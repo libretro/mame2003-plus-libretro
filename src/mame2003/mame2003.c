@@ -131,7 +131,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (!NETPLAY); disabled|enabled");
-  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
+  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Mame Right Stick to Buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
                                                                                          "Vector resolution multiplier (Restart core); 1|2|3|4|5|6|7|8|9|10");
@@ -143,7 +143,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
-  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
+//init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Activate MAME Remapping (!NETPLAY); disabled|enabled");
   
   init_default(&default_options[OPT_4WAY],	              APPNAME"_four_way_emulation",  "4way emulation on 8 way; original|new|rotated_4way");
@@ -250,15 +250,15 @@ static void update_variables(bool first_time)
           options.frameskip = atoi(var.value);
           break;
 
-        case OPT_INPUT_INTERFACE:
+ /*       case OPT_INPUT_INTERFACE:
           if(strcmp(var.value, "retropad") == 0)
             options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "mame_keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
           else
-            options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
+            options.input_interface = 0; // retropad and keyboard simultaneously. "old-school mame2003 input mode" 
           break;
-
+*/
         case OPT_MOUSE_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
@@ -1002,12 +1002,21 @@ void retro_run (void)
          retroJsState[17 + offset] = 0;
       }
      
-      
-        retroJsState[21	+ offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
+ 
+      if ( (options.rstick_to_btns) && (options.content_flags[CONTENT_DUAL_JOYSTICK]) )	
+      {
+         retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+         retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+	  }
+      else
+	  {	  
+        retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : 0;
         retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : 0;
         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : 0;
-          
+	  }   
  
 
  }
