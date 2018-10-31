@@ -113,7 +113,6 @@ static void namcos1_set_flipscreen(int flip)
 static WRITE_HANDLER( namcos1_playfield_control_w )
 {
 	namcos1_playfield_control[offset] = data;
-#if 0
 	/* 0-15 : scrolling */
 	if ( offset < 16 )
 	{
@@ -128,7 +127,6 @@ static WRITE_HANDLER( namcos1_playfield_control_w )
 	}
 	/* 24-29 palette */
 	else
-#endif
 	if ( offset < 30 )
 	{
 		int whichone = offset - 24;
