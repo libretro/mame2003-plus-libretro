@@ -23,7 +23,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Chain Reaction
 * Charlie Ninja
 * Choutetsu Brikin'ger - iron clad
-* Counter Run
+* Counter Run (Set 1 Bootleg)
 * Crossed Swords 2
 * Crystal Castles (Joystick Version)
 * Cute Fighters
