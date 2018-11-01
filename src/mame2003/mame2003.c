@@ -2,7 +2,7 @@
 
 	mame2003.c
     
-    a port of mame 0.78 to the libretro API
+    an updated port of Xmame 0.78 to the libretro API
     
 *********************************************************************/    
 
@@ -461,7 +461,7 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_VECTOR_FLICKER:
-          options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old mame family recipe */
+          options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old family recipe */
           break;
 
         case OPT_VECTOR_INTENSITY:
@@ -620,7 +620,7 @@ bool retro_load_game(const struct retro_game_info *game)
     if ((strcasecmp(driver_lookup, needle->description) == 0) 
       || (strcasecmp(driver_lookup, needle->name) == 0) )
     {
-      log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Total game drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
       game_driver = needle;
       options.romset_filename_noext = driver_lookup;
       break;
@@ -629,7 +629,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
   if(driverIndex == total_drivers)
   {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Total game drivers: %i. Game driver not found for selected game!", (int) total_drivers);
       return false;
   }
 
@@ -908,7 +908,7 @@ extern	const char* ost_drivers[];
 
 void retro_reset (void)
 {
-    machine_reset(); /* use MAME function */
+    machine_reset(); /* use internal core function */
 }
 
 /* get pointer axis vector from coord */
@@ -1267,7 +1267,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *
    *
    *
-   * key: [MAME button/Street Fighter II move]
+   * key: [Button code/Street Fighter II move]
    *
    * PAD_GAMEPAD
    * ========================
@@ -1300,7 +1300,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *
    * PAD_CLASSIC
    * ========================
-   * Uses current MAME's default Xbox 360 controller layout.
+   * Same as FB Alpha's "Classic" mapping.
    * Not sensible for 6 button fighters, but may suit other games.
    *
    * [7/-]                                     [8/-]   |
@@ -1316,10 +1316,10 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 
 /* libretro presents "Player 1", "Player 2", "Player 3", etc while internally using indexed data starting at 0, 1, 2 */
-/* MAME presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,        */
+/* The core presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,        */
 /* JOYCODE_2_BUTTON1, JOYCODE_3_BUTTON1 or with #define-d masks IPF_PLAYER1, IPF_PLAYER2, IPF_PLAYER3.               */
 /*                                                                                                                   */
-/* We are by convention passing "display" value used for mapping to MAME enums and player # masks to our macros.     */
+/* We are by convention passing "display" value used for mapping to core enums and player # masks to these macros.   */
 /* (Display Index - 1) can be used for indexed data structures.                                                      */   
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
@@ -1511,7 +1511,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 
 #define DIRECTIONAL_COUNT           8  /* map Left, Right Up, Down as well as B, Y, A, X */
 #define DIRECTIONAL_COUNT_NO_DBL    4
-#define BUTTON_COUNT_PER           12 /* 10 MAME buttons plus Start and Select          */
+#define BUTTON_COUNT_PER           12  /* 10 buttons plus Start and Select          */
 #define MOUSE_BUTTON_PER            2
 
 #define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
@@ -1817,10 +1817,10 @@ int osd_readkey_unicode(int flush)
 /* Unassigned keycodes*/
 /*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
 
-/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)*/
-/* EMIT1(TAG): The tag value is the same between libretro and MAME*/
-/* EMIT2(RTAG, MTAG): The tag value is different between the two*/
-/* EXITX(TAG): MAME has no equivalent key.*/
+/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG) */
+/* EMIT1(TAG): The tag value is the same between libretro and the core           */
+/* EMIT2(RTAG, MTAG): The tag value is different between the two                 */
+/* EXITX(TAG): The core has no equivalent key.*/
 
 #define EMIT2(RETRO, KEY) {(char*)#RETRO, RETROK_##RETRO, KEYCODE_##KEY}
 #define EMIT1(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_##KEY}
