@@ -143,7 +143,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
-//init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
+  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retroarch|mame");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping and Dipswitch Saving (!NETPLAY); disabled|enabled");  
   init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4way emulation on 8 way; original|new|rotated_4way");
   
@@ -241,24 +241,21 @@ static void update_variables(bool first_time)
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value)) /* the frontend sends a value for this core option */
     {
       current_options[index].value = var.value; /* keep the state of core options matched with the frontend */
-      current_options[index].value = var.value; /* keep the state of core options matched with the frontend */
-      
+            
       switch(index)
       {
         case OPT_FRAMESKIP:
           options.frameskip = atoi(var.value);
           break;
 
- /*       case OPT_INPUT_INTERFACE:
-          if(strcmp(var.value, "retropad") == 0)
+        case OPT_INPUT_INTERFACE:
+          if(strcmp(var.value, "retroarch") == 0)
             options.input_interface = RETRO_DEVICE_JOYPAD;
-          else if(strcmp(var.value, "mame_keyboard") == 0)
+          else 
             options.input_interface = RETRO_DEVICE_KEYBOARD;
-          else
-            options.input_interface = 0; // retropad and keyboard simultaneously. "old-school mame2003 input mode" 
           break;
-*/
-        case OPT_MOUSE_DEVICE:
+
+	    case OPT_MOUSE_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
           else if(strcmp(var.value, "mouse") == 0)
@@ -1805,8 +1802,14 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-  
-  return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0;
+	if (options.input_interface == RETRO_DEVICE_JOYPAD) 
+		return 0;
+
+	else if (options.input_interface == RETRO_DEVICE_KEYBOARD) 
+		return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0; // allow tab to work
+
+	else   log_cb(RETRO_LOG_ERROR, "osd_is_key_pressed should never get here"); // probably not needed always account for the unxpected
+	
 }
 
 int osd_readkey_unicode(int flush)
