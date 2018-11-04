@@ -31,7 +31,7 @@ READ16_HANDLER( dec0_controls_r )
 			return i8751_return;
 	}
 
-	log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
 	return ~0;
 }
 

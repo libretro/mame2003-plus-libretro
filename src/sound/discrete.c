@@ -316,12 +316,12 @@ int discrete_sh_start (const struct MachineSound *msound)
 		/* Check the node parameter is a valid node */
 		if(intf[node_count].node<NODE_START || intf[node_count].node>NODE_END)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Invalid node number on node %02d descriptor\n",node_count);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid node number on node %02d descriptor\n",node_count);
 			return 1;
 		}
 		if(intf[node_count].type>DSO_OUTPUT)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Invalid function type on node %02d descriptor\n",node_count);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid function type on node %02d descriptor\n",node_count);
 			return 1;
 		}
 
@@ -337,7 +337,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		/* Sanity check */
 		if(node_count>DISCRETE_MAX_NODES)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.",DISCRETE_MAX_NODES);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.",DISCRETE_MAX_NODES);
 			return 1;
 		}
 	}
@@ -346,7 +346,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 	/* Allocate memory for the context array and the node execution order array */
 	if((running_order=malloc(node_count*sizeof(struct node_description*)))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Failed to allocate running order array.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Failed to allocate running order array.\n");
 		return 1;
 	}
 	else
@@ -357,7 +357,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 
 	if((node_list=malloc(node_count*sizeof(struct node_description)))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Failed to allocate context list array.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Failed to allocate context list array.\n");
 		return 1;
 	}
 	else
@@ -398,7 +398,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		{
 			if(node_list[loop].node==node_list[loop2].node && loop!=loop2)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start - Node NODE_%02d defined more than once\n",node_list[loop].node-NODE_00);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Node NODE_%02d defined more than once\n",node_list[loop].node-NODE_00);
 				failed=1;
 			}
 		}
@@ -424,7 +424,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		{
 			if(node_list[loop].input_node[loop2]==NULL && intf[loop].input_node[loop2]>=NODE_START && intf[loop].input_node[loop2]<=NODE_END)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start - Node NODE_%02d referenced a non existant node NODE_%02d\n",node_list[loop].node-NODE_00,intf[loop].input_node[loop2]-NODE_00);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Node NODE_%02d referenced a non existant node NODE_%02d\n",node_list[loop].node-NODE_00,intf[loop].input_node[loop2]-NODE_00);
 				failed=1;
 			}
 		}
@@ -446,7 +446,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 				if(intf[loop].type==DSS_NULL) break;
 				else
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Invalid DSS/DST/DSO module type specified in interface, item %02d\n",loop+1);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid DSS/DST/DSO module type specified in interface, item %02d\n",loop+1);
 					failed=1;
 					break;
 				}
@@ -457,7 +457,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 	/* Setup the output node */
 	if((output_node=find_node(NODE_OP))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start() - Couldn't find an output node");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Couldn't find an output node");
 		failed=1;
 	}
 
@@ -486,7 +486,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 
 	if(discrete_stream==-1)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "discrete_sh_start - Stream init returned an error\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Stream init returned an error\n");
 		failed=1;
 	}
 

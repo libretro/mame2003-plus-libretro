@@ -430,7 +430,7 @@ static void locate_audio_hotspot(UINT8 *base, UINT16 start)
 		{
 /*			counter.hotspot_start = i;*/
 /*			counter.hotspot_stop = i + 12;*/
-			log_cb(RETRO_LOG_WARN, LOGPRE "Found hotspot @ %04X", i);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Found hotspot @ %04X", i);
 			return;
 		}
 	}

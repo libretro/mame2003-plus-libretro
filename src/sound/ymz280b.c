@@ -105,14 +105,14 @@ static INLINE void update_irq_state(struct YMZ280BChip *chip)
 		chip->irq_state = 1;
 		if (chip->irq_callback)
 			(*chip->irq_callback)(1);
-else log_cb(RETRO_LOG_ERROR, LOGPRE "ymz280 irq_callback = 0");
+else log_cb(RETRO_LOG_DEBUG, LOGPRE "ymz280 irq_callback = 0");
 	}
 	else if (!irq_bits && chip->irq_state)
 	{
 		chip->irq_state = 0;
 		if (chip->irq_callback)
 			(*chip->irq_callback)(0);
-else log_cb(RETRO_LOG_ERROR, LOGPRE "ymz280 irq_callback = 0");
+else log_cb(RETRO_LOG_DEBUG, LOGPRE "ymz280 irq_callback = 0");
 	}
 }
 
@@ -808,7 +808,7 @@ static void write_to_register(struct YMZ280BChip *chip, int data)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YMZ280B: unknown register write %02X = %02X\n", chip->current_register, data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YMZ280B: unknown register write %02X = %02X\n", chip->current_register, data);
 				break;
 		}
 	}
@@ -839,7 +839,7 @@ static void write_to_register(struct YMZ280BChip *chip, int data)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YMZ280B: unknown register write %02X = %02X\n", chip->current_register, data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YMZ280B: unknown register write %02X = %02X\n", chip->current_register, data);
 				break;
 		}
 	}

@@ -1571,7 +1571,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			default:
 				buffer += sprintf(buffer, "Ext. OP %x", extended_op);
-				log_cb(RETRO_LOG_ERROR, LOGPRE buffer, "Illegal Extended Opcode: %x\n", extended_op);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE buffer, "Illegal Extended Opcode: %x\n", extended_op);
 				break;
 			}
 
@@ -1948,7 +1948,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 		default:
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Illegal Opcode: %x @ %x\n",op_num,pc);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Illegal Opcode: %x @ %x\n",op_num,pc);
 			break;
 	}
 

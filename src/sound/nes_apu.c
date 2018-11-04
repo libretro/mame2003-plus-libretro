@@ -19,18 +19,24 @@
 
    Actual NES APU interface.
 
-   LAST MODIFIED 12/24/1999
+    LAST MODIFIED 02/29/2004
 
-   - Initial public release of core, based on Matthew Conte's
-     Nofrendo/Nosefart core and redesigned to use MAME system calls
-     and to enable multiple APUs.  Sound at this point should be just
-     about 100% accurate, though I cannot tell for certain as yet.
+     - Based on Matthew Conte's Nofrendo/Nosefart core and redesigned to
+     use MAME system calls and to enable multiple APUs.  Sound at this
+     point should be just about 100% accurate, though I cannot tell for
+     certain as yet.
 
      A queue interface is also available for additional speed.  However,
      the implementation is not yet 100% (DPCM sounds are inaccurate),
      so it is disabled by default.
 
+	 *****************************************************************************
+     BUGFIXES:
+     - Various bugs concerning the DPCM channel fixed. (Oliver Achten)
+     - Fixed $4015 read behaviour. (Oliver Achten)
  *****************************************************************************/
+ 
+
 
 #include "driver.h"
 #include "nes_apu.h"
@@ -381,6 +387,8 @@ static INLINE void apu_dpcmreset(dpcm_t *chan)
    chan->length = (uint16) (chan->regs[3] << 4) + 1;
    chan->bits_left = chan->length << 3;
    chan->irq_occurred = FALSE;
+   chan->enabled = TRUE; /* Fixed * Proper DPCM channel ENABLE/DISABLE flag behaviour*/
+   chan->vol = 0; /* Fixed * DPCM DAC resets itself when restarted */
 }
 
 /* OUTPUT DPCM WAVE SAMPLE (VALUES FROM -64 to +63) */
@@ -406,8 +414,10 @@ static int8 apu_dpcm(dpcm_t *chan)
 
          if (0 == chan->length)
          {
-            if (chan->regs[0] & 0x40)
-               apu_dpcmreset(chan);
+            chan->enabled = FALSE; /* Fixed * Proper DPCM channel ENABLE/DISABLE flag behaviour*/
+            chan->vol=0; /* Fixed * DPCM DAC resets itself when restarted */ 
+			if (chan->regs[0] & 0x40)
+				apu_dpcmreset(chan);
             else
             {
                if (chan->regs[0] & 0x80) /* IRQ Generator */
@@ -430,10 +440,10 @@ static int8 apu_dpcm(dpcm_t *chan)
 
          if (chan->cur_byte & (1 << bit_pos))
 /*            chan->regs[1]++;*/
-            chan->vol++;
+            chan->vol+=2;
          else
 /*            chan->regs[1]--;*/
-            chan->vol--;
+            chan->vol-=2;
       }
    }
 
@@ -442,7 +452,7 @@ static int8 apu_dpcm(dpcm_t *chan)
    else if (chan->vol < -64)
       chan->vol = -64;
 
-   return (int8) (chan->vol >> 1);
+   return (int8) (chan->vol);
 }
 
 /* WRITE REGISTER VALUE */
@@ -633,7 +643,7 @@ static INLINE void apu_regwrite(int chip,int address, uint8 value)
 
       break;
    default:
-      (RETRO_LOG_DEBUG, LOGPRE "invalid apu write: $%02X at $%04X\n", value, address);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "invalid apu write: $%02X at $%04X\n", value, address);
       break;
    }
 }
@@ -694,6 +704,20 @@ static INLINE void apu_update(int chip)
 /* READ VALUES FROM REGISTERS */
 static INLINE uint8 apu_read(int chip,int address)
 {
+  if (address == 0x0f) /*FIXED* Address $4015 has different behaviour*/
+  {
+  	int readval = 0;
+  		if ( cur->dpcm.enabled == TRUE )
+  			{
+  				readval |= 0x10;
+  			}
+  		if ( cur->dpcm.irq_occurred == TRUE )
+  			{
+  				readval |= 0x80;
+  			}
+  		return readval;
+  }
+  else
   return APU[chip].regs[address];
 }
 

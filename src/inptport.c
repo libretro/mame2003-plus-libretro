@@ -402,7 +402,7 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 
 struct ipd inputport_defaults[] =
 {
-  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON8) },
+  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
   { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_1(KEYCODE_NONE) },
   { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
   { IPT_UI_UP,                "UI Up",          SEQ_DEF_3(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP) },
@@ -624,11 +624,11 @@ struct ipd inputport_defaults[] =
   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER1, "P1 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
-  { IPT_PEDAL                 | IPF_PLAYER2, "P2 Pedal 1",     SEQ_DEF_3(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER2, "P2 Pedal 1",     SEQ_DEF_3(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER2, "P2 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
-  { IPT_PEDAL                 | IPF_PLAYER3, "P3 Pedal 1",     SEQ_DEF_3(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER3, "P3 Pedal 1",     SEQ_DEF_3(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER3, "P3 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
   { IPT_PEDAL                 | IPF_PLAYER4, "P4 Pedal 1",     SEQ_DEF_1(JOYCODE_4_BUTTON1) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER4, "P4 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
@@ -2226,15 +2226,29 @@ ScanJoysticks( struct InputPort *in )
 			  }
 
 		}
-        else if (options.four_way_emulation) //start use alternative code 
+         else if (options.four_way_emulation == 1) //start use alternative code 
 		{
 		
 			//last press no code needed just ignore diagonals and no movement
 			if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6) && (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10)) 	mJoy4Way[i] = mJoyCurrent[i]; 	
+			
+		}
 
-		}		
+        else if (options.four_way_emulation == 2) //45 degrees rotated use diagonals 
+		{
 		
-
+			
+	    if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=1) && (mJoyCurrent[i] !=2) && (mJoyCurrent[i] !=4) && (mJoyCurrent[i] !=8) )  	
+			{
+			
+				if      (mJoyCurrent[i] == 9) mJoy4Way[i]=1;
+				else if (mJoyCurrent[i] == 6) mJoy4Way[i]=2;
+				else if (mJoyCurrent[i] == 5) mJoy4Way[i]=4;
+				else if (mJoyCurrent[i] == 10) mJoy4Way[i]=8;
+			}		
+			else  if (mJoy4Way[i])  mJoy4Way[i]=0;
+		
+		}
 	}
 
 } /* ScanJoysticks */

@@ -1090,7 +1090,7 @@ void imacn_rn_rn(void)
 	UINT32 r1 = jaguar.r[(jaguar.op >> 5) & 31];
 	UINT32 r2 = jaguar.r[jaguar.op & 31];
 	jaguar.accum += (INT64)((INT16)r1 * (INT16)r2);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected IMACN instruction!\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected IMACN instruction!\n");
 }
 
 void imult_rn_rn(void)
@@ -1681,7 +1681,7 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 		case G_END:
 			jaguar.ctrl[offset] = newval;
 			if ((newval & 7) != 7)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "GPU to set to little-endian!\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "GPU to set to little-endian!\n");
 			break;
 
 		case G_PC:
@@ -1711,7 +1711,7 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 			}
 			if (newval & 0x18)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "GPU single stepping was enabled!\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "GPU single stepping was enabled!\n");
 			}
 			break;
 
@@ -1791,7 +1791,7 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 		case D_END:
 			jaguar.ctrl[offset] = newval;
 			if ((newval & 7) != 7)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "DSP to set to little-endian!\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "DSP to set to little-endian!\n");
 			break;
 
 		case D_PC:
@@ -1821,7 +1821,7 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 			}
 			if (newval & 0x18)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "DSP single stepping was enabled!\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "DSP single stepping was enabled!\n");
 			}
 			break;
 

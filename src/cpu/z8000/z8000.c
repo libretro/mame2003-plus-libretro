@@ -336,7 +336,7 @@ static INLINE void set_irq(int type)
             IRQ_REQ = type;
             break;
         default:
-            log_cb(RETRO_LOG_ERROR, LOGPRE "Z8000 invalid Cause_Interrupt %04x\n", type);
+            log_cb(RETRO_LOG_DEBUG, LOGPRE "Z8000 invalid Cause_Interrupt %04x\n", type);
             return;
     }
     /* set interrupt request flag, reset HALT flag */

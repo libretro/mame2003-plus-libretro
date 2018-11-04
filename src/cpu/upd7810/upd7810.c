@@ -648,7 +648,7 @@ static data8_t RP(offs_t port)
 		data = cpu_readport16(port);
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 internal error: RP() called with invalid port number\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "uPD7810 internal error: RP() called with invalid port number\n");
 	}
 	return data;
 }
@@ -726,7 +726,7 @@ static void WP(offs_t port, data8_t data)
 		cpu_writeport16(port, data);
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 internal error: RP() called with invalid port number\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "uPD7810 internal error: RP() called with invalid port number\n");
 	}
 }
 
@@ -1678,7 +1678,7 @@ int upd7810_execute (int cycles)
 					PC += op74[OP2].oplen - 2;
 					break;
 				default:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 internal error: check cycle counts for main\n"); exit(1); break;
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "uPD7810 internal error: check cycle counts for main\n"); exit(1); break;
 				}
 			}
 			PSW &= ~SK;
@@ -1884,7 +1884,7 @@ void upd7810_set_irq_line(int irqline, int state)
 		if (irqline == UPD7810_INTFE1)
 			IRR |= INTFE1;
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "upd7810_set_irq_line invalid irq line #%d\n", irqline);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "upd7810_set_irq_line invalid irq line #%d\n", irqline);
 	}
 	/* resetting interrupt requests is done with the SKIT/SKNIT opcodes only! */
 }

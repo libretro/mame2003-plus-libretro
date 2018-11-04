@@ -16,7 +16,7 @@ static unsigned long prev_led_state = 0;
 
 #define MAX_LED 16
 
-uint16_t videoBuffer[1024*1024];
+uint16_t *videoBuffer;
 struct osd_create_params videoConfig;
 int gotFrame;
 
@@ -65,12 +65,22 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
       rgb_components[1] = 0x00FF00;
       rgb_components[2] = 0x0000FF;
    }
+ 
+   /* allocate a buffer for color conversion from non-32bpp modes */
+   if (Machine->color_depth != 32) {
+       videoBuffer = malloc(params->width * params->height * 4);
+   }
 
    return 0;
 }
 
 void osd_close_display(void)
 {
+   if (videoBuffer != 0)
+   {
+      free(videoBuffer);
+      videoBuffer = 0;
+   }
 }
 
 static const int frameskip_table[12][12] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },

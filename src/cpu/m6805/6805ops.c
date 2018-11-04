@@ -15,7 +15,7 @@ HNZC
 
 static void illegal( void )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "M6805: illegal opcode\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "M6805: illegal opcode\n");
 }
 
 #ifdef macintosh

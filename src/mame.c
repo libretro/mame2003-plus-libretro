@@ -294,23 +294,24 @@ bool run_game(int game)
   /* finish setting up our local machine */
   if (init_machine())
       bail_and_print("Unable to initialize machine emulation");
-
-  /* then run it */
-  if (run_machine())
-      bail_and_print("Unable to start machine emulation");
   else
-  {
-      game_loaded = 1;
-      return true;
+  {	  
+  /* then run it */
+      if (run_machine())
+          bail_and_print("Unable to start machine emulation");
+      else
+      {
+         game_loaded = 1;
+         return 0;
+      }
+
+      /* shutdown the local machine */
+      shutdown_machine();
   }
-
-  /* shutdown the local machine */
-  shutdown_machine();
-
   /* stop tracking resources and exit the OSD layer */
   end_resource_tracking();
     
-	return false;
+	return 1;
 }
 
 void run_game_done(void)
@@ -617,8 +618,7 @@ static int vh_open(void)
 	/* if we're a vector game, override the screen width and height */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-       /*scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);*/      
-       /*Hack to avoid segfault: leave vector resolution to its default the first time scale_vectorgames is caused*/
+       scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
     }
 	/* compute the visible area for raster games */
 	if (!(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR))
@@ -648,9 +648,7 @@ static int vh_open(void)
 	/* the create display process may update the vector width/height, so recompute */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-        /*scale_vectorgames((options.vector_resolution_multiplier * Machine->drv->screen_width), (options.vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);*/
-        bmwidth = Machine->drv->screen_width * options.vector_resolution_multiplier;
-        bmheight = Machine->drv->screen_height * options.vector_resolution_multiplier;
+        scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
     }
     
     
@@ -806,10 +804,13 @@ static void init_game_options(void)
   if (Machine->drv->video_attributes & VIDEO_RGB_DIRECT)
   {
     /* first pick a default */
-    if (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
+    /*if (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
       Machine->color_depth = 32;
     else
-      Machine->color_depth = 15;
+      Machine->color_depth = 15;*/
+    
+    /* use 32-bit color output as default to skip color conversions */
+		Machine->color_depth = 32;
 
     /* now allow overrides */
     if (options.color_depth == 15 || options.color_depth == 32)
@@ -821,11 +822,15 @@ static void init_game_options(void)
   }
 
   /* update the vector width/height with defaults */
-  if (options.vector_width == 0) options.vector_width = 640;
-  if (options.vector_height == 0) options.vector_height = 480;
+  if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
+  if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
+  
+  /* apply the vector resolution multiplier */
+	options.vector_width  *= options.vector_resolution_multiplier;
+	options.vector_height *= options.vector_resolution_multiplier;
 
   /* get orientation right */
-  Machine->orientation = ROT0;
+  Machine->orientation    = ROT0;
   Machine->ui_orientation = options.ui_orientation;
 
   /* initialize the samplerate */

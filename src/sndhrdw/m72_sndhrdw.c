@@ -95,7 +95,7 @@ static void setvector_callback(int param)
 	}
 
 	if (irqvector == 0)
-		log_cb(RETRO_LOG_WARN, LOGPRE "You didn't call m72_init_sound()\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "You didn't call m72_init_sound()\n");
 
 	cpu_irq_line_vector_w(1,0,irqvector);
 	if (irqvector == 0xff)	/* no IRQs pending */

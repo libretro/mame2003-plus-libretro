@@ -201,7 +201,7 @@ static INLINE void PUSH_PC_TO_STACK(void)
  ***********************************/
 static INLINE void illegal(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "i8x41 #%d: illegal opcode at 0x%03x: %02x\n", cpu_getactivecpu(), PC, ROP(PC));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "i8x41 #%d: illegal opcode at 0x%03x: %02x\n", cpu_getactivecpu(), PC, ROP(PC));
 }
 
 /***********************************

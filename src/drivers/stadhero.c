@@ -37,7 +37,7 @@ static READ16_HANDLER( stadhero_control_r )
 			return (readinputport(3) + (readinputport(4) << 8));
 	}
 
-	log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
 	return ~0;
 }
 
@@ -52,7 +52,7 @@ static WRITE16_HANDLER( stadhero_control_w )
 			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
 			break;
 		default:
-			log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+offset);
 			break;
 	}
 }

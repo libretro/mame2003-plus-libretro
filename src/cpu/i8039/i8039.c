@@ -235,12 +235,12 @@ static INLINE void M_XCHD(UINT8 addr)
 
 static INLINE void M_ILLEGAL(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  PC = %04x,  Illegal opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8039:  PC = %04x,  Illegal opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }
 
 static INLINE void M_UNDEFINED(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  PC = %04x,  Unimplemented opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8039:  PC = %04x,  Unimplemented opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }
 
 static void illegal(void)	 { M_ILLEGAL(); }
