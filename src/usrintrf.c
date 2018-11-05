@@ -3063,12 +3063,13 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         msg_buffer[0]='\0';  
 
         osd_get_path(FILETYPE_CONFIG, current_path);       
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%s", current_path, path_default_slash(), Machine->gamedrv->name, get_extension_for_filetype(FILETYPE_CONFIG));
-        
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+        printf("%s%s", path_buffer, "\n");
         if(remove(path_buffer))
           snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s%s%s", "Error flushing CFG from ", path_buffer, "!");
         else
           snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "CFG flushed!"); 
+        usrintf_showmessage_secs(2, "%s", msg_buffer);
  
         break;
       }
@@ -3077,18 +3078,17 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         char msg_buffer[MAX_MESSAGE_LENGTH];
         char path_buffer[PATH_MAX_LENGTH];
         char current_path[PATH_MAX_LENGTH];
-        int driverIndex = 0;
-        
+        int driverIndex = 0;       
         msg_buffer[0]='\0';
+
         osd_get_path(FILETYPE_CONFIG, current_path);        
 
         snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "Executing flush all CFG command!"); 
         usrintf_showmessage_secs(2, "%s", msg_buffer);
 
         /* be sure to delete "default.cfg" as well */
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%s", current_path, path_default_slash(), "default", get_extension_for_filetype(FILETYPE_CONFIG));
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
         remove(path_buffer);
-
         /* loop through all driver names and attempt to delete the corresponding cfg file.
            it would be good to have a cleaner implementation but this does work and can reuse
            code from mame2003.c */
@@ -3096,20 +3096,26 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
         {
           const struct GameDriver *needle = drivers[driverIndex];
-
-          snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%s", current_path, path_default_slash(), needle->name, get_extension_for_filetype(FILETYPE_CONFIG));
-          remove(path_buffer); /* remove DOS filename version */          
-
-          snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%s", current_path, path_default_slash(), needle->description, get_extension_for_filetype(FILETYPE_CONFIG));
-          remove(path_buffer); /* remove full/alternative filename version -- although not in use as of November 2018 */
+          if(needle && needle->name) 
+          {
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            remove(path_buffer); /* try to remove DOS filename version */
+          }            
+          if(needle && needle->description)
+          {            
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->description, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
+          }
         }
-      }        
         break;          
-      case UI_GENERATE_NEW_XML_DAT:
+      }        
+      case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */
+          usrintf_showmessage_secs(4, "%s", "Generating Alternative XML DAT!");
           print_mame_xml(0);
           break;
 
       case UI_GENERATE_OLD_XML_DAT:
+          usrintf_showmessage_secs(4, "%s", "Generating XML DAT!");      
           print_mame_xml(1);
           break;
 
