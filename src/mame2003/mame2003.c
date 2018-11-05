@@ -413,6 +413,8 @@ static void update_variables(bool first_time)
               usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
               
               load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
+              /* should use reset_driver_inputs() if that function is ever completed */
+
               old_dual_joystick_state = options.dual_joysticks;
             }
             break;
@@ -1924,4 +1926,3 @@ const struct KeyboardInfo retroKeys[] =
 
     {0, 0, 0}
 };
-
