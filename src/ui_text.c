@@ -80,6 +80,8 @@ static const char *mame_default_text[] =
 	"Calibrate Joysticks",
 	"Bookkeeping Info",
 	"Input (this game)",
+  "Flush Current CFG",
+  "Flush All CFGs",  
 	"Game Information",
 	"Game History",
 	"Reset Game",

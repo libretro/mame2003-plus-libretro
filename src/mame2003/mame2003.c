@@ -144,7 +144,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retroarch|keyboard|mame");  
-  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping and Dipswitch Saving (!NETPLAY); disabled|enabled");  
+  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (!NETPLAY); disabled|enabled");  
   init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4way emulation on 8 way; original|new|rotated_4way");
   
   init_default(&default_options[OPT_end], NULL, NULL);
