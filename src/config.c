@@ -288,10 +288,10 @@ static unsigned int count_input_ports(const struct InputPort *in)
 
 config_file *config_open(const char *name)
 {
-	if(options.mame_remapping)
+/*	if(options.mame_remapping)*/ 
     return config_init(name, 0);
 
-  return NULL;
+/*  return NULL;*/
 }
 
 
@@ -302,10 +302,10 @@ config_file *config_open(const char *name)
 
 config_file *config_create(const char *name)
 {
-	if(options.mame_remapping)
+/*	if(options.mame_remapping) */
     return config_init(name, 1);
 
-  return NULL;
+/*  return NULL;*/
 }
 
 

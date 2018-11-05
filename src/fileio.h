@@ -81,6 +81,8 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
 
 int osd_create_directory(const char *dir);
 
+
+
 int mame_faccess(const char *filename, int filetype);
 mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, int openforwrite);
 mame_file *mame_fopen_rom(const char *gamename, const char *filename, const char* exphash);
@@ -113,6 +115,14 @@ UINT64 mame_ftell(mame_file *file);
 
 int mame_fputs(mame_file *f, const char *s);
 int mame_vfprintf(mame_file *f, const char *fmt, va_list va);
+
+
+/***************************************************************************
+	get_extension_for_filetype
+***************************************************************************/
+
+const char *get_extension_for_filetype(int filetype);
+
 
 /***************************************************************************
 	spawn_bootstrap_nvram

@@ -2871,9 +2871,9 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 }
 
 
-enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
+enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_FLUSH_CURRENT_CFG, UI_FLUSH_ALL_CFG, UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
-		UI_CHEAT,UI_RESET,UI_GENERATE_NEW_XML_DAT, UI_GENERATE_OLD_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
+		UI_CHEAT,UI_RESET, UI_GENERATE_NEW_XML_DAT, UI_GENERATE_OLD_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
 
 
 
@@ -2889,8 +2889,10 @@ void setup_menu_init(void)
 
   if(options.mame_remapping)
   {
-	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
-    menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
+	  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
+    menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
+    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
+    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
   }
 
 	/* Determine if there are any dip switches */
@@ -2956,7 +2958,9 @@ void setup_menu_init(void)
 
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
-    menu_item[menu_total] = ui_getstring (UI_generate_old_xml_dat); menu_action[menu_total++] = UI_GENERATE_OLD_XML_DAT;
+    menu_item[menu_total] = ui_getstring (UI_generate_old_xml_dat);   menu_action[menu_total++] = UI_GENERATE_OLD_XML_DAT;
+
+    /* the "alternative XML DAT project" with proper game names for the files instead of DOS names is on hold as of November 2018 */
     /*menu_item[menu_total] = ui_getstring (UI_generate_new_xml_dat); menu_action[menu_total++] = UI_GENERATE_NEW_XML_DAT;*/  
 #endif
   if(!options.display_setup) 
@@ -3051,12 +3055,70 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				sel |= 1 << SEL_BITS;
 				schedule_full_refresh();
 				break;
-           
-      case UI_GENERATE_NEW_XML_DAT:
+      case UI_FLUSH_CURRENT_CFG:
+      {
+        char msg_buffer[MAX_MESSAGE_LENGTH];
+        char path_buffer[PATH_MAX_LENGTH];
+        char current_path[PATH_MAX_LENGTH];
+        msg_buffer[0]='\0';  
+
+        osd_get_path(FILETYPE_CONFIG, current_path);       
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+
+        if(remove(path_buffer))
+          snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s%s%s", "Error flushing CFG from ", path_buffer, "!");
+        else
+          snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "CFG flushed!"); 
+        usrintf_showmessage_secs(2, "%s", msg_buffer);
+ 
+        break;
+      }
+      case UI_FLUSH_ALL_CFG:
+      {
+        char msg_buffer[MAX_MESSAGE_LENGTH];
+        char path_buffer[PATH_MAX_LENGTH];
+        char current_path[PATH_MAX_LENGTH];
+        int driverIndex = 0;       
+        msg_buffer[0]='\0';
+
+        osd_get_path(FILETYPE_CONFIG, current_path);        
+
+        snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "Executing flush all CFG command!"); 
+        usrintf_showmessage_secs(2, "%s", msg_buffer);
+
+        /* delete "default.cfg" and repopulate from the defaults specified by inptport source */
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
+        remove(path_buffer);
+        reset_default_inputs();
+              
+        /* loop through all driver names and attempt to delete the corresponding cfg file.
+           it would be good to have a cleaner implementation but this does work and can reuse
+           code from mame2003.c */
+        for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
+        {
+          const struct GameDriver *needle = drivers[driverIndex];
+          if(needle && needle->name) 
+          {
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            remove(path_buffer); /* try to remove DOS filename version */
+          }            
+          if(needle && needle->description)
+          {            
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->description, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
+          }
+        }
+        load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
+
+        break;          
+      }        
+      case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */
+          usrintf_showmessage_secs(4, "%s", "Generating Alternative XML DAT!");
           print_mame_xml(0);
           break;
 
       case UI_GENERATE_OLD_XML_DAT:
+          usrintf_showmessage_secs(4, "%s", "Generating XML DAT!");      
           print_mame_xml(1);
           break;
 

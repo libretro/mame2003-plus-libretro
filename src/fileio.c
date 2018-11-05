@@ -61,7 +61,6 @@ struct _mame_file
 ***************************************************************************/
 
 static mame_file *generic_fopen(int pathtype, const char *gamename, const char *filename, const char* hash, UINT32 flags);
-static const char *get_extension_for_filetype(int filetype);
 static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **p, UINT64 *size, char* hash);
 
 
@@ -780,7 +779,7 @@ static INLINE void compose_path(char *output, const char *gamename, const char *
 	get_extension_for_filetype
 ***************************************************************************/
 
-static const char *get_extension_for_filetype(int filetype)
+const char *get_extension_for_filetype(int filetype)
 {
 	const char *extension;
 

@@ -25,7 +25,7 @@
 static const struct GameDriver  *game_driver;
 static float              delta_samples;
 int                       samples_per_frame = 0;
-int 			  orig_samples_per_frame =0;
+int                       orig_samples_per_frame =0;
 short*                    samples_buffer;
 short*                    conversion_buffer;
 int                       usestereo = 1;
@@ -37,7 +37,7 @@ int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
- int          retroJsState[109]= {0}; // initialise to zero we are only reaing 4 players atm
+int                 retroJsState[109]= {0}; // initialise to zero - we are only reading 4 players atm
 extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;
@@ -144,7 +144,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retroarch|keyboard|mame");  
-  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping and Dipswitch Saving (!NETPLAY); disabled|enabled");  
+  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (!NETPLAY); disabled|enabled");  
   init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4way emulation on 8 way; original|new|rotated_4way");
   
   init_default(&default_options[OPT_end], NULL, NULL);
@@ -412,7 +412,7 @@ static void update_variables(bool first_time)
               log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
               usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
               
-              load_input_port_settings();
+              load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
               old_dual_joystick_state = options.dual_joysticks;
             }
             break;
