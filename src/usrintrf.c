@@ -3108,6 +3108,8 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
             remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
           }
         }
+        load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
+
         break;          
       }        
       case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */

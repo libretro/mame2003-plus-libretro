@@ -412,7 +412,7 @@ static void update_variables(bool first_time)
               log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
               usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
               
-              load_input_port_settings();
+              load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
               old_dual_joystick_state = options.dual_joysticks;
             }
             break;
