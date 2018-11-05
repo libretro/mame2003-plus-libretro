@@ -411,6 +411,12 @@ extern int num_ik;
 void seq_set_string(InputSeq* a, const char *buf);
 const char *generic_ctrl_label(int input);
 
+/* 
+ * void reset_default_keys(void)
+ * repopulate mappings from the defaults specified in the inptport source 
+ */
+void reset_default_keys(void);
+
 
 #ifdef __cplusplus
 }

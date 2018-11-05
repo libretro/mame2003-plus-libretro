@@ -1691,6 +1691,15 @@ static void save_default_keys(void)
 	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
 }
 
+/* 
+ * void reset_default_keys(void)
+ * repopulate mappings from the defaults specified in the inptport source 
+ */
+void reset_default_keys(void)
+{
+	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
+  save_default_keys();
+}
 
 int load_input_port_settings(void)
 {

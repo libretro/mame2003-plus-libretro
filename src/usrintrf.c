@@ -3086,13 +3086,14 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "Executing flush all CFG command!"); 
         usrintf_showmessage_secs(2, "%s", msg_buffer);
 
-        /* be sure to delete "default.cfg" as well */
+        /* delete "default.cfg" and repopulate from the defaults specified by inptport source */
         snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
         remove(path_buffer);
+        reset_default_keys();
+              
         /* loop through all driver names and attempt to delete the corresponding cfg file.
            it would be good to have a cleaner implementation but this does work and can reuse
            code from mame2003.c */
-
         for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
         {
           const struct GameDriver *needle = drivers[driverIndex];
