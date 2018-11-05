@@ -25,7 +25,7 @@
 static const struct GameDriver  *game_driver;
 static float              delta_samples;
 int                       samples_per_frame = 0;
-int 			  orig_samples_per_frame =0;
+int                       orig_samples_per_frame =0;
 short*                    samples_buffer;
 short*                    conversion_buffer;
 int                       usestereo = 1;
@@ -37,7 +37,7 @@ int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
- int          retroJsState[109]= {0}; // initialise to zero we are only reaing 4 players atm
+int                 retroJsState[109]= {0}; // initialise to zero - we are only reading 4 players atm
 extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;

@@ -2891,8 +2891,8 @@ void setup_menu_init(void)
   {
 	  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
     menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
-    menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
-    menu_item[menu_total] = ui_getstring (UI_flush_all_cfg); menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
+    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
+    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
   }
 
 	/* Determine if there are any dip switches */
@@ -3064,7 +3064,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 
         osd_get_path(FILETYPE_CONFIG, current_path);       
         snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
-        printf("%s%s", path_buffer, "\n");
+
         if(remove(path_buffer))
           snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s%s%s", "Error flushing CFG from ", path_buffer, "!");
         else
@@ -3089,7 +3089,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         /* delete "default.cfg" and repopulate from the defaults specified by inptport source */
         snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
         remove(path_buffer);
-        reset_default_keys();
+        reset_default_inputs();
               
         /* loop through all driver names and attempt to delete the corresponding cfg file.
            it would be good to have a cleaner implementation but this does work and can reuse
