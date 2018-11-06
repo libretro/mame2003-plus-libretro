@@ -213,6 +213,7 @@ struct GameOptions
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
   bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
+  int 	   four_way_emulation;             /* use new 4 way emulation */
   unsigned rstick_to_btns;
   unsigned tate_mode;
 
@@ -248,11 +249,13 @@ struct GameOptions
   bool     nvram_bootstrap;
   
   const char *bios;			         /* specify system bios (if used), 0 is default */
-
+  
+  bool     system_subfolder;     /* save all system files within a subfolder of the libretro system folder rather than directly in the system folder */
+  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */  
+  
   int		   debug_width;	         /* requested width of debugger bitmap */
   int		   debug_height;	       /* requested height of debugger bitmap */
   int		   debug_depth;	         /* requested depth of debugger bitmap */
-  int 	 four_way_emulation; /* use new 4 way emulation */
 };
 
 

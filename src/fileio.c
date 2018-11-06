@@ -181,6 +181,21 @@ int osd_get_path_count(int pathtype)
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
+  char save_path_buffer[PATH_MAX_LENGTH];
+  char sys_path_buffer[PATH_MAX_LENGTH];
+
+  save_path_buffer[0] = '\0';
+  if(options.save_subfolder)
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+  else
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_save_path);
+
+  sys_path_buffer[0] = '\0';
+  if(options.system_subfolder)
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+  else
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
+    
    switch (pathtype)
    {       
        case FILETYPE_ROM:
@@ -190,40 +205,41 @@ void osd_get_path(int pathtype, char* path)
 
       /* user-initiated content goes in mame2003 save directory subfolders */      
       case FILETYPE_IMAGE_DIFF:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "diff");
          break;     
       case FILETYPE_NVRAM:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "nvram");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "nvram");
          break;
       case FILETYPE_HIGHSCORE:
-          snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "hi");
+          snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "hi");
          break;
       case FILETYPE_CONFIG:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "cfg");
          break;
       case FILETYPE_MEMCARD:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "memcard");
          break;
       case FILETYPE_CTRLR:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "ctrlr");
          break;
       case FILETYPE_XML_DAT:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s", save_path_buffer);
          break;
-      /* pre-generated content goes in mam2003 system directory subfolders */
+
+         /* static, pregenerated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "artwork");
          break;
       case FILETYPE_SAMPLE:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "samples");
          break;
       case FILETYPE_SAMPLE_FLAC:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "samples");
          break;
 
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s", sys_path_buffer);
    }    
 }
 
@@ -1165,4 +1181,3 @@ int CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)
 	va_end(va);
 	return rc;
 }
-
