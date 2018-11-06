@@ -80,6 +80,8 @@ enum
   OPT_INPUT_INTERFACE,  
   OPT_MAME_REMAPPING,
   OPT_4WAY,
+  OPT_CORE_SYS_SUBFOLDER,
+  OPT_CORE_SAVE_SUBFOLDER,
   OPT_end /* dummy last entry */
 };
 

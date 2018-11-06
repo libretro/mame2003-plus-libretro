@@ -100,9 +100,8 @@ void retro_init (void)
 
 static void check_system_specs(void)
 {
-   /* TODO - set variably */
-   /* Midway DCS - Mortal Kombat/NBA Jam etc. require level 9 */
-   unsigned level = 10;
+   /* Should we set level variably like the API asks? Are there any frontends that implement this? */
+   unsigned level = 10; /* For stub purposes, set to the highest level */
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
@@ -113,7 +112,7 @@ void retro_set_environment(retro_environment_t cb)
 
 static void init_core_options(void)
 {
-  init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
+  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; original|new|rotated_4way");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -145,8 +144,10 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retroarch|keyboard|mame");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (!NETPLAY); disabled|enabled");  
-  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4way emulation on 8 way; original|new|rotated_4way");
-  
+  init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
+  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
+  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
+
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -244,20 +245,25 @@ static void update_variables(bool first_time)
             
       switch(index)
       {
-        case OPT_FRAMESKIP:
-          options.frameskip = atoi(var.value);
-          break;
-
         case OPT_INPUT_INTERFACE:
           if(strcmp(var.value, "retroarch") == 0)
             options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
-		  else 
-			  options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
+		    else 
+			    options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
+        break;
+
+        case OPT_4WAY:
+          if(strcmp(var.value, "original") == 0)		
+           options.four_way_emulation = 0;
+          else if (strcmp(var.value, "new") == 0)		
+           options.four_way_emulation = 1;
+          else 
+           options.four_way_emulation = 2;
           break;
 
-	    case OPT_MOUSE_DEVICE:
+        case OPT_MOUSE_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
           else if(strcmp(var.value, "mouse") == 0)
@@ -495,14 +501,24 @@ static void update_variables(bool first_time)
           if(!first_time)
             setup_menu_init();
           break;
-		case OPT_4WAY:
-         if(strcmp(var.value, "original") == 0)		
-		  options.four_way_emulation = 0;
-         else if (strcmp(var.value, "new") == 0)		
-	      options.four_way_emulation = 1;
-		 else 
-		  options.four_way_emulation = 2;
-		break;
+
+        case OPT_FRAMESKIP:
+          options.frameskip = atoi(var.value);
+          break;
+
+        case OPT_CORE_SYS_SUBFOLDER:
+          if(strcmp(var.value, "enabled") == 0)
+            options.system_subfolder = true;
+          else
+            options.system_subfolder = false;
+          break;       
+
+          case OPT_CORE_SAVE_SUBFOLDER:
+          if(strcmp(var.value, "enabled") == 0)
+            options.save_subfolder = true;
+          else
+            options.save_subfolder = false;
+          break;             
       }
     }
   }
