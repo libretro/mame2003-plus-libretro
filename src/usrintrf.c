@@ -2214,23 +2214,132 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 
 static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 {
-  char buf2[32];
-  int sel;
-  sel = selected - 1;
-  
-  generate_gameinfo();
-  
+	int i;
+	char buf[2048];
+	char buf2[32];
+	int sel;
+
+
+	sel = selected - 1;
+
+
+	sprintf(buf,"%s\n%s %s\n\n%s:\n",Machine->gamedrv->description,Machine->gamedrv->year,Machine->gamedrv->manufacturer,
+		ui_getstring (UI_cpu));
+	i = 0;
+	while (i < MAX_CPU && Machine->drv->cpu[i].cpu_type)
+	{
+
+		if (Machine->drv->cpu[i].cpu_clock >= 1000000)
+			sprintf(&buf[strlen(buf)],"%s %d.%06d MHz",
+					cputype_name(Machine->drv->cpu[i].cpu_type),
+					Machine->drv->cpu[i].cpu_clock / 1000000,
+					Machine->drv->cpu[i].cpu_clock % 1000000);
+		else
+			sprintf(&buf[strlen(buf)],"%s %d.%03d kHz",
+					cputype_name(Machine->drv->cpu[i].cpu_type),
+					Machine->drv->cpu[i].cpu_clock / 1000,
+					Machine->drv->cpu[i].cpu_clock % 1000);
+
+		if (Machine->drv->cpu[i].cpu_flags & CPU_AUDIO_CPU)
+		{
+			sprintf (buf2, " (%s)", ui_getstring (UI_sound_lc));
+			strcat(buf, buf2);
+		}
+
+		strcat(buf,"\n");
+
+		i++;
+	}
+
+	sprintf (buf2, "\n%s", ui_getstring (UI_sound));
+	strcat (buf, buf2);
+	if (Machine->drv->sound_attributes & SOUND_SUPPORTS_STEREO)
+		sprintf(&buf[strlen(buf)]," (%s)", ui_getstring (UI_stereo));
+	strcat(buf,":\n");
+
+	i = 0;
+	while (i < MAX_SOUND && Machine->drv->sound[i].sound_type)
+	{
+		if (sound_num(&Machine->drv->sound[i]))
+			sprintf(&buf[strlen(buf)],"%dx",sound_num(&Machine->drv->sound[i]));
+
+		sprintf(&buf[strlen(buf)],"%s",sound_name(&Machine->drv->sound[i]));
+
+		if (sound_clock(&Machine->drv->sound[i]))
+		{
+			if (sound_clock(&Machine->drv->sound[i]) >= 1000000)
+				sprintf(&buf[strlen(buf)]," %d.%06d MHz",
+						sound_clock(&Machine->drv->sound[i]) / 1000000,
+						sound_clock(&Machine->drv->sound[i]) % 1000000);
+			else
+				sprintf(&buf[strlen(buf)]," %d.%03d kHz",
+						sound_clock(&Machine->drv->sound[i]) / 1000,
+						sound_clock(&Machine->drv->sound[i]) % 1000);
+		}
+
+		strcat(buf,"\n");
+
+		i++;
+	}
+
+	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
+		sprintf(&buf[strlen(buf)],"\n%s\n", ui_getstring (UI_vectorgame));
+	else
+	{
+		sprintf(&buf[strlen(buf)],"\n%s:\n", ui_getstring (UI_screenres));
+		sprintf(&buf[strlen(buf)],"%d x %d (%s) %f Hz\n",
+				Machine->visible_area.max_x - Machine->visible_area.min_x + 1,
+				Machine->visible_area.max_y - Machine->visible_area.min_y + 1,
+				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
+				Machine->drv->frames_per_second);
+#if 0
+		{
+			int pixelx,pixely,tmax,tmin,rem;
+
+			pixelx = 4 * (Machine->visible_area.max_y - Machine->visible_area.min_y + 1);
+			pixely = 3 * (Machine->visible_area.max_x - Machine->visible_area.min_x + 1);
+
+			/* calculate MCD */
+			if (pixelx >= pixely)
+			{
+				tmax = pixelx;
+				tmin = pixely;
+			}
+			else
+			{
+				tmax = pixely;
+				tmin = pixelx;
+			}
+			while ( (rem = tmax % tmin) )
+			{
+				tmax = tmin;
+				tmin = rem;
+			}
+			/* tmin is now the MCD */
+
+			pixelx /= tmin;
+			pixely /= tmin;
+
+			sprintf(&buf[strlen(buf)],"pixel aspect ratio %d:%d\n",
+					pixelx,pixely);
+		}
+		sprintf(&buf[strlen(buf)],"%d colors ",Machine->drv->total_colors);
+#endif
+	}
+
+
 	if (sel == -1)
 	{
 		/* startup info, print MAME version and ask for any key */
 
 		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
-		strcat(message_buffer, buf2);
+		strcat(buf, buf2);
 
+		strcat(buf,"mame2003-plus");
 		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
-		strcat(message_buffer,buf2);
+		strcat(buf,buf2);
 		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
-		ui_displaymessagewindow(bitmap,message_buffer);
+		ui_displaymessagewindow(bitmap,buf);
 
 		sel = 0;
 		if (code_read_async() != CODE_NONE)
@@ -2239,14 +2348,14 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 	else
 	{
 		/* menu system, use the normal menu keys */
-		strcat(message_buffer,"\n\t");
-		strcat(message_buffer,ui_getstring (UI_lefthilight));
-		strcat(message_buffer," ");
-		strcat(message_buffer,ui_getstring (UI_returntomain));
-		strcat(message_buffer," ");
-		strcat(message_buffer,ui_getstring (UI_righthilight));
+		strcat(buf,"\n\t");
+		strcat(buf,ui_getstring (UI_lefthilight));
+		strcat(buf," ");
+		strcat(buf,ui_getstring (UI_returntomain));
+		strcat(buf," ");
+		strcat(buf,ui_getstring (UI_righthilight));
 
-		ui_displaymessagewindow(bitmap,message_buffer);
+		ui_displaymessagewindow(bitmap,buf);
 
 		if (input_ui_pressed(IPT_UI_SELECT))
 			sel = -1;
@@ -2674,7 +2783,7 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 	static char *buf = 0;
 	int maxcols,maxrows;
 	int sel;
-	int bufsize = 256 * 1024; /* 256KB of history.dat buffer, enough for everything */
+	int bufsize = 256 * 1024; // 256KB of history.dat buffer, enough for everything
 
 	sel = selected - 1;
 
@@ -2729,6 +2838,19 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 			strcat(msg,ui_getstring (UI_righthilight));
 			ui_displaymessagewindow(bitmap,msg);
 		}
+
+		if ((scroll > 0) && input_ui_pressed_repeat(IPT_UI_UP,4))
+		{
+			if (scroll == 2) scroll = 0;	/* 1 would be the same as 0, but with arrow on top */
+			else scroll--;
+		}
+
+		if (input_ui_pressed_repeat(IPT_UI_DOWN,4))
+		{
+			if (scroll == 0) scroll = 2;	/* 1 would be the same as 0, but with arrow on top */
+			else scroll++;
+		}
+
 
 		if (input_ui_pressed(IPT_UI_SELECT))
 			sel = -1;
