@@ -183,7 +183,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Spy Hunter - Romset `spyhunt`
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
-* Street Fighter (With Added Speedups) - Romsets `sf1`, sf1jp`, `sf1p`, `sf1us`
+* Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
 * Tapper - Romset `tapper`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
 * Timber - Romset `timber`
