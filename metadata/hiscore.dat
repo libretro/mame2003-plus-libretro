@@ -41,10 +41,6 @@ pacmanblb:
 0:5220:1:40:40
 0:466f:1:03:03
 
-;lockonph:        ;***** needs work !! ******
-;0:ffe459:87:03:00
-;0:ffe44a:1:04:04
-
 knockout:
 mariner:
 scrambles:
@@ -63,21 +59,6 @@ fball:
 
 wingforc:
 0:30d7e7:13f:00:35
-
-strider: ;*Missing: Stage completion information (Player name + Score)
-striderj: 
-stridrjr: 
-striderua:
-strideruc:
-0:ff89aa:78:ff:20
-0:ff0ca4:04:00:00
-;*DOES NOT WORK: Stage completion information (Player name + Score)
-;*0:920000:14:00:00 Address pointers
-;*0:921004:08:00:00 Stage: St. Petersburg
-;*0:921804:08:00:00 Stage: Siberian Wilderness
-;*0:922004:08:00:00 Stage: Adventure In Amazon
-;*0:922804:08:00:00 Stage: The Arial Battleship
-;*0:923004:08:00:00 Stage: <secret>
 
 ikari:
 ikarijp:
@@ -204,18 +185,6 @@ warpwarpr:
 warpwarpr2:
 0:831d:3:00:00
 0:8358:1e:00:18
-
-;*********mcr3.c (turbo)
-;** highscore updates after first game **
-turbo:
-turboa:
-turbobc:
-turbob:
-turbobl:
-turbod:
-0:e400:1e:94:94
-0:f310:1e:00:00
-0:f292:d:0f:f0
 
 ; fenix is not working yet ;[Special thanks to Cananas for enhancing this entry]
 phoenix:
@@ -558,10 +527,6 @@ gangwars:
 gangwarsj:
 0:43bb2:34:00:45
 
-;spec2k:  ;***** not working yet
-;0:c0301:3b:0f:98
-;0:c033a:1:3a:3a
-
 ;(dai toride) (by GeoMan)
 daitorid:
 0:8042ba:28:00:40  
@@ -569,17 +534,6 @@ daitorid:
 
 daitorida:  ;******Daitoride (YMF278B version)
 0:f042ba:4a:00:01
-
-;** after you get a hiscore, you must start a new game then exit **
-;** for save to work (i.e make sure the new top score is displaying in top score spot) **
-griffon:
-0:4389:3:00:00
-0:41e0:1:20:20
-0:41c0:1:20:20
-0:41a0:1:20:20
-0:4180:1:20:20
-0:4160:1:20:20
-0:4140:1:20:20
 
 falconz:
 vautourz:
@@ -629,19 +583,11 @@ passshtjd:
 cencourt:
 0:ffec00:59e:4d:41
 
-bombsa:  ;not working yet ??
-d84c:3c:17:00
-
 ;(super toffy) (by GeoMan)
 stoffyu:
 stoffy:
 0:833:e0:00:f2
 0:913:f0:20:00
-
-;** you must let the highscore display in attract mode before starting a game  ** 
-shangha3u:
-shangha3j:
-0:307be2:78:00:1d
 
 shangha3:
 0:307be4:78:00:1d
@@ -871,12 +817,6 @@ cosmicg:
 bublbob2p:
 0:406848:04:00:34
 
-rvschool:  ;****** rival school & clones do not save top scores team logo ******
-rvschoola:
-rvschoolu:
-jgakuen:
-0:1f6524:48:50:0f
-
 seabattl:
 0:1c0b:15:00:0a
 
@@ -1024,10 +964,6 @@ toto:
 popobear:
 0:210c42:27c:00:01
 
-;mp_sonic:  ;*** not working **
-;0:a02723:4e:00:5a
-;0:fefe0f:1:65:65
-
 ghostmun:
 0:4288:3:00:00
 0:5180:1:40:40
@@ -1130,30 +1066,6 @@ cbtime:
 chamburger:
 0:32:24:00:12
 
-;********spacefb.c (space firebird (nintendo & gremlin & bootleg))
-;** top score don`t update until you lose your first life, pretty **
-;** lame way for doing a hiscore - but who am i to complain!! ;0) **
-spacefb:
-spacefbb:
-spacefbe:
-spacefbu:
-spacefbe2:
-starwarr:
-0:c0a0:1e:00:00
-0:c0e0:3:00:00
-0:c773:6:05:05
-0:9a51:6:05:05
-
-spacefbg:
-0:c0a0:2b:00:00
-0:c3c0:1e:11:10
-0:c0e0:3:00:30
-
-spacefba:
-0:c773:6:05:05
-0:9a51:6:05:05
-0:c0e0:3:00:00
-
 ;********rastan.c
 rastan: ;[Special thanks to Wob for enhancing this entry]
 rastanu:
@@ -1226,13 +1138,6 @@ birdiy:
 
 fspiderb:
 0:8066:45:00:19
-
-candy:  ;** you must wait untill hiscore table has displayed before starting a game  **
-0:40025660:f0:41:02
-
-;penky:   ;  **  needs work !! **
-;0:e687:23:4f:04
-;0:e187:03:01:01
 
 landgear:
 0:8036f8c:ea:01:4a
@@ -1322,11 +1227,9 @@ ddpdojb:
 ddpdojblkbl:
 0:803824:8c:01:06
 
-;dodonpachi dai-ou-jou (black label)  -- new version game is the default hiscore.dat version !! 
-ddpdojblk:  ;**** you choose between old/new game on startup swap the ; on the version you want. ****
+ddpdojblk:
 ddpdojblka:
-0:803824:8c:01:06   ;*** new version (default) - if you use other version you must delete .hi file
-;0:803824:8c:00:02   ;*** old version - if you use other version you must delete .hi file
+0:803824:8c:01:06  
 
 ket:
 keta:
@@ -1349,26 +1252,10 @@ hvyunitu:
 hvyunitj:
 0:e190:28:00:50
 
-rumba:  ;****** not working - mame 040u3 debug prob ???
-0:e18a:3:40:01
-0:c37c:1:20:20
-0:c3bc:1:31:31
-0:c3fc:1:32:32
-0:c43c:1:33:33
-0:c47c:1:34:34
-0:c4bc:1:30:30
-0:e005:1:5d:5d
-
 skykiddx:
 skykiddxo:
 0:5000:45:00:2f
 0:5001:1:03:03
-
-bygone:  ;***** GAME NOT 100% working yet !! *****
-0:e0c0:3c:00:47
-0:e076:6:00:00
-0:e002:1:0a:0a
-0:f42d:6:3c:3c
 
 pzlbreak:  
 0:102d9c:32:50:32
@@ -1483,16 +1370,6 @@ spidman:
 spidmanu:
 spidmanj:
 0:208c00:7f:a0:57
-
-;** hiscore & top score don`t update until you lose your first life, pretty **
-;** lame way for doing a hiscore - but who am i to complain!! ;0)            **
-spacebrd:
-0:c0e0:3:00:00
-0:d0e0:3:00:00
-0:e0e0:3:00:00
-0:f0f0:3:00:00
-0:be51:6:05:05
-0:bd51:6:88:60
 
 ;********(soldier girl amazon)
 amazon:
@@ -2586,13 +2463,6 @@ rfjetsa:
 rfjett:
 0:28dd4:98:2e:01
 
-pzloop2:  ;******puzz loop 2 (euro 010302)
-pzloop2j:
-;** stage scores not right ** ** you must wait untill the hiscore table has displayed **
-;** at least once before you start a game for this save to work  ****
-0:ff2cbc:3ae:4d:20
-0:ff2cc8:1:20:20
-
 bjtwin:
 bjtwina:  ;******Bombjack Twin (set 2)
 bjtwinp:
@@ -2636,12 +2506,6 @@ skykidd:
 skykids:
 0:5000:45:00:0a
 0:5001:1:03:03
-
-hangon:
-hangon1:  ;******Hang-On
-hangon2:
-0:20c488:4:01:00
-0:20d800:4a0:01:20 ; note best lap time are not saved
 
 guts:  ;******Guts n' Glory (prototype)
 0:fffdd4:c8:00:a4
@@ -2702,22 +2566,6 @@ tehkanwc:
 tehkanwcb:  ;******Tehkan World Cup (set 2, bootleg?)
 tehkenwcc:
 0:c600:60:03:17
-
-;tantr (& clones) hiscores update after hiscore table is displayed in attract mode
-tantr:
-tantrbl:
-tantrbl2:
-tantrkor:  
-tantrbl3:  ;******Puzzle & Action: Tant-R (Japan) (bootleg set 3)
-0:fffc45:28:48:00
-
-;** this only saves the hiscore table, the top score will stay at default **
-sqix:  
-sqixr1:  
-sqixu:  
-sqixb1:  
-sqixb2:
-0:f4c0:28:00:03
 
 rongrong:  ;******puzzle game rong rong (europe)
 0:614f:ea:f4:01
@@ -3074,10 +2922,6 @@ photoy2k102:
 0:8d3452:78:49:40
 0:8f3452:78:49:40
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.107 additions below - by leezer   *
-;***********************************************************************
-
 hyprduel2:
 hyprduel:  ;******hyper duel (japan set 1)
 0:fff2a2:3c:00:01
@@ -3130,17 +2974,6 @@ daikaiju:
 0:a007:3:00:05
 0:a027:1:23:23
 0:d798:b:30:30
-
-;** only top score saved properly, although all other scores do save **
-;** they go in the wrong order ???? **
-madalien:
-madaliena:  ;******Mad Alien (Highway Chase)
-madalienb:
-0:000b:2:00:00
-0:6ef0:d6:00:00
-0:300:c:00:00
-0:604d:5:01:01
-0:6050:1:01:01
 
 spaceod:  ;******space odessy (fixed) *
 spaceod2:
@@ -3380,10 +3213,6 @@ bonzeadvp:
 0:10d528:4:00:00
 0:10d529:1:05:05
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.105 additions below - by leezer   *
-;***********************************************************************
-
 batlbubl:  ;******Battle Bubble (v2.00)
 0:f04b24:9a:54:03
 
@@ -3584,9 +3413,6 @@ mvpd:
 mvpjd:
 0:ff3800:8b:01:01
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.104 additions below - by leezer   *
-;***********************************************************************
 
 missw96:
 missmw96:  ;******Miss Mister World '96 Nude
@@ -3697,10 +3523,6 @@ tstrike:  ;******Thunder Strike (Newer)
 tstrikea:  ;******Thunder Strike (older)
 0:cf5:55:42:30
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.103 additions below - by leezer   *
-;***********************************************************************
-
 supmodel:  ;******super model
 0:c825b6:63:30:20
 
@@ -3797,10 +3619,6 @@ zigzag2:  ;******zig zag (galaxian hardware, set 2)
 0:51c2:1:00:00
 0:51a2:1:00:00
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.102 additions below - by leezer   *
-;***********************************************************************
-
 varth:
 varthj:
 varthu:
@@ -3826,15 +3644,6 @@ rohga1:  ;******rohga armour force (asia/europe v3.0 set 1)
 rohga2:  ;******rohga armour force (asia/europe v3.0 set 2)
 wolffang:
 0:3f0200:50:00:09 
-
-;** these are untested as the dont work in this version of mame (mame v0.96u1) **
-mtlchampj:  
-mtlchamp:  
-mtlchampa:  
-mtlchampu:  
-mtlchamp1:  ;******martial champion (ver eaa)
-mtlchampu1:
-0:100300:61:00:44
 
 metamrph:
 metamrphj:  ;******Metamorphic Force (ver jaa)
@@ -3905,22 +3714,12 @@ fcrash:  ;******Final Crash (World, bootleg)
 0:ff850c:3c:ff:00
 0:ff80a0:4:00:00
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.100 additions below - by leezer   *
-;***********************************************************************
-
-;** both star wars revisions, fixed - you must delete the starwars/starwars1 nvram files/s
-;** before using this save, also delete both starwars/starwars1 .hi files also, and theres more
-;** you must have nvram saving enabled in the games service menu (f2) i think nvram saving is on by
-;** default anyway.
-;**UPDATE** this was working untill mame 0.104 disabled for now !!  ****
 starwars:  ;******star wars (rev 1)
 starwars1:  ;******star wars (rev 2)
 0:4a9a:1c:00:55
 0:4abf:15:07:0d
 
 ;** top 3 scores saved by nvram, this saves other scoretable data **
-;** delete crkdown.nv file before 1st time you play game, ok after that **
 crkdown:
 crkdownj:  ;******Crack Down (Japan, FD1094 317-0058-04b)
 crkdownu:
@@ -4121,9 +3920,6 @@ vautour2:  ;******Vautour (set 2)
 0:4140:1:20:20
 0:4389:3:00:00
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.99 additions below - by leezer    *
-;***********************************************************************
 
 osman:  ;******osman (world)
 candance:  ;******cannon dancer (japan)
@@ -4216,9 +4012,6 @@ arabiana:
 0:d384:3c:00:00
 0:d3bd:1:01:01
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.98 additions below - by leezer    *
-;***********************************************************************
 
 ;******Gun Master
 gunmast:
@@ -4358,15 +4151,6 @@ yosakdon:
 yosakdona:  ;******yokasu to donbei (set 2)
 0:23ab:3:00:00
 
-;*******Yellow Cab (bootleg)
-;** you must exit this game when either the main title page is showing **
-;** (the screen with the game name and copyright displaying) or when the hiscore **
-;** is being displayed in attract mode, or the save will not work **
-kamikcab:
-yellowcb:
-yellowcj:  ;******Yellow Cab (Japan)
-0:636b:7c:00:20
-
 ;******hyper crash (version d)
 hcrash:
 hcrashc:  ;******Hyper Crash (version C)
@@ -4415,9 +4199,6 @@ kikcubicb:  ;******Kickle Cubele
 0:fe30:c8:07:04
 0:fef8:3:07:35
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.96 additions below - by leezer    *
-;***********************************************************************
 
 ;******Schmeiser Robo (japan)
 schmeisr:
@@ -4523,15 +4304,6 @@ ambushh:
 0:8050:3:00:00
 0:800f:24:00:3a
 
-;******g-loc air battle (us)
-;** you need to press f3 as soon as this game starts before it will save **
-;** for some reason the hiscore data will not display untill game is reset with f3 **
-;** driver problem ??????  **
-glocu:
-gloc:
-2:1ffa00:ee:02:04
-2:1ffa4a:1:50:50
-
 ;******Beach Festival World Championship 1997
 wbbc97:
 0:5023f1:6d:00:02
@@ -4617,9 +4389,6 @@ rbislande:
 0:10d0d2:32:00:33 
 0:10e1b6:04:00:00
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.95 additions below - by leezer    *
-;***********************************************************************
 
 pclubys:
 pclubysa:  ;******Puzzle Club (Yun Sung - set 2)
@@ -4636,34 +4405,6 @@ hookj:
 bigkong:
 0:6109:a1:00:92
 0:60b8:3:50:00
-
-;******mighty monkey (bootleg on scramble hardware)
-;** very dodgy hiscore saving, possibly because of it been a **
-;** poorly put together bootleg **
-mimonscr:
-0:44a1:2:d0:07
-0:4981:1:00:00
-0:49a1:1:00:00
-0:49c1:1:00:00
-0:49e1:1:00:00
-0:4a01:1:02:02
-0:4a21:1:10:10
-0:4a41:1:10:10
-0:4920:1:10:10
-0:4940:1:10:10
-0:4960:1:15:15
-0:4980:1:22:22
-0:49a0:1:1f:1f
-0:49c0:1:13:13
-0:49e0:1:23:23
-0:4a00:1:10:10
-0:4a20:1:18:18
-0:4a40:1:17:17
-0:4a60:1:19:19
-0:4a80:1:18:18
-0:4aa0:1:10:10
-0:4ac0:1:10:10
-0:4ae0:1:10:10
 
 ;******mighty monkey
 mimonkey:
@@ -4784,9 +4525,6 @@ excelsr:
 excelsra:
 0:ff1780:b3:0c:01
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.94 additions below - by leezer    *
-;***********************************************************************
 
 ;******galaxy force 2
 gforce2:
@@ -4929,10 +4667,6 @@ karatblzbl:
 karatblza:
 0:c5ba7:31:00:20
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.91 additions below - by leezer    *
-;***********************************************************************
-
 ;******Kick Boy
 kickboy:
 0:9338:3:88:02
@@ -5025,11 +4759,7 @@ twinspri:
 0:10bcff:7d:00:00
 0:10bb74:02:ff:ff
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.90 additions below - by leezer    *
-;***********************************************************************
 
-;alexkida:
 alexkidd:  ;******alex kidd: the lost stars (set 1,fd1089a -unknown)
 alexkidd1:
 0:fffc00:38:00:44
@@ -5248,19 +4978,6 @@ dduxjd:
 0:fff880:98:00:20
 0:fff31b:1:03:03
 
-;******cotton (fd1094 317-0181a)
-;** not working yet (driver issue ????) **
-cotton:
-cottonj:
-cottonu:
-cottonja:
-cottond:
-cottonjad:
-cottonjd:
-cottonud:
-0:200076:31:00:55
-0:2000b6:4:00:a0
-
 eswat:
 eswatbl:
 eswatu:  ;******e-swat - cyber police (us,fd1094 317-0129)
@@ -5281,9 +4998,6 @@ quartet2:  ;******quartet 2 (japan, 8751 317-unknown)
 0:ffc400:317:00:44
 0:ff00b9:1:77:77
 
-;***********************************************************************
-;*    latest unofficial highscore_v0.89 additions below - by leezer    *
-;***********************************************************************
 
 ;********rockola.c (vanguard)
 vanguard:
@@ -5341,9 +5055,6 @@ bonkadv:
 0:10634b:37:60:50
 0:1032f7:1:80:80
 
-;******************************************************************************************
-;* latest unofficial highscore_v0.88 additions below - by leezer/firebrand/geoman/others  *
-;******************************************************************************************
 
 superman:
 supermanu:
@@ -5364,11 +5075,6 @@ brkthruj:
 forcebrk: ;******Force Break (Japan)
 0:0531:27:00:32
 0:0402:3:00:50
-
-;******twin brats (hiscore.dat causes crash at the mo (mame 0.134u3))
-;twinbrat:
-;twinbrata:
-;0:11200e:3c:00:20
 
 ;******twins
 twins:
@@ -5397,11 +5103,6 @@ sonicbomd:
 ;******Explosive Breaker
 explbrkr:
 0:10c01a:63:00:4e
-
-;******Pop Bingo
-;** you cant tenter any names into hiscore table yet, driver problem ??? **
-popbingo:
-0:41001:7f:10:40
 
 ;******Space Raider
 sraider:
@@ -5471,10 +5172,6 @@ paintlad:
 0:ffca10:50:00:00
 0:ffca5e:1:27:27
 
-;******************************************************************************************
-;* latest unofficial highscore_v0.87 additions below - by leezer/firebrand/geoman/others  *
-;******************************************************************************************
-
 ;******Wizz Quiz (version 4)
 wizzquiz:
 0:2b4f:221:4d:00
@@ -5505,10 +5202,6 @@ pairsten:
 pairsnb:
 0:f832:3:70:00
 0:f814:1:03:03
-
-;******************************************************************************************
-;* latest unofficial highscore_v0.86 additions below - by leezer/firebrand/geoman/others  *
-;******************************************************************************************
 
 ;*******drakton
 drakton:
@@ -5541,10 +5234,6 @@ roldfroga:
 ;*******counter Run (bootleg set 1)
 countrunb:
 0:d0d8:127:00:48
-
-;******************************************************************************************
-;* latest unofficial highscore_v0.85 additions below - by leezer/firebrand/geoman/others  *
-;******************************************************************************************
 
 ;*******gold medalist & Gold Medalist (alt) 
 goldmedl:
@@ -5605,10 +5294,6 @@ fantland:
 fantlanda:
 0:edc:28:50:0c
 
-;******************************************************************************************
-;* latest unofficial highscore_v0.84 additions below - by leezer/firebrand/geoman/others  *
-;******************************************************************************************
-
 ;(empire city: 1931 (bootleg?)) and clones (by GeoMan)
 empcity:
 empcityi:
@@ -5664,15 +5349,6 @@ dadandrn:
 mmaulers:
 0:600701:99:02:e8
 
-headoni:
-;** does not save in game top score, only hiscore table saves **
-0:0e:f:00:00
-
-headon:
-headon1:
-;** does not save in game top score, only hiscore table saves **
-0:c780:1e:30:30
-
 headon2:
 0:c390:12:30:30
 
@@ -5691,13 +5367,6 @@ mt_eswat:
 ;******megatech: columns
 mt_cols:
 0:fefa20:8e:00:00
-
-;******dyna gears
-;** top score updates as soon as 1st game starts **
-;** wait about 10 seconds after game starts before entering a credit, or save won`t work **
-dynagear:
-0:af:2c:80:50
-0:fd:1:04:04
 
 ;******continental circus (world & us set 1)
 contcirc:
@@ -5744,14 +5413,6 @@ nratechu:
 piratetr:
 0:2dc:4f:55:44
 
-;(leprechaun) and clones (by GeoMan) 
-;** let game display hiscore table a few times in attract mode before **
-;** starting a game **
-leprechn:
-potogold:
-leprechp:
-0:02ca:50:55:00
-
 ;******super rider
 suprridr:
 0:80ca:3:00:00
@@ -5769,10 +5430,6 @@ drivfrcb:
 drivfrct:
 0:3c05:49:20:20
 0:3c1f:1:31:31
-
-;******************************************************************************************
-;* latest unofficial highscore_v8.3 additions below - by leezer/firebrand/geoman/others   *
-;******************************************************************************************
 
 ;*******spinner
 spinner:
@@ -5974,21 +5631,6 @@ atetrisb3:
 0:99d:3c:30:30
 0:9eb:1e:4b:52
 
-;********turbo.c (buck rodgers: planet of doom & clones)
-;** scores on the side of screen don`t display untill 1st game is over **
-;** also top side score may display 1 digit untill 1st game is over **
-buckrog:
-buckrogn:
-buckrogn2:
-0:c400:3e:00:00
-0:c549:10:ff:ff
-0:c54b:1:0f:0f
-
-zoom909:
-;** top score on game screen updated after 1st game **
-;** assuming you have made score display in dipswitch menu !!**
-0:c400:3e:00:00
-
 ;******botanic
 botanic:
 botanicf:
@@ -6065,15 +5707,6 @@ sspacaho:
 0:e4cb:c:00:00
 0:878a:f:30:30
 
-;*******boxy boy (us) & souko ban deluxe (japan)
-;** do not use in game reset (f3) or save fails !! **
-;** saves hi-score and hiscore table - not step records **
-boxyboy:
-soukobdx:
-0:22d:3:00:00
-0:255:2c:09:00
-0:500f:1:03:03
-
 ;*******cosmo
 cosmo:
 0:2038:3:00:00
@@ -6137,10 +5770,6 @@ pacmaniaj:
 1:61c:4:00:00
 1:61e:1:50:50
 
-;******************************************************************************************
-;* latest unofficial highscore_v8.2 additions below - by leezer/firebrand/geoman/others   *
-;******************************************************************************************
-
 ;*******lady frog
 ladyfrog:
 0:eb44:8f:dc:00
@@ -6202,12 +5831,6 @@ bigbucks:
 bangj:
 0:fe5a50:f0:30:01
 
-;******prop cycle (rev.pr2 ver.a)
-;** bit dodgy this one - think it saves top ten hiscores tho......  ***
-propcycl:
-0:e04031:76:00:31
-0:e15bf9:226:00:0f
-
 ;******super-x (ntc & mitchell)
 superx:
 superxm:
@@ -6230,11 +5853,6 @@ paclandm:
 paclandjo2:
 0:2140:4a:00:e6
 0:205d:4:00:00
-
-paclandp:  ;*****not working/saving driver issue i think
-0:2100:6:00:00
-0:2110:4e:00:24
-0:2112:1:03:03
 
 ;********jrpacman.c
 jrpacman:
@@ -6363,12 +5981,6 @@ spclforc:
 0:1a22:1:33:33
 0:1a27:5:30:30
 
-;******strike bowling(By Firebrand)
-;****no hiscore list per se but this will save the top 5 results permanantly
-;****if you like if not, you can disable this
-sbowling:
-0:fe61:f:00:00
-
 ;******run and gun(By Firebrand)
 rungun:
 0:380c80:4b:4b:40
@@ -6396,15 +6008,6 @@ pitnruna:  ;******Pit & Run (set 2)
 0:89c1:1:00:00
 0:89a1:1:00:00
 0:8981:1:27:27
-
-;******************************************************************************************
-;* latest unofficial highscore_v8.1 additions below - by leezer/firebrand/geoman/others   *
-;******************************************************************************************
-
-;*******evil stone
-;** the game hiscore is not working, but the hiscore table saves ok **
-evilston:
-0:a782:3c:01:2e
 
 ;******change air blade(By Firebrand)
 cairblad:
@@ -6502,15 +6105,6 @@ sdtennis: ;[Special thanks to Cananas for enhancing this entry]
 raphero:
 0:1fe600:60:00:01 
 
-;*******progress(By Firebrand)(Hiscore does not seem to change during game)
-progress:
-0:8711:e:00:01 
-
-;*******prebillian(By Firebrand)(Hiscore display will not change. It is always 50,000. Please check)
-pbillian:
-0:f26b:23:00:45
-0:f222:3:00:00 
-
 ;*******metal soldier issac II(By Firebrand)
 msisaac:
 0:e4a5:50:02:4d 
@@ -6600,12 +6194,6 @@ metlclsh:
 machbrkr:
 0:23f532:f6:03:30
 
-;*******boardwalk casino
-;** only saves the top score of each card game **
-bwcasino:
-0:4c3c:d2:00:00
-0:4cce:1:43:43
-
 ;*******twin bee yahhoo! (ver jaa)
 tbyahhoo:
 0:c0fb42:82:00:12
@@ -6671,10 +6259,6 @@ bwing:
 cuebrick:
 cuebrickj:
 0:60368:50:00:4f
-
-;********************************************************************************
-;* latest unofficial highscore_v7.97 additions below - by leezer/geoman/others  *
-;********************************************************************************
 
 ;*******arcade classics (prototype)
 ;** this entry saves all but the top 4 scores, nvram does the rest **
@@ -7080,25 +6664,6 @@ dassault4:
 dassault:
 0:3f803c:1e:19:10
 
-;*******mayhem 2002(By Firebrand)
-; - Only works if you delete the nvram after you turn off the game. Making 
-;the nvram read-only will not work.
-mayhem:
-0:e081:ba:10:45
-
-;*******super triv II(By Firebrand)
-; - Only saves "Experts Only" scores, can save other slots but the games are 
-;different every time
-;, - unless you choose the same three over and over again so only "Experts 
-;Only" game stays the same.
-supertr2:
-0:4891:20:00:00
-
-;*******golly! ghost!(By Firebrand)(unable to test properly due to lack of 
-;sight movement on screen)
-gollygho:
-0:10312E:143:02:00
-
 wizdfire:
 wizdfireu:
 darkseal2:
@@ -7154,10 +6719,6 @@ chikij:
 0:ff9168:28:02:5b
 0:ffe006:04:00:00
 
-;********************************************************************************
-;* latest unofficial highscore_v7.96 additions below - by leezer/geoman/others  *
-;********************************************************************************
-
 tmnt2:
 tmnt2a:
 tmht22pe:
@@ -7185,13 +6746,6 @@ mouserc:
 ;*******(birdy try (japan))
 birdtry:
 0:ff8530:31a:01:40
-
-;*******(f1 exhaust note)
-;** needs testing - can anyone verify this game saves hiscores ?? **
-f1en:
-f1enu:
-f1enj:
-0:20f20e:38:42:02
 
 ;mars matrix (usa/japan)(by tamphax)
 mmatrix:
@@ -7262,13 +6816,6 @@ sfx:
 0:40a8:3:00:02
 0:4540:1e:00:15
 
-;*******(gumbo)
-;** this hiscore seems broken, think its a driver problem **
-gumbo:
-mspuzzleg:
-0:80000:30:4b:50
-0:815d2:12:0b:0a
-
 ;*******(F-1 grand prix part II)
 f1gp2:
 0:ff91c2:2ee:14:50
@@ -7296,16 +6843,6 @@ bang:
 aligatorun:
 0:fe51da:2:42:68
 0:feaf02:98:42:2e
-
-;*******(boomer rang`r / genesis)
-;** you must let this game display the hiscore table before starting game and **
-;** this game only saves properly if you exit the game when the hiscore is scrolling **
-;** up the screen during attract mode, you have to be quick, you only get about 4-5 seconds **
-;** to do this...**
-boomrang:
-boomrana:
-0:10:3:07:00
-0:62a2:3f:07:89
 
 ;*******(penguin brothers (japan))
 penbros:
@@ -7367,15 +6904,6 @@ speedspn:
 ;********(sky raider)
 skyraid:
 0:a:2:00:00
-
-;********(sengeki striker)
-;** the nvram in this game is about as reliable as the english cricket team, hence **
-;** the top score is sometimes wrong.... but nevermine eh...?? **
-;** the todays top ten hi table saves fine though... **
-sengekis:
-sengekisj:
-0:60b1de8:78:53:00
-0:60b1e47:1:01:01
 
 ;********(solvalou)
 solvalou:
@@ -7474,13 +7002,6 @@ aquariumj:
 kamenrid:
 0:202e93:9f:0a:10
 
-;********(n.y. captor)
-;** hiscore is broken in this game, when h/score is beaten you cannot put your name in **
-;** the scores save ok though...  **
-nycaptor:
-0:e1da:28:00:4e
-0:e188:3:00:00
-
 ;********(sky skipper)
 skyskipr:
 0:81f2:3:01:00
@@ -7541,10 +7062,6 @@ cscrtry2:
 0:ca61:1:1:1
 0:c9c1:1:2b:2b
 
-;********************************************************************************
-;* latest unofficial highscore_v7.95 additions below - by leezer/geoman/others  *
-;********************************************************************************
-
 ;******(up`n down (not encrypted))
 upndownu:
 0:c93f:3f:01:00
@@ -7568,18 +7085,6 @@ jumpkids:
 ;(inferno (s2650)) (by GeoMan)
 minferno:
 0:1c3a:5:10:10
-
-;(high voltage) (by GeoMan) - For the hiscore to display correctly in the opening screen always quit the game when opening screen is displayed!
-hvoltage:
-0:40d20:1e0:4c:00
-0:40020:3:01:00
-0:201615:1:20:20
-0:201695:1:01:01
-0:201715:1:0:0
-0:201795:1:0:0
-0:201815:1:0:0
-0:201895:1:0:0
-0:201915:1:0:0
 
 ;(gulf war ii) (by GeoMan)
 gulfwar2:
@@ -7697,10 +7202,6 @@ bakutotu:
 tubeit:
 0:8d0d:4c:4b:00
 0:8d57:1:10:10
-
-;********************************************************************************
-;* latest unofficial highscore_v7.94 additions below - by leezer/geoman/others  *
-;********************************************************************************
 
 ;(storm blade (us)) (by GeoMan)
 stmblade:
@@ -8028,12 +7529,6 @@ nomnlndg:
 nitedrvr:
 0:a0:c:0:0
 0:130:1:52:52
-
-;(namco classics vol. 1) and clones (by GeoMan) - ALL games MUST run through attract mode before starting a new game!
-ncv1:
-ncv1j:
-ncv1j2:
-0:400914:2ee:07:01
 
 ;********(outfoxies)
 outfxiesj:
@@ -8412,25 +7907,6 @@ punkshotj:
 punkshot2:
 0:80700:30:00:40
 
-;(power surge) (by GeoMan) - Hiscores appear correctly after game enters attract mode!
-psurge: 
-0:a86c:6:20:30 
-0:b080:50:31:ff
-
-;(pop flamer (protected)) and clones (by GeoMan)- hiscore updates after new game start !!! 
-popflame:
-popflamea:
-popflameb:
-popflamen: 
-0:4004:3:0:0
-0:4021:3:0:0
-0:872f:1:20:20
-0:8733:1:20:20
-0:8737:1:20:20 
-0:873b:1:20:20
-0:873f:1:20:20
-0:8743:1:20:20
-
 ;(pocket gal (japan)) and clones (by GeoMan)
 pcktgal:
 pcktgalb:
@@ -8459,10 +7935,6 @@ perfrmanu:
 percuss: 
 0:5da8:37:00:24
  
-;********************************************************************************
-;* latest unofficial highscore_v7.93 additions below - by leezer/geoman/others  *
-;********************************************************************************
-
 ;(peek-a-boo!) (by GeoMan)
 peekaboo:
 peekaboou:
@@ -8767,12 +8239,6 @@ syvalion:
 tailg:
 0:d8:4:0:0
 
-;(tecmo knight) and clones (by GeoMan)- hiscores update after hiscore table is displayed in attract mode
-tknight: 
-wildfang: 
-wildfangs:
-0:609ce:28:00:1a
- 
 ;(time limit) (by GeoMan) 
 timelimt:
 0:80ca:3:0:0 
@@ -8926,21 +8392,11 @@ hal21j:
 0:fe6b:3c:00:41
 0:fce1:3:00:00
 
-;(gypsy juggler) (by GeoMan) - Hiscore displays correctly after a new game starts!
-gypsyjug:
-0:0e00:5:00:00
-0:0e23:1:0e:0e
-
 ;(guzzler) (by GeoMan)
 guzzler:
 guzzlers:
 0:8584:50:00:55
 0:8007:6:00:00
-
-;(dead eye) (by GeoMan) - Hiscore displays correctly after a new game starts!
-deadeye:
-0:0e00:6:0:0
-0:0e2a:1:20:20
 
 ;********twin16.c (missing in action (version t))
 mia:
@@ -9008,23 +8464,6 @@ frogs: ;[Special thanks to Cananas for enhancing this entry]
 ;(freeze) (by GeoMan)
 freeze:
 0:4b90:50:f4:00
-
-;(robotron) and clones (by GeoMan) - Changing DIP switch settings resets the Daily heroes table (ONLY)!
-;robotron:
-;robotronyo:
-;0:cf6e:8c:04:10
-
-;********destroyr.c (destroyer)
-;** hiscore updates once first game is over **
-destroyr:
-0:dd:2:00:00
-0:e0:1:00:00
-
-;********turbo.c (subroc3d)
-;** top score updates after hiscore displayed in attract mode **
-subroc3d:
-0:e400:3e:00:00
-0:b049:1:f6:f6
 
 ;********lemmings.c (lemmings (us prototype))
 lemmings:
@@ -9112,19 +8551,9 @@ ninjawu:
 invds:
 0:8398:e6:00:09
 
-;*************************************************************************
-;* latest unofficial highscore_v7.92 additions below - by leezer/geoman  *
-;*************************************************************************
 ;********metro.c (puzzli)
 puzzli:
 0:80eabc:4c:00:4f
-
-;********taito_b.c (hit the ice (us))
-;** you must wait untill the hiscore table has displayed in attract mode before **
-;** starting a game, for the save to work ** 
-hitice:
-0:802830:27:00:4b
-0:802852:1:56:56
 
 ;********m92.c (gunforce 2)
 gunforc2:
@@ -9235,15 +8664,6 @@ rockman2j:
 rckman2jregion:
 0:ffefc0:118:00:02
 0:fff047:1:01:01
-
-;Skull & Crossbones (set2) clone
-;skullxb2:
-;skullxbo:
-;skullxb1:
-;skullxb3:
-;skullxb4:
-;0:fff568:100:6f:00
-;0:fff666:1:54:54
 
 ;Saturday Night Slam Masters clones
 slammastu: 
@@ -9357,29 +8777,6 @@ route16c:
 moguchan:
 0:5eda:6:0:0
 
-;Naughty Boy clones (by GeoMan) - score updates after game start !!!
-naughtya:
-naughtyc:
-0:4004:3:0:0
-0:8733:1:20:20
-0:8737:1:20:20
-0:873d:1:20:20
-0:873f:1:20:20
-0:8743:1:20:20
-
-;in this game to make the hiscore display by starting a new game (if you beat the hiscore) before you exit
-naughtyb: 
-naughtyba:
-naughtybc:
-0:4004:3:0:0
-0:4021:3:0:0
-0:872f:1:20:20
-0:8733:1:20:20
-0:8737:1:20:20
-0:873b:1:20:20 
-0:873f:1:20:20 
-0:8743:1:20:20
-
 ;Video Hustler and clones (by GeoMan)
 hustlerb:
 billiard:
@@ -9400,13 +8797,6 @@ hustlerb4:
 moonwar:
 moonwara:
 0:80f2:3c:02:4c
-
-;********taito_f3.c (lightbringer (japan))
-;** you must wait until the hiscore table has displayed in attract mode before **
-;** starting a game, for the save to work ** 
-lightbr:
-lightbrj:
-0:40a312:70:00:01
 
 ;********lsasquad.c (land sea air squad / riku kai kuu saizensen)
 lsasquad:
@@ -9471,14 +8861,6 @@ omega:
 0:43c0:0f:00:00
 0:40a8:03:00:00
 
-;********wgp.c (world grand prix (us & joystick version set 1 japan)
-;** you must wait untill the hiscore table has displayed in attract mode before **
-;** starting a game, for the save to work ** 
-;** THIS SAVE DOES NOT SAVE THE COURSE RECORDS **
-wgp:
-0:10bbd9:c5:01:02
-0:10bc9b:1:44:44
-
 wgpjoy:
 0:10bbdd:c5:01:02
 0:10bc9f:1:44:44
@@ -9501,15 +8883,6 @@ secretagj:
 dblaxle:
 0:202c91:18f:13:10
 
-;********taito_f3.c (cleopatras fortune (japan))
-;** you must wait untill the hiscore table has displayed in attract mode before **
-;** starting a game, for the save to work **
-cleopatr:
-0:412de4:78:00:4a
-
-;***************************************************************
-;* latest :highscore_v7.91 additions below - by leezer         *
-;***************************************************************
 ;*******namcos2.c (mirai ninja (japan))
 mirninja:
 0:100400:d0:4d:00
@@ -9526,32 +8899,9 @@ gunnail:
 0:fa800:78:00:55
 0:fe004:f93:00:50
 
-;********galaxian.c (sky base)
-;** if you beat the top score don`t exit game until it is displaying in **
-;** the top centre of the screen **
-skybase:
-0:803a:36:00:00
-0:8000:1:14:14
-0:91a1:1:00:00
-0:91c1:1:00:00
-0:91e1:1:00:00
-0:9201:1:05:05
-0:9221:1:00:00
-0:9241:1:00:00
-
 ;********dcon.c (sd gundam psycho salamander no kyoui)
-;** for some reason you have to press key 9 to insert credits **
-;** game (driver ??) related problem - not hiscore.dat **
 sdgndmps:
 0:8b600:9c:00:1a
-
-;********popper.c (popper)
-;** do not reset this game - it screws up the hiscore & hiscore saving **
-popper:
-0:c700:3c:4f:00
-0:db2b:3:00:01
-0:c1ed:6:00:20
-0:c8ca:1:19:19
 
 ;********carjmbre.c (car jamboree)
 carjmbre:
@@ -9590,8 +8940,6 @@ blocken:
 0:3086ec:4f:00:57
 
 ;********z80bw.c (astro invader)
-;** god, the things i do to give y`all these hiscore saves !! **
-;** is this the longest hiscore.data yet ? **
 astinvad:
 0:1fca:14:00:00
 0:2f1d:1:3e:3e
@@ -9713,7 +9061,6 @@ nitdbl:
 0:105ddd:1:41:41
 
 ;********snk.c (athena) (fix)
-;** fixed, but delete any athena.hi file before playing first time **
 athena:
 0:fe52:6f:41:30
 0:d7f5:3:00:00
@@ -9753,12 +9100,6 @@ weclemana:
 weclemanb:
 0:41110:64:00:20
 0:40006:4:00:00
-
-;********rollerg.c (rollergames (us))
-;** untested - no good at this game !! **
-rollerg:
-rollergj:
-0:2a80:28:08:06
 
 ;********flkatck.c (ka)
 mx5000:
@@ -9825,17 +9166,6 @@ lordofk:
 0:f8875:f:00:00
 0:f887b:1:02:02
 
-;*********mrflea.c (the amazing adventures of mr. f. lea)
-;** this game does not display the top score in the top centre of the screen **
-;** untill the game has ran for a while without inserting any credits but this **
-;** does not matter as long as the default 5,000 high score has been beaten on your**
-;** first game.......
-;** which isn`t hard, or you can just let the game run through attract mode for a **
-;** couple of minutes until the 5,000 top score is on screen. it`s up to you !!! **
-mrflea:
-0:cafd:99:30:20
-0:c6f8:6:30:30
-
 ;*********system1.c (bullfight)
 bullfgt:
 thetogyu:
@@ -9888,10 +9218,6 @@ cloakgr:
 cloaksp:
 0:f35:a0:11:58
 
-;***************************************************************
-;* latest :highscore_v7.9 additions below - by leezer*
-;***************************************************************
-
 ;*********taito_b.c (rambo 3 us)
 rambo3u:
 rambo3:
@@ -9900,13 +9226,6 @@ rambo3:
 ;*********taito_b.c (rambo 3 europe)
 rambo3p:
 0:802600:50:01:2e
-
-;********taito_z.c (aqua jack (world))
-;** game displays highscores wrong (nowt to do with hiscore.dat file,driver issue ??)
-;** top score displays ok..
-aquajack:
-aquajackj:
-0:100160:7c:00:02
 
 ;********superchs.c (super chase - criminal termination (us))
 superchs:
@@ -9965,10 +9284,6 @@ spcforc2:
 meteors:
 0:4300:50:30:30
 
-;***************************************************************
-;* latest :highscore_v7.8 additions below - by leezer*
-;***************************************************************
-
 ;*********senjyo.c (baluba-louk no densetsu)
 baluba:
 0:80f6:4:00:00
@@ -10001,30 +9316,11 @@ leaguemn:
 nbbatmanu:
 0:e25d4:4f:00:03
 
-;********volfied.c (volified (japan))
-;** top score on top centre of screen does not update untill  **
-;** after first demo game in attract mode **
-volfied:
-volfiedjo:
-volfiedj:
-volfiedu:
-volfiedo:
-volfieduo:
-0:100200:26:00:50
-0:100201:1:50:50
-
 ;********vicduel.c (depthcharge)
 depthch:
 depthcho:
 subhunt:
 0:e408:c:55:5a
-
-arknoid2:  ;** you must let the hiscore table display first before starting a game **
-arknoid2j:
-arknoid2u:
-arknoid2b:
-0:ec81:27:01:4e
-0:e3a8:03:01:00
 
 ;*********(block block (world 910910))
 blocka:
@@ -10118,9 +9414,6 @@ mspacmab:
 00:43ED:06:40:40
 00:43D1:01:48:48
 
-;***************************************************************
-;* latest :highscore_v7.7 additions below - by leezer*
-;***************************************************************
 ;********fukki16.c (gyakuten!! puzzle bancho (japan)
 pbancho:
 0:402e1f:3b:01:04
@@ -10201,10 +9494,6 @@ dharmak:
 dharmaj:
 0:40e302:4b:00:5a
 
-;***************************************************************
-;* latest :highscore_v7.6 additions below - by leezer*
-;***************************************************************
-
 ;********shanghai.c (shanghai ii (japan))
 shangha2:
 shangha2a:
@@ -10225,12 +9514,6 @@ cachat:
 bouldash:
 0:306d4d:44:00:52
 0:306aa1:3:00:00
-
-;*********gaelco.c (biomechanical toy (unprotected))
-;** you must let the highscore display in attract mode before starting a game  ** 
-biomtoy:
-biomtoya:
-0:ff0794:17:06:2e
 
 ;*********marvins.c (marvins maze)
 marvins:
@@ -10300,17 +9583,6 @@ mhavoc:
 ;*******segac2.c (zunzunkyou no yabou (japan))
 zunkyou:
 0:fffa01:4f:00:01
-
-;***************************************************************
-;* latest :highscore_v7.5 additions below - by leezer*
-;***************************************************************
-
-;********blmbycar.c (blomby car)
-;** highscore only saves , other course highscores are not possible **
-;** as they don`t load in until you finish a course **
-blmbycar:
-blmbycaru:
-0:fecdbc:117:4e:08
 
 ;********williams.c (mayday (set 1))
 mayday:
@@ -10418,14 +9690,6 @@ cheekyms:
 ;********cinemat.c (solar quest)
 solarq:
 0:e0:50:08:00
-
-;********megasys1.c (soldam (japan))
-;** you must let the game display the highscore in attract mode before **
-;** starting a game - just like in star force                          **
-soldamj:
-soldam:
-0:1f00ba:8:00:00
-0:1f3fbe:24a:00:81
 
 ;********gundealr.c (yam! yam!?)
 yamyam:
@@ -10600,10 +9864,6 @@ turbofrc:
 twinqix:
 0:406b6f:9b:00:54
 
-;***************************************************************
-;* latest :highscore_v7.4 additions below - by leezer*
-;***************************************************************
-
 ;********momoko.c (momoko 120%)
 momoko:
 0:ce01:9f:20:20
@@ -10630,14 +9890,6 @@ elvactr:
 ;********scregg.c (dommy)
 dommy:
 0:1a:3:00:05
-
-;********omegaf.c (omega fighter / omega fighter special)
-;** only saves pasrt of highscore ?? - tables ok though !! **
-omegaf:
-omegafs:
-0:f880:7f:00:24
-0:f7d4:3:00:00
-0:f7d5:1:20:20
 
 ;*******taito_f3.c (darius gaiden - silver hawk / extra version )
 dariusg:
@@ -10707,12 +9959,6 @@ f1dreamb:
 ;******atarisy1.c (road runner)
 roadrunn:
 0:401e42:32:00:da
-
-;added galaxiaj (galaxian (namco set 2))
-
-;***************************************************************
-;* latest :highscore_v7.3 additions below - by leezer*
-;***************************************************************
 
 ;*******taito_b.c (ryu jin (japan))
 ryujin:
@@ -10801,10 +10047,6 @@ sbasketb:
 0:3481:1:00:00
 0:3461:1:00:00
 
-;***************************************************************
-;* latest :highscore_v7.2 additions below - by leezer*
-;***************************************************************
-
 ;********chqflag.c (chequered flag)
 chqflag:
 0:1f08:dd:30:42
@@ -10870,21 +10112,10 @@ twinbee:
 0:1f580:58:00:0a
 0:1eba0:4:00:00
 
-;********skydiver.c (sky diver)
-;** note highscore must be displaying new top score to save properly **
-;** so start a new game after a new highscore and kill man 3 times **
-;** untill new highscore is displayed. **
-skydiver:
-0:af:3:00:00
-
 ;********magix.c (cannon ball)
 cannball:
 cannballv:
 0:f800:80:00:2e
-
-;***************************************************************
-;* latest :highscore_v7.1 additions below - by leezer*
-;***************************************************************
 
 ;********vsnes.c (platoon)
 platoon:
@@ -11012,13 +10243,6 @@ ddonpacha:
 0:1016ea:64:00:05
 0:101626:4:00:06
 
-;********quantum.c (quantum)
-;* signiture is screwed up (other scores ok) *
-quantum:
-quantum1:
-quantump:
-0:1b5aa:1254:00:54
-
 ;******playch10.c (play choice 10:super mario bros)
 ;pc_smb:
 ;1:7d7:7:00:00
@@ -11068,10 +10292,6 @@ suprlocoo:
 0:fca0:12:41:48
 0:fc2c:3:02:00
 
-;*********** latest unofficial additions above this line **************
-;*******************************************************************
-;********* official hiscore.dat v7.0 starts here *******************
-
 ;********1943.c
 1943u:
 1943:
@@ -11114,11 +10334,6 @@ blueshrk:
 
 bowler:
 0:22a0:08:00:00
-
-clowns:  ;*** dont start game untill attract mode starts.(hiscore also updated then)
-clowns1:  ;*** dont start game untill attract mode starts.(hiscore also updated then)
-0:2015:02:00:00
-0:3ea0:140:00:66
 
 desertgu:
 0:2006:02:00:00
@@ -11308,11 +10523,6 @@ terrafj:
 asteroi1:
 0:001c:35:00:00
 
-;********astrocde.c
-gorf: ;* resetting screws up 2 scores and top score
-gorfpgm1:
-0:d010:22:00:00
-
 robby:
 0:e1c7:21:4a:4b
 0:e161:1e:50:58
@@ -11322,14 +10532,6 @@ robby:
 0:e361:1e:50:58
 0:e39d:2a:9e:47
 0:e33b:26:10:17
-
-seawolf2:;*loading score seems to auto start a game?
-0:c208:2:00:00
-
-wow: ;*resetting screws up the 1st score
-wowg:
-0:d004:14:00:00
-0:d304:14:00:00
 
 tomahawk:
 tomahawk1:
@@ -11405,10 +10607,6 @@ bioniccbl:
 0:fec0e3:1:00:00
 0:fec0e5:1:00:00
 0:fec0e7:1:00:00
-
-;macross:  *** not working ***
-;0:f9100:a0:00:45
-;0:f90f6:1:01:01
 
 blkdrgon:
 blkdrgnb:
@@ -11574,13 +10772,6 @@ armora:
 armorap:
 armorar:
 0:a2:4:00:00
-
-;starcas:
-;starcas1:
-;starcase:
-;starcasp: 
-;stellcas: 
-;0:1aa:4:00:00
 
 crash:
 smash:
@@ -12219,17 +11410,6 @@ streaknga:
 0:5200:1:40:40
 0:5230:1:10:10
 
-warofbug:  ;**** these 2 games have very buggy hiscore !  (ho ho ho) ****
-warofbugu:
-0:4034:3:00:00
-0:5241:1:0:0
-0:5221:1:0:0
-0:5201:1:0:0
-0:51e1:1:0:0
-0:51c1:1:0:0
-0:51a1:1:0:0
-
-
 ;********galivan.c
 galivan2:
 galivan3:
@@ -12733,14 +11913,6 @@ hopprobo:
 0:8a1e:1:07:07
 0:8a3e:1:00:00
 
-wanted: ;* not saving whole table
-0:8a5e:1:00:00
-0:8a3e:1:03:03
-0:8a1e:1:00:00
-0:89fe:1:00:00
-0:89de:1:00:00
-0:81b4:4c:00:16
-
 ;********mario.c
 mario:
 masao:
@@ -12963,10 +12135,6 @@ gradius:
 0:70098:4:00:00
 0:7009a:1:73:73
 
-;* top score not saved
-nyanpani:
-0:42800:28:00:10
-
 salamand:
 salamandj:
 lifefrce:
@@ -12982,14 +12150,6 @@ darius2d:
 darius2do:
 sagaia:
 0:1010fa:44b:00:20
-
-;********nova2001.c 
-;****note doesnt save top scores
-nova2001u:
-nova2001:
-nova2001h:
-0:a0ac:7:22:14
-0:e07d:37:00:20
 
 ;********ohmygod.c
 naname:
@@ -13515,14 +12675,6 @@ sqixbl:
 0:f4c0:28:00:03
 0:f8f1:4:75:00
 
-;********surpratk.c
-;* you must exit this game while in-game top score is displaying (not highscore table)*
-;* for in-game top score to save correctly(because of way game uses videoram)
-surpratk:
-0:b00:5a:11:31
-0:5980:4:00:00
-0:609e:6:01:00
-
 ;********system1.c
 4dwarrio: ;[Special thanks to Cananas for enhancing this entry]
 0:d300:a0:00:20
@@ -13558,7 +12710,6 @@ wboy2:
 wboy3:
 wboy4:
 wboy4u:
-wboyu: ;*note* only 1/2 works... 
 wbdeluxe:
 wboyo:
 wboy2u:
@@ -13741,14 +12892,6 @@ spacedxj:
 
 spcinvdj:
 0:404f73:3:00:00
-
-;********taito_f2.c
-cameltry:
-;*note cant see highscore table in cameltry so its commented out
-;cameltru: 
-0:106c9e:244:35:44
-0:1066b0:3e:06:00
-0:105430:4:00:00
 
 deadconx:
 deadconxj:
@@ -13975,19 +13118,6 @@ samesame2:
 0:c1c25:1:26:26
 0:c1dc1:21:2d:00
 
-;*note* top score does not display
-vimana:
-vimanan:
-vimana1:
-vimanaj:
-0:480198:f4:00:41
-
-;** only saves high table (no top score)
-;** and highscore counter (not display)
-zerowing1:
-0:81776:68:00:10
-0:81778:1:50:50
-
 zerowingw:
 zerowing:
 0:81a1e:68:00:10
@@ -14164,12 +13294,6 @@ vendettaj:
 vendetta2peba:
 vendettaz:
 0:2980:28:00:48
-
-;*******vicdual.c
-carnival: ;*note* resetting corrupts the screen not the file
-carnivalc:
-0:e397:3c:00:00
-0:e5a2:9:20:20
 
 digger:
 0:8386:b:53:00
