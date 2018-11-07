@@ -120,81 +120,82 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Zintrick
 * Zupapa
 
-## Games fixed and now working
-
-* Alcon
-* Arch Rivals
-* Avenging Spirit
-* B-Rap Boys
-* B-Rap Boys Special
-* Bakuretsu Breaker
-* Baseball Stars (Playchoice 10)
-* Blasted
-* Blood Warrior
-* Bonk's Adventure
-* Crater Raider
-* Demolition Derby
-* Die Hard Arcade (requires a fast system, video and sound issues remain)
-* Discs Of Tron
-* DJ Boy
-* Domino Man
-* Dragon World
-* Driftout 94
-* Eagle Shot Golf
-* Great 1000 Miles Rally
-* Hang-On
-* Ironhorse
-* Journey
-* Juno First
-* Kick
-* Kozmik Kroozer
-* Fighters History
-* Fire Barrel
-* Funky Jet
-* Gardia
-* Green Beret
-* Hacha Mecha Figher
-* Mario's Open Golf (Playchoice 10)
-* Max RPM
-* Metroid (Playchoice 10)
-* Monster Slider
-* Night Slashers
-* Phantasm
-* Photo Y2k
-* Pigskin 621AD
-* Power Drive
-* Rampage
-* Rogha Armor Force
-* Run And Gun (NVRAM) markwkidd
-* Rush'N Attack
-* Sarge
-* Satan's Hollow
-* Shogun Warriors
-* Slap Fight (Official Version)
-* Snowboard Championship
-* Solar Fox
-* Spy Hunter
-* Spy Hunter 2
-* Star Guards
-* Street Fighter (With Added Speedups)
-* Tapper
-* Task Force Harrier
-* Timber
-* Thunder Dragon
-* Tri-Sports
-* Tron
-* Turbo Tag
-* Twin Eagle 2
-* Two Tigers
-* Xenophobe
-* Wacko
-* Zwackery
-
-## New HBMAME Hacks
+## New Hacks
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
 * Donkey Kong II Jumpman Returns
+
+
+## Games fixed and now working
+
+* Alcon - Romset: `alcon`
+* Arch Rivals - Romset: `archrivl`
+* Avenging Spirit - Romset `avspirit`
+* B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
+* B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
+* Bakuretsu Breaker - Romset `bakubrkr` - Playable with minor remaining graphical issues
+* Baseball Stars (Playchoice 10) - Romset `pc_bstar`
+* Blasted - Romset `blasted`
+* Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
+* Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
+* Crater Raider - Romset `crater`
+* Demolition Derby - Romset `demoderb`
+* Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
+* Discs Of Tron - Romsets `dotron` and `dotrone`
+* DJ Boy - Romset `djboy`
+* Domino Man - Romset `domino`
+* Dragon World - Romset `drgnwrld`
+* Driftout 94 - Romset `drifto94`
+* Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
+* Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
+* Hang-On - Romset `hangon`
+* Ironhorse - Romset `ironhors`
+* Journey - Romset `journey`
+* Juno First - Romset `junofrst`
+* Kick - Romset `kick`
+* Kozmik Kroozr - Romset `kroozr`
+* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
+* Fire Barrel - Romset `firebarr`
+* Funky Jet - Romset `funkyjet`
+* Gardia - Romset `gardia`
+* Green Beret - Romset `greenber`
+* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
+* Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
+* Max RPM - Romset `maxrpm`
+* Metroid (Playchoice 10) - Romset `pc_mtoid`
+* Monster Slider - Romset `mslider`
+* Night Slashers - Romset `nslasher`
+* Phantasm - Romset `phantasm`
+* Photo Y2k - Romset `photoy2k`
+* Pigskin 621AD - Romset `pigskin`
+* Power Drive - Romset `powerdrv`
+* Rampage - Romsets `rampage` and `rampage2`
+* Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
+* Run And Gun - Romset `rungun`
+* Rush'N Attack - Romset `rushatck`
+* Sarge - Romset `sarge`
+* Satan's Hollow - Romset `shollow`
+* Shogun Warriors - Romset `shogwarr`
+* Slap Fight (Official Version) - Romset `slapfigh`
+* Snowboard Championship - Romset `snowboar`
+* Solar Fox - Romset `solarfox`
+* Spy Hunter - Romset `spyhunt`
+* Spy Hunter 2 - Romset `spyhunt2`
+* Star Guards - Romset `stargrds`
+* Street Fighter (With Added Speedups) - Romsets `sf1`, sf1jp`, `sf1p`, `sf1us`
+* Tapper - Romset `tapper`
+* Task Force Harrier - Romsets `tharrier` and `tharierj`
+* Timber - Romset `timber`
+* Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
+* Tri-Sports - Romset `trisport`
+* Tron - Romset `tron`
+* Turbo Tag - Romset `turbotag`
+* Twin Eagle 2 - Romsets `twineagl` and `twineag2`
+* Two Tigers - Romset `twotiger`
+* Xenophobe - Romset `xenophob`
+* Wacko - Romset `wacko`
+* Zwackery - Romset `zwackery`
 
 ## Games now with sound
 
@@ -233,13 +234,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Games now with improved sound
+
 * Asterix
 * Crazy Balloon
-* Final Fight added ost sound track (KMFDManic)
-* Mortal added ost sound track (KMFDManic)
-* nbajam added ost sound track (KMFDManic)
+* Final Fight - Added OST soundtrack (via KMFDManic)
+* Mortal Kombat - Added OST soundtrack (via KMFDManic)
+* NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
-* outrun added ost soundtrack (KMFDManic)
+* Out Run added ost soundtrack (via KMFDManic)
 * Rohga Armor Force
 
 
