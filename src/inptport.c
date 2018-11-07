@@ -1826,6 +1826,7 @@ InputSeq* input_port_type_seq(int type)
 
 InputSeq* input_port_seq(const struct InputPort *in)
 {
+// mark change the (! 0 && ((in-1)->type & IPF_CHEAT))) to a variable name if you want to make it a core option just disable for now until you make a choice 
 	int i,type;
 
 	static InputSeq ip_none = SEQ_DEF_1(CODE_NONE);
@@ -1835,15 +1836,15 @@ InputSeq* input_port_seq(const struct InputPort *in)
 	if ((in->type & ~IPF_MASK) == IPT_EXTENSION)
 	{
 		type = (in-1)->type & (~IPF_MASK | IPF_PLAYERMASK);
-		/* if port is disabled return no key */
-		if ((in-1)->type & IPF_UNUSED)
+		/* if port is disabled, or cheat with cheats disabled, return no key */
+		if (((in-1)->type & IPF_UNUSED) || (! 0 && ((in-1)->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 	else
 	{
 		type = in->type & (~IPF_MASK | IPF_PLAYERMASK);
-		/* if port is disabled return no key */
-		if (in->type & IPF_UNUSED)
+		/* if port is disabled, or cheat with cheats disabled, return no key */
+		if ((in->type & IPF_UNUSED) || (! 0 && (in->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 
