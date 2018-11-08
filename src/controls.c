@@ -5675,10 +5675,10 @@ const char *comotion_get_ctrl_name(int type)
 
 const struct ControlInfo congo_ctrl =
 {
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
+  true,  /* 45_degree_rotation for joystick(s) */
+  true,   /* alternating_controls */
+  true,   /* mirrored_controls */
+  "",     /* control_details */
   &congo_get_ctrl_name
 };
 
@@ -5686,11 +5686,11 @@ const char *congo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up-Right";
-    case IPT_JOYSTICK_DOWN: return "Down-Left";
-    case IPT_JOYSTICK_LEFT: return "Left-Up";
-    case IPT_JOYSTICK_RIGHT: return "Right-Down";
+    case IPT_BUTTON1:         return BTN1 "Jump";
+    case IPT_JOYSTICK_UP:     return "Up-Right";
+    case IPT_JOYSTICK_DOWN:   return "Down-Left";
+    case IPT_JOYSTICK_LEFT:   return "Left-Up";
+    case IPT_JOYSTICK_RIGHT:  return "Right-Down";
   } /* end of switch */
 
   return "";
