@@ -991,9 +991,6 @@ const char *f1en_get_ctrl_name(int type);
 extern const struct ControlInfo fantasy_ctrl;
 const char *fantasy_get_ctrl_name(int type);
 
-extern const struct ControlInfo sqbert_ctrl;
-const char *sqbert_get_ctrl_name(int type);
-
 extern const struct ControlInfo fax_ctrl;
 const char *fax_get_ctrl_name(int type);
 
@@ -2061,9 +2058,6 @@ const char *pbobble3_get_ctrl_name(int type);
 
 extern const struct ControlInfo qbert_ctrl;
 const char *qbert_get_ctrl_name(int type);
-
-extern const struct ControlInfo qbertqub_ctrl;
-const char *qbertqub_get_ctrl_name(int type);
 
 extern const struct ControlInfo qix_ctrl;
 const char *qix_get_ctrl_name(int type);
