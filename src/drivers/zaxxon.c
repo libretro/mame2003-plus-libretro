@@ -1677,5 +1677,5 @@ GAME( 1982, szaxxon,  0,      zaxxon,   szaxxon,  szaxxon,  ROT90,  "Sega",    "
 GAMEX(1983, razmataz, 0,      razmataz, razmataz, razmataz, ROT270, "Sega",    "Razzmatazz",                          GAME_NO_SOUND )
 GAMEX(1983, ixion,    0,      ixion,    ixion,    ixion,    ROT270, "Sega",    "Ixion (prototype)",                   GAME_NO_SOUND )
 GAMEC(1983, congo,    0,      congo,    congo,    0,        ROT90,  "Sega",    "Congo Bongo (Rev C, 2 board stack)",  &congo_ctrl,  NULL )
-GAME( 1983, tiptop,   congo,  congo,    tiptop,   0,        ROT90,  "Sega",    "Tip Top" )
+GAMEC(1983, tiptop,   congo,  congo,    tiptop,   0,        ROT90,  "Sega",    "Tip Top (3 board stack)",             &congo_ctrl,  NULL )
 GAME( 1984, futspy,   0,      futspy,   futspy,   futspy,   ROT270, "Sega",    "Future Spy" )
