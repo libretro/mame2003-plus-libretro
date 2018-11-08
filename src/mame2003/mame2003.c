@@ -71,7 +71,7 @@ static void   init_core_options(void);
        void   init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void   update_variables(bool first_time);
 static void   set_variables(bool first_time);
-static struct retro_variable_default *spawn_effective_default(int option_index);
+static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
@@ -208,21 +208,32 @@ static void set_variables(bool first_time)
            continue;
          break;
    }
-   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
+   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_option(option_index);
    effective_options_count++;
   }
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
 }
 
-static struct retro_variable_default *spawn_effective_default(int option_index)
+static struct retro_variable_default *spawn_effective_option(int option_index)
 {
-  static struct retro_variable_default *encoded_default = NULL;
-  /* search for the string "; " as the delimiter between the option display name and the values */
-  /* stringify the current value for this option */
-  /* see if the current option string is already listed first in the original default -- is it the first in the pipe-delimited list? if so, just return default_options[option_index] */
-  /* if the current selected option is not in the original defaults string at all, log an error message. that shouldn't be possible. */
-  /* otherwise, create a copy of default_options[option_index].defaults_string. First add the stringified current option as the first in the pipe-delimited list for this copied string, and then remove the option from wherever it was originally in the defaults string */
-  return encoded_default;
+  static struct retro_variable_default *encoded_option = NULL;
+
+  /* implementing this function will allow the core to change a core option within the core and then report that that change to the frontend
+   * currently core options only flow one way: from the frontend to mame2003-plus
+   *
+   * search for the string "; " as the delimiter between the option display name and the values
+   * stringify the current value for this option
+   * see if the current option string is already listed first in the original default -- 
+   *    if the current selected option is not in the original defaults string at all
+   *      log an error message and bail. that shouldn't be possible.
+   *    is the currently selected option the first in the default pipe-delimited list? 
+   *      if so, just return default_options[option_index]          
+   *    else
+   *       create a copy of default_options[option_index].defaults_string.
+   *       First add the stringified current option as the first in the pipe-delimited list for this copied string
+   *       then remove the option from wherever it was originally in the defaults string
+   */
+  return encoded_option;
 }
 
 void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
