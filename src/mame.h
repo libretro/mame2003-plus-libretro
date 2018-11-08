@@ -178,6 +178,11 @@ enum /* used to index content-specific flags */
   CONTENT_HAS_TILT,  
   CONTENT_ALTERNATING_CTRLS,
   CONTENT_MIRRORED_CTRLS,
+  CONTENT_ROTATE_JOY_45,
+  CONTENT_PLAYER_COUNT,
+  CONTENT_CTRL_COUNT,
+  CONTENT_BUTTON_COUNT,
+  CONTENT_JOYSTICK_DIRECTIONS,
   CONTENT_DCS_SPEEDHACK,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_end,
@@ -191,10 +196,7 @@ struct GameOptions
   mame_file *playback;		       /* handle to file to playback input from */
   mame_file *language_file;	     /* handle to file for localization */
 
-  bool content_flags[CONTENT_end];
-  int  player_count;
-  int  ctrl_count;
-  int  button_count;
+  int  content_flags[CONTENT_end];
 
   char   *romset_filename_noext;
   char   *libretro_content_path;
@@ -213,7 +215,7 @@ struct GameOptions
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
   bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
-  int 	   four_way_emulation;             /* use new 4 way emulation */
+  int 	   four_way_emulation;             /* simulate 4-way joystick restrictor */
   unsigned rstick_to_btns;
   unsigned tate_mode;
 
