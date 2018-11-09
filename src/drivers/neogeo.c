@@ -7355,7 +7355,7 @@ DRIVER_INIT( kof2003d )
 	kof2003_sx_decrypt();
 
 	neogeo_fix_bank_type = 2;
-	init_neogeo();
+	
 
 	install_mem_read16_handler( 0, 0x2fe000, 0x2fffdf, MRA16_RAM );
 	install_mem_write16_handler( 0, 0x2fe000, 0x2fffdf, MWA16_RAM );
@@ -7367,6 +7367,7 @@ DRIVER_INIT( kof2003d )
 	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
 
 	install_mem_read16_handler( 0, 0xc00000, 0xc3ffff, MRA16_BANK3 );  // 256k bios
+	init_neogeo();
 }
 /* kof2003d Init End */
 
