@@ -890,9 +890,7 @@ static void set_content_flags(void)
   if(options.content_flags[CONTENT_DUAL_JOYSTICK] == true)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
   
-  if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2)
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 2-way joystick controls.\n");
-  else if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
+  if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 4-way joystick controls.\n");
   else
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 8-way joystick controls.\n");
