@@ -105,6 +105,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
+* The King Of Fighters 2003 (Decrypted)
 * The King of Fighters 10th Anniversary
 * The Last Hope
 * The Lost Castle In Darkmist
