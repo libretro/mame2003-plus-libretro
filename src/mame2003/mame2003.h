@@ -324,22 +324,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 void osd_customize_inputport_defaults(struct ipd *defaults);
 
 
-
-/******************************************************************************
-
-	File I/O
-
-******************************************************************************/
-
-/* inp header */
-typedef struct
-{
-	char name[9];      /* 8 bytes for game->name + NUL */
-	char version[3];   /* byte[0] = 0, byte[1] = version byte[2] = beta_version */
-	char reserved[20]; /* for future use, possible store game options? */
-} INP_HEADER;
-
-
 /******************************************************************************
 
 	Timing

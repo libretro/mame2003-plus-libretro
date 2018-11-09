@@ -12,6 +12,7 @@
 
 #include "controls.h"
 #include "inptport.h"
+#include "mame.h"
 
 /***********************************************************
   PRIVATE HELPER FUNCTIONS
@@ -5684,15 +5685,30 @@ const struct ControlInfo congo_ctrl =
 
 const char *congo_get_ctrl_name(int type)
 {
+  if(!options.restrict_4_way)
+  {
+    switch(type)
+    {
+      case IPT_JOYSTICK_UP:     return "Up-Right";
+      case IPT_JOYSTICK_DOWN:   return "Down-Left";
+      case IPT_JOYSTICK_LEFT:   return "Left-Up";
+      case IPT_JOYSTICK_RIGHT:  return "Right-Down";
+    } /* end of switch */
+  }
+  else /* controls are effectively rotated, so using the diagonal names would be confusing */
+  {
+    switch(type)
+    {
+      case IPT_JOYSTICK_UP:     return "Up";
+      case IPT_JOYSTICK_DOWN:   return "Down";
+      case IPT_JOYSTICK_LEFT:   return "Left";
+      case IPT_JOYSTICK_RIGHT:  return "Right";
+    } /* end of switch */
+  }
   switch(type)
   {
     case IPT_BUTTON1:         return BTN1 "Jump";
-    case IPT_JOYSTICK_UP:     return "Up-Right";
-    case IPT_JOYSTICK_DOWN:   return "Down-Left";
-    case IPT_JOYSTICK_LEFT:   return "Left-Up";
-    case IPT_JOYSTICK_RIGHT:  return "Right-Down";
-  } /* end of switch */
-
+  }
   return "";
 }
 
@@ -7602,7 +7618,6 @@ const char *fantasy_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7623,13 +7638,26 @@ const struct ControlInfo qbert_ctrl =
 
 const char *qbert_get_ctrl_name(int type)
 {
-  switch(type)
+  if(!options.restrict_4_way)
   {
-    case IPT_JOYSTICK_LEFT:   return "Left+Up";
-    case IPT_JOYSTICK_DOWN:   return "Down+Left";
-    case IPT_JOYSTICK_UP:     return "Up+Right";
-    case IPT_JOYSTICK_RIGHT:  return "Down+Right";
-  } /* end of switch */
+    switch(type)
+    {
+      case IPT_JOYSTICK_LEFT:   return "Left+Up";
+      case IPT_JOYSTICK_DOWN:   return "Down+Left";
+      case IPT_JOYSTICK_UP:     return "Up+Right";
+      case IPT_JOYSTICK_RIGHT:  return "Down+Right";
+    } /* end of switch */
+  }
+  else
+  {
+    switch(type) /* controls are effectively rotated, so using the diagonal names would be confusing */
+    {
+      case IPT_JOYSTICK_UP:       return "Up";
+      case IPT_JOYSTICK_DOWN:     return "Down";
+      case IPT_JOYSTICK_LEFT:     return "Left";
+      case IPT_JOYSTICK_RIGHT:    return "Right";
+    } /* end of switch */
+  }
 
   return "";
 }
@@ -9751,19 +9779,37 @@ const struct ControlInfo inferno_ctrl =
 
 const char *inferno_get_ctrl_name(int type)
 {
+  if(!options.restrict_4_way)
+  {
+    switch(type)
+    {
+      case IPT_JOYSTICKLEFT_UP:     return "Move Up+Right";
+      case IPT_JOYSTICKLEFT_DOWN:   return "Move Down+Left";
+      case IPT_JOYSTICKLEFT_LEFT:   return "Move Left+Up";
+      case IPT_JOYSTICKLEFT_RIGHT:  return "Move Right+Down";
+      case IPT_JOYSTICKRIGHT_UP:    return "Fire Up+Right";
+      case IPT_JOYSTICKRIGHT_DOWN:  return "Fire Down+Left";
+      case IPT_JOYSTICKRIGHT_LEFT:  return "Fire Left+Up";
+      case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right+Down";
+    } /* end of switch */
+  }
+  else { /* controls are effectively rotated, so using the diagonal names would be confusing */
+    switch(type)
+    {
+      case IPT_JOYSTICKLEFT_UP:     return "Up";
+      case IPT_JOYSTICKLEFT_DOWN:   return "Down";
+      case IPT_JOYSTICKLEFT_LEFT:   return "Left";
+      case IPT_JOYSTICKLEFT_RIGHT:  return "Right";
+      case IPT_JOYSTICKRIGHT_UP:    return "Fire Up";
+      case IPT_JOYSTICKRIGHT_DOWN:  return "Fire Down";
+      case IPT_JOYSTICKRIGHT_LEFT:  return "Fire Left";
+      case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
+    }
+  }
   switch(type)
   {
     case IPT_BUTTON1:             return BTN1 "Fire";
-    case IPT_JOYSTICKLEFT_UP:     return "Move Up+Right";
-    case IPT_JOYSTICKLEFT_DOWN:   return "Move Down+Left";
-    case IPT_JOYSTICKLEFT_LEFT:   return "Move Left+Up";
-    case IPT_JOYSTICKLEFT_RIGHT:  return "Move Right+Down";
-    case IPT_JOYSTICKRIGHT_UP:    return "Fire Up+Right";
-    case IPT_JOYSTICKRIGHT_DOWN:  return "Fire Down+Left";
-    case IPT_JOYSTICKRIGHT_LEFT:  return "Fire Left+Up";
-    case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right+Down";
-  } /* end of switch */
-
+  }
   return "";
 }
 
