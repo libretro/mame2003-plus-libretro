@@ -112,7 +112,7 @@ void retro_set_environment(retro_environment_t cb)
 
 static void init_core_options(void)
 {
-  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; original|new|rotated_4way");
+  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
