@@ -163,7 +163,7 @@ static void set_variables(bool first_time)
     switch(option_index)
     {
       case OPT_4WAY:
-         if((!options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2) && (!options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4))
+         if(options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] != 4)
            continue;
          break;
       case OPT_CROSSHAIR_ENABLED:
@@ -268,14 +268,10 @@ static void update_variables(bool first_time)
         break;
 
         case OPT_4WAY:
-            if(   (strcmp(var.value, "enabled") == 0) &&
-                ( (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) ||
-                  (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2) ) )
-            {                       
-                options.restrict_4_way = true;
-            }
-            else
-              options.restrict_4_way = false;
+          if( (strcmp(var.value, "enabled") == 0) && (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) )                 
+            options.restrict_4_way = true;
+          else
+            options.restrict_4_way = false;
           break;
 
         case OPT_MOUSE_DEVICE:
