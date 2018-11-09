@@ -566,11 +566,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 	log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
    }       
-   else
-   {
-	info->timing.sample_rate = options.samplerate;
-	log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d",options.samplerate); 
-   }
+  else
+  {
+    info->timing.sample_rate = options.samplerate;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
+  }
 }
 
 unsigned retro_api_version(void)
@@ -884,7 +884,7 @@ static void set_content_flags(void)
 		++input;
 	}
 
-  if(options.content_flags[CONTENT_DUAL_JOYSTICK] = true)
+  if(options.content_flags[CONTENT_DUAL_JOYSTICK] == true)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
   
   if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2)
@@ -1415,7 +1415,7 @@ void retro_describe_controls(void)
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
-      log_cb(RETRO_LOG_INFO, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
       needle++;
     }
   }
