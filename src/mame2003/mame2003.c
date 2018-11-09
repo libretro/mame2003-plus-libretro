@@ -774,6 +774,9 @@ static void set_content_flags(void)
   }
   
   /************ INPUT-BASED CONTENT FLAGS ************/
+  
+  options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 8; /* default behavior is 8-way joystick, even for 2-way games */
+
 	while ((input->type & ~IPF_MASK) != IPT_END)
 	{
 		/* skip analog extension fields */
@@ -801,12 +804,9 @@ static void set_content_flags(void)
 					break;
 			}
       
-      if((input->type & IPT_JOYSTICK_LEFT) || (input->type & IPT_JOYSTICKLEFT_UP)) 
+      if (input->type & IPF_4WAY) /* original controls used a 4-way joystick */
       {
-        if (input->type & IPF_4WAY)
-          options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
-        else /* default behavior is 8-way joystick, even for 2-way games */
-          options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 8;
+        options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
       }
 
 			switch (input->type & ~IPF_MASK)
