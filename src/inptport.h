@@ -130,7 +130,7 @@ enum { IPT_END=1,IPT_PORT,
 
 #define IPF_8WAY       0          /* Joystick modes of operation. 8WAY is the default, */
 #define IPF_4WAY       0x00080000 /* it prevents left/right or up/down to be pressed at */
-#define IPF_2WAY       0x00090000 /* the same time. 4WAY prevents diagonal directions. */
+#define IPF_2WAY       0          /* the same time. 4WAY prevents diagonal directions. */
                                   /* 2WAY should be used for joysticks wich move only */
                                   /* on one axis (e.g. Battle Zone) */
 

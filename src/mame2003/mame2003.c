@@ -796,13 +796,11 @@ static void set_content_flags(void)
 					break;
 			}
       
-			switch (input->type & ~IPF_MASK)
-			{      
-        if (input->type & IPF_2WAY)
-          options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 2;
-        else if (input->type & IPF_4WAY)
+      if((input->type & IPT_JOYSTICK_LEFT) || (input->type & IPT_JOYSTICKLEFT_UP)) 
+      {
+        if (input->type & IPF_4WAY)
           options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
-        else
+        else /* default behavior is 8-way joystick, even for 2-way games */
           options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 8;
       }
 
