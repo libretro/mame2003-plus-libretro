@@ -110,7 +110,12 @@ void retro_set_environment(retro_environment_t cb)
   environ_cb = cb;
 }
 
-static void init_core_options(void)
+/* static void init_core_options(void) 
+ *
+ * Note that core options are not presented in order they are initialized here, 
+ * but rather by their order in the OPT_ enum in mame2003.h
+ */
+static void init_core_options(void) 
 {
   init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
