@@ -268,17 +268,14 @@ static void update_variables(bool first_time)
         break;
 
         case OPT_4WAY:
-          if(strcmp(var.value, "original") != 0)            
-          {
-            if((options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) || (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2))
-            {
-              if (strcmp(var.value, "new") == 0)
-                options.four_way_emulation = 1;
-              else
-                options.four_way_emulation = 2;
+            if(   (strcmp(var.value, "enabled") == 0) &&
+                ( (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) ||
+                  (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 2) ) )
+            {                       
+                options.restrict_4_way = true;
             }
-          }
-          options.four_way_emulation = 0;
+            else
+              options.restrict_4_way = false;
           break;
 
         case OPT_MOUSE_DEVICE:
