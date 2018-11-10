@@ -71,7 +71,7 @@ static void   init_core_options(void);
        void   init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void   update_variables(bool first_time);
 static void   set_variables(bool first_time);
-static struct retro_variable_default *spawn_effective_default(int option_index);
+static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
@@ -110,9 +110,14 @@ void retro_set_environment(retro_environment_t cb)
   environ_cb = cb;
 }
 
-static void init_core_options(void)
+/* static void init_core_options(void) 
+ *
+ * Note that core options are not presented in order they are initialized here, 
+ * but rather by their order in the OPT_ enum in mame2003.h
+ */
+static void init_core_options(void) 
 {
-  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; original|new|rotated_4way");
+  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -162,6 +167,10 @@ static void set_variables(bool first_time)
   {
     switch(option_index)
     {
+      case OPT_4WAY:
+         if(options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] != 4)
+           continue;
+         break;
       case OPT_CROSSHAIR_ENABLED:
          if(!options.content_flags[CONTENT_LIGHTGUN])
            continue;
@@ -203,24 +212,33 @@ static void set_variables(bool first_time)
          if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
-	  case OPT_4WAY:
-	  break;
    }
-   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
+   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_option(option_index);
    effective_options_count++;
   }
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
 }
 
-static struct retro_variable_default *spawn_effective_default(int option_index)
+static struct retro_variable_default *spawn_effective_option(int option_index)
 {
-  static struct retro_variable_default *encoded_default = NULL;
-  /* search for the string "; " as the delimiter between the option display name and the values */
-  /* stringify the current value for this option */
-  /* see if the current option string is already listed first in the original default -- is it the first in the pipe-delimited list? if so, just return default_options[option_index] */
-  /* if the current selected option is not in the original defaults string at all, log an error message. that shouldn't be possible. */
-  /* otherwise, create a copy of default_options[option_index].defaults_string. First add the stringified current option as the first in the pipe-delimited list for this copied string, and then remove the option from wherever it was originally in the defaults string */
-  return encoded_default;
+  static struct retro_variable_default *encoded_option = NULL;
+
+  /* implementing this function will allow the core to change a core option within the core and then report that that change to the frontend
+   * currently core options only flow one way: from the frontend to mame2003-plus
+   *
+   * search for the string "; " as the delimiter between the option display name and the values
+   * stringify the current value for this option
+   * see if the current option string is already listed first in the original default -- 
+   *    if the current selected option is not in the original defaults string at all
+   *      log an error message and bail. that shouldn't be possible.
+   *    is the currently selected option the first in the default pipe-delimited list? 
+   *      if so, just return default_options[option_index]          
+   *    else
+   *       create a copy of default_options[option_index].defaults_string.
+   *       First add the stringified current option as the first in the pipe-delimited list for this copied string
+   *       then remove the option from wherever it was originally in the defaults string
+   */
+  return encoded_option;
 }
 
 void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
@@ -255,12 +273,10 @@ static void update_variables(bool first_time)
         break;
 
         case OPT_4WAY:
-          if(strcmp(var.value, "original") == 0)		
-           options.four_way_emulation = 0;
-          else if (strcmp(var.value, "new") == 0)		
-           options.four_way_emulation = 1;
-          else 
-           options.four_way_emulation = 2;
+          if( (strcmp(var.value, "enabled") == 0) && (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) )                 
+            options.restrict_4_way = true;
+          else
+            options.restrict_4_way = false;
           break;
 
         case OPT_MOUSE_DEVICE:
@@ -555,11 +571,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 	log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
    }       
-   else
-   {
-	info->timing.sample_rate = options.samplerate;
-	log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d",options.samplerate); 
-   }
+  else
+  {
+    info->timing.sample_rate = options.samplerate;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
+  }
 }
 
 unsigned retro_api_version(void)
@@ -693,7 +709,7 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
   update_variables(true);
   
-  for(port_index = DISP_PLAYER6 - 1; port_index > (options.ctrl_count - 1); port_index--)
+  for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers;
     retropad_subdevice_ports[port_index].num_types   = 4;
@@ -715,7 +731,8 @@ static void set_content_flags(void)
   extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
-extern	const char* ost_drivers[]; 
+  extern const char* ost_drivers[];
+  
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
@@ -757,6 +774,9 @@ extern	const char* ost_drivers[];
   }
   
   /************ INPUT-BASED CONTENT FLAGS ************/
+  
+  options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 8; /* default behavior is 8-way joystick, even for 2-way games */
+
 	while ((input->type & ~IPF_MASK) != IPT_END)
 	{
 		/* skip analog extension fields */
@@ -765,24 +785,30 @@ extern	const char* ost_drivers[];
 			switch (input->type & IPF_PLAYERMASK)
 			{
 				case IPF_PLAYER1:
-					if (options.player_count < 1) options.player_count = 1;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 1) options.content_flags[CONTENT_PLAYER_COUNT] = 1;
 					break;
 				case IPF_PLAYER2:
-					if (options.player_count < 2) options.player_count = 2;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 2) options.content_flags[CONTENT_PLAYER_COUNT] = 2;
 					break;
 				case IPF_PLAYER3:
-					if (options.player_count < 3) options.player_count = 3;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 3) options.content_flags[CONTENT_PLAYER_COUNT] = 3;
 					break;
 				case IPF_PLAYER4:
-					if (options.player_count < 4) options.player_count = 4;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 4) options.content_flags[CONTENT_PLAYER_COUNT] = 4;
 					break;
 				case IPF_PLAYER5:
-					if (options.player_count < 5) options.player_count = 5;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 5) options.content_flags[CONTENT_PLAYER_COUNT] = 5;
 					break;
 				case IPF_PLAYER6:
-					if (options.player_count < 6) options.player_count = 6;
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 6) options.content_flags[CONTENT_PLAYER_COUNT] = 6;
 					break;
 			}
+      
+      if (input->type & IPF_4WAY) /* original controls used a 4-way joystick */
+      {
+        options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
+      }
+
 			switch (input->type & ~IPF_MASK)
 			{
 				case IPT_JOYSTICKRIGHT_UP:
@@ -793,50 +819,37 @@ extern	const char* ost_drivers[];
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-					if (input->type & IPF_2WAY)
-          {
-						/*control = "doublejoy2way";*/
-          }
-					else if (input->type & IPF_4WAY)
-          {
-						/*control = "doublejoy4way";*/
-          }
-					else
-          {
-						/*control = "doublejoy8way";*/
-          }
-          options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
+          options.content_flags[CONTENT_DUAL_JOYSTICK] = true; /* if there are any "JOYSTICKLEFT" mappings we know there are two joysticks */
 					break;
 				case IPT_BUTTON1:
-					if (options.button_count < 1) options.button_count = 1;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
 					break;
 				case IPT_BUTTON2:
-					if (options.button_count < 2) options.button_count = 2;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 2) options.content_flags[CONTENT_BUTTON_COUNT] = 2;
 					break;
 				case IPT_BUTTON3:
-					if (options.button_count < 3) options.button_count = 3;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 3) options.content_flags[CONTENT_BUTTON_COUNT] = 3;
 					break;
 				case IPT_BUTTON4:
-					if (options.button_count < 4) options.button_count = 4;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 4) options.content_flags[CONTENT_BUTTON_COUNT] = 4;
 					break;
 				case IPT_BUTTON5:
-					if (options.button_count < 5) options.button_count = 5;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 5) options.content_flags[CONTENT_BUTTON_COUNT] = 5;
 					break;
 				case IPT_BUTTON6:
-					if (options.button_count <6 ) options.button_count = 6;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] <6 ) options.content_flags[CONTENT_BUTTON_COUNT] = 6;
 					break;
 				case IPT_BUTTON7:
-					if (options.button_count < 7) options.button_count = 7;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 7) options.content_flags[CONTENT_BUTTON_COUNT] = 7;
 					break;
 				case IPT_BUTTON8:
-					if (options.button_count < 8) options.button_count = 8;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 8) options.content_flags[CONTENT_BUTTON_COUNT] = 8;
 					break;
 				case IPT_BUTTON9:
-					if (options.button_count < 9) options.button_count = 9;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 9) options.content_flags[CONTENT_BUTTON_COUNT] = 9;
 					break;
 				case IPT_BUTTON10:
-					if (options.button_count < 10) options.button_count = 10;
+					if (options.content_flags[CONTENT_BUTTON_COUNT] < 10) options.content_flags[CONTENT_BUTTON_COUNT] = 10;
 					break;
 				case IPT_PADDLE:
           options.content_flags[CONTENT_PADDLE] = true;
@@ -874,6 +887,23 @@ extern	const char* ost_drivers[];
 		++input;
 	}
 
+  if(options.content_flags[CONTENT_DUAL_JOYSTICK] == true)
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
+  
+  if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 4-way joystick controls.\n");
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 8-way joystick controls.\n");
+
+  /************ DRIVERS FLAGGED IN CONTROLS.C WITH 45-DEGREE JOYSTICK ROTATION ************/  
+  if(game_driver->ctrl_dat->rotate_joy_45) 
+  { 
+    options.content_flags[CONTENT_ROTATE_JOY_45] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as joysticks rotated 45-degrees with respect to the cabinet.\n");
+  }
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having joysticks on axis with respect to the cabinet.\n");
+
   /************ DRIVERS FLAGGED IN CONTROLS.C WITH ALTERNATING CONTROLS ************/  
   if(game_driver->ctrl_dat->alternating_controls) 
   { 
@@ -882,13 +912,13 @@ extern	const char* ost_drivers[];
        alternating controls layout. this is a place to check some condition and make the two numbers different
        if that should ever prove useful. */
     if(true)       
-      options.ctrl_count = options.player_count;
+      options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
   }
   else
-    options.ctrl_count = options.player_count;
+    options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
  
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i players with %i distinct controls.\n", options.player_count, options.ctrl_count);
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i button controls.\n", options.button_count);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);
 
   
   
@@ -1356,7 +1386,7 @@ void retro_describe_controls(void)
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
   
-  for(display_idx = DISP_PLAYER1; (display_idx <= options.ctrl_count && display_idx <= DISP_PLAYER6); display_idx++)
+  for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= DISP_PLAYER6); display_idx++)
   {
     for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
     {
@@ -1365,7 +1395,7 @@ void retro_describe_controls(void)
 
       if(mame_ctrl_id >= IPT_BUTTON1 && mame_ctrl_id <= IPT_BUTTON10)
       {
-        if((mame_ctrl_id - IPT_BUTTON1 + 1) > options.button_count)
+        if((mame_ctrl_id - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
         {
           continue;
         }
@@ -1386,7 +1416,7 @@ void retro_describe_controls(void)
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
-      log_cb(RETRO_LOG_INFO, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
       needle++;
     }
   }

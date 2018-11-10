@@ -50,38 +50,38 @@ Core options
 
 ******************************************************************************/
 
-enum
+enum /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
-  OPT_FRAMESKIP = 0,
+  OPT_4WAY = 0,
   OPT_MOUSE_DEVICE,
   OPT_CROSSHAIR_ENABLED,
   OPT_SKIP_DISCLAIMER,
   OPT_SKIP_WARNINGS,
   OPT_DISPLAY_SETUP,
-  OPT_BRIGHTNESS,
-  OPT_GAMMA,
-  OPT_BACKDROP,
   OPT_NEOGEO_BIOS,
   OPT_STV_BIOS,
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
   OPT_DUAL_JOY,
   OPT_RSTICK_BTNS,
-  OPT_TATE_MODE,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
+  OPT_VECTOR_BEAM,  
   OPT_VECTOR_TRANSLUCENCY,
-  OPT_VECTOR_BEAM,
   OPT_VECTOR_FLICKER,
   OPT_VECTOR_INTENSITY,
-  OPT_NVRAM_BOOTSTRAP,
-  OPT_SAMPLE_RATE,
   OPT_DCS_SPEEDHACK,
-  OPT_INPUT_INTERFACE,  
-  OPT_MAME_REMAPPING,
-  OPT_4WAY,
   OPT_CORE_SYS_SUBFOLDER,
   OPT_CORE_SAVE_SUBFOLDER,
+  OPT_TATE_MODE,  
+  OPT_INPUT_INTERFACE,    
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,  
+  OPT_FRAMESKIP,
+  OPT_SAMPLE_RATE,  
+  OPT_MAME_REMAPPING,
+  OPT_BACKDROP,
+  OPT_NVRAM_BOOTSTRAP,  
   OPT_end /* dummy last entry */
 };
 
@@ -322,22 +322,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   Scan the list, and change the keys/joysticks you want.
 */
 void osd_customize_inputport_defaults(struct ipd *defaults);
-
-
-
-/******************************************************************************
-
-	File I/O
-
-******************************************************************************/
-
-/* inp header */
-typedef struct
-{
-	char name[9];      /* 8 bytes for game->name + NUL */
-	char version[3];   /* byte[0] = 0, byte[1] = version byte[2] = beta_version */
-	char reserved[20]; /* for future use, possible store game options? */
-} INP_HEADER;
 
 
 /******************************************************************************
