@@ -24,6 +24,8 @@
 static char message_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
 static int  messagecounter;
+static bool generate_DAT;           /* allows us to display a UI message before and while the DAT is generated */
+static bool generate_alternate_DAT; /* not in use as of November 2018 allows us to display a UI message before and while the DAT is generated */
 
 
 /***************************************************************************
@@ -3098,6 +3100,17 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 	int sel,res=-1;
 	static int menu_lastselected = 0;
 
+  if(generate_alternate_DAT)
+  {
+    print_mame_xml(0);
+    generate_alternate_DAT = false;
+  }
+  
+  if(generate_DAT)
+  {
+    print_mame_xml(1);
+    generate_DAT = false;
+  }
 
 	if (selected == -1)
 		sel = menu_lastselected;
@@ -3235,13 +3248,15 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         break;          
       }        
       case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */
-          usrintf_showmessage_secs(4, "%s", "Generating Alternative XML DAT!");
-          print_mame_xml(0);
+          usrintf_showmessage_secs(2, "%s", "Generating Alternative XML DAT!");
+          schedule_full_refresh();
+          generate_alternate_DAT = true;
           break;
 
       case UI_GENERATE_OLD_XML_DAT:
-          usrintf_showmessage_secs(4, "%s", "Generating XML DAT!");      
-          print_mame_xml(1);
+          usrintf_showmessage_secs(2, "%s", "Generating XML DAT!");   
+          schedule_full_refresh();
+          generate_DAT = true;
           break;
 
 			case UI_EXIT:
