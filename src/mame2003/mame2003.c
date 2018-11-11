@@ -1720,7 +1720,15 @@ const struct JoystickInfo *osd_get_joy_list(void)
 int osd_is_joy_pressed(int joycode)
 {
 if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
-   return (joycode >= 1000) ? retroJsState[joycode-1000] : 0;
+ 
+	if ( joycode-1000  <  sizeof(retroJsState) /4 )
+	{	
+			return (joycode >= 1000) ? retroJsState[joycode-1000] : 0;
+
+	}
+	else
+	//  if the stack gets corruped this seems to be the part of the code that wobbles stop that happening so we can debug effectively by adding the bounds check above 
+	return 0;
 }
 
 int osd_is_joystick_axis_code(int joycode)
