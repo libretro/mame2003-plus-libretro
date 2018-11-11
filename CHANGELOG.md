@@ -44,7 +44,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Fujiyama Buster
 * Gaia: The Last Choice Of Earth
 * Ghost Loop
-* Glass (Censored, Unprotected)
+* Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Guerrilla War (joystick hack bootleg)
 * Gunbarich
 * GunMaster
