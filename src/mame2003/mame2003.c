@@ -252,6 +252,7 @@ static void update_variables(bool first_time)
   struct retro_led_interface ledintf;
   struct retro_variable var;
   int index;
+  bool reset_control_descriptions = false;
 
   for(index = 0; index < OPT_end; index++)
   {
@@ -273,10 +274,22 @@ static void update_variables(bool first_time)
         break;
 
         case OPT_4WAY:
-          if( (strcmp(var.value, "enabled") == 0) && (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) )                 
-            options.restrict_4_way = true;
+          if( (strcmp(var.value, "enabled") == 0) && (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) )
+          {
+            if(!options.restrict_4_way)           /* the option has just been toggled to "enabled" */
+            {
+              options.restrict_4_way = true;
+              reset_control_descriptions = true;  /* games with rotated joysticks send different control descriptions in 4-way restrictor mode */
+            }
+          }
           else
-            options.restrict_4_way = false;
+          {
+            if(options.restrict_4_way)            /* the option has just been toggled to "disabled" */
+            {
+              options.restrict_4_way = false;
+              reset_control_descriptions = true;  /* games with rotated joysticks send different control descriptions in 4-way restrictor mode */
+            }
+          }
           break;
 
         case OPT_MOUSE_DEVICE:
@@ -545,6 +558,12 @@ static void update_variables(bool first_time)
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
   led_state_cb = ledintf.set_led_state;
+  
+  if(reset_control_descriptions) /* one of the option changes has flagged a need to re-describe the controls */
+  {
+    retro_describe_controls();
+    reset_control_descriptions = false;
+  }
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
