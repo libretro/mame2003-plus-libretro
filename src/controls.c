@@ -7687,7 +7687,6 @@ const char *fax_get_ctrl_name(int type)
 const struct ControlInfo fgoal_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
-  false, /* 45_degree_rotation for joystick(s) */
   true, /* alternating_controls */
   true, /* mirrored_controls */
   "", /* control_details */
