@@ -3230,15 +3230,15 @@ GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Gol
 GAMEX(1992, brival,   0,        sys32_hi, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien³ - The Gun", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, svs,	  svf,		system32, svf,		s32,	  ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jleague,  svf,      system32, svf,      s32,      ROT0, "Sega", "The J.League 1994 (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 
 /* not really working */
 GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1993, f1lap,    0,        system32, f1lap,	f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
+GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
 GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
 GAMEX(1995, slipstrm, 0,        sys32_hi, system32,	f1en,     ROT0, "Capcom", "Slipstream", GAME_NOT_WORKING ) /* unhandled v60 opcodes .... */
 /* Loony Toons (maybe) */
