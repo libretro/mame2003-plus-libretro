@@ -1837,14 +1837,14 @@ InputSeq* input_port_seq(const struct InputPort *in)
 	{
 		type = (in-1)->type & (~IPF_MASK | IPF_PLAYERMASK);
 		/* if port is disabled, or cheat with cheats disabled, return no key */
-		if (((in-1)->type & IPF_UNUSED) || (! 0 && ((in-1)->type & IPF_CHEAT)))
+		if (((in-1)->type & IPF_UNUSED) || (!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 	else
 	{
 		type = in->type & (~IPF_MASK | IPF_PLAYERMASK);
 		/* if port is disabled, or cheat with cheats disabled, return no key */
-		if ((in->type & IPF_UNUSED) || (! 0 && (in->type & IPF_CHEAT)))
+		if ((in->type & IPF_UNUSED) || (!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 
@@ -1876,8 +1876,8 @@ void update_analog_port(int port)
 	/* get input definition */
 	in = input_analog[port];
 
-	/* this is a cheat-only port, bail */
-	if (in->type & IPF_CHEAT) return;
+	/* if we're not cheating and this is a cheat-only port, bail */
+	if (!options.cheat_input_ports && (in->type & IPF_CHEAT)) return;
 	type=(in->type & ~IPF_MASK);
 
 	decseq = input_port_seq(in);
