@@ -1781,7 +1781,8 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION && !(!options.cheat_input_ports && (in->type & IPF_CHEAT))) 
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 	
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
