@@ -646,8 +646,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int              orientation    = 0;
   unsigned         rotateMode     = 0;
   static const int uiModes[]      = {ROT0, ROT90, ROT180, ROT270};
-  //move this to a more convient place if you want to it a core option mark
-  options.cheat_input_ports = false;
+
   if(string_is_empty(game->path))
   {
     log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not set. Exiting!\n");
