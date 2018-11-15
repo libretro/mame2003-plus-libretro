@@ -196,15 +196,15 @@ struct GameOptions
   mame_file *playback;		       /* handle to file to playback input from */
   mame_file *language_file;	     /* handle to file for localization */
 
-  int  content_flags[CONTENT_end];
+  int      content_flags[CONTENT_end];
 
-  char   *romset_filename_noext;
-  char   *libretro_content_path;
-  char   *libretro_system_path;
-  char   *libretro_save_path;
+  char     *romset_filename_noext;
+  char     *libretro_content_path;
+  char     *libretro_system_path;
+  char     *libretro_save_path;
 
-  int		   mame_debug;		       /* 1 to enable debugging */
-  int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
+  int      mame_debug;		       /* 1 to enable debugging */
+  int      skip_gameinfo;		     /* 1 to skip the game info screen at startup */
   bool 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
   bool     skip_warnings;        /* 1 to skip the game warning screen at startup */
   bool     display_setup;        /* the MAME setup menu */
@@ -223,30 +223,30 @@ struct GameOptions
   unsigned activate_dcs_speedhack;
   bool     mame_remapping;       /* display MAME input remapping menu */
 
-  int		   samplerate;		       /* sound sample playback rate, in KHz */
-  bool	   use_samples;	         /* 1 to enable external .wav samples */
+  int      samplerate;		       /* sound sample playback rate, in KHz */
+  bool     use_samples;	         /* 1 to enable external .wav samples */
 
   float	   brightness;		       /* brightness of the display */
   float	   pause_bright;		     /* additional brightness when in pause */
   float	   gamma;			           /* gamma correction of the display */
   int      frameskip;
-  int		   color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
-  int		   ui_orientation;	     /* orientation of the UI relative to the video */
+  int      color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
+  int      ui_orientation;	     /* orientation of the UI relative to the video */
       
-  int		   vector_width;	       /* requested width for vector games; 0 means default (640) */
-  int		   vector_height;	       /* requested height for vector games; 0 means default (480) */
+  int      vector_width;	       /* requested width for vector games; 0 means default (640) */
+  int      vector_height;	       /* requested height for vector games; 0 means default (480) */
   float    beam;                 /* vector beam width */
-  int	     vector_flicker;	     /* vector beam flicker effect control */
+  int      vector_flicker;	     /* vector beam flicker effect control */
   float	   vector_intensity_correction;   
-  int		   translucency;	       /* 1 to enable translucency on vectors */
-  int 	   antialias;		         /* 1 to enable antialiasing on vectors */
+  int      translucency;	       /* 1 to enable translucency on vectors */
+  int      antialias;		         /* 1 to enable antialiasing on vectors */
   unsigned vector_resolution_multiplier;
 
-  int		   use_artwork;	         /* bitfield indicating which artwork pieces to use */
-  int		   artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
-  int		   artwork_crop;	       /* 1 to crop artwork to the game screen */
+  int      use_artwork;	         /* bitfield indicating which artwork pieces to use */
+  int      artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
+  int      artwork_crop;	       /* 1 to crop artwork to the game screen */
 
-  char	   savegame;		         /* character representing a savegame to load */
+  char     savegame;		         /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
   
@@ -255,10 +255,11 @@ struct GameOptions
   bool     system_subfolder;     /* save all system files within a subfolder of the libretro system folder rather than directly in the system folder */
   bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */  
   
-  int		   debug_width;	         /* requested width of debugger bitmap */
-  int		   debug_height;	       /* requested height of debugger bitmap */
-  int		   debug_depth;	         /* requested depth of debugger bitmap */
-};
+  int      debug_width;	         /* requested width of debugger bitmap */
+  int      debug_height;	       /* requested height of debugger bitmap */
+  int      debug_depth;	         /* requested depth of debugger bitmap */
+  bool     cheat_input_ports;     /*cheat input ports enable/disable */
+  };
 
 
 

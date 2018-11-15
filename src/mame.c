@@ -836,6 +836,7 @@ static void init_game_options(void)
   /* initialize the samplerate */
   
   Machine->sample_rate = options.samplerate;
+/* move this to a core option if you want it to toggle */
 
 }
 

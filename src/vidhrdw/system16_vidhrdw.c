@@ -91,6 +91,7 @@ type1		type0			function
 ***************************************************************************/
 #include "driver.h"
 #include "system16.h"
+#include "vidhrdw/res_net.h"
 
 /*
 static void debug_draw( struct mame_bitmap *bitmap, int x, int y, unsigned int data ){
@@ -148,14 +149,12 @@ int sys16_textlayer_lo_min;
 int sys16_textlayer_lo_max;
 int sys16_textlayer_hi_min;
 int sys16_textlayer_hi_max;
-int sys16_dactype;
-int sys16_bg1_trans; /* alien syn + sys18*/
+int sys16_bg1_trans; // alien syn + sys18
 int sys16_bg_priority_mode;
 int sys16_fg_priority_mode;
 int sys16_bg_priority_value;
 int sys16_fg_priority_value;
 int sys16_18_mode;
-int sys16_spritelist_end;
 int sys16_tilebank_switch;
 int sys16_rowscroll_scroll;
 int sys16_quartet_title_kludge;
@@ -219,7 +218,7 @@ READ16_HANDLER( sys16_tileram_r ){
 	Each sprite has 4 levels of priority, specifying where they are placed between bg(lo) and text.
 */
 
-static void draw_sprite( /***/
+static void draw_sprite( //*
 	struct mame_bitmap *bitmap,
 	const struct rectangle *cliprect,
 	const unsigned char *addr, int pitch,
@@ -244,7 +243,7 @@ static void draw_sprite( /***/
 	unsigned pen, data;
 
 	priority = 1<<priority;
-	if (!strcmp(Machine->gamedrv->name,"sonicbom")) flipy^=0x80; /* temp hack until we fix drawing*/
+	if (!strcmp(Machine->gamedrv->name,"sonicbom")) flipy^=0x80; // temp hack until we fix drawing
 
 	if( flipy ){
 		dy = -1;
@@ -361,7 +360,7 @@ static void draw_sprite( /***/
 	}
 }
 
-static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int b3d ) /***/
+static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int b3d ) //*
 {
 	const pen_t *base_pal = Machine->gfx[0]->colortable;
 	const unsigned char *base_gfx = memory_region(REGION_GFX2);
@@ -393,7 +392,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 			width <<= 2;
 			eos = 0;
 
-			if( b3d ) /* outrun/aburner*/
+			if( b3d ) // outrun/aburner
 			{
 				if (b3d == 2) eos = 1;
 				if (xpos < 0 && flipx) continue;
@@ -431,12 +430,16 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 			}
 			else
 			{
-				if (!width) { width = 512; eos = 1; } /* used by fantasy zone for laser*/
+				if (!width) { width = 512; eos = 1; } // used by fantasy zone for laser
 				screen_width = width;
 				logical_height = sprite.screen_height;
 
 				if (sprite.zoomy) logical_height = logical_height*(0x400 + sprite.zoomy)/0x400 - 1;
 				if (sprite.zoomx) screen_width = screen_width*(0x800 - sprite.zoomx)/0x800 + 2;
+
+// fix, 5-bit zoom field
+//				if (sprite.zoomy) logical_height = logical_height*(0x20 + sprite.zoomy)/0x20 - 1;
+//				if (sprite.zoomx) screen_width = screen_width*(0x40 - sprite.zoomx)/0x40 + 2;
 
 				if (flipx && flipy) { mod_h = -logical_height-1; mod_x = 2; }
 				else if     (flipx) { mod_h = 0;                 mod_x = 2; }
@@ -482,57 +485,82 @@ UINT32 sys16_text_map( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows 
 
 /***************************************************************************/
 
-WRITE16_HANDLER( sys16_paletteram_w ){
+/*
+	Color generation details
+	
+	Each color is made up of 5 bits, connected through one or more resistors like so:
+	
+	Bit 0 = 1 x 3.9K ohm
+	Bit 1 = 1 x 2.0K ohm
+	Bit 2 = 1 x 1.0K ohm
+	Bit 3 = 2 x 1.0K ohm
+	Bit 4 = 4 x 1.0K ohm
+	
+	Another data bit is connected by a tristate buffer to the color output through a 470 ohm resistor.
+	The buffer allows the resistor to have no effect (tristate), halve brightness (pull-down) or double brightness (pull-up).
+	The data bit source is a PPI pin in some of the earlier hardware (Hang-On, Pre-System 16) or bit 15 of each
+	color RAM entry (Space Harrier, System 16B and most later boards).
+*/
+
+const int resistances_normal[6] = {3900, 2000, 1000, 1000/2, 1000/4, 0};
+const int resistances_sh[6] = {3900, 2000, 1000, 1000/2, 1000/4, 470};
+static double weights[2][3][6];
+
+WRITE16_HANDLER( sys16_paletteram_w )
+{
 	data16_t oldword = paletteram16[offset];
 	data16_t newword;
 	COMBINE_DATA( &paletteram16[offset] );
 	newword = paletteram16[offset];
-	if( oldword!=newword ){ /* we can do this, because we initialize palette RAM to all black in vh_start */
+	
+	if( oldword!=newword )
+	{ 
+		/* we can do this, because we initialize palette RAM to all black in vh_start */
 		/*	   byte 0    byte 1 */
-		/*	GBGR BBBB GGGG RRRR */
-		/*	5444 3210 3210 3210 */
-		UINT8 r = (newword & 0x00f)<<1;
-		UINT8 g = (newword & 0x0f0)>>2;
-		UINT8 b = (newword & 0xf00)>>7;
-		if( sys16_dactype == 0 ){ /* we should really use two distinct paletteram_w handlers */
-			/* dac_type == 0 (from GCS file) */
-			if (newword&0x1000) r|=1;
-			if (newword&0x2000) g|=2;
-			if (newword&0x8000) g|=1;
-			if (newword&0x4000) b|=1;
-		}
-		else if( sys16_dactype == 1 ){
-			/* dac_type == 1 (from GCS file) Shinobi Only*/
-			if (newword&0x1000) r|=1;
-			if (newword&0x4000) g|=2;
-			if (newword&0x8000) g|=1;
-			if (newword&0x2000) b|=1;
-		}
+		/*	sBGR BBBB GGGG RRRR */
+		/*	x000 4321 4321 4321 */
+		
+		int r, g, b, rs, gs, bs, rh, gh, bh;
+		int r0 = (newword >> 12) & 1;
+		int r1 = (newword >>  0) & 1;
+		int r2 = (newword >>  1) & 1;
+		int r3 = (newword >>  2) & 1;
+		int r4 = (newword >>  3) & 1;
+		int g0 = (newword >> 13) & 1;
+		int g1 = (newword >>  4) & 1;
+		int g2 = (newword >>  5) & 1;
+		int g3 = (newword >>  6) & 1;
+		int g4 = (newword >>  7) & 1;
+		int b0 = (newword >> 14) & 1;
+		int b1 = (newword >>  8) & 1;
+		int b2 = (newword >>  9) & 1;
+		int b3 = (newword >> 10) & 1;
+		int b4 = (newword >> 11) & 1;
 
-#ifndef TRANSPARENT_SHADOWS
-		palette_set_color( offset,
-				(r << 3) | (r >> 2), /* 5 bits red */
-				(g << 2) | (g >> 4), /* 6 bits green */
-				(b << 3) | (b >> 2) /* 5 bits blue */
-			);
-#else
-		{   extern struct GameDriver driver_aburner, driver_aburner2; /*JUN*/
-			r=(r << 3) | (r >> 2); /* 5 bits red */
-			g=(g << 2) | (g >> 4); /* 6 bits green */
-			b=(b << 3) | (b >> 2); /* 5 bits blue */
+		/* Normal colors */
+		r = combine_6_weights(weights[0][0], r0, r1, r2, r3, r4, 0);
+		g = combine_6_weights(weights[0][1], g0, g1, g2, g3, g4, 0);
+		b = combine_6_weights(weights[0][2], b0, b1, b2, b3, b4, 0);
+		
+		/* Shadow colors */
+		rs = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 0);
+		gs = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 0);
+		bs = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 0);
 
-			palette_set_color( offset,r,g,b);
-			if (Machine->gamedrv != &driver_aburner && Machine->gamedrv != &driver_aburner2) { /*JUN*/
-			/* shadow color */
-			r= r * 160 / 256;
-			g= g * 160 / 256;
-			b= b * 160 / 256;
-
-			palette_set_color( offset+Machine->drv->total_colors/2,r,g,b); }
-		}
-#endif
+		/* Highlight colors */
+		rh = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 1);
+		gh = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 1);
+		bh = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 1);	
+	
+		palette_set_color( offset, r, g, b );
+		
+#ifdef TRANSPARENT_SHADOWS
+		palette_set_color( offset+Machine->drv->total_colors/2,rs,gs,bs); 
+#endif		
+		
 	}
 }
+
 
 static void update_page( void ){
 	int all_dirty = 0;
@@ -615,13 +643,13 @@ static void get_bg_tile_info( int offset ){
 	}
 
 	switch(sys16_bg_priority_mode) {
-	case 1: /* Alien Syndrome*/
+	case 1: // Alien Syndrome
 		tile_info.priority = (data&0x8000)?1:0;
 		break;
-	case 2: /* Body Slam / wrestwar*/
+	case 2: // Body Slam / wrestwar
 		tile_info.priority = ((data&0xff00) >= sys16_bg_priority_value)?1:0;
 		break;
-	case 3: /* sys18 games*/
+	case 3: // sys18 games
 		if( data&0x8000 ){
 			tile_info.priority = 2;
 		}
@@ -659,7 +687,7 @@ static void get_fg_tile_info( int offset ){
 				0)
 	}
 	switch(sys16_fg_priority_mode){
-	case 1: /* alien syndrome*/
+	case 1: // alien syndrome
 		tile_info.priority = (data&0x8000)?1:0;
 		break;
 
@@ -817,6 +845,20 @@ VIDEO_START( system16 ){
 	};
 	sys16_obj_bank = bank_default;
 
+	/* Normal colors */
+	compute_resistor_weights(0, 255, -1.0,  
+		6, resistances_normal, weights[0][0], 0, 0,
+		6, resistances_normal, weights[0][1], 0, 0,
+		6, resistances_normal, weights[0][2], 0, 0
+		);	
+
+	/* Shadow/Highlight colors */
+	compute_resistor_weights(0, 255, -1.0,  
+		6, resistances_sh, weights[1][0], 0, 0,
+		6, resistances_sh, weights[1][1], 0, 0,
+		6, resistances_sh, weights[1][2], 0, 0
+		);	
+
 	if( !sys16_bg1_trans )
 		background = tilemap_create(
 			get_bg_tile_info,
@@ -879,13 +921,11 @@ VIDEO_START( system16 ){
 		sys16_sprxoffset = -0xb8;
 		sys16_textmode = 0;
 		sys16_bgxoffset = 0;
-		sys16_dactype = 0;
 		sys16_bg_priority_mode=0;
 		sys16_fg_priority_mode=0;
-		sys16_spritelist_end=0xffff;
 		sys16_tilebank_switch=0x1000;
 
-		/* Defaults for sys16 games*/
+		// Defaults for sys16 games
 		sys16_textlayer_lo_min=0;
 		sys16_textlayer_lo_max=0x7f;
 		sys16_textlayer_hi_min=0x80;
@@ -1075,22 +1115,22 @@ static void sys16_vh_refresh_helper( void ){
 
 static void sys18_vh_screenrefresh_helper( void ){
 	int i;
-	if( sys18_splittab_bg_x ){ /* screenwise rowscroll?*/
+	if( sys18_splittab_bg_x ){ // screenwise rowscroll?
 		int offset,offset2, scroll,scroll2,orig_scroll;
 
-		offset = 32+((sys16_bg_scrolly&0x1f8) >> 3); /* 0x00..0x3f*/
-		offset2 = 32+((sys16_bg2_scrolly&0x1f8) >> 3); /* 0x00..0x3f*/
+		offset = 32+((sys16_bg_scrolly&0x1f8) >> 3); // 0x00..0x3f
+		offset2 = 32+((sys16_bg2_scrolly&0x1f8) >> 3); // 0x00..0x3f
 
 		for( i=0;i<29;i++ ){
 			orig_scroll = scroll2 = scroll = sys18_splittab_bg_x[i];
 			if((sys16_bg_scrollx  &0xff00) != 0x8000) scroll = sys16_bg_scrollx;
 			if((sys16_bg2_scrollx &0xff00) != 0x8000) scroll2 = sys16_bg2_scrollx;
 
-			if(orig_scroll&0x8000){ /* background2*/
+			if(orig_scroll&0x8000){ // background2
 				tilemap_set_scrollx( background , (i+offset)&0x3f, TILE_LINE_DISABLED );
 				tilemap_set_scrollx( background2, (i+offset2)&0x3f, -320-(scroll2&0x3ff)+sys16_bgxoffset );
 			}
-			else{ /* background*/
+			else{ // background
 				tilemap_set_scrollx( background , (i+offset)&0x3f, -320-(scroll&0x3ff)+sys16_bgxoffset );
 				tilemap_set_scrollx( background2, (i+offset2)&0x3f, TILE_LINE_DISABLED );
 			}
@@ -1150,15 +1190,15 @@ VIDEO_UPDATE( system16 ){
 
 	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY, 0x00 );
 	if(sys16_bg_priority_mode) tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY | 1, 0x00 );
-/*	sprite_draw(sprite_list,3); // needed for Aurail*/
-	if( sys16_bg_priority_mode==2 ) tilemap_draw( bitmap,cliprect, background, 1, 0x01 );/* body slam (& wrestwar??)*/
-/*	sprite_draw(sprite_list,2);*/
-	else if( sys16_bg_priority_mode==1 ) tilemap_draw( bitmap,cliprect, background, 1, 0x03 );/* alien syndrome / aurail*/
+//	sprite_draw(sprite_list,3); // needed for Aurail
+	if( sys16_bg_priority_mode==2 ) tilemap_draw( bitmap,cliprect, background, 1, 0x01 );// body slam (& wrestwar??)
+//	sprite_draw(sprite_list,2);
+	else if( sys16_bg_priority_mode==1 ) tilemap_draw( bitmap,cliprect, background, 1, 0x03 );// alien syndrome / aurail
 	tilemap_draw( bitmap,cliprect, foreground, 0, 0x03 );
-/*	sprite_draw(sprite_list,1);*/
+//	sprite_draw(sprite_list,1);
 	tilemap_draw( bitmap,cliprect, foreground, 1, 0x07 );
-	if( sys16_textlayer_lo_max!=0 ) tilemap_draw( bitmap,cliprect, text_layer, 1, 7 );/* needed for Body Slam*/
-/*	sprite_draw(sprite_list,0);*/
+	if( sys16_textlayer_lo_max!=0 ) tilemap_draw( bitmap,cliprect, text_layer, 1, 7 );// needed for Body Slam
+//	sprite_draw(sprite_list,0);
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
 
 	draw_sprites( bitmap,cliprect,0 );
@@ -1177,22 +1217,22 @@ VIDEO_UPDATE( system18 ){
 		fillbitmap(bitmap,Machine->pens[0],cliprect);
 
 	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY, 0 );
-	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY | 1, 0 );	/*??*/
-	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY | 2, 0 );	/*??*/
+	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY | 1, 0 );	//??
+	tilemap_draw( bitmap,cliprect, background, TILEMAP_IGNORE_TRANSPARENCY | 2, 0 );	//??
 
-/*	sprite_draw(sprite_list,3);*/
+//	sprite_draw(sprite_list,3);
 	tilemap_draw( bitmap,cliprect, background, 1, 0x1 );
-/*	sprite_draw(sprite_list,2);*/
+//	sprite_draw(sprite_list,2);
 	tilemap_draw( bitmap,cliprect, background, 2, 0x3 );
 
 	if(sys18_fg2_active) tilemap_draw( bitmap,cliprect, foreground2, 0, 0x3 );
 	tilemap_draw( bitmap,cliprect, foreground, 0, 0x3 );
-/*	sprite_draw(sprite_list,1);*/
+//	sprite_draw(sprite_list,1);
 	if(sys18_fg2_active) tilemap_draw( bitmap,cliprect, foreground2, 1, 0x7 );
 	tilemap_draw( bitmap,cliprect, foreground, 1, 0x7 );
 
 	tilemap_draw( bitmap,cliprect, text_layer, 1, 0x7 );
-/*	sprite_draw(sprite_list,0);*/
+//	sprite_draw(sprite_list,0);
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
 
 	draw_sprites( bitmap,cliprect, 0 );
@@ -1259,7 +1299,7 @@ if( keyboard_pressed( KEYCODE_S ) ){
 
 					if((ver_data & 0x500) == 0x100 || (ver_data & 0x300) == 0x200)
 					{
-						/* fill line*/
+						// fill line
 						for(j=cliprect->min_x;j<=cliprect->max_x;j++)
 						{
 							line16=(UINT16 *)bitmap->line[j]+ypos;
@@ -1268,7 +1308,7 @@ if( keyboard_pressed( KEYCODE_S ) ){
 					}
 					else
 					{
-						/* copy line*/
+						// copy line
 						ver_data=ver_data & 0x00ff;
 						colorflip = (sys16_gr_flip[ver_data] >> 3) & 1;
 
@@ -1282,12 +1322,12 @@ if( keyboard_pressed( KEYCODE_S ) ){
 
 						if(hor_pos & 0xf000)
 						{
-							/* reverse*/
+							// reverse
 							hor_pos=((0-((hor_pos&0x7ff)^7))+0x9f8)&0x3ff;
 						}
 						else
 						{
-							/* normal*/
+							// normal
 							hor_pos=(hor_pos+0x200) & 0x3ff;
 						}
 
@@ -1342,7 +1382,7 @@ if( keyboard_pressed( KEYCODE_S ) ){
 						}
 					}
 					else {
-						/* copy line*/
+						// copy line
 						line16 = (UINT16 *)bitmap->line[ypos]+xoff; /* dest for drawing */
 						ver_data &= 0xff;
 
@@ -1353,10 +1393,10 @@ if( keyboard_pressed( KEYCODE_S ) ){
 						colors[4] = paldata2[ sys16_gr_colorflip[colorflip][3] ];
 
 						hor_pos = sys16_gr_hor[ver_data];
-						if( hor_pos & 0xf000 ){ /* reverse (precalculated)*/
+						if( hor_pos & 0xf000 ){ // reverse (precalculated)
 							hor_pos=((0-((hor_pos&0x7ff)^7))+0x9f8)&0x3ff;
 						}
-						else { /* normal*/
+						else { // normal
 							hor_pos=(hor_pos+0x200) & 0x3ff;
 						}
 
@@ -1439,7 +1479,7 @@ static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *clipr
 					if(ver_data & 0x800) /* disable */
 					{
 						colors[0] = paldata1[ ver_data&0x3f ];
-						/* fill line*/
+						// fill line
 						for(j=cliprect->min_x;j<=cliprect->max_x;j++)
 						{
 							line16=(UINT16 *)bitmap->line[j]+ypos;
@@ -1448,11 +1488,11 @@ static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *clipr
 					}
 					else
 					{
-						/* copy line*/
-						ver_data=ver_data & 0x01ff;		/*???*/
+						// copy line
+						ver_data=ver_data & 0x01ff;		//???
 						colorflip_info = sys16_gr_flip[ver_data];
 
-						colors[0] = paldata2[ ((colorflip_info >> 8) & 0x1f) + 0x20 ];		/*??*/
+						colors[0] = paldata2[ ((colorflip_info >> 8) & 0x1f) + 0x20 ];		//??
 
 						colorflip = (colorflip_info >> 3) & 1;
 
@@ -1512,18 +1552,18 @@ static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *clipr
 				if((ver_data & 0x800) == priority){
 					if(ver_data & 0x800){
 						colors[0] = paldata1[ ver_data&0x3f ];
-						/* fill line*/
+						// fill line
 						line16 = (UINT16 *)bitmap->line[ypos];
 						for(j=cliprect->min_x;j<=cliprect->max_x;j++){
 							*line16++ = colors[0];
 						}
 					}
 					else {
-						/* copy line*/
+						// copy line
 						line16 = (UINT16 *)bitmap->line[ypos]+xoff;
-						ver_data &= 0x01ff;		/*???*/
+						ver_data &= 0x01ff;		//???
 						colorflip_info = sys16_gr_flip[ver_data];
-						colors[0] = paldata2[ ((colorflip_info >> 8) & 0x1f) + 0x20 ];		/*??*/
+						colors[0] = paldata2[ ((colorflip_info >> 8) & 0x1f) + 0x20 ];		//??
 						colorflip = (colorflip_info >> 3) & 1;
 						colors[1] = paldata2[ sys16_gr_colorflip[colorflip][0] ];
 						colors[2] = paldata2[ sys16_gr_colorflip[colorflip][1] ];
@@ -1739,7 +1779,7 @@ static void aburner_draw_road( struct mame_bitmap *bitmap, const struct rectangl
 		else if( page&0xc0 ){ /* road */
 			const UINT8 *source = aburner_backdrop+(line&0xff)*512 + 512*256*(page&1);
 			UINT16 xscroll = (512-320)/2;
-			/* 040d 04b0 0552: normal: sky,horizon,sea*/
+			// 040d 04b0 0552: normal: sky,horizon,sea
 
 			UINT16 flip = vreg[0x600+sy];
 			int clut[5];
@@ -1835,19 +1875,19 @@ static void sys16_aburner_vh_screenrefresh_helper( void ){
 
 	{
 		int offset,offset2, scroll,scroll2,orig_scroll;
-		offset  = 32+((sys16_bg_scrolly >>3)&0x3f ); /* screenwise rowscroll*/
-		offset2 = 32+((sys16_bg2_scrolly>>3)&0x3f ); /* screenwise rowscroll*/
+		offset  = 32+((sys16_bg_scrolly >>3)&0x3f ); // screenwise rowscroll
+		offset2 = 32+((sys16_bg2_scrolly>>3)&0x3f ); // screenwise rowscroll
 
 		for( i=0;i<29;i++ ){
 			orig_scroll = scroll2 = scroll = sys18_splittab_bg_x[i];
 			if((sys16_bg_scrollx  &0xff00) != 0x8000) scroll = sys16_bg_scrollx;
 			if((sys16_bg2_scrollx &0xff00) != 0x8000) scroll2 = sys16_bg2_scrollx;
 
-			if( orig_scroll&0x8000 ){ /* background2*/
+			if( orig_scroll&0x8000 ){ // background2
 				tilemap_set_scrollx( background , (i+offset)&0x3f, TILE_LINE_DISABLED );
 				tilemap_set_scrollx( background2, (i+offset2)&0x3f, -320-(scroll2&0x3ff)+sys16_bgxoffset );
 			}
-			else{ /* background1*/
+			else{ // background1
 				tilemap_set_scrollx( background , (i+offset)&0x3f, -320-(scroll&0x3ff)+sys16_bgxoffset );
 				tilemap_set_scrollx( background2, (i+offset2)&0x3f, TILE_LINE_DISABLED );
 			}
@@ -1859,8 +1899,8 @@ static void sys16_aburner_vh_screenrefresh_helper( void ){
 
 	{
 		int offset,offset2, scroll,scroll2,orig_scroll;
-		offset  = 32+((sys16_fg_scrolly >>3)&0x3f ); /* screenwise rowscroll*/
-		offset2 = 32+((sys16_fg2_scrolly>>3)&0x3f ); /* screenwise rowscroll*/
+		offset  = 32+((sys16_fg_scrolly >>3)&0x3f ); // screenwise rowscroll
+		offset2 = 32+((sys16_fg2_scrolly>>3)&0x3f ); // screenwise rowscroll
 
 		for( i=0;i<29;i++ ){
 			orig_scroll = scroll2 = scroll = sys18_splittab_fg_x[i];
@@ -1868,11 +1908,11 @@ static void sys16_aburner_vh_screenrefresh_helper( void ){
 
 			if( (sys16_fg2_scrollx &0xff00) != 0x8000 ) scroll2 = sys16_fg2_scrollx;
 
-			if( orig_scroll&0x8000 ){ /* foreground2*/
+			if( orig_scroll&0x8000 ){ // foreground2
 				tilemap_set_scrollx( foreground , (i+offset)&0x3f, TILE_LINE_DISABLED );
 				tilemap_set_scrollx( foreground2, (i+offset2)&0x3f, -320-(scroll2&0x3ff)+sys16_fgxoffset );
 			}
-			else { /* foreground*/
+			else { // foreground
 				tilemap_set_scrollx( foreground , (i+offset)&0x3f, -320-(scroll&0x3ff)+sys16_fgxoffset );
 				tilemap_set_scrollx( foreground2 , (i+offset2)&0x3f, TILE_LINE_DISABLED );
 			}
@@ -1891,8 +1931,8 @@ VIDEO_UPDATE( aburner ){
 
 	aburner_draw_road( bitmap,cliprect );
 
-/*	tilemap_draw( bitmap,cliprect, background2, 0, 7 );*/
-/*	tilemap_draw( bitmap,cliprect, background2, 1, 7 );*/
+//	tilemap_draw( bitmap,cliprect, background2, 0, 7 );
+//	tilemap_draw( bitmap,cliprect, background2, 1, 7 );
 
 	/* speed indicator, high score header */
 	tilemap_draw( bitmap,cliprect, background, 0, 7 );
@@ -1909,5 +1949,5 @@ VIDEO_UPDATE( aburner ){
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 7 );
 	draw_sprites( bitmap,cliprect, 2 );
 
-/*	debug_draw( bitmap,cliprect, 8,8,sys16_roadram[0x1000] );*/
+//	debug_draw( bitmap,cliprect, 8,8,sys16_roadram[0x1000] );
 }
