@@ -563,5 +563,5 @@ ROM_START( supertr2 )
 ROM_END
 
 GAMEX( 1984, trivquiz, 0, trivquiz, statriv2, 0, ROT0, "Status Games", "Triv Quiz", GAME_WRONG_COLORS )
-GAMEX( 1984, statriv2, 0, statriv2, statriv2, 0, ROT0, "Status Games", "(Status) Triv Two", GAME_WRONG_COLORS )
+GAMEX( 1984, statriv2, 0, statriv2, statriv2, 0, ROT0, "Status Games", "Triv Two",  GAME_WRONG_COLORS )
 GAMEX( 1986, supertr2, 0, supertr2, supertr2, 0, ROT0, "Status Games", "Super Triv II", GAME_WRONG_COLORS )
