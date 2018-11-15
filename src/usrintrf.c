@@ -1470,7 +1470,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 	{
 		if ((in->type & ~IPF_MASK) == switch_name && input_port_name(in) != 0 &&
 				(in->type & IPF_UNUSED) == 0 &&
-				!(in->type & IPF_CHEAT))
+				!(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -1519,7 +1519,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-					!((in-1)->type & IPF_CHEAT))
+					!(!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 				arrowize |= 1;
 		}
 	}
@@ -1536,7 +1536,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-					!((in+1)->type & IPF_CHEAT))
+					!(!options.cheat_input_ports && ((in+1)->type & IPF_CHEAT)))
 				arrowize |= 2;
 		}
 	}
@@ -1564,7 +1564,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-						!((in+1)->type & IPF_CHEAT))
+						!(!options.cheat_input_ports && ((in+1)->type & IPF_CHEAT)))
 					entry[sel]->default_value = (in+1)->default_value & entry[sel]->mask;
 			}
 
@@ -1588,7 +1588,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-						!((in-1)->type & IPF_CHEAT))
+						!(!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 					entry[sel]->default_value = (in-1)->default_value & entry[sel]->mask;
 			}
 
@@ -1653,7 +1653,7 @@ static int setdefcodesettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (in->name != 0  && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION && (in->type & IPF_UNUSED) == 0
-			&& !(in->type & IPF_CHEAT))
+			&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			menu_item[total] = in->name;
@@ -1781,7 +1781,8 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION)
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 	
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -1976,7 +1977,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
-				&& !(in->type & IPF_CHEAT))
+				&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			total++;

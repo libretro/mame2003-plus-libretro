@@ -81,7 +81,8 @@ enum /* controls the order in which core options appear. common, important, and 
   OPT_SAMPLE_RATE,  
   OPT_MAME_REMAPPING,
   OPT_BACKDROP,
-  OPT_NVRAM_BOOTSTRAP,  
+  OPT_NVRAM_BOOTSTRAP, 
+  OPT_Cheat_Input_Ports,
   OPT_end /* dummy last entry */
 };
 
