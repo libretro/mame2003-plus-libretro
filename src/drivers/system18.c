@@ -721,7 +721,7 @@ static void moonwalk_update_proc( void ){
 	}
 }
 
-static MACHINE_INIT( moonwalk ){
+static MACHINE_INIT( mwalk ){
 	sys16_bg_priority_value=0x1000;
 	sys16_sprxoffset = -0x238;
 	sys16_spritelist_end=0x8000;
@@ -768,7 +768,7 @@ static MACHINE_INIT( moonwalk ){
 	sys16_update_proc = moonwalk_update_proc;
 }
 
-static DRIVER_INIT( moonwalk ){
+static DRIVER_INIT( mwalk ){
 	unsigned char *RAM= memory_region(REGION_CPU2);
 	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
@@ -871,7 +871,7 @@ static void astorm_update_proc( void ){
 	}
 }
 
-static MACHINE_INIT( astorm ){
+static MACHINE_INIT( astormj ){
 	sys16_fgxoffset = sys16_bgxoffset = -9;
 
 	sys16_patch_code( 0x2D6E, 0x32 );
@@ -937,7 +937,7 @@ static MACHINE_INIT( astorm ){
 	sys16_update_proc = astorm_update_proc;
 }
 
-static DRIVER_INIT( astorm ){
+static DRIVER_INIT( astormj ){
 	unsigned char *RAM= memory_region(REGION_CPU2);
 	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
@@ -980,25 +980,25 @@ static MACHINE_DRIVER_START( system18 )
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( astorm )
+static MACHINE_DRIVER_START( astormj )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system18)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(astorm_readmem,astorm_writemem)
 
-	MDRV_MACHINE_INIT(astorm)
+	MDRV_MACHINE_INIT(astormj)
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( moonwalk )
+static MACHINE_DRIVER_START( mwalk )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system18)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(moonwalk_readmem,moonwalk_writemem)
 
-	MDRV_MACHINE_INIT(moonwalk)
+	MDRV_MACHINE_INIT(mwalk)
 	
 	MDRV_SOUND_ADD(SAMPLES, moonwalker_samples_set)
 	moonwalker_playing = true;
@@ -1039,7 +1039,7 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
-INPUT_PORTS_START( astorm )
+INPUT_PORTS_START( astormj )
 	PORT_START /* player 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -1104,7 +1104,7 @@ INPUT_PORTS_START( astorm )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( moonwalk )
+INPUT_PORTS_START( mwalk )
 	PORT_START /* player 1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
@@ -1248,7 +1248,7 @@ ROM_START( aceattac )
 ROM_END
 
 // Alien Storm
-ROM_START( astorm )
+ROM_START( astormj )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr13085.bin", 0x000000, 0x40000, CRC(15f74e2d) SHA1(30d9d099ec18907edd3d20df312565c3bd5a80de) )
 	ROM_LOAD16_BYTE( "epr13084.bin", 0x000001, 0x40000, CRC(9687b38f) SHA1(cdeb5b4f06ad4ad8ca579392c1ec901487b08e76) )
@@ -1275,7 +1275,7 @@ ROM_START( astorm )
 	ROM_LOAD( "epr13078.bin", 0xb0000, 0x40000, CRC(15684dc5) SHA1(595051006de24f791dae937584e502ff2fa31d9c) )
 ROM_END
 
-ROM_START( astorm2p )
+ROM_START( astorm )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr13182.bin", 0x000000, 0x40000, CRC(e31f2a1c) SHA1(690ee10c36e5bb6175470fb5564527e0e4a94d2c) )
 	ROM_LOAD16_BYTE( "epr13181.bin", 0x000001, 0x40000, CRC(78cd3b26) SHA1(a81b807c5da625d8e4648ae80c41e4ca3870c0fa) )
@@ -1435,7 +1435,7 @@ ROM_START( lghost )
 	ROM_LOAD( "13418",   0x60000, 0x20000, CRC(4006c9f1) SHA1(e9cecfafdbcfdf716aa2ba911273b18550faea98) )
 ROM_END
 
-ROM_START( moonwalk )
+ROM_START( mwalk )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* 68000 code - custom cpu 317-0159 */
 	ROM_LOAD16_BYTE( "epr13235.a6", 0x000000, 0x40000, CRC(6983e129) SHA1(a8dd430620ab8ce11df46aa208d762d47f510464) )
 	ROM_LOAD16_BYTE( "epr13234.a5", 0x000001, 0x40000, CRC(c9fd20f2) SHA1(9476e6481e6d8f223acd52f543fa04f408d48dc3) )
@@ -1462,7 +1462,7 @@ ROM_START( moonwalk )
 	ROM_LOAD( "mpr13249.b6", 0xb0000, 0x40000, CRC(623edc5d) SHA1(c32d9f818d40f311877fbe6532d9e95b6045c3c4) )
 ROM_END
 
-ROM_START( moonwlka )
+ROM_START( mwalku )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* 68000 code - custom cpu 317-0158 */
 	ROM_LOAD16_BYTE( "epr13233", 0x000000, 0x40000, CRC(f3dac671) SHA1(cd9d372c7e272d2371bc1f9fb0167831c804423f) )
 	ROM_LOAD16_BYTE( "epr13232", 0x000001, 0x40000, CRC(541d8bdf) SHA1(6a99153fddca246ba070e93c4bacd145f15f76bf) )
@@ -1633,12 +1633,12 @@ ROM_END
 
 /*****************************************************************************/
 
-GAMEX(1990, astorm,   0,        astorm,   astorm,   astorm,   ROT0, "Sega",    "Alien Storm", GAME_NOT_WORKING )
-GAMEX(1990, astorm2p, astorm,   astorm,   astorm,   astorm,   ROT0, "Sega",    "Alien Storm (2 Player)", GAME_NOT_WORKING )
-GAME( 1990, astormbl, astorm,   astorm,   astorm,   astorm,   ROT0, "bootleg", "Alien Storm (bootleg)" )
-GAMEX(1990, moonwalk, 0,        moonwalk, moonwalk, moonwalk, ROT0, "Sega",    "Michael Jackson's Moonwalker (Set 1)", GAME_NOT_WORKING )
-GAMEX(1990, moonwlka, moonwalk, moonwalk, moonwalk, moonwalk, ROT0, "Sega",    "Michael Jackson's Moonwalker (Set 2)", GAME_NOT_WORKING )
-GAME( 1990, moonwlkb, moonwalk, moonwalk, moonwalk, moonwalk, ROT0, "bootleg", "Michael Jackson's Moonwalker (bootleg)" )
+GAMEX(1990, astormj,  0,        astormj,  astormj,  astormj,  ROT0, "Sega",    "Alien Storm (Japan, 2 Players) (FD1094 317-0146)", GAME_NOT_WORKING )
+GAMEX(1990, astorm,   astormj,  astormj,  astormj,  astormj,  ROT0, "Sega",    "Alien Storm (World, 2 Players) (FD1094 317-0154)", GAME_NOT_WORKING )
+GAME( 1990, astormbl, astormj,  astormj,  astormj,  astormj,  ROT0, "bootleg", "Alien Storm (bootleg)" )
+GAMEX(1990, mwalk,    0,        mwalk,    mwalk,    mwalk,    ROT0, "Sega",    "Michael Jackson's Moonwalker (Set 1)", GAME_NOT_WORKING )
+GAMEX(1990, mwalku,   mwalk,    mwalk,    mwalk,    mwalk,    ROT0, "Sega",    "Michael Jackson's Moonwalker (Set 2)", GAME_NOT_WORKING )
+GAME( 1990, moonwlkb, mwalk,    mwalk,    mwalk,    mwalk,    ROT0, "bootleg", "Michael Jackson's Moonwalker (bootleg)" )
 GAME( 1989, shdancer, 0,        shdancer, shdancer, shdancer, ROT0, "Sega",    "Shadow Dancer (US)" )
 GAMEX(1989, shdancbl, shdancer, shdancbl, shdancer, shdancbl, ROT0, "bootleg", "Shadow Dancer (bootleg)", GAME_NOT_WORKING )
 GAME( 1989, shdancrj, shdancer, shdancrj, shdancer, shdancrj, ROT0, "Sega",    "Shadow Dancer (Japan)" )

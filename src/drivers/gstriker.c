@@ -141,7 +141,7 @@ X3: 14.31818
 
 Note: Same hardware as Tecmo World Cup '94, minus one VS9209 chip.
 
-*** ROMSET: worldc94
+*** ROMSET: twcup94 
 
 World Cup 94
 Tecmo 1994
@@ -545,7 +545,7 @@ ROM_START( vgoalsca )
 	ROM_LOAD( "vgoalc16.104", 0x000000, 0x100000, CRC(6fb06e1b) SHA1(c4584b480fe1165f8e2f887acaa578690514d35d) )
 ROM_END
 
-ROM_START( worldc94 )
+ROM_START( twcup94  )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "13",           0x00000, 0x80000, CRC(42adb463) SHA1(ec7bcb684489b56f81ab851a9d8f42d54679363b) )
 
@@ -579,4 +579,4 @@ GAMEX(1993, gstriker, 0,        gstriker, gstriker, 0,        ROT0, "Human", "Gr
 /* Similar, but not identical hardware, appear to be protected by an MCU :-( */
 GAMEX(199?, vgoalsoc, 0,        gstriker, gstriker, 0,        ROT0, "Tecmo", "V Goal Soccer", GAME_NOT_WORKING )
 GAMEX(199?, vgoalsca, vgoalsoc, gstriker, gstriker, 0,        ROT0, "Tecmo", "V Goal Soccer (alt)", GAME_NOT_WORKING )
-GAMEX(199?, worldc94, 0,        gstriker, gstriker, 0,        ROT0, "Tecmo", "World Cup '94", GAME_NOT_WORKING )
+GAMEX(199?, twcup94 , 0,        gstriker, gstriker, 0,        ROT0, "Tecmo", "World Cup '94", GAME_NOT_WORKING )

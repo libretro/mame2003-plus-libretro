@@ -2355,7 +2355,7 @@ V-V                           TP-027
 	DRIVER( psyforce )	/* Psychic Force (JAPAN) */
 	DRIVER( sfchamp )	/* Super Football Champ (JAPAN) */
 	DRIVER( mgcldate )	/* Magical Date (JAPAN) */
-	DRIVER( mgcldtea )	/* Magical Date (JAPAN) */
+	DRIVER( mgcldtex )	/* Magical Date (JAPAN) */
 
 	/* Taito FX1b */
 	DRIVER( raystorm )	/* Ray Storm (JAPAN) */
@@ -2685,7 +2685,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( aliensyb )	/* (c) 1987 (protected) */
 	DRIVER( aliensyj )	/* (c) 1987 (protected. Japan) */
 	DRIVER( astorm )	/* (c) 1990 (protected) */
-	DRIVER( astorm2p )	/* (c) 1990 (protected 2 Players) */
+	DRIVER( astormj )	/* (c) 1990 (protected 2 Players) */
 	DRIVER( auraila )	/* (c) 1990 Sega / Westone (protected) */
 	DRIVER( bayrouta )	/* (c) 1989 (protected) */
 	DRIVER( bayrtbl1 )	/* (c) 1989 (protected) (bootleg) */
@@ -2696,9 +2696,9 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( goldnaxb )	/* (c) 1989 (protected) */
 	DRIVER( goldnaxc )	/* (c) 1989 (protected) */
 	DRIVER( goldnaxj )	/* (c) 1989 (protected. Japan) */
-	DRIVER( jyuohki )	/* (c) 1988 (protected. Altered Beast Japan) */
-	DRIVER( moonwalk )	/* (c) 1990 (protected) */
-	DRIVER( moonwlka )	/* (c) 1990 (protected) */
+	DRIVER( altbeastj1 )	/* (c) 1988 (protected. Altered Beast Japan) */
+	DRIVER( mwalk )	/* (c) 1990 (protected) */
+	DRIVER( mwalku )	/* (c) 1990 (protected) */
 	DRIVER( passsht )	/* (protected) */
 	DRIVER( sdioj )		/* (c) 1987 (protected. Japan) */
 	DRIVER( shangon )	/* (c) 1992 (protected) */
@@ -2730,7 +2730,7 @@ DokiDoki Penguin Land *not confirmed
 	/* Working */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
-	DRIVER( alexkida )	/* (c) 1986 */
+	DRIVER( alexkidd1 )	/* (c) 1986 */
 	DRIVER( aliensyn )	/* (c) 1987 */
 	DRIVER( altbeas2 )	/* (c) 1988 */
 	DRIVER( altbeast )	/* (c) 1988 */
@@ -2941,7 +2941,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( puyopuyb )	/* bootleg */
 	DRIVER( ichidant )	/* (c) 1994 Sega */
 	DRIVER( ichidnte )	/* (c) 1994 Sega */
-	DRIVER( ichidntb )	/* bootleg */
+	DRIVER( ichirjbl )	/* bootleg */
 	DRIVER( stkclmns )	/* (c) 1994 Sega */
 	DRIVER( puyopuy2 )	/* (c) 1994 Compile + Sega license */
 	DRIVER( potopoto )	/* (c) 1994 Sega */
@@ -4437,7 +4437,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( wwfmania )	/* (c) 1995 Midway */
 	DRIVER( openice )	/* (c) 1995 Midway */
 	DRIVER( nbahangt )	/* (c) 1996 Midway */
-	DRIVER( nbamaxht )	/* (c) 1996 Midway */
+	DRIVER( nbamht1 )	/* (c) 1996 Midway */
 	DRIVER( rmpgwt )	/* (c) 1997 Midway */
 	DRIVER( rmpgwt11 )	/* (c) 1997 Midway */
 	DRIVER( crusnusa )	/* (c) 1994 Midway */
@@ -4724,7 +4724,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gstriker )	/* (c) [1993] Human */
 	DRIVER( vgoalsoc )
 	DRIVER( vgoalsca )
-	DRIVER( worldc94 )
+	DRIVER( twcup94 )
 	DRIVER( suprslam )	/* (c) 1995 Banpresto */
 	DRIVER( fromanc2 )	/* (c) 1995 Video System Co. (Japan) */
 	DRIVER( fromancr )	/* (c) 1995 Video System Co. (Japan) */

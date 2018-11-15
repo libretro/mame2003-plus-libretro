@@ -84,7 +84,7 @@
 		Golden Axe (Ver 2 317-0110)
 		Golden Axe (Ver 2 317-0122)
 		Golden Axe (protected bootleg)
-		Jyuohki (Japan, altered beast)
+		Juuouki (Japan, altered beast)
 		Moonwalker (317-0158)
 		Moonwalker (317-0159)
 		Passing Shot (317-0080)
@@ -449,7 +449,7 @@ ROM_START( alexkidd )
 	ROM_LOAD( "10436.2", 0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
 ROM_END
 
-ROM_START( alexkida )
+ROM_START( alexkidd1 )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "10447.43", 0x000000, 0x10000, CRC(29e87f71) SHA1(af980e55c02b3de1121c144fee23af74d24042ac) )
 	ROM_LOAD16_BYTE( "10445.26", 0x000001, 0x10000, CRC(25ce5b6f) SHA1(dfec64df7e8d145d30740808bc94bdbbe667c4e8) )
@@ -849,7 +849,7 @@ ROM_START( altbeast )
 	ROM_LOAD( "opr11673",    0x30000, 0x20000, CRC(400c4a36) SHA1(de4bdfa91734410e0a7f6a16bf8336db172f458a) )
 ROM_END
 
-ROM_START( jyuohki )
+ROM_START( altbeastj1 )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* Custom 68000 code. */
 /* custom cpu 317-0065*/
 	ROM_LOAD16_BYTE( "epr11670.a7", 0x000000, 0x20000, CRC(b748eb07) SHA1(f3663831610bcb358340f14c2c96833dd7591bfb) )
@@ -6852,7 +6852,7 @@ GAME( 1986, quartt2j, quartet,  quartet2, quartet2, quartet2, ROT0,   "Sega",   
 /*          rom       parent    machine   inp       init */
 GAMEX(19??, afighter, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Action Fighter", GAME_NOT_WORKING )
 GAMEX(1986, alexkidd, 0,        alexkidd, alexkidd, alexkidd, ROT0,   "Sega",    "Alex Kidd - The Lost Stars (set 1)", GAME_NOT_WORKING )
-GAME( 1986, alexkida, alexkidd, alexkidd, alexkidd, alexkidd, ROT0,   "Sega",    "Alex Kidd - The Lost Stars (set 2)" )
+GAME( 1986, alexkidd1,alexkidd, alexkidd, alexkidd, alexkidd, ROT0,   "Sega",    "Alex Kidd - The Lost Stars (set 2)" )
 GAME( 1986, fantzone, 0,        fantzone, fantzone, fantzone, ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
 GAME( 1986, fantzono, fantzone, fantzono, fantzone, fantzone, ROT0,   "Sega",    "Fantasy Zone (Old Ver.)" )
 GAMEX(19??, ryukyu  , 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Ryukyu", GAME_NOT_WORKING )
@@ -6868,20 +6868,20 @@ GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   tetrisbl, ROT0,   "Sega",   
 
 /* System16B */
 /*          rom       parent    machine   inp       init */
-GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  atomicp,  ROT0,   "Philko",  "Atomic Point", GAME_NO_SOUND )
-GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
-GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
-GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
-GAMEX(1987, aliensyb, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 3)", GAME_NOT_WORKING )
-GAME( 1988, altbeast, 0,        altbeast, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 1)" )
-GAMEX(1988, altbeas2, altbeast, altbeas2, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 2)", GAME_NO_SOUND )
-GAMEX(1988, jyuohki,  altbeast, altbeast, altbeast, altbeast, ROT0,   "Sega",    "Jyuohki (Japan)",           GAME_NOT_WORKING )
-GAME( 1990, aurail,   0,        aurail,   aurail,   aurail,   ROT0,   "Sega / Westone", "Aurail (set 1)" )
-GAME( 1990, auraila,  aurail,   aurail,   aurail,   auraila,  ROT0,   "Sega / Westone", "Aurail (set 2)" )
-GAME( 1989, bayroute, 0,        bayroute, bayroute, bayroute, ROT0,   "Sunsoft / Sega", "Bay Route (set 1)" )
-GAMEX(1989, bayrouta, bayroute, bayroute, bayroute, bayrouta, ROT0,   "Sunsoft / Sega", "Bay Route (set 2)", GAME_NOT_WORKING )
-GAMEX(1989, bayrtbl1, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 1)", GAME_NOT_WORKING )
-GAMEX(1989, bayrtbl2, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 2)", GAME_NOT_WORKING )
+GAMEX(1990, atomicp,    0,        atomicp,  atomicp,  atomicp,  ROT0,   "Philko",  "Atomic Point", GAME_NO_SOUND )
+GAME( 1987, aliensyn,   0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
+GAMEX(1987, aliensya,   aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
+GAMEX(1987, aliensyj,   aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
+GAMEX(1987, aliensyb,   aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 3)", GAME_NOT_WORKING )
+GAME( 1988, altbeast,   0,        altbeast, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 1)" )
+GAMEX(1988, altbeas2,   altbeast, altbeas2, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 2)", GAME_NO_SOUND )
+GAMEX(1988, altbeastj1, altbeast, altbeast, altbeast, altbeast, ROT0,   "Sega",    "Juuouki (set 1, Japan) (FD1094 317-0065)", GAME_NOT_WORKING )
+GAME( 1990, aurail,     0,        aurail,   aurail,   aurail,   ROT0,   "Sega / Westone", "Aurail (set 1)" )
+GAME( 1990, auraila,    aurail,   aurail,   aurail,   auraila,  ROT0,   "Sega / Westone", "Aurail (set 2)" )
+GAME( 1989, bayroute,   0,        bayroute, bayroute, bayroute, ROT0,   "Sunsoft / Sega", "Bay Route (set 1)" )
+GAMEX(1989, bayrouta,   bayroute, bayroute, bayroute, bayrouta, ROT0,   "Sunsoft / Sega", "Bay Route (set 2)", GAME_NOT_WORKING )
+GAMEX(1989, bayrtbl1,   bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 1)", GAME_NOT_WORKING )
+GAMEX(1989, bayrtbl2,   bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 2)", GAME_NOT_WORKING )
 /* Bullet */
 /* Charon */
 GAMEX(19??, cotton,   0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Cotton (Japan)", GAME_NOT_WORKING )

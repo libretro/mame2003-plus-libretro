@@ -591,7 +591,7 @@ static struct tms34010_config cpu_config =
 	wwfmania: 0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
 	openice:  0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
 	nbahangt: 0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
-	nbamaxht: 0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
+	nbamht1: 0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
 */
 
 static MACHINE_DRIVER_START( wunit )
@@ -908,7 +908,7 @@ ROM_START( nbahangt )
 ROM_END
 
 
-ROM_START( nbamaxht )
+ROM_START( nbamht1 )
 	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
 
 	ROM_REGION( ADSP2100_SIZE + 0x400000, REGION_CPU2, 0 )	/* ADSP-2105 data */
@@ -1070,9 +1070,9 @@ GAME( 1994, mk3r10,  mk3,       wunit, mk3,     mk3r10,  ROT0, "Midway", "Mortal
 GAME( 1994, umk3,    mk3,       wunit, mk3,     umk3,    ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.2)" )
 GAME( 1994, umk3r11, mk3,       wunit, mk3,     umk3r11, ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.1)" )
 
-GAME( 1995, wwfmania,0,         wunit, wwfmania,wwfmania,ROT0, "Midway", "WWF - Wrestlemania (rev 1.30 08-10-95)" )
+GAME( 1995, wwfmania,0,         wunit, wwfmania,wwfmania,ROT0, "Midway", "WWF - Wrestlemania (rev 1.30 08/10/95)" )
 GAME( 1995, openice, 0,         wunit, openice, openice, ROT0, "Midway", "2 On 2 Open Ice Challenge (rev 1.21)" )
-GAME( 1996, nbahangt,0,         wunit, nbahangt,nbahangt,ROT0, "Midway", "NBA Hangtime (rev L1.1 04-16-96)" )
-GAME( 1996, nbamaxht,nbahangt,  wunit, nbahangt,nbahangt,ROT0, "Midway", "NBA Maximum Hangtime (rev 1.0 11-8-96)" )
+GAME( 1996, nbahangt,0,         wunit, nbahangt,nbahangt,ROT0, "Midway", "NBA Hangtime (rev L1.1 04/16/96)" )
+GAME( 1996, nbamht1,nbahangt,  wunit, nbahangt,nbahangt,ROT0, "Midway", "NBA Maximum Hangtime (rev 1.0 11/08/96)" )
 GAME( 1997, rmpgwt,  0,         wunit, rmpgwt,  rmpgwt,  ROT0, "Midway", "Rampage - World Tour (rev 1.3)" )
 GAME( 1997, rmpgwt11,rmpgwt,    wunit, rmpgwt,  rmpgwt,  ROT0, "Midway", "Rampage - World Tour (rev 1.1)" )
