@@ -3309,6 +3309,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( magdrop )	/* (c) 1995 Data East Corporation */
 	DRIVER( magdropp )	/* (c) 1995 Data East Corporation */
 	DRIVER( osman )		/* (c) 1996 Mitchell */
+	DRIVER( hangzo )        /* (c) 1992 Hot B    */	
 		
 	/* Data East MLC Games */
 	DRIVER( avengrgs )	/* MCG (c) 1995 Data East Corporation (Europe) */
