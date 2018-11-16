@@ -49,6 +49,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gunbarich
 * GunMaster
 * Hacha Mecha Figher (Unprotected)
+* Hang Zo
 * Heavy Smash
 * Hook (Japan Version) [SumavisionQ5]
 * Hoops '96
