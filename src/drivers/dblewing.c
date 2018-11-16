@@ -409,7 +409,7 @@ static MEMORY_READ16_START( dblewing_readmem )
 	{ 0x300000, 0x3007ff, MRA16_RAM },
 	{ 0x320000, 0x3207ff, MRA16_RAM },
 	{ 0xff0000, 0xff3fff, MRA16_RAM },
-	{ 0xffc000, 0xffffff, MRA16_RAM }, /* Mirror */
+	{ 0xff8000, 0xffffff, MRA16_RAM }, /* Mirror */
 
 MEMORY_END
 
@@ -426,7 +426,7 @@ static MEMORY_WRITE16_START( dblewing_writemem )
 	{ 0x300000, 0x3007ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x320000, 0x3207ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
 	{ 0xff0000, 0xff3fff, MWA16_RAM },
-	{ 0xffc000, 0xffffff, MWA16_RAM }, /* Mirror */
+	{ 0xff8000, 0xffffff, MWA16_RAM }, /* Mirror */
 MEMORY_END
 
 
@@ -440,7 +440,7 @@ static READ_HANDLER(irq_latch_r)
 
 
 static MEMORY_READ_START( dblewing_sound_readmem )
-  { 0x0000, 0x7fff, MRA_ROM },
+        { 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0xa000, 0xa001, YM2151_status_port_0_r },
 	{ 0xb000, 0xb000, OKIM6295_status_0_r },
@@ -450,7 +450,7 @@ static MEMORY_READ_START( dblewing_sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( dblewing_sound_writemem )
-  { 0x0000, 0x7fff, MWA_ROM },
+        { 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xa000, 0xa001, YM2151_word_0_w },
 	{ 0xb000, 0xb000, OKIM6295_data_0_w },
