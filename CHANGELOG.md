@@ -112,6 +112,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Lost Castle In Darkmist
 * Thunder Hoop
 * Title Fight
+* Undercover Cops (Alpha Renewal Version)
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
