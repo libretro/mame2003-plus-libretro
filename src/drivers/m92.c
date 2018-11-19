@@ -2200,6 +2200,30 @@ static READ_HANDLER( inthunt_cycle_r )
 	return m92_ram[0x25e + offset];
 }
 
+static READ_HANDLER( kaiteids_cycle_r ) /* by bkc */
+{
+	int d=activecpu_geticount();
+	int line = 256 - cpu_getiloops();
+
+	/* If possible skip this cpu segment - idle loop */
+	if (d>159 && d<0xf0000000 && line<247) {
+		if ((activecpu_get_pc()==0x885 || activecpu_get_pc()==0x8ac) 
+			&& m92_ram[0x25f]==0 && offset==1) { /* 0x8ac , 0x885 */
+			/* Adjust in-game counter, based on cycles left to run */
+			int old;
+
+			old=m92_ram[0xb898]+(m92_ram[0xb899]<<8);
+			old=(old+d/82)&0xffff; /* 82 cycles per increment */
+			m92_ram[0xb898]=old&0xff;
+			m92_ram[0xb899]=old>>8;
+
+			cpu_spinuntil_int();
+		}
+	}
+
+	return m92_ram[0x25e + offset];
+}
+
 static READ_HANDLER( uccops_cycle_r )
 {
 	int a=m92_ram[0x3f28]+(m92_ram[0x3f29]<<8);
@@ -2403,6 +2427,12 @@ static DRIVER_INIT( inthunt )
 	init_m92(inthunt_decryption_table);
 }
 
+static DRIVER_INIT( kaiteids )
+{
+	install_mem_read_handler(0, 0xe025e, 0xe025f, kaiteids_cycle_r);
+	init_m92(inthunt_decryption_table);
+}
+
 static DRIVER_INIT( lethalth )
 {
 	install_mem_read_handler(0, 0xe001e, 0xe001f, lethalth_cycle_r);
@@ -2486,7 +2516,7 @@ GAME( 1992, rtypeleo, 0,        raster,    rtypeleo, rtypeleo, ROT0,   "Irem",  
 GAME( 1992, rtypelej, rtypeleo, raster,    rtypeleo, rtypelej, ROT0,   "Irem",         "R-Type Leo (Japan rev. D)" )
 GAME( 1993, inthunt,  0,        raster,    inthunt,  inthunt,  ROT0,   "Irem",         "In The Hunt (World)" )
 GAME( 1993, inthuntu, inthunt,  raster,    inthunt,  inthunt,  ROT0,   "Irem America", "In The Hunt (US)" )
-GAME( 1993, kaiteids, inthunt,  raster,    inthunt,  inthunt,  ROT0,   "Irem",         "Kaitei Daisensou (Japan)" )
+GAME( 1993, kaiteids, inthunt,  raster,    inthunt,  kaiteids, ROT0,   "Irem",         "Kaitei Daisensou (Japan)" )
 GAMEX(1993, nbbatman, 0,        raster,    nbbatman, nbbatman, ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, leaguemn, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, ssoldier, 0,        psoldier,  psoldier, ssoldier, ROT0,   "Irem America", "Superior Soldiers (US)", GAME_IMPERFECT_SOUND )
