@@ -4,6 +4,8 @@ SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003_plus
 BUILD_BIN2C ?= 0
+ARM ?= 0 # set to 0 or 1 to indicate ARM or not
+CPU_ARCH ?= 0 # as of November 2018 this flag doesn't seem to be used but is being set to either arm or arm64 for some platforms
 
 ifneq ($(SANITIZER),)
    CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
@@ -437,18 +439,18 @@ else
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -std=gnu90
 endif
 
+# Architecture-Specific Flags #############################
+# Compiling and linking flags for specific architectures follow
+
 ifeq ($(BIGENDIAN), 1)
 	PLATCFLAGS += -DMSB_FIRST
 endif
 
-# use -fsigned-char on ARM and WiiU to solve potential problems with code written/tested on x86
-# eg on mame2003-plus audio on rtype leo is wrong without it.
-ifeq ($(ARM), 1)
-   PLATCFLAGS += -fsigned-char
-else ifeq ($(platform), wiiu)
-   PLATCFLAGS += -fsigned-char
-endif
+# explictly use -fsigned-char on all platforms to solve problems with code written/tested on x86 but used on ARM
+# for example, audio on rtype leo is wrong on ARM without this flag
+PLATCFLAGS += -fsigned-char
 
+# Use position-independent code for all platforms
 PLATCFLAGS += $(fpic)
 
 RETRO_PROFILE = 0
@@ -464,14 +466,17 @@ CFLAGS += -Wall -Wunused \
 endif
 endif
 
+ifeq (,$(findstring msvc,$(platform)))
+   CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
+endif
+# End of Architecture-Specific Flags ######################
+
+
+# Disable optimization when debugging #####################
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g3
 else
    CFLAGS += -O2 -DNDEBUG
-endif
-
-ifeq (,$(findstring msvc,$(platform)))
-   CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # include the various .mak files
