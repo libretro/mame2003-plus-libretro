@@ -1188,6 +1188,8 @@ ROM_END
 
 /**********************************************************************************/
 
+extern void decoprot_reset(void);
+
 static DRIVER_INIT( rohga )
 {
 	deco56_decrypt(REGION_GFX1);
