@@ -812,11 +812,12 @@ static void palette_set_rgb_brightness (int offset, UINT8 brightness_r, UINT8 br
 }
 
 /* This ignores the alpha values atm.*/
-static int spc_changed=0, v3_changed=0;
+static int spc_changed=0, v3_changed=0, palette_updated=0;
 
 static WRITE32_HANDLER ( skns_pal_regs_w )
 {
 	COMBINE_DATA(&skns_pal_regs[offset]);
+	palette_updated =1;
 
 	switch ( offset )
 	{
@@ -875,14 +876,19 @@ static WRITE32_HANDLER ( skns_pal_regs_w )
 void skns_palette_update(void)
 {
 	int i;
+	
+	if (palette_updated)
+	{
+		if(spc_changed)
+			for(i=0; i<=((0x40*256)-1); i++)
+				palette_set_rgb_brightness (i, bright_spc_r, bright_spc_g, bright_spc_b);
+			
+		if(v3_changed)
+			for(i=(0x40*256); i<=((0x80*256)-1); i++)
+				palette_set_rgb_brightness (i, bright_v3_r, bright_v3_g, bright_v3_b);
+		palette_updated =0;
+	}
 
-	if(spc_changed)
-		for(i=0; i<=((0x40*256)-1); i++)
-			palette_set_rgb_brightness (i, bright_spc_r, bright_spc_g, bright_spc_b);
-
-	if(v3_changed)
-		for(i=(0x40*256); i<=((0x80*256)-1); i++)
-			palette_set_rgb_brightness (i, bright_v3_r, bright_v3_g, bright_v3_b);
 }
 
 
@@ -1685,4 +1691,3 @@ GAMEX( 1997, sengekis, skns,    skns, skns,     sengekis, ROT90, "Kaneko / Waras
 GAMEX( 1997, sengekij, sengekis,skns, skns,     sengekij, ROT90, "Kaneko / Warashi", "Sengeki Striker (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1997, vblokbrk, skns,    skns, skns,     sarukani, ROT0,  "Kaneko / Mediaworks", "VS Block Breaker (Asia)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1997, sarukani, vblokbrk,skns, skns,     sarukani, ROT0,  "Kaneko / Mediaworks", "Saru-Kani-Hamu-Zou (Japan)", GAME_IMPERFECT_GRAPHICS )
-
