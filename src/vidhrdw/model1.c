@@ -1514,17 +1514,17 @@ VIDEO_UPDATE(model1)
 	fillbitmap(priority_bitmap, 0, 0);
 	fillbitmap(bitmap, Machine->pens[0], &Machine->visible_area);
 
-	sys24_tile_draw(bitmap, cliprect, 7, 0);
-	sys24_tile_draw(bitmap, cliprect, 6, 0);
-	sys24_tile_draw(bitmap, cliprect, 5, 0);
-	sys24_tile_draw(bitmap, cliprect, 4, 0);
+	sys24_tile_draw(bitmap, cliprect, 6, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 4, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 2, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 0, 0, 0);
 
 	tgp_render(bitmap, cliprect);
 
-	sys24_tile_draw(bitmap, cliprect, 3, 0);
-	sys24_tile_draw(bitmap, cliprect, 2, 0);
-	sys24_tile_draw(bitmap, cliprect, 1, 0);
-	sys24_tile_draw(bitmap, cliprect, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 7, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 5, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 3, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 1, 0, 0);
 }
 
 VIDEO_EOF(model1)
