@@ -75,7 +75,6 @@ void skns_sprite_kludge(int x, int y)
 	int step_spr = step;				\
 	int bxs = 0, bys = 0;				\
 	struct rectangle clip;					\
-						\
 	clip.min_x = cliprect->min_x<<6;					\
 	clip.max_x = (cliprect->max_x+1)<<6;					\
 	clip.min_y = cliprect->min_y<<6;					\
@@ -142,7 +141,7 @@ void skns_sprite_kludge(int x, int y)
 #define z_draw_pixel()				\
 	UINT8 val = src[xs >> 6];			\
 	if(val)					\
-		plot_pixel( bitmap, xd>>6, yd>>6, val + colour*256 );
+		plot_pixel( bitmap, xd>>6, yd>>6, val + colour );
 
 #define z_x_dst(op)			\
 	old = xd;					\
@@ -226,7 +225,7 @@ static void (*blit_z[4])(struct mame_bitmap *bitmap, const struct rectangle *cli
 	blit_fxy_z,
 };
 
-static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	/*- SPR RAM Format -**
 
@@ -278,52 +277,56 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 	int endromoffs=0;
 	UINT16 zoomx, zoomy;
 
-	group_enable    = (skns_spc_regs[0x00/4] & 0x0040) >> 6; /* RWR0*/
-
-	/* Sengekis uses global flip */
-	sprite_flip = (skns_spc_regs[0x04/4] & 0x03); /* RWR1*/
-
-	sprite_y_scroll = ((skns_spc_regs[0x08/4] & 0x7fc0) >> 6); /* RWR2*/
-	sprite_x_scroll = ((skns_spc_regs[0x10/4] & 0x7fc0) >> 6); /* RWR4*/
-	if (sprite_y_scroll&0x100) sprite_y_scroll -= 0x200; /* Signed*/
-	if (sprite_x_scroll&0x100) sprite_x_scroll -= 0x200; /* Signed*/
-
-	group_x_offset[0] = (skns_spc_regs[0x18/4] & 0xffc0) >> 6; /* RWR6*/
-	group_y_offset[0] = (skns_spc_regs[0x1c/4] & 0xffc0) >> 6; /* RWR7*/
-	if (group_x_offset[0]&0x200) group_x_offset[0] -= 0x400; /* Signed*/
-	if (group_y_offset[0]&0x200) group_y_offset[0] -= 0x400; /* Signed*/
-
-	group_x_offset[1] = (skns_spc_regs[0x20/4] & 0xffc0) >> 6; /* RWR8*/
-	group_y_offset[1] = (skns_spc_regs[0x24/4] & 0xffc0) >> 6; /* RWR9*/
-	if (group_x_offset[1]&0x200) group_x_offset[1] -= 0x400; /* Signed*/
-	if (group_y_offset[1]&0x200) group_y_offset[1] -= 0x400; /* Signed*/
-
-	group_x_offset[2] = (skns_spc_regs[0x28/4] & 0xffc0) >> 6; /* RWR10*/
-	group_y_offset[2] = (skns_spc_regs[0x2c/4] & 0xffc0) >> 6; /* RWR11*/
-	if (group_x_offset[2]&0x200) group_x_offset[2] -= 0x400; /* Signed*/
-	if (group_y_offset[2]&0x200) group_y_offset[2] -= 0x400; /* Signed*/
-
-	group_x_offset[3] = (skns_spc_regs[0x30/4] & 0xffc0) >> 6; /* RWR12*/
-	group_y_offset[3] = (skns_spc_regs[0x34/4] & 0xffc0) >> 6; /* RWR13*/
-	if (group_x_offset[3]&0x200) group_x_offset[3] -= 0x400; /* Signed*/
-	if (group_y_offset[3]&0x200) group_y_offset[3] -= 0x400; /* Signed*/
-
-/*	usrintf_showmessage	("x %08x y %08x x2 %08x y2 %08x",sprite_x_scroll, sprite_y_scroll,group_x_offset[1], group_y_offset[1]);*/
-/*	usrintf_showmessage("%d %d %d %d A:%d B:%d", sprite_kludge_x, sprite_kludge_y, sprite_x_scroll, sprite_y_scroll, (skns_pal_regs[0x00/4] & 0x7000) >> 12, (skns_pal_regs[0x10/4] & 0x7000) >> 12);*/
-/*	if (keyboard_pressed(KEYCODE_Q)) sprite_kludge_x++;*/
-/*	if (keyboard_pressed(KEYCODE_W)) sprite_kludge_x--;*/
-/*	if (keyboard_pressed(KEYCODE_E)) sprite_kludge_y++;*/
-/*	if (keyboard_pressed(KEYCODE_D)) sprite_kludge_y--;*/
-
-	/* Tilemap Pri/enables*/
-/*	usrintf_showmessage("A: %x %x B: %x %x", skns_v3_regs[0x10/4]>>3, skns_v3_regs[0x10/4]&7, skns_v3_regs[0x34/4]>>3, skns_v3_regs[0x34/4]&7);*/
-
-	/* Seems that sprites are consistently off by a fixed no. of pixels in different games
-	   (Patterns emerge through Manufacturer/Date/Orientation) */
-	sprite_x_scroll += sprite_kludge_x;
-	sprite_y_scroll += sprite_kludge_y;
 
 	if (!disabled){
+
+		group_enable    = (skns_spc_regs[0x00/4] & 0x0040) >> 6; /* RWR0 */
+
+		/* Sengekis uses global flip */
+		sprite_flip = (skns_spc_regs[0x04/4] & 0x03); /* RWR1 */
+
+		sprite_y_scroll = ((skns_spc_regs[0x08/4] & 0x7fc0) >> 6); /* RWR2 */
+		sprite_x_scroll = ((skns_spc_regs[0x10/4] & 0x7fc0) >> 6); /* RWR4 */
+		if (sprite_y_scroll&0x100) sprite_y_scroll -= 0x200; /* Signed */
+		if (sprite_x_scroll&0x100) sprite_x_scroll -= 0x200; /* Signed */
+
+		group_x_offset[0] = (skns_spc_regs[0x18/4] & 0xffc0) >> 6; /* RWR6 */
+		group_y_offset[0] = (skns_spc_regs[0x1c/4] & 0xffc0) >> 6; /* RWR7 */
+		if (group_x_offset[0]&0x200) group_x_offset[0] -= 0x400; /* Signed */
+		if (group_y_offset[0]&0x200) group_y_offset[0] -= 0x400; /* Signed */
+
+		group_x_offset[1] = (skns_spc_regs[0x20/4] & 0xffc0) >> 6; /* RWR8 */
+		group_y_offset[1] = (skns_spc_regs[0x24/4] & 0xffc0) >> 6; /* RWR9 */
+		if (group_x_offset[1]&0x200) group_x_offset[1] -= 0x400; /* Signed */
+		if (group_y_offset[1]&0x200) group_y_offset[1] -= 0x400; /* Signed */
+
+		group_x_offset[2] = (skns_spc_regs[0x28/4] & 0xffc0) >> 6; /* RWR10 */
+		group_y_offset[2] = (skns_spc_regs[0x2c/4] & 0xffc0) >> 6; /* RWR11 */
+		if (group_x_offset[2]&0x200) group_x_offset[2] -= 0x400; /* Signed */
+		if (group_y_offset[2]&0x200) group_y_offset[2] -= 0x400; /* Signed */
+
+		group_x_offset[3] = (skns_spc_regs[0x30/4] & 0xffc0) >> 6; /* RWR12 */
+		group_y_offset[3] = (skns_spc_regs[0x34/4] & 0xffc0) >> 6; /* RWR13 */
+		if (group_x_offset[3]&0x200) group_x_offset[3] -= 0x400; /* Signed */
+		if (group_y_offset[3]&0x200) group_y_offset[3] -= 0x400; /* Signed */
+
+	    /*	usrintf_showmessage	("x %08x y %08x x2 %08x y2 %08x",sprite_x_scroll, sprite_y_scroll,group_x_offset[1], group_y_offset[1]);
+		usrintf_showmessage("%d %d %d %d A:%d B:%d", sprite_kludge_x, sprite_kludge_y, sprite_x_scroll, sprite_y_scroll, (skns_pal_regs[0x00/4] & 0x7000) >> 12, (skns_pal_regs[0x10/4] & 0x7000) >> 12);
+		if (keyboard_pressed(KEYCODE_Q)) sprite_kludge_x++;
+		if (keyboard_pressed(KEYCODE_W)) sprite_kludge_x--;
+		if (keyboard_pressed(KEYCODE_E)) sprite_kludge_y++;
+		if (keyboard_pressed(KEYCODE_D)) sprite_kludge_y--;
+
+		Tilemap Pri/enables
+		usrintf_showmessage("A: %x %x B: %x %x", skns_v3_regs[0x10/4]>>3, skns_v3_regs[0x10/4]&7, skns_v3_regs[0x34/4]>>3, skns_v3_regs[0x34/4]&7);
+        */
+		
+		/* Seems that sprites are consistently off by a fixed no. of pixels in different games
+		   (Patterns emerge through Manufacturer/Date/Orientation) */
+		sprite_x_scroll += sprite_kludge_x;
+		sprite_y_scroll += sprite_kludge_y;
+
+
 		while( source<finish )
 		{
 			xflip = (source[0] & 0x00000200) >> 9;
@@ -419,9 +422,11 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 /*			if(!( (keyboard_pressed(KEYCODE_Q)&&(pri==0)) || (keyboard_pressed(KEYCODE_W)&&(pri==1)) || (keyboard_pressed(KEYCODE_E)&&(pri==2)) || (keyboard_pressed(KEYCODE_D)&&(pri==3)) ))*/
 /*			if( !(keyboard_pressed(KEYCODE_Q) && ((source[0] & 0x00800000)>>24)) )*/
 			{
+				int NewColour = colour*256;
+
 				if(zoomx || zoomy)
 				{
-					blit_z[ (xflip<<1) | yflip ](bitmap, cliprect, decodebuffer, sx, sy, xsize, ysize, zoomx, zoomy, colour);
+					blit_z[ (xflip<<1) | yflip ](bitmap, cliprect, decodebuffer, sx, sy, xsize, ysize, zoomx, zoomy, NewColour);
 				}
 				else
 				{
@@ -430,13 +435,16 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 
 						for (xx = 0; xx<xsize; xx++)
 						{
-							for (yy = 0; yy<ysize; yy++)
+							if ((sx+xx < (cliprect->max_x+1)) && (sx+xx >= cliprect->min_x))
 							{
-								if ((sx+xx < (cliprect->max_x+1)) && (sx+xx >= cliprect->min_x) && (sy+yy < (cliprect->max_y+1)) && (sy+yy >= cliprect->min_y))
+								for (yy = 0; yy<ysize; yy++)
 								{
-									int pix;
-									pix = decodebuffer[xsize*yy+xx];
-									if (pix) plot_pixel( bitmap, sx+xx, sy+yy, pix+ colour*256 ); /* change later*/
+									if ((sy+yy < (cliprect->max_y+1)) && (sy+yy >= cliprect->min_y))
+									{
+										int pix;
+										pix = decodebuffer[xsize*yy+xx];
+										if (pix) plot_pixel( bitmap, sx+xx, sy+yy, pix+ NewColour ); /* change later */
+									}
 								}
 							}
 						}
@@ -446,13 +454,16 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 
 						for (xx = 0; xx<xsize; xx++)
 						{
-							for (yy = 0; yy<ysize; yy++)
+							if ((sx+xx < (cliprect->max_x+1)) && (sx+xx >= cliprect->min_x))
 							{
-								if ((sx+xx < (cliprect->max_x+1)) && (sx+xx >= cliprect->min_x) && (sy+(ysize-1-yy) < (cliprect->max_y+1)) && (sy+(ysize-1-yy) >= cliprect->min_y))
+								for (yy = 0; yy<ysize; yy++)
 								{
-									int pix;
-									pix = decodebuffer[xsize*yy+xx];
-									if (pix) plot_pixel( bitmap, sx+xx, sy+(ysize-1-yy), pix+ colour*256 ); /* change later*/
+									if ((sy+(ysize-1-yy) < (cliprect->max_y+1)) && (sy+(ysize-1-yy) >= cliprect->min_y))
+									{
+										int pix;
+										pix = decodebuffer[xsize*yy+xx];
+										if (pix) plot_pixel( bitmap, sx+xx, sy+(ysize-1-yy), pix+ NewColour ); /* change later */
+									}
 								}
 							}
 						}
@@ -462,13 +473,16 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 
 						for (xx = 0; xx<xsize; xx++)
 						{
-							for (yy = 0; yy<ysize; yy++)
+							if ( (sx+(xsize-1-xx) < (cliprect->max_x+1)) && (sx+(xsize-1-xx)))
 							{
-								if ((sx+(xsize-1-xx) < (cliprect->max_x+1)) && (sx+(xsize-1-xx) >= cliprect->min_x) && (sy+yy < (cliprect->max_y+1)) && (sy+yy >= cliprect->min_y))
+								for (yy = 0; yy<ysize; yy++)
 								{
-									int pix;
-									pix = decodebuffer[xsize*yy+xx];
-									if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+yy, pix+ colour*256 ); /* change later*/
+									if ((sy+yy < (cliprect->max_y+1)) && (sy+yy >= cliprect->min_y))
+									{
+										int pix;
+										pix = decodebuffer[xsize*yy+xx];
+										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+yy, pix+ NewColour ); /* change later */
+									}
 								}
 							}
 						}
@@ -479,13 +493,16 @@ static void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle
 
 						for (xx = 0; xx<xsize; xx++)
 						{
-							for (yy = 0; yy<ysize; yy++)
+							if ((sx+(xsize-1-xx) < (cliprect->max_x+1)) && (sx+(xsize-1-xx) >= cliprect->min_x))
 							{
-								if ((sx+(xsize-1-xx) < (cliprect->max_x+1)) && (sx+(xsize-1-xx) >= cliprect->min_x) && (sy+(ysize-1-yy) < (cliprect->max_y+1)) && (sy+(ysize-1-yy) >= cliprect->min_y))
+								for (yy = 0; yy<ysize; yy++)
 								{
-									int pix;
-									pix = decodebuffer[xsize*yy+xx];
-									if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+(ysize-1-yy), pix+ colour*256 ); /* change later*/
+									if ((sy+(ysize-1-yy) < (cliprect->max_y+1)) && (sy+(ysize-1-yy) >= cliprect->min_y))
+									{
+										int pix;
+										pix = decodebuffer[xsize*yy+xx];
+										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+(ysize-1-yy), pix+ NewColour ); /* change later */
+									}
 								}
 							}
 						}
