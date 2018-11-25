@@ -116,6 +116,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
+* Virtua Fighter
 * Wing Force
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
@@ -313,5 +314,6 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Fixed background character movements in Power Instinct 2 and Power Instinct Legends
 * Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
+* Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 
