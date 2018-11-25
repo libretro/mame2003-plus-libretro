@@ -1028,7 +1028,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/suprridr_vidhrdw.c $(CORE_DIR)/drivers/suprridr.c \
 				 $(CORE_DIR)/drivers/vmetal.c \
 				 $(CORE_DIR)/drivers/deco156.c \
-				 $(CORE_DIR)/machine/model1.c $(CORE_DIR)/vidhrdw/model1.c $(CORE_DIR)/drivers/model1.c \
+				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c
 
 

@@ -5704,5 +5704,5 @@ Other Sun games
 	DRIVER( ddp3b )
 	DRIVER( ddp3blk )
 	DRIVER( espgal )
-	DRIVER( vf1 )
+	DRIVER( vf )
 #endif	/* DRIVER_RECURSIVE */

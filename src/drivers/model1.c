@@ -420,7 +420,7 @@ static struct YM2612interface m1_ym3438_interface =
 	{ 0 },	{ 0 },	{ 0 },	{ 0 }
 };
 
-INPUT_PORTS_START( vf1 )
+INPUT_PORTS_START( vf )
 	PORT_START  /* Unused analog port 0 */
 	PORT_START  /* Unused analog port 1 */
 	PORT_START  /* Unused analog port 2 */
@@ -462,7 +462,7 @@ INPUT_PORTS_START( vf1 )
 INPUT_PORTS_END
 
 
-ROM_START( vf1 )
+ROM_START( vf )
 	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* v60 code */
 	ROM_LOAD16_BYTE( "epr-16082.14", 0x200000, 0x80000, CRC(b23f22ee) SHA1(9fd5b5a5974703a60a54de3d2bce4301bfc0e533) )
 	ROM_LOAD16_BYTE( "epr-16083.15", 0x200001, 0x80000, CRC(d12c77f8) SHA1(b4aeba8d5f1ab4aec024391407a2cb58ce2e94b0) )
@@ -505,7 +505,7 @@ ROM_END
 
 
 static MACHINE_DRIVER_START( model1 )
-        MDRV_CPU_ADD(V60, 16000000)
+    MDRV_CPU_ADD(V60, 16000000)
 	MDRV_CPU_MEMORY(model1_readmem, model1_writemem)
 	MDRV_CPU_PORTS(model1_readport, 0)
 	MDRV_CPU_VBLANK_INT(model1_interrupt, 2)
@@ -535,4 +535,4 @@ MACHINE_DRIVER_END
 
 
 
-GAMEX( 1993, vf1,      0, model1, vf1,      0, ROT0, "Sega", "Virtua Fighter 1", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, vf, 0, model1, vf, 0, ROT0, "Sega", "Virtua Fighter", GAME_IMPERFECT_GRAPHICS )
