@@ -25,6 +25,11 @@ WRITE16_HANDLER( model1_tgp_copro_adr_w );
 READ16_HANDLER( model1_tgp_copro_ram_r );
 WRITE16_HANDLER( model1_tgp_copro_ram_w );
 
+static int model1_sound_irq;
+
+#define FIFO_SIZE	(8)
+static int to_68k[FIFO_SIZE], fifo_wptr, fifo_rptr;
+
 void model1_tgp_reset(int swa);
 
 static READ16_HANDLER( io_r )
@@ -108,22 +113,33 @@ static INTERRUPT_GEN(model1_interrupt)
 	}
 	else
 	{
-		irq_raise(3);
+		irq_raise(model1_sound_irq);
+
+		// if the FIFO has something in it, signal the 68k too
+		if (fifo_rptr != fifo_wptr)
+		{
+			cpu_set_irq_line(1, 2, HOLD_LINE);
+		}
 	}
 }
-
-static INTERRUPT_GEN(swa_interrupt)
-{
-	irq_raise(1);
-	tgp_tick();
-}
-
 
 static MACHINE_INIT(model1)
 {
 	cpu_setbank(1, memory_region(REGION_CPU1) + 0x1000000);
 	irq_init();
 	model1_tgp_reset(!strcmp(Machine->gamedrv->name, "swa") || !strcmp(Machine->gamedrv->name, "wingwar"));
+	if (!strcmp(Machine->gamedrv->name, "swa"))
+	{
+		model1_sound_irq = 0;
+	}
+	else
+	{
+		model1_sound_irq = 3;
+	}
+
+	// init the sound FIFO
+	fifo_rptr = fifo_wptr = 0;
+	memset(to_68k, 0, sizeof(to_68k));
 }
 
 static READ16_HANDLER( network_ctl_r )
@@ -199,8 +215,6 @@ static WRITE16_HANDLER(mr2_w)
 		logerror("MW 10[r10], %f (%x)\n", *(float *)(mr2+0x1f10/2), activecpu_get_pc());
 }
 
-static int to_68k;
-
 static READ16_HANDLER( snd_68k_ready_r )
 {
 	int sr = cpunum_get_reg(1, M68K_REG_SR);
@@ -216,13 +230,11 @@ static READ16_HANDLER( snd_68k_ready_r )
 
 static WRITE16_HANDLER( snd_latch_to_68k_w )
 {
-	while (!snd_68k_ready_r(0, 0))
-	{
-		cpu_spinuntil_time(TIME_IN_USEC(40));
-	}
+	to_68k[fifo_wptr] = data;
+	fifo_wptr++;
+	if (fifo_wptr >= FIFO_SIZE) fifo_wptr = 0;
 
-	to_68k = data;
-	
+	// signal the 68000 that there's data waiting
 	cpu_set_irq_line(1, 2, HOLD_LINE);
 	// give the 68k time to reply
 	cpu_spinuntil_time(TIME_IN_USEC(40));
@@ -287,12 +299,19 @@ PORT_END
 
 static READ16_HANDLER( m1_snd_68k_latch_r )
 {
-	return to_68k;
+	UINT16 retval;
+
+	retval = to_68k[fifo_rptr];
+
+	fifo_rptr++;
+	if (fifo_rptr >= FIFO_SIZE) fifo_rptr = 0;
+
+	return retval;
 }
 
 static READ16_HANDLER( m1_snd_v60_ready_r )
 {
-	return 0;
+	return 1;
 }
 
 static READ16_HANDLER( m1_snd_mpcm0_r )
@@ -486,12 +505,12 @@ ROM_END
 
 
 static MACHINE_DRIVER_START( model1 )
-	MDRV_CPU_ADD(V60, 16000000/12) // Reality is 16Mhz
+        MDRV_CPU_ADD(V60, 16000000)
 	MDRV_CPU_MEMORY(model1_readmem, model1_writemem)
 	MDRV_CPU_PORTS(model1_readport, 0)
 	MDRV_CPU_VBLANK_INT(model1_interrupt, 2)
 
-	MDRV_CPU_ADD(M68000, 12000000)	// Confirmed 10 MHz on real PCB, run slightly faster here to prevent sync trouble
+	MDRV_CPU_ADD(M68000, 10000000)
 	MDRV_CPU_MEMORY(model1_readsound, model1_writesound)
 
 	MDRV_FRAMES_PER_SECOND(60)
