@@ -3,7 +3,6 @@ DEBUGGER=0
 SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003_plus
-BUILD_BIN2C ?= 0
 ARM ?= 0 # set to 0 or 1 to indicate ARM or not
 CPU_ARCH ?= 0 # as of November 2018 this flag doesn't seem to be used but is being set to either arm or arm64 for some platforms
 
@@ -509,18 +508,6 @@ else
 endif
 else
 	LD = $(CC)
-endif
-
-ifeq ($(BUILD_BIN2C),1)
-# compile bin2c
-$(info creating bin2c working folder and compiling bin2c executable tool...)
-	DUMMY_RESULT:=$(shell mkdir -p ./precompile)
-	DUMMY_RESULT:=$(shell gcc -o ./precompile/bin2c tools/bin2c/bin2c.c)
-# compile hiscore.dat into a fresh header file for embedding
-	DUMMY_RESULT:=$(shell ./precompile/bin2c -o ./precompile/hiscore_dat.h -n hiscoredat ./metadata/hiscore.dat )
-    DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
-else
-$(info BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
 endif
 
 define NEWLINE
