@@ -2532,12 +2532,12 @@ GAME(  1981, colony7a, colony7,  defender, colony7,  colony7,  ROT270, "Taito", 
 
 GAME(  1981, stargate, 0,        williams, stargate, stargate, ROT0,   "Williams", "Stargate" )
 
-GAME(  1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)" )
-GAME(  1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)" )
+GAMEC( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)",    &robotron_ctrl, &robotron_bootstrap )
+GAMEC( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)", &robotron_ctrl, &robotryo_bootstrap )
 
-GAME(  1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)" )
-GAME(  1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)" )
-GAME(  1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Red label)" )
+GAMEC( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)", &joust_ctrl, &joust_bootstrap )
+GAMEC( 1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)",   &joust_ctrl, &joust_bootstrap )
+GAMEC( 1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Red label)",   &joust_ctrl, &joust_bootstrap )
 
 GAME(  1982, bubbles,  0,        williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles" )
 GAME(  1982, bubblesr, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)" )
@@ -2559,6 +2559,6 @@ GAME(  1985, spdball,  0,        williams, spdball,  spdball,  ROT0,   "Williams
 GAME(  1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
 GAME(  1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
 GAMECX(1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno (Williams)", GAME_IMPERFECT_SOUND, &inferno_ctrl, NULL  )
-GAME(  1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)" )
+GAMEC( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)", &joust2_ctrl, &joust2_bootstrap )
 
 GAME(  1987, lottofun, 0,        williams, lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun" )

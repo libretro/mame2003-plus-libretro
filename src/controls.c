@@ -16585,14 +16585,13 @@ const char *robotron_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICKLEFT_UP: return "Move Up";
-    case IPT_JOYSTICKLEFT_DOWN: return "Move Down";
-    case IPT_JOYSTICKLEFT_LEFT: return "Move Left";
-    case IPT_JOYSTICKLEFT_RIGHT: return "Move Right";
-    case IPT_JOYSTICKRIGHT_UP: return "Fire Up";
-    case IPT_JOYSTICKRIGHT_DOWN: return "Fire Down";
-    case IPT_JOYSTICKRIGHT_LEFT: return "Fire Left";
+    case IPT_JOYSTICKLEFT_UP:     return "Move Up";
+    case IPT_JOYSTICKLEFT_DOWN:   return "Move Down";
+    case IPT_JOYSTICKLEFT_LEFT:   return "Move Left";
+    case IPT_JOYSTICKLEFT_RIGHT:  return "Move Right";
+    case IPT_JOYSTICKRIGHT_UP:    return "Fire Up";
+    case IPT_JOYSTICKRIGHT_DOWN:  return "Fire Down";
+    case IPT_JOYSTICKRIGHT_LEFT:  return "Fire Left";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
