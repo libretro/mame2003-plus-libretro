@@ -186,13 +186,13 @@ void osd_get_path(int pathtype, char* path)
 
   save_path_buffer[0] = '\0';
   if(options.save_subfolder)
-    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_save_path, path_default_slash(), APPNAME);
   else
     snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_save_path);
 
   sys_path_buffer[0] = '\0';
   if(options.system_subfolder)
-    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_system_path, path_default_slash(), APPNAME);
   else
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
     
@@ -205,22 +205,22 @@ void osd_get_path(int pathtype, char* path)
 
       /* user-initiated content goes in mame2003 save directory subfolders */      
       case FILETYPE_IMAGE_DIFF:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "diff");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "diff");
          break;     
       case FILETYPE_NVRAM:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "nvram");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "nvram");
          break;
       case FILETYPE_HIGHSCORE:
-          snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "hi");
+          snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "hi");
          break;
       case FILETYPE_CONFIG:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "cfg");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "cfg");
          break;
       case FILETYPE_MEMCARD:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "memcard");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "memcard");
          break;
       case FILETYPE_CTRLR:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", save_path_buffer, path_default_slash(), "ctrlr");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, path_default_slash(), "ctrlr");
          break;
       case FILETYPE_XML_DAT:
          snprintf(path, PATH_MAX_LENGTH, "%s", save_path_buffer);
@@ -228,13 +228,13 @@ void osd_get_path(int pathtype, char* path)
 
          /* static, pregenerated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "artwork");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, path_default_slash(), "artwork");
          break;
       case FILETYPE_SAMPLE:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, path_default_slash(), "samples");
          break;
       case FILETYPE_SAMPLE_FLAC:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", sys_path_buffer, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, path_default_slash(), "samples");
          break;
 
       default:
@@ -249,7 +249,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    char currDir[PATH_MAX_LENGTH];
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, path_default_slash(), filename);
 
    /*log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
 
