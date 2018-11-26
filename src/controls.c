@@ -6220,8 +6220,6 @@ const char *curvebal_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=2 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "Just Buttons+button";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Left (Curve)";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Right (Curve)";
     case IPT_BUTTON1: return BTN1 "Swing";
@@ -6293,8 +6291,6 @@ const char *cybots_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=4 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Attack 1";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Attack 2";
     case (IPT_BUTTON3 | IPF_PLAYER2): return "Boost";
@@ -7868,8 +7864,6 @@ const char *firetrk_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=1 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "360 Steering Wheel+dial+P2_BUTTON1";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Bell";
     case IPT_DIAL: return "Left (Rear Wheels)";
     case (IPT_DIAL + IPT_EXTENSION): return "Right (Rear Wheels)";
@@ -9380,8 +9374,6 @@ const char *holo_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=2 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Quick Tricks";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Fierce Tricks";
     case (IPT_JOYSTICK_UP | IPF_PLAYER2): return "Jump";
@@ -9962,11 +9954,8 @@ const char *teamqb_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P4NumButtons=1 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER4): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER4): return "Action";
-/* P3NumButtons=1 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER3): return "8-way Joystick+joy8way|Baseball Pitcher+stick";
     case (IPT_BUTTON1 | IPF_PLAYER3): return "Action";
     case (IPT_JOYSTICK_UP | IPF_PLAYER3): return "Up";
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER3): return "Down";
@@ -9976,8 +9965,6 @@ const char *teamqb_get_ctrl_name(int type)
     case ((IPT_AD_STICK_X + IPT_EXTENSION) | IPF_PLAYER3): return "Aim Right"
     case (IPT_AD_STICK_Y | IPF_PLAYER3): return "Throw / Kick"
     case ((IPT_AD_STICK_Y + IPT_EXTENSION) | IPF_PLAYER3): return "Short / Long";
-/* P2NumButtons=1 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Action";
     case (IPT_JOYSTICK_UP | IPF_PLAYER2): return "Up";
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Down";
@@ -10078,8 +10065,6 @@ const char *joust2_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=2 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "2-way Joystick (Horizontal)+joy2way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Flap";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Start Player 2 / Transform";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Left";
@@ -12844,8 +12829,6 @@ const char *msh_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=6 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Jab Punch";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Strong Punch";
     case (IPT_BUTTON3 | IPF_PLAYER2): return "Fierce Punch";
@@ -15125,8 +15108,6 @@ const char *playch10_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=2 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "A";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "B";
     case (IPT_JOYSTICK_UP | IPF_PLAYER2): return "Up";
@@ -15787,8 +15768,6 @@ const char *quarterb_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=2 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "8-way Joystick+joy8way";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Action A";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Action B";
     case IPT_JOYSTICK_UP: return "Up";
@@ -18755,7 +18734,6 @@ const char *sf2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case (IPT_OSD_DESCRIPTION): return "8-way Joystick+joy8way";
     case IPT_BUTTON1: return BTN1 "Jab Punch";
     case IPT_BUTTON2: return BTN2 "Strong Punch";
     case IPT_BUTTON3: return BTN3 "Fierce Punch";
@@ -23669,11 +23647,7 @@ const char *wfortune_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P3NumButtons=1 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER3): return "";
     case (IPT_BUTTON1 | IPF_PLAYER3): return "Select";
-/* P2NumButtons=1 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Select";
     case IPT_BUTTON1: return BTN1 "Select";
     case IPT_DIAL: return "Spin Left";
@@ -23979,8 +23953,6 @@ const char *wseries_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P2NumButtons=0 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "Baseball Pitcher+stick";
     case (IPT_AD_STICK_X | IPF_PLAYER2): return "Left";
     case ((IPT_AD_STICK_X + IPT_EXTENSION) | IPF_PLAYER2): return "Right";
     case (IPT_AD_STICK_Y | IPF_PLAYER2): return "Pitch";
