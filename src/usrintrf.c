@@ -3199,7 +3199,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         msg_buffer[0]='\0';  
 
         osd_get_path(FILETYPE_CONFIG, current_path);       
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
 
         if(remove(path_buffer))
           snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s%s%s", "Error flushing CFG from ", path_buffer, "!");
@@ -3223,7 +3223,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         usrintf_showmessage_secs(2, "%s", msg_buffer);
 
         /* delete "default.cfg" and repopulate from the defaults specified by inptport source */
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
+        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
         remove(path_buffer);
         reset_default_inputs();
               
@@ -3235,12 +3235,12 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
           const struct GameDriver *needle = drivers[driverIndex];
           if(needle && needle->name) 
           {
-            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), needle->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
             remove(path_buffer); /* try to remove DOS filename version */
           }            
           if(needle && needle->description)
           {            
-            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%s%s%c%s", current_path, path_default_slash(), needle->description, '.', get_extension_for_filetype(FILETYPE_CONFIG));
+            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), needle->description, '.', get_extension_for_filetype(FILETYPE_CONFIG));
             remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
           }
         }
