@@ -512,8 +512,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( galagamw )	/* (c) 1981 Midway */
 	DRIVER( galagads )	/* hack */
 	DRIVER( gallag )	/* bootleg */
-	DRIVER( galagab2 )	/* bootleg */
-	DRIVER( galaga84 )	/* hack */
+/*	DRIVER( galaga84 ) */	/* mix 'n match of ROMs from other sets */
 	DRIVER( nebulbee )	/* hack */
 	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
 	DRIVER( digdug )	/* (c) 1982 */
