@@ -21,7 +21,7 @@
 #include "controls.h"
 #include "usrintrf.h"
 
-
+int gotFrame;
 static const struct GameDriver  *game_driver;
 static float              delta_samples;
 int                       samples_per_frame = 0;
@@ -33,14 +33,12 @@ int16_t                   prev_pointer_x;
 int16_t                   prev_pointer_y;
 unsigned                  retroColorMode;
 unsigned long             lastled = 0;
-int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
 int                 retroJsState[109]= {0}; // initialise to zero - we are only reading 4 players atm
 extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
-extern struct       osd_create_params videoConfig;
 extern int16_t      analogjoy[4][4];
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 
@@ -576,18 +574,7 @@ static void update_variables(bool first_time)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-   const int orientation = game_driver->flags & ORIENTATION_MASK;
-   const bool rotated = ((orientation == ROT90) || (orientation == ROT270));
-   
-   const int width = rotated ? videoConfig.height : videoConfig.width;
-   const int height = rotated ? videoConfig.width : videoConfig.height;
-   
-   info->geometry.base_width = width;
-   info->geometry.base_height = height;
-   info->geometry.max_width = width;
-   info->geometry.max_height = height;
-   info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   
+   mame2003_video_get_geometry(&info->geometry);  
    if (Machine->drv->frames_per_second < 60.0 )
        info->timing.fps = 60.0; 
    else 
@@ -651,8 +638,6 @@ bool retro_load_game(const struct retro_game_info *game)
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
-  int              orientation    = 0;
-  unsigned         rotateMode     = 0;
   static const int uiModes[]      = {ROT0, ROT90, ROT180, ROT270};
 
   if(string_is_empty(game->path))
@@ -722,17 +707,7 @@ bool retro_load_game(const struct retro_game_info *game)
   log_cb(RETRO_LOG_INFO, LOGPRE " system path: %s\n", options.libretro_system_path);
   log_cb(RETRO_LOG_INFO, LOGPRE "   save path: %s\n", options.libretro_save_path);
 
-  /* Setup Rotation */
-  rotateMode = 0;        
-  orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
   
-  rotateMode = (orientation == ROT270) ? 1 : rotateMode;
-  rotateMode = (orientation == ROT180) ? 2 : rotateMode;
-  rotateMode = (orientation == ROT90) ? 3 : rotateMode;
-  
-  environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
-  options.ui_orientation = uiModes[rotateMode];
-
   init_core_options();
   update_variables(true);
   
