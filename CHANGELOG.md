@@ -11,6 +11,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Attack
 * Air Rescue
 * Asura Buster
+* Avengers in Galactic Storm (US) and (JAPAN)
 * Backfire!
 * Bang Bang Busters
 * Baryon

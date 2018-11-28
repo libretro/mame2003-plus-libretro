@@ -2189,7 +2189,7 @@ const struct ControlInfo avengers_ctrl =
   false, /* 45_degree_rotation for joystick(s) */
   false, /* alternating_controls */
   true, /* mirrored_controls */
-  "Button A - Punch Button B - Kick", /* control_details */
+  "", /* control_details */
   &avengers_get_ctrl_name
 };
 
@@ -2197,8 +2197,11 @@ const char *avengers_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "A";
-    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Punch";
+    case IPT_BUTTON3: return BTN3 "Kick";
+    case IPT_BUTTON4: return BTN4 "Kick";
+	
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
