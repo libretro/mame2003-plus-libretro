@@ -2199,8 +2199,8 @@ const char *avengers_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Punch";
-    case IPT_BUTTON3: return BTN1 "Kick";
-    case IPT_BUTTON4: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Kick";
+    case IPT_BUTTON4: return BTN4 "Kick";
 	
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
