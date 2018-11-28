@@ -560,6 +560,7 @@ ROM_START( gallag )
 	ROM_LOAD( "1d.bin",       0x0000, 0x0100, CRC(86d92b24) SHA1(6bef9102b97c83025a2cf84e89d95f2d44c3d2ed) )
 ROM_END
 
+#if 0
 ROM_START( galagab2 )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code for the first CPU  */
 	ROM_LOAD( "g1",           0x0000, 0x1000, CRC(ab036c9f) SHA1(ca7f5da42d4e76fd89bb0b35198a23c01462fbfe) )
@@ -592,6 +593,7 @@ ROM_START( galagab2 )
 	ROM_REGION( 0x0100, REGION_SOUND1, 0 )	/* sound prom */
 	ROM_LOAD( "1d.bin",       0x0000, 0x0100, CRC(86d92b24) SHA1(6bef9102b97c83025a2cf84e89d95f2d44c3d2ed) )
 ROM_END
+#endif
 
 ROM_START( galaga84 )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code for the first CPU  */
@@ -746,7 +748,7 @@ GAMEX( 1981, galaga,   0,      galaga, galaganm, 0, ROT90, "Namco", "Galaga (Nam
 GAMEX( 1981, galagamw, galaga, galaga, galaga,   0, ROT90, "[Namco] (Midway license)", "Galaga (Midway)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1981, galagads, galaga, galaga, galaga,   0, ROT90, "hack", "Galaga (fast shoot)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1982, gallag,   galaga, galaga, galaganm, 0, ROT90, "bootleg", "Gallag", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1981, galagab2, galaga, galaga, galaganm, 0, ROT90, "bootleg", "Galaga (bootleg)", GAME_IMPERFECT_GRAPHICS )
+/*GAMEX( 1981, galagab2, galaga, galaga, galaganm, 0, ROT90, "bootleg", "Galaga (bootleg)", GAME_IMPERFECT_GRAPHICS )*/
 GAMEX( 1984, galaga84, galaga, galaga, galaganm, 0, ROT90, "hack", "Galaga '84", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1984, nebulbee, galaga, galaga, galaganm, 0, ROT90, "hack", "Nebulous Bee", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1984, gatsbee,  galaga, galaga, galaganm, gatsbee, ROT90, "Uchida", "Gatsbee", GAME_IMPERFECT_GRAPHICS )
