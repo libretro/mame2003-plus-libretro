@@ -11,7 +11,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Attack
 * Air Rescue
 * Asura Buster
-* Avengers in Galactic Storm (US) and (JAPAN)
 * Backfire!
 * Bang Bang Busters
 * Baryon
@@ -136,7 +135,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Alcon - Romset: `alcon`
 * Arch Rivals - Romset: `archrivl`
-* Avengers In Galactic Storm: `avengrgs`
+* Avengers In Galactic Storm US - Romset: `avengrgs`
+* Avengers In Galactic Storm Japan - Romset: `avengrgsj`
 * Avenging Spirit - Romset `avspirit`
 * B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
