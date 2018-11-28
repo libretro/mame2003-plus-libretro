@@ -676,6 +676,52 @@ static READ32_HANDLER( avengrgs_speedup_r )
 	return a;
 }
 
+static READ32_HANDLER( mirror_hack_r )
+{
+	int address = (offset << 2) & 0xffffff;
+
+	if (address >= 0x600000 && address <= 0x600007) {
+		return avengrs_sound_r(offset & 1, mem_mask);
+	}
+
+	printf ("%8.8x, read\n", offset*4);
+	return 0;
+}
+
+static WRITE32_HANDLER( mirror_hack_w )
+{
+	int address = (offset << 2) & 0xffffff;
+
+	if (address < 0x100000) {
+		return;
+	} else if (address >= 0x100000 && address <= 0x11ffff) {
+		COMBINE_DATA(&mlc_ram[offset & 0x7fff]);
+		return;
+	} else if (address >= 0x200080 && address <= 0x2000ff) {
+		COMBINE_DATA(&mlc_clip_ram[offset & 0x3f]);
+		return;
+	} else if (address >= 0x204000 && address <= 0x206fff) {
+		COMBINE_DATA(&spriteram32[offset & 0xfff]);
+		return;
+	} else if (address >= 0x280000 && address <= 0x29ffff) {
+		COMBINE_DATA(&mlc_vram[offset & 0x7fff]);
+		return;
+	} else if (address >= 0x300000 && address <= 0x307fff) {
+		COMBINE_DATA(&paletteram32[offset & 0x1fff]);
+		return;
+	} else if (address >= 0x600000 && address <= 0x600007) {
+		avengrs_sound_w(offset & 1, data, mem_mask);
+		return;
+	} else if (address >= 0x200000 && address <= 0x20007f) {
+		mlc_irq_w(offset & 0x1f, data, mem_mask);
+		return;
+	} else if (address >= 0x500000 && address <= 0x500003) {
+		avengrs_eprom_w(0, data, mem_mask);
+		return;
+	}
+
+	printf ("%8.8x, write\n", offset*4);
+}
 
 static DRIVER_INIT( avengrgs )
 {
@@ -684,7 +730,8 @@ static DRIVER_INIT( avengrgs )
 	descramble_sound();
 
     install_mem_read32_handler(0, 0x01089a0, 0x01089a3, avengrgs_speedup_r );
-
+    install_mem_read32_handler(0, 0x01000000, 0xffffffff, mirror_hack_r );
+    install_mem_write32_handler(0, 0x01000000, 0xffffffff, mirror_hack_w );
 }
 
 static DRIVER_INIT( mlc )
