@@ -136,6 +136,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Alcon - Romset: `alcon`
 * Arch Rivals - Romset: `archrivl`
+* Avengers In Galactic Storm: `avengrgs`
 * Avenging Spirit - Romset `avspirit`
 * B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
@@ -316,5 +317,6 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Fixed background character movements in Power Instinct 2 and Power Instinct Legends
 * Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
 * Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
+* Fixed Avengers In Galactic Storm [grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 
