@@ -630,10 +630,10 @@ static DRIVER_INIT( geebee )
 }
 
 
-GAME ( 1978, geebee,   0,        geebee,   geebee,   geebee, ROT90, "Namco", "Gee Bee" )
-GAME ( 1978, geebeeg,  geebee,	 geebee,   geebee,   geebee, ROT90, "[Namco] (Gremlin license)", "Gee Bee (Gremlin)" )
-GAMEX( 1980, navalone, 0,        navalone, navalone, 0,      ROT90, "Namco", "Navalone", GAME_IMPERFECT_SOUND )
-GAME ( 1980, kaitei,   0,        kaitei,   kaitei,   0,      ROT90, "K.K. Tokki", "Kaitei Takara Sagashi" )
-GAME ( 1980, kaitein,  kaitei,	 kaitei,   kaitein,  0,      ROT90, "Namco", "Kaitei Takara Sagashi (Namco)" )
-GAMEX( 1980, sos,	   0,        sos,      sos,      0,      ROT90, "Namco", "SOS", GAME_IMPERFECT_SOUND )
+GAME ( 1978, geebee,   0,        geebee,   geebee,   geebee, ROT90, "Namco",                      "Gee Bee" )
+GAME ( 1978, geebeeg,  geebee,	 geebee,   geebee,   geebee, ROT90, "[Namco] (Gremlin license)",  "Gee Bee (Gremlin)" )
+GAMEX( 1980, navalone, 0,        navalone, navalone, 0,      ROT90, "Namco",                      "Navarone", GAME_IMPERFECT_SOUND )
+GAME ( 1980, kaitei,   0,        kaitei,   kaitei,   0,      ROT90, "K.K. Tokki",                 "Kaitei Takara Sagashi" )
+GAME ( 1980, kaitein,  kaitei,	 kaitei,   kaitein,  0,      ROT90, "Namco",                      "Kaitei Takara Sagashi (Namco)" )
+GAMEX( 1980, sos,	   0,        sos,      sos,      0,        ROT90, "Namco",                      "SOS", GAME_IMPERFECT_SOUND )
 
