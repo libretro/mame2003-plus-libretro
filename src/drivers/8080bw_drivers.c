@@ -4310,10 +4310,10 @@ ROM_END
 
 /* Nintendo games */
 
-	  GAMEX(1979, sheriff,  0,        sheriff,  sheriff,  8080bw,	ROT270, "Nintendo", "Sheriff", GAME_IMPERFECT_SOUND | GAME_WRONG_COLORS )
-	  GAMEX(1979, spacefev, 0,        sheriff,  spacefev, 8080bw,	ROT270, "Nintendo", "Space Fever (color)", GAME_IMPERFECT_SOUND )
-	  GAMEX(1979, sfeverbw, spacefev, sheriff,  spacefev, 8080bw,	ROT270, "Nintendo", "Space Fever (black and white)", GAME_IMPERFECT_SOUND )
-	  GAMEX(1980, bandido,  sheriff,  sheriff,  bandido,  bandido,	ROT270, "Exidy", "Bandido", GAME_IMPERFECT_SOUND )
+	  GAMEX(1979, sheriff,  0,        sheriff,  sheriff,  8080bw,	  ROT270, "Nintendo", "Sheriff", GAME_IMPERFECT_SOUND | GAME_WRONG_COLORS )
+	  GAMEX(1979, spacefev, 0,        sheriff,  spacefev, 8080bw,	  ROT270, "Nintendo", "Space Fever (New Ver.)", GAME_IMPERFECT_SOUND )
+	  GAMEX(1979, sfeverbw, spacefev, sheriff,  spacefev, 8080bw,	  ROT270, "Nintendo", "Space Fever High Splitter (set 1)", GAME_IMPERFECT_SOUND )
+	  GAMEX(1980, bandido,  sheriff,  sheriff,  bandido,  bandido,	ROT270, "Exidy",    "Bandido", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, helifire, 0,        helifire, helifire, helifire,	ROT270, "Nintendo", "HeliFire (revision B)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, helifira, helifire, helifire, helifire, helifire,	ROT270, "Nintendo", "HeliFire (revision A)", GAME_IMPERFECT_SOUND )
 
