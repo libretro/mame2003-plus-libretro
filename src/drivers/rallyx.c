@@ -454,6 +454,7 @@ ROM_START( nrallyx )
 	ROM_LOAD( "im5623.2m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )  /* timing - not used */
 ROM_END
 
+#if 0
 ROM_START( nrallyv )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
 	ROM_LOAD( "nrallyx.1b",   0x0000, 0x1000, CRC(9404c8d6) SHA1(ee7e45c22a2fbf72d3ac5ac26ab1111a22623fc5) )
@@ -475,9 +476,9 @@ ROM_START( nrallyv )
 	ROM_LOAD( "nrallyx.spr",  0x0000, 0x0100, CRC(b75c4e87) SHA1(450f79a5ae09e34f7624d37769815baf93c0028e) )
 	ROM_LOAD( "im5623.2m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )  /* timing - not used */
 ROM_END
-
+#endif
 
 GAME( 1980, rallyx,  0,       rallyx, rallyx,  0, ROT0, "Namco", "Rally X" )
 GAME( 1980, rallyxm, rallyx,  rallyx, rallyx,  0, ROT0, "[Namco] (Midway license)", "Rally X (Midway)" )
 GAME( 1981, nrallyx, 0,       rallyx, nrallyx, 0, ROT0, "Namco", "New Rally X" )
-GAME( 1981, nrallyv, nrallyx, rallyx, nrallyv, 0, ROT90, "hack", "New Rally X (Vertical Screen)" )
+/*GAME( 1981, nrallyv, nrallyx, rallyx, nrallyv, 0, ROT90, "hack", "New Rally X (Vertical Screen)" )*/
