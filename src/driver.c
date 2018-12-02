@@ -493,7 +493,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rallyx )	/* (c) 1980 Namco */
 	DRIVER( rallyxm )	/* (c) 1980 Midway */
 	DRIVER( nrallyx )	/* (c) 1981 Namco */
-	DRIVER( nrallyv )	/* hack */
 	DRIVER( jungler )	/* GX327 (c) 1981 Konami */
 	DRIVER( junglers )	/* GX327 (c) 1981 Stern */
 	DRIVER( tactcian )	/* GX335 (c) 1982 Sega */
