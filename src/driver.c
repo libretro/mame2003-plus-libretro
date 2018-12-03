@@ -5705,4 +5705,7 @@ Other Sun games
 	DRIVER( ddp3blk )
 	DRIVER( espgal )
 	DRIVER( vf )
+		
+	/* Tester */
+	DRIVER( ssonicbr )
 #endif	/* DRIVER_RECURSIVE */
