@@ -602,7 +602,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
   else
   {
     info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-    info->timing.sample_rate = 30000;
+    info->timing.sample_rate = options.samplerate;
   }
 }
 
@@ -1235,12 +1235,12 @@ if (options.machine_timing)
  }
  else 
  {
-	 Machine->sample_rate = 30000; 
+	 Machine->sample_rate = options.samplerate; 
 	 delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
 	/* determine the number of samples per frame */
-	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
+	samples_per_frame = ( Machine->sample_rate / Machine->drv->frames_per_second ) / Machine->drv->frames_per_second * (Machine->drv->frames_per_second) ; 
 	orig_samples_per_frame = samples_per_frame;
 
 	if (Machine->sample_rate == 0) return 0;
@@ -1278,7 +1278,7 @@ int osd_update_audio_stream(INT16 *buffer)
 		if ( samples_per_frame  != orig_samples_per_frame ) samples_per_frame = orig_samples_per_frame;
 		
 		// dont drop any sample frames some games like mk will drift with time
-   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
+   		delta_samples += ( Machine->sample_rate / Machine->drv->frames_per_second ) / Machine->drv->frames_per_second * (Machine->drv->frames_per_second) - orig_samples_per_frame;
 		if ( delta_samples >= 1.0f )
 		{
 		
@@ -1296,6 +1296,7 @@ int osd_update_audio_stream(INT16 *buffer)
 	}
         return samples_per_frame;
 }
+
 
 void osd_stop_audio_stream(void)
 {
