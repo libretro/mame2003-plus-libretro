@@ -5704,5 +5704,8 @@ Other Sun games
 	DRIVER( ddp3b )
 	DRIVER( ddp3blk )
 	DRIVER( espgal )
+		
+	/* Sega Model 1 Hardware */	
 	DRIVER( vf )
+		
 #endif	/* DRIVER_RECURSIVE */
