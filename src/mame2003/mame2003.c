@@ -594,9 +594,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
   {
 
 	info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-    info->timing.sample_rate = options.samplerate;
   }
-}
+  info->timing.sample_rate = options.samplerate;
+ }
 
 unsigned retro_api_version(void)
 {
