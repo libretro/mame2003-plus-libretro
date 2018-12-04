@@ -40,7 +40,7 @@ extern "C" {
     set in mame2003.c 
 
 ******************************************************************************/
-void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 extern retro_log_printf_t log_cb;
 
 
