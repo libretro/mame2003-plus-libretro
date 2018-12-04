@@ -1209,10 +1209,11 @@ int osd_start_audio_stream(int stereo)
 	int test=0;
 	if (options.machine_timing)
 	{
+		test = 1;
 		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
 		{
 			options.samplerate = Machine->drv->frames_per_second * 1000;
-			test = 1;
+			
 		}
 	}
 	else
