@@ -259,6 +259,7 @@ struct GameOptions
   int      debug_height;	       /* requested height of debugger bitmap */
   int      debug_depth;	         /* requested depth of debugger bitmap */
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
+  bool     machine_timing;         
   };
 
 

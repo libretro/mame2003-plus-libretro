@@ -143,7 +143,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_VECTOR_FLICKER],      APPNAME"_vector_flicker",      "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
   init_default(&default_options[OPT_VECTOR_INTENSITY],    APPNAME"_vector_intensity",    "Vector intensity; 1.5|0.5|1|2|2.5|3");
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
-  init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
+  init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retroarch|keyboard|mame");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (!NETPLAY); disabled|enabled");  
@@ -152,6 +152,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL);
+  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "bypass audio scew(restart); enabled|disabled");
   set_variables(true);
 }
 
@@ -553,7 +554,12 @@ static void update_variables(bool first_time)
           else
             options.cheat_input_ports = false;
           break;		  
-
+	    case OPT_Machine_Timing:
+		if(strcmp(var.value, "enabled") == 0)
+            options.machine_timing = true;
+          else
+            options.machine_timing = false;
+          break;	
 	  }
     }
   }
@@ -575,22 +581,22 @@ static void update_variables(bool first_time)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    mame2003_video_get_geometry(&info->geometry);  
-   if (Machine->drv->frames_per_second < 60.0 )
-       info->timing.fps = 60.0; 
-   else 
-      info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
-
-   if  ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) ) 
+   if (options.machine_timing)
+	//by pass audio scew
    {
-	info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-	log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
-   }       
+     if (Machine->drv->frames_per_second < 60.0 )
+         info->timing.fps = 60.0; 
+     else 
+        info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+   }
+  
   else
   {
-    info->timing.sample_rate = options.samplerate;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
+
+	info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
   }
-}
+  info->timing.sample_rate = options.samplerate;
+ }
 
 unsigned retro_api_version(void)
 {
@@ -1200,9 +1206,31 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-    if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-    else Machine->sample_rate = options.samplerate;
-
+	int test=0;
+	if (options.machine_timing)
+	{
+		test = 1;
+		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
+		{
+			options.samplerate = Machine->drv->frames_per_second * 1000;
+			
+		}
+	}
+	else
+	{
+		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+		options.samplerate=22050;
+		test =1;
+	}
+	if (test)
+	{
+			struct retro_system_av_info info;
+			retro_get_system_av_info(&info);
+			info.timing.sample_rate=options.samplerate;
+			
+			environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
+	}
+	Machine->sample_rate = options.samplerate;
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
@@ -1222,7 +1250,6 @@ int osd_start_audio_stream(int stereo)
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	
 	if ( Machine->sample_rate !=0 && buffer )
 	{
    		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
@@ -1244,7 +1271,8 @@ int osd_update_audio_stream(INT16 *buffer)
 		if ( samples_per_frame  != orig_samples_per_frame ) samples_per_frame = orig_samples_per_frame;
 		
 		// dont drop any sample frames some games like mk will drift with time
-   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
+
+		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
 		if ( delta_samples >= 1.0f )
 		{
 		
@@ -1262,6 +1290,7 @@ int osd_update_audio_stream(INT16 *buffer)
 	}
         return samples_per_frame;
 }
+
 
 void osd_stop_audio_stream(void)
 {

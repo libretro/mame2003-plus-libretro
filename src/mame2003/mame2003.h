@@ -83,6 +83,7 @@ enum /* controls the order in which core options appear. common, important, and 
   OPT_BACKDROP,
   OPT_NVRAM_BOOTSTRAP, 
   OPT_Cheat_Input_Ports,
+  OPT_Machine_Timing,
   OPT_end /* dummy last entry */
 };
 
