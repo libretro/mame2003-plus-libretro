@@ -2929,6 +2929,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( columns2 )	/* (c) 1990 Sega */
 
 	/* System C-2 games */
+  DRIVER( ssonicbr )  /* Sega, Unreleased */
 	DRIVER( borench )	/* (c) 1990 Sega */
 	DRIVER( tfrceac )	/* (c) 1990 Sega / Technosoft */
 	DRIVER( tfrceacj )	/* (c) 1990 Sega / Technosoft */
@@ -5657,8 +5658,8 @@ Other Sun games
 	DRIVER( bbbuster )      /* 0071 Bang Bang Busters 1994 Visco */
 	DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
 	DRIVER( ironclad )      /* 0220 Choutetsu Brikin'ger - iron clad (prototype) 1996 Saurus */
-        DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
-        DRIVER( zupapa )	/* 0070 (c) SNK */
+  DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
+  DRIVER( zupapa )	/* 0070 (c) SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith */
 	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith */
 	DRIVER( mslug4 )	/* 0263 (c) 2001 Mega Enterprises */
@@ -5706,5 +5707,5 @@ Other Sun games
 		
 	/* Sega Model 1 Hardware */	
 	DRIVER( vf )
-		
+
 #endif	/* DRIVER_RECURSIVE */
