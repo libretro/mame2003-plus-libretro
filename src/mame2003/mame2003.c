@@ -152,7 +152,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL);
-  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Honor machine timing; enabled|disabled");
+  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "bypass audio scew; enabled|disabled");
   set_variables(true);
 }
 
@@ -582,26 +582,18 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    mame2003_video_get_geometry(&info->geometry);  
    if (options.machine_timing)
+	//by pass audio scew
    {
      if (Machine->drv->frames_per_second < 60.0 )
          info->timing.fps = 60.0; 
      else 
-        info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
-
-     if  ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) ) 
-     {
-	  info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-	  log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
-     }       
-    else
-    {
-      info->timing.sample_rate = options.samplerate;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
-    }
-  }
+        info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+   }
+  
   else
   {
-    info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
+
+	info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
     info->timing.sample_rate = options.samplerate;
   }
 }
@@ -1214,11 +1206,30 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-if (options.machine_timing)
- {
-    if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-    else Machine->sample_rate = options.samplerate;
-
+	int test=0;
+	if (options.machine_timing)
+	{
+		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
+		{
+			options.samplerate = Machine->drv->frames_per_second * 1000;
+			test = 1;
+		}
+	}
+	else
+	{
+		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+		options.samplerate=22050;
+		test =1;
+	}
+	if (test)
+	{
+			struct retro_system_av_info info;
+			retro_get_system_av_info(&info);
+			info.timing.sample_rate=options.samplerate;
+			
+			environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
+	}
+	Machine->sample_rate = options.samplerate;
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
@@ -1232,31 +1243,12 @@ if (options.machine_timing)
 	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame+16, 4);
 	
 	return samples_per_frame;
- }
- else 
- {
-	 Machine->sample_rate = options.samplerate; 
-	 delta_samples = 0.0f;
-	usestereo = stereo ? 1 : 0;
-
-	/* determine the number of samples per frame */
-	samples_per_frame = ( Machine->sample_rate / Machine->drv->frames_per_second ) / Machine->drv->frames_per_second * (Machine->drv->frames_per_second) ; 
-	orig_samples_per_frame = samples_per_frame;
-
-	if (Machine->sample_rate == 0) return 0;
-
-	samples_buffer = (short *) calloc(samples_per_frame+16, 2 + usestereo * 2);
-	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame+16, 4);
-	
-	return samples_per_frame;
- }
 }
 
 
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	
 	if ( Machine->sample_rate !=0 && buffer )
 	{
    		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
@@ -1278,8 +1270,8 @@ int osd_update_audio_stream(INT16 *buffer)
 		if ( samples_per_frame  != orig_samples_per_frame ) samples_per_frame = orig_samples_per_frame;
 		
 		// dont drop any sample frames some games like mk will drift with time
-		if (!options.machine_timing)  		delta_samples += ( Machine->sample_rate / Machine->drv->frames_per_second ) / Machine->drv->frames_per_second * (Machine->drv->frames_per_second) - orig_samples_per_frame;
-		else delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
+
+		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
 		if ( delta_samples >= 1.0f )
 		{
 		
