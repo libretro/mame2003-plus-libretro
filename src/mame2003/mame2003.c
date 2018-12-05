@@ -580,6 +580,8 @@ static void update_variables(bool first_time)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
+//set the sample rate changes here environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info); opens a new window
+//leave the code in place till i figure it out. 
    mame2003_video_get_geometry(&info->geometry);  
    if (options.machine_timing)
 	//by pass audio scew
@@ -588,12 +590,20 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
          info->timing.fps = 60.0; 
      else 
         info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+
+ 	if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
+	 options.samplerate = Machine->drv->frames_per_second * 1000;
+			
+		
+	
    }
   
   else
   {
 
 	info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
+	if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+		options.samplerate=22050;
   }
   info->timing.sample_rate = options.samplerate;
  }
@@ -1206,30 +1216,42 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-	int test=0;
+	int newrate = 0;
 	if (options.machine_timing)
 	{
-		test = 1;
+		
 		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
 		{
-			options.samplerate = Machine->drv->frames_per_second * 1000;
+			newrate = Machine->drv->frames_per_second * 1000;
 			
 		}
 	}
 	else
 	{
 		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-		options.samplerate=22050;
-		test =1;
+		newrate=22050;
+	
 	}
-	if (test)
-	{
-			struct retro_system_av_info info;
-			retro_get_system_av_info(&info);
-			info.timing.sample_rate=options.samplerate;
+
 			
-			environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
-	}
+			if ( newrate && newrate != options.samplerate ) options.samplerate = newrate;
+/*			{
+				//this code below crashes android so its set retro_get_system_av_info for now 
+				//it also opens and extra ra window on windows
+				struct retro_system_av_info info;
+				retro_get_system_av_info(&info);
+				mame2003_video_get_geometry(&info.geometry);  
+				if (options.machine_timing)
+				{
+					if (Machine->drv->frames_per_second < 60.0 ) 			info.timing.fps = 60.0; 
+					else  info.timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+				}		
+				else info.timing.fps = Machine->drv->frames_per_second;				log_cb(RETRO_LOG_INFO,"Changing Sample rate old:%d new:%d",options.samplerate, newrate);
+				options.samplerate = newrate;
+				info.timing.sample_rate=options.samplerate;
+				environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
+			}
+*/
 	Machine->sample_rate = options.samplerate;
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
