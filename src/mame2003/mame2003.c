@@ -1232,16 +1232,26 @@ int osd_start_audio_stream(int stereo)
 		newrate=22050;
 	
 	}
-			struct retro_system_av_info info;
-			retro_get_system_av_info(&info);
+
 			
-			if ( newrate && newrate != options.samplerate )
-			{
-				log_cb(RETRO_LOG_INFO,"Changing Sample rate old:%d new:%d",options.samplerate, newrate);
+			if ( newrate && newrate != options.samplerate ) options.samplerate = newrate;
+/*			{
+				//this code below crashes android so its set retro_get_system_av_info for now 
+				//it also opens and extra ra window on windows
+				struct retro_system_av_info info;
+				retro_get_system_av_info(&info);
+				mame2003_video_get_geometry(&info.geometry);  
+				if (options.machine_timing)
+				{
+					if (Machine->drv->frames_per_second < 60.0 ) 			info.timing.fps = 60.0; 
+					else  info.timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+				}		
+				else info.timing.fps = Machine->drv->frames_per_second;				log_cb(RETRO_LOG_INFO,"Changing Sample rate old:%d new:%d",options.samplerate, newrate);
 				options.samplerate = newrate;
 				info.timing.sample_rate=options.samplerate;
 				environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
 			}
+*/
 	Machine->sample_rate = options.samplerate;
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
