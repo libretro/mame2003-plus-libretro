@@ -197,6 +197,13 @@ else ifeq ($(platform), classic_armv7_a7)
 	endif
 #######################################
 
+# generic armhf########################
+else ifeq ($(platform), armhf)
+   CFLAGS += $(fpic) -std=gnu90
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -march=armv6 -mfloat-abi=hard -mfpu=vfp
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+  
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
