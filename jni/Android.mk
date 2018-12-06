@@ -15,7 +15,7 @@ endif
 include $(CLEAR_VARS)
 LOCAL_MODULE    := retro
 LOCAL_SRC_FILES := $(SOURCES_C)
-LOCAL_CFLAGS    := -std=gnu99 $(COREFLAGS)
+LOCAL_CFLAGS    := -std=gnu99 $(COREFLAGS) -fsigned-char
 LOCAL_LDFLAGS   := -Wl,-version-script=$(ROOT_DIR)/link.T
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
