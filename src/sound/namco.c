@@ -642,46 +642,6 @@ WRITE_HANDLER( namco_15xx_w )
 		break;
 	}
 }
-//below is a duplicate of namco_15xx_w but our drivers need it called mappy_sound_w 
-//this can be removed when driver updates are completed. It lets up update in stages
-
-WRITE_HANDLER( mappy_sound_w )
-{
-	sound_channel *voice;
-	int ch;
-
-	if (namco_soundregs[offset] == data)
-		return;
-
-	/* update the streams */
-	stream_update(stream, 0);
-
-	/* set the register */
-	namco_soundregs[offset] = data;
-
-	ch = offset / 8;
-	if (ch >= num_voices)
-		return;
-
-	/* recompute the voice parameters */
-	voice = channel_list + ch;
-	switch (offset - ch * 8)
-	{
-	case 0x03:
-		voice->volume[0] = data & 0x0f;
-		break;
-
-	case 0x06:
-		voice->waveform_select = (data >> 4) & 7;
-	case 0x04:
-	case 0x05:
-		/* the frequency has 20 bits */
-		voice->frequency = namco_soundregs[ch * 8 + 0x04];
-		voice->frequency += namco_soundregs[ch * 8 + 0x05] << 8;
-		voice->frequency += (namco_soundregs[ch * 8 + 0x06] & 15) << 16;	/* high bits are from here */
-		break;
-	}
-}
 
 /********************************************************************************/
 
