@@ -1,11 +1,3 @@
-#pragma code_seg("C282")
-#pragma data_seg("D282")
-#pragma bss_seg("B282")
-#pragma const_seg("K282")
-#pragma comment(linker, "/merge:D282=282")
-#pragma comment(linker, "/merge:C282=282")
-#pragma comment(linker, "/merge:B282=282")
-#pragma comment(linker, "/merge:K282=282")
 /***************************************************************************
 
 Bosconian  (c) 1981 Namco
@@ -3157,8 +3149,3 @@ GAME( 1982, digdugb,  digdug,  digdug,  digdug,   0,       ROT90, "Namco", "Dig 
 GAME( 1982, digdugat, digdug,  digdug,  digdug,   0,       ROT90, "[Namco] (Atari license)", "Dig Dug (Atari, rev 2)" )
 GAME( 1982, digduga1, digdug,  digdug,  digdug,   0,       ROT90, "[Namco] (Atari license)", "Dig Dug (Atari, rev 1)" )
 GAME( 1982, dzigzag,  digdug,  dzigzag, digdug,   0,       ROT90, "bootleg", "Zig Zag (Dig Dug hardware)" )
-
-#pragma code_seg()
-#pragma data_seg()
-#pragma bss_seg()
-#pragma const_seg()

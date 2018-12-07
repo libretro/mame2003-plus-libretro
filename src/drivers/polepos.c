@@ -1,11 +1,3 @@
-#pragma code_seg("C498")
-#pragma data_seg("D498")
-#pragma bss_seg("B498")
-#pragma const_seg("K498")
-#pragma comment(linker, "/merge:D498=498")
-#pragma comment(linker, "/merge:C498=498")
-#pragma comment(linker, "/merge:B498=498")
-#pragma comment(linker, "/merge:K498=498")
 /***************************************************************************
 
 Pole Position    (c) 1982 Namco
@@ -1443,8 +1435,3 @@ GAME( 1982, topracer, polepos,	polepos, polepos,  0,		 ROT0, "bootleg", "Top Rac
 GAME( 1983, polepos2, 0,		polepos, polepos2, polepos2, ROT0, "Namco", "Pole Position II" )
 GAME( 1983, poleps2a, polepos2, polepos, polepos2, polepos2, ROT0, "Namco (Atari license)", "Pole Position II (Atari)" )
 GAME( 1983, poleps2b, polepos2, polepos, polepos2, 0,		 ROT0, "bootleg", "Pole Position II (bootleg)" )
-
-#pragma code_seg()
-#pragma data_seg()
-#pragma bss_seg()
-#pragma const_seg()

@@ -1,11 +1,3 @@
-#pragma code_seg("C387")
-#pragma data_seg("D387")
-#pragma bss_seg("B387")
-#pragma const_seg("K387")
-#pragma comment(linker, "/merge:D387=387")
-#pragma comment(linker, "/merge:C387=387")
-#pragma comment(linker, "/merge:B387=387")
-#pragma comment(linker, "/merge:K387=387")
 /***************************************************************************
 
 Several Namco games from 1982-1985
@@ -2213,8 +2205,3 @@ GAME( 1984, todruago, todruaga, todruaga, todruaga, 58_56,    ROT90, "Namco", "T
 GAME( 1985, digdug2,  0,        mappy,    digdug2,  58_56,    ROT90, "Namco", "Dig Dug II (New Ver.)" )
 GAME( 1985, digdug2o, digdug2,  mappy,    digdug2,  58_56,    ROT90, "Namco", "Dig Dug II (Old Ver.)" )
 GAME( 1985, motos,    0,        mappy,    motos,    56out_56, ROT90, "Namco", "Motos" )
-
-#pragma code_seg()
-#pragma data_seg()
-#pragma bss_seg()
-#pragma const_seg()

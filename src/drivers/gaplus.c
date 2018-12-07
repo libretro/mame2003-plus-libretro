@@ -1,11 +1,3 @@
-#pragma code_seg("C289")
-#pragma data_seg("D289")
-#pragma bss_seg("B289")
-#pragma const_seg("K289")
-#pragma comment(linker, "/merge:D289=289")
-#pragma comment(linker, "/merge:C289=289")
-#pragma comment(linker, "/merge:B289=289")
-#pragma comment(linker, "/merge:K289=289")
 /***************************************************************************
 
 Gaplus (c) 1984 Namco
@@ -1055,8 +1047,3 @@ GAMEX( 1984, gapluso,  gaplus,   gaplus,   gapluso,  56_58,  ROT90, "Namco", "Ga
 GAMEX( 1984, gaplusa,  gaplus,   gaplus,   gapluso,  58_56,  ROT90, "Namco", "Gaplus (alternate hardware)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1984, galaga3a, gaplus,   gaplus,   galaga3a, 56_58l, ROT90, "Namco", "Galaga 3 (set 2)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1984, galaga3m, gaplus,   gaplus,   galaga3m, 56_58l, ROT90, "Namco", "Galaga 3 (set 3)", GAME_IMPERFECT_GRAPHICS )
-
-#pragma code_seg()
-#pragma data_seg()
-#pragma bss_seg()
-#pragma const_seg()
