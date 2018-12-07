@@ -298,16 +298,13 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/galaxian_vidhrdw.c $(CORE_DIR)/sndhrdw/galaxian_sndhrdw.c $(CORE_DIR)/drivers/galaxian.c \
 				 $(CORE_DIR)/vidhrdw/rallyx_vidhrdw.c $(CORE_DIR)/drivers/rallyx.c \
 				 $(CORE_DIR)/drivers/locomotn.c \
-				 $(CORE_DIR)/sndhrdw/bosco_sndhrdw.c $(CORE_DIR)/vidhrdw/bosco_vidhrdw.c  \
+				 $(CORE_DIR)/vidhrdw/bosco_vidhrdw.c  \
 				 $(CORE_DIR)/vidhrdw/galaga_vidhrdw.c $(CORE_DIR)/drivers/galaga.c \
-				 $(CORE_DIR)/machine/digdug_machine.c $(CORE_DIR)/vidhrdw/digdug_vidhrdw.c  \
+				 $(CORE_DIR)/vidhrdw/digdug_vidhrdw.c  \
 				 $(CORE_DIR)/vidhrdw/xevious_vidhrdw.c $(CORE_DIR)/machine/xevious_machine.c \
-				 $(CORE_DIR)/machine/superpac_machine.c  \
-				 $(CORE_DIR)/machine/phozon_machine.c  \
-				 $(CORE_DIR)/machine/mappy_machine.c $(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
-				 $(CORE_DIR)/machine/grobda_machine.c   \
+				 $(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
 				 $(CORE_DIR)/machine/gaplus_machine.c $(CORE_DIR)/vidhrdw/gaplus_vidhrdw.c $(CORE_DIR)/drivers/gaplus.c \
-				 $(CORE_DIR)/machine/toypop_machine.c $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
+				 $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
 				 $(CORE_DIR)/drivers/polepos.c   $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c  \
 				 $(CORE_DIR)/vidhrdw/pacland_vidhrdw.c $(CORE_DIR)/drivers/pacland.c \
 				 $(CORE_DIR)/vidhrdw/skykid_vidhrdw.c $(CORE_DIR)/drivers/skykid.c \
