@@ -321,7 +321,7 @@ static MACHINE_DRIVER_START( jcross )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
-	MDRV_SOUND_ADD(NAMCO, snkwave_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, snkwave_interface)
 MACHINE_DRIVER_END
 
 

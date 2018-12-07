@@ -13,14 +13,39 @@
 #define MAX_STARS 250
 #define STARS_COLOR_BASE 32
 
-unsigned char *bosco_staronoff;
-unsigned char *bosco_starblink;
 static unsigned int stars_scrollx;
 static unsigned int stars_scrolly;
-static unsigned char bosco_scrollx,bosco_scrolly;
-static unsigned char bosco_starcontrol;
-static int flipscreen;
-static int displacement;
+static int bosco_starcontrol,bosco_starblink[2];
+
+static struct tilemap *bg_tilemap,*fg_tilemap;
+data8_t *bosco_radarattr;
+
+unsigned char *bosco_sharedram;
+READ_HANDLER( bosco_sharedram1_r );
+WRITE_HANDLER( bosco_sharedram1_w );
+READ_HANDLER( bosco_sharedram2_r );
+WRITE_HANDLER( bosco_sharedram2_w );
+
+READ_HANDLER( bosco_sharedram1_r )
+{
+	return bosco_sharedram[offset];
+}
+
+WRITE_HANDLER( bosco_sharedram1_w )
+{
+	bosco_sharedram[offset] = data;
+}
+
+READ_HANDLER( bosco_sharedram2_r )
+{
+	return bosco_radarattr[offset];
+}
+
+WRITE_HANDLER( bosco_sharedram2_w )
+{
+	bosco_radarattr[offset] = data;
+}
+
 
 
 struct star
@@ -32,41 +57,8 @@ static int total_stars;
 
 #define VIDEO_RAM_SIZE 0x400
 
-unsigned char *bosco_videoram2,*bosco_colorram2;
-unsigned char *bosco_radarx,*bosco_radary,*bosco_radarattr;
-size_t bosco_radarram_size;
-											/* to speed up video refresh */
-static unsigned char *dirtybuffer2;	/* keep track of modified portions of the screen */
-											/* to speed up video refresh */
-static struct mame_bitmap *tmpbitmap1;
-
-
-
-static struct rectangle spritevisiblearea =
-{
-	0*8+3, 28*8-1,
-	0*8, 28*8-1
-};
-
-static struct rectangle spritevisibleareaflip =
-{
-	8*8, 36*8-1-3,
-	0*8, 28*8-1
-};
-
-
-static struct rectangle radarvisiblearea =
-{
-	28*8, 36*8-1,
-	0*8, 28*8-1
-};
-
-static struct rectangle radarvisibleareaflip =
-{
-	0*8, 8*8-1,
-	0*8, 28*8-1
-};
-
+data8_t *bosco_videoram;
+static data8_t *bosco_radarx,*bosco_radary;
 
 
 PALETTE_INIT( bosco )
@@ -81,51 +73,98 @@ PALETTE_INIT( bosco )
 		int bit0,bit1,bit2,r,g,b;
 
 
-		bit0 = (color_prom[31-i] >> 0) & 0x01;
-		bit1 = (color_prom[31-i] >> 1) & 0x01;
-		bit2 = (color_prom[31-i] >> 2) & 0x01;
+		bit0 = ((*color_prom) >> 0) & 0x01;
+		bit1 = ((*color_prom) >> 1) & 0x01;
+		bit2 = ((*color_prom) >> 2) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		bit0 = (color_prom[31-i] >> 3) & 0x01;
-		bit1 = (color_prom[31-i] >> 4) & 0x01;
-		bit2 = (color_prom[31-i] >> 5) & 0x01;
+		bit0 = ((*color_prom) >> 3) & 0x01;
+		bit1 = ((*color_prom) >> 4) & 0x01;
+		bit2 = ((*color_prom) >> 5) & 0x01;
 		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 		bit0 = 0;
-		bit1 = (color_prom[31-i] >> 6) & 0x01;
-		bit2 = (color_prom[31-i] >> 7) & 0x01;
+		bit1 = ((*color_prom) >> 6) & 0x01;
+		bit2 = ((*color_prom) >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
 		palette_set_color(i,r,g,b);
+		color_prom++;
 	}
 
 	/* characters / sprites */
 	for (i = 0;i < 64*4;i++)
 	{
-		colortable[i] = 15 - (color_prom[i + 32] & 0x0f);	/* chars */
-		colortable[i+64*4] = 15 - (color_prom[i + 32] & 0x0f) + 0x10;	/* sprites */
-		if (colortable[i+64*4] == 0x10) colortable[i+64*4] = 0;	/* preserve transparency */
+		colortable[i] = (color_prom[i] & 0x0f) + 0x10;	/* chars */
+		colortable[i+64*4] = (color_prom[i] & 0x0f);	/* sprites */
 	}
 
-	/* radar dots lookup table */
-	/* they use colors 0-3, I think */
+	/* bullets lookup table */
+	/* they use colors 28-31, I think - PAL 5A controls it */
 	for (i = 0;i < 4;i++)
-		COLOR(2,i) = i;
+	{
+		COLOR(2,i) = 31-i;
+		COLOR(2,i+4) = 0;	// transparent
+	}
 
 	/* now the stars */
-	for (i = 32;i < 32 + 64;i++)
+	for (i = 0;i < 64;i++)
 	{
 		int bits,r,g,b;
-		int map[4] = { 0x00, 0x88, 0xcc, 0xff };
+		int map[4] = { 0x00, 0x47, 0x97, 0xde };
 
-		bits = ((i-32) >> 0) & 0x03;
+		bits = (i >> 0) & 0x03;
 		r = map[bits];
-		bits = ((i-32) >> 2) & 0x03;
+		bits = (i >> 2) & 0x03;
 		g = map[bits];
-		bits = ((i-32) >> 4) & 0x03;
+		bits = (i >> 4) & 0x03;
 		b = map[bits];
 
-		palette_set_color(i,r,g,b);
+		palette_set_color(i + 32,r,g,b);
 	}
 }
+
+
+
+/***************************************************************************
+
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+/* the video RAM has space for 32x32 tiles and is only partially used for the radar */
+static UINT32 fg_tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	return col + (row << 5);
+}
+
+
+static void get_tile_info(int ram_offs,int tile_index)
+{
+	UINT8 attr = bosco_videoram[ram_offs + tile_index + 0x800];
+	tile_info.priority = (attr & 0x20) >> 5;
+	SET_TILE_INFO(
+			0,
+			bosco_videoram[ram_offs + tile_index],
+			attr & 0x3f,
+			TILE_FLIPYX(attr >> 6) ^ TILE_FLIPX)
+}
+
+static void bg_get_tile_info(int tile_index)
+{
+	get_tile_info(0x400,tile_index);
+}
+
+static void fg_get_tile_info(int tile_index)
+{
+	get_tile_info(0x000,tile_index);
+}
+
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
+
+***************************************************************************/
 
 VIDEO_START( bosco )
 {
@@ -133,15 +172,19 @@ VIDEO_START( bosco )
 	int x,y;
 	int set = 0;
 
-	if (video_start_generic() != 0)
+	bg_tilemap = tilemap_create(bg_get_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
+	fg_tilemap = tilemap_create(fg_get_tile_info,fg_tilemap_scan,  TILEMAP_OPAQUE,8,8, 8,32);
+
+	if (!bg_tilemap || !fg_tilemap)
 		return 1;
 
-	if ((dirtybuffer2 = auto_malloc(videoram_size)) == 0)
-		return 1;
-	memset(dirtybuffer2,1,videoram_size);
+	tilemap_set_scrolldx(bg_tilemap,3,3);
 
-	if ((tmpbitmap1 = auto_bitmap_alloc(32*8,32*8)) == 0)
-		return 1;
+	spriteram_size = 0x0c;
+	spriteram = bosco_videoram + 0x03d4;
+	spriteram_2 = spriteram + 0x0800;
+	bosco_radarx = bosco_videoram + 0x03f0;
+	bosco_radary = bosco_radarx + 0x0800;
 
 	/* precalculate the star background */
 	/* this comes from the Galaxian hardware, Bosconian is probably different */
@@ -183,55 +226,43 @@ VIDEO_START( bosco )
 			}
 		}
 	}
-	*bosco_staronoff = 1;
-
-	displacement = 1;
 
 	return 0;
 }
 
 
-WRITE_HANDLER( bosco_videoram2_w )
-{
-	if (bosco_videoram2[offset] != data)
-	{
-		dirtybuffer2[offset] = 1;
 
-		bosco_videoram2[offset] = data;
-	}
+/***************************************************************************
+
+  Memory handlers
+
+***************************************************************************/
+
+READ_HANDLER( bosco_videoram_r )
+{
+	return bosco_videoram[offset];
 }
 
-
-
-WRITE_HANDLER( bosco_colorram2_w )
+WRITE_HANDLER( bosco_videoram_w )
 {
-	if (bosco_colorram2[offset] != data)
+	if (bosco_videoram[offset] != data)
 	{
-		dirtybuffer2[offset] = 1;
-
-		bosco_colorram2[offset] = data;
-	}
-}
-
-
-WRITE_HANDLER( bosco_flipscreen_w )
-{
-	if (flipscreen != (~data & 1))
-	{
-		flipscreen = ~data & 1;
-		memset(dirtybuffer,1,videoram_size);
-		memset(dirtybuffer2,1,videoram_size);
+		bosco_videoram[offset] = data;
+		if (offset & 0x400)
+			tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
+		else
+			tilemap_mark_tile_dirty(fg_tilemap,offset & 0x3ff);
 	}
 }
 
 WRITE_HANDLER( bosco_scrollx_w )
 {
-	bosco_scrollx = data;
+	tilemap_set_scrollx(bg_tilemap,0,data);
 }
 
 WRITE_HANDLER( bosco_scrolly_w )
 {
-	bosco_scrolly = data;
+	tilemap_set_scrolly(bg_tilemap,0,data);
 }
 
 WRITE_HANDLER( bosco_starcontrol_w )
@@ -239,172 +270,93 @@ WRITE_HANDLER( bosco_starcontrol_w )
 	bosco_starcontrol = data;
 }
 
+WRITE_HANDLER( bosco_starblink_w )
+{
+	bosco_starblink[offset] = data & 1;
+}
+
+WRITE_HANDLER( bosco_starclr_w )
+{
+}
+
+
 
 /***************************************************************************
 
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
+  Display refresh
 
 ***************************************************************************/
-VIDEO_UPDATE( bosco )
+
+static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
-	int offs,sx,sy;
+	int offs;
 
-
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
-	for (offs = videoram_size - 1;offs >= 0;offs--)
-	{
-		if (dirtybuffer2[offs])
-		{
-			int flipx,flipy;
-
-
-			dirtybuffer2[offs] = 0;
-
-			sx = offs % 32;
-			sy = offs / 32;
-			flipx = ~bosco_colorram2[offs] & 0x40;
-			flipy = bosco_colorram2[offs] & 0x80;
-			if (flipscreen)
-			{
-				sx = 31 - sx;
-				sy = 31 - sy;
-				flipx = !flipx;
-				flipy = !flipy;
-			}
-
-			drawgfx(tmpbitmap1,Machine->gfx[0],
-					bosco_videoram2[offs],
-					bosco_colorram2[offs] & 0x3f,
-					flipx,flipy,
-					8*sx,8*sy,
-					0,TRANSPARENCY_NONE,0);
-		}
-	}
-
-	/* update radar */
-	for (offs = videoram_size - 1;offs >= 0;offs--)
-	{
-		if (dirtybuffer[offs])
-		{
-			int flipx,flipy;
-
-
-			dirtybuffer[offs] = 0;
-
-			sx = (offs % 32) ^ 4;
-			sy = offs / 32 - 2;
-			flipx = ~colorram[offs] & 0x40;
-			flipy = colorram[offs] & 0x80;
-			if (flipscreen)
-			{
-				sx = 7 - sx;
-				sy = 27 - sy;
-				flipx = !flipx;
-				flipy = !flipy;
-			}
-
-			drawgfx(tmpbitmap,Machine->gfx[0],
-					videoram[offs],
-					colorram[offs] & 0x3f,
-					flipx,flipy,
-					8*sx,8*sy,
-					&radarvisibleareaflip,TRANSPARENCY_NONE,0);
-		}
-	}
-
-
-	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
-
-
-	/* draw the sprites */
 	for (offs = 0;offs < spriteram_size;offs += 2)
 	{
-		sx = spriteram[offs + 1] - displacement;
-if (flipscreen) sx += 32;
-		sy = 225 - spriteram_2[offs] - displacement;
+		int sx = spriteram[offs + 1] - 1;
+		int sy = 240 - spriteram_2[offs];
+		int flipx = spriteram[offs] & 1;
+		int flipy = spriteram[offs] & 2;
+		if (flip_screen) sx += 32-2;
 
 		drawgfx(bitmap,Machine->gfx[1],
 				(spriteram[offs] & 0xfc) >> 2,
 				spriteram_2[offs + 1] & 0x3f,
-				spriteram[offs] & 1,spriteram[offs] & 2,
+				flipx,flipy,
 				sx,sy,
-				flipscreen ? &spritevisibleareaflip : &spritevisiblearea,TRANSPARENCY_COLOR,0);
+				cliprect,TRANSPARENCY_COLOR,0x0f);
 	}
+}
 
 
-	/* copy the temporary bitmap to the screen */
-	{
-		int scrollx,scrolly;
+static void draw_bullets( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	int offs;
 
-
-		if (flipscreen)
-		{
-			scrollx = (bosco_scrollx +32);/*- 3*displacement) + 32;*/
-			scrolly = (bosco_scrolly + 16) - 32;
-		}
-		else
-		{
-			scrollx = -(bosco_scrollx);
-			scrolly = -(bosco_scrolly + 16);
-		}
-
-		copyscrollbitmap(bitmap,tmpbitmap1,1,&scrollx,1,&scrolly,&Machine->visible_area,TRANSPARENCY_COLOR,0);
-	}
-
-
-	/* radar */
-	if (flipscreen)
-		copybitmap(bitmap,tmpbitmap,0,0,0,0,&radarvisibleareaflip,TRANSPARENCY_NONE,0);
-	else
-		copybitmap(bitmap,tmpbitmap,0,0,28*8,0,&radarvisiblearea,TRANSPARENCY_NONE,0);
-
-
-	/* draw the dots on the radar and the bullets */
-	for (offs = 0; offs < bosco_radarram_size;offs++)
+	for (offs = 4; offs < 0x10;offs++)
 	{
 		int x,y;
 
-
-		x = bosco_radarx[offs] + ((~bosco_radarattr[offs] & 0x01) << 8) - 2;
-		y = 235 - bosco_radary[offs];
-		if (flipscreen)
-		{
-			x -= 1;
-			y += 2;
-		}
+		x = bosco_radarx[offs] + ((~bosco_radarattr[offs] & 0x01) << 8);
+		y = 253 - bosco_radary[offs];
+		if (flip_screen) x -= 3;
 
 		drawgfx(bitmap,Machine->gfx[2],
 				((bosco_radarattr[offs] & 0x0e) >> 1) ^ 0x07,
 				0,
-				flipscreen,flipscreen,
+				0,0,
 				x,y,
-				&Machine->visible_area,TRANSPARENCY_PEN,3);
+				cliprect,TRANSPARENCY_COLOR,0);
 	}
+}
 
+
+static void draw_stars( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	int offs;
 
 	/* draw the stars */
-	if ((*bosco_staronoff & 1) == 0)
+	if (1)
 	{
 		int bpen;
 
-		bpen = Machine->pens[0];
+		bpen = Machine->pens[0x1f];
 		for (offs = 0;offs < total_stars;offs++)
 		{
 			int x,y;
 			int set;
 			int starset[4][2] = {{0,3},{0,1},{2,3},{2,1}};
 
-			x = (stars[offs].x + stars_scrollx) % 224;
-			y = (stars[offs].y + stars_scrolly) % 224;
-
-			set = (bosco_starblink[0] & 1) + ((bosco_starblink[1] & 1) << 1);
+			set = bosco_starblink[0] + (bosco_starblink[1] << 1);
 
 			if (((stars[offs].set == starset[set][0]) ||
 				 (stars[offs].set == starset[set][1])))
 			{
+				x = (stars[offs].x + stars_scrollx) % 224;
+				y = (stars[offs].y + stars_scrolly) % 224 + 16;
+
+				if (flip_screen) x += 64;
+
 				if (read_pixel(bitmap, x, y) == bpen)
 				{
 					plot_pixel(bitmap, x, y, stars[offs].col);
@@ -414,11 +366,44 @@ if (flipscreen) sx += 32;
 	}
 }
 
-void bosco_vh_interrupt(void)
+
+VIDEO_UPDATE( bosco )
+{
+	/* the radar tilemap is just 8x32. We rely on the tilemap code to repeat it across
+	   the screen, and clip it to only the position where it is supposed to be shown */
+	struct rectangle fg_clip = *cliprect;
+	struct rectangle bg_clip = *cliprect;
+	if (flip_screen)
+	{
+		bg_clip.min_x = 8*8;
+		fg_clip.max_x = 8*8-1;
+	}
+	else
+	{
+		bg_clip.max_x = 28*8-1;
+		fg_clip.min_x = 28*8;
+	}
+
+	tilemap_draw(bitmap,&bg_clip,bg_tilemap,0,0);
+	tilemap_draw(bitmap,&fg_clip,fg_tilemap,0,0);
+
+	draw_sprites(bitmap,cliprect);
+
+	/* draw the high priority characters */
+	tilemap_draw(bitmap,&bg_clip,bg_tilemap,1,0);
+	tilemap_draw(bitmap,&fg_clip,fg_tilemap,1,0);
+
+	draw_bullets(bitmap,cliprect);
+
+	draw_stars(bitmap,cliprect);
+}
+
+
+VIDEO_EOF( bosco )
 {
 	int speedsx[8] = { -1, -2, -3, 0, 3, 2, 1, 0 };
 	int speedsy[8] = { 0, -1, -2, -3, 0, 3, 2, 1 };
 
-	stars_scrollx += speedsx[bosco_starcontrol & 7];
-	stars_scrolly += speedsy[(bosco_starcontrol & 56) >> 3];
+	stars_scrollx += speedsx[bosco_starcontrol & 0x07];
+	stars_scrolly += speedsy[(bosco_starcontrol & 0x38) >> 3];
 }
