@@ -1,28 +1,23 @@
-/***************************************************************************
-
-  vidhrdw.c
-
-  Functions to emulate the video hardware of the machine.
-
-***************************************************************************/
-
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
 
+data8_t *mappy_videoram;
+data8_t *mappy_spriteram;
 
-unsigned char mappy_scroll;
+static data8_t mappy_scroll;
+static struct tilemap *bg_tilemap;
 
-static int special_display;
-static int flipscreen;
+static struct mame_bitmap *sprite_bitmap;
+
 
 /***************************************************************************
 
-  Convert the color PROMs into a more useable format.
+  Convert the color PROMs.
 
-  mappy has one 32x8 palette PROM and two 256x4 color lookup table PROMs
-  (one for characters, one for sprites).
-
+  All games except Phozon have one 32x8 palette PROM and two 256x4 color
+  lookup table PROMs (one for characters, one for sprites), except todruaga
+  which has a larger 1024x4 PROM for sprites.
   The palette PROM is connected to the RGB output this way:
 
   bit 7 -- 220 ohm resistor  -- BLUE
@@ -34,7 +29,49 @@ static int flipscreen;
         -- 470 ohm resistor  -- RED
   bit 0 -- 1  kohm resistor  -- RED
 
+  The way how the lookup tables are mapped to palette colors, and priority
+  handling, are controlled by a PAL (SPV-5 in Super Pacman, MPI-4 in Mappy),
+  so the two hardwares work differently.
+  Super Pacman has a special "super priority" for sprite colors, allowing
+  one pen to be over high priority tiles (used by Pac & Pal for ghost eyes),
+  which isn't present in Mappy.
+
 ***************************************************************************/
+
+PALETTE_INIT( superpac )
+{
+	int i;
+
+	for (i = 0;i < Machine->drv->total_colors;i++)
+	{
+		int bit0,bit1,bit2,r,g,b;
+
+		bit0 = (*color_prom >> 0) & 0x01;
+		bit1 = (*color_prom >> 1) & 0x01;
+		bit2 = (*color_prom >> 2) & 0x01;
+		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+		bit0 = (*color_prom >> 3) & 0x01;
+		bit1 = (*color_prom >> 4) & 0x01;
+		bit2 = (*color_prom >> 5) & 0x01;
+		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+		bit0 = 0;
+		bit1 = (*color_prom >> 6) & 0x01;
+		bit2 = (*color_prom >> 7) & 0x01;
+		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+
+		palette_set_color(i,r,g,b);
+		color_prom++;
+	}
+
+	/* characters */
+	for (i = 0; i < 64*4; i++)
+		colortable[i] = (color_prom[i] & 0x0f) ^ 0x1f;
+
+	/* sprites */
+	for (i = 64*4; i < 128*4; i++)
+		colortable[i] = color_prom[i] & 0x0f;
+}
+
 PALETTE_INIT( mappy )
 {
 	int i;
@@ -62,7 +99,7 @@ PALETTE_INIT( mappy )
 
 	/* characters */
 	for (i = 0*4;i < 64*4;i++)
-		colortable[i] = (color_prom[(i^3)] & 0x0f) + 0x10;
+		colortable[i] = (color_prom[i^3] & 0x0f) + 0x10;
 
 	/* sprites */
 	for (i = 64*4;i < Machine->drv->color_table_len;i++)
@@ -70,57 +107,251 @@ PALETTE_INIT( mappy )
 }
 
 
-static VIDEO_START( common )
-{
-	if ((dirtybuffer = auto_malloc(videoram_size)) == 0)
-		return 1;
-	memset (dirtybuffer, 1, videoram_size);
+/***************************************************************************
 
-	if ((tmpbitmap = auto_bitmap_alloc (36*8,60*8)) == 0)
+  In Phozon, the palette PROMs are connected to the RGB output this way:
+
+  bit 3 -- 220 ohm resistor  -- RED/GREEN/BLUE
+        -- 470 ohm resistor  -- RED/GREEN/BLUE
+        -- 1  kohm resistor  -- RED/GREEN/BLUE
+  bit 0 -- 2.2kohm resistor  -- RED/GREEN/BLUE
+
+***************************************************************************/
+
+PALETTE_INIT( phozon )
+{
+	int i;
+	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
+	#define COLOR(gfxn,offs) (colortable[Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
+
+	for (i = 0; i < Machine->drv->total_colors; i++){
+		int bit0,bit1,bit2,bit3,r,g,b;
+
+		/* red component */
+		bit0 = (color_prom[i] >> 0) & 0x01;
+		bit1 = (color_prom[i] >> 1) & 0x01;
+		bit2 = (color_prom[i] >> 2) & 0x01;
+		bit3 = (color_prom[i] >> 3) & 0x01;
+		r = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
+		/* green component */
+		bit0 = (color_prom[i + 0x100] >> 0) & 0x01;
+		bit1 = (color_prom[i + 0x100] >> 1) & 0x01;
+		bit2 = (color_prom[i + 0x100] >> 2) & 0x01;
+		bit3 = (color_prom[i + 0x100] >> 3) & 0x01;
+		g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
+		/* blue component */
+		bit0 = (color_prom[i + 0x200] >> 0) & 0x01;
+		bit1 = (color_prom[i + 0x200] >> 1) & 0x01;
+		bit2 = (color_prom[i + 0x200] >> 2) & 0x01;
+		bit3 = (color_prom[i + 0x200] >> 3) & 0x01;
+		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
+
+		palette_set_color(i,r,g,b);
+	}
+
+	color_prom += 0x300;
+	/* color_prom now points to the beginning of the lookup table */
+
+	/* characters */
+	for (i = 0; i < TOTAL_COLORS(0); i++)
+		COLOR(0,i) = (*(color_prom++) & 0x0f);
+	/* sprites */
+	for (i = 0; i < TOTAL_COLORS(1); i++)
+		COLOR(1,i) = (*(color_prom++) & 0x0f) + 0x10;
+}
+
+
+
+/***************************************************************************
+
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+/* convert from 32x32 to 36x28 */
+static UINT32 superpac_tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	int offs;
+
+	row += 2;
+	col -= 2;
+	if (col & 0x20)
+		offs = row + ((col & 0x1f) << 5);
+	else
+		offs = col + (row << 5);
+
+	return offs;
+}
+
+/* tilemap is a composition of a 32x60 scrolling portion and two 2x28 fixed portions on the sides */
+static UINT32 mappy_tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	int offs;
+
+	col -= 2;
+	if (col & 0x20)
+	{
+		/* in the following code, note the +2 followed by & 0x0f. This causes unintuitive
+		   mapping from logical to hardware coordinates, which is true to the hardware.
+		   Not doing it that way would cause missing tiles in motos and todruaga */
+		if (row & 0x20)
+			offs = 0x7ff;	// outside visible area
+		else
+			offs = ((row + 2) & 0x0f) + (row & 0x10) + ((col & 3) << 5) + 0x780;
+	}
+	else
+		offs = col + (row << 5);
+
+	return offs;
+}
+
+static void superpac_get_tile_info(int tile_index)
+{
+	unsigned char attr = mappy_videoram[tile_index + 0x400];
+	tile_info.priority = (attr & 0x40) >> 6;
+	SET_TILE_INFO(
+			0,
+			mappy_videoram[tile_index],
+			attr & 0x3f,
+			0)
+}
+
+static void phozon_get_tile_info(int tile_index)
+{
+	unsigned char attr = mappy_videoram[tile_index + 0x400];
+	tile_info.priority = (attr & 0x40) >> 6;
+	SET_TILE_INFO(
+			0,
+			mappy_videoram[tile_index] + ((attr & 0x80) << 1),
+			attr & 0x3f,
+			0)
+}
+
+static void mappy_get_tile_info(int tile_index)
+{
+	unsigned char attr = mappy_videoram[tile_index + 0x800];
+	tile_info.priority = (attr & 0x40) >> 6;
+	SET_TILE_INFO(
+			0,
+			mappy_videoram[tile_index],
+			attr & 0x3f,
+			0)
+}
+
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
+
+***************************************************************************/
+
+VIDEO_START( superpac )
+{
+	bg_tilemap = tilemap_create(superpac_get_tile_info,superpac_tilemap_scan,TILEMAP_TRANSPARENT_COLOR,8,8,36,28);
+	sprite_bitmap = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+
+	if (!bg_tilemap || !sprite_bitmap)
 		return 1;
+
+	tilemap_set_transparent_pen(bg_tilemap, 31);
+
+	spriteram = mappy_spriteram + 0x780;
+	spriteram_2 = spriteram + 0x800;
+	spriteram_3 = spriteram_2 + 0x800;
+
+	return 0;
+}
+
+VIDEO_START( phozon )
+{
+	bg_tilemap = tilemap_create(phozon_get_tile_info,superpac_tilemap_scan,TILEMAP_TRANSPARENT_COLOR,8,8,36,28);
+
+	if (!bg_tilemap)
+		return 1;
+
+	tilemap_set_transparent_pen(bg_tilemap, 15);
+
+	spriteram = mappy_spriteram + 0x780;
+	spriteram_2 = spriteram + 0x800;
+	spriteram_3 = spriteram_2 + 0x800;
 
 	return 0;
 }
 
 VIDEO_START( mappy )
 {
-	special_display = 0;
-	return video_start_common();
+	bg_tilemap = tilemap_create(mappy_get_tile_info,mappy_tilemap_scan,TILEMAP_TRANSPARENT_COLOR,8,8,36,60);
+
+	if (!bg_tilemap)
+		return 1;
+
+	tilemap_set_transparent_pen(bg_tilemap, 31);
+	tilemap_set_scroll_cols(bg_tilemap, 36);
+
+	spriteram = mappy_spriteram + 0x780;
+	spriteram_2 = spriteram + 0x800;
+	spriteram_3 = spriteram_2 + 0x800;
+
+	return 0;
 }
 
-VIDEO_START( motos )
+
+
+/***************************************************************************
+
+  Memory handlers
+
+***************************************************************************/
+
+READ_HANDLER( superpac_videoram_r )
 {
-	special_display = 1;
-	return video_start_common();
+	return mappy_videoram[offset];
 }
 
-VIDEO_START( todruaga )
+WRITE_HANDLER( superpac_videoram_w )
 {
-	special_display = 2;
-	return video_start_common();
+	if (mappy_videoram[offset] != data)
+	{
+		mappy_videoram[offset] = data;
+		tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
+	}
 }
 
-
+READ_HANDLER( mappy_videoram_r )
+{
+	return mappy_videoram[offset];
+}
 
 WRITE_HANDLER( mappy_videoram_w )
 {
-	if (videoram[offset] != data)
+	if (mappy_videoram[offset] != data)
 	{
-		dirtybuffer[offset] = 1;
-		videoram[offset] = data;
+		mappy_videoram[offset] = data;
+		tilemap_mark_tile_dirty(bg_tilemap,offset & 0x7ff);
 	}
 }
 
-
-WRITE_HANDLER( mappy_colorram_w )
+READ_HANDLER( mappy_spriteram_r )
 {
-	if (colorram[offset] != data)
-	{
-		dirtybuffer[offset] = 1;
-		colorram[offset] = data;
-	}
+    return mappy_spriteram[offset];
 }
 
+WRITE_HANDLER( mappy_spriteram_w )
+{
+	mappy_spriteram[offset] = data;
+}
+
+WRITE_HANDLER( superpac_flipscreen_w )
+{
+	flip_screen_set(data & 1);
+}
+
+READ_HANDLER( superpac_flipscreen_r )
+{
+	flip_screen_set(1);
+	return 0xff;
+}
 
 WRITE_HANDLER( mappy_scroll_w )
 {
@@ -129,269 +360,170 @@ WRITE_HANDLER( mappy_scroll_w )
 
 
 
-void mappy_draw_sprite(struct mame_bitmap *dest,unsigned int code,unsigned int color,
-	int flipx,int flipy,int sx,int sy)
-{
-	if (special_display == 1) sy++;	/* Motos */
-
-	drawgfx(dest,Machine->gfx[1],code,color,flipx,flipy,sx,sy,&Machine->visible_area,
-		TRANSPARENCY_COLOR,15);
-}
-
-WRITE_HANDLER( mappy_flipscreen_w )
-{
-	if (flipscreen != (data & 1))
-	{
-		flipscreen = data & 1;
-		memset(dirtybuffer,1,videoram_size);
-	}
-}
-
 /***************************************************************************
 
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
+  Display refresh
 
 ***************************************************************************/
-VIDEO_UPDATE( mappy )
+
+/* also used by toypop.c */
+void mappy_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int xoffs, int yoffs, int trans_color )
 {
 	int offs;
 
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
-	for (offs = videoram_size - 1;offs >= 0;offs--)
-	{
-		if (dirtybuffer[offs])
-		{
-			int sx,sy,mx,my;
-
-			dirtybuffer[offs] = 0;
-
-			if (offs >= videoram_size - 64)
-			{
-				int off = offs;
-
-				if (special_display == 1)
-				{
-					/* Motos */
-					if (off == 0x07d1 || off == 0x07d0 || off == 0x07f1 || off == 0x07f0)
-						off -= 0x10;
-					if (off == 0x07c1 || off == 0x07c0 || off == 0x07e1 || off == 0x07e0)
-						off += 0x10;
-				}
-
-				/* Draw the top 2 lines. */
-				mx = (off - (videoram_size - 64)) / 32;
-				my = off % 32;
-
-				sx = mx;
-				sy = my - 2;
-			}
-			else if (offs >= videoram_size - 128)
-			{
-				int off = offs;
-
-				if (special_display == 2)
-				{
-					/* Tower of Druaga */
-					if (off == 0x0791 || off == 0x0790 || off == 0x07b1 || off == 0x07b0)
-						off -= 0x10;
-					if (off == 0x0781 || off == 0x0780 || off == 0x07a1 || off == 0x07a0)
-						off += 0x10;
-				}
-
-				/* Draw the bottom 2 lines. */
-				mx = (off - (videoram_size - 128)) / 32;
-				my = off % 32;
-
-				sx = mx + 34;
-				sy = my - 2;
-			}
-			else
-			{
-				/* draw the rest of the screen */
-				mx = offs % 32;
-				my = offs / 32;
-
-				sx = mx + 2;
-				sy = my;
-			}
-
-			if (flipscreen)
-			{
-				sx = 35 - sx;
-				sy = 59 - sy;
-			}
-
-			drawgfx(tmpbitmap,Machine->gfx[0],
-					videoram[offs],
-					colorram[offs] & 0x3f,
-					flipscreen,flipscreen,8*sx,8*sy,
-					0,TRANSPARENCY_NONE,0);
-		}
-	}
-
-	/* copy the temporary bitmap to the screen */
-	{
-		int scroll[36];
-
-		for (offs = 0;offs < 2;offs++)
-			scroll[offs] = 0;
-		for (offs = 2;offs < 34;offs++)
-			scroll[offs] = -mappy_scroll;
-		for (offs = 34;offs < 36;offs++)
-			scroll[offs] = 0;
-
-		if (flipscreen)
-		{
-			for (offs = 0;offs < 36;offs++)
-				scroll[offs] = 224 - scroll[offs];
-		}
-
-		copyscrollbitmap(bitmap,tmpbitmap,0,0,36,scroll,&Machine->visible_area,TRANSPARENCY_NONE,0);
-	}
-
-	/* Draw the sprites. */
-	for (offs = 0;offs < spriteram_size;offs += 2)
+	for (offs = 0;offs < 0x80;offs += 2)
 	{
 		/* is it on? */
 		if ((spriteram_3[offs+1] & 2) == 0)
 		{
+			static int gfx_offs[2][2] =
+			{
+				{ 0, 1 },
+				{ 2, 3 }
+			};
 			int sprite = spriteram[offs];
 			int color = spriteram[offs+1];
-			int x = (spriteram_2[offs+1]-40) + 0x100*(spriteram_3[offs+1] & 1);
-			int y = 28*8-spriteram_2[offs];
-			int flipx = spriteram_3[offs] & 1;
-			int flipy = spriteram_3[offs] & 2;
+			int sx = spriteram_2[offs+1] + 0x100 * (spriteram_3[offs+1] & 1) - 40 + xoffs;
+			int sy = 256 - spriteram_2[offs] + yoffs + 1;	// sprites are buffered and delayed by one scanline
+			int flipx = (spriteram_3[offs] & 0x01);
+			int flipy = (spriteram_3[offs] & 0x02) >> 1;
+			int sizex = (spriteram_3[offs] & 0x04) >> 2;
+			int sizey = (spriteram_3[offs] & 0x08) >> 3;
+			int x,y;
 
-			if (flipscreen)
+			sprite &= ~sizex;
+			sprite &= ~(sizey << 1);
+
+			if (flip_screen)
 			{
-				flipx = !flipx;
-				flipy = !flipy;
+				flipx ^= 1;
+				flipy ^= 1;
 			}
 
-			switch (spriteram_3[offs] & 0x0c)
+			sy -= 16 * sizey;
+			sy = (sy & 0xff) - 32;	// fix wraparound
+
+			for (y = 0;y <= sizey;y++)
 			{
-				case 0:		/* normal size */
-					mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y);
-					break;
-
-				case 4:		/* 2x horizontal */
-					sprite &= ~1;
-					if (!flipx)
-					{
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x+16,y);
-					}
-					else
-					{
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x+16,y);
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x,y);
-					}
-					break;
-
-				case 8:		/* 2x vertical */
-					sprite &= ~2;
-					if (!flipy)
-					{
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y-16);
-					}
-					else
-					{
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x,y-16);
-					}
-					break;
-
-				case 12:		/* 2x both ways */
-					sprite &= ~3;
-					if (!flipx && !flipy)
-					{
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,3+sprite,color,flipx,flipy,x+16,y);
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y-16);
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x+16,y-16);
-					}
-					else if (flipx && flipy)
-					{
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x+16,y);
-						mappy_draw_sprite(bitmap,3+sprite,color,flipx,flipy,x,y-16);
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x+16,y-16);
-					}
-					else if (flipy)
-					{
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x+16,y);
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x,y-16);
-						mappy_draw_sprite(bitmap,3+sprite,color,flipx,flipy,x+16,y-16);
-					}
-					else /* flipx */
-					{
-						mappy_draw_sprite(bitmap,3+sprite,color,flipx,flipy,x,y);
-						mappy_draw_sprite(bitmap,2+sprite,color,flipx,flipy,x+16,y);
-						mappy_draw_sprite(bitmap,1+sprite,color,flipx,flipy,x,y-16);
-						mappy_draw_sprite(bitmap,sprite,color,flipx,flipy,x+16,y-16);
-					}
-					break;
+				for (x = 0;x <= sizex;x++)
+				{
+					drawgfx(bitmap,Machine->gfx[1],
+						sprite + gfx_offs[y ^ (sizey * flipy)][x ^ (sizex * flipx)],
+						color,
+						flipx,flipy,
+						sx + 16*x,sy + 16*y,
+						cliprect,TRANSPARENCY_COLOR,trans_color);
+				}
 			}
 		}
 	}
+}
 
-	/* Draw the high priority characters */
-	for (offs = videoram_size - 1;offs >= 0;offs--)
+
+static void phozon_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	int offs;
+
+	for (offs = 0;offs < 0x80;offs += 2)
 	{
-		if (colorram[offs] & 0x40)
+		/* is it on? */
+		if ((spriteram_3[offs+1] & 2) == 0)
 		{
-			int sx,sy,mx,my;
+			static int size[4] = { 1, 0, 3, 0 };	/* 16, 8, 32 pixels; fourth combination unused? */
+			static int gfx_offs[4][4] =
+			{
+				{ 0, 1, 4, 5 },
+				{ 2, 3, 6, 7 },
+				{ 8, 9,12,13 },
+				{10,11,14,15 }
+			};
+			int sprite = (spriteram[offs] << 2) | ((spriteram_3[offs] & 0xc0) >> 6);
+			int color = spriteram[offs+1] & 0x3f;
+			int sx = spriteram_2[offs+1] + 0x100 * (spriteram_3[offs+1] & 1) - 69;
+			int sy = 256 - spriteram_2[offs];
+			int flipx = (spriteram_3[offs] & 0x01);
+			int flipy = (spriteram_3[offs] & 0x02) >> 1;
+			int sizex = size[(spriteram_3[offs] & 0x0c) >> 2];
+			int sizey = size[(spriteram_3[offs] & 0x30) >> 4];
+			int x,y;
 
-				if (offs >= videoram_size - 64)
+			if (flip_screen)
+			{
+				flipx ^= 1;
+				flipy ^= 1;
+			}
+
+			sy -= 8 * sizey;
+			sy = (sy & 0xff) - 32;	// fix wraparound
+
+			for (y = 0;y <= sizey;y++)
+			{
+				for (x = 0;x <= sizex;x++)
 				{
-					/* Draw the top 2 lines. */
-					mx = (offs - (videoram_size - 64)) / 32;
-					my = offs % 32;
-
-					sx = mx;
-					sy = my - 2;
-
-					sy *= 8;
+					drawgfx(bitmap,Machine->gfx[1],
+						sprite + gfx_offs[y ^ (sizey * flipy)][x ^ (sizex * flipx)],
+						color,
+						flipx,flipy,
+						sx + 8*x,sy + 8*y,
+						cliprect,TRANSPARENCY_COLOR,31);
 				}
-				else if (offs >= videoram_size - 128)
-				{
-					/* Draw the bottom 2 lines. */
-					mx = (offs - (videoram_size - 128)) / 32;
-					my = offs % 32;
-
-					sx = mx + 34;
-					sy = my - 2;
-
-					sy *= 8;
-				}
-				else
-				{
-					/* draw the rest of the screen */
-					mx = offs % 32;
-					my = offs / 32;
-
-					sx = mx + 2;
-					sy = my;
-
-					sy = (8*sy-mappy_scroll);
-				}
-
-				if (flipscreen)
-				{
-					sx = 35 - sx;
-					sy = 216 - sy;
-				}
-
-				drawgfx(bitmap,Machine->gfx[0],
-						videoram[offs],
-						colorram[offs] & 0x3f,
-						flipscreen,flipscreen,8*sx,sy,
-						0,TRANSPARENCY_COLOR,31);
+			}
 		}
 	}
+}
+
+
+VIDEO_UPDATE( superpac )
+{
+	int x,y;
+
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0|TILEMAP_IGNORE_TRANSPARENCY,0);
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1|TILEMAP_IGNORE_TRANSPARENCY,0);
+
+	fillbitmap(sprite_bitmap,15,cliprect);
+	mappy_draw_sprites(sprite_bitmap,cliprect,0,0,15);
+	copybitmap(bitmap,sprite_bitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,15);
+
+	/* Redraw the high priority characters */
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1,0);
+
+	/* sprite color 0 still has priority over that (ghost eyes in Pac 'n Pal) */
+	for (y = 0;y < sprite_bitmap->height;y++)
+	{
+		for (x = 0;x < sprite_bitmap->width;x++)
+		{
+			if (read_pixel(sprite_bitmap,x,y) == 0)
+				plot_pixel(bitmap,x,y,0);
+		}
+	}
+}
+
+VIDEO_UPDATE( phozon )
+{
+	/* flip screen control is embedded in RAM */
+	flip_screen_set(mappy_spriteram[0x1f7f-0x800] & 1);
+
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0|TILEMAP_IGNORE_TRANSPARENCY,0);
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1|TILEMAP_IGNORE_TRANSPARENCY,0);
+
+	phozon_draw_sprites(bitmap,cliprect);
+
+	/* Redraw the high priority characters */
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1,0);
+}
+
+VIDEO_UPDATE( mappy )
+{
+	int offs;
+
+	for (offs = 2;offs < 34;offs++)
+		tilemap_set_scrolly(bg_tilemap,offs,mappy_scroll);
+
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0|TILEMAP_IGNORE_TRANSPARENCY,0);
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1|TILEMAP_IGNORE_TRANSPARENCY,0);
+
+	mappy_draw_sprites(bitmap,cliprect,0,0,15);
+
+	/* Redraw the high priority characters */
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1,0);
 }

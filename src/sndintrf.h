@@ -70,6 +70,15 @@ struct MachineSound
 #if (HAS_NAMCO)
 #include "sound/namco.h"
 #endif
+#if (HAS_NAMCO_15XX)
+#include "sound/namco.h"
+#endif
+#if (HAS_NAMCO_52XX)
+#include "sound/namco52.h"
+#endif
+#if (HAS_NAMCO_54XX)
+#include "sound/namco54.h"
+#endif
 #if (HAS_NAMCONA)
 #include "sound/namcona.h"
 #endif
@@ -256,6 +265,15 @@ enum
 #endif
 #if (HAS_NAMCO)
 	SOUND_NAMCO,
+#endif
+#if (HAS_NAMCO_15XX)
+	SOUND_NAMCO_15XX,
+#endif
+#if (HAS_NAMCO_52XX)
+	SOUND_NAMCO_52XX,
+#endif
+#if (HAS_NAMCO_54XX)
+	SOUND_NAMCO_54XX,
 #endif
 #if (HAS_NAMCONA)
 	SOUND_NAMCONA,
