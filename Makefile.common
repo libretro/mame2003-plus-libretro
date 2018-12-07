@@ -308,7 +308,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/machine/grobda_machine.c   \
 				 $(CORE_DIR)/machine/gaplus_machine.c $(CORE_DIR)/vidhrdw/gaplus_vidhrdw.c $(CORE_DIR)/drivers/gaplus.c \
 				 $(CORE_DIR)/machine/toypop_machine.c $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
-				 $(CORE_DIR)/machine/polepos_machine.c $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c  \
+				 $(CORE_DIR)/drivers/polepos.c   $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c  \
 				 $(CORE_DIR)/vidhrdw/pacland_vidhrdw.c $(CORE_DIR)/drivers/pacland.c \
 				 $(CORE_DIR)/vidhrdw/skykid_vidhrdw.c $(CORE_DIR)/drivers/skykid.c \
 				 $(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c $(CORE_DIR)/drivers/baraduke.c \
