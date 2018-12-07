@@ -510,10 +510,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( boscomdo )	/* (c) 1981 Midway */
 	DRIVER( galaga )	/* (c) 1981 */
 	DRIVER( galagamw )	/* (c) 1981 Midway */
-	DRIVER( galagads )	/* hack */
+//	DRIVER( galagads )	/* hack */
 	DRIVER( gallag )	/* bootleg */
 /*	DRIVER( galaga84 ) */	/* mix 'n match of ROMs from other sets */
-	DRIVER( nebulbee )	/* hack */
+//	DRIVER( nebulbee )	/* hack */
 	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
 	DRIVER( digdug )	/* (c) 1982 */
 	DRIVER( digdugb )	/* (c) 1982 */
@@ -559,7 +559,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( polepos2 )	/* (c) 1983 */
 	DRIVER( poleps2a )	/* (c) 1983 + Atari license */
 	DRIVER( poleps2b )	/* bootleg */
-	DRIVER( poleps2c )	/* bootleg */
+//	DRIVER( poleps2c )	/* bootleg */
 	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
 	DRIVER( pacland )	/* (c) 1984 */
 	DRIVER( pacland2 )	/* (c) 1984 */
