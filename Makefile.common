@@ -211,8 +211,8 @@ SOUNDS+=POKEY@
 SOUNDS+=TIA@
 SOUNDS+=NES@
 SOUNDS+=ASTROCADE@
-SOUNDS+=NAMCO@
-#SOUNDS+=NAMCO_15XX@
+#SOUNDS+=NAMCO@
+SOUNDS+=NAMCO_15XX@
 SOUNDS+=NAMCO_52XX@
 SOUNDS+=NAMCO_54XX@
 SOUNDS+=NAMCONA@
@@ -1032,7 +1032,9 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/vmetal.c \
 				 $(CORE_DIR)/drivers/deco156.c \
 				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
-				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c
+				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c \
+				 $(CORE_DIR)/machine/namcoio_machine.c 
+
 
 
 # List of CPU core (and, for a debug build, disassembler) object files
