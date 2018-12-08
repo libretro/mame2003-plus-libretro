@@ -2528,7 +2528,7 @@ static MACHINE_DRIVER_START( pacman )
 	MDRV_VIDEO_UPDATE(pengo)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD_TAG("namco", NAMCO, namco_interface)
+	MDRV_SOUND_ADD_TAG("namco", NAMCO_15XX, namco_interface)
 MACHINE_DRIVER_END
 
 

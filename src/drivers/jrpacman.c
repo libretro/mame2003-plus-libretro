@@ -359,7 +359,7 @@ static MACHINE_DRIVER_START( jrpacman )
 	MDRV_VIDEO_UPDATE(jrpacman)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(NAMCO, namco_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
 MACHINE_DRIVER_END
 
 
