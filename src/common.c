@@ -1344,18 +1344,32 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 static int display_rom_load_results(struct rom_load_data *romdata)
 {
 	int region;
+  const char *missing_files = "Required files are missing, the game cannot be run.\n";
+  const char *rom_warnings  = "Warnings flagged during ROM loading.\n";
 
   /* display either an error message or a warning message */
   if (romdata->errors)
   {
     extern int bailing;
+    struct retro_message osd_missing_files =
+    {
+      missing_files,
+      300
+    };
+    environ_cb(RETRO_ENVIRONMENT_SET_MESSAGE, &osd_missing_files);
     bailing = 1;
-    strcat(romdata->errorbuf, "Required files are missing, the game cannot be run.\n");
+    strcat(romdata->errorbuf, missing_files);
     log_cb(RETRO_LOG_ERROR, LOGPRE "%s", romdata->errorbuf);
   }
   else if (romdata->warnings)
   {
-    strcat(romdata->errorbuf, "The game might not run correctly.\n");
+    struct retro_message osd_rom_warnings =
+    {
+      rom_warnings,
+      300
+    };
+    environ_cb(RETRO_ENVIRONMENT_SET_MESSAGE, &osd_rom_warnings);    
+    strcat(romdata->errorbuf, rom_warnings);
     log_cb(RETRO_LOG_WARN, LOGPRE "%s", romdata->errorbuf);
   }
   else
