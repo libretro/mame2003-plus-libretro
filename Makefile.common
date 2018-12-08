@@ -2306,7 +2306,7 @@ endif
 SOUND=$(strip $(findstring NAMCO_15XX@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_NAMCO_15XX=1
-SOURCES_C += $(CORE_DIR)/sound/namco.o
+SOURCES_C += $(CORE_DIR)/sound/namco.c
 else
 SOUNDDEFS += -DHAS_NAMCO_15XX=0
 endif
@@ -2314,7 +2314,7 @@ endif
 SOUND=$(strip $(findstring NAMCO_52XX@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_NAMCO_52XX=1
-SOURCES_C += $(CORE_DIR)/sound/namco52.o
+SOURCES_C += $(CORE_DIR)/sound/namco52.c
 else
 SOUNDDEFS += -DHAS_NAMCO_52XX=0
 endif
@@ -2322,7 +2322,7 @@ endif
 SOUND=$(strip $(findstring NAMCO_54XX@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_NAMCO_54XX=1
-SOURCES_C += $(CORE_DIR)/sound/namco54.o
+SOURCES_C += $(CORE_DIR)/sound/namco54.c
 else
 SOUNDDEFS += -DHAS_NAMCO_54XX=0
 endif
