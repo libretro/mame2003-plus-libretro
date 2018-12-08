@@ -509,9 +509,9 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( boscomdo )	/* (c) 1981 Midway */
 	DRIVER( galaga )	/* (c) 1981 */
 	DRIVER( galagamw )	/* (c) 1981 Midway */
-//	DRIVER( galagads )	/* hack */
+	DRIVER( galagao )	
 	DRIVER( gallag )	/* bootleg */
-/*	DRIVER( galaga84 ) */	/* mix 'n match of ROMs from other sets */
+	DRIVER( galagamk ) 	/* mix 'n match of ROMs from other sets */
 //	DRIVER( nebulbee )	/* hack */
 	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
 	DRIVER( digdug )	/* (c) 1982 */
@@ -522,6 +522,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( xevious )	/* (c) 1982 */
 	DRIVER( xeviousa )	/* (c) 1982 + Atari license */
 	DRIVER( xeviousb )	/* (c) 1982 + Atari license */
+	DRIVER( xeviousc )
 	DRIVER( xevios )	/* bootleg */
 	DRIVER( battles )	/* bootleg */
 	DRIVER( sxevious )	/* (c) 1984 */
