@@ -45,6 +45,7 @@ TODO:
 ***************************************************************************/
 
 #include "driver.h"
+#include "namco52.h"
 
 /* macro to convert 4-bit unsigned samples to 8-bit signed samples */
 #define SAMPLE_CONV4(a) (0x11*((a&0x0f))-0x80)
