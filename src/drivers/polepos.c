@@ -479,8 +479,8 @@ MEMORY_END
 
 /* the same memory map is used by both Z8002 CPUs; all RAM areas are shared */
 static MEMORY_WRITE16_START( z8002_writemem )
-    { 0x0000, 0x7fff, MWA16_ROM },
-	{ 0x6000, 0x6003, polepos_z8002_nvi_enable_w },	/* NVI enable - *NOT* shared by the two CPUs */
+        { 0x6000, 0x6003, polepos_z8002_nvi_enable_w },	/* NVI enable - *NOT* shared by the two CPUs */
+        { 0x0000, 0x7fff, MWA16_ROM },
 	{ 0x8000, 0x8fff, polepos_sprite16_w, &polepos_sprite16_memory },	/* Motion Object */
 	{ 0x9000, 0x97ff, polepos_road16_w, &polepos_road16_memory },	/* Road Memory */
 	{ 0x9800, 0x9fff, polepos_alpha16_w, &polepos_alpha16_memory },	/* Alphanumeric (char ram) */
