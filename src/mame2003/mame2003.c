@@ -681,20 +681,19 @@ bool retro_load_game(const struct retro_game_info *game)
     if ((strcasecmp(driver_lookup, needle->description) == 0) 
       || (strcasecmp(driver_lookup, needle->name) == 0) )
     {
-      log_cb(RETRO_LOG_INFO, LOGPRE "Total game drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Driver index counter: %d. Matched game driver: %s.\n",  driverIndex, needle->name);
       game_driver = needle;
       options.romset_filename_noext = driver_lookup;
       break;
     }
-  }
-
-  if(driverIndex == total_drivers)
-  {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Total game drivers: %i. Game driver not found for selected game!", (int) total_drivers);
+	if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
+	{
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, needle->name);
       return false;
-  }
+	}
+ }
 
-  if(!init_game(driverIndex))
+   if(!init_game(driverIndex))
     return false;  
   set_content_flags();
 
