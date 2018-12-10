@@ -48,6 +48,7 @@ static struct retro_variable          current_options[OPT_end + 1];
 static struct retro_input_descriptor empty[] = { { 0 } };
 
 retro_log_printf_t                 log_cb;
+static struct retro_message        frontend_message;
 
 struct                             retro_perf_callback perf_cb;
 retro_environment_t                environ_cb                    = NULL;
@@ -74,6 +75,18 @@ static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
 
+
+/******************************************************************************
+
+	frontend message interface
+
+******************************************************************************/
+void frontend_message_cb(const char *message_string, unsigned frames_to_display)
+{
+  frontend_message.msg    = message_string;
+  frontend_message.frames = frames_to_display;
+  environ_cb(RETRO_ENVIRONMENT_SET_MESSAGE, &frontend_message);
+}
 
 /******************************************************************************
 

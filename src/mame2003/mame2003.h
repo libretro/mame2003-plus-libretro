@@ -34,14 +34,26 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
+
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
 /******************************************************************************
 
 	Shared libretro log interface
     set in mame2003.c 
 
 ******************************************************************************/
-extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 extern retro_log_printf_t log_cb;
+
+
+/******************************************************************************
+
+	frontend message interface
+    implemented in mame2003.c 
+
+******************************************************************************/
+extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
 
 /******************************************************************************

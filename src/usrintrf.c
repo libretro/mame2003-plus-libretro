@@ -2501,7 +2501,9 @@ void ui_copyright_and_warnings(void)
   
   if(generate_warning_list())
   {
-    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */   
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */
+    frontend_message_cb("Warning: There are known problems emulating this game.", 180);
+
     if(!options.skip_warnings)
     {
       snprintf(&buffer[strlen(buffer)], MAX_MESSAGE_LENGTH - strlen(buffer), "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
@@ -2615,7 +2617,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "        ----- Driver Warnings -----\n%s", buffer);
+  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "== Driver Warnings ==\n%s", buffer);
 	return true;
 }
 

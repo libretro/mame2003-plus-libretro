@@ -19,7 +19,7 @@ static const char *mame_default_text[] =
 	"MAME",
 
 	/* copyright stuff */
-	"       ----- Copyright Warning -----\nCopying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.\n",
+	"== Copyright Warning ==\nCopying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.\n",
 
 	/* misc stuff */
 	"Return to Main Menu",
@@ -60,7 +60,7 @@ static const char *mame_default_text[] =
 	"\x1b",
 
 	/* known problems */
-	"There are known problems with this game:",
+	"There are known problems emulating this game:",
 	"The colors aren't 100% accurate.",
 	"The colors are completely wrong.",
 	"The video emulation isn't 100% accurate.",

@@ -1351,24 +1351,14 @@ static int display_rom_load_results(struct rom_load_data *romdata)
   if (romdata->errors)
   {
     extern int bailing;
-    struct retro_message osd_missing_files =
-    {
-      missing_files,
-      300
-    };
-    environ_cb(RETRO_ENVIRONMENT_SET_MESSAGE, &osd_missing_files);
+    frontend_message_cb(missing_files, 300);
     bailing = 1;
     strcat(romdata->errorbuf, missing_files);
     log_cb(RETRO_LOG_ERROR, LOGPRE "%s", romdata->errorbuf);
   }
   else if (romdata->warnings)
   {
-    struct retro_message osd_rom_warnings =
-    {
-      rom_warnings,
-      300
-    };
-    environ_cb(RETRO_ENVIRONMENT_SET_MESSAGE, &osd_rom_warnings);    
+    frontend_message_cb(rom_warnings, 180);
     strcat(romdata->errorbuf, rom_warnings);
     log_cb(RETRO_LOG_WARN, LOGPRE "%s", romdata->errorbuf);
   }
