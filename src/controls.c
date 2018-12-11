@@ -4455,10 +4455,10 @@ const char *bosco_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_BUTTON1:        return BTN1 "Fire";
+    case IPT_JOYSTICK_UP:    return "Up";
+    case IPT_JOYSTICK_DOWN:  return "Down";
+    case IPT_JOYSTICK_LEFT:  return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
@@ -6729,11 +6729,11 @@ const char *digdug_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "Pump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
+    case IPT_BUTTON1:         return BTN1 "Pump";
+    case IPT_JOYSTICK_UP:     return "Up";
+    case IPT_JOYSTICK_DOWN:   return "Down";
+    case IPT_JOYSTICK_LEFT:   return "Left";
+    case IPT_JOYSTICK_RIGHT:  return "Right";
   } /* end of switch */
 
   return "";
@@ -8210,8 +8210,8 @@ const char *galaga_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_BUTTON1:        return BTN1 "Fire";
+    case IPT_JOYSTICK_LEFT:  return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
@@ -24228,7 +24228,7 @@ const struct ControlInfo xevious_ctrl =
   false, /* 45_degree_rotation for joystick(s) */
   true, /* alternating_controls */
   true, /* mirrored_controls */
-  "The labels on the original cpo are the ones in this entry, however they don't really apply to what the buttons do. Button 1 shoots and Button 2 Fires bombs. Because of this the button labels may be swapped as I don't have access to a real machine.", /* control_details */
+  "", /* control_details */
   &xevious_get_ctrl_name
 };
 
@@ -24236,12 +24236,12 @@ const char *xevious_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "Zapper";
-    case IPT_BUTTON2: return BTN2 "Blaster";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
+    case IPT_BUTTON1:         return BTN1 "Zapper";
+    case IPT_BUTTON2:         return BTN2 "Blaster";
+    case IPT_JOYSTICK_UP:     return "Up";
+    case IPT_JOYSTICK_DOWN:   return "Down";
+    case IPT_JOYSTICK_LEFT:   return "Left";
+    case IPT_JOYSTICK_RIGHT:  return "Right";
   } /* end of switch */
 
   return "";
@@ -24490,29 +24490,6 @@ const char *zerozone_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo zigzag_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "This game is a pirated version of digdug. With the execption of a new title, the game plays exactly the same.", /* control_details */
-  &zigzag_get_ctrl_name
-};
-
-const char *zigzag_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-    case IPT_BUTTON1: return BTN1 "Pump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
