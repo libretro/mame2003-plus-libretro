@@ -509,10 +509,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( boscomdo )	/* (c) 1981 Midway */
 	DRIVER( galaga )	/* (c) 1981 */
 	DRIVER( galagamw )	/* (c) 1981 Midway */
+	DRIVER( galagamk )
+	DRIVER( galagamf )  
 	DRIVER( galagao )	
 	DRIVER( gallag )	/* bootleg */
-	DRIVER( galagamk ) 	
-	DRIVER( nebulbee )	/* hack */
+	DRIVER( nebulbee )	/* bootleg */
 	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
 	DRIVER( digdug )	/* (c) 1982 */
 	DRIVER( digdugb )	/* (c) 1982 */
