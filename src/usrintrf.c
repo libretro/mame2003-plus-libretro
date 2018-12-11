@@ -3251,13 +3251,13 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         break;          
       }        
       case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */
-          usrintf_showmessage_secs(2, "%s", "Generating Alternative XML DAT!");
+          frontend_message_cb("Generating Alternative XML DAT", 180);
           schedule_full_refresh();
           generate_alternate_DAT = true;
           break;
 
       case UI_GENERATE_OLD_XML_DAT:
-          usrintf_showmessage_secs(2, "%s", "Generating XML DAT!");   
+          frontend_message_cb("Generating XML DAT", 180);   
           schedule_full_refresh();
           generate_DAT = true;
           break;
