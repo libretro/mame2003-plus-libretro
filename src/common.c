@@ -1352,7 +1352,6 @@ static int display_rom_load_results(struct rom_load_data *romdata)
   {
     extern int bailing;
     frontend_message_cb(missing_files, 300);
-    sleep(5);
     bailing = 1;
     strcat(romdata->errorbuf, missing_files);
     log_cb(RETRO_LOG_ERROR, LOGPRE "%s", romdata->errorbuf);
