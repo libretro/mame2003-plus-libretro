@@ -2354,6 +2354,38 @@ ROM_START( galaga )
 	ROM_LOAD( "prom-2.5c",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )	/* timing - not used */
 ROM_END
 
+
+ROM_START( galagamf )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code for the first CPU  */
+	ROM_LOAD( "3200a.bin",    0x0000, 0x1000, CRC(3ef0b053) SHA1(0c04a362b737998c0952a753fb3fd8c8a17e9b46) )
+	ROM_LOAD( "3300b.bin",    0x1000, 0x1000, CRC(1b280831) SHA1(f7ea12e61929717ebe43a4198a97f109845a2c62) )
+	ROM_LOAD( "3400c.bin",    0x2000, 0x1000, CRC(16233d33) SHA1(a7eb799be5e23058754a92b15e6527bfbb47a354) )
+	ROM_LOAD( "3500d.bin",    0x3000, 0x1000, CRC(0aaf5c23) SHA1(3f4b0bb960bf002261e9c1278c88f594c6aa8ab6) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )     /* 64k for the second CPU */
+	ROM_LOAD( "3600fast.bin", 0x0000, 0x1000, CRC(23d586e5) SHA1(43346c69385e9091e64cff6c027ac2689cafcbb9) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )     /* 64k for the third CPU  */
+	ROM_LOAD( "3700g.bin",    0x0000, 0x1000, CRC(b07f0aa4) SHA1(7528644a8480d0be2d0d37069515ed319e94778f) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "gg1-9.4l",     0x0000, 0x1000, CRC(58b2f47c) SHA1(62f1279a784ab2f8218c4137c7accda00e6a3490) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "gg1-11.4d",    0x0000, 0x1000, CRC(ad447c80) SHA1(e697c180178cabd1d32483c5d8889a40633f7857) )
+	ROM_LOAD( "gg1-10.4f",    0x1000, 0x1000, CRC(dd6f1afc) SHA1(c340ed8c25e0979629a9a1730edc762bd72d0cff) )
+
+	ROM_REGION( 0x0220, REGION_PROMS, 0 )
+	ROM_LOAD( "prom-5.5n",    0x0000, 0x0020, CRC(54603c6b) SHA1(1a6dea13b4af155d9cb5b999a75d4f1eb9c71346) )	/* palette */
+	ROM_LOAD( "prom-4.2n",    0x0020, 0x0100, CRC(59b6edab) SHA1(0281de86c236c88739297ff712e0a4f5c8bf8ab9) )	/* char lookup table */
+	ROM_LOAD( "prom-3.1c",    0x0120, 0x0100, CRC(4a04bb6b) SHA1(cdd4bc1013f5c11984fdc4fd10e2d2e27120c1e5) )	/* sprite lookup table */
+
+	ROM_REGION( 0x0200, REGION_SOUND1, 0 )
+	ROM_LOAD( "prom-1.1d",    0x0000, 0x0100, CRC(7a2815b4) SHA1(085ada18c498fdb18ecedef0ea8fe9217edb7b46) )
+	ROM_LOAD( "prom-2.5c",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )	/* timing - not used */
+ROM_END
+
+
 ROM_START( galagao )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code for the first CPU  */
 	ROM_LOAD( "gg1-1",        0x0000, 0x1000, CRC(a3a0f743) SHA1(6907773db7c002ecde5e41853603d53387c5c7cd) )
@@ -3156,17 +3188,18 @@ static DRIVER_INIT( battles )
 GAMEX(1981, bosco,    0,       bosco,   bosco,    0,       ROT0,  "Namco", "Bosconian (new version)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1981, boscoo,   bosco,   bosco,   bosco,    0,       ROT0,  "Namco", "Bosconian (old version)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1981, boscoo2,  bosco,   bosco,   bosco,    0,       ROT0,  "Namco", "Bosconian (older version)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1981, boscomd,  bosco,   bosco,   boscomd,  0,       ROT0,  "[Namco] (Midway license)", "Bosconian (Midway, new version)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1981, boscomdo, bosco,   bosco,   boscomd,  0,       ROT0,  "[Namco] (Midway license)", "Bosconian (Midway, old version)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1981, boscomd,  bosco,   bosco,   boscomd,  0,       ROT0,  "Namco (Midway license)", "Bosconian (Midway, new version)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1981, boscomdo, bosco,   bosco,   boscomd,  0,       ROT0,  "Namco (Midway license)", "Bosconian (Midway, old version)", GAME_IMPERFECT_GRAPHICS )
 
 GAMEX(1981, galaga,   0,       galaga,  galaga,   galaga,  ROT90, "Namco", "Galaga (Namco rev. B)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1981, galagao,  galaga,  galaga,  galaga,   galaga,  ROT90, "Namco", "Galaga (Namco)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1981, galagamw, galaga,  galaga,  galagamw, galaga,  ROT90, "Namco (Midway license)", "Galaga (Midway set 1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1981, galagamk, galaga,  galaga,  galaga,   galaga,  ROT90, "Namco (Midway license)", "Galaga (Midway set 2)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1981, galagamf, galaga,  galaga,  galaga,   galaga,  ROT90, "Namco (Midway license)", "Galaga (Midway set 1 with fast shoot hack)", GAME_IMPERFECT_GRAPHICS )
 
-GAMEX(1981, gallag,   galaga,  galagab, galaga,   galaga,  ROT90, "bootleg",       "Gallag",        GAME_IMPERFECT_GRAPHICS )
+GAMEX(1982, gallag,   galaga,  galagab, galaga,   galaga,  ROT90, "bootleg",       "Gallag",        GAME_IMPERFECT_GRAPHICS )
 GAMEX(1984, gatsbee,  galaga,  galagab, galaga,   gatsbee, ROT90, "hack (Uchida)", "Gatsbee",       GAME_IMPERFECT_GRAPHICS )
-GAMEX(1984, nebulbee, galaga,  galaga,  galaga,   galaga,  ROT90, "bootleg",       "Nebulous Bee",  GAME_IMPERFECT_GRAPHICS )
+GAMEX(1981, nebulbee, galaga,  galaga,  galaga,   galaga,  ROT90, "bootleg",       "Nebulous Bee",  GAME_IMPERFECT_GRAPHICS )
 
 GAME( 1982, xevious,  0,       xevious, xevious,  xevious, ROT90, "Namco", "Xevious (Namco)" )
 GAME( 1982, xeviousa, xevious, xevious, xeviousa, xevious, ROT90, "Namco (Atari license)", "Xevious (Atari set 1)" )
@@ -3178,6 +3211,6 @@ GAME( 1984, sxevious, xevious, xevious, sxevious, xevious, ROT90, "Namco", "Supe
 
 GAME( 1982, digdug,   0,       digdug,  digdug,   0,       ROT90, "Namco", "Dig Dug (rev 2)" )
 GAME( 1982, digdugb,  digdug,  digdug,  digdug,   0,       ROT90, "Namco", "Dig Dug (rev 1)" )
-GAME( 1982, digdugat, digdug,  digdug,  digdug,   0,       ROT90, "[Namco] (Atari license)", "Dig Dug (Atari, rev 2)" )
-GAME( 1982, digduga1, digdug,  digdug,  digdug,   0,       ROT90, "[Namco] (Atari license)", "Dig Dug (Atari, rev 1)" )
+GAME( 1982, digdugat, digdug,  digdug,  digdug,   0,       ROT90, "Namco (Atari license)", "Dig Dug (Atari, rev 2)" )
+GAME( 1982, digduga1, digdug,  digdug,  digdug,   0,       ROT90, "Namco (Atari license)", "Dig Dug (Atari, rev 1)" )
 GAME( 1982, dzigzag,  digdug,  dzigzag, digdug,   0,       ROT90, "bootleg", "Zig Zag (Dig Dug hardware)" )
