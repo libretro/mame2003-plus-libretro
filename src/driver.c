@@ -1920,6 +1920,7 @@ V-V                           TP-027
 	DRIVER( blaster )	/* (c) 1983 */
 	DRIVER( blastkit )	/* (c) 1983 */
 	DRIVER( spdball )	/* (c) 1985 */
+	DRIVER( alienar )	/* (c) 1985 */
 	DRIVER( mysticm )	/* (c) 1983 */
 	DRIVER( tshoot )	/* (c) 1984 */
 	DRIVER( inferno )	/* (c) 1984 */
