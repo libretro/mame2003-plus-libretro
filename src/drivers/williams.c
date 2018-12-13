@@ -896,6 +896,7 @@ INPUT_PORTS_START( spdball )
     PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_X | IPF_PLAYER2, 25, 32, 0, 255 )
 INPUT_PORTS_END
 
+
 INPUT_PORTS_START( alienar )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
@@ -920,7 +921,7 @@ INPUT_PORTS_START( alienar )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_TILT )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-  PORT_START /* IN3 */ /* (muxed with IN0) */
+	PORT_START /* IN3 */      /* (muxed with IN0) */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -931,7 +932,6 @@ INPUT_PORTS_START( alienar )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )
 INPUT_PORTS_END
 
-  
 INPUT_PORTS_START( bubbles )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
@@ -2401,11 +2401,14 @@ static DRIVER_INIT( spdball )
 
 static DRIVER_INIT( alienar )
 {
+	/* CMOS configuration */
+	CONFIGURE_CMOS(0xcc00, 0x400);
+
 	/* video configuration */
 	CONFIGURE_BLITTER(4, 0, 0);
 
 	/* PIA configuration */
-	CONFIGURE_PIAS(williams_pia_0_intf, williams_pia_1_intf, williams_snd_pia_intf);
+	CONFIGURE_PIAS(williams_muxed_pia_0_intf, williams_pia_1_intf, williams_snd_pia_intf);
 
 	install_mem_write_handler (0, 0xcbff, 0xcbff, MWA_NOP);
 }
