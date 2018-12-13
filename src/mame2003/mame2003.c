@@ -6,9 +6,6 @@
     
 *********************************************************************/    
 
-#define JOYTYPE_AXIS_NEG			5000
-#define JOYTYPE_AXIS_POS			5001
-
 #include <stdint.h>
 #include <string/stdstring.h>
 #include <libretro.h>
@@ -1652,11 +1649,12 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RetroPad"   #DISPLAY_IDX " Select",      ((DISPLAY_IDX - 1) * 22) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
   {"RetroMouse" #DISPLAY_IDX " Left Click",  ((DISPLAY_IDX - 1) * 22) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"RetroMouse" #DISPLAY_IDX " Right Click", ((DISPLAY_IDX - 1) * 22) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RetroPad"   #DISPLAY_IDX " Rstick Y-",   ((DISPLAY_IDX - 1) * 22) + 18 + JOYTYPE_AXIS_NEG,               JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
-  {"RetroPad"   #DISPLAY_IDX " Rstick Y+",   ((DISPLAY_IDX - 1) * 22) + 19 + JOYTYPE_AXIS_POS,               JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, \
-  {"RetroPad"   #DISPLAY_IDX " Rstick X-",   ((DISPLAY_IDX - 1) * 22) + 20 + JOYTYPE_AXIS_NEG,               JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
-  {"RetroPad"   #DISPLAY_IDX " Rstick X+",   ((DISPLAY_IDX - 1) * 22) + 21 + JOYTYPE_AXIS_POS,               JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, 
+  {"RetroPad"   #DISPLAY_IDX " Rstick Down", ((DISPLAY_IDX - 1) * 22) + 18 +1000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, \
+  {"RetroPad"   #DISPLAY_IDX " Rstick Left", ((DISPLAY_IDX - 1) * 22) + 19 +1000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RetroPad"   #DISPLAY_IDX " Rstick Up",   ((DISPLAY_IDX - 1) * 22) + 20 +1000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RetroPad"   #DISPLAY_IDX " Rstick Right",((DISPLAY_IDX - 1) * 22) + 21 +1000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, 
 
+  
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RetroPad"   #DISPLAY_IDX " Left",        ((DISPLAY_IDX - 1) * 22) + RETRO_DEVICE_ID_JOYPAD_LEFT +1000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RetroPad"   #DISPLAY_IDX " Right",       ((DISPLAY_IDX - 1) * 22) + RETRO_DEVICE_ID_JOYPAD_RIGHT +1000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
@@ -1832,7 +1830,7 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 		if (analogjoy_input[i] != CODE_NONE)
 		{	
 			if (convert_analog_scale(analogjoy[player][i]) > deadzone)	analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
-		    if (convert_analog_scale(analogjoy[player][i]) < -deadzone) analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
+		    if (convert_analog_scale(analogjoy[player][i]) < -deadzone)     analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
 			
 		}			
 	}
