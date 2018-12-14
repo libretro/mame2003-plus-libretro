@@ -4476,7 +4476,7 @@ GAME ( 1992, puyopuya, puyopuyo, segac2,   puyopuyo, puyopuyo, ROT0, "Sega / Com
 GAME ( 1992, puyopuyb, puyopuyo, segac2,   puyopuyo, puyopuyo, ROT0, "bootleg",                "Puyo Puyo (English) (bootleg)" )
 GAME ( 1994, ichidant, 0,        segac2,   ichidant, ichidant, ROT0, "Sega",                   "Puzzle & Action: Ichidant-R (Japan)" )
 GAME ( 1994, ichidnte, ichidant, segac2,   ichidant, ichidnte, ROT0, "Sega",                   "Puzzle & Action: Ichidant-R (World)" )
-GAME ( 1994, ichidntb, ichidant, segac,    ichidant, segac2,   ROT0, "bootleg",                "Puzzle & Action: Ichidant-R (Japan) (bootleg)" )
+GAMEX( 1994, ichidntb, ichidant, segac,    ichidant, segac2,   ROT0, "bootleg",                "Puzzle & Action: Ichidant-R (Japan) (bootleg)", GAME_NOT_WORKING )
 GAME ( 1994, stkclmns, 0,        segac2,   stkclmns, stkclmns, ROT0, "Sega",                   "Stack Columns (Japan)" )
 GAME ( 1994, puyopuy2, 0,        segac2,   puyopuy2, puyopuy2, ROT0, "Compile (Sega license)", "Puyo Puyo 2 (Japan)" )
 GAME ( 1994, potopoto, 0,        segac2,   potopoto, potopoto, ROT0, "Sega",                   "Poto Poto (Japan)" )
