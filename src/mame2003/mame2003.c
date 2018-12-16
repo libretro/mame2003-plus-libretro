@@ -1116,18 +1116,18 @@ void retro_deinit(void)
 #endif
 }
 
+   extern size_t state_get_dump_size(void);
 
 size_t retro_serialize_size(void)
 {
-    extern size_t state_get_dump_size(void);
-    
+     
     return state_get_dump_size();
 }
 
 bool retro_serialize(void *data, size_t size)
 {
    int cpunum;
-	if( ( retro_serialize_size() ) && (data)  && (size) )
+	if(  retro_serialize_size() == size  && size   )
 	{
 		/* write the save state */
 		state_save_save_begin(data);
