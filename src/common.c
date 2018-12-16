@@ -561,11 +561,11 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
           log_cb(RETRO_LOG_WARN, LOGPRE "Missing audio sample: %s\n", samplenames[i+skipfirst]);
           missing_sample = true;
       }
-		}
-	}
+    }
+  }
   log_cb(RETRO_LOG_WARN, LOGPRE "Warning: audio sample(s) not found.\n");
-	frontend_message_cb("Warning: audio sample(s) not found.", 180);
-	return samples;
+  frontend_message_cb("Warning: audio sample(s) not found.", 180);
+  return samples;
 }
 
 
