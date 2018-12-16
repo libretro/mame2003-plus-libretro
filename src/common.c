@@ -485,6 +485,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
+  bool missing_sample = false;
 
 	/* if the user doesn't want to use samples, bail */
 	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
@@ -555,9 +556,15 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 					
 				mame_fclose(f);
 			}
+      else
+      {
+          log_cb(RETRO_LOG_WARN, LOGPRE "Missing audio sample: %s\n", samplenames[i+skipfirst]);
+          missing_sample = true;
+      }
 		}
 	}
-	
+  log_cb(RETRO_LOG_WARN, LOGPRE "Warning: audio sample(s) not found.\n");
+	frontend_message_cb("Warning: audio sample(s) not found.", 180);
 	return samples;
 }
 
