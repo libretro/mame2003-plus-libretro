@@ -56,48 +56,7 @@ extern retro_log_printf_t log_cb;
 extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
 
-/******************************************************************************
-
-Core options
-
-******************************************************************************/
-
-enum /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
-{
-  OPT_4WAY = 0,
-  OPT_MOUSE_DEVICE,
-  OPT_CROSSHAIR_ENABLED,
-  OPT_SKIP_DISCLAIMER,
-  OPT_SKIP_WARNINGS,
-  OPT_DISPLAY_SETUP,
-  OPT_NEOGEO_BIOS,
-  OPT_STV_BIOS,
-  OPT_USE_ALT_SOUND,
-  OPT_SHARE_DIAL,
-  OPT_DUAL_JOY,
-  OPT_RSTICK_BTNS,
-  OPT_VECTOR_RESOLUTION,
-  OPT_VECTOR_ANTIALIAS,
-  OPT_VECTOR_BEAM,  
-  OPT_VECTOR_TRANSLUCENCY,
-  OPT_VECTOR_FLICKER,
-  OPT_VECTOR_INTENSITY,
-  OPT_DCS_SPEEDHACK,
-  OPT_CORE_SYS_SUBFOLDER,
-  OPT_CORE_SAVE_SUBFOLDER,
-  OPT_TATE_MODE,  
-  OPT_INPUT_INTERFACE,    
-  OPT_BRIGHTNESS,
-  OPT_GAMMA,  
-  OPT_FRAMESKIP,
-  OPT_SAMPLE_RATE,  
-  OPT_MAME_REMAPPING,
-  OPT_BACKDROP,
-  OPT_NVRAM_BOOTSTRAP, 
-  OPT_Cheat_Input_Ports,
-  OPT_Machine_Timing,
-  OPT_end /* dummy last entry */
-};
+extern 
 
 struct retro_variable_default
 {
