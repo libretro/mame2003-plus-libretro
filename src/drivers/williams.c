@@ -1507,6 +1507,8 @@ ROM_START( defender )
 	ROM_RELOAD(               0x13800, 0x0800 )
 	ROM_LOAD( "defend.6",     0x13000, 0x0800, CRC(65f4efd1) SHA1(a960fd1559ed74b81deba434391e49fc6ec389ca) )
 
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "defend.snd",   0xf800, 0x0800, CRC(fefd5b48) SHA1(ceb0d18483f0691978c604db94417e6941ad7ff2) )
 	
 ROM_END
 
