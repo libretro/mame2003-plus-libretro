@@ -42,9 +42,6 @@ extern int16_t      mouse_y[4];
 extern int16_t      analogjoy[4][4];
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 
-static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable          current_options[OPT_end + 1];
-
 static struct retro_input_descriptor empty[] = { { 0 } };
 
 retro_log_printf_t                 log_cb;
@@ -59,6 +56,54 @@ static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
 bool old_dual_joystick_state = false; /* used to track when this core option changes */
+
+/******************************************************************************
+
+Core options
+
+******************************************************************************/
+
+enum CORE_OPTIONS/* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
+{
+  OPT_4WAY = 0,
+  OPT_MOUSE_DEVICE,
+  OPT_CROSSHAIR_ENABLED,
+  OPT_SKIP_DISCLAIMER,
+  OPT_SKIP_WARNINGS,
+  OPT_DISPLAY_SETUP,
+  OPT_NEOGEO_BIOS,
+  OPT_STV_BIOS,
+  OPT_USE_ALT_SOUND,
+  OPT_SHARE_DIAL,
+  OPT_DUAL_JOY,
+  OPT_RSTICK_BTNS,
+  OPT_VECTOR_RESOLUTION,
+  OPT_VECTOR_ANTIALIAS,
+  OPT_VECTOR_BEAM,  
+  OPT_VECTOR_TRANSLUCENCY,
+  OPT_VECTOR_FLICKER,
+  OPT_VECTOR_INTENSITY,
+  OPT_DCS_SPEEDHACK,
+  OPT_CORE_SYS_SUBFOLDER,
+  OPT_CORE_SAVE_SUBFOLDER,
+  OPT_TATE_MODE,  
+  OPT_INPUT_INTERFACE,    
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,  
+  OPT_FRAMESKIP,
+  OPT_SAMPLE_RATE,  
+  OPT_MAME_REMAPPING,
+  OPT_ARTWORK,
+  OPT_ART_RESOLUTION,
+  OPT_NVRAM_BOOTSTRAP, 
+  OPT_Cheat_Input_Ports,
+  OPT_Machine_Timing,
+  OPT_end /* dummy last entry */
+};
+
+static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_variable          current_options[OPT_end + 1];
+
 
 /******************************************************************************
 
@@ -121,10 +166,11 @@ void retro_set_environment(retro_environment_t cb)
   environ_cb = cb;
 }
 
+
 /* static void init_core_options(void) 
  *
  * Note that core options are not presented in order they are initialized here, 
- * but rather by their order in the OPT_ enum in mame2003.h
+ * but rather by their order in the OPT_ enum
  */
 static void init_core_options(void) 
 {
@@ -140,7 +186,8 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
   init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",          "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",               "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_BACKDROP],            APPNAME"_enable_backdrop",     "Use Backdrop artwork (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_ARTWORK],             APPNAME"_display_artwork",     "Display artwork (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_ART_RESOLUTION],      APPNAME"_art_resolution",      "Artwork resolution multiplier (Restart core); 1|2");
   init_default(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios",         "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");  
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
@@ -165,7 +212,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL);
-  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio sqew (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
   set_variables(true);
 }
 
@@ -384,11 +431,15 @@ static void update_variables(bool first_time)
           displayosd(bitmap,buf,oc/2,100/2);
         */
 
-        case OPT_BACKDROP:
+        case OPT_ARTWORK:
           if(strcmp(var.value, "enabled") == 0)
-            options.use_artwork = ARTWORK_USE_BACKDROPS;
+            options.use_artwork = ARTWORK_USE_ALL;
           else
             options.use_artwork = ARTWORK_USE_NONE;
+          break;
+
+        case OPT_ART_RESOLUTION:
+          options.artwork_res = atoi(var.value);
           break;
 
         case OPT_STV_BIOS:
