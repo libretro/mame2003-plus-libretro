@@ -723,6 +723,75 @@ int artwork_create_display(struct osd_create_params *params, UINT32 *rgb_compone
 }
 
 
+/*-------------------------------------------------
+	artwork_system_active - checks to see if the
+	artwork system is currently active
+-------------------------------------------------*/
+
+static int artwork_system_active(void)
+{
+	return artwork_list || uioverlay;
+}
+
+
+/*-------------------------------------------------
+	artwork_update_visible_area - resize artwork
+	when the game changes resolution
+-------------------------------------------------*/
+
+void artwork_update_visible_area(struct mame_display *display)
+{
+	double min_x, min_y, max_x, max_y;
+	int width, height;
+	int original_width = ( display->game_visible_area.max_x - display->game_visible_area.min_x ) + 1;
+	int original_height = ( display->game_visible_area.max_y - display->game_visible_area.min_y ) + 1;
+
+	struct artwork_piece *piece;
+	/* compute the extent of all the artwork */
+	min_x = min_y = 0.0;
+	max_x = max_y = 1.0;
+	if (!options.artwork_crop)
+		for (piece = artwork_list; piece; piece = piece->next)
+		{
+			/* compute the outermost bounds */
+			if (piece->left < min_x) min_x = piece->left;
+			if (piece->right > max_x) max_x = piece->right;
+			if (piece->top < min_y) min_y = piece->top;
+			if (piece->bottom > max_y) max_y = piece->bottom;
+		}
+
+	width = (int)((max_x - min_x) * (double)(original_width * gamescale) + 0.5);
+	height = (int)((max_y - min_y) * (double)(original_height * gamescale) + 0.5);
+
+	/* compute the screen rect */
+	screenrect.min_x = screenrect.min_y = 0;
+	screenrect.max_x = width - 1;
+	screenrect.max_y = height - 1;
+
+	/* compute the game rect */
+	gamerect.min_x = (int)(-min_x * (double)(original_width * gamescale) + 0.5);
+	gamerect.min_y = (int)(-min_y * (double)(original_height * gamescale) + 0.5);
+	gamerect.max_x = gamerect.min_x + original_width * gamescale - 1;
+	gamerect.max_y = gamerect.min_y + original_height * gamescale - 1;
+
+	/* now compute all the artwork pieces' coordinates */
+	for (piece = artwork_list; piece; piece = piece->next)
+	{
+		piece->bounds.min_x = (int)((piece->left - min_x) * (double)(original_width * gamescale) + 0.5);
+		piece->bounds.min_y = (int)((piece->top - min_y) * (double)(original_height * gamescale) + 0.5);
+		piece->bounds.max_x = (int)((piece->right - min_x) * (double)(original_width * gamescale) + 0.5) - 1;
+		piece->bounds.max_y = (int)((piece->bottom - min_y) * (double)(original_height * gamescale) + 0.5) - 1;
+	}
+
+
+
+	artwork_prep();
+}
+
+
+
+
+
 
 /*-------------------------------------------------
 	artwork_update_video_and_audio - update the
@@ -736,13 +805,18 @@ void artwork_update_video_and_audio(struct mame_display *display)
 	int artwork_changed = 0, ui_visible = 0;
 
 	/* do nothing if no artwork */
-	if (!artwork_list && !uioverlay)
+	if (!artwork_system_active())
 	{
 		osd_update_video_and_audio(display);
 		return;
 	}
 
 	profiler_mark(PROFILER_ARTWORK);
+
+	/* if the visible area has changed, update it */
+	if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
+		artwork_update_visible_area(display);
+
 
 	/* update the palette */
 	if (display->changed_flags & GAME_PALETTE_CHANGED)
@@ -848,7 +922,7 @@ void artwork_update_video_and_audio(struct mame_display *display)
 
 void artwork_override_screenshot_params(struct mame_bitmap **bitmap, struct rectangle *rect, UINT32 *rgb_components)
 {
-	if ((*bitmap == Machine->scrbitmap || *bitmap == uioverlay) && artwork_list)
+	if ((*bitmap == Machine->scrbitmap || *bitmap == uioverlay) && artwork_system_active())
 	{
 		*rect = screenrect;
 
@@ -2338,8 +2412,9 @@ static int artwork_prep(void)
 
 static int scale_bitmap(struct artwork_piece *piece, int newwidth, int newheight)
 {
-	UINT32 sx, sxfrac, sxstep, sy, syfrac, systep;
 	UINT32 global_brightness, global_alpha;
+	UINT64 sumscale;
+	UINT32 dx, dy;
 	int x, y;
 
 	/* skip if no bitmap */
@@ -2354,116 +2429,159 @@ static int scale_bitmap(struct artwork_piece *piece, int newwidth, int newheight
 
 	/* also allocate memory for the scanline hints */
 	piece->scanlinehint = auto_malloc(newheight * MAX_HINTS_PER_SCANLINE * sizeof(piece->scanlinehint[0]));
-	if (!piece->scanlinehint)
-		return 0;
 	memset(piece->scanlinehint, 0, newheight * MAX_HINTS_PER_SCANLINE * sizeof(piece->scanlinehint[0]));
 
 	/* convert global brightness and alpha to fixed point */
 	global_brightness = (int)(piece->brightness * 65536.0);
 	global_alpha = (int)(piece->alpha * 65536.0);
 
-	/* compute the step values */
-	sxstep = (UINT32)((double)piece->rawbitmap->width * (double)(1 << 24) / (double)newwidth);
-	systep = (UINT32)((double)piece->rawbitmap->height * (double)(1 << 24) / (double)newheight);
-	sxfrac = (sxstep / 2) & FRAC_MASK;
-	sx = (sxstep / 2) >> FRAC_BITS;
-	syfrac = (systep / 2) & FRAC_MASK;
-	sy = (systep / 2) >> FRAC_BITS;
+	/* compute parameters for scaling */
+	dx = (piece->rawbitmap->width << 12) / newwidth;
+	dy = (piece->rawbitmap->height << 12) / newheight;
+	sumscale = (UINT64)dx * (UINT64)dy;
 
-	/* now do the scaling, using 4-point sampling */
+	/* loop over the target vertically */
 	for (y = 0; y < newheight; y++)
 	{
 		int prevstate = 0, statex = 0;
+		int newstate;
 
-		sxfrac = (sxstep / 2) & FRAC_MASK;
-		sx = (sxstep / 2) >> FRAC_BITS;
+		UINT32 starty = y * dy;
 
-		/* loop over columns */
+		/* loop over the target horizontally */
 		for (x = 0; x < newwidth; x++)
 		{
-			rgb_t pix1, pix2, pix3, pix4;
-			int xweight, dx;
-			int yweight, dy;
-			int r, g, b, a;
-			int newstate;
+			UINT32 startx = x * dx;
+			UINT32 a, r, g, b;
 
-			/* determine the weights and which pixels to fetch */
-			if (sxfrac <= FRAC_HALF)
+			/* if the source is higher res than the target, use full averaging */
+			if (dx > 0x1000 || dy > 0x1000)
 			{
-				dx = -1;
-				xweight = FRAC_HALF - sxfrac;
+				UINT64 sumr = 0, sumg = 0, sumb = 0, suma = 0;
+				UINT32 xchunk, ychunk;
+				UINT32 curx, cury;
+
+				UINT32 yremaining = dy;
+
+				/* accumulate all source pixels that contribute to this pixel */
+				for (cury = starty; yremaining; cury += ychunk)
+				{
+					UINT32 xremaining = dx;
+
+					/* determine the Y contribution, clamping to the amount remaining */
+					ychunk = 0x1000 - (cury & 0xfff);
+					if (ychunk > yremaining)
+						ychunk = yremaining;
+					yremaining -= ychunk;
+
+					/* loop over all source pixels in the X direction */
+					for (curx = startx; xremaining; curx += xchunk)
+					{
+						UINT32 factor;
+						UINT32 pix;
+
+						/* determine the X contribution, clamping to the amount remaining */
+						xchunk = 0x1000 - (curx & 0xfff);
+						if (xchunk > xremaining)
+							xchunk = xremaining;
+						xremaining -= xchunk;
+
+						/* total contribution = x * y */
+						factor = xchunk * ychunk;
+
+						/* fetch the source pixel */
+						pix = ((UINT32 *)piece->rawbitmap->line[cury >> 12])[curx >> 12];
+
+						/* accumulate the RGBA values */
+						sumr += factor * RGB_RED(pix);
+						sumg += factor * RGB_GREEN(pix);
+						sumb += factor * RGB_BLUE(pix);
+						suma += factor * RGB_ALPHA(pix);
+					}
+				}
+
+				/* apply final scale */
+				a = suma / sumscale;
+				r = sumr / sumscale;
+				g = sumg / sumscale;
+				b = sumb / sumscale;
 			}
+
+			/* otherwise, use bilinear filtering to scale up */
 			else
 			{
-				dx = 0;
-				xweight = FRAC_ONE - (sxfrac - FRAC_HALF);
+				UINT32 pix0, pix1, pix2, pix3;
+				UINT32 sumr, sumg, sumb, suma;
+				UINT32 nextx, nexty;
+				UINT32 curx, cury;
+				UINT32 factor;
+
+				/* adjust start to the center */
+				curx = startx + dx / 2 - 0x800;
+				cury = starty + dy / 2 - 0x800;
+
+				/* compute the neighboring pixel */
+				nextx = curx + 0x1000;
+				nexty = cury + 0x1000;
+
+				/* clamp start */
+				if ((INT32)curx < 0) curx += 0x1000;
+				if ((INT32)cury < 0) cury += 0x1000;
+
+				/* fetch the four relevant pixels */
+				pix0 = ((UINT32 *)piece->rawbitmap->line[cury >> 12])[curx >> 12];
+				pix1 = ((UINT32 *)piece->rawbitmap->line[cury >> 12])[nextx >> 12];
+				pix2 = ((UINT32 *)piece->rawbitmap->line[nexty >> 12])[curx >> 12];
+				pix3 = ((UINT32 *)piece->rawbitmap->line[nexty >> 12])[nextx >> 12];
+
+				/* compute the x/y scaling factors */
+				curx &= 0xfff;
+				cury &= 0xfff;
+
+				/* contributions from pixel 0 (top,left) */
+				factor = (0x1000 - curx) * (0x1000 - cury);
+				sumr = factor * RGB_RED(pix0);
+				sumg = factor * RGB_GREEN(pix0);
+				sumb = factor * RGB_BLUE(pix0);
+				suma = factor * RGB_ALPHA(pix0);
+
+				/* contributions from pixel 1 (top,right) */
+				factor = curx * (0x1000 - cury);
+				sumr += factor * RGB_RED(pix1);
+				sumg += factor * RGB_GREEN(pix1);
+				sumb += factor * RGB_BLUE(pix1);
+				suma += factor * RGB_ALPHA(pix1);
+
+				/* contributions from pixel 2 (bottom,left) */
+				factor = (0x1000 - curx) * cury;
+				sumr += factor * RGB_RED(pix2);
+				sumg += factor * RGB_GREEN(pix2);
+				sumb += factor * RGB_BLUE(pix2);
+				suma += factor * RGB_ALPHA(pix2);
+
+				/* contributions from pixel 3 (bottom,right) */
+				factor = curx * cury;
+				sumr += factor * RGB_RED(pix3);
+				sumg += factor * RGB_GREEN(pix3);
+				sumb += factor * RGB_BLUE(pix3);
+				suma += factor * RGB_ALPHA(pix3);
+
+				/* apply final scale */
+				r = sumr >> 24;
+				g = sumg >> 24;
+				b = sumb >> 24;
+				a = suma >> 24;
 			}
 
-			if (syfrac <= FRAC_HALF)
-			{
-				dy = -1;
-				yweight = FRAC_HALF - syfrac;
-			}
-			else
-			{
-				dy = 0;
-				yweight = FRAC_ONE - (syfrac - FRAC_HALF);
-			}
-
-			/* reduce the resolution down to 8 bits for scaling */
-			xweight >>= FRAC_BITS - 8;
-			yweight >>= FRAC_BITS - 8;
-
-			/* fetch the pixels */
-			pix1 = *((UINT32 *)piece->rawbitmap->base + (sy + dy + 0) * piece->rawbitmap->rowpixels + (sx + dx + 0));
-			pix2 = *((UINT32 *)piece->rawbitmap->base + (sy + dy + 0) * piece->rawbitmap->rowpixels + (sx + dx + 1));
-			pix3 = *((UINT32 *)piece->rawbitmap->base + (sy + dy + 1) * piece->rawbitmap->rowpixels + (sx + dx + 0));
-			pix4 = *((UINT32 *)piece->rawbitmap->base + (sy + dy + 1) * piece->rawbitmap->rowpixels + (sx + dx + 1));
-
-			/* blend red */
-			r = xweight * yweight * RGB_RED(pix1);
-			r += (0x100 - xweight) * yweight * RGB_RED(pix2);
-			r += xweight * (0x100 - yweight) * RGB_RED(pix3);
-			r += (0x100 - xweight) * (0x100 - yweight) * RGB_RED(pix4);
-			r >>= 16;
-			r = (r * global_brightness) >> 16;
-			if (r > 0xff) r = 0xff;
-
-			/* blend green */
-			g = xweight * yweight * RGB_GREEN(pix1);
-			g += (0x100 - xweight) * yweight * RGB_GREEN(pix2);
-			g += xweight * (0x100 - yweight) * RGB_GREEN(pix3);
-			g += (0x100 - xweight) * (0x100 - yweight) * RGB_GREEN(pix4);
-			g >>= 16;
-			g = (g * global_brightness) >> 16;
-			if (g > 0xff) g = 0xff;
-
-			/* blend blue */
-			b = xweight * yweight * RGB_BLUE(pix1);
-			b += (0x100 - xweight) * yweight * RGB_BLUE(pix2);
-			b += xweight * (0x100 - yweight) * RGB_BLUE(pix3);
-			b += (0x100 - xweight) * (0x100 - yweight) * RGB_BLUE(pix4);
-			b >>= 16;
-			b = (b * global_brightness) >> 16;
-			if (b > 0xff) b = 0xff;
-
-			/* blend alpha */
-			a = xweight * yweight * RGB_ALPHA(pix1);
-			a += (0x100 - xweight) * yweight * RGB_ALPHA(pix2);
-			a += xweight * (0x100 - yweight) * RGB_ALPHA(pix3);
-			a += (0x100 - xweight) * (0x100 - yweight) * RGB_ALPHA(pix4);
-			a >>= 16;
+			/* apply alpha and brightness */
 			a = (a * global_alpha) >> 16;
-			if (a > 0xff) a = 0xff;
+			r = (r * global_brightness) >> 16;
+			g = (g * global_brightness) >> 16;
+			b = (b * global_brightness) >> 16;
 
-			/* compute the two pixel types */
+			/* store to both bitmaps */
 			*((UINT32 *)piece->prebitmap->base + y * piece->prebitmap->rowpixels + x) = compute_pre_pixel(a,r,g,b);
 			*((UINT32 *)piece->yrgbbitmap->base + y * piece->yrgbbitmap->rowpixels + x) = compute_yrgb_pixel(a,r,g,b);
-
-			/* advance pointers */
-			sxfrac += sxstep;
-			sx += sxfrac >> FRAC_BITS;
-			sxfrac &= FRAC_MASK;
 
 			/* look for state changes */
 			newstate = (a != 0);
@@ -2484,15 +2602,10 @@ static int scale_bitmap(struct artwork_piece *piece, int newwidth, int newheight
 		/* add the final range */
 		if (prevstate)
 			add_range_to_hint(piece->scanlinehint, y, statex, x - 1);
-
-		/* advance pointers */
-		syfrac += systep;
-		sy += syfrac >> FRAC_BITS;
-		syfrac &= FRAC_MASK;
 	}
 
 	/* guess it worked! */
-	return 1;
+return 1;
 }
 
 
@@ -2600,8 +2713,6 @@ static struct artwork_piece *create_new_piece(const char *tag)
 {
 	/* allocate a new piece */
 	struct artwork_piece *newpiece = auto_malloc(sizeof(struct artwork_piece));
-	if (!newpiece)
-		return NULL;
 	num_pieces++;
 
 	/* initialize to default values */
@@ -2618,8 +2729,6 @@ static struct artwork_piece *create_new_piece(const char *tag)
 
 	/* allocate space for the filename */
 	newpiece->tag = auto_malloc(strlen(tag) + 1);
-	if (!newpiece->tag)
-		return NULL;
 	strcpy(newpiece->tag, tag);
 
 	/* link into the list */
@@ -3002,15 +3111,13 @@ static int parse_tag_value(struct artwork_piece *piece, const char *tag, const c
 	else if (!strcmp(tag, "file"))
 	{
 		piece->filename = auto_malloc(strlen(value) + 1);
-		if (piece->filename)
-			strcpy(piece->filename, value);
+		strcpy(piece->filename, value);
 		return (piece->filename != NULL);
 	}
 	else if (!strcmp(tag, "alphafile"))
 	{
 		piece->alpha_filename = auto_malloc(strlen(value) + 1);
-		if (piece->alpha_filename)
-			strcpy(piece->alpha_filename, value);
+		strcpy(piece->alpha_filename, value);
 		return (piece->alpha_filename != NULL);
 	}
 	return 0;
@@ -3119,8 +3226,7 @@ static int compute_rgb_components(int depth, UINT32 rgb_components[3], UINT32 rg
 
 	/* allocate a palette lookup */
 	palette_lookup = auto_malloc(65536 * sizeof(palette_lookup[0]));
-	if (!palette_lookup)
-		return 1;
+	
 
 	/* switch off the depth */
 	switch (depth)
@@ -3131,7 +3237,7 @@ static int compute_rgb_components(int depth, UINT32 rgb_components[3], UINT32 rg
 
 		case 32:
 			/* copy original components */
-			memcpy(rgb_components, rgb32_components, sizeof(rgb_components));
+			memcpy(rgb_components, rgb32_components, sizeof(rgb_components[0])*3);
 			break;
 
 		case 15:
