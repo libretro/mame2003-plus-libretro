@@ -605,7 +605,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ws )		/* (c) 1988 (Japan) */
 	DRIVER( berabohm )	/* (c) 1988 (Japan) */
 	DRIVER( beraboho )	/* (c) 1988 (Japan) */
-	/* 1988 Alice in Wonderland (English version of Marchen maze) */
 	DRIVER( mmaze )		/* (c) 1988 (Japan) */
 	DRIVER( bakutotu )	/* (c) 1988 (Japan) */
 	DRIVER( wldcourt )	/* (c) 1988 (Japan) */
