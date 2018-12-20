@@ -340,7 +340,7 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Added three new Namco soundcores NAMCO_15XX, NAMCO_52XX, NAMCO_54XX and updated NAMCO Sound to MAME80 [grant2258]
 * Updated galaga.c gaplus.c mappy.c polepos.c and toypop.c drivers plus sound and video code to MAME80 then hooked em
 up with the new Namco sound chips netting some major improvements video and soundwise for some classic era Namco games 
-bosconian, diddug, dig dug II, galaga, gaplus, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, pole position, 
-pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
+bosconian, dig dug, dig dug II, galaga, galaga 3, gaplus, grobda, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, 
+pole position, pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 
