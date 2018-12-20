@@ -242,13 +242,32 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with improved sound
 
 * Asterix
+* Bosconian
 * Crazy Balloon
+* Dig Dug
+* Dig Dug II
 * Final Fight - Added OST soundtrack (via KMFDManic)
+* Galaga
+* Galaga 3
+* Gaplus
+* Grobda
+* Libble Rabble
+* Mappy
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
+* Motos
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
 * Out Run added ost soundtrack (via KMFDManic)
+* Pacman & Chomp Chomp
+* Pac & Pal
+* Pole Position
+* Pole Position II
 * Rohga Armor Force
+* Super Pacman
+* Super Xevious
+* Tower Of Druaga
+* Toypop
+* Xevious
 
 
 ## Games now with sound sample support
@@ -318,5 +337,10 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
 * Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
 * Fixed Avengers In Galactic Storm [grant2258]
+* Added three new Namco soundcores NAMCO_15XX, NAMCO_52XX, NAMCO_54XX and updated NAMCO Sound to MAME80 [grant2258]
+* Updated galaga.c gaplus.c mappy.c polepos.c and toypop.c drivers plus sound and video code to MAME80 then hooked em
+up with the new Namco sound chips netting some major improvements video and soundwise for some classic era Namco games 
+bosconian, diddug, dig dug II, galaga, gaplus, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, pole position, 
+pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 
