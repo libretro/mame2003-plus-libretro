@@ -58,10 +58,21 @@
 					---- --10			Code (High Bits)
 
 
+
+	Set TILEMAPS to 1 to debug.
+	Press Z (you see the "tilemaps" in RAM) or
+	Press X (you see the "tilemaps" in ROM) then
+
+	- use Q&W to cycle through the pages.
+	- Use E&R to cycle through the tiles banks.
+	- Use A&S to cycle through the ROM banks (only with X pressed, of course).
+
 ***************************************************************************/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+
+#define TILEMAPS 0
 
 int suna8_text_dim; /* specifies format of text layer */
 
@@ -70,8 +81,8 @@ data8_t suna8_unknown;
 
 /* Functions defined in vidhrdw: */
 
-WRITE_HANDLER( suna8_spriteram_w );			/* for debug*/
-WRITE_HANDLER( suna8_banked_spriteram_w );	/* for debug*/
+WRITE_HANDLER( suna8_spriteram_w );			// for debug
+WRITE_HANDLER( suna8_banked_spriteram_w );	// for debug
 
 VIDEO_START( suna8 );
 VIDEO_UPDATE( suna8 );
@@ -80,9 +91,9 @@ VIDEO_UPDATE( suna8 );
 /***************************************************************************
 	For Debug: there's no tilemap, just sprites.
 ***************************************************************************/
-
+#if TILEMAPS
 static struct tilemap *tilemap;
-static int tiles, rombank;
+static int tiles, rombank, page;
 
 static void get_tile_info(int tile_index)
 {
@@ -100,7 +111,7 @@ static void get_tile_info(int tile_index)
 			(attr >> 2) & 0xf,
 			TILE_FLIPYX( (attr >> 6) & 3 ))
 }
-
+#endif
 
 
 READ_HANDLER( suna8_banked_paletteram_r )
@@ -120,7 +131,9 @@ WRITE_HANDLER( suna8_spriteram_w )
 	if (spriteram[offset] != data)
 	{
 		spriteram[offset] = data;
+#if TILEMAPS
 		tilemap_mark_tile_dirty(tilemap,offset/2);
+#endif
 	}
 }
 
@@ -130,7 +143,9 @@ WRITE_HANDLER( suna8_banked_spriteram_w )
 	if (spriteram[offset] != data)
 	{
 		spriteram[offset] = data;
+#if TILEMAPS
 		tilemap_mark_tile_dirty(tilemap,offset/2);
+#endif
 	}
 }
 
@@ -168,12 +183,6 @@ WRITE_HANDLER( brickzn_banked_paletteram_w )
 int suna8_vh_start_common(int dim)
 {
 	suna8_text_dim = dim;
-	tilemap = tilemap_create(	get_tile_info, tilemap_scan_cols,
-								TILEMAP_TRANSPARENT,
-								8,8,0x20*((suna8_text_dim > 0)?4:8),0x20);
-
-	if ( tilemap == NULL )	return 1;
-
 	if (!(suna8_text_dim > 0))
 	{
 		paletteram	=	memory_region(REGION_USER1);
@@ -182,7 +191,15 @@ int suna8_vh_start_common(int dim)
 		suna8_palettebank = 0;
 	}
 
+#if TILEMAPS
+	tilemap = tilemap_create(	get_tile_info, tilemap_scan_cols,
+								TILEMAP_TRANSPARENT,
+								8,8,0x20*((suna8_text_dim > 0)?4:8),0x20);
+
+	if ( tilemap == NULL )	return 1;
 	tilemap_set_transparent_pen(tilemap,15);
+#endif
+
 	return 0;
 }
 
@@ -201,7 +218,7 @@ VIDEO_START( suna8_textdim12 )	{ return suna8_vh_start_common(12); }
 void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int i;
-	int mx = 0;	/* multisprite x counter*/
+	int mx = 0;	// multisprite x counter
 
 	int max_x	=	Machine->drv->screen_width	- 8;
 	int max_y	=	Machine->drv->screen_height - 8;
@@ -209,7 +226,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 	for (i = 0x1d00; i < 0x2000; i += 4)
 	{
 		int srcpg, srcx,srcy, dimx,dimy, tx, ty;
-		int gfxbank, flipx,flipy, multisprite;
+		int gfxbank, colorbank = 0, flipx,flipy, multisprite;
 
 		int y		=	spriteram[i + 0];
 		int code	=	spriteram[i + 1];
@@ -259,14 +276,16 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				gfxbank = bank & 0x1f;
 				srcpg = (code >> 4) & 3;
 				break;
+// hardhea2: fire code=52/54 bank=a4; player code=02/04/06 bank=08; arrow:code=16 bank=27
 			case 0x40:
 				dimx = 4;					dimy = 4;
-				srcx  = (code & 0xf) * 2;
-				flipx = 0;
+				srcx  = (code & 0xe) * 2;
+				flipx = code & 0x01;
 				flipy = bank & 0x10;
 				srcy  = (((bank & 0x80)>>4) + (bank & 0x04) + ((~bank >> 4)&2)) * 2;
-				gfxbank = bank & 0x3;	/* ??? brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0*/
 				srcpg = (code >> 4) & 7;
+				gfxbank = (bank & 0x3) + (srcpg & 4);	// brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0
+				colorbank = (bank & 8) >> 3;
 				break;
 			case 0x00:
 			default:
@@ -317,7 +336,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 
 				drawgfx(	bitmap,Machine->gfx[0],
 							tile + (attr & 0x3)*0x100 + gfxbank,
-							(attr >> 2) & 0xf,
+							((attr >> 2) & 0xf) | colorbank,	// hardhea2 player2
 							tile_flipx, tile_flipy,
 							sx, sy,
 							cliprect,TRANSPARENCY_PEN,15);
@@ -400,24 +419,16 @@ void suna8_draw_text_sprites(struct mame_bitmap *bitmap,const struct rectangle *
 
 ***************************************************************************/
 
-/*
-	Set TILEMAPS to 1 to debug.
-	Press Z (you see the "tilemaps" in RAM) or
-	Press X (you see the "tilemaps" in ROM) then
-
-	- use Q&W to cycle through the pages.
-	- Use R&T to cycle through the tiles banks.
-	- Use A&S to cycle through the ROM banks (only with X pressed, of course).
-*/
-#define TILEMAPS 0
-
 VIDEO_UPDATE( suna8 )
 {
+	/* see hardhead, hardhea2 test mode (press button 2 for both players) */
+	fillbitmap(bitmap,Machine->pens[0xff],cliprect);
+
 #ifdef MAME_DEBUG
 #if TILEMAPS
-{
-	char buf[80];
-	int max_tiles = memory_region_length(REGION_GFX1) / (0x400 * 0x20);
+	if (keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X))
+	{
+		int max_tiles = memory_region_length(REGION_GFX1) / (0x400 * 0x20);
 
 	if (keyboard_pressed_memory(KEYCODE_Q))	{ page--;	tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);	}
 	if (keyboard_pressed_memory(KEYCODE_W))	{ page++;	tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);	}
@@ -431,27 +442,17 @@ VIDEO_UPDATE( suna8 )
 	tiles %= max_tiles;
 	if (tiles < 0)	tiles += max_tiles;
 
-	tilemap_set_scrollx( tilemap, 0, 0x100 * page);
-	tilemap_set_scrolly( tilemap, 0, 0);
 
-#if 1
-	sprintf(buf,	"%02X %02X %02X %02X - p%2X g%02X r%02X",
-					suna8_rombank, suna8_palettebank, suna8_spritebank, suna8_unknown,
-					page,tiles,rombank	);
-	usrintf_showmessage(buf);
-#endif
 
-}
-#endif
-#endif
-
-	/* see hardhead, hardhea2 test mode (press button 2 for both players) */
-	fillbitmap(bitmap,Machine->pens[0xff],cliprect);
-
-#ifdef MAME_DEBUG
-#if TILEMAPS
-	if (keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X))
+		tilemap_set_scrollx( tilemap, 0, 0x100 * page);
+		tilemap_set_scrolly( tilemap, 0, 0);
 		tilemap_draw(bitmap,cliprect, tilemap, 0, 0);
+#if 1
+	usrintf_showmessage("%02X %02X %02X %02X - p%2X g%02X r%02X",
+						suna8_rombank, suna8_palettebank, suna8_spritebank, suna8_unknown,
+						page,tiles,rombank	);
+#endif
+	}
 	else
 #endif
 #endif
@@ -460,3 +461,4 @@ VIDEO_UPDATE( suna8 )
 		suna8_draw_text_sprites(bitmap,cliprect);
 	}
 }
+

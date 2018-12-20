@@ -156,6 +156,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
 * Hang-On - Romset `hangon`
+* Hard Head 2
 * Ironhorse - Romset `ironhors`
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
@@ -287,7 +288,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Changes
-
 * Added sound support to Fire Shark and Vimana
 * Added sound sample support for Cosmic Alien
 * Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
@@ -343,4 +343,4 @@ up with the new Namco sound chips netting some major improvements video and soun
 bosconian, dig dug, dig dug II, galaga, galaga 3, gaplus, grobda, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, 
 pole position, pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
-
+* Fixed Hard Head 2 [arcadez]
