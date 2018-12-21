@@ -1011,7 +1011,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/rabbit.c \
 				 $(CORE_DIR)/drivers/malzak.c $(CORE_DIR)/vidhrdw/malzak_vidhrdw.c \
 				 $(CORE_DIR)/drivers/supertnk.c \
-				 $(CORE_DIR)/drivers/crospang.c \
+				 $(CORE_DIR)/vidhrdw/crospang_vidhrdw.c $(CORE_DIR)/drivers/crospang.c \
 				 $(CORE_DIR)/drivers/funybubl.c \
 				 $(CORE_DIR)/drivers/dreamwld.c \
 				 $(CORE_DIR)/machine/seicop.c \
