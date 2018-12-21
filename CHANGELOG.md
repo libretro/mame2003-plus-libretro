@@ -209,6 +209,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Blade 
 * Bio-ship Paladin
 * Black Heart
+* Cross Pang
 * Daitoride
 * Dharma Doujou
 * Fire Shark
