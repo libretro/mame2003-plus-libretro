@@ -61,6 +61,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Joe & Mac Return
 * Ketsui Kizuna Jigoku Tachi
 * Knuckle Bash 2
+* Led Storm Rally 2011
 * Lethal Enforcers
 * Magical Drop
 * Magical Drop Plus 1
