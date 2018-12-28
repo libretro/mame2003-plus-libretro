@@ -2692,7 +2692,7 @@ GAME(  1983, blastkit, blaster,  blaster,  blastkit, blastkit, ROT0,   "Williams
 
 GAME(  1985, spdball,  0,        williams, spdball,  spdball,  ROT0,   "Williams", "Speed Ball (prototype)" )
 GAME(  1985, alienar,  0,        alienar,  alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena" )
-GAME(  1985, alienaru,  0,       alienaru, alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena(upgrade)" )
+GAME(  1985, alienaru,  0,       alienaru, alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena (Stargate upgrade)" )
 
 GAME(  1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
 GAME(  1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
