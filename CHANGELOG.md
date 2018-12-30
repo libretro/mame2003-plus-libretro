@@ -276,6 +276,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with sound sample support
 
 * Cosmic Alien
+* Frogs
 * Sasuke Vs Commander 
 * Space Firebird
 
