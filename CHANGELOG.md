@@ -43,6 +43,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * FixEight (bootleg)
 * Fujiyama Buster
 * Gaia: The Last Choice Of Earth
+* Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
 * Ghost Loop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Guerrilla War (joystick hack bootleg)
@@ -76,6 +77,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Osman
 * Pack'n Bang Bang
 * Parallel Turn
+* Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
