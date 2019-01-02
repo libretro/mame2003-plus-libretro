@@ -599,7 +599,7 @@ ROM_END
 
 static DRIVER_INIT( omegrace )
 {
-	artwork_set_overlay(omegrace_overlay);
+	/*artwork_set_overlay(omegrace_overlay);*/ /* removed 2019-01-02 based on report that this yellow overlay is not accurate to original hardware */
 }
 
 
