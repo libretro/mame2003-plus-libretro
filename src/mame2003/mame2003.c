@@ -689,18 +689,22 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
+#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
+#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
+
 static struct retro_controller_description controllers[] = {
-  { "Gamepad",	       RETRO_DEVICE_JOYPAD},
-  { "8-Button",        PAD_8BUTTON },
-  { "6-Button",        PAD_6BUTTON },
-  { "Classic Gamepad", PAD_CLASSIC },
+  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
+  { "Modern Fightstick",  PAD_MODERN  },  
+  { "8-Button",           PAD_8BUTTON },
+  { "6-Button",           PAD_6BUTTON },
 };
 
 static struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Gamepad)",	       RETRO_DEVICE_JOYPAD},
-  { "UNSUPPORTED (8-Button)",        PAD_8BUTTON },
-  { "UNSUPPORTED (6-Button)",        PAD_6BUTTON },
-  { "UNSUPPORTED (Classic Gamepad)", PAD_CLASSIC },
+  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
+  { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
+  { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
+  { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
@@ -1532,7 +1536,7 @@ void retro_describe_controls(void)
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
       needle++;
     }
   }
@@ -1604,6 +1608,23 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
+        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
+        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON3);
+        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON4);
+        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON2);
+        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON5);
+        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
+        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
+        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
+        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
+        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
+      }
+      return 0;
+    }
+    case PAD_MODERN:
+    {
+      switch(retro_ID)
+      {
         case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
         case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
         case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
@@ -1621,16 +1642,16 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
-	case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-	case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-	case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-	case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-	case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
-	case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON7);
-	case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON6);
-	case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-	case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-	case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
+        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
+        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
+        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
+        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
+        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
+        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON7);
+        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON6);
+        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
+        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
+        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
       }
       return 0;
     }
@@ -1651,23 +1672,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case PAD_CLASSIC:
-    {
-      switch(retro_ID)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
-      }
-      return 0;
-    }
+
   }
   return 0;  
 }
@@ -1815,10 +1820,10 @@ const struct JoystickInfo *osd_get_joy_list(void)
       
       switch(coded_layout)
       {
-        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_GAMEPAD; break;
+        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_CLASSIC; break;
+        case PAD_MODERN:          layout_idx = IDX_MODERN;  break;        
         case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
         case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
-        case PAD_CLASSIC:         layout_idx = IDX_CLASSIC; break;
       }
  
       mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
