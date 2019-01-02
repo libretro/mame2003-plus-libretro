@@ -33,6 +33,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Dogou Souken (joystick hack bootleg)
+* Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
