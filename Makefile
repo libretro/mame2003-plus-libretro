@@ -452,12 +452,16 @@ ifeq ($(BIGENDIAN), 1)
 	PLATCFLAGS += -DMSB_FIRST
 endif
 
+# Compiler Flags For All Platforms #############################
+
 # explictly use -fsigned-char on all platforms to solve problems with code written/tested on x86 but used on ARM
 # for example, audio on rtype leo is wrong on ARM without this flag
-PLATCFLAGS += -fsigned-char
+CFLAGS += -fsigned-char
 
 # Use position-independent code for all platforms
-PLATCFLAGS += $(fpic)
+CFLAGS += $(fpic)
+
+CFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESET -DHAVE_SOCKLEN_T -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
