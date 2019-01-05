@@ -177,8 +177,8 @@ else ifeq ($(platform), rpi3)
 # Platform affix = classic_<ISA>_<µARCH>
 # Help at https://modmyclassic.com/comp
 
-# (armv7 a7, hard point, neon based) ### 
-# NESC, SNESC, C64 mini 
+# (armv7 a7, hard point, neon based) ###
+# NESC, SNESC, C64 mini
 else ifeq ($(platform), classic_armv7_a7)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
@@ -217,7 +217,7 @@ else ifeq ($(platform), armhf)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -march=armv6 -mfloat-abi=hard -mfpu=vfp
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-  
+
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
    CFLAGS += -fPIC
@@ -262,7 +262,6 @@ else ifeq ($(platform), libnx)
   DEFINES := -DSWITCH=1 -U__linux__ -U__linux -DRARCH_INTERNAL -DHAVE_LIBNX
   CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
   CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
-  CFLAGS += -std=gnu11
   PLATCFLAGS += -D__SWITCH__ -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
   CPU_ARCH := arm64
   STATIC_LINKING = 1
@@ -282,8 +281,8 @@ else ifeq ($(platform), ps3)
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
-   SPLIT_UP_LINK=1  
-	 
+   SPLIT_UP_LINK=1
+	
 else ifeq ($(platform), sncps3)
    TARGET = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -316,7 +315,7 @@ else ifeq ($(platform), vita)
    CFLAGS += -mthumb -mfloat-abi=hard -fsingle-precision-constant
    CFLAGS += -Wall -mword-relocations
    CFLAGS += -fomit-frame-pointer -ffast-math
-   CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables 
+   CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
    CFLAGS +=  -fno-optimize-sibling-calls
    CFLAGS += -ftree-vectorize -funroll-loops -fno-short-enums
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
@@ -614,7 +613,7 @@ CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 OBJECTS := $(SOURCES_C:.c=.o)
 
 OBJOUT   = -o
-LINKOUT  = -o 
+LINKOUT  = -o
 
 ifneq (,$(findstring msvc,$(platform)))
 	OBJOUT = -Fo
@@ -659,7 +658,7 @@ endif
 CFLAGS += $(PLATCFLAGS) $(CDEFS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $(OBJOUT)$@ $< 
+	$(CC) -c $(OBJOUT)$@ $< $(CFLAGS)
 
 $(OBJ)/%.a:
 	@echo Archiving $@...
