@@ -1,14 +1,14 @@
 LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
 
 INCFLAGS := \
-    -I$(CORE_DIR) \
-    -I$(CORE_DIR)/includes \
-    -I$(CORE_DIR)/cpu/m68000
-
-INCFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESET -DHAVE_SOCKLEN_T -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I$(CORE_DIR)/lib/libFLAC/include \
-    -I$(CORE_DIR)/mame2003 \
-    -I$(LIBRETRO_COMM_DIR)/include \
-    -I$(LIBRETRO_COMM_DIR)/zlib 
+	-I. \
+	-I$(CORE_DIR) \
+	-I$(CORE_DIR)/includes \
+	-I$(CORE_DIR)/cpu/m68000 \
+	-I$(CORE_DIR)/mame2003 \
+	-I$(LIBRETRO_COMM_DIR)/include \
+	-I$(LIBRETRO_COMM_DIR)/zlib \
+	-I$(CORE_DIR)/lib/libFLAC/include \
 
 ifneq (,$(findstring msvc200,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
@@ -18,7 +18,7 @@ ifeq ($(system_platform), win)
 INCFLAGS += -DHAVE_FSEEKO
 endif
 
-ifneq (,$(findstring msvc2003,$(platform)))
+ifneq (,$(findstring msvc200,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
 
@@ -27,7 +27,6 @@ COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 SOURCES_C := \
 	$(CORE_DIR)/mame2003/mame2003.c \
 	$(CORE_DIR)/mame2003/video.c
-
 
 SOURCES_C += \
 	$(CORE_DIR)/artwork.c \
@@ -1030,7 +1029,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/deco156.c \
 				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c \
-				 $(CORE_DIR)/machine/namcoio_machine.c 
+				 $(CORE_DIR)/machine/namcoio_machine.c
 
 
 
@@ -1093,7 +1092,7 @@ endif
 endif
 
 ifeq ($(HAS_ADSP2100),1)
-SOURCES_C += $(CORE_DIR)/cpu/adsp2100/adsp2100.c 
+SOURCES_C += $(CORE_DIR)/cpu/adsp2100/adsp2100.c
 ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/adsp2100/2100dasm.c
 endif
@@ -2649,6 +2648,23 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/formats/libchdr/libchdr_sha1.c \
 	$(LIBRETRO_COMM_DIR)/utils/sha1.c
 
+SOURCES_C += \
+	$(CORE_DIR)/lib/libFLAC/bitmath.c \
+	$(CORE_DIR)/lib/libFLAC/bitreader.c \
+	$(CORE_DIR)/lib/libFLAC/bitwriter.c \
+	$(CORE_DIR)/lib/libFLAC/cpu.c \
+	$(CORE_DIR)/lib/libFLAC/crc.c \
+	$(CORE_DIR)/lib/libFLAC/fixed.c \
+	$(CORE_DIR)/lib/libFLAC/float.c \
+	$(CORE_DIR)/lib/libFLAC/format.c \
+	$(CORE_DIR)/lib/libFLAC/lpc.c \
+	$(CORE_DIR)/lib/libFLAC/md5.c \
+	$(CORE_DIR)/lib/libFLAC/memory.c \
+	$(CORE_DIR)/lib/libFLAC/stream_decoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder_framing.c \
+	$(CORE_DIR)/lib/libFLAC/window.c
+
 ifeq ($(STATIC_LINKING),1)
 else
 SOURCES_C += \
@@ -2680,19 +2696,3 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/zlib/unzip.c \
 	$(LIBRETRO_COMM_DIR)/zlib/zutil.c
 endif
-SOURCES_C += \
-	$(CORE_DIR)/lib/libFLAC/bitmath.c \
-	$(CORE_DIR)/lib/libFLAC/bitreader.c \
-	$(CORE_DIR)/lib/libFLAC/bitwriter.c \
-	$(CORE_DIR)/lib/libFLAC/cpu.c \
-	$(CORE_DIR)/lib/libFLAC/crc.c \
-	$(CORE_DIR)/lib/libFLAC/fixed.c \
-	$(CORE_DIR)/lib/libFLAC/float.c \
-	$(CORE_DIR)/lib/libFLAC/format.c \
-	$(CORE_DIR)/lib/libFLAC/lpc.c \
-	$(CORE_DIR)/lib/libFLAC/md5.c \
-	$(CORE_DIR)/lib/libFLAC/memory.c \
-	$(CORE_DIR)/lib/libFLAC/stream_decoder.c \
-	$(CORE_DIR)/lib/libFLAC/stream_encoder.c \
-	$(CORE_DIR)/lib/libFLAC/stream_encoder_framing.c \
-	$(CORE_DIR)/lib/libFLAC/window.c

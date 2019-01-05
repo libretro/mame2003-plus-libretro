@@ -39,7 +39,7 @@
 #endif
 
 #ifdef _MSC_VER
-#define snprintf _snprintf
+#include <compat/msvc.h>
 
 #ifndef S_ISDIR
 #define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
