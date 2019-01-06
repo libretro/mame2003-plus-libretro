@@ -93,7 +93,7 @@ endif
 
 ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
-   fpic = -fPICb
+   fpic = -fPIC
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 
