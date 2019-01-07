@@ -1,12 +1,11 @@
-
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
 static struct tilemap *bg_layer,*fg_layer,*tx_layer;
 unsigned char *dynduke_back_data,*dynduke_fore_data,*dynduke_scroll_ram,*dynduke_control_ram;
 
-static int flipscreen,back_bankbase,fore_bankbase,back_palbase;
-static int back_enable,fore_enable,sprite_enable;
+static int flipscreen,back_bankbase,fore_bankbase;
+static int back_enable,fore_enable,sprite_enable,txt_enable;
 
 /******************************************************************************/
 
@@ -28,12 +27,6 @@ WRITE_HANDLER( dynduke_paletteram_w )
 
 	palette_set_color(offset/2,r,g,b);
 
-	/* This is a kludge to handle 5bpp graphics but 4bpp palette data */
-	/* the 5th bit is actually transparency, so I should use TILEMAP_BITMASK */
-	if (offset<1024) {
-		palette_set_color(((offset&0x1f)/2) | (offset&0xffe0) | 2048,r,g,b);
-		palette_set_color(((offset&0x1f)/2) | (offset&0xffe0) | 2048 | 16,r,g,b);
-	}
 }
 
 READ_HANDLER( dynduke_background_r )
@@ -74,7 +67,7 @@ static void get_bg_tile_info(int tile_index)
 	SET_TILE_INFO(
 			1,
 			tile+back_bankbase,
-			color+back_palbase,
+			color,
 			0)
 }
 
@@ -110,7 +103,6 @@ VIDEO_START( dynduke )
 	fg_layer = tilemap_create(get_fg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,32,32);
 	tx_layer = tilemap_create(get_tx_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,32,32);
 
-	tilemap_set_transmask(bg_layer,0,0x0000ffff,0xffff0000); /* 4bpp + The rest - 1bpp */
 
 	tilemap_set_transparent_pen(fg_layer,15);
 	tilemap_set_transparent_pen(tx_layer,15);
@@ -136,21 +128,25 @@ WRITE_HANDLER( dynduke_gfxbank_w )
 
 WRITE_HANDLER( dynduke_control_w )
 {
-	static int old_bpal;
 
 	dynduke_control_ram[offset]=data;
 
 	if (offset!=6) return;
 
-	if (data&0x1) back_enable=0; else back_enable=1;
-	if (data&0x2) back_palbase=16; else back_palbase=0;
-	if (data&0x4) fore_enable=0; else fore_enable=1;
+	/* bit 0x80 toggles, maybe sprite buffering?
+	 bit 0x40 is flipscreen
+	 bit 0x20 not used?
+	 bit 0x10 not used?
+	 bit 0x08 is set on the title screen (sprite disable?)
+	 bit 0x04 unused? txt disable?
+	 bit 0x02 is used on the map screen (fore disable?)
+	 bit 0x01 set when inserting coin.. bg disable? */
+
+	if (data&0x1) back_enable = 0; else back_enable = 1;
+	if (data&0x2) fore_enable=0; else fore_enable=1;
+	if (data&0x4) txt_enable = 0; else txt_enable = 1;
 	if (data&0x8) sprite_enable=0; else sprite_enable=1;
 
-	if (back_palbase!=old_bpal)
-		tilemap_mark_all_tiles_dirty(bg_layer);
-
-	old_bpal=back_palbase;
 	flipscreen=data&0x40;
 	tilemap_set_flip(ALL_TILEMAPS,flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 }
@@ -193,24 +189,73 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 	}
 }
 
+static void draw_background(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int pri )
+{
+	/* The transparency / palette handling on the background layer is very strange */
+	const struct mame_bitmap *bm = tilemap_get_pixmap(bg_layer);
+	int scrolly, scrollx;
+	int x,y;
+
+	/* if we're disabled, don't draw */
+	if (!back_enable)
+	{
+		fillbitmap(bitmap,get_black_pen(),cliprect);
+		return;
+	}
+
+	scrolly = ((dynduke_scroll_ram[0x02]&0x30)<<4)+((dynduke_scroll_ram[0x04]&0x7f)<<1)+((dynduke_scroll_ram[0x04]&0x80)>>7);
+	scrollx = ((dynduke_scroll_ram[0x12]&0x30)<<4)+((dynduke_scroll_ram[0x14]&0x7f)<<1)+((dynduke_scroll_ram[0x14]&0x80)>>7);
+	
+	for (y=0;y<256;y++)
+	{
+		int realy = (y + scrolly) & 0x1ff;
+		UINT16 *src = (UINT16*)bm->line[realy];
+	    UINT16 *dst = (UINT16*)bitmap->line[y];
+
+
+		for (x=0;x<256;x++)
+		{
+			int realx = (x + scrollx) & 0x1ff;
+			UINT16 srcdat = src[realx];
+
+			/* 0x01 - data bits
+               0x02
+               0x04
+               0x08
+               0x10 - extra colour bit? (first boss)
+               0x20 - priority over sprites
+               the old driver also had 'bg_palbase' but I don't see what it's for?
+            */
+
+			if ((srcdat & 0x20) == pri)
+			{
+				if (srcdat & 0x10) srcdat += 0x400;
+				/*if (srcdat & 0x10) srcdat += mame_rand(machine)&0x1f; */
+
+				srcdat = (srcdat & 0x000f) | ((srcdat & 0xffc0) >> 2);
+				dst[x] = srcdat;
+			}
+
+
+		}
+	}
+}
+
+
+
 VIDEO_UPDATE( dynduke )
 {
 	/* Setup the tilemaps */
-	tilemap_set_scrolly( bg_layer,0, ((dynduke_scroll_ram[0x02]&0x30)<<4)+((dynduke_scroll_ram[0x04]&0x7f)<<1)+((dynduke_scroll_ram[0x04]&0x80)>>7) );
-	tilemap_set_scrollx( bg_layer,0, ((dynduke_scroll_ram[0x12]&0x30)<<4)+((dynduke_scroll_ram[0x14]&0x7f)<<1)+((dynduke_scroll_ram[0x14]&0x80)>>7) );
 	tilemap_set_scrolly( fg_layer,0, ((dynduke_scroll_ram[0x22]&0x30)<<4)+((dynduke_scroll_ram[0x24]&0x7f)<<1)+((dynduke_scroll_ram[0x24]&0x80)>>7) );
 	tilemap_set_scrollx( fg_layer,0, ((dynduke_scroll_ram[0x32]&0x30)<<4)+((dynduke_scroll_ram[0x34]&0x7f)<<1)+((dynduke_scroll_ram[0x34]&0x80)>>7) );
-	tilemap_set_enable( bg_layer,back_enable);
 	tilemap_set_enable( fg_layer,fore_enable);
+    tilemap_set_enable( tx_layer,txt_enable);
+	
 
-	if (back_enable)
-		tilemap_draw(bitmap,cliprect,bg_layer,TILEMAP_BACK,0);
-	else
-		fillbitmap(bitmap,Machine->pens[0],cliprect);
-
+	draw_background(bitmap, cliprect,0x00);
 	draw_sprites(bitmap,cliprect,0); /* Untested: does anything use it? Could be behind background */
 	draw_sprites(bitmap,cliprect,1);
-	tilemap_draw(bitmap,cliprect,bg_layer,TILEMAP_FRONT,0);
+	draw_background(bitmap, cliprect,0x20);
 	draw_sprites(bitmap,cliprect,2);
 	tilemap_draw(bitmap,cliprect,fg_layer,0,0);
 	draw_sprites(bitmap,cliprect,3);
