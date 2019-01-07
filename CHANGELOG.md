@@ -345,6 +345,7 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
 * Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
 * Fixed Avengers In Galactic Storm [grant2258]
+* Backported Haze's changes from MAME119.u3 fixing the background colours in Dynamite Duke / The Double Dynamites [arcadez]
 * Added three new Namco soundcores NAMCO_15XX, NAMCO_52XX, NAMCO_54XX and updated NAMCO Sound to MAME80 [grant2258]
 * Updated galaga.c gaplus.c mappy.c polepos.c and toypop.c drivers plus sound and video code to MAME80 then hooked em
 up with the new Namco sound chips netting some major improvements video and soundwise for some classic era Namco games 
