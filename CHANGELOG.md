@@ -50,6 +50,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Guerrilla War (joystick hack bootleg)
 * Gunbarich
 * GunMaster
+* Guwange Special Version
 * Hacha Mecha Figher (Unprotected)
 * Hang Zo
 * Heavy Smash
@@ -114,6 +115,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 10th Anniversary
 * The Last Hope
 * The Lost Castle In Darkmist
+* Thunder Heroes
 * Thunder Hoop
 * Title Fight
 * Undercover Cops (Alpha Renewal Version)
