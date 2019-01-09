@@ -288,7 +288,7 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd
 			/* wrong sector len */
 			return 1;
 #if PRINTF_IDE_COMMANDS
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CHS: %d %d %d\n", ide->num_cylinders, ide->num_heads, ide->num_sectors);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CHS: %d %d %d\n", ide->num_cylinders, ide->num_heads, ide->num_sectors);
 #endif
 	}
 
@@ -1341,7 +1341,7 @@ static UINT32 ide_controller_read(struct ide_state *ide, offs_t offset, int size
 
 		/* log anything else */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:unknown IDE read at %03X, size=%d\n", activecpu_get_previouspc(), offset, size);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:unknown IDE read at %03X, size=%d\n", activecpu_get_previouspc(), offset, size);
 			break;
 	}
 
@@ -1419,12 +1419,12 @@ static void ide_controller_write(struct ide_state *ide, offs_t offset, int size,
 							for (i = 0; i < 34; i += 2)
 							{
 								if (i % 8 == 2)
-									log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+									log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 
-								log_cb(RETRO_LOG_ERROR, LOGPRE "0x%02x, 0x%02x, ", ide->buffer[i], ide->buffer[i + 1]);
+								log_cb(RETRO_LOG_DEBUG, LOGPRE "0x%02x, 0x%02x, ", ide->buffer[i], ide->buffer[i + 1]);
 								/*printf("0x%02x%02x, ", ide->buffer[i], ide->buffer[i + 1]);*/
 							}
-							log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 						}
 #endif
 

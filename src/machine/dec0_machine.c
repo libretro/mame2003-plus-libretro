@@ -31,7 +31,7 @@ READ16_HANDLER( dec0_controls_r )
 			return i8751_return;
 	}
 
-	log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
 	return ~0;
 }
 
@@ -48,7 +48,7 @@ READ16_HANDLER( dec0_rotary_r )
 			return ~(1 << (readinputport(6) * 12 / 256));
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown rotary read at 300000 %02x\n",offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown rotary read at 300000 %02x\n",offset);
 	}
 
 	return 0;
@@ -79,7 +79,7 @@ READ16_HANDLER( midres_controls_r )
 			return 0;	/* ?? watchdog ?? */
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06x unknown control read at %02x\n",activecpu_get_pc(),0x180000+offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %06x unknown control read at %02x\n",activecpu_get_pc(),0x180000+offset);
 	return ~0;
 }
 
@@ -99,7 +99,7 @@ READ16_HANDLER( slyspy_controls_r )
 			return readinputport(2);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown control read at 30c000 %d\n",offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown control read at 30c000 %d\n",offset);
 	return ~0;
 }
 
@@ -113,7 +113,7 @@ READ16_HANDLER( slyspy_protection_r )
 		case 6:		return 0x2;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x, Unknown protection read at 30c000 %d\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x, Unknown protection read at 30c000 %d\n",activecpu_get_pc(),offset);
 	return 0;
 }
 
@@ -176,7 +176,7 @@ WRITE16_HANDLER( slyspy_240000_w )
 			else if (offset<0x10) dec0_pf2_control_1_w(offset-0x8,data,mem_mask);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 240000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 240000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 WRITE16_HANDLER( slyspy_242000_w )
@@ -190,7 +190,7 @@ WRITE16_HANDLER( slyspy_242000_w )
 			else if (offset<0x300) COMBINE_DATA(&dec0_pf2_rowscroll[offset-0x200]);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 242000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 242000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 WRITE16_HANDLER( slyspy_246000_w )
@@ -200,7 +200,7 @@ WRITE16_HANDLER( slyspy_246000_w )
 			dec0_pf2_data_w(offset,data,mem_mask);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 246000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 246000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 WRITE16_HANDLER( slyspy_248000_w )
@@ -217,7 +217,7 @@ WRITE16_HANDLER( slyspy_248000_w )
 			else if (offset<0x10) dec0_pf1_control_1_w(offset-0x8,data,mem_mask);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 248000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 248000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 WRITE16_HANDLER( slyspy_24c000_w )
@@ -231,7 +231,7 @@ WRITE16_HANDLER( slyspy_24c000_w )
 			else if (offset<0x300) COMBINE_DATA(&dec0_pf1_rowscroll[offset-0x200]);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 24c000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 24c000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 WRITE16_HANDLER( slyspy_24e000_w )
@@ -242,7 +242,7 @@ WRITE16_HANDLER( slyspy_24e000_w )
 			dec0_pf1_data_w(offset,data,mem_mask);
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to 24e000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to 24e000 %02x at %04x %04x (Trap %02x)\n",offset,activecpu_get_pc(),data,slyspy_state);
 }
 
 /******************************************************************************/
@@ -383,7 +383,7 @@ static void baddudes_i8751_write(int data)
 		case 0x75b: i8751_return=0x70f; break;
 	}
 
-	if (!i8751_return) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: warning - write unknown command %02x to 8571\n",activecpu_get_pc(),data);
+	if (!i8751_return) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: warning - write unknown command %02x to 8571\n",activecpu_get_pc(),data);
 }
 
 static void birdtry_i8751_write(int data)
@@ -452,7 +452,7 @@ static void birdtry_i8751_write(int data)
 		/*These are activated after a shot (???)*/
 		case 0x6ca: i8751_return = 0xff;      break;
 		case 0x7ff: i8751_return = 0x200;     break;
-		default: log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: warning - write unknown command %02x to 8571\n",activecpu_get_pc(),data);
+		default: log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: warning - write unknown command %02x to 8571\n",activecpu_get_pc(),data);
 	}
 }
 
@@ -464,7 +464,7 @@ static void i8751_callback(int param)
 	cpu_set_irq_line(0,5,HOLD_LINE);
 	i8751_timer=NULL;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "i8751:  Timer called!!!\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "i8751:  Timer called!!!\n");
 }
 
 void dec0_i8751_write(int data)
@@ -478,7 +478,7 @@ void dec0_i8751_write(int data)
 
 	/* Simulate the processing time of the i8751, time value is guessed
 	if (i8751_timer)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "i8751:  Missed a timer!!!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "i8751:  Missed a timer!!!\n");
 	else
 		i8751_timer = timer_set(TIME_NOW, 0, i8751_callback);*/
 
@@ -491,7 +491,7 @@ See the code about 0xb60 (USA version)
 
 */
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %02x to i8751\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write %02x to i8751\n",activecpu_get_pc(),data);
 
 }
 
@@ -519,7 +519,7 @@ static READ16_HANDLER( robocop_68000_share_r )
 
 static WRITE16_HANDLER( robocop_68000_share_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Share write %04x %04x\n",activecpu_get_pc(),offset,data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Share write %04x %04x\n",activecpu_get_pc(),offset,data);*/
 
 	robocop_shared_ram[offset]=data&0xff;
 

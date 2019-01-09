@@ -91,7 +91,7 @@ WRITE16_HANDLER( calc3_mcu_ram_w )
 #define CALC3_MCU_COM_W(_n_)				\
 WRITE16_HANDLER( calc3_mcu_com##_n_##_w )	\
 {											\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "calc3w %d %04x %04x\n",_n_, data,mem_mask); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "calc3w %d %04x %04x\n",_n_, data,mem_mask); \
 	calc3_mcu_status |= (1 << _n_);			\
 }
 
@@ -1190,7 +1190,7 @@ static int calc3_decompress_table(int tabnum, UINT8* dstram, int dstoffset)
 
 	if (tabnum > numregions)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CALC3 error, requested table > num tables!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CALC3 error, requested table > num tables!\n");
 		return 0;
 	}
 
@@ -2830,7 +2830,7 @@ void gtmr_mcu_run(void)
 	data16_t mcu_offset		=	mcu_ram[0x0012/2] / 2;
 	data16_t mcu_data		=	mcu_ram[0x0014/2];
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : MCU executed command: %04X %04X %04X\n",activecpu_get_pc(),mcu_command,mcu_offset*2,mcu_data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : MCU executed command: %04X %04X %04X\n",activecpu_get_pc(),mcu_command,mcu_offset*2,mcu_data);
 
 	switch (mcu_command >> 8)
 	{
@@ -2981,7 +2981,7 @@ static READ16_HANDLER( sandscrp_mcu_ram_r )
 			return (mame_rand() & 0xffff);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Unknown MCU word %04X read\n",activecpu_get_pc(),offset*2);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Unknown MCU word %04X read\n",activecpu_get_pc(),offset*2);
 	return mcu_ram[offset];
 }
 
@@ -3225,7 +3225,7 @@ WRITE16_HANDLER( bakubrkr_oki_bank_sw )
 {
 	if (ACCESSING_LSB) {
 		OKIM6295_set_bank_base(0, 0x40000 * (data & 0x7) );
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%06X  Selecting OKI bank %02X\n",activecpu_get_pc(),data&0xff);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%06X  Selecting OKI bank %02X\n",activecpu_get_pc(),data&0xff);
 	}
 }
 
@@ -3371,7 +3371,7 @@ WRITE16_HANDLER( gtmr_oki_0_bank_w )
 	{
 		OKIM6295_set_bank_base(0, 0x10000 * (data & 0xF) );
 		bank0 = (data & 0xF);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI0 bank %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0 bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -3380,7 +3380,7 @@ WRITE16_HANDLER( gtmr_oki_1_bank_w )
 	if (ACCESSING_LSB)
 	{
 		OKIM6295_set_bank_base(1, 0x40000 * (data & 0x1) );
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI1 bank %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI1 bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -3413,7 +3413,7 @@ WRITE16_HANDLER( gtmr_oki_0_data_w )
 				if (samp < 0x20)
 				{
 					OKIM6295_set_bank_base(0, 0);
-/*					log_cb(RETRO_LOG_ERROR, LOGPRE "Setting OKI0 bank to zero\n");*/
+/*					log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting OKI0 bank to zero\n");*/
 				}
 				else
 					OKIM6295_set_bank_base(0, 0x10000 * bank0 );
@@ -3421,7 +3421,7 @@ WRITE16_HANDLER( gtmr_oki_0_data_w )
 		}
 
 		OKIM6295_data_0_w(0,data);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI0 <- %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0 <- %08X\n",activecpu_get_pc(),data);*/
 
 	}
 
@@ -3432,7 +3432,7 @@ WRITE16_HANDLER( gtmr_oki_1_data_w )
 	if (ACCESSING_LSB)
 	{
 		OKIM6295_data_1_w(0,data);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI1 <- %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI1 <- %08X\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -3512,7 +3512,7 @@ READ16_HANDLER( gtmr2_wheel_r )
 			return	(readinputport(7) << 8);
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "gtmr2_wheel_r : read at %06x with joystick\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "gtmr2_wheel_r : read at %06x with joystick\n", activecpu_get_pc());
 			return	(~0);
 			break;
 	}
@@ -3638,7 +3638,7 @@ static WRITE16_HANDLER( sandscrp_soundlatch_word_w )
 		latch1_full = 1;
 		soundlatch_w(0, data & 0xff);
 		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(100));	/* Allow the other cpu to reply*/
+		cpu_spinuntil_time(TIME_IN_USEC(400));	/* Allow the other cpu to reply*/
 	}
 }
 
@@ -3837,7 +3837,7 @@ static WRITE16_HANDLER( bloodwar_oki_0_bank_w )
 	if (ACCESSING_LSB)
 	{
 		OKIM6295_set_bank_base(0, 0x40000 * (data & 0x3) );
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI0  bank %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0  bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -3846,7 +3846,7 @@ static WRITE16_HANDLER( bloodwar_oki_1_bank_w )
 	if (ACCESSING_LSB)
 	{
 		OKIM6295_set_bank_base(1, 0x40000 * (data & 0x3) );
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : OKI1  bank %08X\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI1  bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -3961,7 +3961,7 @@ WRITE_HANDLER(wingforc_oki_bank_w)
 	if (data <= 2)
 		OKIM6295_set_bank_base(0, 0x40000 * data );
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%s: unknown OKI bank %02X\n", activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: unknown OKI bank %02X\n", activecpu_get_pc(),data);
 }
 
 static MEMORY_READ_START( wingforc_sound_readmem )
@@ -3997,7 +3997,7 @@ WRITE_HANDLER( sandscrp_bankswitch_w )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int bank = data & 0x07;
 
-	if ( bank != data )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( bank != data )	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 
 	if (bank < 3)	RAM = &RAM[0x4000 * bank];
 	else			RAM = &RAM[0x4000 * (bank-3) + 0x10000];
@@ -5300,7 +5300,7 @@ static struct OKIM6295interface okim6295_intf_15kHz =
 	1,
 	{ 12000000/6/132 }, /* 2MHz -> 6295 (mode B) */
 	{ REGION_SOUND1 },
-	{ 100 }
+	{ 50 }
 };
 
 static struct OKIM6295interface okim6295_intf_18kHz =
@@ -5625,7 +5625,7 @@ static struct YM2203interface ym2203_intf_sandscrp =
 {
 	1,
 	4000000,	/* ? */
-	{ YM2203_VOL(100,100) },
+	{ YM2203_VOL(80,80) },
 	{ input_port_4_r },	/* Port A Read - DSW 1 */
 	{ input_port_5_r },	/* Port B Read - DSW 2 */
 	{ 0 },	/* Port A Write */

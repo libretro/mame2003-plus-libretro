@@ -12,12 +12,9 @@
 
 struct ControlInfo
 {
-  const unsigned num_players;
+  const bool rotate_joy_45;         /* joystick(s) are physically rotated 45 degress off-axis from the cabinet */
   const bool alternating_controls;
-  const bool mirrored_controls;
-  const bool has_tilt;
-  const bool has_cocktail_dipswitch;
-  const bool uses_service;
+  const bool mirrored_controls;     /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored_controls == 0 */
   const char *control_details;
   const char *(*get_name)(int);  
 };
@@ -993,9 +990,6 @@ const char *f1en_get_ctrl_name(int type);
 
 extern const struct ControlInfo fantasy_ctrl;
 const char *fantasy_get_ctrl_name(int type);
-
-extern const struct ControlInfo sqbert_ctrl;
-const char *sqbert_get_ctrl_name(int type);
 
 extern const struct ControlInfo fax_ctrl;
 const char *fax_get_ctrl_name(int type);
@@ -2064,9 +2058,6 @@ const char *pbobble3_get_ctrl_name(int type);
 
 extern const struct ControlInfo qbert_ctrl;
 const char *qbert_get_ctrl_name(int type);
-
-extern const struct ControlInfo qbertqub_ctrl;
-const char *qbertqub_get_ctrl_name(int type);
 
 extern const struct ControlInfo qix_ctrl;
 const char *qix_get_ctrl_name(int type);

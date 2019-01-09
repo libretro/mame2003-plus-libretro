@@ -20,8 +20,9 @@
 #include "machine/eeprom.h"
 #include "machine/random.h"
 
-#define OSC_A	(32215900)	/* System 32 master crystal is 32215900 Hz*/
-#define Z80_CLOCK (OSC_A/4)
+#define MASTER_CLOCK		32215900
+#define MULTI32_CLOCK		40000000
+
 #define MAX_COLOURS (16384)
 
 int multi32;
@@ -278,7 +279,7 @@ static READ16_HANDLER( multi32_io_analog_r )
 	switch(offset)
 	{
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
 		return 0xffff;
 		break;
 	}
@@ -328,7 +329,7 @@ static READ16_HANDLER( multi32_io_r )
 		/* f1lap*/
 		return 0xffff;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -372,7 +373,7 @@ static WRITE16_HANDLER( multi32_io_w )
 		/* orunners unknown*/
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -394,7 +395,7 @@ static READ16_HANDLER( multi32_io_2_r )
 	case 0x02:
 		return readinputport(0x06);
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -416,7 +417,7 @@ static WRITE16_HANDLER( multi32_io_2_w )
 		/* orunners unknown*/
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -448,7 +449,7 @@ static READ16_HANDLER( multi32_io_B_r )
 		/* harddunk (mask ff00)*/
 		return 0xffff;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -479,7 +480,7 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		break;
 
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -667,7 +668,7 @@ PORT_END
 struct YM2612interface mul32_ym3438_interface =
 {
 	1,
-	Z80_CLOCK,
+	MASTER_CLOCK/4,
 	{ 60,60 },
 	{ 0 },	{ 0 },	{ 0 },	{ 0 },
 	{ irq_handler }
@@ -676,7 +677,7 @@ struct YM2612interface mul32_ym3438_interface =
 static struct MultiPCM_interface mul32_multipcm_interface =
 {
 	1,		/* 1 chip*/
-	{ Z80_CLOCK },	/* clock*/
+	{ MASTER_CLOCK/4 },	/* clock*/
 	{ MULTIPCM_MODE_MULTI32 },	/* banking mode*/
 	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
@@ -686,7 +687,7 @@ static struct MultiPCM_interface mul32_multipcm_interface =
 static struct MultiPCM_interface scross_multipcm_interface =
 {
 	1,		/* 1 chip*/
-	{ Z80_CLOCK },	/* clock*/
+	{ MASTER_CLOCK/4 },	/* clock*/
 	{ MULTIPCM_MODE_STADCROSS },	/* banking mode*/
 	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
@@ -696,11 +697,11 @@ static struct MultiPCM_interface scross_multipcm_interface =
 static MACHINE_DRIVER_START( base )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, 20000000/10) /* Reality is 20mhz but V60/V70 timings are unknown*/
+	MDRV_CPU_ADD(V60, MULTI32_CLOCK/2)
 	MDRV_CPU_MEMORY(multi32_readmem,multi32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
-	MDRV_CPU_ADD(Z80, Z80_CLOCK)
+	MDRV_CPU_ADD(Z80, MASTER_CLOCK/4)
 	MDRV_CPU_MEMORY(multi32_sound_readmem, multi32_sound_writemem)
 	MDRV_CPU_PORTS(multi32_sound_readport, multi32_sound_writeport)
 

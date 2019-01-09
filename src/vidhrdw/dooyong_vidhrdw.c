@@ -54,7 +54,7 @@ WRITE_HANDLER( primella_ctrl_w )
 
 	/* bit 5 used but unknown */
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: bankswitch = %02x\n",activecpu_get_pc(),data&0xe0);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: bankswitch = %02x\n",activecpu_get_pc(),data&0xe0);*/
 }
 
 WRITE16_HANDLER( rshark_ctrl_w )

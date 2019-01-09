@@ -163,7 +163,7 @@ static WRITE32_HANDLER( control_w )
 
 	/* log any unknown bits */
 	if (data & 0x4f1fffff)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X: control_w = %08X & %08X\n", activecpu_get_previouspc(), data, ~mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X: control_w = %08X & %08X\n", activecpu_get_previouspc(), data, ~mem_mask);
 }
 
 

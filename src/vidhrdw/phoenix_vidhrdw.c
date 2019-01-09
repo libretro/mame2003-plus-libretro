@@ -267,7 +267,7 @@ WRITE_HANDLER( pleiads_videoreg_w )
 
 		tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Palette: %02X\n", (data & 0x06) >> 1);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Palette: %02X\n", (data & 0x06) >> 1);
 	}
 
 	pleiads_protection_question = data & 0xfc;
@@ -308,7 +308,7 @@ READ_HANDLER( pleiads_input_port_0_r )
 		ret	|= 0x08;
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown protection question %02X at %04X\n", pleiads_protection_question, activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown protection question %02X at %04X\n", pleiads_protection_question, activecpu_get_pc());
 	}
 
 	return ret;

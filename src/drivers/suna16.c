@@ -48,7 +48,7 @@ WRITE16_HANDLER( suna16_soundlatch_w )
 		if (Machine->sample_rate != 0)
 			soundlatch_w( 0, data & 0xff );
 	}
-	if (data & ~0xff)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X - Sound latch unknown bits: %04X\n", activecpu_get_pc(), data);
+	if (data & ~0xff)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X - Sound latch unknown bits: %04X\n", activecpu_get_pc(), data);
 }
 
 
@@ -62,7 +62,7 @@ WRITE16_HANDLER( bssoccer_leds_w )
 		set_led_status(3, data & 0x08);
 		coin_counter_w(0, data & 0x10);
 	}
-	if (data & ~0x1f)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X - Leds unknown bits: %04X\n", activecpu_get_pc(), data);
+	if (data & ~0x1f)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X - Leds unknown bits: %04X\n", activecpu_get_pc(), data);
 }
 
 
@@ -74,7 +74,7 @@ WRITE16_HANDLER( uballoon_leds_w )
 		set_led_status(0, data & 0x02);
 		set_led_status(1, data & 0x04);
 	}
-	if (data & ~0x07)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X - Leds unknown bits: %04X\n", activecpu_get_pc(), data);
+	if (data & ~0x07)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X - Leds unknown bits: %04X\n", activecpu_get_pc(), data);
 }
 
 
@@ -221,7 +221,7 @@ static WRITE_HANDLER( bssoccer_pcm_1_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU3);
 	int bank = data & 7;
-	if (bank & ~7)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#2 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
+	if (bank & ~7)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#2 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
 	cpu_setbank(1, &RAM[bank * 0x10000 + 0x1000]);
 }
 
@@ -229,7 +229,7 @@ static WRITE_HANDLER( bssoccer_pcm_2_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU4);
 	int bank = data & 7;
-	if (bank & ~7)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#3 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
+	if (bank & ~7)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#3 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
 	cpu_setbank(2, &RAM[bank * 0x10000 + 0x1000]);
 }
 
@@ -298,7 +298,7 @@ static WRITE_HANDLER( uballoon_pcm_1_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU3);
 	int bank = data & 1;
-	if (bank & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#2 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
+	if (bank & ~1)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#2 PC %06X - ROM bank unknown bits: %02X\n", activecpu_get_pc(), data);
 	cpu_setbank(1, &RAM[bank * 0x10000 + 0x400]);
 }
 

@@ -350,7 +350,7 @@ static INLINE void STORE_RESULT(offs_t addr, UINT8 data)
 
 static void illegal(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PIC16C5x:  PC=%03x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PIC16C5x:  PC=%03x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
 }
 
 

@@ -1,16 +1,24 @@
 LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
 
 INCFLAGS := \
-    -I$(CORE_DIR) \
-    -I$(CORE_DIR)/includes \
-    -I$(CORE_DIR)/cpu/m68000
+	-I. \
+	-I$(CORE_DIR) \
+	-I$(CORE_DIR)/includes \
+	-I$(CORE_DIR)/cpu/m68000 \
+	-I$(CORE_DIR)/mame2003 \
+	-I$(LIBRETRO_COMM_DIR)/include \
+	-I$(LIBRETRO_COMM_DIR)/zlib \
+	-I$(CORE_DIR)/lib/libFLAC/include \
 
-INCFLAGS += \
-    -I$(CORE_DIR)/mame2003 \
-    -I$(LIBRETRO_COMM_DIR)/include \
-    -I$(LIBRETRO_COMM_DIR)/zlib 
+ifneq (,$(findstring msvc200,$(platform)))
+INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
+endif
 
-ifneq (,$(findstring msvc2003,$(platform)))
+ifeq ($(system_platform), win)
+INCFLAGS += -DHAVE_FSEEKO
+endif
+
+ifneq (,$(findstring msvc200,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
 
@@ -20,10 +28,10 @@ SOURCES_C := \
 	$(CORE_DIR)/mame2003/mame2003.c \
 	$(CORE_DIR)/mame2003/video.c
 
-
 SOURCES_C += \
 	$(CORE_DIR)/artwork.c \
 	$(CORE_DIR)/bootstrap.c \
+	$(CORE_DIR)/cheat.c \
 	$(CORE_DIR)/common.c \
 	$(CORE_DIR)/config.c \
 	$(CORE_DIR)/controls.c \
@@ -32,6 +40,7 @@ SOURCES_C += \
 	$(CORE_DIR)/cpuintrf.c \
 	$(CORE_DIR)/datafile.c \
 	$(CORE_DIR)/drawgfx.c \
+	$(CORE_DIR)/driver.c \
 	$(CORE_DIR)/fileio.c \
 	$(CORE_DIR)/harddisk.c \
 	$(CORE_DIR)/hash.c \
@@ -203,7 +212,10 @@ SOUNDS+=POKEY@
 SOUNDS+=TIA@
 SOUNDS+=NES@
 SOUNDS+=ASTROCADE@
-SOUNDS+=NAMCO@
+#SOUNDS+=NAMCO@
+SOUNDS+=NAMCO_15XX@
+SOUNDS+=NAMCO_52XX@
+SOUNDS+=NAMCO_54XX@
 SOUNDS+=NAMCONA@
 SOUNDS+=TMS36XX@
 SOUNDS+=TMS5110@
@@ -287,17 +299,14 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/galaxian_vidhrdw.c $(CORE_DIR)/sndhrdw/galaxian_sndhrdw.c $(CORE_DIR)/drivers/galaxian.c \
 				 $(CORE_DIR)/vidhrdw/rallyx_vidhrdw.c $(CORE_DIR)/drivers/rallyx.c \
 				 $(CORE_DIR)/drivers/locomotn.c \
-				 $(CORE_DIR)/machine/bosco_machine.c $(CORE_DIR)/sndhrdw/bosco_sndhrdw.c $(CORE_DIR)/vidhrdw/bosco_vidhrdw.c $(CORE_DIR)/drivers/bosco.c \
-				 $(CORE_DIR)/machine/galaga_machine.c $(CORE_DIR)/vidhrdw/galaga_vidhrdw.c $(CORE_DIR)/drivers/galaga.c \
-				 $(CORE_DIR)/machine/digdug_machine.c $(CORE_DIR)/vidhrdw/digdug_vidhrdw.c $(CORE_DIR)/drivers/digdug.c \
-				 $(CORE_DIR)/vidhrdw/xevious_vidhrdw.c $(CORE_DIR)/machine/xevious_machine.c $(CORE_DIR)/drivers/xevious.c \
-				 $(CORE_DIR)/machine/superpac_machine.c $(CORE_DIR)/vidhrdw/superpac_vidhrdw.c $(CORE_DIR)/drivers/superpac.c \
-				 $(CORE_DIR)/machine/phozon_machine.c $(CORE_DIR)/vidhrdw/phozon_vidhrdw.c $(CORE_DIR)/drivers/phozon.c \
-				 $(CORE_DIR)/machine/mappy_machine.c $(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
-				 $(CORE_DIR)/machine/grobda_machine.c $(CORE_DIR)/vidhrdw/grobda_vidhrdw.c $(CORE_DIR)/drivers/grobda.c \
+				 $(CORE_DIR)/vidhrdw/bosco_vidhrdw.c  \
+				 $(CORE_DIR)/vidhrdw/galaga_vidhrdw.c $(CORE_DIR)/drivers/galaga.c \
+				 $(CORE_DIR)/vidhrdw/digdug_vidhrdw.c  \
+				 $(CORE_DIR)/vidhrdw/xevious_vidhrdw.c $(CORE_DIR)/machine/xevious_machine.c \
+				 $(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
 				 $(CORE_DIR)/machine/gaplus_machine.c $(CORE_DIR)/vidhrdw/gaplus_vidhrdw.c $(CORE_DIR)/drivers/gaplus.c \
-				 $(CORE_DIR)/machine/toypop_machine.c $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
-				 $(CORE_DIR)/machine/polepos_machine.c $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c $(CORE_DIR)/drivers/polepos.c \
+				 $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
+				 $(CORE_DIR)/drivers/polepos.c   $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c  \
 				 $(CORE_DIR)/vidhrdw/pacland_vidhrdw.c $(CORE_DIR)/drivers/pacland.c \
 				 $(CORE_DIR)/vidhrdw/skykid_vidhrdw.c $(CORE_DIR)/drivers/skykid.c \
 				 $(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c $(CORE_DIR)/drivers/baraduke.c \
@@ -1003,7 +1012,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/rabbit.c \
 				 $(CORE_DIR)/drivers/malzak.c $(CORE_DIR)/vidhrdw/malzak_vidhrdw.c \
 				 $(CORE_DIR)/drivers/supertnk.c \
-				 $(CORE_DIR)/drivers/crospang.c \
+				 $(CORE_DIR)/vidhrdw/crospang_vidhrdw.c $(CORE_DIR)/drivers/crospang.c \
 				 $(CORE_DIR)/drivers/funybubl.c \
 				 $(CORE_DIR)/drivers/dreamwld.c \
 				 $(CORE_DIR)/machine/seicop.c \
@@ -1020,7 +1029,9 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/suprridr_vidhrdw.c $(CORE_DIR)/drivers/suprridr.c \
 				 $(CORE_DIR)/drivers/vmetal.c \
 				 $(CORE_DIR)/drivers/deco156.c \
-				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c
+				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
+				 $(CORE_DIR)/machine/namcoio_machine.c
+
 
 
 # List of CPU core (and, for a debug build, disassembler) object files
@@ -1082,7 +1093,7 @@ endif
 endif
 
 ifeq ($(HAS_ADSP2100),1)
-SOURCES_C += $(CORE_DIR)/cpu/adsp2100/adsp2100.c 
+SOURCES_C += $(CORE_DIR)/cpu/adsp2100/adsp2100.c
 ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/adsp2100/2100dasm.c
 endif
@@ -2292,6 +2303,31 @@ else
 SOUNDDEFS += -DHAS_NAMCO=0
 endif
 
+SOUND=$(strip $(findstring NAMCO_15XX@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NAMCO_15XX=1
+SOURCES_C += $(CORE_DIR)/sound/namco.c
+else
+SOUNDDEFS += -DHAS_NAMCO_15XX=0
+endif
+
+SOUND=$(strip $(findstring NAMCO_52XX@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NAMCO_52XX=1
+SOURCES_C += $(CORE_DIR)/sound/namco52.c
+else
+SOUNDDEFS += -DHAS_NAMCO_52XX=0
+endif
+
+SOUND=$(strip $(findstring NAMCO_54XX@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NAMCO_54XX=1
+SOURCES_C += $(CORE_DIR)/sound/namco54.c
+else
+SOUNDDEFS += -DHAS_NAMCO_54XX=0
+endif
+
+
 SOUND=$(strip $(findstring NAMCONA@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_NAMCONA=1
@@ -2612,6 +2648,23 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/formats/libchdr/chd.c \
 	$(LIBRETRO_COMM_DIR)/formats/libchdr/libchdr_sha1.c \
 	$(LIBRETRO_COMM_DIR)/utils/sha1.c
+
+SOURCES_C += \
+	$(CORE_DIR)/lib/libFLAC/bitmath.c \
+	$(CORE_DIR)/lib/libFLAC/bitreader.c \
+	$(CORE_DIR)/lib/libFLAC/bitwriter.c \
+	$(CORE_DIR)/lib/libFLAC/cpu.c \
+	$(CORE_DIR)/lib/libFLAC/crc.c \
+	$(CORE_DIR)/lib/libFLAC/fixed.c \
+	$(CORE_DIR)/lib/libFLAC/float.c \
+	$(CORE_DIR)/lib/libFLAC/format.c \
+	$(CORE_DIR)/lib/libFLAC/lpc.c \
+	$(CORE_DIR)/lib/libFLAC/md5.c \
+	$(CORE_DIR)/lib/libFLAC/memory.c \
+	$(CORE_DIR)/lib/libFLAC/stream_decoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder_framing.c \
+	$(CORE_DIR)/lib/libFLAC/window.c
 
 ifeq ($(STATIC_LINKING),1)
 else

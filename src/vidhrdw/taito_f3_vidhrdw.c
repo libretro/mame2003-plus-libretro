@@ -465,7 +465,7 @@ static INLINE void get_tile_info(int tile_index, data32_t *gfx_base)
 	UINT8 abtype=(tile>>(16+9))&0x1f;
 
 #if DEBUG_F3
-/*if((tile&0xffff)>Machine->gfx[1]->total_elements) log_cb(RETRO_LOG_ERROR, LOGPRE "tile code:%04x\n",tile&0xffff);*/
+/*if((tile&0xffff)>Machine->gfx[1]->total_elements) log_cb(RETRO_LOG_DEBUG, LOGPRE "tile code:%04x\n",tile&0xffff);*/
 	if(deb_tileflag)
 	{
 		int c=tile&0xffff;
@@ -871,11 +871,11 @@ WRITE32_HANDLER( f3_lineram_w )
 
 /*	if (offset>=0x6000/4 && offset<0x7000/4)*/
 /*	if (offset==0x18c0)*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 /*	if (offset>=0xa000/4 && offset<0xb000/4)*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 /*	if (offset>=0xb000/4 && offset<0xc000/4)*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 
 }
 

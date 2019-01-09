@@ -506,16 +506,16 @@ WRITE16_HANDLER( hd68k_wr0_write )
 
 WRITE16_HANDLER( hd68k_wr1_write )
 {
-	if (offset == 0) { /*	log_cb(RETRO_LOG_ERROR, LOGPRE "Shifter Interface Latch = %02X\n", data);*/
-	} else { 				log_cb(RETRO_LOG_ERROR, LOGPRE "/WR1(%04X)=%02X\n", offset, data);
+	if (offset == 0) { /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Shifter Interface Latch = %02X\n", data);*/
+	} else { 				log_cb(RETRO_LOG_DEBUG, LOGPRE "/WR1(%04X)=%02X\n", offset, data);
 	}
 }
 
 
 WRITE16_HANDLER( hd68k_wr2_write )
 {
-	if (offset == 0) { /*	log_cb(RETRO_LOG_ERROR, LOGPRE "Steering Wheel Latch = %02X\n", data);*/
-	} else { 				log_cb(RETRO_LOG_ERROR, LOGPRE "/WR2(%04X)=%02X\n", offset, data);
+	if (offset == 0) { /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Steering Wheel Latch = %02X\n", data);*/
+	} else { 				log_cb(RETRO_LOG_DEBUG, LOGPRE "/WR2(%04X)=%02X\n", offset, data);
 	}
 }
 
@@ -544,12 +544,12 @@ WRITE16_HANDLER( hd68k_nwr_w )
 			m68k_zp2 = data;
 			break;
 		case 6:	/* /GSPRES */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Write to /GSPRES(%d)\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Write to /GSPRES(%d)\n", data);
 			if (hdcpu_gsp != -1)
 				cpu_set_reset_line(hdcpu_gsp, data ? CLEAR_LINE : ASSERT_LINE);
 			break;
 		case 7:	/* /MSPRES */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Write to /MSPRES(%d)\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Write to /MSPRES(%d)\n", data);
 			if (hdcpu_msp != -1)
 				cpu_set_reset_line(hdcpu_msp, data ? CLEAR_LINE : ASSERT_LINE);
 			break;
@@ -621,17 +621,17 @@ static INLINE double duart_clock_period(void)
 {
 	int mode = (duart_write_data[0x04] >> 4) & 7;
 	if (mode != 3)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "DUART: unsupported clock mode %d\n", mode);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART: unsupported clock mode %d\n", mode);
 	return DUART_CLOCK * 16.0;
 }
 
 
 static void duart_callback(int param)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "DUART timer fired\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART timer fired\n");
 	if (duart_write_data[0x05] & 0x08)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "DUART interrupt generated\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART interrupt generated\n");
 		duart_read_data[0x05] |= 0x08;
 		duart_irq_state = (duart_read_data[0x05] & duart_write_data[0x05]) != 0;
 		atarigen_update_interrupts();
@@ -664,7 +664,7 @@ READ16_HANDLER( hd68k_duart_r )
 		{
 			int reps = (duart_write_data[0x06] << 8) | duart_write_data[0x07];
 			timer_adjust(duart_timer, duart_clock_period() * (double)reps, 0, 0);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "DUART timer started (period=%f)\n", duart_clock_period() * (double)reps);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART timer started (period=%f)\n", duart_clock_period() * (double)reps);
 			return 0x00ff;
 		}
 		case 0x0f:		/* Stop-Counter Command 3 */
@@ -673,7 +673,7 @@ READ16_HANDLER( hd68k_duart_r )
 				timer_adjust(duart_timer, TIME_NEVER, 0, 0);
 				duart_read_data[0x06] = reps >> 8;
 				duart_read_data[0x07] = reps & 0xff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "DUART timer stopped (final count=%04X)\n", reps);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART timer stopped (final count=%04X)\n", reps);
 			}
 			duart_read_data[0x05] &= ~0x08;
 			duart_irq_state = (duart_read_data[0x05] & duart_write_data[0x05]) != 0;
@@ -715,10 +715,10 @@ WRITE16_HANDLER( hd68k_duart_w )
 				duart_output_port &= ~newdata;
 				break;
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "DUART write %02X @ %02X\n", (data >> 8) & 0xff, offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "DUART write %02X @ %02X\n", (data >> 8) & 0xff, offset);
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DUART write %02X @ %02X\n", data, offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DUART write %02X @ %02X\n", data, offset);
 }
 
 
@@ -878,12 +878,12 @@ WRITE16_HANDLER( hd68k_adsp_data_w )
 	/* any write to $1FFF is taken to be a trigger; synchronize the CPUs */
 	if (offset == 0x1fff)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:ADSP sync address written (%04X)\n", activecpu_get_previouspc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:ADSP sync address written (%04X)\n", activecpu_get_previouspc(), data);
 		timer_set(TIME_NOW, 0, 0);
 		cpu_triggerint(hdcpu_adsp);
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:ADSP W@%04X (%04X)\n", activecpu_get_previouspc(), offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:ADSP W@%04X (%04X)\n", activecpu_get_previouspc(), offset, data);
 }
 
 
@@ -896,7 +896,7 @@ WRITE16_HANDLER( hd68k_adsp_data_w )
 
 READ16_HANDLER( hd68k_adsp_buffer_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "hd68k_adsp_buffer_r(%04X)\n", offset);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "hd68k_adsp_buffer_r(%04X)\n", offset);*/
 	return som_memory[m68k_adsp_buffer_bank * 0x2000 + offset];
 }
 
@@ -962,7 +962,7 @@ static void deferred_adsp_bank_switch(int data)
 	}
 #endif
 	m68k_adsp_buffer_bank = data;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP bank = %d\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP bank = %d\n", data);
 }
 
 
@@ -981,7 +981,7 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 			break;
 
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP bank = %d (deferred)\n", val);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP bank = %d (deferred)\n", val);
 			timer_set(TIME_NOW, val, deferred_adsp_bank_switch);
 			break;
 
@@ -989,7 +989,7 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 			/* connected to the /BR (bus request) line; this effectively halts */
 			/* the ADSP at the next instruction boundary */
 			adsp_br = !val;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP /BR = %d\n", !adsp_br);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP /BR = %d\n", !adsp_br);
 			if (adsp_br || adsp_halt)
 				cpu_set_halt_line(hdcpu_adsp, ASSERT_LINE);
 			else
@@ -1006,7 +1006,7 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 			/* connected to the /HALT line; this effectively halts */
 			/* the ADSP at the next instruction boundary */
 			adsp_halt = !val;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP /HALT = %d\n", !adsp_halt);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP /HALT = %d\n", !adsp_halt);
 			if (adsp_br || adsp_halt)
 				cpu_set_halt_line(hdcpu_adsp, ASSERT_LINE);
 			else
@@ -1020,13 +1020,13 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 			break;
 
 		case 7:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP reset = %d\n", val);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP reset = %d\n", val);
 			cpu_set_reset_line(hdcpu_adsp, val ? CLEAR_LINE : ASSERT_LINE);
 			cpu_yield();
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP control %02X = %04X\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP control %02X = %04X\n", offset, data);
 			break;
 	}
 }
@@ -1034,7 +1034,7 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 
 WRITE16_HANDLER( hd68k_adsp_irq_clear_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:68k clears ADSP interrupt\n", activecpu_get_previouspc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:68k clears ADSP interrupt\n", activecpu_get_previouspc());
 	adsp_irq_state = 0;
 	atarigen_update_interrupts();
 }
@@ -1045,7 +1045,7 @@ READ16_HANDLER( hd68k_adsp_irq_state_r )
 	int result = 0xfffd;
 	if (adsp_xflag) result ^= 2;
 	if (adsp_irq_state) result ^= 1;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:68k reads ADSP interrupt state = %04x\n", activecpu_get_previouspc(), result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:68k reads ADSP interrupt state = %04x\n", activecpu_get_previouspc(), result);
 	return result;
 }
 
@@ -1077,7 +1077,7 @@ READ16_HANDLER( hdadsp_special_r )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:hdadsp_special_r(%04X)\n", activecpu_get_previouspc(), offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:hdadsp_special_r(%04X)\n", activecpu_get_previouspc(), offset);
 			break;
 	}
 	return 0;
@@ -1105,7 +1105,7 @@ WRITE16_HANDLER( hdadsp_special_w )
 			break;
 
 		case 6:	/* /GINT */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:ADSP signals interrupt\n", activecpu_get_previouspc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:ADSP signals interrupt\n", activecpu_get_previouspc());
 			adsp_irq_state = 1;
 			atarigen_update_interrupts();
 			break;
@@ -1115,7 +1115,7 @@ WRITE16_HANDLER( hdadsp_special_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:hdadsp_special_w(%04X)=%04X\n", activecpu_get_previouspc(), offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:hdadsp_special_w(%04X)=%04X\n", activecpu_get_previouspc(), offset, data);
 			break;
 	}
 }
@@ -1186,7 +1186,7 @@ WRITE16_HANDLER( hd68k_ds3_control_w )
 			}
 			ds3_reset = val;
 			cpu_yield();
-			log_cb(RETRO_LOG_ERROR, LOGPRE "DS III reset = %d\n", val);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "DS III reset = %d\n", val);
 			break;
 
 		case 7:
@@ -1194,7 +1194,7 @@ WRITE16_HANDLER( hd68k_ds3_control_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "DS III control %02X = %04X\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "DS III control %02X = %04X\n", offset, data);
 			break;
 	}
 }
@@ -1225,7 +1225,7 @@ READ16_HANDLER( hd68k_ds3_gdata_r )
 	ds3_gflag = 0;
 	update_ds3_irq();
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:hd68k_ds3_gdata_r(%04X)\n", activecpu_get_previouspc(), ds3_gdata);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:hd68k_ds3_gdata_r(%04X)\n", activecpu_get_previouspc(), ds3_gdata);
 
 	/* attempt to optimize the transfer if conditions are right */
 	if (cpu_getactivecpu() == 0 && pc == hdds3_transfer_pc &&
@@ -1238,7 +1238,7 @@ READ16_HANDLER( hd68k_ds3_gdata_r )
 		data16_t l6 = cpunum_get_reg(hdcpu_adsp, ADSP2100_L6) - 1;
 		data16_t m7 = cpunum_get_reg(hdcpu_adsp, ADSP2100_M7);
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:optimizing 68k transfer, %d words\n", activecpu_get_previouspc(), count68k);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:optimizing 68k transfer, %d words\n", activecpu_get_previouspc(), count68k);
 
 		while (count68k > 0 && adsp_data_memory[0x16e6] > 0)
 		{
@@ -1267,7 +1267,7 @@ READ16_HANDLER( hd68k_ds3_gdata_r )
 
 WRITE16_HANDLER( hd68k_ds3_gdata_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:hd68k_ds3_gdata_w(%04X)\n", activecpu_get_previouspc(), ds3_gdata);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:hd68k_ds3_gdata_w(%04X)\n", activecpu_get_previouspc(), ds3_gdata);
 
 	COMBINE_DATA(&ds3_g68data);
 	ds3_g68flag = 1;
@@ -1326,7 +1326,7 @@ READ16_HANDLER( hdds3_special_r )
 			return result;
 
 		case 6:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADSP r @ %04x\n", ds3_sim_address);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADSP r @ %04x\n", ds3_sim_address);
 			if (ds3_sim_address < sim_memory_size)
 				return sim_memory[ds3_sim_address];
 			else
@@ -1344,7 +1344,7 @@ WRITE16_HANDLER( hdds3_special_w )
 	switch (offset & 7)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:ADSP sets gdata to %04X\n", activecpu_get_previouspc(), data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:ADSP sets gdata to %04X\n", activecpu_get_previouspc(), data);
 			ds3_gdata = data;
 			ds3_gflag = 1;
 			update_ds3_irq();
@@ -1354,7 +1354,7 @@ WRITE16_HANDLER( hdds3_special_w )
 			break;
 
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:ADSP sets interrupt = %d\n", activecpu_get_previouspc(), (data >> 1) & 1);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:ADSP sets interrupt = %d\n", activecpu_get_previouspc(), (data >> 1) & 1);
 			adsp_irq_state = (data >> 1) & 1;
 			hd68k_update_interrupts();
 			break;
@@ -1382,7 +1382,7 @@ WRITE16_HANDLER( hdds3_special_w )
 
 READ16_HANDLER( hdds3_control_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "adsp2101 control r @ %04X\n", 0x3fe0 + offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "adsp2101 control r @ %04X\n", 0x3fe0 + offset);
 	return 0;
 }
 
@@ -1390,7 +1390,7 @@ READ16_HANDLER( hdds3_control_r )
 WRITE16_HANDLER( hdds3_control_w )
 {
 	if (offset != 0x1e && offset != 0x1f)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "adsp2101 control w @ %04X = %04X\n", 0x3fe0 + offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "adsp2101 control w @ %04X = %04X\n", 0x3fe0 + offset, data);
 }
 
 
@@ -1484,7 +1484,7 @@ WRITE16_HANDLER( hd68k_dsk_control_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "hd68k_dsk_control_w(%d) = %d\n", offset & 7, val);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "hd68k_dsk_control_w(%d) = %d\n", offset & 7, val);
 			break;
 	}
 }
@@ -1624,7 +1624,7 @@ WRITE16_HANDLER( hddspcom_control_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "hddspcom_control_w(%d) = %d\n", offset & 7, val);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "hddspcom_control_w(%d) = %d\n", offset & 7, val);
 			break;
 	}
 }

@@ -278,12 +278,12 @@ READ_HANDLER( gottlieb_laserdisc_status_r )
 	{
 		case 0:
 			tmp = current_frame % 100;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "LSB frame read: %d\n",tmp);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "LSB frame read: %d\n",tmp);
 			return ((tmp / 10) << 4) | (tmp % 10);
 			break;
 		case 1:
 			tmp = (current_frame / 100) % 100;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "MSB frame read: %d\n",tmp);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "MSB frame read: %d\n",tmp);
 			return ((tmp / 10) << 4) | (tmp % 10);
 			break;
 		case 2:
@@ -299,10 +299,10 @@ READ_HANDLER( gottlieb_laserdisc_status_r )
 				if (skipfirstbyte) audioptr++;
 				skipfirstbyte = 0;
 				if (audiobuffer_region) {
-					log_cb(RETRO_LOG_ERROR, LOGPRE "audio bufread: %02x\n",audiobuffer_region[audioptr]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "audio bufread: %02x\n",audiobuffer_region[audioptr]);
 					return audiobuffer_region[audioptr++];
 				} else {
-					log_cb(RETRO_LOG_ERROR, LOGPRE "audiobuffer is null !!");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "audiobuffer is null !!");
 					return 0xFF; /* don't know what to do in this case ;-) */
 				}
 			}
@@ -331,7 +331,7 @@ WRITE_HANDLER( gottlieb_laserdisc_command_w )
 
 	if ((data & 0xe0) != 0x20)
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "error: laserdisc command %02x\n",data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "error: laserdisc command %02x\n",data);
 		return;
 	}
 
@@ -341,7 +341,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "error: laserdisc command %02x\n",data);
 			((data & 0x02) << 2) |
 			((data & 0x01) << 4);
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "laserdisc command %02x -> %02x\n",data,cmd);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "laserdisc command %02x -> %02x\n",data,cmd);
 	if (lastcmd == 0x0b && (cmd & 0x10))	/* seek frame # */
 	{
 		current_frame = current_frame * 10 + (cmd & 0x0f);
@@ -387,7 +387,7 @@ INTERRUPT_GEN( gottlieb_interrupt )
 		if (odd_field)		/* the manual says the video frame number is only present in the odd field) */
 		{
 			current_frame++;
-log_cb(RETRO_LOG_ERROR, LOGPRE "current frame : %d\n",current_frame);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "current frame : %d\n",current_frame);
 
 			if (current_frame%53==0)
 			{
@@ -1940,19 +1940,19 @@ static DRIVER_INIT( gottlieb )
 }
 
 
-GAME( 1982, reactor,  0,     reactor,  reactor,  0,        ROT0,   "Gottlieb", "Reactor" )
-GAME( 1982, qbert,    0,     qbert,    qbert,    0,        ROT270, "Gottlieb", "Q-bert (US)" )
-GAME( 1982, qbertjp,  qbert, qbert,    qbert,    0,        ROT270, "Gottlieb (Konami license)", "Q-bert (Japan)" )
-GAME( 1982, myqbert,  qbert, qbert,    qbert,    0,        ROT270, "Gottlieb", "Mello Yello Q-bert" )
-GAME( 1982, qberttst, qbert, qbert,    qbert,    0,        ROT270, "Gottlieb", "Q-bert (early test version)" )
-GAME( 1982, insector, 0,     gottlieb, insector, 0,        ROT0,   "Gottlieb", "Insector (prototype)" )
-GAME( 1983, mplanets, 0,     gottlieb, mplanets, 0,        ROT270, "Gottlieb", "Mad Planets" )
-GAME( 1983, mplanuk,  mplanets, gottlieb, mplanets, 0,        ROT270, "Gottlieb (Taitel license)", "Mad Planets (UK)" )
-GAME( 1983, krull,    0,     krull,    krull,    0,        ROT270, "Gottlieb", "Krull" )
-GAME( 1983, sqbert,   0,     qbert,    qbert,    0,        ROT270, "Mylstar", "Faster, Harder, More Challenging Q-bert (prototype)" )
-GAMEX(1983, mach3,    0,     mach3,    mach3,    gottlieb, ROT0,   "Mylstar", "M.A.C.H. 3", GAME_IMPERFECT_GRAPHICS )
-GAME( 1983, qbertqub, 0,     qbert,    qbertqub, 0,        ROT270, "Mylstar", "Q-bert's Qubes" )
-GAME( 1983, screwloo, 0,     gottlieb2,screwloo, gottlieb, ROT0,   "Mylstar", "Screw Loose (prototype)" )
-GAME( 1984, curvebal, 0,     gottlieb, curvebal, 0,        ROT270, "Mylstar", "Curve Ball" )
-GAMEX(1984, usvsthem, 0,     usvsthem, usvsthem, gottlieb, ROT0,   "Mylstar", "Us vs. Them", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1984, 3stooges, 0,     stooges,  3stooges, gottlieb, ROT0,   "Mylstar", "The Three Stooges In Brides Is Brides", GAME_IMPERFECT_SOUND )
+GAME( 1982, reactor,  0,        reactor,  reactor,  0,        ROT0,   "Gottlieb",                   "Reactor" )
+GAMEC(1982, qbert,    0,        qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Q*bert (US set 1)",            &qbert_ctrl, NULL )
+GAMEC(1982, qbertjp,  qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb (Konami license)",  "Q*bert (Japan)",               &qbert_ctrl, NULL )
+GAMEC(1982, myqbert,  qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Mello Yello Q*bert",           &qbert_ctrl, NULL )
+GAMEC(1982, qberttst, qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Q*bert (early test version)",  &qbert_ctrl, NULL )
+GAME( 1982, insector, 0,        gottlieb, insector, 0,        ROT0,   "Gottlieb",                   "Insector (prototype)" )
+GAME( 1983, mplanets, 0,        gottlieb, mplanets, 0,        ROT270, "Gottlieb",                   "Mad Planets" )
+GAME( 1983, mplanuk,  mplanets, gottlieb, mplanets, 0,        ROT270, "Gottlieb (Taitel license)",  "Mad Planets (UK)" )
+GAME( 1983, krull,    0,        krull,    krull,    0,        ROT270, "Gottlieb",                   "Krull" )
+GAMEC(1983, sqbert,   0,        qbert,    qbert,    0,        ROT270, "Mylstar",                    "Faster, Harder, More Challenging Q*bert (prototype)", &qbert_ctrl, NULL )
+GAMEX(1983, mach3,    0,        mach3,    mach3,    gottlieb, ROT0,   "Mylstar",                    "M.A.C.H. 3", GAME_IMPERFECT_GRAPHICS )
+GAMEC(1983, qbertqub, 0,        qbert,    qbertqub, 0,        ROT270, "Mylstar",                    "Q*bert's Qubes",               &qbert_ctrl, NULL )
+GAME( 1983, screwloo, 0,        gottlieb2,screwloo, gottlieb, ROT0,   "Mylstar",                    "Screw Loose (prototype)" )
+GAME( 1984, curvebal, 0,        gottlieb, curvebal, 0,        ROT270, "Mylstar",                    "Curve Ball" )
+GAMEX(1984, usvsthem, 0,        usvsthem, usvsthem, gottlieb, ROT0,   "Mylstar",                    "Us vs. Them", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1984, 3stooges, 0,        stooges,  3stooges, gottlieb, ROT0,   "Mylstar",                    "The Three Stooges In Brides Is Brides", GAME_IMPERFECT_SOUND )

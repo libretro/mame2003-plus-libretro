@@ -8,7 +8,18 @@
 #include "vidhrdw/generic.h"
 #include "deco16ic.h"
 
+static data16_t * rohga_spriteram;
+
 /******************************************************************************/
+
+WRITE16_HANDLER( rohga_buffer_spriteram16_w )
+{
+	/* Spriteram seems to be triple buffered (no sprite lag on real pcb, but there
+	is on driver with only double buffering) */
+	memcpy(rohga_spriteram, buffered_spriteram16, 0x800);
+	memcpy(buffered_spriteram16, spriteram16, 0x800);
+}
+
 
 static int wizdfire_bank_callback(const int bank)
 {
@@ -17,7 +28,9 @@ static int wizdfire_bank_callback(const int bank)
 
 VIDEO_START( rohga )
 {
-	if (deco16_2_video_init(0))
+	rohga_spriteram = (data16_t*)auto_malloc(0x800);
+
+	if (!rohga_spriteram || deco16_2_video_init(0))
 		return 1;
 
 	deco16_set_tilemap_bank_callback(0,wizdfire_bank_callback);
@@ -27,6 +40,7 @@ VIDEO_START( rohga )
 
 	return 0;
 }
+
 
 VIDEO_START( wizdfire )
 {
@@ -67,7 +81,7 @@ VIDEO_START( nitrobal )
 
 /******************************************************************************/
 
-static void rohga_drawsprites(struct mame_bitmap *bitmap, const data16_t *spriteptr)
+static void rohga_drawsprites(struct mame_bitmap *bitmap, const UINT16 *spriteptr, int is_schmeisr)
 {
 	int offs;
 
@@ -80,17 +94,28 @@ static void rohga_drawsprites(struct mame_bitmap *bitmap, const data16_t *sprite
 		x = spriteptr[offs+2];
 
 		/* Sprite/playfield priority */
-		switch (x&0xc000) {
+		switch (x&0x6000) {
 		case 0x0000: pri=0; break;
 		case 0x4000: pri=0xf0; break;
-		case 0x8000: pri=0xf0|0xcc; break;
-		case 0xc000: pri=0xf0|0xcc; break; /* Perhaps 0xf0|0xcc|0xaa (Sprite under bottom layer) */
+		case 0x6000: pri=0xf0|0xcc; break;
+		case 0x2000: pri=0;/*0xf0|0xcc; break; */ /* Perhaps 0xf0|0xcc|0xaa (Sprite under bottom layer) */
 		}
-/*todo - test above..*/
+
 		y = spriteptr[offs];
 		flash=y&0x1000;
 		if (flash && (cpu_getcurrentframe() & 1)) continue;
-		colour = (x >> 9) &0xf;
+
+		/* Sprite colour is different between Rohga (6bpp) and Schmeisr (4bpp plus wire mods on pcb) */
+		if (is_schmeisr)
+		{
+			colour = ((x >> 9) &0xf)<<2;
+			if (x&0x8000)
+				colour++;
+		}
+		else
+		{
+			colour = (x >> 9) &0xf;
+		}
 
 		fx = y & 0x2000;
 		fy = y & 0x4000;
@@ -132,6 +157,7 @@ static void rohga_drawsprites(struct mame_bitmap *bitmap, const data16_t *sprite
 		}
 	}
 }
+
 
 static void wizdfire_drawsprites(struct mame_bitmap *bitmap, data16_t *spriteptr, int mode, int bank)
 {
@@ -291,13 +317,13 @@ Sprites 2:
 
 		colour = (spriteptr[offs+2] >>0) & 0x1f;
 
-		/* PRIORITIES - TODO*/
+		/* PRIORITIES - TODO */
 		if (gfxbank==3) {
 			/* Sprite chip 1 */
 			switch (spriteptr[offs+2]&0xe0) {
-/*			case 0xc0: colour=rand()%0xff; tilemap_pri=256; break; //todo*/
-			case 0xc0: tilemap_pri=8; break; /*? under other sprites*/
-			case 0x80: tilemap_pri=32; break; /*? under other sprites*/
+/*			case 0xc0: colour=rand()%0xff; tilemap_pri=256; break; todo */
+			case 0xc0: tilemap_pri=8; break; /* under other sprites ? */
+			case 0x80: tilemap_pri=32; break; /* under other sprites ? */
 			case 0x20: tilemap_pri=32; break; /* Over pf2 and under other sprite chip */
 			case 0x40: tilemap_pri=8; break; /* Under pf2 and under other sprite chip */
 			case 0xa0: tilemap_pri=32; break;
@@ -360,9 +386,9 @@ sprite 2:
 			/* Sprite chip 2 (with alpha blending) */
 
 			/* Sprite above playfield 2, but still below other sprite chip */
-/*			if (spriteptr[offs+2]&0x80)*/
+/*			if (spriteptr[offs+2]&0x80) */
 				tilemap_pri=64; 
-/*			else*/
+/*			else */
 /*				tilemap_pri=8; */
 
 			if (deco16_priority)
@@ -422,28 +448,59 @@ sprite 2:
 
 /******************************************************************************/
 
-VIDEO_UPDATE( rohga )
+static void update_rohga(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int is_schmeisr)
 {
 	/* Update playfields */
-/*	flip_screen_set( deco16_pf12_control[0]&0x80 );*/
+	flip_screen_set( deco16_pf12_control[0]&0x80 );
 	deco16_pf12_update(deco16_pf1_rowscroll,deco16_pf2_rowscroll);
 	deco16_pf34_update(deco16_pf3_rowscroll,deco16_pf4_rowscroll);
 
 	/* Draw playfields */
 	fillbitmap(priority_bitmap,0,cliprect);
-	fillbitmap(bitmap,Machine->pens[512],cliprect);
+	fillbitmap(bitmap,Machine->pens[768],cliprect);
 
-	if (!keyboard_pressed(KEYCODE_Z))
-	deco16_tilemap_4_draw(bitmap,cliprect,TILEMAP_IGNORE_TRANSPARENCY,1);
-	if (!keyboard_pressed(KEYCODE_X))
-	deco16_tilemap_3_draw(bitmap,cliprect,0,2);
-	if (!keyboard_pressed(KEYCODE_C))
-	deco16_tilemap_2_draw(bitmap,cliprect,0,4);
+	switch (deco16_priority&3)
+	{
+	case 0:
+		if (deco16_priority&4)
+		{
+			/* Draw as 1 8BPP layer */
+			deco16_tilemap_34_combine_draw(bitmap,cliprect,TILEMAP_IGNORE_TRANSPARENCY,3);
+		}
+		else
+		{
+			/* Draw as 2 4BPP layers */
+			deco16_tilemap_4_draw(bitmap,cliprect,TILEMAP_IGNORE_TRANSPARENCY,1);
+			deco16_tilemap_3_draw(bitmap,cliprect,0,2);
+		}
+		deco16_tilemap_2_draw(bitmap,cliprect,0,4);
+		break;
+	case 1:
+		deco16_tilemap_4_draw(bitmap,cliprect,TILEMAP_IGNORE_TRANSPARENCY,1);
+		deco16_tilemap_2_draw(bitmap,cliprect,0,2);
+		deco16_tilemap_3_draw(bitmap,cliprect,0,4);
+		break;
+	case 2:
+		deco16_tilemap_2_draw(bitmap,cliprect,TILEMAP_IGNORE_TRANSPARENCY,1);
+		deco16_tilemap_4_draw(bitmap,cliprect,0,2);
+		deco16_tilemap_3_draw(bitmap,cliprect,0,4);
+		break;
+	}
 
-	rohga_drawsprites(bitmap,spriteram16);
+	rohga_drawsprites(bitmap,rohga_spriteram,is_schmeisr);
 	deco16_tilemap_1_draw(bitmap,cliprect,0,0);
+}
 
-/*	deco16_print_debug_info();*/
+VIDEO_UPDATE( rohga )
+{
+	update_rohga(bitmap, cliprect, 0);
+}
+
+VIDEO_UPDATE( hangzo )
+{
+	/* The Schmeisr pcb has wire mods which seem to remap sprite palette indices.
+	 Otherwise video update is the same as Rohga. */
+	update_rohga(bitmap, cliprect, 1);
 }
 
 VIDEO_UPDATE( wizdfire )

@@ -203,7 +203,7 @@ UINT32 cdb_find_track(UINT32 fad){
 	if(fad && CD_toc.leadout.fad > fad)
 		return(CD_toc.last.num);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: no track for the poor fad %x\n", fad);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: no track for the poor fad %x\n", fad);
 	exit(1);
 
 	return((INT32)-1);
@@ -245,19 +245,19 @@ UINT32 cdb_find_track(UINT32 fad){
 
 		if(f->mode & CDB_FILTMODE_COD){
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: cod check required\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: cod check required\n");
 			exit(1);
 		}
 
 		if(f->mode & CDB_FILTMODE_SUB){
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: sub check required\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: sub check required\n");
 			exit(1);
 		}
 
 		if(f->mode & CDB_FILTMODE_CHAN){
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: chan check required\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: chan check required\n");
 			exit(1);
 		}
 
@@ -309,7 +309,7 @@ UINT32 cdb_make_room(UINT32 pn){
 
 	/* should never happen, BFUL prevents it*/
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: cdb_make_room found no free sector\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: cdb_make_room found no free sector\n");
 	exit(1);
 }
 
@@ -344,7 +344,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 	static char buff[2352];
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "mode = %i fad = %i ", mode, fad);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "mode = %i fad = %i ", mode, fad);
 
 	if(iso_type == 0){
 
@@ -355,11 +355,11 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 		tn = iso_find_track(fad);
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "track = %i ", tn);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "track = %i ", tn);
 
 		f = fopen(iso_track[tn-1].path, "rb");
 		if(f == NULL){
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: couldn't open %s\n", iso_track[tn-1].path);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: couldn't open %s\n", iso_track[tn-1].path);
 			exit(1);
 		}
 
@@ -368,7 +368,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 		fseek(f, (fad - iso_track[tn-1].fad) * 2048, SEEK_SET); /* 2352*/
 		if(fread(buff, 1, 2352, f) != 2352){
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: couldn't read from iso (fad = %06x)\n", fad);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: couldn't read from iso (fad = %06x)\n", fad);
 			exit(1);
 		}
 
@@ -378,7 +378,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 			/* if CDDA or FORM 2 CDROM*/
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE " [2352] : %i\n", (fad - 150) * 2352);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " [2352] : %i\n", (fad - 150) * 2352);
 
 			if(mode == 0)
 				memcpy(dst, &buff[16], 2048);
@@ -391,7 +391,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 			/* CDROM*/
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE " [2048] : %i\n", (fad - 150) * 2048);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " [2048] : %i\n", (fad - 150) * 2048);
 
 			if(mode == 0)
 				memcpy(dst, buff, 2048);
@@ -455,7 +455,7 @@ UINT32 iso_get_status(void){
 
 static void iso_build_disc_bin(void){
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "loading BIN: %s\n", config.cdrom_image);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "loading BIN: %s\n", config.cdrom_image);*/
 	exit(1);
 }
 
@@ -498,7 +498,7 @@ static void iso_build_disc_iso(void){
 			f = fopen(t, "rb");
 			if(f != NULL){
 
-				log_cb(RETRO_LOG_ERROR, LOGPRE "found track : %s\n", t);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "found track : %s\n", t);
 
 				if(iso_track_first > i) iso_track_first = i;
 				if(iso_track_last  < i) iso_track_last  = i;
@@ -513,15 +513,15 @@ static void iso_build_disc_iso(void){
 					if(i == 1){
 /*
 						// first track
-						log_cb(RETRO_LOG_ERROR, LOGPRE "1, lunghezza %d, iso buff contiene %s\n",fsize(f),iso_buff);
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "1, lunghezza %d, iso buff contiene %s\n",fsize(f),iso_buff);
 						fseek(f, 0, SEEK_SET);
 						int pp=fread(iso_buff, 1, 0x110, f);
 						fseek(f, 0, SEEK_SET);
-						log_cb(RETRO_LOG_ERROR, LOGPRE "2\n");
-						log_cb(RETRO_LOG_ERROR, LOGPRE "%d\t%s\n",pp,iso_buff);
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "2\n");
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "%d\t%s\n",pp,iso_buff);
 
 						if(strncmp(&iso_buff[0x00], "SEGA SEGASATURN ", 16)){
-							log_cb(RETRO_LOG_ERROR, LOGPRE "2b\n");
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "2b\n");
 							// ISO 2048-bytes data track
 
 							//setup_game_info(&iso_buff[0x00]);
@@ -539,10 +539,10 @@ static void iso_build_disc_iso(void){
 
 						}else{
 
-							log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: unknown track %i format (file: %s)\n", i, t);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: unknown track %i format (file: %s)\n", i, t);
 							exit(1);
 						}
-						log_cb(RETRO_LOG_ERROR, LOGPRE "3\n");
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "3\n");
 						memset(iso_buff, 0x00, 0x110);
 
 						iso_track[i-1].type = 0; // 2048-bytes
@@ -699,7 +699,7 @@ void cdb_build_toc(void){
 	for(i = CD_toc.first.num-1; i <= CD_toc.last.num-1; i++){
 
 		if(iso_get_track_info(i+1, &ctrl, &idx, &fad)){
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: error on cdb_build_toc, iso_get_track_info tn=%i\n", i+1);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: error on cdb_build_toc, iso_get_track_info tn=%i\n", i+1);
 			exit(1);
 		}
 
@@ -766,9 +766,9 @@ void cdb_build_toc(void){
 	logerror("leadout:  %02i:%02i:%02i (addr: %i)\n",
 	CD_toc.leadout.min, CD_toc.leadout.sec, CD_toc.leadout.fra, CD_toc.leadout.fad);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\n\nTOC DUMP\n\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\n\nTOC DUMP\n\n");
 	while (oo<408){
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%2x %2x %2x %2x\n", CD_sat_toc[oo],CD_sat_toc[oo+1],CD_sat_toc[oo+2],CD_sat_toc[oo+3]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%2x %2x %2x %2x\n", CD_sat_toc[oo],CD_sat_toc[oo+1],CD_sat_toc[oo+2],CD_sat_toc[oo+3]);
 	oo+=4;
 	}
 
@@ -828,7 +828,7 @@ static UINT8 buff[4096];
 	}
 
 	CD_file_num = (i < 2) ? 2 : i; /* to prevent stupid ISO bugs*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "trovati %d file\n",CD_file_num);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "trovati %d file\n",CD_file_num);
 }
 
 void CD_com_update(UINT32 count){
@@ -838,7 +838,7 @@ void CD_com_update(UINT32 count){
 
 
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "---- periodic update ----\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "---- periodic update ----\n");
 
 		/* prevents update to change anything before*/
 		/* the init string is read by the host*/
@@ -854,7 +854,7 @@ void CD_com_update(UINT32 count){
 
 				/* PEND ?*/
 
-				log_cb(RETRO_LOG_ERROR, LOGPRE "BFUL -> PLAY\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "BFUL -> PLAY\n");
 
 				CD_hirq &= ~HIRQ_BFUL;
 				CD_status = CDB_STAT_PLAY;
@@ -919,7 +919,7 @@ void CD_com_update(UINT32 count){
 
 						/* buffer full*/
 
-						log_cb(RETRO_LOG_ERROR, LOGPRE "BFUL!\n");
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "BFUL!\n");
 
 						CD_hirq |= HIRQ_BFUL;
 					/*	CD_hirq |= HIRQ_PEND; */ /* not sure*/
@@ -1007,13 +1007,13 @@ void CD_com_update(UINT32 count){
 
 					/* setup repeat*/
 
-					log_cb(RETRO_LOG_ERROR, LOGPRE "REPEAT (%i / %i)\n", CD_repeat, CD_repeat_max);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "REPEAT (%i / %i)\n", CD_repeat, CD_repeat_max);
 
 				}else{
 
 					/* play ended*/
 
-					log_cb(RETRO_LOG_ERROR, LOGPRE "PLAY ended\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "PLAY ended\n");
 
 					CD_status = CDB_STAT_PAUSE;
 
@@ -1043,7 +1043,7 @@ void CD_com_update(UINT32 count){
 
 				/* play CDDA*/
 
-				log_cb(RETRO_LOG_ERROR, LOGPRE "SCAN - PLAY CDDA\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "SCAN - PLAY CDDA\n");
 
 				/* set 1x drive speed*/
 
@@ -1054,7 +1054,7 @@ void CD_com_update(UINT32 count){
 
 
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: scanning\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: scanning\n");
 			/*exit(1);*/
 		}
 
@@ -1063,5 +1063,5 @@ void CD_com_update(UINT32 count){
 		CDB_SEND_REPORT();
 		CR1 |= CDB_STAT_PERI << 8; /* periodic response*/
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CD block update\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CD block update\n");
 }

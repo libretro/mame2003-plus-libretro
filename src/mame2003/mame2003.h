@@ -34,60 +34,53 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
+
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
 /******************************************************************************
 
 	Shared libretro log interface
     set in mame2003.c 
 
 ******************************************************************************/
-
 extern retro_log_printf_t log_cb;
 
 
 /******************************************************************************
 
-Core options
+	frontend message interface
+    implemented in mame2003.c 
 
 ******************************************************************************/
+extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
-enum
+
+struct retro_variable_default
 {
-  OPT_FRAMESKIP = 0,
-  OPT_INPUT_INTERFACE,
-  OPT_RETROPAD_LAYOUT,
-  OPT_MOUSE_DEVICE,
-  OPT_CROSSHAIR_ENABLED,
-  OPT_SKIP_DISCLAIMER,
-  OPT_SKIP_WARNINGS,
-  OPT_DISPLAY_SETUP,
-  OPT_BRIGHTNESS,
-  OPT_GAMMA,
-  OPT_BACKDROP,
-  OPT_NEOGEO_BIOS,
-  OPT_STV_BIOS,
-  OPT_SHARE_DIAL,
-  OPT_DUAL_JOY,
-  OPT_RSTICK_BTNS,
-  OPT_TATE_MODE,
-  OPT_VECTOR_RESOLUTION,
-  OPT_VECTOR_ANTIALIAS,
-  OPT_VECTOR_TRANSLUCENCY,
-  OPT_VECTOR_BEAM,
-  OPT_VECTOR_FLICKER,
-  OPT_VECTOR_INTENSITY,
-  OPT_SKIP_CRC,
-  OPT_SAMPLE_RATE,
-  OPT_DCS_SPEEDHACK,
-  OPT_end /* dummy last entry */
+   const char *key;
+   const char *defaults_string;
 };
 
 enum
 {
-  RETROPAD_MAME = 0,
-  RETROPAD_MODERN,
-  RETROPAD_SNES,
-  RETROPAD_10BUTTON,
-  RETROPAD_end
+  IDX_CLASSIC = 0,
+  IDX_MODERN,
+  IDX_8BUTTON,
+  IDX_6BUTTON,
+  IDX_PAD_end,
+};
+
+#define PLAYER_COUNT 6
+
+enum /*the "display numbers" for each player, as opposed to their array index */
+{
+  DISP_PLAYER1 = 1,
+  DISP_PLAYER2,
+  DISP_PLAYER3,
+  DISP_PLAYER4,
+  DISP_PLAYER5,
+  DISP_PLAYER6
 };
 
 
@@ -296,22 +289,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   Scan the list, and change the keys/joysticks you want.
 */
 void osd_customize_inputport_defaults(struct ipd *defaults);
-
-
-
-/******************************************************************************
-
-	File I/O
-
-******************************************************************************/
-
-/* inp header */
-typedef struct
-{
-	char name[9];      /* 8 bytes for game->name + NUL */
-	char version[3];   /* byte[0] = 0, byte[1] = version byte[2] = beta_version */
-	char reserved[20]; /* for future use, possible store game options? */
-} INP_HEADER;
 
 
 /******************************************************************************

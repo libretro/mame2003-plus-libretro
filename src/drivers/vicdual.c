@@ -108,6 +108,88 @@ extern const char *pulsar_sample_names[];
 WRITE_HANDLER( pulsar_sh_port1_w );
 WRITE_HANDLER( pulsar_sh_port2_w );
 
+/* Frogs sound handlers */
+struct Samplesinterface frogs_samples_interface;
+WRITE_HANDLER( frogs_sh_port2_w );
+void croak_callback(int param);
+mame_timer *croak_timer;
+
+static MACHINE_INIT( frogs )
+{
+	croak_timer = timer_alloc(croak_callback);
+}
+
+static const char *frogs_sample_names[] =
+{
+	"*frogs",
+	"boing.wav",
+	"buzzz.wav",
+	"croak.wav",
+	"hop.wav",
+	"splash.wav",
+	"zip.wav",
+	0       /* end of array */
+};
+
+struct Samplesinterface frogs_samples_interface =
+{
+	5,	/* 5 channels */
+	35,	/* volume */
+	frogs_sample_names
+};
+
+void croak_callback(int param)
+{
+	sample_stop(2);
+}
+
+WRITE_HANDLER( frogs_sh_port2_w )
+{
+	static int last_croak = 0;
+	static int last_buzzz = 0;
+	int new_croak = data & 0x08;
+	int new_buzzz = data & 0x10;
+
+
+	if (data & 0x01)
+		sample_start (3, 3, 0);	// Hop
+if (data & 0x02)
+		sample_start (0, 0, 0);	// Boing
+	if (new_croak)
+		sample_start (2, 2, 0);	// Croak
+	else
+	{
+		if (last_croak)
+		{
+			/* The croak will keep playing until .429s after being disabled */
+			timer_adjust(croak_timer, 1.1 * RES_K(390) * CAP_U(1), 0, 0);
+		}
+	}
+	if (new_buzzz)
+	{
+		/* The Buzzz sound starts off a little louder in volume then
+		 * settles down to a steady buzzz.  Whenever the trigger goes
+		 * low, the sound is disabled.  If it then goes high, the buzzz
+		 * then starts off louder again.  The games does this every time
+		 * the fly moves.
+		 * So I made the sample start with the louder effect and then play
+		 * for 12 seconds.  A fly should move before this.  If not the
+		 * sample loops, adding the loud part as if the fly moved.
+		 * This is obviously incorrect, but a fly never stands still for
+		 * 12 seconds.
+		 */
+		if (!last_buzzz)
+			sample_start (1, 1, 1);	// Buzzz
+	}
+	else
+		sample_stop(1);
+	if (data & 0x80)
+		sample_start (4, 4, 0);	// Splash
+
+	last_croak = new_croak;
+	last_buzzz = new_buzzz;
+}
+
 
 static int protection_data;
 
@@ -1285,6 +1367,15 @@ static MACHINE_DRIVER_START( pulsar )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( frogs )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(2ports)
+	MDRV_MACHINE_INIT(frogs)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, frogs_samples_interface)
+MACHINE_DRIVER_END
 
 static struct AY8910interface carnival_ay8910_interface =
 {
@@ -1960,12 +2051,18 @@ static DRIVER_INIT( alphaho )
 }
 #endif
 
+static DRIVER_INIT( frogs )
+{
+	install_port_write_handler(0, 0x02, 0x02, frogs_sh_port2_w);
+	vicdual_decode();
+}
+
 
 GAME( 1977, depthch,  0,        depthch,  depthch,  depthch,   ROT0,   "Gremlin", "Depthcharge" )
 GAME( 1977, depthv1,  depthch,  depthch,  depthch,  depthch,   ROT0,   "Gremlin", "Depthcharge (older)" )
 GAME( 1977, subhunt,  depthch,  depthch,  depthch,  depthch,   ROT0,   "Taito", "Sub Hunter" )
 GAMEX(1977, safari,   0,        safari,   safari,   nosamples, ROT0,   "Gremlin", "Safari", GAME_NO_SOUND )
-GAMEX(1978, frogs,    0,        2ports,   frogs,    nosamples, ROT0,   "Gremlin", "Frogs", GAME_NO_SOUND )
+GAMEX(1978, frogs,    0,        frogs,    frogs,    frogs,     ROT0,   "Gremlin", "Frogs", GAME_IMPERFECT_SOUND )
 GAMEX(1979, sspaceat, 0,        3ports,   sspaceat, nosamples, ROT270, "Sega", "Space Attack (upright)", GAME_NO_SOUND )
 GAMEX(1979, sspacat2, sspaceat, 3ports,   sspaceat, nosamples, ROT270, "Sega", "Space Attack (upright, older)", GAME_NO_SOUND )
 GAMEX(1979, sspacatc, sspaceat, 3ports,   sspaceat, nosamples, ROT270, "Sega", "Space Attack (cocktail)", GAME_NO_SOUND )

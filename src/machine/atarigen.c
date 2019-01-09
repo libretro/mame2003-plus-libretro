@@ -746,7 +746,7 @@ static void delayed_sound_w(int param)
 {
 	/* warn if we missed something */
 	if (atarigen_cpu_to_sound_ready)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Missed command from 68010\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Missed command from 68010\n");
 
 	/* set up the states and signal an NMI to the sound CPU */
 	atarigen_cpu_to_sound = param;
@@ -768,7 +768,7 @@ static void delayed_6502_sound_w(int param)
 {
 	/* warn if we missed something */
 	if (atarigen_sound_to_cpu_ready)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Missed result from 6502\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Missed result from 6502\n");
 
 	/* set up the states and signal the sound interrupt to the main CPU */
 	atarigen_sound_to_cpu = param;
@@ -798,14 +798,14 @@ void atarigen_init_6502_speedup(int cpunum, int compare_pc1, int compare_pc2)
 	address_low = memory[compare_pc1 + 1] | (memory[compare_pc1 + 2] << 8);
 	address_high = memory[compare_pc1 + 4] | (memory[compare_pc1 + 5] << 8);
 	if (address_low != address_high - 1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: address %04X does not point to a speedup location!", compare_pc1);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Error: address %04X does not point to a speedup location!", compare_pc1);
 	speed_a = &memory[address_low];
 
 	/* determine the pointer to the second speed check location */
 	address_low = memory[compare_pc2 + 1] | (memory[compare_pc2 + 2] << 8);
 	address_high = memory[compare_pc2 + 4] | (memory[compare_pc2 + 5] << 8);
 	if (address_low != address_high - 1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: address %04X does not point to a speedup location!", compare_pc2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Error: address %04X does not point to a speedup location!", compare_pc2);
 	speed_b = &memory[address_low];
 
 	/* install a handler on the second address */
@@ -1140,7 +1140,7 @@ static void atarivc_common_w(offs_t offset, data16_t newword)
 		case 0x00:
 		default:
 			if (oldword != newword)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "vc_w(%02X, %04X) ** [prev=%04X]\n", offset, newword, oldword);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "vc_w(%02X, %04X) ** [prev=%04X]\n", offset, newword, oldword);
 			break;
 	}
 }
@@ -1152,7 +1152,7 @@ static void atarivc_common_w(offs_t offset, data16_t newword)
 
 READ16_HANDLER( atarivc_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "vc_r(%02X)\n", offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "vc_r(%02X)\n", offset);
 
 	/* a read from offset 0 returns the current scanline */
 	/* also sets bit 0x4000 if we're in VBLANK */

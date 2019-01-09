@@ -141,9 +141,6 @@
                 Wonder Boy (set 1)
   315-5178      Wonder Boy (set 2)     unencrypted version available
   315-5179      Robo-Wrestle 2001      not decoded yet
-  317-0005      Space Position         not decoded yet
-  317-0006/7    Gardia                 not decoded yet
-  ???-????      Gardia bootleg         not decoded yet
 
 
   The following games use another different encryption algorithm, much more
@@ -200,16 +197,16 @@ static void lfkp(int mask)
 			if (	(RAM[A+ 9] & mask) == (0x36 & mask) &&	/* LD (HL),$xx */
 					(RAM[A+11] & mask) == (0xed & mask) &&
 					(RAM[A+12] & mask) == (0xb0 & mask))	/* LDIR */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc (hl),xx ldir\n",A);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: hl de bc (hl),xx ldir\n",A);
 
 			if (	(RAM[A+ 9] & mask) == (0x77 & mask) &&	/* LD (HL),A */
 					(RAM[A+10] & mask) == (0xed & mask) &&
 					(RAM[A+11] & mask) == (0xb0 & mask))	/* LDIR */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc (hl),a ldir\n",A);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: hl de bc (hl),a ldir\n",A);
 
 			if (	(RAM[A+ 9] & mask) == (0xed & mask) &&
 					(RAM[A+10] & mask) == (0xb0 & mask))	/* LDIR */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc ldir\n",A);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: hl de bc ldir\n",A);
 		}
 
 		/* the following can also be PUSH IX, PUSH IY - need better checking */
@@ -217,18 +214,18 @@ static void lfkp(int mask)
 				(RAM[A+1] & mask) == (0xc5 & mask) &&	/* PUSH BC */
 				(RAM[A+2] & mask) == (0xd5 & mask) &&	/* PUSH DE */
 				(RAM[A+3] & mask) == (0xe5 & mask))		/* PUSH HL */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: push af bc de hl\n",A);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: push af bc de hl\n",A);
 
 		if (	(RAM[A+0] & mask) == (0xe1 & mask) &&	/* POP HL */
 				(RAM[A+1] & mask) == (0xd1 & mask) &&	/* POP DE */
 				(RAM[A+2] & mask) == (0xc1 & mask) &&	/* POP BC */
 				(RAM[A+3] & mask) == (0xf1 & mask))		/* POP AF */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: pop hl de bc af\n",A);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: pop hl de bc af\n",A);
 
 		for (i = 0;i < strlen(text);i++)
 			if ((RAM[A+i] & mask) != (text[i] & mask)) break;
 		if (i == strlen(text))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: INSERT COIN\n",A);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: INSERT COIN\n",A);
 	}
 }
 
@@ -1227,168 +1224,33 @@ void wboy2_decode(void)
 }
 
 
-void spcpostn_decode(void)
+/* Gardia / Space Position */
+/******************************************************************************
+
+  New encryption
+
+  This encryption is quite different from the older one. It permutates bits
+  D0, D2, D4 and D6, then inverts some of them.
+
+  The permutation and inversion depend on A0, A3, A6, A9, A12, and A14.
+
+******************************************************************************/
+
+static void sega_decode_2(const unsigned char opcode_xor[64],const int opcode_swap_select[64],
+		const unsigned char data_xor[64],const int data_swap_select[64])
 {
-	/* not decoded yet! */
-
-
-	static unsigned char opcode_xor[32] =
-	{
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-	};
-
-	static unsigned char data_xor[32] =
-	{
-		0x50,0x54,0x15,0x50,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x44,0x15,0x04,0x14,0x41,0x41,0x40,0x01
-	};
-
-	static const int opcode_swap_select[32] =
-	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
-	};
-
-	static const int data_swap_select[32] =
-	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
-	};
-
-	static const unsigned char swaptable[9][4] =
-	{
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-		{ 6,4,2,0 },
-
-		{ 6,4,2,0 }
-	};
 	int A;
 	unsigned char *rom = memory_region(REGION_CPU1);
 	int diff = memory_region_length(REGION_CPU1) / 2;
-
-
-	memory_set_opcode_base(0,rom+diff);
-
-	for (A = 0x0000;A < 0x8000;A++)
-	{
-		int row;
-		unsigned char src;
-		const unsigned char *tbl;
-
-
-		src = rom[A];
-
-		/* pick the translation table from bits 0, 3, 6, 9, 12 and 14 of the address */
-		row = (A & 1) + (((A >> 3) & 1) << 1) + (((A >> 6) & 1) << 2)
-				+ (((A >> 9) & 1) << 3) + (((A >> 12) & 1) << 4) + (((A >> 14) & 1) << 5);
-
-		/* decode the opcodes */
-		tbl = swaptable[opcode_swap_select[row & 0x1f] + 8 * ((row & 0x20) >> 5)];
-		rom[A + diff] = BITSWAP8(src,7,tbl[0],5,tbl[1],3,tbl[2],1,tbl[3]) ^ opcode_xor[row & 0x1f];
-
-		/* decode the data */
-		tbl = swaptable[data_swap_select[row & 0x1f] + 8 * ((row & 0x20) >> 5)];
-		rom[A] = BITSWAP8(src,7,tbl[0],5,tbl[1],3,tbl[2],1,tbl[3]) ^ data_xor[row & 0x1f];
-	}
-
-	/* copy the opcodes from the not encrypted part of the ROMs */
-	for (A = 0x8000;A < diff;A++)
-		rom[A + diff] = rom[A];
-}
-
-
-void gardia_decode(void)
-{
-	/* not decoded yet! */
-
-
-	static unsigned char opcode_xor[64] =
-	{
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-	};
-
-	static unsigned char data_xor[64] =
-	{
-		0x44,0x54,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x14,0x55,
-		0x41,0x05,0x04,0x41,0x14,0x10,0x45,0x50, 0x00,0x45,0x00,0x00,0x00,0x45,0x00,0x00,
-
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x04,0x15,0x54,0x41,0x00,0x51,0x51,0x44, 0x15,0x04,0x14,0x41,0x41,0x40,0x01,0x01
-	};
-
-	static const int opcode_swap_select[64] =
-	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
-	};
-
-	static const int data_swap_select[64] =
-	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,5,20,
-		13,0,18,14,5,6,10,21,
-		1,11,9,3,21,4,1,17,
-
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
-	};
-
 	static const unsigned char swaptable[24][4] =
 	{
-		{ 6,4,2,0 },
-		{ 4,6,2,0 },
-		{ 2,4,6,0 },
-		{ 0,4,2,6 },
-		{ 6,2,4,0 },
-		{ 6,0,2,4 },
-		{ 6,4,0,2 },
-		{ 2,6,4,0 },
-
-		{ 4,2,6,0 },
-		{ 4,6,0,2 },
-		{ 6,0,4,2 },
-		{ 0,6,4,2 },
-		{ 4,0,6,2 },
-		{ 0,4,6,2 },
-		{ 6,2,0,4 },
-		{ 2,6,0,4 },
-
-		{ 0,6,2,4 },
-		{ 2,0,6,4 },
-		{ 0,2,6,4 },
-		{ 4,2,0,6 },
-		{ 2,4,0,6 },
-		{ 4,0,2,6 },
-		{ 2,0,4,6 },
-		{ 0,2,4,6 }
+		{ 6,4,2,0 }, { 4,6,2,0 }, { 2,4,6,0 }, { 0,4,2,6 },
+		{ 6,2,4,0 }, { 6,0,2,4 }, { 6,4,0,2 }, { 2,6,4,0 },
+		{ 4,2,6,0 }, { 4,6,0,2 }, { 6,0,4,2 }, { 0,6,4,2 },
+		{ 4,0,6,2 }, { 0,4,6,2 }, { 6,2,0,4 }, { 2,6,0,4 },
+		{ 0,6,2,4 }, { 2,0,6,4 }, { 0,2,6,4 }, { 4,2,0,6 },
+		{ 2,4,0,6 }, { 4,0,2,6 }, { 2,0,4,6 }, { 0,2,4,6 },
 	};
-	int A;
-	unsigned char *rom = memory_region(REGION_CPU1);
-	int diff = memory_region_length(REGION_CPU1) / 2;
 
 
 	memory_set_opcode_base(0,rom+diff);
@@ -1420,115 +1282,67 @@ void gardia_decode(void)
 		rom[A + diff] = rom[A];
 }
 
+/******************************************************************************
 
-void gardiab_decode(void)
+  These games (all 317-xxxx CPUs) use the same algorithm, but the key doesn't
+  change much - just one or two positions shift in the table.
+
+******************************************************************************/
+
+static void sega_decode_317(int order, int opcode_shift, int data_shift)
 {
-	/* not decoded yet! */
-
-
-	static unsigned char opcode_xor[64] =
+	static const unsigned char xor1_317[1+64] =
 	{
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+		0x54,
+		0x14,0x15,0x41,0x14,0x50,0x55,0x05,0x41,0x01,0x10,0x51,0x05,0x11,0x05,0x14,0x55,
+		0x41,0x05,0x04,0x41,0x14,0x10,0x45,0x50,0x00,0x45,0x00,0x00,0x00,0x45,0x00,0x00,
+		0x54,0x04,0x15,0x10,0x04,0x05,0x11,0x44,0x04,0x01,0x05,0x00,0x44,0x15,0x40,0x45,
+		0x10,0x15,0x51,0x50,0x00,0x15,0x51,0x44,0x15,0x04,0x44,0x44,0x50,0x10,0x04,0x04,
 	};
 
-	static unsigned char data_xor[64] =
+	static const unsigned char xor2_317[2+64] =
 	{
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x00,0x00,0x00,0x55,0x45,0x04,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-
-		0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-		0x44,0x10,0x44,0x45,0x01,0x41,0x41,0x01, 0x10,0x40,0x11,0x41,0x50,0x44,0x40,0x40
+		0x04,
+		0x44,
+		0x15,0x51,0x41,0x10,0x15,0x54,0x04,0x51,0x05,0x55,0x05,0x54,0x45,0x04,0x10,0x01,
+		0x51,0x55,0x45,0x55,0x45,0x04,0x55,0x40,0x11,0x15,0x01,0x40,0x01,0x11,0x45,0x44,
+		0x40,0x05,0x15,0x15,0x01,0x50,0x00,0x44,0x04,0x50,0x51,0x45,0x50,0x54,0x41,0x40,
+		0x14,0x40,0x50,0x45,0x10,0x05,0x50,0x01,0x40,0x01,0x50,0x50,0x50,0x44,0x40,0x10,
 	};
 
-	static const int opcode_swap_select[64] =
+	static const int swap1_317[1+64] =
 	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
+		 7,
+		 1,11,23,17,23, 0,15,19,
+		20,12,10, 0,18,18, 5,20,
+		13, 0,18,14, 5, 6,10,21,
+		 1,11, 9, 3,21, 4, 1,17,
+		 5, 7,16,13,19,23,20, 2,
+		10,23,23,15,10,12, 0,22,
+		14, 6,15,11,17,15,21, 0,
+		 6, 1, 1,18, 5,15,15,20,
 	};
 
-	static const int data_swap_select[64] =
+	static const int swap2_317[2+64] =
 	{
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,8,17,22,0,0,
-		0,0,0,0,0,0,0,0,
-
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
+		 7,
+		12,
+		18, 8,21, 0,22,21,13,21,
+		20,13,20,14, 6, 3, 5,20,
+		 8,20, 4, 8,17,22, 0, 0,
+		 6,17,17, 9, 0,16,13,21,
+		 3, 2,18, 6,11, 3, 3,18,
+		18,19, 3, 0, 5, 0,11, 8,
+		 8, 1, 7, 2,10, 8,10, 2,
+		 1, 3,12,16, 0,17,10, 1,
 	};
 
-	static const unsigned char swaptable[24][4] =
-	{
-		{ 6,4,2,0 },
-		{ 4,6,2,0 },
-		{ 2,4,6,0 },
-		{ 0,4,2,6 },
-		{ 6,2,4,0 },
-		{ 6,0,2,4 },
-		{ 6,4,0,2 },
-		{ 2,6,4,0 },
-
-		{ 4,2,6,0 },
-		{ 4,6,0,2 },
-		{ 6,0,4,2 },
-		{ 0,6,4,2 },
-		{ 4,0,6,2 },
-		{ 0,4,6,2 },
-		{ 6,2,0,4 },
-		{ 2,6,0,4 },
-
-		{ 0,6,2,4 },
-		{ 2,0,6,4 },
-		{ 0,2,6,4 },
-		{ 4,2,0,6 },
-		{ 2,4,0,6 },
-		{ 4,0,2,6 },
-		{ 2,0,4,6 },
-		{ 0,2,4,6 }
-	};
-	int A;
-	unsigned char *rom = memory_region(REGION_CPU1);
-	int diff = memory_region_length(REGION_CPU1) / 2;
-
-
-	memory_set_opcode_base(0,rom+diff);
-
-	for (A = 0x0000;A < 0x8000;A++)
-	{
-		int row;
-		unsigned char src;
-		const unsigned char *tbl;
-
-
-		src = rom[A];
-
-		/* pick the translation table from bits 0, 3, 6, 9, 12 and 14 of the address */
-		row = (A & 1) + (((A >> 3) & 1) << 1) + (((A >> 6) & 1) << 2)
-				+ (((A >> 9) & 1) << 3) + (((A >> 12) & 1) << 4) + (((A >> 14) & 1) << 5);
-
-		/* decode the opcodes */
-		tbl = swaptable[opcode_swap_select[row]];
-		rom[A + diff] = BITSWAP8(src,7,tbl[0],5,tbl[1],3,tbl[2],1,tbl[3]) ^ opcode_xor[row];
-
-		/* decode the data */
-		tbl = swaptable[data_swap_select[row]];
-		rom[A] = BITSWAP8(src,7,tbl[0],5,tbl[1],3,tbl[2],1,tbl[3]) ^ data_xor[row];
-	}
-
-	/* copy the opcodes from the not encrypted part of the ROMs */
-	for (A = 0x8000;A < diff;A++)
-		rom[A + diff] = rom[A];
+	if (order)
+		sega_decode_2( xor2_317+opcode_shift, swap2_317+opcode_shift, xor1_317+data_shift, swap1_317+data_shift );
+	else
+		sega_decode_2( xor1_317+opcode_shift, swap1_317+opcode_shift, xor2_317+data_shift, swap2_317+data_shift );
 }
+
+void spcpostn_decode(void)	{ sega_decode_317( 0, 0, 1 ); }
+void gardia_decode(void)	{ sega_decode_317( 1, 1, 1 ); }
+void gardiab_decode(void)	{ sega_decode_317( 0, 1, 2 ); }

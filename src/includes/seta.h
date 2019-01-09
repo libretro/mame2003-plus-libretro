@@ -68,10 +68,19 @@ extern int ssv_tile_code[16];
 extern int ssv_sprites_offsx, ssv_sprites_offsy;
 extern int ssv_tilemap_offsx, ssv_tilemap_offsy;
 
+extern data16_t *eaglshot_gfxram, *gdfs_tmapram, *gdfs_tmapscroll;
+extern char eaglshot_dirty, *eaglshot_dirty_tile;
+
 READ16_HANDLER( ssv_vblank_r );
 WRITE16_HANDLER( ssv_scroll_w );
 WRITE16_HANDLER( paletteram16_xrgb_swap_word_w );
+WRITE16_HANDLER( gdfs_tmapram_w );
 void ssv_enable_video(int enable);
 
 VIDEO_START( ssv );
+VIDEO_START( eaglshot );
+VIDEO_START( gdfs );
+
 VIDEO_UPDATE( ssv );
+VIDEO_UPDATE( eaglshot );
+VIDEO_UPDATE( gdfs );

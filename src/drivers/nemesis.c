@@ -153,7 +153,7 @@ WRITE16_HANDLER( gx400_irq1_enable_word_w )
 	if (ACCESSING_LSB)
 		irq1_on = data & 0x0001;
 /*	else
-log_cb(RETRO_LOG_ERROR, LOGPRE "irq1en = %08x\n",data);*/
+log_cb(RETRO_LOG_DEBUG, LOGPRE "irq1en = %08x\n",data);*/
 }
 
 WRITE16_HANDLER( gx400_irq2_enable_word_w )
@@ -161,7 +161,7 @@ WRITE16_HANDLER( gx400_irq2_enable_word_w )
 	if (ACCESSING_LSB)
 		irq2_on = data & 0x0001;
 /*	else
-log_cb(RETRO_LOG_ERROR, LOGPRE "irq2en = %08x\n",data);*/
+log_cb(RETRO_LOG_DEBUG, LOGPRE "irq2en = %08x\n",data);*/
 }
 
 WRITE16_HANDLER( gx400_irq4_enable_word_w )
@@ -169,7 +169,7 @@ WRITE16_HANDLER( gx400_irq4_enable_word_w )
 	if (ACCESSING_MSB)
 		irq4_on = data & 0x0100;
 /*	else
-log_cb(RETRO_LOG_ERROR, LOGPRE "irq4en = %08x\n",data);*/
+log_cb(RETRO_LOG_DEBUG, LOGPRE "irq4en = %08x\n",data);*/
 }
 
 static unsigned char *gx400_shared_ram;

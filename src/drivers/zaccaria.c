@@ -69,7 +69,7 @@ static WRITE_HANDLER( zaccaria_dsw_sel_w )
 			break;
 
 		default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: portsel = %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: portsel = %02x\n",activecpu_get_pc(),data);
 			break;
 	}
 }

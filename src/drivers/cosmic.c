@@ -104,7 +104,7 @@ static WRITE_HANDLER( panic_sound_output_w )
     }
 
     #ifdef MAME_DEBUG
- 	log_cb(RETRO_LOG_ERROR, LOGPRE "Sound output %x=%x\n",offset,data);
+ 	log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound output %x=%x\n",offset,data);
 	#endif
 }
 
@@ -174,7 +174,7 @@ WRITE_HANDLER( cosmicg_output_w )
     }
 
 	#ifdef MAME_DEBUG
- 	if (offset != 11) log_cb(RETRO_LOG_ERROR, LOGPRE "Output %x=%x\n",offset,data);
+ 	if (offset != 11) log_cb(RETRO_LOG_DEBUG, LOGPRE "Output %x=%x\n",offset,data);
     #endif
 }
 
@@ -323,7 +323,7 @@ static WRITE_HANDLER( cosmica_sound_output_w )
     }
 
     #ifdef MAME_DEBUG
- 	log_cb(RETRO_LOG_ERROR, LOGPRE "Sound output %x=%x\n",offset,data);
+ 	log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound output %x=%x\n",offset,data);
 	#endif
 }
 

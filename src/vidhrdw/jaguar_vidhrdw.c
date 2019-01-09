@@ -463,7 +463,7 @@ void jaguar_set_palette(UINT16 vmode)
 
 		/* others */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Can't handle mode %X\n", vmode);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Can't handle mode %X\n", vmode);
 			break;
 	}
 }
@@ -554,12 +554,12 @@ blitter_stats[i][3]++;
 blitter_pixels[i] += (blitter_regs[B_COUNT] & 0xffff) * (blitter_regs[B_COUNT] >> 16);
 if (++reps % 100 == 99)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "---\nBlitter stats:\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "---\nBlitter stats:\n");
 	for (i = 0; i < blitter_count; i++)
 		printf("  CMD=%08X A1=%08X A2=%08X %6d times, %08X%08X pixels\n",
 				blitter_stats[i][0], blitter_stats[i][1], blitter_stats[i][2],
 				blitter_stats[i][3], (UINT32)(blitter_pixels[i] >> 32), (UINT32)(blitter_pixels[i]));
-	log_cb(RETRO_LOG_ERROR, LOGPRE "---\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "---\n");
 }
 }
 #endif
@@ -577,7 +577,7 @@ READ32_HANDLER( jaguar_blitter_r )
 			return 0x00000001;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blitter read register @ F022%02X\n", activecpu_get_previouspc(), offset * 4);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Blitter read register @ F022%02X\n", activecpu_get_previouspc(), offset * 4);
 			return 0;
 	}
 }
@@ -590,7 +590,7 @@ WRITE32_HANDLER( jaguar_blitter_w )
 		blitter_run();
 
 #if LOG_BLITTER_WRITE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blitter write register @ F022%02X = %08X\n", activecpu_get_previouspc(), offset * 4, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Blitter write register @ F022%02X = %08X\n", activecpu_get_previouspc(), offset * 4, data);
 #endif
 }
 
@@ -605,7 +605,7 @@ WRITE32_HANDLER( jaguar_blitter_w )
 READ16_HANDLER( jaguar_tom_regs_r )
 {
 	if (offset != INT1 && offset != INT2 && offset != HC && offset != VC)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:TOM read register @ F00%03X\n", activecpu_get_previouspc(), offset * 2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:TOM read register @ F00%03X\n", activecpu_get_previouspc(), offset * 2);
 
 	switch (offset)
 	{
@@ -650,7 +650,7 @@ WRITE16_HANDLER( jaguar_tom_regs_w )
 	}
 
 	if (offset != INT2 && offset != VI)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:TOM write register @ F00%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:TOM write register @ F00%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
 }
 
 

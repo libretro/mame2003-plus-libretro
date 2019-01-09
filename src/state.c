@@ -215,7 +215,7 @@ static ss_entry *ss_register_entry(const char *module, int instance, const char 
 	while((e = *ep) != 0) {
 		int pos = strcmp(e->name, name);
 		if(!pos) {
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Duplicate save state registration entry (%s, %d, %s)\n", module, instance, name);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Duplicate save state registration entry (%s, %d, %s)\n", module, instance, name);
 			return NULL;
 		}
 		if(pos>0)
@@ -299,7 +299,7 @@ static void ss_register_func(ss_func **root, void (*func)(void))
 	{
 		if (next->func == func && next->tag == ss_current_tag)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Duplicate save state function (%d, 0x%x)\n", ss_current_tag, (int)func);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Duplicate save state function (%d, 0x%x)\n", ss_current_tag, (int)func);
 			exit(1);
 		}
 		next = next->next;
@@ -308,7 +308,7 @@ static void ss_register_func(ss_func **root, void (*func)(void))
 	*root = malloc(sizeof(ss_func));
 	if (*root == NULL)
 	{
-		logerror ("malloc failed in ss_register_func\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "malloc failed in ss_register_func\n");
 		return;
 	}
 	(*root)->next = next;
@@ -386,11 +386,11 @@ size_t state_get_dump_size(void)
   
   if(Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
   {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Driver flagged GAME_DOESNT_SERIALIZE. Setting state_get_dump_size() to 0.\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Driver flagged GAME_DOESNT_SERIALIZE. Setting state_get_dump_size() to 0.\n");
     return 0;
   }
   
-	TRACE(logerror("Beginning save\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning save\n");
 	ss_dump_size = 0x18;
 	for(m = ss_registry; m; m=m->next) {
 		int i;
@@ -413,7 +413,7 @@ size_t state_get_dump_size(void)
 void state_save_save_begin(void *array)
 {
 	ss_module *m;
-	TRACE(logerror("Beginning save\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning save\n");
 	ss_dump_size = 0x18;
 	for(m = ss_registry; m; m=m->next) {
 		int i;
@@ -426,11 +426,11 @@ void state_save_save_begin(void *array)
 		}
 	}
 
-	TRACE(logerror("   total size %u\n", ss_dump_size));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "   total size %u\n", ss_dump_size);
 	ss_dump_array = array;
 	if (ss_dump_array == NULL)
 	{
-		logerror ("malloc failed in state_save_save_begin\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "malloc failed in state_save_save_begin\n");
 	}
 }
 
@@ -439,8 +439,8 @@ int state_save_save_continue(void)
 	ss_module *m;
 	ss_func * f;
 	int count = 0;
-	TRACE(logerror("Saving tag %d\n", ss_current_tag));
-	TRACE(logerror("  calling pre-save functions\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Saving tag %d\n", ss_current_tag);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  calling pre-save functions\n");
 	f = ss_prefunc_reg;
 	while(f) {
 		if(f->tag == ss_current_tag) {
@@ -449,8 +449,8 @@ int state_save_save_continue(void)
 		}
 		f = f->next;
 	}
-	TRACE(logerror("    %d functions called\n", count));
-	TRACE(logerror("  copying data\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "    %d functions called\n", count);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  copying data\n");
 	for(m = ss_registry; m; m=m->next) {
 		int i;
 		for(i=0; i<MAX_INSTANCES; i++) {
@@ -468,10 +468,10 @@ int state_save_save_continue(void)
 						ss_dump_array[e->offset+1] = v >> 8;
 						ss_dump_array[e->offset+2] = v >> 16;
 						ss_dump_array[e->offset+3] = v >> 24;
-						TRACE(logerror("    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+3));
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+3);
 					} else {
 						memcpy(ss_dump_array + e->offset, e->data, ss_size[e->type]*e->size);
-						TRACE(logerror("    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+ss_size[e->type]*e->size-1));
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+ss_size[e->type]*e->size-1);
 					}
 				}
 		}
@@ -485,7 +485,7 @@ void state_save_save_finish(void)
 	UINT32 signature;
 	unsigned char flags = 0;
 
-	TRACE(logerror("Finishing save\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Finishing save\n");
 
 	signature = ss_get_signature();
 	if(!Machine->sample_rate)
@@ -516,7 +516,7 @@ int state_save_load_begin(void *array, size_t size)
 	unsigned int offset = 0;
 	UINT32 signature, file_sig;
 
-	TRACE(logerror("Beginning load\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning load\n");
 
 	signature = ss_get_signature();
 
@@ -586,8 +586,8 @@ int state_save_load_continue(void)
 	need_convert = (ss_dump_array[9] & SS_MSB_FIRST) != 0;
 #endif
 
-	TRACE(logerror("Loading tag %d\n", ss_current_tag));
-	TRACE(logerror("  copying data\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Loading tag %d\n", ss_current_tag);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  copying data\n");
 	for(m = ss_registry; m; m=m->next) {
 		int i;
 		for(i=0; i<MAX_INSTANCES; i++) {
@@ -606,18 +606,18 @@ int state_save_load_continue(void)
 							| (ss_dump_array[e->offset+1] << 8)
 							| (ss_dump_array[e->offset+2] << 16)
 							| (ss_dump_array[e->offset+3] << 24);
-						TRACE(logerror("    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+3));
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+3);
 						*(int *)(e->data) = v;
 					} else {
 						memcpy(e->data, ss_dump_array + e->offset, ss_size[e->type]*e->size);
 						if (need_convert && ss_conv[e->type])
 							ss_conv[e->type](e->data, e->size);
-						TRACE(logerror("    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+ss_size[e->type]*e->size-1));
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "    %s.%d.%s: %x..%x\n", m->name, i, e->name, e->offset, e->offset+ss_size[e->type]*e->size-1);
 					}
 				}
 		}
 	}
-	TRACE(logerror("  calling post-load functions\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  calling post-load functions\n");
 	f = ss_postfunc_reg;
 	while(f) {
 		if(f->tag == ss_current_tag) {
@@ -626,14 +626,14 @@ int state_save_load_continue(void)
 		}
 		f = f->next;
 	}
-	TRACE(logerror("    %d functions called\n", count));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "    %d functions called\n", count);
 	
 	return 0;
 }
 
 void state_save_load_finish(void)
 {
-	TRACE(logerror("Finishing load\n"));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Finishing load\n");
 	ss_dump_array = 0;
 	ss_dump_size = 0;
 }
@@ -647,7 +647,7 @@ void state_save_dump_registry(void)
 		for(i=0; i<MAX_INSTANCES; i++) {
 			ss_entry *e;
 			for(e = m->instances[i]; e; e=e->next)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%d %s.%d.%s: %s, %x\n", e->tag, m->name, i, e->name, ss_type[e->type], e->size);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%d %s.%d.%s: %s, %x\n", e->tag, m->name, i, e->name, ss_type[e->type], e->size);
 		}
 	}
 #endif

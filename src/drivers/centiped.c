@@ -1490,13 +1490,14 @@ static DRIVER_INIT( magworm )
  *
  *************************************/
 
-GAME( 1980, centiped, 0,        centiped, centiped, 0,        ROT270, "Atari", "Centipede (revision 3)" )
-GAME( 1980, centipd2, centiped, centiped, centiped, 0,        ROT270, "Atari", "Centipede (revision 2)" )
-GAME( 1980, centtime, centiped, centiped, centtime, 0,        ROT270, "Atari", "Centipede (1 player, timed)" )
-GAME( 1980, centipdb, centiped, centipdb, centipdb, centipdb, ROT270, "bootleg", "Centipede (bootleg set 1)" )
-GAME( 1980, centipb2, centiped, centipb2, centiped, 0,        ROT270, "bootleg", "Centipede (bootleg set 2)" )
-GAME( 1980, millpac,  centiped, centipb2, centiped,  0, 	  ROT270, "Valadon Automation", "Millpac" )
-GAME( 1980, magworm,  centiped, magworm,  magworm,  magworm,  ROT270, "bootleg", "Magic Worm (bootleg)" )
-GAME( 1982, milliped, 0,        milliped, milliped, 0,        ROT270, "Atari", "Millipede" )
+GAME( 1980, centiped, 0,        centiped, centiped, 0,        ROT270, "Atari",              "Centipede (revision 3)" )
+GAME( 1980, centipd2, centiped, centiped, centiped, 0,        ROT270, "Atari",              "Centipede (revision 2)" )
+GAME( 1980, centtime, centiped, centiped, centtime, 0,        ROT270, "Atari",              "Centipede (revision 4)" )
+GAME( 1980, centipdb, centiped, centipdb, centipdb, centipdb, ROT270, "bootleg",            "Caterpillar (bootleg of Centipede)" )
+GAME( 1980, centipb2, centiped, centipb2, centiped, 0,        ROT270, "bootleg",            "Centipede (bootleg, set 1)" )
+GAME( 1980, millpac,  centiped, centipb2, centiped, 0,        ROT270, "Valadon Automation", "Millpac (bootleg of Centipede)" )
+GAME( 1980, magworm,  centiped, magworm,  magworm,  magworm,  ROT270, "bootleg",            "Magic Worm (bootleg of Centipede)" )
 
-GAME( 1980, warlords, 0,        warlords, warlords, 0,        ROT0,   "Atari", "Warlords" )
+GAME( 1982, milliped, 0,        milliped, milliped, 0,        ROT270, "Atari",              "Millipede" )
+
+GAME( 1980, warlords, 0,        warlords, warlords, 0,        ROT0,   "Atari",              "Warlords" )

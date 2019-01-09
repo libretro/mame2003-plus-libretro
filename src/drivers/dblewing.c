@@ -259,7 +259,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 	}
 
 
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
 
 	if ((offset*2)==0x0f8) return 0; /* dblwings_080_data;*/
 	if ((offset*2)==0x104) return 0;
@@ -272,7 +272,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 	if ((offset*2)==0x786) return 0;
 
 	/*printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot r %08x, %04x, %04x\n",activecpu_get_pc(), offset*2, mem_mask);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot r %08x, %04x, %04x\n",activecpu_get_pc(), offset*2, mem_mask);
 
 	return 0;/*mame_rand(space->machine);*/
 }
@@ -280,7 +280,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 static WRITE16_HANDLER( dblewing_prot_w )
 {
 /*  if(offset*2 != 0x380)*/
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	switch(offset*2)
 	{
@@ -358,7 +358,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 
 				case 0xeff5: boss_move = 1; break;
 				case 0xd2f1: boss_move = 2; break;
-				/*default:   log_cb(RETRO_LOG_ERROR, LOGPRE "%04x\n",dblwings_38e_data); break;*/
+				/*default:   log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x\n",dblwings_38e_data); break;*/
 				/*case 0xe65a: boss_shoot_type = 0; break;*/
 			}
 			return;
@@ -382,7 +382,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 			return;  /* p2 inputs select screen  OK*/
 	}
 
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	if ((offset*2)==0x008) { dblwings_008_data = data; return; }
 	if ((offset*2)==0x080) { dblwings_080_data = data; return; } /* p3 3rd boss?*/
@@ -397,7 +397,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 
 
 static MEMORY_READ16_START( dblewing_readmem )
-  { 0x000000, 0x07ffff, MRA16_ROM },
+        { 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x100fff, MRA16_RAM },
 	{ 0x102000, 0x102fff, MRA16_RAM },
 	{ 0x104000, 0x104fff, MRA16_RAM },
@@ -409,13 +409,12 @@ static MEMORY_READ16_START( dblewing_readmem )
 	{ 0x300000, 0x3007ff, MRA16_RAM },
 	{ 0x320000, 0x3207ff, MRA16_RAM },
 	{ 0xff0000, 0xff3fff, MRA16_RAM },
-	{ 0xff4000, 0xff7fff, MRA16_RAM }, /* mirrors for above correct.??*/
-	{ 0xff8000, 0xffbfff, MRA16_RAM }, /**/
-	{ 0xffc000, 0xffffff, MRA16_RAM }, /**/
+	{ 0xff8000, 0xffffff, MRA16_RAM }, /* Mirror */
+
 MEMORY_END
 
 static MEMORY_WRITE16_START( dblewing_writemem )
-  { 0x000000, 0x07ffff, MWA16_ROM },
+        { 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x100fff, deco16_pf1_data_w, &deco16_pf1_data },
 	{ 0x102000, 0x102fff, deco16_pf2_data_w, &deco16_pf2_data },
 	{ 0x104000, 0x104fff, MWA16_RAM, &deco16_pf1_rowscroll },
@@ -427,9 +426,7 @@ static MEMORY_WRITE16_START( dblewing_writemem )
 	{ 0x300000, 0x3007ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x320000, 0x3207ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
 	{ 0xff0000, 0xff3fff, MWA16_RAM },
-	{ 0xff4000, 0xff7fff, MWA16_RAM }, /* mirrors for above correct.??*/
-	{ 0xff8000, 0xffbfff, MWA16_RAM }, /**/
-	{ 0xffc000, 0xffffff, MWA16_RAM }, /**/
+	{ 0xff8000, 0xffffff, MWA16_RAM }, /* Mirror */
 MEMORY_END
 
 
@@ -443,7 +440,7 @@ static READ_HANDLER(irq_latch_r)
 
 
 static MEMORY_READ_START( dblewing_sound_readmem )
-  { 0x0000, 0x7fff, MRA_ROM },
+        { 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0xa000, 0xa001, YM2151_status_port_0_r },
 	{ 0xb000, 0xb000, OKIM6295_status_0_r },
@@ -453,7 +450,7 @@ static MEMORY_READ_START( dblewing_sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( dblewing_sound_writemem )
-  { 0x0000, 0x7fff, MWA_ROM },
+        { 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xa000, 0xa001, YM2151_word_0_w },
 	{ 0xb000, 0xb000, OKIM6295_data_0_w },

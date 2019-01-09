@@ -124,7 +124,7 @@ double z80ctc_getperiod (int which, int ch)
 	/* if counter mode */
 	if( (mode & MODE) == MODE_COUNTER)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CTC %d is CounterMode : Can't calcrate period\n", ch );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC %d is CounterMode : Can't calcrate period\n", ch );
 		return 0;
 	}
 
@@ -228,7 +228,7 @@ void z80ctc_w (int which, int offset, int data)
 #endif
 	{
 		ctc->vector = data & 0xf8;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CTC Vector = %02x\n", ctc->vector);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC Vector = %02x\n", ctc->vector);
 		return;
 	}
 
@@ -237,7 +237,7 @@ void z80ctc_w (int which, int offset, int data)
 	{
 		/* set the new mode */
 		ctc->mode[ch] = data;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CTC ch.%d mode = %02x\n", ch, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC ch.%d mode = %02x\n", ch, data);
 
 		/* if we're being reset, clear out any pending timers for this channel */
 		if ((data & RESET) == RESET_ACTIVE)
@@ -279,7 +279,7 @@ int z80ctc_r (int which, int ch)
 	{
 		double clock = ((mode & PRESCALER) == PRESCALER_16) ? ctc->invclock16 : ctc->invclock256;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CTC clock %f\n",1.0/clock);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC clock %f\n",1.0/clock);
 
 
 		if (ctc->timer[ch])
@@ -309,7 +309,7 @@ int z80ctc_interrupt( int which )
 	}
 	if( ch > 3 )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CTC entry INT : non IRQ\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC entry INT : non IRQ\n");
 		ch = 0;
 	}
 	z80ctc_interrupt_check( ctc );
@@ -386,7 +386,7 @@ void z80ctc_trg_w (int which, int trg, int offset, int data)
 			{
 				double clock = ((mode & PRESCALER) == PRESCALER_16) ? ctc->invclock16 : ctc->invclock256;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CTC clock %f\n",1.0/clock);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CTC clock %f\n",1.0/clock);
 
 				if (!(ctc->notimer & (1<<ch)))
 					timer_adjust(ctc->timer[ch], clock * (double)ctc->tconst[ch], (which << 2) + ch, clock * (double)ctc->tconst[ch]);
@@ -566,7 +566,7 @@ void z80pio_d_w( int which , int ch , int data )
 	case PIO_MODE3:			/* mode 0 bit */
 		return;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c data write,bad mode\n",'A'+ch );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c data write,bad mode\n",'A'+ch );
 	}
 }
 
@@ -586,33 +586,33 @@ void z80pio_c_w( int which , int ch , int data )
 	if( pio->enable[ch] & PIO_INT_MASK ){	/* load mask folows */
 		pio->mask[ch] = data;
 		pio->enable[ch] &= ~PIO_INT_MASK;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c interrupt mask %02x\n",'A'+ch,data );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c interrupt mask %02x\n",'A'+ch,data );
 		return;
 	}
 	switch( data & 0x0f ){
 	case PIO_OP_MODE:	/* mode select 0=out,1=in,2=i/o,3=bit */
 		pio->mode[ch] = (data >> 6 );
 		if( pio->mode[ch] == 0x03 ) pio->mode[ch] = 0x13;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c Mode %x\n",'A'+ch,pio->mode[ch] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c Mode %x\n",'A'+ch,pio->mode[ch] );
 		break;
 	case PIO_OP_INTC:		/* interrupt control */
 		pio->enable[ch] = data & 0xf0;
 		pio->mask[ch]   = 0x00;
 		/* when interrupt enable , set vector request flag */
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c Controll %02x\n",'A'+ch,data );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c Controll %02x\n",'A'+ch,data );
 		break;
 	case PIO_OP_INTE:		/* interrupt enable controll */
 		pio->enable[ch] &= ~PIO_INT_ENABLE;
 		pio->enable[ch] |= (data & PIO_INT_ENABLE);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c enable %02x\n",'A'+ch,data&0x80 );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c enable %02x\n",'A'+ch,data&0x80 );
 		break;
 	default:
 			if( !(data&1) )
 			{
 				pio->vector[ch] = data;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c vector %02x\n",'A'+ch,data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c vector %02x\n",'A'+ch,data);
 			}
-			else log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c illegal command %02x\n",'A'+ch,data );
+			else log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c illegal command %02x\n",'A'+ch,data );
 	}
 	/* interrupt check */
 	z80pio_check_irq( pio , ch );
@@ -623,7 +623,7 @@ int z80pio_c_r( int which , int ch )
 {
 	if( ch ) ch = 1;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c controll read\n",'A'+ch );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c controll read\n",'A'+ch );
 	return 0;
 }
 
@@ -641,14 +641,14 @@ int z80pio_d_r( int which , int ch )
 		z80pio_check_irq( pio , ch );
 		return pio->in[ch];
 	case PIO_MODE2:			/* mode 2 i/o */
-		if( ch ) log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-B mode 2 \n");
+		if( ch ) log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-B mode 2 \n");
 		z80pio_set_rdy(pio, 1, 1); /* brdy = H */
 		z80pio_check_irq( pio , ch );
 		return pio->in[ch];
 	case PIO_MODE3:			/* mode 3 bit */
 		return (pio->in[ch]&pio->dir[ch])|(pio->out[ch]&~pio->dir[ch]);
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c data read,bad mode\n",'A'+ch );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c data read,bad mode\n",'A'+ch );
 	return 0;
 }
 
@@ -671,7 +671,7 @@ int z80pio_interrupt( int which )
 		}
 		else
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIO entry INT : non IRQ\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO entry INT : non IRQ\n");
 			ch = 0;
 		}
 	}
@@ -704,7 +704,7 @@ void z80pio_p_w( int which , int ch , int data )
 	pio->in[ch]  = data;
 	switch( pio->mode[ch] ){
 	case PIO_MODE0:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c OUTPUT mode and data write\n",'A'+ch );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c OUTPUT mode and data write\n",'A'+ch );
 		break;
 	case PIO_MODE2:	/* only port A */
 		ch = 1;		/* handshake and IRQ is use portB */
@@ -733,7 +733,7 @@ int z80pio_p_r( int which , int ch )
 		z80pio_check_irq( pio , ch );
 		break;
 	case PIO_MODE1:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c INPUT mode and data read\n",'A'+ch );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c INPUT mode and data read\n",'A'+ch );
 		break;
 	case PIO_MODE3:
 		/*     input bits                , output bits                */
@@ -783,7 +783,7 @@ static void z80pio_update_strobe(int which, int ch, int state)
 				if (state!=0)
 				{
 					/* positive edge */
-					log_cb(RETRO_LOG_ERROR, LOGPRE "PIO-%c positive strobe\n",'A'+ch );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "PIO-%c positive strobe\n",'A'+ch );
 					/* ready is now inactive */
 					z80pio_set_rdy(pio, ch, 0);
 

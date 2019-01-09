@@ -53,7 +53,7 @@ WRITE_HANDLER( dealer_decrypt_rom )
 		counter = (counter - 1) & 0x0F;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %08x: ctr=%04x\n",activecpu_get_pc(),counter);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %08x: ctr=%04x\n",activecpu_get_pc(),counter);*/
 
 	switch(counter)
 	{
@@ -63,7 +63,7 @@ WRITE_HANDLER( dealer_decrypt_rom )
 		case 0x02:	cpu_setbank(1, &RAM[0x30000]);		break;
 		case 0x03:	cpu_setbank(1, &RAM[0x40000]);		break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid counter = %02X\n",counter);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Invalid counter = %02X\n",counter);
 			break;
 	}
 }

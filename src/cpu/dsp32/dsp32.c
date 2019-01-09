@@ -933,7 +933,7 @@ void dsp32c_pio_w(int cpunum, int reg, int data)
 
 		/* error case */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "dsp32_pio_w called on invalid register %d\n", reg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "dsp32_pio_w called on invalid register %d\n", reg);
 			break;
 	}
 
@@ -1007,7 +1007,7 @@ int dsp32c_pio_r(int cpunum, int reg)
 
 		/* error case */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "dsp32_pio_w called on invalid register %d\n", reg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "dsp32_pio_w called on invalid register %d\n", reg);
 			break;
 	}
 

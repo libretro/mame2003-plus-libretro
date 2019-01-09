@@ -317,7 +317,7 @@ static WRITE_HANDLER( mrokumei_sound_io_w )
 			DAC_signed_data_w(0,data);
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: I/O write to port %04x\n",activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: I/O write to port %04x\n",activecpu_get_pc(),offset);
 			break;
 	}
 }
@@ -361,7 +361,7 @@ static WRITE_HANDLER( reikaids_upd7807_portc_w )
 	   1 \ ROM bank
 	   0 /
 	  */
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: port C wr %02x (STATUS %d DATA %d)\n",activecpu_get_pc(),data,BIT(data,2),BIT(data,6));*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: port C wr %02x (STATUS %d DATA %d)\n",activecpu_get_pc(),data,BIT(data,2),BIT(data,6));*/
 
 
 	cpu_setbank(2,memory_region(REGION_CPU2) + 0x10000 * (data & 0x03));
@@ -468,7 +468,7 @@ static READ_HANDLER( pteacher_keyboard_r )
 {
 	int dips = readinputport(0);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: keyboard_r with port A = %02x\n",activecpu_get_pc(),upd7807_porta);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: keyboard_r with port A = %02x\n",activecpu_get_pc(),upd7807_porta);*/
 
 	if (upd7807_porta & 0x80)
 	{
@@ -491,7 +491,7 @@ static READ_HANDLER( pteacher_upd7807_porta_r )
 	if (!BIT(upd7807_portc,6))
 		upd7807_porta = from_cpu;
 	else
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read PA with PC *not* clear\n",activecpu_get_pc());
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read PA with PC *not* clear\n",activecpu_get_pc());
 
 	return upd7807_porta;
 }
@@ -520,7 +520,7 @@ static WRITE_HANDLER( pteacher_upd7807_portc_w )
 	   0 input (coin)
 	  */
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: port C wr %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: port C wr %02x\n",activecpu_get_pc(),data);*/
 
 	cpu_setbank(2,memory_region(REGION_CPU2) + 0x10000 * ((data & 0x0c) >> 2));
 

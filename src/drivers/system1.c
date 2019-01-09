@@ -51,43 +51,43 @@ static int inport16_step,inport17_step,inport23_step;
 
 static READ_HANDLER( inport16_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);*/
 	return(inport16_step);
 }
 
 static READ_HANDLER( inport1c_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());*/
 	return(0x80);	/* infinite loop (at 0x0fb3) until bit 7 is set*/
 }
 
 static READ_HANDLER( inport22_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);*/
 	return(inport17_step);
 }
 
 static READ_HANDLER( inport23_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);*/
 	return(inport23_step);
 }
 
 static WRITE_HANDLER( outport16_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport16_step = data;
 }
 
 static WRITE_HANDLER( outport17_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport17_step = data;
 }
 
 static WRITE_HANDLER( outport24_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport23_step = data;
 }
 
@@ -211,6 +211,12 @@ static MEMORY_WRITE_START( chplft_writemem )
 	{ 0xf800, 0xfbff, system1_sprites_collisionram_w, &system1_sprites_collisionram },
 MEMORY_END
 
+static MEMORY_READ_START( nobo_readmem )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK1 },
+	{ 0xc000, 0xffff, MRA_RAM },
+MEMORY_END
+
 static MEMORY_WRITE_START( nobo_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xc3ff, system1_background_collisionram_w, &system1_background_collisionram },
@@ -231,7 +237,7 @@ static MEMORY_WRITE_START( nobo_writemem )
 	{ 0xd200, 0xd7ff, MWA_RAM },
 	{ 0xde00, 0xdfff, MWA_RAM },
 	{ 0xef00, 0xefbc, MWA_RAM },
-	{ 0xefbf, 0xeffb, MWA_RAM },
+	{ 0xefbe, 0xeffb, MWA_RAM },
 	{ 0xeffe, 0xefff, MWA_RAM },
 MEMORY_END
 
@@ -2093,6 +2099,59 @@ INPUT_PORTS_START( noboranb )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( gardia )
+	PORT_START  /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	
+	PORT_START  /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	
+	PORT_START  /* IN0 */
+	IN0_PORT
+	
+	PORT_START	  /* DSW1 */
+	DSW1_PORT
+	
+	PORT_START  /* DSW0 */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x04, "5" )
+	PORT_DIPSETTING(    0x00, "Infinite" )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x30, "5k, 20k and 30k" )
+	PORT_DIPSETTING(    0x20, "10k, 25k and 50k" )
+	PORT_DIPSETTING(    0x10, "15k, 30k and 60k" )
+	PORT_DIPSETTING(    0x00, "None" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x40, "Easy" )
+	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) /* Manual states "Always On" */
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+
 static struct GfxLayout charlayout =
 {
 	8,8,
@@ -2233,7 +2292,7 @@ static MACHINE_DRIVER_START( noboranb )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM( system1 )
 	MDRV_CPU_REPLACE( "main", Z80, 8000000)    /* ? guess ? */
-	MDRV_CPU_MEMORY(brain_readmem,nobo_writemem)
+	MDRV_CPU_MEMORY(nobo_readmem,nobo_writemem)
 	MDRV_CPU_PORTS(nobo_readport,nobo_writeport)
 
 	/* video hardware */
@@ -4072,8 +4131,8 @@ GAME( 1986, wboy2u,   wboy,     system1,  wboy,     0,        ROT0,   "Sega (Esc
 GAME( 1986, wboy3,    wboy,     system1,  wboy,     hvymetal, ROT0,   "Sega (Escape license)", "Wonder Boy (set 3)" )
 GAME( 1986, wboyu,    wboy,     system1,  wboyu,    0,        ROT0,   "Sega (Escape license)", "Wonder Boy (not encrypted)" )
 GAME( 1986, wbdeluxe, wboy,     system1,  wbdeluxe, 0,        ROT0,   "Sega (Escape license)", "Wonder Boy Deluxe" )
-GAMEX(1986, gardia,   0,        brain,    wboy,     gardia,   ROT270, "Sega / Coreland", 	   "Gardia", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX(1986, gardiab,  gardia,   brain,    wboy,     gardiab,  ROT270, "bootleg", 		 	   "Gardia (bootleg)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX(1986, gardia,   0,        brain,    gardia,   gardia,   ROT270, "Sega / Coreland", 	   "Gardia", GAME_NO_COCKTAIL )
+GAMEX(1986, gardiab,  gardia,   brain,    gardia,   gardiab,  ROT270, "bootleg", 		 	   "Gardia (bootleg)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAME( 1986, noboranb, 0,        noboranb, noboranb, noboranb, ROT270, "bootleg", 		 	   "Noboranka (Japan)" )
 GAMEX(1987, blockgal, 0,        blockgal, blockgal, 0,        ROT90,  "Sega / Vic Tokai",	   "Block Gal", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAMEX(1987, blckgalb, blockgal, blockgal, blockgal, bootleg,  ROT90,  "bootleg", 		 	   "Block Gal (bootleg)", GAME_NO_COCKTAIL )

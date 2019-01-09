@@ -119,7 +119,7 @@ static unsigned char mcu_val;
 static WRITE_HANDLER( mcu_data_w )
 {
 #ifdef MAME_DEBUG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu_data_w = %x\n",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu_data_w = %x\n",data);
 #endif
 	mcu_val = data;
 	/* HW test */
@@ -503,7 +503,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static WRITE_HANDLER( portb_w )
 {
 	/* don't know what this is... could be a filter */
-	if (data != 0x00) log_cb(RETRO_LOG_ERROR, LOGPRE "portB = %02x\n",data);
+	if (data != 0x00) log_cb(RETRO_LOG_DEBUG, LOGPRE "portB = %02x\n",data);
 }
 
 static struct AY8910interface ay8910_interface =

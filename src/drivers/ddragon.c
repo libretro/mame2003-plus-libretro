@@ -17,10 +17,10 @@ table:
     BAD3: LDY   #$BADD
     BAD7: JSR   [A,Y]
 
-At the point of the crash A is 0x3e which causes a jump to 0x3401 (background tile ram) 
-which obviously doesn't contain proper code and causes a crash.  The jump table has 
-32 entries, and only the last contains an invalid jump vector.  A is set to 0x3e as a 
-result of code at 0x625f - it reads from the shared spriteram (0x2049 in main cpu memory space), 
+At the point of the crash A is 0x3e which causes a jump to 0x3401 (background tile ram)
+which obviously doesn't contain proper code and causes a crash.  The jump table has
+32 entries, and only the last contains an invalid jump vector.  A is set to 0x3e as a
+result of code at 0x625f - it reads from the shared spriteram (0x2049 in main cpu memory space),
 copies the value to 0x523 (main ram) where it is later fetched and shifted to make 0x3e.
 
 So..  it's not clear where the error is - the 0x1f value is actually written to
@@ -66,6 +66,8 @@ conversion kit which could be applied to a bootleg double dragon :-p?
 #include "cpu/z80/z80.h"
 #include "vidhrdw/generic.h"
 
+
+int  m_ddragon_sub_port = 0;
 /* from vidhrdw */
 extern unsigned char *ddragon_bgvideoram,*ddragon_fgvideoram;
 extern int ddragon_scrollx_hi, ddragon_scrolly_hi;
@@ -87,6 +89,48 @@ static data8_t* darktowr_mcu_ports;
 static int VBLK;
 /* end of private globals */
 
+bool		ddragon_playing = false;
+int			ddragon_current_music = 0;
+int			ddragon_stage = 0;
+int			d_title_counter = 0;
+
+const char *const ddragon_samples_set_names[] =
+{
+	"*ddragon",
+	"title-01",
+	"title-02",
+	"stage1-01",
+	"stage1-02",
+	"stage2-01",
+	"stage2-02",
+	"stage3-01",
+	"stage3-02",
+	"stage3-alt-01",
+	"stage3-alt-02",
+	"stage4-01",
+	"stage4-02",
+	"credits-01",
+	"credits-02",
+	"diddy-01",
+	"diddy-02",
+	"complete-01",
+	"complete-02",
+	"boss-01",
+	"boss-02",
+	"boss-alt-01",
+	"boss-alt-02",
+	"finalboss-01",
+	"finalboss-02",
+	0
+};
+
+static struct Samplesinterface ddragon_samples_set =
+{
+	2,	// 2 channels
+	100, // volume
+	ddragon_samples_set_names
+};
+
 static MACHINE_INIT( ddragon )
 {
 	sprite_irq = IRQ_LINE_NMI;
@@ -96,6 +140,7 @@ static MACHINE_INIT( ddragon )
 	dd_sub_cpu_busy = 0x10;
 	adpcm_idle[0] = adpcm_idle[1] = 1;
 	snd_cpu = 2;
+	m_ddragon_sub_port = 0;
 }
 
 static MACHINE_INIT( toffy )
@@ -185,7 +230,7 @@ static WRITE_HANDLER( darktowr_bankswitch_w )
 
 	darktowr_bank=(data & 0xe0) >> 5;
 /*	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );*/
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);*/
 }
 
 static READ_HANDLER( darktowr_bank_r )
@@ -194,12 +239,12 @@ static READ_HANDLER( darktowr_bank_r )
 
 	/* MCU is mapped into main cpu memory as a bank */
 	if (darktowr_bank==4) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "BankRead %05x %08x\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "BankRead %05x %08x\n",activecpu_get_pc(),offset);
 		if (offset==0x1401 || offset==1) {
 			return darktowr_mcu_ports[0];
 		}
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unmapped mcu bank read %04x\n",offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unmapped mcu bank read %04x\n",offset);
 		return 0xff;
 	}
 
@@ -209,20 +254,20 @@ static READ_HANDLER( darktowr_bank_r )
 static WRITE_HANDLER( darktowr_bank_w )
 {
 	if (darktowr_bank==4) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "BankWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "BankWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
 
 		if (offset==0x1400 || offset==0) {
 			int bitSwappedData=BITSWAP8(data,0,1,2,3,4,5,6,7);
 
 			darktowr_mcu_ports[1]=bitSwappedData;
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "MCU PORT 1 -> %04x (from %04x)\n",bitSwappedData,data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "MCU PORT 1 -> %04x (from %04x)\n",bitSwappedData,data);
 			return;
 		}
 		return;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ROM write! %04x %02x\n",offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ROM write! %04x %02x\n",offset,data);
 }
 
 static READ_HANDLER( darktowr_mcu_r )
@@ -232,7 +277,7 @@ static READ_HANDLER( darktowr_mcu_r )
 
 static WRITE_HANDLER( darktowr_mcu_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "McuWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "McuWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
 	darktowr_mcu_ports[offset]=data;
 }
 
@@ -251,8 +296,214 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		cpu_set_irq_line(0,M6809_IRQ_LINE,CLEAR_LINE);
 		break;
 	case 3: /* 380e - SND irq */
-		soundlatch_w( 0, data );
-		cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+		if(ddragon_playing == true) {
+			int a = 0;
+			int o_max_samples = 23;
+			int sa_left = 0;
+			int sa_right = 1;
+			int sa_volume = 40;
+			bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
+			bool sa_play_sample = false;
+			bool sa_play_original = false;
+			bool ddragon_do_nothing = false;
+			bool ddragon_stop_samples = false;
+			bool ddragon_play_default = false;
+
+			switch(data) {
+				// Use for a counter flag on the title screen and stopping music.
+				case 0xFF:
+					// We are at the title screen.
+					if(ddragon_current_music == 10 && ddragon_stage != 4) {
+							// A coin has been inserted, lets stop the title music, about to start the first stage.
+							if(d_title_counter > 5) {
+								ddragon_stop_samples = true;
+								d_title_counter = 0;
+							}
+							else
+								d_title_counter++;
+					}
+					else {
+						ddragon_stop_samples = true;
+						ddragon_stage = 0;
+						d_title_counter = 0;
+					}
+				break;
+
+				// Title screen.
+				case 0x1:
+					if(ddragon_current_music != 10 && ddragon_stage != 4) {
+						ddragon_current_music = 10;
+						sa_play_sample = true;
+						sa_left = 0;
+						sa_right = 1;
+					}
+					else if(ddragon_stage == 4 && ddragon_current_music != 15) { // Final boss fight.
+						ddragon_current_music = 15;
+						sa_play_sample = true;
+						sa_left = 22;
+						sa_right = 23;
+					}
+					else
+						ddragon_do_nothing = true;
+
+					d_title_counter = 0;
+				break;
+
+				// Stage 1.
+				case 0x9:
+					ddragon_stage = 1;
+					ddragon_current_music = 1;
+					sa_play_sample = true;
+					sa_left = 2;
+					sa_right = 3;
+				break;
+
+				// Stage 2.
+				case 0x7:
+					ddragon_stage = 2;
+					ddragon_current_music = 2;
+					sa_play_sample = true;
+					sa_left = 4;
+					sa_right = 5;
+				break;
+
+				// Stage 3.
+				case 0xA:
+					if(ddragon_current_music != 3 && ddragon_stage != 3) {
+						ddragon_stage = 3;
+						ddragon_current_music = 3;
+						sa_play_sample = true;
+						sa_left = 6;
+						sa_right = 7;
+					}
+					else if(ddragon_stage == 3) {
+						sa_play_sample = true;
+						sa_left = 8;
+						sa_right = 9;
+					}
+					else
+						ddragon_do_nothing;
+				break;
+
+				// Stage 4.
+				case 0xD:
+					ddragon_stage = 4;
+					ddragon_current_music = 4;
+					sa_play_sample = true;
+					sa_left = 10;
+					sa_right = 11;
+				break;
+
+				// Credits.
+				case 0x6:
+					sa_volume = 100;
+					sa_loop = 0;
+					ddragon_stage = 5;
+					ddragon_current_music = 5;
+					sa_play_sample = true;
+					sa_left = 12;
+					sa_right = 13;
+				break;
+
+				// Level finished.
+				case 0xE:
+					ddragon_current_music = 11;
+					sa_loop = 0;
+					sa_play_sample = true;
+					sa_left = 14;
+					sa_right = 15;
+				break;
+
+				// Short diddy after boss battle.
+				case 0xC:
+					ddragon_current_music = 12;
+					sa_loop = 0;
+					sa_play_sample = true;
+					sa_left = 16;
+					sa_right = 17;
+				break;
+
+				// Boss battle music.
+				case 0x3:
+					if(ddragon_stage == 3) {
+						ddragon_current_music = 14;
+						sa_play_sample = true;
+						sa_left = 20;
+						sa_right = 21;
+					}
+					else {
+						ddragon_current_music = 13;
+						sa_play_sample = true;
+						sa_left = 18;
+						sa_right = 19;
+					}
+				break;
+
+				default:
+					soundlatch_w( 0, data );
+					cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+				break;
+			}
+
+			if(sa_play_sample == true) {
+				a = 0;
+
+				for(a = 0; a <= o_max_samples; a++) {
+					sample_stop(a);
+				}
+
+				sample_start(0, sa_left, sa_loop);
+				sample_start(1, sa_right, sa_loop);
+
+				// Determine how we should mix these samples together.
+				if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+					sample_set_stereo_volume(1, sa_volume, sa_volume);
+				}
+				else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+					sample_set_stereo_volume(0, sa_volume, sa_volume);
+				}
+				else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+					sample_set_stereo_volume(0, sa_volume, 0);
+					sample_set_stereo_volume(1, 0, sa_volume);
+				}
+				else if(sample_playing(0) == 0 && sample_playing(1) == 0 && ddragon_do_nothing == false) { // No sample playing, revert to the default sound.
+					sa_play_original = false;
+					ddragon_current_music = 0;
+					soundlatch_w( 0, data );
+					cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+				}
+
+				if(sa_play_original == true) {
+					ddragon_current_music = 0;
+					soundlatch_w( 0, data );
+					cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+				}
+			}
+			else if(ddragon_do_nothing == true) {
+				// --> Do nothing.
+			}
+			else if(ddragon_stop_samples == true) {
+				ddragon_current_music = 0;
+				a = 0;
+
+				for(a = 0; a <= o_max_samples; a++) {
+					sample_stop(a);
+				}
+
+				// Now play the default sound.
+				soundlatch_w( 0, data );
+				cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			}
+			else if(ddragon_play_default == true) {
+				ddragon_current_music = 0;
+				soundlatch_w( 0, data );
+				cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			}
+		}
+		else {
+			soundlatch_w( 0, data );
+			cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+		}
 		break;
 	case 4: /* 380f - ? */
 		/* Not sure what this is - almost certainly related to the sprite mcu */
@@ -262,21 +513,23 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 
 static READ_HANDLER( ddragon_hd63701_internal_registers_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read %d\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read %d\n",activecpu_get_pc(),offset);
 	return 0;
 }
 
+
 static WRITE_HANDLER( ddragon_hd63701_internal_registers_w )
 {
-	/* I don't know why port 0x17 is used..  Doesn't seem to be a standard MCU port */
-	if (offset==0x17) {
-		/* This is a guess, but makes sense.. The mcu definitely interrupts the main cpu.
-		I don't know what bit is the assert and what is the clear though (in comparison
-		it's quite obvious from the Double Dragon 2 code, below). */
-		if (data&3) {
-			cpu_set_irq_line(0,M6809_IRQ_LINE,ASSERT_LINE);
+	
+	if (offset == 0x17)
+	{
+		if ((data & 0x1) == 0)
 			cpu_set_irq_line(1,sprite_irq, CLEAR_LINE );
-		}
+
+		if (!(m_ddragon_sub_port & 0x2) && (data & 0x2))
+			cpu_set_irq_line(0,M6809_IRQ_LINE,ASSERT_LINE);
+
+		m_ddragon_sub_port = data;	
 	}
 }
 
@@ -303,7 +556,7 @@ static READ_HANDLER( ddragon_spriteram_r )
 	/* if (offset == 0x49 && activecpu_get_pc() == 0x6261 && ddragon_spriteram[offset]== 0x1f) */
 	   if (offset==0x49 && ddragon_spriteram[offset]==0x1f)
 	    return 0x1;
-	
+
 	return ddragon_spriteram[offset];
 }
 
@@ -954,6 +1207,12 @@ static MACHINE_DRIVER_START( ddragon )
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
+
+	MDRV_SOUND_ADD(SAMPLES, ddragon_samples_set)
+	ddragon_playing = true;
+	ddragon_current_music = 0;
+	ddragon_stage = 0;
+	d_title_counter = 0;
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( darktowr )

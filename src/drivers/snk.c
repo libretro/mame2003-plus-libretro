@@ -436,7 +436,7 @@ static int snk_input_port_r( int which ){
 		case SNK_INP11: return input_port_11_r(0);
 
 		default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "read from unmapped input port:%d\n", which );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "read from unmapped input port:%d\n", which );
 		break;
 	}
 	return 0;

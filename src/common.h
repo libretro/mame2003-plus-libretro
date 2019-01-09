@@ -56,7 +56,12 @@ struct GameSample
 	int length;
 	int smpfreq;
 	int resolution;
-	signed char data[1];	/* extendable */
+	int b_decoded;
+	int b_h_decoded;
+	char gamename[512];
+	char filename[512];
+	int filetype;
+	signed char data[1]; /* extendable */
 };
 
 
@@ -92,7 +97,9 @@ struct GameSamples
 	struct GameSample *sample[1];	/* extendable */
 };
 
-
+int f_load_sample_sizes;
+ 
+#define	GAME_SAMPLE_LARGE		10000000 // 10MB
 
 /***************************************************************************
 

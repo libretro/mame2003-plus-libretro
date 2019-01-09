@@ -16,6 +16,11 @@ Revisions:
   a musical-note style progression in sample rate
   calculation(still very inaccurate)
 
+02-18-2004 R. Belmont
+- sample rate calculation reverse-engineered.
+  Thanks to Fujix, Yasuhiro Ogawa, the Guru, and Tormod
+  for real PCB samples that made this possible.
+
 *********************************************************/
 #include <math.h>
 #include "driver.h"
@@ -24,14 +29,6 @@ Revisions:
 
 /*AT*/
 #define MAX_VOL 256
-#define NUM_STEPS 8
-#define NUM_OCTAVES 8
-
-/* International standard: 435, U.S.standard: 440*/
-#define A4 435/2
-
-/* starts from "A#" in the fourth octave(tentative)*/
-#define BASE_KEY 14*4+1
 
 #define MIX_CH(CH) \
 	if (play[CH]) \
@@ -72,9 +69,7 @@ static struct IremGA20_channel_def
 	unsigned long play;
 } IremGA20_channel[4];
 
-/*AT*/
-static float *sr_table;
-static int *sr_xlat;
+static int sr_table[256];
 
 void IremGA20_update( int param, INT16 **buffer, int length )
 {
@@ -101,9 +96,10 @@ void IremGA20_update( int param, INT16 **buffer, int length )
 	edi += ecx;
 	ebp += ecx;
 	ecx = -ecx;
+
 	for (; ecx; ecx+=2)
 	{
-		edx ^= edx;
+		edx = 0;
 
 		MIX_CH(0);
 		MIX_CH(1);
@@ -157,8 +153,8 @@ WRITE_HANDLER( IremGA20_w )
 		IremGA20_channel[channel].end = ((IremGA20_channel[channel].end)&0x00ff0) | (data<<12);
 	break;
 
-	case 8: /*AT: frequencies are snapped to half-note boundaries*/
-		IremGA20_channel[channel].rate = sr_table[sr_xlat[data>>3]] / Machine->sample_rate;
+	case 8:
+		IremGA20_channel[channel].rate = (sr_table[data]<<8) / Machine->sample_rate;
 	break;
 
 	case 0xa: /*AT: gain control*/
@@ -174,8 +170,27 @@ WRITE_HANDLER( IremGA20_w )
 
 READ_HANDLER( IremGA20_r )
 {
-	/* Todo - Looks like there is a status bit to show whether each channel is playing */
-	return 0xff;
+	int channel;
+
+	if (!Machine->sample_rate)
+		return 0;
+
+	stream_update(IremGA20_chip.channel, 0);
+
+	channel = offset >> 4;
+
+	switch (offset & 0xf)
+	{
+		case 0xe:	/* voice status.  bit 0 is 1 if active. (routine around 0xccc in rtypeleo) */
+			return IremGA20_channel[channel].play ? 1 : 0;
+			break;
+
+		default:
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "GA20: read unk. register %d, channel %d\n", offset & 0xf, channel);
+			break;
+	}
+
+	return 0;
 }
 
 static void IremGA20_reset( void )
@@ -199,12 +214,7 @@ int IremGA20_sh_start(const struct MachineSound *msound)
 {
 	const char *names[2];
 	char ch_names[2][40];
-/*AT*/
-	float fx;
-	float *root_table, *fptr;
-	int *iptr, i, j, k;
-	int key_progress[14]={0,1,2,2,3,4,5,6,7,7,8,9,10,11};
-/*ZT*/
+	int i;
 
 	if (!Machine->sample_rate) return 0;
 
@@ -214,34 +224,15 @@ int IremGA20_sh_start(const struct MachineSound *msound)
 	IremGA20_chip.rom = memory_region(IremGA20_chip.intf->region);
 	IremGA20_chip.rom_size = memory_region_length(IremGA20_chip.intf->region);
 
-/*AT*/
-	sr_table = auto_malloc(sizeof(float)*NUM_STEPS*NUM_OCTAVES*12);
-	root_table = auto_malloc(sizeof(float)*NUM_STEPS*12);
-	sr_xlat = auto_malloc(sizeof(int)*256);
-
-	for (i=0; i<NUM_STEPS*12; i++)
-		root_table[i] = pow(2.0, (float)i/(12.0*NUM_STEPS));
-
-	fptr = sr_table;
-	for (i=0; i<NUM_OCTAVES; i++)
+	/* Initialize our pitch table */
+	for (i = 0; i < 255; i++)
 	{
-		fx = A4<<(i + 8);
-		for (j=0; j<NUM_STEPS*12; j++)
-			*fptr++ = fx * root_table[j];
+		sr_table[i] = (IremGA20_chip.intf->clock / (256-i) / 4);
 	}
 
-	iptr = sr_xlat;
-	for (i=BASE_KEY; i<BASE_KEY+32; i++)
-	{
-		j = i / 14;
-		k = i % 14;
-		*iptr++ = (j * 12 + key_progress[k]) * NUM_STEPS;
-	}
-
-	/* change sinage of PCM samples in advance*/
+	/* change signedness of PCM samples in advance */
 	for (i=0; i<IremGA20_chip.rom_size; i++)
 		IremGA20_chip.rom[i] -= 0x80;
-/*ZT*/
 
 	IremGA20_reset();
 

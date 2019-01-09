@@ -507,7 +507,7 @@ const struct GameDriver driver_##NAME =          \
   init_##INIT,          \
   rom_##NAME,           \
   MONITOR,              \
-  CTRL_INFO,          \
+  CTRL_INFO,            \
   BOOTSTRAP             \
 };
 
@@ -527,7 +527,7 @@ const struct GameDriver driver_##NAME =           \
   init_##INIT,          \
   rom_##NAME,           \
   (MONITOR)|(FLAGS),    \
-  CTRL_INFO,          \
+  CTRL_INFO,            \
   BOOTSTRAP             \
 };
 

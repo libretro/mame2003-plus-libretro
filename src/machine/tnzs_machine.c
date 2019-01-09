@@ -55,14 +55,14 @@ static READ_HANDLER( mcu_tnzs_r )
 		cpu_yield();
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: read %02x from mcu $c00%01x\n", activecpu_get_previouspc(), data, offset);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: read %02x from mcu $c00%01x\n", activecpu_get_previouspc(), data, offset);*/
 
 	return data;
 }
 
 static WRITE_HANDLER( mcu_tnzs_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: write %02x to mcu $c00%01x\n", activecpu_get_previouspc(), data, offset);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: write %02x to mcu $c00%01x\n", activecpu_get_previouspc(), data, offset);*/
 
 	if (offset == 0)
 		cpunum_set_reg(2, I8X41_DATA, data);
@@ -83,7 +83,7 @@ READ_HANDLER( tnzs_port1_r )
 		default:	data = 0xff; break;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "I8742:%04x  Read %02x from port 1\n", activecpu_get_previouspc(), data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8742:%04x  Read %02x from port 1\n", activecpu_get_previouspc(), data);*/
 
 	return data;
 }
@@ -92,14 +92,14 @@ READ_HANDLER( tnzs_port2_r )
 {
 	int data = input_port_4_r(0);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "I8742:%04x  Read %02x from port 2\n", activecpu_get_previouspc(), data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8742:%04x  Read %02x from port 2\n", activecpu_get_previouspc(), data);*/
 
 	return data;
 }
 
 WRITE_HANDLER( tnzs_port2_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "I8742:%04x  Write %02x to port 2\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8742:%04x  Write %02x to port 2\n", activecpu_get_previouspc(), data);
 
 	coin_lockout_w( 0, (data & 0x40) );
 	coin_lockout_w( 1, (data & 0x80) );
@@ -115,7 +115,7 @@ READ_HANDLER( arknoid2_sh_f000_r )
 {
 	int val;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: read input %04x\n", activecpu_get_pc(), 0xf000 + offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: read input %04x\n", activecpu_get_pc(), 0xf000 + offset);
 
 	val = readinputport(7 + offset/2);
 	if (offset & 1)
@@ -159,7 +159,7 @@ static void mcu_handle_coins(int coin)
 	{
 		if (coin & 0x01)	/* coin A */
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Coin dropped into slot A\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot A\n");
 			coin_counter_w(0,1); coin_counter_w(0,0); /* Count slot A */
 			mcu_coinsA++;
 			if (mcu_coinsA >= mcu_coinage[0])
@@ -179,7 +179,7 @@ static void mcu_handle_coins(int coin)
 		}
 		if (coin & 0x02)	/* coin B */
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Coin dropped into slot B\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot B\n");
 			coin_counter_w(1,1); coin_counter_w(1,0); /* Count slot B */
 			mcu_coinsB++;
 			if (mcu_coinsB >= mcu_coinage[2])
@@ -199,7 +199,7 @@ static void mcu_handle_coins(int coin)
 		}
 		if (coin & 0x04)	/* service */
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Coin dropped into service slot C\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into service slot C\n");
 			mcu_credits++;
 		}
 		mcu_reportcoin = coin;
@@ -219,7 +219,7 @@ static READ_HANDLER( mcu_arknoid2_r )
 {
 	const char *mcu_startup = "\x55\xaa\x5a";
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: read mcu %04x\n", activecpu_get_pc(), 0xc000 + offset);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: read mcu %04x\n", activecpu_get_pc(), 0xc000 + offset);*/
 
 	if (offset == 0)
 	{
@@ -250,7 +250,7 @@ static READ_HANDLER( mcu_arknoid2_r )
 				else return readinputport(2);	/* buttons */
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "error, unknown mcu command\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "error, unknown mcu command\n");
 				/* should not happen */
 				return 0xff;
 				break;
@@ -281,7 +281,7 @@ static WRITE_HANDLER( mcu_arknoid2_w )
 {
 	if (offset == 0)
 	{
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);*/
 		if (mcu_command == 0x41)
 		{
 			mcu_credits = (mcu_credits + data) & 0xff;
@@ -298,7 +298,7 @@ static WRITE_HANDLER( mcu_arknoid2_w )
 		0x80: release coin lockout (issued only in test mode)
 		during initialization, a sequence of 4 bytes sets coin/credit settings
 		*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);*/
 
 		if (mcu_initializing)
 		{
@@ -324,7 +324,7 @@ static READ_HANDLER( mcu_extrmatn_r )
 {
 	const char *mcu_startup = "\x5a\xa5\x55";
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x (re %04x): read mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), 0xc000 + offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): read mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), 0xc000 + offset);
 
 	if (offset == 0)
 	{
@@ -378,7 +378,7 @@ static READ_HANDLER( mcu_extrmatn_r )
 				else return ((readinputport(2) & 0xf0) | (readinputport(3) >> 4)) ^ 0xff;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "error, unknown mcu command\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "error, unknown mcu command\n");
 				/* should not happen */
 				return 0xff;
 				break;
@@ -409,7 +409,7 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 {
 	if (offset == 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
 		if (mcu_command == 0x41)
 		{
 			mcu_credits = (mcu_credits + data) & 0xff;
@@ -431,7 +431,7 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 		during initialization, a sequence of 4 bytes sets coin/credit settings
 		*/
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
 
 		if (mcu_initializing)
 		{
@@ -699,7 +699,7 @@ WRITE_HANDLER( tnzs_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data);*/
 
 	/* bit 4 resets the second CPU */
 	if (data & 0x10)
@@ -715,7 +715,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data);
 
 	switch (mcu_type)
 	{

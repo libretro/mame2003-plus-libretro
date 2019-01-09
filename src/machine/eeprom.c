@@ -144,7 +144,7 @@ static void EEPROM_write(int bit)
 
 	if (serial_count >= SERIAL_BUFFER_LENGTH-1)
 	{
-    log_cb(RETRO_LOG_ERROR, LOGPRE "error: EEPROM serial buffer overflow\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "error: EEPROM serial buffer overflow\n");
 		return;
 	}
 
@@ -195,7 +195,7 @@ static void EEPROM_write(int bit)
 				eeprom_data[address] = 0x00;
 		}
 		else
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Error: EEPROM is locked\n");
 		serial_count = 0;
 	}
 	else if ( (serial_count > (intf->address_bits + intf->data_bits)) &&
@@ -227,7 +227,7 @@ static void EEPROM_write(int bit)
 				eeprom_data[address] = data;
 		}
 		else
-       log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
+       log_cb(RETRO_LOG_DEBUG, LOGPRE "Error: EEPROM is locked\n");
 		serial_count = 0;
 	}
 	else if ( EEPROM_command_match((char*)serial_buffer,intf->cmd_lock,strlen((char*)serial_buffer)) )

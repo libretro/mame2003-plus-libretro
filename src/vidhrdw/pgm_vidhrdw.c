@@ -173,7 +173,8 @@ static void pgm_drawsprites(int priority)
 	   wwww wwwh hhhh hhhh
 	*/
 
-	const UINT16 *finish = pgm_spritebufferram+0xa00;
+	/* const UINT16 *finish = pgm_spritebufferram+0xa00; */
+	const UINT16 *finish = pgm_spritebufferram+(0xa00/2);
 	int y;
 
 	/* clear the sprite bitmap */
@@ -280,9 +281,11 @@ VIDEO_START( pgm )
 	pgm_tx_tilemap= tilemap_create(get_pgm_tx_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,64,32);
 	tilemap_set_transparent_pen(pgm_tx_tilemap,15);
 
-	pgm_bg_tilemap = tilemap_create(get_pgm_bg_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 32, 32,64,64);
+/*	pgm_bg_tilemap = tilemap_create(get_pgm_bg_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 32, 32,64,64); */
+	pgm_bg_tilemap = tilemap_create(get_pgm_bg_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 32, 32,64,16);
 	tilemap_set_transparent_pen(pgm_bg_tilemap,31);
-	tilemap_set_scroll_rows(pgm_bg_tilemap,64*32);
+/*	tilemap_set_scroll_rows(pgm_bg_tilemap,64*32); */
+	tilemap_set_scroll_rows(pgm_bg_tilemap,16*32);
 
 	pgm_spritebufferram = auto_malloc (0xa00);
 
@@ -311,8 +314,9 @@ VIDEO_UPDATE( pgm )
 	tilemap_set_scrolly(pgm_bg_tilemap,0, pgm_videoregs[0x2000/2]);
 
 	for (y = 0; y < 224; y++)
-		tilemap_set_scrollx(pgm_bg_tilemap,(y+pgm_videoregs[0x2000/2])&0x7ff, pgm_videoregs[0x3000/2]+pgm_rowscrollram[y]);
-
+		/*tilemap_set_scrollx(pgm_bg_tilemap,(y+pgm_videoregs[0x2000/2])&0x7ff, pgm_videoregs[0x3000/2]+pgm_rowscrollram[y]); */
+        tilemap_set_scrollx(pgm_bg_tilemap,(y+pgm_videoregs[0x2000/2])&0x1ff, pgm_videoregs[0x3000/2]+pgm_rowscrollram[y]);
+	
 	tilemap_draw(bitmap,cliprect,pgm_bg_tilemap,0,0);
 
 	pgm_drawsprites(0);

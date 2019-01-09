@@ -12,15 +12,6 @@
 #include "includes/psx.h"
 #include "state.h"
 
-static INLINE void verboselog( int n_level, const char *s_fmt, ... )
-{
-  va_list v;
-  char buf[ 32768 ];
-  va_start( v, s_fmt );
-  vsprintf( buf, s_fmt, v );
-  va_end( v );
-  log_cb(n_level, LOGPRE  "%08x: %s", activecpu_get_pc(), buf );
-}
 
 static UINT8 *m_p_n_ram;
 static size_t m_n_ramsize;
@@ -72,7 +63,7 @@ static void spu_read( UINT32 n_address, INT32 n_size )
 {
 	data32_t n_spuoffset;
 
-	verboselog(RETRO_LOG_DEBUG, "spu_read( %08x, %08x )\n", n_address, n_size );
+	log_cb(RETRO_LOG_DEBUG, "spu_read( %08x, %08x )\n", n_address, n_size );
 
 	n_spuoffset = m_n_irqaddress * 2;
 	while( n_size > 0 )
@@ -88,7 +79,7 @@ static void spu_write( UINT32 n_address, INT32 n_size )
 {
 	data32_t n_spuoffset;
 
-	verboselog(RETRO_LOG_DEBUG, "spu_write( %08x, %08x )\n", n_address, n_size );
+	log_cb(RETRO_LOG_DEBUG, "spu_write( %08x, %08x )\n", n_address, n_size );
 
 	n_spuoffset = m_n_irqaddress * 2;
 	while( n_size > 0 )
@@ -205,7 +196,7 @@ void PSX_sh_reset( void )
 
 READ32_HANDLER( psx_spu_delay_r )
 {
-	verboselog(RETRO_LOG_DEBUG, "psx_spu_delay_r()\n", m_n_voiceon );
+	log_cb(RETRO_LOG_DEBUG, "psx_spu_delay_r()\n", m_n_voiceon );
 	return 0;
 }
 
@@ -220,15 +211,15 @@ READ32_HANDLER( psx_spu_r )
 		case SPU_CHANNEL_REG( 0xc ):
 			if( ACCESSING_LSW32 )
 			{
-				verboselog(RETRO_LOG_DEBUG, "psx_spu_r() channel %d adsr volume = %04x\n", n_channel, m_p_n_adsrvolume[ n_channel ] );
+				log_cb(RETRO_LOG_DEBUG, "psx_spu_r() channel %d adsr volume = %04x\n", n_channel, m_p_n_adsrvolume[ n_channel ] );
 			}
 			if( ACCESSING_MSW32 )
 			{
-				verboselog(RETRO_LOG_DEBUG, "psx_spu_r() channel %d repeat address = %04x\n", n_channel, m_p_n_repeataddress[ n_channel ] );
+				log_cb(RETRO_LOG_DEBUG, "psx_spu_r() channel %d repeat address = %04x\n", n_channel, m_p_n_repeataddress[ n_channel ] );
 			}
 			return ( m_p_n_repeataddress[ n_channel ] << 16 ) | m_p_n_adsrvolume[ n_channel ];
 		default:
-			verboselog(RETRO_LOG_WARN, "psx_spu_r( %08x, %08x ) channel %d reg %d\n", offset, mem_mask, n_channel, offset % 4 ); 
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r( %08x, %08x ) channel %d reg %d\n", offset, mem_mask, n_channel, offset % 4 ); 
 			return 0;
 		}
 	}
@@ -237,25 +228,25 @@ READ32_HANDLER( psx_spu_r )
 		switch( offset )
 		{
 		case SPU_REG( 0xd88 ):
-			verboselog(RETRO_LOG_DEBUG, "psx_spu_r() voice on = %08x\n", m_n_voiceon );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() voice on = %08x\n", m_n_voiceon );
 			return m_n_voiceon;
 		case SPU_REG( 0xd8c ):
-			verboselog(RETRO_LOG_DEBUG, "psx_spu_r() voice off = %08x\n", m_n_voiceoff );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() voice off = %08x\n", m_n_voiceoff );
 			return m_n_voiceoff;
 		case SPU_REG( 0xd98 ):
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_r() reverb mode = %08x\n", m_n_reverbmode );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_r() reverb mode = %08x\n", m_n_reverbmode );
 			return m_n_reverbmode;
 		case SPU_REG( 0xda4 ):
-			verboselog(RETRO_LOG_DEBUG, "psx_spu_r() irq address = %08x\n", m_n_irqaddress << 16 );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() irq address = %08x\n", m_n_irqaddress << 16 );
 			return m_n_irqaddress << 16;
 		case SPU_REG( 0xda8 ):
-			verboselog(RETRO_LOG_DEBUG, "psx_spu_r() spu data/control = %08x\n", m_n_spudata | ( m_n_spucontrol << 16 ) );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() spu data/control = %08x\n", m_n_spudata | ( m_n_spucontrol << 16 ) );
 			return m_n_spudata | ( m_n_spucontrol << 16 );
 		case SPU_REG( 0xdac ):
-			verboselog(RETRO_LOG_DEBUG, "psx_spu_r() spu status = %08x\n", m_n_spustatus );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() spu status = %08x\n", m_n_spustatus );
 			return m_n_spustatus;
 		default:
-			verboselog(RETRO_LOG_WARN, "psx_spu_r( %08x, %08x ) %08x\n", offset, mem_mask, 0xc00 + ( offset * 4 ) );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r( %08x, %08x ) %08x\n", offset, mem_mask, 0xc00 + ( offset * 4 ) );
 			return 0;
 		}
 	}
@@ -273,52 +264,52 @@ WRITE32_HANDLER( psx_spu_w )
 			if( ACCESSING_LSW32 )
 			{
 				m_p_n_volumeleft[ n_channel ] = offset & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d volume left = %04x\n", n_channel, m_p_n_volumeleft[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d volume left = %04x\n", n_channel, m_p_n_volumeleft[ n_channel ] );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_p_n_volumeright[ n_channel ] = offset >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d volume right = %04x\n", n_channel, m_p_n_volumeright[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d volume right = %04x\n", n_channel, m_p_n_volumeright[ n_channel ] );
 			}
 			break;
 		case SPU_CHANNEL_REG( 0x4 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_p_n_pitch[ n_channel ] = offset & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d pitch = %04x\n", n_channel, m_p_n_pitch[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d pitch = %04x\n", n_channel, m_p_n_pitch[ n_channel ] );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_p_n_address[ n_channel ] = offset >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d address = %04x\n", n_channel, m_p_n_address[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d address = %04x\n", n_channel, m_p_n_address[ n_channel ] );
 			}
 			break;
 		case SPU_CHANNEL_REG( 0x8 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_p_n_attackdecaysustain[ n_channel ] = offset & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d attack/decay/sustain = %04x\n", n_channel, m_p_n_attackdecaysustain[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d attack/decay/sustain = %04x\n", n_channel, m_p_n_attackdecaysustain[ n_channel ] );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_p_n_sustainrelease[ n_channel ] = offset >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d sustain/release = %04x\n", n_channel, m_p_n_sustainrelease[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d sustain/release = %04x\n", n_channel, m_p_n_sustainrelease[ n_channel ] );
 			}
 			break;
 		case SPU_CHANNEL_REG( 0xc ):
 			if( ACCESSING_LSW32 )
 			{
 				m_p_n_adsrvolume[ n_channel ] = offset & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d adsr volume = %04x\n", n_channel, m_p_n_adsrvolume[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d adsr volume = %04x\n", n_channel, m_p_n_adsrvolume[ n_channel ] );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_p_n_repeataddress[ n_channel ] = offset >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel %d repeat address = %04x\n", n_channel, m_p_n_repeataddress[ n_channel ] );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel %d repeat address = %04x\n", n_channel, m_p_n_repeataddress[ n_channel ] );
 			}
 			break;
 		default:
-			verboselog( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) channel %d reg %d\n", offset, mem_mask, data, n_channel, offset % 4 ); 
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) channel %d reg %d\n", offset, mem_mask, data, n_channel, offset % 4 ); 
 			break;
 		}
 	}
@@ -330,117 +321,117 @@ WRITE32_HANDLER( psx_spu_w )
 			if( ACCESSING_LSW32 )
 			{
 				m_n_mainvolumeleft = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() main volume left = %04x\n", m_n_mainvolumeleft );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() main volume left = %04x\n", m_n_mainvolumeleft );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_mainvolumeright = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() main volume right = %04x\n", m_n_mainvolumeright );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() main volume right = %04x\n", m_n_mainvolumeright );
 			}
 			break;
 		case SPU_REG( 0xd84 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_n_reverberationdepthleft = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() reverberation depth left = %04x\n", m_n_reverberationdepthleft );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() reverberation depth left = %04x\n", m_n_reverberationdepthleft );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_reverberationdepthright = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() reverberation depth right = %04x\n", m_n_reverberationdepthright );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() reverberation depth right = %04x\n", m_n_reverberationdepthright );
 			}
 			break;
 		case SPU_REG( 0xd88 ):
 			COMBINE_DATA( &m_n_voiceon );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() voice on = %08x\n", m_n_voiceon );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() voice on = %08x\n", m_n_voiceon );
 			break;
 		case SPU_REG( 0xd8c ):
 			COMBINE_DATA( &m_n_voiceoff );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() voice off = %08x\n", m_n_voiceoff );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() voice off = %08x\n", m_n_voiceoff );
 			break;
 		case SPU_REG( 0xd90 ):
 			COMBINE_DATA( &m_n_modulationmode );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() modulation mode = %08x\n", m_n_modulationmode );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() modulation mode = %08x\n", m_n_modulationmode );
 			break;
 		case SPU_REG( 0xd94 ):
 			COMBINE_DATA( &m_n_noisemode );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() noise mode = %08x\n", m_n_noisemode );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() noise mode = %08x\n", m_n_noisemode );
 			break;
 		case SPU_REG( 0xd98 ):
 			COMBINE_DATA( &m_n_reverbmode );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() reverb mode = %08x\n", m_n_reverbmode );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() reverb mode = %08x\n", m_n_reverbmode );
 			break;
 		case SPU_REG( 0xd9c ):
 			COMBINE_DATA( &m_n_channelonoff );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() channel on/off = %08x\n", m_n_channelonoff );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() channel on/off = %08x\n", m_n_channelonoff );
 			break;
 		case SPU_REG( 0xda0 ):
 			if( ACCESSING_LSW32 )
 			{
-				verboselog( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_reverbworkareastart = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() reverb work area start = %04x\n", m_n_reverbworkareastart );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() reverb work area start = %04x\n", m_n_reverbworkareastart );
 			}
 			break;
 		case SPU_REG( 0xda4 ):
 			if( ACCESSING_LSW32 )
 			{
-				verboselog( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_irqaddress = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() irq address = %04x\n", m_n_irqaddress );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() irq address = %04x\n", m_n_irqaddress );
 			}
 			break;
 		case SPU_REG( 0xda8 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_n_spudata = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() spu data = %04x\n", m_n_spudata );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() spu data = %04x\n", m_n_spudata );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_spucontrol = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() spu control = %04x\n", m_n_spucontrol );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() spu control = %04x\n", m_n_spucontrol );
 			}
 			break;
 		case SPU_REG( 0xdac ):
 			if( ACCESSING_LSW32 )
 			{
 				m_n_spustatus = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() spu status = %04x\n", m_n_spustatus );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() spu status = %04x\n", m_n_spustatus );
 			}
 			if( ACCESSING_MSW32 )
 			{
-				verboselog( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			break;
 		case SPU_REG( 0xdb0 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_n_cdvolumeleft = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() cd volume left = %04x\n", m_n_cdvolumeleft );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() cd volume left = %04x\n", m_n_cdvolumeleft );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_cdvolumeright = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() cd volume right = %04x\n", m_n_cdvolumeright );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() cd volume right = %04x\n", m_n_cdvolumeright );
 			}
 			break;
 		case SPU_REG( 0xdb4 ):
 			if( ACCESSING_LSW32 )
 			{
 				m_n_externalvolumeleft = data & 0xffff;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() external volume left = %04x\n", m_n_externalvolumeleft );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() external volume left = %04x\n", m_n_externalvolumeleft );
 			}
 			if( ACCESSING_MSW32 )
 			{
 				m_n_externalvolumeright = data >> 16;
-				verboselog( RETRO_LOG_DEBUG, "psx_spu_w() external volume right = %04x\n", m_n_externalvolumeright );
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w() external volume right = %04x\n", m_n_externalvolumeright );
 			}
 			break;
 		case SPU_REG( 0xdc0 ):
@@ -460,10 +451,10 @@ WRITE32_HANDLER( psx_spu_w )
 		case SPU_REG( 0xdf8 ):
 		case SPU_REG( 0xdfc ):
 			COMBINE_DATA( &m_p_n_effect[ offset & 0x0f ] );
-			verboselog( RETRO_LOG_DEBUG, "psx_spu_w() effect %d = %04x\n", offset & 0x0f, m_p_n_effect[ offset & 0x0f ] );
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() effect %d = %04x\n", offset & 0x0f, m_p_n_effect[ offset & 0x0f ] );
 			break;
 		default:
-			verboselog( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			break;
 		}
 	}

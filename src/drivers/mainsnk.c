@@ -38,7 +38,7 @@ static void init_sound( int busy_bit )
 static WRITE_HANDLER( sound_command_w )
 {
 	if( sound_fetched==0 ){
-		log_cb(RETRO_LOG_ERROR, LOGPRE "missed sound command: %02x\n", sound_command );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "missed sound command: %02x\n", sound_command );
 	}
 
 	sound_fetched = 0;
@@ -246,7 +246,7 @@ static MACHINE_DRIVER_START( mainsnk)
 	MDRV_VIDEO_UPDATE(mainsnk)
 	
 	MDRV_SOUND_ADD(AY8910, ay8910_interface) 
-	MDRV_SOUND_ADD(NAMCO, snkwave_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, snkwave_interface)
 
 
 MACHINE_DRIVER_END

@@ -147,7 +147,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 		slot->env_vol = (256U << 23) - 1;
 		slot->env_vol_lim = 256U<<23;
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Skipping attack (rate = %d)\n", slot->AR);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Skipping attack (rate = %d)\n", slot->AR);
 #endif
 		slot->env_step++;
 	}
@@ -160,7 +160,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 		{
 			int rate = ymf278b_compute_rate(slot, slot->D1R);
 #ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Decay step 1, dl=%d, val = %d rate = %d, delay = %g\n", slot->DL, slot->D1R, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Decay step 1, dl=%d, val = %d rate = %d, delay = %g\n", slot->DL, slot->D1R, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate);
 #endif
 			if(rate<4)
 				slot->env_vol_step = 0;
@@ -175,7 +175,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 		/* Decay 2*/
 		int rate = ymf278b_compute_rate(slot, slot->D2R);
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Decay step 2, val = %d, rate = %d, delay = %g, current vol = %d\n", slot->D2R, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate, slot->env_vol >> 23);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Decay step 2, val = %d, rate = %d, delay = %g, current vol = %d\n", slot->D2R, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate, slot->env_vol >> 23);
 #endif
 		if(rate<4)
 			slot->env_vol_step = 0;
@@ -189,7 +189,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	{
 		/* Decay 2 reached -96dB*/
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Voice cleared because of decay 2\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Voice cleared because of decay 2\n");
 #endif
 		slot->env_vol = 256U<<23;
 		slot->env_vol_step = 0;
@@ -202,7 +202,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 		/* Release*/
 		int rate = ymf278b_compute_rate(slot, slot->RR);
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Release, val = %d, rate = %d, delay = %g\n", slot->RR, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Release, val = %d, rate = %d, delay = %g\n", slot->RR, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate);
 #endif
 		if(rate<4)
 			slot->env_vol_step = 0;
@@ -216,7 +216,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	{
 		/* Release reached -96dB*/
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: Release ends\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: Release ends\n");
 #endif
 		slot->env_vol = 256U<<23;
 		slot->env_vol_step = 0;
@@ -392,7 +392,7 @@ static void ymf278b_A_w(int num, UINT8 reg, UINT8 data)
 			ymf278b_irq_check(num);
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B:  Port A write %02x, %02x\n", reg, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B:  Port A write %02x, %02x\n", reg, data);
 	}
 }
 
@@ -400,7 +400,7 @@ static void ymf278b_B_w(int num, UINT8 reg, UINT8 data)
 {
 	if (!Machine->sample_rate) return;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B:  Port B write %02x, %02x\n", reg, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B:  Port B write %02x, %02x\n", reg, data);
 }
 
 static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
@@ -504,13 +504,13 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 #ifdef VERBOSE
 					logerror("YMF278B: slot %2d wave %3d lfo=%d vib=%d ar=%d d1r=%d dl=%d d2r=%d rc=%d rr=%d am=%d\n", snum, slot->wave,
 							 slot->lfo, slot->vib, slot->AR, slot->D1R, slot->DL, slot->D2R, slot->RC, slot->RR, slot->AM);
-					log_cb(RETRO_LOG_ERROR, LOGPRE "                  b=%d, start=%x, loop=%x, end=%x, oct=%d, fn=%d, step=%x\n", slot->bits, slot->startaddr, slot->loopaddr>>16, slot->endaddr>>16, oct, slot->FN, slot->step);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "                  b=%d, start=%x, loop=%x, end=%x, oct=%d, fn=%d, step=%x\n", slot->bits, slot->startaddr, slot->loopaddr>>16, slot->endaddr>>16, oct, slot->FN, slot->step);
 #endif
 				}
 				else
 				{
 #ifdef VERBOSE
-					log_cb(RETRO_LOG_ERROR, LOGPRE "YMF278B: slot %2d off\n", snum);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: slot %2d off\n", snum);
 #endif
 					if(slot->active)
 					{

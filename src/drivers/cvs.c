@@ -171,7 +171,7 @@ WRITE_HANDLER( control_port_w )
 {
 	/* Controls both Speech and Effects */
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%4x : Sound Port = %2x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x : Sound Port = %2x\n",activecpu_get_pc(),data);
 
     /* Sample CPU write - Causes interrupt if bit 7 set */
 
@@ -194,7 +194,7 @@ WRITE_HANDLER( control_port_w )
             speech_rom_address = ((data & 0x3f) * 0x80);
            	speech_rom_bit     = 0;
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%4x : Speech = %4x\n",activecpu_get_pc(),speech_rom_address);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x : Speech = %4x\n",activecpu_get_pc(),speech_rom_address);
 
             start_talking();
         }

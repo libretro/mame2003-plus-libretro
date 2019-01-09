@@ -116,10 +116,10 @@ struct atarimo_data
 ##########################################################################*/
 
 /* verification macro for void functions */
-#define VERIFY(cond, msg) if (!(cond)) { log_cb(RETRO_LOG_ERROR, LOGPRE msg); return; }
+#define VERIFY(cond, msg) if (!(cond)) { log_cb(RETRO_LOG_DEBUG, LOGPRE msg); return; }
 
 /* verification macro for non-void functions */
-#define VERIFYRETFREE(cond, msg, ret) if (!(cond)) { log_cb(RETRO_LOG_ERROR, LOGPRE msg); return (ret); }
+#define VERIFYRETFREE(cond, msg, ret) if (!(cond)) { log_cb(RETRO_LOG_DEBUG, LOGPRE msg); return (ret); }
 
 
 /* data extraction */
@@ -394,11 +394,11 @@ int atarimo_init(int map, const struct atarimo_desc *desc)
 	/* start a timer to update a few times during refresh */
 	timer_set(cpu_getscanlinetime(0), 0, force_update);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "atarimo_init:\n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  width=%d (shift=%d),  height=%d (shift=%d)\n", mo->tilewidth, mo->tilexshift, mo->tileheight, mo->tileyshift);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  spriteram mask=%X, size=%d\n", mo->spriterammask, mo->spriteramsize);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  slipram mask=%X, size=%d\n", mo->sliprammask, mo->slipramsize);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  bitmap size=%dx%d\n", mo->bitmapwidth, mo->bitmapheight);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "atarimo_init:\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  width=%d (shift=%d),  height=%d (shift=%d)\n", mo->tilewidth, mo->tilexshift, mo->tileheight, mo->tileyshift);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  spriteram mask=%X, size=%d\n", mo->spriterammask, mo->spriteramsize);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  slipram mask=%X, size=%d\n", mo->sliprammask, mo->slipramsize);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  bitmap size=%dx%d\n", mo->bitmapwidth, mo->bitmapheight);
 
 	return 1;
 }

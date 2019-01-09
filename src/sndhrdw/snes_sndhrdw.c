@@ -362,7 +362,7 @@ WRITE_HANDLER( snes_dsp_io_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "DSP: write to unknown offset %X. Data = %X\n", offset, data );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "DSP: write to unknown offset %X. Data = %X\n", offset, data );
 			break;
 	}
 }

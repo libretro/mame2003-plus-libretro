@@ -56,7 +56,7 @@ static READ16_HANDLER( supbtime_controls_r )
 			return 0;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped control address %06x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped control address %06x\n",activecpu_get_pc(),offset);
 	return ~0;
 }
 

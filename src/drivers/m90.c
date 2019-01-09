@@ -62,7 +62,7 @@ static WRITE_HANDLER( m90_coincounter_w )
 		coin_counter_w(0,data & 0x01);
 		coin_counter_w(1,data & 0x02);
 
-		if (data&0xfe) log_cb(RETRO_LOG_ERROR, LOGPRE "Coin counter %02x\n",data);
+		if (data&0xfe) log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin counter %02x\n",data);
 	}
 }
 
@@ -223,8 +223,8 @@ INPUT_PORTS_START( hasamu )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( dynablst )
-	IREM_JOYSTICK_1_2(1)
-	IREM_JOYSTICK_1_2(2)
+	IREM_FOURWAY_1_2(1)
+	IREM_FOURWAY_1_2(2)
 	IREM_COINS
 
 	PORT_START	/* Dip switch bank 1 */
@@ -266,13 +266,13 @@ INPUT_PORTS_START( dynablst )
 	/* Coin Mode 2, not supported yet */
 /*	IREM_COIN_MODE_2*/
 
-	IREM_JOYSTICK_3_4(3)
-	IREM_JOYSTICK_3_4(4)
+	IREM_FOURWAY_3_4(3)
+	IREM_FOURWAY_3_4(4)
 INPUT_PORTS_END
 
 INPUT_PORTS_START( bombrman ) /* Does not appear to support 4 players or cocktail mode */
-	IREM_JOYSTICK_1_2(1)
-	IREM_JOYSTICK_1_2(2)
+	IREM_FOURWAY_1_2(1)
+	IREM_FOURWAY_1_2(2)
 	IREM_COINS
 
 	PORT_START	/* Dip switch bank 1 */
@@ -317,8 +317,8 @@ INPUT_PORTS_START( bombrman ) /* Does not appear to support 4 players or cocktai
 INPUT_PORTS_END
 
 INPUT_PORTS_START( bbmanw )
-	IREM_JOYSTICK_1_2(1)
-	IREM_JOYSTICK_1_2(2)
+	IREM_FOURWAY_1_2(1)
+	IREM_FOURWAY_1_2(2)
 	IREM_COINS
 
 	PORT_START	/* Dip switch bank 1 */
@@ -360,8 +360,8 @@ INPUT_PORTS_START( bbmanw )
 	/* Coin Mode 2, not supported yet */
 /*	IREM_COIN_MODE_2*/
 
-	IREM_JOYSTICK_3_4(3)
-	IREM_JOYSTICK_3_4(4)
+	IREM_FOURWAY_3_4(3)
+	IREM_FOURWAY_3_4(4)
 INPUT_PORTS_END
 
 INPUT_PORTS_START( quizf1 )
@@ -934,7 +934,7 @@ static DRIVER_INIT( riskchal )
 
 static DRIVER_INIT( shisen2 )
 {
-	irem_cpu_decrypt(0,shisen2_decryption_table);
+	irem_cpu_decrypt(0,matchit2_decryption_table);
 }
 
 

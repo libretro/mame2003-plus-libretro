@@ -1244,10 +1244,22 @@ static void HandleMemBlock( data32_t insn)
 
 			if (insn & INSN_BDT_W)
 			{
-				if (ARM_DEBUG_CORE && rb==15)
-					log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
+			   /* Arm docs notes: The base register can always be loaded without any problems.
+                           However, don't specify writeback if the base register is being loaded -
+                           you can't end up with both a written-back value and a loaded value in the base register!
+                           However - Fighter's History does exactly that at 0x121e4 (LDMUW [R13], { R13-R15 })!
 
-				SetRegister(rb,GetRegister(rb)+result*4);
+                          This emulator implementation skips applying writeback in this case, which is confirmed
+                          correct for this situation, but that is not necessarily true for all ARM hardware
+                          implementations (the results are officially undefined).
+                          */
+			  if (ARM_DEBUG_CORE && rb==15)
+			      log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
+
+			  if ((insn&(1<<rb))==0)
+			      SetRegister(rb,GetRegister(rb)+result*4);
+			  else if (ARM_DEBUG_CORE)
+			       log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Illegal LDRM writeback to base register (%d)\n",R15, rb);
 			}
 		}
 		else

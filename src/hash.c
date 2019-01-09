@@ -680,15 +680,21 @@ static MD5_CTX md5;
 
 static void h_md5_begin(void)
 {
-	MD5_Init(&md5);		
+#ifndef HAVE_LIBNX // Add hw crypto later, works without
+	MD5_Init(&md5);
+#endif
 }
 
 static void h_md5_buffer(const void* mem, unsigned long len)
 {
+#ifndef HAVE_LIBNX // Add hw crypto later, works without
 	MD5_Update(&md5, (md5byte*)mem, len);
+#endif
 }
 
 static void h_md5_end(UINT8* bin_chksum)
 {
+#ifndef HAVE_LIBNX // Add hw crypto later, works without
 	MD5_Final(bin_chksum, &md5);
+#endif
 }

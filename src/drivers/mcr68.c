@@ -226,7 +226,7 @@ static WRITE16_HANDLER( pigskin_protection_w )
 		protection_data[3] = protection_data[4];
 		protection_data[4] = data & 0xff;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:protection_w=%02X\n", activecpu_get_previouspc(), data & 0xff);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:protection_w=%02X\n", activecpu_get_previouspc(), data & 0xff);
 	}
 }
 

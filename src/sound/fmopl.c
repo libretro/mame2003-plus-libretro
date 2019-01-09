@@ -1219,9 +1219,9 @@ static int init_tables(void)
 		else
 			sin_tab[3*SIN_LEN+i] = sin_tab[i & (SIN_MASK>>2)];
 
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );
+//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
+//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
+//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );
 	}
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: ENV_QUIET= %08x (dec*8=%i)\n", ENV_QUIET, ENV_QUIET*8 );
 
@@ -1502,7 +1502,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 				if(OPL->keyboardhandler_w)
 					OPL->keyboardhandler_w(OPL->keyboard_param,v);
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Y8950: write unmapped KEYBOARD port\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Y8950: write unmapped KEYBOARD port\n");
 			}
 			break;
 		case 0x07:	/* DELTA-T control 1 : START,REC,MEMDATA,REPT,SPOFF,x,x,RST */
@@ -1536,7 +1536,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 		case 0x15:		/* DAC data high 8 bits (F7,F6...F2) */
 		case 0x16:		/* DAC data low 2 bits (F1, F0 in bits 7,6) */
 		case 0x17:		/* DAC data shift (S2,S1,S0 in bits 2,1,0) */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FMOPL.C: DAC data register written, but not implemented reg=%02x val=%02x\n",r,v);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: DAC data register written, but not implemented reg=%02x val=%02x\n",r,v);
 			break;
 
 		case 0x18:		/* I/O CTRL (Direction) */
@@ -1553,7 +1553,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 			break;
 #endif
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FMOPL.C: write to unknown register: %02x\n",r);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: write to unknown register: %02x\n",r);
 			break;
 		}
 		break;
@@ -1732,7 +1732,7 @@ static int OPL_LockTable(void)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Could not create file 3812_.cym\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Could not create file 3812_.cym\n");
 #endif
 
 	return 0;
@@ -1917,7 +1917,7 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->keyboardhandler_r)
 				return OPL->keyboardhandler_r(OPL->keyboard_param);
 			else
-				log_cb(RETRO_LOG_WARN, LOGPRE "Y8950: read unmapped KEYBOARD port\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Y8950: read unmapped KEYBOARD port\n");
 		}
 		return 0;
 
@@ -1938,13 +1938,13 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->porthandler_r)
 				return OPL->porthandler_r(OPL->port_param);
 			else
-				log_cb(RETRO_LOG_WARN, LOGPRE "Y8950:read unmapped I/O port\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Y8950:read unmapped I/O port\n");
 		}
 		return 0;
 	case 0x1a: /* PCM-DATA    */
 		if(OPL->type&OPL_TYPE_ADPCM)
 		{
-			log_cb(RETRO_LOG_WARN, LOGPRE "Y8950 A/D convertion is accessed but not implemented!\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Y8950 A/D convertion is accessed but not implemented!\n");
 			return 0x80; /* 2's complement PCM data - result from A/D convertion */
 		}
 		return 0;

@@ -296,7 +296,7 @@ void btoads_to_shiftreg(UINT32 address, UINT16 *shiftreg)
 	}
 
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:btoads_to_shiftreg(%08X)\n", activecpu_get_pc(), address);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:btoads_to_shiftreg(%08X)\n", activecpu_get_pc(), address);
 }
 
 
@@ -321,7 +321,7 @@ void btoads_from_shiftreg(UINT32 address, UINT16 *shiftreg)
 		render_sprite_row(shiftreg, address);
 
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:btoads_from_shiftreg(%08X)\n", activecpu_get_pc(), address);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:btoads_from_shiftreg(%08X)\n", activecpu_get_pc(), address);
 }
 
 
@@ -489,6 +489,6 @@ VIDEO_UPDATE( btoads )
 		fclose(f);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "---VBLANK---\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "---VBLANK---\n");
 #endif
 }

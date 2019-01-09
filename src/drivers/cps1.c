@@ -28,56 +28,56 @@ void slammast_decode(void);
 const char *const ffight_sample_names[] =
 {
 	"*ffight",
-	"track02-01.wav",
-	"track02-02.wav",
-	"track03-01.wav",
-	"track03-02.wav",
-	"track04-01.wav",
-	"track04-02.wav",
-	"track05-01.wav",
-	"track05-02.wav",
-	"track06-01.wav",
-	"track06-02.wav",
-	"track07-01.wav",
-	"track07-02.wav",
-	"track08-01.wav",
-	"track08-02.wav",
-	"track09-01.wav",
-	"track09-02.wav",
-	"track10-01.wav",
-	"track10-02.wav",
-	"track11-01.wav",
-	"track11-02.wav",
-	"track12-01.wav",
-	"track12-02.wav",
-	"track13-01.wav",
-	"track13-02.wav",
-	"track14-01.wav",
-	"track14-02.wav",
-	"track15-01.wav",
-	"track15-02.wav",
-	"track16-01.wav",
-	"track16-02.wav",
-	"track17-01.wav",
-	"track17-02.wav",
-	"track18-01.wav",
-	"track18-02.wav",
-	"track19-01.wav",
-	"track19-02.wav",
-	"track20-01.wav",
-	"track20-02.wav",
-	"track21-01.wav",
-	"track21-02.wav",
-	"track22-01.wav",
-	"track22-02.wav",
-	"track23-01.wav",
-	"track23-02.wav",
-	"track24-01.wav",
-	"track24-02.wav",
-	"track25-01.wav",
-	"track25-02.wav",
-	"track26-01.wav",
-	"track26-02.wav",
+	"track02-01",
+	"track02-02",
+	"track03-01",
+	"track03-02",
+	"track04-01",
+	"track04-02",
+	"track05-01",
+	"track05-02",
+	"track06-01",
+	"track06-02",
+	"track07-01",
+	"track07-02",
+	"track08-01",
+	"track08-02",
+	"track09-01",
+	"track09-02",
+	"track10-01",
+	"track10-02",
+	"track11-01",
+	"track11-02",
+	"track12-01",
+	"track12-02",
+	"track13-01",
+	"track13-02",
+	"track14-01",
+	"track14-02",
+	"track15-01",
+	"track15-02",
+	"track16-01",
+	"track16-02",
+	"track17-01",
+	"track17-02",
+	"track18-01",
+	"track18-02",
+	"track19-01",
+	"track19-02",
+	"track20-01",
+	"track20-02",
+	"track21-01",
+	"track21-02",
+	"track22-01",
+	"track22-02",
+	"track23-01",
+	"track23-02",
+	"track24-01",
+	"track24-02",
+	"track25-01",
+	"track25-02",
+	"track26-01",
+	"track26-02",
 	0
 };
 
@@ -141,7 +141,7 @@ static WRITE_HANDLER( cps1_snd_bankswitch_w )
 	bankaddr = (data * 0x4000) & (length-1);
 	cpu_setbank(1,&RAM[0x10000 + bankaddr]);
 
-	if (data & 0xfe) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: write %02x to f004\n",activecpu_get_pc(),data);
+	if (data & 0xfe) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: write %02x to f004\n",activecpu_get_pc(),data);
 }
 
 static WRITE16_HANDLER( cps1_sound_fade_w )
@@ -160,7 +160,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	/* Debug.*/
 	/*
 	if (data != 0xff) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%X\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%X\n", data);
 	}
 	*/
 	
@@ -474,7 +474,7 @@ static WRITE_HANDLER( qsound_banksw_w )
 	int bankaddress=0x10000+((data&0x0f)*0x4000);
 	if (bankaddress >= memory_region_length(REGION_CPU2))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING: Q sound bank overflow (%02x)\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING: Q sound bank overflow (%02x)\n", data);
 		bankaddress=0x10000;
 	}
 	cpu_setbank(1, &RAM[bankaddress]);
@@ -3848,6 +3848,65 @@ INPUT_PORTS_START( rockmanj )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
+					
+/* CPS Changer */
+INPUT_PORTS_START( wofch )
+	PORT_START    /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Pause", KEYCODE_F1, IP_JOY_NONE ) /* pause */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE  )	/* pause */
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
+
+	PORT_START
+	PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START     /* Player 1 & 2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+
+	PORT_START      /* Player 3 */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED)
+    PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START3)
+	
+	PORT_START      /* Player 4 - not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END	
 
 
 static struct GfxLayout layout8x8 =
@@ -7629,6 +7688,38 @@ ROM_START( rockmanj )
 	ROM_LOAD( "rcm_19.rom",    0x20000, 0x20000, CRC(f257dbe1) SHA1(967def6b6f93039dbc46373caabeb3301577be75) )
 ROM_END
 
+/* Home 'CPS Changer' Unit  */
+
+/* B-Board 91635B-2 */
+ROM_START( wofch )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "tk2=ch=_23.8f", 0x000000, 0x80000, CRC(4e0b8dee) SHA1(d2fb716d62b7a259f46bbc74c1976a18d56696ea) )
+	ROM_LOAD16_WORD_SWAP( "tk2=ch=_22.7f", 0x080000, 0x80000, CRC(d0937a8d) SHA1(01d7be446e2e3ef8ca767f59c178240dfd52dd93) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "tk2-1m.3a",      0x000000, 0x80000, CRC(0d9cb9bf) SHA1(cc7140e9a01a14b252cb1090bcea32b0de461928) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-3m.5a",      0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-2m.4a",      0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-4m.6a",      0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2=ch=_05.7a",  0x200000, 0x80000, CRC(e4a44d53) SHA1(b747679f4d63e5e62d9fd81b3120fba0401fadfb) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_05.7a
+	ROMX_LOAD( "tk2=ch=_06.8a",  0x200002, 0x80000, CRC(58066ba8) SHA1(c93af968e21094d020e4b2002e0c6fc0d746af0b) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_06.8a
+	ROMX_LOAD( "tk2=ch=_07.9a",  0x200004, 0x80000, CRC(cc9006c9) SHA1(cfcbec3a67052268a7739538aa28a6391fe5400e) , ROM_GROUPWORD | ROM_SKIP(6) )    /* 1 byte different from wofj, pcb verified */
+	ROMX_LOAD( "tk2=ch=_08.10a", 0x200006, 0x80000, CRC(d4a19a02) SHA1(ff396b1d33d9b4842140f2c6d085fe05748e3244) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_08.10a
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+	
+	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "tk2_qa.5k",       0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(                0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "tk2-q1.1k",       0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2-q2.2k",       0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2-q3.3k",       0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2-q4.4k",       0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+ROM_END		
+					
 
 
 static DRIVER_INIT( wof )
@@ -7702,12 +7793,6 @@ GAME( 1989, ffightu,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Ca
 GAME( 1989, ffightj,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
 GAME( 1989, ffightj1, ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
 
-/*
-GAME( 1989, ffight,   0,        cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (World)" )
-GAME( 1989, ffightu,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (US 900112)" )
-GAME( 1989, ffightj,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
-GAME( 1989, ffightj1, ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
-*/
 
 GAME( 1990, 1941,     0,        cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (World)" )
 GAME( 1990, 1941j,    1941,     cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (Japan)" )
@@ -7802,3 +7887,7 @@ GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (
 /* Japanese version of Pang 3 is encrypted, Euro version is not */
 GAME( 1995, pang3,    0,        pang3,    pang3,    cps1,     ROT0,   "Mitchell", "Pang! 3 (Euro 950511)" )
 GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Japan 950511)" )
+					
+/* CPS Changer */
+GAME( 1994, wofch,    0,        qsound,   wofch,    wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)" )
+			

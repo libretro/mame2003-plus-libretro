@@ -168,7 +168,7 @@ WRITE_HANDLER( ldrun2_bankswitch_w )
 	{
 		if (data < 1 || data > 30)
 		{
-log_cb(RETRO_LOG_ERROR, LOGPRE "unknown bank select %02x\n",data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "unknown bank select %02x\n",data);
 			return;
 		}
 		bankaddress = 0x10000 + (banks[data-1] * 0x2000);

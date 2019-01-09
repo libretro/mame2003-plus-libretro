@@ -71,7 +71,7 @@ WRITE16_HANDLER( esd16_flip_screen_w )
 		flip_screen_set( data & 0x80 );
 		/*               data & 0x01 ?? always 1*/
 	}
-	else	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 - PC %06X: unknown flip screen bits: %02X\n",activecpu_get_pc(),data);
+	else	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 - PC %06X: unknown flip screen bits: %02X\n",activecpu_get_pc(),data);
 }
 
 WRITE16_HANDLER( esd16_sound_command_w )
@@ -142,7 +142,7 @@ static READ16_HANDLER( esd_eeprom_r )
 		return ((EEPROM_read_bit() & 0x01) << 15);
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "(0x%06x) unk EEPROM read: %04x\n", activecpu_get_pc(), mem_mask);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "(0x%06x) unk EEPROM read: %04x\n", activecpu_get_pc(), mem_mask);*/
 	return 0;
 }
 
@@ -160,7 +160,7 @@ static WRITE16_HANDLER( esd_eeprom_w )
 		EEPROM_set_cs_line((data & 0x0100) ? CLEAR_LINE : ASSERT_LINE );
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "(0x%06x) Unk EEPROM write: %04x %04x\n", activecpu_get_pc(), data, mem_mask);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "(0x%06x) Unk EEPROM write: %04x %04x\n", activecpu_get_pc(), data, mem_mask);*/
 }
 
 
@@ -277,7 +277,7 @@ MEMORY_END
 static WRITE_HANDLER( esd16_sound_rombank_w )
 {
 	int bank = data & 0xf;
-	if (data != bank)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
+	if (data != bank)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
 	if (bank >= 3)	bank += 1;
 	cpu_setbank(1, memory_region(REGION_CPU2) + 0x4000 * bank);
 }

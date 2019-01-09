@@ -354,7 +354,8 @@ Stephh's notes (based on some tests) :
 #include "machine/eeprom.h"
 #include "machine/random.h"
 
-#define OSC_A	(32215900)	/* System 32 master crystal is 32215900 Hz*/
+#define MASTER_CLOCK  32215900
+
 #define MAX_COLOURS (16384)
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
@@ -579,7 +580,7 @@ static WRITE16_HANDLER(brival_protboard_w)
 		default:
 			if (offset >= 0xa00/2 && offset < 0xc00/2)
 				return;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "brival_protboard_w: UNKNOWN WRITE: offset %x value %x\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "brival_protboard_w: UNKNOWN WRITE: offset %x value %x\n", offset, data);
 			return;
 			break;
 	}
@@ -653,7 +654,7 @@ static READ16_HANDLER( system32_io_analog_r )
 	switch(offset)
 	{
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
 		return 0xffff;
 		break;
 	}
@@ -701,7 +702,7 @@ static READ16_HANDLER( system32_io_r )
 		/* f1lap*/
 		return 0xffff;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -744,7 +745,7 @@ static WRITE16_HANDLER( system32_io_w )
 		/* orunners unknown*/
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -766,7 +767,7 @@ static READ16_HANDLER( system32_io_2_r )
 	case 0x02:
 		return readinputport(0x06);
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -788,7 +789,7 @@ static WRITE16_HANDLER( system32_io_2_w )
 		/* orunners unknown*/
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -1139,7 +1140,7 @@ static WRITE16_HANDLER( sonic_track_reset_w )
 			last[5] = readinputport(12);
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "track_w : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "track_w : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
 			break;
 	}
 }
@@ -1169,7 +1170,7 @@ static READ16_HANDLER( sonic_track_r )
 			delta = (int)readinputport(12) - (int)last[5];
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "track_r : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "track_r : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
 			break;
 	}
 
@@ -2023,7 +2024,7 @@ static void irq_handler(int irq)
 
 struct RF5C68interface sys32_rf5c68_interface =
 {
-  8000000,
+  9000000,	/* pitch matches real PCB, but this is a weird frequency */
   55
 };
 
@@ -2073,11 +2074,11 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( system32 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, OSC_A/2/12) /* Reality is 16.somethingMHz, use magic /12 factor to get approximate speed*/
+	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, OSC_A/4)	/* verified on real PCB*/
+	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem_32, sound_writemem_32)
 	MDRV_CPU_PORTS(sound_readport_32, sound_writeport_32)
@@ -2116,7 +2117,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( jpark )
 	MDRV_IMPORT_FROM( system32 )
 
-	MDRV_CPU_ADD_TAG("cabinet", Z80, OSC_A/8)	/* ???*/
+	MDRV_CPU_ADD_TAG("cabinet", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_MEMORY( jpcab_readmem, jpcab_writemem )
 	MDRV_CPU_PORTS( jpcab_readport, jpcab_writeport )
 /*	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)		*/ /* CPU has an IRQ handler, it appears to be periodic*/
@@ -2971,7 +2972,7 @@ ROM_END
 
 static WRITE16_HANDLER( trap_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
 }
 
 static DRIVER_INIT ( s32 )
@@ -3165,7 +3166,7 @@ static READ16_HANDLER( arescue_dsp_r )
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled DSP cmd %04x (%04x).\n", arescue_dsp_io[0], arescue_dsp_io[1] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled DSP cmd %04x (%04x).\n", arescue_dsp_io[0], arescue_dsp_io[1] );
 				break;
 		}
 	}
@@ -3220,8 +3221,8 @@ GAME( 1992, holo,     0,        system32, holo,     holo,     ROT0, "Sega", "Hol
 GAMEX(1992, arescue,  0,        system32, arescue,  arescue,  ROT0, "Sega", "Air Rescue", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, radm,     0,        system32, radm,     radm,     ROT0, "Sega", "Rad Mobile", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, radr,     0,        sys32_hi, radr,     radr,     ROT0, "Sega", "Rad Rally", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1991, spidey,   0,        system32, spidey,   spidey,   ROT0, "Sega", "Spider-Man - The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1991, spideyj,  spidey,   system32, spideyj,  spidey,   ROT0, "Sega", "Spider-Man - The Videogame (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1991, spidey,   0,        system32, spidey,   spidey,   ROT0, "Sega", "Spider-Man: The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1991, spideyj,  spidey,   system32, spideyj,  spidey,   ROT0, "Sega", "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, f1en,     0,        system32, f1en,     f1en,     ROT0, "Sega", "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
@@ -3229,16 +3230,15 @@ GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Gol
 GAMEX(1992, brival,   0,        sys32_hi, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien³ - The Gun", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, svs,	  svf,		system32, svf,		s32,	  ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jleague,  svf,      system32, svf,      s32,      ROT0, "Sega", "The J.League 1994 (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 
 /* not really working */
 GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1993, f1lap,    0,        system32, f1lap,	f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
+GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
 GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
 GAMEX(1995, slipstrm, 0,        sys32_hi, system32,	f1en,     ROT0, "Capcom", "Slipstream", GAME_NOT_WORKING ) /* unhandled v60 opcodes .... */
-/* Air Rescue */
 /* Loony Toons (maybe) */

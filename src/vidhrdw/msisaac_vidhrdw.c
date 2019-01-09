@@ -131,7 +131,7 @@ WRITE_HANDLER( msisaac_bg2_textbank_w )
 		/*check if we are correct on this one*/
 		if ((data!=8) && (data!=0))
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "bg2 control=%2x\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "bg2 control=%2x\n",data);
 		}
 	}
 }

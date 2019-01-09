@@ -138,13 +138,13 @@ static WRITE_HANDLER( dynax_coincounter_0_w )
 {
 	coin_counter_w(0, data & 1);
 	if (data & ~1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X: Warning, coin counter 0 <- %02X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X: Warning, coin counter 0 <- %02X\n", activecpu_get_pc(), data);
 }
 static WRITE_HANDLER( dynax_coincounter_1_w )
 {
 	coin_counter_w(1, data & 1);
 	if (data & ~1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X: Warning, coin counter 1 <- %02X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X: Warning, coin counter 1 <- %02X\n", activecpu_get_pc(), data);
 }
 
 static READ_HANDLER( ret_ff )	{	return 0xff;	}

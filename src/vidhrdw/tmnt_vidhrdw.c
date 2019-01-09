@@ -94,7 +94,7 @@ static void ssbl_tile_callback(int layer,int bank,int *code,int *color)
 	{
 		*code |= ((*color & 0x03) << 8) | ((*color & 0x10) << 6) | ((*color & 0x0c) << 9)
 				| (bank << 13);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "L%d: bank %d code %x color %x\n", layer, bank, *code, *color);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "L%d: bank %d code %x color %x\n", layer, bank, *code, *color);*/
 	}
 
 	*color = layer_colorbase[layer] + ((*color & 0xe0) >> 5);

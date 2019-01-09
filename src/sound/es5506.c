@@ -1055,8 +1055,9 @@ static INLINE void es5506_reg_write_low(struct ES5506Chip *chip, struct ES5506Vo
 #ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, left vol=%04x\n", chip->current_page & 0x1f, voice->lvol);
-			break;
 #endif
+			break;
+
 
 		case 0x18/8:	/* LVRAMP */
 			voice->lvramp = (data & 0xff00) >> 8;

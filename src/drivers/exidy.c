@@ -172,7 +172,7 @@ static WRITE_HANDLER( fax_bank_select_w )
 
 	cpu_setbank(1, &RAM[0x10000 + (0x2000 * (data & 0x1F))]);
 	if ((data & 0x1F) > 0x17)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Banking to unpopulated ROM bank %02X!\n",data & 0x1F);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Banking to unpopulated ROM bank %02X!\n",data & 0x1F);
 }
 
 

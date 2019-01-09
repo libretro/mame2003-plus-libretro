@@ -23,6 +23,10 @@ extern void deco156_decrypt(void);
 #include "deco16ic.h"
 #include "state.h"
 
+#include "mame2003.h"
+#include "bootstrap.h"
+#include "inptport.h"
+
 UINT32 *backfire_spriteram32_1;
 UINT32 *backfire_spriteram32_2;
 UINT32 *backfire_mainram;
@@ -38,7 +42,7 @@ extern int deco16_pf1_colour_bank,deco16_pf2_colour_bank,deco16_pf3_colour_bank,
 
 static int backfire_bank_callback(int bank)
 {
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "bank callback %04x\n",bank); */ /* bit 1 gets set too?*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "bank callback %04x\n",bank); */ /* bit 1 gets set too?*/
 
 	bank = bank >> 4;
 
@@ -255,14 +259,14 @@ static READ32_HANDLER(backfire_eeprom_r)
 
 static READ32_HANDLER(backfire_control2_r)
 {
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(1) | (readinputport(1)<<16);
 }
 
 #ifdef UNUSED_FUNCTION
 static READ32_HANDLER(backfire_control3_r)
 {
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(2) | (readinputport(2)<<16);
 }
 #endif
@@ -270,7 +274,7 @@ static READ32_HANDLER(backfire_control3_r)
 
 static WRITE32_HANDLER(backfire_eeprom_w)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:write eprom %08x (%08x) %08x\n",activecpu_get_pc(),offset<<1,mem_mask,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:write eprom %08x (%08x) %08x\n",activecpu_get_pc(),offset<<1,mem_mask,data);
 	if (ACCESSING_LSB32) {
 		EEPROM_set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
 		EEPROM_write_bit(data & 0x1);
@@ -498,7 +502,7 @@ static struct GfxDecodeInfo gfxdecodeinfo_backfire[] =
 
 static void sound_irq_gen(int state)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "sound irq\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "sound irq\n");
 }
 
 
@@ -661,7 +665,7 @@ static void descramble_sound( void )
 
 static READ32_HANDLER( backfire_speedup_r )
 {
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x\n",activecpu_get_pc());*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x\n",activecpu_get_pc());*/
 
 	if (activecpu_get_pc()==0xce44)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfire*/
 	if (activecpu_get_pc()==0xcee4)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfira*/

@@ -3,35 +3,35 @@
  *  HALT: must add log
  */
 
-UINT32 opBRK(void)
+static UINT32 opBRK(void)
 {
 /*
-	UPDATEPSW();
+    UINT32 oldPSW = v60_update_psw_for_exception(0, 0);
 
-	SP -=4;
-	MemWrite32(SP, 0x0d00);
-	SP -=4;
-	MemWrite32(SP, PSW);
-	SP -=4;
-	MemWrite32(SP, PC + 1);
-	PC = GETINTVECT(13);
-	ChangePC(PC);
+    SP -=4;
+    MemWrite32(SP, EXCEPTION_CODE_AND_SIZE(0x0d00, 4));
+    SP -=4;
+    MemWrite32(SP, oldPSW);
+    SP -=4;
+    MemWrite32(SP, PC + 1);
+    PC = GETINTVECT(13);
+    ChangePC(PC);
 */
-	log_cb(RETRO_LOG_WARN, LOGPRE "Skipping BRK opcode! PC=%x", PC);
+	logerror("Skipping BRK opcode! PC=%x", PC);
 
 	return 1;
 }
 
-UINT32 opBRKV(void)
+static UINT32 opBRKV(void)
 {
-	UPDATEPSW();
+	UINT32 oldPSW = v60_update_psw_for_exception(0, 0);
 
 	SP -=4;
 	MemWrite32(SP, PC);
 	SP -=4;
-	MemWrite32(SP, 0x0d00);
+	MemWrite32(SP, EXCEPTION_CODE_AND_SIZE(0x1501, 4));
 	SP -=4;
-	MemWrite32(SP, PSW);
+	MemWrite32(SP, oldPSW);
 	SP -=4;
 	MemWrite32(SP, PC + 1);
 	PC = GETINTVECT(21);
@@ -40,14 +40,14 @@ UINT32 opBRKV(void)
 	return 0;
 }
 
-UINT32 opCLRTLBA(void)
+static UINT32 opCLRTLBA(void)
 {
-	/* @@@ TLB not yet supported*/
-	log_cb(RETRO_LOG_WARN, LOGPRE "Skipping CLRTLBA opcode! PC=%x\n", PC);
+	// @@@ TLB not yet supported
+	logerror("Skipping CLRTLBA opcode! PC=%x\n", PC);
 	return 1;
 }
 
-UINT32 opDISPOSE(void)
+static UINT32 opDISPOSE(void)
 {
 	SP = FP;
 	FP = MemRead32(SP);
@@ -56,19 +56,19 @@ UINT32 opDISPOSE(void)
 	return 1;
 }
 
-UINT32 opHALT(void)
+static UINT32 opHALT(void)
 {
-	/* @@@ It should wait for an interrupt to occur*/
-	/*logerror("HALT found: skipping");*/
+	// @@@ It should wait for an interrupt to occur
+	//logerror("HALT found: skipping");
 	return 1;
 }
 
-UINT32 opNOP(void) /* TRUSTED */
+static UINT32 opNOP(void) /* TRUSTED */
 {
 	return 1;
 }
 
-UINT32 opRSR(void)
+static UINT32 opRSR(void)
 {
 	PC = MemRead32(SP);
 	SP +=4;
@@ -77,15 +77,12 @@ UINT32 opRSR(void)
 	return 0;
 }
 
-UINT32 opTRAPFL(void)
+static UINT32 opTRAPFL(void)
 {
-	UPDATEPSW();
-
-	if ((TKCW & 0x1F0) & ((PSW & 0x1F00) >> 4))
+	if ((TKCW & 0x1F0) & ((v60ReadPSW() & 0x1F00) >> 4))
 	{
-		/* @@@ FPU exception*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Hit TRAPFL! PC=%x\n", PC);
-		abort();
+		// @@@ FPU exception
+		log_cb(RETRO_LOG_DEBUG, "Hit TRAPFL! PC=%x", PC);
 	}
 
 	return 1;

@@ -469,7 +469,7 @@ static WRITE_HANDLER( srmp3_input_1_w )
 	---- -x-- : Player 2 side flag ?
 */
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%04X DATA:%02X  srmp3_input_1_w\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%04X DATA:%02X  srmp3_input_1_w\n", activecpu_get_pc(), data);
 
 	srmp2_port_select = 0;
 
@@ -493,7 +493,7 @@ static WRITE_HANDLER( srmp3_input_2_w )
 
 	/* Key matrix reading related ? */
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%04X DATA:%02X  srmp3_input_2_w\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%04X DATA:%02X  srmp3_input_2_w\n", activecpu_get_pc(), data);
 
 	srmp2_port_select = 1;
 
@@ -510,7 +510,7 @@ static READ_HANDLER( srmp3_input_r )
 
 	int keydata = 0xff;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%04X          srmp3_input_r\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%04X          srmp3_input_r\n", activecpu_get_pc());
 
 	/* PC:0x8903	ROM:0xC903*/
 	/* PC:0x7805	ROM:0x7805*/

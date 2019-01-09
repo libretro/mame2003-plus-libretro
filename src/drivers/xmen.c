@@ -57,7 +57,7 @@ static READ16_HANDLER( eeprom_r )
 {
 	int res;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "%06x eeprom_r\n",activecpu_get_pc());
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x eeprom_r\n",activecpu_get_pc());
 	/* bit 6 is EEPROM data */
 	/* bit 7 is EEPROM ready */
 	/* bit 14 is service button */
@@ -72,7 +72,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "%06x eeprom_r\n",activecpu_get_pc());
 
 static WRITE16_HANDLER( eeprom_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: write %04x to 108000\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: write %04x to 108000\n",activecpu_get_pc(),data);
 	if (ACCESSING_LSB)
 	{
 		/* bit 0 = coin counter */

@@ -46,7 +46,7 @@ static READ16_HANDLER( goal92_inputs_r )
 			return readinputport(4);
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "reading unhandled goal92 inputs %04x %04x\n",offset, mem_mask);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "reading unhandled goal92 inputs %04x %04x\n",offset, mem_mask);
 	}
 
 	return 0;

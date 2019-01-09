@@ -69,7 +69,7 @@ READ16_HANDLER( lethalj_gun_r )
 			result = guny + 4;
 			break;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:lethalj_gun_r(%d) = %04X\n", activecpu_get_pc(), offset, result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:lethalj_gun_r(%d) = %04X\n", activecpu_get_pc(), offset, result);
 	return result;
 }
 

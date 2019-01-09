@@ -273,7 +273,7 @@ int jrpacman_romdecode(int offset)
 	int ns3 =  ( !md7 );
 
 /*	DebugPrint("%04x: %02x & %02x | %02x = %02x",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));*/
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: %02x & %02x | %02x = %02x\n",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: %02x & %02x | %02x = %02x\n",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
 	{static int i=0;
 	if (i++>100)
 	{
@@ -301,12 +301,12 @@ int jrpacman_romdecode(int offset)
 		{
 			static last = 0;
 			if (last + 30 <= TickCount()) /* print bnanner if we havent been called in half a second */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "m1   sop0 sop1 sop2 pcbe  md7  md2 md0   d7   d2   d0    pb1   s0   s1   s2   s3    ns0  ns1  ns2  ns3\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "m1   sop0 sop1 sop2 pcbe  md7  md2 md0   d7   d2   d0    pb1   s0   s1   s2   s3    ns0  ns1  ns2  ns3\n");
 			last = TickCount();
 			printf("%-4d %-4d %-4d %-4d %-4d  %-4d %-4d %-4d %-4d %-4d %-4d  %-4d  %-4d %-4d %-4d %-4d  %-4d %-4d %-4d %-4d     ",
 			        m1,  sop0,sop1,sop2,pcbe, md7, md2, md0,
 d7,  d2,  d0,   pb1,  s0,  s1,  s2,  s3,   ns0, ns1, ns2, ns3);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: %02x & %02x | %02x = %02x\n",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: %02x & %02x | %02x = %02x\n",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
 			Z80_Trace = 1; /* stop it if it was running for a count */
 		}
 
@@ -332,8 +332,8 @@ void jr_monitor()
 	int last_used=-1;
 	int unmapped_encrypted=0;
 	int unmapped=0;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "statistics: \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  Successfully mapped: %d\n",numberUsed);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "statistics: \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  Successfully mapped: %d\n",numberUsed);
 	for (i=0;i<0xe000;i=(i==0x4000?0x8000:i+1)) /* skip hole where
 hardware and RAM is */
 	{
@@ -353,7 +353,7 @@ hardware and RAM is */
 				unmapped++;
 		}
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  Non mapped, Probably not encrypted: %d\n",unmapped);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  Non mapped, Probably not encrypted: %d\n",unmapped);
 	printf("  Non mapped, but Probably encrypted:
 %d\n",unmapped_encrypted);
 
@@ -364,7 +364,7 @@ start,int end);
 		char c;
 		printf(" Enter D to Merge mapped and unmapped and dump to
 rom file,\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE " Enter Q to quit.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE " Enter Q to quit.\n");
 		c=tolower(getchar());
 		while (getchar()!='\n') {}
 		if (c=='q')
@@ -521,7 +521,7 @@ void CreateJrDecodeTable(byte *x, int length)
 	{
 		if (x[i] != last)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "    { 0x%04X, 0x%02X },\n",count,last);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "    { 0x%04X, 0x%02X },\n",count,last);
 			count = 0;
 		}
 first:
@@ -529,7 +529,7 @@ first:
 		count++;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "    { 0x%04X, 0x%02X },\n",count,last);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "    { 0x%04X, 0x%02X },\n",count,last);
 	printf(	"    { 0,0 }\n"
 			"};\n");
 }

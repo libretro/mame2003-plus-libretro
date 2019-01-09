@@ -13,7 +13,8 @@
 #define XML_TOP "game"
 
 int old_style = 0;
-
+extern const char* ost_drivers[];
+ 
 /* Print a free format string */
 static void print_free_string(FILE* out, const char* s)
 {
@@ -429,26 +430,40 @@ static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 {
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
-	int i;
+	int i=0;
+        int ost=0;
 
-	expand_machine_driver(game->drv, &drv);
+	while(ost_drivers[i])
+  	{
+  	  if(strcmp(ost_drivers[i], game->name) == 0)
+	  { 	 
+	   ost=1;
+           break;
+          }
 
-	for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
-	{
-		const char **samplenames = NULL;
-		if( drv.sound[i].sound_type == SOUND_SAMPLES )
-			samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
-		if (samplenames != 0 && samplenames[0] != 0) {
-			int k = 0;
-			if (samplenames[k][0]=='*')
-			{
-				/* output sampleof only if different from game name */
-				if (strcmp(samplenames[k] + 1, game->name)!=0)
-					fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
-				++k;
+	  i++;    
+        }
+    
+        if (!ost) 
+        { 
+		expand_machine_driver(game->drv, &drv);
+
+		for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
+		{
+			const char **samplenames = NULL;
+			if( drv.sound[i].sound_type == SOUND_SAMPLES )
+				samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
+			if (samplenames != 0 && samplenames[0] != 0) {
+				int k = 0;
+				if (samplenames[k][0]=='*')
+				{
+					/* output sampleof only if different from game name */
+					if (strcmp(samplenames[k] + 1, game->name)!=0)
+						fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
+					++k;
+				}
 			}
-		}
-	}
+	}	}
 #endif
 }
 
@@ -456,32 +471,49 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 {
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
-	int i;
+	int i=0;
+        int ost=0;
 
-	expand_machine_driver(game->drv, &drv);
+	
 
-	for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
-	{
-		const char **samplenames = NULL;
-		if( drv.sound[i].sound_type == SOUND_SAMPLES )
-			samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
-		if (samplenames != 0 && samplenames[0] != 0) {
-			int k = 0;
-			if (samplenames[k][0]=='*')
-			{
-				++k;
-			}
-			while (samplenames[k] != 0) {
-				/* check if is not empty */
-				if (*samplenames[k]) {
-					/* check if sample is duplicate */
-					int l = 0;
-					while (l<k && strcmp(samplenames[k],samplenames[l])!=0)
-						++l;
-					if (l==k)
-						fprintf(out, "\t\t<sample name=\"%s\"/>\n", samplenames[k]);
+	while(ost_drivers[i])
+  	{
+  	  if(strcmp(ost_drivers[i], game->name) == 0)
+	  { 	 
+	   ost=1;
+           break;
+          }
+
+	  i++;    
+        }
+
+        if (!ost) 
+        { 
+		expand_machine_driver(game->drv, &drv);
+
+		for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
+		{
+			const char **samplenames = NULL;
+			if( drv.sound[i].sound_type == SOUND_SAMPLES )
+				samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
+			if (samplenames != 0 && samplenames[0] != 0) {
+				int k = 0;
+				if (samplenames[k][0]=='*')
+				{
+					++k;
+				}	
+				while (samplenames[k] != 0) {
+					/* check if is not empty */
+					if (*samplenames[k]) {
+						/* check if sample is duplicate */
+						int l = 0;
+						while (l<k && strcmp(samplenames[k],samplenames[l])!=0)
+							++l;
+						if (l==k)
+							fprintf(out, "\t\t<sample name=\"%s\"/>\n", samplenames[k]);
+					}
+					++k;
 				}
-				++k;
 			}
 		}
 	}
@@ -730,7 +762,7 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 		fprintf(out, "</manufacturer>\n");
 	}
 
-	print_game_history(out, game);
+/*	print_game_history(out, game); */
 	print_game_bios(out, game);
 	print_game_rom(out, game);
 	print_game_sample(out, game);
@@ -809,10 +841,10 @@ void print_mame_xml(int old_style_flag)
 		"\t\t<!ATTLIST " XML_TOP " romof CDATA #IMPLIED>\n"
 		"\t\t<!ATTLIST " XML_TOP " sampleof CDATA #IMPLIED>\n"
 		"\t\t<!ELEMENT description (#PCDATA)>\n"
-		"\t\t<!ELEMENT driver (#PCDATA)>\n"
+//		"\t\t<!ELEMENT driver (#PCDATA)>\n"
 		"\t\t<!ELEMENT year (#PCDATA)>\n"
 		"\t\t<!ELEMENT manufacturer (#PCDATA)>\n"
-		"\t\t<!ELEMENT history (#PCDATA)>\n"
+		/*"\t\t<!ELEMENT history (#PCDATA)>\n"*/
 		"\t\t<!ELEMENT biosset EMPTY>\n"
 		"\t\t\t<!ATTLIST biosset name CDATA #REQUIRED>\n"
 		"\t\t\t<!ATTLIST biosset description CDATA #REQUIRED>\n"

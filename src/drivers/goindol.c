@@ -70,7 +70,7 @@ static UINT8 *ram;
 
 static WRITE_HANDLER( prot_fc44_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0419] = 0x5b;
 	ram[0x041a] = 0x3f;
 	ram[0x041b] = 0x6d;
@@ -78,19 +78,19 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),da
 
 static WRITE_HANDLER( prot_fd99_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fd99_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: prot_fd99_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0421] = 0x3f;
 }
 
 static WRITE_HANDLER( prot_fc66_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fc66_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: prot_fc66_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0423] = 0x06;
 }
 
 static WRITE_HANDLER( prot_fcb0_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fcb0_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: prot_fcb0_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0425] = 0x06;
 }
 
@@ -498,5 +498,5 @@ DRIVER_INIT( goindol )
 
 GAMEX(1987, goindol,  0,       goindol, goindol, goindol, ROT90, "Sun a Electronics", "Goindol (World)", GAME_UNEMULATED_PROTECTION )
 GAMEX(1987, goindolu, goindol, goindol, goindol, goindol, ROT90, "Sun a Electronics", "Goindol (US)",    GAME_UNEMULATED_PROTECTION )
-GAMEX(1987, goindolj, goindol, goindol, goindol, goindol, ROT90, "Sun a Electronics", "Goindol (Japan)", GAME_UNEMULATED_PROTECTION )
+GAMEX(1987, goindolj, goindol, goindol, goindol, goindol, ROT90, "Sun a Electronics", "Goindol (Korea)", GAME_UNEMULATED_PROTECTION )
 GAME( 1987, homo,     goindol, goindol, homo,    0,       ROT90, "bootleg", "Homo" )

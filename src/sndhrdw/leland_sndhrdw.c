@@ -398,15 +398,15 @@ static void leland_i186_dma_update(int param, INT16 *buffer, int length)
 			/* make sure the parameters meet our expectations */
 			if ((d->control & 0xfe00) != 0x1600)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA control %02X\n", d->control);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA control %02X\n", d->control);
 			}
 			else if (!is_redline && ((d->dest & 1) || (d->dest & 0x3f) > 0x0b))
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
 			}
 			else if (is_redline && (d->dest & 0xf000) != 0x4000 && (d->dest & 0xf000) != 0x5000)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
 			}
 
 			/* otherwise, we're ready for liftoff */
@@ -773,7 +773,7 @@ static void handle_eoi(int data)
 			case 0x0d:	i186.intr.in_service &= ~0x20;	break;
 			case 0x0e:	i186.intr.in_service &= ~0x40;	break;
 			case 0x0f:	i186.intr.in_service &= ~0x80;	break;
-			default:	log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:ERROR - 80186 EOI with unknown vector %02X\n", activecpu_get_pc(), data & 0x1f);
+			default:	log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:ERROR - 80186 EOI with unknown vector %02X\n", activecpu_get_pc(), data & 0x1f);
 		}
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "(%f) **** Got EOI for vector %02X\n", timer_get_time(), data & 0x1f);
 	}
@@ -948,7 +948,7 @@ static void internal_timer_update(int which, int new_count, int new_maxA, int ne
 		/* check for control bits we don't handle */
 		diff = new_control ^ t->control;
 		if (diff & 0x001c)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR! - unsupported timer mode %04X\n", new_control);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR! - unsupported timer mode %04X\n", new_control);
 
 		/* if we have real changes, update things */
 		if (diff != 0)
@@ -1049,7 +1049,7 @@ static void update_dma_control(int which, int new_control)
 	/* check for control bits we don't handle */
 	diff = new_control ^ d->control;
 	if (diff & 0x6811)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR! - unsupported DMA mode %04X\n", new_control);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR! - unsupported DMA mode %04X\n", new_control);
 
 	/* if we're going live, set a timer */
 	if ((diff & 0x0002) && (new_control & 0x0002))
@@ -1057,15 +1057,15 @@ static void update_dma_control(int which, int new_control)
 		/* make sure the parameters meet our expectations */
 		if ((new_control & 0xfe00) != 0x1600)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA control %02X\n", new_control);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA control %02X\n", new_control);
 		}
 		else if (!is_redline && ((d->dest & 1) || (d->dest & 0x3f) > 0x0b))
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
 		}
 		else if (is_redline && (d->dest & 0xf000) != 0x4000 && (d->dest & 0xf000) != 0x5000)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected DMA destination %02X\n", d->dest);
 		}
 
 		/* otherwise, set a timer */
@@ -1110,7 +1110,7 @@ static READ_HANDLER( i186_internal_port_r )
 	switch (offset & ~1)
 	{
 		case 0x22:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:ERROR - read from 80186 EOI\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:ERROR - read from 80186 EOI\n", activecpu_get_pc());
 			break;
 
 		case 0x24:
@@ -1309,11 +1309,11 @@ static WRITE_HANDLER( i186_internal_port_w )
 			break;
 
 		case 0x24:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:ERROR - write to 80186 interrupt poll = %04X\n", activecpu_get_pc(), data16);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:ERROR - write to 80186 interrupt poll = %04X\n", activecpu_get_pc(), data16);
 			break;
 
 		case 0x26:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:ERROR - write to 80186 interrupt poll status = %04X\n", activecpu_get_pc(), data16);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:ERROR - write to 80186 interrupt poll status = %04X\n", activecpu_get_pc(), data16);
 			break;
 
 		case 0x28:
@@ -1685,12 +1685,12 @@ WRITE_HANDLER( leland_i86_control_w )
 	last_control = data;
 
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:I86 control = %02X", activecpu_get_previouspc(), data);
-		if (!(data & 0x80)) log_cb(RETRO_LOG_ERROR, LOGPRE "  /RESET");
-		if (!(data & 0x40)) log_cb(RETRO_LOG_ERROR, LOGPRE "  ZNMI");
-		if (!(data & 0x20)) log_cb(RETRO_LOG_ERROR, LOGPRE "  INT0");
-		if (!(data & 0x10)) log_cb(RETRO_LOG_ERROR, LOGPRE "  /TEST");
-		if (!(data & 0x08)) log_cb(RETRO_LOG_ERROR, LOGPRE "  INT1");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		if (!(data & 0x80)) log_cb(RETRO_LOG_DEBUG, LOGPRE "  /RESET");
+		if (!(data & 0x40)) log_cb(RETRO_LOG_DEBUG, LOGPRE "  ZNMI");
+		if (!(data & 0x20)) log_cb(RETRO_LOG_DEBUG, LOGPRE "  INT0");
+		if (!(data & 0x10)) log_cb(RETRO_LOG_DEBUG, LOGPRE "  /TEST");
+		if (!(data & 0x08)) log_cb(RETRO_LOG_DEBUG, LOGPRE "  INT1");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 
 
 	/* /RESET */
@@ -1800,7 +1800,7 @@ static void delayed_response_r(int checkpc)
 		cpunum_set_reg(0, Z80_AF, oldaf);
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: delayed_response_r - current PC = %04X, checkPC = %04X\n", pc, checkpc);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: delayed_response_r - current PC = %04X, checkPC = %04X\n", pc, checkpc);
 }
 
 
@@ -2033,7 +2033,7 @@ static WRITE_HANDLER( ataxx_dac_control )
 				return;
 		}
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:Unexpected peripheral write %d/%02X = %02X\n", activecpu_get_pc(), 5, offset, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:Unexpected peripheral write %d/%02X = %02X\n", activecpu_get_pc(), 5, offset, data);
 }
 
 
@@ -2076,8 +2076,8 @@ static READ_HANDLER( peripheral_r )
 				}
 				else if (LOG_OPTIMIZATION)
 				{
-					if (i186.intr.pending) log_cb(RETRO_LOG_ERROR, LOGPRE "(can't suspend - interrupt pending)\n");
-					else if (active_mask && (*active_mask & result) != 0) log_cb(RETRO_LOG_ERROR, LOGPRE "(can't suspend: mask=%02X result=%02X\n", *active_mask, result);
+					if (i186.intr.pending) log_cb(RETRO_LOG_DEBUG, LOGPRE "(can't suspend - interrupt pending)\n");
+					else if (active_mask && (*active_mask & result) != 0) log_cb(RETRO_LOG_DEBUG, LOGPRE "(can't suspend: mask=%02X result=%02X\n", *active_mask, result);
 				}
 
 				return result;
@@ -2099,11 +2099,11 @@ static READ_HANDLER( peripheral_r )
 			if (is_redline)
 				return pit8254_r(offset | 0x100);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:Unexpected peripheral read %d/%02X\n", activecpu_get_pc(), select, offset);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:Unexpected peripheral read %d/%02X\n", activecpu_get_pc(), select, offset);
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:Unexpected peripheral read %d/%02X\n", activecpu_get_pc(), select, offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:Unexpected peripheral read %d/%02X\n", activecpu_get_pc(), select, offset);
 			break;
 	}
 	return 0xff;
@@ -2146,7 +2146,7 @@ static WRITE_HANDLER( peripheral_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%05X:Unexpected peripheral write %d/%02X = %02X\n", activecpu_get_pc(), select, offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%05X:Unexpected peripheral write %d/%02X = %02X\n", activecpu_get_pc(), select, offset, data);
 			break;
 	}
 }

@@ -98,13 +98,13 @@ static WRITE_HANDLER( xain_irqB_clear_w )
 
 static READ_HANDLER( xain_68705_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "read 68705\n");*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "read 68705\n");*/
 	return 0x4d;	/* fake P5 checksum test pass */
 }
 
 static WRITE_HANDLER( xain_68705_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "write %02x to 68705\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "write %02x to 68705\n",data);*/
 }
 
 static INTERRUPT_GEN( xainA_interrupt )

@@ -137,18 +137,18 @@ static READ16_HANDLER( fdc_r )
 		int res = fdc_data;
 		if(fdc_drq) {
 			fdc_span--;
-			/*			log_cb(RETRO_LOG_ERROR, LOGPRE "Read %02x (%d)\n", res, fdc_span);*/
+			/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "Read %02x (%d)\n", res, fdc_span);*/
 			if(fdc_span) {
 				fdc_pt++;
 				fdc_data = *fdc_pt;
 			} else {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: transfert complete\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: transfert complete\n");
 				fdc_drq = 0;
 				fdc_status = 0;
 				fdc_irq = 1;
 			}
 		} else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: data read with drq down\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: data read with drq down\n");
 		return res;
 	}
 	}
@@ -166,19 +166,19 @@ static WRITE16_HANDLER( fdc_w )
 			fdc_irq = 0;
 			switch(data >> 4) {
 			case 0x0:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Restore\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Restore\n");
 				fdc_phys_track = fdc_track = 0;
 				fdc_irq = 1;
 				fdc_status = 4;
 				break;
 			case 0x1:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Seek %d\n", fdc_data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Seek %d\n", fdc_data);
 				fdc_phys_track = fdc_track = fdc_data;
 				fdc_irq = 1;
 				fdc_status = fdc_track ? 0 : 4;
 				break;
 			case 0x9:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Read multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Read multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
 				fdc_pt = memory_region(REGION_USER2) + track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
 				fdc_span = track_size;
 				fdc_status = 3;
@@ -186,14 +186,14 @@ static WRITE16_HANDLER( fdc_w )
 				fdc_data = *fdc_pt;
 				break;
 			case 0xb:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Write multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Write multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
 				fdc_pt = memory_region(REGION_USER2) + track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
 				fdc_span = track_size;
 				fdc_status = 3;
 				fdc_drq = 1;
 				break;
 			case 0xd:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Forced interrupt\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Forced interrupt\n");
 				fdc_span = 0;
 				fdc_drq = 0;
 				fdc_irq = data & 1;
@@ -201,38 +201,38 @@ static WRITE16_HANDLER( fdc_w )
 				break;
 			case 0xf:
 				if(data == 0xfe)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Assign mode %02x\n", fdc_data);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Assign mode %02x\n", fdc_data);
 				else if(data == 0xfd)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Assign parameter %02x\n", fdc_data);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Assign parameter %02x\n", fdc_data);
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Unknown command %02x\n", data);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Unknown command %02x\n", data);
 				break;
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Unknown command %02x\n", data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Unknown command %02x\n", data);
 				break;
 			}
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Track register %02x\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Track register %02x\n", data);
 			fdc_track = data;
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Sector register %02x\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Sector register %02x\n", data);
 			fdc_sector = data;
 			break;
 		case 3:
 			if(fdc_drq) {
-				/*				log_cb(RETRO_LOG_ERROR, LOGPRE "Write %02x (%d)\n", data, fdc_span);*/
+				/*				log_cb(RETRO_LOG_DEBUG, LOGPRE "Write %02x (%d)\n", data, fdc_span);*/
 				*fdc_pt++ = data;
 				fdc_span--;
 				if(!fdc_span) {
-					log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: transfert complete\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: transfert complete\n");
 					fdc_drq = 0;
 					fdc_status = 0;
 					fdc_irq = 1;
 				}
 			} else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "FDC: Data register %02x\n", data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC: Data register %02x\n", data);
 			fdc_data = data;
 			break;
 		}
@@ -250,7 +250,7 @@ static READ16_HANDLER( fdc_status_r )
 static WRITE16_HANDLER( fdc_ctrl_w )
 {
 	if(ACCESSING_LSB)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "FDC control %02x\n", data & 0xff);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FDC control %02x\n", data & 0xff);
 }
 
 
@@ -405,13 +405,13 @@ static READ16_HANDLER( hotrod3_ctrl_r )
 
 static READ16_HANDLER( iod_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "IO daughterboard read %02x (%x)\n", offset, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "IO daughterboard read %02x (%x)\n", offset, activecpu_get_pc());
 	return 0xffff;
 }
 
 static WRITE16_HANDLER( iod_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "IO daughterboard write %02x, %04x & %04x (%x)\n", offset, data, mem_mask, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "IO daughterboard write %02x, %04x & %04x (%x)\n", offset, data, mem_mask, activecpu_get_pc());
 }
 
 
@@ -437,7 +437,7 @@ static void reset_reset(void)
 static void resetcontrol_w(UINT8 data)
 {
 	resetcontrol = data;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Reset control %02x (%x:%x)\n", resetcontrol, cpu_getactivecpu(), activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Reset control %02x (%x:%x)\n", resetcontrol, cpu_getactivecpu(), activecpu_get_pc());
 	reset_reset();
 }
 
@@ -556,7 +556,7 @@ static WRITE16_HANDLER( mlatch_w )
 		int i;
 		unsigned char mxor = 0;
 		if(!mlatch_table) {
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Protection: magic latch accessed but no table loaded (%d:%x)\n", cpu_getactivecpu(), activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Protection: magic latch accessed but no table loaded (%d:%x)\n", cpu_getactivecpu(), activecpu_get_pc());
 			return;
 		}
 
@@ -567,9 +567,9 @@ static WRITE16_HANDLER( mlatch_w )
 				if(mlatch & (1<<i))
 					mxor |= 1 << mlatch_table[i];
 			mlatch = data ^ mxor;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Magic latching %02x ^ %02x as %02x (%d:%x)\n", data & 0xff, mxor, mlatch, cpu_getactivecpu(), activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Magic latching %02x ^ %02x as %02x (%d:%x)\n", data & 0xff, mxor, mlatch, cpu_getactivecpu(), activecpu_get_pc());
 		} else {
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Magic latch reset (%d:%x)\n", cpu_getactivecpu(), activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Magic latch reset (%d:%x)\n", cpu_getactivecpu(), activecpu_get_pc());
 			mlatch = 0x00;
 		}
 	}
@@ -617,7 +617,7 @@ static void irq_timer_reset(void)
 	freq &= 0x1fff;
 
 	timer_adjust(irq_timer, TIME_IN_HZ(freq), 0, TIME_IN_HZ(freq));
-	log_cb(RETRO_LOG_ERROR, LOGPRE "New timer frequency: %0d [%02x %04x]\n", freq, irq_timerb, irq_timera);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "New timer frequency: %0d [%02x %04x]\n", freq, irq_timerb, irq_timera);
 }
 
 static WRITE16_HANDLER(irq_w)

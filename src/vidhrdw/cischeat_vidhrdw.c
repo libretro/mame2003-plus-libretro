@@ -74,27 +74,27 @@ data16_t *f1gpstr2_ioready;
 #define SHOW_READ_ERROR(_format_,_offset_)\
 {\
 	usrintf_showmessage(_format_,_offset_);\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_ "\n",_offset_);\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_ "\n",_offset_);\
 }
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
 	usrintf_showmessage(_format_,_offset_,_data_);\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_ "\n",_offset_,_data_); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_ "\n",_offset_,_data_); \
 }
 
 #else
 
 #define SHOW_READ_ERROR(_format_,_offset_)\
 {\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_ "\n",_offset_);\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_ "\n",_offset_);\
 }
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_ "\n",_offset_,_data_); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_ "\n",_offset_,_data_); \
 }
 
 #endif

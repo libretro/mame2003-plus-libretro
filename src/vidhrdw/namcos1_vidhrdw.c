@@ -113,7 +113,6 @@ static void namcos1_set_flipscreen(int flip)
 static WRITE_HANDLER( namcos1_playfield_control_w )
 {
 	namcos1_playfield_control[offset] = data;
-#if 0
 	/* 0-15 : scrolling */
 	if ( offset < 16 )
 	{
@@ -128,7 +127,6 @@ static WRITE_HANDLER( namcos1_playfield_control_w )
 	}
 	/* 24-29 palette */
 	else
-#endif
 	if ( offset < 30 )
 	{
 		int whichone = offset - 24;
@@ -492,10 +490,6 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 }
 #endif
 
-
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-
 static void namcos1_draw_screen(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int i, j, scrollx, scrolly, priority;
@@ -569,7 +563,6 @@ static void namcos1_draw_screen(struct mame_bitmap *bitmap, const struct rectang
 		draw_sprites(bitmap, cliprect, sp_updatebuffer);
 #endif
 }
-#pragma GCC pop_options
 
 
 VIDEO_START( namcos1 )

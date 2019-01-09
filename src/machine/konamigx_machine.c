@@ -1990,7 +1990,7 @@ WRITE16_HANDLER( K055550_word_w )
 			break;
 
 			default:
-/*              log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: unknown K055550 command %02x\n", activecpu_get_pc(), data);*/
+/*              log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: unknown K055550 command %02x\n", activecpu_get_pc(), data);*/
 			break;
 		}
 	}

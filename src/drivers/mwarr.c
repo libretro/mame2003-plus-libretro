@@ -276,7 +276,7 @@ static WRITE16_HANDLER( sprites_commands_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "used unknown sprites command %02X\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "used unknown sprites command %02X\n",data);
 		case 0xf:
 			/* refresh sprites on screen */
 			for( i = 0; i < 0x800; i++)

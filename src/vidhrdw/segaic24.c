@@ -680,6 +680,7 @@ void sys24_sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *clipr
 {
 	UINT16 curspr = 0;
 	int countspr = 0;
+	int seen;
 	UINT8 pmt[4];
 	int i;
 	UINT16 *sprd[0x2000], *clip[0x2000];
@@ -688,7 +689,7 @@ void sys24_sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *clipr
 	for(i=0; i<4; i++)
 		pmt[i] = 0xff << (1+spri[3-i]);
 
-	for(;;) {
+	for(seen = 0; seen < 0x2000; seen++) {
 		UINT16 *source;
 		UINT16 type;
 
@@ -716,7 +717,7 @@ void sys24_sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *clipr
 		clip[countspr] = cclip;
 
 		countspr++;
-		if(!curspr || countspr >= 0x2000)
+		if(!curspr)
 			break;
 	}
 

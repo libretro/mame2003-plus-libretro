@@ -377,6 +377,9 @@ static struct CPS1config cps1_config_table[]=
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
+		
+    /* CPS Changer */
+	{"wofch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 
     /* CPS2 games */
 	{"cps2",    NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff },
@@ -554,7 +557,7 @@ WRITE16_HANDLER( cps1_output_w )
 
 #ifdef MAME_DEBUG
 if (cps1_game_config->control_reg && offset == cps1_game_config->control_reg/2 && data != 0x3f)
-	log_cb(RETRO_LOG_ERROR, LOGPRE "control_reg = %04x",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "control_reg = %04x",data);
 #endif
 if (offset > 0x22/2 &&
         offset != cps1_game_config->layer_control/2 &&
@@ -567,7 +570,7 @@ if (offset > 0x22/2 &&
 
 #ifdef MAME_DEBUG
 if (offset == 0x22/2 && (data & ~0x8001) != 0x0e)
-	log_cb(RETRO_LOG_ERROR, LOGPRE "port 22 = %04x",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "port 22 = %04x",data);
 if (cps1_game_config->priority[0] && offset == cps1_game_config->priority[0]/2 && data != 0x00)
 	usrintf_showmessage("priority0 %04x",data);
 #endif
@@ -1169,7 +1172,7 @@ VIDEO_START( cps )
 
 	if (!cps1_game_config)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "cps1_game_config hasn't been set up yet");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "cps1_game_config hasn't been set up yet");
 		return -1;
 	}
 
@@ -1954,3 +1957,5 @@ void cps2_objram_latch(void)
 	cps2_set_sprite_priorities();
 	memcpy(cps2_buffered_obj, cps2_objbase(), cps2_obj_size);
 }
+
+    

@@ -2445,7 +2445,7 @@ static void sh2_timer_activate(void)
 			sh2.frc_base = cpunum_gettotalcycles(sh2.cpu_number);
 			timer_adjust(sh2.timer, TIME_IN_CYCLES(max_delta, sh2.cpu_number), sh2.cpu_number, 0);
 		} else {
-			log_cb(RETRO_LOG_WARN, LOGPRE "SH2.%d: Timer event in %d cycles of external clock", sh2.cpu_number, max_delta);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2.%d: Timer event in %d cycles of external clock", sh2.cpu_number, max_delta);
 		}
 	}
 }
@@ -2544,7 +2544,7 @@ static void sh2_dmac_check(int dma)
 			size = (sh2.m[0x63+4*dma] >> 10) & 3;
 			if(incd == 3 || incs == 3)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2.m[0x63+4*dma]);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2.m[0x63+4*dma]);
 				return;
 			}
 			src   = sh2.m[0x60+4*dma];
@@ -2633,7 +2633,7 @@ static void sh2_dmac_check(int dma)
 	{
 		if(sh2.dma_timer_active[dma])
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SH2: DMA %d cancelled in-flight", dma);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2: DMA %d cancelled in-flight", dma);
 			timer_adjust(sh2.dma_timer[dma], TIME_NEVER, 0, 0);
 			sh2.dma_timer_active[dma] = 0;
 		}
@@ -2646,7 +2646,7 @@ WRITE32_HANDLER( sh2_internal_w )
 	COMBINE_DATA(sh2.m+offset);
 
 	/*	if(offset != 0x20)*/
-	/*		log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);*/
+	/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);*/
 
 	switch( offset )
 	{
@@ -2803,14 +2803,14 @@ WRITE32_HANDLER( sh2_internal_w )
 		break;
 
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
 		break;
 	}
 }
 
 READ32_HANDLER( sh2_internal_r )
 {
-	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);*/
+	/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);*/
 	switch( offset )
 	{
 	case 0x04: /* TIER, FTCSR, FRC*/
@@ -3082,7 +3082,7 @@ void sh2_init(void)
 	sh2.m = malloc(0x200);
 	if (!sh2.m)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SH2 failed to malloc FREGS\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2 failed to malloc FREGS\n");
 		/*raise( SIGABRT );*/
 	}
 

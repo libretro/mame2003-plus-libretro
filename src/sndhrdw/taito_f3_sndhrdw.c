@@ -112,13 +112,13 @@ WRITE16_HANDLER(f3_68681_w)
 		case 0x04: /* ACR */
 			switch ((data>>4)&7) {
 				case 0:
-					log_cb(RETRO_LOG_WARN, LOGPRE "Counter:  Unimplemented external IP2\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Counter:  Unimplemented external IP2\n");
 					break;
 				case 1:
-					log_cb(RETRO_LOG_WARN, LOGPRE "Counter:  Unimplemented TxCA - 1X clock of channel A\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Counter:  Unimplemented TxCA - 1X clock of channel A\n");
 					break;
 				case 2:
-					log_cb(RETRO_LOG_WARN, LOGPRE "Counter:  Unimplemented TxCB - 1X clock of channel B\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Counter:  Unimplemented TxCB - 1X clock of channel B\n");
 					break;
 				case 3:
 					log_cb(RETRO_LOG_DEBUG, LOGPRE "Counter:  X1/Clk - divided by 16, counter is %04x, so interrupt every %d cycles\n",counter,(M68000_CLOCK/M68681_CLOCK)*counter*16);
@@ -126,10 +126,10 @@ WRITE16_HANDLER(f3_68681_w)
 					timer_adjust(timer_68681, TIME_IN_CYCLES((M68000_CLOCK/M68681_CLOCK)*counter*16,1), 0, 0);
 					break;
 				case 4:
-					log_cb(RETRO_LOG_WARN, LOGPRE "Timer:  Unimplemented external IP2\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  Unimplemented external IP2\n");
 					break;
 				case 5:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Timer:  Unimplemented external IP2/16\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  Unimplemented external IP2/16\n");
 					break;
 				case 6:
 					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  X1/Clk, counter is %04x, so interrupt every %d cycles\n",counter,(M68000_CLOCK/M68681_CLOCK)*counter);
@@ -137,7 +137,7 @@ WRITE16_HANDLER(f3_68681_w)
 					timer_adjust(timer_68681, TIME_IN_CYCLES((M68000_CLOCK/M68681_CLOCK)*counter,1), 0, TIME_IN_CYCLES((M68000_CLOCK/M68681_CLOCK)*counter,1));
 					break;
 				case 7:
-					log_cb(RETRO_LOG_WARN, LOGPRE "Timer:  Unimplemented X1/Clk - divided by 16\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  Unimplemented X1/Clk - divided by 16\n");
 					break;
 			}
 			break;

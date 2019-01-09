@@ -235,7 +235,7 @@ static WRITE16_HANDLER( cpua_ctrl_w )
 
 	parse_control();
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
 }
 
 
@@ -333,7 +333,7 @@ static READ16_HANDLER( topspeed_motor_r )
 			return 0x55;	/* motor cpu status ? */
 
 		default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read from motor cpu %03x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read from motor cpu %03x\n",activecpu_get_pc(),offset);
 			return 0;
 	}
 }
@@ -342,7 +342,7 @@ static WRITE16_HANDLER( topspeed_motor_w )
 {
 	/* Writes $900000-25 and $900200-219 */
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",activecpu_get_pc(),data,offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",activecpu_get_pc(),data,offset);
 
 }
 

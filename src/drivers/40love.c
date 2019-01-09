@@ -313,7 +313,7 @@ static WRITE_HANDLER( bank_select_w )
 
 	if ((data!=0x02) && (data!=0xfd))
 	{
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "WRONG BANK SELECT = %x !!!!\n",data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "WRONG BANK SELECT = %x !!!!\n",data);*/
 /*		usrintf_showmessage("WRONG BANK SELECT = %x !!!!\n",data);*/
 	}
 
@@ -328,14 +328,14 @@ static UINT8 pix2[2];
 static WRITE_HANDLER( pix1_w )
 {
 /*	if ( data > 7 )*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "pix1 = %2x\n",data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "pix1 = %2x\n",data);*/
 
 	pix1 = data;
 }
 static WRITE_HANDLER( pix2_w )
 {
 /*	if ( (data!=0x00) && (data!=0xff) )*/
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "pix2 = %2x\n",data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "pix2 = %2x\n",data);*/
 
 	pix2[0] = pix2[1];
 	pix2[1] = data;
@@ -438,7 +438,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 	int d;
 	int i;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu_w %02x\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu_w %02x\n",data);*/
 
 
 	if (mcu_cmd != -1)
@@ -555,7 +555,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 						case 0x07: mcu_out[0][0] = 0xb6; break;
 						default:
 						/*	usrintf_showmessage("cmd06: %02x %02x",mcu_in[0][0],mcu_in[0][1]);*/
-							log_cb(RETRO_LOG_ERROR, LOGPRE "cmd06: %02x %02x\n",mcu_in[0][0],mcu_in[0][1]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "cmd06: %02x %02x\n",mcu_in[0][0],mcu_in[0][1]);
 					}
 				break;
 
@@ -584,7 +584,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 				from_mcu = 0x5d;
 
 /*				usrintf_showmessage("unknown cmd%02x: %02x %02x %02x %02x",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);*/
-/*				log_cb(RETRO_LOG_ERROR, LOGPRE "unknown cmd%02x: %02x %02x %02x %02x\n",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);*/
+/*				log_cb(RETRO_LOG_DEBUG, LOGPRE "unknown cmd%02x: %02x %02x %02x %02x\n",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);*/
 		}
 	}
 }
@@ -592,7 +592,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 static READ_HANDLER( undoukai_mcu_r )
 {
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu_r %02x\n",from_mcu);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu_r %02x\n",from_mcu);*/
 
 	return from_mcu;
 }
@@ -805,7 +805,7 @@ static MACHINE_INIT( ta7630 )
 	}
 
 	/* for (i=0; i<8; i++)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) ); */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) ); */
 /*
   channels 0-2 AY#0
   channels 3,4 MSM5232 group1,group2

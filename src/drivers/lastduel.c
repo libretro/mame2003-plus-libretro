@@ -2,6 +2,7 @@
 
   Last Duel 			          - Capcom, 1988
   LED Storm 			          - Capcom, 1988
+  LED Storm Rally 2011            - Capcom, 1988
   Mad Gear                        - Capcom, 1989
 
   Emulation by Bryan McPhail, mish@tendril.co.uk
@@ -160,6 +161,20 @@ static struct GfxLayout sprite_layout =
 			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
 	32*8
 };
+/* leds2011 lazy way */
+static struct GfxLayout sprite_layout2 =
+{
+	16,16,
+	RGN_FRAC(1,1),
+	4,
+	{ 16, 0, 24, 8 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7,
+			512+0,512+1,512+2,512+3,512+4,512+5,512+6,512+7 },
+	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32,
+			8*32, 9*32, 10*32, 11*32, 12*32, 13*32, 14*32, 15*32 },
+	128*8
+};
+
 
 static struct GfxLayout text_layout =
 {
@@ -228,6 +243,16 @@ static struct GfxDecodeInfo madgear_gfxdecodeinfo[] =
 	{ REGION_GFX4, 0,&madgear_tile2, 0x100, 16 },	/* colors 0x100-0x1ff */
 	{ -1 }
 };
+/* leds2011 lazy way */
+static struct GfxDecodeInfo leds2011_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0,&sprite_layout2, 0x200, 16 },	/* colors 0x200-0x2ff */
+	{ REGION_GFX2, 0,&text_layout,    0x300, 16 },	/* colors 0x300-0x33f */
+	{ REGION_GFX3, 0,&madgear_tile,   0x000, 16 },	/* colors 0x000-0x0ff */
+	{ REGION_GFX4, 0,&madgear_tile2,  0x100, 16 },	/* colors 0x100-0x1ff */
+	{ -1 }
+};
+
 
 /******************************************************************************/
 
@@ -329,6 +354,36 @@ static MACHINE_DRIVER_START( madgear )
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
+
+static MACHINE_DRIVER_START( leds2011 )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 10000000) /* Accurate */
+	MDRV_CPU_MEMORY(madgear_readmem,madgear_writemem)
+	MDRV_CPU_VBLANK_INT(madgear_interrupt,3)	/* 1 for vbl, 2 for control reads?? */
+
+	MDRV_CPU_ADD(Z80, 3579545)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU) /* Accurate */
+	MDRV_CPU_MEMORY(mg_sound_readmem,mg_sound_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK | VIDEO_BUFFERS_SPRITERAM)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
+	MDRV_GFXDECODE(leds2011_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(1024)
+
+	MDRV_VIDEO_START(madgear)
+	MDRV_VIDEO_EOF(lastduel)
+	MDRV_VIDEO_UPDATE(lastduel)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM2203, ym2203_interface)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+MACHINE_DRIVER_END
 /******************************************************************************/
 
 INPUT_PORTS_START( lastduel )
@@ -518,17 +573,17 @@ INPUT_PORTS_START( madgear )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
@@ -793,6 +848,38 @@ ROM_START( ledstorm )
 	ROM_LOAD( "prom",         0x0000, 0x0100, NO_DUMP )	/* priority (not used) */
 ROM_END
 
+ROM_START( leds2011 )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* 256K for 68000 code */
+	ROM_LOAD16_BYTE( "lse_04.8b", 0x00000, 0x20000, CRC(166c0576) SHA1(1bae79fa565d87ebcaf92bf2531b759ec22111c7) )
+	ROM_LOAD16_BYTE( "lse_03.7b", 0x00001, 0x20000, CRC(0c8647b6) SHA1(ea041e3fdb0991fc7aae736f3043e3edbb2d10f5) )
+	ROM_LOAD16_BYTE( "ls-02.6b",  0x40000, 0x20000, CRC(05c0285e) SHA1(b155d2d0c41f614bd324813c5d3d87a6765ad812) )
+	ROM_LOAD16_BYTE( "ls-01.5b",  0x40001, 0x20000, CRC(8bf934dd) SHA1(f2287a4361af4986eb010dfbfb6de3a3d4124937) )
+
+	ROM_REGION(  0x18000 , REGION_CPU2, 0 ) /* audio CPU */
+	ROM_LOAD( "ls-07.14j",    0x00000,  0x08000, CRC(98af7838) SHA1(a0b87b9ce3c1b0e5d7696ffaab9cea483b9ee928) )
+	ROM_CONTINUE(             0x10000,  0x08000 )
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "ls-10.13a",    0x00001, 0x40000, CRC(db2c5883) SHA1(00899f96e2cbf6930c107a53f660a944fa9a2682) )    /* NEC 23C2000 256kx8 mask ROM (QFP52) */
+	ROM_LOAD16_BYTE( "ls-09.5a",     0x00000, 0x40000, CRC(89949efb) SHA1(c4d2ca19e483e468dedd184d0158e11e5591ab02) )    /* NEC 23C2000 256kx8 mask ROM (QFP52) */
+
+	ROM_REGION( 0x08000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "ls-08.10k",    0x000000, 0x08000, CRC(8803cf49) SHA1(7a01a05f760d8e2472fdbc1d10b53094babe295e) ) /* 8x8 text */
+
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "ls-12.7l",     0x000000, 0x40000, CRC(6c1b2c6c) SHA1(18f22129f13c6bfa7e285f0e09a35644272f6ecb) ) /* NEC 23C2000 256kx8 mask ROM (QFP52) */
+
+	ROM_REGION( 0x80000, REGION_GFX4, ROMREGION_DISPOSE )
+	ROM_LOAD( "ls-11.2l",     0x000000, 0x80000, CRC(6bf81c64) SHA1(2289978c6bdb6e4f86e7094e861df147e757e249) ) /* NEC 23C4000 512kx8 mask ROM (QFP64) */
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 ) /* ADPCM */
+	ROM_LOAD( "ls-06.10e",    0x00000, 0x20000, CRC(88d39a5b) SHA1(8fb2d1d26e2ffb93dfc9cf8f23bb81eb64496c2b) )
+	ROM_LOAD( "ls-05.12e",    0x20000, 0x20000, CRC(b06e03b5) SHA1(7d17e5cfb57866c60146bea1a4535e961c73327c) )
+
+	ROM_REGION( 0x0100, REGION_PROMS, 0 )
+	ROM_LOAD( "29.14k",   0x0000, 0x0100, CRC(7f862e1e) SHA1(7134c4f741463007a177d55922e1284d132f60e3) ) /* priority (not used) BPROM type 63S141 or compatible like 82S129A */
+ROM_END
+
 /******************************************************************************/
 
 GAME( 1988, lastduel, 0,        lastduel, lastduel, 0, ROT270, "Capcom", "Last Duel (US set 1)" )
@@ -801,3 +888,5 @@ GAME( 1988, lstduelb, lastduel, lastduel, lastduel, 0, ROT270, "bootleg", "Last 
 GAME( 1989, madgear,  0,        madgear,  madgear,  0, ROT270, "Capcom", "Mad Gear (US)" )
 GAME( 1989, madgearj, madgear,  madgear,  madgear,  0, ROT270, "Capcom", "Mad Gear (Japan)" )
 GAME( 1988, ledstorm, madgear,  madgear,  madgear,  0, ROT270, "Capcom", "Led Storm (US)" )
+GAME( 1988, leds2011, 0,        leds2011, madgear,  0, ROT270, "Capcom", "Led Storm Rally 2011 (World)")
+

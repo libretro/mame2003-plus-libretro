@@ -135,7 +135,7 @@ READ32_HANDLER( midvunit_adc_r )
 	if (!(control_data & 0x40))
 		return adc_data << adc_shift;
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "adc_r without enabling reads!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "adc_r without enabling reads!\n");
 	return 0xffffffff;
 }
 
@@ -152,12 +152,12 @@ WRITE32_HANDLER( midvunit_adc_w )
 	{
 		int which = (data >> adc_shift) - 4;
 		if (which < 0 || which > 2)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "adc_w: unexpected which = %02X\n", which + 4);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "adc_w: unexpected which = %02X\n", which + 4);
 		adc_data = readinputport(3 + which);
 		timer_set(TIME_IN_MSEC(1), 0, adc_ready);
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "adc_w without enabling writes!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "adc_w without enabling writes!\n");
 }
 
 
@@ -214,7 +214,7 @@ WRITE32_HANDLER( midvunit_control_w )
 
 	/* log anything unusual */
 	if ((olddata ^ control_data) & ~0x00e8)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "midvunit_control_w: old=%04X new=%04X diff=%04X\n", olddata, control_data, olddata ^ control_data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "midvunit_control_w: old=%04X new=%04X diff=%04X\n", olddata, control_data, olddata ^ control_data);
 }
 
 
@@ -234,13 +234,13 @@ WRITE32_HANDLER( crusnwld_control_w )
 
 	/* log anything unusual */
 	if ((olddata ^ control_data) & ~0xe800)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "crusnwld_control_w: old=%04X new=%04X diff=%04X\n", olddata, control_data, olddata ^ control_data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "crusnwld_control_w: old=%04X new=%04X diff=%04X\n", olddata, control_data, olddata ^ control_data);
 }
 
 
 static WRITE32_HANDLER( midvunit_sound_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Sound W = %02X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound W = %02X\n", data);
 	dcs_data_w(data & 0xff);
 }
 
@@ -260,13 +260,13 @@ READ32_HANDLER( tms32031_control_r )
 		/* timer is clocked at 100ns */
 		int which = (offset >> 4) & 1;
 		INT32 result = timer_timeelapsed(timer[which]) * timer_rate;
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:tms32031_control_r(%02X) = %08X\n", activecpu_get_pc(), offset, result);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:tms32031_control_r(%02X) = %08X\n", activecpu_get_pc(), offset, result);*/
 		return result;
 	}
 
 	/* log anything else except the memory control register */
 	if (offset != 0x64)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:tms32031_control_r(%02X)\n", activecpu_get_pc(), offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:tms32031_control_r(%02X)\n", activecpu_get_pc(), offset);
 
 	return tms32031_control[offset];
 }
@@ -284,7 +284,7 @@ WRITE32_HANDLER( tms32031_control_w )
 	else if (offset == 0x20 || offset == 0x30)
 	{
 		int which = (offset >> 4) & 1;
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);*/
 		if (data & 0x40)
 			timer_adjust(timer[which], TIME_NEVER, 0, TIME_NEVER);
 
@@ -295,7 +295,7 @@ WRITE32_HANDLER( tms32031_control_w )
 			timer_rate = 10000000.;
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);
 }
 
 
@@ -417,7 +417,7 @@ static READ32_HANDLER( midvplus_misc_r )
 	}
 
 	if (offset != 0 && offset != 3)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:midvplus_misc_r(%d) = %08X\n", activecpu_get_pc(), offset, result);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:midvplus_misc_r(%d) = %08X\n", activecpu_get_pc(), offset, result);
 	return result;
 }
 
@@ -446,7 +446,7 @@ static WRITE32_HANDLER( midvplus_misc_w )
 	}
 
 	if (logit)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:midvplus_misc_w(%d) = %08X\n", activecpu_get_pc(), offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:midvplus_misc_w(%d) = %08X\n", activecpu_get_pc(), offset, data);
 }
 
 
@@ -460,7 +460,7 @@ static WRITE32_HANDLER( midvplus_misc_w )
 static void midvplus_xf1_w(UINT8 val)
 {
 	static int lastval;
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "xf1_w = %d\n", val);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "xf1_w = %d\n", val);*/
 
 	if (lastval && !val)
 		memcpy(ram_base, fastram_base, 0x20000*4);

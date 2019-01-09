@@ -261,7 +261,7 @@ int kageki_init_samples(const struct MachineSound *msound)
 		{
 			*dest++ = ((*scan++) ^ 0x80);
 		}
-	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "samples num:%02X ofs:%04X lng:%04X\n", i, start, size);*/
+	/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "samples num:%02X ofs:%04X lng:%04X\n", i, start, size);*/
 	}
 
 	return 0;
@@ -292,7 +292,7 @@ static READ_HANDLER( kageki_csport_r )
 			break;
 		default:
 			dsw = 0x00;
-		/*	log_cb(RETRO_LOG_ERROR, LOGPRE "kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);*/
+		/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);*/
 	}
 
 	return (dsw & 0xff);
@@ -2305,21 +2305,21 @@ ROM_START( insectx )
 ROM_END
 
 
-/*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR COMPANY    FULLNAME     FLAGS ) */
-GAME( 1987, plumppop, 0,        drtoppel, plumppop, drtoppel, ROT0,   "Taito Corporation", "Plump Pop (Japan)" )
-GAME( 1987, extrmatn, 0,        arknoid2, extrmatn, extrmatn, ROT270, "[Taito] World Games", "Extermination (US)" )
-GAME( 1987, arknoid2, 0,        arknoid2, arknoid2, arknoid2, ROT270, "Taito Corporation Japan", "Arkanoid - Revenge of DOH (World)" )
-GAME( 1987, arknid2u, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito America Corporation (Romstar license)", "Arkanoid - Revenge of DOH (US)" )
-GAME( 1987, arknid2j, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito Corporation", "Arkanoid - Revenge of DOH (Japan)" )
-GAME( 1987, drtoppel, 0,        drtoppel, drtoppel, drtoppel, ROT90,  "Taito Corporation Japan", "Dr. Toppel's Adventure (World)" )
-GAME( 1987, drtopplu, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Taito America Corporation", "Dr. Toppel's Adventure (US)" )
-GAME( 1987, drtopplj, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Taito Corporation", "Dr. Toppel's Tankentai (Japan)" )
-GAME( 1988, kageki,   0,        kageki,   kageki,   kageki,   ROT90,  "Taito America Corporation (Romstar license)", "Kageki (US)" )
-GAME( 1988, kagekij,  kageki,   kageki,   kageki,   kageki,   ROT90,  "Taito Corporation", "Kageki (Japan)" )
-GAME( 1988, chukatai, 0,        tnzs,     chukatai, chukatai, ROT0,   "Taito Corporation Japan", "Chuka Taisen (World)" )
-GAME( 1988, chukatau, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito America Corporation", "Chuka Taisen (US)" )
-GAME( 1988, chukataj, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito Corporation", "Chuka Taisen (Japan)" )
-GAME( 1988, tnzs,     0,        tnzs,     tnzs,     tnzs,     ROT0,   "Taito Corporation", "The NewZealand Story (Japan)" )
-GAME( 1988, tnzsb,    tnzs,     tnzsb,    tnzsb,    tnzsb,    ROT0,   "bootleg", "The NewZealand Story (World, bootleg)" )
-GAME( 1988, tnzs2,    tnzs,     tnzs,     tnzs2,    tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story 2 (World)" )
-GAME( 1989, insectx,  0,        insectx,  insectx,  insectx,  ROT0,   "Taito Corporation Japan", "Insector X (World)" )
+/*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR COMPANY                                         FULLNAME                        FLAGS ) */
+GAME( 1987, plumppop, 0,        drtoppel, plumppop, drtoppel, ROT0,   "Taito Corporation",                            "Plump Pop (Japan)" )
+GAME( 1987, extrmatn, 0,        arknoid2, extrmatn, extrmatn, ROT270, "[Taito] World Games",                          "Extermination (US)" )
+GAME( 1987, arknoid2, 0,        arknoid2, arknoid2, arknoid2, ROT270, "Taito Corporation Japan",                      "Arkanoid - Revenge of DOH (World)" )
+GAME( 1987, arknid2u, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito America Corporation (Romstar license)",  "Arkanoid - Revenge of DOH (US)" )
+GAME( 1987, arknid2j, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito Corporation",                            "Arkanoid - Revenge of DOH (Japan)" )
+GAME( 1987, drtoppel, 0,        drtoppel, drtoppel, drtoppel, ROT90,  "Taito Corporation Japan",                      "Dr. Toppel's Adventure (World)" )
+GAME( 1987, drtopplu, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Taito America Corporation",                    "Dr. Toppel's Adventure (US)" )
+GAME( 1987, drtopplj, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Taito Corporation",                            "Dr. Toppel's Tankentai (Japan)" )
+GAME( 1988, kageki,   0,        kageki,   kageki,   kageki,   ROT90,  "Taito America Corporation (Romstar license)",  "Kageki (US)" )
+GAME( 1988, kagekij,  kageki,   kageki,   kageki,   kageki,   ROT90,  "Taito Corporation",                            "Kageki (Japan)" )
+GAME( 1988, chukatai, 0,        tnzs,     chukatai, chukatai, ROT0,   "Taito Corporation Japan",                      "Chuka Taisen (World)" )
+GAME( 1988, chukatau, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito America Corporation",                    "Chuka Taisen (US)" )
+GAME( 1988, chukataj, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito Corporation",                            "Chuka Taisen (Japan)" )
+GAME( 1988, tnzs,     0,        tnzs,     tnzs,     tnzs,     ROT0,   "Taito Corporation",                            "The NewZealand Story (Japan, new version) (P0-043A PCB)" )
+GAME( 1988, tnzsb,    tnzs,     tnzsb,    tnzsb,    tnzsb,    ROT0,   "Taito Corporation Japan",                      "The NewZealand Story (World, new version) (P0-043A PCB)" )
+GAME( 1988, tnzs2,    tnzs,     tnzs,     tnzs2,    tnzs,     ROT0,   "Taito Corporation Japan",                      "The NewZealand Story (World, old version) (P0-041A PCB)" )
+GAME( 1989, insectx,  0,        insectx,  insectx,  insectx,  ROT0,   "Taito Corporation Japan",                      "Insector X (World)" )

@@ -273,18 +273,7 @@ bool init_game(int game)
 	Machine->gamedrv = gamedrv = drivers[game];
 	expand_machine_driver(gamedrv->drv, &internal_drv);
 	Machine->drv = &internal_drv;
-
-	init_game_options();
-
-	/* here's the meat of it all */
-	bailing = 0;
   
-  begin_resource_tracking();
-
-  /* finish setting up our local machine */
-  if (init_machine())
-      bail_and_print("Unable to initialize machine emulation");
-    
   return true;
 }
     
@@ -295,23 +284,34 @@ bool init_game(int game)
 
 bool run_game(int game)
 {
-  /* then run it */
-  if (run_machine())
-      bail_and_print("Unable to start machine emulation");
+	init_game_options();
+
+	/* here's the meat of it all */
+	bailing = 0;
+  
+  begin_resource_tracking();
+
+  /* finish setting up our local machine */
+  if (init_machine())
+      bail_and_print("Unable to initialize machine emulation");
   else
-  {
-      log_cb(RETRO_LOG_ERROR, "\ngame loaded = 1\n");
-      game_loaded = 1;
-      return true;
+  {	  
+  /* then run it */
+      if (run_machine())
+          bail_and_print("Unable to start machine emulation");
+      else
+      {
+         game_loaded = 1;
+         return 0;
+      }
+
+      /* shutdown the local machine */
+      shutdown_machine();
   }
-
-  /* shutdown the local machine */
-  shutdown_machine();
-
   /* stop tracking resources and exit the OSD layer */
   end_resource_tracking();
     
-	return false;
+	return 1;
 }
 
 void run_game_done(void)
@@ -490,29 +490,42 @@ void run_machine_done(void)
 
 void pause_action_start_emulator(void)
 {
-    init_user_interface();
-    artwork_enable(1);
-    InitCheat();
+  init_user_interface();
+  artwork_enable(1);
+  InitCheat();
 
-    /* load the NVRAM now */
-    if (Machine->drv->nvram_handler)
+  /* load the NVRAM now */
+  if (Machine->drv->nvram_handler)
+  {
+    mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
+
+    if(!nvram_file)
+      log_cb(RETRO_LOG_INFO, LOGPRE "First run: NVRAM handler found for %s but no existing NVRAM file found.\n", Machine->gamedrv->name);
+    
+    log_cb(RETRO_LOG_INFO, LOGPRE "options.nvram_bootstrap: %i \n", options.nvram_bootstrap);
+    if(!nvram_file && (Machine->gamedrv->bootstrap != NULL))
     {
-        mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
-        if(!nvram_file && (Machine->gamedrv->bootstrap != NULL))
-        {
-          nvram_file = spawn_bootstrap_nvram(Machine->gamedrv->bootstrap->data, Machine->gamedrv->bootstrap->length);
-        }
-
-        (*Machine->drv->nvram_handler)(nvram_file, 0);
-        if (nvram_file)
-            mame_fclose(nvram_file);
+      if(options.nvram_bootstrap)
+      {
+        log_cb(RETRO_LOG_INFO, LOGPRE "Spwaning NVRAM bootstrap as the initial NVRAM image.\n");
+        nvram_file = spawn_bootstrap_nvram(Machine->gamedrv->bootstrap->data, Machine->gamedrv->bootstrap->length);
+      }
+      else
+        log_cb(RETRO_LOG_INFO, LOGPRE "NVRAM bootstrap available, but disabled via core option.\n");
     }
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Delegating population of initial NVRAM to emulated system.\n");
 
-    /* run the emulation! */
-    cpu_run();
+    (*Machine->drv->nvram_handler)(nvram_file, 0);
+    if (nvram_file)
+        mame_fclose(nvram_file);
+  }
 
-    /* Unpause */
-    pause_action = 0;
+  /* run the emulation! */
+  cpu_run();
+
+  /* Unpause */
+  pause_action = 0;
 }
 
 void run_machine_core_done(void)
@@ -605,8 +618,7 @@ static int vh_open(void)
 	/* if we're a vector game, override the screen width and height */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-       /*scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);*/      
-       /*Hack to avoid segfault: leave vector resolution to its default the first time scale_vectorgames is caused*/
+       scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
     }
 	/* compute the visible area for raster games */
 	if (!(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR))
@@ -636,9 +648,7 @@ static int vh_open(void)
 	/* the create display process may update the vector width/height, so recompute */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-        /*scale_vectorgames((options.vector_resolution_multiplier * Machine->drv->screen_width), (options.vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);*/
-        bmwidth = Machine->drv->screen_width * options.vector_resolution_multiplier;
-        bmheight = Machine->drv->screen_height * options.vector_resolution_multiplier;
+        scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
     }
     
     
@@ -798,6 +808,9 @@ static void init_game_options(void)
       Machine->color_depth = 32;
     else
       Machine->color_depth = 15;
+    
+    /* use 32-bit color output as default to skip color conversions */
+	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR) 	Machine->color_depth = 32;
 
     /* now allow overrides */
     if (options.color_depth == 15 || options.color_depth == 32)
@@ -809,21 +822,22 @@ static void init_game_options(void)
   }
 
   /* update the vector width/height with defaults */
-  if (options.vector_width == 0) options.vector_width = 640;
-  if (options.vector_height == 0) options.vector_height = 480;
+  if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
+  if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
+  
+  /* apply the vector resolution multiplier */
+	options.vector_width  *= options.vector_resolution_multiplier;
+	options.vector_height *= options.vector_resolution_multiplier;
 
   /* get orientation right */
-  Machine->orientation = ROT0;
+  Machine->orientation    = ROT0;
   Machine->ui_orientation = options.ui_orientation;
 
   /* initialize the samplerate */
   
   Machine->sample_rate = options.samplerate;
+/* move this to a core option if you want it to toggle */
 
-  /* catch any custom bios options needed on a per-game basis. this is a hack. */
-  if(strcasecmp(Machine->gamedrv->name, "diehard") == 0) {
-      options.bios = strdup("us");
-  }
 }
 
 

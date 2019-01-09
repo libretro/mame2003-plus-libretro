@@ -14,7 +14,7 @@ HNZVC
 
 static INLINE void illegal( void )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "HD6309: illegal opcode at %04x\nVectoring to [$fff0]\n",PC);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "HD6309: illegal opcode at %04x\nVectoring to [$fff0]\n",PC);
 
 	CC |= CC_E | CC_IF | CC_II;
 	PUSHWORD(pPC);

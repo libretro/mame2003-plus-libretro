@@ -82,7 +82,7 @@ WRITE_HANDLER( spacefb_video_control_w )
 
 WRITE_HANDLER( spacefb_port_2_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "Port #2 = %02d\n",data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "Port #2 = %02d\n",data);
        colour_control = data;
 }
 

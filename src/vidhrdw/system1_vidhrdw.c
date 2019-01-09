@@ -133,7 +133,7 @@ VIDEO_START( system1 )
 
 WRITE_HANDLER( system1_videomode_w )
 {
-if (data & 0x6e) log_cb(RETRO_LOG_ERROR, LOGPRE "videomode = %02x\n",data);
+if (data & 0x6e) log_cb(RETRO_LOG_DEBUG, LOGPRE "videomode = %02x\n",data);
 
 	/* bit 0 is coin counter */
 	coin_counter_w(0, data & 1);

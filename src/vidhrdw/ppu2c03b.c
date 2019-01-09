@@ -727,7 +727,7 @@ static void scanline_callback( int num )
 	int blanked = ( ppu_regs[PPU_CONTROL1] & ( PPU_CONTROL1_BACKGROUND | PPU_CONTROL1_SPRITES ) ) == 0;
 	int vblank = ( ppu_regs[PPU_STATUS] & PPU_STATUS_VBLANK ) ? 1 : 0;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SCANLINE CALLBACK %d\n",chips[num].scanline); */
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "SCANLINE CALLBACK %d\n",chips[num].scanline); */
 
 	/* if a callback is available, call it */
 	if ( chips[num].scanline_callback_proc )
@@ -792,7 +792,7 @@ void ppu2c03b_reset( int num, int scan_scale )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(reset): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(reset): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -862,13 +862,13 @@ int ppu2c03b_r( int num, int offset )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU %d(r): Attempting to access an unmapped chip\n", num );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU %d(r): Attempting to access an unmapped chip\n", num );
 		return 0;
 	}
 
 	if ( offset >= PPU_MAX_REG )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU %d(r): Attempting to read past the chip\n", num );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU %d(r): Attempting to read past the chip\n", num );
 
 		offset &= PPU_MAX_REG - 1;
 /*		return 0; */
@@ -925,13 +925,13 @@ void ppu2c03b_w( int num, int offset, int data )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(w): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(w): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
 	if ( offset >= PPU_MAX_REG )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU: Attempting to write past the chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU: Attempting to write past the chip\n" );
 
 		offset &= PPU_MAX_REG - 1;
 /*		return; */
@@ -1039,7 +1039,7 @@ void ppu2c03b_w( int num, int offset, int data )
 					{
 						/* if there is a vidaccess callback, assume it coped up with it */
 						if ( chips[num].vidaccess_callback_proc == 0 )
-							log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU: Attempting to write to the chargen, when there's a ROM there!\n" );
+							log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU: Attempting to write to the chargen, when there's a ROM there!\n" );
 					}
 					else
 					{
@@ -1129,7 +1129,7 @@ void ppu2c03b_spriteram_dma( int num, const UINT8 *source )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(render): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(render): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -1146,11 +1146,11 @@ void ppu2c03b_render( int num, struct mame_bitmap *bitmap, int flipx, int flipy,
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(render): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(render): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PPU %d:VBLANK HIT (scanline %d)\n",num, chips[num].scanline); */
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PPU %d:VBLANK HIT (scanline %d)\n",num, chips[num].scanline); */
 
 	copybitmap( bitmap, chips[num].bitmap, flipx, flipy, sx, sy, 0, TRANSPARENCY_NONE, 0 );
 }
@@ -1167,13 +1167,13 @@ void ppu2c03b_set_videorom_bank( int num, int start_page, int num_pages, int ban
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set vrom bank): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set vrom bank): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
 	if ( !chips[num].has_videorom )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set vrom bank): Attempting to switch videorom banks and no rom is mapped\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set vrom bank): Attempting to switch videorom banks and no rom is mapped\n" );
 		return;
 	}
 
@@ -1201,7 +1201,7 @@ int ppu2c03b_get_pixel( int num, int x, int y )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(get_pixel): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(get_pixel): Attempting to access an unmapped chip\n" );
 		return 0;
 	}
 
@@ -1219,7 +1219,7 @@ int ppu2c03b_get_colorbase( int num )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(get_colorbase): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(get_colorbase): Attempting to access an unmapped chip\n" );
 		return 0;
 	}
 
@@ -1231,7 +1231,7 @@ void ppu2c03b_set_mirroring( int num, int mirroring )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(get_colorbase): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(get_colorbase): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -1281,7 +1281,7 @@ void ppu2c03b_set_nmi_callback( int num, ppu2c03b_nmi_cb cb )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set_nmi_callback): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set_nmi_callback): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -1293,7 +1293,7 @@ void ppu2c03b_set_scanline_callback( int num, ppu2c03b_scanline_cb cb )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set_scanline_callback): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set_scanline_callback): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -1305,7 +1305,7 @@ void ppu2c03b_set_vidaccess_callback( int num, ppu2c03b_vidaccess_cb cb )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set_vidaccess_callback): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set_vidaccess_callback): Attempting to access an unmapped chip\n" );
 		return;
 	}
 
@@ -1317,7 +1317,7 @@ void ppu2c03b_set_scanlines_per_frame( int num, int scanlines )
 	/* check bounds */
 	if ( num >= intf->num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "PPU(set_scanlines_per_frame): Attempting to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "PPU(set_scanlines_per_frame): Attempting to access an unmapped chip\n" );
 		return;
 	}
 

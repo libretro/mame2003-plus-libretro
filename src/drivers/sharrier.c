@@ -246,7 +246,7 @@ static void generate_gr_screen(
 	    int center_offset=0;
 		sys16_gr_bitmap_width = bitmap_width;
 
-/*logerror( "generating road gfx; bitmap_width = %d\n", bitmap_width );*/
+/*log_cb(RETRO_LOG_DEBUG, LOGPRE  "generating road gfx; bitmap_width = %d\n", bitmap_width );*/
 
 		memcpy( buf,gr,source_size ); /* copy from ROM to temp buffer */
 		memset( gr,0,256*bitmap_width ); /* erase */
@@ -283,13 +283,13 @@ static void generate_gr_screen(
 						}
 					}
 					*gr++ = color_data[bit];
-/*					log_cb(RETRO_LOG_ERROR, LOGPRE  "%01x", color_data[bit] );*/
+/*					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%01x", color_data[bit] );*/
 					last_bit=bit;
 					buf[0] <<= 1; buf[0x4000] <<= 1;
 				}
 				buf++;
 			}
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );*/
 
 			if( grr!=NULL ){ /* need mirrored RHS*/
 				const UINT8 *temp = gr-1-skip;
@@ -309,7 +309,7 @@ static void generate_gr_screen(
 			while ( (1<<i) < sys16_gr_bitmap_width ) i++;
 			sys16_gr_bitmap_width=i; /* power of 2*/
 		}
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE  "width = %d\n", sys16_gr_bitmap_width );*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE  "width = %d\n", sys16_gr_bitmap_width );*/
 		free( buf0 );
 	}
 }
@@ -428,11 +428,11 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( hangon_writemem )
     { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x20c000, 0x20ffff, SYS16_MWA16_EXTRAM },
-	{ 0x400000, 0x403fff, SYS16_MWA16_TILERAM },
-	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM },
-	{ 0x600000, 0x6007ff, SYS16_MWA16_SPRITERAM },
-	{ 0xa00000, 0xa00fff, SYS16_MWA16_PALETTERAM },
+	{ 0x20c000, 0x20ffff, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x400000, 0x403fff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x600000, 0x6007ff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0xa00000, 0xa00fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc00000, 0xc3ffff, MWA16_NOP },
 	{ 0xc68000, 0xc68fff, hangon_roadram_w, &hangon_roadram },
 	{ 0xc7c000, 0xc7ffff, hangon_sharedram_w, &hangon_sharedram },
@@ -458,7 +458,7 @@ static MEMORY_WRITE16_START( hangon_writemem2 )
 MEMORY_END
 
 static MEMORY_READ_START( hangon_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
+    { 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe7ff, SegaPCM_r },
@@ -466,7 +466,7 @@ static MEMORY_READ_START( hangon_sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( hangon_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
+    { 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
@@ -475,7 +475,7 @@ static MEMORY_WRITE_START( hangon_sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( hangon_sound_readport )
-	{ 0x40, 0x40, soundlatch_r },
+    { 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( hangon_sound_writeport )
@@ -508,9 +508,9 @@ static MACHINE_INIT( hangon ){
 	the ADC is mapped to, so the input selection behavior didn't have to be
 	emulated. Not needed anymore, but left in for reference.
 	
-	sys16_patch_code( 0x83bd, 0x29);
-	sys16_patch_code( 0x8495, 0x2a);
-	sys16_patch_code( 0x84f9, 0x2b);
+	sys16_patch_code( 0x83bd, 0x29); // $E03021 -> $E03029
+	sys16_patch_code( 0x8495, 0x2a); // $E03021 -> $E0302A
+	sys16_patch_code( 0x84f9, 0x2b); // $E03021 -> $E0302B
 */
 
 	sys16_update_proc = hangon_update_proc;
@@ -593,8 +593,9 @@ static WRITE16_HANDLER( shared_ram_w ){
 
 static READ16_HANDLER( sh_motor_status_r ) { return 0x0; }
 
+
 static MEMORY_READ16_START( harrier_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM },
+    { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x040000, 0x043fff, SYS16_MRA16_EXTRAM },
 	{ 0x100000, 0x107fff, SYS16_MRA16_TILERAM },
 	{ 0x108000, 0x108fff, SYS16_MRA16_TEXTRAM },
@@ -610,39 +611,39 @@ static MEMORY_READ16_START( harrier_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( harrier_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM },
-	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM },
-	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM },
-	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM },
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0x124000, 0x127fff, shared_ram_w, &shared_ram },
-	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM },
+	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x140000, 0x140001, sound_command_nmi_w },
 	{ 0x140002, 0x140003, sys16_3d_coinctrl_w },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
 MEMORY_END
 
 static MEMORY_READ16_START( harrier_readmem2 )
-	{ 0x000000, 0x03ffff, MRA16_ROM },
+    { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( harrier_writemem2 )
-	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_w, &shared_ram },
 MEMORY_END
 
 static MEMORY_READ_START( harrier_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
+    { 0x0000, 0x7fff, MRA_ROM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe0ff, SegaPCM_r },
 	{ 0x8000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( harrier_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
+    { 0x0000, 0x7fff, MWA_ROM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
 	{ 0xe000, 0xe0ff, SegaPCM_w },
@@ -650,9 +651,8 @@ static MEMORY_WRITE_START( harrier_sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( harrier_sound_readport )
-	{ 0x40, 0x40, soundlatch_r },
+    { 0x40, 0x40, soundlatch_r },
 PORT_END
-
 
 static PORT_WRITE_START( harrier_sound_writeport )
 PORT_END
@@ -815,7 +815,7 @@ static READ16_HANDLER( er_reset2_r )
 }
 
 static MEMORY_READ16_START( enduror_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM },
+    { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x040000, 0x043fff, SYS16_MRA16_EXTRAM },
 	{ 0x100000, 0x107fff, SYS16_MRA16_TILERAM },
 	{ 0x108000, 0x108fff, SYS16_MRA16_TEXTRAM },
@@ -831,13 +831,13 @@ static MEMORY_READ16_START( enduror_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( enduror_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM },
-	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM },
-	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM },
-	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM },
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0x124000, 0x127fff, shared_ram_w, &shared_ram },
-	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM },
+	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x140000, 0x140001, sound_command_nmi_w },
 	{ 0x140002, 0x140003, sys16_3d_coinctrl_w },
 	{ 0x140030, 0x140031, er_io_analog_w },
@@ -849,63 +849,65 @@ static READ16_HANDLER( enduro_p2_skip_r ){
 }
 
 static MEMORY_READ16_START( enduror_readmem2 )
-	{ 0x000000, 0x03ffff, MRA16_ROM },
+    { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 	{ 0xc7e000, 0xc7e001, enduro_p2_skip_r },
 	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( enduror_writemem2 )
-	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_w, &shared_ram },
 MEMORY_END
 
 static MEMORY_READ_START( enduror_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
+    { 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe7ff, SegaPCM_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( enduror_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
+    { 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
 	{ 0xe000, 0xe7ff, SegaPCM_w },
 MEMORY_END
 
+
 static PORT_READ_START( enduror_sound_readport )
-	{ 0x40, 0x40, soundlatch_r },
+    { 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( enduror_sound_writeport )
 PORT_END
 
+
 static MEMORY_READ_START( enduror_b2_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
+    { 0x0000, 0x7fff, MRA_ROM },
 /*	{ 0xc000, 0xc7ff, MRA_RAM },*/
 	{ 0xf000, 0xf7ff, SegaPCM_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( enduror_b2_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
+    { 0x0000, 0x7fff, MWA_ROM },
 /*	{ 0xc000, 0xc7ff, MWA_RAM },*/
 	{ 0xf000, 0xf7ff, SegaPCM_w },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( enduror_b2_sound_readport )
-	{ 0x00, 0x00, YM2203_status_port_0_r },
+    { 0x00, 0x00, YM2203_status_port_0_r },
 	{ 0x80, 0x80, YM2203_status_port_1_r },
 	{ 0xc0, 0xc0, YM2203_status_port_2_r },
 	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( enduror_b2_sound_writeport )
-	{ 0x00, 0x00, YM2203_control_port_0_w },
+    { 0x00, 0x00, YM2203_control_port_0_w },
 	{ 0x01, 0x01, YM2203_write_port_0_w },
 	{ 0x80, 0x80, YM2203_control_port_1_w },
 	{ 0x81, 0x81, YM2203_write_port_1_w },
@@ -1234,9 +1236,9 @@ ROM_START( enduror )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* second 68000 CPU */
 	ROM_LOAD16_BYTE("7634.rom", 0x0000, 0x8000, CRC(3e07fd32) SHA1(7acb9e9712ecfe928c421c84dece783e75077746) )
 	ROM_LOAD16_BYTE("7635.rom", 0x0001, 0x8000, CRC(22f762ab) SHA1(70fa87da76c714db7213c42128a0b6a27644a1d4) )
-	/* alternate version??*/
-/*	ROM_LOAD16_BYTE("7634a.rom", 0x0000, 0x8000, CRC(aec83731) )*/
-/*	ROM_LOAD16_BYTE("7635a.rom", 0x0001, 0x8000, CRC(b2fce96f) )*/
+	// alternate version??
+//	ROM_LOAD16_BYTE("7634a.rom", 0x0000, 0x8000, CRC(aec83731) )
+//	ROM_LOAD16_BYTE("7635a.rom", 0x0001, 0x8000, CRC(b2fce96f) )
 
 	ROM_REGION( 0x40000, REGION_GFX3, 0 ) /* Road Graphics  (region size should be gr_bitmapwidth*256, 0 )*/
 	ROM_LOAD( "7633.rom", 0x0000, 0x8000, CRC(6f146210) SHA1(2f58f0c3563b434ed02700b9ca1545a696a5716e) )

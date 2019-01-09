@@ -79,6 +79,8 @@ enum
 	UI_calibrate,
 	UI_bookkeeping,
 	UI_inputspecific,
+  UI_flush_current_cfg,
+  UI_flush_all_cfg,  
 	UI_gameinfo,
 	UI_history,
   UI_resetgame,

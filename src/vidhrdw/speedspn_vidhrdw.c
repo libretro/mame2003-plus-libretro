@@ -47,14 +47,14 @@ READ_HANDLER( speedspn_vidram_r )
 
 WRITE_HANDLER(speedspn_banked_vidram_change)
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "VidRam Bank: %04x\n", data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "VidRam Bank: %04x\n", data);*/
 	speedspn_bank_vidram = data & 1;
 	speedspn_bank_vidram *= 0x1000;
 }
 
 WRITE_HANDLER(speedspn_global_display_w)
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Global display: %u\n", data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Global display: %u\n", data);*/
 	speedspn_display_disable = data & 1;
 }
 

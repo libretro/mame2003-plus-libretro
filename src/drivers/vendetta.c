@@ -806,7 +806,7 @@ ROM_END
 
 ROM_START( esckidsj )
 	ROM_REGION( 0x049000, REGION_CPU1, 0 )		/* Main CPU (053248) Code & Banked (1M x 1)*/
-	ROM_LOAD( "975r01", 0x010000, 0x018000, CRC(7b5c5572) SHA1(b94b58c010539926d112c2dfd80bcbad76acc986) )
+	ROM_LOAD( "975r01j", 0x010000, 0x018000, CRC(7b5c5572) SHA1(b94b58c010539926d112c2dfd80bcbad76acc986) )
 	ROM_CONTINUE(		0x008000, 0x008000 )
 
 	ROM_REGION( 0x010000, REGION_CPU2, 0 )		/* Sound CPU (Z80) Code (512K x 1)*/
@@ -839,7 +839,7 @@ static void vendetta_banking( int lines )
 
 	if ( lines >= 0x1c )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC = %04x : Unknown bank selected %02x\n", activecpu_get_pc(), lines );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC = %04x : Unknown bank selected %02x\n", activecpu_get_pc(), lines );
 	}
 	else
 		cpu_setbank( 1, &RAM[ 0x10000 + ( lines * 0x2000 ) ] );

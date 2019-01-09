@@ -748,7 +748,7 @@ READ_HANDLER( namcos2_input_port_0_r )
 		case NAMCOS2_ASSAULT_JP:
 		case NAMCOS2_ASSAULT_PLUS:
 			datafake=~readinputport(15) & 0xff;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "xxx=%08x\n",datafake);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "xxx=%08x\n",datafake);
 			for (i=0;i<10;i++)
 				if (datafake==one_joy_trans0[0][i])
 				{

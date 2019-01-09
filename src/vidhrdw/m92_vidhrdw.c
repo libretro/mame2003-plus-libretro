@@ -108,7 +108,7 @@ WRITE_HANDLER( m92_spritecontrol_w )
 		*/
 		timer_set (TIME_IN_NSEC(37 * 0x400), 0, spritebuffer_callback);
 	}
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: m92_spritecontrol_w %08x %08x\n",activecpu_get_pc(),offset,data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: m92_spritecontrol_w %08x %08x\n",activecpu_get_pc(),offset,data);*/
 }
 
 WRITE_HANDLER( m92_videocontrol_w )
@@ -132,7 +132,7 @@ WRITE_HANDLER( m92_videocontrol_w )
 		if ((data & 0x2) == 0x2 && m92_game_kludge!=3) m92_palette_bank = 1;
 		else                     m92_palette_bank = 0;
 	}
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: m92_videocontrol_w %d = %02x\n",activecpu_get_pc(),offset,data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: m92_videocontrol_w %d = %02x\n",activecpu_get_pc(),offset,data);*/
 }
 
 READ_HANDLER( m92_paletteram_r )
@@ -397,7 +397,7 @@ WRITE_HANDLER( m92_master_control_w )
 /*			else*/
 				m92_raster_irq_position=((pf4_control[7]<<8) | pf4_control[6])-128;
 /*			if (offset==7)*/
-/*				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: Raster %d %d\n",activecpu_get_pc(),offset, m92_raster_irq_position);*/
+/*				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: Raster %d %d\n",activecpu_get_pc(),offset, m92_raster_irq_position);*/
 			break;
 	}
 }

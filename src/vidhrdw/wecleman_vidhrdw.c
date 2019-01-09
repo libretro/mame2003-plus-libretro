@@ -1108,7 +1108,7 @@ WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w )
 	newword = COMBINE_DATA(&paletteram16[offset]);
 
 	/* the highest nibble has some unknown functions*/
-/*	if (newword & 0xf000) log_cb(RETRO_LOG_ERROR, LOGPRE "MSN set on color %03x: %1x\n", offset, newword>>12);*/
+/*	if (newword & 0xf000) log_cb(RETRO_LOG_DEBUG, LOGPRE "MSN set on color %03x: %1x\n", offset, newword>>12);*/
 
 	r0 = newword; g0 = newword; b0 = newword;
 	g0 >>=4;      b0 >>=8;

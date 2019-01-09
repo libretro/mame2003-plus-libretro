@@ -72,7 +72,7 @@ void tlc34076_reset(int dacwidth)
 	dacbits = dacwidth;
 	if (dacbits != 6 && dacbits != 8)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "tlc34076_reset: dacwidth must be 6 or 8!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "tlc34076_reset: dacwidth must be 6 or 8!\n");
 		dacbits = 6;
 	}
 

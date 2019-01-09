@@ -156,13 +156,13 @@ WRITE_HANDLER( astrocde_interrupt_enable_w )
 		}
 
 #ifdef MAME_DEBUG
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Gorf Delay set to %02x\n",GorfDelay);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Gorf Delay set to %02x\n",GorfDelay);
 #endif
 
 	}
 
 #ifdef MAME_DEBUG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Interrupt Flag set to %02x\n",InterruptFlag);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Interrupt Flag set to %02x\n",InterruptFlag);
 #endif
 }
 
@@ -171,7 +171,7 @@ WRITE_HANDLER( astrocde_interrupt_w )
 	/* A write to 0F triggers an interrupt at that scanline */
 
 #ifdef MAME_DEBUG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Scanline interrupt set to %02x\n",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Scanline interrupt set to %02x\n",data);
 #endif
 
 	NextScanInt = data;
@@ -273,7 +273,7 @@ WRITE_HANDLER( astrocde_colour_register_w )
 	colors[CurrentScan][offset] = data;
 
 #ifdef MAME_DEBUG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "colors %01x set to %02x\n",offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "colors %01x set to %02x\n",offset,data);
 #endif
 }
 
@@ -299,7 +299,7 @@ WRITE_HANDLER( wow_videoram_w )
 WRITE_HANDLER( astrocde_magic_expand_color_w )
 {
 #ifdef MAME_DEBUG
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: magic_expand_color = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: magic_expand_color = %02x\n",activecpu_get_pc(),data);*/
 #endif
 
 	magic_expand_color = data;
@@ -309,7 +309,7 @@ WRITE_HANDLER( astrocde_magic_expand_color_w )
 WRITE_HANDLER( astrocde_magic_control_w )
 {
 #ifdef MAME_DEBUG
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: magic_control = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: magic_control = %02x\n",activecpu_get_pc(),data);*/
 #endif
 
 	magic_control = data;
@@ -634,7 +634,7 @@ READ_HANDLER( gorf_io_r )
 	case 0x0d: artwork_show("lamp5", !data); break;
 #ifdef MAME_DEBUG
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: Latch IO %02x set to %d\n",activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: Latch IO %02x set to %d\n",activecpu_get_pc(),offset,data);
 #endif
 	}
 
@@ -682,7 +682,7 @@ READ_HANDLER( wow_io_r )
 	}
 
 #ifdef MAME_DEBUG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: Latch IO %02x set to %d\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: Latch IO %02x set to %d\n",activecpu_get_pc(),offset,data);
 #endif
 
 	return 0;

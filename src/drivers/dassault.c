@@ -157,7 +157,7 @@ static WRITE16_HANDLER( dassault_control_w )
 {
 	coin_counter_w(0,data&1);
 	if (data&0xfffe)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Coin cointrol %04x\n",data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin cointrol %04x\n",data);
 }
 
 static READ16_HANDLER( dassault_sub_control_r )

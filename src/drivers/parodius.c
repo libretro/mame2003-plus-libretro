@@ -69,7 +69,7 @@ static WRITE_HANDLER( parodius_052109_053245_w )
 
 static WRITE_HANDLER( parodius_videobank_w )
 {
-	if (videobank & 0xf8) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: videobank = %02x\n",activecpu_get_pc(),data);
+	if (videobank & 0xf8) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: videobank = %02x\n",activecpu_get_pc(),data);
 
 	/* bit 0 = select palette or work RAM at 0000-07ff */
 	/* bit 1 = select 052109 or 053245 at 2000-27ff */
@@ -79,7 +79,7 @@ static WRITE_HANDLER( parodius_videobank_w )
 
 static WRITE_HANDLER( parodius_3fc0_w )
 {
-	if ((data & 0xf4) != 0x10) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 3fc0 = %02x\n",activecpu_get_pc(),data);
+	if ((data & 0xf4) != 0x10) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 3fc0 = %02x\n",activecpu_get_pc(),data);
 
 	/* bit 0/1 = coin counters */
 	coin_counter_w(0,data & 0x01);
@@ -408,7 +408,7 @@ static void parodius_banking(int lines)
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int offs = 0;
 
-	if (lines & 0xf0) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: setlines %02x\n",activecpu_get_pc(),lines);
+	if (lines & 0xf0) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: setlines %02x\n",activecpu_get_pc(),lines);
 
 	offs = 0x10000 + (((lines & 0x0f)^0x0f) * 0x4000);
 	if (offs >= 0x48000) offs -= 0x40000;

@@ -43,7 +43,8 @@
 unsigned char *vectorram;
 size_t vectorram_size;
 
-static int beam_diameter_is_one;		  /* flag that beam is one pixel wide */
+static int int_beam;                      /* size of vector beam    */
+static int beam_diameter_is_one;		      /* flag that beam is one pixel wide */
 
 static float vector_scale_x;              /* scaling to screen */
 static float vector_scale_y;              /* scaling to screen */
@@ -151,6 +152,16 @@ float vector_get_gamma(void)
 	return gamma_correction;
 }
 
+static void update_options(void)
+{
+
+	/* Beam width is encoded as fixed point */
+	int_beam = (int)(options.beam * 0x00010000);
+	int_beam = int_beam > 0x00100000 ? 0x00100000 : int_beam;
+	int_beam = int_beam < 0x00010000 ? 0x00010000 : int_beam;
+	beam_diameter_is_one = int_beam == 0x00010000;
+}
+
 /*
  * Initializes vector game video emulation
  */
@@ -159,12 +170,8 @@ VIDEO_START( vector )
 {
 	int i;
 
-	/* Grab the settings for this session */
-
-	if (options.beam == 0x00010000)
-		beam_diameter_is_one = 1;
-	else
-		beam_diameter_is_one = 0;
+  /* Set initial rendering options */
+  update_options();
 
 	p_index = 0;
 
@@ -352,7 +359,7 @@ void vector_draw_to(int x2, int y2, rgb_t col, int intensity, int dirty, rgb_t (
 				dy--;
 			x1 >>= 16;
 			xx = x2 >> 16;
-			width = vec_mult(options.beam << 4, Tcosin(abs(sy) >> 5));
+			width = vec_mult(int_beam << 4, Tcosin(abs(sy) >> 5));
 			if (!beam_diameter_is_one)
 				yy1 -= width >> 1; /* start back half the diameter */
 			for (;;)
@@ -380,7 +387,7 @@ void vector_draw_to(int x2, int y2, rgb_t col, int intensity, int dirty, rgb_t (
 				dx--;
 			yy1 >>= 16;
 			yy = y2 >> 16;
-			width = vec_mult(options.beam << 4,Tcosin(abs(sx) >> 5));
+			width = vec_mult(int_beam << 4,Tcosin(abs(sx) >> 5));
 			if (!beam_diameter_is_one)
 				x1 -= width >> 1; /* start back half the width */
 			for (;;)
@@ -484,7 +491,7 @@ void vector_add_point (int x, int y, rgb_t color, int intensity)
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -516,7 +523,7 @@ void vector_add_point_callback (int x, int y, rgb_t (*color_callback)(void), int
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -538,7 +545,7 @@ void vector_add_clip (int x1, int yy1, int x2, int y2)
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -551,7 +558,7 @@ void vector_set_clip (int x1, int yy1, int x2, int y2)
 	/* failsafe */
 	if ((x1 >= x2) || (yy1 >= y2))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in clipping parameters.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Error in clipping parameters.\n");
 		xmin = 0;
 		ymin = 0;
 		xmax = vecwidth;
@@ -725,6 +732,9 @@ VIDEO_UPDATE( vector )
 
 	/* clear ALL pixels in the hidden map */
 	vector_clear_pixels();
+
+  /* Update rendering options once the screen is clear */
+	update_options();
 
 	/* Draw ALL lines into the hidden map. Mark only those lines with */
 	/* new->dirty = 1 as dirty. Remember the pixel start/end indices  */

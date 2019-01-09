@@ -269,7 +269,7 @@ WRITE16_HANDLER( midyunit_control_w )
 		{
 			if (autoerase_enable)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "autoerase off @ %d\n", cpu_getscanline());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "autoerase off @ %d\n", cpu_getscanline());
 				update_partial(cpu_getscanline() - 1, 1);
 			}
 			autoerase_enable = 0;
@@ -280,7 +280,7 @@ WRITE16_HANDLER( midyunit_control_w )
 		{
 			if (!autoerase_enable)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "autoerase on @ %d\n", cpu_getscanline());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "autoerase on @ %d\n", cpu_getscanline());
 				update_partial(cpu_getscanline() - 1, 1);
 			}
 			autoerase_enable = 1;
@@ -496,11 +496,12 @@ READ16_HANDLER( midyunit_dma_r )
 {
 	int result = dma_register[offset];
 
-#if !FAST_DMA
-	/* see if we're done */
-	if (offset == DMA_COMMAND && (result & 0x8000))
-		switch (activecpu_get_pc())
-		{
+    if(!options.activate_dcs_speedhack)
+	{
+	   /* see if we're done */
+	   if (offset == DMA_COMMAND && (result & 0x8000))
+         switch (activecpu_get_pc())
+		 {
 			case 0xfff7aa20: /* narc */
 			case 0xffe1c970: /* trog */
 			case 0xffe1c9a0: /* trog3 */
@@ -519,8 +520,8 @@ READ16_HANDLER( midyunit_dma_r )
 			case 0xff82e200: /* nbajam */
 				cpu_spinuntil_int();
 				break;
-		}
-#endif
+		 }
+   }
 
 	return result;
 }
@@ -581,7 +582,7 @@ WRITE16_HANDLER( midyunit_dma_w )
 #if LOG_DMA
 	if (keyboard_pressed(KEYCODE_L))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "----\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "----\n");
 		logerror("DMA command %04X: (xflip=%d yflip=%d)\n",
 				command, (command >> 4) & 1, (command >> 5) & 1);
 		logerror("  offset=%08X pos=(%d,%d) w=%d h=%d\n",
@@ -664,11 +665,11 @@ WRITE16_HANDLER( midyunit_dma_w )
 	}
 
 	/* signal we're done */
-#ifdef FAST_DMA
-		dma_callback(1);
-#else
-		timer_set(TIME_IN_NSEC(41 * dma_state.width * dma_state.height), 0, dma_callback);
-#endif
+    if(options.activate_dcs_speedhack)
+	   dma_callback(1);
+	else
+	   timer_set(TIME_IN_NSEC(41 * dma_state.width * dma_state.height), 0, dma_callback);
+
 
 	profiler_mark(PROFILER_END);
 }

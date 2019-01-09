@@ -239,7 +239,11 @@ void pgm_dw2_decrypt(void);
 void pgm_djlzz_decrypt(void);
 void pgm_killbld_decrypt(void);
 void pgm_pstar_decrypt(void);
+void pgm_ket_decrypt(void);
+void pgm_espgal_decrypt(void);
+void pgm_py2k2_decrypt(void);
 
+READ16_HANDLER( pgm_calendar_r );
 READ16_HANDLER( pgm_asic3_r );
 WRITE16_HANDLER( pgm_asic3_w );
 WRITE16_HANDLER( pgm_asic3_reg_w );
@@ -275,12 +279,12 @@ static WRITE16_HANDLER ( z80_ram_w )
 		z80_mainram[offset*2+1] = data;
 
 	if(pc != 0xf12 && pc != 0xde2 && pc != 0x100c50 && pc != 0x100b20)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: write %04x, %04x @ %04x (%06x)\n", offset*2, data, mem_mask, activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80: write %04x, %04x @ %04x (%06x)\n", offset*2, data, mem_mask, activecpu_get_pc());
 }
 
 static WRITE16_HANDLER ( z80_reset_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
 
 	if(data == 0x5050) {
 		ics2115_reset();
@@ -296,7 +300,7 @@ static WRITE16_HANDLER ( z80_reset_w )
 	else
 	{
 		/* this might not be 100% correct, but several of the games (ddp2, puzzli2 etc. expect the z80 to be turned
-           off during data uploads, they write here before the upload */
+           off during data uploads, they write here before the upload  */
          cpu_set_halt_line(1, ASSERT_LINE);
 		/*Note Puzzle Star needs this also*/
 	}
@@ -304,13 +308,13 @@ static WRITE16_HANDLER ( z80_reset_w )
 
 static WRITE16_HANDLER ( z80_ctrl_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
 }
 
 static WRITE16_HANDLER ( m68k_l1_w )
 {
 	if(ACCESSING_LSB) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, activecpu_get_pc());
 		soundlatch_w(0, data);
 		cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE );
 	}
@@ -318,7 +322,7 @@ static WRITE16_HANDLER ( m68k_l1_w )
 
 static WRITE_HANDLER( z80_l3_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "SL 3 z80.w %02x (%04x)\n", data, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SL 3 z80.w %02x (%04x)\n", data, activecpu_get_pc());
 	soundlatch3_w(0, data);
 }
 
@@ -416,6 +420,17 @@ WRITE16_HANDLER( pgm_calendar_w )
 	}
 }
 
+/*************************************
+ *
+ *	NVRAM
+ *
+ *************************************/
+
+static READ16_HANDLER( nvram_r ) /* ddp3blk needs this to boot */
+{
+	return ((data16_t *)generic_nvram)[offset] | 0xfff0;
+}
+
 /*** Memory Maps *************************************************************/
 
 
@@ -469,6 +484,56 @@ static MEMORY_WRITE16_START( pgm_writemem )
 	{ 0xc10000, 0xc1ffff, z80_ram_w }, /* Z80 Program */
 MEMORY_END
 
+static MEMORY_READ16_START( cavepgm_readmem )
+	{ 0x000000, 0x3fffff, MRA16_ROM },   /* BIOS ROM */
+
+	{ 0x800000, 0x81ffff, MRA16_RAM }, /* Main Ram, Sprites, SRAM? */
+	{ 0x820000, 0x8fffff, pgm_mirror_r },
+	{ 0x800000, 0x81ffff, nvram_r },   /* ddp3blk */
+
+	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
+	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
+	{ 0x907000, 0x9077ff, MRA16_RAM },
+	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
+
+	{ 0xc00002, 0xc00003, soundlatch_word_r },
+	{ 0xc00004, 0xc00005, soundlatch2_word_r },
+	{ 0xc00006, 0xc00007, pgm_calendar_r },
+	{ 0xc0000c, 0xc0000d, soundlatch3_word_r },
+
+	{ 0xC08000, 0xC08001, input_port_0_word_r }, /* p1+p2 controls*/
+	{ 0xC08002, 0xC08003, input_port_1_word_r }, /* p3+p4 controls*/
+	{ 0xC08004, 0xC08005, input_port_2_word_r }, /* extra controls*/
+	{ 0xC08006, 0xC08007, input_port_3_word_r }, /* dipswitches*/
+
+	{ 0xc10000, 0xc1ffff, z80_ram_r }, /* Z80 Program */
+MEMORY_END
+
+static MEMORY_WRITE16_START( cavepgm_writemem )
+	{ 0x000000, 0x3fffff, MWA16_ROM },   /* BIOS ROM */
+
+	{ 0x700006, 0x700007, MWA16_NOP }, /* Watchdog?*/
+
+	{ 0x800000, 0x81ffff, MWA16_RAM, &pgm_mainram },
+	{ 0x820000, 0x8fffff, pgm_mirror_w },
+	{ 0x800000, 0x81ffff, MWA16_RAM, (data16_t **)&generic_nvram, &generic_nvram_size }, /* ddp3blk */
+
+	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
+	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
+	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
+	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+
+	{ 0xc00002, 0xc00003, m68k_l1_w },
+	{ 0xc00004, 0xc00005, soundlatch2_word_w },
+	{ 0xc00006, 0xc00007, pgm_calendar_w },
+	{ 0xc00008, 0xc00009, z80_reset_w },
+	{ 0xc0000a, 0xc0000b, z80_ctrl_w },
+	{ 0xc0000c, 0xc0000d, soundlatch3_word_w },
+
+	{ 0xc10000, 0xc1ffff, z80_ram_w }, /* Z80 Program */
+MEMORY_END
 
 static UINT16 *killbld_sharedprotram;
 
@@ -1003,6 +1068,37 @@ static MACHINE_DRIVER_START( pgm )
 	MDRV_VIDEO_UPDATE(pgm)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( cavepgm )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
+	MDRV_CPU_MEMORY(cavepgm_readmem,cavepgm_writemem)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+
+	MDRV_CPU_ADD(Z80, 8468000)
+	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
+	MDRV_CPU_PORTS(z80_readport, z80_writeport)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU | CPU_16BIT_PORT)
+	
+	MDRV_NVRAM_HANDLER(generic_0fill)
+
+	MDRV_SOUND_ADD(ICS2115, pgm_ics2115_interface)
+
+    MDRV_FRAMES_PER_SECOND(59.170000)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER )
+	MDRV_SCREEN_SIZE(64*8, 64*8)
+	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(0x1200/2)
+
+	MDRV_VIDEO_START(pgm)
+	MDRV_VIDEO_EOF(pgm)
+	MDRV_VIDEO_UPDATE(pgm)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( killbld )
 
 	/* basic machine hardware */
@@ -1102,11 +1198,6 @@ static void pgm_basic_init(void)
 
 /* Oriental Legend INIT */
 
-READ16_HANDLER ( orlegend_speedup )
-{
-	if (activecpu_get_pc()==0x104DD2) cpu_spinuntil_int();
-	return pgm_mainram[0x00a70e/2];
-}
 
 static DRIVER_INIT( orlegend )
 {
@@ -1115,7 +1206,6 @@ static DRIVER_INIT( orlegend )
 	install_mem_read16_handler (0, 0xC0400e, 0xC0400f, pgm_asic3_r);
 	install_mem_write16_handler(0, 0xC04000, 0xC04001, pgm_asic3_reg_w);
 	install_mem_write16_handler(0, 0xC0400e, 0xC0400f, pgm_asic3_w);
-	install_mem_read16_handler (0, 0x80a70e, 0x80a70f, orlegend_speedup);
 }
 
 static DRIVER_INIT( dragwld2 )
@@ -1203,77 +1293,72 @@ static DRIVER_INIT( olds )
 /* Killing Blade uses some kind of DMA protection device which can copy data from a data rom.  The
    MCU appears to have an internal ROM as if you remove the data ROM then the shared ram is filled
    with a constant value.
-   
-   The device can perform various decryption operations on the data it copies.  for now we're just
-   using a dump of the shared RAM instead.  This will be improved later.
+   The device can perform various decryption operations on the data it copies.
 */
 
 static int kb_cmd;
-static int reg;
-static int ptr;
+static int kb_reg;
+static int kb_ptr;
+UINT32 kb_regs[0x10];
+
 
 static WRITE16_HANDLER( killbld_prot_w )
 {
-/*  mame_printf_debug("killbrd prot r\n");*/
-/*  return 0;*/
-	offset&=0xf;
+	offset &= 0xf;
 
-	if(offset==0)
-		kb_cmd=data;
-	else /*offset==2*/
+	if (offset == 0)
+		kb_cmd = data;
+	else /* offset==2 */
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X: ASIC25 W CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,data);
-		if(kb_cmd==0)
-			reg=data;
-		else if(kb_cmd==2)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 W CMD %X  VAL %X\n", activecpu_get_pc(),kb_cmd,data);
+		if (kb_cmd == 0)
+			kb_reg = data;
+		else if (kb_cmd == 2)
 		{
-
-			if(data==1)	/*Execute cmd*/
+			if (data == 1)	/* Execute cmd */
 			{
-				UINT16 cmd=killbld_sharedprotram[0x200/2];
-				/*mame_printf_debug("command %04x\n",cmd);*/
-				if(cmd==0x6d)	/*Store values to asic ram*/
+				UINT16 cmd = killbld_sharedprotram[0x200/2];
+
+				if (cmd == 0x6d)	/* Store values to asic ram */
 				{
-					UINT32 p1=(killbld_sharedprotram[0x298/2] << 16) | killbld_sharedprotram[0x29a/2];
-					UINT32 p2=(killbld_sharedprotram[0x29c/2] << 16) | killbld_sharedprotram[0x29e/2];
-					static UINT32 Regs[0x10];
-					if((p2&0xFFFF)==0x9)	/*Set value*/
+					UINT32 p1 = (killbld_sharedprotram[0x298/2] << 16) | killbld_sharedprotram[0x29a/2];
+					UINT32 p2 = (killbld_sharedprotram[0x29c/2] << 16) | killbld_sharedprotram[0x29e/2];
+
+					if ((p2 & 0xffff) == 0x9)	/* Set value */
 					{
-						int reg2=(p2>>16)&0xFFFF;
-						if(reg2&0x200)
-							Regs[reg2&0xFF]=p1;
+						int reg = (p2 >> 16) & 0xffff;
+						if (reg & 0x200)
+							kb_regs[reg & 0xff] = p1;
 					}
-					if((p2&0xFFFF)==0x6)	/*Add value*/
+					if ((p2 & 0xffff) == 0x6)	/* Add value */
 					{
-						int src1=(p1>>16)&0xFF;
-						int src2=(p1>>0)&0xFF;
-						int dst=(p2>>16)&0xFF;
-						Regs[dst]=Regs[src2]-Regs[src1];
+						int src1 = (p1 >> 16) & 0xff;
+						int src2 = (p1 >> 0) & 0xff;
+						int dst = (p2 >> 16) & 0xff;
+						kb_regs[dst] = kb_regs[src2] - kb_regs[src1];
 					}
-					if((p2&0xFFFF)==0x1)	/*Add Imm?*/
+					if ((p2 & 0xffff) == 0x1)	/* Add Imm? */
 					{
-						int reg2=(p2>>16)&0xFF;
-						int imm=(p1>>0)&0xFFFF;
-						Regs[reg2]+=imm;
+						int reg = (p2 >> 16) & 0xff;
+						int imm = (p1 >> 0) & 0xffff;
+						kb_regs[reg] += imm;
 					}
-					if((p2&0xFFFF)==0xa)	/*Get value*/
+					if ((p2 & 0xffff) == 0xa)	/* Get value */
 					{
-						int reg2=(p1>>16)&0xFF;
-						killbld_sharedprotram[0x29c/2] = (Regs[reg2]>>16)&0xffff;
-						killbld_sharedprotram[0x29e/2] = Regs[reg2]&0xffff;
+						int reg = (p1 >> 16) & 0xFF;
+						killbld_sharedprotram[0x29c/2] = (kb_regs[reg] >> 16) & 0xffff;
+						killbld_sharedprotram[0x29e/2] = kb_regs[reg] & 0xffff;
 					}
 				}
-				if(cmd==0x4f)	/*memcpy with encryption / scrambling*/
+				if(cmd == 0x4f)	/* memcpy with encryption / scrambling */
 				{
-					UINT16 src=killbld_sharedprotram[0x290/2]>>1; /* ?*/
-					UINT32 dst=killbld_sharedprotram[0x292/2];
-					UINT16 size=killbld_sharedprotram[0x294/2];
-					UINT16 mode=killbld_sharedprotram[0x296/2];
+					UINT16 src = killbld_sharedprotram[0x290 / 2] >> 1; /* ? */
+					UINT32 dst = killbld_sharedprotram[0x292 / 2];
+					UINT16 size = killbld_sharedprotram[0x294 / 2];
+					UINT16 mode = killbld_sharedprotram[0x296 / 2];
 
-
-				/*  int a=1;*/
-				/*  if(src==0x580)*/
-				/*      int a=1;*/
+					UINT16 param;
+					
 					/*
                     P_SRC =0x300290 (offset from prot rom base)
                     P_DST =0x300292 (words from 0x300000)
@@ -1281,117 +1366,176 @@ static WRITE16_HANDLER( killbld_prot_w )
                     P_MODE=0x300296
                     Mode 5 direct
                     Mode 6 swap nibbles and bytes
-                    1,2,3 unk.
+                    1,2,3 table based ops
                     */
+	
+					param = mode >> 8;
+					mode &=0xf;  /* what are the other bits? */
 
-					/*mame_printf_debug("src %04x dst %04x size %04x mode %04x\n",src,dst,size,mode);*/
-
-					/*if (src&1) mame_printf_debug("odd offset\n");*/
-
-					mode &=0xf;  /* what are the other bits?*/
-
-					if (mode == 1 || mode == 2 || mode == 3)
+					if (mode == 0)
 					{
-						/* for now, cheat -- the scramble isn't understood, it might
-                           be state based */
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* plain byteswapped copy */
+					}
+					if ((mode == 1) || (mode == 2) || (mode == 3))
+					{
+						/* mode3 applies a xor from a 0x100 byte table to the data being
+						   transferred
+						   the table is stored at the start of the protection rom.
+						   the param used with the mode gives a start offset into the table
+						   odd offsets seem to change the table slightly (see rawDataOdd)
+					   */
+						  					
+						/*
+						unsigned char rawDataOdd[256] = {
+							0xB6, 0xA8, 0xB1, 0x5D, 0x2C, 0x5D, 0x4F, 0xC1,
+							0xCF, 0x39, 0x3A, 0xB7,	0x65, 0x85, 0xD9, 0xEE,
+							0xDB, 0x7B, 0x5F, 0x81, 0x03, 0x6D, 0xEB, 0x07,
+							0x0F, 0xB5, 0x61, 0x59, 0xCD, 0x60, 0x06, 0x21,
+							0xA0, 0x99, 0xDD, 0x27,	0x42, 0xD7, 0xC5, 0x5B,
+							0x3B, 0xC6, 0x4F, 0xA2, 0x20, 0xF6, 0x61, 0x61,
+							0x8C, 0x46, 0x8C, 0xCA, 0xE0, 0x0E, 0x2C, 0xE9,
+							0xBA, 0x0F, 0x45, 0x6D,	0x36, 0x1C, 0x18, 0x37,
+							0xE7, 0x85, 0x89, 0xA4, 0x94, 0x46, 0x30, 0x9B,
+							0xB2, 0xF4, 0x41, 0x55, 0xA5, 0x63, 0x1C, 0xEF,
+							0xB7, 0x18, 0xB3, 0xB1,	0xD4, 0x72, 0xA0, 0x1C,
+							0x0B, 0x97, 0x02, 0xB6, 0xC5, 0x1F, 0x1B, 0x94,
+							0xC3, 0x83, 0xAA, 0xAC, 0xD9, 0x44, 0x09, 0xD7,
+							0x6C, 0xDB, 0x07, 0xA9,	0xAD, 0x64, 0x83, 0xF1,
+							0x92, 0x09, 0xCD, 0x0E, 0x99, 0x2F, 0xBC, 0xF8,
+							0x3C, 0x63, 0x8F, 0x0A, 0x33, 0x03, 0x84, 0x91,
+							0x6C, 0xAC, 0x3A, 0x15,	0xCB, 0x67, 0xC7, 0x69,
+							0xA1, 0x92, 0x99, 0x74, 0xEE, 0x90, 0x0D, 0xBE,
+							0x57, 0x30, 0xD1, 0xBA, 0xE5, 0xDE, 0xFA, 0xD6,
+							0x83, 0x8C, 0xE4, 0x43,	0x36, 0x5E, 0xCD, 0x84,
+							0x1A, 0x18, 0x31, 0xB9, 0x20, 0x48, 0xE3, 0xA8,
+							0x89, 0x32, 0xF0, 0x90, 0x21, 0x80, 0x33, 0xAE,
+							0x3C, 0xA6, 0xB8, 0x8C,	0x72, 0x17, 0xD1, 0x0C,
+							0x1A, 0x29, 0xFA, 0x38, 0x87, 0xC9, 0x6E, 0xC7,
+							0x05, 0xDE, 0x85, 0x6E, 0x92, 0x7E, 0xD4, 0xED,
+							0x5C, 0xD3, 0x03, 0xD4,	0xFE, 0xCB, 0x6C, 0x19,
+							0x7A, 0x83, 0x79, 0x5B, 0xF6, 0x71, 0xBA, 0xF4,
+							0x37, 0x53, 0xC9, 0xC1, 0xDE, 0xDB, 0xDE, 0xB1,
+							0x64, 0x17, 0x31, 0x0E,	0xD7, 0xA2, 0x13, 0x8E,
+							0x52, 0x8D, 0xCB, 0x19, 0x3D, 0x0B, 0x31, 0x58,
+							0x4A, 0xDE, 0x0C, 0x01, 0x2B, 0x85, 0x2D, 0xE5,
+							0x13, 0x22, 0x48, 0xB6,	0xF3, 0x2D, 0x00, 0x9A
+						};
+						*/
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
-						for (x=0;x<size;x++)
-						{
-							UINT16 dat;
+						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
 
-							dat = RAMDUMP[dst+x];
-							killbld_sharedprotram[dst+x] = dat;
+						for (x = 0; x < size; x++)
+						{
+				
+							UINT16 dat2 = PROTROM[src + x];
+
+							UINT8 extraoffset = param&0xfe; /* the lowest bit changed the table addressing in tests, see 'rawDataOdd' table instead.. it's still related to the main one, not identical */
+							UINT8* dectable = (UINT8*)memory_region(REGION_USER1);/* rawDataEven; the basic decryption table is at the start of the mcu data rom! at least in killbld */
+							UINT16 extraxor = ((dectable[((x*2)+0+extraoffset)&0xff]) << 8) | (dectable[((x*2)+1+extraoffset)&0xff] << 0);
+							
+							dat2 = ((dat2 & 0x00ff)<<8) | ((dat2 & 0xff00)>>8);
+							
+							if (mode==3) dat2 ^= extraxor;						
+							if (mode==2) dat2 += extraxor;
+							if (mode==1) dat2 -= extraxor;
+							
+							/*if (dat!=dat2)
+								printf("Mode %04x Param %04x Mismatch %04x %04x\n", mode, param, dat, dat2);
+							*/
+
+							killbld_sharedprotram[dst + x] = dat2;
 						}
+	
+						/* hack, patches out some additional security checks... we need to emulate them instead!
+						  they occur before it displays the disclaimer, so if you remove the overlay patches it will display
+						  the highscore table before coming up with this error... */
+						if ((mode==3) && (param==0x54) && (src*2==0x2120) && (dst*2==0x2600)) killbld_sharedprotram[0x2600 / 2] = 0x4e75;
+						
+					}
+					if (mode == 4)
+					{
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* looks almost like a fixed value xor, but isn't */
 					}
 					else if (mode == 5)
 					{
 						/* mode 5 seems to be a straight copy */
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
 						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
-						for (x=0;x<size;x++)
+						for (x = 0; x < size; x++)
 						{
-							UINT16 dat;
-							dat = PROTROM[src+x];
+							UINT16 dat = PROTROM[src + x];
 
-							if (RAMDUMP[dst+x] != dat)
-								log_cb(RETRO_LOG_ERROR, LOGPRE "Mismatch! %04x %04x\n", RAMDUMP[dst+x], dat);
 
-							killbld_sharedprotram[dst+x] = dat;
+							killbld_sharedprotram[dst + x] = dat;
 						}
 					}
 					else if (mode == 6)
 					{
 						/* mode 6 seems to swap bytes and nibbles */
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
 						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
-						for (x=0;x<size;x++)
+						for (x = 0; x < size; x++)
 						{
-							UINT16 dat;
-							dat = PROTROM[src+x];
+							UINT16 dat = PROTROM[src + x];
 
 							dat = ((dat & 0xf000) >> 12)|
 								  ((dat & 0x0f00) >> 4)|
 								  ((dat & 0x00f0) << 4)|
 								  ((dat & 0x000f) << 12);
 
-
-							if (RAMDUMP[dst+x] != dat)
-								log_cb(RETRO_LOG_ERROR, LOGPRE "Mismatch! Mode 6 %04x %04x\n", RAMDUMP[dst+x], dat);
-
-							killbld_sharedprotram[dst+x] = dat;
+							killbld_sharedprotram[dst + x] = dat;
 						}
+					}
+					else if (mode == 7)
+					{
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* weird mode, the params get left in memory? - maybe it's a NOP? */
 					}
 					else
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE "unknown copy mode!\n");
-					}
-					/* hack.. it jumps here but there isn't valid code even when we do
-                       use what was in ram.. probably some more protection as the game
-                       still doesn't behave 100% correctly :-/
-                       the code is copied in 'mode 3' but even the code put here on
-                       the real ram dump is corrupt??? something _very_ strange is
-                       going on.. maybe more rom overlays, or ram overlays too??
-                    */
-					killbld_sharedprotram[0x2600/2]=0x4e75;
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* invalid? */
 
+					}
 
 				}
-				reg++;
+				kb_reg++;
 			}
 		}
-		else if(kb_cmd==4)
-			ptr=data;
-		else if(kb_cmd==0x20)
-			ptr++;
+		else if (kb_cmd == 4)
+			kb_ptr = data;
+		else if (kb_cmd == 0x20)
+			kb_ptr++;
 	}
 }
 
 static READ16_HANDLER( killbld_prot_r )
 {
-/*  mame_printf_debug("killbld prot w\n");*/
+
 	UINT16 res ;
 
-	offset&=0xf;
-	res=0;
+	offset &= 0xf;
+	res = 0;
 
-	if(offset==1)
+	if (offset == 1)
 	{
-		if(kb_cmd==1)
+		if (kb_cmd == 1)
 		{
-			res=reg&0x7f;
+			res = kb_reg & 0x7f;
 		}
-		else if(kb_cmd==5)
+		else if (kb_cmd == 5)
 		{
-			UINT32 protvalue;
-			protvalue = 0x89911400|readinputport(4);
-			res=(protvalue>>(8*(ptr-1)))&0xff;
-
+			UINT32 protvalue = 0x89911400 | readinputport(4);
+			res = (protvalue >> (8 * (kb_ptr - 1))) & 0xff;
 		}
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X: ASIC25 R CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,res);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 R CMD %X  VAL %X\n", activecpu_get_pc(),kb_cmd,res);
 	return res;
 }
 
@@ -1402,44 +1546,28 @@ static MACHINE_INIT( killbld )
 	machine_init_pgm();
 
 	/* fill the protection ram with a5 */
-	for (i = 0;i < 0x4000/2;i++)
+	for (i = 0; i < 0x4000/2; i++)
 		killbld_sharedprotram[i] = 0xa5a5;
 
 }
 
 
+/* ASIC025/ASIC022 don't provide rom patches like the DW2 protection does, the previous dump was bad :-) */
 static DRIVER_INIT( killbld )
 {
-	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
 
 	pgm_basic_init();
- 	pgm_killbld_decrypt();
-
-
-
-	/* this isn't a hack.. doing a rom dump while the game is running shows the
-       rom space to look like this.. there may be more overlays / enables tho */
-
-	/* the game actually performs a CRC check of the rom during the 'Please Wait'
-       screen, the checksum expected is that of the patched rom.  if the checksum
-       fails the please wait screen doesn't last as long and the region supplied
-       by the protection device is ignored and the attract sequence appears out
-       of order */
-	mem16[0x108a2c/2]=0xB6AA;
-	mem16[0x108a30/2]=0x6610;
-	mem16[0x108a32/2]=0x13c2;
-	mem16[0x108a34/2]=0x0080;
-	mem16[0x108a36/2]=0x9c76;
-	mem16[0x108a38/2]=0x23c3;
-	mem16[0x108a3a/2]=0x0080;
-	mem16[0x108a3c/2]=0x9c78;
-	mem16[0x108a3e/2]=0x1002;
-	mem16[0x108a40/2]=0x6054;
-	mem16[0x108a42/2]=0x5202;
-	mem16[0x108a44/2]=0x0c02;
+	pgm_killbld_decrypt();
 
 	install_mem_read16_handler(0, 0xd40000, 0xd40003, killbld_prot_r);
 	install_mem_write16_handler(0, 0xd40000, 0xd40003, killbld_prot_w);
+	
+	kb_cmd = 0;
+	kb_reg = 0;
+	kb_ptr = 0;
+	memset(kb_regs, 0, 0x10);
+
+
 }
 
 extern READ16_HANDLER( PSTARS_protram_r );
@@ -1456,6 +1584,184 @@ static DRIVER_INIT( pstar )
 	install_mem_write16_handler(0, 0x500000, 0x500005, PSTARS_w16);
 }
 
+static UINT16 value0, value1, valuekey, ddp3lastcommand;
+static UINT32 valueresponse;
+int ddp3internal_slot = 0;
+UINT32 ddp3slots[0xff];
+INT16 thrust;
+
+static WRITE16_HANDLER( ddp3_asic_w )
+{
+
+	if (offset == 0)
+	{
+		value0 = data;
+		return;
+	}
+	else if (offset == 1)
+	{
+		UINT16 realkey;
+		if ((data >> 8) == 0xff)
+			valuekey = 0xff00;
+		realkey = valuekey >> 8;
+		realkey |= valuekey;
+		{
+			valuekey += 0x0100;
+			valuekey &= 0xff00;
+			if (valuekey == 0xff00)
+				valuekey =  0x0100;
+		}
+		data ^= realkey;
+		value1 = data;
+		value0 ^= realkey;
+
+		ddp3lastcommand = value1 & 0xff;
+
+		/* typical frame (ddp3) (all 3 games use only these commands? for the most part of levels espgal just issues 8e)
+            vbl
+            145f28 command 67
+            145f70 command e5
+            145f28 command 67
+            145f70 command e5
+            1460c6 command 40
+            145ec0 command 8e
+        */
+
+		switch (ddp3lastcommand)
+		{
+			default:
+				valueresponse = 0x880000;
+				break;
+
+			case 0x40:
+				valueresponse = 0x880000;
+				ddp3slots[(value0>>10)&0x1F] = (ddp3slots[(value0>>5)&0x1F]+ddp3slots[(value0>>0)&0x1F])&0xffffff;
+				
+				break;
+
+			case 0x67:
+				valueresponse = 0x880000;
+				ddp3internal_slot = (value0 & 0xff00)>>8;
+				ddp3slots[ddp3internal_slot] = (value0 & 0x00ff) << 16;
+				break;
+
+			case 0xe5:
+				valueresponse = 0x880000;
+				ddp3slots[ddp3internal_slot] |= (value0 & 0xffff);
+				if (value0 > 0xf000) thrust = -value0;
+				break;
+
+			case 0x8e:
+				valueresponse = ddp3slots[value0 & 0xff];
+				break;
+
+			case 0x99: /* reset? */
+			valuekey = 0x100;
+				valueresponse = 0x880000;
+				break;
+
+		}
+	}
+	else if (offset==2)
+	{
+
+	}
+
+}
+
+static READ16_HANDLER( ddp3_asic_r )
+{
+
+	if (offset == 0)
+	{
+		UINT16 d = valueresponse & 0xffff;
+		UINT16 realkey = valuekey >> 8;
+		realkey |= valuekey;
+		d ^= realkey;
+
+
+		return d;
+
+	}
+	else if (offset == 1)
+	{
+		UINT16 d = valueresponse >> 16;
+		UINT16 realkey = valuekey >> 8;
+		realkey |= valuekey;
+		d ^= realkey;
+
+
+		return d;
+
+	}
+	return 0xffff;
+}
+
+static READ16_HANDLER( ddp3_ram_mirror_r )
+{
+	return 0x0000;
+}
+
+void install_asic27a_ddp3(void)
+{
+	install_mem_read16_handler(0,  0x500000, 0x500005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x500000, 0x500005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+void install_asic27a_ket(void)
+{
+	install_mem_read16_handler(0,  0x400000, 0x400005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x400000, 0x400005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+void install_asic27a_espgal(void)
+{
+	install_mem_read16_handler(0,  0x400000, 0x400005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x400000, 0x400005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+static void pgm_basic_init_nobank(void)
+{
+	expand_32x32x5bpp();
+	expand_colourdata();
+}
+
+static DRIVER_INIT( ddp3 )
+{
+	pgm_basic_init_nobank();
+	pgm_py2k2_decrypt(); /* yes, it's the same as photo y2k2 */
+	install_asic27a_ddp3();
+}
+
+static DRIVER_INIT( ddp3blk )
+{
+	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+	pgm_basic_init_nobank();
+	pgm_py2k2_decrypt(); /* yes, it's the same as photo y2k2 */
+	install_asic27a_ddp3();
+	
+	rom[0x13C33A/2] = 0x4e71;
+	rom[0x13C33C/2] = 0x4e71;
+	rom[0x13C348/2] = 0x4e71;
+	rom[0x13C34A/2] = 0x4e71;
+}
+
+static DRIVER_INIT( ket )
+{
+	pgm_basic_init_nobank();
+	pgm_ket_decrypt();
+	install_asic27a_ket();
+}
+
+static DRIVER_INIT( espgal )
+{
+	pgm_basic_init_nobank();
+	pgm_espgal_decrypt();
+	install_asic27a_espgal();
+}
 
 /*** Rom Loading *************************************************************/
 
@@ -1878,13 +2184,39 @@ ROM_START( photoy2k )
 	ROM_LOAD( "m0700.rom",    0x400000, 0x080000, CRC(acc7afce) SHA1(ac2d344ebac336f0f363bb045dd8ea4e83d1fb50) )
 ROM_END
 
+/*
+The Killing Blade (English / World Version)
+IGS, 1998
+This is a cart for the IGS PGM system.
+
+Notes:
+      U1           - 32MBit MASKROM (SOP44, labelled "M0300")
+      U2           - 32MBit MASKROM (SOP44, labelled "A0307")
+      U3           - 16MBit MASKROM (DIP42, labelled "A0302")
+      U4           - 16MBit MASKROM (DIP42, labelled "A0304")
+      U5           - 16MBit MASKROM (DIP42, labelled "A0305")
+      U8           - 16MBit MASKROM (DIP42, labelled "B0301")
+      U9           - 32MBit MASKROM (SOP44, labelled "A0300")
+      U10          - 32MBit MASKROM (SOP44, labelled "A0301")
+      U11          - 32MBit MASKROM (SOP44, labelled "A0303")
+      U12          - 32MBit MASKROM (SOP44, labelled "A0306")
+      U13          - 32MBit MASKROM (SOP44, labelled "B0300")
+      U14          - 32MBit MASKROM (SOP44, labelled "B0302")
+      U15          - 32MBit MASKROM (SOP44, labelled "B0303")
+	  
+the text on the chip are
+
+IGS
+PGM P0300 V109
+1A0577Y3
+J982846
+
+*/
+
 ROM_START( killbld )
 	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS)*/
-	ROM_LOAD16_WORD_SWAP( "kb.u9", 0x100000, 0x200000, CRC(43da77d7) SHA1(f99e89da4587d6c9e3c2ae66fa139830d893fdda) ) /* not verified to be correct*/
-
-	ROM_REGION( 0x4000, REGION_USER2, 0 ) /* dump of RAM shared with protection device, todo, emulate protection device instead! */
-	ROM_LOAD( "kb.ram", 0x000000, 0x04000,  CRC(6994c507) SHA1(8264c56709488b72282d6ddfce3a4b188c6cc109) )
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS) */
+	ROM_LOAD16_WORD_SWAP( "p0300_v109.u9", 0x100000, 0x200000, CRC(2fcee215) SHA1(855281a9090bfdf3da9f4d50c121765131a13400) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
 
@@ -1946,28 +2278,275 @@ ROM_START( puzlstar )
 	ROM_LOAD( "m0800.u2",    0x400000, 0x400000,  CRC(e1a46541) SHA1(6fe9de5700d8638374734d80551dcedb62975140) )
 ROM_END
 
+ROM_START( ket )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_v100.u38", 0x000000, 0x200000, CRC(dfe62f3b) SHA1(baa58d1ce47a707f84f65779ac0689894793e9d9) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",    0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",  0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+	
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "m04701b032.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) ) /* music-1 */
+ROM_END
+
+ROM_START( keta )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_prg_revised.bin", 0x000000, 0x200000, CRC(69fcf5eb) SHA1(f726e251b4daa2f8d717e32000d4d7abc71c710d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",   0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "music-1.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) )
+ROM_END
+
+ROM_START( ketb )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_prg_original.bin", 0x000000, 0x200000, CRC(cca5e153) SHA1(b653feaa2004c379312def6b1613c3497f654ddf) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",   0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 )  /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "music-1.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) )
+ROM_END
+
+ROM_START( espgal )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "espgaluda_v100.u38", 0x000000, 0x200000, CRC(08ecec34) SHA1(bce2e7fb9105ed51603d09cbd3a9eeb5b8f47ee2) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",     0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04801w064.u19",   0x400000, 0x800000, CRC(6021c79e) SHA1(fbc340dafb18aa3094de29b881318a5a9794e4bc) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04801w064.u7",    0x0000000, 0x0800000, CRC(26dd4932) SHA1(9bbabb5a53cb5ba88397cc2c258980f3b70314ce) ) /* image-1 */
+	ROM_LOAD( "a04802w064.u8",    0x0800000, 0x0800000, CRC(0e6bf7a9) SHA1(a7541e2b5a0df2bc62a5b347e54dbc2ed1922db2) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04801w064.u1",    0x0000000, 0x0800000, CRC(98dce13a) SHA1(61d48b7117459f7babc022b68231f6928177a71d) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "w04801b032.u17",    0x400000, 0x400000, CRC(60298536) SHA1(6b7333f16cce778c5725dbdf75a5446f0906397a) ) /* music-1 */
+ROM_END
+
+ROM_START( ddp3 )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddp3_v101.u36",  0x100000, 0x200000, CRC(195b5c1e) SHA1(f18d791c034b0a3d85888a92fb5d326ee3deb04f) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+ROM_START( ddp3a )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddp3_d_d_1_0.u36",  0x100000, 0x200000, CRC(5d3f85ba) SHA1(4c24ea206140863d456179750366921442e1d2b8) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+ROM_START( ddp3b )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /*  uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "dd v100.bin",  0x100000, 0x200000, CRC(7da0c1e4) SHA1(aca2fe35ba0ab3628900fa2aba2d22fc4fd7046d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+/* this expects Magic values in NVRAM to boot */
+ROM_START( ddp3blk )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddb10.u45",  0x100000, 0x200000, CRC(72b35510) SHA1(9a432e5e1ebe61aafd737b6acc905653e5af0d38) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom",    0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
 /*** GAME ********************************************************************/
 
-GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,          ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
+GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,         ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
 
-GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,       ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,      ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,   ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,  ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour Plus - Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
+GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
+GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour Plus - Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,      ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,      ROT0, "IGS", "Puzzle Star", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,     ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,     ROT0, "IGS", "Puzzle Star", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,    ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,   ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* not working */
-GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,      ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,     ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+
+/* Cave Games On PGM Hardware */
+
+GAMEX( 2002, ddp3,    0,         cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 2002, ddp3a,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, second revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays "2002.04.05.Master Ver" */
+GAMEX( 2002, ddp3b,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays "2002.04.05 Master Ver" */
+GAMEX( 2002, ddp3blk, ddp3,      cavepgm,    pgm,     ddp3blk,   ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+
+/* the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none. */
+
+GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
+GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (older)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
 

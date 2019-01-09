@@ -123,7 +123,7 @@ WRITE_HANDLER( taitol_bankc_w )
 	if (bankc[offset] != data)
 	{
 		bankc[offset] = data;
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Bankc %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "Bankc %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
 
 		tilemap_mark_all_tiles_dirty(bg18_tilemap);
 		tilemap_mark_all_tiles_dirty(bg19_tilemap);
@@ -138,7 +138,7 @@ READ_HANDLER( taitol_bankc_r )
 
 WRITE_HANDLER( taitol_control_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Control Write %02x (%04x)\n", data, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Control Write %02x (%04x)\n", data, activecpu_get_pc());*/
 
 	cur_ctrl = data;
 /*usrintf_showmessage("%02x",data);*/
@@ -158,7 +158,7 @@ WRITE_HANDLER( taitol_control_w )
 
 READ_HANDLER( taitol_control_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Control Read %02x (%04x)\n", cur_ctrl, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Control Read %02x (%04x)\n", cur_ctrl, activecpu_get_pc());*/
 	return cur_ctrl;
 }
 

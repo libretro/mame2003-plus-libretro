@@ -163,7 +163,7 @@ static READ_HANDLER(data_408_r)
 		case 0xf0: return 0; /*hs? */
 		
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "408[%x] r at %x\n",select_408,activecpu_get_previouspc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "408[%x] r at %x\n",select_408,activecpu_get_previouspc());
 	return 0;
 }
 

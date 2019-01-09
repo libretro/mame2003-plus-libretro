@@ -86,7 +86,7 @@ WRITE32_HANDLER( beathead_vram_bulk_w )
 		videoram32[offset+2] =
 		videoram32[offset+3] = *beathead_vram_bulk_latch;
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Detected bulk VRAM write with mask %08x\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Detected bulk VRAM write with mask %08x\n", data);
 }
 
 
@@ -120,7 +120,7 @@ WRITE32_HANDLER( beathead_finescroll_w )
 	/* if VBLANK is going off on a non-zero scanline, suspend time */
 	if ((oldword & 8) && !(newword & 8) && current_scanline != 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Suspending time! (scanline = %d)\n", current_scanline);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Suspending time! (scanline = %d)\n", current_scanline);
 		cpu_set_halt_line(0, ASSERT_LINE);
 	}
 }
@@ -159,7 +159,7 @@ READ32_HANDLER( beathead_hsync_ram_r )
 {
 	/* offset 0 is probably write-only */
 	if (offset == 0)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unexpected HSYNC RAM read at offset 0\n", activecpu_get_previouspc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unexpected HSYNC RAM read at offset 0\n", activecpu_get_previouspc());
 
 	/* offset 1 reads the data */
 	else

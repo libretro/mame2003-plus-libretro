@@ -91,7 +91,7 @@ const INT32 ym_deltat_decode_tableB2[16] = {
 #if 0
 void YM_DELTAT_BRDY_callback(YM_DELTAT *DELTAT)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "BRDY_callback reached (flag set) !\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "BRDY_callback reached (flag set) !\n");
 
 	/* set BRDY bit in status register */
 	if(DELTAT->status_set_handler)
@@ -221,7 +221,7 @@ value:   START, REC, MEMDAT, REPEAT, SPOFF, x,x,RESET   meaning:
 			/* if yes, then let's check if ADPCM memory is mapped and big enough */
 			if(DELTAT->memory == 0)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YM Delta-T ADPCM rom not mapped\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YM Delta-T ADPCM rom not mapped\n");
 				DELTAT->portstate = 0x00;
 				DELTAT->PCM_BSY = 0;
 			}
@@ -229,12 +229,12 @@ value:   START, REC, MEMDAT, REPEAT, SPOFF, x,x,RESET   meaning:
 			{
 				if( DELTAT->end >= DELTAT->memory_size )	/* Check End in Range */
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "YM Delta-T ADPCM end out of range: $%08x\n", DELTAT->end);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "YM Delta-T ADPCM end out of range: $%08x\n", DELTAT->end);
 					DELTAT->end = DELTAT->memory_size - 1;
 				}
 				if( DELTAT->start >= DELTAT->memory_size )	/* Check Start in Range */
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "YM Delta-T ADPCM start out of range: $%08x\n", DELTAT->start);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "YM Delta-T ADPCM start out of range: $%08x\n", DELTAT->start);
 					DELTAT->portstate = 0x00;
 					DELTAT->PCM_BSY = 0;
 				}

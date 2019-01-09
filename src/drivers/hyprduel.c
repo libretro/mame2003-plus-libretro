@@ -295,7 +295,7 @@ static INLINE void blt_write(const int tmap, const offs_t offs, const data16_t d
 		case 2:	hyprduel_vram_1_w(offs,data,mask);	break;
 		case 3:	hyprduel_vram_2_w(offs,data,mask);	break;
 	}
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
 }
 
 
@@ -320,7 +320,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 		int shift			=	(dst_offs & 0x80) ? 0 : 8;
 		data16_t mask		=	(dst_offs & 0x80) ? 0xff00 : 0x00ff;
 
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
 
 		dst_offs >>= 7+1;
 		switch( tmap )
@@ -330,7 +330,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 			case 3:
 				break;
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter unknown destination: %08X\n",activecpu_get_pc(),tmap);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Blitter unknown destination: %08X\n",activecpu_get_pc(),tmap);
 				return;
 		}
 
@@ -340,7 +340,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 
 			src_offs %= src_len;
 			b1 = blt_read(src,src_offs);
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
 			src_offs++;
 
 			count = ((~b1) & 0x3f) + 1;
@@ -424,7 +424,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 
 
 				default:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter unknown opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs-1);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Blitter unknown opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs-1);
 					return;
 			}
 

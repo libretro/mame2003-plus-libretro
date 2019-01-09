@@ -200,7 +200,7 @@ static MACHINE_INIT( ta7630 )
 	}
 
 	/* for (i=0; i<8; i++)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) ); */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) ); */
 /*
   channels 0-2 AY#0
   channels 3,4 MSM5232 group1,group2

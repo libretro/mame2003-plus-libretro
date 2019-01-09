@@ -259,7 +259,7 @@ static INTERRUPT_GEN( generate_nmi )
 	itech8_update_interrupts(1, -1, -1);
 	itech8_update_interrupts(0, -1, -1);
 
-	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "------------ VBLANK (%d) --------------\n", cpu_getscanline());
+	if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "------------ VBLANK (%d) --------------\n", cpu_getscanline());
 }
 
 
@@ -359,14 +359,14 @@ static READ_HANDLER( special_port0_r )
 
 static WRITE_HANDLER( pia_porta_out )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PIA port A write = %02x\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA port A write = %02x\n", data);
 	pia_porta_data = data;
 }
 
 
 static WRITE_HANDLER( pia_portb_out )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PIA port B write = %02x\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA port B write = %02x\n", data);
 
 	/* bit 0 provides feedback to the main CPU */
 	/* bit 4 controls the ticket dispenser */
@@ -380,7 +380,7 @@ static WRITE_HANDLER( pia_portb_out )
 
 static WRITE_HANDLER( ym2203_portb_out )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "YM2203 port B write = %02x\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2203 port B write = %02x\n", data);
 
 	/* bit 0 provides feedback to the main CPU */
 	/* bit 5 controls the coin counter */
@@ -483,7 +483,7 @@ static WRITE_HANDLER( via6522_w )
 			break;
 
 		default:	/* log everything else */
-			if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "VIA write(%02x) = %02x\n", offset, data);
+			if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "VIA write(%02x) = %02x\n", offset, data);
 			break;
 	}
 }
@@ -507,7 +507,7 @@ static READ_HANDLER( via6522_r )
 			break;
 	}
 
-	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "VIA read(%02x) = %02x\n", offset, result);
+	if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "VIA read(%02x) = %02x\n", offset, result);
 	return result;
 }
 

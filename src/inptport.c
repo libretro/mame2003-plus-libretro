@@ -402,7 +402,7 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 
 struct ipd inputport_defaults[] =
 {
-  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON8) },
+  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
   { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_1(KEYCODE_NONE) },
   { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
   { IPT_UI_UP,                "UI Up",          SEQ_DEF_3(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP) },
@@ -624,11 +624,11 @@ struct ipd inputport_defaults[] =
   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER1, "P1 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
-  { IPT_PEDAL                 | IPF_PLAYER2, "P2 Pedal 1",     SEQ_DEF_3(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER2, "P2 Pedal 1",     SEQ_DEF_3(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER2, "P2 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
-  { IPT_PEDAL                 | IPF_PLAYER3, "P3 Pedal 1",     SEQ_DEF_3(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON1) },
+  { IPT_PEDAL                 | IPF_PLAYER3, "P3 Pedal 1",     SEQ_DEF_3(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER3, "P3 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
   { IPT_PEDAL                 | IPF_PLAYER4, "P4 Pedal 1",     SEQ_DEF_1(JOYCODE_4_BUTTON1) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER4, "P4 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
@@ -1691,6 +1691,31 @@ static void save_default_keys(void)
 	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
 }
 
+/* 
+ * void reset_default_inputs(void)
+ * repopulate mappings from the defaults specified in the inptport source 
+ */
+void reset_default_inputs(void)
+{
+	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
+  save_default_keys();
+}
+
+/* 
+ * void reset_default_inputs(void)
+ * repopulate mappings from the defaults specified in the driver source 
+ */
+void reset_driver_inputs(void)
+{
+  struct InputPort *in;
+
+	in = (struct InputPort *) inputport_defaults;
+	while (in->type != IPT_END)
+	{
+    /* still needs to be implemented */
+		in++;
+	}
+}
 
 int load_input_port_settings(void)
 {
@@ -1801,6 +1826,7 @@ InputSeq* input_port_type_seq(int type)
 
 InputSeq* input_port_seq(const struct InputPort *in)
 {
+// mark change the (! 0 && ((in-1)->type & IPF_CHEAT))) to a variable name if you want to make it a core option just disable for now until you make a choice 
 	int i,type;
 
 	static InputSeq ip_none = SEQ_DEF_1(CODE_NONE);
@@ -1810,15 +1836,15 @@ InputSeq* input_port_seq(const struct InputPort *in)
 	if ((in->type & ~IPF_MASK) == IPT_EXTENSION)
 	{
 		type = (in-1)->type & (~IPF_MASK | IPF_PLAYERMASK);
-		/* if port is disabled return no key */
-		if ((in-1)->type & IPF_UNUSED)
+		/* if port is disabled, or cheat with cheats disabled, return no key */
+		if (((in-1)->type & IPF_UNUSED) || (!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 	else
 	{
 		type = in->type & (~IPF_MASK | IPF_PLAYERMASK);
-		/* if port is disabled return no key */
-		if (in->type & IPF_UNUSED)
+		/* if port is disabled, or cheat with cheats disabled, return no key */
+		if ((in->type & IPF_UNUSED) || (!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 			return &ip_none;
 	}
 
@@ -1850,8 +1876,8 @@ void update_analog_port(int port)
 	/* get input definition */
 	in = input_analog[port];
 
-	/* this is a cheat-only port, bail */
-	if (in->type & IPF_CHEAT) return;
+	/* if we're not cheating and this is a cheat-only port, bail */
+	if (!options.cheat_input_ports && (in->type & IPF_CHEAT)) return;
 	type=(in->type & ~IPF_MASK);
 
 	decseq = input_port_seq(in);
@@ -2127,7 +2153,7 @@ The above "Joy" states contain packed bits:
 	0100	left
 	1000	right
 */
-
+static int last_direction;
 static void
 ScanJoysticks( struct InputPort *in )
 {
@@ -2181,49 +2207,75 @@ ScanJoysticks( struct InputPort *in )
 		}
 
 		/* Only update mJoy4Way if the joystick has moved. */
-		if( mJoyCurrent[i]!=mJoyPrevious[i] )
+		if( mJoyCurrent[i]!=mJoyPrevious[i] && !options.restrict_4_way)
 		{
 			mJoy4Way[i] = mJoyCurrent[i];
 
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
-			{
-				/* If joystick is pointing at a diagonal, acknowledge that the player moved
-				 * the joystick by favoring a direction change.  This minimizes frustration
-				 * when using a keyboard for input, and maximizes responsiveness.
-				 *
-				 * For example, if you are holding "left" then switch to "up" (where both left
-				 * and up are briefly pressed at the same time), we'll transition immediately
-				 * to "up."
-				 *
-				 * Under the old "sticky" key implentation, "up" wouldn't be triggered until
-				 * left was released.
-				 *
-				 * Zero any switches that didn't change from the previous to current state.
-				 */
-				mJoy4Way[i] ^= (mJoy4Way[i] & mJoyPrevious[i]);
-			}
+			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			  {
+			  	  /* If joystick is pointing at a diagonal, acknowledge that the player moved
+				   * the joystick by favoring a direction change.  This minimizes frustration
+				   * when using a keyboard for input, and maximizes responsiveness.
+				   *
+				   * For example, if you are holding "left" then switch to "up" (where both left
+				   * and up are briefly pressed at the same time), we'll transition immediately
+				   * to "up."
+				   *
+				   * Under the old "sticky" key implentation, "up" wouldn't be triggered until
+				   * left was released.
+				   *
+				   * Zero any switches that didn't change from the previous to current state.
+				   */
+				  mJoy4Way[i] ^= (mJoy4Way[i] & mJoyPrevious[i]);
+			  }
 
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
-			{
-				/* If we are still pointing at a diagonal, we are in an indeterminant state.
-				 *
-				 * This could happen if the player moved the joystick from the idle position directly
-				 * to a diagonal, or from one diagonal directly to an extreme diagonal.
-				 *
-				 * The chances of this happening with a keyboard are slim, but we still need to
-				 * constrain this case.
-				 *
-				 * For now, just resolve randomly.
-				 */
-				if( rand()&1 )
-				{
-					mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
-				}
-				else
-				{
-					mJoy4Way[i] &= 0xc; /* eliminate vertical component */
-				}
-			}
+			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			  {
+			  	  /* If we are still pointing at a diagonal, we are in an indeterminant state.
+				   *
+				   * This could happen if the player moved the joystick from the idle position directly
+				   * to a diagonal, or from one diagonal directly to an extreme diagonal.
+				   *
+				   * The chances of this happening with a keyboard are slim, but we still need to
+				   * constrain this case.
+				   *
+				   * For now, just resolve randomly.
+				   */
+				  if( rand()&1 )
+				  {
+				  	  mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
+				  }
+				  else
+				  {
+				 	  mJoy4Way[i] &= 0xc; /* eliminate vertical component */
+				  }
+			  }
+
+		}
+    else if (options.restrict_4_way) //start use alternative code 
+    {
+      if(options.content_flags[CONTENT_ROTATE_JOY_45])
+      {
+        if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=1) &&
+              (mJoyCurrent[i] !=2) && (mJoyCurrent[i] !=4) &&
+              (mJoyCurrent[i] !=8) )  	
+        {    
+          if      (mJoyCurrent[i] == 9)  mJoy4Way[i]=1;
+          else if (mJoyCurrent[i] == 6)  mJoy4Way[i]=2;
+          else if (mJoyCurrent[i] == 5)  mJoy4Way[i]=4;
+          else if (mJoyCurrent[i] == 10) mJoy4Way[i]=8;
+        }     
+        else if (mJoy4Way[i])
+          mJoy4Way[i]=0;
+      }
+      else // just a regular 4-way - last press no code needed just ignore diagonals and no movement
+      {
+        if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6)
+          &&  (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10) )
+        {
+          mJoy4Way[i] = mJoyCurrent[i];
+        }
+      }
 		}
 	}
 } /* ScanJoysticks */

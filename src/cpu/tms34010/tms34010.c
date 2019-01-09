@@ -1828,7 +1828,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 		case REG020_PMASKL:
 		case REG020_PMASKH:
-			/*if (data) log_cb(RETRO_LOG_ERROR, LOGPRE "Plane masking not supported. PC=%08X\n", activecpu_get_pc());*/
+			/*if (data) log_cb(RETRO_LOG_DEBUG, LOGPRE "Plane masking not supported. PC=%08X\n", activecpu_get_pc());*/
 			break;
 
 		case REG020_DPYCTL:
