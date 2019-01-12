@@ -5716,5 +5716,8 @@ Other Sun games
 		
 	/* Sega Model 1 Hardware */	
 	DRIVER( vf )
+    
+  DRIVER( 1945kiii )	/* (c) 2000 Oriental */
+	DRIVER( flagrall )  /* (c) 1996 Promat? */
 
 #endif	/* DRIVER_RECURSIVE */
