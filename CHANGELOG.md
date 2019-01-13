@@ -7,7 +7,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## New games
 
+* 96 Flag Rally
 * 1943 - The Battle Of Midway Mark II
+* 1945k III
 * Air Attack
 * Air Rescue
 * Asura Buster
