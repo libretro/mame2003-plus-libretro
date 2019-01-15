@@ -57,19 +57,19 @@ PALETTE_INIT( mrdo )
 	const int R2 = 120;
 	const int R3 = 100;
 	const int R4 = 75;
-	const int pull = 200;
+	const int pull = 220;
 	float pot[16];
 	int weight[16];
-	const float potadjust = 0.2;	/* diode voltage drop */
+	const float potadjust = 0.7f;	/* diode voltage drop */
 
-	for (i = 15;i >= 0;i--)
+	for (i = 0x0f;i >= 0;i--)
 	{
 		float par = 0;
 
-		if (i & 1) par += 1.0/R1;
-		if (i & 2) par += 1.0/R2;
-		if (i & 4) par += 1.0/R3;
-		if (i & 8) par += 1.0/R4;
+		if (i & 1) par += 1.0f/(float)R1;
+		if (i & 2) par += 1.0f/(float)R2;
+		if (i & 4) par += 1.0f/(float)R3;
+		if (i & 8) par += 1.0f/(float)R4;
 		if (par)
 		{
 			par = 1/par;
@@ -77,10 +77,11 @@ PALETTE_INIT( mrdo )
 		}
 		else pot[i] = 0;
 
-		weight[i] = 255 * pot[i] / pot[15];
+		weight[i] = 0xff * pot[i] / pot[0x0f];
+		if (weight[i] < 0) weight[i] = 0;
 	}
 
-	for (i = 0;i < 256;i++)
+	for (i = 0;i < 0x100;i++)
 	{
 		int a1,a2;
 		int bits0,bits2,r,g,b;
@@ -100,19 +101,22 @@ PALETTE_INIT( mrdo )
 		palette_set_color(i,r,g,b);
 	}
 
-	color_prom += 64;
+	color_prom += 0x40;
+
+        /* characters */
+        for (i = 0; i < 0x100; i++)
+               COLOR(0,i) = i;
 
 	/* sprites */
-	for (i = 0;i < TOTAL_COLORS(2);i++)
+	for (i = 0x100; i < 0x140 ; i++)
 	{
-		int bits;
-
-		if (i < 32)
-			bits = color_prom[i] & 0x0f;		/* low 4 bits are for sprite color n */
+		unsigned char ctabentry = color_prom[(i - 0x100) & 0x1f];
+		if ((i - 0x100) & 0x20)
+			ctabentry >>= 4;	/* high 4 bits are for sprite color n + 8 */
 		else
-			bits = color_prom[i & 0x1f] >> 4;	/* high 4 bits are for sprite color n + 8 */
+			ctabentry &= 0x0f;	/* low 4 bits are for sprite color n */
 
-		COLOR(2,i) = bits + ((bits & 0x0c) << 3);
+		COLOR(1,i) = (ctabentry + ((ctabentry & 0x0c) << 3));
 	}
 }
 
