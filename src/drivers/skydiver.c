@@ -566,4 +566,4 @@ ROM_END
  *
  *************************************/
 
-GAMEX( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver", GAME_NO_SOUND )
+GAME( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver" )
