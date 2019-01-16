@@ -644,32 +644,28 @@ static void update_variables(bool first_time)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-//set the sample rate changes here environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info); opens a new window
-//leave the code in place till i figure it out. 
-   mame2003_video_get_geometry(&info->geometry);  
-   if (options.machine_timing)
+	mame2003_video_get_geometry(&info->geometry);  
+	if (options.machine_timing)
 	//by pass audio scew
-   {
-     if (Machine->drv->frames_per_second < 60.0 )
-         info->timing.fps = 60.0; 
-     else 
-        info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
+	{
+		if (Machine->drv->frames_per_second < 60.0 )
+			info->timing.fps = 60.0; 
 
- 	if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   
-	 options.samplerate = Machine->drv->frames_per_second * 1000;
-			
-		
+		else  if (Machine->drv->frames_per_second > 60.0 )
+			info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps 
 	
-   }
+		if ( Machine->drv->frames_per_second * 1000 < options.samplerate || Machine->drv->frames_per_second < 60 )   
+			options.samplerate = Machine->drv->frames_per_second * 1000;
+	}
   
-  else
-  {
+	else
+	{
 
-	info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-	if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-		options.samplerate=22050;
-  }
-  info->timing.sample_rate = options.samplerate;
+		info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
+		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+			options.samplerate=22050;
+	}
+	info->timing.sample_rate = options.samplerate;
  }
 
 unsigned retro_api_version(void)
@@ -722,8 +718,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
-  static const int uiModes[]      = {ROT0, ROT90, ROT180, ROT270};
-
+ 
   if(string_is_empty(game->path))
   {
     log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not set. Exiting!\n");
@@ -1565,6 +1560,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       case 4: player_flag = IPF_PLAYER4; break;
       case 5: player_flag = IPF_PLAYER5; break;
       case 6: player_flag = IPF_PLAYER6; break;    
+	  default: player_flag = IPF_PLAYER1; break;
     }
   }
   
@@ -1911,52 +1907,52 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
       switch(entry->type)
       {
          case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER1):
-            seq_set_1(entry->seq, JOYCODE_2_UP);
+            seq_set_1(&entry->seq, JOYCODE_2_UP);
             break;
          case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER1):
-            seq_set_1(entry->seq, JOYCODE_2_DOWN);
+            seq_set_1(&entry->seq, JOYCODE_2_DOWN);
             break;
          case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER1):
-            seq_set_1(entry->seq, JOYCODE_2_LEFT);
+            seq_set_1(&entry->seq, JOYCODE_2_LEFT);
             break;
          case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT);
+            seq_set_1(&entry->seq, JOYCODE_2_RIGHT);
             break;
          case (IPT_JOYSTICK_UP   | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_UP);
+            seq_set_1(&entry->seq, JOYCODE_3_UP);
             break;
          case (IPT_JOYSTICK_DOWN | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_DOWN);
+            seq_set_1(&entry->seq, JOYCODE_3_DOWN);
             break;
          case (IPT_JOYSTICK_LEFT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_LEFT);
+            seq_set_1(&entry->seq, JOYCODE_3_LEFT);
             break;
          case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_RIGHT);
+            seq_set_1(&entry->seq, JOYCODE_3_RIGHT);
             break; 
          case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_4_UP);
+            seq_set_1(&entry->seq, JOYCODE_4_UP);
             break;
          case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_4_DOWN);
+            seq_set_1(&entry->seq, JOYCODE_4_DOWN);
             break;
          case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_4_LEFT);
+            seq_set_1(&entry->seq, JOYCODE_4_LEFT);
             break;
          case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_4_RIGHT);
+            seq_set_1(&entry->seq, JOYCODE_4_RIGHT);
             break;
          case (IPT_JOYSTICKLEFT_UP   | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_UP);
+            seq_set_1(&entry->seq, JOYCODE_3_UP);
             break;
          case (IPT_JOYSTICKLEFT_DOWN | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_DOWN);
+            seq_set_1(&entry->seq, JOYCODE_3_DOWN);
             break;
          case (IPT_JOYSTICKLEFT_LEFT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_LEFT);
+            seq_set_1(&entry->seq, JOYCODE_3_LEFT);
             break;
          case (IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_3_RIGHT);
+            seq_set_1(&entry->seq, JOYCODE_3_RIGHT);
             break;
      }
     }
@@ -1993,8 +1989,10 @@ int osd_is_key_pressed(int keycode)
 	else if (options.input_interface == RETRO_DEVICE_KEYBOARD || options.input_interface == RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD ) 
 		return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0; // allow tab to work
 
-	else   log_cb(RETRO_LOG_ERROR, "osd_is_key_pressed should never get here"); // probably not needed always account for the unxpected
-	
+	else 
+	log_cb(RETRO_LOG_ERROR, "osd_is_key_pressed should never get here"); // probably not needed always account for the unxpected
+
+	return 0; // keep compiler happy
 }
 
 int osd_readkey_unicode(int flush)
