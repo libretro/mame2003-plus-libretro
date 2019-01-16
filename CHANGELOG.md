@@ -240,6 +240,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
+* Sky Diver
 * Super Spacefortress Macross
 * The Karate Tournament
 * Thunder Dragon
