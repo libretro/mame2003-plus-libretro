@@ -273,14 +273,14 @@ struct GameOptions
 /* these flags are set in the mame_display struct to indicate that */
 /* a particular piece of state has changed since the last call to */
 /* osd_update_video_and_audio() */
-#define GAME_BITMAP_CHANGED			0x00000001
-#define GAME_PALETTE_CHANGED		0x00000002
+#define GAME_BITMAP_CHANGED       0x00000001
+#define GAME_PALETTE_CHANGED      0x00000002
 #define GAME_VISIBLE_AREA_CHANGED	0x00000004
-#define VECTOR_PIXELS_CHANGED		0x00000008
-#define DEBUG_BITMAP_CHANGED		0x00000010
-#define DEBUG_PALETTE_CHANGED		0x00000020
-#define DEBUG_FOCUS_CHANGED			0x00000040
-#define LED_STATE_CHANGED			0x00000080
+#define VECTOR_PIXELS_CHANGED     0x00000008
+#define DEBUG_BITMAP_CHANGED      0x00000010
+#define DEBUG_PALETTE_CHANGED     0x00000020
+#define DEBUG_FOCUS_CHANGED       0x00000040
+#define LED_STATE_CHANGED         0x00000080
 
 
 /* the main mame_display structure, containing the current state of the */
@@ -291,22 +291,22 @@ struct mame_display
     UINT32					changed_flags;
 
     /* game bitmap and display information */
-    struct mame_bitmap *	game_bitmap;			/* points to game's bitmap */
-    struct rectangle		game_bitmap_update;		/* bounds that need to be updated */
-    const rgb_t *			game_palette;			/* points to game's adjusted palette */
-    UINT32					game_palette_entries;	/* number of palette entries in game's palette */
-    UINT32 *				game_palette_dirty;		/* points to game's dirty palette bitfield */
-    struct rectangle 		game_visible_area;		/* the game's visible area */
-    void *					vector_dirty_pixels;	/* points to X,Y pairs of dirty vector pixels */
+    struct mame_bitmap *  game_bitmap;            /* points to game's bitmap */
+    struct rectangle      game_bitmap_update;     /* bounds that need to be updated */
+    const rgb_t *         game_palette;           /* points to game's adjusted palette */
+    UINT32                game_palette_entries;   /* number of palette entries in game's palette */
+    UINT32 *              game_palette_dirty;     /* points to game's dirty palette bitfield */
+    struct rectangle      game_visible_area;      /* the game's visible area */
+    void *                vector_dirty_pixels;    /* points to X,Y pairs of dirty vector pixels */
 
     /* debugger bitmap and display information */
-    struct mame_bitmap *	debug_bitmap;			/* points to debugger's bitmap */
-    const rgb_t *			debug_palette;			/* points to debugger's palette */
-    UINT32					debug_palette_entries;	/* number of palette entries in debugger's palette */
-    UINT8					debug_focus;			/* set to 1 if debugger has focus */
+    struct mame_bitmap *	debug_bitmap;           /* points to debugger's bitmap */
+    const rgb_t *         debug_palette;          /* points to debugger's palette */
+    UINT32                debug_palette_entries;  /* number of palette entries in debugger's palette */
+    UINT8                 debug_focus;            /* set to 1 if debugger has focus */
 
     /* other misc information */
-    UINT8					led_state;				/* bitfield of current LED states */
+    UINT8                 led_state;              /* bitfield of current LED states */
 };
 
 
