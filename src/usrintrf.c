@@ -3102,16 +3102,10 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
-
-  if(generate_alternate_DAT)
-  {
-    print_mame_xml(0);
-    generate_alternate_DAT = false;
-  }
-  
+ 
   if(generate_DAT)
   {
-    print_mame_xml(1);
+    print_mame_xml();
     generate_DAT = false;
   }
 
