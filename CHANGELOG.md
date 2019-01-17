@@ -69,6 +69,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Knuckle Bash 2
 * Led Storm Rally 2011
 * Lethal Enforcers
+* Mad Alien
 * Magical Drop
 * Magical Drop Plus 1
 * Metal Slug 4
@@ -358,3 +359,4 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 * Fixed Hard Head 2 [arcadez]
 * Fixed incorrect palette colours and clock frequencies in Mr Do [cataylox]
+* Added sound support for Sky Diver [grant2258]
