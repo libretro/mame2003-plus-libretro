@@ -25,7 +25,6 @@ static char message_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
 static int  messagecounter;
 static bool generate_DAT;           /* allows us to display a UI message before and while the DAT is generated */
-static bool generate_alternate_DAT; /* not in use as of November 2018 allows us to display a UI message before and while the DAT is generated */
 
 
 /***************************************************************************
@@ -3000,7 +2999,7 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 
 enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_FLUSH_CURRENT_CFG, UI_FLUSH_ALL_CFG, UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
-		UI_CHEAT,UI_RESET, UI_GENERATE_NEW_XML_DAT, UI_GENERATE_OLD_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
+		UI_CHEAT,UI_RESET, UI_GENERATE_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
 
 
 
@@ -3085,10 +3084,8 @@ void setup_menu_init(void)
 
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
-    menu_item[menu_total] = ui_getstring (UI_generate_old_xml_dat);   menu_action[menu_total++] = UI_GENERATE_OLD_XML_DAT;
+    menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 
-    /* the "alternative XML DAT project" with proper game names for the files instead of DOS names is on hold as of November 2018 */
-    /*menu_item[menu_total] = ui_getstring (UI_generate_new_xml_dat); menu_action[menu_total++] = UI_GENERATE_NEW_XML_DAT;*/  
 #endif
   if(!options.display_setup) 
   {
@@ -3244,13 +3241,8 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 
         break;          
       }        
-      case UI_GENERATE_NEW_XML_DAT: /* full/alternative filename version -- not in use as of November 2018 */
-          frontend_message_cb("Generating Alternative XML DAT", 180);
-          schedule_full_refresh();
-          generate_alternate_DAT = true;
-          break;
 
-      case UI_GENERATE_OLD_XML_DAT:
+      case UI_GENERATE_XML_DAT:
           frontend_message_cb("Generating XML DAT", 180);   
           schedule_full_refresh();
           generate_DAT = true;
