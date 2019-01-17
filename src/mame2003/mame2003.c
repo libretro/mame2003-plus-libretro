@@ -211,7 +211,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
-  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL); 
   set_variables(true);
 }
@@ -271,11 +271,15 @@ static void set_variables(bool first_time)
          if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
+                              
+                  
    }
    effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_option(option_index);
    effective_options_count++;
   }
+  
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
+  
 }
 
 static struct retro_variable_default *spawn_effective_option(int option_index)
@@ -619,7 +623,7 @@ static void update_variables(bool first_time)
             options.cheat_input_ports = false;
           break;		  
 	    case OPT_Machine_Timing:
-		if(strcmp(var.value, "enabled") == 0)
+          if(strcmp(var.value, "enabled") == 0)
             options.machine_timing = true;
           else
             options.machine_timing = false;
@@ -666,15 +670,19 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 			options.samplerate=22050;
 	}
 	info->timing.sample_rate = options.samplerate;
- }
+}
+
 
 unsigned retro_api_version(void)
 {
   return RETRO_API_VERSION;
 }
 
+
 void retro_get_system_info(struct retro_system_info *info)
 {
+   /* this must match the 'corename' field in mame2003_plus_libretro.info
+    * in order for netplay to work. */
   info->library_name = "MAME 2003-Plus";
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
@@ -718,7 +726,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
- 
+
   if(string_is_empty(game->path))
   {
     log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not set. Exiting!\n");
@@ -757,7 +765,8 @@ bool retro_load_game(const struct retro_game_info *game)
  }
 
    if(!init_game(driverIndex))
-    return false;  
+    return false;
+  
   set_content_flags();
 
   options.libretro_content_path = strdup(game->path);
@@ -790,10 +799,30 @@ bool retro_load_game(const struct retro_game_info *game)
   update_variables(true);
   
   for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
+                                                                                       
+                                                                                        
+                                                                                     
+                                                                                       
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
     retropad_subdevice_ports[port_index].num_types   = 4;
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                   
+                                                                                     
+                                                                              
+
+                                            
+                           
+                           
+                           
+                           
   }
+          
 
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
   
@@ -1087,16 +1116,35 @@ void retro_run (void)
       analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
       analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
       analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+      
+                    
+                                 
+       
+                                                                       
       retroJsState[0 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+                                                                                                                                  
+       
+          
+       
+                                                                                                                                  
       retroJsState[1 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+       
       retroJsState[2 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
       retroJsState[3 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
       retroJsState[4 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
       retroJsState[5 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
       retroJsState[6 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
       retroJsState[7 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+                                 
+       
       retroJsState[8 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+                                                                                                                                  
+       
+          
+       
+                                                                                                                                  
       retroJsState[9 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+       
       retroJsState[10 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
       retroJsState[11 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
       retroJsState[12 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
@@ -1145,7 +1193,7 @@ void retro_run (void)
 	  }   
  
 
- }
+  }
 
    mame_frame();
 
@@ -1166,11 +1214,10 @@ void retro_deinit(void)
 #endif
 }
 
-   extern size_t state_get_dump_size(void);
+extern size_t state_get_dump_size(void);
 
 size_t retro_serialize_size(void)
-{
-     
+{ 
     return state_get_dump_size();
 }
 
@@ -1379,6 +1426,7 @@ int osd_update_audio_stream(INT16 *buffer)
 void osd_stop_audio_stream(void)
 {
 }
+
 
 /******************************************************************************
 
@@ -1841,7 +1889,8 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
 int osd_is_joy_pressed(int joycode)
 {
-if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
+  if (options.input_interface == RETRO_DEVICE_KEYBOARD)
+    return 0;
  
 	if ( joycode-1000  <  sizeof(retroJsState) /4 )
 	{	
@@ -1887,6 +1936,10 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 		if (analogjoy_input[i] != CODE_NONE)
 		{	
 			if (convert_analog_scale(analogjoy[player][i]) > deadzone)	analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
+                                                                        
+     
+
+                                        
 		    if (convert_analog_scale(analogjoy[player][i]) < -deadzone)     analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
 			
 		}			
@@ -1895,6 +1948,7 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
 {
+     
   unsigned int i = 0;
   default_inputs = defaults;
 
@@ -1957,6 +2011,7 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
      }
     }
    }
+      
 }
 
 /* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
@@ -1965,6 +2020,8 @@ void osd_joystick_start_calibration(void){ }
 const char *osd_joystick_calibrate_next(void) { return 0; }
 void osd_joystick_calibrate(void) { }
 void osd_joystick_end_calibration(void) { }
+
+
 
 
 /******************************************************************************
@@ -1986,13 +2043,10 @@ int osd_is_key_pressed(int keycode)
 	if (options.input_interface == RETRO_DEVICE_JOYPAD) 
 		return 0;
 
-	else if (options.input_interface == RETRO_DEVICE_KEYBOARD || options.input_interface == RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD ) 
-		return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0; // allow tab to work
+	if (keycode < 512 && keycode >= 0)
+    return retroKeyState[keycode];
 
-	else 
-	log_cb(RETRO_LOG_ERROR, "osd_is_key_pressed should never get here"); // probably not needed always account for the unxpected
-
-	return 0; // keep compiler happy
+  return 0;
 }
 
 int osd_readkey_unicode(int flush)
@@ -2000,6 +2054,12 @@ int osd_readkey_unicode(int flush)
   /* TODO*/
   return 0;
 }
+
+                                                                               
+
+           
+
+                                                                               
 
 /* Unassigned keycodes*/
 /*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
