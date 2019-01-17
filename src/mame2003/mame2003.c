@@ -791,7 +791,7 @@ bool retro_load_game(const struct retro_game_info *game)
   
   for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
-    retropad_subdevice_ports[port_index].types       = &unsupported_controllers[port_index];
+    retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
     retropad_subdevice_ports[port_index].num_types   = 4;
   }
 
