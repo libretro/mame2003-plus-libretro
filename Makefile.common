@@ -8,7 +8,7 @@ INCFLAGS := \
 	-I$(CORE_DIR)/mame2003 \
 	-I$(LIBRETRO_COMM_DIR)/include \
 	-I$(LIBRETRO_COMM_DIR)/zlib \
-	-I$(CORE_DIR)/lib/libFLAC/include \
+	-I$(CORE_DIR)/lib/libFLAC/include
 
 ifneq (,$(findstring msvc200,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
@@ -62,7 +62,9 @@ SOURCES_C += \
 	$(CORE_DIR)/ui_text.c \
 	$(CORE_DIR)/usrintrf.c \
 	$(CORE_DIR)/window.c \
-	$(CORE_DIR)/x86drc.c \
+	$(CORE_DIR)/x86drc.c
+
+SOURCES_C += \
 	$(CORE_DIR)/machine/6522via.c \
 	$(CORE_DIR)/machine/6532riot.c \
 	$(CORE_DIR)/machine/6821pia.c \
@@ -1030,6 +1032,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/vmetal.c \
 				 $(CORE_DIR)/drivers/deco156.c \
 				 $(CORE_DIR)/drivers/1945kiii.c \
+				 $(CORE_DIR)/drivers/madalien.c \
 				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 				 $(CORE_DIR)/machine/namcoio_machine.c
 

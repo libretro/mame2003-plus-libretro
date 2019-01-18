@@ -571,7 +571,6 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 
 
 
-
 /***************************************************************************
 
 	Memory region code
@@ -1454,16 +1453,14 @@ static int open_rom_file(struct rom_load_data *romdata, const struct RomModule *
 	   attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
 	for (drv = Machine->gamedrv; !romdata->file && drv; drv = drv->clone_of)
-		if (drv->name && *drv->name) {
-      romdata->file = mame_fopen_rom(drv->description, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
-			if(!romdata->file)
-        romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
-    }
+  {
+		if (drv->name && *drv->name)
+			romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+  }
 
 	/* return the result */
 	return (romdata->file != NULL);
 }
-
 
 /*-------------------------------------------------
 	rom_fread - cheesy fread that fills with
