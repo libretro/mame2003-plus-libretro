@@ -4878,6 +4878,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* Kaneko "Super Nova System" games */
 	DRIVER( galpani4 )	/* (c) 1996 Kaneko (Japan) */
+  DRIVER( galpandx )	/* (c) 2001 Kaneko (Asia) */
 	DRIVER( galpanis )	/* (c) 1997 Kaneko (Japan) */
 	DRIVER( sengekis )	/* (c) 1997 Kaneko / Warashi (Asia) */
 	DRIVER( sengekij )	/* (c) 1997 Kaneko / Warashi (Japan) */
