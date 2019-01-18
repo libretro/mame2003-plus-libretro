@@ -9,7 +9,7 @@
 /************************************************************************/
 /*                                                                      */
 /* DSS_INPUT             - Memory Mapped input device                   */
-/* DSS_CONSTANT          - Node based constand - Do we need this ???    */
+/* DSS_CONSTANT          - Node based constant - Do we need this ???    */
 /* DSS_ADJUSTER          - UI Mapped adjustable input                   */
 /*                                                                      */
 /************************************************************************/
