@@ -1200,6 +1200,7 @@ static READ32_HANDLER( sengekij_speedup_r ) /* 60006ee  600308e*/
 static DRIVER_INIT( skns )     { install_mem_read32_handler(0, 0x6000028, 0x600002b, bios_skip_r );  }
 static DRIVER_INIT( galpani4 ) { skns_sprite_kludge(-5,-1); init_skns();  } /* Idle Loop caught by sh-2 core*/
 static DRIVER_INIT( galpanis ) { skns_sprite_kludge(-5,-1); init_skns();  } /* Idle Loop caught by sh-2 core*/
+static DRIVER_INIT( galpandx ) { skns_sprite_kludge(-5,-1); init_skns();  } /* Idle Loop caught by sh-2 core*/
 static DRIVER_INIT( cyvern )   { skns_sprite_kludge(+0,+2); init_skns(); install_mem_read32_handler(0, 0x604d3c8, 0x604d3cb, cyvern_speedup_r );   }
 static DRIVER_INIT( galpans2 ) { skns_sprite_kludge(-1,-1); init_skns(); install_mem_read32_handler(0, 0x60fb6bc, 0x60fb6bf, galpans2_speedup_r );  }
 static DRIVER_INIT( gutsn )    { skns_sprite_kludge(+0,+0); init_skns(); install_mem_read32_handler(0, 0x600c780, 0x600c783, gutsn_speedup_r );  }
@@ -1275,6 +1276,31 @@ ROM_START( galpani4 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* Samples */
     ROM_LOAD( "gp430000.u4", 0x000000, 0x200000, CRC(8374663a) SHA1(095512564f4de25dc3752d9fbd254b9dabd16d1b) )
+ROM_END
+
+ROM_START( galpandx )
+	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* SH-2 Code */
+	ROM_LOAD  ( "sknsa1.u10", 0x000000, 0x080000, CRC(745e5212) SHA1(caba649ab2d83b2d7e007eecee0fc582c019df38) ) /* Asia BIOS */
+
+	ROM_REGION32_BE( 0x200000, REGION_USER1, 0 ) /* SH-2 Code mapped at 0x04000000 */
+	ROM_LOAD16_BYTE( "gpdx.u10", 0x000000, 0x100000, CRC(8eca883d) SHA1(f5a102ac21aeebc44afcd0ef7f655de21d4442b2) )
+	ROM_LOAD16_BYTE( "gpdx.u8",  0x000001, 0x100000, CRC(b0088d8f) SHA1(2363620265d3fc53bae1c5889ea761444f80735a) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+    ROM_LOAD( "gp410000.u24", 0x000000, 0x200000, CRC(1df61f01) SHA1(a9e95bbb3013e8f2fd01243b1b392ff07b4f7d02) )
+    ROM_LOAD( "gp410100.u20", 0x200000, 0x100000, CRC(8e2c9349) SHA1(a58fa9bcc9684ed4558e3395d592b64a1978a902) )
+
+	ROM_REGION( 0x400000, REGION_GFX2, ROMREGION_DISPOSE )
+    ROM_LOAD( "gp420000.u16", 0x000000, 0x200000, CRC(f0781376) SHA1(aeab9553a9af922524e528eb2d019cf36b6e2094) )
+    ROM_LOAD( "gp420100.u18", 0x200000, 0x200000, CRC(10c4b183) SHA1(80e05f3932495ad4fc9bf928fa66e6d2931bbb06) )
+
+	ROM_REGION( 0x800000, REGION_GFX3, 0 ) /* Tiles Plane B */
+	/* First 0x040000 bytes (0x03ff Tiles) are RAM Based Tiles */
+	/* 0x040000 - 0x3fffff empty? */
+	
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "gp430000.u4",   0x000000, 0x200000, CRC(8374663a) SHA1(095512564f4de25dc3752d9fbd254b9dabd16d1b) ) /* Doesn't seem to use these samples at all */
+	ROM_LOAD( "gp4-301-01.u7", 0x200000, 0x200000, CRC(886ef77f) SHA1(047d5fecf2034339c69b2cb605b623a814a18f0d) ) /* Changed some samples when compared to U4 rom  */
 ROM_END
 
 ROM_START( galpanis )
@@ -1674,6 +1700,7 @@ ROM_END
 GAMEX( 1996, skns,     0,    skns, skns, 0,        ROT0,  "Kaneko", "Super Kaneko Nova System BIOS", NOT_A_DRIVER )
 
 GAMEX( 1996, galpani4, skns,    skns, skns,     galpani4, ROT0,  "Kaneko", "Gals Panic 4 (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2001, galpandx, skns,    skns, skns,     galpandx, ROT0,  "Kaneko", "Gals Panic DX (Asia)", GAME_IMPERFECT_GRAPHICS ) /* copyright 2001, re-release for the Asian market? */
 GAMEX( 1997, galpanis, skns,    skns, skns,     galpanis, ROT0,  "Kaneko", "Gals Panic S - Extra Edition (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, cyvern,   skns,    skns, skns,     cyvern,   ROT90, "Kaneko", "Cyvern (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, galpans2, skns,    skns, skns,     galpans2, ROT0,  "Kaneko", "Gals Panic S2 (Japan)", GAME_IMPERFECT_GRAPHICS )
