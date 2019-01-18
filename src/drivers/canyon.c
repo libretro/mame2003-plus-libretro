@@ -272,14 +272,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 /* canyon Sound System Analog emulation                               */
 /************************************************************************/
 
-const struct discrete_555_astbl_desc canyonWhistl555 =
-{
-	DISC_555_OUT_CAP | DISC_555_OUT_AC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
-};
+int canyonWhistl555 = DISC_555_ASTBL_CAP | DISC_555_ASTBL_AC;
 
 const struct discrete_lfsr_desc canyon_lfsr={
 	16,                 /* Bit Length */
@@ -439,16 +432,14 @@ static DISCRETE_SOUND_START(canyon_sound_interface)
 	/* a 68k resistor and 22uf capacitor.           */
 	/************************************************/
 	DISCRETE_ADJUSTMENT(NODE_70, 1, 50000, 100000, 85000, DISC_LINADJ, "Whistle 1 Freq")	/* R59 */
-	DISCRETE_MULTADD(NODE_71, 1, CANYON_WHISTLESND1_EN, 3.05-0.33, 0.33)
+	DISCRETE_MULTADD(NODE_71, 1, CANYON_WHISTLESND1_EN, ((3.05-0.33)/5)*519.4, (0.33/5.0)*519.4)
 	DISCRETE_RCDISC2(NODE_72, CANYON_WHISTLESND1_EN, NODE_71, 1.0, NODE_71, 68000.0, 2.2e-5)	/* CV */
-	DISCRETE_555_ASTABLE(NODE_73, CANYON_WHISTLESND1_EN, 33000, NODE_70, 1e-8, NODE_72, &canyonWhistl555)
-	DISCRETE_MULTIPLY(CANYON_WHISTLESND1, CANYON_WHISTLESND1_EN, NODE_73, 519.4/3.3)
+	DISCRETE_555_ASTABLE(CANYON_WHISTLESND1, CANYON_WHISTLESND1_EN, 519.4, 33000, NODE_70, 1e-8, NODE_72, &canyonWhistl555)
 
 	DISCRETE_ADJUSTMENT(NODE_75, 1, 50000, 100000, 90000, DISC_LINADJ, "Whistle 2 Freq")	/* R69 */
-	DISCRETE_MULTADD(NODE_76, 1, CANYON_WHISTLESND2_EN, 3.05-0.33, 0.33)
+	DISCRETE_MULTADD(NODE_76, 1, CANYON_WHISTLESND2_EN, ((3.05-0.33)/5)*519.4, (0.33/5.0)*519.4)
 	DISCRETE_RCDISC2(NODE_77, CANYON_WHISTLESND2_EN, NODE_76, 1.0, NODE_76, 68000.0, 2.2e-5)	/* CV */
-	DISCRETE_555_ASTABLE(NODE_78, CANYON_WHISTLESND2_EN, 33000, NODE_75, 1e-8, NODE_77, &canyonWhistl555)
-	DISCRETE_MULTIPLY(CANYON_WHISTLESND2, CANYON_WHISTLESND2_EN, NODE_78, 519.4/3.3)
+	DISCRETE_555_ASTABLE(CANYON_WHISTLESND2, CANYON_WHISTLESND2_EN, 519.4, 33000, NODE_75, 1e-8, NODE_77, &canyonWhistl555)
 
 	/************************************************/
 	/* Combine all 5 sound sources.                 */
