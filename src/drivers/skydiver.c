@@ -128,8 +128,42 @@ static WRITE_HANDLER( skydiver_nmion_w )
 
 static INTERRUPT_GEN( skydiver_interrupt )
 {
+/* Convert range data to divide value and write to sound */
+	discrete_sound_w(0, (0x01 << (~skydiver_videoram[0x394] & 0x07)) & 0xff);	// Range 0-2
+
+	discrete_sound_w(1,  skydiver_videoram[0x394] & 0x08);	// Range 3 - note disable
+	discrete_sound_w(2, ~skydiver_videoram[0x395] & 0xff);	// Note - freq
+	discrete_sound_w(3,  skydiver_videoram[0x396] & 0x0f);	// NAM - Noise Amplitude
+
+
 	if (skydiver_nmion)
 		cpu_set_irq_line(0, IRQ_LINE_NMI, PULSE_LINE);
+}
+
+/*************************************
+ *
+ *	Sound handlers
+ *
+ *************************************/
+
+static WRITE_HANDLER( skydiver_sound_enable_w )
+{
+	discrete_sound_w(9, offset);
+}
+
+static WRITE_HANDLER( skydiver_whistle_w )
+{
+	discrete_sound_w(5 + (offset / 2), offset & 0x01);
+}
+
+static WRITE_HANDLER( skydiver_oct_w )
+{
+	discrete_sound_w(7 + (offset / 2), offset & 0x01);
+}
+
+static WRITE_HANDLER( skydiver_noise_reset_w )
+{
+	discrete_sound_w(4, !offset);
 }
 
 
@@ -175,11 +209,11 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0806, 0x0807, skydiver_start_lamp_2_w },
 	{ 0x0808, 0x0809, skydiver_lamp_y_w },
 	{ 0x080a, 0x080b, skydiver_lamp_d_w },
-	/* { 0x080c, 0x080d, skydiver_sound_enable_w },*/
+	{ 0x080c, 0x080d, skydiver_sound_enable_w },
 	/* { 0x1000, 0x1001, skydiver_jump1_lamps_w },*/
 	{ 0x1002, 0x1003, skydiver_coin_lockout_w },
 	/* { 0x1006, 0x1007, skydiver_jump2_lamps_w },*/
-	/* { 0x1008, 0x100b, skydiver_whistle_w },*/
+	{ 0x1008, 0x100b, skydiver_whistle_w },
 	{ 0x100c, 0x100d, skydiver_nmion_w },
 	{ 0x100e, 0x100f, skydiver_width_w },
 	{ 0x2000, 0x2000, watchdog_reset_w },
@@ -187,8 +221,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2004, 0x2005, skydiver_lamp_v_w },
 	{ 0x2006, 0x2007, skydiver_lamp_e_w },
 	{ 0x2008, 0x2009, skydiver_lamp_r_w },
-	/* { 0x200a, 0x200d, skydiver_oct_w },*/
-	/* { 0x200e, 0x200f, skydiver_noise_reset_w },*/
+	{ 0x200a, 0x200d, skydiver_oct_w },
+	{ 0x200e, 0x200f, skydiver_noise_reset_w },
 	{ 0x2800, 0x3fff, MWA_ROM },
 	{ 0x7800, 0x7fff, MWA_ROM },
 	{ 0xf800, 0xffff, MWA_ROM },
@@ -328,6 +362,145 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 }
 };
 
+/************************************************************************/
+/* skydiver Sound System Analog emulation                               */
+/* Jan 2004, Derrick Renaud                                             */
+/************************************************************************/
+
+int skydiverWhistl555 = DISC_555_ASTBL_SQW | DISC_555_ASTBL_AC;
+
+const struct discrete_lfsr_desc skydiver_lfsr={
+	16,				/* Bit Length */
+	0,				/* Reset Value */
+	0,				/* Use Bit 0 as XOR input 0 */
+	14,				/* Use Bit 14 as XOR input 1 */
+	DISC_LFSR_XNOR,			/* Feedback stage1 is XNOR */
+	DISC_LFSR_OR,			/* Feedback stage2 is just stage 1 output OR with external feed */
+	DISC_LFSR_REPLACE,		/* Feedback stage3 replaces the shifted register contents */
+	0x000001,			/* Everything is shifted into the first bit only */
+	DISC_LFSR_FLAG_OUT_INVERT,	/* Output is inverted, Active Low Reset */
+	15				/* Output bit */
+};
+
+/* Nodes - Inputs */
+#define SKYDIVER_RANGE_DATA	NODE_01
+#define SKYDIVER_NOTE_DATA	NODE_02
+#define SKYDIVER_RANGE3_EN	NODE_03
+#define SKYDIVER_NOISE_DATA	NODE_04
+#define SKYDIVER_NOISE_RST	NODE_05
+#define SKYDIVER_WHISTLE1_EN	NODE_06
+#define SKYDIVER_WHISTLE2_EN	NODE_07
+#define SKYDIVER_OCT1_EN	NODE_08
+#define SKYDIVER_OCT2_EN	NODE_09
+#define SKYDIVER_SOUND_EN	NODE_10
+/* Nodes - Sounds */
+#define SKYDIVER_NOTE_SND	NODE_11
+#define SKYDIVER_NOISE_SND	NODE_12
+#define SKYDIVER_WHISTLE1_SND	NODE_13
+#define SKYDIVER_WHISTLE2_SND	NODE_14
+
+static DISCRETE_SOUND_START(skydiver_sound_interface)
+	/************************************************/
+	/* skydiver  Effects Relataive Gain Table       */
+	/*                                              */
+	/* Effect  V-ampIn  Gain ratio        Relative  */
+	/* Note     3.8     3.8/260.5          1000.0   */
+	/* Noise    3.8     3.8/680             383.1   */
+	/* Whistle  5.0     5.0/1500            228.5   */
+	/************************************************/
+
+	/************************************************/
+	/* Input register mapping for skydiver          */
+	/************************************************/
+	/*              NODE                  ADDR  MASK     GAIN        OFFSET  INIT */
+	DISCRETE_INPUT (SKYDIVER_RANGE_DATA,  0x00, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_RANGE3_EN,   0x01, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_NOTE_DATA,   0x02, 0x000f,                      0.0)
+	DISCRETE_INPUTX(SKYDIVER_NOISE_DATA,  0x03, 0x000f,  383.1/15.0, 0.0,    0.0)
+	DISCRETE_INPUT (SKYDIVER_NOISE_RST,   0x04, 0x000f,                      1.0)
+	DISCRETE_INPUT (SKYDIVER_WHISTLE1_EN, 0x05, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_WHISTLE2_EN, 0x06, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_OCT1_EN,     0x07, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_OCT2_EN,     0x08, 0x000f,                      0.0)
+	DISCRETE_INPUT (SKYDIVER_SOUND_EN,    0x09, 0x000f,                      0.0)
+	/************************************************/
+
+	/************************************************/
+	/* The note generator has a selectable range    */
+	/* and selectable frequency.                    */
+	/* The base frequency is                        */
+	/* 12.096MHz / 2 / range / note freq / 2        */
+	/* The final /2 is just to give a 50% duty,     */
+	/* so we can just start by 12.096MHz/4/range    */
+	/* The octave is selected by 3 bits selecting   */
+	/* 000 64H  = 12096MHz / 2 / 128                */
+	/* 001 32H  = 12096MHz / 2 / 64                 */
+	/* 010 16H  = 12096MHz / 2 / 32                 */
+	/* 011  8H  = 12096MHz / 2 / 16                 */
+	/* 100  4H  = 12096MHz / 2 / 8                  */
+	/* 101  2H  = 12096MHz / 2 / 4                  */
+	/* 110  1H  = 12096MHz / 2 / 2                  */
+	/* 111 6MHz = 12096MHz / 2 / 1                  */
+	/* We will convert the 3 range bits to a        */
+	/* divide value in the driver before sending    */
+	/* to the sound interface.                      */
+	/*                                              */
+	/* note data: 0xff = off,                       */
+	/*            0xfe = /2,                        */
+	/*            0x00 = /256                       */
+	/* We will send the note data bit inverted to   */
+	/* sound interface so it is easier to work with.*/
+	/*                                              */
+	/* The note generator is disabled by a low on   */
+	/* RANGE3.                                      */
+	/************************************************/
+	// We will disable the divide if SKYDIVER_RANGE_DATA = 0
+	DISCRETE_DIVIDE(NODE_20, SKYDIVER_RANGE_DATA, 12096000.0 /2.0 / 2.0, SKYDIVER_RANGE_DATA)
+	DISCRETE_ADDER2(NODE_21, 1, SKYDIVER_NOTE_DATA, 1)
+	// We will disable the divide if SKYDIVER_NOTE_DATA = 0
+	DISCRETE_DIVIDE(NODE_22, SKYDIVER_NOTE_DATA, NODE_20, NODE_21)	// freq
+	DISCRETE_SQUAREWAVE(SKYDIVER_NOTE_SND, SKYDIVER_RANGE3_EN, NODE_22, 1000.0, 50.0, 0, 0.0)
+
+	/************************************************/
+	/* Noise circuit is built around a noise        */
+	/* generator built from 2 shift registers that  */
+	/* are clocked by the 1V signal.                */
+	/* 1V = HSYNC/2                                 */
+	/*    = 15750/2                                 */
+	/* Output is binary weighted with 4 bits of     */
+	/* volume.                                      */
+	/************************************************/
+	DISCRETE_LFSR_NOISE(SKYDIVER_NOISE_SND, SKYDIVER_NOISE_RST, SKYDIVER_NOISE_RST, 15750.0/2.0, SKYDIVER_NOISE_DATA, 0, 0, &skydiver_lfsr)
+
+	/************************************************/
+	/* Whistle circuit is a 555 capacitor charge    */
+	/* waveform.  The original game pot varies from */
+	/* 0-250k, but we are going to limit it because */
+	/* below 50k the frequency is too high.         */
+	/* When triggered it starts at it's highest     */
+	/* frequency, then decays at the rate set by    */
+	/* a 68k resistor and 22uf capacitor.           */
+	/************************************************/
+	DISCRETE_ADJUSTMENT(NODE_30, 1, 50000, 250000, 185000, DISC_LINADJ, "Whistle 1 Freq")	/* R66 */
+	DISCRETE_MULTADD(NODE_31, 1, SKYDIVER_WHISTLE1_EN, ((3.05-0.33)/5.0)*519.4, (0.33/5.0)*519.4)
+	DISCRETE_RCDISC2(NODE_32, SKYDIVER_WHISTLE1_EN, NODE_31, 1.0, NODE_31, 68000.0, 2.2e-5)	/* CV */
+	DISCRETE_SWITCH(NODE_33, 1, SKYDIVER_OCT1_EN, 1e-8, 1e-8 + 3.3e-9)	/* Cap C73 & C58 */
+	DISCRETE_555_ASTABLE(SKYDIVER_WHISTLE1_SND, SKYDIVER_WHISTLE1_EN, 228.5, 100000, NODE_30, NODE_33, NODE_32, &skydiverWhistl555)
+
+	DISCRETE_ADJUSTMENT(NODE_35, 1, 50000, 250000, 200000, DISC_LINADJ, "Whistle 2 Freq")	/* R65 */
+	DISCRETE_MULTADD(NODE_36, 1, SKYDIVER_WHISTLE2_EN, ((3.05-0.33)/5.0)*519.4, (0.33/5.0)*519.4)
+	DISCRETE_RCDISC2(NODE_37, SKYDIVER_WHISTLE2_EN, NODE_36, 1.0, NODE_36, 68000.0, 2.2e-5)	/* CV */
+	DISCRETE_SWITCH(NODE_38, 1, SKYDIVER_OCT2_EN, 1e-8, 1e-8 + 3.3e-9)	/* Cap C72 & C59 */
+	DISCRETE_555_ASTABLE(SKYDIVER_WHISTLE2_SND, SKYDIVER_WHISTLE2_EN, 228.5, 100000, NODE_35, NODE_38, NODE_37, &skydiverWhistl555)
+
+	/************************************************/
+	/* Final gain and ouput.                        */
+	/************************************************/
+	DISCRETE_ADDER4(NODE_90, SKYDIVER_SOUND_EN, SKYDIVER_NOTE_SND, SKYDIVER_NOISE_SND, SKYDIVER_WHISTLE1_SND, SKYDIVER_WHISTLE2_SND)
+	DISCRETE_GAIN(NODE_91, NODE_90, 65534.0/(1000.0 + 383.1 + 228.5 + 228.5))
+	DISCRETE_OUTPUT(NODE_91, 100)
+DISCRETE_SOUND_END
+
 
 
 /*************************************
@@ -358,6 +531,7 @@ static MACHINE_DRIVER_START( skydiver )
 	MDRV_PALETTE_INIT(skydiver)
 	MDRV_VIDEO_START(skydiver)
 	MDRV_VIDEO_UPDATE(skydiver)
+	MDRV_SOUND_ADD_TAG("discrete", DISCRETE, skydiver_sound_interface)
 MACHINE_DRIVER_END
 
 
@@ -392,4 +566,4 @@ ROM_END
  *
  *************************************/
 
-GAMEX( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver", GAME_NO_SOUND )
+GAME( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver" )

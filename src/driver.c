@@ -2592,6 +2592,7 @@ V-V                           TP-027
 	/* Sega SG1000 based games */
 	DRIVER( chboxing )
 	DRIVER( chwrestl )
+  DRIVER( dokidoki )
 
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
@@ -3086,6 +3087,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( czeroize ) /* ?? (c) 198? */
 
 	/* other Data East games */
+  DRIVER( madalien )	 /* (c) 1980 */ 
 	DRIVER( astrof )	/* (c) [1980?] */
 	DRIVER( astrof2 )	/* (c) [1980?] */
 	DRIVER( astrof3 )	/* (c) [1980?] */

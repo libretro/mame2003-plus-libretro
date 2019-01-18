@@ -85,7 +85,6 @@ static const char *mame_default_text[] =
 	"Game Information",
 	"Game History",
 	"Reset Game",
-  "Generate Alternative XML DAT",
   "Generate XML DAT",  
 	"Return to Game",
 	"Cheat",

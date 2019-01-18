@@ -35,6 +35,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Dogou Souken (joystick hack bootleg)
+* Doki Doki Penguin Land
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
 * DownTown (joystick hack)
@@ -68,6 +69,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Knuckle Bash 2
 * Led Storm Rally 2011
 * Lethal Enforcers
+* Mad Alien
 * Magical Drop
 * Magical Drop Plus 1
 * Metal Slug 4
@@ -239,6 +241,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
+* Sky Diver
 * Super Spacefortress Macross
 * The Karate Tournament
 * Thunder Dragon
@@ -355,3 +358,5 @@ bosconian, dig dug, dig dug II, galaga, galaga 3, gaplus, grobda, libble rabble,
 pole position, pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
 * Fixed Hard Head 2 [arcadez]
+* Fixed incorrect palette colours and clock frequencies in Mr Do [cataylox]
+* Added sound support for Sky Diver [grant2258]
