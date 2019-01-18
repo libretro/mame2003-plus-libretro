@@ -12,7 +12,8 @@
 /*  - "The Amazing Maze Game" on title screen, but manual, flyer,           */
 /*    cabinet side art all call it just "Amazing Maze"                      */
 /*                                                                          */
-/*  - Desert Gun is also known as Road Runner                               */
+/*  - Desert Gun was originally named Road Runner. The name was changed     */
+/*    when Midway merged with Bally who had a game by the same title        */
 /*                                                                          */
 /*  - Space Invaders Deluxe still says Space Invaders Part II,              */
 /*    because according to KLOV, Midway was only allowed to make minor      */

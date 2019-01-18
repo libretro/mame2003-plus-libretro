@@ -573,9 +573,17 @@ static struct GfxDecodeInfo soccer_gfxdecodeinfo[] =
 /* atarifb Sound System Analog emulation                                */
 /************************************************************************/
 
-int atarifbWhistl555 = DISC_555_ASTBL_CAP | DISC_555_ASTBL_AC;
+const struct discrete_555_astbl_desc atarifbWhistl555 =
+{
+	DISC_555_OUT_CAP | DISC_555_OUT_AC,
+	5,		// B+ voltage of 555
+	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
+	5.0 * 2.0 /3.0,	// normally 2/3 of v555
+	5.0 / 3.0	// normally 1/3 of v555
+};
 
-const struct discrete_lfsr_desc atarifb_lfsr={
+const struct discrete_lfsr_desc atarifb_lfsr =
+{
 	16,			/* Bit Length */
 	0,			/* Reset Value */
 	0,			/* Use Bit 0 as XOR input 0 */
@@ -623,7 +631,7 @@ static DISCRETE_SOUND_START(atarifb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC*/
+	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */
@@ -636,7 +644,8 @@ static DISCRETE_SOUND_START(atarifb_sound_interface)
 	/************************************************/
 	/* Whistle effect is a triggered 555 cap charge */
 	/************************************************/
-	DISCRETE_555_ASTABLE(ATARIFB_WHISTLE_SND, ATARIFB_WHISTLE_EN, 1000, 2200, 2200, 1e-7, NODE_NC, &atarifbWhistl555)
+	DISCRETE_555_ASTABLE(NODE_20, ATARIFB_WHISTLE_EN, 2200, 2200, 1e-7, NODE_NC, &atarifbWhistl555)
+	DISCRETE_MULTIPLY(ATARIFB_WHISTLE_SND, ATARIFB_WHISTLE_EN, NODE_20, 1000.0/3.3)
 
 	DISCRETE_ADDER3(NODE_90, ATARIFB_ATTRACT_EN, ATARIFB_HIT_SND, ATARIFB_WHISTLE_SND, ATARIFB_CROWD_SND)
 	DISCRETE_GAIN(NODE_91, NODE_90, 65534.0/(506.7+1000.0+760.0))
@@ -684,7 +693,7 @@ static DISCRETE_SOUND_START(abaseb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC*/
+	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */
@@ -697,7 +706,8 @@ static DISCRETE_SOUND_START(abaseb_sound_interface)
 	/************************************************/
 	/* Whistle effect is a triggered 555 cap charge */
 	/************************************************/
-	DISCRETE_555_ASTABLE(ABASEB_WHISTLE_SND, ABASEB_WHISTLE_EN, 1000, 2200, 2200, 1e-7, NODE_NC, &atarifbWhistl555)
+	DISCRETE_555_ASTABLE(NODE_20, ABASEB_WHISTLE_EN, 2200, 2200, 1e-7, NODE_NC, &atarifbWhistl555)
+	DISCRETE_MULTIPLY(ATARIFB_WHISTLE_SND, ABASEB_WHISTLE_EN, NODE_20, 1000.0/5)
 
 	DISCRETE_ADDER3(NODE_90, ABASEB_ATTRACT_EN, ABASEB_HIT_SND, ABASEB_WHISTLE_SND, ABASEB_CROWD_SND)
 	DISCRETE_GAIN(NODE_91, NODE_90, 65534.0/(506.7+1000.0+760.0))
