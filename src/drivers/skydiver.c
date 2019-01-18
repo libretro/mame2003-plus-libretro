@@ -367,14 +367,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 /* Jan 2004, Derrick Renaud                                             */
 /************************************************************************/
 
-const struct discrete_555_astbl_desc skydiverWhistl555 =
-{
-	DISC_555_OUT_SQW | DISC_555_OUT_AC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
-};
+int skydiverWhistl555 = DISC_555_ASTBL_SQW | DISC_555_ASTBL_AC;
 
 const struct discrete_lfsr_desc skydiver_lfsr={
 	16,				/* Bit Length */
@@ -489,18 +482,16 @@ static DISCRETE_SOUND_START(skydiver_sound_interface)
 	/* a 68k resistor and 22uf capacitor.           */
 	/************************************************/
 	DISCRETE_ADJUSTMENT(NODE_30, 1, 50000, 250000, 185000, DISC_LINADJ, "Whistle 1 Freq")	/* R66 */
-	DISCRETE_MULTADD(NODE_31, 1, SKYDIVER_WHISTLE1_EN, 3.05-0.33, 0.33)
+	DISCRETE_MULTADD(NODE_31, 1, SKYDIVER_WHISTLE1_EN, ((3.05-0.33)/5.0)*519.4, (0.33/5.0)*519.4)
 	DISCRETE_RCDISC2(NODE_32, SKYDIVER_WHISTLE1_EN, NODE_31, 1.0, NODE_31, 68000.0, 2.2e-5)	/* CV */
 	DISCRETE_SWITCH(NODE_33, 1, SKYDIVER_OCT1_EN, 1e-8, 1e-8 + 3.3e-9)	/* Cap C73 & C58 */
-	DISCRETE_555_ASTABLE(NODE_34, SKYDIVER_WHISTLE1_EN, 100000, NODE_30, NODE_33, NODE_32, &skydiverWhistl555)
-	DISCRETE_MULTIPLY(SKYDIVER_WHISTLE1_SND, SKYDIVER_WHISTLE1_EN, NODE_34, 228.5/3.3)
+	DISCRETE_555_ASTABLE(SKYDIVER_WHISTLE1_SND, SKYDIVER_WHISTLE1_EN, 228.5, 100000, NODE_30, NODE_33, NODE_32, &skydiverWhistl555)
 
 	DISCRETE_ADJUSTMENT(NODE_35, 1, 50000, 250000, 200000, DISC_LINADJ, "Whistle 2 Freq")	/* R65 */
-	DISCRETE_MULTADD(NODE_36, 1, SKYDIVER_WHISTLE2_EN, 3.05-0.33, 0.33)
+	DISCRETE_MULTADD(NODE_36, 1, SKYDIVER_WHISTLE2_EN, ((3.05-0.33)/5.0)*519.4, (0.33/5.0)*519.4)
 	DISCRETE_RCDISC2(NODE_37, SKYDIVER_WHISTLE2_EN, NODE_36, 1.0, NODE_36, 68000.0, 2.2e-5)	/* CV */
 	DISCRETE_SWITCH(NODE_38, 1, SKYDIVER_OCT2_EN, 1e-8, 1e-8 + 3.3e-9)	/* Cap C72 & C59 */
-	DISCRETE_555_ASTABLE(NODE_39, SKYDIVER_WHISTLE2_EN, 100000, NODE_35, NODE_38, NODE_37, &skydiverWhistl555)
-	DISCRETE_MULTIPLY(SKYDIVER_WHISTLE2_SND, SKYDIVER_WHISTLE2_EN, NODE_39, 228.5/3.3)
+	DISCRETE_555_ASTABLE(SKYDIVER_WHISTLE2_SND, SKYDIVER_WHISTLE2_EN, 228.5, 100000, NODE_35, NODE_38, NODE_37, &skydiverWhistl555)
 
 	/************************************************/
 	/* Final gain and ouput.                        */
@@ -540,7 +531,6 @@ static MACHINE_DRIVER_START( skydiver )
 	MDRV_PALETTE_INIT(skydiver)
 	MDRV_VIDEO_START(skydiver)
 	MDRV_VIDEO_UPDATE(skydiver)
-	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("discrete", DISCRETE, skydiver_sound_interface)
 MACHINE_DRIVER_END
 

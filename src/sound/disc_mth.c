@@ -5,16 +5,18 @@
 /*  Written by Keith Wilkins (mame@esplexo.co.uk)                       */
 /*                                                                      */
 /*  (c) K.Wilkins 2000                                                  */
-/*  (c) D.Renaud 2003-2004                                              */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DST_TRANSFORM         - Multiple math functions                      */
 /* DST_ADDDER            - Multichannel adder                           */
-/* DST_COMP_ADDER        - Selectable parallel component circuit        */
-/* DST_DAC_R1            - R1 Ladder DAC with cap smoothing             */
-/* DST_DIVIDER           - Division function                            */
 /* DST_GAIN              - Gain Factor                                  */
+/* DST_SWITCH            - Switch implementation                        */
+/* DST_RAMP              - Ramp up/down                                 */
+/* DST_ONESHOT           - One shot pulse generator                     */
+/* DST_DIVIDER           - Division function                            */
 /* DST_LADDER            - Resistor ladder implementation               */
+/* DST_SAMPHOLD          - Sample & Hold Implementation                 */
 /* DST_LOGIC_INV         - Logic level invertor                         */
 /* DST_LOGIC_AND         - Logic AND gate 4 input                       */
 /* DST_LOGIC_NAND        - Logic NAND gate 4 input                      */
@@ -22,12 +24,6 @@
 /* DST_LOGIC_NOR         - Logic NOR gate 4 input                       */
 /* DST_LOGIC_XOR         - Logic XOR gate 2 input                       */
 /* DST_LOGIC_NXOR        - Logic NXOR gate 2 input                      */
-/* DST_MIXER             - Final Mixer Stage                            */
-/* DST_ONESHOT           - One shot pulse generator                     */
-/* DST_RAMP              - Ramp up/down                                 */
-/* DST_SAMPHOLD          - Sample & Hold Implementation                 */
-/* DST_SWITCH            - Switch implementation                        */
-/* DST_TRANSFORM         - Multiple math functions                      */
 /*                                                                      */
 /************************************************************************/
 
@@ -40,50 +36,26 @@ struct dss_ramp_context
 	int last_en;	/* Keep track of the last enable value */
 };
 
-struct dst_dac_r1_context
-{
-	double	iBias;		// current of the bias circuit
-	double	exponent;	// smoothing curve
-	double	rTotal;		// all resistors in parallel
-};
-
-struct dst_ladder_context
-{
-	int state;
-	double t;           // time
-	double step;
-	double exponent;
-	double total_resistance;
-};
-
-#define DISC_MIXER_MAX_INPS	8
-
-struct dst_mixer_context
-{
-	int	type;
-	double	rTotal;
-	struct	node_description* rNode[DISC_MIXER_MAX_INPS];	// Either pointer to input node OR NULL
-	double	exponent_rc[DISC_MIXER_MAX_INPS];	// For high pass filtering cause by cIn
-	double	vCap[DISC_MIXER_MAX_INPS];		// cap voltage of each input
-	double	exponent_cF;				// Low pass on mixed inputs
-	double	exponent_cAmp;				// Final high pass caused by out cap and amp input impedance
-	double	vCapF;					// cap voltage of cF
-	double	vCapAmp;				// cap voltage of cAmp
-	double	gain;					// used for DISC_MIXER_IS_OP_AMP_WITH_RI
-};
-
 struct dst_oneshot_context
 {
 	double countdown;
 	double stepsize;
 	int state;
-	int lastTrig;
+};
+
+struct dst_ladder_context
+{
+        int state;
+        double t;           /* time*/
+        double step;
+		double exponent;
+		double total_resistance;
 };
 
 struct dst_samphold_context
 {
-	double lastinput;
-	int clocktype;
+		double lastinput;
+		int clocktype;
 };
 
 /************************************************************************/
@@ -95,6 +67,7 @@ struct dst_samphold_context
 /* input[2]    - Channel1 input value                                   */
 /* input[3]    - Channel2 input value                                   */
 /* input[4]    - Channel3 input value                                   */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_adder_step(struct node_description *node)
@@ -129,7 +102,7 @@ int dst_adder_step(struct node_description *node)
 double dst_transform_pop(double *stack,int *pointer)
 {
 	double value;
-	//decrement THEN read
+	/*decrement THEN read*/
 	if(*pointer>0) (*pointer)--;
 	value=stack[*pointer];
 	return value;
@@ -137,7 +110,7 @@ double dst_transform_pop(double *stack,int *pointer)
 
 double dst_transform_push(double *stack,int *pointer,double value)
 {
-	//Store THEN increment
+	/*Strore THEN increment*/
 	if(*pointer<MAX_TRANS_STACK) stack[(*pointer)++]=value;
 	return value;
 }
@@ -161,73 +134,37 @@ int dst_transform_step(struct node_description *node)
 			switch (*fPTR++)
 			{
 				case '*':
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1*number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
 				case '/':
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1/number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
 				case '+':
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1+number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
 				case '-':
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1-number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case 'i':	// * -1
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=-number1;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '!':	// Logical NOT of Last Value
+				case '!':
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=!number1;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '=':	// Logical =
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+				case 'i':
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=(int)number1 == (int)number2;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '>':	// Logical >
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=number1 > number2;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '<':	// Logical <
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=number1 < number2;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '&':	// Bitwise AND
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=(int)number1 & (int)number2;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '|':	// Bitwise OR
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=(int)number1 | (int)number2;
-					dst_transform_push(trans_stack,&trans_stack_ptr,result);
-					break;
-				case '^':	// Bitwise XOR
-					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=(int)number1 ^ (int)number2;
+					result=-number1;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
 				case '0':
@@ -269,6 +206,8 @@ int dst_transform_step(struct node_description *node)
 /* input[1]    - Channel0 input value                                   */
 /* input[2]    - Gain value                                             */
 /* input[3]    - Final addition offset                                  */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_gain_step(struct node_description *node)
@@ -292,6 +231,9 @@ int dst_gain_step(struct node_description *node)
 /* input[0]    - Enable input value                                     */
 /* input[1]    - Channel0 input value                                   */
 /* input[2]    - Divisor                                                */
+/* input[3]    - NOT USED                                               */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_divide_step(struct node_description *node)
@@ -300,7 +242,7 @@ int dst_divide_step(struct node_description *node)
 	{
 		if(node->input[2]==0)
 		{
-			node->output=DBL_MAX;	/* Max out but don't break */
+			node->output=DBL_MAX;	/* Max out but dont break */
 			discrete_log("dst_divider_step() - Divide by Zero attempted.");
 		}
 		else
@@ -317,12 +259,14 @@ int dst_divide_step(struct node_description *node)
 
 /************************************************************************/
 /*                                                                      */
-/* DSS_SWITCH - Programmable 2 pole switch module with enable function  */
+/* DSS_SWITCH - Programmable 2 pole switchmodule with enable function   */
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - switch position                                        */
 /* input[2]    - input[0]                                               */
 /* input[3]    - input[1]                                               */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_switch_step(struct node_description *node)
@@ -376,7 +320,7 @@ int dst_ramp_step(struct node_description *node)
 	else
 	{
 		context->last_en = 0;
-		// Disabled so clamp to output
+		/* Disabled so clamp to output*/
 		node->output=node->input[5];
 	}
 	return 0;
@@ -404,11 +348,11 @@ int dst_ramp_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialize memory */
+		/* Initialise memory */
 		memset(node->context,0,sizeof(struct dss_ramp_context));
 	}
 
-	/* Initialize the object */
+	/* Initialise the object */
 	dst_ramp_reset(node);
 	return 0;
 }
@@ -419,72 +363,57 @@ int dst_ramp_init(struct node_description *node)
 /*                                                                      */
 /* dst_oneshot - Usage of node_description values for one shot pulse    */
 /*                                                                      */
-/* input[0]    - Reset value                                            */
+/* input[0]    - Enable input value                                     */
 /* input[1]    - Trigger value                                          */
-/* input[2]    - Amplitude value                                        */
-/* input[3]    - Width of oneshot pulse                                 */
-/* input[4]    - type R/F edge, Retriggerable?                          */
+/* input[2]    - Reset value                                            */
+/* input[3]    - Amplitude value                                        */
+/* input[4]    - Width of oneshot pulse                                 */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
-/* Complete re-write Jan 2004, D Renaud.                                */
 /************************************************************************/
 int dst_oneshot_step(struct node_description *node)
 {
 	struct dst_oneshot_context *context;
 	context=(struct dst_oneshot_context*)node->context;
-	int trigger = node->input[1] && node->input[1];
 
-	/* If the state is triggered we will need to countdown later */
-	int doCount = context->state;
-
-	if (node->input[0])
+	/* Check state */
+	switch(context->state)
 	{
-		/* Hold in Reset */
-		node->output = 0;
-		context->state = 0;
-	}
-	else
-	{
-		/* are we at an edge? */
-		if (trigger != context->lastTrig)
-		{
-			/* There has been a trigger edge */
-			context->lastTrig = trigger;
-
-			/* Is it the proper edge trigger */
-			if (((int)(node->input[4]) & DISC_ONESHOT_REDGE) ? trigger : !trigger)
+		case 0:		/* Waiting for trigger */
+			if(node->input[1])
 			{
-				if (!context->state)
+				context->state=1;
+				context->countdown=node->input[4];
+				node->output=node->input[3];
+			}
+		 	node->output=0;
+			break;
+
+		case 1:		/* Triggered */
+			node->output=node->input[3];
+			if(node->input[1] && node->input[2])
+			{
+				/* Dont start the countdown if we're still triggering*/
+				/* and we've got a reset signal as well*/
+			}
+			else
+			{
+				context->countdown-=context->stepsize;
+				if(context->countdown<0.0)
 				{
-					/* We have first trigger */
-					context->state = 1;
-					node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? 0 : node->input[2];
-					context->countdown = node->input[3];
-				}
-				else
-				{
-					/* See if we retrigger */
-					if ((int)(node->input[4]) & DISC_ONESHOT_RETRIG)
-					{
-						/* Retrigger */
-						context->countdown = node->input[3];
-						doCount = 0;
-					}
+					context->countdown=0;
+					node->output=0;
+					context->state=2;
 				}
 			}
-		}
+			break;
 
-		if (doCount)
-		{
-			context->countdown -= context->stepsize;
-			if(context->countdown <= 0.0)
-			{
-				node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? node->input[2] : 0;
-				context->countdown = 0;
-				context->state = 0;
-			}
-		}
+		case 2:		/* Waiting for reset */
+		default:
+			if(node->input[2]) context->state=0;
+		 	node->output=0;
+			break;
 	}
-
 	return 0;
 }
 
@@ -492,13 +421,10 @@ int dst_oneshot_step(struct node_description *node)
 int dst_oneshot_reset(struct node_description *node)
 {
 	struct dst_oneshot_context *context=(struct dst_oneshot_context*)node->context;
-	context->countdown = 0;
-	context->stepsize = 1.0 / Machine->sample_rate;
-	context->state = 0;
- 	/* We will make the initial last trigger equal to the current trigger.
- 	 * This is so an output is not triggered on startup. */
- 	context->lastTrig = node->input[1] && node->input[1]; 
- 	node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? node->input[2] : 0;
+	context->countdown=0;
+	context->stepsize=1.0/Machine->sample_rate;
+	context->state=0;
+ 	node->output=0;
  	return 0;
 }
 
@@ -514,11 +440,11 @@ int dst_oneshot_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialize memory */
+		/* Initialise memory */
 		memset(node->context,0,sizeof(struct dst_oneshot_context));
 	}
 
-	/* Initialize the object */
+	/* Initialise the object */
 	dst_oneshot_reset(node);
 
 	return 0;
@@ -557,141 +483,6 @@ int dst_clamp_step(struct node_description *node)
 
 /************************************************************************/
 /*                                                                      */
-/* DST_DAC_R1 - R1 Ladder DAC with cap smoothing                        */
-/*                                                                      */
-/* input[0]    - Enable                                                 */
-/* input[1]    - Binary Data Input                                      */
-/* input[2]    - Data On Voltage (3.4 for TTL)                          */
-/*                                                                      */
-/* also passed discrete_dac_r1_ladder structure                         */
-/*                                                                      */
-/* Mar 2004, D Renaud.                                                                    */
-/************************************************************************/
-#define DSTDACR1_ENABLE		node->input[0]
-#define DSTDACR1_DATA		(int)node->input[1]
-#define DSTDACR1_VON		node->input[2]
-
-int dst_dac_r1_step(struct node_description *node)
-{
-	struct dst_dac_r1_context *context=(struct dst_dac_r1_context*)node->context;
-	struct discrete_dac_r1_ladder *info = (struct discrete_dac_r1_ladder*)node->custom;
-
-	int	bit;
-	double	v;
-	double	i;
-
-	i = context->iBias;
-
-	if (DSTDACR1_ENABLE)
-	{
-		for (bit=0; bit < info->ladderLength; bit++)
-		{
-			/* Add up currents of ON circuits per Millman. */
-			/* Off, being 0V and having no current, can be ignored. */
-			if (DSTDACR1_DATA & (1 << bit))
-				i += DSTDACR1_VON / info->r[bit];
-		}
-
-		v = i * context->rTotal;
-
-		/* Filter if needed, else just output voltage */
-		node->output = info->cFilter ? node->output + ((v - node->output) * context->exponent) : v;
-	}
-	else
-	{
-		/*
-		 * If module is disabled we will just leave the voltage where it was.
-		 * We may want to set it to 0 in the future, but we will probably never
-		 * disable this module.
-		 */
-	}
-
-	return 0;
-}
-
-int dst_dac_r1_reset(struct node_description *node)
-{
-	struct dst_dac_r1_context *context=(struct dst_dac_r1_context*)node->context;
-	struct discrete_dac_r1_ladder *info = (struct discrete_dac_r1_ladder*)node->custom;
-
-	int	bit;
-
-	/* Calculate the Millman current of the bias circuit */
-	if (info->rBias)
-		context->iBias = info->vBias / info->rBias;
-	else
-		context->iBias = 0;
-
-	/*
-	 * We will do a small amount of error checking.
-	 * But if you are an idiot and pass a bad ladder table
-	 * then you deserve a crash.
-	 */
-	if (info->ladderLength < 2)
-	{
-		/* You need at least 2 resistors for a ladder */
-		info->ladderLength = 2;
-		discrete_log("dst_dac_r1_reset - Ladder length too small");
-	}
-	if (info->ladderLength > DISC_LADDER_MAXRES )
-	{
-		info->ladderLength = DISC_LADDER_MAXRES;
-		discrete_log("dst_dac_r1_reset - Ladder length exceeds DISC_LADDER_MAXRES");
-	}
-
-	/*
-	 * Calculate the total of all resistors in parallel.
-	 * This is the combined resistance of the voltage sources.
-	 * This is used for the charging curve.
-	 */
-	context->rTotal = 0;
-	for(bit=0; bit < info->ladderLength; bit++)
-	{
-		if (!info->r[bit])
-		{
-			info->r[bit] = 1000; // Put a default resistor if table bad.
-			discrete_log("dst_dac_r1_reset - Resistor can't equal 0");
-		}
-		context->rTotal += 1.0 / info->r[bit];
-	}
-	if (info->rBias) context->rTotal += 1.0 / info->rBias;
-	if (info->rGnd) context->rTotal += 1.0 / info->rGnd;
-	context->rTotal = 1.0 / context->rTotal;
-
-	node->output = 0;
-
-	if (info->cFilter)
-	{
-		/* Setup filter constants */
-		context->exponent = -1.0 / (context->rTotal * info->cFilter  * Machine->sample_rate);
-		context->exponent = 1.0 - exp(context->exponent);
-	}
-
-	return 0;
-}
-
-int dst_dac_r1_init(struct node_description *node)
-{
-	/* Allocate memory for the context array and the node execution order array */
-	if((node->context=malloc(sizeof(struct dst_dac_r1_context)))==NULL)
-	{
-		discrete_log("dst_dac_r1_init() - Failed to allocate local context memory.");
-		return 1;
-	}
-	else
-	{
-		/* Initialize memory */
-		memset(node->context,0,sizeof(struct dst_dac_r1_context));
-	}
-
-	/* Initialize the object */
-	dst_dac_r1_reset(node);
-	return 0;
-}
-
-
-/************************************************************************/
-/*                                                                      */
 /* DST_LADDER - Resistor ladder emulation complete with capacitor       */
 /*                                                                      */
 /* input[0]    - Enable                                                 */
@@ -699,6 +490,7 @@ int dst_dac_r1_init(struct node_description *node)
 /* input[2]    - binary bit selector                                    */
 /* input[3]    - gain                                                   */
 /* input[4]    - offset                                                 */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_ladder_step(struct node_description *node)
@@ -776,11 +568,11 @@ int dst_ladder_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialize memory */
+		/* Initialise memory */
 		memset(node->context,0,sizeof(struct dst_ladder_context));
 	}
 
-	/* Initialize the object */
+	/* Initialise the object */
 	dst_ladder_reset(node);
 	return 0;
 }
@@ -793,6 +585,8 @@ int dst_ladder_init(struct node_description *node)
 /* input[1]    - input[0] value                                         */
 /* input[2]    - clock node                                             */
 /* input[3]    - clock type                                             */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_samphold_step(struct node_description *node)
@@ -857,11 +651,11 @@ int dst_samphold_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialize memory */
+		/* Initialise memory */
 		memset(node->context,0,sizeof(struct dst_samphold_context));
 	}
 
-	/* Initialize the object */
+	/* Initialise the object */
 	dst_samphold_reset(node);
 	return 0;
 }
@@ -872,6 +666,10 @@ int dst_samphold_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Enable                                                 */
 /* input[1]    - input[0] value                                         */
+/* input[2]    - NOT USED                                               */
+/* input[3]    - NOT USED                                               */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_inv_step(struct node_description *node)
@@ -896,6 +694,7 @@ int dst_logic_inv_step(struct node_description *node)
 /* input[2]    - input[1] value                                         */
 /* input[3]    - input[2] value                                         */
 /* input[4]    - input[3] value                                         */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_and_step(struct node_description *node)
@@ -920,6 +719,7 @@ int dst_logic_and_step(struct node_description *node)
 /* input[2]    - input[1] value                                         */
 /* input[3]    - input[2] value                                         */
 /* input[4]    - input[3] value                                         */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_nand_step(struct node_description *node)
@@ -944,6 +744,7 @@ int dst_logic_nand_step(struct node_description *node)
 /* input[2]    - input[1] value                                         */
 /* input[3]    - input[2] value                                         */
 /* input[4]    - input[3] value                                         */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_or_step(struct node_description *node)
@@ -968,6 +769,7 @@ int dst_logic_or_step(struct node_description *node)
 /* input[2]    - input[1] value                                         */
 /* input[3]    - input[2] value                                         */
 /* input[4]    - input[3] value                                         */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_nor_step(struct node_description *node)
@@ -990,6 +792,9 @@ int dst_logic_nor_step(struct node_description *node)
 /* input[0]    - Enable                                                 */
 /* input[1]    - input[0] value                                         */
 /* input[2]    - input[1] value                                         */
+/* input[3]    - NOT USED                                               */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_xor_step(struct node_description *node)
@@ -1012,6 +817,9 @@ int dst_logic_xor_step(struct node_description *node)
 /* input[0]    - Enable                                                 */
 /* input[1]    - input[0] value                                         */
 /* input[2]    - input[1] value                                         */
+/* input[3]    - NOT USED                                               */
+/* input[4]    - NOT USED                                               */
+/* input[5]    - NOT USED                                               */
 /*                                                                      */
 /************************************************************************/
 int dst_logic_nxor_step(struct node_description *node)
@@ -1024,322 +832,5 @@ int dst_logic_nxor_step(struct node_description *node)
 	{
 		node->output=0.0;
 	}
-	return 0;
-}
-
-
-/************************************************************************/
-/*                                                                      */
-/* DST_COMP_ADDER  - Selectable parallel component adder                */
-/*                                                                      */
-/* input[0]    - Enable input value                                     */
-/* input[1]    - Bit Select                                             */
-/*                                                                      */
-/* Also passed discrete_comp_adder_table structure                      */
-/*                                                                      */
-/* Mar 2004, D Renaud.                                                  */
-/************************************************************************/
-int dst_comp_adder_step(struct node_description *node)
-{
-	struct	discrete_comp_adder_table *info;
-
-	info = (struct discrete_comp_adder_table*)node->custom;
-	int bit;
-
-	if(node->input[0])
-	{
-		switch (info->type)
-		{
-			case DISC_COMP_P_CAPACITOR:
-				node->output = info->cDefault;
-				for(bit=0; bit < info->length; bit++)
-				{
-					if ((int)node->input[1] & (1 << bit)) node->output += info->c[bit];
-				}
-				break;
-			case DISC_COMP_P_RESISTOR:
-				node->output = info->cDefault ? 1.0 / info->cDefault : 0;
-				for(bit=0; bit < info->length; bit++)
-				{
-					if ((int)node->input[1] & (1 << bit)) node->output += 1.0 / info->c[bit];
-				}
-				if (node->output != 0) node->output = 1.0 / node->output;
-				break;
-		}
-	}
-	else
-	{
-		node->output = 0;
-	}
-	return 0;
-}
-
-
-/************************************************************************/
-/*                                                                      */
-/* DST_MIXER  - Mixer/Gain stage                                        */
-/*                                                                      */
-/* input[0]    - Enable input value                                     */
-/* input[1]    - Input 1                                                */
-/* input[2]    - Input 2                                                */
-/* input[3]    - Input 3                                                */
-/* input[4]    - Input 4                                                */
-/* input[5]    - Input 5                                                */
-/* input[6]    - Input 6                                                */
-/* input[7]    - Input 7                                                */
-/* input[8]    - Input 8                                                */
-/*                                                                      */
-/* Also passed discrete_mixer_info structure                            */
-/*                                                                      */
-/* Mar 2004, D Renaud.                                                  */
-/************************************************************************/
-/*
- * The input resistors can be a combination of static values and nodes.
- * If a node is used then its value is in series with the static value.
- * Also if a node is used and its value is 0, then that means the
- * input is disconnected from the circuit.
- *
- * There are 3 basic types of mixers, defined by the 2 types.  The
- * op amp mixer is further defined by the prescence of rI.  This is a
- * brief explaination.
- *
- * DISC_MIXER_IS_RESISTOR
- * The inputs are high pass filtered if needed, using (rX || rF) * cX.
- * Then Millman is used for the voltages.
- * r = (1/rF + 1/r1 + 1/r2...)
- * i = (v1/r1 + v2/r2...)
- * v = i * r
- *
- * DISC_MIXER_IS_OP_AMP - no rI
- * This is just a summing circuit.
- * The inputs are high pass filtered if needed, using rX * cX.
- * Then a modified Millman is used for the voltages.
- * i = ((vRef - v1)/r1 + (vRef - v2)/r2...)
- * v = i * rF
- *
- * DISC_MIXER_IS_OP_AMP_WITH_RI
- * The inputs are high pass filtered if needed, using (rX + rI) * cX.
- * Then Millman is used for the voltages including vRef/rI.
- * r = (1/rI + 1/r1 + 1/r2...)
- * i = (vRef/rI + v1/r1 + v2/r2...)
- * The voltage is then modified by an inverting amp formula.
- * v = vRef + (rF/rI) * (vRef - (i * r))
- */
-#define DSTMIXER_ENABLE		node->input[0]
-
-int dst_mixer_step(struct node_description *node)
-{
-	struct dst_mixer_context *context = (struct dst_mixer_context*)node->context;
-	struct discrete_mixer_desc *info = (struct discrete_mixer_desc*)node->custom;
-
-	double	v, vTemp, rTotal, rTemp, rTemp2 = 0;
-	double	i = 0;		// total current of inputs
-	int	bit, connected;
-
-	if (DSTMIXER_ENABLE)
-	{
-		rTotal = context->rTotal;
-
-		for(bit=0; bit < info->mixerLength; bit++)
-		{
-			rTemp = info->r[bit];
-			connected = 1;
-			vTemp = node->input[bit + 1];
-
-			if (info->rNode[bit])
-			{
-				/* a node has the posibility of being disconnected from the circuit. */
-				if ((context->rNode[bit])->output == 0)
-					connected = 0;
-				else
-				{
-					rTemp += (context->rNode[bit])->output;
-					rTotal += 1.0 / rTemp;
-					if (info->c[bit] != 0)
-					{
-						switch (context->type & DISC_MIXER_IS_MASK)
-						{
-							case DISC_MIXER_IS_RESISTOR:
-								rTemp2 = 1.0 / ((1.0 / rTemp) + (1.0 / info->rF));
-								break;
-							case DISC_MIXER_IS_OP_AMP:
-								rTemp2 = rTemp;
-								break;
-							case DISC_MIXER_IS_OP_AMP_WITH_RI:
-								rTemp2 = rTemp + info->rI;
-								break;
-						}
-						/* Re-calculate exponent if resistor is a node */
-						context->exponent_rc[bit] = -1.0 / (rTemp2 * info->c[bit]  * Machine->sample_rate);
-						context->exponent_rc[bit] = 1.0 - exp(context->exponent_rc[bit]);
-					}
-				}
-			}
-
-			if (connected)
-			{
-				if (info->c[bit] != 0)
-				{
-					/* do input high pass filtering if needed. */
-					context->vCap[bit] += (vTemp - info->vRef - context->vCap[bit]) * context->exponent_rc[bit];
-					vTemp -= context->vCap[bit];
-				}
-				i += (((context->type & DISC_MIXER_IS_MASK) == DISC_MIXER_IS_OP_AMP) ? info->vRef - vTemp : vTemp) / rTemp;
-			}
-		}
-
-		if ((context->type & DISC_MIXER_IS_MASK) == DISC_MIXER_IS_OP_AMP_WITH_RI) i += info->vRef / info->rI;
-		rTotal = 1.0 / rTotal;
-
-		/* If resistor network or has rI then Millman is used.
-		 * If op-amp then summing formula is used. */
-		v = i * (((context->type & DISC_MIXER_IS_MASK) == DISC_MIXER_IS_OP_AMP) ? info->rF : rTotal);
-
-		if ((context->type & DISC_MIXER_IS_MASK) == DISC_MIXER_IS_OP_AMP_WITH_RI)
-			v = info->vRef + (context->gain * (info->vRef - v));
-
-		/* Do the low pass filtering for cF */
-		if (info->cF != 0)
-		{
-			if (context->type & DISC_MIXER_HAS_R_NODE)
-			{
-				/* Re-calculate exponent if resistor nodes are used */
-				context->exponent_cF = -1.0 / (rTotal * info->cF  * Machine->sample_rate);
-				context->exponent_cF = 1.0 - exp(context->exponent_cF);
-			}
-			context->vCapF += (v -info->vRef - context->vCapF) * context->exponent_cF;
-			v = context->vCapF;
-		}
-
-		/* Do the high pass filtering for cAmp */
-		if (info->cAmp != 0)
-		{
-			context->vCapAmp += (v - context->vCapAmp) * context->exponent_cAmp;
-			v -= context->vCapAmp;
-		}
-		node->output = v * info->gain;
-	}
-	else
-	{
-		node->output = 0;
-	}
-
-	return 0;
-}
-
-int dst_mixer_reset(struct node_description *node)
-{
-	struct dst_mixer_context *context = (struct dst_mixer_context*)node->context;
-	struct discrete_mixer_desc *info = (struct discrete_mixer_desc*)node->custom;
-
-	int	bit;
-	double	rTemp = 0;
-
-	/*
-	 * THERE IS NO ERROR CHECKING!!!!!!!!!
-	 * If you are an idiot and pass a bad ladder table
-	 * then you deserve a crash.
-	 */
-
-	context->type = ((info->type == DISC_MIXER_IS_OP_AMP) && info->rI) ? DISC_MIXER_IS_OP_AMP_WITH_RI : info->type;
-
-	/*
-	 * Calculate the total of all resistors in parallel.
-	 * This is the combined resistance of the voltage sources.
-	 * Also calculate the exponents while we are here.
-	 */
-	context->rTotal = 0;
-	for(bit=0; bit < info->mixerLength; bit++)
-	{
-		if (info->rNode[bit])
-		{
-			context->type = context->type | DISC_MIXER_HAS_R_NODE;
-			context->rNode[bit] = discrete_find_node(info->rNode[bit]);	// get node pointers
-		}
-		else
-			context->rNode[bit] = NULL;
-
-		if ((info->r[bit] != 0) && !info->rNode[bit] )
-		{
-			context->rTotal += 1.0 / info->r[bit];
-		}
-
-		context->vCap[bit] = 0;
-		context->exponent_rc[bit] = 0;
-		if ((info->c[bit] != 0)  && !info->rNode[bit])
-		{
-			switch (context->type)
-			{
-				case DISC_MIXER_IS_RESISTOR:
-					rTemp = 1.0 / ((1.0 / info->r[bit]) + (1.0 / info->rF));
-					break;
-				case DISC_MIXER_IS_OP_AMP:
-					rTemp = info->r[bit];
-					break;
-				case DISC_MIXER_IS_OP_AMP_WITH_RI:
-					rTemp = info->r[bit] + info->rI;
-					break;
-			}
-			/* Setup filter constants */
-			context->exponent_rc[bit] = -1.0 / (rTemp * info->c[bit]  * Machine->sample_rate);
-			context->exponent_rc[bit] = 1.0 - exp(context->exponent_rc[bit]);
-		}
-	}
-
-	if (info->rF == 0)
-	{
-		/* You must have an rF */
-		info->rF = 1000;
-		discrete_log("dst_mixer_reset - rF can't equal 0");
-	}
-	if (info->type == DISC_MIXER_IS_RESISTOR) context->rTotal += 1.0 / info->rF;
-	if (context->type == DISC_MIXER_IS_OP_AMP_WITH_RI) context->rTotal += 1.0 / info->rI;
-
-	context->vCapF = 0;
-	context->exponent_cF = 0;
-	if (info->cF != 0)
-	{
-		/* Setup filter constants */
-		context->exponent_cF = -1.0 / (((info->type == DISC_MIXER_IS_OP_AMP) ? info->rF : (1.0 / context->rTotal))* info->cF  * Machine->sample_rate);
-		context->exponent_cF = 1.0 - exp(context->exponent_cF);
-	}
-
-	context->vCapAmp = 0;
-	context->exponent_cAmp = 0;
-	if (info->cAmp != 0)
-	{
-		/* Setup filter constants */
-		/* We will use 100000 ohms as an average final stage impedance. */
-		/* Your amp/speaker system will have more effect on incorrect filtering then any value used here. */
-		context->exponent_cAmp = -1.0 / (100000 * info->cAmp  * Machine->sample_rate);
-		context->exponent_cAmp = 1.0 - exp(context->exponent_cAmp);
-	}
-
-	if ((context->type & DISC_MIXER_IS_MASK) == DISC_MIXER_IS_OP_AMP_WITH_RI) context->gain = info->rF / info->rI;
-
-	node->output = 0;
-
-	return 0;
-}
-
-int dst_mixer_init(struct node_description *node)
-{
-	discrete_log("dst_mixer_init() - Creating node %d.",node->node-NODE_00);
-
-	/* Allocate memory for the context array and the node execution order array */
-	if((node->context=malloc(sizeof(struct dst_mixer_context)))==NULL)
-	{
-		discrete_log("dst_mixer_init() - Failed to allocate local context memory.");
-		return 1;
-	}
-	else
-	{
-		/* Initialize memory */
-		memset(node->context,0,sizeof(struct dst_mixer_context));
-	}
-
-	/* Initialize the object */
-	dst_mixer_reset(node);
-
 	return 0;
 }

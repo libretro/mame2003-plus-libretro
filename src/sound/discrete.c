@@ -74,9 +74,9 @@ static int discrete_stream=0;
 static int discrete_stereo=0;
 
 /* Uncomment this line to log discrete sound output to a file */
-//#define DISCRETE_WAVELOG
+/*#define DISCRETE_WAVELOG*/
 /* Uncomment this line to log discrete sound debug log information to a file */
-//#define DISCRETE_DEBUGLOG
+/*#define DISCRETE_DEBUGLOG*/
 
 #ifdef DISCRETE_WAVELOG
 #include "wavwrite.h"
@@ -136,16 +136,12 @@ struct discrete_module module_list[]=
 	{ DSS_ADJUSTMENT  ,"DSS_ADJUSTMENT"  ,dss_adjustment_init  ,dss_default_kill     ,dss_adjustment_reset  ,dss_adjustment_step  },
 	{ DSS_SQUAREWAVE  ,"DSS_SQUAREWAVE"  ,dss_squarewave_init  ,dss_default_kill     ,dss_squarewave_reset  ,dss_squarewave_step  },
 	{ DSS_SQUAREWFIX  ,"DSS_SQUAREWFIX"  ,dss_squarewfix_init  ,dss_default_kill     ,dss_squarewfix_reset  ,dss_squarewfix_step  },
-	{ DSS_SQUAREWAVE2 ,"DSS_SQUAREWAVE2" ,dss_squarewave2_init ,dss_default_kill     ,dss_squarewave2_reset ,dss_squarewave2_step },
+	{ DSS_SQUAREWAVE2 ,"DSS_SQUAREWAVE2" ,dss_squarewave2_init ,dss_default_kill     ,dss_squarewave2_reset ,dss_squarewave2_step  },
 	{ DSS_SINEWAVE    ,"DSS_SINEWAVE"    ,dss_sinewave_init    ,dss_default_kill     ,dss_sinewave_reset    ,dss_sinewave_step    },
 	{ DSS_NOISE       ,"DSS_NOISE"       ,dss_noise_init       ,dss_default_kill     ,dss_noise_reset       ,dss_noise_step       },
 	{ DSS_LFSR_NOISE  ,"DSS_LFSR_NOISE"  ,dss_lfsr_init        ,dss_default_kill     ,dss_lfsr_reset        ,dss_lfsr_step        },
 	{ DSS_TRIANGLEWAVE,"DSS_TRIANGLEWAVE",dss_trianglewave_init,dss_default_kill     ,dss_trianglewave_reset,dss_trianglewave_step},
 	{ DSS_SAWTOOTHWAVE,"DSS_SAWTOOTHWAVE",dss_sawtoothwave_init,dss_default_kill     ,dss_sawtoothwave_reset,dss_sawtoothwave_step},
-	{ DSS_COUNTER     ,"DSS_COUNTER"     ,dss_counter_init     ,dss_default_kill     ,dss_counter_reset     ,dss_counter_step     },
-	{ DSS_COUNTER_FIX ,"DSS_COUNTER_FIX" ,dss_counterfix_init  ,dss_default_kill     ,dss_counterfix_reset  ,dss_counterfix_step  },
-	{ DSS_OP_AMP_OSC  ,"DSS_OP_AMP_OSC"  ,dss_op_amp_osc_init  ,dss_default_kill     ,dss_op_amp_osc_reset  ,dss_op_amp_osc_step  },
-	{ DSS_SCHMITT_OSC ,"DSS_SCHMITT_OSC" ,dss_schmitt_osc_init ,dss_default_kill     ,dss_schmitt_osc_reset ,dss_schmitt_osc_step },
 	{ DSS_ADSR        ,"DSS_ADSR"        ,dss_adsrenv_init     ,dss_default_kill     ,dss_adsrenv_reset     ,dss_adsrenv_step     },
 
 	{ DST_TRANSFORM   ,"DST_TRANSFORM"   ,NULL                 ,NULL                 ,NULL                  ,dst_transform_step   },
@@ -154,23 +150,19 @@ struct discrete_module module_list[]=
 	{ DST_ADDER       ,"DST_ADDER"       ,NULL                 ,NULL                 ,NULL                  ,dst_adder_step       },
 	{ DST_SWITCH      ,"DST_SWITCH"      ,NULL                 ,NULL                 ,NULL                  ,dst_switch_step      },
 	{ DST_RCFILTER    ,"DST_RCFILTER"    ,dst_rcfilter_init    ,NULL                 ,dst_rcfilter_reset    ,dst_rcfilter_step    },
-	{ DST_CRFILTER    ,"DST_CRFILTER"    ,dst_crfilter_init    ,NULL                 ,dst_crfilter_reset    ,dst_crfilter_step    },
 	{ DST_RCDISC      ,"DST_RCDISC"      ,dst_rcdisc_init      ,dss_default_kill     ,dst_rcdisc_reset      ,dst_rcdisc_step      },
 	{ DST_RCDISC2     ,"DST_RCDISC2"     ,dst_rcdisc2_init     ,dss_default_kill     ,dst_rcdisc2_reset     ,dst_rcdisc2_step     },
 	{ DST_RCFILTERN   ,"DST_RCFILTERN"   ,dst_rcfilterN_init   ,dss_default_kill     ,dst_filter1_reset     ,dst_filter1_step     },
-	{ DST_RCDISCN     ,"DST_RCDISCN"     ,dst_rcdiscN_init     ,dss_default_kill     ,dst_filter1_reset     ,dst_rcdiscN_step     },
-	{ DST_RCDISC2N    ,"DST_RCDISC2N"    ,dst_rcdisc2N_init    ,dss_default_kill     ,dst_rcdisc2N_reset    ,dst_rcdisc2N_step    },
+	{ DST_RCDISCN     ,"DST_RCDISCN"     ,dst_rcdiscN_init     ,dss_default_kill     ,dst_filter1_reset     ,dst_rcdiscN_step      },
+	{ DST_RCDISC2N    ,"DST_RCDISC2N"    ,dst_rcdisc2N_init    ,dss_default_kill     ,dst_rcdisc2N_reset    ,dst_rcdisc2N_step     },
 	{ DST_FILTER1     ,"DST_FILTER1"     ,dst_filter1_init     ,dss_default_kill     ,dst_filter1_reset     ,dst_filter1_step     },
 	{ DST_FILTER2     ,"DST_FILTER2"     ,dst_filter2_init     ,dss_default_kill     ,dst_filter2_reset     ,dst_filter2_step     },
-	{ DST_COMP_ADDER  ,"DST_COMP_ADDER"  ,NULL                 ,NULL                 ,NULL                  ,dst_comp_adder_step  },
-	{ DST_MIXER       ,"DST_MIXER"       ,dst_mixer_init       ,dss_default_kill     ,dst_mixer_reset       ,dst_mixer_step       },
 
 	{ DST_RAMP        ,"DST_RAMP"        ,dst_ramp_init        ,dss_default_kill     ,dst_ramp_reset        ,dst_ramp_step        },
 	{ DST_CLAMP       ,"DST_CLAMP"       ,NULL                 ,NULL                 ,NULL                  ,dst_clamp_step       },
 	{ DST_LADDER      ,"DST_LADDER"      ,dst_ladder_init      ,dss_default_kill     ,dst_ladder_reset      ,dst_ladder_step      },
 	{ DST_ONESHOT     ,"DST_ONESHOT"     ,dst_oneshot_init     ,dss_default_kill     ,dst_oneshot_reset     ,dst_oneshot_step     },
 	{ DST_SAMPHOLD    ,"DST_SAMPHOLD"    ,dst_samphold_init    ,dss_default_kill     ,dst_samphold_reset    ,dst_samphold_step    },
-	{ DST_DAC_R1      ,"DST_DAC_R1"      ,dst_dac_r1_init      ,dss_default_kill     ,dst_dac_r1_reset      ,dst_dac_r1_step      },
 
 	{ DST_LOGIC_INV   ,"DST_LOGIC_INV"   ,NULL                 ,NULL                 ,NULL                  ,dst_logic_inv_step   },
 	{ DST_LOGIC_AND   ,"DST_LOGIC_AND"   ,NULL                 ,NULL                 ,NULL                  ,dst_logic_and_step   },
@@ -181,15 +173,16 @@ struct discrete_module module_list[]=
 	{ DST_LOGIC_NXOR  ,"DST_LOGIC_NXOR"  ,NULL                 ,NULL                 ,NULL                  ,dst_logic_nxor_step  },
 
 	{ DSD_555_ASTBL   ,"DSD_555_ASTBL"   ,dsd_555_astbl_init   ,dss_default_kill     ,dsd_555_astbl_reset   ,dsd_555_astbl_step   },
-	{ DSD_555_CC      ,"DSD_555_CC"      ,dsd_555_cc_init      ,dss_default_kill     ,dsd_555_cc_reset      ,dsd_555_cc_step      },
-	{ DSD_566         ,"DSD_566"         ,dsd_566_init         ,dss_default_kill     ,dsd_566_reset         ,dsd_566_step         },
+	{ DSD_SQUAREW555  ,"DSD_SQUAREW555"  ,dsd_squarew555_init  ,dss_default_kill     ,dsd_squarew555_reset  ,dsd_squarew555_step  },
+	{ DSD_SQUAREW566  ,"DSD_SQUAREW566"  ,dsd_squarew566_init  ,dss_default_kill     ,dsd_squarew566_reset  ,dsd_squarew566_step  },
+	{ DSD_TRIANGLEW566,"DSD_TRIANGLEW566",dsd_trianglew566_init,dss_default_kill     ,dsd_trianglew566_reset,dsd_trianglew566_step},
 
 	{ DSO_OUTPUT      ,"DSO_OUTPUT"      ,dso_output_init      ,NULL                 ,NULL                  ,dso_output_step      },
 	{ DSS_NULL        ,"DSS_NULL"        ,NULL                 ,NULL                 ,NULL                  ,NULL                 }
 };
 
 
-struct node_description* discrete_find_node(int node)
+static struct node_description* find_node(int node)
 {
 	int loop;
 	for(loop=0;loop<node_count;loop++)
@@ -305,9 +298,6 @@ int discrete_sh_start (const struct MachineSound *msound)
 	struct discrete_sound_block *intf;
 	int loop=0,loop2=0,search=0,failed=0;
 
-	if (!Machine->sample_rate)
-		return 0;
-
 #ifdef DISCRETE_WAVELOG
 	wav_file = wav_open("discrete.wav", Machine->sample_rate, ((Machine->drv->sound_attributes&SOUND_SUPPORTS_STEREO) == SOUND_SUPPORTS_STEREO) ? 2: 1);
 #endif
@@ -326,12 +316,12 @@ int discrete_sh_start (const struct MachineSound *msound)
 		/* Check the node parameter is a valid node */
 		if(intf[node_count].node<NODE_START || intf[node_count].node>NODE_END)
 		{
-			logerror("discrete_sh_start() - Invalid node number on node %02d descriptor\n",node_count);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid node number on node %02d descriptor\n",node_count);
 			return 1;
 		}
 		if(intf[node_count].type>DSO_OUTPUT)
 		{
-			logerror("discrete_sh_start() - Invalid function type on node %02d descriptor\n",node_count);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid function type on node %02d descriptor\n",node_count);
 			return 1;
 		}
 
@@ -347,7 +337,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		/* Sanity check */
 		if(node_count>DISCRETE_MAX_NODES)
 		{
-			logerror("discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.",DISCRETE_MAX_NODES);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.",DISCRETE_MAX_NODES);
 			return 1;
 		}
 	}
@@ -356,7 +346,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 	/* Allocate memory for the context array and the node execution order array */
 	if((running_order=malloc(node_count*sizeof(struct node_description*)))==NULL)
 	{
-		logerror("discrete_sh_start() - Failed to allocate running order array.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Failed to allocate running order array.\n");
 		return 1;
 	}
 	else
@@ -367,7 +357,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 
 	if((node_list=malloc(node_count*sizeof(struct node_description)))==NULL)
 	{
-		logerror("discrete_sh_start() - Failed to allocate context list array.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Failed to allocate context list array.\n");
 		return 1;
 	}
 	else
@@ -397,7 +387,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 	}
 	discrete_log("discrete_sh_start() - Running order sort completed", node_count);
 
-	/* Configure the input node pointers, the discrete_find_node function wont work without the node ID setup beforehand */
+	/* Configure the input node pointers, the find_node function wont work without the node ID setup beforehand */
 	for(loop=0;loop<node_count;loop++) node_list[loop].node=intf[loop].node;
 	failed=0;
 
@@ -408,7 +398,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		{
 			if(node_list[loop].node==node_list[loop2].node && loop!=loop2)
 			{
-				logerror("discrete_sh_start - Node NODE_%02d defined more than once\n",node_list[loop].node-NODE_00);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Node NODE_%02d defined more than once\n",node_list[loop].node-NODE_00);
 				failed=1;
 			}
 		}
@@ -424,7 +414,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		for(loop2=0;loop2<intf[loop].active_inputs;loop2++)
 		{
 			node_list[loop].input[loop2]=intf[loop].initial[loop2];
-			node_list[loop].input_node[loop2]=discrete_find_node(intf[loop].input_node[loop2]);
+			node_list[loop].input_node[loop2]=find_node(intf[loop].input_node[loop2]);
 		}
 		node_list[loop].name=intf[loop].name;
 		node_list[loop].custom=intf[loop].custom;
@@ -434,7 +424,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 		{
 			if(node_list[loop].input_node[loop2]==NULL && intf[loop].input_node[loop2]>=NODE_START && intf[loop].input_node[loop2]<=NODE_END)
 			{
-				logerror("discrete_sh_start - Node NODE_%02d referenced a non existant node NODE_%02d\n",node_list[loop].node-NODE_00,intf[loop].input_node[loop2]-NODE_00);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Node NODE_%02d referenced a non existant node NODE_%02d\n",node_list[loop].node-NODE_00,intf[loop].input_node[loop2]-NODE_00);
 				failed=1;
 			}
 		}
@@ -456,7 +446,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 				if(intf[loop].type==DSS_NULL) break;
 				else
 				{
-					logerror("discrete_sh_start() - Invalid DSS/DST/DSO module type specified in interface, item %02d\n",loop+1);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Invalid DSS/DST/DSO module type specified in interface, item %02d\n",loop+1);
 					failed=1;
 					break;
 				}
@@ -465,9 +455,9 @@ int discrete_sh_start (const struct MachineSound *msound)
 		}
 	}
 	/* Setup the output node */
-	if((output_node=discrete_find_node(NODE_OP))==NULL)
+	if((output_node=find_node(NODE_OP))==NULL)
 	{
-		logerror("discrete_sh_start() - Couldn't find an output node");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start() - Couldn't find an output node");
 		failed=1;
 	}
 
@@ -496,7 +486,7 @@ int discrete_sh_start (const struct MachineSound *msound)
 
 	if(discrete_stream==-1)
 	{
-		logerror("discrete_sh_start - Stream init returned an error\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "discrete_sh_start - Stream init returned an error\n");
 		failed=1;
 	}
 
