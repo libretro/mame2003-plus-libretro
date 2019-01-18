@@ -124,6 +124,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vanvan )	/* (c) 1983 Sanritsu */
 	DRIVER( vanvank )	/* (c) 1983 Karateco (bootleg?) */
 	DRIVER( alibaba )	/* (c) 1982 Sega */
+	DRIVER( alibabab )      /* (c) 1982 Sega (bootleg) */
 	DRIVER( pengo )		/* 834-0386 (c) 1982 Sega */
 	DRIVER( pengo2 )	/* 834-0386 (c) 1982 Sega */
 	DRIVER( pengo2u )	/* 834-0386 (c) 1982 Sega */
