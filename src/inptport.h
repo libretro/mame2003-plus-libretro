@@ -244,6 +244,7 @@ enum { IPT_END=1,IPT_PORT,
 
 #define MAX_DEFSTR_LEN 20
 extern const char ipdn_defaultstrings[][MAX_DEFSTR_LEN];
+#define PORT_ADJUSTER(default,name) 
 
 /* this must match the ipdn_defaultstrings list in inptport.c */
 enum {
