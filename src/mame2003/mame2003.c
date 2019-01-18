@@ -1136,27 +1136,23 @@ void retro_run (void)
          retroJsState[17 + offset] = 0;
       }
 
-
       if ( (options.rstick_to_btns) && (options.content_flags[CONTENT_DUAL_JOYSTICK]) )	
       {
          retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
          retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
          retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
          retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-	  }
+	    }
       else
-	  {	
+	    {	
         retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : 0;
         retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : 0;
         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : 0;
-	  }
-
-
+	    }
   }
 
    mame_frame();
-
 }
 
 void retro_unload_game(void)
@@ -1409,7 +1405,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 /******************************************************************************
 
-	RetroPad Keymapping
+	RetroPad mapping
 
 ******************************************************************************/
 
@@ -2002,11 +1998,18 @@ int osd_is_key_pressed(int keycode)
   return 0;
 }
 
+
 int osd_readkey_unicode(int flush)
 {
   /* TODO*/
   return 0;
 }
+
+/******************************************************************************
+
+	Keymapping
+
+******************************************************************************/
 
 /* Unassigned keycodes*/
 /*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
