@@ -15,9 +15,14 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* For good free text books on electronic theory check out:             */
+/* http://www.ibiblio.org/obp/electricCircuits/                         */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* Unused/Unconnected input nodes should be set to NODE_NC (No Connect) */
 /*                                                                      */
-/* Each node can have upto 6 inputs from either constants or other      */
+/* Each node can have many inputs from either constants or other        */
 /* nodes within the system.                                             */
 /*                                                                      */
 /* It should be remembered that the discrete sound system emulation     */
@@ -77,15 +82,6 @@
 /* the perfect solution but saves repeatedly traversing the netlist     */
 /* until all nodes have settled.                                        */
 /*                                                                      */
-/* It will often be necessary to add gain and level shifting blocks to  */
-/* correct the signal amplitude and offset to the required level        */
-/* as all sine waves have 0 offset and swing +ve/-ve so if you want     */
-/* to use this as a frequency modulation you need to offset it so that  */
-/* it always stays positive, use the DISCRETE_ADDER & DISCRETE_GAIN     */
-/* modules to do this. You will also need to do this to scale and off-  */
-/* set your memory mapped device inputs if they are being used to set   */
-/* amplitude and frequency values.                                      */
-/*                                                                      */
 /* The best way to work out your system is generally to use a pen and   */
 /* paper to draw a logical block diagram like the one above, it helps   */
 /* to understand the system ,map the inputs and outputs and to work     */
@@ -114,6 +110,9 @@
 /* DISCRETE_SAWTOOTHWAVE(NODE,ENAB,FREQ,AMP,BIAS,GRADIENT,PHASE)        */
 /* DISCRETE_NOISE(NODE,ENAB,FREQ,AMP,BIAS)                              */
 /* DISCRETE_LFSR_NOISE(NODE,ENAB,RESET,FREQ,AMPL,FEED,BIAS,LFSRTB)      */
+/* DISCRETE_COUNTER(NODE,ENAB,RESET,CLK,BITS,DIR,INIT0,CLKTYPE)         */
+/* DISCRETE_COUNTER_FIX(NODE,ENAB,RESET,FREQ,BITS,DIR,INIT0)            */
+/* DISCRETE_SCHMITT_OSCILLATOR(NODE,ENAB,INP0,AMPL,TABLE)               */
 /* DISCRETE_ADSR_ENV(NODE,ENAB,TRIG,GAIN,ADSRDESC)                      */
 /*                                                                      */
 /* DISCRETE_INVERT(NODE,IN0)                                            */
@@ -126,11 +125,23 @@
 /* DISCRETE_DIVIDE(NODE,ENAB,IN0,IN1)                                   */
 /* DISCRETE_GAIN(NODE,IN0,GAIN)                                         */
 /* DISCRETE_ONOFF(NODE,IN0,IN1)                                         */
-/* DISCRETE_ADDER2(NODE,IN0,IN1,IN2)                                    */
-/* DISCRETE_ADDER3(NODE,IN0,IN1,IN2,IN3)                                */
+/* DISCRETE_ADDER2(NODE,IN0,IN1)                                        */
+/* DISCRETE_ADDER3(NODE,IN0,IN1,IN2)                                    */
+/* DISCRETE_ADDER4(NODE,IN0,IN1,IN2,IN3)                                */
+/* DISCRETE_COMP_ADDER(NODE,ENAB,DATA,TABLE)                            */
 /* DISCRETE_SWITCH(NODE,ENAB,SWITCH,INP0,INP1)                          */
-/* DISCRETE_ONESHOTR(NODE,ENAB,TRIG,AMP,WIDTH) - Retriggerable          */
-/* DISCRETE_ONESHOT(NODE,ENAB,TRIG,RESET,AMP,WIDTH) - Non retriggerable */
+/* DISCRETE_ONESHOT(NODE,ENAB,TRIG,AMP,WIDTH)                           */
+/* DISCRETE_ONESHOTR(NODE,ENAB,TRIG,RESET,AMP,WIDTH)                    */
+/* DISCRETE_MIXER2(NODE,ENAB,IN0,IN1,INFO)                              */
+/* DISCRETE_MIXER3(NODE,ENAB,IN0,IN1,IN2,INFO)                          */
+/* DISCRETE_MIXER4(NODE,ENAB,IN0,IN1,IN2,IN3,INFO)                      */
+/* DISCRETE_MIXER5(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,INFO)                  */
+/* DISCRETE_MIXER6(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,INFO)              */
+/* DISCRETE_MIXER7(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,INFO)          */
+/* DISCRETE_MIXER8(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,IN7,INFO)      */
+/* DISCRETE_MIXER(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,IN7,IN8,INFO)   */
+/* DISCRETE_DAC_R1(NODE,ENAB,DATA,VDATA,LADDER)                         */
+/* DISCRETE_RC_ADDER(NODE,ENAB,DATA,TABLE)                              */
 /*                                                                      */
 /* DISCRETE_RCFILTER(NODE,ENAB,IN0,RVAL,CVAL)                           */
 /* DISCRETE_RCDISC(NODE,ENAB,IN0,RVAL,CVAL)                             */
@@ -161,8 +172,9 @@
 /* DISCRETE_LOGIC_XOR(NODE,ENAB,INP0,INP1)                              */
 /* DISCRETE_LOGIC_NXOR(NODE,ENAB,INP0,INP1)                             */
 /*                                                                      */
-/* DISCRETE_NE555(NODE,RESET,TRIGR,THRSH,CTRLV,VCC)                     */
 /* DISCRETE_555_ASTABLE(NODE,RESET,AMPL,R1,R2,C,CTRLV,TYPE)             */
+/* DISCRETE_555_CC(NODE,RESET,VIN,R,C,RBIAS,RGND,RDIS,OPTIONS)          */
+/* DISCRETE_566(NODE,ENAB,VMOD,R,C,OPTIONS)                             */
 /*                                                                      */
 /* DISCRETE_OUTPUT(OPNODE)                                              */
 /* DISCRETE_OUTPUT_STEREO(OPNODEL,OPNODER)                              */
@@ -171,11 +183,11 @@
 /*                                                                      */
 /* DISCRETE_CONSTANT - Single output, fixed at compile time             */
 /*                                                                      */
-/*                         ----------                                   */
+/*                        .----------.                                  */
 /*                        |          |                                  */
-/*                        | CONSTANT |--------}   Netlist node          */
+/*                        | CONSTANT |-------->   Netlist node          */
 /*                        |          |                                  */
-/*                         ----------                                   */
+/*                        '----------'                                  */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_CONSTANT(name of node, constant value)                  */
@@ -190,19 +202,19 @@
 /*                                                                      */
 /* DISCRETE_ADJUSTMENT - Adjustable constant nodempile time             */
 /*                                                                      */
-/*                         ----------                                   */
+/*                        .----------.                                  */
 /*                        |          |                                  */
-/*                        | ADJUST.. |--------}   Netlist node          */
+/*                        | ADJUST.. |-------->   Netlist node          */
 /*                        |          |                                  */
-/*                         ----------                                   */
+/*                        '----------'                                  */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_ADJUSTMENT(name of node,                                */
-/*                         enable node or static value                  */
-/*                         static minimum value the node can take       */
-/*                         static maximum value the node can take       */
-/*                         default static value for the node            */
-/*                         log/linear scale 0=Linear !0=Logarithmic     */
+/*                         enable node or static value,                 */
+/*                         static minimum value the node can take,      */
+/*                         static maximum value the node can take,      */
+/*                         default static value for the node,           */
+/*                         log/linear scale 0=Linear !0=Logarithmic,    */
 /*                         ascii name of the node for UI)               */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -212,6 +224,9 @@
 /*  Define an adjustment slider that has a default value of 2.5 and     */
 /*  can be adjusted between 0.0 and 5.0 via the user interface.         */
 /*  Adujstment scaling is Linear.                                       */
+/*                                                                      */
+/*      DISC_LOGADJ 1.0                                                 */
+/*      DISC_LINADJ 0.0                                                 */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -224,11 +239,11 @@
 /*                        whereby the register write pulse is used as   */
 /*                        a reset to a system.                          */
 /*                                                                      */
-/*                             ----------                               */
+/*                            .----------.                              */
 /*                      -----\|          |                              */
-/*        Memory Mapped ===== | INPUT(A) |----}   Netlist node          */
+/*        Memory Mapped ===== | INPUT(A) |---->   Netlist node          */
 /*            Write     -----/|          |                              */
-/*                             ----------                               */
+/*                            '----------'                              */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
@@ -258,30 +273,30 @@
 /* DISCRETE_SQUAREWFIX   Waveform is defined by frequency and duty      */
 /*                       cycle.                                         */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    FREQUENCY  -1------}|            |                                */
+/*    FREQUENCY  -1------>|            |                                */
 /*                        |            |                                */
-/*    AMPLITUDE  -2------}| SQUAREWAVE |----}   Netlist node            */
+/*    AMPLITUDE  -2------>| SQUAREWAVE |---->   Netlist node            */
 /*                        |            |                                */
-/*    DUTY CYCLE -3------}|            |                                */
+/*    DUTY CYCLE -3------>|            |                                */
 /*                        |            |                                */
-/*    BIAS       -4------}|            |                                */
+/*    BIAS       -4------>|            |                                */
 /*                        |            |                                */
-/*    PHASE      -5------}|            |                                */
+/*    PHASE      -5------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SQUAREWAVE(name of node,                                */
-/*                         enable node or static value                  */
-/*                         frequency node or static value               */
-/*                         amplitude node or static value               */
-/*                         duty cycle node or static value              */
-/*                         dc bias value for waveform                   */
+/*                         enable node or static value,                 */
+/*                         frequency node or static value,              */
+/*                         amplitude node or static value,              */
+/*                         duty cycle node or static value,             */
+/*                         dc bias value for waveform,                  */
 /*                         starting phase value in degrees)             */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -301,35 +316,35 @@
 /*                        Waveform is defined by it's off/on time       */
 /*                        periods.                                      */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    AMPLITUDE  -1------}|            |                                */
+/*    AMPLITUDE  -1------>|            |                                */
 /*                        |            |                                */
-/*    OFF TIME   -2------}| SQUAREWAVE |----}   Netlist node            */
+/*    OFF TIME   -2------>| SQUAREWAVE |---->   Netlist node            */
 /*                        |            |                                */
-/*    ON TIME    -3------}|            |                                */
+/*    ON TIME    -3------>|            |                                */
 /*                        |            |                                */
-/*    BIAS       -4------}|            |                                */
+/*    BIAS       -4------>|            |                                */
 /*                        |            |                                */
-/*    TIME SHIFT -5------}|            |                                */
+/*    TIME SHIFT -5------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SQUAREWAVE2(name of node,                               */
-/*                          enable node or static value                 */
-/*                          frequency node or static value              */
-/*                          amplitude node or static value              */
-/*                          duty cycle node or static value             */
-/*                          dc bias value for waveform                  */
-/*                          starting phase value in degrees)            */
+/*                          enable node or static value,                */
+/*                          amplitude node or static value,             */
+/*                          off time node or static value in seconds,   */
+/*                          on time node or static value in seconds,    */
+/*                          dc bias value for waveform,                 */
+/*                          starting phase value in seconds)            */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*   DISCRETE_SQUAREWAVE2(NODE_03,NODE_01,NODE_02,0.01,0.001,100,50,0)  */
+/*   DISCRETE_SQUAREWAVE2(NODE_03,NODE_01,NODE_02,0.01,0.001,0.0,0.001) */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -338,127 +353,163 @@
 /*                       PHASE, if a node is not connected it will      */
 /*                       default to the initialised value in the macro  */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    FREQUENCY  -1------}|            |                                */
-/*                        | SINEWAVE   |----}   Netlist node            */
-/*    AMPLITUDE  -2------}|            |                                */
+/*    FREQUENCY  -1------>|            |                                */
+/*                        | SINEWAVE   |---->   Netlist node            */
+/*    AMPLITUDE  -2------>|            |                                */
 /*                        |            |                                */
-/*    BIAS       -3------}|            |                                */
+/*    BIAS       -3------>|            |                                */
 /*                        |            |                                */
-/*    PHASE      -4------}|            |                                */
+/*    PHASE      -4------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SINEWAVE  (name of node,                                */
-/*                         enable node or static value                  */
-/*                         frequency node or static value               */
-/*                         amplitude node or static value               */
-/*                         dc bias value for waveform                   */
+/*                         enable node or static value,                 */
+/*                         frequency node or static value,              */
+/*                         amplitude node or static value,              */
+/*                         dc bias value for waveform,                  */
 /*                         starting phase value in degrees)             */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_SINEWAVE(NODE_03,NODE_01,NODE_02,10000,90)              */
+/*     DISCRETE_SINEWAVE(NODE_03,NODE_01,NODE_02,10000,5000.0,90)       */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_TRIANGLEW  - Triagular waveform generator, generates        */
 /*                       equal ramp up/down at chosen frequency         */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    FREQUENCY  -1------}|  TRIANGLE  |----}   Netlist node            */
+/*    FREQUENCY  -1------>|  TRIANGLE  |---->   Netlist node            */
 /*                        |    WAVE    |                                */
-/*    AMPLITUDE  -2------}|            |                                */
+/*    AMPLITUDE  -2------>|            |                                */
 /*                        |            |                                */
-/*    BIAS       -3------}|            |                                */
+/*    BIAS       -3------>|            |                                */
 /*                        |            |                                */
-/*    PHASE      -4------}|            |                                */
+/*    PHASE      -4------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_TRIANGLEWAVE(name of node,                              */
-/*                         enable node or static value                  */
-/*                         frequency node or static value               */
-/*                         amplitude node or static value               */
-/*                         dc bias value for waveform                   */
+/*                         enable node or static value,                 */
+/*                         frequency node or static value,              */
+/*                         amplitude node or static value,              */
+/*                         dc bias value for waveform,                  */
 /*                         starting phase value in degrees)             */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_TRIANGLEWAVE(NODE_03,1,5000,NODE_01)                    */
+/*     DISCRETE_TRIANGLEWAVE(NODE_03,1,5000,NODE_01,0.0,0.0)            */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_SAWTOOTHWAVE - Saw tooth shape waveform generator, rapid    */
 /*                         rise and then graduated fall                 */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    FREQUENCY  -1------}|            |                                */
+/*    FREQUENCY  -1------>|            |                                */
 /*                        |            |                                */
-/*    AMPLITUDE  -2------}|  SAWTOOTH  |----} Netlist Node              */
+/*    AMPLITUDE  -2------>|  SAWTOOTH  |----> Netlist Node              */
 /*                        |    WAVE    |                                */
-/*    BIAS       -3------}|            |                                */
+/*    BIAS       -3------>|            |                                */
 /*                        |            |                                */
-/*    GRADIENT   -4------}|            |                                */
+/*    GRADIENT   -4------>|            |                                */
 /*                        |            |                                */
-/*    PHASE      -5------}|            |                                */
+/*    PHASE      -5------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SAWTOOTHWAVE(name of node,                              */
-/*                         enable node or static value                  */
-/*                         frequency node or static value               */
-/*                         amplitude node or static value               */
-/*                         dc bias value for waveform                   */
-/*                         gradient of wave ==0 //// !=0 \\\\           */
+/*                         enable node or static value,                 */
+/*                         frequency node or static value,              */
+/*                         amplitude node or static value,              */
+/*                         dc bias value for waveform,                  */
+/*                         gradient of wave ==0 //// !=0 \\\\,          */
 /*                         starting phase value in degrees)             */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_SAWTOOTHWAVE(NODE_03,1,5000,NODE_01,0,90)               */
+/*     DISCRETE_SAWTOOTHWAVE(NODE_03,1,5000,NODE_01,0,0,90)             */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_SCHMITT_OSCILLATOR - Schmitt Inverter gate oscillator       */
+/*                                                                      */
+/*                  rFeedback                                           */
+/*                .---ZZZ----.                   .--< Amplitude         */
+/*                |          |                   |                      */
+/*                |  |\      |      .------.     |                      */
+/*           rIn  |  | \     | 0/1  | AND/ |    .-.                     */
+/*  INP0 >---ZZZ--+--|S >o---+----->|NAND/ |--->|*|-----> Netlist Node  */
+/*                |  | /            |  OR/ |    '-'                     */
+/*                |  |/          .->| NOR  |                            */
+/*               ---             |  '------'                            */
+/*               --- C           |                                      */
+/*                |              ^                                      */
+/*               gnd          Enable                                    */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_SCHMITT_OSCILLATOR(name of node,                        */
+/*                                 enable node or static value,         */
+/*                                 Input 0 node or static value,        */
+/*                                 Amplitude node or static value,      */
+/*                                 address of discrete_schmitt_osc_desc */
+/*                                    structure)                        */
+/*                                                                      */
+/*  Input Options:                                                      */
+/*     DISC_SCHMITT_OSC_IN_IS_LOGIC                                     */
+/*     DISC_SCHMITT_OSC_IN_IS_VOLTAGE                                   */
+/*                                                                      */
+/*  Enable Options:                                                     */
+/*     DISC_SCHMITT_OSC_ENAB_IS_AND                                     */
+/*     DISC_SCHMITT_OSC_ENAB_IS_NAND                                    */
+/*     DISC_SCHMITT_OSC_ENAB_IS_OR                                      */
+/*     DISC_SCHMITT_OSC_ENAB_IS_NOR                                     */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_NOISE      - Noise waveform generator node, generates       */
-/*                       random noise at the chosen frequency.          */
+/*                       random noise of the chosen frequency.          */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |            |                                */
-/*    FREQUENCY  -1------}|   NOISE    |----}   Netlist node            */
+/*    FREQUENCY  -1------>|   NOISE    |---->   Netlist node            */
 /*                        |            |                                */
-/*    AMPLITUDE  -2------}|            |                                */
+/*    AMPLITUDE  -2------>|            |                                */
 /*                        |            |                                */
-/*    BIAS       -3------}|            |                                */
+/*    BIAS       -3------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_NOISE     (name of node,                                */
-/*                         enable node or static value                  */
-/*                         frequency node or static value               */
+/*                         enable node or static value,                 */
+/*                         frequency node or static value,              */
 /*                         amplitude node or static value)              */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_NOISE(NODE_03,1,5000,NODE_01)                           */
+/*     DISCRETE_NOISE(NODE_03,1,5000,NODE_01,0)                         */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -466,35 +517,16 @@
 /*                       psuedo random digital stream at the requested  */
 /*                       clock frequency. Amplitude is 0/AMPLITUDE.     */
 /*                                                                      */
-/*                         ------------                                 */
-/*                        |            |                                */
-/*    ENABLE      -0-----}|            |                                */
-/*                        |            |                                */
-/*    RESET       -1-----}|            |                                */
-/*                        |            |                                */
-/*    FREQUENCY   -2-----}|   LFSR     |                                */
-/*                        |   CYCLIC   |----}   Netlist Node            */
-/*    AMPLITUDE   -3-----}|   NOISE    |                                */
-/*                        |            |                                */
-/*    FEED BIT    -4-----}|            |                                */
-/*                        |            |                                */
-/*    LFSR DESC   -5-----}|            |                                */
-/*                        |            |                                */
-/*                         ------------                                 */
-/*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_LFSR_NOISE(name of node,                                */
-/*                         enable node or static value                  */
-/*                         reset node or static value                   */
-/*                         frequency node or static value               */
-/*                         amplitude node or static value               */
-/*                         forced infeed bit to shift reg               */
+/*                         enable node or static value,                 */
+/*                         reset node or static value,                  */
+/*                         frequency node or static value,              */
+/*                         amplitude node or static value,              */
+/*                         forced infeed bit to shift reg,              */
+/*                         bias node or static value,                   */
 /*                         LFSR noise descriptor structure)             */
-/*                                                                      */
-/*  Example config line                                                 */
-/*                                                                      */
-/*     DISCRETE_LFSR_NOISE(NODE_03,1,NODE_04,5000,NODE_01,0,{...})      */
 /*                                                                      */
 /*  The diagram below outlines the structure of the LFSR model.         */
 /*                                                                      */
@@ -502,43 +534,43 @@
 /*   FEED  |       |                                                    */
 /*   ----->|  F2   |<--------------------------------------------.      */
 /*         |       |                                             |      */
-/*         .-------.               BS - Bit Select               |      */
+/*         '-------'               BS - Bit Select               |      */
 /*             |                   Fx - Programmable Function    |      */
 /*             |        .-------.  PI - Programmable Inversion   |      */
 /*             |        |       |                                |      */
 /*             |  .---- | SR>>1 |<--------.                      |      */
 /*             |  |     |       |         |                      |      */
-/*             V  V     .-------.         |  .----               |      */
-/*           .------.                     |->| BS |--. .------.  |      */
-/*   BITMASK |      |    .-------------.  |  .----.  .-|      |  |      */
-/*   ------->|  F3  |--->| Shift Reg   |--|            |  F1  |--.      */
-/*           |      | |  .-------------.  |  .----.  .-|      |         */
-/*           .------. |         ^         .->| BS |--. .------.         */
-/*                    |         |            .----.                     */
+/*             V  V     '-------'         |  .----               |      */
+/*           .------.                     +->| BS |--. .------.  |      */
+/*   BITMASK |      |    .-------------.  |  '----'  '-|      |  |      */
+/*   ------->|  F3  |-+->| Shift Reg   |--+            |  F1  |--'      */
+/*           |      | |  '-------------'  |  .----.  .-|      |         */
+/*           '------' |         ^         '->| BS |--' '------'         */
+/*                    |         |            '----'                     */
 /*   CLOCK            |     RESET VAL                                   */
 /*   ---->            |                      .----.  .----.             */
-/*                    .----------------------| BS |--| PI |----OUTPUT   */
-/*                                           .----.  .----.             */
+/*                    '----------------------| BS |--| PI |--->OUTPUT   */
+/*                                           '----'  '----'             */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_ADSR_ENV  - Attack Decay Sustain Release envelope generator */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENABLE     -0------}|            |                                */
+/*    ENABLE     -0------>|            |                                */
 /*                        |    /\__    |                                */
-/*    TRIGGER    -1------}|   /    \   |----}   Netlist node            */
+/*    TRIGGER    -1------>|   /    \   |---->   Netlist node            */
 /*                        |    ADSR    |                                */
-/*    GAIN       -2------}|    Env     |                                */
+/*    GAIN       -2------>|    Env     |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_ADSR_ENV  (name of node,                                */
-/*                         enable node or static value                  */
-/*                         envelope gain node or static value           */
+/*                         enable node or static value,                 */
+/*                         envelope gain node or static value,          */
 /*                         envelope descriptor struct)                  */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -547,29 +579,60 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DISCRETE_COUNTER     - up/down counter clocked externally.           */
+/* DISCRETE_COUNTER_FIX - up/down counter clocked internally.           */
+/*                                                                      */
+/*  These counters count up/down from 0 to MAX.  When the enable is     */
+/*  low, the output held at it's last value.  When reset is high,       */
+/*  the reset value is loaded into the output.                          */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*       where:         direction: 0 = down, 1 = up                     */
+/*                      clock type: toggle on 0/1                       */
+/*                                                                      */
+/*     DISCRETE_COUNTER(name of node,                                   */
+/*                      enable node or static value,                    */
+/*                      reset node or static value,                     */
+/*                      ext clock node,                                 */
+/*                      max count static value,                         */
+/*                      direction node or static value,                 */
+/*                      reset value node or static value,               */
+/*                      clock type static value)                        */
+/*                                                                      */
+/*     DISCRETE_COUNTER_FIX(name of node,                               */
+/*                          enable node or static value,                */
+/*                          reset node or static value,                 */
+/*                          clock frequency static value                */
+/*                          max count static value,                     */
+/*                          direction node or static value              */
+/*                          reset value node or static value)           */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* DISCRETE_ADDER      - Node addition function, available in three     */
 /*                       lovelly flavours, ADDER2,ADDER3,ADDER4         */
 /*                       that perform a summation of incoming nodes     */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    INPUT0     -0------}|            |                                */
+/*    INPUT0     -0------>|            |                                */
 /*                        |            |                                */
-/*    INPUT1     -1------}|     |      |                                */
-/*                        |    -+-     |----}   Netlist node            */
-/*    INPUT2     -2------}|     |      |                                */
+/*    INPUT1     -1------>|     |      |                                */
+/*                        |    -+-     |---->   Netlist node            */
+/*    INPUT2     -2------>|     |      |                                */
 /*                        |            |                                */
-/*    INPUT3     -3------}|            |                                */
+/*    INPUT3     -3------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_ADDERx    (name of node,                                */
-/*        (x=2/3/4)        enable node or static value                  */
-/*                         input0 node or static value                  */
-/*                         input1 node or static value                  */
-/*                         input2 node or static value                  */
+/*        (x=2/3/4)        enable node or static value,                 */
+/*                         input0 node or static value,                 */
+/*                         input1 node or static value,                 */
+/*                         input2 node or static value,                 */
 /*                         input3 node or static value)                 */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -580,37 +643,70 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DISCRETE_ONESHOT    - Monostable multivibrator, no reset             */
+/* DISCRETE_ONESHOTR   - Monostable multivibrator, with reset           */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_ONESHOT   (name of node,                                */
+/*                         trigger node,                                */
+/*                         amplitude node or static value,              */
+/*                         width (in seconds) node or static value,     */
+/*                         type of oneshot static value)                */
+/*                                                                      */
+/*     DISCRETE_ONESHOTR  (name of node,                                */
+/*                         reset node or static value,                  */
+/*                         trigger node,                                */
+/*                         amplitude node or static value,              */
+/*                         width (in seconds) node or static value,     */
+/*                         type of oneshot static value)                */
+/*                                                                      */
+/*  Types:                                                              */
+/*                                                                      */
+/*     DISC_ONESHOT_FEDGE    0x00 - trigger on falling edge             */
+/*     DISC_ONESHOT_REDGE    0x01 - trigger on rising edge              */
+/*     DISC_ONESHOT_NORETRIG 0x00 - non-retriggerable                   */
+/*     DISC_ONESHOT_RETRIG   0x02 - retriggerable                       */
+/*     DISC_OUT_ACTIVE_LOW   0x04 - output active low                   */
+/*     DISC_OUT_ACTIVE_HIGH  0x00 - output active high                  */
+/*                                                                      */
+/*  NOTE: A width of 0 seconds will output a pulse of 1 sample.         */
+/*        This is usefull for a guaranteed minimun pulse, regardless    */
+/*        of the sample rate.                                           */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* DISCRETE_GAIN       - Node multiplication function output is equal   */
 /* DISCRETE_MULTIPLY     to INPUT0 * INPUT1                             */
 /* DISCRETE_MULTADD      to (INPUT0 * INPUT1) + INPUT 2                 */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INPUT0     -1------}|     \|/    |                                */
-/*                        |     -+-    |----}   Netlist node            */
-/*    INPUT1     -2------}|     /|\    |                                */
+/*    INPUT0     -1------>|     \|/    |                                */
+/*                        |     -+-    |---->   Netlist node            */
+/*    INPUT1     -2------>|     /|\    |                                */
 /*                        |            |                                */
-/*    INPUT2     -3------}|            |                                */
+/*    INPUT2     -3------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_MULTIPLY  (name of node,                                */
-/*                         enable node or static value                  */
-/*                         input0 node or static value                  */
+/*                         enable node or static value,                 */
+/*                         input0 node or static value,                 */
 /*                         input1 node or static value)                 */
 /*                                                                      */
 /*     DISCRETE_MULTADD   (name of node,                                */
-/*                         enable node or static value                  */
-/*                         input0 node or static value                  */
-/*                         input1 node or static value                  */
+/*                         enable node or static value,                 */
+/*                         input0 node or static value,                 */
+/*                         input1 node or static value,                 */
 /*                         input2 node or static value)                 */
 /*                                                                      */
 /*     DISCRETE_GAIN      (name of node,                                */
-/*                         input0 node or static value                  */
+/*                         input0 node or static value,                 */
 /*                         static value for gain)                       */
 /*  Example config line                                                 */
 /*                                                                      */
@@ -622,21 +718,21 @@
 /*                                                                      */
 /* DISCRETE_TRANSFORMn - Node arithmatic logic (postfix arithmatic)     */
 /*     (n=2,3,4,5)                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INPUT0     -1------}|            |                                */
+/*    INPUT0     -1------>|            |                                */
 /*                        |            |                                */
-/*    INPUT1     -2------}|  Postfix   |                                */
-/*                        |   stack    |----} Netlist node              */
-/*    INPUT2     -3------}|   maths    |                                */
+/*    INPUT1     -2------>|  Postfix   |                                */
+/*                        |   stack    |----> Netlist node              */
+/*    INPUT2     -3------>|   maths    |                                */
 /*                        |            |                                */
-/*    INPUT3     -4------}|            |                                */
+/*    INPUT3     -4------>|            |                                */
 /*                        |            |                                */
-/*    INPUT4     -5------}|            |                                */
+/*    INPUT4     -5------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
@@ -654,39 +750,45 @@
 /*  DISCRETE_TRANSFORM4(NODE_12,1,NODE_22,50.0,120.0,33.33,"01*2+3/")   */
 /*                                                                      */
 /*  Arithmetic uses stack based arithmetic similar to Forth, the maths  */
-/*  has 5 registers 0-4 and various arithmatic operations. The math     */
+/*  has 5 registers 0-4 and various arithmetic operations. The math     */
 /*  string is processed from left to right in the following manner:     */
 /*   0 - Push input 0 to stack                                          */
 /*   1 - Push input 1 to stack                                          */
 /*   2 - Push input 2 to stack                                          */
 /*   3 - Push input 3 to stack                                          */
 /*   4 - Push input 4 to stack                                          */
-/*   - - Pop two values from stack, substract and push result to stack  */
+/*   - - Pop two values from stack, subtract and push result to stack   */
 /*   + - Pop two values from stack, add and push result to stack        */
 /*   / - Pop two values from stack, divide and push result to stack     */
 /*   * - Pop two values from stack, multiply and push result to stack   */
-/*   ! - Pop one value from stack, logical invert, push result to stack */
 /*   i - Pop one value from stack, multiply -1 and push result to stack */
+/*   ! - Pop one value from stack, logical invert, push result to stack */
+/*   = - Pop two values from stack, logical = and push result to stack  */
+/*   > - Pop two values from stack, logical > and push result to stack  */
+/*   < - Pop two values from stack, logical < and push result to stack  */
+/*   & - Pop two values from stack, binary AND and push result to stack */
+/*   | - Pop two values from stack, binary OR and push result to stack  */
+/*   ^ - Pop two values from stack, binary XOR and push result to stack */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_DIVIDE     - Node division function                         */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |     o      |                                */
-/*    INPUT1     -1------}|    ---     |----}   Netlist node            */
+/*    INPUT1     -1------>|    ---     |---->   Netlist node            */
 /*                        |     o      |                                */
-/*    INPUT2     -2------}|            |                                */
+/*    INPUT2     -2------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_DIVIDE    (name of node,                                */
-/*                         enable node or static value                  */
-/*                         input0 node or static value                  */
+/*                         enable node or static value,                 */
+/*                         input0 node or static value,                 */
 /*                         input1 node or static value)                 */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -706,20 +808,20 @@
 /*                                                                      */
 /*    SWITCH     -0--------------.                                      */
 /*                               V                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |      |     |                                */
 /*    INPUT0     -1------}|----o       |                                */
-/*                        |       .--- |----}   Netlist node            */
-/*    INPUT1     -2------}|----o /     |                                */
+/*                        |       .--- |---->   Netlist node            */
+/*    INPUT1     -2------>|----o /     |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SWITCH    (name of node,                                */
-/*                         enable node or static value                  */
-/*                         switch node or static value                  */
-/*                         input0 node or static value                  */
+/*                         enable node or static value,                 */
+/*                         switch node or static value,                 */
+/*                         input0 node or static value,                 */
 /*                         input1 node or static value)                 */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -731,19 +833,47 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DISCRETE_COMP_ADDER - Selecatable parallel component adder.          */
+/*                       The total netlist out will be the sum of all   */
+/*                       components selected in parallel.               */
+/*                       Set cDefault to 0 if not used.                 */
+/*                                                                      */
+/*      cDefault  >---xx---.                                            */
+/*      data&0x01 >---xx---+                                            */
+/*      data&0x02 >---xx---+                                            */
+/*      data&0x04 >---xx---+                                            */
+/*      data&0x08 >---xx---+-----> netlist node                         */
+/*      data&0x10 >---xx---+                                            */
+/*      data&0x20 >---xx---+                                            */
+/*      data&0x40 >---xx---+                                            */
+/*      data&0x80 >---xx---'                                            */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_COMP_ADDER(name of node,                                */
+/*                         enable node or static value,                 */
+/*                         data node (static value is useless),         */
+/*                      address of discrete_comp_adder_table structure) */
+/*                                                                      */
+/*  Circuit Types:                                                      */
+/*     DISC_COMP_P_CAPACITOR - parallel capacitors                      */
+/*     DISC_COMP_P_RESISTOR  - parallel resistors                       */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* DISCRETE_RCFILTER - Simple single pole RC filter network             */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
 /*    ENAB       -0------}| RC FILTER  |                                */
 /*                        |            |                                */
-/*    INPUT1     -1------}| -ZZZZ----  |                                */
+/*    INPUT1     -1------}| -ZZZZ-+--  |                                */
 /*                        |   R   |    |----}   Netlist node            */
 /*    RVAL       -2------}|      ---   |                                */
 /*                        |      ---C  |                                */
 /*    CVAL       -3------}|       |    |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
@@ -770,26 +900,65 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
-/* DISCRETE_RCDISC - Simple single pole RC discharge network            */
+/* DISCRETE_CRFILTER - Simple single pole CR filter network             */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}| RC         |                                */
+/*    ENAB       -0------}| CR FILTER  |                                */
 /*                        |            |                                */
-/*    INPUT1     -1------}| -ZZZZ----  |                                */
-/*                        |   R   |    |----}   Netlist node            */
-/*    RVAL       -2------}|      ---   |                                */
-/*                        |      ---C  |                                */
+/*    INPUT1     -1------}| --| |-+--  |                                */
+/*                        |   C   |    |----}   Netlist node            */
+/*    RVAL       -2------}|       Z    |                                */
+/*                        |       Z R  |                                */
 /*    CVAL       -3------}|       |    |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_CRFILTER(name of node,                                  */
+/*                       enable                                         */
+/*                       input node (or value)                          */
+/*                       resistor value in OHMS                         */
+/*                       capacitor value in FARADS)                     */
+/*                                                                      */
+/*  Example config line                                                 */
+/*                                                                      */
+/*     DISCRETE_CRFILTER(NODE_11,1,NODE_10,100,1e-6)                    */
+/*                                                                      */
+/*  Defines an always enabled CR filter with a 100R & 1uF network       */
+/*  the input is fed from NODE_10.                                      */
+/*                                                                      */
+/*  This can be also thought of as a high pass filter with a 3dB cutoff */
+/*  at:                                                                 */
+/*                                  1                                   */
+/*            Fcuttoff =      --------------                            */
+/*                            2*Pi*RVAL*CVAL                            */
+/*                                                                      */
+/*  (3dB cutoff is where the output power has dropped by 3dB ie Half)   */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_RCDISC - Simple single pole RC discharge network            */
+/*                                                                      */
+/*                        .------------.                                */
+/*                        |            |                                */
+/*    ENAB       -0------>| RC         |                                */
+/*                        |            |                                */
+/*    INPUT1     -1------>| -ZZZZ-+--  |                                */
+/*                        |   R   |    |---->   Netlist node            */
+/*    RVAL       -2------>|      ---   |                                */
+/*                        |      ---C  |                                */
+/*    CVAL       -3------>|       |    |                                */
+/*                        |            |                                */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_RCFILTER(name of node,                                  */
-/*                       enable                                         */
-/*                       input node (or value)                          */
-/*                       resistor value in OHMS                         */
+/*                       enable,                                        */
+/*                       input node (or value),                         */
+/*                       resistor value in OHMS,                        */
 /*                       capacitor value in FARADS)                     */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -801,32 +970,32 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
-/* DISCRETE_RCDIS2C  - Switched input RC discharge network              */
+/* DISCRETE_RCDISC2  - Switched input RC discharge network              */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    SWITCH     -0------}| IP0 | IP1  |                                */
+/*    SWITCH     -0------>| IP0 | IP1  |                                */
 /*                        |            |                                */
-/*    INPUT0     -1------}| -ZZZZ-.    |                                */
+/*    INPUT0     -1------>| -ZZZZ-.    |                                */
 /*                        |   R0  |    |                                */
-/*    RVAL0      -2------}|       |    |                                */
+/*    RVAL0      -2------>|       |    |                                */
 /*                        |       |    |                                */
-/*    INPUT1     -3------}| -ZZZZ----  |                                */
-/*                        |   R1  |    |----}   Netlist node            */
-/*    RVAL1      -4------}|      ---   |                                */
+/*    INPUT1     -3------>| -ZZZZ-+--  |                                */
+/*                        |   R1  |    |---->   Netlist node            */
+/*    RVAL1      -4------>|      ---   |                                */
 /*                        |      ---C  |                                */
-/*    CVAL       -5------}|       |    |                                */
+/*    CVAL       -5------>|       |    |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*      DISCRETE_RCDISC2(name of node,                                  */
-/*                       switch                                         */
-/*                       input0 node (or value)                         */
-/*                       resistor0 value in OHMS                        */
-/*                       input1 node (or value)                         */
-/*                       resistor1 value in OHMS                        */
+/*                       switch,                                        */
+/*                       input0 node (or value),                        */
+/*                       resistor0 value in OHMS,                       */
+/*                       input1 node (or value),                        */
+/*                       resistor1 value in OHMS,                       */
 /*                       capacitor value in FARADS)                     */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -841,30 +1010,30 @@
 /*                                                                      */
 /* DISCRETE_RAMP - Ramp up/down circuit with clamps & reset             */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}| FREE/CLAMP |                                */
+/*    ENAB       -0------>| FREE/CLAMP |                                */
 /*                        |            |                                */
-/*    RAMP       -1------}| FW/REV     |                                */
+/*    RAMP       -1------>| FW/REV     |                                */
 /*                        |            |                                */
-/*    GRAD       -2------}| Grad/sec   |                                */
-/*                        |            |----}   Netlist node            */
-/*    START      -3------}| Start clamp|                                */
+/*    GRAD       -2------>| Grad/sec   |                                */
+/*                        |            |---->   Netlist node            */
+/*    START      -3------>| Start clamp|                                */
 /*                        |            |                                */
-/*    END        -4------}| End clamp  |                                */
+/*    END        -4------>| End clamp  |                                */
 /*                        |            |                                */
-/*    CLAMP      -5------}| off clamp  |                                */
+/*    CLAMP      -5------>| off clamp  |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*         DISCRETE_RAMP(name of node,                                  */
-/*                       enable                                         */
-/*                       ramp forward/reverse node (or value)           */
-/*                       gradient node (or static value)                */
-/*                       minimum node or static value                   */
-/*                       maximum node or static value                   */
+/*                       enable,                                        */
+/*                       ramp forward/reverse node (or value),          */
+/*                       gradient node (or static value),               */
+/*                       start node or static value,                    */
+/*                       end node or static value,                      */
 /*                       clamp node or static value when disabled)      */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -880,27 +1049,27 @@
 /*                                                                      */
 /* DISCRETE_CLAMP - Force a signal to stay within bounds MIN/MAX        */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INP0       -1------}|            |                                */
+/*    INP0       -1------>|            |                                */
 /*                        |            |                                */
-/*    MIN        -2------}|   CLAMP    |----}   Netlist node            */
+/*    MIN        -2------>|   CLAMP    |---->   Netlist node            */
 /*                        |            |                                */
-/*    MAX        -3------}|            |                                */
+/*    MAX        -3------>|            |                                */
 /*                        |            |                                */
-/*    CLAMP      -4------}|            |                                */
+/*    CLAMP      -4------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*        DISCRETE_CLAMP(name of node,                                  */
-/*                       enable                                         */
-/*                       input node                                     */
-/*                       minimum node or static value                   */
-/*                       maximum node or static value                   */
+/*                       enable,                                        */
+/*                       input node,                                    */
+/*                       minimum node or static value,                  */
+/*                       maximum node or static value,                  */
 /*                       clamp node or static value when disabled)      */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -915,24 +1084,24 @@
 /*                                                                      */
 /* DISCRETE_SAMPHOLD - Sample & Hold circuit                            */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INP0       -1------}|   SAMPLE   |                                */
-/*                        |     &      |----} Netlist node              */
-/*    CLOCK      -2------}|    HOLD    |                                */
+/*    INP0       -1------>|   SAMPLE   |                                */
+/*                        |     &      |----> Netlist node              */
+/*    CLOCK      -2------>|    HOLD    |                                */
 /*                        |            |                                */
-/*    CLKTYPE    -3------}|            |                                */
+/*    CLKTYPE    -3------>|            |                                */
 /*                        |            |                                */
-/*                         ------------                                 */
+/*                        '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_SAMPHOLD(name of node,                                  */
-/*                       enable                                         */
-/*                       input node                                     */
-/*                       clock node or static value                     */
+/*                       enable,                                        */
+/*                       input node,                                    */
+/*                       clock node or static value,                    */
 /*                       input clock type)                              */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -957,27 +1126,27 @@
 /* DISCRETE_LOGIC_XOR  - Logic XOR gate                                 */
 /* DISCRETE_LOGIC_NXOR - Logic NXOR gate                                */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INPUT0     -0------}|            |                                */
+/*    INPUT0     -0------>|            |                                */
 /*                        |   LOGIC    |                                */
-/*    [INPUT1]   -1------}|  FUNCTION  |----}   Netlist node            */
+/*    [INPUT1]   -1------>|  FUNCTION  |---->   Netlist node            */
 /*                        |    !&|^    |                                */
-/*    [INPUT2]   -2------}|            |                                */
+/*    [INPUT2]   -2------>|            |                                */
 /*                        |            |                                */
-/*    [INPUT3]   -3------}|            |                                */
+/*    [INPUT3]   -3------>|            |                                */
 /*                        |            |                                */
-/*    [] - Optional        ------------                                 */
+/*    [] - Optional       '------------'                                */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_LOGIC_XXXn(name of node,                                */
-/*      (X=INV/AND/etc)    enable node or static value                  */
-/*      (n=Blank/2/3)      input0 node or static value                  */
-/*                         [input1 node or static value]                */
-/*                         [input2 node or static value]                */
+/*      (X=INV/AND/etc)    enable node or static value,                 */
+/*      (n=Blank/2/3)      input0 node or static value,                 */
+/*                         [input1 node or static value],               */
+/*                         [input2 node or static value],               */
 /*                         [input3 node or static value])               */
 /*                                                                      */
 /*  Example config lines                                                */
@@ -993,28 +1162,28 @@
 /*                                                                      */
 /* DISCRETE_LADDER - Resistor ladder D/A with smoothing R/C             */
 /*                                                                      */
-/*                         ------------                                 */
+/*                        .------------.                                */
 /*                        |            |                                */
-/*    ENAB       -0------}|            |                                */
+/*    ENAB       -0------>|            |                                */
 /*                        |            |                                */
-/*    INP0       -1------}|            |                                */
+/*    INP0       -1------>|            |                                */
 /*                        |            |                                */
-/*    SELECT     -2------}|   LADDER   |---ZZZZZ-----} Netlist node     */
+/*    SELECT     -2------>|   LADDER   |---ZZZZZ-+---> Netlist node     */
 /*                        |            |     R   |                      */
-/*    GAIN       -3------}|            |        ---                     */
+/*    GAIN       -3------>|            |        ---                     */
 /*                        |            |        ---C                    */
-/*    OFFSET     -4------}|            |         |                      */
+/*    OFFSET     -4------>|            |         |                      */
 /*                        |            |         |                      */
-/*                         ------------         GND                     */
+/*                        '------------'        GND                     */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*       DISCRETE_LADDER(name of node,                                  */
-/*                       enable                                         */
-/*                       high voltage rail                              */
-/*                       resistor select (Int value to binary 8bit)     */
-/*                       gain multiplyer for output value               */
-/*                       dc offset for output value                     */
+/*                       enable,                                        */
+/*                       high voltage rail,                             */
+/*                       resistor select (Int value to binary 8bit),    */
+/*                       gain multiplyer for output value,              */
+/*                       dc offset for output value,                    */
 /*                       pointer to resistor ladder struture)           */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -1025,43 +1194,271 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
-/* DISCRETE_NE555 - NE555 Chip simulation                               */
+/* DISCRETE_DAC_R1 - R1 ladder DAC with cap smoothing and external bias */
 /*                                                                      */
-/*                         ------------                                 */
-/*                        |            |                                */
-/*    RESET      -0------}|            |                                */
-/*                        |            |                                */
-/*    TRIGGER    -1------}|            |                                */
-/*                        |            |                                */
-/*    THRESHOLD  -2------}|   NE555    |----}   Netlist node            */
-/*                        |            |                                */
-/*    CONTROL V  -3------}|            |                                */
-/*                        |            |                                */
-/*    VCC        -4------}|            |                                */
-/*                        |            |                                */
-/*                         ------------                                 */
+/*                           rBias                                      */
+/* data&0x01 >--/\R0/\--+-----/\/\----< vBias                           */
+/* data&0x02 >--/\R1/\--|                                               */
+/* data&0x04 >--/\R2/\--|                                               */
+/* data&0x08 >--/\R3/\--|                                               */
+/* data&0x10 >--/\R4/\--|                                               */
+/* data&0x20 >--/\R5/\--|                                               */
+/* data&0x40 >--/\R6/\--|                                               */
+/* data&0x80 >--/\R7/\--+-------------+-----> Netlist node              */
+/*                      |             |                                 */
+/*                      Z            ---                                */
+/*                      Z rGnd       --- cSmoothing                     */
+/*                      |             |                                 */
+/*                     gnd           gnd                                */
+/*                                                                      */
+/* NOTES: rBias and vBias are used together.  If not needed they should */
+/*        be set to 0.  If used, they should both have valid values.    */
+/*        rGnd and cSmoothing should be 0 if not needed.                */
+/*        A resistor value should be properly set for each resistor     */
+/*        up to the ladder length.  Remember 0 is a short circuit.      */
+/*        The data node is bit mapped to the ladder. valid int 0-255.   */
+/*        TTL logic 0 is actually 0.2V but I use 0V.  The other parts   */
+/*        have a tolerance that more then makes up for this.            */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
-/*     DISCRETE_NE555(reset node (or value) - <0.7 causes a reset       */
-/*                    trigger node (or value)                           */
-/*                    threshold node (or value)                         */
-/*                    ctrl volt node (or value) - Use NODE_NC for N/C   */
-/*                    vcc node (or value) - Needed for comparators)     */
+/*     DISCRETE_DAC_R1(name of node,                                    */
+/*                     enable node or static value,                     */
+/*                     data node (static value is useless),             */
+/*                     vData node or static value (vON),                */
+/*                     address of discrete_dac_r1_ladder structure)     */
 /*                                                                      */
-/*  Example config line                                                 */
+/************************************************************************/
 /*                                                                      */
-/*     DISCRETE_NE555(NODE32,1,NODE_31,NODE_31,NODE_NC,5.0)             */
+/* DISCRETE_555_ASTABLE - NE555 Chip simulation (astable mode)          */
+/*                                                                      */
+/*                                v555                                  */
+/*                                 |                                    */
+/*                       .---------+                                    */
+/*                       |         |                                    */
+/*                       Z         |                                    */
+/*                    R1 Z     .---------.                              */
+/*                       |     |  Vcc    |                              */
+/*                       +-----|Discharge|                              */
+/*                       |     |         |                              */
+/*                       Z     |   555   |                              */
+/*                    R2 Z     |      Out|---> Netlist Node             */
+/*                       |     |         |                              */
+/*                       +-----|Threshold|                              */
+/*                       |     |         |                              */
+/*                       +-----|Trigger  |                              */
+/*                       |     |         |---< Control Voltage          */
+/*                       |     |  Reset  |                              */
+/*                       |     '---------'                              */
+/*                      ---         |                                   */
+/*                    C ---         |                                   */
+/*                       |          ^                                   */
+/*                      gnd       Reset                                 */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_NE555(name of node,                                     */
+/*                    reset node (or value),                            */
+/*                    R1 node (or value) in ohms,                       */
+/*                    R2 node (or value) in ohms,                       */
+/*                    C node (or value) in farads,                      */
+/*                    Control Voltage node (or value),                  */
+/*                    &Type structure)                                  */
+/*                                                                      */
+/*  Output Types:                                                       */
+/*     DISC_555_OUT_DC - Output is actual DC.                           */
+/*     DISC_555_OUT_AC - A cheat to make the waveform AC.               */
+/*                                                                      */
+/*  Waveform Types:                                                     */
+/*     DISC_555_OUT_SQW       - Output is Squarewave.  0 or v555high.   */ 
+/*     DISC_555_OUT_CAP       - Output is Timing Capacitor 'C' voltage. */
+/*     DISC_555_OUT_CAP_CLAMP - During a sample period, the high/low    */
+/*                              threshold may be reached, causing the   */
+/*                              voltage to change direction.  This will */
+/*                              make varing peaks on the cap out signal.*/
+/*                              This may cause an alaised noise to be   */
+/*                              heard.  Using this clamp option will    */
+/*                              force the output to be the threshold    */
+/*                              voltage during a change.  While not     */
+/*                              affecting the actual cap voltage.  This */
+/*                              may cause a high freq alaised noise     */
+/*                              that is less noticeable then the noise  */
+/*                              without the option.  Try without CLAMP  */
+/*                              first, as it is more accurate.          */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_555_CC - Constant Current Controlled 555 Oscillator         */
+/*                   Which works out to a VCO when R is fixed.          */
+/*                                                                      */
+/*       vCCsource                       v555                           */
+/*           V                            V                             */
+/*           |     .----------------------+                             */
+/*           |     |                      |                             */
+/*           |     |                  .---------.                       */
+/*           |     |       rDischarge |  Vcc    |                       */
+/*           Z     Z        .---+-----|Discharge|                       */
+/*           Z R   Z rBias  |   |     |         |                       */
+/*           |     |        |   Z     |   555   |                       */
+/*           |     |        |   Z     |      Out|---> Netlist Node      */
+/*         .----.  |        |   |     |         |                       */
+/*  Vin >--| CC |--+--------'   +-----|Threshold|                       */
+/*         '----'               |     |         |                       */
+/*                              +-----|Trigger  |                       */
+/*                              |     |         |                       */
+/*                 .------+-----'     |  Reset  |                       */
+/*                 |      |           '---------'                       */
+/*                ---     Z                |                            */
+/*                --- C   Z rGnd           |                            */
+/*                 |      |                ^                            */
+/*                gnd    gnd             Reset                          */
+/*                                                                      */
+/* Notes: R sets the current and should never be 0 (short).             */
+/*        The current follows the voltage I=Vin/R and charges C.        */
+/*        rBias, rDischarge and rGnd should be 0 if not used.           */
+/*        Reset is active low for the module.                           */
+/*                                                                      */
+/*        DISC_555_OUT_SQW mode only:                                   */
+/*        When there is no rDischarge there is a very short discharge   */
+/*        cycle (almost 0s), so the module triggers the output for 1    */
+/*        sample. This does not effect the timing, just the duty cycle. */
+/*        But frequencies more the half the sample frequency will be    */
+/*        limited to a max of half the sample frequency.                */
+/*        This mode should be used to drive a counter for any real use. */
+/*        Just like the real thing.                                     */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_555_CC(name of node,                                    */
+/*                     reset node or static value,                      */
+/*                     Vin node or static value,                        */
+/*                     R node or static value,                          */
+/*                     C node or static value,                          */
+/*                     rBias node or static value,                      */
+/*                     rGnd node or static value,                       */
+/*                     rDischarge node or static value,                 */
+/*                     address of discrete_555_cc_desc structure)       */
+/*                                                                      */
+/*  Output Types:                                                       */
+/*     See DISCRETE_555_ASTABLE for description.                        */ 
+/*                                                                      */
+/*  Waveform Types:                                                     */
+/*     See DISCRETE_555_ASTABLE for description.                        */ 
+/*     Note that DISC_555_OUT_CAP_CLAMP does not work well with         */
+/*     type 0 circuit.                                                  */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_566 - NE566 VCO simulation.                                 */
+/*                                                                      */
+/*                       vPlus                                          */
+/*                         V                                            */
+/*           .-------------+                                            */
+/*           |             |                                            */
+/*           |    R    .-------.                                        */
+/*           '---/\/\--|6  8   |                                        */
+/*                     |       |                                        */
+/*   vMod >------------|5   3/4|---------> Netlist Node                 */
+/*                     |       |                                        */
+/*                 .---|7  1   |                                        */
+/*                 |   '-------'                                        */
+/*                ---      |                                            */
+/*                --- C    |                                            */
+/*                 |       |                                            */
+/*                vNeg    vNeg                                          */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_566(name of node,                                       */
+/*                  enable node or static value,                        */
+/*                  R node or static value in ohms,                     */
+/*                  C node or static value in Farads,                   */
+/*                  vMod node or static value,                          */
+/*                  address of discrete_566_desc structure)             */
+/*                                                                      */
+/*  Output Types:                                                       */
+/*     DISC_556_OUT_DC - Output is actual DC.                           */
+/*     DISC_556_OUT_AC - A cheat to make the waveform AC.               */
+/*                                                                      */
+/*  Waveform Types:                                                     */
+/*     DISC_566_OUT_SQUARE   - Pin 3 Square Wave Output                 */
+/*     DISC_566_OUT_TRIANGLE - Pin 4 Triangle Wave Output               */
+/*     DISC_566_OUT_LOGIC    - Internal Flip/Flop Output                */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_MIXER - Mixes multiple input signals.                       */
+/*                                                                      */
+/* Note: Set all unused components to 0.                                */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_MIXERx(name of node,                                    */
+/*      (x = 2 to 8)   enable node or static value,                     */
+/*                     input 0 node,                                    */
+/*                     input 1 node,                                    */
+/*                     input 2 node,  (if used)                         */
+/*                     input 3 node,  (if used)                         */
+/*                     input 4 node,  (if used)                         */
+/*                     input 5 node,  (if used)                         */
+/*                     input 6 node,  (if used)                         */
+/*                     input 7 node,  (if used)                         */
+/*                     address of discrete_mixer_info structure)        */
+/*                                                                      */
+/*  Types:                                                              */
+/*                                                                      */
+/*     DISC_MIXER_IS_RESISTOR                                           */
+/*                                                                      */
+/*         r[0]   c[0]                                                  */
+/*  IN0 >--zzzz----||---.                                               */
+/*                      |                                               */
+/*         r[1]   c[1]  |                                               */
+/*  IN1 >--zzzz----||---+--------.                                      */
+/*   .      .      .    |        |      cAmp                            */
+/*   .      .      .    |        Z<------||---------> Netlist Node      */
+/*   .      .      .    |        Z                                      */
+/*   .     r[7]   c[7]  |        Z rF                                   */
+/*  IN7 >--zzzz----||---+        |                                      */
+/*                      |        |                                      */
+/*                     ---       |                                      */
+/*                  cF ---       |                                      */
+/*                      |        |                                      */
+/*                     gnd      gnd                                     */
+/*                                                                      */
+/*  Note: The variable resistor is used in it's full volume position.   */
+/*        MAME's built in volume is used for adjustment.                */
+/*                                                                      */
+/*          --------------------------------------------------          */
+/*                                                                      */
+/*     DISC_MIXER_IS_OP_AMP                                             */
+/*                                                                      */
+/*                                    cF                                */
+/*                               .----||---.                            */
+/*                               |         |                            */
+/*         r[0]   c[0]           |    rF   |                            */
+/*  IN0 >--zzzz----||---.        +---ZZZZ--+                            */
+/*                      |        |         |                            */
+/*         r[1]   c[1]  |   rI   |  |\     |                            */
+/*  IN1 >--zzzz----||---+--zzzz--+  | \    |                            */
+/*   .      .      .    |        '--|- \   |  cAmp                      */
+/*   .      .      .    |           |   >--+---||-----> Netlist Node    */
+/*   .      .      .    |        .--|+ /                                */
+/*   .     r[7]   c[7]  |        |  | /                                 */
+/*  IN7 >--zzzz----||---'        |  |/                                  */
+/*                               |                                      */
+/*  vRef >-----------------------'                                      */
+/*                                                                      */
+/* Note: rI is not always used and should then be 0.                    */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
 /* DISCRETE_OUTPUT - Single output node to Mame mixer and output        */
 /*                                                                      */
-/*                             ----------                               */
-/*                            |          |     -/|                      */
-/*      Netlist node --------}| OUTPUT   |----|  | Sound Output         */
-/*                            |          |     -\|                      */
-/*                             ----------                               */
+/*                            .----------.       .                      */
+/*                            |          |    .-/|                      */
+/*      Netlist node -------->| OUTPUT   |----|  | Sound Output         */
+/*                            |          |    '-\|                      */
+/*                            '----------'       '                      */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
@@ -1077,13 +1474,13 @@
 /*                                                                      */
 /* DISCRETE_OUTPUT_STEREO - Single output node to Mame mixer and output */
 /*                                                                      */
-/*                                ----------                            */
-/*                               |          |                           */
-/*    Left  Netlist node -------}|          |     -/|                   */
+/*                               .----------.                           */
+/*                               |          |       .                   */
+/*    Left  Netlist node ------->|          |    .-/|                   */
 /*                               | OUTPUT   |----|  | Sound Output      */
-/*    Right Netlist node -------}|          |     -\|     L/R           */
-/*                               |          |                           */
-/*                                ----------                            */
+/*    Right Netlist node ------->|          |    '-\|     L/R           */
+/*                               |          |       '                   */
+/*                               '----------'                           */
 /*  Declaration syntax                                                  */
 /*                                                                      */
 /*     DISCRETE_OUTPUT_STEREO(left output node,                         */
@@ -1100,11 +1497,15 @@
 /************************************************************************/
 
 #define DISCRETE_MAX_NODES		300
-#define DISCRETE_MAX_ADJUSTERS	20
+#define DISCRETE_MAX_ADJUSTERS		20
 #define DISCRETE_MAX_INPUTS		10
 
 #define DISC_LOGADJ 1.0
 #define DISC_LINADJ 0.0
+
+/* DISCRETE_COMP_ADDER types */
+#define DISC_COMP_P_CAPACITOR	0x00
+#define DISC_COMP_P_RESISTOR	0x01
 
 /* Function possibilities for the LFSR feedback nodes */
 /* 2 inputs, one output                               */
@@ -1139,36 +1540,85 @@
 #define DISC_FILTER_HIGHPASS	1
 #define DISC_FILTER_BANDPASS	2
 
-/* 555_AST output flags */
-#define DISC_555_ASTBL_DC	0x00
-#define DISC_555_ASTBL_AC	0x01
-#define DISC_555_ASTBL_SQW	0x00	/* Squarewave */
-#define DISC_555_ASTBL_CAP	0x02	/* Cap charge waveform */
+/* Mixer types */
+#define DISC_MIXER_IS_RESISTOR		0
+#define DISC_MIXER_IS_OP_AMP		1
+
+#define DISC_MIXER_IS_OP_AMP_WITH_RI	2	// Used only internally.  Use DISC_MIXER_IS_OP_AMP
+#define DISC_MIXER_IS_MASK		3	// Used only internally.
+#define DISC_MIXER_HAS_R_NODE		4	// Used only internally.
+
+/* Schmitt Oscillator Options */
+#define DISC_SCHMITT_OSC_IN_IS_LOGIC	0x00
+#define DISC_SCHMITT_OSC_IN_IS_VOLTAGE	0x01
+
+#define DISC_SCHMITT_OSC_ENAB_IS_AND	0x00
+#define DISC_SCHMITT_OSC_ENAB_IS_NAND	0x02
+#define DISC_SCHMITT_OSC_ENAB_IS_OR	0x04
+#define DISC_SCHMITT_OSC_ENAB_IS_NOR	0x06
+
+#define DISC_SCHMITT_OSC_ENAB_MASK	0x06	/* Bits that define output enable type.
+						 * Used only internally in module. */
+
+/* 555 Common output flags */
+#define DISC_555_OUT_DC		0x00
+#define DISC_555_OUT_AC		0x01
+
+#define DISC_555_OUT_SQW	0x00	/* Squarewave */
+#define DISC_555_OUT_CAP	0x10	/* Cap charge waveform */
+#define DISC_555_OUT_CAP_CLAMP	0x20	/* When outputting the cap voltage, it is forced
+					 * to the threshold/trigger levels to help eliminate
+					 * alaising. */
+
+#define DISC_555_OUT_MASK	0x30	/* Bits that define output type.
+					 * Used only internally in module. */
+
+/* 566 output flags */
+#define DISC_566_OUT_DC		0x00
+#define DISC_566_OUT_AC		0x01
+
+#define DISC_566_OUT_SQUARE	0x00	/* Squarewave */
+#define DISC_566_OUT_TRIANGLE	0x10	/* Triangle waveform */
+#define DISC_566_OUT_LOGIC	0x20	/* 0/1 logic output */
+
+#define DISC_566_OUT_MASK	0x30	/* Bits that define output type.
+					 * Used only internally in module. */
+
+/* Oneshot types */
+#define DISC_ONESHOT_FEDGE	0x00
+#define DISC_ONESHOT_REDGE	0x01
+
+#define DISC_ONESHOT_NORETRIG	0x00
+#define DISC_ONESHOT_RETRIG	0x02
+
+#define DISC_OUT_ACTIVE_LOW	0x04
+#define DISC_OUT_ACTIVE_HIGH	0x00
+
 
 struct discrete_sound_block
 {
-	int node;                                   /* Output node number */
-	int type;                                   /* see defines below */
-	int active_inputs;							/* Number of active inputs on this node type */
-	int input_node[DISCRETE_MAX_INPUTS];       /* input/control nodes */
-	double initial[DISCRETE_MAX_INPUTS];  /* Initial values */
-	const void *custom;                         /* Custom function specific initialisation data */
-	const char *name;                           /* Node Name */
+	int node;				/* Output node number */
+	int type;				/* see defines below */
+	int active_inputs;			/* Number of active inputs on this node type */
+	int input_node[DISCRETE_MAX_INPUTS];	/* input/control nodes */
+	double initial[DISCRETE_MAX_INPUTS];	/* Initial values */
+	const void *custom;			/* Custom function specific initialisation data */
+	const char *name;			/* Node Name */
 };
 
 struct node_description
 {
-	int 	node;                                      /* The nodes index number in the node list      */
-	int		module;                                    /* The nodes module number from the module list */
-	double	output;                                    /* The nodes last output value                  */
+	int 	node;			/* The nodes index number in the node list      */
+	int	module;			/* The nodes module number from the module list */
+	double	output;			/* The nodes last output value                  */
 
-	int		active_inputs;                             /* Number of active inputs on this node type */
-	struct	node_description* input_node[DISCRETE_MAX_INPUTS];	   /* Either pointer to input node OR NULL in which case use the input value */
-	double	input[DISCRETE_MAX_INPUTS];               /* Input values for this node */
+	int	active_inputs;		/* Number of active inputs on this node type */
+	struct	node_description* input_node[DISCRETE_MAX_INPUTS];	/* Either pointer to input node OR NULL in which case use the input value */
+	double	input[DISCRETE_MAX_INPUTS];	/* Input values for this node */
 
-	void	*context;                                  /* Contextual information specific to this node type */
-	const char	*name;                                 /* Text name string for identification/debug */
-	const void *custom;                                /* Custom function specific initialisation data */
+	void	*context;		/* Contextual information specific to this node type */
+	const char	*name;		/* Text name string for identification/debug */
+	const void *custom;		/* Custom function specific initialisation data */
 };
 
 struct discrete_module
@@ -1210,6 +1660,50 @@ struct discrete_lfsr_desc
 	int output_bit;
 };
 
+struct discrete_555_astbl_desc
+{
+	int	options;	// bit mapped options
+	double	v555;		// B+ voltage of 555
+	double	v555high;	// High output voltage of 555 (Usually v555 - 1.7)
+	double	threshold555;	// normally 2/3 of v555
+	double	trigger555;	// normally 1/3 of v555
+};
+
+struct discrete_555_cc_desc
+{
+	int	options;	// bit mapped options
+	double	v555;		// B+ voltage of 555
+	double	v555high;	// High output voltage of 555 (Usually v555 - 1.7)
+	double	threshold555;	// normally 2/3 of v555
+	double	trigger555;	// normally 1/3 of v555
+	double	vCCsource;	// B+ voltage of the Constant Current source
+	double	vCCjunction;	// The voltage drop of the Constant Current source transitor (0 if Op Amp)
+};
+
+struct discrete_566_desc
+{
+	int	options;	// bit mapped options
+	double	vPlus;		// B+ voltage of 566
+	double	vNeg;		// B- voltage of 566
+};
+
+struct discrete_comp_adder_table
+{
+	int	type;
+	double	cDefault;
+	int	length;
+	double	c[DISC_LADDER_MAXRES];
+};
+
+struct discrete_dac_r1_ladder
+{
+	int	ladderLength;		// 2 to DISC_LADDER_MAXRES.  1 would be useless.
+	double	r[DISC_LADDER_MAXRES];	// Don't use 0 for valid resistors.  That is a short.
+	double	vBias;			// Voltage Bias resistor is tied to (0 = not used)
+	double	rBias;			// Additional resistor tied to vBias (0 = not used)
+	double	rGnd;			// Resistor tied to ground (0 = not used)
+	double	cFilter;		// Smoothing cap (0 = not used)
+};
 
 struct discrete_ladder
 {
@@ -1219,6 +1713,33 @@ struct discrete_ladder
 	double smoothing_cap;
 };
 
+#define DISC_MAX_MIXER_INPUTS	8
+
+struct discrete_mixer_desc
+{
+	int	type;
+	int	mixerLength;
+	double	r[DISC_MAX_MIXER_INPUTS];	// static input resistance values.  These are in series with rNode, if used.
+	int	rNode[DISC_MAX_MIXER_INPUTS];	// variable resistance nodes, if needed.  0 if not used.
+	double	c[DISC_MAX_MIXER_INPUTS];
+	double	rI;
+	double	rF;
+	double	cF;
+	double	cAmp;
+	double	vRef;
+	double	gain;				// Scale value to get output close to +/- 32767
+};
+
+struct discrete_schmitt_osc_desc
+{
+	double	rIn;
+	double	rFeedback;
+	double	c;
+	double	trshRise;	// voltage that triggers the gate input to go high (vGate) on rise
+	double	trshFall;	// voltage that triggers the gate input to go low (0V) on fall
+	double	vGate;		// the ouput high voltage of the gate that gets fedback through rFeedback
+	int	options;	// bitmaped options
+};
 
 struct discrete_adsr
 {
@@ -1284,60 +1805,71 @@ enum { NODE_00=0x40000000
 /************************************************************************/
 enum {
 	/* Sources */
-		DSS_NULL,                                /* Nothing, nill, zippo, only to be used as terminating node */
-		DSS_CONSTANT,                            /* Constant node */
-		DSS_ADJUSTMENT,                          /* Adjustment node */
-		DSS_INPUT,                               /* Memory mapped input node */
-		DSS_INPUT_PULSE,                         /* Memory mapped input node, single pulsed version */
-		DSS_NOISE,                               /* Random Noise generator */
-		DSS_LFSR_NOISE,                          /* Cyclic/Resetable LFSR based Noise generator */
-		DSS_SQUAREWAVE,                          /* Square Wave generator, adjustable frequency based */
-		DSS_SQUAREWFIX,                          /* Square Wave generator, fixed frequency based (faster) */
-		DSS_SQUAREWAVE2,                         /* Square Wave generator, time based */
-		DSS_SINEWAVE,                            /* Sine Wave generator */
-		DSS_TRIANGLEWAVE,                        /* Triangle wave generator, frequency based */
-		DSS_SAWTOOTHWAVE,                        /* Sawtooth wave generator */
-		DSS_ADSR,                                /* ADSR Envelope generator */
+	DSS_NULL,		/* Nothing, nill, zippo, only to be used as terminating node */
+	DSS_CONSTANT,		/* Constant node */
+	DSS_ADJUSTMENT,		/* Adjustment node */
+	DSS_INPUT,		/* Memory mapped input node */
+	DSS_INPUT_PULSE,	/* Memory mapped input node, single pulsed version */
+	DSS_NOISE,		/* Random Noise generator */
+	DSS_LFSR_NOISE,		/* Cyclic/Resetable LFSR based Noise generator */
+	DSS_SQUAREWAVE,		/* Square Wave generator, adjustable frequency based */
+	DSS_SQUAREWFIX,		/* Square Wave generator, fixed frequency based (faster) */
+	DSS_SQUAREWAVE2,	/* Square Wave generator, time based */
+	DSS_SINEWAVE,		/* Sine Wave generator */
+	DSS_TRIANGLEWAVE,	/* Triangle wave generator, frequency based */
+	DSS_SAWTOOTHWAVE,	/* Sawtooth wave generator */
+	DSS_COUNTER,		/* External clock Binary Counter */
+	DSS_COUNTER_FIX,	/* Fixed frequency Binary Counter */
+	DSS_OP_AMP_OSC,		/* Op Amp Oscillator */
+	DSS_SCHMITT_OSC,	/* Schmitt Feedback Oscillator */
+	DSS_ADSR,		/* ADSR Envelope generator */
 
 	/* Transforms */
-		DST_RCFILTER,				 /* Simple RC Filter network */
-		DST_RCDISC,                              /* Simple RC discharge */
-		DST_RCDISC2,                             /* Switched 2 Input RC discharge */
+	DST_RCFILTER,		/* Simple RC Filter network */
+	DST_CRFILTER,		/* RC Bypass Filter (High Pass) */
+	DST_RCDISC,		/* Simple RC discharge */
+	DST_RCDISC2,		/* Switched 2 Input RC discharge */
 
-		DST_RCFILTERN,				 /* Simple RC Filter network */
-		DST_RCDISCN,                             /* Simple RC discharge */
-		DST_RCDISC2N,                            /* Switched 2 Input RC discharge */
+	DST_RCFILTERN,		/* Simple RC Filter network */
+	DST_RCDISCN,		/* Simple RC discharge */
+	DST_RCDISC2N,		/* Switched 2 Input RC discharge */
 
-		DST_RAMP,                                /* Ramp up/down simulation */
-		DST_CLAMP,                               /* Signal Clamp */
-		DST_FILTER1,                             /* 1st Order Filter, Low or High Pass */
-		DST_FILTER2,                             /* 2nd Order Filter, Low, High, or Band Pass */
-		DST_TRANSFORM,                           /* Muliply math functions based on string */
-		DST_GAIN,                                /* Gain Block, D = (A*B) + C*/
-		DST_DIVIDE,                              /* Gain Block, C = A/B */
-		DST_ADDER,                               /* C = A+B */
-		DST_SWITCH,                              /* C = A or B */
-		DST_ONESHOT,                             /* One-shot pulse generator */
-		DST_SAMPHOLD,                            /* Sample & hold transform */
-		DST_LADDER,                              /* Resistor ladder emulation */
-/*		DST_DELAY,                               // Phase shift/Delay line */
+	DST_RAMP,		/* Ramp up/down simulation */
+	DST_CLAMP,		/* Signal Clamp */
+	DST_FILTER1,		/* 1st Order Filter, Low or High Pass */
+	DST_FILTER2,		/* 2nd Order Filter, Low, High, or Band Pass */
+	DST_TRANSFORM,		/* Muliply math functions based on string */
+	DST_GAIN,		/* Gain Block, D = (A*B) + C*/
+	DST_DIVIDE,		/* Gain Block, C = A/B */
+	DST_ADDER,		/* C = A+B */
+	DST_SWITCH,		/* C = A or B */
+	DST_ONESHOT,		/* One-shot pulse generator */
+	DST_SAMPHOLD,		/* Sample & hold transform */
+	DST_LADDER,		/* Resistor ladder emulation */
+	DST_DAC_R1,		/* R1 Ladder DAC with cap smoothing */
+	DST_COMP_ADDER,		/* Selectable Parallel Component Adder */
+	DST_MIXER,		/* Final Mixing Stage */
+//	DST_DELAY,		/* Phase shift/Delay line */
+
 	/* Logic */
-		DST_LOGIC_INV,
-		DST_LOGIC_AND,
-		DST_LOGIC_NAND,
-		DST_LOGIC_OR,
-		DST_LOGIC_NOR,
-		DST_LOGIC_XOR,
-		DST_LOGIC_NXOR,
+	DST_LOGIC_INV,
+	DST_LOGIC_AND,
+	DST_LOGIC_NAND,
+	DST_LOGIC_OR,
+	DST_LOGIC_NOR,
+	DST_LOGIC_XOR,
+	DST_LOGIC_NXOR,
+
 	/* Devices */
-		DSD_555_ASTBL,                           /* NE555 Emulation */
-		DSD_SQUAREW555,                          /* Square Wave generator, NE555 based */
-		DSD_SQUAREW566,                          /* Square Wave generator, NE566 based */
-		DSD_TRIANGLEW566,                        /* Triangle wave generator, NE566 based */
+	DSD_555_ASTBL,		/* NE555 Astable Emulation */
+	DSD_555_CC,		/* Constant Current 555 circuit (VCO)*/
+	DSD_566,		/* NE566 Emulation */
+
 	/* Custom */
-/*		DST_CUSTOM,                              // whatever you want someday */
-    /* Output Node */
-		DSO_OUTPUT                               /* The final output node */
+//	DST_CUSTOM,		/* whatever you want someday */
+
+	/* Output Node */
+	DSO_OUTPUT		/* The final output node */
 };
 
 
@@ -1363,9 +1895,15 @@ enum {
 #define DISCRETE_TRIANGLEWAVE(NODE,ENAB,FREQ,AMPL,BIAS,PHASE)           { NODE, DSS_TRIANGLEWAVE, 5, { ENAB,FREQ,AMPL,BIAS,NODE_NC }, { ENAB,FREQ,AMPL,BIAS,PHASE }, NULL, "Triangle Wave" },
 #define DISCRETE_SAWTOOTHWAVE(NODE,ENAB,FREQ,AMPL,BIAS,GRAD,PHASE)      { NODE, DSS_SAWTOOTHWAVE, 6, { ENAB,FREQ,AMPL,BIAS,NODE_NC,NODE_NC }, { ENAB,FREQ,AMPL,BIAS,GRAD,PHASE }, NULL, "Saw Tooth Wave" },
 #define DISCRETE_LFSR_NOISE(NODE,ENAB,RESET,FREQ,AMPL,FEED,BIAS,LFSRTB) { NODE, DSS_LFSR_NOISE  , 6, { ENAB,RESET,FREQ,AMPL,FEED,BIAS }, { ENAB,RESET,FREQ,AMPL,FEED,BIAS }, LFSRTB, "LFSR Noise Source" },
+#define DISCRETE_COUNTER(NODE,ENAB,RESET,CLK,MAX,DIR,INIT0,CLKTYPE)     { NODE, DSS_COUNTER     , 7, { ENAB,RESET,CLK,NODE_NC,DIR,INIT0,NODE_NC }, { ENAB,RESET,CLK,MAX,DIR,INIT0,CLKTYPE }, NULL, "External clock Binary Counter" },
+#define DISCRETE_COUNTER_FIX(NODE,ENAB,RESET,FREQ,MAX,DIR,INIT0)        { NODE, DSS_COUNTER_FIX , 6, { ENAB,RESET,FREQ,NODE_NC,DIR,INIT0 }, { ENAB,RESET,FREQ,MAX,DIR,INIT0 }, NULL, "Fixed Freq Binary Counter" },
+#define DISCRETE_OP_AMP_OSCILLATOR(NODE,ENAB,VIN,TYPE,INFO)             { NODE, DSS_OP_AMP_OSC  , 3, { ENAB,VIN,NODE_NC }, { ENAB,VIN,TYPE }, INFO, "Op Amp Oscillator" },
+#define DISCRETE_SCHMITT_OSCILLATOR(NODE,ENAB,INP0,AMPL,TABLE)          { NODE, DSS_SCHMITT_OSC , 3, { ENAB,INP0,AMPL }, { ENAB,INP0,AMPL }, TABLE, "Schmitt Feedback Oscillator" },
 #define DISCRETE_ADSR_ENV(NODE,ENAB,TRIGGER,GAIN,ADSRTB)                { NODE, DSS_ADSR        , 3, { ENAB,TRIGGER,GAIN }, { ENAB,TRIGGER,GAIN }, ADSRTB, "ADSR Env Generator" },
 
 #define DISCRETE_RCFILTER(NODE,ENAB,INP0,RVAL,CVAL)                     { NODE, DST_RCFILTER    , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Filter" },
+#define DISCRETE_CRFILTER(NODE,ENAB,INP0,RVAL,CVAL)                     { NODE, DST_CRFILTER    , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "CR Filter" },
+#define DISCRETE_CRFILTER_VREF(NODE,ENAB,INP0,RVAL,CVAL,VREF)           { NODE, DST_CRFILTER    , 5, { ENAB,INP0,NODE_NC,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL,VREF }, NULL, "CR Filter to VREF" },
 #define DISCRETE_RCDISC(NODE,ENAB,INP0,RVAL,CVAL)                       { NODE, DST_RCDISC      , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Discharge" },
 #define DISCRETE_RCDISC2(NODE,SWITCH,INP0,RVAL0,INP1,RVAL1,CVAL)        { NODE, DST_RCDISC2     , 6, { SWITCH,INP0,NODE_NC,INP1,NODE_NC,NODE_NC }, { SWITCH,INP0,RVAL0,INP1,RVAL1,CVAL }, NULL, "RC Discharge 2" },
 #define DISCRETE_RCFILTERN(NODE,ENAB,INP0,RVAL,CVAL)                    { NODE, DST_RCFILTERN   , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Filter (New Type)" },
@@ -1390,34 +1928,42 @@ enum {
 #define DISCRETE_ADDER2(NODE,ENAB,INP0,INP1)                            { NODE, DST_ADDER       , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Adder 2 Node" },
 #define DISCRETE_ADDER3(NODE,ENAB,INP0,INP1,INP2)                       { NODE, DST_ADDER       , 4, { ENAB,INP0,INP1,INP2 }, { ENAB,INP0,INP1,INP2 }, NULL, "Adder 3 Node" },
 #define DISCRETE_ADDER4(NODE,ENAB,INP0,INP1,INP2,INP3)                  { NODE, DST_ADDER       , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Adder 4 Node" },
-#define DISCRETE_ONESHOTR(NODE,ENAB,TRIG,AMPL,WIDTH)                    { NODE, DST_ONESHOT     , 5, { ENAB,TRIG,NODE_NC,AMPL,WIDTH }, { ENAB,TRIG,1,AMPL,WIDTH }, NULL, "One Shot Resetable" },
-#define DISCRETE_ONESHOT(NODE,ENAB,TRIG,RESET,AMPL,WIDTH)               { NODE, DST_ONESHOT     , 5, { ENAB,TRIG,RESET,AMPL,WIDTH }, { ENAB,TRIG,RESET,AMPL,WIDTH }, NULL, "One Shot" },
+#define DISCRETE_ONESHOT(NODE,TRIG,AMPL,WIDTH,TYPE)                     { NODE, DST_ONESHOT     , 5, { NODE_NC,TRIG,AMPL,WIDTH,NODE_NC }, { 0,TRIG,AMPL,WIDTH,TYPE }, NULL, "One Shot" },
+#define DISCRETE_ONESHOTR(NODE,RESET,TRIG,AMPL,WIDTH,TYPE)              { NODE, DST_ONESHOT     , 5, { RESET,TRIG,AMPL,WIDTH,NODE_NC }, { RESET,TRIG,AMPL,WIDTH,TYPE }, NULL, "One Shot Resetable" },
 #define DISCRETE_LADDER(NODE,ENAB,INP0,SELECT,GAIN,OFFSET,LADDER)       { NODE, DST_LADDER      , 5, { ENAB,INP0,SELECT,GAIN,OFFSET }, { ENAB,INP0,SELECT,GAIN,OFFSET }, LADDER, "Resistor Ladder" },
 #define DISCRETE_SAMPLHOLD(NODE,ENAB,INP0,CLOCK,CLKTYPE)                { NODE, DST_SAMPHOLD    , 4, { ENAB,INP0,CLOCK,NODE_NC }, { ENAB,INP0,CLOCK,CLKTYPE }, NULL, "Sample & Hold" },
+#define DISCRETE_DAC_R1(NODE,ENAB,DATA,VDATA,LADDER)                    { NODE, DST_DAC_R1      , 3, { ENAB,DATA,VDATA }, { ENAB,DATA,VDATA }, LADDER, "DAC with R1 Ladder" },
+#define DISCRETE_COMP_ADDER(NODE,ENAB,DATA,TABLE)                       { NODE, DST_COMP_ADDER  , 2, { ENAB,DATA }, { ENAB,DATA }, TABLE, "Selectable R or C component Adder" },
+#define DISCRETE_MIXER2(NODE,ENAB,IN0,IN1,INFO)                         { NODE, DST_MIXER       , 3, { ENAB,IN0,IN1 }, { ENAB,IN0,IN1 }, INFO, "Final Mixer 2 Stage" },
+#define DISCRETE_MIXER3(NODE,ENAB,IN0,IN1,IN2,INFO)                     { NODE, DST_MIXER       , 4, { ENAB,IN0,IN1,IN2 }, { ENAB,IN0,IN1,IN2 }, INFO, "Final Mixer 3 Stage" },
+#define DISCRETE_MIXER4(NODE,ENAB,IN0,IN1,IN2,IN3,INFO)                 { NODE, DST_MIXER       , 5, { ENAB,IN0,IN1,IN2,IN3 }, { ENAB,IN0,IN1,IN2,IN3 }, INFO, "Final Mixer 4 Stage" },
+#define DISCRETE_MIXER5(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,INFO)             { NODE, DST_MIXER       , 6, { ENAB,IN0,IN1,IN2,IN3,IN4 }, { ENAB,IN0,IN1,IN2,IN3,IN4 }, INFO, "Final Mixer 5 Stage" },
+#define DISCRETE_MIXER6(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,INFO)         { NODE, DST_MIXER       , 7, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5 }, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5 }, INFO, "Final Mixer 6 Stage" },
+#define DISCRETE_MIXER7(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,INFO)     { NODE, DST_MIXER       , 8, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6 }, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6 }, INFO, "Final Mixer 7 Stage" },
+#define DISCRETE_MIXER8(NODE,ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,IN7,INFO) { NODE, DST_MIXER       , 9, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,IN7 }, { ENAB,IN0,IN1,IN2,IN3,IN4,IN5,IN6,IN7 }, INFO, "Final Mixer 8 Stage" },
 
-#define	DISCRETE_LOGIC_INVERT(NODE,ENAB,INP0)                          { NODE, DST_LOGIC_INV   , 2, { ENAB,INP0 }, { ENAB,INP0 }, NULL, "Logic Invertor" },
-#define	DISCRETE_LOGIC_AND(NODE,ENAB,INP0,INP1)                        { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,1.0,1.0 }, NULL, "Logic AND (2inp)" },
-#define	DISCRETE_LOGIC_AND3(NODE,ENAB,INP0,INP1,INP2)                  { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,1.0 }, NULL, "Logic AND (3inp)" },
-#define	DISCRETE_LOGIC_AND4(NODE,ENAB,INP0,INP1,INP2,INP3)             { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 } ,NULL, "Logic AND (4inp)" },
-#define	DISCRETE_LOGIC_NAND(NODE,ENAB,INP0,INP1)                       { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,1.0,1.0 }, NULL, "Logic NAND (2inp)" },
-#define	DISCRETE_LOGIC_NAND3(NODE,ENAB,INP0,INP1,INP2)                 { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,1.0 }, NULL, "Logic NAND (3inp)" },
-#define	DISCRETE_LOGIC_NAND4(NODE,ENAB,INP0,INP1,INP2,INP3)            { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic NAND (4inp)" },
-#define	DISCRETE_LOGIC_OR(NODE,ENAB,INP0,INP1)                         { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,0.0,0.0 }, NULL, "Logic OR (2inp)" },
-#define	DISCRETE_LOGIC_OR3(NODE,ENAB,INP0,INP1,INP2)                   { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,0.0 }, NULL, "Logic OR (3inp)" },
-#define	DISCRETE_LOGIC_OR4(NODE,ENAB,INP0,INP1,INP2,INP3)              { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic OR (4inp)" },
-#define	DISCRETE_LOGIC_NOR(NODE,ENAB,INP0,INP1)                        { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,0.0,0.0 }, NULL, "Logic NOR (2inp)" },
-#define	DISCRETE_LOGIC_NOR3(NODE,ENAB,INP0,INP1,INP2)                  { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,0.0 }, NULL, "Logic NOR (3inp)" },
-#define	DISCRETE_LOGIC_NOR4(NODE,ENAB,INP0,INP1,INP2,INP3)             { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic NOR (4inp)" },
-#define	DISCRETE_LOGIC_XOR(NODE,ENAB,INP0,INP1)                        { NODE, DST_LOGIC_XOR   , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Logic XOR (2inp)" },
-#define	DISCRETE_LOGIC_NXOR(NODE,ENAB,INP0,INP1)                       { NODE, DST_LOGIC_NXOR  , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Logic NXOR (2inp)" },
+#define DISCRETE_LOGIC_INVERT(NODE,ENAB,INP0)                           { NODE, DST_LOGIC_INV   , 2, { ENAB,INP0 }, { ENAB,INP0 }, NULL, "Logic Invertor" },
+#define DISCRETE_LOGIC_AND(NODE,ENAB,INP0,INP1)                         { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,1.0,1.0 }, NULL, "Logic AND (2inp)" },
+#define DISCRETE_LOGIC_AND3(NODE,ENAB,INP0,INP1,INP2)                   { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,1.0 }, NULL, "Logic AND (3inp)" },
+#define DISCRETE_LOGIC_AND4(NODE,ENAB,INP0,INP1,INP2,INP3)              { NODE, DST_LOGIC_AND   , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 } ,NULL, "Logic AND (4inp)" },
+#define DISCRETE_LOGIC_NAND(NODE,ENAB,INP0,INP1)                        { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,1.0,1.0 }, NULL, "Logic NAND (2inp)" },
+#define DISCRETE_LOGIC_NAND3(NODE,ENAB,INP0,INP1,INP2)                  { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,1.0 }, NULL, "Logic NAND (3inp)" },
+#define DISCRETE_LOGIC_NAND4(NODE,ENAB,INP0,INP1,INP2,INP3)             { NODE, DST_LOGIC_NAND  , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic NAND (4inp)" },
+#define DISCRETE_LOGIC_OR(NODE,ENAB,INP0,INP1)                          { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,0.0,0.0 }, NULL, "Logic OR (2inp)" },
+#define DISCRETE_LOGIC_OR3(NODE,ENAB,INP0,INP1,INP2)                    { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,0.0 }, NULL, "Logic OR (3inp)" },
+#define DISCRETE_LOGIC_OR4(NODE,ENAB,INP0,INP1,INP2,INP3)               { NODE, DST_LOGIC_OR    , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic OR (4inp)" },
+#define DISCRETE_LOGIC_NOR(NODE,ENAB,INP0,INP1)                         { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,NODE_NC,NODE_NC }, { ENAB,INP0,INP1,0.0,0.0 }, NULL, "Logic NOR (2inp)" },
+#define DISCRETE_LOGIC_NOR3(NODE,ENAB,INP0,INP1,INP2)                   { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,INP2,NODE_NC }, { ENAB,INP0,INP1,INP2,0.0 }, NULL, "Logic NOR (3inp)" },
+#define DISCRETE_LOGIC_NOR4(NODE,ENAB,INP0,INP1,INP2,INP3)              { NODE, DST_LOGIC_NOR   , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Logic NOR (4inp)" },
+#define DISCRETE_LOGIC_XOR(NODE,ENAB,INP0,INP1)                         { NODE, DST_LOGIC_XOR   , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Logic XOR (2inp)" },
+#define DISCRETE_LOGIC_NXOR(NODE,ENAB,INP0,INP1)                        { NODE, DST_LOGIC_NXOR  , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Logic NXOR (2inp)" },
 
-#define DISCRETE_555_ASTABLE(NODE,RESET,AMPL,R1,R2,C,CTRLV,TYPE)       { NODE, DSD_555_ASTBL   , 6, { RESET,AMPL,R1,R2,C,CTRLV }, { RESET,AMPL,R1,R2,C,CTRLV }, TYPE, "555 Astable" },
-#define DISCRETE_SQUAREW555(NODE,RESET,AMPL,R1,R2,C,BIAS)              { NODE, DSD_SQUAREW555  , 6, { RESET,AMPL,R1,R2,C,BIAS }, { RESET,AMPL,R1,R2,C,BIAS }, NULL, "Square Wave 555" },
-#define DISCRETE_SQUAREW566(NODE,ENAB,AMPL,V_IN,R,C,BIAS,SETUP)        { NODE, DSD_SQUAREW566  , 6, { ENAB,AMPL,V_IN,R,C,BIAS }, { ENAB,AMPL,V_IN,R,C,BIAS }, SETUP," Square Wave 566" },
-#define DISCRETE_TRIANGLEW566(NODE,ENAB,AMPL,V_IN,R,C,BIAS,SETUP)      { NODE, DSD_TRIANGLEW566, 6, { ENAB,AMPL,V_IN,R,C,BIAS }, { ENAB,AMPL,V_IN,R,C,BIAS }, SETUP," Triangle Wave 566" },
+#define DISCRETE_555_ASTABLE(NODE,RESET,R1,R2,C,CTRLV,OPTIONS)          { NODE, DSD_555_ASTBL   , 5, { RESET,R1,R2,C,CTRLV }, { RESET,R1,R2,C,CTRLV }, OPTIONS, "555 Astable" },
+#define DISCRETE_555_CC(NODE,RESET,VIN,R,C,RBIAS,RGND,RDIS,OPTIONS)     { NODE, DSD_555_CC      , 7, { RESET,VIN,R,C,RBIAS,RGND,RDIS }, { RESET,VIN,R,C,RBIAS,RGND,RDIS }, OPTIONS, "555 Constant Current VCO" },
+#define DISCRETE_566(NODE,ENAB,VMOD,R,C,OPTIONS)                        { NODE, DSD_566         , 4, { ENAB,VMOD,R,C }, { ENAB,VMOD,R,C }, OPTIONS, "566" },
 
-#define DISCRETE_OUTPUT(OPNODE,VOL)                                    { NODE_OP, DSO_OUTPUT   , 3, { OPNODE,OPNODE,NODE_NC }, {0,0,VOL }, NULL, "Output Node" },
-#define DISCRETE_OUTPUT_STEREO(OPNODEL,OPNODER,VOL)                    { NODE_OP, DSO_OUTPUT   , 3, { OPNODEL,OPNODER,NODE_NC }, { 0,0,VOL }, NULL, "Stereo Output Node" },
+#define DISCRETE_OUTPUT(OPNODE,VOL)                                     { NODE_OP, DSO_OUTPUT   , 3, { OPNODE,OPNODE,NODE_NC }, {0,0,VOL }, NULL, "Output Node" },
+#define DISCRETE_OUTPUT_STEREO(OPNODEL,OPNODER,VOL)                     { NODE_OP, DSO_OUTPUT   , 3, { OPNODEL,OPNODER,NODE_NC }, { 0,0,VOL }, NULL, "Stereo Output Node" },
 
 
 /************************************************************************/
@@ -1426,6 +1972,7 @@ enum {
 /*                                                                      */
 /************************************************************************/
 
+struct node_description* discrete_find_node(int node);
 int  discrete_sh_start (const struct MachineSound *msound);
 void discrete_sh_stop (void);
 void discrete_sh_reset (void);

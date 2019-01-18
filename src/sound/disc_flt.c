@@ -8,10 +8,12 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DST_CRFILTER          - Simple CR filter & also highpass filter      */
 /* DST_FILTER1           - Generic 1st order filter                     */
 /* DST_FILTER2           - Generic 2nd order filter                     */
 /* DST_RCFILTER          - Simple RC filter & also lowpass filter       */
-/* DST_RCDISC            - Simple discharing RC                         */
+/* DST_RCDISC            - Simple discharging RC                        */
+/* DST_RCDISC2           - Simple charge R1/C, discharge R0/C           */
 /*                                                                      */
 /************************************************************************/
 
@@ -21,10 +23,8 @@
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Frequency value (initialisation only)                  */
-/* input[3]    - Filter type (initialisation only)                      */
-/* input[4]    - NOT USED                                               */
-/* input[5]    - NOT USED                                               */
+/* input[2]    - Frequency value (initialization only)                  */
+/* input[3]    - Filter type (initialization only)                      */
 /*                                                                      */
 /************************************************************************/
 
@@ -42,20 +42,20 @@ static void calculate_filter1_coefficients(double fc, double type,
 	double den, w, two_over_T;
 
 	/* calculate digital filter coefficents */
-    /*w = 2.0*M_PI*fc; no pre-warping */
-    w = Machine->sample_rate*2.0*tan(M_PI*fc/Machine->sample_rate); /* pre-warping */
+	/*w = 2.0*M_PI*fc; no pre-warping */
+	w = Machine->sample_rate*2.0*tan(M_PI*fc/Machine->sample_rate); /* pre-warping */
 	two_over_T = 2.0*Machine->sample_rate;
 
-    den = w + two_over_T;
-    *a1 = (w - two_over_T)/den;
-    if (type == DISC_FILTER_LOWPASS)
+	den = w + two_over_T;
+	*a1 = (w - two_over_T)/den;
+	if (type == DISC_FILTER_LOWPASS)
 	{
-    	*b0 = *b1 = w/den;
+		*b0 = *b1 = w/den;
 	}
 	else if (type == DISC_FILTER_HIGHPASS)
-    {
+	{
 		*b0 = two_over_T/den;
-    	*b1 = *b0;
+		*b1 = *b0;
 	}
 	else
 	{
@@ -100,15 +100,14 @@ int dst_filter1_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialise memory */
+		/* Initialize memory */
 		memset(node->context,0,sizeof(struct dss_filter1_context));
 	}
 	context=(struct dss_filter1_context*)node->context;
 
-	calculate_filter1_coefficients(node->input[2], node->input[3],
-								   &context->a1, &context->b0, &context->b1);
+	calculate_filter1_coefficients(node->input[2], node->input[3], &context->a1, &context->b0, &context->b1);
 
-	/* Initialise the object */
+	/* Initialize the object */
 	dst_filter1_reset(node);
 	return 0;
 }
@@ -119,10 +118,9 @@ int dst_filter1_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Frequency value (initialisation only)                  */
-/* input[3]    - Damping value (initialisation only)                    */
-/* input[4]    - Filter type (initialisation only) 						*/
-/* input[5]    - NOT USED                                               */
+/* input[2]    - Frequency value (initialization only)                  */
+/* input[3]    - Damping value (initialization only)                    */
+/* input[4]    - Filter type (initialization only) 			*/
 /*                                                                      */
 /************************************************************************/
 
@@ -145,30 +143,30 @@ static void calculate_filter2_coefficients(double fc, double d, double type,
 	double two_over_T_squared = two_over_T * two_over_T;
 
 	/* calculate digital filter coefficents */
-    /*w = 2.0*M_PI*fc; no pre-warping */
-    w = Machine->sample_rate*2.0*tan(M_PI*fc/Machine->sample_rate); /* pre-warping */
+	/*w = 2.0*M_PI*fc; no pre-warping */
+	w = Machine->sample_rate*2.0*tan(M_PI*fc/Machine->sample_rate); /* pre-warping */
 	w_squared = w*w;
 
-    den = two_over_T_squared + d*w*two_over_T + w_squared;
+	den = two_over_T_squared + d*w*two_over_T + w_squared;
 
-    *a1 = 2.0*(-two_over_T_squared + w_squared)/den;
-    *a2 = (two_over_T_squared - d*w*two_over_T + w_squared)/den;
+	*a1 = 2.0*(-two_over_T_squared + w_squared)/den;
+	*a2 = (two_over_T_squared - d*w*two_over_T + w_squared)/den;
 
-    if (type == DISC_FILTER_LOWPASS)
+	if (type == DISC_FILTER_LOWPASS)
 	{
-    	*b0 = *b2 = w_squared/den;
-    	*b1 = 2.0*(*b0);
+		*b0 = *b2 = w_squared/den;
+		*b1 = 2.0*(*b0);
 	}
 	else if (type == DISC_FILTER_BANDPASS)
-    {
+	{
 		*b0 = w*two_over_T/den;
-    	*b1 = 0.0;
-    	*b2 = -(*b0);
+		*b1 = 0.0;
+		*b2 = -(*b0);
 	}
 	else if (type == DISC_FILTER_HIGHPASS)
-    {
+	{
 		*b0 = *b2 = two_over_T_squared/den;
-    	*b1 = -2.0*(*b0);
+		*b1 = -2.0*(*b0);
 	}
 	else
 	{
@@ -216,7 +214,7 @@ int dst_filter2_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialise memory */
+		/* Initialize memory */
 		memset(node->context,0,sizeof(struct dss_filter2_context));
 	}
 	context=(struct dss_filter2_context*)node->context;
@@ -225,7 +223,7 @@ int dst_filter2_init(struct node_description *node)
 								   &context->a1, &context->a2,
 								   &context->b0, &context->b1, &context->b2);
 
-	/* Initialise the object */
+	/* Initialize the object */
 	dst_filter2_reset(node);
 	return 0;
 }
@@ -234,7 +232,7 @@ int dst_filter2_init(struct node_description *node)
 struct dss_rcdisc_context
 {
         int state;
-        double t;           /* time*/
+        double t;           // time
         double step;
 	double exponent0;
 	double exponent1;
@@ -246,21 +244,26 @@ struct dss_rcdisc_context
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Resistor value (initialisation only)                   */
-/* input[3]    - Capacitor Value (initialisation only)                  */
-/* input[4]    - NOT USED                                               */
-/* input[5]    - Pre-calculated value for exponent                      */
+/* input[2]    - Resistor value (initialization only)                   */
+/* input[3]    - Capacitor Value (initialization only)                  */
 /*                                                                      */
 /************************************************************************/
+struct dst_rcfilter_context
+{
+	double	exponent;
+};
+
 int dst_rcfilter_step(struct node_description *node)
 {
+	struct dst_rcfilter_context *context=(struct dst_rcfilter_context*)node->context;
+
 	/************************************************************************/
 	/* Next Value = PREV + (INPUT_VALUE - PREV)*(1-(EXP(-TIMEDELTA/RC)))    */
 	/************************************************************************/
 
 	if(node->input[0])
 	{
-		node->output=node->output+((node->input[1]-node->output)*node->input[5]);
+		node->output=node->output+((node->input[1]-node->output)*context->exponent);
 	}
 	else
 	{
@@ -271,19 +274,97 @@ int dst_rcfilter_step(struct node_description *node)
 
 int dst_rcfilter_reset(struct node_description *node)
 {
-	node->output=0;
+	struct dst_rcfilter_context *context=(struct dst_rcfilter_context*)node->context;
+
+	context->exponent = -1.0 / (node->input[2] * node->input[3] * Machine->sample_rate);
+	context->exponent = 1.0 - exp(context->exponent);
+	node->output = node->input[1];
 	return 0;
 }
 
 int dst_rcfilter_init(struct node_description *node)
 {
-	node->input[5]=-1.0/(node->input[2]*node->input[3]*Machine->sample_rate);
-	node->input[5]=1-exp(node->input[5]);
-	/* Initialise the object */
+	/* Allocate memory for the context array and the node execution order array */
+	if((node->context=malloc(sizeof(struct dst_rcfilter_context)))==NULL)
+	{
+		discrete_log("dst_rcfilter_init() - Failed to allocate local context memory.");
+		return 1;
+	}
+	else
+	{
+		/* Initialize memory */
+		memset(node->context,0,sizeof(struct dst_rcfilter_context));
+	}
+
+	/* Initialize the object */
 	dst_rcfilter_reset(node);
 	return 0;
 }
 
+
+/************************************************************************/
+/*                                                                      */
+/* DST_CRFILTER - Usage of node_description values for CR filter        */
+/*                                                                      */
+/* input[0]    - Enable input value                                     */
+/* input[1]    - input value                                            */
+/* input[2]    - Resistor value (initialization only)                   */
+/* input[3]    - Capacitor Value (initialization only)                  */
+/* input[4]    - Voltage reference. Usually 0V.                         */
+/*                                                                      */
+/************************************************************************/
+struct dst_crfilter_context
+{
+	double	exponent;
+	double	vCap;
+};
+
+int dst_crfilter_step(struct node_description *node)
+{
+	struct dst_crfilter_context *context=(struct dst_crfilter_context*)node->context;
+
+
+	if(node->input[0])
+	{
+		context->vCap += ((node->input[1] - node->input[4]) - context->vCap) * context->exponent;
+		node->output = node->input[1] - context->vCap;
+	}
+	else
+	{
+		node->output=0;
+	}
+	return 0;
+}
+
+int dst_crfilter_reset(struct node_description *node)
+{
+	struct dst_crfilter_context *context=(struct dst_crfilter_context*)node->context;
+
+	context->exponent = -1.0 / (node->input[2] * node->input[3] * Machine->sample_rate);
+	context->exponent = 1.0 - exp(context->exponent);
+	context->vCap = 0;
+	node->output = node->input[1];
+	return 0;
+}
+
+int dst_crfilter_init(struct node_description *node)
+{
+	/* Allocate memory for the context array and the node execution order array */
+	if((node->context=malloc(sizeof(struct dst_crfilter_context)))==NULL)
+	{
+		discrete_log("dst_crfilter_init() - Failed to allocate local context memory.");
+		return 1;
+	}
+	else
+	{
+		/* Initialize memory */
+		memset(node->context,0,sizeof(struct dst_crfilter_context));
+	}
+
+	/* Initialize the object */
+	dst_crfilter_reset(node);
+	return 0;
+}
 /************************************************************************/
 /*                                                                      */
 /* DST_RCDISC -   Usage of node_description values for RC discharge     */
@@ -291,8 +372,8 @@ int dst_rcfilter_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Resistor value (initialisation only)                   */
-/* input[3]    - Capacitor Value (initialisation only)                  */
+/* input[2]    - Resistor value (initialization only)                   */
+/* input[3]    - Capacitor Value (initialization only)                  */
 /* input[4]    - NOT USED                                               */
 /* input[5]    - NOT_USED                                               */
 /*                                                                      */
@@ -349,11 +430,11 @@ int dst_rcdisc_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialise memory */
+		/* Initialize memory */
 		memset(node->context,0,sizeof(struct dss_rcdisc_context));
 	}
 
-	/* Initialise the object */
+	/* Initialize the object */
 	dst_rcdisc_reset(node);
 	return 0;
 }
@@ -366,10 +447,10 @@ int dst_rcdisc_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Switch input value                                     */
 /* input[1]    - input[0] value                                         */
-/* input[2]    - Resistor0 value (initialisation only)                  */
+/* input[2]    - Resistor0 value (initialization only)                  */
 /* input[3]    - input[1] value                                         */
-/* input[4]    - Resistor1 value (initialisation only)                  */
-/* input[5]    - Capacitor Value (initialisation only)                  */
+/* input[4]    - Resistor1 value (initialization only)                  */
+/* input[5]    - Capacitor Value (initialization only)                  */
 /*                                                                      */
 /************************************************************************/
 
@@ -381,7 +462,7 @@ int dst_rcdisc2_step(struct node_description *node)
 	context=(struct dss_rcdisc_context*)node->context;
 
 	/* Works differently to other as we always on, no enable */
-	/* exponential based in differnce between input/output   */
+	/* exponential based in difference between input/output   */
 
 	diff = ((node->input[0]==0)?node->input[1]:node->input[3])-node->output;
 	diff = diff -(diff * exp(context->step / ((node->input[0]==0)?context->exponent0:context->exponent1)));
@@ -415,11 +496,11 @@ int dst_rcdisc2_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialise memory */
+		/* Initialize memory */
 		memset(node->context,0,sizeof(struct dss_rcdisc_context));
 	}
 
-	/* Initialise the object */
+	/* Initialize the object */
 	dst_rcdisc2_reset(node);
 	return 0;
 }
@@ -433,8 +514,8 @@ int dst_rcdisc2_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Resistor value (initialisation only)                   */
-/* input[3]    - Capacitor Value (initialisation only)                  */
+/* input[2]    - Resistor value (initialization only)                   */
+/* input[3]    - Capacitor Value (initialization only)                  */
 /* input[4]    - NOT USED                                               */
 /* input[5]    - NOT USED                                               */
 /*                                                                      */
@@ -459,8 +540,8 @@ int dst_rcfilterN_init(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Enable input value                                     */
 /* input[1]    - input value                                            */
-/* input[2]    - Resistor value (initialisation only)                   */
-/* input[3]    - Capacitor Value (initialisation only)                  */
+/* input[2]    - Resistor value (initialization only)                   */
+/* input[3]    - Capacitor Value (initialization only)                  */
 /* input[4]    - NOT USED                                               */
 /* input[5]    - NOT_USED                                               */
 /*                                                                      */
@@ -509,10 +590,10 @@ int dst_rcdiscN_step(struct node_description *node)
 /*                                                                      */
 /* input[0]    - Switch input value                                     */
 /* input[1]    - input[0] value                                         */
-/* input[2]    - Resistor0 value (initialisation only)                  */
+/* input[2]    - Resistor0 value (initialization only)                  */
 /* input[3]    - input[1] value                                         */
-/* input[4]    - Resistor1 value (initialisation only)                  */
-/* input[5]    - Capacitor Value (initialisation only)                  */
+/* input[4]    - Resistor1 value (initialization only)                  */
+/* input[5]    - Capacitor Value (initialization only)                  */
 /*                                                                      */
 /************************************************************************/
 
@@ -560,7 +641,7 @@ int dst_rcdisc2N_init(struct node_description *node)
 	}
 	else
 	{
-		/* Initialise memory */
+		/* Initialize memory */
 		memset(node->context,0,sizeof(struct dss_rcdisc2_context));
 	}
 	context=(struct dss_rcdisc2_context*)node->context;
@@ -571,7 +652,7 @@ int dst_rcdisc2N_init(struct node_description *node)
 	calculate_filter1_coefficients(f1, DISC_FILTER_LOWPASS, &context->a1_0, &context->b0_0, &context->b1_0);
 	calculate_filter1_coefficients(f2, DISC_FILTER_LOWPASS, &context->a1_1, &context->b0_1, &context->b1_1);
 
-	/* Initialise the object */
+	/* Initialize the object */
 	dst_rcdisc2_reset(node);
 
 	return 0;
