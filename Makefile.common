@@ -673,7 +673,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/boxer_vidhrdw.c $(CORE_DIR)/drivers/boxer.c \
 				 $(CORE_DIR)/vidhrdw/skyraid_vidhrdw.c $(CORE_DIR)/drivers/skyraid.c \
 				 $(CORE_DIR)/machine/avalnche_machine.c $(CORE_DIR)/vidhrdw/avalnche_vidhrdw.c $(CORE_DIR)/drivers/avalnche.c \
-				 $(CORE_DIR)/drivers/firetrk.c $(CORE_DIR)/vidhrdw/firetrk_vidhrdw.c \
+				 $(CORE_DIR)/drivers/firetrk.c $(CORE_DIR)/vidhrdw/firetrk_vidhrdw.c $(CORE_DIR)/sndhrdw/ataridis_sndhrdw.c \
 				 $(CORE_DIR)/vidhrdw/skydiver_vidhrdw.c $(CORE_DIR)/drivers/skydiver.c \
 				 $(CORE_DIR)/machine/sbrkout_machine.c $(CORE_DIR)/vidhrdw/sbrkout_vidhrdw.c $(CORE_DIR)/drivers/sbrkout.c \
 				 $(CORE_DIR)/machine/atarifb_machine.c $(CORE_DIR)/vidhrdw/atarifb_vidhrdw.c $(CORE_DIR)/drivers/atarifb.c \
