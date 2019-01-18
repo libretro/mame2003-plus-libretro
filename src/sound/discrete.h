@@ -17,7 +17,7 @@
 /*                                                                      */
 /* Unused/Unconnected input nodes should be set to NODE_NC (No Connect) */
 /*                                                                      */
-/* Each node can have upto 6 inputs from either constants or other      */
+/* Each node can have many inputs from either constants or other        */
 /* nodes within the system.                                             */
 /*                                                                      */
 /* It should be remembered that the discrete sound system emulation     */
@@ -77,15 +77,6 @@
 /* the perfect solution but saves repeatedly traversing the netlist     */
 /* until all nodes have settled.                                        */
 /*                                                                      */
-/* It will often be necessary to add gain and level shifting blocks to  */
-/* correct the signal amplitude and offset to the required level        */
-/* as all sine waves have 0 offset and swing +ve/-ve so if you want     */
-/* to use this as a frequency modulation you need to offset it so that  */
-/* it always stays positive, use the DISCRETE_ADDER & DISCRETE_GAIN     */
-/* modules to do this. You will also need to do this to scale and off-  */
-/* set your memory mapped device inputs if they are being used to set   */
-/* amplitude and frequency values.                                      */
-/*                                                                      */
 /* The best way to work out your system is generally to use a pen and   */
 /* paper to draw a logical block diagram like the one above, it helps   */
 /* to understand the system ,map the inputs and outputs and to work     */
@@ -114,6 +105,8 @@
 /* DISCRETE_SAWTOOTHWAVE(NODE,ENAB,FREQ,AMP,BIAS,GRADIENT,PHASE)        */
 /* DISCRETE_NOISE(NODE,ENAB,FREQ,AMP,BIAS)                              */
 /* DISCRETE_LFSR_NOISE(NODE,ENAB,RESET,FREQ,AMPL,FEED,BIAS,LFSRTB)      */
+/* DISCRETE_COUNTER(NODE,ENAB,RESET,CLK,BITS,DIR,INIT0,CLKTYPE)         */
+/* DISCRETE_COUNTER_FIX(NODE,ENAB,RESET,FREQ,BITS,DIR,INIT0)            */
 /* DISCRETE_ADSR_ENV(NODE,ENAB,TRIG,GAIN,ADSRDESC)                      */
 /*                                                                      */
 /* DISCRETE_INVERT(NODE,IN0)                                            */
@@ -129,8 +122,8 @@
 /* DISCRETE_ADDER2(NODE,IN0,IN1,IN2)                                    */
 /* DISCRETE_ADDER3(NODE,IN0,IN1,IN2,IN3)                                */
 /* DISCRETE_SWITCH(NODE,ENAB,SWITCH,INP0,INP1)                          */
-/* DISCRETE_ONESHOTR(NODE,ENAB,TRIG,AMP,WIDTH) - Retriggerable          */
-/* DISCRETE_ONESHOT(NODE,ENAB,TRIG,RESET,AMP,WIDTH) - Non retriggerable */
+/* DISCRETE_ONESHOT(NODE,ENAB,TRIG,AMP,WIDTH)                           */
+/* DISCRETE_ONESHOTR(NODE,ENAB,TRIG,RESET,AMP,WIDTH)                    */
 /*                                                                      */
 /* DISCRETE_RCFILTER(NODE,ENAB,IN0,RVAL,CVAL)                           */
 /* DISCRETE_RCDISC(NODE,ENAB,IN0,RVAL,CVAL)                             */
@@ -161,7 +154,6 @@
 /* DISCRETE_LOGIC_XOR(NODE,ENAB,INP0,INP1)                              */
 /* DISCRETE_LOGIC_NXOR(NODE,ENAB,INP0,INP1)                             */
 /*                                                                      */
-/* DISCRETE_NE555(NODE,RESET,TRIGR,THRSH,CTRLV,VCC)                     */
 /* DISCRETE_555_ASTABLE(NODE,RESET,AMPL,R1,R2,C,CTRLV,TYPE)             */
 /*                                                                      */
 /* DISCRETE_OUTPUT(OPNODE)                                              */
@@ -212,6 +204,9 @@
 /*  Define an adjustment slider that has a default value of 2.5 and     */
 /*  can be adjusted between 0.0 and 5.0 via the user interface.         */
 /*  Adujstment scaling is Linear.                                       */
+/*                                                                      */
+/*      DISC_LOGADJ 1.0                                                 */
+/*      DISC_LINADJ 0.0                                                 */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -321,15 +316,15 @@
 /*                                                                      */
 /*     DISCRETE_SQUAREWAVE2(name of node,                               */
 /*                          enable node or static value                 */
-/*                          frequency node or static value              */
 /*                          amplitude node or static value              */
-/*                          duty cycle node or static value             */
+/*                          off time node or static value in seconds    */
+/*                          on time node or static value in seconds     */
 /*                          dc bias value for waveform                  */
-/*                          starting phase value in degrees)            */
+/*                          starting phase value in seconds)            */
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*   DISCRETE_SQUAREWAVE2(NODE_03,NODE_01,NODE_02,0.01,0.001,100,50,0)  */
+/*   DISCRETE_SQUAREWAVE2(NODE_03,NODE_01,NODE_02,0.01,0.001,0.0,0.001) */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -363,7 +358,7 @@
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_SINEWAVE(NODE_03,NODE_01,NODE_02,10000,90)              */
+/*     DISCRETE_SINEWAVE(NODE_03,NODE_01,NODE_02,10000,5000.0,90)       */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -395,7 +390,7 @@
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_TRIANGLEWAVE(NODE_03,1,5000,NODE_01)                    */
+/*     DISCRETE_TRIANGLEWAVE(NODE_03,1,5000,NODE_01,0.0,0.0)            */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -430,7 +425,7 @@
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_SAWTOOTHWAVE(NODE_03,1,5000,NODE_01,0,90)               */
+/*     DISCRETE_SAWTOOTHWAVE(NODE_03,1,5000,NODE_01,0,0,90)             */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -458,7 +453,7 @@
 /*                                                                      */
 /*  Example config line                                                 */
 /*                                                                      */
-/*     DISCRETE_NOISE(NODE_03,1,5000,NODE_01)                           */
+/*     DISCRETE_NOISE(NODE_03,1,5000,NODE_01,0)                         */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -547,6 +542,37 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DISCRETE_COUNTER     - up/down counter clocked externally.           */
+/* DISCRETE_COUNTER_FIX - up/down counter clocked internally.           */
+/*                                                                      */
+/*  These counters count up/down from 0 to MAX.  When the enable is     */
+/*  low, the output held at it's last value.  When reset is high,       */
+/*  the reset value is loaded into the output.                          */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*       where:         direction: 0 = down, 1 = up                     */
+/*                      clock type: toggle on 0/1                       */
+/*                                                                      */
+/*     DISCRETE_COUNTER(name of node,                                   */
+/*                      enable node or static value,                    */
+/*                      reset node or static value,                     */
+/*                      ext clock node,                                 */
+/*                      max count static value,                         */
+/*                      direction node or static value,                 */
+/*                      reset value node or static value,               */
+/*                      clock type static value)                        */
+/*                                                                      */
+/*     DISCRETE_COUNTER_FIX(name of node,                               */
+/*                          enable node or static value,                */
+/*                          reset node or static value,                 */
+/*                          clock frequency static value                */
+/*                          max count static value,                     */
+/*                          direction node or static value              */
+/*                          reset value node or static value)           */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* DISCRETE_ADDER      - Node addition function, available in three     */
 /*                       lovelly flavours, ADDER2,ADDER3,ADDER4         */
 /*                       that perform a summation of incoming nodes     */
@@ -577,6 +603,39 @@
 /*     DISCRETE_ADDER2(NODE_03,1,NODE_12,-2000)                         */
 /*                                                                      */
 /*  Always enabled, subtracts 2000 from the output of NODE_12           */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/* DISCRETE_ONESHOT    - Monostable multivibrator, no reset             */
+/* DISCRETE_ONESHOTR   - Monostable multivibrator, with reset           */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_ONESHOT   (name of node,                                */
+/*                         trigger node,                                */
+/*                         amplitude node or static value,              */
+/*                         width (in seconds) node or static value,     */
+/*                         type of oneshot static value)                */
+/*                                                                      */
+/*     DISCRETE_ONESHOTR  (name of node,                                */
+/*                         reset node or static value,                  */
+/*                         trigger node,                                */
+/*                         amplitude node or static value,              */
+/*                         width (in seconds) node or static value,     */
+/*                         type of oneshot static value)                */
+/*                                                                      */
+/*  Types:                                                              */
+/*                                                                      */
+/*     DISC_ONESHOT_FEDGE    0x00 - trigger on falling edge             */
+/*     DISC_ONESHOT_REDGE    0x01 - trigger on rising edge              */
+/*     DISC_ONESHOT_NORETRIG 0x00 - non-retriggerable                   */
+/*     DISC_ONESHOT_RETRIG   0x02 - retriggerable                       */
+/*     DISC_OUT_ACTIVE_LOW   0x04 - output active low                   */
+/*     DISC_OUT_ACTIVE_HIGH  0x00 - output active high                  */
+/*                                                                      */
+/*  NOTE: A width of 0 seconds will output a pulse of 1 sample.         */
+/*        This is usefull for a guaranteed minimun pulse, regardless    */
+/*        of the sample rate.                                           */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -665,8 +724,13 @@
 /*   + - Pop two values from stack, add and push result to stack        */
 /*   / - Pop two values from stack, divide and push result to stack     */
 /*   * - Pop two values from stack, multiply and push result to stack   */
-/*   ! - Pop one value from stack, logical invert, push result to stack */
 /*   i - Pop one value from stack, multiply -1 and push result to stack */
+/*   ! - Pop one value from stack, logical invert, push result to stack */
+/*   = - Pop two values from stack, logical = and push result to stack  */
+/*   > - Pop two values from stack, logical > and push result to stack  */
+/*   < - Pop two values from stack, logical < and push result to stack  */
+/*   & - Pop two values from stack, binary AND and push result to stack */
+/*   | - Pop two values from stack, binary OR and push result to stack  */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -770,6 +834,45 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
+/* DISCRETE_CRFILTER - Simple single pole CR filter network             */
+/*                                                                      */
+/*                         ------------                                 */
+/*                        |            |                                */
+/*    ENAB       -0------}| CR FILTER  |                                */
+/*                        |            |                                */
+/*    INPUT1     -1------}| --| |----  |                                */
+/*                        |   C   |    |----}   Netlist node            */
+/*    RVAL       -2------}|       \    |                                */
+/*                        |       / R  |                                */
+/*    CVAL       -3------}|       \    |                                */
+/*                        |       |    |                                */
+/*                         ------------                                 */
+/*                                                                      */
+/*  Declaration syntax                                                  */
+/*                                                                      */
+/*     DISCRETE_CRFILTER(name of node,                                  */
+/*                       enable                                         */
+/*                       input node (or value)                          */
+/*                       resistor value in OHMS                         */
+/*                       capacitor value in FARADS)                     */
+/*                                                                      */
+/*  Example config line                                                 */
+/*                                                                      */
+/*     DISCRETE_CRFILTER(NODE_11,1,NODE_10,100,1e-6)                    */
+/*                                                                      */
+/*  Defines an always enabled CR filter with a 100R & 1uF network       */
+/*  the input is fed from NODE_10.                                      */
+/*                                                                      */
+/*  This can be also thought of as a high pass filter with a 3dB cutoff */
+/*  at:                                                                 */
+/*                                  1                                   */
+/*            Fcuttoff =      --------------                            */
+/*                            2*Pi*RVAL*CVAL                            */
+/*                                                                      */
+/*  (3dB cutoff is where the output power has dropped by 3dB ie Half)   */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
 /* DISCRETE_RCDISC - Simple single pole RC discharge network            */
 /*                                                                      */
 /*                         ------------                                 */
@@ -863,8 +966,8 @@
 /*                       enable                                         */
 /*                       ramp forward/reverse node (or value)           */
 /*                       gradient node (or static value)                */
-/*                       minimum node or static value                   */
-/*                       maximum node or static value                   */
+/*                       start node or static value                     */
+/*                       end node or static value                       */
 /*                       clamp node or static value when disabled)      */
 /*                                                                      */
 /*  Example config line                                                 */
@@ -1025,33 +1128,24 @@
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
-/* DISCRETE_NE555 - NE555 Chip simulation                               */
-/*                                                                      */
-/*                         ------------                                 */
-/*                        |            |                                */
-/*    RESET      -0------}|            |                                */
-/*                        |            |                                */
-/*    TRIGGER    -1------}|            |                                */
-/*                        |            |                                */
-/*    THRESHOLD  -2------}|   NE555    |----}   Netlist node            */
-/*                        |            |                                */
-/*    CONTROL V  -3------}|            |                                */
-/*                        |            |                                */
-/*    VCC        -4------}|            |                                */
-/*                        |            |                                */
-/*                         ------------                                 */
+/* DISCRETE_555_ASTABLE - NE555 Chip simulation (astable mode)          */
 /*                                                                      */
 /*  Declaration syntax                                                  */
 /*                                                                      */
-/*     DISCRETE_NE555(reset node (or value) - <0.7 causes a reset       */
-/*                    trigger node (or value)                           */
-/*                    threshold node (or value)                         */
-/*                    ctrl volt node (or value) - Use NODE_NC for N/C   */
-/*                    vcc node (or value) - Needed for comparators)     */
+/*     DISCRETE_NE555(reset node (or value),                            */
+/*                    amplitude node (or value),                        */
+/*                    R1 node (or value) in ohms,                       */
+/*                    R2 node (or value) in ohms,                       */
+/*                    C node (or value) in farads,                      */
+/*                    Control Voltage node (or value),                  */
+/*                    &Type structure)                                  */
 /*                                                                      */
-/*  Example config line                                                 */
+/*  Types:                                                              */
 /*                                                                      */
-/*     DISCRETE_NE555(NODE32,1,NODE_31,NODE_31,NODE_NC,5.0)             */
+/*     DISC_555_ASTBL_DC  0x00 - DC output                              */
+/*     DISC_555_ASTBL_AC  0x01 - AC output                              */
+/*     DISC_555_ASTBL_SQW 0x00 - Output is Squarewave                   */ 
+/*     DISC_555_ASTBL_CAP 0x02 - Output is Timing Capacitor 'C' voltage */
 /*                                                                      */
 /************************************************************************/
 /*                                                                      */
@@ -1144,6 +1238,13 @@
 #define DISC_555_ASTBL_AC	0x01
 #define DISC_555_ASTBL_SQW	0x00	/* Squarewave */
 #define DISC_555_ASTBL_CAP	0x02	/* Cap charge waveform */
+/* Oneshot types */
+#define DISC_ONESHOT_FEDGE	0x00
+#define DISC_ONESHOT_REDGE	0x01
+#define DISC_ONESHOT_NORETRIG	0x00
+#define DISC_ONESHOT_RETRIG	0x02
+#define DISC_OUT_ACTIVE_LOW	0x04
+#define DISC_OUT_ACTIVE_HIGH	0x00
 
 struct discrete_sound_block
 {
@@ -1297,10 +1398,13 @@ enum {
 		DSS_SINEWAVE,                            /* Sine Wave generator */
 		DSS_TRIANGLEWAVE,                        /* Triangle wave generator, frequency based */
 		DSS_SAWTOOTHWAVE,                        /* Sawtooth wave generator */
+	DSS_COUNTER,		/* External clock Binary Counter */
+	DSS_COUNTER_FIX,	/* Fixed frequency Binary Counter */
 		DSS_ADSR,                                /* ADSR Envelope generator */
 
 	/* Transforms */
 		DST_RCFILTER,				 /* Simple RC Filter network */
+	DST_CRFILTER,		/* RC Bypass Filter (High Pass) */
 		DST_RCDISC,                              /* Simple RC discharge */
 		DST_RCDISC2,                             /* Switched 2 Input RC discharge */
 
@@ -1320,7 +1424,7 @@ enum {
 		DST_ONESHOT,                             /* One-shot pulse generator */
 		DST_SAMPHOLD,                            /* Sample & hold transform */
 		DST_LADDER,                              /* Resistor ladder emulation */
-/*		DST_DELAY,                               // Phase shift/Delay line */
+//	DST_DELAY,		/* Phase shift/Delay line */
 	/* Logic */
 		DST_LOGIC_INV,
 		DST_LOGIC_AND,
@@ -1335,7 +1439,7 @@ enum {
 		DSD_SQUAREW566,                          /* Square Wave generator, NE566 based */
 		DSD_TRIANGLEW566,                        /* Triangle wave generator, NE566 based */
 	/* Custom */
-/*		DST_CUSTOM,                              // whatever you want someday */
+//	        DST_CUSTOM,		/* whatever you want someday */
     /* Output Node */
 		DSO_OUTPUT                               /* The final output node */
 };
@@ -1363,9 +1467,12 @@ enum {
 #define DISCRETE_TRIANGLEWAVE(NODE,ENAB,FREQ,AMPL,BIAS,PHASE)           { NODE, DSS_TRIANGLEWAVE, 5, { ENAB,FREQ,AMPL,BIAS,NODE_NC }, { ENAB,FREQ,AMPL,BIAS,PHASE }, NULL, "Triangle Wave" },
 #define DISCRETE_SAWTOOTHWAVE(NODE,ENAB,FREQ,AMPL,BIAS,GRAD,PHASE)      { NODE, DSS_SAWTOOTHWAVE, 6, { ENAB,FREQ,AMPL,BIAS,NODE_NC,NODE_NC }, { ENAB,FREQ,AMPL,BIAS,GRAD,PHASE }, NULL, "Saw Tooth Wave" },
 #define DISCRETE_LFSR_NOISE(NODE,ENAB,RESET,FREQ,AMPL,FEED,BIAS,LFSRTB) { NODE, DSS_LFSR_NOISE  , 6, { ENAB,RESET,FREQ,AMPL,FEED,BIAS }, { ENAB,RESET,FREQ,AMPL,FEED,BIAS }, LFSRTB, "LFSR Noise Source" },
+#define DISCRETE_COUNTER(NODE,ENAB,RESET,CLK,MAX,DIR,INIT0,CLKTYPE)     { NODE, DSS_COUNTER     , 7, { ENAB,RESET,CLK,NODE_NC,DIR,INIT0,NODE_NC }, { ENAB,RESET,CLK,MAX,DIR,INIT0,CLKTYPE }, NULL, "External clock Binary Counter" },
+#define DISCRETE_COUNTER_FIX(NODE,ENAB,RESET,FREQ,MAX,DIR,INIT0)        { NODE, DSS_COUNTER_FIX , 6, { ENAB,RESET,FREQ,NODE_NC,DIR,INIT0 }, { ENAB,RESET,FREQ,MAX,DIR,INIT0 }, NULL, "Fixed Freq Binary Counter" },
 #define DISCRETE_ADSR_ENV(NODE,ENAB,TRIGGER,GAIN,ADSRTB)                { NODE, DSS_ADSR        , 3, { ENAB,TRIGGER,GAIN }, { ENAB,TRIGGER,GAIN }, ADSRTB, "ADSR Env Generator" },
 
 #define DISCRETE_RCFILTER(NODE,ENAB,INP0,RVAL,CVAL)                     { NODE, DST_RCFILTER    , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Filter" },
+#define DISCRETE_CRFILTER(NODE,ENAB,INP0,RVAL,CVAL)                     { NODE, DST_CRFILTER    , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "CR Filter" },
 #define DISCRETE_RCDISC(NODE,ENAB,INP0,RVAL,CVAL)                       { NODE, DST_RCDISC      , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Discharge" },
 #define DISCRETE_RCDISC2(NODE,SWITCH,INP0,RVAL0,INP1,RVAL1,CVAL)        { NODE, DST_RCDISC2     , 6, { SWITCH,INP0,NODE_NC,INP1,NODE_NC,NODE_NC }, { SWITCH,INP0,RVAL0,INP1,RVAL1,CVAL }, NULL, "RC Discharge 2" },
 #define DISCRETE_RCFILTERN(NODE,ENAB,INP0,RVAL,CVAL)                    { NODE, DST_RCFILTERN   , 4, { ENAB,INP0,NODE_NC,NODE_NC }, { ENAB,INP0,RVAL,CVAL }, NULL, "RC Filter (New Type)" },
@@ -1390,8 +1497,8 @@ enum {
 #define DISCRETE_ADDER2(NODE,ENAB,INP0,INP1)                            { NODE, DST_ADDER       , 3, { ENAB,INP0,INP1 }, { ENAB,INP0,INP1 }, NULL, "Adder 2 Node" },
 #define DISCRETE_ADDER3(NODE,ENAB,INP0,INP1,INP2)                       { NODE, DST_ADDER       , 4, { ENAB,INP0,INP1,INP2 }, { ENAB,INP0,INP1,INP2 }, NULL, "Adder 3 Node" },
 #define DISCRETE_ADDER4(NODE,ENAB,INP0,INP1,INP2,INP3)                  { NODE, DST_ADDER       , 5, { ENAB,INP0,INP1,INP2,INP3 }, { ENAB,INP0,INP1,INP2,INP3 }, NULL, "Adder 4 Node" },
-#define DISCRETE_ONESHOTR(NODE,ENAB,TRIG,AMPL,WIDTH)                    { NODE, DST_ONESHOT     , 5, { ENAB,TRIG,NODE_NC,AMPL,WIDTH }, { ENAB,TRIG,1,AMPL,WIDTH }, NULL, "One Shot Resetable" },
-#define DISCRETE_ONESHOT(NODE,ENAB,TRIG,RESET,AMPL,WIDTH)               { NODE, DST_ONESHOT     , 5, { ENAB,TRIG,RESET,AMPL,WIDTH }, { ENAB,TRIG,RESET,AMPL,WIDTH }, NULL, "One Shot" },
+#define DISCRETE_ONESHOT(NODE,TRIG,AMPL,WIDTH,TYPE)                     { NODE, DST_ONESHOT     , 5, { NODE_NC,TRIG,AMPL,WIDTH,NODE_NC }, { 0,TRIG,AMPL,WIDTH,TYPE }, NULL, "One Shot" },
+#define DISCRETE_ONESHOTR(NODE,RESET,TRIG,AMPL,WIDTH,TYPE)              { NODE, DST_ONESHOT     , 5, { RESET,TRIG,AMPL,WIDTH,NODE_NC }, { RESET,TRIG,AMPL,WIDTH,TYPE }, NULL, "One Shot Resetable" },
 #define DISCRETE_LADDER(NODE,ENAB,INP0,SELECT,GAIN,OFFSET,LADDER)       { NODE, DST_LADDER      , 5, { ENAB,INP0,SELECT,GAIN,OFFSET }, { ENAB,INP0,SELECT,GAIN,OFFSET }, LADDER, "Resistor Ladder" },
 #define DISCRETE_SAMPLHOLD(NODE,ENAB,INP0,CLOCK,CLKTYPE)                { NODE, DST_SAMPHOLD    , 4, { ENAB,INP0,CLOCK,NODE_NC }, { ENAB,INP0,CLOCK,CLKTYPE }, NULL, "Sample & Hold" },
 

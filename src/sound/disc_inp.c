@@ -29,6 +29,8 @@ struct dss_adjustment_context
 
 WRITE_HANDLER(discrete_sound_w)
 {
+	if (!Machine->sample_rate) return;
+
 	/* Bring the system upto now */
 	discrete_sh_update();
 	/* Mask the memory offset to stay in the space allowed */
@@ -43,6 +45,8 @@ WRITE_HANDLER(discrete_sound_w)
 READ_HANDLER(discrete_sound_r)
 {
 	int data=0;
+
+	if (!Machine->sample_rate) return 0;
 
 	discrete_sh_update();
 	/* Mask the memory offset to stay in the space allowed */

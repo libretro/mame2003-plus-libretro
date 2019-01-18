@@ -11,7 +11,9 @@
 /* DST_FILTER1           - Generic 1st order filter                     */
 /* DST_FILTER2           - Generic 2nd order filter                     */
 /* DST_RCFILTER          - Simple RC filter & also lowpass filter       */
-/* DST_RCDISC            - Simple discharing RC                         */
+/* DST_CRFILTER          - Simple CR filter & also highpass filter      */
+/* DST_RCDISC            - Simple discharging RC                        */
+/* DST_RCDISC2           - Simple charge R1/C, discharge R0/C           */
 /*                                                                      */
 /************************************************************************/
 
@@ -234,7 +236,7 @@ int dst_filter2_init(struct node_description *node)
 struct dss_rcdisc_context
 {
         int state;
-        double t;           /* time*/
+        double t;           // time
         double step;
 	double exponent0;
 	double exponent1;
@@ -248,19 +250,24 @@ struct dss_rcdisc_context
 /* input[1]    - input value                                            */
 /* input[2]    - Resistor value (initialisation only)                   */
 /* input[3]    - Capacitor Value (initialisation only)                  */
-/* input[4]    - NOT USED                                               */
-/* input[5]    - Pre-calculated value for exponent                      */
 /*                                                                      */
 /************************************************************************/
+struct dst_rcfilter_context
+{
+	double	exponent;
+};
+
 int dst_rcfilter_step(struct node_description *node)
 {
+	struct dst_rcfilter_context *context=(struct dst_rcfilter_context*)node->context;
+
 	/************************************************************************/
 	/* Next Value = PREV + (INPUT_VALUE - PREV)*(1-(EXP(-TIMEDELTA/RC)))    */
 	/************************************************************************/
 
 	if(node->input[0])
 	{
-		node->output=node->output+((node->input[1]-node->output)*node->input[5]);
+		node->output=node->output+((node->input[1]-node->output)*context->exponent);
 	}
 	else
 	{
@@ -271,19 +278,100 @@ int dst_rcfilter_step(struct node_description *node)
 
 int dst_rcfilter_reset(struct node_description *node)
 {
-	node->output=0;
+	struct dst_rcfilter_context *context=(struct dst_rcfilter_context*)node->context;
+
+	context->exponent=-1.0/(node->input[2]*node->input[3]*Machine->sample_rate);
+	context->exponent=1-exp(context->exponent);
+	node->output = node->input[1];
 	return 0;
 }
 
 int dst_rcfilter_init(struct node_description *node)
 {
-	node->input[5]=-1.0/(node->input[2]*node->input[3]*Machine->sample_rate);
-	node->input[5]=1-exp(node->input[5]);
+	/* Allocate memory for the context array and the node execution order array */
+	if((node->context=malloc(sizeof(struct dst_rcfilter_context)))==NULL)
+	{
+		discrete_log("dst_rcfilter_init() - Failed to allocate local context memory.");
+		return 1;
+	}
+	else
+	{
+		/* Initialise memory */
+		memset(node->context,0,sizeof(struct dst_rcfilter_context));
+	}
+
 	/* Initialise the object */
 	dst_rcfilter_reset(node);
 	return 0;
 }
 
+
+/************************************************************************/
+/*                                                                      */
+/* DST_CRFILTER - Usage of node_description values for CR filter        */
+/*                                                                      */
+/* input[0]    - Enable input value                                     */
+/* input[1]    - input value                                            */
+/* input[2]    - Resistor value (initialisation only)                   */
+/* input[3]    - Capacitor Value (initialisation only)                  */
+/*                                                                      */
+/************************************************************************/
+struct dst_crfilter_context
+{
+	double	exponent;
+	double	vCap;
+};
+
+int dst_crfilter_step(struct node_description *node)
+{
+	struct dst_crfilter_context *context=(struct dst_crfilter_context*)node->context;
+//	double lastVout = node->output;
+
+	/************************************************************************/
+	/* Next Value = PREV + (INPUT_VALUE - PREV)*(1-(EXP(-TIMEDELTA/RC)))    */
+	/************************************************************************/
+
+	if(node->input[0])
+	{
+		context->vCap += (node->input[1] - context->vCap) * context->exponent;
+		node->output = node->input[1] - context->vCap;
+	}
+	else
+	{
+		node->output=0;
+	}
+	return 0;
+}
+
+int dst_crfilter_reset(struct node_description *node)
+{
+	struct dst_crfilter_context *context=(struct dst_crfilter_context*)node->context;
+
+	context->exponent=-1.0/(node->input[2]*node->input[3]*Machine->sample_rate);
+	context->exponent=1-exp(context->exponent);
+	context->vCap =0;
+	node->output = node->input[1];
+	return 0;
+}
+
+int dst_crfilter_init(struct node_description *node)
+{
+	/* Allocate memory for the context array and the node execution order array */
+	if((node->context=malloc(sizeof(struct dst_crfilter_context)))==NULL)
+	{
+		discrete_log("dst_crfilter_init() - Failed to allocate local context memory.");
+		return 1;
+	}
+	else
+	{
+		/* Initialise memory */
+		memset(node->context,0,sizeof(struct dst_crfilter_context));
+	}
+
+	/* Initialise the object */
+	dst_crfilter_reset(node);
+	return 0;
+}
 /************************************************************************/
 /*                                                                      */
 /* DST_RCDISC -   Usage of node_description values for RC discharge     */

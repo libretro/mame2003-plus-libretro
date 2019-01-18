@@ -41,14 +41,15 @@ struct dst_oneshot_context
 	double countdown;
 	double stepsize;
 	int state;
+	int lastTrig;
 };
 
 struct dst_ladder_context
 {
         int state;
-        double t;           /* time*/
+	double t;           // time
         double step;
-		double exponent;
+	double exponent;
 		double total_resistance;
 };
 
@@ -102,7 +103,7 @@ int dst_adder_step(struct node_description *node)
 double dst_transform_pop(double *stack,int *pointer)
 {
 	double value;
-	/*decrement THEN read*/
+	//decrement THEN read
 	if(*pointer>0) (*pointer)--;
 	value=stack[*pointer];
 	return value;
@@ -110,7 +111,7 @@ double dst_transform_pop(double *stack,int *pointer)
 
 double dst_transform_push(double *stack,int *pointer,double value)
 {
-	/*Strore THEN increment*/
+	//Strore THEN increment
 	if(*pointer<MAX_TRANS_STACK) stack[(*pointer)++]=value;
 	return value;
 }
@@ -157,14 +158,44 @@ int dst_transform_step(struct node_description *node)
 					result=number1-number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '!':
+				case 'i':	// * -1
+					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=-number1;
+					dst_transform_push(trans_stack,&trans_stack_ptr,result);
+					break;
+				case '!':	// Logical NOT of Last Value
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=!number1;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case 'i':
+				case '=':	// Logical =
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
-					result=-number1;
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=(int)number1 == (int)number2;
+					dst_transform_push(trans_stack,&trans_stack_ptr,result);
+					break;
+				case '>':	// Logical >
+					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=(int)number1 > (int)number2;
+					dst_transform_push(trans_stack,&trans_stack_ptr,result);
+					break;
+				case '<':	// Logical <
+					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=(int)number1 < (int)number2;
+					dst_transform_push(trans_stack,&trans_stack_ptr,result);
+					break;
+				case '&':	// Binary AND
+					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=(int)number1 & (int)number2;
+					dst_transform_push(trans_stack,&trans_stack_ptr,result);
+					break;
+				case '|':	// Binary OR
+					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
+					result=(int)number1 | (int)number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
 				case '0':
@@ -320,7 +351,7 @@ int dst_ramp_step(struct node_description *node)
 	else
 	{
 		context->last_en = 0;
-		/* Disabled so clamp to output*/
+		// Disabled so clamp to output
 		node->output=node->input[5];
 	}
 	return 0;
@@ -363,57 +394,70 @@ int dst_ramp_init(struct node_description *node)
 /*                                                                      */
 /* dst_oneshot - Usage of node_description values for one shot pulse    */
 /*                                                                      */
-/* input[0]    - Enable input value                                     */
+/* input[0]    - Reset value                                            */
 /* input[1]    - Trigger value                                          */
-/* input[2]    - Reset value                                            */
-/* input[3]    - Amplitude value                                        */
-/* input[4]    - Width of oneshot pulse                                 */
-/* input[5]    - NOT USED                                               */
+/* input[2]    - Amplitude value                                        */
+/* input[3]    - Width of oneshot pulse                                 */
+/* input[4]    - type R/F edge, Retriggerable?                          */
 /*                                                                      */
 /************************************************************************/
 int dst_oneshot_step(struct node_description *node)
 {
-	struct dst_oneshot_context *context;
-	context=(struct dst_oneshot_context*)node->context;
+	struct dst_oneshot_context *context=(struct dst_oneshot_context*)node->context;
+	int trigger = node->input[1] && node->input[1];
 
-	/* Check state */
-	switch(context->state)
+	/* If the state is triggered we will need to countdown later */
+	int doCount = context->state;
+
+	if (node->input[0])
 	{
-		case 0:		/* Waiting for trigger */
-			if(node->input[1])
-			{
-				context->state=1;
-				context->countdown=node->input[4];
-				node->output=node->input[3];
-			}
+		/* Hold in Reset */
 		 	node->output=0;
-			break;
+		context->state = 0;
+	}
+	else
+	{
+		/* are we at an edge? */
+		if (trigger != context->lastTrig)
+		{
+			/* There has been a trigger edge */
+			context->lastTrig = trigger;
 
-		case 1:		/* Triggered */
-			node->output=node->input[3];
-			if(node->input[1] && node->input[2])
+			/* Is it the proper edge trigger */
+			if (((int)(node->input[4]) & DISC_ONESHOT_REDGE) ? trigger : !trigger)
 			{
-				/* Dont start the countdown if we're still triggering*/
-				/* and we've got a reset signal as well*/
+				if (!context->state)
+				{
+					/* We have first trigger */
+					context->state = 1;
+					node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? 0 : node->input[2];
+					context->countdown = node->input[3];
 			}
 			else
-			{
-				context->countdown-=context->stepsize;
-				if(context->countdown<0.0)
 				{
-					context->countdown=0;
-					node->output=0;
-					context->state=2;
+					/* See if we retrigger */
+					if ((int)(node->input[4]) & DISC_ONESHOT_RETRIG)
+					{
+						/* Retrigger */
+						context->countdown = node->input[3];
+						doCount = 0;
+					}
 				}
 			}
-			break;
+		}
 
-		case 2:		/* Waiting for reset */
-		default:
-			if(node->input[2]) context->state=0;
-		 	node->output=0;
-			break;
+		if (doCount)
+			{
+				context->countdown-=context->stepsize;
+			if(context->countdown <= 0.0)
+				{
+				node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? node->input[2] : 0;
+					context->countdown=0;
+				context->state = 0;
+				}
+			}
 	}
+
 	return 0;
 }
 
@@ -424,7 +468,10 @@ int dst_oneshot_reset(struct node_description *node)
 	context->countdown=0;
 	context->stepsize=1.0/Machine->sample_rate;
 	context->state=0;
- 	node->output=0;
+ 	/* We will make the initial last trigger equal to the current trigger.
+ 	 * This is so an output is not triggered on startup. */
+ 	context->lastTrig = node->input[1] && node->input[1]; 
+ 	node->output = ((int)(node->input[4]) & DISC_OUT_ACTIVE_LOW) ? node->input[2] : 0;
  	return 0;
 }
 

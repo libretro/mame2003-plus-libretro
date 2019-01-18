@@ -74,9 +74,9 @@ static int discrete_stream=0;
 static int discrete_stereo=0;
 
 /* Uncomment this line to log discrete sound output to a file */
-/*#define DISCRETE_WAVELOG*/
+//#define DISCRETE_WAVELOG
 /* Uncomment this line to log discrete sound debug log information to a file */
-/*#define DISCRETE_DEBUGLOG*/
+//#define DISCRETE_DEBUGLOG
 
 #ifdef DISCRETE_WAVELOG
 #include "wavwrite.h"
@@ -142,6 +142,8 @@ struct discrete_module module_list[]=
 	{ DSS_LFSR_NOISE  ,"DSS_LFSR_NOISE"  ,dss_lfsr_init        ,dss_default_kill     ,dss_lfsr_reset        ,dss_lfsr_step        },
 	{ DSS_TRIANGLEWAVE,"DSS_TRIANGLEWAVE",dss_trianglewave_init,dss_default_kill     ,dss_trianglewave_reset,dss_trianglewave_step},
 	{ DSS_SAWTOOTHWAVE,"DSS_SAWTOOTHWAVE",dss_sawtoothwave_init,dss_default_kill     ,dss_sawtoothwave_reset,dss_sawtoothwave_step},
+	{ DSS_COUNTER     ,"DSS_COUNTER"     ,dss_counter_init     ,dss_default_kill     ,dss_counter_reset     ,dss_counter_step     },
+	{ DSS_COUNTER_FIX ,"DSS_COUNTER_FIX" ,dss_counterfix_init  ,dss_default_kill     ,dss_counterfix_reset  ,dss_counterfix_step  },
 	{ DSS_ADSR        ,"DSS_ADSR"        ,dss_adsrenv_init     ,dss_default_kill     ,dss_adsrenv_reset     ,dss_adsrenv_step     },
 
 	{ DST_TRANSFORM   ,"DST_TRANSFORM"   ,NULL                 ,NULL                 ,NULL                  ,dst_transform_step   },
@@ -150,6 +152,7 @@ struct discrete_module module_list[]=
 	{ DST_ADDER       ,"DST_ADDER"       ,NULL                 ,NULL                 ,NULL                  ,dst_adder_step       },
 	{ DST_SWITCH      ,"DST_SWITCH"      ,NULL                 ,NULL                 ,NULL                  ,dst_switch_step      },
 	{ DST_RCFILTER    ,"DST_RCFILTER"    ,dst_rcfilter_init    ,NULL                 ,dst_rcfilter_reset    ,dst_rcfilter_step    },
+	{ DST_CRFILTER    ,"DST_CRFILTER"    ,dst_crfilter_init    ,NULL                 ,dst_crfilter_reset    ,dst_crfilter_step    },
 	{ DST_RCDISC      ,"DST_RCDISC"      ,dst_rcdisc_init      ,dss_default_kill     ,dst_rcdisc_reset      ,dst_rcdisc_step      },
 	{ DST_RCDISC2     ,"DST_RCDISC2"     ,dst_rcdisc2_init     ,dss_default_kill     ,dst_rcdisc2_reset     ,dst_rcdisc2_step     },
 	{ DST_RCFILTERN   ,"DST_RCFILTERN"   ,dst_rcfilterN_init   ,dss_default_kill     ,dst_filter1_reset     ,dst_filter1_step     },
@@ -298,6 +301,8 @@ int discrete_sh_start (const struct MachineSound *msound)
 	struct discrete_sound_block *intf;
 	int loop=0,loop2=0,search=0,failed=0;
 
+	if (!Machine->sample_rate)
+		return 0;
 #ifdef DISCRETE_WAVELOG
 	wav_file = wav_open("discrete.wav", Machine->sample_rate, ((Machine->drv->sound_attributes&SOUND_SUPPORTS_STEREO) == SOUND_SUPPORTS_STEREO) ? 2: 1);
 #endif
