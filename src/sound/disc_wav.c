@@ -1,3 +1,5 @@
+
+#include <math.h>
 /************************************************************************/
 /*                                                                      */
 /*  MAME - Discrete sound system emulation library                      */
