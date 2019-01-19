@@ -362,3 +362,8 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Fixed incorrect palette colours and clock frequencies in Mr Do [cataylox]
 * Added sound support for Sky Diver [grant2258]
 * Added Proms for Ali Baba And The 40 Thieves [cataylox]
+* Added analog joystick support to libretro port [grant2258]
+* Updated discrete soundcore to mame081 and drives that needed updated [grant2258]
+* Updated IREM decryption tables (sound fixes) [grant2258]
+* Updated m68000 core [grant2258]
+
