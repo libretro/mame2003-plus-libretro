@@ -74,7 +74,7 @@ static int discrete_stream;
 /* debugging statics */
 static void *wav_file[DISCRETE_MAX_OUTPUTS];
 static FILE *disclogfile = NULL;
-
+extern int bailing;
 
 
 /*************************************
@@ -253,15 +253,15 @@ int discrete_sh_start(const struct MachineSound *msound)
 	{
 		/* make sure we don't have too many nodes overall */
 		if (node_count > DISCRETE_MAX_NODES)
-			osd_die("discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.", DISCRETE_MAX_NODES);
+			{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.", DISCRETE_MAX_NODES);  bailing =1; }
 
 		/* make sure the node number is in range */
 		if (intf[node_count].node < NODE_START || intf[node_count].node > NODE_END)
-			osd_die("discrete_sh_start() - Invalid node number on node %02d descriptor\n", node_count);
+			{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Invalid node number on node %02d descriptor\n", node_count);  bailing =1; }
 		
 		/* make sure the node type is valid */
 		if (intf[node_count].type > DSO_OUTPUT)
-			osd_die("discrete_sh_start() - Invalid function type on NODE_%03d\n", intf[node_count].node - NODE_START);
+			{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Invalid function type on NODE_%03d\n", intf[node_count].node - NODE_START);  bailing =1; }
 	}
 	node_count++;
 	discrete_log("discrete_sh_start() - Sanity check counted %d nodes", node_count);
@@ -269,25 +269,25 @@ int discrete_sh_start(const struct MachineSound *msound)
 	/* allocate memory for the array of actual nodes */
 	node_list = auto_malloc(node_count * sizeof(node_list[0]));
 	if (!node_list)
-		osd_die("discrete_sh_start() - Out of memory allocating node_list\n");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Out of memory allocating node_list\n");  bailing =1; }
 	memset(node_list, 0, node_count * sizeof(node_list[0]));
 	
 	/* allocate memory for the node execution order array */
 	running_order = auto_malloc(node_count * sizeof(running_order[0]));
 	if (!running_order)
-		osd_die("discrete_sh_start() - Out of memory allocating running_order\n");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Out of memory allocating running_order\n");  bailing =1; }
 	memset(running_order, 0, node_count * sizeof(running_order[0]));
 
 	/* allocate memory to hold pointers to nodes by index */
 	indexed_node = auto_malloc(DISCRETE_MAX_NODES * sizeof(indexed_node[0]));
 	if (!indexed_node)
-		osd_die("discrete_sh_start() - Out of memory allocating indexed_node\n");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Out of memory allocating indexed_node\n");  bailing =1; }
 	memset(indexed_node, 0, DISCRETE_MAX_NODES * sizeof(indexed_node[0]));
 	
 	/* allocate memory to hold the input map */
 	dss_input_map = auto_malloc(DSS_INPUT_SPACE * sizeof(dss_input_map[0]));
 	if (!dss_input_map)
-		osd_die("discrete_sh_start() - Out of memory allocating dss_input_map\n");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start() - Out of memory allocating dss_input_map\n");  bailing =1; }
 	memset(dss_input_map, 0, DSS_INPUT_SPACE * sizeof(dss_input_map[0]));
 
 	/* initialize the node data */
@@ -467,7 +467,7 @@ static void init_nodes(struct discrete_sound_block *block_list)
 		else
 		{
 			if (indexed_node[block->node - NODE_START])
-				osd_die("init_nodes() - Duplicate entries for NODE_%03d\n", block->node - NODE_START);
+				{ log_cb(RETRO_LOG_INFO, LOGPRE "init_nodes() - Duplicate entries for NODE_%03d\n", block->node - NODE_START);  bailing =1; }
 			indexed_node[block->node - NODE_START] = node;
 		}
 
@@ -476,7 +476,7 @@ static void init_nodes(struct discrete_sound_block *block_list)
 			if (module_list[modulenum].type == block->type)
 				break;
 		if (module_list[modulenum].type != block->type)
-			osd_die("init_nodes() - Unable to find discrete module typer %d for NODE_%03d\n", block->type, block->node - NODE_START);
+			{ log_cb(RETRO_LOG_INFO, LOGPRE "init_nodes() - Unable to find discrete module typer %d for NODE_%03d\n", block->type, block->node - NODE_START);  bailing =1; }
 
 		/* static inits */
 		node->node = block->node;
@@ -499,14 +499,14 @@ static void init_nodes(struct discrete_sound_block *block_list)
 		{
 			node->context = auto_malloc(node->module.contextsize);
 			if (!node->context)
-				osd_die("init_nodes() - Out of memory allocating memory for NODE_%03d\n", node->node - NODE_START);
+				{ log_cb(RETRO_LOG_INFO, LOGPRE "init_nodes() - Out of memory allocating memory for NODE_%03d\n", node->node - NODE_START);  bailing =1; }
 			memset(node->context, 0, node->module.contextsize);
 		}
 	}
 	
 	/* if no outputs, give an error */
 	if (discrete_outputs == 0)
-		osd_die("init_nodes() - Couldn't find an output node");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "init_nodes() - Couldn't find an output node"); bailing =1; }
 }
 
 
@@ -536,7 +536,7 @@ static void find_input_nodes(struct discrete_sound_block *block_list)
 			if (inputnode >= NODE_START && inputnode <= NODE_END)
 			{
 				if (!indexed_node[inputnode - NODE_START])
-					osd_die("discrete_sh_start - Node NODE_%03d referenced a non existant node NODE_%03d\n", node->node - NODE_START, inputnode - NODE_START);
+					{ log_cb(RETRO_LOG_INFO, LOGPRE "discrete_sh_start - Node NODE_%03d referenced a non existant node NODE_%03d\n", node->node - NODE_START, inputnode - NODE_START);  bailing =1; }
 				node->input_node[inputnum] = indexed_node[inputnode - NODE_START];
 			}
 		}
@@ -585,5 +585,5 @@ static void setup_output_nodes(void)
 
 	/* handle failure */
 	if (discrete_stream == -1)
-		osd_die("setup_output_nodes - Stream init returned an error\n");
+		{ log_cb(RETRO_LOG_INFO, LOGPRE "setup_output_nodes - Stream init returned an error\n"); bailing =1; }
 }
