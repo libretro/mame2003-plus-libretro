@@ -1,3 +1,9 @@
+#include <math.h>
+//fix for android
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
+
 /************************************************************************/
 /*                                                                      */
 /*  MAME - Discrete sound system emulation library                      */
