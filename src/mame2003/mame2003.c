@@ -1165,12 +1165,12 @@ void retro_run (void)
 
 			if (convert_analog_scale(analogjoy[i][1]) >  deadzone)
 				retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
-		}
-		if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
-		if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
-		if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
-		if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
-        
+		
+			if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
+			if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
+			if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
+			if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+        }
 		if (!options.analog)
 		{
 			 retroJsState[ 18 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_LEFT + offset];
