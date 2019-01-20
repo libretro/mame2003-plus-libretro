@@ -40,9 +40,9 @@ unsigned long             lastled = 0;
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
 int                 retroJsState[156]= {0}; // initialise to zero - we are only reading 4 players atm map for 6 (6*26)
-extern int16_t      mouse_x[4];
-extern int16_t      mouse_y[4];
-extern int16_t      analogjoy[4][4];
+int16_t             mouse_x[4]= {0};
+int16_t             mouse_y[4]= {0};
+int16_t             analogjoy[4][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 
 static struct retro_input_descriptor empty[] = { { 0 } };
@@ -79,7 +79,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
   OPT_DUAL_JOY,
-  OPT_RSTICK_BTNS,
+  OPT_DPAD_ANALOG,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -196,7 +196,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
-  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Map right analog stick as buttons; enabled|disabled");
+  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Analog enable; disabled|enabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
                                                                                          "Vector resolution multiplier (Restart core); 3|1|2|4|5|6|7|8|9|10");
@@ -530,11 +530,11 @@ static void update_variables(bool first_time)
             break;
           }
 
-        case OPT_RSTICK_BTNS:
+        case OPT_DPAD_ANALOG:
           if(strcmp(var.value, "enabled") == 0)
-            options.rstick_to_btns = 1;
+            options.analog = 1;
           else
-            options.rstick_to_btns = 0;
+            options.analog = 0;
           break;
 
         case OPT_TATE_MODE:
@@ -649,32 +649,34 @@ static void update_variables(bool first_time)
   }
 }
 
+
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-	mame2003_video_get_geometry(&info->geometry);
-	if (options.machine_timing)
-	//by pass audio scew
+	mame2003_video_get_geometry(&info->geometry);  
+	if(options.machine_timing)
 	{
 		if (Machine->drv->frames_per_second < 60.0 )
-			info->timing.fps = 60.0;
+			info->timing.fps = 60.0; 
+		else 
+			info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
 
-		else  if (Machine->drv->frames_per_second > 60.0 )
-			info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps
-	
-		if ( Machine->drv->frames_per_second * 1000 < options.samplerate || Machine->drv->frames_per_second < 60 )
-			options.samplerate = Machine->drv->frames_per_second * 1000;
+		if  ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) ) 
+		{
+			info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
+			log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
+		}       
+		else
+		{
+			info->timing.sample_rate = options.samplerate;
+			log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
+		}
 	}
-
 	else
 	{
-
-		info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-			options.samplerate=22050;
+		info->timing.fps = Machine->drv->frames_per_second;
+		info->timing.sample_rate = options.samplerate;
 	}
-	info->timing.sample_rate = options.samplerate;
 }
-
 
 unsigned retro_api_version(void)
 {
@@ -1095,11 +1097,13 @@ void retro_run (void)
 		unsigned int offset = (i * 26);
 
 		/* Analog joystick */
-		analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
-		analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
-      
+		if (options.analog)
+		{	
+			analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
+			analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
+			analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+			analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+		}
 	  
 		retroJsState[0 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
 		retroJsState[1 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
@@ -1142,23 +1146,46 @@ void retro_run (void)
 			retroJsState[17 + offset] = 0;
 		}
 
-		retroJsState[ 18 + offset] = 0;
-		retroJsState[ 19 + offset] = 0;
-		retroJsState[ 20 + offset] = 0;
-		retroJsState[ 21 + offset] = 0;
-		retroJsState[ 22 + offset] = 0;
-		retroJsState[ 23 + offset] = 0;
-		retroJsState[ 24 + offset] = 0;
-		retroJsState[ 25 + offset] = 0;
-		if (convert_analog_scale(analogjoy[i][0]) < -deadzone) retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
-        if (convert_analog_scale(analogjoy[i][0]) >  deadzone) retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
-		if (convert_analog_scale(analogjoy[i][1]) < -deadzone) retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
-        if (convert_analog_scale(analogjoy[i][1]) >  deadzone) retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (options.analog)
+		{	
+			retroJsState[ 18 + offset] = 0;
+			retroJsState[ 19 + offset] = 0;
+			retroJsState[ 20 + offset] = 0;
+			retroJsState[ 21 + offset] = 0;
+			retroJsState[ 22 + offset] = 0;
+			retroJsState[ 23 + offset] = 0;
+			retroJsState[ 24 + offset] = 0;
+			retroJsState[ 25 + offset] = 0;
+			if (convert_analog_scale(analogjoy[i][0]) < -deadzone) 
+				retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
 
-		if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
-        if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
-		if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
-        if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+			if (convert_analog_scale(analogjoy[i][0]) >  deadzone)
+				retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
+
+			if (convert_analog_scale(analogjoy[i][1]) < -deadzone)
+				retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
+
+			if (convert_analog_scale(analogjoy[i][1]) >  deadzone)
+				retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
+		
+			if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
+			if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
+			if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
+			if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+        }
+		if (!options.analog)
+		{
+			 retroJsState[ 18 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_LEFT + offset];
+			 retroJsState[ 19 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_RIGHT + offset];
+			 retroJsState[ 20 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_UP + offset];
+			 retroJsState[ 21 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_DOWN + offset];
+			 //now set dpad to zero so we dont get double mapping
+			 retroJsState[RETRO_DEVICE_ID_JOYPAD_LEFT + offset] = 0;
+			 retroJsState[RETRO_DEVICE_ID_JOYPAD_RIGHT + offset] = 0;
+			 retroJsState[RETRO_DEVICE_ID_JOYPAD_UP + offset] = 0;
+			 retroJsState[RETRO_DEVICE_ID_JOYPAD_DOWN + offset] = 0;
+				
+		}
 	}
    mame_frame();
 }
@@ -1289,42 +1316,12 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-	int newrate = 0;
 	if (options.machine_timing)
 	{
-		
-		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )
-		{
-			newrate = Machine->drv->frames_per_second * 1000;
-			
-		}
+		if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+		else Machine->sample_rate = options.samplerate;
 	}
 	else
-	{
-		if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-		newrate=22050;
-	
-	}
-
-			
-			if ( newrate && newrate != options.samplerate ) options.samplerate = newrate;
-/*			{
-				//this code below crashes android so its set retro_get_system_av_info for now
-				//it also opens and extra ra window on windows
-				struct retro_system_av_info info;
-				retro_get_system_av_info(&info);
-				mame2003_video_get_geometry(&info.geometry);
-				if (options.machine_timing)
-				{
-					if (Machine->drv->frames_per_second < 60.0 ) 			info.timing.fps = 60.0;
-					else  info.timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps
-				}		
-				else info.timing.fps = Machine->drv->frames_per_second;				log_cb(RETRO_LOG_INFO,"Changing Sample rate old:%d new:%d",options.samplerate, newrate);
-				options.samplerate = newrate;
-				info.timing.sample_rate=options.samplerate;
-				environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
-			}
-*/
 	Machine->sample_rate = options.samplerate;
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
@@ -1340,7 +1337,6 @@ int osd_start_audio_stream(int stereo)
 	
 	return samples_per_frame;
 }
-
 
 int osd_update_audio_stream(INT16 *buffer)
 {
@@ -1694,10 +1690,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +1000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +1000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +1000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +1000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
@@ -1722,10 +1718,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +1000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +1000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +1000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +1000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
@@ -1750,10 +1746,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
   
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +1000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +1000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +1000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +1000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
@@ -1778,10 +1774,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +1000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +1000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +1000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +1000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
@@ -1823,10 +1819,6 @@ struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYE
 ******************************************************************************/
 
 
-int16_t mouse_x[4];
-int16_t mouse_y[4];
-int16_t analogjoy[4][4];
-
 struct JoystickInfo mame_joy_map[(PLAYER_COUNT * PER_PLAYER_CTRL_COUNT) + 1]; /* + 1 for final zeroed struct */
 
 const struct JoystickInfo *osd_get_joy_list(void)
@@ -1867,25 +1859,24 @@ int osd_is_joy_pressed(int joycode)
 {
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
  
-	if ( joycode  >=1000 &&  joycode  <=2000)
+	if ( joycode  >=1000 &&  joycode  < 2000)
 		return  retroJsState[joycode-1000]; 
 		
-	if ( joycode >= 2000)
+	if ( joycode >= 2000 && joycode < 3000 )
 	{
 		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
-		return 0;
+		if (!options.analog)  return retroJsState[joycode-2000];
 	}
-	 	  
-	
-	//  if the stack gets corruped this seems to be the part of the code that wobbles stop that happening so we can debug effectively by adding the bounds check above 
+	// only send dpad when analog is set or we will get a double input
+	if ( joycode >= 3000) return retroJsState[joycode-3000];
+
 	return 0;
 }
 
 int osd_is_joystick_axis_code(int joycode)
 {
-	if (joycode >= 2000) 
-		return 1;
+if (joycode >= 2000  && joycode < 3000 && options.analog)  return 1;
 	return 0;
 }
 
@@ -1910,10 +1901,11 @@ int convert_analog_scale(int input)
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
+	
 	int i;
     for (i = 0; i < MAX_ANALOG_AXES; i ++)
     {
-		
+		analog_axis[i]=0;
 		if (analogjoy_input[i] != CODE_NONE)
 		{	
 			
