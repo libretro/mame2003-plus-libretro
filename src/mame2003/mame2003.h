@@ -8,16 +8,31 @@
 #include "osd_cpu.h"
 #include "inptport.h"
 
-/* we can't #include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts */
+/* 
+ * we can't #include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts
+ * involing the DWORD define so we'll include only some useful bits for now
+ */ 
+#include <retro_inline.h>
+
+#if defined(__CELLOS_LV2__)
+#include <sys/fs_external.h>
+#endif
+
+#include <limits.h>
+
 #ifndef PATH_MAX_LENGTH
 #if defined(__CELLOS_LV2__)
 #define PATH_MAX_LENGTH CELL_FS_MAX_FS_PATH_LENGTH
-#elif defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(GEKKO)|| defined(WIIU)
+#elif defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(PS2) || defined(GEKKO)|| defined(WIIU) || defined(ORBIS)
 #define PATH_MAX_LENGTH 512
 #else
 #define PATH_MAX_LENGTH 4096
 #endif
 #endif
+
+/*
+ * end of retro_miscellaneous.h bits
+ */
 
 #ifdef __cplusplus
 extern "C" {
