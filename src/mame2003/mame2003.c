@@ -79,7 +79,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
   OPT_DUAL_JOY,
-  OPT_RSTICK_BTNS,
+  OPT_DPAD_BTNS,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -196,7 +196,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
-  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Map right analog stick as buttons; enabled|disabled");
+  init_default(&default_options[OPT_DPAD_BTNS],           APPNAME"_dpad_to_btns",        "Map dpad to axis direction buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
                                                                                          "Vector resolution multiplier (Restart core); 3|1|2|4|5|6|7|8|9|10");
@@ -530,11 +530,11 @@ static void update_variables(bool first_time)
             break;
           }
 
-        case OPT_RSTICK_BTNS:
+        case OPT_DPAD_BTNS:
           if(strcmp(var.value, "enabled") == 0)
-            options.rstick_to_btns = 1;
+            options.dpad_to_btns = 1;
           else
-            options.rstick_to_btns = 0;
+            options.dpad_to_btns = 0;
           break;
 
         case OPT_TATE_MODE:
@@ -1151,14 +1151,32 @@ void retro_run (void)
 		retroJsState[ 24 + offset] = 0;
 		retroJsState[ 25 + offset] = 0;
 		if (convert_analog_scale(analogjoy[i][0]) < -deadzone) retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
-        if (convert_analog_scale(analogjoy[i][0]) >  deadzone) retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
+		if (convert_analog_scale(analogjoy[i][0]) >  deadzone) retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
 		if (convert_analog_scale(analogjoy[i][1]) < -deadzone) retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
-        if (convert_analog_scale(analogjoy[i][1]) >  deadzone) retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (convert_analog_scale(analogjoy[i][1]) >  deadzone) retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
 
 		if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
-        if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
+		if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
 		if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
-        if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+		if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+        
+		if (options.dpad_to_btns)
+		{
+
+		
+			if (retroJsState[ RETRO_DEVICE_ID_JOYPAD_LEFT + offset] !=0 &&  !retroJsState[18 + offset < -deadzone])
+				 retroJsState[ 18 + offset]=1;
+			
+			if (retroJsState[ RETRO_DEVICE_ID_JOYPAD_RIGHT + offset] !=0 &&  !retroJsState[ 19 + offset > -deadzone])
+				 retroJsState[ 19 + offset]=1;
+			
+			if (retroJsState[ RETRO_DEVICE_ID_JOYPAD_UP + offset] !=0 &&  !retroJsState[ 20 + offset < -deadzone])
+				 retroJsState[ 20 + offset]=1;
+
+			if (retroJsState[ RETRO_DEVICE_ID_JOYPAD_DOWN + offset] !=0 &&  !retroJsState[ 21 + offset < -deadzone])
+				 retroJsState[ 21 + offset]=1;
+				
+		}
 	}
    mame_frame();
 }
@@ -1874,11 +1892,12 @@ int osd_is_joy_pressed(int joycode)
 	{
 		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
-		return 0;
+		if (options.dpad_to_btns && retroJsState[joycode-2000] == 1) 	return retroJsState[joycode-2000];
 	}
-	 	  
+
+   //dpad map do not put this retro run	 	  
 	
-	//  if the stack gets corruped this seems to be the part of the code that wobbles stop that happening so we can debug effectively by adding the bounds check above 
+
 	return 0;
 }
 
