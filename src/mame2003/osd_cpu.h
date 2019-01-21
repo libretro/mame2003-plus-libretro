@@ -76,13 +76,6 @@ typedef int8_t   INT8;
 extern struct retro_perf_callback perf_cb;
 
 /* typedefs are the same as coretypes.h, although those typedefs are overridden by ifndef */
-typedef uint32_t UINT32;
-typedef uint16_t UINT16;
-typedef uint8_t  UINT8;
-
-typedef int32_t  INT32;
-typedef int16_t  INT16;
-typedef int8_t   INT8;
 
 /* Combine two 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
