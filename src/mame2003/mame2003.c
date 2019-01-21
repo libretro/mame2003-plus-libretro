@@ -1893,34 +1893,39 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 
 int convert_analog_scale(int input)
 {
-    static int libretro_analog_range = LIBRETRO_ANALOG_MAX - LIBRETRO_ANALOG_MIN;
-    static int analog_range = ANALOG_MAX - ANALOG_MIN;
-
-    return (input - LIBRETRO_ANALOG_MIN)*analog_range / libretro_analog_range + ANALOG_MIN;
+		int result;
+		result =  (input / (int) 326.68);
+		result = result * 1.28;
+		if ( ( result > 0 && result < deadzone) || ( result < 0 && result > -deadzone)) return 0;
+		return result;
 }
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
-	
 	int i;
+	int value;
+	
     for (i = 0; i < MAX_ANALOG_AXES; i ++)
     {
-		analog_axis[i]=0;
+		value =0;
+		int code;	
 		if (analogjoy_input[i] != CODE_NONE)
 		{	
+			code = analogjoy_input[i];
 			
-			if ( analogjoy_input[i] == (player * 26) + 18 + 2000) 
-				analog_axis[i] = convert_analog_scale(analogjoy[i][0]);
+			if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 ) 
+				value = convert_analog_scale(analogjoy[player][0]); 
+
+			else if ( code == (player * 26) + 20 + 2000 || code == (player * 26) + 21 + 2000 ) 
+				value = convert_analog_scale(analogjoy[player][1]); 
 				
-			else if ( analogjoy_input[i] == (player * 26) + 20 + 2000) 
-				analog_axis[i] = convert_analog_scale(analogjoy[i][1]);
-			else if ( analogjoy_input[i] == (player * 26) + 22 + 2000) 
-				analog_axis[i] = convert_analog_scale(analogjoy[i][2]);
-			else if ( analogjoy_input[i] == (player * 26) + 24 + 2000) 
-				analog_axis[i] = convert_analog_scale(analogjoy[i][3]);
-			else printf("unmapped analogjoy_input[%d]=%d\n",i, analogjoy_input[i]);
-			if ( analog_axis[i] > 0 &&  analog_axis[i] < deadzone) analog_axis[i] = 0;
-			if ( analog_axis[i] < 0 &&  analog_axis[i] > -deadzone) analog_axis[i] = 0;
+			else if ( code == (player * 26) + 22 + 2000 || code == (player * 23) + 23 + 2000 ) 
+				value = convert_analog_scale(analogjoy[player][2]);  
+
+			else if ( code == (player * 26) + 24 + 2000 || code == (player * 25) + 25 + 2000 ) 
+				value = convert_analog_scale(analogjoy[player][3]); 
+
+			analog_axis[i]=value;
 		}			
 	}
 }
