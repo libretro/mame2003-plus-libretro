@@ -7,7 +7,7 @@
 #ifndef CHD_H
 #define CHD_H
 
-#include <libchdr/coretypes.h>
+#include "osd_cpu.h"
 
 
 /***************************************************************************

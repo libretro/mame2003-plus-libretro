@@ -42,13 +42,6 @@ typedef int32_t  INT32;
 typedef int16_t  INT16;
 typedef int8_t   INT8;
 
-#define core_file FILE
-#define core_fopen(file) fopen(file, "rb")
-#define core_fseek fseek
-#define core_fread(fc, buff, len) fread(buff, 1, len, fc)
-#define core_fclose fclose
-#define core_ftell ftell
-
 #if 0
 #define DEBUG_LOG 1
 #endif
@@ -74,8 +67,6 @@ typedef int8_t   INT8;
 #endif
 
 extern struct retro_perf_callback perf_cb;
-
-/* typedefs are the same as coretypes.h, although those typedefs are overridden by ifndef */
 
 /* Combine two 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
