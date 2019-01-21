@@ -17818,6 +17818,29 @@ const char *souledge_get_ctrl_name(int type)
   return "";
 }
 
+const struct ControlInfo spacewar_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  false, /* alternating_controls */
+  true, /* mirrored_controls */
+  "Two player only game where each player flies around space and tries to shoot each other. Features include partial damage, modifying gravity and inertia. Controls are fire, thrust, rotate left and right, hyperspace and reset.", /* control_details */
+  &sspaceat_get_ctrl_name
+};
+
+const char *spacewar_get_ctrl_name(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Hyper Space";
+    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_RIGHT: return "Right";
+  } /* end of switch */
+
+  return "";
+}
+
 const struct ControlInfo sspaceat_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
