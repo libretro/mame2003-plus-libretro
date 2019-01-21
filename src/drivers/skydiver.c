@@ -581,4 +581,4 @@ ROM_END
  *
  *************************************/
 
-GAME( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver" )
+GAMEC( 1978, skydiver, 0, skydiver, skydiver, 0, ROT0, "Atari", "Sky Diver", &skydiver_ctrl, NULL )
