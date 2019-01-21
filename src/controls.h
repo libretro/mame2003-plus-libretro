@@ -2329,6 +2329,9 @@ const char *sbm_get_ctrl_name(int type);
 extern const struct ControlInfo souledge_ctrl;
 const char *souledge_get_ctrl_name(int type);
 
+extern const struct ControlInfo spacewar_ctrl;
+const char *spacewar_get_ctrl_name(int type);
+
 extern const struct ControlInfo sspaceat_ctrl;
 const char *sspaceat_get_ctrl_name(int type);
 
