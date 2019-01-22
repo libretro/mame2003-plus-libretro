@@ -1902,32 +1902,32 @@ int convert_analog_scale(int input)
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
-	int i;
-	int value;
-	
-    for (i = 0; i < MAX_ANALOG_AXES; i ++)
-    {
-		value =0;
-		int code;	
-		if (analogjoy_input[i] != CODE_NONE)
-		{	
-			code = analogjoy_input[i];
-			
-			if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 ) 
-				value = convert_analog_scale(analogjoy[player][0]); 
+  int i;
+  int value;
 
-			else if ( code == (player * 26) + 20 + 2000 || code == (player * 26) + 21 + 2000 ) 
-				value = convert_analog_scale(analogjoy[player][1]); 
-				
-			else if ( code == (player * 26) + 22 + 2000 || code == (player * 23) + 23 + 2000 ) 
-				value = convert_analog_scale(analogjoy[player][2]);  
+  for (i = 0; i < MAX_ANALOG_AXES; i ++)
+  {
+    int code;
+    value = 0;
+    if (analogjoy_input[i] != CODE_NONE)
+    {  
+      code = analogjoy_input[i];
 
-			else if ( code == (player * 26) + 24 + 2000 || code == (player * 25) + 25 + 2000 ) 
-				value = convert_analog_scale(analogjoy[player][3]); 
+      if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 )
+        value = convert_analog_scale(analogjoy[player][0]);
 
-			analog_axis[i]=value;
-		}			
-	}
+      else if ( code == (player * 26) + 20 + 2000 || code == (player * 26) + 21 + 2000 )
+        value = convert_analog_scale(analogjoy[player][1]);
+
+      else if ( code == (player * 26) + 22 + 2000 || code == (player * 23) + 23 + 2000 )
+        value = convert_analog_scale(analogjoy[player][2]);
+
+      else if ( code == (player * 26) + 24 + 2000 || code == (player * 25) + 25 + 2000 )
+        value = convert_analog_scale(analogjoy[player][3]);
+
+      analog_axis[i]=value;
+    }
+  }
 }
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
