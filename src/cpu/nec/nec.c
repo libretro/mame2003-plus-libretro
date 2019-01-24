@@ -394,6 +394,7 @@ OP( 0x62, i_chkind  ) {
  	nec_ICount-=20;
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: bound %04x high %04x low %04x tmp\n",activecpu_get_pc(),high,low,tmp);
 }
+OP( 0x63, i_brkn   ) { nec_interrupt(FETCH,1); CLKS(50,50,24); } /* timing not verified, used by riskchal / gussun */
 OP( 0x64, i_repnc  ) { 	UINT32 next = FETCHOP;	UINT16 c = I.regs.w[CW];
     switch(next) { /* Segments */
 	    case 0x26:	seg_prefix=TRUE;	prefix_base=I.sregs[ES]<<4;	next = FETCHOP;	CLK(2); break;
@@ -679,7 +680,7 @@ OP( 0xcb, i_retf      ) { POP(I.ip); POP(I.sregs[CS]); CHANGE_PC; CLKS(29,29,16)
 OP( 0xcc, i_int3      ) { nec_interrupt(3,0); CLKS(50,50,24); }
 OP( 0xcd, i_int       ) { nec_interrupt(FETCH,0); CLKS(50,50,24); }
 OP( 0xce, i_into      ) { if (OF) { nec_interrupt(4,0); CLKS(52,52,26); } else CLK(3); }
-OP( 0xcf, i_iret      ) { POP(I.ip); POP(I.sregs[CS]); i_popf(); CHANGE_PC; CLKS(39,39,19); }
+OP( 0xcf, i_iret      ) { POP(I.ip); POP(I.sregs[CS]); i_popf(); SetMD(1); CHANGE_PC; CLKS(39,39,19); }
 
 OP( 0xd0, i_rotshft_b ) {
 	UINT32 src, dst; GetModRM; src = (UINT32)GetRMByte(ModRM); dst=src;
