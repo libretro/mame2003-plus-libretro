@@ -51,6 +51,13 @@
 
 #ifndef FLAC__INTEGER_ONLY_LIBRARY
 
+#if defined(_MSC_VER) && (_MSC_VER < 1800)
+#include <float.h>
+static inline long int lround(double x) {
+	return (long)(x + _copysign(0.5, x));
+}
+#endif
+
 void FLAC__lpc_window_data(const FLAC__int32 in[], const FLAC__real window[], FLAC__real out[], unsigned data_len)
 {
 	unsigned i;
