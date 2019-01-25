@@ -1705,16 +1705,29 @@ void reset_default_inputs(void)
  * void reset_default_inputs(void)
  * repopulate mappings from the defaults specified in the driver source 
  */
-void reset_driver_inputs(void)
+void reset_driver_inputs(const struct InputPort *in)
 {
-  struct InputPort *in;
-
-	in = (struct InputPort *) inputport_defaults;
+ 		
+	char test[100];
 	while (in->type != IPT_END)
 	{
-    /* still needs to be implemented */
-		in++;
+		
+					
+	  	if ( (in->type & ~IPF_MASK) != IPT_DIPSWITCH_NAME && input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 
+		 {
+			seq_name(input_port_seq(in),test,100);
+			
+			if ( seq_get_1(in->seq) != CODE_DEFAULT)
+			{
+					seq_set_1(&in->seq, CODE_DEFAULT);
+					printf("restore default: %s  mapped to %s\n",input_port_name(in),test);
+			}
+
+		 }
+		in ++;
 	}
+
 }
 
 int load_input_port_settings(void)

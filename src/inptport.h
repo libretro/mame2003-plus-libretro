@@ -422,7 +422,7 @@ void reset_default_inputs(void);
  * void reset_default_keys(void)
  * repopulate mappings from the defaults specified in the driver source 
  */
-void reset_driver_inputs(void);
+void reset_driver_inputs(const struct InputPort *in);
 
 #ifdef __cplusplus
 }
