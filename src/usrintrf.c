@@ -3059,7 +3059,7 @@ void setup_menu_init(void)
 			in++;
 		}
 
-		if (options.mame_remapping && num != 0)
+		if (num != 0)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}
