@@ -1895,12 +1895,12 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 
 int convert_analog_scale(int input)
 {
+	static const int TRIGGER_MAX = 0x8000;
 	int trigger_deadzone = (32678 /100) * 20; // 20% deadzone is plenty i would imagine
 	int neg_test=0;
 	float scale;
 	
 	if (input < 0) { input =abs(input); neg_test=1; }
-	static const int TRIGGER_MAX = 0x8000;
 	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
 
 	if ( input > 0 && input > trigger_deadzone )
