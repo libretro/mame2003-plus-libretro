@@ -1820,7 +1820,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int player_map_idx = 0;
   int overall_idx    = 0;
   int display_idx    = 0;
-
+  char temp[40];
   for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
   {
     for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
@@ -1845,7 +1845,28 @@ const struct JoystickInfo *osd_get_joy_list(void)
   mame_joy_map[overall_idx].name         = NULL;
   mame_joy_map[overall_idx].code         = 0;
   mame_joy_map[overall_idx].standardcode = 0;
+  if (!options.analog)
+  {
+     for(display_idx = 0; display_idx <= 5; display_idx++)
+     {
 
+        mame_joy_map[(display_idx * 26) + 18 ].name = mame_joy_map[(display_idx * 26 )+0].name;
+        mame_joy_map[(display_idx * 26) + 19 ].name = mame_joy_map[(display_idx * 26 )+1].name;
+		mame_joy_map[(display_idx * 26) + 20 ].name = mame_joy_map[(display_idx * 26 )+2].name;
+        mame_joy_map[(display_idx * 26) + 21 ].name = mame_joy_map[(display_idx * 26 )+3].name;
+	
+        mame_joy_map[(display_idx * 26) + 18 ].code = mame_joy_map[(display_idx * 26 )+0].code;
+        mame_joy_map[(display_idx * 26) + 19 ].code = mame_joy_map[(display_idx * 26 )+1].code;
+        mame_joy_map[(display_idx * 26) + 20 ].code = mame_joy_map[(display_idx * 26 )+2].code;
+        mame_joy_map[(display_idx * 26) + 21 ].code = mame_joy_map[(display_idx * 26 )+3].code;
+		
+        mame_joy_map[(display_idx * 26) + 0 ].code =  (display_idx * 26) +  2018;
+        mame_joy_map[(display_idx * 26) + 1 ].code =  (display_idx * 26) +  2019;
+        mame_joy_map[(display_idx * 26) + 2 ].code =  (display_idx * 26) +  2020;
+        mame_joy_map[(display_idx * 26) + 3 ].code =  (display_idx * 26) +  2021;
+	   
+     }
+  } 
   return mame_joy_map;
 }
 
@@ -1858,6 +1879,7 @@ int osd_is_joy_pressed(int joycode)
 		
 	if ( joycode >= 2000 && joycode < 3000 )
 	{
+		if (!options.analog) return 0;
 		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
 	}
