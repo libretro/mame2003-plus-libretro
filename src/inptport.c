@@ -1668,7 +1668,7 @@ static void load_default_keys(void)
 	memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
 
 	cfg = config_open(NULL);
-	if (cfg)
+	if (cfg && options.mame_remapping)
 	{
 		config_read_default_ports(cfg, inputport_defaults);
 		config_close(cfg);
@@ -1682,11 +1682,11 @@ static void save_default_keys(void)
 	config_file *cfg;
 
 	cfg = config_create(NULL);
-	if (cfg)
+	if (cfg && options.mame_remapping)
 	{
 		config_write_default_ports(cfg, inputport_defaults_backup, inputport_defaults);
 		config_close(cfg);
-			}
+	}
 
 	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
 }
