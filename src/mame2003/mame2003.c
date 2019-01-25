@@ -1099,13 +1099,12 @@ void retro_run (void)
 		unsigned int offset = (i * 26);
 
 		/* Analog joystick */
-		if (options.analog)
-		{	
-			analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
-			analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
-			analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-			analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
-		}
+
+		analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
+		analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
+		analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+		analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+
 	  
 		retroJsState[0 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
 		retroJsState[1 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
@@ -1148,46 +1147,39 @@ void retro_run (void)
 			retroJsState[17 + offset] = 0;
 		}
 
-		if (options.analog)
-		{	
-			retroJsState[ 18 + offset] = 0;
-			retroJsState[ 19 + offset] = 0;
-			retroJsState[ 20 + offset] = 0;
-			retroJsState[ 21 + offset] = 0;
-			retroJsState[ 22 + offset] = 0;
-			retroJsState[ 23 + offset] = 0;
-			retroJsState[ 24 + offset] = 0;
-			retroJsState[ 25 + offset] = 0;
-			if (convert_analog_scale(analogjoy[i][0]) < -deadzone) 
-				retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
+		retroJsState[ 18 + offset] = 0;
+		retroJsState[ 19 + offset] = 0;
+		retroJsState[ 20 + offset] = 0;
+		retroJsState[ 21 + offset] = 0;
+		retroJsState[ 22 + offset] = 0;
+		retroJsState[ 23 + offset] = 0;
+		retroJsState[ 24 + offset] = 0;
+		retroJsState[ 25 + offset] = 0;
 
-			if (convert_analog_scale(analogjoy[i][0]) >  deadzone)
-				retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
+		if (convert_analog_scale(analogjoy[i][0]) < -deadzone) 
+			retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
 
-			if (convert_analog_scale(analogjoy[i][1]) < -deadzone)
-				retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
+		if (convert_analog_scale(analogjoy[i][0]) >  deadzone)
+			retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
 
-			if (convert_analog_scale(analogjoy[i][1]) >  deadzone)
-				retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (convert_analog_scale(analogjoy[i][1]) < -deadzone)
+			retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
+
+		if (convert_analog_scale(analogjoy[i][1]) >  deadzone)
+			retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
 		
-			if (convert_analog_scale(analogjoy[i][2]) < -deadzone) retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
-			if (convert_analog_scale(analogjoy[i][2]) >  deadzone) retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
-			if (convert_analog_scale(analogjoy[i][3]) < -deadzone) retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
-			if (convert_analog_scale(analogjoy[i][3]) >  deadzone) retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
-        }
-		if (!options.analog)
-		{
-			 retroJsState[ 18 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_LEFT + offset];
-			 retroJsState[ 19 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_RIGHT + offset];
-			 retroJsState[ 20 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_UP + offset];
-			 retroJsState[ 21 + offset] = retroJsState[RETRO_DEVICE_ID_JOYPAD_DOWN + offset];
-			 //now set dpad to zero so we dont get double mapping
-			 retroJsState[RETRO_DEVICE_ID_JOYPAD_LEFT + offset] = 0;
-			 retroJsState[RETRO_DEVICE_ID_JOYPAD_RIGHT + offset] = 0;
-			 retroJsState[RETRO_DEVICE_ID_JOYPAD_UP + offset] = 0;
-			 retroJsState[RETRO_DEVICE_ID_JOYPAD_DOWN + offset] = 0;
-				
-		}
+		if (convert_analog_scale(analogjoy[i][2]) < -deadzone) 
+			retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
+		
+		if (convert_analog_scale(analogjoy[i][2]) >  deadzone) 
+			retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
+		
+		if (convert_analog_scale(analogjoy[i][3]) < -deadzone) 
+			retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
+
+		if (convert_analog_scale(analogjoy[i][3]) >  deadzone) 
+			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+       
 	}
    mame_frame();
 }
@@ -1868,9 +1860,8 @@ int osd_is_joy_pressed(int joycode)
 	{
 		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
-		if (!options.analog)  return retroJsState[joycode-2000];
 	}
-	// only send dpad when analog is set or we will get a double input
+
 	if ( joycode >= 3000) return retroJsState[joycode-3000];
 
 	return 0;
@@ -1878,7 +1869,7 @@ int osd_is_joy_pressed(int joycode)
 
 int osd_is_joystick_axis_code(int joycode)
 {
-if (joycode >= 2000  && joycode < 3000 && options.analog)  return 1;
+	if (joycode >= 2000  && joycode < 3000)  return 1;
 	return 0;
 }
 
