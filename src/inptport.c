@@ -1713,18 +1713,18 @@ void reset_driver_inputs(const struct InputPort *in)
 	{
 		
 					
-	  	if ( (in->type & ~IPF_MASK) != IPT_DIPSWITCH_NAME && !IPT_DIPSWITCH_SETTING && input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+	  	if ( (in->type & ~IPF_MASK) != IPT_DIPSWITCH_NAME  && input_port_name(in) != 0 &&  (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
 		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 
 		 {
 			seq_name(input_port_seq(in),test,100);
 			
-			if ( seq_get_1(in->seq) != CODE_DEFAULT)
-			{
-				seq_set_1(&in->seq, CODE_DEFAULT);
-				printf("restore default: %s  mapped to %s\n",input_port_name(in),test);
-			}
-			else 				printf("%s  mapped to %s\n",input_port_name(in),test);
+			if ( seq_get_1(in->seq) != CODE_DEFAULT )
 				
+				{
+					    if ( seq_get_1(in->seq) != CODE_NONE ) seq_set_1(&in->seq, CODE_DEFAULT);
+						printf("restore default: %s  mapped to %s\n",input_port_name(in),test);
+				}
+		
 		 }
 		in ++;	
 	}
