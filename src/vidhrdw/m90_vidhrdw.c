@@ -18,7 +18,7 @@
  		Bit 0x04 - Playfield 2 width (0 is 64 tiles, 0x4 is 128 tiles)
 		Bit 0x10 - Playfield 2 disable
 		Bit 0x20 - Playfield 2 rowscroll enable
-	14: Bit 0x02 - unknown (set by hasamu)
+	    Bits0x03 - Sprite/Tile Priority (related to sprite color)
 
 	Emulation by Bryan McPhail, mish@tendril.co.uk, thanks to Chris Hardy!
 
@@ -97,13 +97,30 @@ static void m90_drawsprites(struct mame_bitmap *bitmap,const struct rectangle *c
 		y -= 16 * y_multi;
 
 		for (i = 0;i < y_multi;i++)
-			pdrawgfx(bitmap,Machine->gfx[1],
+			if (m90_video_control_data[0xe] & 0x01)
+			    pdrawgfx(bitmap,Machine->gfx[1],
 					sprite + (fy ? y_multi-1 - i : i),
 					colour,
 					fx,fy,
 					x,y+i*16,
 					cliprect,TRANSPARENCY_PEN,0,
 					(colour & 0x08) ? 0x00 : 0x02);
+			else if (m90_video_control_data[0xe] & 0x02)
+				pdrawgfx(bitmap,Machine->gfx[1],
+					sprite + (fy ? y_multi-1 - i : i),
+					colour,
+					fx,fy,
+					x,y+i*16,
+					cliprect,TRANSPARENCY_PEN,0,
+					((colour & 0x0c)==0x0c) ? 0x00 : 0x02);
+			else
+				pdrawgfx(bitmap,Machine->gfx[1],
+					sprite + (fy ? y_multi-1 - i : i),
+					colour,
+					fx,fy,
+					x,y+i*16,
+					cliprect,TRANSPARENCY_PEN,0,
+					0x02);
 	}
 }
 
@@ -169,8 +186,9 @@ VIDEO_UPDATE( m90 )
 	static int last_pf1,last_pf2;
 	int pf1_base = m90_video_control_data[0xa] & 0x3;
 	int pf2_base = m90_video_control_data[0xc] & 0x3;
-	int i,pf1_enable,pf2_enable;
+	int i,pf1_enable,pf2_enable, video_enable;
 
+    if (m90_video_control_data[0xe]&0x04) video_enable=0; else video_enable=1;
 	if (m90_video_control_data[0xa]&0x10) pf1_enable=0; else pf1_enable=1;
 	if (m90_video_control_data[0xc]&0x10) pf2_enable=0; else pf2_enable=1;
 /*	tilemap_set_enable(pf1_layer,pf1_enable);*/
@@ -234,8 +252,10 @@ VIDEO_UPDATE( m90 )
 
 	fillbitmap(priority_bitmap,0,cliprect);
 
-	if (!pf2_enable)
-		fillbitmap(bitmap,Machine->pens[0],cliprect);
+	if (video_enable) {
+		if (!pf2_enable)
+			fillbitmap(bitmap,Machine->pens[0],cliprect);
+
 
 	if (pf2_enable)
 	{
@@ -264,4 +284,9 @@ VIDEO_UPDATE( m90 )
 	}
 
 	m90_drawsprites(bitmap,cliprect);
+
+	} else {
+		fillbitmap(bitmap,get_black_pen(),cliprect);
+	}
+
 }
