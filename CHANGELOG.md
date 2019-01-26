@@ -189,6 +189,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pigskin 621AD - Romset `pigskin`
 * Power Drive - Romset `powerdrv`
 * Rampage - Romsets `rampage` and `rampage2`
+* Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
 * Run And Gun - Romset `rungun`
 * Rush'N Attack - Romset `rushatck`
