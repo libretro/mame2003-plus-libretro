@@ -371,7 +371,6 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 			break;
 		in++;
 	}
-	/*if (!options.mame_remapping)*/ reset_driver_inputs(Machine->input_ports);
 	cfg->position = POSITION_AFTER_PORTS;
 	return CONFIG_ERROR_SUCCESS;
 }
