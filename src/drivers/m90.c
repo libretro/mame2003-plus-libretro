@@ -518,7 +518,7 @@ INPUT_PORTS_START( riskchal )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2 */
 INPUT_PORTS_END
 
 /*****************************************************************************/
