@@ -509,16 +509,16 @@ INPUT_PORTS_START( riskchal )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "Coin Slots" )
+	PORT_DIPSETTING(    0x04, "Common" )
+    PORT_DIPSETTING(    0x00, "Separate" )
 	PORT_DIPNAME( 0x08, 0x08, "Coin Mode" )
 	PORT_DIPSETTING(    0x08, "1" )
 	PORT_DIPSETTING(    0x00, "2" )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-/*	IREM_COIN_MODE_2 */
+//	IREM_COIN_MODE_2
 INPUT_PORTS_END
 
 /*****************************************************************************/
