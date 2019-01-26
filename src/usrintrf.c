@@ -3199,7 +3199,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
         else
           snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "CFG flushed!"); 
         usrintf_showmessage_secs(2, "%s", msg_buffer);
-        reset_driver_inputs(); /* just a stub for now */
+        //reset_driver_inputs(); /* just a stub for now */
         break;
       }
       case UI_FLUSH_ALL_CFG:
@@ -3237,7 +3237,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
             remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
           }
         }
-        reset_driver_inputs(); /* just a stub for now */
+        //reset_driver_inputs(); /* just a stub for now */
 
         break;          
       }        

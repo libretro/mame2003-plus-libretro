@@ -1668,7 +1668,7 @@ static void load_default_keys(void)
 	memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
 
 	cfg = config_open(NULL);
-	if (cfg && options.mame_remapping)
+	if (cfg)
 	{
 		config_read_default_ports(cfg, inputport_defaults);
 		config_close(cfg);
@@ -1682,7 +1682,7 @@ static void save_default_keys(void)
 	config_file *cfg;
 
 	cfg = config_create(NULL);
-	if (cfg && options.mame_remapping)
+	if (cfg)
 	{
 		config_write_default_ports(cfg, inputport_defaults_backup, inputport_defaults);
 		config_close(cfg);
@@ -1713,19 +1713,20 @@ void reset_driver_inputs(const struct InputPort *in)
 	{
 		
 					
-	  	if ( (in->type & ~IPF_MASK) != IPT_DIPSWITCH_NAME && input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+	  	if ( (in->type & ~IPF_MASK) != IPT_DIPSWITCH_NAME && !IPT_DIPSWITCH_SETTING && input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
 		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 
 		 {
 			seq_name(input_port_seq(in),test,100);
 			
 			if ( seq_get_1(in->seq) != CODE_DEFAULT)
 			{
-					seq_set_1(&in->seq, CODE_DEFAULT);
-					printf("restore default: %s  mapped to %s\n",input_port_name(in),test);
+				seq_set_1(&in->seq, CODE_DEFAULT);
+				printf("restore default: %s  mapped to %s\n",input_port_name(in),test);
 			}
-
+			else 				printf("%s  mapped to %s\n",input_port_name(in),test);
+				
 		 }
-		in ++;
+		in ++;	
 	}
 
 }
