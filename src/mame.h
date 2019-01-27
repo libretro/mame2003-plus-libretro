@@ -220,7 +220,7 @@ struct GameOptions
   bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
   unsigned tate_mode;
 
-  unsigned activate_dcs_speedhack;
+  unsigned activate_dcs_speedhack; 
   int      crosshair_enable;
   bool     mame_remapping;       /* display MAME input remapping menu */
 
