@@ -202,6 +202,7 @@ static int input_port_read_ver_8(mame_file *f, struct InputPort *in)
 
 static config_file *config_init(const char *name, int save)
 {
+	
 	static const struct cfg_format formats[] =
 	{
 		/* mame 0.74 with 8 coin counters */
@@ -218,10 +219,11 @@ static config_file *config_init(const char *name, int save)
 		goto error;
 	memset(cfg, 0, sizeof(*cfg));
 
-	cfg->file = mame_fopen(name ? name : "default", 0, FILETYPE_CONFIG, save);
+	if(options.mame_remapping)	cfg->file = mame_fopen(name ? name : "default", 0, FILETYPE_CONFIG, save);
+	else
+	cfg->file = mame_fopen(name ? name : "ra_default", 0, FILETYPE_CONFIG, save);	
 	if (!cfg->file)
 		goto error;
-
 	cfg->is_default = name ? 0 : 1;
 	cfg->is_write = save ? 1 : 0;
 
@@ -363,10 +365,13 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 		in++;
 	}
 
+
+
 	/* read the current settings */
 	in = input_ports;
 	while (in->type != IPT_END)
 	{
+
 		if (read_input_port(cfg->file, in) != 0)
 			break;
 		in++;

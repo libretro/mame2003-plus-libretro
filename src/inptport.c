@@ -1733,13 +1733,22 @@ void reset_driver_inputs(const struct InputPort *in)
 
 int load_input_port_settings(void)
 {
+	char buf[30];
+	
 	config_file *cfg;
 	int err;
 	struct mixer_config mixercfg;
 
 	load_default_keys();
 
-	cfg = config_open(Machine->gamedrv->name);
+	if(options.mame_remapping)  sprintf(buf,"%s",Machine->gamedrv->name);
+	else
+	sprintf(buf,"ra_%s",Machine->gamedrv->name);	
+	
+	 	
+	cfg = config_open(buf);
+	
+		
 	if (cfg)
 		{
 		err = config_read_ports(cfg, Machine->input_ports_default, Machine->input_ports);
@@ -1783,10 +1792,15 @@ void save_input_port_settings(void)
 {
 	config_file *cfg;
 	struct mixer_config mixercfg;
-
+	char buf[30];
+	
 	save_default_keys();
 
-	cfg = config_create(Machine->gamedrv->name);
+	if(options.mame_remapping)  sprintf(buf,"%s",Machine->gamedrv->name);
+	else
+	sprintf(buf,"ra_%s",Machine->gamedrv->name);	
+
+	cfg = config_create(buf);
 	if (cfg)
 		{
 		mixer_save_config(&mixercfg);
