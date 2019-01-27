@@ -195,6 +195,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rush'N Attack - Romset `rushatck`
 * Sarge - Romset `sarge`
 * Satan's Hollow - Romset `shollow`
+* Shisensho II - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
