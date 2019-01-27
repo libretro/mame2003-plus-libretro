@@ -215,12 +215,13 @@ struct GameOptions
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
 
+  bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
   bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
   unsigned analog;
-  bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
-  unsigned tate_mode;
 
-  unsigned activate_dcs_speedhack; 
+  unsigned tate_mode;
+  unsigned activate_dcs_speedhack;
+
   int      crosshair_enable;
   bool     mame_remapping;       /* display MAME input remapping menu */
 
