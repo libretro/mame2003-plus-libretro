@@ -81,7 +81,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
   OPT_DUAL_JOY,
-  OPT_DPAD_ANALOG,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -198,7 +197,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Analog enable; disabled|enabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
                                                                                          "Vector resolution multiplier (Restart core); 3|1|2|4|5|6|7|8|9|10");
@@ -337,8 +335,8 @@ static void update_variables(bool first_time)
             options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
-		    else
-			    options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
+          else
+            options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
         break;
 
         case OPT_4WAY:
@@ -532,14 +530,7 @@ static void update_variables(bool first_time)
             break;
           }
 
-        case OPT_DPAD_ANALOG:
-          if(strcmp(var.value, "enabled") == 0)
-            options.analog = 1;
-          else
-            options.analog = 0;
-          break;
-
-        case OPT_TATE_MODE:
+         case OPT_TATE_MODE:
           if(strcmp(var.value, "enabled") == 0)
             options.tate_mode = 1;
           else
@@ -621,19 +612,19 @@ static void update_variables(bool first_time)
             options.save_subfolder = false;
           break;
 
-	    case OPT_Cheat_Input_Ports:
+          case OPT_Cheat_Input_Ports:
           if(strcmp(var.value, "enabled") == 0)
             options.cheat_input_ports = true;
           else
             options.cheat_input_ports = false;
-          break;		
-	    case OPT_Machine_Timing:
+          break;
+          case OPT_Machine_Timing:
           if(strcmp(var.value, "enabled") == 0)
             options.machine_timing = true;
           else
             options.machine_timing = false;
-          break;	
-	  }
+          break;
+      }
     }
   }
 
@@ -666,7 +657,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 		{
 			info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 			log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
-		}       
+		}
 		else
 		{
 			info->timing.sample_rate = options.samplerate;
@@ -764,11 +755,11 @@ bool retro_load_game(const struct retro_game_info *game)
       options.romset_filename_noext = driver_lookup;
       break;
     }
-	if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
-	{
+    if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
+    {
       log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, needle->name);
       return false;
-	}
+    }
  }
 
    if(!init_game(driverIndex))
@@ -915,7 +906,7 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-          options.content_flags[CONTENT_DUAL_JOYSTICK] = true; /* if there are any "JOYSTICKLEFT" mappings we know there are two joysticks */
+					options.content_flags[CONTENT_DUAL_JOYSTICK] = true; /* if there are any "JOYSTICKLEFT" mappings we know there are two joysticks */
 					break;
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
@@ -948,35 +939,35 @@ static void set_content_flags(void)
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 10) options.content_flags[CONTENT_BUTTON_COUNT] = 10;
 					break;
 				case IPT_PADDLE:
-          options.content_flags[CONTENT_PADDLE] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
-          break;
+					options.content_flags[CONTENT_PADDLE] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
+					break;
 				case IPT_DIAL:
-          options.content_flags[CONTENT_DIAL] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
+					options.content_flags[CONTENT_DIAL] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
 					break;
 				case IPT_TRACKBALL_X:
 				case IPT_TRACKBALL_Y:
-          options.content_flags[CONTENT_TRACKBALL] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
+					options.content_flags[CONTENT_TRACKBALL] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
 					break;
 				case IPT_AD_STICK_X:
 				case IPT_AD_STICK_Y:
-          options.content_flags[CONTENT_AD_STICK] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					options.content_flags[CONTENT_AD_STICK] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
 					break;
 				case IPT_LIGHTGUN_X:
 				case IPT_LIGHTGUN_Y:
-          options.content_flags[CONTENT_LIGHTGUN] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					options.content_flags[CONTENT_LIGHTGUN] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
 					break;
 				case IPT_SERVICE :
-          options.content_flags[CONTENT_HAS_SERVICE] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
+					options.content_flags[CONTENT_HAS_SERVICE] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
 					break;
 				case IPT_TILT :
-          options.content_flags[CONTENT_HAS_TILT] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
+					options.content_flags[CONTENT_HAS_TILT] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
 					break;
 			}
 		}
@@ -1179,9 +1170,9 @@ void retro_run (void)
 
 		if (convert_analog_scale(analogjoy[i][3]) >  deadzone) 
 			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
-       
+
 	}
-   mame_frame();
+	mame_frame();
 }
 
 void retro_unload_game(void)
@@ -1684,10 +1675,38 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_HAT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_HAT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_HAT_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_HAT_DOWN}, \
+  {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
+  {"RP"   #DISPLAY_IDX " L2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
+  {"RP"   #DISPLAY_IDX " R2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
+  {"RP"   #DISPLAY_IDX " L3",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L3 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
+  {"RP"   #DISPLAY_IDX " R3",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R3 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"   #DISPLAY_IDX " Start",        ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_START +1000,  JOYCODE_##DISPLAY_IDX##_START}, \
+  {"RP"   #DISPLAY_IDX " Select",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"Mouse" #DISPLAY_IDX " LClick",      ((DISPLAY_IDX - 1) * 26) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Mouse" #DISPLAY_IDX " RClick",      ((DISPLAY_IDX - 1) * 26) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * 26) + 18 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * 26) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * 26) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * 26) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_DOWN}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * 26) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * 26) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * 26) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
+
+#define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_HAT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_HAT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_HAT_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_HAT_DOWN}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1712,10 +1731,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_HAT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_HAT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_HAT_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_HAT_DOWN}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1740,10 +1759,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
   
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
-  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_OTHER}, \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_HAT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_HAT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_HAT_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_HAT_DOWN}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1768,6 +1787,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
+  {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_HAT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_HAT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_HAT_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_HAT_DOWN}, \
   {"RP"   #DISPLAY_IDX " HAT Left",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_OTHER}, \
   {"RP"   #DISPLAY_IDX " HAT Up",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_OTHER}, \
@@ -1845,28 +1868,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
   mame_joy_map[overall_idx].name         = NULL;
   mame_joy_map[overall_idx].code         = 0;
   mame_joy_map[overall_idx].standardcode = 0;
-  if (!options.analog)
-  {
-     for(display_idx = 0; display_idx <= 5; display_idx++)
-     {
 
-        mame_joy_map[(display_idx * 26) + 18 ].name = mame_joy_map[(display_idx * 26 )+0].name;
-        mame_joy_map[(display_idx * 26) + 19 ].name = mame_joy_map[(display_idx * 26 )+1].name;
-		mame_joy_map[(display_idx * 26) + 20 ].name = mame_joy_map[(display_idx * 26 )+2].name;
-        mame_joy_map[(display_idx * 26) + 21 ].name = mame_joy_map[(display_idx * 26 )+3].name;
-	
-        mame_joy_map[(display_idx * 26) + 18 ].code = mame_joy_map[(display_idx * 26 )+0].code;
-        mame_joy_map[(display_idx * 26) + 19 ].code = mame_joy_map[(display_idx * 26 )+1].code;
-        mame_joy_map[(display_idx * 26) + 20 ].code = mame_joy_map[(display_idx * 26 )+2].code;
-        mame_joy_map[(display_idx * 26) + 21 ].code = mame_joy_map[(display_idx * 26 )+3].code;
-		
-        mame_joy_map[(display_idx * 26) + 0 ].code =  (display_idx * 26) +  2018;
-        mame_joy_map[(display_idx * 26) + 1 ].code =  (display_idx * 26) +  2019;
-        mame_joy_map[(display_idx * 26) + 2 ].code =  (display_idx * 26) +  2020;
-        mame_joy_map[(display_idx * 26) + 3 ].code =  (display_idx * 26) +  2021;
-	   
-     }
-  } 
   return mame_joy_map;
 }
 
@@ -1879,7 +1881,6 @@ int osd_is_joy_pressed(int joycode)
 		
 	if ( joycode >= 2000 && joycode < 3000 )
 	{
-		if (!options.analog) return 0;
 		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
 	}
@@ -1951,20 +1952,18 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
     if (analogjoy_input[i] != CODE_NONE)
     {  
       code = analogjoy_input[i];
+        if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 )
+           value = convert_analog_scale(analogjoy[player][0]);
 
-      if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 )
-        value = convert_analog_scale(analogjoy[player][0]);
+        else if ( code == (player * 26) + 20 + 2000 || code == (player * 26) + 21 + 2000 )
+           value = convert_analog_scale(analogjoy[player][1]);
 
-      else if ( code == (player * 26) + 20 + 2000 || code == (player * 26) + 21 + 2000 )
-        value = convert_analog_scale(analogjoy[player][1]);
+        else if ( code == (player * 26) + 22 + 2000 || code == (player * 23) + 23 + 2000 )
+           value = convert_analog_scale(analogjoy[player][2]);
 
-      else if ( code == (player * 26) + 22 + 2000 || code == (player * 23) + 23 + 2000 )
-        value = convert_analog_scale(analogjoy[player][2]);
-
-      else if ( code == (player * 26) + 24 + 2000 || code == (player * 25) + 25 + 2000 )
-        value = convert_analog_scale(analogjoy[player][3]);
-
-      analog_axis[i]=value;
+        else if ( code == (player * 26) + 24 + 2000 || code == (player * 25) + 25 + 2000 )
+           value = convert_analog_scale(analogjoy[player][3]);
+		analog_axis[i]=value;
     }
   }
 }
@@ -2065,9 +2064,9 @@ int osd_is_key_pressed(int keycode)
 		return 0;
 
 	if (keycode < 512 && keycode >= 0)
-    return retroKeyState[keycode];
+		return retroKeyState[keycode];
 
-  return 0;
+	return 0;
 }
 
 
