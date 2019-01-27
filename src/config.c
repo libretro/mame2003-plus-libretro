@@ -1,3 +1,4 @@
+
 /***************************************************************************
 
 	config.c - config file access functions
@@ -515,10 +516,10 @@ static void seq_write(mame_file *f, const InputSeq *seq)
 
 static void input_port_write(mame_file *f, const struct InputPort *in)
 {
-	writeint(f, in->type);
-	writeword(f, in->mask);
-	writeword(f, in->default_value);
-	seq_write(f, &in->seq);
+  writeint(f, in->type);
+  writeword(f, in->mask);
+  writeword(f, in->default_value);
+  seq_write(f, &in->seq);
 }
 
 
@@ -529,38 +530,37 @@ static void input_port_write(mame_file *f, const struct InputPort *in)
 
 int config_write_ports(config_file *cfg, const struct InputPort *input_ports_default, const struct InputPort *input_ports)
 {
-	unsigned int total;
-	const struct InputPort *in;
+  unsigned int total;
+  const struct InputPort *in;
+  if (!cfg->is_write || cfg->is_default)
+  return CONFIG_ERROR_BADMODE;
+  if (cfg->position != POSITION_BEGIN)
+    return CONFIG_ERROR_BADPOSITION;
 
-	if (!cfg->is_write || cfg->is_default)
-		return CONFIG_ERROR_BADMODE;
-	if (cfg->position != POSITION_BEGIN)
-		return CONFIG_ERROR_BADPOSITION;
+  /* calculate the size of the array */
+  total = count_input_ports(input_ports_default);
 
-	/* calculate the size of the array */
-	total = count_input_ports(input_ports_default);
+  /* write array size */
+  writeint(cfg->file, total);
 
-	/* write array size */
-	writeint(cfg->file, total);
+  /* write the original settings as defined in the driver */
+  in = input_ports_default;
+  while (in->type != IPT_END)
+  {
+    input_port_write(cfg->file, in);
+    in++;
+  }
 
-	/* write the original settings as defined in the driver */
-	in = input_ports_default;
-	while (in->type != IPT_END)
-	{
-		input_port_write(cfg->file, in);
-		in++;
-	}
+  /* write the current settings */
+  in = input_ports;
+  while (in->type != IPT_END)
+  {
+    input_port_write(cfg->file, in);
+    in++;
+  }
 
-	/* write the current settings */
-	in = input_ports;
-	while (in->type != IPT_END)
-	{
-		input_port_write(cfg->file, in);
-		in++;
-	}
-
-	cfg->position = POSITION_AFTER_PORTS;
-	return CONFIG_ERROR_SUCCESS;
+  cfg->position = POSITION_AFTER_PORTS;
+  return CONFIG_ERROR_SUCCESS;
 }
 
 
@@ -571,26 +571,25 @@ int config_write_ports(config_file *cfg, const struct InputPort *input_ports_def
 
 int config_write_default_ports(config_file *cfg, const struct ipd *input_ports_default_backup, const struct ipd *input_ports_default)
 {
-	int i = 0;
+  int i = 0;
+  if (!cfg->is_write || !cfg->is_default)
+    return CONFIG_ERROR_BADMODE;
+  if (cfg->position != POSITION_BEGIN)
+    return CONFIG_ERROR_BADPOSITION;
 
-	if (!cfg->is_write || !cfg->is_default)
-		return CONFIG_ERROR_BADMODE;
-	if (cfg->position != POSITION_BEGIN)
-		return CONFIG_ERROR_BADPOSITION;
+  while (input_ports_default[i].type != IPT_END)
+  {
+    if (input_ports_default[i].type != IPT_OSD_DESCRIPTION)
+    {
+      writeint(cfg->file, input_ports_default[i].type);
+      seq_write(cfg->file, &input_ports_default_backup[i].seq);
+      seq_write(cfg->file, &input_ports_default[i].seq);
+    }
+  i++;
+  }
 
-	while (input_ports_default[i].type != IPT_END)
-	{
-		if (input_ports_default[i].type != IPT_OSD_DESCRIPTION)
-		{
-			writeint(cfg->file, input_ports_default[i].type);
-			seq_write(cfg->file, &input_ports_default_backup[i].seq);
-			seq_write(cfg->file, &input_ports_default[i].seq);
-		}
-		i++;
-	}
-
-	cfg->position = POSITION_AFTER_PORTS;
-	return CONFIG_ERROR_SUCCESS;
+  cfg->position = POSITION_AFTER_PORTS;
+  return CONFIG_ERROR_SUCCESS;
 }
 
 
@@ -600,16 +599,15 @@ int config_write_default_ports(config_file *cfg, const struct ipd *input_ports_d
 ***************************************************************************/
 
 int config_write_coin_and_ticket_counters(config_file *cfg, const unsigned int *coins, const unsigned int *lastcoin,
-	const unsigned int *coinlockedout, unsigned int dispensed_tickets)
+  const unsigned int *coinlockedout, unsigned int dispensed_tickets)
 {
-	int i;
-
-	/* write out the coin/ticket counters for this machine - LBO 042898 */
-	for (i = 0; i < COIN_COUNTERS; i ++)
-		writeint(cfg->file, coins[i]);
-	writeint(cfg->file, dispensed_tickets);
-	cfg->position = POSITION_AFTER_COINS;
-	return CONFIG_ERROR_SUCCESS;
+  int i;
+  /* write out the coin/ticket counters for this machine - LBO 042898 */
+  for (i = 0; i < COIN_COUNTERS; i ++)
+    writeint(cfg->file, coins[i]);
+  writeint(cfg->file, dispensed_tickets);
+  cfg->position = POSITION_AFTER_COINS;
+  return CONFIG_ERROR_SUCCESS;
 }
 
 
@@ -620,13 +618,13 @@ int config_write_coin_and_ticket_counters(config_file *cfg, const unsigned int *
 
 int config_write_mixer_config(config_file *cfg, const struct mixer_config *mixercfg)
 {
-	if (!cfg->is_write)
-		return CONFIG_ERROR_BADMODE;
-	if (cfg->position != POSITION_AFTER_COINS)
-		return CONFIG_ERROR_BADPOSITION;
+  if (!cfg->is_write)
+    return CONFIG_ERROR_BADMODE;
+  if (cfg->position != POSITION_AFTER_COINS)
+    return CONFIG_ERROR_BADPOSITION;
 
-	mame_fwrite(cfg->file, mixercfg->default_levels, MIXER_MAX_CHANNELS);
-	mame_fwrite(cfg->file, mixercfg->mixing_levels, MIXER_MAX_CHANNELS);
-	cfg->position = POSITION_AFTER_MIXER;
-	return CONFIG_ERROR_SUCCESS;
+  mame_fwrite(cfg->file, mixercfg->default_levels, MIXER_MAX_CHANNELS);
+  mame_fwrite(cfg->file, mixercfg->mixing_levels, MIXER_MAX_CHANNELS);
+  cfg->position = POSITION_AFTER_MIXER;
+  return CONFIG_ERROR_SUCCESS;
 }

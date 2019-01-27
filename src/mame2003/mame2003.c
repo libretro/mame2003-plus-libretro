@@ -46,7 +46,7 @@ int16_t             mouse_x[4]= {0};
 int16_t             mouse_y[4]= {0};
 int16_t             analogjoy[4][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
-
+int cfg_save_status=-1;
 static struct retro_input_descriptor empty[] = { { 0 } };
 
 retro_log_printf_t                 log_cb;
@@ -597,6 +597,7 @@ static void update_variables(bool first_time)
             options.mame_remapping = true;
           else
             options.mame_remapping = false;
+            cfg_save_status++;
           if(!first_time)
             setup_menu_init();
           break;
@@ -1850,7 +1851,6 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int player_map_idx = 0;
   int overall_idx    = 0;
   int display_idx    = 0;
-  char temp[40];
   for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
   {
     for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
@@ -1875,18 +1875,30 @@ const struct JoystickInfo *osd_get_joy_list(void)
   mame_joy_map[overall_idx].name         = NULL;
   mame_joy_map[overall_idx].code         = 0;
   mame_joy_map[overall_idx].standardcode = 0;
-/*  if (!options.analog) overall_idx =0;
+  if (!options.analog) overall_idx =0;
   if (options.analog) overall_idx =18;
   {
     for(display_idx = 0; display_idx <= 5; display_idx++)
     {
       mame_joy_map[(display_idx * 26 ) + overall_idx].standardcode = (display_idx * 16) + JOYCODE_1_LEFT;
-      mame_joy_map[(display_idx * 26 ) + overall_idx +1 ].standardcode = (display_idx * 16) + JOYCODE_1_RIGHT;
+      mame_joy_map[(display_idx * 26 ) + overall_idx +1].standardcode = (display_idx * 16) + JOYCODE_1_RIGHT;
       mame_joy_map[(display_idx * 26 ) + overall_idx +2].standardcode = (display_idx * 16) + JOYCODE_1_UP;
       mame_joy_map[(display_idx * 26 ) + overall_idx +3].standardcode = (display_idx * 16) + JOYCODE_1_DOWN;
-    }
+    
+/*      printf("display_idx=%d  (display_idx * 26 ) + 18=%d\n",display_idx, (display_idx * 26 ) + 18);
+      if (options.analog)
+      {
+
+        mame_joy_map[(display_idx * 26 ) + 0].standardcode = (display_idx * 4) + JOYCODE_1_HAT_LEFT;
+        mame_joy_map[(display_idx * 26 ) + 1].standardcode = (display_idx * 4) + JOYCODE_1_HAT_RIGHT;
+        mame_joy_map[(display_idx * 26 ) + 2].standardcode = (display_idx * 4) + JOYCODE_1_HAT_UP;
+        mame_joy_map[(display_idx * 26 ) + 3].standardcode = (display_idx * 4) + JOYCODE_1_HAT_DOWN;
+      }
+*/ 
+ }
   }
-*/
+  
+
   return mame_joy_map;
 }
 
@@ -1967,9 +1979,12 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   {
     int code;
     value = 0;
+
     if (analogjoy_input[i] != CODE_NONE)
-    {  
+    {
       code = analogjoy_input[i];
+  	  printf("axis code %d\n",code);
+		
         if ( code == (player * 26) + 18 + 2000 || code == (player * 26) + 19 + 2000 )
            value = convert_analog_scale(analogjoy[player][0]);
 

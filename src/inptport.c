@@ -305,7 +305,7 @@ extern unsigned int dispensed_tickets;
 extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int lastcoin[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
-
+extern int cfg_save_status;
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
 
@@ -1663,30 +1663,29 @@ static void writeword(mame_file *f,UINT16 num)
 
 static void load_default_keys(void)
 {
-	config_file *cfg;
+  config_file *cfg;
 
-	memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
+  memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
 
-	cfg = config_open(NULL);
-	if (cfg)
-	{
-		config_read_default_ports(cfg, inputport_defaults);
-		config_close(cfg);
-	}
+  cfg = config_open(NULL);
+  if (cfg)
+  {
+    config_read_default_ports(cfg, inputport_defaults);
+    config_close(cfg);
+  }
   
   osd_customize_inputport_defaults(inputport_defaults);
 }
 
 static void save_default_keys(void)
 {
-	config_file *cfg;
+  config_file *cfg;
 
-	cfg = config_create(NULL);
-	if (cfg)
-	{
-		config_write_default_ports(cfg, inputport_defaults_backup, inputport_defaults);
-		config_close(cfg);
-	}
+  cfg = config_create(NULL);
+  {
+    config_write_default_ports(cfg, inputport_defaults_backup, inputport_defaults);
+    config_close(cfg);
+  }
 
 	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
 }
@@ -1733,56 +1732,54 @@ void reset_driver_inputs(const struct InputPort *in)
 
 int load_input_port_settings(void)
 {
-	char buf[30];
-	
-	config_file *cfg;
-	int err;
-	struct mixer_config mixercfg;
+  char buf[30];
 
-	load_default_keys();
+  config_file *cfg;
+  int err;
+  struct mixer_config mixercfg;
 
-	if(options.mame_remapping)  sprintf(buf,"%s",Machine->gamedrv->name);
-	else
-	sprintf(buf,"ra_%s",Machine->gamedrv->name);	
-	
-	 	
-	cfg = config_open(buf);
-	
-		
-	if (cfg)
-		{
-		err = config_read_ports(cfg, Machine->input_ports_default, Machine->input_ports);
-		if (err)
-				goto getout;
+  load_default_keys();
 
-		err = config_read_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, &dispensed_tickets);
-		if (err)
-				goto getout;
+  if(options.mame_remapping)  sprintf(buf,"%s",Machine->gamedrv->name);
+  else
+    sprintf(buf,"ra_%s",Machine->gamedrv->name);	
+  printf("on load savestatus = %d\n", cfg_save_status);
+  cfg = config_open(buf);
 
-		err = config_read_mixer_config(cfg, &mixercfg);
-		if (err)
-			goto getout;
+  if (cfg)
+  {
+    err = config_read_ports(cfg, Machine->input_ports_default, Machine->input_ports);
+    if (err)
+    goto getout;
 
-		mixer_load_config(&mixercfg);
+    err = config_read_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, &dispensed_tickets);
+    if (err)
+      goto getout;
 
-getout:
-		config_close(cfg);
-	}
+    err = config_read_mixer_config(cfg, &mixercfg);
+    if (err)
+      goto getout;
 
-	/* All analog ports need initialization */
-	{
-		int i;
-		for (i = 0; i < MAX_INPUT_PORTS; i++)
-			input_analog_init[i] = 1;
-	}
+      mixer_load_config(&mixercfg);
 
-	init_analog_seq();
+    getout:
+      config_close(cfg);
+    }
 
-	update_input_ports();
+    /* All analog ports need initialization */
+    {
+      int i;
+      for (i = 0; i < MAX_INPUT_PORTS; i++)
+      input_analog_init[i] = 1;
+    }
 
-	/* if we didn't find a saved config, return 0 so the main core knows that it */
-	/* is the first time the game is run and it should diplay the disclaimer. */
-	return cfg ? 1 : 0;
+    init_analog_seq();
+
+    update_input_ports();
+
+    /* if we didn't find a saved config, return 0 so the main core knows that it */
+    /* is the first time the game is run and it should diplay the disclaimer. */
+return cfg ? 1 : 0;
 }
 
 /***************************************************************************/
@@ -1790,26 +1787,31 @@ getout:
 
 void save_input_port_settings(void)
 {
-	config_file *cfg;
-	struct mixer_config mixercfg;
-	char buf[30];
-	
-	save_default_keys();
+  printf("on save savestatus = %d\n", cfg_save_status);
+  if (!cfg_save_status)
+  {
+    config_file *cfg;
+    struct mixer_config mixercfg;
+    char buf[30];
 
-	if(options.mame_remapping)  sprintf(buf,"%s",Machine->gamedrv->name);
-	else
-	sprintf(buf,"ra_%s",Machine->gamedrv->name);	
+    save_default_keys();
 
-	cfg = config_create(buf);
-	if (cfg)
-		{
-		mixer_save_config(&mixercfg);
+    if(options.mame_remapping)
+     sprintf(buf,"%s",Machine->gamedrv->name);
 
-		config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
-		config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
-		config_write_mixer_config(cfg, &mixercfg);
-		config_close(cfg);
-	}
+    else
+    sprintf(buf,"ra_%s",Machine->gamedrv->name);
+
+    cfg = config_create(buf);
+    if (cfg)
+    {
+      mixer_save_config(&mixercfg);
+      config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
+      config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
+      config_write_mixer_config(cfg, &mixercfg);
+      config_close(cfg);
+    }
+  }
 }
 
 
