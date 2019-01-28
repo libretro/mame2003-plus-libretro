@@ -1767,23 +1767,25 @@ getout:
 
 void save_input_port_settings(void)
 {
-	config_file *cfg;
-	struct mixer_config mixercfg;
+	if (options.mame_remapping)
+	{
+		config_file *cfg;
+		struct mixer_config mixercfg;
 
-	save_default_keys();
+		save_default_keys();
 
-	cfg = config_create(Machine->gamedrv->name);
-	if (cfg)
+		cfg = config_create(Machine->gamedrv->name);
+		if (cfg)
 		{
-		mixer_save_config(&mixercfg);
+			mixer_save_config(&mixercfg);
 
-		config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
-		config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
-		config_write_mixer_config(cfg, &mixercfg);
-		config_close(cfg);
+			config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
+			config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
+			config_write_mixer_config(cfg, &mixercfg);
+			config_close(cfg);
+		}
 	}
 }
-
 
 
 /* Note that the following 3 routines have slightly different meanings with analog ports */
