@@ -2337,7 +2337,7 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
 		strcat(buf, buf2);
 
-		strcat(buf,"mame2003-plus");
+		strcat(buf, APPNAME);
 		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
 		strcat(buf,buf2);
 		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
@@ -2501,10 +2501,10 @@ void ui_copyright_and_warnings(void)
   if(generate_warning_list())
   {
     log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */
-    frontend_message_cb("Warning: There are known problems emulating this game.", 180);
 
     if(!options.skip_warnings)
     {
+      frontend_message_cb("Warning: There are known problems emulating this game.", 180);
       snprintf(&buffer[strlen(buffer)], MAX_MESSAGE_LENGTH - strlen(buffer), "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
     }
   }
