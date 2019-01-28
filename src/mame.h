@@ -217,6 +217,7 @@ struct GameOptions
   bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
   bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
   unsigned analog;
+  unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */
   unsigned tate_mode;
 
   int      crosshair_enable;
