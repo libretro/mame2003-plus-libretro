@@ -73,6 +73,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mad Alien
 * Magical Drop
 * Magical Drop Plus 1
+* Match It II
 * Metal Slug 4
 * Metal Slug 5
 * Midnight Resistance (joystick hack bootleg)
