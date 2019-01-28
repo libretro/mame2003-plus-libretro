@@ -83,6 +83,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_DUAL_JOY,
   OPT_DPAD_ANALOG,
   OPT_DEADZONE,
+  OPT_SCALE,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -201,6 +202,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Analog enable; disabled|enabled");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
+  init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scaale type; rsn8887|grant2258");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
                                                                                          "Vector resolution multiplier (Restart core); 3|1|2|4|5|6|7|8|9|10");
@@ -543,6 +545,13 @@ static void update_variables(bool first_time)
 
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);
+          break;
+
+        case OPT_SCALE:
+          if(strcmp(var.value, "grant2258") == 0)
+            options.analog_scale = 1;
+          else
+            options.analog_scale = 0;
           break;
 
         case OPT_TATE_MODE:
@@ -1900,9 +1909,12 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 int convert_analog_scale(int input)
 {
 	static const int TRIGGER_MAX = 0x8000;
-	int trigger_deadzone = (32678 * options.deadzone) / 100;
 	int neg_test=0;
 	float scale;
+	int trigger_deadzone;
+	
+	if( options.analog_scale)   trigger_deadzone = (32678 /100) * 20;
+	if( !options.analog_scale)  trigger_deadzone = (32678 * options.deadzone) / 100;
 	
 	if (input < 0) { input =abs(input); neg_test=1; }
 	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
