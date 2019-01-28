@@ -202,7 +202,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Analog enable; disabled|enabled");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
-  init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scaale type; grant2258|rsn8887");
+  init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scaale type; rsn8887|grant2258");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
                                                                                          "Vector resolution multiplier (Restart core); 3|1|2|4|5|6|7|8|9|10");
