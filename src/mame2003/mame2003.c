@@ -23,7 +23,7 @@
 #include "controls.h"
 #include "usrintrf.h"
 
-#define deadzone  1.28 * 15
+int  pressure_check =  1.28 * 20;
 int convert_analog_scale(int input);
 
 int gotFrame;
@@ -1162,27 +1162,27 @@ void retro_run (void)
 		retroJsState[ 24 + offset] = 0;
 		retroJsState[ 25 + offset] = 0;
 
-		if (convert_analog_scale(analogjoy[i][0]) < -deadzone) 
+		if (convert_analog_scale(analogjoy[i][0]) < -pressure_check) 
 			retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]); 
 
-		if (convert_analog_scale(analogjoy[i][0]) >  deadzone)
+		if (convert_analog_scale(analogjoy[i][0]) >  pressure_check)
 			retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
 
-		if (convert_analog_scale(analogjoy[i][1]) < -deadzone)
+		if (convert_analog_scale(analogjoy[i][1]) < -pressure_check)
 			retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]); 
 
-		if (convert_analog_scale(analogjoy[i][1]) >  deadzone)
+		if (convert_analog_scale(analogjoy[i][1]) >  pressure_check)
 			retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
 		
-		if (convert_analog_scale(analogjoy[i][2]) < -deadzone)
+		if (convert_analog_scale(analogjoy[i][2]) < -pressure_check)
 			retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]); 
 
-		if (convert_analog_scale(analogjoy[i][2]) >  deadzone)
+		if (convert_analog_scale(analogjoy[i][2]) >  pressure_check)
 			retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
 
-		if (convert_analog_scale(analogjoy[i][3]) < -deadzone) 
+		if (convert_analog_scale(analogjoy[i][3]) < -pressure_check) 
 			retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]); 
-		if (convert_analog_scale(analogjoy[i][3]) >  deadzone)
+		if (convert_analog_scale(analogjoy[i][3]) >  pressure_check)
 			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
 	}
    mame_frame();
