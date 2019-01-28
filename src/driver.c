@@ -1235,9 +1235,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bbmanwj )	/* (c) 1992 Irem (Japan) */
 	DRIVER( atompunk )	/* (c) 1992 Irem America (US) */
 	DRIVER( quizf1 )	/* (c) 1992 Irem (Japan) */
-	DRIVER( riskchal )
-	DRIVER( gussun )
-	DRIVER( shisen2 )
+  DRIVER( riskchal )  /* (c) 1993 Irem (World) */
+  DRIVER( gussun )    /* (c) 1993 Irem (Japan) */
+	DRIVER( matchit2 )  /* (c) 1993 Irem (World) */
+  DRIVER( shisen2 )   /* (c) 1992 Irem (Japan) */
 	/* M92 */
 	DRIVER( gunforce )	/* (c) 1991 Irem (World) */
 	DRIVER( gunforcu )	/* (c) 1991 Irem America (US) */
