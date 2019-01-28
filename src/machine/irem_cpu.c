@@ -671,36 +671,7 @@ void irem_cpu_decrypt(int cpu,const unsigned char *decryption_table)
 	memory_set_opcode_base(cpu,rom+diff);
 	for (A = 0;A < diff;A++)
 		rom[A + diff] = decryption_table[rom[A]];
-
-	for (A=0; A<256; A++) {
-		t[A]=0;
-		for (diff=0; diff<256; diff++)
-			if (decryption_table[diff]==A) {
-				t[A]++;
-			}
-#ifdef MAME_DEBUG
-        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\t%s\n",byte_count_table[A],A,opmap1[A]);
-        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\t%s\n",A,opmap1[A]);
-#else
-        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\n",byte_count_table[A],A);
-        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\n",A);
-#endif
-    }
-	
-}
-
-void riskchal_cpu_decrypt(int cpu,const unsigned char *decryption_table)
-{
-	int A,diff;
-	unsigned char *rom;
-
-	rom = memory_region(cpu+REGION_CPU1);
-	diff = memory_region_length(cpu+REGION_CPU1) / 2;
-
-	memory_set_opcode_base(cpu,rom+diff);
-	for (A = 0;A < diff;A++)
-		rom[A + diff] = decryption_table[rom[A]];
-	
+  
     /* robiza note:
 	 for "gussun" and "riskchal" is necessary an hack to not decrypt not encrypted routines
 	 we need a real nec v25+/35+ core to support 0x63 (brkn for "break native") instruction
@@ -736,5 +707,19 @@ void riskchal_cpu_decrypt(int cpu,const unsigned char *decryption_table)
 				rom[A + diff] = rom[A];
 		}
 
-
+	for (A=0; A<256; A++) {
+		t[A]=0;
+		for (diff=0; diff<256; diff++)
+			if (decryption_table[diff]==A) {
+				t[A]++;
+			}
+#ifdef MAME_DEBUG
+        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\t%s\n",byte_count_table[A],A,opmap1[A]);
+        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\t%s\n",A,opmap1[A]);
+#else
+        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\n",byte_count_table[A],A);
+        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\n",A);
+#endif
+    }
+	
 }
