@@ -565,9 +565,6 @@ endif
 # for example, audio on rtype leo is wrong on ARM without this flag
 CFLAGS += -fsigned-char
 
-# include the math library
-CFLAGS += -lm
-
 # Use position-independent code for all platforms
 CFLAGS += $(fpic)
 

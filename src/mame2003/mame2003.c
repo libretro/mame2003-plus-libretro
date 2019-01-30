@@ -1925,7 +1925,7 @@ int convert_analog_scale(int input)
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
 
-		input = (int)round(scaled);
+		input = roundf(scaled);
 		if (input > +32767) 
 		{
 			input = +32767;
