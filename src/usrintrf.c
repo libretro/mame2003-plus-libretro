@@ -2616,7 +2616,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "== Driver Warnings ==\n%s", buffer);
+  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "Driver Warnings:\n%s", buffer);
 	return true;
 }
 
