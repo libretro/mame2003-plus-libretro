@@ -1090,7 +1090,6 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-
 	int i;
 	bool pointer_pressed;
 	const struct KeyboardInfo *thisInput;
@@ -1345,6 +1344,7 @@ int osd_start_audio_stream(int stereo)
 	return samples_per_frame;
 }
 
+
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
@@ -1393,6 +1393,7 @@ int osd_update_audio_stream(INT16 *buffer)
 void osd_stop_audio_stream(void)
 {
 }
+
 
 
 /******************************************************************************

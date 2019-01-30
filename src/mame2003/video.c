@@ -61,7 +61,6 @@ void mame2003_video_get_geometry(struct retro_game_geometry *geom)
    geom->base_width = video_hw_transpose ? vis_h : vis_w;
    geom->base_height = video_hw_transpose ? vis_w : vis_h;
 
-                                                                            
    geom->aspect_ratio = video_hw_transpose ? (float)video_config.aspect_y / (float)video_config.aspect_x : (float)video_config.aspect_x / (float)video_config.aspect_y;
 }
 
