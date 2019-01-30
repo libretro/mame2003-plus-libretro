@@ -2821,6 +2821,9 @@ const char *triviayp_get_ctrl_name(int type);
 extern const struct ControlInfo trog_ctrl;
 const char *trog_get_ctrl_name(int type);
 
+extern const struct ControlInfo trojan_ctrl;
+const char *trojan_get_ctrl_name(int type);
+
 extern const struct ControlInfo tron_ctrl;
 const char *tron_get_ctrl_name(int type);
 
