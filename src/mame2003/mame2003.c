@@ -10,6 +10,7 @@
 #include <string/stdstring.h>
 #include <libretro.h>
 #include <file/file_path.h>
+#include <compat/msvc.h>
 #include <math.h>
 
 
@@ -1907,6 +1908,15 @@ void osd_trak_read(int player, int *deltax, int *deltay)
     *deltay = mouse_y[player];
 }
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1800
+double round(double number)
+{
+  return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
+}
+#endif
+#endif
+
 int convert_analog_scale(int input)
 {
 	static const int TRIGGER_MAX = 0x8000;
@@ -1924,13 +1934,13 @@ int convert_analog_scale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
+    input = (int)round(scaled);
 
-		input = (int)round(scaled);
 		if (input > +32767) 
 		{
 			input = +32767;
 		}
-			input = input / 326.78;
+		input = input / 326.78;
 	}
 
 	else
