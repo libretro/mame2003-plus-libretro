@@ -2117,17 +2117,22 @@ static void writeword(mame_file *f,UINT16 num)
 
 static void load_default_keys(void)
 {
-	config_file *cfg;
+  config_file *cfg;
 
-	osd_customize_inputport_defaults(inputport_defaults);
-	memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
+  osd_customize_inputport_defaults(inputport_defaults);
+  if (!options.analog) memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
 
-	cfg = config_open(NULL);
-	if (cfg)
-	{
-		config_read_default_ports(cfg, inputport_defaults);
-		config_close(cfg);
-	}
+  if (options.analog)
+  {
+    memcpy(inputport_defaults,inputport_defaults_analog,sizeof(inputport_defaults));
+    memcpy(inputport_defaults_backup,inputport_defaults_analog,sizeof(inputport_defaults));
+  }
+  cfg = config_open(NULL);
+  if (cfg)
+  {
+    config_read_default_ports(cfg, inputport_defaults);
+    config_close(cfg);
+  }
 }
 
 static void save_default_keys(void)
