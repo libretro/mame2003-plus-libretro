@@ -2144,31 +2144,6 @@ static void save_default_keys(void)
 	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
 }
 
-/* 
- * void reset_default_inputs(void)
- * repopulate mappings from the defaults specified in the inptport source 
- */
-void reset_default_inputs(void)
-{
-	memcpy(inputport_defaults,inputport_defaults_backup,sizeof(inputport_defaults_backup));
-  save_default_keys();
-}
-
-/* 
- * void reset_default_inputs(void)
- * repopulate mappings from the defaults specified in the driver source 
- */
-void reset_driver_inputs(void)
-{
-  struct InputPort *in;
-
-	in = (struct InputPort *) inputport_defaults;
-	while (in->type != IPT_END)
-	{
-    /* still needs to be implemented */
-		in++;
-	}
-}
 
 int load_input_port_settings(void)
 {
