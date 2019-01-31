@@ -1859,16 +1859,6 @@ const struct JoystickInfo *osd_get_joy_list(void)
   mame_joy_map[overall_idx].code         = 0;
   mame_joy_map[overall_idx].standardcode = 0;
 
-  if (!options.analog) overall_idx =0;
-  if (options.analog) overall_idx =18;
-  
-  for(display_idx = 0; display_idx <= 5; display_idx++)
-  {
-    mame_joy_map[(display_idx * 26 ) + overall_idx].standardcode = (display_idx * 16) + JOYCODE_1_LEFT;
-    mame_joy_map[(display_idx * 26 ) + overall_idx +1].standardcode = (display_idx * 16) + JOYCODE_1_RIGHT;
-    mame_joy_map[(display_idx * 26 ) + overall_idx +2].standardcode = (display_idx * 16) + JOYCODE_1_UP;
-    mame_joy_map[(display_idx * 26 ) + overall_idx +3].standardcode = (display_idx * 16) + JOYCODE_1_DOWN;
-  }
   return mame_joy_map;
 }
 
