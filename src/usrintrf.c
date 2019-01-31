@@ -3086,14 +3086,14 @@ void setup_menu_init(void)
 			in++;
 		}
 
-		if (options.mame_remapping && num != 0)
+		if ( num != 0)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}
 	}
 
 	/* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
-	if ((options.mame_remapping && osd_joystick_needs_calibration()) != 0)
+	if ( osd_joystick_needs_calibration() != 0)
 	{
 		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
 	}
