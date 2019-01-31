@@ -1883,7 +1883,7 @@ int osd_is_joy_pressed(int joycode)
 
 int osd_is_joystick_axis_code(int joycode)
 {
-if (joycode >= 2000  && joycode < 3000 && options.analog)  return 1;
+if (joycode >= 2000  && joycode < 3000)  return 1;
 	return 0;
 }
 
@@ -1952,7 +1952,7 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   {
     int code;
     value = 0;
-    if (analogjoy_input[i] != CODE_NONE && options.analog)
+    if (analogjoy_input[i] != CODE_NONE)
     {  
       code = analogjoy_input[i];
 
