@@ -70,7 +70,6 @@ enum
 	UI_brokenprotection,
 	UI_no_serialization,
 	UI_workingclones,
-	UI_typeok,
 
 	/* main menu */
 	UI_inputgeneral,

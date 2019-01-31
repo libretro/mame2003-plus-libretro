@@ -2495,18 +2495,149 @@ void ui_copyright_and_warnings(void)
 {
   char buffer[MAX_MESSAGE_LENGTH];
   buffer[0]='\0';
+  int i;
+  char warning_buffer[MAX_MESSAGE_LENGTH];
+  bool first_warning = true;
+
+  warning_buffer[0] = '\0';
+
   if(!options.skip_disclaimer)
     snprintf(buffer, MAX_MESSAGE_LENGTH, "%s", ui_getstring(UI_copyright));
   
-  if(generate_warning_list())
+	if (Machine->gamedrv->flags &
+			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
+			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
   {
-    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */
 
-    if(!options.skip_warnings)
+    strcat(warning_buffer, ui_getstring(UI_knownproblems));
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
     {
-      frontend_message_cb("Warning: There are known problems emulating this game.", 180);
-      snprintf(&buffer[strlen(buffer)], MAX_MESSAGE_LENGTH - strlen(buffer), "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
+      strcat(warning_buffer, ui_getstring(UI_imperfectcolors));
+      first_warning = false;
     }
+
+    if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_wrongcolors));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_imperfectgraphics));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_imperfectsound));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_NO_SOUND)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_nosound));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_nococktail));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_no_serialization));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) /* major problems */
+    {
+      const struct GameDriver *maindrv;
+      int foundworking;
+      
+      if (Machine->gamedrv->flags & GAME_NOT_WORKING)
+      {
+        if(!first_warning)
+          strcat(warning_buffer, ", ");
+
+        strcpy(warning_buffer, ui_getstring (UI_brokengame));
+        first_warning = false;
+      }
+
+      if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
+      {
+        if(!first_warning)
+          strcat(warning_buffer, ", ");
+
+        strcat(warning_buffer, ui_getstring (UI_brokenprotection));
+        first_warning = false;
+      }
+      if(!options.skip_warnings) /* send the warnings to the frontend before looking up alternatives */
+      {
+        frontend_message_cb(warning_buffer, 180);
+      }
+      if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
+      {
+        maindrv = Machine->gamedrv->clone_of;
+      }
+      else
+      {
+        maindrv = Machine->gamedrv;
+      }
+
+      foundworking = 0;
+      i = 0;
+      while (drivers[i])
+      {
+        if (drivers[i] == maindrv || drivers[i]->clone_of == maindrv)
+        {
+          if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
+          {
+            if (foundworking == 0)
+            {
+              strcat(warning_buffer,"\n\n");
+              strcat(warning_buffer, ui_getstring (UI_workingclones));
+              strcat(warning_buffer,"\n\n");
+            }
+            foundworking = 1;
+
+            sprintf(&warning_buffer[strlen(warning_buffer)],"%s\n",drivers[i]->name);
+          }
+        }
+        i++;
+      }
+    }
+    else /* there is not a GAME_NOT_WORKING or GAME_UNEMULATED_PROTECTION flag set */
+    {
+      if(!options.skip_warnings) /* send the warnings to the frontend */
+      {
+        frontend_message_cb(warning_buffer, 180);
+      }
+    }
+   
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", warning_buffer); /* log warning list to the console */
+
   }
  
   generate_gameinfo();
@@ -2516,110 +2647,6 @@ void ui_copyright_and_warnings(void)
     usrintf_showmessage_secs(8, "%s", buffer);
   
 }
-
-bool generate_warning_list(void)
-{
-  int i;
-  char buffer[MAX_MESSAGE_LENGTH];
-  
-  buffer[0] = '\0';
-
-	if (Machine->gamedrv->flags &
-			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
-			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
-	{
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectcolors));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
-		{
-			strcat(buffer, ui_getstring (UI_wrongcolors));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectgraphics));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectsound));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_NO_SOUND)
-		{
-			strcat(buffer, ui_getstring (UI_nosound));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
-		{
-			strcat(buffer, ui_getstring (UI_nococktail));
-			strcat(buffer, "\n");
-		}
-		if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
-		{
-			strcat(buffer, ui_getstring (UI_no_serialization));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
-		{
-			const struct GameDriver *maindrv;
-			int foundworking;
-
-			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
-			{
-				strcpy(buffer, ui_getstring (UI_brokengame));
-				strcat(buffer, "\n");
-			}
-			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
-			{
-				strcat(buffer, ui_getstring (UI_brokenprotection));
-				strcat(buffer, "\n");
-			}
-
-			if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
-				maindrv = Machine->gamedrv->clone_of;
-			else maindrv = Machine->gamedrv;
-
-			foundworking = 0;
-			i = 0;
-			while (drivers[i])
-			{
-				if (drivers[i] == maindrv || drivers[i]->clone_of == maindrv)
-				{
-					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
-					{
-						if (foundworking == 0)
-						{
-							strcat(buffer,"\n\n");
-							strcat(buffer, ui_getstring (UI_workingclones));
-							strcat(buffer,"\n\n");
-						}
-						foundworking = 1;
-
-						sprintf(&buffer[strlen(buffer)],"%s\n",drivers[i]->name);
-					}
-				}
-				i++;
-			}
-		}
-	}
-  if(string_is_empty(buffer))
-    return false;
-  
-  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "Driver Warnings:\n%s", buffer);
-	return true;
-}
-
 
 /* Word-wraps the text in the specified buffer to fit in maxwidth characters per line.
    The contents of the buffer are modified.
@@ -3059,14 +3086,14 @@ void setup_menu_init(void)
 			in++;
 		}
 
-		if ( num != 0)
+		if (options.mame_remapping && num != 0)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}
 	}
 
 	/* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
-	if ( osd_joystick_needs_calibration() != 0)
+	if ((options.mame_remapping && osd_joystick_needs_calibration()) != 0)
 	{
 		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
 	}
