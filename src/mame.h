@@ -170,7 +170,6 @@ enum /* used to index content-specific flags */
   CONTENT_VECTOR,
   CONTENT_DIAL,
   CONTENT_TRACKBALL,
-  CONTENT_DUAL_JOYSTICK,
   CONTENT_LIGHTGUN,
   CONTENT_PADDLE,
   CONTENT_AD_STICK,
@@ -214,7 +213,6 @@ struct GameOptions
   unsigned mouse_device;
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
-  bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
   bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
   unsigned analog;                         /* analog enable/disable */
   unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */

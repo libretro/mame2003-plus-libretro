@@ -260,10 +260,6 @@ static void set_variables(bool first_time)
          if(!options.content_flags[CONTENT_DIAL])
            continue;
          break;
-      case OPT_DUAL_JOY:
-         if(!options.content_flags[CONTENT_DUAL_JOYSTICK])
-           continue;
-         break;
       case OPT_VECTOR_RESOLUTION:
       case OPT_VECTOR_ANTIALIAS:
       case OPT_VECTOR_TRANSLUCENCY:
@@ -493,47 +489,6 @@ static void update_variables(bool first_time)
           else
           {
             options.dial_share_xy = 0;
-            break;
-          }
-
-        case OPT_DUAL_JOY:
-          if(options.content_flags[CONTENT_DUAL_JOYSTICK])
-          {
-            if(strcmp(var.value, "enabled") == 0)
-              options.dual_joysticks = true;
-            else
-              options.dual_joysticks = false;
-
-            if(first_time)
-              old_dual_joystick_state = options.dual_joysticks;
-            else if(old_dual_joystick_state != options.dual_joysticks)
-            {
-              char cfg_file_path[PATH_MAX_LENGTH];
-              char buffer[PATH_MAX_LENGTH];
-              osd_get_path(FILETYPE_CONFIG, buffer);
-              snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
-              buffer[0] = '\0';
-
-              if(path_is_valid(cfg_file_path))
-              {
-                if(!remove(cfg_file_path) == 0)
-                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-                else
-                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-              }
-              log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
-              usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
-
-              load_input_port_settings(); /* this may just read the active mappings from memory (ie the same ones we're trying to delete) rather than resetting them to default */
-              /* should use reset_driver_inputs() if that function is ever completed */
-
-              old_dual_joystick_state = options.dual_joysticks;
-            }
-            break;
-          }
-          else /* always disabled except when options.content_flags[CONTENT_DUAL_JOYSTICK] has been set to true */
-          {
-            options.dual_joysticks = false;
             break;
           }
 
@@ -931,7 +886,7 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-          options.content_flags[CONTENT_DUAL_JOYSTICK] = true; /* if there are any "JOYSTICKLEFT" mappings we know there are two joysticks */
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dual joystick controls controls.\n");
 					break;
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
@@ -998,9 +953,6 @@ static void set_content_flags(void)
 		}
 		++input;
 	}
-
-  if(options.content_flags[CONTENT_DUAL_JOYSTICK] == true)
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
 
   if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 4-way joystick controls.\n");
@@ -1975,69 +1927,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
 {
-
-  unsigned int i = 0;
-  default_inputs = defaults;
-
-  for( ; default_inputs[i].type != IPT_END; ++i)
-  {
-    struct ipd *entry = &default_inputs[i];
-
-    if(options.dual_joysticks)
-    {
-      switch(entry->type)
-      {
-         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER1):
-            seq_set_1(&entry->seq, JOYCODE_2_UP);
-            break;
-         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER1):
-            seq_set_1(&entry->seq, JOYCODE_2_DOWN);
-            break;
-         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER1):
-            seq_set_1(&entry->seq, JOYCODE_2_LEFT);
-            break;
-         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1):
-            seq_set_1(&entry->seq, JOYCODE_2_RIGHT);
-            break;
-         case (IPT_JOYSTICK_UP   | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_UP);
-            break;
-         case (IPT_JOYSTICK_DOWN | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_DOWN);
-            break;
-         case (IPT_JOYSTICK_LEFT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_LEFT);
-            break;
-         case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_RIGHT);
-            break;
-         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_4_UP);
-            break;
-         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_4_DOWN);
-            break;
-         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_4_LEFT);
-            break;
-         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_4_RIGHT);
-            break;
-         case (IPT_JOYSTICKLEFT_UP   | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_UP);
-            break;
-         case (IPT_JOYSTICKLEFT_DOWN | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_DOWN);
-            break;
-         case (IPT_JOYSTICKLEFT_LEFT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_LEFT);
-            break;
-         case (IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2):
-            seq_set_1(&entry->seq, JOYCODE_3_RIGHT);
-            break;
-     }
-    }
-   }
 
 }
 
