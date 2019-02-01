@@ -61,7 +61,6 @@ static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
-bool old_dual_joystick_state = false; /* used to track when this core option changes */
 
 /******************************************************************************
 
@@ -81,7 +80,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_STV_BIOS,
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
-  OPT_DUAL_JOY,
   OPT_DPAD_ANALOG,
   OPT_DEADZONE,
   OPT_SCALE,
@@ -200,7 +198,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual joystick mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Analog enable; disabled|enabled");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scaale type; rsn8887|grant2258");
