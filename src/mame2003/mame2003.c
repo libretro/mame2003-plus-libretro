@@ -49,6 +49,7 @@ int16_t             analogjoy[4][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 int                 running = 0;
 int                 control_flag=-1;
+int                 legacy_flag=-1;    
 static struct retro_input_descriptor empty[] = { { 0 } };
 
 retro_log_printf_t                 log_cb;
@@ -580,11 +581,18 @@ static void update_variables(bool first_time)
 
         case OPT_MAME_REMAPPING:
           if(strcmp(var.value, "enabled") == 0)
+          {
+            if( !options.mame_remapping && legacy_flag !=-1) legacy_flag =0;
             options.mame_remapping = true;
+          }
           else
+          {
+            if( options.mame_remapping && legacy_flag !=-1) legacy_flag =0;
             options.mame_remapping = false;
+          }
           if(!first_time)
             setup_menu_init();
+          if(control_flag ==-1) legacy_flag = 1;
           break;
 
         case OPT_FRAMESKIP:

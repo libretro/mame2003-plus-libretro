@@ -306,6 +306,8 @@ extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int lastcoin[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
 
+extern int legacy_flag;
+
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
 
@@ -2163,10 +2165,16 @@ int load_input_port_settings(void)
 	config_file *cfg;
 	int err;
 	struct mixer_config mixercfg;
+	char buf[20];
+
+	if(options.mame_remapping) 
+		sprintf(buf,"%s",Machine->gamedrv->name);
+	else
+		sprintf(buf,"ra_%s",Machine->gamedrv->name);
 
 	load_default_keys();
 
-	cfg = config_open(Machine->gamedrv->name);
+	cfg = config_open(buf);
 	if (cfg)
 		{
 		err = config_read_ports(cfg, Machine->input_ports_default, Machine->input_ports);
@@ -2208,14 +2216,19 @@ getout:
 
 void save_input_port_settings(void)
 {
-	if (options.mame_remapping)
+	if (legacy_flag)
 	{
 		config_file *cfg;
 		struct mixer_config mixercfg;
+		char buf[20];
+		if(options.mame_remapping) 
+			sprintf(buf,"%s",Machine->gamedrv->name);
+		else
+			sprintf(buf,"ra_%s",Machine->gamedrv->name);
 
 		save_default_keys();
 
-		cfg = config_create(Machine->gamedrv->name);
+		cfg = config_create(buf);
 		if (cfg)
 		{
 			mixer_save_config(&mixercfg);
