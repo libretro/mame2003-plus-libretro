@@ -400,7 +400,7 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 	"Unknown"
 };
 
-struct ipd inputport_defaults[] =
+struct ipd inputport_defaults_digital[] =
 {
   { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
   { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_1(KEYCODE_NONE) },
@@ -1306,9 +1306,9 @@ struct ipd inputport_defaults_analog[] =
   { IPT_END,                 0,                 SEQ_DEF_0 }  /* returned when there is no match */
 };
 
-
-struct ipd inputport_defaults_backup[sizeof(inputport_defaults)/sizeof(struct ipd)];
-
+//its important to keep both stuctures the same size for now
+struct ipd inputport_defaults_backup[sizeof(inputport_defaults_digital)/sizeof(struct ipd)];
+struct ipd inputport_defaults[sizeof(inputport_defaults_digital)/sizeof(struct ipd)];
 
 struct ik *osd_input_keywords = NULL;
 
@@ -2115,18 +2115,26 @@ static void writeword(mame_file *f,UINT16 num)
 /***************************************************************************/
 /* Load */
 
-static void load_default_keys(void)
+void change_control_type(void)
 {
-  config_file *cfg;
+  if (!options.analog)
 
-  osd_customize_inputport_defaults(inputport_defaults);
-  if (!options.analog) memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
-
+    memcpy(inputport_defaults,inputport_defaults_digital,sizeof(inputport_defaults));
+    memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
+  
   if (options.analog)
   {
     memcpy(inputport_defaults,inputport_defaults_analog,sizeof(inputport_defaults));
     memcpy(inputport_defaults_backup,inputport_defaults_analog,sizeof(inputport_defaults));
   }
+};
+
+static void load_default_keys(void)
+{
+  config_file *cfg;
+
+  osd_customize_inputport_defaults(inputport_defaults);
+  change_control_type();
   cfg = config_open(NULL);
   if (cfg)
   {
