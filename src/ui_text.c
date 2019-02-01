@@ -67,7 +67,7 @@ static const char *mame_default_text[] =
 	"imperfect sound",
 	"missing sound",
 	"missing cocktail mode",
-	"mame does not work",
+	"game does not work",
 	"unimplemented protection",
 	"missing serialization",
 	"There are working clones of this game:",
