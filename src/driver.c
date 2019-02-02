@@ -1770,13 +1770,21 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( snowbrob )	/* MIN16-02 (c) 1990 Toaplan + Romstar license */
 	DRIVER( snowbroj )	/* MIN16-02 (c) 1990 Toaplan */
 	DRIVER( wintbob )	/* bootleg */
-	/* SemiCom games on snowbros like hardware */
-	DRIVER( hyperpac )	/* (c) 1995 SemiCom */
-	DRIVER( hyperpcb )	/* bootleg */
-	DRIVER( moremorp )
+	
+	/* SemiCom games */
 	DRIVER( 3in1semi )
 	DRIVER( 4in1boot )	/* bootleg? */
-	DRIVER( cookbib2 )
+	DRIVER( bcstry )    /* (c) 1997 SemiCom */
+	DRIVER( bcstrya )   /* (c) 1997 SemiCom */
+	DRIVER( chokchok )  /* (c) 1995 SemiCom */
+	DRIVER( cookbib )   /* (c) 1995 SemiCom */
+	DRIVER( cookbib2 )  /* (c) 1996 SemiCom */
+	DRIVER( htchctch )	/* (c) 1995 SemiCom */
+	DRIVER( hyperpac )	/* (c) 1995 SemiCom */
+	DRIVER( hyperpcb )	/* bootleg */
+	DRIVER( moremorp )  /* (c) 1999 SemiCom / Exit */
+	DRIVER( sdfight )   /* (c) 1996 SemiCom */
+	
 
 	/* More Toaplan Games */
 	DRIVER( tekipaki )	/* TP-020 (c) 1991 Toaplan */
@@ -3247,8 +3255,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tumblep2 )	/* bootleg */
 	DRIVER( jumpkids )	/* (c) 1993 Comad */
 	DRIVER( fncywld )	/* (c) 1996 Unico */
-	DRIVER( htchctch )	/* (c) 1995 SemiCom */
-	DRIVER( bcstry )	/* (c) 199? SemiCom */
+	DRIVER( suprtrio )  /* (c) 1994 GameAce */
 	DRIVER( lemmings )	/* prototype (c) 1991 Data East USA (US) */
 	/* MAQ ?? */
 	DRIVER( dragngun )	/* MAR (c) 1992 Data East Corporation (US) */
