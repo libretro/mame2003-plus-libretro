@@ -24,7 +24,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cannon Dancer
 * Chain Reaction
 * Charlie Ninja
+* Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
+* Cookie & Bibi
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Crystal Castles (Joystick Version)
@@ -99,6 +101,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
+* SD Fighter
 * Sengoku 3
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
@@ -107,6 +110,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
+* Super Trio
 * SWAT Police
 * Tang Tang
 * Teeter Torture
@@ -150,6 +154,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Avengers In Galactic Storm US - Romset: `avengrgs`
 * Avengers In Galactic Storm Japan - Romset: `avengrgsj`
 * Avenging Spirit - Romset `avspirit`
+* B.C. Story - Romset `bcstry`
 * B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
 * Bakuretsu Breaker - Romset `bakubrkr` - Playable with minor remaining graphical issues
