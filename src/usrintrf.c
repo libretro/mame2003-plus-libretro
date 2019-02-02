@@ -3210,63 +3210,6 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				sel |= 1 << SEL_BITS;
 				schedule_full_refresh();
 				break;
-      case UI_FLUSH_CURRENT_CFG:
-      {
-        char msg_buffer[MAX_MESSAGE_LENGTH];
-        char path_buffer[PATH_MAX_LENGTH];
-        char current_path[PATH_MAX_LENGTH];
-        msg_buffer[0]='\0';  
-
-        osd_get_path(FILETYPE_CONFIG, current_path);       
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), Machine->gamedrv->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
-
-        if(remove(path_buffer))
-          snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s%s%s", "Error flushing CFG from ", path_buffer, "!");
-        else
-          snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "CFG flushed!"); 
-        usrintf_showmessage_secs(2, "%s", msg_buffer);
-        reset_driver_inputs(); /* just a stub for now */
-        break;
-      }
-      case UI_FLUSH_ALL_CFG:
-      {
-        char msg_buffer[MAX_MESSAGE_LENGTH];
-        char path_buffer[PATH_MAX_LENGTH];
-        char current_path[PATH_MAX_LENGTH];
-        int driverIndex = 0;       
-        msg_buffer[0]='\0';
-
-        osd_get_path(FILETYPE_CONFIG, current_path);        
-
-        snprintf(msg_buffer, MAX_MESSAGE_LENGTH, "%s", "Executing flush all CFG command!"); 
-        usrintf_showmessage_secs(2, "%s", msg_buffer);
-
-        /* delete "default.cfg" and repopulate from the defaults specified by inptport source */
-        snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), "default", '.', get_extension_for_filetype(FILETYPE_CONFIG));
-        remove(path_buffer);
-        reset_default_inputs();
-              
-        /* loop through all driver names and attempt to delete the corresponding cfg file.
-           it would be good to have a cleaner implementation but this does work and can reuse
-           code from mame2003.c */
-        for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
-        {
-          const struct GameDriver *needle = drivers[driverIndex];
-          if(needle && needle->name) 
-          {
-            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), needle->name, '.', get_extension_for_filetype(FILETYPE_CONFIG));
-            remove(path_buffer); /* try to remove DOS filename version */
-          }            
-          if(needle && needle->description)
-          {            
-            snprintf(path_buffer, PATH_MAX_LENGTH, "%s%c%s%c%s", current_path,path_default_slash_c(), needle->description, '.', get_extension_for_filetype(FILETYPE_CONFIG));
-            remove(path_buffer); /* try to remove full/alternative filename version -- although not in use as of November 2018 */   
-          }
-        }
-        reset_driver_inputs(); /* just a stub for now */
-
-        break;          
-      }        
 
       case UI_GENERATE_XML_DAT:
           frontend_message_cb("Generating XML DAT", 180);   
