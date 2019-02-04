@@ -205,7 +205,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scale type; rsn8887|grant2258");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier",
-                                                                                         "Vector resolution multiplier (Restart core); 2|1|3|4|5|6|7|8|9|10");
+                                                                                         "Vector resolution multiplier (Restart core); 2|1|3");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialiasing; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "Vector beam width (only with antialiasing); 1|1.2|1.4|1.6|1.8|2|2.5|3|4|5|6|7|8|9|10|11|12");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
