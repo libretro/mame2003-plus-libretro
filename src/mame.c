@@ -823,7 +823,7 @@ static void init_game_options(void)
 
   /* update the vector width/height with defaults */
   options.vector_width=640;
-  options.vector_width=480;
+  options.vector_height=480;
   if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
   if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
   
