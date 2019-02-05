@@ -821,15 +821,11 @@ static void init_game_options(void)
     alpha_init();
   }
 
-  /* update the vector width/height with defaults */
-  options.vector_width=640;
-  options.vector_height=480;
+  /* update the vector width/height with libretro settings or use the default */
   if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
   if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
   
-  /* apply the vector resolution multiplier */
-	options.vector_width  *= options.vector_resolution_multiplier;
-	options.vector_height *= options.vector_resolution_multiplier;
+
 
   /* get orientation right */
   Machine->orientation    = ROT0;
