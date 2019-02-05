@@ -8,6 +8,8 @@ struct YMF271interface
 	int num;
 	int region[MAX_YMF271];			/* memory region of sample ROMs */
 	int mixing_level[MAX_YMF271];			/* volume */
+	read8_handler ext_read[MAX_YMF271];		/* external memory read */
+	write8_handler ext_write[MAX_YMF271];	/* external memory write */
 	void (*irq_callback[MAX_YMF271])(int state);	/* irq callback */
 };
 
