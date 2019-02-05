@@ -374,4 +374,5 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Updated discrete soundcore to mame081 and drives that needed updated [grant2258]
 * Updated IREM decryption tables (sound fixes) [grant2258]
 * Updated m68000 core [grant2258]
+* Updates YMF271 sound core [grant2258]
 
