@@ -17,7 +17,7 @@
 	"Andrew Caldwell (anti-aliasing)\n" \
 	"- *** -\n"
 
-#define MAX_POINTS 5000	/* Maximum # of points we can queue in a vector list */
+#define MAX_POINTS 10000	/* Maximum # of points we can queue in a vector list */
 
 #define MAX_PIXELS 850000  /* Maximum of pixels we can remember */
 

@@ -49,7 +49,7 @@ static int beam_diameter_is_one;		      /* flag that beam is one pixel wide */
 static float vector_scale_x;              /* scaling to screen */
 static float vector_scale_y;              /* scaling to screen */
 
-static float gamma_correction = 1.2;
+static float gamma_correction = 1.2f;
 
 static int (*vector_aux_renderer)(point *start, int num_points) = NULL;
 
@@ -213,6 +213,9 @@ VIDEO_START( vector )
 	/* build gamma correction table */
 	vector_set_gamma (gamma_correction);
 
+	/* make sure we reset the list */
+	vector_dirty_list[0] = VECTOR_PIXEL_END;
+	
 	return 0;
 }
 
@@ -567,6 +570,8 @@ void vector_set_clip (int x1, int yy1, int x2, int y2)
 	}
 
 	/* scale coordinates to display */
+		x1 = (int)(vector_scale_x*x1);
+	yy1= (int)(vector_scale_y*yy1);
 	x2 = (int)(vector_scale_x*x2);
 	y2 = (int)(vector_scale_y*y2);
 
