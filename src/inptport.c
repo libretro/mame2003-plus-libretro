@@ -2023,7 +2023,7 @@ int num_ik = sizeof(input_keywords)/sizeof(struct ik);
 const char *generic_ctrl_label(int input)
 {
   unsigned int i = 0;
-  change_control_type();// copy the relevant contol type this is called before it set in mame
+
   for( ; inputport_defaults[i].type != IPT_END; ++i)
   {
     struct ipd *entry = &inputport_defaults[i];
