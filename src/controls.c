@@ -17824,7 +17824,7 @@ const struct ControlInfo spacewar_ctrl =
   false, /* alternating_controls */
   true, /* mirrored_controls */
   "Two player only game where each player flies around space and tries to shoot each other. Features include partial damage, modifying gravity and inertia. Controls are fire, thrust, rotate left and right, hyperspace and reset.", /* control_details */
-  &sspaceat_get_ctrl_name
+  &spacewar_get_ctrl_name
 };
 
 const char *spacewar_get_ctrl_name(int type)
