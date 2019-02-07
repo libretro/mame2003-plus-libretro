@@ -77,6 +77,8 @@
 data16_t *seta2_vregs;
 
 static int yoffset;
+int xpos;
+xpos = 0;
 
 /***************************************************************************
 
@@ -384,6 +386,28 @@ VIDEO_UPDATE( seta2 )
 
 	seta2_draw_sprites(bitmap,cliprect);
 }
+
+VIDEO_UPDATE( seta2_gun )
+{
+	/* Black or pens[0]? */
+	fillbitmap(bitmap,Machine->pens[0],cliprect);
+
+	if (seta2_vregs[0x30/2] & 1)	return;		/* BLANK SCREEN */
+
+	seta2_draw_sprites(bitmap,cliprect);
+
+/* these aren't quite right */
+
+	xpos = (readinputport(2) * 320) / 160;
+
+	draw_crosshair(bitmap,xpos-8,readinputport(8)+46,cliprect);
+
+	xpos = (readinputport(3) * 320) / 160;
+
+	if (readinputport(3) != 0xff) /* not 1 player */
+	draw_crosshair(bitmap,xpos-8,readinputport(9)+46,cliprect);
+}
+
 
 VIDEO_EOF( seta2 )
 {
