@@ -204,7 +204,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scale type; rsn8887|grant2258");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
-  init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|original");
+  init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialiasing; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
@@ -550,6 +550,11 @@ static void update_variables(bool first_time)
           {
             options.vector_width=1440;
             options.vector_height=1080; 
+          }
+          else if(strcmp(var.value, "1600x1200") == 0)
+          {
+            options.vector_width=1600;
+            options.vector_height=1200; 
           }
           else 
           {
