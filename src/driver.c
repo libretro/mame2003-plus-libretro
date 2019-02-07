@@ -4963,6 +4963,13 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( myangel2 )	/* (c) 1997 Namco */
 	DRIVER( pzlbowl )	/* (c) 1999 Nihon System / Moss */
 	DRIVER( penbros )	/* (c) 2000 Subsino */
+	DRIVER( deerhunt  ) /* (c) 2000 American Sammy */
+	DRIVER( deerhunta ) /* (c) 2000 American Sammy */
+	DRIVER( deerhuntb ) /* (c) 2000 American Sammy */
+	DRIVER( turkhunt )  /* (c) 2001 American Sammy */
+	DRIVER( wschamp )   /* (c) 2001 American Sammy */
+	DRIVER( wschampa )  /* (c) 2001 American Sammy */
+	DRIVER( trophyh )   /* (c) 2002 American Sammy */
 
 	/* SSV System (Seta, Sammy, Visco) games */
 	DRIVER( srmp4 )		/* (c) 1993 Seta */
