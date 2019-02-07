@@ -64,6 +64,14 @@ grdians:
   and ignore the individual color codes in the tiles data. Zooming is also
   used briefly in pengbros.
 
+deerhunt,wschamp:
+- offset tilemap sprite during demo
+
+trophyh:
+- mame hangs for around 15 seconds every now and then, at scene changes.
+  This is probably due to a couple of frames with an odd or corrupt sprites list,
+  taking a long time to render.
+
 ***************************************************************************/
 
 /***************************************************************************
@@ -165,10 +173,75 @@ Notes:	pzlbowl PCB with extra parts:
 
 ***************************************************************************/
 
+/***************************************************************************
+Sammy USA Outdoor Shooting Series PCB
+Deer Hunting USA (c) 2000 Sammy USA
+Turkey Hunting USA (c) 2001 Sammy USA
+Wing Shooting Championship (c) 2001 Sammy USA*
+Trophy Hunting - Bear & Moose (c) 2002 Sammy USA*
+* Slightly different PCB then listed below.  Two Player input / connection ports
+   CPU: Toshiba TMP68301AF-16 (100 Pin PQFP)
+ Video: NEC DX-101 (240 Pin PQFP)
+        NEC DX-102 (52 Pin PQFP x3)
+ Sound: X1-010 (Mitsubishi M60016 Gate Array, 80 Pin PQFP)
+EEPROM: 93LC46BX (1K Low-power 64 x 16-bit organization serial EEPROM)
+   OSC: 50MHz & 28MHz
+ Other: 8 Position Dipswitch x 2
+        Lattice ispLSI2032
+        Lattice isp1016E
+PCB Number: B0-003B
++-----------------------------------------------------------+
+|             VOL                          +------+         |
+|                                          |X1-010|     M1  |
+|   +---+ +---+                            |M60016|         |
+|   |   | |   |  M    M                    |CALRUA|  +---+  |
++-+ | U | | U |  2    1                    +------+  |   |  |
+  | | 0 | | 0 |                                      |   |  |
++-+ | 7 | | 6 |  M    M                              | U |  |
+|   |   | |   |  2    1                              | 1 |  |
+|   +---+ +---+                                      | 8 |  |
+|                                          Lattice   |   |  |
+|   D +---+  C                            ispLSI2032 |   |  |
+|   S |DX |  N   BAT1           +-------+            +---+  |
+|   W |102|  5                  |Toshiba|  D                |
+|   1 +---+                     |  TMP  |  S EEPROM       C |
+|            C                  | 68301 |  W              N |
+|            N  Lattice         +-------+  2              2 |
+|            6  isp1016E                                    |
+|                               +----------+    50MHz       |
+|     +---+                     |          |                |
+|     |DX |  SW1                |   NEC    |    M   M       |
+|     |102|                     |  DX-101  |    3   3       |
+|     +---+         M  M        |          |                |
+|                   1  1        |          |                |
+|                               +----------+                |
+|                                                           |
+|                             +---+      +---++---++---+    |
+|                             |   |      |   ||   ||   |    |
+|     +---+        28MHz      |   |      |   ||   ||   |    |
++-+   |DX |                   | U |      | U || U || U |    |
+  |   |102|                   | 4 |      | 4 || 3 || 3 |    |
++-+   +---+                   | 0 |      | 1 || 8 || 9 |    |
+|                             |   |      |   ||   ||   |    |
+|                             |   |      |   ||   ||   |    |
+|                             +---+      +---++---++---+    |
++-----------------------------------------------------------+
+Ram M1 are Toshiba TC55257DFL-70L
+Ram M2 are NEC D43001GU-70L
+Ram M3 are ISSI IS62C1024L-70Q
+U06 Program rom ST27C801 (even)
+U07 Program rom ST27C801 (odd)
+U18 Mask rom (Samples 23C32000 32Mbit (read as 27C322))
+U38 - U40 Mask roms (Graphics 23c64020 64Mbit) - 23C64020 read as 27C322 with pin11 +5v & 27C322 with pin11 GND
+***************************************************************************/
+
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "machine/tmp68301.h"
+#include "machine/eeprom.h"
 #include "seta.h"
+
+extern VIDEO_UPDATE( seta2_gun );
 
 /***************************************************************************
 
@@ -243,6 +316,43 @@ MEMORY_END
 						Mobile Suit Gundam EX Revue
 ***************************************************************************/
 
+static NVRAM_HANDLER(93C46_gundamex)
+{
+	if (read_or_write)
+	{
+		EEPROM_save(file);
+	}
+	else
+	{
+		EEPROM_init(&eeprom_interface_93C46);
+		if (file)
+		{
+			EEPROM_load(file);
+		}
+		else
+		{
+			int length;
+			UINT8 *dat;
+
+			dat = EEPROM_get_data_pointer(&length);
+			dat[0]=0x70;
+			dat[1]=0x08;
+		}
+	}
+}
+
+READ16_HANDLER( gundamex_eeprom_r )
+{
+	return ((EEPROM_read_bit() & 1)) << 3;
+}
+
+WRITE16_HANDLER( gundamex_eeprom_w )
+{
+		EEPROM_set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
+		EEPROM_write_bit(data & 0x1);
+		EEPROM_set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
+}
+
 static MEMORY_READ16_START( gundamex_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM					},	/* ROM*/
 	{ 0x200000, 0x20ffff, MRA16_RAM					},	/* RAM*/
@@ -255,7 +365,7 @@ static MEMORY_READ16_START( gundamex_readmem )
 	{ 0x700008, 0x700009, input_port_5_word_r		},	/* P1*/
 	{ 0x70000a, 0x70000b, input_port_6_word_r		},	/* P2*/
 	{ 0xb00000, 0xb03fff, seta_sound_word_r 		},	/* Sound*/
-	{ 0xfffc00, 0xffffff, MRA16_RAM					},	/* TMP68301 Registers*/
+	{ 0xfffd0a, 0xfffd0b, gundamex_eeprom_r			},	/* Parallel Data Register*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( gundamex_writemem )
@@ -270,6 +380,7 @@ static MEMORY_WRITE16_START( gundamex_writemem )
 	{ 0xc50000, 0xc5ffff, MWA16_RAM							},	/* cleared*/
 	{ 0xc60000, 0xc6003f, seta2_vregs_w, &seta2_vregs		},	/* Video Registers*/
 	{ 0xe00010, 0xe0001f, seta2_sound_bank_w				},	/* Samples Banks*/
+	{ 0xfffd0a, 0xfffd0b, gundamex_eeprom_w 				},  /* Parallel Data Register */
 	{ 0xfffc00, 0xffffff, tmp68301_regs_w, &tmp68301_regs	},	/* TMP68301 Registers*/
 MEMORY_END
 
@@ -482,7 +593,50 @@ static MEMORY_WRITE16_START( penbros_writemem )
 	{ 0xfffc00, 0xffffff, tmp68301_regs_w, &tmp68301_regs	},	/* TMP68301 Registers*/
 MEMORY_END
 
+/***************************************************************************
+                            Sammy Outdoor Shooting
+***************************************************************************/
 
+static READ16_HANDLER( samshoot_gun1_r )
+{
+	return (readinputport(8) << 8) | readinputport(2);
+}
+
+static READ16_HANDLER( samshoot_gun2_r )
+{
+	return (readinputport(9) << 8) | readinputport(3);
+}
+
+static MEMORY_READ16_START( samshoot_readmem )
+    { 0x000000, 0x1fffff, MRA16_ROM },
+	{ 0x200000, 0x20ffff, MRA16_RAM },
+	{ 0x300000, 0x30ffff, MRA16_RAM },
+	{ 0x400000, 0x400001, input_port_0_word_r },			/* DSW 1 */
+	{ 0x400002, 0x400003, input_port_7_word_r },			/* Buttons */
+	{ 0x500000, 0x500001, samshoot_gun1_r },				/* P1 */
+	{ 0x580000, 0x580001, samshoot_gun2_r },				/* P2 */
+	{ 0x700000, 0x700001, input_port_4_word_r },			/* Trigger */
+	{ 0x700002, 0x700003, input_port_5_word_r },				/* Pump */
+	{ 0x700004, 0x700005, input_port_6_word_r },  /* Coins */
+	{ 0x700006, 0x700007, watchdog_reset16_r },	/* Watchdog? */
+	{ 0x800000, 0x83ffff, MRA16_RAM },	/* Sprites */
+	{ 0x840000, 0x84ffff, MRA16_RAM },	/* Palette */
+	{ 0x900000, 0x903fff, seta_sound_word_r },	/* Sound */
+	{ 0xfffd0a, 0xfffd0b, input_port_0_word_r },				/* parallel data register (DSW 2) */
+	{ 0xfffc00, 0xffffff, MRA16_RAM },	/* TMP68301 Registers */
+MEMORY_END
+
+static MEMORY_WRITE16_START( samshoot_writemem )
+    { 0x000000, 0x1fffff, MWA16_ROM },
+	{ 0x200000, 0x20ffff, MWA16_RAM },
+	{ 0x300000, 0x30ffff, MWA16_RAM, (data16_t **)&generic_nvram, &generic_nvram_size },
+	{ 0x400300, 0x40030f, seta2_sound_bank_w },	/* Samples Banks */
+	{ 0x800000, 0x83ffff, MWA16_RAM, &spriteram16, &spriteram_size },	/* Sprites */
+	{ 0x840000, 0x84ffff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	/* Palette */
+	{ 0x860000, 0x86003f, seta2_vregs_w, &seta2_vregs },	/* Video Registers */
+	{ 0x900000, 0x903fff, seta_sound_word_w	},	/* Sound */
+	{ 0xfffc00, 0xffffff, tmp68301_regs_w, &tmp68301_regs },	/* TMP68301 Registers */
+MEMORY_END
 
 /***************************************************************************
 
@@ -574,8 +728,10 @@ INPUT_PORTS_START( gundamex )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT(  0x0020, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN ) /* jumper pad */
+	PORT_DIPNAME( 0x0020, 0x0020, "Language" ) 		 /* jumper pad */
+	PORT_DIPSETTING(      0x0020, "English" )
+	PORT_DIPSETTING(      0x0000, "Japanese" )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -1127,6 +1283,354 @@ INPUT_PORTS_START( pzlbowl )
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+/***************************************************************************
+                            Sammy Outdoor Shooting
+***************************************************************************/
+
+INPUT_PORTS_START( deerhunt )
+	PORT_START /* $400000.w */
+	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(      0x0005, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0007, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0003, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x0038, 0x0038, DEF_STR( Coin_A ) ) 
+	PORT_DIPSETTING(      0x0028, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0030, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0038, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0018, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Discount To Continue" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_SERVICE(         0x0080, IP_ACTIVE_LOW )
+	PORT_BIT(     0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* fffd0a.w */
+	PORT_DIPNAME( 0x0001, 0x0001, "Vert. Flip Screen" )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, "Horiz. Flip Screen" )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0018, 0x0018, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0010, "Easy" )
+	PORT_DIPSETTING(      0x0018, "Normal" )
+	PORT_DIPSETTING(      0x0008, "Hard" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Blood Color" ) 
+	PORT_DIPSETTING(      0x0020, "Red" )
+	PORT_DIPSETTING(      0x0000, "Yellow" )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0040, "3" )
+	PORT_DIPSETTING(      0x0000, "4" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Gun Type" )
+	PORT_DIPSETTING(      0x0080, "Pump Action" )
+	PORT_DIPSETTING(      0x0000, "Hand Gun" )
+	PORT_BIT(     0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* $500000 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START /* $580000.b */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* P2 gun, read but not used */
+
+	PORT_START /* $700000 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1  )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700003.b */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump */
+	PORT_BIT( 0xffbf, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700005.b */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $400002 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 )	/* trigger */
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON2 )	/* pump */
+	PORT_BIT( 0xfffc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* gun1 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+
+	PORT_START /* gun2 part 2 */
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* P2 gun */
+INPUT_PORTS_END
+
+
+INPUT_PORTS_START( turkhunt )
+	PORT_START /* $400000.w */
+	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(      0x0005, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0007, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0003, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x0038, 0x0038, DEF_STR( Coin_A ) ) 
+	PORT_DIPSETTING(      0x0028, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0030, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0038, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0018, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Discount To Continue" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_SERVICE(         0x0080, IP_ACTIVE_LOW )
+	PORT_BIT(     0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* fffd0a.w */
+	PORT_DIPNAME( 0x0001, 0x0001, "Vert. Flip Screen" )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, "Horiz. Flip Screen" )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0018, 0x0018, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0010, "Easy" )
+	PORT_DIPSETTING(      0x0018, "Normal" )
+	PORT_DIPSETTING(      0x0008, "Hard" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Blood Color" ) 
+	PORT_DIPSETTING(      0x0020, "Red" )
+	PORT_DIPSETTING(      0x0000, "Yellow" )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0040, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Gun Type" )
+	PORT_DIPSETTING(      0x0080, "Pump Action" )
+	PORT_DIPSETTING(      0x0000, "Hand Gun" )
+	PORT_BIT(     0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* $500000 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START	/* $580000.b */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* P2 gun, read but not used */
+
+	PORT_START	/* $700000 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1  )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700003.b */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump */
+	PORT_BIT( 0xffbf, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700005.b */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $400002 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 )	/* trigger */
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON2 )	/* pump */
+	PORT_BIT( 0xfffc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* gun1 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+
+	PORT_START /* gun2 part 2 */
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* P2 gun */
+INPUT_PORTS_END
+
+INPUT_PORTS_START( wschamp )
+	PORT_START /* $400000.w */
+	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(      0x0009, "4 Coins Start, 4 Coins Continue" )
+	PORT_DIPSETTING(      0x0008, "4 Coins Start, 3 Coins Continue" )
+	PORT_DIPSETTING(      0x0007, "4 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x0006, "4 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000c, "3 Coins Start, 3 Coins Continue" )
+	PORT_DIPSETTING(      0x000b, "3 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x000a, "3 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000e, "2 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x000d, "2 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000f, "1 Coin Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x0005, "1 Coin 2 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0004, "1 Coin 3 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0003, "1 Coin 4 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0002, "1 Coin 5 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0001, "1 Coin 6 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+	PORT_SERVICE(         0x0080, IP_ACTIVE_LOW )
+	PORT_BIT(             0xff70, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* fffd0a.w */
+	PORT_DIPNAME( 0x0001, 0x0001, "Vert. Flip Screen" )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, "Horiz. Flip Screen" )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0018, 0x0018, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0010, "Easy" )
+	PORT_DIPSETTING(      0x0018, "Normal" )
+	PORT_DIPSETTING(      0x0008, "Hard" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0040, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Gun Type" )
+	PORT_DIPSETTING(      0x0080, "Pump Action" )
+	PORT_DIPSETTING(      0x0000, "Hand Gun" )
+	PORT_BIT(     0xff20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START  /* $500000 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START	/* $580000.b */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START	/* $700000 */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger P2 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger P1 */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1  )
+	PORT_BIT( 0xff1f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700003.b */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump P2 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump P1 */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2  )
+	PORT_BIT( 0xff1f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700005.b */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $400002 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 )	/* trigger P1 */
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON2 )	/* pump P1 */
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* trigger P2 */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* pump P2 */
+	PORT_BIT( 0xffcc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* gun1 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+
+	PORT_START /* gun2 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+INPUT_PORTS_END
+
+
+INPUT_PORTS_START( trophyh )
+	PORT_START /* $400000.w */
+	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(      0x0009, "4 Coins Start, 4 Coins Continue" )
+	PORT_DIPSETTING(      0x0008, "4 Coins Start, 3 Coins Continue" )
+	PORT_DIPSETTING(      0x0007, "4 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x0006, "4 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000c, "3 Coins Start, 3 Coins Continue" )
+	PORT_DIPSETTING(      0x000b, "3 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x000a, "3 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000e, "2 Coins Start, 2 Coins Continue" )
+	PORT_DIPSETTING(      0x000d, "2 Coins Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x000f, "1 Coin Start, 1 Coin Continue" )
+	PORT_DIPSETTING(      0x0005, "1 Coin 2 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0004, "1 Coin 3 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0003, "1 Coin 4 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0002, "1 Coin 5 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0001, "1 Coin 6 Credits, 1 Credit Start & Continue" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+	PORT_SERVICE(         0x0080, IP_ACTIVE_LOW )
+	PORT_BIT(             0xff70, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* fffd0a.w */
+	PORT_DIPNAME( 0x0001, 0x0001, "Vert. Flip Screen" )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, "Horiz. Flip Screen" )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0018, 0x0018, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0010, "Easy" )
+	PORT_DIPSETTING(      0x0018, "Normal" )
+	PORT_DIPSETTING(      0x0008, "Hard" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Blood Color" ) /* WSChamp doesn't use Blood Color, so add it back in */
+	PORT_DIPSETTING(      0x0020, "Red" )
+	PORT_DIPSETTING(      0x0000, "Yellow" )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0040, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Gun Type" )
+	PORT_DIPSETTING(      0x0080, "Pump Action" )
+	PORT_DIPSETTING(      0x0000, "Hand Gun" )
+	PORT_BIT(     0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* $500000 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START	/* $580000.b */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 10, 0x0025, 0x00c5 )
+
+	PORT_START	/* $700000 */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger P2 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* trigger P1 */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1  )
+	PORT_BIT( 0xff1f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700003.b */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump P2 */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SPECIAL )	/* pump P1 */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2  )
+	PORT_BIT( 0xff1f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $700005.b */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* $400002 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 )	/* trigger P1 */
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON2 )	/* pump P1 */
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* trigger P2 */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* pump P2 */
+	PORT_BIT( 0xffcc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* gun1 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+
+	PORT_START /* gun2 part 2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0x08, 0xf8 )
+INPUT_PORTS_END
 
 /***************************************************************************
 							Penguin Bros
@@ -1333,6 +1837,19 @@ static INTERRUPT_GEN( seta2_interrupt )
 	}
 }
 
+static INTERRUPT_GEN( samshoot_interrupt )
+{
+	switch ( cpu_getiloops() )
+	{
+		case 0:
+			tmp68301_external_interrupt_0();	/* vblank */
+			break;
+		case 1:
+			tmp68301_external_interrupt_2();	/* to do: hook up x1-10 interrupts */
+			break;
+	}
+}
+
 static struct x1_010_interface x1_010_sound_intf_16MHz =
 {
 	50000000/3,	/* clock */
@@ -1376,6 +1893,7 @@ static MACHINE_DRIVER_START( gundamex )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_REPLACE("main",M68000,16000000)
 	MDRV_CPU_MEMORY(gundamex_readmem,gundamex_writemem)
+	MDRV_NVRAM_HANDLER(93C46_gundamex)
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(0x00, 0x180-1, 0x100, 0x1e0-1)
@@ -1443,6 +1961,22 @@ static MACHINE_DRIVER_START( penbros )
 	MDRV_VISIBLE_AREA(0, 0x140-1, 0x80, 0x160-1)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( samshoot )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(mj4simai)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(samshoot_readmem, samshoot_writemem)
+	MDRV_CPU_VBLANK_INT(samshoot_interrupt,2)
+
+	MDRV_NVRAM_HANDLER(generic_0fill)
+
+	MDRV_VIDEO_UPDATE(seta2_gun)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(0x40, 0x180-1, 0x40, 0x130-1)
+MACHINE_DRIVER_END
+
 
 /***************************************************************************
 
@@ -1456,7 +1990,7 @@ ROM_START( gundamex )
 	ROM_LOAD16_BYTE(	  "ka002004.u3",  0x000001, 0x080000, CRC(c0fb1208) SHA1(84b25e4c73cb8e023ee5dbf69f588be98700b43f) )
 	ROM_LOAD16_BYTE(	  "ka002001.u4",  0x100000, 0x080000, CRC(553ebe6b) SHA1(7fb8a159513d31a1d60520ff14e4c4d133fd3e19) )
 	ROM_LOAD16_BYTE(	  "ka002003.u5",  0x100001, 0x080000, CRC(946185aa) SHA1(524911c4c510d6c3e17a7ab42c7077c2fffbf06b) )
-	ROM_LOAD16_WORD_SWAP( "ka001005.u77", 0x400000, 0x200000, CRC(8c09405f) SHA1(4a45d9db48f559386f72ad339695d85d40707fb1) )
+	ROM_LOAD16_WORD_SWAP(     "ka001005.u77", 0x500000, 0x080000, CRC(f01d3d00) SHA1(ff12834e99a76261d619f10d186f4b329fb9cb7a) )
 
 	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE|ROMREGION_ERASE)	/* Sprites */
 	ROM_LOAD( "ka001009.u16",  0x0000000, 0x200000, CRC(997d8d93) SHA1(4cb4cdb7e8208af4b14483610d9d6aa5e13acd89) )
@@ -1601,19 +2135,132 @@ ROM_START( penbros )
 	ROM_LOAD( "u18.bin", 0x100000, 0x200000, CRC(de4e65e2) SHA1(82d4e590c714b3e9bf0ffaf1500deb24fd315595) )
 ROM_END
 
-DRIVER_INIT( gundamex )
-{
-	data16_t *ROM = (data16_t *)memory_region( REGION_CPU1 );
+ROM_START( deerhunt ) /* Deer Hunting USA V4.3 (11/1/2000) - The "E05" breaks version label conventions but is correct & verified */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as0906e05.u06", 0x000000, 0x100000, CRC(20c81f17) SHA1(d41d93d6ee88738cec55f7bf3ce6be1dbec68e09) ) /* checksum 694E printed on label */
+	ROM_LOAD16_BYTE( "as0907e05.u07", 0x000001, 0x100000, CRC(1731aa2a) SHA1(cffae7a99a7f960a62ef0c4454884df17a93c1a6) ) /* checksum 5D89 printed on label */
 
-	/* ??? doesn't boot otherwise */
-	ROM[0x0f98/2] = 0x4e71;
-}
+	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
+	ROM_LOAD( "as0901m01.u38", 0x0000000, 0x800000, CRC(1d6acf8f) SHA1(6f61fe21bebb7c87e8e6c3ef3ba73b8cf327dde9) )
+	ROM_LOAD( "as0902m01.u39", 0x0800000, 0x800000, CRC(c7ca2128) SHA1(86be3a3ec2f86f61acfa3d4d261faea3c27dc378) )
+	ROM_LOAD( "as0903m01.u40", 0x1000000, 0x800000, CRC(e8ef81b3) SHA1(97666942ca6cca5b8ea6451314a2aaabad9e06ba) )
+	ROM_LOAD( "as0904m01.u41", 0x1800000, 0x800000, CRC(d0f97fdc) SHA1(776c9d42d03a9f61155521212305e1ed696eaf47) )
 
-GAME(  1994, gundamex, 0, gundamex, gundamex, gundamex, ROT0, "Banpresto",           "Mobile Suit Gundam EX Revue" )
-GAMEX( 1995, grdians,  0, grdians,  grdians,  0,  		ROT0, "Banpresto",           "Guardians - Denjin Makai II",                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )	/* Displays (c) Winky Soft at game's end.*/
-GAMEX( 1996, mj4simai, 0, mj4simai, mj4simai, 0,        ROT0, "Maboroshi Ware",      "Wakakusamonogatari Mahjong Yonshimai (Japan)", GAME_NO_COCKTAIL )
-GAMEX( 1996, myangel,  0, myangel,  myangel,  0,        ROT0, "Namco",               "Kosodate Quiz My Angel (Japan)",               GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, myangel2, 0, myangel2, myangel2, 0,        ROT0, "Namco",               "Kosodate Quiz My Angel 2 (Japan)",             GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, pzlbowl,  0, pzlbowl,  pzlbowl,  0,		ROT0, "Nihon System / Moss", "Puzzle De Bowling (Japan)",                    GAME_NO_COCKTAIL )
-GAMEX( 2000, penbros,  0, penbros,  penbros,  0,  		ROT0, "Subsino",             "Penguin Brothers (Japan)",                     GAME_NO_COCKTAIL )
+	ROM_REGION( 0x500000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as0905m01.u18", 0x100000, 0x400000, CRC(8d8165bb) SHA1(aca7051613d260734ee787b4c3db552c336bd600) )
+ROM_END
 
+
+ROM_START( deerhunta ) /* Deer Hunting USA V4.2 (xx/x/2000) */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as0906e04-v4_2.u06", 0x000000, 0x100000, CRC(bb3af36f) SHA1(f04071347e8ad361bf666fcb6c0136e522f19d47) ) /* checksum 6640 printed on label */
+	ROM_LOAD16_BYTE( "as0907e04-v4_2.u07", 0x000001, 0x100000, CRC(83f02117) SHA1(70fc2291bc93af3902aae88688be6a8078f7a07e) ) /* checksum 595A printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "as0901m01.u38", 0x0000000, 0x800000, CRC(1d6acf8f) SHA1(6f61fe21bebb7c87e8e6c3ef3ba73b8cf327dde9) )
+	ROM_LOAD( "as0902m01.u39", 0x0800000, 0x800000, CRC(c7ca2128) SHA1(86be3a3ec2f86f61acfa3d4d261faea3c27dc378) )
+	ROM_LOAD( "as0903m01.u40", 0x1000000, 0x800000, CRC(e8ef81b3) SHA1(97666942ca6cca5b8ea6451314a2aaabad9e06ba) )
+	ROM_LOAD( "as0904m01.u41", 0x1800000, 0x800000, CRC(d0f97fdc) SHA1(776c9d42d03a9f61155521212305e1ed696eaf47) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as0905m01.u18", 0x100000, 0x400000, CRC(8d8165bb) SHA1(aca7051613d260734ee787b4c3db552c336bd600) )
+ROM_END
+
+ROM_START( deerhuntb ) /* Deer Hunting USA V4.0 (6/15/2000) */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as0906e04.u06", 0x000000, 0x100000, CRC(07d9b64a) SHA1(f9aac644aab920bbac84b14836ee589ccd51f6db) ) /* checksum 7BBB printed on label */
+	ROM_LOAD16_BYTE( "as0907e04.u07", 0x000001, 0x100000, CRC(19973d08) SHA1(da1cc02ce480a62ccaf94d0af1246a340f054b43) ) /* checksum 4C78 printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "as0901m01.u38", 0x0000000, 0x800000, CRC(1d6acf8f) SHA1(6f61fe21bebb7c87e8e6c3ef3ba73b8cf327dde9) )
+	ROM_LOAD( "as0902m01.u39", 0x0800000, 0x800000, CRC(c7ca2128) SHA1(86be3a3ec2f86f61acfa3d4d261faea3c27dc378) )
+	ROM_LOAD( "as0903m01.u40", 0x1000000, 0x800000, CRC(e8ef81b3) SHA1(97666942ca6cca5b8ea6451314a2aaabad9e06ba) )
+	ROM_LOAD( "as0904m01.u41", 0x1800000, 0x800000, CRC(d0f97fdc) SHA1(776c9d42d03a9f61155521212305e1ed696eaf47) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as0905m01.u18", 0x100000, 0x400000, CRC(8d8165bb) SHA1(aca7051613d260734ee787b4c3db552c336bd600) )
+ROM_END
+
+ROM_START( turkhunt ) /* V1.0 is currently the only known version */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "asx906e01.u06", 0x000000, 0x100000, CRC(c96266e1) SHA1(0ca462b3b0f27198e36384eee6ea5c5d4e7e1293) ) /* checksum E510 printed on label */
+	ROM_LOAD16_BYTE( "asx907e01.u07", 0x000001, 0x100000, CRC(7c67b502) SHA1(6a0e8883a115dac4095d86897e7eca2a007a1c71) ) /* checksum AB40 printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "asx901m01.u38", 0x0000000, 0x800000, CRC(eabd3f44) SHA1(5a1ac986d11a8b019e18761cf4ea0a6f49fbdbfc) )
+	ROM_LOAD( "asx902m01.u39", 0x0800000, 0x800000, CRC(c32130c8) SHA1(70d56ebed1f51657aaee02f95ac51589733e6eb7) )
+	ROM_LOAD( "asx903m01.u40", 0x1000000, 0x800000, CRC(5f86c322) SHA1(5a72adb99eea176199f172384cb051e2b045ab94) )
+	ROM_LOAD( "asx904m01.u41", 0x1800000, 0x800000, CRC(c77e0b66) SHA1(0eba30e62e4bd38c198fa6cb69fb94d002ded77a) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "asx905m01.u18", 0x100000, 0x400000, CRC(8d9dd9a9) SHA1(1fc2f3688d2c24c720dca7357bca6bf5f4016c53) )
+ROM_END
+
+ROM_START( wschamp ) /* Wing Shootiong Championship V2.00 (01/23/2002) */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as1006e03.u06", 0x000000, 0x100000, CRC(0ad01677) SHA1(63e09b9f7cc8b781af1756f86caa0cc0962ae584) ) /* checksum 421E printed on label */
+	ROM_LOAD16_BYTE( "as1007e03.u07", 0x000001, 0x100000, CRC(572624f0) SHA1(0c2f67daa22f4edd66a2be990dc6cd999faff0fa) ) /* checksum A48F printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "as1001m01.u38", 0x0000000, 0x800000, CRC(92595579) SHA1(75a7131aedb18b7103677340c3cca7c91aaca2bf) )
+	ROM_LOAD( "as1002m01.u39", 0x0800000, 0x800000, CRC(16c2bb08) SHA1(63926464c8bd8db7d05905a953765e645942beb4) )
+	ROM_LOAD( "as1003m01.u40", 0x1000000, 0x800000, CRC(89618858) SHA1(a8bd07f233482e8f5a256af7ff9577648eb58ef4) )
+	ROM_LOAD( "as1004m01.u41", 0x1800000, 0x800000, CRC(500c0909) SHA1(73ff27d46b9285f34a50a81c21c54437f21e1939) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as1005m01.u18", 0x100000, 0x400000, CRC(e4b137b8) SHA1(4d8d15073c51f7d383282cc5755ae5b2eab6226c) )
+ROM_END
+
+ROM_START( wschampa ) /* Wing Shootiong Championship V1.01 */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as1006e02.u06", 0x000000, 0x100000, CRC(d3d3b2b5) SHA1(2d036d795b40a4ed78bb9f7751f875cfc76276a9) ) /* checksum 31EF printed on label */
+	ROM_LOAD16_BYTE( "as1007e02.u07", 0x000001, 0x100000, CRC(78ede6d9) SHA1(e6d10f52cd4c6bf97288df44911f23bb64fc012c) ) /* checksum 615E printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "as1001m01.u38", 0x0000000, 0x800000, CRC(92595579) SHA1(75a7131aedb18b7103677340c3cca7c91aaca2bf) )
+	ROM_LOAD( "as1002m01.u39", 0x0800000, 0x800000, CRC(16c2bb08) SHA1(63926464c8bd8db7d05905a953765e645942beb4) )
+	ROM_LOAD( "as1003m01.u40", 0x1000000, 0x800000, CRC(89618858) SHA1(a8bd07f233482e8f5a256af7ff9577648eb58ef4) )
+	ROM_LOAD( "as1004m01.u41", 0x1800000, 0x800000, CRC(500c0909) SHA1(73ff27d46b9285f34a50a81c21c54437f21e1939) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as1005m01.u18", 0x100000, 0x400000, CRC(e4b137b8) SHA1(4d8d15073c51f7d383282cc5755ae5b2eab6226c) )
+ROM_END
+
+ROM_START( trophyh ) /* V1.0 is currently the only known version */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )		/* TMP68301 Code */
+	ROM_LOAD16_BYTE( "as1106e01.u06", 0x000000, 0x100000, CRC(b4950882) SHA1(2749f7ffc5b543c9f39815f0913a1d1e385b63f4) ) /* checksum D8DA printed on label */
+	ROM_LOAD16_BYTE( "as1107e01.u07", 0x000001, 0x100000, CRC(19ee67cb) SHA1(e75ce66d3ff5aad46ba997c09d6514260e617f55) ) /* checksum CEEF printed on label */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )	/* Sprites */
+	ROM_LOAD( "as1101m01.u38", 0x0000000, 0x800000, CRC(855ed675) SHA1(84ce229a9feb6331413253a5aed10b362e8102e5) )
+	ROM_LOAD( "as1102m01.u39", 0x0800000, 0x800000, CRC(d186d271) SHA1(3c54438b35adfab8be91df0a633270d6db49beef) )
+	ROM_LOAD( "as1103m01.u40", 0x1000000, 0x800000, CRC(adf8a54e) SHA1(bb28bf219d18082246f7964851a5c49b9c0ba7f5) )
+	ROM_LOAD( "as1104m01.u41", 0x1800000, 0x800000, CRC(387882e9) SHA1(0fdd0c77dabd1066c6f3bd64e357236a76f524ab) )
+
+	ROM_REGION( 0x500000, REGION_SOUND1, 0 )	/* Samples */
+	/* Leave 1MB empty (addressable by the chip) */
+	ROM_LOAD( "as1105m01.u18", 0x100000, 0x400000, CRC(633d0df8) SHA1(3401c424f5c207ef438a9269e0c0e7d482771fed) )
+ROM_END
+
+
+GAME(  1994, gundamex, 0,        gundamex, gundamex, 0,   ROT0, "Banpresto",                "Mobile Suit Gundam EX Revue" )
+GAMEX( 1995, grdians,  0,        grdians,  grdians,  0,   ROT0, "Banpresto",                "Guardians - Denjin Makai II",                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )	/* Displays (c) Winky Soft at game's end.*/
+GAMEX( 1996, mj4simai, 0,        mj4simai, mj4simai, 0,   ROT0, "Maboroshi Ware",           "Wakakusamonogatari Mahjong Yonshimai (Japan)", GAME_NO_COCKTAIL )
+GAMEX( 1996, myangel,  0,        myangel,  myangel,  0,   ROT0, "Namco",                    "Kosodate Quiz My Angel (Japan)",               GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, myangel2, 0,        myangel2, myangel2, 0,   ROT0, "Namco",                    "Kosodate Quiz My Angel 2 (Japan)",             GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, pzlbowl,  0,        pzlbowl,  pzlbowl,  0,   ROT0, "Nihon System / Moss",      "Puzzle De Bowling (Japan)",                    GAME_NO_COCKTAIL )
+GAMEX( 2000, penbros,  0,        penbros,  penbros,  0,   ROT0, "Subsino",                  "Penguin Brothers (Japan)",                     GAME_NO_COCKTAIL )
+
+GAMEX( 2000, deerhunt, 0,        samshoot, deerhunt, 0,   ROT0, "Sammy USA Corporation",    "Deer Hunting USA V4.3",                        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2000, deerhunta,deerhunt, samshoot, deerhunt, 0,   ROT0, "Sammy USA Corporation",    "Deer Hunting USA V4.2",                        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2000, deerhuntb,deerhunt, samshoot, deerhunt, 0,   ROT0, "Sammy USA Corporation",    "Deer Hunting USA V4.0",                        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2001, turkhunt, 0,        samshoot, turkhunt, 0,   ROT0, "Sammy USA Corporation",    "Turkey Hunting USA V1.0",                      GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2001, wschamp,  0,        samshoot, wschamp,  0,   ROT0, "Sammy USA Corporation",    "Wing Shooting Championship V2.0",              GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2001, wschampa, wschamp,  samshoot, wschamp,  0,   ROT0, "Sammy USA Corporation",    "Wing Shooting Championship V1.01",             GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2002, trophyh,  0,        samshoot, trophyh,  0,   ROT0, "Sammy USA Corporation",    "Trophy Hunting - Bear & Moose V1.0",           GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
