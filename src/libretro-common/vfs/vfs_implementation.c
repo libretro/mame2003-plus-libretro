@@ -225,9 +225,6 @@ int64_t retro_vfs_file_seek_internal(libretro_vfs_implementation_file *stream, i
       return fioLseek(fileno(stream->fp), (off_t)offset, whence);
 #elif defined(ORBIS)
       int ret = orbisLseek(stream->fd, offset, whence);
-
-      RARCH_LOG("[VFS]retro_vfs_file_seek_internal orbisLseek return %d on fd=%d filename=%s\n", ret, stream->fd, stream->orig_path);
-
       if (ret < 0)
          return -1;
       return 0;
@@ -238,10 +235,10 @@ int64_t retro_vfs_file_seek_internal(libretro_vfs_implementation_file *stream, i
 #ifdef HAVE_MMAP
    /* Need to check stream->mapped because this function is
     * called in filestream_open() */
-   if (stream->mapped && stream->hints & 
+   if (stream->mapped && stream->hints &
          RETRO_VFS_FILE_ACCESS_HINT_FREQUENT_ACCESS)
    {
-      /* fseek() returns error on under/overflow but 
+      /* fseek() returns error on under/overflow but
        * allows cursor > EOF for
        read-only file descriptors. */
       switch (whence)
@@ -377,7 +374,7 @@ libretro_vfs_implementation_file *retro_vfs_file_open_impl(const char *path, uns
 #endif
 #endif
          break;
-         
+
       default:
          goto error;
    }
@@ -386,10 +383,9 @@ libretro_vfs_implementation_file *retro_vfs_file_open_impl(const char *path, uns
    {
 #ifdef ORBIS
       int fd = orbisOpen(path, flags, 0644);
-      RARCH_LOG("[VFS]retro_vfs_file_open_impl orbisOpen fd=%d path=%s\n", fd, path);
       if( fd < 0)
       {
-         stream->fd=-1;
+         stream->fd = -1;
          goto error;
       }
       stream->fd = fd;
@@ -410,7 +406,7 @@ libretro_vfs_implementation_file *retro_vfs_file_open_impl(const char *path, uns
        */
       /* TODO: this is only useful for a few platforms, find which and add ifdef */
       stream->fp  = fp;
-#if !defined(PS2) /* TODO: PS2 IMPROVEMENT */
+#if !defined(PS2) && !defined(PSP)
       stream->buf = (char*)calloc(1, 0x4000);
       setvbuf(stream->fp, stream->buf, _IOFBF, 0x4000);
 #endif
@@ -460,7 +456,6 @@ libretro_vfs_implementation_file *retro_vfs_file_open_impl(const char *path, uns
 #ifdef ORBIS
    stream->size = orbisLseek(stream->fd, 0, SEEK_END);
    orbisLseek(stream->fd, 0, SEEK_SET);
-   RARCH_LOG("[VFS]retro_vfs_file_open_impl size=%d fd=%d path=%s\n", stream->size, stream->fd, stream->orig_path);
 #else
    retro_vfs_file_seek_internal(stream, 0, SEEK_SET);
    retro_vfs_file_seek_internal(stream, 0, SEEK_END);
@@ -497,7 +492,6 @@ int retro_vfs_file_close_impl(libretro_vfs_implementation_file *stream)
    if (stream->fd > 0)
    {
 #ifdef ORBIS
-      RARCH_LOG("[VFS]retro_vfs_file_close_impl orbisClose fd=%d path=%s\n", stream->fd, stream->orig_path);
       orbisClose(stream->fd);
       stream->fd=-1;
 #else
@@ -516,6 +510,7 @@ int retro_vfs_file_close_impl(libretro_vfs_implementation_file *stream)
 int retro_vfs_file_error_impl(libretro_vfs_implementation_file *stream)
 {
 #ifdef ORBIS
+   /* TODO/FIXME - implement this? */
    return 0;
 #else
    return ferror(stream->fp);
@@ -554,7 +549,6 @@ int64_t retro_vfs_file_tell_impl(libretro_vfs_implementation_file *stream)
    {
 #ifdef ORBIS
       int64_t ret = orbisLseek(stream->fd, 0, SEEK_CUR);
-      RARCH_LOG("[VFS]retro_vfs_file_tell_impl orbisLseek fd=%d path=%s ret=%d\n", stream->fd, stream->orig_path, ret);  
       if(ret < 0)
          return -1;
       return ret;
@@ -609,8 +603,6 @@ int64_t retro_vfs_file_read_impl(libretro_vfs_implementation_file *stream,
    {
 #ifdef ORBIS
       int64_t ret = orbisRead(stream->fd, s, (size_t)len);
-
-      RARCH_LOG("[VFS]retro_vfs_file_read_impl orbisRead fd=%d path=%s bytesread=%d\n", stream->fd, stream->orig_path, ret);
       if( ret < 0)
          return -1;
       return 0;
@@ -649,9 +641,6 @@ int64_t retro_vfs_file_write_impl(libretro_vfs_implementation_file *stream, cons
    {
 #ifdef ORBIS
       int64_t ret = orbisWrite(stream->fd, s, (size_t)len);
-
-      RARCH_LOG("[VFS]retro_vfs_file_write_impl orbisWrite fd=%d path=%s byteswrite=%d\n", stream->fd, stream->orig_path, ret);
-
       if( ret < 0)
          return -1;
       return 0;
@@ -675,7 +664,7 @@ int retro_vfs_file_flush_impl(libretro_vfs_implementation_file *stream)
       return -1;
 #ifdef ORBIS
    return 0;
-#else   
+#else
    return fflush(stream->fp)==0 ? 0 : -1;
 #endif
 }
@@ -800,7 +789,6 @@ const char *retro_vfs_file_get_path_impl(libretro_vfs_implementation_file *strea
       abort();
    return stream->orig_path;
 }
-
 
 int retro_vfs_stat_impl(const char *path, int32_t *size)
 {
@@ -978,7 +966,7 @@ struct libretro_vfs_implementation_dir
    CellFsDirent entry;
 #elif defined(ORBIS)
    int directory;
-   struct dirent entry; 
+   struct dirent entry;
 #else
    DIR *directory;
    const struct dirent *entry;
@@ -1161,6 +1149,7 @@ bool retro_vfs_dirent_is_dir_impl(libretro_vfs_implementation_dir *rdir)
       return false;
 #else
    struct stat buf;
+   char path[PATH_MAX_LENGTH];
 #if defined(DT_DIR)
    const struct dirent *entry = (const struct dirent*)rdir->entry;
    if (entry->d_type == DT_DIR)
@@ -1170,7 +1159,6 @@ bool retro_vfs_dirent_is_dir_impl(libretro_vfs_implementation_dir *rdir)
       return false;
 #endif
    /* dirent struct doesn't have d_type, do it the slow way ... */
-   char path[PATH_MAX_LENGTH];
    path[0] = '\0';
    fill_pathname_join(path, rdir->orig_path, retro_vfs_dirent_get_name_impl(rdir), sizeof(path));
    if (stat(path, &buf) < 0)
