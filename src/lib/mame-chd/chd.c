@@ -7,7 +7,7 @@
 #include <chd.h>
 #include <retro_inline.h>
 #include <utils/md5.h>
-#include <utils/sha1.h>
+#include "mame_sha1.h"
 #include <zlib.h>
 #include <time.h>
 #include <string.h>
