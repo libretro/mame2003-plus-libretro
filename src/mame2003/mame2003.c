@@ -10,7 +10,6 @@
 #include <string/stdstring.h>
 #include <libretro.h>
 #include <file/file_path.h>
-#include <compat/msvc.h>
 #include <math.h>
 
 
