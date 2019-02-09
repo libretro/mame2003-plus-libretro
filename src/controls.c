@@ -8188,13 +8188,9 @@ const char *galaga88_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_BUTTON3: return BTN3 "N/A";
-    case IPT_JOYSTICK_UP: return "N/A";
-    case IPT_JOYSTICK_DOWN: return "N/A";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type); /* generic "Left" and "Right" labels */
 }
 
 const struct ControlInfo galaga_ctrl =
@@ -8211,19 +8207,17 @@ const char *galaga_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1:        return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT:  return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type); /* generic "Left" and "Right" labels */
 }
 
 const struct ControlInfo galaxian_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
+  true,  /* alternating_controls */
+  true,  /* mirrored_controls */
+  "",    /* control_details */
   &galaxian_get_ctrl_name
 };
 
@@ -8232,11 +8226,9 @@ const char *galaxian_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Control Left";
-    case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type); /* generic "Left" and "Right" labels */
 }
 
 const struct ControlInfo gforce2_ctrl =
@@ -13542,27 +13534,6 @@ const char *montecar_get_ctrl_name(int type)
     case IPT_BUTTON6: return BTN6 "Track Select";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mooncrst_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
-  &mooncrst_get_ctrl_name
-};
-
-const char *mooncrst_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-    case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
   return "";
@@ -19530,8 +19501,8 @@ const struct ControlInfo stonebal_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
   false, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
+  true,  /* mirrored_controls */
+  "",    /* control_details */
   &stonebal_get_ctrl_name
 };
 
@@ -19544,6 +19515,20 @@ const char *stonebal_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Push";
   } /* end of switch */
 
+  return joy4way_labels(type);
+}
+
+const struct ControlInfo streakng_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  false, /* alternating_controls */
+  true,  /* mirrored_controls */
+  "",    /* control_details */
+  &streakng_get_ctrl_name
+};
+
+const char *streakng_get_ctrl_name(int type)
+{
   return joy4way_labels(type);
 }
 
@@ -23551,6 +23536,26 @@ const char *wargods_get_ctrl_name(int type)
 
   return "";
 }
+
+const struct ControlInfo warofbug_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  false, /* alternating_controls */
+  true,  /* mirrored_controls */
+  "", /* control_details */
+  &warofbug_get_ctrl_name
+};
+
+const char *warofbug_get_ctrl_name(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return BTN1 "Fire";
+  } /* end of switch */
+
+  return joy4way_labels(type); /* generic "Left" and "Right" labels */
+}
+
 
 const struct ControlInfo wotw_ctrl =
 {
