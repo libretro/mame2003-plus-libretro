@@ -2964,7 +2964,7 @@ GAME( 1981, dkongjo1, dkong,    dkong,    dkong,    0,        ROT90, "Nintendo",
 GAME( 2013, dkongpe,  dkong,    dkong,    dkong,    0,        ROT90,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
 
 GAME( 2008, dkongx,   dkong,    braze,    dkong2,   dkong2,   ROT90, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
-GAME( 2015, dkrdemo,  dkong,    braze,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
+GAME( 2015, dkrdemo,  dkong,    dkong,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
 
 GAME( 1982, dkongjr,  0,        dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (US)" )
 GAME( 1982, dkongjrj, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo", "Donkey Kong Jr. (Japan)" )
