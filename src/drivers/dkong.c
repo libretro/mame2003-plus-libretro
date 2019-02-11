@@ -1573,7 +1573,7 @@ static struct GfxLayout charlayout =
 static struct GfxLayout spritelayout =
 {
 	16,16,	/* 16*16 sprites */
-	RGN_FRAC(1,2),	/* 128 sprites */
+	RGN_FRAC(1,4),	/* 128 sprites */
 	2,	/* 2 bits per pixel */
 	{ RGN_FRAC(1,2), RGN_FRAC(0,2) },	/* the two bitplanes are separated */
 	{ 0, 1, 2, 3, 4, 5, 6, 7,	/* the two halves of the sprite are separated */

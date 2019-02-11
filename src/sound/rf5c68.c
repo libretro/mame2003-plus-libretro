@@ -96,7 +96,7 @@ void RF5C68_sh_stop( void )
 /*    RF5C68 update                             */
 /************************************************/
 
-INLINE int ILimit(int v, int max, int min) { return v > max ? max : (v < min ? min : v); }
+static INLINE int ILimit(int v, int max, int min) { return v > max ? max : (v < min ? min : v); }
 
 static void RF5C68Update( int num, INT16 **buffer, int length )
 {
