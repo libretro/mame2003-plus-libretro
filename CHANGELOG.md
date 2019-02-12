@@ -33,6 +33,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cute Fighters
 * Deluxe 5
 * Denjin Makai 
+* Deer Hunting
 * Diet Go Go
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
@@ -128,12 +129,15 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
+* Trophy Hunting Bear & Moose
+* Turkey Hunting
 * Undercover Cops (Alpha Renewal Version)
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
 * Virtua Fighter
 * Wing Force
+* Wing Shooting Championship
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
 * World Cup Volley 95 Extra Version
