@@ -165,12 +165,12 @@ static void scanline_interrupt(int param);
 
 #define ADJUSTED_HEIGHT(x) ((((x) >> 1) & 0x100) | ((x) & 0xff))
 
-INLINE offs_t compute_safe_address(int x, int y)
+static INLINE offs_t compute_safe_address(int x, int y)
 {
 	return ((y & vram_ymask) * 512) + (x & vram_xmask);
 }
 
-INLINE void disable_clipping(void)
+static INLINE void disable_clipping(void)
 {
 	clip_save = clip_rect;
 
@@ -181,7 +181,7 @@ INLINE void disable_clipping(void)
 	scaled_clip_rect.max_x = scaled_clip_rect.max_y = 0xfff << 8;
 }
 
-INLINE void enable_clipping(void)
+static INLINE void enable_clipping(void)
 {
 	clip_rect = clip_save;
 
@@ -893,7 +893,7 @@ do {												\
  *
  *************************************/
 
-INLINE void draw_rle_fast(UINT16 *base, UINT16 color)
+static INLINE void draw_rle_fast(UINT16 *base, UINT16 color)
 {
 	UINT8 *src = &grom_base[(grom_bank | ((VIDEO_TRANSFER_ADDRHI & 0xff) << 16) | VIDEO_TRANSFER_ADDRLO) % grom_size];
 	int transparent_pen = (VIDEO_TRANSFER_FLAGS & XFERFLAG_TRANSPARENT) ? 0xff : -1;
@@ -970,7 +970,7 @@ INLINE void draw_rle_fast(UINT16 *base, UINT16 color)
 }
 
 
-INLINE void draw_rle_fast_xflip(UINT16 *base, UINT16 color)
+static INLINE void draw_rle_fast_xflip(UINT16 *base, UINT16 color)
 {
 	UINT8 *src = &grom_base[(grom_bank | ((VIDEO_TRANSFER_ADDRHI & 0xff) << 16) | VIDEO_TRANSFER_ADDRLO) % grom_size];
 	int transparent_pen = (VIDEO_TRANSFER_FLAGS & XFERFLAG_TRANSPARENT) ? 0xff : -1;
@@ -1054,7 +1054,7 @@ INLINE void draw_rle_fast_xflip(UINT16 *base, UINT16 color)
  *
  *************************************/
 
-INLINE void draw_rle_slow(UINT16 *base, UINT16 color)
+static INLINE void draw_rle_slow(UINT16 *base, UINT16 color)
 {
 	UINT8 *src = &grom_base[(grom_bank | ((VIDEO_TRANSFER_ADDRHI & 0xff) << 16) | VIDEO_TRANSFER_ADDRLO) % grom_size];
 	int transparent_pen = (VIDEO_TRANSFER_FLAGS & XFERFLAG_TRANSPARENT) ? 0xff : -1;
