@@ -831,10 +831,7 @@ static void init_game_options(void)
   Machine->orientation    = ROT0;
   Machine->ui_orientation = options.ui_orientation;
 
-  /* initialize the samplerate */
-  
-  Machine->sample_rate = options.samplerate;
-/* move this to a core option if you want it to toggle */
+
 
 }
 
