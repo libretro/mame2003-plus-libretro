@@ -5,8 +5,8 @@
 
 /* @(#) $Id$ */
 
-#ifndef MAME_ZCONF_H
-#define MAME_ZCONF_H
+#ifndef ZCONF_H
+#define ZCONF_H
 
 /*
  * If you *really* need a unique prefix for all types and library functions,
