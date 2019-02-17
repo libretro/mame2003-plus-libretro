@@ -126,6 +126,7 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
+       void   change_control_type(void);
 
 
 /******************************************************************************
