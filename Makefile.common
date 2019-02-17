@@ -8,7 +8,8 @@ INCFLAGS := \
 	-I$(CORE_DIR)/mame2003 \
 	-I$(LIBRETRO_COMM_DIR)/include \
  	-I$(CORE_DIR)/libretro-deps/libFLAC/include \
- 	-I$(CORE_DIR)/lib/mame-chd
+ 	-I$(CORE_DIR)/lib/mame-chd \
+	-I$(CORE_DIR)/lib/zlib
 
 ifneq (,$(findstring msvc200,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc

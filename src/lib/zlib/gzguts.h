@@ -22,7 +22,7 @@
 #endif
 
 #include <stdio.h>
-#include "mame_zlib.h"
+#include <zlib.h>
 #ifdef STDC
 #  include <string.h>
 #  include <stdlib.h>

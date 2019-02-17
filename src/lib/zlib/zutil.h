@@ -10,8 +10,8 @@
 
 /* @(#) $Id$ */
 
-#ifndef MAME_ZUTIL_H
-#define MAME_ZUTIL_H
+#ifndef ZUTIL_H
+#define ZUTIL_H
 
 #ifdef HAVE_HIDDEN
 #  define ZLIB_INTERNAL __attribute__((visibility ("hidden")))
@@ -19,7 +19,7 @@
 #  define ZLIB_INTERNAL
 #endif
 
-#include "mame_zlib.h"
+#include <zlib.h>
 
 #if defined(STDC) && !defined(Z_SOLO)
 #  if !(defined(_WIN32_WCE) && defined(_MSC_VER))
