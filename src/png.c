@@ -21,7 +21,7 @@
 *********************************************************************/
 
 #include <math.h>
-#include <zlib.h>
+#include <compat/zlib.h>
 #include "driver.h"
 #include "png.h"
 
