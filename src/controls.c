@@ -17,28 +17,39 @@
 /***********************************************************
   PRIVATE HELPER FUNCTIONS
  ***********************************************************/
-
+ 
 static const char *joy2way_labels(int type);
 static const char *joy4way_labels(int type);
 
+/* joy2way_labels returns only generic "Left" and "Right"
+ * strings for 2-way joysticks that have no game-specific
+ * control panel labels.
+*/
 static const char *joy2way_labels(int type)
 {
   switch(type)
   {
-    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_LEFT:  return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */ 
   
   return "";  
 }
 
+/* joy4way_labels returns only generic "Left", "Right",
+ * "Up", and "Down" strings for 4-way and 8-way joysticks that have
+ * no game-specific control panel labels. An example of game-
+ * specific 8-way joystick labels is Street Fighter 2, which uses
+ * "Crouch" instead of "Down" and "Jump" instead of "Up" and
+ * and therefore is not suitable for the generic function.
+*/
 static const char *joy4way_labels(int type)
 {
   switch(type)
   {
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_UP:    return "Up";
+    case IPT_JOYSTICK_DOWN:  return "Down";
+    case IPT_JOYSTICK_LEFT:  return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */ 
   
@@ -93,13 +104,9 @@ const char *a005_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a10yardj_ctrl =
@@ -117,13 +124,9 @@ const char *a10yardj_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Pass / Hike";
     case IPT_BUTTON2: return BTN2 "Lateral";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gtmr_ctrl =
@@ -162,13 +165,9 @@ const char *a1941_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Loop";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a1942_ctrl =
@@ -186,13 +185,9 @@ const char *a1942_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Loop";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a1943kai_ctrl =
@@ -210,13 +205,9 @@ const char *a1943kai_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a1943_ctrl =
@@ -234,13 +225,9 @@ const char *a1943_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a1944_ctrl =
@@ -258,13 +245,9 @@ const char *a1944_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a19xx_ctrl =
@@ -282,13 +265,9 @@ const char *a19xx_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo openice_ctrl =
@@ -307,13 +286,9 @@ const char *openice_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Turbo";
     case IPT_BUTTON2: return BTN2 "Shoot / Block";
     case IPT_BUTTON3: return BTN3 "Pass / Steal";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a39in1_ctrl =
@@ -332,13 +307,9 @@ const char *a39in1_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a4enraya_ctrl =
@@ -356,11 +327,9 @@ const char *a4enraya_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Down";
     case IPT_BUTTON2: return BTN2 "Shot";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo a4in1_ctrl =
@@ -377,13 +346,9 @@ const char *a4in1_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a4dwarrio_ctrl =
@@ -401,13 +366,9 @@ const char *a4dwarrio_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a64street_ctrl =
@@ -425,13 +386,9 @@ const char *a64street_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a720_ctrl =
@@ -456,24 +413,6 @@ const char *a720_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo a7jigen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &a7jigen_get_ctrl_name
-};
-
-const char *a7jigen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
 
 const struct ControlInfo ace_ctrl =
 {
@@ -513,13 +452,9 @@ const char *acrobatm_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo actfancr_ctrl =
@@ -537,13 +472,9 @@ const char *actfancr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hatena_ctrl =
@@ -583,13 +514,9 @@ const char *aerofgt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aburner2_ctrl =
@@ -635,13 +562,9 @@ const char *koshien_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo airbustr_ctrl =
@@ -659,13 +582,9 @@ const char *airbustr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo airduel_ctrl =
@@ -685,13 +604,9 @@ const char *airduel_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Guided Bomb";
     case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_BUTTON4: return BTN4 "Unknown";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo airwolf_ctrl =
@@ -709,13 +624,9 @@ const char *airwolf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ajax_ctrl =
@@ -734,13 +645,9 @@ const char *ajax_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Machine Gun";
     case IPT_BUTTON2: return BTN2 "Missle";
     case IPT_BUTTON3: return BTN3 "Super Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo alexkidd_ctrl =
@@ -759,13 +666,9 @@ const char *alexkidd_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Unknown";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo alibaba_ctrl =
@@ -782,13 +685,9 @@ const char *alibaba_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Drop";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo astorm_ctrl =
@@ -807,13 +706,9 @@ const char *astorm_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Roll";
     case IPT_BUTTON3: return BTN3 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aliensyn_ctrl =
@@ -830,13 +725,9 @@ const char *aliensyn_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo avsp_ctrl =
@@ -903,13 +794,9 @@ const char *aliens_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot 1";
     case IPT_BUTTON2: return BTN2 "Shoot 2";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aafb_ctrl =
@@ -926,17 +813,13 @@ const char *aafb_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_AD_STICK_X: return "Aim Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Aim Right";
     case IPT_AD_STICK_Y: return "Short";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Long";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo alleymas_ctrl =
@@ -977,13 +860,9 @@ const char *alphaho_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Accelerate";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo alpinerd_ctrl =
@@ -1048,13 +927,9 @@ const char *altbeast_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick ";
     case IPT_BUTTON3: return BTN3 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo maze_ctrl =
@@ -1068,16 +943,7 @@ const struct ControlInfo maze_ctrl =
 
 const char *maze_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo horshoes_ctrl =
@@ -1162,13 +1028,9 @@ const char *amidar_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo angelkds_ctrl =
@@ -1184,7 +1046,6 @@ const char *angelkds_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -1212,13 +1073,9 @@ const char *anteater_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Tongue Return";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo apb_ctrl =
@@ -1244,25 +1101,6 @@ const char *apb_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo apparel_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &apparel_get_ctrl_name
-};
-
-const char *apparel_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo aquajack_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -1280,13 +1118,9 @@ const char *aquajack_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Vulcan";
     case IPT_BUTTON4: return BTN4 "Thrust";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aquarium_ctrl =
@@ -1304,13 +1138,9 @@ const char *aquarium_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate Right";
     case IPT_BUTTON2: return BTN2 "Rotate Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo arabian_ctrl =
@@ -1351,13 +1181,9 @@ const char *arbalest_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo arcadecl_ctrl =
@@ -1493,13 +1319,9 @@ const char *argus_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Laser";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo arkarea_ctrl =
@@ -1517,13 +1339,9 @@ const char *arkarea_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Direction";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo arkanoid_ctrl =
@@ -1607,7 +1425,6 @@ const char *armwrest_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Power";
     case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "";
     case IPT_JOYSTICK_UP: return "Pull";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -1631,13 +1448,9 @@ const char *armedf_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special";
     case IPT_BUTTON3: return BTN3 "Unknown";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo armora_ctrl =
@@ -1655,11 +1468,9 @@ const char *armora_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Forward";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo armorcar_ctrl =
@@ -1677,13 +1488,9 @@ const char *armorcar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sawhorse";
     case IPT_BUTTON2: return BTN2 "2nd Gear";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ashura_ctrl =
@@ -1701,13 +1508,9 @@ const char *ashura_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aso_ctrl =
@@ -1726,13 +1529,9 @@ const char *aso_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Laser";
     case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_BUTTON3: return BTN3 "Power Up";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo assault_ctrl =
@@ -1770,13 +1569,9 @@ const char *asterix_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo asteroid_ctrl =
@@ -1840,11 +1635,9 @@ const char *astrob_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Warp";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo astrof_ctrl =
@@ -1861,11 +1654,9 @@ const char *astrof_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Missile";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo astinvad_ctrl =
@@ -1882,11 +1673,9 @@ const char *astinvad_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "FIRE";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo asuka_ctrl =
@@ -1904,13 +1693,9 @@ const char *asuka_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo asylum_ctrl =
@@ -1928,13 +1713,9 @@ const char *asylum_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo abaseb_ctrl =
@@ -2021,13 +1802,9 @@ const char *athena_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Attack";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo atehate_ctrl =
@@ -2067,13 +1844,9 @@ const char *atomicp_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_BUTTON2: return BTN2 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo robokid_ctrl =
@@ -2091,13 +1864,9 @@ const char *robokid_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Weapon Select";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aurail_ctrl =
@@ -2116,51 +1885,9 @@ const char *aurail_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Sepcial";
     case IPT_BUTTON3: return BTN3 "Shield";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo av2mj1bb_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &av2mj1bb_get_ctrl_name
-};
-
-const char *av2mj1bb_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo av2mj2rg_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &av2mj2rg_get_ctrl_name
-};
-
-const char *av2mj2rg_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo avalnche_ctrl =
@@ -2202,13 +1929,9 @@ const char *avengers_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Kick";
     case IPT_BUTTON4: return BTN4 "Kick";
 	
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo avspirit_ctrl =
@@ -2226,13 +1949,9 @@ const char *avspirit_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo aztarac_ctrl =
@@ -2275,13 +1994,9 @@ const char *azurian_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo baddudes_ctrl =
@@ -2299,13 +2014,9 @@ const char *baddudes_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo badlands_ctrl =
@@ -2344,13 +2055,9 @@ const char *bagman_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bkrtmaq_ctrl =
@@ -2391,13 +2098,9 @@ const char *bakutotu_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_BUTTON3: return BTN3 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ballbomb_ctrl =
@@ -2414,11 +2117,9 @@ const char *ballbomb_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo ballbros_ctrl =
@@ -2438,7 +2139,6 @@ const char *ballbros_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Unknown";
     case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -2460,13 +2160,9 @@ const char *baluba_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bangball_ctrl =
@@ -2483,13 +2179,9 @@ const char *bangball_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Throw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bang_ctrl =
@@ -2531,11 +2223,9 @@ const char *bankp_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot Door 1";
     case IPT_BUTTON2: return BTN2 "Shoot Door 2";
     case IPT_BUTTON3: return BTN3 "Shoot Door 3";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo baraduke_ctrl =
@@ -2552,13 +2242,9 @@ const char *baraduke_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo barricad_ctrl =
@@ -2572,16 +2258,7 @@ const struct ControlInfo barricad_ctrl =
 
 const char *barricad_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo barrier_ctrl =
@@ -2600,13 +2277,9 @@ const char *barrier_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Beginner";
     case IPT_BUTTON2: return BTN2 "Intermediate";
     case IPT_BUTTON3: return BTN3 "Expert";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bsktball_ctrl =
@@ -2647,13 +2320,9 @@ const char *batman_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo batsugun_ctrl =
@@ -2671,13 +2340,9 @@ const char *batsugun_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo battlnts_ctrl =
@@ -2694,13 +2359,9 @@ const char *battlnts_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bkraidj_ctrl =
@@ -2719,13 +2380,9 @@ const char *bkraidj_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo battlex_ctrl =
@@ -2742,13 +2399,9 @@ const char *battlex_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bcruzm12_ctrl =
@@ -2765,11 +2418,9 @@ const char *bcruzm12_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo btlkroad_ctrl =
@@ -2815,13 +2466,9 @@ const char *battlane_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Missile";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo atlantis_ctrl =
@@ -2839,13 +2486,9 @@ const char *atlantis_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo battlera_ctrl =
@@ -2864,13 +2507,9 @@ const char *battlera_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bshark_ctrl =
@@ -2911,13 +2550,9 @@ const char *btoads_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Start / Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bzone_ctrl =
@@ -2958,13 +2593,9 @@ const char *bayroute_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo beaminv_ctrl =
@@ -3027,13 +2658,9 @@ const char *beathead_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Big Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bm1stmix_ctrl =
@@ -3274,7 +2901,6 @@ const char *beezer_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -3323,13 +2949,9 @@ const char *blswhstl_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo berabohm_ctrl =
@@ -3349,13 +2971,9 @@ const char *berabohm_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Hard Attack";
     case IPT_BUTTON3: return BTN3 "Jump";
     case IPT_BUTTON4: return BTN4 "High Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bermudat_ctrl =
@@ -3373,15 +2991,11 @@ const char *bermudat_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "??";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo berzerk_ctrl =
@@ -3398,13 +3012,9 @@ const char *berzerk_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bigevglf_ctrl =
@@ -3446,13 +3056,9 @@ const char *bigkarnk_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bigrun_ctrl =
@@ -3496,13 +3102,9 @@ const char *bigstrik_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bigtwin_ctrl =
@@ -3519,13 +3121,9 @@ const char *bigtwin_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Grab";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bbonk_ctrl =
@@ -3539,54 +3137,7 @@ const struct ControlInfo bbonk_ctrl =
 
 const char *bbonk_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo bijokkog_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &bijokkog_get_ctrl_name
-};
-
-const char *bijokkog_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo bijokkoy_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &bijokkoy_get_ctrl_name
-};
-
-const char *bijokkoy_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bioatack_ctrl =
@@ -3603,13 +3154,9 @@ const char *bioatack_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bioship_ctrl =
@@ -3627,13 +3174,9 @@ const char *bioship_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Cursor";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo biofreak_ctrl =
@@ -3655,13 +3198,9 @@ const char *biofreak_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Left Kick";
     case IPT_BUTTON5: return BTN5 "Right Kick";
     case IPT_BUTTON6: return BTN6 "Hover";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo biomtoy_ctrl =
@@ -3679,13 +3218,9 @@ const char *biomtoy_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bionicc_ctrl =
@@ -3703,13 +3238,9 @@ const char *bionicc_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bionic Reach";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bking_ctrl =
@@ -3725,7 +3256,6 @@ const char *bking_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -3748,7 +3278,6 @@ const char *bking2_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
@@ -3771,7 +3300,6 @@ const char *bking3_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -3796,51 +3324,9 @@ const char *birdtry_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Swing";
     case IPT_BUTTON2: return BTN2 "Options";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo psailor1_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &psailor1_get_ctrl_name
-};
-
-const char *psailor1_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo psailor2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &psailor2_get_ctrl_name
-};
-
-const char *psailor2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blkheart_ctrl =
@@ -3858,13 +3344,9 @@ const char *blkheart_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire A";
     case IPT_BUTTON2: return BTN2 "Fire B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blkhole_ctrl =
@@ -3881,11 +3363,9 @@ const char *blkhole_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo blkpnthr_ctrl =
@@ -3903,13 +3383,9 @@ const char *blkpnthr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blktiger_ctrl =
@@ -3927,13 +3403,9 @@ const char *blktiger_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Mace";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bwidow_ctrl =
@@ -3949,18 +3421,13 @@ const char *bwidow_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICKLEFT_UP: return "Up";
-    case IPT_JOYSTICKLEFT_DOWN: return "Down";
-    case IPT_JOYSTICKLEFT_LEFT: return "Left";
-    case IPT_JOYSTICKLEFT_RIGHT: return "Right";
     case IPT_JOYSTICKRIGHT_UP: return "Aim Up";
     case IPT_JOYSTICKRIGHT_DOWN: return "Aim Down";
     case IPT_JOYSTICKRIGHT_LEFT: return "Aim Left";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bmaster_ctrl =
@@ -3978,13 +3445,9 @@ const char *bmaster_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bladestl_ctrl =
@@ -4028,13 +3491,9 @@ const char *blandia_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack High";
     case IPT_BUTTON2: return BTN2 "Attack Middle";
     case IPT_BUTTON3: return BTN3 "Attack Low";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blastoff_ctrl =
@@ -4053,13 +3512,9 @@ const char *blastoff_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Change Weapon";
     case IPT_BUTTON3: return BTN3 "NA";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blasted_ctrl =
@@ -4147,13 +3602,9 @@ const char *blasto_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blazeon_ctrl =
@@ -4171,13 +3622,9 @@ const char *blazeon_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Normal Shot";
     case IPT_BUTTON2: return BTN2 "Special Weapon / Attack";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blockout_ctrl =
@@ -4197,13 +3644,9 @@ const char *blockout_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "B Button";
     case IPT_BUTTON3: return BTN3 "C Button";
     case IPT_BUTTON4: return BTN4 "Drop";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blockade_ctrl =
@@ -4217,16 +3660,7 @@ const struct ControlInfo blockade_ctrl =
 
 const char *blockade_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bloodbro_ctrl =
@@ -4245,13 +3679,9 @@ const char *bloodbro_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Roll";
     case IPT_BUTTON3: return BTN3 "Dynamite";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bloxeed_ctrl =
@@ -4268,13 +3698,9 @@ const char *bloxeed_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo blueprnt_ctrl =
@@ -4313,7 +3739,6 @@ const char *blueshrk_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_PADDLE: return "Aim Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
@@ -4337,13 +3762,9 @@ const char *bodyslam_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Help";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bogeyman_ctrl =
@@ -4361,13 +3782,9 @@ const char *bogeyman_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bombjack_ctrl =
@@ -4384,13 +3801,9 @@ const char *bombjack_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo boogwing_ctrl =
@@ -4408,13 +3821,9 @@ const char *boogwing_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo boothill_ctrl =
@@ -4431,15 +3840,11 @@ const char *boothill_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_PADDLE: return "Aim Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bosco_ctrl =
@@ -4456,13 +3861,9 @@ const char *bosco_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1:        return BTN1 "Fire";
-    case IPT_JOYSTICK_UP:    return "Up";
-    case IPT_JOYSTICK_DOWN:  return "Down";
-    case IPT_JOYSTICK_LEFT:  return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bottom9_ctrl =
@@ -4480,13 +3881,9 @@ const char *bottom9_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bouldash_ctrl =
@@ -4500,16 +3897,7 @@ const struct ControlInfo bouldash_ctrl =
 
 const char *bouldash_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bowler_ctrl =
@@ -4608,13 +3996,9 @@ const char *brkthru_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bublbobl_ctrl =
@@ -4632,11 +4016,9 @@ const char *bublbobl_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Bubble";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo bubbles_ctrl =
@@ -4650,16 +4032,7 @@ const struct ControlInfo bubbles_ctrl =
 
 const char *bubbles_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo buckrog_ctrl =
@@ -4678,13 +4051,9 @@ const char *buckrog_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Slow";
     case IPT_BUTTON3: return BTN3 "Fast";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo buggychl_ctrl =
@@ -4723,13 +4092,9 @@ const char *btime_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Pepper";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo brubber_ctrl =
@@ -4794,13 +4159,9 @@ const char *cadash_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dino_ctrl =
@@ -4818,13 +4179,9 @@ const char *dino_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo calibr50_ctrl =
@@ -4842,15 +4199,11 @@ const char *calibr50_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rapid Fire";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cameltry_ctrl =
@@ -4932,13 +4285,9 @@ const char *captaven_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Start / Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo captcomm_ctrl =
@@ -4956,13 +4305,9 @@ const char *captcomm_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo carnevil_ctrl =
@@ -5003,11 +4348,9 @@ const char *carnival_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo cawing_ctrl =
@@ -5025,13 +4368,9 @@ const char *cawing_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cavelon_ctrl =
@@ -5049,13 +4388,9 @@ const char *cavelon_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Magic Sword";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cninja_ctrl =
@@ -5121,11 +4456,9 @@ const char *challeng_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_BUTTON3: return BTN3 "Warp";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo champbas_ctrl =
@@ -5144,13 +4477,9 @@ const char *champbas_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A: Change Batter, Pitcher";
     case IPT_BUTTON2: return BTN2 "B: Bat, Extra Bases - Pitch, Throw Ball";
     case IPT_BUTTON3: return BTN3 "C: Steal, Run Back";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo csprint_ctrl =
@@ -5166,7 +4495,6 @@ const char *csprint_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate ";
@@ -5190,13 +4518,9 @@ const char *checkman_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Slide left";
     case IPT_BUTTON2: return BTN2 "Slide right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo checkmat_ctrl =
@@ -5210,16 +4534,7 @@ const struct ControlInfo checkmat_ctrl =
 
 const char *checkmat_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cheekyms_ctrl =
@@ -5320,11 +4635,6 @@ const struct ControlInfo ccasino_ctrl =
 
 const char *ccasino_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
   return "";
 }
 
@@ -5343,13 +4653,9 @@ const char *chopper_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Special Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo circus_ctrl =
@@ -5365,7 +4671,6 @@ const char *circus_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -5387,11 +4692,9 @@ const char *circusc_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo cischeat_ctrl =
@@ -5434,13 +4737,9 @@ const char *citycon_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo citylove_ctrl =
@@ -5454,11 +4753,6 @@ const struct ControlInfo citylove_ctrl =
 
 const char *citylove_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
   return "";
 }
 
@@ -5502,7 +4796,6 @@ const char *clowns_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_PADDLE: return "Move Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Move Right";
   } /* end of switch */
@@ -5526,13 +4819,9 @@ const char *cltchitr_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo colony7_ctrl =
@@ -5574,7 +4863,6 @@ const char *columns_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Switch Pieces";
-    case IPT_JOYSTICK_UP: return "(Not Used)";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
@@ -5621,13 +4909,9 @@ const char *commsega_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Machine Gun";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo commando_ctrl =
@@ -5645,13 +4929,9 @@ const char *commando_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Machine Gun";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo comotion_ctrl =
@@ -5665,16 +4945,7 @@ const struct ControlInfo comotion_ctrl =
 
 const char *comotion_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo congo_ctrl =
@@ -5688,6 +4959,10 @@ const struct ControlInfo congo_ctrl =
 
 const char *congo_get_ctrl_name(int type)
 {
+  switch(type)
+  {
+    case IPT_BUTTON1:         return BTN1 "Jump";
+  }
   if(!options.restrict_4_way)
   {
     switch(type)
@@ -5698,21 +4973,10 @@ const char *congo_get_ctrl_name(int type)
       case IPT_JOYSTICK_RIGHT:  return "Right-Down";
     } /* end of switch */
   }
-  else /* controls are effectively rotated, so using the diagonal names would be confusing */
-  {
-    switch(type)
-    {
-      case IPT_JOYSTICK_UP:     return "Up";
-      case IPT_JOYSTICK_DOWN:   return "Down";
-      case IPT_JOYSTICK_LEFT:   return "Left";
-      case IPT_JOYSTICK_RIGHT:  return "Right";
-    } /* end of switch */
-  }
-  switch(type)
-  {
-    case IPT_BUTTON1:         return BTN1 "Jump";
-  }
-  return "";
+
+  /* otherwise, controls are effectively rotated, so using the diagonal names would be confusing. */
+  /* just use the generic function                                                                */
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo contra_ctrl =
@@ -5730,13 +4994,9 @@ const char *contra_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cosmica_ctrl =
@@ -5753,11 +5013,9 @@ const char *cosmica_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo cavenger_ctrl =
@@ -5775,13 +5033,9 @@ const char *cavenger_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cchasm_ctrl =
@@ -5821,11 +5075,9 @@ const char *cosmicg_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo cracksht_ctrl =
@@ -5865,13 +5117,9 @@ const char *crash_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fast";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo crater_ctrl =
@@ -5912,7 +5160,6 @@ const char *cclimber_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Left Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left Left";
@@ -5939,7 +5186,6 @@ const char *cclimbr2_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Left Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left Left";
@@ -5967,13 +5213,9 @@ const char *ckong_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo crimec_ctrl =
@@ -5991,13 +5233,9 @@ const char *crimec_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo crimfght_ctrl =
@@ -6015,13 +5253,9 @@ const char *crimfght_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick ";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo crossbow_ctrl =
@@ -6070,11 +5304,9 @@ const char *crgolf_get_ctrl_name(int type)
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "";
     case IPT_AD_STICK_Y: return "Decrease Swing Angle";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Increase Swing Angle";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo cbuster_ctrl =
@@ -6093,13 +5325,9 @@ const char *cbuster_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fight";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Pick Up";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo crush_ctrl =
@@ -6113,16 +5341,7 @@ const struct ControlInfo crush_ctrl =
 
 const char *crush_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cryptklr_ctrl =
@@ -6167,44 +5386,6 @@ const char *ccastles_get_ctrl_name(int type)
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo crystalg_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &crystalg_get_ctrl_name
-};
-
-const char *crystalg_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo crystal2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &crystal2_get_ctrl_name
-};
-
-const char *crystal2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -6272,13 +5453,9 @@ const char *cyberbal_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cybots_ctrl =
@@ -6334,13 +5511,9 @@ const char *daioh_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Fire Bomb";
     case IPT_BUTTON5: return BTN5 "Mega Beam";
     case IPT_BUTTON6: return BTN6 "Atomic Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dangar_ctrl =
@@ -6359,13 +5532,9 @@ const char *dangar_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Transform";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dangerz_ctrl =
@@ -6452,13 +5621,9 @@ const char *darkseal_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dstlk_ctrl =
@@ -6480,13 +5645,9 @@ const char *dstlk_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Light Kick";
     case IPT_BUTTON5: return BTN5 "Middle Kick";
     case IPT_BUTTON6: return BTN6 "Heavy Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo deadang_ctrl =
@@ -6527,11 +5688,9 @@ const char *redufo_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo defender_ctrl =
@@ -6686,13 +5845,9 @@ const char *devilfsh_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Drop bait";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo devzone_ctrl =
@@ -6730,13 +5885,9 @@ const char *digdug_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1:         return BTN1 "Pump";
-    case IPT_JOYSTICK_UP:     return "Up";
-    case IPT_JOYSTICK_DOWN:   return "Down";
-    case IPT_JOYSTICK_LEFT:   return "Left";
-    case IPT_JOYSTICK_RIGHT:  return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo digdug2_ctrl =
@@ -6754,13 +5905,9 @@ const char *digdug2_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Pump";
     case IPT_BUTTON2: return BTN2 "Drill";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo digger_ctrl =
@@ -6778,13 +5925,9 @@ const char *digger_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Dig";
     case IPT_BUTTON2: return BTN2 "Fill";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dimahoo_ctrl =
@@ -6802,32 +5945,9 @@ const char *dimahoo_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo otatidai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &otatidai_get_ctrl_name
-};
-
-const char *otatidai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dotron_ctrl =
@@ -6872,13 +5992,9 @@ const char *dorunrun_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo domino_ctrl =
@@ -6895,55 +6011,9 @@ const char *domino_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Swat";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo dominos_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  false, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
-  &dominos_get_ctrl_name
-};
-
-const char *dominos_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo dondenmj_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &dondenmj_get_ctrl_name
-};
-
-const char *dondenmj_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dkong_ctrl =
@@ -6983,13 +6053,9 @@ const char *dkong3_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "SPRAY";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dkongjr_ctrl =
@@ -7006,13 +6072,9 @@ const char *dkongjr_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "JUMP";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddragon_ctrl =
@@ -7031,13 +6093,9 @@ const char *ddragon_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Punch";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddragon3_ctrl =
@@ -7056,13 +6114,9 @@ const char *ddragon3_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddragon2_ctrl =
@@ -7081,13 +6135,9 @@ const char *ddragon2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack Left";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Attack Right";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddribble_ctrl =
@@ -7106,13 +6156,9 @@ const char *ddribble_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Dribble";
     case IPT_BUTTON2: return BTN2 "Shoot";
     case IPT_BUTTON3: return BTN3 "Pass";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo downtown_ctrl =
@@ -7130,15 +6176,11 @@ const char *downtown_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dragrace_ctrl =
@@ -7206,13 +6248,9 @@ const char *dspirit_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_BUTTON3: return BTN3 "Unknown";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo drgnunit_ctrl =
@@ -7231,13 +6269,9 @@ const char *drgnunit_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Shield";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddsom_ctrl =
@@ -7257,13 +6291,9 @@ const char *ddsom_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Select";
     case IPT_BUTTON4: return BTN4 "Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ddtod_ctrl =
@@ -7283,13 +6313,9 @@ const char *ddtod_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Magic";
     case IPT_BUTTON4: return BTN4 "Select";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dynamcop_ctrl =
@@ -7308,13 +6334,9 @@ const char *dynamcop_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo eswat_ctrl =
@@ -7358,13 +6380,9 @@ const char *ecofghtr_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Rotate CCW";
     case IPT_BUTTON2: return BTN2 "Shot";
     case IPT_BUTTON3: return BTN3 "Rotate CW";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo eggventr_ctrl =
@@ -7451,11 +6469,9 @@ const char *enigma2_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Thrust";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo eprom_ctrl =
@@ -7498,13 +6514,9 @@ const char *exerion_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fast Fire";
     case IPT_BUTTON2: return BTN2 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo exterm_ctrl =
@@ -7547,13 +6559,9 @@ const char *eyes_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo f1dream_ctrl =
@@ -7617,13 +6625,9 @@ const char *fantasy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo qbert_ctrl =
@@ -7647,18 +6651,9 @@ const char *qbert_get_ctrl_name(int type)
       case IPT_JOYSTICK_RIGHT:  return "Down+Right";
     } /* end of switch */
   }
-  else
-  {
-    switch(type) /* controls are effectively rotated, so using the diagonal names would be confusing */
-    {
-      case IPT_JOYSTICK_UP:       return "Up";
-      case IPT_JOYSTICK_DOWN:     return "Down";
-      case IPT_JOYSTICK_LEFT:     return "Left";
-      case IPT_JOYSTICK_RIGHT:    return "Right";
-    } /* end of switch */
-  }
-
-  return "";
+  /* otherwise, controls are effectively rotated, so using the diagonal names would be confusing. */
+  /* just use the generic labels                                                                  */
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo fax_ctrl =
@@ -7696,7 +6691,6 @@ const char *fgoal_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -7719,13 +6713,9 @@ const char *fghtatck_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo fvipers_ctrl =
@@ -7744,13 +6734,9 @@ const char *fvipers_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Guard";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo finalb_ctrl =
@@ -7769,13 +6755,9 @@ const char *finalb_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Weak";
     case IPT_BUTTON2: return BTN2 "Medium Strength";
     case IPT_BUTTON3: return BTN3 "Duck";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ffight_ctrl =
@@ -7794,13 +6776,9 @@ const char *ffight_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo finalap2_ctrl =
@@ -7896,13 +6874,9 @@ const char *fshark_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo foodf_ctrl =
@@ -7942,15 +6916,11 @@ const char *forgottn_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Push to Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo formatz_ctrl =
@@ -7968,13 +6938,9 @@ const char *formatz_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Laser / Hold for Energy";
     case IPT_BUTTON2: return BTN2 "Jump Button / Hold to Transform";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo frenzy_ctrl =
@@ -7991,13 +6957,9 @@ const char *frenzy_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo frogger_ctrl =
@@ -8013,14 +6975,9 @@ const char *frogger_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo frogs_ctrl =
@@ -8038,11 +6995,9 @@ const char *frogs_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Tongue";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo frontlin_ctrl =
@@ -8088,13 +7043,9 @@ const char *futspy_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Fire (Bomb)";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gloc_ctrl =
@@ -8139,13 +7090,9 @@ const char *gijoe_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Super Weapon";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gground_ctrl =
@@ -8163,13 +7110,9 @@ const char *gground_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Magic Weapon";
     case IPT_BUTTON2: return BTN2 "special Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo galaga88_ctrl =
@@ -8292,13 +7235,9 @@ const char *galpanic_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Cut";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo galpani2_ctrl =
@@ -8315,13 +7254,9 @@ const char *galpani2_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Cut";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gaplus_ctrl =
@@ -8338,13 +7273,9 @@ const char *gaplus_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gauntlet_ctrl =
@@ -8362,13 +7293,9 @@ const char *gauntlet_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Magic / Start";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gaunt2_ctrl =
@@ -8386,13 +7313,9 @@ const char *gaunt2_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Magic / Start";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo geebee_ctrl =
@@ -8431,13 +7354,9 @@ const char *gng_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ghouls_ctrl =
@@ -8455,13 +7374,9 @@ const char *ghouls_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gigawing_ctrl =
@@ -8479,13 +7394,9 @@ const char *gigawing_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shot / Hold for Reflect Barrier";
     case IPT_BUTTON2: return BTN2 "Force Bomb";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo goldmedl_ctrl =
@@ -8525,13 +7436,9 @@ const char *goldnaxe_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Magic";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ga2_ctrl =
@@ -8550,13 +7457,9 @@ const char *ga2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gt97_ctrl =
@@ -8795,14 +7698,10 @@ const char *gondo_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Character Weapon";
     case IPT_BUTTON2: return BTN2 "Airbike Weapon";
     case IPT_DIAL: return "Rotate Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gorf_ctrl =
@@ -8819,13 +7718,9 @@ const char *gorf_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo grchamp_ctrl =
@@ -8841,7 +7736,6 @@ const char *grchamp_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -8935,13 +7829,9 @@ const char *gberet_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Weapon";
     case IPT_BUTTON2: return BTN2 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gridiron_ctrl =
@@ -9008,13 +7898,9 @@ const char *guardian_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Defense";
     case IPT_BUTTON4: return BTN4 "Strong Punch";
     case IPT_BUTTON5: return BTN5 "Strong Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gwar_ctrl =
@@ -9032,15 +7918,11 @@ const char *gwar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gunsmoke_ctrl =
@@ -9059,13 +7941,9 @@ const char *gunsmoke_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire - Left";
     case IPT_BUTTON2: return BTN2 "Fire - Center";
     case IPT_BUTTON3: return BTN3 "Fire - Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gunbird_ctrl =
@@ -9083,13 +7961,9 @@ const char *gunbird_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gunbustr_ctrl =
@@ -9134,13 +8008,9 @@ const char *gyruss_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo halleys_ctrl =
@@ -9158,13 +8028,9 @@ const char *halleys_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Warp";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hardyard_ctrl =
@@ -9182,13 +8048,9 @@ const char *hardyard_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Pass / Jump";
     case IPT_BUTTON2: return BTN2 "Dive";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hattrick_ctrl =
@@ -9205,13 +8067,9 @@ const char *hattrick_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hcastle_ctrl =
@@ -9229,13 +8087,9 @@ const char *hcastle_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hbarrel_ctrl =
@@ -9253,15 +8107,11 @@ const char *hbarrel_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hiimpact_ctrl =
@@ -9278,13 +8128,9 @@ const char *hiimpact_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hippodrm_ctrl =
@@ -9302,13 +8148,9 @@ const char *hippodrm_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hitme_ctrl =
@@ -9347,13 +8189,9 @@ const char *hitice_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot / Check";
     case IPT_BUTTON2: return BTN2 "Pass / Save";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo holo_ctrl =
@@ -9399,7 +8237,6 @@ const char *hotrod_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -9423,74 +8260,9 @@ const char *hstennis_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Hard";
     case IPT_BUTTON2: return BTN2 "Soft";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo housemnq_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &housemnq_get_ctrl_name
-};
-
-const char *housemnq_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo housemn2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &housemn2_get_ctrl_name
-};
-
-const char *housemn2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hustle_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  false, /* alternating_controls */
-  true, /* mirrored_controls */
-  "", /* control_details */
-  &hustle_get_ctrl_name
-};
-
-const char *hustle_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hng64_ctrl =
@@ -9510,13 +8282,9 @@ const char *hng64_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
     case IPT_BUTTON4: return BTN4 "D";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hyperspt_ctrl =
@@ -9564,101 +8332,6 @@ const char *irobot_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo a47pie2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &a47pie2_get_ctrl_name
-};
-
-const char *a47pie2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo idhimitu_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &idhimitu_get_ctrl_name
-};
-
-const char *idhimitu_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo fromance_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &fromance_get_ctrl_name
-};
-
-const char *fromance_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo idolmj_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &idolmj_get_ctrl_name
-};
-
-const char *idolmj_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo iemoto_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &iemoto_get_ctrl_name
-};
-
-const char *iemoto_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo ikari3_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -9675,15 +8348,11 @@ const char *ikari3_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_BUTTON2: return BTN2 "Punch";
     case IPT_BUTTON3: return BTN3 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ikari_ctrl =
@@ -9701,34 +8370,11 @@ const char *ikari_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Gun";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo imekura_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &imekura_get_ctrl_name
-};
-
-const char *imekura_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo indytemp_ctrl =
@@ -9745,13 +8391,9 @@ const char *indytemp_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Whip";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo inferno_ctrl =
@@ -9834,13 +8476,9 @@ const char *invho2_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire / Gas";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo offroad_ctrl =
@@ -9902,13 +8540,9 @@ const char *jackal_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Machine Gun";
     case IPT_BUTTON2: return BTN2 "Hand Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo jailbrek_ctrl =
@@ -9926,13 +8560,9 @@ const char *jailbrek_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Select";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 #if 0
@@ -9984,25 +8614,6 @@ const char *teamqb_get_ctrl_name(int type)
 }
 #endif
 
-const struct ControlInfo jantouki_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &jantouki_get_ctrl_name
-};
-
-const char *jantouki_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo journey_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -10017,13 +8628,9 @@ const char *journey_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Blast";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo joust_ctrl =
@@ -10040,11 +8647,9 @@ const char *joust_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Flap";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo joust2_ctrl =
@@ -10066,11 +8671,9 @@ const char *joust2_get_ctrl_name(int type)
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Right";
     case IPT_BUTTON1: return BTN1 "Flap";
     case IPT_BUTTON2: return BTN2 "Start Player 1 / Transform";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo joyfulr_ctrl =
@@ -10086,7 +8689,6 @@ const char *joyfulr_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Car Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Car Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Car Left";
@@ -10111,16 +8713,7 @@ const struct ControlInfo jrpacman_ctrl =
 
 const char *jrpacman_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo jumpbug_ctrl =
@@ -10137,13 +8730,9 @@ const char *jumpbug_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo junglek_ctrl =
@@ -10160,13 +8749,9 @@ const char *junglek_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump / Knife";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo jungler_ctrl =
@@ -10183,13 +8768,9 @@ const char *jungler_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo jpark_ctrl =
@@ -10230,32 +8811,9 @@ const char *kageki_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jab";
     case IPT_BUTTON2: return BTN2 "Punch";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo kanatuen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &kanatuen_get_ctrl_name
-};
-
-const char *kanatuen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo kangaroo_ctrl =
@@ -10272,13 +8830,9 @@ const char *kangaroo_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo kaos_ctrl =
@@ -10297,11 +8851,9 @@ const char *kaos_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "??";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo kchamp_ctrl =
@@ -10317,7 +8869,6 @@ const char *kchamp_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -10347,13 +8898,9 @@ const char *karnov_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Option";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo kick_ctrl =
@@ -10392,32 +8939,9 @@ const char *kicker_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo mayumi_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mayumi_get_ctrl_name
-};
-
-const char *mayumi_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo killcom_ctrl =
@@ -10437,13 +8961,9 @@ const char *killcom_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Fire Up";
     case IPT_BUTTON3: return BTN3 "Fire Right";
     case IPT_BUTTON4: return BTN4 "Hyperspace";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo kinst_ctrl =
@@ -10516,11 +9036,9 @@ const char *kingball_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo kingofb_ctrl =
@@ -10538,13 +9056,9 @@ const char *kingofb_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Uppercut";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo klax_ctrl =
@@ -10561,13 +9075,9 @@ const char *klax_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Start / Flip";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo knights_ctrl =
@@ -10585,13 +9095,9 @@ const char *knights_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo konamigt_ctrl =
@@ -10658,13 +9164,9 @@ const char *kram_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Wall";
     case IPT_BUTTON2: return BTN2 "Breakout";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo krull_ctrl =
@@ -10680,7 +9182,6 @@ const char *krull_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -10753,16 +9254,7 @@ const struct ControlInfo ladybug_ctrl =
 
 const char *ladybug_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo lagunar_ctrl =
@@ -10826,13 +9318,9 @@ const char *lastduel_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Button 1";
     case IPT_BUTTON2: return BTN2 "Button 2";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo lethalen_ctrl =
@@ -10919,13 +9407,9 @@ const char *lnc_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Lock";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo lockon_ctrl =
@@ -10968,13 +9452,9 @@ const char *locomotn_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Speed";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ldrun_ctrl =
@@ -10992,13 +9472,9 @@ const char *ldrun_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Dig Left";
     case IPT_BUTTON2: return BTN2 "Dig Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo looping_ctrl =
@@ -11037,32 +9513,9 @@ const char *losttomb_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Whip";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo janjans1_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &janjans1_get_ctrl_name
-};
-
-const char *janjans1_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo llander_ctrl =
@@ -11079,13 +9532,11 @@ const char *llander_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Abort";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_PADDLE_V: return "Increase Thrust";
     case (IPT_PADDLE_V + IPT_EXTENSION): return "Decrease Thrust";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo lrescue_ctrl =
@@ -11102,11 +9553,9 @@ const char *lrescue_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo lupin3_ctrl =
@@ -11123,13 +9572,9 @@ const char *lupin3_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Magic Button";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo m4_ctrl =
@@ -11168,15 +9613,11 @@ const char *mplanets_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo msword_ctrl =
@@ -11194,13 +9635,9 @@ const char *msword_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo magspot_ctrl =
@@ -11224,1430 +9661,6 @@ const char *magspot_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo akiss_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &akiss_get_ctrl_name
-};
-
-const char *akiss_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjangels_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjangels_get_ctrl_name
-};
-
-const char *mjangels_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo bananadr_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &bananadr_get_ctrl_name
-};
-
-const char *bananadr_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjcamera_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjcamera_get_ctrl_name
-};
-
-const char *mjcamera_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mcnpshnt_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mcnpshnt_get_ctrl_name
-};
-
-const char *mcnpshnt_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo chinmoku_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &chinmoku_get_ctrl_name
-};
-
-const char *chinmoku_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo cmehyou_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &cmehyou_get_ctrl_name
-};
-
-const char *cmehyou_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjclinic_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjclinic_get_ctrl_name
-};
-
-const char *mjclinic_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo club90s_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &club90s_get_ctrl_name
-};
-
-const char *club90s_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo daiyogen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &daiyogen_get_ctrl_name
-};
-
-const char *daiyogen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjderngr_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjderngr_get_ctrl_name
-};
-
-const char *mjderngr_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjdialq2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjdialq2_get_ctrl_name
-};
-
-const char *mjdialq2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjdiplob_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjdiplob_get_ctrl_name
-};
-
-const char *mjdiplob_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo dokyusei_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &dokyusei_get_ctrl_name
-};
-
-const char *dokyusei_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo dokyusp_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &dokyusp_get_ctrl_name
-};
-
-const char *dokyusp_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjelctrn_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjelctrn_get_ctrl_name
-};
-
-const char *mjelctrn_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjegolf_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjegolf_get_ctrl_name
-};
-
-const char *mjegolf_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjfocus_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjfocus_get_ctrl_name
-};
-
-const char *mjfocus_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjfriday_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjfriday_get_ctrl_name
-};
-
-const char *mjfriday_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mfunclub_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mfunclub_get_ctrl_name
-};
-
-const char *mfunclub_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mgmen89_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mgmen89_get_ctrl_name
-};
-
-const char *mgmen89_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mgakuen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mgakuen_get_ctrl_name
-};
-
-const char *mgakuen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mgakuen2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mgakuen2_get_ctrl_name
-};
-
-const char *mgakuen2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo gakusai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &gakusai_get_ctrl_name
-};
-
-const char *gakusai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo gakusai2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &gakusai2_get_ctrl_name
-};
-
-const char *gakusai2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo gal10ren_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &gal10ren_get_ctrl_name
-};
-
-const char *gal10ren_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo galkaika_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &galkaika_get_ctrl_name
-};
-
-const char *galkaika_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo galkoku_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &galkoku_get_ctrl_name
-};
-
-const char *galkoku_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjgottsu_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjgottsu_get_ctrl_name
-};
-
-const char *mjgottsu_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hanamomo_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hanamomo_get_ctrl_name
-};
-
-const char *hanamomo_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mhgaiden_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mhgaiden_get_ctrl_name
-};
-
-const char *mhgaiden_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjhokite_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjhokite_get_ctrl_name
-};
-
-const char *mjhokite_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hourouki_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hourouki_get_ctrl_name
-};
-
-const char *hourouki_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hypreact_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hypreact_get_ctrl_name
-};
-
-const char *hypreact_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hypreac2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hypreac2_get_ctrl_name
-};
-
-const char *hypreac2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjikaga_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjikaga_get_ctrl_name
-};
-
-const char *mjikaga_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo janbari_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &janbari_get_ctrl_name
-};
-
-const char *janbari_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjlstory_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjlstory_get_ctrl_name
-};
-
-const char *mjlstory_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo jogakuen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &jogakuen_get_ctrl_name
-};
-
-const char *jogakuen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo kaguya_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &kaguya_get_ctrl_name
-};
-
-const char *kaguya_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mkeibaou_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mkeibaou_get_ctrl_name
-};
-
-const char *mkeibaou_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjkinjas_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjkinjas_get_ctrl_name
-};
-
-const char *mjkinjas_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo koinomp_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &koinomp_get_ctrl_name
-};
-
-const char *koinomp_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjkoiura_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjkoiura_get_ctrl_name
-};
-
-const char *mjkoiura_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjkojink_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjkojink_get_ctrl_name
-};
-
-const char *mjkojink_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjkjidai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjkjidai_get_ctrl_name
-};
-
-const char *mjkjidai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjlaman_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjlaman_get_ctrl_name
-};
-
-const char *mjlaman_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo lemnangl_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &lemnangl_get_ctrl_name
-};
-
-const char *lemnangl_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjnanpas_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjnanpas_get_ctrl_name
-};
-
-const char *mjnanpas_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjnatsu_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjnatsu_get_ctrl_name
-};
-
-const char *mjnatsu_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ntopstar_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ntopstar_get_ctrl_name
-};
-
-const char *ntopstar_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo neruton_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &neruton_get_ctrl_name
-};
-
-const char *neruton_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo patimono_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &patimono_get_ctrl_name
-};
-
-const char *patimono_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo pstadium_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &pstadium_get_ctrl_name
-};
-
-const char *pstadium_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ponchin_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ponchin_get_ctrl_name
-};
-
-const char *ponchin_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjnquest_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjnquest_get_ctrl_name
-};
-
-const char *mjnquest_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo renaiclb_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &renaiclb_get_ctrl_name
-};
-
-const char *renaiclb_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mrokumei_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mrokumei_get_ctrl_name
-};
-
-const char *mrokumei_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo sailorws_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &sailorws_get_ctrl_name
-};
-
-const char *sailorws_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo msjiken_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &msjiken_get_ctrl_name
-};
-
-const char *msjiken_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mscoutm_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mscoutm_get_ctrl_name
-};
-
-const char *mscoutm_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjsikaku_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjsikaku_get_ctrl_name
-};
-
-const char *mjsikaku_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjsister_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjsister_get_ctrl_name
-};
-
-const char *mjsister_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo majs101b_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &majs101b_get_ctrl_name
-};
-
-const char *majs101b_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mladyhtr_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mladyhtr_get_ctrl_name
-};
-
-const char *mladyhtr_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo triplew1_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &triplew1_get_ctrl_name
-};
-
-const char *triplew1_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo triplew2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &triplew2_get_ctrl_name
-};
-
-const char *triplew2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo uchuuai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &uchuuai_get_ctrl_name
-};
-
-const char *uchuuai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjuraden_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjuraden_get_ctrl_name
-};
-
-const char *mjuraden_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo vanilla_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &vanilla_get_ctrl_name
-};
-
-const char *vanilla_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo vitaminc_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &vitaminc_get_ctrl_name
-};
-
-const char *vitaminc_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo yarunara_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &yarunara_get_ctrl_name
-};
-
-const char *yarunara_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjyuugi_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjyuugi_get_ctrl_name
-};
-
-const char *mjyuugi_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mjyougo_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mjyougo_get_ctrl_name
-};
-
-const char *mjyougo_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo korinai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &korinai_get_ctrl_name
-};
-
-const char *korinai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
 
 const struct ControlInfo mhavoc_ctrl =
 {
@@ -12686,13 +9699,9 @@ const char *maniach_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mappy_ctrl =
@@ -12709,11 +9718,9 @@ const char *mappy_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Door Open / Close";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo marble_ctrl =
@@ -12729,7 +9736,6 @@ const char *marble_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -12753,11 +9759,9 @@ const char *mario_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo mars_ctrl =
@@ -12773,18 +9777,13 @@ const char *mars_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICKLEFT_UP: return "Up";
-    case IPT_JOYSTICKLEFT_DOWN: return "Down";
-    case IPT_JOYSTICKLEFT_LEFT: return "Left";
-    case IPT_JOYSTICKLEFT_RIGHT: return "Right";
     case IPT_JOYSTICKRIGHT_UP: return "Fire Up";
     case IPT_JOYSTICKRIGHT_DOWN: return "Fire Down";
     case IPT_JOYSTICKRIGHT_LEFT: return "Fire Left";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mmatrix_ctrl =
@@ -12802,13 +9801,9 @@ const char *mmatrix_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo msh_ctrl =
@@ -12868,13 +9863,9 @@ const char *mshvsf_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Kick - Short";
     case IPT_BUTTON5: return BTN5 "Kick - Forward";
     case IPT_BUTTON6: return BTN6 "Kick - Roundhouse";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mvsc_ctrl =
@@ -12896,13 +9887,9 @@ const char *mvsc_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Kick - Short";
     case IPT_BUTTON5: return BTN5 "Kick - Forward";
     case IPT_BUTTON6: return BTN6 "Kick - Round-House";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo matmania_ctrl =
@@ -12920,13 +9907,9 @@ const char *matmania_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Action Punch";
     case IPT_BUTTON2: return BTN2 "Action Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo maxrpm_ctrl =
@@ -12993,7 +9976,6 @@ const char *mayday_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Back";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
@@ -13024,44 +10006,6 @@ const char *mechatt_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo mmehyou_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mmehyou_get_ctrl_name
-};
-
-const char *mmehyou_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo pachiten_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &pachiten_get_ctrl_name
-};
-
-const char *pachiten_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo megaman2_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -13078,13 +10022,9 @@ const char *megaman2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Weapon Change";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo megazone_ctrl =
@@ -13101,13 +10041,9 @@ const char *megazone_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mercs_ctrl =
@@ -13125,13 +10061,9 @@ const char *mercs_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo metamrph_ctrl =
@@ -13149,13 +10081,9 @@ const char *metamrph_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo metrocrs_ctrl =
@@ -13172,13 +10100,9 @@ const char *metrocrs_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mwalk_ctrl =
@@ -13196,13 +10120,9 @@ const char *mwalk_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Dance";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo midres_ctrl =
@@ -13220,15 +10140,11 @@ const char *midres_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo gtmr2_ctrl =
@@ -13250,13 +10166,9 @@ const char *gtmr2_get_ctrl_name(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo milliped_ctrl =
@@ -13320,16 +10232,7 @@ const struct ControlInfo mineswpr_ctrl =
 
 const char *mineswpr_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo minigolf_ctrl =
@@ -13346,25 +10249,6 @@ const char *minigolf_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Tee Selection";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mcontest_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mcontest_get_ctrl_name
-};
-
-const char *mcontest_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -13409,11 +10293,9 @@ const char *gmissile_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo moguchan_ctrl =
@@ -13430,13 +10312,9 @@ const char *moguchan_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Unkown";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mole_ctrl =
@@ -13481,13 +10359,9 @@ const char *monymony_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo monsterb_ctrl =
@@ -13504,13 +10378,9 @@ const char *monsterb_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Zap";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo montecar_ctrl =
@@ -13711,13 +10581,9 @@ const char *mtrap_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Doors - Yellow";
     case IPT_BUTTON3: return BTN3 "Doors - Red";
     case IPT_BUTTON4: return BTN4 "Doors - Blue";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mrdo_ctrl =
@@ -13734,13 +10600,9 @@ const char *mrdo_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Throw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo docastle_ctrl =
@@ -13757,13 +10619,9 @@ const char *docastle_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo dowild_ctrl =
@@ -13780,13 +10638,9 @@ const char *dowild_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Run";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mrdrillr_ctrl =
@@ -13803,13 +10657,9 @@ const char *mrdrillr_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Drill";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mspacman_ctrl =
@@ -13823,16 +10673,7 @@ const struct ControlInfo mspacman_ctrl =
 
 const char *mspacman_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mvp_ctrl =
@@ -13851,13 +10692,9 @@ const char *mvp_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Red";
     case IPT_BUTTON2: return BTN2 "Yellow";
     case IPT_BUTTON3: return BTN3 "Blue";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mx5000_ctrl =
@@ -13875,13 +10712,9 @@ const char *mx5000_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Air - to - Air";
     case IPT_BUTTON2: return BTN2 "Air - to - Ground";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mysticm_ctrl =
@@ -13898,13 +10731,9 @@ const char *mysticm_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mystwarr_ctrl =
@@ -13923,13 +10752,9 @@ const char *mystwarr_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "NA";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nametune_ctrl =
@@ -13971,13 +10796,9 @@ const char *narc_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Crouch";
     case IPT_BUTTON4: return BTN4 "Rocket Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nastar_ctrl =
@@ -13995,13 +10816,9 @@ const char *nastar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo natodef_ctrl =
@@ -14018,13 +10835,9 @@ const char *natodef_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "1";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo naughtyb_ctrl =
@@ -14041,13 +10854,9 @@ const char *naughtyb_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Throw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nbahangt_ctrl =
@@ -14066,13 +10875,9 @@ const char *nbahangt_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Turbo";
     case IPT_BUTTON2: return BTN2 "Shoot / Block";
     case IPT_BUTTON3: return BTN3 "Pass / Steal";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nbajam_ctrl =
@@ -14091,13 +10896,9 @@ const char *nbajam_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Turbo";
     case IPT_BUTTON2: return BTN2 "Shoot / Block";
     case IPT_BUTTON3: return BTN3 "Pass / Steal";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo neckneck_ctrl =
@@ -14119,44 +10920,6 @@ const char *neckneck_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "4";
     case IPT_BUTTON5: return BTN5 "5";
     case IPT_BUTTON6: return BTN6 "6";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ngpgal_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ngpgal_get_ctrl_name
-};
-
-const char *ngpgal_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo nmsengen_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &nmsengen_get_ctrl_name
-};
-
-const char *nmsengen_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-
   } /* end of switch */
 
   return "";
@@ -14199,11 +10962,9 @@ const char *nyny_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo blitz_ctrl =
@@ -14222,13 +10983,9 @@ const char *blitz_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Turbo";
     case IPT_BUTTON2: return BTN2 "Jump/Tackle";
     case IPT_BUTTON3: return BTN3 "Pass/Change Player";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nibbler_ctrl =
@@ -14242,16 +10999,7 @@ const struct ControlInfo nibbler_ctrl =
 
 const char *nibbler_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nss_ctrl =
@@ -14273,17 +11021,13 @@ const char *nss_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "X";
     case IPT_BUTTON5: return BTN5 "L";
     case IPT_BUTTON6: return BTN6 "R";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_SERVICE1: return "Select (Player 1)";
     case IPT_SERVICE2: return "Select (Player 2)";
     case IPT_SERVICE3: return "Select (Player 3)";
     case IPT_SERVICE4: return "Select (Player 4)";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nomnlnd_ctrl =
@@ -14300,13 +11044,9 @@ const char *nomnlnd_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire!";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo nova2001_ctrl =
@@ -14324,108 +11064,9 @@ const char *nova2001_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Pause";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo ojankoc_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ojankoc_get_ctrl_name
-};
-
-const char *ojankoc_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ojankohs_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ojankohs_get_ctrl_name
-};
-
-const char *ojankohs_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ojankoy_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ojankoy_get_ctrl_name
-};
-
-const char *ojankoy_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ojanko2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ojanko2_get_ctrl_name
-};
-
-const char *ojanko2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ojousan_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ojousan_get_ctrl_name
-};
-
-const char *ojousan_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo olibochu_ctrl =
@@ -14439,16 +11080,7 @@ const struct ControlInfo olibochu_ctrl =
 
 const char *olibochu_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo omegrace_ctrl =
@@ -14568,44 +11200,6 @@ const char *opwolf3_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo orangec_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &orangec_get_ctrl_name
-};
-
-const char *orangec_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo otonano_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &otonano_get_ctrl_name
-};
-
-const char *otonano_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo outrun_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -14668,13 +11262,9 @@ const char *pow_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Punch";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pacland_ctrl =
@@ -14709,16 +11299,7 @@ const struct ControlInfo pacplus_ctrl =
 
 const char *pacplus_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pacmania_ctrl =
@@ -14737,13 +11318,9 @@ const char *pacmania_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Bounce";
     case IPT_BUTTON2: return BTN2 "Bounce";
     case IPT_BUTTON3: return BTN3 "Bounce";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo paddlema_ctrl =
@@ -14760,13 +11337,9 @@ const char *paddlema_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Bounce";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pandoras_ctrl =
@@ -14783,13 +11356,9 @@ const char *pandoras_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo paperboy_ctrl =
@@ -14827,11 +11396,6 @@ const struct ControlInfo pastelg_ctrl =
 
 const char *pastelg_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
   return "";
 }
 
@@ -14849,13 +11413,9 @@ const char *pengo_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Push";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pepper2_ctrl =
@@ -14869,16 +11429,7 @@ const struct ControlInfo pepper2_ctrl =
 
 const char *pepper2_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo peterpak_ctrl =
@@ -14896,13 +11447,9 @@ const char *peterpak_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo phoenix_ctrl =
@@ -14920,11 +11467,9 @@ const char *phoenix_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Force Field";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo pigout_ctrl =
@@ -14942,13 +11487,9 @@ const char *pigout_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Throw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pigskin_ctrl =
@@ -15009,16 +11550,7 @@ const struct ControlInfo piratetr_ctrl =
 
 const char *piratetr_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pitfight_ctrl =
@@ -15037,13 +11569,9 @@ const char *pitfight_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Start / Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pitfall2_ctrl =
@@ -15060,13 +11588,9 @@ const char *pitfall2_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo playch10_ctrl =
@@ -15122,11 +11646,9 @@ const char *pleiads_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Warp";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo plotting_ctrl =
@@ -15143,13 +11665,9 @@ const char *plotting_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ptblank_ctrl =
@@ -15189,13 +11707,9 @@ const char *polaris_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo polepos_ctrl =
@@ -15281,13 +11795,9 @@ const char *polyplay_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ponpoko_ctrl =
@@ -15304,13 +11814,9 @@ const char *ponpoko_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pooyan_ctrl =
@@ -15348,13 +11854,9 @@ const char *popeye_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo popper_ctrl =
@@ -15440,32 +11942,9 @@ const char *pclubj_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Ok / Print";
     case IPT_BUTTON2: return BTN2 "Cancel";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo kiwame_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &kiwame_get_ctrl_name
-};
-
-const char *kiwame_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo profpac_ctrl =
@@ -15524,16 +12003,7 @@ const struct ControlInfo puckman_ctrl =
 
 const char *puckman_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pulsar_ctrl =
@@ -15550,13 +12020,9 @@ const char *pulsar_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo punchout_ctrl =
@@ -15599,13 +12065,9 @@ const char *punkshot_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Pass / Hit";
     case IPT_BUTTON2: return BTN2 "Shoot / Block";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pbobble_ctrl =
@@ -15622,11 +12084,9 @@ const char *pbobble_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo pbobble2_ctrl =
@@ -15646,13 +12106,9 @@ const char *pbobble2_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "NA";
     case IPT_BUTTON3: return BTN3 "NA";
     case IPT_BUTTON4: return BTN4 "NA";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo pbobble3_ctrl =
@@ -15672,13 +12128,9 @@ const char *pbobble3_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "NA";
     case IPT_BUTTON3: return BTN3 "NA";
     case IPT_BUTTON4: return BTN4 "NA";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo qix_ctrl =
@@ -15696,13 +12148,9 @@ const char *qix_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fast Draw";
     case IPT_BUTTON2: return BTN2 "Slow Draw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo quantum_ctrl =
@@ -15718,7 +12166,6 @@ const char *quantum_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -15779,13 +12226,9 @@ const char *quartet_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump / Start";
     case IPT_BUTTON2: return BTN2 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo quasar_ctrl =
@@ -15803,11 +12246,9 @@ const char *quasar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Forward";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo qad_ctrl =
@@ -15854,25 +12295,6 @@ const char *qndream_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo qmhayaku_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &qmhayaku_get_ctrl_name
-};
-
-const char *qmhayaku_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo rtype_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -15888,13 +12310,9 @@ const char *rtype_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Force";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo radarscp_ctrl =
@@ -15911,11 +12329,9 @@ const char *radarscp_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo radrad_ctrl =
@@ -15932,13 +12348,9 @@ const char *radrad_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rchase_ctrl =
@@ -15979,11 +12391,9 @@ const char *rainbow_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rainbow";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo rallyx_ctrl =
@@ -16002,11 +12412,9 @@ const char *rallyx_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Smoke Screen";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo rampage_ctrl =
@@ -16049,13 +12457,9 @@ const char *rmpgwt_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Punch";
     case IPT_BUTTON3: return BTN3 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rampart_ctrl =
@@ -16097,13 +12501,9 @@ const char *rastan_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo reactor_ctrl =
@@ -16130,63 +12530,6 @@ const char *reactor_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo rmhaihai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &rmhaihai_get_ctrl_name
-};
-
-const char *rmhaihai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo rmhaijin_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &rmhaijin_get_ctrl_name
-};
-
-const char *rmhaijin_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo rmhaisei_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &rmhaisei_get_ctrl_name
-};
-
-const char *rmhaisei_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo redlin2p_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -16200,7 +12543,6 @@ const char *redlin2p_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -16224,13 +12566,9 @@ const char *regulus_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo renegade_ctrl =
@@ -16249,13 +12587,9 @@ const char *renegade_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack Left";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Attack Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rescue_ctrl =
@@ -16307,25 +12641,6 @@ const char *rescraid_get_ctrl_name(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Steering Down";
     case IPT_JOYSTICKRIGHT_LEFT: return "Steering Left";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Steering Right";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo nekkyoku_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &nekkyoku_get_ctrl_name
-};
-
-const char *nekkyoku_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -16395,11 +12710,9 @@ const char *ripoff_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Forward";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo roadblst_ctrl =
@@ -16512,13 +12825,9 @@ const char *robocop_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot/Punch";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo robocop2_ctrl =
@@ -16537,13 +12846,9 @@ const char *robocop2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot Left";
     case IPT_BUTTON2: return BTN2 "Shoot Right";
     case IPT_BUTTON3: return BTN3 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo robotron_ctrl =
@@ -16587,13 +12892,9 @@ const char *rocnrope_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rope";
     case IPT_BUTTON2: return BTN2 "Flash";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rollerg_ctrl =
@@ -16611,13 +12912,9 @@ const char *rollerg_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rthunder_ctrl =
@@ -16635,13 +12932,9 @@ const char *rthunder_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rranger_ctrl =
@@ -16659,13 +12952,9 @@ const char *rranger_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo roundup_ctrl =
@@ -16682,32 +12971,9 @@ const char *roundup_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Cube Color Select";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo royalmah_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &royalmah_get_ctrl_name
-};
-
-const char *royalmah_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rungun_ctrl =
@@ -16726,13 +12992,9 @@ const char *rungun_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
     case IPT_BUTTON3: return BTN3 "C";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo runaway_ctrl =
@@ -16751,25 +13013,6 @@ const char *runaway_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Switcher";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Forward / Reverse";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo kirarast_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &kirarast_get_ctrl_name
-};
-
-const char *kirarast_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -16814,13 +13057,9 @@ const char *salamand_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Missile";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo searchar_ctrl =
@@ -16838,15 +13077,11 @@ const char *searchar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sarge_ctrl =
@@ -16888,11 +13123,9 @@ const char *satansat_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Firing Button";
     case IPT_BUTTON2: return BTN2 "Laser Beam";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo shollow_ctrl =
@@ -16910,30 +13143,9 @@ const char *shollow_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Shield";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo scandal_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &scandal_get_ctrl_name
-};
-
-const char *scandal_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo scramble_ctrl =
@@ -17029,63 +13241,6 @@ const char *seawolf2_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo secolove_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &secolove_get_ctrl_name
-};
-
-const char *secolove_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo seiha_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &seiha_get_ctrl_name
-};
-
-const char *seiha_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo sengokmj_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &sengokmj_get_ctrl_name
-};
-
-const char *sengokmj_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
 const struct ControlInfo shdancer_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */
@@ -17102,13 +13257,9 @@ const char *shdancer_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Ninja Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo shadoww_ctrl =
@@ -17127,13 +13278,9 @@ const char *shadoww_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Grab";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sharkatt_ctrl =
@@ -17151,13 +13298,9 @@ const char *sharkatt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Munch";
     case IPT_BUTTON2: return BTN2 "Thrust";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sshooter_ctrl =
@@ -17226,13 +13369,9 @@ const char *shinobi_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Ninja Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo shootout_ctrl =
@@ -17250,13 +13389,9 @@ const char *shootout_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo shootbul_ctrl =
@@ -17272,7 +13407,6 @@ const char *shootbul_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -17345,13 +13479,9 @@ const char *sidearms_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire Left";
     case IPT_BUTTON2: return BTN2 "Fire Right";
     case IPT_BUTTON3: return BTN3 "Power";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sidetrac_ctrl =
@@ -17368,13 +13498,9 @@ const char *sidetrac_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Speed Up";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sinistar_ctrl =
@@ -17416,13 +13542,9 @@ const char *skullxbo_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sword";
     case IPT_BUTTON2: return BTN2 "Turn";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo skydiver_ctrl =
@@ -17440,11 +13562,9 @@ const char *skydiver_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Open Chute";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo skysoldr_ctrl =
@@ -17462,13 +13582,9 @@ const char *skysoldr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Cannon";
     case IPT_BUTTON2: return BTN2 "Missle";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo slapfigh_ctrl =
@@ -17486,13 +13602,9 @@ const char *slapfigh_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Weapon Select";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo slikshot_ctrl =
@@ -17559,13 +13671,9 @@ const char *slyspy_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo smashtv_ctrl =
@@ -17581,7 +13689,6 @@ const char *smashtv_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Move Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Move Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Move Left";
@@ -17629,16 +13736,7 @@ const struct ControlInfo snapjack_ctrl =
 
 const char *snapjack_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo snowbros_ctrl =
@@ -17656,13 +13754,9 @@ const char *snowbros_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot and Kick Snowball";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "N/A";
-    case IPT_JOYSTICK_UP: return "N/A";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo solarfox_ctrl =
@@ -17680,13 +13774,9 @@ const char *solarfox_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Speed Control";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo solarq_ctrl =
@@ -17706,11 +13796,9 @@ const char *solarq_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_BUTTON3: return BTN3 "Hyper Space";
     case IPT_BUTTON4: return BTN4 "Nova";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo amazon_ctrl =
@@ -17728,13 +13816,9 @@ const char *amazon_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sbm_ctrl =
@@ -17780,13 +13864,9 @@ const char *souledge_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Attack B";
     case IPT_BUTTON3: return BTN3 "Kick";
     case IPT_BUTTON4: return BTN4 "Guard";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spacewar_ctrl =
@@ -17805,11 +13885,9 @@ const char *spacewar_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_BUTTON3: return BTN3 "Hyper Space";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo sspaceat_ctrl =
@@ -17985,13 +14063,9 @@ const char *spacedx_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo invadpt2_ctrl =
@@ -18008,11 +14082,9 @@ const char *invadpt2_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire Laser";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo spacelnc_ctrl =
@@ -18029,11 +14101,9 @@ const char *spacelnc_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Launch";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo spaceod_ctrl =
@@ -18051,13 +14121,9 @@ const char *spaceod_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Laser";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo panic_ctrl =
@@ -18075,13 +14141,9 @@ const char *panic_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Holing";
     case IPT_BUTTON2: return BTN2 "Closing";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spacezap_ctrl =
@@ -18098,13 +14160,9 @@ const char *spacezap_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo speakres_ctrl =
@@ -18121,11 +14179,9 @@ const char *speakres_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo spectar_ctrl =
@@ -18142,13 +14198,9 @@ const char *spectar_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spdcoin_ctrl =
@@ -18164,12 +14216,9 @@ const char *spdcoin_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo speedfrk_ctrl =
@@ -18185,7 +14234,6 @@ const char *speedfrk_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -18232,13 +14280,9 @@ const char *spidman_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spiders_ctrl =
@@ -18302,11 +14346,9 @@ const char *starcas_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Thrust";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo starforc_ctrl =
@@ -18323,13 +14365,9 @@ const char *starforc_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo stargrds_ctrl =
@@ -18345,7 +14383,6 @@ const char *stargrds_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Move Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Move Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Move Left";
@@ -18376,13 +14413,9 @@ const char *starhawk_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Slow";
     case IPT_BUTTON3: return BTN3 "Medium";
     case IPT_BUTTON4: return BTN4 "Fast";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo starjack_ctrl =
@@ -18400,13 +14433,9 @@ const char *starjack_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo startrek_ctrl =
@@ -18594,13 +14623,9 @@ const char *stratgyx_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Tank Fire";
     case IPT_BUTTON2: return BTN2 "Turrent Rotate Left";
     case IPT_BUTTON3: return BTN3 "Turrent Rotate Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sf_ctrl =
@@ -18848,13 +14873,9 @@ const char *sftm_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Light Kick";
     case IPT_BUTTON5: return BTN5 "Middle Kick";
     case IPT_BUTTON6: return BTN6 "Heavy Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo strider_ctrl =
@@ -18872,13 +14893,9 @@ const char *strider_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sword";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sbowling_ctrl =
@@ -18894,7 +14911,6 @@ const char *sbowling_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -18920,13 +14936,9 @@ const char *strkforc_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Weapon Select";
     case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_BUTTON3: return BTN3 "Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo s1945_ctrl =
@@ -18944,13 +14956,9 @@ const char *s1945_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo s1945iii_ctrl =
@@ -18969,13 +14977,9 @@ const char *s1945iii_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Loop";
     case IPT_BUTTON3: return BTN3 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo subs_ctrl =
@@ -19014,13 +15018,9 @@ const char *ssriders_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sbagman_ctrl =
@@ -19037,13 +15037,9 @@ const char *sbagman_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sbrkout_ctrl =
@@ -19085,13 +15081,9 @@ const char *scobra_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sidewinder Missile";
     case IPT_BUTTON2: return BTN2 "Bombs";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo scontra_ctrl =
@@ -19109,13 +15101,9 @@ const char *scontra_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spdodgeb_ctrl =
@@ -19133,13 +15121,9 @@ const char *spdodgeb_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Offensive Throw / Defensive Catch";
     case IPT_BUTTON2: return BTN2 "offensive Pass / Defensive Duck";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sgemf_ctrl =
@@ -19158,13 +15142,9 @@ const char *sgemf_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo shimpact_ctrl =
@@ -19181,32 +15161,9 @@ const char *shimpact_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo marukin_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &marukin_get_ctrl_name
-};
-
-const char *marukin_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo smgp_ctrl =
@@ -19247,13 +15204,9 @@ const char *superpac_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Super Speed";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo spbactn_ctrl =
@@ -19316,89 +15269,9 @@ const char *sqix_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Draw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo srmp7_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &srmp7_get_ctrl_name
-};
-
-const char *srmp7_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo srmp2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &srmp2_get_ctrl_name
-};
-
-const char *srmp2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo srmp3_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &srmp3_get_ctrl_name
-};
-
-const char *srmp3_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo srmp4_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &srmp4_get_ctrl_name
-};
-
-const char *srmp4_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo sspeedr_ctrl =
@@ -19436,7 +15309,6 @@ const char *ssprint_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Gas";
@@ -19546,13 +15418,9 @@ const char *szaxxon_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo superman_ctrl =
@@ -19570,13 +15438,9 @@ const char *superman_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo swimmer_ctrl =
@@ -19593,13 +15457,9 @@ const char *swimmer_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Dive";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tnk3_ctrl =
@@ -19617,34 +15477,11 @@ const char *tnk3_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Cannon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Aim Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo ttmahjng_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ttmahjng_get_ctrl_name
-};
-
-const char *ttmahjng_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tailg_ctrl =
@@ -19666,120 +15503,6 @@ const char *tailg_get_ctrl_name(int type)
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hotgmck_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hotgmck_get_ctrl_name
-};
-
-const char *hotgmck_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hotgmck3_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hotgmck3_get_ctrl_name
-};
-
-const char *hotgmck3_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo hgkairak_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &hgkairak_get_ctrl_name
-};
-
-const char *hgkairak_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo fromanc2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &fromanc2_get_ctrl_name
-};
-
-const char *fromanc2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo fromanc4_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &fromanc4_get_ctrl_name
-};
-
-const char *fromanc4_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo fromancr_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &fromancr_get_ctrl_name
-};
-
-const char *fromancr_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -19822,13 +15545,9 @@ const char *tankbatt_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tapper_ctrl =
@@ -19845,13 +15564,9 @@ const char *tapper_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Pour / Serve";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo targ_ctrl =
@@ -19868,13 +15583,9 @@ const char *targ_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tazmania_ctrl =
@@ -19892,13 +15603,9 @@ const char *tazmania_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Zapper";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tbowl_ctrl =
@@ -19916,13 +15623,9 @@ const char *tbowl_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Start / Jump";
     case IPT_BUTTON2: return BTN2 "Snap / Pass / Tackle / Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tmnt_ctrl =
@@ -19940,13 +15643,9 @@ const char *tmnt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Attack";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tmnt2_ctrl =
@@ -19964,13 +15663,9 @@ const char *tmnt2_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_BUTTON2: return BTN2 "Attack";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tehkanwc_ctrl =
@@ -20013,13 +15708,9 @@ const char *tekken_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Right Punch";
     case IPT_BUTTON3: return BTN3 "Left Kick";
     case IPT_BUTTON4: return BTN4 "Right Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tekken2_ctrl =
@@ -20039,13 +15730,9 @@ const char *tekken2_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Right Punch";
     case IPT_BUTTON3: return BTN3 "Left Kick";
     case IPT_BUTTON4: return BTN4 "Right Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tekken3_ctrl =
@@ -20065,32 +15752,9 @@ const char *tekken3_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Right Punch";
     case IPT_BUTTON3: return BTN3 "Left Kick";
     case IPT_BUTTON4: return BTN4 "Right Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo telmahjn_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &telmahjn_get_ctrl_name
-};
-
-const char *telmahjn_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tempest_ctrl =
@@ -20131,13 +15795,9 @@ const char *tengai_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo term2_ctrl =
@@ -20179,13 +15839,9 @@ const char *terracre_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Formation";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo terraf_ctrl =
@@ -20203,13 +15859,9 @@ const char *terraf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Formation";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo atetris_ctrl =
@@ -20229,7 +15881,6 @@ const char *atetris_get_ctrl_name(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "";
   } /* end of switch */
 
   return "";
@@ -20249,7 +15900,6 @@ const char *tetris_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
-    case IPT_JOYSTICK_UP: return "";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
@@ -20273,13 +15923,9 @@ const char *tetrisp_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_BUTTON2: return BTN2 "Rotate";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tetrisp2_ctrl =
@@ -20298,7 +15944,6 @@ const char *tetrisp2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Rotate Clockwise";
     case IPT_BUTTON2: return BTN2 "Rotate Anti Clockwise";
     case IPT_BUTTON3: return BTN3 "Bomb";
-    case IPT_JOYSTICK_UP: return "";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
@@ -20322,13 +15967,9 @@ const char *ctribe_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo elecyoyo_ctrl =
@@ -20342,16 +15983,7 @@ const struct ControlInfo elecyoyo_ctrl =
 
 const char *elecyoyo_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo esb_ctrl =
@@ -20394,11 +16026,9 @@ const char *theend_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo lkage_ctrl =
@@ -20416,32 +16046,9 @@ const char *lkage_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sword";
     case IPT_BUTTON2: return BTN2 "Star Knives";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo themj_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &themj_get_ctrl_name
-};
-
-const char *themj_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mainevt_ctrl =
@@ -20459,13 +16066,9 @@ const char *mainevt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Action";
     case IPT_BUTTON2: return BTN2 "Tag";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ninjaw_ctrl =
@@ -20483,13 +16086,9 @@ const char *ninjaw_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Dagger";
     case IPT_BUTTON2: return BTN2 "Ninja Star";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo thepit_ctrl =
@@ -20506,13 +16105,9 @@ const char *thepit_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo punisher_ctrl =
@@ -20530,13 +16125,9 @@ const char *punisher_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo ghostb_ctrl =
@@ -20554,13 +16145,9 @@ const char *ghostb_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot / Start";
     case IPT_BUTTON2: return BTN2 "Beam";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo simpsons_ctrl =
@@ -20578,13 +16165,9 @@ const char *simpsons_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo srumbler_ctrl =
@@ -20602,13 +16185,9 @@ const char *srumbler_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Escape";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a3stooges_ctrl =
@@ -20625,13 +16204,9 @@ const char *a3stooges_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Slap / Throw";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tinstar_ctrl =
@@ -20672,16 +16247,7 @@ const struct ControlInfo thief_ctrl =
 
 const char *thief_get_ctrl_name(int type)
 {
-  switch(type)
-  {
-/* P1NumButtons=0 */
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo a3wonders_ctrl =
@@ -20700,13 +16266,9 @@ const char *a3wonders_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo thndrbld_ctrl =
@@ -20751,13 +16313,9 @@ const char *thundfox_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo thunderj_ctrl =
@@ -20775,13 +16333,9 @@ const char *thunderj_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tickee_ctrl =
@@ -20822,13 +16376,9 @@ const char *tigerh_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Mini-Gun";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tigeroad_ctrl =
@@ -20846,13 +16396,9 @@ const char *tigeroad_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo timber_ctrl =
@@ -20870,13 +16416,9 @@ const char *timber_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Chop Left";
     case IPT_BUTTON2: return BTN2 "Chop Right";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo timecris_ctrl =
@@ -20921,13 +16463,9 @@ const char *timekill_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Left Leg";
     case IPT_BUTTON4: return BTN4 "Right Leg";
     case IPT_BUTTON5: return BTN5 "Head";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo timeplt_ctrl =
@@ -20944,13 +16482,9 @@ const char *timeplt_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo timesold_ctrl =
@@ -20968,15 +16502,11 @@ const char *timesold_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Hyper Weapon";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo titlef_ctrl =
@@ -20992,7 +16522,6 @@ const char *titlef_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Left Fist Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Fist Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left Fist Left";
@@ -21021,89 +16550,9 @@ const char *toki_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo tmmjprd_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &tmmjprd_get_ctrl_name
-};
-
-const char *tmmjprd_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mahmajn_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mahmajn_get_ctrl_name
-};
-
-const char *mahmajn_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mahmajn2_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mahmajn2_get_ctrl_name
-};
-
-const char *mahmajn2_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo tokyogal_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &tokyogal_get_ctrl_name
-};
-
-const char *tokyogal_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tomahawk_ctrl =
@@ -21120,32 +16569,9 @@ const char *tomahawk_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo tontonb_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &tontonb_get_ctrl_name
-};
-
-const char *tontonb_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo toobin_ctrl =
@@ -21208,7 +16634,6 @@ const char *totcarn_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKLEFT_UP: return "Move Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Move Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Move Left";
@@ -21237,15 +16662,11 @@ const char *tdfever_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Run";
     case IPT_BUTTON2: return BTN2 "Pass";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo toypop_ctrl =
@@ -21262,13 +16683,9 @@ const char *toypop_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo trackfld_ctrl =
@@ -21306,13 +16723,9 @@ const char *tranqgun_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo trisport_ctrl =
@@ -21590,13 +17003,9 @@ const char *trojan_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sword/Punch";
     case IPT_BUTTON2: return BTN1 "Shield/Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo trog_ctrl =
@@ -21613,13 +17022,9 @@ const char *trog_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tron_ctrl =
@@ -21636,15 +17041,11 @@ const char *tron_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Aim Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tubep_ctrl =
@@ -21661,13 +17062,9 @@ const char *tubep_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tunhunt_ctrl =
@@ -21731,13 +17128,9 @@ const char *turbofrc_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo toutrun_ctrl =
@@ -21805,13 +17198,9 @@ const char *tutankhm_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire Left";
     case IPT_BUTTON2: return BTN2 "Fire Right";
     case IPT_BUTTON3: return BTN3 "Flash";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo twincobr_ctrl =
@@ -21829,13 +17218,9 @@ const char *twincobr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo twineagl_ctrl =
@@ -21853,13 +17238,9 @@ const char *twineagl_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Missile";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo twineag2_ctrl =
@@ -21878,13 +17259,9 @@ const char *twineag2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_BUTTON3: return BTN3 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo twotiger_ctrl =
@@ -21927,13 +17304,9 @@ const char *earthjkr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A-Shoot";
     case IPT_BUTTON2: return BTN2 "B-Bomb";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo unsquad_ctrl =
@@ -21951,13 +17324,9 @@ const char *unsquad_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special Weapon";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vball_ctrl =
@@ -21975,13 +17344,9 @@ const char *vball_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo usclssic_ctrl =
@@ -22002,25 +17367,6 @@ const char *usclssic_get_ctrl_name(int type)
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo ultramhm_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &ultramhm_get_ctrl_name
-};
-
-const char *ultramhm_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -22065,13 +17411,9 @@ const char *utoukond_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo undrfire_ctrl =
@@ -22133,13 +17475,9 @@ const char *upndown_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo valkyrie_ctrl =
@@ -22158,13 +17496,9 @@ const char *valkyrie_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vandyke_ctrl =
@@ -22182,13 +17516,9 @@ const char *vandyke_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vanguard_ctrl =
@@ -22208,13 +17538,9 @@ const char *vanguard_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Fire Forward";
     case IPT_BUTTON3: return BTN3 "Fire Down";
     case IPT_BUTTON4: return BTN4 "Fire Up";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo varth_ctrl =
@@ -22232,13 +17558,9 @@ const char *varth_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vendetta_ctrl =
@@ -22256,13 +17578,9 @@ const char *vendetta_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo venture_ctrl =
@@ -22279,13 +17597,9 @@ const char *venture_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo victory_ctrl =
@@ -22327,15 +17641,11 @@ const char *victroad_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Grenade";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo hustler_ctrl =
@@ -22352,11 +17662,9 @@ const char *hustler_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo videopin_ctrl =
@@ -22422,13 +17730,9 @@ const char *vimana_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Circle Bomb";
     case IPT_BUTTON3: return BTN3 "??";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vindictr_ctrl =
@@ -22499,13 +17803,9 @@ const char *viofight_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Kick";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo viper_ctrl =
@@ -22548,13 +17848,9 @@ const char *vf_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Defense";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vf2_ctrl =
@@ -22573,13 +17869,9 @@ const char *vf2_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_BUTTON3: return BTN3 "Defense";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsgongf_ctrl =
@@ -22597,13 +17889,9 @@ const char *vsgongf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo rbibb_ctrl =
@@ -22621,13 +17909,9 @@ const char *rbibb_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo balonfgt_ctrl =
@@ -22645,13 +17929,9 @@ const char *balonfgt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsbball_ctrl =
@@ -22669,13 +17949,9 @@ const char *vsbball_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo btlecity_ctrl =
@@ -22693,13 +17969,9 @@ const char *btlecity_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cstlevna_ctrl =
@@ -22717,13 +17989,9 @@ const char *cstlevna_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo cluclu_ctrl =
@@ -22741,13 +18009,9 @@ const char *cluclu_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo drmario_ctrl =
@@ -22765,13 +18029,9 @@ const char *drmario_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo duckhunt_ctrl =
@@ -22789,13 +18049,9 @@ const char *duckhunt_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo excitebk_ctrl =
@@ -22813,13 +18069,9 @@ const char *excitebk_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsfdf_ctrl =
@@ -22837,13 +18089,9 @@ const char *vsfdf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsgradus_ctrl =
@@ -22861,13 +18109,9 @@ const char *vsgradus_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsgshoe_ctrl =
@@ -22929,7 +18173,6 @@ const char *hotsmash_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -22952,13 +18195,9 @@ const char *iceclimb_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo iceclmrj_ctrl =
@@ -22976,13 +18215,9 @@ const char *iceclmrj_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo machridr_ctrl =
@@ -23000,32 +18235,9 @@ const char *machridr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
-}
-
-const struct ControlInfo vsmahjng_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &vsmahjng_get_ctrl_name
-};
-
-const char *vsmahjng_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
-  } /* end of switch */
-
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo mightybj_ctrl =
@@ -23043,13 +18255,9 @@ const char *mightybj_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo jajamaru_ctrl =
@@ -23067,13 +18275,9 @@ const char *jajamaru_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vspinbal_ctrl =
@@ -23091,13 +18295,9 @@ const char *vspinbal_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo platoon_ctrl =
@@ -23115,13 +18315,9 @@ const char *platoon_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo bnglngby_ctrl =
@@ -23139,13 +18335,9 @@ const char *bnglngby_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsslalom_ctrl =
@@ -23186,13 +18378,9 @@ const char *vssoccer_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo starlstr_ctrl =
@@ -23210,13 +18398,9 @@ const char *starlstr_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo smgolf_ctrl =
@@ -23234,13 +18418,9 @@ const char *smgolf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo suprmrio_ctrl =
@@ -23258,13 +18438,9 @@ const char *suprmrio_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vsskykid_ctrl =
@@ -23282,13 +18458,9 @@ const char *vsskykid_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo supxevs_ctrl =
@@ -23306,13 +18478,9 @@ const char *supxevs_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo tkoboxng_ctrl =
@@ -23330,13 +18498,9 @@ const char *tkoboxng_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vstennis_ctrl =
@@ -23354,13 +18518,9 @@ const char *vstennis_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo vstetris_ctrl =
@@ -23378,13 +18538,9 @@ const char *vstetris_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo goonies_ctrl =
@@ -23402,13 +18558,9 @@ const char *goonies_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo topgun_ctrl =
@@ -23426,13 +18578,9 @@ const char *topgun_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wrecking_ctrl =
@@ -23450,13 +18598,9 @@ const char *wrecking_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "B";
     case IPT_BUTTON2: return BTN2 "A";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wacko_ctrl =
@@ -23472,7 +18616,6 @@ const char *wacko_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
     case IPT_JOYSTICKRIGHT_RIGHT: return "-";
     case IPT_JOYSTICKRIGHT_LEFT: return "-";
     case IPT_JOYSTICKRIGHT_DOWN: return "-";
@@ -23485,25 +18628,6 @@ const char *wacko_get_ctrl_name(int type)
     case IPT_TRACKBALL_Y: return "Krooz Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Krooz Right";
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Krooz Down";
-  } /* end of switch */
-
-  return "";
-}
-
-const struct ControlInfo mj4simai_ctrl =
-{
-  false, /* 45_degree_rotation for joystick(s) */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control_details */
-  &mj4simai_get_ctrl_name
-};
-
-const char *mj4simai_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=0 */
   } /* end of switch */
 
   return "";
@@ -23528,13 +18652,9 @@ const char *wargods_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Low Punch";
     case IPT_BUTTON5: return BTN5 "Low Kick";
     case IPT_BUTTON6: return BTN6 "3D";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo warofbug_ctrl =
@@ -23572,11 +18692,9 @@ const char *wotw_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Shield";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo warlords_ctrl =
@@ -23614,13 +18732,9 @@ const char *warpwarp_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo warrior_ctrl =
@@ -23637,13 +18751,9 @@ const char *warrior_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Sword";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo suzume_ctrl =
@@ -23750,13 +18860,9 @@ const char *wildfang_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Special";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo moo_ctrl =
@@ -23774,13 +18880,9 @@ const char *moo_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo willow_ctrl =
@@ -23798,13 +18900,9 @@ const char *willow_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wizdfire_ctrl =
@@ -23822,13 +18920,9 @@ const char *wizdfire_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Magic";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wow_ctrl =
@@ -23845,13 +18939,9 @@ const char *wow_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wolfpack_ctrl =
@@ -23890,11 +18980,9 @@ const char *wboy_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Speed / Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo wbml_ctrl =
@@ -23912,13 +19000,9 @@ const char *wbml_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Sword";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wbeachvl_ctrl =
@@ -24038,13 +19122,9 @@ const char *wsf_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wtennis_ctrl =
@@ -24061,13 +19141,9 @@ const char *wtennis_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Swing";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wwfsstar_ctrl =
@@ -24085,13 +19161,9 @@ const char *wwfsstar_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wwfwfest_ctrl =
@@ -24109,13 +19181,9 @@ const char *wwfwfest_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "A";
     case IPT_BUTTON2: return BTN2 "B";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo wwfmania_ctrl =
@@ -24161,13 +19229,9 @@ const char *xmen_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_BUTTON3: return BTN3 "Mutant Power";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xmvsf_ctrl =
@@ -24189,13 +19253,9 @@ const char *xmvsf_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Kick - Light";
     case IPT_BUTTON5: return BTN5 "Kick - Medium";
     case IPT_BUTTON6: return BTN6 "Kick - Heavy";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xmcota_ctrl =
@@ -24217,13 +19277,9 @@ const char *xmcota_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Kick - Short";
     case IPT_BUTTON5: return BTN5 "Kick - Forward";
     case IPT_BUTTON6: return BTN6 "Kick - Roundhouse";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xsleena_ctrl =
@@ -24241,13 +19297,9 @@ const char *xsleena_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xenophob_ctrl =
@@ -24266,13 +19318,9 @@ const char *xenophob_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire / Punch";
     case IPT_BUTTON2: return BTN2 "Left Button";
     case IPT_BUTTON3: return BTN3 "Right Button";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xevious_ctrl =
@@ -24290,13 +19338,9 @@ const char *xevious_get_ctrl_name(int type)
   {
     case IPT_BUTTON1:         return BTN1 "Zapper";
     case IPT_BUTTON2:         return BTN2 "Blaster";
-    case IPT_JOYSTICK_UP:     return "Up";
-    case IPT_JOYSTICK_DOWN:   return "Down";
-    case IPT_JOYSTICK_LEFT:   return "Left";
-    case IPT_JOYSTICK_RIGHT:  return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo xybots_ctrl =
@@ -24315,13 +19359,9 @@ const char *xybots_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Turn Left";
     case IPT_BUTTON3: return BTN3 "Turn Right";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo yesnoj_ctrl =
@@ -24382,11 +19422,9 @@ const char *yosakdon_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy2way_labels(type);
 }
 
 const struct ControlInfo yuyugogo_ctrl =
@@ -24426,13 +19464,9 @@ const char *zaxxon_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zerohour_ctrl =
@@ -24449,13 +19483,9 @@ const char *zerohour_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zeropnt_ctrl =
@@ -24519,13 +19549,9 @@ const char *zerowing_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Shield";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zerozone_ctrl =
@@ -24542,13 +19568,9 @@ const char *zerozone_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Rotate";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zingzip_ctrl =
@@ -24566,13 +19588,9 @@ const char *zingzip_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON2: return BTN2 "Bomb";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zoar_ctrl =
@@ -24614,13 +19632,9 @@ const char *zodiack_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Fire";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zombraid_ctrl =
@@ -24661,13 +19675,9 @@ const char *zookeep_get_ctrl_name(int type)
   switch(type)
   {
     case IPT_BUTTON1: return BTN1 "Jump";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zunkyou_ctrl =
@@ -24685,13 +19695,9 @@ const char *zunkyou_get_ctrl_name(int type)
   {
     case IPT_BUTTON1: return BTN1 "Attack";
     case IPT_BUTTON2: return BTN2 "Special Attack";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo zwackery_ctrl =
