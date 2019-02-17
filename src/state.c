@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include "driver.h"
-#include "zlib.h"
+#include <compat/zlib.h>
 
 /* Save state file format:
  *
