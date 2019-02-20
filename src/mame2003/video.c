@@ -250,7 +250,7 @@ int osd_create_display(
       if (!video_buffer)
          return 1;
    }
-  if( video_conversion_type == VCT_PALTO565 )   video_buffer = malloc(video_config.width * video_config.height * video_stride_out);
+
    return 0;
 }
 
