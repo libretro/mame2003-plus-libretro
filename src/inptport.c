@@ -2120,11 +2120,11 @@ static void writeword(mame_file *f,UINT16 num)
 void change_control_type(void)
 {
   if (!options.analog)
-
+  {
     memcpy(inputport_defaults,inputport_defaults_digital,sizeof(inputport_defaults));
     memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
-  
-  if (options.analog)
+  }
+  else 
   {
     memcpy(inputport_defaults,inputport_defaults_analog,sizeof(inputport_defaults));
     memcpy(inputport_defaults_backup,inputport_defaults_analog,sizeof(inputport_defaults));
@@ -2609,7 +2609,7 @@ The above "Joy" states contain packed bits:
 	0100	left
 	1000	right
 */
-static int last_direction;
+
 static void
 ScanJoysticks( struct InputPort *in )
 {
