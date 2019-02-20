@@ -490,27 +490,31 @@ static void update_variables(bool first_time)
             break;
           }
 
-        case OPT_DPAD_ANALOG:
+      case OPT_DPAD_ANALOG:
           if(strcmp(var.value, "analog_and_digital") == 0)
           {
             if( options.analog !=1 && control_flag !=-1) control_flag =1;
-            else if( options.analog ==1 && control_flag !=-1) control_flag =0;
             options.analog = 1;
+            if (running && control_flag == 1) 
+            {
+              change_control_type(); 
+              control_flag =0;
+            }
           }
           else
           {
-            if(options.analog !=0 && control_flag !=-1 ) control_flag =1;
-            else if( options.analog ==0 && control_flag !=-1) control_flag =0;
+            if(options.analog !=0 && control_flag !=-1)  control_flag =1;
             options.analog = 0;
-          }
-          if(running  && control_flag) 
-          {
-            change_control_type(); 
-            control_flag =0;
+            if (running && control_flag == 1) 
+            {
+              change_control_type(); 
+              control_flag =0;
+            }
           }
           //skip the first set then there so it doesnt change input general every time you open the options menu if using none legacy mode
-          if(running && control_flag ==-1) control_flag = 3;
+          if(control_flag ==-1) control_flag = 0;
           break;
+
 
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);
@@ -610,17 +614,17 @@ static void update_variables(bool first_time)
         case OPT_MAME_REMAPPING:
           if(strcmp(var.value, "enabled") == 0)
           {
-            if( !options.mame_remapping && legacy_flag !=-1) legacy_flag =0;
+            if( !options.mame_remapping && legacy_flag != -1) legacy_flag =0;
             options.mame_remapping = true;
           }
           else
           {
-            if( options.mame_remapping && legacy_flag !=-1) legacy_flag =0;
+            if( options.mame_remapping && legacy_flag != -1) legacy_flag =0;
             options.mame_remapping = false;
           }
           if(!first_time)
             setup_menu_init();
-          if(control_flag ==-1) legacy_flag = 1;
+          if(legacy_flag ==-1) legacy_flag = 1;
           break;
 
         case OPT_FRAMESKIP:
