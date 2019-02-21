@@ -2167,6 +2167,14 @@ static struct VLM5030interface gx400_vlm5030_interface =
     0x0800         /* memory length (not sure if correct) */
 };
 
+static struct VLM5030interface hcrash_vlm5030_interface =
+{
+    3579545,       /* master clock  */
+    100,            /* volume        */
+    REGION_SOUND1, /* memory region  */
+    0              /* memory length */
+};
+
 static void volume_callback(int v)
 {
 	K007232_set_volume(0,0,(v >> 4) * 0x11,0);
@@ -2481,7 +2489,7 @@ static MACHINE_DRIVER_START( hcrash )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(K007232, k007232_interface)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-    MDRV_SOUND_ADD(VLM5030, vlm5030_interface)
+  MDRV_SOUND_ADD(VLM5030, hcrash_vlm5030_interface)
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -2769,7 +2777,7 @@ ROM_START( hcrash )
 	ROM_LOAD( "790-c08.j4",   0x04000, 0x04000, CRC(cfb844bc) SHA1(43b7adb6093e707212204118087ef4f79b0dbc1f) )
 	ROM_CONTINUE(             0x00000, 0x04000 ) /* Board is wired for 27C128, top half of EPROM is blank */
 
-	ROM_REGION( 0x80000, REGION_SOUND2, 0 )  /* 007232 data */
+	ROM_REGION( 0x20000, REGION_SOUND2, 0 )  /* 007232 data */
 	ROM_LOAD( "790-c01.m10",  0x00000, 0x20000, CRC(07976bc3) SHA1(9341ac6084fbbe17c4e7bbefade9a3f1dec3f132) )
 ROM_END
 
@@ -2787,7 +2795,7 @@ ROM_START( hcrashc )
 	ROM_LOAD( "790-c08.j4",   0x04000, 0x04000, CRC(cfb844bc) SHA1(43b7adb6093e707212204118087ef4f79b0dbc1f) )
 	ROM_CONTINUE(             0x00000, 0x04000 ) /* Board is wired for 27C128, top half of EPROM is blank */
 
-	ROM_REGION( 0x80000, REGION_SOUND2, 0 )  /* 007232 data */
+	ROM_REGION( 0x20000, REGION_SOUND2, 0 )  /* 007232 data */
 	ROM_LOAD( "790-c01.m10",  0x00000, 0x20000, CRC(07976bc3) SHA1(9341ac6084fbbe17c4e7bbefade9a3f1dec3f132) )
 ROM_END
 
