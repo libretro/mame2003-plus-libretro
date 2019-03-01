@@ -25,6 +25,13 @@
 **	thus which is the 'last sprite' with which we need to start.
 */
 
+/*
+Changes:
+03/12/04  Charles MacDonald
+- Fixed end of list and sprite hide flag processing in sys16_sprite_shinobi, hwchamp output test works properly.
+- Fixed size of zoom fields, fixes sprite alignment issues in hwchamp
+*/
+
 #include "driver.h"
 #include "system16.h"
 
@@ -32,25 +39,36 @@ int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *
 /* standard sprite hardware (Shinobi, Altered Beast, Golden Axe
 	0	YYYYYYYY	YYYYYYYY	top, bottom (screen coordinates)
 	1	-------X	XXXXXXXX	left (screen coordinate)
-	2	-------F	FWWWWWWW	flipx, signed pitch
+	2	EH------F	WWWWWWWW	end list flag, hide sprite flag, flipx, signed pitch
 	3	TTTTTTTT	TTTTTTTT	word offset for start of sprite data; each word is 16 bits (4 pixels)
 	4	----BBBB	PPCCCCCC	attributes: bank, priority, color
-	5	------ZZ	ZZZZZZZZ	zoomx: 0 for 100%; 0x3ff for 50% size
-	6	------ZZ	ZZZZZZZZ	zoomy: (defaults to zoomx)
+	5	------YY	YYYXXXXX	zoomy, zoomx
+	6	--------	--------	
 	7	--------	--------
 */
-	extern int sys16_wwfix; /***/
+	extern int sys16_wwfix; //*
 	UINT16 ypos = source[0];
 	UINT16 width = source[2];
 	int top = ypos&0xff;
 	int bottom = ypos>>8;
-	if( bottom == 0xff || width ==sys16_spritelist_end ) return 1; /* ? */
-	/* end of spritelist */
-	if( bottom !=0 && bottom > top ){
+	if(width & 0x8000) return 1; // End of list bit set
+	if(width & 0x4000) return 0; // Hide this sprite bit set
+	if(top >= bottom || top >= 0xe0) return 0; // Invalid height or off-screen
+	if(bottom >= 0xe0) bottom = 0xe0; // Clip bottom of sprite
+	
+	{
 		UINT16 attributes = source[4];
-		UINT16 zoomx = source[5]&0x3ff;
-		UINT16 zoomy = (source[6]&0x3ff);
-		if( zoomy==0 || source[6]==0xffff ) zoomy = zoomx; /* if zoomy is 0, use zoomx instead */
+
+		UINT16 zoomx = source[5] & 0x1F;
+		UINT16 zoomy = (source[5] >> 5) & 0x1F;
+			
+		// Rest of rendering code expects zoom to be 10 bits
+		zoomx <<= 5;
+		zoomy <<= 5;
+
+		// Having zoomy set to zoomx when zoomy is zero heavily distorts the multi-sprite opponents in hwchamp
+		//if( zoomy==0 || source[6]==0xffff ) zoomy = zoomx; /* if zoomy is 0, use zoomx instead */
+		
 		sprite->x = source[1] + sys16_sprxoffset;
 		sprite->y = top;
 		sprite->priority = (attributes>>6)&0x3;
@@ -64,7 +82,7 @@ int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *
 		sprite->zoomx = zoomx;
 		sprite->zoomy = zoomy;
 		sprite->pitch = source[2]&0xff;
-		sprite->gfx = ( source[3] + (sys16_obj_bank[(attributes>>8)&0xf]<<(16+sys16_wwfix)) ) << 1; /***/
+		sprite->gfx = ( source[3] + (sys16_obj_bank[(attributes>>8)&0xf]<<(16+sys16_wwfix)) ) << 1; //*
 	}
 	return 0;
 }
@@ -103,66 +121,21 @@ int sys16_sprite_passshot( struct sys16_sprite_attributes *sprite, const UINT16 
 		sprite->flags = SYS16_SPR_VISIBLE;
 		if( number & 0x8000 ) sprite->flags |= SYS16_SPR_FLIPX;
 #ifdef TRANSPARENT_SHADOWS
-		if (((attributes>>8)&0x3f)==0x3f)	/* shadow sprite*/
+		if (((attributes>>8)&0x3f)==0x3f)	// shadow sprite
 			sprite->flags|= SYS16_SPR_SHADOW;
 #endif
 		sprite->pitch = width&0xff;
 		if( sprite->flags&SYS16_SPR_FLIPX ){
 			bank = (bank-1) & 0xf; /* ? */
 		}
-		sprite->gfx = ((number-(short)width)*4 + (sys16_obj_bank[bank] << 17))/2; /***/
+		sprite->gfx = ((number-(short)width)*4 + (sys16_obj_bank[bank] << 17))/2; //*
 		sprite->x = xpos;
-		sprite->y = top+2; /***/
+		sprite->y = top+2; //*
 		sprite->zoomx = sprite->zoomy = zoom;
 	}
 	return 0;
 }
 
-int sys16_sprite_aurail( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor ){
-/* Aurail, Bay Route, riotcity
-	0	YYYYYYYY	YYYYYYYY	(screen coordinates)
-	1	-------X	XXXXXXXX	(screen coordinate)
-	2	-------F	FWWWWWWW	flipx, pitch
-	3	TTTTTTTT	TTTTTTTT	(pen data)
-	4	----BBBB	PPCCCCCC	(attributes: bank, priority, color)
-	5	------ZZ	ZZZZZZZZ	zoomx
-	6	------ZZ	ZZZZZZZZ	zoomy (defaults to zoomx)
-	7	--------	--------
-*/
-	UINT16 ypos = source[0];
-	UINT16 width = source[2];
-	UINT16 attributes = source[4];
-	int top = ypos&0xff;
-	int bottom = ypos>>8;
-	if( width == sys16_spritelist_end) return 1;
-#ifdef TRANSPARENT_SHADOWS
-	if(bottom !=0 && bottom > top)
-#else
-	if(bottom !=0 && bottom > top && (attributes&0x3f) !=0x3f)
-#endif
-	{
-		UINT16 zoomx = source[5]&0x3ff;
-		UINT16 zoomy = (source[6]&0x3ff);
-		if( zoomy==0 ) zoomy = zoomx; /* if zoomy is 0, use zoomx instead */
-		sprite->color = 1024/16 + (attributes&0x3f);
-		sprite->x = source[1] + sys16_sprxoffset;;
-		sprite->y = top;
-		sprite->priority = (attributes>>6)&0x3;
-		sprite->screen_height = bottom-top;
-		sprite->pitch = width&0xff;
-		sprite->flags = SYS16_SPR_VISIBLE;
-		if( width&0x100 ) sprite->flags |= SYS16_SPR_FLIPX;
-#ifdef TRANSPARENT_SHADOWS
-		if ((attributes&0x3f)==0x3f)	/* shadow sprite*/
-			sprite->flags|= SYS16_SPR_SHADOW;
-#endif
-			sprite->zoomx = zoomx;
-			sprite->zoomy = zoomy;
-			sprite->gfx = (source[3] + sys16_obj_bank[(attributes>>8)&0xf]*0x10000)*2;
-/*			sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[(attributes>>8)&0xf] << 17))/2;*/
-	}
-	return 0;
-}
 
 int sys16_sprite_fantzone( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor ){
 /*	0	YYYYYYYY	YYYYYYYY	bottom,top (screen coordinates)
@@ -195,7 +168,7 @@ int sys16_sprite_fantzone( struct sys16_sprite_attributes *sprite, const UINT16 
 			sprite->flags ^= SYS16_SPR_FLIPX;
 		}
 		sprite->screen_height = bottom-top;
-		/*top++; bottom++;*/
+		//top++; bottom++;
 		sprite->x = source[1] + sys16_sprxoffset;
 		if( sprite->x > 0x140 ) sprite->x -= 0x200;
 		sprite->y = top;
@@ -236,21 +209,21 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			tsource[2]=source[2];
 			tsource[3]=source[3];
 #ifndef TRANSPARENT_SHADOWS
-			if( pal==0x3f ) pal = (bank<<1); /* shadow sprite*/
+			if( pal==0x3f ) pal = (bank<<1); // shadow sprite
 #endif
 			if((tsource[3] & 0x7f80) == 0x7f80){
 				bank=(bank-1)&0xf;
 				tsource[3]^=0x8000;
 			}
 			tsource[2] &= 0x00ff;
-			if (tsource[3]&0x8000){ /* reverse*/
+			if (tsource[3]&0x8000){ // reverse
 				tsource[2] |= 0x0100;
 				tsource[3] &= 0x7fff;
 			}
 			gfx = tsource[3]*4;
 			width = tsource[2];
-			/*top++;*/
-			/*bottom++;*/
+			//top++;
+			//bottom++;
 			sprite->x = source[1] + sys16_sprxoffset;
 			if(sprite->x > 0x140) sprite->x-=0x200;
 			sprite->y = top;
@@ -261,7 +234,7 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			sprite->flags = SYS16_SPR_VISIBLE;
 			if( width&0x100 ) sprite->flags |= SYS16_SPR_FLIPX;
 #ifdef TRANSPARENT_SHADOWS
-			if( pal==0x3f ) sprite->flags|= SYS16_SPR_SHADOW; /* shadow sprite*/
+			if( pal==0x3f ) sprite->flags|= SYS16_SPR_SHADOW; // shadow sprite
 #endif
 			sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[bank] << 17))/2;
 		}
@@ -299,7 +272,7 @@ int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UINT16 *s
 			bank=(bank-1)&0xf;
 			tsource[3]^=0x8000;
 		}
-		if (tsource[3]&0x8000){ /* reverse*/
+		if (tsource[3]&0x8000){ // reverse
 			tsource[2] |= 0x0100;
 			tsource[3] &= 0x7fff;
 		}
@@ -314,8 +287,8 @@ int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UINT16 *s
 		sprite->pitch = width&0xff;
 		sprite->flags = SYS16_SPR_VISIBLE;
 		if( width&0x100 ) sprite->flags |= SYS16_SPR_FLIPX;
-/*			sprite->flags|= SYS16_SPR_PARTIAL_SHADOW;*/
-/*			sprite->shadow_pen=10;*/
+//			sprite->flags|= SYS16_SPR_PARTIAL_SHADOW;
+//			sprite->shadow_pen=10;
 		sprite->zoomx = zoomx;
 		sprite->zoomy = zoomy;
 		sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[bank] << 17))/2;
@@ -344,7 +317,7 @@ int sys16_sprite_sharrier( struct sys16_sprite_attributes *sprite, const UINT16 
 		sprite->zoomx = (source[4]&0x3f)*(1024/64);
 		sprite->zoomy = (1024*sprite->zoomx)/(2048-sprite->zoomx);
 #ifndef TRANSPARENT_SHADOWS
-/*		if (pal==0x3f) pal=(bank<<1); // shadow sprite*/
+//		if (pal==0x3f) pal=(bank<<1); // shadow sprite
 #endif
 		sprite->x = ((source[1] & 0x3ff) + sys16_sprxoffset);
 		if(sprite->x >= 0x200) sprite->x-=0x200;
@@ -355,15 +328,15 @@ int sys16_sprite_sharrier( struct sys16_sprite_attributes *sprite, const UINT16 
 		sprite->flags = SYS16_SPR_VISIBLE;
 		if( source[3]&0x8000 ) sprite->flags |= SYS16_SPR_FLIPX;
 #ifdef TRANSPARENT_SHADOWS
-		if (sys16_sh_shadowpal == 0){ /* space harrier*/
+		if (sys16_sh_shadowpal == 0){ // space harrier
 			if( ((source[2]>>8)&0x3f)==sys16_sh_shadowpal ) sprite->flags|= SYS16_SPR_SHADOW;
 		}
-		else { /* enduro*/
+		else { // enduro
 			sprite->flags|= SYS16_SPR_PARTIAL_SHADOW;
 			sprite->shadow_pen=10;
 		}
 #endif
-		sprite->gfx = ((bank<<15)|(source[3]&0x7fff))*4;/* + (sys16_obj_bank[bank] << 17);*/
+		sprite->gfx = ((bank<<15)|(source[3]&0x7fff))*4;// + (sys16_obj_bank[bank] << 17);
 	}
 	return 0;
 }
@@ -385,7 +358,7 @@ int sys16_sprite_outrun( struct sys16_sprite_attributes *sprite, const UINT16 *s
 	else if( source[0]&0x4000 ){ /* hidden sprite */
 		return 0;
 	}
-	else {/*if (!(source[0]&0x4000)){*/
+	else {//if (!(source[0]&0x4000)){
 		int zoomx = source[3];
 		int zoomy = source[4];
 		int x = (source[2]&0x1ff);

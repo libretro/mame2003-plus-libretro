@@ -19,7 +19,7 @@ static const char *mame_default_text[] =
 	"MAME",
 
 	/* copyright stuff */
-	"       ----- Copyright Warning -----\nCopying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.\n",
+	"Copyright Warning:\nCopying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.\n",
 
 	/* misc stuff */
 	"Return to Main Menu",
@@ -60,18 +60,17 @@ static const char *mame_default_text[] =
 	"\x1b",
 
 	/* known problems */
-	"There are known problems with this game:",
-	"The colors aren't 100% accurate.",
-	"The colors are completely wrong.",
-	"The video emulation isn't 100% accurate.",
-	"The sound emulation isn't 100% accurate.",
-	"The game lacks sound.",
-	"Screen flipping cocktail video is not supported by MAME 2003 for this title. If your frontend implements the libretro Shader API, an appropriate mirrored cocktail video shader may be available.",
-	"THIS GAME DOESN'T WORK PROPERLY",
-	"The game has protection which isn't fully emulated.",
-	"This game does not have libretro serialization support.",
-	"There are working clones of this game. They are:",
-  "Type OK on Keyboard, or Left, Right on Joystick to continue",
+	"Driver warnings: ",
+	"imperfect colors",
+	"wrong colors",
+	"imperfect video",
+	"imperfect sound",
+	"missing sound",
+	"missing cocktail mode",
+	"game does not work",
+	"unimplemented protection",
+	"missing serialization",
+	"There are working clones of this game:",
 
 	/* main menu */
 	"Input (general)",
@@ -80,10 +79,11 @@ static const char *mame_default_text[] =
 	"Calibrate Joysticks",
 	"Bookkeeping Info",
 	"Input (this game)",
+  "Flush Current CFG",
+  "Flush All CFGs",  
 	"Game Information",
 	"Game History",
 	"Reset Game",
-  "Generate Alternative XML DAT",
   "Generate XML DAT",  
 	"Return to Game",
 	"Cheat",

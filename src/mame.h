@@ -170,7 +170,6 @@ enum /* used to index content-specific flags */
   CONTENT_VECTOR,
   CONTENT_DIAL,
   CONTENT_TRACKBALL,
-  CONTENT_DUAL_JOYSTICK,
   CONTENT_LIGHTGUN,
   CONTENT_PADDLE,
   CONTENT_AD_STICK,
@@ -178,6 +177,11 @@ enum /* used to index content-specific flags */
   CONTENT_HAS_TILT,  
   CONTENT_ALTERNATING_CTRLS,
   CONTENT_MIRRORED_CTRLS,
+  CONTENT_ROTATE_JOY_45,
+  CONTENT_PLAYER_COUNT,
+  CONTENT_CTRL_COUNT,
+  CONTENT_BUTTON_COUNT,
+  CONTENT_JOYSTICK_DIRECTIONS,
   CONTENT_DCS_SPEEDHACK,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_end,
@@ -191,18 +195,15 @@ struct GameOptions
   mame_file *playback;		       /* handle to file to playback input from */
   mame_file *language_file;	     /* handle to file for localization */
 
-  bool content_flags[CONTENT_end];
-  int  player_count;
-  int  ctrl_count;
-  int  button_count;
+  int      content_flags[CONTENT_end];
 
-  char   *romset_filename_noext;
-  char   *libretro_content_path;
-  char   *libretro_system_path;
-  char   *libretro_save_path;
+  char     *romset_filename_noext;
+  char     *libretro_content_path;
+  char     *libretro_system_path;
+  char     *libretro_save_path;
 
-  int		   mame_debug;		       /* 1 to enable debugging */
-  int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
+  int      mame_debug;		       /* 1 to enable debugging */
+  int      skip_gameinfo;		     /* 1 to skip the game info screen at startup */
   bool 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
   bool     skip_warnings;        /* 1 to skip the game warning screen at startup */
   bool     display_setup;        /* the MAME setup menu */
@@ -212,48 +213,54 @@ struct GameOptions
   unsigned mouse_device;
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
-  bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
-  unsigned rstick_to_btns;
+  bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
+  unsigned analog;                         /* analog enable/disable */
+  unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */
+  unsigned analog_scale;           /* analog scale type */
   unsigned tate_mode;
 
   int      crosshair_enable;
   unsigned activate_dcs_speedhack;
   bool     mame_remapping;       /* display MAME input remapping menu */
 
-  int		   samplerate;		       /* sound sample playback rate, in KHz */
-  bool	   use_samples;	         /* 1 to enable external .wav samples */
+  int      samplerate;		       /* sound sample playback rate, in KHz */
+  bool     use_samples;	         /* 1 to enable external .wav samples */
 
   float	   brightness;		       /* brightness of the display */
   float	   pause_bright;		     /* additional brightness when in pause */
   float	   gamma;			           /* gamma correction of the display */
   int      frameskip;
-  int		   color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
-  int		   ui_orientation;	     /* orientation of the UI relative to the video */
+  int      color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
+  int      ui_orientation;	     /* orientation of the UI relative to the video */
       
-  int		   vector_width;	       /* requested width for vector games; 0 means default (640) */
-  int		   vector_height;	       /* requested height for vector games; 0 means default (480) */
+  int      vector_width;	       /* requested width for vector games; 0 means default (640) */
+  int      vector_height;	       /* requested height for vector games; 0 means default (480) */
   float    beam;                 /* vector beam width */
-  int	     vector_flicker;	     /* vector beam flicker effect control */
+  int      vector_flicker;	     /* vector beam flicker effect control */
   float	   vector_intensity_correction;   
-  int		   translucency;	       /* 1 to enable translucency on vectors */
-  int 	   antialias;		         /* 1 to enable antialiasing on vectors */
+  int      translucency;	       /* 1 to enable translucency on vectors */
+  int      antialias;		         /* 1 to enable antialiasing on vectors */
   unsigned vector_resolution_multiplier;
 
-  int		   use_artwork;	         /* bitfield indicating which artwork pieces to use */
-  int		   artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
-  int		   artwork_crop;	       /* 1 to crop artwork to the game screen */
+  int      use_artwork;	         /* bitfield indicating which artwork pieces to use */
+  int      artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
+  int      artwork_crop;	       /* 1 to crop artwork to the game screen */
 
-  char	   savegame;		         /* character representing a savegame to load */
+  char     savegame;		         /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
   
   const char *bios;			         /* specify system bios (if used), 0 is default */
-
-  int		   debug_width;	         /* requested width of debugger bitmap */
-  int		   debug_height;	       /* requested height of debugger bitmap */
-  int		   debug_depth;	         /* requested depth of debugger bitmap */
-  int 	 four_way_emulation; /* use new 4 way emulation */
-};
+  
+  bool     system_subfolder;     /* save all system files within a subfolder of the libretro system folder rather than directly in the system folder */
+  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */  
+  
+  int      debug_width;	         /* requested width of debugger bitmap */
+  int      debug_height;	       /* requested height of debugger bitmap */
+  int      debug_depth;	         /* requested depth of debugger bitmap */
+  bool     cheat_input_ports;     /*cheat input ports enable/disable */
+  bool     machine_timing;         
+  };
 
 
 
@@ -266,14 +273,14 @@ struct GameOptions
 /* these flags are set in the mame_display struct to indicate that */
 /* a particular piece of state has changed since the last call to */
 /* osd_update_video_and_audio() */
-#define GAME_BITMAP_CHANGED			0x00000001
-#define GAME_PALETTE_CHANGED		0x00000002
+#define GAME_BITMAP_CHANGED       0x00000001
+#define GAME_PALETTE_CHANGED      0x00000002
 #define GAME_VISIBLE_AREA_CHANGED	0x00000004
-#define VECTOR_PIXELS_CHANGED		0x00000008
-#define DEBUG_BITMAP_CHANGED		0x00000010
-#define DEBUG_PALETTE_CHANGED		0x00000020
-#define DEBUG_FOCUS_CHANGED			0x00000040
-#define LED_STATE_CHANGED			0x00000080
+#define VECTOR_PIXELS_CHANGED     0x00000008
+#define DEBUG_BITMAP_CHANGED      0x00000010
+#define DEBUG_PALETTE_CHANGED     0x00000020
+#define DEBUG_FOCUS_CHANGED       0x00000040
+#define LED_STATE_CHANGED         0x00000080
 
 
 /* the main mame_display structure, containing the current state of the */
@@ -284,22 +291,22 @@ struct mame_display
     UINT32					changed_flags;
 
     /* game bitmap and display information */
-    struct mame_bitmap *	game_bitmap;			/* points to game's bitmap */
-    struct rectangle		game_bitmap_update;		/* bounds that need to be updated */
-    const rgb_t *			game_palette;			/* points to game's adjusted palette */
-    UINT32					game_palette_entries;	/* number of palette entries in game's palette */
-    UINT32 *				game_palette_dirty;		/* points to game's dirty palette bitfield */
-    struct rectangle 		game_visible_area;		/* the game's visible area */
-    void *					vector_dirty_pixels;	/* points to X,Y pairs of dirty vector pixels */
+    struct mame_bitmap *  game_bitmap;            /* points to game's bitmap */
+    struct rectangle      game_bitmap_update;     /* bounds that need to be updated */
+    const rgb_t *         game_palette;           /* points to game's adjusted palette */
+    UINT32                game_palette_entries;   /* number of palette entries in game's palette */
+    UINT32 *              game_palette_dirty;     /* points to game's dirty palette bitfield */
+    struct rectangle      game_visible_area;      /* the game's visible area */
+    void *                vector_dirty_pixels;    /* points to X,Y pairs of dirty vector pixels */
 
     /* debugger bitmap and display information */
-    struct mame_bitmap *	debug_bitmap;			/* points to debugger's bitmap */
-    const rgb_t *			debug_palette;			/* points to debugger's palette */
-    UINT32					debug_palette_entries;	/* number of palette entries in debugger's palette */
-    UINT8					debug_focus;			/* set to 1 if debugger has focus */
+    struct mame_bitmap *	debug_bitmap;           /* points to debugger's bitmap */
+    const rgb_t *         debug_palette;          /* points to debugger's palette */
+    UINT32                debug_palette_entries;  /* number of palette entries in debugger's palette */
+    UINT8                 debug_focus;            /* set to 1 if debugger has focus */
 
     /* other misc information */
-    UINT8					led_state;				/* bitfield of current LED states */
+    UINT8                 led_state;              /* bitfield of current LED states */
 };
 
 

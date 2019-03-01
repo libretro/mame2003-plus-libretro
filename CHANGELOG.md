@@ -7,7 +7,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## New games
 
+* 96 Flag Rally
 * 1943 - The Battle Of Midway Mark II
+* 1945k III
 * Air Attack
 * Air Rescue
 * Asura Buster
@@ -22,17 +24,22 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cannon Dancer
 * Chain Reaction
 * Charlie Ninja
+* Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
+* Cookie & Bibi
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Crystal Castles (Joystick Version)
 * Cute Fighters
 * Deluxe 5
 * Denjin Makai 
+* Deer Hunting
 * Diet Go Go
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Dogou Souken (joystick hack bootleg)
+* Doki Doki Penguin Land
+* Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
@@ -43,12 +50,16 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * FixEight (bootleg)
 * Fujiyama Buster
 * Gaia: The Last Choice Of Earth
+* Gals Panic DX
+* Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
 * Ghost Loop
-* Glass (Censored, Unprotected)
+* Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Guerrilla War (joystick hack bootleg)
 * Gunbarich
 * GunMaster
+* Guwange Special Version
 * Hacha Mecha Figher (Unprotected)
+* Hang Zo
 * Heavy Smash
 * Hook (Japan Version) [SumavisionQ5]
 * Hoops '96
@@ -60,9 +71,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Joe & Mac Return
 * Ketsui Kizuna Jigoku Tachi
 * Knuckle Bash 2
+* Led Storm Rally 2011
 * Lethal Enforcers
+* Mad Alien
 * Magical Drop
 * Magical Drop Plus 1
+* Match It II
 * Metal Slug 4
 * Metal Slug 5
 * Midnight Resistance (joystick hack bootleg)
@@ -74,6 +88,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Osman
 * Pack'n Bang Bang
 * Parallel Turn
+* Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
@@ -87,6 +102,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
+* SD Fighter
 * Sengoku 3
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
@@ -95,6 +111,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
+* Super Trio
 * SWAT Police
 * Tang Tang
 * Teeter Torture
@@ -105,96 +122,110 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
+* The King Of Fighters 2003 (Decrypted)
 * The King of Fighters 10th Anniversary
 * The Last Hope
 * The Lost Castle In Darkmist
+* Thunder Heroes
 * Thunder Hoop
 * Title Fight
+* Trophy Hunting Bear & Moose
+* Turkey Hunting
+* Undercover Cops (Alpha Renewal Version)
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
+* Virtua Fighter
 * Wing Force
+* Wing Shooting Championship
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
 * World Cup Volley 95 Extra Version
 * Zintrick
 * Zupapa
 
-## Games fixed and now working
-
-* Alcon
-* Arch Rivals
-* Avenging Spirit
-* B-Rap Boys
-* B-Rap Boys Special
-* Bakuretsu Breaker
-* Baseball Stars (Playchoice 10)
-* Blasted
-* Blood Warrior
-* Bonk's Adventure
-* Crater Raider
-* Demolition Derby
-* Die Hard Arcade (requires a fast system, video and sound issues remain)
-* Discs Of Tron
-* DJ Boy
-* Domino Man
-* Dragon World
-* Driftout 94
-* Eagle Shot Golf
-* Great 1000 Miles Rally
-* Hang-On
-* Ironhorse
-* Journey
-* Juno First
-* Kick
-* Kozmik Kroozer
-* Fighters History
-* Fire Barrel
-* Funky Jet
-* Gardia
-* Green Beret
-* Hacha Mecha Figher
-* Mario's Open Golf (Playchoice 10)
-* Max RPM
-* Metroid (Playchoice 10)
-* Monster Slider
-* Night Slashers
-* Phantasm
-* Photo Y2k
-* Pigskin 621AD
-* Power Drive
-* Rampage
-* Rogha Armor Force
-* Run And Gun (NVRAM) markwkidd
-* Rush'N Attack
-* Sarge
-* Satan's Hollow
-* Shogun Warriors
-* Slap Fight (Official Version)
-* Snowboard Championship
-* Solar Fox
-* Spy Hunter
-* Spy Hunter 2
-* Star Guards
-* Street Fighter (With Added Speedups)
-* Tapper
-* Task Force Harrier
-* Timber
-* Thunder Dragon
-* Tri-Sports
-* Tron
-* Turbo Tag
-* Twin Eagle 2
-* Two Tigers
-* Xenophobe
-* Wacko
-* Zwackery
-
-## New HBMAME Hacks
+## New Hacks
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
 * Donkey Kong II Jumpman Returns
+
+
+## Games fixed and now working
+
+* Alcon - Romset: `alcon`
+* Arch Rivals - Romset: `archrivl`
+* Avengers In Galactic Storm US - Romset: `avengrgs`
+* Avengers In Galactic Storm Japan - Romset: `avengrgsj`
+* Avenging Spirit - Romset `avspirit`
+* B.C. Story - Romset `bcstry`
+* B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
+* B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
+* Bakuretsu Breaker - Romset `bakubrkr` - Playable with minor remaining graphical issues
+* Baseball Stars (Playchoice 10) - Romset `pc_bstar`
+* Blasted - Romset `blasted`
+* Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
+* Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
+* Crater Raider - Romset `crater`
+* Demolition Derby - Romset `demoderb`
+* Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
+* Discs Of Tron - Romsets `dotron` and `dotrone`
+* DJ Boy - Romset `djboy`
+* Domino Man - Romset `domino`
+* Dragon World - Romset `drgnwrld`
+* Driftout 94 - Romset `drifto94`
+* Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
+* Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
+* Hang-On - Romset `hangon`
+* Hard Head 2
+* Ironhorse - Romset `ironhors`
+* Journey - Romset `journey`
+* Juno First - Romset `junofrst`
+* Kick - Romset `kick`
+* Kozmik Kroozr - Romset `kroozr`
+* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
+* Fire Barrel - Romset `firebarr`
+* Funky Jet - Romset `funkyjet`
+* Gardia - Romset `gardia`
+* Green Beret - Romset `greenber`
+* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
+* Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
+* Max RPM - Romset `maxrpm`
+* Metroid (Playchoice 10) - Romset `pc_mtoid`
+* Monster Slider - Romset `mslider`
+* Night Slashers - Romset `nslasher`
+* Phantasm - Romset `phantasm`
+* Photo Y2k - Romset `photoy2k`
+* Pigskin 621AD - Romset `pigskin`
+* Power Drive - Romset `powerdrv`
+* Rampage - Romsets `rampage` and `rampage2`
+* Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
+* Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
+* Run And Gun - Romset `rungun`
+* Rush'N Attack - Romset `rushatck`
+* Sarge - Romset `sarge`
+* Satan's Hollow - Romset `shollow`
+* Shisensho II - Romset `shisen2`
+* Shogun Warriors - Romset `shogwarr`
+* Slap Fight (Official Version) - Romset `slapfigh`
+* Snowboard Championship - Romset `snowboar`
+* Solar Fox - Romset `solarfox`
+* Spy Hunter - Romset `spyhunt`
+* Spy Hunter 2 - Romset `spyhunt2`
+* Star Guards - Romset `stargrds`
+* Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
+* Tapper - Romset `tapper`
+* Task Force Harrier - Romsets `tharrier` and `tharierj`
+* Timber - Romset `timber`
+* Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
+* Tri-Sports - Romset `trisport`
+* Tron - Romset `tron`
+* Turbo Tag - Romset `turbotag`
+* Twin Eagle 2 - Romsets `twineagl` and `twineag2`
+* Two Tigers - Romset `twotiger`
+* Xenophobe - Romset `xenophob`
+* Wacko - Romset `wacko`
+* Zwackery - Romset `zwackery`
 
 ## Games now with sound
 
@@ -202,6 +233,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Blade 
 * Bio-ship Paladin
 * Black Heart
+* Cross Pang
 * Daitoride
 * Dharma Doujou
 * Fire Shark
@@ -222,6 +254,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
+* Sky Diver
 * Super Spacefortress Macross
 * The Karate Tournament
 * Thunder Dragon
@@ -233,19 +266,40 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Games now with improved sound
+
 * Asterix
+* Bosconian
 * Crazy Balloon
-* Final Fight added ost sound track (KMFDManic)
-* Mortal added ost sound track (KMFDManic)
-* nbajam added ost sound track (KMFDManic)
+* Dig Dug
+* Dig Dug II
+* Final Fight - Added OST soundtrack (via KMFDManic)
+* Galaga
+* Galaga 3
+* Gaplus
+* Grobda
+* Libble Rabble
+* Mappy
+* Mortal Kombat - Added OST soundtrack (via KMFDManic)
+* Motos
+* NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
-* outrun added ost soundtrack (KMFDManic)
+* Out Run added ost soundtrack (via KMFDManic)
+* Pacman & Chomp Chomp
+* Pac & Pal
+* Pole Position
+* Pole Position II
 * Rohga Armor Force
+* Super Pacman
+* Super Xevious
+* Tower Of Druaga
+* Toypop
+* Xevious
 
 
 ## Games now with sound sample support
 
 * Cosmic Alien
+* Frogs
 * Sasuke Vs Commander 
 * Space Firebird
 
@@ -260,7 +314,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Changes
-
 * Added sound support to Fire Shark and Vimana
 * Added sound sample support for Cosmic Alien
 * Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
@@ -308,5 +361,22 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Fixed background character movements in Power Instinct 2 and Power Instinct Legends
 * Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
+* Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
+* Fixed Avengers In Galactic Storm [grant2258]
+* Backported Haze's changes from MAME119.u3 fixing the background colours in Dynamite Duke / The Double Dynamites [arcadez]
+* Added three new Namco soundcores NAMCO_15XX, NAMCO_52XX, NAMCO_54XX and updated NAMCO Sound to MAME80 [grant2258]
+* Updated galaga.c gaplus.c mappy.c polepos.c and toypop.c drivers plus sound and video code to MAME80 then hooked em
+up with the new Namco sound chips netting some major improvements video and soundwise for some classic era Namco games 
+bosconian, dig dug, dig dug II, galaga, galaga 3, gaplus, grobda, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, 
+pole position, pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
+* Fixed Hard Head 2 [arcadez]
+* Fixed incorrect palette colours and clock frequencies in Mr Do [cataylox]
+* Added sound support for Sky Diver [grant2258]
+* Added Proms for Ali Baba And The 40 Thieves [cataylox]
+* Added analog joystick support to libretro port [grant2258]
+* Updated discrete soundcore to mame081 and drives that needed updated [grant2258]
+* Updated IREM decryption tables (sound fixes) [grant2258]
+* Updated m68000 core [grant2258]
+* Updates YMF271 sound core [grant2258]
 

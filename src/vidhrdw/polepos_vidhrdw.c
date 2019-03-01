@@ -13,21 +13,15 @@ data16_t *polepos_alpha16_memory;
  */
 static data16_t polepos_vertical_position_modifier[256];
 
-static data16_t view16_hscroll;
 static data16_t road16_vscroll;
 
-static const UINT8 *road_control;
-static const UINT8 *road_bits1;
-static const UINT8 *road_bits2;
-
-static struct mame_bitmap *view_bitmap;
-static UINT8 *view_dirty;
-
+static struct tilemap *bg_tilemap,*tx_tilemap;
+static int polepos_chacl;
 
 
 /***************************************************************************
 
-  Convert the color PROMs into a more useable format.
+  Convert the color PROMs.
 
   Pole Position has three 256x4 palette PROMs (one per gun)
   and a lot ;-) of 256x4 lookup table PROMs.
@@ -52,6 +46,16 @@ PALETTE_INIT( polepos )
 	 * Note that we only decode the lower 128 colors because
 	 * the upper 128 are all black and used during the
 	 * horizontal and vertical blanking periods.
+	 * The purpose of the 128V input is to use a different palette for the
+	 * background and for the road; it is irrelevant for alpha and
+	 * sprites because their palette is the same in both halves.
+	 * Anyway, we emulate that to a certain extent, using different
+	 * colortables for the two halves of the screen. We don't support the
+	 * palette change in the middle of a sprite, however.
+	 * Also, note that priority encoding is done is such a way that alpha
+	 * will use palette bank 2 or 3 depending on whether there is a sprite
+	 * below the pixel or not. That would be tricky to emulate, and it's
+	 * not needed because of course the two banks are the same.
 	 *******************************************************/
 	for (i = 0; i < 128; i++)
 	{
@@ -77,7 +81,7 @@ PALETTE_INIT( polepos )
 		bit2 = (color_prom[0x200 + i] >> 2) & 1;
 		bit3 = (color_prom[0x200 + i] >> 3) & 1;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-		
+
 		palette_set_color(i,r,g,b);
 	}
 
@@ -89,44 +93,44 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x300 + i];
-		colortable[0x0000 + i] = (color != 15) ? (0x020 + color) : 0;
-		colortable[0x0100 + i] = (color != 15) ? (0x060 + color) : 0;
+		colortable[0x0000 + i] = (color != 15) ? (0x020 + color) : 0x2f;
+		colortable[0x0100 + i] = (color != 15) ? (0x060 + color) : 0x2f;
 	}
 
 	/*******************************************************
-	 * View colors (colors 0x200-0x3ff)
+	 * Background colors (colors 0x200-0x2ff)
 	 * Sheet 13A: left, 136014-141
 	 * Inputs: SHFT2, SHFT3 and CHA8 ... CHA13
+     * The background is only in the top half of the screen
 	 *******************************************************/
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x400 + i];
 		colortable[0x0200 + i] = 0x000 + color;
-		colortable[0x0300 + i] = 0x040 + color;
 	}
 
 	/*******************************************************
-	 * Sprite colors (colors 0x400-0xbff)
+	 * Sprite colors (colors 0x300-0xaff)
 	 * Sheet 14B: right, 136014-146
 	 * Inputs: CUSTOM0 ... CUSTOM3 and DATA0 ... DATA5
 	 *******************************************************/
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0xc00 + i];
-		colortable[0x0400 + i] = (color != 15) ? (0x010 + color) : 0;
-		colortable[0x0800 + i] = (color != 15) ? (0x050 + color) : 0;
+		colortable[0x0300 + i] = (color != 15) ? (0x010 + color) : 0x1f;
+		colortable[0x0700 + i] = (color != 15) ? (0x050 + color) : 0x1f;
 	}
 
 	/*******************************************************
-	 * Road colors (colors 0xc00-0x13ff)
+	 * Road colors (colors 0xb00-0x0eff)
 	 * Sheet 13A: bottom left, 136014-145
 	 * Inputs: R1 ... R6 and CHA0 ... CHA3
+     * The road is only in the bottom half of the screen
 	 *******************************************************/
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0x800 + i];
-		colortable[0x0c00 + i] = 0x000 + color;
-		colortable[0x1000 + i] = 0x040 + color;
+		colortable[0x0b00 + i] = 0x040 + color;
 	}
 
 	/* 136014-142, 136014-143, 136014-144 Vertical position modifiers */
@@ -135,30 +139,70 @@ PALETTE_INIT( polepos )
 		j = color_prom[0x500 + i] + (color_prom[0x600 + i] << 4) + (color_prom[0x700 + i] << 8);
 		polepos_vertical_position_modifier[i] = j;
 	}
-
-	road_control = &color_prom[0x2000];
-	road_bits1 = &color_prom[0x4000];
-	road_bits2 = &color_prom[0x6000];
 }
+
 
 
 /***************************************************************************
 
-  Video initialization/shutdown
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+static void bg_get_tile_info(int tile_index)
+{
+	data16_t word = polepos_view16_memory[tile_index];
+	int code = (word & 0xff) | ((word & 0x4000) >> 6);
+	int color = (word & 0x3f00) >> 8;
+	SET_TILE_INFO(
+			1,
+			code,
+			color,
+			0)
+}
+
+static void tx_get_tile_info(int tile_index)
+{
+	data16_t word = polepos_alpha16_memory[tile_index];
+	int code = (word & 0xff) | ((word & 0x4000) >> 6);
+	int color = (word & 0x3f00) >> 8;
+
+	/* I assume the purpose of CHACL is to allow the Z80 to control
+	   the display (therefore using only the bottom 8 bits of tilemap RAM)
+	   in case the Z8002 is not working. */
+	if (polepos_chacl == 0)
+	{
+		code &= 0xff;
+		color = 0;
+	}
+
+	/* 128V input to the palette PROM */
+	if (tile_index >= 32*16) color |= 0x40;
+
+	SET_TILE_INFO(
+			0,
+			code,
+			color,
+			0)
+}
+
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
 
 ***************************************************************************/
 
 VIDEO_START( polepos )
 {
-	/* allocate view bitmap */
-	view_bitmap = auto_bitmap_alloc(64*8, 16*8);
-	if (!view_bitmap)
+	bg_tilemap = tilemap_create(bg_get_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,8,8,64,16);
+	tx_tilemap = tilemap_create(tx_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT_COLOR,8,8,32,32);
+
+	if (!bg_tilemap || !tx_tilemap)
 		return 1;
 
-	/* allocate view dirty buffer */
-	view_dirty = auto_malloc(64*16);
-	if (!view_dirty)
-		return 1;
+	tilemap_set_transparent_pen(tx_tilemap, 0x2f);
 
 	return 0;
 }
@@ -241,7 +285,7 @@ WRITE16_HANDLER( polepos_view16_w )
 	if (oldword != polepos_view16_memory[offset])
 	{
 		if (offset < 0x400)
-			view_dirty[offset] = 1;
+			tilemap_mark_tile_dirty(bg_tilemap,offset);
 	}
 }
 
@@ -257,13 +301,25 @@ WRITE_HANDLER( polepos_view_w )
 	if (oldword != polepos_view16_memory[offset])
 	{
 		if (offset < 0x400)
-			view_dirty[offset] = 1;
+			tilemap_mark_tile_dirty(bg_tilemap,offset);
 	}
 }
 
 WRITE16_HANDLER( polepos_view16_hscroll_w )
 {
-	COMBINE_DATA(&view16_hscroll);
+	static data16_t scroll;
+
+	COMBINE_DATA(&scroll);
+	tilemap_set_scrollx(bg_tilemap,0,scroll);
+}
+
+WRITE_HANDLER( polepos_chacl_w )
+{
+	if (polepos_chacl != (data & 1))
+	{
+		polepos_chacl = data & 1;
+		tilemap_mark_all_tiles_dirty(tx_tilemap);
+	}
 }
 
 
@@ -280,7 +336,12 @@ READ16_HANDLER( polepos_alpha16_r )
 
 WRITE16_HANDLER( polepos_alpha16_w )
 {
+	data16_t oldword = polepos_alpha16_memory[offset];
 	COMBINE_DATA(&polepos_alpha16_memory[offset]);
+	if (oldword != polepos_alpha16_memory[offset])
+	{
+		tilemap_mark_tile_dirty(tx_tilemap,offset);
+	}
 }
 
 READ_HANDLER( polepos_alpha_r )
@@ -290,44 +351,29 @@ READ_HANDLER( polepos_alpha_r )
 
 WRITE_HANDLER( polepos_alpha_w )
 {
+	data16_t oldword = polepos_alpha16_memory[offset];
 	polepos_alpha16_memory[offset] = (polepos_alpha16_memory[offset] & 0xff00) | data;
+	if (oldword != polepos_alpha16_memory[offset])
+	{
+		tilemap_mark_tile_dirty(tx_tilemap,offset);
+	}
 }
+
 
 
 /***************************************************************************
 
-  Internal draw routines
+  Display refresh
 
 ***************************************************************************/
 
-static void draw_view(struct mame_bitmap *bitmap)
-{
-	struct rectangle clip = Machine->visible_area;
-	int x, y, offs;
-
-	/* look for dirty tiles */
-	for (x = offs = 0; x < 64; x++)
-		for (y = 0; y < 16; y++, offs++)
-			if (view_dirty[offs])
-			{
-				data16_t word = polepos_view16_memory[offs];
-				int code = (word & 0xff) | ((word >> 6) & 0x100);
-				int color = (word >> 8) & 0x3f;
-
-				drawgfx(view_bitmap, Machine->gfx[1], code, color,
-						0, 0, 8*x, 8*y, NULL, TRANSPARENCY_NONE, 0);
-				view_dirty[offs] = 0;
-			}
-
-	/* copy the bitmap */
-	x = -view16_hscroll;
-	clip.max_y = 127;
-	copyscrollbitmap(bitmap, view_bitmap, 1, &x, 0, 0, &clip, TRANSPARENCY_NONE, 0);
-}
-
 static void draw_road(struct mame_bitmap *bitmap)
 {
+	const UINT8 *road_control = memory_region(REGION_GFX5);
+	const UINT8 *road_bits1 = memory_region(REGION_GFX5) + 0x2000;
+	const UINT8 *road_bits2 = memory_region(REGION_GFX5) + 0x4000;
 	int x, y, i;
+
 
 	/* loop over the lower half of the screen */
 	for (y = 128; y < 256; y++)
@@ -344,7 +390,7 @@ static void draw_road(struct mame_bitmap *bitmap)
 		roadpal = polepos_road16_memory[yoffs] & 15;
 
 		/* this becomes the palette base for the scanline */
-		colortable = &Machine->remapped_colortable[0x1000 + (roadpal << 6)];
+		colortable = &Machine->remapped_colortable[0x0b00 + (roadpal << 6)];
 
 		/* now fetch the horizontal scroll offset for this scanline */
 		xoffs = polepos_road16_memory[0x380 + (y & 0x7f)] & 0x3ff;
@@ -370,21 +416,21 @@ static void draw_road(struct mame_bitmap *bitmap)
 			else
 			{
 				/* the road ROM offset comes from the current scanline and the X offset */
-				int romoffs = ((y & 0x07f) << 6) + ((xoffs & 0x1ff) >> 3);
+				int romoffs = ((y & 0x07f) << 6) + ((xoffs & 0x1f8) >> 3);
 
 				/* fetch the current data from the road ROMs */
 				int control = road_control[romoffs];
 				int bits1 = road_bits1[romoffs];
-				int bits2 = road_bits2[(romoffs & 0xfff) | ((romoffs >> 1) & 0x800)];
+				int bits2 = road_bits2[(romoffs & 0xfff) | ((romoffs & 0x1000) >> 1)];
 
 				/* extract the road value and the carry-in bit */
 				int roadval = control & 0x3f;
 				int carin = control >> 7;
 
 				/* draw this 8-pixel chunk */
-				for (i = 0; i < 8; i++, bits1 <<= 1, bits2 <<= 1)
+				for (i = 8; i > 0; i--)
 				{
-					int bits = ((bits1 >> 7) & 1) + ((bits2 >> 6) & 2);
+					int bits = BIT(bits1,i) + (BIT(bits2,i) << 1);
 					if (!carin && bits) bits++;
 					*dest++ = roadval & 0x3f;
 					roadval += bits;
@@ -397,7 +443,57 @@ static void draw_road(struct mame_bitmap *bitmap)
 	}
 }
 
-static void draw_sprites(struct mame_bitmap *bitmap)
+static void zoom_sprite( struct mame_bitmap *bitmap,int big,
+		unsigned int code,unsigned int color,int flipx,int sx,int sy,
+		int sizex,int sizey)
+{
+	const struct GfxElement *gfx = Machine->gfx[big ? 3 : 2];
+	UINT8 *gfxdata = gfx->gfxdata + (code % gfx->total_elements) * gfx->char_modulo;
+	UINT8 *scaling_rom = memory_region(REGION_GFX6);
+	pen_t *colortable = gfx->colortable + color * gfx->color_granularity;
+	int x,y;
+
+	if (flipx) flipx = big ? 0x1f : 0x0f;
+
+	for (y = 0;y <= sizey;y++)
+	{
+		int yy = (sy + y) & 0x1ff;
+
+		/* the following should be a reasonable reproduction of how the real hardware works */
+		if (yy >= 0x10 && yy < 0xf0)
+		{
+			int dy = scaling_rom[(y << 6) + sizey] & 0x1f;
+			int xx = sx & 0x3ff;
+			int siz = 0;
+			int offs = 0;
+			UINT8 *src;
+
+			if (!big) dy >>= 1;
+			src = gfxdata + dy * gfx->line_modulo;
+
+			for (x = (big ? 0x40 : 0x20);x > 0;x--)
+			{
+				if (xx < 0x100)
+				{
+					int pen = colortable[src[offs/2 ^ flipx]];
+
+					if (pen != 0x1f)
+						plot_pixel(bitmap,xx,yy,pen);
+				}
+				offs++;
+
+				siz = siz+1+sizex;
+				if (siz & 0x40)
+				{
+					siz &= 0x3f;
+					xx = (xx+1) & 0x3ff;
+				}
+			}
+		}
+	}
+}
+
+static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	data16_t *posmem = &polepos_sprite16_memory[0x380];
 	data16_t *sizmem = &polepos_sprite16_memory[0x780];
@@ -405,76 +501,42 @@ static void draw_sprites(struct mame_bitmap *bitmap)
 
 	for (i = 0; i < 64; i++, posmem += 2, sizmem += 2)
 	{
-		const struct GfxElement *gfx = Machine->gfx[(sizmem[0] & 0x8000) ? 3 : 2];
-		int vpos = (~posmem[0] & 0x1ff) + 4;
-		int hpos = (posmem[1] & 0x3ff) - 0x40;
-		int vsize = ((sizmem[0] >> 8) & 0x3f) + 1;
-		int hsize = ((sizmem[1] >> 8) & 0x3f) + 1;
+		int sx = (posmem[1] & 0x3ff) - 0x40 + 4;
+		int sy = 512 - (posmem[0] & 0x1ff) + 1;	// sprites are buffered and delayed by one scanline
+		int sizex = (sizmem[1] & 0x3f00) >> 8;
+		int sizey = (sizmem[0] & 0x3f00) >> 8;
 		int code = sizmem[0] & 0x7f;
-		int hflip = sizmem[0] & 0x80;
+		int flipx = sizmem[0] & 0x80;
 		int color = sizmem[1] & 0x3f;
 
-		if (vpos >= 128) color |= 0x40;
-		drawgfxzoom(bitmap, gfx,
-				 code, color, hflip, 0, hpos, vpos,
-				 &Machine->visible_area, TRANSPARENCY_COLOR, 0, hsize << 11, vsize << 11);
+		/* 128V input to the palette PROM */
+		if (sy >= 128) color |= 0x40;
+
+		zoom_sprite(bitmap, (sizmem[0] & 0x8000) ? 1 : 0,
+				 code,
+				 color,
+				 flipx,
+				 sx, sy,
+				 sizex,sizey);
 	}
 }
 
-static void draw_alpha(struct mame_bitmap *bitmap)
-{
-	int x, y, offs, in;
-
-	for (y = offs = 0; y < 32; y++)
-		for (x = 0; x < 32; x++, offs++)
-		{
-			data16_t word = polepos_alpha16_memory[offs];
-			int code = (word & 0xff) | ((word >> 6) & 0x100);
-			int color = (word >> 8) & 0x3f; /* 6 bits color */
-
-			if (y >= 16) color |= 0x40;
-			drawgfx(bitmap, Machine->gfx[0],
-					 code, color, 0, 0, 8*x, 8*y,
-					 &Machine->visible_area, TRANSPARENCY_COLOR, 0);
-		}
-
-	/* Now draw the shift if selected on the fake dipswitch */
-	in = readinputport( 0 );
-
-	if ( in & 8 ) {
-		if ( ( in & 2 ) == 0 ) {
-			/* L */
-			drawgfx(bitmap, Machine->gfx[0],
-					 0x15, 0, 0, 0, 30*8-1, 29*8,
-					 &Machine->visible_area, TRANSPARENCY_PEN, 0);
-			/* O */
-			drawgfx(bitmap, Machine->gfx[0],
-					 0x18, 0, 0, 0, 31*8-1, 29*8,
-					 &Machine->visible_area, TRANSPARENCY_PEN, 0);
-		} else {
-			/* H */
-			drawgfx(bitmap, Machine->gfx[0],
-					 0x11, 0, 0, 0, 30*8-1, 29*8,
-					 &Machine->visible_area, TRANSPARENCY_PEN, 0);
-			/* I */
-			drawgfx(bitmap, Machine->gfx[0],
-					 0x12, 0, 0, 0, 31*8-1, 29*8,
-					 &Machine->visible_area, TRANSPARENCY_PEN, 0);
-		}
-	}
-}
-
-
-/***************************************************************************
-
-  Master refresh routine
-
-***************************************************************************/
 
 VIDEO_UPDATE( polepos )
 {
-	draw_view(bitmap);
+	struct rectangle clip = *cliprect;
+	clip.max_y = 127;
+	tilemap_draw(bitmap,&clip,bg_tilemap,0,0);
 	draw_road(bitmap);
-	draw_sprites(bitmap);
-	draw_alpha(bitmap);
+	draw_sprites(bitmap,cliprect);
+	tilemap_draw(bitmap,cliprect,tx_tilemap,0,0);
+
+	{
+		int in = readinputport( 0 );
+		static int lastin;
+
+		if ((in ^ lastin) & 2)
+			usrintf_showmessage((in & 2) ? "LO" : "HI");
+		lastin = in;
+	}
 }

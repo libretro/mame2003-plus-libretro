@@ -5,7 +5,7 @@ CORE_DIR := $(ROOT_DIR)/src
 
 include $(ROOT_DIR)/Makefile.common
 
-COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -Dstricmp=strcasecmp -DINLINE="static inline" -DANDROID $(INCFLAGS)
+COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID $(INCFLAGS)
 
 GIT_VERSION := " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -15,7 +15,7 @@ endif
 include $(CLEAR_VARS)
 LOCAL_MODULE    := retro
 LOCAL_SRC_FILES := $(SOURCES_C)
-LOCAL_CFLAGS    := -std=gnu99 $(COREFLAGS)
+LOCAL_CFLAGS    := -std=gnu90 $(COREFLAGS) -fsigned-char
 LOCAL_LDFLAGS   := -Wl,-version-script=$(ROOT_DIR)/link.T
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)

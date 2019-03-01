@@ -1,22 +1,33 @@
 /*
+
   "Simple" 156 based Data East Hardware
+
  Data East
   DE-0409-1
   DE-0491-1
+
  Mitchell
   MT5601-0 (slightly different component arrangement to Deco PCBs)
+
+
  Games Supported
+
   Data East:
     Joe & Mac Returns (Japanese version called Caveman Ninja 2 might exist)
     Chain Reaction / Magical Drop / Magical Drop Plus 1
+
   Mitchell games:
     Charlie Ninja
     Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
     Osman / Cannon Dancer
+
+
   The DECO 156 is a 32-bit custom encrypted ARM5 chip connected to
-  16-bit hardware. Only ROM and System Work RAM is accessed via all
-  32 data lines.
+  16-bit hardware only ROM and System Work Ram is accessed via all
+  32 data lines we should throw away the MSB for other accesses
+
   Info from Charles MacDonald:
+
   - The sound effects 6295 is clocked at exactly half the rate of the
   music 6295.
   - Both have the SS pin pulled high to select the sample rate of the
@@ -24,41 +35,57 @@
   in the data sheet.
   - Both are connected directly to their ROMs with no swapping on the
   address or data lines. The music ROM is a 16-bit ROM in byte mode.
+
   The 156 data bus has pull-up resistors so reading unused locations will
   return $FFFF.
+
   I traced out all the connections and confirmed that both video chips (52
   and 141) really are on the lower 16 bits of the 32-bit data bus, same
   with the palette RAM. Just the program ROM and 4K internal RAM to the
   223 should be accessed as 32-bit. Not sure why that part isn't working
   right though.
+
   Each game has a 512K block of memory that is decoded in the same way.
   One of the PALs controls where this block starts at, for example
   0x380000 for Magical Drop and 0x180000 for Osman:
+
     000000-00FFFF : Main RAM (16K)
     010000-01FFFF : Sprite RAM (8K)
     020000-02FFFF : Palette RAM (4K)
-    030000-03FFFF : Read player inputs, write EEPROM and OKI banking
+    030000-03FFFF : simpl156_system_r / simpl156_eeprom_w
     040000-04FFFF : PF1,2 control registers
     050000-05FFFF : PF1,2 name tables
     060000-06FFFF : PF1,2 row scroll
     070000-07FFFF : Control register
+
   The ordering of items within the block does not change and the size of
   each region is always 64K. If any RAM or other I/O has to be mirrored,
   it likely fills out the entire 64K range.
+
   The control register (marked as MWA_NOP in the driver) pulls one of the
   DE156 pins high for a brief moment and low again. Perhaps it triggers an
   interrupt or reset? It doesn't seem to be connected to anything else, at
   least on my board.
+
   The sprite chip has 16K RAM but the highest address line is tied to
   ground, so only 8K is available. This is correctly implemented in the
   driver, I'm mentioning it to confirm it isn't banked or anything like that.
+
+
   Notes:
+
   Magical Drop / Magical Drop Plus / Chain Reaction
+
   Random crashes at 7mhz..
+
 -- check this ---
+
 Are the OKI M6295 clocks from Heavy Smash are correct at least for the Mitchell games:
+
  - OKI M6295(1) clock: 1.000MHz (28 / 28), sample rate = 1000000 / 132
  - OKI M6295(2) clock: 2.000MHz (28 / 14), sample rate = 2000000 / 132
+
+
 */
 #include "driver.h"
 #include "decocrpt.h"
@@ -70,6 +97,7 @@ Are the OKI M6295 clocks from Heavy Smash are correct at least for the Mitchell 
 
 static UINT32 *simpl156_systemram;
 static const UINT8 *simpl156_default_eeprom = NULL;
+static const UINT8 *prtytime_default_eeprom = NULL;
 
 static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
@@ -227,6 +255,17 @@ static READ32_HANDLER( simpl156_inputs_read )
 	returndata &= ~0xf0;
 	returndata |= vblank_fake;
 
+	return returndata;
+}
+
+static READ32_HANDLER( prtytime_inputs_read )
+{
+	int eep = EEPROM_read_bit();
+	UINT32 returndata;
+
+	returndata = readinputport(0)^0xffff0000;
+
+	returndata^= ( (eep<<8)  );
 	return returndata;
 }
 
@@ -577,6 +616,41 @@ static MEMORY_WRITE32_START( magdropp_writemem )
 	{ 0x780000, 0x780003, simpl156_6295_0_w },
 MEMORY_END
 
+static MEMORY_READ32_START( prtytime_readmem )
+    { 0x000000, 0x07ffff, MRA32_ROM },
+	{ 0x100000, 0x100003, simpl156_6295_0_r },
+	{ 0x140000, 0x140003, simpl156_6295_1_r },
+	{ 0x180000, 0x187fff, simpl156_mainram_r }, /* main ram */
+	{ 0x190000, 0x191fff, simpl156_spriteram_r },
+	{ 0x1a0000, 0x1a0fff, simpl156_palette_r },
+	{ 0x1b0000, 0x1b0003, simpl156_system_r },
+	{ 0x1c0000, 0x1c001f, simpl156_pf12_control_r },
+	{ 0x1d0000, 0x1d1fff, simpl156_pf1_data_r },
+	{ 0x1d2000, 0x1d3fff, simpl156_pf1_data_r },
+	{ 0x1d4000, 0x1d5fff, simpl156_pf2_data_r },
+	{ 0x1e0000, 0x1e1fff, simpl156_pf1_rowscroll_r },
+	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_r },
+	{ 0x200000, 0x200003, prtytime_inputs_read },
+	{ 0x201000, 0x201fff, MRA32_RAM }, /* work ram (32-bit) */
+MEMORY_END
+
+static MEMORY_WRITE32_START( prtytime_writemem )
+    { 0x000000, 0x07ffff, MWA32_ROM },
+	{ 0x100000, 0x100003, simpl156_6295_0_w },
+	{ 0x140000, 0x140003, simpl156_6295_1_w },
+	{ 0x180000, 0x187fff, simpl156_mainram_w, &simpl156_mainram }, /* main ram */
+	{ 0x190000, 0x191fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
+	{ 0x1a0000, 0x1a0fff, simpl156_palette_w },
+	{ 0x1b0000, 0x1b0003, simpl156_eeprom_w },
+	{ 0x1c0000, 0x1c001f, simpl156_pf12_control_w },
+	{ 0x1d0000, 0x1d1fff, simpl156_pf1_data_w },
+	{ 0x1d2000, 0x1d3fff, simpl156_pf1_data_w },
+	{ 0x1d4000, 0x1d5fff, simpl156_pf2_data_w },
+	{ 0x1e0000, 0x1e1fff, simpl156_pf1_rowscroll_w },
+	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_w },
+	{ 0x1f0000, 0x1f0003, MWA32_NOP }, /* ? */
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit) */
+MEMORY_END
 
 static struct GfxLayout tile_8x8_layout =
 {
@@ -638,6 +712,23 @@ static NVRAM_HANDLER( simpl156 )
 
 				EEPROM_set_data(eeprom_data,0x100);
 			}
+		}
+	}
+}
+
+static NVRAM_HANDLER( prtytime )
+{
+	if (read_or_write)
+		EEPROM_save(file);
+	else
+	{
+		EEPROM_init(&eeprom_interface_93C46);/* 93c45 */
+
+		if (file) EEPROM_load(file);
+		else
+		{
+			if (simpl156_default_eeprom)	/* Set the EEPROM to Factory Defaults */
+				EEPROM_set_data(simpl156_default_eeprom,0x100);
 		}
 	}
 }
@@ -796,6 +887,33 @@ static MACHINE_DRIVER_START( magdropp )
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) /* not right!!*/
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( prtytime )
+	/* basic machine hardware */
+
+	MDRV_CPU_ADD(ARM, 28000000 /* /4 */)	/*DE156*/ /* 7.000 MHz */ /* measured at 7.. seems to need 28? */
+	MDRV_CPU_MEMORY(prtytime_readmem,prtytime_writemem)
+	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
+
+	MDRV_NVRAM_HANDLER(prtytime) /* 93C45 */
+
+	MDRV_FRAMES_PER_SECOND(58)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(4096)
+
+	MDRV_VIDEO_START(simpl156)
+	MDRV_VIDEO_UPDATE(simpl156)
+
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(OKIM6295, mitchell156_6295_interface)
 MACHINE_DRIVER_END
 
 static void simpl156_common_init(void)
@@ -1179,6 +1297,110 @@ ROM_START( candance )
 	ROM_LOAD( "mcf-05.12f",    0x00000, 0x200000, CRC(f007d376) SHA1(4ba20e5dabeacc3278b7f30c4462864cbe8f6984) )
 ROM_END
 
+/*
+
+Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
+(c)1995 Mitchell Corp.
+
+DEC-22VO (board is manufactured by DECO)
+MT5601-0
+------------------------------------------------------------
+|                 MCB05.14H     MCB-03.14D     MCB-02.14A  |
+|                                                          |
+|     OKI M6295   PZ01-0.13H            52     MCB-01.13A  |
+|                                                          |
+--|   OKI M6295    MCB04.12F                               |
+  |                                                        |
+--|                               CY7C185-25   MCB-00.9A   |
+|                                 CY7C185-25               |
+|                                                          |
+|                                                          |
+|J                     GAL16V8           28.000MHz         |
+|A                  CY7C185-25                             |
+|M                  CY7C185-25     141                     |
+|M                                                         |
+|A          223                                            |
+|                                             GAL16V8      |
+|                                GAL16V8                   |
+|                             CY7C185-25   223             |
+--|                93C45.2H   CY7C185-25                   |
+  |                                                  156   |
+--| TESTSW                  PZ00-0.1E                      |
+|                                                          |
+------------------------------------------------------------
+
+CPU  : DECO 156 100pin PQFP custom encrypted ARM
+Sound: M6295x2
+OSC  : 28.0000MHz
+
+ROMs:
+pz_00-0.1e - Main program (27c4096) Party Time: Gonta the Diver II
+rd_00-0.1e - Main program (27c4096) Ganbare! Gonta!! 2
+
+mcb-00.9a  - Graphics (23c16000)
+
+mcb-01.13a - Graphics (23c16000)
+mcb-02.14a |
+mcb-03.14d |
+mcb-05.14h /
+
+pz_01-0.13h - Samples (27c020) Party Time: Gonta the Diver II
+rd_01-0.13h - Samples (27c020) Ganbare! Gonta!! 2
+
+mcb-04.12f - Samples (23c16000)
+
+GALs (16V8B, not dumped):
+vz-00.5c
+vz-01.4e
+vz-02.8f
+
+*/
+
+ROM_START( prtytime )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* DE156 code (encrypted) */
+	ROM_LOAD( "pz_00-0.1e",    0x000000, 0x080000, CRC(ec715c87) SHA1(c9f28399d59b37977f31a5c67cb97af6c58947ae) )
+
+	ROM_REGION( 0x200000, REGION_GFX1, 0 )
+	ROM_LOAD( "mcb-00.9a",    0x000000, 0x080000, CRC(c48a4f2b) SHA1(2dee5f8507b2a7e6f7e44b14f9abca36d0ebf78b) )
+	ROM_CONTINUE( 0x100000, 0x080000)
+	ROM_CONTINUE( 0x080000, 0x080000)
+	ROM_CONTINUE( 0x180000, 0x080000)
+
+	ROM_REGION( 0x800000, REGION_GFX2, 0 )
+	ROM_LOAD16_BYTE( "mcb-02.14a",    0x000001, 0x200000, CRC(423cfb38) SHA1(b8c772a8ab471c365a11a88c85e1c8c7d2ad6e80) )
+	ROM_LOAD16_BYTE( "mcb-05.14h",    0x000000, 0x200000, CRC(81540cfb) SHA1(6f7bc62c3c4d4a29eb1e0cfb261ace461bbca57c) )
+	ROM_LOAD16_BYTE( "mcb-01.13a",    0x400001, 0x200000, CRC(06f40a57) SHA1(896f1d373e911dcff7223bf21756ad35b28b4c5d) )
+	ROM_LOAD16_BYTE( "mcb-03.14d",    0x400000, 0x200000, CRC(0aef73af) SHA1(76cf13f53da5202da80820f98660edee1eef7f1a) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* Oki samples */
+	ROM_LOAD( "pz_01-0.13h",    0x00000, 0x40000,  CRC(8925bce2) SHA1(0ff2d5db7a24a2af30bd753eba274572c32cc2e7) )
+
+	ROM_REGION( 0x200000, REGION_SOUND2, 0 ) /* samples? (banked?) */
+	ROM_LOAD( "mcb-04.12f",    0x00000, 0x200000, CRC(e23d3590) SHA1(dc8418edc525f56e84f26e9334d5576000b14e5f) )
+ROM_END
+
+ROM_START( gangonta )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* DE156 code (encrypted) */
+	ROM_LOAD( "rd_00-0.1e",    0x000000, 0x080000, CRC(f80f43bb) SHA1(f9d26829eb90d41a6c410d4d673fe9595f814868) )
+
+	ROM_REGION( 0x200000, REGION_GFX1, 0 )
+	ROM_LOAD( "mcb-00.9a",    0x000000, 0x080000, CRC(c48a4f2b) SHA1(2dee5f8507b2a7e6f7e44b14f9abca36d0ebf78b) )
+	ROM_CONTINUE( 0x100000, 0x080000)
+	ROM_CONTINUE( 0x080000, 0x080000)
+	ROM_CONTINUE( 0x180000, 0x080000)
+
+	ROM_REGION( 0x800000, REGION_GFX2, 0 )
+	ROM_LOAD16_BYTE( "mcb-02.14a",    0x000001, 0x200000, CRC(423cfb38) SHA1(b8c772a8ab471c365a11a88c85e1c8c7d2ad6e80) )
+	ROM_LOAD16_BYTE( "mcb-05.14h",    0x000000, 0x200000, CRC(81540cfb) SHA1(6f7bc62c3c4d4a29eb1e0cfb261ace461bbca57c) )
+	ROM_LOAD16_BYTE( "mcb-01.13a",    0x400001, 0x200000, CRC(06f40a57) SHA1(896f1d373e911dcff7223bf21756ad35b28b4c5d) )
+	ROM_LOAD16_BYTE( "mcb-03.14d",    0x400000, 0x200000, CRC(0aef73af) SHA1(76cf13f53da5202da80820f98660edee1eef7f1a) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* Oki samples */
+	ROM_LOAD( "rd_01-0.13h",    0x00000, 0x40000,  CRC(70fd18c6) SHA1(368cd8e10c5f5a13eb3813974a7e6b46a4fa6b6c) )
+
+	ROM_REGION( 0x200000, REGION_SOUND2, 0 ) /* samples? (banked?) */
+	ROM_LOAD( "mcb-04.12f",    0x00000, 0x200000, CRC(e23d3590) SHA1(dc8418edc525f56e84f26e9334d5576000b14e5f) )
+ROM_END
 
 /* some default eeproms */
 
@@ -1271,6 +1493,27 @@ static const UINT8 candance_eeprom[128] = {
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
+static const UINT8 prtytime_eeprom[128] = {
+	0xAF, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xDE, 0xDE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xED, 0xED, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xAF, 0x7F, 0xFF, 0xFF, 0x7F, 0xFE, 0xFF, 0xFF
+};
+
+static const UINT8 gangonta_eeprom[128] = {
+	0x2F, 0xFF, 0x2F, 0xFF, 0xFF, 0xFE, 0xFF, 0xFE, 0xFF, 0xFE, 0xED, 0xCB, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+};
 
 /* Everything seems more stable if we run the CPU speed x4 and use Idle skips.. maybe it has an internal multipler? */
 static READ32_HANDLER( joemacr_speedup_r )
@@ -1298,6 +1541,25 @@ static DRIVER_INIT (chainrec)
 	simpl156_default_eeprom = chainrec_eeprom;
 }
 
+static READ32_HANDLER( prtytime_speedup_r )
+{
+	if (activecpu_get_pc()==0x4f0)  cpu_spinuntil_time(TIME_IN_USEC(400));
+	return simpl156_systemram[0xae0/4];
+}
+
+static DRIVER_INIT (prtytime)
+{
+	install_mem_read32_handler(0, 0x0201ae0, 0x0201ae3, prtytime_speedup_r );
+	simpl156_common_init();
+	simpl156_default_eeprom = prtytime_eeprom;
+}
+
+static DRIVER_INIT (gangonta)
+{
+	install_mem_read32_handler(0, 0x0201ae0, 0x0201ae3, prtytime_speedup_r );
+	simpl156_common_init();
+	simpl156_default_eeprom = gangonta_eeprom;
+}
 
 static READ32_HANDLER( charlien_speedup_r )
 {
@@ -1346,6 +1608,8 @@ GAME( 1995, magdrop,  chainrec, magdrop,     simpl156, chainrec, ROT0,  "Data Ea
 GAME( 1995, magdropp, chainrec, magdropp,    simpl156, chainrec, ROT0,  "Data East Corporation", "Magical Drop Plus 1 (Japan, Version 2.1)" )
 
 /* Mitchell games running on the DEC-22VO / MT5601-0 PCB */
-GAMEC( 1995, charlien, 0,        mitchell156, simpl156, charlien, ROT0,  "Mitchell", "Charlie Ninja" , &generic_ctrl, &charlien_bootstrap) /* language in service mode */
+GAMEC(1995, charlien, 0,        mitchell156, simpl156, charlien, ROT0,  "Mitchell", "Charlie Ninja" , &generic_ctrl, &charlien_bootstrap) /* language in service mode */
 GAME( 1996, osman,    0,        mitchell156, simpl156, osman,    ROT0,  "Mitchell", "Osman (World)" )
 GAME( 1996, candance, osman,    mitchell156, simpl156, candance, ROT0,  "Mitchell", "Cannon Dancer (Japan)" )
+GAME( 1995, prtytime, 0,        prtytime,    simpl156, prtytime, ROT90, "Mitchell", "Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 (World Release)") /* language in service mode */
+GAME( 1995, gangonta, prtytime, prtytime,    simpl156, gangonta, ROT90, "Mitchell", "Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II (Japan Release)") /* language in service mode */

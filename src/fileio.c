@@ -4,7 +4,7 @@
 
 ***************************************************************************/
 
-#include <zlib.h>
+#include <compat/zlib.h>
 
 #include <assert.h>
 
@@ -61,7 +61,6 @@ struct _mame_file
 ***************************************************************************/
 
 static mame_file *generic_fopen(int pathtype, const char *gamename, const char *filename, const char* hash, UINT32 flags);
-static const char *get_extension_for_filetype(int filetype);
 static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **p, UINT64 *size, char* hash);
 
 
@@ -182,6 +181,21 @@ int osd_get_path_count(int pathtype)
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
+  char save_path_buffer[PATH_MAX_LENGTH];
+  char sys_path_buffer[PATH_MAX_LENGTH];
+
+  save_path_buffer[0] = '\0';
+  if(options.save_subfolder)
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_save_path,path_default_slash_c(), APPNAME);
+  else
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_save_path);
+
+  sys_path_buffer[0] = '\0';
+  if(options.system_subfolder)
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_system_path,path_default_slash_c(), APPNAME);
+  else
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
+    
    switch (pathtype)
    {       
        case FILETYPE_ROM:
@@ -191,40 +205,41 @@ void osd_get_path(int pathtype, char* path)
 
       /* user-initiated content goes in mame2003 save directory subfolders */      
       case FILETYPE_IMAGE_DIFF:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "diff");
          break;     
       case FILETYPE_NVRAM:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "nvram");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "nvram");
          break;
       case FILETYPE_HIGHSCORE:
-          snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "hi");
+          snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "hi");
          break;
       case FILETYPE_CONFIG:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "cfg");
          break;
       case FILETYPE_MEMCARD:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "memcard");
          break;
       case FILETYPE_CTRLR:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "ctrlr");
          break;
       case FILETYPE_XML_DAT:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s", save_path_buffer);
          break;
-      /* pre-generated content goes in mam2003 system directory subfolders */
+
+         /* static, pregenerated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "artwork");
          break;
       case FILETYPE_SAMPLE:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "samples");
          break;
       case FILETYPE_SAMPLE_FLAC:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "samples");
          break;
 
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s", sys_path_buffer);
    }    
 }
 
@@ -234,7 +249,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    char currDir[PATH_MAX_LENGTH];
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
 
    /*log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
 
@@ -253,7 +268,7 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
    FILE* out;
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
 
    path_mkdir(currDir);
 
@@ -780,7 +795,7 @@ static INLINE void compose_path(char *output, const char *gamename, const char *
 	get_extension_for_filetype
 ***************************************************************************/
 
-static const char *get_extension_for_filetype(int filetype)
+const char *get_extension_for_filetype(int filetype)
 {
 	const char *extension;
 
@@ -1166,4 +1181,3 @@ int CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)
 	va_end(va);
 	return rc;
 }
-

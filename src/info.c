@@ -12,7 +12,6 @@
 #define XML_ROOT "mame"
 #define XML_TOP "game"
 
-int old_style = 0;
 extern const char* ost_drivers[];
  
 /* Print a free format string */
@@ -730,10 +729,7 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 
 	fprintf(out, "\t<" XML_TOP);
 
-	if(old_style)
-    fprintf(out, " name=\"%s\"", game->name ); /* use GameDrv "name" field as the filename */
-  else
-    fprintf(out, " name=\"%s\"", game->description ); /* use GameDrv "description" field as the filename */
+  fprintf(out, " name=\"%s\"", game->name ); /* use GameDrv "name" field as the filename */
 
 	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
 		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
@@ -815,13 +811,11 @@ static void print_resource_info(FILE* out, const struct GameDriver* game)
 
 
 /* Print the MAME database in XML format */
-void print_mame_xml(int old_style_flag)
+void print_mame_xml()
 {
     int driver_index = 0;
     FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, APPNAME".xml", "w+b");	
-    
-    old_style = old_style_flag;
-    	
+     	
     if (xml_dat != NULL)	
     {	
 	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003.xml\n");	

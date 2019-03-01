@@ -128,10 +128,10 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include <zlib.h>
+#include <compat/zlib.h>
 #include "hash.h"
 #include <utils/md5.h>
-#include <utils/sha1.h>
+#include "mame_sha1.h"
 #include "osd_cpu.h"
 #include "mame.h"
 #include "common.h"

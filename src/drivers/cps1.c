@@ -7793,12 +7793,6 @@ GAME( 1989, ffightu,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Ca
 GAME( 1989, ffightj,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
 GAME( 1989, ffightj1, ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
 
-/*
-GAME( 1989, ffight,   0,        cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (World)" )
-GAME( 1989, ffightu,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (US 900112)" )
-GAME( 1989, ffightj,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
-GAME( 1989, ffightj1, ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
-*/
 
 GAME( 1990, 1941,     0,        cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (World)" )
 GAME( 1990, 1941j,    1941,     cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (Japan)" )

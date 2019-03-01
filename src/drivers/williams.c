@@ -897,6 +897,41 @@ INPUT_PORTS_START( spdball )
 INPUT_PORTS_END
 
 
+INPUT_PORTS_START( alienar )
+	PORT_START /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )
+
+	PORT_START /* IN1 */
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START /* IN2 */
+	PORT_BITX(0x01, IP_ACTIVE_HIGH, 0, "Auto Up", KEYCODE_F1, IP_JOY_NONE )
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, 0, "Advance", KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN3 )
+	PORT_BITX(0x08, IP_ACTIVE_HIGH, 0, "High Score Reset", KEYCODE_7, IP_JOY_NONE )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_TILT )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START /* IN3 */      /* (muxed with IN0) */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( bubbles )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
@@ -1325,6 +1360,36 @@ static MACHINE_DRIVER_START( williams )
 	MDRV_MACHINE_INIT(williams)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( alienar )
+
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD_TAG("main", M6809, 1000000)
+	MDRV_CPU_MEMORY(defender_readmem,defender_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(defender)
+	MDRV_NVRAM_HANDLER(generic_0fill)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(304, 256)
+	MDRV_VISIBLE_AREA(6, 298-1, 7, 247-1)
+	MDRV_PALETTE_LENGTH(16)
+
+	MDRV_VIDEO_START(williams)
+	MDRV_VIDEO_UPDATE(williams)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(DAC, dac_interface)
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(williams_readmem,williams_writemem)
+
+	MDRV_MACHINE_INIT(williams)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( sinistar )
 
@@ -1336,6 +1401,18 @@ static MACHINE_DRIVER_START( sinistar )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( alienaru )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(defender)
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(williams_readmem,williams_writemem)
+
+	MDRV_MACHINE_INIT(williams)
+MACHINE_DRIVER_END
+
+
 static MACHINE_DRIVER_START( playball )
 
 	/* basic machine hardware */
@@ -1344,6 +1421,9 @@ static MACHINE_DRIVER_START( playball )
 	/* video hardware */
 	MDRV_VISIBLE_AREA(6, 298-1, 8, 239-1)
 MACHINE_DRIVER_END
+
+
+
 
 
 static MACHINE_DRIVER_START( blaster )
@@ -1429,6 +1509,7 @@ ROM_START( defender )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )
 	ROM_LOAD( "defend.snd",   0xf800, 0x0800, CRC(fefd5b48) SHA1(ceb0d18483f0691978c604db94417e6941ad7ff2) )
+	
 ROM_END
 
 
@@ -1763,7 +1844,48 @@ ROM_START( spdball )
 	ROM_LOAD( "mystery.rom", 0x00000, 0x1000, CRC(dcb6a070) SHA1(6a6fcddf5b46eef187dcf5d9b60e03e9375e7276) )
 ROM_END
 
+ROM_START( alienar )
+	ROM_REGION( 0x19000, REGION_CPU1, 0 )
+	ROM_LOAD( "aarom01",   0x0000, 0x1000, CRC(bb0c21be) SHA1(dbf122870adaa49cd99e2c1e9fa4b78fb74ef2c1) )
+	ROM_LOAD( "aarom02",   0x1000, 0x1000, CRC(165acd37) SHA1(12466c94bcf5a98f154a639ecc2e95d5193cbab2) )
+	ROM_LOAD( "aarom03",   0x2000, 0x1000, CRC(e5d51d92) SHA1(598c928499e977a30906319c97ffa1ef2b9395d1) )
+	ROM_LOAD( "aarom04",   0x3000, 0x1000, CRC(24f6feb8) SHA1(c1b7d764785b4edfe80a90ffdc52a67c8dbbfea5) )
+	ROM_LOAD( "aarom05",   0x4000, 0x1000, CRC(5b1ac59b) SHA1(9b312eb419e994a006fda2ae61c58c31f048bace) )
+	ROM_LOAD( "aarom06",   0x5000, 0x1000, CRC(da7195a2) SHA1(ef2c2750c504176fd6a11e8463278d97cac9a5c5) )
+	ROM_LOAD( "aarom07",   0x6000, 0x1000, CRC(f9812be4) SHA1(5f116345f09cd79790612672aa48ede63fc91f56) )
+	ROM_LOAD( "aarom08",   0x7000, 0x1000, CRC(cd7f3a87) SHA1(59577059308931139ecc036d06953660a148d91c) )
+	ROM_LOAD( "aarom09",   0x8000, 0x1000, CRC(e6ce77b4) SHA1(bd4354100067654d0ad2e590591582dbdfb845b6) )
+	ROM_LOAD( "aarom10",   0xd000, 0x1000, CRC(6feb0314) SHA1(5cf30f097bc695cbd388cb408e78394926362a7b) )
+	ROM_LOAD( "aarom11",   0xe000, 0x1000, CRC(ae3a270e) SHA1(867fff32062bc876390e8ca6bd7cedae47cd92c9) )
+	ROM_LOAD( "aarom12",   0xf000, 0x1000, CRC(6be9f09e) SHA1(98821c9b94301c5fd6e7f5d9e4bc9c1bdbab53ec) )
+ROM_END
 
+ROM_START( alienaru )
+	ROM_REGION( 0x19000, REGION_CPU1, 0 )
+	ROM_LOAD( "aarom01",   0x0000, 0x1000, CRC(bb0c21be) SHA1(dbf122870adaa49cd99e2c1e9fa4b78fb74ef2c1) )
+	ROM_LOAD( "aarom02",   0x1000, 0x1000, CRC(165acd37) SHA1(12466c94bcf5a98f154a639ecc2e95d5193cbab2) )
+	ROM_LOAD( "aarom03",   0x2000, 0x1000, CRC(e5d51d92) SHA1(598c928499e977a30906319c97ffa1ef2b9395d1) )
+	ROM_LOAD( "aarom04",   0x3000, 0x1000, CRC(24f6feb8) SHA1(c1b7d764785b4edfe80a90ffdc52a67c8dbbfea5) )
+	ROM_LOAD( "aarom05",   0x4000, 0x1000, CRC(5b1ac59b) SHA1(9b312eb419e994a006fda2ae61c58c31f048bace) )
+	ROM_LOAD( "aarom06",   0x5000, 0x1000, CRC(da7195a2) SHA1(ef2c2750c504176fd6a11e8463278d97cac9a5c5) )
+	ROM_LOAD( "aarom07",   0x6000, 0x1000, CRC(f9812be4) SHA1(5f116345f09cd79790612672aa48ede63fc91f56) )
+	ROM_LOAD( "aarom08",   0x7000, 0x1000, CRC(cd7f3a87) SHA1(59577059308931139ecc036d06953660a148d91c) )
+	ROM_LOAD( "aarom09",   0x8000, 0x1000, CRC(e6ce77b4) SHA1(bd4354100067654d0ad2e590591582dbdfb845b6) )
+	ROM_LOAD( "aarom10",   0xd000, 0x1000, CRC(6feb0314) SHA1(5cf30f097bc695cbd388cb408e78394926362a7b) )
+	ROM_LOAD( "aarom11",   0xe000, 0x1000, CRC(ae3a270e) SHA1(867fff32062bc876390e8ca6bd7cedae47cd92c9) )
+	ROM_LOAD( "aarom12",   0xf000, 0x1000, CRC(6be9f09e) SHA1(98821c9b94301c5fd6e7f5d9e4bc9c1bdbab53ec) )
+ 
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "sg.snd",    0xf800, 0x0800, CRC(2fcf6c4d) SHA1(9c4334ac3ff15d94001b22fc367af40f9deb7d57) )
+
+	/*
+	ROM_REGION( 0x0400, REGION_PROMS, 0 )
+	ROM_LOAD( "decoder.4", 0x0000, 0x0200, CRC(e6631c23) SHA1(9988723269367fb44ef83f627186a1c88cf7877e) )
+	ROM_LOAD( "decoder.6", 0x0200, 0x0200, CRC(83faf25e) SHA1(30002643d08ed983a6701a7c4b5ee74a2f4a1adb) )
+	*/
+ROM_END	
+	
 ROM_START( bubbles )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "bubbles.1b",   0x0000, 0x1000, CRC(8234f55c) SHA1(4d60942320c03ae50b0b17267062a321cf49e240) )
@@ -2329,6 +2451,20 @@ static DRIVER_INIT( spdball )
 	install_mem_write_handler(0, 0xc808, 0xc80b, pia_3_w);
 }
 
+static DRIVER_INIT( alienar )
+{
+	/* CMOS configuration */
+	CONFIGURE_CMOS(0xcc00, 0x400);
+
+	/* video configuration */
+	CONFIGURE_BLITTER(4, 0, 0);
+
+	/* PIA configuration */
+	CONFIGURE_PIAS(williams_muxed_pia_0_intf, williams_pia_1_intf, williams_snd_pia_intf);
+
+	install_mem_write_handler (0, 0xcbff, 0xcbff, MWA_NOP);
+}
+
 
 static DRIVER_INIT( bubbles )
 {
@@ -2523,42 +2659,44 @@ GAMEX( 1980, defndjeu, defender, defender, defender, defndjeu, ROT0,   "Jeutel",
 GAMEC( 1980, defcmnd,  defender, defender, defender, defender, ROT0,   "bootleg", "Defense Command (set 1)", &generic_ctrl, &defcmnd_bootstrap )
 GAMEC( 1981, defence,  defender, defender, defender, defender, ROT0,   "Outer Limits", "Defence Command",    &generic_ctrl, &defence_bootstrap   )
 
-GAME( 1980, mayday,   0,        defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 1)" )
-GAME( 1980, maydaya,  mayday,   defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 2)" )
-GAME( 1980, maydayb,  mayday,   defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 3)" )
+GAME(  1980, mayday,   0,        defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 1)" )
+GAME(  1980, maydaya,  mayday,   defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 2)" )
+GAME(  1980, maydayb,  mayday,   defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 3)" )
 
-GAME( 1981, colony7,  0,        defender, colony7,  colony7,  ROT270, "Taito", "Colony 7 (set 1)" )
-GAME( 1981, colony7a, colony7,  defender, colony7,  colony7,  ROT270, "Taito", "Colony 7 (set 2)" )
+GAME(  1981, colony7,  0,        defender, colony7,  colony7,  ROT270, "Taito", "Colony 7 (set 1)" )
+GAME(  1981, colony7a, colony7,  defender, colony7,  colony7,  ROT270, "Taito", "Colony 7 (set 2)" )
 
-GAME( 1981, stargate, 0,        williams, stargate, stargate, ROT0,   "Williams", "Stargate" )
+GAME(  1981, stargate, 0,        williams, stargate, stargate, ROT0,   "Williams", "Stargate" )
 
-GAME( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)" )
-GAME( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)" )
+GAMEC( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)",    &robotron_ctrl, &robotron_bootstrap )
+GAMEC( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)", &robotron_ctrl, &robotryo_bootstrap )
 
-GAME( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)" )
-GAME( 1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)" )
-GAME( 1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Red label)" )
+GAMEC( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)", &joust_ctrl, &joust_bootstrap )
+GAMEC( 1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)",   &joust_ctrl, &joust_bootstrap )
+GAMEC( 1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Red label)",   &joust_ctrl, &joust_bootstrap )
 
-GAME( 1982, bubbles,  0,        williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles" )
-GAME( 1982, bubblesr, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)" )
-GAME( 1982, bubblesp, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (prototype version)" )
+GAME(  1982, bubbles,  0,        williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles" )
+GAME(  1982, bubblesr, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)" )
+GAME(  1982, bubblesp, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (prototype version)" )
 
-GAME( 1982, splat,    0,        williams, splat,    splat,    ROT0,   "Williams", "Splat!" )
+GAME(  1982, splat,    0,        williams, splat,    splat,    ROT0,   "Williams", "Splat!" )
 
-GAMEC( 1982, sinistar, 0,        sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 3)", &generic_ctrl, &sinistar_bootstrap)
-GAMEC( 1982, sinista1, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (prototype version)", &generic_ctrl, &sinista1_bootstrap )
-GAMEC( 1982, sinista2, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 2)", &generic_ctrl, &sinista2_bootstrap )
+GAMEC( 1982, sinistar, 0,        sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 3)",         &generic_ctrl, &sinistar_bootstrap)
+GAMEC( 1982, sinista1, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (prototype version)",  &generic_ctrl, &sinista1_bootstrap )
+GAMEC( 1982, sinista2, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 2)",         &generic_ctrl, &sinista2_bootstrap )
 
-GAME( 1983, playball, 0,        playball, playball, playball, ROT270, "Williams", "PlayBall! (prototype)" )
+GAME(  1983, playball, 0,        playball, playball, playball, ROT270, "Williams", "PlayBall! (prototype)" )
 
-GAME( 1983, blaster,  0,        blaster,  blaster,  blaster,  ROT0,   "Williams", "Blaster" )
-GAME( 1983, blastkit, blaster,  blaster,  blastkit, blastkit, ROT0,   "Williams", "Blaster (kit)" )
+GAME(  1983, blaster,  0,        blaster,  blaster,  blaster,  ROT0,   "Williams", "Blaster" )
+GAME(  1983, blastkit, blaster,  blaster,  blastkit, blastkit, ROT0,   "Williams", "Blaster (kit)" )
 
-GAME( 1985, spdball,  0,        williams, spdball,  spdball,  ROT0,   "Williams", "Speed Ball (prototype)" )
+GAME(  1985, spdball,  0,        williams, spdball,  spdball,  ROT0,   "Williams", "Speed Ball (prototype)" )
+GAME(  1985, alienar,  0,        alienar,  alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena" )
+GAME(  1985, alienaru,  0,       alienaru, alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena (Stargate upgrade)" )
 
-GAME( 1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
-GAME( 1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
-GAMEX(1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno", GAME_IMPERFECT_SOUND )
-GAME( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)" )
+GAME(  1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
+GAME(  1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
+GAMECX(1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno (Williams)", GAME_IMPERFECT_SOUND, &inferno_ctrl, NULL  )
+GAMEC( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)", &joust2_ctrl, &joust2_bootstrap )
 
-GAME( 1987, lottofun, 0,        williams, lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun" )
+GAME(  1987, lottofun, 0,        williams, lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun" )

@@ -2087,13 +2087,13 @@ static struct NESinterface nes_interface =
 {
 	1,
 	{ REGION_CPU1 },
-	{ 25 },
+	{ 50 },
 };
 
 static struct DACinterface nes_dac_interface =
 {
 	1,
-	{ 18 },
+	{ 50 },
 };
 
 static struct NESinterface nes_dual_interface =
@@ -2106,7 +2106,7 @@ static struct NESinterface nes_dual_interface =
 static struct DACinterface nes_dual_dac_interface =
 {
 	2,
-	{ 18, 18 },
+	{ 25, 25 },
 };
 
 static MACHINE_DRIVER_START( vsnes )

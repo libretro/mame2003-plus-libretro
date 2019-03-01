@@ -107,10 +107,10 @@ enum { IPT_END=1,IPT_PORT,
 #define IPT_SPECIAL    IPT_UNUSED	/* special meaning handled by custom functions */
 
 #define IPF_MASK       0xffffff00
-#define IPF_UNUSED     0x80000000	/* The bit is not used by this game, but is used */
-									/* by other games running on the same hardware. */
-									/* This is different from IPT_UNUSED, which marks */
-									/* bits not connected to anything. */
+#define IPF_UNUSED     0x80000000 /* The bit is not used by this game, but is used */
+                                  /* by other games running on the same hardware. */
+                                  /* This is different from IPT_UNUSED, which marks */
+                                  /* bits not connected to anything. */
 #define IPF_COCKTAIL   IPF_PLAYER2	/* the bit is used in cocktail mode only */
 
 #define IPF_CHEAT      0x40000000	/* Indicates that the input bit is a "cheat" key */
@@ -128,11 +128,11 @@ enum { IPT_END=1,IPT_PORT,
 #define IPF_PLAYER7    0x00060000
 #define IPF_PLAYER8    0x00070000
 
-#define IPF_8WAY       0         	/* Joystick modes of operation. 8WAY is the default, */
-#define IPF_4WAY       0x00080000	/* it prevents left/right or up/down to be pressed at */
-#define IPF_2WAY       0         	/* the same time. 4WAY prevents diagonal directions. */
-									/* 2WAY should be used for joysticks wich move only */
-                                 	/* on one axis (e.g. Battle Zone) */
+#define IPF_8WAY       0          /* Joystick modes of operation. 8WAY is the default, */
+#define IPF_4WAY       0x00080000 /* it prevents left/right or up/down to be pressed at */
+#define IPF_2WAY       0          /* the same time. 4WAY prevents diagonal directions. */
+                                  /* 2WAY should be used for joysticks wich move only */
+                                  /* on one axis (e.g. Battle Zone) */
 
 #define IPF_IMPULSE    0x00100000	/* When this is set, when the key corrisponding to */
 									/* the input bit is pressed it will be reported as */
@@ -244,6 +244,7 @@ enum { IPT_END=1,IPT_PORT,
 
 #define MAX_DEFSTR_LEN 20
 extern const char ipdn_defaultstrings[][MAX_DEFSTR_LEN];
+#define PORT_ADJUSTER(default,name) 
 
 /* this must match the ipdn_defaultstrings list in inptport.c */
 enum {
@@ -411,6 +412,17 @@ extern int num_ik;
 void seq_set_string(InputSeq* a, const char *buf);
 const char *generic_ctrl_label(int input);
 
+/* 
+ * void reset_default_inputs(void)
+ * repopulate mappings from the defaults specified in the inptport source 
+ */
+void reset_default_inputs(void);
+
+/* 
+ * void reset_default_keys(void)
+ * repopulate mappings from the defaults specified in the driver source 
+ */
+void reset_driver_inputs(void);
 
 #ifdef __cplusplus
 }

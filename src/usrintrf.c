@@ -24,6 +24,7 @@
 static char message_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
 static int  messagecounter;
+static bool generate_DAT;           /* allows us to display a UI message before and while the DAT is generated */
 
 
 /***************************************************************************
@@ -1468,7 +1469,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 	{
 		if ((in->type & ~IPF_MASK) == switch_name && input_port_name(in) != 0 &&
 				(in->type & IPF_UNUSED) == 0 &&
-				!(in->type & IPF_CHEAT))
+				!(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -1517,7 +1518,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-					!((in-1)->type & IPF_CHEAT))
+					!(!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 				arrowize |= 1;
 		}
 	}
@@ -1534,7 +1535,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-					!((in+1)->type & IPF_CHEAT))
+					!(!options.cheat_input_ports && ((in+1)->type & IPF_CHEAT)))
 				arrowize |= 2;
 		}
 	}
@@ -1562,7 +1563,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-						!((in+1)->type & IPF_CHEAT))
+						!(!options.cheat_input_ports && ((in+1)->type & IPF_CHEAT)))
 					entry[sel]->default_value = (in+1)->default_value & entry[sel]->mask;
 			}
 
@@ -1586,7 +1587,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-						!((in-1)->type & IPF_CHEAT))
+						!(!options.cheat_input_ports && ((in-1)->type & IPF_CHEAT)))
 					entry[sel]->default_value = (in-1)->default_value & entry[sel]->mask;
 			}
 
@@ -1651,7 +1652,7 @@ static int setdefcodesettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (in->name != 0  && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION && (in->type & IPF_UNUSED) == 0
-			&& !(in->type & IPF_CHEAT))
+			&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			menu_item[total] = in->name;
@@ -1779,7 +1780,8 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION)
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 	
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -1974,7 +1976,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
-				&& !(in->type & IPF_CHEAT))
+				&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
 			total++;
@@ -2214,23 +2216,132 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 
 static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 {
-  char buf2[32];
-  int sel;
-  sel = selected - 1;
-  
-  generate_gameinfo();
-  
+	int i;
+	char buf[2048];
+	char buf2[32];
+	int sel;
+
+
+	sel = selected - 1;
+
+
+	sprintf(buf,"%s\n%s %s\n\n%s:\n",Machine->gamedrv->description,Machine->gamedrv->year,Machine->gamedrv->manufacturer,
+		ui_getstring (UI_cpu));
+	i = 0;
+	while (i < MAX_CPU && Machine->drv->cpu[i].cpu_type)
+	{
+
+		if (Machine->drv->cpu[i].cpu_clock >= 1000000)
+			sprintf(&buf[strlen(buf)],"%s %d.%06d MHz",
+					cputype_name(Machine->drv->cpu[i].cpu_type),
+					Machine->drv->cpu[i].cpu_clock / 1000000,
+					Machine->drv->cpu[i].cpu_clock % 1000000);
+		else
+			sprintf(&buf[strlen(buf)],"%s %d.%03d kHz",
+					cputype_name(Machine->drv->cpu[i].cpu_type),
+					Machine->drv->cpu[i].cpu_clock / 1000,
+					Machine->drv->cpu[i].cpu_clock % 1000);
+
+		if (Machine->drv->cpu[i].cpu_flags & CPU_AUDIO_CPU)
+		{
+			sprintf (buf2, " (%s)", ui_getstring (UI_sound_lc));
+			strcat(buf, buf2);
+		}
+
+		strcat(buf,"\n");
+
+		i++;
+	}
+
+	sprintf (buf2, "\n%s", ui_getstring (UI_sound));
+	strcat (buf, buf2);
+	if (Machine->drv->sound_attributes & SOUND_SUPPORTS_STEREO)
+		sprintf(&buf[strlen(buf)]," (%s)", ui_getstring (UI_stereo));
+	strcat(buf,":\n");
+
+	i = 0;
+	while (i < MAX_SOUND && Machine->drv->sound[i].sound_type)
+	{
+		if (sound_num(&Machine->drv->sound[i]))
+			sprintf(&buf[strlen(buf)],"%dx",sound_num(&Machine->drv->sound[i]));
+
+		sprintf(&buf[strlen(buf)],"%s",sound_name(&Machine->drv->sound[i]));
+
+		if (sound_clock(&Machine->drv->sound[i]))
+		{
+			if (sound_clock(&Machine->drv->sound[i]) >= 1000000)
+				sprintf(&buf[strlen(buf)]," %d.%06d MHz",
+						sound_clock(&Machine->drv->sound[i]) / 1000000,
+						sound_clock(&Machine->drv->sound[i]) % 1000000);
+			else
+				sprintf(&buf[strlen(buf)]," %d.%03d kHz",
+						sound_clock(&Machine->drv->sound[i]) / 1000,
+						sound_clock(&Machine->drv->sound[i]) % 1000);
+		}
+
+		strcat(buf,"\n");
+
+		i++;
+	}
+
+	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
+		sprintf(&buf[strlen(buf)],"\n%s\n", ui_getstring (UI_vectorgame));
+	else
+	{
+		sprintf(&buf[strlen(buf)],"\n%s:\n", ui_getstring (UI_screenres));
+		sprintf(&buf[strlen(buf)],"%d x %d (%s) %f Hz\n",
+				Machine->visible_area.max_x - Machine->visible_area.min_x + 1,
+				Machine->visible_area.max_y - Machine->visible_area.min_y + 1,
+				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
+				Machine->drv->frames_per_second);
+#if 0
+		{
+			int pixelx,pixely,tmax,tmin,rem;
+
+			pixelx = 4 * (Machine->visible_area.max_y - Machine->visible_area.min_y + 1);
+			pixely = 3 * (Machine->visible_area.max_x - Machine->visible_area.min_x + 1);
+
+			/* calculate MCD */
+			if (pixelx >= pixely)
+			{
+				tmax = pixelx;
+				tmin = pixely;
+			}
+			else
+			{
+				tmax = pixely;
+				tmin = pixelx;
+			}
+			while ( (rem = tmax % tmin) )
+			{
+				tmax = tmin;
+				tmin = rem;
+			}
+			/* tmin is now the MCD */
+
+			pixelx /= tmin;
+			pixely /= tmin;
+
+			sprintf(&buf[strlen(buf)],"pixel aspect ratio %d:%d\n",
+					pixelx,pixely);
+		}
+		sprintf(&buf[strlen(buf)],"%d colors ",Machine->drv->total_colors);
+#endif
+	}
+
+
 	if (sel == -1)
 	{
 		/* startup info, print MAME version and ask for any key */
 
 		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
-		strcat(message_buffer, buf2);
+		strcat(buf, buf2);
 
+		strcat(buf, APPNAME);
 		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
-		strcat(message_buffer,buf2);
+		strcat(buf,buf2);
 		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
-		ui_displaymessagewindow(bitmap,message_buffer);
+		ui_displaymessagewindow(bitmap,buf);
 
 		sel = 0;
 		if (code_read_async() != CODE_NONE)
@@ -2239,14 +2350,14 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 	else
 	{
 		/* menu system, use the normal menu keys */
-		strcat(message_buffer,"\n\t");
-		strcat(message_buffer,ui_getstring (UI_lefthilight));
-		strcat(message_buffer," ");
-		strcat(message_buffer,ui_getstring (UI_returntomain));
-		strcat(message_buffer," ");
-		strcat(message_buffer,ui_getstring (UI_righthilight));
+		strcat(buf,"\n\t");
+		strcat(buf,ui_getstring (UI_lefthilight));
+		strcat(buf," ");
+		strcat(buf,ui_getstring (UI_returntomain));
+		strcat(buf," ");
+		strcat(buf,ui_getstring (UI_righthilight));
 
-		ui_displaymessagewindow(bitmap,message_buffer);
+		ui_displaymessagewindow(bitmap,buf);
 
 		if (input_ui_pressed(IPT_UI_SELECT))
 			sel = -1;
@@ -2383,17 +2494,149 @@ void generate_gameinfo(void)
 void ui_copyright_and_warnings(void)
 {
   char buffer[MAX_MESSAGE_LENGTH];
+  int i;
+  char warning_buffer[MAX_MESSAGE_LENGTH];
+  bool first_warning = true;
+
+  warning_buffer[0] = '\0';
   buffer[0]='\0';
   if(!options.skip_disclaimer)
     snprintf(buffer, MAX_MESSAGE_LENGTH, "%s", ui_getstring(UI_copyright));
   
-  if(generate_warning_list())
+	if (Machine->gamedrv->flags &
+			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
+			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
   {
-    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */   
-    if(!options.skip_warnings)
+
+    strcat(warning_buffer, ui_getstring(UI_knownproblems));
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
     {
-      snprintf(&buffer[strlen(buffer)], MAX_MESSAGE_LENGTH - strlen(buffer), "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
+      strcat(warning_buffer, ui_getstring(UI_imperfectcolors));
+      first_warning = false;
     }
+
+    if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_wrongcolors));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_imperfectgraphics));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_imperfectsound));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_NO_SOUND)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_nosound));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_nococktail));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
+    {
+      if(!first_warning)
+        strcat(warning_buffer, ", ");
+
+      strcat(warning_buffer, ui_getstring (UI_no_serialization));
+      first_warning = false;
+    }
+
+    if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) /* major problems */
+    {
+      const struct GameDriver *maindrv;
+      int foundworking;
+      
+      if (Machine->gamedrv->flags & GAME_NOT_WORKING)
+      {
+        if(!first_warning)
+          strcat(warning_buffer, ", ");
+
+        strcpy(warning_buffer, ui_getstring (UI_brokengame));
+        first_warning = false;
+      }
+
+      if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
+      {
+        if(!first_warning)
+          strcat(warning_buffer, ", ");
+
+        strcat(warning_buffer, ui_getstring (UI_brokenprotection));
+        first_warning = false;
+      }
+      if(!options.skip_warnings) /* send the warnings to the frontend before looking up alternatives */
+      {
+        frontend_message_cb(warning_buffer, 180);
+      }
+      if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
+      {
+        maindrv = Machine->gamedrv->clone_of;
+      }
+      else
+      {
+        maindrv = Machine->gamedrv;
+      }
+
+      foundworking = 0;
+      i = 0;
+      while (drivers[i])
+      {
+        if (drivers[i] == maindrv || drivers[i]->clone_of == maindrv)
+        {
+          if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
+          {
+            if (foundworking == 0)
+            {
+              strcat(warning_buffer,"\n\n");
+              strcat(warning_buffer, ui_getstring (UI_workingclones));
+              strcat(warning_buffer,"\n\n");
+            }
+            foundworking = 1;
+
+            sprintf(&warning_buffer[strlen(warning_buffer)],"%s\n",drivers[i]->name);
+          }
+        }
+        i++;
+      }
+    }
+    else /* there is not a GAME_NOT_WORKING or GAME_UNEMULATED_PROTECTION flag set */
+    {
+      if(!options.skip_warnings) /* send the warnings to the frontend */
+      {
+        frontend_message_cb(warning_buffer, 180);
+      }
+    }
+   
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", warning_buffer); /* log warning list to the console */
+
   }
  
   generate_gameinfo();
@@ -2403,110 +2646,6 @@ void ui_copyright_and_warnings(void)
     usrintf_showmessage_secs(8, "%s", buffer);
   
 }
-
-bool generate_warning_list(void)
-{
-  int i;
-  char buffer[MAX_MESSAGE_LENGTH];
-  
-  buffer[0] = '\0';
-
-	if (Machine->gamedrv->flags &
-			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
-			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
-	{
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectcolors));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
-		{
-			strcat(buffer, ui_getstring (UI_wrongcolors));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectgraphics));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
-		{
-			strcat(buffer, ui_getstring (UI_imperfectsound));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_NO_SOUND)
-		{
-			strcat(buffer, ui_getstring (UI_nosound));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
-		{
-			strcat(buffer, ui_getstring (UI_nococktail));
-			strcat(buffer, "\n");
-		}
-		if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
-		{
-			strcat(buffer, ui_getstring (UI_no_serialization));
-			strcat(buffer, "\n");
-		}
-
-		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
-		{
-			const struct GameDriver *maindrv;
-			int foundworking;
-
-			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
-			{
-				strcpy(buffer, ui_getstring (UI_brokengame));
-				strcat(buffer, "\n");
-			}
-			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
-			{
-				strcat(buffer, ui_getstring (UI_brokenprotection));
-				strcat(buffer, "\n");
-			}
-
-			if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
-				maindrv = Machine->gamedrv->clone_of;
-			else maindrv = Machine->gamedrv;
-
-			foundworking = 0;
-			i = 0;
-			while (drivers[i])
-			{
-				if (drivers[i] == maindrv || drivers[i]->clone_of == maindrv)
-				{
-					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
-					{
-						if (foundworking == 0)
-						{
-							strcat(buffer,"\n\n");
-							strcat(buffer, ui_getstring (UI_workingclones));
-							strcat(buffer,"\n\n");
-						}
-						foundworking = 1;
-
-						sprintf(&buffer[strlen(buffer)],"%s\n",drivers[i]->name);
-					}
-				}
-				i++;
-			}
-		}
-	}
-  if(string_is_empty(buffer))
-    return false;
-  
-  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "        ----- Driver Warnings -----\n%s", buffer);
-	return true;
-}
-
 
 /* Word-wraps the text in the specified buffer to fit in maxwidth characters per line.
    The contents of the buffer are modified.
@@ -2674,7 +2813,7 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 	static char *buf = 0;
 	int maxcols,maxrows;
 	int sel;
-	int bufsize = 256 * 1024; /* 256KB of history.dat buffer, enough for everything */
+	int bufsize = 256 * 1024; // 256KB of history.dat buffer, enough for everything
 
 	sel = selected - 1;
 
@@ -2729,6 +2868,19 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 			strcat(msg,ui_getstring (UI_righthilight));
 			ui_displaymessagewindow(bitmap,msg);
 		}
+
+		if ((scroll > 0) && input_ui_pressed_repeat(IPT_UI_UP,4))
+		{
+			if (scroll == 2) scroll = 0;	/* 1 would be the same as 0, but with arrow on top */
+			else scroll--;
+		}
+
+		if (input_ui_pressed_repeat(IPT_UI_DOWN,4))
+		{
+			if (scroll == 0) scroll = 2;	/* 1 would be the same as 0, but with arrow on top */
+			else scroll++;
+		}
+
 
 		if (input_ui_pressed(IPT_UI_SELECT))
 			sel = -1;
@@ -2871,9 +3023,9 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 }
 
 
-enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
+enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_FLUSH_CURRENT_CFG, UI_FLUSH_ALL_CFG, UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
-		UI_CHEAT,UI_RESET,UI_GENERATE_NEW_XML_DAT, UI_GENERATE_OLD_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
+		UI_CHEAT,UI_RESET, UI_GENERATE_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
 
 
 
@@ -2889,8 +3041,10 @@ void setup_menu_init(void)
 
   if(options.mame_remapping)
   {
-	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
-    menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
+	  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
+    menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
+    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
+    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
   }
 
 	/* Determine if there are any dip switches */
@@ -2931,14 +3085,14 @@ void setup_menu_init(void)
 			in++;
 		}
 
-		if (options.mame_remapping && num != 0)
+		if ( num != 0)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}
 	}
 
 	/* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
-	if ((options.mame_remapping && osd_joystick_needs_calibration()) != 0)
+	if ( osd_joystick_needs_calibration() != 0)
 	{
 		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
 	}
@@ -2956,8 +3110,8 @@ void setup_menu_init(void)
 
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
-    menu_item[menu_total] = ui_getstring (UI_generate_old_xml_dat); menu_action[menu_total++] = UI_GENERATE_OLD_XML_DAT;
-    /*menu_item[menu_total] = ui_getstring (UI_generate_new_xml_dat); menu_action[menu_total++] = UI_GENERATE_NEW_XML_DAT;*/  
+    menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
+
 #endif
   if(!options.display_setup) 
   {
@@ -2971,7 +3125,12 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
-
+ 
+  if(generate_DAT)
+  {
+    print_mame_xml();
+    generate_DAT = false;
+  }
 
 	if (selected == -1)
 		sel = menu_lastselected;
@@ -3051,13 +3210,11 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				sel |= 1 << SEL_BITS;
 				schedule_full_refresh();
 				break;
-           
-      case UI_GENERATE_NEW_XML_DAT:
-          print_mame_xml(0);
-          break;
 
-      case UI_GENERATE_OLD_XML_DAT:
-          print_mame_xml(1);
+      case UI_GENERATE_XML_DAT:
+          frontend_message_cb("Generating XML DAT", 180);   
+          schedule_full_refresh();
+          generate_DAT = true;
           break;
 
 			case UI_EXIT:

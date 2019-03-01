@@ -218,7 +218,11 @@ static config_file *config_init(const char *name, int save)
 		goto error;
 	memset(cfg, 0, sizeof(*cfg));
 
-	cfg->file = mame_fopen(name ? name : "default", 0, FILETYPE_CONFIG, save);
+	if(options.mame_remapping)
+		cfg->file = mame_fopen(name ? name : "default", 0, FILETYPE_CONFIG, save);
+	else 
+		cfg->file = mame_fopen(name ? name : "ra_default", 0, FILETYPE_CONFIG, save);
+
 	if (!cfg->file)
 		goto error;
 
@@ -288,10 +292,8 @@ static unsigned int count_input_ports(const struct InputPort *in)
 
 config_file *config_open(const char *name)
 {
-	if(options.mame_remapping)
     return config_init(name, 0);
 
-  return NULL;
 }
 
 
@@ -302,10 +304,8 @@ config_file *config_open(const char *name)
 
 config_file *config_create(const char *name)
 {
-	if(options.mame_remapping)
     return config_init(name, 1);
 
-  return NULL;
 }
 
 

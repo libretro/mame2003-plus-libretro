@@ -496,11 +496,12 @@ READ16_HANDLER( midyunit_dma_r )
 {
 	int result = dma_register[offset];
 
-#if !FAST_DMA
-	/* see if we're done */
-	if (offset == DMA_COMMAND && (result & 0x8000))
-		switch (activecpu_get_pc())
-		{
+    if(!options.activate_dcs_speedhack)
+	{
+	   /* see if we're done */
+	   if (offset == DMA_COMMAND && (result & 0x8000))
+         switch (activecpu_get_pc())
+		 {
 			case 0xfff7aa20: /* narc */
 			case 0xffe1c970: /* trog */
 			case 0xffe1c9a0: /* trog3 */
@@ -519,8 +520,8 @@ READ16_HANDLER( midyunit_dma_r )
 			case 0xff82e200: /* nbajam */
 				cpu_spinuntil_int();
 				break;
-		}
-#endif
+		 }
+   }
 
 	return result;
 }
@@ -664,11 +665,11 @@ WRITE16_HANDLER( midyunit_dma_w )
 	}
 
 	/* signal we're done */
-#ifdef FAST_DMA
-		dma_callback(1);
-#else
-		timer_set(TIME_IN_NSEC(41 * dma_state.width * dma_state.height), 0, dma_callback);
-#endif
+    if(options.activate_dcs_speedhack)
+	   dma_callback(1);
+	else
+	   timer_set(TIME_IN_NSEC(41 * dma_state.width * dma_state.height), 0, dma_callback);
+
 
 	profiler_mark(PROFILER_END);
 }

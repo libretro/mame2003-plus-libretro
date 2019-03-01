@@ -80,7 +80,7 @@ WRITE_HANDLER( mystston_videoram_w )
 
 WRITE_HANDLER( mystston_videoram2_w )
 {
-	if (videoram[offset] != data)
+	if (mystston_videoram2[offset] != data)
 	{
 		mystston_videoram2[offset] = data;
 		tilemap_mark_tile_dirty(bg_tilemap, offset & 0x1ff);

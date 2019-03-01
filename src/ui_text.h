@@ -70,7 +70,6 @@ enum
 	UI_brokenprotection,
 	UI_no_serialization,
 	UI_workingclones,
-	UI_typeok,
 
 	/* main menu */
 	UI_inputgeneral,
@@ -79,11 +78,12 @@ enum
 	UI_calibrate,
 	UI_bookkeeping,
 	UI_inputspecific,
+  UI_flush_current_cfg,
+  UI_flush_all_cfg,  
 	UI_gameinfo,
 	UI_history,
   UI_resetgame,
-  UI_generate_new_xml_dat,
-  UI_generate_old_xml_dat,  
+  UI_generate_xml_dat,  
 	UI_returntogame,
 	UI_cheat,
 	UI_memorycard,

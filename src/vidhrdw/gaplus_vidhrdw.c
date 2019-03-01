@@ -9,9 +9,16 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
+
+data8_t *gaplus_videoram;
+data8_t *gaplus_spriteram;
+
+static struct tilemap *bg_tilemap;
+
+
 /***************************************************************************
 
-  Convert the color PROMs into a more useable format.
+  Convert the color PROMs.
 
   The palette PROMs are connected to the RGB output this way:
 
@@ -21,6 +28,7 @@
   bit 0 -- 2.2kohm resistor  -- RED/GREEN/BLUE
 
 ***************************************************************************/
+
 PALETTE_INIT( gaplus )
 {
 	int i;
@@ -34,43 +42,78 @@ PALETTE_INIT( gaplus )
 
 
 		/* red component */
-		bit0 = (color_prom[0] >> 0) & 0x01;
-		bit1 = (color_prom[0] >> 1) & 0x01;
-		bit2 = (color_prom[0] >> 2) & 0x01;
-		bit3 = (color_prom[0] >> 3) & 0x01;
+		bit0 = (color_prom[i] >> 0) & 0x01;
+		bit1 = (color_prom[i] >> 1) & 0x01;
+		bit2 = (color_prom[i] >> 2) & 0x01;
+		bit3 = (color_prom[i] >> 3) & 0x01;
 		r = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 		/* green component */
-		bit0 = (color_prom[Machine->drv->total_colors] >> 0) & 0x01;
-		bit1 = (color_prom[Machine->drv->total_colors] >> 1) & 0x01;
-		bit2 = (color_prom[Machine->drv->total_colors] >> 2) & 0x01;
-		bit3 = (color_prom[Machine->drv->total_colors] >> 3) & 0x01;
+		bit0 = (color_prom[i + 0x100] >> 0) & 0x01;
+		bit1 = (color_prom[i + 0x100] >> 1) & 0x01;
+		bit2 = (color_prom[i + 0x100] >> 2) & 0x01;
+		bit3 = (color_prom[i + 0x100] >> 3) & 0x01;
 		g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 		/* blue component */
-		bit0 = (color_prom[2*Machine->drv->total_colors] >> 0) & 0x01;
-		bit1 = (color_prom[2*Machine->drv->total_colors] >> 1) & 0x01;
-		bit2 = (color_prom[2*Machine->drv->total_colors] >> 2) & 0x01;
-		bit3 = (color_prom[2*Machine->drv->total_colors] >> 3) & 0x01;
+		bit0 = (color_prom[i + 0x200] >> 0) & 0x01;
+		bit1 = (color_prom[i + 0x200] >> 1) & 0x01;
+		bit2 = (color_prom[i + 0x200] >> 2) & 0x01;
+		bit3 = (color_prom[i + 0x200] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
 		palette_set_color(i,r,g,b);
-		color_prom++;
 	}
 
-	color_prom += 2*Machine->drv->total_colors;
+	color_prom += 0x300;
 	/* color_prom now points to the beginning of the lookup table */
 
 
-	/* characters use colors 240-255 */
+	/* characters use colors 0xf0-0xff */
 	for (i = 0;i < TOTAL_COLORS(0);i++)
-		COLOR(0,i) = 240 + (*(color_prom++) & 0x0f);
+		COLOR(0,i) = 0xf0 + (*(color_prom++) & 0x0f);
 
 	/* sprites */
-	for (i = 0;i < TOTAL_COLORS(2);i++)
+	for (i = 0;i < TOTAL_COLORS(1);i++)
 	{
-		COLOR(2,i) = (color_prom[0] & 0x0f) + ((color_prom[TOTAL_COLORS(2)] & 0x0f) << 4);
+		COLOR(1,i) = (color_prom[0] & 0x0f) + ((color_prom[0x200] & 0x0f) << 4);
 		color_prom++;
 	}
 }
+
+
+
+/***************************************************************************
+
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+/* convert from 32x32 to 36x28 */
+static UINT32 tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	int offs;
+
+	row += 2;
+	col -= 2;
+	if (col & 0x20)
+		offs = row + ((col & 0x1f) << 5);
+	else
+		offs = col + (row << 5);
+
+	return offs;
+}
+
+static void get_tile_info(int tile_index)
+{
+	unsigned char attr = gaplus_videoram[tile_index + 0x400];
+	tile_info.priority = (attr & 0x40) >> 6;
+	SET_TILE_INFO(
+			0,
+			gaplus_videoram[tile_index] + ((attr & 0x80) << 1),
+			attr & 0x3f,
+			0)
+}
+
+
 
 /***************************************************************************
 	Starfield information
@@ -99,8 +142,8 @@ static struct star stars[MAX_STARS];
 static unsigned char gaplus_starfield_control[4];
 static int total_stars;
 
-static void starfield_init( void ) {
-
+static void starfield_init( void )
+{
 	int generator = 0;
 	int x,y;
 	int set = 0;
@@ -144,7 +187,167 @@ static void starfield_init( void ) {
 	}
 }
 
-void gaplus_starfield_update( void ) {
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
+
+***************************************************************************/
+
+VIDEO_START( gaplus )
+{
+	bg_tilemap = tilemap_create(get_tile_info,tilemap_scan,TILEMAP_TRANSPARENT_COLOR,8,8,36,28);
+
+	if (!bg_tilemap)
+		return 1;
+
+	tilemap_set_transparent_pen(bg_tilemap, 0xff);
+
+	spriteram = gaplus_spriteram + 0x780;
+	spriteram_2 = spriteram + 0x800;
+	spriteram_3 = spriteram_2 + 0x800;
+
+	starfield_init();
+
+	return 0;
+}
+
+
+
+/***************************************************************************
+
+  Memory handlers
+
+***************************************************************************/
+
+READ_HANDLER( gaplus_videoram_r )
+{
+	return gaplus_videoram[offset];
+}
+
+WRITE_HANDLER( gaplus_videoram_w )
+{
+	if (gaplus_videoram[offset] != data)
+	{
+		gaplus_videoram[offset] = data;
+		tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
+	}
+}
+
+WRITE_HANDLER( gaplus_starfield_control_w )
+{
+	offset &= 3;
+	gaplus_starfield_control[offset] = data;
+}
+
+
+
+/***************************************************************************
+
+	Display Refresh
+
+***************************************************************************/
+
+static void starfield_render( struct mame_bitmap *bitmap )
+{
+	int i;
+	int width, height;
+
+	width = Machine->drv->screen_width;
+	height = Machine->drv->screen_height;
+
+	/* check if we're running */
+	if ( ( gaplus_starfield_control[0] & 1 ) == 0 )
+		return;
+
+	/* draw the starfields */
+	for ( i = 0; i < total_stars; i++ )
+	{
+		int x, y;
+
+		x = stars[i].x;
+		y = stars[i].y;
+
+		if ( x >=0 && x < width && y >= 0 && y < height )
+		{
+			plot_pixel(bitmap, x, y, stars[i].col);
+		}
+	}
+}
+
+static void gaplus_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	int offs;
+
+	for (offs = 0;offs < 0x80;offs += 2)
+	{
+		/* is it on? */
+		if ((spriteram_3[offs+1] & 2) == 0)
+		{
+			static int gfx_offs[2][2] =
+			{
+				{ 0, 1 },
+				{ 2, 3 }
+			};
+			int sprite = spriteram[offs] | ((spriteram_3[offs] & 0x40) << 2);
+			int color = spriteram[offs+1] & 0x3f;
+			int sx = spriteram_2[offs+1] + 0x100 * (spriteram_3[offs+1] & 1) - 71;
+			int sy = 256 - spriteram_2[offs] - 8;
+			int flipx = (spriteram_3[offs] & 0x01);
+			int flipy = (spriteram_3[offs] & 0x02) >> 1;
+			int sizex = (spriteram_3[offs] & 0x08) >> 3;
+			int sizey = (spriteram_3[offs] & 0x20) >> 5;
+			int duplicate = spriteram_3[offs] & 0x80;
+			int x,y;
+
+			if (flip_screen)
+			{
+				flipx ^= 1;
+				flipy ^= 1;
+			}
+
+			sy -= 16 * sizey;
+			sy = (sy & 0xff) - 32;	// fix wraparound
+
+			for (y = 0;y <= sizey;y++)
+			{
+				for (x = 0;x <= sizex;x++)
+				{
+					drawgfx(bitmap,Machine->gfx[1],
+						sprite + (duplicate ? 0 : (gfx_offs[y ^ (sizey * flipy)][x ^ (sizex * flipx)])),
+						color,
+						flipx,flipy,
+						sx + 16*x,sy + 16*y,
+						cliprect,TRANSPARENCY_COLOR,0xff);
+				}
+			}
+		}
+	}
+}
+
+VIDEO_UPDATE( gaplus )
+{
+	/* flip screen control is embedded in RAM */
+	flip_screen_set(gaplus_spriteram[0x1f7f-0x800] & 1);
+
+	fillbitmap(bitmap, Machine->pens[0], cliprect);
+
+	starfield_render(bitmap);
+
+	/* draw the low priority characters */
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
+
+	gaplus_draw_sprites(bitmap, cliprect);
+
+	/* draw the high priority characters */
+	/* (I don't know if this feature is used by Gaplus, but it's shown in the schematics) */
+	tilemap_draw(bitmap,cliprect,bg_tilemap,1,0);
+}
+
+
+VIDEO_EOF( gaplus )	/* update starfields */
+{
 	int i;
 	int width, height;
 
@@ -216,186 +419,4 @@ void gaplus_starfield_update( void ) {
 		if ( stars[i].y >= ( float )( height ) )
 			stars[i].y -= ( float )( height );
 	}
-}
-
-static void starfield_render( struct mame_bitmap *bitmap ) {
-
-	int i;
-	int width, height;
-
-	width = Machine->drv->screen_width;
-	height = Machine->drv->screen_height;
-
-	/* check if we're running */
-	if ( ( gaplus_starfield_control[0] & 1 ) == 0 )
-		return;
-
-	/* draw the starfields */
-	for ( i = 0; i < total_stars; i++ )
-	{
-		int x, y;
-
-		x = stars[i].x;
-		y = stars[i].y;
-
-		if ( x >=0 && x < width && y >= 0 && y < height )
-		{
-			plot_pixel(bitmap, x, y, stars[i].col);
-		}
-	}
-}
-
-WRITE_HANDLER( gaplus_starfield_control_w ) {
-	gaplus_starfield_control[offset] = data;
-}
-
-extern unsigned char *gaplus_sharedram;
-
-VIDEO_START( gaplus ) {
-
-	/* set up spriteram area */
-	spriteram_size = 0x80;
-	spriteram = &gaplus_sharedram[0x780];
-	spriteram_2 = &gaplus_sharedram[0x780+0x800];
-	spriteram_3 = &gaplus_sharedram[0x780+0x800+0x800];
-
-	starfield_init();
-
-	return video_start_generic();
-}
-
-/***************************************************************************
-
-	Display Refresh
-
-***************************************************************************/
-
-static void gaplus_draw_sprites(struct mame_bitmap *bitmap){
-	int offs;
-
-	for (offs = 0; offs < spriteram_size; offs += 2){
-        if ((spriteram_3[offs+1] & 2) == 0){
-			int number = spriteram[offs]+4*(spriteram_3[offs] & 0x40);
-			int color = spriteram[offs+1] & 0x3f;
-            int sx = (spriteram_2[offs+1]-71) + 0x100*(spriteram_3[offs+1] & 1);
-			int sy = ( Machine->drv->screen_height ) - spriteram_2[offs]-24;
-			int flipy = spriteram_3[offs] & 2;
-			int flipx = spriteram_3[offs] & 1;
-			int width, height;
-
-			if (number >= 128*3) continue;
-
-			if (flip_screen)
-			{
-				flipx = !flipx;
-				flipy = !flipy;
-			}
-
-			if ((spriteram_3[offs] & 0xa8) == 0xa0){ /* draw the sprite twice in a row */
-                    drawgfx(bitmap,Machine->gfx[2+(number >> 7)],
-								number,color,flipx,flipy,sx,sy,
-								&Machine->visible_area,TRANSPARENCY_COLOR,255);
-					drawgfx(bitmap,Machine->gfx[2+(number >> 7)],
-								number,color,flipx,flipy,sx,sy+16,
-								&Machine->visible_area,TRANSPARENCY_COLOR,255);
-			}
-			else{
-				switch (spriteram_3[offs] & 0x28){
-					case 0x28:	/* 2x both ways */
-						width = height = 2; number &= (~3); break;
-					case 0x20:	/* 2x vertical */
-						width = 1; height = 2; number &= (~2); break;
-					case 0x08:	/* 2x horizontal */
-						width = 2; height = 1; number &= (~1); sy += 16; break;
-					default:	/* normal sprite */
-						width = height = 1; sy += 16; break;
-				}
-				{
-					static int x_offset[2] = { 0x00, 0x01 };
-					static int y_offset[2] = { 0x00, 0x02 };
-					int x,y, ex, ey;
-
-					for( y=0; y < height; y++ ){
-						for( x=0; x < width; x++ ){
-							ex = flipx ? (width-1-x) : x;
-							ey = flipy ? (height-1-y) : y;
-
-							drawgfx(bitmap,Machine->gfx[2+(number >> 7)],
-								(number)+x_offset[ex]+y_offset[ey],
-								color,
-								flipx, flipy,
-								sx+x*16,sy+y*16,
-								&Machine->visible_area,
-								TRANSPARENCY_COLOR,255);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-VIDEO_UPDATE( gaplus )
-{
-	int offs;
-
-	fillbitmap( bitmap, Machine->pens[0], &Machine->visible_area );
-
-	starfield_render( bitmap );
-
-	/* colorram layout: */
-	/* bit 7 = bank */
-	/* bit 6 = not used? */
-	/* bit 5-0 = color */
-
-
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
-	for (offs = videoram_size - 1;offs >= 0;offs--)
-	{
-        int sx,sy,mx,my, bank;
-
-        /* Even if Gaplus screen is 28x36, the memory layout is 32x32. We therefore
-        have to convert the memory coordinates into screen coordinates.
-        Note that 32*32 = 1024, while 28*36 = 1008: therefore 16 bytes of Video RAM
-        don't map to a screen position. We don't check that here, however: range
-        checking is performed by drawgfx(). */
-
-        mx = offs / 32;
-		my = offs % 32;
-
-        if (mx <= 1)        /* bottom screen characters */
-		{
-			sx = 29 - my;
-			sy = mx + 34;
-		}
-        else if (mx >= 30)  /* top screen characters */
-		{
-			sx = 29 - my;
-			sy = mx - 30;
-		}
-        else                /* middle screen characters */
-		{
-			sx = 29 - mx;
-			sy = my + 2;
-		}
-
-		if (flip_screen)
-		{
-			sx = 27 - sx;
-			sy = 35 - sy;
-		}
-
-		sx = ( ( Machine->drv->screen_height - 1 ) / 8 ) - sx;
-
-		bank = ( colorram[offs] & 0x80 ) ? 1 : 0;
-
-        drawgfx(bitmap,Machine->gfx[bank],
-                videoram[offs],
-                colorram[offs] & 0x3f,
-                flip_screen,flip_screen,8*sy,8*sx,
-                &Machine->visible_area,TRANSPARENCY_PEN,0);
-	}
-
-	gaplus_draw_sprites(bitmap);
 }

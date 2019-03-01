@@ -484,7 +484,7 @@ MEMORY_END
 
 
 /***************************************************************************
-                     Mobil Suit Gundam Final Shooting
+                     Mobile Suit Gundam Final Shooting
 ***************************************************************************/
 
 static int gdfs_gfxram_bank, gdfs_lightgun_select;
@@ -4925,7 +4925,7 @@ GAMEX( 2000,  vasara,   0,        ryorioh,  vasara,   vasara,   ROT270, "Visco",
 GAMEX( 2001,  vasara2,  0,        ryorioh,  vasara2,  vasara2,  ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
 GAMEX( 2001,  vasara2a, vasara2,  ryorioh,  vasara2,  vasara2,  ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )
 GAMEX( 1995,  ultrax,   0,        ultrax,   ultrax,   ultrax,   ROT270,	"Banpresto + Tsuburaya Prod.", "Ultra X Weapons - Ultra Keibitai",        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1995,  gdfs,     0,        gdfs,     gdfs,     gdfs,     ROT0,   "Banpresto",          "Mobil Suit Gundam Final Shooting",                 GAME_NO_COCKTAIL )
+GAMEX( 1995,  gdfs,     0,        gdfs,     gdfs,     gdfs,     ROT0,   "Banpresto",          "Mobile Suit Gundam Final Shooting (Japan)",                 GAME_NO_COCKTAIL ) /* title screen spells the title "Mobil" but standardized spelling is "Mobile" it also lists the company name as "Banprest" instead of "Banpresto" */
 GAMEX( 1994,  eaglshot, 0,        eaglshot, eaglshot, eaglshot, ROT0,   "Sammy",              "Eagle Shot Golf",                                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994,  eaglshta, eaglshot, eaglshot, eaglshot, eaglshot, ROT0,   "Sammy",              "Eagle Shot Golf (alt)",                            GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
 

@@ -1197,7 +1197,7 @@ static MACHINE_DRIVER_START( ns1 )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(NAMCO, namco_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
 	MDRV_SOUND_ADD(DAC, dac_interface)
 
 MACHINE_DRIVER_END
@@ -2688,7 +2688,6 @@ GAME( 1987, galag88j, galaga88, ns1,     galaga88,galaga88, ROT270, "Namco", "Ga
 GAME( 1988, ws,       0,        ns1,     splatter,ws,       ROT0,   "Namco", "World Stadium (Japan)" )
 GAME( 1988, berabohm, 0,        ns1,     berabohm,berabohm, ROT0,   "Namco", "Beraboh Man (Japan version C)" )
 GAME( 1988, beraboho, berabohm, ns1,     berabohm,berabohm, ROT0,   "Namco", "Beraboh Man (Japan version B)" )
-/*GAME( 1988, alice,    0,        ns1,     ns1,     alice,    ROT0,   "Namco", "Alice In Wonderland" )*/
 GAME( 1988, mmaze,    0,        ns1,     mmaze,   alice,    ROT0,   "Namco", "Marchen Maze (Japan)" )
 GAME( 1988, bakutotu, 0,        bakutotu,bakutotu,bakutotu, ROT0,   "Namco", "Bakutotsu Kijuutei" )
 GAME( 1988, wldcourt, 0,        ns1,     wldcourt,wldcourt, ROT0,   "Namco", "World Court (Japan)" )

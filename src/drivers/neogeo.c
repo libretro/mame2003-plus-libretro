@@ -5778,6 +5778,43 @@ ROM_START( kof2002 ) /* Encrypted Set */
 	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( kof2003d ) // Decrypted C Roms
+	ROM_REGION( 0x900000, REGION_CPU1, 0 )
+	ROM_LOAD32_WORD_SWAP( "271-p1.bin", 0x000000, 0x400000, CRC(b9da070c) )
+	ROM_LOAD32_WORD_SWAP( "271-p2.bin", 0x000002, 0x400000, CRC(da3118c4) )
+	ROM_LOAD16_WORD_SWAP( "271-p3.bin", 0x800000, 0x100000, CRC(5cefd0d2) )
+	ROM_LOAD16_WORD_SWAP( "271-p3d.bin", 0x800000, 0x100000, CRC(59d376da) )
+
+	ROM_REGION( 0x100000, REGION_GFX1, 0 )
+	ROM_FILL(                 0x000000, 0x100000, 0 )
+	ROM_REGION( 0x20000, REGION_GFX2, 0 )
+	ROM_LOAD( "sfix.sfx",  0x000000, 0x20000, CRC(354029fc) )
+
+	ROM_REGION16_BE( 0x40000, REGION_USER1, 0 )
+	ROM_LOAD16_WORD_SWAP( "271-osjd.bin", 0x00000, 0x040000, CRC(c521b5bc) )
+	NEOGEO_BIOS
+
+	ROM_REGION( 0x90000, REGION_CPU2, 0 )
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) )
+	ROM_LOAD( "271-m1d.bin", 		0x00000, 0x80000, CRC(0e86af8f) )
+	ROM_RELOAD(             0x10000, 0x80000 )
+	ROM_REGION( 0x10000, REGION_GFX4, 0 )
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "271-v1d.bin", 0x000000, 0x1000000, CRC(2964f36e) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x6000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "271-c1d.bin", 0x0000000, 0x1000000, CRC(c29acd28) )
+	ROM_LOAD16_BYTE( "271-c2d.bin", 0x0000001, 0x1000000, CRC(328e80b1) )
+	ROM_LOAD16_BYTE( "271-c3d.bin", 0x2000000, 0x1000000, CRC(020a11f1) )
+	ROM_LOAD16_BYTE( "271-c4d.bin", 0x2000001, 0x1000000, CRC(991b5ed2) )
+	ROM_LOAD16_BYTE( "271-c5d.bin", 0x4000000, 0x1000000, CRC(c2de8b66) )
+	ROM_LOAD16_BYTE( "271-c6d.bin", 0x4000001, 0x1000000, CRC(3ff750db) )
+ROM_END
+
 ROM_START( mslug4 ) /* Original Version - Encrypted GFX */
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "263-p1.bin",  0x000000, 0x100000, CRC(27e4def3) SHA1(a08785e8145981bb6b5332a3b2df7eb321253cca) )
@@ -6126,11 +6163,11 @@ ROM_START( mslug5 ) /* Encrypted Set */
 ROM_END
 
 ROM_START( kof10th )
-    ROM_REGION( 0x900000, REGION_CPU1, 0 )
+        ROM_REGION( 0x900000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "kf10-p1.bin", 0x000000, 0x800000, CRC(b1fd0c43) SHA1(5f842a8a27be2d957fd4140d6431ae47154997bb) )
 
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 	ROM_REGION( 0x40000, REGION_GFX1, 0 )
 	ROM_FILL( 0x000000, 0x40000, 0 )
@@ -7234,6 +7271,106 @@ init_neogeo();
 
 }
 
+/* kof2003d Init Start */
+static void kof2003_px_decrypt( void )
+{
+	const unsigned char xor2[ 0x20 ] = {
+		0xb4, 0x0f, 0x40, 0x6c, 0x38, 0x07, 0xd0, 0x3f, 0x53, 0x08, 0x80, 0xaa, 0xbe, 0x07, 0xc0, 0xfa,
+		0xd0, 0x08, 0x10, 0xd2, 0xf1, 0x03, 0x70, 0x7e, 0x87, 0x0B, 0x40, 0xf6, 0x2a, 0x0a, 0xe0, 0xf9
+	};
+
+	int i;
+	int ofst;
+	UINT8 *rom, *buf;
+
+	rom = memory_region( REGION_CPU1 );
+
+	for( i = 0x100000; i < 0x800000; i++ ){
+		rom[ i ] ^= xor2[ (i % 0x20) ];
+	}
+
+	for( i = 0x100000; i < 0x800000; i += 4 ){
+		UINT16 *rom16 = (UINT16*)&rom[ i + 1 ];
+		*rom16 = BITSWAP16( *rom16, 15, 14, 13, 12, 4, 5, 6, 7, 8, 9, 10, 11, 3, 2, 1, 0 );
+	}
+
+	buf = malloc( 0x800000 );
+	memcpy( buf, rom, 0x800000 );
+
+	for( i = 0; i < 0x0100000 / 0x10000; i++ ){
+		ofst = (i & 0xf0) + BITSWAP8( (i & 0x0f), 7, 6, 5, 4, 1, 0, 3, 2 );
+		memcpy( &rom[ i * 0x10000 ], &buf[ ofst * 0x10000 ], 0x10000 );
+	}
+
+	for( i = 0x100000; i < 0x800000; i += 0x100 ){
+		ofst = (i & 0xf000ff) + 
+			   ((i & 0x000f00) ^ 0x00300) +
+			   (BITSWAP8( ((i & 0x0ff000) >> 12), 4, 5, 6, 7, 1, 0, 3, 2 ) << 12);
+
+		memcpy( &rom[ i ], &buf[ ofst ], 0x100 );
+	}
+
+	free( buf );
+
+	buf = malloc(0x900000);
+	memcpy( buf, rom, 0x900000 );
+
+	memcpy( &rom[0x100000], &buf[0x800000], 0x100000 );
+	memcpy( &rom[0x200000], &buf[0x100000], 0x700000 );
+
+	free(buf);
+}
+
+static void kof2003_sx_decrypt( void )
+{
+	int i;
+	int tx_size = memory_region_length( REGION_GFX1 );
+	int rom_size = memory_region_length( REGION_GFX3 );
+	UINT8 *src;
+	UINT8 *dst;
+
+	src = memory_region( REGION_GFX3 ) + rom_size - 0x1000000 - 0x80000;
+	dst = memory_region( REGION_GFX1 );
+
+	for( i = 0; i < tx_size / 2; i++ ){
+		dst[ i ] = src[ (i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4) ];
+	}
+
+	src = memory_region( REGION_GFX3 ) + rom_size - 0x80000;
+	dst = memory_region( REGION_GFX1 ) + 0x80000;
+
+	for( i = 0; i < tx_size / 2; i++ ){
+		dst[ i ] = src[ (i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4) ];
+	}
+
+	dst = memory_region( REGION_GFX1 );
+	for( i = 0; i < tx_size; i++ ){
+		dst[ i ] = BITSWAP8( dst[ i ] ^ 0xd2, 4, 0, 7, 2, 5, 1, 6, 3 );
+	}
+}
+
+DRIVER_INIT( kof2003d )
+{
+	kof2003_px_decrypt();
+	kof2003_sx_decrypt();
+
+	neogeo_fix_bank_type = 2;
+	
+
+	install_mem_read16_handler( 0, 0x2fe000, 0x2fffdf, MRA16_RAM );
+	install_mem_write16_handler( 0, 0x2fe000, 0x2fffdf, MWA16_RAM );
+
+	install_mem_read16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_r );
+	install_mem_write16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_w );
+
+	install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_r );
+	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
+
+	install_mem_read16_handler( 0, 0xc00000, 0xc3ffff, MRA16_BANK3 );  // 256k bios
+	init_neogeo();
+}
+/* kof2003d Init End */
+
 /******************************************************************************/
 
 static UINT32 cpu1_second_bankaddress;
@@ -7305,70 +7442,70 @@ GAMEB( 1990, tpgolf,   neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK",
 GAMEB( 1990, mahretsu, neogeo,   neogeo, neogeo, mjneogeo,mjneogeo, ROT0, "SNK", "Mahjong Kyoretsuden", &neogeo_ctrl, NULL )
 GAMEB( 1990, ridhero,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Riding Hero (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1990, ridheroh, ridhero,  neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Riding Hero (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1991, alpham2,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Alpha Mission II - ASO II - Last Guardian", &neogeo_ctrl, NULL )
+GAMEB( 1991, alpham2,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Alpha Mission II / ASO II - Last Guardian", &neogeo_ctrl, NULL )
 GAMEB( 1990, cyberlip, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Cyber-Lip", &neogeo_ctrl, NULL )
 GAMEB( 1990, superspy, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The Super Spy", &neogeo_ctrl, NULL )
 GAMEB( 1992, mutnat,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Mutation Nation", &neogeo_ctrl, NULL )
 GAMEB( 1991, kotm,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "King of the Monsters (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1991, kotmh,    kotm,     neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "King of the Monsters (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1991, sengoku,  neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Sengoku - Sengoku Denshou (set 1)", &neogeo_ctrl, NULL )
-GAMEB( 1991, sengokh,  sengoku,  neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Sengoku - Sengoku Denshou (set 2)", &neogeo_ctrl, NULL )
+GAMEB( 1991, sengoku,  neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Sengoku / Sengoku Denshou (set 1)", &neogeo_ctrl, NULL )
+GAMEB( 1991, sengokh,  sengoku,  neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Sengoku / Sengoku Denshou (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1991, burningf, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Burning Fight (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1991, burningh, burningf, neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Burning Fight (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1990, lbowling, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "League Bowling", &neogeo_ctrl, NULL )
 GAMEB( 1991, gpilots,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Ghost Pilots", &neogeo_ctrl, NULL )
-GAMEB( 1990, joyjoy,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Puzzled - Joy Joy Kid", &neogeo_ctrl, NULL )
+GAMEB( 1990, joyjoy,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Puzzled / Joy Joy Kid", &neogeo_ctrl, NULL )
 GAMEB( 1991, quizdais, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Quiz Daisousa Sen - The Last Count Down", &neogeo_ctrl, NULL )
 GAMEB( 1992, lresort,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Last Resort", &neogeo_ctrl, NULL )
 GAMEB( 1991, eightman, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK / Pallas", "Eight Man", &neogeo_ctrl, NULL )
-GAMEB( 1991, legendos, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Legend of Success Joe - Ashitano Joe Densetsu", &neogeo_ctrl, NULL )
+GAMEB( 1991, legendos, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Legend of Success Joe / Ashitano Joe Densetsu", &neogeo_ctrl, NULL )
 GAMEB( 1991, 2020bb,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK / Pallas", "2020 Super Baseball (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1991, 2020bbh,  2020bb,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK / Pallas", "2020 Super Baseball (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1991, socbrawl, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Soccer Brawl", &neogeo_ctrl, NULL )
-GAMEB( 1991, fatfury1, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury - King of Fighters - Garou Densetsu - shukumei no tatakai", &neogeo_ctrl, NULL )
+GAMEB( 1991, fatfury1, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury - King of Fighters / Garou Densetsu - Shukumei no Tatakai", &neogeo_ctrl, NULL )
 GAMEB( 1991, roboarmy, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Robo Army", &neogeo_ctrl, NULL )
 GAMEB( 1992, fbfrenzy, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Football Frenzy", &neogeo_ctrl, NULL )
 GAMEB( 1992, kotm2,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "King of the Monsters 2 - The Next Thing", &neogeo_ctrl, NULL )
-GAMEB( 1993, sengoku2, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Sengoku 2 - Sengoku Denshou 2", &neogeo_ctrl, NULL )
+GAMEB( 1993, sengoku2, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Sengoku 2 / Sengoku Denshou 2", &neogeo_ctrl, NULL )
 GAMEB( 1992, bstars2,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Baseball Stars 2", &neogeo_ctrl, NULL )
 GAMEB( 1992, quizdai2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Quiz Meitantei Neo and Geo - Quiz Daisousa Sen part 2", &neogeo_ctrl, NULL )
-GAMEB( 1993, 3countb,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "3 Count Bout - Fire Suplex", &neogeo_ctrl, NULL )
-GAMEB( 1992, aof,      neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting - Ryuuko no Ken", &neogeo_ctrl, NULL )
-GAMEB( 1993, samsho,   neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown - Samurai Spirits", &neogeo_ctrl, NULL )
+GAMEB( 1993, 3countb,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "3 Count Bout / Fire Suplex (NGM-043 ~ NGH-043)", &neogeo_ctrl, NULL )
+GAMEB( 1992, aof,      neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting / Ryuuko no Ken", &neogeo_ctrl, NULL )
+GAMEB( 1993, samsho,   neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown / Samurai Spirits", &neogeo_ctrl, NULL )
 GAMEB( 1994, tophuntr, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Top Hunter - Roddy and Cathy", &neogeo_ctrl, NULL )
-GAMEB( 1992, fatfury2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury 2 - Garou Densetsu 2 - arata-naru tatakai", &neogeo_ctrl, NULL )
-GAMEB( 1992, ssideki,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks - Tokuten Ou", &neogeo_ctrl, NULL )
+GAMEB( 1992, fatfury2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury 2 / Garou Densetsu 2 - Arata-naru Tatakai", &neogeo_ctrl, NULL )
+GAMEB( 1992, ssideki,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks / Tokuten Ou", &neogeo_ctrl, NULL )
 GAMEB( 1994, kof94,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '94", &neogeo_ctrl, NULL )
-GAMEB( 1994, aof2,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting 2 - Ryuuko no Ken 2", &neogeo_ctrl, NULL )
-GAMEB( 1993, fatfursp, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury Special - Garou Densetsu Special (set 1)", &neogeo_ctrl, NULL )
-GAMEB( 1993, fatfursa, fatfursp, neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury Special - Garou Densetsu Special (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1995, savagere, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Savage Reign - Fu'un Mokushiroku - kakutou sousei", &neogeo_ctrl, NULL )
-GAMEB( 1994, ssideki2, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks 2 - The World Championship - Tokuten Ou 2 - real fight football", &neogeo_ctrl, NULL )
-GAMEB( 1994, samsho2,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown II - Shin Samurai Spirits - Haohmaru jigokuhen", &neogeo_ctrl, NULL )
-GAMEB( 1995, fatfury3, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury 3 - Road to the Final Victory - Garou Densetsu 3 - haruka-naru tatakai", &neogeo_ctrl, NULL )
-GAMEB( 1995, ssideki3, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks 3 - The Next Glory - Tokuten Ou 3 - eikoue no michi", &neogeo_ctrl, NULL )
+GAMEB( 1994, aof2,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting 2 / Ryuuko no Ken 2", &neogeo_ctrl, NULL )
+GAMEB( 1993, fatfursp, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury Special / Garou Densetsu Special (set 1)", &neogeo_ctrl, NULL )
+GAMEB( 1993, fatfursa, fatfursp, neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury Special / Garou Densetsu Special (set 2)", &neogeo_ctrl, NULL )
+GAMEB( 1995, savagere, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Savage Reign / Fu'un Mokushiroku - kakutou sousei", &neogeo_ctrl, NULL )
+GAMEB( 1994, ssideki2, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks 2 - The World Championship / Tokuten Ou 2 - Real Fight Football", &neogeo_ctrl, NULL )
+GAMEB( 1994, samsho2,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen", &neogeo_ctrl, NULL )
+GAMEB( 1995, fatfury3, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - Haruka-naru Tatakai", &neogeo_ctrl, NULL )
+GAMEB( 1995, ssideki3, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Super Sidekicks 3 - The Next Glory / Tokuten Ou 3 - eikoue no michi", &neogeo_ctrl, NULL )
 GAMEB( 1995, kof95,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '95 (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1995, kof95a,   kof95,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '95 (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1995, samsho3,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown III - Samurai Spirits - Zankurou Musouken", &neogeo_ctrl, NULL )
-GAMEB( 1995, rbff1,    neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury - Real Bout Garou Densetsu", &neogeo_ctrl, NULL )
-GAMEB( 1996, aof3,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting 3 - The Path of the Warrior - Art of Fighting - Ryuuko no Ken Gaiden", &neogeo_ctrl, NULL )
+GAMEB( 1995, samsho3,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown III / Samurai Spirits - Zankurou Musouken", &neogeo_ctrl, NULL )
+GAMEB( 1995, rbff1,    neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury / Real Bout Garou Densetsu", &neogeo_ctrl, NULL )
+GAMEB( 1996, aof3,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Art of Fighting 3 - The Path of the Warrior / Art of Fighting - Ryuuko no Ken Gaiden", &neogeo_ctrl, NULL )
 GAMEB( 1996, kof96,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1996, kof96h,   kof96,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1996, ssideki4, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Ultimate 11 - The SNK Football Championship - Tokuten Ou - Honoo no Libero, The", &neogeo_ctrl, NULL )
-GAMEB( 1996, kizuna,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Kizuna Encounter - Super Tag Battle - Fu'un Super Tag Battle", &neogeo_ctrl, NULL )
-GAMEB( 1996, samsho4,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown IV - Amakusa's Revenge - Samurai Spirits - Amakusa Kourin", &neogeo_ctrl, NULL )
-GAMEB( 1996, rbffspec, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury Special - Real Bout Garou Densetsu Special", &neogeo_ctrl, NULL )
+GAMEB( 1996, ssideki4, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Ultimate 11 - The SNK Football Championship / Tokuten Ou - Honoo no Libero, The", &neogeo_ctrl, NULL )
+GAMEB( 1996, kizuna,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Kizuna Encounter - Super Tag Battle / Fu'un Super Tag Battle", &neogeo_ctrl, NULL )
+GAMEB( 1996, samsho4,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Samurai Shodown IV - Amakusa's Revenge / Samurai Spirits - Amakusa Kourin", &neogeo_ctrl, NULL )
+GAMEB( 1996, rbffspec, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special", &neogeo_ctrl, NULL )
 GAMEB( 1997, kof97,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '97 (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1997, kof97a,   kof97,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '97 (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1997, lastblad, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade - Bakumatsu Roman - Gekka no Kenshi, The (set 1)", &neogeo_ctrl, NULL )
-GAMEB( 1997, lastblda, lastblad, neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade - Bakumatsu Roman - Gekka no Kenshi, The (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1997, irrmaze,  neogeo,   neogeo, neogeo, irrmaze, neogeo,   ROT0, "SNK / Saurus", "The Irritating Maze - Ultra Denryu Iraira Bou", &neogeo_ctrl, NULL )
-GAMEB( 1998, rbff2,    neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury 2 - The Newcomers - Real Bout Garou Densetsu 2 - the newcomers (set 1)", &neogeo_ctrl, NULL )
-GAMEB( 1998, rbff2a,   rbff2,    neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury 2 - The Newcomers - Real Bout Garou Densetsu 2 - the newcomers (set 2)", &neogeo_ctrl, NULL )
+GAMEB( 1997, lastblad, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade / Bakumatsu Roman - Gekka no Kenshi, The (set 1)", &neogeo_ctrl, NULL )
+GAMEB( 1997, lastblda, lastblad, neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade / Bakumatsu Roman - Gekka no Kenshi, The (set 2)", &neogeo_ctrl, NULL )
+GAMEB( 1997, irrmaze,  neogeo,   neogeo, neogeo, irrmaze, neogeo,   ROT0, "SNK / Saurus", "The Irritating Maze / Ultra Denryu Iraira Bou", &neogeo_ctrl, NULL )
+GAMEB( 1998, rbff2,    neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury 2 - The Newcomers / Real Bout Garou Densetsu 2 - The Newcomers (set 1)", &neogeo_ctrl, NULL )
+GAMEB( 1998, rbff2a,   rbff2,    neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury 2 - The Newcomers / Real Bout Garou Densetsu 2 - The Newcomers (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1998, mslug2,   neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "SNK", "Metal Slug 2 - Super Vehicle-001-II", &neogeo_ctrl, NULL )
-GAMEB( 1998, kof98,    neogeo,   neogeo, neogeo, neogeo,  kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest - King of Fighters '98 - dream match never ends", &neogeo_ctrl, NULL )
-GAMEB( 1998, kof98n,   kof98,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '98 - The Slugfest - King of Fighters '98 - dream match never ends (not encrypted)", &neogeo_ctrl, NULL )
-GAMEB( 1998, lastbld2, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade 2 - Bakumatsu Roman - Dai Ni Maku Gekka no Kenshi, The", &neogeo_ctrl, NULL )
+GAMEB( 1998, kof98,    neogeo,   neogeo, neogeo, neogeo,  kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest - King of Fighters '98 / Dream Match Never Ends", &neogeo_ctrl, NULL )
+GAMEB( 1998, kof98n,   kof98,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '98 - The Slugfest - King of Fighters '98 / Dream Match Never Ends (Decrypted)", &neogeo_ctrl, NULL )
+GAMEB( 1998, lastbld2, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Last Blade 2 / Bakumatsu Roman - Dai Ni Maku Gekka no Kenshi, The", &neogeo_ctrl, NULL )
 GAMEB( 1998, neocup98, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "SNK", "Neo-Geo Cup '98 - The Road to the Victory", &neogeo_ctrl, NULL )
 GAMEB( 1999, mslugx,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Metal Slug X - Super Vehicle-001", &neogeo_ctrl, NULL )
 GAMEB( 1999, kof99,    neogeo,   neogeo, raster, neogeo,  kof99,    ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (set 1)", &neogeo_ctrl, NULL ) /* Encrypted Code & GFX */
@@ -7383,13 +7520,13 @@ GAMEB( 2000, mslug3,   neogeo,   neogeo, raster, neogeo,  mslug3,   ROT0, "SNK",
 GAMEB( 2000, mslug3n,  mslug3,   neogeo, raster, neogeo,  mslug3n,  ROT0, "SNK", "Metal Slug 3 (not encrypted)", &neogeo_ctrl, NULL ) /* Encrypted GFX */
 GAMEB( 2000, kof2000,  neogeo,   neogeo, neogeo, neogeo,  kof2000,  ROT0, "SNK", "The King of Fighters 2000", &neogeo_ctrl, NULL ) /* Encrypted Code & GFX */
 GAMEB( 2000, kof2000n, kof2000,  neogeo, neogeo, neogeo,  kof2000n, ROT0, "SNK", "The King of Fighters 2000 (not encrypted)", &neogeo_ctrl, NULL ) /* Encrypted GFX */
-GAMEB( 1996, zintrckb, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack / bootleg",   "Zintrick - Oshidashi Zentrix (hack - bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 1996, zintrckb, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack / bootleg",   "Zintrick - Oshidashi Zentrix (Hack-bootleg)", &neogeo_ctrl, NULL )
 
 /* Alpha Denshi Co. / ADK (changed name in 1993) */
 GAMEB( 1990, maglord,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Magician Lord (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1990, maglordh, maglord,  neogeo, neo320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Magician Lord (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1990, ncombat,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Ninja Combat", &neogeo_ctrl, NULL )
-GAMEB( 1990, bjourney, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Blue's Journey - Raguy", &neogeo_ctrl, NULL )
+GAMEB( 1990, bjourney, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Blue's Journey / Raguy", &neogeo_ctrl, NULL )
 GAMEB( 1991, crsword,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Crossed Swords", &neogeo_ctrl, NULL )
 GAMEB( 1996, crswd2bl, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg",          "Crossed Swords 2", &neogeo_ctrl, NULL )
 GAMEB( 1991, trally,   neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "Thrash Rally", &neogeo_ctrl, NULL )
@@ -7398,11 +7535,11 @@ GAMEB( 1992, wh1,      neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "Alpha
 GAMEB( 1992, wh1h,     wh1,      neogeo, ras320, neogeo,  neogeo,   ROT0, "Alpha Denshi Co.", "World Heroes (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1993, wh2,      neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "ADK",              "World Heroes 2", &neogeo_ctrl, NULL )
 GAMEB( 1994, wh2j,     neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "ADK / SNK",        "World Heroes 2 Jet", &neogeo_ctrl, NULL )
-GAMEB( 1994, aodk,     neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "ADK / SNK",        "Aggressors of Dark Kombat - Tsuukai GANGAN Koushinkyoku", &neogeo_ctrl, NULL )
+GAMEB( 1994, aodk,     neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "ADK / SNK",        "Aggressors of Dark Kombat / Tsuukai GANGAN Koushinkyoku", &neogeo_ctrl, NULL )
 GAMEB( 1995, whp,      neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "ADK / SNK",        "World Heroes Perfect", &neogeo_ctrl, NULL )
 GAMEB( 1995, mosyougi, neogeo,   neogeo, raster_busy, neogeo,  neogeo,   ROT0, "ADK / SNK",   "Syougi No Tatsujin - Master of Syougi", &neogeo_ctrl, NULL )
 GAMEB( 1996, overtop,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "ADK",              "Over Top", &neogeo_ctrl, NULL )
-GAMEB( 1996, ninjamas, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "ADK / SNK",        "Ninja Master's - haoh-ninpo-cho", &neogeo_ctrl, NULL )
+GAMEB( 1996, ninjamas, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "ADK / SNK",        "Ninja Master's - Haoh-ninpo-cho", &neogeo_ctrl, NULL )
 GAMEB( 1996, twinspri, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "ADK",              "Twinkle Star Sprites", &neogeo_ctrl, NULL )
 GAMEB( 2001, zupapa,   neogeo,   neogeo, neogeo, neogeo,  zupapa,   ROT0, "SNK",              "Zupapa!", &neogeo_ctrl, NULL )	/* Encrypted GFX */
 	
@@ -7414,11 +7551,11 @@ GAMEB( 1995, pulstar,  neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "Aicom
 GAMEB( 2003, pnyaa,    neogeo,   neogeo, neogeo, neogeo,  pnyaa,    ROT0, "Aiky", "Pochi and Nyaa", &neogeo_ctrl, NULL )
 
 /* Data East Corporation */
-GAMEB( 1996, ghostlop, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Ghostlop (prototype)", &neogeo_ctrl, NULL )
-GAMEB( 1993, spinmast, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Spin Master - Miracle Adventure", &neogeo_ctrl, NULL )
-GAMEB( 1994, wjammers, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Data East Corporation", "Windjammers - Flying Power Disc", &neogeo_ctrl, NULL )
-GAMEB( 1994, karnovr,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Karnov's Revenge - Fighter's History Dynamite", &neogeo_ctrl, NULL )
-GAMEB( 1994, strhoop,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Street Hoop - Street Slam - Dunk Dream", &neogeo_ctrl, NULL )
+GAMEB( 1996, ghostlop, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Ghostlop (Prototype)", &neogeo_ctrl, NULL )
+GAMEB( 1993, spinmast, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Spin Master / Miracle Adventure", &neogeo_ctrl, NULL )
+GAMEB( 1994, wjammers, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Data East Corporation", "Windjammers / Flying Power Disc", &neogeo_ctrl, NULL )
+GAMEB( 1994, karnovr,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Karnov's Revenge / Fighter's History Dynamite", &neogeo_ctrl, NULL )
+GAMEB( 1994, strhoop,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Data East Corporation", "Street Hoop / Street Slam / Dunk Dream", &neogeo_ctrl, NULL )
 GAMEB( 1996, magdrop2, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Data East Corporation", "Magical Drop II", &neogeo_ctrl, NULL )
 GAMEB( 1997, magdrop3, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Data East Corporation", "Magical Drop III", &neogeo_ctrl, NULL )
 
@@ -7435,11 +7572,11 @@ GAMEB( 2002, rotd,     neogeo,	 neogeo, neogeo, neogeo,  rotd,	    ROT0, "Evoga 
 
 /* Face */
 GAMEB( 1994, gururin,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Face", "Gururin", &neogeo_ctrl, NULL )
-GAMEB( 1997, miexchng, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Face", "Money Puzzle Exchanger - Money Idol Exchanger", &neogeo_ctrl, NULL )
+GAMEB( 1997, miexchng, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Face", "Money Puzzle Exchanger / Money Idol Exchanger", &neogeo_ctrl, NULL )
 
 /* Hudson Soft */
 GAMEB( 1994, panicbom, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Eighting / Hudson", "Panic Bomber", &neogeo_ctrl, NULL )
-GAMEB( 1995, kabukikl, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Hudson", "Far East of Eden - Kabuki Klash - Tengai Makyou - Shin Den", &neogeo_ctrl, NULL )
+GAMEB( 1995, kabukikl, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Hudson", "Far East of Eden - Kabuki Klash / Tengai Makyou - Shin Den", &neogeo_ctrl, NULL )
 GAMEB( 1997, neobombe, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Hudson", "Neo Bomberman", &neogeo_ctrl, NULL )
 
 /* Mega Enterprise */
@@ -7451,11 +7588,11 @@ GAMEB( 1990, minasan,  neogeo,   neogeo, neogeo, mjneogeo,mjneogeo, ROT0, "Monol
 GAMEB( 1991, bakatono, neogeo,   neogeo, neogeo, mjneogeo,mjneogeo, ROT0, "Monolith Corp.", "Bakatonosama Mahjong Manyuki", &neogeo_ctrl, NULL )
 
 /* Nazca */
-GAMEB( 1996, turfmast, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Nazca", "Neo Turf Masters - Big Tournament Golf", &neogeo_ctrl, NULL )
+GAMEB( 1996, turfmast, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Nazca", "Neo Turf Masters / Big Tournament Golf", &neogeo_ctrl, NULL )
 GAMEB( 1996, mslug,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Nazca", "Metal Slug - Super Vehicle-001", &neogeo_ctrl, NULL )
 
 /* NMK */
-GAMEB( 1994, zedblade, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "NMK", "Zed Blade - Operation Ragnarok", &neogeo_ctrl, NULL )
+GAMEB( 1994, zedblade, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "NMK", "Zed Blade / Operation Ragnarok", &neogeo_ctrl, NULL )
 
 /* Noise Factory */
 GAMEB( 2003, matrim,   neogeo,   neogeo, neogeo, neogeo,  matrim,   ROT0, "Atlus / Noise Factory", "Power Instinct Matrimelee", &neogeo_ctrl, NULL )
@@ -7469,36 +7606,36 @@ GAMEB( 1992, viewpoin, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Sammy
 
 /* Saurus */
 GAMEB( 1995, quizkof,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Saurus", "Quiz King of Fighters", &neogeo_ctrl, NULL )
-GAMEB( 1995, stakwin,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Saurus", "Stakes Winner - Stakes Winner - GI kinzen seihae no michi", &neogeo_ctrl, NULL )
-GAMEB( 1996, ragnagrd, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Saurus", "Ragnagard - Shin-Oh-Ken", &neogeo_ctrl, NULL )
-GAMEB( 1996, pgoal,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Pleasure Goal - Futsal - 5 on 5 Mini Soccer", &neogeo_ctrl, NULL )
+GAMEB( 1995, stakwin,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seihae no michi", &neogeo_ctrl, NULL )
+GAMEB( 1996, ragnagrd, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", &neogeo_ctrl, NULL )
+GAMEB( 1996, pgoal,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer", &neogeo_ctrl, NULL )
 GAMEB( 1996, stakwin2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Saurus", "Stakes Winner 2", &neogeo_ctrl, NULL )
 GAMEB( 1997, shocktro, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Shock Troopers (set 1)", &neogeo_ctrl, NULL )
 GAMEB( 1997, shocktra, shocktro, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Shock Troopers (set 2)", &neogeo_ctrl, NULL )
 GAMEB( 1998, shocktr2, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Shock Troopers - 2nd Squad", &neogeo_ctrl, NULL )
-GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - iron clad (prototype)", &neogeo_ctrl, NULL )
+GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Ironclad (Prototype)", &neogeo_ctrl, NULL )
 
 /* SNK Playmore */
 GAMEB( 2003, svcboot,  neogeo,   neogeo, neogeo, neogeo,  svcboot,  ROT0, "Snk Playmore", "Snk Vs Capcom  - Svc Chaos (Bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "Snk Playmore", "Metal Slug 5", &neogeo_ctrl, NULL )
-
+GAMEB( 2003, kof2003d, neogeo,   neogeo, neogeo, neogeo,  kof2003d, ROT0, "Snk Playmore", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
 	
 /* Sunsoft */
 GAMEB( 1995, galaxyfg, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Sunsoft", "Galaxy Fight - Universal Warriors", &neogeo_ctrl, NULL )
 GAMEB( 1996, wakuwak7, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sunsoft", "Waku Waku 7", &neogeo_ctrl, NULL )
 
 /* Taito */
-GAMEB( 1994, pbobblen, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Taito", "Puzzle Bobble - Bust-A-Move (Neo-Geo) (set 1)", &neogeo_ctrl, NULL )
-GAMEB( 1994, pbobblna, pbobblen, neogeo, neo320, neogeo,  neogeo,   ROT0, "Taito", "Puzzle Bobble - Bust-A-Move (Neo-Geo) (set 2)", &neogeo_ctrl, NULL )
-GAMEB( 1999, pbobbl2n, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Taito (SNK license)", "Puzzle Bobble 2 - Bust-A-Move Again (Neo-Geo)", &neogeo_ctrl, NULL )
+GAMEB( 1994, pbobblen, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Taito", "Puzzle Bobble / Bust-A-Move (Neo-Geo) (set 1)", &neogeo_ctrl, NULL )
+GAMEB( 1994, pbobblna, pbobblen, neogeo, neo320, neogeo,  neogeo,   ROT0, "Taito", "Puzzle Bobble / Bust-A-Move (Neo-Geo) (set 2)", &neogeo_ctrl, NULL )
+GAMEB( 1999, pbobbl2n, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Taito (SNK license)", "Puzzle Bobble 2 / Bust-A-Move Again (Neo-Geo)", &neogeo_ctrl, NULL )
 
 /* Takara */
 GAMEB( 1995, marukodq, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Takara", "Chibi Marukochan Deluxe Quiz", &neogeo_ctrl, NULL )
 
 /* Technos */
 GAMEB( 1995, doubledr, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "Technos", "Double Dragon (Neo-Geo)", &neogeo_ctrl, NULL )
-GAMEB( 1995, gowcaizr, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Technos", "Voltage Fighter - Gowcaizer - Choujin Gakuen Gowcaizer", &neogeo_ctrl, NULL )
-GAMEB( 1996, sdodgeb,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Technos", "Super Dodge Ball - Kunio no Nekketsu Toukyuu Densetsu", &neogeo_ctrl, NULL )
+GAMEB( 1995, gowcaizr, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Technos", "Voltage Fighter - Gowcaizer / Choujin Gakuen Gowcaizer", &neogeo_ctrl, NULL )
+GAMEB( 1996, sdodgeb,  neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Technos", "Super Dodge Ball / Kunio no Nekketsu Toukyuu Densetsu", &neogeo_ctrl, NULL )
 
 /* Tecmo */
 GAMEB( 1996, tws96,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Tecmo", "Tecmo World Soccer '96", &neogeo_ctrl, NULL )
@@ -7513,9 +7650,9 @@ GAMEB( 1994, fightfva, fightfev, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Vicco
 
 /* Video System Co. */
 GAMEB( 1994, pspikes2, neogeo,   neogeo, ras320, neogeo,  neogeo,   ROT0, "Video System Co.", "Power Spikes II", &neogeo_ctrl, NULL )
-GAMEB( 1994, sonicwi2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 - Sonic Wings 2", &neogeo_ctrl, NULL )
-GAMEB( 1995, sonicwi3, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 - Sonic Wings 3", &neogeo_ctrl, NULL )
-GAMEB( 1997, popbounc, neogeo,   neogeo, neogeo, popbounc,popbounc, ROT0, "Video System Co.", "Pop 'n Bounce - Gapporin", &neogeo_ctrl, NULL )
+GAMEB( 1994, sonicwi2, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 / Sonic Wings 2", &neogeo_ctrl, NULL )
+GAMEB( 1995, sonicwi3, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 / Sonic Wings 3", &neogeo_ctrl, NULL )
+GAMEB( 1997, popbounc, neogeo,   neogeo, neogeo, popbounc,popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", &neogeo_ctrl, NULL )
 
 /* Yuki Enterprises */
 GAMEB( 2003, samsho5,  neogeo,   neogeo, raster, neogeo,  samsho5,  ROT0, "NeoGeo", "Samurai Shodown V", &neogeo_ctrl, NULL )

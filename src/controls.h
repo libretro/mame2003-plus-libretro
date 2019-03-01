@@ -12,8 +12,9 @@
 
 struct ControlInfo
 {
+  const bool rotate_joy_45;         /* joystick(s) are physically rotated 45 degress off-axis from the cabinet */
   const bool alternating_controls;
-  const bool mirrored_controls; /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored_controls == 0 */
+  const bool mirrored_controls;     /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored_controls == 0 */
   const char *control_details;
   const char *(*get_name)(int);  
 };
@@ -990,9 +991,6 @@ const char *f1en_get_ctrl_name(int type);
 extern const struct ControlInfo fantasy_ctrl;
 const char *fantasy_get_ctrl_name(int type);
 
-extern const struct ControlInfo sqbert_ctrl;
-const char *sqbert_get_ctrl_name(int type);
-
 extern const struct ControlInfo fax_ctrl;
 const char *fax_get_ctrl_name(int type);
 
@@ -1779,9 +1777,6 @@ const char *monsterb_get_ctrl_name(int type);
 extern const struct ControlInfo montecar_ctrl;
 const char *montecar_get_ctrl_name(int type);
 
-extern const struct ControlInfo mooncrst_ctrl;
-const char *mooncrst_get_ctrl_name(int type);
-
 extern const struct ControlInfo mpatrol_ctrl;
 const char *mpatrol_get_ctrl_name(int type);
 
@@ -2061,9 +2056,6 @@ const char *pbobble3_get_ctrl_name(int type);
 extern const struct ControlInfo qbert_ctrl;
 const char *qbert_get_ctrl_name(int type);
 
-extern const struct ControlInfo qbertqub_ctrl;
-const char *qbertqub_get_ctrl_name(int type);
-
 extern const struct ControlInfo qix_ctrl;
 const char *qix_get_ctrl_name(int type);
 
@@ -2334,6 +2326,9 @@ const char *sbm_get_ctrl_name(int type);
 extern const struct ControlInfo souledge_ctrl;
 const char *souledge_get_ctrl_name(int type);
 
+extern const struct ControlInfo spacewar_ctrl;
+const char *spacewar_get_ctrl_name(int type);
+
 extern const struct ControlInfo sspaceat_ctrl;
 const char *sspaceat_get_ctrl_name(int type);
 
@@ -2552,6 +2547,9 @@ const char *sstrike_get_ctrl_name(int type);
 
 extern const struct ControlInfo stonebal_ctrl;
 const char *stonebal_get_ctrl_name(int type);
+
+extern const struct ControlInfo streakng_ctrl;
+const char *streakng_get_ctrl_name(int type);
 
 extern const struct ControlInfo szaxxon_ctrl;
 const char *szaxxon_get_ctrl_name(int type);
@@ -2823,6 +2821,9 @@ const char *triviayp_get_ctrl_name(int type);
 extern const struct ControlInfo trog_ctrl;
 const char *trog_get_ctrl_name(int type);
 
+extern const struct ControlInfo trojan_ctrl;
+const char *trojan_get_ctrl_name(int type);
+
 extern const struct ControlInfo tron_ctrl;
 const char *tron_get_ctrl_name(int type);
 
@@ -3062,6 +3063,9 @@ const char *mj4simai_get_ctrl_name(int type);
 
 extern const struct ControlInfo wargods_ctrl;
 const char *wargods_get_ctrl_name(int type);
+
+extern const struct ControlInfo warofbug_ctrl;
+const char *warofbug_get_ctrl_name(int type);
 
 extern const struct ControlInfo wotw_ctrl;
 const char *wotw_get_ctrl_name(int type);

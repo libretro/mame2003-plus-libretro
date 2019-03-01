@@ -456,7 +456,7 @@ static MACHINE_DRIVER_START( baraduke )
 	MDRV_VIDEO_UPDATE(baraduke)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(NAMCO, namco_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( metrocrs )
@@ -488,7 +488,7 @@ static MACHINE_DRIVER_START( metrocrs )
 	MDRV_VIDEO_UPDATE(metrocrs)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(NAMCO, namco_interface)
+	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
 MACHINE_DRIVER_END
 
 ROM_START( baraduke )

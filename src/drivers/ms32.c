@@ -1560,7 +1560,7 @@ static MACHINE_INIT( ms32 )
 static MACHINE_DRIVER_START( ms32 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V70, 20000000/9) /* 20MHz*/
+	MDRV_CPU_ADD(V70, 20000000) /* 20MHz*/
 	MDRV_CPU_MEMORY(ms32_readmem,ms32_writemem)
 	MDRV_CPU_VBLANK_INT(ms32_interrupt,32)
 

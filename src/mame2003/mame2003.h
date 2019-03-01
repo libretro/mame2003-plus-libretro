@@ -8,16 +8,31 @@
 #include "osd_cpu.h"
 #include "inptport.h"
 
-/* we can't #include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts */
+/* 
+ * we can't #include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts
+ * involing the DWORD define so we'll include only some useful bits for now
+ */ 
+#include <retro_inline.h>
+
+#if defined(__CELLOS_LV2__)
+#include <sys/fs_external.h>
+#endif
+
+#include <limits.h>
+
 #ifndef PATH_MAX_LENGTH
 #if defined(__CELLOS_LV2__)
 #define PATH_MAX_LENGTH CELL_FS_MAX_FS_PATH_LENGTH
-#elif defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(GEKKO)|| defined(WIIU)
+#elif defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(PS2) || defined(GEKKO)|| defined(WIIU) || defined(ORBIS)
 #define PATH_MAX_LENGTH 512
 #else
 #define PATH_MAX_LENGTH 4096
 #endif
 #endif
+
+/*
+ * end of retro_miscellaneous.h bits
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,54 +49,27 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
+
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
 /******************************************************************************
 
 	Shared libretro log interface
     set in mame2003.c 
 
 ******************************************************************************/
-
 extern retro_log_printf_t log_cb;
 
 
 /******************************************************************************
 
-Core options
+	frontend message interface
+    implemented in mame2003.c 
 
 ******************************************************************************/
+extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
-enum
-{
-  OPT_FRAMESKIP = 0,
-  OPT_MOUSE_DEVICE,
-  OPT_CROSSHAIR_ENABLED,
-  OPT_SKIP_DISCLAIMER,
-  OPT_SKIP_WARNINGS,
-  OPT_DISPLAY_SETUP,
-  OPT_BRIGHTNESS,
-  OPT_GAMMA,
-  OPT_BACKDROP,
-  OPT_NEOGEO_BIOS,
-  OPT_STV_BIOS,
-  OPT_USE_ALT_SOUND,
-  OPT_SHARE_DIAL,
-  OPT_DUAL_JOY,
-  OPT_RSTICK_BTNS,
-  OPT_TATE_MODE,
-  OPT_VECTOR_RESOLUTION,
-  OPT_VECTOR_ANTIALIAS,
-  OPT_VECTOR_TRANSLUCENCY,
-  OPT_VECTOR_BEAM,
-  OPT_VECTOR_FLICKER,
-  OPT_VECTOR_INTENSITY,
-  OPT_NVRAM_BOOTSTRAP,
-  OPT_SAMPLE_RATE,
-  OPT_DCS_SPEEDHACK,
-  OPT_INPUT_INTERFACE,  
-  OPT_MAME_REMAPPING,
-  OPT_4WAY,
-  OPT_end /* dummy last entry */
-};
 
 struct retro_variable_default
 {
@@ -89,16 +77,12 @@ struct retro_variable_default
    const char *defaults_string;
 };
 
-#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
-#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
-#define PAD_CLASSIC RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
-
 enum
 {
-  IDX_GAMEPAD = 0,
+  IDX_CLASSIC = 0,
+  IDX_MODERN,
   IDX_8BUTTON,
   IDX_6BUTTON,
-  IDX_CLASSIC,
   IDX_PAD_end,
 };
 
@@ -320,22 +304,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   Scan the list, and change the keys/joysticks you want.
 */
 void osd_customize_inputport_defaults(struct ipd *defaults);
-
-
-
-/******************************************************************************
-
-	File I/O
-
-******************************************************************************/
-
-/* inp header */
-typedef struct
-{
-	char name[9];      /* 8 bytes for game->name + NUL */
-	char version[3];   /* byte[0] = 0, byte[1] = version byte[2] = beta_version */
-	char reserved[20]; /* for future use, possible store game options? */
-} INP_HEADER;
 
 
 /******************************************************************************

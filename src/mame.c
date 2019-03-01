@@ -224,7 +224,7 @@ static int decode_graphics(const struct GfxDecodeInfo *gfxdecodeinfo);
 static void compute_aspect_ratio(const struct InternalMachineDriver *drv, int *aspect_x, int *aspect_y);
 static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *height);
 static int init_buffered_spriteram(void);
-
+void change_control_type(void);
 
 /***************************************************************************
 
@@ -273,7 +273,7 @@ bool init_game(int game)
 	Machine->gamedrv = gamedrv = drivers[game];
 	expand_machine_driver(gamedrv->drv, &internal_drv);
 	Machine->drv = &internal_drv;
-  
+  change_control_type();
   return true;
 }
     
@@ -804,13 +804,13 @@ static void init_game_options(void)
   if (Machine->drv->video_attributes & VIDEO_RGB_DIRECT)
   {
     /* first pick a default */
-    /*if (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
+    if (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
       Machine->color_depth = 32;
     else
-      Machine->color_depth = 15;*/
+      Machine->color_depth = 15;
     
     /* use 32-bit color output as default to skip color conversions */
-		Machine->color_depth = 32;
+	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR) 	Machine->color_depth = 32;
 
     /* now allow overrides */
     if (options.color_depth == 15 || options.color_depth == 32)
@@ -821,21 +821,35 @@ static void init_game_options(void)
     alpha_init();
   }
 
-  /* update the vector width/height with defaults */
+  /* update the vector width/height with libretro settings or use the default */
   if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
   if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
   
-  /* apply the vector resolution multiplier */
-	options.vector_width  *= options.vector_resolution_multiplier;
-	options.vector_height *= options.vector_resolution_multiplier;
+
 
   /* get orientation right */
   Machine->orientation    = ROT0;
   Machine->ui_orientation = options.ui_orientation;
 
-  /* initialize the samplerate */
-  
-  Machine->sample_rate = options.samplerate;
+
+// set sample rate here as osd_start_audio_stream the logic must be the same in both some soundcores require setting here as well
+// ie ymf271 will segfault without this.
+ if (options.machine_timing)
+  {
+    if ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) ) 
+      Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+    
+    else Machine->sample_rate = options.samplerate;
+  }
+
+  else
+  {
+    if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+      Machine->sample_rate=22050;
+
+    else
+      Machine->sample_rate = options.samplerate;
+  }
 
 }
 

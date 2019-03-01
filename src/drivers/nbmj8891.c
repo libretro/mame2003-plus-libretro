@@ -3059,7 +3059,7 @@ GAME( 1988, telmahjn,  0,        telmahjn, telmahjn, telmahjn, ROT270, "Nichibut
 GAME( 1989, gionbana,  0,        gionbana, gionbana, gionbana, ROT0,   "Nichibutsu", "Gionbana (Japan 890120)" )
 GAME( 1989, mjfocus,   0,        mjfocus,  mjfocus,  mjfocus,  ROT0,   "Nichibutsu", "Mahjong Focus (Japan 890313)" )
 GAME( 1989, mjfocusm,  mjfocus,  mjfocusm, mjfocusm, mjfocusm, ROT0,   "Nichibutsu", "Mahjong Focus [BET] (Japan 890510)" )
-GAME( 1989, mmcamera,  mjcamera, mmcamera, mmcamera, mmcamera, ROT0,   "MIKI SYOUJI", "(Medal) Mahjong Camera Kozou [BET] (Japan 890509)" )
+GAME( 1989, mmcamera,  mjcamera, mmcamera, mmcamera, mmcamera, ROT0,   "Miki Syouji", "Mahjong Camera Kozou [BET] (Japan 890509)" )
 GAME( 1989, peepshow,  mjfocus,  mjfocus,  peepshow, mjfocus,  ROT0,   "AC", "Nozokimeguri Mahjong Peep Show (Japan 890404)" )
 GAME( 1989, scandal,   0,        scandal,  scandal,  scandal,  ROT0,   "Nichibutsu", "Scandal Mahjong (Japan 890213)" )
 GAME( 1989, scandalm,  scandal,  mjfocusm, scandalm, scandalm, ROT0,   "Nichibutsu", "Scandal Mahjong [BET] (Japan 890217)" )

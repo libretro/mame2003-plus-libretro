@@ -345,4 +345,4 @@ DRIVER_INIT( yumefuda )
 }
 
 
-GAMEX( 199?, yumefuda, 0, 		yumefuda, yumefuda, yumefuda,	ROT0, "Alba", "(Medal) Yumefuda", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 199?, yumefuda, 0, 		yumefuda, yumefuda, yumefuda,	ROT0, "Alba", "Yumefuda [BET]", GAME_NO_SOUND | GAME_NOT_WORKING )

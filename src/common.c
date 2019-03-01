@@ -11,7 +11,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <string/stdstring.h>
-#include "lib/libFLAC/include/FLAC/all.h"
+#include "libretro-deps/libFLAC/include/FLAC/all.h"
 #include "log.h"
 //#define LOG_LOAD
 
@@ -485,6 +485,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
+  bool missing_sample = false;
 
 	/* if the user doesn't want to use samples, bail */
 	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
@@ -555,12 +556,18 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 					
 				mame_fclose(f);
 			}
-		}
-	}
-	
-	return samples;
-}
+			else if (samples->sample[i] == NULL)
+			{
+				log_cb(RETRO_LOG_WARN, LOGPRE "Missing audio sample: %s\n", samplenames[i+skipfirst]);
+				missing_sample = true;
+				log_cb(RETRO_LOG_WARN, LOGPRE "Warning: audio sample(s) not found.\n");
+				frontend_message_cb("Warning: audio sample(s) not found.", 180);
+			}
+    }
+  }
 
+  return samples;
+}
 
 
 
@@ -1344,18 +1351,22 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 static int display_rom_load_results(struct rom_load_data *romdata)
 {
 	int region;
+  const char *missing_files = "Required files are missing, the game cannot be run.\n";
+  const char *rom_warnings  = "Warnings flagged during ROM loading.\n";
 
   /* display either an error message or a warning message */
   if (romdata->errors)
   {
     extern int bailing;
+    frontend_message_cb(missing_files, 300);
     bailing = 1;
-    strcat(romdata->errorbuf, "Required files are missing, the game cannot be run.\n");
+    strcat(romdata->errorbuf, missing_files);
     log_cb(RETRO_LOG_ERROR, LOGPRE "%s", romdata->errorbuf);
   }
   else if (romdata->warnings)
   {
-    strcat(romdata->errorbuf, "The game might not run correctly.\n");
+    frontend_message_cb(rom_warnings, 180);
+    strcat(romdata->errorbuf, rom_warnings);
     log_cb(RETRO_LOG_WARN, LOGPRE "%s", romdata->errorbuf);
   }
   else
@@ -1442,16 +1453,14 @@ static int open_rom_file(struct rom_load_data *romdata, const struct RomModule *
 	   attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
 	for (drv = Machine->gamedrv; !romdata->file && drv; drv = drv->clone_of)
-		if (drv->name && *drv->name) {
-      romdata->file = mame_fopen_rom(drv->description, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
-			if(!romdata->file)
-        romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
-    }
+  {
+		if (drv->name && *drv->name)
+			romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+  }
 
 	/* return the result */
 	return (romdata->file != NULL);
 }
-
 
 /*-------------------------------------------------
 	rom_fread - cheesy fread that fills with

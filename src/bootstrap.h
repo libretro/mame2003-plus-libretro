@@ -27,6 +27,16 @@ extern const struct bin2cFILE defender_bootstrap;
 /* used for defendg and defendw */
 extern const struct bin2cFILE defendg_bootstrap;
 
+/* used for foodf and foodf2 */
+extern const struct bin2cFILE foodf_bootstrap;
+
+extern const struct bin2cFILE foodfc_bootstrap;
+
+/* used for joust, joustr, and joustwr */
+extern const struct bin2cFILE joust_bootstrap;
+
+extern const struct bin2cFILE joust2_bootstrap;
+
 extern const struct bin2cFILE mk2_bootstrap;
 
 extern const struct bin2cFILE mk2chal_bootstrap;
@@ -47,6 +57,10 @@ extern const struct bin2cFILE narc3_bootstrap;
 
 /* used for qix, qix2, qixa, qixb */
 extern const struct bin2cFILE qix_bootstrap;
+
+extern const struct bin2cFILE robotron_bootstrap;
+
+extern const struct bin2cFILE robotryo_bootstrap;
 
 extern const struct bin2cFILE rungun_bootstrap;
 
