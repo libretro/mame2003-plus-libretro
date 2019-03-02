@@ -102,7 +102,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
-* SD Fighter
+* SD Fighters
+* Sega Megaplay : Bio Hazard Battle
+* Sega Megaplay : Columns III
+* Sega Megaplay : Shinobi III
+* Sega Megaplay : Sonic The Hedgehog 2
+* Sega Megaplay : Streets Of Rage II
+* Sega Megaplay : Tecmo World Cup
 * Sengoku 3
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
@@ -205,6 +211,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rush'N Attack - Romset `rushatck`
 * Sarge - Romset `sarge`
 * Satan's Hollow - Romset `shollow`
+* Sega Megaplay : Golden Axe II - Romset `mp_gaxe2`
+* Sega Megaplay : Sonic The Hedgehog - Romset `mp_sonic`
 * Shisensho II - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Slap Fight (Official Version) - Romset `slapfigh`
