@@ -9599,6 +9599,27 @@ const char *m4_get_ctrl_name(int type)
   return "";
 }
 
+const struct ControlInfo megaplay_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  false, /* alternating_controls */
+  true, /* mirrored_controls */
+  "", /* control_details */
+  &megaplay_get_ctrl_name
+};
+
+const char *megaplay_get_ctrl_name(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN2 "C";
+  } /* end of switch */
+
+  return joy4way_labels(type);
+}
+
 const struct ControlInfo mplanets_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */

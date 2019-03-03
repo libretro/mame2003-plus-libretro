@@ -1432,6 +1432,9 @@ const char *lupin3_get_ctrl_name(int type);
 extern const struct ControlInfo m4_ctrl;
 const char *m4_get_ctrl_name(int type);
 
+extern const struct ControlInfo megaplay_ctrl;
+const char *megaplay_get_ctrl_name(int type);
+
 extern const struct ControlInfo mplanets_ctrl;
 const char *mplanets_get_ctrl_name(int type);
 
