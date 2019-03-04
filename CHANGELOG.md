@@ -388,6 +388,7 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Updated m68000 core [grant2258]
 * Updates YMF271 sound core [grant2258]
 * Fixed missing sound speech in Hyper Crash [arcadez]
-* Sorted some game breaking graphical problems in Mysterious Stones - Dr Johns Adventure
-* Fixed slowdowns in Taito's Fighting Hawk
+* Sorted some game breaking graphical problems in Mysterious Stones - Dr Johns Adventure [arcadez]
+* Fixed slowdowns in Taito's Fighting Hawk [arcadez]
+* Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
 
