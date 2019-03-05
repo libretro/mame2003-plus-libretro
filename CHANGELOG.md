@@ -54,6 +54,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
 * Ghost Loop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
+* Golden Tee 3D Golf (v1.93N)
+* Golden Tee '97 (v1.30)
+* Golden Tee '98 (v1.10)
+* Golden Tee '99 (v1.00)
+* Golden Tee 2K (v1.00)
+* Golden Tee Classic (v1.00)
 * Guerrilla War (joystick hack bootleg)
 * Gunbarich
 * GunMaster
