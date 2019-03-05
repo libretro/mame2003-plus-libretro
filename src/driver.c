@@ -2493,7 +2493,13 @@ V-V                           TP-027
 	DRIVER( sftmj )		/* (c) 1995 Capcom/Incredible Technologies */
 	DRIVER( shufshot )	/* (c) Strata/Incredible Technologies */
 	DRIVER( sshot137 )	/* (c) Strata/Incredible Technologies */
-
+  DRIVER( gt3d )      /* (c) 1995 Incredible Technologies */
+	DRIVER( gt97 )      /* (c) 1997 Incredible Technologies */
+	DRIVER( gt98 )      /* (c) 1998 Incredible Technologies */
+	DRIVER( gt99 )      /* (c) 1999 Incredible Technologies */
+	DRIVER( gt2k )      /* (c) 2000 Incredible Technologies */
+	DRIVER( gtclassc )  /* (c) 2001 Incredible Technologies */
+    
 	/* Leland games */
 	DRIVER( cerberus )	/* (c) 1985 Cinematronics */
 	DRIVER( mayhem )	/* (c) 1985 Cinematronics */
