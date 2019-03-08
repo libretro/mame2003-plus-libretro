@@ -5561,6 +5561,26 @@ const char *dangerz_get_ctrl_name(int type)
   return "";
 }
 
+const struct ControlInfo dbreed_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  true, /* alternating_controls */
+  true, /* mirrored_controls */
+  "", /* control_details */
+  &dbreed_get_ctrl_name
+};
+
+const char *dbreed_get_ctrl_name(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+  } /* end of switch */
+
+  return joy4way_labels(type);
+}
+
 const struct ControlInfo indyheat_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */

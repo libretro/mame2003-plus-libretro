@@ -835,6 +835,9 @@ const char *dangar_get_ctrl_name(int type);
 extern const struct ControlInfo dangerz_ctrl;
 const char *dangerz_get_ctrl_name(int type);
 
+extern const struct ControlInfo dbreed_ctrl;
+const char *dbreed_get_ctrl_name(int type);
+
 extern const struct ControlInfo indyheat_ctrl;
 const char *indyheat_get_ctrl_name(int type);
 
