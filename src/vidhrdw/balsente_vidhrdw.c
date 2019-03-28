@@ -22,6 +22,7 @@ static UINT8 *scanline_dirty;
 static UINT8 *scanline_palette;
 static UINT8 *sprite_data;
 static UINT32 sprite_mask;
+static UINT8 *sprite_bank[2];
 
 static UINT8 last_scanline_palette;
 static UINT8 screen_refresh_counter;
@@ -39,6 +40,9 @@ VIDEO_START( balsente )
 {
 	/* reset the system */
 	palettebank_vis = 0;
+
+	sprite_bank[0] = memory_region(REGION_GFX1);
+	sprite_bank[1] = memory_region(REGION_GFX1) + 0x10000;
 	
 	/* allocate a bitmap */
 	tmpbitmap = auto_bitmap_alloc(Machine->drv->screen_width, Machine->drv->screen_height);
@@ -172,7 +176,22 @@ WRITE_HANDLER( balsente_paletteram_w )
 	palette_set_color(offset / 4, (r << 4) | r, (g << 4) | g, (b << 4) | b);
 }
 
+/*************************************
+ *
+ *	Sprite banking
+ *
+ *************************************/
 
+WRITE_HANDLER( shrike_sprite_select_w )
+{
+  if( sprite_data != sprite_bank[ (data & 0x80 >> 7) ^ 1 ] )
+  {
+  	log_cb(RETRO_LOG_DEBUG, LOGPRE "shrike_sprite_select_w( 0x%02x )\n", data );
+  	sprite_data = sprite_bank[ (data & 0x80 >> 7) ^ 1 ];
+  }
+
+  shrike_shared_6809_w( 1, data );
+}
 
 /*************************************
  *
