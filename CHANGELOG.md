@@ -221,6 +221,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Sonic The Hedgehog - Romset `mp_sonic`
 * Shisensho II - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
+* Shrike Avenger - Romset `shrike`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
