@@ -1953,7 +1953,7 @@ int convert_analog_scale(int input)
 
 	
 	if (neg_test) input =-abs(input);
-	return input * 1.28;
+	return (int) input * 1.28;
 }
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
