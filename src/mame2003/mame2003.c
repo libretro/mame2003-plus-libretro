@@ -83,7 +83,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_SHARE_DIAL,
   OPT_DPAD_ANALOG,
   OPT_DEADZONE,
-  OPT_SCALE,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -202,7 +201,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Control mapping ; analog|digital");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
-  init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scale type; rsn8887|grant2258");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialiasing; enabled|disabled");
@@ -518,13 +516,6 @@ static void update_variables(bool first_time)
 
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);
-          break;
-
-        case OPT_SCALE:
-          if(strcmp(var.value, "grant2258") == 0)
-            options.analog_scale = 1;
-          else
-            options.analog_scale = 0;
           break;
 
         case OPT_TATE_MODE:
@@ -1937,8 +1928,7 @@ int convert_analog_scale(int input)
 	float scale;
 	int trigger_deadzone;
 	
-	if( options.analog_scale)   trigger_deadzone = (32678 /100) * 20;
-	if( !options.analog_scale)  trigger_deadzone = (32678 * options.deadzone) / 100;
+	trigger_deadzone = (32678 * options.deadzone) / 100;
 	
 	if (input < 0) { input =abs(input); neg_test=1; }
 	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
