@@ -491,7 +491,7 @@ static void update_variables(bool first_time)
           }
 
       case OPT_DPAD_ANALOG:
-          if(strcmp(var.value, "analog_and_digital") == 0)
+          if(strcmp(var.value, "analog") == 0)
           {
             if( options.analog !=1 && control_flag !=-1) control_flag =1;
             options.analog = 1;
