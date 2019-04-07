@@ -217,7 +217,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
-  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "fix framerate form 57 to 59 fps for lcd displays (Restart core); disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -666,42 +666,26 @@ static void update_variables(bool first_time)
   }
 }
 
-
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);  
   if(options.machine_timing)
   {
-    if (Machine->drv->frames_per_second < 60.0 )
+     if (Machine->drv->frames_per_second >= 57 || Machine->drv->frames_per_second <= 59 )
       info->timing.fps = 60.0; 
     else 
-      info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
-
-    if ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) ) 
-    {
-      info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
-    }       
-
-    else
-    {
-      info->timing.sample_rate = options.samplerate;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate); 
-    }
+      info->timing.fps = Machine->drv->frames_per_second; 
   }
 
   else
-  {
-    info->timing.fps = Machine->drv->frames_per_second;
-
-    if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-     info->timing.sample_rate = 22050;
-
-    else 
-     info->timing.sample_rate = options.samplerate;
-  }
-
+   info->timing.fps = Machine->drv->frames_per_second;
+ 
+  if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
+   info->timing.sample_rate = 22050;
+  else 
+  info->timing.sample_rate = options.samplerate;
 }
+
 
 unsigned retro_api_version(void)
 {
@@ -1327,22 +1311,13 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-  if (options.machine_timing)
-  {
-    if ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) ) 
-      Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-    
-    else Machine->sample_rate = options.samplerate;
-  }
 
-  else
-  {
     if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
       Machine->sample_rate=22050;
 
     else
       Machine->sample_rate = options.samplerate;
-  }
+  
   
   delta_samples = 0.0f;
   usestereo = stereo ? 1 : 0;
