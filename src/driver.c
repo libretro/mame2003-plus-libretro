@@ -1080,6 +1080,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( shollow2 )	/* (c) 1981 */
 	DRIVER( tron )		/* (c) 1982 */
 	DRIVER( tron2 )		/* (c) 1982 */
+	DRIVER( tronfp )	/* (c) custom free rom */
 	DRIVER( kroozr )	/* (c) 1982 */
 	DRIVER( domino )	/* (c) 1982 */
 	DRIVER( wacko )		/* (c) 1982 */
