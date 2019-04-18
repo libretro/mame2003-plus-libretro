@@ -141,6 +141,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
+* Tron freeplay custom rom
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Undercover Cops (Alpha Renewal Version)
