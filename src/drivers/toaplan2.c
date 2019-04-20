@@ -331,7 +331,9 @@ READ16_HANDLER ( pipibibi_spriteram16_r );
 WRITE16_HANDLER( pipibibi_spriteram16_w );
 WRITE16_HANDLER( pipibibi_scroll_w );
 
-
+/********** Sound Stuff ***********************/
+void batsugun_okisnd_w(int data);
+void kbash_okisnd_w(int data);
 
 /***************************************************************************
   Initialisation handlers
@@ -813,6 +815,7 @@ static READ16_HANDLER( ghox_shared_ram_r )
 
 	return toaplan2_shared_ram16[offset] & 0xff;
 }
+
 static WRITE16_HANDLER( ghox_shared_ram_w )
 {
 	if (ACCESSING_LSB)
@@ -820,6 +823,127 @@ static WRITE16_HANDLER( ghox_shared_ram_w )
 		toaplan2_shared_ram16[offset] = data & 0xff;
 	}
 }
+
+/****************************************************************************
+  The Toaplan 2 hardware with V25+ secondary CPU controls the sound through
+  to a YM2151 and OKI M6295 on some boards. Here we just interperet some of
+  commands sent to the V25+, directly onto the OKI M6295
+
+  These tables convert commands sent from the main CPU, into sample numbers
+  played back by the sound processor.
+  The ADPCM ROMs contain intrument samples which are sequenced by the
+  sound processor to create some of the backing tracks. This is beyond the
+  scope of this playback file. Time would be better spent elsewhere.
+  
+****************************************************************************/
+
+static READ16_HANDLER( toaplan2_snd_cpu_r )
+{
+/*** Status port includes NEC V25+ CPU POST codes. ************
+ *** This is actually a part of the 68000/V25+ Shared RAM */
+
+	int response = 0xffff;
+
+	/* Provide successful POST responses */
+	if (mcu_data == 0xffaa)						/* Dogyuun */
+	{
+		response = 0xffaa;
+		mcu_data = 0xffff;
+	}
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%06x reading status %08x from the Zx80 secondary CPU port\n",activecpu_get_previouspc(),response);
+	return response;
+}
+
+static const data8_t batsugun_cmd_snd[64] =
+{
+/* Sound Command 13 (0x0d) is a megamix of OKI sound effects */
+/* Sound Command 20 (0x14) repeats the initial crash part of the sample 4 times */
+/*00*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*08*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*10*/  0x00, 0x00, 0x00, 0x12, 0x12, 0x10, 0x0e, 0x0f,
+/*18*/  0x0d, 0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*20*/  0x00, 0x00, 0x00, 0x13, 0x14, 0x17, 0x15, 0x16,
+/*28*/  0x18, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*30*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1a,
+/*38*/  0x0e, 0x0f, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+static const data8_t kbash_cmd_snd[128] =
+{
+/*00*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*08*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*10*/  0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
+/*18*/  0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21,
+/*20*/  0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
+/*28*/  0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31,
+/*30*/  0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
+/*38*/  0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41,
+/*40*/  0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
+/*48*/  0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51,
+/*50*/  0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
+/*58*/  0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61,
+/*60*/  0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
+/*68*/  0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x00,
+/*70*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/*78*/  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+static void play_oki_sound(int game_sound, int data)
+{
+	int status = OKIM6295_status_0_r(0);
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Playing sample %02x from command %02x\n",game_sound,data);
+
+	if (game_sound != 0)
+	{
+		if ((status & 0x01) == 0) {
+			OKIM6295_data_0_w(0,(0x80 | game_sound));
+			OKIM6295_data_0_w(0,0x11);
+		}
+		else if ((status & 0x02) == 0) {
+			OKIM6295_data_0_w(0,(0x80 | game_sound));
+			OKIM6295_data_0_w(0,0x21);
+		}
+		else if ((status & 0x04) == 0) {
+			OKIM6295_data_0_w(0,(0x80 | game_sound));
+			OKIM6295_data_0_w(0,0x41);
+		}
+		else if ((status & 0x08) == 0) {
+			OKIM6295_data_0_w(0,(0x80 | game_sound));
+			OKIM6295_data_0_w(0,0x81);
+		}
+	}
+}
+
+void batsugun_okisnd_w(int data)
+{
+/*	usrintf_showmessage("Writing %04x to Sound CPU",data); */
+
+	if (data == 0)
+	{
+		OKIM6295_data_0_w(0,0x78);		/* Stop playing effects */
+	}
+	else if ((data > 0) && (data < 64))
+	{
+		play_oki_sound(batsugun_cmd_snd[data], data);
+	}
+}
+
+void kbash_okisnd_w(int data)
+{
+/*	usrintf_showmessage("Writing %04x to Sound CPU",data); */
+
+	if (data == 0)
+	{
+		OKIM6295_data_0_w(0,0x78);		/* Stop playing effects */
+	}
+	else if ((data > 0) && (data < 128))
+	{
+		play_oki_sound(kbash_cmd_snd[data], data);
+	}
+}
+
 static READ16_HANDLER( kbash_sub_cpu_r )
 {
 /*	Knuckle Bash's  68000 reads secondary CPU status via an I/O port.
@@ -832,7 +956,21 @@ static READ16_HANDLER( kbash_sub_cpu_r )
 
 static WRITE16_HANDLER( kbash_sub_cpu_w )
 {
+	if (ACCESSING_LSB)
+	{
+		kbash_okisnd_w(data);
+	}
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%08x writing %04x to Zx80 secondary CPU status port %02x\n",activecpu_get_previouspc(),mcu_data,offset/2);
+}
+
+static WRITE16_HANDLER( batsugun_snd_cpu_w )
+{
+	if (ACCESSING_LSB)
+	{
+		mcu_data = data;
+		batsugun_okisnd_w(data);
+	}
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%06x Writing command (%04x) to the Zx80 secondary CPU port %02x\n",activecpu_get_previouspc(),mcu_data,(offset*2));
 }
 
 static READ16_HANDLER( shared_ram_r )
@@ -1701,6 +1839,7 @@ static MEMORY_WRITE16_START( vfive_writemem )
 	{ 0x400000, 0x400fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 MEMORY_END
 
+
 static MEMORY_READ16_START( batsugun_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, MRA16_RAM },
@@ -1713,7 +1852,7 @@ static MEMORY_READ16_START( batsugun_readmem )
 	{ 0x21fc00, 0x21ffff, Zx80_sharedram_r },		/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #else
 	{ 0x21e000, 0x21efff, shared_ram_r },
-	{ 0x21f000, 0x21f001, Zx80_status_port_r },		/* Zx80 status port */
+	{ 0x21f000, 0x21f001, toaplan2_snd_cpu_r },	    /* V25+ status port */
 	{ 0x21f004, 0x21f005, input_port_4_word_r },	/* Dip Switch A */
 	{ 0x21f006, 0x21f007, input_port_5_word_r },	/* Dip Switch B */
 	{ 0x21f008, 0x21f009, input_port_6_word_r },	/* Territory Jumper block */
@@ -1738,7 +1877,7 @@ static MEMORY_WRITE16_START( batsugun_writemem )
 	{ 0x21fc00, 0x21ffff, Zx80_sharedram_w, &Zx80_shared_ram },	/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #else
 	{ 0x21e000, 0x21efff, shared_ram_w, &toaplan2_shared_ram16 },
-	{ 0x21f000, 0x21f001, Zx80_command_port_w },	/* Zx80 command port */
+	{ 0x21f000, 0x21f001, batsugun_snd_cpu_w },	    /* V25+ command port */
 	{ 0x21fc00, 0x21ffff, Zx80_sharedram_w, &Zx80_shared_ram },	/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #endif
 	/***** The following in 0x30000x are for video controller 1 ******/
@@ -4086,6 +4225,22 @@ static struct OKIM6295interface fixeighb_okim6295_interface =
 	{ 100 }
 };
 
+static struct OKIM6295interface batsugun_okim6295_interface =
+{
+	1,						/* 1 chip */
+	{ 32000000/8/165 },		/* 24242.42Hz , 4.0MHz to 6295 (using A mode) */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 25 }
+};
+
+static struct OKIM6295interface kbash_okim6295_interface =
+{
+	1,						/* 1 chip */
+	{ 32000000/32/132 },	/* 7575.75Hz , 1.0MHz to 6295 (using B mode) */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 25 }
+};
+
 static struct OKIM6295interface kbash2_okim6295_interface =
 {
 	2,										/* 2 chips */
@@ -4240,7 +4395,7 @@ static MACHINE_DRIVER_START( kbash )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, kbash_okim6295_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( kbash2 )
@@ -4527,7 +4682,7 @@ static MACHINE_DRIVER_START( batsugun )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, batsugun_okim6295_interface)
 MACHINE_DRIVER_END
 
 
@@ -5322,7 +5477,7 @@ ROM_END
 GAMEX( 1991, tekipaki, 0,        tekipaki, tekipaki, T2_Z180,  ROT0,   "Toaplan", "Teki Paki", GAME_NO_SOUND )
 GAMEX( 1991, ghox,     0,        ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox", GAME_NO_SOUND )
 GAMEX( 1992, dogyuun,  0,        dogyuun,  dogyuun,  T2_Zx80,  ROT270, "Toaplan", "Dogyuun", GAME_NO_SOUND )
-GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan", "Knuckle Bash", GAME_NO_SOUND )
+GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan", "Knuckle Bash", GAME_IMPERFECT_SOUND )
 GAME(  1999, kbash2,   0,        kbash2,   kbash2,   T2_noZ80, ROT0,   "Toaplan", "Knuckle Bash 2" )
 GAME ( 1992, truxton2, 0,        truxton2, truxton2, T2_noZ80, ROT270, "Toaplan", "Truxton II - Tatsujin II - Tatsujin Oh (Japan)" )
 GAME ( 1991, pipibibs, 0,        pipibibs, pipibibs, T2_Z80,   ROT0,   "Toaplan", "Pipi and Bibis - Whoopee!!" )
@@ -5333,8 +5488,8 @@ GAME ( 1992, fixeighb, fixeight, fixeighb, fixeighb, fixeighb, ROT270, "Toaplan"
 GAMEX( 1992, grindstm, vfive,    vfive,    grindstm, T2_Zx80,  ROT270, "Toaplan", "Grind Stormer", GAME_NO_SOUND )
 GAMEX( 1992, grindsta, vfive,    vfive,    grindstm, T2_Zx80,  ROT270, "Toaplan", "Grind Stormer (older set)", GAME_NO_SOUND )
 GAMEX( 1993, vfive,    0,        vfive,    vfive,    T2_Zx80,  ROT270, "Toaplan", "V-Five (Japan)", GAME_NO_SOUND )
-GAMEX( 1993, batsugun, 0,        batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan", "Batsugun", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1993, batugnsp, batsugun, batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan", "Batsugun (Special Ver.)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1993, batsugun, 0,        batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan", "Batsugun", GAME_IMPERFECT_SOUND )
+GAMEX( 1993, batugnsp, batsugun, batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan", "Batsugun (Special Ver.)", GAME_IMPERFECT_SOUND )
 GAME ( 1994, snowbro2, 0,        snowbro2, snowbro2, T2_noZ80, ROT0,   "[Toaplan] Hanafram", "Snow Bros. 2 - With New Elves - Otenki Paradise" )
 GAME ( 1993, mahoudai, 0,        mahoudai, mahoudai, T2_Z80,   ROT270, "Raizing (Able license)", "Mahou Daisakusen (Japan)" )
 GAME ( 1993, sstriker, mahoudai, mahoudai, sstriker, T2_Z80,   ROT270, "Raizing", "Sorcer Striker (World)" ) /* from korean board*/
