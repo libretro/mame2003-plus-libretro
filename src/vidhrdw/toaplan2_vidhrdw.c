@@ -1550,6 +1550,9 @@ VIDEO_UPDATE( batsugun_1 )
 {
 	int priority;
 
+	static int bg1=0,fg1=0,tp1=0,tp0=0;
+	UINT32 *vramp;
+	static int bg[2]={0,0},fg[2]={0,0},top[2]={0,0};
 
 #ifdef MAME_DEBUG
 	toaplan2_log_vram();
@@ -1560,24 +1563,78 @@ VIDEO_UPDATE( batsugun_1 )
 	mark_tile_priority(0);
 	mark_tile_priority(1);
 
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
+	bg[0]=0;fg[0]=0;top[0]=0;
+	bg[1]=0;fg[1]=0;top[1]=0;
 
 	for (priority = 0; priority < 16; priority++)
 	{
-		if (bg_tile_priority[1][priority]) tilemap_draw(bitmap,cliprect,bg_tilemap[1],priority,0);/* 2 */
-		if (bg_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,bg_tilemap[0],priority,0);
-		if (fg_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,fg_tilemap[0],priority,0);
-		if (fg_tile_priority[1][priority]) tilemap_draw(bitmap,cliprect,fg_tilemap[1],priority,0);
-		if (top_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,top_tilemap[0],priority,0);
-		if (sprite_priority[0][priority])
-			draw_sprites(bitmap,cliprect,0,priority,0);
+		if (bg_tile_priority[0][priority]) bg[0]++;
+		if (fg_tile_priority[0][priority]) fg[0]++;
+		if (top_tile_priority[0][priority]) top[0]++;
+		if (bg_tile_priority[1][priority]) bg[1]++;
+		if (fg_tile_priority[1][priority]) fg[1]++;
+		if (top_tile_priority[1][priority]) top[1]++;
+	}
+
+	if( (bg[0]==1 && bg[1]==1 && fg[0]==1 && fg[1]==1 && top[0]==1 && top[1]==1)||
+		(bg[0]==1 && bg[1]==2 && fg[0]==1 && fg[1]==1 && top[0]==1 && top[1]==1)||
+		(bg[0]==1 && bg[1]==2 && fg[0]==1 && fg[1]==2 && top[0]==1 && top[1]==1)){
+		tp1=1;
+	} else {
+		tp1=0;
+	}
+
+	fillbitmap(bitmap,Machine->pens[0],cliprect);
+
+	vramp = (UINT32*)bgvideoram16[1];
+	if(*(vramp+28)==0x225e027a){
+		bg1=0;
+		fg1=1;
+	} else if(*(vramp+28)==0x0aa50060){
+		bg1=2;
+		fg1=1;
+	} else if(*(vramp+28)==0x02040032){
+		bg1=1;
+		fg1=2;
+	} else {
+		bg1=1;
+		fg1=1;
+	}
+
+	vramp = (UINT32*)fgvideoram16[1];
+	if(*vramp==0x09cb006d||*vramp==0x09ab006d||*vramp==0x01c4006e)
+	{
+		fg1=3;
+	}
+
+	vramp = (UINT32*)topvideoram16[0];
+	if(*vramp==0x2500740)
+	{
+		tp0=1;
+	} else {
+		tp0=0;
 	}
 
 	for (priority = 0; priority < 16; priority++)
 	{
-		if (top_tile_priority[1][priority]) tilemap_draw(bitmap,cliprect,top_tilemap[1],priority,0);
-		if (sprite_priority[1][priority])
-			draw_sprites(bitmap,cliprect,1,priority,0);
+		if (top_tile_priority[1][priority] && tp1==1) tilemap_draw(bitmap,cliprect,top_tilemap[1],priority,0);  /* 3 */
+		if (bg_tile_priority[1][priority] && bg1==2) tilemap_draw(bitmap,cliprect,bg_tilemap[1],priority,0);    /* 5 */
+		if (fg_tile_priority[1][priority] && fg1==3) tilemap_draw(bitmap,cliprect,fg_tilemap[1],priority,0);    /* 4 */
+		if (bg_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,bg_tilemap[0],priority,0);				/* 2 */
+		if (fg_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,fg_tilemap[0],priority,0);				/* 1 */
+		if (bg_tile_priority[1][priority] && bg1==1) tilemap_draw(bitmap,cliprect,bg_tilemap[1],priority,0);    /* 5 */
+		if (fg_tile_priority[1][priority] && fg1==1) tilemap_draw(bitmap,cliprect,fg_tilemap[1],priority,0);    /* 4 */
+		if (top_tile_priority[0][priority]) tilemap_draw(bitmap,cliprect,top_tilemap[0],priority,0);			/* 0 */
+		if (sprite_priority[0][priority]) draw_sprites(bitmap,cliprect,0,priority,0);
+	}
+	
+	for (priority = 0; priority < 16; priority++)
+	{
+		if (fg_tile_priority[1][priority] && fg1==2) tilemap_draw(bitmap,cliprect,fg_tilemap[1],priority,0);    /* 4 */
+		if (top_tile_priority[1][priority] && tp1==0) tilemap_draw(bitmap,cliprect,top_tilemap[1],priority,0);  /* 3 */
+		if (sprite_priority[1][priority]) draw_sprites(bitmap,cliprect,1,priority,0);
+		if (bg_tile_priority[1][priority] && tp1==1) tilemap_draw(bitmap,cliprect,bg_tilemap[1],priority,0);    /* 5 */
+		if (sprite_priority[0][priority] && tp0==1) draw_sprites(bitmap,cliprect,0,priority,0);
 	}
 
 }
