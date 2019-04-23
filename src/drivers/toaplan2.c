@@ -335,6 +335,25 @@ WRITE16_HANDLER( pipibibi_scroll_w );
 void batsugun_okisnd_w(int data);
 void kbash_okisnd_w(int data);
 
+int fadeout_ready = 0;
+int fadeout_stop = 0;
+int counter1 = 0;
+float sample_vol1 = 0;
+
+int playing1 = 0xff;
+int playing2 = 0xff;
+int playing3 = 0x00;
+int playing4 = 0x00;
+int playing5 = 0x00;
+int play_bat1 = 0x00;
+
+int thunder1 = 0;
+int thunder2 = 0;
+int thunder3 = 0;
+int thunder4 = 0;
+int thunder5 = 0;
+int thunder6 = 0;
+
 /***************************************************************************
   Initialisation handlers
 ***************************************************************************/
@@ -671,6 +690,63 @@ static WRITE16_HANDLER( toaplan2_hd647180_cpu_w )
 	}
 }
 
+static WRITE16_HANDLER( tekipaki_hd647180_w )
+{
+	if (data == 0xfe)
+	{
+		sample_stop(0);sample_stop(1);sample_stop(2);sample_stop(3);
+		sample_stop(4);sample_stop(5);sample_stop(6);sample_stop(7);
+	}
+	
+	if (data >= 0x01 && data <= 0x03)
+		sample_start (0, data, 1);
+	
+	if (data >= 0x04 && data <= 0x05)
+		sample_start (0, data, 0);
+	
+	if (data == 0x06)
+		sample_start (1, data ,0);
+	
+	if (data == 0x07)
+		sample_start (1, data ,0);
+	
+	if (data >= 0x08 && data <= 0x09)
+		sample_start (2, data, 0);
+	
+	if (data >= 0x0a && data <= 0x0d)
+		sample_start (3, data, 0);
+	
+	if (data >= 0x0e && data <= 0x12)
+		sample_start (4, data, 0);
+	
+	if (data >= 0x13 && data <= 0x14)
+		sample_start (5, data, 0);
+	
+	if (data == 0x15)
+		sample_start (6, data, 0);
+	
+	if (ACCESSING_LSB)
+	{
+		mcu_data = data & 0xff;
+		/* logerror("PC:%08x Writing command (%04x) to secondary CPU shared port\n",activecpu_get_previouspc(),mcu_data); */
+	}
+}
+
+static const char *tekipaki_sample_names[] =
+{
+	"*tekipaki",
+	"dm.wav","01.wav","02.wav","03.wav","04.wav","05.wav","06.wav","07.wav",
+	"08.wav","09.wav","0a.wav","0b.wav","0c.wav","0d.wav","0e.wav","0f.wav",
+	"10.wav","11.wav","12.wav","13.wav","14.wav","15.wav",0
+};
+
+struct Samplesinterface tekipaki_samples_interface =
+{
+	8,
+    75,
+    tekipaki_sample_names
+};
+
 static READ16_HANDLER( c2map_port_6_r )
 {
 	/* For Teki Paki hardware */
@@ -759,6 +835,48 @@ static READ16_HANDLER( ghox_mcu_r )
 
 static WRITE16_HANDLER( ghox_mcu_w )
 {
+	if (data == 0xfe)
+		sample_stop (0);
+
+	if (data == 0x42 || data == 0x44 || data == 0x45 || data == 0x47 || data == 0x48 || data == 0x4c || data == 0x4d || data == 0x4e)
+		sample_start (0, data , 1);
+
+	if (data == 0xd0)
+		sample_start (0, 0, 1);
+
+	if (data == 0x49)
+		sample_start (0, data , 0);
+
+	if (data >= 0x02 && data <= 0x0f)
+		sample_start (1, data , 0);
+
+	if (data >= 0x10 && data <= 0x17)
+		sample_start (2, data , 0);
+
+	if (data >= 0x18 && data <= 0x1f)
+		sample_start (3, data , 0);
+
+	if (data >= 0x20 && data <= 0x27)
+		sample_start (4, data , 0);
+
+	if (data >= 0x28 && data <= 0x2f)
+		sample_start (5, data , 0);
+
+	if (data >= 0x30 && data <= 0x38)
+		sample_start (6, data , 0);
+
+	if (data == 0x39)
+		sample_start (8, data , 0);
+
+	if (data >= 0x3a && data <= 0x3f)
+		sample_start (7, data , 0);
+
+	if (data == 0x01)
+		sample_start (8, data , 0);
+
+	if (data == 0x4b)
+		sample_start (0, 0x4f , 0);
+
 	if (ACCESSING_LSB)
 	{
 		mcu_data = data;
@@ -796,6 +914,28 @@ static WRITE16_HANDLER( ghox_mcu_w )
 		}
 	}
 }
+
+static const char *ghox_sample_names[] =
+{
+	"*ghox",
+	"d0.wav","01.wav","02.wav","dm.wav","04.wav","05.wav","06.wav","dm.wav",
+	"08.wav","09.wav","dm.wav","0b.wav","0c.wav","dm.wav","dm.wav","0f.wav",
+	"dm.wav","11.wav","12.wav","12.wav","14.wav","15.wav","16.wav","17.wav",
+	"18.wav","19.wav","1a.wav","1b.wav","1c.wav","1c.wav","1c.wav","1f.wav",
+	"20.wav","21.wav","22.wav","23.wav","24.wav","dm.wav","dm.wav","27.wav",
+	"dm.wav","dm.wav","2a.wav","2b.wav","dm.wav","2d.wav","2e.wav","2f.wav",
+	"dm.wav","dm.wav","dm.wav","33.wav","34.wav","35.wav","36.wav","37.wav",
+	"38.wav","39.wav","dm.wav","dm.wav","3c.wav","dm.wav","3e.wav","dm.wav",
+	"dm.wav","dm.wav","42.wav","43.wav","44.wav","45.wav","43.wav","47.wav",
+	"48.wav","49.wav","43.wav","dm.wav","4c.wav","4d.wav","4e.wav","d1.wav",0
+};
+
+struct Samplesinterface ghox_samples_interface =
+{
+	9,
+    75,
+    ghox_sample_names
+};
 
 static READ16_HANDLER( ghox_shared_ram_r )
 {
@@ -4289,7 +4429,10 @@ static MACHINE_DRIVER_START( tekipaki )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
+/*	
 	MDRV_SOUND_ADD(YM3812, ym3812_interface)
+*/
+	MDRV_SOUND_ADD(SAMPLES, tekipaki_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -4322,8 +4465,11 @@ static MACHINE_DRIVER_START( ghox )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
+/*	
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+*/
+	MDRV_SOUND_ADD(SAMPLES, ghox_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -5474,8 +5620,8 @@ ROM_END
 /* Whoopee  init   to be changed to T2_Z180   when (if) HD647180 is dumped */
 
 /*   ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR COMPANY    FULLNAME     FLAGS ) */
-GAMEX( 1991, tekipaki, 0,        tekipaki, tekipaki, T2_Z180,  ROT0,   "Toaplan", "Teki Paki", GAME_NO_SOUND )
-GAMEX( 1991, ghox,     0,        ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox", GAME_NO_SOUND )
+GAME ( 1991, tekipaki, 0,        tekipaki, tekipaki, T2_Z180,  ROT0,   "Toaplan", "Teki Paki" )
+GAME ( 1991, ghox,     0,        ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox" )
 GAMEX( 1992, dogyuun,  0,        dogyuun,  dogyuun,  T2_Zx80,  ROT270, "Toaplan", "Dogyuun", GAME_NO_SOUND )
 GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan", "Knuckle Bash", GAME_IMPERFECT_SOUND )
 GAME(  1999, kbash2,   0,        kbash2,   kbash2,   T2_noZ80, ROT0,   "Toaplan", "Knuckle Bash 2" )
