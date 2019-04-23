@@ -254,6 +254,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Daitoride
 * Dharma Doujou
 * Fire Shark
+* Ghox (via Toaplan samples)
 * GunNail
 * Hacha Mecha Fighter
 * Koutetsu Yousai Strahl
@@ -274,6 +275,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sky Alert
 * Sky Diver
 * Super Spacefortress Macross
+* Teki Paki (via Toaplan samples)
 * The Karate Tournament
 * Thunder Dragon
 * Toride II Adauchi Gaiden
@@ -318,8 +320,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Cosmic Alien
 * Frogs
+* Ghox (Toaplan Samples)
 * Sasuke Vs Commander 
 * Space Firebird
+* Teki Paki (Toaplan Samples)
 
 
 ## Games supporting new and improved samples
@@ -402,4 +406,5 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Fixed slowdowns in Taito's Fighting Hawk [arcadez]
 * Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
+* Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 
