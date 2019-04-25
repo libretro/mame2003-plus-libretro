@@ -1590,7 +1590,7 @@ static MEMORY_WRITE16_START( tekipaki_writemem )
 	{ 0x140008, 0x140009, toaplan2_0_scroll_reg_select_w },
 	{ 0x14000c, 0x14000d, toaplan2_0_scroll_reg_data_w },
 	{ 0x180040, 0x180041, toaplan2_coin_word_w },	/* Coin count/lock */
-	{ 0x180070, 0x180071, toaplan2_hd647180_cpu_w },
+	{ 0x180070, 0x180071, tekipaki_hd647180_w },
 MEMORY_END
 
 static MEMORY_READ16_START( ghox_readmem )
