@@ -1765,7 +1765,7 @@ static struct OKIM6295interface okim6295_interface =
 	2,              /* 2 chips */
 	{ 32220000/32/132, 32220000/16/132 },/* Frequency */
 	{ REGION_SOUND1, REGION_SOUND2 },
-	{ 100, 35 }
+	{ 50, 50 }
 };
 
 static struct OKIM6295interface okim6295_3_interface =

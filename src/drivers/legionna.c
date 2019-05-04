@@ -1,5 +1,5 @@
 /***************************************************************************
-
+-
 Legionnaire (c) Tad 1992
 -----------
 
@@ -1459,7 +1459,7 @@ static MACHINE_DRIVER_START( legionna )
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)/* VBL */
 
 	SEIBU_SOUND_SYSTEM_CPU(14318180/4)
-
+	MDRV_INTERLEAVE(400)
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
