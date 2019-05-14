@@ -188,6 +188,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dragon World - Romset `drgnwrld`
 * Driftout 94 - Romset `drifto94`
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
+* F-1 Grand Prix Star II - Romset `f1gpstr2`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
 * Hang-On - Romset `hangon`
 * Hard Head 2
