@@ -393,6 +393,8 @@ VIDEO_START( system32 );
 VIDEO_UPDATE( system32 );
 
 int system32_use_default_eeprom;
+static void (*system32_prot_vblank)(void);
+static void f1lap_fd1149_vblank(void);
 
 /* alien 3 with the gun calibrated, it doesn't prompt you if its not */
 unsigned char alien3_default_eeprom[128] = {
@@ -1070,6 +1072,9 @@ static INTERRUPT_GEN( system32_interrupt )
 		irq_raise(1);
 	else
 		irq_raise(0);
+
+	if (system32_prot_vblank)
+		(*system32_prot_vblank)();
 }
 
 /* jurassic park moving cab - not working yet */
@@ -1656,6 +1661,71 @@ INPUT_PORTS_START( f1en )
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* port B*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( f1lap )
+	PORT_START	/* 0xc0000a - port 0 */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) ) /* service coin mirror */
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) ) /* seems to be a service switch mirror */
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* 0xc00000 - port 1 */
+	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON1, "Gear Up",   IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON2, "Gear Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_BUTTON3, "Overtake",  IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+
+	PORT_START	/* 0xc00002 - port 2 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* 0xc00008 - port 3 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* port 4 */
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 5 */
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port 6 */
+	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 7 */
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port 8 */
+	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 9 */
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port A */
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port B */
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -3042,12 +3112,55 @@ static DRIVER_INIT ( spidey )
 	system32_mixerShift = 3;
 }
 
+
+/* F1 Superlap fake comms and protection workaround */
+
+static UINT16* dual_pcb_comms;
+
+static WRITE16_HANDLER( dual_pcb_comms_w )
+{
+	COMBINE_DATA(&dual_pcb_comms[offset]);
+}
+
+static READ16_HANDLER( dual_pcb_comms_r )
+{
+	return dual_pcb_comms[offset];
+}
+
+
+/* There must be something on the comms board for this?
+   Probably not a dip/solder link/trace cut, but maybe
+   just whichever way the cables are plugged in?
+   Both f1en and arescue master units try to set bit 1... */
+static READ16_HANDLER( dual_pcb_masterslave )
+{
+	return 0; /* 0/1 master/slave */
+}
+
+
+int val;
+void f1lap_fd1149_vblank(void)
+{
+	/* needed to start a game */
+	data8_t val = 	cpu_readmem24lew(0x20EE81);
+	if (val == 0xff)  cpu_writemem24lew(0x20EE81,0);
+
+	cpu_writemem24lew(0x20F7C6, 0);
+
+}
+
 static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 	multi32 = 0;
 	system32_mixerShift = 6;
 	init_driving();
+	
+	dual_pcb_comms = auto_malloc(0x1000);
+	install_mem_read16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_r);
+	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
+	install_mem_read16_handler(0, 0x801000, 0x801003,  dual_pcb_masterslave);
+	system32_prot_vblank = f1lap_fd1149_vblank;
 }
 
 static DRIVER_INIT ( arf )
@@ -3235,10 +3348,10 @@ GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jur
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jleague,  svf,      system32, svf,      s32,      ROT0, "Sega", "The J.League 1994 (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAMEX(1992, f1lap,    0,        system32, f1lap,    f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_IMPERFECT_GRAPHICS )
 
 /* not really working */
 GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
 GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
 GAMEX(1995, slipstrm, 0,        sys32_hi, system32,	f1en,     ROT0, "Capcom", "Slipstream", GAME_NOT_WORKING ) /* unhandled v60 opcodes .... */
 /* Loony Toons (maybe) */
