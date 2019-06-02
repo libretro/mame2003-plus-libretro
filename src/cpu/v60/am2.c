@@ -956,8 +956,9 @@ static UINT32 am2ImmediateQuick(void)
 
 static UINT32 am2Error1(void)
 {
-	log_cb(RETRO_LOG_DEBUG, "CPU - AM2 - 1 (PC=%06x)", PC);
-	return 0; /* never reached, fatalerror won't return */
+	/* f1lap trips this, why? */
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM2 - 1 (PC=%06x)", PC);
+	return 0;
 }
 
 static UINT32 am2Error2(void)
