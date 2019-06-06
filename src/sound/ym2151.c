@@ -129,6 +129,7 @@ typedef struct
 	void		*timer_B;
 	double		timer_A_time[1024];		/* timer A times for MAME */
 	double		timer_B_time[256];		/* timer B times for MAME */
+	int			irqlinestate;
 #else
 	UINT8		tim_A;					/* timer A enable (0-disabled) */
 	UINT8		tim_B;					/* timer B enable (0-disabled) */
@@ -786,6 +787,46 @@ static INLINE void envelope_KONKOFF(YM2151Operator * op, int v)
 
 
 #ifdef USE_MAME_TIMERS
+static void irqAon_callback(int n)
+{
+	YM2151 *chip = &YMPSG[n];
+	int oldstate = chip->irqlinestate;
+
+	chip->irqlinestate |= 1;
+
+	if (oldstate == 0 && chip->irqhandler) (*chip->irqhandler)(1);
+}
+
+static void irqBon_callback(int n)
+{
+	YM2151 *chip = &YMPSG[n];
+	int oldstate = chip->irqlinestate;
+
+	chip->irqlinestate |= 2;
+
+	if (oldstate == 0 && chip->irqhandler) (*chip->irqhandler)(1);
+}
+
+static void irqAoff_callback(int n)
+{
+	YM2151 *chip = &YMPSG[n];
+	int oldstate = chip->irqlinestate;
+
+	chip->irqlinestate &= ~1;
+
+	if (oldstate == 1 && chip->irqhandler) (*chip->irqhandler)(0);
+}
+
+static void irqBoff_callback(int n)
+{
+	YM2151 *chip = &YMPSG[n];
+	int oldstate = chip->irqlinestate;
+
+	chip->irqlinestate &= ~2;
+
+	if (oldstate == 2 && chip->irqhandler) (*chip->irqhandler)(0);
+}
+
 static void timer_callback_a (int n)
 {
 	YM2151 *chip = &YMPSG[n];
@@ -793,9 +834,8 @@ static void timer_callback_a (int n)
 	chip->timer_A_index_old = chip->timer_A_index;
 	if (chip->irq_enable & 0x04)
 	{
-		int oldstate = chip->status & 3;
 		chip->status |= 1;
-		if ((!oldstate) && (chip->irqhandler)) (*chip->irqhandler)(1);
+		timer_set(TIME_NOW,n,irqAon_callback);
 	}
 	if (chip->irq_enable & 0x80)
 		chip->csm_req = 2;		/* request KEY ON / KEY OFF sequence */
@@ -807,9 +847,8 @@ static void timer_callback_b (int n)
 	chip->timer_B_index_old = chip->timer_B_index;
 	if (chip->irq_enable & 0x08)
 	{
-		int oldstate = chip->status & 3;
 		chip->status |= 2;
-		if ((!oldstate) && (chip->irqhandler)) (*chip->irqhandler)(1);
+		timer_set(TIME_NOW,n,irqBon_callback);
 	}
 }
 #if 0
@@ -1068,18 +1107,28 @@ void YM2151WriteReg(int n, int r, int v)
 
 			chip->irq_enable = v;	/* bit 3-timer B, bit 2-timer A, bit 7 - CSM */
 
-			if (v&0x20)	/* reset timer B irq flag */
-			{
-				int oldstate = chip->status & 3;
-				chip->status &= 0xfd;
-				if ((oldstate==2) && (chip->irqhandler)) (*chip->irqhandler)(0);
-			}
-
 			if (v&0x10)	/* reset timer A irq flag */
 			{
+#ifdef USE_MAME_TIMERS
+				chip->status &= ~1;
+				timer_set(TIME_NOW,n,irqAoff_callback);
+#else
 				int oldstate = chip->status & 3;
-				chip->status &= 0xfe;
+				chip->status &= ~1;
 				if ((oldstate==1) && (chip->irqhandler)) (*chip->irqhandler)(0);
+#endif
+			}
+
+			if (v&0x20)	/* reset timer B irq flag */
+			{
+#ifdef USE_MAME_TIMERS
+				chip->status &= ~2;
+				timer_set(TIME_NOW,n,irqBoff_callback);
+#else
+				int oldstate = chip->status & 3;
+				chip->status &= ~2;
+				if ((oldstate==2) && (chip->irqhandler)) (*chip->irqhandler)(0);
+#endif
 
 			}
 
@@ -1446,6 +1495,10 @@ static void ym2151_state_save_register( int numchips )
 		state_save_register_UINT32 (buf1, i, "TimBind" , &YMPSG[i].timer_B_index, 1);
 		state_save_register_UINT32 (buf1, i, "TimAold" , &YMPSG[i].timer_A_index_old, 1);
 		state_save_register_UINT32 (buf1, i, "TimBold" , &YMPSG[i].timer_B_index_old, 1);
+		
+#ifdef USE_MAME_TIMERS
+	    state_save_register_UINT32 (buf1, i, "sndindex", &YMPSG[i].irqlinestate, 1);
+#endif
 
 		state_save_register_UINT8  (buf1, i, "connect" , &YMPSG[i].connect[0], 8);
 	}
