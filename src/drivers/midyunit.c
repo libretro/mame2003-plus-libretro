@@ -17,12 +17,13 @@
 		* Total Carnage
 
 	Known bugs:
-		* Super Hi Impact freaks out during play
 		* when the Porsche spins in Narc, the wheels are missing for
 			a single frame (may be an original bug)
 		* Terminator 2 freezes while playing the movies after destroying
 			skynet. Currently we have a hack in which prevents the freeze,
 			but we really should eventually figure it out for real
+    * Super Hi Impact: You need to at least reset the high score
+      table from the UTILITIES menu.  It's best to do a FULL FACTORY RESTORE
 
 **************************************************************************/
 
@@ -1966,8 +1967,8 @@ GAME( 1990, smashtv6, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "S
 GAME( 1990, smashtv5, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 5.00)" )
 GAME( 1990, smashtv4, smashtv, smashtv,  smashtv, smashtv4, ROT0, "Williams", "Smash T.V. (rev 4.00)" )
 GAME( 1990, hiimpact, 0,       hiimpact, trog,    hiimpact, ROT0, "Williams", "High Impact Football (rev LA3 12-27-90)" )
-GAMEX(1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)", GAME_NOT_WORKING )
-GAMEX(1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)", GAME_NOT_WORKING )
+GAME( 1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)" )
+GAME( 1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)" )
 
 GAME( 1991, term2,    0,       term2,    term2,   term2,    ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA3 03-27-92)" )
 GAME( 1991, term2la2, term2,   term2,    term2,   term2la2, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA2 12-09-91)" )
