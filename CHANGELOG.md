@@ -197,6 +197,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
 * Kozmik Kroozr - Romset `kroozr`
+* F1 Super Lap - Romset `f1lap`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Fire Barrel - Romset `firebarr`
 * Funky Jet - Romset `funkyjet`
