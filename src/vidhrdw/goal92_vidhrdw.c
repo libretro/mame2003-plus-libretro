@@ -102,9 +102,9 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 	for (offs = 3;offs <= 0x400-5;offs += 4)
 	{
-		UINT16 data = spriteram16[offs+2];
+		UINT16 data = buffered_spriteram16[offs+2];
 
-		y = spriteram16[offs+0];
+		y = buffered_spriteram16[offs+0];
 
 		if (y & 0x8000)
 			break;
@@ -112,12 +112,12 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		if (!(data & 0x8000))
 			continue;
 
-		sprite = spriteram16[offs+1];
+		sprite = buffered_spriteram16[offs+1];
 
 		if ((sprite>>14)!=pri)
 			continue;
 
-		x = spriteram16[offs+3];
+		x = buffered_spriteram16[offs+3];
 
 		sprite &= 0x1fff;
 
@@ -146,7 +146,9 @@ VIDEO_START( goal92 )
 	foreground_layer = tilemap_create(get_fore_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,16,16,32,32);
 	text_layer =       tilemap_create(get_text_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,  8,8,64,32);
 
-	if (!background_layer || !foreground_layer || !text_layer)
+	buffered_spriteram16 = auto_malloc(0x400*2);
+
+	if (!background_layer || !foreground_layer || !text_layer || !buffered_spriteram16)
 		return 1;
 
 	tilemap_set_transparent_pen(background_layer,15);
@@ -158,18 +160,18 @@ VIDEO_START( goal92 )
 
 VIDEO_UPDATE( goal92 )
 {
-	tilemap_set_scrollx( background_layer, 0, goal92_scrollram16[0] + 60);
-	tilemap_set_scrolly( background_layer, 0, goal92_scrollram16[1] + 8);
+	tilemap_set_scrollx(background_layer, 0, goal92_scrollram16[0] + 60);
+	tilemap_set_scrolly(background_layer, 0, goal92_scrollram16[1] + 8);
 
 	if(fg_bank & 0xff)
 	{
-		tilemap_set_scrollx( foreground_layer, 0, goal92_scrollram16[0] + 60);
-		tilemap_set_scrolly( foreground_layer, 0, goal92_scrollram16[1] + 8);
+		tilemap_set_scrollx(foreground_layer, 0, goal92_scrollram16[0] + 60);
+		tilemap_set_scrolly(foreground_layer, 0, goal92_scrollram16[1] + 8);
 	}
 	else
 	{
-		tilemap_set_scrollx( foreground_layer, 0, goal92_scrollram16[2] + 60);
-		tilemap_set_scrolly( foreground_layer, 0, goal92_scrollram16[3] + 8);
+		tilemap_set_scrollx(foreground_layer, 0, goal92_scrollram16[2] + 60);
+		tilemap_set_scrolly(foreground_layer, 0, goal92_scrollram16[3] + 8);
 	}
 
 	fillbitmap(bitmap,get_black_pen(),cliprect);
@@ -188,4 +190,9 @@ VIDEO_UPDATE( goal92 )
 	draw_sprites(bitmap,cliprect,0);
 	draw_sprites(bitmap,cliprect,3);
 	tilemap_draw(bitmap,cliprect,text_layer,0,0);
+}
+
+VIDEO_EOF( goal92 )
+{
+	memcpy(buffered_spriteram16,spriteram16,0x400*2);
 }
