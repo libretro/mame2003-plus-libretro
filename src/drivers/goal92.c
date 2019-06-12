@@ -1,6 +1,6 @@
 /***************************************************************************
 
-	Goal '92
+	Goal! '92
 
 	driver by Pierpaolo Prazzoli
 	and some bits by David Haywood
@@ -18,8 +18,11 @@ extern READ16_HANDLER( goal92_fg_bank_r );
 
 extern VIDEO_START( goal92 );
 extern VIDEO_UPDATE( goal92 );
+extern VIDEO_EOF( goal92 );
 
 extern data16_t *goal92_back_data,*goal92_fore_data,*goal92_textram,*goal92_scrollram16;
+
+static int msm5205next;
 
 static WRITE16_HANDLER( goal92_sound_command_w )
 {
@@ -77,8 +80,28 @@ static MEMORY_WRITE16_START( goal92_writemem )
 	{ 0x18001c, 0x18001d, goal92_fg_bank_w },
 MEMORY_END
 
+/* Sound CPU */
+
+static WRITE_HANDLER( adpcm_control_w )
+{
+	int bankaddress;
+	unsigned char *RAM = memory_region(REGION_CPU2);
+
+	/* the code writes either 2 or 3 in the bottom two bits */
+	bankaddress = 0x10000 + (data & 0x01) * 0x4000;
+	cpu_setbank(1,&RAM[bankaddress]);
+
+	MSM5205_reset_w(0,data & 0x08);
+}
+
+static WRITE_HANDLER( adpcm_data_w )
+{
+	msm5205next = data;
+}
+
 static MEMORY_READ_START( sound_readmem )
-	{ 0x0000, 0xdfff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK1 },
 	{ 0xe800, 0xe800, YM2203_status_port_0_r },
 	{ 0xe801, 0xe801, YM2203_read_port_0_r },
 	{ 0xec00, 0xec00, YM2203_status_port_1_r },
@@ -88,9 +111,10 @@ static MEMORY_READ_START( sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
-	{ 0x0000, 0xdfff, MWA_ROM },
-	{ 0xe000, 0xe000, MWA_NOP },
-	{ 0xe400, 0xe400, MWA_NOP },
+    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xbfff, MWA_BANK1 },
+	{ 0xe000, 0xe000, adpcm_control_w },
+	{ 0xe400, 0xe400, adpcm_data_w },
 	{ 0xe800, 0xe800, YM2203_control_port_0_w },
 	{ 0xe801, 0xe801, YM2203_write_port_0_w },
 	{ 0xec00, 0xec00, YM2203_control_port_1_w },
@@ -99,7 +123,6 @@ static MEMORY_WRITE_START( sound_writemem )
 MEMORY_END
 
 INPUT_PORTS_START( goal92 )
-
 	PORT_START
 	PORT_DIPNAME( 0x0007, 0x0007, "Coin A / Coin C" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
@@ -130,6 +153,9 @@ INPUT_PORTS_START( goal92 )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
@@ -174,13 +200,13 @@ INPUT_PORTS_START( goal92 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER3 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_BUTTON3 | IPF_PLAYER3 )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW,  IPT_COIN3 )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW,  IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER3 )
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER3 )
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW,  IPT_BUTTON3 | IPF_PLAYER3 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW,  IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER4 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER4 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW,  IPT_BUTTON3 | IPF_PLAYER4 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_COIN4 )
 
 	PORT_START
@@ -211,7 +237,6 @@ INPUT_PORTS_START( goal92 )
 	PORT_DIPNAME( 0xffc0, 0xffc0, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0xffc0, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-
 INPUT_PORTS_END
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
@@ -223,8 +248,8 @@ static void irqhandler(int irq)
 static struct YM2203interface ym2203_interface =
 {
 	2,			/* 2 chips */
-	2510000/2,
-	{ YM2203_VOL(25,25), YM2203_VOL(25,25) },
+	2500000/2,
+	{ YM2203_VOL(35,35), YM2203_VOL(35,35) },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -235,10 +260,32 @@ static struct YM2203interface ym2203_interface =
 static struct OKIM6295interface okim6295_interface =
 {
 	1,
-	{ 2510000 },
+	{ 2500000 },
 	{ REGION_SOUND1 },
 	{ 100 }
 };
+
+static void goal92_adpcm_int(int data)
+{
+	static int toggle = 0;
+
+	MSM5205_data_w (0,msm5205next);
+	msm5205next>>=4;
+
+	toggle ^= 1;
+	if(toggle)
+	    cpu_set_nmi_line(1, PULSE_LINE );
+}
+
+static struct MSM5205interface msm5205_interface =
+{
+	1,						/* 1 chip */
+	384000, 				/* 400KHz */
+	{ goal92_adpcm_int },	/* interrupt function */
+	{ MSM5205_S96_4B },		/* 4KHz 4-bit */
+	{ 20 }					/* volume */
+};
+
 
 static struct GfxLayout layout_8x8x4 =
 {
@@ -298,11 +345,11 @@ static struct GfxDecodeInfo cupsocbl_gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( goal92 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000,16000000) /* clock should be 12 MHz, but it causes problems for an unknown reason*/
+	MDRV_CPU_ADD(M68000,12000000)
 	MDRV_CPU_MEMORY(goal92_readmem,goal92_writemem)
 	MDRV_CPU_VBLANK_INT(irq6_line_hold,1) /* VBL */
 
-	MDRV_CPU_ADD(Z80, 2510000)
+	MDRV_CPU_ADD(Z80, 2500000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 								/* IRQs are triggered by the main CPU */
@@ -313,15 +360,17 @@ static MACHINE_DRIVER_START( goal92 )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(40*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) // black border at bottom is a game bug...
 	MDRV_GFXDECODE(goal92_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(128*16)
 
 	MDRV_VIDEO_START(goal92)
 	MDRV_VIDEO_UPDATE(goal92)
+	MDRV_VIDEO_EOF(goal92)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
+	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( cupsocbl )
@@ -331,7 +380,7 @@ static MACHINE_DRIVER_START( cupsocbl )
 	MDRV_CPU_MEMORY(goal92_readmem,goal92_writemem)
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1) /* VBL */
 
-	MDRV_CPU_ADD(Z80, 2510000)
+	MDRV_CPU_ADD(Z80, 2500000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 								/* IRQs are triggered by the main CPU */
@@ -348,6 +397,7 @@ static MACHINE_DRIVER_START( cupsocbl )
 
 	MDRV_VIDEO_START(goal92)
 	MDRV_VIDEO_UPDATE(goal92)
+	MDRV_VIDEO_EOF(goal92)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
@@ -397,8 +447,9 @@ ROM_START( goal92 )
 	ROM_LOAD16_BYTE( "2.bin", 0x00000, 0x80000, CRC(db0a6c7c) SHA1(b609db7806b99bc921806d8b3e5e515b4651c375) )
 	ROM_LOAD16_BYTE( "3.bin", 0x00001, 0x80000, CRC(e4c45dee) SHA1(542749bd1ff51220a151fe66acdadac83df8f0ee) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Z80 code */
-	ROM_LOAD( "1.bin",        0x00000, 0x10000, CRC(3d317622) SHA1(ae4e8c5247bc215a2769786cb8639bce2f80db22) )
+	ROM_REGION( 0x18000, REGION_CPU2, 0 )	/* Z80 code */
+	ROM_LOAD( "1.bin",        0x00000, 0x8000, CRC(3d317622) SHA1(ae4e8c5247bc215a2769786cb8639bce2f80db22) )
+	ROM_CONTINUE(             0x10000, 0x8000 ) /* banked at 8000-bfff */
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "6.bin",        0x000000, 0x040000, CRC(83cadc8f) SHA1(1d3309750347c5d6d661f5cf452235e5a83a7483) )
