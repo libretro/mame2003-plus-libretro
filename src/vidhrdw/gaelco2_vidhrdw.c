@@ -89,7 +89,7 @@ static struct tilemap *pant[2];
 int dual_monitor;
 
 /* comment this line to display 2 monitors for the dual monitor games */
-/*#define ONE_MONITOR*/
+#define ONE_MONITOR
 
 /***************************************************************************
 
@@ -533,18 +533,37 @@ VIDEO_UPDATE( bang )
     }
 }
 
-
 #ifdef ONE_MONITOR
 
 VIDEO_UPDATE( gaelco2_dual )
 {
 	int i;
 
+	int xoff0 = 0x14; // intro scenes align better with 0x13, but test screen is definitely 0x14
+	int xoff1 = xoff0 - 4;
+	int yoff0 = 0x01;
+	int yoff1 = 0x01;
+
+
 	/* read scroll values */
-	int scroll0x = gaelco2_videoram[0x2802/2] + 0x14;
-	int scroll1x = gaelco2_videoram[0x2806/2] + 0x10;
-	int scroll0y = gaelco2_videoram[0x2800/2] + 0x01;
-	int scroll1y = gaelco2_videoram[0x2804/2] + 0x01;
+	int scroll0x = gaelco2_videoram[0x2802/2] + xoff0;
+	int scroll1x = gaelco2_videoram[0x2806/2] + xoff1;
+	int scroll0y = gaelco2_videoram[0x2800/2] + yoff0;
+	int scroll1y = gaelco2_videoram[0x2804/2] + yoff1;
+
+	/* if linescroll is enabled y-scroll handling changes too?
+	   touchgo uses 0x1f0 / 0x1ef between game and intro screens but actual scroll position needs to be different
+	   this aligns the crowd with the advertising boards */
+	if (gaelco2_vregs[0] & 0x8000)
+	{
+		scroll0y += 32;
+	}
+
+	if (gaelco2_vregs[1] & 0x8000)
+	{
+		scroll1y += 32;
+	}
+
 
 	/* set y scroll registers */
 	tilemap_set_scrolly(pant[0], 0, scroll0y & 0x1ff);
@@ -552,8 +571,8 @@ VIDEO_UPDATE( gaelco2_dual )
 
 	/* set x linescroll registers */
 	for (i = 0; i < 512; i++){
-		tilemap_set_scrollx(pant[0], i & 0x1ff, (gaelco2_vregs[0] & 0x8000) ? (gaelco2_videoram[(0x2000/2) + i] + 0x14) & 0x3ff : scroll0x & 0x3ff);
-		tilemap_set_scrollx(pant[1], i & 0x1ff, (gaelco2_vregs[1] & 0x8000) ? (gaelco2_videoram[(0x2400/2) + i] + 0x10) & 0x3ff : scroll1x & 0x3ff);
+		tilemap_set_scrollx(pant[0], i & 0x1ff, (gaelco2_vregs[0] & 0x8000) ? (gaelco2_videoram[(0x2000/2) + i] + xoff0) & 0x3ff : scroll0x & 0x3ff);
+		tilemap_set_scrollx(pant[1], i & 0x1ff, (gaelco2_vregs[1] & 0x8000) ? (gaelco2_videoram[(0x2400/2) + i] + xoff1) & 0x3ff : scroll1x & 0x3ff);
 	}
 
 	if (readinputport(4) & 0x01){
@@ -573,11 +592,30 @@ VIDEO_UPDATE( gaelco2_dual )
 {
 	int i;
 
+	int xoff0 = 0x14; // intro scenes align better with 0x13, but test screen is definitely 0x14
+	int xoff1 = xoff0 - 4;
+	int yoff0 = 0x01;
+	int yoff1 = 0x01;
+
 	/* read scroll values */
-	int scroll0x = gaelco2_videoram[0x2802/2] + 0x14;
-	int scroll1x = gaelco2_videoram[0x2806/2] + 0x10 - ((Machine->visible_area.max_x/2) + 1);
-	int scroll0y = gaelco2_videoram[0x2800/2] + 0x01;
-	int scroll1y = gaelco2_videoram[0x2804/2] + 0x01;
+	int scroll0x = gaelco2_videoram[0x2802/2] + xoff0;
+	int scroll1x = gaelco2_videoram[0x2806/2] + xoff1 - ((Machine->visible_area.max_x/2) + 1);
+	int scroll0y = gaelco2_videoram[0x2800/2] + yoff0;
+	int scroll1y = gaelco2_videoram[0x2804/2] + yoff1;
+
+	/* if linescroll is enabled y-scroll handling changes too?
+	   touchgo uses 0x1f0 / 0x1ef between game and intro screens but actual scroll position needs to be different
+	   this aligns the crowd with the advertising boards */
+	if (gaelco2_vregs[0] & 0x8000)
+	{
+		scroll0y += 32;
+	}
+
+	if (gaelco2_vregs[1] & 0x8000)
+	{
+		scroll1y += 32;
+	}
+
 
 	/* set y scroll registers */
 	tilemap_set_scrolly(pant[0], 0, scroll0y & 0x1ff);
@@ -585,8 +623,8 @@ VIDEO_UPDATE( gaelco2_dual )
 
 	/* set x linescroll registers */
 	for (i = 0; i < 512; i++){
-		tilemap_set_scrollx(pant[0], i & 0x1ff, (gaelco2_vregs[0] & 0x8000) ? (gaelco2_videoram[(0x2000/2) + i] + 0x14) & 0x3ff : scroll0x & 0x3ff);
-		tilemap_set_scrollx(pant[1], i & 0x1ff, (gaelco2_vregs[1] & 0x8000) ? (gaelco2_videoram[(0x2400/2) + i] + 0x10) & 0x3ff : scroll1x & 0x3ff);
+		tilemap_set_scrollx(pant[0], i & 0x1ff, (gaelco2_vregs[0] & 0x8000) ? (gaelco2_videoram[(0x2000/2) + i] + xoff0) & 0x3ff : scroll0x & 0x3ff);
+		tilemap_set_scrollx(pant[1], i & 0x1ff, (gaelco2_vregs[1] & 0x8000) ? (gaelco2_videoram[(0x2400/2) + i] + xoff1) & 0x3ff : scroll1x & 0x3ff);
 	}
 
 	/* draw screen */
