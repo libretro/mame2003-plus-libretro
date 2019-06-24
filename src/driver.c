@@ -4848,6 +4848,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( aligatun )	/* (c) 1994 - Ref 940411 (unprotected) */
 	DRIVER( biomtoy )	/* (c) 1995 - Ref 922804/2 - (unprotected) */
 	DRIVER( touchgo )	/* (c) 1995 - Ref 950510-1 */
+  DRIVER( touchgok )/* (c) 1995 - Ref 950510-1 - (unprotected) */
 	DRIVER( wrally2 )	/* (c) 1995 - Ref 950510 */
 	DRIVER( maniacsp )	/* (c) 1996 - Ref 922804/2 - (prototype) */
 	DRIVER( maniacsq )	/* (c) 1996 - Ref ??? - (unprotected) */
