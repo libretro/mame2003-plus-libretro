@@ -138,6 +138,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 10th Anniversary
 * The Last Hope
 * The Lost Castle In Darkmist
+* Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
