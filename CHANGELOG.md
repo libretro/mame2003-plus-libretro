@@ -193,7 +193,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
 * Hang-On - Romset `hangon`
-* Hard Head 2
+* Hard Head 2 - Romset `hardhea2`
+* Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * Ironhorse - Romset `ironhors`
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
