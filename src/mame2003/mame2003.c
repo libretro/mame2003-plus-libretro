@@ -789,7 +789,7 @@ bool retro_load_game(const struct retro_game_info *game)
     }
 	if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
 	{
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, needle->name);
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, driver_lookup);
       return false;
 	}
  }
