@@ -224,9 +224,13 @@ VIDEO_UPDATE( beathead )
 		offs_t src = scanline_offset[y] + cliprect->min_x;
 		UINT8 scanline[336];
 
-		/* unswizzle the scanline first */
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
-			scanline[x] = ((data8_t *)videoram32)[BYTE4_XOR_LE(src++)];
+		if (scanline_offset[y] != ~0)
+		{
+			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+				scanline[x] = ((UINT8 *)videoram32)[BYTE4_XOR_LE(src++)];
+		}
+		else
+			memset(scanline, 0, sizeof(scanline));
 
 		/* then draw it */
 		draw_scanline8(bitmap, cliprect->min_x, y, cliprect->max_x - cliprect->min_x + 1, &scanline[cliprect->min_x], &Machine->pens[scanline_palette[y] * 256], -1);
