@@ -178,6 +178,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
 * Bakuretsu Breaker - Romset `bakubrkr` - Playable with minor remaining graphical issues
 * Baseball Stars (Playchoice 10) - Romset `pc_bstar`
+* BeatHead - Romset `beathead`
 * Blasted - Romset `blasted`
 * Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
 * Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
@@ -412,4 +413,5 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
+* Fixed BeatHeat from crashing [grant2258]
 
