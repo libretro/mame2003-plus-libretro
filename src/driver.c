@@ -4944,7 +4944,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( thunderl )	/* (c) 1990 Seta + Romstar or Visco license (DSW) */
 	DRIVER( rezon )		/* (c) 1991 Allumer */
 	DRIVER( stg )		/* (c) 1991 Athena / Tecmo */
-	DRIVER( pairlove )		/* (c) 199? Allumer */
 	DRIVER( blandia )	/* (c) 1992 Allumer */
 	DRIVER( blandiap )	/* (c) 1992 Allumer */
 	DRIVER( blockcar )	/* (c) 1992 Visco */
