@@ -1007,6 +1007,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( helifira )	/* (c) Nintendo */
 	DRIVER( spacefev )
 	DRIVER( sfeverbw )
+	DRIVER( spacelnc )
 	DRIVER( spclaser )
 	DRIVER( laser )
 	DRIVER( spcewarl )
@@ -4943,6 +4944,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( thunderl )	/* (c) 1990 Seta + Romstar or Visco license (DSW) */
 	DRIVER( rezon )		/* (c) 1991 Allumer */
 	DRIVER( stg )		/* (c) 1991 Athena / Tecmo */
+	DRIVER( pairlove )		/* (c) 199? Allumer */
 	DRIVER( blandia )	/* (c) 1992 Allumer */
 	DRIVER( blandiap )	/* (c) 1992 Allumer */
 	DRIVER( blockcar )	/* (c) 1992 Visco */
@@ -5250,6 +5252,7 @@ Other Sun games
 	DRIVER( mjifb )		/* "29" 1990 Dynax */
 	DRIVER( sprtmtch )	/* "31" (c) 1989 Dynax + Fabtek license */
 	DRIVER( maya )		/* (c) 1994 Promat */
+	DRIVER( inca )
 	DRIVER( roldfrog )
 	DRIVER( roldfrga )
 	DRIVER( mcnpshnt )	/* "33" Mahjong Campus Hunting 1990 Dynax */
