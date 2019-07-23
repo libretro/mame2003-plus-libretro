@@ -1007,6 +1007,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( helifira )	/* (c) Nintendo */
 	DRIVER( spacefev )
 	DRIVER( sfeverbw )
+	DRIVER( spacelnc )
 	DRIVER( spclaser )
 	DRIVER( laser )
 	DRIVER( spcewarl )
@@ -5105,6 +5106,7 @@ Other Sun games
 	/* Tong Electronic games */
 	DRIVER( leprechn )	/* (c) 1982 */
 	DRIVER( potogold )	/* (c) 1982 */
+	DRIVER( piratetr )  /* (c) 1982 */
 	DRIVER( beezer )	/* (c) 1982 */
 	DRIVER( beezer1 )	/* (c) 1982 */
 
@@ -5250,6 +5252,7 @@ Other Sun games
 	DRIVER( mjifb )		/* "29" 1990 Dynax */
 	DRIVER( sprtmtch )	/* "31" (c) 1989 Dynax + Fabtek license */
 	DRIVER( maya )		/* (c) 1994 Promat */
+	DRIVER( inca )
 	DRIVER( roldfrog )
 	DRIVER( roldfrga )
 	DRIVER( mcnpshnt )	/* "33" Mahjong Campus Hunting 1990 Dynax */
