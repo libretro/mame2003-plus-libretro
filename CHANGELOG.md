@@ -13,6 +13,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Action Hollywood
 * Air Attack
 * Air Rescue
+* Argus (Gottlieb, prototype)
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
@@ -38,7 +39,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Diet Go Go
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
-* Dogou Souken (joystick hack bootleg)
 * Doki Doki Penguin Land
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
@@ -55,6 +55,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
 * Ghost Loop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
+* Golden Par Golf
 * Golden Tee 3D Golf (v1.93N)
 * Golden Tee '97 (v1.30)
 * Golden Tee '98 (v1.10)
@@ -72,12 +73,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hoops '96
 * Hyper Crash
 * Hyper Street Fighter II (Asia)
-* Ikari (joystick hack bootleg)
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * In Your Face
-* Joe & Mac Return
-* Ketsui Kizuna Jigoku Tachi
+* Inca
+* Joe & Mac Returns
+* Ketsui: Kizuna Jigoku Tachi
+* Knightmare
 * Knuckle Bash 2
+* Last Hope
 * Led Storm Rally 2011
 * Lethal Enforcers
 * Mad Alien
@@ -86,9 +89,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Match It II
 * Metal Slug 4
 * Metal Slug 5
-* Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
-* Mobil Shot Gundam Final Shooting
+* Mobile Suit Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Oriental Legend Special
@@ -96,6 +98,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pack'n Bang Bang
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
+* Pirate Treasure
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
@@ -120,6 +123,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Space Launcher
 * Squash
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
@@ -137,15 +141,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
 * The King of Fighters 10th Anniversary
-* The Last Hope
 * The Lost Castle In Darkmist
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
-* Tron freeplay custom rom
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
+* Tylz
 * Undercover Cops (Alpha Renewal Version)
 * Varia Metal
 * Vasara 2
@@ -153,6 +156,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Virtua Fighter
 * Wing Force
 * Wing Shooting Championship
+* Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
 * World Cup Volley 95 Extra Version
@@ -163,7 +167,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* Ikari (joystick hack bootleg)
+* Midnight Resistance (joystick hack bootleg)
+* Tron freeplay custom rom
 
 
 ## Games fixed and now working
@@ -414,4 +422,3 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 * Fixed BeatHeat from crashing [grant2258]
-
