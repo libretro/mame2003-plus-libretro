@@ -998,6 +998,49 @@ ROM_START( goldbug )
 	ROM_LOAD( "82s123.10k", 0x0800, 0x0020, CRC(b5221cec) SHA1(71d9830b33b1a8140b0fe1a2ba8024ba8e6e48e0) ) 
 ROM_END
 
+ROM_START( diggerc )
+
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+	ROM_LOAD( "dig-gp1.bin", 0x0000, 0x0400, CRC(6a67662f) SHA1(70e9814259c1fbaf195004e1d8ce0ab1125d62d0) )
+	ROM_CONTINUE( 0x2000, 0x0400 )
+	ROM_CONTINUE( 0x4000, 0x0400 )
+	ROM_CONTINUE( 0x6000, 0x0400 )
+	ROM_LOAD( "dig-gp2.bin", 0x0400, 0x0400, CRC(aa9f93b5) SHA1(e118ecb9160b7ba4a81b75b6cca56c0f01a9a3af) )
+	ROM_CONTINUE( 0x2400, 0x0400 )
+	ROM_CONTINUE( 0x4400, 0x0400 )
+	ROM_CONTINUE( 0x6400, 0x0400 )
+	ROM_LOAD( "dig-gp3.bin", 0x0800, 0x0400, CRC(4aa4c87c) SHA1(bcbe291e2ca060ecc623702cba1f4189dfa9c105) )
+	ROM_CONTINUE( 0x2800, 0x0400 )
+	ROM_CONTINUE( 0x4800, 0x0400 )
+	ROM_CONTINUE( 0x6800, 0x0400 )
+	ROM_LOAD( "dig-gp4.bin", 0x0c00, 0x0400, CRC(127e6520) SHA1(a4f1813a297616b7f864e235f40a432881fe252b) )
+	ROM_CONTINUE( 0x2c00, 0x0400 )
+	ROM_CONTINUE( 0x4c00, 0x0400 )
+	ROM_CONTINUE( 0x6c00, 0x0400 )
+	ROM_LOAD( "dig-gp5.bin", 0x1000, 0x0400, CRC(76786827) SHA1(43e33c47a42878a58d72051c1edeccf944db4a17) )
+	ROM_CONTINUE( 0x3000, 0x0400 )
+	ROM_CONTINUE( 0x5000, 0x0400 )
+	ROM_CONTINUE( 0x7000, 0x0400 )
+
+	ROM_REGION( 0x2000, REGION_CPU2, 0 )
+	ROM_LOAD( "dig-sdp1.bin", 0x0000, 0x1000, CRC(f82e51f0) SHA1(52903c19cdf7754894cbae57a16533579737b3d5) )
+
+	ROM_REGION( 0x0800, REGION_CPU3, 0 )
+	ROM_LOAD( "dig.bin", 0x0000, 0x0800, CRC(f055a624) SHA1(5dfe89d7271092e665cdd5cd59d15a2b70f92f43) )
+
+	ROM_REGION( 0x1000, REGION_SOUND1, 0 )
+	ROM_LOAD( "dig-sp1.bin", 0x0000, 0x0800, CRC(db526ee1) SHA1(afe319e64350b0c54b72394294a6369c885fdb7f) )
+
+	ROM_REGION( 0x1800, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "dig-cp1.bin", 0x0000, 0x0800, CRC(ca30fb97) SHA1(148f3a6f20b1f256a73e7a1992262116d77cc0a8) )
+	ROM_LOAD( "dig-cp2.bin", 0x0800, 0x0800, CRC(bed2334c) SHA1(c93902d01174e13fb9265194e5e44f67b38c5970) )
+	ROM_LOAD( "dig-cp3.bin", 0x1000, 0x0800, CRC(46db9b65) SHA1(1c655b4611ab182b6e4a3cdd3ef930e0d4dad0d9) )
+
+	ROM_REGION( 0x0820, REGION_PROMS, 0 )
+	ROM_LOAD( "82s185.10h", 0x0000, 0x0800, CRC(c205bca6) SHA1(ec9bd220e75f7b067ede6139763ef8aca0fb7a29) )
+	ROM_LOAD( "82s123.10k", 0x0800, 0x0020, CRC(b5221cec) SHA1(71d9830b33b1a8140b0fe1a2ba8024ba8e6e48e0) )
+ROM_END
+
 ROM_START( superbik ) 
 	
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) 
@@ -1364,6 +1407,7 @@ GAMEX( 1982, radarzn1,    radarzon, cvs,      cvs,    0,          ROT90, "Centur
 GAMEX( 1982, radarznt,    radarzon, cvs,      cvs,    0,          ROT90, "Century Electronics (Tuni Electro Service Inc)", "Radar Zone (Tuni)", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
 GAMEX( 1982, outline,     radarzon, cvs,      cvs,    0,          ROT90, "Century Electronics", "Outline", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
 GAMEX( 1982, goldbug,     cvs,      cvs,      cvs,    goldbug,    ROT90, "Century Electronics", "Gold Bug", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
+GAMEX( 1982, diggerc,     cvs,      cvs,      cvs,    0,          ROT90, "Century Electronics", "Digger (CVS)", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
 GAMEX( 1983, heartatk,    cvs,      cvs,      cvs,    0,          ROT90, "Century Electronics", "Heart Attack", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
 GAMEX( 1983, hunchbak,    cvs,      cvs,      cvs,    0,          ROT90, "Century Electronics", "Hunchback", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
 GAMEX( 1983, superbik,    cvs,      cvs,      cvs,    superbik,   ROT90, "Century Electronics", "Superbike", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL )
