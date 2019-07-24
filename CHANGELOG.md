@@ -37,6 +37,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Denjin Makai 
 * Deer Hunting
 * Diet Go Go
+* Digger (CVS)
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Doki Doki Penguin Land
