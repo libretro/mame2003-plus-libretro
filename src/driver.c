@@ -1055,6 +1055,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( radarznt )	/* (c) 1982 Tuni Electro Service */
 	DRIVER( outline )	/* (c) 1982 Century */
 	DRIVER( goldbug )	/* (c) 1982 Century */
+	DRIVER( diggerc )	/* (c) 1982 Century */
 	DRIVER( heartatk )	/* (c) 1983 Century Electronics */
 	DRIVER( hunchbak )	/* (c) 1983 Century */
 	DRIVER( superbik )	/* (c) 1983 Century */
@@ -1285,7 +1286,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( myqbert )	/* GV-103?(c) 1982 Gottlieb */
 	DRIVER( qberttst )	/* GV-103 (c) 1982 Gottlieb */
 	DRIVER( insector )	/* GV-??? (c) 1982 Gottlieb - never released */
+	DRIVER( tylz )	/* GV-??? (c) 1982 Gottlieb - never released */
+	DRIVER( argusg )	/* GV-??? (c) 1982 Gottlieb - never released */
 	DRIVER( krull )		/* GV-105 (c) 1983 Gottlieb */
+	DRIVER( kngtmare )	/* GV-??? (c) 1983 Gottlieb - never released */
 	DRIVER( sqbert )	/* GV-??? (c) 1983 Mylstar - never released */
 	DRIVER( mach3 )		/* GV-109 (c) 1983 Mylstar */
 	DRIVER( usvsthem )	/* GV-??? (c) 198? Mylstar */
@@ -1293,6 +1297,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( qbertqub )	/* GV-119 (c) 1983 Mylstar */
 	DRIVER( screwloo )	/* GV-123 (c) 1983 Mylstar - never released */
 	DRIVER( curvebal )	/* GV-134 (c) 1984 Mylstar */
+	DRIVER( wizwarz )	/* GV-??? (c) 1984 Mylstar - never released */
 
 	/* Taito "Qix hardware" games */
 	DRIVER( qix )		/* LK  (c) 1981 Taito America Corporation */
@@ -2470,6 +2475,7 @@ V-V                           TP-027
 	DRIVER( rimrck16 )	/* (c) 1991 Strata/Incredible Technologies */
 	DRIVER( rimrck12 )	/* (c) 1991 Strata/Incredible Technologies */
 	DRIVER( ninclown )	/* (c) 1991 Strata/Incredible Technologies */
+	DRIVER( gpgolf )		/* (c) 1992 Strata/Incredible Technologies */
 	DRIVER( gtg2 )		/* (c) 1992 Strata/Incredible Technologies */
 	DRIVER( gtg2t )		/* (c) 1989 Strata/Incredible Technologies */
 	DRIVER( gtg2j )		/* (c) 1991 Strata/Incredible Technologies */
