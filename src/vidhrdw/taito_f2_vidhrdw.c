@@ -73,7 +73,9 @@ int f2_tilemap_col_base = 0;
 static int f2_game = 0;
 static int FOOTCHMP = 1;
 
-
+static UINT8 f2_tilepri[6]; /* todo - move into taitoic.c */
+static UINT8 f2_spritepri[6]; /* todo - move into taitoic.c */
+static UINT8 f2_spriteblendmode; /* todo - move into taitoic.c */
 
 /***********************************************************************************/
 
@@ -379,9 +381,155 @@ WRITE16_HANDLER( koshien_spritebank_w )
 	spritebank_buffered[7] = spritebank_buffered[6] + 0x400;
 }
 
+static void taito_f2_tc360_spritemixdraw( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
+		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
+		const struct rectangle *clip,int scalex, int scaley)
+{
+	const pen_t *pal = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)]; /* ASG 980209 */
+	UINT8 *source_base = gfx->gfxdata + (code % gfx->total_elements) * gfx->char_modulo;
 
+	int sprite_screen_height = (scaley*gfx->height+0x8000)>>16;
+	int sprite_screen_width = (scalex*gfx->width+0x8000)>>16;
 
-static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect,int *primasks)
+	if (!scalex || !scaley) return;
+
+	if (sprite_screen_width && sprite_screen_height)
+	{
+		/* compute sprite increment per screen pixel */
+		int dx = (gfx->width<<16)/sprite_screen_width;
+		int dy = (gfx->height<<16)/sprite_screen_height;
+
+		int ex = sx+sprite_screen_width;
+		int ey = sy+sprite_screen_height;
+
+		int x_index_base;
+		int y_index;
+
+		if( flipx )
+		{
+			x_index_base = (sprite_screen_width-1)*dx;
+			dx = -dx;
+		}
+		else
+		{
+			x_index_base = 0;
+		}
+
+		if( flipy )
+		{
+			y_index = (sprite_screen_height-1)*dy;
+			dy = -dy;
+		}
+		else
+		{
+			y_index = 0;
+		}
+
+		if( clip )
+		{
+			if( sx < clip->min_x)
+			{ /* clip left */
+				int pixels = clip->min_x-sx;
+				sx += pixels;
+				x_index_base += pixels*dx;
+			}
+			if( sy < clip->min_y )
+			{ /* clip top */
+				int pixels = clip->min_y-sy;
+				sy += pixels;
+				y_index += pixels*dy;
+			}
+			/* NS 980211 - fixed incorrect clipping */
+			if( ex > clip->max_x+1 )
+			{ /* clip right */
+				int pixels = ex-clip->max_x-1;
+				ex -= pixels;
+			}
+			if( ey > clip->max_y+1 )
+			{ /* clip bottom */
+				int pixels = ey-clip->max_y-1;
+				ey -= pixels;
+			}
+		}
+
+		if( ex>sx )
+		{ 
+			/* skip if inner loop doesn't draw anything */
+			int y;
+
+			for( y=sy; y<ey; y++ )
+			{
+				UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+				UINT16 *dest = (UINT16 *)dest_bmp->line[y];
+				UINT8 *pri = priority_bitmap->line[y];
+
+				int x, x_index = x_index_base;
+				for( x=sx; x<ex; x++ )
+				{
+					int c = source[x_index>>16];
+					if( c && (pri[x]&0x80)==0 )
+					{
+						UINT8 tilemap_priority=0, sprite_priority=0;
+
+						/* Get tilemap priority (0 - 0xf) for this destination pixel */
+						if (pri[x]&0x10) tilemap_priority=f2_tilepri[4];
+						else if (pri[x]&0x8) tilemap_priority=f2_tilepri[3];
+						else if (pri[x]&0x4) tilemap_priority=f2_tilepri[2];
+						else if (pri[x]&0x2) tilemap_priority=f2_tilepri[1];
+						else if (pri[x]&0x1) tilemap_priority=f2_tilepri[0];
+
+						/* Get sprite priority (0 - 0xf) for this source pixel */
+						if ((color&0xc0)==0xc0) 
+							sprite_priority=f2_spritepri[3];
+						else if ((color&0xc0)==0x80) 
+							sprite_priority=f2_spritepri[2];
+						else if ((color&0xc0)==0x40) 
+							sprite_priority=f2_spritepri[1];
+						else if ((color&0xc0)==0x00) 
+							sprite_priority=f2_spritepri[0];
+
+						/* Blend mode 1 - Sprite under tilemap, use sprite palette with tilemap data */
+						if ((f2_spriteblendmode&0xc0)==0xc0 && sprite_priority==(tilemap_priority-1))
+						{
+							dest[x]=(pal[c]&0xfff0)|(dest[x]&0xf);
+						}
+						/* Blend mode 1 - Sprite over tilemap, use sprite data with tilemap palette */
+						else if ((f2_spriteblendmode&0xc0)==0xc0 && sprite_priority==(tilemap_priority+1))
+						{
+							if (dest[x]&0xf)
+								dest[x]=(dest[x]&0xfff0)|(pal[c]&0xf);
+							else
+								dest[x]=pal[c];
+						}
+						/* Blend mode 2 - Sprite under tilemap, use sprite data with tilemap palette */
+						else if ((f2_spriteblendmode&0xc0)==0x80 && sprite_priority==(tilemap_priority-1))
+						{
+							dest[x]=(dest[x]&0xffef);
+						}
+						/* Blend mode 2 - Sprite over tilemap, alternate sprite palette, confirmed in Pulirula level 2 */
+						else if ((f2_spriteblendmode&0xc0)==0x80 && sprite_priority==(tilemap_priority+1))
+						{
+							dest[x]=(pal[c]&0xffef); /* Pulirula level 2, Liquid Kids attract mode */
+						}
+						/* No blending */
+						else
+						{
+							if (sprite_priority>tilemap_priority) /* Ninja Kids confirms tilemap takes priority in equal value case */
+								dest[x]=pal[c];
+						}
+						pri[x] |= 0x80;
+					}
+
+					x_index += dx;
+				}
+
+				y_index += dy;
+			}
+		}
+	}
+}
+
+static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect,int *primasks,int uses_tc360_mixer)
 {
 	/*
 		Sprite format:
@@ -714,9 +862,10 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			sprite_ptr->zoomx = zx << 12;
 			sprite_ptr->zoomy = zy << 12;
 
-			if (primasks)
+			if (primasks || uses_tc360_mixer)
 			{
-				sprite_ptr->primask = primasks[(color & 0xc0) >> 6];
+				if (primasks)
+					sprite_ptr->primask = primasks[(color & 0xc0) >> 6];
 
 				sprite_ptr++;
 			}
@@ -739,19 +888,25 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 	{
 		sprite_ptr--;
 
-		pdrawgfxzoom(bitmap,Machine->gfx[0],
-				sprite_ptr->code,
-				sprite_ptr->color,
-				sprite_ptr->flipx,sprite_ptr->flipy,
-				sprite_ptr->x,sprite_ptr->y,
-				cliprect,TRANSPARENCY_PEN,0,
-				sprite_ptr->zoomx,sprite_ptr->zoomy,
-				sprite_ptr->primask);
+		if (!uses_tc360_mixer)
+			pdrawgfxzoom(bitmap,Machine->gfx[0],
+					sprite_ptr->code,
+					sprite_ptr->color,
+					sprite_ptr->flipx,sprite_ptr->flipy,
+					sprite_ptr->x,sprite_ptr->y,
+					cliprect,TRANSPARENCY_PEN,0,
+					sprite_ptr->zoomx,sprite_ptr->zoomy,
+					sprite_ptr->primask);
+		else
+			taito_f2_tc360_spritemixdraw(bitmap,Machine->gfx[0],
+					sprite_ptr->code,
+					sprite_ptr->color,
+					sprite_ptr->flipx,sprite_ptr->flipy,
+					sprite_ptr->x,sprite_ptr->y,
+					cliprect,
+					sprite_ptr->zoomx,sprite_ptr->zoomy);
 	}
 }
-
-
-
 
 static int prepare_sprites;
 
@@ -909,7 +1064,7 @@ VIDEO_UPDATE( ssi )
 	   (they are in Majestic 12, but the tilemaps are not used anyway) */
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
-	draw_sprites(bitmap,cliprect,NULL);
+	draw_sprites(bitmap,cliprect,NULL, 0);
 }
 
 
@@ -921,7 +1076,7 @@ VIDEO_UPDATE( yesnoj )
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
-	draw_sprites(bitmap,cliprect,NULL);
+	draw_sprites(bitmap,cliprect,NULL, 0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,TC0100SCN_bottomlayer(0),0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,TC0100SCN_bottomlayer(0)^1,0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,2,0,0);
@@ -938,17 +1093,14 @@ VIDEO_UPDATE( taitof2 )
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,TC0100SCN_bottomlayer(0),0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,TC0100SCN_bottomlayer(0)^1,0,0);
-	draw_sprites(bitmap,cliprect,NULL);
+	draw_sprites(bitmap,cliprect,NULL, 0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,2,0,0);
 }
 
 
 VIDEO_UPDATE( taitof2_pri )
 {
-	int tilepri[3];
-	int spritepri[4];
 	int layer[3];
-
 
 	taitof2_handle_sprite_buffering();
 
@@ -957,14 +1109,16 @@ VIDEO_UPDATE( taitof2_pri )
 	layer[0] = TC0100SCN_bottomlayer(0);
 	layer[1] = layer[0]^1;
 	layer[2] = 2;
-	tilepri[layer[0]] = TC0360PRI_regs[5] & 0x0f;
-	tilepri[layer[1]] = TC0360PRI_regs[5] >> 4;
-	tilepri[layer[2]] = TC0360PRI_regs[4] >> 4;
+	f2_tilepri[layer[0]] = TC0360PRI_regs[5] & 0x0f;
+	f2_tilepri[layer[1]] = TC0360PRI_regs[5] >> 4;
+	f2_tilepri[layer[2]] = TC0360PRI_regs[4] >> 4;
 
-	spritepri[0] = TC0360PRI_regs[6] & 0x0f;
-	spritepri[1] = TC0360PRI_regs[6] >> 4;
-	spritepri[2] = TC0360PRI_regs[7] & 0x0f;
-	spritepri[3] = TC0360PRI_regs[7] >> 4;
+	f2_spritepri[0] = TC0360PRI_regs[6] & 0x0f;
+	f2_spritepri[1] = TC0360PRI_regs[6] >> 4;
+	f2_spritepri[2] = TC0360PRI_regs[7] & 0x0f;
+	f2_spritepri[3] = TC0360PRI_regs[7] >> 4;
+
+	f2_spriteblendmode = TC0360PRI_regs[0]&0xc0;
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
@@ -973,52 +1127,28 @@ VIDEO_UPDATE( taitof2_pri )
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[1],0,2);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[2],0,4);
 
-	{
-		int primasks[4] = {0,0,0,0};
-		int i;
-
-		for (i = 0;i < 4;i++)
-		{
-			if (spritepri[i] < tilepri[0]) primasks[i] |= 0xaa;
-			if (spritepri[i] < tilepri[1]) primasks[i] |= 0xcc;
-			if (spritepri[i] < tilepri[2]) primasks[i] |= 0xf0;
-		}
-
-		draw_sprites(bitmap,cliprect,primasks);
-	}
-
-#if 0
-	{
-		char buf[100];
-		sprintf(buf,"spritebanks: %04x %04x %04x %04x %04x %04x",spritebank[2],
-			spritebank[3],spritebank[4],spritebank[5],spritebank[6],spritebank[7]);
-		usrintf_showmessage(buf);
-	}
-#endif
+	draw_sprites(bitmap,cliprect,NULL,1);
 }
 
 
 
-static void draw_roz_layer(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
+static void draw_roz_layer(struct mame_bitmap *bitmap,const struct rectangle *cliprect,UINT32 priority)
 {
 	if (has_TC0280GRD())
-		TC0280GRD_zoom_draw(bitmap,cliprect,f2_pivot_xdisp,f2_pivot_ydisp,8);
+		TC0280GRD_zoom_draw(bitmap,cliprect,f2_pivot_xdisp,f2_pivot_ydisp,priority);
 
 	if (has_TC0430GRW())
-		TC0430GRW_zoom_draw(bitmap,cliprect,f2_pivot_xdisp,f2_pivot_ydisp,8);
+		TC0430GRW_zoom_draw(bitmap,cliprect,f2_pivot_xdisp,f2_pivot_ydisp,priority);
 }
-
 
 VIDEO_UPDATE( taitof2_pri_roz )
 {
 	int tilepri[3];
-	int spritepri[4];
 	int rozpri;
 	int layer[3];
 	int drawn;
-	int lastpri;
+	int i,j;
 	int roz_base_color = (TC0360PRI_regs[1] & 0x3f) << 2;
-
 
 	taitof2_handle_sprite_buffering();
 
@@ -1030,54 +1160,49 @@ VIDEO_UPDATE( taitof2_pri_roz )
 
 	TC0100SCN_tilemap_update();
 
+	rozpri = (TC0360PRI_regs[1] & 0xc0) >> 6;
+	rozpri = (TC0360PRI_regs[8 + rozpri/2] >> 4*(rozpri & 1)) & 0x0f;
+
 	layer[0] = TC0100SCN_bottomlayer(0);
 	layer[1] = layer[0]^1;
 	layer[2] = 2;
+
 	tilepri[layer[0]] = TC0360PRI_regs[5] & 0x0f;
 	tilepri[layer[1]] = TC0360PRI_regs[5] >> 4;
 	tilepri[layer[2]] = TC0360PRI_regs[4] >> 4;
 
-	spritepri[0] = TC0360PRI_regs[6] & 0x0f;
-	spritepri[1] = TC0360PRI_regs[6] >> 4;
-	spritepri[2] = TC0360PRI_regs[7] & 0x0f;
-	spritepri[3] = TC0360PRI_regs[7] >> 4;
+	f2_spritepri[0] = TC0360PRI_regs[6] & 0x0f;
+	f2_spritepri[1] = TC0360PRI_regs[6] >> 4;
+	f2_spritepri[2] = TC0360PRI_regs[7] & 0x0f;
+	f2_spritepri[3] = TC0360PRI_regs[7] >> 4;
 
-	rozpri = (TC0360PRI_regs[1] & 0xc0) >> 6;
-	rozpri = (TC0360PRI_regs[8 + rozpri/2] >> 4*(rozpri & 1)) & 0x0f;
+	f2_spriteblendmode = TC0360PRI_regs[0]&0xc0;
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
 
-	drawn = 0;
-	lastpri = 0;
-	while (drawn < 3)
+	drawn=0;
+	for (i=0; i<16; i++)
 	{
-		if (rozpri > lastpri && rozpri <= tilepri[drawn])
+		if (rozpri==i)
 		{
-			draw_roz_layer(bitmap,cliprect);
-			lastpri = rozpri;
-		}
-		TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[drawn],0,1<<drawn);
-		lastpri = tilepri[drawn];
-		drawn++;
-	}
-	if (rozpri > lastpri)
-		draw_roz_layer(bitmap,cliprect);
-
-	{
-		int primasks[4] = {0,0,0,0};
-		int i;
-
-		for (i = 0;i < 4;i++)
-		{
-			if (spritepri[i] < tilepri[0]) primasks[i] |= 0xaaaa;
-			if (spritepri[i] < tilepri[1]) primasks[i] |= 0xcccc;
-			if (spritepri[i] < tilepri[2]) primasks[i] |= 0xf0f0;
-			if (spritepri[i] < rozpri)     primasks[i] |= 0xff00;
+			draw_roz_layer(bitmap,cliprect,1 << drawn);
+			f2_tilepri[drawn]=i;
+			drawn++;
 		}
 
-		draw_sprites(bitmap,cliprect,primasks);
+		for (j=0; j<3; j++)
+		{
+			if (tilepri[layer[j]]==i)
+			{
+				TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[j],0,1<<drawn);
+				f2_tilepri[drawn]=i;
+				drawn++;
+			}
+		}
 	}
+
+	draw_sprites(bitmap,cliprect,NULL,1);
 }
 
 
@@ -1160,7 +1285,7 @@ VIDEO_UPDATE( thundfox )
 			if (spritepri[i] < tilepri[1][1]) primasks[i] |= 0xff00;
 		}
 
-		draw_sprites(bitmap,cliprect,primasks);
+		draw_sprites(bitmap,cliprect,primasks,0);
 	}
 
 
@@ -1214,9 +1339,7 @@ and it changes these (and the sprite pri settings) a lot.
 
 VIDEO_UPDATE( metalb )
 {
-	UINT8 layer[5];
-	UINT8 tilepri[5];
-	UINT8 spritepri[4];
+	UINT8 layer[5], invlayer[4];
 	UINT16 priority;
 
 	taitof2_handle_sprite_buffering();
@@ -1231,18 +1354,23 @@ VIDEO_UPDATE( metalb )
 	layer[3] = (priority &0x000f) >>  0;	/* tells us which is top */
 	layer[4] = 4;   /* text layer always over bg layers */
 
-	tilepri[0] = TC0360PRI_regs[4] & 0x0f;     /* bg0 */
-	tilepri[1] = TC0360PRI_regs[4] >> 4;       /* bg1 */
-	tilepri[2] = TC0360PRI_regs[5] & 0x0f;     /* bg2 */
-	tilepri[3] = TC0360PRI_regs[5] >> 4;       /* bg3 */
+	invlayer[layer[0]]=0;
+	invlayer[layer[1]]=1;
+	invlayer[layer[2]]=2;
+	invlayer[layer[3]]=3;
 
-/* we actually assume text layer is on top of everything anyway, but FWIW... */
-	tilepri[layer[4]] = TC0360PRI_regs[7] & 0x0f;    /* fg (text layer) */
+	f2_tilepri[invlayer[0]] = TC0360PRI_regs[4] & 0x0f;	/* bg0 */
+	f2_tilepri[invlayer[1]] = TC0360PRI_regs[4] >> 4;	/* bg1 */
+	f2_tilepri[invlayer[2]] = TC0360PRI_regs[5] & 0x0f;	/* bg2 */
+	f2_tilepri[invlayer[3]] = TC0360PRI_regs[5] >> 4;	/* bg3 */
+	f2_tilepri[4] = TC0360PRI_regs[9] & 0x0f;			/* fg (text layer) */
 
-	spritepri[0] = TC0360PRI_regs[6] & 0x0f;
-	spritepri[1] = TC0360PRI_regs[6] >> 4;
-	spritepri[2] = TC0360PRI_regs[7] & 0x0f;
-	spritepri[3] = TC0360PRI_regs[7] >> 4;
+	f2_spritepri[0] = TC0360PRI_regs[6] & 0x0f;
+	f2_spritepri[1] = TC0360PRI_regs[6] >> 4;
+	f2_spritepri[2] = TC0360PRI_regs[7] & 0x0f;
+	f2_spritepri[3] = TC0360PRI_regs[7] >> 4;
+
+	f2_spriteblendmode = TC0360PRI_regs[0]&0xc0;
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
@@ -1251,29 +1379,9 @@ VIDEO_UPDATE( metalb )
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[1],0,2);
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[2],0,4);
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[3],0,8);
+	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,16);
 
-	{
-		int primasks[4] = {0,0,0,0};
-		int i;
-
-		for (i = 0;i < 4;i++)
-		{
-			if (spritepri[i] < tilepri[(layer[0])]) primasks[i] |= 0xaaaa;
-			if (spritepri[i] < tilepri[(layer[1])]) primasks[i] |= 0xcccc;
-			if (spritepri[i] < tilepri[(layer[2])]) primasks[i] |= 0xf0f0;
-			if (spritepri[i] < tilepri[(layer[3])]) primasks[i] |= 0xff00;
-		}
-
-		draw_sprites(bitmap,cliprect,primasks);
-	}
-
-	/*
-	TODO: This isn't the correct way to handle the priority. At the moment of
-	writing, pdrawgfx() doesn't support 5 layers, so I have to cheat, assuming
-	that the FG layer is always on top of sprites.
-	*/
-
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,0);
+	draw_sprites(bitmap,cliprect,NULL,1);
 }
 
 
@@ -1330,7 +1438,7 @@ VIDEO_UPDATE( deadconx )
 			if (spritepri[i] < tilepri[(layer[3])]) primasks[i] |= 0xff00;
 		}
 
-		draw_sprites(bitmap,cliprect,primasks);
+		draw_sprites(bitmap,cliprect,primasks,0);
 	}
 
 	/*
