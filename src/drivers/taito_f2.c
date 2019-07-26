@@ -199,14 +199,15 @@ Gun Frontier
 There are mask sprites used on the waterfall in the first round
 of attract demo, however it's not clear what they should mask since
 there don't seem to be sprites below them. Shadow maybe?
-
+(BM161104 - Fixed)
 
 Pulirula
 --------
 
 In level 3, the mask sprites used for the door are misaligned by one pixel to
 the left.
-
+(BM100705 - Not a bug - various alignment problems seem to be confirmed from a real pcb).
+Shadows appear to have some kind of flicker effect on real pcb - not emulated/understood.
 
 Metal Black
 -----------
@@ -220,7 +221,7 @@ Sprite emulation issues may be responsible for minor glitches on the
 Missing two blend effects: there's a sun sprite underneath tilemaps
 in round 1; and the boss sprite crosses under the tilemaps at start
 of round 5 finale.
-
+(BM161104 - Fixed)
 
 Yesnoj
 ------
@@ -241,7 +242,7 @@ Quiz Crayon 2
 There should be a highlight circle around the player while it moves on the
 map. This is done by a sprite which doesn't have priority over the
 background. This is probably the same thing as the waterfall in Gun Frontier.
-
+(BM161104 - Fixed)
 
 Driftout
 --------
@@ -4901,7 +4902,7 @@ static MACHINE_DRIVER_START( ssi )
 
 	/* video hardware */
 	MDRV_VIDEO_START(taitof2_ssi)
-	MDRV_VIDEO_EOF(taitof2_partial_buffer_delayed)
+	MDRV_VIDEO_EOF(taitof2_partial_buffer_delayed_thundfox)	/* buffer_delayed_thundfox instead of buffer_delayed fixes the butterfly powerup */
 	MDRV_VIDEO_UPDATE(ssi)
 MACHINE_DRIVER_END
 
