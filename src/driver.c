@@ -2617,7 +2617,7 @@ V-V                           TP-027
 	/* Sega SG1000 based games */
 	DRIVER( chboxing )
 	DRIVER( chwrestl )
-  DRIVER( dokidoki )
+    DRIVER( dokidoki )
 
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
@@ -3351,6 +3351,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
   DRIVER( gangonta )	/* (c) 1995 Mitchell */
 	DRIVER( prtytime )	/* (c) 1995 Mitchell */
 	DRIVER( hangzo )        /* (c) 1992 Hot B    */	
+	DRIVER( schmeisr ) 	/* (c) 1993 Hot B    */	
 		
 	/* Data East MLC Games */
 	DRIVER( avengrgs )	/* MCG (c) 1995 Data East Corporation (Europe) */
@@ -3745,6 +3746,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( starfire )	/* Exidy [1979?] */
 	DRIVER( starfira )	/* Exidy [1979?] */
 	DRIVER( fireone )	/* (c) 1979 Exidy */
+	DRIVER( starfir2 )	/* (c) 1979 Exidy */
 	DRIVER( victory )	/* (c) 1982 */
 	DRIVER( victorba )	/* (c) 1982 */
 	DRIVER( teetert )	/* (c) 1982 Exidy */
