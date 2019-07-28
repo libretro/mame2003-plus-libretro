@@ -3351,7 +3351,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
   DRIVER( gangonta )	/* (c) 1995 Mitchell */
 	DRIVER( prtytime )	/* (c) 1995 Mitchell */
 	DRIVER( hangzo )        /* (c) 1992 Hot B    */	
-	DRIVER( schmeisr ) 	/* (c) 1993 Hot B    */	
 		
 	/* Data East MLC Games */
 	DRIVER( avengrgs )	/* MCG (c) 1995 Data East Corporation (Europe) */
