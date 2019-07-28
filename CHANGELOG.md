@@ -20,6 +20,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Baryon: Futrue Assault
 * Boogie Wings
 * Botanic
+* Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
 * Choky! Choky!
@@ -142,7 +143,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## New Clones
 * Battle Shark (Japan, Joystick)
 * Bubble Bobble (prototype on tokio hardware)
-* Cabal (Joystick with 3 buttons version)
 * Cannon Dancer
 * Crystal Castles (Joystick Version)
 * DoDonPachi Dai-Ou-Jou (Black Label)
