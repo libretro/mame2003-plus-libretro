@@ -106,6 +106,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sonic Boom
 * Space Launcher
 * Squash
+* Star Fire 2
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Rider
 * Super Trio
