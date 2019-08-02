@@ -18,6 +18,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Backfire!
 * Bang Bang Busters
 * Baryon: Futrue Assault
+* Bomb Kick
 * Boogie Wings
 * Botanic
 * Cabal (World, Joystick version)
@@ -427,6 +428,3 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 * Fixed BeatHeat from crashing [grant2258]
 * Fixed tgm2/tgm2p running half speed [arnoldsecret]
-* Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
-Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
-* Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
