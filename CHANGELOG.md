@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez, markwkidd, twinaphex
+* Current repository maintainers: arcadez2003, markwkidd, twinaphex, arnoldsecret
 * Past repository maintiners: grant2258
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -427,7 +427,7 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 * Fixed BeatHeat from crashing [grant2258]
-* Fixed tgm2/tgm2p running half speed [arnoldsecret]
+* Fixed tgm2/tgm2p running half speed [dink, arnoldsecret]
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
