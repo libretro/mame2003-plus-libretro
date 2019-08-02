@@ -14,8 +14,9 @@ Sound Chips  :	OKI M6295 + YM3812 [Optional]
 ---------------------------------------------------------------------------
 Year + Game         Board#
 ---------------------------------------------------------------------------
-97 Shocking         ?
-?? Magic Bubble     YS102
+19?? Magic Bubble     YS-1302
+1997 Shocking
+1998 Bomb Kick        YS-0211
 ---------------------------------------------------------------------------
 
 - In shocking, service mode just shows the menu, with mangled graphics
@@ -337,6 +338,85 @@ INPUT_PORTS_START( shocking )
 
 INPUT_PORTS_END
 
+/***************************************************************************
+                                Bomb Kick
+***************************************************************************/
+
+INPUT_PORTS_START( bombkick )
+	PORT_START	/* IN0 - $800000.w*/
+	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 )
+	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1 )
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 )
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
+	PORT_BIT(  0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
+	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
+	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT(  0x2000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* IN1 - $800019.b*/
+	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* IN2 - $80001b.b*/
+	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(      0x0007, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0003, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0005, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0018, 0x0018, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0x0020, 0x0000, "Special Powers" )        /* Only has an effect when difficulty set to "Easy" or "Normal" - read notes */
+	PORT_DIPSETTING(      0x0020, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x0040, 0x0000, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
+
+	PORT_START	/* IN3 - $80001d.b*/
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0000, "2" )
+	PORT_DIPSETTING(      0x0003, "3" )
+	PORT_DIPSETTING(      0x0002, "4" )
+	PORT_DIPSETTING(      0x0001, "5" )
+	PORT_DIPNAME( 0x0004, 0x0004, "DON'T CHANGE IT!" )      /* Must be OFF ! - read notes */
+	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0008, 0x0008, "DON'T CHANGE IT!" )      /* Must be OFF ! - read notes */
+	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0010, 0x0000, "DON'T CHANGE IT!" )      /* Must be ON  ! - read notes */
+	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0020, 0x0020, "DON'T CHANGE IT!" )      /* Must be OFF ! - read notes */
+	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0000, "DON'T CHANGE IT!" )      /* Must be ON  ! - read notes */
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0080, "DON'T CHANGE IT!" )      /* Must be OFF ! - read notes */
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	
+INPUT_PORTS_END
+
 
 
 
@@ -578,6 +658,43 @@ ROM_START( shocking )
 
 ROM_END
 
+/***************************************************************************
+
+                                Bomb Kick
+
+YunSung YS-0211
+
+  CPU: 68HC000 P16
+Video: Actel A1020B PL84C
+  OSC: 16.000000 MHz
+Sound: Unmarked OKI M6295
+
+***************************************************************************/
+
+ROM_START( bombkick )
+
+	ROM_REGION( 0x080000, REGION_CPU1, 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "bk_u33",       0x000000, 0x040000, CRC(d6eb50bf) SHA1(a24c31f212f86f066c35d39da137ef0933323e43) )
+	ROM_LOAD16_BYTE( "bk_u32",       0x000001, 0x040000, CRC(d55388a2) SHA1(928f1a8933b986cf099e184002660e30ee1aeb0a) )
+
+	ROM_REGION( 0x200000*8, REGION_GFX1, ROMREGION_ERASEFF | ROMREGION_DISPOSE )	/* 16x16x8 */
+	ROMX_LOAD( "bk_u67",       0x000000, 0x080000, CRC(1962f536) SHA1(36d3c73a322330058e963efcb9b81324724382cc) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "bk_u68",       0x000002, 0x080000, CRC(d80c75a4) SHA1(330c20d126b9f1f61f17750028c92843be55ec78) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "bk_u69",       0x000004, 0x080000, CRC(615e1e6f) SHA1(73875313010514ff5ca9e0bc96d6f93baaee391e) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "bk_u70",       0x000006, 0x080000, CRC(59817ef1) SHA1(d23df30b34223575d6a9c814f2ec3db990b18679) , ROM_GROUPWORD | ROM_SKIP(6))
+
+	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )	/* 16x16x4 */
+	ROM_LOAD( "bk_u20",       0x000000, 0x040000, CRC(c2b83e3f) SHA1(8bcd862dbf56cf579058d045f89f900ebfea2f1d) )
+	ROM_LOAD( "bk_u21",       0x040000, 0x040000, CRC(d6890192) SHA1(3c26a08580ceecf2f61f008861a459e175c99ed9) )
+	ROM_LOAD( "bk_u22",       0x080000, 0x040000, CRC(9538c46c) SHA1(d7d0e167d5abc2ee81eae6fde152b2f5cc716c0e) )
+	ROM_LOAD( "bk_u23",       0x0c0000, 0x040000, CRC(e3831f3d) SHA1(096658ee5a7b83d774b671c0a38113533c8751d1) )
+
+	ROM_REGION( 0x080000 * 2, REGION_SOUND1, 0 )	/* Samples */
+	ROM_LOAD( "bk_u131",      0x000000, 0x080000, CRC(22cc5732) SHA1(38aefa4e543ea54e004eee428ee087121eb20905) )
+	ROM_RELOAD(               0x080000, 0x080000             )
+
+ROM_END
+
 
 /***************************************************************************
 
@@ -589,3 +706,4 @@ ROM_END
 
 GAMEX( 19??, magicbub, 0, magicbub, magicbub, magicbub, ROT0, "Yun Sung", "Magic Bubble", GAME_NO_COCKTAIL )
 GAMEX( 1997, shocking, 0, shocking, shocking, 0,        ROT0, "Yun Sung", "Shocking",     GAME_NO_COCKTAIL )
+GAMEX( 1998, bombkick, 0, shocking, bombkick, 0,        ROT0, "Yun Sung", "Bomb Kick",    GAME_NO_COCKTAIL )
