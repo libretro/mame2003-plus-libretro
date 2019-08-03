@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez2003, markwkidd, twinaphex, arnoldsecret
+* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret
 * Past repository maintiners: grant2258
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -329,6 +329,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pole Position II
 * Rohga Armor Force
 * Super Pacman
+* Super Space Fortress Macross II
 * Super Xevious
 * Tower Of Druaga
 * Toypop
@@ -431,3 +432,4 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
+* Ported Mamesick's fix for the sound in Super Space Fortress Macross II level 2 onwards [arcadez]
