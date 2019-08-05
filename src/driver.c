@@ -132,6 +132,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( pengob )	/* bootleg */
 	DRIVER( penta )		/* bootleg */
 	DRIVER( jrpacman )	/* (c) 1983 Midway */
+	DRIVER( jrpacmanf )
 	DRIVER( jumpshot )	/* (c) 1985 Bally Midway */
 	DRIVER( shootbul )	/* (c) 1985 Bally Midway */
 	DRIVER( bigbucks )	/* (c) 1986 Dynasoft Inc. */
@@ -928,6 +929,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vsfdf )
 	DRIVER( smgolfb )
 	DRIVER( vsbbaljb )
+	DRIVER( skatekds )
 
 	/* Nintendo Super System Games */
 	DRIVER( nss_ssoc )
@@ -1885,6 +1887,7 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
+	DRIVER( ddonpacha )
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
@@ -1961,6 +1964,7 @@ V-V                           TP-027
 	DRIVER( 1942 )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942a )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
+	DRIVER( 1942h )
 	DRIVER( exedexes )	/*  2/1985 (c) 1985 */
 	DRIVER( savgbees )	/*  2/1985 (c) 1985 + Memetron license */
 	DRIVER( commando )	/*  5/1985 (c) 1985 (World) */
@@ -2617,7 +2621,7 @@ V-V                           TP-027
 	/* Sega SG1000 based games */
 	DRIVER( chboxing )
 	DRIVER( chwrestl )
-  DRIVER( dokidoki )
+    DRIVER( dokidoki )
 
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
@@ -3699,6 +3703,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( daiskiss )	/* GX535 (c) 1996 (Japan) */
 	DRIVER( tokkae )	/* GX615 (c) 1996 (Japan) */
 	DRIVER( winspike )	/* GX705 */
+	DRIVER( crzcross )	
 
 	/* GX Type 3 */
 	DRIVER( soccerss )	/* GX427 */
@@ -3745,6 +3750,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( starfire )	/* Exidy [1979?] */
 	DRIVER( starfira )	/* Exidy [1979?] */
 	DRIVER( fireone )	/* (c) 1979 Exidy */
+	DRIVER( starfir2 )	/* (c) 1979 Exidy */
 	DRIVER( victory )	/* (c) 1982 */
 	DRIVER( victorba )	/* (c) 1982 */
 	DRIVER( teetert )	/* (c) 1982 Exidy */
@@ -5196,6 +5202,7 @@ Other Sun games
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */
 	DRIVER( shocking )	/* (c) 1997 Yun Sung */
+	DRIVER( bombkick )	/* (c) 1998 Yun Sung */
 
 	/* Zilec games */
 	DRIVER( blueprnt )	/* (c) 1982 Bally Midway (Zilec in ROM 3U, and the programmer names) */
