@@ -3703,7 +3703,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( daiskiss )	/* GX535 (c) 1996 (Japan) */
 	DRIVER( tokkae )	/* GX615 (c) 1996 (Japan) */
 	DRIVER( winspike )	/* GX705 */
-	DRIVER( crzcross )	
 
 	/* GX Type 3 */
 	DRIVER( soccerss )	/* GX427 */
