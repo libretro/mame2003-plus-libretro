@@ -84,12 +84,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hangly3 )	/* hack */
 	DRIVER( newpuckx )	/* hack */
 	DRIVER( pacheart )	/* hack */
-	DRIVER( joyman )	/* hack */
+	DRIVER( ctrpllrp  )	/* hack */
+	DRIVER( joyman  )	/* hack */
 	DRIVER( newpuc2 )	/* hack */
 	DRIVER( newpuc2b )	/* hack */
 	DRIVER( piranha )	/* GL */
 	DRIVER( piranhao )	/* GL */
 	DRIVER( piranhah )	/* hack */
+	DRIVER( abscam )	/* hack */
 	DRIVER( nmouse )	/* (c) 1981 Amenip (Palcom Queen River) */
 	DRIVER( nmouseb )	/* (c) 1981 Amenip Nova Games Ltd. */
 						/* Woodpecker somewhere around here?*/
