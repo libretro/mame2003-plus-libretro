@@ -447,7 +447,7 @@ ROM_START( 1942b )
 ROM_END
 
 ROM_START( 1942h )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 64k for code + 3*16k for the banked ROMs images */
+	ROM_REGION( 0x1c000, REGION_CPU1, 0 ) /* 64k for code + 3*16k for the banked ROMs images */
 	ROM_LOAD( "42-3.bin",  0x00000, 0x4000, CRC(ec70785f) SHA1(2010a945e1d5c984a14cf7f47a883d04bd71567d) )
 	ROM_LOAD( "42-4.bin",  0x04000, 0x4000, CRC(cc11355f) SHA1(44fceb449f406f657494eeee4e6b43bf063f2013) )
 	ROM_LOAD( "42-5.bin",  0x10000, 0x4000, CRC(42746d75) SHA1(ede6919b84653b94fddeb40b3004e44336880ba2) )
