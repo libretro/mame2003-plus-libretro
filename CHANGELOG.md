@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez, markwkidd, twinaphex
+* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret
 * Past repository maintiners: grant2258
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -17,13 +17,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
-* Baryon
-* Battle Shark (Japan, Joystick)
+* Baryon: Future Assault
+* Bomb Kick
 * Boogie Wings
 * Botanic
-* Bubble Bobble (prototype on tokio hardware)
-* Cabal (Joystick with 3 buttons version)
-* Cannon Dancer
+* Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
 * Choky! Choky!
@@ -31,30 +29,23 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cookie & Bibi
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
-* Crystal Castles (Joystick Version)
-* Cute Fighters
+* Cute Fighter
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
 * Diet Go Go
 * Digger (CVS)
 * DoDonPachi Dai-Ou-Jou
-* DoDonPachi Dai-Ou-Jou (Black Label)
 * Doki Doki Penguin Land
-* Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
-* DownTown (joystick hack)
 * Dream World
-* Dunk Dream 95
-* Dyna Gears
-* Escape Kids (Asia 4 Players)
+* Dyna Gear
 * ESPGaluda
 * FixEight (bootleg)
-* Fujiyama Buster
 * Gaia: The Last Choice Of Earth
 * Gals Panic DX
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
-* Ghost Loop
+* Ghostlop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Golden Par Golf
 * Golden Tee 3D Golf (v1.93N)
@@ -63,30 +54,22 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Golden Tee '99 (v1.00)
 * Golden Tee 2K (v1.00)
 * Golden Tee Classic (v1.00)
-* Guerrilla War (joystick hack bootleg)
 * Gunbarich
 * GunMaster
-* Guwange Special Version
-* Hacha Mecha Figher (Unprotected)
 * Hang Zo
 * Heavy Smash
-* Hook (Japan Version) [SumavisionQ5]
 * Hoops '96
 * Hyper Crash
 * Hyper Street Fighter II (Asia)
-* Ikari III - The Rescue (World, 8-Way Joystick)
 * In Your Face
 * Inca
 * Joe & Mac Returns
 * Ketsui: Kizuna Jigoku Tachi
 * Knightmare
-* Knuckle Bash 2
 * Last Hope
 * Led Storm Rally 2011
 * Lethal Enforcers
 * Mad Alien
-* Magical Drop
-* Magical Drop Plus 1
 * Match It II
 * Metal Slug 4
 * Metal Slug 5
@@ -105,7 +88,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Progear
-* Progear No Arashi
 * Puzz Loop 2
 * Puzzle Star
 * Rage Of The Dragons
@@ -126,8 +108,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sonic Boom
 * Space Launcher
 * Squash
+* Star Fire 2
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
-* Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
 * Super Trio
 * SWAT Police
@@ -135,13 +117,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Teeter Torture
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
 * Tetris the Absolute The Grand Master 2
-* Tetris the Absolute The Grand Master 2 Plus
-* The Great Ragtime Show
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
-* The King of Fighters 10th Anniversary
 * The Lost Castle In Darkmist
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
@@ -150,7 +129,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Tylz
-* Undercover Cops (Alpha Renewal Version)
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
@@ -160,19 +138,51 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
-* World Cup Volley 95 Extra Version
 * Zintrick
 * Zupapa
 
+## New Clones
+
+* Battle Shark (Japan, Joystick)
+* Bubble Bobble (prototype on tokio hardware)
+* Cannon Dancer
+* Crystal Castles (Joystick Version)
+* DoDonPachi Dai-Ou-Jou (Black Label)
+* Double Dragon 3 - The Rosetta Stone (Japan)
+* Dunk Dream '95
+* Escape Kids (Asia 4 Players)
+* Fujiyama Buster
+* Guwange Special Version
+* Hacha Mecha Fighter (bootleg)
+* Hook (Japan Version)
+* Ikari III - The Rescue (World, 8-Way Joystick)
+* Knuckle Bash 2
+* Magical Drop
+* Magical Drop Plus 1
+* Progear No Arashi
+* Super Bishi Bashi Championship (ver KAA, 3 Players)
+* Tetris the Absolute The Grand Master 2 Plus
+* The Great Ragtime Show
+* The King of Fighters 10th Anniversary
+* Undercover Cops (Alpha Renewal Version)
+* World Cup Volley 95 Extra Version
+
 ## New Hacks
 
+* Abscam
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* DoDonPachi (2012/02/12 Arrange Ver. 1.1) (hack)
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* DownTown (joystick hack)
+* Guerrilla War (joystick hack bootleg)
 * Ikari (joystick hack bootleg)
+* Jr. Pac-Man (speedup hack)
 * Midnight Resistance (joystick hack bootleg)
+* Supercharger 1942
 * Tron freeplay custom rom
+* Vs. Skate Kids
 
 
 ## Games fixed and now working
@@ -201,7 +211,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Driftout 94 - Romset `drifto94`
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
+* F1 Super Lap - Romset `f1lap`
+* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
+* Fire Barrel - Romset `firebarr`
+* Funky Jet - Romset `funkyjet`
+* Gardia - Romset `gardia`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
+* Green Beret - Romset `greenber`
+* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Hang-On - Romset `hangon`
 * Hard Head 2 - Romset `hardhea2`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
@@ -210,13 +227,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
 * Kozmik Kroozr - Romset `kroozr`
-* F1 Super Lap - Romset `f1lap`
-* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
-* Fire Barrel - Romset `firebarr`
-* Funky Jet - Romset `funkyjet`
-* Gardia - Romset `gardia`
-* Green Beret - Romset `greenber`
-* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
 * Max RPM - Romset `maxrpm`
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
@@ -318,13 +328,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Motos
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
-* Out Run added ost soundtrack (via KMFDManic)
+* Out Run - Added ost soundtrack (via KMFDManic)
 * Pacman & Chomp Chomp
 * Pac & Pal
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
 * Super Pacman
+* Super Spacefortress Macross II
 * Super Xevious
 * Tower Of Druaga
 * Toypop
@@ -422,4 +433,8 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
-* Fixed BeatHeat from crashing [grant2258]
+* Fixed BeatHead from crashing [grant2258]
+* Fixed tgm2/tgm2p running half speed [dink, arnoldsecret]
+* Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
+Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
+* Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
