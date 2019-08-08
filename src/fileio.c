@@ -181,8 +181,8 @@ int osd_get_path_count(int pathtype)
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
-  char save_path_buffer[PATH_MAX_LENGTH];
-  char sys_path_buffer[PATH_MAX_LENGTH];
+  char save_path_buffer[PATH_MAX_LENGTH]= {0};
+  char sys_path_buffer[PATH_MAX_LENGTH]= {0};
 
   save_path_buffer[0] = '\0';
   if(options.save_subfolder)
@@ -251,25 +251,31 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    osd_get_path(pathtype, currDir);
    snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
 
-   /*log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
+   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);
 
    if (path_is_directory(buffer))
+   {
+       log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) path is directory _-_ %s\n",buffer);
       return PATH_IS_DIRECTORY;
+   }
    else if (filestream_exists(buffer))
+   {
+      log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) path is file _-_ %s\n",buffer);
       return PATH_IS_FILE;
-
+   }
+   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) path not found _-_ %s\n",buffer);
    return PATH_NOT_FOUND;
 }
 
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
-   char buffer[PATH_MAX_LENGTH];
-   char currDir[PATH_MAX_LENGTH];
+   char buffer[PATH_MAX_LENGTH]= {0};
+   char currDir[PATH_MAX_LENGTH]= {0};
    FILE* out;
 
    osd_get_path(pathtype, currDir);
    snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
-
+   log_cb(RETRO_LOG_DEBUG, "(osd_fopen) called: %s\n",buffer);
    path_mkdir(currDir);
 
    out = fopen(buffer, mode);
@@ -874,7 +880,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 	mame_file file, *newfile;
 	char tempname[256];
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "generic_fopen(%d, %s, %s, %s, %X)\n", pathtype, gamename, filename, extension, flags);
+	log_cb(RETRO_LOG_DEBUG, "(generic_fopen) (%d, %s, %s, %s, %X)\n", pathtype, gamename, filename, extension, flags);
 
 	/* reset the file handle */
 	memset(&file, 0, sizeof(file));
@@ -912,6 +918,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 		/* if the directory exists, proceed */
 		if (*name == 0 || osd_get_path_info(pathtype, pathindex, name) == PATH_IS_DIRECTORY)
 		{
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "(generic_fopen) directory exists: %s\n", name);
 			/* now look for path/gamename/filename.ext */
 			compose_path(name, gamename, filename, extension);
 
@@ -928,6 +935,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 			/* otherwise, just open it straight */
 			else
 			{
+				log_cb(RETRO_LOG_DEBUG, LOGPRE " (generic_fopen) using osd_fopen %s\n", name);
 				file.type = PLAIN_FILE;
 				file.file = osd_fopen(pathtype, pathindex, name, access_modes[flags & 3]);
 				if (file.file == NULL && (flags & 3) == 3)
