@@ -419,7 +419,8 @@ cant_load_language_file:
 	and the CPU emulation; returns non zero in
 	case of error
 -------------------------------------------------*/
-
+extern int showcopyright(struct mame_bitmap *bitmap);
+int showgamewarnings(struct mame_bitmap *bitmap);
 static int run_machine(void)
 {
 	int res = 1;
@@ -457,8 +458,24 @@ static int run_machine(void)
 						Machine->memory_region[region].base = 0;
 					}
 
-				ui_copyright_and_warnings();
-        pause_action = pause_action_start_emulator;
+//				ui_copyright_and_warnings();
+    //    
+    if(settingsloaded || options.skip_disclaimer)
+    {
+        if (options.skip_warnings)
+        {
+            pause_action = pause_action_start_emulator;
+        }
+        else
+        {
+            showgamewarnings(artwork_get_ui_bitmap());	}
+        }
+    else
+    {
+        showcopyright(artwork_get_ui_bitmap());
+    }
+
+//pause_action = pause_action_start_emulator;
 				return 0;
 			}
 

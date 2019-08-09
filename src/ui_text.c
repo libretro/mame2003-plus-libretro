@@ -19,7 +19,9 @@ static const char *mame_default_text[] =
 	"MAME",
 
 	/* copyright stuff */
-	"Copyright Warning:\nCopying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.\n",
+	"Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.",
+	"IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.",
+	"To continue, type OK on Keyboard *OR* Left then Right on Joystick",
 
 	/* misc stuff */
 	"Return to Main Menu",
@@ -71,7 +73,7 @@ static const char *mame_default_text[] =
 	"unimplemented protection",
 	"missing serialization",
 	"There are working clones of this game:",
-
+	"Type OK on Keyboard, or Left, Right on Joystick to continue",
 	/* main menu */
 	"Input (general)",
 	"Dip Switches",

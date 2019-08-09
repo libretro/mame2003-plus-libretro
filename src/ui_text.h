@@ -18,7 +18,9 @@ enum
 	UI_mame = 0,
 
 	/* copyright stuff */
-	UI_copyright,
+	UI_copyright1,
+	UI_copyright2,
+	UI_copyright3,
 
 	/* misc menu stuff */
 	UI_returntomain,
@@ -70,7 +72,7 @@ enum
 	UI_brokenprotection,
 	UI_no_serialization,
 	UI_workingclones,
-
+	UI_typeok,
 	/* main menu */
 	UI_inputgeneral,
 	UI_dipswitches,
