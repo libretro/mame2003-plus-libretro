@@ -434,3 +434,4 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
+* Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
