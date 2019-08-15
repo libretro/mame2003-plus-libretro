@@ -84,14 +84,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hangly3 )	/* hack */
 	DRIVER( newpuckx )	/* hack */
 	DRIVER( pacheart )	/* hack */
-	DRIVER( ctrpllrp  )	/* hack */
 	DRIVER( joyman  )	/* hack */
 	DRIVER( newpuc2 )	/* hack */
 	DRIVER( newpuc2b )	/* hack */
 	DRIVER( piranha )	/* GL */
 	DRIVER( piranhao )	/* GL */
 	DRIVER( piranhah )	/* hack */
-	DRIVER( abscam )	/* hack */
 	DRIVER( nmouse )	/* (c) 1981 Amenip (Palcom Queen River) */
 	DRIVER( nmouseb )	/* (c) 1981 Amenip Nova Games Ltd. */
 						/* Woodpecker somewhere around here?*/
@@ -134,7 +132,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( pengob )	/* bootleg */
 	DRIVER( penta )		/* bootleg */
 	DRIVER( jrpacman )	/* (c) 1983 Midway */
-	DRIVER( jrpacmanf )
 	DRIVER( jumpshot )	/* (c) 1985 Bally Midway */
 	DRIVER( shootbul )	/* (c) 1985 Bally Midway */
 	DRIVER( bigbucks )	/* (c) 1986 Dynasoft Inc. */
@@ -931,7 +928,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vsfdf )
 	DRIVER( smgolfb )
 	DRIVER( vsbbaljb )
-	DRIVER( skatekds )
 
 	/* Nintendo Super System Games */
 	DRIVER( nss_ssoc )
@@ -1889,7 +1885,6 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
-	DRIVER( ddonpacha )
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
@@ -1966,7 +1961,6 @@ V-V                           TP-027
 	DRIVER( 1942 )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942a )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
-	DRIVER( 1942h )
 	DRIVER( exedexes )	/*  2/1985 (c) 1985 */
 	DRIVER( savgbees )	/*  2/1985 (c) 1985 + Memetron license */
 	DRIVER( commando )	/*  5/1985 (c) 1985 (World) */
