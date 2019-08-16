@@ -1885,6 +1885,7 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
+  DRIVER( ddonpacha )	/* (c) 2012 Trap15 Hack */
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
