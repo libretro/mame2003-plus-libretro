@@ -172,6 +172,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
 * DownTown (joystick hack)
