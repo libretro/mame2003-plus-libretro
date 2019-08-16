@@ -89,6 +89,7 @@ WRITE_HANDLER(pitnrun_v_heed_w);
 WRITE_HANDLER(pitnrun_color_select_w);
 WRITE_HANDLER( pitnrun_char_bank_select );
 WRITE_HANDLER( pitnrun_scroll_w );
+WRITE_HANDLER( pitnrun_scroll_y_w );
 READ_HANDLER( pitnrun_videoram_r );
 READ_HANDLER( pitnrun_videoram2_r );
 
@@ -147,7 +148,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xb007, 0xb007, pitnrun_vflip_w},
 	{ 0xb800, 0xb800, soundlatch_w },
 	{ 0xc800, 0xc801, pitnrun_scroll_w },
-	{ 0xc802, 0xc802, MWA_NOP },/* VP(VF?)MCV - not used ?*/
+	{ 0xc802, 0xc802, pitnrun_scroll_y_w },
 	{ 0xc804, 0xc804, pitnrun_mcu_data_w },
 	{ 0xc805, 0xc805, pitnrun_h_heed_w },
  	{ 0xc806, 0xc806, pitnrun_v_heed_w },
@@ -289,6 +290,7 @@ INPUT_PORTS_START( jumpkun )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
+
 
 static struct GfxLayout spritelayout =
 {
