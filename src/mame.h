@@ -37,7 +37,7 @@ extern retro_environment_t environ_cb;
 #define MAX_GFX_ELEMENTS 32
 #define MAX_MEMORY_REGIONS 32
 
-#define APPNAME					"mame2003-plus"
+#define APPNAME					"mame2003-plus-barcade"
 
 /***************************************************************************
 
