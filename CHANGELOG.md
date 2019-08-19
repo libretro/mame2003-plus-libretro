@@ -291,6 +291,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Poitto!
 * Pururun
 * Puzzli
+* Riding Fight
+* Ring Rage
 * Same Same Same
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
@@ -436,3 +438,4 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
 * Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
+* Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]
