@@ -1,4 +1,4 @@
-TARGET_NAME := mame2003_plus
+TARGET_NAME := mame2003_plus_barcade
 CORE_DIR    := src
 
 DEBUG         ?= 0

@@ -71,38 +71,42 @@ Core options
 
 enum CORE_OPTIONS/* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
-  OPT_4WAY = 0,
-  OPT_MOUSE_DEVICE,
-  OPT_CROSSHAIR_ENABLED,
-  OPT_SKIP_DISCLAIMER,
-  OPT_SKIP_WARNINGS,
-  OPT_DISPLAY_SETUP,
-  OPT_NEOGEO_BIOS,
-  OPT_STV_BIOS,
-  OPT_USE_ALT_SOUND,
-  OPT_SHARE_DIAL,
+  OPT_DISPLAY_SETUP= 0,
+#if none_legacy
+  OPT_MAME_REMAPPING,
+#endif
+  OPT_INPUT_INTERFACE,
+  OPT_4WAY ,
   OPT_DPAD_ANALOG,
   OPT_DEADZONE,
+  OPT_Cheat_Input_Ports,
+  OPT_MOUSE_DEVICE,
+  OPT_SHARE_DIAL,
+  OPT_CROSSHAIR_ENABLED,
+#if none_legacy
+  OPT_SKIP_DISCLAIMER,
+  OPT_SKIP_WARNINGS,
+#endif
+  OPT_FRAMESKIP,
+  OPT_TATE_MODE,
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,
+  OPT_ARTWORK,
+  OPT_ART_RESOLUTION,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
   OPT_VECTOR_TRANSLUCENCY,
   OPT_VECTOR_FLICKER,
   OPT_VECTOR_INTENSITY,
+  OPT_SAMPLE_RATE,
+  OPT_USE_ALT_SOUND,
+  OPT_NVRAM_BOOTSTRAP,
+  OPT_NEOGEO_BIOS,
+  OPT_STV_BIOS,
   OPT_DCS_SPEEDHACK,
   OPT_CORE_SYS_SUBFOLDER,
   OPT_CORE_SAVE_SUBFOLDER,
-  OPT_TATE_MODE,
-  OPT_BRIGHTNESS,
-  OPT_GAMMA,
-  OPT_FRAMESKIP,
-  OPT_SAMPLE_RATE,
-  OPT_INPUT_INTERFACE,
-  OPT_MAME_REMAPPING,
-  OPT_ARTWORK,
-  OPT_ART_RESOLUTION,
-  OPT_NVRAM_BOOTSTRAP,
-  OPT_Cheat_Input_Ports,
   OPT_Machine_Timing,
   OPT_end /* dummy last entry */
 };
@@ -188,9 +192,11 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; mouse|pointer|disabled");
 #endif
   init_default(&default_options[OPT_CROSSHAIR_ENABLED],   APPNAME"_crosshair_enabled",   "Show Lightgun crosshair; enabled|disabled");
+#if none_legacy
   init_default(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");
-  init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
+#endif
+  init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME tab menu; disabled|enabled");
   init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",          "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",               "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_ARTWORK],             APPNAME"_display_artwork",     "Display artwork (Restart core); enabled|disabled");
@@ -199,7 +205,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Control mapping ; analog|digital");
+  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Controller type mapping ; digital|analog");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode - Rotating display (Restart core); disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
@@ -211,8 +217,10 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
-  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|keyboard|simultaneous");
+  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; simultaneous|retropad|keyboard");
+#if none_legacy
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (restart); enabled|disabled");
+#endif
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
@@ -310,6 +318,9 @@ void init_default(struct retro_variable_default *def, const char *key, const cha
 {
   def->key = key;
   def->defaults_string = label_and_values;
+ #ifndef none_legacy
+ options.mame_remapping =1;
+ #endif
 }
 
 static void update_variables(bool first_time)
@@ -372,7 +383,7 @@ static void update_variables(bool first_time)
           else
             options.crosshair_enable = 0;
           break;
-
+#if none_legacy
         case OPT_SKIP_DISCLAIMER:
           if(strcmp(var.value, "enabled") == 0)
             options.skip_disclaimer = true;
@@ -386,9 +397,9 @@ static void update_variables(bool first_time)
           else
             options.skip_warnings = false;
           break;
-
+#endif
         case OPT_DISPLAY_SETUP:
-          if(strcmp(var.value, "enabled") == 0)
+          if(strcmp(var.value, "enabled") == 0 && (options.mame_remapping) )
             options.display_setup = 1;
           else
             options.display_setup = 0;
@@ -601,7 +612,7 @@ static void update_variables(bool first_time)
           else
             options.activate_dcs_speedhack = 0;
           break;
-
+#if none_legacy
         case OPT_MAME_REMAPPING:
           if(strcmp(var.value, "enabled") == 0)
           {
@@ -617,7 +628,7 @@ static void update_variables(bool first_time)
             setup_menu_init();
           if(legacy_flag ==-1) legacy_flag = 1;
           break;
-
+#endif
         case OPT_FRAMESKIP:
           options.frameskip = atoi(var.value);
           break;
@@ -713,7 +724,7 @@ void retro_get_system_info(struct retro_system_info *info)
 {
    /* this must match the 'corename' field in mame2003_plus_libretro.info
     * in order for netplay to work. */
-  info->library_name = "MAME 2003-Plus";
+  info->library_name = "MAME2003-plus-Barcade";
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
 #endif
@@ -1441,78 +1452,6 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 ******************************************************************************/
 
-  /* Assuming the standard RetroPad layout:
-   *
-   *   [L2]                                 [R2]
-   *   [L]                                   [R]
-   *
-   *     [^]                               [X]
-   *
-   * [<]     [>]    [start] [selct]    [Y]     [A]
-   *
-   *     [v]                               [B]
-   *
-   *
-   * or standard RetroPad fight stick layout:
-   *
-   *   [start] [selct]
-   *                                         [X]  [R]  [L]
-   *     [^]                            [Y]
-   *
-   * [<]     [>]                             [A]  [R2] [L2]
-   *                                    [B]
-   *     [v]
-   *
-   *
-   *
-   * key: [Button code/Street Fighter II move]
-   *
-   * PAD_GAMEPAD
-   * ========================
-   * Uses the fight stick & pad layout popularised by Street Figher IV.
-   * Needs an 8+ button controller by default.
-   *
-   * [8/-]                                     [6/HK]  |
-   * [7/-]                                     [3/HP]  |
-   *                                                   |        [2/MP]  [3/HP]  [7/-]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * PAD_6BUTTON
-   * ========================
-   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
-   *
-   * [7/-]                                      [8/-]  |
-   * [3/HP]                                    [6/HK]  |
-   *                                                   |        [2/MP]  [6/HK]  [3/HP]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * PAD_CLASSIC
-   * ========================
-   * Same as FB Alpha's "Classic" mapping.
-   * Not sensible for 6 button fighters, but may suit other games.
-   *
-   * [7/-]                                     [8/-]   |
-   * [5/MK]                                    [6/HK]  |
-   *                                                   |        [4/WK]  [6/HK]  [5/MK]
-   *     [^]                               [4/WK]      |  [3/HP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
-   *                                                   |  [1/LP]
-   *     [v]                               [1/LP]      |
-   *                                                   |
-   */
-
-
 /* libretro presents "Player 1", "Player 2", "Player 3", etc while internally using indexed data starting at 0, 1, 2 */
 /* The core presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,        */
 /* JOYCODE_2_BUTTON1, JOYCODE_3_BUTTON1 or with #define-d masks IPF_PLAYER1, IPF_PLAYER2, IPF_PLAYER3.               */
@@ -1531,6 +1470,7 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 
 void retro_describe_controls(void)
 {
+#if none_legacy
   int retro_type   = 0;
   int display_idx  = 0;
 
@@ -1580,7 +1520,7 @@ void retro_describe_controls(void)
   needle->description = NULL;
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-
+#endif
 }
 
 int get_mame_ctrl_id(int display_idx, int retro_ID)
@@ -1674,15 +1614,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
+        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
+        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON4);
+        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON5);
+        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON2);
+        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON6);
         case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON6);
+        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON3);
         case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
+        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9); 
         case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
       }
       return 0;
@@ -1691,12 +1631,12 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
+        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
+        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON4);
+        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON5);
+        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON2);
+        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON6);
+        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON3);
         case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
         case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
         case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
@@ -1772,18 +1712,18 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * 26) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
   {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * 26) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * 26) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN}, 
-  
+
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
   {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
   {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
-  {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
-  {"RP"   #DISPLAY_IDX " L2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
+  {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"   #DISPLAY_IDX " L2",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L2 +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RP"   #DISPLAY_IDX " L",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
   {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
   {"RP"   #DISPLAY_IDX " R2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
   {"RP"   #DISPLAY_IDX " L3",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L3 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
@@ -1806,12 +1746,12 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
   {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
   {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
-  {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
-  {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
+  {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
   {"RP"   #DISPLAY_IDX " L2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
   {"RP"   #DISPLAY_IDX " R2",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_R2 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
   {"RP"   #DISPLAY_IDX " L3",           ((DISPLAY_IDX - 1) * 26) + RETRO_DEVICE_ID_JOYPAD_L3 +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
@@ -1853,26 +1793,28 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int overall_idx    = 0;
   int display_idx    = 0;
 
-  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  if (options.input_interface != RETRO_DEVICE_KEYBOARD)
   {
-    for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
+    for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
     {
-      int data_idx     = display_idx - 1;
-      int coded_layout = options.retropad_layout[data_idx];
-      int layout_idx   = 0;
-
-      switch(coded_layout)
+      for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
       {
-        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_CLASSIC; break;
-        case PAD_MODERN:          layout_idx = IDX_MODERN;  break;
-        case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
-      }
+        int data_idx     = display_idx - 1;
+        int coded_layout = options.retropad_layout[data_idx];
+        int layout_idx   = 0;
 
-      mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+        switch(coded_layout)
+        {
+          case RETRO_DEVICE_JOYPAD: layout_idx = IDX_CLASSIC; break;
+          case PAD_MODERN:          layout_idx = IDX_MODERN;  break;
+          case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
+          case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
+        }
+
+        mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+      }
     }
   }
-
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
   mame_joy_map[overall_idx].name         = NULL;
   mame_joy_map[overall_idx].code         = 0;
@@ -2012,14 +1954,18 @@ void osd_joystick_end_calibration(void) { }
 
 extern const struct KeyboardInfo retroKeys[];
 int retroKeyState[512];
-
+ struct KeyboardInfo temp[] = { {NULL,0,0} };
 const struct KeyboardInfo *osd_get_key_list(void)
 {
-  return retroKeys;
+  if (options.input_interface != RETRO_DEVICE_JOYPAD)
+    return retroKeys;
+  else
+    return temp;
 }
 
 int osd_is_key_pressed(int keycode)
 {
+
 	if (options.input_interface == RETRO_DEVICE_JOYPAD)
 		return 0;
 
