@@ -84,7 +84,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hangly3 )	/* hack */
 	DRIVER( newpuckx )	/* hack */
 	DRIVER( pacheart )	/* hack */
-	DRIVER( joyman )	/* hack */
+	DRIVER( joyman  )	/* hack */
 	DRIVER( newpuc2 )	/* hack */
 	DRIVER( newpuc2b )	/* hack */
 	DRIVER( piranha )	/* GL */
@@ -1885,6 +1885,7 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
+  DRIVER( ddonpacha )	/* (c) 2012 Trap15 Hack */
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
@@ -4878,6 +4879,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	*/
 
 	/* Kaneko games */
+	DRIVER( jumpkun )   /* (c) 1984 Kaneko */
 	DRIVER( airbustr )	/* (c) 1990 Kaneko + Namco */
 	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
 	DRIVER( djboy )		/* ?? */

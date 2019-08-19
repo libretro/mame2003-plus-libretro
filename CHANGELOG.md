@@ -17,7 +17,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
-* Baryon: Futrue Assault
+* Baryon: Future Assault
 * Bomb Kick
 * Boogie Wings
 * Botanic
@@ -64,6 +64,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * In Your Face
 * Inca
 * Joe & Mac Returns
+* Jump Kun
 * Ketsui: Kizuna Jigoku Tachi
 * Knightmare
 * Last Hope
@@ -142,6 +143,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Zupapa
 
 ## New Clones
+
 * Battle Shark (Japan, Joystick)
 * Bubble Bobble (prototype on tokio hardware)
 * Cannon Dancer
@@ -170,6 +172,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
 * DownTown (joystick hack)
@@ -288,6 +291,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Poitto!
 * Pururun
 * Puzzli
+* Riding Fight
+* Ring Rage
 * Same Same Same
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
@@ -322,14 +327,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Motos
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
-* Out Run added ost soundtrack (via KMFDManic)
+* Out Run - Added ost soundtrack (via KMFDManic)
 * Pacman & Chomp Chomp
 * Pac & Pal
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
 * Super Pacman
-* Super Space Fortress Macross II
+* Super Spacefortress Macross II
 * Super Xevious
 * Tower Of Druaga
 * Toypop
@@ -427,9 +432,10 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
-* Fixed BeatHeat from crashing [grant2258]
+* Fixed BeatHead from crashing [grant2258]
 * Fixed tgm2/tgm2p running half speed [dink, arnoldsecret]
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
-* Ported Mamesick's fix for the sound in Super Space Fortress Macross II level 2 onwards [arcadez]
+* Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
+* Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]
