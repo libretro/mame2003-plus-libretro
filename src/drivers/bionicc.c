@@ -337,11 +337,11 @@ static struct YM2151interface ym2151_interface =
 static MACHINE_DRIVER_START( bionicc )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 10000000) /* ?? MHz ? */
+	MDRV_CPU_ADD(M68000, 12000000) /* ?? MHz ? */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(bionicc_interrupt,8)
 
-	MDRV_CPU_ADD(Z80, 4000000)
+	MDRV_CPU_ADD(Z80, 3579545)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)  /* 4 MHz ??? TODO: find real FRQ */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_VBLANK_INT(nmi_line_pulse,4)	/* ??? */
