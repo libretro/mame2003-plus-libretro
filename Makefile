@@ -233,7 +233,7 @@ else ifeq ($(platform), classic_armv7_a7)
 else ifeq ($(platform), classic_armv8_a35)
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
-  LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 	CFLAGS += -Ofast \
 	-flto=4 -fwhole-program -fuse-linker-plugin \
 	-fdata-sections -ffunction-sections -Wl,--gc-sections \
@@ -249,17 +249,10 @@ else ifeq ($(platform), classic_armv8_a35)
 	ARCH = arm
 	BUILTIN_GPU = neon
 	USE_DYNAREC = 1
-  CPU_ARCH := arm
-  ARM = 1
-	ifeq ($(shell echo `$(CC) -dumpversion` "< 4.9" | bc -l), 1)
-	  CFLAGS += -march=armv8-a
-	else
-	  CFLAGS += -march=armv8-a
-	  # If gcc is 5.0 or later
-	  ifeq ($(shell echo `$(CC) -dumpversion` ">= 5" | bc -l), 1)
-	    LDFLAGS += -static-libgcc -static-libstdc++
-	  endif
-	endif
+	CPU_ARCH := arm
+	ARM = 1
+	CFLAGS += -march=armv8-a
+	LDFLAGS += -static-libgcc -static-libstdc++
 #######################################
 
 # generic armhf########################
