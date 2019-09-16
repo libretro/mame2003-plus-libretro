@@ -708,6 +708,70 @@ INPUT_PORTS_START( mplanets )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( tylz )
+	PORT_START	/* Dips */
+	PORT_DIPNAME( 0x01, 0x00, "0" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* ? */
+	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) // cycle through test options, hold to do test
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_DIPNAME( 0x10, 0x10, "1" )  // probably nothing else here
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* trackball H not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* trackball V (dial) */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ? */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN    | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( qbert )
 	PORT_START      /* DSW */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
@@ -1214,6 +1278,161 @@ INPUT_PORTS_START( insector )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( wizwarz )
+	PORT_START	/* Dips */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x00, "20000, 30000" )
+	PORT_DIPSETTING(    0x01, "25000, 35000" )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x00, "Normal" )
+	PORT_DIPSETTING(    0x04, "Hard" )
+	PORT_DIPNAME( 0x08, 0x08, "Bonus Mine" )
+	PORT_DIPSETTING(    0x00, "15000, 20000" )
+	PORT_DIPSETTING(    0x08, "15000, 25000" )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x20, "5" )
+	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )
+
+	PORT_START	/* ? */
+	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) // cycle through test options, hold to do test
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START	/* trackball H not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* trackball V not used */
+	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL, 15, 15, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
+
+	PORT_START	/* ? */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_START2 )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( argusg )
+	PORT_START	/* Dips */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x22, 0x02, "Bonus Human" )
+	PORT_DIPSETTING(    0x00, "15000" )
+	PORT_DIPSETTING(    0x02, "20000" )
+	PORT_DIPSETTING(    0x20, "25000" )
+	PORT_DIPSETTING(    0x22, "30000" )
+	PORT_DIPNAME( 0x14, 0x10, "Initial Humans" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPSETTING(    0x10, "6" )
+	PORT_DIPSETTING(    0x04, "8" )
+	PORT_DIPSETTING(    0x14, "10" )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x00, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard"  )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START      /* IN0 */
+	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START	/* trackball H */
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X, 15, 20, 0, 0 )
+
+	PORT_START	/* trackball V */
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y, 15, 20, 0, 0 )
+
+	PORT_START	/* IN4 */
+	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 )
+	PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( kngtmare )
+	PORT_START	/* Dips */
+	PORT_DIPNAME( 0x11, 0x11, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x11, DEF_STR( 1C_1C ) )
+//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x20, "5" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* ? */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START	/* trackball H not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* trackball V not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ? */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_RIGHT  | IPF_2WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICKRIGHT_LEFT  | IPF_2WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_LEFT   | IPF_2WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICKRIGHT_RIGHT | IPF_2WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_START2 )
 INPUT_PORTS_END
 
 
@@ -1736,6 +1955,28 @@ ROM_START( insector )
 	ROM_LOAD( "fg0",          0x6000, 0x2000, CRC(965f6b76) SHA1(faec9d43f39e730eefd08d4c3337ed4b230bf7e1) )
 ROM_END
 
+ROM_START( tylz )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "tylz.s4t",        0x8000, 0x2000, CRC(28ed146d) SHA1(52d72503b456b1411cd91724c6d524b78ca6fe03) )
+	ROM_LOAD( "tylz.s4b",        0xa000, 0x2000, CRC(18ee09f9) SHA1(632896bfe7e14f93665671dbcc17b7cabc754a98) )
+	ROM_LOAD( "tylz.r4",         0xc000, 0x2000, CRC(657c3d2e) SHA1(9908a2dd5109e632dff38b8b4b56160615355200) )
+	ROM_LOAD( "tylz.n4",         0xe000, 0x2000, CRC(b2a15510) SHA1(15db4d1a2fb70d8111940246cd7a8ae06403cac5) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for sound cpu */
+	ROM_LOAD( "tylz.f2",   0xf000, 0x1000, CRC(ebcedba9) SHA1(94aee8e32bdc80bbc5dc1423ca97597bdb9d808c) )
+	ROM_RELOAD(             0x7000, 0x1000 ) /* A15 is not decoded */
+
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "tylz.m6",          0x0000, 0x1000, CRC(5e300b9b) SHA1(3b1e0371ba6d76ace893b92728c7a64b0e207d22) )	/* chars */
+	ROM_LOAD( "tylz.n6",          0x1000, 0x1000, CRC(af56292e) SHA1(772b2fb8efaaaccd465ab9d61fc295ef09e3a10d) )
+
+	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "tylz.f12",          0x6000, 0x2000, CRC(6d2c5ad8) SHA1(851592d82680f9983f5d8c10c0a13fbaf31cfe41) )	/* sprites */
+	ROM_LOAD( "tylz.g12",          0x4000, 0x2000, CRC(1eb26e6f) SHA1(bc50069cefaafa302d559a2c2d3ab93f58900a24) )
+	ROM_LOAD( "tylz.j12",          0x2000, 0x2000, CRC(bc319067) SHA1(cdaacd4d5a7644468c913076850f08d979cbb004) )
+	ROM_LOAD( "tylz.k12",          0x0000, 0x2000, CRC(ff62bc4b) SHA1(71de79a92f23a1fcf4331c7fb1762870d74f7ea9) )
+ROM_END
+
 ROM_START( screwloo )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
 	ROM_LOAD( "rom4",         0x6000, 0x2000, CRC(744a2513) SHA1(d6e8e016d9af984fae9b6667bedeea069637bd3a) )
@@ -1933,6 +2174,77 @@ ROM_START( curvebal )
 	ROM_LOAD( "cb-fg-0.chp",  0x6000, 0x2000, CRC(e3a8230e) SHA1(c256b5ca25dc15c11d574d0ad823b34093933802) )
 ROM_END
 
+ROM_START( wizwarz )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "gv110_rom4_2764.c16",    0x6000, 0x2000, CRC(e4e6c29b) SHA1(8cc7b04afb613149c3d2fe160dc0ed1d3fe005af) )
+	ROM_LOAD( "gv110_rom3_2764.c14c15", 0x8000, 0x2000, CRC(aa8e0fc4) SHA1(7bae2b48d14c097285d0dc1fa2a133fb24091602) )
+	ROM_LOAD( "gv110_rom2_2764.c13c14", 0xa000, 0x2000, CRC(16c7d8ba) SHA1(b0950e45548ba991b0415927c8e46c98c4df5b13) )
+	ROM_LOAD( "gv110_rom1_2764.c12c13", 0xc000, 0x2000, CRC(358895b5) SHA1(38a4a27849ab491a6e3dd3415fe684d1c71c392d) )
+	ROM_LOAD( "gv110_rom0_2764.c11c12", 0xe000, 0x2000, CRC(f7157e17) SHA1(1b155602557ad173d74d4d5cf953b206b262987b) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for sound cpu */
+	ROM_LOAD( "gv110_drom1_snd_2732.k2",0xf000, 0x1000, CRC(05ca79da) SHA1(f9e9b0de02d618aeb73f7218a49b41d7b94c24a4) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for second sound cpu */
+	ROM_LOAD( "gv110_yrom1_snd_2732.n3",0xf000, 0x1000, CRC(1e3de643) SHA1(7717547c6c5b1ff178595c67f19265dc59130d90) )
+
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "gv110_bg0_2732.e11e12",  0x0000, 0x1000, CRC(7437813c) SHA1(11f93c8b965d861a1ebb0f894a956db4a77ee7e5) )	/* chars */
+	ROM_LOAD( "gv110_bg1_2732.e13",     0x1000, 0x1000, CRC(70a54cc5) SHA1(769d17d44c3042df0ea9ff0c20f87f8e44dedc05) )
+
+	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "gv110_fg3_2764.k7k8",    0x0000, 0x2000, CRC(ce0c3e8b) SHA1(5823d4705091ecbd7dcd052719a88fd27f2fb8ee) )	/* sprites */
+	ROM_LOAD( "gv110_fg2_2764.k6",      0x2000, 0x2000, CRC(e42a166f) SHA1(c0f203cd08e6b5db45bd8eb3cfa05fe9a282a97d) )
+	ROM_LOAD( "gv110_fg1_2764.k5",      0x4000, 0x2000, CRC(b947cf84) SHA1(7b04ebb408a230696dcc77c6f5b6b46e5b9ae7ea) )
+	ROM_LOAD( "gv110_fg0_2764.k4",      0x6000, 0x2000, CRC(f7ba0fcb) SHA1(73d656ac4a4a2bc8d1f04d00c8af0d808ea31388) )
+ROM_END
+
+ROM_START( argusg )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "arg_ram2_2732.c7",         0x1000, 0x1000, CRC(5d35b83e) SHA1(5a1c3b2ae138d5509b8daaf03036f000bd09d0fc) )
+	ROM_LOAD( "arg_ram4_2732.c9c10",      0x2000, 0x1000, CRC(7180e823) SHA1(47124925d863b9b3784c0c990d4a4344e8d09372) )
+	ROM_LOAD( "arg_rom4_2764.c16",        0x6000, 0x2000, CRC(2f48bd78) SHA1(b625a03b5a4989b67d5180fca7e9f6b7a24e6d2c) )
+	ROM_LOAD( "arg_rom3_2764.c14c15",     0x8000, 0x2000, CRC(4dc2914c) SHA1(8ca0fd2ce1fc9f00afd30a638ff2f8787ef7e3d4) )
+	ROM_LOAD( "arg_rom2_2764.c13c14",     0xa000, 0x2000, CRC(b5e9ee77) SHA1(dbdc176e3ca6be17b78eb98c07d5a9b5eaa28ba1) )
+	ROM_LOAD( "arg_rom1_2764.c12c13",     0xc000, 0x2000, CRC(733d3d44) SHA1(03c11e89ed6906c0383dc19c0db2d21ebe69b128) )
+	ROM_LOAD( "arg_rom0_2764.c11c12",     0xe000, 0x2000, CRC(e1906355) SHA1(4735370ff0dfe381358dfa41d82fab455ec3c016) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for sound cpu */
+	ROM_LOAD( "arg_snd1_2716.u5",  0xf000, 0x800, CRC(3a6cf455) SHA1(0c701aa4d956947a101212b494b030cd2df5a2d6) )
+	ROM_RELOAD(               0x7000, 0x800 ) /* A15 is not decoded */
+	ROM_LOAD( "arg_snd2_2716.u6",  0xf800, 0x800, CRC(ddf32040) SHA1(61ae22faa013b29a5fbd9520073f172a98ca38ec) )
+	ROM_RELOAD(               0x7800, 0x800 ) /* A15 is not decoded */
+
+	/* no gfx1 (RAM is used) */
+
+	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "arg_fg3_2764.k7k8",    0x0000, 0x2000, CRC(cdb6e25c) SHA1(d439a4c777c585d1ee89410816c9f7580f7e0ae8) )	/* sprites */
+	ROM_LOAD( "arg_fg2_2764.k6",      0x2000, 0x2000, CRC(f10af1be) SHA1(e9f9b90de374ff9cb7cc072625b4980cef3ab1a6) )
+	ROM_LOAD( "arg_fg1_2764.k5",      0x4000, 0x2000, CRC(5add96e5) SHA1(ba8a1e54f12aab43c4dfce8f3bf8fcf4007b2eff) )
+	ROM_LOAD( "arg_fg0_2764.k4",      0x6000, 0x2000, CRC(5b7bd588) SHA1(49ee6a747832f0d4d436c199db2022fd5dfb8d4a))
+ROM_END
+
+ROM_START( kngtmare )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "gv112_rom3_2764.c14c15", 0x8000, 0x2000, CRC(47351270) SHA1(e6ca0b27b8f703cf73aad5f82d3b986823fbda88) )
+	ROM_LOAD( "gv112_rom2_2764.c13c14", 0xa000, 0x2000, CRC(53e01f97) SHA1(0fbb92789609ba1df6e4ae56b2fc77a004e3a4ea) )
+	ROM_LOAD( "gv112_rom1_2764.c12c13", 0xc000, 0x2000, CRC(5b340640) SHA1(8ccad017d5b9b748327baf22ff51d30ee96cb25e) )
+	ROM_LOAD( "gv112_rom0_2764.c11c12", 0xe000, 0x2000, CRC(620dc629) SHA1(0d94b7c50ef499eb9bb3f4986a8d29547181f7ea) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for sound cpu */
+	ROM_LOAD( "gv112_snd",              0xf000, 0x1000, NO_DUMP )
+
+	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "gv112_fg3_2764.k7k8",    0x0000, 0x2000, CRC(d1886658) SHA1(2ba452acfb3548c02137c8732e1f7cf8f4c31275) )
+	ROM_LOAD( "gv112_fg2_2764.k6",      0x2000, 0x2000, CRC(e1c73f0c) SHA1(3e91d6184f94b06ab0342504da387ac41d1a83b3) )
+	ROM_LOAD( "gv112_fg1_2764.k5",      0x4000, 0x2000, CRC(724bc3ea) SHA1(305945e7224c3463083c7579a826ec7eba846067) )
+	ROM_LOAD( "gv112_fg0_2764.k4",      0x6000, 0x2000, CRC(0311bbd9) SHA1(0a4f8268dab696bcb25738a482add24fb1f5f09d) )
+
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "gv112_bg0_2732.e11e12",  0x0000, 0x1000, CRC(a74591fd) SHA1(e6916cfa44cbe4c0d58fb0307c70580a6fabfcf1) )
+	ROM_LOAD( "gv112_bg1_2732.e13",     0x1000, 0x1000, CRC(5a226e6a) SHA1(faf119a8db823f2fc57c0e789b5f3486bca1feb1) )
+ROM_END
+
 
 static DRIVER_INIT( gottlieb )
 {
@@ -1946,9 +2258,12 @@ GAMEC(1982, qbertjp,  qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb 
 GAMEC(1982, myqbert,  qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Mello Yello Q*bert",           &qbert_ctrl, NULL )
 GAMEC(1982, qberttst, qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Q*bert (early test version)",  &qbert_ctrl, NULL )
 GAME( 1982, insector, 0,        gottlieb, insector, 0,        ROT0,   "Gottlieb",                   "Insector (prototype)" )
+GAMEX(1982, tylz,     0,     gottlieb, tylz,     0,        ROT0,   "Mylstar",  "Tylz (prototype)", GAME_IMPERFECT_SOUND )
+GAME( 1984, argusg,   0,        krull,    argusg,   0,        ROT0,   "Gottlieb", "Argus (Gottlieb, prototype)" ) // aka Guardian / Protector?
 GAME( 1983, mplanets, 0,        gottlieb, mplanets, 0,        ROT270, "Gottlieb",                   "Mad Planets" )
 GAME( 1983, mplanuk,  mplanets, gottlieb, mplanets, 0,        ROT270, "Gottlieb (Taitel license)",  "Mad Planets (UK)" )
 GAME( 1983, krull,    0,        krull,    krull,    0,        ROT270, "Gottlieb",                   "Krull" )
+GAMEX(1983, kngtmare, 0,        gottlieb, kngtmare, 0,        ROT0,   "Gottlieb", "Knightmare (prototype)", GAME_NO_SOUND )
 GAMEC(1983, sqbert,   0,        qbert,    qbert,    0,        ROT270, "Mylstar",                    "Faster, Harder, More Challenging Q*bert (prototype)", &qbert_ctrl, NULL )
 GAMEX(1983, mach3,    0,        mach3,    mach3,    gottlieb, ROT0,   "Mylstar",                    "M.A.C.H. 3", GAME_IMPERFECT_GRAPHICS )
 GAMEC(1983, qbertqub, 0,        qbert,    qbertqub, 0,        ROT270, "Mylstar",                    "Q*bert's Qubes",               &qbert_ctrl, NULL )
@@ -1956,3 +2271,4 @@ GAME( 1983, screwloo, 0,        gottlieb2,screwloo, gottlieb, ROT0,   "Mylstar",
 GAME( 1984, curvebal, 0,        gottlieb, curvebal, 0,        ROT270, "Mylstar",                    "Curve Ball" )
 GAMEX(1984, usvsthem, 0,        usvsthem, usvsthem, gottlieb, ROT0,   "Mylstar",                    "Us vs. Them", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1984, 3stooges, 0,        stooges,  3stooges, gottlieb, ROT0,   "Mylstar",                    "The Three Stooges In Brides Is Brides", GAME_IMPERFECT_SOUND )
+GAME( 1984, wizwarz,  0,        gottlieb2,wizwarz,  gottlieb, ROT0,   "Mylstar", "Wiz Warz (prototype)" )

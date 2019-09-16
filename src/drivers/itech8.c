@@ -1049,6 +1049,38 @@ INPUT_PORTS_START( gtg2t )
     PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( gpgolf )
+	PORT_START	/* 40 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x40, DEF_STR( Upright ))
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 60 */
+
+	PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Swing" )
+	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START	/* 80 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	UNUSED_ANALOG	/* analog C */
+	UNUSED_ANALOG	/* analog D */
+	UNUSED_ANALOG	/* analog E */
+	UNUSED_ANALOG	/* analog F */
+INPUT_PORTS_END
+
 
 INPUT_PORTS_START( slikshot )
 	PORT_START	/* 40 */
@@ -1834,6 +1866,24 @@ ROM_START( sstrike )
 	ROM_LOAD( "sstsrom0.bin", 0x00000, 0x20000, CRC(6ff390b9) SHA1(f31dae9e31f3fc83b9253e49fd4204820db3587e) )
 ROM_END
 
+ROM_START( gpgolf )
+	ROM_REGION( 0x1c000, REGION_CPU1, 0 )
+	ROM_LOAD( "gpgjv1_1.bin",   0x04000, 0x4000, CRC(631e77e0) SHA1(847ba1e00d31441620a2a1f45a9aa58df84bde8b) )
+	ROM_CONTINUE(       0x10000, 0xc000 )
+	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "sndv1.u27", 0x08000, 0x8000, CRC(55734876) SHA1(eb5ef816acbc6e35642749e38a2908b7ba359b9d) )
+
+	ROM_REGION( 0xc0000, REGION_GFX1, 0 )
+	ROM_LOAD( "grom00.bin", 0x00000, 0x40000, CRC(c3a7b54b) SHA1(414d693bc5337d578d2630817dd647cf7e5cbcf7) )
+	ROM_LOAD( "grom01.bin", 0x40000, 0x40000, BAD_DUMP CRC(2c834cf9) SHA1(49eb070ca4439d4fcd2d8a2db62d3c99b824bf99) ) /* Self test checksum reports BAD */
+	ROM_LOAD( "grom02.bin", 0x80000, 0x40000, CRC(aebe6c45) SHA1(15e64fcb36cb1064988ee5cd45699d501a6e7f01) )
+
+	ROM_REGION( 0x20000, REGION_SOUND1, 0 )
+	ROM_LOAD( "srom00.bin", 0x00000, 0x20000, CRC(4dd4db42) SHA1(0dffb51e8de36d8747f443fd65fe9927815eaff0) )
+ROM_END
+
 
 ROM_START( gtg2 )
 	/* banks are loaded in the opposite order from the others, */
@@ -2221,6 +2271,7 @@ GAME ( 1991, rimrck20, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/
 GAME ( 1991, rimrck16, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.6)" )
 GAME ( 1991, rimrck12, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.2)" )
 GAME ( 1991, ninclown, 0,        ninclown,  ninclown, viasound, ROT0,   "Strata/Incredible Technologies", "Ninja Clowns (08-27-91)" )
+GAME ( 1992, gpgolf,   0,        gtg2,      gpgolf,   viasound, ROT0,   "Strata/Incredible Technologies", "Golden Par Golf (Joystick, V1.1)" )
 GAME ( 1992, gtg2,     0,        gtg2,      gtg2,     viasound, ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V2.2)" )
 GAME ( 1989, gtg2t,    gtg2,     tmshi2203, gtg2t,    0,        ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V1.1)" )
 GAME ( 1991, gtg2j,    gtg2,     tmslo2203, gtg,      0,        ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Joystick, V1.0)" )

@@ -229,7 +229,7 @@ VIDEO_UPDATE( matmania )
 
 
 		scrolly = -*matmania_scroll;
-		if (*matmania_pageselect)
+		if (matmania_pageselect[0]&0x01) /* maniach sets 0x20 sometimes, which must have a different meaning */
 			copyscrollbitmap(bitmap,tmpbitmap2,0,0,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
 		else
 			copyscrollbitmap(bitmap,tmpbitmap,0,0,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
@@ -325,7 +325,7 @@ VIDEO_UPDATE( maniach )
 
 
 		scrolly = -*matmania_scroll;
-		if (*matmania_pageselect)
+		if (matmania_pageselect[0]&0x01) /* this sets 0x20 sometimes, which must have a different meaning */
 			copyscrollbitmap(bitmap,tmpbitmap2,0,0,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
 		else
 			copyscrollbitmap(bitmap,tmpbitmap,0,0,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);

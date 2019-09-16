@@ -388,6 +388,22 @@ ROM_START( fireone )
 	ROM_LOAD( "fo-ic18.1c",     0x6800, 0x0800, CRC(771ee5ba) SHA1(6577e219386de594dbde8a54d5f5f9657419061a) )
 ROM_END
 
+ROM_START( starfir2 )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "sfire2.01",     0x0000, 0x0800, CRC(f75be2f4) SHA1(b15511c345363f45eee0c019aa336a9aa16e63ea) )
+	ROM_LOAD( "sfire2.02",     0x0800, 0x0800, CRC(ccf98c6a) SHA1(3e7792aa47750ee19baf1e74016038fe80c92381) )
+	ROM_LOAD( "sfire2.03",     0x1000, 0x0800, CRC(604b2d50) SHA1(39d402135aaaa44c1ad05e1665eb6668280fae28) )
+	ROM_LOAD( "sfire2.04",     0x1800, 0x0800, CRC(f8a9658f) SHA1(aea97387001183a797375971c7325b4a838ea1d5) )
+	ROM_LOAD( "sfire2.05",     0x2000, 0x0800, CRC(acbaf827) SHA1(a546340f8533557a86b589f5011e5af0439e0d4d) )
+	ROM_LOAD( "sfire2.06",     0x2800, 0x0800, CRC(3525bb22) SHA1(1a1ca8b5ef1a5584d28644bdc751635aac3fad02) )
+	ROM_LOAD( "sfire2.07",     0x3000, 0x0800, CRC(7fce0e54) SHA1(17355fe98cf1511c32e90434960ced7b3f3ecac7) )
+	ROM_LOAD( "sfire2.08",     0x3800, 0x0800, CRC(98054c14) SHA1(4a561a9d87be9c5d4283ee78c4cf05c10c979a2f) )
+	ROM_LOAD( "sfire2.09",     0x4000, 0x0800, CRC(abaa4144) SHA1(045ebcd38d6a3f75c6d819a42aa1fb92ac84755c) )
+	ROM_LOAD( "sfire2.10",     0x4800, 0x0800, CRC(a0b3dadb) SHA1(d86683b528b5fbafad0cdd054940bc04b056b850) )
+	ROM_LOAD( "sfire2.11",     0x5000, 0x0800, CRC(a61ebbd2) SHA1(9fdf6558306aebbf5e9e106e4f4f6f7a3e703696) )
+	ROM_LOAD( "sfire2.12",     0x5800, 0x0800, CRC(a35ba06d) SHA1(122f1dbc235977367fdd06b7517c356a3147dfd1) )
+ROM_END
+
 
 
 /*************************************
@@ -417,3 +433,4 @@ static DRIVER_INIT( fireone )
 GAMEX( 1979, starfire, 0,        starfire, starfire, starfire, ROT0, "Exidy", "Star Fire (set 1)", GAME_NO_SOUND )
 GAMEX( 1979, starfira, starfire, starfire, starfire, starfire, ROT0, "Exidy", "Star Fire (set 2)", GAME_NO_SOUND )
 GAMEX( 1979, fireone,  0,        starfire, fireone,  fireone,  ROT0, "Exidy", "Fire One", GAME_NO_SOUND )
+GAMEX( 1979, starfir2, 0,        starfire, starfire, starfire, ROT0, "Exidy", "Star Fire 2", GAME_NO_SOUND )

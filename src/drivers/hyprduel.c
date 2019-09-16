@@ -13,7 +13,7 @@ Imagetek Inc 14220 071
 --
 driver by Eisuke Watanabe
 based on driver from drivers/metro.c by Luca Elia
-spthx to kikur,Cha,teioh,kokkyusan,teruchu
+spthx to kikur,Cha,teioh,kokkyu,teruchu,aya,sgo
 
 Note:
 sub68k is performing not only processing of sound but assistance of main68k.
@@ -130,7 +130,7 @@ static WRITE16_HANDLER( hypr_subcpu_control_w )
 			cpu_set_reset_line(1, CLEAR_LINE);
 			subcpu_resetline = 0;
 			if (pc == 0xbb0 || pc == 0x9d30 || pc == 0xb19c)
-				cpu_spinuntil_time(TIME_IN_USEC(10000));
+				cpu_spinuntil_time(TIME_IN_USEC(15000));		/* sync semaphore */
 		}
 		else if (subcpu_resetline == -1)
 		{
@@ -695,6 +695,7 @@ MACHINE_DRIVER_END
 static DRIVER_INIT( hyprduel )
 {
 	int i;
+	data8_t *ROM = memory_region(REGION_GFX1);
 
 	/*
 	  Tiles can be either 4-bit or 8-bit, and both depths can be used at the same
@@ -703,7 +704,10 @@ static DRIVER_INIT( hyprduel )
 	  for both tile depths.
 	*/
 	for (i = 0;i < memory_region_length(REGION_GFX1);i++)
-		memory_region(REGION_GFX1)[i] ^= 0xff;
+		ROM[i] ^= 0xff;
+
+/*	ROM[(0x174b9*0x20)+0x1f] |= 0x0e; I */
+/*	ROM[(0x174e9*0x20)+0x1f] |= 0x0e;   */
 
 	install_mem_write16_handler(0, 0xc00000, 0xc07fff, hypr_sharedram1_w);
 	install_mem_write16_handler(1, 0xc00000, 0xc07fff, hypr_sharedram1_w);
@@ -726,10 +730,10 @@ ROM_START( hyprduel )
 	ROM_REGION( 0x8000, REGION_CPU2, 0 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Prg + Data (Addressable by CPU & Blitter) */
-	ROMX_LOAD( "hd_m1.rom", 0x000000, 0x100000, BAD_DUMP CRC(582aab46) SHA1(b94bd7aee717c5e449c9138fd82ca9a6423cd382) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
-	ROMX_LOAD( "hd_m2.rom", 0x000002, 0x100000, BAD_DUMP CRC(63da509e) SHA1(b7254fab2d6d68bf52b0cdbf4e32d990420e4627) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
-	ROMX_LOAD( "hd_m3.rom", 0x000004, 0x100000, BAD_DUMP CRC(4dbb5a79) SHA1(5df5cfe7ab404ec97822c3edd86728b03aeb33d1) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
-	ROMX_LOAD( "hd_m4.rom", 0x000006, 0x100000, BAD_DUMP CRC(8061d5dd) SHA1(1d953ba8d85e0513683e0094eb1f5bbfda4576bf) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
+	ROMX_LOAD( "hyper-1.4", 0x000000, 0x100000, CRC(4b3b2d3c) SHA1(5e9e8ec853f71aeff3910b93dadbaeae2b61717b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "hyper-2.6", 0x000002, 0x100000, CRC(dc230116) SHA1(a3c447657d8499764f52c81382961f425c56037b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "hyper-3.3", 0x000004, 0x100000, CRC(2d770dd0) SHA1(27f9e7f67e96210d3710ab4f940c5d7ae13f8bbf) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "hyper-4.5", 0x000006, 0x100000, CRC(f88c6d33) SHA1(277b56df40a17d7dd9f1071b0d498635a5b783cd) , ROM_GROUPWORD | ROM_SKIP(6) )
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "97.11", 0x00000, 0x40000, CRC(bf3f8574) SHA1(9e743f05e53256c886d43e1f0c43d7417134b9b3) )
@@ -753,6 +757,5 @@ ROM_START( hyprdelj )
 ROM_END
 
 
-GAMEX( 1993, hyprduel, 0,        hyprduel, hyprduel, hyprduel, ROT0, "Technosoft", "Hyper Duel (World)", GAME_NOT_WORKING )
-GAME ( 1993, hyprdelj, hyprduel, hyprduel, hyprduel, hyprduel, ROT0, "Technosoft", "Hyper Duel (Japan)" )
-
+GAME( 1993, hyprduel, 0,        hyprduel, hyprduel, hyprduel, ROT0, "Technosoft", "Hyper Duel (World)" )
+GAME( 1993, hyprdelj, hyprduel, hyprduel, hyprduel, hyprduel, ROT0, "Technosoft", "Hyper Duel (Japan)" )

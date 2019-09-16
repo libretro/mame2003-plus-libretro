@@ -331,6 +331,55 @@ INPUT_PORTS_START( tron )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( tronfp )
+	PORT_START	/* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+//	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )
+//	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_START1, 1 )
+	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_LOW, IPT_START2, 1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START	/* IN1 -- controls spinner */
+	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE, 50, 10, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
+
+	PORT_START	/* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+
+	PORT_START	/* IN3 -- dipswitches */
+	PORT_DIPNAME( 0x01, 0x00, "Coin Meters" )
+	PORT_DIPSETTING(    0x01, "1" )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x04, 0x00, "Allow Continue" )
+	PORT_DIPSETTING(    0x04, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x08, 0x08, "freeplay" )
+	PORT_DIPSETTING(      0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+//	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* IN4 */
+	PORT_ANALOG( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_COCKTAIL, 50, 10, 0, 0 )
+
+	PORT_START	/* AIN0 */
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
 
 INPUT_PORTS_START( kroozr )
 	PORT_START	/* IN0 */
@@ -790,6 +839,33 @@ ROM_START( tron2 )
 	ROM_LOAD( "82s123.d12",   0x0000, 0x0020, CRC(e1281ee9) SHA1(9ac9b01d24affc0ee9227a4364c4fd8f8290343a) )
 ROM_END
 
+ROM_START( tronfp )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
+	ROM_LOAD( "625_v11.bin",      0x0000, 0x2000, CRC(402a99dc) SHA1(d3fdf877f185473d3dbf33cd1a3d0dae4173e479) )
+	ROM_LOAD( "scpu_pgb.bin", 0x2000, 0x2000, CRC(8ddf8717) SHA1(e0c294afa8ba0b0ba89e3e0fb3ff6d8fc4398e32) )
+	ROM_LOAD( "scpu_pgc.bin", 0x4000, 0x2000, CRC(4241e3a0) SHA1(24c1bd2f31e194542571c391c5dccf21354115c2) )
+	ROM_LOAD( "scpu_pgd.bin", 0x6000, 0x2000, CRC(035d2fe7) SHA1(1b827ca30a439d2f4cc94fcc0e90ee0cf87e018c) )
+	ROM_LOAD( "scpu_pge.bin", 0x8000, 0x2000, CRC(24c185d8) SHA1(45ac7c53f6f4eba5c7bf3fc6559cddd3821eddad) )
+	ROM_LOAD( "scpu_pgf.bin", 0xA000, 0x2000, CRC(38c4bbaf) SHA1(a7cd496ce75199b8279ea963520cf70d5f562bb2) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for the audio CPU */
+	ROM_LOAD( "ssi_0a.bin",   0x0000, 0x1000, CRC(765e6eba) SHA1(42efeefc8571dfc237c0be3368248f1e56add92e) )
+	ROM_LOAD( "ssi_0b.bin",   0x1000, 0x1000, CRC(1b90ccdd) SHA1(0876e5eeaa63bb8cc97f3634a6ddd8a29a9b012f) )
+	ROM_LOAD( "ssi_0c.bin",   0x2000, 0x1000, CRC(3a4bc629) SHA1(ce8452a99a313ae7429de471bbea39de08c9fd4b) )
+
+	ROM_REGION( 0x04000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "scpu_bgg.bin", 0x00000, 0x2000, CRC(1a9ed2f5) SHA1(b0d85b47873ac8ad475da18b9540d37232cb2b7c) )
+	ROM_LOAD( "scpu_bgh.bin", 0x02000, 0x2000, CRC(3220f974) SHA1(a38ea5f1db27f05d9689db838ce7a8de98f34837) )
+
+	ROM_REGION( 0x08000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "vg_3.bin",     0x00000, 0x2000, CRC(bc036d1d) SHA1(c5d54d0b80ac768ccf6fdd32cad1ef6359fa324c) )
+	ROM_LOAD( "vg_2.bin",     0x02000, 0x2000, CRC(58ee14d3) SHA1(5fb4268c9c73bdfc3b1e866618979aea3f219bbc) )
+	ROM_LOAD( "vg_1.bin",     0x04000, 0x2000, CRC(3329f9d4) SHA1(11f4d744374e475d2c5b195a9f70888414529dd3) )
+	ROM_LOAD( "vg_0.bin",     0x06000, 0x2000, CRC(9743f873) SHA1(71ed80ecd8caaf9fce1d7010f95c4678c9bd7102) )
+
+	ROM_REGION( 0x0020, REGION_PROMS, 0 )
+	ROM_LOAD( "82s123.d12",   0x0000, 0x0020, CRC(e1281ee9) SHA1(9ac9b01d24affc0ee9227a4364c4fd8f8290343a) )
+ROM_END
 
 ROM_START( kroozr )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
@@ -1036,6 +1112,7 @@ GAME( 1981, shollow,  0,        mcr2,     shollow,  mcr2,     ROT90, "Bally Midw
 GAME( 1981, shollow2, shollow,  mcr2,     shollow,  mcr2,     ROT90, "Bally Midway", "Satan's Hollow (set 2)" )
 GAME( 1982, tron,     0,        mcr2,     tron,     mcr2,     ROT90, "Bally Midway", "Tron (set 1)" )
 GAME( 1982, tron2,    tron,     mcr2,     tron,     mcr2,     ROT90, "Bally Midway", "Tron (set 2)" )
+GAME( 1982, tronfp,   tron,     mcr2,     tronfp,   mcr2,     ROT90, "Bally Midway", "Tron (freeplay)" )
 GAME( 1982, kroozr,   0,        mcr2,     kroozr,   kroozr,   ROT0,  "Bally Midway", "Kozmik Kroozr" )
 GAME( 1982, domino,   0,        mcr2,     domino,   domino,   ROT0,  "Bally Midway", "Domino Man" )
 GAME( 1982, wacko,    0,        mcr2,     wacko,    wacko,    ROT0,  "Bally Midway", "Wacko" )

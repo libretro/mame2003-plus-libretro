@@ -4233,6 +4233,21 @@ ROM_START( sfeverbw )
 	ROM_LOAD( "ss3.ic2",      0x0000, 0x0400, CRC(95c2c1ee) SHA1(42a3a382fc7d2782052372d71f6d0e8a153e74d0) )
 ROM_END
 
+ROM_START( spacelnc )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )             /* 64k for code */
+	ROM_LOAD( "sl_f1.f1",     0x0000, 0x0400, CRC(6ad59e40) SHA1(d416f7e6f5f55178df5c390548cd299650853022) )
+	ROM_LOAD( "sl_f2.f2",     0x0400, 0x0400, CRC(2de568e2) SHA1(f13740d3d9bf7434b7760e9286ef6e2ede40845f) )
+	ROM_LOAD( "sl_g1.g1",     0x0800, 0x0400, CRC(06d0ab36) SHA1(bf063100b065dbf511d6f32da169fb461568d15d) )
+	ROM_LOAD( "sl_g2.g2",     0x0c00, 0x0400, CRC(73ac4fe6) SHA1(7fa8c09692446bdf804900158e040f0b875a2e32) )
+	ROM_LOAD( "sl_h1.h1",     0x1000, 0x0400, CRC(7f42a94b) SHA1(ad85706de5e3f952b12756275be1ea1276a10666) )
+	ROM_LOAD( "sl_h2.h2",     0x1400, 0x0400, CRC(04b7a5f9) SHA1(589b0a0c8dcb1300623fe8478f1d7173b2bc575f) )
+	ROM_LOAD( "sl_i1.i1",     0x1800, 0x0400, CRC(d30007a3) SHA1(9e5905df8f7822385daef159a07f0e8257cb862a) )
+	ROM_LOAD( "sl_i2.i2",     0x1c00, 0x0400, CRC(640ffd2f) SHA1(65c21396c39dc99ec263f66f400a8e4c7712b20a) )
+
+	ROM_REGION( 0x1000, REGION_CPU2, 0 )	/* Sound 8035 + 76477 Sound Generator */
+	ROM_LOAD( "sl_sound.ic2", 0x0000, 0x0400, CRC(8e1ff929) SHA1(5c7da97b05fb8fff242158978199f5d35b234426) )
+ROM_END
+
 ROM_START( sstrangr )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
 	ROM_LOAD( "hss-01.58",     0x0000, 0x0400, CRC(feec7600) SHA1(787a6be4e24ce931e7678e777699b9f6789bc199) )
@@ -4314,6 +4329,7 @@ ROM_END
 	  GAMEX(1979, sheriff,  0,        sheriff,  sheriff,  8080bw,	  ROT270, "Nintendo", "Sheriff", GAME_IMPERFECT_SOUND | GAME_WRONG_COLORS )
 	  GAMEX(1979, spacefev, 0,        sheriff,  spacefev, 8080bw,	  ROT270, "Nintendo", "Space Fever (New Ver.)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1979, sfeverbw, spacefev, sheriff,  spacefev, 8080bw,	  ROT270, "Nintendo", "Space Fever High Splitter (set 1)", GAME_IMPERFECT_SOUND )
+	  GAMEX(1979, spacelnc, 0,        sheriff,  spacefev, 8080bw,	ROT270, "Nintendo", "Space Launcher", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, bandido,  sheriff,  sheriff,  bandido,  bandido,	ROT270, "Exidy",    "Bandido", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, helifire, 0,        helifire, helifire, helifire,	ROT270, "Nintendo", "HeliFire (revision B)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, helifira, helifire, helifire, helifire, helifire,	ROT270, "Nintendo", "HeliFire (revision A)", GAME_IMPERFECT_SOUND )

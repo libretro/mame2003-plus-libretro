@@ -84,7 +84,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hangly3 )	/* hack */
 	DRIVER( newpuckx )	/* hack */
 	DRIVER( pacheart )	/* hack */
-	DRIVER( joyman )	/* hack */
+	DRIVER( joyman  )	/* hack */
 	DRIVER( newpuc2 )	/* hack */
 	DRIVER( newpuc2b )	/* hack */
 	DRIVER( piranha )	/* GL */
@@ -1007,6 +1007,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( helifira )	/* (c) Nintendo */
 	DRIVER( spacefev )
 	DRIVER( sfeverbw )
+	DRIVER( spacelnc )
 	DRIVER( spclaser )
 	DRIVER( laser )
 	DRIVER( spcewarl )
@@ -1054,6 +1055,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( radarznt )	/* (c) 1982 Tuni Electro Service */
 	DRIVER( outline )	/* (c) 1982 Century */
 	DRIVER( goldbug )	/* (c) 1982 Century */
+	DRIVER( diggerc )	/* (c) 1982 Century */
 	DRIVER( heartatk )	/* (c) 1983 Century Electronics */
 	DRIVER( hunchbak )	/* (c) 1983 Century */
 	DRIVER( superbik )	/* (c) 1983 Century */
@@ -1080,6 +1082,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( shollow2 )	/* (c) 1981 */
 	DRIVER( tron )		/* (c) 1982 */
 	DRIVER( tron2 )		/* (c) 1982 */
+	DRIVER( tronfp )	/* (c) custom free rom */
 	DRIVER( kroozr )	/* (c) 1982 */
 	DRIVER( domino )	/* (c) 1982 */
 	DRIVER( wacko )		/* (c) 1982 */
@@ -1283,7 +1286,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( myqbert )	/* GV-103?(c) 1982 Gottlieb */
 	DRIVER( qberttst )	/* GV-103 (c) 1982 Gottlieb */
 	DRIVER( insector )	/* GV-??? (c) 1982 Gottlieb - never released */
+	DRIVER( tylz )	/* GV-??? (c) 1982 Gottlieb - never released */
+	DRIVER( argusg )	/* GV-??? (c) 1982 Gottlieb - never released */
 	DRIVER( krull )		/* GV-105 (c) 1983 Gottlieb */
+	DRIVER( kngtmare )	/* GV-??? (c) 1983 Gottlieb - never released */
 	DRIVER( sqbert )	/* GV-??? (c) 1983 Mylstar - never released */
 	DRIVER( mach3 )		/* GV-109 (c) 1983 Mylstar */
 	DRIVER( usvsthem )	/* GV-??? (c) 198? Mylstar */
@@ -1291,6 +1297,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( qbertqub )	/* GV-119 (c) 1983 Mylstar */
 	DRIVER( screwloo )	/* GV-123 (c) 1983 Mylstar - never released */
 	DRIVER( curvebal )	/* GV-134 (c) 1984 Mylstar */
+	DRIVER( wizwarz )	/* GV-??? (c) 1984 Mylstar - never released */
 
 	/* Taito "Qix hardware" games */
 	DRIVER( qix )		/* LK  (c) 1981 Taito America Corporation */
@@ -1878,6 +1885,7 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
+  DRIVER( ddonpacha )	/* (c) 2012 Trap15 Hack */
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
@@ -2468,6 +2476,7 @@ V-V                           TP-027
 	DRIVER( rimrck16 )	/* (c) 1991 Strata/Incredible Technologies */
 	DRIVER( rimrck12 )	/* (c) 1991 Strata/Incredible Technologies */
 	DRIVER( ninclown )	/* (c) 1991 Strata/Incredible Technologies */
+	DRIVER( gpgolf )		/* (c) 1992 Strata/Incredible Technologies */
 	DRIVER( gtg2 )		/* (c) 1992 Strata/Incredible Technologies */
 	DRIVER( gtg2t )		/* (c) 1989 Strata/Incredible Technologies */
 	DRIVER( gtg2j )		/* (c) 1991 Strata/Incredible Technologies */
@@ -2493,7 +2502,13 @@ V-V                           TP-027
 	DRIVER( sftmj )		/* (c) 1995 Capcom/Incredible Technologies */
 	DRIVER( shufshot )	/* (c) Strata/Incredible Technologies */
 	DRIVER( sshot137 )	/* (c) Strata/Incredible Technologies */
-
+  DRIVER( gt3d )      /* (c) 1995 Incredible Technologies */
+	DRIVER( gt97 )      /* (c) 1997 Incredible Technologies */
+	DRIVER( gt98 )      /* (c) 1998 Incredible Technologies */
+	DRIVER( gt99 )      /* (c) 1999 Incredible Technologies */
+	DRIVER( gt2k )      /* (c) 2000 Incredible Technologies */
+	DRIVER( gtclassc )  /* (c) 2001 Incredible Technologies */
+    
 	/* Leland games */
 	DRIVER( cerberus )	/* (c) 1985 Cinematronics */
 	DRIVER( mayhem )	/* (c) 1985 Cinematronics */
@@ -2603,7 +2618,7 @@ V-V                           TP-027
 	/* Sega SG1000 based games */
 	DRIVER( chboxing )
 	DRIVER( chwrestl )
-  DRIVER( dokidoki )
+    DRIVER( dokidoki )
 
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
@@ -3039,8 +3054,14 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mt_kcham )	/* 60 */
 
 	/* Sega MegaPlay */
-	DRIVER( mp_sonic )
-	DRIVER( mp_gaxe2 )
+	DRIVER( mp_sonic )	/* 01 */
+	DRIVER( mp_gaxe2 )	/* 02 */
+	DRIVER( mp_sor2 )   /* 03 */
+	DRIVER( mp_twc )	/* 04 */
+	DRIVER( mp_soni2 )  /* 05 */
+	DRIVER( mp_bio )    /* 06 */
+	DRIVER( mp_shnb3 )  /* 07 */
+	DRIVER( mp_col3 )   /* 10 */
 
 	/* Data East "Burger Time hardware" games */
 	DRIVER( lnc )		/* (c) 1981 */
@@ -3725,6 +3746,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( starfire )	/* Exidy [1979?] */
 	DRIVER( starfira )	/* Exidy [1979?] */
 	DRIVER( fireone )	/* (c) 1979 Exidy */
+	DRIVER( starfir2 )	/* (c) 1979 Exidy */
 	DRIVER( victory )	/* (c) 1982 */
 	DRIVER( victorba )	/* (c) 1982 */
 	DRIVER( teetert )	/* (c) 1982 Exidy */
@@ -4835,6 +4857,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( aligatun )	/* (c) 1994 - Ref 940411 (unprotected) */
 	DRIVER( biomtoy )	/* (c) 1995 - Ref 922804/2 - (unprotected) */
 	DRIVER( touchgo )	/* (c) 1995 - Ref 950510-1 */
+  DRIVER( touchgok )/* (c) 1995 - Ref 950510-1 - (unprotected) */
 	DRIVER( wrally2 )	/* (c) 1995 - Ref 950510 */
 	DRIVER( maniacsp )	/* (c) 1996 - Ref 922804/2 - (prototype) */
 	DRIVER( maniacsq )	/* (c) 1996 - Ref ??? - (unprotected) */
@@ -4856,6 +4879,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	*/
 
 	/* Kaneko games */
+	DRIVER( jumpkun )   /* (c) 1984 Kaneko */
 	DRIVER( airbustr )	/* (c) 1990 Kaneko + Namco */
 	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
 	DRIVER( djboy )		/* ?? */
@@ -5091,6 +5115,7 @@ Other Sun games
 	/* Tong Electronic games */
 	DRIVER( leprechn )	/* (c) 1982 */
 	DRIVER( potogold )	/* (c) 1982 */
+	DRIVER( piratetr )  /* (c) 1982 */
 	DRIVER( beezer )	/* (c) 1982 */
 	DRIVER( beezer1 )	/* (c) 1982 */
 
@@ -5174,6 +5199,7 @@ Other Sun games
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */
 	DRIVER( shocking )	/* (c) 1997 Yun Sung */
+	DRIVER( bombkick )	/* (c) 1998 Yun Sung */
 
 	/* Zilec games */
 	DRIVER( blueprnt )	/* (c) 1982 Bally Midway (Zilec in ROM 3U, and the programmer names) */
@@ -5236,6 +5262,7 @@ Other Sun games
 	DRIVER( mjifb )		/* "29" 1990 Dynax */
 	DRIVER( sprtmtch )	/* "31" (c) 1989 Dynax + Fabtek license */
 	DRIVER( maya )		/* (c) 1994 Promat */
+	DRIVER( inca )
 	DRIVER( roldfrog )
 	DRIVER( roldfrga )
 	DRIVER( mcnpshnt )	/* "33" Mahjong Campus Hunting 1990 Dynax */
@@ -5302,6 +5329,7 @@ Other Sun games
 	/* TCH games */
 	DRIVER( speedspn )	/* (c) 1994 */
 	DRIVER( kickgoal )	/* (c) 1995 */
+  DRIVER( actionhw )	/* (c) 1995 */
 
 	/* U.S. Games games */
 	DRIVER( usg32 )

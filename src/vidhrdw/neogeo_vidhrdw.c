@@ -69,6 +69,12 @@ static int no_of_tiles;
 static int palette_swap_pending;
 static int fix_bank;
 
+
+static UINT8 *memory_region_gfx4;
+static UINT8 *memory_region_gfx3;
+
+
+
 extern unsigned int neogeo_frame_counter;
 
 int neogeo_fix_bank_type;
@@ -187,6 +193,10 @@ VIDEO_START( neogeo_mvs )
 	neogeo_vidram16_offset = 0;
 	fix_bank = 0;
 	palette_swap_pending = 0;
+
+	memory_region_gfx4  = memory_region(REGION_GFX4);
+	memory_region_gfx3  = memory_region(REGION_GFX3);
+
 
 	register_savestate();
 
@@ -319,7 +329,8 @@ static void NeoMVSDrawGfxLine(UINT16 **line,const struct GfxElement *gfx,
 	UINT16 *bm = line[sy]+sx;
 	int col;
 	int mydword;
-	UINT8 *fspr = memory_region(REGION_GFX3);
+
+	UINT8 *fspr = memory_region_gfx3;
 	const pen_t *paldata = &gfx->colortable[gfx->color_granularity * color];
 
 	if (sx <= -16) return;
@@ -384,7 +395,7 @@ static void NeoMVSDrawGfxLine(UINT16 **line,const struct GfxElement *gfx,
 	}
 	else		/* normal */
 	{
-		if (zx == 16)
+		if (zx == 0x0f)		/* fixed */
 		{
 			mydword = (fspr[0]<<0)|(fspr[1]<<8)|(fspr[2]<<16)|(fspr[3]<<24);
 			col = (mydword>> 0)&0xf; if (col) bm[ 0] = paldata[col];
@@ -462,7 +473,7 @@ profiler_mark(PROFILER_VIDEO);
 
 		t3 = neogeo_vidram16[(0x10000 >> 1) + count];
 		t1 = neogeo_vidram16[(0x10400 >> 1) + count];
-		t2 = neogeo_vidram16[(0x10800 >> 1) + count];
+
 
 		/* If this bit is set this new column is placed next to last one */
 		if (t1 & 0x40)
@@ -477,6 +488,7 @@ profiler_mark(PROFILER_VIDEO);
 		else /* nope it is a new block */
 		{
 			/* Sprite scaling */
+			t2 = neogeo_vidram16[(0x10800 >> 1) + count];
 			zx = (t3 >> 8) & 0x0f;
 			zy = t3 & 0xff;
 
@@ -493,12 +505,12 @@ profiler_mark(PROFILER_VIDEO);
 			{
 				my = 0x20;
 
-				if (sy < 248)
+				/* if (sy < 248) */
 					fullmode = 1;
-				else
+				/* else */
 					/* kludge to avoid a white line in KOF94 Japan stage... */
 					/* probably indication of a subtle bug somewhere else */
-					fullmode = 0;
+				/*	fullmode = 0; */
 			}
 			else
 				fullmode = 0;
@@ -513,7 +525,7 @@ profiler_mark(PROFILER_VIDEO);
 		offs = count<<6;
 
 		/* get pointer to table in zoom ROM (thanks to Miguel Angel Horna for the info) */
-		zoomy_rom = memory_region(REGION_GFX4) + (zy << 8);
+		zoomy_rom = memory_region_gfx4 + (zy << 8);
 		drawn_lines = 0;
 
 		/* my holds the number of tiles in each vertical multisprite block */
@@ -537,10 +549,10 @@ profiler_mark(PROFILER_VIDEO);
 				{
 					if (zy)
 					{
-						zoom_line %= 2*zy;
-						if (zoom_line >= zy)
+						zoom_line %= 2*(zy+1);	/* fixed */
+						if (zoom_line >= (zy+1))	/* fixed */
 						{
-							zoom_line = 2*zy-1 - zoom_line;
+							zoom_line = 2*(zy+1)-1 - zoom_line;	/* fixed */
 							invert ^= 1;
 						}
 					}
@@ -563,8 +575,8 @@ profiler_mark(PROFILER_VIDEO);
 				if ( vhigh_tile && (tileatr & 0x20)) tileno+=0x20000;
 				if (vvhigh_tile && (tileatr & 0x40)) tileno+=0x40000;
 
-				if (tileatr & 0x08)      tileno=(tileno&~7)+((tileno+neogeo_frame_counter)&7);
-				else if (tileatr & 0x04) tileno=(tileno&~3)+((tileno+neogeo_frame_counter)&3);
+				if (tileatr & 0x08) tileno=(tileno&~7)|(neogeo_frame_counter&7);	/* fixed */
+				else if (tileatr & 0x04) tileno=(tileno&~3)|(neogeo_frame_counter&3);	/* fixed */
 
 				if (tileatr & 0x02) yoffs ^= 0x0f;	/* flip y */
 
@@ -615,16 +627,16 @@ profiler_mark(PROFILER_VIDEO);
 			}
 		}
 
-		for (y=cliprect->min_y / 8; y <= cliprect->max_y / 8; y++)
+		if (banked)
 		{
-			for (x = 0; x < 40; x++)
+			for (y=cliprect->min_y / 8; y <= cliprect->max_y / 8; y++)
 			{
-				int byte1 = neogeo_vidram16[(0xe000 >> 1) + y + 32 * x];
-				int byte2 = byte1 >> 12;
-				byte1 = byte1 & 0xfff;
-
-				if (banked)
+				for (x = 0; x < 40; x++)
 				{
+					int byte1 = neogeo_vidram16[(0xe000 >> 1) + y + 32 * x];
+					int byte2 = byte1 >> 12;
+					byte1 = byte1 & 0xfff;
+
 					switch (neogeo_fix_bank_type)
 					{
 						case 1:
@@ -635,19 +647,43 @@ profiler_mark(PROFILER_VIDEO);
 							byte1 += 0x1000 * (((neogeo_vidram16[(0xea00 >> 1) + ((y-1)&31) + 32 * (x/6)] >> (5-(x%6))*2) & 3) ^ 3);
 							break;
 					}
+
+
+					if ((pen_usage[byte1] & ~1) == 0) continue;
+
+					drawgfx(bitmap,gfx,
+							byte1,
+							byte2,
+							0,0,
+							x*8,y*8,
+							cliprect,TRANSPARENCY_PEN,0);
 				}
-
-				if ((pen_usage[byte1] & ~1) == 0) continue;
-
-				drawgfx(bitmap,gfx,
-						byte1,
-						byte2,
-						0,0,
-						x*8,y*8,
-						cliprect,TRANSPARENCY_PEN,0);
 			}
-		}
+		} /* Banked	*/
+		else
+		{
+			for (y=cliprect->min_y / 8; y <= cliprect->max_y / 8; y++)
+			{
+				for (x = 0; x < 40; x++)
+				{
+					int byte1 = neogeo_vidram16[(0xe000 >> 1) + y + 32 * x];
+					int byte2 = byte1 >> 12;
+					byte1 = byte1 & 0xfff;
+
+					if ((pen_usage[byte1] & ~1) == 0) continue;
+
+					drawgfx(bitmap,gfx,
+							byte1,
+							byte2,
+							0,0,
+							x*8,y*8,
+							cliprect,TRANSPARENCY_PEN,0);
+							/* x = x +8; */
+				}
+			}
+		} /* Not banked */
 	}
+
 
 profiler_mark(PROFILER_END);
 }

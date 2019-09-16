@@ -216,7 +216,6 @@ struct GameOptions
   bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
   unsigned analog;                         /* analog enable/disable */
   unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */
-  unsigned analog_scale;           /* analog scale type */
   unsigned tate_mode;
 
   int      crosshair_enable;

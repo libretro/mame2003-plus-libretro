@@ -83,7 +83,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_SHARE_DIAL,
   OPT_DPAD_ANALOG,
   OPT_DEADZONE,
-  OPT_SCALE,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -200,10 +199,9 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Control mapping ; analog_and_digital|digital");
+  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Control mapping ; analog|digital");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
-  init_default(&default_options[OPT_SCALE],               APPNAME"_analogscale",         "Analog scale type; rsn8887|grant2258");
-  init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
+  init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode - Rotating display (Restart core); disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialiasing; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
@@ -214,11 +212,11 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|keyboard|simultaneous");
-  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (restart); disabled|enabled");
+  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (restart); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
-  init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input ports",   "Dip switch/Cheat input ports; disabled|enabled");
+  init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input_ports",   "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
@@ -491,7 +489,7 @@ static void update_variables(bool first_time)
           }
 
       case OPT_DPAD_ANALOG:
-          if(strcmp(var.value, "analog_and_digital") == 0)
+          if(strcmp(var.value, "analog") == 0)
           {
             if( options.analog !=1 && control_flag !=-1) control_flag =1;
             options.analog = 1;
@@ -518,13 +516,6 @@ static void update_variables(bool first_time)
 
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);
-          break;
-
-        case OPT_SCALE:
-          if(strcmp(var.value, "grant2258") == 0)
-            options.analog_scale = 1;
-          else
-            options.analog_scale = 0;
           break;
 
         case OPT_TATE_MODE:
@@ -762,6 +753,7 @@ static struct retro_controller_info retropad_subdevice_ports[] = {
 
 bool retro_load_game(const struct retro_game_info *game)
 {
+  int i;
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
@@ -772,17 +764,17 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
   }
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content path: %s.\n", game->path);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Full content path %s\n", game->path);
   if(!path_is_valid(game->path))
   {
     log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not valid. Exiting!");
     return false;
   }
-
+  log_cb(RETRO_LOG_INFO, LOGPRE "Git Version %s\n",GIT_VERSION);
   driver_lookup = strdup(path_basename(game->path));
   path_remove_extension(driver_lookup);
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: %s.\n", driver_lookup);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: %s\n", driver_lookup);
 
   for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
   {
@@ -791,14 +783,14 @@ bool retro_load_game(const struct retro_game_info *game)
     if ((strcasecmp(driver_lookup, needle->description) == 0)
       || (strcasecmp(driver_lookup, needle->name) == 0) )
     {
-      log_cb(RETRO_LOG_INFO, LOGPRE "Driver index counter: %d. Matched game driver: %s.\n",  driverIndex, needle->name);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Driver index counter: %d. Matched game driver: %s\n",  driverIndex, needle->name);
       game_driver = needle;
       options.romset_filename_noext = driver_lookup;
       break;
     }
 	if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
 	{
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, needle->name);
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, driver_lookup);
       return false;
 	}
  }
@@ -810,6 +802,10 @@ bool retro_load_game(const struct retro_game_info *game)
 
   options.libretro_content_path = strdup(game->path);
   path_basedir(options.libretro_content_path);
+  /*fix trailing slash in path*/
+  for(i = 0; options.libretro_content_path[i] != '\0'; ++i); 
+  if ( options.libretro_content_path[i-1] == '/' || options.libretro_content_path[i-1]  == '\\' ) 
+   options.libretro_content_path[i-1] =0; 
 
   /* Get system directory from frontend */
   options.libretro_system_path = NULL;
@@ -1937,8 +1933,7 @@ int convert_analog_scale(int input)
 	float scale;
 	int trigger_deadzone;
 	
-	if( options.analog_scale)   trigger_deadzone = (32678 /100) * 20;
-	if( !options.analog_scale)  trigger_deadzone = (32678 * options.deadzone) / 100;
+	trigger_deadzone = (32678 * options.deadzone) / 100;
 	
 	if (input < 0) { input =abs(input); neg_test=1; }
 	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
@@ -1963,7 +1958,7 @@ int convert_analog_scale(int input)
 
 	
 	if (neg_test) input =-abs(input);
-	return input * 1.28;
+	return (int) input * 1.28;
 }
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])

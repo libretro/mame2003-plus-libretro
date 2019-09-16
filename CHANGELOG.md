@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez, markwkidd, twinaphex
+* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret
 * Past repository maintiners: grant2258
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -10,18 +10,18 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * 96 Flag Rally
 * 1943 - The Battle Of Midway Mark II
 * 1945k III
+* Action Hollywood
 * Air Attack
 * Air Rescue
+* Argus (Gottlieb, prototype)
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
-* Baryon
-* Battle Shark (Japan, Joystick)
+* Baryon: Future Assault
+* Bomb Kick
 * Boogie Wings
 * Botanic
-* Bubble Bobble (prototype on tokio hardware)
-* Cabal (Joystick with 3 buttons version)
-* Cannon Dancer
+* Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
 * Choky! Choky!
@@ -29,59 +29,53 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cookie & Bibi
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
-* Crystal Castles (Joystick Version)
-* Cute Fighters
+* Cute Fighter
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
 * Diet Go Go
+* Digger (CVS)
 * DoDonPachi Dai-Ou-Jou
-* DoDonPachi Dai-Ou-Jou (Black Label)
-* Dogou Souken (joystick hack bootleg)
 * Doki Doki Penguin Land
-* Double Dragon 3 - The Rosetta Stone (Japan)
 * Double Wings
-* DownTown (joystick hack)
 * Dream World
-* Dunk Dream 95
-* Dyna Gears
-* Escape Kids (Asia 4 Players)
+* Dyna Gear
 * ESPGaluda
 * FixEight (bootleg)
-* Fujiyama Buster
 * Gaia: The Last Choice Of Earth
 * Gals Panic DX
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
-* Ghost Loop
+* Ghostlop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
-* Guerrilla War (joystick hack bootleg)
+* Golden Par Golf
+* Golden Tee 3D Golf (v1.93N)
+* Golden Tee '97 (v1.30)
+* Golden Tee '98 (v1.10)
+* Golden Tee '99 (v1.00)
+* Golden Tee 2K (v1.00)
+* Golden Tee Classic (v1.00)
 * Gunbarich
 * GunMaster
-* Guwange Special Version
-* Hacha Mecha Figher (Unprotected)
 * Hang Zo
 * Heavy Smash
-* Hook (Japan Version) [SumavisionQ5]
 * Hoops '96
 * Hyper Crash
 * Hyper Street Fighter II (Asia)
-* Ikari (joystick hack bootleg)
-* Ikari III - The Rescue (World, 8-Way Joystick)
 * In Your Face
-* Joe & Mac Return
-* Ketsui Kizuna Jigoku Tachi
-* Knuckle Bash 2
+* Inca
+* Joe & Mac Returns
+* Jump Kun
+* Ketsui: Kizuna Jigoku Tachi
+* Knightmare
+* Last Hope
 * Led Storm Rally 2011
 * Lethal Enforcers
 * Mad Alien
-* Magical Drop
-* Magical Drop Plus 1
 * Match It II
 * Metal Slug 4
 * Metal Slug 5
-* Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
-* Mobil Shot Gundam Final Shooting
+* Mobile Suit Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Oriental Legend Special
@@ -89,12 +83,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pack'n Bang Bang
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
+* Pirate Treasure
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Progear
-* Progear No Arashi
 * Puzz Loop 2
 * Puzzle Star
 * Rage Of The Dragons
@@ -102,14 +96,21 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
-* SD Fighter
+* SD Fighters
+* Sega Megaplay : Bio Hazard Battle
+* Sega Megaplay : Columns III
+* Sega Megaplay : Shinobi III
+* Sega Megaplay : Sonic The Hedgehog 2
+* Sega Megaplay : Streets Of Rage II
+* Sega Megaplay : Tecmo World Cup
 * Sengoku 3
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Space Launcher
 * Squash
+* Star Fire 2
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
-* Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
 * Super Trio
 * SWAT Police
@@ -117,38 +118,68 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Teeter Torture
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
 * Tetris the Absolute The Grand Master 2
-* Tetris the Absolute The Grand Master 2 Plus
-* The Great Ragtime Show
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
-* The King of Fighters 10th Anniversary
-* The Last Hope
 * The Lost Castle In Darkmist
+* Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
-* Undercover Cops (Alpha Renewal Version)
+* Tylz
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
 * Virtua Fighter
 * Wing Force
 * Wing Shooting Championship
+* Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
-* World Cup Volley 95 Extra Version
 * Zintrick
 * Zupapa
+
+## New Clones
+
+* Battle Shark (Japan, Joystick)
+* Bubble Bobble (prototype on tokio hardware)
+* Cannon Dancer
+* Crystal Castles (Joystick Version)
+* DoDonPachi Dai-Ou-Jou (Black Label)
+* Double Dragon 3 - The Rosetta Stone (Japan)
+* Dunk Dream '95
+* Escape Kids (Asia 4 Players)
+* Fujiyama Buster
+* Guwange Special Version
+* Hacha Mecha Fighter (bootleg)
+* Hook (Japan Version)
+* Ikari III - The Rescue (World, 8-Way Joystick)
+* Knuckle Bash 2
+* Magical Drop
+* Magical Drop Plus 1
+* Progear No Arashi
+* Super Bishi Bashi Championship (ver KAA, 3 Players)
+* Tetris the Absolute The Grand Master 2 Plus
+* The Great Ragtime Show
+* The King of Fighters 10th Anniversary
+* Undercover Cops (Alpha Renewal Version)
+* World Cup Volley 95 Extra Version
 
 ## New Hacks
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
+* Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* DownTown (joystick hack)
+* Guerrilla War (joystick hack bootleg)
+* Ikari (joystick hack bootleg)
+* Midnight Resistance (joystick hack bootleg)
+* Tron freeplay custom rom
 
 
 ## Games fixed and now working
@@ -163,6 +194,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
 * Bakuretsu Breaker - Romset `bakubrkr` - Playable with minor remaining graphical issues
 * Baseball Stars (Playchoice 10) - Romset `pc_bstar`
+* BeatHead - Romset `beathead`
 * Blasted - Romset `blasted`
 * Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
 * Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
@@ -175,20 +207,23 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dragon World - Romset `drgnwrld`
 * Driftout 94 - Romset `drifto94`
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
+* F-1 Grand Prix Star II - Romset `f1gpstr2`
+* F1 Super Lap - Romset `f1lap`
+* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
+* Fire Barrel - Romset `firebarr`
+* Funky Jet - Romset `funkyjet`
+* Gardia - Romset `gardia`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
+* Green Beret - Romset `greenber`
+* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Hang-On - Romset `hangon`
-* Hard Head 2
+* Hard Head 2 - Romset `hardhea2`
+* Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * Ironhorse - Romset `ironhors`
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
 * Kozmik Kroozr - Romset `kroozr`
-* Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
-* Fire Barrel - Romset `firebarr`
-* Funky Jet - Romset `funkyjet`
-* Gardia - Romset `gardia`
-* Green Beret - Romset `greenber`
-* Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
 * Max RPM - Romset `maxrpm`
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
@@ -205,8 +240,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rush'N Attack - Romset `rushatck`
 * Sarge - Romset `sarge`
 * Satan's Hollow - Romset `shollow`
+* Sega Megaplay : Golden Axe II - Romset `mp_gaxe2`
+* Sega Megaplay : Sonic The Hedgehog - Romset `mp_sonic`
 * Shisensho II - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
+* Shrike Avenger - Romset `shrike`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
@@ -230,18 +268,21 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with sound
 
 * Acrobat Mission
-* Asura Blade 
+* Asura Blade
+* Batsugun (Partial)
 * Bio-ship Paladin
 * Black Heart
 * Cross Pang
 * Daitoride
 * Dharma Doujou
 * Fire Shark
+* Ghox (via Toaplan samples)
 * GunNail
 * Hacha Mecha Fighter
 * Koutetsu Yousai Strahl
 * Knights Of Valour / Sangoku Senki
 * Knights of Valour Plus / Sangoku Senki Plus
+* Knuckle Bash (Partial)
 * Lady Killer
 * Last Fortress - Toride
 * Mustache Boy
@@ -250,12 +291,15 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Poitto!
 * Pururun
 * Puzzli
+* Riding Fight
+* Ring Rage
 * Same Same Same
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
 * Sky Diver
 * Super Spacefortress Macross
+* Teki Paki (via Toaplan samples)
 * The Karate Tournament
 * Thunder Dragon
 * Toride II Adauchi Gaiden
@@ -283,13 +327,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Motos
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
-* Out Run added ost soundtrack (via KMFDManic)
+* Out Run - Added ost soundtrack (via KMFDManic)
 * Pacman & Chomp Chomp
 * Pac & Pal
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
 * Super Pacman
+* Super Spacefortress Macross II
 * Super Xevious
 * Tower Of Druaga
 * Toypop
@@ -300,8 +345,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Cosmic Alien
 * Frogs
+* Ghox (Toaplan Samples)
 * Sasuke Vs Commander 
 * Space Firebird
+* Teki Paki (Toaplan Samples)
 
 
 ## Games supporting new and improved samples
@@ -379,4 +426,16 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Updated IREM decryption tables (sound fixes) [grant2258]
 * Updated m68000 core [grant2258]
 * Updates YMF271 sound core [grant2258]
-
+* Fixed missing sound speech in Hyper Crash [arcadez]
+* Sorted some game breaking graphical problems in Mysterious Stones - Dr Johns Adventure [arcadez]
+* Fixed slowdowns in Taito's Fighting Hawk [arcadez]
+* Backported a graphical fix for Spy - Special Project Y and hooked up missing player 3 inputs in Gaurdians Of The Hood [arcadez]
+* Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
+* Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
+* Fixed BeatHead from crashing [grant2258]
+* Fixed tgm2/tgm2p running half speed [dink, arnoldsecret]
+* Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
+Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
+* Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
+* Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
+* Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]

@@ -1669,7 +1669,7 @@ GAME( 1981, astrob1,  astrob,  astrob,   astrob1,  astrob,   ROT270, "Sega", "As
 GAME( 1981, 005,      0,       005,      005,      005,      ROT270, "Sega", "005" )
 GAME( 1982, monsterb, 0,       monsterb, monsterb, monsterb, ROT270, "Sega", "Monster Bash" )
 GAME( 1981, spaceod,  0,       spaceod,  spaceod,  spaceod,  ROT270, "Sega", "Space Odyssey" )
-GAMEX(1983, pignewt,  0,       pignewt,  pignewt,  pignewt,  ROT270, "Sega", "Pig Newton (version C)", GAME_NO_SOUND )
-GAMEX(1983, pignewta, pignewt, pignewt,  pignewta, pignewt,  ROT270, "Sega", "Pig Newton (version A)", GAME_NO_SOUND )
+GAMEX(1983, pignewt,  0,       pignewt,  pignewt,  pignewt,  ROT270, "Sega", "Pig Newton (version C)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX(1983, pignewta, pignewt, pignewt,  pignewta, pignewt,  ROT270, "Sega", "Pig Newton (version A)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAME( 1983, sindbadm, 0,       sindbadm, sindbadm, sindbadm, ROT270, "Sega", "Sindbad Mystery" )
 

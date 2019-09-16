@@ -14,15 +14,15 @@
 		* World Class Bowling (4 sets)
 		* Street Fighter: The Movie (4 sets)
 		* Shuffleshot (2 sets)
+		* Golden Tee 3D Golf 
+		* Golden Tee Golf '97
+		* Golden Tee Golf '98
+		* Golden Tee Golf '99
+		* Golden Tee Golf 2K
+		* Golden Tee Golf Classic
 
 	Games not supported because IT is still selling them:
 		* World Class Bowling Deluxe
-		* Golden Tee 3D Golf  (8 sets)
-		* Golden Tee Golf '97 (6 sets)
-		* Golden Tee Golf '98 (4 sets)
-		* Golden Tee Golf '99 (3 Sets)
-		* Golden Tee Golf 2K  (2 Sets)
-		* Golden Tee Classic  (2 Sets)
 
 ****************************************************************************
 
@@ -282,7 +282,11 @@ static READ32_HANDLER( trackball32_4bit_p2_r )
 	return lastresult | (lastresult << 16);
 }
 
-
+static READ32_HANDLER( trackball32_4bit_combined_r )
+{
+	return trackball32_4bit_r(offset, mem_mask) |
+			(trackball32_4bit_p2_r(offset, mem_mask) << 8);
+}
 
 /*************************************
  *
@@ -302,7 +306,6 @@ static READ32_HANDLER( itech020_prot_result_r )
 	result >>= (~itech020_prot_address & 3) * 8;
 	return (result & 0xff) << 8;
 }
-
 
 
 /*************************************
@@ -747,6 +750,36 @@ static MEMORY_WRITE32_START( itech020_writemem )
 	{ 0x800000, 0x9fffff, MWA32_ROM, (data32_t **)&main_rom },
 MEMORY_END
 
+static MEMORY_READ32_START( gt_readmem )
+	{ 0x000000, 0x007fff, MRA32_RAM },
+	{ 0x080000, 0x080003, input_port_0_msw_r },
+	{ 0x100000, 0x100003, input_port_1_msw_r },
+	{ 0x180000, 0x180003, input_port_2_msw_r },
+	{ 0x200000, 0x200003, input_port_3_msw_r },
+	{ 0x280000, 0x280003, input_port_4_msw_r },
+	{ 0x500000, 0x5000ff, itech020_video_r },
+	{ 0x578000, 0x57ffff, MRA32_NOP },				/* touched by protection */
+	{ 0x580000, 0x59ffff, MRA32_RAM },
+	{ 0x600000, 0x603fff, MRA32_RAM },
+	{ 0x680000, 0x680003, itech020_prot_result_r },
+	{ 0x800000, 0xbfffff, MRA32_ROM },
+MEMORY_END
+
+
+static MEMORY_WRITE32_START( gt_writemem )
+	{ 0x000000, 0x007fff, MWA32_RAM, (data32_t **)&main_ram, &main_ram_size },
+	{ 0x080000, 0x080003, int1_ack32_w },
+	{ 0x300000, 0x300003, itech020_color1_w },
+	{ 0x380000, 0x380003, itech020_color2_w },
+	{ 0x400000, 0x400003, itech020_watchdog_w },
+	{ 0x480000, 0x480003, sound_data32_w },
+	{ 0x500000, 0x5000ff, itech020_video_w, (data32_t **)&itech32_video },
+	{ 0x580000, 0x59ffff, itech020_paletteram_w, &paletteram32 },
+	{ 0x600000, 0x603fff, MWA32_RAM, &nvram, &nvram_size },
+	{ 0x680000, 0x680003, MWA32_NOP },				/* written by protection */
+	{ 0x700000, 0x700003, itech020_plane_w },
+	{ 0x800000, 0xbfffff, MWA32_ROM, (data32_t **)&main_rom },
+MEMORY_END
 
 
 /*************************************
@@ -1377,6 +1410,171 @@ INPUT_PORTS_START( shufbowl )
     PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL, 25, 32, 0, 255 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( gt3d )
+	PORT_START	/* 080000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 100000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 180000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START	/* 200000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 280000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x00f8, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_DIPNAME( 0x0010, 0x0000, DEF_STR( Unknown ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0010, DEF_STR( On ))
+	PORT_DIPNAME( 0x0020, 0x0000, "Trackball Orientation" )
+	PORT_DIPSETTING(      0x0000, "Normal Mount" )
+	PORT_DIPSETTING(      0x0020, "45 Degree Angle" )
+	PORT_DIPNAME( 0x0040, 0x0000, "Controls" )
+	PORT_DIPSETTING(      0x0000, "One Trackball" )
+	PORT_DIPSETTING(      0x0040, "Two Trackballs" )
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0080, DEF_STR( On ))
+	
+	PORT_START	/* 78000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL, 35, 47, 0, 255 )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( gt97 )
+	PORT_START	/* 080000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 100000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 180000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START	/* 200000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 280000 */
+	PORT_SERVICE_NO_TOGGLE( 0x0001, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SPECIAL )
+	PORT_DIPNAME( 0x0010, 0x0000, "Freeze Screen" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0010, DEF_STR( On ))
+	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Unknown ))	/* Seem to have no effect on the game */
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0020, DEF_STR( On ))
+	PORT_DIPNAME( 0x0040, 0x0000, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( Upright ))
+	PORT_DIPSETTING(      0x0040, DEF_STR( Cocktail ))
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0080, DEF_STR( On ))
+	
+	PORT_START	/* 78000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL, 35, 47, 0, 255 )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( aama )
+	PORT_START	/* 080000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 100000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 180000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START	/* 200000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 280000 */
+	PORT_SERVICE_NO_TOGGLE( 0x0001, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SPECIAL )
+	PORT_DIPNAME( 0x0010, 0x0000, "Trackball Orientation" )	/* Determined by actual use / trial & error */
+	PORT_DIPSETTING(      0x0000, "Normal Mount" )			/* The manual says "Always on (defualt)" and "Off -- UNUSED --" */
+	PORT_DIPSETTING(      0x0010, "45 Degree Angle" )
+	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( Upright ))
+	PORT_DIPSETTING(      0x0020, DEF_STR( Cocktail ))		/* Cocktail mode REQUIRES "Controls" to be set to "Two Trackballs" */
+	PORT_DIPNAME( 0x0040, 0x0000, "Controls" )
+	PORT_DIPSETTING(      0x0000, "One Trackball" )
+	PORT_DIPSETTING(      0x0040, "Two Trackballs" )		/* Two Trackballs will work for Upright for "side by side" controls */
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0080, DEF_STR( On ))
+	
+	PORT_START	/* 78000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE, 35, 47, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL, 35, 47, 0, 255 )
+INPUT_PORTS_END
+
 
 /*************************************
  *
@@ -1525,6 +1723,24 @@ static MACHINE_DRIVER_START( sftm )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(0, 383, 0, 254)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( gt3d )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(bloodstm)
+
+	MDRV_CPU_REPLACE("main", M68EC020, CLOCK_25MHz)
+	MDRV_CPU_MEMORY(gt_readmem,gt_writemem)
+
+	MDRV_CPU_MODIFY("sound")
+	MDRV_CPU_MEMORY(sound_020_readmem,sound_020_writemem)
+	MDRV_CPU_VBLANK_INT(irq1_line_assert,4)
+
+	MDRV_NVRAM_HANDLER(itech020)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(0, 383, 0, 239)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( sftmspec )
@@ -2291,6 +2507,205 @@ ROM_START( sshot137 )	/* Version 1.37 (PCB P/N 1082 Rev 2) */
 	ROM_LOAD16_BYTE( "shf_srom.1", 0x200000, 0x80000, CRC(8c89948a) SHA1(1054eca5de352c17f34f31ef16297ba6177a37ba) )
 ROM_END
 
+ /* Maximum sftm code size */
+#undef  CODE_SIZE
+#define CODE_SIZE   0x0400000
+
+ROM_START( gt3d )	/* Version 1.93N for the single large type PCB P/N 1082 Rev 2 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gtg3prm0.93n", 0x00000, 0x80000, CRC(cacacb44) SHA1(747f48a52e140ab3e321b8f6a96f06bc70dc7cfa) )
+	ROM_LOAD32_BYTE( "gtg3prm1.93n", 0x00001, 0x80000, CRC(4c172d7f) SHA1(d4217d5d4d561e46e0213e6f8dc8d9a874f86877) )
+	ROM_LOAD32_BYTE( "gtg3prm2.93n", 0x00002, 0x80000, CRC(b53fe6f0) SHA1(4fbaa2f2a877c051b06ffa570e40156142d8e6bf) )
+	ROM_LOAD32_BYTE( "gtg3prm3.93n", 0x00003, 0x80000, CRC(78468761) SHA1(f3a785dffa5269b5dbd3aee63ed97fe8b8cdcc0e) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gtg3_grm.0_0", 0x000000, 0x80000, CRC(1b10379d) SHA1(b6d61771e2bc3909ea4229777867b217a3e9e580) )
+	ROM_LOAD32_BYTE( "gtg3_grm.0_1", 0x000001, 0x80000, CRC(3b852e1a) SHA1(4b3653d55c52fc2eb5438d1604247a8e68d569a5) )
+	ROM_LOAD32_BYTE( "gtg3_grm.0_2", 0x000002, 0x80000, CRC(d43ffb35) SHA1(748be07e03bbbb40cd7a725c708cacc46f33d9ca) )
+	ROM_LOAD32_BYTE( "gtg3_grm.0_3", 0x000003, 0x80000, CRC(2d24e93e) SHA1(505272c1a509d013c2ce9fb8e8e0ac88870d74e7) )
+	ROM_LOAD32_BYTE( "gtg3_grm.1_0", 0x200000, 0x80000, CRC(4476b239) SHA1(71b8258ca94859eb4bdf83b855a87aff79d3df2b) )
+	ROM_LOAD32_BYTE( "gtg3_grm.1_1", 0x200001, 0x80000, CRC(0aadfad2) SHA1(56a283b30a13b77ec53b7ae2b4129d44b7fa25d4) )
+	ROM_LOAD32_BYTE( "gtg3_grm.1_2", 0x200002, 0x80000, CRC(27871980) SHA1(fe473d12cb4805e25dcac8f9ae187891936b961b) )
+	ROM_LOAD32_BYTE( "gtg3_grm.1_3", 0x200003, 0x80000, CRC(7dbc242b) SHA1(9aa5074cad633446e0110a1a3d9c6e1f2158070a) )
+	ROM_LOAD32_BYTE( "gtg3tgrm.2_0", 0x400000, 0x80000, CRC(80ae7148) SHA1(e19d3390a2a0dad260d770fdbbb64d1f8e43d53f) )
+	ROM_LOAD32_BYTE( "gtg3tgrm.2_1", 0x400001, 0x80000, CRC(0f85a618) SHA1(d9ced21c20f9ed6b7f19e7645d75b239ea709b79) )
+	ROM_LOAD32_BYTE( "gtg3tgrm.2_2", 0x400002, 0x80000, CRC(09ca5fbf) SHA1(6a6ed4d5d76035d8acc33c6494fba6012194362e) )
+	ROM_LOAD32_BYTE( "gtg3tgrm.2_3", 0x400003, 0x80000, CRC(d136853a) SHA1(0777d6bfab9e3d57c2a61d058fd185fc1f547698) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
+ROM_START( gt97 ) /* Version 1.30 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gt97prm0.130", 0x00000, 0x80000, CRC(7490ba4e) SHA1(b833d4175617727b3dc80e242457996a2efb844c) )
+	ROM_LOAD32_BYTE( "gt97prm1.130", 0x00001, 0x80000, CRC(71f9c5f3) SHA1(c472aa1bcc217656f409614b73f0b7662215c202) )
+	ROM_LOAD32_BYTE( "gt97prm2.130", 0x00002, 0x80000, CRC(8292b51a) SHA1(f8167b0aef87fb286006a17043de041c71afe41d) )
+	ROM_LOAD32_BYTE( "gt97prm3.130", 0x00003, 0x80000, CRC(64539f72) SHA1(58fccee17987cb010d9b7f3b8f060a1b1040b21f) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gt97_grm.0_0", 0x000000, 0x80000, CRC(81784aaf) SHA1(9544ed2087ca5f71c747e3b782513614937a51ed) )
+	ROM_LOAD32_BYTE( "gt97_grm.0_1", 0x000001, 0x80000, CRC(345bda44) SHA1(b6d66c99bd68396e1e94ece76989a6190571ae14) )
+	ROM_LOAD32_BYTE( "gt97_grm.0_2", 0x000002, 0x80000, CRC(b2beb40d) SHA1(2b955919e7e5f9093eb3a856f93c39684437b371) )
+	ROM_LOAD32_BYTE( "gt97_grm.0_3", 0x000003, 0x80000, CRC(7cef32ff) SHA1(614c6aa26398d054a087dfe5e75cef78e6096f30) )
+	ROM_LOAD32_BYTE( "gt97_grm.1_0", 0x200000, 0x80000, CRC(1cc4c309) SHA1(ef15f663ad1ea14c25f08fb6c1d5a58a38834ae6) )
+	ROM_LOAD32_BYTE( "gt97_grm.1_1", 0x200001, 0x80000, CRC(512cea45) SHA1(03b229317c8f357fa2d2ead93bf519251edc6605) )
+	ROM_LOAD32_BYTE( "gt97_grm.1_2", 0x200002, 0x80000, CRC(0599b505) SHA1(13078eae4051b3a4c1955cc246e58ef51ee2e53a) )
+	ROM_LOAD32_BYTE( "gt97_grm.1_3", 0x200003, 0x80000, CRC(257eacc9) SHA1(2d03c38965930c4c1da4aa86583bb19c5f135100) )
+	ROM_LOAD32_BYTE( "gt97_grm.2_0", 0x400000, 0x80000, CRC(95b6e7ee) SHA1(c27f69f69927e75ec8cba0df5c12e10418a53bbc) )
+	ROM_LOAD32_BYTE( "gt97_grm.2_1", 0x400001, 0x80000, CRC(afd558b4) SHA1(0571bfc2b0131cdd62f92641dd1acf7b10ae09d8) )
+	ROM_LOAD32_BYTE( "gt97_grm.2_2", 0x400002, 0x80000, CRC(5b7a8733) SHA1(e0a947ebabc8e6ab23b375afef49cd4be7d6d570) )
+	ROM_LOAD32_BYTE( "gt97_grm.2_3", 0x400003, 0x80000, CRC(72e8ae60) SHA1(410da9970c50021f1724c8c51678691322eece92) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
+
+ROM_START( gt98 )	/* Version 1.10 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gt98prm0.110", 0x00000, 0x80000, CRC(dd93ab2a) SHA1(b7eb6331f781422d6d46babcc24a85ae36b25914) )
+	ROM_LOAD32_BYTE( "gt98prm1.110", 0x00001, 0x80000, CRC(6ea92960) SHA1(05d22ad6c6027afe7ebb3bc7c70f58d840ed3d4e) )
+	ROM_LOAD32_BYTE( "gt98prm2.110", 0x00002, 0x80000, CRC(27a8a15f) SHA1(f1eb7b24f9cb77877ceaa033abfde124e159cb2b) )
+	ROM_LOAD32_BYTE( "gt98prm3.110", 0x00003, 0x80000, CRC(d61f2bb2) SHA1(6eb9f779b78ef396eff6dbc25fd6dba128c77124) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gt98_grm.0_0", 0x000000, 0x80000, CRC(2d79492b) SHA1(16d66d937c34ddf616f31cba0d285326a31cad85) )
+	ROM_LOAD32_BYTE( "gt98_grm.0_1", 0x000001, 0x80000, CRC(79afda1a) SHA1(77a9883f14b58ceece9c76ce88bb900bc4accf25) )
+	ROM_LOAD32_BYTE( "gt98_grm.0_2", 0x000002, 0x80000, CRC(8c381f56) SHA1(41a5b70f9e524a1cade031f864350ec75c08c956) )
+	ROM_LOAD32_BYTE( "gt98_grm.0_3", 0x000003, 0x80000, CRC(46c35ba6) SHA1(a1976dd8710442cdb92c47f778acacba4380731b) )
+	ROM_LOAD32_BYTE( "gt98_grm.1_0", 0x200000, 0x80000, CRC(b07bc634) SHA1(48a9aeafaf844374d129d209884ec3a23abe249f) )
+	ROM_LOAD32_BYTE( "gt98_grm.1_1", 0x200001, 0x80000, CRC(b23d59a7) SHA1(be68da263691e297b266e81485f5f28a5a5ad2f2) )
+	ROM_LOAD32_BYTE( "gt98_grm.1_2", 0x200002, 0x80000, CRC(9c113abc) SHA1(8cb23da237dce73bbd283662c6344876d1c352f3) )
+	ROM_LOAD32_BYTE( "gt98_grm.1_3", 0x200003, 0x80000, CRC(231bbe58) SHA1(b662a2ffd881a22ec0503810dca8bd61a4994463) )
+	ROM_LOAD32_BYTE( "gt98_grm.2_0", 0x400000, 0x80000, CRC(db5cec87) SHA1(831cebd0c90c118d007b737b2eb5fb374a86cf4b) )
+	ROM_LOAD32_BYTE( "gt98_grm.2_1", 0x400001, 0x80000, CRC(c74fc7d3) SHA1(38581876d4557f79acbc2c639bd4188a49d3b7cc) )
+	ROM_LOAD32_BYTE( "gt98_grm.2_2", 0x400002, 0x80000, CRC(1227609d) SHA1(5a586d2383c9090ff3847abd2c645354dacd400f) )
+	ROM_LOAD32_BYTE( "gt98_grm.2_3", 0x400003, 0x80000, CRC(78745131) SHA1(c430be4cb650f1f6265406ca8fcad8df809282f5) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
+
+ROM_START( gt99 )	/* Version 1.00 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gt99prm0.100", 0x00000, 0x80000, CRC(1ca05267) SHA1(431788db68122df5b6c0642ffc84954fb3043295) )
+	ROM_LOAD32_BYTE( "gt99prm1.100", 0x00001, 0x80000, CRC(4fb757fa) SHA1(9efa6f933b20e5a6de9a5da3c0197cf29c8f1df2) )
+	ROM_LOAD32_BYTE( "gt99prm2.100", 0x00002, 0x80000, CRC(3eb2b13a) SHA1(6b6b79c7f07cc345f392d12625548c8fae6a1d42) )
+	ROM_LOAD32_BYTE( "gt99prm3.100", 0x00003, 0x80000, CRC(03454e7d) SHA1(be885433830976b6c684e944f1d3a96d261b27f2) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gt99_grm.0_0", 0x000000, 0x80000, CRC(c22b50f9) SHA1(9e8acfce6cc30adc150b602d026c00fa1fb7747f) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_1", 0x000001, 0x80000, CRC(d6d6be57) SHA1(fda20185e842dd4aa1a1601f95e5cc787644f4c3) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_2", 0x000002, 0x80000, CRC(005d4791) SHA1(b03d5835465ccc4fe73f4adb1342ef2b38aad90c) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_3", 0x000003, 0x80000, CRC(0c998eb7) SHA1(2950a56192dd794e3f34459c52edf7ea484d6901) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_0", 0x200000, 0x80000, CRC(8b79d6e2) SHA1(b4aeac78a470bd8b9f557ded39775cb56f525cce) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_1", 0x200001, 0x80000, CRC(84ef1803) SHA1(c4e2f0451a35874603cc767b4dbb566b2507ae39) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_2", 0x200002, 0x80000, CRC(d73d8afc) SHA1(2fced1ee7dd11c6db07750f617356c6608ac0291) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_3", 0x200003, 0x80000, CRC(59f48688) SHA1(37b2c84e487f4f3a9145bef34c573a3716b4a6a7) )
+	ROM_LOAD32_BYTE( "gt99_grm.2_0", 0x400000, 0x80000, CRC(693d9d68) SHA1(c8f0a5ca72b239aed8150a79f330b109bd6c3d95) )
+	ROM_LOAD32_BYTE( "gt99_grm.2_1", 0x400001, 0x80000, CRC(2c0b8b8c) SHA1(f36c40b29ad9a4849f12eaa79c6b26aa85ca6ee9) )
+	ROM_LOAD32_BYTE( "gt99_grm.2_2", 0x400002, 0x80000, CRC(ba1b5961) SHA1(d9078653edafb1aaabf2fe040b77a194b3a34863) )
+	ROM_LOAD32_BYTE( "gt99_grm.2_3", 0x400003, 0x80000, CRC(cfccd5c2) SHA1(6d87675e9cdaebc801a6f52688e0a142f578d36d) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
+
+ROM_START( gt2k ) /* Version 1.00 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gt2kprm0.100", 0x00000, 0x80000, CRC(b83d7b67) SHA1(9e3c4f5d09ae63d75f4c9499b0a09acea7b022b2) )
+	ROM_LOAD32_BYTE( "gt2kprm1.100", 0x00001, 0x80000, CRC(89bd952d) SHA1(8b49610b9947dbc4cb3ab28f6aed31d8b848a2bf) )
+	ROM_LOAD32_BYTE( "gt2kprm2.100", 0x00002, 0x80000, CRC(b603d283) SHA1(dc02b4969f96a089766b07eb45a2eb6be6ae0aad) )
+	ROM_LOAD32_BYTE( "gt2kprm3.100", 0x00003, 0x80000, CRC(85ba9e2d) SHA1(f026d6dcf91848a40bcc9f9ba5e9262de33c30d1) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gt99_grm.0_0", 0x000000, 0x80000, CRC(c22b50f9) SHA1(9e8acfce6cc30adc150b602d026c00fa1fb7747f) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_1", 0x000001, 0x80000, CRC(d6d6be57) SHA1(fda20185e842dd4aa1a1601f95e5cc787644f4c3) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_2", 0x000002, 0x80000, CRC(005d4791) SHA1(b03d5835465ccc4fe73f4adb1342ef2b38aad90c) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_3", 0x000003, 0x80000, CRC(0c998eb7) SHA1(2950a56192dd794e3f34459c52edf7ea484d6901) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_0", 0x200000, 0x80000, CRC(8b79d6e2) SHA1(b4aeac78a470bd8b9f557ded39775cb56f525cce) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_1", 0x200001, 0x80000, CRC(84ef1803) SHA1(c4e2f0451a35874603cc767b4dbb566b2507ae39) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_2", 0x200002, 0x80000, CRC(d73d8afc) SHA1(2fced1ee7dd11c6db07750f617356c6608ac0291) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_3", 0x200003, 0x80000, CRC(59f48688) SHA1(37b2c84e487f4f3a9145bef34c573a3716b4a6a7) )
+	ROM_LOAD32_BYTE( "gt2k_grm.2_0", 0x400000, 0x80000, CRC(cc11b93f) SHA1(f281448c8fa23595dd2664cc8c168565b60d4fc1) )
+	ROM_LOAD32_BYTE( "gt2k_grm.2_1", 0x400001, 0x80000, CRC(1c3a0126) SHA1(3f9de1239dd64b9f50220842ffcf3e0f8928d2dc) )
+	ROM_LOAD32_BYTE( "gt2k_grm.2_2", 0x400002, 0x80000, CRC(97814df5) SHA1(fcbb9ca08cbcef20231e602c99cd14e7905b2110) )
+	ROM_LOAD32_BYTE( "gt2k_grm.2_3", 0x400003, 0x80000, CRC(f0f7373f) SHA1(6d71f338992598feffd9b4ac26bd0cf2f9edb53e) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
+ROM_START( gtclassc ) /* Version 1.00 */
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+
+  ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "gtc_prm0.100", 0x00000, 0x80000, CRC(a57e6ef0) SHA1(9a67b8d9314a774654f89343df2e6a6fd3cfef01) )
+	ROM_LOAD32_BYTE( "gtc_prm1.100", 0x00001, 0x80000, CRC(15f8a831) SHA1(982675b26f5f19aaf7d8adc73474e05dd82c56a3) )
+	ROM_LOAD32_BYTE( "gtc_prm2.100", 0x00002, 0x80000, CRC(2f260a93) SHA1(b953e003a588e6c1d7d7c065afd6cdfefb526642) )
+	ROM_LOAD32_BYTE( "gtc_prm3.100", 0x00003, 0x80000, CRC(03a1fcdd) SHA1(6cf96de58231a3734adc272c2631d09b93eca8ad) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "gt_nr.u88", 0x10000, 0x18000, CRC(2cee9e98) SHA1(02edac7abab2335c1cd824d1d9b26aa32238a2de) )
+	ROM_CONTINUE(           0x08000, 0x08000 )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "gt99_grm.0_0", 0x000000, 0x80000, CRC(c22b50f9) SHA1(9e8acfce6cc30adc150b602d026c00fa1fb7747f) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_1", 0x000001, 0x80000, CRC(d6d6be57) SHA1(fda20185e842dd4aa1a1601f95e5cc787644f4c3) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_2", 0x000002, 0x80000, CRC(005d4791) SHA1(b03d5835465ccc4fe73f4adb1342ef2b38aad90c) )
+	ROM_LOAD32_BYTE( "gt99_grm.0_3", 0x000003, 0x80000, CRC(0c998eb7) SHA1(2950a56192dd794e3f34459c52edf7ea484d6901) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_0", 0x200000, 0x80000, CRC(8b79d6e2) SHA1(b4aeac78a470bd8b9f557ded39775cb56f525cce) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_1", 0x200001, 0x80000, CRC(84ef1803) SHA1(c4e2f0451a35874603cc767b4dbb566b2507ae39) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_2", 0x200002, 0x80000, CRC(d73d8afc) SHA1(2fced1ee7dd11c6db07750f617356c6608ac0291) )
+	ROM_LOAD32_BYTE( "gt99_grm.1_3", 0x200003, 0x80000, CRC(59f48688) SHA1(37b2c84e487f4f3a9145bef34c573a3716b4a6a7) )
+	ROM_LOAD32_BYTE( "gtc_grom.2_0", 0x400000, 0x80000, CRC(c4f54398) SHA1(08e57ef5cb56c793edc677d53b2e036acf558564) )
+	ROM_LOAD32_BYTE( "gtc_grom.2_1", 0x400001, 0x80000, CRC(2c1f83cf) SHA1(a5a8724c59177fbf2a676ece0e93a08a3a1b0d68) )
+	ROM_LOAD32_BYTE( "gtc_grom.2_2", 0x400002, 0x80000, CRC(607657a6) SHA1(705e8c6878e9b2f4da510c198f7ac8987869fce3) )
+	ROM_LOAD32_BYTE( "gtc_grom.2_3", 0x400003, 0x80000, CRC(7ad615c1) SHA1(b5360885f775ba5e5e13fa624091cca6e3e6948a) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "gt_srom0.nr", 0x000000, 0x100000, CRC(44983bd7) SHA1(a6ac966ec113b079434d7f871e4ce7266206d234) )
+	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
+ROM_END
+
 
 /*************************************
  *
@@ -2426,7 +2841,25 @@ static DRIVER_INIT( wcbowln )	/* PIC 16C54 labeled as ITBWL-3 */
 	init_shuffle_bowl_common(0x1116, 0x9067);
 }
 
+static DRIVER_INIT( aama )
+{
+	/*
+		This is the single PCB style board commonly referred to as: 
+		"AAMA Serial Numbers 676266 and Up." All versions of GT on this 
+		board share the same sound CPU code and sample ROMs.
+		This board has all versions of GT for it, GT3D through GTClassic
+	*/
 
+	init_program_rom();
+	itech32_vram_height = 1024;
+	itech32_planes = 2;
+	is_drivedge = 0;
+
+	itech020_prot_address = 0x112f;
+
+	install_mem_read32_handler(0, 0x180800, 0x180803, trackball32_4bit_r);
+	install_mem_read32_handler(0, 0x181000, 0x181003, trackball32_4bit_p2_r);
+}
 
 
 /*************************************
@@ -2450,9 +2883,15 @@ GAME( 1995, wcbowl,   0,        sftm,     wcbowln,  wcbowln,  ROT0, "Incredible 
 GAME( 1995, wcbwl165, wcbowl,   sftm,     shufbowl, wcbowln,  ROT0, "Incredible Technologies", "World Class Bowling (v1.65)" ) /* PIC 16C54 labeled as ITBWL-3 */
 GAME( 1995, wcbwl161, wcbowl,   sftm,     shufbowl, wcbowln,  ROT0, "Incredible Technologies", "World Class Bowling (v1.61)" ) /* PIC 16C54 labeled as ITBWL-3 */
 GAME( 1995, wcbwl12,  wcbowl,   wcbowl,   wcbowl,   wcbowl,   ROT0, "Incredible Technologies", "World Class Bowling (v1.2)" ) /* PIC 16C54 labeled as ITBWL-1 */
-GAME( 1995, sftm,     0,        sftmspec,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.12)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftm111,  sftm,     sftmspec,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.11)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftm110,  sftm,     sftmspec,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.10)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftmj,    sftm,     sftmspec,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.12N, Japan)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm,     0,        sftmspec, sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.12)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm111,  sftm,     sftmspec, sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.11)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm110,  sftm,     sftmspec, sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.10)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftmj,    sftm,     sftmspec, sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.12N, Japan)" )	/* PIC 16C54 labeled as ITSF-1 */
 GAME( 1997, shufshot, 0,        sftm,     shufshot, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.39)" ) /* PIC 16C54 labeled as ITSHF-1 */
 GAME( 1997, sshot137, shufshot, sftm,     shufbowl, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.37)" ) /* PIC 16C54 labeled as ITSHF-1 */
+GAME( 1995, gt3d,     0,        gt3d,     gt3d,     aama,     ROT0, "Strata/Incredible Technologies", "Golden Tee 3D Golf (v1.93N)" ) /* PIC 16C54 labeled as ITGF-2 */ 
+GAME( 1997, gt97,     0,        gt3d,     gt97,     aama,     ROT0, "Incredible Technologies", "Golden Tee '97 (v1.30)" ) /* PIC 16C54 labeled as ITGFS-3 */
+GAME( 1998, gt98,     0,        gt3d,     aama,     aama,     ROT0, "Incredible Technologies", "Golden Tee '98 (v1.10)" ) /* PIC 16C54 labeled as ITGF98 */
+GAME( 1999, gt99,     0,        gt3d,     aama,     aama,     ROT0, "Incredible Technologies", "Golden Tee '99 (v1.00)" ) /* PIC 16C54 labeled as ITGF99 */
+GAME( 2000, gt2k,     0,        gt3d,     aama,     aama,     ROT0, "Incredible Technologies", "Golden Tee 2K (v1.00)" ) /* PIC 16C54 labeled as ITGF2K */
+GAME( 2001, gtclassc, 0,        gt3d,     aama,     aama,     ROT0, "Incredible Technologies", "Golden Tee Classic (v1.00)" ) /* PIC 16C54 labeled as ITGFCL */

@@ -284,15 +284,17 @@ WRITE_HANDLER ( ssmissin_soundbank_w )
 }
 
 
+static WRITE16_HANDLER( macross2_sound_reset_w )
+{
+	/* PCB behaviour verified by Corrado Tomaselli at MAME Italia Forum:
+	   every time music changes Z80 is resetted */
+	cpu_set_reset_line(1, data ? CLEAR_LINE : ASSERT_LINE);
+}
+
 static WRITE16_HANDLER( macross2_sound_command_w )
 {
 	if (ACCESSING_LSB)
-		soundlatch_w(0,data & 0xff);
-}
-
-static READ16_HANDLER( macross2_sound_result_r )
-{
-	return soundlatch2_r(0);
+	   soundlatch_w(0,data & 0xff);
 }
 
 static WRITE_HANDLER( macross2_sound_bank_w )
@@ -1072,7 +1074,7 @@ static MEMORY_READ16_START( macross2_readmem )
 	{ 0x100002, 0x100003, input_port_1_word_r },
 	{ 0x100008, 0x100009, input_port_2_word_r },
 	{ 0x10000a, 0x10000b, input_port_3_word_r },
-	{ 0x10000e, 0x10000f, macross2_sound_result_r },	/* from Z80 */
+	{ 0x10000e, 0x10000f, soundlatch2_word_r },	/* from Z80 */
 	{ 0x120000, 0x1207ff, MRA16_RAM },
 	{ 0x140000, 0x14ffff, nmk_bgvideoram_r },
 	{ 0x170000, 0x170fff, nmk_txvideoram_r },
@@ -1083,7 +1085,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( macross2_writemem )
     { 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100014, 0x100015, nmk_flipscreen_w },
-	{ 0x100016, 0x100017, MWA16_NOP },	/* IRQ eanble? */
+	{ 0x100016, 0x100017, macross2_sound_reset_w },	    /* Z80 reset */
 	{ 0x100018, 0x100019, nmk_tilebank_w },
 	{ 0x10001e, 0x10001f, macross2_sound_command_w },	/* to Z80 */
 	{ 0x120000, 0x1207ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },

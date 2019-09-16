@@ -27,7 +27,7 @@ extern data16_t *snowboar_protection;
 extern data32_t  snowboard_latch;
 
 /* comment this line to display 2 monitors for the dual monitor games */
-/*#define ONE_MONITOR*/
+#define ONE_MONITOR
 
 /* from machine/gaelco2.c */
 DRIVER_INIT( alighunt );
@@ -650,7 +650,8 @@ static WRITE16_HANDLER( touchgo_coin_w )
 	}
 }
 
-/* the game expects this value each frame to know that the DS5002FP is alive */
+/* the game expects this value each frame to know that the DS5002FP is alive 
+disabled now as the working unprotected version does not require this patch */
 READ16_HANDLER ( dallas_kludge_r )
 {
 	return 0x0200;
@@ -666,7 +667,7 @@ static MEMORY_READ16_START( touchgo_readmem )
 	{ 0x300002, 0x300003, input_port_1_word_r },/* DSW #1 + Input 2P */
 	{ 0x300004, 0x300005, input_port_2_word_r },/* COINSW + Input 3P */
 	{ 0x300006, 0x300007, input_port_3_word_r },/* SERVICESW + Input 4P */
-	{ 0xfefffa, 0xfefffb, dallas_kludge_r },	/* DS5002FP related patch */
+/*	{ 0xfefffa, 0xfefffb, dallas_kludge_r },	/* DS5002FP related patch */
 	{ 0xfe0000, 0xfeffff, MRA16_RAM },			/* Work RAM */
 MEMORY_END
 
@@ -887,11 +888,7 @@ ROM_START( touchgo )
 
 	ROM_REGION( 0x1400000, REGION_GFX1, 0 ) /* GFX + Sound */
 	/* 0x0000000-0x0ffffff filled in in the DRIVER_INIT */
-	ROM_LOAD( "ic69",		0x1000000, 0x0200000, BAD_DUMP CRC(bba9aed5) SHA1(5ae1d082dafd82c406e0979f2884093deea17f86) )	/* GFX only */
-	/* 	the first 3/4 of this ROM contain gfx data for tiles 0x0000-0xbfff
-		 the last 1/4 of this ROM contain gfx data for tiles 0x8000-0xbfff
-		 it's a bad dump??? For now, we fill that area with 0 */
-	ROM_FILL(				0x1180000, 0x0280000, 0x0 )
+	ROM_LOAD( "ic69",  0x1000000, 0x0200000, CRC(18bb12d4) SHA1(ee6e7a63b86c56d71e62db0ae5892ab3ab94b0a0) ) /* GFX only */
 
 	ROM_REGION( 0x0c00000, REGION_GFX2, ROMREGION_DISPOSE ) /* Temporary storage */
 	ROM_LOAD( "ic65",		0x0000000, 0x0400000, CRC(91b89c7c) SHA1(1c24b494b56845b0f21be40ab737f251d7683c7d) )	/* GFX only */
@@ -900,6 +897,21 @@ ROM_START( touchgo )
 	ROM_LOAD( "ic67",		0x0800000, 0x0400000, CRC(c0a2ce5b) SHA1(94b024373c7c546c0f4fe9737639f02e9c7ebbdb) )	/* GFX only */
 ROM_END
 
+ROM_START( touchgok ) /* REF: 950510-1 - ds5002fp unpopulated, game is unprotected */
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )    /* 68000 code */
+	ROM_LOAD16_BYTE( "56.IC56", 0x000000, 0x080000, CRC(cbb87505) SHA1(f19832af60fb6273c3263ebdd93bb7705ab61e20) )
+	ROM_LOAD16_BYTE( "57.IC57", 0x000001, 0x080000, CRC(36bcc7e7) SHA1(2fff881ba0a99ebcfe3c03fdc61f4bf40e152c7f))
+
+	ROM_REGION( 0x1400000, REGION_GFX1, 0 ) /* GFX + Sound */
+	/* 0x0000000-0x0ffffff filled in in the DRIVER_INIT */
+	ROM_LOAD( "ic69",  0x1000000, 0x0200000, CRC(18bb12d4) SHA1(ee6e7a63b86c56d71e62db0ae5892ab3ab94b0a0) ) /* GFX only */
+
+ 	ROM_REGION( 0x0c00000, REGION_GFX2, ROMREGION_DISPOSE ) /* Temporary storage */
+	ROM_LOAD( "ic65",		0x0000000, 0x0400000, CRC(91b89c7c) SHA1(1c24b494b56845b0f21be40ab737f251d7683c7d) )	/* GFX only */
+	ROM_LOAD( "ic66",		0x0400000, 0x0200000, CRC(52682953) SHA1(82cde061bdd827ed4a47a9a4256cd0e887ebc29d) )	/* Sound only */
+	ROM_FILL(				0x0600000, 0x0200000, 0x0 )			/* Empty */
+	ROM_LOAD( "ic67",		0x0800000, 0x0400000, CRC(c0a2ce5b) SHA1(94b024373c7c546c0f4fe9737639f02e9c7ebbdb) )	/* GFX only */
+ROM_END
 
 
 /*============================================================================
@@ -1336,7 +1348,8 @@ ROM_END
 GAMEX(1994, aligator, 0,        alighunt, alighunt, alighunt, ROT0, "Gaelco", "Alligator Hunt", GAME_UNEMULATED_PROTECTION )
 GAME( 1994, aligatun, aligator, alighunt, alighunt, alighunt, ROT0, "Gaelco", "Alligator Hunt (unprotected)" )
 GAMEX(1995, touchgo,  0,        touchgo,  touchgo,  touchgo,  ROT0, "Gaelco", "Touch and Go", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAMEX(1995, wrally2,  0,        wrally2,  wrally2,  0,        ROT0, "Gaelco", "World Rally 2 - Twin Racing", GAME_UNEMULATED_PROTECTION )
+GAMEX(1995, touchgok, touchgo,  touchgo,  touchgo,  touchgo,  ROT0, "Gaelco", "Touch and Go (Korea, unprotected)", GAME_IMPERFECT_SOUND )
+GAMEX(1995, wrally2,  0,        wrally2,  wrally2,  0,        ROT0, "Gaelco", "World Rally 2 - Twin Racing", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1996, maniacsq, 0,        maniacsq, maniacsq, 0,        ROT0, "Gaelco", "Maniac Square (unprotected)" )
 GAME( 1996, snowboar, 0,        snowboar, snowboar, snowboar, ROT0, "Gaelco", "Snow Board Championship (set 1)" )
 GAME( 1996, snowbalt, snowboar, snowboar, snowboar, 0,        ROT0, "Gaelco", "Snow Board Championship (set 2)" )

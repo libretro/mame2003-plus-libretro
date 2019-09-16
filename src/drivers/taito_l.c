@@ -2235,7 +2235,7 @@ static struct YM2203interface ym2203_interface_single =
 static MACHINE_DRIVER_START( fhawk )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("cpu1", Z80, 6000000)	/* ? xtal is 13.33056 */
+	MDRV_CPU_ADD_TAG("cpu1", Z80, 6665280)	/* ? xtal is 13.33056 */
 	MDRV_CPU_MEMORY(fhawk_readmem,fhawk_writemem)
 	MDRV_CPU_VBLANK_INT(vbl_interrupt,3)
 
@@ -2243,9 +2243,9 @@ static MACHINE_DRIVER_START( fhawk )
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(fhawk_3_readmem,fhawk_3_writemem)
 
-	MDRV_CPU_ADD_TAG("cpu2", Z80, 6000000)	/* ? xtal is 13.33056 */
+	MDRV_CPU_ADD_TAG("cpu2", Z80, 4000000)	/* ? xtal is 13.33056 */
 	MDRV_CPU_MEMORY(fhawk_2_readmem,fhawk_2_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,3)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)

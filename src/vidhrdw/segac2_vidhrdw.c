@@ -14,6 +14,7 @@
 /* in vidhrdw/segasyse.c */
 int start_megatech_video_normal(void);
 void update_megatech_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect );
+void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect );
 
 /******************************************************************************
 	Macros
@@ -531,13 +532,11 @@ if (keyboard_pressed(KEYCODE_D)) segac2_sp_palbase ^= 0x100;
 
 	/* generate the final screen - control which screen is 
 	   shown by a keystroke for now */
-	if(keyboard_pressed(KEYCODE_G))
-	{
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-			drawline((UINT16 *)bitmap->line[y], y);
-	}
-	else 
-		update_megatech_video_normal(bitmap, cliprect);
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		drawline((UINT16 *)bitmap->line[y], y);
+
+	update_megaplay_video_normal(bitmap, cliprect);
+
 	segac2_bg_palbase = old_bg;
 	segac2_sp_palbase = old_sp;
 

@@ -9,6 +9,8 @@ CPU_ARCH      ?= 0 # as of November 2018 this flag doesn't seem to be used but i
 
 LIBS          ?=
 
+HIDE ?= @
+
 ifneq ($(SANITIZER),)
    CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
    CXXFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
@@ -122,13 +124,18 @@ else ifneq (,$(findstring ios,$(platform)))
    TARGET = $(TARGET_NAME)_libretro_ios.dylib
    fpic = -fPIC
    LDFLAGS += $(fpic) -dynamiclib
-   PLATCFLAGS += -D__IOS__
+   PLATCFLAGS += -D__IOS__ -Wcast-align -Wall -Wno-error=implicit-function-declaration
 ifeq ($(IOSSDK),)
      IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
+ifeq ($(platform),ios-arm64)
+   CC = cc -arch arm64 -isysroot $(IOSSDK)
+   LD = cc -arch arm64 -isysroot $(IOSSDK)
+else
    CC = cc -arch armv7 -isysroot $(IOSSDK)
    LD = cc -arch armv7 -isysroot $(IOSSDK)
-ifeq ($(platform),ios9)
+endif
+ifeq ($(platform),$(filter $(platform),ios9 ios-arm64))
      fpic += -miphoneos-version-min=8.0
      CC += -miphoneos-version-min=8.0
      LD += -miphoneos-version-min=8.0
@@ -136,6 +143,16 @@ else
      fpic += -miphoneos-version-min=5.0
      CC += -miphoneos-version-min=5.0
      LD += -miphoneos-version-min=5.0
+endif
+
+# tvOS
+else ifeq ($(platform), tvos-arm64)
+   TARGET = $(TARGET_NAME)_libretro_tvos.dylib
+   fpic = -fPIC
+   LDFLAGS += $(fpic) -dynamiclib
+   PLATCFLAGS += -D__IOS__ -Wcast-align -Wall -Wno-error=implicit-function-declaration
+ifeq ($(IOSSDK),)
+     IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
 endif
 
 # 3DS
@@ -579,7 +596,7 @@ else ifneq (,$(findstring windows_msvc2017,$(platform)))
 # Windows
 else
    TARGET := $(TARGET_NAME)_libretro.dll
-   CC = gcc
+   CC ?= gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
    CFLAGS += -D__WIN32__
 endif
@@ -671,39 +688,41 @@ $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
 ifeq ($(SPLIT_UP_LINK), 1)
-	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
+	$(HIDE)$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
-	$(AR) rcs $@ $(OBJECTS)
+	$(HIDE)$(AR) rcs $@ $(OBJECTS)
 endif
 else
 	@echo Linking $@...
 	@echo platform $(system_platform)
 ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
-	$(file >$@.in,$(OBJECTS))
-	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
+	$(HIDE)$(file >$@.in,$(OBJECTS))
+	$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
 	@rm $@.in
 else
-	$(LD) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
+	$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
 endif
 endif
 
 CFLAGS += $(PLATCFLAGS) $(CDEFS)
 
 %.o: %.c
-	$(CC) -c $(OBJOUT)$@ $< $(CFLAGS)
+	@echo Compiling $<...
+	$(HIDE)$(CC) -c $(OBJOUT)$@ $< $(CFLAGS)
 
 $(OBJ)/%.a:
 	@echo Archiving $@...
-	$(RM) $@
-	$(AR) cr $@ $^
+	@$(RM) $@
+	$(HIDE)$(AR) cr $@ $^
 
 
 clean:
+	@echo Cleaning project...
 ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
-	$(file >$@.in,$(OBJECTS))
-	rm -f @$@.in $(TARGET)
+	$(HIDE)$(file >$@.in,$(OBJECTS))
+	$(HIDE)rm -f @$@.in $(TARGET)
 	@rm $@.in
 endif
-	rm -f $(OBJECTS) $(TARGET)
+	$(HIDE)rm -f $(OBJECTS) $(TARGET)

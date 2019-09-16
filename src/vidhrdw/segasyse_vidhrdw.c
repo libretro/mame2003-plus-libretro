@@ -86,7 +86,7 @@ VIDEO_UPDATE( segae )
 	/*- Draw from cache_bitmap to screen -*/
 
 	for (i = 0;i < 192;i++)
-		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],-1);
+		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],15);
 }
 
 /* these are used by megatech */
@@ -116,6 +116,20 @@ void update_megatech_video_normal(struct mame_bitmap *bitmap, const struct recta
 
 	for (i = 0;i < 192;i++)
 		draw_scanline8(bitmap,32,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],-1);
+
+}
+
+void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	int i;
+
+	/*- Draw from cache_bitmap to screen -*/
+
+	for (i = 0; i < 192;i++)
+		segae_drawscanline(i,0,0);
+
+	for (i = 0;i < 192;i++)
+		draw_scanline8(bitmap,32,i+16,256,&cache_bitmap[i * (16+256+16) +24],&Machine->pens[segasyse_palettebase],0);
 
 }
 
@@ -465,6 +479,9 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 		flipy =   (vram_word & 0x0400) >> 10;
 		palette = (vram_word & 0x0800) >> 11;
 		priority= (vram_word & 0x1000) >> 12;
+
+		tilesline2= (line + vscroll) % 8; 
+		if (flipy) tilesline2 = 7-tilesline2;
 
 		if (priority == pri) {
 			if (chip == 0) segae_draw8pix_solid16(dest, chip, tile_no,tilesline2,flipx,palette);
