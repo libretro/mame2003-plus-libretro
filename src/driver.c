@@ -783,6 +783,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( idsoccer )	/* (c) 1985 */
 
 	/* Nintendo games */
+	DRIVER( spacefev )  /* (c) 1979 Nintendo */
+	DRIVER( spacefevo ) /* (c) 1979 Nintendo */
+	DRIVER( highsplt )  /* (c) 1979 Nintendo */
+	DRIVER( highspla )  /* (c) 1979 Nintendo */
+	DRIVER( spacelnc )  /* (c) 1979 Nintendo */
+	DRIVER( sheriff )   /* (c) 1979 Nintendo */
+	DRIVER( bandido )   /* (c) 1980 Exidy */
+	DRIVER( helifire )  /* (c) 1980 Nintendo */
+	DRIVER( helifira )  /* (c) 1980 Nintendo */
 	DRIVER( radarscp )	/* (c) 1980 Nintendo */
 	DRIVER( dkong )		/* (c) 1981 Nintendo of America */
 	DRIVER( dkongpe )		
@@ -994,8 +1003,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( desterth )	/* bootleg */
 	DRIVER( cosmicmo )	/* Universal */
 	DRIVER( rollingc )	/* Nichibutsu */
-	DRIVER( sheriff )	/* (c) Nintendo */
-	DRIVER( bandido )	/* (c) Exidy */
 	DRIVER( ozmawars )	/* Shin Nihon Kikaku (SNK) */
 	DRIVER( ozmawar2 )	/* Shin Nihon Kikaku (SNK) */
 	DRIVER( solfight )	/* bootleg */
@@ -1003,11 +1010,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( schaser )	/* RT  Taito */
 	DRIVER( schasrcv )	/* RT  Taito */
 	DRIVER( lupin3 )	/* LP  (c) 1980 Taito */
-	DRIVER( helifire )	/* (c) Nintendo */
-	DRIVER( helifira )	/* (c) Nintendo */
-	DRIVER( spacefev )
-	DRIVER( sfeverbw )
-	DRIVER( spacelnc )
 	DRIVER( spclaser )
 	DRIVER( laser )
 	DRIVER( spcewarl )
