@@ -18,8 +18,6 @@ static int color_map_select;
 static int background_color;
 static UINT8 cloud_pos;
 static data8_t bowler_bonus_display;
-static int helifire_mv2_offset;
-static UINT32 helifire_star_rng;
 
 static mem_write_handler videoram_w_p;
 static void (*video_update_p)(struct mame_bitmap *bitmap,const struct rectangle *cliprect);
@@ -29,13 +27,11 @@ static WRITE_HANDLER( schaser_videoram_w );
 static WRITE_HANDLER( lupin3_videoram_w );
 static WRITE_HANDLER( polaris_videoram_w );
 static WRITE_HANDLER( sstrngr2_videoram_w );
-static WRITE_HANDLER( helifire_videoram_w );
 static WRITE_HANDLER( phantom2_videoram_w );
 static WRITE_HANDLER( invadpt2_videoram_w );
 static WRITE_HANDLER( cosmo_videoram_w );
 
 static VIDEO_UPDATE( 8080bw_common );
-static VIDEO_UPDATE( helifire );
 static VIDEO_UPDATE( seawolf );
 static VIDEO_UPDATE( blueshrk );
 static VIDEO_UPDATE( desertgu );
@@ -95,31 +91,6 @@ OVERLAY_START( gunfight_overlay )
 OVERLAY_END
 
 
-OVERLAY_START( bandido_overlay )
-	OVERLAY_RECT(   0,   0,  24, 224, OVERLAY_BLUE )
-	OVERLAY_RECT(  24,   0,  40, 100, OVERLAY_BLUE )
-	OVERLAY_RECT(  24, 124,  40, 224, OVERLAY_BLUE )
-	OVERLAY_RECT(  24, 100,  40, 124, OVERLAY_GREEN )
-	OVERLAY_RECT(  40,   0, 184,  24, OVERLAY_BLUE )
-	OVERLAY_RECT(  40,  24, 100,  32, OVERLAY_BLUE )
-	OVERLAY_RECT( 124,  24, 184,  32, OVERLAY_BLUE )
-	OVERLAY_RECT( 100,  24, 124,  40, OVERLAY_RED )
-	OVERLAY_RECT( 184, 100, 200, 124, OVERLAY_GREEN )
-	OVERLAY_RECT( 184,   0, 200, 100, OVERLAY_BLUE )
-	OVERLAY_RECT( 184, 124, 200, 224, OVERLAY_BLUE )
-	OVERLAY_RECT( 200,   0, 232, 224, OVERLAY_BLUE )
-	OVERLAY_RECT( 232,   0, 256, 224, OVERLAY_RED )
-	OVERLAY_RECT(  40,  32, 100,  40, OVERLAY_YELLOW )
-	OVERLAY_RECT( 124,  32, 184,  40, OVERLAY_YELLOW )
-	OVERLAY_RECT(  40,  40, 184, 184, OVERLAY_YELLOW )
-	OVERLAY_RECT(  40, 184, 100, 192, OVERLAY_YELLOW )
-	OVERLAY_RECT( 124, 184, 184, 192, OVERLAY_YELLOW )
-	OVERLAY_RECT(  40, 192, 100, 200, OVERLAY_BLUE )
-	OVERLAY_RECT( 124, 192, 184, 200, OVERLAY_BLUE )
-	OVERLAY_RECT(  40, 200, 184, 224, OVERLAY_BLUE )
-	OVERLAY_RECT( 100, 184, 124, 200, OVERLAY_RED )
-OVERLAY_END
-
 
 DRIVER_INIT( 8080bw )
 {
@@ -176,14 +147,6 @@ DRIVER_INIT( rollingc )
 	background_color = 0;	/* black */
 }
 
-DRIVER_INIT( helifire )
-{
-	init_8080bw();
-	videoram_w_p = helifire_videoram_w;
-	video_update_p = video_update_helifire;
-	helifire_mv2_offset = 0;
-	helifire_star_rng = 0;
-}
 
 DRIVER_INIT( polaris )
 {
@@ -247,11 +210,6 @@ DRIVER_INIT( gunfight )
 	artwork_set_overlay(gunfight_overlay);
 }
 
-DRIVER_INIT( bandido )
-{
-	init_8080bw();
-	artwork_set_overlay(bandido_overlay);
-}
 
 
 
@@ -453,30 +411,6 @@ static WRITE_HANDLER( polaris_videoram_w )
 	}
 }
 
-static WRITE_HANDLER( helifire_videoram_w )
-{
-	int x,y,back_color,foreground_color;
-
-	videoram[offset] = data;
-
-	y = offset / 32;
-	x = 8 * (offset % 32);
-
-	back_color = 8; /* TRANSPARENT PEN */
-	foreground_color = colorram[offset] & 0x07;
-
-	plot_byte(x, y, data, foreground_color, back_color);
-}
-
-
-WRITE_HANDLER( helifire_colorram_w )
-{
-	colorram[offset] = data;
-
-	/* redraw region with (possibly) changed color */
-	videoram_w_p(offset, videoram[offset]);
-}
-
 
 WRITE_HANDLER( schaser_colorram_w )
 {
@@ -581,211 +515,6 @@ static VIDEO_UPDATE( 8080bw_common )
 	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_NONE,0);
 }
 
-
-
-static int sea_waveform[8] = {0,70,90,97,99,30,10,3}; /* percentage of RC charge (charging and discharging curve)*/
-static int helifire_star_latch = 0;
-static int MVx_count = 0;
-static UINT16 scanline[256];
-
-static int last_colors_change = -1;
-static int b_to_g = 0;
-static int g_to_r = 0;
-static int death_colors_rng = 0;
-static int death_colors_timing = 0;
-
-PALETTE_INIT( helifire )
-{
-	int i;
-
-	for (i = 0; i < 8; i++)
-	{
-		int r = 0xff * ((i >> 0) & 1);
-		int g = 0xff * ((i >> 1) & 1);
-		int b = 0xff * ((i >> 2) & 1);
-		palette_set_color(i,r,g,b);
-	}
-	for (i = 0; i < 256; i++)
-	{
-		double V, time;
-		int level;
-
-		time = i;
-		V = 255.0 * pow(2.71828, -time/ (255.0/3.0) ); /* capacitor discharge */
-		level = V;
-
-		palette_set_color(8+i    ,0,0,level);	/* shades of blue without green star */
-
-		palette_set_color(512+8+i,level,0,0);	/* shades of red without green star */
-
-		/* green brightness was not verified */
-		palette_set_color(256+8+i,0,192,level);	/* shades of blue with green star */
-
-		/* green brightness was not verified */
-		palette_set_color(768+8+i,level,192,0);	/* shades of red with green star */
-	}
-}
-
-
-
-void c8080bw_helifire_colors_change_w(int data) /* 1 - don't change colors, 0 - change colors of fonts and objects */
-{
-	if (last_colors_change != data)
-	{
-		last_colors_change = data;
-	}
-}
-
-VIDEO_EOF (helifire)
-{
-	int i;
-
-	/* there are two circuits:
-		one generates physical 256 lines (and takes exactly 256 horizontal blanks) ,
-		the other one that generates MVx lines (takes 257 horizontal blanks)
-	  The final effect of this is that the waves and stars in background move right by 1 pixel per frame
-	*/
-	helifire_mv2_offset = (helifire_mv2_offset + 1) & 255;
-
-
-	death_colors_timing = (death_colors_timing + 1) & 15;
-
-	if (death_colors_timing & 1) /* 1,3,5,7,9,11,13,15 */
-		death_colors_rng = (((death_colors_rng ^ (death_colors_rng<<1) ^ 0x80)&0x80)>>7) | ((death_colors_rng&0x7f)<<1);
-
-	b_to_g = (death_colors_rng & 0x20) >> 5;
-
-
-	if (death_colors_timing == 8)
-		g_to_r = 1;
-	if (death_colors_timing == 0)
-		g_to_r = 0;	
-
-
-	if (last_colors_change)
-	{
-		/* normal palette */
-		for (i = 0; i < 8; i++)
-		{
-			int r = 0xff * ((i >> 0) & 1);
-			int g = 0xff * ((i >> 1) & 1);
-			int b = 0xff * ((i >> 2) & 1);
-			palette_set_color(i,r,g,b);
-		}
-	}
-	else
-	{
-		/* randomized palette */
-		for (i = 0; i < 8; i++)
-		{
-			int r = 0xff * ((i >> 0) & 1);
-			int g = 0xff * ((i >> 1) & 1);
-			int b = 0xff * ((i >> 2) & 1);
-
-			if (b_to_g)
-				g |= b;	/* perhaps we should use |= instead ? */
-			if (g_to_r)
-				r |= g;	/* perhaps we should use |= instead ? */
-
-			palette_set_color(i,r,g,b);
-		}
-	}
-}
-
-
-static VIDEO_UPDATE( helifire )
-{
-	int x, y;
-	int sun_brightness = readinputport(4);
-	int sea_brightness = readinputport(5);
-	int sea_level = 116 + readinputport(6); /* 116 is a guess */
-	int wave_height = readinputport(7);
-
-	if (get_vh_global_attribute_changed())
-	{
-		int offs;
-
-		for (offs = 0;offs < videoram_size;offs++)
-			videoram_w_p(offs, videoram[offs]);
-	}
-
-
-	/* background */
-	for (y = 0; y < 256; y++)
-	{
-		int start;
-		int color;		
-		int sea_wave = sea_level + (sea_waveform[ (y-helifire_mv2_offset) & 7 ] * wave_height / 100);
-#if 1
-		MVx_count++;
-		if (MVx_count>=257)	/* the RNG is reset every MV_RST which is every 257 physical lines */
-		{
-			helifire_star_rng = 0;
-			MVx_count = 0;
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "257 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );
-		}
-#endif
-/*		if (y == helifire_mv2_offset) // when MV_RST // the RNG is reset every MV_RST which is every 257 physical lines */
-/*		{*/
-/*			helifire_star_rng = 0;*/
-/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "mv2 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );*/
-/*		}*/
-
-		/*if (((helifire_mv2_offset + y)&7) == 4) // when MV2 goes high */
-		if ((MVx_count&7) == 4) /* when MV2 goes high */
-		{
-			helifire_star_latch = (helifire_star_rng & 0x0f)<<3;	/* latched value is being compared to H0, H1, H2, H3 (where H0 is physical H3) */
-		}
-
-		/* star RNG circuit, 1 step per 1 pixel */
-		for(x = 256; x > 0; x--)
-		{
-			/* negated: bit 7 xor bit 6 goes to bit 0 */
-			helifire_star_rng = (((helifire_star_rng ^ (helifire_star_rng<<1) ^ 0x80)&0x80)>>7) | ((helifire_star_rng&0x7f)<<1);
-		}
-
-		/* draw the sea */
-		start = 0;
-		for (x = 0; x < sea_wave; x++)
-		{
-			color = start + sea_brightness;
-			if (color>255) color = 255;
-			scanline[x] = 8 + color;
-			start++;
-		}
-
-		/* draw the sun glow */
-		start = 0;
-		for (x = sea_wave; x < 256; x++)
-		{
-			color = start + sun_brightness;
-			if (color>255) color = 255;
-			scanline[x] = 512 + 8 + color;
-			start++;
-		}
-
-		/* there will be two stars:
-			- one at each line when MV2 goes low->high in a pixels range of 128-255
-			- one at the very next line in a pixels range of 0-127
-		*/
-
-		/*if (((helifire_mv2_offset + y)&7) == 4) // when MV2 goes high */
-		if ((MVx_count&7) == 4) /* when MV2 goes high */
-		{
-			scanline[ 128 + helifire_star_latch ] = scanline[ 128 + helifire_star_latch ] + 256; /* background with the star */
-		}
-		/*if (((helifire_mv2_offset + y)&7) == 5) // when MV2 goes high - the very next line */
-		if ((MVx_count&7) == 5) /* when MV2 goes high */
-		{
-			scanline[ helifire_star_latch ] = scanline[ helifire_star_latch ] + 256; /* background with the star */
-		}
-
-		draw_scanline16(bitmap, 0, y, 256, scanline, &Machine->pens[0], -1);
-	}
-
-	/* foreground */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,8);
-}
 
 static void draw_sight(struct mame_bitmap *bitmap,const struct rectangle *cliprect,int x_center, int y_center)
 {
