@@ -312,6 +312,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with improved sound
 
 * Asterix
+* Bandito
 * Bosconian
 * Crazy Balloon
 * Dig Dug
@@ -333,6 +334,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
+* Sheriff
+* Space Fever
+* Space Fever High Splitter
+* Space Launcher
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
@@ -439,3 +444,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
 * Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
 * Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]
+* Backported Stefan Jokisch's graphical and sound improvemnets for the Nintendo 8080 based games from MAME81 [arcadez]
