@@ -38,8 +38,6 @@ static READ16_HANDLER( stadhero_control_r )
 		case 4: /* Byte 4: Dipswitch bank 2, Byte 5: Dipswitch Bank 1 */
 			return (readinputport(3) + (readinputport(4) << 8));
       
-    case 6:
-      return mame_rand() & 0x3f;
 	}
 
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
@@ -67,6 +65,11 @@ static WRITE16_HANDLER( spriteram_mirror_w )
 	spriteram16[offset]=data;
 }
 
+static READ16_HANDLER( mystery_r )
+{
+	 return mame_rand() & 0x3f;
+}
+
 static READ16_HANDLER( stadhero_pf1_data_r ) { return stadhero_pf1_data[offset]; }
 static READ16_HANDLER( stadhero_pf2_data_r ) { return stadhero_pf2_data[offset]; }
 
@@ -77,6 +80,7 @@ static MEMORY_READ16_START( stadhero_readmem )
 	{ 0x200000, 0x2007ff, stadhero_pf1_data_r },
 	{ 0x260000, 0x261fff, stadhero_pf2_data_r },
 	{ 0x30c000, 0x30c00b, stadhero_control_r },
+	{ 0x30c003, 0x30c003, mystery_r },
 	{ 0x310000, 0x3107ff, MRA16_RAM },
 	{ 0xff8000, 0xffbfff, MRA16_RAM }, /* Main ram */
 	{ 0xffc000, 0xffc7ff, MRA16_RAM }, /* Sprites */
