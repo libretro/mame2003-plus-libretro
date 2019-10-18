@@ -10,6 +10,7 @@
 #include "vidhrdw/generic.h"
 #include "cpu/m6502/m6502.h"
 
+
 /* Video emulation definitions */
 VIDEO_START( stadhero );
 VIDEO_UPDATE( stadhero );
@@ -35,6 +36,7 @@ static READ16_HANDLER( stadhero_control_r )
 
 		case 4: /* Byte 4: Dipswitch bank 2, Byte 5: Dipswitch Bank 1 */
 			return (readinputport(3) + (readinputport(4) << 8));
+      
 	}
 
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);

@@ -828,11 +828,13 @@ static WRITE_HANDLER( n8080_video_control_w )
 
 
 static MEMORY_READ_START( main_cpu_readmem )
+MEMORY_ADDRESS_BITS(15)
     { 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x7fff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( main_cpu_writemem )
+MEMORY_ADDRESS_BITS(15)
     { 0x0000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0x7fff, MWA_RAM, &n8080_videoram },
 MEMORY_END
@@ -852,6 +854,7 @@ MEMORY_END
 
 
 static PORT_READ_START( n8080_main_io_readport )
+PORT_ADDRESS_BITS(3)
     { 0x00, 0x00, input_port_0_r },
 	{ 0x01, 0x01, input_port_1_r },
 	{ 0x02, 0x02, input_port_2_r },
@@ -860,6 +863,7 @@ static PORT_READ_START( n8080_main_io_readport )
 PORT_END
 
 static PORT_WRITE_START( n8080_main_io_writeport )
+PORT_ADDRESS_BITS(3)
     { 0x02, 0x02, n8080_shift_bits_w },
 	{ 0x03, 0x03, n8080_shift_data_w },
 	{ 0x04, 0x04, n8080_sound_1_w },
@@ -869,13 +873,14 @@ PORT_END
 
 
 static MEMORY_READ_START( sound_cpu_readmem )
+MEMORY_ADDRESS_BITS(10)
     { 0x0000, 0x03ff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_cpu_writemem )
+MEMORY_ADDRESS_BITS(10)
     { 0x0000, 0x03ff, MWA_ROM },
 MEMORY_END
-
 
 static PORT_READ_START( n8080_sound_io_readport )
     { I8039_t0, I8039_t0, n8080_8035_t0_r },
@@ -891,7 +896,6 @@ PORT_END
 static PORT_READ_START( helifire_sound_io_readport )
     { I8039_t0, I8039_t0, helifire_8035_t0_r },
 	{ I8039_t1, I8039_t1, helifire_8035_t1_r },
-	
 	{ 0x00, 0x7f, helifire_8035_extended_ram_r },
 PORT_END
 
