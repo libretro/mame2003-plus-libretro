@@ -107,6 +107,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Space Fever High Splitter
 * Space Launcher
 * Squash
 * Star Fire 2
