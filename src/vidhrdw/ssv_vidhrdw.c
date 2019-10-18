@@ -1537,16 +1537,20 @@ VIDEO_UPDATE( ssv )
 	if (ssv_scroll[0x76/2] & 0x0080)
 	{
 		/* 4 bit shadows (mslider, stmblade) */
-		shadow_pen_mask		=	0x1fff;
-		shadow_pen_shift	=	11;
+		/*shadow_pen_mask		=	0x1fff;*/
+		/*shadow_pen_shift	=	11;*/
+    shadow_pen_shift = 15-4;
 	}
 	else
 	{
 		/* 2 bit shadows */
-		shadow_pen_mask		=	0x3fff;
-		shadow_pen_shift	=	13;
+		/*shadow_pen_mask		=	0x3fff;*/
+		/*shadow_pen_shift	=	13;*/
+    shadow_pen_shift = 15-2;
 	}
 	}
+  
+  shadow_pen_mask = (1 << shadow_pen_shift) - 1;
 
 	/* The background color is the first one in the palette */
 	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
