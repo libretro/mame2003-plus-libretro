@@ -7152,6 +7152,11 @@ void K056832_tilemap_draw(struct mame_bitmap *bitmap, const struct rectangle *cl
 			if (dminy > cmaxy || dmaxy < cminy) continue;
 
 			sdat_offs = sdat_walk & sdat_wrapmask;
+      
+      if(strcmp(Machine->gamedrv->name, "lethalen") == 0)
+			{
+          if (scrollmode==2) sdat_offs = sdat_offs + 0x1e0 + 14;
+	    }
 
 			drawrect.min_y = (dminy < cminy ) ? cminy : dminy;
 			drawrect.max_y = (dmaxy > cmaxy ) ? cmaxy : dmaxy;
