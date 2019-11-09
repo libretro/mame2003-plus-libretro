@@ -40,6 +40,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Double Wings
 * Dream World
 * Dyna Gear
+* Eeekk!
 * ESPGaluda
 * FixEight (bootleg)
 * Gaia: The Last Choice Of Earth
