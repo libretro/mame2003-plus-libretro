@@ -144,6 +144,7 @@ const struct GameDriver *test_drivers[] =
 	/* Epos games */
 	DRIVER( megadon )	/* (c) 1982 */
 	DRIVER( catapult )	/* (c) 1982 */
+  DRIVER( eeekk )     /* (c) 1983 */
 	DRIVER( suprglob )	/* (c) 1983 */
 	DRIVER( theglob )	/* (c) 1983 */
 	DRIVER( theglob2 )	/* (c) 1983 */
