@@ -152,6 +152,57 @@ static ppi8255_interface ppi8255_intf =
 /* I think the upper two bits of port 1 are used as a simple form of protection,
    so that ROMs couldn't be simply swapped.  Each game checks these bits and halts
    the processor if an unexpected value is read. */
+   
+INPUT_PORTS_START( eeekk )
+	PORT_START      /* IN0 */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x50, 0x00, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x10, "4" )
+	PORT_DIPSETTING(    0x40, "5" )
+	PORT_DIPSETTING(    0x50, "6" )
+	PORT_DIPNAME( 0x26, 0x04, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x00, "1 (Easy)" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x20, "3" )
+	PORT_DIPSETTING(    0x22, "4" )
+	PORT_DIPSETTING(    0x04, "5" )
+	PORT_DIPSETTING(    0x06, "6" )
+	PORT_DIPSETTING(    0x24, "7" )
+	PORT_DIPSETTING(    0x26, "8 (Hard)" )
+	PORT_DIPNAME( 0x08, 0x08, "Extra Life Range" ) /* exact points value varies by 10000 for every level of difficulty chosen via the dips above */
+	PORT_DIPSETTING(    0x08, "100000 - 170000 points" )
+	PORT_DIPSETTING(    0x00, "20000 - 90000 points" )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START      /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_START1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START2 )
+	PORT_BITX(0x10, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL )   /* this has to be LO */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )   /* this has to be LO */
+
+	PORT_START      /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* IN3 */
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+INPUT_PORTS_END
+
 
 INPUT_PORTS_START( megadon )
 	PORT_START      /* IN0 */
@@ -465,6 +516,22 @@ ROM_START( catapult )
 ROM_END
 
 
+ROM_START( eeekk )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "u10_e12063.u10", 0x0000, 0x1000, CRC(edd05de2) SHA1(25dfa7ad2e29b1ca9ce9bb36bf1a573baabb4d5b) )
+	ROM_LOAD( "u9_e12063.u9",   0x1000, 0x1000, CRC(6f57114a) SHA1(417b910a4343da026426b4cfd0a83b9142c87353) )
+	ROM_LOAD( "u8_e12063.u8",   0x2000, 0x1000, CRC(bcb0ebbd) SHA1(a2a00dedee12d6006817021e98fb44b2339127a0) )
+	ROM_LOAD( "u7_e12063.u7",   0x3000, 0x1000, CRC(a0df8f77) SHA1(ee2afed25ab32bf09b14e8638d03b6e2f8e6b337) )
+	ROM_LOAD( "u6_e12063.u6",   0x4000, 0x1000, CRC(61953b0a) SHA1(67bcb4286e39cdda20684a4f580392468b08800e) )
+	ROM_LOAD( "u5_e12063.u5",   0x5000, 0x1000, CRC(4c22c6d9) SHA1(94a8fc951994746f8ccfb77d80f8b98fde8a6f33) )
+	ROM_LOAD( "u4_e12063.u4",   0x6000, 0x1000, CRC(3d341208) SHA1(bc4d2567df2779d97e718376c4bf682ba459c01e) )
+	ROM_LOAD( "u11_e12063.u11", 0x7000, 0x0800, CRC(417faff0) SHA1(7965155ee32694ea9a10245db73d8beef229408c) )
+	
+	ROM_REGION( 0x0020, REGION_PROMS, 0 )
+	ROM_LOAD( "74s288.u66",     0x0000, 0x0020, CRC(f2078c38) SHA1(7bfd49932a6fd8840514b7af93a64cedb248122d) )
+ROM_END
+
+
 ROM_START( suprglob )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )       /* 64k for code */
 	ROM_LOAD( "u10",			0x0000, 0x1000, CRC(c0141324) SHA1(a54bd71da233eb22f45da630693fddd5a0bcf25b) )
@@ -725,11 +792,17 @@ Dave
  *
  *************************************/
 
+/* Epos Tristar 8000 */ 
+ 
 GAME ( 1982, megadon,  0,        epos,  megadon,  0,	  ROT270, "Epos Corporation (Photar Industries license)", "Megadon" )
 GAMEX( 1982, catapult, 0,        epos,  igmo,     0,	  ROT270, "Epos Corporation", "Catapult", GAME_NOT_WORKING) /* bad rom, hold f2 for test mode */
+GAME ( 1983, eeekk,    0,        epos,  eeekk,    0,    ROT270, "Epos Corporation", "Eeekk!" )
 GAME ( 1983, suprglob, 0,        epos,  suprglob, 0,	  ROT270, "Epos Corporation", "Super Glob" )
 GAME ( 1983, theglob,  suprglob, epos,  suprglob, 0,	  ROT270, "Epos Corporation", "The Glob" )
 GAME ( 1983, theglob2, suprglob, epos,  suprglob, 0,	  ROT270, "Epos Corporation", "The Glob (earlier)" )
 GAME ( 1983, theglob3, suprglob, epos,  suprglob, 0,	  ROT270, "Epos Corporation", "The Glob (set 3)" )
 GAMEX( 1984, igmo,     0,        epos,  igmo,     0,	  ROT270, "Epos Corporation", "IGMO", GAME_WRONG_COLORS )
+
+/* Epos Tristar 9000 */ 
+
 GAMEX( 19??, dealer,   0,        dealer, dealer,  dealer, ROT270, "Epos Corporation", "The Dealer", GAME_NOT_WORKING)
