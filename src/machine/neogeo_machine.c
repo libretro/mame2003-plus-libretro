@@ -617,6 +617,7 @@ static void neogeo_custom_memory(void)
 			!strcmp(Machine->gamedrv->name,"rbff2") ||
 			!strcmp(Machine->gamedrv->name,"rbff2a") ||
 			!strcmp(Machine->gamedrv->name,"mslug2") ||
+      !strcmp(Machine->gamedrv->name,"mslug2t") ||
 			!strcmp(Machine->gamedrv->name,"mslug3") ||
 			!strcmp(Machine->gamedrv->name,"garou") ||
 			!strcmp(Machine->gamedrv->name,"garouo") ||
