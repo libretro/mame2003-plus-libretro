@@ -180,6 +180,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DownTown (joystick hack)
 * Guerrilla War (joystick hack bootleg)
 * Ikari (joystick hack bootleg)
+* Metal Slug 2 - Turbo (Trap15, Hack)
 * Midnight Resistance (joystick hack bootleg)
 * Tron freeplay custom rom
 
