@@ -242,6 +242,9 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 	{
 		/* Volume port */
 	}
+  
+  deco32_pri_w(0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
+  
 }
 
 /**********************************************************************************/
