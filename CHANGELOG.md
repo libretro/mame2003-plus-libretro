@@ -178,6 +178,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
 * DownTown (joystick hack)
+* Final Fight 30th Anniversary Edition (Grego And Rotwang)
 * Guerrilla War (joystick hack bootleg)
 * Ikari (joystick hack bootleg)
 * Metal Slug 2 - Turbo (Trap15, Hack)
