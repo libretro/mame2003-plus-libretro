@@ -237,7 +237,7 @@ VIDEO_START(metamrph)
 		return 1;
 	}
 
-	if (K055673_vh_start(REGION_GFX2, 1, -51, -22, metamrph_sprite_callback))
+	if (K055673_vh_start(REGION_GFX2, 1, -51, -24, metamrph_sprite_callback))
 	{
 		return 1;
 	}
