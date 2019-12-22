@@ -70,9 +70,6 @@ struct png_info {
 int png_verify_signature (mame_file *fp);
 int png_inflate_image (struct png_info *p);
 int png_read_file(mame_file *fp, struct png_info *p);
-#if !defined(VITA)
-int png_read_info(mame_file *fp, struct png_info *p);
-#endif
 int png_expand_buffer_8bit (struct png_info *p);
 void png_delete_unused_colors (struct png_info *p);
 int png_add_text (const char *keyword, const char *text);
