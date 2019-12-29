@@ -1004,7 +1004,6 @@ static UINT32 opMULB(void)
 
 	F12LOADOP2BYTE();
 
-	// @@@ OV not set!!
 	tmp=(INT8)appb * (INT32)(INT8)f12Op1;
 	appb = tmp;
 	_Z = (appb == 0);
@@ -1023,7 +1022,6 @@ static UINT32 opMULH(void)
 
 	F12LOADOP2HALF();
 
-	// @@@ OV not set!!
 	tmp=(INT16)apph * (INT32)(INT16)f12Op1;
 	apph = tmp;
 	_Z = (apph == 0);
@@ -1042,7 +1040,6 @@ static UINT32 opMULW(void)
 
 	F12LOADOP2WORD();
 
-	// @@@ OV not set!!
 	tmp=(INT32)appw * (INT64)(INT32)f12Op1;
 	appw = tmp;
 	_Z = (appw == 0);
@@ -1061,7 +1058,6 @@ static UINT32 opMULUB(void)
 
 	F12LOADOP2BYTE();
 
-	// @@@ OV not set!!
 	tmp = appb * (UINT8)f12Op1;
 	appb = tmp;
 	_Z = (appb == 0);
@@ -1080,7 +1076,6 @@ static UINT32 opMULUH(void)
 
 	F12LOADOP2HALF();
 
-	// @@@ OV not set!!
 	tmp=apph * (UINT16)f12Op1;
 	apph = tmp;
 	_Z = (apph == 0);
@@ -1099,7 +1094,6 @@ static UINT32 opMULUW(void)
 
 	F12LOADOP2WORD();
 
-	// @@@ OV not set!!
 	tmp=(UINT64)appw * (UINT64)f12Op1;
 	appw = tmp;
 	_Z = (appw == 0);
@@ -1116,7 +1110,7 @@ static UINT32 opNEGB(void) /* TRUSTED  (C too!)*/
 
 	modWriteValB = 0;
 	SUBB(modWriteValB, (INT8)f12Op1);
-
+	_CY = modWriteValB ? 1 : 0;
 	F12WriteSecondOperand(0);
 	F12END();
 }
@@ -1127,7 +1121,7 @@ static UINT32 opNEGH(void) /* TRUSTED  (C too!)*/
 
 	modWriteValH = 0;
 	SUBW(modWriteValH, (INT16)f12Op1);
-
+	_CY = modWriteValH ? 1 : 0;
 	F12WriteSecondOperand(1);
 	F12END();
 }
@@ -1138,7 +1132,7 @@ static UINT32 opNEGW(void) /* TRUSTED  (C too!)*/
 
 	modWriteValW = 0;
 	SUBL(modWriteValW, (INT32)f12Op1);
-
+	_CY = modWriteValW ? 1 : 0;
 	F12WriteSecondOperand(2);
 	F12END();
 }
