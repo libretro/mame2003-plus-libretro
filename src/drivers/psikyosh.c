@@ -895,7 +895,7 @@ static READ32_HANDLER( tgm2_speedup_r )
 {
 	if (activecpu_get_pc()==0x0602895a) cpu_spinuntil_int(); 
 	if (activecpu_get_pc()==0x06028cac) cpu_spinuntil_int();
-	// if (activecpu_get_pc()==0x06029272) cpu_spinuntil_int(); // bad!! (game logic, etc)
+	if (activecpu_get_pc()==0x06029272) cpu_spinuntil_int();
 	if (activecpu_get_pc()==0x06028ef2) cpu_spinuntil_int();
 
 	return psh_ram[0x06000C/4];
@@ -905,7 +905,7 @@ static READ32_HANDLER( tgm2p_speedup_r )
 {
 	if (activecpu_get_pc()==0x0602ae5a) cpu_spinuntil_int(); 
 	if (activecpu_get_pc()==0x0602b1ac) cpu_spinuntil_int();
-	// if (activecpu_get_pc()==0x0602b772) cpu_spinuntil_int(); // bad!! (game logic, etc)
+	if (activecpu_get_pc()==0x0602b772) cpu_spinuntil_int();
 	if (activecpu_get_pc()==0x0602b3f2) cpu_spinuntil_int();
 
 	return psh_ram[0x06000C/4];
