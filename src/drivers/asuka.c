@@ -1456,17 +1456,25 @@ ROM_START( eto )
 	/* empty region */
 ROM_END
 
+DRIVER_INIT(earthjkr)
+{
+	data16_t *rom = memory_region(REGION_CPU1);
+	/* 357c -> 317c, I think this is bitrot, see ROM loading for which ROM needs redumping, causes rowscroll to be broken on final stage (writes to ROM area instead)
+	   code is correct in the 'prototype?' set */
+	rom[0x7aaa/2] = 0x317c; 
+}
 
-GAME( 1988, bonzeadv, 0,        bonzeadv, bonzeadv, 0, ROT0,   "Taito Corporation Japan", "Bonze Adventure (World)" )
-GAME( 1988, bonzeadu, bonzeadv, bonzeadv, jigkmgri, 0, ROT0,   "Taito America Corporation", "Bonze Adventure (US)" )
-GAME( 1988, jigkmgri, bonzeadv, bonzeadv, jigkmgri, 0, ROT0,   "Taito Corporation", "Jigoku Meguri (Japan)" )
-GAME( 1988, asuka,    0,        asuka,    asuka,    0, ROT270, "Taito Corporation", "Asuka and Asuka (Japan)" )
-GAME( 1989, mofflott, 0,        galmedes, mofflott, 0, ROT270, "Taito Corporation", "Maze of Flott (Japan)" )
-GAME( 1989, cadash,   0,        cadash,   cadash,   0, ROT0,   "Taito Corporation Japan", "Cadash (World)" )
-GAME( 1989, cadashj,  cadash,   cadash,   cadashj,  0, ROT0,   "Taito Corporation", "Cadash (Japan)" )
-GAME( 1989, cadashu,  cadash,   cadash,   cadashu,  0, ROT0,   "Taito America Corporation", "Cadash (US)" )
-GAME( 1989, cadashi,  cadash,   cadash,   cadash,   0, ROT0,   "Taito Corporation Japan", "Cadash (Italy)" )
-GAME( 1989, cadashf,  cadash,   cadash,   cadash,   0, ROT0,   "Taito Corporation Japan", "Cadash (France)" )
-GAME( 1992, galmedes, 0,        galmedes, galmedes, 0, ROT270, "Visco", "Galmedes (Japan)" )
-GAME( 1993, earthjkr, 0,        galmedes, earthjkr, 0, ROT270, "Visco", "U.N. Defense Force - Earth Joker (Japan)" )
-GAME( 1994, eto,      0,        eto,      eto,      0, ROT0,   "Visco", "Kokontouzai Eto Monogatari (Japan)" )
+
+GAME( 1988, bonzeadv, 0,        bonzeadv, bonzeadv, 0,        ROT0,   "Taito Corporation Japan", "Bonze Adventure (World)" )
+GAME( 1988, bonzeadu, bonzeadv, bonzeadv, jigkmgri, 0,        ROT0,   "Taito America Corporation", "Bonze Adventure (US)" )
+GAME( 1988, jigkmgri, bonzeadv, bonzeadv, jigkmgri, 0,        ROT0,   "Taito Corporation", "Jigoku Meguri (Japan)" )
+GAME( 1988, asuka,    0,        asuka,    asuka,    0,        ROT270, "Taito Corporation", "Asuka and Asuka (Japan)" )
+GAME( 1989, mofflott, 0,        galmedes, mofflott, 0,        ROT270, "Taito Corporation", "Maze of Flott (Japan)" )
+GAME( 1989, cadash,   0,        cadash,   cadash,   0,        ROT0,   "Taito Corporation Japan", "Cadash (World)" )
+GAME( 1989, cadashj,  cadash,   cadash,   cadashj,  0,        ROT0,   "Taito Corporation", "Cadash (Japan)" )
+GAME( 1989, cadashu,  cadash,   cadash,   cadashu,  0,        ROT0,   "Taito America Corporation", "Cadash (US)" )
+GAME( 1989, cadashi,  cadash,   cadash,   cadash,   0,        ROT0,   "Taito Corporation Japan", "Cadash (Italy)" )
+GAME( 1989, cadashf,  cadash,   cadash,   cadash,   0,        ROT0,   "Taito Corporation Japan", "Cadash (France)" )
+GAME( 1992, galmedes, 0,        galmedes, galmedes, 0,        ROT270, "Visco", "Galmedes (Japan)" )
+GAME( 1993, earthjkr, 0,        galmedes, earthjkr, earthjkr, ROT270, "Visco", "U.N. Defense Force - Earth Joker (Japan)" )
+GAME( 1994, eto,      0,        eto,      eto,      0,        ROT0,   "Visco", "Kokontouzai Eto Monogatari (Japan)" )
