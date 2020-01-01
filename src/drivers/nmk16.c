@@ -140,7 +140,7 @@ If someone could fix the protection it'd be fully playable with sound and music.
 #include "sndhrdw/seibu.h"
 
 extern data16_t *nmk_bgvideoram,*nmk_fgvideoram,*nmk_txvideoram;
-extern data16_t *gunnail_scrollram;
+extern data16_t *gunnail_scrollram, *gunnail_scrollramy;
 extern data16_t tharrier_scroll;
 
 READ16_HANDLER( nmk_bgvideoram_r );
@@ -152,8 +152,6 @@ WRITE16_HANDLER( nmk_txvideoram_w );
 WRITE16_HANDLER( nmk_scroll_w );
 WRITE16_HANDLER( nmk_scroll_2_w );
 WRITE16_HANDLER( nmk_scroll_3_w );
-WRITE16_HANDLER( gunnail_scrollx_w );
-WRITE16_HANDLER( gunnail_scrolly_w );
 WRITE16_HANDLER( nmk_flipscreen_w );
 WRITE16_HANDLER( nmk_tilebank_w );
 WRITE16_HANDLER( bioship_scroll_w );
@@ -1059,9 +1057,9 @@ static MEMORY_WRITE16_START( gunnail_writemem )
 	{ 0x080016, 0x080017, MWA16_NOP },	/* IRQ enable? */
 	{ 0x080018, 0x080019, nmk_tilebank_w },
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
-	{ 0x08c000, 0x08c1ff, gunnail_scrollx_w, &gunnail_scrollram },
-	{ 0x08c200, 0x08c201, gunnail_scrolly_w },
-/*	{ 0x08c202, 0x08c7ff, MWA16_RAM },	*/ /* unknown*/
+	{ 0x08c000, 0x08c1ff, MWA16_RAM, &gunnail_scrollram },
+	{ 0x08c200, 0x08c3ff, MWA16_RAM, &gunnail_scrollramy },
+	{ 0x08c400, 0x08c7ff, MWA16_RAM },    /* unknown */
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x09c000, 0x09cfff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x09d000, 0x09dfff, nmk_txvideoram_w }, /* mirror */
@@ -2955,7 +2953,7 @@ static struct YM2203interface ym2203_interface_NMK004 =
 {
 	1,			/* 1 chip */
 	1500000,	/* 1.5 MHz */
-	{ YM2203_VOL(90,90) },
+	{ YM2203_VOL(50,50) },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -2969,6 +2967,14 @@ static struct OKIM6295interface okim6295_interface_dual =
 	{ 16000000/4/165, 16000000/4/165 },	/* 24242Hz frequency? */
 	{ REGION_SOUND1, REGION_SOUND2 },	/* memory region */
 	{ 40, 40 }							/* volume */
+};
+
+static struct OKIM6295interface okim6295_interface_NMK004 =
+{
+	2,              					/* 2 chips */
+	{ 16000000/4/165, 16000000/4/165 },	/* 24242Hz frequency? */
+	{ REGION_SOUND1, REGION_SOUND2 },	/* memory region */
+	{ 20, 20 }							/* volume */
 };
 
 static struct OKIM6295interface okim6295_interface_ssmissin =
@@ -3016,7 +3022,7 @@ static MACHINE_DRIVER_START( vandyke )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
@@ -3110,7 +3116,7 @@ static MACHINE_DRIVER_START( mustang )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( mustangb )
@@ -3167,7 +3173,7 @@ static MACHINE_DRIVER_START( acrobatm )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
@@ -3196,7 +3202,7 @@ static MACHINE_DRIVER_START( bioship )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
@@ -3287,7 +3293,7 @@ static MACHINE_DRIVER_START( strahl )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 static INTERRUPT_GEN( hachamf_interrupt )
@@ -3326,7 +3332,7 @@ static MACHINE_DRIVER_START( hachamf )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( hachamfb )
@@ -3354,7 +3360,7 @@ static MACHINE_DRIVER_START( hachamfb )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( tdragon )
@@ -3382,7 +3388,7 @@ static MACHINE_DRIVER_START( tdragon )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
@@ -3411,20 +3417,20 @@ static MACHINE_DRIVER_START( macross )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
 static MACHINE_DRIVER_START( gunnail )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 10000000) /* 10 MHz? */
+	MDRV_CPU_ADD(M68000, 12000000) /* 12 MHz? */
 	MDRV_CPU_MEMORY(gunnail_readmem,gunnail_writemem)
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,112)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(TIME_IN_USEC(2500))
+/*  MDRV_VBLANK_DURATION(TIME_IN_USEC(2500)) */
 	MDRV_MACHINE_INIT(nmk16_nmk004)
 
 	/* video hardware */
@@ -3440,7 +3446,7 @@ static MACHINE_DRIVER_START( gunnail )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface_NMK004)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_dual)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_NMK004)
 MACHINE_DRIVER_END
 
 
@@ -4236,6 +4242,36 @@ ROM_START( gunnail )
 	ROM_LOAD( "10.bpr",     0x0200, 0x0020, CRC(c60103c8) SHA1(dfb05b704bb5e1f75f5aaa4fa36e8ddcc905f8b6) )	/* unknown */
 ROM_END
 
+ROM_START( gunnailp )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )		/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "3.u132",  0x00000, 0x80000, CRC(93570f03) SHA1(54fb203b5bfceb0ac86627bff3e67863f460fe73) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Code for (unknown?) CPU */
+	ROM_LOAD( "92077_2.bin",      0x00000, 0x10000, CRC(cd4e55f8) SHA1(92182767ca0ec37ec4949bd1a88c2efdcdcb60ed) )
+
+	ROM_REGION( 0x020000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "1.u21",    0x000000, 0x020000, CRC(bdf427e4) SHA1(e9cd178d1d9e2ed72f0fb013385d935f334b8fe3) )    /* 8x8 tiles */
+
+	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "92077-4.bin", 0x000000, 0x100000, CRC(a9ea2804) SHA1(14dbdb3c7986db5e44dc7c5be6fcf39f3d1e50b0) )	/* 16x16 tiles */
+
+	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD16_WORD_SWAP( "92077-7.bin", 0x000000, 0x200000, CRC(d49169b3) SHA1(565ff7725dd6ace79b55706114132d8d867e81a9) )	/* Sprites */
+
+	ROM_REGION( 0x0a0000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
+	ROM_LOAD( "92077-5.bin", 0x00000, 0x20000, CRC(feb83c73) SHA1(b44e9d20b4af02e218c4bc875d66a7d6b8551cae) )
+	ROM_CONTINUE(            0x40000, 0x60000 )	/* banked */
+
+	ROM_REGION( 0x0a0000, REGION_SOUND2, 0 )	/* OKIM6295 samples */
+	ROM_LOAD( "92077-6.bin", 0x00000, 0x20000, CRC(6d133f0d) SHA1(8a5e6e27a297196f20e4de0d060f1188115809bb) )
+	ROM_CONTINUE(            0x40000, 0x60000 )	/* banked */
+
+	ROM_REGION( 0x0220, REGION_PROMS, 0 )
+	ROM_LOAD( "8.bpr",      0x0000, 0x0100, CRC(4299776e) SHA1(683d14d2ace14965f0fcfe0f0540c1b77d2cece5) )	/* unknown */
+	ROM_LOAD( "9.bpr",      0x0100, 0x0100, CRC(633ab1c9) SHA1(acd99fcca41eaab7948ca84988352f1d7d519c61) )	/* unknown */
+	ROM_LOAD( "10.bpr",     0x0200, 0x0020, CRC(c60103c8) SHA1(dfb05b704bb5e1f75f5aaa4fa36e8ddcc905f8b6) )	/* unknown */
+ROM_END
+
 ROM_START( macross2 )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "mcrs2j.3",      0x00000, 0x80000, CRC(36a618fe) SHA1(56fdb2bcb4a39888cfbaf9692d66335524a6ac0c) )
@@ -4776,6 +4812,7 @@ GAMEX( 1991, hachamf,  0,       hachamf,  hachamf,  hachamf,  ROT0,   "NMK",				
 GAMEX( 1991, hachamfb, hachamf, hachamfb, hachamfb, hachamfb, ROT0,   "bootleg",                        "Hacha Mecha Fighter (unprotected)", GAME_IMPERFECT_SOUND ) /* appears to be a Thunder Dragon conversion, could be bootleg?*/
 GAMEX( 1992, macross,  0,       macross,  macross,  nmk,      ROT270, "Banpresto",			            "Super Spacefortress Macross - Chou-Jikuu Yousai Macross", GAME_IMPERFECT_SOUND )
 GAMEX( 1993, gunnail,  0,       gunnail,  gunnail,  nmk,      ROT270, "NMK / Tecmo",			        "GunNail", GAME_IMPERFECT_SOUND )
+GAMEX( 1993, gunnailp, gunnail, gunnail,  gunnail,  nmk,      ROT270, "Tecmo",			                "GunNail (location test)", GAME_IMPERFECT_SOUND )
 GAMEX( 1993, macross2, 0,       macross2, macross2, 0,        ROT0,   "Banpresto",			            "Super Spacefortress Macross II - Chou-Jikuu Yousai Macross II", GAME_NO_COCKTAIL )
 GAMEX( 1993, tdragon2, 0,       tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Thunder Dragon 2 (9th Nov. 1993)", GAME_NO_COCKTAIL )
 GAMEX( 1993, bigbang,  tdragon2,tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Big Bang (9th Nov. 1993)", GAME_NO_COCKTAIL )
