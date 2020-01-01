@@ -414,7 +414,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/darius_vidhrdw.c $(CORE_DIR)/drivers/darius.c \
 				 $(CORE_DIR)/vidhrdw/rastan_vidhrdw.c $(CORE_DIR)/sndhrdw/rastan_sndhrdw.c $(CORE_DIR)/drivers/rastan.c \
 				 $(CORE_DIR)/machine/rainbow_machine.c $(CORE_DIR)/drivers/rainbow.c \
-				 $(CORE_DIR)/drivers/opwolf.c \
+				 $(CORE_DIR)/machine/opwolf_machine.c $(CORE_DIR)/drivers/opwolf.c \
 				 $(CORE_DIR)/vidhrdw/othunder_vidhrdw.c $(CORE_DIR)/drivers/othunder.c \
 				 $(CORE_DIR)/vidhrdw/topspeed_vidhrdw.c $(CORE_DIR)/drivers/topspeed.c \
 				 $(CORE_DIR)/machine/arkanoid_machine.c $(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c $(CORE_DIR)/drivers/arkanoid.c \
