@@ -155,6 +155,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dunk Dream '95
 * Escape Kids (Asia 4 Players)
 * Fujiyama Buster
+* GunNail (Location Test)
 * Guwange Special Version
 * Hacha Mecha Fighter (bootleg)
 * Hook (Japan Version)
@@ -442,10 +443,11 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 * Fixed BeatHead from crashing [grant2258]
-* Fixed tgm2/tgm2p running half speed [dink, arnoldsecret]
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
 * Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
 * Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]
 * Backported Stefan Jokisch's graphical and sound improvemnets for the Nintendo 8080 based games from MAME81 [arcadez]
+* Added Bryan McPhail's C-Chip simulation code for Operation Wolf from MAME98 and MAME176 respectively [arcadez]
+* Fixed graphical problems in GunNail and better balanced the sound for the games using the NMK004 [arcadez]
