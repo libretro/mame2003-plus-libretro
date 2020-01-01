@@ -4409,6 +4409,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( hachamfb )	/* bootleg */
 	DRIVER( macross )	/* (c) 1992 Banpresto */
 	DRIVER( gunnail )	/* (c) 1993 NMK / Tecmo */
+  DRIVER( gunnailp )	/* (c) 1993 Tecmo (Location Test)*/
 	DRIVER( macross2 )	/* (c) 1993 Banpresto */
 	DRIVER( sabotenb )	/* (c) 1992 NMK / Tecmo */
 	DRIVER( sabotnba )	/* (c) 1992 NMK / Tecmo */
