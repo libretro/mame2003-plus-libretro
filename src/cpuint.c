@@ -16,6 +16,10 @@
 #include "cpu/m68000/m68000.h"
 #endif
 
+#if (HAS_CYCLONE)
+#include "cpu/m68000_cyclone/c68000.h"
+#endif
+
 
 /*************************************
  *
