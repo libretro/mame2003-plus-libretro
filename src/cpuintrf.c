@@ -25,6 +25,9 @@
 #if (HAS_Z80)
 #include "cpu/z80/z80.h"
 #endif
+#if (HAS_DRZ80)
+#include "cpu/z80_drz80/drz80_z80.h"
+#endif
 #if (HAS_Z180)
 #include "cpu/z180/z180.h"
 #endif
@@ -90,6 +93,9 @@
 #endif
 #if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
 #include "cpu/m68000/m68000.h"
+#endif
+#if (HAS_CYCLONE)
+#include "cpu/m68000_cyclone/c68000.h"
 #endif
 #if (HAS_T11)
 #include "cpu/t11/t11.h"
@@ -327,6 +333,9 @@ const struct cpu_interface cpuintrf[] =
 #if (HAS_Z80)
 	CPU1(Z80,	   z80, 	 1,255,1.00, 8, 16,	  0,16,LE,1, 4	),
 #endif
+#if (HAS_DRZ80)
+	CPU1(DRZ80,	   drz80, 	 1,255,1.00, 8, 16,   0,16,LE,1, 4	),
+#endif
 #if (HAS_Z180)
 	CPU1(Z180,	   z180, 	 1,255,1.00, 8, 20,	  0,20,LE,1, 4	),
 #endif
@@ -461,6 +470,9 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_M68000)
 	CPU0(M68000,   m68000,	 8, -1,1.00,16,24bew,  0,24,BE,2,10	),
+#endif
+#if (HAS_CYCLONE)
+	CPU0(CYCLONE,  cyclone,  8, -1,1.00,16,24bew,  0,24,BE,2,10 ),
 #endif
 #if (HAS_M68010)
 	CPU0(M68010,   m68010,	 8, -1,1.00,16,24bew,  0,24,BE,2,10	),
@@ -1422,7 +1434,7 @@ static unsigned dummy_dasm(char *buffer, unsigned pc)
  *
  *************************************/
 
-#if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
+#if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020 || HAS_CYCLONE)
 void cpu_set_m68k_reset(int cpunum, void (*resetfn)(void))
 {
 	void m68k_set_reset_instr_callback(void (*callback)(void));
@@ -1432,6 +1444,9 @@ void cpu_set_m68k_reset(int cpunum, void (*resetfn)(void))
 	if ( 1
 #if (HAS_M68000)
 		&& cpu[cpunum].cputype != CPU_M68000
+#endif
+#if (HAS_CYCLONE)
+		&& cpu[cpunum].cputype != CPU_CYCLONE
 #endif
 #if (HAS_M68010)
 		&& cpu[cpunum].cputype != CPU_M68010
@@ -1453,6 +1468,9 @@ void cpu_set_m68k_reset(int cpunum, void (*resetfn)(void))
 	if ( 0
 #if (HAS_M68000)
 		|| cpu[cpunum].cputype == CPU_M68000
+#endif
+#if (HAS_CYCLONE)
+		|| cpu[cpunum].cputype == CPU_CYCLONE
 #endif
 #if (HAS_M68010)
 		|| cpu[cpunum].cputype == CPU_M68010

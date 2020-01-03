@@ -1111,6 +1111,11 @@ static int init_cpudata(void)
 			if (!(Machine->drv->cpu[cpunum].cpu_flags & CPU_16BIT_PORT))
 				cpudata[cpunum].port.mask = 0xff;
 #endif
+#if HAS_DRZ80
+		if (cputype == CPU_DRZ80)
+			if (!(Machine->drv->cpu[cpunum].cpu_flags & CPU_16BIT_PORT))
+				cpudata[cpunum].port.mask = 0xff;
+#endif
 #if HAS_Z180
 		/* Z180 port mask kludge */
 		if (cputype == CPU_Z180)

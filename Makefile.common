@@ -2702,3 +2702,15 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/unzip.c \
 	$(CORE_DIR)/lib/zlib/zutil.c
 endif
+
+ifeq ($(USE_CYCLONE), 1)
+	CPUDEFS += -DHAS_CYCLONE=1
+	SOURCES_ASM += $(CORE_DIR)/cpu/m68000_cyclone/cyclone.s
+	SOURCES_C += $(CORE_DIR)/cpu/m68000_cyclone/c68000.c
+endif
+
+ifeq ($(USE_DRZ80), 1)
+	CPUDEFS += -DHAS_DRZ80=1
+	SOURCES_ASM += $(CORE_DIR)/cpu/z80_drz80/drz80.s
+	SOURCES_C += $(CORE_DIR)/cpu/z80_drz80/drz80_z80.c
+endif
