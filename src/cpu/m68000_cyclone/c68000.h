@@ -15,18 +15,13 @@ extern int cyclone_ICount;
 #define cyclone_STOP     0x10
 
 extern void cyclone_init(void);
-extern void cyclone_reset(void *param);                      
-extern int  cyclone_execute(int cycles);                     
-extern void cyclone_set_context(void *src);
-extern unsigned cyclone_get_context(void *dst);
-extern unsigned int cyclone_get_pc(void);                      
+extern void cyclone_reset(void *param);
 extern void cyclone_exit(void);
-extern void cyclone_set_pc(unsigned val);
-extern unsigned cyclone_get_sp(void);
-extern void cyclone_set_sp(unsigned val);
+extern int  cyclone_execute(int cycles);
+extern unsigned cyclone_get_context(void *dst);
+extern void cyclone_set_context(void *src);
 extern unsigned cyclone_get_reg(int regnum);
 extern void cyclone_set_reg(int regnum, unsigned val);
-extern void cyclone_set_nmi_line(int state);
 extern void cyclone_set_irq_line(int irqline, int state);
 extern void cyclone_set_irq_callback(int (*callback)(int irqline));
 extern const char *cyclone_info(void *context, int regnum);

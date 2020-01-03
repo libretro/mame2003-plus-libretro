@@ -32,7 +32,7 @@ static void update_irq_line(void)
 			if (cyclone.pending_interrupts & mask)
 				break;
 		cyclone.regs.irq = level;
-	}
+			}
 	else
 	{
 		cyclone.regs.irq = 0;
@@ -76,12 +76,11 @@ static void cpu_writemem24bew_dword(offs_t address, data32_t data)
 
 void cyclone_init(void)
 {
-	//cyclone_reset(NULL);
+   	CycloneInit();
 }
 
 void cyclone_reset(void *param)
 {
-   	CycloneInit();
 	memset(&cyclone, 0,sizeof(Cyclone_Regs));
 	cyclone.regs.checkpc=MyCheckPc;
 	cyclone.regs.read8  = (unsigned int (*)(unsigned int)) cpu_readmem24bew;
@@ -167,7 +166,9 @@ unsigned cyclone_get_reg(int regnum)
 {
     switch( regnum )
     {
+    	case REG_PC:
 		case M68K_PC: return cyclone_get_pc();
+		case REG_SP:
 		case M68K_SP: return cyclone_get_sp();
 		case M68K_ISP: return cyclone.regs.osp;
 		case M68K_USP: return cyclone.regs.osp;
@@ -188,8 +189,6 @@ unsigned cyclone_get_reg(int regnum)
 		case M68K_A5: return cyclone.regs.a[5];
 		case M68K_A6: return cyclone.regs.a[6];
 		case M68K_A7: return cyclone.regs.a[7];
-		case M68K_PREF_ADDR:  return 0; /*?*/
-		case M68K_PREF_DATA:  return 0; /*?*/
 		case REG_PREVIOUSPC: return (cyclone.regs.prev_pc - cyclone.regs.membase - 2) & 0xffffff;
 		default:
 			if( regnum < REG_SP_CONTENTS )
@@ -206,7 +205,9 @@ void cyclone_set_reg(int regnum, unsigned val)
 {
     switch( regnum )
     {
+		case REG_PC:
 		case M68K_PC: cyclone_set_pc(val); break;
+		case REG_SP:
 		case M68K_SP: cyclone_set_sp(val); break;
 		case M68K_ISP: cyclone.regs.osp = val; break;
 		case M68K_USP: cyclone.regs.osp = val; break;
@@ -236,24 +237,11 @@ void cyclone_set_reg(int regnum, unsigned val)
             }
     }
 }
-void cyclone_set_nmi_line(int state)
-{
-	switch(state)
-	{
-		case CLEAR_LINE:
-			cyclone_Clear_Interrupt(7);
-			return;
-		case ASSERT_LINE:
-			cyclone_Cause_Interrupt(7);
-			return;
-		default:
-			cyclone_Cause_Interrupt(7);
-			return;
-	}
-}
 
 void cyclone_set_irq_line(int irqline, int state)
 {
+	if (irqline == IRQ_LINE_NMI)
+		irqline = 7;
 	switch(state)
 	{
 		case CLEAR_LINE:

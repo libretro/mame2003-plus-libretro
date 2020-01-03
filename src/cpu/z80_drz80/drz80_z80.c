@@ -260,7 +260,7 @@ void drz80_set_reg (int regnum, unsigned val)
 		case Z80_IFF1: DRZ80.regs.Z80IF=(DRZ80.regs.Z80IF)&(~(val==0)); break;
 		case Z80_IFF2: DRZ80.regs.Z80IF=(DRZ80.regs.Z80IF)&(~((val==0)<<1)); break;
 		case Z80_HALT: DRZ80.regs.Z80IF=(DRZ80.regs.Z80IF)&(~((val==0)<<2)); break;
-		case Z80_NMI_STATE: drz80_set_nmi_line(val); break;
+		case Z80_NMI_STATE: drz80_set_irq_line(IRQ_LINE_NMI,val); break;
 		case Z80_IRQ_STATE: drz80_set_irq_line(0,val); break;
 		case Z80_DC0: break; /* daisy chain */
 		case Z80_DC1: break; /* daisy chain */
@@ -276,16 +276,15 @@ void drz80_set_reg (int regnum, unsigned val)
     	}
 }
 
-void drz80_set_nmi_line(int state)
-{
-	DRZ80.nmi_state=state;
-	if (state!=CLEAR_LINE)
-		DRZ80.regs.Z80_IRQ=DRZ80.regs.Z80_IRQ|NMI_IRQ;
-}
-
 void drz80_set_irq_line(int irqline, int state)
 {
-	DRZ80.irq_state=state;
+	if(irqline == IRQ_LINE_NMI){
+		DRZ80.nmi_state=state;
+		if (state!=CLEAR_LINE)
+			DRZ80.regs.Z80_IRQ=DRZ80.regs.Z80_IRQ|NMI_IRQ;
+	} else {
+		DRZ80.irq_state=state;
+	}
 }
 
 void drz80_set_irq_callback(int (*callback)(int))

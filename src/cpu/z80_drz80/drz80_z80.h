@@ -25,7 +25,6 @@ extern unsigned drz80_get_sp (void);
 extern void drz80_set_sp (unsigned val);
 extern unsigned drz80_get_reg (int regnum);
 extern void drz80_set_reg (int regnum, unsigned val);
-extern void drz80_set_nmi_line(int state);
 extern void drz80_set_irq_line(int irqline, int state);
 extern void drz80_set_irq_callback(int (*irq_callback)(int));
 extern void drz80_state_save(void *file);
