@@ -32,7 +32,7 @@ static void update_irq_line(void)
 			if (cyclone.pending_interrupts & mask)
 				break;
 		cyclone.regs.irq = level;
-			}
+	}
 	else
 	{
 		cyclone.regs.irq = 0;
@@ -166,7 +166,7 @@ unsigned cyclone_get_reg(int regnum)
 {
     switch( regnum )
     {
-    	case REG_PC:
+    case REG_PC:
 		case M68K_PC: return cyclone_get_pc();
 		case REG_SP:
 		case M68K_SP: return cyclone_get_sp();
