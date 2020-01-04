@@ -166,9 +166,7 @@ unsigned cyclone_get_reg(int regnum)
 {
     switch( regnum )
     {
-    case REG_PC:
 		case M68K_PC: return cyclone_get_pc();
-		case REG_SP:
 		case M68K_SP: return cyclone_get_sp();
 		case M68K_ISP: return cyclone.regs.osp;
 		case M68K_USP: return cyclone.regs.osp;
@@ -205,9 +203,7 @@ void cyclone_set_reg(int regnum, unsigned val)
 {
     switch( regnum )
     {
-		case REG_PC:
 		case M68K_PC: cyclone_set_pc(val); break;
-		case REG_SP:
 		case M68K_SP: cyclone_set_sp(val); break;
 		case M68K_ISP: cyclone.regs.osp = val; break;
 		case M68K_USP: cyclone.regs.osp = val; break;
