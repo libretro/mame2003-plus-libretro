@@ -96,8 +96,6 @@ struct GameSamples
 	int total;	/* total number of samples */
 	struct GameSample *sample[1];	/* extendable */
 };
-
-int f_load_sample_sizes;
  
 #define	GAME_SAMPLE_LARGE		10000000 // 10MB
 
