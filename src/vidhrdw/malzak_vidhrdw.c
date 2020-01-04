@@ -16,8 +16,8 @@
 #include "vidhrdw/generic.h"
 #include "vidhrdw/s2636.h"
 
-unsigned char* s2636_1_ram;
-unsigned char* s2636_2_ram;
+unsigned char* malzak_s2636_1_ram;
+unsigned char* malzak_s2636_2_ram;
 
 static INT8 frame_count;
 
@@ -46,7 +46,7 @@ struct	{
 
 unsigned char* saa5050_vidram;  /* Video RAM for SAA 5050 */
 
-struct mame_bitmap* collision_bitmap;
+static struct mame_bitmap* collision_bitmap;
 
 int temp_x,temp_y;
 
@@ -68,8 +68,8 @@ VIDEO_START( malzak )
 		return 1;
 
 	saa5050_vidram = auto_malloc(0x800);
-	s2636_1_ram = auto_malloc(0x100);
-	s2636_2_ram = auto_malloc(0x100);
+	malzak_s2636_1_ram = auto_malloc(0x100);
+	malzak_s2636_2_ram = auto_malloc(0x100);
 
 	return 0;
 }
@@ -217,8 +217,8 @@ VIDEO_UPDATE( malzak )
 	s2636_x_offset = -16;
 /*	s2636_y_offset = -8;*/
 
-	Update_Bitmap(bitmap,s2636_1_ram,s2636_1_dirty,1,collision_bitmap);
-	Update_Bitmap(bitmap,s2636_2_ram,s2636_2_dirty,2,collision_bitmap);
+	Update_Bitmap(bitmap,malzak_s2636_1_ram,s2636_1_dirty,1,collision_bitmap);
+	Update_Bitmap(bitmap,malzak_s2636_2_ram,s2636_2_dirty,2,collision_bitmap);
 }
 
 WRITE_HANDLER( playfield_w )

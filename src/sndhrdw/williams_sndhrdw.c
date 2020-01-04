@@ -24,6 +24,19 @@
 	STATIC GLOBALS
 ****************************************************************************/
 
+bool	mk_playing_mortal_kombat;
+bool	mk_playing_mortal_kombat_t;
+bool	nba_jam_playing;
+bool	nba_jam_title_screen;
+bool	nba_jam_select_screen;
+bool	nba_jam_intermission;
+bool	nba_jam_in_game;
+bool	nba_jam_boot_up;
+bool	nba_jam_playing_title_music;
+
+int		m_nba_last_offset;
+int		m_nba_start_counter;
+
 UINT8 williams_sound_int_state;
 
 static INT8 sound_cpunum;

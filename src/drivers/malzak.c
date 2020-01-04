@@ -34,8 +34,8 @@
 extern int temp_x,temp_y;
 
 extern unsigned char* saa5050_vidram;  /* Video RAM for SAA 5050 */
-extern unsigned char* s2636_1_ram;  /* Video RAM for S2636 #1 */
-extern unsigned char* s2636_2_ram;  /* Video RAM for S2636 #2 */
+extern unsigned char* malzak_s2636_1_ram;  /* Video RAM for S2636 #1 */
+extern unsigned char* malzak_s2636_2_ram;  /* Video RAM for S2636 #2 */
 extern unsigned char s2636_1_dirty[4];
 extern unsigned char s2636_2_dirty[4];
 
@@ -46,22 +46,22 @@ WRITE_HANDLER( playfield_w );
 
 READ_HANDLER( malzak_s2636_1_r )
 {
-	return s2636_1_ram[offset];
+	return malzak_s2636_1_ram[offset];
 }
 
 READ_HANDLER( malzak_s2636_2_r )
 {
-	return s2636_2_ram[offset];
+	return malzak_s2636_2_ram[offset];
 }
 
 WRITE_HANDLER( malzak_s2636_1_w )
 {
-	s2636_w(s2636_1_ram,offset,data,s2636_1_dirty);
+	s2636_w(malzak_s2636_1_ram,offset,data,s2636_1_dirty);
 }
 
 WRITE_HANDLER( malzak_s2636_2_w )
 {
-	s2636_w(s2636_2_ram,offset,data,s2636_2_dirty);
+	s2636_w(malzak_s2636_2_ram,offset,data,s2636_2_dirty);
 }
 
 
@@ -77,7 +77,7 @@ static WRITE_HANDLER( saa5050_w )
 
 static READ_HANDLER( fake_VRLE_r )
 {
-	return (s2636_1_ram[0xcb] & 0x3f) + (cpu_getvblank()*0x40);
+	return (malzak_s2636_1_ram[0xcb] & 0x3f) + (cpu_getvblank()*0x40);
 }
 
 static READ_HANDLER( ram_mirror_r )

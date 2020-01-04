@@ -98,9 +98,9 @@ extern unsigned char *character_1_ram;
 extern unsigned char *character_2_ram;
 extern unsigned char *character_3_ram;
 extern unsigned char *bullet_ram;
-extern unsigned char *s2636_1_ram;
-extern unsigned char *s2636_2_ram;
-extern unsigned char *s2636_3_ram;
+extern unsigned char *cvs_s2636_1_ram;
+extern unsigned char *cvs_s2636_2_ram;
+extern unsigned char *cvs_s2636_3_ram;
 
 WRITE_HANDLER( cvs_videoram_w );
 WRITE_HANDLER( cvs_bullet_w );
@@ -274,9 +274,9 @@ static MEMORY_WRITE_START( cvs_writemem )
 	{ 0x4000, 0x53ff, MWA_ROM },
 	{ 0x6000, 0x73ff, MWA_ROM },
     { 0x1400, 0x14ff, cvs_bullet_w, &bullet_ram },
-    { 0x1500, 0x15ff, cvs_2636_3_w, &s2636_3_ram },
-    { 0x1600, 0x16ff, cvs_2636_2_w, &s2636_2_ram },
-    { 0x1700, 0x17ff, cvs_2636_1_w, &s2636_1_ram },
+    { 0x1500, 0x15ff, cvs_2636_3_w, &cvs_s2636_3_ram },
+    { 0x1600, 0x16ff, cvs_2636_2_w, &cvs_s2636_2_ram },
+    { 0x1700, 0x17ff, cvs_2636_1_w, &cvs_s2636_1_ram },
 	{ 0x1800, 0x1bff, cvs_videoram_w, &videoram, &videoram_size },
     { 0x1c00, 0x1fff, MWA_RAM },
 	{ 0x3400, 0x3fff, cvs_mirror_w },

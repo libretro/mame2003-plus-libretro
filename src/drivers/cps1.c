@@ -18,6 +18,10 @@
 
 #include "cps1.h"       /* External CPS1 definitions */
 
+bool	ff_provision_alt_song;
+bool	ff_play_alternate_song;
+bool	ff_playing_final_fight;
+
 /* in machine/kabuki.c */
 void wof_decode(void);
 void dino_decode(void);
@@ -8012,4 +8016,3 @@ GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell"
 					
 /* CPS Changer */
 GAME( 1994, wofch,    0,        qsound,   wofch,    wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)" )
-			
