@@ -582,7 +582,9 @@ endif
 
 # explictly use -fsigned-char on all platforms to solve problems with code written/tested on x86 but used on ARM
 # for example, audio on rtype leo is wrong on ARM without this flag
+ifeq (,$(findstring msvc,$(platform)))
 CFLAGS += -fsigned-char
+endif
 
 # Use position-independent code for all platforms
 CFLAGS += $(fpic)
