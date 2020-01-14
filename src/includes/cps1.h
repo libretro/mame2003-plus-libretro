@@ -13,10 +13,6 @@ extern bool	ff_provision_alt_song; /* For Final Fight SegaCD music hack.*/
 extern bool	ff_play_alternate_song; /* For Final Fight SegaCD music hack.*/
 extern bool	ff_playing_final_fight; /* For Final Fight SegaCD music hack.*/
 
-bool	sf2_playing_street_fighter;
-bool 	fadingMusic;
-float fadeMusicVolume;
-
 READ16_HANDLER( qsound_sharedram1_r );
 WRITE16_HANDLER( qsound_sharedram1_w );
 
