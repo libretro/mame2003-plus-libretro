@@ -13,15 +13,25 @@
   .align 4
 
   .global CycloneInitJT
+  .type CycloneInitJT, %function
   .global CycloneResetJT
+  .type CycloneResetJT, %function  
   .global CycloneRun
+  .type CycloneRun, %function  
   .global CycloneSetSr
+  .type CycloneSetSr, %function  
   .global CycloneGetSr
+  .type CycloneGetSr, %function  
   .global CycloneFlushIrq
+  .type CycloneFlushIrq, %function  
   .global CyclonePack
+  .type CyclonePack, %function  
   .global CycloneUnpack
+  .type CycloneUnpack, %function  
   .global CycloneVer
+  .type CycloneVer, %function  
   .global CycloneJumpTab
+  .type CycloneJumpTab, %function  
 
 CycloneVer: .long 0x0099
 

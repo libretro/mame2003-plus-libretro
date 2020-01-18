@@ -9,7 +9,9 @@
       .align 4
 
       .global DrZ80Run
+	  .type DrZ80Run, %function
       .global DrZ80Ver
+	  .type DrZ80Ver, %function
 
 	  .equiv INTERRUPT_MODE, 		1		;@1 = Call MAME before IRQ handling
 	  .equiv FAST_Z80SP,			1		;@0 = Use mem functions for stack pointer, 1 = Use direct mem pointer
