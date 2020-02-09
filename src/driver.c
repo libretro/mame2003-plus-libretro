@@ -4296,6 +4296,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( maniach )	/* TA-0017 (c) 1986 + Taito America license */
 	DRIVER( maniach2 )	/* TA-0017 (c) 1986 + Taito America license */
 	DRIVER( renegade )	/* TA-0018 (c) 1986 + Taito America license */
+  DRIVER( renegadeb )	/* bootleg */
 	DRIVER( kuniokun )	/* TA-0018 (c) 1986 */
 	DRIVER( kuniokub )	/* bootleg */
 	DRIVER( xsleena )	/* TA-0019 (c) 1986 */
