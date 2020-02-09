@@ -95,6 +95,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rage Of The Dragons
 * Riot
 * Rolling Crush
+* Rumba Lumber
 * Samurai Shodown V
 * Samurai Shodown V Special
 * SD Fighters
@@ -451,3 +452,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Backported Stefan Jokisch's graphical and sound improvemnets for the Nintendo 8080 based games from MAME81 [arcadez]
 * Added Bryan McPhail's C-Chip simulation code for Operation Wolf from MAME98 and MAME176 respectively [arcadez]
 * Fixed graphical problems in GunNail and better balanced the sound for the games using the NMK004 [arcadez]
+* Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
