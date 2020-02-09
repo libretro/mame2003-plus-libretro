@@ -165,6 +165,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Magical Drop
 * Magical Drop Plus 1
 * Progear No Arashi
+* Renegade (US, Bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
