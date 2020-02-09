@@ -746,7 +746,7 @@ ROM_END
 
 ROM_START( renegadeb )
 	ROM_REGION( 0x14000, REGION_CPU1, 0 )	/* 64k for code + bank switched ROM */
-	ROM_LOAD( "40.ic51",       0x08000, 0x8000, CRC(3dbaac11) SHA1(a40470514f01a1a9c159de0aa416ea3940be76e8) ) // bootleg
+	ROM_LOAD( "40.ic51",       0x08000, 0x8000, CRC(3dbaac11) SHA1(a40470514f01a1a9c159de0aa416ea3940be76e8) ) /* bootleg */
 	ROM_LOAD( "na-5.bin",      0x04000, 0x4000, CRC(de7e7df4) SHA1(7d26ac29e0b5858d9a0c0cdc86c864e464145260) )
 	ROM_CONTINUE(			   0x10000, 0x4000 )
 	
