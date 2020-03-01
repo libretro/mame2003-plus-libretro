@@ -51,6 +51,8 @@ extern const struct bin2cFILE mk2r42_bootstrap;
 
 extern const struct bin2cFILE mk2r91_bootstrap;
 
+extern const struct bin2cFILE mk2p_bootstrap;
+
 extern const struct bin2cFILE narc_bootstrap;
 
 extern const struct bin2cFILE narc3_bootstrap;
