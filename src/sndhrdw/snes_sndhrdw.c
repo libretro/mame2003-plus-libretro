@@ -60,8 +60,6 @@ static struct
 	void *timer;
 } timers[3];
 static int channel;
-UINT8 spc_port_in[4];					/* Port for receiving data from the G65816 */
-UINT8 spc_port_out[4];					/* Port for sending data to the G65816 */
 UINT8 spc_usefakeapu = 0;				/* Fake the APU behaviour. */
 static UINT8 spc_showrom = 1;			/* Is the IPL ROM visible or not */
 static UINT8 spc_iplrom[IPLROM_SIZE];	/* Storage for the IPL rom */

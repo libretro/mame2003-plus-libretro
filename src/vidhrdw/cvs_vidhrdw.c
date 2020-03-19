@@ -50,16 +50,16 @@ unsigned char *character_1_ram;
 unsigned char *character_2_ram;
 unsigned char *character_3_ram;
 unsigned char *bullet_ram;
-unsigned char *s2636_1_ram;
-unsigned char *s2636_2_ram;
-unsigned char *s2636_3_ram;
+unsigned char *cvs_s2636_1_ram;
+unsigned char *cvs_s2636_2_ram;
+unsigned char *cvs_s2636_3_ram;
 
 struct mame_bitmap *s2636_1_bitmap;
 struct mame_bitmap *s2636_2_bitmap;
 struct mame_bitmap *s2636_3_bitmap;
-struct mame_bitmap *collision_bitmap;
-struct mame_bitmap *collision_background;
-struct mame_bitmap *scrolled_background;
+static struct mame_bitmap *collision_bitmap;
+static struct mame_bitmap *collision_background;
+static struct mame_bitmap *scrolled_background;
 
 static unsigned char s2636_1_dirty[4];
 static unsigned char s2636_2_dirty[4];
@@ -262,7 +262,7 @@ WRITE_HANDLER( cvs_2636_1_w )
     {
     	/* First 2636*/
 
-        s2636_w(s2636_1_ram,offset,data,s2636_1_dirty);
+        s2636_w(cvs_s2636_1_ram,offset,data,s2636_1_dirty);
     }
     else
     {
@@ -282,7 +282,7 @@ READ_HANDLER( cvs_2636_1_r )
     {
     	/* First 2636*/
 
-        return s2636_1_ram[offset];
+        return cvs_s2636_1_ram[offset];
     }
     else
     {
@@ -298,7 +298,7 @@ WRITE_HANDLER( cvs_2636_2_w )
     {
     	/* Second 2636*/
 
-        s2636_w(s2636_2_ram,offset,data,s2636_2_dirty);
+        s2636_w(cvs_s2636_2_ram,offset,data,s2636_2_dirty);
     }
     else
     {
@@ -318,7 +318,7 @@ READ_HANDLER( cvs_2636_2_r )
     {
     	/* Second 2636*/
 
-        return s2636_2_ram[offset];
+        return cvs_s2636_2_ram[offset];
     }
     else
     {
@@ -334,7 +334,7 @@ WRITE_HANDLER( cvs_2636_3_w )
     {
     	/* Third 2636*/
 
-        s2636_w(s2636_3_ram,offset,data,s2636_3_dirty);
+        s2636_w(cvs_s2636_3_ram,offset,data,s2636_3_dirty);
     }
     else
     {
@@ -354,7 +354,7 @@ READ_HANDLER( cvs_2636_3_r )
     {
     	/* Third 2636*/
 
-        return s2636_3_ram[offset];
+        return cvs_s2636_3_ram[offset];
     }
     else
     {
@@ -544,13 +544,13 @@ VIDEO_UPDATE( cvs )
     /* 2636's */
 
 	fillbitmap(s2636_1_bitmap,0,0);
-	Update_Bitmap(s2636_1_bitmap,s2636_1_ram,s2636_1_dirty,2,collision_bitmap);
+	Update_Bitmap(s2636_1_bitmap,cvs_s2636_1_ram,s2636_1_dirty,2,collision_bitmap);
 
 	fillbitmap(s2636_2_bitmap,0,0);
-	Update_Bitmap(s2636_2_bitmap,s2636_2_ram,s2636_2_dirty,3,collision_bitmap);
+	Update_Bitmap(s2636_2_bitmap,cvs_s2636_2_ram,s2636_2_dirty,3,collision_bitmap);
 
 	fillbitmap(s2636_3_bitmap,0,0);
-	Update_Bitmap(s2636_3_bitmap,s2636_3_ram,s2636_3_dirty,4,collision_bitmap);
+	Update_Bitmap(s2636_3_bitmap,cvs_s2636_3_ram,s2636_3_dirty,4,collision_bitmap);
 
     /* Bullet Hardware */
 

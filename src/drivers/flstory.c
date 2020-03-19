@@ -17,6 +17,8 @@ TODO:
 
 VIDEO_START( flstory );
 VIDEO_UPDATE( flstory );
+VIDEO_START( rumba );
+VIDEO_UPDATE( rumba );
 
 extern UINT8 *flstory_scrlram;
 
@@ -26,6 +28,7 @@ WRITE_HANDLER( flstory_palette_w );
 WRITE_HANDLER( flstory_gfxctrl_w );
 READ_HANDLER( flstory_scrlram_r );
 WRITE_HANDLER( flstory_scrlram_w );
+WRITE_HANDLER( rumba_gfxctrl_w );
 
 READ_HANDLER( flstory_68705_portA_r );
 WRITE_HANDLER( flstory_68705_portA_w );
@@ -169,6 +172,47 @@ static MEMORY_WRITE_START( onna34ro_writemem )
 	{ 0xdcc0, 0xdcff, MWA_RAM }, /* unknown */
 	{ 0xdd00, 0xdeff, flstory_palette_w },
 	{ 0xdf03, 0xdf03, flstory_gfxctrl_w },
+	{ 0xe000, 0xe7ff, MWA_RAM },	/* work RAM */
+MEMORY_END
+
+/* Using Fairyland Story MCU hookup for Rumba Lumba, 95% of Taito 68705 MCU's 
+all use the same address values so it's highly likely to be correct anyhow.
+*/
+static MEMORY_READ_START( rumba_readmem )
+    { 0x0000, 0xbfff, MRA_ROM },
+	{ 0xc000, 0xc7ff, MRA_RAM },
+/*	{ 0xc800, 0xcfff, MRA_RAM }, unknown */
+    { 0xd000, 0xd000, flstory_mcu_r },
+	{ 0xd400, 0xd400, from_snd_r },
+	{ 0xd401, 0xd401, snd_flag_r },
+/*	{ 0xd403, 0xd403, MRA_NOP }, unknown */
+    { 0xd800, 0xd800, input_port_0_r },
+	{ 0xd801, 0xd801, input_port_1_r },
+	{ 0xd802, 0xd802, input_port_2_r },
+	{ 0xd803, 0xd803, input_port_3_r },
+	{ 0xd804, 0xd804, input_port_4_r },
+	{ 0xd805, 0xd805, flstory_mcu_status_r },
+	{ 0xd806, 0xd806, input_port_6_r },
+	{ 0xd807, 0xd807, input_port_7_r },
+	{ 0xdc00, 0xdc9f, MRA_RAM }, /* spriteram / scrollram */
+	{ 0xdd00, 0xdeff, flstory_palette_r },
+	{ 0xe000, 0xe7ff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( rumba_writemem )
+    { 0x0000, 0xbfff, MWA_ROM },
+	{ 0xc000, 0xc7ff, flstory_videoram_w, &videoram, &videoram_size },
+/*	{ 0xc800, 0xcfff, MWA_RAM }, */
+    { 0xd000, 0xd000, flstory_mcu_w },
+	{ 0xd001, 0xd001, MWA_NOP },	/* watchdog? */
+/*	{ 0xd002, 0xd002, MWA_NOP },	 coin lock out? */
+    { 0xd400, 0xd400, sound_command_w },
+	{ 0xd403, 0xd403, MWA_NOP },	/* unknown */
+/*	{ 0xda00, 0xda00, MWA_RAM }, */
+    { 0xdc00, 0xdc9f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0xdca0, 0xdcbf, flstory_scrlram_w, &flstory_scrlram },
+	{ 0xdd00, 0xdeff, flstory_palette_w },
+	{ 0xdce0, 0xdce0, rumba_gfxctrl_w },
 	{ 0xe000, 0xe7ff, MWA_RAM },	/* work RAM */
 MEMORY_END
 
@@ -511,6 +555,135 @@ INPUT_PORTS_START( onna34ro )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( rumba )
+	PORT_START     /* D800 */
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x00, "20000 50000" )
+	PORT_DIPSETTING(    0x01, "10000 60000" )
+	PORT_DIPSETTING(    0x02, "10000 40000" )
+	PORT_DIPSETTING(    0x03, "10000 20000" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x18, "3" )
+	PORT_DIPSETTING(    0x10, "4" )
+	PORT_DIPSETTING(    0x08, "5" )
+	PORT_DIPSETTING(    0x00, "6")
+    PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+    PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+    PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )
+
+
+	PORT_START     /* D801 */
+	PORT_DIPNAME(0x0f, 0x00, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(   0x0f, DEF_STR( 9C_1C ) )
+	PORT_DIPSETTING(   0x0e, DEF_STR( 8C_1C ) )
+	PORT_DIPSETTING(   0x0d, DEF_STR( 7C_1C ) )
+	PORT_DIPSETTING(   0x0c, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(   0x0b, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(   0x0a, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(   0x09, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(   0x08, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(   0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(   0x01, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(   0x02, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(   0x03, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(   0x04, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(   0x05, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(   0x06, DEF_STR( 1C_7C ) )
+	PORT_DIPSETTING(   0x07, DEF_STR( 1C_8C ) )
+	PORT_DIPNAME(0xf0, 0x00, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(   0xf0, DEF_STR( 9C_1C ) )
+	PORT_DIPSETTING(   0xe0, DEF_STR( 8C_1C ) )
+	PORT_DIPSETTING(   0xd0, DEF_STR( 7C_1C ) )
+	PORT_DIPSETTING(   0xc0, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(   0xb0, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(   0xa0, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(   0x90, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(   0x80, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(   0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(   0x10, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(   0x20, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(   0x30, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(   0x40, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(   0x50, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(   0x60, DEF_STR( 1C_7C ) )
+	PORT_DIPSETTING(   0x70, DEF_STR( 1C_8C ) )
+
+	PORT_START     /* D802 */
+    PORT_DIPNAME( 0x01,   0x01, "Training Stage" )
+    PORT_DIPSETTING(      0x00, DEF_STR( Off ) )
+    PORT_DIPSETTING(      0x01, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02,   0x02, DEF_STR( Unknown ) )
+    PORT_DIPSETTING(      0x02, DEF_STR( Off ) )
+    PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x04,   0x00, "Language" )
+    PORT_DIPSETTING(      0x04, "Japanese" )
+    PORT_DIPSETTING(      0x00, "English" )
+	PORT_DIPNAME( 0x08,   0x00, "Attract Sound" ) /* At title sequence only - NOT Demo Sounds */
+	PORT_DIPSETTING(      0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10,   0x00, "Coinage Display" )
+	PORT_DIPSETTING(      0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x20,   0x20, "Copyright String" )
+    PORT_DIPSETTING(      0x20, "Taito Corp. MCMLXXXIV" )
+    PORT_DIPSETTING(      0x00, "Taito Corporation" )
+    PORT_DIPNAME( 0x40,   0x40, "Infinite Lives" ) /* ??? */
+    PORT_DIPSETTING(      0x40, DEF_STR( Off ) )
+    PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x80,   0x80, DEF_STR( Unknown ) )
+    PORT_DIPSETTING(      0x80, DEF_STR( Off ) )
+    PORT_DIPSETTING(      0x00, DEF_STR( On ) )
+
+	PORT_START      /* D803 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* D804 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )	/* A */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )	/* C */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START     /* D806 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )	/* A */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )	/* C */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START     /* D807 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
 
 static struct GfxLayout charlayout =
 {
@@ -646,6 +819,43 @@ static MACHINE_DRIVER_START( onna34ro )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( rumba )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80,8000000/2)		/* 4 MHz */
+	MDRV_CPU_MEMORY(rumba_readmem,rumba_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80,8000000/2)		/* 4 MHz */
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)		/* 4 MHz */
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)	/* IRQ generated by ??? */
+						/* NMI generated by the main CPU */
+	MDRV_CPU_ADD(M68705,4000000/2)	/* ??? */
+	MDRV_CPU_MEMORY(m68705_readmem,m68705_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)	/* 100 CPU slices per frame - an high value to ensure proper */
+							/* synchronization of the CPUs */
+	MDRV_MACHINE_INIT(ta7630)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+    MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(512)
+
+	MDRV_VIDEO_START(rumba)
+	MDRV_VIDEO_UPDATE(rumba)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(AY8910, ay8910_interface)
+	MDRV_SOUND_ADD(MSM5232, msm5232_interface)
+	MDRV_SOUND_ADD(DAC, dac_interface)
+MACHINE_DRIVER_END
+
 /***************************************************************************
 
   Game driver(s)
@@ -754,8 +964,29 @@ ROM_START( onna34ra )
 	ROM_LOAD( "a52-11.32v",   0x1c000, 0x4000, CRC(d1dda6b3) SHA1(fadf1404e8a03ec7e3fafb6281d33bc73bb5c473) )
 ROM_END
 
+ROM_START( rumba )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for the first CPU */
+	ROM_LOAD( "a23_01-1.bin",   0x0000, 0x4000, CRC(4bea6e18) SHA1(b9a85e65105773b5f93dcc5fc1e7c588b2d25056) )
+	ROM_LOAD( "a23_02-1.bin",   0x4000, 0x4000, CRC(08f98c6f) SHA1(f2a850b1138cfefab6ff1d1adcda9e084f52e9c2) )
+	ROM_LOAD( "a23_03-1.bin",   0x8000, 0x4000, CRC(ab595427) SHA1(1ff51740e1c7915e1f79a55801d11c8fdce764c8) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for the second CPU */
+	ROM_LOAD( "a23_08-1.bin",    0x0000, 0x2000, CRC(a18eae00) SHA1(6ac1ad07bb5a97c6edaaf0e1fb842e1741f4cf1e) )
+	ROM_LOAD( "a23_09.bin",      0x2000, 0x2000, CRC(d0a101d3) SHA1(c92bb1ce67bec394fd8ce303d9e61eac12493b5d) )
+	ROM_LOAD( "a23_10.bin",      0x4000, 0x2000, CRC(f9447bd4) SHA1(68c02249ca0e5b923cddb4bff8d090963b9c78e4) )
+
+	ROM_REGION( 0x0800, REGION_CPU3, 0 )	/* 2k for the microcontroller */
+	ROM_LOAD( "a23_11.bin",      0x0000, 0x0800, CRC(fddc99ce) SHA1(a9c7f76752ce74a780ca74004106c969d78ba931) )
+
+	ROM_REGION( 0x8000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
+	ROM_LOAD( "a23_07.bin",   0x02000, 0x2000, CRC(c98fbea6) SHA1(edd1e0b2551f726018ca6e0b2cf629046a482711) )
+	ROM_LOAD( "a23_06.bin",   0x00000, 0x2000, CRC(bf1e3a7f) SHA1(1258be10739cee6e6a8b2ce4d39f89bff1ea7f16) ) /* should be a good read */
+	ROM_LOAD( "a23_05.bin",   0x06000, 0x2000, CRC(b40db231) SHA1(85204efc05e95334576807e4dab866f4f40081e6) )
+	ROM_LOAD( "a23_04.bin",   0x04000, 0x2000, CRC(1d4f001f) SHA1(c3245650e57138ed89e7de8289fe37c5d933ddca) )
+ROM_END
 
 GAMEX( 1985, flstory,  0,        flstory,  flstory,  0, ROT180, "Taito", "The FairyLand Story", GAME_IMPERFECT_SOUND )
 GAMEX( 1985, flstoryj, flstory,  flstory,  flstory,  0, ROT180, "Taito", "The FairyLand Story (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX( 1985, onna34ro, 0,        onna34ro, onna34ro, 0, ROT0,   "Taito", "Onna Sansirou - Typhoon Gal (set 1)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
 GAMEX( 1985, onna34ra, onna34ro, onna34ro, onna34ro, 0, ROT0,   "Taito", "Onna Sansirou - Typhoon Gal (set 2)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
+GAMEX( 1984, rumba,    0,        rumba,    rumba,    0, ROT270, "Taito", "Rumba Lumber", GAME_IMPERFECT_SOUND )
