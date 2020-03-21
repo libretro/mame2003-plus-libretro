@@ -1,292 +1,3 @@
-/***************************************************************************
-
-  inptport.c
-
-  Input ports handling
-
-TODO:	remove the 1 analog device per port limitation
-		support for inputports producing interrupts
-		support for extra "real" hardware (PC throttle's, spinners etc)
-		
-                 Controller-Specific Input Port Mappings
-                 ---------------------------------------
-
-The main purpose of the controller-specific configuration is to remap 
-inputs.  This is handled via two mechanisms: key re-mapping and 
-sequence re-mapping.
-
-Key re-mapping occurs at the most basic level.  The specified keycode is
-replaced where ever it occurs (in all sequences) with the specified 
-replacement.  Only single keycodes can be used as a replacement (that is, a 
-single key cannot be replaced with a key sequence).
-
-Sequence mapping occurs at a higher level.  In this case, the entire
-key sequence for the given input is replaced with the specified key
-sequence.
-
-Keycodes are specified as a single keyword.  Key sequences are specified
-as a series of keycodes separated by spaces (the full sequence must be
-enclosed in quotes if spaces exist).  Two special keywords are available
-for defining key sequences, CODE_OR and CODE_NOT (which can abbreviated | 
-and ! respectively).
-
-When two keycodes are specified together (separated by only whitespace),
-the default action is a logical AND, such that both keys must be pressed
-at the same time for the action to occur.  Often it desired that either
-key can be pressed for the action to occur (for example LEFT CTRL and 
-Joystick Button 0), in which case the two keycodes need to be separated
-by a CODE_OR (|) keyword.  Finally, certain combinations may be 
-undesirable and warrant no action by MAME.  For these, the keywords should
-be specified by a CODE_NOT (!) (for example, ALT-TAB on a windows machine).
-
-An example file containing all key sequences and the standard definitions
-can be found in ctrlr\std.ini.  This file is NOT parsed by MAME and is
-only provided for reference.  Lines can be copied from this file to create
-a controller customization file.  When creating a file, keep the number of
-redefinitions to a minimum.  Any input not listed will default to the
-standard sequence.  Note that several files may be parsed for any given
-controller/game combination, so an input may be re-defined in multiple
-places.
-
-For support of controller input customization, two new command-line
-options were added:
-
--ctrlr_directory "name"
-
-Specifies the directory that contains the controller customization .ini files.
-
--ctrlr "name"
-
-Specifies a controller name for customization.  The .ini files for the 
-controller are stored in either a directory or a .zip file with the same
-name as the specified controller.  
-
-The first file in the directory/zip to be scanned is the file default.ini.
-From there, game-specific files are scanned starting with the top-most
-parent file and continuing down to the specified game name.
-
-Once the default.ini and all game-specific files are scanned, additional
-files may be scanned depending on the game type.  The files to be scanned
-are specified by the following custom keywords:
-
-dial_ini                "name"
-paddle_ini              "name"
-pedal_ini               "name"
-trackball_ini           "name"
-ad_stick_ini            "name"
-
-Each of these keywords specify the name of an .ini file that will be
-parsed if the game has one of these types of inputs.  For example,
-Tempest, which  has a dial input, will automatically parse the file
-specified by the dial_ini keyword.  Typically, all of the x_ini keywords
-will point to the same file (e.g. mouse.ini) which enables mouse and/or
-joystick support.  In this way, mouse and joystick support will only be
-enabled on those games that require it.  If all games for this controller
-require joystick and/or mouse support, those keywords can be placed in
-the main default.ini file.
-
-All of the options that can be specified on the command-line or in the 
-main mame.ini file can be specified in the controller-specific ini files, 
-though because of when these files are parsed, the specified options may 
-have no effect.  The only two general options guaranteed to be supported
-are mouse and joystick.  Note that command-line specification of these
-options takes precedence.  Since most front-ends, including MAME32, 
-specify these options through the command-line, the mouse and/or joystick
-options specified in the .ini files will be ignored.
-
-Another custom keyword is:
-
-ctrlrname               "name"
-
-This keyword defines a detailed name for the selected controller.  Names 
-that include spaces must be enclosed in quotes.
-
-
-Keywords:
----------
-
-Keywords are separated into two categories, keycodes and input port
-definitions.  To specify a key re-mapping, specify the keycode as the
-keyword to re-define (that is, on the left-hand side) followed by the 
-replacement code.  To specify a sequence re-map, specify the input port 
-code to be re-defined on the left followed by the sequence.
-
-In addition to the standard codes, additional OSD specific codes may be
-generated.  The keycodes added are typically generated based on connected
-hardware.  For example, in the windows port, direct input is polled to
-determine what inputs are available and assign names.
-
-With respect to the windows port, the generated keycodes are identical
-to those displayed in the configuration menu with all spaces replaced by
-underscores.  For example, the keycodes automatically generated for a
-Wingman Warrior joystick are:
-
-J1_X-axis_+        J1_X-axis_-        J1_Y-axis_+        J1_Y-axis_-
-J1_Z-axis_+        J1_Z-axis_-        J1_Rz-axis_+       J1_Rz-axis_-
-J1_Button_0        J1_Button_1        J1_Button_2        J1_Button_3
-J1_POV_0_U         J1_POV_0_D         J1_POV_0_L         J1_POV_0_R
-
-The names generated will vary with the port to which the joystick is
-connected.  In the codes listed above, the Wingman Warrior was connected as
-the first joystick (J1).  If it had been configured as a different input,
-the generated codes would have a different Jx number.
-
-All keyword matching including the standard keywords is case sensitive.  
-Also, some of the automatically generated OSD codes may be redundant. 
-For example, J1_Button_0 is the same as JOYCODE_1_BUTTON1.  Standard codes
-are preferred over OSD codes.
-
-
-The standard keycodes are:
---------------------------
-
-KEYCODE_A                KEYCODE_B                KEYCODE_C
-KEYCODE_D                KEYCODE_E                KEYCODE_F
-KEYCODE_G                KEYCODE_H                KEYCODE_I
-KEYCODE_J                KEYCODE_K                KEYCODE_L
-KEYCODE_M                KEYCODE_N                KEYCODE_O
-KEYCODE_P                KEYCODE_Q                KEYCODE_R
-KEYCODE_S                KEYCODE_T                KEYCODE_U
-KEYCODE_V                KEYCODE_W                KEYCODE_X
-KEYCODE_Y                KEYCODE_Z                KEYCODE_0
-KEYCODE_1                KEYCODE_2                KEYCODE_3
-KEYCODE_4                KEYCODE_5                KEYCODE_6
-KEYCODE_7                KEYCODE_8                KEYCODE_9
-KEYCODE_0_PAD            KEYCODE_1_PAD            KEYCODE_2_PAD
-KEYCODE_3_PAD            KEYCODE_4_PAD            KEYCODE_5_PAD
-KEYCODE_6_PAD            KEYCODE_7_PAD            KEYCODE_8_PAD
-KEYCODE_9_PAD            KEYCODE_F1               KEYCODE_F2
-KEYCODE_F3               KEYCODE_F4               KEYCODE_F5
-KEYCODE_F6               KEYCODE_F7               KEYCODE_F8
-KEYCODE_F9               KEYCODE_F10              KEYCODE_F11
-KEYCODE_F12              KEYCODE_ESC              KEYCODE_TILDE
-KEYCODE_MINUS            KEYCODE_EQUALS           KEYCODE_BACKSPACE
-KEYCODE_TAB              KEYCODE_OPENBRACE        KEYCODE_CLOSEBRACE
-KEYCODE_ENTER            KEYCODE_COLON            KEYCODE_QUOTE
-KEYCODE_BACKSLASH        KEYCODE_BACKSLASH2       KEYCODE_COMMA
-KEYCODE_STOP             KEYCODE_SLASH            KEYCODE_SPACE
-KEYCODE_INSERT           KEYCODE_DEL              KEYCODE_HOME
-KEYCODE_END              KEYCODE_PGUP             KEYCODE_PGDN
-KEYCODE_LEFT             KEYCODE_RIGHT            KEYCODE_UP
-KEYCODE_DOWN             KEYCODE_SLASH_PAD        KEYCODE_ASTERISK
-KEYCODE_MINUS_PAD        KEYCODE_PLUS_PAD         KEYCODE_DEL_PAD
-KEYCODE_ENTER_PAD        KEYCODE_PRTSCR           KEYCODE_PAUSE
-KEYCODE_LSHIFT           KEYCODE_RSHIFT           KEYCODE_LCONTROL
-KEYCODE_RCONTROL         KEYCODE_LALT             KEYCODE_RALT
-KEYCODE_SCRLOCK          KEYCODE_NUMLOCK          KEYCODE_CAPSLOCK
-KEYCODE_LWIN             KEYCODE_RWIN             KEYCODE_MENU
-
-JOYCODE_1_LEFT           JOYCODE_1_RIGHT          JOYCODE_1_UP
-JOYCODE_1_DOWN           JOYCODE_1_BUTTON1        JOYCODE_1_BUTTON2
-JOYCODE_1_BUTTON3        JOYCODE_1_BUTTON4        JOYCODE_1_BUTTON5
-JOYCODE_1_BUTTON6        JOYCODE_1_START          JOYCODE_1_SELECT
-JOYCODE_2_LEFT           JOYCODE_2_RIGHT          JOYCODE_2_UP
-JOYCODE_2_DOWN           JOYCODE_2_BUTTON1        JOYCODE_2_BUTTON2
-JOYCODE_2_BUTTON3        JOYCODE_2_BUTTON4        JOYCODE_2_BUTTON5
-JOYCODE_2_BUTTON6        JOYCODE_2_START          JOYCODE_2_SELECT
-JOYCODE_3_LEFT           JOYCODE_3_RIGHT          JOYCODE_3_UP
-JOYCODE_3_DOWN           JOYCODE_3_BUTTON1        JOYCODE_3_BUTTON2
-JOYCODE_3_BUTTON3        JOYCODE_3_BUTTON4        JOYCODE_3_BUTTON5
-JOYCODE_3_BUTTON6        JOYCODE_3_START          JOYCODE_3_SELECT
-JOYCODE_4_LEFT           JOYCODE_4_RIGHT          JOYCODE_4_UP
-JOYCODE_4_DOWN           JOYCODE_4_BUTTON1        JOYCODE_4_BUTTON2
-JOYCODE_4_BUTTON3        JOYCODE_4_BUTTON4        JOYCODE_4_BUTTON5
-JOYCODE_4_BUTTON6        JOYCODE_4_START          JOYCODE_4_SELECT
-
-MOUSECODE_1_BUTTON1      MOUSECODE_1_BUTTON2      MOUSECODE_1_BUTTON3
-
-KEYCODE_NONE             CODE_NONE                CODE_OTHER
-CODE_DEFAULT             CODE_PREVIOUS            CODE_NOT
-CODE_OR                  !                        |
-
-
-
-The input port codes are:
--------------------------
-
-UI_CONFIGURE             UI_ON_SCREEN_DISPLAY     UI_PAUSE
-UI_RESET_MACHINE         UI_SHOW_GFX              UI_FRAMESKIP_DEC
-UI_FRAMESKIP_INC         UI_THROTTLE              UI_SHOW_FPS
-UI_SHOW_PROFILER         UI_SNAPSHOT              UI_TOGGLE_CHEAT
-UI_UP                    UI_DOWN                  UI_LEFT
-UI_RIGHT                 UI_SELECT                UI_CANCEL
-UI_PAN_UP                UI_PAN_DOWN              UI_PAN_LEFT
-UI_PAN_RIGHT             UI_TOGGLE_DEBUG          UI_SAVE_STATE
-UI_LOAD_STATE            UI_ADD_CHEAT             UI_DELETE_CHEAT
-UI_SAVE_CHEAT            UI_WATCH_VALUE           UI_EDIT_CHEAT
-START1                   START2                   START3
-START4                   COIN1                    COIN2
-COIN3                    COIN4                    SERVICE1
-SERVICE2                 SERVICE3                 SERVICE4
-TILT
-
-P1_JOYSTICK_UP           P1_JOYSTICK_DOWN         P1_JOYSTICK_LEFT
-P1_JOYSTICK_RIGHT        P1_BUTTON1               P1_BUTTON2
-P1_BUTTON3               P1_BUTTON4               P1_BUTTON5
-P1_BUTTON6               P1_BUTTON7               P1_BUTTON8
-P1_BUTTON9               P1_BUTTON10              P1_JOYSTICKRIGHT_UP
-P1_JOYSTICKRIGHT_DOWN    P1_JOYSTICKRIGHT_LEFT    P1_JOYSTICKRIGHT_RIGHT
-P1_JOYSTICKLEFT_UP       P1_JOYSTICKLEFT_DOWN     P1_JOYSTICKLEFT_LEFT
-P1_JOYSTICKLEFT_RIGHT
-
-P2_JOYSTICK_UP           P2_JOYSTICK_DOWN         P2_JOYSTICK_LEFT
-P2_JOYSTICK_RIGHT        P2_BUTTON1               P2_BUTTON2
-P2_BUTTON3               P2_BUTTON4               P2_BUTTON5
-P2_BUTTON6               P2_BUTTON7               P2_BUTTON8
-P2_BUTTON9               P2_BUTTON10              P2_JOYSTICKRIGHT_UP
-P2_JOYSTICKRIGHT_DOWN    P2_JOYSTICKRIGHT_LEFT    P2_JOYSTICKRIGHT_RIGHT
-P2_JOYSTICKLEFT_UP       P2_JOYSTICKLEFT_DOWN     P2_JOYSTICKLEFT_LEFT
-P2_JOYSTICKLEFT_RIGHT
-
-P3_JOYSTICK_UP           P3_JOYSTICK_DOWN         P3_JOYSTICK_LEFT
-P3_JOYSTICK_RIGHT        P3_BUTTON1               P3_BUTTON2
-P3_BUTTON3               P3_BUTTON4               
-
-P4_JOYSTICK_UP           P4_JOYSTICK_DOWN         P4_JOYSTICK_LEFT
-P4_JOYSTICK_RIGHT        P4_BUTTON1               P4_BUTTON2
-P4_BUTTON3               P4_BUTTON4               
-
-P1_PEDAL                 P1_PEDAL_EXT             P2_PEDAL
-P2_PEDAL_EXT             P3_PEDAL                 P3_PEDAL_EXT
-P4_PEDAL                 P4_PEDAL_EXT             
-
-P1_PADDLE                P1_PADDLE_EXT            P2_PADDLE
-P2_PADDLE_EXT            P3_PADDLE                P3_PADDLE_EXT
-P4_PADDLE                P4_PADDLE_EXT            P1_PADDLE_V
-P1_PADDLE_V_EXT          P2_PADDLE_V              P2_PADDLE_V_EXT
-P3_PADDLE_V              P3_PADDLE_V_EXT          P4_PADDLE_V
-P4_PADDLE_V_EXT
-
-P1_DIAL                  P1_DIAL_EXT              P2_DIAL
-P2_DIAL_EXT              P3_DIAL                  P3_DIAL_EXT
-P4_DIAL                  P4_DIAL_EXT              P1_DIAL_V
-P1_DIAL_V_EXT            P2_DIAL_V                P2_DIAL_V_EXT
-P3_DIAL_V                P3_DIAL_V_EXT            P4_DIAL_V
-P4_DIAL_V_EXT
-
-P1_TRACKBALL_X           P1_TRACKBALL_X_EXT       P2_TRACKBALL_X
-P2_TRACKBALL_X_EXT       P3_TRACKBALL_X           P3_TRACKBALL_X_EXT
-P4_TRACKBALL_X           P4_TRACKBALL_X_EXT       
-
-P1_TRACKBALL_Y           P1_TRACKBALL_Y_EXT       P2_TRACKBALL_Y
-P2_TRACKBALL_Y_EXT       P3_TRACKBALL_Y           P3_TRACKBALL_Y_EXT
-P4_TRACKBALL_Y           P4_TRACKBALL_Y_EXT       
-
-P1_AD_STICK_X            P1_AD_STICK_X_EXT        P2_AD_STICK_X
-P2_AD_STICK_X_EXT        P3_AD_STICK_X            P3_AD_STICK_X_EXT
-P4_AD_STICK_X            P4_AD_STICK_X_EXT        
-
-P1_AD_STICK_Y            P1_AD_STICK_Y_EXT        P2_AD_STICK_Y
-P2_AD_STICK_Y_EXT        P3_AD_STICK_Y            P3_AD_STICK_Y_EXT
-P4_AD_STICK_Y            P4_AD_STICK_Y_EXT        
-
-OSD_1                    OSD_2                    OSD_3
-OSD_4
-
-
-
-***************************************************************************/
-
 #include <math.h>
 #include "driver.h"
 #include "config.h"
@@ -404,227 +115,227 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 
 struct ipd inputport_defaults_digital[] =
 {
-  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
-  { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_UP,                "UI Up",          SEQ_DEF_5(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP,     CODE_OR,   JOYCODE_1_LEFT_UP)    },
-  { IPT_UI_DOWN,              "UI Down",        SEQ_DEF_5(KEYCODE_DOWN,  CODE_OR, JOYCODE_1_DOWN,   CODE_OR,   JOYCODE_1_LEFT_DOWN)  },
-  { IPT_UI_LEFT,              "UI Left",        SEQ_DEF_5(KEYCODE_LEFT,  CODE_OR, JOYCODE_1_LEFT,   CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
-  { IPT_UI_RIGHT,             "UI Right",       SEQ_DEF_5(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT,  CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
-  { IPT_UI_SELECT,            "UI Select",      SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON4) },
-  { IPT_UI_CANCEL,            "UI Cancel",      SEQ_DEF_3(KEYCODE_ESC,   CODE_OR, JOYCODE_1_BUTTON1) },
-  { IPT_UI_ADD_CHEAT,         "Add Cheat",      SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_DELETE_CHEAT,      "Delete Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_SAVE_CHEAT,        "Save Cheat",     SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_WATCH_VALUE,       "Watch Value",    SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_EDIT_CHEAT,        "Edit Cheat",     SEQ_DEF_1(KEYCODE_NONE) },
+   { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
+   { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_0 },
+   { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_0 },
+   { IPT_UI_UP,                "UI Up",          SEQ_DEF_5(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP,     CODE_OR,   JOYCODE_1_LEFT_UP)    },
+   { IPT_UI_DOWN,              "UI Down",        SEQ_DEF_5(KEYCODE_DOWN,  CODE_OR, JOYCODE_1_DOWN,   CODE_OR,   JOYCODE_1_LEFT_DOWN)  },
+   { IPT_UI_LEFT,              "UI Left",        SEQ_DEF_5(KEYCODE_LEFT,  CODE_OR, JOYCODE_1_LEFT,   CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
+   { IPT_UI_RIGHT,             "UI Right",       SEQ_DEF_5(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT,  CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
+   { IPT_UI_SELECT,            "UI Select",      SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON1) },
+   { IPT_UI_CANCEL,            "UI Cancel",      SEQ_DEF_3(KEYCODE_ESC,   CODE_OR, JOYCODE_1_BUTTON2) },
+   { IPT_UI_ADD_CHEAT,         "Add Cheat",      SEQ_DEF_0 },
+   { IPT_UI_DELETE_CHEAT,      "Delete Cheat",   SEQ_DEF_0 },
+   { IPT_UI_SAVE_CHEAT,        "Save Cheat",     SEQ_DEF_0 },
+   { IPT_UI_WATCH_VALUE,       "Watch Value",    SEQ_DEF_0 },
+   { IPT_UI_EDIT_CHEAT,        "Edit Cheat",     SEQ_DEF_0 },
 
-	{ IPT_START1, "P1 Start",  SEQ_DEF_3(KEYCODE_1, CODE_OR, JOYCODE_1_START) },
-	{ IPT_START2, "P2 Start", SEQ_DEF_3(KEYCODE_2, CODE_OR, JOYCODE_2_START) },
-	{ IPT_START3, "P3 Start", SEQ_DEF_3(KEYCODE_3, CODE_OR, JOYCODE_3_START) },
-	{ IPT_START4, "P4 Start", SEQ_DEF_3(KEYCODE_4, CODE_OR, JOYCODE_4_START) },
-	{ IPT_START5, "P5 Start", SEQ_DEF_0 },
-	{ IPT_START6, "P6 Start", SEQ_DEF_0 },
-	{ IPT_START7, "P7 Start", SEQ_DEF_0 },
-	{ IPT_START8, "P8 Start", SEQ_DEF_0 },
-	{ IPT_COIN1,  "P1 Coin",          SEQ_DEF_3(KEYCODE_5, CODE_OR, JOYCODE_1_SELECT) },
-	{ IPT_COIN2,  "P2 Coin",          SEQ_DEF_3(KEYCODE_6, CODE_OR, JOYCODE_2_SELECT) },
-  { IPT_COIN3,  "P3 Coin",          SEQ_DEF_3(KEYCODE_7, CODE_OR, JOYCODE_3_SELECT) },
-  { IPT_COIN4,  "P4 Coin",          SEQ_DEF_3(KEYCODE_8, CODE_OR, JOYCODE_4_SELECT) },
-  { IPT_COIN5,  "P5 Coin",          SEQ_DEF_0 },
-  { IPT_COIN6,  "P6 Coin",          SEQ_DEF_0 },
-  { IPT_COIN7,  "P7 Coin",          SEQ_DEF_0 },
-  { IPT_COIN8,  "P8 Coin",          SEQ_DEF_0 },
+   { IPT_START1, "P1 Start", SEQ_DEF_1(JOYCODE_1_START) },
+   { IPT_START2, "P2 Start", SEQ_DEF_1(JOYCODE_2_START) },
+   { IPT_START3, "P3 Start", SEQ_DEF_1(JOYCODE_3_START) },
+   { IPT_START4, "P4 Start", SEQ_DEF_1(JOYCODE_4_START) },
+   { IPT_START5, "P5 Start", SEQ_DEF_0 },
+   { IPT_START6, "P6 Start", SEQ_DEF_0 },
+   { IPT_START7, "P7 Start", SEQ_DEF_0 },
+   { IPT_START8, "P8 Start", SEQ_DEF_0 },
+   { IPT_COIN1,  "P1 Coin",  SEQ_DEF_3(KEYCODE_5, CODE_OR, JOYCODE_1_SELECT) },
+   { IPT_COIN2,  "P2 Coin",  SEQ_DEF_3(KEYCODE_6, CODE_OR, JOYCODE_2_SELECT) },
+   { IPT_COIN3,  "P3 Coin",  SEQ_DEF_3(KEYCODE_7, CODE_OR, JOYCODE_3_SELECT) },
+   { IPT_COIN4,  "P4 Coin",  SEQ_DEF_3(KEYCODE_8, CODE_OR, JOYCODE_4_SELECT) },
+   { IPT_COIN5,  "P5 Coin",  SEQ_DEF_0 },
+   { IPT_COIN6,  "P6 Coin",  SEQ_DEF_0 },
+   { IPT_COIN7,  "P7 Coin",  SEQ_DEF_0 },
+   { IPT_COIN8,  "P8 Coin",  SEQ_DEF_0 },
 
-  { IPT_SERVICE1, "Service 1",     SEQ_DEF_1(KEYCODE_9) },
-  { IPT_SERVICE2, "Service 2",     SEQ_DEF_1(KEYCODE_0) },
-  { IPT_SERVICE3, "Service 3",     SEQ_DEF_1(KEYCODE_MINUS) },
-  { IPT_SERVICE4, "Service 4",     SEQ_DEF_1(KEYCODE_EQUALS) },
-  { IPT_TILT,     "Tilt",          SEQ_DEF_1(KEYCODE_T) },
+   { IPT_SERVICE1, "Service 1", SEQ_DEF_1(KEYCODE_9) },
+   { IPT_SERVICE2, "Service 2", SEQ_DEF_1(KEYCODE_0) },
+   { IPT_SERVICE3, "Service 3", SEQ_DEF_1(KEYCODE_MINUS) },
+   { IPT_SERVICE4, "Service 4", SEQ_DEF_1(KEYCODE_EQUALS) },
+   { IPT_TILT,     "Tilt",      SEQ_DEF_1(KEYCODE_T) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER1, "P1 Up",          SEQ_DEF_3(KEYCODE_UP,       CODE_OR, JOYCODE_1_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER1, "P1 Down",        SEQ_DEF_3(KEYCODE_DOWN,     CODE_OR, JOYCODE_1_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER1, "P1 Left",        SEQ_DEF_3(KEYCODE_LEFT,     CODE_OR, JOYCODE_1_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER1, "P1 Right",       SEQ_DEF_3(KEYCODE_RIGHT,    CODE_OR, JOYCODE_1_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER1, "P1 Button 1",    SEQ_DEF_5(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER1, "P1 Button 2",    SEQ_DEF_5(KEYCODE_LALT,     CODE_OR, JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER1, "P1 Button 3",    SEQ_DEF_5(KEYCODE_SPACE,    CODE_OR, JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER1, "P1 Button 4",    SEQ_DEF_3(KEYCODE_LSHIFT,   CODE_OR, JOYCODE_1_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER1, "P1 Button 5",    SEQ_DEF_3(KEYCODE_Z, CODE_OR, JOYCODE_1_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER1, "P1 Button 6",    SEQ_DEF_3(KEYCODE_X, CODE_OR, JOYCODE_1_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER1, "P1 Button 7",    SEQ_DEF_3(KEYCODE_C, CODE_OR, JOYCODE_1_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER1, "P1 Button 8",    SEQ_DEF_3(KEYCODE_V, CODE_OR, JOYCODE_1_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER1, "P1 Button 9",    SEQ_DEF_3(KEYCODE_B, CODE_OR, JOYCODE_1_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER1, "P1 Button 10",   SEQ_DEF_3(KEYCODE_N, CODE_OR, JOYCODE_1_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1, "P1 Right/Up",    SEQ_DEF_3(KEYCODE_I, CODE_OR, JOYCODE_2_UP) },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1, "P1 Right/Down",  SEQ_DEF_3(KEYCODE_K, CODE_OR, JOYCODE_2_DOWN) },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1, "P1 Right/Left",  SEQ_DEF_3(KEYCODE_J, CODE_OR, JOYCODE_2_LEFT) },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1, "P1 Right/Right", SEQ_DEF_3(KEYCODE_L, CODE_OR, JOYCODE_2_RIGHT) },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER1, "P1 Left/Up",     SEQ_DEF_3(KEYCODE_E, CODE_OR, JOYCODE_1_UP) },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER1, "P1 Left/Down",   SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_1_DOWN) },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER1, "P1 Left/Left",   SEQ_DEF_3(KEYCODE_S, CODE_OR, JOYCODE_1_LEFT) },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER1, "P1 Left/Right",  SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_1_RIGHT) },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER1, "P1 Up",          SEQ_DEF_1(JOYCODE_1_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER1, "P1 Down",        SEQ_DEF_1(JOYCODE_1_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER1, "P1 Left",        SEQ_DEF_1(JOYCODE_1_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER1, "P1 Right",       SEQ_DEF_1(JOYCODE_1_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER1, "P1 Button 1",    SEQ_DEF_3(JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER1, "P1 Button 2",    SEQ_DEF_3(JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER1, "P1 Button 3",    SEQ_DEF_3(JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER1, "P1 Button 4",    SEQ_DEF_1(JOYCODE_1_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER1, "P1 Button 5",    SEQ_DEF_1(JOYCODE_1_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER1, "P1 Button 6",    SEQ_DEF_1(JOYCODE_1_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER1, "P1 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER1, "P1 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER1, "P1 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER1, "P1 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1, "P1 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1, "P1 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1, "P1 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1, "P1 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER1, "P1 Left/Up",     SEQ_DEF_1(JOYCODE_1_LEFT) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER1, "P1 Left/Down",   SEQ_DEF_1(JOYCODE_1_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER1, "P1 Left/Left",   SEQ_DEF_1(JOYCODE_1_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER1, "P1 Left/Right",  SEQ_DEF_1(JOYCODE_1_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER2, "P2 Up",          SEQ_DEF_3(KEYCODE_R, CODE_OR, JOYCODE_2_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER2, "P2 Down",        SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_2_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER2, "P2 Left",        SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_2_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER2, "P2 Right",       SEQ_DEF_3(KEYCODE_G, CODE_OR, JOYCODE_2_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER2, "P2 Button 1",    SEQ_DEF_5(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON1, CODE_OR, JOYCODE_MOUSE_2_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER2, "P2 Button 2",    SEQ_DEF_5(KEYCODE_S, CODE_OR, JOYCODE_2_BUTTON2, CODE_OR, JOYCODE_MOUSE_2_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER2, "P2 Button 3",    SEQ_DEF_5(KEYCODE_Q, CODE_OR, JOYCODE_2_BUTTON3, CODE_OR, JOYCODE_MOUSE_2_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER2, "P2 Button 4",    SEQ_DEF_3(KEYCODE_W, CODE_OR, JOYCODE_2_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER2, "P2 Button 5",    SEQ_DEF_1(JOYCODE_2_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER2, "P2 Button 6",    SEQ_DEF_1(JOYCODE_2_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER2, "P2 Button 7",    SEQ_DEF_1(JOYCODE_2_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER2, "P2 Button 8",    SEQ_DEF_1(JOYCODE_2_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER2, "P2 Button 9",    SEQ_DEF_1(JOYCODE_2_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER2, "P2 Button 10",   SEQ_DEF_1(JOYCODE_2_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER2, "P2 Right/Up",    SEQ_DEF_1(JOYCODE_4_UP) },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER2, "P2 Right/Down",  SEQ_DEF_1(JOYCODE_4_DOWN) },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER2, "P2 Right/Left",  SEQ_DEF_1(JOYCODE_4_LEFT) },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2, "P2 Right/Right", SEQ_DEF_1(JOYCODE_4_RIGHT) },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER2, "P2 Left/Up",     SEQ_DEF_1(JOYCODE_3_UP) },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER2, "P2 Left/Down",   SEQ_DEF_1(JOYCODE_3_DOWN) },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER2, "P2 Left/Left",   SEQ_DEF_1(JOYCODE_3_LEFT) },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER2, "P2 Left/Right",  SEQ_DEF_1(JOYCODE_3_RIGHT) },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER2, "P2 Up",          SEQ_DEF_1(JOYCODE_2_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER2, "P2 Down",        SEQ_DEF_1(JOYCODE_2_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER2, "P2 Left",        SEQ_DEF_1(JOYCODE_2_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER2, "P2 Right",       SEQ_DEF_1(JOYCODE_2_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER2, "P2 Button 1",    SEQ_DEF_3(JOYCODE_2_BUTTON1, CODE_OR, JOYCODE_MOUSE_2_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER2, "P2 Button 2",    SEQ_DEF_3(JOYCODE_2_BUTTON2, CODE_OR, JOYCODE_MOUSE_2_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER2, "P2 Button 3",    SEQ_DEF_3(JOYCODE_2_BUTTON3, CODE_OR, JOYCODE_MOUSE_2_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER2, "P2 Button 4",    SEQ_DEF_1(JOYCODE_2_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER2, "P2 Button 5",    SEQ_DEF_1(JOYCODE_2_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER2, "P2 Button 6",    SEQ_DEF_1(JOYCODE_2_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER2, "P2 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER2, "P2 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER2, "P2 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER2, "P2 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER2, "P2 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER2, "P2 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER2, "P2 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2, "P2 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER2, "P2 Left/Up",     SEQ_DEF_1(JOYCODE_2_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER2, "P2 Left/Down",   SEQ_DEF_1(JOYCODE_2_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER2, "P2 Left/Left",   SEQ_DEF_1(JOYCODE_2_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER2, "P2 Left/Right",  SEQ_DEF_1(JOYCODE_2_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER3, "P3 Up",          SEQ_DEF_3(KEYCODE_I, CODE_OR, JOYCODE_3_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER3, "P3 Down",        SEQ_DEF_3(KEYCODE_K, CODE_OR, JOYCODE_3_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER3, "P3 Left",        SEQ_DEF_3(KEYCODE_J, CODE_OR, JOYCODE_3_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER3, "P3 Right",       SEQ_DEF_3(KEYCODE_L, CODE_OR, JOYCODE_3_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER3, "P3 Button 1",    SEQ_DEF_5(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON1, CODE_OR, JOYCODE_MOUSE_3_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER3, "P3 Button 2",    SEQ_DEF_5(KEYCODE_RSHIFT,   CODE_OR, JOYCODE_3_BUTTON2, CODE_OR, JOYCODE_MOUSE_3_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER3, "P3 Button 3",    SEQ_DEF_5(KEYCODE_ENTER,    CODE_OR, JOYCODE_3_BUTTON3, CODE_OR, JOYCODE_MOUSE_3_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER3, "P3 Button 4",    SEQ_DEF_1(JOYCODE_3_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER3, "P3 Button 5",    SEQ_DEF_1(JOYCODE_3_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER3, "P3 Button 6",    SEQ_DEF_1(JOYCODE_3_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER3, "P3 Button 7",    SEQ_DEF_1(JOYCODE_3_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER3, "P3 Button 8",    SEQ_DEF_1(JOYCODE_3_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER3, "P3 Button 9",    SEQ_DEF_1(JOYCODE_3_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER3, "P3 Button 10",   SEQ_DEF_1(JOYCODE_3_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER3, "P3 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER3, "P3 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER3, "P3 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER3, "P3 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER3, "P3 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER3, "P3 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER3, "P3 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER3, "P3 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER3, "P3 Up",          SEQ_DEF_1(JOYCODE_3_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER3, "P3 Down",        SEQ_DEF_1(JOYCODE_3_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER3, "P3 Left",        SEQ_DEF_1(JOYCODE_3_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER3, "P3 Right",       SEQ_DEF_1(JOYCODE_3_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER3, "P3 Button 1",    SEQ_DEF_3(JOYCODE_3_BUTTON1, CODE_OR, JOYCODE_MOUSE_3_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER3, "P3 Button 2",    SEQ_DEF_3(JOYCODE_3_BUTTON2, CODE_OR, JOYCODE_MOUSE_3_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER3, "P3 Button 3",    SEQ_DEF_3(JOYCODE_3_BUTTON3, CODE_OR, JOYCODE_MOUSE_3_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER3, "P3 Button 4",    SEQ_DEF_1(JOYCODE_3_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER3, "P3 Button 5",    SEQ_DEF_1(JOYCODE_3_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER3, "P3 Button 6",    SEQ_DEF_1(JOYCODE_3_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER3, "P3 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER3, "P3 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER3, "P3 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER3, "P3 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER3, "P3 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER3, "P3 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER3, "P3 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER3, "P3 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER3, "P3 Left/Up",     SEQ_DEF_1(JOYCODE_3_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER3, "P3 Left/Down",   SEQ_DEF_1(JOYCODE_3_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER3, "P3 Left/Left",   SEQ_DEF_1(JOYCODE_3_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER3, "P3 Left/Right",  SEQ_DEF_1(JOYCODE_3_RIGHT) },
+   
+   { IPT_JOYSTICK_UP         | IPF_PLAYER4, "P1 Up",          SEQ_DEF_1(JOYCODE_1_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER4, "P1 Down",        SEQ_DEF_1(JOYCODE_1_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER4, "P1 Left",        SEQ_DEF_1(JOYCODE_1_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER4, "P1 Right",       SEQ_DEF_1(JOYCODE_1_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER4, "P1 Button 1",    SEQ_DEF_3(JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER4, "P1 Button 2",    SEQ_DEF_3(JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER4, "P1 Button 3",    SEQ_DEF_3(JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER4, "P1 Button 4",    SEQ_DEF_1(JOYCODE_1_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER4, "P1 Button 5",    SEQ_DEF_1(JOYCODE_1_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER4, "P1 Button 6",    SEQ_DEF_1(JOYCODE_1_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER4, "P1 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER4, "P1 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER4, "P1 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER4, "P1 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER4, "P1 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER4, "P1 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER4, "P1 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER4, "P1 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER4, "P1 Left/Up",     SEQ_DEF_1(JOYCODE_1_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER4, "P1 Left/Down",   SEQ_DEF_1(JOYCODE_1_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER4, "P1 Left/Left",   SEQ_DEF_1(JOYCODE_1_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER4, "P1 Left/Right",  SEQ_DEF_1(JOYCODE_1_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER4, "P4 Up",          SEQ_DEF_1(JOYCODE_4_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER4, "P4 Down",        SEQ_DEF_1(JOYCODE_4_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER4, "P4 Left",        SEQ_DEF_1(JOYCODE_4_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER4, "P4 Right",       SEQ_DEF_1(JOYCODE_4_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER4, "P4 Button 1",    SEQ_DEF_3(JOYCODE_4_BUTTON1, CODE_OR, JOYCODE_MOUSE_4_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER4, "P4 Button 2",    SEQ_DEF_3(JOYCODE_4_BUTTON2, CODE_OR, JOYCODE_MOUSE_4_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER4, "P4 Button 3",    SEQ_DEF_3(JOYCODE_4_BUTTON3, CODE_OR, JOYCODE_MOUSE_4_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER4, "P4 Button 4",    SEQ_DEF_1(JOYCODE_4_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER4, "P4 Button 5",    SEQ_DEF_1(JOYCODE_4_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER4, "P4 Button 6",    SEQ_DEF_1(JOYCODE_4_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER4, "P4 Button 7",    SEQ_DEF_1(JOYCODE_4_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER4, "P4 Button 8",    SEQ_DEF_1(JOYCODE_4_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER4, "P4 Button 9",    SEQ_DEF_1(JOYCODE_4_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER4, "P4 Button 10",   SEQ_DEF_1(JOYCODE_4_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER4, "P4 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER4, "P4 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER4, "P4 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER4, "P4 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER4, "P4 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER4, "P4 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER4, "P4 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER4, "P4 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER5, "P5 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER5, "P5 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER5, "P5 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER5, "P5 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER5, "P5 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER5, "P5 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER5, "P5 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER5, "P5 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER5, "P5 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER5, "P5 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER5, "P5 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER5, "P5 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER5, "P5 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER5, "P5 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER5, "P5 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER5, "P5 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER5, "P5 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER5, "P5 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER5, "P5 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER5, "P5 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER5, "P5 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER5, "P5 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER5, "P5 Up",          SEQ_DEF_1(JOYCODE_5_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER5, "P5 Down",        SEQ_DEF_1(JOYCODE_5_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER5, "P5 Left",        SEQ_DEF_1(JOYCODE_5_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER5, "P5 Right",       SEQ_DEF_1(JOYCODE_5_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER5, "P5 Button 1",    SEQ_DEF_3(JOYCODE_5_BUTTON1, CODE_OR, JOYCODE_MOUSE_5_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER5, "P5 Button 2",    SEQ_DEF_3(JOYCODE_5_BUTTON2, CODE_OR, JOYCODE_MOUSE_5_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER5, "P5 Button 3",    SEQ_DEF_3(JOYCODE_5_BUTTON3, CODE_OR, JOYCODE_MOUSE_5_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER5, "P5 Button 4",    SEQ_DEF_1(JOYCODE_5_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER5, "P5 Button 5",    SEQ_DEF_1(JOYCODE_5_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER5, "P5 Button 6",    SEQ_DEF_1(JOYCODE_5_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER5, "P5 Button 7",    SEQ_DEF_1(JOYCODE_5_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER5, "P5 Button 8",    SEQ_DEF_1(JOYCODE_5_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER5, "P5 Button 9",    SEQ_DEF_1(JOYCODE_5_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER5, "P5 Button 10",   SEQ_DEF_1(JOYCODE_5_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER5, "P5 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER5, "P5 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER5, "P5 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER5, "P5 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER5, "P5 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER5, "P5 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER5, "P5 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER5, "P5 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER6, "P6 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER6, "P6 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER6, "P6 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER6, "P6 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER6, "P6 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER6, "P6 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER6, "P6 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER6, "P6 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER6, "P6 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER6, "P6 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER6, "P6 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER6, "P6 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER6, "P6 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER6, "P6 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER6, "P6 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER6, "P6 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER6, "P6 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER6, "P6 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER6, "P6 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER6, "P6 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER6, "P6 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER6, "P6 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER6, "P6 Up",          SEQ_DEF_1(JOYCODE_6_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER6, "P6 Down",        SEQ_DEF_1(JOYCODE_6_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER6, "P6 Left",        SEQ_DEF_1(JOYCODE_6_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER6, "P6 Right",       SEQ_DEF_1(JOYCODE_6_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER6, "P6 Button 1",    SEQ_DEF_3(JOYCODE_6_BUTTON1, CODE_OR, JOYCODE_MOUSE_6_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER6, "P6 Button 2",    SEQ_DEF_3(JOYCODE_6_BUTTON2, CODE_OR, JOYCODE_MOUSE_6_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER6, "P6 Button 3",    SEQ_DEF_3(JOYCODE_6_BUTTON3, CODE_OR, JOYCODE_MOUSE_6_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER6, "P6 Button 4",    SEQ_DEF_1(JOYCODE_6_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER6, "P6 Button 5",    SEQ_DEF_1(JOYCODE_6_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER6, "P6 Button 6",    SEQ_DEF_1(JOYCODE_6_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER6, "P6 Button 7",    SEQ_DEF_1(JOYCODE_6_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER6, "P6 Button 8",    SEQ_DEF_1(JOYCODE_6_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER6, "P6 Button 9",    SEQ_DEF_1(JOYCODE_6_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER6, "P6 Button 10",   SEQ_DEF_1(JOYCODE_6_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER6, "P6 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER6, "P6 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER6, "P6 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER6, "P6 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER6, "P6 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER6, "P6 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER6, "P6 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER6, "P6 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER7, "P7 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER7, "P7 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER7, "P7 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER7, "P7 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER7, "P7 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER7, "P7 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER7, "P7 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER7, "P7 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER7, "P7 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER7, "P7 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_0 }, 
+   { IPT_BUTTON8             | IPF_PLAYER7, "P7 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER7, "P7 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER7, "P7 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER7, "P7 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER7, "P7 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER7, "P7 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER7, "P7 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER7, "P7 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER7, "P7 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER7, "P7 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER7, "P7 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER7, "P7 Up",          SEQ_DEF_1(JOYCODE_7_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER7, "P7 Down",        SEQ_DEF_1(JOYCODE_7_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER7, "P7 Left",        SEQ_DEF_1(JOYCODE_7_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER7, "P7 Right",       SEQ_DEF_1(JOYCODE_7_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER7, "P7 Button 1",    SEQ_DEF_3(JOYCODE_7_BUTTON1, CODE_OR, JOYCODE_MOUSE_7_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER7, "P7 Button 2",    SEQ_DEF_3(JOYCODE_7_BUTTON2, CODE_OR, JOYCODE_MOUSE_7_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER7, "P7 Button 3",    SEQ_DEF_3(JOYCODE_7_BUTTON3, CODE_OR, JOYCODE_MOUSE_7_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER7, "P7 Button 4",    SEQ_DEF_1(JOYCODE_7_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER7, "P7 Button 5",    SEQ_DEF_1(JOYCODE_7_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER7, "P7 Button 6",    SEQ_DEF_1(JOYCODE_7_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_1(JOYCODE_7_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER7, "P7 Button 8",    SEQ_DEF_1(JOYCODE_7_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER7, "P7 Button 9",    SEQ_DEF_1(JOYCODE_7_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER7, "P7 Button 10",   SEQ_DEF_1(JOYCODE_7_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER7, "P7 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER7, "P7 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER7, "P7 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER7, "P7 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER7, "P7 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER7, "P7 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER7, "P7 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER7, "P7 Left/Right",  SEQ_DEF_0 },
-
-  { IPT_JOYSTICK_UP         | IPF_PLAYER8, "P8 Up",          SEQ_DEF_1(JOYCODE_8_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER8, "P8 Down",        SEQ_DEF_1(JOYCODE_8_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER8, "P8 Left",        SEQ_DEF_1(JOYCODE_8_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER8, "P8 Right",       SEQ_DEF_1(JOYCODE_8_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER8, "P8 Button 1",    SEQ_DEF_3(JOYCODE_8_BUTTON1, CODE_OR, JOYCODE_MOUSE_8_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER8, "P8 Button 2",    SEQ_DEF_3(JOYCODE_8_BUTTON2, CODE_OR, JOYCODE_MOUSE_8_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER8, "P8 Button 3",    SEQ_DEF_3(JOYCODE_8_BUTTON3, CODE_OR, JOYCODE_MOUSE_8_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER8, "P8 Button 4",    SEQ_DEF_1(JOYCODE_8_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER8, "P8 Button 5",    SEQ_DEF_1(JOYCODE_8_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER8, "P8 Button 6",    SEQ_DEF_1(JOYCODE_8_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER8, "P8 Button 7",    SEQ_DEF_1(JOYCODE_8_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER8, "P8 Button 8",    SEQ_DEF_1(JOYCODE_8_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER8, "P8 Button 9",    SEQ_DEF_1(JOYCODE_8_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER8, "P8 Button 10",   SEQ_DEF_1(JOYCODE_8_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER8, "P8 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER8, "P8 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER8, "P8 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER8, "P8 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER8, "P8 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER8, "P8 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER8, "P8 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER8, "P8 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER8, "P8 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER8, "P8 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER8, "P8 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER8, "P8 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER8, "P8 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER8, "P8 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER8, "P8 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER8, "P8 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER8, "P8 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER8, "P8 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER8, "P8 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER8, "P8 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER8, "P8 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER8, "P8 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER8, "P8 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER8, "P8 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER8, "P8 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER8, "P8 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
 
   { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER1, "P1 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
@@ -857,227 +568,227 @@ struct ipd inputport_defaults_digital[] =
 
 struct ipd inputport_defaults_analog[] =
 {
-  { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
-  { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_UP,                "UI Up",          SEQ_DEF_5(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP,     CODE_OR,   JOYCODE_1_LEFT_UP)    },
-  { IPT_UI_DOWN,              "UI Down",        SEQ_DEF_5(KEYCODE_DOWN,  CODE_OR, JOYCODE_1_DOWN,   CODE_OR,   JOYCODE_1_LEFT_DOWN)  },
-  { IPT_UI_LEFT,              "UI Left",        SEQ_DEF_5(KEYCODE_LEFT,  CODE_OR, JOYCODE_1_LEFT,   CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
-  { IPT_UI_RIGHT,             "UI Right",       SEQ_DEF_5(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT,  CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
-  { IPT_UI_SELECT,            "UI Select",      SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON4) },
-  { IPT_UI_CANCEL,            "UI Cancel",      SEQ_DEF_3(KEYCODE_ESC,   CODE_OR, JOYCODE_1_BUTTON1) },
-  { IPT_UI_ADD_CHEAT,         "Add Cheat",      SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_DELETE_CHEAT,      "Delete Cheat",   SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_SAVE_CHEAT,        "Save Cheat",     SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_WATCH_VALUE,       "Watch Value",    SEQ_DEF_1(KEYCODE_NONE) },
-  { IPT_UI_EDIT_CHEAT,        "Edit Cheat",     SEQ_DEF_1(KEYCODE_NONE) },
+   { IPT_UI_CONFIGURE,         "Config Menu",    SEQ_DEF_3(KEYCODE_TAB,   CODE_OR, JOYCODE_1_BUTTON9) },
+   { IPT_UI_SHOW_GFX,          "Show Gfx",       SEQ_DEF_0 },
+   { IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",   SEQ_DEF_0 },
+   { IPT_UI_UP,                "UI Up",          SEQ_DEF_5(KEYCODE_UP,    CODE_OR, JOYCODE_1_UP,     CODE_OR,   JOYCODE_1_LEFT_UP)    },
+   { IPT_UI_DOWN,              "UI Down",        SEQ_DEF_5(KEYCODE_DOWN,  CODE_OR, JOYCODE_1_DOWN,   CODE_OR,   JOYCODE_1_LEFT_DOWN)  },
+   { IPT_UI_LEFT,              "UI Left",        SEQ_DEF_5(KEYCODE_LEFT,  CODE_OR, JOYCODE_1_LEFT,   CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
+   { IPT_UI_RIGHT,             "UI Right",       SEQ_DEF_5(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT,  CODE_OR,   JOYCODE_1_LEFT_LEFT)  },
+   { IPT_UI_SELECT,            "UI Select",      SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON1) },
+   { IPT_UI_CANCEL,            "UI Cancel",      SEQ_DEF_3(KEYCODE_ESC,   CODE_OR, JOYCODE_1_BUTTON2) },
+   { IPT_UI_ADD_CHEAT,         "Add Cheat",      SEQ_DEF_0 },
+   { IPT_UI_DELETE_CHEAT,      "Delete Cheat",   SEQ_DEF_0 },
+   { IPT_UI_SAVE_CHEAT,        "Save Cheat",     SEQ_DEF_0 },
+   { IPT_UI_WATCH_VALUE,       "Watch Value",    SEQ_DEF_0 },
+   { IPT_UI_EDIT_CHEAT,        "Edit Cheat",     SEQ_DEF_0 },
 
-	{ IPT_START1, "P1 Start",  SEQ_DEF_3(KEYCODE_1, CODE_OR, JOYCODE_1_START) },
-	{ IPT_START2, "P2 Start", SEQ_DEF_3(KEYCODE_2, CODE_OR, JOYCODE_2_START) },
-	{ IPT_START3, "P3 Start", SEQ_DEF_3(KEYCODE_3, CODE_OR, JOYCODE_3_START) },
-	{ IPT_START4, "P4 Start", SEQ_DEF_3(KEYCODE_4, CODE_OR, JOYCODE_4_START) },
-	{ IPT_START5, "P5 Start", SEQ_DEF_0 },
-	{ IPT_START6, "P6 Start", SEQ_DEF_0 },
-	{ IPT_START7, "P7 Start", SEQ_DEF_0 },
-	{ IPT_START8, "P8 Start", SEQ_DEF_0 },
-	{ IPT_COIN1,  "P1 Coin",          SEQ_DEF_3(KEYCODE_5, CODE_OR, JOYCODE_1_SELECT) },
-	{ IPT_COIN2,  "P2 Coin",          SEQ_DEF_3(KEYCODE_6, CODE_OR, JOYCODE_2_SELECT) },
-  { IPT_COIN3,  "P3 Coin",          SEQ_DEF_3(KEYCODE_7, CODE_OR, JOYCODE_3_SELECT) },
-  { IPT_COIN4,  "P4 Coin",          SEQ_DEF_3(KEYCODE_8, CODE_OR, JOYCODE_4_SELECT) },
-  { IPT_COIN5,  "P5 Coin",          SEQ_DEF_0 },
-  { IPT_COIN6,  "P6 Coin",          SEQ_DEF_0 },
-  { IPT_COIN7,  "P7 Coin",          SEQ_DEF_0 },
-  { IPT_COIN8,  "P8 Coin",          SEQ_DEF_0 },
+   { IPT_START1, "P1 Start", SEQ_DEF_1(JOYCODE_1_START) },
+   { IPT_START2, "P2 Start", SEQ_DEF_1(JOYCODE_2_START) },
+   { IPT_START3, "P3 Start", SEQ_DEF_1(JOYCODE_3_START) },
+   { IPT_START4, "P4 Start", SEQ_DEF_1(JOYCODE_4_START) },
+   { IPT_START5, "P5 Start", SEQ_DEF_0 },
+   { IPT_START6, "P6 Start", SEQ_DEF_0 },
+   { IPT_START7, "P7 Start", SEQ_DEF_0 },
+   { IPT_START8, "P8 Start", SEQ_DEF_0 },
+   { IPT_COIN1,  "P1 Coin",  SEQ_DEF_3(KEYCODE_5, CODE_OR, JOYCODE_1_SELECT) },
+   { IPT_COIN2,  "P2 Coin",  SEQ_DEF_3(KEYCODE_6, CODE_OR, JOYCODE_2_SELECT) },
+   { IPT_COIN3,  "P3 Coin",  SEQ_DEF_3(KEYCODE_7, CODE_OR, JOYCODE_3_SELECT) },
+   { IPT_COIN4,  "P4 Coin",  SEQ_DEF_3(KEYCODE_8, CODE_OR, JOYCODE_4_SELECT) },
+   { IPT_COIN5,  "P5 Coin",  SEQ_DEF_0 },
+   { IPT_COIN6,  "P6 Coin",  SEQ_DEF_0 },
+   { IPT_COIN7,  "P7 Coin",  SEQ_DEF_0 },
+   { IPT_COIN8,  "P8 Coin",  SEQ_DEF_0 },
 
-  { IPT_SERVICE1, "Service 1",     SEQ_DEF_1(KEYCODE_9) },
-  { IPT_SERVICE2, "Service 2",     SEQ_DEF_1(KEYCODE_0) },
-  { IPT_SERVICE3, "Service 3",     SEQ_DEF_1(KEYCODE_MINUS) },
-  { IPT_SERVICE4, "Service 4",     SEQ_DEF_1(KEYCODE_EQUALS) },
-  { IPT_TILT,     "Tilt",          SEQ_DEF_1(KEYCODE_T) },
+   { IPT_SERVICE1, "Service 1", SEQ_DEF_1(KEYCODE_9) },
+   { IPT_SERVICE2, "Service 2", SEQ_DEF_1(KEYCODE_0) },
+   { IPT_SERVICE3, "Service 3", SEQ_DEF_1(KEYCODE_MINUS) },
+   { IPT_SERVICE4, "Service 4", SEQ_DEF_1(KEYCODE_EQUALS) },
+   { IPT_TILT,     "Tilt",      SEQ_DEF_1(KEYCODE_T) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER1, "P1 Up",          SEQ_DEF_3(KEYCODE_UP,       CODE_OR, JOYCODE_1_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER1, "P1 Down",        SEQ_DEF_3(KEYCODE_DOWN,     CODE_OR, JOYCODE_1_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER1, "P1 Left",        SEQ_DEF_3(KEYCODE_LEFT,     CODE_OR, JOYCODE_1_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER1, "P1 Right",       SEQ_DEF_3(KEYCODE_RIGHT,    CODE_OR, JOYCODE_1_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER1, "P1 Button 1",    SEQ_DEF_5(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER1, "P1 Button 2",    SEQ_DEF_5(KEYCODE_LALT,     CODE_OR, JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER1, "P1 Button 3",    SEQ_DEF_5(KEYCODE_SPACE,    CODE_OR, JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER1, "P1 Button 4",    SEQ_DEF_3(KEYCODE_LSHIFT,   CODE_OR, JOYCODE_1_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER1, "P1 Button 5",    SEQ_DEF_3(KEYCODE_Z, CODE_OR, JOYCODE_1_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER1, "P1 Button 6",    SEQ_DEF_3(KEYCODE_X, CODE_OR, JOYCODE_1_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER1, "P1 Button 7",    SEQ_DEF_3(KEYCODE_C, CODE_OR, JOYCODE_1_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER1, "P1 Button 8",    SEQ_DEF_3(KEYCODE_V, CODE_OR, JOYCODE_1_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER1, "P1 Button 9",    SEQ_DEF_3(KEYCODE_B, CODE_OR, JOYCODE_1_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER1, "P1 Button 10",   SEQ_DEF_3(KEYCODE_N, CODE_OR, JOYCODE_1_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1, "P1 Right/Up",    SEQ_DEF_3(KEYCODE_I, CODE_OR, JOYCODE_1_RIGHT_UP) },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1, "P1 Right/Down",  SEQ_DEF_3(KEYCODE_K, CODE_OR, JOYCODE_1_RIGHT_DOWN) },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1, "P1 Right/Left",  SEQ_DEF_3(KEYCODE_J, CODE_OR, JOYCODE_1_RIGHT_LEFT) },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1, "P1 Right/Right", SEQ_DEF_3(KEYCODE_L, CODE_OR, JOYCODE_1_RIGHT_RIGHT) },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER1, "P1 Left/Up",     SEQ_DEF_3(KEYCODE_E, CODE_OR, JOYCODE_1_LEFT_UP) },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER1, "P1 Left/Down",   SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_1_LEFT_DOWN) },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER1, "P1 Left/Left",   SEQ_DEF_3(KEYCODE_S, CODE_OR, JOYCODE_1_LEFT_LEFT) },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER1, "P1 Left/Right",  SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_1_LEFT_RIGHT) },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER1, "P1 Up",          SEQ_DEF_1(JOYCODE_1_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER1, "P1 Down",        SEQ_DEF_1(JOYCODE_1_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER1, "P1 Left",        SEQ_DEF_1(JOYCODE_1_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER1, "P1 Right",       SEQ_DEF_1(JOYCODE_1_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER1, "P1 Button 1",    SEQ_DEF_3(JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER1, "P1 Button 2",    SEQ_DEF_3(JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER1, "P1 Button 3",    SEQ_DEF_3(JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER1, "P1 Button 4",    SEQ_DEF_1(JOYCODE_1_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER1, "P1 Button 5",    SEQ_DEF_1(JOYCODE_1_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER1, "P1 Button 6",    SEQ_DEF_1(JOYCODE_1_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER1, "P1 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER1, "P1 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER1, "P1 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER1, "P1 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1, "P1 Right/Up",    SEQ_DEF_1(JOYCODE_1_RIGHT_UP) },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1, "P1 Right/Down",  SEQ_DEF_1(JOYCODE_1_RIGHT_DOWN) },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1, "P1 Right/Left",  SEQ_DEF_1(JOYCODE_1_RIGHT_LEFT) },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1, "P1 Right/Right", SEQ_DEF_1(JOYCODE_1_RIGHT_RIGHT) },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER1, "P1 Left/Up",     SEQ_DEF_1(JOYCODE_1_LEFT_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER1, "P1 Left/Down",   SEQ_DEF_1(JOYCODE_1_LEFT_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER1, "P1 Left/Left",   SEQ_DEF_1(JOYCODE_1_LEFT_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER1, "P1 Left/Right",  SEQ_DEF_1(JOYCODE_1_LEFT_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER2, "P2 Up",          SEQ_DEF_3(KEYCODE_R, CODE_OR, JOYCODE_2_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER2, "P2 Down",        SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_2_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER2, "P2 Left",        SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_2_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER2, "P2 Right",       SEQ_DEF_3(KEYCODE_G, CODE_OR, JOYCODE_2_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER2, "P2 Button 1",    SEQ_DEF_5(KEYCODE_A, CODE_OR, JOYCODE_2_BUTTON1, CODE_OR, JOYCODE_MOUSE_2_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER2, "P2 Button 2",    SEQ_DEF_5(KEYCODE_S, CODE_OR, JOYCODE_2_BUTTON2, CODE_OR, JOYCODE_MOUSE_2_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER2, "P2 Button 3",    SEQ_DEF_5(KEYCODE_Q, CODE_OR, JOYCODE_2_BUTTON3, CODE_OR, JOYCODE_MOUSE_2_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER2, "P2 Button 4",    SEQ_DEF_3(KEYCODE_W, CODE_OR, JOYCODE_2_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER2, "P2 Button 5",    SEQ_DEF_1(JOYCODE_2_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER2, "P2 Button 6",    SEQ_DEF_1(JOYCODE_2_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER2, "P2 Button 7",    SEQ_DEF_1(JOYCODE_2_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER2, "P2 Button 8",    SEQ_DEF_1(JOYCODE_2_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER2, "P2 Button 9",    SEQ_DEF_1(JOYCODE_2_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER2, "P2 Button 10",   SEQ_DEF_1(JOYCODE_2_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER2, "P2 Right/Up",    SEQ_DEF_1(JOYCODE_2_RIGHT_UP) },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER2, "P2 Right/Down",  SEQ_DEF_1(JOYCODE_2_RIGHT_DOWN) },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER2, "P2 Right/Left",  SEQ_DEF_1(JOYCODE_2_RIGHT_LEFT) },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2, "P2 Right/Right", SEQ_DEF_1(JOYCODE_2_RIGHT_RIGHT) },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER2, "P2 Left/Up",     SEQ_DEF_1(JOYCODE_2_LEFT_UP) },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER2, "P2 Left/Down",   SEQ_DEF_1(JOYCODE_2_LEFT_DOWN) },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER2, "P2 Left/Left",   SEQ_DEF_1(JOYCODE_2_LEFT_LEFT) },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER2, "P2 Left/Right",  SEQ_DEF_1(JOYCODE_2_LEFT_RIGHT) },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER2, "P2 Up",          SEQ_DEF_1(JOYCODE_2_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER2, "P2 Down",        SEQ_DEF_1(JOYCODE_2_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER2, "P2 Left",        SEQ_DEF_1(JOYCODE_2_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER2, "P2 Right",       SEQ_DEF_1(JOYCODE_2_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER2, "P2 Button 1",    SEQ_DEF_3(JOYCODE_2_BUTTON1, CODE_OR, JOYCODE_MOUSE_2_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER2, "P2 Button 2",    SEQ_DEF_3(JOYCODE_2_BUTTON2, CODE_OR, JOYCODE_MOUSE_2_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER2, "P2 Button 3",    SEQ_DEF_3(JOYCODE_2_BUTTON3, CODE_OR, JOYCODE_MOUSE_2_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER2, "P2 Button 4",    SEQ_DEF_1(JOYCODE_2_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER2, "P2 Button 5",    SEQ_DEF_1(JOYCODE_2_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER2, "P2 Button 6",    SEQ_DEF_1(JOYCODE_2_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER2, "P2 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER2, "P2 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER2, "P2 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER2, "P2 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER2, "P2 Right/Up",    SEQ_DEF_1(JOYCODE_2_RIGHT_UP) },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER2, "P2 Right/Down",  SEQ_DEF_1(JOYCODE_2_RIGHT_DOWN) },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER2, "P2 Right/Left",  SEQ_DEF_1(JOYCODE_2_RIGHT_LEFT) },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2, "P2 Right/Right", SEQ_DEF_1(JOYCODE_2_RIGHT_RIGHT) },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER2, "P2 Left/Up",     SEQ_DEF_1(JOYCODE_2_LEFT_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER2, "P2 Left/Down",   SEQ_DEF_1(JOYCODE_2_LEFT_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER2, "P2 Left/Left",   SEQ_DEF_1(JOYCODE_2_LEFT_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER2, "P2 Left/Right",  SEQ_DEF_1(JOYCODE_2_LEFT_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER3, "P3 Up",          SEQ_DEF_3(KEYCODE_I, CODE_OR, JOYCODE_3_UP)    },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER3, "P3 Down",        SEQ_DEF_3(KEYCODE_K, CODE_OR, JOYCODE_3_DOWN)  },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER3, "P3 Left",        SEQ_DEF_3(KEYCODE_J, CODE_OR, JOYCODE_3_LEFT)  },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER3, "P3 Right",       SEQ_DEF_3(KEYCODE_L, CODE_OR, JOYCODE_3_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER3, "P3 Button 1",    SEQ_DEF_5(KEYCODE_RCONTROL, CODE_OR, JOYCODE_3_BUTTON1, CODE_OR, JOYCODE_MOUSE_3_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER3, "P3 Button 2",    SEQ_DEF_5(KEYCODE_RSHIFT,   CODE_OR, JOYCODE_3_BUTTON2, CODE_OR, JOYCODE_MOUSE_3_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER3, "P3 Button 3",    SEQ_DEF_5(KEYCODE_ENTER,    CODE_OR, JOYCODE_3_BUTTON3, CODE_OR, JOYCODE_MOUSE_3_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER3, "P3 Button 4",    SEQ_DEF_1(JOYCODE_3_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER3, "P3 Button 5",    SEQ_DEF_1(JOYCODE_3_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER3, "P3 Button 6",    SEQ_DEF_1(JOYCODE_3_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER3, "P3 Button 7",    SEQ_DEF_1(JOYCODE_3_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER3, "P3 Button 8",    SEQ_DEF_1(JOYCODE_3_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER3, "P3 Button 9",    SEQ_DEF_1(JOYCODE_3_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER3, "P3 Button 10",   SEQ_DEF_1(JOYCODE_3_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER3, "P3 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER3, "P3 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER3, "P3 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER3, "P3 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER3, "P3 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER3, "P3 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER3, "P3 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER3, "P3 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER3, "P3 Up",          SEQ_DEF_1(JOYCODE_3_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER3, "P3 Down",        SEQ_DEF_1(JOYCODE_3_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER3, "P3 Left",        SEQ_DEF_1(JOYCODE_3_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER3, "P3 Right",       SEQ_DEF_1(JOYCODE_3_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER3, "P3 Button 1",    SEQ_DEF_3(JOYCODE_3_BUTTON1, CODE_OR, JOYCODE_MOUSE_3_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER3, "P3 Button 2",    SEQ_DEF_3(JOYCODE_3_BUTTON2, CODE_OR, JOYCODE_MOUSE_3_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER3, "P3 Button 3",    SEQ_DEF_3(JOYCODE_3_BUTTON3, CODE_OR, JOYCODE_MOUSE_3_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER3, "P3 Button 4",    SEQ_DEF_1(JOYCODE_3_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER3, "P3 Button 5",    SEQ_DEF_1(JOYCODE_3_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER3, "P3 Button 6",    SEQ_DEF_1(JOYCODE_3_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER3, "P3 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER3, "P3 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER3, "P3 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER3, "P3 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER3, "P3 Right/Up",    SEQ_DEF_1(JOYCODE_3_RIGHT_UP) },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER3, "P3 Right/Down",  SEQ_DEF_1(JOYCODE_3_RIGHT_DOWN) },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER3, "P3 Right/Left",  SEQ_DEF_1(JOYCODE_3_RIGHT_LEFT) },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER3, "P3 Right/Right", SEQ_DEF_1(JOYCODE_3_RIGHT_RIGHT) },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER3, "P3 Left/Up",     SEQ_DEF_1(JOYCODE_3_LEFT_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER3, "P3 Left/Down",   SEQ_DEF_1(JOYCODE_3_LEFT_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER3, "P3 Left/Left",   SEQ_DEF_1(JOYCODE_3_LEFT_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER3, "P3 Left/Right",  SEQ_DEF_1(JOYCODE_3_LEFT_RIGHT) },
+   
+   { IPT_JOYSTICK_UP         | IPF_PLAYER4, "P1 Up",          SEQ_DEF_1(JOYCODE_1_UP)    },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER4, "P1 Down",        SEQ_DEF_1(JOYCODE_1_DOWN)  },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER4, "P1 Left",        SEQ_DEF_1(JOYCODE_1_LEFT)  },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER4, "P1 Right",       SEQ_DEF_1(JOYCODE_1_RIGHT) },
+   { IPT_BUTTON1             | IPF_PLAYER4, "P1 Button 1",    SEQ_DEF_3(JOYCODE_1_BUTTON1, CODE_OR, JOYCODE_MOUSE_1_BUTTON1) },
+   { IPT_BUTTON2             | IPF_PLAYER4, "P1 Button 2",    SEQ_DEF_3(JOYCODE_1_BUTTON2, CODE_OR, JOYCODE_MOUSE_1_BUTTON3) },
+   { IPT_BUTTON3             | IPF_PLAYER4, "P1 Button 3",    SEQ_DEF_3(JOYCODE_1_BUTTON3, CODE_OR, JOYCODE_MOUSE_1_BUTTON2) },
+   { IPT_BUTTON4             | IPF_PLAYER4, "P1 Button 4",    SEQ_DEF_1(JOYCODE_1_BUTTON4) },
+   { IPT_BUTTON5             | IPF_PLAYER4, "P1 Button 5",    SEQ_DEF_1(JOYCODE_1_BUTTON5) },
+   { IPT_BUTTON6             | IPF_PLAYER4, "P1 Button 6",    SEQ_DEF_1(JOYCODE_1_BUTTON6) },
+   { IPT_BUTTON7             | IPF_PLAYER4, "P1 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER4, "P1 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER4, "P1 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER4, "P1 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER4, "P1 Right/Up",    SEQ_DEF_1(JOYCODE_1_RIGHT_UP) },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER4, "P1 Right/Down",  SEQ_DEF_1(JOYCODE_1_RIGHT_DOWN) },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER4, "P1 Right/Left",  SEQ_DEF_1(JOYCODE_1_RIGHT_LEFT) },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER4, "P1 Right/Right", SEQ_DEF_1(JOYCODE_1_RIGHT_RIGHT) },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER4, "P1 Left/Up",     SEQ_DEF_1(JOYCODE_1_LEFT_UP) },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER4, "P1 Left/Down",   SEQ_DEF_1(JOYCODE_1_LEFT_DOWN) },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER4, "P1 Left/Left",   SEQ_DEF_1(JOYCODE_1_LEFT_LEFT) },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER4, "P1 Left/Right",  SEQ_DEF_1(JOYCODE_1_LEFT_RIGHT) },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER4, "P4 Up",          SEQ_DEF_1(JOYCODE_4_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER4, "P4 Down",        SEQ_DEF_1(JOYCODE_4_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER4, "P4 Left",        SEQ_DEF_1(JOYCODE_4_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER4, "P4 Right",       SEQ_DEF_1(JOYCODE_4_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER4, "P4 Button 1",    SEQ_DEF_3(JOYCODE_4_BUTTON1, CODE_OR, JOYCODE_MOUSE_4_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER4, "P4 Button 2",    SEQ_DEF_3(JOYCODE_4_BUTTON2, CODE_OR, JOYCODE_MOUSE_4_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER4, "P4 Button 3",    SEQ_DEF_3(JOYCODE_4_BUTTON3, CODE_OR, JOYCODE_MOUSE_4_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER4, "P4 Button 4",    SEQ_DEF_1(JOYCODE_4_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER4, "P4 Button 5",    SEQ_DEF_1(JOYCODE_4_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER4, "P4 Button 6",    SEQ_DEF_1(JOYCODE_4_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER4, "P4 Button 7",    SEQ_DEF_1(JOYCODE_4_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER4, "P4 Button 8",    SEQ_DEF_1(JOYCODE_4_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER4, "P4 Button 9",    SEQ_DEF_1(JOYCODE_4_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER4, "P4 Button 10",   SEQ_DEF_1(JOYCODE_4_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER4, "P4 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER4, "P4 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER4, "P4 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER4, "P4 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER4, "P4 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER4, "P4 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER4, "P4 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER4, "P4 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER5, "P5 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER5, "P5 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER5, "P5 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER5, "P5 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER5, "P5 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER5, "P5 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER5, "P5 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER5, "P5 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER5, "P5 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER5, "P5 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER5, "P5 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER5, "P5 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER5, "P5 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER5, "P5 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER5, "P5 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER5, "P5 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER5, "P5 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER5, "P5 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER5, "P5 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER5, "P5 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER5, "P5 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER5, "P5 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER5, "P5 Up",          SEQ_DEF_1(JOYCODE_5_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER5, "P5 Down",        SEQ_DEF_1(JOYCODE_5_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER5, "P5 Left",        SEQ_DEF_1(JOYCODE_5_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER5, "P5 Right",       SEQ_DEF_1(JOYCODE_5_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER5, "P5 Button 1",    SEQ_DEF_3(JOYCODE_5_BUTTON1, CODE_OR, JOYCODE_MOUSE_5_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER5, "P5 Button 2",    SEQ_DEF_3(JOYCODE_5_BUTTON2, CODE_OR, JOYCODE_MOUSE_5_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER5, "P5 Button 3",    SEQ_DEF_3(JOYCODE_5_BUTTON3, CODE_OR, JOYCODE_MOUSE_5_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER5, "P5 Button 4",    SEQ_DEF_1(JOYCODE_5_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER5, "P5 Button 5",    SEQ_DEF_1(JOYCODE_5_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER5, "P5 Button 6",    SEQ_DEF_1(JOYCODE_5_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER5, "P5 Button 7",    SEQ_DEF_1(JOYCODE_5_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER5, "P5 Button 8",    SEQ_DEF_1(JOYCODE_5_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER5, "P5 Button 9",    SEQ_DEF_1(JOYCODE_5_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER5, "P5 Button 10",   SEQ_DEF_1(JOYCODE_5_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER5, "P5 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER5, "P5 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER5, "P5 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER5, "P5 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER5, "P5 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER5, "P5 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER5, "P5 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER5, "P5 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER6, "P6 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER6, "P6 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER6, "P6 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER6, "P6 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER6, "P6 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER6, "P6 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER6, "P6 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER6, "P6 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER6, "P6 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER6, "P6 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER6, "P6 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER6, "P6 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER6, "P6 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER6, "P6 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER6, "P6 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER6, "P6 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER6, "P6 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER6, "P6 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER6, "P6 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER6, "P6 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER6, "P6 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER6, "P6 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER6, "P6 Up",          SEQ_DEF_1(JOYCODE_6_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER6, "P6 Down",        SEQ_DEF_1(JOYCODE_6_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER6, "P6 Left",        SEQ_DEF_1(JOYCODE_6_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER6, "P6 Right",       SEQ_DEF_1(JOYCODE_6_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER6, "P6 Button 1",    SEQ_DEF_3(JOYCODE_6_BUTTON1, CODE_OR, JOYCODE_MOUSE_6_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER6, "P6 Button 2",    SEQ_DEF_3(JOYCODE_6_BUTTON2, CODE_OR, JOYCODE_MOUSE_6_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER6, "P6 Button 3",    SEQ_DEF_3(JOYCODE_6_BUTTON3, CODE_OR, JOYCODE_MOUSE_6_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER6, "P6 Button 4",    SEQ_DEF_1(JOYCODE_6_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER6, "P6 Button 5",    SEQ_DEF_1(JOYCODE_6_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER6, "P6 Button 6",    SEQ_DEF_1(JOYCODE_6_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER6, "P6 Button 7",    SEQ_DEF_1(JOYCODE_6_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER6, "P6 Button 8",    SEQ_DEF_1(JOYCODE_6_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER6, "P6 Button 9",    SEQ_DEF_1(JOYCODE_6_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER6, "P6 Button 10",   SEQ_DEF_1(JOYCODE_6_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER6, "P6 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER6, "P6 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER6, "P6 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER6, "P6 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER6, "P6 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER6, "P6 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER6, "P6 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER6, "P6 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER7, "P7 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER7, "P7 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER7, "P7 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER7, "P7 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER7, "P7 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER7, "P7 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER7, "P7 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER7, "P7 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER7, "P7 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER7, "P7 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_0 }, 
+   { IPT_BUTTON8             | IPF_PLAYER7, "P7 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER7, "P7 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER7, "P7 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER7, "P7 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER7, "P7 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER7, "P7 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER7, "P7 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER7, "P7 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER7, "P7 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER7, "P7 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER7, "P7 Left/Right",  SEQ_DEF_0 },
 
-  { IPT_JOYSTICK_UP         | IPF_PLAYER7, "P7 Up",          SEQ_DEF_1(JOYCODE_7_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER7, "P7 Down",        SEQ_DEF_1(JOYCODE_7_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER7, "P7 Left",        SEQ_DEF_1(JOYCODE_7_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER7, "P7 Right",       SEQ_DEF_1(JOYCODE_7_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER7, "P7 Button 1",    SEQ_DEF_3(JOYCODE_7_BUTTON1, CODE_OR, JOYCODE_MOUSE_7_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER7, "P7 Button 2",    SEQ_DEF_3(JOYCODE_7_BUTTON2, CODE_OR, JOYCODE_MOUSE_7_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER7, "P7 Button 3",    SEQ_DEF_3(JOYCODE_7_BUTTON3, CODE_OR, JOYCODE_MOUSE_7_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER7, "P7 Button 4",    SEQ_DEF_1(JOYCODE_7_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER7, "P7 Button 5",    SEQ_DEF_1(JOYCODE_7_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER7, "P7 Button 6",    SEQ_DEF_1(JOYCODE_7_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_1(JOYCODE_7_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER7, "P7 Button 8",    SEQ_DEF_1(JOYCODE_7_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER7, "P7 Button 9",    SEQ_DEF_1(JOYCODE_7_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER7, "P7 Button 10",   SEQ_DEF_1(JOYCODE_7_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER7, "P7 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER7, "P7 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER7, "P7 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER7, "P7 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER7, "P7 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER7, "P7 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER7, "P7 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER7, "P7 Left/Right",  SEQ_DEF_0 },
-
-  { IPT_JOYSTICK_UP         | IPF_PLAYER8, "P8 Up",          SEQ_DEF_1(JOYCODE_8_UP) },
-  { IPT_JOYSTICK_DOWN       | IPF_PLAYER8, "P8 Down",        SEQ_DEF_1(JOYCODE_8_DOWN) },
-  { IPT_JOYSTICK_LEFT       | IPF_PLAYER8, "P8 Left",        SEQ_DEF_1(JOYCODE_8_LEFT) },
-  { IPT_JOYSTICK_RIGHT      | IPF_PLAYER8, "P8 Right",       SEQ_DEF_1(JOYCODE_8_RIGHT) },
-  { IPT_BUTTON1             | IPF_PLAYER8, "P8 Button 1",    SEQ_DEF_3(JOYCODE_8_BUTTON1, CODE_OR, JOYCODE_MOUSE_8_BUTTON1) },
-  { IPT_BUTTON2             | IPF_PLAYER8, "P8 Button 2",    SEQ_DEF_3(JOYCODE_8_BUTTON2, CODE_OR, JOYCODE_MOUSE_8_BUTTON3) },
-  { IPT_BUTTON3             | IPF_PLAYER8, "P8 Button 3",    SEQ_DEF_3(JOYCODE_8_BUTTON3, CODE_OR, JOYCODE_MOUSE_8_BUTTON2) },
-  { IPT_BUTTON4             | IPF_PLAYER8, "P8 Button 4",    SEQ_DEF_1(JOYCODE_8_BUTTON4) },
-  { IPT_BUTTON5             | IPF_PLAYER8, "P8 Button 5",    SEQ_DEF_1(JOYCODE_8_BUTTON5) },
-  { IPT_BUTTON6             | IPF_PLAYER8, "P8 Button 6",    SEQ_DEF_1(JOYCODE_8_BUTTON6) },
-  { IPT_BUTTON7             | IPF_PLAYER8, "P8 Button 7",    SEQ_DEF_1(JOYCODE_8_BUTTON7) },
-  { IPT_BUTTON8             | IPF_PLAYER8, "P8 Button 8",    SEQ_DEF_1(JOYCODE_8_BUTTON8) },
-  { IPT_BUTTON9             | IPF_PLAYER8, "P8 Button 9",    SEQ_DEF_1(JOYCODE_8_BUTTON9) },
-  { IPT_BUTTON10            | IPF_PLAYER8, "P8 Button 10",   SEQ_DEF_1(JOYCODE_8_BUTTON10) },
-  { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER8, "P8 Right/Up",    SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER8, "P8 Right/Down",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER8, "P8 Right/Left",  SEQ_DEF_0 },
-  { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER8, "P8 Right/Right", SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER8, "P8 Left/Up",     SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER8, "P8 Left/Down",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
-  { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
+   { IPT_JOYSTICK_UP         | IPF_PLAYER8, "P8 Up",          SEQ_DEF_0 },
+   { IPT_JOYSTICK_DOWN       | IPF_PLAYER8, "P8 Down",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_LEFT       | IPF_PLAYER8, "P8 Left",        SEQ_DEF_0 },
+   { IPT_JOYSTICK_RIGHT      | IPF_PLAYER8, "P8 Right",       SEQ_DEF_0 },
+   { IPT_BUTTON1             | IPF_PLAYER8, "P8 Button 1",    SEQ_DEF_0 },
+   { IPT_BUTTON2             | IPF_PLAYER8, "P8 Button 2",    SEQ_DEF_0 },
+   { IPT_BUTTON3             | IPF_PLAYER8, "P8 Button 3",    SEQ_DEF_0 },
+   { IPT_BUTTON4             | IPF_PLAYER8, "P8 Button 4",    SEQ_DEF_0 },
+   { IPT_BUTTON5             | IPF_PLAYER8, "P8 Button 5",    SEQ_DEF_0 },
+   { IPT_BUTTON6             | IPF_PLAYER8, "P8 Button 6",    SEQ_DEF_0 },
+   { IPT_BUTTON7             | IPF_PLAYER8, "P8 Button 7",    SEQ_DEF_0 },
+   { IPT_BUTTON8             | IPF_PLAYER8, "P8 Button 8",    SEQ_DEF_0 },
+   { IPT_BUTTON9             | IPF_PLAYER8, "P8 Button 9",    SEQ_DEF_0 },
+   { IPT_BUTTON10            | IPF_PLAYER8, "P8 Button 10",   SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER8, "P8 Right/Up",    SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER8, "P8 Right/Down",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER8, "P8 Right/Left",  SEQ_DEF_0 },
+   { IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER8, "P8 Right/Right", SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_UP     | IPF_PLAYER8, "P8 Left/Up",     SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER8, "P8 Left/Down",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER8, "P8 Left/Left",   SEQ_DEF_0 },
+   { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER8, "P8 Left/Right",  SEQ_DEF_0 },
 
   { IPT_PEDAL                 | IPF_PLAYER1, "P1 Pedal 1",     SEQ_DEF_3(KEYCODE_LCONTROL, CODE_OR, JOYCODE_1_BUTTON6) },
   { (IPT_PEDAL+IPT_EXTENSION) | IPF_PLAYER1, "P1 Auto Release <Y/N>", SEQ_DEF_1(KEYCODE_Y) },
