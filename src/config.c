@@ -218,10 +218,7 @@ static config_file *config_init(const char *name, int save)
 		goto error;
 	memset(cfg, 0, sizeof(*cfg));
 
-	if(options.mame_remapping)
 		cfg->file = mame_fopen(name ? name : "default", 0, FILETYPE_CONFIG, save);
-	else 
-		cfg->file = mame_fopen(name ? name : "ra_default", 0, FILETYPE_CONFIG, save);
 
 	if (!cfg->file)
 		goto error;

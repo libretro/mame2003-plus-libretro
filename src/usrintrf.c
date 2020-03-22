@@ -2926,87 +2926,75 @@ static int menu_total;
 
 void setup_menu_init(void)
 {
-	menu_total = 0;
+  menu_total = 0;
+  struct InputPort *in;
+  int num;
 
-  if(options.mame_remapping)
+  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
+  menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
+
+
+
+  /* Determine if there are any dip switches */
+
+  in = Machine->input_ports;
+  num = 0;
+  while (in->type != IPT_END)
   {
-	  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
-    menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
-    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
-    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
+    if ((in->type & ~IPF_MASK) == IPT_DIPSWITCH_NAME && input_port_name(in) != 0 &&
+      (in->type & IPF_UNUSED) == 0 &&	!(in->type & IPF_CHEAT))
+    num++;
+    in++;
   }
 
-	/* Determine if there are any dip switches */
-	{
-		struct InputPort *in;
-		int num;
+  if (num != 0)
+  {
+      menu_item[menu_total] = ui_getstring (UI_dipswitches); menu_action[menu_total++] = UI_SWITCH;
+  }
 
-		in = Machine->input_ports;
+  /* Determine if there are any analog controls */
+  in = Machine->input_ports;
 
-		num = 0;
-		while (in->type != IPT_END)
-		{
-			if ((in->type & ~IPF_MASK) == IPT_DIPSWITCH_NAME && input_port_name(in) != 0 &&
-					(in->type & IPF_UNUSED) == 0 &&	!(in->type & IPF_CHEAT))
-				num++;
-			in++;
-		}
+  num = 0;
+  while (in->type != IPT_END)
+  {
+    if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
+      && !(in->type & IPF_CHEAT))
+      num++;
+      in++;
+  }
 
-		if (num != 0)
-		{
-			menu_item[menu_total] = ui_getstring (UI_dipswitches); menu_action[menu_total++] = UI_SWITCH;
-		}
-	}
+  if ( num != 0)
+  {
+     menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
+  }
 
-	/* Determine if there are any analog controls */
-	{
-		struct InputPort *in;
-		int num;
+  /* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
+  if ( osd_joystick_needs_calibration() != 0)
+  {
+    menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
+  }
 
-		in = Machine->input_ports;
+  menu_item[menu_total] = ui_getstring (UI_bookkeeping); menu_action[menu_total++] = UI_STATS;
+  menu_item[menu_total] = ui_getstring (UI_gameinfo); menu_action[menu_total++] = UI_GAMEINFO;
+  menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
 
-		num = 0;
-		while (in->type != IPT_END)
-		{
-			if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
-					&& !(in->type & IPF_CHEAT))
-				num++;
-			in++;
-		}
+  menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
 
-		if ( num != 0)
-		{
-			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
-		}
-	}
-
-	/* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
-	if ( osd_joystick_needs_calibration() != 0)
-	{
-		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
-	}
-
-	menu_item[menu_total] = ui_getstring (UI_bookkeeping); menu_action[menu_total++] = UI_STATS;
-	menu_item[menu_total] = ui_getstring (UI_gameinfo); menu_action[menu_total++] = UI_GAMEINFO;
-	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
-
-	menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
-
-	if (options.content_flags[CONTENT_NEOGEO])
-	{
-		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
-	}
+  if (options.content_flags[CONTENT_NEOGEO])
+  {
+    menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
+  }
 
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
-    /* don't offer to generate_xml_dat on consoles where it can't be used */
-    menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
-
+  /* don't offer to generate_xml_dat on consoles where it can't be used */
+  menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 #endif
   if(!options.display_setup) 
   {
     menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
   }
-	menu_item[menu_total] = 0; /* terminate array */
+  menu_item[menu_total] = 0; /* terminate array */
 }
 
 

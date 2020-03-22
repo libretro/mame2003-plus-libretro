@@ -72,21 +72,15 @@ Core options
 enum CORE_OPTIONS/* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
   OPT_DISPLAY_SETUP= 0,
-#if none_legacy
-  OPT_MAME_REMAPPING,
-#endif
   OPT_INPUT_INTERFACE,
   OPT_4WAY ,
-  OPT_DPAD_ANALOG,
   OPT_DEADZONE,
   OPT_Cheat_Input_Ports,
   OPT_MOUSE_DEVICE,
   OPT_SHARE_DIAL,
   OPT_CROSSHAIR_ENABLED,
-#if none_legacy
   OPT_SKIP_DISCLAIMER,
   OPT_SKIP_WARNINGS,
-#endif
   OPT_FRAMESKIP,
   OPT_TATE_MODE,
   OPT_BRIGHTNESS,
@@ -192,10 +186,8 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; mouse|pointer|disabled");
 #endif
   init_default(&default_options[OPT_CROSSHAIR_ENABLED],   APPNAME"_crosshair_enabled",   "Show Lightgun crosshair; enabled|disabled");
-#if none_legacy
   init_default(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");
-#endif
   init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME tab menu; disabled|enabled");
   init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",          "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",               "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
@@ -205,7 +197,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Controller type mapping ; digital|analog");
   init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode - Rotating display (Restart core); disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
@@ -218,9 +209,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; simultaneous|retropad|keyboard");
-#if none_legacy
-  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (restart); enabled|disabled");
-#endif
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
@@ -318,9 +306,6 @@ void init_default(struct retro_variable_default *def, const char *key, const cha
 {
   def->key = key;
   def->defaults_string = label_and_values;
- #ifndef none_legacy
- options.mame_remapping =1;
- #endif
 }
 
 static void update_variables(bool first_time)
@@ -383,7 +368,6 @@ static void update_variables(bool first_time)
           else
             options.crosshair_enable = 0;
           break;
-#if none_legacy
         case OPT_SKIP_DISCLAIMER:
           if(strcmp(var.value, "enabled") == 0)
             options.skip_disclaimer = true;
@@ -397,20 +381,17 @@ static void update_variables(bool first_time)
           else
             options.skip_warnings = false;
           break;
-#endif
         case OPT_DISPLAY_SETUP:
-          if(strcmp(var.value, "enabled") == 0 && (options.mame_remapping) )
+          if(strcmp(var.value, "enabled") == 0  )
             options.display_setup = 1;
           else
             options.display_setup = 0;
           break;
-
         case OPT_BRIGHTNESS:
           options.brightness = atof(var.value);
           if(!first_time)
             palette_set_global_brightness(options.brightness);
           break;
-
         case OPT_GAMMA:
           options.gamma = atof(var.value);
           if(!first_time)
@@ -498,33 +479,6 @@ static void update_variables(bool first_time)
             options.dial_share_xy = 0;
             break;
           }
-
-      case OPT_DPAD_ANALOG:
-          if(strcmp(var.value, "analog") == 0)
-          {
-            if( options.analog !=1 && control_flag !=-1) control_flag =1;
-            options.analog = 1;
-            if (running && control_flag == 1) 
-            {
-              change_control_type(); 
-              control_flag =0;
-            }
-          }
-          else
-          {
-            if(options.analog !=0 && control_flag !=-1)  control_flag =1;
-            options.analog = 0;
-            if (running && control_flag == 1) 
-            {
-              change_control_type(); 
-              control_flag =0;
-            }
-          }
-          //skip the first set then there so it doesnt change input general every time you open the options menu if using none legacy mode
-          if(control_flag ==-1) control_flag = 0;
-          break;
-
-
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);
           break;
@@ -568,7 +522,6 @@ static void update_variables(bool first_time)
             options.vector_height=0; 
           }
           break;
-
         case OPT_VECTOR_ANTIALIAS:
           if(strcmp(var.value, "enabled") == 0)
             options.antialias = 1; /* integer: 1 to enable antialiasing on vectors _ does not work as of 2018/04/17*/
@@ -586,49 +539,27 @@ static void update_variables(bool first_time)
           else
             options.translucency = 0;
           break;
-
         case OPT_VECTOR_FLICKER:
           options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old family recipe */
           break;
-
         case OPT_VECTOR_INTENSITY:
           options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
           break;
-
         case OPT_NVRAM_BOOTSTRAP:
           if(strcmp(var.value, "enabled") == 0)
             options.nvram_bootstrap = true;
           else
             options.nvram_bootstrap = false;
           break;
-
         case OPT_SAMPLE_RATE:
           options.samplerate = atoi(var.value);
           break;
-
         case OPT_DCS_SPEEDHACK:
           if(strcmp(var.value, "enabled") == 0)
             options.activate_dcs_speedhack = 1;
           else
             options.activate_dcs_speedhack = 0;
           break;
-#if none_legacy
-        case OPT_MAME_REMAPPING:
-          if(strcmp(var.value, "enabled") == 0)
-          {
-            if( !options.mame_remapping && legacy_flag != -1) legacy_flag =0;
-            options.mame_remapping = true;
-          }
-          else
-          {
-            if( options.mame_remapping && legacy_flag != -1) legacy_flag =0;
-            options.mame_remapping = false;
-          }
-          if(!first_time)
-            setup_menu_init();
-          if(legacy_flag ==-1) legacy_flag = 1;
-          break;
-#endif
         case OPT_FRAMESKIP:
           options.frameskip = atoi(var.value);
           break;
@@ -639,28 +570,26 @@ static void update_variables(bool first_time)
           else
             options.system_subfolder = false;
           break;
-
           case OPT_CORE_SAVE_SUBFOLDER:
           if(strcmp(var.value, "enabled") == 0)
             options.save_subfolder = true;
           else
             options.save_subfolder = false;
           break;
-
-	    case OPT_Cheat_Input_Ports:
+      case OPT_Cheat_Input_Ports:
           if(strcmp(var.value, "enabled") == 0)
             options.cheat_input_ports = true;
           else
             options.cheat_input_ports = false;
-          break;		
+          break;
 	    case OPT_Machine_Timing:
           if(strcmp(var.value, "enabled") == 0)
             options.machine_timing = true;
           else
             options.machine_timing = false;
-          break;	
-	  }
-    }
+          break;
+      }
+   }
   }
 
   if(!options.content_flags[CONTENT_ALT_SOUND])
@@ -1890,7 +1819,7 @@ int convert_analog_scale(int input)
 		{
 			input = +32767;
 		}
-		input = input / 326.78;
+		input = input / 327.68;
 	}
 
 	else

@@ -224,7 +224,6 @@ static int decode_graphics(const struct GfxDecodeInfo *gfxdecodeinfo);
 static void compute_aspect_ratio(const struct InternalMachineDriver *drv, int *aspect_x, int *aspect_y);
 static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *height);
 static int init_buffered_spriteram(void);
-void change_control_type(void);
 
 /***************************************************************************
 
@@ -273,7 +272,6 @@ bool init_game(int game)
 	Machine->gamedrv = gamedrv = drivers[game];
 	expand_machine_driver(gamedrv->drv, &internal_drv);
 	Machine->drv = &internal_drv;
-  change_control_type();
   return true;
 }
     
