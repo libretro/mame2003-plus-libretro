@@ -38,7 +38,14 @@
 	midyunit_speedup_offset = ((addr) & 0x10) >> 4; \
 	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midwunit_generic_speedup_1_address);
 
-
+#define INSTALL_SPEEDUP_4(addr, pc, spin1, spin2, spin3, spin4) \
+	midyunit_speedup_pc = (pc); \
+	midyunit_speedup_offset = ((addr) & 0x10) >> 4; \
+	midyunit_speedup_spin[0] = spin1; \
+	midyunit_speedup_spin[1] = spin2; \
+	midyunit_speedup_spin[2] = spin3; \
+  midyunit_speedup_spin[3] = spin4; \
+	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midyunit_generic_speedup_3);
 
 /* code-related variables */
        UINT8 *	midwunit_decode_memory;
