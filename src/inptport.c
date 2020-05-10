@@ -2466,7 +2466,7 @@ void update_analog_port(int port)
 		if (delta == 0 && options.digital_analog )
 			current = default_value;
 
-		else if ((delta == 0) && (in->type & IPF_CENTER) )
+		else if ((delta == 0) && (in->type & IPF_CENTER))
 		{
 			if (current > default_value)
 			delta = -100 / sensitivity;
