@@ -174,15 +174,13 @@ static WRITE16_HANDLER( digital_w )
 
 static UINT8 position_update ( UINT8 temp )
 {
-  if (temp > 128) {
+  if (temp > 127) {
     if (temp > 190) return 190;
     else return temp; }
 
-  else if (temp < 128) {
+  else {
     if (temp < 65) return 65;
     else return temp; }
-
-  else return 128;
 }
 
 static READ16_HANDLER( analog_r )
@@ -192,9 +190,9 @@ static READ16_HANDLER( analog_r )
   * Live Center - rev 5 - by mahoneyt944 & grant2258 *
   ****************************************************/
 
-  static UINT8 currentx  = 0x7F; // upright
+  static UINT8 currentx  = 0x80; // upright
   static UINT8 currenty  = 0x7F;
-  static UINT8 currentx2 = 0x7F; // cocktail
+  static UINT8 currentx2 = 0x80; // cocktail
   static UINT8 currenty2 = 0x7F;
   static UINT8 delay     = 0;    // debounce counter
   static UINT8 t         = 0;    // debounce count to reach
