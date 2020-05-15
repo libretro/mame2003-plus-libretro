@@ -1,6 +1,6 @@
 #include "driver.h"
 
-
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load);
 
 static int firstchannel,numchannels;
 int leftSampleNum;
