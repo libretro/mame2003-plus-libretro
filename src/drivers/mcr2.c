@@ -195,6 +195,18 @@ static READ_HANDLER( twotigra_yoke2_r )
 	}
 }
 
+static WRITE_HANDLER( journey_sample_select_w )
+{
+  if ((data & 1) == 0)
+    sample_set_volume(0,0);
+
+  else if (!sample_playing(0)) {
+    sample_set_volume(0, 1000);
+    sample_start(0, 0, 1);
+  }
+
+  else sample_set_volume(0, 1000);
+}
 
 
 /*************************************
@@ -660,6 +672,25 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+/*************************************
+ *
+ *  Sound definitions
+ *
+ *************************************/
+
+static const char *journey_sample_names[] =
+{
+	"*journey",
+	"sepways.wav",
+	0
+};
+
+struct Samplesinterface journey_samples_interface =
+{
+	1,
+	25,
+	journey_sample_names
+};
 
 
 /*************************************
@@ -714,6 +745,9 @@ static MACHINE_DRIVER_START( journey )
 	/* video hardware */
 	MDRV_VIDEO_START(journey)
 	MDRV_VIDEO_UPDATE(journey)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, journey_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1074,6 +1108,15 @@ static DRIVER_INIT( wacko )
 	mcr12_sprite_xoffs_flip = 0;
 }
 
+static DRIVER_INIT( journey )
+{
+	MCR_CONFIGURE_SOUND(MCR_SSIO);
+	install_port_write_handler(0, 0x00, 0x00, mcr_control_port_w);
+	install_port_write_handler(0, 0x04, 0x04, journey_sample_select_w);
+
+	mcr12_sprite_xoffs = 0;
+	mcr12_sprite_xoffs_flip = 0;
+}
 
 static DRIVER_INIT( kroozr )
 {
@@ -1118,4 +1161,4 @@ GAME( 1982, domino,   0,        mcr2,     domino,   domino,   ROT0,  "Bally Midw
 GAME( 1982, wacko,    0,        mcr2,     wacko,    wacko,    ROT0,  "Bally Midway", "Wacko" )
 GAME( 1984, twotiger, 0,        mcr2,     twotiger, mcr2,     ROT0,  "Bally Midway", "Two Tigers" )
 GAME( 1984, twotigra, twotiger, twotigra, twotigra, twotigra, ROT0,  "Bally Midway", "Two Tigers (dedicated)" )
-GAMEX(1983, journey,  0,        journey,  journey,   mcr2,     ROT90, "Bally Midway", "Journey", GAME_IMPERFECT_SOUND )
+GAME( 1983, journey,  0,        journey,  journey,  journey,  ROT90, "Bally Midway", "Journey" )
