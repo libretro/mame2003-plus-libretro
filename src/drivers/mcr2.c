@@ -201,11 +201,11 @@ static WRITE_HANDLER( journey_sample_select_w )
     sample_set_volume(0,0);
 
   else if (!sample_playing(0)) {
-    sample_set_volume(0, 1000);
+    sample_set_volume(0, 100);
     sample_start(0, 0, 1);
   }
 
-  else sample_set_volume(0, 1000);
+  else sample_set_volume(0, 100);
 }
 
 
@@ -688,7 +688,7 @@ static const char *journey_sample_names[] =
 struct Samplesinterface journey_samples_interface =
 {
 	1,
-	25,
+	100,
 	journey_sample_names
 };
 
