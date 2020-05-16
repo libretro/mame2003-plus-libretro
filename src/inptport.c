@@ -17,8 +17,6 @@ extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int lastcoin[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
 
-extern int legacy_flag;
-
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
 
@@ -221,7 +219,7 @@ struct ipd inputport_defaults[] =
    { IPT_JOYSTICKLEFT_DOWN   | IPF_PLAYER3, "P3 Left/Down",   SEQ_DEF_1(JOYCODE_3_LEFT_DOWN) },
    { IPT_JOYSTICKLEFT_LEFT   | IPF_PLAYER3, "P3 Left/Left",   SEQ_DEF_1(JOYCODE_3_LEFT_LEFT) },
    { IPT_JOYSTICKLEFT_RIGHT  | IPF_PLAYER3, "P3 Left/Right",  SEQ_DEF_1(JOYCODE_3_LEFT_RIGHT) },
-   
+
    { IPT_JOYSTICK_UP         | IPF_PLAYER4, "P4 Up",          SEQ_DEF_1(JOYCODE_4_UP)    },
    { IPT_JOYSTICK_DOWN       | IPF_PLAYER4, "P4 Down",        SEQ_DEF_1(JOYCODE_4_DOWN)  },
    { IPT_JOYSTICK_LEFT       | IPF_PLAYER4, "P4 Left",        SEQ_DEF_1(JOYCODE_4_LEFT)  },
@@ -301,7 +299,7 @@ struct ipd inputport_defaults[] =
    { IPT_BUTTON4             | IPF_PLAYER7, "P7 Button 4",    SEQ_DEF_0 },
    { IPT_BUTTON5             | IPF_PLAYER7, "P7 Button 5",    SEQ_DEF_0 },
    { IPT_BUTTON6             | IPF_PLAYER7, "P7 Button 6",    SEQ_DEF_0 },
-   { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_0 }, 
+   { IPT_BUTTON7             | IPF_PLAYER7, "P7 Button 7",    SEQ_DEF_0 },
    { IPT_BUTTON8             | IPF_PLAYER7, "P7 Button 8",    SEQ_DEF_0 },
    { IPT_BUTTON9             | IPF_PLAYER7, "P7 Button 9",    SEQ_DEF_0 },
    { IPT_BUTTON10            | IPF_PLAYER7, "P7 Button 10",   SEQ_DEF_0 },
@@ -387,7 +385,7 @@ struct ipd inputport_defaults[] =
    { (IPT_PADDLE | IPF_PLAYER7)+IPT_EXTENSION, "Paddle 7",      SEQ_DEF_0 },
    {  IPT_PADDLE | IPF_PLAYER8,                "Paddle 8",      SEQ_DEF_0 },
    { (IPT_PADDLE | IPF_PLAYER8)+IPT_EXTENSION, "Paddle 8",      SEQ_DEF_0 },
-   
+
    {  IPT_PADDLE_V | IPF_PLAYER1,                "Paddle V 1",      SEQ_DEF_3(JOYCODE_1_LEFT_UP,   CODE_OR, JOYCODE_1_UP)    },
    { (IPT_PADDLE_V | IPF_PLAYER1)+IPT_EXTENSION, "Paddle V 1",      SEQ_DEF_3(JOYCODE_1_LEFT_DOWN, CODE_OR, JOYCODE_1_DOWN)  },
    {  IPT_PADDLE_V | IPF_PLAYER2,                "Paddle V 2",      SEQ_DEF_3(JOYCODE_2_LEFT_UP,   CODE_OR, JOYCODE_2_UP)    },
@@ -507,14 +505,14 @@ struct ipd inputport_defaults[] =
   {  IPT_AD_STICK_Y | IPF_PLAYER8,                "AD Stick Y 8", SEQ_DEF_0 },
   { (IPT_AD_STICK_Y | IPF_PLAYER8)+IPT_EXTENSION, "AD Stick Y 8", SEQ_DEF_0 },
 
-  {  IPT_AD_STICK_Z | IPF_PLAYER1,                "AD Stick Z",   SEQ_DEF_3(JOYCODE_1_LEFT_UP,   CODE_OR, JOYCODE_1_UP)    },
-  { (IPT_AD_STICK_Z | IPF_PLAYER1)+IPT_EXTENSION, "AD Stick Z",   SEQ_DEF_3(JOYCODE_1_LEFT_DOWN, CODE_OR, JOYCODE_1_DOWN)  },
-  {  IPT_AD_STICK_Z | IPF_PLAYER2,                "AD Stick Z 2", SEQ_DEF_3(JOYCODE_2_LEFT_UP,   CODE_OR, JOYCODE_1_UP)    },
-  { (IPT_AD_STICK_Z | IPF_PLAYER2)+IPT_EXTENSION, "AD Stick Z 2", SEQ_DEF_3(JOYCODE_3_LEFT_DOWN, CODE_OR, JOYCODE_2_DOWN)  },
-  {  IPT_AD_STICK_Z | IPF_PLAYER3,                "AD Stick Z 3", SEQ_DEF_3(JOYCODE_3_LEFT_UP,   CODE_OR, JOYCODE_2_UP)    },
-  { (IPT_AD_STICK_Z | IPF_PLAYER3)+IPT_EXTENSION, "AD Stick Z 3", SEQ_DEF_3(JOYCODE_3_LEFT_DOWN, CODE_OR, JOYCODE_3_DOWN)  },
-  {  IPT_AD_STICK_Z | IPF_PLAYER4,                "AD Stick Z 4", SEQ_DEF_3(JOYCODE_4_LEFT_UP,   CODE_OR, JOYCODE_3_UP)    },
-  { (IPT_AD_STICK_Z | IPF_PLAYER4)+IPT_EXTENSION, "AD Stick Z 4", SEQ_DEF_3(JOYCODE_4_LEFT_DOWN, CODE_OR, JOYCODE_4_DOWN)  },
+  {  IPT_AD_STICK_Z | IPF_PLAYER1,                "AD Stick Z",   SEQ_DEF_3(JOYCODE_1_RIGHT_UP,   CODE_OR, JOYCODE_1_UP)    },
+  { (IPT_AD_STICK_Z | IPF_PLAYER1)+IPT_EXTENSION, "AD Stick Z",   SEQ_DEF_3(JOYCODE_1_RIGHT_DOWN, CODE_OR, JOYCODE_1_DOWN)  },
+  {  IPT_AD_STICK_Z | IPF_PLAYER2,                "AD Stick Z 2", SEQ_DEF_3(JOYCODE_2_RIGHT_UP,   CODE_OR, JOYCODE_1_UP)    },
+  { (IPT_AD_STICK_Z | IPF_PLAYER2)+IPT_EXTENSION, "AD Stick Z 2", SEQ_DEF_3(JOYCODE_3_RIGHT_DOWN, CODE_OR, JOYCODE_2_DOWN)  },
+  {  IPT_AD_STICK_Z | IPF_PLAYER3,                "AD Stick Z 3", SEQ_DEF_3(JOYCODE_3_RIGHT_UP,   CODE_OR, JOYCODE_2_UP)    },
+  { (IPT_AD_STICK_Z | IPF_PLAYER3)+IPT_EXTENSION, "AD Stick Z 3", SEQ_DEF_3(JOYCODE_3_RIGHT_DOWN, CODE_OR, JOYCODE_3_DOWN)  },
+  {  IPT_AD_STICK_Z | IPF_PLAYER4,                "AD Stick Z 4", SEQ_DEF_3(JOYCODE_4_RIGHT_UP,   CODE_OR, JOYCODE_3_UP)    },
+  { (IPT_AD_STICK_Z | IPF_PLAYER4)+IPT_EXTENSION, "AD Stick Z 4", SEQ_DEF_3(JOYCODE_4_RIGHT_DOWN, CODE_OR, JOYCODE_4_DOWN)  },
   {  IPT_AD_STICK_Z | IPF_PLAYER5,                "AD Stick Z 5", SEQ_DEF_0 },
   { (IPT_AD_STICK_Z | IPF_PLAYER5)+IPT_EXTENSION, "AD Stick Z 5", SEQ_DEF_0 },
   {  IPT_AD_STICK_Z | IPF_PLAYER6,                "AD Stick Z 6", SEQ_DEF_0 },
@@ -664,6 +662,7 @@ struct ik input_keywords[] =
 	{ "KEYCODE_DEL_PAD",	  	IKT_STD,		KEYCODE_DEL_PAD },
 	{ "KEYCODE_ENTER_PAD",	  	IKT_STD,		KEYCODE_ENTER_PAD },
 	{ "KEYCODE_PRTSCR",		  	IKT_STD,		KEYCODE_PRTSCR },
+	{ "KEYCODE_PAUSE",		  	IKT_STD,		KEYCODE_PAUSE },
 	{ "KEYCODE_LSHIFT",		  	IKT_STD,		KEYCODE_LSHIFT },
 	{ "KEYCODE_RSHIFT",		  	IKT_STD,		KEYCODE_RSHIFT },
 	{ "KEYCODE_LCONTROL",	  	IKT_STD,		KEYCODE_LCONTROL },
@@ -810,6 +809,78 @@ struct ik input_keywords[] =
 	{ "MOUSECODE_1_BUTTON2", 	IKT_STD,		JOYCODE_MOUSE_1_BUTTON2 },
 	{ "MOUSECODE_1_BUTTON3", 	IKT_STD,		JOYCODE_MOUSE_1_BUTTON3 },
 
+	{ "JOYCODE_1_LEFT_LEFT",		  	IKT_STD,		JOYCODE_1_LEFT_LEFT },
+	{ "JOYCODE_1_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_1_LEFT_RIGHT },
+	{ "JOYCODE_1_LEFT_UP",  		  	IKT_STD,		JOYCODE_1_LEFT_UP },
+	{ "JOYCODE_1_LEFT_DOWN",		  	IKT_STD,		JOYCODE_1_LEFT_DOWN },
+  { "JOYCODE_1_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_1_RIGHT_LEFT },
+	{ "JOYCODE_1_RIGHT_RIGHT",			IKT_STD,		JOYCODE_1_RIGHT_RIGHT },
+	{ "JOYCODE_1_RIGHT_UP",  		  	IKT_STD,		JOYCODE_1_RIGHT_UP },
+	{ "JOYCODE_1_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_1_RIGHT_DOWN },
+
+	{ "JOYCODE_2_LEFT_LEFT",		  	IKT_STD,		JOYCODE_2_LEFT_LEFT },
+	{ "JOYCODE_2_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_2_LEFT_RIGHT },
+	{ "JOYCODE_2_LEFT_UP",  		  	IKT_STD,		JOYCODE_2_LEFT_UP },
+	{ "JOYCODE_2_LEFT_DOWN",			  IKT_STD,		JOYCODE_2_LEFT_DOWN },
+  { "JOYCODE_2_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_2_RIGHT_LEFT },
+	{ "JOYCODE_2_RIGHT_RIGHT",			IKT_STD,		JOYCODE_2_RIGHT_RIGHT },
+	{ "JOYCODE_2_RIGHT_UP",  		  	IKT_STD,		JOYCODE_2_RIGHT_UP },
+	{ "JOYCODE_2_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_2_RIGHT_DOWN },
+
+	{ "JOYCODE_3_LEFT_LEFT",		  	IKT_STD,		JOYCODE_3_LEFT_LEFT },
+	{ "JOYCODE_3_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_3_LEFT_RIGHT },
+	{ "JOYCODE_3_LEFT_UP",  		  	IKT_STD,		JOYCODE_3_LEFT_UP },
+	{ "JOYCODE_3_LEFT_DOWN",			  IKT_STD,		JOYCODE_3_LEFT_DOWN },
+  { "JOYCODE_3_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_3_RIGHT_LEFT },
+	{ "JOYCODE_3_RIGHT_RIGHT",			IKT_STD,		JOYCODE_3_RIGHT_RIGHT },
+	{ "JOYCODE_3_RIGHT_UP",  		  	IKT_STD,		JOYCODE_3_RIGHT_UP },
+	{ "JOYCODE_3_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_3_RIGHT_DOWN },
+
+	{ "JOYCODE_4_LEFT_LEFT",		  	IKT_STD,		JOYCODE_4_LEFT_LEFT },
+	{ "JOYCODE_4_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_4_LEFT_RIGHT },
+	{ "JOYCODE_4_LEFT_UP",  		  	IKT_STD,		JOYCODE_4_LEFT_UP },
+	{ "JOYCODE_4_LEFT_DOWN",			  IKT_STD,		JOYCODE_4_LEFT_DOWN },
+  { "JOYCODE_4_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_4_RIGHT_LEFT },
+	{ "JOYCODE_4_RIGHT_RIGHT",			IKT_STD,		JOYCODE_4_RIGHT_RIGHT },
+	{ "JOYCODE_4_RIGHT_UP",  		  	IKT_STD,		JOYCODE_4_RIGHT_UP },
+	{ "JOYCODE_4_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_4_RIGHT_DOWN },
+
+	{ "JOYCODE_5_LEFT_LEFT",		  	IKT_STD,		JOYCODE_5_LEFT_LEFT },
+	{ "JOYCODE_5_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_5_LEFT_RIGHT },
+	{ "JOYCODE_5_LEFT_UP",  		  	IKT_STD,		JOYCODE_5_LEFT_UP },
+	{ "JOYCODE_5_LEFT_DOWN",			  IKT_STD,		JOYCODE_5_LEFT_DOWN },
+  { "JOYCODE_5_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_5_RIGHT_LEFT },
+	{ "JOYCODE_5_RIGHT_RIGHT",			IKT_STD,		JOYCODE_5_RIGHT_RIGHT },
+	{ "JOYCODE_5_RIGHT_UP",  		  	IKT_STD,		JOYCODE_5_RIGHT_UP },
+	{ "JOYCODE_5_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_5_RIGHT_DOWN },
+
+	{ "JOYCODE_6_LEFT_LEFT",		  	IKT_STD,		JOYCODE_6_LEFT_LEFT },
+	{ "JOYCODE_6_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_6_LEFT_RIGHT },
+	{ "JOYCODE_6_LEFT_UP",  		  	IKT_STD,		JOYCODE_6_LEFT_UP },
+	{ "JOYCODE_6_LEFT_DOWN",			  IKT_STD,		JOYCODE_6_LEFT_DOWN },
+  { "JOYCODE_6_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_6_RIGHT_LEFT },
+	{ "JOYCODE_6_RIGHT_RIGHT",			IKT_STD,		JOYCODE_6_RIGHT_RIGHT },
+	{ "JOYCODE_6_RIGHT_UP",  		  	IKT_STD,		JOYCODE_6_RIGHT_UP },
+	{ "JOYCODE_6_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_6_RIGHT_DOWN },
+
+	{ "JOYCODE_7_LEFT_LEFT",		  	IKT_STD,		JOYCODE_7_LEFT_LEFT },
+	{ "JOYCODE_7_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_7_LEFT_RIGHT },
+	{ "JOYCODE_7_LEFT_UP",  		  	IKT_STD,		JOYCODE_7_LEFT_UP },
+	{ "JOYCODE_7_LEFT_DOWN",			  IKT_STD,		JOYCODE_7_LEFT_DOWN },
+  { "JOYCODE_7_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_7_RIGHT_LEFT },
+	{ "JOYCODE_7_RIGHT_RIGHT",			IKT_STD,		JOYCODE_7_RIGHT_RIGHT },
+	{ "JOYCODE_7_RIGHT_UP",  		  	IKT_STD,		JOYCODE_7_RIGHT_UP },
+	{ "JOYCODE_7_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_7_RIGHT_DOWN },
+
+	{ "JOYCODE_8_LEFT_LEFT",		  	IKT_STD,		JOYCODE_8_LEFT_LEFT },
+	{ "JOYCODE_8_LEFT_RIGHT",		  	IKT_STD,		JOYCODE_8_LEFT_RIGHT },
+	{ "JOYCODE_8_LEFT_UP",  		  	IKT_STD,		JOYCODE_8_LEFT_UP },
+	{ "JOYCODE_8_LEFT_DOWN",			  IKT_STD,		JOYCODE_8_LEFT_DOWN },
+  { "JOYCODE_8_RIGHT_LEFT",		  	IKT_STD,		JOYCODE_8_RIGHT_LEFT },
+	{ "JOYCODE_8_RIGHT_RIGHT",			IKT_STD,		JOYCODE_8_RIGHT_RIGHT },
+	{ "JOYCODE_8_RIGHT_UP",  		  	IKT_STD,		JOYCODE_8_RIGHT_UP },
+	{ "JOYCODE_8_RIGHT_DOWN",		  	IKT_STD,		JOYCODE_8_RIGHT_DOWN },
+
 	{ "KEYCODE_NONE",			IKT_STD,		CODE_NONE },
 	{ "CODE_NONE",			  	IKT_STD,		CODE_NONE },
 	{ "CODE_OTHER",				IKT_STD,		CODE_OTHER },
@@ -821,7 +892,19 @@ struct ik input_keywords[] =
 	{ "|",					   	IKT_STD,		CODE_OR },
 
 	{ "UI_CONFIGURE", 			IKT_IPT,	 	IPT_UI_CONFIGURE },
+	{ "UI_ON_SCREEN_DISPLAY",	IKT_IPT,		IPT_UI_ON_SCREEN_DISPLAY },
+	{ "UI_PAUSE",				IKT_IPT,		IPT_UI_PAUSE },
 	{ "UI_RESET_MACHINE",		IKT_IPT,		IPT_UI_RESET_MACHINE },
+	{ "UI_SHOW_GFX",			IKT_IPT,		IPT_UI_SHOW_GFX },
+	{ "UI_FRAMESKIP_DEC",		IKT_IPT,		IPT_UI_FRAMESKIP_DEC },
+	{ "UI_FRAMESKIP_INC",		IKT_IPT,		IPT_UI_FRAMESKIP_INC },
+	{ "UI_THROTTLE",			IKT_IPT,		IPT_UI_THROTTLE },
+	{ "UI_SHOW_FPS",			IKT_IPT,		IPT_UI_SHOW_FPS },
+	{ "UI_SHOW_PROFILER",		IKT_IPT,		IPT_UI_SHOW_PROFILER },
+#ifdef MESS
+	{ "UI_TOGGLE_UI",			IKT_IPT,		IPT_UI_TOGGLE_UI },
+#endif
+	{ "UI_SNAPSHOT",			IKT_IPT,		IPT_UI_SNAPSHOT },
 	{ "UI_TOGGLE_CHEAT",		IKT_IPT,		IPT_UI_TOGGLE_CHEAT },
 	{ "UI_UP",					IKT_IPT,		IPT_UI_UP },
 	{ "UI_DOWN",				IKT_IPT,		IPT_UI_DOWN },
@@ -829,11 +912,17 @@ struct ik input_keywords[] =
 	{ "UI_RIGHT",				IKT_IPT,		IPT_UI_RIGHT },
 	{ "UI_SELECT",				IKT_IPT,		IPT_UI_SELECT },
 	{ "UI_CANCEL",				IKT_IPT,		IPT_UI_CANCEL },
+	{ "UI_PAN_UP",				IKT_IPT,		IPT_UI_PAN_UP },
+	{ "UI_PAN_DOWN",			IKT_IPT,		IPT_UI_PAN_DOWN },
+	{ "UI_PAN_LEFT",			IKT_IPT,		IPT_UI_PAN_LEFT },
+	{ "UI_PAN_RIGHT",			IKT_IPT,		IPT_UI_PAN_RIGHT },
+	{ "UI_TOGGLE_DEBUG",		IKT_IPT,		IPT_UI_TOGGLE_DEBUG },
 	{ "UI_ADD_CHEAT",			IKT_IPT,		IPT_UI_ADD_CHEAT },
 	{ "UI_DELETE_CHEAT",		IKT_IPT,		IPT_UI_DELETE_CHEAT },
 	{ "UI_SAVE_CHEAT",			IKT_IPT,		IPT_UI_SAVE_CHEAT },
 	{ "UI_WATCH_VALUE",			IKT_IPT,		IPT_UI_WATCH_VALUE },
 	{ "UI_EDIT_CHEAT",			IKT_IPT,		IPT_UI_EDIT_CHEAT },
+	{ "UI_TOGGLE_CROSSHAIR",	IKT_IPT,		IPT_UI_TOGGLE_CROSSHAIR },
 	{ "START1",					IKT_IPT,		IPT_START1 },
 	{ "START2",					IKT_IPT,		IPT_START2 },
 	{ "START3",					IKT_IPT,		IPT_START3 },
@@ -1514,7 +1603,7 @@ InputSeq* input_port_type_seq(int type)
 
 InputSeq* input_port_seq(const struct InputPort *in)
 {
-// mark change the (! 0 && ((in-1)->type & IPF_CHEAT))) to a variable name if you want to make it a core option just disable for now until you make a choice 
+// mark change the (! 0 && ((in-1)->type & IPF_CHEAT))) to a variable name if you want to make it a core option just disable for now until you make a choice
 	int i,type;
 
 	static InputSeq ip_none = SEQ_DEF_1(CODE_NONE);
@@ -1631,7 +1720,7 @@ void update_analog_port(int port)
 	delta = 0;
 
 	player = IP_GET_PLAYER(in);
-    
+
     /* if second player on a dial, and dial sharing turned on, use Y axis from player 1 */
     if (options.dial_share_xy && type == IPT_DIAL && player == 1)
     {
@@ -1940,19 +2029,19 @@ ScanJoysticks( struct InputPort *in )
 			  }
 
 		}
-    else if (options.restrict_4_way) //start use alternative code 
+    else if (options.restrict_4_way) //start use alternative code
     {
       if(options.content_flags[CONTENT_ROTATE_JOY_45])
       {
         if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=1) &&
               (mJoyCurrent[i] !=2) && (mJoyCurrent[i] !=4) &&
-              (mJoyCurrent[i] !=8) )  	
-        {    
+              (mJoyCurrent[i] !=8) )
+        {
           if      (mJoyCurrent[i] == 9)  mJoy4Way[i]=1;
           else if (mJoyCurrent[i] == 6)  mJoy4Way[i]=2;
           else if (mJoyCurrent[i] == 5)  mJoy4Way[i]=4;
           else if (mJoyCurrent[i] == 10) mJoy4Way[i]=8;
-        }     
+        }
         else if (mJoy4Way[i])
           mJoy4Way[i]=0;
       }

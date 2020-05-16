@@ -2,7 +2,6 @@
 #define __VECTOR__
 
 #include "artwork.h"
-#include "mame2003.h"
 
 #define VECTOR_TEAM \
 	"-* Vector Heads *-\n" \

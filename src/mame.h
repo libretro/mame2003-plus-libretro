@@ -19,6 +19,7 @@
 #endif
 #include "fileio.h"
 #include "log.h"
+#include "mame2003.h" // some things here need re-arranged
 #include "drawgfx.h"
 #include "palette.h"
 
@@ -37,7 +38,7 @@ extern retro_environment_t environ_cb;
 #define MAX_GFX_ELEMENTS 32
 #define MAX_MEMORY_REGIONS 32
 
-#define APPNAME					"mame2003-plus-barcade"
+#define APPNAME					"blaster-barcade"
 
 /***************************************************************************
 
@@ -174,7 +175,7 @@ enum /* used to index content-specific flags */
   CONTENT_PADDLE,
   CONTENT_AD_STICK,
   CONTENT_HAS_SERVICE,
-  CONTENT_HAS_TILT,  
+  CONTENT_HAS_TILT,
   CONTENT_ALTERNATING_CTRLS,
   CONTENT_MIRRORED_CTRLS,
   CONTENT_ROTATE_JOY_45,
@@ -212,9 +213,7 @@ struct GameOptions
   unsigned dial_share_xy;
   unsigned mouse_device;
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
-  unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
   bool     restrict_4_way;                 /* simulate 4-way joystick restrictor */
-  unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */
   unsigned tate_mode;
   int      crosshair_enable;
   unsigned activate_dcs_speedhack;
@@ -230,7 +229,7 @@ struct GameOptions
   int      vector_height;        /* requested height for vector games; 0 means default (480) */
   float    beam;                 /* vector beam width */
   int      vector_flicker;       /* vector beam flicker effect control */
-  float    vector_intensity_correction;   
+  float    vector_intensity_correction;
   int      translucency;         /* 1 to enable translucency on vectors */
   int      antialias;            /* 1 to enable antialiasing on vectors */
   unsigned vector_resolution_multiplier;
@@ -242,12 +241,12 @@ struct GameOptions
   char     savegame;	            /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
-  
+
   const char *bios;              /* specify system bios (if used), 0 is default */
-  
+
   bool     system_subfolder;     /* save all system files within a subfolder of the libretro system folder rather than directly in the system folder */
-  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */  
-  
+  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */
+
   int      debug_width;          /* requested width of debugger bitmap */
   int      debug_height;         /* requested height of debugger bitmap */
   int      debug_depth;          /* requested depth of debugger bitmap */

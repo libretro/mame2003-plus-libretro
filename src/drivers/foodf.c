@@ -172,9 +172,83 @@ static WRITE16_HANDLER( digital_w )
  *
  *************************************/
 
+static UINT8 position_update ( UINT8 temp )
+{
+  if (temp > 127) {
+    if (temp > 190) return 190;
+    else return temp; }
+
+  else {
+    if (temp < 65) return 65;
+    else return temp; }
+}
+
 static READ16_HANDLER( analog_r )
 {
-	return readinputport(whichport);
+
+ /****************************************************
+  * Live Center - rev 5 - by mahoneyt944 & grant2258 *
+  ****************************************************/
+
+  static UINT8 currentx  = 0x80; // upright
+  static UINT8 currenty  = 0x7F;
+  static UINT8 currentx2 = 0x80; // cocktail
+  static UINT8 currenty2 = 0x7F;
+  static UINT8 delay     = 0;    // debounce counter
+  static UINT8 t         = 0;    // debounce count to reach
+  UINT8  center          = 0;    // reset center checks
+  UINT8  center2         = 0;
+
+
+  // live center dip switch set -> On
+  if (readinputport(6) == 0x01)
+  {
+    // user set debounce delay from dip menu
+    if (readinputport(7) == 0xFF) t = 0;
+    else t = readinputport(7);
+    if (delay > t) delay = 0;
+
+    // check for centers
+    if (readinputport(0) == 0x7F && readinputport(2) == 0x7F) center = 1;
+    if (readinputport(1) == 0x7F && readinputport(3) == 0x7F) center2 = 1;
+
+    if (delay == t) // debounce protection
+    {
+      delay = 0;
+
+      if (center == 0)
+      { // update upright stopping positions
+        currentx = position_update(readinputport(0));
+        currenty = position_update(readinputport(2));
+      }
+
+      if (center2 == 0)
+      { // update cocktail stopping positions
+        currentx2 = position_update(readinputport(1));
+        currenty2 = position_update(readinputport(3));
+      }
+    }
+    else delay++;
+
+    // return upright x stopping position
+    if (whichport == 0)
+    { if (center) return currentx; }
+
+    // return upright y stopping position
+    else if (whichport == 2)
+    { if (center) return currenty; }
+
+    // return cocktail x stopping position
+    else if (whichport == 1)
+    { if (center2) return currentx2; }
+
+    // return cocktail y stopping position
+    else if (whichport == 3)
+    { if (center2) return currenty2; }
+  }
+
+  // return actual input 
+  return readinputport(whichport);
 }
 
 
@@ -248,16 +322,16 @@ MEMORY_END
 
 INPUT_PORTS_START( foodf )
 	PORT_START	/* IN0 */
-	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1 | IPF_REVERSE, 100, 60, 0, 255 )
+	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1 | IPF_REVERSE, 100, 100, 0, 255 )
 
 	PORT_START	/* IN1 */
-	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER2 | IPF_REVERSE | IPF_COCKTAIL, 100, 60, 0, 255 )
+	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER2 | IPF_REVERSE | IPF_COCKTAIL, 100, 100, 0, 255 )
 
 	PORT_START	/* IN2 */
-	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 100, 60, 0, 255 )
+	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 100, 100, 0, 255 )
 
 	PORT_START	/* IN3 */
-	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_Y | IPF_PLAYER2 | IPF_REVERSE | IPF_COCKTAIL, 100, 60, 0, 255 )
+	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_Y | IPF_PLAYER2 | IPF_REVERSE | IPF_COCKTAIL, 100, 100, 0, 255 )
 
 	PORT_START	/* IN4 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -289,6 +363,26 @@ INPUT_PORTS_START( foodf )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ))
 	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ))
 	PORT_DIPSETTING(    0x40, DEF_STR( Free_Play ))
+	
+	PORT_START	/* Port #6 - Toggle for Live Center */
+	PORT_DIPNAME( 0x01, 0x00, "Live Center" )
+	PORT_DIPSETTING(    0x01, "On" )
+	PORT_DIPSETTING(    0x00, "Off" )
+	
+	PORT_START	/* Port #7 - Settings for Debounce Delay */
+	PORT_DIPNAME( 0xFF, 0xFF, "Debounce Delay" )
+	PORT_DIPSETTING(    0xFF, "0" )
+	PORT_DIPSETTING(    0x01, "1" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x03, "3" )
+	PORT_DIPSETTING(    0x04, "4" )
+	PORT_DIPSETTING(    0x05, "5" )
+	PORT_DIPSETTING(    0x06, "6" )
+	PORT_DIPSETTING(    0x07, "7" )
+	PORT_DIPSETTING(    0x08, "8" )
+	PORT_DIPSETTING(    0x09, "9" )
+	PORT_DIPSETTING(    0x0A, "10")
+
 INPUT_PORTS_END
 
 

@@ -30,17 +30,17 @@
 #include <retro_inline.h>
 #include <stdio.h>
 
-#define ARRAY_LENGTH(x) (sizeof(x)/sizeof(x[0]))
+#define ARRAY_LENGTH(x) (sizeof(x) / sizeof(x[0]))
 
 typedef uint64_t UINT64;
 typedef uint32_t UINT32;
 typedef uint16_t UINT16;
-typedef uint8_t  UINT8;
+typedef uint8_t UINT8;
 
-typedef int64_t  INT64;
-typedef int32_t  INT32;
-typedef int16_t  INT16;
-typedef int8_t   INT8;
+typedef int64_t INT64;
+typedef int32_t INT32;
+typedef int16_t INT16;
+typedef int8_t INT8;
 
 #if 0
 #define DEBUG_LOG 1
@@ -69,43 +69,47 @@ typedef int8_t   INT8;
 extern struct retro_perf_callback perf_cb;
 
 /* Combine two 32-bit integers into a 64-bit integer */
-#define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
-#define COMBINE_U64_U32_U32(A,B)  COMBINE_64_32_32(A,B)
+#define COMBINE_64_32_32(A, B)     ((((UINT64)(A)) << 32) | (UINT32)(B))
+#define COMBINE_U64_U32_U32(A, B)  COMBINE_64_32_32(A, B)
 
 /* Return upper 32 bits of a 64-bit integer */
-#define HI32_32_64(A)		  (((UINT64)(A)) >> 32)
-#define HI32_U32_U64(A)		  HI32_32_64(A)
+#define HI32_32_64(A)             (((UINT64)(A)) >> 32)
+#define HI32_U32_U64(A)           HI32_32_64(A)
 
 /* Return lower 32 bits of a 64-bit integer */
-#define LO32_32_64(A)		  ((A) & 0xffffffff)
-#define LO32_U32_U64(A)		  LO32_32_64(A)
+#define LO32_32_64(A)             ((A) & 0xffffffff)
+#define LO32_U32_U64(A)           LO32_32_64(A)
 
-#define DIV_64_64_32(A,B)	  ((A)/(B))
-#define DIV_U64_U64_U32(A,B)  ((A)/(UINT32)(B))
+#define DIV_64_64_32(A, B)         ((A) / (B))
+#define DIV_U64_U64_U32(A, B)  ((A) / (UINT32)(B))
 
-#define MOD_32_64_32(A,B)	  ((A)%(B))
-#define MOD_U32_U64_U32(A,B)  ((A)%(UINT32)(B))
+#define MOD_32_64_32(A, B)         ((A) % (B))
+#define MOD_U32_U64_U32(A, B)  ((A) % (UINT32)(B))
 
-#define MUL_64_32_32(A,B)	  ((A)*(INT64)(B))
-#define MUL_U64_U32_U32(A,B)  ((A)*(UINT64)(UINT32)(B))
+#define MUL_64_32_32(A, B)         ((A)*(INT64)(B))
+#define MUL_U64_U32_U32(A, B)  ((A)*(UINT64)(UINT32)(B))
 
 
 /******************************************************************************
- * Union of UINT8, UINT16 and UINT32 in native endianess of the target
- * This is used to access bytes and words in a machine independent manner.
- * The upper bytes h2 and h3 normally contain zero (16 bit CPU cores)
- * thus PAIR.d can be used to pass arguments to the memory system
- * which expects 'int' really.
- ******************************************************************************/
+* Union of UINT8, UINT16 and UINT32 in native endianess of the target
+* This is used to access bytes and words in a machine independent manner.
+* The upper bytes h2 and h3 normally contain zero (16 bit CPU cores)
+* thus PAIR.d can be used to pass arguments to the memory system
+* which expects 'int' really.
+******************************************************************************/
 typedef union {
 #ifdef MSB_FIRST
-	struct { UINT8 h3,h2,h,l; } b;
-	struct { UINT16 h,l; } w;
+	struct { UINT8 h3, h2, h, l; } b;
+	struct { UINT16 h, l; } w;
 #else
-	struct { UINT8 l,h,h2,h3; } b;
-	struct { UINT16 l,h; } w;
+	struct { UINT8 l, h, h2, h3; } b;
+	struct { UINT16 l, h; } w;
 #endif
 	UINT32 d;
-}	PAIR;
+}       PAIR;
 
-#endif	/* defined OSD_CPU_H */
+#endif  /* defined OSD_CPU_H */
+
+#ifndef CLIB_DECL
+#define CLIB_DECL
+#endif

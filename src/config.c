@@ -413,9 +413,21 @@ int config_read_default_ports(config_file *cfg, struct ipd *input_ports_default)
 		{
 			if (input_ports_default[i].type == type)
 			{
-				/* load stored settings only if the default hasn't changed */
-				if (seq_cmp(&input_ports_default[i].seq, &def_seq)==0)
-					seq_copy(&input_ports_default[i].seq, &seq);
+				/* fix this logic up to only load the new default key if its changed the old way always loaded the way
+             * its checked the sequence would always show true
+
+             * todo: fix the osd_customize_inputport_defaults() to not to save/load changes to default.cfg. 
+             * if uses it a modifier its not a global config change. We dont need to use this function as we
+             * can change the controller directly now. If we set a flag when using this function to not load 
+             * and save it will work like it should modify controllers without changing global defaults. There 
+             * is a bug in the original code where osd_customize_inputport_defaults() would only work if you did 
+             * not change the defaults from the original source.
+             */
+				if (seq_cmp(&seq, &def_seq)!=0)
+				{
+					printf("original default changed %s\n",input_ports_default[i].name);
+               if (seq_cmp(&seq, &def_seq)!=0)  seq_copy(&input_ports_default[i].seq, &seq);
+				}
 			}
 
 			i++;

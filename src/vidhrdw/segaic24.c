@@ -26,7 +26,6 @@ System 24      68000x2  315-5292   315-5293  315-5294  315-5242        ym2151 da
 #include "state.h"
 #include "generic.h"
 #include "drawgfx.h"
-#include "mame2003.h"
 #include "segaic24.h"
 
 #include <math.h>
@@ -281,7 +280,7 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 							*pr |= lpri;
 						}
 						src++;
-						dst++;	
+						dst++;
 						pr++;
 					}
 
@@ -413,7 +412,7 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 						if(*srct++ == tpri)
 							*dst = pens[*src];
 						src++;
-						dst++;	
+						dst++;
 					}
 
 				} else if(m == 0xffff) {

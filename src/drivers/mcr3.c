@@ -427,12 +427,14 @@ static READ_HANDLER( turbotag_kludge_r )
 
 static NVRAM_HANDLER( mcr3 )
 {
+generic_nvram = &memory_region(REGION_CPU1)[0xe000];
+generic_nvram_size = 0x800;
 	if (read_or_write)
-		mame_fwrite(file, videoram, videoram_size);
+		mame_fwrite(file, generic_nvram, generic_nvram_size);
 	else if (file)
-		mame_fread(file, videoram, videoram_size);
+		mame_fread(file, generic_nvram, generic_nvram_size);
 	else
-		memset(videoram, 0, videoram_size);
+		memset(generic_nvram, 0, generic_nvram_size);
 }
 
 
@@ -445,18 +447,19 @@ static NVRAM_HANDLER( mcr3 )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0xdfff, MRA_ROM },
-	{ 0xe000, 0xe9ff, MRA_RAM },
+	{ 0xe000, 0xe7ff, MRA_RAM },
 	{ 0xf000, 0xf7ff, MRA_RAM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xdfff, MWA_ROM },
-	{ 0xe000, 0xe7ff, MWA_RAM },
+	{ 0xe000, 0xe7ff, MWA_RAM, &generic_nvram, &generic_nvram_size },
 	{ 0xe800, 0xe9ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xf000, 0xf7ff, mcr3_videoram_w, &videoram, &videoram_size },
-	{ 0xf800, 0xf8ff, mcr3_paletteram_w, &paletteram },
+	{ 0xf800, 0xf87f, mcr3_paletteram_w, &paletteram },
 MEMORY_END
+
 
 
 static PORT_READ_START( readport )

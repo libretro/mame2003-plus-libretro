@@ -1678,9 +1678,14 @@ static int setdefcodesettings(struct mame_bitmap *bitmap,int selected)
 		{
 			seq_name(&entry[i]->seq,menu_subitem_buffer[i],sizeof(menu_subitem_buffer[0]));
 			menu_subitem[i] = menu_subitem_buffer[i];
+// this code does nothing right now need to add a way to set the default back and highlight it :)
+// need done carefuly the way the default file it parsed atm
+			if (seq_get_1(&entry[i]->seq) != CODE_DEFAULT)
+				flag[i] = 0;
+			else
+				flag[i] = 0;
 		} else
 			menu_subitem[i] = 0;	/* no subitem */
-		flag[i] = 0;
 	}
 
 	if (sel > SEL_MASK)   /* are we waiting for a new key? */
@@ -1783,8 +1788,8 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
-		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 	
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) )
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -2229,7 +2234,7 @@ int showcopyright(struct mame_bitmap *bitmap)
 	strcat (pause_buffer, ui_getstring(UI_copyright3));
 
 	setup_selected = -1;
-	
+
 	/* Prep pause action */
     pause_action = pause_action_showcopyright;
     pause_bitmap = bitmap;
@@ -2405,9 +2410,9 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 {
 	int i;
     pause_action = pause_action_start_emulator;
-  
+
     /* Fill pause_buffer with text */
-  
+
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
 			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
@@ -2465,7 +2470,7 @@ int showgamewarnings(struct mame_bitmap *bitmap)
     {
       const struct GameDriver *maindrv;
       int foundworking;
-      
+
       if (Machine->gamedrv->flags & GAME_NOT_WORKING)
       {
 				strcpy(pause_buffer, ui_getstring (UI_brokengame));
@@ -2507,20 +2512,20 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 		strcat(pause_buffer,"\n\n");
 		strcat(pause_buffer,ui_getstring (UI_typeok));
     }
-   
+
 	/* not needed */
 	/*erase_screen(bitmap);*/
 	/*update_video_and_audio();*/
 
 	return 0;
   }
- 
+
 #if 0 /* Will hang */
 int showgameinfo(struct mame_bitmap *bitmap)
 {
 	/* clear the input memory */
 	while (code_read_async() != CODE_NONE) {};
-  
+
 	while (displaygameinfo(bitmap,0) == 1)
 	{
 		update_video_and_audio();
@@ -2990,10 +2995,12 @@ void setup_menu_init(void)
   /* don't offer to generate_xml_dat on consoles where it can't be used */
   menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 #endif
-  if(!options.display_setup) 
+  menu_item[menu_total] = ui_getstring (UI_resetgame); menu_action[menu_total++] = UI_RESET;
+  if(!options.display_setup)
   {
     menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
   }
+
   menu_item[menu_total] = 0; /* terminate array */
 }
 
@@ -3002,7 +3009,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
- 
+
   if(generate_DAT)
   {
     print_mame_xml();
@@ -3089,10 +3096,14 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				break;
 
       case UI_GENERATE_XML_DAT:
-          frontend_message_cb("Generating XML DAT", 180);   
+          frontend_message_cb("Generating XML DAT", 180);
           schedule_full_refresh();
           generate_DAT = true;
           break;
+
+			case UI_RESET:
+				machine_reset();
+				break;
 
 			case UI_EXIT:
 				menu_lastselected = 0;
@@ -3175,7 +3186,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 {
 
 	DoCheat(bitmap);	/* This must be called once a frame */
-   
+
 	if (setup_selected == 0)
   {
     if(input_ui_pressed(IPT_UI_CONFIGURE))
@@ -3186,7 +3197,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
     {
       setup_selected = -1;
       setup_via_menu = 1;
-	    setup_menu_init();      
+	    setup_menu_init();
     }
   }
 
@@ -3194,11 +3205,11 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   {
     setup_selected = 0;
     setup_via_menu = 0;
-    setup_menu_init();       
+    setup_menu_init();
     schedule_full_refresh();
-  }   
+  }
   else if(setup_selected)
-  {  
+  {
     setup_selected = setup_menu(bitmap, setup_selected);
   }
 
@@ -3246,12 +3257,12 @@ static int show_game_message(void)
     ui_displaymessagewindow(pause_bitmap,pause_buffer);
 
     update_video_and_audio();
-    
+
     if (input_ui_pressed(IPT_UI_CANCEL))
     {
         return 1;
     }
-    
+
     if (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT))
     {
         pause_done = 1;
@@ -3261,7 +3272,7 @@ static int show_game_message(void)
         pause_done = 2;
         return 1;
     }
-    
+
     return 0;
 }
 
@@ -3278,7 +3289,7 @@ static int show_game_message(void)
 {
     if(show_game_message())
     {
-        pause_action = pause_action_start_emulator;    
+        pause_action = pause_action_start_emulator;
     }
 }
 

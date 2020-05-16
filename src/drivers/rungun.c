@@ -46,7 +46,6 @@
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
 
-#include "mame2003.h"
 #include "bootstrap.h"
 #include "inptport.h"
 
@@ -89,7 +88,7 @@ static NVRAM_HANDLER( rungun )
 			EEPROM_load(file);
 		}
 		else
-    {   
+    {
       init_eeprom_count = 10;
     }
 	}

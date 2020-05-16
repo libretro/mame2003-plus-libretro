@@ -10,8 +10,8 @@
 #define FILEIO_H
 
 #include <stdarg.h>
-#include "mame2003.h"
 #include "hash.h"
+#include "osd_cpu.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,15 +60,15 @@ int osd_get_path_count(int pathtype);
 
 struct bin2cFILE {
   const unsigned int length;
-  const unsigned char data[]; 
+  const unsigned char data[];
 };
 
 /******************************************************************************
- 
+
  osd_get_path
  Sets char* path to point at a valid path of the type incidated by int pathtype,
  although the path itself does not necessarily exist at this point in the process.
- 
+
  *****************************************************************************/
  void osd_get_path(int pathtype, char* path);
 

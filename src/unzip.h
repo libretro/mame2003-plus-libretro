@@ -2,7 +2,6 @@
 #define __UNZIP_H
 
 #include "osd_cpu.h"
-#include "mame2003.h"
 #include <stdio.h>
 
 #ifdef __cplusplus

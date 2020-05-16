@@ -27,7 +27,10 @@ COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 
 SOURCES_C := \
 	$(CORE_DIR)/mame2003/mame2003.c \
-	$(CORE_DIR)/mame2003/video.c
+	$(CORE_DIR)/mame2003/input.c \
+	$(CORE_DIR)/mame2003/video.c \
+	$(CORE_DIR)/mame2003/core_options.c \
+	$(CORE_DIR)/mame2003/audio.c
 
 SOURCES_C += \
 	$(CORE_DIR)/artwork.c \
@@ -2681,6 +2684,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/compat/fopen_utf8.c \
 	$(LIBRETRO_COMM_DIR)/encodings/encoding_utf.c \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
+   $(LIBRETRO_COMM_DIR)/file/file_path_io.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \

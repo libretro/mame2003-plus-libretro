@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include "window.h"
-
+#include "mame2003.h"
 /*
  * These standard definition functions are macro'd so they can easily be
  * redefined to other custom procedures.

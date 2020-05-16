@@ -10,7 +10,6 @@
 #include "driver.h"
 #include "ui_text.h"
 
-
 struct lang_struct lang;
 
 /* All entries in this table must match the enum ordering in "ui_text.h" */
@@ -82,11 +81,11 @@ static const char *mame_default_text[] =
 	"Bookkeeping Info",
 	"Input (this game)",
   "Flush Current CFG",
-  "Flush All CFGs",  
+  "Flush All CFGs",
 	"Game Information",
 	"Game History",
 	"Reset Game",
-  "Generate XML DAT",  
+  "Generate XML DAT",
 	"Return to Game",
 	"Cheat",
 	"Memory Card",

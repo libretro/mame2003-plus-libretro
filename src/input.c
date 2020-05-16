@@ -184,6 +184,7 @@ static INLINE const struct JoystickInfo* internal_code_find_joystick(InputCode c
 		{
 			if (joyinfo->standardcode == code)
 				return joyinfo;
+
 			++joyinfo;
 		}
 	} else {
