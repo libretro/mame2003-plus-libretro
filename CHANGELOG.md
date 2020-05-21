@@ -178,7 +178,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
-* Dogou Souken (joystick hack bootleg)
+* Dogou Souken / Victory Road (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
 * DownTown (joystick hack)
 * Final Fight 30th Anniversary Edition (Grego And Rotwang)
@@ -186,6 +186,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ikari (joystick hack bootleg)
 * Metal Slug 2 - Turbo (Trap15, Hack)
 * Midnight Resistance (joystick hack bootleg)
+* TANK III (joystick hack bootleg)
 * Tron freeplay custom rom
 
 
