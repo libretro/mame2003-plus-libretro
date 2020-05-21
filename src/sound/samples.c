@@ -176,3 +176,15 @@ int samples_sh_start(const struct MachineSound *msound)
 	}
 	return 0;
 }
+
+int sample_set_pause(int channel,int pause)
+{
+  if (Machine->sample_rate == 0) return 0;
+	if (channel >= numchannels)
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE"error: sample_pause() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		return 0;
+	}
+  mixer_set_pause(channel + firstchannel, pause);
+  return 1;
+}
