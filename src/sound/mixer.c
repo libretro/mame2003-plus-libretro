@@ -81,6 +81,7 @@ struct mixer_channel_data
 	int is_stream;
 	int is_playing;
 	int is_looping;
+	int is_paused;
 	int is_16bit;
 	void* data_start;
 	void* data_end;
@@ -714,6 +715,8 @@ void mixer_update_channel(struct mixer_channel_data *channel, int total_sample_c
 	if (samples_to_generate <= 0)
 		return;
 
+  if ( channel->is_paused) return;
+
         /* if we're playing, mix in the data */
 	if (channel->is_playing)
 	{
@@ -931,6 +934,17 @@ void mixer_set_volume(int ch, int volume)
 	channel->right_volume = volume;
 }
 
+/***************************************************************************
+	mixer_set_Pause
+***************************************************************************/
+
+void mixer_set_pause(int ch, int pause)
+{
+	struct mixer_channel_data *channel = &mixer_channel[ch];
+
+	mixer_update_channel(channel, sound_scalebufferpos(samples_this_frame));
+	channel->is_paused  = pause;
+}
 
 /***************************************************************************
 	mixer_set_mixing_level
