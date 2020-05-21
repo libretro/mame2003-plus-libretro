@@ -4198,6 +4198,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( aso )		/*            (c) 1985 */
 	DRIVER( tnk3 )		/* A5001      (c) 1985 */
 	DRIVER( tnk3j )		/* A5001      (c) 1985 */
+	DRIVER( tnk3b )		/* bootleg    (c) 1985 */    
 	DRIVER( athena )	/*       'UP' (c) 1986 */
 	DRIVER( fitegolf )	/*       'GU' (c) 1988 */
 	DRIVER( fitegol2 )	/*       'GU' (c) 1988 */
