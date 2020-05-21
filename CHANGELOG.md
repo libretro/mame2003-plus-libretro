@@ -330,6 +330,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Galaga 3
 * Gaplus
 * Grobda
+* Journey (Added sepways.wav sample)
 * Libble Rabble
 * Mappy
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
@@ -359,6 +360,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cosmic Alien
 * Frogs
 * Ghox (Toaplan Samples)
+* Journey
 * Sasuke Vs Commander 
 * Space Firebird
 * Teki Paki (Toaplan Samples)
@@ -455,3 +457,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Bryan McPhail's C-Chip simulation code for Operation Wolf from MAME98 and MAME176 respectively [arcadez]
 * Fixed graphical problems in GunNail and better balanced the sound for the games using the NMK004 [arcadez]
 * Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
+* Hooked up the sepways.wav sample for journey in mcr2.c [mahoneyt944, grant2258, arcadez]
