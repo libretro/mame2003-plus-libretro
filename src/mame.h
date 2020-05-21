@@ -174,7 +174,7 @@ enum /* used to index content-specific flags */
   CONTENT_PADDLE,
   CONTENT_AD_STICK,
   CONTENT_HAS_SERVICE,
-  CONTENT_HAS_TILT,  
+  CONTENT_HAS_TILT,
   CONTENT_ALTERNATING_CTRLS,
   CONTENT_MIRRORED_CTRLS,
   CONTENT_ROTATE_JOY_45,
@@ -231,12 +231,12 @@ struct GameOptions
   int      frameskip;
   int      color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
   int      ui_orientation;	     /* orientation of the UI relative to the video */
-      
+
   int      vector_width;	       /* requested width for vector games; 0 means default (640) */
   int      vector_height;	       /* requested height for vector games; 0 means default (480) */
   float    beam;                 /* vector beam width */
   int      vector_flicker;	     /* vector beam flicker effect control */
-  float	   vector_intensity_correction;   
+  float	   vector_intensity_correction;
   int      translucency;	       /* 1 to enable translucency on vectors */
   int      antialias;		         /* 1 to enable antialiasing on vectors */
   unsigned vector_resolution_multiplier;
@@ -248,17 +248,18 @@ struct GameOptions
   char     savegame;		         /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
-  
+
   const char *bios;			         /* specify system bios (if used), 0 is default */
-  
+
   bool     system_subfolder;     /* save all system files within a subfolder of the libretro system folder rather than directly in the system folder */
-  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */  
-  
+  bool     save_subfolder;       /* save all save files within a subfolder of the libretro system folder rather than directly in the system folder */
+
   int      debug_width;	         /* requested width of debugger bitmap */
   int      debug_height;	       /* requested height of debugger bitmap */
   int      debug_depth;	         /* requested depth of debugger bitmap */
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
-  bool     machine_timing;         
+  bool     machine_timing;
+  bool     digital_analog;
   };
 
 
