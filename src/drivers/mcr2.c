@@ -197,15 +197,14 @@ static READ_HANDLER( twotigra_yoke2_r )
 
 static WRITE_HANDLER( journey_sample_select_w )
 {
-  if ((data & 1) == 0)
-    sample_set_volume(0,0);
-
-  else if (!sample_playing(0)) {
-    sample_set_volume(0, 100);
+  /* start sample with looping on and pause it) */
+  if (!sample_playing(0) )
+  {
     sample_start(0, 0, 1);
+    sample_set_pause(0, 1);
   }
 
-  else sample_set_volume(0, 100);
+    sample_set_pause(0, ~data & 1);
 }
 
 
