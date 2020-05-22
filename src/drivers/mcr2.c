@@ -687,7 +687,7 @@ static const char *journey_sample_names[] =
 struct Samplesinterface journey_samples_interface =
 {
 	1,
-	100,
+	50,
 	journey_sample_names
 };
 
