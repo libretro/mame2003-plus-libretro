@@ -202,7 +202,7 @@ static WRITE_HANDLER( journey_sample_select_w )
   {
     sample_start(0, 0, 1);
     sample_set_pause(0, 1);
-    sample_set_volume(0,100);
+    sample_set_volume(0, 100);
   }
 
     sample_set_pause(0, ~data & 1);
