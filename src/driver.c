@@ -2156,9 +2156,12 @@ V-V                           TP-027
 	DRIVER( pang3j )	/* 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site */
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
+    
+  /* CPS Prototype */
+	DRIVER( gulunpa )   /* (c) 1993 (prototype) */  
 		
-    /* Capcom CPS Changer */
-    DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+  /* Capcom CPS Changer */
+  DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
 
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */
