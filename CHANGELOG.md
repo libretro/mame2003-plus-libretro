@@ -460,5 +460,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
 * Hooked up the sepways.wav sample for journey in mcr2.c [mahoneyt944, grant2258, arcadez]
 * Created new hack for food fight - allows player to face the direction last applied. [mahoneyt944, grant2258]
-* Added core option for axis centering to allow digital joysticks to play analog joystick games such as food fight, roadrunner, paperboy
+* Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy)
 * Added pause support for use with samples.
+* Fixed mcr3 game saving
+
