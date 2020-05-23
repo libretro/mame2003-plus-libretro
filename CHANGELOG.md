@@ -182,6 +182,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Donkey Kong II Jumpman Returns
 * DownTown (joystick hack)
 * Final Fight 30th Anniversary Edition (Grego And Rotwang)
+* Food Fight - Live Center Rev 5 w/ debounce delay position hack
 * Guerrilla War (joystick hack bootleg)
 * Ikari (joystick hack bootleg)
 * Metal Slug 2 - Turbo (Trap15, Hack)
@@ -458,3 +459,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed graphical problems in GunNail and better balanced the sound for the games using the NMK004 [arcadez]
 * Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
 * Hooked up the sepways.wav sample for journey in mcr2.c [mahoneyt944, grant2258, arcadez]
+* Created new hack for food fight - allows player to face the direction last applied. [mahoneyt944, grant2258]
+* Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy)
+* Added pause support for use with samples.
+* Fixed mcr3 game saving
+
