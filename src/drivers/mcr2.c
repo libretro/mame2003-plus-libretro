@@ -197,14 +197,12 @@ static READ_HANDLER( twotigra_yoke2_r )
 
 static WRITE_HANDLER( journey_sample_select_w )
 {
-  /* start sample with looping on and pause it) */
-  if (!sample_playing(0) )
-  {
+  /* if we're not playing the sample yet, start it */
+  if (!sample_playing(0))
     sample_start(0, 0, 1);
-    sample_set_pause(0, 1);
-  }
 
-    sample_set_pause(0, ~data & 1);
+  /* bit 0 turns cassette on/off */
+  sample_set_pause(0, ~data & 1);
 }
 
 
