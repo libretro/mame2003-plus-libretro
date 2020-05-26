@@ -337,6 +337,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mappy
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
 * Motos
+* NATO Defense
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
 * Out Run - Added ost soundtrack (via KMFDManic)
@@ -345,6 +346,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
+* Shark Attack
 * Sheriff
 * Space Fever
 * Space Fever High Splitter
@@ -352,6 +354,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
+* Thief
 * Tower Of Druaga
 * Toypop
 * Xevious
@@ -363,9 +366,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Frogs
 * Ghox (Toaplan Samples)
 * Journey
+* NATO defense
 * Sasuke Vs Commander 
+* Shark Attack
 * Space Firebird
 * Teki Paki (Toaplan Samples)
+* Theif
 
 
 ## Games supporting new and improved samples
@@ -464,4 +470,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy)
 * Added pause support for use with samples.
 * Fixed mcr3 game saving
+* Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
 
