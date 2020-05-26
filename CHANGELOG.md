@@ -366,7 +366,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Frogs
 * Ghox (Toaplan Samples)
 * Journey
-* NATO defense
+* NATO Defense
 * Sasuke Vs Commander 
 * Shark Attack
 * Space Firebird
