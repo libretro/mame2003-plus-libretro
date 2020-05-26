@@ -357,6 +357,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thief
 * Tower Of Druaga
 * Toypop
+* Two Tigers - twotigra romset
 * Xevious
 
 
@@ -372,6 +373,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Firebird
 * Teki Paki (Toaplan Samples)
 * Theif
+* Two Tigers - twotigra romset
 
 
 ## Games supporting new and improved samples
@@ -471,4 +473,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added pause support for use with samples.
 * Fixed mcr3 game saving
 * Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
-
+* Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
