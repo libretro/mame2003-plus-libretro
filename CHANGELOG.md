@@ -325,15 +325,18 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bandito
 * Bosconian
 * Crazy Balloon
+* Destination Earth - (Added lrescue.zip sample support)
 * Dig Dug
 * Dig Dug II
 * Final Fight - Added OST soundtrack (via KMFDManic)
 * Galaga
 * Galaga 3
+* Galaxy Rescue - (Added lrescue.zip sample support)
 * Gaplus
 * Grobda
 * Journey (Added sepways.wav sample)
 * Libble Rabble
+* Lunar Rescue - (Added lrescue.zip sample support)
 * Mappy
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
 * Motos
@@ -364,9 +367,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with sound sample support
 
 * Cosmic Alien
+* Destination Earth - lrescue
 * Frogs
+* Galaxy Rescue - lrescue
 * Ghox (Toaplan Samples)
 * Journey
+* Lunar Rescue - lrescue
 * NATO Defense
 * Sasuke Vs Commander 
 * Shark Attack
@@ -378,9 +384,12 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games supporting new and improved samples
 
+* Destination Earth
 * Donkey Kong
 * Donkey Kong JR
 * Fantasy
+* Galaxy Rescue
+* Lunar Rescue
 * Pioneer Balloon
 * Vanguard
 
@@ -474,3 +483,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed mcr3 game saving
 * Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
 * Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
+* Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
