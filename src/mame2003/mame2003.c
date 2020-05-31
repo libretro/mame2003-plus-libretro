@@ -222,7 +222,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input_ports",   "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_Digital_Analog],      APPNAME"_digital_analog",      "Center joystick axis for digital controls; enabled|disabled");
+  init_default(&default_options[OPT_Digital_Analog],      APPNAME"_digital_analog",      "Center joystick axis for digital controls; disabled|enabled");
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
