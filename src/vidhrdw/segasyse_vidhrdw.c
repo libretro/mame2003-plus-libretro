@@ -228,10 +228,17 @@ unsigned char segae_vdp_ctrl_r ( UINT8 chip )
 {
 	UINT8 temp;
 
+	if(strcmp(Machine->gamedrv->name, "opaopan") == 0)
+	{
+     if (chip == 0) return 0; /* slave vdp (chip==0) doesn't get to clear hint/vint status. dink */
+	} 
+
 	temp = 0;
 
 	temp |= (vintpending << 7);
 	temp |= (hintpending << 6);
+
+	cpu_set_irq_line(0, 0, CLEAR_LINE);
 
 	hintpending = vintpending = 0;
 
@@ -291,7 +298,7 @@ void segae_vdp_data_w ( UINT8 chip, UINT8 data )
 
 		segae_vdp_accessaddr[chip] += 1;
 		segae_vdp_accessaddr[chip] &= 0x1f;
-	} else { /* VRAM Accesses */
+	} else if (segae_vdp_accessmode[chip]==0x01) { /* VRAM Accesses */
 		segae_vdp_vram[chip][ segae_vdp_vrambank[chip]*0x4000 + segae_vdp_accessaddr[chip] ] = data;
 		segae_vdp_accessaddr[chip] += 1;
 		segae_vdp_accessaddr[chip] &= 0x3fff;
@@ -363,6 +370,20 @@ void segae_vdp_setregister ( UINT8 chip, UINT16 cmd )
 
 	if (regnumber < 11) {
 		segae_vdp_regs[chip][regnumber] = regdata;
+		if (regnumber == 1 && chip == 1) {
+			if ((segae_vdp_regs[chip][0x1]&0x20) && vintpending) {
+				cpu_set_irq_line(0, 0, HOLD_LINE);
+			} else {
+				cpu_set_irq_line(0, 0, CLEAR_LINE);
+			}
+		}
+		if (regnumber == 0 && chip == 1) {
+			if ((segae_vdp_regs[chip][0x0]&0x10) && hintpending) { /* dink */
+				cpu_set_irq_line(0, 0, HOLD_LINE);
+			} else {
+				cpu_set_irq_line(0, 0, CLEAR_LINE);
+			}
+		}
 	} else {
 		/* Illegal, there aren't this many registers! */
 	}
@@ -429,9 +450,14 @@ void segae_drawscanline(int line, int chips, int blank)
 		}
 	}
 
-	if (blank) memset(dest+16, 32+16, 8); /* Clear Leftmost column, there should be a register for this like on the SMS i imagine    */
-							   			  /* on the SMS this is bit 5 of register 0 (according to CMD's SMS docs) for system E this  */
-							   			  /* appears to be incorrect, most games need it blanked 99% of the time so we blank it      */
+	/* FIX ME!! */
+	if (blank)
+	{
+		if (strcmp(Machine->gamedrv->name,"tetrisse")) /* and we really don't want to do it on tetrise */
+			if (strcmp(Machine->gamedrv->name,"opaopan")) /* and we really don't want to do it on opaopa */
+			memset(dest+16, 32+16, 8); /* Clear Leftmost column, there should be a register for this like on the SMS i imagine    */
+							   			  /* on the SMS this is bit 5 of register 0 (according to CMD's SMS docs) for system E this  */							   			  /* appears to be incorrect, most games need it blanked 99% of the time so we blank it      */
+	}
 
 }
 
@@ -439,10 +465,9 @@ void segae_drawscanline(int line, int chips, int blank)
 
 void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 {
-	/* todo: fix vscrolling (or is it something else causing the glitch on the hi-score screen of hangonjr, seems to be ..  */
 
 	UINT8 hscroll;
-	UINT8 vscroll;
+	UINT8 vscroll, vscroll_line;
 	UINT16 tmbase;
 	UINT8 tilesline, tilesline2;
 	UINT8 coloffset, coloffset2;
@@ -450,13 +475,13 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 
 	hscroll = (256-segae_vdp_regs[chip][8]);
 	vscroll = segae_vdp_regs[chip][9];
-	if (vscroll > 224) vscroll %= 224;
+	vscroll_line = (line + vscroll) % 224;
 
 	tmbase =  (segae_vdp_regs[chip][2] & 0x0e) << 10;
 	tmbase += (segae_vdp_vrambank[chip] * 0x4000);
 
-	tilesline = (line + vscroll) >> 3;
-	tilesline2= (line + vscroll) % 8;
+	tilesline = vscroll_line >> 3;
+	tilesline2= vscroll_line % 8;
 
 
 	coloffset = (hscroll >> 3);
@@ -480,7 +505,7 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 		palette = (vram_word & 0x0800) >> 11;
 		priority= (vram_word & 0x1000) >> 12;
 
-		tilesline2= (line + vscroll) % 8; 
+		tilesline2= vscroll_line % 8;
 		if (flipy) tilesline2 = 7-tilesline2;
 
 		if (priority == pri) {
@@ -502,6 +527,11 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 
 	nosprites = 0;
 
+	if (segae_vdp_regs[chip][1] & 0x1) {
+		usrintf_showmessage("double-size spr. not supported. ");
+		return;
+	}
+
 	spritebase =  (segae_vdp_regs[chip][5] & 0x7e) << 7;
 	spritebase += (segae_vdp_vrambank[chip] * 0x4000);
 
@@ -519,7 +549,8 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 	}
 
 	if (!strcmp(Machine->gamedrv->name,"ridleofp")) nosprites = 63; /* why, there must be a bug elsewhere i guess ?! */
-
+        if (!strcmp(Machine->gamedrv->name,"slapshtr")) nosprites = 63; /* why, there must be a bug elsewhere i guess ?! */
+			
 	/*- draw sprites IN REVERSE ORDER -*/
 
 	for (loopcount = nosprites; loopcount >= 0;loopcount--) {
@@ -532,7 +563,7 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 
 		if ( (line >= ypos) && (line < ypos+sheight) ) {
 			int xpos;
-			UINT8 sprnum;
+			UINT16 sprnum;
 			UINT8 spline;
 
 			spline = line - ypos;
@@ -541,7 +572,9 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 			sprnum = segae_vdp_vram[chip][spritebase+0x81+ (2*loopcount)];
 
 			if (segae_vdp_regs[chip][6] & 0x04)
-				sprnum += 0x100;
+			    sprnum |= 0x100;
+			if (segae_vdp_regs[chip][1] & 0x02)
+				sprnum &= 0x01FE;
 
 			segae_draw8pixsprite(dest+xpos, chip, sprnum, spline);
 
@@ -614,7 +647,7 @@ static void segae_draw8pix(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UIN
 static void segae_draw8pixsprite(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line)
 {
 
-	UINT32 pix8 = *(UINT32 *)&segae_vdp_vram[chip][(32)*tile + (4)*line + (0x4000) * segae_vdp_vrambank[chip]];
+	UINT32 pix8 = *(UINT32 *)&segae_vdp_vram[chip][(((32)*tile + (4)*line)&0x3fff) + (0x4000) * segae_vdp_vrambank[chip]];
 	UINT8  pix;
 
 	if (!pix8) return; /*note only the colour 0 of each vdp is transparent NOT colour 16, fixes sky in HangonJr */
