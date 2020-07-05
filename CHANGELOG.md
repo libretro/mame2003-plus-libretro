@@ -80,6 +80,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
+* Opa Opa (Rev A Unprotected)
 * Oriental Legend Special
 * Osman
 * Pack'n Bang Bang
@@ -108,6 +109,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Tecmo World Cup
 * Sengoku 3
 * Skull Fang
+* Slap Shooter
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Space Fever High Splitter
@@ -121,7 +123,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tang Tang
 * Teeter Torture
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
-* Tetris the Absolute The Grand Master 2
+* Tetris (Sega System E)
+* Tetris The Absolute The Grand Master 2
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
@@ -484,3 +487,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
 * Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
 * Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
+* Fixed Gunbird 2 from randomly crashing and removed related hacks from several psikyosh games which are no longer required [arcadez]
+* Added three more games to the Sega System E driver and ported across from FBN some required video fixes and code for Opa Opa and Slap Shooter [dink, arcadez]
