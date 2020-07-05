@@ -197,7 +197,8 @@ static READ_HANDLER( twotigra_yoke2_r )
 
 static WRITE_HANDLER( twotiger_sample_select_w )
 {
-  for (int i = 0; i < 2; i++)
+  int i;
+  for (i = 0; i < 2; i++)
   {
     if (!sample_playing(i))
       sample_start(i, i, 1);
