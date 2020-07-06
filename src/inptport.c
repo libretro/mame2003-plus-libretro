@@ -2463,7 +2463,7 @@ void update_analog_port(int port)
 		int new, prev;
 
 		/* center stick */
-		if (delta == 0 && options.digital_analog && (type == IPT_AD_STICK_X || type == IPT_AD_STICK_Y))
+		if (delta == 0 && options.digital_analog )
 			current = default_value;
 
 		else if ((delta == 0) && (in->type & IPF_CENTER))
