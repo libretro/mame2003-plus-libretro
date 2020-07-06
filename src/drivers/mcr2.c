@@ -195,16 +195,27 @@ static READ_HANDLER( twotigra_yoke2_r )
 	}
 }
 
+static WRITE_HANDLER( twotiger_sample_select_w )
+{
+  int i;
+  for (i = 0; i < 2; i++)
+  {
+    if (!sample_playing(i))
+      sample_start(i, i, 1);
+
+    /* bit 1 turns cassette on/off */
+    sample_set_pause(i, ~data & 2);
+  }
+}
+
 static WRITE_HANDLER( journey_sample_select_w )
 {
-  /* start sample with looping on and pause it) */
-  if (!sample_playing(0) )
-  {
+  /* if we're not playing the sample yet, start it */
+  if (!sample_playing(0))
     sample_start(0, 0, 1);
-    sample_set_pause(0, 1);
-  }
 
-    sample_set_pause(0, ~data & 1);
+  /* bit 0 turns cassette on/off */
+  sample_set_pause(0, ~data & 1);
 }
 
 
@@ -691,6 +702,21 @@ struct Samplesinterface journey_samples_interface =
 	journey_sample_names
 };
 
+static const char *twotiger_sample_names[] =
+{
+	"*twotiger",
+	"left.wav",
+  "right.wav",
+	0
+};
+
+struct Samplesinterface twotiger_samples_interface =
+{
+	2,
+	50,
+	twotiger_sample_names
+};
+
 
 /*************************************
  *
@@ -732,6 +758,9 @@ static MACHINE_DRIVER_START( twotigra )
 
 	/* video hardware */
 	MDRV_VIDEO_START(twotigra)
+
+  /* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, twotiger_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1135,7 +1164,7 @@ static DRIVER_INIT( twotigra )
 	install_port_write_handler(0, 0x00, 0x00, mcr_control_port_w);
 	install_port_read_handler(0, 0x01, 0x01, twotigra_yoke2_r);
 	install_port_read_handler(0, 0x02, 0x02, twotigra_yoke1_r);
-
+  install_port_write_handler(0, 0x04, 0x04, twotiger_sample_select_w);
 	install_mem_write_handler(0, 0xf800, 0xffff, twotigra_videoram_w);
 
 	mcr12_sprite_xoffs = 0;

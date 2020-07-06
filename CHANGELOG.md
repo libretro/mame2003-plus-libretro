@@ -80,6 +80,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
+* Opa Opa (Rev A Unprotected)
 * Oriental Legend Special
 * Osman
 * Pack'n Bang Bang
@@ -108,6 +109,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Tecmo World Cup
 * Sengoku 3
 * Skull Fang
+* Slap Shooter
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Space Fever High Splitter
@@ -121,7 +123,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tang Tang
 * Teeter Torture
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
-* Tetris the Absolute The Grand Master 2
+* Tetris (Sega System E)
+* Tetris The Absolute The Grand Master 2
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
@@ -325,18 +328,22 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bandito
 * Bosconian
 * Crazy Balloon
+* Destination Earth - (Added lrescue.zip sample support)
 * Dig Dug
 * Dig Dug II
 * Final Fight - Added OST soundtrack (via KMFDManic)
 * Galaga
 * Galaga 3
+* Galaxy Rescue - (Added lrescue.zip sample support)
 * Gaplus
 * Grobda
 * Journey (Added sepways.wav sample)
 * Libble Rabble
+* Lunar Rescue - (Added lrescue.zip sample support)
 * Mappy
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
 * Motos
+* NATO Defense
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * Nibbler
 * Out Run - Added ost soundtrack (via KMFDManic)
@@ -345,6 +352,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pole Position
 * Pole Position II
 * Rohga Armor Force
+* Shark Attack
 * Sheriff
 * Space Fever
 * Space Fever High Splitter
@@ -352,27 +360,39 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
+* Thief
 * Tower Of Druaga
 * Toypop
+* Two Tigers - twotigra romset
 * Xevious
 
 
 ## Games now with sound sample support
 
 * Cosmic Alien
+* Destination Earth - lrescue
 * Frogs
+* Galaxy Rescue - lrescue
 * Ghox (Toaplan Samples)
 * Journey
+* Lunar Rescue - lrescue
+* NATO Defense
 * Sasuke Vs Commander 
+* Shark Attack
 * Space Firebird
 * Teki Paki (Toaplan Samples)
+* Theif
+* Two Tigers - twotigra romset
 
 
 ## Games supporting new and improved samples
 
+* Destination Earth
 * Donkey Kong
 * Donkey Kong JR
 * Fantasy
+* Galaxy Rescue
+* Lunar Rescue
 * Pioneer Balloon
 * Vanguard
 
@@ -464,4 +484,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy)
 * Added pause support for use with samples.
 * Fixed mcr3 game saving
-
+* Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
+* Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
+* Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
+* Fixed Gunbird 2 from randomly crashing and removed related hacks from several psikyosh games which are no longer required [arcadez]
+* Added three more games to the Sega System E driver and ported across from FBN some required video fixes and code for Opa Opa and Slap Shooter [dink, arcadez]

@@ -82,16 +82,29 @@ static void tape_set_audio( int track, int bOn )
 
 static void tape_set_motor( int bOn )
 {
-	if( bOn )
-	{
-		sample_start( 0, 0, 1 );
-		sample_start( 1, 1, 1 );
-	}
-	else
-	{
-		sample_stop( kTalkTrack );
-		sample_stop( kCrashTrack );
-	}
+  if( bOn )
+  {
+    // Start if not playing
+    if (!sample_playing( kTalkTrack ))
+      sample_start( 0, kTalkTrack, 1 );
+
+    // Resume
+    sample_set_pause( kTalkTrack, 0 );
+
+    // Start if not playing
+    if (!sample_playing( kCrashTrack ))
+      sample_start( 1, kCrashTrack, 1 );
+
+    // Resume
+    sample_set_pause( kCrashTrack, 0 );
+
+  }
+  else
+  {
+    // Pause
+    sample_set_pause( kTalkTrack, 1 );
+    sample_set_pause( kCrashTrack, 1 );
+  }
 }
 
 /***********************************************************/

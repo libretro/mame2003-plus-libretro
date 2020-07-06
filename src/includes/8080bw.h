@@ -44,10 +44,13 @@ MACHINE_INIT( desertgu );
 MACHINE_INIT( schaser );
 MACHINE_INIT( polaris );
 MACHINE_INIT( clowns );
+MACHINE_INIT( lrescue );
 
 
 extern struct SN76477interface invaders_sn76477_interface;
 extern struct Samplesinterface invaders_samples_interface;
+extern struct SN76477interface lrescue_sn76477_interface;
+extern struct Samplesinterface lrescue_samples_interface;
 extern struct SN76477interface invad2ct_sn76477_interface;
 extern struct Samplesinterface invad2ct_samples_interface;
 extern struct Samplesinterface boothill_samples_interface;
@@ -79,6 +82,7 @@ DRIVER_INIT( phantom2 );
 DRIVER_INIT( bowler );
 DRIVER_INIT( gunfight );
 DRIVER_INIT( bandido );
+DRIVER_INIT( lrescue );
 
 void c8080bw_flip_screen_w(int data);
 void c8080bw_screen_red_w(int data);
@@ -96,6 +100,7 @@ VIDEO_UPDATE( 8080bw );
 
 
 PALETTE_INIT( invadpt2 );
+PALETTE_INIT( lrescue );
 PALETTE_INIT( sflush );
 PALETTE_INIT( cosmo );
 

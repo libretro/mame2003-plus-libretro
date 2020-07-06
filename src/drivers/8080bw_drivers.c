@@ -1024,6 +1024,22 @@ INPUT_PORTS_START( lrescue )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+static MACHINE_DRIVER_START( lrescue )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(8080bw)
+	MDRV_CPU_MODIFY("main")
+	MDRV_MACHINE_INIT(lrescue)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 32*8-1)
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_PALETTE_INIT(lrescue)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, lrescue_samples_interface)
+	MDRV_SOUND_ADD(SN76477, lrescue_sn76477_interface)
+MACHINE_DRIVER_END
 
 /*******************************************************/
 /*                                                     */
@@ -3793,9 +3809,9 @@ ROM_END
 	  GAME( 1979, galxwar2, galxwars, invaders, galxwars, invaders, ROT270, "Universal", "Galaxy Wars (Universal set 2)" )
 	  GAME( 1979, galxwart, galxwars, invaders, galxwars, invaders, ROT270,	"Taito?", "Galaxy Wars (Taito[Q])" ) /* Copyright Not Displayed */
 	  GAME( 1979, starw,    galxwars, invaders, galxwars, invaders, ROT270, "bootleg", "Star Wars" )
-	  GAME( 1979, lrescue,  0,        invadpt2, lrescue,  invadpt2, ROT270, "Taito", "Lunar Rescue" )
-	  GAME( 1979, grescue,  lrescue,  invadpt2, lrescue,  invadpt2, ROT270, "Taito (Universal license?)", "Galaxy Rescue" )
-	  GAME( 1979, desterth, lrescue,  invadpt2, invrvnge, invadpt2, ROT270, "bootleg", "Destination Earth" )
+	  GAME( 1979, lrescue,  0,        lrescue,  lrescue,  lrescue,  ROT270, "Taito", "Lunar Rescue" )
+	  GAME( 1979, grescue,  lrescue,  lrescue,  lrescue,  lrescue,  ROT270, "Taito (Universal license?)", "Galaxy Rescue" )
+	  GAME( 1979, desterth, lrescue,  lrescue,  invrvnge, lrescue,  ROT270, "bootleg", "Destination Earth" )
 	  GAME( 1979, invadpt2, 0,        invadpt2, invadpt2, invadpt2, ROT270, "Taito", "Space Invaders Part II (Taito)" )
 	  GAME( 1979, cosmo,    0,        cosmo,    cosmo,    cosmo,    ROT90,  "bootleg", "Cosmo" )
 	  GAMEX(1979, schaser,  0,        schaser,  schaser,  schaser,  ROT270, "Taito", "Space Chaser", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_COLORS )

@@ -2702,8 +2702,11 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( transfrm )	/* 834-5803 (c) 1986 */
 	DRIVER( astrofl )	/* 834-5803 (c) 1986 */
 	DRIVER( ridleofp )	/* (c) 1986 Sega / Nasco */
+  DRIVER( opaopa )    /* (c) 1987 */
+  DRIVER( opaopan )   /* (c) 1987 */
+	DRIVER( tetrisse )  /* (c) 1988 */
+	DRIVER( slapshtr )  /* (c) 1986 */
 	DRIVER( fantzn2 )
-	DRIVER( opaopa )
 
 	/* other Sega 8-bit games */
 	DRIVER( turbo )		/* (c) 1981 Sega */
