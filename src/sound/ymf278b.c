@@ -250,22 +250,6 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 
 			for (j = 0; j < length; j++)
 			{
-
-				if(slot->stepptr >= slot->endaddr)
-				{
-					slot->stepptr = slot->stepptr - slot->endaddr + slot->loopaddr;
-					/* If the step is bigger than the loop, finish the sample forcibly */
-					if(slot->stepptr >= slot->endaddr)
-					{
-						slot->env_vol = 256U<<23;
-						slot->env_vol_step = 0;
-						slot->env_vol_lim = 0;
-						slot->active = 0;
-						slot->stepptr = 0;
-						slot->step = 0;
-					}
-				}
-
 				switch (slot->bits)
 				{
 					case 8: 	/* 8 bit*/
@@ -290,6 +274,20 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 
 				/* update frequency*/
 				slot->stepptr += slot->step;
+				if(slot->stepptr >= slot->endaddr)
+				{
+					slot->stepptr = slot->stepptr - slot->endaddr + slot->loopaddr;
+					// If the step is bigger than the loop, finish the sample forcibly
+					if(slot->stepptr >= slot->endaddr)
+					{
+						slot->env_vol = 256U<<23;
+						slot->env_vol_step = 0;
+						slot->env_vol_lim = 0;
+						slot->active = 0;
+						slot->stepptr = 0;
+						slot->step = 0;
+					}
+				}
 
 				/* update envelope*/
 				slot->env_vol += slot->env_vol_step;
