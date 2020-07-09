@@ -1011,8 +1011,9 @@ ROM_START( rolcrush )
 ROM_END
 
 
-GAME( 1997, baryon,   0, dreamwld,  baryon,   0, ROT270,  "Other", "Baryon - Future Assault" )
-GAME( 1998, cutefght, 0, dreamwld,  cutefght, 0, ROT0,    "Other", "Cute Fighter" )
-GAME( 2000, dreamwld, 0, dreamwld,  dreamwld, 0, ROT0,    "Other", "Dream World" )
-GAME( 1999, gaialast, 0, dreamwld,  gaialast, 0, ROT0,    "Other", "Gaia - The Last Choice of Earth")
-GAME( 1999, rolcrush, 0, dreamwld,  rolcrush, 0, ROT0,    "Other", "Rolling Crush" )
+GAME( 1997, baryon,   0, dreamwld,  baryon,   0, ROT270,  "SemiCom / Tirano", "Baryon - Future Assault" )
+GAME( 1998, cutefght, 0, dreamwld,  cutefght, 0, ROT0,    "SemiCom",          "Cute Fighter" )
+GAME( 2000, dreamwld, 0, dreamwld,  dreamwld, 0, ROT0,    "SemiCom",          "Dream World" )
+GAME( 1999, gaialast, 0, dreamwld,  gaialast, 0, ROT0,    "SemiCom / XESS",   "Gaia - The Last Choice of Earth" )
+GAME( 1999, rolcrush, 0, dreamwld,  rolcrush, 0, ROT0,    "SemiCom / Exit",   "Rolling Crush (version 1.07.E - 1999/02/11)" )
+
