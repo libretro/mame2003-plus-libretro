@@ -259,7 +259,7 @@ struct GameOptions
   int      debug_depth;	         /* requested depth of debugger bitmap */
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
   bool     machine_timing;
-  bool     digital_analog;
+  bool     digital_joy_centering;
   };
 
 
