@@ -75,4 +75,7 @@ extern const struct bin2cFILE sinista2_bootstrap;
 /* used for zookeep, zookeep2, and zookeep3 */
 extern const struct bin2cFILE zookeep_bootstrap;
 
+/* used for gaiapols */
+extern const struct bin2cFILE gaiapols_bootstrap;
+
 #endif /* BOOTSTRAP_H */
