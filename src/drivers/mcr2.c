@@ -616,9 +616,9 @@ INPUT_PORTS_START( twotigra )
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255 )
 
 	PORT_START	/* IN3 -- dipswitches */
-	PORT_DIPNAME( 0x01, 0x00, "Shot Speed" )
-	PORT_DIPSETTING(    0x01, "Slow" )
-	PORT_DIPSETTING(    0x00, "Fast" )
+	PORT_DIPNAME( 0x01, 0x00, "Shot" )
+	PORT_DIPSETTING(    0x01, "Single Fire" )
+	PORT_DIPSETTING(    0x00, "Rapid Fire" )
 	PORT_DIPNAME( 0x02, 0x00, "Dogfight" )
 	PORT_DIPSETTING(    0x00, "1 Credit" )
 	PORT_DIPSETTING(    0x02, "2 Credits" )
