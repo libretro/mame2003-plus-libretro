@@ -162,37 +162,17 @@ static READ_HANDLER( wacko_trackball_r )
 
 static READ_HANDLER( twotigra_yoke1_r )
 {
-	int p1_yoke = readinputport(6);
-	if (p1_yoke & 0x10)
-	{
-		if ((p1_yoke & 0x01) != 0x01) return 0;
-		if ((p1_yoke & 0x02) != 0x02) return 255;
-		return 100;
-	}
-	else
-	{
-		p1_yoke = readinputport(2);
-		if (p1_yoke < 0x1b) return 0;
-		return p1_yoke - 0x1b;
-	}
+  int p1_yoke = readinputport(2);
+  if (p1_yoke < 0x1b) return 0;
+  return p1_yoke - 0x1b;
 }
 
 
 static READ_HANDLER( twotigra_yoke2_r )
 {
-	int p1_yoke = readinputport(6);
-	if (p1_yoke & 0x10)
-	{
-		if ((p1_yoke & 0x04) != 0x04) return 0;
-		if ((p1_yoke & 0x08) != 0x08) return 255;
-		return 100;
-	}
-	else
-	{
-		p1_yoke = readinputport(1);
-		if (p1_yoke < 0x1b) return 0;
-		return p1_yoke - 0x1b;
-	}
+  int p1_yoke = readinputport(1);
+  if (p1_yoke < 0x1b) return 0;
+  return p1_yoke - 0x1b;
 }
 
 static WRITE_HANDLER( twotiger_sample_select_w )
@@ -637,8 +617,8 @@ INPUT_PORTS_START( twotigra )
 
 	PORT_START	/* IN3 -- dipswitches */
 	PORT_DIPNAME( 0x01, 0x00, "Shot Speed" )
-	PORT_DIPSETTING(    0x01, "Fast" )
-	PORT_DIPSETTING(    0x00, "Slow" )
+	PORT_DIPSETTING(    0x01, "Slow" )
+	PORT_DIPSETTING(    0x00, "Fast" )
 	PORT_DIPNAME( 0x02, 0x00, "Dogfight" )
 	PORT_DIPSETTING(    0x00, "1 Credit" )
 	PORT_DIPSETTING(    0x02, "2 Credits" )
@@ -657,14 +637,6 @@ INPUT_PORTS_START( twotigra )
 	PORT_START	/* AIN0 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	/* IN6 fake for yoke */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
-	PORT_DIPNAME( 0x10, 0x10, "Fake Inputs " )
-	PORT_DIPSETTING(    0x10, "Digital" )
-	PORT_DIPSETTING(    0x00, "Analog" )
 INPUT_PORTS_END
 
 
@@ -759,7 +731,7 @@ static MACHINE_DRIVER_START( twotigra )
 	/* video hardware */
 	MDRV_VIDEO_START(twotigra)
 
-  /* sound hardware */
+	/* sound hardware */
 	MDRV_SOUND_ADD(SAMPLES, twotiger_samples_interface )
 MACHINE_DRIVER_END
 
@@ -1164,7 +1136,7 @@ static DRIVER_INIT( twotigra )
 	install_port_write_handler(0, 0x00, 0x00, mcr_control_port_w);
 	install_port_read_handler(0, 0x01, 0x01, twotigra_yoke2_r);
 	install_port_read_handler(0, 0x02, 0x02, twotigra_yoke1_r);
-  install_port_write_handler(0, 0x04, 0x04, twotiger_sample_select_w);
+	install_port_write_handler(0, 0x04, 0x04, twotiger_sample_select_w);
 	install_mem_write_handler(0, 0xf800, 0xffff, twotigra_videoram_w);
 
 	mcr12_sprite_xoffs = 0;
