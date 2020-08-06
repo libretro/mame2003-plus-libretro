@@ -32,6 +32,9 @@ extern const struct bin2cFILE foodf_bootstrap;
 
 extern const struct bin2cFILE foodfc_bootstrap;
 
+/* used for gaiapols */
+extern const struct bin2cFILE gaiapols_bootstrap;
+
 /* used for joust, joustr, and joustwr */
 extern const struct bin2cFILE joust_bootstrap;
 
