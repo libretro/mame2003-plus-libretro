@@ -78,6 +78,7 @@
 #include "vidhrdw/generic.h"
 #include "foodf.h"
 #include "bootstrap.h"
+#include "inptport.h"
 
 
 
