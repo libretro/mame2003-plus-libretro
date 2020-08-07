@@ -33,6 +33,7 @@
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
 #include "bootstrap.h"
+#include "inptport.h"
 
 VIDEO_START(gaiapols);
 VIDEO_START(dadandrn);
