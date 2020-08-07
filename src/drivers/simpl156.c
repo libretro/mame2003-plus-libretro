@@ -94,6 +94,7 @@ Are the OKI M6295 clocks from Heavy Smash are correct at least for the Mitchell 
 #include "deco16ic.h"
 #include "vidhrdw/generic.h"
 #include "bootstrap.h"
+#include "inptport.h"
 
 static UINT32 *simpl156_systemram;
 static const UINT8 *simpl156_default_eeprom = NULL;
