@@ -32,6 +32,7 @@
 #include "sndhrdw/williams.h"
 #include "midyunit.h"
 #include "bootstrap.h"
+#include "inptport.h"
 
 const char *const mk_sample_names_yunit[] =
 {
