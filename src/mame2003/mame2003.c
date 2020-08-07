@@ -107,7 +107,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_NVRAM_BOOTSTRAP,
   OPT_Cheat_Input_Ports,
   OPT_Machine_Timing,
-  OPT_Digital_Analog,
+  OPT_Digital_Joy_Centering,
   OPT_end /* dummy last entry */
 };
 
@@ -185,44 +185,44 @@ void retro_set_environment(retro_environment_t cb)
  */
 static void init_core_options(void)
 {
-  init_default(&default_options[OPT_4WAY],                APPNAME"_four_way_emulation",  "4-way joystick emulation on 8-way joysticks; disabled|enabled");
+  init_default(&default_options[OPT_4WAY],                   APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
-  init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; pointer|mouse|disabled");
 #else
-  init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; mouse|pointer|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
 #endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED],   APPNAME"_crosshair_enabled",   "Show Lightgun crosshair; enabled|disabled");
-  init_default(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
-  init_default(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");
-  init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
-  init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",          "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",               "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_ARTWORK],             APPNAME"_display_artwork",     "Display artwork (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_ART_RESOLUTION],      APPNAME"_art_resolution",      "Artwork resolution multiplier (Restart core); 1|2");
-  init_default(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios",         "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
-  init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
-  init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],         APPNAME"_analog",              "Control mapping ; analog|digital");
-  init_default(&default_options[OPT_DEADZONE],            APPNAME"_deadzone",            "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
-  init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode - Rotating display (Restart core); disabled|enabled");
-  init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution",   "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
-  init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialiasing; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
-  init_default(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_FLICKER],      APPNAME"_vector_flicker",      "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
-  init_default(&default_options[OPT_VECTOR_INTENSITY],    APPNAME"_vector_intensity",    "Vector intensity; 1.5|0.5|1|2|2.5|3");
-  init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
-  init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
-  init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
-  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|keyboard|simultaneous");
-  init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Legacy Remapping (restart); enabled|disabled");
-  init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
-  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],  APPNAME"_core_sys_subfolder",  "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
-  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER], APPNAME"_core_save_subfolder", "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
-  init_default(&default_options[OPT_Cheat_Input_Ports],   APPNAME"_cheat_input_ports",   "Dip switch/Cheat input ports; disabled|enabled");
-  init_default(&default_options[OPT_Machine_Timing],      APPNAME"_machine_timing",      "Bypass audio skew (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_Digital_Analog],      APPNAME"_digital_analog",      "Center joystick axis for digital controls; enabled|disabled");
+  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshair; enabled|disabled");
+  init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
+  init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
+  init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
+  init_default(&default_options[OPT_BRIGHTNESS],             APPNAME"_brightness",             "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_default(&default_options[OPT_GAMMA],                  APPNAME"_gamma",                  "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_default(&default_options[OPT_ARTWORK],                APPNAME"_display_artwork",        "Display artwork (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2");
+  init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
+  init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
+  init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
+  init_default(&default_options[OPT_DPAD_ANALOG],            APPNAME"_analog",                 "Control mapping ; analog|digital");
+  init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
+  init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
+  init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
+  init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
+  init_default(&default_options[OPT_VECTOR_BEAM],            APPNAME"_vector_beam_width",      "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
+  init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
+  init_default(&default_options[OPT_VECTOR_FLICKER],         APPNAME"_vector_flicker",         "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
+  init_default(&default_options[OPT_VECTOR_INTENSITY],       APPNAME"_vector_intensity",       "Vector intensity; 1.5|0.5|1|2|2.5|3");
+  init_default(&default_options[OPT_NVRAM_BOOTSTRAP],        APPNAME"_nvram_bootstraps",       "NVRAM Bootstraps; enabled|disabled");
+  init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
+  init_default(&default_options[OPT_DCS_SPEEDHACK],          APPNAME"_dcs_speedhack",          "DCS Speedhack; enabled|disabled");
+  init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; retropad|keyboard|simultaneous");
+  init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (restart); enabled|disabled");
+  init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
+  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
+  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
+  init_default(&default_options[OPT_Cheat_Input_Ports],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
+  init_default(&default_options[OPT_Machine_Timing],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_Digital_Joy_Centering],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -530,11 +530,11 @@ static void update_variables(bool first_time)
             options.tate_mode = 0;
           break;
 
-        case OPT_Digital_Analog:
+        case OPT_Digital_Joy_Centering:
           if(strcmp(var.value, "enabled") == 0)
-            options.digital_analog = 1;
+            options.digital_joy_centering = 1;
           else
-            options.digital_analog = 0;
+            options.digital_joy_centering = 0;
           break;
 
         case OPT_VECTOR_RESOLUTION:
