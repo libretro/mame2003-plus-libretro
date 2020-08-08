@@ -19,6 +19,9 @@
 #include "sndhrdw/dcs.h"
 #include "midwunit.h"
 
+#include "bootstrap.h"
+#include "inptport.h"
+
 
 
 /*************************************
@@ -311,4 +314,4 @@ ROM_END
  *
  *************************************/
 
-GAME( 1994, revx,   0,         midxunit, revx, revx, ROT0, "Midway",   "Revolution X (Rev. 1.0 6-16-94)" )
+GAMEC( 1994, revx,   0,         midxunit, revx, revx, ROT0, "Midway",   "Revolution X (Rev. 1.0 6-16-94)", &revx_ctrl, &revx_bootstrap )
