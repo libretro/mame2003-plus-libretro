@@ -200,8 +200,7 @@ MACHINE_INIT( pacman )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* check if the loaded set of ROMs allows the Pac Man speed hack */
-	if ((RAM[0x180b] == 0xbe && RAM[0x1ffd] == 0x00) ||
-			(RAM[0x180b] == 0x01 && RAM[0x1ffd] == 0xbd))
+	if (RAM[0x180b] == 0xbe && RAM[0x1ffd] == 0x00)
 		speedcheat = 1;
 	else
 		speedcheat = 0;
@@ -213,8 +212,7 @@ MACHINE_INIT( pacplus )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* check if the loaded set of ROMs allows the Pac Man speed hack */
-	if ((RAM[0x182d] == 0xbe && RAM[0x1ffd] == 0xff) ||
-			(RAM[0x182d] == 0x01 && RAM[0x1ffd] == 0xbc))
+	if (RAM[0x182d] == 0xbe && RAM[0x1ffd] == 0xff)
 		speedcheat = 1;
 	else
 		speedcheat = 0;
@@ -235,11 +233,10 @@ MACHINE_INIT( piranha )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* check if the loaded set of ROMs allows the Pac Man speed hack */
-	if ((RAM[0x180b] == 0xbe && RAM[0x1ffd] == 0x00) ||
-			(RAM[0x180b] == 0x01 && RAM[0x1ffd] == 0xbd))
+	if (RAM[0x180b] == 0xbe && RAM[0x1ffd] == 0x00)
 		speedcheat = 1;
 	else
-	speedcheat = 0;
+		speedcheat = 0;
 }
 
 /*************************************
