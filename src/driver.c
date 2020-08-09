@@ -77,6 +77,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( puckman )	/* (c) 1980 Namco */
 	DRIVER( puckmana )	/* (c) 1980 Namco */
 	DRIVER( pacman )	/* (c) 1980 Midway */
+	DRIVER( pacmanf )	/* hack (speedup) */
 	DRIVER( puckmod )	/* (c) 1981 Namco */
 	DRIVER( pacmod )	/* (c) 1981 Midway */
 	DRIVER( hangly )	/* hack */
@@ -95,6 +96,7 @@ const struct GameDriver *test_drivers[] =
 						/* Woodpecker somewhere around here?*/
 	DRIVER( pacplus )
 	DRIVER( mspacman )	/* (c) 1981 Midway */	/* made by Gencomp */
+	DRIVER( mspacmnf )	/* hack (speedup) */
 	DRIVER( mspacmab )	/* bootleg */
 	DRIVER( mspacmat )	/* hack */
 	DRIVER( mspacpls )	/* hack */
