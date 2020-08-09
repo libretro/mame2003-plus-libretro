@@ -719,7 +719,7 @@ INPUT_PORTS_START( term2 )
 	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER1, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER1, 35, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
@@ -775,15 +775,15 @@ INPUT_PORTS_START( term2 )
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER2, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER2, 35, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -1957,27 +1957,27 @@ ROM_END
 GAMEC( 1988, narc,     0,       zunit,    narc,    narc,     ROT0, "Williams", "Narc (rev 7.00)", &narc_ctrl, &narc_bootstrap  )
 GAMEC( 1988, narc3,    narc,    zunit,    narc,    narc3,    ROT0, "Williams", "Narc (rev 3.20)", &narc_ctrl, &narc3_bootstrap )
 
-GAME( 1990, trog,     0,       trog,     trog,    trog,     ROT0, "Midway",   "Trog (rev LA4 03-11-91)" )
-GAME( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "Trog (rev LA3 02-14-91)" )
-GAME( 1990, trogpa6,  trog,    trog,     trog,    trogpa6,  ROT0, "Midway",   "Trog (rev PA6-PAC 09-09-90)" )
-GAME( 1990, trogp,    trog,    trog,     trog,    trogp,    ROT0, "Midway",   "Trog (prototype, rev 4.00 07-27-90)" )
-GAME( 1991, strkforc, 0,       strkforc, strkforc,strkforc, ROT0, "Midway",   "Strike Force (rev 1 02-25-91)" )
+GAME ( 1990, trog,     0,       trog,     trog,    trog,     ROT0, "Midway",   "Trog (rev LA4 03-11-91)" )
+GAME ( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "Trog (rev LA3 02-14-91)" )
+GAME ( 1990, trogpa6,  trog,    trog,     trog,    trogpa6,  ROT0, "Midway",   "Trog (rev PA6-PAC 09-09-90)" )
+GAME ( 1990, trogp,    trog,    trog,     trog,    trogp,    ROT0, "Midway",   "Trog (prototype, rev 4.00 07-27-90)" )
+GAME ( 1991, strkforc, 0,       strkforc, strkforc,strkforc, ROT0, "Midway",   "Strike Force (rev 1 02-25-91)" )
 
-GAME( 1990, smashtv,  0,       smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 8.00)" )
-GAME( 1990, smashtv6, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 6.00)" )
-GAME( 1990, smashtv5, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 5.00)" )
-GAME( 1990, smashtv4, smashtv, smashtv,  smashtv, smashtv4, ROT0, "Williams", "Smash T.V. (rev 4.00)" )
-GAME( 1990, hiimpact, 0,       hiimpact, trog,    hiimpact, ROT0, "Williams", "High Impact Football (rev LA3 12-27-90)" )
-GAME( 1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)" )
-GAME( 1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)" )
+GAME ( 1990, smashtv,  0,       smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 8.00)" )
+GAME ( 1990, smashtv6, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 6.00)" )
+GAME ( 1990, smashtv5, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 5.00)" )
+GAME ( 1990, smashtv4, smashtv, smashtv,  smashtv, smashtv4, ROT0, "Williams", "Smash T.V. (rev 4.00)" )
+GAME ( 1990, hiimpact, 0,       hiimpact, trog,    hiimpact, ROT0, "Williams", "High Impact Football (rev LA3 12-27-90)" )
+GAME ( 1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)" )
+GAME ( 1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)" )
 
-GAME( 1991, term2,    0,       term2,    term2,   term2,    ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA3 03-27-92)" )
-GAME( 1991, term2la2, term2,   term2,    term2,   term2la2, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA2 12-09-91)" )
-GAME( 1991, term2la1, term2,   term2,    term2,   term2la1, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA1 11-01-91)" )
-GAME( 1992, mkprot9,  mk,      mk,       mkla2,   mkprot9,  ROT0, "Midway",   "Mortal Kombat (prototype, rev 9.0 07-28-92)" )
-GAME( 1992, mkla1,    mk,      mk,       mkla2,   mkla1,    ROT0, "Midway",   "Mortal Kombat (rev 1.0 08-08-92)" )
-GAME( 1992, mkla2,    mk,      mk,       mkla2,   mkla2,    ROT0, "Midway",   "Mortal Kombat (rev 2.0 08-18-92)" )
-GAME( 1992, mkla3,    mk,      mk,       mkla4,   mkla3,    ROT0, "Midway",   "Mortal Kombat (rev 3.0 08-31-92)" )
-GAME( 1992, mkla4,    mk,      mk,       mkla4,   mkla4,    ROT0, "Midway",   "Mortal Kombat (rev 4.0 09-28-92)" )
-GAME( 1992, totcarn,  0,       totcarn,  totcarn, totcarn,  ROT0, "Midway",   "Total Carnage (rev LA1 03-10-92)" )
-GAME( 1992, totcarnp, totcarn, totcarn,  totcarn, totcarnp, ROT0, "Midway",   "Total Carnage (prototype, rev 1.0 01-25-92)" )
+GAMEC( 1991, term2,    0,       term2,    term2,   term2,    ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA3 03-27-92)", &term2_ctrl, &term2_bootstrap )
+GAMEC( 1991, term2la2, term2,   term2,    term2,   term2la2, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA2 12-09-91)", &term2_ctrl, &term2la2_bootstrap )
+GAMEC( 1991, term2la1, term2,   term2,    term2,   term2la1, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA1 11-01-91)", &term2_ctrl, &term2la1_bootstrap )
+GAME ( 1992, mkprot9,  mk,      mk,       mkla2,   mkprot9,  ROT0, "Midway",   "Mortal Kombat (prototype, rev 9.0 07-28-92)" )
+GAME ( 1992, mkla1,    mk,      mk,       mkla2,   mkla1,    ROT0, "Midway",   "Mortal Kombat (rev 1.0 08-08-92)" )
+GAME ( 1992, mkla2,    mk,      mk,       mkla2,   mkla2,    ROT0, "Midway",   "Mortal Kombat (rev 2.0 08-18-92)" )
+GAME ( 1992, mkla3,    mk,      mk,       mkla4,   mkla3,    ROT0, "Midway",   "Mortal Kombat (rev 3.0 08-31-92)" )
+GAME ( 1992, mkla4,    mk,      mk,       mkla4,   mkla4,    ROT0, "Midway",   "Mortal Kombat (rev 4.0 09-28-92)" )
+GAME ( 1992, totcarn,  0,       totcarn,  totcarn, totcarn,  ROT0, "Midway",   "Total Carnage (rev LA1 03-10-92)" )
+GAME ( 1992, totcarnp, totcarn, totcarn,  totcarn, totcarnp, ROT0, "Midway",   "Total Carnage (prototype, rev 1.0 01-25-92)" )
