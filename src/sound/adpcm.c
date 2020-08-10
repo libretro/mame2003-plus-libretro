@@ -343,13 +343,13 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 		/* system has already been initalized by the MSM6295, do a smaller portion */
 		num_voices += intf->num;
 
+		#ifdef VERBOSE
 		if (num_voices > MAX_ADPCM)
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
-		#ifdef MAME_DEBUG
+			logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 			exit(-1);
+      } 
 		#endif
-    }
 		for (i = msm_voices; i < num_voices; i++)
 		{
 			/* generate the name and create the stream */
@@ -369,13 +369,13 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 	else
 	{
 		num_voices = intf->num;
+		#ifdef MAME_DEBUG
 		if (num_voices > MAX_ADPCM)
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
-		#ifdef MAME_DEBUG
+			logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 			exit(-1);
-		#endif		
     }
+		#endif
 		compute_tables();
 
 		/* initialize the voices */
@@ -448,7 +448,7 @@ void ADPCM_play(int num, int offset, int length)
 	/* range check the numbers */
 	if ((num+msm_voices) >= num_voices)
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "error: ADPCM_trigger() called with channel = %d, but only %d channels allocated\n", num, num_voices);
+		logerror("error: ADPCM_trigger() called with channel = %d, but only %d channels allocated\n", num, num_voices);
 		return;
 	}
 
@@ -635,11 +635,9 @@ int OKIM6295_sh_start(const struct MachineSound *msound)
 	#ifdef MAME_DEBUG
 	if (num_voices > MAX_ADPCM)
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
-		#ifdef MAME_DEBUG
+		logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 			exit(-1);
-		#endif
-  }
+	   }
 	#endif
 	compute_tables();
 

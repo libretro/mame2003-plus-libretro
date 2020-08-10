@@ -33,7 +33,6 @@ int16_t prev_pointer_y;
 int gotFrame;
 int running = 0;
 int control_flag = -1;
-int pressure_check = 1.28 * 20;
 struct ipd *default_inputs;          /* pointer the array of structs with default MAME input mappings and labels */
 const struct GameDriver *game_driver;
 unsigned retroColorMode;
@@ -285,10 +284,10 @@ void retro_run(void)
 
 		/* Analog joystick */
 
-		analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
-		analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+		analogjoy[i][0] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X ) );
+		analogjoy[i][1] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y ) );
+		analogjoy[i][2] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
+		analogjoy[i][3] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
 		retroJsState[0 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
 		retroJsState[1 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
@@ -335,28 +334,28 @@ void retro_run(void)
 		retroJsState[24 + offset] = 0;
 		retroJsState[25 + offset] = 0;
 
-		if (convert_analog_scale(analogjoy[i][0]) < -pressure_check)
-			retroJsState[18 + offset] = convert_analog_scale(analogjoy[i][0]);
+		if (analogjoy[i][0] < -64)
+			retroJsState[18 + offset] = analogjoy[i][0];
 
-		if (convert_analog_scale(analogjoy[i][0]) > pressure_check)
-			retroJsState[19 + offset] = convert_analog_scale(analogjoy[i][0]);
+		if (analogjoy[i][0] > 64)
+			retroJsState[19 + offset] = analogjoy[i][0];
 
-		if (convert_analog_scale(analogjoy[i][1]) < -pressure_check)
-			retroJsState[20 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (analogjoy[i][1] < -64)
+			retroJsState[20 + offset] = analogjoy[i][1];
 
-		if (convert_analog_scale(analogjoy[i][1]) > pressure_check)
-			retroJsState[21 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (analogjoy[i][1] > 64)
+			retroJsState[21 + offset] = analogjoy[i][1];
 
-		if (convert_analog_scale(analogjoy[i][2]) < -pressure_check)
-			retroJsState[22 + offset] = convert_analog_scale(analogjoy[i][2]);
+		if (analogjoy[i][2] < -64)
+			retroJsState[22 + offset] = analogjoy[i][2];
 
-		if (convert_analog_scale(analogjoy[i][2]) > pressure_check)
-			retroJsState[23 + offset] = convert_analog_scale(analogjoy[i][2]);
+		if (analogjoy[i][2] > 64)
+			retroJsState[23 + offset] = analogjoy[i][2];
 
-		if (convert_analog_scale(analogjoy[i][3]) < -pressure_check)
-			retroJsState[24 + offset] = convert_analog_scale(analogjoy[i][3]);
-		if (convert_analog_scale(analogjoy[i][3]) > pressure_check)
-			retroJsState[25 + offset] = convert_analog_scale(analogjoy[i][3]);
+		if (analogjoy[i][3] < -64)
+			retroJsState[24 + offset] = analogjoy[i][3];
+		if (analogjoy[i][3] > 64)
+			retroJsState[25 + offset] = analogjoy[i][3];
 	}
 	mame_frame();
 }

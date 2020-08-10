@@ -85,11 +85,116 @@ const char *const ffight_sample_names[] =
 	0
 };
 
+const char *const sf2_sample_names[] =
+{
+	"*sf2",
+	"ryuslow-01",
+	"ryuslow-02",
+	"ryufast-01",
+	"ryufast-02",
+	"blankaslow-01",
+	"blankaslow-02",
+	"blankafast-01",
+	"blankafast-02",
+	"chunlislow-01",
+	"chunlislow-02",
+	"chunlifast-01",
+	"chunlifast-02",
+	"ehondaslow-01",
+	"ehondaslow-02",
+	"ehondafast-01",
+	"ehondafast-02",
+	"guileslow-01",
+	"guileslow-02",
+	"guilefast-01",
+	"guilefast-02",
+	"dhalsimslow-01",
+	"dhalsimslow-02",
+	"dhalsimfast-01",
+	"dhalsimfast-02",
+	"balrogslow-01",
+	"balrogslow-02",
+	"balrogfast-01",
+	"balrogfast-02",
+	"sagatslow-01",
+	"sagatslow-02",
+	"sagatfast-01",
+	"sagatfast-02",
+	"mbisonslow-01",
+	"mbisonslow-02",
+	"mbisonfast-01",
+	"mbisonfast-02",
+	"versus-01",
+	"versus-02",
+	"endfight-01",
+	"endfight-02",
+	"continue-01",
+	"continue-02",
+	"highscore-01",
+	"highscore-02",
+	"intro-01",
+	"intro-02",
+	"playerjoin-01",
+	"playerjoin-02",
+	"playerselect-01",
+	"playerselect-02",
+	"gameover-01",
+	"gameover-02",
+	"kenslow-01",
+	"kenslow-02",
+	"kenfast-01",
+	"kenfast-02",
+	"zangiefslow-01",
+	"zangiefslow-02",
+	"zangieffast-01",
+	"zangieffast-02",
+	"vegaslow-01",
+	"vegaslow-02",
+	"vegafast-01",
+	"vegafast-02",
+	"bonusstage-01",
+	"bonusstage-02",
+	"mbisonending-01",
+	"mbisonending-02",
+	"kenendinga-01",
+	"kenendinga-02",
+	"kenendingb-01",
+	"kenendingb-02",
+	"ehondaending-01",
+	"ehondaending-02",
+	"blankaending-01",
+	"blankaending-02",
+	"guileending-01",
+	"guileending-02",
+	"zangiefending-01",
+	"zangiefending-02",
+	"specialending-01",
+	"specialending-02",
+	"ryuending-01",
+	"ryuending-02",
+	"dhalsimending-01",
+	"dhalsimending-02",
+	"chunliendinga-01",
+	"chunliendinga-02",
+	"chunliendingb-01",
+	"chunliendingb-02",
+	"gameover-01",
+	"gameover-02",
+	0
+};
+
 static struct Samplesinterface ff_samples =
 {
 	2,	/* 2 channels*/
 	100, /* volume*/
 	ffight_sample_names
+};
+
+static struct Samplesinterface sf2_samples =
+{
+	2, // 2 channels
+	100, // volume
+	sf2_sample_names
 };
 
 static READ16_HANDLER( cps1_input_r )
@@ -159,36 +264,30 @@ static READ_HANDLER( cps1_snd_fade_timer_r )
 	return cps1_sound_fade_timer;
 }
 
+
 static WRITE16_HANDLER( cps1_sound_command_w )
 {
-	/* Debug.*/
-	/*
-	if (data != 0xff) {
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%X\n", data);
-	}
-	*/
-	
-	/* We are playing Final Fight. Let's use the samples.*/
+	// We are playing Final Fight. Let's use the samples.
 	if(ff_playing_final_fight == true) {
 		switch (data) {
-			/* stage 1 upper level music*/
+			// stage 1 upper level music
 			case 0x40:
-				/* Play the left channel.*/
+				// Play the left channel.
 				sample_start(0, 0, 1);
 
-				/* Play the right channel.*/
+				// Play the right channel.
 				sample_start(1, 1, 1);
 
 				break;
-			/* stage #1: basement*/
+			// stage #1: basement
 			case 0x41:
 				sample_start(0, 2, 1);
 				sample_start(1, 3, 1);
 
 				break;
-			/* stage #2: subway intro*/
+			// stage #2: subway intro
 			case 0x42:
-				/* play the normal version of the song unless playAlternateSong is true*/
+				// play the normal version of the song unless playAlternateSong is true
 				if (ff_play_alternate_song == false) {
 					sample_start(0, 4, 1);
 					sample_start(1, 5, 1);
@@ -197,40 +296,40 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 40, 1);
 					sample_start(1, 41, 1);
 				}
-				
+
 				break;
-			/* stage #2 exiting subway/alley*/
+			// stage #2 exiting subway/alley
 			case 0x43:
 				sample_start(0, 6, 1);
 				sample_start(1, 7, 1);
 
 				break;
-			/* double andore cage fight music*/
+			// double andore cage fight music
 			case 0x44:
 				sample_start(0, 8, 1);
 				sample_start(1, 9, 1);
 
 				break;
-			/* bay area sea side theme*/
+			// bay area sea side theme
 			case 0x45:
 				sample_start(0, 10, 1);
 				sample_start(1, 11, 1);
 
-				/* we'll provision the alternate songs if they're not already*/
+				// we'll provision the alternate songs if they're not already
 				if (ff_provision_alt_song == false) {
 					ff_provision_alt_song = true;
 				}
-				
+
 				break;
-			/* bathroom music for bay area*/
+			// bathroom music for bay area
 			case 0x46:
 				sample_start(0, 12, 1);
 				sample_start(1, 13, 1);
 
 				break;
-			/* bay area post-bathroom ending/boss / final boss room entrance*/
+			// bay area post-bathroom ending/boss / final boss room entrance
 			case 0x47:
-				/* play the normal version of the song unless playAlternateSong is true*/
+				// play the normal version of the song unless playAlternateSong is true
 				if (ff_provision_alt_song == false) {
 					sample_start(0, 14, 1);
 					sample_start(1, 15, 1);
@@ -239,114 +338,572 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 36, 1);
 					sample_start(1, 37, 1);
 				}
-				
+
 				break;
-			/* bonus stage music*/
+			// bonus stage music
 			case 0x4c:
 				sample_start(0, 20, 1);
 				sample_start(1, 21, 1);
 
 				break;
-			/* industrial music theme*/
+			// industrial music theme
 			case 0x48:
 				sample_start(0, 16, 1);
 				sample_start(1, 17, 1);
 
 				break;
-			/* industrial zone elevator ride music*/
+			// industrial zone elevator ride music
 			case 0x49:
 				sample_start(0, 18, 1);
 				sample_start(1, 19, 1);
 
 				break;
-			/* game start ditty*/
+			// game start ditty
 			case 0x50:
 				sample_start(0, 22, 0);
 				sample_start(1, 23, 0);
 
-				/* when the game starts, we'll reset all the alternate songs*/
+				// when the game starts, we'll reset all the alternate songs
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
-			/* post explosion ditty*/
+			// post explosion ditty
 			case 0x51:
 				sample_start(0, 24, 0);
 				sample_start(1, 25, 0);
 
 				break;
-			/* opening cinematic song*/
+			// opening cinematic song
 			case 0x52:
 				sample_start(0, 46, 0);
 				sample_start(1, 47, 0);
-		
+
 				break;
-			/* continue/dynamite song*/
+			// continue/dynamite song
 			case 0x53:
 				sample_start(0, 32, 1);
 				sample_start(1, 33, 1);
-				
+
 				break;
-			/* homosexual cheesy ending music*/
+			// homosexual cheesy ending music
 			case 0x54:
 				sample_start(0, 48, 1);
 				sample_start(1, 49, 1);
-			
+
 				break;
-			/* player select song*/
+			// player select song
 			case 0x55:
 				sample_start(0, 30, 0);
 				sample_start(1, 31, 0);
-				
+
 				break;
-			/* stage end/victory song*/
+			// stage end/victory song
 			case 0x57:
 				sample_start(0, 28, 0);
 				sample_start(1, 29, 0);
-				
-				/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
+
+				// when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs
 				if (ff_provision_alt_song == true) {
 					ff_play_alternate_song = true;
 				}
-				
+
 				break;
-			/* final stage clear ditty*/
+			// final stage clear ditty
 			case 0x58:
 				sample_start(0, 26, 0);
 				sample_start(1, 27, 0);
-								
+
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
 			default:
 				if(ACCESSING_LSB)
 					soundlatch_w(0,data & 0xff);
 
-				/* Lets stop the Final Fight sample music.*/
+				// Lets stop the Final Fight sample music.
 				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
-					int a = 0;
-					
-					for(a = 0; a <= 50; a++) {
-						sample_stop(a);
-					}
+					sample_stop(0);
+					sample_stop(1);
 				}
 
 				break;
 		}
 
-		/* Determine how we should mix these samples together.*/
-		if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
+		// Determine how we should mix these samples together.
+		if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
 			sample_set_stereo_volume(1, 100, 100);
 		}
-		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
+		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
 			sample_set_stereo_volume(0, 100, 100);
 		}
-		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
+		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
 			sample_set_stereo_volume(0, 100, 0);
 			sample_set_stereo_volume(1, 0, 100);
 		}
-		else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
+		else if(sample_playing(0) == 0 && sample_playing(1) == 0) { // No sample playing, revert to the default sound.
+			if(ACCESSING_LSB) {
+				soundlatch_w(0,data & 0xff);
+			}
+		}
+	}
+	else if(sf2_playing_street_fighter == true) {
+		// Playing Street Fighter II
+		switch (data)
+		{
+			case 0x1:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu music slow
+				sample_start(0, 0, 1);
+				sample_start(1, 1, 1);
+				break;
+			}
+			case 0x2:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e honda music slow
+				sample_start(0, 12, 1);
+				sample_start(1, 13, 1);
+				break;
+			}
+			case 0x3:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// blanka music slow
+				sample_start(0, 4, 1);
+				sample_start(1, 5, 1);
+				break;
+			}
+			case 0x4:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken music slow
+				sample_start(0, 52, 1);
+				sample_start(1, 53, 1);
+				break;
+			}
+			case 0x5:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile music slow
+				sample_start(0, 16, 1);
+				sample_start(1, 17, 1);
+				break;
+			}
+			case 0x6:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li music slow
+				sample_start(0, 8, 1);
+				sample_start(1, 9, 1);
+				break;
+			}
+			case 0x7:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief music slow
+				sample_start(0, 56, 1);
+				sample_start(1, 57, 1);
+				break;
+			}
+			case 0x8:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim music slow
+				sample_start(0, 20, 1);
+				sample_start(1, 21, 1);
+				break;
+			}
+			case 0x9:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// balrog music slow
+				sample_start(0, 24, 1);
+				sample_start(1, 25, 1);
+				break;
+			}
+			case 0xa:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// vega music slow
+				sample_start(0, 60, 1);
+				sample_start(1, 61, 1);
+				break;
+			}
+			case 0xb:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// sagat music slow
+				sample_start(0, 28, 1);
+				sample_start(1, 29, 1);
+				break;
+			}
+			case 0xc:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// m. bison music slow
+				sample_start(0, 32, 1);
+				sample_start(1, 33, 1);
+				break;
+			}
+			case 0xd:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// bonus stage music
+				sample_start(0, 64, 1);
+				sample_start(1, 65, 1);
+				break;
+			}
+			case 0xe:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// character select stage
+				sample_start(0, 48, 1);
+				sample_start(1, 49, 1);
+				break;
+			}
+			case 0xf:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// versus screen ditty
+				sample_start(0, 36, 0);
+				sample_start(1, 37, 0);
+				break;
+			}
+			case 0x10:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// end of fight dialog/resolution screen
+				sample_start(0, 38, 0);
+				sample_start(1, 39, 0);
+				break;
+			}
+			case 0x11:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// continue music
+				sample_start(0, 40, 0);
+				sample_start(1, 41, 0);
+				break;
+			}
+			case 0x13:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// failed to continue?
+				sample_start(0, 90, 0);
+				sample_start(1, 91, 0);
+				break;
+			}
+			case 0x14:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// high score screen
+				sample_start(0, 42, 0);
+				sample_start(1, 43, 0);
+				break;
+			}
+			case 0x15:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// player joined music
+				sample_start(0, 46, 0);
+				sample_start(1, 47, 0);
+				break;
+			}
+			case 0x16:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// intro music
+				sample_start(0, 44, 1);
+				sample_start(1, 45, 1);
+				break;
+			}
+			case 0x18:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu ending music
+				sample_start(0, 82, 0);
+				sample_start(1, 83, 0);
+				break;
+			}
+			case 0x19:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e.honda ending music
+				sample_start(0, 72, 1);
+				sample_start(1, 73, 1);
+				break;
+			}
+			case 0x1a:
+			{
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				fadeMusicVolume = 1.0f;
+
+				// blanka ending music
+				sample_start(0, 74, 1);
+				sample_start(1, 75, 1);
+				break;
+			}
+			case 0x1b:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile ending music
+				sample_start(0, 76, 1);
+				sample_start(1, 77, 1);
+				break;
+			}
+			case 0x1c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken ending music
+				sample_start(0, 68, 1);
+				sample_start(1, 69, 1);
+				break;
+			}
+			case 0x1d:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li ending music?
+				sample_start(0, 86, 1);
+				sample_start(1, 87, 1);
+				break;
+			}
+			case 0x1e:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief ending music
+				sample_start(0, 78, 1);
+				sample_start(1, 79, 1);
+				break;
+			}
+			case 0x1f:
+			{
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim ending music
+				sample_start(0, 84, 1);
+				sample_start(1, 85, 1);
+				break;
+			}
+			case 0x34:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// wedding music -- ken ending
+				sample_start(0, 70, 1);
+				sample_start(1, 71, 1);
+				break;
+			}
+			case 0x35:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li ending #2
+				sample_start(0, 88, 1);
+				sample_start(1, 89, 1);
+				break;
+			}
+			case 0x79:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu music fast
+				sample_start(0, 2, 1);
+				sample_start(1, 3, 1);
+				break;
+			}
+			case 0x7a:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e. honda music fast
+				sample_start(0, 14, 1);
+				sample_start(1, 15, 1);
+				break;
+			}
+			case 0x7b:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// blanka music fast
+				sample_start(0, 6, 1);
+				sample_start(1, 7, 1);
+				break;
+			}
+			case 0x7c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile music fast
+				sample_start(0, 18, 1);
+				sample_start(1, 19, 1);
+				break;
+			}
+			case 0x7d:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken music fast
+				sample_start(0, 54, 1);
+				sample_start(1, 55, 1);
+				break;
+			}
+			case 0x7e:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast chun li music
+				sample_start(0, 10, 1);
+				sample_start(1, 11, 1);
+				break;
+			}
+			case 0x7f:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief music fast
+				sample_start(0, 58, 1);
+				sample_start(1, 59, 1);
+				break;
+			}
+			case 0x80:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim music fast
+				sample_start(0, 22, 1);
+				sample_start(1, 23, 1);
+				break;
+			}
+			case 0x81:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast balrog music
+				sample_start(0, 26, 1);
+				sample_start(1, 27, 1);
+				break;
+			}
+			case 0x82:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast vega music
+				sample_start(0, 62, 1);
+				sample_start(1, 63, 1);
+				break;
+			}
+			case 0x83:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast sagat music
+				sample_start(0, 30, 1);
+				sample_start(1, 31, 1);
+				break;
+			}
+			case 0x84:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast m. bison music
+				sample_start(0, 34, 1);
+				sample_start(1, 35, 1);
+				break;
+			}
+			case 0x8c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// m. bison ending
+				sample_start(0, 66, 1);
+				sample_start(1, 67, 1);
+				break;
+			}
+			case 0x8d:
+			{
+				// there's no stop music command after the ending music plays for some of them so we have to make sure that we're still not stuck in fading mode
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				// special ending
+				fadeMusicVolume = 1.0f;
+
+				sample_start(0, 80, 1);
+				sample_start(1, 81, 1);
+				break;
+			}
+			case 0xf9:
+			{
+				fadingMusic = true;
+
+				if(ACCESSING_LSB)
+					soundlatch_w(0,data & 0xff);
+
+				break;
+			}
+
+			default:
+				if(ACCESSING_LSB)
+					soundlatch_w(0,data & 0xff);
+
+				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
+					sample_stop(0);
+					sample_stop(1);
+				}
+
+				break;
+		}
+
+		// Determine how we should mix these samples together.
+		if(sample_playing(0) == 0 && sample_playing(1) == 1 && fadingMusic == false) { // Right channel only. Lets make it play in both speakers.
+			sample_set_stereo_volume(1, 100, 100);
+		}
+		else if(sample_playing(0) == 1 && sample_playing(1) == 0 && fadingMusic == false) { // Left channel only. Lets make it play in both speakers.
+			sample_set_stereo_volume(0, 100, 100);
+		}
+		else if(sample_playing(0) == 1 && sample_playing(1) == 1 && fadingMusic == false) { // Both left and right channels. Lets make them play in there respective speakers.
+			sample_set_stereo_volume(0, 100, 0);
+			sample_set_stereo_volume(1, 0, 100);
+		}
+		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && fadingMusic == false) { // No sample playing, revert to the default sound.
 			if(ACCESSING_LSB) {
 				soundlatch_w(0,data & 0xff);
 			}
@@ -403,7 +960,38 @@ static INTERRUPT_GEN( cps1_interrupt )
 	/* works without it (maybe it's used to multiplex controls). It is the */
 	/* *only* game to have that. */
 	cpu_set_irq_line(0, 2, HOLD_LINE);
+
+	if(sf2_playing_street_fighter == true && fadingMusic == true) {
+		const float prospectiveVolume = fadeMusicVolume - 0.0048f;
+
+		// We need to convert the volume level to int for the mame2003 sample sound system.
+		const int volume = (int) (prospectiveVolume * 100);
+
+		if (prospectiveVolume <= 0.0f)
+		{
+			fadingMusic = false;
+      sample_set_stereo_volume(0, 0, 0);
+      sample_set_stereo_volume(1, 0, 0);
+		}
+		else
+		{
+			fadeMusicVolume = prospectiveVolume;
+
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(1, volume, volume);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(0, volume, volume);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+				sample_set_stereo_volume(0, volume, 0);
+				sample_set_stereo_volume(1, 0, volume);
+			}
+
+		}
+	}
 }
+
 
 /********************************************************************
 *
@@ -1565,7 +2153,7 @@ INPUT_PORTS_START( ffight )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 | IPF_CHEAT )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
-                                        
+
 INPUT_PORTS_START( ffightae )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1652,7 +2240,7 @@ INPUT_PORTS_START( ffightae )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	
+
 	PORT_START      /* Player 3 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
@@ -1662,7 +2250,7 @@ INPUT_PORTS_START( ffightae )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
-INPUT_PORTS_END                                       
+INPUT_PORTS_END
 
 INPUT_PORTS_START( 1941 )
 	PORT_START      /* IN0 */
@@ -3950,7 +4538,7 @@ INPUT_PORTS_START( rockmanj )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
-					
+
 /* CPS Changer */
 INPUT_PORTS_START( wofch )
 	PORT_START    /* IN0 */
@@ -4005,10 +4593,10 @@ INPUT_PORTS_START( wofch )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED)
     PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START3)
-	
+
 	PORT_START      /* Player 4 - not used */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
-INPUT_PORTS_END	
+INPUT_PORTS_END
 
 
 static struct GfxLayout layout8x8 =
@@ -4128,7 +4716,7 @@ MACHINE_DRIVER_END
 /* For Final Fight.*/
 static MACHINE_DRIVER_START( ffight_hack )
 	ff_playing_final_fight = true;
-	
+
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
 
@@ -4150,10 +4738,13 @@ MACHINE_DRIVER_END
 
 
 static MACHINE_DRIVER_START( sf2 )
-
+	sf2_playing_street_fighter = true;
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
 	MDRV_CPU_REPLACE("main", M68000, 12000000)
+// add a check for the game name here if you don want samples to be use in all sf2 clones
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(SAMPLES, sf2_samples)
 MACHINE_DRIVER_END
 
 
@@ -4883,18 +5474,18 @@ ROM_START( ffightj1 )
 	ROM_LOAD( "ff18-18.bin",  0x00000, 0x20000, CRC(375c66e7) SHA1(36189e23209ce4ae5d9cbabd1574540d0591e7b3) )
 	ROM_LOAD( "ff19-19.bin",  0x20000, 0x20000, CRC(1ef137f9) SHA1(974b5e72aa28b87ebfa7438efbdfeda769dedf5e) )
 ROM_END
-                                        
+
 ROM_START( ffightae )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "ff-23m.8h", 0x00000, 0x80000, CRC(86DEF74F) SHA1(5206cc13bfe40fb4f9c3677629aee89099623ee6) )
 	ROM_LOAD16_WORD_SWAP( "ff-22m.7h", 0x80000, 0x80000, CRC(CBDD8689) SHA1(a75918ee837dfccdd4fd02b716928a2de2003103) )
-	
+
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )
 	ROMX_LOAD( "ff-5m.7a", 0x000000, 0x80000, CRC(91A909BD) SHA1(09621cb33a9c26798b1bba186dceb02e5f126e1a) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "ff-7m.9a", 0x000002, 0x80000, CRC(89F8B4CD) SHA1(c169c445686d3c79eae2dc42460b8194c491ccb0) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "ff-1m.3a", 0x000004, 0x80000, CRC(D5469303) SHA1(0c1e33a87eb3ef79e6a5ba80753eb495284e666c) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "ff-3m.5a", 0x000006, 0x80000, CRC(0C6302BF) SHA1(03ee13a67a8a3b92fac462623ace752d77b9e9f1) , ROM_GROUPWORD | ROM_SKIP(6) )
-	
+
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
@@ -4905,7 +5496,7 @@ ROM_START( ffightae )
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "ff18-18.bin",  0x00000, 0x20000, CRC(375c66e7) SHA1(36189e23209ce4ae5d9cbabd1574540d0591e7b3) )
 	ROM_LOAD( "ff19-19.bin",  0x20000, 0x20000, CRC(1ef137f9) SHA1(974b5e72aa28b87ebfa7438efbdfeda769dedf5e) )
-ROM_END                                       
+ROM_END
 
 ROM_START( 1941 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -7833,7 +8424,7 @@ ROM_START( wofch )
 
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
-	
+
 	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
 	ROM_LOAD( "tk2_qa.5k",       0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
 	ROM_CONTINUE(                0x10000, 0x18000 )
@@ -7843,8 +8434,8 @@ ROM_START( wofch )
 	ROM_LOAD( "tk2-q2.2k",       0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
 	ROM_LOAD( "tk2-q3.3k",       0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
 	ROM_LOAD( "tk2-q4.4k",       0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
-ROM_END		
-					
+ROM_END
+
 
 
 static DRIVER_INIT( wof )
@@ -8013,7 +8604,7 @@ GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (
 /* Japanese version of Pang 3 is encrypted, Euro version is not */
 GAME( 1995, pang3,    0,        pang3,    pang3,    cps1,     ROT0,   "Mitchell", "Pang! 3 (Euro 950511)" )
 GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Japan 950511)" )
-					
+
 /* CPS Changer */
 GAME( 1994, wofch,    0,        qsound,   wofch,    wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)" )
-			
+

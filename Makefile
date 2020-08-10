@@ -1,4 +1,4 @@
-TARGET_NAME := blaster-barcade
+TARGET_NAME := blaster_barcade
 CORE_DIR    := src
 
 DEBUG         ?= 0

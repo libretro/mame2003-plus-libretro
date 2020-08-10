@@ -6,7 +6,7 @@
   fix analog up
   do lots of testing a lots changed
 */
-
+int deadzone = (int) 32767 * 0.2;
 struct JoystickInfo mame_joy_map[] =
 {
 	{ "J1 Left",	   ((0) * 26) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_1_LEFT	      },
@@ -122,7 +122,7 @@ struct JoystickInfo mame_joy_map[] =
 
 int16_t mouse_x[4] = { 0 };
 int16_t mouse_y[4] = { 0 };
-int retroJsState[156] = { 0 };              // initialise to zero - we are only reading 4 players atm map for 6 (6*26)
+int retroJsState[156] = { 0 };              // initialise to zero - we are only reading 4 players atm map for 6 (4*26)
 int16_t analogjoy[4][4] = { 0 };
 
 int convert_analog_scale(int input);
@@ -194,16 +194,16 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
 			code = analogjoy_input[i] &~0x10000;
 
 			if (code == (player * 26) + 18  || code == (player * 26) + 19)
-				value = convert_analog_scale(analogjoy[player][0]);
+				value = analogjoy[player][0];
 
 			else if (code == (player * 26) + 20 || code == (player * 26) + 21)
-				value = convert_analog_scale(analogjoy[player][1]);
+				value = analogjoy[player][1];
 
 			else if (code == (player * 26) + 22 || code == (player * 23) + 23)
-				value = convert_analog_scale(analogjoy[player][2]);
+				value = analogjoy[player][2];
 
 			else if (code == (player * 26) + 24 || code == (player * 25) + 25)
-				value = convert_analog_scale(analogjoy[player][3]);
+				value = analogjoy[player][3];
 
     if(code%2) value = -value;
 
@@ -394,10 +394,9 @@ long map2(long x, long in_min, long in_max, long out_min, long out_max) {
 
 int convert_analog_scale(int input)
 {
-
-// log_cb(RETRO_LOG_INFO, LOGPRE "map(%d) map2(%d) \n,",(int)map(input,0,32767,0,128),(int)map2(input,0,32767,0,128));
-
-return (int)map(input,0,32767,0,128);
+	//log_cb(RETRO_LOG_INFO, LOGPRE "map(%d) map2(%d) \n,",(int)map(input,0,32767,0,128),(int)map2(input,0,32767,0,128));
+	if ( ( input > -deadzone && input < 0) || (input < deadzone && input > 0) ) input = 0;
+	return (int)map(input,0,32767 ,0,128);
 }
 
 /* get pointer axis vector from coord */

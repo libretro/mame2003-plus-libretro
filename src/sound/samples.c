@@ -29,20 +29,20 @@ void sample_start(int channel,int samplenum,int loop)
 
 	if (Machine->samples->sample[samplenum] != NULL)
 	{
-		if ( (Machine->samples->sample[samplenum]->b_decoded == 0) && (options.content_flags[CONTENT_ALT_SOUND]) )
+		if (Machine->samples->sample[samplenum]->b_decoded == 0)
 		{
 			// Lets decode this sample before playing it.
 			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
 		}
 
-		if ( (Machine->samples->sample[samplenum]->b_decoded == 1) && (options.content_flags[CONTENT_ALT_SOUND]) )
+		if (Machine->samples->sample[samplenum]->b_decoded == 1)
 		{
 			if (channel == 0)
 				leftSampleNum = samplenum;
 
 			if (channel == 1)
 				rightSampleNum = samplenum;
-		}			
+		}
 		if (Machine->samples->sample[samplenum]->resolution == 8 )
 		{
 				log_cb(RETRO_LOG_DEBUG, LOGPRE"play 8 bit sample %d, channel %d\n",samplenum,channel);
@@ -60,7 +60,7 @@ void sample_start(int channel,int samplenum,int loop)
 			Machine->samples->sample[samplenum]->length,
 			Machine->samples->sample[samplenum]->smpfreq,
 				loop);
-			
+
 		}
 	}
 }
@@ -113,7 +113,7 @@ void sample_stop(int channel)
 		c_sample = leftSampleNum;
 	else if (channel == 1)
 		c_sample = rightSampleNum;
-		
+
 	if (Machine->sample_rate == 0) return;
 	if (channel >= numchannels)
 	{
@@ -177,4 +177,16 @@ int samples_sh_start(const struct MachineSound *msound)
 		mixer_set_name(firstchannel + i,buf);
 	}
 	return 0;
+}
+
+int sample_set_pause(int channel,int pause)
+{
+  if (Machine->sample_rate == 0) return 0;
+	if (channel >= numchannels)
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE"error: sample_pause() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		return 0;
+	}
+  mixer_set_pause(channel + firstchannel, pause);
+  return 1;
 }

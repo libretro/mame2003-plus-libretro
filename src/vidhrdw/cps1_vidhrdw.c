@@ -378,7 +378,7 @@ static struct CPS1config cps1_config_table[]=
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
-		
+
     /* CPS Changer */
 	{"wofch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 
@@ -509,8 +509,9 @@ static INLINE data16_t *cps1_base(int offset,int boundary)
 
 READ16_HANDLER( cps1_output_r )
 {
+#if VERBOSE
   if (offset >= 0x18/2) log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %06x: read output port %02x\n",activecpu_get_pc(),offset*2);
-
+#endif
 	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to */
 	/* game. */
@@ -1959,4 +1960,4 @@ void cps2_objram_latch(void)
 	memcpy(cps2_buffered_obj, cps2_objbase(), cps2_obj_size);
 }
 
-    
+
