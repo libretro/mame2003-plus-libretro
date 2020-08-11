@@ -89,7 +89,7 @@ static NVRAM_HANDLER( rungun )
 			EEPROM_load(file);
 		}
 		else
-    {   
+    {
       init_eeprom_count = 10;
     }
 	}
