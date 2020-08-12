@@ -1933,5 +1933,3 @@ static void trapf(void)
 {
 	generate_exception(EXCEPTION_TRAPF);
 }
-
-
