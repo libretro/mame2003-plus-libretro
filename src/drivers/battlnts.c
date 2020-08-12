@@ -489,4 +489,3 @@ GAME( 1987, battlntj, battlnts, battlnts, battlnts, 0,		  ROT90, "Konami", "Batt
 GAMEX(1987, thehustl, 0,		battlnts, thehustj, 0,		  ROT90, "Konami", "The Hustler (Japan version M)", GAME_NO_COCKTAIL )
 GAMEX(1987, thehustj, thehustl, battlnts, thehustj, 0,		  ROT90, "Konami", "The Hustler (Japan version J)", GAME_NO_COCKTAIL )
 GAMEX(1987, rackemup, thehustl, battlnts, thehustj, rackemup, ROT90, "Konami", "Rack 'em Up", GAME_NO_COCKTAIL )
-
