@@ -889,4 +889,3 @@ unsigned Dasmnec(char* buffer, unsigned pc)
 }
 
 #endif	/* MAME_DEBUG */
-
