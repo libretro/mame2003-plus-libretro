@@ -1505,4 +1505,3 @@ GAMEX( 1986, alcon,    slapfigh, slapfight,slapfigh, slapfigh, ROT270, "Taito Am
 GAMEX( 1986, getstar,  0,        slapfigh, getstar,  0,        ROT0,   "Taito",                          "Guardian", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAMEX( 1986, getstarj, getstar,  slapfigh, getstar,  0,        ROT0,   "Taito",                          "Get Star (Japan)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAMEX( 1986, getstarb, getstar,  slapfigh, getstar,  0,        ROT0,   "bootleg",                        "Get Star (bootleg)", GAME_NO_COCKTAIL )
-
