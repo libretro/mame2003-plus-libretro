@@ -1007,4 +1007,3 @@ GAME( 1988, turtship, 0,        turtship, turtship, turtship, ROT0,   "Philko", 
 GAME( 1989, dyger,    0,        turtship, dyger,    dyger,    ROT270, "Philko", "Dyger (Korea set 1)" )
 GAME( 1989, dygera,   dyger,    turtship, dyger,    dyger,    ROT270, "Philko", "Dyger (Korea set 2)" )
 GAMEX(1989, whizz,    0,        whizz, 	  whizz,    whizz,    ROT0,   "Philko", "Whizz", GAME_NOT_WORKING )
-
