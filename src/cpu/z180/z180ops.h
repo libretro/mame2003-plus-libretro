@@ -1265,4 +1265,3 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 	z180_icount = 0;											\
 	_HALT = 2;													\
 }
-
