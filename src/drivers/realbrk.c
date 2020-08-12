@@ -402,4 +402,3 @@ ROM_START( realbrk )
 ROM_END
 
 GAMEX( 1998, realbrk, 0, realbrk, realbrk, 0, ROT0, "Nakanihon", "Billiard Academy Real Break (Japan)", GAME_IMPERFECT_GRAPHICS )
-
