@@ -425,4 +425,3 @@ unsigned m6509_dasm(char *buffer, unsigned pc)
 
 
 void m6509_init(void){ return; }
-

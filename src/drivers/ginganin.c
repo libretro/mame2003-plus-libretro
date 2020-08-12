@@ -458,4 +458,3 @@ DRIVER_INIT( ginganin )
 
 
 GAME( 1987, ginganin, 0, ginganin, ginganin, ginganin, ROT0, "Jaleco", "Ginga NinkyouDen" )
-

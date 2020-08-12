@@ -884,4 +884,3 @@ GAME( 1980, astdelux, 0,        astdelux, astdelux, astdelux, ROT0, "Atari", "As
 GAME( 1980, astdelu1, astdelux, astdelux, astdelux, astdelux, ROT0, "Atari", "Asteroids Deluxe (rev 1)" )
 GAME( 1979, llander,  0,        llander,  llander,  0,        ROT0, "Atari", "Lunar Lander (rev 2)" )
 GAME( 1979, llander1, llander,  llander,  llander1, 0,        ROT0, "Atari", "Lunar Lander (rev 1)" )
-

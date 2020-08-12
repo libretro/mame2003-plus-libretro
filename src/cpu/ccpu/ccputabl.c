@@ -462,4 +462,3 @@ static opcode_func cineops[4][256] =
 		opSUBirg_BB_AA, opANDirg_BB_AA, opLDAirg_BB_AA, opLSRf_BB_AA,   opLSLf_BB_AA,   opASRf_BB_AA,   opASRDf_BB_AA,  opLSLDf_BB_AA,
 	}
 };
-

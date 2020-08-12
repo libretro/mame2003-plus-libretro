@@ -366,4 +366,3 @@ static void (*insn2a03[0x100])(void) = {
 	n2a03_f0,n2a03_f1,n2a03_f2,n2a03_f3,n2a03_f4,n2a03_f5,n2a03_f6,n2a03_f7,
 	n2a03_f8,n2a03_f9,n2a03_fa,n2a03_fb,n2a03_fc,n2a03_fd,n2a03_fe,n2a03_ff
 };
-

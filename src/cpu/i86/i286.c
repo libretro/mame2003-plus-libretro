@@ -556,5 +556,3 @@ void i286_init(void)
 	state_save_register_INT8(  type, cpu, "IRQ_STATE",		&I.irq_state, 1);
 	state_save_register_int(   type, cpu, "EXTRA_CYCLES",	&I.extra_cycles);
 }
-
-

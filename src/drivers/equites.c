@@ -76,7 +76,6 @@ Stephh's notes (based on the games M68000 code and some tests) :
       * when bit 7 is On ("Coinage" Dip Switch set to "A 1/3C B 1/6C" or "A 2/1C B 3/1C"),
         a "band" is displayed at the left of the screen
 
-
 TO DO :
 
   - support screen flipping in 'equites' and 'splndrbt'.
@@ -122,10 +121,10 @@ Other unemulated Alpha Denshi and SNK games that may use similar hardware:
 -----------------------------------------------------------
 Maker        Year Genre Name             Japanese Name
 -----------------------------------------------------------
-Alpha Denshi 1984 (SPT) Champion Croquet ƒ`ƒƒƒ“ƒsƒIƒ“ƒNƒƒbƒP[
-Alpha Denshi 1985 (???) Tune Pit(?)      ƒ`ƒF[ƒ“ƒsƒbƒg
-Alpha Denshi 1985 (MAJ) Perfect Janputer ƒp[ƒtƒFƒNƒgƒWƒƒƒ“ƒsƒ…[ƒ^[
-SNK/Eastern  1985 (ACT) Gekisoh          Œƒ‘–
+Alpha Denshi 1984 (SPT) Champion Croquet ãƒãƒ£ãƒ³ãƒ”ã‚ªãƒ³ã‚¯ãƒ­ãƒƒã‚±ãƒ¼
+Alpha Denshi 1985 (???) Tune Pit(?)      ãƒã‚§ãƒ¼ãƒ³ãƒ”ãƒƒãƒˆ
+Alpha Denshi 1985 (MAJ) Perfect Janputer ãƒ‘ãƒ¼ãƒ•ã‚§ã‚¯ãƒˆã‚¸ãƒ£ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼
+SNK/Eastern  1985 (ACT) Gekisoh          æ¿€èµ°
 
 *******************************************************************************/
 /* Directives*/

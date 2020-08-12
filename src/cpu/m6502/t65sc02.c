@@ -364,4 +364,3 @@ static void (*insn65sc02[0x100])(void) = {
 	m65sc02_f0,m65sc02_f1,m65sc02_f2,m65sc02_f3,m65sc02_f4,m65sc02_f5,m65sc02_f6,m65sc02_f7,
 	m65sc02_f8,m65sc02_f9,m65sc02_fa,m65sc02_fb,m65sc02_fc,m65sc02_fd,m65sc02_fe,m65sc02_ff
 };
-

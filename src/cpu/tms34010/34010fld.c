@@ -657,5 +657,3 @@ data32_t rfield_s_31(offs_t offset)
 	RFIELDMAC_BIG(0x7fffffff,2);
 	return ((INT32)(ret << 1)) >> 1;
 }
-
-

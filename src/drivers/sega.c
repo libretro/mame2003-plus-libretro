@@ -1232,4 +1232,3 @@ GAME( 1981, elim2,	  0,        elim2,    elim2,    elim2,    ROT0,   "Gremlin", 
 GAME( 1981, elim2a,   elim2,    elim2,    elim2,    elim2,    ROT0,   "Gremlin", "Eliminator (2 Players, set 2)" )
 GAME( 1981, elim4,	  elim2,    elim2,    elim4,    elim4,    ROT0,   "Gremlin", "Eliminator (4 Players)" )
 GAME( 1982, startrek, 0,        startrek, startrek, startrek, ROT0,   "Sega", "Star Trek" )
-

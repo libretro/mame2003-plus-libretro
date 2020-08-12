@@ -893,4 +893,3 @@ GAME(1984, sbagman,  0,       bagman, sbagman, 0, ROT270, "Valadon Automation", 
 GAME(1984, sbagmans, sbagman, bagman, sbagman, 0, ROT270, "Valadon Automation (Stern license)", "Super Bagman (Stern)" )
 GAME(1983, pickin,   0,       pickin, pickin,  0, ROT270, "Valadon Automation", "Pickin'" )
 GAME(1984, botanic,  0,       botanic,botanic, 0, ROT270, "Valadon Automation (Itisa license)", "Botanic" )
-

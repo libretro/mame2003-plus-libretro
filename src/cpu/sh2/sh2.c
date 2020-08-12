@@ -3117,4 +3117,3 @@ void sh2_init(void)
 	state_save_register_UINT32("sh2", cpu, "EA", &sh2.ea, 1);
 	return;
 }
-

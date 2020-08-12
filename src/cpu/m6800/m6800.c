@@ -2550,4 +2550,3 @@ WRITE_HANDLER( m6803_internal_registers_w )
 	}
 }
 #endif
-

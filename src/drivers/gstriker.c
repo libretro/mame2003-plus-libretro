@@ -129,7 +129,7 @@ c13_u12.u12     HN624116 - GFX
 
 *** ROMSET: vgoalsca
 
-Tecmo V Goal Soccer ©1994? Tecmo
+Tecmo V Goal Soccer Â©1994? Tecmo
 
 CPU: 68000, Z80
 Sound: YM2610
@@ -571,6 +571,7 @@ ROM_START( worldc94 )
 	ROM_REGION( 0x100000, REGION_SOUND2, 0 )
 	ROM_LOAD( "u104",         0x000000, 0x100000, CRC(df07d0af) SHA1(356560e164ff222bc9004fe202f829c93244a6c9) )
 ROM_END
+
 
 /*** GAME DRIVERS ************************************************************/
 

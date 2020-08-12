@@ -289,5 +289,3 @@ OP(cb,fc) { _H = SET(7,_H); 										} /* SET  7,H		  */
 OP(cb,fd) { _L = SET(7,_L); 										} /* SET  7,L		  */
 OP(cb,fe) { WM( _HL, SET(7,RM(_HL)) );								} /* SET  7,(HL)	  */
 OP(cb,ff) { _A = SET(7,_A); 										} /* SET  7,A		  */
-
-

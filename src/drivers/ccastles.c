@@ -405,4 +405,3 @@ GAME( 1983, ccastles, 0,        ccastles, ccastles, 0, ROT0, "Atari", "Crystal C
 GAME( 1983, ccastle3, ccastles, ccastles, ccastles, 0, ROT0, "Atari", "Crystal Castles (version 3)" )
 GAME( 1983, ccastle2, ccastles, ccastles, ccastles, 0, ROT0, "Atari", "Crystal Castles (version 2)" )
 GAME( 1983, ccastlej, ccastles, ccastles, ccastlej, 0, ROT0, "Atari", "Crystal Castles (joystick version)" )
-

@@ -8153,4 +8153,3 @@ GAME( 1993, gulunpa,  0,        cps1,     gulunpa,  cps1,     ROT0,   "Capcom", 
                                         			
 /* CPS Changer */
 GAME( 1994, wofch,    0,        qsound,   wofch,    wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)" )
-			

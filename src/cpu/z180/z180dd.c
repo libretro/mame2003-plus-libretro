@@ -293,4 +293,3 @@ OP(dd,fc) { illegal_1(); op_fc();									} /* DB   DD		  */
 OP(dd,fd) { illegal_1(); op_fd();									} /* DB   DD		  */
 OP(dd,fe) { illegal_1(); op_fe();									} /* DB   DD		  */
 OP(dd,ff) { illegal_1(); op_ff();									} /* DB   DD		  */
-

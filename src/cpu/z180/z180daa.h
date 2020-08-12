@@ -2048,4 +2048,3 @@ static UINT16 DAATable[0x800] = {
   (0x98<<8)+SF         +XF   +NF+CF,
   (0x99<<8)+SF         +XF+VF+NF+CF
 };
-

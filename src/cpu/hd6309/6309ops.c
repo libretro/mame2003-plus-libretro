@@ -5625,4 +5625,3 @@ static INLINE void pref11( void )
 #endif /* BIG_SWITCH */
 	hd6309_ICount -= cycle_counts_page11[ireg2];
 }
-

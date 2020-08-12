@@ -3,12 +3,12 @@
 
 /* 6309dasm.c - a 6309 opcode disassembler		*/
 /* Version 1.0 5-AUG-2000						*/
-/* Copyright © 2000 tim lindner 				*/
+/* Copyright Â© 2000 tim lindner 				*/
 /*												*/
 /* based on:									*/
 /*		6809dasm.c - a 6809 opcode disassembler */
 /*		Version 1.4 1-MAR-95					*/
-/*		Copyright © 1995 Sean Riddle			*/
+/*		Copyright Â© 1995 Sean Riddle			*/
 /*												*/
 /*		thanks to Franklin Bowen for bug fixes, ideas */
 
@@ -1094,4 +1094,3 @@ unsigned Dasm6309 (char *buffer, unsigned pc)
 }
 
 #endif
-
