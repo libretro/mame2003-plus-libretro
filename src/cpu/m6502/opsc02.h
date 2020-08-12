@@ -264,4 +264,3 @@
 	EAW = PCW + (INT16)(EAW-1); 								\
 	PCD = EAD;													\
 	CHANGE_PC
-
