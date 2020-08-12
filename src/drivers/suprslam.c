@@ -393,4 +393,3 @@ ROM_END
 /*** GAME DRIVERS ************************************************************/
 
 GAMEX( 1995, suprslam, 0, suprslam, suprslam, 0, ROT0, "Banpresto / Toei Animation", "Super Slams", GAME_IMPERFECT_GRAPHICS )
-
