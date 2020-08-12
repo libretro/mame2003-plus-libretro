@@ -1122,4 +1122,3 @@ GAME( 1986, slapshtr, 0,        segae, slapshtr, segasyse, ROT0,  "Sega", "Slap 
 /* Not Working */
 GAMEX(198?, fantzn2,  0,        segae, dummy,    segasyse, ROT0,  "????", "Fantasy Zone 2", GAME_NOT_WORKING )	/* encrypted */
 GAMEX(1987, opaopa,   0,        segae, opaopa,   segasyse, ROT0,  "Sega", "Opa Opa (MC-8123, 317-0042)", GAME_NOT_WORKING ) /* encrypted */
-
