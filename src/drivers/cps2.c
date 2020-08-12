@@ -6390,4 +6390,3 @@ GAMEX(2000, 1944j,    1944,    cps2, 19xx,    cps2, ROT0,   "Capcom, supported b
 
 GAME( 2001, progear,  0,       cps2, sgemf,   cps2, ROT0,   "Cave, distributed by Capcom", "Progear (USA 010117)" )
 GAME( 2001, progearj, progear, cps2, sgemf,   cps2, ROT0,   "Cave, distributed by Capcom", "Progear No Arashi (Japan 010117)" )
-
