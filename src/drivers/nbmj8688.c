@@ -2771,4 +2771,3 @@ GAME( 1988, mjsikaku, 0,        mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nich
 GAME( 1988, mjsikakb, mjsikaku, mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880722)" )
 GAME( 1988, otonano,  0,        otonano,         otonano,  otonano,  ROT0, "Apple", "Otona no Mahjong (Japan 880628)" )
 GAME( 1988, mjcamera, 0,        otonano,         mjcamera, mjcamera, ROT0, "MIKI SYOUJI", "Mahjong Camera Kozou (Japan 881109)" )
-
