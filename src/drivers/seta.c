@@ -8294,4 +8294,3 @@ GAMEX(1995, extdwnhl, 0,        extdwnhl, extdwnhl, 0,        ROT0,   "Sammy Ind
 GAME( 1995, gundhara, 0,        gundhara, gundhara, 0,        ROT270, "Banpresto",              "Gundhara" )
 GAMEX(1995, sokonuke, 0,        extdwnhl, sokonuke, 0,        ROT0,   "Sammy Industries",       "Sokonuke Taisen Game (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX(1995, zombraid, 0,        gundhara, zombraid, zombraid, ROT0,   "American Sammy",   "Zombie Raid (US)", GAME_NO_COCKTAIL )
-
