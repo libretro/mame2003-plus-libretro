@@ -470,5 +470,3 @@ WRITE32_HANDLER( jaguar_serial_w )
 			break;
 	}
 }
-
-
