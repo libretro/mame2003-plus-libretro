@@ -136,5 +136,3 @@ WRITE_HANDLER( dominos_tumble_w )
 {
 	discrete_sound_w(2, offset & 0x01);
 }
-
-
