@@ -1354,4 +1354,3 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 
 	megasys1_active_layers = megasys1_active_layers1;
 }
-
