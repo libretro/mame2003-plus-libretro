@@ -906,4 +906,3 @@ int sys24_mixer_get_reg(int reg)
 {
 	return sys24_mixer_reg[reg];
 }
-
