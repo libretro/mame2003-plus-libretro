@@ -245,6 +245,3 @@ extern UINT32	CD_drive_speed;			/* 0 = noop, 1 = 1x, 2 = 2x*/
 
 extern UINT8			cdda_buff[8192];		/* CD-DA buffer for SCSP communication*/
 extern UINT32		cdda_pos;
-
-
-
