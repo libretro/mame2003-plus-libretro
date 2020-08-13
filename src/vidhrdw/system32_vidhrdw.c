@@ -1568,5 +1568,3 @@ VIDEO_UPDATE( system32 ) {
 	}
 	system32_draw_text_layer (bitmap, cliprect);
 }
-
-
