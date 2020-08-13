@@ -338,6 +338,3 @@ READ16_HANDLER( ygv608_r );
 WRITE16_HANDLER( ygv608_w );
 
 #endif
-
-
-
