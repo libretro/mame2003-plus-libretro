@@ -780,4 +780,3 @@ NAMCONA_sh_stop( void )
 	}
 	#endif
 } /* NAMCONA_sh_stop */
-
