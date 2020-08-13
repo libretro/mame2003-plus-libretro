@@ -291,4 +291,3 @@ READ16_HANDLER( taitosound_comm16_msb_r )
 {
 	return taitosound_comm_r(0) << 8;
 }
-
