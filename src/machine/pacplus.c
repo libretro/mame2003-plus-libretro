@@ -52,5 +52,3 @@ void pacplus_decode(void)
 		RAM[i] = decrypt(i,RAM[i]);
 	}
 }
-
-
