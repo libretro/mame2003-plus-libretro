@@ -203,4 +203,3 @@ NVRAM_HANDLER( namcond1 )
     mame_fwrite( file, namcond1_eeprom, NAMCOND1_EEPROM_SIZE );
   }
 }
-
