@@ -84,4 +84,3 @@ READ_HANDLER( beezer_line_r )
 {
 	return (scanline & 0xfe) << 1;
 }
-
