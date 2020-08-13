@@ -610,4 +610,3 @@ WRITE_HANDLER( YMF271_1_w )
 {
 	ymf271_w(1, offset, data);
 }
-
