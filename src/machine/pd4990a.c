@@ -323,4 +323,3 @@ WRITE16_HANDLER( pd4990a_control_16_w )
 {
 	pd4990a_serial_control(data&0x7);
 }
-
