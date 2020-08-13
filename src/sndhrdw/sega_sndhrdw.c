@@ -589,4 +589,3 @@ WRITE_HANDLER( spacfury2_sh_w )
 		sample_start (0, 7, 0);
 
 }
-
