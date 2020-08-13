@@ -112,5 +112,3 @@ VIDEO_UPDATE(homerun)
 
 	homerun_gc_down=homerun_gc_up;
 }
-
-
