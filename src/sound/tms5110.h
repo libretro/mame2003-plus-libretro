@@ -27,4 +27,3 @@ int tms5110_ready_read(void);
 void tms5110_process(INT16 *buffer, unsigned int size);
 
 #endif
-
