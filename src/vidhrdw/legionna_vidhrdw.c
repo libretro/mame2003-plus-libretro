@@ -371,4 +371,3 @@ VIDEO_UPDATE( sdgndmrb )
 	draw_sprites(bitmap,cliprect,3);
 	tilemap_draw(bitmap,cliprect,text_layer,0,0);
 }
-
