@@ -575,4 +575,3 @@ WRITE32_HANDLER( konamigx_t4_psacmap_w )
 
 	tilemap_mark_tile_dirty(gx_psac_tilemap, offset);
 }
-
