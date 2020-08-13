@@ -180,4 +180,3 @@ INTERRUPT_GEN( battles_interrupt_4 )
 {
 	cpu_set_irq_line(3, 0, HOLD_LINE);
 }
-
