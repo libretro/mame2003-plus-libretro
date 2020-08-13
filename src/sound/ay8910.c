@@ -799,4 +799,3 @@ void AY8910_sh_stop_ym(void)
 {
 	ym_num = 0;
 }
-
