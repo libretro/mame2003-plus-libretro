@@ -36,4 +36,3 @@ extern unsigned char *namco_wavedata;
 #define polepos_soundregs namco_soundregs
 
 #endif
-
