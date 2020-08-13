@@ -13,4 +13,3 @@ WRITE16_HANDLER( realbrk_flipscreen_w );
 extern data16_t *realbrk_vram_0, *realbrk_vram_1, *realbrk_vram_2, *realbrk_vregs;
 
 #endif
-
