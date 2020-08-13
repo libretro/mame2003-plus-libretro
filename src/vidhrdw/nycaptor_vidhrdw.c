@@ -297,4 +297,3 @@ VIDEO_UPDATE( nycaptor )
  }
  	draw_crosshair(bitmap,readinputport(5),readinputport(6),cliprect);
 }
-
