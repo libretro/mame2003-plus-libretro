@@ -196,5 +196,3 @@ void cchasm_sh_update(void)
     if ((input_port_3_r (0) & 0x70) != 0x70)
         z80ctc_0_trg0_w (0, 1);
 }
-
-
