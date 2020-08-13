@@ -852,5 +852,3 @@ void deco56_remap_gfx(int region)
 	/* Apply address remap, but not XOR/shift*/
 	deco_decrypt(region,deco56_xor_table,deco56_address_table,deco56_swap_table, 1);
 }
-
-
