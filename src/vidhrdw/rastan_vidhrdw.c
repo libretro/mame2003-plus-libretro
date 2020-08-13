@@ -251,4 +251,3 @@ VIDEO_UPDATE( jumping )
 	}
 #endif
 }
-
