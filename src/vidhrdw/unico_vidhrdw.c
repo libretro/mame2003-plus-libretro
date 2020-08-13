@@ -444,4 +444,3 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 			cliprect);
 	}
 }
-
