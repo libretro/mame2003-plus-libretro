@@ -323,4 +323,3 @@ extern struct RF5C68interface sys18_rf5c68_interface;
 extern struct YM2612interface sys18_ym3438_interface;
 
 extern int sys18_sound_info[4*2];
-
