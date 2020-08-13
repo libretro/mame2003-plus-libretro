@@ -26,4 +26,3 @@ typedef enum
 void tms5220_set_variant(tms5220_variant new_variant);
 
 #endif
-
