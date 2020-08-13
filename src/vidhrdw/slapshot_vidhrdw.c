@@ -642,4 +642,3 @@ VIDEO_UPDATE( slapshot )
 #endif
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,0);
 }
-
