@@ -117,5 +117,3 @@ WRITE_HANDLER( geebee_out7_w )
 		break;
 	}
 }
-
-
