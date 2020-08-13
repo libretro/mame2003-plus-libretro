@@ -22,4 +22,3 @@ VIDEO_START( meadows );
 VIDEO_UPDATE( meadows );
 WRITE_HANDLER( meadows_videoram_w );
 WRITE_HANDLER( meadows_spriteram_w );
-

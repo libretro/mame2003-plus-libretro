@@ -26,4 +26,3 @@ VIDEO_UPDATE( unico );
 
 VIDEO_START( zeropnt2 );
 VIDEO_UPDATE( zeropnt2 );
-
