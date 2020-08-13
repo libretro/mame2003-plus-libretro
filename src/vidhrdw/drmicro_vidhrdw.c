@@ -168,4 +168,3 @@ VIDEO_UPDATE( drmicro )
 		}
 	}
 }
-
