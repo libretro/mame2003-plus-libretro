@@ -90,4 +90,3 @@ VIDEO_UPDATE( fantland )
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
 	fantland_draw_sprites(bitmap,cliprect);
 }
-

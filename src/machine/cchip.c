@@ -161,4 +161,3 @@ READ16_HANDLER( cchip2_word_r )
 
 	return cchip_ram[offset];
 }
-

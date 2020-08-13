@@ -197,4 +197,3 @@ VIDEO_UPDATE(mainsnk)
 	draw_status( bitmap,cliprect,32*8,0x40 );
 	update_palette(1);
 }
-

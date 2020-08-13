@@ -849,4 +849,3 @@ VIDEO_UPDATE( cojag )
 #undef A1FIXED
 #undef COMMAND
 #undef FUNCNAME
-

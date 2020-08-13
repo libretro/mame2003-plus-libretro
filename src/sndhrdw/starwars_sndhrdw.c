@@ -238,4 +238,3 @@ WRITE_HANDLER( starwars_soundrst_w )
 	/* reset sound CPU here  */
 	cpu_set_reset_line(1, PULSE_LINE);
 }
-

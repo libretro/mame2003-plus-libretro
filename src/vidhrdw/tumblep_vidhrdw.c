@@ -718,5 +718,3 @@ VIDEO_START( suprtrio )
 
 	return 0;
 }
-
-

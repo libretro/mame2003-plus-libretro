@@ -38,4 +38,3 @@ int  YM2413_sh_start(const struct MachineSound *msound);
 void YM2413_sh_stop(void);
 
 #endif
-

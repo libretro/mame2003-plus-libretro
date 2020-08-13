@@ -73,4 +73,3 @@ void vector_set_gamma(float _gamma);
 float vector_get_gamma(void);
 
 #endif
-

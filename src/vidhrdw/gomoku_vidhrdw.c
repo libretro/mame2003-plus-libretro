@@ -11,7 +11,6 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-
 static int gomoku_flipscreen;
 static int gomoku_bg_dispsw;
 static struct tilemap *fg_tilemap;
@@ -136,17 +135,17 @@ VIDEO_START( gomoku )
 	/* make background bitmap */
 	fillbitmap(gomoku_bg_bitmap, 0x20, 0);
 
-	/* ”ÕŠOAŒé”Õ*/
+	/* ç›¤å¤–ã€ç¢ç›¤*/
 	for (y = 0; y < 256; y++)
 	{
 		for (x = 0; x < 256; x++)
 		{
 			bgdata = GOMOKU_BG_D[ GOMOKU_BG_X[x] + (GOMOKU_BG_Y[y] << 4) ];
 
-			color = 0x20;				/* •(˜gŠO)*/
+			color = 0x20;				/* é»’(æ å¤–)*/
 
-			if (bgdata & 0x01) color = 0x21;	/* ’ƒ(”Õ)*/
-			if (bgdata & 0x02) color = 0x20;	/* •(˜gü)*/
+			if (bgdata & 0x01) color = 0x21;	/* èŒ¶(ç›¤)*/
+			if (bgdata & 0x02) color = 0x20;	/* é»’(æ ç·š)*/
 
 			plot_pixel(gomoku_bg_bitmap, (255 - x + 7), (255 - y - 1), color);
 		}
@@ -176,7 +175,7 @@ VIDEO_UPDATE( gomoku )
 		/* copy bg bitmap */
 		copybitmap(bitmap, gomoku_bg_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENCY_NONE, 0);
 
-		/* Î*/
+		/* çŸ³*/
 		for (y = 0; y < 256; y++)
 		{
 			for (x = 0; x < 256; x++)
@@ -191,11 +190,11 @@ VIDEO_UPDATE( gomoku )
 					{
 						if (bgram & 0x01)
 						{
-							color = 0x2f;	/* –¾‚é‚¢•(Î)*/
+							color = 0x2f;	/* æ˜ã‚‹ã„é»’(çŸ³)*/
 						}
 						else if (bgram & 0x02)
 						{
-							color = 0x22;	/* ”’(Î)*/
+							color = 0x22;	/* ç™½(çŸ³)*/
 						}
 						else continue;
 					}
@@ -206,7 +205,7 @@ VIDEO_UPDATE( gomoku )
 			}
 		}
 
-		/* ƒJ[ƒ\ƒ‹*/
+		/* ã‚«ãƒ¼ã‚½ãƒ«*/
 		for (y = 0; y < 256; y++)
 		{
 			for (x = 0; x < 256; x++)
@@ -221,11 +220,11 @@ VIDEO_UPDATE( gomoku )
 					{
 						if (bgram & 0x04)
 						{
-							color = 0x2f;	/* –¾‚é‚¢•(ƒJ[ƒ\ƒ‹)*/
+							color = 0x2f;	/* æ˜ã‚‹ã„é»’(ã‚«ãƒ¼ã‚½ãƒ«)*/
 						}
 						else if (bgram & 0x08)
 						{
-							color = 0x22;	/* ”’(ƒJ[ƒ\ƒ‹)*/
+							color = 0x22;	/* ç™½(ã‚«ãƒ¼ã‚½ãƒ«)*/
 						}
 						else continue;
 					}
@@ -316,4 +315,3 @@ if (keyboard_pressed(KEYCODE_F))
 }
 #endif
 }
-

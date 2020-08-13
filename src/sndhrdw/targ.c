@@ -166,4 +166,3 @@ WRITE_HANDLER( targ_sh_w )
         targ_sh_ctrl0 = data;
     }
 }
-

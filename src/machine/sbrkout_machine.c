@@ -106,4 +106,3 @@ WRITE_HANDLER( sbrkout_serve_led_w )
 {
 	set_led_status(2,~offset & 1);
 }
-

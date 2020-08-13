@@ -180,4 +180,3 @@ READ_HANDLER( elim4_IN4_r )
 		return readinputport (8);
 	return (0);
 }
-

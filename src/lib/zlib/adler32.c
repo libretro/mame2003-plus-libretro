@@ -72,4 +72,3 @@ uLong adler32(uLong adler, const Bytef *buf, uInt len)
    }
    return (s2 << 16) | s1;
 }
-

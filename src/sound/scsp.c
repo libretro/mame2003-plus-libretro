@@ -1081,4 +1081,3 @@ READ16_HANDLER( SCSP_MidiOutR )
 	MidiR&=7;
 	return val;
 }
-

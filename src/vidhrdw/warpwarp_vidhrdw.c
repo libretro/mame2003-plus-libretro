@@ -164,4 +164,3 @@ WRITE_HANDLER( warpwarp_flip_screen_w )
 {
 	flip_screen_set(data & 1);
 }
-

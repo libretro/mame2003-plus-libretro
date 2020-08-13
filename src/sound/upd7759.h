@@ -38,4 +38,3 @@ WRITE_HANDLER( UPD7759_0_start_w );
 READ_HANDLER( UPD7759_0_busy_r );
 
 #endif
-

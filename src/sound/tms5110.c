@@ -653,4 +653,3 @@ static unsigned int example_word_TEN[619]={
 /*16*/1,1,1,1
 };
 #endif
-

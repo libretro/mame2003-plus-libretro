@@ -420,5 +420,3 @@ void sega_security(int chip)
 			break;
 	}
 }
-
-

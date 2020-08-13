@@ -1544,5 +1544,3 @@ void atarigen_blend_gfx(int gfx0, int gfx1, int mask0, int mask1)
 	freegfx(gx1);
 	Machine->gfx[gfx1] = NULL;
 }
-
-

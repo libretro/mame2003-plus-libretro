@@ -1021,4 +1021,3 @@ void SN76477_sh_update(void)
 	for( i = 0; i < intf->num; i++ )
 		stream_update(i,0);
 }
-

@@ -168,5 +168,3 @@ VIDEO_UPDATE(sslam)
 	);
 */
 }
-
-

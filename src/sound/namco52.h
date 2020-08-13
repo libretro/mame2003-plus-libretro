@@ -14,4 +14,3 @@ void namco_52xx_sh_stop(void);
 void namcoio_52XX_write(int data);
 
 #endif
-

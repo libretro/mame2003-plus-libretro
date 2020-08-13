@@ -237,4 +237,3 @@ READ16_HANDLER ( TC0640FIO_halfword_r );
 WRITE16_HANDLER( TC0640FIO_halfword_w );
 READ16_HANDLER ( TC0640FIO_halfword_byteswap_r );
 WRITE16_HANDLER( TC0640FIO_halfword_byteswap_w );
-

@@ -16,7 +16,6 @@ static UINT8 palettedata[3];
 static UINT8 writeindex, readindex;
 static UINT8 dacbits;
 
-
 #define PALETTE_WRITE_ADDR	0x00
 #define PALETTE_DATA		0x01
 #define PIXEL_READ_MASK		0x02
@@ -191,7 +190,7 @@ WRITE_HANDLER( tlc34076_w )
 		case INPUT_CLOCK_SEL:
 			/*
 				3 2 1 0
-				0 0 0 0 Select CLK0 as clock source§
+				0 0 0 0 Select CLK0 as clock sourceÂ§
 				0 0 0 1 Select CLK1 as clock source
 				0 0 1 0 Select CLK2 as clock source
 				0 0 1 1 Select CLK3 as TTL clock source
@@ -259,4 +258,3 @@ WRITE16_HANDLER( tlc34076_msb_w )
 	if (ACCESSING_MSB)
 		tlc34076_w(offset, data >> 8);
 }
-

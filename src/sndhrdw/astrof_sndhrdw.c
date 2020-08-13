@@ -173,4 +173,3 @@ WRITE_HANDLER( astrof_sample2_w )
 
 	last = data;
 }
-

@@ -954,4 +954,3 @@ static void BLITTER_NAME(int sstart, int dstart, int w, int h, int data)
 }
 
 #endif
-

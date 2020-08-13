@@ -80,4 +80,3 @@ int votrax_status_r(void)
 {
     return mixer_is_sample_playing(VotraxChannel);
 }
-

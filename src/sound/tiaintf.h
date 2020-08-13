@@ -15,5 +15,3 @@ void tia_sh_stop (void);
 void tia_sh_update (void);
 
 #endif
-
-

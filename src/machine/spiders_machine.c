@@ -191,4 +191,3 @@ READ_HANDLER( spiders_vrom_r )
 	}
 	return retval;
 }
-

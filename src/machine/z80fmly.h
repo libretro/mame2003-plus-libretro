@@ -90,5 +90,3 @@ WRITE_HANDLER( z80pioA_0_p_w );
 WRITE_HANDLER( z80pioB_0_p_w );
 READ_HANDLER( z80pioA_0_p_r );
 READ_HANDLER( z80pioB_0_p_r );
-
-

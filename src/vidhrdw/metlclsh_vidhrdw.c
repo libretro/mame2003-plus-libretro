@@ -263,4 +263,3 @@ VIDEO_UPDATE( metlclsh )
 
 /*	usrintf_showmessage("%02X",metlclsh_scrollx[0]);*/
 }
-

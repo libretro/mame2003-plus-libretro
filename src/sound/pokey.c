@@ -1501,4 +1501,3 @@ void pokey4_kbcode_w(int kbcode, int make)
 {
 	pokey_kbcode_w(3, kbcode, make);
 }
-

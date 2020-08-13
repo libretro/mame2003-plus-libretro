@@ -45,4 +45,3 @@ double cem3394_get_parameter(int chip, int input);
 
 
 #endif
-

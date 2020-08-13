@@ -120,4 +120,3 @@ WRITE_HANDLER( timeplt_sh_irqtrigger_w )
 
 	last = data;
 }
-

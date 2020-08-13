@@ -108,4 +108,3 @@ VIDEO_UPDATE(polygonet_vh_screenrefresh)
 
 	tilemap_draw(bitmap, cliprect, ttl_tilemap, 0, 1<<0);
 }
-

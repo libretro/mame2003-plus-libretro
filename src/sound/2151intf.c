@@ -388,5 +388,3 @@ WRITE16_HANDLER( YM2151_data_port_2_lsb_w )
 	if (ACCESSING_LSB)
 		YM2151_data_port_2_w(0, data & 0xff);
 }
-
-

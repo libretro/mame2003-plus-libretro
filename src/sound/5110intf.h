@@ -25,4 +25,3 @@ void tms5110_reset(void);
 void tms5110_set_frequency(int frequency);
 
 #endif
-
