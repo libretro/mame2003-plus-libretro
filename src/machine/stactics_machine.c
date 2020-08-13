@@ -89,4 +89,3 @@ WRITE_HANDLER( stactics_coin_lockout_w )
 {
 	coin_lockout_w(offset, ~data & 0x01);
 }
-
