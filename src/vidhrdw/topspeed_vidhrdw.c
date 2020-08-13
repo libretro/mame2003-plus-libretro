@@ -198,5 +198,3 @@ VIDEO_UPDATE( topspeed )
 
 	topspeed_draw_sprites(bitmap,cliprect);
 }
-
-
