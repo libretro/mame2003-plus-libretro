@@ -237,4 +237,3 @@ static double compute_resistor_weights(
 }
 
 #endif /*_res_net_h_*/
-
