@@ -489,4 +489,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
 * Fixed Gunbird 2 from randomly crashing and removed related hacks from several psikyosh games which are no longer required [arcadez]
 * Added three more games to the Sega System E driver and ported across from FBN some required video fixes and code for Opa Opa and Slap Shooter [dink, arcadez]
-* Added bootstrap support for term2, term2la1, term2la2, revx, gaiapols.
+* Added bootstrap support for term2, term2la1, term2la2, revx, gaiapols. [mahoneyt944]
