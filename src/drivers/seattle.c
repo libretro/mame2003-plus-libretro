@@ -92,8 +92,8 @@ static MACHINE_INIT( seattle )
 
 	if (mame_find_cpu_index("dcs2") != -1)
 	{
-		dcs_reset_w(1);
 		dcs_reset_w(0);
+		dcs_reset_w(1);
 	}
 	else if (mame_find_cpu_index("cage") != -1)
 	{
