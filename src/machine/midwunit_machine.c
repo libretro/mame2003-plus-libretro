@@ -170,6 +170,8 @@ WRITE16_HANDLER( midxunit_io_w )
 WRITE16_HANDLER( midxunit_unknown_w )
 {
 	int offs = offset / 0x40000;
+	if (offs == 1 && ACCESSING_LSB)
+		dcs_reset_w(data & 2);
 	if (ACCESSING_LSB && offset % 0x40000 == 0)
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:midxunit_unknown_w @ %d = %02X\n", activecpu_get_pc(), offs, data & 0xff);
 }
