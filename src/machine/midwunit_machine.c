@@ -122,7 +122,7 @@ WRITE16_HANDLER( midwunit_io_w )
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Control W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
 
 			/* bit 4 reset sound CPU */
-			dcs_reset_w(newword & 0x10);
+			dcs_reset_w(~newword & 0x10);
 
 			/* bit 5 (active low) reset security chip */
 			midway_serial_pic_reset_w(newword & 0x20);
@@ -170,6 +170,10 @@ WRITE16_HANDLER( midxunit_io_w )
 WRITE16_HANDLER( midxunit_unknown_w )
 {
 	int offs = offset / 0x40000;
+
+	if (offs == 1 && ACCESSING_LSB)
+		dcs_reset_w(~data & 2);
+
 	if (ACCESSING_LSB && offset % 0x40000 == 0)
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:midxunit_unknown_w @ %d = %02X\n", activecpu_get_pc(), offs, data & 0xff);
 }
@@ -614,8 +618,8 @@ MACHINE_INIT( midwunit )
 	int i;
 
 	/* reset sound */
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 	/* reset I/O shuffling */
 	for (i = 0; i < 16; i++)
