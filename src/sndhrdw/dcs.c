@@ -656,8 +656,8 @@ int dcs_control_r(void)
 
 void dcs_reset_w(int state)
 {
-	/* going high halts the CPU */
-	if (state)
+	/* going low halts the CPU */
+	if (!state)
 	{
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: DCS reset = %d\n", activecpu_get_pc(), state);
 
@@ -666,7 +666,7 @@ void dcs_reset_w(int state)
 		cpu_set_reset_line(dcs_cpunum, ASSERT_LINE);
 	}
 	
-	/* going low resets and reactivates the CPU */
+	/* going high resets and reactivates the CPU */
 	else
 		cpu_set_reset_line(dcs_cpunum, CLEAR_LINE);
 }
