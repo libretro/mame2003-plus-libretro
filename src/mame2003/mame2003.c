@@ -2093,6 +2093,9 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
       else if ( code == (player * 26) + 24 + 2000 || code == (player * 26) + 25 + 2000 )
         value = convert_analog_scale(analogjoy[player][3]);
 
+      /* opposite when reversing axis mapping */
+      if (code%2) value = -value;
+
       analog_axis[i]=value;
     }
   }
