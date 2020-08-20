@@ -395,7 +395,7 @@ ROM_START( jrpacman )
 ROM_END
 
 
-ROM_START( jrpacmanf )
+ROM_START( jrpacmnf )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
 	ROM_LOAD( "fast_jr.8d",   0x0000, 0x2000, CRC(461e8b57) SHA1(42e25d384e653efb95a97bd64f55a8c3b3f71239) )
 	ROM_LOAD( "jrp8e.8e",     0x2000, 0x2000, CRC(ec889e94) SHA1(8294e9e79f8fd19a419431fa690e6ac4a1302f58) )
@@ -490,4 +490,4 @@ static DRIVER_INIT( jrpacman )
 
 /*          rom        parent    machine   inp       init */
 GAME( 1983, jrpacman,  0,        jrpacman, jrpacman, jrpacman, ROT90, "Bally Midway", "Jr. Pac-Man" )
-GAME( 1983, jrpacmanf, jrpacman, jrpacman, jrpacman, jrpacman, ROT90, "hack", "Jr. Pac-Man (speedup hack)" )
+GAME( 1983, jrpacmnf,  jrpacman, jrpacman, jrpacman, jrpacman, ROT90, "hack", "Jr. Pac-Man (speedup hack)" )

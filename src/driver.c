@@ -126,7 +126,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vanvan )	/* (c) 1983 Sanritsu */
 	DRIVER( vanvank )	/* (c) 1983 Karateco (bootleg?) */
 	DRIVER( alibaba )	/* (c) 1982 Sega */
-	DRIVER( alibabab )      /* (c) 1982 Sega (bootleg) */
+	DRIVER( alibabab )	/* (c) 1982 Sega (bootleg) */
 	DRIVER( pengo )		/* 834-0386 (c) 1982 Sega */
 	DRIVER( pengo2 )	/* 834-0386 (c) 1982 Sega */
 	DRIVER( pengo2u )	/* 834-0386 (c) 1982 Sega */
@@ -134,7 +134,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( pengob )	/* bootleg */
 	DRIVER( penta )		/* bootleg */
 	DRIVER( jrpacman )	/* (c) 1983 Midway */
-	DRIVER( jrpacmanf )	/* hack */
+	DRIVER( jrpacmnf )	/* hack */
 	DRIVER( jumpshot )	/* (c) 1985 Bally Midway */
 	DRIVER( shootbul )	/* (c) 1985 Bally Midway */
 	DRIVER( bigbucks )	/* (c) 1986 Dynasoft Inc. */
@@ -147,7 +147,7 @@ const struct GameDriver *test_drivers[] =
 	/* Epos games */
 	DRIVER( megadon )	/* (c) 1982 */
 	DRIVER( catapult )	/* (c) 1982 */
-  DRIVER( eeekk )     /* (c) 1983 */
+  DRIVER( eeekk )		/* (c) 1983 */
 	DRIVER( suprglob )	/* (c) 1983 */
 	DRIVER( theglob )	/* (c) 1983 */
 	DRIVER( theglob2 )	/* (c) 1983 */
