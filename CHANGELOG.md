@@ -351,6 +351,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pac & Pal
 * Pole Position
 * Pole Position II
+* Rampage World Tour
+* Revolution X
 * Rohga Armor Force
 * Shark Attack
 * Sheriff
@@ -363,7 +365,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thief
 * Tower Of Druaga
 * Toypop
-* Two Tigers - twotigra romset
+* Two Tigers - `twotigra` romset
 * Xevious
 
 
@@ -382,7 +384,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Firebird
 * Teki Paki (Toaplan Samples)
 * Theif
-* Two Tigers - twotigra romset
+* Two Tigers - `twotigra` romset
 
 
 ## Games supporting new and improved samples
@@ -489,4 +491,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
 * Fixed Gunbird 2 from randomly crashing and removed related hacks from several psikyosh games which are no longer required [arcadez]
 * Added three more games to the Sega System E driver and ported across from FBN some required video fixes and code for Opa Opa and Slap Shooter [dink, arcadez]
-* Added bootstrap support for term2, term2la1, term2la2, revx, gaiapols. [mahoneyt944]
+* Added bootstrap support for term2, term2la1, term2la2, revx, gaiapols [mahoneyt944]
+* Added bootstrap support for rmpgwt, rmpgwt11 - fixes CMOS errors, volume, coinage [mahoneyt944]
+* Fixed DCS reset, set to active low - fixes volume issues in midway titles [mahoneyt944]
+* Fixed mame menu analog controller bugs in mame2003.c and inptport.c [mahoneyt944]
