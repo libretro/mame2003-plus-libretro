@@ -64,6 +64,10 @@ extern const struct bin2cFILE qix_bootstrap;
 /* used for revx */
 extern const struct bin2cFILE revx_bootstrap;
 
+/* used for rmpgwt11, rmpgwt */
+extern const struct bin2cFILE rmpgwt11_bootstrap;
+extern const struct bin2cFILE rmpgwt_bootstrap;
+
 extern const struct bin2cFILE robotron_bootstrap;
 
 extern const struct bin2cFILE robotryo_bootstrap;
