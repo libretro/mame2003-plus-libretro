@@ -78,6 +78,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metal Slug 5
 * Mighty Warriors
 * Mobile Suit Gundam Final Shooting
+* Monster Maulers
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Opa Opa (Rev A Unprotected)
@@ -495,3 +496,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added bootstrap support for rmpgwt, rmpgwt11 - fixes CMOS errors, volume, coinage [mahoneyt944]
 * Fixed DCS reset, set to active low - fixes volume issues in midway titles [mahoneyt944]
 * Fixed mame menu analog controller bugs in mame2003.c and inptport.c [mahoneyt944]
+* Added support for Monster Maulers - `mmaulers` romset [mahoneyt944]
+* Added support for uni-bios_4_0.rom for neogeo titles [mahoneyt944]
