@@ -42,6 +42,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dyna Gear
 * Eeekk!
 * ESPGaluda
+* F1 Super Lap (World)
 * FixEight (bootleg)
 * Gaia: The Last Choice Of Earth
 * Gals Panic DX
@@ -222,7 +223,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Driftout 94 - Romset `drifto94`
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
-* F1 Super Lap - Romset `f1lap`
+* F1 Super Lap (Japan) - Romset `f1lapj`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Fire Barrel - Romset `firebarr`
 * Funky Jet - Romset `funkyjet`
@@ -490,7 +491,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
 * Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
 * Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
-* Fixed Gunbird 2 from randomly crashing and removed related hacks from several psikyosh games which are no longer required [arcadez]
+* Fixed Gunbird 2 from randomly crashing by adding a hack to the psikyosh driver [arcadez]
 * Added three more games to the Sega System E driver and ported across from FBN some required video fixes and code for Opa Opa and Slap Shooter [dink, arcadez]
 * Added bootstrap support for term2, term2la1, term2la2, revx, gaiapols [mahoneyt944]
 * Added bootstrap support for rmpgwt, rmpgwt11 - fixes CMOS errors, volume, coinage [mahoneyt944]
