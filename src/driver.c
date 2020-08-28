@@ -2884,7 +2884,8 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( spideyj )	/* (c) 1991 (Japan) */
 	DRIVER( arabfgt )	/* (c) 1991 */
 	DRIVER( arescue )	/* (c) 1992 */
-	DRIVER( f1lap )
+  DRIVER( f1lap )     /* (c) 1993 (World) */
+	DRIVER( f1lapj )    /* (c) 1993 (Japan) */
 	DRIVER( dbzvrvs )
 	DRIVER( darkedge )
 	DRIVER( slipstrm )	/* Capcom */
