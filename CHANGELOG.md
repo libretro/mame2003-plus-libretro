@@ -346,8 +346,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mortal Kombat - Added OST soundtrack (via KMFDManic)
 * Motos
 * NATO Defense
+* NBA Hangtime
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
+* NBA Maximum Hangtime
 * Nibbler
+* Open Ice
 * Out Run - Added ost soundtrack (via KMFDManic)
 * Pacman & Chomp Chomp
 * Pac & Pal
