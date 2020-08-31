@@ -5,6 +5,14 @@
 static int layer_colorbase[3],sprite_colorbase,bg_colorbase;
 static int layerpri[3];
 
+extern data16_t xmen_current_frame;
+extern data16_t *K053247_ram;
+extern data16_t*xmen6p_spriteramleft;
+extern data16_t*xmen6p_spriteramright;
+extern data16_t*xmen6p_tilemapleft;
+extern data16_t*xmen6p_tilemapright;
+extern WRITE8_HANDLER( K052109_w );
+
 
 /***************************************************************************
 
@@ -98,7 +106,6 @@ static void sortlayers(int *layer,int *pri)
 	SWAP(1,2)
 }
 
-
 VIDEO_UPDATE( xmen )
 {
 	int layer[3];
@@ -131,16 +138,6 @@ VIDEO_UPDATE( xmen )
 	pdrawgfx_shadow_lowpri = 1;	/* fix shadows of boulders in front of feet */
 	K053247_sprites_draw(bitmap,cliprect);
 }
-
-extern data16_t xmen_current_frame;
-extern data16_t *K053247_ram;
-extern data16_t*xmen6p_spriteramleft;
-extern data16_t*xmen6p_spriteramright;
-extern data16_t*xmen6p_tilemapleft;
-extern data16_t*xmen6p_tilemapright;
-extern WRITE8_HANDLER( K052109_w );
-
-
 
 VIDEO_UPDATE( xmen6p )
 {
@@ -199,7 +196,6 @@ VIDEO_EOF( xmen6p )
 			K052109_w(offset,xmen6p_tilemapright[offset]&0x00ff);
 		}
 
-
 		renderbitmap = screen_left;
 	}
 	else
@@ -218,12 +214,8 @@ VIDEO_EOF( xmen6p )
 			K052109_w(offset,xmen6p_tilemapleft[offset]&0x00ff);
 		}
 
-
-
-
 		renderbitmap = screen_right;
 	}
-
 
 	bg_colorbase       = K053251_get_palette_index(K053251_CI4);
 	sprite_colorbase   = K053251_get_palette_index(K053251_CI1);
