@@ -1,7 +1,6 @@
 #include "driver.h"
 #include "vidhrdw/konamiic.h"
 
-
 static int layer_colorbase[3],sprite_colorbase,bg_colorbase;
 static int layerpri[3];
 
@@ -13,6 +12,8 @@ extern data16_t*xmen6p_tilemapleft;
 extern data16_t*xmen6p_tilemapright;
 extern WRITE8_HANDLER( K052109_w );
 
+struct mame_bitmap * screen_left;
+struct mame_bitmap * screen_right;
 
 /***************************************************************************
 
@@ -46,8 +47,6 @@ static void xmen_sprite_callback(int *code,int *color,int *priority_mask)
 	*color = sprite_colorbase + (*color & 0x001f);
 }
 
-
-
 /***************************************************************************
 
   Start the video hardware emulation.
@@ -65,9 +64,6 @@ VIDEO_START( xmen )
 	return 0;
 }
 
-struct mame_bitmap * screen_left;
-struct mame_bitmap * screen_right;
-
 VIDEO_START( xmen6p )
 {
 	K053251_vh_start();
@@ -82,7 +78,6 @@ VIDEO_START( xmen6p )
 
 	return 0;
 }
-
 
 /***************************************************************************
 
