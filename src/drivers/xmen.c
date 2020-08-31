@@ -465,8 +465,6 @@ static struct K054539interface k054539_interface =
 	{ 0 }		/* The YM does not seem to be connected to the 539 analog input */
 };
 
-
-
 static INTERRUPT_GEN( xmen_interrupt )
 {
 	if (cpu_getiloops() == 0) irq5_line_hold();
@@ -514,8 +512,6 @@ static INTERRUPT_GEN( xmen6p_interrupt )
 	if (cpu_getiloops() == 0)
 	{
 		irq5_line_hold();
-
-
 	}
 	else
 	{
