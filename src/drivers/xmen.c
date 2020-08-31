@@ -26,6 +26,10 @@ VIDEO_UPDATE( xmen6p );
 VIDEO_EOF( xmen6p );
 
 data16_t xmen_current_frame;
+data16_t*xmen6p_spriteramleft;
+data16_t*xmen6p_spriteramright;
+data16_t*xmen6p_tilemapleft;
+data16_t*xmen6p_tilemapright;
 
 
 
@@ -242,11 +246,6 @@ static MEMORY_READ16_START( readmem6p )
 	{ 0x1cc000, 0x1d7fff, MRA16_RAM }, /* tilemap ?*/
 	{ 0x1ec000, 0x1f7fff, MRA16_RAM }, /* tilemap ?*/
 MEMORY_END
-
-data16_t*xmen6p_spriteramleft;
-data16_t*xmen6p_spriteramright;
-data16_t*xmen6p_tilemapleft;
-data16_t*xmen6p_tilemapright;
 
 static MEMORY_WRITE16_START( writemem6p )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
