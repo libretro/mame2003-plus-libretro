@@ -64,11 +64,11 @@ struct bin2cFILE {
 };
 
 /******************************************************************************
- 
+
  osd_get_path
  Sets char* path to point at a valid path of the type incidated by int pathtype,
  although the path itself does not necessarily exist at this point in the process.
- 
+
  *****************************************************************************/
  void osd_get_path(int pathtype, char* path);
 
