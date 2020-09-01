@@ -15,6 +15,10 @@
 extern const struct bin2cFILE avengrgs_bootstrap;
 extern const struct bin2cFILE bubblem_bootstrap;
 extern const struct bin2cFILE charlien_bootstrap;
+extern const struct bin2cFILE ddsom_bootstrap;
+extern const struct bin2cFILE ddsoma_bootstrap;
+extern const struct bin2cFILE ddsomj_bootstrap;
+extern const struct bin2cFILE ddsomu_bootstrap;
 extern const struct bin2cFILE defcmnd_bootstrap;
 extern const struct bin2cFILE defence_bootstrap;
 extern const struct bin2cFILE defender_bootstrap;
