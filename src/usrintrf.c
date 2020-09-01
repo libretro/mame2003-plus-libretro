@@ -1781,7 +1781,7 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
-		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) ) 	
+		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) )
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -3212,7 +3212,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				break;
 
       case UI_GENERATE_XML_DAT:
-          frontend_message_cb("Generating XML DAT", 180);   
+          frontend_message_cb("Generating XML DAT", 180);
           schedule_full_refresh();
           generate_DAT = true;
           break;
@@ -3296,7 +3296,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 {
 
 	DoCheat(bitmap);	/* This must be called once a frame */
-   
+
 	if (setup_selected == 0)
   {
     if(input_ui_pressed(IPT_UI_CONFIGURE))
@@ -3307,7 +3307,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
     {
       setup_selected = -1;
       setup_via_menu = 1;
-	    setup_menu_init();      
+	    setup_menu_init();
     }
   }
 
@@ -3315,11 +3315,11 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   {
     setup_selected = 0;
     setup_via_menu = 0;
-    setup_menu_init();       
+    setup_menu_init();
     schedule_full_refresh();
-  }   
+  }
   else if(setup_selected)
-  {  
+  {
     setup_selected = setup_menu(bitmap, setup_selected);
   }
 
