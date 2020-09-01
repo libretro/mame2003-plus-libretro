@@ -148,6 +148,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
+* X-men (6 player)
 * Zintrick
 * Zupapa
 
@@ -277,6 +278,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
 * Xenophobe - Romset `xenophob`
+* X-men (6 players) - Romset `xmen6p` and `xmen6pu`
 * Wacko - Romset `wacko`
 * Zwackery - Romset `zwackery`
 
@@ -504,3 +506,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for uni-bios_4_0.rom for neogeo titles [mahoneyt944]
 * Added bootstraps for smashtv, smashtv4, smashtv5, smashtv6 [mahoneyt944]
 * Added bootstraps for nbahangt, nbamaxht, openice, wwfmania [mahoneyt944]
+* Hooked up x-men 6 players [arcadez, mahoneyt944, KMFDManic]
