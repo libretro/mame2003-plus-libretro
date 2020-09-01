@@ -197,7 +197,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 40, 1);
 					sample_start(1, 41, 1);
 				}
-				
+
 				break;
 			/* stage #2 exiting subway/alley*/
 			case 0x43:
@@ -220,7 +220,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				if (ff_provision_alt_song == false) {
 					ff_provision_alt_song = true;
 				}
-				
+
 				break;
 			/* bathroom music for bay area*/
 			case 0x46:
@@ -239,7 +239,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 36, 1);
 					sample_start(1, 37, 1);
 				}
-				
+
 				break;
 			/* bonus stage music*/
 			case 0x4c:
@@ -267,7 +267,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				/* when the game starts, we'll reset all the alternate songs*/
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
 			/* post explosion ditty*/
 			case 0x51:
@@ -279,45 +279,45 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 			case 0x52:
 				sample_start(0, 46, 0);
 				sample_start(1, 47, 0);
-		
+
 				break;
 			/* continue/dynamite song*/
 			case 0x53:
 				sample_start(0, 32, 1);
 				sample_start(1, 33, 1);
-				
+
 				break;
 			/* homosexual cheesy ending music*/
 			case 0x54:
 				sample_start(0, 48, 1);
 				sample_start(1, 49, 1);
-			
+
 				break;
 			/* player select song*/
 			case 0x55:
 				sample_start(0, 30, 0);
 				sample_start(1, 31, 0);
-				
+
 				break;
 			/* stage end/victory song*/
 			case 0x57:
 				sample_start(0, 28, 0);
 				sample_start(1, 29, 0);
-				
+
 				/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
 				if (ff_provision_alt_song == true) {
 					ff_play_alternate_song = true;
 				}
-				
+
 				break;
 			/* final stage clear ditty*/
 			case 0x58:
 				sample_start(0, 26, 0);
 				sample_start(1, 27, 0);
-								
+			
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
 			default:
 				if(ACCESSING_LSB)
@@ -326,7 +326,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				/* Lets stop the Final Fight sample music.*/
 				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
 					int a = 0;
-					
+
 					for(a = 0; a <= 50; a++) {
 						sample_stop(a);
 					}
