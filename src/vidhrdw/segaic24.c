@@ -281,7 +281,7 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 							*pr |= lpri;
 						}
 						src++;
-						dst++;	
+						dst++;
 						pr++;
 					}
 
@@ -413,7 +413,7 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 						if(*srct++ == tpri)
 							*dst = pens[*src];
 						src++;
-						dst++;	
+						dst++;
 					}
 
 				} else if(m == 0xffff) {
