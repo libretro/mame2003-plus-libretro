@@ -10,7 +10,7 @@ extern data16_t*xmen6p_spriteramleft;
 extern data16_t*xmen6p_spriteramright;
 extern data16_t*xmen6p_tilemapleft;
 extern data16_t*xmen6p_tilemapright;
-extern int WRITE8_HANDLER( K052109_w );
+extern WRITE8_HANDLER( int K052109_w );
 
 struct mame_bitmap * screen_left;
 struct mame_bitmap * screen_right;
