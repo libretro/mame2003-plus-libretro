@@ -366,7 +366,7 @@ static MEMORY_WRITE16_START( main_writemem )
 	{ 0x800000, 0x801fff, MWA16_RAM },
 	{ 0x802000, 0x802fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
 	{ 0x803100, 0x803101, watchdog_reset16_w },
-	{ 0x803120, 0x803121, sound_reset_w },
+	{ 0x80312e, 0x80312f, sound_reset_w },
 	{ 0x803140, 0x803141, atarigen_video_int_ack_w },
 	{ 0x803150, 0x803151, atarigen_eeprom_enable_w },
 	{ 0x803170, 0x803171, atarigen_sound_w },
