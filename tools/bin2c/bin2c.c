@@ -112,16 +112,14 @@ emit(const char *name)
   int file_length = 0;
   int col = COLUMNS;
 
-  /*printf("const char ");
+  printf("const struct bin2cFILE ");
   emit_name(name);
-  printf("_source[] = \"%s\";\n\n", name);*/
-  printf("const unsigned char ");
-  emit_name(name);
-  printf("_bytes[] = {");
+  printf("_bootstrap = {");
+  printf("\n    ?,\n  {");
   for (;;) {
     int ch = getchar();
     if (ch == EOF) {
-      printf("\n};\n\n");
+      printf("\n  }\n};");
       printf("const unsigned int ");
       emit_name(name);
       printf("_length = %i;", file_length);      
