@@ -1958,10 +1958,10 @@ ROM_END
 GAMEC( 1988, narc,     0,       zunit,    narc,    narc,     ROT0, "Williams", "Narc (rev 7.00)", &narc_ctrl, &narc_bootstrap  )
 GAMEC( 1988, narc3,    narc,    zunit,    narc,    narc3,    ROT0, "Williams", "Narc (rev 3.20)", &narc_ctrl, &narc3_bootstrap )
 
-GAME ( 1990, trog,     0,       trog,     trog,    trog,     ROT0, "Midway",   "Trog (rev LA4 03-11-91)" )
-GAME ( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "Trog (rev LA3 02-14-91)" )
-GAME ( 1990, trogpa6,  trog,    trog,     trog,    trogpa6,  ROT0, "Midway",   "Trog (rev PA6-PAC 09-09-90)" )
-GAME ( 1990, trogp,    trog,    trog,     trog,    trogp,    ROT0, "Midway",   "Trog (prototype, rev 4.00 07-27-90)" )
+GAMEC( 1990, trog,     0,       trog,     trog,    trog,     ROT0, "Midway",   "Trog (rev LA4 03-11-91)", &trog_ctrl, &trog_bootstrap )
+GAMEC( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "Trog (rev LA3 02-14-91)", &trog_ctrl, &trog3_bootstrap )
+GAMEC( 1990, trogpa6,  trog,    trog,     trog,    trogpa6,  ROT0, "Midway",   "Trog (rev PA6-PAC 09-09-90)", &trog_ctrl, &trogpa6_bootstrap )
+GAMEC( 1990, trogp,    trog,    trog,     trog,    trogp,    ROT0, "Midway",   "Trog (prototype, rev 4.00 07-27-90)", &trog_ctrl, &trogp_bootstrap )
 GAME ( 1991, strkforc, 0,       strkforc, strkforc,strkforc, ROT0, "Midway",   "Strike Force (rev 1 02-25-91)" )
 
 GAMEC( 1990, smashtv,  0,       smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 8.00)", &smashtv_ctrl, &smashtv_bootstrap )
