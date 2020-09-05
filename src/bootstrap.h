@@ -59,6 +59,8 @@ extern const struct bin2cFILE smashtv6_bootstrap;
 extern const struct bin2cFILE term2_bootstrap;
 extern const struct bin2cFILE term2la1_bootstrap;
 extern const struct bin2cFILE term2la2_bootstrap;
+extern const struct bin2cFILE totcarn_bootstrap;
+extern const struct bin2cFILE totcarnp_bootstrap;
 extern const struct bin2cFILE trog_bootstrap;
 extern const struct bin2cFILE trog3_bootstrap;
 extern const struct bin2cFILE trogp_bootstrap;

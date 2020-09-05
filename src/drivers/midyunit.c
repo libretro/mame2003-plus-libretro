@@ -1980,5 +1980,5 @@ GAME ( 1992, mkla1,    mk,      mk,       mkla2,   mkla1,    ROT0, "Midway",   "
 GAME ( 1992, mkla2,    mk,      mk,       mkla2,   mkla2,    ROT0, "Midway",   "Mortal Kombat (rev 2.0 08-18-92)" )
 GAME ( 1992, mkla3,    mk,      mk,       mkla4,   mkla3,    ROT0, "Midway",   "Mortal Kombat (rev 3.0 08-31-92)" )
 GAME ( 1992, mkla4,    mk,      mk,       mkla4,   mkla4,    ROT0, "Midway",   "Mortal Kombat (rev 4.0 09-28-92)" )
-GAME ( 1992, totcarn,  0,       totcarn,  totcarn, totcarn,  ROT0, "Midway",   "Total Carnage (rev LA1 03-10-92)" )
-GAME ( 1992, totcarnp, totcarn, totcarn,  totcarn, totcarnp, ROT0, "Midway",   "Total Carnage (prototype, rev 1.0 01-25-92)" )
+GAMEC( 1992, totcarn,  0,       totcarn,  totcarn, totcarn,  ROT0, "Midway",   "Total Carnage (rev LA1 03-10-92)", &totcarn_ctrl, &totcarn_bootstrap )
+GAMEC( 1992, totcarnp, totcarn, totcarn,  totcarn, totcarnp, ROT0, "Midway",   "Total Carnage (prototype, rev 1.0 01-25-92)", &totcarn_ctrl, &totcarnp_bootstrap )
