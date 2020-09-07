@@ -30,7 +30,9 @@ data16_t*xmen6p_spriteramleft;
 data16_t*xmen6p_spriteramright;
 data16_t*xmen6p_tilemapleft;
 data16_t*xmen6p_tilemapright;
-
+data16_t*xmen6p_tilemapleftalt;
+data16_t*xmen6p_tilemaprightalt;
+int xmen6p_tilemap_select;
 
 
 /***************************************************************************
@@ -120,6 +122,7 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: write %04x to 108000\n",activecpu_get_pc()
 		EEPROM_write_bit(data & 0x04);
 		EEPROM_set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 		EEPROM_set_clock_line((data & 0x08) ? ASSERT_LINE : CLEAR_LINE);
+		xmen6p_tilemap_select = BIT(data, 7);
 	}
 	if (ACCESSING_MSB)
 	{
@@ -265,8 +268,8 @@ static MEMORY_WRITE16_START( writemem6p )
 	{ 0x18fa00, 0x18fa01, xmen_18fa00_w },
 	{ 0x18c000, 0x197fff, MWA16_RAM, &xmen6p_tilemapleft }, /* left tilemap (p1,p2,p3 counters) */
 	{ 0x1ac000, 0x1b7fff, MWA16_RAM, &xmen6p_tilemapright }, /* tilemap right side (p4,p5,p6 counters) */
-	{ 0x1cc000, 0x1d7fff, MWA16_RAM }, /* tilemap? */
-	{ 0x1ec000, 0x1f7fff, MWA16_RAM }, /*  tilemap? */
+	{ 0x1cc000, 0x1d7fff, MWA16_RAM, &xmen6p_tilemapleftalt }, /* left tilemap (p1,p2,p3 counters) */
+	{ 0x1ec000, 0x1f7fff, MWA16_RAM, &xmen6p_tilemaprightalt }, /* tilemap right side (p4,p5,p6 counters) */
 MEMORY_END
 
 INPUT_PORTS_START( xmen )
@@ -388,6 +391,7 @@ INPUT_PORTS_START( xmen6p )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER6)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_COIN6 )
 INPUT_PORTS_END
+
 
 INPUT_PORTS_START( xmen2p )
 	PORT_START	/* IN1 */
