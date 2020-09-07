@@ -10,6 +10,9 @@ extern data16_t*xmen6p_spriteramleft;
 extern data16_t*xmen6p_spriteramright;
 extern data16_t*xmen6p_tilemapleft;
 extern data16_t*xmen6p_tilemapright;
+extern data16_t*xmen6p_tilemapleftalt;
+extern data16_t*xmen6p_tilemaprightalt;
+extern int xmen6p_tilemap_select;
 extern WRITE_HANDLER( K052109_w );
 
 struct mame_bitmap * screen_left;
@@ -188,7 +191,13 @@ VIDEO_EOF( xmen6p )
 		for (offset=0;offset<(0xc000/2);offset++)
 		{
 //          K052109_lsb_w
-			K052109_w(offset,xmen6p_tilemapright[offset]&0x00ff);
+			if (offset != 0x1c80 && offset != 0x1e80)
+				{
+					if (xmen6p_tilemap_select)
+						K052109_w(offset, xmen6p_tilemaprightalt[offset] & 0x00ff);
+					else
+						K052109_w(offset, xmen6p_tilemapright[offset] & 0x00ff);
+				}
 		}
 
 		renderbitmap = screen_left;
@@ -206,7 +215,15 @@ VIDEO_EOF( xmen6p )
 		for (offset=0;offset<(0xc000/2);offset++)
 		{
 //          K052109_lsb_w
-			K052109_w(offset,xmen6p_tilemapleft[offset]&0x00ff);
+		    {
+				if (xmen6p_tilemap_select)
+				  {
+						if (offset != 0x1c80 && offset != 0x1e80)
+							K052109_w(offset, xmen6p_tilemapleftalt[offset] & 0x00ff);
+					}
+					else
+						    K052109_w(offset, xmen6p_tilemapleft[offset] & 0x00ff);
+		    }
 		}
 
 		renderbitmap = screen_right;
