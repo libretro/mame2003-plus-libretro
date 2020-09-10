@@ -479,19 +479,19 @@ DRIVER_INIT( umk3 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
-  umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
 }
 
 DRIVER_INIT( umk3r11 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff969680, 0x105dc10, 0x105dc30, 0x105dc50);
-  umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
 }
 
 DRIVER_INIT( umk3p )
 {
-  init_mk3_common();
+	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
 }
 
