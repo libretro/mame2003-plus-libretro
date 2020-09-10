@@ -472,15 +472,9 @@ static void update_variables(bool first_time)
           if(options.content_flags[CONTENT_ALT_SOUND])
           {
             if(strcmp(var.value, "enabled") == 0)
-            {
               options.use_samples = true;
-              options.use_alt_sound = 1;
-            }
             else
-            {
               options.use_samples = false;
-              options.use_alt_sound = 0;
-            }
           }
           break;
 
