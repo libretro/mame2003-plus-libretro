@@ -1118,8 +1118,8 @@ GAME ( 1994, mk3r20,  mk3,       wunit, mk3,     mk3r20,  ROT0, "Midway", "Morta
 GAME ( 1994, mk3r10,  mk3,       wunit, mk3,     mk3r10,  ROT0, "Midway", "Mortal Kombat 3 (rev 1.0)" )
 GAME ( 1994, umk3,    mk3,       wunit, mk3,     umk3,    ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.2)" )
 GAME ( 1994, umk3r11, mk3,       wunit, mk3,     umk3r11, ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.1)" )
-GAME ( 2019, umk3p, 	 mk3,       wunit, mk3,     umk3p,	 ROT0, "hack", "Ultimate Mortal Kombat 3 Plus" )
-  
+GAME ( 2019, umk3p,   mk3,       wunit, mk3,     umk3p,   ROT0, "hack",   "Ultimate Mortal Kombat 3 Plus" )
+
 GAMEC( 1995, wwfmania,0,         wunit, wwfmania,wwfmania,ROT0, "Midway", "WWF - Wrestlemania (rev 1.30 08-10-95)", &wwfmania_ctrl, &wwfmania_bootstrap )
 GAMEC( 1995, openice, 0,         wunit, openice, openice, ROT0, "Midway", "2 On 2 Open Ice Challenge (rev 1.21)", &openice_ctrl, &openice_bootstrap )
 GAMEC( 1996, nbahangt,0,         wunit, nbahangt,nbahangt,ROT0, "Midway", "NBA Hangtime (rev L1.1 04-16-96)", &nbahangt_ctrl, &nbahangt_bootstrap )
