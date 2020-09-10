@@ -17,6 +17,7 @@
 
 	Known bugs:
 		* WWF has an unimplemented and not Y2K compatible real-time clock
+
 **************************************************************************/
 
 
@@ -586,6 +587,7 @@ static struct tms34010_config cpu_config =
 /*
 	all games use identical visible areas and VBLANK timing
 	based on these video params:
+
 	          VERTICAL                   HORIZONTAL
 	mk3:      0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
 	umk3:     0014-0112 / 0120 (254)     0065-001F5 / 01F9 (400)
