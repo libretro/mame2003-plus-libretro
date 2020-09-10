@@ -1,11 +1,15 @@
 /******************************************************************************
+
   driver.c
+
   The list of all available drivers. Drivers have to be included here to be
   recognized by the executable.
+
   To save some typing, we use a hack here. This file is recursively #included
   twice, with different definitions of the DRIVER() macro. The first one
   declares external references to the drivers; the second one builds an array
   storing all the drivers.
+
 ******************************************************************************/
 
 #include "driver.h"
