@@ -459,7 +459,7 @@ DRIVER_INIT( umk3r11 )
 DRIVER_INIT( umk3p )
 {
   init_mk3_common();
-  INSTALL_SPEEDUP_4(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105d4d0, 0x105dc50);
+	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
 }
 
 /********************** 2 On 2 Open Ice Challenge **********************/
