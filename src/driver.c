@@ -2955,6 +2955,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( logicpr2 )	/* (c) 1997 Deniam (Japan) */
 /*
 Deniam is a Korean company (http://deniam.co.kr).
+
 Game list:
 Title            System     Date
 ---------------- ---------- ----------
