@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2270
+#define NUMGAMES 2272
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
@@ -1198,6 +1198,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Mortal Kombat II (rev L1.4)"                                                                           ,"mk2r14"       , "mame", 3, 0 } ,												
 { "Mortal Kombat II (rev L3.1)"                                                                           ,"mk2"          , "mame", 3, 0 } ,												
 { "Mortal Kombat II (rev L3.2 (European))"                                                                ,"mk2r32"       , "mame", 3, 0 } ,												
+{ "Mortal Kombat II Plus"                                                                                 ,"mk2p"         , "mame", 3, 0 } ,
 { "MotoRace USA"                                                                                          ,"motorace"     , "mame", 3, 0 } ,												
 { "Motos"                                                                                                 ,"motos"        , "mame", 3, 0 } ,												
 { "Mouse Trap (version 3)"                                                                                ,"mtrap3"       , "mame", 3, 0 } ,												
@@ -2129,6 +2130,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Ultimate 11 / Tokuten Ou - Honoo no Libero, The"                                                       ,"ssideki4"     , "neomame", 3, 0 } ,												
 { "Ultimate Mortal Kombat 3 (rev 1.1)"                                                                    ,"umk3r11"      , "mame", 3, 0 } ,												
 { "Ultimate Mortal Kombat 3 (rev 1.2)"                                                                    ,"umk3"         , "mame", 3, 0 } ,												
+{ "Ultimate Mortal Kombat 3 Plus"                                                                         ,"umk3p"        , "mame", 3, 0 ] ,
 { "Ultraman (Japan)"                                                                                      ,"ultraman"     , "mame", 3, 0 } ,												
 { "Undercover Cops (Japan)"                                                                               ,"uccopsj"      , "mame", 3, 0 } ,												
 { "Undercover Cops (World)"                                                                               ,"uccops"       , "mame", 3, 0 } ,												

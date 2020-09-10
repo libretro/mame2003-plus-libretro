@@ -2634,9 +2634,9 @@ V-V                           TP-027
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
 	DRIVER( starjacs )	/* (c) 1983 Stern (S1) */
-	DRIVER( regulus )	/* 834-5328 (c) 1983 (S1) */
-	DRIVER( reguluso )	/* 834-5328 (c) 1983 (S1) */
-	DRIVER( regulusu )	/* 834-5328 (c) 1983 (S1) */
+	DRIVER( regulus )	/* 834-5328 (c) 1983 (S1) */
+	DRIVER( reguluso )	/* 834-5328 (c) 1983 (S1) */
+	DRIVER( regulusu )	/* 834-5328 (c) 1983 (S1) */
 	DRIVER( upndown )	/* (c) 1983 (S1) */
 	DRIVER( upndownu )	/* (c) 1983 (S1) */
 	DRIVER( mrviking )	/* 834-5383 (c) 1984 (S1) */
@@ -2694,7 +2694,6 @@ V-V                           TP-027
 	DRIVER( ufosensi )	/* 834-6659 (S2) */
 /*
 other System 1 / System 2 games:
-
 WarBall
 Sanrin Sanchan
 DokiDoki Penguin Land *not confirmed
@@ -4487,6 +4486,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mk2r42 )	/* hack */
 	DRIVER( mk2r91 )	/* hack */
 	DRIVER( mk2chal )	/* hack */
+  DRIVER( mk2p )    /* hack */
 	DRIVER( jdreddp )	/* (c) 1993 Midway */
 	DRIVER( nbajam )	/* (c) 1993 Midway */
 	DRIVER( nbajamr2 )	/* (c) 1993 Midway */
@@ -4500,6 +4500,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mk3r10 )	/* (c) 1994 Midway */
 	DRIVER( umk3 )		/* (c) 1994 Midway */
 	DRIVER( umk3r11 )	/* (c) 1994 Midway */
+  DRIVER( umk3p )   /* hack */
 	DRIVER( wwfmania )	/* (c) 1995 Midway */
 	DRIVER( openice )	/* (c) 1995 Midway */
 	DRIVER( nbahangt )	/* (c) 1996 Midway */
@@ -4625,14 +4626,12 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( raiden2 )
 
 /* Seibu STI System games:
-
 	Viper: Phase 1 					(c) 1995
 	Viper: Phase 1 (New version)	(c) 1996
 	Battle Balls					(c) 1996
 	Raiden Fighters					(c) 1996
 	Raiden Fighters 2 				(c) 1997
 	Senku							(c) 1997
-
 */
 
 	/* Tad games (Tad games run on Seibu hardware) */
