@@ -44,7 +44,7 @@
 	midyunit_speedup_spin[0] = spin1; \
 	midyunit_speedup_spin[1] = spin2; \
 	midyunit_speedup_spin[2] = spin3; \
-  midyunit_speedup_spin[3] = spin4; \
+	midyunit_speedup_spin[3] = spin4; \
 	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midyunit_generic_speedup_3);
 
 /* code-related variables */
