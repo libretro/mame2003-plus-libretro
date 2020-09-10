@@ -352,7 +352,7 @@ PORT_END
 static WRITE16_HANDLER( sound_command_nmi_w ){
 
 	if( ACCESSING_LSB ){
-		if(moonwalker_playing == true) {
+		if(moonwalker_playing && options.use_samples) {
 			int a = 0;
 			int o_max_samples = 12;
 			int sa_left = 0;
