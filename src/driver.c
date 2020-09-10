@@ -1835,6 +1835,7 @@ const struct GameDriver *test_drivers[] =
 /*
 Toa Plan's board list
 (translated from http://www.aianet.ne.jp/~eisetu/rom/rom_toha.html)
+
 Title              ROMno.   Remark(1)   Remark(2)
 --------------------------------------------------
 Tiger Heli           A47      GX-551
@@ -1853,6 +1854,7 @@ Dogyuun                       TP-022
 Tatsujin Oh                   TP-024    *1
 Fixeight                      TP-026
 V-V                           TP-027
+
 *1 There is a doubt this game uses TP-024 board and TP-025 romsets.
    86 Mahjong Sisters                                 Kit 2P 8W+2B     HC    Mahjong TP-
    88 Dash                                            Kit 2P 8W+2B                   TP-
