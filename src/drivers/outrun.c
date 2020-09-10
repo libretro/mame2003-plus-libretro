@@ -733,7 +733,7 @@ static READ16_HANDLER( or_io_service_r )
 
 static WRITE16_HANDLER( outrun_sound_write_w )
 {
-	if(outrun_playing == true) {
+	if(outrun_playing && options.use_samples) {
 		int a = 0;
 		int o_max_samples = 12;
 		int sa_left = 0;
