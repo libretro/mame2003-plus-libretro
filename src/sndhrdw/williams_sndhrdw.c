@@ -610,7 +610,7 @@ static READ_HANDLER( adpcm_command_r )
 
 void williams_adpcm_data_w(int data)
 {
-	if(nba_jam_playing == true) {
+	if(nba_jam_playing && options.use_samples) {
 		int a = 0;
 		bool nba_jam_do_nothing = false;
 		bool sa_play_sample = false;
@@ -908,7 +908,7 @@ void williams_adpcm_data_w(int data)
 
 		m_nba_last_offset = data;
 	}
-	else if(mk_playing_mortal_kombat == true || mk_playing_mortal_kombat_t == true) {
+	else if( (mk_playing_mortal_kombat || mk_playing_mortal_kombat_t) && options.use_samples ) {
 		int a = 0;
 		bool mk_do_nothing = false;
 		bool sa_play_sample = false;

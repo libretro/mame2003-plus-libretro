@@ -169,7 +169,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	*/
 	
 	/* We are playing Final Fight. Let's use the samples.*/
-	if(ff_playing_final_fight == true) {
+	if(ff_playing_final_fight && options.use_samples) {
 		switch (data) {
 			/* stage 1 upper level music*/
 			case 0x40:
