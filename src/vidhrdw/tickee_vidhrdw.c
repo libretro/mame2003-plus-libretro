@@ -145,4 +145,3 @@ VIDEO_UPDATE( tickee )
 	get_crosshair_xy(1, &beamx, &beamy);
 	draw_crosshair(bitmap, beamx, beamy, cliprect);
 }
-

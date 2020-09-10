@@ -109,4 +109,3 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w )
 	rom_offset = (rom_offset & 0x0FFF) | ((0x4000 + ((data&0xf) << 12)) & 0x3000);
 
 }
-

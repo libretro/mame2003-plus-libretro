@@ -51,9 +51,9 @@ static int blockgal_kludgeoffset;
   Green:.250K ohms
   Green:.495K ohms
   Green:.995K ohms
-  Red:  .495K ohms
-  Red:  .250K ohms
-  Red:  .995K ohms
+  Red:Â  .495K ohms
+  Red:Â  .250K ohms
+  Red:Â  .995K ohms
 
   accurate to +/- .003K ohms.
 
@@ -66,7 +66,6 @@ PALETTE_INIT( system1 )
 WRITE_HANDLER( system1_paletteram_w )
 {
 	int val,r,g,b;
-
 
 	paletteram[offset] = data;
 

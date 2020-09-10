@@ -692,4 +692,3 @@ int konami_execute(int cycles)
 
 	return cycles - konami_ICount;
 }
-

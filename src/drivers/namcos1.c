@@ -2705,4 +2705,3 @@ GAME( 1990, soukobdx, boxyboy,  ns1,     ns1,     soukobdx, ROT180, "Namco", "So
 GAME( 1990, puzlclub, 0,        ns1,     puzlclub,puzlclub, ROT270, "Namco", "Puzzle Club (Japan prototype)" )
 GAME( 1991, tankfrce, 0,        ns1,     splatter,tankfrce, ROT180, "Namco", "Tank Force (US)" )
 GAME( 1991, tankfrcj, tankfrce, ns1,     splatter,tankfrce, ROT180, "Namco", "Tank Force (Japan)" )
-

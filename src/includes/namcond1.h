@@ -35,4 +35,3 @@ MACHINE_INIT( namcond1 );
 
 /* to be removed*/
 extern READ16_HANDLER( debug_trigger );
-

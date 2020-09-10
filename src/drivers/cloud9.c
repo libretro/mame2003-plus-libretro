@@ -311,4 +311,3 @@ ROM_END
  *************************************/
 
 GAMEX( 1983, cloud9, 0, cloud9, cloud9, 0, ROT0, "Atari", "Cloud 9 (prototype)", GAME_NO_COCKTAIL )
-

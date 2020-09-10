@@ -264,5 +264,3 @@ unsigned long mame_rand(void)
 {
 	return genrand_int32();
 }
-
-

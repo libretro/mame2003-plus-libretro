@@ -507,4 +507,3 @@ VIDEO_UPDATE( dleague )
 
 	TC0080VCO_tilemap_draw(bitmap,cliprect,2,0,0);
 }
-

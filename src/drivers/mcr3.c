@@ -427,12 +427,12 @@ static READ_HANDLER( turbotag_kludge_r )
 
 static NVRAM_HANDLER( mcr3 )
 {
+  unsigned char *ram = memory_region(REGION_CPU1);
+
 	if (read_or_write)
-		mame_fwrite(file, videoram, videoram_size);
+		mame_fwrite(file, &ram[0xe000], 0x800);
 	else if (file)
-		mame_fread(file, videoram, videoram_size);
-	else
-		memset(videoram, 0, videoram_size);
+		mame_fread(file, &ram[0xe000], 0x800);
 }
 
 

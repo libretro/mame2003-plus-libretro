@@ -214,4 +214,3 @@ WRITE_HANDLER( subs_noise_reset_w )
 	/* Pulse noise reset */
 	discrete_sound_w(6, 0);
 }
-

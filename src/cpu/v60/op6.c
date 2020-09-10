@@ -251,4 +251,3 @@ static UINT32 opC7(void) /* TRUSTED */
 	UINT8 appb=OpRead8(PC + 1);
 	return OpC7Table[appb>>5](appb&0x1f);
 }
-

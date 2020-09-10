@@ -802,4 +802,3 @@ VIDEO_UPDATE( sindbadm )
 	segar_common_screenrefresh(bitmap, sprite_transparency, TRANSPARENCY_NONE);
 
 }
-

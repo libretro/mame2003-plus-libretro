@@ -1251,7 +1251,3 @@ static UINT32 (*const BAMTable2[2][8])(void) =
 		bam2Error1
 	}
 };
-
-
-
-

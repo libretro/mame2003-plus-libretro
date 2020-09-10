@@ -1461,13 +1461,14 @@ SYSTEM_BIOS_START( neogeo )
 	SYSTEM_BIOS_ADD( 4, "asia",       "Asia MVS (Ver. 3)" )
 	SYSTEM_BIOS_ADD( 5, "japan",      "Japan MVS (Ver. 3)" )
 	SYSTEM_BIOS_ADD( 6, "japan-s2",   "Japan MVS (Ver. 2)" )
-	SYSTEM_BIOS_ADD( 7, "unibios33",  "Universe Bios (Hack, Ver. 3.3)" )
-	SYSTEM_BIOS_ADD( 8, "unibios20",  "Unibios MVS (Hack, Ver. 2.0)" )
-	SYSTEM_BIOS_ADD( 9, "unibios13",  "Unibios MVS (Hack, Ver. 1.3)" )  
-	SYSTEM_BIOS_ADD(10, "unibios11",  "Unibios MVS (Hack, Ver. 1.1)" )  
-	SYSTEM_BIOS_ADD(11, "unibios10",  "Unibios MVS (Hack, Ver. 1.0)" )
-	SYSTEM_BIOS_ADD(12, "debug",      "Debug MVS (Hack?)" )
-	SYSTEM_BIOS_ADD(13, "asia-aes",   "Asia AES" )
+	SYSTEM_BIOS_ADD( 7, "unibios40",  "Universe Bios (Hack, Ver. 4.0)" )
+	SYSTEM_BIOS_ADD( 8, "unibios33",  "Universe Bios (Hack, Ver. 3.3)" )
+	SYSTEM_BIOS_ADD( 9, "unibios20",  "Universe Bios (Hack, Ver. 2.0)" )
+	SYSTEM_BIOS_ADD(10, "unibios13",  "Universe Bios (Hack, Ver. 1.3)" )
+	SYSTEM_BIOS_ADD(11, "unibios11",  "Universe Bios (Hack, Ver. 1.1)" )
+	SYSTEM_BIOS_ADD(12, "unibios10",  "Universe Bios (Hack, Ver. 1.0)" )
+	SYSTEM_BIOS_ADD(13, "debug",      "Debug MVS (Hack?)" )
+	SYSTEM_BIOS_ADD(14, "asia-aes",   "Asia AES" )
 SYSTEM_BIOS_END
 
 
@@ -1475,20 +1476,21 @@ SYSTEM_BIOS_END
 		ROMX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(bios+1)) /* Note '+1' */
 
 #define NEOGEO_BIOS \
-	ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1",    0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) /* Europe, 1 Slot, has also been found on a 4 Slot (the old hacks were designed for this one) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 1, "sp-s.sp1",     0x00000, 0x020000, CRC(c7f2fa45) SHA1(09576ff20b4d6b365e78e6a5698ea450262697cd) ) /* Europe, 4 Slot */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 2, "usa_2slt.bin", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) /* US, 2 Slot */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 3, "sp-e.sp1",     0x00000, 0x020000, CRC(2723a5b5) SHA1(5dbff7531cf04886cde3ef022fb5ca687573dcb8) ) /* US, 6 Slot (V5?) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom",  0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) /* Asia */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom",  0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.sp1",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios_3_3.rom",  0x00000, 0x020000, CRC(24858466) SHA1(0ad92efb0c2338426635e0159d1f60b4473d0785) ) /* Japan, Older */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) ) /* Universe Bios v2.0 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 9, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) ) /* Universe Bios v1.3 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(10, "uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(11, "uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(12, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(13, "neo-epo.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1",         0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) /* Europe, 1 Slot, has also been found on a 4 Slot (the old hacks were designed for this one) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 1, "sp-s.sp1",          0x00000, 0x020000, CRC(c7f2fa45) SHA1(09576ff20b4d6b365e78e6a5698ea450262697cd) ) /* Europe, 4 Slot */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 2, "usa_2slt.bin",      0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) /* US, 2 Slot */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 3, "sp-e.sp1",          0x00000, 0x020000, CRC(2723a5b5) SHA1(5dbff7531cf04886cde3ef022fb5ca687573dcb8) ) /* US, 6 Slot (V5?) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom",       0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) /* Asia */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom",       0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.sp1",         0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios_4_0.rom",  0x00000, 0x020000, CRC(a7aab458) SHA1(938a0bda7d9a357240718c2cec319878d36b8f72) ) /* Universe Bios v4.0 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios_3_3.rom",  0x00000, 0x020000, CRC(24858466) SHA1(0ad92efb0c2338426635e0159d1f60b4473d0785) ) /* Universe Bios v3.3 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 9, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(10, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(11, "uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(12, "uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(13, "neodebug.rom",      0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(14, "neo-epo.bin",       0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
 
 /* note you'll have to modify the last for lines of each block to use the extra bios roms,
    they're hacks / homebrew / console bios roms so Mame doesn't list them by default */
@@ -7703,4 +7705,3 @@ GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DE
 #if 0
 GAMEB( 2000, bangbedp, bangbead, neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", &neogeo_ctrl, NULL )
 #endif
-	

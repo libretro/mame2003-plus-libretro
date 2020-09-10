@@ -196,5 +196,3 @@ WRITE_HANDLER( mspacman_activate_rom )
 
 	if(data==1) cpu_setbank (1, &RAM[0x10000]);
 }
-
-

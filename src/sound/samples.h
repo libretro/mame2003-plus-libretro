@@ -17,8 +17,9 @@ void sample_set_freq(int channel,int freq);
 void sample_set_stereo_volume(int channel,int volume_left, int volume_right);
 void sample_set_volume(int channel,int volume);
 void sample_stop(int channel);
-int sample_playing(int channel);
 
+int sample_set_pause(int channel,int pause);
+int sample_playing(int channel);
 int samples_sh_start(const struct MachineSound *msound);
 
 #endif

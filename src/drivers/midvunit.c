@@ -56,8 +56,8 @@ static data32_t *midvplus_misc;
 
 static MACHINE_INIT( midvunit )
 {
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 	cpu_setbank(1, memory_region(REGION_USER1));
 	memcpy(ram_base, memory_region(REGION_USER1), 0x20000*4);
@@ -69,8 +69,8 @@ static MACHINE_INIT( midvunit )
 
 static MACHINE_INIT( midvplus )
 {
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 /*	cpu_setbank(1, ram_base);*/
 	memcpy(ram_base, memory_region(REGION_USER1), 0x20000*4);
@@ -210,7 +210,7 @@ WRITE32_HANDLER( midvunit_control_w )
 		watchdog_reset_w(0, 0);
 
 	/* bit 1 is the DCS sound reset */
-	dcs_reset_w((~control_data >> 1) & 1);
+	dcs_reset_w((control_data >> 1) & 1);
 
 	/* log anything unusual */
 	if ((olddata ^ control_data) & ~0x00e8)
@@ -224,7 +224,7 @@ WRITE32_HANDLER( crusnwld_control_w )
 	COMBINE_DATA(&control_data);
 
 	/* bit 11 is the DCS sound reset */
-	dcs_reset_w((~control_data >> 11) & 1);
+	dcs_reset_w((control_data >> 11) & 1);
 
 	/* bit 9 is the watchdog */
 	if ((olddata ^ control_data) & 0x0200)

@@ -366,4 +366,3 @@ VIDEO_UPDATE( gcpinbal )
 #endif
 
 }
-

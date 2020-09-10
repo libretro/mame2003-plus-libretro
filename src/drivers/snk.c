@@ -1478,6 +1478,40 @@ ROM_START( tnk3j )
 	ROM_LOAD( "tnk3-p9.bin", 0x10000, 0x4000, CRC(872e3fac) SHA1(98e7e9315fe7ccc51151c67dc60a362a1c2d8372) )
 ROM_END
 
+ROM_START( tnk3b ) /* Korean bootleg, hacked to use standard joysticks */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for cpuA code */
+	ROM_LOAD( "tnk3-p1a.bin", 0x0000, 0x4000, CRC(26c45b82) SHA1(5ba944e9508a935f77e1555c6920b0bc638b6423) )
+	ROM_LOAD( "tnk3-p2.bin",  0x4000, 0x4000, CRC(0ae0a483) SHA1(6a1ba86da4fd75bfb00855db04eac2727ec4159e) )
+	ROM_LOAD( "tnk3-p3.bin",  0x8000, 0x4000, CRC(d16dd4db) SHA1(dcbc61251c13e11ce3cdd7a5ad200cd2d2758cab) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for cpuB code */
+	ROM_LOAD( "tnk3-p4.bin",  0x0000, 0x4000, CRC(01b45a90) SHA1(85ba3b157cd6463c92ed831bb48d38f3a16f9537) )
+	ROM_LOAD( "tnk3-p5.bin",  0x4000, 0x4000, CRC(60db6667) SHA1(9c4bb99473c6d9b8ac9086b7364b6278b70757f6) )
+	ROM_LOAD( "tnk3-p6.bin",  0x8000, 0x4000, CRC(4761fde7) SHA1(dadf60e33f5dd8108478ca480bcef6b2624cfca8) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for sound code */
+	ROM_LOAD( "tnk3-p10.bin",  0x0000, 0x4000, CRC(7bf0a517) SHA1(0197feeaf511ac59f3df8195ec57e947fb08e995) )
+	ROM_LOAD( "tnk3-p11.bin",  0x4000, 0x4000, CRC(0569ce27) SHA1(7aa73f57ad97445ce5729f05cd8d24973886dbf5) )
+
+	ROM_REGION( 0x0c00, REGION_PROMS, 0 )
+	ROM_LOAD( "7122.2",  0x000, 0x400, CRC(34c06bc6) SHA1(bb68e96a8fcc754840420952dab961e03bf6acdd) )
+	ROM_LOAD( "7122.1",  0x400, 0x400, CRC(6d0ac66a) SHA1(e792218ec43dd10473dc020afed8527cf43ea0d0) )
+	ROM_LOAD( "7122.0",  0x800, 0x400, CRC(4662b4c8) SHA1(391c2b8a17ce2e092b46a17fc4170dc1e3bde426) )
+
+	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE ) /* characters */
+	ROM_LOAD( "p14.1e", 0x0000, 0x2000, CRC(6bd575ca) SHA1(446bb929fa19a7ff8b92731f71ab3e3252899f07) )
+	ROM_RELOAD(         0x2000, 0x2000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE ) /* background tiles */
+	ROM_LOAD( "tnk3-p12.bin", 0x0000, 0x4000, CRC(ff495a16) SHA1(e6b97a63efe58018260ff34f0ea4edc81718cb14) )
+	ROM_LOAD( "tnk3-p13.bin", 0x4000, 0x4000, CRC(f8344843) SHA1(c741dc84b48f830f6d4eaa4476f5c2a391153acc) )
+
+	ROM_REGION( 0x18000, REGION_GFX3, ROMREGION_DISPOSE ) /* 16x16 sprites */
+	ROM_LOAD( "tnk3-p7.bin", 0x00000, 0x4000, CRC(06b92c88) SHA1(b39c2cc4a58937d89f9b0c9093b9742509db64a3) )
+	ROM_LOAD( "tnk3-p8.bin", 0x08000, 0x4000, CRC(63d0e2eb) SHA1(96182639bb620d9692a4c8266130769c44dd29f8) )
+	ROM_LOAD( "tnk3-p9.bin", 0x10000, 0x4000, CRC(872e3fac) SHA1(98e7e9315fe7ccc51151c67dc60a362a1c2d8372) )
+ROM_END
+
 /***********************************************************************/
 
 ROM_START( athena )
@@ -4215,6 +4249,14 @@ static DRIVER_INIT( tnk3 ){
 	snk_gamegroup = 1;
 }
 
+static DRIVER_INIT( tnk3b ){
+	snk_sound_busy_bit = 0x20;
+	snk_io = ikarijpb_io; /* Ikari joystick bootleg inputs are fine for this one */
+	hard_flags = 0;
+	snk_bg_tilemap_baseaddr = 0xd800;
+	snk_gamegroup = 1;
+}
+
 static DRIVER_INIT( athena ){
 	snk_sound_busy_bit = 0x01;
 	snk_io = athena_io;
@@ -4242,6 +4284,7 @@ static DRIVER_INIT( psychos ){
 /*          rom       parent    machine   inp       init */
 GAMEX( 1985, tnk3,     0,        tnk3,     tnk3,     tnk3,     ROT270, "SNK", "T.N.K. III (US)", GAME_NO_COCKTAIL )
 GAMEX( 1985, tnk3j,    tnk3,     tnk3,     tnk3,     tnk3,     ROT270, "SNK", "T.A.N.K. (Japan)", GAME_NO_COCKTAIL )
+GAMEX( 1985, tnk3b,    tnk3,     tnk3,     tnk3,     tnk3b,    ROT270, "bootleg", "T.A.N.K. (joystick hack bootleg)", GAME_NO_COCKTAIL ) 
 GAMEX( 1986, athena,   0,        athena,   athena,   athena,   ROT0,   "SNK", "Athena", GAME_NO_COCKTAIL )
 GAMEX( 1988, fitegolf, 0,        athena,   fitegolf, fitegolf, ROT0,   "SNK", "Fighting Golf (World[Q])", GAME_NO_COCKTAIL )
 GAMEX( 1988, fitegol2, fitegolf, athena,   fitegolf, fitegolf, ROT0,   "SNK", "Fighting Golf (US)", GAME_NO_COCKTAIL )

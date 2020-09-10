@@ -117,4 +117,3 @@ WRITE_HANDLER( redalert_AY8910_B_w )
 	/* D5 = Explosion #2? */
 	/* D6 = Explosion #3? */
 }
-

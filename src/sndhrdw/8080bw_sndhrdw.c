@@ -39,6 +39,8 @@ static WRITE_HANDLER( invaders_sh_port3_w );
 static WRITE_HANDLER( invaders_sh_port5_w );
 static WRITE_HANDLER( invad2ct_sh_port7_w );
 
+static WRITE_HANDLER( lrescue_sh_port3_w );
+static WRITE_HANDLER( lrescue_sh_port5_w );
 
 static WRITE_HANDLER( ballbomb_sh_port3_w );
 static WRITE_HANDLER( ballbomb_sh_port5_w );
@@ -64,24 +66,24 @@ static WRITE_HANDLER( polaris_sh_port6_w );
 
 struct SN76477interface invaders_sn76477_interface =
 {
-	1,	/* 1 chip */
-	{ 25 },  /* mixing level   pin description		 */
-	{ 0	/* N/C */},		/*	4  noise_res		 */
-	{ 0	/* N/C */},		/*	5  filter_res		 */
-	{ 0	/* N/C */},		/*	6  filter_cap		 */
-	{ 0	/* N/C */},		/*	7  decay_res		 */
-	{ 0	/* N/C */},		/*	8  attack_decay_cap  */
-	{ RES_K(100) },		/* 10  attack_res		 */
-	{ RES_K(56)  },		/* 11  amplitude_res	 */
-	{ RES_K(10)  },		/* 12  feedback_res 	 */
-	{ 0	/* N/C */},		/* 16  vco_voltage		 */
-	{ CAP_U(0.1) },		/* 17  vco_cap			 */
-	{ RES_K(8.2) },		/* 18  vco_res			 */
-	{ 5.0		 },		/* 19  pitch_voltage	 */
-	{ RES_K(120) },		/* 20  slf_res			 */
-	{ CAP_U(1.0) },		/* 21  slf_cap			 */
-	{ 0	/* N/C */},		/* 23  oneshot_cap		 */
-	{ 0	/* N/C */}		/* 24  oneshot_res		 */
+  1,                   /* 1 chip                         */
+  { 25 },              /* mixing level pin description   */
+  { 0   /* N/C */},    /* 4   noise_res                  */
+  { 0   /* N/C */},    /* 5   filter_res                 */
+  { 0   /* N/C */},    /* 6   filter_cap                 */
+  { 0   /* N/C */},    /* 7   decay_res	                 */
+  { 0   /* N/C */},    /* 8   attack_decay_cap           */
+  { RES_K(100)   },    /* 10  attack_res                 */
+  { RES_K(56)    },    /* 11  amplitude_res              */
+  { RES_K(10)    },    /* 12  feedback_res               */
+  { 0   /* N/C */},    /* 16  vco_voltage                */
+  { CAP_U(0.1)   },    /* 17  vco_cap                    */
+  { RES_K(8.2)   },    /* 18  vco_res                    */
+  { 5.0	         },    /* 19  pitch_voltage              */
+  { RES_K(120)   },    /* 20  slf_res                    */
+  { CAP_U(1.0)   },    /* 21  slf_cap                    */
+  { 0   /* N/C */},    /* 23  oneshot_cap                */
+  { 0   /* N/C */}     /* 24  oneshot_res                */
 };
 
 static const char *invaders_sample_names[] =
@@ -122,7 +124,7 @@ struct SN76477interface invad2ct_sn76477_interface =
 	{ 0,          0	/* N/C */  },	/* 16  vco_voltage		 */
 	{ CAP_U(0.1), CAP_U(0.047) },	/* 17  vco_cap			 */
 	{ RES_K(8.2), RES_K(39)    },	/* 18  vco_res			 */
-	{ 5.0,        5.0		   },	/* 19  pitch_voltage	 */
+	{ 5.0,        5.0          },	/* 19  pitch_voltage	 */
 	{ RES_K(120), RES_K(120)   },	/* 20  slf_res			 */
 	{ CAP_U(1.0), CAP_U(1.0)   },	/* 21  slf_cap			 */
 	{ 0,          0	/* N/C */  },	/* 23  oneshot_cap		 */
@@ -294,6 +296,120 @@ static WRITE_HANDLER( invad2ct_sh_port7_w )
 	invaders_sh_2_w(1, data, &last);
 }
 
+
+/*******************************************************/
+/*                                                     */
+/* Lunar Rescue                                        */
+/*                                                     */
+/*******************************************************/
+
+struct SN76477interface lrescue_sn76477_interface =
+{
+  1,                   /* 1 chip                         */
+  { 25 },              /* mixing level pin description   */
+  { 0   /* N/C */},    /* 4   noise_res                  */
+  { 0   /* N/C */},    /* 5   filter_res                 */
+  { 0   /* N/C */},    /* 6   filter_cap                 */
+  { 0   /* N/C */},    /* 7   decay_res	                 */
+  { 0   /* N/C */},    /* 8   attack_decay_cap           */
+  { RES_K(100)   },    /* 10  attack_res                 */
+  { RES_K(56)    },    /* 11  amplitude_res              */
+  { RES_K(10)    },    /* 12  feedback_res               */
+  { 0   /* N/C */},    /* 16  vco_voltage                */
+  { CAP_U(0.1)   },    /* 17  vco_cap                    */
+  { RES_K(8.2)   },    /* 18  vco_res                    */
+  { 5.0	         },    /* 19  pitch_voltage              */
+  { RES_K(120)   },    /* 20  slf_res                    */
+  { CAP_U(1.0)   },    /* 21  slf_cap                    */
+  { 0   /* N/C */},    /* 23  oneshot_cap                */
+  { 0   /* N/C */}     /* 24  oneshot_res                */
+};
+
+static const char *lrescue_sample_names[] =
+{
+  "*lrescue",
+  "alienexplosion",
+  "rescueshipexplosion",
+  "beamgun",
+  "thrust",
+  "bonus2",
+  "bonus3",
+  "shootingstar",
+  "stepl",
+  "steph",
+  0
+};
+
+struct Samplesinterface lrescue_samples_interface =
+{
+  4,	/* 4 channels */
+  25,	/* volume */
+  lrescue_sample_names
+};
+
+MACHINE_INIT( lrescue )
+{
+  install_port_write_handler(0, 0x03, 0x03, lrescue_sh_port3_w);
+  install_port_write_handler(0, 0x05, 0x05, lrescue_sh_port5_w);
+
+  SN76477_envelope_1_w(0, 1);
+  SN76477_envelope_2_w(0, 0);
+  SN76477_mixer_a_w(0, 0);
+  SN76477_mixer_b_w(0, 0);
+  SN76477_mixer_c_w(0, 0);
+  SN76477_vco_w(0, 1);
+}
+
+static void lrescue_sh_1_w(int board, int data, unsigned char *last)
+{
+  int base_channel, base_sample;
+
+  base_channel = 4 * board;
+  base_sample  = 9 * board;
+
+  if (data & 0x01 && ~*last & 0x01) sample_start (base_channel+0, base_sample+3, 0);    /* thrust.wav  */
+  if (data & 0x02 && ~*last & 0x02) sample_start (base_channel+1, base_sample+2, 0);    /* beamgun.wav  */
+  if (data & 0x04 && ~*last & 0x04) sample_start (base_channel+0, base_sample+1, 0);    /* rescueshipexplosion.wav  */
+  if (data & 0x08 && ~*last & 0x08) sample_start (base_channel+1, base_sample+0, 0);    /* alienexplosion.wav  */
+  if (data & 0x10 && ~*last & 0x10) sample_start (base_channel+2, base_sample+5, 0);    /* bonus3.wav - bonus life */
+
+  c8080bw_screen_red_w(data & 0x04);
+
+  *last = data;
+}
+
+static void lrescue_sh_2_w(int board, int data, unsigned char *last)
+{
+  int base_channel, base_sample;
+
+  base_channel = 4 * board;
+  base_sample  = 9 * board;
+
+  if (data & 0x01 && ~*last & 0x01) sample_start (base_channel+1, base_sample+8, 0);    /* steph.wav - foot step high  */
+  if (data & 0x02 && ~*last & 0x02) sample_start (base_channel+1, base_sample+7, 0);    /* stepl.wav - foot step low  */
+  if (data & 0x04 && ~*last & 0x04) sample_start (base_channel+1, base_sample+4, 0);    /* bonus2.wav - count men saved  */
+  if (data & 0x08 && ~*last & 0x08) sample_start (base_channel+3, base_sample+4, 0);    /* bitstream tunes - end level and bonus 1  */
+  if (data & 0x10 && ~*last & 0x10) sample_start (base_channel+3, base_sample+6, 0);    /* shootingstar.wav  */
+  if (~data & 0x10 && *last & 0x10) sample_stop  (base_channel+3);                      /* This makes the rescue ship sound beep on and off  */
+
+  c8080bw_flip_screen_w(data & 0x20);
+
+  *last = data;
+}
+
+static WRITE_HANDLER( lrescue_sh_port3_w )
+{
+  static unsigned char last = 0;
+
+  lrescue_sh_1_w(0, data, &last);
+}
+
+static WRITE_HANDLER( lrescue_sh_port5_w )
+{
+  static unsigned char last = 0;
+
+  lrescue_sh_2_w(0, data, &last);
+}
 
 /*******************************************************/
 /*                                                     */

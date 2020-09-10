@@ -189,4 +189,3 @@
  * never reach this state.
  */
 #define EMULATE_HALT                0
-

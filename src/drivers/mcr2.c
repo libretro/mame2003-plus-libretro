@@ -162,39 +162,41 @@ static READ_HANDLER( wacko_trackball_r )
 
 static READ_HANDLER( twotigra_yoke1_r )
 {
-	int p1_yoke = readinputport(6);
-	if (p1_yoke & 0x10)
-	{
-		if ((p1_yoke & 0x01) != 0x01) return 0;
-		if ((p1_yoke & 0x02) != 0x02) return 255;
-		return 100;
-	}
-	else
-	{
-		p1_yoke = readinputport(2);
-		if (p1_yoke < 0x1b) return 0;
-		return p1_yoke - 0x1b;
-	}
+  int p1_yoke = readinputport(2);
+  if (p1_yoke < 0x1b) return 0;
+  return p1_yoke - 0x1b;
 }
 
 
 static READ_HANDLER( twotigra_yoke2_r )
 {
-	int p1_yoke = readinputport(6);
-	if (p1_yoke & 0x10)
-	{
-		if ((p1_yoke & 0x04) != 0x04) return 0;
-		if ((p1_yoke & 0x08) != 0x08) return 255;
-		return 100;
-	}
-	else
-	{
-		p1_yoke = readinputport(1);
-		if (p1_yoke < 0x1b) return 0;
-		return p1_yoke - 0x1b;
-	}
+  int p1_yoke = readinputport(1);
+  if (p1_yoke < 0x1b) return 0;
+  return p1_yoke - 0x1b;
 }
 
+static WRITE_HANDLER( twotiger_sample_select_w )
+{
+  int i;
+  for (i = 0; i < 2; i++)
+  {
+    if (!sample_playing(i))
+      sample_start(i, i, 1);
+
+    /* bit 1 turns cassette on/off */
+    sample_set_pause(i, ~data & 2);
+  }
+}
+
+static WRITE_HANDLER( journey_sample_select_w )
+{
+  /* if we're not playing the sample yet, start it */
+  if (!sample_playing(0))
+    sample_start(0, 0, 1);
+
+  /* bit 0 turns cassette on/off */
+  sample_set_pause(0, ~data & 1);
+}
 
 
 /*************************************
@@ -614,9 +616,9 @@ INPUT_PORTS_START( twotigra )
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255 )
 
 	PORT_START	/* IN3 -- dipswitches */
-	PORT_DIPNAME( 0x01, 0x00, "Shot Speed" )
-	PORT_DIPSETTING(    0x01, "Fast" )
-	PORT_DIPSETTING(    0x00, "Slow" )
+	PORT_DIPNAME( 0x01, 0x00, "Shot Type" )
+	PORT_DIPSETTING(    0x01, "Single Fire" )
+	PORT_DIPSETTING(    0x00, "Rapid Fire" )
 	PORT_DIPNAME( 0x02, 0x00, "Dogfight" )
 	PORT_DIPSETTING(    0x00, "1 Credit" )
 	PORT_DIPSETTING(    0x02, "2 Credits" )
@@ -635,14 +637,6 @@ INPUT_PORTS_START( twotigra )
 	PORT_START	/* AIN0 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	/* IN6 fake for yoke */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
-	PORT_DIPNAME( 0x10, 0x10, "Fake Inputs " )
-	PORT_DIPSETTING(    0x10, "Digital" )
-	PORT_DIPSETTING(    0x00, "Analog" )
 INPUT_PORTS_END
 
 
@@ -660,6 +654,40 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+/*************************************
+ *
+ *  Sound definitions
+ *
+ *************************************/
+
+static const char *journey_sample_names[] =
+{
+	"*journey",
+	"sepways.wav",
+	0
+};
+
+struct Samplesinterface journey_samples_interface =
+{
+	1,
+	50,
+	journey_sample_names
+};
+
+static const char *twotiger_sample_names[] =
+{
+	"*twotiger",
+	"left.wav",
+  "right.wav",
+	0
+};
+
+struct Samplesinterface twotiger_samples_interface =
+{
+	2,
+	50,
+	twotiger_sample_names
+};
 
 
 /*************************************
@@ -702,6 +730,9 @@ static MACHINE_DRIVER_START( twotigra )
 
 	/* video hardware */
 	MDRV_VIDEO_START(twotigra)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, twotiger_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -714,6 +745,9 @@ static MACHINE_DRIVER_START( journey )
 	/* video hardware */
 	MDRV_VIDEO_START(journey)
 	MDRV_VIDEO_UPDATE(journey)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, journey_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1074,6 +1108,15 @@ static DRIVER_INIT( wacko )
 	mcr12_sprite_xoffs_flip = 0;
 }
 
+static DRIVER_INIT( journey )
+{
+	MCR_CONFIGURE_SOUND(MCR_SSIO);
+	install_port_write_handler(0, 0x00, 0x00, mcr_control_port_w);
+	install_port_write_handler(0, 0x04, 0x04, journey_sample_select_w);
+
+	mcr12_sprite_xoffs = 0;
+	mcr12_sprite_xoffs_flip = 0;
+}
 
 static DRIVER_INIT( kroozr )
 {
@@ -1093,7 +1136,7 @@ static DRIVER_INIT( twotigra )
 	install_port_write_handler(0, 0x00, 0x00, mcr_control_port_w);
 	install_port_read_handler(0, 0x01, 0x01, twotigra_yoke2_r);
 	install_port_read_handler(0, 0x02, 0x02, twotigra_yoke1_r);
-
+	install_port_write_handler(0, 0x04, 0x04, twotiger_sample_select_w);
 	install_mem_write_handler(0, 0xf800, 0xffff, twotigra_videoram_w);
 
 	mcr12_sprite_xoffs = 0;
@@ -1118,4 +1161,4 @@ GAME( 1982, domino,   0,        mcr2,     domino,   domino,   ROT0,  "Bally Midw
 GAME( 1982, wacko,    0,        mcr2,     wacko,    wacko,    ROT0,  "Bally Midway", "Wacko" )
 GAME( 1984, twotiger, 0,        mcr2,     twotiger, mcr2,     ROT0,  "Bally Midway", "Two Tigers" )
 GAME( 1984, twotigra, twotiger, twotigra, twotigra, twotigra, ROT0,  "Bally Midway", "Two Tigers (dedicated)" )
-GAMEX(1983, journey,  0,        journey,  journey,   mcr2,     ROT90, "Bally Midway", "Journey", GAME_IMPERFECT_SOUND )
+GAME( 1983, journey,  0,        journey,  journey,  journey,  ROT90, "Bally Midway", "Journey" )

@@ -410,6 +410,3 @@ unsigned int m65ce02_dasm(char *buffer, unsigned pc)
 	return 1;
 #endif
 }
-
-
-

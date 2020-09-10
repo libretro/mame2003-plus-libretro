@@ -63,5 +63,3 @@ extern unsigned int Dasm65ce02( char *dst, unsigned pc );
 #endif
 
 #endif /* _M65CE02_H */
-
-

@@ -5636,7 +5636,7 @@ INPUT_PORTS_START( wits )
 	PORT_DIPSETTING(      0x0010, "2" )
 	PORT_DIPSETTING(      0x0030, "3" )
 	PORT_DIPSETTING(      0x0020, "5" )
-	PORT_DIPNAME( 0x0040, 0x0040, "Max Players" )
+	PORT_DIPNAME( 0x0040, 0x0000, "Max Players" )
 	PORT_DIPSETTING(      0x0040, "2" )
 	PORT_DIPSETTING(      0x0000, "4" )
 	PORT_DIPNAME( 0x0080, 0x0080, "Unknown 1-7*" )
@@ -8294,4 +8294,3 @@ GAMEX(1995, extdwnhl, 0,        extdwnhl, extdwnhl, 0,        ROT0,   "Sammy Ind
 GAME( 1995, gundhara, 0,        gundhara, gundhara, 0,        ROT270, "Banpresto",              "Gundhara" )
 GAMEX(1995, sokonuke, 0,        extdwnhl, sokonuke, 0,        ROT0,   "Sammy Industries",       "Sokonuke Taisen Game (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX(1995, zombraid, 0,        gundhara, zombraid, zombraid, ROT0,   "American Sammy",   "Zombie Raid (US)", GAME_NO_COCKTAIL )
-

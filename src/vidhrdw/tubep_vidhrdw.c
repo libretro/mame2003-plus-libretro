@@ -928,4 +928,3 @@ VIDEO_UPDATE( rjammer )
 	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_PEN, Machine->pens[0] );
 
 }
-

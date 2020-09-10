@@ -52,5 +52,3 @@ void jumpshot_decode(void)
 		RAM[i] = decrypt(i,RAM[i]);
 	}
 }
-
-

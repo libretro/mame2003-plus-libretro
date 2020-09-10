@@ -364,5 +364,3 @@ ROM_START( jcross )
 ROM_END
 
 GAMEX(1984, jcross, 0, jcross, jcross, 0, ROT270,   "SNK", "Jumping Cross",GAME_NO_COCKTAIL|GAME_IMPERFECT_GRAPHICS)
-
-

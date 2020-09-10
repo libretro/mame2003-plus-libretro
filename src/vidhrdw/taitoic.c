@@ -5845,5 +5845,3 @@ WRITE16_HANDLER( TC0640FIO_halfword_byteswap_w )
 log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write to LSB of TC0640FIO address %02x\n",activecpu_get_pc(),offset);
 	}
 }
-
-

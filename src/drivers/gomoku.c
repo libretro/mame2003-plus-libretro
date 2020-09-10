@@ -16,7 +16,6 @@ todo:
 #include "cpu/z80/z80.h"
 #include "vidhrdw/generic.h"
 
-
 PALETTE_INIT(gomoku);
 VIDEO_START(gomoku);
 VIDEO_UPDATE(gomoku);
@@ -216,7 +215,7 @@ ROM_START( gomoku )
 	ROM_REGION( 0x0800, REGION_USER4, 0 )	/* program ?*/
 	ROM_LOAD( "rj_5.4e",      0x0000, 0x0800, CRC(eaf541b4) SHA1(bc7e7ec1ba68f71ab9ac86f9ae77971ddb9ce3a4) )
 
-	ROM_REGION( 0x0020, REGION_USER5, 0 )	/* –³‚¢‚Æ‹N“®‚¹‚¸*/
+	ROM_REGION( 0x0020, REGION_USER5, 0 )	/* â€“Â³â€šÂ¢â€šÃ†â€¹Nâ€œÂ®â€šÂ¹â€šÂ¸*/
 	ROM_LOAD( "rj_prom.9k",   0x0000, 0x0020, CRC(cff72923) SHA1(4f61375028ab62da46ed119bc81052f5f98c28d4) )
 ROM_END
 

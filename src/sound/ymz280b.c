@@ -976,4 +976,3 @@ WRITE16_HANDLER( YMZ280B_data_1_msb_w )
 {
 	if (ACCESSING_MSB)	write_to_register(&ymz280b[1], (data >> 8) & 0xff);
 }
-

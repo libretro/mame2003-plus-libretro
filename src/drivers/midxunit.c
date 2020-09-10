@@ -19,6 +19,9 @@
 #include "sndhrdw/dcs.h"
 #include "midwunit.h"
 
+#include "bootstrap.h"
+#include "inptport.h"
+
 
 
 /*************************************
@@ -120,13 +123,13 @@ INPUT_PORTS_START( revx )
 	PORT_DIPSETTING(      0x0014, "3" )
 	PORT_DIPSETTING(      0x000c, "ECA" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
-	PORT_DIPNAME( 0x00e0, 0x0060, "Credits" )
-	PORT_DIPSETTING(      0x0020, "3 Start/1 Continue" )
+	PORT_DIPNAME( 0x00e0, 0x00a0, "Credits" )
+	PORT_DIPSETTING(      0x0020, "4 Start/2 Continue" )
 	PORT_DIPSETTING(      0x00e0, "2 Start/2 Continue" )
-	PORT_DIPSETTING(      0x00a0, "2 Start/1 Continue" )
-	PORT_DIPSETTING(      0x0000, "1 Start/4 Continue" )
-	PORT_DIPSETTING(      0x0040, "1 Start/3 Continue" )
-	PORT_DIPSETTING(      0x0060, "1 Start/1 Continue" )
+	PORT_DIPSETTING(      0x00a0, "1 Start/1 Continue" )
+	PORT_DIPSETTING(      0x0000, "3 Start/3 Continue" )
+	PORT_DIPSETTING(      0x0040, "3 Start/2 Continue" )
+	PORT_DIPSETTING(      0x0060, "4 Start/1 Continue" )
 	PORT_DIPNAME( 0x0300, 0x0300, "Country" )
 	PORT_DIPSETTING(      0x0300, "USA" )
 	PORT_DIPSETTING(      0x0100, "French" )
@@ -152,27 +155,27 @@ INPUT_PORTS_START( revx )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ))
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER1, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER1, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER1, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER1, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER2, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER2, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER2, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER2, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER3, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_X | IPF_REVERSE | IPF_PLAYER3, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER3, 20, 10, 0, 0xff)
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_LIGHTGUN_Y | IPF_PLAYER3, 39, 10, 0, 0xff)
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -311,4 +314,4 @@ ROM_END
  *
  *************************************/
 
-GAME( 1994, revx,   0,         midxunit, revx, revx, ROT0, "Midway",   "Revolution X (Rev. 1.0 6-16-94)" )
+GAMEC( 1994, revx,   0,         midxunit, revx, revx, ROT0, "Midway",   "Revolution X (Rev. 1.0 6-16-94)", &revx_ctrl, &revx_bootstrap )

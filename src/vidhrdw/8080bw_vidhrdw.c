@@ -30,6 +30,7 @@ static WRITE_HANDLER( sstrngr2_videoram_w );
 static WRITE_HANDLER( phantom2_videoram_w );
 static WRITE_HANDLER( invadpt2_videoram_w );
 static WRITE_HANDLER( cosmo_videoram_w );
+static WRITE_HANDLER( lrescue_videoram_w );
 
 static VIDEO_UPDATE( 8080bw_common );
 static VIDEO_UPDATE( seawolf );
@@ -164,6 +165,13 @@ DRIVER_INIT( invadpt2 )
 {
 	init_8080bw();
 	videoram_w_p = invadpt2_videoram_w;
+	screen_red_enabled = 1;
+}
+
+DRIVER_INIT( lrescue )
+{
+	init_8080bw();
+	videoram_w_p = lrescue_videoram_w;
 	screen_red_enabled = 1;
 }
 
@@ -676,10 +684,23 @@ PALETTE_INIT( invadpt2 )
 {
 	int i;
 
-
 	for (i = 0;i < Machine->drv->total_colors;i++)
 	{
 		/* this bit arrangment is a little unusual but are confirmed by screen shots */
+		int r = 0xff * ((i >> 0) & 1);
+		int g = 0xff * ((i >> 2) & 1);
+		int b = 0xff * ((i >> 1) & 1);
+		palette_set_color(i,r,g,b);
+	}
+}
+
+PALETTE_INIT( lrescue )
+{
+	int i;
+
+	for (i = 0;i < Machine->drv->total_colors;i++)
+	{
+		/* clone of invadpt2 */
 		int r = 0xff * ((i >> 0) & 1);
 		int g = 0xff * ((i >> 2) & 1);
 		int b = 0xff * ((i >> 1) & 1);
@@ -706,6 +727,29 @@ PALETTE_INIT( sflush )
 
 
 static WRITE_HANDLER( invadpt2_videoram_w )
+{
+	UINT8 x,y,col;
+
+	videoram[offset] = data;
+
+	y = offset / 32;
+	x = 8 * (offset % 32);
+
+	/* 32 x 32 colormap */
+	if (!screen_red)
+	{
+		UINT16 colbase;
+
+		colbase = color_map_select ? 0x0400 : 0;
+		col = memory_region(REGION_PROMS)[colbase | (y >> 3 << 5) | (x >> 3)] & 0x07;
+	}
+	else
+		col = 1;	/* red */
+
+	plot_byte(x, y, data, col, 0);
+}
+
+static WRITE_HANDLER( lrescue_videoram_w )
 {
 	UINT8 x,y,col;
 

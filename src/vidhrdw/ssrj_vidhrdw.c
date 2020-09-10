@@ -289,5 +289,3 @@ VIDEO_UPDATE( ssrj )
 
 	if(ssrj_scrollram[0x101]==0xb)tilemap_draw(bitmap,cliprect,tilemap4, 0,0);/* hack to display 4th tilemap */
 }
-
-

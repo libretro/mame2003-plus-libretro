@@ -351,4 +351,3 @@ static UINT32 opBSR(void) /* TRUSTED */
 	PC += (INT16)OpRead16(PC + 1);
 	return 0;
 }
-

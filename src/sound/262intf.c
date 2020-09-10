@@ -138,4 +138,3 @@ WRITE_HANDLER( YMF262_data_B_1_w ) {
 }
 
 #endif
-

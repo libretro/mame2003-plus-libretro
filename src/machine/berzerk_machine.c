@@ -81,4 +81,3 @@ INTERRUPT_GEN( berzerk_interrupt )
 		if (irq_enabled) cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xfc);
 	}
 }
-

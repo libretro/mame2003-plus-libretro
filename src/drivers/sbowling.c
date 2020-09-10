@@ -393,4 +393,3 @@ ROM_START( sbowling )
 ROM_END
 
 GAMEX( 1982, sbowling, 0, sbowling, sbowling, 0, ROT90, "Taito Corporation", "Strike Bowling",GAME_IMPERFECT_SOUND|GAME_IMPERFECT_COLORS)
-

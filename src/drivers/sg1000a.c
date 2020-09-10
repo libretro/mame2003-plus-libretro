@@ -252,4 +252,3 @@ DRIVER_INIT(chwrestl)
 GAME( 1984, chboxing, 0, sg1000a, chboxing, 0, ROT0, "Sega", "Champion Boxing")
 GAME( 1985, chwrestl, 0, sg1000a, chwrestl, chwrestl, ROT0, "Sega", "Champion Pro Wrestling")
 GAME( 1985, dokidoki, 0, sg1000a, dokidoki, 0, ROT0, "Sega", "Doki Doki Penguin Land")
-

@@ -202,4 +202,3 @@ VIDEO_UPDATE( skydiver )
 
 	draw_sprites(bitmap, cliprect);
 }
-

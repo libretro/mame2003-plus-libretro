@@ -3,15 +3,6 @@
  * defines a string with the file name of the source of data, and an
  * unsigned character array containing the binary data.
  *
- * For example, if the source file is dl.lua, the generated file
- * contains:
- *
- * static const char dl_lua_source[] = "dl.lua";
- *
- * static const unsigned char dl_lua_bytes[] = {
- * ...
- * };
- *
  * A useful GNUMakefile rule follows.
  *
  * %.h:    %.lua
@@ -19,28 +10,9 @@
  *         bin2c -o $@ -n $*.lua $*.luo
  *         rm $*.luo
  *
- * John D. Ramsdell
- * Copyright (C) 2006 The MITRE Corporation
+ * This version was modified from the original for use in mame2003-plus.
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use, copy,
- * modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * Original version credited by John D. Ramsdell - Copyright (C) 2006 The MITRE Corporation.
  */
 
 #include <stddef.h>
@@ -97,7 +69,7 @@ emit_name(const char *name)
     putchar('_');
   for (;;) {
     ch = *++name;
-    if (!ch)
+    if (!ch || ch == 0x2e)	/* return if no value or reached file extension */
       return;
     if (isalnum(ch))		/* Print underscore when */
       putchar(ch);		/* part of identifier is */
@@ -112,19 +84,16 @@ emit(const char *name)
   int file_length = 0;
   int col = COLUMNS;
 
-  /*printf("const char ");
+  printf("const struct bin2cFILE ");
   emit_name(name);
-  printf("_source[] = \"%s\";\n\n", name);*/
-  printf("const unsigned char ");
-  emit_name(name);
-  printf("_bytes[] = {");
+  printf("_bootstrap = {");
+  printf("\n    ?,\n  {");
   for (;;) {
     int ch = getchar();
     if (ch == EOF) {
-      printf("\n};\n\n");
-      printf("const unsigned int ");
+      printf("\n  }\n};");
       emit_name(name);
-      printf("_length = %i;", file_length);      
+      printf("_length = %i", file_length);      
       return 0;
     }
     if (col >= COLUMNS) {

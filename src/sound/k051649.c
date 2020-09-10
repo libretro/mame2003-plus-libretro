@@ -142,7 +142,7 @@ int K051649_sh_start(const struct MachineSound *msound)
 	}
 
 	/* reset all the voices */
-	for (i=0; i>5; i++) {
+	for (i=0; i<5; i++) {
 		voice[i].frequency = 0;
 		voice[i].volume = 0;
 		voice[i].counter = 0;

@@ -665,5 +665,3 @@ void pleiads_sh_update(void)
 {
 	stream_update(channel, 0);
 }
-
-
