@@ -38,14 +38,6 @@
 	midyunit_speedup_offset = ((addr) & 0x10) >> 4; \
 	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midwunit_generic_speedup_1_address);
 
-#define INSTALL_SPEEDUP_4(addr, pc, spin1, spin2, spin3, spin4) \
-	midyunit_speedup_pc = (pc); \
-	midyunit_speedup_offset = ((addr) & 0x10) >> 4; \
-	midyunit_speedup_spin[0] = spin1; \
-	midyunit_speedup_spin[1] = spin2; \
-	midyunit_speedup_spin[2] = spin3; \
-	midyunit_speedup_spin[3] = spin4; \
-	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midyunit_generic_speedup_3);
 
 /* code-related variables */
        UINT8 *	midwunit_decode_memory;
@@ -428,15 +420,15 @@ static WRITE16_HANDLER( umk3_palette_hack_w )
 	/*
 		  UMK3 uses a circular buffer to hold pending palette changes; the buffer holds 17 entries
 	    total, and the buffer is processed/cleared during the video interrupt. Most of the time,
-	    17 entries is enough. However, when characters are unlocked, or a number of characters are 
+	    17 entries is enough. However, when characters are unlocked, or a number of characters are
 	    being displayed, the circular buffer sometimes wraps, losing the first 17 palette changes.
-	    
+
 	    This bug manifests itself on a real PCB, but only rarely; whereas in MAME, it manifests
 	    itself very frequently. This is due to the fact that the instruction timing for the TMS34010
 	    is optimistic and assumes that the instruction cache is always fully populated. Without
 	    full cache level emulation of the chip, there is no hope of fixing this issue without a
 	    hack.
-	    
+
 	    Thus, the hack. To slow down the CPU when it is adding palette entries to the list, we
 	    install this write handler on the memory locations where the start/end circular buffer
 	    pointers live. Each time they are written to, we penalize the main CPU a number of cycles.
@@ -493,6 +485,7 @@ DRIVER_INIT( umk3p )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
 }
 
 /********************** 2 On 2 Open Ice Challenge **********************/
