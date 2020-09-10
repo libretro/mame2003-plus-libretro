@@ -260,7 +260,6 @@ struct GameOptions
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
   bool     machine_timing;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
-  bool     use_alt_sound;         /* use CD soundtrack enable/disable */
   };
 
 
