@@ -296,7 +296,7 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		cpu_set_irq_line(0,M6809_IRQ_LINE,CLEAR_LINE);
 		break;
 	case 3: /* 380e - SND irq */
-		if(ddragon_playing == true) {
+		if(ddragon_playing && options.use_samples) {
 			int a = 0;
 			int o_max_samples = 23;
 			int sa_left = 0;
