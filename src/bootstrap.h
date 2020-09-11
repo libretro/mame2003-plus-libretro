@@ -30,6 +30,7 @@ extern const struct bin2cFILE joust_bootstrap;
 extern const struct bin2cFILE joust2_bootstrap;
 extern const struct bin2cFILE mk2_bootstrap;
 extern const struct bin2cFILE mk2chal_bootstrap;
+extern const struct bin2cFILE mk2p_bootstrap;
 extern const struct bin2cFILE mk2r14_bootstrap;
 extern const struct bin2cFILE mk2r21_bootstrap;
 extern const struct bin2cFILE mk2r32_bootstrap;
@@ -71,6 +72,7 @@ extern const struct bin2cFILE trog_bootstrap;
 extern const struct bin2cFILE trog3_bootstrap;
 extern const struct bin2cFILE trogp_bootstrap;
 extern const struct bin2cFILE trogpa6_bootstrap;
+extern const struct bin2cFILE umk3p_bootstrap;
 extern const struct bin2cFILE wwfmania_bootstrap;
 extern const struct bin2cFILE zookeep_bootstrap;
 
