@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret
+* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret, mahoneyt944
 * Past repository maintiners: grant2258
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -80,6 +80,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mighty Warriors
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
+* Mortal Kombat 2 Plus Beta 2
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Opa Opa (Rev A Unprotected)
@@ -139,6 +140,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Tylz
+* Ultimate Mortal Kombat 3 Plus Beta 1
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
@@ -509,3 +511,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added bootstraps for nbahangt, nbamaxht, openice, wwfmania [mahoneyt944]
 * Hooked up x-men 6 players [arcadez, mahoneyt944, KMFDManic]
 * Removed gauntlet entry from highscore dat to fix game glitches [mahoneyt944]
+* Set flag in Ost drivers to allow them to be fully bypassed [mahoneyt944]
+* Hooked up mk2p and umk3p romsets [Zoltan45, mahoneyt944]
