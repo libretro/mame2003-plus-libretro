@@ -450,6 +450,8 @@ $a00000 checks have been seen on the Final Lap boards.
 #include "cpu/m6809/m6809.h"
 #include "namcoic.h"
 #include "artwork.h"
+#include "bootstrap.h
+#include "inptport.h"
 
 
 /*************************************************************/
@@ -1451,7 +1453,7 @@ INPUT_PORTS_START( luckywld )
 	PORT_START
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X, 50, 8, 0, 0xff )
 	PORT_START		/* Steering Wheel */
-	PORT_ANALOG( 0xff, 0x80, IPT_DIAL|IPF_CENTER, 100, 70, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_DIAL|IPF_CENTER, 100, 70, 0x00, 0x00 )
 	PORT_START		/* Brake pedal */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 100, 30, 0x00, 0x7f )
 	PORT_START		/* Accelerator pedal */
@@ -4441,7 +4443,7 @@ GAME( 1991, cosmogng, 0,        default,  default,  cosmogng, ROT90,  "Namco", "
 GAME( 1991, cosmognj, cosmogng, default,  default,  cosmogng, ROT90,  "Namco", "Cosmo Gang the Video (Japan)" )
 GAMEX(1992, finalap3, 0,        finallap, finalap3, finalap3, ROT0,   "Namco", "Final Lap 3 (Japan set 1)", GAME_IMPERFECT_GRAPHICS  )
 GAMEX(1992, finalp3a, finalap3, finallap, finalap3, finalap3, ROT0,   "Namco", "Final Lap 3 (World)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS  )
-GAMEX(1992, luckywld, 0,        luckywld, luckywld, luckywld, ROT0,   "Namco", "Lucky and Wild",GAME_IMPERFECT_GRAPHICS )
+GAMECX(1992, luckywld, 0,        luckywld, luckywld, luckywld, ROT0,   "Namco", "Lucky and Wild",GAME_IMPERFECT_GRAPHICS, &generic_ctrl, &luckywld_bootstrap )
 GAMEX(1992, suzuka8h, 0,        luckywld, suzuka,   suzuka8h, ROT0,   "Namco", "Suzuka 8 Hours (World[Q])", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, suzuk8hj, suzuka8h, luckywld, suzuka,   suzuka8h, ROT0,   "Namco", "Suzuka 8 Hours (Japan)", GAME_IMPERFECT_GRAPHICS  )
 GAME( 1992, sws92,    0,        default,  default,  sws92,    ROT0,   "Namco", "Super World Stadium '92 (Japan)" )
