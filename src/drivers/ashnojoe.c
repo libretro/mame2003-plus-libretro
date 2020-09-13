@@ -4,11 +4,6 @@ Ashita no Joe (Success Joe) [Wave]
 
 driver by David Haywood and bits from Pierpaolo Prazzoli
 
-todo:
-- sound
-- frequencies
-- 1 unused rom
-
 there is an english logo in the roms, needs different program roms?
 
 Tow sub-boards:
@@ -87,21 +82,23 @@ extern WRITE16_HANDLER( joe_tilemaps_yscroll_w );
 extern VIDEO_START( ashnojoe );
 extern VIDEO_UPDATE( ashnojoe );
 
+static UINT8 adpcm_byte;
+static int soundlatch_status;
+static int msm5205_vclk_toggle;
+
 static READ16_HANDLER(fake_4a00a_r)
 {
-	/*if it returns 1 there's no sound. is it used to sync the game and sound?*/
-	/*or just a debug enable/disble register?*/
+	/* If it returns 1 there's no sound. Is it used to sync the game and sound?
+	or just a debug enable/disable register? */
 	return 0;
-	return 1;
 }
 
 static WRITE16_HANDLER( ashnojoe_soundlatch_w )
 {
 	if(ACCESSING_LSB)
 	{
-		soundlatch_w(0,data & 0xff);
-		/*needed?*/
-		cpu_set_irq_line(1,0,HOLD_LINE);
+		soundlatch_status = 1;
+		soundlatch_w(0, data & 0xff);
 	}
 }
 
@@ -136,21 +133,20 @@ static MEMORY_WRITE16_START( ashnojoe_writemem )
 	{ 0x080000, 0x0bffff, MWA16_ROM },
 MEMORY_END
 
-static READ_HANDLER(fake_6_r)
+static WRITE_HANDLER( adpcm_w )
 {
-	/* if it returns 0 the cpu doesn't read from port $4 ?*/
-	int ret = 0;
-	ret ^= 1;
-	return ret;
-	return 1;
-	return 0;
-	return rand();
+	adpcm_byte = data;
 }
 
-static WRITE_HANDLER( adpcm_data_w )
+static READ_HANDLER( sound_latch_r )
 {
-	MSM5205_data_w(0, data & 0xf);
-	MSM5205_data_w(0, data>>4);
+	soundlatch_status = 0;
+	return soundlatch_r(0);
+}
+
+static READ_HANDLER( sound_latch_status_r )
+{
+    return soundlatch_status;
 }
 
 static MEMORY_READ_START( sound_readmem )
@@ -168,14 +164,14 @@ MEMORY_END
 static PORT_READ_START( sound_readport )
 	{ 0x00, 0x00, YM2203_status_port_0_r },
 	{ 0x01, 0x01, YM2203_read_port_0_r },
-	{ 0x04, 0x04, soundlatch_r }, /*PC: 15D -> cp $7f*/
-	{ 0x06, 0x06, fake_6_r/*soundlatch_r */}, /*PC: 14A -> and $1*/
+	{ 0x04, 0x04, sound_latch_r },
+	{ 0x06, 0x06, sound_latch_status_r},
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
 	{ 0x00, 0x00, YM2203_control_port_0_w },
 	{ 0x01, 0x01, YM2203_write_port_0_w },
-	{ 0x02, 0x02, adpcm_data_w },
+	{ 0x02, 0x02, adpcm_w },
 PORT_END
 
 INPUT_PORTS_START( ashnojoe )
@@ -306,7 +302,9 @@ static void irqhandler(int irq)
 
 static WRITE_HANDLER(writeA)
 {
-	if (data == 0xff) return;	/* this gets called at 8910 startup with 0xff before the 5205 exists, causing a crash*/
+	/* This gets called at 8910 startup with 0xff before the 5205 exists, causing a crash */
+	if (data == 0xff)
+		return;
 
 	MSM5205_reset_w(0, !(data & 0x01));
 }
@@ -316,25 +314,35 @@ static WRITE_HANDLER(writeB)
 	cpu_setbank(4, memory_region(REGION_SOUND1) + ((data & 0xf) * 0x8000));
 }
 
-static void ashnojoe_adpcm_int (int data)
+static void ashnojoe_vclk_cb(int data)
 {
-	cpu_set_nmi_line(1, PULSE_LINE);
+	if (msm5205_vclk_toggle == 0)
+	{
+		MSM5205_data_w(0, adpcm_byte >> 4);
+	}
+	else
+	{
+		MSM5205_data_w(0, adpcm_byte & 0xf);
+		cpu_set_nmi_line(1, PULSE_LINE);
+	}
+
+	msm5205_vclk_toggle ^= 1;
 }
 
 static struct MSM5205interface msm5205_interface =
 {
 	1,			/* 1 chip */
 	384000, 		/* 384KHz */
-	{ ashnojoe_adpcm_int},	/* interrupt function */
+	{ ashnojoe_vclk_cb },	/* interrupt function */
 	{ MSM5205_S48_4B},	/* 4KHz 4-bit */
-	{ 50 }			/* volume */
+	{ 100 }			/* volume */
 };
 
 static struct YM2203interface ym2203_interface =
 {
 	1,
-	3000000,					/* ?? */
-	{ YM2203_VOL(100,100) },
+	4000000,	/* 4 MHz (verified on pcb) */
+	{ YM2203_VOL(10,10) },
 	{ 0 },
 	{ 0 },
 	{ writeA },
@@ -350,11 +358,11 @@ static DRIVER_INIT( ashnojoe )
 static MACHINE_DRIVER_START( ashnojoe )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 8000000)	/* 8 MHz? */
+	MDRV_CPU_ADD(M68000, 8000000) /* 8 MHz (verified on pcb) */
 	MDRV_CPU_MEMORY(ashnojoe_readmem,ashnojoe_writemem)
 	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
 
-	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz ??? */
+	MDRV_CPU_ADD(Z80, 4000000)	  /* 4 MHz (verified on pcb) */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport)
@@ -411,8 +419,8 @@ ROM_START( ashnojoe )
 	ROM_LOAD16_WORD_SWAP( "sj408-nw.bin", 0x200000, 0x80000, CRC(6a3b1ea1) SHA1(e39a6e52d930f291bf237cf9db3d4b3d2fad53e0) )
 	ROM_LOAD16_WORD_SWAP( "sj409-nw.bin", 0x280000, 0x80000, CRC(d8764213) SHA1(89eadefb956863216c8e3d0380394aba35e8c856) )
 
-	ROM_REGION( 0x80000, REGION_SOUND1, 0 )   /* samples? */
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )
 	ROM_LOAD( "sj401-nw.bin", 0x00000, 0x80000, CRC(25dfab59) SHA1(7d50159204ba05323a2442778f35192e66117dda) )
 ROM_END
 
-GAMEX( 1990, ashnojoe, 0, ashnojoe, ashnojoe, ashnojoe, ROT0, "WAVE / Taito Corporation", "Ashita no Joe (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1990, ashnojoe, 0, ashnojoe, ashnojoe, ashnojoe, ROT0, "WAVE / Taito Corporation", "Ashita no Joe (Japan)" )
