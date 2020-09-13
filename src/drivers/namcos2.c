@@ -450,7 +450,7 @@ $a00000 checks have been seen on the Final Lap boards.
 #include "cpu/m6809/m6809.h"
 #include "namcoic.h"
 #include "artwork.h"
-#include "bootstrap.h
+#include "bootstrap.h"
 #include "inptport.h"
 
 
