@@ -330,6 +330,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games now with improved sound
 
+* Ashita no Joe
 * Asterix
 * Bandito
 * Bosconian
@@ -513,3 +514,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Removed gauntlet entry from highscore dat to fix game glitches [mahoneyt944]
 * Set flag in Ost drivers to allow them to be fully bypassed [mahoneyt944]
 * Hooked up mk2p and umk3p romsets [Zoltan45, mahoneyt944]
+* Ashita no Joe sound fixes / CPU clock frequencies [arcadez]
