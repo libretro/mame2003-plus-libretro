@@ -119,6 +119,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Launcher
 * Squash
 * Star Fire 2
+* Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Rider
 * Super Trio
@@ -515,3 +516,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Set flag in Ost drivers to allow them to be fully bypassed [mahoneyt944]
 * Hooked up mk2p and umk3p romsets [Zoltan45, mahoneyt944]
 * Ashita no Joe sound fixes / CPU clock frequencies [arcadez]
+* Success Joe new game support added [mahoneyt944]
