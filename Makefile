@@ -194,13 +194,13 @@ else ifeq ($(platform), rpi3)
 else ifeq ($(platform), rpi4)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
-	 CFLAGS += $(fpic)
-	 LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-	 PLATCFLAGS += -marm -mcpu=cortex-a72 -mfpu=neon-fp-armv8 -mfloat-abi=hard
-	 PLATCFLAGS += -fomit-frame-pointer -ffast-math
-	 CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
-	 CPU_ARCH := arm
-	 ARM = 1
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a72 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
 
 # Classic Platforms ####################
 # Platform affix = classic_<ISA>_<µARCH>
