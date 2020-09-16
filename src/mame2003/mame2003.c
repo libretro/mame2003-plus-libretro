@@ -692,7 +692,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     if ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) )
     {
       info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f\n",  Machine->drv->frames_per_second * 1000);
     }
 
     else
@@ -763,9 +763,27 @@ static struct retro_controller_info retropad_subdevice_ports[] = {
   { 0 },
 };
 
-bool retro_load_game(const struct retro_game_info *game)
+static char* remove_slash (char* temp)
 {
   int i;
+
+  for(i=0; temp[i] != '\0'; ++i);
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
+
+  if(temp[i-1] == '/' || temp[i-1] == '\\')
+  {
+    temp[i-1] = 0;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
+  }
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
+
+  return temp;
+}
+
+bool retro_load_game(const struct retro_game_info *game)
+{
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
@@ -909,10 +927,6 @@ bool retro_load_game(const struct retro_game_info *game)
 
   options.libretro_content_path = strdup(game->path);
   path_basedir(options.libretro_content_path);
-  /*fix trailing slash in path*/
-  for(i = 0; options.libretro_content_path[i] != '\0'; ++i);
-  if ( options.libretro_content_path[i-1] == '/' || options.libretro_content_path[i-1]  == '\\' )
-   options.libretro_content_path[i-1] =0;
 
   /* Get system directory from frontend */
   options.libretro_system_path = NULL;
@@ -931,10 +945,11 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
       options.libretro_save_path = options.libretro_content_path;
   }
-  /* Remove slash for save dir - WiiU */
-  for(i = 0; options.libretro_save_path[i] != '\0'; ++i);
-  if ( options.libretro_save_path[i-1] == '/' || options.libretro_save_path[i-1]  == '\\' )
-   options.libretro_save_path[i-1] =0;
+
+  /* Remove trailing slashes for specified systems */
+  remove_slash(options.libretro_content_path);
+  remove_slash(options.libretro_system_path);
+  remove_slash(options.libretro_save_path);
 
   log_cb(RETRO_LOG_INFO, LOGPRE "content path: %s\n", options.libretro_content_path);
   log_cb(RETRO_LOG_INFO, LOGPRE " system path: %s\n", options.libretro_system_path);
