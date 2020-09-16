@@ -222,7 +222,7 @@ bool path_mkdir(const char *dir)
    if (!*basedir || !strcmp(basedir, dir))
       goto end;
 
-#if defined (GEKKO || WIIU)
+#if defined(GEKKO)
    {
       size_t len = strlen(basedir);
 
