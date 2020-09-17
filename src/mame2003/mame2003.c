@@ -763,7 +763,7 @@ static struct retro_controller_info retropad_subdevice_ports[] = {
   { 0 },
 };
 
-static char* remove_slash (char* temp)
+static void remove_slash (char* temp)
 {
   int i;
 
@@ -778,8 +778,6 @@ static char* remove_slash (char* temp)
   }
   else
     log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
-
-  return temp;
 }
 
 bool retro_load_game(const struct retro_game_info *game)
