@@ -244,6 +244,7 @@ bool path_mkdir(const char *dir)
    else
    {
       target    = basedir;
+      printf("Directory missing, attempting to create missing directory: %s\n", target);
       sret      = path_mkdir(basedir);
 
       if (sret)
@@ -268,7 +269,7 @@ bool path_mkdir(const char *dir)
 
 end:
    if (target && !sret)
-      printf("Failed to create directory: \"%s\".\n", target);
+      printf("Failed to create directory: %s\n", target);
    free(basedir);
    return sret;
 }
