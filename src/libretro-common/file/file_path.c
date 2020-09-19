@@ -244,11 +244,12 @@ bool path_mkdir(const char *dir)
    else
    {
       target    = basedir;
-      printf("Directory missing, attempting to create missing directory: %s\n", target);
+      printf("Directory missing, attempting to create missing directory: %s\n", basedir);
       sret      = path_mkdir(basedir);
 
       if (sret)
       {
+         printf("Directory was successfully created: %s\n", basedir);
          target    = dir;
          norecurse = true;
       }
