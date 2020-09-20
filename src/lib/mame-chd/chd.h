@@ -13,7 +13,7 @@
 /***************************************************************************
 
 	Compressed Hunks of Data header format. All numbers are stored in
-	Motorola (big-endian) byte ordering. The header is 76 (V1) or 80 (V2) 
+	Motorola (big-endian) byte ordering. The header is 76 (V1) or 80 (V2)
 	bytes long.
 
 	V1 header:
@@ -105,7 +105,7 @@
 
 enum
 {
-	CHDERR_NONE,
+	CHDERR_NONE = 0,
 	CHDERR_NO_INTERFACE,
 	CHDERR_OUT_OF_MEMORY,
 	CHDERR_INVALID_FILE,
@@ -128,6 +128,7 @@ enum
 	CHDERR_INVALID_METADATA_SIZE,
 	CHDERR_UNSUPPORTED_VERSION
 };
+
 
 
 
