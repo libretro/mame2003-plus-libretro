@@ -23,6 +23,31 @@
 				"moonwalk", "moonwlka", "moonwlkb", 0
 		 };
 
+char *chd_error_text[] =
+{
+	"CHDERR_NONE",
+	"CHDERR_NO_INTERFACE",
+	"CHDERR_OUT_OF_MEMORY",
+	"CHDERR_INVALID_FILE",
+	"CHDERR_INVALID_PARAMETER",
+	"CHDERR_INVALID_DATA",
+	"CHDERR_FILE_NOT_FOUND",
+	"CHDERR_REQUIRES_PARENT",
+	"CHDERR_FILE_NOT_WRITEABLE",
+	"CHDERR_READ_ERROR",
+	"CHDERR_WRITE_ERROR",
+	"CHDERR_CODEC_ERROR",
+	"CHDERR_INVALID_PARENT",
+	"CHDERR_HUNK_OUT_OF_RANGE",
+	"CHDERR_DECOMPRESSION_ERROR",
+	"CHDERR_COMPRESSION_ERROR",
+	"CHDERR_CANT_CREATE_FILE",
+	"CHDERR_CANT_VERIFY",
+	"CHDERR_NOT_SUPPORTED",
+	"CHDERR_METADATA_NOT_FOUND",
+	"CHDERR_INVALID_METADATA_SIZE",
+	"CHDERR_UNSUPPORTED_VERSION"
+};
 /***************************************************************************
 	Constants
 ***************************************************************************/
@@ -1875,7 +1900,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
 							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T CREATE DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T CREATE DIFF FILE     Error code %s\n", filename, chd_error_text[err]);
 						romdata->errors++;
 						romp++;
 						continue;
@@ -1889,7 +1914,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
 							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE  Error code %s\n", filename, chd_error_text[err]);
 						romdata->errors++;
 						romp++;
 						continue;
