@@ -1914,7 +1914,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
 							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE  Error code %s\n chd_error_text[err]\n", filename);
+							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE  Error code %s\n", filename, chd_error_text[err]);
 						romdata->errors++;
 						romp++;
 						continue;
