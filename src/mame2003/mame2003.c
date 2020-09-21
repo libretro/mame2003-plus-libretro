@@ -6,7 +6,7 @@
 
 *********************************************************************/
 
-#define number_of_controls 26;
+#define number_of_controls 26
 
 #include <stdint.h>
 #include <string/stdstring.h>
