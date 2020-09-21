@@ -1,4 +1,4 @@
-/* Copyright  (C) 2010-2018 The RetroArch team
+/* Copyright  (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
  * The following license statement only applies to this file (image_texture.c).
@@ -28,15 +28,53 @@
 #include <boolean.h>
 #include <formats/image.h>
 #include <file/nbio.h>
+#include <string/stdstring.h>
 
-enum video_image_format
+enum image_type_enum image_texture_get_type(const char *path)
 {
-   IMAGE_FORMAT_NONE = 0,
-   IMAGE_FORMAT_TGA,
-   IMAGE_FORMAT_PNG,
-   IMAGE_FORMAT_JPEG,
-   IMAGE_FORMAT_BMP
-};
+   /* We are comparing against a fixed list of file
+    * extensions, the longest (jpeg) being 4 characters
+    * in length. We therefore only need to extract the first
+    * 5 characters from the extension of the input path
+    * to correctly validate a match */
+   const char *ext = NULL;
+   char ext_lower[6];
+
+   ext_lower[0] = '\0';
+
+   if (string_is_empty(path))
+      return IMAGE_TYPE_NONE;
+
+   /* Get file extension */
+   ext = strrchr(path, '.');
+
+   if (!ext || (*(++ext) == '\0'))
+      return IMAGE_TYPE_NONE;
+
+   /* Copy and convert to lower case */
+   strlcpy(ext_lower, ext, sizeof(ext_lower));
+   string_to_lower(ext_lower);
+
+#ifdef HAVE_RPNG
+   if (string_is_equal(ext_lower, "png"))
+      return IMAGE_TYPE_PNG;
+#endif
+#ifdef HAVE_RJPEG
+   if (string_is_equal(ext_lower, "jpg") ||
+       string_is_equal(ext_lower, "jpeg"))
+      return IMAGE_TYPE_JPEG;
+#endif
+#ifdef HAVE_RBMP
+   if (string_is_equal(ext_lower, "bmp"))
+      return IMAGE_TYPE_BMP;
+#endif
+#ifdef HAVE_RTGA
+   if (string_is_equal(ext_lower, "tga"))
+      return IMAGE_TYPE_TGA;
+#endif
+
+   return IMAGE_TYPE_NONE;
+}
 
 bool image_texture_set_color_shifts(
       unsigned *r_shift, unsigned *g_shift, unsigned *b_shift,
@@ -77,8 +115,13 @@ bool image_texture_color_convert(unsigned r_shift,
          uint8_t r    = (uint8_t)(col >> 16);
          uint8_t g    = (uint8_t)(col >>  8);
          uint8_t b    = (uint8_t)(col >>  0);
-         pixels[i]    = (a << a_shift) |
-            (r << r_shift) | (g << g_shift) | (b << b_shift);
+         /* Explicitly cast these to uint32_t to prevent
+          * ASAN runtime error: left shift of 255 by 24 places
+          * cannot be represented in type 'int' */
+         pixels[i]    = ((uint32_t)a << a_shift) |
+                        ((uint32_t)r << r_shift) |
+                        ((uint32_t)g << g_shift) |
+                        ((uint32_t)b << b_shift);
       }
 
       return true;
@@ -162,7 +205,7 @@ static bool image_texture_load_internal(
    if (!img)
       goto end;
 
-   image_transfer_set_buffer_ptr(img, type, (uint8_t*)ptr);
+   image_transfer_set_buffer_ptr(img, type, (uint8_t*)ptr, len);
 
    if (!image_transfer_start(img, type))
       goto end;
@@ -177,7 +220,7 @@ static bool image_texture_load_internal(
       ret = image_transfer_process(img, type,
             (uint32_t**)&out_img->pixels, len, &out_img->width,
             &out_img->height);
-   }while(ret == IMAGE_PROCESS_NEXT);
+   } while (ret == IMAGE_PROCESS_NEXT);
 
    if (ret == IMAGE_PROCESS_ERROR || ret == IMAGE_PROCESS_ERROR_END)
       goto end;
@@ -214,53 +257,29 @@ void image_texture_free(struct texture_image *img)
    img->pixels = NULL;
 }
 
-static enum video_image_format image_texture_get_type(const char *path)
+bool image_texture_load_buffer(struct texture_image *out_img,
+   enum image_type_enum type, void *buffer, size_t buffer_len)
 {
-#ifdef HAVE_RTGA
-   if (strstr(path, ".tga"))
-      return IMAGE_FORMAT_TGA;
-#endif
-#ifdef HAVE_RPNG
-   if (strstr(path, ".png"))
-      return IMAGE_FORMAT_PNG;
-#endif
-#ifdef HAVE_RJPEG
-   if (strstr(path, ".jpg") || strstr(path, ".jpeg"))
-      return IMAGE_FORMAT_JPEG;
-#endif
-#ifdef HAVE_RBMP
-   if (strstr(path, ".bmp"))
-      return IMAGE_FORMAT_BMP;
-#endif
-   return IMAGE_FORMAT_NONE;
-}
+   unsigned r_shift, g_shift, b_shift, a_shift;
+   image_texture_set_color_shifts(&r_shift, &g_shift, &b_shift,
+      &a_shift, out_img);
 
-static enum image_type_enum image_texture_convert_fmt_to_type(enum video_image_format fmt)
-{
-   switch (fmt)
+   if (type != IMAGE_TYPE_NONE)
    {
-#ifdef HAVE_RPNG
-      case IMAGE_FORMAT_PNG:
-         return IMAGE_TYPE_PNG;
-#endif
-#ifdef HAVE_RJPEG
-      case IMAGE_FORMAT_JPEG:
-         return IMAGE_TYPE_JPEG;
-#endif
-#ifdef HAVE_RBMP
-      case IMAGE_FORMAT_BMP:
-         return IMAGE_TYPE_BMP;
-#endif
-#ifdef HAVE_RTGA
-      case IMAGE_FORMAT_TGA:
-         return IMAGE_TYPE_TGA;
-#endif
-      case IMAGE_FORMAT_NONE:
-      default:
-         break;
+      if (image_texture_load_internal(
+         type, buffer, buffer_len, out_img,
+         a_shift, r_shift, g_shift, b_shift))
+      {
+         return true;
+      }
    }
 
-   return IMAGE_TYPE_NONE;
+   out_img->supports_rgba = false;
+   out_img->pixels = NULL;
+   out_img->width = 0;
+   out_img->height = 0;
+
+   return false;
 }
 
 bool image_texture_load(struct texture_image *out_img,
@@ -270,12 +289,12 @@ bool image_texture_load(struct texture_image *out_img,
    size_t file_len             = 0;
    struct nbio_t      *handle  = NULL;
    void                   *ptr = NULL;
-   enum video_image_format fmt = image_texture_get_type(path);
+   enum image_type_enum type  = image_texture_get_type(path);
 
    image_texture_set_color_shifts(&r_shift, &g_shift, &b_shift,
          &a_shift, out_img);
 
-   if (fmt != IMAGE_FORMAT_NONE)
+   if (type != IMAGE_TYPE_NONE)
    {
       handle = (struct nbio_t*)nbio_open(path, NBIO_READ);
       if (!handle)
@@ -290,7 +309,7 @@ bool image_texture_load(struct texture_image *out_img,
          goto error;
 
       if (image_texture_load_internal(
-               image_texture_convert_fmt_to_type(fmt),
+               type,
                ptr, file_len, out_img,
                a_shift, r_shift, g_shift, b_shift))
          goto success;

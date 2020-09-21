@@ -1,4 +1,4 @@
-/* Copyright  (C) 2010-2018 The RetroArch team
+/* Copyright  (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
  * The following license statement only applies to this file (dsp_filter.c).
@@ -244,8 +244,7 @@ retro_dsp_filter_t *retro_dsp_filter_new(
    if (!dsp)
       return NULL;
 
-   conf = config_file_new(filter_config);
-   if (!conf)   /* Did not find config. */
+   if (!(conf = config_file_new_from_path_to_string(filter_config)))
       goto error;
 
    dsp->conf = conf;

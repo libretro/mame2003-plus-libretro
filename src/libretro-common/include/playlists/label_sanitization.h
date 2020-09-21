@@ -1,7 +1,7 @@
-/* Copyright  (C) 2010-2018 The RetroArch team
+/* Copyright  (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
- * The following license statement only applies to this file (null_resampler.c).
+ * The following license statement only applies to this file (label_sanitization.h).
  * ---------------------------------------------------------------------------------------
  *
  * Permission is hereby granted, free of charge,
@@ -19,40 +19,19 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+#include <stddef.h>
+#include <boolean.h>
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <math.h>
+void label_sanitize(char *label, bool (*left)(char*), bool (*right)(char*));
 
-#include <audio/audio_resampler.h>
+void label_remove_parens(char *label);
 
-typedef struct rarch_null_resampler
-{
-   void *empty;
-} rarch_null_resampler_t;
+void label_remove_brackets(char *label);
 
-static void resampler_null_process(
-      void *re_, struct resampler_data *data)
-{
-}
+void label_remove_parens_and_brackets(char *label);
 
-static void resampler_null_free(void *re_)
-{
-}
+void label_keep_region(char *label);
 
-static void *resampler_null_init(const struct resampler_config *config,
-      double bandwidth_mod,
-      enum resampler_quality quality,
-      resampler_simd_mask_t mask)
-{
-   return (void*)0;
-}
+void label_keep_disc(char *label);
 
-retro_resampler_t null_resampler = {
-   resampler_null_init,
-   resampler_null_process,
-   resampler_null_free,
-   RESAMPLER_API_VERSION,
-   "null",
-   "null"
-};
+void label_keep_region_and_disc(char *label);

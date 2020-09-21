@@ -1,4 +1,4 @@
-/* Copyright (C) 2010-2018 The RetroArch team
+/* Copyright (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
  * The following license statement only applies to this libretro SDK code part (glsym).
@@ -24,7 +24,7 @@
 
 #include <glsym/glsym.h>
 
-#define SYM(x) { "gl" #x, &(gl##x) }
+#define SYM(x) { "gl" #x, (void*)&(gl##x) }
 
 const struct rglgen_sym_map rglgen_symbol_map[] = {
 #ifdef HAVE_LIBNX
