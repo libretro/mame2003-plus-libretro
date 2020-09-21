@@ -2685,6 +2685,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
+	$(LIBRETRO_COMM_DIR)/time/rtime.c \
 	$(CORE_DIR)/lib/zlib/adler32.c \
 	$(CORE_DIR)/lib/zlib/compress.c \
 	$(CORE_DIR)/lib/zlib/crc32.c \
