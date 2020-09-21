@@ -1,7 +1,7 @@
-/* Copyright  (C) 2010-2015 The RetroArch team
+/* Copyright  (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
- * The following license statement only applies to this file (rsemaphore.h).
+ * The following license statement only applies to this file (net_http_parse_test.c).
  * ---------------------------------------------------------------------------------------
  *
  * Permission is hereby granted, free of charge,
@@ -20,35 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __LIBRETRO_SDK_SEMAPHORE_H
-#define __LIBRETRO_SDK_SEMAPHORE_H
+#include <stdio.h>
+#include <compat/strcasestr.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int main(int argc, char *argv[])
+{
+   char link[1024];
+   char name[1024];
+   const char *line  = "<a href=\"http://www.test.com/somefile.zip\">Test</a>\n";
 
-typedef struct ssem ssem_t;
+   link[0] = name[0] = '\0';
 
-/**
- * ssem_create:
- * @value                   : initial value for the semaphore
- *
- * Create a new semaphore.
- *
- * Returns: pointer to new semaphore if successful, otherwise NULL.
- */
-ssem_t *ssem_new(int value);
+   string_parse_html_anchor(line, link, name, sizeof(link), sizeof(name));
 
-void ssem_free(ssem_t *semaphore);
+   printf("link: %s\nname: %s\n", link, name);
 
-int ssem_get(ssem_t *semaphore);
-
-void ssem_wait(ssem_t *semaphore);
-
-void ssem_signal(ssem_t *semaphore);
-
-#ifdef __cplusplus
+   return 1;
 }
-#endif
-
-#endif /* __LIBRETRO_SDK_SEMAPHORE_H */
