@@ -249,9 +249,9 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    char currDir[PATH_MAX_LENGTH];
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,PATH_DEFAULT_SLASH_C(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%s", currDir, filename);
 
-   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);
+   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) buffer = %s pathindex = %d filename =%s ", currDir, pathtype, filename);
 
    if (path_is_directory(buffer))
    {
@@ -274,11 +274,14 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
    FILE* out;
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,PATH_DEFAULT_SLASH_C(), filename);
-   log_cb(RETRO_LOG_DEBUG, "(osd_fopen) called: %s\n",buffer);
+   /* call this before adding slash else wiiu will fail at creating directory*/
    path_mkdir(currDir);
+   if (filename)     snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
-   out = fopen(buffer, mode);
+   log_cb(RETRO_LOG_DEBUG, "(osd_fopen) called: buffer:%s filename %s pathindex:%d pathtype %d \n",buffer,filename, pathindex, pathtype);
+
+
+  out = fopen(buffer, mode);
 
    return out;
 }
@@ -778,7 +781,11 @@ static INLINE void compose_path(char *output, const char *gamename, const char *
 		strcat(output, gamename);
 		if (filename)
 		{
-			strcat(output, "/");
+
+			/*
+      original code has been hacked up a lot added elsewhere
+      strcat(output, "/");
+      */
 			filename_base = &output[strlen(output)];
 		}
 	}
