@@ -196,6 +196,12 @@ void osd_get_path(int pathtype, char* path)
   else
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
 
+  log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path() called:  sys_path_buffer= %s  save_path_buffer= %s\n", sys_path_buffer, save_path_buffer);
+
+  /* force path to be created if not already there */
+  path_mkdir(save_path_buffer);
+  path_mkdir(sys_path_buffer);
+
    switch (pathtype)
    {
        case FILETYPE_ROM:
@@ -812,12 +818,12 @@ const char *get_extension_for_filetype(int filetype)
 	/* now open the file appropriately */
 	switch (filetype)
 	{
-		case FILETYPE_RAW:			/* raw data files */
-		case FILETYPE_ROM:			/* ROM files */
-		case FILETYPE_HIGHSCORE_DB:	/* highscore database/history files */
-		case FILETYPE_HISTORY:		/* game history files */
-		case FILETYPE_CHEAT:		/* cheat file */
-		default:					/* anything else */
+		case FILETYPE_RAW:              /* raw data files */
+		case FILETYPE_ROM:              /* ROM files */
+		case FILETYPE_HIGHSCORE_DB:     /* highscore database/history files */
+		case FILETYPE_HISTORY:          /* game history files */
+		case FILETYPE_CHEAT:            /* cheat file */
+		default:                        /* anything else */
 			extension = NULL;
 			break;
 
@@ -833,7 +839,7 @@ const char *get_extension_for_filetype(int filetype)
 			extension = "wav";
 			break;
 
-		case FILETYPE_SAMPLE_FLAC:		/* samples */
+		case FILETYPE_SAMPLE_FLAC:	/* samples */
 			extension = "flac";
 			break;
 
