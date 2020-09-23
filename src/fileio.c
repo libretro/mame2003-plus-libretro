@@ -181,6 +181,8 @@ int osd_get_path_count(int pathtype)
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
+  static int cycle = 0;
+
   char save_path_buffer[PATH_MAX_LENGTH]= {0};
   char sys_path_buffer[PATH_MAX_LENGTH]= {0};
 
@@ -196,11 +198,15 @@ void osd_get_path(int pathtype, char* path)
   else
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path() called:  sys_path_buffer= %s  save_path_buffer= %s\n", sys_path_buffer, save_path_buffer);
+  if (cycle < 1)
+  {
+    log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path() called:  sys_path_buffer= %s  save_path_buffer= %s\n", sys_path_buffer, save_path_buffer);
+    cycle = 1;
 
-  /* force path to be created if not already there */
-  path_mkdir(save_path_buffer);
-  path_mkdir(sys_path_buffer);
+    /* force path to be created if not already there */
+    path_mkdir(save_path_buffer);
+    path_mkdir(sys_path_buffer);
+  }
 
    switch (pathtype)
    {
