@@ -197,7 +197,7 @@ void osd_get_path(int pathtype, char* path)
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
 
   /* force system and save paths to be created if not already there */
-  if (!path_is_directory(sys_path_buffer) || !path_is_directory(save_path_buffer))
+  if ( !(path_is_directory(sys_path_buffer)) || !(path_is_directory(save_path_buffer)) )
   {
     log_cb(RETRO_LOG_INFO, LOGPRE "Searching for missing directories.........\n");
 
