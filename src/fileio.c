@@ -181,8 +181,6 @@ int osd_get_path_count(int pathtype)
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
-  static int cycle = 0;
-
   char save_path_buffer[PATH_MAX_LENGTH]= {0};
   char sys_path_buffer[PATH_MAX_LENGTH]= {0};
 
@@ -198,14 +196,20 @@ void osd_get_path(int pathtype, char* path)
   else
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
 
-  if (cycle < 1)
+  /* force system and save paths to be created if not already there */
+  if (!path_is_directory(sys_path_buffer) || !path_is_directory(save_path_buffer))
   {
-    log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path() called:  sys_path_buffer= %s  save_path_buffer= %s\n", sys_path_buffer, save_path_buffer);
-    cycle = 1;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Searching for missing directories.........\n");
 
-    /* force path to be created if not already there */
-    path_mkdir(save_path_buffer);
-    path_mkdir(sys_path_buffer);
+    if (!path_mkdir(sys_path_buffer))
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing system directory: %s\n", sys_path_buffer);
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified system directory exists: %s\n", sys_path_buffer);
+
+    if (!path_mkdir(save_path_buffer))
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing save directory: %s\n", save_path_buffer);
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified save directory exists: %s\n", save_path_buffer);
   }
 
    switch (pathtype)
