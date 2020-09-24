@@ -202,14 +202,14 @@ void osd_get_path(int pathtype, char* path)
     log_cb(RETRO_LOG_INFO, LOGPRE "Searching for missing directories.........\n");
 
     if (path_mkdir(sys_path_buffer))
-      log_cb(RETRO_LOG_INFO, LOGPRE "Verified system directory exists: %s\n", sys_path_buffer);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified system directory exists:  %s\n", sys_path_buffer);
     else
-      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing system directory: %s\n", sys_path_buffer);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing system directory:  %s\n", sys_path_buffer);
 
     if (path_mkdir(save_path_buffer))
-      log_cb(RETRO_LOG_INFO, LOGPRE "Verified save directory exists: %s\n", save_path_buffer);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified save directory exists:  %s\n", save_path_buffer);
     else
-      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing save directory: %s\n", save_path_buffer);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing save directory:  %s\n", save_path_buffer);
   }
 
    switch (pathtype)
