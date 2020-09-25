@@ -267,7 +267,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    osd_get_path(pathtype, currDir);
    snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
-   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) directory= %s  pathindex= %d  filename= %s\n", currDir, pathtype, filename);
+   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) buffer=  %s\n", buffer);
 
    if (path_is_directory(buffer))
    {
