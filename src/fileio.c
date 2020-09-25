@@ -256,7 +256,13 @@ void osd_get_path(int pathtype, char* path)
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
          snprintf(path, PATH_MAX_LENGTH, "%s", sys_path_buffer);
+         break;
    }
+   /* Create path if it doesn't exist and log create failures */
+   if (!path_is_directory(path))
+     if (!path_mkdir(path)) log_cb(RETRO_LOG_DEBUG, LOGPRE "osd_get_path() failed to create path:  %s\n", path);
+
+   log_cb(RETRO_LOG_DEBUG, LOGPRE "osd_get_path() return path=  %s\n", path);
 }
 
 int osd_get_path_info(int pathtype, int pathindex, const char *filename)
@@ -290,8 +296,7 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
    FILE* out;
 
    osd_get_path(pathtype, currDir);
-
-   if (filename) snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
    out = fopen(buffer, mode);
    if (out)  log_cb(RETRO_LOG_DEBUG, "(osd_fopen) opened the file:  %s\n", buffer);
