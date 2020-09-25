@@ -291,14 +291,11 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
 
    osd_get_path(pathtype, currDir);
 
-   /* call this before adding slash else wiiu will fail at creating directory */
-   path_mkdir(currDir);
-
    if (filename) snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
-   log_cb(RETRO_LOG_DEBUG, "(osd_fopen) called: buffer= %s  filename= %s  pathindex= %d   pathtype= %d\n", buffer, filename, pathindex, pathtype);
-
    out = fopen(buffer, mode);
+   if (out)  log_cb(RETRO_LOG_DEBUG, "(osd_fopen) opened the file:  %s\n", buffer);
+   else  log_cb(RETRO_LOG_DEBUG, "(osd_fopen) failed to open file:  %s\n", buffer);
 
    return out;
 }
