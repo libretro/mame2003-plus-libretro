@@ -330,6 +330,19 @@ else ifeq ($(platform), switch)
 	include $(LIBTRANSISTOR_HOME)/libtransistor.mk
 	STATIC_LINKING=1
 
+# PS2
+else ifeq ($(platform), ps2)
+	TARGET := $(TARGET_NAME)_libretro_$(platform).a
+	CC = ee-gcc$(EXE_EXT)
+	CXX = ee-g++$(EXE_EXT)
+	AR = ee-ar$(EXE_EXT)
+	PLATCFLAGS := -G0 -Wall -DPS2 -DNO_UNALIGNED_ACCESS -DABGR1555 -DRENDER_GSKIT_PS2 -fsingle-precision-constant
+	PLATCFLAGS += -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include  -I$(PS2DEV)/gsKit/include
+	PLATCFLAGS += -O3
+	PLATCFLAGS += -DHAVE_NO_LANGEXTRA
+	CXXFLAGS += -fno-rtti -fno-exceptions -ffast-math
+	STATIC_LINKING = 1
+
 else ifeq ($(platform), ps3)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
