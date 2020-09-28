@@ -111,6 +111,8 @@ from Dragon Gun.
 #include "machine/eeprom.h"
 #include "deco32.h"
 #include "cpu/z80/z80.h"
+#include "bootstrap.h"
+#include "inptport.h"
 
 static data32_t *deco32_ram;
 static int raster_enable,raster_offset;
@@ -3090,4 +3092,4 @@ GAMEX(1994, tattass,  0,        tattass,  tattass,  tattass,  ROT0, "Data East P
 GAMEX(1994, tattassa, tattass,  tattass,  tattass,  tattass,  ROT0, "Data East Pinball",     "Tattoo Assassins (Asia Prototype)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, nslasher, 0,        nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Korea Rev 1.3)" )
 GAME( 1994, nslasherj,nslasher, nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Japan Rev 1.2)" )
-GAME( 1994, nslashers,nslasher, nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Over Sea Rev 1.2)" )
+GAMEC( 1994, nslashers,nslasher, nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Over Sea Rev 1.2)", &generic_ctrl, &nslashers_bootstrap )
