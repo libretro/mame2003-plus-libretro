@@ -2214,7 +2214,7 @@ static DRIVER_INIT( biofreak )
 static DRIVER_INIT( blitz )
 {
 	dcs2_init(0x39c2);
-	init_common(MIDWAY_IOASIC_BLITZ99, 528/* or 444 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 444/* or 528 */, 80);
 
 	/* for some reason, the code in the ROM appears buggy; this is a small patch to fix it */
 	rombase[0x934/4] += 4;
@@ -2228,7 +2228,7 @@ static DRIVER_INIT( blitz )
 static DRIVER_INIT( blitz99 )
 {
 	dcs2_init(0x0afb);
-	init_common(MIDWAY_IOASIC_BLITZ99, 520/* or 481 or 484 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 481/* or 484 or 520 */, 80);
 
 	/* speedups */
 	install_mem_write32_handler(0, 0x802502bc, 0x802502bf, generic_speedup_w);
@@ -2239,7 +2239,7 @@ static DRIVER_INIT( blitz99 )
 static DRIVER_INIT( blitz2k )
 {
 	dcs2_init(0x0b5d);
-	init_common(MIDWAY_IOASIC_BLITZ99, 498/* or 494 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 494/* or 498 */, 80);
 
 	/* speedups */
 	install_mem_write32_handler(0, 0x8024e8d8, 0x8024e8db, generic_speedup_w);
@@ -2250,7 +2250,7 @@ static DRIVER_INIT( blitz2k )
 static DRIVER_INIT( carnevil )
 {
 	dcs2_init(0x0af7);
-	init_common(MIDWAY_IOASIC_CARNEVIL, 528/* or 469 or 486 */, 80);
+	init_common(MIDWAY_IOASIC_CARNEVIL, 469/* or 486 or 528 */, 80);
 
 	/* set up the gun */
 	install_mem_read32_handler(0, 0xb6800000, 0xb680001f, carnevil_gun_r);
