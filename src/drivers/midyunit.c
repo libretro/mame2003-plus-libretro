@@ -1968,9 +1968,9 @@ GAMEC( 1990, smashtv,  0,       smashtv,  smashtv, smashtv,  ROT0, "Williams", "
 GAMEC( 1990, smashtv6, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 6.00)", &smashtv_ctrl, &smashtv6_bootstrap )
 GAMEC( 1990, smashtv5, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 5.00)", &smashtv_ctrl, &smashtv5_bootstrap )
 GAMEC( 1990, smashtv4, smashtv, smashtv,  smashtv, smashtv4, ROT0, "Williams", "Smash T.V. (rev 4.00)", &smashtv_ctrl, &smashtv4_bootstrap )
-GAME ( 1990, hiimpact, 0,       hiimpact, trog,    hiimpact, ROT0, "Williams", "High Impact Football (rev LA3 12-27-90)" )
-GAME ( 1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)" )
-GAME ( 1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)" )
+GAMEC( 1990, hiimpact, 0,       hiimpact, trog,    hiimpact, ROT0, "Williams", "High Impact Football (rev LA3 12-27-90)", &hiimpact_ctrl, &hiimpact_bootstrap )
+GAMEC( 1991, shimpact, 0,       hiimpact, trog,    shimpact, ROT0, "Midway",   "Super High Impact (rev LA1 09-30-91)", &shimpact_ctrl, &shimpact_bootstrap )
+GAMEC( 1991, shimpacp, shimpact,hiimpact, trog,    shimpacp, ROT0, "Midway",   "Super High Impact (prototype, rev 5.0 09-15-91)", &shimpact_ctrl, &shimpacp_bootstrap )
 
 GAMEC( 1991, term2,    0,       term2,    term2,   term2,    ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA3 03-27-92)", &term2_ctrl, &term2_bootstrap )
 GAMEC( 1991, term2la2, term2,   term2,    term2,   term2la2, ROT0, "Midway",   "Terminator 2 - Judgment Day (rev LA2 12-09-91)", &term2_ctrl, &term2la2_bootstrap )
