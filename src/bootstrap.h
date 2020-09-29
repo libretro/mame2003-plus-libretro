@@ -14,6 +14,7 @@
 
 extern const struct bin2cFILE avengrgs_bootstrap;
 extern const struct bin2cFILE bubblem_bootstrap;
+extern const struct bin2cFILE carnevil_bootstrap;
 extern const struct bin2cFILE charlien_bootstrap;
 extern const struct bin2cFILE ddsom_bootstrap;
 extern const struct bin2cFILE ddsoma_bootstrap;
