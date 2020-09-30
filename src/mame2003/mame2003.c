@@ -217,7 +217,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],        APPNAME"_nvram_bootstraps",       "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],          APPNAME"_dcs_speedhack",          "DCS Speedhack; enabled|disabled");
-  init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; retropad|keyboard|simultaneous");
+  init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
   init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (restart); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
