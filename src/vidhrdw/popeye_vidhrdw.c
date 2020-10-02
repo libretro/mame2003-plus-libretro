@@ -261,7 +261,7 @@ WRITE_HANDLER( skyskipr_bitmap_w )
 static void get_fg_tile_info(int tile_index)
 {
 	int code = videoram[tile_index];
-	int color = colorram[tile_index];
+	int color = colorram[tile_index] & 0x0f;
 
 	SET_TILE_INFO(0, code, color, 0)
 }
@@ -308,7 +308,7 @@ VIDEO_START( popeye )
 	return 0;
 }
 
-static void popeye_draw_background(struct mame_bitmap *bitmap)
+static void popeye_draw_background(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
 	static int lastflip = 0;
@@ -325,7 +325,7 @@ static void popeye_draw_background(struct mame_bitmap *bitmap)
 
 	if (popeye_background_pos[1] == 0)	/* no background */
 	{
-		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+		fillbitmap(bitmap,Machine->pens[0],cliprect);
 	}
 	else
 	{
@@ -343,11 +343,11 @@ static void popeye_draw_background(struct mame_bitmap *bitmap)
 			scrolly = -scrolly;
 		}
 
-		copyscrollbitmap(bitmap,tmpbitmap2,1,&scrollx,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
+		copyscrollbitmap(bitmap,tmpbitmap2,1,&scrollx,1,&scrolly,cliprect,TRANSPARENCY_NONE,0);
 	}
 }
 
-static void popeye_draw_sprites(struct mame_bitmap *bitmap)
+static void popeye_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
 
@@ -396,13 +396,13 @@ static void popeye_draw_sprites(struct mame_bitmap *bitmap)
 					color,
 					flipx,flipy,
 					sx,sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 	}
 }
 
 VIDEO_UPDATE( popeye )
 {
-	popeye_draw_background(bitmap);
-	popeye_draw_sprites(bitmap);
-	tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
+	popeye_draw_background(bitmap, cliprect);
+	popeye_draw_sprites(bitmap, cliprect);
+	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
 }
