@@ -317,7 +317,7 @@ else ifeq ($(platform), libnx)
   DEFINES := -DSWITCH=1 -U__linux__ -U__linux -DRARCH_INTERNAL -DHAVE_LIBNX
   CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
   CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
-  CFLAGS += -std=gnu11
+  CFLAGS += -std=gnu11 -fcommon
   PLATCFLAGS += -D__SWITCH__ -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
   CPU_ARCH := arm64
   STATIC_LINKING = 1
