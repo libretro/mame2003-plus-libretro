@@ -280,6 +280,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Turbo Tag - Romset `turbotag`
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
+* Wonder Boy in Monster Land (Japan New Ver.) - Romset `wbml`
+* Wonder Boy in Monster Land (Japan Old Ver.) - Romset `wbmljo`
 * Xenophobe - Romset `xenophob`
 * X-men (6 players) - Romset `xmen6p` and `xmen6pu`
 * Wacko - Romset `wacko`
