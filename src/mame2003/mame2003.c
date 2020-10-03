@@ -773,7 +773,7 @@ static void remove_slash (char* temp)
 
   log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
 
-  if( temp[i-1] == '/' || temp[i-1] == '\\' )
+  if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
   {
     temp[i-1] = 0;
     log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
