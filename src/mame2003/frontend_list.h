@@ -2245,7 +2245,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "X Multiply (Japan)"                                                                                    ,"xmultipl"     , "mame", 1, 0 } ,
 { "X-Men (2 Players Japan)"                                                                               ,"xmen2pj"      , "mame", 3, 0 } ,
 { "X-Men (4 Players)"                                                                                     ,"xmen"         , "mame", 3, 0 } ,
-{ "X-Men (6 Players)"                                                                                     ,"xmen6p"       , "mame", 3, 0 } ,
+{ "X-Men (6 Players Euro)"                                                                                ,"xmen6p"       , "mame", 3, 0 } ,
 { "X-Men (6 Players US)"                                                                                  ,"xmen6pu"      , "mame", 3, 0 } ,
 { "Xain'd Sleena (bootleg)"                                                                               ,"xsleenab"     , "mame", 3, 0 } ,
 { "Xain'd Sleena"                                                                                         ,"xsleena"      , "mame", 3, 0 } ,
