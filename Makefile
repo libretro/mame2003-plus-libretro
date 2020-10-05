@@ -316,7 +316,7 @@ else ifeq ($(platform), libnx)
   TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
   DEFINES := -DSWITCH=1 -U__linux__ -U__linux -DRARCH_INTERNAL -DHAVE_LIBNX
   CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
-  CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+  CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11 -fcommon
   CFLAGS += -std=gnu11
   PLATCFLAGS += -D__SWITCH__ -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
   CPU_ARCH := arm64
@@ -387,7 +387,7 @@ else ifeq ($(platform), vita)
    CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
    CFLAGS +=  -fno-optimize-sibling-calls
    CFLAGS += -ftree-vectorize -funroll-loops -fno-short-enums
-   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -fcommon
    HAVE_RZLIB := 1
    ARM = 1
    STATIC_LINKING := 1
