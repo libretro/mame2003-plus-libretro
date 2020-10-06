@@ -5786,7 +5786,13 @@ Other Sun games
 	/* Sega Model 1 Hardware */	
 	DRIVER( vf )
     
+  /* Oriental Soft */  
 	DRIVER( 1945kiii )	/* (c) 2000 Oriental */
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
+    
+  /* Current Tech */
+  DRIVER( mirax )	  /* (c) Current Technologies */
+	DRIVER( miraxa )  /* (c) Current Technologies */
+    
 
 #endif	/* DRIVER_RECURSIVE */
