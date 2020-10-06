@@ -78,6 +78,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metal Slug 4
 * Metal Slug 5
 * Mighty Warriors
+* Mirax
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
 * Mortal Kombat 2 Plus Beta 2
@@ -174,6 +175,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Knuckle Bash 2
 * Magical Drop
 * Magical Drop Plus 1
+* Mirax (set 2)
 * Progear No Arashi
 * Renegade (US, Bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
@@ -520,3 +522,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Ashita no Joe sound fixes / CPU clock frequencies [arcadez]
 * Success Joe new game support added [mahoneyt944]
 * Fixed directory and file creation for WiiU - should be working for all platforms now [mahoneyt944]
+* Ported mirax.c across to MAME2003+ [arcadez, dink]
