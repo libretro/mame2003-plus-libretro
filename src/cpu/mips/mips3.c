@@ -267,7 +267,7 @@ static UINT8 fcc_shift[8] = { 23, 25, 26, 27, 28, 29, 30, 31 };
 **	PUBLIC GLOBAL VARIABLES
 **#################################################################################################*/
 
-static int	mips3_icount;
+static int	mips3_icount = 0;
 
 
 
