@@ -1255,8 +1255,6 @@ static INLINE void handle_cop2(UINT32 op)
 
 int mips3_execute(int cycles)
 {
-/*printf("mips3_execute (PC=%08X)\n", mips3.pc);*/
-
 	/* count cycles and interrupt cycles */
 	mips3_icount = cycles;
 	mips3_icount -= mips3.interrupt_cycles;
@@ -1504,8 +1502,6 @@ int mips3_execute(int cycles)
 		mips3_icount--;
 
 	} while (mips3_icount > 0 || mips3.nextpc != ~0);
-
-/*printf("mips3_execute done (PC=%08X)\n", mips3.pc);*/
 
 	mips3_icount -= mips3.interrupt_cycles;
 	mips3.interrupt_cycles = 0;
