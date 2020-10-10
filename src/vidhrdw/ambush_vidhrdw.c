@@ -76,7 +76,7 @@ static void draw_chars(struct mame_bitmap *bitmap, int priority)
 
 		col = colorram[((sy & 0x1c) << 3) + sx];
 
-		if ((col & 0x10) != priority)  continue;
+		if (priority & ~col)  continue;
 
 		scroll = ~ambush_scrollram[sx];
 
@@ -107,7 +107,7 @@ VIDEO_UPDATE( ambush )
 	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
 
 
-	/* Draw the background priority characters */
+	/* Draw the characters */
 	draw_chars(bitmap, 0x00);
 
 
@@ -176,6 +176,6 @@ VIDEO_UPDATE( ambush )
 	}
 
 
-	/* Draw the foreground priority characters */
+	/* Draw the foreground priority characters over the sprites */
 	draw_chars(bitmap, 0x10);
 }
