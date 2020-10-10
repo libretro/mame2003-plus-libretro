@@ -85,7 +85,6 @@ WRITE_HANDLER( senjyo_bg1videoram_w );
 WRITE_HANDLER( senjyo_bg2videoram_w );
 WRITE_HANDLER( senjyo_bg3videoram_w );
 WRITE_HANDLER( senjyo_bgstripes_w );
-WRITE_HANDLER( senjyo_paletteram_w );
 
 
 DRIVER_INIT( starforc );
