@@ -145,9 +145,7 @@ WRITE_HANDLER( djboy_paletteram_w )
 	offset &= ~1;
 	val = (paletteram[offset]<<8) | paletteram[offset+1];
 
-#define pal4bit(v)	((((v) & 0x0f) << 4) | ((v) & 0x0f))
 	palette_set_color(offset/2,pal4bit(val >> 8),pal4bit(val >> 4),pal4bit(val >> 0));
-#undef pal4bit
 }
 
 VIDEO_UPDATE( djboy )
