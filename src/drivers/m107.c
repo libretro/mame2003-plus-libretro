@@ -299,7 +299,7 @@ INPUT_PORTS_START( dsoccr94 )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	/* This is sprite flag on IREM M92, if this is active low, then "Dream Soccer'94" is unplayably slow . */
-	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
