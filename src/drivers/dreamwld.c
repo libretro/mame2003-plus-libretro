@@ -339,14 +339,11 @@ static WRITE32_HANDLER( dreamwld_palette_w )
 	COMBINE_DATA(&paletteram32[offset]);
 	color = offset * 2;
 
-#define pal5bit(n)	((((n) & 0x1f) << 3) | (((n) & 0x1f) >> 2))
-
 	dat = paletteram32[offset] & 0x7fff;
 	palette_set_color(color + 1, pal5bit(dat >> 10), pal5bit(dat >> 5), pal5bit(dat >> 0));
 
 	dat = (paletteram32[offset] >> 16) & 0x7fff;
 	palette_set_color(color, pal5bit(dat >> 10), pal5bit(dat >> 5), pal5bit(dat >> 0));
-#undef pal5bit
 }
 
 static void dreamwld_oki_setbank(UINT8 chip, UINT8 bank )
