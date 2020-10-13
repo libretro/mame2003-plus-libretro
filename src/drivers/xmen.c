@@ -534,7 +534,7 @@ static MACHINE_DRIVER_START( xmen6p )
 	MDRV_CPU_MEMORY(readmem6p,writemem6p)
 	MDRV_CPU_VBLANK_INT(xmen6p_interrupt,2)
 
-	MDRV_CPU_ADD(Z80,2*3579545)
+	MDRV_CPU_ADD(Z80, 8000000)	/* verified with M1, guessed but accurate */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ????? */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 
