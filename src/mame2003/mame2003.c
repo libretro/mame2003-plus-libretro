@@ -46,10 +46,10 @@ unsigned long             lastled = 0;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-int                 retroJsState[156]= {0}; // initialise to zero - we are only reading 4 players atm map for 6 (6*26)
+int                 retroJsState[156]= {0}; // initialise to zero - we are reading 6 players (6*26)
 int16_t             mouse_x[4]= {0};
 int16_t             mouse_y[4]= {0};
-int16_t             analogjoy[4][4]= {0};
+int16_t             analogjoy[6][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 int                 running = 0;
 int                 control_flag=-1;
@@ -1245,7 +1245,7 @@ void retro_run (void)
 		thisInput ++;
 	}
 
-	for (i = 0; i < 4; i ++)
+	for (i = 0; i < 6; i ++)
 	{
 		unsigned int offset = (i * number_of_controls);
 
@@ -1327,6 +1327,7 @@ void retro_run (void)
 
 		if (convert_analog_scale(analogjoy[i][3]) < -pressure_check)
 			retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]);
+
 		if (convert_analog_scale(analogjoy[i][3]) >  pressure_check)
 			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
 	}
@@ -1845,10 +1846,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
-  {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
+  {"RP"   #DISPLAY_IDX " HAT Up   ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
   {"RP"   #DISPLAY_IDX " B",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_B +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " A",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_A +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1873,10 +1874,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
-  {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
+  {"RP"   #DISPLAY_IDX " HAT Up   ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_Y  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_X  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " R",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_R  +1000,     JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1901,10 +1902,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
-  {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
+  {"RP"   #DISPLAY_IDX " HAT Up   ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
@@ -1929,10 +1930,10 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " HAT Left ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
+  {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " HAT Up   ",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
-  {"RP"   #DISPLAY_IDX " HAT Down ",     ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
+  {"RP"   #DISPLAY_IDX " HAT Up   ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_UP +3000,     JOYCODE_##DISPLAY_IDX##_UP}, \
+  {"RP"   #DISPLAY_IDX " HAT Down ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_DOWN +3000,   JOYCODE_##DISPLAY_IDX##_DOWN}, \
   {"RP"   #DISPLAY_IDX " Y",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_Y +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"RP"   #DISPLAY_IDX " X",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_X +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"RP"   #DISPLAY_IDX " L",            ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_L +1000,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
