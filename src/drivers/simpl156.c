@@ -277,7 +277,6 @@ static READ32_HANDLER( simpl156_palette_r )
 
 static WRITE32_HANDLER( simpl156_palette_w )
 {
-	int r,g,b;
 	UINT16 dat;
 	int color;
 
@@ -289,15 +288,7 @@ static WRITE32_HANDLER( simpl156_palette_w )
 
 	dat = paletteram16[offset]&0xffff;
 
-	g = (dat >>  5) & 0x1f;
-	r = (dat >>  0) & 0x1f;
-	b = (dat >> 10) & 0x1f;
-
-	g = (g << 3) | (g >> 2);
-	r = (r << 3) | (r >> 2);
-	b = (b << 3) | (b >> 2);
-
-	palette_set_color(color,r,g,b);
+	palette_set_color(color,pal5bit(dat >> 0),pal5bit(dat >> 5),pal5bit(dat >> 10));
 }
 
 
