@@ -7,6 +7,7 @@
 *********************************************************************/
 
 #define number_of_controls 26
+#define total_controllers   6
 
 #include <stdint.h>
 #include <string/stdstring.h>
@@ -46,10 +47,10 @@ unsigned long             lastled = 0;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-int                 retroJsState[156]= {0}; // initialise to zero - we are reading 6 players (6*26)
-int16_t             mouse_x[4]= {0};
-int16_t             mouse_y[4]= {0};
-int16_t             analogjoy[6][4]= {0};
+int                 retroJsState[total_controllers * number_of_controls]= {0}; // initialise to zero - we are reading 6 players (6*26)
+int16_t             mouse_x[total_controllers]= {0};
+int16_t             mouse_y[total_controllers]= {0};
+int16_t             analogjoy[total_controllers][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 int                 running = 0;
 int                 control_flag=-1;
@@ -1245,7 +1246,7 @@ void retro_run (void)
 		thisInput ++;
 	}
 
-	for (i = 0; i < 6; i ++)
+	for (i = 0; i < total_controllers; i ++)
 	{
 		unsigned int offset = (i * number_of_controls);
 
