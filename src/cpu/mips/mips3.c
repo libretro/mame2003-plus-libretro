@@ -1551,7 +1551,7 @@ unsigned mips3_get_reg(int regnum)
 		case MIPS3_SR:		return SR;
 		case MIPS3_EPC:		return mips3.cpr[0][COP0_EPC];
 		case MIPS3_CAUSE:	return mips3.cpr[0][COP0_Cause];
-		case MIPS3_COUNT:	return ((activecpu_gettotalcycles64() - mips3.count_zero_time) / 2);
+		case MIPS3_COUNT:	return mips3.cpr[0][COP0_Count];
 		case MIPS3_COMPARE:	return mips3.cpr[0][COP0_Compare];
 
 		case MIPS3_R0:		return (UINT32)mips3.r[0];
