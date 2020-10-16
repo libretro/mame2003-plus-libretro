@@ -552,11 +552,12 @@ static READ_HANDLER( port4_r )
 
 static READ_HANDLER( ddragon_spriteram_r )
 {
-        /* Double Dragon crash fix - see notes above */
-	/* if (offset == 0x49 && activecpu_get_pc() == 0x6261 && ddragon_spriteram[offset]== 0x1f) */
-	   if (offset==0x49 && ddragon_spriteram[offset]==0x1f)
-	    return 0x1;
-
+	if(strcmp(Machine->gamedrv->name, "ddragon") == 0)
+	{	
+	/* BritneysPAIRS Double Dragon crash fix  */
+	if (offset==0x49 && ddragon_spriteram[offset]==0x1f)
+		return 0x1;
+  }
 	return ddragon_spriteram[offset];
 }
 
