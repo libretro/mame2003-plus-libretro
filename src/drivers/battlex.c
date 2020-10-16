@@ -1,59 +1,81 @@
 /* battlex.c - by David Haywood
 
-Stephh's notes :
-
-  - I don't know exactly how to call the "Free Play" Dip Switch 8(
-    It's effect is the following :
-      * you need to insert at least one credit and start a game
-      * when the game is over, you can start another games WITHOUT
-        inserting another coins
-    Note that the number of credits is decremented though.
-    Credits are BCD coded on 3 bytes (0x000000-0x999999) at addresses
-    0xa039 (LSB), 0xa03a and 0xa03b (MSB), but only the LSB is displayed.
-
-   - Setting the flipscreen dip to ON also hides the copyright message (?)
-
-TO DO :
-
-  - missing starfield
-
-  - game speed, its seems to be controlled by the IRQ's, how fast should it
-    be? firing seems frustratingly inconsistant
-
-  - colors match Tim's screen shots, but there's no guarantee RGB are in the
-    correct order.
-*/
-
-/*
-
-Battle Cross (c)1982 Omori
-
-CPU: Z80A
-Sound: AY-3-8910
-Other: 93419 (in socket marked 93219)
-
-RAM: 4116(x12), 2114(x2), 2114(x6)
-PROMS: none
-
-XTAL: 10.0 MHz
+    Stephh's notes :
+    - I don't know exactly how to call the "Free Play" Dip Switch 8(
+      Its effect is the following :
+        * you need to insert at least one credit and start a game
+        * when the game is over, you can start another games WITHOUT
+          inserting another coins
+      Note that the number of credits is decremented though.
+      Credits are BCD coded on 3 bytes (0x000000-0x999999) at addresses
+      0xa039 (LSB), 0xa03a and 0xa03b (MSB), but only the LSB is displayed.
+     - Setting the flipscreen dip to ON also hides the copyright message (?)
+    Notes from Tomasz Slanina:
+	Tile decoding:
+	Each 8x8 BG tile is defined by:
+	- 1 bit  8x8 mask  (one tile - 8 consecutive bytes - user2 region)
+	- 4+4  bits of color ( one tile - 8 consecutive bytes - user1 region) 
+	- bit 3 of color  = brightness ?
+	Single mask byte defines one row of tile pixels (FG or BG)
+	Single color byte defines color of FG (4 bits) and color of BG (4 bits)
+	of high (odd address in user1) or low (even address in user1) 
+	nibbles of two tile pixels rows.
+	Here's an example (single tile):
+     user2      user1   colors
+    ----------------------------
+    00011100    0x32   33321144    
+	00111100    0x41   33221144 
+	00111100    0x32   33227744 
+	00011000    0x47   33327444
+	00011000    0x56   55566555
+	00011000    0x56   55566555
+	00011000    0x84   88844777
+	00011000    0x74   88844777
+	
+	
+    TO DO :
+    - missing starfield
+    - game speed, its seems to be controlled by the IRQ's, how fast should it
+      be? firing seems frustratingly inconsistant (better with PORT_IMPULSE)
+    - BG tilemap palette bits (in most cases paltte 0 is used, 
+      only highlights ( battlex logo, hiscore table) uses different palettes(?).
+      Current implementation gives different highlight colors than on real 
+      hardware (i.e. battlex logo should have yellow highights)
+****************************************************************************
+    Battle Cross (c)1982 Omori
+    CPU: Z80A
+    Sound: AY-3-8910
+    Other: 93419 (in socket marked 93219)
+    RAM: 4116(x12), 2114(x2), 2114(x6)
+    PROMS: none
+    XTAL: 10.0 MHz
 
 */
 
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "includes/battlex.h"
 
 
-extern WRITE_HANDLER( battlex_palette_w );
-extern WRITE_HANDLER( battlex_videoram_w );
-extern WRITE_HANDLER( battlex_scroll_x_lsb_w );
-extern WRITE_HANDLER( battlex_scroll_x_msb_w );
-extern WRITE_HANDLER( battlex_flipscreen_w );
 
-extern PALETTE_INIT( battlex );
-extern VIDEO_START( battlex );
-extern VIDEO_UPDATE( battlex );
+INTERRUPT_GEN( battlex_interrupt )
+{
+	battlex_in0_b4 = 1;
+	cpu_set_reset_line(0, ASSERT_LINE);
+}
 
+READ_HANDLER( battlex_in0_b4_r )
+{
+	uint32_t ret = battlex_in0_b4;
+	if (battlex_in0_b4)
+	{
+		cpu_set_reset_line(0, CLEAR_LINE);
+		battlex_in0_b4 = 0;
+	}
+
+	return ret;
+}
 
 /*** MEMORY & PORT READ / WRITE **********************************************/
 
@@ -70,7 +92,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x8000, 0x8fff, battlex_videoram_w, &videoram },
 	{ 0x9000, 0x91ff, MWA_RAM, &spriteram },
 	{ 0xa000, 0xa3ff, MWA_RAM }, /* main */
-	{ 0xe000, 0xe03f, battlex_palette_w }, /* probably palette */
+	{ 0xe000, 0xe03f, battlex_palette_w },
 MEMORY_END
 
 static PORT_READ_START( readport )
@@ -86,11 +108,7 @@ static PORT_WRITE_START( writeport )
 	/* verify all of these */
 	{ 0x22, 0x22, AY8910_write_port_0_w },
 	{ 0x23, 0x23, AY8910_control_port_0_w },
-
-	/* 0x30 looks like scroll, but can't be ? changes (increases or decreases)
-		depending on the direction your ship is facing on lev 2. at least */
-	{ 0x30, 0x30, MWA_NOP },
-
+	{ 0x30, 0x30, battlex_scroll_starfield_w },
 	{ 0x32, 0x32, battlex_scroll_x_lsb_w },
 	{ 0x33, 0x33, battlex_scroll_x_msb_w },
 MEMORY_END
@@ -110,9 +128,7 @@ INPUT_PORTS_START( battlex )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, "Freeze" )				/* VBLANK ?*/
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -186,7 +202,7 @@ static struct GfxLayout battlex_spritelayout =
 	16,16,
 	RGN_FRAC(1,3),
 	3,
-	{ 0,RGN_FRAC(1,3),RGN_FRAC(2,3) },
+	{ RGN_FRAC(0,3), RGN_FRAC(1,3), RGN_FRAC(2,3) },
 	{ 7,6,5,4,3,2,1,0,
 		15,14,13,12,11,10,9,8 },
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16,
@@ -197,8 +213,8 @@ static struct GfxLayout battlex_spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &battlex_charlayout,      0, 8 },
-	{ REGION_GFX2, 0, &battlex_spritelayout, 16*8, 8 },
+	{ REGION_GFX1, 0, &battlex_charlayout,    64, 8 },
+	{ REGION_GFX2, 0, &battlex_spritelayout,   0, 8 },
 	{ -1 } /* end of array */
 };
 
@@ -217,15 +233,23 @@ static struct AY8910interface battlex_ay8910_interface =
 
 /*** MACHINE DRIVERS *********************************************************/
 
+static MACHINE_INIT ( battlex )
+{
+	battlex_scroll_lsb = 0;
+	battlex_scroll_msb = 0;
+	battlex_starfield_enabled = 0;
+	battlex_in0_b4 = 0;
+}
+
 static MACHINE_DRIVER_START( battlex )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80,10000000/2 )		 /* 10 MHz, divided ? (Z80A CPU) */
+	MDRV_CPU_ADD(Z80,10000000/4 )	/* ? */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_pulse,8) /* controls game speed? */
 
-	MDRV_FRAMES_PER_SECOND(56) /* The video syncs at 15.8k H and 56 V (www.klov.com) */
+	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
@@ -235,7 +259,6 @@ static MACHINE_DRIVER_START( battlex )
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(16*8+64)
 
-	MDRV_PALETTE_INIT(battlex)
 	MDRV_VIDEO_START(battlex)
 	MDRV_VIDEO_UPDATE(battlex)
 
@@ -273,31 +296,33 @@ ROM_END
 
 static DRIVER_INIT( battlex )
 {
-	UINT8 *cold    = memory_region       ( REGION_USER1 );
-	UINT8 *mskd    = memory_region       ( REGION_USER2 );
-	UINT8 *dest    = memory_region       ( REGION_GFX1 );
+	uint8_t *colormask    = memory_region( REGION_USER1 );
+	uint8_t *gfxdata      = memory_region( REGION_USER2 );
+	uint8_t *dest         = memory_region( REGION_GFX1 );
 
-	int outcount;
-
-	/* convert gfx data from 1bpp + color block mask to straight 4bpp */
-	for (outcount = 0; outcount < (0x1000/8); outcount++)
+	int offset = 0;
+	int tile;
+	for (tile = 0; tile < (0x1000/8); tile++)
 	{
-		int linecount;
-		for (linecount = 0; linecount < 8; linecount ++)
+		int line;
+		for (line = 0; line < 8; line ++)
 		{
-			int bitmask = 0x01;
-			int bitcount;
-
-			for (bitcount = 0;bitcount < 8 ; bitcount ++)
+			int bit;
+			for (bit = 0; bit < 8 ; bit ++)
 			{
-				int bit, col;
-				bit = (mskd[outcount*8+linecount] & bitmask) >> bitcount;
+				int color = colormask[(tile << 3) | ((line & 0x6) + (bit > 3 ? 1 : 0))];
+				int data = BIT(gfxdata[(tile << 3) | line], bit);
 
-				if (bit) col = (cold[outcount*8+(linecount&~1)+(bitcount/4)] & 0x0f) << 4;
-				else col = (cold[outcount*8+(linecount&~1)+(bitcount/4)] & 0xf0);
+				if (!data)
+					color >>= 4;
 
-				dest[outcount*32 + linecount*4 + bitcount /2] |= (col >> (4*(bitcount & 1)));
-				bitmask = bitmask << 1;
+				color &= 0x0f;
+
+				if (offset&1)
+					dest[offset >> 1] |= color;
+				else
+					dest[offset >> 1] = color<<4;
+				++offset;
 			}
 		}
 	}
