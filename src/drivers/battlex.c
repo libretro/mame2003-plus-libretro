@@ -58,11 +58,10 @@
 #include "includes/battlex.h"
 
 
-
 INTERRUPT_GEN( battlex_interrupt )
 {
 	battlex_in0_b4 = 1;
-	cpu_set_reset_line(0, ASSERT_LINE);
+	cpu_set_irq_line(0, 0, ASSERT_LINE);
 }
 
 READ_HANDLER( battlex_in0_b4_r )
@@ -70,7 +69,7 @@ READ_HANDLER( battlex_in0_b4_r )
 	uint32_t ret = battlex_in0_b4;
 	if (battlex_in0_b4)
 	{
-		cpu_set_reset_line(0, CLEAR_LINE);
+		cpu_set_irq_line(0, 0, CLEAR_LINE);
 		battlex_in0_b4 = 0;
 	}
 
@@ -140,8 +139,8 @@ INPUT_PORTS_START( battlex )
 	PORT_START	/* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1, 4 )
+	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1, 4 | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
