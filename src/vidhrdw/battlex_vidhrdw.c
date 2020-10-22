@@ -53,9 +53,28 @@ static void get_bg_tile_info(int tile_index)
 	SET_TILE_INFO(0,tile,color,0)
 }
 
+static void get_dodgeman_bg_tile_info(int tile_index)
+{
+	int tile = videoram[tile_index*2] | (((videoram[tile_index*2+1] & 0x03)) << 8);
+	int color = (videoram[tile_index*2+1] & 0x0c) >> 2;
+
+	SET_TILE_INFO(0,tile,color,0)
+}
+
 VIDEO_START( battlex )
 {
 	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows,
+		TILEMAP_OPAQUE, 8, 8, 64, 32);
+
+	if ( !bg_tilemap )
+		return 1;
+
+	return 0;
+}
+
+VIDEO_START( dodgeman )
+{
+	bg_tilemap = tilemap_create(get_dodgeman_bg_tile_info, tilemap_scan_rows,
 		TILEMAP_OPAQUE, 8, 8, 64, 32);
 
 	if ( !bg_tilemap )

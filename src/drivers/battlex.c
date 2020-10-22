@@ -112,6 +112,18 @@ static PORT_WRITE_START( writeport )
 	{ 0x33, 0x33, battlex_scroll_x_msb_w },
 MEMORY_END
 
+static PORT_WRITE_START( dodgeman_writeport )
+	{ 0x10, 0x10, battlex_flipscreen_w },
+	/* verify all of these */
+	{ 0x22, 0x22, AY8910_write_port_0_w },
+	{ 0x23, 0x23, AY8910_control_port_0_w },
+	{ 0x26, 0x26, AY8910_write_port_0_w },
+	{ 0x27, 0x27, AY8910_control_port_0_w },
+	{ 0x30, 0x30, battlex_scroll_starfield_w },
+	{ 0x32, 0x32, battlex_scroll_x_lsb_w },
+	{ 0x33, 0x33, battlex_scroll_x_msb_w },
+MEMORY_END
+
 /*** INPUT PORTS *************************************************************/
 
 INPUT_PORTS_START( battlex )
@@ -139,6 +151,7 @@ INPUT_PORTS_START( battlex )
 	PORT_START	/* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
+	/* TO DO: port impulse? */
 	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1, 4 )
 	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL, 4 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
@@ -314,6 +327,7 @@ static MACHINE_DRIVER_START( battlex )
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_pulse,8) /* controls game speed? */
+	MDRV_MACHINE_INIT(battlex)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -328,10 +342,22 @@ static MACHINE_DRIVER_START( battlex )
 	MDRV_VIDEO_START(battlex)
 	MDRV_VIDEO_UPDATE(battlex)
 
-	/* sound hardware */
+	/* sound hardware - ay1 */
 	MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( dodgeman )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(battlex)
+	MDRV_CPU_PORTS(readport, dodgeman_writeport)
+
+	/* video hardware */
+	MDRV_VIDEO_START(dodgeman)
+
+	/* sound hardware - ay2 */
+	/*MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)*/
+MACHINE_DRIVER_END
 
 /*** ROM LOADING *************************************************************/
 
@@ -386,10 +412,11 @@ static DRIVER_INIT( battlex )
 	uint8_t *colormask    = memory_region( REGION_USER1 );
 	uint8_t *gfxdata      = memory_region( REGION_USER2 );
 	uint8_t *dest         = memory_region( REGION_GFX1 );
+	int tile_size         = memory_region_length( REGION_GFX1 ) / 32;
 
 	int offset = 0;
 	int tile;
-	for (tile = 0; tile < (0x1000/8); tile++)
+	for (tile = 0; tile < tile_size; tile++)
 	{
 		int line;
 		for (line = 0; line < 8; line ++)
@@ -417,5 +444,5 @@ static DRIVER_INIT( battlex )
 
 /*** GAME DRIVERS ************************************************************/
 
-GAMEX( 1982, battlex,  0, battlex, battlex, battlex, ROT180, "Omori Electric", "Battle Cross", GAME_IMPERFECT_GRAPHICS )
-//GAMEX( 1983, dodgeman, 0, dodgeman, dodgeman, dodgeman, ROT180, "Omori Electric", "Dodge Man", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1982, battlex,  0, battlex,  battlex,  battlex, ROT180, "Omori Electric", "Battle Cross", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1983, dodgeman, 0, dodgeman, dodgeman, battlex, ROT180, "Omori Electric", "Dodge Man", GAME_IMPERFECT_GRAPHICS )
