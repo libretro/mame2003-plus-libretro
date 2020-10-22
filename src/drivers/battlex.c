@@ -340,7 +340,7 @@ static MACHINE_DRIVER_START( battlex )
 	MDRV_VIDEO_START(battlex)
 	MDRV_VIDEO_UPDATE(battlex)
 
-	/* sound hardware */
+	/* sound hardware - ay1 */
 	MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
 MACHINE_DRIVER_END
 
@@ -353,8 +353,8 @@ static MACHINE_DRIVER_START( dodgeman )
 	/* video hardware */
 	MDRV_VIDEO_START(dodgeman)
 
-	/* sound hardware */
-	MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
+	/* sound hardware - ay2 */
+	//MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
 MACHINE_DRIVER_END
 
 /*** ROM LOADING *************************************************************/
