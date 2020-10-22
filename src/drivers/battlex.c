@@ -356,7 +356,7 @@ static MACHINE_DRIVER_START( dodgeman )
 	MDRV_VIDEO_START(dodgeman)
 
 	/* sound hardware - ay2 */
-	//MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
+	/*MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)*/
 MACHINE_DRIVER_END
 
 /*** ROM LOADING *************************************************************/
