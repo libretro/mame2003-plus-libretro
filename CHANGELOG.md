@@ -35,6 +35,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Deer Hunting
 * Diet Go Go
 * Digger (CVS)
+* Dodge Man
 * DoDonPachi Dai-Ou-Jou
 * Doki Doki Penguin Land
 * Double Wings
@@ -210,6 +211,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Avengers In Galactic Storm US - Romset: `avengrgs`
 * Avengers In Galactic Storm Japan - Romset: `avengrgsj`
 * Avenging Spirit - Romset `avspirit`
+* Battle Cross - Romset `battlex`
 * B.C. Story - Romset `bcstry`
 * B-Rap Boys - Romset: `brapboys` - Playable with minor remaining graphical issues
 * B-Rap Boys Special - Romset `brapboysj` - Playable with minor remaining graphical issues
@@ -523,3 +525,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Success Joe new game support added [mahoneyt944]
 * Fixed directory and file creation for WiiU - should be working for all platforms now [mahoneyt944]
 * Ported mirax.c across to MAME2003+ [arcadez, dink]
+* Fixed battlex to current mame standards / added dodgeman support [mahoneyt944, arcadez]
