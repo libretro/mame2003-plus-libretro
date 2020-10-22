@@ -326,6 +326,7 @@ static MACHINE_DRIVER_START( battlex )
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_pulse,8) /* controls game speed? */
+	MDRV_MACHINE_INIT(battlex)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
