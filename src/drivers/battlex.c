@@ -151,6 +151,7 @@ INPUT_PORTS_START( battlex )
 	PORT_START	/* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
+	/* TO DO: port impulse? */
 	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1, 4 )
 	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL, 4 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
@@ -411,10 +412,11 @@ static DRIVER_INIT( battlex )
 	uint8_t *colormask    = memory_region( REGION_USER1 );
 	uint8_t *gfxdata      = memory_region( REGION_USER2 );
 	uint8_t *dest         = memory_region( REGION_GFX1 );
+	int tile_size         = memory_region_length( REGION_GFX1 ) / 32;
 
 	int offset = 0;
 	int tile;
-	for (tile = 0; tile < (0x1000/8); tile++)
+	for (tile = 0; tile < tile_size; tile++)
 	{
 		int line;
 		for (line = 0; line < 8; line ++)
