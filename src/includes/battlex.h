@@ -20,6 +20,7 @@ WRITE_HANDLER( battlex_scroll_x_msb_w );
 WRITE_HANDLER( battlex_scroll_starfield_w );
 WRITE_HANDLER( battlex_flipscreen_w );
 VIDEO_START( battlex );
+VIDEO_START( dodgeman );
 VIDEO_UPDATE( battlex );
 
 
