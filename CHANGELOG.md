@@ -143,6 +143,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Tylz
+* Ufo Senshi Yohko Chan (not encrypted)
 * Ultimate Mortal Kombat 3 Plus Beta 1
 * Varia Metal
 * Vasara 2
