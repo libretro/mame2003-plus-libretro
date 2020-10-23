@@ -2151,6 +2151,90 @@ INPUT_PORTS_START( gardia )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( ufosensi )
+	PORT_START  /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+
+	PORT_START  /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+
+	PORT_START  /* IN0 */
+	IN0_PORT
+
+	PORT_START  /* DSW1 */
+	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(	0x00, "Easy" )
+	PORT_DIPSETTING(	0x01, "Normal" )
+	PORT_DIPSETTING(	0x02, "Hard" )
+	PORT_DIPSETTING(	0x03, "Hardest" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
+	PORT_DIPSETTING(	0x0c, "3" )
+	PORT_DIPSETTING(	0x04, "4" )
+/*	PORT_DIPSETTING(	0x08, "4" ) */
+	PORT_DIPSETTING(	0x00, "5" )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(	0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(	0x10, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x20, 0x00, "Allow_Continue" )
+	PORT_DIPSETTING(	0x20, DEF_STR( No ) )
+	PORT_DIPSETTING(	0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(	0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Invulnerability" )
+	PORT_DIPSETTING(	0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
+
+	PORT_START	  /* DSW0 */
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(	0x07, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x08, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x09, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x05, "2 Coins/1 Credit 5/3 6/4" )
+	PORT_DIPSETTING(	0x04, "2 Coins/1 Credit 4/3" )
+	PORT_DIPSETTING(	0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x03, "1 Coin/1 Credit 5/6" )
+	PORT_DIPSETTING(	0x02, "1 Coin/1 Credit 4/5" )
+	PORT_DIPSETTING(	0x01, "1 Coin/1 Credit 2/3" )
+	PORT_DIPSETTING(	0x06, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(	0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(	0x00, "Infinite Lives (both set)" )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(	0x70, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x80, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x90, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x50, "2 Coins/1 Credit 5/3 6/4" )
+	PORT_DIPSETTING(	0x40, "2 Coins/1 Credit 4/3" )
+	PORT_DIPSETTING(	0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x30, "1 Coin/1 Credit 5/6" )
+	PORT_DIPSETTING(	0x20, "1 Coin/1 Credit 4/5" )
+	PORT_DIPSETTING(	0x10, "1 Coin/1 Credit 2/3" )
+	PORT_DIPSETTING(	0x60, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(	0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(	0xa0, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(	0x00, "Infinite Lives (both set)" )
+INPUT_PORTS_END
 
 static struct GfxLayout charlayout =
 {
@@ -2309,9 +2393,21 @@ static MACHINE_DRIVER_START( blockgal )
 
 	/* video hardware */
 	MDRV_VIDEO_UPDATE(blockgal)
-
+	
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( ufosensi )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( wbml )
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(1*8, 31*8-1, 1*8, 27*8-1)
+
+	/* video hardware */
+	MDRV_VIDEO_UPDATE(ufosensi)
+	
+MACHINE_DRIVER_END
 
 /***************************************************************************
 
@@ -3958,6 +4054,36 @@ ROM_START( ufosensi )
 	ROM_LOAD( "pr5317.28",    0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
 ROM_END
 
+ROM_START( ufosensb )
+	ROM_REGION( 2*0x20000, REGION_CPU1, 0 ) /* 256k for code + 256k for decrypted opcodes */
+	ROM_LOAD( "k108.bin",     0x20000, 0x8000, CRC(6b1d0955) SHA1(dbda145d40eaecd30c1d55a9675c58a2967c20c4) )
+	ROM_CONTINUE(             0x00000, 0x8000 )             /* Now load the operands in RAM */
+	ROM_LOAD( "k109.bin",     0x30000, 0x8000, CRC(fc543b26) SHA1(b9e1d2ca6f9811bf341edf104fe209dbf56e4b2d) )
+	ROM_CONTINUE(             0x10000, 0x8000 )
+	ROM_LOAD( "k110.bin",     0x38000, 0x8000, CRC(6ba2dc77) SHA1(09a65f55988ae28e285d402af9a2a1f1dc05a82c) )
+	ROM_CONTINUE(             0x18000, 0x8000 )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
+	ROM_LOAD( "epr11667.126", 0x0000, 0x8000, CRC(110baba9) SHA1(e14cf5af11ac9691eca897bbae7c238665cd2a4d) )
+
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "epr11664.4",   0x00000, 0x8000, CRC(1b1bc3d5) SHA1(2a09e0dbe2d467c151dce705f249367df849eaeb) )
+	ROM_LOAD( "epr11665.5",   0x08000, 0x8000, CRC(3659174a) SHA1(176d2436abb45827a8d387241082854f55dc0314) )
+	ROM_LOAD( "epr11666.6",   0x10000, 0x8000, CRC(99dcc793) SHA1(ad1d0acb60e7c1a7016955e142ebca1cf07b4908) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, 0 ) /* 128k for sprites data */
+	ROM_LOAD( "epr11658.87",  0x00000, 0x8000, CRC(3b5a20f7) SHA1(03e0934b0913c3a2cadf1d28b8a700d70b80fbac) )
+	ROM_LOAD( "epr11657.86",  0x08000, 0x8000, CRC(010f81a9) SHA1(1b7ee05c80edfa403e32c216fa69387ca556895e) )
+	ROM_LOAD( "epr11660.89",  0x10000, 0x8000, CRC(e1e2e7c5) SHA1(434039a70049a6e74e2a2f48b60345f720e6b1af) )
+	ROM_LOAD( "epr11659.88",  0x18000, 0x8000, CRC(286c7286) SHA1(449a19ea9a9f9df47005e8dac1b8eacaebc515e7) )
+
+	ROM_REGION( 0x0400, REGION_PROMS, 0 )
+	ROM_LOAD( "pr11656.20",   0x0000, 0x0100, CRC(640740eb) SHA1(9a601a3665f612d00c70019d33c7abd3cca9434b) ) /* palette red component */
+	ROM_LOAD( "pr11655.14",   0x0100, 0x0100, CRC(a0c3fa77) SHA1(cdffa1de06d30ec421323145dfc3271803fc25d4) ) /* palette green component */
+	ROM_LOAD( "pr11654.8",    0x0200, 0x0100, CRC(ba624305) SHA1(eb1d0dde60f81ff510ac8c1212e0ed5703febaf3) ) /* palette blue component */
+	ROM_LOAD( "pr5317.28",    0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
+ROM_END
+
 ROM_START( noboranb )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 )
 	ROM_LOAD( "nobo-t.bin", 0x00000, 0x8000, CRC(176fd168) SHA1(f262521f07e5340f175019e2a06a54120a4aa3b7) )
@@ -5070,4 +5196,5 @@ GAMEX(1987, wbmljb,   wbml,     wbml,     wbml,     bootleg,  ROT0,   "bootleg",
 GAMEX(1987, wbmlb,    wbml,     wbml,     wbml,     bootleg,  ROT0,   "bootleg", 		     "Wonder Boy in Monster Land", GAME_NO_COCKTAIL )
 GAMEX(2009, wbmlvc,   wbml,     wbml,     wbml,     bootleg,  ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (English, Virtual Console)", GAME_NO_COCKTAIL )
 GAMEX(1987, dakkochn, 0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "DakkoChan Jansoh", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX(1988, ufosensi, 0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Ufo Senshi Yohko Chan", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX(1988, ufosensi, 0,        ufosensi, ufosensi, 0,        ROT0,   "Sega", 			 	   "Ufo Senshi Yohko Chan", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX(1988, ufosensb, ufosensi, ufosensi, ufosensi, bootleg,  ROT0,   "bootleg", 			   "Ufo Senshi Yohko Chan (not encrypted)", GAME_NO_COCKTAIL )
