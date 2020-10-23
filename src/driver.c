@@ -2693,6 +2693,7 @@ V-V                           TP-027
 	DRIVER( wbmlb )		/* bootleg? (S2) */
 	DRIVER( dakkochn )	/* 836-6483? (S2) */
 	DRIVER( ufosensi )	/* 834-6659 (S2) */
+  DRIVER( ufosensb )	/* bootleg (S2) */
 /*
 other System 1 / System 2 games:
 WarBall
