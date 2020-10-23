@@ -4,7 +4,6 @@
 
 
 /*----------------- video-related ----------------- */
-static struct tilemap *bg_tilemap;
 static uint8_t battlex_scroll_lsb;
 static uint8_t battlex_scroll_msb;
 static uint8_t battlex_starfield_enabled;

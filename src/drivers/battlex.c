@@ -314,7 +314,7 @@ static struct AY8910interface dodgeman_ay8910_interface =
 {
 	2,	/* 2 chip */
 	10000000/8,
-	{ 13,13 },
+	{ 15,15 },
 	{ 0 },
 	{ 0 },
 	{ 0 },

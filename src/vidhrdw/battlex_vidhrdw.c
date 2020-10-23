@@ -2,6 +2,7 @@
 #include "vidhrdw/generic.h"
 #include "includes/battlex.h"
 
+static struct tilemap *bg_tilemap;
 
 WRITE_HANDLER( battlex_palette_w )
 {
