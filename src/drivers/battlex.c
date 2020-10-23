@@ -349,14 +349,27 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( dodgeman )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(battlex)
-	MDRV_CPU_PORTS(readport, dodgeman_writeport)
+	MDRV_CPU_ADD(Z80,10000000/4 )	/* ? */
+	MDRV_CPU_MEMORY(readmem,writemem)
+	MDRV_CPU_PORTS(readport,dodgeman_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,8) /* controls game speed? */
+	MDRV_MACHINE_INIT(battlex)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(16*8+64)
+
 	MDRV_VIDEO_START(dodgeman)
+	MDRV_VIDEO_UPDATE(battlex)
 
 	/* sound hardware - ay2 */
-	/*MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)*/
+	MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
 MACHINE_DRIVER_END
 
 /*** ROM LOADING *************************************************************/
@@ -445,4 +458,4 @@ static DRIVER_INIT( battlex )
 /*** GAME DRIVERS ************************************************************/
 
 GAMEX( 1982, battlex,  0, battlex,  battlex,  battlex, ROT180, "Omori Electric", "Battle Cross", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1983, dodgeman, 0, dodgeman, dodgeman, battlex, ROT180, "Omori Electric", "Dodge Man", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1983, dodgeman, 0, dodgeman, dodgeman, battlex, ROT180, "Omori Electric", "Dodge Man", GAME_IMPERFECT_SOUND )
