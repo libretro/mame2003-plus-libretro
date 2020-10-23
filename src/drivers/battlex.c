@@ -117,8 +117,8 @@ static PORT_WRITE_START( dodgeman_writeport )
 	/* verify all of these */
 	{ 0x22, 0x22, AY8910_write_port_0_w },
 	{ 0x23, 0x23, AY8910_control_port_0_w },
-	{ 0x26, 0x26, AY8910_write_port_0_w },
-	{ 0x27, 0x27, AY8910_control_port_0_w },
+	{ 0x26, 0x26, AY8910_write_port_1_w },
+	{ 0x27, 0x27, AY8910_control_port_1_w },
 	{ 0x30, 0x30, battlex_scroll_starfield_w },
 	{ 0x32, 0x32, battlex_scroll_x_lsb_w },
 	{ 0x33, 0x33, battlex_scroll_x_msb_w },
@@ -310,6 +310,17 @@ static struct AY8910interface battlex_ay8910_interface =
 	{ 0 }
 };
 
+static struct AY8910interface dodgeman_ay8910_interface =
+{
+	2,	/* 2 chip */
+	10000000/8,
+	{ 13,13 },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{ 0 }
+};
+
 /*** MACHINE DRIVERS *********************************************************/
 
 static MACHINE_INIT ( battlex )
@@ -369,8 +380,7 @@ static MACHINE_DRIVER_START( dodgeman )
 	MDRV_VIDEO_UPDATE(battlex)
 
 	/* sound hardware - 2 AY8910 chips */
-	MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)
-	/*MDRV_SOUND_ADD(AY8910, battlex_ay8910_interface)*/
+	MDRV_SOUND_ADD(AY8910, dodgeman_ay8910_interface)
 MACHINE_DRIVER_END
 
 /*** ROM LOADING *************************************************************/
