@@ -303,7 +303,7 @@ static struct AY8910interface battlex_ay8910_interface =
 {
 	1,	/* 1 chip */
 	10000000/8,
-	{ 40 },
+	{ 30 },
 	{ 0 },
 	{ 0 },
 	{ 0 },
