@@ -185,7 +185,7 @@ static int _gxcommoninit(void)
 
 VIDEO_START(konamigx_5bpp)
 {
-	if (!strcmp(Machine->gamedrv->name,"sexyparo"))
+	if (!strcmp(Machine->gamedrv->name,"sexyparo") || !strcmp(Machine->gamedrv->name,"sexyparoa"))
 		game_tile_callback = konamigx_alpha_tile_callback;
 	else
 		game_tile_callback = konamigx_type2_tile_callback;
@@ -222,7 +222,7 @@ VIDEO_START(konamigx_5bpp)
 		K053247GP_set_SpriteOffset(-46, -23);
 	} else
 
-	if (!strcmp(Machine->gamedrv->name,"sexyparo"))
+	if (!strcmp(Machine->gamedrv->name,"sexyparo") || !strcmp(Machine->gamedrv->name,"sexyparoa"))
 	{
 		K053247GP_set_SpriteOffset(-42, -23);
 	}
