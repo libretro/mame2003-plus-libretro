@@ -1020,6 +1020,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( polaris )	/* PS  (c) 1980 Taito */
 	DRIVER( polarisa )	/* PS  (c) 1980 Taito */
 	DRIVER( ballbomb )	/* TN  (c) 1980 Taito */
+  DRIVER( steelwkr )	/* (c) 1980 Taito */
 	DRIVER( m79amb )
 	DRIVER( alieninv )
 	DRIVER( tst_invd )
