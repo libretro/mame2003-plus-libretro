@@ -121,6 +121,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Launcher
 * Squash
 * Star Fire 2
+* Steel Worker
 * Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Rider
@@ -180,7 +181,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mirax (set 2)
 * Progear No Arashi
 * Renegade (US, Bootleg)
-* Sexy Parodius (Ver AAA) This version all in English
+* Sexy Parodius (Ver AAA)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
