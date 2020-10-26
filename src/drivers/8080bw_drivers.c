@@ -3012,7 +3012,85 @@ INPUT_PORTS_START( spceking )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+/*******************************************************/
+/*                                                     */
+/* Taito "Steel Worker"                                */
+/*                                                     */
+/*******************************************************/
 
+
+static WRITE_HANDLER( steelwkr_sh_port_3_w )
+{
+	coin_lockout_global_w(!(~data & 0x03));		/* possibly */
+}
+
+static PORT_READ_START( steelwkr_readport )
+  /*	{ 0x00, 0x00, input_port_0_r }, */
+	{ 0x01, 0x01, input_port_1_r },
+	{ 0x02, 0x02, input_port_2_r },
+	{ 0x03, 0x03, c8080bw_shift_data_r },
+PORT_END
+
+static PORT_WRITE_START( steelwkr_writeport )
+	{ 0x02, 0x02, c8080bw_shift_amount_w },
+	{ 0x04, 0x04, c8080bw_shift_data_w },
+  { 0x06, 0x06, steelwkr_sh_port_3_w },
+PORT_END
+
+INPUT_PORTS_START( steelwkr )
+	PORT_START
+/*
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+*/
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_2WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_BUTTON2 )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )									
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x01, "2" )
+	PORT_DIPSETTING(    0x02, "3" )
+	PORT_DIPSETTING(    0x03, "4" )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_TILT )										
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER2 )
+
+	PORT_START		/* Dummy port for cocktail mode */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+INPUT_PORTS_END
+
+static MACHINE_DRIVER_START( steelwkr )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(invaders)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_PORTS(steelwkr_readport,steelwkr_writeport)
+
+	/* video hardware */
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_PALETTE_INIT(invadpt2)
+MACHINE_DRIVER_END
 
 
 ROM_START( invaders )
@@ -3767,6 +3845,22 @@ ROM_START( sstrngr2 )
 	ROM_LOAD( "2708.15",      0x0000, 0x0400, CRC(c176a89d) SHA1(955dd540dc3787091c3f34ae122a13e6b7523414) )
 ROM_END
 
+ROM_START( steelwkr )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "1.36",     		  0x0000, 0x0400, CRC(5d78873a) SHA1(293cbc067937668148181453877239cb5ed57600) )
+	ROM_LOAD( "2.35",     		  0x0400, 0x0400, CRC(99cd70c6) SHA1(a08bf4db6b39d22dfcf052cc6603aab041db0208) )
+	ROM_LOAD( "3.34",     		  0x0800, 0x0400, CRC(18103b67) SHA1(45929ea56ab15769fc68873570aab3d403e8e913) )
+	ROM_LOAD( "4.33",     		  0x0c00, 0x0400, CRC(c413ae82) SHA1(302b933b45b2aaa515434b5268fd74aec4160e3f) )
+	ROM_LOAD( "5.32",     		  0x1000, 0x0400, CRC(ca7b07b5) SHA1(cbea221c4daf84825f99bbef6d731fc2ef88feeb) )
+	ROM_LOAD( "6.31",     		  0x1400, 0x0400, CRC(f8181fa0) SHA1(a907611529a1500a2ae118e834c2d4b6d11974f1) )
+	ROM_LOAD( "7.42",     		  0x1800, 0x0400, CRC(a35f113e) SHA1(53073037db55c14055810c0bee7b85eb75bbaa72) )
+	ROM_LOAD( "8.41",     		  0x1c00, 0x0400, CRC(af208370) SHA1(ccbd002accda26cc0a02987d9801a47e5f49921a) )
+
+	ROM_REGION( 0x0800, REGION_PROMS, 0 )		/* color maps player 1/player 2 (not used, but they were on the board) */
+	ROM_LOAD( "la05.1",         0x0000, 0x0400, CRC(98f31392) SHA1(ccdd1bd2ddd24bd6b1f8255a87e138f937eaf5b4) )
+	ROM_LOAD( "la06.2",         0x0400, 0x0400, CRC(98f31392) SHA1(ccdd1bd2ddd24bd6b1f8255a87e138f937eaf5b4) )
+ROM_END
+
 
 /* Midway games */
 
@@ -3821,7 +3915,8 @@ ROM_END
 	  GAMEX(1980, polaris,  0,        polaris,  polaris,  polaris,  ROT270, "Taito", "Polaris (set 1)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, polarisa, polaris,  polaris,  polaris,  polaris,  ROT270, "Taito", "Polaris (set 2)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, ballbomb, 0,        ballbomb, ballbomb, invadpt2, ROT270, "Taito", "Balloon Bomber", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )	/* missing clouds and blue background */
-
+    GAME( 1980, steelwkr, 0,        steelwkr, steelwkr, invadpt2, ROT0,   "Taito", "Steel Worker" )
+	  
 /* Misc. manufacturers */
 
 	  GAME( 1980, earthinv, invaders, invaders, earthinv, invaders, ROT270, "bootleg", "Super Earth Invasion" )
