@@ -343,8 +343,9 @@ static MEMORY_WRITE_START( trojan_writemem )
 	{ 0xf802, 0xf803, lwings_bg1_scrolly_w },
 	{ 0xf804, 0xf804, trojan_bg2_scrollx_w },
 	{ 0xf805, 0xf805, trojan_bg2_image_w },
+	{ 0xf808, 0xf808, MWA_NOP }, /* watchdog */
 	{ 0xf80c, 0xf80c, soundlatch_w },
-	{ 0xf80d, 0xf80d, watchdog_reset_w },
+	{ 0xf80d, 0xf80d, soundlatch2_w },
 	{ 0xf80e, 0xf80e, lwings_bankswitch_w },
 MEMORY_END
 
@@ -381,6 +382,10 @@ PORT_END
 
 static PORT_READ_START( adpcm_readport )
 	{ 0x00, 0x00, soundlatch_r },
+PORT_END
+
+static PORT_READ_START( trojan_adpcm_readport )
+	{ 0x00, 0x00, soundlatch2_r },
 PORT_END
 
 static PORT_WRITE_START( adpcm_writeport )
@@ -917,7 +922,7 @@ static MACHINE_DRIVER_START( trojan )
 	MDRV_CPU_ADD(Z80, 4000000) /* 3.579545 Mhz (?)*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ? */
 	MDRV_CPU_MEMORY(adpcm_readmem,adpcm_writemem)
-	MDRV_CPU_PORTS(adpcm_readport,adpcm_writeport)
+	MDRV_CPU_PORTS(trojan_adpcm_readport,adpcm_writeport)
 	MDRV_CPU_PERIODIC_INT(irq0_line_hold,4000)
 
 	MDRV_FRAMES_PER_SECOND(60)
