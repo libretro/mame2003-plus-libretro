@@ -5612,7 +5612,7 @@ Other Sun games
 	DRIVER( ssideki )	/* 0052 (c) 1992 SNK */
 	DRIVER( wh1 )		/* 0053 (c) 1992 Alpha Denshi Co. */
 	DRIVER( wh1h )		/* 0053 (c) 1992 Alpha Denshi Co. */
-	/* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
+	DRIVER( crswd2bl )  /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 	DRIVER( kof94 )		/* 0055 (c) 1994 SNK */
 	DRIVER( aof2 )		/* 0056 (c) 1994 SNK */
 	DRIVER( wh2 )		/* 0057 (c) 1993 ADK */
@@ -5630,8 +5630,8 @@ Other Sun games
 	DRIVER( gururin )	/* 0067 (c) 1994 Face */
 	DRIVER( pspikes2 )	/* 0068 (c) 1994 Video System Co. */
 	DRIVER( fatfury3 )	/* 0069 (c) 1995 SNK */
-	/* 0070 Zupapa - released in 2001 */
-	/* 0071 Bang Bang Busters (prototype) 1994 Visco */
+	DRIVER( zupapa )	/* 0070 (c) SNK */
+	DRIVER( bbbuster )  /* 0071 Bang Bang Busters 1994 Visco */
 	/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
 	DRIVER( panicbom )	/* 0073 (c) 1994 Eighting / Hudson */
 	DRIVER( aodk )		/* 0074 (c) 1994 ADK / SNK */
@@ -5673,7 +5673,7 @@ Other Sun games
 	DRIVER( sdodgeb )	/* 0208 (c) 1996 Technos */
 	DRIVER( goalx3 )	/* 0209 (c) 1995 Visco */
 	/* 0210 Karate Ninja Sho (prototype) 1995 Yumekobo */
-	/* 0211 Oshidashi Zintrick (CD only? not confirmed, MVS might exist) 1996 SNK/ADK */
+	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( overtop )	/* 0212 (c) 1996 ADK */
 	DRIVER( neodrift )	/* 0213 (c) 1996 Visco */
 	DRIVER( kof96 )		/* 0214 (c) 1996 SNK */
@@ -5683,7 +5683,7 @@ Other Sun games
 	DRIVER( ninjamas )	/* 0217 (c) 1996 ADK / SNK */
 	DRIVER( ragnagrd )	/* 0218 (c) 1996 Saurus */
 	DRIVER( pgoal )		/* 0219 (c) 1996 Saurus */
-	/* 0220 Choutetsu Brikin'ger - iron clad (MVS existance seems to have been confirmed) */
+	DRIVER( ironclad )  /* 0220 Choutetsu Brikin'ger - iron clad (prototype) 1996 Saurus */
 	DRIVER( magdrop2 )	/* 0221 (c) 1996 Data East Corporation */
 	DRIVER( samsho4 )	/* 0222 (c) 1996 SNK */
 	DRIVER( rbffspec )	/* 0223 (c) 1996 SNK */
@@ -5691,7 +5691,7 @@ Other Sun games
 	DRIVER( wakuwak7 )	/* 0225 (c) 1996 Sunsoft */
 	/* 0226 Pair Pair Wars (prototype) 1996 Sunsoft? */
 	DRIVER( stakwin2 )	/* 0227 (c) 1996 Saurus */
-	/* 0228 GhostLop (prototype) 1996? Data East */
+	DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
 	/* 0229 King of Fighters '96 CD Collection (CD only) */
 	DRIVER( breakers )	/* 0230 (c) 1996 Visco */
 	DRIVER( miexchng )	/* 0231 (c) 1997 Face */
@@ -5737,25 +5737,19 @@ Other Sun games
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
-	DRIVER( bbbuster )      /* 0071 Bang Bang Busters 1994 Visco */
-	DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
-	DRIVER( ironclad )      /* 0220 Choutetsu Brikin'ger - iron clad (prototype) 1996 Saurus */
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
-	DRIVER( zupapa )	/* 0070 (c) SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith */
-	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith */
 	DRIVER( mslug4 )	/* 0263 (c) 2001 Mega Enterprises */
 	DRIVER( rotd )		/* 0264 (c) 2002 Evoga Entertainment */
+	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
+	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
 	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
-	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
 	DRIVER( kof2003d)	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( kof10th )       /* 2005 SNK Playmore */
-	DRIVER( crswd2bl )      /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
-	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
 
 	/* SemiCom 68020 based hardware */
