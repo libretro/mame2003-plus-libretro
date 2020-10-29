@@ -82,7 +82,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mirax
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
-* Mortal Kombat 2 Plus Beta 2
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Opa Opa (Rev A Unprotected)
@@ -145,7 +144,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Turkey Hunting
 * Tylz
 * Ufo Senshi Yohko Chan (not encrypted)
-* Ultimate Mortal Kombat 3 Plus Beta 1
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
@@ -203,8 +201,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ikari (joystick hack bootleg)
 * Metal Slug 2 - Turbo (Trap15, Hack)
 * Midnight Resistance (joystick hack bootleg)
+* Mortal Kombat 2 Plus Beta 2
 * TANK III (joystick hack bootleg)
 * Tron freeplay custom rom
+* Ultimate Mortal Kombat 3 Plus Beta 1
 
 
 ## Games fixed and now working
