@@ -1515,6 +1515,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( chukatai )	/* B44 (c) 1988 Taito Corporation Japan (World) */
 	DRIVER( chukatau )	/* B44 (c) 1988 Taito Corporation (US) */
 	DRIVER( chukataj )	/* B44 (c) 1988 Taito Corporation (Japan) */
+  DRIVER( kabukiz )	  /* B50 (c) 1988 Taito Corporation Japan (World) */
+	DRIVER( kabukizj )	/* B50 (c) 1988 Taito Corporation (Japan) */
 	DRIVER( tnzs )		/* B53?(c) 1988 Taito Corporation (Japan) (new logo) */
 	DRIVER( tnzsb )		/* bootleg but Taito Corporation Japan (World) (new logo) */
 	DRIVER( tnzs2 )		/* B53?(c) 1988 Taito Corporation Japan (World) (old logo) */
