@@ -69,6 +69,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Inca
 * Joe & Mac Returns
 * Jump Kun
+* Kabuki-Z (World)
 * Ketsui: Kizuna Jigoku Tachi
 * Knightmare
 * Last Hope
@@ -172,6 +173,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hacha Mecha Fighter (bootleg)
 * Hook (Japan Version)
 * Ikari III - The Rescue (World, 8-Way Joystick)
+* Kabuki-Z (Japan)
 * Knuckle Bash 2
 * Magical Drop
 * Magical Drop Plus 1
