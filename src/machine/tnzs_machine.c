@@ -15,7 +15,7 @@
 #include "driver.h"
 #include "cpu/i8x41/i8x41.h"
 
-extern unsigned char *tnzs_workram;
+extern unsigned char *tnzs_sharedram;
 
 static int mcu_type;
 static int tnzs_input_select;
@@ -25,8 +25,10 @@ enum
 	MCU_NONE_INSECTX,
 	MCU_NONE_KAGEKI,
 	MCU_NONE_TNZSB,
+	MCU_NONE_KABUKIZ,
 	MCU_EXTRMATN,
 	MCU_ARKANOID,
+	MCU_PLUMPOP,
 	MCU_DRTOPPEL,
 	MCU_CHUKATAI,
 	MCU_TNZS
@@ -34,10 +36,8 @@ enum
 
 static int mcu_initializing,mcu_coinage_init,mcu_command,mcu_readcredits;
 static int mcu_reportcoin;
-static int tnzs_workram_backup;
 static unsigned char mcu_coinage[4];
 static unsigned char mcu_coinsA,mcu_coinsB,mcu_credits;
-
 
 
 static READ_HANDLER( mcu_tnzs_r )
@@ -99,7 +99,7 @@ READ_HANDLER( tnzs_port2_r )
 
 WRITE_HANDLER( tnzs_port2_w )
 {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8742:%04x  Write %02x to port 2\n", activecpu_get_previouspc(), data);
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "I8742:%04x  Write %02x to port 2\n", activecpu_get_previouspc(), data); */
 
 	coin_lockout_w( 0, (data & 0x40) );
 	coin_lockout_w( 1, (data & 0x80) );
@@ -110,12 +110,11 @@ WRITE_HANDLER( tnzs_port2_w )
 }
 
 
-
 READ_HANDLER( arknoid2_sh_f000_r )
 {
 	int val;
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: read input %04x\n", activecpu_get_pc(), 0xf000 + offset);
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: read input %04x\n", activecpu_get_pc(), 0xf000 + offset);*/
 
 	val = readinputport(7 + offset/2);
 	if (offset & 1)
@@ -159,7 +158,7 @@ static void mcu_handle_coins(int coin)
 	{
 		if (coin & 0x01)	/* coin A */
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot A\n");
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot A\n"); */
 			coin_counter_w(0,1); coin_counter_w(0,0); /* Count slot A */
 			mcu_coinsA++;
 			if (mcu_coinsA >= mcu_coinage[0])
@@ -179,7 +178,7 @@ static void mcu_handle_coins(int coin)
 		}
 		if (coin & 0x02)	/* coin B */
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot B\n");
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into slot B\n"); */
 			coin_counter_w(1,1); coin_counter_w(1,0); /* Count slot B */
 			mcu_coinsB++;
 			if (mcu_coinsB >= mcu_coinage[2])
@@ -199,7 +198,7 @@ static void mcu_handle_coins(int coin)
 		}
 		if (coin & 0x04)	/* service */
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into service slot C\n");
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "Coin dropped into service slot C\n"); */
 			mcu_credits++;
 		}
 		mcu_reportcoin = coin;
@@ -212,7 +211,6 @@ static void mcu_handle_coins(int coin)
 	}
 	insertcoin = coin;
 }
-
 
 
 static READ_HANDLER( mcu_arknoid2_r )
@@ -324,7 +322,7 @@ static READ_HANDLER( mcu_extrmatn_r )
 {
 	const char *mcu_startup = "\x5a\xa5\x55";
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): read mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), 0xc000 + offset);
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): read mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), 0xc000 + offset); */
 
 	if (offset == 0)
 	{
@@ -409,7 +407,7 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 {
 	if (offset == 0)
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset); */
 		if (mcu_command == 0x41)
 		{
 			mcu_credits = (mcu_credits + data) & 0xff;
@@ -431,7 +429,7 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 		during initialization, a sequence of 4 bytes sets coin/credit settings
 		*/
 
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset);
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x (re %04x): write %02x to mcu %04x\n", activecpu_get_pc(), cpu_geturnpc(), data, 0xc000 + offset); */
 
 		if (mcu_initializing)
 		{
@@ -444,9 +442,9 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 			mcu_readcredits = 0;	/* reset input port number */
 
 		/* Dr Toppel decrements credits differently. So handle it */
-		if ((data == 0x09) && (mcu_type == MCU_DRTOPPEL))
+		if ((data == 0x09) && (mcu_type == MCU_DRTOPPEL || mcu_type == MCU_PLUMPOP))
 			mcu_credits = (mcu_credits - 1) & 0xff;		/* Player 1 start */
-		if ((data == 0x18) && (mcu_type == MCU_DRTOPPEL))
+		if ((data == 0x18) && (mcu_type == MCU_DRTOPPEL || mcu_type == MCU_PLUMPOP))
 			mcu_credits = (mcu_credits - 2) & 0xff;		/* Player 2 start */
 
 		mcu_command = data;
@@ -454,6 +452,66 @@ static WRITE_HANDLER( mcu_extrmatn_w )
 }
 
 
+/*********************************
+
+TNZS sync bug kludge
+
+In all TNZS versions there is code like this:
+
+0C5E: ld   ($EF10),a
+0C61: ld   a,($EF10)
+0C64: inc  a
+0C65: ret  nz
+0C66: jr   $0C61
+
+which is sometimes executed by the main cpu when it writes to shared RAM a
+command for the second CPU. The intended purpose of the code is to wait an
+acknowledge from the sub CPU: the sub CPU writes FF to the same location
+after reading the command.
+
+However the above code is wrong. The "ret nz" instruction means that the
+loop will be exited only when the contents of $EF10 are *NOT* $FF!!
+On the real board, this casues little harm: the main CPU will just write
+the command, read it back and, since it's not $FF, return immediately. There
+is a chance that the command might go lost, but this will cause no major
+harm, the worse that can happen is that the background tune will not change.
+
+In MAME, however, since CPU interleaving is not perfect, it can happen that
+the main CPU ends its timeslice after writing to EF10 but before reading it
+back. In the meantime, the sub CPU will run, read the command and write FF
+there - therefore causing the main CPU to enter an endless loop.
+
+Unlike the usual sync problems in MAME, which can be fixed by increasing the
+interleave factor, in this case increasing it will actually INCREASE the
+chance of entering the endless loop - because it will increase the chances of
+the main CPU ending its timeslice at the wrong moment.
+
+So what we do here is catch writes by the main CPU to the RAM location, and
+process them using a timer, in order to
+a) force a resync of the two CPUs
+b) make sure the main CPU will be the first one to run after the location is
+   changed
+
+Since the answer from the sub CPU is ignored, we don't even need to boost
+interleave.
+
+*********************************/
+
+static void kludge_callback(int param)
+{
+	tnzs_sharedram[0x0f10] = param;
+}
+
+static WRITE_HANDLER( tnzs_sync_kludge_w )
+{
+	timer_set(TIME_NOW,data,kludge_callback);
+}
+
+
+DRIVER_INIT( plumpop )
+{
+	mcu_type = MCU_PLUMPOP;
+}
 
 DRIVER_INIT( extrmatn )
 {
@@ -483,7 +541,7 @@ DRIVER_INIT( drtoppel )
 
 	mcu_type = MCU_DRTOPPEL;
 
-	/* there's code which falls through from the fixed ROM to bank #0, I have to */
+	/* there's code which falls through from the fixed ROM to bank #2, I have to */
 	/* copy it there otherwise the CPU bank switching support will not catch it. */
 	memcpy(&RAM[0x08000],&RAM[0x18000],0x4000);
 
@@ -493,13 +551,7 @@ DRIVER_INIT( drtoppel )
 
 DRIVER_INIT( chukatai )
 {
-	unsigned char *RAM = memory_region(REGION_CPU1);
-
 	mcu_type = MCU_CHUKATAI;
-
-	/* there's code which falls through from the fixed ROM to bank #0, I have to */
-	/* copy it there otherwise the CPU bank switching support will not catch it. */
-	memcpy(&RAM[0x08000],&RAM[0x18000],0x4000);
 }
 
 DRIVER_INIT( tnzs )
@@ -507,9 +559,12 @@ DRIVER_INIT( tnzs )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	mcu_type = MCU_TNZS;
 
-	/* there's code which falls through from the fixed ROM to bank #0, I have to */
+	/* there's code which falls through from the fixed ROM to bank #7, I have to */
 	/* copy it there otherwise the CPU bank switching support will not catch it. */
-	memcpy(&RAM[0x08000],&RAM[0x18000],0x4000);
+	memcpy(&RAM[0x08000],&RAM[0x2c000],0x4000);
+
+	/* we need to install a kludge to avoid problems with a bug in the original code */
+	install_mem_write_handler(0, 0xef10, 0xef10, tnzs_sync_kludge_w);
 }
 
 DRIVER_INIT( tnzsb )
@@ -517,9 +572,17 @@ DRIVER_INIT( tnzsb )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	mcu_type = MCU_NONE_TNZSB;
 
-	/* there's code which falls through from the fixed ROM to bank #0, I have to */
+	/* there's code which falls through from the fixed ROM to bank #7, I have to */
 	/* copy it there otherwise the CPU bank switching support will not catch it. */
-	memcpy(&RAM[0x08000],&RAM[0x18000],0x4000);
+	memcpy(&RAM[0x08000],&RAM[0x2c000],0x4000);
+
+	/* we need to install a kludge to avoid problems with a bug in the original code */
+	install_mem_write_handler(0, 0xef10, 0xef10, tnzs_sync_kludge_w);
+}
+
+DRIVER_INIT( kabukiz )
+{
+	mcu_type = MCU_NONE_KABUKIZ;
 }
 
 DRIVER_INIT( insectx )
@@ -551,6 +614,7 @@ READ_HANDLER( tnzs_mcu_r )
 			break;
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
+		case MCU_PLUMPOP:
 			return mcu_extrmatn_r(offset);
 			break;
 		default:
@@ -572,6 +636,7 @@ WRITE_HANDLER( tnzs_mcu_w )
 			break;
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
+		case MCU_PLUMPOP:
 			mcu_extrmatn_w(offset,data);
 			break;
 		default:
@@ -588,6 +653,7 @@ INTERRUPT_GEN( arknoid2_interrupt )
 		case MCU_ARKANOID:
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
+		case MCU_PLUMPOP:
 			coin  = 0;
 			coin |= ((readinputport(5) & 1) << 0);
 			coin |= ((readinputport(6) & 1) << 1);
@@ -610,13 +676,12 @@ MACHINE_INIT( tnzs )
 		case MCU_ARKANOID:
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
+		case MCU_PLUMPOP:
 			mcu_reset();
 			break;
 		default:
 			break;
 	}
-
-	tnzs_workram_backup = -1;
 
 	/* preset the banks */
 	{
@@ -631,75 +696,21 @@ MACHINE_INIT( tnzs )
 }
 
 
-READ_HANDLER( tnzs_workram_r )
+READ_HANDLER( tnzs_sharedram_r )
 {
-	/* Location $EF10 workaround required to stop TNZS getting */
-	/* caught in and endless loop due to shared ram sync probs */
-
-	if ((offset == 0xf10) && ((mcu_type == MCU_TNZS) || (mcu_type == MCU_NONE_TNZSB)))
-	{
-		int tnzs_cpu0_pc;
-
-		tnzs_cpu0_pc = activecpu_get_pc();
-		switch (tnzs_cpu0_pc)
-		{
-			case 0xc66:		/* tnzs */
-			case 0xc64:		/* tnzsb */
-			case 0xab8:		/* tnzs2 */
-				tnzs_workram[offset] = (tnzs_workram_backup & 0xff);
-				return tnzs_workram_backup;
-				break;
-			default:
-				break;
-		}
-	}
-	return tnzs_workram[offset];
+	return tnzs_sharedram[offset];
 }
 
-READ_HANDLER( tnzs_workram_sub_r )
+WRITE_HANDLER( tnzs_sharedram_w )
 {
-	return tnzs_workram[offset];
-}
-
-WRITE_HANDLER( tnzs_workram_w )
-{
-	/* Location $EF10 workaround required to stop TNZS getting */
-	/* caught in and endless loop due to shared ram sync probs */
-
-	tnzs_workram_backup = -1;
-
-	if ((offset == 0xf10) && ((mcu_type == MCU_TNZS) || (mcu_type == MCU_NONE_TNZSB)))
-	{
-		int tnzs_cpu0_pc;
-
-		tnzs_cpu0_pc = activecpu_get_pc();
-		switch (tnzs_cpu0_pc)
-		{
-			case 0xab5:		/* tnzs2 */
-				if (activecpu_get_previouspc() == 0xab4)
-					break;  /* unfortunantly tnzsb is true here too, so stop it */
-			case 0xc63:		/* tnzs */
-			case 0xc61:		/* tnzsb */
-				tnzs_workram_backup = data;
-				break;
-			default:
-				break;
-		}
-	}
-	if (tnzs_workram_backup == -1)
-		tnzs_workram[offset] = data;
-}
-
-WRITE_HANDLER( tnzs_workram_sub_w )
-{
-	tnzs_workram[offset] = data;
+	tnzs_sharedram[offset] = data;
 }
 
 WRITE_HANDLER( tnzs_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data);*/
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data);
 
 	/* bit 4 resets the second CPU */
 	if (data & 0x10)
@@ -715,7 +726,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data);
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data);
 
 	switch (mcu_type)
 	{
@@ -736,6 +747,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w )
 				coin_counter_w( 1, (data & 0x20) );
 				break;
 		case MCU_NONE_TNZSB:
+		case MCU_NONE_KABUKIZ:
 				coin_lockout_w( 0, (~data & 0x10) );
 				coin_lockout_w( 1, (~data & 0x20) );
 				coin_counter_w( 0, (data & 0x04) );
@@ -749,6 +761,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w )
 		case MCU_ARKANOID:
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
+		case MCU_PLUMPOP:
 				/* bit 2 resets the mcu */
 				if (data & 0x04)
 					mcu_reset();
