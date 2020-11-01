@@ -2438,7 +2438,7 @@ static struct K007232_interface k007232_interface =
 static struct UPD7759_interface upd7759_interface =
 {
 	1,		/* number of chips */
-	{ 60 }, /* volume */
+	{ 100 }, /* volume */
 	{ REGION_SOUND2 },		/* memory region */
 	UPD7759_STANDALONE_MODE,		/* chip mode */
 	{0}
