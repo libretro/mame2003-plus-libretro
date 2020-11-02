@@ -5128,6 +5128,7 @@ Other Sun games
 	DRIVER( gulfstr2 )	/* (c) 1991 Dooyong + distributed by Media Shoji */
 	DRIVER( pollux )	/* (c) 1991 Dooyong */
 	DRIVER( polluxa )	/* (c) 1991 Dooyong */
+  DRIVER( flytiger )	/* (c) 1992 Dooyong */
 	DRIVER( bluehawk )	/* (c) 1993 Dooyong */
 	DRIVER( bluehawn )	/* (c) 1993 NTC */
 	DRIVER( sadari )	/* (c) 1993 NTC */
