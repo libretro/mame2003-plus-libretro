@@ -45,6 +45,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * ESPGaluda
 * F1 Super Lap (World)
 * FixEight (bootleg)
+* Flying Tiger
 * Gaia: The Last Choice Of Earth
 * Gals Panic DX
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
