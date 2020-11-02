@@ -68,9 +68,7 @@ WRITE_HANDLER( paletteram_flytiger_w )
 		UINT16 value;
 		paletteram_flytiger[offset] = data;
 		value = paletteram_flytiger[offset & ~1] | (paletteram_flytiger[offset | 1] << 8);
-    #define pal5bit(n) ((((n) & 0x1f) << 3) | (((n) & 0x1f) >> 2))
 		palette_set_color(offset/2, pal5bit(value >> 10), pal5bit(value >> 5), pal5bit(value >> 0));
-	#undef pal5bit
 	}
 }
 
