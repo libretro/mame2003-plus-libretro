@@ -336,7 +336,7 @@ static MACHINE_DRIVER_START( paradise )
 	MDRV_CPU_PORTS(paradise_readport,paradise_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,4)	/* No nmi routine */
 
-	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_FRAMES_PER_SECOND(54) /* 54 verified */
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK */
 
 	/* video hardware */
