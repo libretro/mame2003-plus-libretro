@@ -1,6 +1,6 @@
 /***************************************************************************
 
-							  -= Paradise =-
+							  -= Paradise / Target Ball =-
 
 					driver by	Luca Elia (l.elia@tin.it)
 
@@ -11,7 +11,7 @@ Sound Chips  :	2 x AR17961 (OKI M6295)
 
 Notes:
 
-I'm not sure it's working correctly:
+paradise: I'm not sure it's working correctly:
 
 - The high scores table can't be entered !?
 - The chance to play a bonus game is very slim. I think I got to play
@@ -403,16 +403,7 @@ ROM_START( paradise )
 	ROM_LOAD( "u113", 0x00000, 0x80000, CRC(53de6025) SHA1(c94b3778b57ff7f46ce4cff661841019fb187d5d) )
 ROM_END
 
-/* target ball
 
-looks like its probably similar hardware ... */
-
-/* Inverted flipscreen and sprites are packed in less memory (same number though) */
-DRIVER_INIT (tgtball)
-{
-	spriteram_size = 0x100;
-	install_port_write_handler(0, 0x2001, 0x2001, tgtball_flipscreen_w );
-}
 
 ROM_START( tgtball )
 	ROM_REGION( 0x44000, REGION_CPU1, 0 )		/* Z80 Code */
@@ -420,10 +411,10 @@ ROM_START( tgtball )
 	ROM_CONTINUE(     0x10000, 0x34000    )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 16x16x8 Sprites */
-	ROM_LOAD( "rom6.bin", 0x00000, 0x40000, CRC(30f49dac) SHA1(b70d37973bd03069c48641d6c0804be6f9aa6553) )
-	ROM_LOAD( "rom5.bin", 0x40000, 0x40000, CRC(3dbe1872) SHA1(754f90123a3944ca548fc66ee65a93615155bf30) )
+	ROM_LOAD( "rom5.bin", 0x00000, 0x40000, CRC(3dbe1872) SHA1(754f90123a3944ca548fc66ee65a93615155bf30) )
+	ROM_LOAD( "rom6.bin", 0x40000, 0x40000, CRC(30f49dac) SHA1(b70d37973bd03069c48641d6c0804be6f9aa6553) )
 
-	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x4 Background */
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF)	/* 8x8x4 Background */
 	/* not for this game? */
 
 	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Foreground */
@@ -441,11 +432,19 @@ ROM_START( tgtball )
 	ROM_LOAD( "rom9.bin", 0x00000, 0x40000, CRC(150a6cc6) SHA1(b435fcf8ba48006f506db6b63ba54a30a6b3eade) )
 ROM_END
 
+/* Inverted flipscreen and sprites are packed in less memory (same number though) */
+DRIVER_INIT (tgtball)
+{
+	spriteram_size = 0x100;
+	install_port_write_handler(0, 0x2001, 0x2001, tgtball_flipscreen_w );
+}
+
+
 /***************************************************************************
 
 								Game Drivers
 
 ***************************************************************************/
 
-GAME( 1994+, paradise, 0, paradise, paradise, 0, ROT90, "Yun Sung", "Paradise" )
-GAMEX(1995,  tgtball,  0, paradise, tgtball, tgtball, ROT0,  "Yun Sung", "Target Ball", GAME_NOT_WORKING )
+GAME( 1994+, paradise, 0, paradise, paradise, 0,       ROT90, "Yun Sung", "Paradise" )
+GAME( 1995,  tgtball,  0, paradise, tgtball,  tgtball, ROT0,  "Yun Sung", "Target Ball" )
