@@ -407,14 +407,11 @@ ROM_END
 
 looks like its probably similar hardware ... */
 
-READ_HANDLER( tgt_ball_unk )
-{
-	return rand();
-}
-
+/* Inverted flipscreen and sprites are packed in less memory (same number though) */
 DRIVER_INIT (tgtball)
 {
-	install_port_read_handler(0, 0x2000, 0x2fff, tgt_ball_unk);
+	spriteram_size = 0x100;
+	install_port_write_handler(0, 0x2001, 0x2001, tgtball_flipscreen_w );
 }
 
 ROM_START( tgtball )
