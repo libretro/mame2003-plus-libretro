@@ -228,7 +228,7 @@ INPUT_PORTS_START( tgtball )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Characters Test" )
+	PORT_DIPNAME( 0x80, 0x80, "Slide Show" ) /* Player1 button used to advance one time through ALL backgrounds */
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
