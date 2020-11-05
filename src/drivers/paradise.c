@@ -322,7 +322,7 @@ static struct GfxDecodeInfo paradise_gfxdecodeinfo[] =
 static struct OKIM6295interface paradise_okim6295_intf =
 {
 	2,
-	{ 8000,8000 },		/* ? */
+	{ 1000000/132,1000000/132 },		/* 1Mhz / 132 verified */
 	{ REGION_SOUND1,REGION_SOUND2 },
 	{ 50,50 }
 };
