@@ -183,6 +183,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Renegade (US, Bootleg)
 * Sexy Parodius (Ver AAA)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
+* Target Ball (Romset `tgtballa` - family friendly version)
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
 * The King of Fighters 10th Anniversary
