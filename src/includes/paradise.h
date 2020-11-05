@@ -9,6 +9,7 @@ WRITE_HANDLER( paradise_vram_1_w );
 WRITE_HANDLER( paradise_vram_2_w );
 
 WRITE_HANDLER( paradise_flipscreen_w );
+WRITE_HANDLER( tgtball_flipscreen_w );
 WRITE_HANDLER( paradise_palette_w );
 WRITE_HANDLER( paradise_pixmap_w );
 
