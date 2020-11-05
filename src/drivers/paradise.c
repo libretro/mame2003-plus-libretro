@@ -447,4 +447,4 @@ DRIVER_INIT (tgtball)
 ***************************************************************************/
 
 GAME( 1994+, paradise, 0, paradise, paradise, 0,       ROT90, "Yun Sung", "Paradise" )
-GAME( 1995,  tgtball,  0, paradise, tgtball,  tgtball, ROT0,  "Yun Sung", "Target Ball" )
+GAME( 1995,  tgtball,  0, paradise, tgtball,  tgtball, ROT0,  "Yun Sung", "Target Ball (Nude)" )
