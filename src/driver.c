@@ -5220,7 +5220,8 @@ Other Sun games
 
 	/* Yun Sung games */
 	DRIVER( paradise )	/* (c) >1994 Yun Sung */
-	DRIVER( tgtball )	/* (c) 199? Yun Sung */
+	DRIVER( tgtball )	/* (c) 1995 Yun Sung */
+	DRIVER( tgtballa )	/* (c) 1995 Yun Sung */
 	DRIVER( cannball )	/* (c) 1995 Yun Sung / Soft Visio */
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */
