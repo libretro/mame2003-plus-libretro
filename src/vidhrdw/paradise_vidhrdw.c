@@ -31,6 +31,7 @@ Note:	if MAME_DEBUG is defined, pressing Z with:
 /* Variables that driver has access to: */
 
 data8_t *paradise_vram_0,*paradise_vram_1,*paradise_vram_2;
+int paradise_sprite_inc;
 
 /* Variables only used here */
 
@@ -204,11 +205,11 @@ WRITE_HANDLER( paradise_priority_w )
 static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int i;
-	for (i = 0; i < spriteram_size ; i += spriteram_size/0x40)
+	for (i = 0; i < spriteram_size ; i += paradise_sprite_inc)
 	{
 		int code	=	spriteram[i+0];
 		int x		=	spriteram[i+1];
-		int y		=	spriteram[i+2];
+		int y		=	spriteram[i+2] - 2;
 		int attr	=	spriteram[i+3];
 
 		int flipx	=	0;	/* ? */
@@ -222,6 +223,21 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				0,
 				flipx, flipy,
 				x,y,
+				cliprect,TRANSPARENCY_PEN, 0xff );
+
+		/* wrap around x */
+		drawgfx(bitmap,Machine->gfx[0],
+				code + (attr << 8),
+				0,
+				flipx, flipy,
+				x - 256,y,
+				cliprect,TRANSPARENCY_PEN, 0xff );
+
+		drawgfx(bitmap,Machine->gfx[0],
+				code + (attr << 8),
+				0,
+				flipx, flipy,
+				x + 256,y,
 				cliprect,TRANSPARENCY_PEN, 0xff );
 	}
 }

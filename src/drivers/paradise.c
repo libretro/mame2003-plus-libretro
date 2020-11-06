@@ -56,17 +56,26 @@ static MEMORY_READ_START( paradise_readmem )
 	{ 0xc000, 0xffff, MRA_RAM		},	/* RAM*/
 MEMORY_END
 
+#define STANDARD_MAP	\
+	{ 0x0000, 0x7fff, MWA_ROM		},	/* ROM*/	\
+	{ 0x8000, 0xbfff, MWA_ROM		},	/* ROM (banked)*/ \
+	{ 0xc000, 0xc7ff, paradise_vram_2_w,&paradise_vram_2	},	/* Background*/ \
+	{ 0xc800, 0xcfff, paradise_vram_1_w,&paradise_vram_1	},	/* Midground*/ \
+	{ 0xd000, 0xd7ff, paradise_vram_0_w,&paradise_vram_0	},	/* Foreground*/ \
+
 static MEMORY_WRITE_START( paradise_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM		},	/* ROM*/
-	{ 0x8000, 0xbfff, MWA_ROM		},	/* ROM (banked)*/
-	{ 0xc000, 0xc7ff, paradise_vram_2_w,&paradise_vram_2	},	/* Background*/
-	{ 0xc800, 0xcfff, paradise_vram_1_w,&paradise_vram_1	},	/* Midground*/
-	{ 0xd000, 0xd7ff, paradise_vram_0_w,&paradise_vram_0	},	/* Foreground*/
+	STANDARD_MAP
 	{ 0xd800, 0xd8ff, MWA_RAM								},	/* RAM*/
 	{ 0xd900, 0xe0ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
 	{ 0xe100, 0xffff, MWA_RAM								},	/* RAM*/
 MEMORY_END
 
+static MEMORY_WRITE_START( tgtball_writemem )
+	STANDARD_MAP
+	{ 0xd800, 0xd8ff, MWA_RAM								},	/* RAM*/
+	{ 0xd900, 0xd9ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xda00, 0xffff, MWA_RAM								},	/* RAM*/
+MEMORY_END
 
 
 static PORT_READ_START( paradise_readport )
@@ -330,7 +339,7 @@ static struct OKIM6295interface paradise_okim6295_intf =
 static MACHINE_DRIVER_START( paradise )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)			/* Z8400B */
+	MDRV_CPU_ADD_TAG("main", Z80, 6000000)			/* Z8400B */
 	MDRV_CPU_FLAGS(CPU_16BIT_PORT)
 	MDRV_CPU_MEMORY(paradise_readmem,paradise_writemem)
 	MDRV_CPU_PORTS(paradise_readport,paradise_writeport)
@@ -351,6 +360,13 @@ static MACHINE_DRIVER_START( paradise )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(OKIM6295, paradise_okim6295_intf)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( tgtball )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( paradise )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(paradise_readmem,tgtball_writemem)
 MACHINE_DRIVER_END
 
 
@@ -457,10 +473,16 @@ ROM_START( tgtballa )
 	ROM_LOAD( "yunsung.113", 0x00000, 0x40000, CRC(150a6cc6) SHA1(b435fcf8ba48006f506db6b63ba54a30a6b3eade) )
 ROM_END
 
+
+DRIVER_INIT (paradise)
+{
+	paradise_sprite_inc = 0x20;
+}
+
 /* Inverted flipscreen and sprites are packed in less memory (same number though) */
 DRIVER_INIT (tgtball)
 {
-	spriteram_size = 0x100;
+	paradise_sprite_inc = 4;
 	install_port_write_handler(0, 0x2001, 0x2001, tgtball_flipscreen_w );
 }
 
@@ -471,6 +493,6 @@ DRIVER_INIT (tgtball)
 
 ***************************************************************************/
 
-GAME( 1994+, paradise, 0,       paradise, paradise, 0,       ROT90, "Yun Sung", "Paradise" )
-GAME( 1995,  tgtball,  0,       paradise, tgtball,  tgtball, ROT0,  "Yun Sung", "Target Ball (Nude)" )
-GAME( 1995,  tgtballa, tgtball, paradise, tgtball,  tgtball, ROT0,  "Yun Sung", "Target Ball" )
+GAME( 1994+, paradise, 0,       paradise, paradise, paradise, ROT90, "Yun Sung", "Paradise" )
+GAME( 1995,  tgtball,  0,       tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)" )
+GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball" )
