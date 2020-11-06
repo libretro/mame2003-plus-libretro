@@ -77,6 +77,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Led Storm Rally 2011
 * Lethal Enforcers
 * Mad Alien
+* Mad Ball V2.0 * Mature * - Romset `madballn`
 * Match It II
 * Metal Slug 4
 * Metal Slug 5
@@ -138,7 +139,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
 * The Lost Castle In Darkmist
-* Torus
+* Torus - * Mature *
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
@@ -177,6 +178,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * Kabuki-Z (Japan)
 * Knuckle Bash 2
+* Mad Ball V2.0 - Romset `madball`
 * Magical Drop
 * Magical Drop Plus 1
 * Mirax (set 2)

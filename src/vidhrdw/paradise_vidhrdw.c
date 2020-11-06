@@ -320,3 +320,13 @@ VIDEO_UPDATE( torus )
 			draw_sprites(bitmap,cliprect);
 	}
 }
+
+/* I don't know how the priority bits work on this one */
+VIDEO_UPDATE( madball )
+{
+	fillbitmap(bitmap,get_black_pen(),cliprect);
+	tilemap_draw(bitmap,cliprect, tilemap_0, 0,0);
+	tilemap_draw(bitmap,cliprect, tilemap_1, 0,0);
+	tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+	draw_sprites(bitmap,cliprect);
+}

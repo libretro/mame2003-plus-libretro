@@ -5223,6 +5223,8 @@ Other Sun games
 	DRIVER( tgtball )	/* (c) 1995 Yun Sung */
 	DRIVER( tgtballa )	/* (c) 1995 Yun Sung */
 	DRIVER( torus ) 	/* (c) 1996 Yun Sung */
+	DRIVER( madball )	/* (c) 1998 Yun Sung */
+	DRIVER( madballn )	/* (c) 1997 Yun Sung */
 	DRIVER( cannball )	/* (c) 1995 Yun Sung / Soft Visio */
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */

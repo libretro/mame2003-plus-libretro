@@ -364,6 +364,87 @@ INPUT_PORTS_START( torus )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( madball )
+	PORT_START	/* 8bit DSW 1 */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )
+	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x04, "5" )
+	PORT_DIPSETTING(    0x00, "6" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, "Controls" )
+	PORT_DIPSETTING(    0x20, "Spinner" )
+	PORT_DIPSETTING(    0x00, "Joystick" )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Slide Show" ) /* Use P1 button to advance */
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* 8bit DSW 2 */
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x02, "Easy" )
+	PORT_DIPSETTING(    0x03, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* IN2 - port $2022 - Player 1 */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1 )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1  )
+
+	PORT_START	/* IN3 - port $2023 - Player 2 */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2  )
+
+	PORT_START	/* IN4 - port $2024 - Coins */
+	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 5 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_VBLANK  )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
 
 /***************************************************************************
 
@@ -433,6 +514,15 @@ static struct GfxDecodeInfo torus_gfxdecodeinfo[] =
 	{ -1 }
 };
 
+static const gfx_decode madball_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x500, 1  }, // [0] Sprites
+	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, // [1] Background
+	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, // [2] Midground
+	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, // [3] Foreground
+	{ -1 }
+};
+
 
 /***************************************************************************
 
@@ -490,6 +580,17 @@ static MACHINE_DRIVER_START( torus )
 	MDRV_GFXDECODE(torus_gfxdecodeinfo)
 
 	MDRV_VIDEO_UPDATE(torus)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( madball )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(paradise)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(paradise_readmem,torus_writemem)
+
+	MDRV_GFXDECODE(madball_gfxdecodeinfo)
+
+	MDRV_VIDEO_UPDATE(madball)
 MACHINE_DRIVER_END
 
 
@@ -620,6 +721,75 @@ ROM_START( torus )
 	ROM_LOAD( "bc15.bin",     0x00000, 0x40000, CRC(12d84839) SHA1(840d82253c0651ebe6799ea2bb5bae334e963e12) )
 ROM_END
 
+/*
+Yun Sung Mad Ball
+PCB: YS-0402
+Z80A
+AD-65 (OKI M6295)
+Actel A1020B PLC84C
+OSC: 12.000 MHz, 4.000Mhz
+RAM 4 Hyundai HY62256ALP-70
+    1 Hyundai HY6264LP-10 (by P rom & Z80A)
+DSW 2 8-switch DIP
+P.u1  Intel i27C010A - Program (next to Z80A)
+s.u28 ST M27C4001    - Sound (next to AD-65)
+1.u66  ST M27C2001
+2.u67  ST M27C2001
+3.u92  TI 27C040
+4.u93  TI 27C040
+5.u105 TI 27C040
+6.u106 TI 27C040
+All roms with manufacturer's IDs and routines
+*/
+
+ROM_START( madball ) /* Models in swimsuits only, no nudity */
+	ROM_REGION( 0x24000, REGION_CPU1, 0 )		/* Z80 Code */
+	ROM_LOAD( "p.u1",     0x00000, 0xc000, CRC(73008425) SHA1(6eded60fd5c637a63783247c858d999d5974d378) )
+	ROM_CONTINUE(             0x10000, 0x14000 )
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 16x16x8 Sprites */
+	ROM_LOAD( "2.u67",      0x00000, 0x40000, CRC(1f3a6cd5) SHA1(7a17549f2fff003605d91703c84a398488b2f74c) )
+	ROM_LOAD( "1.u66",      0x40000, 0x40000, CRC(8637c7b4) SHA1(e0026e48f0e8f3554a5b448e0d1f9d1c5551dbfb) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF)	/* 8x8x4 Background */
+	/* not for this game */
+
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Foreground */
+	ROM_LOAD( "5.u105",      0x00000, 0x80000, CRC(f26aac1e) SHA1(50ad34ee70bf45fa4e1dc9281b83bcdd7c7db3f8) )
+	ROM_LOAD( "6.u106",      0x80000, 0x80000, CRC(27b78907) SHA1(ab6645457adc0d17b141e366aac7e00e8ce4296b) )
+
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Midground */
+	ROM_LOAD( "4.u93",      0x80000, 0x80000, CRC(c3be56ad) SHA1(9cfa0b38c60798deccca74dc6b0ce0826ff7f467) )
+	ROM_LOAD( "3.u92",      0x00000, 0x80000, CRC(846019a6) SHA1(571bfa299e13b96ca263bd7e62c760bdbe3438bd) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_LOAD( "s.u28",     0x00000, 0x80000, CRC(78f02584) SHA1(70542e126db73a573db9ef41399d3a07fb7ea94b) )
+ROM_END
+
+ROM_START( madballn ) /* Even numbered stages show topless models.  Is nudity controlled by a dipswitch? */
+	ROM_REGION( 0x24000, REGION_CPU1, 0 )		/* Z80 Code */
+	ROM_LOAD( "bc13.u1",     0x00000, 0xc000, CRC(531fa919) SHA1(0eafc663b9ad50d0dfc5491fe96c9bcf30483991) )
+	ROM_CONTINUE(             0x10000, 0x14000 )
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 16x16x8 Sprites */
+	ROM_LOAD( "2.u67",      0x00000, 0x40000, CRC(1f3a6cd5) SHA1(7a17549f2fff003605d91703c84a398488b2f74c) )
+	ROM_LOAD( "1.u66",      0x40000, 0x40000, CRC(8637c7b4) SHA1(e0026e48f0e8f3554a5b448e0d1f9d1c5551dbfb) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF)	/* 8x8x4 Background */
+	/* not for this game */
+
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Foreground */
+	ROM_LOAD( "bc2.u105",      0x00000, 0x80000, CRC(d75faa62) SHA1(95badf932e8a8084e67aa7df8d6cb2cb2917d5fc) )
+	ROM_LOAD( "bc1.u106",      0x80000, 0x80000, CRC(04b8f7a5) SHA1(97555880f200d0ecc521f8c76bcaa4a0f0eb1aa9) )
+
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Midground */
+	ROM_LOAD( "bc3.u93",      0x80000, 0x80000, CRC(f07a5fe6) SHA1(0b1117d8ff0f2a6c953ab1988065b75a33e2c949) )
+	ROM_LOAD( "bc4.u92",      0x00000, 0x80000, CRC(7ed233ab) SHA1(8a4bc31741b4e6e1c03974f9b00f747a29c78ebf) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_LOAD( "s.u28",     0x00000, 0x80000, CRC(78f02584) SHA1(70542e126db73a573db9ef41399d3a07fb7ea94b) )
+ROM_END
+
 
 DRIVER_INIT (paradise)
 {
@@ -650,3 +820,5 @@ GAME( 1994+, paradise, 0,       paradise, paradise, paradise, ROT90, "Yun Sung",
 GAME( 1995,  tgtball,  0,       tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)" )
 GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball" )
 GAME( 1996,  torus,    0,       torus,    torus,    torus,    ROT90, "Yun Sung", "Torus" )
+GAME( 1998,  madball,  0,       madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0" )
+GAME( 1997,  madballn, 0,       madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0 (With Nudity)" )

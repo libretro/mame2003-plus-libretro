@@ -20,3 +20,4 @@ WRITE_HANDLER( paradise_palbank_w );
 VIDEO_START( paradise );
 VIDEO_UPDATE( paradise );
 VIDEO_UPDATE( torus );
+VIDEO_UPDATE( madball );
