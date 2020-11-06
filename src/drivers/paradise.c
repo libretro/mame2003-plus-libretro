@@ -514,7 +514,7 @@ static struct GfxDecodeInfo torus_gfxdecodeinfo[] =
 	{ -1 }
 };
 
-static const gfx_decode madball_gfxdecodeinfo[] =
+static struct GfxDecodeInfo madball_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x500, 1  }, // [0] Sprites
 	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, // [1] Background
