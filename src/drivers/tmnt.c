@@ -2416,7 +2416,7 @@ static struct YM2151interface ym2151_interface =
 {
 	1,			/* 1 chip */
 	3579545,	/* 3.579545 MHz */
-	{ YM3012_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) },
+	{ YM3012_VOL(60,MIXER_PAN_LEFT,60,MIXER_PAN_RIGHT) },
 	{ 0 }
 };
 
@@ -2431,14 +2431,14 @@ static struct K007232_interface k007232_interface =
 	1,		/* number of chips */
 	3579545,	/* clock */
 	{ REGION_SOUND1 },	/* memory regions */
-	{ K007232_VOL(20,MIXER_PAN_CENTER,20,MIXER_PAN_CENTER) },	/* volume */
+	{ K007232_VOL(30,MIXER_PAN_CENTER,30,MIXER_PAN_CENTER) },	/* volume */
 	{ volume_callback }	/* external port callback */
 };
 
 static struct UPD7759_interface upd7759_interface =
 {
 	1,		/* number of chips */
-	{ 100 }, /* volume */
+	{ 60 }, /* volume */
 	{ REGION_SOUND2 },		/* memory region */
 	UPD7759_STANDALONE_MODE,		/* chip mode */
 	{0}
