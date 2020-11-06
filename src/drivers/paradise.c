@@ -1,13 +1,13 @@
 /***************************************************************************
 
-							  -= Paradise / Target Ball =-
+							  -= Paradise / Target Ball / Torus =-
 
 					driver by	Luca Elia (l.elia@tin.it)
 
 
 CPU          :  Z8400B
 Video Chips  :	TPC1024AFN-084C
-Sound Chips  :	2 x AR17961 (OKI M6295)
+Sound Chips  :	2 x AR17961 (OKI M6295) (only 1 in Torus)
 
 Notes:
 
@@ -49,6 +49,11 @@ static WRITE_HANDLER( paradise_okibank_w )
 	OKIM6295_set_bank_base(1, (data & 0x02) ? 0x40000 : 0);
 }
 
+static WRITE_HANDLER( torus_coin_counter_w )
+{
+	coin_counter_w(0, data ^ 0xff);
+}
+
 
 static MEMORY_READ_START( paradise_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM		},	/* ROM*/
@@ -77,6 +82,11 @@ static MEMORY_WRITE_START( tgtball_writemem )
 	{ 0xda00, 0xffff, MWA_RAM								},	/* RAM*/
 MEMORY_END
 
+static MEMORY_WRITE_START( torus_writemem )
+	STANDARD_MAP
+	{ 0xd800, 0xdfff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xea00, 0xffff, MWA_RAM								},	/* RAM*/
+MEMORY_END
 
 static PORT_READ_START( paradise_readport )
 	{ 0x0000, 0x17ff, paletteram_r			},	/* Palette*/
@@ -272,6 +282,88 @@ INPUT_PORTS_START( tgtball )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( torus )
+	PORT_START	/* IN0 - port $2020 - DSW 1 */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x0c, 0x0c, "Dropping Speed" )
+	PORT_DIPSETTING(    0x0c, "Normal" )
+	PORT_DIPSETTING(    0x08, "Fast" )
+	PORT_DIPSETTING(    0x04, "Faster" )
+	PORT_DIPSETTING(    0x00, "Fastest" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* IN1 - port $2021 - DSW 2 */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Slide Show" )    /* Player1 Button to pull the blinds down in sections, continuous loop */
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* IN2 - port $2022 - Player 1 */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1 )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1  )
+
+	PORT_START	/* IN3 - port $2023 - Player 2 */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2  )
+
+	PORT_START	/* IN4 - port $2024 - Coins */
+	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 5 )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_VBLANK  )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
 
 /***************************************************************************
 
@@ -312,12 +404,32 @@ static struct GfxLayout layout_16x16x8 =
 	16*16*4
 };
 
+static struct GfxLayout torus_layout_16x16x8 =
+{
+	16,16,
+	RGN_FRAC(1,2),
+	8,
+	{ STEP4(RGN_FRAC(1,2),1), STEP4(RGN_FRAC(0,2),1) },
+	{ STEP8(0,4),STEP8(4*8,4) },
+	{ STEP16(0,8*8) },
+	128*8
+};
+
 static struct GfxDecodeInfo paradise_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &layout_16x16x8,	0x100, 1  }, /* [0] Sprites*/
 	{ REGION_GFX2, 0, &layout_8x8x4,	0x400, 16 }, /* [1] Background*/
 	{ REGION_GFX3, 0, &layout_8x8x8,	0x300, 1  }, /* [2] Midground*/
 	{ REGION_GFX4, 0, &layout_8x8x8,	0x000, 1  }, /* [3] Foreground*/
+	{ -1 }
+};
+
+static struct GfxDecodeInfo torus_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x100, 1  }, // [0] Sprites
+	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, // [1] Background
+	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, // [2] Midground
+	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, // [3] Foreground
 	{ -1 }
 };
 
@@ -367,6 +479,17 @@ static MACHINE_DRIVER_START( tgtball )
 	MDRV_IMPORT_FROM( paradise )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(paradise_readmem,tgtball_writemem)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( torus )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(paradise)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(paradise_readmem,torus_writemem)
+
+	MDRV_GFXDECODE(torus_gfxdecodeinfo)
+
+	MDRV_VIDEO_UPDATE(torus)
 MACHINE_DRIVER_END
 
 
@@ -473,6 +596,30 @@ ROM_START( tgtballa )
 	ROM_LOAD( "yunsung.113", 0x00000, 0x40000, CRC(150a6cc6) SHA1(b435fcf8ba48006f506db6b63ba54a30a6b3eade) )
 ROM_END
 
+ROM_START( torus )
+	ROM_REGION( 0x14000, REGION_CPU1, 0 )		/* Z80 Code */
+	ROM_LOAD( "bc13.bin",     0x00000, 0xc000, CRC(55d3ef3e) SHA1(195463271fdb3f9f5c19068efd1c99105f761fe9) )
+	ROM_CONTINUE(             0x10000, 0x4000 )
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 16x16x8 Sprites */
+	ROM_LOAD( "bc5.bin",      0x00000, 0x40000, CRC(5b60ce9f) SHA1(d5c091145e0bae7cd776e642ea17895d086ed2b0) )
+	ROM_LOAD( "bc6.bin",      0x40000, 0x40000, CRC(4caa0c50) SHA1(a971b6e87cd1162cf370d39cfeafefbb1557e14e) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF)	/* 8x8x4 Background */
+	/* not for this game */
+
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Foreground */
+	ROM_LOAD( "bc2.bin",      0x00000, 0x80000, CRC(67c5ba1a) SHA1(0e39752ddc5ee9469647140a3fc9e6bb69d6afa1) )
+	ROM_LOAD( "bc1.bin",      0x80000, 0x80000, CRC(efb105e9) SHA1(7bfe6ff64b25797dd524a7077def5669f25f16ec) )
+
+	ROM_REGION( 0x40000, REGION_GFX4, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Midground */
+	ROM_LOAD( "bc4.bin",      0x00000, 0x20000, CRC(ee914caf) SHA1(42f3d760a4c14658ac2eb0ba7f54fb9916368b50) )
+	ROM_LOAD( "bc3.bin",      0x20000, 0x20000, CRC(aff1dab9) SHA1(ae488abd605c1e78b8b73452a2c1391cc0fe6b00) )
+
+	ROM_REGION( 0x40000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD( "bc15.bin",     0x00000, 0x40000, CRC(12d84839) SHA1(840d82253c0651ebe6799ea2bb5bae334e963e12) )
+ROM_END
+
 
 DRIVER_INIT (paradise)
 {
@@ -486,6 +633,12 @@ DRIVER_INIT (tgtball)
 	install_port_write_handler(0, 0x2001, 0x2001, tgtball_flipscreen_w );
 }
 
+DRIVER_INIT (torus)
+{
+	paradise_sprite_inc = 4;
+	install_port_write_handler(0, 0x2070, 0x2070, torus_coin_counter_w);
+}
+
 
 /***************************************************************************
 
@@ -496,3 +649,4 @@ DRIVER_INIT (tgtball)
 GAME( 1994+, paradise, 0,       paradise, paradise, paradise, ROT90, "Yun Sung", "Paradise" )
 GAME( 1995,  tgtball,  0,       tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)" )
 GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball" )
+GAME( 1996,  torus,    0,       torus,    torus,    torus,    ROT90, "Yun Sung", "Torus" )

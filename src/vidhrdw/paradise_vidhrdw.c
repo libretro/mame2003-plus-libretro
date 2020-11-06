@@ -291,3 +291,32 @@ if (keyboard_pressed(KEYCODE_Z))
 			if (layers_ctrl&16)	draw_sprites(bitmap,cliprect);
 	}
 }
+
+/* no pix layer, no tilemap_0, different priority bits */
+VIDEO_UPDATE( torus )
+{
+	fillbitmap(bitmap,get_black_pen(),cliprect);
+
+	if (!(paradise_priority & 2))	/* Screen blanking */
+		return;
+
+	if (paradise_priority & 1)
+		draw_sprites(bitmap,cliprect);
+
+	tilemap_draw(bitmap,cliprect, tilemap_1, 0,0);
+
+	if(paradise_priority & 4)
+	{
+		if (!(paradise_priority & 1))
+			draw_sprites(bitmap,cliprect);
+
+		tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+	}
+	else
+	{
+		tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+
+		if (!(paradise_priority & 1))
+			draw_sprites(bitmap,cliprect);
+	}
+}

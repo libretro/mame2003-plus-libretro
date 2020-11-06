@@ -138,6 +138,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
 * The Lost Castle In Darkmist
+* Torus
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
@@ -534,3 +535,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed directory and file creation for WiiU - should be working for all platforms now [mahoneyt944]
 * Ported mirax.c across to MAME2003+ [arcadez, dink]
 * Fixed battlex to current mame standards / added dodgeman support [mahoneyt944, arcadez]
+* Fixed up paradise driver and added new games [mahoneyt944]
