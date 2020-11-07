@@ -383,7 +383,7 @@ typedef struct josvolly_8741_struct {
 
 	UINT8 rst;
 
-	mem_read_handler initReadPort; /* Tweak for MAME78 */
+	mem_read_handler initReadPort;
 }JV8741;
 
 static JV8741 i8741[4];
