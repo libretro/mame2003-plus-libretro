@@ -253,6 +253,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hard Head 2 - Romset `hardhea2`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * Ironhorse - Romset `ironhors`
+* Joshi Volleyball - Romset `josvolly`
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
