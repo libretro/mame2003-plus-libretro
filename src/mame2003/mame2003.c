@@ -1007,7 +1007,7 @@ static void set_content_flags(void)
   }
 
   /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
-  while(ost_drivers[i])
+  while(ost_drivers[i] && game_driver->name )
   {
     if(strcmp(ost_drivers[i], game_driver->name) == 0)
     {
