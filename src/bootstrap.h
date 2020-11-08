@@ -52,6 +52,7 @@ extern const struct bin2cFILE nbajamt3_bootstrap;
 extern const struct bin2cFILE nbajamte_bootstrap;
 extern const struct bin2cFILE nbamaxht_bootstrap;
 extern const struct bin2cFILE nslashers_bootstrap;
+extern const struct bin2cFILE offroadc_bootstrap;
 extern const struct bin2cFILE openice_bootstrap;
 extern const struct bin2cFILE qix_bootstrap;
 extern const struct bin2cFILE revx_bootstrap;

@@ -1459,6 +1459,6 @@ GAME ( 1994, crusnu21, crusnusa, midvunit, crusnusa, crusnu21, ROT0, "Midway", "
 GAME ( 1996, crusnwld, 0,        midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.3)" )
 GAME ( 1996, crusnw20, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.0)" )
 GAME ( 1996, crusnw13, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L1.3)" )
-GAME ( 1997, offroadc, 0,        midvunit, offroadc, offroadc, ROT0, "Midway", "Off Road Challenge" )
+GAMEC( 1997, offroadc, 0,        midvunit, offroadc, offroadc, ROT0, "Midway", "Off Road Challenge", &generic_ctrl, &offroadc_bootstrap )
 
 GAME ( 1995, wargods,  0,        midvplus, wargods,  wargods,  ROT0, "Midway", "War Gods" )
