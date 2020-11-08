@@ -21,10 +21,6 @@ static struct tilemap *bg_tilemap;
 
 PALETTE_INIT( josvolly )
 {
-	/* sprite lookup table is not original but it is almost 98% correct */
-
-	int sprite_lookup_table[16] = { 0x00,0x02,0x05,0x8C,0x49,0xDD,0xB7,0x06,
-					0xD5,0x7A,0x85,0x8D,0x27,0x1A,0x03,0x0F };
 	int i;
 
 	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
