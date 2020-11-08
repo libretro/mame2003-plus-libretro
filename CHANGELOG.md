@@ -263,6 +263,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
 * Night Slashers - Romset `nslasher`
+* Off Road Challenge - Romset `offroadc`
 * Phantasm - Romset `phantasm`
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
