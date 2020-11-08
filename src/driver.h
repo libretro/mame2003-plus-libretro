@@ -311,7 +311,7 @@ struct InternalMachineDriver
 	void (*video_update)(struct mame_bitmap *bitmap,const struct rectangle *cliprect);
 
 	UINT32 sound_attributes;
-	struct MachineSound sound[MAX_SOUND];
+	struct MachineSound sound[MAX_SOUND+1]; /* add one code is assuming its +1 in a lot of places and is causing overflows */
 };
 
 
