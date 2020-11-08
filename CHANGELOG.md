@@ -101,6 +101,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Progear
 * Puzz Loop 2
 * Puzzle Star
+* Racing Beat
 * Rage Of The Dragons
 * Riot
 * Rolling Crush
