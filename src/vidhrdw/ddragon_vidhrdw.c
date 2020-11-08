@@ -44,11 +44,11 @@ Sprite layout.
 #include "vidhrdw/generic.h"
 
 
-unsigned char *ddragon_bgvideoram,*ddragon_fgvideoram;
+UINT8 *ddragon_bgvideoram,*ddragon_fgvideoram;
 int ddragon_scrollx_hi, ddragon_scrolly_hi;
-unsigned char *ddragon_scrollx_lo;
-unsigned char *ddragon_scrolly_lo;
-unsigned char *ddragon_spriteram;
+UINT8 *ddragon_scrollx_lo;
+UINT8 *ddragon_scrolly_lo;
+UINT8 *ddragon_spriteram;
 int technos_video_hw;
 
 static struct tilemap *fg_tilemap,*bg_tilemap;
@@ -69,7 +69,7 @@ static UINT32 background_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_r
 
 static void get_bg_tile_info(int tile_index)
 {
-	unsigned char attr = ddragon_bgvideoram[2*tile_index];
+	UINT8 attr = ddragon_bgvideoram[2*tile_index];
 	SET_TILE_INFO(
 			2,
 			ddragon_bgvideoram[2*tile_index+1] + ((attr & 0x07) << 8),
@@ -79,7 +79,7 @@ static void get_bg_tile_info(int tile_index)
 
 static void get_fg_tile_info(int tile_index)
 {
-	unsigned char attr = ddragon_fgvideoram[2*tile_index];
+	UINT8 attr = ddragon_fgvideoram[2*tile_index];
 	SET_TILE_INFO(
 			0,
 			ddragon_fgvideoram[2*tile_index+1] + ((attr & 0x07) << 8),
@@ -89,7 +89,7 @@ static void get_fg_tile_info(int tile_index)
 
 static void get_fg_16color_tile_info(int tile_index)
 {
-	unsigned char attr = ddragon_fgvideoram[2*tile_index];
+	UINT8 attr = ddragon_fgvideoram[2*tile_index];
 	SET_TILE_INFO(
 			0,
 			ddragon_fgvideoram[2*tile_index+1] + ((attr & 0x0f) << 8),
@@ -139,20 +139,14 @@ VIDEO_START( chinagat )
 
 WRITE_HANDLER( ddragon_bgvideoram_w )
 {
-	if (ddragon_bgvideoram[offset] != data)
-	{
-		ddragon_bgvideoram[offset] = data;
-		tilemap_mark_tile_dirty(bg_tilemap,offset/2);
-	}
+	ddragon_bgvideoram[offset] = data;
+	tilemap_mark_tile_dirty(bg_tilemap,offset/2);
 }
 
 WRITE_HANDLER( ddragon_fgvideoram_w )
 {
-	if (ddragon_fgvideoram[offset] != data)
-	{
-		ddragon_fgvideoram[offset] = data;
-		tilemap_mark_tile_dirty(fg_tilemap,offset/2);
-	}
+	ddragon_fgvideoram[offset] = data;
+	tilemap_mark_tile_dirty(fg_tilemap,offset/2);
 }
 
 
@@ -170,13 +164,13 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 {
 	const struct GfxElement *gfx = Machine->gfx[1];
 
-	data8_t *src;
+	UINT8 *src;
 	int i;
 
 	if ( technos_video_hw == 1 ) {		/* China Gate Sprite RAM */
-		src = (data8_t *) (spriteram);
+		src = (UINT8 *) (spriteram);
 	} else {
-		src = (data8_t *) (&( ddragon_spriteram[0x800] ));
+		src = (UINT8 *) (&( ddragon_spriteram[0x800] ));
 	}
 
 	for( i = 0; i < ( 64 * 5 ); i += 5 ) {
@@ -217,6 +211,8 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				dx = -dx;
 				dy = -dy;
 			}
+
+			which &= ~size;
 
 			switch ( size ) {
 				case 0: /* normal */
