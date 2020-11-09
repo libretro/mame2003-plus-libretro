@@ -48,7 +48,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Flying Tiger
 * Gaia: The Last Choice Of Earth
 * Gals Panic DX
-* Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II
 * Ghostlop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Golden Par Golf
