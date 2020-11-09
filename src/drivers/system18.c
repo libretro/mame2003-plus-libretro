@@ -1608,7 +1608,7 @@ static MACHINE_DRIVER_START( moonwalk )
 	MDRV_CPU_MEMORY(moonwalk_readmem,moonwalk_writemem)
 
 	MDRV_MACHINE_INIT(moonwalk)
-	MDRV_SOUND_ADD(SAMPLES, moonwalker_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, moonwalker_samples_set)
 	moonwalker_playing = true;
 	moon_diddy = false;
 MACHINE_DRIVER_END

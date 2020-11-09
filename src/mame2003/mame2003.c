@@ -983,7 +983,17 @@ static void set_content_flags(void)
   extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
-  extern const char* ost_drivers[];
+
+  /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
+  for( i = 0; Machine->drv->sound[i].sound_type && i < MAX_SOUND; i++ )
+  {
+    if (Machine->drv->sound[i].tag)
+      if (strcmp("OST Samples",  Machine->drv->sound[i].tag) !=0)
+      {
+        options.content_flags[CONTENT_ALT_SOUND] = true;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
+      }
+  }
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
@@ -1004,18 +1014,6 @@ static void set_content_flags(void)
   {
     options.content_flags[CONTENT_DIEHARD] = true;
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
-  }
-
-  /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
-  while(ost_drivers[i] && game_driver->name )
-  {
-    if(strcmp(ost_drivers[i], game_driver->name) == 0)
-    {
-      options.content_flags[CONTENT_ALT_SOUND] = true;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
-      break;
-    }
-    i++;
   }
 
   /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/

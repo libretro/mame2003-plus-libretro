@@ -12,8 +12,6 @@
 #define XML_ROOT "mame"
 #define XML_TOP "game"
 
-extern const char* ost_drivers[];
- 
 /* Print a free format string */
 static void print_free_string(FILE* out, const char* s)
 {
@@ -418,51 +416,34 @@ static void print_game_rom(FILE* out, const struct GameDriver* game)
 			fprintf(out, "/>\n");
 		}
 	}
-   
+
 }
 
-
-/* disable optimization for this section until code is change to be 64 bit friendly */
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
+static int sampleof;
 static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 {
+sampleof =0;
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
 	int i=0;
-        int ost=0;
+	expand_machine_driver(game->drv, &drv);
 
-	while(ost_drivers[i])
-  	{
-  	  if(strcmp(ost_drivers[i], game->name) == 0)
-	  { 	 
-	   ost=1;
-           break;
-          }
-
-	  i++;    
-        }
-    
-        if (!ost) 
-        { 
-		expand_machine_driver(game->drv, &drv);
-
-		for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
-		{
-			const char **samplenames = NULL;
-			if( drv.sound[i].sound_type == SOUND_SAMPLES )
-				samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
-			if (samplenames != 0 && samplenames[0] != 0) {
-				int k = 0;
-				if (samplenames[k][0]=='*')
-				{
-					/* output sampleof only if different from game name */
-					if (strcmp(samplenames[k] + 1, game->name)!=0)
-						fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
+	for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )	{
+		const char **samplenames = NULL;
+		if( drv.sound[i].sound_type == SOUND_SAMPLES )
+			samplenames = ((struct Samplesinterface *)drv.sound[i].sound_interface)->samplenames;
+		if (samplenames != 0 && samplenames[0] != 0){
+			int k = 0;
+			if (samplenames[k][0]=='*'){
+				/* output sampleof only if different from game name */
+				if (strcmp(samplenames[k] + 1, game->name)!=0){
+					fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
+					sampleof=1;
 					++k;
 				}
 			}
-	}	}
+		}
+	}
 #endif
 }
 
@@ -471,23 +452,9 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
 	int i=0;
-        int ost=0;
 
-	
+  if (!sampleof){
 
-	while(ost_drivers[i])
-  	{
-  	  if(strcmp(ost_drivers[i], game->name) == 0)
-	  { 	 
-	   ost=1;
-           break;
-          }
-
-	  i++;    
-        }
-
-        if (!ost) 
-        { 
 		expand_machine_driver(game->drv, &drv);
 
 		for( i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++ )
@@ -500,7 +467,7 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 				if (samplenames[k][0]=='*')
 				{
 					++k;
-				}	
+				}
 				while (samplenames[k] != 0) {
 					/* check if is not empty */
 					if (*samplenames[k]) {
@@ -511,15 +478,13 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 						if (l==k)
 							fprintf(out, "\t\t<sample name=\"%s\"/>\n", samplenames[k]);
 					}
-					++k;
+						++k;
 				}
 			}
 		}
-	}
+  }
 #endif
 }
-#pragma GCC pop_options
-/*restore gcc flags */
 
 static void print_game_micro(FILE* out, const struct GameDriver* game)
 {
@@ -727,18 +692,18 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 {
 	extern struct GameDriver driver_0;
 	const char *start;
-	
+
 	fprintf(out, "\t<" XML_TOP);
 
 	fprintf(out, " name=\"%s\"", game->name ); /* use GameDrv "name" field as the filename */
-  
+
 	start = strrchr(game->source_file, '/');
 	if (!start)
 		start = strrchr(game->source_file, '\\');
 	if (!start)
 		start = game->source_file - 1;
 	fprintf(out, " sourcefile=\"%s\"", start + 1);
-	
+
 
 	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
 		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
@@ -821,13 +786,13 @@ static void print_resource_info(FILE* out, const struct GameDriver* game)
 void print_mame_xml()
 {
     int driver_index = 0;
-    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, APPNAME".xml", "w+b");	
-     	
-    if (xml_dat != NULL)	
-    {	
-	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003.xml\n");	
-    } else {	
-      log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open mame2003.xml for writing.\n");
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, APPNAME".xml", "w+b");
+
+    if (xml_dat != NULL)
+    {
+	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003-plus.xml\n");
+    } else {
+      log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open mame2003-plus.xml for writing.\n");
       return;
     }
 
@@ -929,7 +894,7 @@ void print_mame_xml()
 	PRINT_RESOURCE(tps);
 	PRINT_RESOURCE(taitofx1);
 	PRINT_RESOURCE(acpsx);
-  
+
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
 }

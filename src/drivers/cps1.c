@@ -4242,8 +4242,7 @@ static MACHINE_DRIVER_START( ffight_hack )
 
 	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(SAMPLES, ff_samples)
-	/*MDRV_SOUND_ADD(SAMPLES, ff_samplesR)*/
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ff_samples)
 MACHINE_DRIVER_END
 
 
