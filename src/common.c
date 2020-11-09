@@ -15,13 +15,6 @@
 #include "log.h"
 //#define LOG_LOAD
 
-	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna", \
-				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
-				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
-				"ffight", "ffightu", "ffightj",  "ffightj1", "ffightae", \
-				"ddragon", "ddragonu", "ddragonw",  "ddragonb", \
-				"moonwalk", "moonwlka", "moonwlkb", 0
-		 };
 
 char *chd_error_text[] =
 {
