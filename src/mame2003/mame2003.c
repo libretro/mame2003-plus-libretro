@@ -984,6 +984,17 @@ static void set_content_flags(void)
   const struct InputPortTiny *input = game_driver->input_ports;
 
 
+  /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
+  for( i = 0; Machine->drv->sound[i].sound_type && i < MAX_SOUND; i++ )
+  {
+    if (Machine->drv->sound[i].tag)
+      if (strcmp("OST Samples",  Machine->drv->sound[i].tag) !=0)
+      {
+        options.content_flags[CONTENT_ALT_SOUND] = true;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
+      }
+  }
+
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
@@ -1004,10 +1015,6 @@ static void set_content_flags(void)
     options.content_flags[CONTENT_DIEHARD] = true;
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
   }
-
-  /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
-      /* this should not be a hidden option it's either on or off, user would need to load the game twice if they wanted to change this setting */
-      options.content_flags[CONTENT_ALT_SOUND] = true;
 
   /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/
   if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
