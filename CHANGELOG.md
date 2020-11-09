@@ -366,6 +366,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gaplus
 * Grobda
 * Journey (Added sepways.wav sample)
+* Legion
 * Libble Rabble
 * Lunar Rescue - (Added lrescue.zip sample support)
 * Mappy
