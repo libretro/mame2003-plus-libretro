@@ -1267,7 +1267,7 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 
-	MDRV_SOUND_ADD_ADD_TAG("OST Samples", SAMPLES, ddragon_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ddragon_samples_set)
 	ddragon_playing = true;
 	ddragon_current_music = 0;
 	ddragon_stage = 0;
