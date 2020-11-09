@@ -252,6 +252,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hang-On - Romset `hangon`
 * Hard Head 2 - Romset `hardhea2`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
+* IGMO - Romset `igmo` color fixed
 * Ironhorse - Romset `ironhors`
 * Joshi Volleyball - Romset `josvolly`
 * Journey - Romset `journey`
