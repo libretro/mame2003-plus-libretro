@@ -983,7 +983,6 @@ static void set_content_flags(void)
   extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
-  extern const char* ost_drivers[];
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
@@ -1007,16 +1006,8 @@ static void set_content_flags(void)
   }
 
   /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
-  while(ost_drivers[i] && game_driver->name )
-  {
-    if(strcmp(ost_drivers[i], game_driver->name) == 0)
-    {
+      /* this should not be a hidden option it's either on or off, user would need to load the game twice if they wanted to change this setting */
       options.content_flags[CONTENT_ALT_SOUND] = true;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
-      break;
-    }
-    i++;
-  }
 
   /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/
   if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
