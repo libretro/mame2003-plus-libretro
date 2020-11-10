@@ -169,6 +169,28 @@ else ifeq ($(platform), ctr)
    CPU_ARCH := arm
    STATIC_LINKING = 1
 
+else ifeq ($(platform), rpi0)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
+
+else ifeq ($(platform), rpi1)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
+
 else ifeq ($(platform), rpi2)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
