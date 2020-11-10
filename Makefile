@@ -179,7 +179,6 @@ else ifeq ($(platform), rpi0)
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
    ARM = 1
-   USE_CYCLONE := 1
 
 else ifeq ($(platform), rpi1)
    TARGET = $(TARGET_NAME)_libretro.so
