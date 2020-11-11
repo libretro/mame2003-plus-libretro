@@ -646,7 +646,7 @@ INPUT_PORTS_START( harddriv )
 	PORT_BIT( 0xfff8, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START		/* b00000 - 8 bit ADC 0 - gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL1, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
@@ -702,7 +702,7 @@ INPUT_PORTS_START( racedriv )
 	PORT_BIT( 0xfff8, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START		/* b00000 - 8 bit ADC 0 - gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL1, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
@@ -765,7 +765,7 @@ INPUT_PORTS_START( racedrvc )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START		/* b00000 - 8 bit ADC 0 - gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL1, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
@@ -945,7 +945,7 @@ INPUT_PORTS_START( hdrivair )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START		/* b00000 - 8 bit ADC 0 - gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL1, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
