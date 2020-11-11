@@ -649,7 +649,7 @@ INPUT_PORTS_START( harddriv )
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER3, 25, 100, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 2 - seat */
 	PORT_BIT( 0xff, 0x80, IPT_SPECIAL )
@@ -705,7 +705,7 @@ INPUT_PORTS_START( racedriv )
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER3, 25, 100, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 2 - seat */
 	PORT_BIT( 0xff, 0x80, IPT_SPECIAL )
@@ -768,7 +768,7 @@ INPUT_PORTS_START( racedrvc )
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 1 - clutch pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL3, 25, 100, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER3, 25, 100, 0x00, 0xff )
 
 	PORT_START		/* b00000 - 8 bit ADC 2 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
