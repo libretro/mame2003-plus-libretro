@@ -1150,9 +1150,9 @@ INPUT_PORTS_START( finallap )
 	PORT_START		/* Steering Wheel */		/* sensitivity, delta, min, max */
 	PORT_ANALOG( 0xff, 0x7f, IPT_DIAL|IPF_CENTER|IPF_PLAYER1, 75, 100, 0x00, 0xff )
 	PORT_START		/* Brake Pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER2, 100, 30, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL2, 100, 30, 0x00, 0xff )
 	PORT_START		/* Accelerator Pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER1, 100, 15, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL, 100, 15, 0x00, 0xff )
 
 	PORT_START		/* 63B05Z0 - PORT H */
 	PORT_DIPNAME( 0x01, 0x01, "PortH 0x01")
@@ -1214,9 +1214,9 @@ INPUT_PORTS_START( finalap3 )
 	PORT_ANALOG( 0xff, 0x00, IPT_DIAL | IPF_PLAYER1, 50, 10, 0x00, 0xff )
 
 	PORT_START		/* Brake Pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER2, 100, 30, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL2, 100, 30, 0x00, 0xff )
 	PORT_START		/* Accelerator Pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER1, 100, 15, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL, 100, 15, 0x00, 0xff )
 
 	PORT_START		/* 63B05Z0 - PORT H */
 	PORT_DIPNAME( 0x01, 0x01, "PortH 0x01")
@@ -1301,9 +1301,9 @@ INPUT_PORTS_START( fourtrax )
 	PORT_START		/* Steering Wheel 7 */		/* sensitivity, delta, min, max */
 	PORT_ANALOG( 0xff, 0x7f, IPT_DIAL|IPF_CENTER|IPF_PLAYER1, 75, 100, 0x00, 0xff )
 	PORT_START		/* Brake Pedal 8 */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER2, 100, 30, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL2, 100, 30, 0x00, 0xff )
 	PORT_START		/* Accelerator Pedal 9 */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER1, 100, 15, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL, 100, 15, 0x00, 0xff )
 
 	PORT_START		/* 63B05Z0 - PORT H */
 	PORT_DIPNAME( 0x01, 0x01, "PortH 0x01")
@@ -1400,9 +1400,9 @@ INPUT_PORTS_START( suzuka )
 	PORT_START /* Steering Wheel */
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X|IPF_PLAYER1, 50, 100, 0x00, 0xff )
 	PORT_START		/* Brake pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL|IPF_PLAYER2, 100, 30, 0x00, 0x7f )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 100, 30, 0x00, 0x7f )
 	PORT_START		/* Accelerator pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL|IPF_PLAYER1, 100, 15, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 100, 15, 0x00, 0xff )
 
 	PORT_START		/* 63B05Z0 - PORT H */ \
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1526,9 +1526,9 @@ INPUT_PORTS_START( dirtfox )
 	PORT_START		/* Steering Wheel */
 	PORT_ANALOG( 0xff, 0x7f, IPT_DIAL|IPF_CENTER|IPF_PLAYER1, 70, 50, 0x00, 0xff )
 	PORT_START		/* Brake pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER2, 100, 30, 0x00, 0x7f )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL2, 100, 30, 0x00, 0x7f )
 	PORT_START		/* Accelerator pedal */
-	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL|IPF_PLAYER1, 100, 15, 0x00, 0x7f )
+	PORT_ANALOG( 0xff, 0xff, IPT_PEDAL, 100, 15, 0x00, 0x7f )
 
 	PORT_START		/* 63B05Z0 - PORT H */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
