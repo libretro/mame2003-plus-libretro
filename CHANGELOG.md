@@ -48,7 +48,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * FixEight (bootleg)
 * Flying Tiger
 * Gaia: The Last Choice Of Earth
-* Gals Panic DX
 * Ghostlop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Golden Par Golf
@@ -67,7 +66,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hyper Crash
 * Hyper Street Fighter II (Asia)
 * In Your Face
-* Inca
+* Inca * Mature *
 * Joe & Mac Returns
 * Jump Kun
 * Kabuki-Z (World)
@@ -78,7 +77,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Lethal Enforcers
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
-* Match It II
+* Match It II * Mature *
 * Metal Slug 4
 * Metal Slug 5
 * Mighty Warriors
@@ -86,17 +85,17 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
 * Mouse Shooter GoGo
-* Multi Champ Deluxe
+* Multi Champ Deluxe * Mature *
 * Opa Opa (Rev A Unprotected)
 * Oriental Legend Special
 * Osman
 * Pack'n Bang Bang
 * Parallel Turn
-* Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
+* Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 * Mature *
 * Pirate Treasure
 * Planet Probe
 * Pochi & Nyaa
-* Pocket Gal Deluxe
+* Pocket Gal Deluxe * Mature *
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Progear
@@ -141,7 +140,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King Of Fighters 2002
 * The King Of Fighters 2003 (Decrypted)
 * The Lost Castle In Darkmist
-* Torus - * Mature *
+* Torus * Mature *
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
 * Thunder Hoop
@@ -173,6 +172,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dunk Dream '95
 * Escape Kids (Asia 4 Players)
 * Fujiyama Buster
+* Gals Panic DX * Mature *
+* Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II * Mature *
 * GunNail (Location Test)
 * Guwange Special Version
 * Hacha Mecha Fighter (bootleg)
@@ -180,13 +181,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * Kabuki-Z (Japan)
 * Knuckle Bash 2
-* Mad Ball V2.0 - Romset `madball`
+* Mad Ball V2.0 * Mature * - Romset `madball`
 * Magical Drop
 * Magical Drop Plus 1
 * Mirax (set 2)
 * Progear No Arashi
 * Renegade (US, Bootleg)
-* Sexy Parodius (Ver AAA)
+* Sexy Parodius (Ver AAA) * Mature *
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Target Ball (Romset `tgtballa` - family friendly version)
 * Tetris the Absolute The Grand Master 2 Plus
@@ -280,7 +281,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Satan's Hollow - Romset `shollow`
 * Sega Megaplay : Golden Axe II - Romset `mp_gaxe2`
 * Sega Megaplay : Sonic The Hedgehog - Romset `mp_sonic`
-* Shisensho II - Romset `shisen2`
+* Shisensho II * Mature * - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Shrike Avenger - Romset `shrike`
 * Slap Fight (Official Version) - Romset `slapfigh`
@@ -326,7 +327,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Knights Of Valour / Sangoku Senki
 * Knights of Valour Plus / Sangoku Senki Plus
 * Knuckle Bash (Partial)
-* Lady Killer
+* Lady Killer * Mature *
 * Last Fortress - Toride
 * Mustache Boy
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
@@ -508,6 +509,7 @@ pole position, pole position II, super pacman, super xevious, tower of druaga, t
 * Added partial sound for Batsugun and Knuckle Bash plus fixed a graphical problem with level one in Batsugun [arcadez]
 * Added Toaplan samples for Ghox and Teki Paki code via ThunderMAME and amadvanceMAME [arcadez]
 * Fixed BeatHead from crashing [grant2258]
+* Added four prototype games in the Gottlieb driver [arnoldsecret]
 * Backported the Taito F2 video improvements from MAME89 which fixes some graphical problems in the following games Liquid Kids 
 Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Nicola Salmoria's fix for the butterfly freeze time powerup in Super Space Invaders 91 [arcadez]
@@ -544,6 +546,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed directory and file creation for WiiU - should be working for all platforms now [mahoneyt944]
 * Ported mirax.c across to MAME2003+ [arcadez, dink]
 * Fixed battlex to current mame standards / added dodgeman support [mahoneyt944, arcadez]
+* Added color prom to IGMO, now with perfect colors [arnoldsecret, mahoneyt944]
 * Fixed up paradise driver and added new games [mahoneyt944]
 * Fixed double dragon sprite issue in attract mode and the end of the game crash [grant2258]
 * Added support for Planet Probe to the vaster driver [BritneyPAIRS, arcadez]
