@@ -1,7 +1,8 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: arcadez, markwkidd, twinaphex, arnoldsecret, mahoneyt944
+* Current repository maintainers: arcadez, arnoldsecret, mahoneyt944, markwkidd, twinaphex
 * Past repository maintiners: grant2258
+* Significant code contributers to this project: AMadvanceMAME, BritneysPAIRS, dink, FBN Dev, grant2258, iq_132, MAME Dev, ShmupMAME
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
 
@@ -437,7 +438,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Changes
-* Added sound support for Fire Shark and Vimana [arcadez]
+* Added HD647180 MCU sound support for Fire Shark and Vimana [arcadez]
 * Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
 * Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]
 * Updated sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard to MAME89 [arcadez]
@@ -475,7 +476,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Fixed sound pitch in Asterix [arcadez]
 * Fixed missing road layer in Sega's Hang-On game now playable [arcadez]
 * Hooked up custom sound for Crazy Balloon game now has music and extra SFX which were missing before [arcadez]
-* Added Mobil Shot Gundam Final Shooting and fixed Eagle Shot Golf in the ssv driver [arcadez, grant2258]
+* Added Dyna Gears, Mobil Shot Gundam Final Shooting, Vasara 2 and fixed Eagle Shot Golf in the ssv driver [arcadez, grant2258]
 * Fixed the ES5506 sound problems which affected all the games in the ssv driver [grant2258]
 * Backported some changes from later MAME for the ARM CPU core required for all the 32-bit Data East games to function
 correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c  [iq_132, BritneysPAIRS, arcadez]
@@ -548,3 +549,9 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Planet Probe to the vaster driver [BritneyPAIRS, arcadez]
 * Updated the DJ Boy driver to MAME118 game now plyable  [iq_132, BritneysPAIRS, arcadez]
 * Added support for the Cave PGM games to the PGM driver and vastly improved the ICS2115 soundcore [arcadez, shmupmame, amadvanceMAME]
+* Added support for Hyper Street Fight 2, Progear and Puzzloop 2 to the CPS2 driver [arcadez, BritneysPAIRS]
+* Added support for many games to the neogeo driver plus backported some grahical fixes from later MAME [arcadez, BritneysPAIRS]
+* Added full sound and music for Asura Blade and added support for Asura Buster to the fuukifg3 driver [arcadez]
+* Added a working bootleg of FixEight to the Toaplan 2 driver [BritnaysPAIRS, arcadez]
+* Fixed Hyper Duel from crashing once you started a game [arcadez, KMFDManic ]
+* Updated many Konami drivers to MAME99 for some sound and graphical improvements and got Lethal Enforcers to work in MAME2003+ [arcadez]
