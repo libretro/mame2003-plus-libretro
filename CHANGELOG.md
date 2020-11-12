@@ -93,6 +93,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2
 * Pirate Treasure
+* Planet Probe
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
@@ -436,52 +437,51 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Changes
-* Added sound support to Fire Shark and Vimana
-* Added sound sample support for Cosmic Alien
-* Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
-* New and improved sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard
-* Added sound support for SD Gundam Psycho Salamander no Kyoui
-* Enabled single screen hack for Lode Runner The Dig Fight
-* Fixed random crashes in Rampage World Tour
-* Added protection simulation for Snowboard Championship
-* Added dsp handling for Driftout 94 and Twin Eagle 2 both games now playable
-* Fixed incorrect game logic in Monster Slider game now playable
-* Small graphical improvements for Biomechanical Toy and Maniac Square
-* Backported iq_132's Kaneko16 driver making all of these games playable in this core
-* Updated the Deco Protection Rohga Armor Force now playable
-* Fixed possible crash in Funky Jet by updating Deco Protection
-* Fixed sound and music in Rohga Armor Force
-* Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
-* Added M6801 MCU dump for Bubble Bobble game is now 100% Emulated
-* added M68705 MCU dump for Alcon and Slap Fight official versions of both games are now playable
-* Updated the NMK16 driver for many sound and graphical improvements
-* Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
-* Enabled breakable backgrounds in 64th street code via BritneysPAIRS
-* Improved sprite drawing for Gun Force 2
-* Updated and hooked up the UPD7810 sound cpu to the metro driver enabling full sound and music for all the games
-* Added the ICS2115 soundcore for the PGM games
-* Updated the PGM driver to MAME105 more games are now playable
-* Hooked Up Toshiba T5182 sound in Mustache Boy and The Lost Castle In Darkmist
-* Tweaked Tecmo Bowl so it will boot using only a single screen
+* Added sound support for Fire Shark and Vimana [arcadez]
+* Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
+* Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]
+* Updated sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard to MAME89 [arcadez]
+* Added sound support for SD Gundam Psycho Salamander no Kyoui [arcadez]
+* Enabled single screen hack for Lode Runner The Dig Fight [arcadez]
+* Fixed random crashes in Rampage World Tour [arcadez]
+* Added protection simulation for Snowboard Championship game now playable [arcadez]
+* Added dsp handling for Driftout 94 and Twin Eagle 2 both games now playable [arcadez]
+* Fixed incorrect game logic in Monster Slider game now playable [arcadez]
+* Small graphical improvements for Biomechanical Toy and Maniac Square [arcadez]
+* Ported a new updated Kaneko16 driver from MAME136 across to this core many more games are now playable  [iq_132, BritneysPAIRS, arcadez]
+* Updated lots of Data East drivers to later MAME many more DECO games are now playable in MAME2003+  [iq_132, BritneysPAIRS, arcadez, grant2258]
+* Updated the Deco Protection Rohga Armor Force now playable  [iq_132, BritneysPAIRS, arcadez]
+* Fixed possible crash in Funky Jet by updating Deco Protection  [iq_132, BritneysPAIRS, arcadez]
+* Fixed sound and music in Rohga Armor Force [arcadez]
+* Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip [arcadez]
+* Added M6801 MCU dump for Bubble Bobble game is now 100% Emulated  [BritneysPAIRS, arcadez]
+* added M68705 MCU dump for Alcon and Slap Fight official versions of both games are now playable [arcadez]
+* Updated the NMK16 driver to later MAME many games now playable and or playable with sound  [iq_132, BritneysPAIRS, arcadez]
+* Fixed a reset problem after level 3 in Night Slashers (ARM CPU) [arcadez]
+* Enabled breakable backgrounds in 64th street [BritneysPAIRS]
+* Improved sprite drawing for Gun Force 2 [arcadez]
+* Updated and hooked up the UPD7810 sound cpu to the metro driver enabling full sound and music for all the games [arcadez]
+* Added the ICS2115 soundcore for the PGM games [arcadez]
+* Updated the PGM driver to MAME105 more games are now playable [arcadez]
+* Hooked Up Toshiba T5182 sound in Mustache Boy and The Lost Castle In Darkmist [arcadez]
+* Tweaked Tecmo Bowl so it will boot using only a single screen [arcadez]
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
-* Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
-* Added sound sample support for Nintendo's Space Firebird
-* Fixed a sprite bug in Ghost's n Goblins
-* Improved the MCU simulation for Renegade
-* Fixed the trench vectors bug in Star Wars by reverting back to older MAME code
-* Fixed some graphical issues with Gunbird and Strikers 1945
-* reverted the RC5c68 soundcore back to the superior earlier version pre the MAME76 changes
-* Fixed sound pitch in Asterix
-* Fixed missing road in Hang-On game now playable
-* Hooked up custom sound for Crazy Balloon game now has music and extra SFX which were missing before
-* Added support for the Cave PGM games and improved the ICS2115 soundcore thanks to ShmupMAME and amadvance for the code
-* Added Mobil Shot Gundam Final Shooting and fixed Eagle Shot Golf in the ssv driver
+* Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games. [arcadez]
+* Added sound sample support for Nintendo's Space Firebird [arcadez]
+* Fixed a sprite bug in Ghost's n Goblins [arcadez]
+* Fixed the trench vectors bug in Star Wars by reverting back to older MAME code [arcadez, grant2258]
+* Fixed some graphical issues with Gunbird and Strikers 1945 [arcadez]
+* reverted the RC5c68 soundcore back to the superior earlier version pre the MAME76 changes [arcadez]
+* Fixed sound pitch in Asterix [arcadez]
+* Fixed missing road layer in Sega's Hang-On game now playable [arcadez]
+* Hooked up custom sound for Crazy Balloon game now has music and extra SFX which were missing before [arcadez]
+* Added Mobil Shot Gundam Final Shooting and fixed Eagle Shot Golf in the ssv driver [arcadez, grant2258]
 * Fixed the ES5506 sound problems which affected all the games in the ssv driver [grant2258]
 * Backported some changes from later MAME for the ARM CPU core required for all the 32-bit Data East games to function
-correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c
+correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c  [iq_132, BritneysPAIRS, arcadez]
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
-* Fixed background character movements in Power Instinct 2 and Power Instinct Legends
-* Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
+* Fixed background character movements in Power Instinct 2 and Power Instinct Legends [arcadez]
+* Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid [arcadez]
 * Added support for Virtua Fighter on Sega Model 1 Hardware [arcadez & grant2258]
 * Fixed Avengers In Galactic Storm [grant2258]
 * Backported Haze's changes from MAME119.u3 fixing the background colours in Dynamite Duke / The Double Dynamites [arcadez]
@@ -490,7 +490,7 @@ correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, dec
 up with the new Namco sound chips netting some major improvements video and soundwise for some classic era Namco games 
 bosconian, dig dug, dig dug II, galaga, galaga 3, gaplus, grobda, libble rabble, mappy, motos, pac & pal, pacman & chomp chomp, 
 pole position, pole position II, super pacman, super xevious, tower of druaga, toypop and xevious [arcadez & grant2258]
-* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded.
+* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color problem when backdrops are first loaded. [markwkidd]
 * Fixed Hard Head 2 [arcadez]
 * Fixed incorrect palette colours and clock frequencies in Mr Do [cataylox]
 * Added sound support for Sky Diver [grant2258]
@@ -518,9 +518,9 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
 * Hooked up the sepways.wav sample for journey in mcr2.c [mahoneyt944, grant2258, arcadez]
 * Created new hack for food fight - allows player to face the direction last applied. [mahoneyt944, grant2258]
-* Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy)
-* Added pause support for use with samples.
-* Fixed mcr3 game saving
+* Added core option for axis centering to allow digital joysticks to play analog joystick games (food fight, roadrunner, paperboy) [mahoneyt944]
+* Added pause support for use with samples [mahoneyt944]
+* Fixed mcr3 game saving [grant2258]
 * Added pause support for NATO Defense, Shark Attack, Thief [mahoneyt944]
 * Added sample support with pause for Two Tigers - twotigra romset [mahoneyt944]
 * Added lrescue sample support, isolated lrescue's drivers [mahoneyt944]
@@ -545,3 +545,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed battlex to current mame standards / added dodgeman support [mahoneyt944, arcadez]
 * Fixed up paradise driver and added new games [mahoneyt944]
 * Fixed double dragon sprite issue in attract mode and the end of the game crash [grant2258]
+* Added support for Planet Probe to the vaster driver [BritneyPAIRS, arcadez]
+* Updated the DJ Boy driver to MAME118 game now plyable  [iq_132, BritneysPAIRS, arcadez]
+* Added support for the Cave PGM games to the PGM driver and vastly improved the ICS2115 soundcore [arcadez, shmupmame, amadvanceMAME]
