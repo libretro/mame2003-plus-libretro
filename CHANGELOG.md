@@ -21,7 +21,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Baryon: Future Assault
 * Bomb Kick
 * Boogie Wings
-* Botanic
+* Botanic (English / Spanish set 1)
 * Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
@@ -164,6 +164,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## New Clones
 
 * Battle Shark (Japan, Joystick)
+* Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
 * Cannon Dancer
 * Crystal Castles (Joystick Version)
@@ -558,3 +559,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added a working bootleg of FixEight to the Toaplan 2 driver [BritnaysPAIRS, arcadez]
 * Fixed Hyper Duel from crashing once you started a game [arcadez, KMFDManic ]
 * Updated many Konami drivers to MAME99 for some sound and graphical improvements and got Lethal Enforcers to work in MAME2003+ [arcadez]
+* Added English / Spanish set 1 of Botanic [mahoneyt944]
