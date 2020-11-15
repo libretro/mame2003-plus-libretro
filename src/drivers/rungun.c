@@ -89,9 +89,9 @@ static NVRAM_HANDLER( rungun )
 			EEPROM_load(file);
 		}
 		else
-    {   
-      init_eeprom_count = 10;
-    }
+		{
+			init_eeprom_count = 10;
+		}
 	}
 }
 
@@ -399,7 +399,7 @@ INPUT_PORTS_START( rng )
 	PORT_DIPNAME( 0x10, 0x00, "Monitors" )
 	PORT_DIPSETTING(    0x00, "1" )
 	PORT_DIPSETTING(    0x10, "2" )
-	PORT_DIPNAME( 0x20, 0x00, "Number of players" )
+	PORT_DIPNAME( 0x20, 0x20, "Number of players" )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x20, "4" )
 	PORT_DIPNAME( 0x40, 0x00, "Sound Output" )

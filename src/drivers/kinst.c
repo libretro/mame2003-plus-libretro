@@ -171,6 +171,10 @@ static WRITE32_HANDLER( kinst_control_w )
 			kinst_buffer_vram(&rambase1[0x30000/4]);
 			break;
 
+		case 1: 	/* $88 - sound reset */
+			dcs_reset_w(data & 0x01);
+			break;
+
 		case 2:		/* $90 - sound control */
 			if (!(olddata & 0x02) && (kinst_control[offset] & 0x02))
 				dcs_data_w(kinst_control[3]);

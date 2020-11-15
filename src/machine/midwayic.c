@@ -839,7 +839,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 			/* sound reset? */
 			if (ioasic.has_dcs)
 			{
-				dcs_reset_w(~newreg & 1);
+				dcs_reset_w(newreg & 1);
 				
 			}
 			else if (ioasic.has_cage)

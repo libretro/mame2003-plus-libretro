@@ -92,4 +92,3 @@
 				UINT8 op = RDOP();								\
 				(*m65ce02.insn[op])();							\
  } \
-

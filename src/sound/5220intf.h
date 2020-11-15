@@ -28,4 +28,3 @@ void tms5220_reset(void);
 void tms5220_set_frequency(int frequency);
 
 #endif
-

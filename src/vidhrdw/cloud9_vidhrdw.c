@@ -292,4 +292,3 @@ VIDEO_START( cloud9 )
 
 	return 0;
 }
-

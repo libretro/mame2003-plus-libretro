@@ -22,7 +22,7 @@ Stephh's notes :
 
 -- Read Me --
 
-Shadow Force ©1993 Technos
+Shadow Force Â©1993 Technos
 TA-0032-P1-23
 
 CPU: 68000
@@ -63,7 +63,6 @@ Samples(?)
 32J9-0.76 = 27C040
 
 *******************************************************************************/
-
 
 /*
 68k interrupts

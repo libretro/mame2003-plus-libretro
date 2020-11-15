@@ -733,7 +733,7 @@ static READ16_HANDLER( or_io_service_r )
 
 static WRITE16_HANDLER( outrun_sound_write_w )
 {
-	if(outrun_playing == true) {
+	if(outrun_playing && options.use_samples) {
 		int a = 0;
 		int o_max_samples = 12;
 		int sa_left = 0;
@@ -1251,7 +1251,7 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k)
 
 	// Lets add our Out Run music sample packs.
-	MDRV_SOUND_ADD(SAMPLES, outrun_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, outrun_samples_set)
 	outrun_playing = true;
 	outrun_start = true;
 	outrun_diddy = false;

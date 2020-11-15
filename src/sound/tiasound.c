@@ -530,4 +530,3 @@ void tia_sound_init(int clock, int sample_rate, int gain)
         P9[chan] = 0;
     }
 }
-

@@ -506,4 +506,3 @@ WRITE16_HANDLER( saa1099_write_port_1_lsb_w )
 	if (ACCESSING_LSB)
 		saa1099_write_port_w(1, offset, data & 0xff);
 }
-

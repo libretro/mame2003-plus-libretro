@@ -4,9 +4,10 @@ The New Zealand Story driver, used for tnzs & tnzs2.
 
 TODO: - Find out how the hardware credit-counter works (MPU)
 	  - Verify dip switches
-	  - Fix video offsets (See Dr Toppel in Flip-Screen - also
-	       affects Chuka Taisen)
-	  - Video scroll side flicker in Chuka Taisen, Insector X and Dr Toppel
+- Fix video offsets (See Dr Toppel in Flip-Screen - also affects Chuka Taisen)
+- Video scroll side flicker in Chuka Taisen, Insector X, Dr Toppel, Kabuki Z
+- Sprite/background sync during scrolling, e.g. insectorx, kabukiz.
+- Merge video driver with seta.c (it's the same thing but seta.c assumes a 16-bit CPU)
 
 	Arkanoid 2:
 	  - What do writes at $f400 do ?
@@ -176,18 +177,20 @@ Driver by Takahiro Nogi (nogi@kt.rim.or.jp) 1999/11/06
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/i8x41/i8x41.h"
-
+#include "sound/dac.h"
 
 
 /* prototypes for functions in ../machine/tnzs.c */
-unsigned char *tnzs_objram, *tnzs_workram;
-unsigned char *tnzs_vdcram, *tnzs_scrollram;
+unsigned char *tnzs_objram, *tnzs_sharedram;
+unsigned char *tnzs_vdcram, *tnzs_scrollram, *tnzs_objctrl;
+DRIVER_INIT( plumpop );
 DRIVER_INIT( extrmatn );
 DRIVER_INIT( arknoid2 );
 DRIVER_INIT( drtoppel );
 DRIVER_INIT( chukatai );
 DRIVER_INIT( tnzs );
 DRIVER_INIT( tnzsb );
+DRIVER_INIT( kabukiz );
 DRIVER_INIT( insectx );
 DRIVER_INIT( kageki );
 READ_HANDLER( arknoid2_sh_f000_r );
@@ -197,10 +200,8 @@ READ_HANDLER( tnzs_port1_r );
 READ_HANDLER( tnzs_port2_r );
 WRITE_HANDLER( tnzs_port2_w );
 READ_HANDLER( tnzs_mcu_r );
-READ_HANDLER( tnzs_workram_r );
-READ_HANDLER( tnzs_workram_sub_r );
-WRITE_HANDLER( tnzs_workram_w );
-WRITE_HANDLER( tnzs_workram_sub_w );
+READ_HANDLER( tnzs_sharedram_r );
+WRITE_HANDLER( tnzs_sharedram_w );
 WRITE_HANDLER( tnzs_mcu_w );
 WRITE_HANDLER( tnzs_bankswitch_w );
 WRITE_HANDLER( tnzs_bankswitch1_w );
@@ -209,6 +210,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w );
 /* prototypes for functions in ../vidhrdw/tnzs.c */
 PALETTE_INIT( arknoid2 );
 VIDEO_UPDATE( tnzs );
+VIDEO_EOF( tnzs );
 
 
 
@@ -321,12 +323,28 @@ static WRITE_HANDLER( kageki_csport_w )
 	}
 }
 
+static WRITE_HANDLER( kabukiz_sound_bank_w )
+{
+	/* to avoid the write when the sound chip is initialized */
+	if(data != 0xff)
+	{
+		data8_t *ROM = memory_region(REGION_CPU3);
+		cpu_setbank(3, &ROM[0x10000 + 0x4000 * (data & 0x07)]);
+	}
+}
+
+static WRITE_HANDLER( kabukiz_sample_w )
+{
+	/* to avoid the write when the sound chip is initialized */
+	if(data != 0xff)
+		DAC_0_data_w(0, data );
+}
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 }, /* ROM + RAM */
 	{ 0xc000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_r },	/* WORK RAM (shared by the 2 z80's */
+	{ 0xe000, 0xefff, tnzs_sharedram_r },	/* WORK RAM (shared by the 2 z80's */
 	{ 0xf000, 0xf1ff, MRA_RAM },	/* VDC RAM */
 	{ 0xf600, 0xf600, MRA_NOP },	/* ? */
 	{ 0xf800, 0xfbff, MRA_RAM },	/* not in extrmatn and arknoid2 (PROMs instead) */
@@ -336,9 +354,11 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0xbfff, MWA_BANK1 },	/* ROM + RAM */
 	{ 0xc000, 0xdfff, MWA_RAM, &tnzs_objram },
-	{ 0xe000, 0xefff, tnzs_workram_w, &tnzs_workram },
+	{ 0xe000, 0xefff, tnzs_sharedram_w, &tnzs_sharedram },
 	{ 0xf000, 0xf1ff, MWA_RAM, &tnzs_vdcram },
-	{ 0xf200, 0xf3ff, MWA_RAM, &tnzs_scrollram }, /* scrolling info */
+    { 0xf200, 0xf2ff, MWA_RAM, &tnzs_scrollram }, /* scrolling info */
+	{ 0xf300, 0xf303, MWA_RAM, &tnzs_objctrl }, /* control registers (0x80 mirror used by Arkanoid 2) */
+	{ 0xf3fc, 0xf3ff, MWA_RAM, &tnzs_objctrl }, /* mirror of above */
 	{ 0xf400, 0xf400, MWA_NOP },	/* ? */
 	{ 0xf600, 0xf600, tnzs_bankswitch_w },
 	/* arknoid2, extrmatn, plumppop and drtoppel have PROMs instead of RAM */
@@ -346,6 +366,30 @@ static MEMORY_WRITE_START( writemem )
 	/* so the handler is patched out in init_drtopple() */
 	{ 0xf800, 0xfbff, paletteram_xRRRRRGGGGGBBBBB_w, &paletteram },
 MEMORY_END
+
+static MEMORY_READ_START( tnzsb_readmem )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK1 }, /* ROM + RAM */
+	{ 0xc000, 0xdfff, MRA_RAM },
+	{ 0xe000, 0xefff, tnzs_sharedram_r },	/* WORK RAM (shared by the 2 z80's */
+	{ 0xf000, 0xf1ff, MRA_RAM },	/* VDC RAM */
+	{ 0xf800, 0xfbff, MRA_RAM },	/* not in extrmatn and arknoid2 (PROMs instead) */
+MEMORY_END
+
+static MEMORY_WRITE_START( tnzsb_writemem )
+	{ 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xbfff, MWA_BANK1 },	/* ROM + RAM */
+	{ 0xc000, 0xdfff, MWA_RAM, &tnzs_objram },
+	{ 0xe000, 0xefff, tnzs_sharedram_w, &tnzs_sharedram },
+	{ 0xf000, 0xf1ff, MWA_RAM, &tnzs_vdcram },
+    { 0xf200, 0xf2ff, MWA_RAM, &tnzs_scrollram }, /* scrolling info */
+	{ 0xf300, 0xf303, MWA_RAM, &tnzs_objctrl }, /* control registers (0x80 mirror used by Arkanoid 2) */
+	{ 0xf3fc, 0xf3ff, MWA_RAM, &tnzs_objctrl }, /* mirror of above */
+	{ 0xf400, 0xf400, MWA_NOP },	/* ? */
+	{ 0xf600, 0xf600, tnzs_bankswitch_w },
+	/* kabukiz still writes here but it's not used (it's paletteram in type1 map) */
+	{ 0xf800, 0xfbff, MWA_NOP },
+MEMORY_END	
 
 static MEMORY_READ_START( sub_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -355,7 +399,7 @@ static MEMORY_READ_START( sub_readmem )
 	{ 0xc000, 0xc001, tnzs_mcu_r },	/* plain input ports in insectx (memory handler */
 									/* changed in insectx_init() ) */
 	{ 0xd000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_r },
+	{ 0xe000, 0xefff, tnzs_sharedram_r },
 	{ 0xf000, 0xf003, arknoid2_sh_f000_r },	/* paddles in arkanoid2/plumppop. The ports are */
 						/* read but not used by the other games, and are not read at */
 						/* all by insectx. */
@@ -368,8 +412,9 @@ static MEMORY_WRITE_START( sub_writemem )
 	{ 0xb001, 0xb001, YM2203_write_port_0_w },
 	{ 0xc000, 0xc001, tnzs_mcu_w },	/* not present in insectx */
 	{ 0xd000, 0xdfff, MWA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_w },
+	{ 0xe000, 0xefff, tnzs_sharedram_w },
 MEMORY_END
+
 
 static MEMORY_READ_START( kageki_sub_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -380,7 +425,7 @@ static MEMORY_READ_START( kageki_sub_readmem )
 	{ 0xc001, 0xc001, input_port_3_r },
 	{ 0xc002, 0xc002, input_port_4_r },
 	{ 0xd000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_r },
+	{ 0xe000, 0xefff, tnzs_sharedram_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( kageki_sub_writemem )
@@ -389,10 +434,10 @@ static MEMORY_WRITE_START( kageki_sub_writemem )
 	{ 0xb000, 0xb000, YM2203_control_port_0_w },
 	{ 0xb001, 0xb001, YM2203_write_port_0_w },
 	{ 0xd000, 0xdfff, MWA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_w },
+	{ 0xe000, 0xefff, tnzs_sharedram_w },
 MEMORY_END
 
-/* the bootleg board is different, it has a third CPU (and of course no mcu) */
+/* the later board is different, it has a third CPU (and of course no mcu) */
 
 static WRITE_HANDLER( tnzsb_sound_command_w )
 {
@@ -409,17 +454,38 @@ static MEMORY_READ_START( tnzsb_readmem1 )
 	{ 0xc001, 0xc001, input_port_3_r },
 	{ 0xc002, 0xc002, input_port_4_r },
 	{ 0xd000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_r },
+	{ 0xe000, 0xefff, tnzs_sharedram_r },
 	{ 0xf000, 0xf003, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( tnzsb_writemem1 )
 	{ 0x0000, 0x9fff, MWA_ROM },
+	{ 0xd000, 0xdfff, MWA_RAM },
 	{ 0xa000, 0xa000, tnzs_bankswitch1_w },
 	{ 0xb004, 0xb004, tnzsb_sound_command_w },
-	{ 0xd000, 0xdfff, MWA_RAM },
-	{ 0xe000, 0xefff, tnzs_workram_sub_w },
+	{ 0xe000, 0xefff, tnzs_sharedram_w },
 	{ 0xf000, 0xf3ff, paletteram_xRRRRRGGGGGBBBBB_w, &paletteram },
+MEMORY_END
+
+static MEMORY_READ_START( kabukiz_readmem1 )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0x9fff, MRA_BANK2 },
+	{ 0xb002, 0xb002, input_port_0_r },
+	{ 0xb003, 0xb003, input_port_1_r },
+	{ 0xc000, 0xc000, input_port_2_r },
+	{ 0xc001, 0xc001, input_port_3_r },
+	{ 0xc002, 0xc002, input_port_4_r },
+	{ 0xd000, 0xdfff, MRA_RAM },
+	{ 0xe000, 0xefff, tnzs_sharedram_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( kabukiz_writemem1 )
+	{ 0x0000, 0x9fff, MWA_ROM },
+	{ 0xd000, 0xdfff, MWA_RAM },
+	{ 0xa000, 0xa000, tnzs_bankswitch1_w },
+	{ 0xb004, 0xb004, tnzsb_sound_command_w },
+	{ 0xe000, 0xefff, tnzs_sharedram_w },
+	{ 0xf800, 0xfbff, paletteram_xRRRRRGGGGGBBBBB_w, &paletteram },
 MEMORY_END
 
 static MEMORY_READ_START( tnzsb_readmem2 )
@@ -430,6 +496,18 @@ MEMORY_END
 static MEMORY_WRITE_START( tnzsb_writemem2 )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xdfff, MWA_RAM },
+MEMORY_END
+
+static MEMORY_READ_START( kabukiz_readmem2 )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK3 },
+	{ 0xe000, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( kabukiz_writemem2 )
+	{ 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xbfff, MWA_BANK3 },
+	{ 0xe000, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( tnzsb_readport )
@@ -1562,26 +1640,170 @@ INPUT_PORTS_START( kageki )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( kabukiz )
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Allow_Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Yes ) )
 
-static struct GfxLayout arknoid2_charlayout =
-{
-	16,16,
-	4096,
-	4,
-	{ 3*4096*32*8, 2*4096*32*8, 1*4096*32*8, 0*4096*32*8 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7,
-			8*8+0,8*8+1,8*8+2,8*8+3,8*8+4,8*8+5,8*8+6,8*8+7},
-	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
-			16*8, 17*8, 18*8, 19*8, 20*8, 21*8, 22*8, 23*8 },
-	32*8
-};
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Medium" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_6C ) )
+	
+    PORT_START	
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2)
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( kabukizj )
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Allow_Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Yes ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Medium" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_2C ) )
+	
+    PORT_START	
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2)
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
 
 static struct GfxLayout tnzs_charlayout =
 {
 	16,16,
-	8192,
+	RGN_FRAC(1,4),
 	4,
-	{ 3*8192*32*8, 2*8192*32*8, 1*8192*32*8, 0*8192*32*8 },
+	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
 	{ 0, 1, 2, 3, 4, 5, 6, 7,
 			8*8+0, 8*8+1, 8*8+2, 8*8+3, 8*8+4, 8*8+5, 8*8+6, 8*8+7 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
@@ -1602,12 +1824,6 @@ static struct GfxLayout insectx_charlayout =
 	64*8
 };
 
-static struct GfxDecodeInfo arknoid2_gfxdecodeinfo[] =
-{
-	{ REGION_GFX1, 0, &arknoid2_charlayout, 0, 32 },
-	{ -1 } /* end of array */
-};
-
 static struct GfxDecodeInfo tnzs_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &tnzs_charlayout, 0, 32 },
@@ -1621,11 +1837,10 @@ static struct GfxDecodeInfo insectx_gfxdecodeinfo[] =
 };
 
 
-
 static struct YM2203interface ym2203_interface =
 {
 	1,			/* 1 chip */
-	3000000,	/* 3 MHz ??? */
+	3000000,	/* 3 MHz  */
 	{ YM2203_VOL(30,30) },
 	{ input_port_0_r },		/* DSW1 connected to port A */
 	{ input_port_1_r },		/* DSW2 connected to port B */
@@ -1643,8 +1858,8 @@ static void irqhandler(int irq)
 static struct YM2203interface ym2203b_interface =
 {
 	1,			/* 1 chip */
-	3000000,	/* 3 MHz ??? */
-	{ YM2203_VOL(100,100) },
+	3000000,	/* 3 MHz  */
+	{ YM2203_VOL(MIXERG(100,MIXER_GAIN_2x,MIXER_PAN_CENTER),100) },	/* compensate for very low volume */
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -1661,6 +1876,25 @@ static struct YM2203interface kageki_ym2203_interface =
 	{ 0 },
 	{ 0 },
 	{ kageki_csport_w },
+};
+
+static struct YM2203interface kabukiz_ym2203_interface =
+{
+	1,					/* 1 chip */
+	3000000,			/* 12000000/4 ??? */
+	{ YM2203_VOL(MIXERG(100,MIXER_GAIN_2x,MIXER_PAN_CENTER),100) },	/* compensate for very low volume */
+	{ 0 },
+	{ 0 },
+	{ kabukiz_sound_bank_w },
+	{ kabukiz_sample_w },
+	{ irqhandler }
+};
+
+
+static struct DACinterface dac_interface =
+{
+	1,
+	{ 50, }
 };
 
 static struct Samplesinterface samples_interface =
@@ -1699,11 +1933,12 @@ static MACHINE_DRIVER_START( arknoid2 )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MDRV_GFXDECODE(arknoid2_gfxdecodeinfo)
+	MDRV_GFXDECODE(tnzs_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_PALETTE_INIT(arknoid2)
 	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
@@ -1736,6 +1971,7 @@ static MACHINE_DRIVER_START( drtoppel )
 
 	MDRV_PALETTE_INIT(arknoid2)
 	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
@@ -1759,8 +1995,8 @@ static MACHINE_DRIVER_START( tnzs )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(500)	/* 500 CPU slices per frame - heavy sync required in order to*/
-							/* avoid crashes/hangs -kal 14 jul 2002 */
+	MDRV_INTERLEAVE(100)
+
 	MDRV_MACHINE_INIT(tnzs)
 
 	/* video hardware */
@@ -1771,44 +2007,10 @@ static MACHINE_DRIVER_START( tnzs )
 	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-MACHINE_DRIVER_END
-
-
-static MACHINE_DRIVER_START( tnzsb )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz(?) */
-	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-
-	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz(?) */
-	MDRV_CPU_MEMORY(tnzsb_readmem1,tnzsb_writemem1)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-
-	MDRV_CPU_ADD(Z80, 4000000)		/* 4 MHz??? */
-	MDRV_CPU_MEMORY(tnzsb_readmem2,tnzsb_writemem2)
-	MDRV_CPU_PORTS(tnzsb_readport,tnzsb_writeport)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(200)	/* 200 CPU slices per frame - an high value to ensure proper */
-							/* synchronization of the CPUs */
-	MDRV_MACHINE_INIT(tnzs)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MDRV_GFXDECODE(tnzs_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(512)
-
-	MDRV_VIDEO_UPDATE(tnzs)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(YM2203, ym2203b_interface)
 MACHINE_DRIVER_END
 
 
@@ -1825,8 +2027,8 @@ static MACHINE_DRIVER_START( insectx )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(200)	/* 200 CPU slices per frame - an high value to ensure proper */
-							/* synchronization of the CPUs */
+	MDRV_INTERLEAVE(100)
+
 	MDRV_MACHINE_INIT(tnzs)
 
 	/* video hardware */
@@ -1837,6 +2039,7 @@ static MACHINE_DRIVER_START( insectx )
 	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
@@ -1856,8 +2059,8 @@ static MACHINE_DRIVER_START( kageki )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(200)	/* 200 CPU slices per frame - an high value to ensure proper */
-							/* synchronization of the CPUs */
+	MDRV_INTERLEAVE(100)
+
 	MDRV_MACHINE_INIT(tnzs)
 
 	/* video hardware */
@@ -1868,11 +2071,84 @@ static MACHINE_DRIVER_START( kageki )
 	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, kageki_ym2203_interface)
 	MDRV_SOUND_ADD(SAMPLES, samples_interface)
 	MDRV_SOUND_ADD(CUSTOM, custom_interface)
+MACHINE_DRIVER_END
+
+
+static MACHINE_DRIVER_START( tnzsb )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+    MDRV_CPU_MEMORY(tnzsb_readmem,tnzsb_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+	MDRV_CPU_MEMORY(tnzsb_readmem1,tnzsb_writemem1)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+	MDRV_CPU_MEMORY(tnzsb_readmem2,tnzsb_writemem2)
+	MDRV_CPU_PORTS(tnzsb_readport,tnzsb_writeport)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)
+
+	MDRV_MACHINE_INIT(tnzs)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(tnzs_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(512)
+
+	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM2203, ym2203b_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( kabukiz )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+    MDRV_CPU_MEMORY(tnzsb_readmem,tnzsb_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+	MDRV_CPU_MEMORY(kabukiz_readmem1,kabukiz_writemem1)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 6000000)		/* 6 MHz */
+	MDRV_CPU_MEMORY(kabukiz_readmem2,kabukiz_writemem2)
+	MDRV_CPU_PORTS(tnzsb_readport,tnzsb_writeport)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)
+
+	MDRV_MACHINE_INIT(tnzs)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(tnzs_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(512)
+
+	MDRV_VIDEO_UPDATE(tnzs)
+	MDRV_VIDEO_EOF(tnzs)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM2203, kabukiz_ym2203_interface)
+	MDRV_SOUND_ADD(DAC, dac_interface)
 MACHINE_DRIVER_END
 
 
@@ -1893,7 +2169,7 @@ ROM_START( plumppop )
 	ROM_LOAD( "a98-11.bin", 0x00000, 0x08000, CRC(bc56775c) SHA1(0c22c22c0e9d7ec0e34f8ab4bfe61068f65e8759) )
 	ROM_CONTINUE(           0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "plmp8742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -1929,7 +2205,7 @@ ROM_START( extrmatn )
 	ROM_LOAD( "b06-06.bin", 0x00000, 0x08000, CRC(744f2c84) SHA1(7565c1594c2a3bae1ae45afcbf93363fe2b12d58) )
 	ROM_CONTINUE(           0x10000, 0x08000 )	/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "extr8742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -1953,7 +2229,7 @@ ROM_START( arknoid2 )
 	ROM_LOAD( "b08_13.3e", 0x00000, 0x08000, CRC(e8035ef1) SHA1(9a54e952cff0036c4b6affd9ffb1097cdccbe255) )
 	ROM_CONTINUE(          0x10000, 0x08000 )			/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "ark28742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -1977,7 +2253,7 @@ ROM_START( arknid2u )
 	ROM_LOAD( "b08_12.3e", 0x00000, 0x08000, CRC(dc84e27d) SHA1(d549d8c9fbec0521517f0c5f5cee763e27d48633) )
 	ROM_CONTINUE(          0x10000, 0x08000 )			/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "ark28742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2001,7 +2277,7 @@ ROM_START( arknid2j )
 	ROM_LOAD( "b08_06.3e", 0x00000, 0x08000, CRC(adfcd40c) SHA1(f91299407ed21e2dd244c9b1a315b27ed32f5514) )
 	ROM_CONTINUE(          0x10000, 0x08000 )			/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "ark28742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2025,7 +2301,7 @@ ROM_START( drtoppel )
 	ROM_LOAD( "b19-11w", 0x00000, 0x08000, CRC(37a0d3fb) SHA1(f65fb9382af5f5b09725c39b660c5138b3912f53) )
 	ROM_CONTINUE(        0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "drt8742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2053,7 +2329,7 @@ ROM_START( drtopplu )
 	ROM_LOAD( "b19-11u", 0x00000, 0x08000, CRC(05565b22) SHA1(d1aa47b438d3b44c5177337809e38b50f6445c36) )
 	ROM_CONTINUE(        0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "drt8742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2081,7 +2357,7 @@ ROM_START( drtopplj )
 	ROM_LOAD( "b19-11j", 0x00000, 0x08000, CRC(524dc249) SHA1(158b2de0fcd17ad16ba72bb24888122bf704e216) )
 	ROM_CONTINUE(        0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "drt8742.bin", 0x0000, 0x0800, NO_DUMP )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2157,7 +2433,7 @@ ROM_START( chukatai )
 	ROM_LOAD( "b44-12w", 0x00000, 0x08000, CRC(e80ecdca) SHA1(cd96403ca97f18f630118dcb3dc2179c01147213) )
 	ROM_CONTINUE(        0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "b44-8742.mcu", 0x0000, 0x0800, CRC(7dff3f9f) SHA1(bbf4e036d025fe8179b053d639f9b8ad401e6e68) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2205,7 +2481,7 @@ ROM_START( chukataj )
 	ROM_LOAD( "b44-12j", 0x00000, 0x08000, CRC(0600ace6) SHA1(3d5767b91ea63128bfbff3527ddcf90fcf43af2e) )
 	ROM_CONTINUE(        0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "b44-8742.mcu", 0x0000, 0x0800, CRC(7dff3f9f) SHA1(bbf4e036d025fe8179b053d639f9b8ad401e6e68) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2228,7 +2504,7 @@ ROM_START( tnzs )
 	ROM_LOAD( "b53_11.38", 0x00000, 0x08000, CRC(9784d443) SHA1(bc3647aac9974031dbe4898417fbaa99841f9548) )
 	ROM_CONTINUE(          0x10000, 0x08000 )		/* banked at 8000-9fff */
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "tnzs8742.u46", 0x0000, 0x0800, CRC(a4bfce19) SHA1(9340862d5bdc1ad4799dc92cae9bce1428b47478) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2276,7 +2552,7 @@ ROM_START( tnzs2 )
 	ROM_LOAD( "ns_e-3.rom", 0x00000, 0x08000, CRC(c7662e96) SHA1(be28298bfde4e3867cfe75633ffb0f8611dbbd8b) )
 	ROM_CONTINUE(           0x10000, 0x08000 )
 
-	ROM_REGION( 0x1000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* M-Chip (i8742 internal ROM) */
 	ROM_LOAD( "tnzs8742.u46", 0x0000, 0x0800, CRC(a4bfce19) SHA1(9340862d5bdc1ad4799dc92cae9bce1428b47478) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -2288,6 +2564,46 @@ ROM_START( tnzs2 )
 	ROM_LOAD( "ns_a05.rom",   0xa0000, 0x20000, CRC(6e762e20) SHA1(66731fe4053b9c09bc9c95d10aba212db08b4636) )
 	ROM_LOAD( "ns_a04.rom",   0xc0000, 0x20000, CRC(e1fd1b9d) SHA1(6027491b927c2ab9c77fbf8895da1abcfbe32d62) )
 	ROM_LOAD( "ns_a02.rom",   0xe0000, 0x20000, CRC(2ab06bda) SHA1(2b208b564e55c258665e1f66b26fe14a6c68eb96) )
+ROM_END
+
+ROM_START( kabukiz )
+	ROM_REGION( 0x30000, REGION_CPU1, 0 )	/* 64k + bankswitch areas for the first CPU */
+	ROM_LOAD( "b50_05.u1",  0x00000, 0x08000, CRC(9cccb129) SHA1(054faf7657bad7237182e36bcc4388b1748af935) )
+	ROM_CONTINUE(           0x18000, 0x18000 )		/* banked at 8000-bfff */
+
+	ROM_REGION( 0x18000, REGION_CPU2, 0 )	/* 64k for the second CPU */
+	ROM_LOAD( "b50-08.1e",  0x00000, 0x08000, CRC(cb92d34c) SHA1(3a666f0e3ff9d3daa599123edee228d94eeae754) )
+	ROM_CONTINUE(           0x10000, 0x08000 )		/* banked at 8000-9fff */
+
+	ROM_REGION( 0x30000, REGION_CPU3, 0 )	/* 64k + bankswitch areas for the third CPU */
+	ROM_LOAD( "b50_07.u34", 0x00000, 0x08000, CRC(bf7fc2ed) SHA1(77008d12d9bdbfa100dcd87cd6ca7de3748408c5) )
+	ROM_CONTINUE(           0x18000, 0x18000 )		/* banked at 8000-bfff */
+	
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "b50-04.u35", 0x000000, 0x80000, CRC(04829aa9) SHA1(a501ec7c802478fc41ec8ef4270b1a6872bcbf34) )
+	ROM_LOAD( "b50-03.u39", 0x080000, 0x80000, CRC(31489a4c) SHA1(a4b7e00e2074287b47c7e16add963c1470534376) )
+	ROM_LOAD( "b50-02.u43", 0x100000, 0x80000, CRC(90b8a8e7) SHA1(a55e327307606142fbb9d500e757655b35e1f252) )
+	ROM_LOAD( "b50-01.u46", 0x180000, 0x80000, CRC(f4277751) SHA1(8f50f843f0eda30d639ba397889236ff0a3edce5) )
+ROM_END
+
+ROM_START( kabukizj )
+	ROM_REGION( 0x30000, REGION_CPU1, 0 )	/* 64k + bankswitch areas for the first CPU */
+	ROM_LOAD( "b50_05.u1",  0x00000, 0x08000, CRC(9cccb129) SHA1(054faf7657bad7237182e36bcc4388b1748af935) )
+	ROM_CONTINUE(           0x18000, 0x18000 )		/* banked at 8000-bfff */
+
+	ROM_REGION( 0x18000, REGION_CPU2, 0 )	/* 64k for the second CPU */
+	ROM_LOAD( "b50_06.u3",  0x00000, 0x08000, CRC(45650aab) SHA1(00d1fc6044a6ad1e82476ccbe730907b4d780cb9) )
+	ROM_CONTINUE(           0x10000, 0x08000 )		/* banked at 8000-9fff */
+
+	ROM_REGION( 0x30000, REGION_CPU3, 0 )	/* 64k + bankswitch areas for the third CPU */
+	ROM_LOAD( "b50_07.u34", 0x00000, 0x08000, CRC(bf7fc2ed) SHA1(77008d12d9bdbfa100dcd87cd6ca7de3748408c5) )
+	ROM_CONTINUE(           0x18000, 0x18000 )		/* banked at 8000-bfff */
+	
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "b50-04.u35", 0x000000, 0x80000, CRC(04829aa9) SHA1(a501ec7c802478fc41ec8ef4270b1a6872bcbf34) )
+	ROM_LOAD( "b50-03.u39", 0x080000, 0x80000, CRC(31489a4c) SHA1(a4b7e00e2074287b47c7e16add963c1470534376) )
+	ROM_LOAD( "b50-02.u43", 0x100000, 0x80000, CRC(90b8a8e7) SHA1(a55e327307606142fbb9d500e757655b35e1f252) )
+	ROM_LOAD( "b50-01.u46", 0x180000, 0x80000, CRC(f4277751) SHA1(8f50f843f0eda30d639ba397889236ff0a3edce5) )
 ROM_END
 
 ROM_START( insectx )
@@ -2306,7 +2622,7 @@ ROM_END
 
 
 /*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR COMPANY                                         FULLNAME                        FLAGS ) */
-GAME( 1987, plumppop, 0,        drtoppel, plumppop, drtoppel, ROT0,   "Taito Corporation",                            "Plump Pop (Japan)" )
+GAME( 1987, plumppop, 0,        drtoppel, plumppop, plumpop,  ROT0,   "Taito Corporation",                            "Plump Pop (Japan)" )
 GAME( 1987, extrmatn, 0,        arknoid2, extrmatn, extrmatn, ROT270, "[Taito] World Games",                          "Extermination (US)" )
 GAME( 1987, arknoid2, 0,        arknoid2, arknoid2, arknoid2, ROT270, "Taito Corporation Japan",                      "Arkanoid - Revenge of DOH (World)" )
 GAME( 1987, arknid2u, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito America Corporation (Romstar license)",  "Arkanoid - Revenge of DOH (US)" )
@@ -2319,6 +2635,8 @@ GAME( 1988, kagekij,  kageki,   kageki,   kageki,   kageki,   ROT90,  "Taito Cor
 GAME( 1988, chukatai, 0,        tnzs,     chukatai, chukatai, ROT0,   "Taito Corporation Japan",                      "Chuka Taisen (World)" )
 GAME( 1988, chukatau, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito America Corporation",                    "Chuka Taisen (US)" )
 GAME( 1988, chukataj, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito Corporation",                            "Chuka Taisen (Japan)" )
+GAME( 1988, kabukiz,  0,        kabukiz,  kabukiz,  kabukiz,  ROT0,   "Taito Corporation Japan",                      "Kabuki-Z (World)" )
+GAME( 1988, kabukizj, kabukiz,  kabukiz,  kabukizj, kabukiz,  ROT0,   "Taito Corporation",                            "Kabuki-Z (Japan)" )
 GAME( 1988, tnzs,     0,        tnzs,     tnzs,     tnzs,     ROT0,   "Taito Corporation",                            "The NewZealand Story (Japan, new version) (P0-043A PCB)" )
 GAME( 1988, tnzsb,    tnzs,     tnzsb,    tnzsb,    tnzsb,    ROT0,   "Taito Corporation Japan",                      "The NewZealand Story (World, new version) (P0-043A PCB)" )
 GAME( 1988, tnzs2,    tnzs,     tnzs,     tnzs2,    tnzs,     ROT0,   "Taito Corporation Japan",                      "The NewZealand Story (World, old version) (P0-041A PCB)" )

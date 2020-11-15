@@ -173,11 +173,11 @@ int osd_get_path_count(int pathtype)
 }
 
 /******************************************************************************
- 
+
  osd_get_path
  Sets char* path to point at a valid path of the type incidated by int pathtype,
  although the path itself does not necessarily exist at this point in the process.
- 
+
  *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
@@ -186,41 +186,57 @@ void osd_get_path(int pathtype, char* path)
 
   save_path_buffer[0] = '\0';
   if(options.save_subfolder)
-    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_save_path,path_default_slash_c(), APPNAME);
+    snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_save_path, PATH_DEFAULT_SLASH_C(), APPNAME);
   else
     snprintf(save_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_save_path);
 
   sys_path_buffer[0] = '\0';
   if(options.system_subfolder)
-    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_system_path,path_default_slash_c(), APPNAME);
+    snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s%c%s", options.libretro_system_path, PATH_DEFAULT_SLASH_C(), APPNAME);
   else
     snprintf(sys_path_buffer, PATH_MAX_LENGTH, "%s", options.libretro_system_path);
-    
+
+  /* force system and save paths to be created if not already there */
+  if ( !(path_is_directory(sys_path_buffer)) || !(path_is_directory(save_path_buffer)) )
+  {
+    log_cb(RETRO_LOG_INFO, LOGPRE "Searching for missing directories.........\n");
+
+    if (path_mkdir(sys_path_buffer))
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified system directory exists:  %s\n", sys_path_buffer);
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing system directory:  %s\n", sys_path_buffer);
+
+    if (path_mkdir(save_path_buffer))
+      log_cb(RETRO_LOG_INFO, LOGPRE "Verified save directory exists:  %s\n", save_path_buffer);
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Failed to create missing save directory:  %s\n", save_path_buffer);
+  }
+
    switch (pathtype)
-   {       
+   {
        case FILETYPE_ROM:
-       case FILETYPE_IMAGE:	
-          strcpy(path, options.libretro_content_path);	
+       case FILETYPE_IMAGE:
+          strcpy(path, options.libretro_content_path);
           break;
 
-      /* user-initiated content goes in mame2003 save directory subfolders */      
+      /* user-initiated content goes in mame2003 save directory subfolders */
       case FILETYPE_IMAGE_DIFF:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "diff");
-         break;     
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "diff");
+         break;
       case FILETYPE_NVRAM:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "nvram");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "nvram");
          break;
       case FILETYPE_HIGHSCORE:
-          snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "hi");
+          snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "hi");
          break;
       case FILETYPE_CONFIG:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "cfg");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "cfg");
          break;
       case FILETYPE_MEMCARD:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "memcard");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "memcard");
          break;
       case FILETYPE_CTRLR:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer,path_default_slash_c(), "ctrlr");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", save_path_buffer, PATH_DEFAULT_SLASH_C(), "ctrlr");
          break;
       case FILETYPE_XML_DAT:
          snprintf(path, PATH_MAX_LENGTH, "%s", save_path_buffer);
@@ -228,19 +244,25 @@ void osd_get_path(int pathtype, char* path)
 
          /* static, pregenerated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "artwork");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, PATH_DEFAULT_SLASH_C(), "artwork");
          break;
       case FILETYPE_SAMPLE:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, PATH_DEFAULT_SLASH_C(), "samples");
          break;
       case FILETYPE_SAMPLE_FLAC:
-         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer,path_default_slash_c(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%c%s", sys_path_buffer, PATH_DEFAULT_SLASH_C(), "samples");
          break;
 
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
          snprintf(path, PATH_MAX_LENGTH, "%s", sys_path_buffer);
-   }    
+         break;
+   }
+   /* Create path if it doesn't exist and log create failures */
+   if (!path_is_directory(path))
+     if (!path_mkdir(path)) log_cb(RETRO_LOG_DEBUG, LOGPRE "osd_get_path() failed to create path:  %s\n", path);
+
+   log_cb(RETRO_LOG_DEBUG, LOGPRE "osd_get_path() return path=  %s\n", path);
 }
 
 int osd_get_path_info(int pathtype, int pathindex, const char *filename)
@@ -249,9 +271,9 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    char currDir[PATH_MAX_LENGTH];
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
-   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);
+   log_cb(RETRO_LOG_DEBUG, "(osd_get_path_info) buffer=  %s\n", buffer);
 
    if (path_is_directory(buffer))
    {
@@ -274,11 +296,11 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
    FILE* out;
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir,path_default_slash_c(), filename);
-   log_cb(RETRO_LOG_DEBUG, "(osd_fopen) called: %s\n",buffer);
-   path_mkdir(currDir);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%c%s", currDir, PATH_DEFAULT_SLASH_C(), filename);
 
    out = fopen(buffer, mode);
+   if (out)  log_cb(RETRO_LOG_DEBUG, "(osd_fopen) opened the file:  %s\n", buffer);
+   else  log_cb(RETRO_LOG_DEBUG, "(osd_fopen) failed to open file:  %s\n", buffer);
 
    return out;
 }
@@ -289,7 +311,7 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
 	mame_fopen_rom
 ***************************************************************************/
 
-/* Similar to mame_fopen(,,FILETYPE_ROM), but lets you specify an expected checksum 
+/* Similar to mame_fopen(,,FILETYPE_ROM), but lets you specify an expected checksum
    (better encapsulation of the load by CRC used for ZIP files) */
 mame_file *mame_fopen_rom(const char *gamename, const char *filename, const char* exphash)
 {
@@ -425,7 +447,7 @@ UINT32 mame_fwrite(mame_file *file, const void *buffer, UINT32 length)
 	/* check against null pointer */
 	if (!file)
 		return 0;
-	
+
 	/* switch off the file type */
 	switch (file->type)
 	{
@@ -808,12 +830,12 @@ const char *get_extension_for_filetype(int filetype)
 	/* now open the file appropriately */
 	switch (filetype)
 	{
-		case FILETYPE_RAW:			/* raw data files */
-		case FILETYPE_ROM:			/* ROM files */
-		case FILETYPE_HIGHSCORE_DB:	/* highscore database/history files */
-		case FILETYPE_HISTORY:		/* game history files */
-		case FILETYPE_CHEAT:		/* cheat file */
-		default:					/* anything else */
+		case FILETYPE_RAW:              /* raw data files */
+		case FILETYPE_ROM:              /* ROM files */
+		case FILETYPE_HIGHSCORE_DB:     /* highscore database/history files */
+		case FILETYPE_HISTORY:          /* game history files */
+		case FILETYPE_CHEAT:            /* cheat file */
+		default:                        /* anything else */
 			extension = NULL;
 			break;
 
@@ -829,9 +851,9 @@ const char *get_extension_for_filetype(int filetype)
 			extension = "wav";
 			break;
 
-		case FILETYPE_SAMPLE_FLAC:		/* samples */
+		case FILETYPE_SAMPLE_FLAC:	/* samples */
 			extension = "flac";
-			break;			
+			break;
 
 		case FILETYPE_ARTWORK:		/* artwork files */
 			extension = "png";
@@ -880,7 +902,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 	mame_file file, *newfile;
 	char tempname[256];
 
-	log_cb(RETRO_LOG_DEBUG, "(generic_fopen) (%d, %s, %s, %s, %X)\n", pathtype, gamename, filename, extension, flags);
+	log_cb(RETRO_LOG_DEBUG, "(generic_fopen) (pathtype:%d, gamename:%s, filename:%s, extension:%s, flags:%X)\n", pathtype, gamename, filename, extension, flags);
 
 	/* reset the file handle */
 	memset(&file, 0, sizeof(file));
@@ -984,7 +1006,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 					}
 
 					hash_data_clear(file.hash);
-						
+
 					if (checksum_zipped_file(pathtype, pathindex, name, tempname, &ziplength, &crc) == 0)
 					{
 						file.length = ziplength;
@@ -1007,8 +1029,8 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 					/* Try loading the file */
 					err = load_zipped_file(pathtype, pathindex, name, tempname, &file.data, &ziplength);
 
-					/* If it failed, since this is a ZIP file, we can try to load by CRC 
-					   if an expected hash has been provided. unzip.c uses this ugly hack 
+					/* If it failed, since this is a ZIP file, we can try to load by CRC
+					   if an expected hash has been provided. unzip.c uses this ugly hack
 					   of specifying the CRC as filename. */
 					if (err && hash)
 					{
@@ -1119,7 +1141,7 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 
 	*size = length;
 
-	
+
 	/* compute the checksums (only the functions for which we have an expected
 	   checksum). Take also care of crconly: if the user asked, we will calculate
 	   only the CRC, but only if there is an expected CRC for this file. */
@@ -1162,17 +1184,17 @@ mame_file *spawn_bootstrap_nvram(unsigned char const *bootstrap_nvram, unsigned 
   mame_file *nvram_file = NULL;
 
   log_cb(RETRO_LOG_INFO, LOGPRE "Generating bootstrap nvram for %s\n", options.romset_filename_noext);
-        
+
   nvram_file = mame_fopen(options.romset_filename_noext, 0, FILETYPE_NVRAM, 1);
-  mame_fwrite(nvram_file, bootstrap_nvram, nvram_length);          
+  mame_fwrite(nvram_file, bootstrap_nvram, nvram_length);
   mame_fclose(nvram_file);
 
   nvram_file = mame_fopen(options.romset_filename_noext, 0, FILETYPE_NVRAM, 0);
-  
+
   if(!nvram_file)
     log_cb(RETRO_LOG_ERROR, LOGPRE "Error generating nvram bootstrap file!\n");
-  
-  return nvram_file;  
+
+  return nvram_file;
 }
 
 

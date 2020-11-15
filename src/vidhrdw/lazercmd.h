@@ -16,5 +16,3 @@
 
 #define MARKER_HORZ_ADJ -1
 #define MARKER_VERT_ADJ -10
-
-

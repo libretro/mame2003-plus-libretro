@@ -94,6 +94,7 @@ Are the OKI M6295 clocks from Heavy Smash are correct at least for the Mitchell 
 #include "deco16ic.h"
 #include "vidhrdw/generic.h"
 #include "bootstrap.h"
+#include "inptport.h"
 
 static UINT32 *simpl156_systemram;
 static const UINT8 *simpl156_default_eeprom = NULL;
@@ -287,11 +288,7 @@ static WRITE32_HANDLER( simpl156_palette_w )
 
 	dat = paletteram16[offset]&0xffff;
 
-#define pal5bit(n)	((((n) & 0x1f) << 3) | (((n) & 0x1f) >> 2))
-
 	palette_set_color(color,pal5bit(dat >> 0),pal5bit(dat >> 5),pal5bit(dat >> 10));
-
-#undef pal5bit
 }
 
 

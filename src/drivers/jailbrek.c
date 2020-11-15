@@ -11,7 +11,7 @@ ernesto@imagina.com
 
 	TODO:
 
-	- coin counters
+    - various unknown writes (NOPed out in the memory map)
 
 */
 
@@ -41,6 +41,12 @@ static WRITE_HANDLER( ctrl_w )
 	nmi_enable = data & 0x01;
 	irq_enable = data & 0x02;
 	flip_screen_set(data & 0x08);
+}
+
+static WRITE_HANDLER( coin_w )
+{
+	coin_counter_w(0, data & 0x01);
+	coin_counter_w(1, data & 0x02);
 }
 
 static INTERRUPT_GEN( jb_interrupt )
@@ -73,7 +79,6 @@ static MEMORY_READ_START( readmem )
 	{ 0x10c0, 0x14ff, MRA_RAM }, /* ??? */
 	{ 0x1500, 0x1fff, MRA_RAM }, /* work ram */
 	{ 0x2000, 0x203f, MRA_RAM }, /* scroll registers */
-	{ 0x3000, 0x307f, MRA_NOP }, /* related to sprites? */
 	{ 0x3100, 0x3100, input_port_4_r }, /* DSW1 */
 	{ 0x3200, 0x3200, input_port_5_r }, /* DSW2 */
 	{ 0x3300, 0x3300, input_port_0_r }, /* coins, start */
@@ -86,23 +91,23 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, jailbrek_colorram_w, &colorram },
-    { 0x0800, 0x0fff, jailbrek_videoram_w, &videoram },
-    { 0x1000, 0x10bf, MWA_RAM, &spriteram, &spriteram_size }, /* sprites */
-    { 0x10c0, 0x14ff, MWA_RAM }, /* ??? */
+	{ 0x0800, 0x0fff, jailbrek_videoram_w, &videoram },
+	{ 0x1000, 0x10bf, MWA_RAM, &spriteram, &spriteram_size }, /* sprites */
+	{ 0x10c0, 0x14ff, MWA_RAM }, /* ??? */
 	{ 0x1500, 0x1fff, MWA_RAM }, /* work ram */
-    { 0x2000, 0x203f, MWA_RAM, &jailbrek_scroll_x }, /* scroll registers */
-    { 0x2040, 0x2040, MWA_NOP }, /* ??? */
-    { 0x2041, 0x2041, MWA_NOP }, /* ??? */
-    { 0x2042, 0x2042, MWA_RAM, &jailbrek_scroll_dir }, /* bit 2 = scroll direction */
-    { 0x2043, 0x2043, MWA_NOP }, /* ??? */
-    { 0x2044, 0x2044, ctrl_w }, /* irq, nmi enable, screen flip */
-    { 0x3000, 0x307f, MWA_RAM }, /* ??? */
+	{ 0x2000, 0x203f, MWA_RAM, &jailbrek_scroll_x }, /* scroll registers */
+	{ 0x2040, 0x2040, MWA_NOP }, /* ??? */
+	{ 0x2041, 0x2041, MWA_NOP }, /* ??? */
+	{ 0x2042, 0x2042, MWA_RAM, &jailbrek_scroll_dir }, /* bit 2 = scroll direction */
+	{ 0x2043, 0x2043, MWA_NOP }, /* ??? */
+	{ 0x2044, 0x2044, ctrl_w }, /* irq, nmi enable, screen flip */
+	{ 0x3000, 0x3000, coin_w }, /* coin counter */
 	{ 0x3100, 0x3100, SN76496_0_w }, /* SN76496 data write */
 	{ 0x3200, 0x3200, MWA_NOP },	/* mirror of the previous? */
-    { 0x3300, 0x3300, watchdog_reset_w }, /* watchdog */
+	{ 0x3300, 0x3300, watchdog_reset_w }, /* watchdog */
 	{ 0x4000, 0x4000, jailbrek_speech_w }, /* speech pins */
 	{ 0x5000, 0x5000, VLM5030_data_w }, /* speech data */
-    { 0x8000, 0xffff, MWA_ROM },
+	{ 0x8000, 0xffff, MWA_ROM },
 MEMORY_END
 
 

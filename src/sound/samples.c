@@ -1,12 +1,10 @@
 #include "driver.h"
 
-
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load);
 
 static int firstchannel,numchannels;
 int leftSampleNum;
 int rightSampleNum;
-
-void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load);
 
 /* Start one of the samples loaded from disk. Note: channel must be in the range */
 /* 0 .. Samplesinterface->channels-1. It is NOT the discrete channel to pass to */
@@ -18,7 +16,7 @@ void sample_start(int channel,int samplenum,int loop)
 	if (Machine->samples->sample[samplenum] == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE" sample_start() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE"error: sample_start() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return;
 	}
 	if (samplenum >= Machine->samples->total)
@@ -29,28 +27,29 @@ void sample_start(int channel,int samplenum,int loop)
 
 	if (Machine->samples->sample[samplenum] != NULL)
 	{
-		if ( (Machine->samples->sample[samplenum]->b_decoded == 0) && (options.content_flags[CONTENT_ALT_SOUND]) )
+		if (Machine->samples->sample[samplenum]->b_decoded == 0)
 		{
 			// Lets decode this sample before playing it.
 			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
 		}
 
-		if ( (Machine->samples->sample[samplenum]->b_decoded == 1) && (options.content_flags[CONTENT_ALT_SOUND]) )
+		if (Machine->samples->sample[samplenum]->b_decoded == 1)
 		{
 			if (channel == 0)
 				leftSampleNum = samplenum;
 
 			if (channel == 1)
 				rightSampleNum = samplenum;
-		}			
+		}
+
 		if (Machine->samples->sample[samplenum]->resolution == 8 )
 		{
-				log_cb(RETRO_LOG_DEBUG, LOGPRE"play 8 bit sample %d, channel %d\n",samplenum,channel);
-				mixer_play_sample(firstchannel + channel,
-					Machine->samples->sample[samplenum]->data,
-					Machine->samples->sample[samplenum]->length,
-					Machine->samples->sample[samplenum]->smpfreq,
-					loop);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE"play 8 bit sample %d, channel %d\n",samplenum,channel);
+			mixer_play_sample(firstchannel + channel,
+			Machine->samples->sample[samplenum]->data,
+			Machine->samples->sample[samplenum]->length,
+			Machine->samples->sample[samplenum]->smpfreq,
+			loop);
 		}
 		else
 		{
@@ -59,9 +58,9 @@ void sample_start(int channel,int samplenum,int loop)
 			(short *) Machine->samples->sample[samplenum]->data,
 			Machine->samples->sample[samplenum]->length,
 			Machine->samples->sample[samplenum]->smpfreq,
-				loop);
-			
+			loop);
 		}
+
 	}
 }
 
@@ -113,7 +112,7 @@ void sample_stop(int channel)
 		c_sample = leftSampleNum;
 	else if (channel == 1)
 		c_sample = rightSampleNum;
-		
+
 	if (Machine->sample_rate == 0) return;
 	if (channel >= numchannels)
 	{
@@ -122,12 +121,11 @@ void sample_stop(int channel)
 	}
 
 	mixer_stop_sample(channel + firstchannel);
-
+	//respect samples being disabled
 	if (!options.use_samples) return;
-        if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
+	if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
 
-
-	if ( Machine->samples->sample[c_sample] != NULL ) {
+	if (Machine->samples->sample[c_sample] != NULL) {
 		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
 			// A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files.
 			if (Machine->samples->sample[c_sample]->length > GAME_SAMPLE_LARGE)
@@ -177,4 +175,16 @@ int samples_sh_start(const struct MachineSound *msound)
 		mixer_set_name(firstchannel + i,buf);
 	}
 	return 0;
+}
+
+int sample_set_pause(int channel,int pause)
+{
+  if (Machine->sample_rate == 0) return 0;
+	if (channel >= numchannels)
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE"error: sample_pause() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		return 0;
+	}
+  mixer_set_pause(channel + firstchannel, pause);
+  return 1;
 }

@@ -314,4 +314,3 @@ VIDEO_UPDATE( searchar )
 
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 }
-

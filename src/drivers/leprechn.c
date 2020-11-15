@@ -327,4 +327,3 @@ ROM_END
 GAME( 1982, leprechn, 0,        leprechn, leprechn, leprechn, ROT0, "Tong Electronic", "Leprechaun" )
 GAME( 1982, potogold, leprechn, leprechn, leprechn, leprechn, ROT0, "GamePlan", "Pot of Gold" )
 GAME( 1982, piratetr, 0,        leprechn, piratetr, leprechn, ROT0, "Tong Electronic", "Pirate Treasure" )
-  

@@ -461,4 +461,3 @@ VIDEO_UPDATE( suna8 )
 		suna8_draw_text_sprites(bitmap,cliprect);
 	}
 }
-

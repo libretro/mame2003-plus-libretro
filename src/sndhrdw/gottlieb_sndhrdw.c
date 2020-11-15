@@ -345,4 +345,3 @@ WRITE16_HANDLER( gottlieb_sh_word_w )
 	if (ACCESSING_LSB)
 		gottlieb_sh_w(offset, data);
 }
-

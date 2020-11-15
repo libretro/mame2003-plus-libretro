@@ -2514,4 +2514,3 @@ void YM2151SetPortWriteHandler(int n, mem_write_handler handler)
 {
 	YMPSG[n].porthandler = handler;
 }
-

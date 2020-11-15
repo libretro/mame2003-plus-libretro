@@ -7,6 +7,10 @@ unsigned char *lastday_txvideoram;
 unsigned char *lastday_bgscroll,*lastday_fgscroll,*bluehawk_fg2scroll;
 data16_t *rshark_scroll1,*rshark_scroll2,*rshark_scroll3,*rshark_scroll4;
 static int tx_pri;
+static int flytiger_pri;
+static int sprites_disabled;
+data8_t *paletteram_flytiger;
+static data8_t flytiger_palette_bank;		/* Used by flytiger */
 
 
 WRITE_HANDLER( lastday_ctrl_w )
@@ -55,6 +59,31 @@ WRITE_HANDLER( primella_ctrl_w )
 	/* bit 5 used but unknown */
 
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: bankswitch = %02x\n",activecpu_get_pc(),data&0xe0);*/
+}
+
+WRITE_HANDLER( paletteram_flytiger_w )
+{
+	if (flytiger_palette_bank)
+	{
+		UINT16 value;
+		paletteram_flytiger[offset] = data;
+		value = paletteram_flytiger[offset & ~1] | (paletteram_flytiger[offset | 1] << 8);
+		palette_set_color(offset/2, pal5bit(value >> 10), pal5bit(value >> 5), pal5bit(value >> 0));
+	}
+}
+
+WRITE_HANDLER( flytiger_ctrl_w )
+{
+	/* bit 0 is flip screen */
+	flip_screen_set(data & 0x01);
+
+	/* bits 1, 2 used but unknown */
+
+	/* bit 3 fg palette banking: trash protection? */	
+	flytiger_palette_bank = data & 0x08;
+
+	/* bit 4 changes tilemaps priority */
+	flytiger_pri = data & 0x10;
 }
 
 WRITE16_HANDLER( rshark_ctrl_w )
@@ -255,6 +284,57 @@ static void rshark_draw_layer(struct mame_bitmap *bitmap,int gfx,data16_t *scrol
 	}
 }
 
+
+/* it's the same as draw_layer function for now... */
+static void flytiger_draw_layer2(struct mame_bitmap *bitmap,int gfx,const unsigned char *scroll,
+		const unsigned char *tilemap,int transparency)
+{
+	int offs;
+	int scrollx,scrolly;
+
+	scrollx = scroll[0] + (scroll[1] << 8);
+	scrolly = scroll[3] + (scroll[4] << 8);
+
+	for (offs = 0;offs < 0x100;offs += 2)
+	{
+		int sx,sy,code,color,attr,flipx,flipy;
+		int toffs = offs+((scrollx&~0x1f)>>1);
+
+		attr = tilemap[toffs];
+		code = tilemap[toffs+1] | ((attr & 0x01) << 8) | ((attr & 0x80) << 2),
+		color = (attr & 0x78) >> 3;
+		sx = 32 * ((offs/2) / 8) - (scrollx & 0x1f);
+		sy = (32 * ((offs/2) % 8) - scrolly) & 0xff;
+
+		flipx = attr & 0x02;
+		flipy = attr & 0x04;
+		if (flip_screen)
+		{
+			sx = 512-32 - sx;
+			sy = 256-32 - sy;
+			flipx = !flipx;
+			flipy = !flipy;
+		}
+
+		drawgfx(bitmap,Machine->gfx[gfx],
+				code,
+				color,
+				flipx,flipy,
+				sx,sy,
+				&Machine->visible_area,transparency,15);
+		/* wraparound */
+		if (scrolly & 0x1f)
+		{
+			drawgfx(bitmap,Machine->gfx[gfx],
+					code,
+					color,
+					flipx,flipy,
+					sx,((sy + 0x20) & 0xff) - 0x20,
+					&Machine->visible_area,transparency,15);
+		}
+	}
+}
+
 static void draw_tx(struct mame_bitmap *bitmap,int yoffset)
 {
 	int offs;
@@ -338,6 +418,14 @@ static void draw_sprites(struct mame_bitmap *bitmap,int pollux_extensions)
 					flipx = buffered_spriteram[offs+0x1c] & 0x08;
 					flipy = buffered_spriteram[offs+0x1c] & 0x04;
 				}
+
+				if (pollux_extensions == 4)
+				{
+					/* flytiger */
+					sy -=(buffered_spriteram[offs+0x1c] & 0x02) << 7;
+					flipx = buffered_spriteram[offs+0x1c] & 0x08;
+					flipy = buffered_spriteram[offs+0x1c] & 0x04;
+				}
 			}
 		}
 
@@ -409,9 +497,17 @@ static void rshark_draw_sprites(struct mame_bitmap *bitmap)
 
 VIDEO_UPDATE( lastday )
 {
-	draw_layer(bitmap,2,lastday_bgscroll,memory_region(REGION_GFX5),TRANSPARENCY_NONE);
-	draw_layer(bitmap,3,lastday_fgscroll,memory_region(REGION_GFX6),TRANSPARENCY_PEN);
-	draw_sprites(bitmap,0);
+	fillbitmap(bitmap, get_black_pen(), cliprect);
+
+	if(!(lastday_bgscroll[6] & 0x10))
+		draw_layer(bitmap,2,lastday_bgscroll,memory_region(REGION_GFX5),TRANSPARENCY_NONE);
+
+	if(!(lastday_fgscroll[6] & 0x10))
+		draw_layer(bitmap,3,lastday_fgscroll,memory_region(REGION_GFX6),TRANSPARENCY_PEN);
+
+	if(!sprites_disabled)
+		draw_sprites(bitmap,0);
+
 	draw_tx(bitmap,-1);
 }
 
@@ -430,6 +526,32 @@ VIDEO_UPDATE( pollux )
 	draw_sprites(bitmap,2);
 	draw_tx(bitmap,0);
 }
+
+VIDEO_UPDATE( flytiger )
+{
+	fillbitmap(bitmap, get_black_pen(), cliprect);
+
+	if(flytiger_pri)
+	{
+		if(!(lastday_fgscroll[6] & 0x10))
+			flytiger_draw_layer2(bitmap,3,lastday_fgscroll,memory_region(REGION_GFX4)+0x78000,TRANSPARENCY_NONE);
+
+		if(!(lastday_bgscroll[6] & 0x10))
+			draw_layer(bitmap,2,lastday_bgscroll,memory_region(REGION_GFX3)+0x78000,TRANSPARENCY_PEN);
+	}
+	else
+	{
+		if(!(lastday_bgscroll[6] & 0x10))
+			draw_layer(bitmap,2,lastday_bgscroll,memory_region(REGION_GFX3)+0x78000,TRANSPARENCY_NONE);
+
+		if(!(lastday_fgscroll[6] & 0x10))
+			flytiger_draw_layer2(bitmap,3,lastday_fgscroll,memory_region(REGION_GFX4)+0x78000,TRANSPARENCY_PEN);
+	}
+
+	draw_sprites(bitmap,4);
+	draw_tx(bitmap,0);
+}
+
 
 VIDEO_UPDATE( bluehawk )
 {

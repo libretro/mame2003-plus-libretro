@@ -169,6 +169,28 @@ else ifeq ($(platform), ctr)
    CPU_ARCH := arm
    STATIC_LINKING = 1
 
+else ifeq ($(platform), rpi0)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
+
+else ifeq ($(platform), rpi1)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
+
 else ifeq ($(platform), rpi2)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
@@ -186,6 +208,17 @@ else ifeq ($(platform), rpi3)
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
+   ARM = 1
+
+else ifeq ($(platform), rpi4)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -marm -mcpu=cortex-a72 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
@@ -227,6 +260,32 @@ else ifeq ($(platform), classic_armv7_a7)
 	    LDFLAGS += -static-libgcc -static-libstdc++
 	  endif
 	endif
+	
+# (armv8 a35, hard point, neon based) ###
+# Playstation Classic
+else ifeq ($(platform), classic_armv8_a35)
+	TARGET := $(TARGET_NAME)_libretro.so
+	fpic := -fPIC
+	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+	CFLAGS += -Ofast \
+	-flto=4 -fwhole-program -fuse-linker-plugin \
+	-fdata-sections -ffunction-sections -Wl,--gc-sections \
+	-fno-stack-protector -fno-ident -fomit-frame-pointer \
+	-falign-functions=1 -falign-jumps=1 -falign-loops=1 \
+	-fno-unwind-tables -fno-asynchronous-unwind-tables -fno-unroll-loops \
+	-fmerge-all-constants -fno-math-errno \
+	-marm -mtune=cortex-a35 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+	CXXFLAGS += $(CFLAGS)
+	CPPFLAGS += $(CFLAGS)
+	ASFLAGS += $(CFLAGS)
+	HAVE_NEON = 1
+	ARCH = arm
+	BUILTIN_GPU = neon
+	USE_DYNAREC = 1
+	CPU_ARCH := arm
+	ARM = 1
+	CFLAGS += -march=armv8-a
+	LDFLAGS += -static-libgcc -static-libstdc++
 #######################################
 
 # generic armhf########################
@@ -278,7 +337,7 @@ else ifeq ($(platform), libnx)
   EXT=a
   TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
   DEFINES := -DSWITCH=1 -U__linux__ -U__linux -DRARCH_INTERNAL -DHAVE_LIBNX
-  CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
+  CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -fcommon -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
   CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
   CFLAGS += -std=gnu11
   PLATCFLAGS += -D__SWITCH__ -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
@@ -293,6 +352,19 @@ else ifeq ($(platform), switch)
 	include $(LIBTRANSISTOR_HOME)/libtransistor.mk
 	STATIC_LINKING=1
 
+# PS2
+else ifeq ($(platform), ps2)
+	TARGET := $(TARGET_NAME)_libretro_$(platform).a
+	CC = ee-gcc$(EXE_EXT)
+	CXX = ee-g++$(EXE_EXT)
+	AR = ee-ar$(EXE_EXT)
+	PLATCFLAGS := -G0 -Wall -DPS2 -DNO_UNALIGNED_ACCESS -DABGR1555 -DRENDER_GSKIT_PS2 -fsingle-precision-constant
+	PLATCFLAGS += -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include  -I$(PS2DEV)/gsKit/include
+	PLATCFLAGS += -O3
+	PLATCFLAGS += -DHAVE_NO_LANGEXTRA
+	CXXFLAGS += -fno-rtti -fno-exceptions -ffast-math
+	STATIC_LINKING = 1
+
 else ifeq ($(platform), ps3)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
@@ -301,7 +373,7 @@ else ifeq ($(platform), ps3)
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
    SPLIT_UP_LINK=1
-	
+
 else ifeq ($(platform), sncps3)
    TARGET = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -336,7 +408,7 @@ else ifeq ($(platform), vita)
    CFLAGS += -fomit-frame-pointer -ffast-math
    CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
    CFLAGS +=  -fno-optimize-sibling-calls
-   CFLAGS += -ftree-vectorize -funroll-loops -fno-short-enums
+   CFLAGS += -ftree-vectorize -funroll-loops -fno-short-enums -fcommon
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    HAVE_RZLIB := 1
    ARM = 1
@@ -447,6 +519,26 @@ PSS_STYLE :=2
 LDFLAGS += -DLL
 LIBS =
 
+# Windows MSVC 2003 x86
+else ifeq ($(platform), windows_msvc2003_x86)
+ 	CC  = cl.exe
+ 	CXX = cl.exe
+ 	PATH := $(shell IFS=$$'\n'; cygpath "$(VS71COMNTOOLS)../../Vc7/bin"):$(PATH)
+ 	PATH := $(PATH):$(shell IFS=$$'\n'; cygpath "$(VS71COMNTOOLS)../IDE")
+ 	INCLUDE := $(shell IFS=$$'\n'; cygpath -w "$(VS71COMNTOOLS)../../Vc7/include")
+ 	LIB := $(shell IFS=$$'\n'; cygpath -w "$(VS71COMNTOOLS)../../Vc7/lib")
+ 	BIN := $(shell IFS=$$'\n'; cygpath "$(VS71COMNTOOLS)../../Vc7/bin")
+
+ 	WindowsSdkDir := $(INETSDK)
+ 	export INCLUDE := $(INCLUDE);$(INETSDK)/Include;src/libretro/libretro-common/include/compat/msvc
+ 	export LIB := $(LIB);$(WindowsSdkDir);$(INETSDK)/Lib
+
+ 	TARGET := $(TARGET_NAME)_libretro.dll
+ 	PSS_STYLE :=2
+ 	LDFLAGS += -DLL
+ 	CFLAGS += -D_CRT_SECURE_NO_DEPRECATE
+ 	LIBS =
+
 # Windows MSVC 2005 x86
 else ifeq ($(platform), windows_msvc2005_x86)
  	CC  = cl.exe
@@ -555,7 +647,7 @@ else ifneq (,$(findstring windows_msvc2017,$(platform)))
 	ifneq (,$(findstring uwp,$(PlatformSuffix)))
 		LIB := $(LIB);$(shell IFS=$$'\n'; cygpath -w "$(LIB)/store")
 	endif
-    
+
 	export INCLUDE := $(INCLUDE);$(WindowsSDKSharedIncludeDir);$(WindowsSDKUCRTIncludeDir);$(WindowsSDKUMIncludeDir)
 	export LIB := $(LIB);$(WindowsSDKUCRTLibDir);$(WindowsSDKUMLibDir)
 	TARGET := $(TARGET_NAME)_libretro.dll

@@ -35,4 +35,3 @@ READ_HANDLER( ticket_dispenser_1_r );
 WRITE_HANDLER( ticket_dispenser_w );
 WRITE_HANDLER( ticket_dispenser_0_w );
 WRITE_HANDLER( ticket_dispenser_1_w );
-

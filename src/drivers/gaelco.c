@@ -1068,5 +1068,3 @@ GAME(1995, biomtoy,  0,        maniacsq, biomtoy,  0, ROT0, "Gaelco", "Biomechan
 GAME(1996, maniacsp, maniacsq, maniacsq, maniacsq, 0, ROT0, "Gaelco", "Maniac Square (prototype)" )
 GAME(1992, squash,   0,	       squash,   squash,   0, ROT0, "Gaelco", "Squash" )
 GAME(1992, thoop,    0,	       thoop,    thoop,    0, ROT0, "Gaelco", "Thunder Hoop" )
-
-

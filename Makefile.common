@@ -1035,6 +1035,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/1945kiii.c \
 				 $(CORE_DIR)/drivers/madalien.c \
 				 $(CORE_DIR)/drivers/n8080.c \
+				 $(CORE_DIR)/drivers/mirax.c \
 				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 				 $(CORE_DIR)/machine/namcoio_machine.c
 
@@ -2681,10 +2682,12 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/compat/fopen_utf8.c \
 	$(LIBRETRO_COMM_DIR)/encodings/encoding_utf.c \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
+	$(LIBRETRO_COMM_DIR)/file/file_path_io.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
+	$(LIBRETRO_COMM_DIR)/time/rtime.c \
 	$(CORE_DIR)/lib/zlib/adler32.c \
 	$(CORE_DIR)/lib/zlib/compress.c \
 	$(CORE_DIR)/lib/zlib/crc32.c \

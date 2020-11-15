@@ -347,4 +347,3 @@ READ_HANDLER( tigerh_mcu_status_r )
 	if (!mcu_sent) res |= 0x04;
 	return res;
 }
-

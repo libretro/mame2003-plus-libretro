@@ -39,6 +39,8 @@
 #include "machine/idectrl.h"
 #include "machine/midwayic.h"
 #include "vidhrdw/voodoo.h"
+#include "bootstrap.h"
+#include "inptport.h"
 
 
 #define TIMER_CLOCK			TIME_IN_HZ(50000000)
@@ -92,8 +94,8 @@ static MACHINE_INIT( seattle )
 
 	if (mame_find_cpu_index("dcs2") != -1)
 	{
-		dcs_reset_w(1);
 		dcs_reset_w(0);
+		dcs_reset_w(1);
 	}
 	else if (mame_find_cpu_index("cage") != -1)
 	{
@@ -2214,7 +2216,7 @@ static DRIVER_INIT( biofreak )
 static DRIVER_INIT( blitz )
 {
 	dcs2_init(0x39c2);
-	init_common(MIDWAY_IOASIC_BLITZ99, 528/* or 444 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 444/* or 528 */, 80);
 
 	/* for some reason, the code in the ROM appears buggy; this is a small patch to fix it */
 	rombase[0x934/4] += 4;
@@ -2228,7 +2230,7 @@ static DRIVER_INIT( blitz )
 static DRIVER_INIT( blitz99 )
 {
 	dcs2_init(0x0afb);
-	init_common(MIDWAY_IOASIC_BLITZ99, 520/* or 481 or 484 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 481/* or 484 or 520 */, 80);
 
 	/* speedups */
 	install_mem_write32_handler(0, 0x802502bc, 0x802502bf, generic_speedup_w);
@@ -2239,7 +2241,7 @@ static DRIVER_INIT( blitz99 )
 static DRIVER_INIT( blitz2k )
 {
 	dcs2_init(0x0b5d);
-	init_common(MIDWAY_IOASIC_BLITZ99, 498/* or 494 */, 80);
+	init_common(MIDWAY_IOASIC_BLITZ99, 494/* or 498 */, 80);
 
 	/* speedups */
 	install_mem_write32_handler(0, 0x8024e8d8, 0x8024e8db, generic_speedup_w);
@@ -2250,7 +2252,7 @@ static DRIVER_INIT( blitz2k )
 static DRIVER_INIT( carnevil )
 {
 	dcs2_init(0x0af7);
-	init_common(MIDWAY_IOASIC_CARNEVIL, 528/* or 469 or 486 */, 80);
+	init_common(MIDWAY_IOASIC_CARNEVIL, 469/* or 486 or 528 */, 80);
 
 	/* set up the gun */
 	install_mem_read32_handler(0, 0xb6800000, 0xb680001f, carnevil_gun_r);
@@ -2280,4 +2282,4 @@ GAME ( 1997, biofreak, 0,        seattle150, biofreak, biofreak, ROT0, "Midway G
 GAME ( 1997, blitz,    0,        seattle150, blitz,    blitz,    ROT0, "Midway Games", "NFL Blitz" )
 GAME ( 1998, blitz99,  0,        seattle150, blitz99,  blitz99,  ROT0, "Midway Games", "NFL Blitz '99" )
 GAME ( 1999, blitz2k,  0,        seattle150, blitz99,  blitz2k,  ROT0, "Midway Games", "NFL Blitz 2000" )
-GAME ( 1998, carnevil, 0,        carnevil,   carnevil, carnevil, ROT0, "Midway Games", "CarnEvil" )
+GAMEC( 1998, carnevil, 0,        carnevil,   carnevil, carnevil, ROT0, "Midway Games", "CarnEvil", &carnevil_ctrl, &carnevil_bootstrap )

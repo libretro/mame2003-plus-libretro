@@ -333,4 +333,3 @@ static DRIVER_INIT( glass )
 
 GAMEX(1993, glass,  0,      glass, glass, glass, ROT0, "OMK / Gaelco",                  "Glass (Ver 1.1, Break Edition, Checksum 49D5E66B, Version 1994)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1993, glasskr,glass,  glass, glass, glass, ROT0, "OMK / Gaelco (Promat license)", "Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)" )
-

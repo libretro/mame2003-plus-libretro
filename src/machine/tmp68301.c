@@ -177,4 +177,3 @@ WRITE16_HANDLER( tmp68301_regs_w )
 void tmp68301_external_interrupt_0()	{ tmp68301_IE[0] = 1;	update_irq_state(); }
 void tmp68301_external_interrupt_1()	{ tmp68301_IE[1] = 1;	update_irq_state(); }
 void tmp68301_external_interrupt_2()	{ tmp68301_IE[2] = 1;	update_irq_state(); }
-

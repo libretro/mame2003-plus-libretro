@@ -282,5 +282,3 @@ VIDEO_UPDATE( skysmash )
 	bloodbro_draw_sprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,tx_tilemap,0,0);
 }
-
-

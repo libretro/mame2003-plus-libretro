@@ -615,9 +615,11 @@ static void subf(union genreg *dst, union genreg *src1, union genreg *src2)
 	/* check for underflow */
 	if (exp <= -128)
 	{
+		/* make sure a 0 result doesn't set underflow */
+		if (man != 0 || exp < -128)
+			IREG(TMR_ST) |= UFFLAG | LUFFLAG;
 		man = 0x80000000;
 		exp = -128;
-		IREG(TMR_ST) |= UFFLAG | LUFFLAG;
 	}
 
 	/* check for overflow */
@@ -1695,31 +1697,35 @@ static void cmpi_imm(void)
 static void fix_reg(void)
 {
 	int dreg = (OP >> 16) & 31;
-	tms32031.r[dreg] = tms32031.r[OP & 7];
-	float2int(&tms32031.r[dreg]);
+	tms32031.r[TMR_TEMP1] = tms32031.r[OP & 7];
+	float2int(&tms32031.r[TMR_TEMP1]);
+    SET_MANTISSA(&tms32031.r[dreg], MANTISSA(&tms32031.r[TMR_TEMP1]));
 }
 
 static void fix_dir(void)
 {
 	UINT32 res = RMEM(DIRECT());
 	int dreg = (OP >> 16) & 31;
-	LONG2FP(dreg, res);
-	float2int(&tms32031.r[dreg]);
+	LONG2FP(TMR_TEMP1, res);
+	float2int(&tms32031.r[TMR_TEMP1]);
+	SET_MANTISSA(&tms32031.r[dreg], MANTISSA(&tms32031.r[TMR_TEMP1]));
 }
 
 static void fix_ind(void)
 {
 	UINT32 res = RMEM(INDIRECT_D(OP >> 8));
 	int dreg = (OP >> 16) & 31;
-	LONG2FP(dreg, res);
-	float2int(&tms32031.r[dreg]);
+	LONG2FP(TMR_TEMP1, res);
+	float2int(&tms32031.r[TMR_TEMP1]);
+	SET_MANTISSA(&tms32031.r[dreg], MANTISSA(&tms32031.r[TMR_TEMP1]));
 }
 
 static void fix_imm(void)
 {
 	int dreg = (OP >> 16) & 31;
-	SHORT2FP(dreg, OP);
-	float2int(&tms32031.r[dreg]);
+	SHORT2FP(TMR_TEMP1, OP);
+	float2int(&tms32031.r[TMR_TEMP1]);
+    SET_MANTISSA(&tms32031.r[dreg], MANTISSA(&tms32031.r[TMR_TEMP1]));
 }
 
 /*-----------------------------------------------------*/

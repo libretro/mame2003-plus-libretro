@@ -889,4 +889,3 @@ GAME( 1989, madgear,  0,        madgear,  madgear,  0, ROT270, "Capcom", "Mad Ge
 GAME( 1989, madgearj, madgear,  madgear,  madgear,  0, ROT270, "Capcom", "Mad Gear (Japan)" )
 GAME( 1988, ledstorm, madgear,  madgear,  madgear,  0, ROT270, "Capcom", "Led Storm (US)" )
 GAME( 1988, leds2011, 0,        leds2011, madgear,  0, ROT270, "Capcom", "Led Storm Rally 2011 (World)")
-

@@ -59,6 +59,3 @@ int dso_output_init(struct node_description *node)
 
 	return 0;
 }
-
-
-

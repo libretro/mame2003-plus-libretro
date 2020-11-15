@@ -85,4 +85,3 @@ VIDEO_UPDATE( spacewar )
 	artwork_show("pressed5", (~sw_option >> 10) & 1);
 	artwork_show("pressed0", (~sw_option >> 11) & 1);
 }
-

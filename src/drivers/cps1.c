@@ -169,7 +169,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	*/
 	
 	/* We are playing Final Fight. Let's use the samples.*/
-	if(ff_playing_final_fight == true) {
+	if(ff_playing_final_fight && options.use_samples) {
 		switch (data) {
 			/* stage 1 upper level music*/
 			case 0x40:
@@ -197,7 +197,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 40, 1);
 					sample_start(1, 41, 1);
 				}
-				
+
 				break;
 			/* stage #2 exiting subway/alley*/
 			case 0x43:
@@ -220,7 +220,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				if (ff_provision_alt_song == false) {
 					ff_provision_alt_song = true;
 				}
-				
+
 				break;
 			/* bathroom music for bay area*/
 			case 0x46:
@@ -239,7 +239,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 					sample_start(0, 36, 1);
 					sample_start(1, 37, 1);
 				}
-				
+
 				break;
 			/* bonus stage music*/
 			case 0x4c:
@@ -267,7 +267,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				/* when the game starts, we'll reset all the alternate songs*/
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
 			/* post explosion ditty*/
 			case 0x51:
@@ -279,45 +279,45 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 			case 0x52:
 				sample_start(0, 46, 0);
 				sample_start(1, 47, 0);
-		
+
 				break;
 			/* continue/dynamite song*/
 			case 0x53:
 				sample_start(0, 32, 1);
 				sample_start(1, 33, 1);
-				
+
 				break;
 			/* homosexual cheesy ending music*/
 			case 0x54:
 				sample_start(0, 48, 1);
 				sample_start(1, 49, 1);
-			
+
 				break;
 			/* player select song*/
 			case 0x55:
 				sample_start(0, 30, 0);
 				sample_start(1, 31, 0);
-				
+
 				break;
 			/* stage end/victory song*/
 			case 0x57:
 				sample_start(0, 28, 0);
 				sample_start(1, 29, 0);
-				
+
 				/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
 				if (ff_provision_alt_song == true) {
 					ff_play_alternate_song = true;
 				}
-				
+
 				break;
 			/* final stage clear ditty*/
 			case 0x58:
 				sample_start(0, 26, 0);
 				sample_start(1, 27, 0);
-								
+			
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
-				
+
 				break;
 			default:
 				if(ACCESSING_LSB)
@@ -326,7 +326,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				/* Lets stop the Final Fight sample music.*/
 				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
 					int a = 0;
-					
+
 					for(a = 0; a <= 50; a++) {
 						sample_stop(a);
 					}
@@ -2733,7 +2733,7 @@ INPUT_PORTS_START( captcomm )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0xc0, 0xc0, "Max Players" )
+	PORT_DIPNAME( 0xc0, 0x00, "Max Players" )
 	PORT_DIPSETTING(    0x40, "1" )
 	PORT_DIPSETTING(    0xc0, "2" )
 	PORT_DIPSETTING(    0x80, "3" )
@@ -4010,6 +4010,114 @@ INPUT_PORTS_START( wofch )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END	
 
+INPUT_PORTS_START( gulunpa )
+	PORT_START      /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )  /* Service, but it doesn't give any credit */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	
+	PORT_START
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x18, 0x18, "Coin slots" )
+	PORT_DIPSETTING(    0x18, "1, Common" )
+	PORT_DIPSETTING(    0x00, "2, Common" )
+	PORT_DIPSETTING(    0x10, "2, Common (duplicate 1)" )
+	PORT_DIPSETTING(    0x08, "2, Common (duplicate 2)" )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	
+	PORT_START
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x07, "1 Easiest" )
+	PORT_DIPSETTING(    0x06, "2 Very Easy" )
+	PORT_DIPSETTING(    0x05, "3 Easy" )
+	PORT_DIPSETTING(    0x04, "4 Medium" )
+	PORT_DIPSETTING(    0x03, "5 Medium Hard" )
+	PORT_DIPSETTING(    0x02, "6 Hard" )
+	PORT_DIPSETTING(    0x01, "7 Very Hard" )
+	PORT_DIPSETTING(    0x00, "8 Hardest" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	/* flipping this on any screen causes scroll1 layer left edge to be filled with tile 0x0014 */
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPSETTING(    0x80, "Game" )
+	PORT_DIPSETTING(    0x00, "Test" )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END                                        
+                                        
 
 static struct GfxLayout layout8x8 =
 {
@@ -4134,8 +4242,7 @@ static MACHINE_DRIVER_START( ffight_hack )
 
 	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(SAMPLES, ff_samples)
-	/*MDRV_SOUND_ADD(SAMPLES, ff_samplesR)*/
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ff_samples)
 MACHINE_DRIVER_END
 
 
@@ -7812,7 +7919,33 @@ ROM_START( rockmanj )
 	ROM_LOAD( "rcm_18.rom",    0x00000, 0x20000, CRC(80f1f8aa) SHA1(4a5b7b2a6941ad68da7472c63362c7bcd353fa54) )
 	ROM_LOAD( "rcm_19.rom",    0x20000, 0x20000, CRC(f257dbe1) SHA1(967def6b6f93039dbc46373caabeb3301577be75) )
 ROM_END
+         
+/* CPS Prototype */                                        
 
+ROM_START( gulunpa )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+  ROM_LOAD16_BYTE( "26",  0x00000, 0x020000, CRC(f30ffa29) SHA1(9e70daf4229485dc5700b074dba55839c7357351) )
+  ROM_LOAD16_BYTE( "30",  0x00001, 0x020000, CRC(5d35f737) SHA1(47b6bfa6eaa512684e12c23162243d1a21cb1a7a) )
+
+	ROM_REGION( 0x200000, REGION_GFX1, 0 )
+	ROMX_LOAD( "1",     0x000000, 0x080000, CRC(b55e648f) SHA1(e22eec707b3b1ad8fb93c0f2df41ccf72cd03440) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "2",     0x000002, 0x080000, CRC(ad033bce) SHA1(b37b1d341e61502aa4213b049b14974fab8a0445) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3",     0x000004, 0x080000, CRC(36c3951a) SHA1(74edaca2c78dd6a304ea702091a9f0b7f6036e41) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "4",     0x000006, 0x080000, CRC(ff0cb826) SHA1(fec7833652e6789e886a1ec7b4680a608ddbbe20) , ROM_GROUPWORD | ROM_SKIP(6) )
+  ROM_FILL(0x000006, 1, 0xff)
+	
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+	
+	ROM_REGION( 0x18000, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "9",      0x00000, 0x08000, CRC(15afd06f) SHA1(1a4ff3e11e55266e7c93743b6564c226eaaba142) )
+	ROM_CONTINUE(       0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_LOAD( "18",     0x00000, 0x20000, CRC(9997a34f) SHA1(8e107d6413836c48fc57e4a9b89ae99a9e381e8b) )
+	ROM_LOAD( "19",     0x20000, 0x20000, CRC(e95270ac) SHA1(dc684abfa1ea276a00ec541ab8f3f9f131375faa) )
+ROM_END                                        
+                                        
 /* Home 'CPS Changer' Unit  */
 
 /* B-Board 91635B-2 */
@@ -8013,7 +8146,9 @@ GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (
 /* Japanese version of Pang 3 is encrypted, Euro version is not */
 GAME( 1995, pang3,    0,        pang3,    pang3,    cps1,     ROT0,   "Mitchell", "Pang! 3 (Euro 950511)" )
 GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Japan 950511)" )
-					
+                                        
+/* CPS Prototype */
+GAME( 1993, gulunpa,  0,        cps1,     gulunpa,  cps1,     ROT0,   "Capcom", "Gulun.Pa! (Japan 931220 L Prototype)" )
+                                        			
 /* CPS Changer */
 GAME( 1994, wofch,    0,        qsound,   wofch,    wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)" )
-			

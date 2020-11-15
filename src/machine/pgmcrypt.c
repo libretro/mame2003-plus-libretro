@@ -499,4 +499,3 @@ void pgm_espgal_decrypt(void)
 		src[i] = x;
 	}
 }
-

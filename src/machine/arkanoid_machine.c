@@ -123,4 +123,3 @@ READ_HANDLER( arkanoid_input_2_r )
 		return input_port_2_r(offset);
 	}
 }
-

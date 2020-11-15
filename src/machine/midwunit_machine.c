@@ -39,7 +39,6 @@
 	midyunit_speedup_base = install_mem_read16_handler(0, TOBYTE((addr) & ~0x1f), TOBYTE((addr) | 0x1f), midwunit_generic_speedup_1_address);
 
 
-
 /* code-related variables */
        UINT8 *	midwunit_decode_memory;
 
@@ -122,7 +121,7 @@ WRITE16_HANDLER( midwunit_io_w )
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Control W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
 
 			/* bit 4 reset sound CPU */
-			dcs_reset_w(newword & 0x10);
+			dcs_reset_w(~newword & 0x10);
 
 			/* bit 5 (active low) reset security chip */
 			midway_serial_pic_reset_w(newword & 0x20);
@@ -170,6 +169,10 @@ WRITE16_HANDLER( midxunit_io_w )
 WRITE16_HANDLER( midxunit_unknown_w )
 {
 	int offs = offset / 0x40000;
+
+	if (offs == 1 && ACCESSING_LSB)
+		dcs_reset_w(~data & 2);
+
 	if (ACCESSING_LSB && offset % 0x40000 == 0)
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:midxunit_unknown_w @ %d = %02X\n", activecpu_get_pc(), offs, data & 0xff);
 }
@@ -410,6 +413,33 @@ static void init_wunit_generic(void)
 
 /********************** Mortal Kombat 3 **********************/
 
+static UINT16 *umk3_palette;
+
+static WRITE16_HANDLER( umk3_palette_hack_w )
+{
+	/*
+		  UMK3 uses a circular buffer to hold pending palette changes; the buffer holds 17 entries
+	    total, and the buffer is processed/cleared during the video interrupt. Most of the time,
+	    17 entries is enough. However, when characters are unlocked, or a number of characters are
+	    being displayed, the circular buffer sometimes wraps, losing the first 17 palette changes.
+
+	    This bug manifests itself on a real PCB, but only rarely; whereas in MAME, it manifests
+	    itself very frequently. This is due to the fact that the instruction timing for the TMS34010
+	    is optimistic and assumes that the instruction cache is always fully populated. Without
+	    full cache level emulation of the chip, there is no hope of fixing this issue without a
+	    hack.
+
+	    Thus, the hack. To slow down the CPU when it is adding palette entries to the list, we
+	    install this write handler on the memory locations where the start/end circular buffer
+	    pointers live. Each time they are written to, we penalize the main CPU a number of cycles.
+	    Although not realistic, this is sufficient to reduce the frequency of incorrect colors
+	    without significantly impacting the rest of the system.
+	*/
+	COMBINE_DATA(&umk3_palette[offset]);
+	activecpu_adjust_icount(-100);
+/*	printf("in=%04X%04X  out=%04X%04X\n", umk3_palette[3], umk3_palette[2], umk3_palette[1], umk3_palette[0]); */
+}
+
 static void init_mk3_common(void)
 {
 	/* common init */
@@ -441,14 +471,22 @@ DRIVER_INIT( umk3 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
 }
 
 DRIVER_INIT( umk3r11 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff969680, 0x105dc10, 0x105dc30, 0x105dc50);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
 }
 
+DRIVER_INIT( umk3p )
+{
+	init_mk3_common();
+	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
+	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+}
 
 /********************** 2 On 2 Open Ice Challenge **********************/
 
@@ -614,8 +652,8 @@ MACHINE_INIT( midwunit )
 	int i;
 
 	/* reset sound */
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 	/* reset I/O shuffling */
 	for (i = 0; i < 16; i++)

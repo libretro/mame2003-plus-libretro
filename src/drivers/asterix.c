@@ -112,6 +112,14 @@ static WRITE16_HANDLER( control2_w )
 
 		/* bit 5 is select tile bank */
 		K054157_set_tile_bank((data & 0x20) >> 5);
+		// TODO: looks like 0xffff is used from time to time for chip selection/reset something, not unlike Jackal
+		if((data & 0xff) != 0xff)
+		{
+			coin_counter_w(0, data & 0x08);
+			coin_counter_w(1, data & 0x10);
+			coin_lockout_w(0, data & 0x40);
+			coin_lockout_w(1, data & 0x80);
+		}
 	}
 }
 

@@ -24,36 +24,36 @@
  *	**** Change Log ****
  *
  *	TLP (10-Jan-2003) Changed ver from 0.1 to 0.2
- *	 -ÿChanged the internal RAM mask from 3Fh to FFh . The i8x41/i8x42 have
+ *	 -Ã¿Changed the internal RAM mask from 3Fh to FFh . The i8x41/i8x42 have
  *	   128/256 bytes of internal RAM respectively.
- *	 -ÿAdded output port data to the debug register view window.
- *	 -ÿAdded some missing break commands to the set_reg switch function.
- *	 -ÿChanged Ports 1 and 2 to latched types (Quasi-bidirectional).
- *	 -ÿStopped illegal access to Port 0 and 3 (they don't exist).
- *	 -ÿChanged ANLD, ORLD and MOVD instructions to act through Port 2 in
+ *	 -Ã¿Added output port data to the debug register view window.
+ *	 -Ã¿Added some missing break commands to the set_reg switch function.
+ *	 -Ã¿Changed Ports 1 and 2 to latched types (Quasi-bidirectional).
+ *	 -Ã¿Stopped illegal access to Port 0 and 3 (they don't exist).
+ *	 -Ã¿Changed ANLD, ORLD and MOVD instructions to act through Port 2 in
  *	   nibble mode.
- *	 -ÿCopied F0 and moved F1 flags to the STATE flag bits where they belong.
- *	 -ÿCorrected the 'addr' field by changing it from UINT8 to UINT16 for:
+ *	 -Ã¿Copied F0 and moved F1 flags to the STATE flag bits where they belong.
+ *	 -Ã¿Corrected the 'addr' field by changing it from UINT8 to UINT16 for:
  *	   'INC @Rr' 'MOV @Rr,A' 'MOV @Rr,#N' 'XCH A,@Rr' 'XCHD A,@Rr'
- *	 -ÿAdded mask to TIMER when the TEST1 Counter overflows.
+ *	 -Ã¿Added mask to TIMER when the TEST1 Counter overflows.
  *	 - Seperated the prescaler out of the timer/counter, in order to correct
  *	   the TEST1 input counter step.
- *	 -ÿMoved TEST0 and TEST1 status flags out of the STATE register.
+ *	 -Ã¿Moved TEST0 and TEST1 status flags out of the STATE register.
  *	   STATE register uses these upper bits for user definable purposes.
- *	 -ÿTEST0 and TEST1 input lines are now sampled during the JTx/JNTx
+ *	 -Ã¿TEST0 and TEST1 input lines are now sampled during the JTx/JNTx
  *	   instructions.
- *	 -ÿTwo methods for updating TEST1 input during counter mode are now
+ *	 -Ã¿Two methods for updating TEST1 input during counter mode are now
  *	   supported depending on the mode of use required.
  *	   You can use the Interrupt method, or input port read method.
- *	 -ÿTIMER is now only controlled by the timer or counter (not both)
+ *	 -Ã¿TIMER is now only controlled by the timer or counter (not both)
  *	   ie, When Starting the Counter, Stop the Timer and viceversa.
- *	 -ÿNested IRQs of any sort are no longer allowed, however IRQs can
+ *	 -Ã¿Nested IRQs of any sort are no longer allowed, however IRQs can
  *	   become pending while a current interrupt is being serviced.
- *	 -ÿIBF Interrupt now has priority over the Timer Interrupt, when they
+ *	 -Ã¿IBF Interrupt now has priority over the Timer Interrupt, when they
  *	   occur simultaneously.
- *	 -ÿAdd the external Interrupt FLAGS (Port 24, Port 25).
+ *	 -Ã¿Add the external Interrupt FLAGS (Port 24, Port 25).
  *	To Do:
- *	 -ÿAdd the external DMA FLAGS (Port 26, Port 27).  Page 4 and 37
+ *	 -Ã¿Add the external DMA FLAGS (Port 26, Port 27).  Page 4 and 37
  *
  *****************************************************************************/
 
@@ -2212,7 +2212,6 @@ void i8x41_set_irq_callback(int (*callback)(int irqline))
 {
 	i8x41.irq_callback = callback;
 }
-
 
 /****************************************************************************
  *	Return a formatted string for a register

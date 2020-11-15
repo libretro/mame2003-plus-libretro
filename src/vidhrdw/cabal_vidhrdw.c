@@ -152,5 +152,3 @@ VIDEO_UPDATE( cabal )
 	cabal_draw_sprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,text_layer,0,0);
 }
-
-

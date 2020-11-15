@@ -258,6 +258,11 @@ static WRITE_HANDLER( m92_sound_status_w )
 		sound_status = (data<<8) | (sound_status&0xff);
 }
 
+static WRITE_HANDLER( m92_sound_reset_w )	/* Added sound reset line for IREM M92 */
+{
+  cpu_set_reset_line( 1, (data) ? CLEAR_LINE : ASSERT_LINE);
+}
+
 /*****************************************************************************/
 
 static MEMORY_READ_START( readmem )
@@ -323,7 +328,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x88, 0x8f, m92_pf2_control_w },
 	{ 0x90, 0x97, m92_pf3_control_w },
 	{ 0x98, 0x9f, m92_master_control_w },
-/*	{ 0xc0, 0xc1, m92_unknown_w },	*/ /* sound related?*/
+	{ 0xc0, 0xc1, m92_sound_reset_w },
 PORT_END
 
 /******************************************************************************/
@@ -972,7 +977,7 @@ INPUT_PORTS_START( dsccr94j )
 	IREM_JOYSTICK_3_4(3)
 	IREM_JOYSTICK_3_4(4)
 	IREM_COINS
-	IREM_SYSTEM_DIPSWITCH_4PLAYERS
+	IREM_SYSTEM_DIPSWITCH_4PLAYERS /* Dip Switch 2, dip 2 is listed as "Don't Change" and is "OFF" */
 
 	PORT_START	/* Dip switch bank 1 */
 	PORT_DIPNAME( 0x03, 0x03, "Time" )
@@ -980,15 +985,21 @@ INPUT_PORTS_START( dsccr94j )
 	PORT_DIPSETTING(    0x03, "2:00" )
 	PORT_DIPSETTING(    0x02, "2:30" )
 	PORT_DIPSETTING(    0x01, "3:00" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x0c, "Difficulty" )
+	PORT_DIPSETTING(    0x00, "Very Easy" )
+	PORT_DIPSETTING(    0x08, "Easy" )
+	PORT_DIPSETTING(    0x0c, "Normal" )
+	PORT_DIPSETTING(    0x04, "Hard" )
+	PORT_DIPNAME( 0x10, 0x10, "Game Mode" )
+	PORT_DIPSETTING(    0x10, "Match Mode" )
+	PORT_DIPSETTING(    0x00, "Power Mode" )
+/*
+   Match Mode: Winner advances to the next game.  Game Over for the loser
+   Power Mode: The Players can play the game until their respective powers run
+               out, reguardless of whether they win or lose the game.
+               Player 2 can join in any time during the game
+               Player power (time) can be adjusted by dip switch #3
+*/
 	PORT_DIPNAME( 0x20, 0x20, "Starting Button" )
 	PORT_DIPSETTING(    0x00, "Button 1" )
 	PORT_DIPSETTING(    0x20, "Start Button" )
@@ -997,13 +1008,12 @@ INPUT_PORTS_START( dsccr94j )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	/* Dip switch bank 2 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_START	/* Dip switch bank 3 */
+	PORT_DIPNAME( 0x03, 0x03, "Player Power" )
+	PORT_DIPSETTING(    0x00, "500" )
+	PORT_DIPSETTING(    0x03, "1000" )
+	PORT_DIPSETTING(    0x01, "1500" )
+	PORT_DIPSETTING(    0x02, "2000" )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2519,8 +2529,8 @@ GAME( 1993, inthuntu, inthunt,  raster,    inthunt,  inthunt,  ROT0,   "Irem Ame
 GAME( 1993, kaiteids, inthunt,  raster,    inthunt,  kaiteids, ROT0,   "Irem",         "Kaitei Daisensou (Japan)" )
 GAMEX(1993, nbbatman, 0,        raster,    nbbatman, nbbatman, ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, leaguemn, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1993, ssoldier, 0,        psoldier,  psoldier, ssoldier, ROT0,   "Irem America", "Superior Soldiers (US)", GAME_IMPERFECT_SOUND )
-GAMEX(1993, psoldier, ssoldier, psoldier,  psoldier, psoldier, ROT0,   "Irem",         "Perfect Soldiers (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1993, ssoldier, 0,        psoldier,  psoldier, ssoldier, ROT0,   "Irem America", "Superior Soldiers (US)" )
+GAME( 1993, psoldier, ssoldier, psoldier,  psoldier, psoldier, ROT0,   "Irem",         "Perfect Soldiers (Japan)" )
 GAME( 1994, dsccr94j, dsoccr94, psoldier,  dsccr94j, dsccr94j, ROT0,   "Irem",         "Dream Soccer '94 (Japan)" )
 GAME( 1994, gunforc2, 0,        raster,    gunforc2, gunforc2, ROT0,   "Irem",         "Gunforce 2 (US)" )
 GAME( 1994, geostorm, gunforc2, raster,    gunforc2, gunforc2, ROT0,   "Irem",         "Geostorm (Japan)" )

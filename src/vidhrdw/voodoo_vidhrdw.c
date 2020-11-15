@@ -3676,4 +3676,3 @@ Carnevil:
 #undef ALPHAMODE_MASK
 #undef FBZCOLORPATH
 #undef FBZCOLORPATH_MASK
-

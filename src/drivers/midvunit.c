@@ -26,6 +26,8 @@
 #include "machine/midwayic.h"
 #include "midvunit.h"
 #include <time.h>
+#include "bootstrap.h"
+#include "inptport.h"
 
 
 static data32_t *ram_base;
@@ -56,8 +58,8 @@ static data32_t *midvplus_misc;
 
 static MACHINE_INIT( midvunit )
 {
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 	cpu_setbank(1, memory_region(REGION_USER1));
 	memcpy(ram_base, memory_region(REGION_USER1), 0x20000*4);
@@ -69,8 +71,8 @@ static MACHINE_INIT( midvunit )
 
 static MACHINE_INIT( midvplus )
 {
-	dcs_reset_w(1);
 	dcs_reset_w(0);
+	dcs_reset_w(1);
 
 /*	cpu_setbank(1, ram_base);*/
 	memcpy(ram_base, memory_region(REGION_USER1), 0x20000*4);
@@ -210,7 +212,7 @@ WRITE32_HANDLER( midvunit_control_w )
 		watchdog_reset_w(0, 0);
 
 	/* bit 1 is the DCS sound reset */
-	dcs_reset_w((~control_data >> 1) & 1);
+	dcs_reset_w((control_data >> 1) & 1);
 
 	/* log anything unusual */
 	if ((olddata ^ control_data) & ~0x00e8)
@@ -224,7 +226,7 @@ WRITE32_HANDLER( crusnwld_control_w )
 	COMBINE_DATA(&control_data);
 
 	/* bit 11 is the DCS sound reset */
-	dcs_reset_w((~control_data >> 11) & 1);
+	dcs_reset_w((control_data >> 11) & 1);
 
 	/* bit 9 is the watchdog */
 	if ((olddata ^ control_data) & 0x0200)
@@ -693,10 +695,10 @@ INPUT_PORTS_START( crusnusa )
 	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE, 25, 20, 0x10, 0xf0 )
 
 	PORT_START		/* gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 100, 20, 0x00, 0xff )
 
 	PORT_START		/* brake pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 100, 20, 0x00, 0xff )
 INPUT_PORTS_END
 
 
@@ -814,10 +816,10 @@ INPUT_PORTS_START( crusnwld )
 	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE, 25, 20, 0x10, 0xf0 )
 
 	PORT_START		/* gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 100, 20, 0x00, 0xff )
 
 	PORT_START		/* brake pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 100, 20, 0x00, 0xff )
 INPUT_PORTS_END
 
 
@@ -909,10 +911,10 @@ INPUT_PORTS_START( offroadc )
 	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE, 25, 20, 0x10, 0xf0 )
 
 	PORT_START		/* gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 100, 20, 0x00, 0xff )
 
 	PORT_START		/* brake pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 25, 20, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 100, 20, 0x00, 0xff )
 INPUT_PORTS_END
 
 
@@ -1451,12 +1453,12 @@ static DRIVER_INIT( wargods )
  *
  *************************************/
 
-GAME( 1994, crusnusa, 0,        midvunit, crusnusa, crusnusa, ROT0, "Midway", "Cruis'n USA (rev L4.1)" )
-GAME( 1994, crusnu40, crusnusa, midvunit, crusnusa, crusnu40, ROT0, "Midway", "Cruis'n USA (rev L4.0)" )
-GAME( 1994, crusnu21, crusnusa, midvunit, crusnusa, crusnu21, ROT0, "Midway", "Cruis'n USA (rev L2.1)" )
-GAME( 1996, crusnwld, 0,        midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.3)" )
-GAME( 1996, crusnw20, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.0)" )
-GAME( 1996, crusnw13, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L1.3)" )
-GAMEX( 1997, offroadc, 0,        midvunit, offroadc, offroadc, ROT0, "Midway", "Off Road Challenge", GAME_NOT_WORKING )
+GAMEC( 1994, crusnusa, 0,        midvunit, crusnusa, crusnusa, ROT0, "Midway", "Cruis'n USA (rev L4.1)", &generic_ctrl, &crusnusa_bootstrap )
+GAMEC( 1994, crusnu40, crusnusa, midvunit, crusnusa, crusnu40, ROT0, "Midway", "Cruis'n USA (rev L4.0)", &generic_ctrl, &crusnu40_bootstrap )
+GAMEC( 1994, crusnu21, crusnusa, midvunit, crusnusa, crusnu21, ROT0, "Midway", "Cruis'n USA (rev L2.1)", &generic_ctrl, &crusnu21_bootstrap )
+GAME ( 1996, crusnwld, 0,        midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.3)" )
+GAME ( 1996, crusnw20, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L2.0)" )
+GAME ( 1996, crusnw13, crusnwld, midvunit, crusnwld, crusnwld, ROT0, "Midway", "Cruis'n World (rev L1.3)" )
+GAMEC( 1997, offroadc, 0,        midvunit, offroadc, offroadc, ROT0, "Midway", "Off Road Challenge", &generic_ctrl, &offroadc_bootstrap )
 
-GAME( 1995, wargods,  0,        midvplus, wargods,  wargods,  ROT0, "Midway", "War Gods" )
+GAME ( 1995, wargods,  0,        midvplus, wargods,  wargods,  ROT0, "Midway", "War Gods" )

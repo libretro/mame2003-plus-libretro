@@ -51,9 +51,9 @@ static int blockgal_kludgeoffset;
   Green:.250K ohms
   Green:.495K ohms
   Green:.995K ohms
-  Red:  .495K ohms
-  Red:  .250K ohms
-  Red:  .995K ohms
+  Red:Â  .495K ohms
+  Red:Â  .250K ohms
+  Red:Â  .995K ohms
 
   accurate to +/- .003K ohms.
 
@@ -66,7 +66,6 @@ PALETTE_INIT( system1 )
 WRITE_HANDLER( system1_paletteram_w )
 {
 	int val,r,g,b;
-
 
 	paletteram[offset] = data;
 
@@ -232,6 +231,7 @@ WRITE_HANDLER( system1_sprites_collisionram_w )
 
 
 extern struct GameDriver driver_wbml;
+extern struct GameDriver driver_ufosensi;
 
 static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 {
@@ -267,7 +267,8 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 
 		/* the +1 prevents sprite lag in Wonder Boy */
 		x = sprite_base[SPR_X_LO] + ((sprite_base[SPR_X_HI] & 0x01) << 8) + 1;
-		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml)
+		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml ||
+			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi)
 		{
 			x += 7*2;
 		}
@@ -788,6 +789,75 @@ VIDEO_UPDATE( wbml )
 	wbml_draw_bg(bitmap,0);
 	draw_sprites(bitmap);
 	wbml_draw_bg(bitmap,1);
+	wbml_draw_fg(bitmap);
+
+	/* even if screen is off, sprites must still be drawn to update the collision table */
+	if (system1_video_mode & 0x10)  /* screen off */
+		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+}
+
+/* same as wbml but with rows scroll */
+static void ufosensi_draw_bg(struct mame_bitmap *bitmap, int trasp)
+{
+	int page;
+
+	int yscroll = -wbml_paged_videoram[0x7ba];
+
+	for (page=0; page < 4; page++)
+	{
+		const unsigned char *source = wbml_paged_videoram + (wbml_paged_videoram[0x0740 + page*2] & 0x07)*0x800;
+		int starty = (page>>1)*256+yscroll;
+		int row,col;
+
+
+		for( row=0; row<32*8; row+=8 )
+		{
+			for( col=0; col<32*8; col+=8 )
+			{
+				int code,priority;
+				int xscroll = (wbml_paged_videoram[0x7c0 + row/4] >> 1) + ((wbml_paged_videoram[0x7c1 + row/4] & 1) << 7) - 256 + 5;
+				int startx = (page&1)*256+xscroll;
+				int x = (startx+col) & 0x1ff;
+				int y = (starty+row) & 0x1ff;
+				if (x > 256) x -= 512;
+				if (y > 224) y -= 512;
+
+				if (flip_screen)
+				{
+					x = 248 - x;
+					y = 248 - y;
+				}
+
+				code = source[0] + (source[1] << 8);
+				priority = code & 0x800;
+				code = ((code >> 4) & 0x800) | (code & 0x7ff);
+
+				if (!trasp)
+					drawgfx(bitmap,Machine->gfx[0],
+							code,
+							((code >> 5) & 0x3f) + 64,
+							flip_screen,flip_screen,
+							x,y,
+							&Machine->visible_area, TRANSPARENCY_NONE, 0);
+				else if (priority)
+					drawgfx(bitmap,Machine->gfx[0],
+							code,
+							((code >> 5) & 0x3f) + 64,
+							flip_screen,flip_screen,
+							x,y,
+							&Machine->visible_area, TRANSPARENCY_PEN, 0);
+
+				source+=2;
+			}
+		}
+	} /* next page */
+}
+
+VIDEO_UPDATE( ufosensi )
+{
+	ufosensi_draw_bg(bitmap,0);
+	draw_sprites(bitmap);
+	ufosensi_draw_bg(bitmap,1);
 	wbml_draw_fg(bitmap);
 
 	/* even if screen is off, sprites must still be drawn to update the collision table */

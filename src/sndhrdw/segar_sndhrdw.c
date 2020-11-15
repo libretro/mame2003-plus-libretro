@@ -412,4 +412,3 @@ WRITE_HANDLER( monsterb_sh_rom_select_w )
 	if ((data & 0x02) == 0)
 		rom_offset |= 0x1000;
 }
-

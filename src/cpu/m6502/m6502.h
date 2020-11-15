@@ -365,4 +365,3 @@ extern unsigned Dasm6502( char *dst, unsigned pc );
 #endif
 
 #endif /* _M6502_H */
-

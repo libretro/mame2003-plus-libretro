@@ -233,4 +233,3 @@ ROM_END
 /* game drivers */
 
 GAMEX( 1981, sbugger, 0, sbugger, sbugger, 0, ROT270, "Game-A-Tron", "Space Bugger", GAME_NO_SOUND | GAME_NOT_WORKING )
-

@@ -4,9 +4,6 @@ Senjyo / Star Force / Baluba-louk
 
 driver by Mirko Buffoni
 
-TODO:
-- wrong background colors in baluba, intermissions after round 13
-
 
 This board was obviously born to run Senjyo. Four scrolling layers, gradient
 background, sprite/background priorities, and even a small bitmap for the
@@ -89,6 +86,7 @@ WRITE_HANDLER( senjyo_bg2videoram_w );
 WRITE_HANDLER( senjyo_bg3videoram_w );
 WRITE_HANDLER( senjyo_bgstripes_w );
 
+
 DRIVER_INIT( starforc );
 DRIVER_INIT( starfore );
 DRIVER_INIT( senjyo );
@@ -135,7 +133,20 @@ static WRITE_HANDLER( flip_screen_w )
 	flip_screen_set(data);
 }
 
+static WRITE_HANDLER( senjyo_paletteram_w )
+{
+  int r = (data << 2) & 0x0c;
+  int g = (data	    ) & 0x0c;
+  int b = (data >> 2) & 0x0c;
+  int i = (data >> 6) & 0x03;
 
+  int rr = r | ((r != 0) ? i : 0);
+  int gg = g | ((g != 0) ? i : 0);
+  int bb = b | ((b != 0) ? i : 0);
+
+  paletteram[offset] = data;
+  palette_set_color(offset, pal4bit(rr), pal4bit(gg), pal4bit(bb) );
+}
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -160,7 +171,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x9000, 0x93ff, senjyo_fgvideoram_w, &senjyo_fgvideoram },
 	{ 0x9400, 0x97ff, senjyo_fgcolorram_w, &senjyo_fgcolorram },
 	{ 0x9800, 0x987f, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x9c00, 0x9d8f, paletteram_IIBBGGRR_w, &paletteram },
+	{ 0x9c00, 0x9d8f, senjyo_paletteram_w, &paletteram },
 	{ 0x9e00, 0x9e1f, MWA_RAM, &senjyo_fgscroll },
 	{ 0x9e20, 0x9e21, MWA_RAM, &senjyo_scrolly3 },
 /*	{ 0x9e22, 0x9e23, height of the layer (Senjyo only, fixed at 0x380) */
@@ -800,4 +811,4 @@ GAME( 1983, senjyo,   0,        senjyo, senjyo,   senjyo,   ROT90, "Tehkan", "Se
 GAME( 1984, starforc, 0,        senjyo, starforc, starforc, ROT90, "Tehkan", "Star Force" )
 GAME( 1984, starfore, starforc, senjyo, starforc, starfore, ROT90, "Tehkan", "Star Force (encrypted)" )
 GAME( 1985, megaforc, starforc, senjyo, starforc, starforc, ROT90, "Tehkan (Video Ware license)", "Mega Force" )
-GAMEX(1986, baluba,   0,        senjyo, baluba,   starforc, ROT90, "Able Corp, Ltd.", "Baluba-louk no Densetsu", GAME_IMPERFECT_COLORS )
+GAME( 1986, baluba,   0,        senjyo, baluba,   starforc, ROT90, "Able Corp, Ltd.", "Baluba-louk no Densetsu" )

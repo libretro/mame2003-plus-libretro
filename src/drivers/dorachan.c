@@ -133,4 +133,3 @@ ROM_START( dorachan )
 ROM_END
 
 GAMEX( 1980, dorachan, 0, dorachan, dorachan, 0, ROT90, "Craul Denshi", "Dorachan",GAME_NO_SOUND)
-

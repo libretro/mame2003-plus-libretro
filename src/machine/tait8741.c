@@ -358,3 +358,182 @@ READ_HANDLER( TAITO8741_3_r )
 	if(offset&1) return I8741_status_r(3);
 	return I8741_data_r(3);
 }
+
+/****************************************************************************
+
+joshi Vollyball set.
+
+  Only the chip of the communication between MAIN and the SUB.
+  For the I/O, there may be I8741 of the addition.
+
+  MCU code is not dumped.
+  There is some HACK operation because the emulation is imperfect.
+
+****************************************************************************/
+
+int josvolly_nmi_enable;
+
+typedef struct josvolly_8741_struct {
+	UINT8 cmd;
+	UINT8 sts;
+	UINT8 txd;
+	UINT8 outport;
+	UINT8 rxd;
+	UINT8 connect;
+
+	UINT8 rst;
+
+	mem_read_handler initReadPort;
+}JV8741;
+
+static JV8741 i8741[4];
+
+void josvolly_8741_reset(void)
+{
+	int i;
+
+	josvolly_nmi_enable = 0;
+
+	for(i=0;i<4;i++)
+	{
+		i8741[i].cmd = 0;
+		i8741[i].sts = 0; /* 0xf0; */ /* init flag */
+		i8741[i].txd = 0;
+		i8741[i].outport = 0xff;
+		i8741[i].rxd = 0;
+
+		i8741[i].rst = 1;
+
+	}
+	i8741[0].connect = 1;
+	i8741[1].connect = 0;
+
+	i8741[0].initReadPort = input_port_3_r;  /* DSW1 */
+	i8741[1].initReadPort = input_port_4_r;  /* DSW2 */
+	i8741[2].initReadPort = input_port_3_r;  /* DUMMY */
+	i8741[3].initReadPort = input_port_4_r;  /* DUMMY */
+}
+
+/* transmit data finish callback */
+static void josvolly_8741_tx(int num)
+{
+	JV8741 *src = &i8741[num];
+	JV8741 *dst = &i8741[src->connect];
+
+	dst->rxd = src->txd;
+
+	src->sts &= ~0x02; /* TX full ? */
+	dst->sts |=  0x01; /* RX ready  ? */
+}
+
+static void josvolly_8741_do(int num)
+{
+	if( (i8741[num].sts & 0x02) )
+	{
+		/* transmit data */
+		timer_set (TIME_IN_USEC(1),num,josvolly_8741_tx);
+	}
+}
+
+static void josvolly_8741_w(int num,int offset,int data,int log)
+{
+	JV8741 *mcu = &i8741[num];
+
+	if(offset==1)
+	{
+#if __log__
+if(log)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC=%04X 8741[%d] CW %02X\n",activecpu_get_pc(),num,data);
+#endif
+
+		/* read pointer */
+		mcu->cmd = data;
+		/* CMD */
+		switch(data)
+		{
+		case 0:
+			mcu->txd = data ^ 0x40;
+			mcu->sts |= 0x02;
+			break;
+		case 1:
+			mcu->txd = data ^ 0x40;
+			mcu->sts |= 0x02;
+#if 1
+			/* ?? */
+			mcu->rxd = 0;  /* SBSTS ( DIAG ) , killed */
+			mcu->sts |= 0x01; /* RD ready */
+#endif
+			break;
+		case 2:
+#if 1
+			mcu->rxd = input_port_4_r(0);  /* DSW2 */
+			mcu->sts |= 0x01; /* RD ready */
+#endif
+			break;
+		case 3: /* normal mode ? */
+			break;
+
+		case 0xf0: /* clear main sts ? */
+			mcu->txd = data ^ 0x40;
+			mcu->sts |= 0x02;
+			break;
+		}
+	}
+	else
+	{
+		/* data */
+#if __log__
+if(log)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC=%04X 8741[%d] DW %02X\n",activecpu_get_pc(),num,data);
+#endif
+
+		mcu->txd  = data^0x40; /* parity reverce ? */
+		mcu->sts  |= 0x02;     /* TXD busy         */
+#if 1
+		/* interrupt ? */
+		if(num==0)
+		{
+			if(josvolly_nmi_enable)
+			{
+				cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);
+				josvolly_nmi_enable = 0;
+			}
+		}
+#endif
+	}
+	josvolly_8741_do(num);
+}
+
+static INT8 josvolly_8741_r(int num,int offset,int log)
+{
+	JV8741 *mcu = &i8741[num];
+	int ret;
+
+	if(offset==1)
+	{
+		if(mcu->rst)
+			mcu->rxd = (mcu->initReadPort)(0); /* port in */
+		ret = mcu->sts;
+#if __log__
+if(log)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC=%04X 8741[%d]       SR %02X\n",activecpu_get_pc(),num,ret);
+#endif
+	}
+	else
+	{
+		/* clear status port */
+		mcu->sts &= ~0x01; /* RD ready */
+		ret = mcu->rxd;
+#if __log__
+if(log)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC=%04X 8741[%d]       DR %02X\n",activecpu_get_pc(),num,ret);
+#endif
+		mcu->rst = 0;
+	}
+	return ret;
+}
+
+WRITE_HANDLER( josvolly_8741_0_w ){ josvolly_8741_w(0,offset,data,1); }
+READ_HANDLER( josvolly_8741_0_r ) { return josvolly_8741_r(0,offset,1); }
+WRITE_HANDLER( josvolly_8741_1_w ) { josvolly_8741_w(1,offset,data,1); }
+READ_HANDLER( josvolly_8741_1_r ) { return josvolly_8741_r(1,offset,1); }

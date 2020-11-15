@@ -9,4 +9,3 @@ WRITE16_HANDLER( gcpinbal_tilemaps_word_w );
 
 extern data16_t *gcpinbal_tilemapram;
 extern data16_t *gcpinbal_ioc_ram;
-

@@ -266,4 +266,3 @@ WRITE_HANDLER( zigzag_8910_control_trigger_w )
 {
 	AY8910_control_port_0_w(0,latch);
 }
-

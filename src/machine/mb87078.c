@@ -165,4 +165,3 @@ int MB87078_gain_percent_r(int which, int channel)
 {
 	return MB87078_gain_percent[ chip[which].gain[channel] ];
 }
-

@@ -20,4 +20,3 @@ extern WRITE_HANDLER( tubep_background_a000_w );
 extern WRITE_HANDLER( tubep_background_c000_w );
 
 extern WRITE_HANDLER( tubep_sprite_control_w );
-

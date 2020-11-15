@@ -11,4 +11,3 @@ WRITE_HANDLER( thedeep_vram_1_w );
 PALETTE_INIT( thedeep );
 VIDEO_START( thedeep );
 VIDEO_UPDATE( thedeep );
-

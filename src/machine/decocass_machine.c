@@ -1940,5 +1940,3 @@ READ_HANDLER( i8041_p2_r )
 	}
 	return data;
 }
-
-

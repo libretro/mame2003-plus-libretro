@@ -1146,4 +1146,3 @@ GAME( 1997, burglarx, 0,       burglarx, burglarx, 0, ROT0, "Unico", "Burglar X"
 GAME( 1998, zeropnt,  0,       zeropnt,  zeropnt,  0, ROT0, "Unico", "Zero Point (set 1)" )
 GAME( 1998, zeropnta, zeropnt, zeropnt,  zeropnt,  0, ROT0, "Unico", "Zero Point (set 2)" )
 GAME( 1999, zeropnt2, 0,       zeropnt2, zeropnt2, 0, ROT0, "Unico", "Zero Point 2" )
-

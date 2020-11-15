@@ -4759,4 +4759,3 @@ void e132xs_trap(void)
 			e132xs_ICount -= 1;
 	}
 }
-

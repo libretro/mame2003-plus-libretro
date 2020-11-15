@@ -137,5 +137,3 @@ WRITE_HANDLER( beezer_bankswitch_w )
 		cpu_setbank(1, rom + (data & 0x07) * 0x2000 + ((data & 0x08) ? 0x1000: 0));
 	}
 }
-
-

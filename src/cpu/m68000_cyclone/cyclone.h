@@ -107,4 +107,3 @@ void CycloneSetRealTAS_JT(int use_real, void *jt);
 #endif
 
 #endif // __CYCLONE_H__
-

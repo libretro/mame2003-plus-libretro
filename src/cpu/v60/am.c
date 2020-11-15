@@ -98,5 +98,3 @@ static UINT32 WriteAM(void)
 	modVal=OpRead8(modAdd);
 	return AMTable3[modM][modVal>>5]();
 }
-
-

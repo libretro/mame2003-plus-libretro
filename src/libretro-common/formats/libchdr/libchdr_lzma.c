@@ -88,7 +88,7 @@ static void *lzma_fast_alloc(void *p, size_t size)
 	}
 
 	/* alloc a new one and put it into the list */
-	addr = (uint32_t *)malloc(sizeof(uint32_t) * (size + sizeof(uint32_t)));
+	addr = (uint32_t *)malloc(sizeof(uint32_t) * size + sizeof(uintptr_t));
 	if (!addr)
 		return NULL;
 
@@ -102,8 +102,8 @@ static void *lzma_fast_alloc(void *p, size_t size)
 	}
 
 	/* set the low bit of the size so we don't match next time */
-	*addr = size | 1;
-	return addr + 1;
+	*addr = (uint32_t)(size | 1);
+   return addr + (sizeof(uint32_t) == sizeof(uintptr_t) ? 1 : 2);
 }
 
 /*-------------------------------------------------
@@ -238,8 +238,8 @@ void lzma_codec_free(void* codec)
 	lzma_allocator* alloc = &lzma_codec->allocator;
 
 	/* free memory */
-	lzma_allocator_free(alloc);
 	LzmaDec_Free(&lzma_codec->decoder, (ISzAlloc*)&lzma_codec->allocator);
+	lzma_allocator_free(alloc);
 }
 
 /*-------------------------------------------------

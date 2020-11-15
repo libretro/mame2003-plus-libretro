@@ -1533,4 +1533,3 @@ unsigned s2650_dasm(char *buffer, unsigned pc)
 	return 1;
 #endif
 }
-

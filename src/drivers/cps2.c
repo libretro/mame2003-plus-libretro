@@ -95,6 +95,8 @@
 #include "driver.h"
 #include "machine/eeprom.h"
 #include "cpu/m68000/m68000.h"
+#include "bootstrap.h"
+#include "inptport.h"
 
 #include "cps1.h"       /* External CPS1 definitions */
 
@@ -6294,13 +6296,13 @@ GAMEX(1996, 19xxa,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The
 GAMEX(1996, 19xxj,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Japan 951225)", GAME_NOT_WORKING )
 GAME( 1996, 19xxjr1,  19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Japan 951207)" )
 GAME( 1996, 19xxh,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Hispanic 951218)" )
-GAME( 1996, ddsom,    0,       cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Euro 960619)" )
-GAME( 1996, ddsomr1,  ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Euro 960209)" )
-GAME( 1996, ddsomu,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (USA 960619)" )
-GAME( 1996, ddsomur1, ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (USA 960209)" )
-GAME( 1996, ddsomj,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Japan 960619)" )
-GAME( 1996, ddsomjr1, ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Japan 960206)" )
-GAME( 1996, ddsoma,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Asia 960619)" )
+GAMEC( 1996, ddsom,    0,       cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Euro 960619)", &ddsom_ctrl, &ddsom_bootstrap )
+GAMEC( 1996, ddsomr1,  ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Euro 960209)", &ddsom_ctrl, &ddsom_bootstrap )
+GAMEC( 1996, ddsomu,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (USA 960619)", &ddsom_ctrl, &ddsomu_bootstrap )
+GAMEC( 1996, ddsomur1, ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (USA 960209)", &ddsom_ctrl, &ddsomu_bootstrap )
+GAMEC( 1996, ddsomj,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Japan 960619)", &ddsom_ctrl, &ddsomj_bootstrap )
+GAMEC( 1996, ddsomjr1, ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Japan 960206)", &ddsom_ctrl, &ddsomj_bootstrap )
+GAMEC( 1996, ddsoma,   ddsom,   cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Asia 960619)", &ddsom_ctrl, &ddsoma_bootstrap )
 GAME( 1996, megaman2, 0,       cps2, sgemf,   cps2, ROT0,   "Capcom", "Mega Man 2: The Power Fighters (USA 960708)" )
 GAMEX(1996, megamn2a, megaman2,cps2, sgemf,   cps2, ROT0,   "Capcom", "Mega Man 2: The Power Fighters (Asia 960708)", GAME_NOT_WORKING )
 GAME( 1996, rckman2j, megaman2,cps2, sgemf,   cps2, ROT0,   "Capcom", "Rockman 2: The Power Fighters (Japan 960708)" )
@@ -6390,4 +6392,3 @@ GAMEX(2000, 1944j,    1944,    cps2, 19xx,    cps2, ROT0,   "Capcom, supported b
 
 GAME( 2001, progear,  0,       cps2, sgemf,   cps2, ROT0,   "Cave, distributed by Capcom", "Progear (USA 010117)" )
 GAME( 2001, progearj, progear, cps2, sgemf,   cps2, ROT0,   "Cave, distributed by Capcom", "Progear No Arashi (Japan 010117)" )
-

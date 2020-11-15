@@ -15,14 +15,32 @@
 #include "log.h"
 //#define LOG_LOAD
 
-	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna", \
-				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
-				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
-				"ffight", "ffightu", "ffightj",  "ffightj1", \
-				"ddragon", "ddragonu", "ddragonw",  "ddragonb", \
-				"moonwalk", "moonwlka", "moonwlkb", 0
-		 };    
 
+char *chd_error_text[] =
+{
+	"CHDERR_NONE",
+	"CHDERR_NO_INTERFACE",
+	"CHDERR_OUT_OF_MEMORY",
+	"CHDERR_INVALID_FILE",
+	"CHDERR_INVALID_PARAMETER",
+	"CHDERR_INVALID_DATA",
+	"CHDERR_FILE_NOT_FOUND",
+	"CHDERR_REQUIRES_PARENT",
+	"CHDERR_FILE_NOT_WRITEABLE",
+	"CHDERR_READ_ERROR",
+	"CHDERR_WRITE_ERROR",
+	"CHDERR_CODEC_ERROR",
+	"CHDERR_INVALID_PARENT",
+	"CHDERR_HUNK_OUT_OF_RANGE",
+	"CHDERR_DECOMPRESSION_ERROR",
+	"CHDERR_COMPRESSION_ERROR",
+	"CHDERR_CANT_CREATE_FILE",
+	"CHDERR_CANT_VERIFY",
+	"CHDERR_NOT_SUPPORTED",
+	"CHDERR_METADATA_NOT_FOUND",
+	"CHDERR_INVALID_METADATA_SIZE",
+	"CHDERR_UNSUPPORTED_VERSION"
+};
 /***************************************************************************
 	Constants
 ***************************************************************************/
@@ -214,7 +232,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 
 	/* read the core header and make sure it's a proper  file */
 	offset += mame_fread(f, buf, 4);
-	
+
 	if (offset < 4)
 		return NULL;
 
@@ -301,13 +319,13 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		// For small samples, lets force them to pre load into memory.
 		if(length <= GAME_SAMPLE_LARGE)
 			b_data = 1;
-			
+
 		/* allocate the game sample */
 		if(b_data == 1)
 			result = auto_malloc(sizeof(struct GameSample) + length);
 		else
 			result = malloc(sizeof(struct GameSample));
-			
+
 		if (result == NULL)
 			return NULL;
 
@@ -355,10 +373,10 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		// For small samples, lets force them to pre load into memory.
 		if (f_length <= GAME_SAMPLE_LARGE)
 			b_data = 1;
-			
+
 		flac_file.length = f_length;
 		flac_file.position = 0;
-		flac_file.decoded_size = 0;		
+		flac_file.decoded_size = 0;
 
 		// Allocate space for the data.
 		flac_file.rawdata = malloc(f_length);
@@ -390,7 +408,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		}
 
 		// only Mono supported
-		if (flac_file.channels != 1) { 
+		if (flac_file.channels != 1) {
 			free(flac_file.rawdata);
 			FLAC__stream_decoder_delete(decoder);
 			return NULL;
@@ -411,7 +429,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		strcpy(result->gamename, gamename);
 		strcpy(result->filename, filename);
 		result->filetype = filetype;
-		
+
 		result->smpfreq = flac_file.sample_rate;
 		result->length = flac_file.total_samples * (flac_file.bits_per_sample / 8);
 		result->resolution = flac_file.bits_per_sample;
@@ -419,7 +437,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 
 		if (b_data == 1) {
 			flac_file.write_data = result->data;
-			
+
 			if (FLAC__stream_decoder_process_until_end_of_stream (decoder) != FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM) {
 				free(flac_file.rawdata);
 				FLAC__stream_decoder_delete(decoder);
@@ -447,7 +465,8 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		return NULL;
 }
 
-// Handles freeing previous played sample from memory. Helps with the low memory devices which load large sample files.
+/* Handles freeing previous played sample from memory. Helps with the low memory devices which load large sample files. */
+
 void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load)
 {
 	mame_file *f;
@@ -475,8 +494,8 @@ void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *
 }
 
 /*-------------------------------------------------
-	readsamples - load all samples
--------------------------------------------------*/
+  readsamples() load all samples
+  -------------------------------------------------*/
 
 struct GameSamples *readsamples(const char **samplenames,const char *basename)
 /* V.V - avoids samples duplication */
@@ -512,7 +531,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 		mame_file *f;
 		int f_type = 0;
 		int f_skip = 0;
-		
+
 		if (samplenames[i+skipfirst][0])
 		{
 			// Try opening FLAC samples first.
@@ -528,7 +547,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 				{
 					f_type = 1;
 					f_skip = 0;
-					
+
 					if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
 						if (skipfirst) {
 							f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
@@ -542,7 +561,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 			{
 				// Open FLAC.
 				if(f_type == 0) {
-					if (f_skip == 1)				
+					if (f_skip == 1)
 						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
 					else
 						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
@@ -553,7 +572,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 					else
 						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0);
 				}
-					
+
 				mame_fclose(f);
 			}
 			else if (samples->sample[i] == NULL)
@@ -1149,7 +1168,7 @@ int determine_bios_rom(const struct SystemBios *bios)
     while(!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
-			
+
 			if(!strcmp(bios_number, options.bios))
 				bios_no = bios->value;
 
@@ -1171,8 +1190,8 @@ int determine_bios_rom(const struct SystemBios *bios)
 			bios++;
 		}
     if(string_is_empty(options.bios))
-      log_cb(RETRO_LOG_INFO, LOGPRE "No matching BIOS found. Using default system BIOS.");     
-    
+      log_cb(RETRO_LOG_INFO, LOGPRE "No matching BIOS found. Using default system BIOS.");
+
 	}
 
 	return bios_no;
@@ -1874,7 +1893,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
 							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T CREATE DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T CREATE DIFF FILE     Error code %s\n", filename, chd_error_text[err]);
 						romdata->errors++;
 						romp++;
 						continue;
@@ -1888,7 +1907,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
 							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE  Error code %s\n", filename, chd_error_text[err]);
 						romdata->errors++;
 						romp++;
 						continue;

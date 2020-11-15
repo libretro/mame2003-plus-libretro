@@ -506,4 +506,3 @@ MEMORY_WRITE_START( seibu3_adpcm_sound_writemem )
 	{ 0x601a, 0x601a, seibu_adpcm_ctl_2_w },
 	{ 0x8000, 0xffff, MWA_ROM },
 MEMORY_END
-

@@ -31,7 +31,7 @@ PALETTE_INIT( hanaroku )
 		g = ((color_prom[i*2+1] & 0xe0) | ( (color_prom[i*2+0]& 0x03) <<8)  ) >> 5;
 		r = (color_prom[i*2+0]&0x7c) >> 2;
 
-		palette_set_color(i,r<<3,g<<3,b<<3);
+		palette_set_color(i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 

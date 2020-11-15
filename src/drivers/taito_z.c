@@ -701,6 +701,7 @@ VIDEO_UPDATE( sci );
 VIDEO_UPDATE( aquajack );
 VIDEO_UPDATE( spacegun );
 VIDEO_UPDATE( dblaxle );
+VIDEO_UPDATE( racingb );
 
 READ16_HANDLER ( sci_spriteframe_r );
 WRITE16_HANDLER( sci_spriteframe_w );
@@ -1742,6 +1743,49 @@ static MEMORY_WRITE16_START( dblaxle_cpub_writemem )
 	{ 0x500000, 0x503fff, MWA16_RAM },	/* network ram ? (see Gunbustr) */
 MEMORY_END
 
+static MEMORY_READ16_START( racingb_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x100000, 0x103fff, MRA16_RAM },	/* main CPUA ram */
+	{ 0x110000, 0x11ffff, sharedram_r },
+	{ 0x300000, 0x30000f, TC0510NIO_halfword_wordswap_r },
+	{ 0x300010, 0x30001f, dblaxle_steer_input_r },
+	{ 0x520000, 0x520003, taitoz_sound_r },
+	{ 0x700000, 0x701fff, paletteram16_word_r },	/* palette */
+	{ 0x900000, 0x90ffff, TC0480SCP_word_r },	  /* tilemaps */
+	{ 0x930000, 0x93002f, TC0480SCP_ctrl_word_r },
+	{ 0xb00000, 0xb03fff, MRA16_RAM },	/* spriteram */
+	{ 0xb08000, 0xb08001, sci_spriteframe_r },	/* debugging */
+MEMORY_END
+
+static MEMORY_WRITE16_START( racingb_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x100000, 0x103fff, MWA16_RAM },
+	{ 0x110000, 0x11ffff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
+	{ 0x300000, 0x30000f, TC0510NIO_halfword_wordswap_w },
+	{ 0x500002, 0x500003, cpua_ctrl_w },
+	{ 0x520000, 0x520003, taitoz_sound_w },
+	{ 0x700000, 0x701fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+	{ 0x900000, 0x90ffff, TC0480SCP_word_w },  /* tilemaps */
+	{ 0x930000, 0x93002f, TC0480SCP_ctrl_word_w },
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16, &spriteram_size },/* mostly unused ? */
+	{ 0xb08000, 0xb08001, sci_spriteframe_w },	/* alternates 0/0x100 */
+MEMORY_END
+
+static MEMORY_READ16_START( racingb_cpub_readmem )
+    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x400000, 0x403fff, MRA16_RAM },
+	{ 0x410000, 0x41ffff, sharedram_r },
+	{ 0xa00000, 0xa01fff, TC0150ROD_word_r },
+	{ 0xd00000, 0xd03fff, MRA16_RAM },	/* network ram ? */
+MEMORY_END
+
+static MEMORY_WRITE16_START( racingb_cpub_writemem )
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x400000, 0x403fff, MWA16_RAM },
+	{ 0x410000, 0x41ffff, sharedram_w, &taitoz_sharedram },
+	{ 0xa00000, 0xa01fff, TC0150ROD_word_w },
+	{ 0xd00000, 0xd03fff, MWA16_RAM },	/* network ram ? */
+MEMORY_END
 
 /***************************************************************************/
 
@@ -2975,6 +3019,78 @@ INPUT_PORTS_START( pwheelsj )
 	PORT_DIPSETTING(    0x00, "Analogue" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( racingb )
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, "Type 0" ) /* free steering wheel */
+	PORT_DIPSETTING(    0x01, "Type 1" ) /* locked steering wheel */
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	TAITO_Z_COINAGE_WORLD_8
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "Steering Wheel Range" )
+	PORT_DIPSETTING(    0x04, "Normal" )
+	PORT_DIPSETTING(    0x00, "High" )
+	PORT_DIPNAME( 0x08, 0x08, "Steering Wheel Type" )
+	PORT_DIPSETTING(    0x00, "Free" )
+	PORT_DIPSETTING(    0x08, "Locked" )
+	PORT_DIPNAME( 0x10, 0x10, "Network" )  /* gives a LAN error */
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x60, 0x60, "Player Car" )
+	PORT_DIPSETTING(    0x60, "Red" )
+	PORT_DIPSETTING(    0x40, "Blue" )
+	PORT_DIPSETTING(    0x20, "Green" )
+	PORT_DIPSETTING(    0x00, "Yellow" )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) ) /* affects car color too? */
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 ) /* gear shift */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 ) /* brake */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 ) /* pit in */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 ) /* centre */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) /* gas */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* IN2, unused */
+
+	PORT_START      /* IN3, steering */
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 40, 10, 0x00, 0xff )
+
+	PORT_START      /* IN4, fake allowing digital steer */
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER1 )
+	PORT_DIPNAME( 0x10, 0x00, "Steering type" )
+	PORT_DIPSETTING(    0x10, "Digital" )
+	PORT_DIPSETTING(    0x00, "Analogue" )
+INPUT_PORTS_END
+
 
 /***********************************************************
                        GFX DECODING
@@ -3497,6 +3613,39 @@ static MACHINE_DRIVER_START( dblaxle )
 	MDRV_SOUND_ADD(YM2610, ym2610_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( racingb )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 16000000)	/* 16 MHz ??? */
+	MDRV_CPU_MEMORY(racingb_readmem,racingb_writemem)
+	MDRV_CPU_VBLANK_INT(sci_interrupt,1)
+
+	MDRV_CPU_ADD(Z80,16000000/4)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 4 MHz ??? */
+	MDRV_CPU_MEMORY(z80_sound_readmem,z80_sound_writemem)
+
+	MDRV_CPU_ADD(M68000, 16000000)	/* 16 MHz ??? */
+	MDRV_CPU_MEMORY(racingb_cpub_readmem,racingb_cpub_writemem)
+	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
+	MDRV_GFXDECODE(dblaxle_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(4096)
+
+	MDRV_VIDEO_START(taitoz)
+	MDRV_VIDEO_UPDATE(racingb)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2610, ym2610_interface)
+MACHINE_DRIVER_END
 
 /***************************************************************************
                                  DRIVERS
@@ -4267,6 +4416,52 @@ ROM_START( pwheelsj )
 	ROM_LOAD( "c84-11.17",  0x00000, 0x00400, CRC(10728853) SHA1(45d7cc8e06fbe01295cc2194bca9586f0ef8b12b) )
 ROM_END
 
+ROM_START( racingb )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )	/* 512K for 68000 code (CPU A) */
+	ROM_LOAD16_BYTE( "c84-110.3",  0x00000, 0x20000, CRC(119a8d3b) SHA1(bcda256730c4427c25aab17d2178814289361a78) )
+	ROM_LOAD16_BYTE( "c84-111.5",  0x00001, 0x20000, CRC(1f095692) SHA1(6a36f3a62de9fc24724e68a23de782bc21c01734) )
+	ROM_LOAD16_BYTE( "c84-104.2",  0x40000, 0x20000, CRC(37077fc6) SHA1(3498db29936f806e1cb624031940fda2e7e601fe) )
+	ROM_LOAD16_BYTE( "c84-103.4",  0x40001, 0x20000, CRC(4ca1d1c2) SHA1(cd526db226362b7d4429a29392dee40bcc519556) )
+
+	ROM_REGION( 0x40000, REGION_CPU3, 0 )	/* 256K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "c84-99.35",  0x00000, 0x20000, CRC(24778f40) SHA1(5a588be1774af4e179bdc0e16cd118e74bb9f6ff) )
+	ROM_LOAD16_BYTE( "c84-100.36", 0x00001, 0x20000, CRC(2b99258a) SHA1(ff2da0f3a0391f55e20655554d72b82cc29fbc87) )
+
+	ROM_REGION( 0x2c000, REGION_CPU2, 0 )	/* sound cpu */
+	ROM_LOAD    ( "c84-101.42",    0x00000, 0x04000, CRC(9322106e) SHA1(6c42ee7b9c76483fec2e397ec2737c030a082267) )
+	ROM_CONTINUE(                  0x10000, 0x1c000 )	/* banked stuff */
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "c84-90.12",  0x00000, 0x80000, CRC(83ee0e8d) SHA1(a3b6067913f15656e1f74b30b4c0364a50d1846a) )	/* SCR 8x8 */
+	ROM_LOAD16_BYTE( "c84-89.11",  0x00001, 0x80000, CRC(aae43c87) SHA1(cfc05553f7a18132127ae5f1d181fcc582432b56) )
+
+	ROM_REGION( 0x400000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "c84-92.25", 0x000000, 0x100000, CRC(56e8fd55) SHA1(852446d4069a446dd9b88b29e461b83b8d626b2c) )	/* OBJ 16x8 */
+	ROM_LOAD32_BYTE( "c84-94.33", 0x000001, 0x100000, CRC(6117c19b) SHA1(6b9587fb864a325aec17a73046ba5b7be08a8dd2) )
+	ROM_LOAD32_BYTE( "c84-91.23", 0x000002, 0x100000, CRC(b1b0146c) SHA1(d01f08085d644b17445d904a4684c00f133f7bae) )
+	ROM_LOAD32_BYTE( "c84-93.31", 0x000003, 0x100000, CRC(8837bb4e) SHA1(c41fff198a3c87c6e1672174ede589434374c1b3) )
+
+	ROM_REGION( 0x80000, REGION_GFX3, 0 )	/* don't dispose */
+	ROM_LOAD( "c84-84.12", 0x000000, 0x80000, CRC(34dc486b) SHA1(2f503be67adbc5293f2d1218c838416fd931796c) )	/* ROD, road lines */
+
+	ROM_REGION16_LE( 0x80000, REGION_USER1, 0 )
+	ROM_LOAD16_WORD( "c84-88.3", 0x00000, 0x80000, CRC(edd1f49c) SHA1(f11c419dcc7da03ef1f1665c1344c27ff35fe867) )	/* STY spritemap */
+
+	ROM_REGION( 0x180000, REGION_SOUND1, 0 )	/* ADPCM samples */
+	ROM_LOAD( "c84-86.33", 0x000000, 0x100000, CRC(98d9771e) SHA1(0cbb6b08e1fa5e632309962d7ad7dca448ef4d78) )
+	ROM_LOAD( "c84-87.46", 0x100000, 0x080000, CRC(9c1dd80c) SHA1(e1bae4e02fd94413fac4683e39e530f9d508d658) )
+
+	ROM_REGION( 0x80000, REGION_SOUND2, 0 )	/* Delta-T samples */
+	ROM_LOAD( "c84-85.31",  0x00000, 0x80000, CRC(24cd838d) SHA1(18139f7df191ff2d005d76b3a85a6fafb630ea42) )
+
+	ROM_REGION( 0x10000, REGION_USER2, 0 )	/* unused roms */
+	ROM_LOAD( "c84-19.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )
+	ROM_LOAD( "c84-07.22",  0x00000, 0x00100, CRC(95a15c77) SHA1(10246020776cf23c0659f41db66ae2c86db09ed2) )
+	ROM_LOAD( "c84-09.74",  0x00000, 0x00100, CRC(71217472) SHA1(69352cd484b4d5b41b37697aea24107dff8f1b24) )
+	ROM_LOAD( "c84-10.16",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
+	ROM_LOAD( "c84-11.17",  0x00000, 0x00400, CRC(10728853) SHA1(45d7cc8e06fbe01295cc2194bca9586f0ef8b12b) )
+ROM_END
+
 
 static DRIVER_INIT( taitoz )
 {
@@ -4315,3 +4510,4 @@ GAMEX( 1990, aquajckj, aquajack, aquajack, aquajckj, taitoz,   ROT0,            
 GAME ( 1990, spacegun, 0,        spacegun, spacegun, bshark,   ORIENTATION_FLIP_X, "Taito Corporation Japan", "Space Gun (World)" )
 GAMEX( 1991, dblaxle,  0,        dblaxle,  dblaxle,  taitoz,   ROT0,               "Taito America Corporation", "Double Axle (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1991, pwheelsj, dblaxle,  dblaxle,  pwheelsj, taitoz,   ROT0,               "Taito Corporation", "Power Wheels (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1991, racingb,  0,        racingb,  racingb,  taitoz,   ROT0,               "Taito Corporation Japan", "Racing Beat (World)", GAME_IMPERFECT_GRAPHICS )

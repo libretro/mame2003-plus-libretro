@@ -462,7 +462,7 @@ void dcs2_init(offs_t polling_offset)
       dcs_speedup2 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063d, 0x063d), dcs_speedup2_w);
 	    dcs_speedup3 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063a, 0x063a), dcs_speedup3_w);
       dcs_speedup4 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x0641, 0x0641), dcs_speedup4_w);
-     }
+    }
 	
 	/* create the timer */
 	dcs.reg_timer = timer_alloc(dcs_irq);
@@ -656,8 +656,8 @@ int dcs_control_r(void)
 
 void dcs_reset_w(int state)
 {
-	/* going high halts the CPU */
-	if (state)
+	/* going low halts the CPU */
+	if (!state)
 	{
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: DCS reset = %d\n", activecpu_get_pc(), state);
 
@@ -666,7 +666,7 @@ void dcs_reset_w(int state)
 		cpu_set_reset_line(dcs_cpunum, ASSERT_LINE);
 	}
 	
-	/* going low resets and reactivates the CPU */
+	/* going high resets and reactivates the CPU */
 	else
 		cpu_set_reset_line(dcs_cpunum, CLEAR_LINE);
 }

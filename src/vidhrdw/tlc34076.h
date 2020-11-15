@@ -16,4 +16,3 @@ READ16_HANDLER( tlc34076_lsb_r );
 WRITE16_HANDLER( tlc34076_lsb_w );
 READ16_HANDLER( tlc34076_msb_r );
 WRITE16_HANDLER( tlc34076_msb_w );
-

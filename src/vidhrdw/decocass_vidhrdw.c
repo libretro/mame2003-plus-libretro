@@ -751,4 +751,3 @@ VIDEO_UPDATE( decocass )
 	draw_sprites(bitmap,cliprect, (color_center_bot >> 1) & 1, 0, 0, decocass_fgvideoram, 0x20);
 	draw_missiles(bitmap,cliprect, 1, 0, decocass_colorram, 0x20);
 }
-

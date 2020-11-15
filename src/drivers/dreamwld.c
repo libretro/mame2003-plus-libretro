@@ -339,14 +339,11 @@ static WRITE32_HANDLER( dreamwld_palette_w )
 	COMBINE_DATA(&paletteram32[offset]);
 	color = offset * 2;
 
-#define pal5bit(n)	((((n) & 0x1f) << 3) | (((n) & 0x1f) >> 2))
-
 	dat = paletteram32[offset] & 0x7fff;
 	palette_set_color(color + 1, pal5bit(dat >> 10), pal5bit(dat >> 5), pal5bit(dat >> 0));
 
 	dat = (paletteram32[offset] >> 16) & 0x7fff;
 	palette_set_color(color, pal5bit(dat >> 10), pal5bit(dat >> 5), pal5bit(dat >> 0));
-#undef pal5bit
 }
 
 static void dreamwld_oki_setbank(UINT8 chip, UINT8 bank )
@@ -1011,8 +1008,8 @@ ROM_START( rolcrush )
 ROM_END
 
 
-GAME( 1997, baryon,   0, dreamwld,  baryon,   0, ROT270,  "Other", "Baryon - Future Assault" )
-GAME( 1998, cutefght, 0, dreamwld,  cutefght, 0, ROT0,    "Other", "Cute Fighter" )
-GAME( 2000, dreamwld, 0, dreamwld,  dreamwld, 0, ROT0,    "Other", "Dream World" )
-GAME( 1999, gaialast, 0, dreamwld,  gaialast, 0, ROT0,    "Other", "Gaia - The Last Choice of Earth")
-GAME( 1999, rolcrush, 0, dreamwld,  rolcrush, 0, ROT0,    "Other", "Rolling Crush" )
+GAME( 1997, baryon,   0, dreamwld,  baryon,   0, ROT270,  "SemiCom / Tirano", "Baryon - Future Assault" )
+GAME( 1998, cutefght, 0, dreamwld,  cutefght, 0, ROT0,    "SemiCom",          "Cute Fighter" )
+GAME( 2000, dreamwld, 0, dreamwld,  dreamwld, 0, ROT0,    "SemiCom",          "Dream World" )
+GAME( 1999, gaialast, 0, dreamwld,  gaialast, 0, ROT0,    "SemiCom / XESS",   "Gaia - The Last Choice of Earth" )
+GAME( 1999, rolcrush, 0, dreamwld,  rolcrush, 0, ROT0,    "SemiCom / Exit",   "Rolling Crush (version 1.07.E - 1999/02/11)" )

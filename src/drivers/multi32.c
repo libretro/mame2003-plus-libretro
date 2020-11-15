@@ -1269,5 +1269,3 @@ GAMEX( 1994, harddunk,     0,        multi32, harddunk, harddunk, ROT0, "Sega", 
 GAMEX( 1994, harddunj,     harddunk, multi32, harddunk, harddunk, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1992, scross,       0,        scross,  scross,   orunners, ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1992, titlef,       0,        multi32, titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
-
-

@@ -153,6 +153,3 @@ READ_HANDLER( pitnrun_68705_portC_r )
 {
 	return (zready << 0) | (zaccept << 1);
 }
-
-
-

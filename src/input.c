@@ -685,7 +685,12 @@ static InputCode record_seq[SEQ_MAX]; /* buffer for key recording */
 static int record_count; /* number of key/joy press recorded */
 static clock_t record_last; /* time of last key/joy press */
 
+/* Windows out of spec workaround */
+#if defined WIN32 || (defined _WIN64) || (defined _WINDOWS)
 #define RECORD_TIME (CLOCKS_PER_SEC*2/3) /* max time between key press */
+#else
+#define RECORD_TIME (CLOCKS_PER_SEC/8) /* max time between key press */
+#endif
 
 /* Start a sequence recording */
 void seq_read_async_start(void)

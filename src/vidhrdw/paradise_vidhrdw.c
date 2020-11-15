@@ -1,6 +1,6 @@
 /***************************************************************************
 
-							  -= Paradise =-
+							  -= Paradise / Target Ball =-
 
 					driver by	Luca Elia (l.elia@tin.it)
 
@@ -31,6 +31,7 @@ Note:	if MAME_DEBUG is defined, pressing Z with:
 /* Variables that driver has access to: */
 
 data8_t *paradise_vram_0,*paradise_vram_1,*paradise_vram_2;
+int paradise_sprite_inc;
 
 /* Variables only used here */
 
@@ -40,6 +41,12 @@ WRITE_HANDLER( paradise_flipscreen_w )
 {
 	flip_screen_set(data ? 0 : 1);
 }
+
+WRITE_HANDLER( tgtball_flipscreen_w )
+{
+	flip_screen_set(data ? 1 : 0);
+}
+
 
 /* 800 bytes for red, followed by 800 bytes for green & 800 bytes for blue */
 WRITE_HANDLER( paradise_palette_w )
@@ -198,14 +205,14 @@ WRITE_HANDLER( paradise_priority_w )
 static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int i;
-	for (i = 0; i < spriteram_size ; i += 32)
+	for (i = 0; i < spriteram_size ; i += paradise_sprite_inc)
 	{
-		int code	=	spriteram[i+0];	/* Only 4 bytes out of 32 used?*/
+		int code	=	spriteram[i+0];
 		int x		=	spriteram[i+1];
-		int y		=	spriteram[i+2];
+		int y		=	spriteram[i+2] - 2;
 		int attr	=	spriteram[i+3];
 
-		int flipx	=	0;	/* ?*/
+		int flipx	=	0;	/* ? */
 		int flipy	=	0;
 
 		if (flip_screen)	{	x = 0xf0 - x;	flipx = !flipx;
@@ -216,6 +223,21 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				0,
 				flipx, flipy,
 				x,y,
+				cliprect,TRANSPARENCY_PEN, 0xff );
+
+		/* wrap around x */
+		drawgfx(bitmap,Machine->gfx[0],
+				code + (attr << 8),
+				0,
+				flipx, flipy,
+				x - 256,y,
+				cliprect,TRANSPARENCY_PEN, 0xff );
+
+		drawgfx(bitmap,Machine->gfx[0],
+				code + (attr << 8),
+				0,
+				flipx, flipy,
+				x + 256,y,
 				cliprect,TRANSPARENCY_PEN, 0xff );
 	}
 }
@@ -268,4 +290,43 @@ if (keyboard_pressed(KEYCODE_Z))
 		if (!(paradise_priority & 1))
 			if (layers_ctrl&16)	draw_sprites(bitmap,cliprect);
 	}
+}
+
+/* no pix layer, no tilemap_0, different priority bits */
+VIDEO_UPDATE( torus )
+{
+	fillbitmap(bitmap,get_black_pen(),cliprect);
+
+	if (!(paradise_priority & 2))	/* Screen blanking */
+		return;
+
+	if (paradise_priority & 1)
+		draw_sprites(bitmap,cliprect);
+
+	tilemap_draw(bitmap,cliprect, tilemap_1, 0,0);
+
+	if(paradise_priority & 4)
+	{
+		if (!(paradise_priority & 1))
+			draw_sprites(bitmap,cliprect);
+
+		tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+	}
+	else
+	{
+		tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+
+		if (!(paradise_priority & 1))
+			draw_sprites(bitmap,cliprect);
+	}
+}
+
+/* I don't know how the priority bits work on this one */
+VIDEO_UPDATE( madball )
+{
+	fillbitmap(bitmap,get_black_pen(),cliprect);
+	tilemap_draw(bitmap,cliprect, tilemap_0, 0,0);
+	tilemap_draw(bitmap,cliprect, tilemap_1, 0,0);
+	tilemap_draw(bitmap,cliprect, tilemap_2, 0,0);
+	draw_sprites(bitmap,cliprect);
 }

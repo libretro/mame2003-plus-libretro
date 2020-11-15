@@ -275,23 +275,29 @@ INPUT_PORTS_START( dsoccr94 )
 	IREM_JOYSTICK_3_4(3)
 	IREM_JOYSTICK_3_4(4)
 	IREM_COINS
-	IREM_SYSTEM_DIPSWITCH_4PLAYERS
+	IREM_SYSTEM_DIPSWITCH_4PLAYERS /* Dip Switch 2, dip 2 is listed as "Don't Change" and is "OFF" */
 
-	PORT_START
+	PORT_START	/* Dip switch bank 1 */
 	PORT_DIPNAME( 0x03, 0x03, "Time" )
 	PORT_DIPSETTING(    0x00, "1:30" )
 	PORT_DIPSETTING(    0x03, "2:00" )
 	PORT_DIPSETTING(    0x02, "2:30" )
 	PORT_DIPSETTING(    0x01, "3:00" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x0c, "Difficulty" )
+	PORT_DIPSETTING(    0x00, "Very Easy" )
+	PORT_DIPSETTING(    0x08, "Easy" )
+	PORT_DIPSETTING(    0x0c, "Normal" )
+	PORT_DIPSETTING(    0x04, "Hard" )
+	PORT_DIPNAME( 0x10, 0x10, "Game Mode" )
+	PORT_DIPSETTING(    0x10, "Match Mode" )
+	PORT_DIPSETTING(    0x00, "Power Mode" )
+/*
+   Match Mode: Winner advances to the next game.  Game Over for the loser
+   Power Mode: The Players can play the game until their respective powers run
+               out, reguardless of whether they win or lose the game.
+               Player 2 can join in any time during the game
+               Player power (time) can be adjusted by dip switch #3
+*/
 	PORT_DIPNAME( 0x20, 0x20, "Starting Button" )
 	PORT_DIPSETTING(    0x00, "Button 1" )
 	PORT_DIPSETTING(    0x20, "Start Button" )
@@ -300,13 +306,12 @@ INPUT_PORTS_START( dsoccr94 )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_START	/* Dip switch bank 3 */
+	PORT_DIPNAME( 0x03, 0x03, "Player Power" )
+	PORT_DIPSETTING(    0x00, "500" )
+	PORT_DIPSETTING(    0x03, "1000" )
+	PORT_DIPSETTING(    0x01, "1500" )
+	PORT_DIPSETTING(    0x02, "2000" )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

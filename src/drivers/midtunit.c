@@ -8,6 +8,7 @@
 	Games supported:
 		* Mortal Kombat (T-unit version)
 		* Mortal Kombat 2
+		* Mortal Kombat 2 +
 		* NBA Jam
 		* NBA Jam Tournament Edition
 		* Judge Dredd (prototype)
@@ -753,7 +754,7 @@ static MACHINE_DRIVER_START( mk )
 
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(SAMPLES, mk_samples_tunit)	
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, mk_samples_tunit)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
@@ -774,7 +775,7 @@ static MACHINE_DRIVER_START( nbajam )
 
 	/* Lets add our NBA Jam music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(SAMPLES, nba_jam_samples_tunit)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, nba_jam_samples_tunit)
 MACHINE_DRIVER_END
 
 
@@ -1146,6 +1147,46 @@ ROM_START( mk2chal )
 ROM_END
 
 
+ROM_START( mk2p )
+	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
+
+	ROM_REGION( ADSP2100_SIZE + 0x800000, REGION_CPU2, 0 )	/* ADSP-2105 data */
+	ROM_LOAD( "su2.l1", ADSP2100_SIZE + 0x000000, 0x80000, CRC(65d11dd7) SHA1(bb94cca5a35f8f285d32314f8762c3c52ec48f5b) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x080000, 0x80000 )
+	ROM_LOAD( "su3.l1", ADSP2100_SIZE + 0x100000, 0x80000, CRC(d6d92bf9) SHA1(397351c6b707f2595e36360471015f9fa494e894) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x180000, 0x80000 )
+	ROM_LOAD( "su4.l1", ADSP2100_SIZE + 0x200000, 0x80000, CRC(eebc8e0f) SHA1(705ab63ff7672a4857d546afda6dca4973cce1ad) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x280000, 0x80000 )
+	ROM_LOAD( "su5.l1", ADSP2100_SIZE + 0x300000, 0x80000, CRC(2b0b7961) SHA1(1cdc64aab74d14afbd8c3531e3d0bd49271a281f) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x380000, 0x80000 )
+	ROM_LOAD( "su6.l1", ADSP2100_SIZE + 0x400000, 0x80000, CRC(f694b27f) SHA1(d43e38a124665f49ebb4ffc5a55e8f19a1a64686) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x480000, 0x80000 )
+	ROM_LOAD( "su7.l1", ADSP2100_SIZE + 0x500000, 0x80000, CRC(20387e0a) SHA1(505d05173b2a1f1ee3ebc2898ccd3a95c98dd04a) )
+	ROM_RELOAD(	        ADSP2100_SIZE + 0x580000, 0x80000 )
+	/* su8 and su9 are unpopulated */
+
+	ROM_REGION16_LE( 0x100000, REGION_USER1, ROMREGION_DISPOSE )	/* 34010 code */
+	ROM_LOAD16_BYTE( "uj12.l31", 0x00000, 0x80000, CRC(05ff15a9) SHA1(23e9c47644c756d7568b6e5122801b19cf594e9b) )
+	ROM_LOAD16_BYTE( "ug12.l31", 0x00001, 0x80000, CRC(b6d8ff5c) SHA1(ad974cc0dcdf35c7175f7cb8c620b58b82843523) )
+
+	ROM_REGION( 0xc00000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "ug14-vid", 0x000000, 0x100000, CRC(01e73af6) SHA1(6598cfd704cc92a7f358a0e1f1c973ab79dcc493) )
+	ROM_LOAD( "ug16-vid", 0x100000, 0x100000, CRC(b2af2798) SHA1(3d679fb59753b72f961fe60a65e4e03a76b64266) )
+	ROM_LOAD( "ug17-vid", 0x200000, 0x100000, CRC(937d8620) SHA1(8b9f80a460b124a747a6d1495b53f01f580e28f1) )
+
+	ROM_LOAD( "uj14-vid", 0x300000, 0x100000, CRC(d4985cbb) SHA1(367865da7efae38d83de3c0868d02a705177ae63) )
+	ROM_LOAD( "uj16-vid", 0x400000, 0x100000, CRC(d70dd149) SHA1(1add61f22a68c0bd8dba3fa0da18f5ecc7f51c6f) )
+	ROM_LOAD( "uj17-vid", 0x500000, 0x100000, CRC(218de160) SHA1(87aea173720d2a33d8183903f4fe8ba1d47e3348) )
+
+	ROM_LOAD( "ug19-vid", 0x600000, 0x100000, CRC(fec137be) SHA1(f11ecb8a7993f5c4f4449564b4911f69bd6e9bf8) )
+	ROM_LOAD( "ug20-vid", 0x700000, 0x100000, CRC(d05e970a) SHA1(0f07d72c0ae9ed77c79b4a39abbc047df68a6b1d) )
+	ROM_LOAD( "ug22-vid", 0x800000, 0x100000, CRC(154d53b1) SHA1(58ff0aa59101f40a9a3b5fbae1c904d0b0b31612) )
+
+	ROM_LOAD( "uj19-vid", 0x900000, 0x100000, CRC(2d763156) SHA1(06536006da49ab5fb6b75b25f801b83fad000ff5) )
+	ROM_LOAD( "uj20-vid", 0xa00000, 0x100000, CRC(0f9c9a12) SHA1(6c593ab037f9e203e50a13bef1cdbba765a45845) )
+	ROM_LOAD( "uj22-vid", 0xb00000, 0x100000, CRC(8891d785) SHA1(fd460df1ef8f4306ea42f7dc41488a80fd2c8f53) )
+ROM_END
+
 /*
     equivalences for the extension board version (same contents, split in half)
 
@@ -1455,19 +1496,20 @@ ROM_END
 GAME( 1992, mk,       0,       mk, mk,      mk,       ROT0, "Midway",   "Mortal Kombat (rev 5.0 T-Unit 03-19-93)" )
 GAME( 1992, mkr4,     mk,      mk, mk,      mkr4,     ROT0, "Midway",   "Mortal Kombat (rev 4.0 T-Unit 02-11-93)" )
 
-GAMEC( 1993, mk2,      0,       tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.1)", &generic_ctrl, &mk2_bootstrap )
-GAMEC( 1993, mk2r32,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.2 (European))", &generic_ctrl, &mk2r32_bootstrap )
-GAMEC( 1993, mk2r21,   mk2,     tunit_dcs,   mk2,     mk2r21,   ROT0, "Midway",   "Mortal Kombat II (rev L2.1)", &generic_ctrl, &mk2r21_bootstrap)
-GAMEC( 1993, mk2r14,   mk2,     tunit_dcs,   mk2,     mk2r14,   ROT0, "Midway",   "Mortal Kombat II (rev L1.4)", &generic_ctrl, &mk2r14_bootstrap )
-GAMEC( 1993, mk2r42,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II (rev L4.2, hack)", &generic_ctrl, &mk2r42_bootstrap )
-GAMEC( 1993, mk2r91,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II (rev L9.1, hack)", &generic_ctrl, &mk2r91_bootstrap)
-GAMEC( 1993, mk2chal,  mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II Challenger (hack)", &generic_ctrl, &mk2chal_bootstrap )
+GAMEC( 1993, mk2,      0,       tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.1)", &mk2_ctrl, &mk2_bootstrap )
+GAMEC( 1993, mk2r32,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.2 (European))", &mk2_ctrl, &mk2r32_bootstrap )
+GAMEC( 1993, mk2r21,   mk2,     tunit_dcs,   mk2,     mk2r21,   ROT0, "Midway",   "Mortal Kombat II (rev L2.1)", &mk2_ctrl, &mk2r21_bootstrap)
+GAMEC( 1993, mk2r14,   mk2,     tunit_dcs,   mk2,     mk2r14,   ROT0, "Midway",   "Mortal Kombat II (rev L1.4)", &mk2_ctrl, &mk2r14_bootstrap )
+GAMEC( 1993, mk2r42,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II (rev L4.2, hack)", &mk2_ctrl, &mk2r42_bootstrap )
+GAMEC( 1993, mk2r91,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II (rev L9.1, hack)", &mk2_ctrl, &mk2r91_bootstrap)
+GAMEC( 1993, mk2chal,  mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II Challenger (hack)", &mk2_ctrl, &mk2chal_bootstrap )
+GAMEC( 2019, mk2p,     mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",     "Mortal Kombat II Plus (Beta 2)", &mk2_ctrl, &mk2p_bootstrap )
 
 GAME( 1993, jdreddp,  0,       tunit_adpcm, jdreddp, jdreddp,  ROT0, "Midway",   "Judge Dredd (rev LA1, prototype)" )
 
-GAME( 1993, nbajam,   0,       nbajam, nbajam,  nbajam,   ROT0, "Midway",   "NBA Jam (rev 3.01 04-07-93)" )
-GAME( 1993, nbajamr2, nbajam,  nbajam, nbajam,  nbajam20, ROT0, "Midway",   "NBA Jam (rev 2.00 02-10-93)" )
-GAME( 1994, nbajamte, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 4.0 03-23-94)" )
-GAME( 1994, nbajamt1, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 1.0 01-17-94)" )
-GAME( 1994, nbajamt2, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 2.0 01-28-94)" )
-GAME( 1994, nbajamt3, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 3.0 03-04-94)" )
+GAMEC( 1993, nbajam,   0,       nbajam,      nbajam,    nbajam,   ROT0, "Midway", "NBA Jam (rev 3.01 04-07-93)", &nbajam_ctrl, &nbajam_bootstrap )
+GAMEC( 1993, nbajamr2, nbajam,  nbajam,      nbajam,    nbajam20, ROT0, "Midway", "NBA Jam (rev 2.00 02-10-93)", &nbajam_ctrl, &nbajamr2_bootstrap )
+GAMEC( 1994, nbajamte, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 4.0 03-23-94)", &nbajam_ctrl, &nbajamte_bootstrap )
+GAMEC( 1994, nbajamt1, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 1.0 01-17-94)", &nbajam_ctrl, &nbajamt1_bootstrap )
+GAMEC( 1994, nbajamt2, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 2.0 01-28-94)", &nbajam_ctrl, &nbajamt2_bootstrap )
+GAMEC( 1994, nbajamt3, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 3.0 03-04-94)", &nbajam_ctrl, &nbajamt3_bootstrap )

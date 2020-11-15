@@ -33,6 +33,7 @@ DRIVER_INIT( mk3r20 );
 DRIVER_INIT( mk3r10 );
 DRIVER_INIT( umk3 );
 DRIVER_INIT( umk3r11 );
+DRIVER_INIT( umk3p );
 
 DRIVER_INIT( openice );
 DRIVER_INIT( nbahangt );

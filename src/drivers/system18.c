@@ -352,7 +352,7 @@ PORT_END
 static WRITE16_HANDLER( sound_command_nmi_w ){
 
 	if( ACCESSING_LSB ){
-		if(moonwalker_playing == true) {
+		if(moonwalker_playing && options.use_samples) {
 			int a = 0;
 			int o_max_samples = 12;
 			int sa_left = 0;
@@ -1608,7 +1608,7 @@ static MACHINE_DRIVER_START( moonwalk )
 	MDRV_CPU_MEMORY(moonwalk_readmem,moonwalk_writemem)
 
 	MDRV_MACHINE_INIT(moonwalk)
-	MDRV_SOUND_ADD(SAMPLES, moonwalker_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, moonwalker_samples_set)
 	moonwalker_playing = true;
 	moon_diddy = false;
 MACHINE_DRIVER_END

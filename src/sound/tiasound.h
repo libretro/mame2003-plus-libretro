@@ -40,4 +40,3 @@ void tia_process (int param, INT16 *buffer, int length);
 WRITE_HANDLER( tia_sound_w );
 
 #endif	/* TIASOUND_H */
-

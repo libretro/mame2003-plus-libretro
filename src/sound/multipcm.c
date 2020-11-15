@@ -579,4 +579,3 @@ WRITE_HANDLER( MultiPCM_bank_1_w )
 		mpcm[1].bankL = data&0x1f;
 	}
 }
-

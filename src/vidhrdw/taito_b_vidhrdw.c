@@ -679,4 +679,3 @@ VIDEO_EOF( taitob )
 
   taitob_draw_sprites(framebuffer[framebuffer_page],&Machine->visible_area);
 }
-

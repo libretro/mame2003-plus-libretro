@@ -552,4 +552,3 @@ void tms36xx_sh_update(void)
     for( i = 0; i < intf->num; i++ )
 		stream_update(i,0);
 }
-

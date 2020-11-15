@@ -1131,5 +1131,3 @@ unsigned int Dasm4510(char *buffer, unsigned pc)
 #endif
 
 #endif	/* MAME_DEBUG */
-
-

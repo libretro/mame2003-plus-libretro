@@ -12,4 +12,3 @@ extern const struct IO_ReadPort         sega_speechboard_readport[];
 extern const struct IO_WritePort        sega_speechboard_writeport[];
 
 extern struct sp0250_interface sega_sp0250_interface;
-

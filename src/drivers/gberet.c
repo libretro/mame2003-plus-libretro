@@ -745,4 +745,3 @@ GAME( 1985, gberet,   0,      gberet,   gberet,   0, ROT0, "Konami", "Green Bere
 GAME( 1985, rushatck, gberet, gberet,   gberet,   0, ROT0, "Konami", "Rush'n Attack" )
 GAME( 1985, gberetb,  gberet, gberetb,  gberetb,  0, ROT0, "bootleg", "Green Beret (bootleg)" )
 GAME( 1986, mrgoemon, 0,      mrgoemon, mrgoemon, 0, ROT0, "Konami", "Mr. Goemon (Japan)" )
-

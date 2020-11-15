@@ -814,4 +814,3 @@ VIDEO_UPDATE( wgp )
 	}
 #endif
 }
-

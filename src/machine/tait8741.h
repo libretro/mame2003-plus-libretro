@@ -32,4 +32,16 @@ READ_HANDLER( TAITO8741_1_r );
 READ_HANDLER( TAITO8741_2_r );
 READ_HANDLER( TAITO8741_3_r );
 
+/****************************************************************************
+  joshi Vollyball set.
+****************************************************************************/
+
+extern int josvolly_nmi_enable;
+
+void josvolly_8741_reset(void);
+WRITE_HANDLER( josvolly_8741_0_w );
+WRITE_HANDLER( josvolly_8741_1_w );
+READ_HANDLER( josvolly_8741_0_r );
+READ_HANDLER( josvolly_8741_1_r );
+
 #endif

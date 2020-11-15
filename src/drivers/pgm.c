@@ -2549,4 +2549,3 @@ GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave",
 GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
 GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (older)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
 GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
-

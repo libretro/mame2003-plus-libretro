@@ -1,4 +1,4 @@
-/* Copyright  (C) 2010-2018 The RetroArch team
+/* Copyright  (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
  * The following license statement only applies to this file (features_cpu.h).
@@ -67,6 +67,8 @@ uint64_t cpu_features_get(void);
  * Returns: amount of CPU cores available.
  **/
 unsigned cpu_features_get_core_amount(void);
+
+void cpu_features_get_model_name(char *name, int len);
 
 RETRO_END_DECLS
 

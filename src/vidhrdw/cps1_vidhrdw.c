@@ -378,7 +378,10 @@ static struct CPS1config cps1_config_table[]=
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
-		
+    
+    /* CPS Prototype */
+  {"gulunpa", NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Best guess likely incorrect */
+    
     /* CPS Changer */
 	{"wofch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 
@@ -1958,5 +1961,3 @@ void cps2_objram_latch(void)
 	cps2_set_sprite_priorities();
 	memcpy(cps2_buffered_obj, cps2_objbase(), cps2_obj_size);
 }
-
-    

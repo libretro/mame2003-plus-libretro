@@ -87,10 +87,3 @@ static UINT32 opTRAPFL(void)
 
 	return 1;
 }
-
-
-
-
-
-
-

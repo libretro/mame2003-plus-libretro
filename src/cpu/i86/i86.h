@@ -116,4 +116,3 @@ typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,SIL,SIH,DIL,DIH } BREGS;
 	  I.OverVal = (f) & 2048; \
 }
 #endif
-

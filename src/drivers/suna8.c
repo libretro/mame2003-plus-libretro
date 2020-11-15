@@ -2774,4 +2774,3 @@ GAMEX( 1989, sparkman, 0,        sparkman, sparkman, sparkman, ROT0,  "SunA",   
 GAMEX( 1990, starfigh, 0,        starfigh, hardhea2, starfigh, ROT90, "SunA",                       "Star Fighter (v1)",             GAME_NOT_WORKING )
 GAMEX( 1992, brickzn,  0,        brickzn,  brickzn,  brickzn3, ROT90, "SunA",                       "Brick Zone (v5.0)",             GAME_NOT_WORKING )
 GAMEX( 1992, brickzn3, brickzn,  brickzn,  brickzn,  brickzn3, ROT90, "SunA",                       "Brick Zone (v3.0)",             GAME_NOT_WORKING )
-

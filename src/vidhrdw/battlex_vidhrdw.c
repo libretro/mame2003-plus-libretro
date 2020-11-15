@@ -1,46 +1,18 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
-
-static int battlex_scroll_lsb;
-static int battlex_scroll_msb;
+#include "includes/battlex.h"
 
 static struct tilemap *bg_tilemap;
 
-PALETTE_INIT( battlex )
-{
-	int i,col;
-
-	for (col = 0;col < 8;col++)
-	{
-		for (i = 0;i < 16;i++)
-		{
-			int data = i | col;
-			int g = ((data & 1) >> 0) * 0xff;
-			int b = ((data & 2) >> 1) * 0xff;
-			int r = ((data & 4) >> 2) * 0xff;
-
-#if 0
-			/* from Tim's shots, bit 3 seems to have no effect (see e.g. Laser Ship on title screen) */
-			if (i & 8)
-			{
-				r /= 2;
-				g /= 2;
-				b /= 2;
-			}
-#endif
-
-			palette_set_color(i + 16 * col,r,g,b);
-		}
-	}
-}
-
 WRITE_HANDLER( battlex_palette_w )
 {
-	int g = ((data & 1) >> 0) * 0xff;
-	int b = ((data & 2) >> 1) * 0xff;
-	int r = ((data & 4) >> 2) * 0xff;
+	int palette_num = offset / 8;
+	int color_num = offset & 7;
 
-	palette_set_color(16*8 + offset,r,g,b);
+	palette_set_color(offset, pal1bit(data >> 0), pal1bit(data >> 2), pal1bit(data >> 1));
+	/* set darker colors */
+	palette_set_color(64+palette_num*16+color_num, pal1bit(data >> 0), pal1bit(data >> 2), pal1bit(data >> 1));
+	palette_set_color(64+palette_num*16+color_num+8, pal2bit((data >> 0)&1), pal2bit((data >> 2)&1), pal2bit( (data >> 1) &1));
 }
 
 WRITE_HANDLER( battlex_scroll_x_lsb_w )
@@ -53,22 +25,21 @@ WRITE_HANDLER( battlex_scroll_x_msb_w )
 	battlex_scroll_msb = data;
 }
 
+WRITE_HANDLER( battlex_scroll_starfield_w )
+{
+}
+
 WRITE_HANDLER( battlex_videoram_w )
 {
-	if (videoram[offset] != data)
-	{
-		videoram[offset] = data;
-		tilemap_mark_tile_dirty(bg_tilemap, offset / 2);
-	}
+	videoram[offset] = data;
+	tilemap_mark_tile_dirty(bg_tilemap, offset / 2);
 }
 
 WRITE_HANDLER( battlex_flipscreen_w )
 {
-	/* bit 4 is used, but for what? */
+	battlex_starfield_enabled = data & 0x10;
 
-	/* bit 7 is flip screen */
-
-	if (flip_screen != (data & 0x80))
+	if (flip_screen != (data >> 7))
 	{
 		flip_screen_set(data & 0x80);
 		tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
@@ -83,9 +54,28 @@ static void get_bg_tile_info(int tile_index)
 	SET_TILE_INFO(0,tile,color,0)
 }
 
+static void get_dodgeman_bg_tile_info(int tile_index)
+{
+	int tile = videoram[tile_index*2] | (((videoram[tile_index*2+1] & 0x03)) << 8);
+	int color = (videoram[tile_index*2+1] & 0x0c) >> 2;
+
+	SET_TILE_INFO(0,tile,color,0)
+}
+
 VIDEO_START( battlex )
 {
 	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows,
+		TILEMAP_OPAQUE, 8, 8, 64, 32);
+
+	if ( !bg_tilemap )
+		return 1;
+
+	return 0;
+}
+
+VIDEO_START( dodgeman )
+{
+	bg_tilemap = tilemap_create(get_dodgeman_bg_tile_info, tilemap_scan_rows,
 		TILEMAP_OPAQUE, 8, 8, 64, 32);
 
 	if ( !bg_tilemap )
@@ -104,7 +94,7 @@ static void battlex_drawsprites( struct mame_bitmap *bitmap, const struct rectan
 	{
 		int sx = (source[0] & 0x7f) * 2 - (source[0] & 0x80) * 2;
 		int sy = source[3];
-		int tile = source[2] & 0x7f;
+		int tile = source[2]; /* dodgeman has 0x100 sprites */
 		int color = source[1] & 0x07;	/* bits 3,4,5 also used during explosions */
 		int flipy = source[1] & 0x80;
 		int flipx = source[1] & 0x40;
@@ -126,7 +116,10 @@ static void battlex_drawsprites( struct mame_bitmap *bitmap, const struct rectan
 
 VIDEO_UPDATE(battlex)
 {
-	tilemap_set_scrollx(bg_tilemap, 0, battlex_scroll_lsb | (battlex_scroll_msb << 8));
-	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
-	battlex_drawsprites(bitmap, &Machine->visible_area);
+	if (!flip_screen)
+		tilemap_set_scrollx(bg_tilemap, 0, battlex_scroll_lsb | (battlex_scroll_msb << 8));
+	else
+		tilemap_set_scrollx(bg_tilemap, 0, battlex_scroll_lsb | (battlex_scroll_msb << 3));
+	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
+	battlex_drawsprites(bitmap, cliprect);
 }

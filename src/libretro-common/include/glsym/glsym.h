@@ -1,4 +1,4 @@
-/* Copyright (C) 2010-2018 The RetroArch team
+/* Copyright (C) 2010-2020 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
  * The following license statement only applies to this libretro SDK code part (glsym).
@@ -36,6 +36,10 @@
 #endif
 #include "glsym_gl.h"
 #endif
+#endif
+
+#ifdef HAVE_GLSYM_PRIVATE
+#include "glsym_private.h"
 #endif
 
 #endif

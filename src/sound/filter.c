@@ -132,5 +132,3 @@ filter* filter_lp_fir_alloc(double freq, int order) {
 
 	return f;
 }
-
-

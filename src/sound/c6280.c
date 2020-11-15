@@ -329,4 +329,3 @@ void c6280_sh_stop(void)
 
 WRITE_HANDLER( C6280_0_w ) {  c6280_write(0,offset,data); }
 WRITE_HANDLER( C6280_1_w ) {  c6280_write(1,offset,data); }
-
