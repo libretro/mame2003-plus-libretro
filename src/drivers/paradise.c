@@ -14,8 +14,7 @@ Notes:
 paradise: I'm not sure it's working correctly:
 
 - The high scores table can't be entered !?
-- The chance to play a bonus game is very slim. I think I got to play
-  a couple in total. Is there a way to trigger them !?
+- note added: complete 90% or more to play a bonus game.
 
 ***************************************************************************/
 
