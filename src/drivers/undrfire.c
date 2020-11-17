@@ -1,10 +1,11 @@
 /***************************************************************************
 
 	Underfire  							(c) 1993 Taito
+    Chase Bombers                       (c) 1994 Taito
 
 	Driver by Bryan McPhail & David Graves.
 
-	Board Info:
+	Board Info (Underfire):
 
 		TC0470LIN : ?
 		TC0480SCP : known tilemap chip
@@ -115,6 +116,74 @@ calculations when it needs to, so to provide an artificial target we
 need to reproduce the $18141a calculations.
 
 
+Info (Chase Bombers)
+
+Chase Bombers
+Taito, 1994
+
+Runs on hardware similar to Ground Effects
+
+
+PCB Layout
+----------
+
+MAIN PCB-D
+K1100809A
+J1100342A
+|----------------------------------------------------------------------------------------------|
+|           C5                              C6                             SMC_COM20020  LANOUT|
+| 68EC020   61256     68EC000  61256            68EC000      61256      MB8421                 |
+|           61256              61256                         61256                       LANIN |
+|           61256                     61256                  PAL                               |
+|           61256    PAL              61256                  PAL                               |
+|                    PAL                                     PAL        MB8421                 |
+|                    40MHz                                                                     |
+|                                                                  MC68681                     |
+|                                           TC511664-80     MB3771                             |
+|                                                                                            P1|
+|  MACH120   MACH120                                                                           |
+|                                     ENSONIQ         30.4761MHz  16MHz   ADC0809              |
+|                                     ESP-R6                                                   |
+|                                                       ENSONIQ                                |
+|                                     ENSONIQ           5701     DSW1(8)  TC0510NIO            |
+|                                     OTIS-R2                                                 Z|
+|                                                         93C46                                |
+|           C3                              C4                                                 |
+|                                                                                              |
+|  61256                                                                                     |-|
+|  61256                                                                                     |
+|                                                                                            |-|
+|                TC0480SCP        TC0620SCC           TC0360PRI                                |
+|                                                                                              |
+|                                                                                TC0650FDA     |
+|  2018                                                                  61256                 |
+|                                                                        61256                 |
+|  2018     2088             61256                                       61256                G|
+|                            61256                    TC0580PIV                                |
+|  2018     2088                                                                               |
+|                                                                                              |
+|  2018                                                             TL074    TL074   TDA1543   |
+|           TC0570SPC         TC0470LIN               514256  514256                           |
+|  2018                                               514256  514256        TA8221   TD62064 |-|
+|                                                     514256  514256                 TD62064 |
+|  2018                                                               MB87078        TD62064 |-|
+|           C1                              C2                                                 |
+|----------------------------------------------------------------------------------------------|
+Notes:
+      ROM board plugs into C* connectors
+      No clocks for now, PCB has light corrosion and will need extensive cleaning before it can be powered up.
+
+ROM Board
+---------
+
+PCB Numbers - ROM.PCB
+              K9100508A
+              J9100367A
+
+Board contains only 29 ROMs and not much else.
+
+
+
 ***************************************************************************/
 
 #include "driver.h"
@@ -126,6 +195,7 @@ need to reproduce the $18141a calculations.
 
 VIDEO_START( undrfire );
 VIDEO_UPDATE( undrfire );
+VIDEO_UPDATE( cbombers );
 
 /* F3 sound */
 READ16_HANDLER(f3_68000_share_r);
@@ -145,7 +215,7 @@ extern UINT16 undrfire_rotate_ctrl[8];
 static int frame_counter=0;
 
 data32_t *undrfire_ram;	/* will be read in vidhrdw for gun target calcs */
-
+UINT32 *shared_ram;
 
 /***********************************************************
 				COLOR RAM
@@ -281,6 +351,29 @@ static WRITE32_HANDLER( undrfire_input_w )
 }
 
 
+static READ16_HANDLER( shared_ram_r )
+{
+	if ((offset&1)==0) return (shared_ram[offset/2]&0xffff0000)>>16;
+	return (shared_ram[offset/2]&0x0000ffff);
+}
+
+
+static WRITE16_HANDLER( shared_ram_w )
+{
+	if ((offset&1)==0) {
+		if (ACCESSING_MSB)
+			shared_ram[offset/2]=(shared_ram[offset/2]&0x00ffffff)|((data&0xff00)<<16);
+		if (ACCESSING_LSB)
+			shared_ram[offset/2]=(shared_ram[offset/2]&0xff00ffff)|((data&0x00ff)<<16);
+	} else {
+		if (ACCESSING_MSB)
+			shared_ram[offset/2]=(shared_ram[offset/2]&0xffff00ff)|((data&0xff00)<< 0);
+		if (ACCESSING_LSB)
+			shared_ram[offset/2]=(shared_ram[offset/2]&0xffffff00)|((data&0x00ff)<< 0);
+	}
+}
+
+
 /* Some unknown hardware byte mapped at $600002-5 */
 
 static READ32_HANDLER( unknown_hardware_r )
@@ -376,6 +469,27 @@ static WRITE32_HANDLER( motor_control_w )
 */
 }
 
+static WRITE32_HANDLER( cbombers_cpua_ctrl_w )
+{
+/*
+    ........ ..xxxxxx   Lamp 1-6 enables
+    ........ .x......   Vibration
+*/
+
+	cpu_set_reset_line(2,(data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
+}
+
+static READ32_HANDLER( cbombers_adc_r )
+{
+	return (input_port_3_word_r(0,0) << 24 );
+}
+
+static WRITE32_HANDLER( cbombers_adc_w )
+{
+	/* One interrupt per input port (4 per frame, though only 2 used).
+        1000 cycle delay is arbitrary */
+	timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
+}
 
 /***********************************************************
 			 MEMORY STRUCTURES
@@ -417,6 +531,54 @@ static MEMORY_WRITE32_START( undrfire_writemem )
 	{ 0xb00000, 0xb003ff, MWA32_RAM },	/* single bytes, blending ??*/
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
 MEMORY_END
+
+static MEMORY_READ32_START( cbombers_readmem )
+    { 0x000000, 0x1fffff, MRA32_ROM },
+	{ 0x200000, 0x21ffff, MRA32_RAM },
+	{ 0x300000, 0x303fff, MRA32_RAM },
+	{ 0x500000, 0x500007, undrfire_input_r },
+	{ 0x600000, 0x600007, cbombers_adc_r },
+	{ 0x700000, 0x7007ff, MRA32_RAM },
+	{ 0x800000, 0x80ffff, TC0480SCP_long_r },		/* tilemaps */
+	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },
+	{ 0x900000, 0x90ffff, TC0100SCN_long_r },		/* piv tilemaps */
+	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
+	{ 0xb00000, 0xb0000f, MRA32_RAM }, /* ? */
+	{ 0xc00000, 0xc00007, MRA32_RAM }, /* LAN controller? */
+	{ 0xe00000, 0xe0ffff, MRA32_RAM },
+MEMORY_END
+
+static MEMORY_WRITE32_START( cbombers_writemem )
+    { 0x000000, 0x1fffff, MWA32_ROM },
+	{ 0x200000, 0x21ffff, MWA32_RAM },
+	{ 0x300000, 0x303fff, MWA32_RAM, &spriteram32, &spriteram_size },
+	{ 0x400000, 0x400003, cbombers_cpua_ctrl_w },
+	{ 0x500000, 0x500007, undrfire_input_w },
+	{ 0x600000, 0x600007, cbombers_adc_w },
+	{ 0x700000, 0x7007ff, MWA32_RAM, &f3_shared_ram },
+	{ 0x800000, 0x80ffff, TC0480SCP_long_w },		/* tilemaps */
+	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_w },
+	{ 0x900000, 0x90ffff, TC0100SCN_long_w },		/* piv tilemaps */
+	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
+    { 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
+	{ 0xb00000, 0xb0000f, MWA32_RAM }, /* ? */
+	{ 0xc00000, 0xc00007, MWA32_RAM },/* LAN controller? */
+	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
+	{ 0xe00000, 0xe0ffff, MWA32_RAM, &shared_ram },
+MEMORY_END
+
+static MEMORY_READ16_START( cbombers_sub_readmem )
+    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x400000, 0x40ffff, MRA16_RAM	}, /* local ram */
+	{ 0x800000, 0x80ffff, shared_ram_r },
+MEMORY_END
+
+static MEMORY_WRITE16_START( cbombers_sub_writemem )
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x400000, 0x40ffff, MWA16_RAM	},/* local ram */
+	{ 0x800000, 0x80ffff, shared_ram_w },
+MEMORY_END
+
 
 /******************************************************************************/
 
@@ -515,6 +677,57 @@ INPUT_PORTS_START( undrfire )
 INPUT_PORTS_END
 
 
+INPUT_PORTS_START( cbombers )
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_BUTTON5 ) /* ? where is freeze input */
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BITX(0x0100, IP_ACTIVE_LOW,  IPT_BUTTON4 | IPF_TOGGLE, "Gear Shift", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0200, IP_ACTIVE_LOW,  IPT_BUTTON3, "Fire", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0400, IP_ACTIVE_LOW,  IPT_BUTTON1, "Accelerator", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0800, IP_ACTIVE_LOW,  IPT_BUTTON2, "Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* Frame counter */
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* reserved for EEROM */
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW,  IPT_START1 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW,  IPT_START2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BITX(0x01, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+
+	PORT_START	/* IN 3, steering wheel */
+	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 25, 15, 0, 0xff)
+INPUT_PORTS_END
+
 
 /**********************************************************
 				GFX DECODING
@@ -562,10 +775,19 @@ static struct GfxDecodeInfo undrfire_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static struct GfxDecodeInfo cbombers_gfxdecodeinfo[] =
+{
+	{ REGION_GFX2, 0x0, &tile16x16_layout,  0, 512 },
+	{ REGION_GFX1, 0x0, &charlayout,        0x1000, 512 },
+	{ REGION_GFX3, 0x0, &pivlayout,         0, 512 },
+	{ -1 } /* end of array */
+};
+
 
 /***********************************************************
 			     MACHINE DRIVERS
 ***********************************************************/
+
 
 static MACHINE_INIT( undrfire )
 {
@@ -580,6 +802,7 @@ static MACHINE_INIT( undrfire )
 
 	f3_68681_reset();
 }
+
 
 static struct ES5505interface es5505_interface =
 {
@@ -629,6 +852,42 @@ static MACHINE_DRIVER_START( undrfire )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( cbombers )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68EC020, 16000000)	/* 16 MHz */
+	MDRV_CPU_MEMORY(cbombers_readmem, cbombers_writemem)
+	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
+	MDRV_CPU_ADD(M68000, 16000000)  /* 16 MHz */
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+
+	MDRV_CPU_ADD(M68000, 16000000)	/* 16 MHz */
+	MDRV_CPU_MEMORY(cbombers_sub_readmem, cbombers_sub_writemem)
+	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
+	MDRV_INTERLEAVE(5)	/* CPU slices - Need to interleave Cpu's 1 & 3 */
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(undrfire)
+	MDRV_NVRAM_HANDLER(undrfire)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
+	MDRV_SCREEN_SIZE(40*8, 32*8)
+	MDRV_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
+	MDRV_GFXDECODE(cbombers_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(16384)
+
+	MDRV_VIDEO_START(undrfire)
+	MDRV_VIDEO_UPDATE(cbombers)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(ES5505, es5505_interface)
+MACHINE_DRIVER_END
 
 /***************************************************************************
 					DRIVERS
@@ -743,6 +1002,57 @@ ROM_START( undrfirj )
 	ROM_LOAD16_BYTE( "d67-02", 0xc00000, 0x200000, CRC(fceb715e) SHA1(9326513acb0696669d4f2345649ab37c8c6ed171) )
 ROM_END
 
+ROM_START( cbombers )
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )	/* 2048K for 68020 code (CPU A) */
+	ROM_LOAD32_BYTE( "d83_39.ic17", 0x00000, 0x80000, CRC(b9f48284) SHA1(acc5d412e8900dda483a89a1ac1febd6d5735f3c) )
+	ROM_LOAD32_BYTE( "d83_41.ic4",  0x00001, 0x80000, CRC(a2f4c8be) SHA1(0f8f3b5ecff34d8c35af1ab11bb5528b52e30109) )
+	ROM_LOAD32_BYTE( "d83_40.ic3",  0x00002, 0x80000, CRC(b05f59ea) SHA1(e46a31737f44be2a3d478b8010fe0d6383290e03) )
+	ROM_LOAD32_BYTE( "d83_38.ic16", 0x00003, 0x80000, CRC(0a10616c) SHA1(c9cfc8c870f8a989f004d2db4f6fb76e5b7b7f9b) )
+
+	ROM_REGION( 0x140000, REGION_CPU2, 0 )	/* Sound cpu */
+	ROM_LOAD16_BYTE( "d83_26.ic37", 0x100000, 0x20000, CRC(4f49b484) SHA1(96daa3cb7fa4aae3aedc91ec27d85945311dfcc9) )
+	ROM_LOAD16_BYTE( "d83_27.ic38", 0x100001, 0x20000, CRC(2aa1a237) SHA1(b809f75bbbbb4eb5d0df725aaa31aae8a6fba552) )
+
+	ROM_REGION( 0x40000, REGION_CPU3, 0 )	/* 256K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "d83_28.ic26", 0x00001, 0x20000, CRC(06328ef7) SHA1(90a14649e56221e47b87958896f6eae4556265c2) )
+	ROM_LOAD16_BYTE( "d83_29.ic27", 0x00000, 0x20000, CRC(771b4080) SHA1(a47c3a6abc07a6a61b694d32baa0ad4c25045841) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "d83_04.ic8", 0x000000, 0x200000, CRC(79f36cce) SHA1(2c8dc4cd5c4aa335c1e45888f5947acf94fa628a) )
+	ROM_LOAD16_BYTE( "d83_05.ic7", 0x000001, 0x200000, CRC(7787e495) SHA1(1758de5fdd1d12727368d08d7d4752c3756fc23e) )
+
+	ROM_REGION( 0x1800000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD32_BYTE( "d83_06.ic28", 0x000003, 0x200000, CRC(4b71944e) SHA1(e8ed190280c7378fb4edcb192cef0d4d62582ad5) )
+	ROM_LOAD32_BYTE( "d83_07.ic30", 0x000002, 0x200000, CRC(29861b61) SHA1(76562b0243c1bc38623c0ef9d20de7572a979e37) )
+	ROM_LOAD32_BYTE( "d83_08.ic32", 0x000001, 0x200000, CRC(a0e81e01) SHA1(96ad8cfc849caaf85350cfc7cf23ad23635a3813) )
+	ROM_LOAD32_BYTE( "d83_09.ic45", 0x000000, 0x200000, CRC(7e4dec50) SHA1(4d8c1be739d425d8ded07774094b775f35a915bf) )
+	ROM_LOAD32_BYTE( "d83_11.ic41", 0x800003, 0x100000, CRC(a790e490) SHA1(9c57405ef2ef3368eb0958a3e43601110c1cc90d) )
+	ROM_LOAD32_BYTE( "d83_12.ic29", 0x800002, 0x100000, CRC(2f237b0d) SHA1(2ecb947671d263a77510bfebda03f883b55b8df4) )
+	ROM_LOAD32_BYTE( "d83_13.ic31", 0x800001, 0x100000, CRC(c2cceeb6) SHA1(3ec932655326caed13a40394bbf8e8baf836de2a) )
+	ROM_LOAD32_BYTE( "d83_14.ic44", 0x800000, 0x100000, CRC(8b6f4f12) SHA1(6a28004d287f00627622376aa3d6704f2684a6f3) )
+	ROM_LOAD32_BYTE( "d83_10.ic43", 0xc00000, 0x200000, CRC(36c440a0) SHA1(31685d3cdf4e39e1365df7e6a588c28f95d7e0a8) )
+	ROM_LOAD32_BYTE( "d83_15.ic42", 0x1400000, 0x100000, CRC(1b71175e) SHA1(60ad38ce97fd7995ff2f29d6b1a3b873dc2f0eb3) )
+
+	ROM_REGION( 0x400000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "d83_16.ic19", 0x000000, 0x100000, CRC(d364cf1e) SHA1(ee43f50edf50ec840acfb98b1314140ee9693839) )
+	ROM_LOAD16_BYTE( "d83_17.ic5",  0x000001, 0x100000, CRC(0ffe737c) SHA1(5923a4edf9d0c8339f793840c2bdc691e2c651e6) )
+	ROM_LOAD       ( "d83_18.ic6",  0x300000, 0x100000, CRC(87979155) SHA1(0ffafa970f9f9c98f8938104b97e63d2b5757804) )
+	ROM_FILL       (                0x200000, 0x100000, 0 )
+
+	ROM_REGION16_LE( 0x80000, REGION_USER1, 0 )
+	ROM_LOAD16_BYTE( "d83_31.ic10", 0x000001, 0x40000, CRC(85c37961) SHA1(15ea5c4904d910575e984e146c8941dff913d45f) )
+	ROM_LOAD16_BYTE( "d83_32.ic11", 0x000000, 0x40000, CRC(b0db2559) SHA1(2bfae2dbe164b42e95d0a93fab82b7040c3fbc56) )
+
+	ROM_REGION( 0x40000, REGION_USER2, 0 )
+	ROM_LOAD( "d83_30.ic9", 0x00000,  0x40000,  CRC(eb86dc67) SHA1(31c7b6f30ff912fafed4b87ce8bf603ee17d1664) )
+
+	ROM_REGION16_BE( 0x1000000,  REGION_SOUND1, ROMREGION_SOUNDONLY | ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "d83_01.ic40", 0xc00000, 0x200000, CRC(912799f4) SHA1(22f69e61519d2cddcfc4e4c9601e78a9d5265d5b) )
+	ROM_LOAD16_BYTE( "d83_02.ic39", 0x000000, 0x200000, CRC(2abca020) SHA1(3491a95651ca89b7fe6d040b8576fa7646bfe84b) )
+	ROM_RELOAD     (                0x400000, 0x200000 )
+	ROM_LOAD16_BYTE( "d83_03.ic18", 0x800000, 0x200000, CRC(1b2d9ec3) SHA1(ead6b5542ad3987ef0f9ea01ce7f960abc9119b3) )
+ROM_END
+
 
 static READ32_HANDLER( main_cycle_r )
 {
@@ -789,6 +1099,36 @@ DRIVER_INIT( undrfire )
 }
 
 
+DRIVER_INIT( cbombers )
+{
+	unsigned int offset,i;
+	UINT8 *gfx = memory_region(REGION_GFX3);
+	int size=memory_region_length(REGION_GFX3);
+	int data;
+
+	
+	/* make piv tile GFX format suitable for gfxdecode */
+	offset = size/2;
+	for (i = size/2+size/4; i<size; i++)
+	{
+		int d1,d2,d3,d4;
+
+		/* Expand 2bits into 4bits format */
+		data = gfx[i];
+		d1 = (data>>0) & 3;
+		d2 = (data>>2) & 3;
+		d3 = (data>>4) & 3;
+		d4 = (data>>6) & 3;
+
+		gfx[offset] = (d1<<2) | (d2<<6);
+		offset++;
+
+		gfx[offset] = (d3<<2) | (d4<<6);
+		offset++;
+	}
+}
+
 GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)" )
 GAME( 1993, undrfiru, undrfire, undrfire, undrfire, undrfire, ROT0, "Taito America Corporation", "Under Fire (US)" )
 GAME( 1993, undrfirj, undrfire, undrfire, undrfire, undrfire, ROT0, "Taito Corporation", "Under Fire (Japan)" )
+GAME( 1994, cbombers, 0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation", "Chase Bombers (World)" )
