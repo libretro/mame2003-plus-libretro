@@ -25,6 +25,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
+* Chase Bombers
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
 * Cookie & Bibi
@@ -423,7 +424,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shark Attack
 * Space Firebird
 * Teki Paki (Toaplan Samples)
-* Theif
+* Thief
 * Two Tigers - `twotigra` romset
 
 
@@ -553,10 +554,27 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Planet Probe to the vaster driver [BritneyPAIRS, arcadez]
 * Updated the DJ Boy driver to MAME118 game now plyable  [iq_132, BritneysPAIRS, arcadez]
 * Added support for the Cave PGM games to the PGM driver and vastly improved the ICS2115 soundcore [arcadez, shmupmame, amadvanceMAME]
-* Added support for Hyper Street Fight 2, Progear and Puzzloop 2 to the CPS2 driver [arcadez, BritneysPAIRS]
+* Added support for Hyper Street Fighter 2, Progear and Puzzloop 2 to the CPS2 driver [arcadez, BritneysPAIRS]
 * Added support for many games to the neogeo driver plus backported some grahical fixes from later MAME [arcadez, BritneysPAIRS]
 * Added full sound and music for Asura Blade and added support for Asura Buster to the fuukifg3 driver [arcadez]
 * Added a working bootleg of FixEight to the Toaplan 2 driver [BritnaysPAIRS, arcadez]
-* Fixed Hyper Duel from crashing once you started a game [arcadez, KMFDManic ]
+* Fixed Hyper Duel from crashing once you started a game [arcadez, KMFDManic]
 * Updated many Konami drivers to MAME99 for some sound and graphical improvements and got Lethal Enforcers to work in MAME2003+ [arcadez]
 * Added English / Spanish set 1 of Botanic [mahoneyt944]
+* Added support for Chase Bombers to undrfire.c [arcadez]
+* Added support for the joystick version of Tad Corp's Cabal [arcadez]
+* Added support for 1943 - The Battle Of Midway Mark II to 1943.c [arcadez]
+* Updated the legionnaire driver and video code to MAME142 added seicop protection Denjin Makai now playable [arcadez]
+* Added a small hack to the seibu soundcore to fix music and sfx in Denjin Makai [arcadez]
+* Added a working bootleg of Counter Run to freekick.c [BritneysPAIRS]
+* Updated the rohga.c driver to support the rare prototype Hang-Zo [arcadez]
+* Added support for Hyper Crash to nemesis.c [arcadez]
+* Added support for In Your Face a rare basketball prototype to the megasys1.c driver [arcadez]
+* Fixed some major slowdowns in Avenging Spirit / Phantasm in the megasys1.c driver [arcadez]
+* Added support for Squash and Thunder Hoop to the galeco.c driver [iq_132, BritneysPAIRS, arcadez]
+* Added support for Teeter Torture to exidy.c [arcadez]
+* Fixed the Sega Megaplay games so they now work in MAME2003+ [arcadez, grant2258]
+* Fixed the offical japan versions of Wonderboy In Monsterland and added support for the official VC English version [arcadez]
+* Added support for the American Sammy hunting games to the seta2.c driver [iq_132, BritneysPAIRS, arcadez]
+* Improved the gfx and hooked up the sound in Fire Barrel game now playable [BritneysPAIRS, arcadez]
+* Added support for the Golden tee 3D golf games to itech32.c [arcadez]
