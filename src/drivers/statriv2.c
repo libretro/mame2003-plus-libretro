@@ -108,28 +108,21 @@ VIDEO_UPDATE (statriv2)
 
 PALETTE_INIT(statriv2)
 {
-	int j;
+	int i;
 
-	for (j = 0;j < 16;j++)
+	for (i = 0; i < 8; i++)
 	{
-		int r = (j & 1) >> 0;
-		int g = (j & 2) >> 1;
-		int b = (j & 4) >> 2;
-		int i = (j & 8) >> 3;
-
-		r = 0xff * r;
-		g = 0x7f * g * (i + 1);
-		b = 0x7f * b * (i + 1);
-
-		palette_set_color(j,r,g,b);
+		palette_set_color(i,
+			0xff * ((i >> 2) & 1),
+			0xff * ((i >> 0) & 1),
+			0xff * ((i >> 1) & 1));
 	}
 
-	for (j = 0;j < 256;j++)
+	for (i = 0; i < 64; i++)
 	{
-		colortable[2*j] = j & 0x0f;
-		colortable[2*j+1] = j >> 4;
+		colortable[2*i+0] = i % 8;
+		colortable[2*i+1] = i / 8;
 	}
-        palette_set_color(8,0xFF,0xFF,0xFF);
 }
 
 /* end video related */
@@ -434,8 +427,8 @@ static MACHINE_DRIVER_START( statriv2 )
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(4*8, 38*8-1, 0, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16)
-	MDRV_COLORTABLE_LENGTH(2*256)
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_COLORTABLE_LENGTH(2*64)
 
 	MDRV_PALETTE_INIT(statriv2)
 	MDRV_VIDEO_START(statriv2)
@@ -462,8 +455,8 @@ static MACHINE_DRIVER_START( supertr2 )
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(2*8, 36*8-1, 0, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16)
-	MDRV_COLORTABLE_LENGTH(2*256)
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_COLORTABLE_LENGTH(2*64)
 
 	MDRV_PALETTE_INIT(statriv2)
 	MDRV_VIDEO_START(statriv2)
@@ -488,10 +481,10 @@ static MACHINE_DRIVER_START( trivquiz )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER )
 	MDRV_SCREEN_SIZE(64*8, 32*8)
-	MDRV_VISIBLE_AREA(4*8, 40*8-1, 0, 32*8-1)
+	MDRV_VISIBLE_AREA(4*8, 38*8-1, 0, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16)
-	MDRV_COLORTABLE_LENGTH(2*256)
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_COLORTABLE_LENGTH(2*64)
 
 	MDRV_PALETTE_INIT(statriv2)
 	MDRV_VIDEO_START(statriv2)
