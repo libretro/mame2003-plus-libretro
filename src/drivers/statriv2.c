@@ -110,18 +110,10 @@ PALETTE_INIT(statriv2)
 {
 	int i;
 
-	for (i = 0; i < 8; i++)
+	for (int i = 0; i < 64; i++)
 	{
-		palette_set_color(i,
-			0xff * ((i >> 2) & 1),
-			0xff * ((i >> 0) & 1),
-			0xff * ((i >> 1) & 1));
-	}
-
-	for (i = 0; i < 64; i++)
-	{
-		colortable[2*i+0] = i % 8;
-		colortable[2*i+1] = i / 8;
+		palette_set_color(2*i + 0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
+		palette_set_color(2*i + 1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
 	}
 }
 
@@ -555,6 +547,6 @@ ROM_START( supertr2 )
 	ROM_LOAD( "astq2-8.rom", 0x38000, 0x08000, CRC(cd2674d5) SHA1(7fb6513172ffe8e3b9e0f4dc9ecdb42d954b1ff0) )
 ROM_END
 
-GAMEX( 1984, trivquiz, 0, trivquiz, statriv2, 0, ROT0, "Status Games", "Triv Quiz", GAME_WRONG_COLORS )
-GAMEX( 1984, statriv2, 0, statriv2, statriv2, 0, ROT0, "Status Games", "Triv Two",  GAME_WRONG_COLORS )
-GAMEX( 1986, supertr2, 0, supertr2, supertr2, 0, ROT0, "Status Games", "Super Triv II", GAME_WRONG_COLORS )
+GAME( 1984, trivquiz, 0, trivquiz, statriv2, 0, ROT0, "Status Games", "Triv Quiz" )
+GAME( 1984, statriv2, 0, statriv2, statriv2, 0, ROT0, "Status Games", "Triv Two" )
+GAME( 1986, supertr2, 0, supertr2, supertr2, 0, ROT0, "Status Games", "Super Triv II" )
