@@ -110,7 +110,7 @@ PALETTE_INIT(statriv2)
 {
 	int i;
 
-	for (int i = 0; i < 64; i++)
+	for (i = 0; i < 64; i++)
 	{
 		palette_set_color(2*i + 0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
 		palette_set_color(2*i + 1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
