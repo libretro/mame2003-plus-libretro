@@ -397,7 +397,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct AY8910interface ay8910_interface =
 {
 	1,	/* 1 chip */
-	1500000,	/* 1.5 MHz ???? */
+	12440000/8,	/* 1.555 MHz */
 	{ 100 },
 	{ 0 },
 	{ 0 },
@@ -412,7 +412,7 @@ static INTERRUPT_GEN( statriv2_interrupt )
 
 static MACHINE_DRIVER_START( statriv2 )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(8085A,12400000)              /* 12.4MHz / 4? */
+	MDRV_CPU_ADD(8085A,12440000)              /* 12.44MHz / 4? */
 	MDRV_CPU_MEMORY(statriv2_readmem,statriv2_writemem)
 	MDRV_CPU_PORTS(statriv2_readport,statriv2_writeport)
 	MDRV_CPU_VBLANK_INT(statriv2_interrupt,1)
@@ -440,7 +440,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( supertr2 )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(8085A,12400000)              /* 12.4MHz / 4? */
+	MDRV_CPU_ADD(8085A,12440000)              /* 12.44MHz / 4? */
 	MDRV_CPU_MEMORY(supertr2_readmem,supertr2_writemem)
 	MDRV_CPU_PORTS(supertr2_readport,supertr2_writeport)
 	MDRV_CPU_VBLANK_INT(statriv2_interrupt,1)
@@ -468,7 +468,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( trivquiz )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(8085A,12400000)              /* 12.4MHz / 4? */
+	MDRV_CPU_ADD(8085A,12440000)              /* 12.44MHz / 4? */
 	MDRV_CPU_MEMORY(supertr2_readmem,supertr2_writemem)
 	MDRV_CPU_PORTS(trivquiz_readport,trivquiz_writeport)
 	MDRV_CPU_VBLANK_INT(statriv2_interrupt,1)
