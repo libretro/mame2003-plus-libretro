@@ -206,6 +206,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken / Victory Road (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* Dottori-Man Jr. (Hack by Chris Covell)
 * DownTown (joystick hack)
 * Final Fight 30th Anniversary Edition (Grego And Rotwang)
 * Food Fight - Live Center Rev 5 w/ debounce delay position hack
@@ -580,3 +581,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for the Golden tee 3D golf games to itech32.c [arcadez]
 * Corrected color palette for trivquiz, statriv2, supertr2. [mahoneyt944]
 * Added custom low res backdrop for blueshrk [mahoneyt944]
+* Added support for Dottori-Man Jr. hack by Chris Covell [arnoldsecret]
