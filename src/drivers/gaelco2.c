@@ -667,7 +667,7 @@ static MEMORY_READ16_START( touchgo_readmem )
 	{ 0x300002, 0x300003, input_port_1_word_r },/* DSW #1 + Input 2P */
 	{ 0x300004, 0x300005, input_port_2_word_r },/* COINSW + Input 3P */
 	{ 0x300006, 0x300007, input_port_3_word_r },/* SERVICESW + Input 4P */
-/*	{ 0xfefffa, 0xfefffb, dallas_kludge_r },	/* DS5002FP related patch */
+/*	{ 0xfefffa, 0xfefffb, dallas_kludge_r },*/	/* DS5002FP related patch */
 	{ 0xfe0000, 0xfeffff, MRA16_RAM },			/* Work RAM */
 MEMORY_END
 
