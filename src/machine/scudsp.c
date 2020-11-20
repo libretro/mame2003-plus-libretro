@@ -59,9 +59,9 @@ struct {
 	   UINT32 md0[0x40],md1[0x40],md2[0x40],md3[0x40]; /*RAM memory*/
 	   UINT8  ra;									   /*RAM selector*/
 	   UINT32 rx;									   /*X-Bus register*/
-	   UINT64 mul;                                     /*Multiplier register* //*48-bits/*/
+	   UINT64 mul;                                     /*Multiplier register 48-bits*/
 	   UINT32 ry;									   /*Y-Bus register*/
-	   UINT64 alu;                                     /*ALU register*/       /*48-bits*/
+	   UINT64 alu;                                     /*ALU register       48-bits*/
 	   UINT16 ph;									   /*ALU high register*/
 	   UINT32 pl;									   /*ALU low register*/
 	   UINT16 ach;									   /*ALU external high register*/
