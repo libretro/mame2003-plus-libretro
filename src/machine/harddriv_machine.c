@@ -56,7 +56,7 @@ data16_t *hd68k_slapstic_base;
 data16_t *st68k_sloop_alt_base;
 
 data16_t *hdgsp_protection;
-data16_t *stmsp_sync[2];
+data16_t *stmsp_sync[3];
 
 data16_t *hdgsp_speedup_addr[2];
 offs_t hdgsp_speedup_pc;
