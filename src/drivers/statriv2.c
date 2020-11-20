@@ -11,7 +11,6 @@
 * in attract and fixing the questions so it actually asked more  *
 * than one per category.                                         *
 *                                                                *
-* Colours are wrong, what should they be?                        *
 * Game Speed too fast?                                           *
 *                                                                *
 * MG: Dave seems to think that the AY is hooked up wrong since   *
