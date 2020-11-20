@@ -696,7 +696,7 @@ if (palbase == 0xff) palbase = 0;	/* workaround for ddenlovr dynax logo*/
 VIDEO_UPDATE(ddenlovr)
 {
 #if 0
-	static int base = 0x24bbed;/*0x294a82;*/ /*0x27c47a; ;/* = 0x279a4b;*/ //0x2a0e7c;/*0x2a88ae;*/ //0x24bbed;*/
+	static int base = 0x24bbed;/*0x294a82;*/ /*0x27c47a;*/ /* = 0x279a4b;*/ /*0x2a0e7c;*/ /*0x2a88ae;*/ /*0x24bbed;*/
 
 	int next;
 	memset(pixmap[0],0,512*512);
