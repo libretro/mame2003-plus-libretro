@@ -601,6 +601,11 @@ static void neogeo_custom_memory(void)
 			!strcmp(Machine->gamedrv->name,"kof96h") ||
 			!strcmp(Machine->gamedrv->name,"kof97") ||
 			!strcmp(Machine->gamedrv->name,"kof97a") ||
+			!strcmp(Machine->gamedrv->name,"kof97pls") ||
+			!strcmp(Machine->gamedrv->name,"kog") ||
+			!strcmp(Machine->gamedrv->name,"kof98") ||
+			!strcmp(Machine->gamedrv->name,"kof98n") ||
+			!strcmp(Machine->gamedrv->name,"kof98k") ||
 			!strcmp(Machine->gamedrv->name,"kof98") ||
 			!strcmp(Machine->gamedrv->name,"kof98n") ||
 			!strcmp(Machine->gamedrv->name,"kof99") ||
