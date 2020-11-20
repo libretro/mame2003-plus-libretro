@@ -26,7 +26,7 @@ extern data16_t *hd68k_slapstic_base;
 extern data16_t *st68k_sloop_alt_base;
 
 extern data16_t *hdgsp_protection;
-extern data16_t *stmsp_sync[2];
+extern data16_t *stmsp_sync[3];
 
 extern data16_t *hdgsp_speedup_addr[2];
 extern offs_t hdgsp_speedup_pc;
