@@ -623,7 +623,7 @@ VIDEO_START( namcos1 )
 		/*case 0x0181:*/ /* Splatter House*/
 		/*case 0x1288:*/ /* Face Off*/
 		/*case 0xff90:*/ /* Puzzle Club*/
-		/*break;
+		/*break; */
 
 		case 0x0588: /* Berabohm*/
 		case 0x0787: /* Blazer*/
