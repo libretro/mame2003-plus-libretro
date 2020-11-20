@@ -369,7 +369,7 @@ static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0xfce00034, 0xfce00037, MWA32_NOP }, /* irq ack?*/
 	{ 0xfce00038, 0xfce0003b, reset_sub_w },
 	{ 0xfce00050, 0xfce0005f, MWA32_NOP },	/* watchdog? I haven't investigated*/
-/*	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 },  /* registers not ram? */
+/*	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 },*/  /* registers not ram? */
 	{ 0xfce00280, 0xfce0028f, ms32_brightness_w },	/* global brightness control*/
 	{ 0xfce00600, 0xfce0065f, MWA32_RAM, &ms32_roz_ctrl },	/* roz control registers */
 /*	{ 0xfce00800, 0xfce0085f, */ /* f1superb, roz #2 control?*/
@@ -378,8 +378,8 @@ static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0xfce00a7c, 0xfce00a7f, pip_w },	/* ??? layer related? seems to be always 0*/
 /*	{ 0xfce00e00, 0xfce00e03,  },	coin counters + something else*/
 
-/*	{ 0xfd104000, 0xfd105fff, MWA32_RAM },  /* f1superb */
-/*	{ 0xfd144000, 0xfd145fff, MWA32_RAM },  /* f1superb */
+/*	{ 0xfd104000, 0xfd105fff, MWA32_RAM },*/  /* f1superb */
+/*	{ 0xfd144000, 0xfd145fff, MWA32_RAM },*/  /* f1superb */
 
 	{ 0xfd180000, 0xfd19ffff, ms32_priram_w, &ms32_priram },	/* priority ram */
 	{ 0xfd1a0000, 0xfd1bffff, ms32_priram_w },			/* mirror only used by memory test in service mode */
