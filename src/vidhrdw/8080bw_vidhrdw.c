@@ -602,13 +602,8 @@ static VIDEO_UPDATE( blueshrk )
 {
 	/* update the bitmap (and erase old cross) */
 	video_update_8080bw_common(bitmap, cliprect);
-	draw_sight(bitmap,cliprect,((input_port_0_r(0) & 0x7f) * 2) - 12, 63);
 
-	/* Draw crosshairs to aim with */
-	int x_center = readinputport( 0 );
-	int y_center = 228;
-	draw_crosshair(bitmap,x_center,y_center,&Machine->visible_area);
-
+    draw_sight(bitmap,cliprect,((input_port_0_r(0) & 0x7f) * 2) - 12, 63);
 }
 
 static VIDEO_UPDATE( desertgu )
