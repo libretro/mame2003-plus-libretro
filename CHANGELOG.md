@@ -139,7 +139,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
-* The King Of Fighters 2003 (Decrypted)
+* The King Of Fighters 2003
 * The Lost Castle In Darkmist
 * Torus * Mature *
 * Touch & Go (Korea, unprotected)
@@ -168,6 +168,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
 * Cannon Dancer
+* Crouching Tiger Hidden Dragon 2003
+* Crouching Tiger Hidden Dragon 2003 Super Plus
 * Crystal Castles (Joystick Version)
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
@@ -182,6 +184,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hook (Japan Version)
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * Kabuki-Z (Japan)
+* King of Gladiator
 * Knuckle Bash 2
 * Mad Ball V2.0 * Mature * - Romset `madball`
 * Magical Drop
@@ -194,7 +197,22 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Target Ball (Romset `tgtballa` - family friendly version)
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
+* The King of Fighters '97 Plus
+* The King of Fighters '98 (Korean board, set 1)
 * The King of Fighters 10th Anniversary
+* The King of Fighters 10th Anniversary 2005 Unique
+* The King of Fighters 10th Anniversary Extra Plus
+* The King of Fighters 2001 (NGH-2621)
+* The King of Fighters 2002 Magic Plus
+* The King of Fighters 2002 Magic Plus II
+* The King of Fighters 2002 Plus
+* The King of Fighters 2002 Plus (bootleg set 2)
+* The King of Fighters 2003 (bootleg set 1)
+* The King of Fighters 2003 (bootleg set 2)
+* The King Of Fighters 2003 (Decrypted)
+* The King of Fighters 2004 Plus / Hero
+* The King of Fighters 2004 Ultra Plus
+* The King of Fighters Special Edition 2004
 * Undercover Cops (Alpha Renewal Version)
 * X-men (6 Players ver UCB)
 * World Cup Volley 95 Extra Version
@@ -582,3 +600,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Corrected color palette for trivquiz, statriv2, supertr2. [mahoneyt944]
 * Added custom low res backdrop for blueshrk [mahoneyt944]
 * Added support for Dottori-Man Jr. hack by Chris Covell [arnoldsecret]
+* Added encrypted KOF 2003 + clones for other KOF games [odarknighto]
