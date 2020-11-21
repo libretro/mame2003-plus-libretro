@@ -542,6 +542,69 @@ static void neogeo_gfx_decrypt(int extra_xor)
 	}
 }
 
+static void neogeo_gfx_decrypt_for_mc50(int extra_xor)
+{
+	int rom_size;
+	UINT8 *buf;
+	UINT8 *rom;
+	int rpos;
+
+	rom_size = memory_region_length(REGION_GFX3);
+	buf = malloc(rom_size);
+
+	if (!buf) return;
+
+	rom = memory_region(REGION_GFX3);
+
+	// Data xor
+	for (rpos = 0;rpos < rom_size/4;rpos++)
+	{
+		decrypt(buf+4*rpos+0, buf+4*rpos+3, rom[4*rpos+0], rom[4*rpos+3], type0_t03, type0_t12, type1_t03, rpos, (rpos>>8) & 1);
+		decrypt(buf+4*rpos+1, buf+4*rpos+2, rom[4*rpos+1], rom[4*rpos+2], type0_t12, type0_t03, type1_t12, rpos, ((rpos>>16) ^ address_16_23_xor2[(rpos>>8) & 0xff]) & 1);
+	}
+
+	// Address xor
+	for (rpos = 0;rpos < rom_size/4;rpos++)
+	{
+		int baser;
+
+		baser = rpos;
+
+		baser ^= extra_xor;
+
+		baser ^= address_8_15_xor1[(baser >> 16) & 0xff] << 8;
+		baser ^= address_8_15_xor2[baser & 0xff] << 8;
+		baser ^= address_16_23_xor1[baser & 0xff] << 16;
+		baser ^= address_16_23_xor2[(baser >> 8) & 0xff] << 16;
+		baser ^= address_0_7_xor[(baser >> 8) & 0xff];
+
+
+		if (rom_size == 0x3000000) /* special handling for preisle2 */
+		{
+			if (rpos < 0x2000000/4)
+				baser &= (0x2000000/4)-1;
+			else
+				baser = 0x2000000/4 + (baser & ((0x1000000/4)-1));
+		}
+		else if (rom_size == 0x6000000)	/* special handling for kf2k3pcb */
+		{
+			if (rpos < 0x4000000/4)
+				baser &= (0x4000000/4)-1;
+			else
+				baser = 0x4000000/4 + (baser & ((0x1000000/4)-1));
+		}
+		else /* Clamp to the real rom size */
+			baser &= (rom_size/4)-1;
+
+		rom[4*rpos+0] = buf[4*baser+0];
+		rom[4*rpos+1] = buf[4*baser+1];
+		rom[4*rpos+2] = buf[4*baser+2];
+		rom[4*rpos+3] = buf[4*baser+3];
+	}
+
+	free(buf);
+}
+
 
 /* CMC42 protection chip */
 void kof99_neogeo_gfx_decrypt(int extra_xor)
@@ -571,6 +634,22 @@ void kof2000_neogeo_gfx_decrypt(int extra_xor)
 	address_16_23_xor2 = kof2000_address_16_23_xor2;
 	address_0_7_xor =    kof2000_address_0_7_xor;
 	neogeo_gfx_decrypt(extra_xor);
+
+	/* here I should also decrypt the sound ROM */
+}
+
+void cmc50_neogeo_gfx_decrypt(int extra_xor)
+{
+	type0_t03 =          kof2000_type0_t03;
+	type0_t12 =          kof2000_type0_t12;
+	type1_t03 =          kof2000_type1_t03;
+	type1_t12 =          kof2000_type1_t12;
+	address_8_15_xor1 =  kof2000_address_8_15_xor1;
+	address_8_15_xor2 =  kof2000_address_8_15_xor2;
+	address_16_23_xor1 = kof2000_address_16_23_xor1;
+	address_16_23_xor2 = kof2000_address_16_23_xor2;
+	address_0_7_xor =    kof2000_address_0_7_xor;
+	neogeo_gfx_decrypt_for_mc50(extra_xor);
 
 	/* here I should also decrypt the sound ROM */
 }

@@ -52,6 +52,7 @@ extern int neogeo_fix_bank_type;
 
 void kof99_neogeo_gfx_decrypt(int extra_xor);
 void kof2000_neogeo_gfx_decrypt(int extra_xor);
+void cmc50_neogeo_gfx_decrypt(int extra_xor);
 
 
 /*----------- defined in vidhrdw/neogeo.c -----------*/
