@@ -109,10 +109,18 @@ PALETTE_INIT(statriv2)
 {
 	int i;
 
+	for (i = 0; i < 8; i++)
+	{
+		palette_set_color(i,
+			0xff * ((i >> 2) & 1),
+			0xff * ((i >> 0) & 1),
+			0xff * ((i >> 1) & 1));
+	}
+
 	for (i = 0; i < 64; i++)
 	{
-		palette_set_color(2*i + 0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
-		palette_set_color(2*i + 1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
+		colortable[2*i+0] = i % 8;
+		colortable[2*i+1] = i / 8;
 	}
 }
 
