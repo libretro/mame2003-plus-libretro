@@ -328,6 +328,18 @@ static PORT_WRITE_START( writeport )
 	{ 0x88, 0x8f, m92_pf2_control_w },
 	{ 0x90, 0x97, m92_pf3_control_w },
 	{ 0x98, 0x9f, m92_master_control_w },
+/*	{ 0xc0, 0xc1, m92_sound_reset_w }, */ /* causes breakage with certain games */
+PORT_END
+
+static PORT_WRITE_START( psoldier_writeport )
+	{ 0x00, 0x01, m92_soundlatch_w },
+	{ 0x02, 0x03, m92_coincounter_w },
+	{ 0x20, 0x21, m92_bankswitch_w },
+	{ 0x40, 0x43, MWA_NOP }, /* Interrupt controller, only written to at bootup */
+	{ 0x80, 0x87, m92_pf1_control_w },
+	{ 0x88, 0x8f, m92_pf2_control_w },
+	{ 0x90, 0x97, m92_pf3_control_w },
+	{ 0x98, 0x9f, m92_master_control_w },
 	{ 0xc0, 0xc1, m92_sound_reset_w },
 PORT_END
 
@@ -1283,7 +1295,7 @@ static MACHINE_DRIVER_START( psoldier )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(V33, 18000000/2)		/* NEC V33, 18 MHz clock */
 	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_PORTS(readport,writeport)
+	MDRV_CPU_PORTS(readport,psoldier_writeport)
 	MDRV_CPU_VBLANK_INT(m92_interrupt,1)
 
 	MDRV_CPU_ADD(V30, 14318180/2)
