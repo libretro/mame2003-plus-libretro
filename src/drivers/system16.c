@@ -7132,9 +7132,9 @@ ROM_END
 GAME( 1985, mjleague, 0,        mjleague, mjleague, mjleague, ROT270, "Sega",    "Major League" )
 GAME( 1986, bodyslam, 0,        bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Body Slam" )
 GAME( 1986, dumpmtmt, bodyslam, bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Dump Matsumoto (Japan)" )
-GAME( 1986, quartet,  0,        quartet,  quartet,  quartet,  ROT0,   "Sega",    "Quartet (Rev A, 8751 315-5194)" )
-GAME( 1986, quartetj, quartet,  quartet,  quartet,  quartet,  ROT0,   "Sega",    "Quartet (8751 315-5194)" )
-GAME( 1986, quartet2, quartet,  quartet2, quartet2, quartet2, ROT0,   "Sega",    "Quartet 2 (8751 317-0010)" )
+GAME( 1986, quartet,  0,        quartet,  quartet,  quartet,  ROT0,   "Sega",    "Quartet (Rev A, 8751 315-5194)", GAME_UNEMULATED_PROTECTION )
+GAME( 1986, quartetj, quartet,  quartet,  quartet,  quartet,  ROT0,   "Sega",    "Quartet (8751 315-5194)", GAME_UNEMULATED_PROTECTION )
+GAME( 1986, quartet2, quartet,  quartet2, quartet2, quartet2, ROT0,   "Sega",    "Quartet 2 (8751 317-0010)", GAME_UNEMULATED_PROTECTION )
 GAME( 1986, quartt2j, quartet,  quartet2, quartet2, quartet2, ROT0,   "Sega",    "Quartet 2 (unprotected)" )
 
 /* System16A */
