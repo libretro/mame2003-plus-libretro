@@ -137,9 +137,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tetris (Sega System E)
 * Tetris The Absolute The Grand Master 2
 * The Killing Blade
-* The King Of Fighters 2001
-* The King Of Fighters 2002
-* The King Of Fighters 2003
+* The King of Fighters 2001
+* The King of Fighters 2002
+* The King of Fighters 2003
 * The Lost Castle In Darkmist
 * Torus * Mature *
 * Touch & Go (Korea, unprotected)
@@ -209,7 +209,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2002 Plus (bootleg set 2)
 * The King of Fighters 2003 (bootleg set 1)
 * The King of Fighters 2003 (bootleg set 2)
-* The King Of Fighters 2003 (Decrypted)
+* The King of Fighters 2003 (Decrypted)
 * The King of Fighters 2004 Plus / Hero
 * The King of Fighters 2004 Ultra Plus
 * The King of Fighters Special Edition 2004
@@ -277,7 +277,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hard Head 2 - Romset `hardhea2`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * IGMO - Romset `igmo` color fixed
-* Ironhorse - Romset `ironhors`
+* Iron Horse - Romset `ironhors`
 * Joshi Volleyball - Romset `josvolly`
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
@@ -288,7 +288,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
 * Night Slashers - Romset `nslasher`
-* Off Road Challenge - Romset `offroadc`
+* Off Road Challenge - Romset `offroadc` - Requires a fast system
 * Phantasm - Romset `phantasm`
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
