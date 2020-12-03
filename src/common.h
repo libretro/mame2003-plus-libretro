@@ -142,6 +142,7 @@ enum
 	REGION_USER7,
 	REGION_USER8,
 	REGION_DISKS,
+	audiocrypt,
 	REGION_MAX
 };
 
