@@ -453,7 +453,7 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 	struct InternalMachineDriver drv;
 	int i=0;
 
-  if (!sampleof){
+  if (!sampleof || true){
 
 		expand_machine_driver(game->drv, &drv);
 
