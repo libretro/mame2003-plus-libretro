@@ -74,7 +74,7 @@ int			mj_current_music = 0;
 
 const char *const moonwalker_samples_set_names[] =
 {
-	"*moonwalker",
+	"*moonwalk",
 	"bad-01",
 	"bad-02",
 	"smoothcriminal-01",
