@@ -5768,6 +5768,7 @@ Other Sun games
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
+  DRIVER( svc )	    /* 0269 (c) 2003 SNK Playmore */
 	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
