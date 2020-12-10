@@ -6571,6 +6571,39 @@ ROM_START( zintrckb )
 	ROM_LOAD16_BYTE( "zin_c2.rom", 0x000001, 0x200000, CRC(844ed4b3) SHA1(fb7cd057bdc6cbe8b78097dd124118bae7402256) )
 ROM_END
 
+ROM_START( svc ) /* Encrypted Set, MVS Set */
+	ROM_REGION( 0x800000, REGION_CPU1, 0 )
+	ROM_LOAD32_WORD_SWAP( "269-p1c.bin", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097) )
+	ROM_LOAD32_WORD_SWAP( "269-p2c.bin", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7) )
+
+	/* The Encrypted Boards do _not_ have an s1 rom, data for it comes from the Cx ROMs */
+	ROM_REGION( 0x80000, REGION_GFX1, 0 ) /* larger char set */
+	ROM_FILL( 0x000000, 0x80000, 0 )
+	ROM_REGION( 0x20000, REGION_GFX2, 0 )
+	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
+
+	/* Encrypted */
+    NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	/* Encrypted */
+	ROM_LOAD( "269-v1c.bin", 0x000000, 0x800000, CRC(c659b34c) SHA1(1931e8111ef43946f68699f8707334c96f753a1e) )
+	ROM_LOAD( "269-v2c.bin", 0x800000, 0x800000, CRC(dd903835) SHA1(e58d38950a7a8697bb22a1cc7a371ae6664ae8f9) )
+
+	NO_DELTAT_REGION
+		
+	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
+	/* Encrypted */
+	ROM_LOAD16_BYTE( "269-c1c.bin", 0x0000000, 0x800000, CRC(887b4068) SHA1(227cdcf7a10a415f1e3afe7ae97acc9afc2cc8e1) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c2c.bin", 0x0000001, 0x800000, CRC(4e8903e4) SHA1(31daaa4fd6c23e8f0a8428931c513d97d2eee1bd) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c3c.bin", 0x1000000, 0x800000, CRC(7d9c55b0) SHA1(1f94a948b3e3c31b3ff05518ef525031a3cb2c62) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c4c.bin", 0x1000001, 0x800000, CRC(8acb5bb6) SHA1(2c27d6e309646d7b84da85f78c06e4aaa74e844b) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c5c.bin", 0x2000000, 0x800000, CRC(097a4157) SHA1(54d839f55d27f68c704a94ea3c63c644ffc22ca4) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c6c.bin", 0x2000001, 0x800000, CRC(e19df344) SHA1(20448add53ab25dd3a8f0b681131ad3b9c68acc9) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c7c.bin", 0x3000000, 0x800000, CRC(d8f0340b) SHA1(43114af7557361a8903bb8cf8553f602946a9220) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c8c.bin", 0x3000001, 0x800000, CRC(2570b71b) SHA1(99266e1c2ffcf324793fb5c55325fbc7e6265ac0) ) /* Plane 2,3 */
+ROM_END
+
 ROM_START( svcboot )
 	ROM_REGION( 0x800000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "svc-p1.bin", 0x000000, 0x800000, CRC(0348f162) SHA1(c313351d68effd92aeb80ed320e4f8c26a3bb53e) )
@@ -8721,6 +8754,160 @@ DRIVER_INIT( kf2k3upl )
 }
 /* kof2003d Init End */
 
+/* svc Init Start */
+
+static void svcchaos_px_decrypt( void )
+{
+	const unsigned char xor1[ 0x20 ] = {
+		0x3b, 0x6a, 0xf7, 0xb7, 0xe8, 0xa9, 0x20, 0x99, 0x9f, 0x39, 0x34, 0x0c, 0xc3, 0x9a, 0xa5, 0xc8,
+		0xb8, 0x18, 0xce, 0x56, 0x94, 0x44, 0xe3, 0x7a, 0xf7, 0xdd, 0x42, 0xf0, 0x18, 0x60, 0x92, 0x9f,
+	};
+
+	const unsigned char xor2[ 0x20 ] = {
+		0x69, 0x0b, 0x60, 0xd6, 0x4f, 0x01, 0x40, 0x1a, 0x9f, 0x0b, 0xf0, 0x75, 0x58, 0x0e, 0x60, 0xb4,
+		0x14, 0x04, 0x20, 0xe4, 0xb9, 0x0d, 0x10, 0x89, 0xeb, 0x07, 0x30, 0x90, 0x50, 0x0e, 0x20, 0x26,
+	};
+
+	int i;
+	int ofst;
+	UINT8 *rom, *buf;
+
+	rom = memory_region( REGION_CPU1 );
+
+	for( i = 0; i < 0x100000; i++ ){
+		rom[ i ] ^= xor1[ (i % 0x20) ];
+	}
+
+	for( i = 0x100000; i < 0x800000; i++ ){
+		rom[ i ] ^= xor2[ (i % 0x20) ];
+	}
+
+	for( i = 0x100000; i < 0x800000; i += 4 ){
+		UINT16 *rom16 = (UINT16*)&rom[ i + 1 ];
+		*rom16 = BITSWAP16( *rom16, 15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0 );
+	}
+
+	buf = malloc( 0x800000 );
+	memcpy( buf, rom, 0x800000 );
+
+	for( i = 0; i < 0x0100000 / 0x10000; i++ ){
+		ofst = (i & 0xf0) + BITSWAP8( (i & 0x0f), 7, 6, 5, 4, 2, 3, 0, 1 );
+		memcpy( &rom[ i * 0x10000 ], &buf[ ofst * 0x10000 ], 0x10000 );
+	}
+
+	for( i = 0x100000; i < 0x800000; i += 0x100 ){
+		ofst = (i & 0xf000ff) + 
+			   ((i & 0x000f00) ^ 0x00a00) +
+			   (BITSWAP8( ((i & 0x0ff000) >> 12), 4, 5, 6, 7, 1, 0, 3, 2 ) << 12);
+
+		memcpy( &rom[ i ], &buf[ ofst ], 0x100 );
+	}
+
+	free( buf );
+
+	buf = malloc( 0x800000 );
+	memcpy( buf, rom, 0x800000 );
+	memcpy( &rom[ 0x100000 ], &buf[ 0x700000 ], 0x100000 );
+	memcpy( &rom[ 0x200000 ], &buf[ 0x100000 ], 0x600000 );
+	free( buf );
+}
+
+static void svcchaos_gfx_decrypt( void )
+{
+	const unsigned char xor[ 4 ] = {
+		0x34, 0x21, 0xc4, 0xe9,
+	};
+
+	int i;
+	int ofst;
+
+	int rom_size = memory_region_length( REGION_GFX3 );
+	UINT8 *rom = memory_region( REGION_GFX3 );
+	UINT8 *buf = malloc( rom_size );
+
+	for( i = 0; i < rom_size; i++ ){
+		rom[ i ] ^= xor[ (i % 4) ];
+	}
+
+	for( i = 0; i < rom_size; i += 4 ){
+		UINT32 *rom32 = (UINT32*)&rom[ i ];
+		*rom32 = BITSWAP32( *rom32, 0x09, 0x0d, 0x13, 0x00, 0x17, 0x0f, 0x03, 0x05,
+									0x04, 0x0c, 0x11, 0x1e, 0x12, 0x15, 0x0b, 0x06,
+									0x1b, 0x0a, 0x1a, 0x1c, 0x14, 0x02, 0x0e, 0x1d,
+									0x18, 0x08, 0x01, 0x10, 0x19, 0x1f, 0x07, 0x16 );
+	}
+
+	memcpy( buf, rom, rom_size );
+
+	for( i = 0; i < rom_size / 4; i++ ){
+		ofst =  BITSWAP24( (i & 0x1fffff), 0x17, 0x16, 0x15, 0x04, 0x0b, 0x0e, 0x08, 0x0c,
+										   0x10, 0x00, 0x0a, 0x13, 0x03, 0x06, 0x02, 0x07,
+										   0x0d, 0x01, 0x11, 0x09, 0x14, 0x0f, 0x12, 0x05 );
+		ofst ^= 0x0c8923;
+		ofst += (i & 0xffe00000);
+
+		memcpy( &rom[ i * 4 ], &buf[ ofst * 4 ], 0x04 );
+	}
+
+	free( buf );
+
+	kof2000_neogeo_gfx_decrypt(0x57);
+
+	rom = memory_region( REGION_GFX1 );
+	rom_size = memory_region_length( REGION_GFX1 );
+
+	for( i = 0; i < rom_size; i++ ){
+		rom[ i ] = BITSWAP8( rom[ i ] ^ 0xd2, 4, 0, 7, 2, 5, 1, 6, 3 );
+	}
+}
+
+static void svcchaos_vx_decrypt( void )
+{
+	const unsigned char xor[ 0x08 ] = {
+		0xc3, 0xfd, 0x81, 0xac, 0x6d, 0xe7, 0xbf, 0x9e
+	};
+
+	int ofst;
+
+	int rom_size = memory_region_length( REGION_SOUND1 );
+	UINT8 *rom = memory_region( REGION_SOUND1 );
+	UINT8 *buf = malloc( rom_size );
+	int i;
+
+	memcpy( buf, rom, rom_size );
+
+	for( i=0;i<rom_size;i++ ){
+		ofst = (i & 0xfefffe) |
+			   ((i & 0x010000) >> 16) |
+			   ((i & 0x000001) << 16);
+
+		ofst ^= 0xc2000;
+
+		rom[ ofst ] = buf[ ((i + 0xffac28) & 0xffffff) ] ^ xor[ (ofst & 0x07) ];
+	}
+
+	free( buf );
+}
+
+DRIVER_INIT( svc )
+{
+	svcchaos_px_decrypt();
+	svcchaos_vx_decrypt();
+	neogeo_cmc50_m1_decrypt();
+	kof2000_neogeo_gfx_decrypt(0x57);
+	
+	neogeo_fix_bank_type = 2;
+	init_neogeo();
+	
+	install_mem_read16_handler( 0, 0x2fe000, 0x2fffdf, MRA16_RAM );
+	install_mem_write16_handler( 0, 0x2fe000, 0x2fffdf, MWA16_RAM );
+	install_mem_read16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_r );
+	install_mem_write16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_w );
+	install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_r );
+	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
+}
+/* svc Init End */
+
 /******************************************************************************/
 
 static UINT32 cpu1_second_bankaddress;
@@ -8980,14 +9167,15 @@ GAMEB( 1998, shocktr2, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sauru
 GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Ironclad (Prototype)", &neogeo_ctrl, NULL )
 
 /* SNK Playmore */
+GAMEB( 2003, svc,      neogeo,   neogeo, neogeo, neogeo,  svc,      ROT0, "Snk Playmore", "Snk Vs Capcom  - Svc Chaos (MVS)", &neogeo_ctrl, NULL )
 GAMEB( 2003, svcboot,  neogeo,   neogeo, neogeo, neogeo,  svcboot,  ROT0, "Snk Playmore", "Snk Vs Capcom  - Svc Chaos (Bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "Snk Playmore", "Metal Slug 5", &neogeo_ctrl, NULL )
 GAMEB( 2003, kof2003,  neogeo,   neogeo, neogeo, neogeo,  kof2003,  ROT0, "SNK Playmore", "The King of Fighters 2003 (World / US, MVS)", &neogeo_ctrl, NULL )
 GAMEB( 2003, kof2003d, neogeo,   neogeo, neogeo, neogeo,  kof2003d, ROT0, "Snk Playmore", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
-GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo, kf2k3bl, ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
-GAMEB( 2003, kf2k3bla,  kof2003,  neogeo, neogeo, neogeo, kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo, kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo, kf2k3upl, ROT0, "bootleg", "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3bl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
+GAMEB( 2003, kf2k3bla, kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo,  kf2k3upl, ROT0, "bootleg", "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
 	
 /* Sunsoft */
 GAMEB( 1995, galaxyfg, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Sunsoft", "Galaxy Fight - Universal Warriors", &neogeo_ctrl, NULL )
