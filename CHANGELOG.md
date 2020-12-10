@@ -119,6 +119,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sengoku 3
 * Skull Fang
 * Slap Shooter
+* Snk Vs Capcom : Svc Chaos (MVS)
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Space Fever High Splitter
@@ -601,4 +602,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added custom low res backdrop for blueshrk [mahoneyt944]
 * Added support for Dottori-Man Jr. hack by Chris Covell [arnoldsecret]
 * Added encrypted KOF 2003 + clones for other KOF games [odarknighto]
-* Ported NeoGeo M1 decrypted program from MAME128, benefiting kof2000, kof2000n, kof2001, kof2001h, kof2002, kf2k2pls, kf2kpla, kf2k2mp, kf2k2mp2, kof2003, mslug4, rotd, matrim, pnyaa, samsho5, samsh5sp, mslug5 [odarknighto]
+* Added support for Snk Vs Capcom  - Svc Chaos (MVS) and hooked it up to use the new m1 decryption [arcadez]
+* Ported NeoGeo M1 decrypted program from MAME128, benefiting kof2000, kof2000n, kof2001, kof2001h, kof2002, kf2k2pls, kf2kpla, kf2k2mp, kf2k2mp2, kof2003, mslug4, rotd, matrim, pnyaa, samsho5, samsh5sp, mslug5, svc [odarknighto]
