@@ -5820,7 +5820,7 @@ ROM_START( nitd ) /* Original Version - Encrypted GFX */
 	ROM_LOAD16_BYTE( "260-c2.bin", 0x0000001, 0x800000, CRC(d2b04b0d) SHA1(ce4322e6cfacb627fe997efe81018861e21d3c27) )
 ROM_END
 
-ROM_START( bbbuster )
+ROM_START( b2b )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "071-p1.bin", 0x000000, 0x80000, CRC(7687197d) SHA1(4bb9cb7819807f7a7e1f85f1c4faac4a2f8761e8) )
 
@@ -6583,7 +6583,7 @@ ROM_START( svc ) /* Encrypted Set, MVS Set */
 	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
 
 	/* Encrypted */
-    NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
+  NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
 	/* Encrypted */
@@ -9219,7 +9219,7 @@ GAMEB( 1998, flipshot, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Captain Tomaday", &neogeo_ctrl, NULL )
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Musashi Ganryuuki", &neogeo_ctrl, NULL )	/* Encrypted GFX */
 GAMEB( 2000, bangbead, neogeo,   neogeo, raster, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", &neogeo_ctrl, NULL )
-GAMEB( 1994, bbbuster, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
+GAMEB( 1994, b2b,      neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
 	
 /* NG:DEV.TEAM */
 GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DEV.TEAM", "Last Hope", &neogeo_ctrl, NULL )
