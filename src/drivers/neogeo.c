@@ -8897,14 +8897,15 @@ DRIVER_INIT( svc )
 	kof2000_neogeo_gfx_decrypt(0x57);
 	
 	neogeo_fix_bank_type = 2;
-	init_neogeo();
-	
+  
 	install_mem_read16_handler( 0, 0x2fe000, 0x2fffdf, MRA16_RAM );
 	install_mem_write16_handler( 0, 0x2fe000, 0x2fffdf, MWA16_RAM );
 	install_mem_read16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_r );
 	install_mem_write16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_w );
 	install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_r );
 	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
+  
+  init_neogeo();
 }
 /* svc Init End */
 
