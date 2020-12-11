@@ -120,7 +120,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Skull Fang
 * Slap Shooter
 * Snk Vs Capcom : Svc Chaos (MVS)
-* Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Space Fever High Splitter
 * Space Launcher
@@ -194,6 +193,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Progear No Arashi
 * Renegade (US, Bootleg)
 * Sexy Parodius (Ver AAA) * Mature *
+* Snk Vs Capcom : Svc Chaos (bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Target Ball (Romset `tgtballa` - family friendly version)
 * Tetris the Absolute The Grand Master 2 Plus
