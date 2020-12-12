@@ -109,6 +109,7 @@ else ifeq ($(platform), linux-portable)
 
 else ifeq ($(platform), osx)
    TARGET = $(TARGET_NAME)_libretro.dylib
+   PLATCFLAGS += -Wno-error=implicit-function-declaration
    fpic = -fPIC
 
 ifeq ($(ARCH),ppc)
