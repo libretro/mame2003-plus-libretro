@@ -406,11 +406,6 @@ static void get_tile_info(int tile_index)
 	code = videoram[tile_index] + (colbank << 8);
 	attr = colorram[tile_index & 0x1f];
 
-	/* remove when we have proms dumps for it */
-	if (!strcmp(Machine->gamedrv->name, "8bpm"))
-	{
-		attr = 1;
-	}
 
 	SET_TILE_INFO(0,code,attr & 0x1f,0)
 }

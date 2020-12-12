@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
 	M.A.M.E. Neo Geo driver presented to you by the Shin Emu Keikaku team.
 	The following people have all spent probably far too much time on this:
 	AVDB
@@ -5820,7 +5820,7 @@ ROM_START( nitd ) /* Original Version - Encrypted GFX */
 	ROM_LOAD16_BYTE( "260-c2.bin", 0x0000001, 0x800000, CRC(d2b04b0d) SHA1(ce4322e6cfacb627fe997efe81018861e21d3c27) )
 ROM_END
 
-ROM_START( bbbuster )
+ROM_START( b2b )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "071-p1.bin", 0x000000, 0x80000, CRC(7687197d) SHA1(4bb9cb7819807f7a7e1f85f1c4faac4a2f8761e8) )
 
@@ -6542,8 +6542,8 @@ ROM_START( pnyaa ) /* Encrypted Set */
 
 	ROM_REGION( 0x1000000, REGION_GFX3, 0 )
 	/* Encrypted */
-	ROM_LOAD16_BYTE( "267-c1.bin", 0x0000000, 0x800000, BAD_DUMP CRC(2e20617a) SHA1(ed73724377a321aa024a5886eb148c416d4451aa) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "267-c2.bin", 0x0000001, 0x800000, BAD_DUMP CRC(4edfa720) SHA1(1407a1d0d44f73c1a196c95d368d6451b17f6176) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "267-c1.bin", 0x0000000, 0x800000, CRC(5eebee65) SHA1(7eb3eefdeb24e19831d0f51d4ea07a0292c25ab6) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "267-c2.bin", 0x0000001, 0x800000, CRC(2b67187b) SHA1(149c3efd3c444fd0d35a97fa2268102bf76be3ed) ) /* Plane 2,3 */
 ROM_END
 
 
@@ -7409,31 +7409,40 @@ DRIVER_INIT ( ct2k3sp )
 	patch_cthd2003();
 }
 
+void neo_pcm2_snk_1999(int value);
+
+/* Neo-Pcm2 Drivers for Encrypted V Roms */
+void neo_pcm2_snk_1999(int value)
+{	/* thanks to Elsemi for the NEO-PCM2 info */
+	UINT16 *rom = (UINT16 *)memory_region(REGION_SOUND1);
+	int size = memory_region_length(REGION_SOUND1);
+	int i, j;
+
+	if( rom != NULL )
+	{	/* swap address lines on the whole ROMs */
+		UINT16 *buffer = malloc((value / 2) * sizeof(UINT16));
+		if (!buffer)
+			return;
+
+		for( i = 0; i < size / 2; i += ( value / 2 ) )
+		{
+			memcpy( buffer, &rom[ i ], value );
+			for( j = 0; j < (value / 2); j++ )
+			{
+				rom[ i + j ] = buffer[ j ^ (value/4) ];
+			}
+		}
+		free(buffer);
+	}
+}
+
 DRIVER_INIT( mslug4 )
 {
-	data16_t *rom;
-	int i,j;
-
 	neogeo_fix_bank_type = 1; /* maybe slightly different, USA violent content screen is wrong */
 	kof2000_neogeo_gfx_decrypt(0x31);
 	neogeo_cmc50_m1_decrypt();
 	init_neogeo();
-
-	/* thanks to Elsemi for the NEO-PCM2 info */
-	rom = (data16_t *)(memory_region(REGION_SOUND1));
-	if( rom != NULL )
-	{
-		/* swap address lines on the whole ROMs */
-		for( i = 0; i < 0x1000000 / 2; i += 8 / 2 )
-		{
-			data16_t buffer[ 8 / 2 ];
-			memcpy( buffer, &rom[ i ], 8 );
-			for( j = 0; j < 8 / 2; j++ )
-			{
-				rom[ i + j ] = buffer[ j ^ 2 ];
-			}
-		}
-	}
+	neo_pcm2_snk_1999(8);
 }
 
 DRIVER_INIT( kof99n )
@@ -7509,6 +7518,7 @@ DRIVER_INIT( sengoku3 )
 
 DRIVER_INIT( pnyaa )
 {
+	neo_pcm2_snk_1999(4);
 	neogeo_fix_bank_type = 1;
 	kof2000_neogeo_gfx_decrypt(0x2e);
 	neogeo_cmc50_m1_decrypt();
@@ -7617,29 +7627,12 @@ DRIVER_INIT( popbounc )
 
 DRIVER_INIT( rotd )
 {
-	data16_t *rom;
-	int i,j;
-
+	neo_pcm2_snk_1999(16);
 	neogeo_fix_bank_type = 1;
 	neogeo_cmc50_m1_decrypt();
 	kof2000_neogeo_gfx_decrypt(0x3f);
 	init_neogeo();
 
-	/* thanks to Elsemi for the NEO-PCM2 info */
-	rom = (data16_t *)(memory_region(REGION_SOUND1));
-	if( rom != NULL )
-	{
-		/* swap address lines on the whole ROMs */
-		for( i = 0; i < 0x1000000 / 2; i += 16 / 2 )
-		{
-			data16_t buffer[ 16 / 2 ];
-			memcpy( buffer, &rom[ i ], 16 );
-			for( j = 0; j < 16 / 2; j++ )
-			{
-				rom[ i + j ] = buffer[ j ^ 4 ];
-			}
-		}
-	}
 }
 
 void kof2002_decrypt_68k(void)
@@ -8895,17 +8888,14 @@ DRIVER_INIT( svc )
 	svcchaos_vx_decrypt();
 	neogeo_cmc50_m1_decrypt();
 	kof2000_neogeo_gfx_decrypt(0x57);
-	
 	neogeo_fix_bank_type = 2;
-  
 	install_mem_read16_handler( 0, 0x2fe000, 0x2fffdf, MRA16_RAM );
 	install_mem_write16_handler( 0, 0x2fe000, 0x2fffdf, MWA16_RAM );
 	install_mem_read16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_r );
 	install_mem_write16_handler( 0, 0x2fffe0, 0x2fffef, mv0_prot_w );
 	install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_r );
 	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
-  
-  init_neogeo();
+	init_neogeo();
 }
 /* svc Init End */
 
@@ -9229,7 +9219,7 @@ GAMEB( 1998, flipshot, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Captain Tomaday", &neogeo_ctrl, NULL )
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Musashi Ganryuuki", &neogeo_ctrl, NULL )	/* Encrypted GFX */
 GAMEB( 2000, bangbead, neogeo,   neogeo, raster, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", &neogeo_ctrl, NULL )
-GAMEB( 1994, bbbuster, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
+GAMEB( 1994, b2b,      neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
 	
 /* NG:DEV.TEAM */
 GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DEV.TEAM", "Last Hope", &neogeo_ctrl, NULL )

@@ -265,6 +265,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dragon World - Romset `drgnwrld`
 * Driftout 94 - Romset `drifto94`
 * Eagle Shot Golf - Romsets `eaglshot` and `eaglshta` - Playable with minor remaining graphical issues
+* Eight Ball Action (Pacman conversion) - Romset `8bpm` - colors fixed
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
 * F1 Super Lap (Japan) - Romset `f1lapj`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
@@ -288,6 +289,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Max RPM - Romset `maxrpm`
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
+* Mr. TNT - Romset `mrtnt` - colors fixed
 * Night Slashers - Romset `nslasher`
 * Off Road Challenge - Romset `offroadc` - Requires a fast system
 * Phantasm - Romset `phantasm`
@@ -604,3 +606,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added encrypted KOF 2003 + clones for other KOF games [odarknighto]
 * Added support for Snk Vs Capcom  - Svc Chaos (MVS) and hooked it up to use the new m1 decryption [arcadez]
 * Ported NeoGeo M1 decrypted program from MAME128, benefiting kof2000, kof2000n, kof2001, kof2001h, kof2002, kf2k2pls, kf2kpla, kf2k2mp, kf2k2mp2, kof2003, mslug4, rotd, matrim, pnyaa, samsho5, samsh5sp, mslug5, svc [odarknighto]
+* Added missing color proms for mrtnt and 8bpm [mahoneyt944]
