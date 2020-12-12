@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
 	M.A.M.E. Neo Geo driver presented to you by the Shin Emu Keikaku team.
 	The following people have all spent probably far too much time on this:
 	AVDB
