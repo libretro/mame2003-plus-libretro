@@ -143,28 +143,50 @@ static READ16_HANDLER( boxingb_input_port_1_r )
  *
  *************************************/
 
+/* Overlay based on colours shown in videos: */
+/* https://www.youtube.com/watch?v=D6DkKPy3Q_I */
+/* https://www.youtube.com/watch?v=8HHRCA6CS8k */
+/* Overlay is quite visible in a lot of machines so is reproduced */
+/* faithfully here. */
+#define STARCAS_RED		MAKE_ARGB(0x24,0xff,0x20,0x20)
+#define STARCAS_ORANGE		MAKE_ARGB(0x24,0xff,0xa5,0x00)
+#define STARCAS_YELLOW		MAKE_ARGB(0x24,0xff,0xff,0x20)
+#define STARCAS_BLUE		MAKE_ARGB(0x24,0x1f,0x75,0xfe)
 OVERLAY_START( starcas_overlay )
-	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0,       MAKE_ARGB(0x24,0x00,0x3c,0xff) )
-	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.1225, MAKE_ARGB(0x24,0xff,0x20,0x20) )
-	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.0950, MAKE_ARGB(0x24,0xff,0x80,0x10) )
-	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.0725, MAKE_ARGB(0x24,0xff,0xff,0x20) )
+	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0,       STARCAS_BLUE)
+	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.1225, STARCAS_RED)
+	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.0950, STARCAS_ORANGE)
+	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.0725, STARCAS_YELLOW)
 OVERLAY_END
 
 
+/* Overlay based on colours shown in videos: */
+/* https://www.youtube.com/watch?v=kbm5sw2eHQs */
+/* https://www.youtube.com/watch?v=9mMjxeSmUrs */
+#define TAILG_CYAN		MAKE_ARGB(0x04,0x20,0xff,0xff)
 OVERLAY_START( tailg_overlay )
-	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, MAKE_ARGB(0x04,0x20,0xff,0xff) )
+	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, TAILG_CYAN)
 OVERLAY_END
 
 
+/* Overlay based on colours shown in video: */
+/* https://www.youtube.com/watch?v=MPGpq6iTetk */
+#define SUNDANCE_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
 OVERLAY_START( sundance_overlay )
-	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, MAKE_ARGB(0x04,0xff,0xff,0x20) )
+	OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, SUNDANCE_YELLOW)
 OVERLAY_END
 
 
+/* Overlay based on colours shown in videos: */
+/* https://www.youtube.com/watch?v=jQdK9k86Ivw */
+/* https://www.youtube.com/watch?v=I2fKvSmph8g */
+#define SOLARQ_BLUE             MAKE_ARGB(0x04,0x1f,0x75,0xfe)
+#define SOLARQ_RED		MAKE_ARGB(0x04,0xff,0x20,0x20)
+#define SOLARQ_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
 OVERLAY_START( solarq_overlay )
-	OVERLAY_RECT( 0.0, 0.1, 1.0, 1.0, MAKE_ARGB(0x04,0x20,0x20,0xff) )
-	OVERLAY_RECT( 0.0, 0.0, 1.0, 0.1, MAKE_ARGB(0x04,0xff,0x20,0x20) )
-	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.03, MAKE_ARGB(0x04,0xff,0xff,0x20) )
+	OVERLAY_RECT( 0.0, 0.068, 1.0, 1.0, SOLARQ_BLUE)
+	OVERLAY_RECT( 0.0, 0.0, 1.0, 0.068, SOLARQ_RED)
+	OVERLAY_DISK_NOBLEND( 0.5, 0.5, 0.02, SOLARQ_YELLOW)
 OVERLAY_END
 
 
