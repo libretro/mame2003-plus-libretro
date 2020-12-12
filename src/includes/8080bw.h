@@ -44,6 +44,7 @@ MACHINE_INIT( desertgu );
 MACHINE_INIT( schaser );
 MACHINE_INIT( polaris );
 MACHINE_INIT( clowns );
+MACHINE_INIT( indianbt );
 MACHINE_INIT( lrescue );
 
 
@@ -66,7 +67,12 @@ extern struct discrete_sound_block polaris_sound_interface[];
 DRIVER_INIT( 8080bw );
 DRIVER_INIT( invaders );
 DRIVER_INIT( invadpt2 );
+DRIVER_INIT( cosmicmo );
+DRIVER_INIT( yosakdon );
+DRIVER_INIT( clowns );
 DRIVER_INIT( cosmo );
+DRIVER_INIT( sstrangr );
+DRIVER_INIT( ozmawars );
 DRIVER_INIT( sstrngr2 );
 DRIVER_INIT( invaddlx );
 DRIVER_INIT( invrvnge );
@@ -79,10 +85,15 @@ DRIVER_INIT( seawolf );
 DRIVER_INIT( blueshrk );
 DRIVER_INIT( desertgu );
 DRIVER_INIT( phantom2 );
+DRIVER_INIT( maze );
 DRIVER_INIT( bowler );
 DRIVER_INIT( gunfight );
 DRIVER_INIT( bandido );
 DRIVER_INIT( lrescue );
+DRIVER_INIT( spclaser );
+DRIVER_INIT( galxwars );
+DRIVER_INIT( indianbt );
+DRIVER_INIT( 280zzzap );
 
 void c8080bw_flip_screen_w(int data);
 void c8080bw_screen_red_w(int data);
@@ -103,5 +114,6 @@ PALETTE_INIT( invadpt2 );
 PALETTE_INIT( lrescue );
 PALETTE_INIT( sflush );
 PALETTE_INIT( cosmo );
+PALETTE_INIT( indianbt );
 
 WRITE_HANDLER( bowler_bonus_display_w );
