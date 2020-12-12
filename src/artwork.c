@@ -360,7 +360,7 @@ struct artwork_piece
 	/* raw data from the .art file */
 	UINT8					layer;
 	UINT8					has_alpha;
-	int						priority;
+	int					priority;
 	float					alpha;
 	float					brightness;
 	float					top;
@@ -620,8 +620,6 @@ int artwork_create_display(struct osd_create_params *params, UINT32 *rgb_compone
 	gamescale = options.artwork_res;
 	if (gamescale < 1 || (params->video_attributes & VIDEO_TYPE_VECTOR))
 		gamescale = 1;
-	else if (gamescale > 2)
-		gamescale = 2;
 
 	/* compute the extent of all the artwork */
 	min_x = min_y = 0.0;
@@ -1534,6 +1532,45 @@ static void render_game_bitmap(struct mame_bitmap *bitmap, const rgb_t *palette,
 			}
 		}
 	}
+	/* Any other scale. For performance at 2x we don't use the below code and handle separately. */
+	else
+	{
+		/* 16/15bpp case */
+		if (bitmap->depth != 32)
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT16 *src = (UINT16 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = palette[*src++];
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = val;
+                                        dst += gamescale;
+				}
+			}
+		}
+
+		/* 32bpp case */
+		else
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT32 *src = (UINT32 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = *src++;
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = val;
+                                        dst += gamescale;
+				}
+			}
+		}
+	}
 }
 
 
@@ -1662,6 +1699,49 @@ static void render_game_bitmap_underlay(struct mame_bitmap *bitmap, const rgb_t 
 					dst[dstrowpixels + 1] = add_and_clamp(val, und[dstrowpixels + 1]);
 					dst += 2;
 					und += 2;
+				}
+			}
+		}
+	}
+	/* Any other scale. For performance at 2x we don't use the below code and handle separately. */
+	else
+	{
+		/* 16/15bpp case */
+		if (bitmap->depth != 32)
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT16 *src = (UINT16 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *und = (UINT32 *)undbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = palette[*src++];
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = add_and_clamp(val, und[dstrowpixels*r + c]);
+                                        dst += gamescale;
+					und += gamescale;
+				}
+			}
+		}
+
+		/* 32bpp case */
+		else
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT32 *src = (UINT32 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *und = (UINT32 *)undbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = *src++;
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = add_and_clamp(val, und[dstrowpixels*r + c]);
+					dst += gamescale;
+					und += gamescale;
 				}
 			}
 		}
@@ -1801,6 +1881,53 @@ static void render_game_bitmap_overlay(struct mame_bitmap *bitmap, const rgb_t *
 					dst += 2;
 					over += 2;
 					overyrgb += 2;
+				}
+			}
+		}
+	}
+	/* Any other scale. For performance at 2x we don't use the below code and handle separately. */
+	else
+	{
+		/* 16/15bpp case */
+		if (bitmap->depth != 32)
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT16 *src = (UINT16 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *over = (UINT32 *)overbase + y * gamescale * dstrowpixels;
+				UINT32 *overyrgb = (UINT32 *)overyrgbbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = palette[*src++];
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]);
+					dst += gamescale;
+					over += gamescale;
+					overyrgb += gamescale;
+				}
+			}
+		}
+
+		/* 32bpp case */
+		else
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT32 *src = (UINT32 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *over = (UINT32 *)overbase + y * gamescale * dstrowpixels;
+				UINT32 *overyrgb = (UINT32 *)overyrgbbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = *src++;
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]);
+					dst += gamescale;
+					over += gamescale;
+					overyrgb += gamescale;
 				}
 			}
 		}
@@ -1952,6 +2079,57 @@ static void render_game_bitmap_underlay_overlay(struct mame_bitmap *bitmap, cons
 			}
 		}
 	}
+	/* Any other scale. For performance at 2x we don't use the below code and handle separately. */
+	else
+	{
+		/* 16/15bpp case */
+		if (bitmap->depth != 32)
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT16 *src = (UINT16 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *und = (UINT32 *)undbase + y * gamescale * dstrowpixels;
+				UINT32 *over = (UINT32 *)overbase + y * gamescale * dstrowpixels;
+				UINT32 *overyrgb = (UINT32 *)overyrgbbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = palette[*src++];
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = add_and_clamp(blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]), und[dstrowpixels*r + c]);
+					dst += gamescale;
+					und += gamescale;
+					over += gamescale;
+					overyrgb += gamescale;
+				}
+			}
+		}
+
+		/* 32bpp case */
+		else
+		{
+			for (y = 0; y < height; y++)
+			{
+				UINT32 *src = (UINT32 *)srcbase + y * srcrowpixels + Machine->absolute_visible_area.min_x;
+				UINT32 *dst = (UINT32 *)dstbase + y * gamescale * dstrowpixels;
+				UINT32 *und = (UINT32 *)undbase + y * gamescale * dstrowpixels;
+				UINT32 *over = (UINT32 *)overbase + y * gamescale * dstrowpixels;
+				UINT32 *overyrgb = (UINT32 *)overyrgbbase + y * gamescale * dstrowpixels;
+				for (x = 0; x < width; x++)
+				{
+					UINT32 val = *src++;
+                                        for (int r = 0; r < gamescale; r++)
+                                            for (int c = 0; c < gamescale; c++)
+                                                dst[dstrowpixels*r + c] = add_and_clamp(blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]), und[dstrowpixels*r + c]);
+					dst += gamescale;
+					und += gamescale;
+					over += gamescale;
+					overyrgb += gamescale;
+				}
+			}
+		}
+	}
 }
 
 
@@ -2085,9 +2263,36 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 	if (!options.use_artwork)
 		return 1;
 
-	/* first process any hard-coded overlays */
-	if (list && !generate_overlay(list, width, height))
-		return 0;
+	/* First process any hard-coded overlays. */
+	/* We handle any overlay opacity options here. */
+	/* A hard-coded overlay opacity of 0 means don't show overlay. */
+	/* A negative values will use the default opacity for the overlay. */
+	int opacity = options.overlay_opacity;
+	if (opacity != 0 && list) {
+	    if (opacity < 0) { // Default overlay opacity
+		if (!generate_overlay(list, width, height))
+		    return 0;
+	    } else { // Opacity is > 0
+		/* Count elements in list */
+		int count = 0;
+		for (const struct overlay_piece *tmp = list;
+			tmp->type != OVERLAY_TYPE_END; count++)
+		    tmp++;
+		/* Create a new list we can modify */
+		struct overlay_piece *newlist = (struct overlay_piece *)
+				    calloc(count + 1, sizeof(struct overlay_piece));
+		memcpy(newlist, list, (count + 1)*sizeof(struct overlay_piece));
+		/* Modify opacity as set to user defined value */
+		struct overlay_piece *tmp = newlist;
+		while (tmp->type != OVERLAY_TYPE_END) {
+		    tmp->color = tmp->color & ~(0xff << 24); // Clear
+		    tmp->color = tmp->color | (((opacity) & 0xff) << 24); // Set
+		    tmp++;
+		}
+		if (!generate_overlay(newlist, width, height))
+		    return 0;
+	    }
+	}
 
 	/* attempt to open the .ART file; if none, that's okay */
 	artfile = callbacks->load_artwork(&driver);
@@ -2990,6 +3195,116 @@ static int generate_disk_piece(struct artwork_piece *piece, const struct overlay
 }
 
 
+/****************************************************************************
+Renders the right angled triangle. If upper is true, the upper half of
+the triangle is filled, otherwise the lower half is filled. If reverse is
+true, the gradient of the triangle is positive, otherwise negative.
+****************************************************************************/
+static void render_right_triangle(struct mame_bitmap *bitmap, int reverse, int upper, UINT32 color)
+{ 
+    if (reverse)
+	for (int j = 0; j < bitmap->height; j++)
+	    if (upper)
+		for (int i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
+		    plot_pixel(bitmap, i, bitmap->height-j-1, color);
+	    else
+		for (int i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
+		    plot_pixel(bitmap, i, bitmap->height-j-1, color);
+    else
+	for (int j = 0; j < bitmap->height; j++)
+	    if (upper)
+		for (int i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
+		    plot_pixel(bitmap, i, j, color);
+	    else
+		for (int i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
+		    plot_pixel(bitmap, i, j, color);
+}
+
+
+/****************************************************************************
+Generates a right angled triangle. 
+Coordinates of the piece are labelled internal as (left,top), (right,bottom) 
+however, these represent (x,y) and (z,w) in the following situations: 
+
+(x,y)                     (z,w)
+     X                         X********
+     ***                         *******
+     *****                         *****
+     *******                         ***
+     ********X                         X
+              (z,w)                     (x,y)
+
+              (z,w)                     (x,y)
+             X                 ********X
+           ***                 *******
+         *****                 *****
+       *******                 ***
+     X********                 X
+(x,y)                     (z,w)
+
+As such, we must rearrange the coordinates to not upset the drawing code
+that expects (left,top) and (right, bottom).
+****************************************************************************/
+static int generate_right_triangle_piece(struct artwork_piece *piece, const struct overlay_piece *data, int width, int height)
+{
+	int gfxwidth, gfxheight;
+	struct rectangle temprect;
+
+	/* extract coordinates */
+	piece->top = data->top;
+	piece->left = data->left;
+	piece->bottom = data->bottom;
+	piece->right = data->right;
+
+	/* convert from pixel coordinates if necessary */
+	if (fabs(piece->left) > 4.0 || fabs(piece->right) > 4.0 ||
+		fabs(piece->top) > 4.0 || fabs(piece->bottom) > 4.0)
+	{
+		piece->left /= (double)width;
+		piece->right /= (double)width;
+		piece->top /= (double)height;
+		piece->bottom /= (double)height;
+	}
+
+	/* compute the effective width/height */
+	gfxwidth = (int)(fabs(piece->right - piece->left) * (double)width * 2.0 + 0.5);
+	gfxheight = (int)(fabs(piece->bottom - piece->top) * (double)height * 2.0 + 0.5);
+
+	/* allocate a source bitmap 2x the game bitmap's size */
+	piece->rawbitmap = auto_bitmap_alloc_depth(gfxwidth, gfxheight, 32);
+	if (!piece->rawbitmap)
+		return 0;
+
+	/* fill the bitmap with white */
+	temprect.min_x = temprect.min_y = 0;
+	temprect.max_x = piece->rawbitmap->width - 1;
+	temprect.max_y = piece->rawbitmap->height - 1;
+	erase_rect(piece->rawbitmap, &temprect, MAKE_ARGB(0,0xff,0xff,0xff));
+
+	/* work out rules for upper and reverse used in drawing the right shape */
+	int reverse = (piece->left < piece->right && piece->top > piece->bottom)
+	    || (piece->left > piece->right && piece->top < piece->bottom);
+	int upper = piece->left > piece->right;
+
+	/* Get the coordinates back to the drawing code expectation that */
+	/* (left, top) is top left, and (right, bottom) is bottom right */
+	if (piece->right < piece->left) {
+	    double temp = piece->left;
+	    piece->left = piece->right;
+	    piece->right = temp;
+	}
+	if (piece->bottom < piece->top) {
+	    double temp = piece->top;
+	    piece->top = piece->bottom;
+	    piece->bottom = temp;
+	}
+
+	/* now render the triangle */
+	render_right_triangle(piece->rawbitmap, reverse, upper, data->color);
+	return 1;
+}
+
+
 
 /*-------------------------------------------------
 	generate_overlay - generate an overlay with
@@ -3014,6 +3329,7 @@ static int generate_overlay(const struct overlay_piece *list, int width, int hei
 		piece->layer = LAYER_OVERLAY;
 		piece->priority = priority++;
 		piece->blendflags = list->type & OVERLAY_FLAG_MASK;
+		piece->tag = list->tag; // Handle someone using a different tag, for example, cocktail mode
 
 		/* switch off the type */
 		switch (list->type & ~OVERLAY_FLAG_MASK)
@@ -3025,6 +3341,10 @@ static int generate_overlay(const struct overlay_piece *list, int width, int hei
 
 			case OVERLAY_TYPE_DISK:
 				if (!generate_disk_piece(piece, list, width, height))
+					return 0;
+				break;
+			case OVERLAY_TYPE_RIGHT_TRIANGLE:
+				if (!generate_right_triangle_piece(piece, list, width, height))
 					return 0;
 				break;
 		}
