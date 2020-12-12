@@ -42,6 +42,9 @@ static WRITE_HANDLER( invad2ct_sh_port7_w );
 static WRITE_HANDLER( lrescue_sh_port3_w );
 static WRITE_HANDLER( lrescue_sh_port5_w );
 
+static WRITE_HANDLER( indianbt_sh_port3_w );
+static WRITE_HANDLER( indianbt_sh_port5_w );
+
 static WRITE_HANDLER( ballbomb_sh_port3_w );
 static WRITE_HANDLER( ballbomb_sh_port5_w );
 
@@ -1164,4 +1167,43 @@ MACHINE_INIT( clowns )
 	 * a bonus is made. */
 
 	install_port_write_handler (0, 0x07, 0x07, clowns_sh_port7_w);
+}
+
+
+/*******************************************************/
+/*                                                     */
+/* Taito "Indian Battle"	                       */
+/* *Missing music*                                     */
+/* Based on invader settings and sample choices from   */
+/* https://github.com/mamedev/mame                     */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( indianbt )
+{
+	install_port_write_handler(0, 0x03, 0x03, indianbt_sh_port3_w);
+	install_port_write_handler(0, 0x05, 0x05, indianbt_sh_port5_w);
+
+	SN76477_envelope_1_w(0, 1);
+	SN76477_envelope_2_w(0, 0);
+	SN76477_mixer_a_w(0, 0);
+	SN76477_mixer_b_w(0, 0);
+	SN76477_mixer_c_w(0, 0);
+	SN76477_vco_w(0, 1);
+}
+
+static WRITE_HANDLER( indianbt_sh_port3_w )
+{
+	if (data & 0x01) sample_start(1, 7, 0);     /* Death */
+	if (data & 0x02) sample_start(0, 1, 0);     /* Shot Sound */
+	if (data & 0x04) sample_start(2, 3, 0);     /* Move */
+	if (data & 0x08) sample_start(3, 2, 0);     /* Hit */
+}
+
+static WRITE_HANDLER( indianbt_sh_port5_w )
+{
+    	if (data & 0x01) sample_start(4, 0, 0);     /* Bird dropped an egg, Lasso used */
+	if (data & 0x02) sample_start(4, 2, 0);     /* Egg hatches, egg shot */
+	if (data & 0x08) sample_start(5, 0, 0);     /* Grabber, Lasso caught something */
+	if (data & 0x10) sample_start(3, 7, 0);     /* Lasso sound */
 }
