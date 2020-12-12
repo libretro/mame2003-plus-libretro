@@ -985,6 +985,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( invadpt2 )	/* 852 [1980] Taito */
 	DRIVER( invaddlx )	/* 852 [1980] Midway */
 	DRIVER( moonbase )	/* Zeta - Nichibutsu */
+    	DRIVER( indianbt )	/* Taito - 1980 */
 	/* 870 - Space Invaders Deluxe cocktail */
 	DRIVER( earthinv )
 	DRIVER( spaceatt )
@@ -1006,6 +1007,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( grescue )	/* bootleg? */
 	DRIVER( desterth )	/* bootleg */
 	DRIVER( cosmicmo )	/* Universal */
+    	DRIVER( cosmicm2 )	/* Universal */
 	DRIVER( rollingc )	/* Nichibutsu */
 	DRIVER( ozmawars )	/* Shin Nihon Kikaku (SNK) */
 	DRIVER( ozmawar2 )	/* Shin Nihon Kikaku (SNK) */
@@ -1020,7 +1022,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( polaris )	/* PS  (c) 1980 Taito */
 	DRIVER( polarisa )	/* PS  (c) 1980 Taito */
 	DRIVER( ballbomb )	/* TN  (c) 1980 Taito */
-  DRIVER( steelwkr )	/* (c) 1980 Taito */
+	DRIVER( steelwkr )	/* (c) 1980 Taito */
 	DRIVER( m79amb )
 	DRIVER( alieninv )
 	DRIVER( tst_invd )
@@ -1030,6 +1032,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sisv2 )
 	DRIVER( spacewr3 )
 	DRIVER( invaderl )
+    	DRIVER( yosakdoa )
 	DRIVER( yosakdon )
 	DRIVER( spceking )
 	DRIVER( spcewars )
@@ -2698,7 +2701,7 @@ V-V                           TP-027
 	DRIVER( wbmlb )		/* bootleg? (S2) */
 	DRIVER( dakkochn )	/* 836-6483? (S2) */
 	DRIVER( ufosensi )	/* 834-6659 (S2) */
-  DRIVER( ufosensb )	/* bootleg (S2) */
+	DRIVER( ufosensb )	/* bootleg (S2) */
 /*
 other System 1 / System 2 games:
 WarBall
