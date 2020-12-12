@@ -8,7 +8,6 @@
  * TODO:
  * backdrop support for lamps? (player1, player2 and serve)
  * what is the counter output anyway?
- * add overlay colors for Navalone and Kaitei Takara Sagashi
  *
  ****************************************************************************/
 
@@ -57,14 +56,17 @@ static unsigned short navalone_colortable[] =
 	 0, 2
 };
 
+#define COCKTAIL_ONLY		"cocktail"
+#define UPRIGHT_ONLY		"upright"
 
 VIDEO_START( geebee )
 {
 	if( video_start_generic() )
 		return 1;
 
-	/* use an overlay only in upright mode */
-	artwork_show(OVERLAY_TAG, (readinputport(2) & 0x01) == 0);
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(2) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(2) & 0x01) != 0);
 
 	return 0;
 }
@@ -74,7 +76,9 @@ VIDEO_START( navalone )
 	if( video_start_generic() )
 		return 1;
 
-    /* overlay? */
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(2) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(2) & 0x01) != 0);
 
 	return 0;
 }
@@ -84,8 +88,6 @@ VIDEO_START( sos )
 	if( video_start_generic() )
 		return 1;
 
-    /* overlay? */
-
 	return 0;
 }
 
@@ -94,7 +96,21 @@ VIDEO_START( kaitei )
 	if( video_start_generic() )
 	return 1;
 
-    /* overlay? */
+	/* Change overlay based on mode */
+	artwork_show(COCKTAIL_ONLY, (readinputport(2) & 0x01) == 0);
+	artwork_show(UPRIGHT_ONLY, (readinputport(2) & 0x01) != 0);
+
+	return 0;
+}
+
+VIDEO_START( kaitein )
+{
+	if( video_start_generic() )
+	return 1;
+
+	// No change in overlay, as this is always in cocktail mode
+	artwork_show(COCKTAIL_ONLY, true);
+	artwork_show(UPRIGHT_ONLY, false);
 
 	return 0;
 }
