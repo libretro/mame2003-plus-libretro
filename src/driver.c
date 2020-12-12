@@ -5764,23 +5764,28 @@ Other Sun games
 	DRIVER( kf2k2pla )	/* bootleg */
 	DRIVER( kf2k2mp )	/* bootleg */
 	DRIVER( kf2k2mp2 )	/* bootleg */
-	DRIVER( kof2k4se )
+	DRIVER( kof2k4se )  /* bootleg of kof2002 */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
-  DRIVER( svc )	    /* 0269 (c) 2003 SNK Playmore */
+	DRIVER( svcpcb )	/* 0269 (c) 2003 Playmore / Capcom - JAMMA PCB */
+	DRIVER( svc )		/* 0269 (c) 2003 Playmore / Capcom */
 	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
+	DRIVER( svcplus )	/* bootleg */
+	DRIVER( svcplusa )	/* bootleg */
+	DRIVER( svcsplus )	/* bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
-  DRIVER( kof2003 )	/* 0271 (c) 2003 SNK Playmore */
+	DRIVER( kf2k3pcb )	/* 0271 (c) 2003 Playmore - JAMMA PCB */
+    DRIVER( kof2003 )	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( kof2003d)	/* 0271 (c) 2003 SNK Playmore */
-	DRIVER( kf2k3bl)
-	DRIVER( kf2k3bla)
-	DRIVER( kf2k3pl)
-	DRIVER( kf2k3upl)
+	DRIVER( kf2k3bl)    /* bootleg */
+	DRIVER( kf2k3bla)   /* bootleg */
+	DRIVER( kf2k3pl)    /* bootleg */
+	DRIVER( kf2k3upl)   /* bootleg */
 	DRIVER( kof10th )       /* 2005 SNK Playmore */
-	DRIVER( kf10thep)
-	DRIVER( kf2k5uni)
+	DRIVER( kf10thep)       /* bootleg of kof2002 */
+	DRIVER( kf2k5uni)       /* bootleg of kof2002 */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
 
 	/* SemiCom 68020 based hardware */
