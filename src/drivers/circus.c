@@ -84,7 +84,7 @@ OVERLAY_START( circus_overlay )
 OVERLAY_END
 
 /* There does not appear to be any known overlays for */
-/* this game, so one has been created. */
+/* this game, so one has been created for completion. */
 OVERLAY_START( ripcord_overlay )
 	OVERLAY_RECT(   0,   0, 248,  16, OVERLAY_GREEN )
 	OVERLAY_RECT(   0, 128,   6, 134, OVERLAY_BROWN )
