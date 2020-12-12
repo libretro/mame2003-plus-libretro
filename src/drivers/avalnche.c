@@ -40,17 +40,25 @@
  *
  *************************************/
 
-#define OVERLAY_CYAN		MAKE_ARGB(0x04,0x80,0xff,0xff)
-#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x20,0x20,0xff)
+/* Overlay based on images: */
+/* https://images.launchbox-app.com/e2efac7f-8256-4345-8854-7b540c6b72fa.png */
+/* https://missilecommand.files.wordpress.com/2019/03/47398407361_f2b8776126_z.jpg */
+/* https://www.arcade-museum.com/images/118/11812420501.jpg */
+/* The colour scheme usually used here is not based on evidence from */
+/* photos. The score in photos is always white, and only in one photo */
+/* does the white look "cyan", most likely just a colour-balance issue. */
+/* Realistically, they are meant to be snowballs, so it is unlikely */
+/* Atari meant to colour the snowballs cyan. */
+/* Exact location of the orange is debateable, as it is missing in one */
+/* shot and misplaced in another; it is assumed it covered through to */
+/* the bottom of the final top layer. */
+#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
 #define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
-#define OVERLAY_ORANGE		MAKE_ARGB(0x04,0xff,0x80,0x10)
-
+#define OVERLAY_ORANGE		MAKE_ARGB(0x04,0xff,0xa5,0x00)
 OVERLAY_START( avalnche_overlay )
-	OVERLAY_RECT(   0,   0, 256,  10, OVERLAY_CYAN )
-	OVERLAY_RECT(   0,  10, 256,  20, OVERLAY_BLUE )
-	OVERLAY_RECT(   0,  20, 256,  29, OVERLAY_YELLOW )
-	OVERLAY_RECT(   0,  29, 256,  40, OVERLAY_ORANGE )
-	OVERLAY_RECT(   0,  40, 256, 240, OVERLAY_CYAN )
+	OVERLAY_RECT(   0,  20, 256,  29, OVERLAY_BLUE )
+	OVERLAY_RECT(   0,  29, 256,  40, OVERLAY_YELLOW )
+	OVERLAY_RECT(   0,  40, 256,  56, OVERLAY_ORANGE )
 OVERLAY_END
 
 
