@@ -160,6 +160,7 @@ struct RunningMachine
 #define ARTWORK_USE_BACKDROPS	0x01
 #define ARTWORK_USE_OVERLAYS	0x02
 #define ARTWORK_USE_BEZELS		0x04
+#define ARTWORK_OVERLAY_DEFAULT		(-1) /* Set if using hardcoded opacity */
 
 enum /* used to index content-specific flags */
 {
@@ -244,6 +245,7 @@ struct GameOptions
   int      use_artwork;	         /* bitfield indicating which artwork pieces to use */
   int      artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
   int      artwork_crop;	       /* 1 to crop artwork to the game screen */
+  int      overlay_opacity;	       /* overlay opacity used in any hardcoded overlays */
 
   char     savegame;		         /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
