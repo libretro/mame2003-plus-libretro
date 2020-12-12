@@ -5777,7 +5777,7 @@ Other Sun games
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( kf2k3pcb )	/* 0271 (c) 2003 Playmore - JAMMA PCB */
-    DRIVER( kof2003 )	/* 0271 (c) 2003 SNK Playmore */
+	DRIVER( kof2003 )	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( kof2003d)	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( kf2k3bl)    /* bootleg */
 	DRIVER( kf2k3bla)   /* bootleg */
