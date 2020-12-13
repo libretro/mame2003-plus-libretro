@@ -6649,7 +6649,7 @@ ROM_START( pnyaa ) /* Encrypted Set */
 
 	ROM_REGION( 0x1000000, REGION_GFX3, 0 )
 	/* Encrypted */
-    ROM_LOAD16_BYTE( "267-c1.bin", 0x0000000, 0x800000, CRC(5eebee65) SHA1(7eb3eefdeb24e19831d0f51d4ea07a0292c25ab6) ) /* Plane 0,1 */
+  ROM_LOAD16_BYTE( "267-c1.bin", 0x0000000, 0x800000, CRC(5eebee65) SHA1(7eb3eefdeb24e19831d0f51d4ea07a0292c25ab6) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "267-c2.bin", 0x0000001, 0x800000, CRC(2b67187b) SHA1(149c3efd3c444fd0d35a97fa2268102bf76be3ed) ) /* Plane 2,3 */
 ROM_END
 
@@ -6691,7 +6691,7 @@ ROM_START( svcpcb ) /* Encrypted Set, JAMMA PCB */
 	/* this contains both an ASIA and JAPAN bios, HARDDIP3 on the PCB selects which to use */
 	ROM_LOAD16_WORD_SWAP( "269-bios.bin", 0x00000, 0x80000, CRC(b4590283) SHA1(47047ed5b6062babc0a0bebcc30e4b3f021e115a) )
 
-		/* Encrypted */
+	/* Encrypted */
 	NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
 
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
@@ -6720,7 +6720,7 @@ ROM_START( svc ) /* Encrypted Set, MVS Set */
 	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
 
 	/* Encrypted */
-    NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
+  NEO_BIOS_AUDIO_ENCRYPTED_512K( "269-m1.bin", CRC(f6819d00) SHA1(d3bbe09df502464f104e53501708ac6e2c1832c6) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
 	/* Encrypted */
@@ -7023,7 +7023,7 @@ ROM_START( kof2k4se )
 ROM_END
 
 ROM_START( kof10th )
-        ROM_REGION( 0x900000, REGION_CPU1, 0 )
+  ROM_REGION( 0x900000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "kf10-p1.bin", 0x000000, 0x800000, CRC(b1fd0c43) SHA1(5f842a8a27be2d957fd4140d6431ae47154997bb) )
 
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
@@ -7072,7 +7072,6 @@ ROM_START( kf10thep ) /* this is a hack of kof2002 much like the various korean 
 	NEO_SFIX_128K( "5008-s1.rom", CRC(92410064) SHA1(1fb800b46341858207d3b6961a760289fbec7faa) )
 
 	NEO_BIOS_SOUND_128K( "5008-m1.rom", CRC(5a47d9ad) SHA1(0197737934653acc6c97221660d789e9914f3578) )
-	//NEO_BIOS_SOUND_128K( "5004-m1.bin", CRC(f6fab859) SHA1(0184aa1394b9f9946d610278b53b846020dd88dc) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
 	ROM_LOAD( "kf10-v1.bin", 0x000000, 0x800000, CRC(0fc9a58d) SHA1(9d79ef00e2c2abd9f29af5521c2fbe5798bf336f) )
@@ -7177,12 +7176,12 @@ DRIVER_INIT( garou )
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0x06);
 	init_neogeo();
-    garou_install_protection(); 
+  garou_install_protection(); 
 }
 
 DRIVER_INIT( garouo )
 {
-    garouo_decrypt_68k();
+  garouo_decrypt_68k();
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0x06);
 	init_neogeo();
@@ -7342,7 +7341,7 @@ DRIVER_INIT( popbounc )
 
 DRIVER_INIT( rotd )
 {
-    neo_pcm2_snk_1999(16);
+  neo_pcm2_snk_1999(16);
 	neogeo_fix_bank_type = 1;
 	neogeo_cmc50_m1_decrypt();
 	kof2000_neogeo_gfx_decrypt(0x3f);
@@ -7514,8 +7513,8 @@ DRIVER_INIT( svcboot )
 {
 	svcboot_px_decrypt();
 	svcboot_cx_decrypt();
-    init_neogeo();
-    install_pvc_protection();
+  init_neogeo();
+  install_pvc_protection();
 }
 
 DRIVER_INIT( svcplus )
@@ -7559,7 +7558,7 @@ DRIVER_INIT( samsho5 )
 
 DRIVER_INIT( samsh5sp )
 {
-    samsh5sp_decrypt_68k();
+  samsh5sp_decrypt_68k();
 	neogeo_fix_bank_type = 1;
 	kof2000_neogeo_gfx_decrypt(0x0d);
 	neogeo_cmc50_m1_decrypt();
@@ -7571,7 +7570,7 @@ DRIVER_INIT( mslug5 )
 {
 	mslug5_decrypt_68k();
 	neo_pcm2_swap(2);
-    neogeo_cmc50_m1_decrypt();
+  neogeo_cmc50_m1_decrypt();
 	neogeo_fix_bank_type = 1;
 	kof2000_neogeo_gfx_decrypt(0x19);
 	install_pvc_protection();
@@ -7954,20 +7953,20 @@ GAMEB( 1998, shocktr2, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sauru
 GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Ironclad (Prototype)", &neogeo_ctrl, NULL )
 
 /* SNK Playmore */
-GAME ( 2003, svcpcb,   0,                neogeo, svcpcb,  svcpcb,   ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
-GAMEB( 2003, svc    ,  neogeo,   neogeo, neogeo, neogeo,  svc    , ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (MVS)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcboot,  svc,      neogeo, neogeo, neogeo,  svcboot,  ROT0, "Snk Playmore", "Snk Vs Capcom  - Svc Chaos (Bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcplus,  svc,      neogeo, neogeo, neogeo,  svcplus,  ROT0, "bootleg", "SvC Chaos - SNK vs Capcom Plus (set 1, bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcplusa, svc,      neogeo, neogeo, neogeo,  svcplusa, ROT0, "bootleg", "SvC Chaos - SNK vs Capcom Plus (set 2, bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcsplus, svc,      neogeo, neogeo, neogeo,  svcsplus, ROT0, "bootleg", "SvC Chaos - SNK vs Capcom Super Plus (bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "Snk Playmore", "Metal Slug 5", &neogeo_ctrl, NULL )
+GAME ( 2003, svcpcb,   0,                neogeo, svcpcb,  svcpcb,   ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
+GAMEB( 2003, svc,      neogeo,   neogeo, neogeo, neogeo,  svc,      ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (MVS)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcboot,  svc,      neogeo, neogeo, neogeo,  svcboot,  ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (Bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcplus,  svc,      neogeo, neogeo, neogeo,  svcplus,  ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Plus (set 1, bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcplusa, svc,      neogeo, neogeo, neogeo,  svcplusa, ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Plus (set 2, bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcsplus, svc,      neogeo, neogeo, neogeo,  svcsplus, ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Super Plus (bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "SNK Playmore", "Metal Slug 5", &neogeo_ctrl, NULL )
 GAME ( 2003, kf2k3pcb, 0,                neogeo, neogeo,  kf2k3pcb, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
 GAMEB( 2003, kof2003,  neogeo,   neogeo, neogeo, neogeo,  kof2003,  ROT0, "SNK Playmore", "The King of Fighters 2003 (World / US, MVS)", &neogeo_ctrl, NULL )
-GAMEB( 2003, kof2003d, kof2003,  neogeo, neogeo, neogeo,  kof2003d, ROT0, "Snk Playmore", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
-GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3bl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
-GAMEB( 2003, kf2k3bla, kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo,  kf2k3upl, ROT0, "bootleg", "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kof2003d, kof2003,  neogeo, neogeo, neogeo,  kof2003d, ROT0, "SNK Playmore", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
+GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3bl,  ROT0, "bootleg",      "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
+GAMEB( 2003, kf2k3bla, kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg",      "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg",      "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo,  kf2k3upl, ROT0, "bootleg",      "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
 	
 /* Sunsoft */
 GAMEB( 1995, galaxyfg, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Sunsoft", "Galaxy Fight - Universal Warriors", &neogeo_ctrl, NULL )
@@ -8020,7 +8019,7 @@ GAMEB( 1998, flipshot, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Captain Tomaday", &neogeo_ctrl, NULL )
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Musashi Ganryuuki", &neogeo_ctrl, NULL )	/* Encrypted GFX */
 GAMEB( 2000, bangbead, neogeo,   neogeo, raster, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", &neogeo_ctrl, NULL )
-GAMEB( 1994, b2b     , neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
+GAMEB( 1994, b2b,      neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bang Busters", &neogeo_ctrl, NULL )
 	
 /* NG:DEV.TEAM */
 GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DEV.TEAM", "Last Hope", &neogeo_ctrl, NULL )
