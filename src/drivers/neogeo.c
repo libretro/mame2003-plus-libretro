@@ -7894,13 +7894,13 @@ GAMEB( 2001, kof2001,  neogeo,   neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolit
 GAMEB( 2001, kof2001h, kof2001,  neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2)" , &neogeo_ctrl, NULL ) /* Encrypted GFX */
 GAMEB( 2003, cthd2003, kof2001,  neogeo, neogeo, neogeo,  cthd2003, ROT0, "Eolith / SNK", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)", &neogeo_ctrl, NULL ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2003, ct2k3sp,  kof2001,  neogeo, neogeo, neogeo,  ct2k3sp,  ROT0, "Eolith / SNK", "Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)", &neogeo_ctrl, NULL ) /* Protected Hack / Bootleg of kof2001 */
-GAMEB( 2002, kof2002,  neogeo,   neogeo, neogeo, neogeo,  kof2002,  ROT0, "Eolith", "The King of Fighters 2002", &neogeo_ctrl, NULL )
+GAMEB( 2002, kof2002,  neogeo,   neogeo, neogeo, neogeo,  kof2002,  ROT0, "Eolith / Playmore", "The King of Fighters 2002", &neogeo_ctrl, NULL )
 GAMEB( 2002, kf2k2pls, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 1, bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2002, kf2k2pla, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 2, bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2002, kf2k2mp,  kof2002,  neogeo, neogeo, neogeo,  kf2k2mp,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus (bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2002, kf2k2mp2, kof2002,  neogeo, neogeo, neogeo,  kof2km2,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus II (bootleg)" , &neogeo_ctrl, NULL ) 
 GAMEB( 2004, kof2k4se, kof2002,  neogeo, neogeo, neogeo,  kof2k4se, ROT0, "bootleg", "The King of Fighters Special Edition 2004 (The King of Fighters 2002 bootleg)", &neogeo_ctrl, NULL ) /* Hack / Bootleg of kof2002 */
-GAMEB( 2003, kof10th,  kof2002,  neogeo, neogeo, neogeo,  kof10th,  ROT0, "NeoGeo", "The King of Fighters 10th Anniversary", &neogeo_ctrl, NULL )
+GAMEB( 2003, kof10th,  kof2002,  neogeo, neogeo, neogeo,  kof10th,  ROT0, "bootleg", "The King of Fighters 10th Anniversary", &neogeo_ctrl, NULL )
 GAMEB( 2005, kf10thep, kof2002,  neogeo, neogeo, neogeo,  kf10thep, ROT0, "bootleg", "The King of Fighters 10th Anniversary Extra Plus (The King of Fighters 2002 bootleg)", &neogeo_ctrl, NULL ) // fake SNK copyright
 GAMEB( 2004, kf2k5uni, kof2002,  neogeo, neogeo, neogeo,  kf2k5uni, ROT0, "bootleg", "The King of Fighters 10th Anniversary 2005 Unique (The King of Fighters 2002 bootleg)", &neogeo_ctrl, NULL )
 
@@ -7953,20 +7953,20 @@ GAMEB( 1998, shocktr2, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sauru
 GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Ironclad (Prototype)", &neogeo_ctrl, NULL )
 
 /* SNK Playmore */
-GAME ( 2003, svcpcb,   0,                neogeo, svcpcb,  svcpcb,   ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
-GAMEB( 2003, svc,      neogeo,   neogeo, neogeo, neogeo,  svc,      ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (MVS)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcboot,  svc,      neogeo, neogeo, neogeo,  svcboot,  ROT0, "SNK Playmore", "SvC Chaos - SNK vs Capcom (Bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcplus,  svc,      neogeo, neogeo, neogeo,  svcplus,  ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Plus (set 1, bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcplusa, svc,      neogeo, neogeo, neogeo,  svcplusa, ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Plus (set 2, bootleg)", &neogeo_ctrl, NULL )
-GAMEB( 2003, svcsplus, svc,      neogeo, neogeo, neogeo,  svcsplus, ROT0, "bootleg",      "SvC Chaos - SNK vs Capcom Super Plus (bootleg)", &neogeo_ctrl, NULL )
+GAME ( 2003, svcpcb,   0,                neogeo, svcpcb,  svcpcb,   ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
+GAMEB( 2003, svc,      neogeo,   neogeo, neogeo, neogeo,  svc,      ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (MVS)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcboot,  svc,      neogeo, neogeo, neogeo,  svcboot,  ROT0, "bootleg",  "SvC Chaos - SNK vs Capcom (Bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcplus,  svc,      neogeo, neogeo, neogeo,  svcplus,  ROT0, "bootleg",  "SvC Chaos - SNK vs Capcom Plus (set 1, bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcplusa, svc,      neogeo, neogeo, neogeo,  svcplusa, ROT0, "bootleg",  "SvC Chaos - SNK vs Capcom Plus (set 2, bootleg)", &neogeo_ctrl, NULL )
+GAMEB( 2003, svcsplus, svc,      neogeo, neogeo, neogeo,  svcsplus, ROT0, "bootleg",  "SvC Chaos - SNK vs Capcom Super Plus (bootleg)", &neogeo_ctrl, NULL )
 GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "SNK Playmore", "Metal Slug 5", &neogeo_ctrl, NULL )
 GAME ( 2003, kf2k3pcb, 0,                neogeo, neogeo,  kf2k3pcb, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB)" ) // not a clone of neogeo because it's NOT a neogeo cart.
 GAMEB( 2003, kof2003,  neogeo,   neogeo, neogeo, neogeo,  kof2003,  ROT0, "SNK Playmore", "The King of Fighters 2003 (World / US, MVS)", &neogeo_ctrl, NULL )
-GAMEB( 2003, kof2003d, kof2003,  neogeo, neogeo, neogeo,  kof2003d, ROT0, "SNK Playmore", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
-GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3bl,  ROT0, "bootleg",      "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
-GAMEB( 2003, kf2k3bla, kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg",      "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg",      "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
-GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo,  kf2k3upl, ROT0, "bootleg",      "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kof2003d, kof2003,  neogeo, neogeo, neogeo,  kof2003d, ROT0, "bootleg", "The King of Fighters 2003 (Decrypted)", &neogeo_ctrl, NULL )
+GAMEB( 2003, kf2k3bl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3bl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 1)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart (unless it was a bootleg pcb with the new bios?)
+GAMEB( 2003, kf2k3bla, kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2003 (bootleg set 2)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3pl,  kof2003,  neogeo, neogeo, neogeo,  kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
+GAMEB( 2003, kf2k3upl, kof2003,  neogeo, neogeo, neogeo,  kf2k3upl, ROT0, "bootleg", "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", &neogeo_ctrl, NULL ) // zooming is wrong because its a bootleg of the pcb version on a cart
 	
 /* Sunsoft */
 GAMEB( 1995, galaxyfg, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Sunsoft", "Galaxy Fight - Universal Warriors", &neogeo_ctrl, NULL )
@@ -8003,8 +8003,8 @@ GAMEB( 1995, sonicwi3, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "Video
 GAMEB( 1997, popbounc, neogeo,   neogeo, neogeo, popbounc,popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", &neogeo_ctrl, NULL )
 
 /* Yuki Enterprises */
-GAMEB( 2003, samsho5,  neogeo,   neogeo, raster, neogeo,  samsho5,  ROT0, "NeoGeo", "Samurai Shodown V", &neogeo_ctrl, NULL )
-GAMEB( 2003, samsh5sp, neogeo,	 neogeo, neogeo, neogeo,  samsh5sp, ROT0, "NeoGeo", "Samurai Shodown V Special", &neogeo_ctrl, NULL )
+GAMEB( 2003, samsho5,  neogeo,   neogeo, raster, neogeo,  samsho5,  ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V", &neogeo_ctrl, NULL )
+GAMEB( 2003, samsh5sp, neogeo,	 neogeo, neogeo, neogeo,  samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special", &neogeo_ctrl, NULL )
 
 /* Visco */
 GAMEB( 1992, androdun, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Andro Dunos", &neogeo_ctrl, NULL )
