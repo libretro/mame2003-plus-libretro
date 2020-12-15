@@ -33,7 +33,6 @@ Video board
 
 TODO:
 
-- colors (8 colors originally, see game flyer screen shots)
 - SN76477 sound
 
 ****************************************************************************/
@@ -42,9 +41,9 @@ TODO:
 #include "vidhrdw/generic.h"
 
 
-UINT8 *safarir_ram1, *safarir_ram2;
-size_t safarir_ram_size;
-
+static UINT8 *safarir_ram1, *safarir_ram2;
+static size_t safarir_ram_size;
+static UINT8 safarir_ram_bank;
 static UINT8 *safarir_ram;
 
 static struct tilemap *bg_tilemap, *fg_tilemap;
@@ -52,24 +51,17 @@ static struct tilemap *bg_tilemap, *fg_tilemap;
 
 WRITE_HANDLER( safarir_ram_w )
 {
-	if (safarir_ram[offset] != data)
-	{
-		safarir_ram[offset] = data;
+	if (safarir_ram_bank)
+		safarir_ram2[offset] = data;
+	else
+		safarir_ram1[offset] = data;
 
-		if (offset < 0x400)
-		{
-			tilemap_mark_tile_dirty(fg_tilemap, offset);
-		} 
-		else
-		{
-			tilemap_mark_tile_dirty(bg_tilemap, offset - 0x400);
-		}
-	}
+	tilemap_mark_tile_dirty((offset & 0x0400) ? bg_tilemap : fg_tilemap, offset & 0x03ff);
 }
 
 READ_HANDLER( safarir_ram_r )
 {
-	return safarir_ram[offset];
+	return safarir_ram_bank ? safarir_ram2[offset] : safarir_ram1[offset];
 }
 
 WRITE_HANDLER( safarir_scroll_w )
@@ -79,23 +71,44 @@ WRITE_HANDLER( safarir_scroll_w )
 
 WRITE_HANDLER( safarir_ram_bank_w )
 {
-	safarir_ram = data ? safarir_ram1 : safarir_ram2;
+	safarir_ram_bank = data & 0x01;
+
 	tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
 }
 
 static void get_bg_tile_info(int tile_index)
 {
-	int code = safarir_ram[tile_index + 0x400];
+	int color;
+	UINT8 code = safarir_ram_r(tile_index | 0x400);
 
-	SET_TILE_INFO(0, code & 0x7f, code >> 7, 0)
+	if (code & 0x80)
+		color = 6;	/* yellow */
+	else
+	{
+		color = ((~tile_index & 0x04) >> 2) | ((tile_index & 0x04) >> 1);
+
+		if (~tile_index & 0x100)
+			color |= ((tile_index & 0xc0) == 0x80) ? 1 : 0;
+		else
+			color |= (tile_index & 0xc0) ? 1 : 0;
+	}
+
+	SET_TILE_INFO(0, code & 0x7f, color, 0)
 }
 
 static void get_fg_tile_info(int tile_index)
 {
-	int code = safarir_ram[tile_index];
-	int flags = ((tile_index & 0x1d) && (tile_index & 0x1e)) ? 0 : TILE_IGNORE_TRANSPARENCY;
+	int color, flags;
+	UINT8 code = safarir_ram_r(tile_index);
 
-	SET_TILE_INFO(1, code & 0x7f, code >> 7, flags)
+	if (code & 0x80)
+		color = 7;	/* white */
+	else
+		color = (~tile_index & 0x04) | ((tile_index >> 1) & 0x03);
+
+	flags = ((tile_index & 0x1f) >= 0x03) ? 0 : TILE_IGNORE_TRANSPARENCY;
+
+	SET_TILE_INFO(1, code & 0x7f, color, flags)
 }
 
 VIDEO_START( safarir )
@@ -287,4 +300,4 @@ DRIVER_INIT( safarir )
 }
 
 
-GAMEX( 1979, safarir, 0, safarir, safarir, safarir, ROT90, "SNK", "Safari Rally (Japan)", GAME_NO_SOUND | GAME_WRONG_COLORS )
+GAMEX( 1979, safarir, 0, safarir, safarir, safarir, ROT90, "SNK", "Safari Rally (Japan)", GAME_NO_SOUND )
