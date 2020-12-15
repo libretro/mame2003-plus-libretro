@@ -223,7 +223,7 @@ static const char *safarir_sample_names[] =
 
 struct Samplesinterface safarir_samples_interface =
 {
-	6,	/* 5 channels */
+	6,	/* 6 channels */
 	50,	/* volume */
 	safarir_sample_names
 };
