@@ -124,30 +124,17 @@ VIDEO_UPDATE( safarir )
 }
 
 
-static unsigned short colortable_source[] =
-{
-	0x00, 0x01,
-	0x00, 0x02,
-	0x00, 0x03,
-	0x00, 0x04,
-	0x00, 0x05,
-	0x00, 0x06,
-	0x00, 0x07,
-};
-
 static PALETTE_INIT( safarir )
 {
-	palette_set_color(0, 0x00, 0x00, 0x00);
-	palette_set_color(1, 0x80, 0x80, 0x80);
-	palette_set_color(2, 0xff, 0xff, 0xff);
-	
-	palette_set_color(3, 0x00, 0x00, 0x00);
-	palette_set_color(4, 0x00, 0x00, 0x00);
-	palette_set_color(5, 0x00, 0x00, 0x00);
-	palette_set_color(6, 0x00, 0x00, 0x00);
-	palette_set_color(7, 0x00, 0x00, 0x00);
+	int i;
 
-	memcpy(colortable, colortable_source, sizeof(colortable_source));
+	for (i = 0; i < machine->drv->total_colors; i++)
+	{
+		palette_set_color(i, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
+
+		colortable[(i * 2) + 0] = 0;
+		colortable[(i * 2) + 1] = i;
+	}
 }
 
 
@@ -261,7 +248,7 @@ static MACHINE_DRIVER_START( safarir )
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 0*8, 26*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(8)
-	MDRV_COLORTABLE_LENGTH(2*7)
+	MDRV_COLORTABLE_LENGTH(2*8)
 
 	MDRV_PALETTE_INIT(safarir)
 	MDRV_VIDEO_START(safarir)
