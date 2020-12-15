@@ -1898,7 +1898,7 @@ GAME( 1982, aponow,   rescue,   rescue,   rescue,   rescue,       ROT90,  "bootl
 GAME( 1983, minefld,  0,        minefld,  minefld,  minefld,      ROT90,  "Stern", "Minefield" )
 GAME( 1982, losttomb, 0,        type1,    losttomb, losttomb,     ROT90,  "Stern", "Lost Tomb (easy)" )
 GAME( 1982, losttmbh, losttomb, type1,    losttomb, losttomb,     ROT90,  "Stern", "Lost Tomb (hard)" )
-GAMEX(1985, superbon, 0,        type1,    superbon, superbon,     ROT90,  "Signatron USA", "Agent Super Bond (Super Cobra conversion)", GAME_WRONG_COLORS )
+GAME( 1985, superbon, 0,        type1,    superbon, superbon,     ROT90,  "Signatron USA", "Agent Super Bond (Super Cobra conversion)" )
 GAME( 1981, hustler,  0,        hustler,  hustler,  hustler,      ROT90,  "Konami", "Video Hustler" )
 GAME( 1981, billiard, hustler,  hustler,  hustler,  billiard,     ROT90,  "bootleg", "The Billiards" )
 GAME( 1981, hustlerb, hustler,  hustlerb, hustler,  scramble_ppi, ROT90,  "bootleg", "Video Hustler (bootleg)" )
