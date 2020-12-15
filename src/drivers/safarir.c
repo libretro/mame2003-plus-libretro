@@ -132,9 +132,101 @@ VIDEO_START( safarir )
 
 VIDEO_UPDATE( safarir )
 {
-	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
-	tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
+	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
+	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
 }
+
+
+/*************************************
+ *
+ *  Audio system
+ *
+ *************************************/
+
+#define SAMPLE_SOUND1_1		0
+#define SAMPLE_SOUND1_2		1
+#define SAMPLE_SOUND2		2
+#define SAMPLE_SOUND3		3
+#define SAMPLE_SOUND4_1		4
+#define SAMPLE_SOUND4_2		5
+#define SAMPLE_SOUND5_1		6
+#define SAMPLE_SOUND5_2		7
+#define SAMPLE_SOUND6		8
+#define SAMPLE_SOUND7		9
+#define SAMPLE_SOUND8		10
+
+#define CHANNEL_SOUND1		0
+#define CHANNEL_SOUND2		1
+#define CHANNEL_SOUND3		2
+#define CHANNEL_SOUND4		3
+#define CHANNEL_SOUND5		4
+#define CHANNEL_SOUND6		5
+
+static UINT8 port_last;
+static UINT8 port_last2;
+
+
+WRITE_HANDLER( safarir_audio_w )
+{
+	UINT8 rising_bits = data & ~port_last;
+
+	if (rising_bits == 0x12) sample_start(CHANNEL_SOUND1, SAMPLE_SOUND1_1, 0);
+	if (rising_bits == 0x02) sample_start(CHANNEL_SOUND1, SAMPLE_SOUND1_2, 0);
+	if (rising_bits == 0x95) sample_start(CHANNEL_SOUND1, SAMPLE_SOUND6, 0);
+
+	if (rising_bits == 0x04 && (data == 0x15 || data ==0x16)) sample_start(CHANNEL_SOUND2, SAMPLE_SOUND2, 0);
+
+	if (data == 0x5f && (rising_bits == 0x49 || rising_bits == 0x5f)) sample_start(CHANNEL_SOUND3, SAMPLE_SOUND3, 1);
+	if (data == 0x00 || rising_bits == 0x01) sample_stop(CHANNEL_SOUND3);
+
+	if (data == 0x13)
+	{
+		if ((rising_bits == 0x13 && port_last != 0x04) || (rising_bits == 0x01 && port_last == 0x12))
+		{
+			sample_start(CHANNEL_SOUND4, SAMPLE_SOUND7, 0);
+		}
+		else if (rising_bits == 0x03 && port_last2 == 0x15 && !sample_playing(CHANNEL_SOUND4))
+		{
+			sample_start(CHANNEL_SOUND4, SAMPLE_SOUND4_1, 0);
+		}
+	}
+	if (data == 0x53 && port_last == 0x55) sample_start(CHANNEL_SOUND4, SAMPLE_SOUND4_2, 0);
+
+	if (data == 0x1f && rising_bits == 0x1f) sample_start(CHANNEL_SOUND5, SAMPLE_SOUND5_1, 0);
+	if (data == 0x14 && (rising_bits == 0x14 || rising_bits == 0x04)) sample_start(CHANNEL_SOUND5, SAMPLE_SOUND5_2, 0);
+
+	if (data == 0x07 && rising_bits == 0x07 && !sample_playing(CHANNEL_SOUND6))
+		sample_start(CHANNEL_SOUND6, SAMPLE_SOUND8, 0);
+
+	port_last2 = port_last;
+	port_last = data;
+}
+
+
+static const char *safarir_sample_names[] =
+{
+	"*safarir",
+	"sound1-1.wav",
+	"sound1-2.wav",
+	"sound2.wav",
+	"sound3.wav",
+	"sound4-1.wav",
+	"sound4-2.wav",
+	"sound5-1.wav",
+	"sound5-2.wav",
+	"sound6.wav",
+	"sound7.wav",
+	"sound8.wav",
+	0
+};
+
+
+struct Samplesinterface safarir_samples_interface =
+{
+	6,	/* 5 channels */
+	25,	/* volume */
+	safarir_sample_names
+};
 
 
 static PALETTE_INIT( safarir )
@@ -163,8 +255,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2000, 0x27ff, safarir_ram_w, &safarir_ram1, &safarir_ram_size },
 	{ 0x2800, 0x28ff, safarir_ram_bank_w },
 	{ 0x2c00, 0x2cff, safarir_scroll_w },
-	{ 0x3000, 0x30ff, MWA_NOP },	/* goes to SN76477 */
-
+	{ 0x3000, 0x30ff, safarir_audio_w },	/* goes to SN76477 */
 	{ 0x8000, 0x87ff, MWA_NOP, &safarir_ram2 },	/* only here to initialize pointer */
 MEMORY_END
 
@@ -246,10 +337,11 @@ struct SN76477interface safarir_sn76477_interface =
 	{ 0	/* N/C */}		/* 24  oneshot_res		 */
 };
 
+
 static MACHINE_DRIVER_START( safarir )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(8080, 3072000)	/* 3 MHz ? */
+	MDRV_CPU_ADD(8080, 18000000/8)	/* 2.25 MHz ? */
 	MDRV_CPU_MEMORY(readmem, writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -268,7 +360,7 @@ static MACHINE_DRIVER_START( safarir )
 	MDRV_VIDEO_UPDATE(safarir)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(SN76477, safarir_sn76477_interface)
+	MDRV_SOUND_ADD(SAMPLES, safarir_samples_interface)
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -286,10 +378,10 @@ ROM_START( safarir )
 	ROM_LOAD( "rl05",		0x1000, 0x0400, CRC(935ed469) SHA1(052a59df831dcc2c618e9e5e5fdfa47548550596) )
 	ROM_LOAD( "rl06",		0x1400, 0x0400, CRC(24c1cd42) SHA1(fe32ecea77a3777f8137ca248b8f371db37b8b85) )
 
-	ROM_REGION( 0x0400, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x0400, REGION_GFX1, 0 )
 	ROM_LOAD( "rl08",		0x0000, 0x0400, CRC(d6a50aac) SHA1(0a0c2cefc556e4e15085318fcac485b82bac2416) )
 
-	ROM_REGION( 0x0400, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_REGION( 0x0400, REGION_GFX2, 0 )
 	ROM_LOAD( "rl07",		0x0000, 0x0400, CRC(ba525203) SHA1(1c261cc1259787a7a248766264fefe140226e465) )
 ROM_END
 
@@ -297,7 +389,10 @@ ROM_END
 DRIVER_INIT( safarir )
 {
 	safarir_ram = safarir_ram1;
+
+	port_last = 0;
+	port_last2 = 0;
 }
 
 
-GAMEX( 1979, safarir, 0, safarir, safarir, safarir, ROT90, "SNK", "Safari Rally (Japan)", GAME_NO_SOUND )
+GAMEX( 1979, safarir, 0, safarir, safarir, safarir, ROT90, "SNK", "Safari Rally (Japan)", GAME_IMPERFECT_SOUND )
