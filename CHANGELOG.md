@@ -303,6 +303,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
 * Run And Gun - Romset `rungun`
 * Rush'N Attack - Romset `rushatck`
+* Safari Rally - Romset `safarir` - colors fixed
 * Sarge - Romset `sarge`
 * Satan's Hollow - Romset `shollow`
 * Sega Megaplay : Golden Axe II - Romset `mp_gaxe2`
@@ -444,6 +445,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Journey
 * Lunar Rescue - lrescue
 * NATO Defense
+* Safari Rally - safarir
 * Sasuke Vs Commander 
 * Shark Attack
 * Space Firebird
@@ -610,3 +612,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Ported NeoGeo M1 decrypted program from MAME128, benefiting kof2000, kof2000n, kof2001, kof2001h, kof2002, kf2k2pls, kf2kpla, kf2k2mp, kf2k2mp2, kof2003, mslug4, rotd, matrim, pnyaa, samsho5, samsh5sp, mslug5, svc [odarknighto]
 * Added missing color proms for mrtnt and 8bpm [mahoneyt944]
 * Added missing color proms for superbon and machomou [mahoneyt944]
+* Fixed colors and added sample support for safarir [mahoneyt944]
