@@ -241,6 +241,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games fixed and now working
 
+* Agent Super Bond - Romset `superbon` - colors fixed
 * Alcon - Romset: `alcon`
 * Arch Rivals - Romset: `archrivl`
 * Avengers In Galactic Storm US - Romset: `avengrgs`
@@ -285,6 +286,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
 * Kozmik Kroozr - Romset `kroozr`
+* Macho Mouse - Romset `machomou` - colors fixed
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
 * Max RPM - Romset `maxrpm`
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
@@ -607,3 +609,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Snk Vs Capcom  - Svc Chaos (MVS) and hooked it up to use the new m1 decryption [arcadez]
 * Ported NeoGeo M1 decrypted program from MAME128, benefiting kof2000, kof2000n, kof2001, kof2001h, kof2002, kf2k2pls, kf2kpla, kf2k2mp, kf2k2mp2, kof2003, mslug4, rotd, matrim, pnyaa, samsho5, samsh5sp, mslug5, svc [odarknighto]
 * Added missing color proms for mrtnt and 8bpm [mahoneyt944]
+* Added missing color proms for superbon and machomou [mahoneyt944]
