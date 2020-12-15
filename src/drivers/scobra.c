@@ -1766,8 +1766,7 @@ ROM_START( superbon )
 	/* However, pages may be missing. In addition, it is mentioned that the      */
 	/* conversion kit may be used for Scramble, Amidar and Frogger as well.      */
 	/* They all have different color proms. We use the prom from Super Cobra     */
-	/* for now and mark it as bad dump until we have more information.           */
-	ROM_LOAD( "82s123.6e",    0x0000, 0x0020, BAD_DUMP CRC(9b87f90d) SHA1(d11ac5e4a6057301ea2a9cbb404c2b978eb4c1dc) )
+	ROM_LOAD( "82s123.6e",    0x0000, 0x0020, CRC(9b87f90d) SHA1(d11ac5e4a6057301ea2a9cbb404c2b978eb4c1dc) )
 ROM_END
 
 ROM_START( hustler )
