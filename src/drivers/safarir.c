@@ -128,7 +128,7 @@ static PALETTE_INIT( safarir )
 {
 	int i;
 
-	for (i = 0; i < machine->drv->total_colors; i++)
+	for (i = 0; i < Machine->drv->total_colors; i++)
 	{
 		palette_set_color(i, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
 
