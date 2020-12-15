@@ -1545,9 +1545,12 @@ static void render_game_bitmap(struct mame_bitmap *bitmap, const rgb_t *palette,
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = palette[*src++];
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = val;
+					}
                                         dst += gamescale;
 				}
 			}
@@ -1563,9 +1566,12 @@ static void render_game_bitmap(struct mame_bitmap *bitmap, const rgb_t *palette,
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = *src++;
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = val;
+					}
                                         dst += gamescale;
 				}
 			}
@@ -1717,9 +1723,12 @@ static void render_game_bitmap_underlay(struct mame_bitmap *bitmap, const rgb_t 
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = palette[*src++];
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = add_and_clamp(val, und[dstrowpixels*r + c]);
+					}
                                         dst += gamescale;
 					und += gamescale;
 				}
@@ -1737,9 +1746,12 @@ static void render_game_bitmap_underlay(struct mame_bitmap *bitmap, const rgb_t 
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = *src++;
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = add_and_clamp(val, und[dstrowpixels*r + c]);
+					}
 					dst += gamescale;
 					und += gamescale;
 				}
@@ -1900,9 +1912,12 @@ static void render_game_bitmap_overlay(struct mame_bitmap *bitmap, const rgb_t *
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = palette[*src++];
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]);
+					}
 					dst += gamescale;
 					over += gamescale;
 					overyrgb += gamescale;
@@ -1922,9 +1937,12 @@ static void render_game_bitmap_overlay(struct mame_bitmap *bitmap, const rgb_t *
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = *src++;
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]);
+					}
 					dst += gamescale;
 					over += gamescale;
 					overyrgb += gamescale;
@@ -2095,9 +2113,12 @@ static void render_game_bitmap_underlay_overlay(struct mame_bitmap *bitmap, cons
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = palette[*src++];
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = add_and_clamp(blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]), und[dstrowpixels*r + c]);
+					}
 					dst += gamescale;
 					und += gamescale;
 					over += gamescale;
@@ -2119,9 +2140,12 @@ static void render_game_bitmap_underlay_overlay(struct mame_bitmap *bitmap, cons
 				for (x = 0; x < width; x++)
 				{
 					UINT32 val = *src++;
-                                        for (int r = 0; r < gamescale; r++)
-                                            for (int c = 0; c < gamescale; c++)
+					int r;
+                                        for (r = 0; r < gamescale; r++) {
+					    int c;
+                                            for (c = 0; c < gamescale; c++)
                                                 dst[dstrowpixels*r + c] = add_and_clamp(blend_over(val, over[dstrowpixels*r + c], overyrgb[dstrowpixels*r + c]), und[dstrowpixels*r + c]);
+					}
 					dst += gamescale;
 					und += gamescale;
 					over += gamescale;
@@ -2275,15 +2299,15 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 	    } else { // Opacity is > 0
 		/* Count elements in list */
 		int count = 0;
-		for (const struct overlay_piece *tmp = list;
-			tmp->type != OVERLAY_TYPE_END; count++)
+		struct overlay_piece *tmp;
+		for (tmp = list; tmp->type != OVERLAY_TYPE_END; count++)
 		    tmp++;
 		/* Create a new list we can modify */
 		struct overlay_piece *newlist = (struct overlay_piece *)
 				    calloc(count + 1, sizeof(struct overlay_piece));
 		memcpy(newlist, list, (count + 1)*sizeof(struct overlay_piece));
 		/* Modify opacity as set to user defined value */
-		struct overlay_piece *tmp = newlist;
+		tmp = newlist;
 		while (tmp->type != OVERLAY_TYPE_END) {
 		    tmp->color = tmp->color & ~(0xff << 24); // Clear
 		    tmp->color = tmp->color | (((opacity) & 0xff) << 24); // Set
@@ -3202,22 +3226,32 @@ true, the gradient of the triangle is positive, otherwise negative.
 ****************************************************************************/
 static void render_right_triangle(struct mame_bitmap *bitmap, int reverse, int upper, UINT32 color)
 { 
-    if (reverse)
-	for (int j = 0; j < bitmap->height; j++)
-	    if (upper)
-		for (int i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
+    if (reverse) {
+	int j;
+	for (j = 0; j < bitmap->height; j++)
+	    if (upper) {
+		int i;
+		for (i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
 		    plot_pixel(bitmap, i, bitmap->height-j-1, color);
-	    else
-		for (int i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
+	    } else {
+		int i;
+		for (i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
 		    plot_pixel(bitmap, i, bitmap->height-j-1, color);
-    else
-	for (int j = 0; j < bitmap->height; j++)
-	    if (upper)
-		for (int i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
+	    }
+    } else {
+	int j;
+	for (j = 0; j < bitmap->height; j++) {
+	    if (upper) {
+		int i;
+	 	for (i = ((double) bitmap->width / (double) bitmap->height)*j; i < bitmap->width; i++)
 		    plot_pixel(bitmap, i, j, color);
-	    else
-		for (int i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
+	    } else {
+		int i;
+		for (i = 0; i <= ((double) bitmap->width / (double) bitmap->height)*j; i++)
 		    plot_pixel(bitmap, i, j, color);
+	    }
+	}
+    }
 }
 
 
