@@ -24,6 +24,7 @@ D000      Paddle Position and Interrupt Reset
                   Ripcord: rewrote video driver, fixed gameplay, flipped
                            control and tuned DIP switches.
                   (Thanks Gregf for introducing these cool classics.)
+  JPC 03 OCT 20 - added overlays for circus, ripcord and crash.
 
 ***************************************************************************/
 
@@ -57,13 +58,72 @@ static READ_HANDLER( ripcord_IN2_r )
 }
 #endif
 
+#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
+#define OVERLAY_GREEN		MAKE_ARGB(0x04,0x20,0xff,0x20)
+#define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
+#define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xad,0xd8,0xe6)
+#define OVERLAY_BROWN		MAKE_ARGB(0x04,0x65,0x43,0x21)
 
+/* Overlay colours are based on the video shown here: */
+/* https://www.youtube.com/watch?v=bFm3b7e2tV8 */
+/* The original overlay overlaps the edges, which is authentic to the */
+/* real machine, though a little ugly and likely just because of */
+/* limited ability to do overlays back in 1977. */
+/* For the authentic look, uncomment the definition below. */
+//#define USE_AUTHENTIC_OVERLAY	1
 OVERLAY_START( circus_overlay )
-	OVERLAY_RECT(   0,  20, 248, 36, MAKE_ARGB(0x04,0x20,0x20,0xff) )
-	OVERLAY_RECT(   0,  36, 248, 48, MAKE_ARGB(0x04,0x20,0xff,0x20) )
-	OVERLAY_RECT(   0,  48, 248, 64, MAKE_ARGB(0x04,0xff,0xff,0x20) )
+#ifdef USE_AUTHENTIC_OVERLAY
+	OVERLAY_RECT( 0, 20, 248, 36, OVERLAY_BLUE )
+	OVERLAY_RECT( 0, 36, 248, 48, OVERLAY_GREEN )
+	OVERLAY_RECT( 0, 48, 248, 64, OVERLAY_YELLOW )
+#else
+	OVERLAY_RECT( 1, 20, 247, 36, OVERLAY_BLUE )
+	OVERLAY_RECT( 1, 36, 247, 48, OVERLAY_GREEN )
+	OVERLAY_RECT( 1, 48, 247, 64, OVERLAY_YELLOW )
+#endif
 OVERLAY_END
 
+/* There does not appear to be any known overlays for */
+/* this game, so one has been created for completion. */
+OVERLAY_START( ripcord_overlay )
+	OVERLAY_RECT(   0,   0, 248,  16, OVERLAY_GREEN )
+	OVERLAY_RECT(   0, 128,   6, 134, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 134,  10, 138, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 138,  12, 148, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 148,  24, 157, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 157,  20, 165, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 165,  18, 173, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 173,  14, 183, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 183,  16, 196, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 196,  32, 216, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 216,  36, 226, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 226,  34, 235, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 235,  40, 240, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 240,  46, 244, OVERLAY_BROWN )
+	OVERLAY_RECT(   0, 244,  64, 256, OVERLAY_BROWN )
+	OVERLAY_RECT(  64, 240, 120, 256, OVERLAY_BLUE )
+	OVERLAY_RECT( 120, 244, 151, 256, OVERLAY_YELLOW )
+	OVERLAY_RECT( 151, 240, 194, 256, OVERLAY_BLUE )
+	OVERLAY_RECT( 194, 244, 208, 256, OVERLAY_YELLOW )
+	OVERLAY_RECT( 208, 236, 232, 256, OVERLAY_YELLOW )
+	OVERLAY_RECT( 232, 240, 248, 256, OVERLAY_YELLOW )
+	OVERLAY_RECT( 138, 237, 143, 244, OVERLAY_BROWN )
+	OVERLAY_RECT( 135, 229, 149, 237, OVERLAY_GREEN )
+	OVERLAY_RECT( 233, 200, 248, 240, OVERLAY_LT_BLUE )
+	OVERLAY_RECT( 232, 200, 233, 208, OVERLAY_LT_BLUE )
+	OVERLAY_RECT( 224, 204, 232, 208, OVERLAY_LT_BLUE )
+OVERLAY_END
+
+/* I can't find any evidence of there ever being an overlay */
+/* for this game, but since this seems to be the accepted */
+/* overlay often used, I have included it. */
+OVERLAY_START( crash_overlay )
+	OVERLAY_RECT(   0,   0, 248,  87, OVERLAY_BLUE )
+	OVERLAY_RECT(   0,  87,  87, 168, OVERLAY_BLUE )
+	OVERLAY_RECT(  87,  87, 160, 168, OVERLAY_YELLOW )
+	OVERLAY_RECT( 160,  87, 248, 168, OVERLAY_BLUE )
+	OVERLAY_RECT(   0, 168, 248, 256, OVERLAY_BLUE )
+OVERLAY_END
 
 
 static MEMORY_READ_START( readmem )
@@ -480,6 +540,16 @@ ROM_START( ripcord )
 ROM_END
 
 
+static DRIVER_INIT( ripcord )
+{
+	artwork_set_overlay(ripcord_overlay);
+}
+
+static DRIVER_INIT( crash )
+{
+	artwork_set_overlay(crash_overlay);
+}
+
 static DRIVER_INIT( circus )
 {
 	artwork_set_overlay(circus_overlay);
@@ -488,5 +558,5 @@ static DRIVER_INIT( circus )
 
 GAME( 1977, circus,   0, circus,   circus,   circus, ROT0, "Exidy", "Circus" )
 GAMEX( 1977, robotbwl, 0, robotbwl, robotbwl, 0,      ROT0, "Exidy", "Robot Bowl", GAME_NO_SOUND )
-GAMEX( 1979, crash,    0, crash,    crash,    0,      ROT0, "Exidy", "Crash", GAME_IMPERFECT_SOUND )
-GAMEX( 1979, ripcord,  0, ripcord,  ripcord,  0,      ROT0, "Exidy", "Rip Cord", GAME_IMPERFECT_SOUND )
+GAMEX( 1979, crash,    0, crash,    crash,    crash,      ROT0, "Exidy", "Crash", GAME_IMPERFECT_SOUND )
+GAMEX( 1979, ripcord,  0, ripcord,  ripcord,  ripcord,      ROT0, "Exidy", "Rip Cord", GAME_IMPERFECT_SOUND )

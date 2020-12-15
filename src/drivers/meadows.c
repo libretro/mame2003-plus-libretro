@@ -339,25 +339,67 @@ static INTERRUPT_GEN( sound_interrupt )
 #define SCR_HORZ        32
 #define SCR_VERT        28
 
+/* Colors used in overlays. Smoothed out where possible */
+/* so that overlays are not so contrasted */
+#define OVERLAY_RED             MAKE_ARGB(0x04,0xff,0x20,0x20)
+#define OVERLAY_GREEN           MAKE_ARGB(0x04,0x20,0xff,0x20)
+// Original blue is too dark so is replaced with crayola blue
+// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
+//#define OVERLAY_BLUE          MAKE_ARGB(0x04,0x20,0x20,0xff)
+#define OVERLAY_BLUE            MAKE_ARGB(0x04,0x1f,0x75,0xfe)
+#define OVERLAY_YELLOW          MAKE_ARGB(0x04,0xff,0xff,0x20)
+#define OVERLAY_CYAN            MAKE_ARGB(0x04,0x20,0xff,0xff)
+// https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue
+#define OVERLAY_LT_BLUE         MAKE_ARGB(0x04,0xad,0xd8,0xe6)
+#define OVERLAY_ORANGE          MAKE_ARGB(0x04,0xff,0xa5,0x00)
+#define OVERLAY_PURPLE          MAKE_ARGB(0x04,0xff,0x00,0xff)
+
+
+
+/*************************************
+ *
+ * Often this overlay is shown with blue trousers on the player. This actually
+ * ruins game player and is likely a misplacement of blue that was meant to
+ * go on the text below the game field. The game field should be all white
+ * as with Gypsy Juggler. I can find no sources for colours, so have assumed
+ * colours as in Gypsy Juggler which does have a source:
+ * https://www.youtube.com/watch?v=aDW51awYLnE
+ *
+ *************************************/
 OVERLAY_START( deadeye_overlay )
-	OVERLAY_RECT(            0,    0, SCR_HORZ*8,        2*8, MAKE_ARGB(0x04, 32,192, 64))
-	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))
-	OVERLAY_RECT(            0,  6*8, SCR_HORZ*8,        9*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT(            0,  9*8,        1*8,       24*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT( SCR_HORZ*8-8,  9*8, SCR_HORZ*8,       24*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT(            0, 24*8, SCR_HORZ*8, SCR_VERT*8, MAKE_ARGB(0x04, 64, 64,192))
+	OVERLAY_RECT(0,    0,    SCR_HORZ*8, 1*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    1*8,  SCR_HORZ*8, 2*8,        OVERLAY_GREEN)
+	OVERLAY_RECT(0,    2*8,  SCR_HORZ*8, 6*8,        OVERLAY_BLUE)
+	OVERLAY_RECT(0,    6*8,  SCR_HORZ*8, 7*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    7*8,  1*8,        26*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(31*8, 7*8,  SCR_HORZ*8, 26*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    26*8, SCR_HORZ*8, 27*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(1*8,  7*8,  2*8,        8*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(30*8, 7*8,  31*8,       8*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(1*8,  25*8, 2*8,        26*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(30*8, 25*8, 31*8,       26*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    27*8, SCR_HORZ*8, SCR_VERT*8, OVERLAY_BLUE)
 OVERLAY_END
 
 
+/*************************************
+ *
+ * Video from https://www.youtube.com/watch?v=aDW51awYLnE show that, although
+ * people often overlay coloured pants on the juggler, the arcade game did
+ * not have these. This overlay follows that shown in the video.
+ *
+ *************************************/
 OVERLAY_START( gypsyjug_overlay )
-	OVERLAY_RECT(            0,    0, SCR_HORZ*8,        2*8, MAKE_ARGB(0x04, 32,192, 64))
-/*	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))*/
-	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        3*8, MAKE_ARGB(0x04, 32,192, 64))
-	OVERLAY_RECT(            0,  3*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))
-	OVERLAY_RECT(            0,  6*8, SCR_HORZ*8,        9*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT(            0,  9*8,        1*8,       24*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT( SCR_HORZ*8-8,  9*8, SCR_HORZ*8,       24*8, MAKE_ARGB(0x04,192,160, 32))
-	OVERLAY_RECT(            0, 24*8, SCR_HORZ*8, SCR_VERT*8, MAKE_ARGB(0x04,192,160, 32))
+	OVERLAY_RECT(0,    0,    SCR_HORZ*8, 2*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    2*8,  SCR_HORZ*8, 3*8,        OVERLAY_GREEN)
+	OVERLAY_RECT(0,    3*8,  SCR_HORZ*8, 6*8,        OVERLAY_BLUE)
+	OVERLAY_RECT(0,    7*8,  14*8,       8*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(18*8, 7*8,  SCR_HORZ*8, 8*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(13*8, 8*8,  15*8,       9*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(17*8, 8*8,  19*8,       9*8,        OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    8*8,  1*8,        25*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(31*8, 8*8,  SCR_HORZ*8, 25*8,       OVERLAY_YELLOW)
+	OVERLAY_RECT(0,    25*8, SCR_HORZ*8, SCR_VERT*8, OVERLAY_YELLOW)
 OVERLAY_END
 
 

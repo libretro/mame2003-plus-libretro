@@ -107,6 +107,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_MAME_REMAPPING,
   OPT_ARTWORK,
   OPT_ART_RESOLUTION,
+  OPT_ART_OVERLAY_OPACITY,
   OPT_NVRAM_BOOTSTRAP,
   OPT_Cheat_Input_Ports,
   OPT_Machine_Timing,
@@ -201,7 +202,8 @@ static void init_core_options(void)
   init_default(&default_options[OPT_BRIGHTNESS],             APPNAME"_brightness",             "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],                  APPNAME"_gamma",                  "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_ARTWORK],                APPNAME"_display_artwork",        "Display artwork (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2");
+  init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2|3|4|5|6|7|8");
+  init_default(&default_options[OPT_ART_OVERLAY_OPACITY],    APPNAME"_art_overlay_opacity",    "Hardcoded overlay opacity if used (Restart core); default|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|50|70");
   init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
@@ -209,7 +211,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DPAD_ANALOG],            APPNAME"_analog",                 "Control mapping ; analog|digital");
   init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
-  init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|original");
+  init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],            APPNAME"_vector_beam_width",      "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
@@ -219,7 +221,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_DCS_SPEEDHACK],          APPNAME"_dcs_speedhack",          "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
-  init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (restart); enabled|disabled");
+  init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
@@ -456,6 +458,18 @@ static void update_variables(bool first_time)
           options.artwork_res = atoi(var.value);
           break;
 
+        case OPT_ART_OVERLAY_OPACITY:
+	  if(strcmp(var.value, "default") == 0)
+	    options.overlay_opacity = ARTWORK_OVERLAY_DEFAULT;
+	  else {
+	    options.overlay_opacity = atoi(var.value);
+	    if (options.overlay_opacity < 0 )
+	      options.overlay_opacity = 0;
+	    else if (options.overlay_opacity > 255)
+	      options.overlay_opacity = 255;
+	  }
+          break;
+
         case OPT_STV_BIOS:
           if(!options.content_flags[CONTENT_STV])
             break;
@@ -541,35 +555,13 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_VECTOR_RESOLUTION:
-          if(strcmp(var.value, "640x480") == 0)
           {
-            options.vector_width=640;
-            options.vector_height=480;
-          }
-          else if(strcmp(var.value, "1024x768") == 0)
-          {
-            options.vector_width=1024;
-            options.vector_height=768;
-          }
-          else if(strcmp(var.value, "1280x960") == 0)
-          {
-            options.vector_width=1280;
-            options.vector_height=960;
-          }
-          else if(strcmp(var.value, "1440x1080") == 0)
-          {
-            options.vector_width=1440;
-            options.vector_height=1080;
-          }
-          else if(strcmp(var.value, "1600x1200") == 0)
-          {
-            options.vector_width=1600;
-            options.vector_height=1200;
-          }
-          else
-          {
-            options.vector_width=0; // mame will set this from the driver resolution set
-            options.vector_height=0;
+	      int width = 0;
+	      int height = 0;
+	      sscanf(var.value, "%dx%d", &width, &height);
+	      // if they are still 0, mame will set from driver resolution set
+	      options.vector_width = width;
+	      options.vector_height = height;
           }
           break;
 

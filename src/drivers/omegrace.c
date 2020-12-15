@@ -599,7 +599,13 @@ ROM_END
 
 static DRIVER_INIT( omegrace )
 {
-	/*artwork_set_overlay(omegrace_overlay);*/ /* removed 2019-01-02 based on report that this yellow overlay is not accurate to original hardware */
+    	/* Removed 2019-01-02 based on report that this yellow overlay is not accurate to original hardware */
+	/* Reinstated 2020-09-09 based on evidence of two sources of original hardware showing overlay color: */
+	/* https://www.youtube.com/watch?v=PTb5JVCPc2g */
+    	/* https://www.youtube.com/watch?v=BgIYtzccPnw */
+    	/* Also shown as yellow in flyer: https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=752&image=1 */
+    	/* and in flyer: https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=752&image=2 */
+	artwork_set_overlay(omegrace_overlay);
 }
 
 

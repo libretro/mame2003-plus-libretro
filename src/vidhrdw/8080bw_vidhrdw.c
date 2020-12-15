@@ -6,6 +6,34 @@
 
 ***************************************************************************/
 
+/**************************************************************************/
+/* Change Log                                                             */
+/*                                                                        */
+/* 7 Sep 2020                                                             */
+/*                                                                        */
+/* - Updates to all overlay colours as follows:                           */
+/*   - Adjusted OVERLAY_BLUE used in overlays so it is viewable on black. */
+/*   - Adjusted OVERLAY_LT_BLUE so it actually is blue not purple.        */
+/*   - Added OVERLAY_ORANGE and OVERLAY_PURPLE for use in overlays.       */
+/* - Updated overlays as follows:                                         */
+/*   - invad2ct: added extra overlay and fixed position of overlays.      */
+/*   - invaders: repositioned overlays to match actual hardware.          */
+/*   - invaders: added a cocktail overlay.                                */
+/*   - invrvnge: repositioned overlays to avoid ship partial colouring.   */ 
+/* - Added new overlays for the following games (and variants):           */
+/*   - 280zzzap                                                           */
+/*   - clowns, clowns1                                                    */
+/*   - cosmicmo, cosmicm2 (including cocktail variant)                    */
+/*   - galxwars, galxwar2, galxwart, starw (including cocktail variant)   */
+/*   - invaddlx                                                           */
+/*   - maze                                                               */
+/*   - ozmawars, ozmawar2, solfight, spaceph (including cocktail variant) */
+/*   - spclaser, laser, spcewarl                                          */
+/*   - sstranger (including coctail variant)                              */
+/*   - yosakdon, yosakdoa                                                 */
+/* - Added internal comments on overlays to show source of overlay.       */
+/**************************************************************************/
+
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "artwork.h"
@@ -40,57 +68,312 @@ static VIDEO_UPDATE( bowler );
 
 static void plot_pixel_8080(int x, int y, int col);
 
-/* smoothed colors, overlays are not so contrasted */
-#define OVERLAY_RED			MAKE_ARGB(0x08,0xff,0x20,0x20)
-#define OVERLAY_GREEN		MAKE_ARGB(0x08,0x20,0xff,0x20)
-#define OVERLAY_BLUE		MAKE_ARGB(0x08,0x20,0x20,0xff)
-#define OVERLAY_YELLOW		MAKE_ARGB(0x08,0xff,0xff,0x20)
-#define OVERLAY_CYAN		MAKE_ARGB(0x08,0x20,0xff,0xff)
-#define OVERLAY_LT_BLUE		MAKE_ARGB(0x08,0xa0,0xa0,0xff)
+/* Colors used in overlays. Smoothed out where possible */
+/* so that overlays are not so contrasted */
+#define OVERLAY_RED		MAKE_ARGB(0x04,0xff,0x20,0x20)
+#define OVERLAY_GREEN		MAKE_ARGB(0x04,0x20,0xff,0x20)
+// Original blue is too dark so is replaced with crayola blue
+// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
+//#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x20,0x20,0xff)
+#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
+#define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
+#define OVERLAY_CYAN		MAKE_ARGB(0x04,0x20,0xff,0xff)
+// Light blue originally used is more purple, so is replaced
+// https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue
+//#define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xa0,0xa0,0xff)
+#define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xad,0xd8,0xe6)
+#define OVERLAY_ORANGE		MAKE_ARGB(0x04,0xff,0xa5,0x00)
+#define OVERLAY_PURPLE		MAKE_ARGB(0x04,0xff,0x00,0xff)
+#define OVERLAY_BROWN		MAKE_ARGB(0x04,0x65,0x43,0x21)
+
+#define COCKTAIL_ONLY		"cocktail"
+#define UPRIGHT_ONLY		"upright"
+
+/* Overlay comes from this page: */
+/* https://www.proxibid.com/Art-Antiques-Collectibles/Collectibles/COSMIC-MONSTERS-II-UNIVERSAL-ARCADE-GAME-SOLD-AS-IS-TURNS-ON-BUT-SCREEN-DOESN-T-OPERATE-PROPER/lotInformation/43093078 */
+/* The overlay is for Cosmic Monsters II, but we assume they */
+/* had similar overlays, so apply to both. */
+/* Unlike most emulators with an overlay for this game */
+/* the actual machine seems to suggest the overlay is */
+/* as below (that is, yellow, cyan, purple, green, yellow). */
+/* There is no known photos of an overlay for cocktail mode */
+/* So I've made a variant to handle this so both players */
+/* get the same look from either angle. */
+OVERLAY_START( cosmicmo_overlay )
+    // Common to both upright and cocktail
+	OVERLAY_RECT(  0, 0,  40, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT( 40, 0,  56, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 56, 0, 184, 224, OVERLAY_PURPLE )
+
+    // Upright overlay
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 216, 0, 240, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 184, 0, 216, 224, OVERLAY_CYAN )
+
+    // Cocktail overlay
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 200, 0, 240, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 184, 0, 200, 224, OVERLAY_GREEN )
+OVERLAY_END
 
 
+/* Overlay based on actual arcade video sources: */
+/* https://www.youtube.com/watch?v=0RA-42dPnPk */
+/* https://www.youtube.com/watch?v=hmyVEJzgvZ0&feature=emb_logo */
+/* Colour is much closer to cyan in videos and photos. */
+OVERLAY_START( d280zzzap_overlay )
+	OVERLAY_RECT(   0, 180, 256, 224, OVERLAY_CYAN )
+OVERLAY_END
+
+
+/* Overlay based on actual arcade video sources: */
+/* https://www.youtube.com/watch?v=NajsSj3nRQI */
+/* https://www.arcade-museum.com/game_detail.php?game_id=7356 */
+/* Also for clowns1. */
+OVERLAY_START( clowns_overlay )
+	OVERLAY_RECT(   0,  24, 256,  43, OVERLAY_BLUE )
+	OVERLAY_RECT(   0,  43, 256,  64, OVERLAY_GREEN )
+	OVERLAY_RECT(   0,  64, 256,  85, OVERLAY_YELLOW )
+OVERLAY_END
+
+
+/* Overlay based on actual arcade video sources. */
+/* https://www.youtube.com/watch?v=1uSzmzZP1s8 */
+/* The green overlay was originally too high, so has been */
+/* adjusted. The red was too low, and should have been */
+/* just down to the row for the UFO, so has been adjusted. */
+/* Also added an overlay for cocktail mode. This is harder */
+/* to based on a "standard" given there appear to be so */
+/* many overlays for cocktails. I've gone with this source: */
+/* https://i.ebayimg.com/thumbs/images/g/lDMAAOSw2WheBkDx/s-l225.jpg */
+/* which ensures the same look no matter which side of the */
+/* machine the player is on. */
 OVERLAY_START( invaders_overlay )
-	OVERLAY_RECT(   8,   0,  64, 224, OVERLAY_GREEN )
-	OVERLAY_RECT(   0,  16,   8, 134, OVERLAY_GREEN )
-	OVERLAY_RECT( 184,   0, 216, 224, OVERLAY_RED )
+    // Upright overlay
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  10,  0,  56, 224, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 18,   8, 134, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 200,  0, 216, 224, OVERLAY_RED )
+
+    // Cocktail overlay
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 0,   0,  32, 224, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 32,  0,  56, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 56,  0,  96, 224, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 96,  0, 144, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 144, 0, 184, 224, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 184, 0, 208, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 208, 0, 240, 224, OVERLAY_GREEN )
 OVERLAY_END
 
 
-/*
-OVERLAY_START( invdpt2m_overlay )
-	OVERLAY_RECT(  16,   0,  72, 224, OVERLAY_GREEN )
-	OVERLAY_RECT(   0,  16,  16, 134, OVERLAY_GREEN )
-	OVERLAY_RECT(  72,   0, 192, 224, OVERLAY_YELLOW )
-	OVERLAY_RECT( 192,   0, 224, 224, OVERLAY_RED )
+/* Overlay based on actual arcade video sources. */
+/* https://www.youtube.com/watch?v=xnuIEFpZOCM */
+/* This is specifically for invaddlx, but also works */
+/* for moonbase. */
+OVERLAY_START( invaddlx_overlay )
+	OVERLAY_RECT(   0,   0,  32, 224, OVERLAY_CYAN )
+	OVERLAY_RECT(  32,   0,  80, 224, OVERLAY_GREEN )
+	OVERLAY_RECT(  80,   0, 168, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT( 168,   0, 200, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT( 200,   0, 240, 224, OVERLAY_RED )
 OVERLAY_END
-*/
 
 
+/* Cannot find any actual footage of a real arcade machine. */
+/* Generally it was just a conversion of Space Invaders. */
+/* Have adjusted the red overlay from what is generally used */
+/* to ensure your ship doesn't go partly red when near the */
+/* top of the screen. */
+/* Also works for invrvnga. */
 OVERLAY_START( invrvnge_overlay )
 	OVERLAY_RECT(   0,   0,  64, 224, OVERLAY_GREEN )
-	OVERLAY_RECT( 184,   0, 224, 224, OVERLAY_RED )
+	OVERLAY_RECT( 192,   0, 224, 224, OVERLAY_RED )
 OVERLAY_END
 
 
+/* Real arcade footage exists but actual overlay colours */
+/* can't easily be determined. */
+/* Updated overlays to ensure invaders don't get two overlays */
+/* on same row. Fixed yellow overlay which was misplaced. */
+/* Added an extra overlay to ensure player 2 also gets the */
+/* same number of overlays. */
 OVERLAY_START( invad2ct_overlay )
 	OVERLAY_RECT(   0,   0,  48, 224, OVERLAY_YELLOW )
-	OVERLAY_RECT(  25,   0,  71, 224, OVERLAY_GREEN )
-	OVERLAY_RECT(  48,   0, 140, 224, OVERLAY_CYAN )
-	OVERLAY_RECT( 117,   0, 186, 224, OVERLAY_GREEN )
-	OVERLAY_RECT( 163,   0, 232, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT(  24,   0,  72, 224, OVERLAY_GREEN )
+	OVERLAY_RECT(  48,   0,  96, 224, OVERLAY_CYAN )
+	OVERLAY_RECT(  48,   0, 137, 224, OVERLAY_BLUE )
+	OVERLAY_RECT( 120,   0, 185, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 160,   0, 232, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT( 209,   0, 256, 224, OVERLAY_RED )
 OVERLAY_END
 
 
+/* Overlay colours are based on the upright machine overlays shown */
+/* in https://www.rotheblog.com/2019/07/classic-arcade-games/space-stranger-arcade-upright-yachiyo-electronics/ */
+/* and https://www.arcade-museum.com/game_detail.php?game_id=18021 */
+/* The overlay on the shields appears red in the first, and orange */
+/* in the second; it is quite possible it was a red overlay on top */
+/* of the larger yellow overlay, making orange, so orange is used */
+/* in the overlay. */
+/* There is also, shown in the second URL, an overlay for the */
+/* cocktail varient; just blue and yellow. This is used in cocktail */
+/* mode, though cocktail mode implementation is broken currently. */
+OVERLAY_START( sstrangr_overlay )
+    // Upright overlay
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  0,   0,  16, 224, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 16,   0,  40, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 40,   0,  56, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 56,   0, 200, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,200,   0, 216, 224, OVERLAY_RED )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,216,   0, 240,  68, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,216,  68, 240, 148, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,216, 148, 240, 224, OVERLAY_BLUE )
+
+    // Cocktail overlay
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  0,   0,  40, 224, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 40,   0, 200, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,200,   0, 240, 224, OVERLAY_BLUE )
+OVERLAY_END
+
+
+/* Overlay based on flyer: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=5784&image=2 */
+/* Can't find any flyers or videos of cocktail version, so have used */
+/* Same overlay with different top and bottom to work in */
+/* upside down mode. */
+/* Also works for ozmawar2, solfight and spaceph. */
+OVERLAY_START( ozmawars_overlay )
+    // Common to both upright and cocktail
+	OVERLAY_RECT( 200, 0, 224, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT( 175, 0, 200, 224, OVERLAY_BLUE )
+	OVERLAY_RECT( 148, 0, 175, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT( 120, 0, 148, 224, OVERLAY_CYAN )
+	OVERLAY_RECT(  88, 0, 120, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT(  56, 0,  88, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT(  32, 0,  56, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT(  16, 0,  32, 224, OVERLAY_CYAN )
+
+    // Upright overlay
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,  74, 240, 148, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224, 148, 240, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,   0, 240,  74, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0,   0,  16, 144, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 192,  16, 224, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 144,  16, 192, OVERLAY_PURPLE )
+
+    // Cocktail overlay
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 224, 0, 240, 224, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   0, 0,  16, 224, OVERLAY_PURPLE )
+OVERLAY_END
+
+/* No known overlay exists, so I have just created one here.  */
+/* Also works for yosakdoa. */
+OVERLAY_START( yosakdon_overlay )
+	OVERLAY_RECT( 216,  74, 240, 148, OVERLAY_PURPLE )
+	OVERLAY_RECT( 216, 148, 240, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 216,   0, 240,  74, OVERLAY_CYAN )
+	OVERLAY_RECT( 177, 97, 184, 127, OVERLAY_GREEN )
+	OVERLAY_RECT( 169, 127, 177, 143, OVERLAY_GREEN )
+	OVERLAY_RECT( 169, 81, 177, 97, OVERLAY_GREEN )
+	OVERLAY_RECT( 160, 143, 169, 160, OVERLAY_GREEN )
+	OVERLAY_RECT( 160, 64, 169, 81, OVERLAY_GREEN )
+	OVERLAY_RECT( 144, 159, 160, 176, OVERLAY_GREEN )
+	OVERLAY_RECT( 144, 48, 160, 64, OVERLAY_GREEN )
+	OVERLAY_RECT( 128, 176, 144, 200, OVERLAY_GREEN )
+	OVERLAY_RECT( 128, 24, 144, 48, OVERLAY_GREEN )
+	OVERLAY_RECT( 113, 200, 128, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 113, 0, 128, 24, OVERLAY_GREEN )
+	OVERLAY_RECT( 88, 208, 113, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 88, 0, 113, 16, OVERLAY_GREEN )
+	OVERLAY_RECT( 72, 118, 88, 119, OVERLAY_BROWN )
+	OVERLAY_RECT( 72, 106, 88, 107, OVERLAY_BROWN )
+	OVERLAY_RECT( 56, 119, 72, 120, OVERLAY_BROWN )
+	OVERLAY_RECT( 56, 105, 72, 106, OVERLAY_BROWN )
+	OVERLAY_RECT( 40, 120, 56, 121, OVERLAY_BROWN )
+	OVERLAY_RECT( 40, 104, 56, 105, OVERLAY_BROWN )
+	OVERLAY_RECT( 32, 121, 40, 122, OVERLAY_BROWN )
+	OVERLAY_RECT( 32, 103, 40, 104, OVERLAY_BROWN )
+	OVERLAY_RECT( 24, 103, 32, 122, OVERLAY_BROWN )
+	OVERLAY_RECT( 9, 102, 24, 123, OVERLAY_BROWN )
+	OVERLAY_RECT( 8, 0, 9, 224, OVERLAY_BROWN )
+	OVERLAY_RECT( 0, 182, 8, 224, OVERLAY_CYAN )
+	OVERLAY_RECT( 0, 137, 8, 182, OVERLAY_YELLOW )
+	OVERLAY_RECT( 0, 0, 8, 137, OVERLAY_CYAN )
+OVERLAY_END
+
+
+/* Cannot find any actual arcade footage to show there is an */
+/* overlay, but a light blue colour seems to be the standard */
+/* used in emulators. */
 OVERLAY_START( phantom2_overlay )
 	OVERLAY_RECT(   0,   0, 240, 224, OVERLAY_LT_BLUE )
 OVERLAY_END
 
 
+/* Overlay based on actual arcade video sources. */
+/* https://www.youtube.com/watch?v=u5vSZyDhFLo */
+/* Video of actual arcade machine shows yellow screen. */
 OVERLAY_START( gunfight_overlay )
 	OVERLAY_RECT(   0,   0, 256, 224, OVERLAY_YELLOW )
 OVERLAY_END
 
+/* Overlay based on actual arcade video sources. */
+/* https://youtu.be/KITGPAKABlY */
+/* Video of actual arcade machine shows green screen. */
+OVERLAY_START( maze_overlay )
+	OVERLAY_RECT(   0,   0, 256, 224, OVERLAY_GREEN )
+OVERLAY_END
+
+
+/* The only actual screen shots I could find were from: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=3236&image=1 */
+/* The overlay is on a cocktail version and clearly doesn't */
+/* actually fit correctly with poor overlaps on the scoring */
+/* area. So this overlay has attempted to mirror the colours */
+/* and positions of overlays, but fix the scoring area while */
+/* maintaining the look and feel of the screenshots. */
+/* This also works with laser and spcewarl. */
+OVERLAY_START( spclaser_overlay )
+	OVERLAY_RECT( 232,   0, 240, 126, OVERLAY_BLUE )
+	OVERLAY_RECT( 232, 126, 240, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT( 224,   0, 232, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 216,   0, 224, 224, OVERLAY_RED )
+	OVERLAY_RECT( 184,   0, 216, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT( 152,   0, 184, 224, OVERLAY_GREEN )
+	OVERLAY_RECT( 120,   0, 152, 224, OVERLAY_BLUE )
+	OVERLAY_RECT(  88,   0, 120, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT(  56,   0,  88, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT(  40,   0,  56, 224, OVERLAY_RED )
+	OVERLAY_RECT(  32,   0,  40, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT(  24,   0,  32, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT(  16,   0,  24, 224, OVERLAY_RED )
+	OVERLAY_RECT(   0,   0,  16, 224, OVERLAY_GREEN )
+OVERLAY_END
+
+
+/* Overlay based on images from flyer: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=431&image=1 */
+/* Overlays are carefully placed to avoid meteors and */
+/* titles being cut by two overlay colours. */
+/* This overlay also works for galxwar2, galxwart, starw. */
+/* A slight variant is used in cocktail mode (less colourful */
+/* scores. */
+OVERLAY_START( galxwars_overlay )
+    // Common to both upright and cocktail
+	OVERLAY_RECT( 184, 0, 224, 224, OVERLAY_CYAN )
+	OVERLAY_RECT( 144, 0, 184, 224, OVERLAY_PURPLE )
+	OVERLAY_RECT(  96, 0, 144, 224, OVERLAY_RED )
+	OVERLAY_RECT(  56, 0,  96, 224, OVERLAY_GREEN )
+	OVERLAY_RECT(  13, 0,  56, 224, OVERLAY_CYAN )
+
+    // Upright overlay
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,   0, 240,  80, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,  80, 240, 144, OVERLAY_BLUE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224, 144, 240, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  10,   0,  13, 224, OVERLAY_RED )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0,   0,  10, 224, OVERLAY_CYAN )
+
+    // Cocktail overlay
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 224, 0, 240, 224, OVERLAY_CYAN )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   0, 0,  13, 224, OVERLAY_CYAN )
+OVERLAY_END
 
 
 DRIVER_INIT( 8080bw )
@@ -103,6 +386,30 @@ DRIVER_INIT( 8080bw )
 	flip_screen_set(0);
 }
 
+DRIVER_INIT( cosmicmo )
+{
+	init_8080bw();
+	artwork_set_overlay(cosmicmo_overlay);
+}
+
+DRIVER_INIT( yosakdon )
+{
+	init_8080bw();
+	artwork_set_overlay(yosakdon_overlay);
+}
+
+DRIVER_INIT( 280zzzap )
+{
+	init_8080bw();
+	artwork_set_overlay(d280zzzap_overlay);
+}
+
+DRIVER_INIT( clowns )
+{
+	init_8080bw();
+	artwork_set_overlay(clowns_overlay);
+}
+
 DRIVER_INIT( invaders )
 {
 	init_8080bw();
@@ -112,7 +419,7 @@ DRIVER_INIT( invaders )
 DRIVER_INIT( invaddlx )
 {
 	init_8080bw();
-/*	artwork_set_overlay(invdpt2m_overlay);*/
+	artwork_set_overlay(invaddlx_overlay);
 }
 
 DRIVER_INIT( invrvnge )
@@ -125,6 +432,12 @@ DRIVER_INIT( invad2ct )
 {
 	init_8080bw();
 	artwork_set_overlay(invad2ct_overlay);
+}
+
+DRIVER_INIT( sstrangr )
+{
+	init_8080bw();
+	artwork_set_overlay(sstrangr_overlay);
 }
 
 DRIVER_INIT( sstrngr2 )
@@ -146,6 +459,12 @@ DRIVER_INIT( rollingc )
 	init_8080bw();
 	videoram_w_p = schaser_videoram_w;
 	background_color = 0;	/* black */
+}
+
+DRIVER_INIT( ozmawars )
+{
+	init_8080bw();
+	artwork_set_overlay(ozmawars_overlay);
 }
 
 
@@ -218,6 +537,29 @@ DRIVER_INIT( gunfight )
 	artwork_set_overlay(gunfight_overlay);
 }
 
+DRIVER_INIT( indianbt )
+{
+        init_8080bw();
+        videoram_w_p = invadpt2_videoram_w;
+}
+
+DRIVER_INIT( maze )
+{
+	init_8080bw();
+	artwork_set_overlay(maze_overlay);
+}
+
+DRIVER_INIT( spclaser )
+{
+	init_8080bw();
+	artwork_set_overlay(spclaser_overlay);
+}
+
+DRIVER_INIT( galxwars )
+{
+	init_8080bw();
+	artwork_set_overlay(galxwars_overlay);
+}
 
 
 
@@ -684,6 +1026,7 @@ PALETTE_INIT( invadpt2 )
 {
 	int i;
 
+
 	for (i = 0;i < Machine->drv->total_colors;i++)
 	{
 		/* this bit arrangment is a little unusual but are confirmed by screen shots */
@@ -692,6 +1035,19 @@ PALETTE_INIT( invadpt2 )
 		int b = 0xff * ((i >> 1) & 1);
 		palette_set_color(i,r,g,b);
 	}
+}
+
+PALETTE_INIT( indianbt )
+{
+        int i;
+
+        for (i = 0;i < Machine->drv->total_colors;i++)
+        {
+                int r = 0xff * ((i >> 0) & 1);
+                int b = 0xff * ((i >> 2) & 1);
+                int g = 0xff * ((i >> 1) & 1);
+		palette_set_color(i,r,g,b);
+        }
 }
 
 PALETTE_INIT( lrescue )
@@ -707,7 +1063,6 @@ PALETTE_INIT( lrescue )
 		palette_set_color(i,r,g,b);
 	}
 }
-
 
 PALETTE_INIT( sflush )
 {

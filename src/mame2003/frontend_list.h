@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2273
+#define NUMGAMES 2276
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
@@ -398,6 +398,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Cosmic Chasm (set 2)"                                                                                  ,"cchasm1"      , "mame", 1, 0 } ,
 { "Cosmic Guerilla"                                                                                       ,"cosmicg"      , "mame", 3, 0 } ,
 { "Cosmic Monsters"                                                                                       ,"cosmicmo"     , "mame", 3, 0 } ,
+{ "Cosmic Monsters II"                                                                                    ,"cosmicm2"     , "mame", 3, 0 } ,
 { "Cosmo Gang the Video (Japan)"                                                                          ,"cosmognj"     , "mame", 3, 0 } ,
 { "Cosmo Gang the Video (US)"                                                                             ,"cosmogng"     , "mame", 3, 0 } ,
 { "Cotocoto Cottong"                                                                                      ,"cottong"      , "mame", 3, 0 } ,
@@ -868,6 +869,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Image Fight (Japan)"                                                                                   ,"imgfight"     , "mame", 1, 0 } ,
 { "In The Hunt (US)"                                                                                      ,"inthuntu"     , "mame", 3, 0 } ,
 { "In The Hunt (World)"                                                                                   ,"inthunt"      , "mame", 3, 0 } ,
+{ "Indian Battle"                                                                                         ,"indianbt"     , "mame", 3, 0 } ,
 { "Indiana Jones and the Temple of Doom (set 1)"                                                          ,"indytemp"     , "mame", 0, 0 } ,
 { "Indiana Jones and the Temple of Doom (set 2)"                                                          ,"indytem2"     , "mame", 0, 0 } ,
 { "Indiana Jones and the Temple of Doom (set 3)"                                                          ,"indytem3"     , "mame", 0, 0 } ,
@@ -2263,7 +2265,8 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Yie Ar Kung-Fu (set 2)"                                                                                ,"yiear2"       , "mame", 3, 0 } ,
 { "Yokai Douchuuki (Japan new version)"                                                                   ,"youkaidk"     , "mame", 3, 0 } ,
 { "Yokai Douchuuki (Japan old version)"                                                                   ,"yokaidko"     , "mame", 3, 0 } ,
-{ "Yosaku To Donbee (bootleg)"                                                                            ,"yosakdon"     , "mame", 3, 0 } ,
+{ "Yosaku To Donbee (set 1)"                                                                              ,"yosakdon"     , "mame", 3, 0 } ,
+{ "Yosaku To Donbee (set 2)"                                                                              ,"yosakdoa"     , "mame", 3, 0 } ,
 { "Youma Ninpou Chou (Japan)"                                                                             ,"youma"        , "mame", 3, 0 } ,
 { "Yuuyu no Quiz de GO!GO! (Japan)"                                                                       ,"yuyugogo"     , "mame", 1, 0 } ,
 { "Zarzon"                                                                                                ,"zarzon"       , "mame", 3, 0 } ,

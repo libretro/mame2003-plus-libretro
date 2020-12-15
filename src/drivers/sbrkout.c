@@ -55,12 +55,36 @@ extern VIDEO_UPDATE( sbrkout );
  *
  *************************************/
 
+/* Colors used in overlay. */
+#define OVERLAY_RED		MAKE_ARGB(0x04,0xff,0x20,0x20)
+#define OVERLAY_GREEN		MAKE_ARGB(0x04,0x20,0xff,0x20)
+// Original blue is too dark so is replaced with crayola blue
+// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
+//#define OVERLAY_BLUE		MAKE_ARGB(0x08,0x20,0x20,0xff)
+#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
+#define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
+
+/* Overlay colours are based on the flyer shown here: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=3417&image=2 */
+/* The original overlay overlaps the edges, which is authentic to the */
+/* real machine, though a little ugly and likely just because of */
+/* limited ability to do overlays back in 1978. */
+/* For the authentic look, uncomment the definition below. */
+//#define USE_AUTHENTIC_OVERLAY 1
 OVERLAY_START( sbrkout_overlay )
-	OVERLAY_RECT( 208,   8, 248, 218, MAKE_ARGB(0x04,0x20,0x20,0xff) )
-	OVERLAY_RECT( 176,   8, 208, 218, MAKE_ARGB(0x04,0xff,0x80,0x10) )
-	OVERLAY_RECT( 144,   8, 176, 218, MAKE_ARGB(0x04,0x20,0xff,0x20) )
-	OVERLAY_RECT(  96,   8, 144, 218, MAKE_ARGB(0x04,0xff,0xff,0x20) )
-	OVERLAY_RECT(  16,   8,  24, 218, MAKE_ARGB(0x04,0x20,0x20,0xff) )
+#ifdef USE_AUTHENTIC_OVERLAY
+	OVERLAY_RECT( 216,   0, 256, 224, OVERLAY_BLUE)
+	OVERLAY_RECT( 184,   0, 216, 224, OVERLAY_RED)
+	OVERLAY_RECT( 152,   0, 184, 224, OVERLAY_GREEN)
+	OVERLAY_RECT(  24,   0, 152, 224, OVERLAY_YELLOW)
+	OVERLAY_RECT(  16,   0,  24, 224, OVERLAY_BLUE)
+#else
+	OVERLAY_RECT( 216,   8, 248, 218, OVERLAY_BLUE)
+	OVERLAY_RECT( 184,   8, 216, 218, OVERLAY_RED)
+	OVERLAY_RECT( 152,   8, 184, 218, OVERLAY_GREEN)
+	OVERLAY_RECT(  24,   8, 152, 218, OVERLAY_YELLOW)
+	OVERLAY_RECT(  16,   8,  24, 218, OVERLAY_BLUE)
+#endif
 OVERLAY_END
 
 

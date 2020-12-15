@@ -24,8 +24,6 @@
 /*  To Do:                                                                  */
 /*  -----                                                                   */
 /*                                                                          */
-/*  - Space Invaders Deluxe: overlay                                        */
-/*                                                                          */
 /*  - Space Encounters: 'trench' circuit                                    */
 /*                                                                          */
 /*  - Phantom II: verify clouds                                             */
@@ -59,15 +57,35 @@
 /*                                                                          */
 /* 30 July 2001 - sstrngr2 Added (c)1979 Yachiyo, Colour version of Space   */
 /*                Stranger, board has Stranger 2 written on it              */
+/*                                                                          */
+/* ------------------------------------------------------------------------ */
+/*                                                                          */
+/* 7 Sep 2020 - Following were added                                        */
+/* yosakdoa - Yosaku To Donbee (set 2) (c)1979 Worldwing                    */
+/* cosmicm2 - Cosmic Monsters II (c) 1979 Universal                         */
+/* indianbt - Indian Battle (c)1980 Taito                                   */
+/*                                                                          */
+/* 7 Sep 2020 - Updated manufacturer details on yosakdon and yosakdoa.      */
+/* Added warning cosmicmo/cosmicm2 cocktail mode not implemented.           */
+/*                                                                          */
 /****************************************************************************/
 
 #include "driver.h"
 #include "8080bw.h"
 #include "vidhrdw/generic.h"
 #include "cpu/i8039/i8039.h"
+#include "artwork.h"
 
 extern struct Samplesinterface circus_samples_interface;
 
+#define COCKTAIL_ONLY		"cocktail"
+#define UPRIGHT_ONLY		"upright"
+
+static VIDEO_START( invaders );
+static VIDEO_START( sstrangr );
+static VIDEO_START( cosmicmo );
+static VIDEO_START( ozmawars );
+static VIDEO_START( galxwars );
 
 static PALETTE_INIT( 8080bw )
 {
@@ -202,11 +220,25 @@ static MACHINE_DRIVER_START( invaders )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 32*8-1)
+	MDRV_VIDEO_START(invaders)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(SAMPLES, invaders_samples_interface)
 	MDRV_SOUND_ADD(SN76477, invaders_sn76477_interface)
 MACHINE_DRIVER_END
+
+VIDEO_START( invaders )
+{
+	if( video_start_generic() )
+		return 1;
+
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(3) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(3) & 0x01) != 0);
+
+	return 0;
+}
+
 
 
 /*******************************************************/
@@ -715,6 +747,18 @@ INPUT_PORTS_START( sstrangr )
 	PORT_BITX(0,  0x02, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Fast", IP_KEY_NONE, IP_JOY_NONE )
 INPUT_PORTS_END
 
+VIDEO_START( sstrangr )
+{
+	if( video_start_generic() )
+		return 1;
+
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(3) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(3) & 0x01) != 0);
+
+	return 0;
+}
+
 static MACHINE_DRIVER_START( sstrangr )
 
 	/* basic machine hardware */
@@ -726,6 +770,8 @@ static MACHINE_DRIVER_START( sstrangr )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 32*8-1)
+
+	MDRV_VIDEO_START(sstrangr)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(SAMPLES, invaders_samples_interface)
@@ -972,6 +1018,27 @@ INPUT_PORTS_START( galxwars )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+static MACHINE_DRIVER_START( galxwars )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(invaders)
+
+	/* video hardware */
+	MDRV_VIDEO_START(galxwars)
+MACHINE_DRIVER_END
+
+
+VIDEO_START( galxwars )
+{
+	if( video_start_generic() )
+		return 1;
+
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(3) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(3) & 0x01) != 0);
+
+	return 0;
+}
 
 /*******************************************************/
 /*                                                     */
@@ -1094,6 +1161,27 @@ INPUT_PORTS_START( cosmicmo )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+static MACHINE_DRIVER_START( cosmicmo )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(invaders)
+
+	/* video hardware */
+	MDRV_VIDEO_START(cosmicmo)
+MACHINE_DRIVER_END
+
+
+VIDEO_START( cosmicmo )
+{
+	if( video_start_generic() )
+		return 1;
+
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(3) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(3) & 0x01) != 0);
+
+	return 0;
+}
 
 
 /*******************************************************/
@@ -1665,6 +1753,90 @@ INPUT_PORTS_START( sflush )
 	PORT_ANALOG( 0xff, 0x6a, IPT_PADDLE, 30, 30, 0x16,0xbf)
 INPUT_PORTS_END
 
+
+/*******************************************************/
+/*                                                     */
+/* Taito  "Indian battle"                              */
+/* Back ported from https://github.com/mamedev/mame    */
+/*                                                     */
+/*******************************************************/
+
+INPUT_PORTS_START( indianbt )
+        PORT_START
+        PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 )
+        PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
+        PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
+        PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+        PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+        PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_2WAY )
+        PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
+        PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+
+        PORT_START
+        PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
+        PORT_DIPSETTING(    0x00, "3" )
+        PORT_DIPSETTING(    0x01, "4" )
+        PORT_DIPSETTING(    0x02, "5" )
+        PORT_DIPSETTING(    0x03, "6" )
+        PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_TILT )
+        PORT_DIPNAME( 0x08, 0x00, "Number of Catch Animals" )
+        PORT_DIPSETTING(    0x00, "6" )
+        PORT_DIPSETTING(    0x08, "3" )
+        PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
+        PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_PLAYER2 )
+        PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
+        PORT_DIPNAME(0x80,  0x00, "Invulnerability (Cheat)")
+        PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+        PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+
+        PORT_START /*  cabinet fake port  must be 4th  */
+
+        PORT_START          /* Dummy port for cocktail mode */
+        PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+        PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+        PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+INPUT_PORTS_END
+
+static READ_HANDLER( indianbt_r )
+{
+        switch(activecpu_get_pc())
+        {
+                case 0x5fed:    return 0x10;
+                case 0x5ffc:    return 0;
+        }
+        logerror("unknown port 0 read @ %x\n",activecpu_get_pc());
+        return rand();
+}
+
+static PORT_READ_START( indianbt_readport )
+        { 0x00, 0x00, indianbt_r },
+        { 0x01, 0x01, input_port_0_r },
+        { 0x02, 0x02, input_port_1_r },
+        { 0x03, 0x03, c8080bw_shift_data_r },
+PORT_END
+
+static PORT_WRITE_START( indianbt_writeport )
+        { 0x02, 0x02, c8080bw_shift_amount_w },
+        { 0x04, 0x04, c8080bw_shift_data_w },
+        { 0x06, 0x06, IOWP_NOP }, // For sound
+        //{ 0x07, 0x07, indianbt_sh_port7_w }, // For music (not implemented)
+PORT_END
+
+static MACHINE_DRIVER_START( indianbt )
+        /* basic machine hardware */
+        MDRV_IMPORT_FROM(invaders)
+        MDRV_CPU_MODIFY("main")
+	MDRV_CPU_PORTS(indianbt_readport, indianbt_writeport)
+	MDRV_MACHINE_INIT(indianbt)
+
+        /* video hardware */
+        MDRV_PALETTE_LENGTH(8)
+        MDRV_PALETTE_INIT(indianbt)
+
+        /* sound hardware */
+        /* Uses invaders with adjusted samples. */
+    	/* Music missing */
+MACHINE_DRIVER_END
 
 
 /*******************************************************/
@@ -2548,7 +2720,6 @@ INPUT_PORTS_START( maze )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
-
 /*******************************************************/
 /*                                                     */
 /* Midway "Tornado Baseball"                           */
@@ -2733,6 +2904,29 @@ INPUT_PORTS_START( ozmawars )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
+
+static MACHINE_DRIVER_START( ozmawars )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(invaders)
+
+	/* video hardware */
+	MDRV_VIDEO_START(ozmawars)
+MACHINE_DRIVER_END
+
+
+VIDEO_START( ozmawars )
+{
+	if( video_start_generic() )
+		return 1;
+
+	/* Change overlay based on mode */
+	artwork_show(UPRIGHT_ONLY, (readinputport(3) & 0x01) == 0);
+	artwork_show(COCKTAIL_ONLY, (readinputport(3) & 0x01) != 0);
+
+	return 0;
+}
+
 
 INPUT_PORTS_START( spaceph )
 	PORT_START      /* IN0 */
@@ -3014,6 +3208,7 @@ INPUT_PORTS_START( spceking )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+
 /*******************************************************/
 /*                                                     */
 /* Taito "Steel Worker"                                */
@@ -3062,12 +3257,12 @@ INPUT_PORTS_START( steelwkr )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_BUTTON2 )
 
 	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )									
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "1" )
 	PORT_DIPSETTING(    0x01, "2" )
 	PORT_DIPSETTING(    0x02, "3" )
 	PORT_DIPSETTING(    0x03, "4" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_TILT )										
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_TILT )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
@@ -3313,6 +3508,22 @@ ROM_START( invad2ct )
     ROM_LOAD( "invad2ct.a",   0x5800, 0x0800, CRC(efdabb03) SHA1(33f4cf249e88e2b7154350e54c479eb4fa86f26f) )
 ROM_END
 
+ROM_START( indianbt )
+        ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+        ROM_LOAD( "1.36",       0x0000, 0x0800, CRC(ddc2b25d) SHA1(120ae17492b79d7d2ad515de9f1e3be7f8b9d4eb) )
+        ROM_LOAD( "2.35",       0x0800, 0x0800, CRC(6499b062) SHA1(62a301d532b9fc4e7a17cbe8d2061eb0e842bdfa) )
+        ROM_LOAD( "3.34",       0x1000, 0x0800, CRC(5c51675d) SHA1(1313e8794ee6cd0252452b96d42cff7907eeaa21) )
+        ROM_LOAD( "4.33",       0x1800, 0x0800, CRC(70ebec95) SHA1(f6e1e7a28033d89e49b88c559ea8926b1b4ff21b) )
+        ROM_LOAD( "5.32",       0x4000, 0x0800, CRC(7b4022f4) SHA1(10dec8110e8f4bc79764d3183bdfb3c135e27faf) )
+        ROM_LOAD( "6.31",       0x4800, 0x0800, CRC(89bd6f73) SHA1(5dc63871252c530ef0aae4f4cd02fee44b397815) )
+        ROM_LOAD( "7.42",       0x5000, 0x0800, CRC(7060ba0b) SHA1(366ce02b7b0a3391afef23b8b41cd98a91034830) )
+        ROM_LOAD( "8.41",       0x5800, 0x0800, CRC(eaccfc0a) SHA1(c6c2d702243bdd1d2ad5fbaaceadb5a5798577bc) )
+
+        ROM_REGION( 0x0800, REGION_PROMS, 0 )           /* color maps player 1/player 2 */
+        ROM_LOAD( "mb7054.1",   0x0000, 0x0400, CRC(4acf4db3) SHA1(842a6c9f91806b424b7cc437670b4fe0bd57dff1) )
+        ROM_LOAD( "mb7054.2",   0x0400, 0x0400, CRC(62cb3419) SHA1(3df65062945589f1df37359dbd3e30ae4b23f469) )
+ROM_END
+
 ROM_START( invrvnge )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
 	ROM_LOAD( "invrvnge.h",   0x0000, 0x0800, CRC(aca41bbb) SHA1(ca71f792abd6d9a44d15b19d2ccf678e82ccba4f) )
@@ -3457,6 +3668,12 @@ ROM_START( cosmicmo )
 	ROM_LOAD( "cosmicmo.5",   0x4000, 0x0400, CRC(b13f228e) SHA1(a0de05aa36435e72c77f5333f3ad964ec448a8f0) )
 	ROM_LOAD( "cosmicmo.6",   0x4400, 0x0400, CRC(4ae1b9c4) SHA1(8eed87eebe68caa775fa679363b0fe3728d98c34) )
 	ROM_LOAD( "cosmicmo.7",   0x4800, 0x0400, CRC(6a13b15b) SHA1(dc03a6c3e938cfd08d16bd1660899f951ba72ea2) )
+ROM_END
+
+ROM_START( cosmicm2 )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+	ROM_LOAD( "3907.bin",   0x0000, 0x1000, CRC(bbffede6) SHA1(e7505ee8e3f19557ebbfd0145dc2ae0d1c529eba) )
+	ROM_LOAD( "3906.bin",   0x4000, 0x1000, CRC(b841f894) SHA1(b1f9e1800969baab14da2fd8873b58d4707b7236) )
 ROM_END
 
 ROM_START( superinv )
@@ -3815,6 +4032,17 @@ ROM_START( ballbomb )
 	ROM_LOAD( "tn07",         0x0400, 0x0400, CRC(deb0ac82) SHA1(839581c4e58cb7b0c2c14cf4f239220017cc26eb) )
 ROM_END
 
+ROM_START( yosakdoa )
+        ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
+        ROM_LOAD( "yosaku1",      0x0000, 0x0400, CRC(d132f4f0) SHA1(373c7ea1bd6debcb3dad5881793b8c31dc7a01e6) )
+        ROM_LOAD( "yd2.bin",      0x0400, 0x0400, CRC(78336df4) SHA1(b0b6254568d191d2d0b9c9280a3ccf2417ef3f38) )
+        ROM_LOAD( "yosaku3",      0x0800, 0x0400, CRC(b1a0b3eb) SHA1(4eb80668920b45dc6216424f8ca53d753a35f4f1) )
+        ROM_LOAD( "yosaku4",      0x0c00, 0x0400, CRC(c06c225e) SHA1(2699e3c13b09b6de16bd3ca3ca2e9d7a91b7e268) )
+        ROM_LOAD( "yosaku5",      0x1400, 0x0400, CRC(ae422a43) SHA1(5219680f9d6c5d984b29167f85106fa375856121) )
+        ROM_LOAD( "yosaku6",      0x1800, 0x0400, CRC(26b24a12) SHA1(387589fa4027d41b6fb06555661d4f92fe2f990c) )
+        ROM_LOAD( "yosaku7",      0x1c00, 0x0400, CRC(878d5a18) SHA1(6adc8763d5644602eed7fe6d9186a48be105aace) )
+ROM_END
+
 ROM_START( yosakdon )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )     /* 64k for code */
 	ROM_LOAD( "yd1.bin", 	  0x0000, 0x0400, CRC(607899c9) SHA1(219c0c99894715818606fba49cc75517f6f43e0c) )
@@ -3871,8 +4099,8 @@ ROM_END
 /* 596 */ GAMEX(1976, seawolf,  0,        seawolf,  seawolf,  seawolf,  ROT0,   "Midway", "Sea Wolf", GAME_IMPERFECT_SOUND )
 /* 597 */ GAMEX(1975, gunfight, 0,        gunfight, gunfight, gunfight, ROT0,   "Midway", "Gun Fight", GAME_NO_SOUND )
 /* 605 */ GAMEX(1976, tornbase, 0,        8080bw,   tornbase, 8080bw,	ROT0,   "Midway", "Tornado Baseball", GAME_NO_SOUND )
-/* 610 */ GAMEX(1976, 280zzzap, 0,        280zzzap, 280zzzap, 8080bw,	ROT0,   "Midway", "Datsun 280 Zzzap", GAME_NO_SOUND )
-/* 611 */ GAMEX(1976, maze,     0,        8080bw,   maze,     8080bw,	ROT0,   "Midway", "Amazing Maze", GAME_NO_SOUND )
+/* 610 */ GAMEX(1976, 280zzzap, 0,        280zzzap, 280zzzap, 280zzzap,	ROT0,   "Midway", "Datsun 280 Zzzap", GAME_NO_SOUND )
+/* 611 */ GAMEX(1976, maze,     0,        8080bw,   maze,     maze,	ROT0,   "Midway", "Amazing Maze", GAME_NO_SOUND )
 /* 612 */ GAME( 1977, boothill, 0,        boothill, boothill, 8080bw,   ROT0,   "Midway", "Boot Hill" )
 /* 615 */ GAMEX(1977, checkmat, 0,        checkmat, checkmat, 8080bw,	ROT0,   "Midway", "Checkmate", GAME_NO_SOUND )
 /* 618 */ GAMEX(1977, desertgu, 0,        desertgu, desertgu, desertgu,	ROT0,   "Midway", "Desert Gun", GAME_NO_SOUND )
@@ -3880,8 +4108,8 @@ ROM_END
 /* 622 */ GAMEX(1977, lagunar,  0,        280zzzap, lagunar,  8080bw,   ROT90,  "Midway", "Laguna Racer", GAME_NO_SOUND )
 /* 623 */ GAMEX(1977, gmissile, 0,        m4,       gmissile, 8080bw,   ROT0,   "Midway", "Guided Missile", GAME_NO_SOUND )
 /* 626 */ GAMEX(1977, m4,       0,        m4,       m4,       8080bw,   ROT0,   "Midway", "M-4", GAME_NO_SOUND )
-/* 630 */ GAMEX(1978, clowns,   0,        clowns,   clowns,   8080bw,   ROT0,   "Midway", "Clowns (rev. 2)", GAME_IMPERFECT_SOUND )
-/* 630 */ GAMEX(1978, clowns1,  clowns,   clowns,   clowns1,   8080bw,   ROT0,   "Midway", "Clowns (rev. 1)", GAME_IMPERFECT_SOUND )
+/* 630 */ GAMEX(1978, clowns,   0,        clowns,   clowns,   clowns,   ROT0,   "Midway", "Clowns (rev. 2)", GAME_IMPERFECT_SOUND )
+/* 630 */ GAMEX(1978, clowns1,  clowns,   clowns,   clowns1,  clowns,   ROT0,   "Midway", "Clowns (rev. 1)", GAME_IMPERFECT_SOUND )
 /* 640    																		"Midway", "Space Walk" */
 /* 642 */ GAMEX(1978, einnings, 0,        m4,       einnings, 8080bw,	ROT0,   "Midway", "Extra Inning", GAME_NO_SOUND )
 /* 643 */ GAMEX(1978, shuffle,  0,        shuffle,  shuffle,  8080bw,	ROT90,  "Midway", "Shuffleboard", GAME_NO_SOUND )
@@ -3901,10 +4129,10 @@ ROM_END
 	  GAME( 1979, sicv,     invaders, invadpt2, invaders, invadpt2, ROT270, "Taito", "Space Invaders (CV Version)" )
 	  GAME( 1978, sisv,     invaders, invadpt2, invaders, invadpt2, ROT270, "Taito", "Space Invaders (SV Version)" )
 	  GAME( 1978, sisv2,    invaders, invadpt2, invaders, invadpt2, ROT270, "Taito", "Space Invaders (SV Version 2)" )
-	  GAME( 1979, galxwars, 0,        invaders, galxwars, invaders, ROT270, "Universal", "Galaxy Wars (Universal set 1)" )
-	  GAME( 1979, galxwar2, galxwars, invaders, galxwars, invaders, ROT270, "Universal", "Galaxy Wars (Universal set 2)" )
-	  GAME( 1979, galxwart, galxwars, invaders, galxwars, invaders, ROT270,	"Taito?", "Galaxy Wars (Taito[Q])" ) /* Copyright Not Displayed */
-	  GAME( 1979, starw,    galxwars, invaders, galxwars, invaders, ROT270, "bootleg", "Star Wars" )
+	  GAME( 1979, galxwars, 0,        galxwars, galxwars, galxwars, ROT270, "Universal", "Galaxy Wars (Universal set 1)" )
+	  GAME( 1979, galxwar2, galxwars, galxwars, galxwars, galxwars, ROT270, "Universal", "Galaxy Wars (Universal set 2)" )
+	  GAME( 1979, galxwart, galxwars, galxwars, galxwars, galxwars, ROT270,	"Taito?", "Galaxy Wars (Taito[Q])" ) /* Copyright Not Displayed */
+	  GAME( 1979, starw,    galxwars, galxwars, galxwars, galxwars, ROT270, "bootleg", "Star Wars" )
 	  GAME( 1979, lrescue,  0,        lrescue,  lrescue,  lrescue,  ROT270, "Taito", "Lunar Rescue" )
 	  GAME( 1979, grescue,  lrescue,  lrescue,  lrescue,  lrescue,  ROT270, "Taito (Universal license?)", "Galaxy Rescue" )
 	  GAME( 1979, desterth, lrescue,  lrescue,  invrvnge, lrescue,  ROT270, "bootleg", "Destination Earth" )
@@ -3917,8 +4145,9 @@ ROM_END
 	  GAMEX(1980, polaris,  0,        polaris,  polaris,  polaris,  ROT270, "Taito", "Polaris (set 1)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, polarisa, polaris,  polaris,  polaris,  polaris,  ROT270, "Taito", "Polaris (set 2)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, ballbomb, 0,        ballbomb, ballbomb, invadpt2, ROT270, "Taito", "Balloon Bomber", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )	/* missing clouds and blue background */
-    GAME( 1980, steelwkr, 0,        steelwkr, steelwkr, invadpt2, ROT0,   "Taito", "Steel Worker" )
-	  
+          GAMEX( 1980, indianbt, 0,       indianbt, indianbt, indianbt, ROT270, "Taito", "Indian Battle", GAME_IMPERFECT_SOUND ) /* No music */
+          GAME( 1980, steelwkr, 0,        steelwkr, steelwkr, invadpt2, ROT0,   "Taito", "Steel Worker" )
+
 /* Misc. manufacturers */
 
 	  GAME( 1980, earthinv, invaders, invaders, earthinv, invaders, ROT270, "bootleg", "Super Earth Invasion" )
@@ -3934,20 +4163,22 @@ ROM_END
 	  GAME( 1978, invaderl, invaders, invaders, invaders, invaders, ROT270, "bootleg", "Space Invaders (Logitec)" )
 	  GAME( 1979, jspecter, invaders, invaders, jspecter, invaders, ROT270, "Jatre", "Jatre Specter (set 1)" )
 	  GAME( 1979, jspectr2, invaders, invaders, jspecter, invaders, ROT270, "Jatre", "Jatre Specter (set 2)" )
-	  GAME( 1979, cosmicmo, invaders, invaders, cosmicmo, invaders, ROT270, "Universal", "Cosmic Monsters" )
+	  GAME( 1979, cosmicmo, 0, cosmicmo, cosmicmo, cosmicmo, ROT270, "Universal", "Cosmic Monsters" )
+	  GAME( 1979, cosmicm2, 0, cosmicmo, cosmicmo, cosmicmo, ROT270, "Universal", "Cosmic Monsters II" )
 	  GAME( 19??, superinv, invaders, invaders, invaders, invaders, ROT270, "bootleg", "Super Invaders" )
-	  GAME( 1978, sstrangr, 0,		  sstrangr, sstrangr, 8080bw,   ROT270,	"Yachiyo Electronics, Ltd.", "Space Stranger" )
+	  GAMEX(1978, sstrangr, 0,	  sstrangr, sstrangr, sstrangr, ROT270,	"Yachiyo Electronics, Ltd.", "Space Stranger", GAME_NO_COCKTAIL )
 	  GAME( 1979, sstrngr2, 0,        sstrngr2, sstrngr2, sstrngr2, ROT270, "Yachiyo Electronics, Ltd.", "Space Stranger 2" )
 	  GAME( 1978, moonbase, invadpt2, invaders, invadpt2, invaddlx, ROT270, "Nichibutsu", "Moon Base" )
 	  GAMEX(19??, invrvnge, 0,        invrvnge, invrvnge, invrvnge, ROT270, "Zenitone Microsec Ltd.", "Invader's Revenge",  GAME_NO_SOUND )
 	  GAMEX(19??, invrvnga, invrvnge, invrvnge, invrvnge, invrvnge, ROT270, "Zenitone Microsec Ltd. (Dutchford license)", "Invader's Revenge (Dutchford)", GAME_NO_SOUND )
-	  GAME( 1980, spclaser, 0,        invaders, spclaser, invaddlx, ROT270, "GamePlan (Taito)", "Space Laser" )
+	  GAME( 1980, spclaser, 0,        invaders, spclaser, spclaser, ROT270, "GamePlan (Taito)", "Space Laser" )
 
-	  GAME( 1980, laser,    spclaser, invaders, spclaser, invaddlx, ROT270, "<unknown>", "Laser" )
-	  GAME( 1979, spcewarl, spclaser, invaders, spclaser, invaddlx, ROT270, "Leijac (Konami)","Space War (Leijac)" )
+	  GAME( 1980, laser,    spclaser, invaders, spclaser, spclaser, ROT270, "<unknown>", "Laser" )
+	  GAME( 1979, spcewarl, spclaser, invaders, spclaser, spclaser, ROT270, "Leijac (Konami)","Space War (Leijac)" )
 	  GAMEX(1979, rollingc, 0,        rollingc, rollingc, rollingc, ROT270, "Nichibutsu", "Rolling Crash - Moon Base", GAME_NO_SOUND )
-	  GAME( 1979, ozmawars, 0,        invaders, ozmawars, 8080bw,   ROT270, "SNK", "Ozma Wars (set 1)" )
-	  GAME( 1979, ozmawar2, ozmawars, invaders, ozmawars, 8080bw,   ROT270, "SNK", "Ozma Wars (set 2)" ) /* Uses Taito's three board colour version of Space Invaders PCB */
-	  GAME( 1979, solfight, ozmawars, invaders, ozmawars, 8080bw,   ROT270, "bootleg", "Solar Fight" )
-	  GAME( 1979, spaceph,  ozmawars, invaders, spaceph,  8080bw,   ROT270, "Zilec Games", "Space Phantoms" )
-	  GAMEX(1979, yosakdon, 0,        yosakdon, lrescue,  8080bw,   ROT270, "bootleg", "Yosaku To Donbee (bootleg)", GAME_NO_SOUND )
+	  GAME( 1979, ozmawars, 0,        ozmawars, ozmawars, ozmawars, ROT270, "SNK", "Ozma Wars (set 1)" )
+	  GAME( 1979, ozmawar2, ozmawars, ozmawars, ozmawars, ozmawars, ROT270, "SNK", "Ozma Wars (set 2)" ) /* Uses Taito's three board colour version of Space Invaders PCB */
+	  GAME( 1979, solfight, ozmawars, ozmawars, ozmawars, ozmawars, ROT270, "bootleg", "Solar Fight" )
+	  GAME( 1979, spaceph,  ozmawars, ozmawars, spaceph,  ozmawars, ROT270, "Zilec Games", "Space Phantoms" )
+	  GAMEX(1979, yosakdon, 0,        yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbee (set 1)", GAME_NO_SOUND )
+	  GAMEX(1979, yosakdoa, yosakdon, yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbee (set 2)", GAME_NO_SOUND )
