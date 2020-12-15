@@ -218,8 +218,8 @@ static struct GfxLayout charlayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout, 0, 2 },
-	{ REGION_GFX2, 0, &charlayout, 0, 2 },
+	{ REGION_GFX1, 0, &charlayout, 0, 8 },
+	{ REGION_GFX2, 0, &charlayout, 0, 8 },
 	{ -1 } /* end of array */
 };
 
