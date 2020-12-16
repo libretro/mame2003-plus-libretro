@@ -44,7 +44,6 @@ TODO:
 static UINT8 *safarir_ram1, *safarir_ram2;
 static size_t safarir_ram_size;
 static UINT8 safarir_ram_bank;
-static UINT8 *safarir_ram;
 
 static struct tilemap *bg_tilemap, *fg_tilemap;
 
@@ -388,7 +387,8 @@ ROM_END
 
 DRIVER_INIT( safarir )
 {
-	safarir_ram = safarir_ram1;
+	safarir_ram1 = auto_malloc(safarir_ram_size);
+	safarir_ram2 = auto_malloc(safarir_ram_size);
 
 	port_last = 0;
 	port_last2 = 0;
