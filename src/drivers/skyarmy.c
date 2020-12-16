@@ -30,8 +30,8 @@ static struct tilemap* skyarmy_tilemap;
 
 static void get_skyarmy_tile_info(int tile_index)
 {
-        int code = skyarmy_videoram[tile_index];
-        int attr = skyarmy_colorram[tile_index];
+	int code = skyarmy_videoram[tile_index];
+	int attr = skyarmy_colorram[tile_index];
         
 	/* bit 0 <-> bit 2 ????? */
 	switch(attr)
@@ -99,27 +99,30 @@ PALETTE_INIT( skyarmy )
 
 VIDEO_START( skyarmy )
 {
-        skyarmy_tilemap = tilemap_create(get_skyarmy_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
-        tilemap_set_scroll_cols(skyarmy_tilemap,32);
-        if(!skyarmy_tilemap)
+	skyarmy_tilemap = tilemap_create(get_skyarmy_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
+	tilemap_set_scroll_cols(skyarmy_tilemap,32);
+
+	if(!skyarmy_tilemap)
 		return 1;
+
 	return 0;
 }
 
 
 VIDEO_UPDATE( skyarmy )
 {
-        int sx, sy, flipx, flipy, offs,pal;
-        int i;
+	int sx, sy, flipx, flipy, offs,pal;
+	int i;
+
 	for(i=0;i<0x20;i++)tilemap_set_scrolly( skyarmy_tilemap,i,skyarmy_scrollram[i]);
-       
-        tilemap_draw(bitmap,cliprect,skyarmy_tilemap,0,0);
-	
+
+	tilemap_draw(bitmap,cliprect,skyarmy_tilemap,0,0);
+
 	for (offs = 0 ; offs < 0x40; offs+=4)
 	{
-		
+
 		pal=spriteram[offs+2]&0x7;
-		
+
 		switch(pal)
 		{
 		 case 1: pal=4; break;
