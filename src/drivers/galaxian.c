@@ -5317,4 +5317,4 @@ GAME( 1981, rockclim, 0,        rockclim, rockclim, 0,		    ROT180, "Taito", "Ro
 GAME( 1983, ozon1,    0,        ozon1,    ozon1,	0,		      ROT90,  "Proma", "Ozon I" )
 GAME( 1983, ladybugg, ladybug,  batman2,  ladybugg, ladybugg, ROT270, "bootleg", "Ladybug (bootleg on Galaxian hardware)" )
 GAME( 1980, vpool,    hustler,  mooncrst, vpool,    0,        ROT90,  "bootleg", "Video Pool (bootleg on Moon Cresta hardware)" )
-GAMEX(1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, 0,		    ROT90,  "Shinkai Inc. (Magic Eletronics USA licence)", "Driving Force (Galaxian conversion)", GAME_WRONG_COLORS )
+GAME( 1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, 0,		    ROT90,  "Shinkai Inc. (Magic Eletronics USA licence)", "Driving Force (Galaxian conversion)" )
