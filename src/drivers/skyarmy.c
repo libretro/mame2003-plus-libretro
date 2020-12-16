@@ -125,8 +125,8 @@ VIDEO_UPDATE( skyarmy )
 		 case 1: pal=4; break;
 		 case 2: pal=2; break;
 	 	 case 3: pal=6; break;
-	  	 case 4: pal=1; break;
-	  	 case 6: pal=3; break;
+		 case 4: pal=1; break;
+		 case 6: pal=3; break;
 		}
 		sx = spriteram[offs+3];
 		sy = 242-spriteram[offs];
@@ -259,8 +259,8 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-        { REGION_GFX1, 0, &charlayout,   0, 8 },
-        { REGION_GFX2, 0, &spritelayout, 0, 8 },
+	{ REGION_GFX1, 0, &charlayout,   0, 8 },
+	{ REGION_GFX2, 0, &spritelayout, 0, 8 },
 	{ -1 } /* end of array */
 };
 
@@ -285,11 +285,11 @@ static struct AY8910interface ay8910_interface =
 };
 
 static MACHINE_DRIVER_START( skyarmy )
-        MDRV_CPU_ADD(Z80,4000000)
+	MDRV_CPU_ADD(Z80,4000000)
 	MDRV_CPU_MEMORY(skyarmy_readmem,skyarmy_writemem)
 	MDRV_CPU_PORTS(readport,writeport)
-        MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
-        MDRV_CPU_PERIODIC_INT(skyarmy_nmi_source,650)	/* Hz */
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
+	MDRV_CPU_PERIODIC_INT(skyarmy_nmi_source,650)	/* Hz */
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -297,14 +297,14 @@ static MACHINE_DRIVER_START( skyarmy )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8,32*8)
 	MDRV_VISIBLE_AREA(0*8,32*8-1,1*8,31*8-1) 
-        MDRV_GFXDECODE(gfxdecodeinfo)
-        MDRV_PALETTE_LENGTH(32)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(32)
 
-        MDRV_PALETTE_INIT(skyarmy)
-        MDRV_VIDEO_START(skyarmy)
-        MDRV_VIDEO_UPDATE(skyarmy)
+	MDRV_PALETTE_INIT(skyarmy)
+	MDRV_VIDEO_START(skyarmy)
+	MDRV_VIDEO_UPDATE(skyarmy)
         
-        MDRV_SOUND_ADD(AY8910, ay8910_interface)
+	MDRV_SOUND_ADD(AY8910, ay8910_interface)
 MACHINE_DRIVER_END
 
 
@@ -315,16 +315,16 @@ ROM_START( skyarmy )
 	ROM_LOAD( "a3h.bin", 0x4000, 0x2000, CRC(95485e56) SHA1(c4cbcd31ba68769d2d0d0875e2a92982265339ae) )
 	ROM_LOAD( "j4.bin",  0x6000, 0x2000, CRC(843783df) SHA1(256d8375a8af7de080d456dbc6290a22473d011b) )
 
-        ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
-        ROM_LOAD( "13b.bin", 0x0000, 0x0800, CRC(3b0e0f7c) SHA1(2bbba10121d3e745146f50c14dc6df97de40fb96) )
-        ROM_LOAD( "15b.bin", 0x0800, 0x0800, CRC(5ccfd782) SHA1(408406ae068e5578b8a742abed1c37dcd3720fe5) )
+	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "13b.bin", 0x0000, 0x0800, CRC(3b0e0f7c) SHA1(2bbba10121d3e745146f50c14dc6df97de40fb96) )
+	ROM_LOAD( "15b.bin", 0x0800, 0x0800, CRC(5ccfd782) SHA1(408406ae068e5578b8a742abed1c37dcd3720fe5) )
 
-        ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-        ROM_LOAD( "8b.bin",  0x0000, 0x0800, CRC(6ac6bd98) SHA1(e653d80ec1b0f8e07821ea781942dae3de7d238d) )
-        ROM_LOAD( "10b.bin", 0x0800, 0x0800, CRC(cada7682) SHA1(83ce8336274cb8006a445ac17a179d9ffd4d6809) )
+	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "8b.bin",  0x0000, 0x0800, CRC(6ac6bd98) SHA1(e653d80ec1b0f8e07821ea781942dae3de7d238d) )
+	ROM_LOAD( "10b.bin", 0x0800, 0x0800, CRC(cada7682) SHA1(83ce8336274cb8006a445ac17a179d9ffd4d6809) )
 
-        ROM_REGION( 0x0020, REGION_PROMS, 0 )
-        ROM_LOAD( "a6.bin",  0x0000, 0x0020, CRC(c721220b) SHA1(61b3320fb616c0600d56840cb6438616c7e0c6eb) )
+	ROM_REGION( 0x0020, REGION_PROMS, 0 )
+	ROM_LOAD( "a6.bin",  0x0000, 0x0020, CRC(c721220b) SHA1(61b3320fb616c0600d56840cb6438616c7e0c6eb) )
 ROM_END
 
 GAMEX( 1982, skyarmy, 0, skyarmy, skyarmy, 0, ROT90, "Shoei", "Sky Army", GAME_NO_COCKTAIL )
