@@ -262,6 +262,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
 * DJ Boy - Romset `djboy`
+* Driving Force (galaxian hardware) - Romset `drivfrcg` - colors fixed
 * Domino Man - Romset `domino`
 * Dragon World - Romset `drgnwrld`
 * Driftout 94 - Romset `drifto94`
@@ -311,6 +312,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shisensho II * Mature * - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Shrike Avenger - Romset `shrike`
+* Sky Army - Romset `skyarmy`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
@@ -613,3 +615,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added missing color proms for mrtnt and 8bpm [mahoneyt944]
 * Added missing color proms for superbon and machomou [mahoneyt944]
 * Fixed colors and added sample support for safarir [mahoneyt944]
+* Fixed color proms and video code for Driving Force (galaxian hardware) - drivfrcg [mahoneyt944]
+* Replaced bad_dump rom in Sky Army to fix bitrot [mahoneyt944]
