@@ -75,6 +75,7 @@ static void dkongjrm_modify_spritecode(data8_t *spriteram,int *code,int *flipx,i
 static void (*modify_color)(UINT8 *color);	/* function to call to do modify how the color codes map to the PROM */
 static void frogger_modify_color(UINT8 *color);
 static void gmgalax_modify_color(UINT8 *color);
+static void drivfrcg_modify_color(UINT8 *color);
 
 static void (*modify_ypos)(UINT8*);	/* function to call to do modify how vertical positioning bits are connected */
 static void frogger_modify_ypos(UINT8 *sy);
@@ -809,13 +810,13 @@ static void drivfrcg_get_tile_info(int tile_index)
 {
 	int code = galaxian_videoram[tile_index];
 	UINT8 x = tile_index & 0x1f;
-	UINT8 color = galaxian_attributesram[(x << 1) | 1] & color_mask;
+	UINT8 color = galaxian_attributesram[(x << 1) | 1] & 7;
 	UINT8 bank = galaxian_attributesram[(x << 1) | 1] & 0x30;
 
 	code |= (bank << 4);
-/*	color |= ((galaxian_attributesram[(x << 1) | 1] & 0x40) >> 2);*/
+	color |= ((galaxian_attributesram[(x << 1) | 1] & 0x40) >> 3);
 
-	SET_TILE_INFO(0,code,color,0)
+	SET_TILE_INFO(0, code, color, 0)
 }
 
 VIDEO_START( drivfrcg )
@@ -831,7 +832,7 @@ VIDEO_START( drivfrcg )
 
 	modify_charcode = 0;
 	modify_spritecode = mshuttle_modify_spritecode;
-	modify_color = 0;
+	modify_color = drivfrcg_modify_color;
 	modify_ypos = 0;
 
 	mooncrst_gfxextend = 0;
@@ -854,7 +855,7 @@ VIDEO_START( drivfrcg )
 	spritevisiblearea      = &_spritevisiblearea;
 	spritevisibleareaflipx = &_spritevisibleareaflipx;
 
-	color_mask = (Machine->gfx[0]->color_granularity == 4) ? 7 : 3;
+	color_mask = 0xff;
 
 	return 0;
 }
@@ -1185,6 +1186,11 @@ static void frogger_modify_color(UINT8 *color)
 static void gmgalax_modify_color(UINT8 *color)
 {
 	*color |= (gfxbank[0] << 3);
+}
+
+static void drivfrcg_modify_color(UINT8 *color)
+{
+	*color = ((*color & 0x40) >> 3) | (*color & 7);
 }
 
 
