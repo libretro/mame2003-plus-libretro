@@ -321,6 +321,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
 * Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
+* Super Stingray - Romset `sstingry` - colors fixed
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
@@ -619,3 +620,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed color proms and video code for Driving Force (galaxian hardware) - drivfrcg [mahoneyt944]
 * Replaced bad_dump rom in Sky Army to fix bitrot [mahoneyt944]
 * Re-rom Safari Rally to support World version [mahoneyt944]
+* Added missing rom files and video code to sstingry [mahoneyt944]
