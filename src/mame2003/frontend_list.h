@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2276
+#define NUMGAMES 2277
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
@@ -1608,7 +1608,8 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "SDI - Strategic Defense Initiative"                                                                    ,"sdi"          , "mame", 3, 0 } ,
 { "SOS"                                                                                                   ,"sos"          , "mame", 3, 0 } ,
 { "SWAT"                                                                                                  ,"swat"         , "mame", 5, 0 } ,
-{ "Safari Rally"                                                                                          ,"safarir"      , "mame", 3, 0 } ,
+{ "Safari Rally (World)"                                                                                  ,"safarir"      , "mame", 3, 0 } ,
+{ "Safari Rally (Japan)"                                                                                  ,"safarirj"     , "mame", 3, 0 } ,
 { "Safari"                                                                                                ,"safari"       , "mame", 3, 0 } ,
 { "Saigo no Nindou (Japan)"                                                                               ,"nspiritj"     , "mame", 1, 0 } ,
 { "Saint Dragon"                                                                                          ,"stdragon"     , "mame", 3, 0 } ,
