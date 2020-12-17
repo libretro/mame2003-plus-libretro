@@ -511,7 +511,7 @@ PALETTE_INIT( paddlem )
 	for (i=0; i<1024; i++) colortable[i] = color_prom[i]|(color_prom[i+0x400]<<4);
 }
 
-static void kyros_video_banking(int *bank, int data)
+void kyros_video_banking(int *bank, int data)
 {
 	*bank = (data>>13 & 4) | (data>>10 & 3);
 }
