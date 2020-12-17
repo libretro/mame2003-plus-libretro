@@ -192,6 +192,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mirax (set 2)
 * Progear No Arashi
 * Renegade (US, Bootleg)
+* Safari Rally (World) - safarir
 * Sexy Parodius (Ver AAA) * Mature *
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
@@ -617,3 +618,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed colors and added sample support for safarir [mahoneyt944]
 * Fixed color proms and video code for Driving Force (galaxian hardware) - drivfrcg [mahoneyt944]
 * Replaced bad_dump rom in Sky Army to fix bitrot [mahoneyt944]
+* Re-rom Safari Rally to support World version [mahoneyt944]
