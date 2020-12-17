@@ -185,6 +185,8 @@ VIDEO_UPDATE( alpha68k_V );
 VIDEO_UPDATE( alpha68k_V_sb );
 void alpha68k_V_video_bank_w(int bank);
 void alpha68k_flipscreen_w(int flip);
+void (*alpha68k_video_banking)(int *bank, int data);
+void kyros_video_banking(int *bank, int data);
 WRITE16_HANDLER( alpha68k_V_video_control_w );
 WRITE16_HANDLER( alpha68k_paletteram_w );
 WRITE16_HANDLER( alpha68k_videoram_w );
@@ -1732,7 +1734,7 @@ static struct GfxLayout sting_layout1 =
 	8,8,    /* 8*8 chars */
 	1024,
 	3,      /* 3 bits per pixel */
-	{ 4, 4+(0x8000*8), 0+(0x10000*4) },
+	{ 4, 0+(0x10000*4), 4+(0x8000*8) },
 	{ 8*8+3, 8*8+2, 8*8+1, 8*8+0, 3, 2, 1, 0 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
 	16*8    /* every char takes 16 consecutive bytes */
@@ -2918,6 +2920,8 @@ static DRIVER_INIT( kyros )
 	invert_controls=0;
 	microcontroller_id=0x0012;
 	coin_id=0x22|(0x22<<8);
+
+	alpha68k_video_banking = kyros_video_banking;
 }
 
 static DRIVER_INIT( paddlema )
@@ -3040,7 +3044,7 @@ static DRIVER_INIT( tnexspce )
 
 /******************************************************************************/
 
-GAMEX(1986, sstingry, 0,        sstingry,      sstingry, sstingry, ROT90, "Alpha Denshi Co.",   "Super Stingray", GAME_NO_COCKTAIL | GAME_WRONG_COLORS )
+GAMEX(1986, sstingry, 0,        sstingry,      sstingry, sstingry, ROT90, "Alpha Denshi Co.",   "Super Stingray", GAME_NO_COCKTAIL )
 GAMEX(1987, kyros,    0,        kyros,         kyros,    kyros,    ROT90, "World Games Inc",    "Kyros", GAME_NO_COCKTAIL )
 GAMEX(1986, kyrosj,   kyros,    kyros,         kyros,    kyros,    ROT90, "Alpha Denshi Co.",    "Kyros No Yakata (Japan)", GAME_NO_COCKTAIL )
 GAME( 1988, paddlema, 0,        alpha68k_I,    paddlema, paddlema, ROT90, "SNK",                "Paddle Mania" )

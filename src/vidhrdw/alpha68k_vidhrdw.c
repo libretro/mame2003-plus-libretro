@@ -10,6 +10,8 @@
 static struct tilemap *fix_tilemap;
 static int bank_base,flipscreen;
 
+extern void (*alpha68k_video_banking)(int *bank, int data);
+
 extern int microcontroller_id;
 
 /******************************************************************************/
@@ -36,11 +38,7 @@ WRITE16_HANDLER( alpha68k_paletteram_w )
 	g = ((newword >> 3) & 0x1e) | ((newword >> 13) & 0x01);
 	b = ((newword << 1) & 0x1e) | ((newword >> 12) & 0x01);
 
-	r = (r << 3) | (r >> 2);
-	g = (g << 3) | (g >> 2);
-	b = (b << 3) | (b >> 2);
-
-	palette_set_color(offset,r,g,b);
+	palette_set_color(offset, pal5bit(r), pal5bit(g), pal5bit(b));
 }
 
 /******************************************************************************/
@@ -87,24 +85,7 @@ VIDEO_START( alpha68k )
 
 /******************************************************************************/
 /*AT*/
-/*
-static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int j, int pos)
-{
-	int offs,mx,my,color,tile,fx,fy,i;
 
-	for (offs = pos; offs < pos+0x400; offs += 0x40 )
-	{
-		mx = spriteram16[offs+2+(2*j)]<<1;
-		my = spriteram16[offs+3+(2*j)];
-		if (my&0x8000) mx++;
-
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x100;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-*/
 static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int j, int s, int e)
 {
 	int offs,mx,my,color,tile,fx,fy,i;
@@ -164,14 +145,7 @@ VIDEO_UPDATE( alpha68k_II )
 
 	fillbitmap(bitmap,Machine->pens[2047],cliprect);
 /*AT*/
-/*
-	draw_sprites(bitmap,cliprect,1,0x000);
-	draw_sprites(bitmap,cliprect,1,0x400);
-	draw_sprites(bitmap,cliprect,0,0x000);
-	draw_sprites(bitmap,cliprect,0,0x400);
-	draw_sprites(bitmap,cliprect,2,0x000);
-	draw_sprites(bitmap,cliprect,2,0x400);
-*/
+
 	draw_sprites(bitmap,cliprect,0,0x07c0,0x0800);
 	draw_sprites(bitmap,cliprect,1,0x0000,0x0800);
 	draw_sprites(bitmap,cliprect,2,0x0000,0x0800);
@@ -256,18 +230,7 @@ static void draw_sprites_V(struct mame_bitmap *bitmap, const struct rectangle *c
 	for (offs = s; offs < e; offs += 0x40 )
 	{
 /*AT*/
-/*
-		mx = spriteram16[offs+2+(2*j)]<<1;
-		my = spriteram16[offs+3+(2*j)];
-		if (my&0x8000) mx++;
 
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x100;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-*/
 		my = spriteram16[offs+3+(j<<1)];
 		mx = spriteram16[offs+2+(j<<1)]<<1 | my>>15;
 		my = -my & 0x1ff;
@@ -366,38 +329,7 @@ VIDEO_UPDATE( alpha68k_V_sb )
 
 /******************************************************************************/
 /*AT*/
-/*
-static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
-{
-	int offs,mx,my,color,tile,i;
 
-	for (offs = 0x0000; offs < 0x400; offs += 0x20 )
-	{
-		mx=spriteram16[offs+c];
-
-		my=mx>>8;
-		mx=mx&0xff;
-
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x110;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-
-		for (i=0; i<0x20; i++) {
-			tile=spriteram16[offs+d+i];
-			color=1;
-			tile&=0x3fff;
-
-			if (tile && tile!=0x3000 && tile!=0x26)
-				drawgfx(bitmap,Machine->gfx[0],
-					tile,
-					color,
-					0,0,
-					mx+16,my,
-					cliprect,TRANSPARENCY_PEN,0);
-*/
 static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c, int d, int yshift)
 {
 	int data, offs, mx, my, tile, color, fy, i;
@@ -441,25 +373,6 @@ VIDEO_UPDATE( alpha68k_I )
 
 PALETTE_INIT( kyros )
 {
-/*AT: reconstructed Super Stingry CLUT(bad ic5.5)*/
-	const UINT8 temp_clut[256] = {
-		0x00,0x01,0x00,0x02,0x03,0xAE,0xAB,0x0C,0x00,0xA1,0xA0,0xA2,0xA3,0xA7,0xA6,0x0F,
-		0x00,0x11,0x12,0x13,0x04,0x5D,0x5B,0x44,0x00,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
-		0x00,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x00,0xC3,0x02,0xC4,0xC5,0xC6,0x0C,0xC7,
-		0x00,0x04,0x01,0x07,0x09,0x92,0x02,0x96,0x00,0xBB,0x02,0xBC,0xBF,0xBE,0x0C,0xBD,
-		0x00,0x02,0x06,0x08,0x0A,0x0C,0x07,0x09,0x00,0x02,0x06,0x08,0x0A,0x0C,0x06,0x09,
-		0x00,0xAA,0xA9,0xAF,0xAE,0x0C,0xAD,0xAB,0x00,0xA8,0xAC,0xA9,0xAE,0x0C,0xAF,0xAB,
-		0x00,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x00,0x6B,0x60,0x6A,0x6F,0x0C,0x6D,0x6C,
-		0x00,0x92,0x12,0x1A,0x00,0x0C,0x1C,0x96,0x00,0x7C,0x7F,0x7D,0x78,0x0C,0x7A,0x7B,
-		0x00,0x68,0x06,0x6B,0x64,0x25,0x6F,0x07,0x00,0xB0,0x0C,0xB2,0xB3,0x25,0xB5,0x27,
-		0x00,0xA0,0xA7,0xA3,0xA6,0xA2,0xA5,0xA1,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
-		0x00,0x00,0x02,0x08,0x0A,0x04,0x2C,0x06,0x00,0xB2,0xB0,0xB3,0x08,0x93,0x95,0x97,
-		0x00,0xB2,0xB0,0xB3,0xB4,0xB5,0x0C,0x09,0x00,0xA5,0x0C,0xA0,0xA7,0x04,0x02,0x09,
-		0x00,0x0C,0x04,0x06,0x08,0x0A,0x02,0x09,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
-		0x00,0x0C,0x04,0x06,0x08,0x0A,0x02,0x09,0x00,0x0C,0x04,0x06,0x08,0x0A,0x02,0x09,
-		0x00,0x02,0x04,0x06,0x5C,0x0C,0x5A,0x25,0x00,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
-		0x00,0x00,0x02,0x06,0x08,0x0B,0x0C,0x04,0x00,0x00,0x02,0x06,0x08,0x0B,0x0C,0x0A };
-/*ZT*/
 	int i,bit0,bit1,bit2,bit3,r,g,b;
 
 	for (i = 0;i < 256;i++)
@@ -487,11 +400,7 @@ PALETTE_INIT( kyros )
 	}
 
 	color_prom += 0x200;
-/*AT: fill Super Stingray CLUT(bad ic5.5)*/
-	if (!strcmp(Machine->gamedrv->name, "sstingry")) {
-		for (i=0; i<256; i++) colortable[i] = temp_clut[i];
-		return; }
-/*ZT*/
+
 	for (i = 0;i < 256;i++)
 	{
 		*colortable++ = ((color_prom[0] & 0x0f) << 4) | (color_prom[0x100] & 0x0f);
@@ -532,39 +441,27 @@ PALETTE_INIT( paddlem )
 	for (i=0; i<1024; i++) colortable[i] = color_prom[i]|(color_prom[i+0x400]<<4);
 }
 
+void kyros_video_banking(int *bank, int data)
+{
+	*bank = (data>>13 & 4) | (data>>10 & 3);
+}
+
 static void kyros_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
 {
-	int offs,mx,my,color,tile,i,bank,fy;
-/*AT*/
-/*
-	for (offs = 0x0000; offs < 0x400; offs += 0x20 )
-	{
-		mx=spriteram16[offs+c];
-		my=0x100-(mx>>8);
-		mx=mx&0xff;
-
-		for (i=0; i<0x20; i++) {
-			tile=spriteram16[offs+d+i];
-			color=(tile&0x4000)>>14;
-			fy=tile&0x1000;
-			bank=((tile>>10)&0x3)+((tile&0x8000)?4:0);
-			tile=(tile&0x3ff)+((tile&0x2000)?0x400:0);
-
-			drawgfx(bitmap,Machine->gfx[bank],
-					tile,
-					color,
-					0,fy,
-					mx,my,
-					cliprect,TRANSPARENCY_PEN,0);
-*/
+	int offs,mx,my,color,tile,i,bank,fy,fx;
 	int data;
 	UINT8 *color_prom = memory_region(REGION_USER1);
 
+/* AT */
 	for (offs=0; offs<0x400; offs+=0x20)
 	{
 		mx = spriteram16[offs+c];
 		my = -(mx>>8) & 0xff;
 		mx &= 0xff;
+
+		if (flipscreen) {
+			my=249-my;
+		}
 
 		for (i=0; i<0x20; i++)
 		{
@@ -575,21 +472,31 @@ static void kyros_draw_sprites(struct mame_bitmap *bitmap, const struct rectangl
 				if (color!=0xff)
 				{
 					fy = data & 0x1000;
+					fx = 0;
+
+					if(flipscreen)
+					{
+						if (fy) fy=0; else fy=1;
+						fx = 1;
+					}
+
 					tile = (data>>3 & 0x400) | (data & 0x3ff);
-					bank = (data>>13 & 4) | (data>>10 & 3);
-					drawgfx(bitmap, Machine->gfx[bank], tile, color, 0, fy, mx, my,
+					alpha68k_video_banking(&bank, data);
+					drawgfx(bitmap, Machine->gfx[bank], tile, color, fx, fy, mx, my,
 							cliprect, TRANSPARENCY_PEN, 0);
 				}
 			}
-/*ZT*/
-			my=(my+8)&0xff;
+/* ZT */
+			if(flipscreen)
+				my=(my-8)&0xff;
+			else
+				my=(my+8)&0xff;
 		}
 	}
 }
 
 VIDEO_UPDATE( kyros )
 {
-	/*fillbitmap(bitmap,Machine->pens[0],cliprect);*/
 	fillbitmap(bitmap,*videoram16&0xff,cliprect); /*AT*/
 
 	kyros_draw_sprites(bitmap,cliprect,2,0x0800);
@@ -601,32 +508,8 @@ VIDEO_UPDATE( kyros )
 
 static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
 {
-/*AT*/
-/*
-	int offs,mx,my,color,tile,i,bank,fx,fy;
-
-	for (offs = 0x0000; offs < 0x400; offs += 0x20 )
-	{
-		mx=spriteram16[offs+c];
-		my=0x100-(mx>>8);
-		mx=mx&0xff;
-
-		for (i=0; i<0x20; i++) {
-			tile=spriteram16[offs+d+i];
-			color=0; // bit 0x4000
-			fy=tile&0x1000;
-			fx=0;
-			tile=(tile&0xfff);
-			bank=tile/0x400;
-
-			drawgfx(bitmap,Machine->gfx[bank],
-					tile&0x3ff,
-					color,
-					fx,fy,
-					mx,my,
-					cliprect,TRANSPARENCY_PEN,0);
-*/
-	int data,offs,mx,my,color,tile,i,bank,fy;
+/* AT */
+	int data,offs,mx,my,color,tile,i,bank,fy,fx;
 
 	for (offs=0; offs<0x400; offs+=0x20)
 	{
@@ -635,28 +518,42 @@ static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 		mx &= 0xff;
 		if (mx > 0xf8) mx -= 0x100;
 
+		if (flipscreen) {
+			my=249-my;
+		}
+
 		for (i=0; i<0x20; i++)
 		{
 			data = spriteram16[offs+d+i];
 			if (data!=0x40)
 			{
 				fy = data & 0x1000;
-				color = (data>>7 & 0x18) | (data>>13 & 7); /* can't verify(PROMs missing)                        bank = tile>>10 & 3;*/
+				fx = 0;
+
+				if(flipscreen)
+				{
+					if (fy) fy=0; else fy=1;
+					fx = 1;
+				}
+
+				color = (data>>7 & 0x18) | (data>>13 & 7);
 				tile = data & 0x3ff;
 				bank = data>>10 & 3;
-				drawgfx(bitmap, Machine->gfx[bank], tile, color, 0, fy, mx, my,
+				drawgfx(bitmap, Machine->gfx[bank], tile, color, fx, fy, mx, my,
 						cliprect, TRANSPARENCY_PEN, 0);
 			}
-/*ZT*/
-			my=(my+8)&0xff;
+/* ZT */
+			if(flipscreen)
+				my=(my-8)&0xff;
+			else
+				my=(my+8)&0xff;
 		}
 	}
 }
 
 VIDEO_UPDATE( sstingry )
 {
-	/*fillbitmap(bitmap,Machine->pens[0],cliprect);*/
-	fillbitmap(bitmap,*videoram16&0xff,cliprect); /*AT*/
+	fillbitmap(bitmap,*videoram16 & 0xff,cliprect); /* AT */
 
 	sstingry_draw_sprites(bitmap,cliprect,2,0x0800);
 	sstingry_draw_sprites(bitmap,cliprect,3,0x0c00);
