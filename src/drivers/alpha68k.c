@@ -2920,6 +2920,8 @@ static DRIVER_INIT( kyros )
 	invert_controls=0;
 	microcontroller_id=0x0012;
 	coin_id=0x22|(0x22<<8);
+
+	alpha68k_video_banking = kyros_video_banking;
 }
 
 static DRIVER_INIT( paddlema )
