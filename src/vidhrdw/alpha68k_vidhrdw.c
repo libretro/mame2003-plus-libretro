@@ -89,24 +89,7 @@ VIDEO_START( alpha68k )
 
 /******************************************************************************/
 /*AT*/
-/*
-static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int j, int pos)
-{
-	int offs,mx,my,color,tile,fx,fy,i;
 
-	for (offs = pos; offs < pos+0x400; offs += 0x40 )
-	{
-		mx = spriteram16[offs+2+(2*j)]<<1;
-		my = spriteram16[offs+3+(2*j)];
-		if (my&0x8000) mx++;
-
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x100;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-*/
 static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int j, int s, int e)
 {
 	int offs,mx,my,color,tile,fx,fy,i;
@@ -166,14 +149,7 @@ VIDEO_UPDATE( alpha68k_II )
 
 	fillbitmap(bitmap,Machine->pens[2047],cliprect);
 /*AT*/
-/*
-	draw_sprites(bitmap,cliprect,1,0x000);
-	draw_sprites(bitmap,cliprect,1,0x400);
-	draw_sprites(bitmap,cliprect,0,0x000);
-	draw_sprites(bitmap,cliprect,0,0x400);
-	draw_sprites(bitmap,cliprect,2,0x000);
-	draw_sprites(bitmap,cliprect,2,0x400);
-*/
+
 	draw_sprites(bitmap,cliprect,0,0x07c0,0x0800);
 	draw_sprites(bitmap,cliprect,1,0x0000,0x0800);
 	draw_sprites(bitmap,cliprect,2,0x0000,0x0800);
@@ -258,18 +234,7 @@ static void draw_sprites_V(struct mame_bitmap *bitmap, const struct rectangle *c
 	for (offs = s; offs < e; offs += 0x40 )
 	{
 /*AT*/
-/*
-		mx = spriteram16[offs+2+(2*j)]<<1;
-		my = spriteram16[offs+3+(2*j)];
-		if (my&0x8000) mx++;
 
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x100;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-*/
 		my = spriteram16[offs+3+(j<<1)];
 		mx = spriteram16[offs+2+(j<<1)]<<1 | my>>15;
 		my = -my & 0x1ff;
@@ -368,38 +333,7 @@ VIDEO_UPDATE( alpha68k_V_sb )
 
 /******************************************************************************/
 /*AT*/
-/*
-static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
-{
-	int offs,mx,my,color,tile,i;
 
-	for (offs = 0x0000; offs < 0x400; offs += 0x20 )
-	{
-		mx=spriteram16[offs+c];
-
-		my=mx>>8;
-		mx=mx&0xff;
-
-		mx=(mx+0x100)&0x1ff;
-		my=(my+0x100)&0x1ff;
-		mx-=0x110;
-		my-=0x100;
-		my=0x200 - my;
-		my-=0x200;
-
-		for (i=0; i<0x20; i++) {
-			tile=spriteram16[offs+d+i];
-			color=1;
-			tile&=0x3fff;
-
-			if (tile && tile!=0x3000 && tile!=0x26)
-				drawgfx(bitmap,Machine->gfx[0],
-					tile,
-					color,
-					0,0,
-					mx+16,my,
-					cliprect,TRANSPARENCY_PEN,0);
-*/
 static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c, int d, int yshift)
 {
 	int data, offs, mx, my, tile, color, fy, i;
