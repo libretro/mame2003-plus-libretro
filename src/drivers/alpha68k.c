@@ -1734,7 +1734,7 @@ static struct GfxLayout sting_layout1 =
 	8,8,    /* 8*8 chars */
 	1024,
 	3,      /* 3 bits per pixel */
-	{ 4, 4+(0x8000*8), 0+(0x10000*4) },
+	{ 4, 0+(0x10000*4), 4+(0x8000*8) },
 	{ 8*8+3, 8*8+2, 8*8+1, 8*8+0, 3, 2, 1, 0 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
 	16*8    /* every char takes 16 consecutive bytes */
