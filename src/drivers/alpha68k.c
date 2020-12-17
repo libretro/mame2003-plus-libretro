@@ -230,7 +230,7 @@ static WRITE16_HANDLER( alpha_microcontroller_w )
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x:  Alpha write trigger at %04x (%04x)\n",activecpu_get_pc(),offset,data);
 	/* 0x44 = coin clear signal to microcontroller? */
 	if (offset==0x2d && ACCESSING_LSB)
-		alpha68k_flipscreen_w(data & 0x100);
+		alpha68k_flipscreen_w(data & 1);
 }
 
 /******************************************************************************/
