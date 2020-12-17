@@ -462,6 +462,7 @@ const struct GameDriver *test_drivers[] =
 
 	/* "Phoenix hardware" (and variations) games */
 	DRIVER( safarir )	/* Shin Nihon Kikaku (SNK) */
+	DRIVER( safarirj )	/* Shin Nihon Kikaku (SNK) Taito License */
 	DRIVER( phoenix )	/* (c) 1980 Amstar */
 	DRIVER( phoenixa )	/* (c) 1980 Amstar + Centuri license */
 	DRIVER( phoenixt )	/* (c) 1980 Taito */
