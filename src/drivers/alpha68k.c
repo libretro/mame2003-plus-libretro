@@ -185,6 +185,8 @@ VIDEO_UPDATE( alpha68k_V );
 VIDEO_UPDATE( alpha68k_V_sb );
 void alpha68k_V_video_bank_w(int bank);
 void alpha68k_flipscreen_w(int flip);
+void (*alpha68k_video_banking)(int *bank, int data);
+void kyros_video_banking(int *bank, int data);
 WRITE16_HANDLER( alpha68k_V_video_control_w );
 WRITE16_HANDLER( alpha68k_paletteram_w );
 WRITE16_HANDLER( alpha68k_videoram_w );
