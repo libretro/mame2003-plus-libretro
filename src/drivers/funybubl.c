@@ -425,4 +425,4 @@ ROM_START( funybubl )
 ROM_END
 
 
-GAMEX( 1999, funybubl, 0, funybubl, funybubl, funybubl, ROT0, "Comad", "Funny Bubble", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1999, funybubl, 0, funybubl, funybubl, funybubl, ROT0, "Comad", "Funny Bubble", GAME_IMPERFECT_GRAPHICS )
