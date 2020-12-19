@@ -101,7 +101,10 @@ WRITE_HANDLER( funybubl_soundcommand_w )
 	cpu_set_irq_line(1,0, PULSE_LINE);
 }
 
-
+WRITE_HANDLER( funybubl_oki_bank_sw )
+{
+	OKIM6295_set_bank_base(0, ((data & 1) * 0x40000));
+}
 
 static PORT_WRITE_START( writeport )
 	{ 0x00, 0x00, vidram_bank_w	},	/* vidram bank*/
@@ -125,6 +128,7 @@ MEMORY_END
 static MEMORY_WRITE_START( soundwritemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM }, /* ram?*/
+	{ 0x9000, 0x9000, funybubl_oki_bank_sw },
 	{ 0x9800, 0x9800, OKIM6295_data_0_w },
 MEMORY_END
 
