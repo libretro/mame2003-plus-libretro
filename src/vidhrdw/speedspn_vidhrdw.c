@@ -73,6 +73,8 @@ static void speedspn_drawsprites( struct mame_bitmap *bitmap, const struct recta
 		int ypos = source[3];
 		int color;
 
+		if (!attr && xpos) break; /* end of sprite list marker? */
+
 		if (attr&0x10) xpos +=0x100;
 
 		xpos = 0x1f8-xpos;
