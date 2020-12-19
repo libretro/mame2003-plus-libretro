@@ -7,7 +7,7 @@ Notes:
   e.g. BUTTON 1.
 
 TODO:
-- A couple of garbage sprites on the player selection screen
+
 - Unknown Port Writes:
   cpu #0 (PC=00000D88): unmapped port byte write to 00000001 = 02
   cpu #0 (PC=00006974): unmapped port byte write to 00000010 = 10
