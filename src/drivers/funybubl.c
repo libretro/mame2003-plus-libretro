@@ -11,7 +11,6 @@ title screen has no date
 
 
 banking might not be 100%
-dips not done
 
 */
 
