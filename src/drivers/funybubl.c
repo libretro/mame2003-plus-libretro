@@ -277,11 +277,6 @@ VIDEO_START(funybubl)
 	return 0;
 }
 
-VIDEO_START(funybubl)
-{
-	return 0;
-}
-
 
 static void funybubl_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
