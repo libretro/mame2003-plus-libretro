@@ -279,38 +279,32 @@ VIDEO_START(funybubl)
 	return 0;
 }
 
-/* note, we're not using half the sprite data .. maybe one copy is a buffer, we could be using the wrong one .. */
+VIDEO_START(funybubl)
+{
+	return 0;
+}
+
+
 static void funybubl_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
+  UINT8 *source = &banked_videoram[0x2000-0x20];
+  UINT8 *finish = source - 0x1000;
 
+  while( source>finish )
+  {
+    int xpos, ypos, tile;
 
-	data8_t *source = &banked_videoram[0x2000-0x20];
-	data8_t *finish = source - 0x1000;
+    ypos = source[2];
+    xpos = source[3];
+    tile =  source[0] | ( (source[1] & 0x0f) <<8);
+    if (source[1] & 0x80) tile += 0x1000;
+    if (source[1] & 0x20) {	if (xpos < 0xe0) xpos += 0x100; }
+    /* bits 0x40 and 0x10 not used?... */
 
+    drawgfx(bitmap,Machine->gfx[1],tile,0,0,0,xpos,ypos,cliprect,TRANSPARENCY_PEN,255);
 
-	while( source>finish )
-	{
-		int xpos, ypos, tile;
-
-		ypos = 0xff-source[1+0x10];
-		xpos = source[2+0x10];
-
-
-
-		tile =  source[0+0x10] | ( (source[3+0x10] & 0x0f) <<8);
-
-		if (source[3+0x10] & 0x80) tile += 0x1000;
-		if (source[3+0x10] & 0x20) xpos += 0x100;
-
-		/* bits 0x40 (not used?) and 0x10 (just set during transition period of x co-ord 0xff and 0x00) ...*/
-
-		xpos -= 8;
-		ypos -= 14;
-
-		drawgfx(bitmap,Machine->gfx[1],tile,0,0,0,xpos,ypos,cliprect,TRANSPARENCY_PEN,255);
-
-		source -= 0x20;
-	}
+    source -= 0x20;
+  }
 
 }
 
