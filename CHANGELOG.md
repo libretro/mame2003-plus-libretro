@@ -317,6 +317,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
+* Speed Spin - Romset `speedspn` - gfx glitches
 * Spy Hunter - Romset `spyhunt`
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
@@ -396,6 +397,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dig Dug
 * Dig Dug II
 * Final Fight - Added OST soundtrack (via KMFDManic)
+* Funny Bubble - `funybubl`
 * Galaga
 * Galaga 3
 * Galaxy Rescue - (Added lrescue.zip sample support)
@@ -621,3 +623,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Replaced bad_dump rom in Sky Army to fix bitrot [mahoneyt944]
 * Re-rom Safari Rally to support World version [mahoneyt944]
 * Added missing rom files and video code to sstingry [mahoneyt944]
+* Speedspn - fixed selection screen graphic glitches [mahoneyt944]
+* Funybubl - fixed audio and graphic glitches [mahoneyt944]
