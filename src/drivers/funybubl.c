@@ -11,9 +11,7 @@ title screen has no date
 
 
 banking might not be 100%
-sprite glitches in 2 player mode (end of list marker? or are we using the wrong copy of the sprites)
 dips not done
-sound banking (we have 2 oki roms ..)
 
 */
 
@@ -419,4 +417,4 @@ ROM_START( funybubl )
 ROM_END
 
 
-GAMEX( 1999, funybubl, 0, funybubl, funybubl, funybubl, ROT0, "Comad", "Funny Bubble", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, funybubl, 0, funybubl, funybubl, funybubl, ROT0, "Comad", "Funny Bubble" )
