@@ -322,6 +322,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
 * Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
+* Strike Bowling - Romset `sbowling` - fixed colors
 * Super Stingray - Romset `sstingry` - colors fixed
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
@@ -625,3 +626,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added missing rom files and video code to sstingry [mahoneyt944]
 * Speedspn - fixed selection screen graphic glitches [mahoneyt944]
 * Funybubl - fixed audio and graphic glitches [mahoneyt944]
+* Updated res_net code to fix colors in strike bowling [mahoneyt944]
