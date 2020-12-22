@@ -269,7 +269,7 @@ static double compute_resistor_net_outputs(
 	int networks_no;
 
 	int rescount[MAX_NETS];		/* number of resistors in each of the nets */
-	double r[MAX_NETS][MAX_RES_PER_NET];		/* resistances */
+	double r[MAX_NETS][18];		/* resistances */
 	double *o;					/* calulated outputs */
 	double *os;					/* calulated, scaled outputss */
 	int r_pd[MAX_NETS];			/* pulldown resistances */
@@ -286,8 +286,8 @@ static double compute_resistor_net_outputs(
 
 	/* parse input parameters */
 
-	o  = (double *) malloc( sizeof(double) * (1<<MAX_RES_PER_NET) *  MAX_NETS);
-	os = (double *) malloc( sizeof(double) * (1<<MAX_RES_PER_NET) *  MAX_NETS);
+	o  = (double *) malloc( sizeof(double) * (1<<18) *  MAX_NETS);
+	os = (double *) malloc( sizeof(double) * (1<<18) *  MAX_NETS);
 
 	networks_no = 0;
 	for (n = 0; n < MAX_NETS; n++)
@@ -322,9 +322,9 @@ static double compute_resistor_net_outputs(
 		}
 
 		/* parameters validity check */
-		if (count > MAX_RES_PER_NET)
+		if (count > 18)
 		{
-			logerror(" ERROR: res_net.h: compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
+			logerror(" ERROR: res_net.h: compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, 18, count);
 			/* quit */
 			free(o);
 			free(os);
@@ -380,7 +380,7 @@ static double compute_resistor_net_outputs(
 			/* and convert it to a destination value */
 			dst = (Vout < minval) ? minval : (Vout > maxval) ? maxval : Vout;
 
-			o[i*(1<<MAX_RES_PER_NET)+n] = dst;
+			o[i*(1<<18)+n] = dst;
 		}
 	}
 
@@ -396,10 +396,10 @@ static double compute_resistor_net_outputs(
 
 		for (n = 0; n < (1<<rescount[i]); n++)
 		{
-			if (min_tmp > o[i*(1<<MAX_RES_PER_NET)+n])
-				min_tmp = o[i*(1<<MAX_RES_PER_NET)+n];
-			if (max_tmp < o[i*(1<<MAX_RES_PER_NET)+n])
-				max_tmp = o[i*(1<<MAX_RES_PER_NET)+n];
+			if (min_tmp > o[i*(1<<18)+n])
+				min_tmp = o[i*(1<<18)+n];
+			if (max_tmp < o[i*(1<<18)+n])
+				max_tmp = o[i*(1<<18)+n];
 		}
 
 		max_out[i] = max_tmp;	/* maximum output */
@@ -429,8 +429,8 @@ static double compute_resistor_net_outputs(
 	{
 		for (n = 0; n < (1<<rescount[i]); n++)
 		{
-			os[i*(1<<MAX_RES_PER_NET)+n] = (o[i*(1<<MAX_RES_PER_NET)+n] - min) * scale;	/* scale the result */
-			(out[i])[n] = os[i*(1<<MAX_RES_PER_NET)+n];		/* fill the output table */
+			os[i*(1<<18)+n] = (o[i*(1<<18)+n] - min) * scale;	/* scale the result */
+			(out[i])[n] = os[i*(1<<18)+n];		/* fill the output table */
 		}
 	}
 
@@ -454,7 +454,7 @@ static double compute_resistor_net_outputs(
 		}
 		for (n = 0; n < (1<<rescount[i]); n++)
 		{
-			logerror("   combination %2i  out=%10.5f (scaled = %15.10f)\n", n, o[i*(1<<MAX_RES_PER_NET)+n], os[i*(1<<MAX_RES_PER_NET)+n] );
+			logerror("   combination %2i  out=%10.5f (scaled = %15.10f)\n", n, o[i*(1<<18)+n], os[i*(1<<18)+n] );
 		}
 	}
 #endif
