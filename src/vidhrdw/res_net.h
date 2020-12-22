@@ -71,6 +71,7 @@ static double compute_resistor_net_outputs(
 	int count_2, const int * resistances_2, double * outputs_2, int pulldown_2, int pullup_2,
 	int count_3, const int * resistances_3, double * outputs_3, int pulldown_3, int pullup_3 );
 
+
 static double compute_resistor_weights(
 	int minval, int maxval, double scaler,
 	int count_1, const int * resistances_1, double * weights_1, int pulldown_1, int pullup_1,
