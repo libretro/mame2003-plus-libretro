@@ -320,7 +320,7 @@ static PALETTE_INIT( sbowling )
 
 	const int resistances_rg[3] = { 470, 270, 100 };
 	const int resistances_b[2]  = { 270, 100 };
-	double weights_r[1<<3], weights_g[1<<3], weights_b[1<<2];
+	double weights_r[3], weights_g[3], weights_b[2];
 
 	compute_resistor_weights(0,	255,	-1.0,
 			3,	resistances_rg,	weights_r,	0,	100,
@@ -332,21 +332,21 @@ static PALETTE_INIT( sbowling )
 		int bit0,bit1,bit2,r,g,b;
 
 		/* blue component */
-		bit0 = (color_prom[i] >> 0);
-		bit1 = (color_prom[i] >> 1);
-		b = (int)(weights_b[ (bit0<<0) | (bit1<<1) ] + 0.5);
+		bit0 = (color_prom[i] >> 0) & 0x01;
+		bit1 = (color_prom[i] >> 1) & 0x01;
+		b = combine_2_weights(weights_b, bit0, bit1);
 
 		/* green component */
-		bit0 = (color_prom[i] >> 2);
-		bit1 = (color_prom[i] >> 3);
-		bit2 = (color_prom[i+0x400] >> 0);
-		g = (int)(weights_g[ (bit0<<0) | (bit1<<1) | (bit2<<2) ] + 0.5);
+		bit0 = (color_prom[i] >> 2) & 0x01;
+		bit1 = (color_prom[i] >> 3) & 0x01;
+		bit2 = (color_prom[i+0x400] >> 0) & 0x01;
+		g = combine_3_weights(weights_g, bit0, bit1, bit2);
 
 		/* red component */
-		bit0 = (color_prom[i+0x400] >> 1);
-		bit1 = (color_prom[i+0x400] >> 2);
-		bit2 = (color_prom[i+0x400] >> 3);
-		r = (int)(weights_r[ (bit0<<0) | (bit1<<1) | (bit2<<2) ] + 0.5);
+		bit0 = (color_prom[i+0x400] >> 1) & 0x01;
+		bit1 = (color_prom[i+0x400] >> 2) & 0x01;
+		bit2 = (color_prom[i+0x400] >> 3) & 0x01;
+		r = combine_3_weights(weights_r, bit0, bit1, bit2);
 
 		palette_set_color(i,r,g,b);
 	}
