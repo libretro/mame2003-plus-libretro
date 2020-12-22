@@ -288,9 +288,9 @@ INPUT_PORTS_END
 static struct GfxLayout charlayout =
 {
 	8,8,
-	256,
+	RGN_FRAC(1,3),
 	3,
-	{ 0x800*0*8, 0x800*1*8, 0x800*2*8 },
+	{ RGN_FRAC(0,3), RGN_FRAC(1,3), RGN_FRAC(2,3) },
 	{ 7, 6, 5, 4, 3, 2, 1, 0 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
 	8*8
