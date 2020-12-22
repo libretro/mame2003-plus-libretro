@@ -60,7 +60,8 @@ static double compute_resistor_weights(
 /* this should be moved to one of the core files */
 
 #define MAX_NETS 3
-#define MAX_RES_PER_NET 32 /* should be 18 */
+#define MAX_RES_PER_NET 18
+#define old_MAX_RES_PER_NET 32
 
 
 /* for the open collector outputs PROMs */
@@ -82,9 +83,9 @@ static double compute_resistor_weights(
 	int networks_no;
 
 	int rescount[MAX_NETS];		/* number of resistors in each of the nets */
-	double r[MAX_NETS][MAX_RES_PER_NET];		/* resistances */
-	double w[MAX_NETS][MAX_RES_PER_NET];		/* calulated weights */
-	double ws[MAX_NETS][MAX_RES_PER_NET];	/* calulated, scaled weights */
+	double r[MAX_NETS][old_MAX_RES_PER_NET];		/* resistances */
+	double w[MAX_NETS][old_MAX_RES_PER_NET];		/* calulated weights */
+	double ws[MAX_NETS][old_MAX_RES_PER_NET];	/* calulated, scaled weights */
 	int r_pd[MAX_NETS];			/* pulldown resistances */
 	int r_pu[MAX_NETS];			/* pullup resistances */
 
@@ -130,9 +131,9 @@ static double compute_resistor_weights(
 		}
 
 		/* parameters validity check */
-		if (count > MAX_RES_PER_NET)
+		if (count > old_MAX_RES_PER_NET)
 		{
-			logerror(" ERROR: res_net.h: compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
+			logerror(" ERROR: res_net.h: compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, old_MAX_RES_PER_NET, count);
 			/* quit */
 			return (0.0);
 		}
