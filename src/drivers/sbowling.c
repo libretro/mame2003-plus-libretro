@@ -334,19 +334,19 @@ static PALETTE_INIT( sbowling )
 		/* blue component */
 		bit0 = (color_prom[i] >> 0) & 0x01;
 		bit1 = (color_prom[i] >> 1) & 0x01;
-		b = int( combine_2_weights(weights_b, bit0<<0, bit1<<1) + 0.5 );
+		b = combine_2_weights(weights_b, bit0, bit1);
 
 		/* green component */
 		bit0 = (color_prom[i] >> 2) & 0x01;
 		bit1 = (color_prom[i] >> 3) & 0x01;
 		bit2 = (color_prom[i+0x400] >> 0) & 0x01;
-		g = int( combine_3_weights(weights_g, bit0<<0, bit1<<1, bit2<<2) + 0.5 );
+		g = combine_3_weights(weights_g, bit0, bit1, bit2);
 
 		/* red component */
 		bit0 = (color_prom[i+0x400] >> 1) & 0x01;
 		bit1 = (color_prom[i+0x400] >> 2) & 0x01;
 		bit2 = (color_prom[i+0x400] >> 3) & 0x01;
-		r = int( combine_3_weights(weights_r, bit0<<0, bit1<<1, bit2<<2) + 0.5 );
+		r = combine_3_weights(weights_r, bit0, bit1, bit2);
 
 		palette_set_color(i,r,g,b);
 	}
