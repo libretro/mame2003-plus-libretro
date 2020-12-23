@@ -226,15 +226,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,   32, 1 },	/* seems correct */
 	{ REGION_GFX2, 0, &charlayout,    0, 1 },	/* seems correct */
-	{ REGION_GFX3, 0, &spritelayout,  0, 8 },	/* ?? */
-	{ -1 } /* end of array */
-};
-
-static struct GfxDecodeInfo progress_gfxdecodeinfo[] =
-{
-	{ REGION_GFX1, 0, &charlayout,   32, 1 },	/* seems correct */
-	{ REGION_GFX2, 0, &charlayout,    0, 1 },	/* seems correct */
-	{ REGION_GFX3, 0, &spritelayout, 64, 4 },	/* seems correct */
+	{ REGION_GFX3, 0, &spritelayout,  64, 4 },	/* ?? */
 	{ -1 } /* end of array */
 };
 
@@ -283,8 +275,8 @@ static MACHINE_DRIVER_START( timelimt )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(64)
-	MDRV_COLORTABLE_LENGTH(64)
+	MDRV_PALETTE_LENGTH(96)
+	MDRV_COLORTABLE_LENGTH(96)
 
 	MDRV_PALETTE_INIT(timelimt)
 	MDRV_VIDEO_START(timelimt)
@@ -292,16 +284,6 @@ static MACHINE_DRIVER_START( timelimt )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( progress )
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(timelimt)
-
-	MDRV_GFXDECODE(progress_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(96)
-	MDRV_COLORTABLE_LENGTH(96)
-
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -330,14 +312,14 @@ ROM_START( timelimt )
 	ROM_LOAD( "tl12",   0x1000, 0x1000, CRC(ce960389) SHA1(57ee52cfa1b5a3832b362b38c8b7aa411dfc782b) )
 
 	ROM_REGION( 0x6000, REGION_GFX3, ROMREGION_DISPOSE )	/* sprites */
-	ROM_LOAD( "tl3",    0x0000, 0x2000, CRC(01a9fd95) SHA1(cd1078700c97a3539c9d9447c55efbd27540a1b3) )
+	ROM_LOAD( "tl3",    0x4000, 0x2000, CRC(01a9fd95) SHA1(cd1078700c97a3539c9d9447c55efbd27540a1b3) )
 	ROM_LOAD( "tl2",    0x2000, 0x2000, CRC(4693b849) SHA1(fbebedde53599fb1eaedc648bd704b321ab096b5) )
-	ROM_LOAD( "tl1",    0x4000, 0x2000, CRC(c4007caf) SHA1(ae05af3319545d5ca98a046bfc100138a5a3ed96) )
+	ROM_LOAD( "tl1",    0x0000, 0x2000, CRC(c4007caf) SHA1(ae05af3319545d5ca98a046bfc100138a5a3ed96) )
 
-	ROM_REGION( 0x0040, REGION_PROMS, 0 )
+	ROM_REGION( 0x0060, REGION_PROMS, 0 )
 	ROM_LOAD( "clr.35", 0x0000, 0x0020, CRC(9c9e6073) SHA1(98496175bf19a8cdb0018705bc1a2193b8a782e1) )
-	ROM_LOAD( "clr.48", 0x0020, 0x0020, BAD_DUMP CRC(a0bcac59) SHA1(e5832831b21981363509b79d89766757bd9273b0)  )	/* FIXED BITS (xxxxxx1x) */
-	/* missing a prom? */
+	ROM_LOAD( "clr.48", 0x0020, 0x0020, CRC(a0bcac59) SHA1(e5832831b21981363509b79d89766757bd9273b0) ) /* FIXED BITS (xxxxxx1x) */
+	ROM_LOAD( "clr.57", 0x0040, 0x0020, CRC(3a9f5394) SHA1(0b501f81ce1df722cf7ef982c03e0be337bfe9ee) )
 ROM_END
 
 ROM_START( progress )
@@ -369,5 +351,5 @@ ROM_START( progress )
 	ROM_LOAD( "57.bin", 0x0040, 0x0020, CRC(18455a79) SHA1(e4d64368560e3116a922588129f5f91a4c520f7d) )
 ROM_END
 
-GAMEX( 1983, timelimt, 0, timelimt, timelimt, 0, ROT90, "Chuo Co. Ltd", "Time Limit", GAME_IMPERFECT_COLORS )
-GAME ( 1984, progress, 0, progress, progress, 0, ROT90, "Chuo Co. Ltd", "Progress" )
+GAME ( 1983, timelimt, 0, timelimt, timelimt, 0, ROT90, "Chuo Co. Ltd", "Time Limit" )
+GAME ( 1984, progress, 0, timelimt, progress, 0, ROT90, "Chuo Co. Ltd", "Progress" )
