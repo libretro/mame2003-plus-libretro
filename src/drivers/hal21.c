@@ -948,5 +948,5 @@ ROM_START( aso )
 ROM_END
 
 GAMEX( 1985, aso,    0,     aso,   aso,   aso,   ROT270, "SNK", "ASO - Armored Scrum Object", GAME_NO_COCKTAIL )
-GAMEX( 1985, hal21,  0,     hal21, hal21, hal21, ROT270, "SNK", "HAL21", GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL )
-GAMEX( 1985, hal21j, hal21, hal21, hal21, hal21, ROT270, "SNK", "HAL21 (Japan)", GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL )
+GAMEX( 1985, hal21,  0,     hal21, hal21, hal21, ROT270, "SNK", "HAL21", GAME_NO_COCKTAIL )
+GAMEX( 1985, hal21j, hal21, hal21, hal21, hal21, ROT270, "SNK", "HAL21 (Japan)", GAME_NO_COCKTAIL )
