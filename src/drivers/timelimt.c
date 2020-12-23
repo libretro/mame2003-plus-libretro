@@ -226,7 +226,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,   32, 1 },	/* seems correct */
 	{ REGION_GFX2, 0, &charlayout,    0, 1 },	/* seems correct */
-	{ REGION_GFX3, 0, &spritelayout,  64, 4 },	/* ?? */
+	{ REGION_GFX3, 0, &spritelayout,  64, 4 },	/* seems correct */
 	{ -1 } /* end of array */
 };
 
