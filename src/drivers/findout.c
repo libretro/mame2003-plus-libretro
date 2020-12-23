@@ -10,6 +10,8 @@ driver by Nicola Salmoria
 #include "vidhrdw/generic.h"
 #include "machine/8255ppi.h"
 
+static UINT8 drawctrl[3];
+static UINT8 color[8];
 
 
 VIDEO_UPDATE( findout )
@@ -17,38 +19,36 @@ VIDEO_UPDATE( findout )
 	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_NONE,0);
 }
 
-
-static data8_t drawctrl[3];
-
 static WRITE_HANDLER( findout_drawctrl_w )
 {
 	drawctrl[offset] = data;
+	if (offset == 2)
+	{
+		int i;
+		for (i = 0; i < 8; i++)
+			if (BIT(drawctrl[1],i)) color[i] = drawctrl[0] & 7;
+	}
 }
 
 static WRITE_HANDLER( findout_bitmap_w )
 {
 	int sx,sy;
-	int fg,bg,mask,bits;
+	static int prevoffset, yadd;
+	int i;
 
-	fg = drawctrl[0] & 7;
-	bg = 2;
-	mask = 0xff;/*drawctrl[2];*/
-	bits = drawctrl[1];
+	videoram[offset] = data;
 
-	sx = 8*(offset % 64);
+	yadd = (offset==prevoffset) ? (yadd+1):0;
+	prevoffset = offset;
+
+	sx = 8 * (offset % 64);
 	sy = offset / 64;
+	sy = (sy + yadd) & 0xff;
 
-/*if (mask != bits)*/
-/*	usrintf_showmessage("color %02x bits %02x mask %02x\n",fg,bits,mask);*/
+	for (i = 0; i < 8; i++)
+		plot_pixel(tmpbitmap, sx+i, sy, NULL);
 
-	if (mask & 0x80) plot_pixel(tmpbitmap,sx+0,sy,(bits & 0x80) ? fg : bg);
-	if (mask & 0x40) plot_pixel(tmpbitmap,sx+1,sy,(bits & 0x40) ? fg : bg);
-	if (mask & 0x20) plot_pixel(tmpbitmap,sx+2,sy,(bits & 0x20) ? fg : bg);
-	if (mask & 0x10) plot_pixel(tmpbitmap,sx+3,sy,(bits & 0x10) ? fg : bg);
-	if (mask & 0x08) plot_pixel(tmpbitmap,sx+4,sy,(bits & 0x08) ? fg : bg);
-	if (mask & 0x04) plot_pixel(tmpbitmap,sx+5,sy,(bits & 0x04) ? fg : bg);
-	if (mask & 0x02) plot_pixel(tmpbitmap,sx+6,sy,(bits & 0x02) ? fg : bg);
-	if (mask & 0x01) plot_pixel(tmpbitmap,sx+7,sy,(bits & 0x01) ? fg : bg);
+/* *BITMAP_ADDR16(space->machine->generic.tmpbitmap, sy, sx+i) = color[8-i-1]; */
 }
 
 PALETTE_INIT( findout )
