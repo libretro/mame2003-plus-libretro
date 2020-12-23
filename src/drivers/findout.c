@@ -50,6 +50,15 @@ static WRITE_HANDLER( findout_bitmap_w )
 		plot_pixel(tmpbitmap, sy, sx + i, color[8 - i - 1]);
 }
 
+PALETTE_INIT( findout )
+{
+	int i;
+
+	for (i = 0; i < 8; i++ )
+	{
+		palette_set_color(i, pal1bit(i >> 2), pal1bit(i), pal1bit(i >> 1));
+	}
+}
 
 static READ_HANDLER( portC_r )
 {
@@ -263,7 +272,8 @@ static MACHINE_DRIVER_START( findout )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER|VIDEO_PIXEL_ASPECT_RATIO_1_2)
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_VISIBLE_AREA(48, 511-48, 16, 255-16)
-	MDRV_PALETTE_LENGTH(256)
+	MDRV_PALETTE_LENGTH(8)
+	MDRV_PALETTE_INIT(findout)
 
 	MDRV_VIDEO_START(generic_bitmapped)
 	MDRV_VIDEO_UPDATE(findout)
