@@ -33,18 +33,12 @@ static WRITE_HANDLER( findout_drawctrl_w )
 static WRITE_HANDLER( findout_bitmap_w )
 {
 	int sx,sy;
-	int fg,bg,mask,bits;
+	int mask;
 
-	fg = drawctrl[0] & 7;
-	bg = 2;
-	mask = 0xff;/*drawctrl[2];*/
-	bits = drawctrl[1];
+	mask = 0xff;
 
 	sx = 8*(offset % 64);
 	sy = offset / 64;
-
-/*if (mask != bits)*/
-/*	usrintf_showmessage("color %02x bits %02x mask %02x\n",fg,bits,mask);*/
 
 	if (mask & 0x80) plot_pixel(tmpbitmap,sx+0,sy, color[8-0-1]);
 	if (mask & 0x40) plot_pixel(tmpbitmap,sx+1,sy, color[8-1-1]);
