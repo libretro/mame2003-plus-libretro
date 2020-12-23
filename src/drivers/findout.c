@@ -277,7 +277,7 @@ static MACHINE_DRIVER_START( findout )
 	MDRV_PALETTE_INIT(findout)
 
 	MDRV_VIDEO_START(generic_bitmapped)
-	MDRV_VIDEO_UPDATE(findout)
+	MDRV_VIDEO_UPDATE(generic_bitmapped)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(DAC, dac_interface)
