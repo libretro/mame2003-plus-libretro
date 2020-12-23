@@ -5,8 +5,6 @@ Progress   (c) 1984 Chuo
 
 driver by Ernesto Corvi
 
-Notes:
-- Sprite colors are wrong (missing colortable?)
 
 ***************************************************************************/
 
