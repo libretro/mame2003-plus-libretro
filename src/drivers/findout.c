@@ -11,6 +11,7 @@ driver by Nicola Salmoria
 #include "machine/8255ppi.h"
 
 static UINT8 drawctrl[3];
+static UINT8 color[8];
 
 
 VIDEO_UPDATE( findout )
@@ -21,6 +22,12 @@ VIDEO_UPDATE( findout )
 static WRITE_HANDLER( findout_drawctrl_w )
 {
 	drawctrl[offset] = data;
+	if (offset == 2)
+	{
+		int i;
+		for (i = 0; i < 8; i++)
+			if (BIT(drawctrl[1],i)) color[i] = drawctrl[0] & 7;
+	}
 }
 
 static WRITE_HANDLER( findout_bitmap_w )
