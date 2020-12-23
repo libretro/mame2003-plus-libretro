@@ -39,6 +39,8 @@ static WRITE_HANDLER( findout_bitmap_w )
 	static int prevoffset, yadd;
 	int i;
 
+	videoram[offset] = data;
+
 	yadd = (offset == prevoffset) ? (yadd + 1) : 0;
 	prevoffset = offset;
 
