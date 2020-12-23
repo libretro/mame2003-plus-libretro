@@ -46,14 +46,14 @@ static WRITE_HANDLER( findout_bitmap_w )
 /*if (mask != bits)*/
 /*	usrintf_showmessage("color %02x bits %02x mask %02x\n",fg,bits,mask);*/
 
-	if (mask & 0x80) plot_pixel(tmpbitmap,sx+0,sy, color[8-i-1]);
-	if (mask & 0x40) plot_pixel(tmpbitmap,sx+1,sy, color[8-i-1]);
-	if (mask & 0x20) plot_pixel(tmpbitmap,sx+2,sy, color[8-i-1]);
-	if (mask & 0x10) plot_pixel(tmpbitmap,sx+3,sy, color[8-i-1]);
-	if (mask & 0x08) plot_pixel(tmpbitmap,sx+4,sy, color[8-i-1]);
-	if (mask & 0x04) plot_pixel(tmpbitmap,sx+5,sy, color[8-i-1]);
-	if (mask & 0x02) plot_pixel(tmpbitmap,sx+6,sy, color[8-i-1]);
-	if (mask & 0x01) plot_pixel(tmpbitmap,sx+7,sy, color[8-i-1]);
+	if (mask & 0x80) plot_pixel(tmpbitmap,sx+0,sy, color[8-0-1]);
+	if (mask & 0x40) plot_pixel(tmpbitmap,sx+1,sy, color[8-1-1]);
+	if (mask & 0x20) plot_pixel(tmpbitmap,sx+2,sy, color[8-2-1]);
+	if (mask & 0x10) plot_pixel(tmpbitmap,sx+3,sy, color[8-3-1]);
+	if (mask & 0x08) plot_pixel(tmpbitmap,sx+4,sy, color[8-4-1]);
+	if (mask & 0x04) plot_pixel(tmpbitmap,sx+5,sy, color[8-5-1]);
+	if (mask & 0x02) plot_pixel(tmpbitmap,sx+6,sy, color[8-6-1]);
+	if (mask & 0x01) plot_pixel(tmpbitmap,sx+7,sy, color[8-7-1]);
 }
 
 PALETTE_INIT( findout )
