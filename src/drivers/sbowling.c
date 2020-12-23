@@ -6,6 +6,7 @@ driver by Jaroslaw Burczynski
 
 Todo:
  - analog sound
+ - horizontal sprite positioning when screen is flipped
 
 ***********************************************************
 
@@ -58,18 +59,19 @@ static void get_sb_tile_info(int tile_index)
 	SET_TILE_INFO(0, tileno, 0, 0)
 }
 
-static void plot_pixel_sbw(int x, int y, int col)
+static void plot_pixel_sbw(int x, int y, int col, int flip)
 {
-	if (flip_screen)
+	if (flip)
 	{
-		y = 255-y;
-		x = 247-x;
+		y = 255 - y;
+		x = 255 - x;
 	}
 	plot_pixel(tmpbitmap,x,y,Machine->pens[col]);
 }
 
 static WRITE_HANDLER( sbw_videoram_w )
 {
+	int flip = flip_screen;
 	int x,y,i,v1,v2;
 
 	videoram[offset] = data;
@@ -81,10 +83,10 @@ static WRITE_HANDLER( sbw_videoram_w )
 
 	v1 = videoram[offset];
 	v2 = videoram[offset+0x2000];
-	
-	for(i = 0; i < 8; i++)
+
+	for (i = 0; i < 8; i++)
 	{
-		plot_pixel_sbw(x++, y, color_prom_address | ( ((v1&1)*0x20) | ((v2&1)*0x40) ) );
+		plot_pixel_sbw(x++, y, color_prom_address | ( ((v1&1)*0x20) | ((v2&1)*0x40) ), flip);
 		v1 >>= 1;
 		v2 >>= 1;
 	}
@@ -145,14 +147,12 @@ static WRITE_HANDLER (system_w)
 		-----x-- 1 ?
 		----x--- flip screen/controls
 	*/
-	flip_screen_set(data&1);
+	flip_screen_set(BIT(data, 3);
 
-	if((sbw_system^data)&1)
-	{
-		int offs;
-		for (offs = 0;offs < videoram_size; offs++)
-			sbw_videoram_w(offs, videoram[offs]);
-	}
+	int offs;
+	for (offs = 0; offs < 0x4000; offs++)
+		sbw_videoram_w(offs, videoram[offs]);
+
 	sbw_system = data;
 }
 
