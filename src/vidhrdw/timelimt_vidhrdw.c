@@ -149,7 +149,7 @@ static void drawsprites( struct mame_bitmap *bitmap )
 
 		drawgfx( bitmap, Machine->gfx[2],
 				code,
-				attr & 7,
+				attr & 3, /* was & 7, wrong for 3bpp and 32 colors */
 				flipx,flipy,
 				sx,sy,
 				&Machine->visible_area,TRANSPARENCY_PEN,0);
