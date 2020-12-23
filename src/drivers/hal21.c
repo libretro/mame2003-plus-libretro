@@ -547,6 +547,7 @@ static struct GfxLayout spritelayout_3bpp =
 
 static struct GfxDecodeInfo aso_gfxdecodeinfo[] =
 {
+	/* colors 0x200-0x3ff contain shadows */
 	{ REGION_GFX1, 0, &charlayout_4bpp,   0x180, 0x080>>4 }, /* colors 384..511 */
 	{ REGION_GFX2, 0, &charlayout_4bpp,   0x080, 0x100>>4 }, /* colors 128..383 */
 	{ REGION_GFX3, 0, &spritelayout_3bpp, 0x000, 0x080>>3 }, /* colors   0..127 */
