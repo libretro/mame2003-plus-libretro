@@ -1,4 +1,5 @@
 #include "vidhrdw/generic.h"
+#include "res_net.h"
 
 /* globals */
 data8_t *timelimt_bg_videoram;
