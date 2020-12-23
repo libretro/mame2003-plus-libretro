@@ -45,8 +45,8 @@ static WRITE_HANDLER( findout_bitmap_w )
 	sy = offset / 64;
 	sy = (sy + yadd) & 0xff;
 
-	for (i = 0; i < 8; i++)
-		plot_pixel(tmpbitmap, sx+i, sy, NULL);
+	//for (i = 0; i < 8; i++)
+		//plot_pixel(tmpbitmap, sx+i, sy, NULL);
 
 /* *BITMAP_ADDR16(space->machine->generic.tmpbitmap, sy, sx+i) = color[8-i-1]; */
 }
