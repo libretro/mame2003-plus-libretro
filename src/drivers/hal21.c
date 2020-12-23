@@ -517,9 +517,10 @@ INPUT_PORTS_END
 
 /**************************************************************************/
 
-static struct GfxLayout char256 = {
+static struct GfxLayout charlayout_4bpp =
+{
 	8,8,
-	0x100,
+	RGN_FRAC(1,1),
 	4,
 	{ 0, 1, 2, 3 },
 	{ 4, 0, 12, 8, 20, 16, 28, 24},
@@ -527,21 +528,12 @@ static struct GfxLayout char256 = {
 	256
 };
 
-static struct GfxLayout char1024 = {
-	8,8,
-	0x400,
-	4,
-	{ 0, 1, 2, 3 },
-	{ 4, 0, 12, 8, 20, 16, 28, 24},
-	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
-	256
-};
-
-static struct GfxLayout sprite1024 = {
+static struct GfxLayout spritelayout_3bpp =
+{
 	16,16,
-	0x400,
+	RGN_FRAC(1,3),
 	3,
-	{ 2*1024*256,1*1024*256,0*1024*256 },
+	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },
 	{
 		7,6,5,4,3,2,1,0,
 		15,14,13,12,11,10,9,8
@@ -555,10 +547,9 @@ static struct GfxLayout sprite1024 = {
 
 static struct GfxDecodeInfo aso_gfxdecodeinfo[] =
 {
-	/* colors 512-1023 are currently unused, I think they are a second bank */
-	{ REGION_GFX1, 0, &char256,    128*3,  8 }, /* colors 384..511 */
-	{ REGION_GFX2, 0, &char1024,   128*1, 16 }, /* colors 128..383 */
-	{ REGION_GFX3, 0, &sprite1024, 128*0, 16 }, /* colors   0..127 */
+	{ REGION_GFX1, 0, &charlayout_4bpp,   0x180, 0x080>>4 }, /* colors 384..511 */
+	{ REGION_GFX2, 0, &charlayout_4bpp,   0x080, 0x100>>4 }, /* colors 128..383 */
+	{ REGION_GFX3, 0, &spritelayout_3bpp, 0x000, 0x080>>3 }, /* colors   0..127 */
 	{ -1 }
 };
 
