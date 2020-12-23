@@ -1,4 +1,5 @@
 #include "vidhrdw/generic.h"
+#include "res_net.h"
 
 /* globals */
 data8_t *timelimt_bg_videoram;
@@ -13,7 +14,7 @@ static struct tilemap *bg_tilemap, *fg_tilemap;
 
   Convert the color PROMs into a more useable format.
 
-  Time Limit has two 32 bytes palette PROM, connected to the RGB output this
+  Time Limit has three 32 bytes palette PROM, connected to the RGB output this
   way:
 
   bit 7 -- 220 ohm resistor  -- BLUE
@@ -27,30 +28,40 @@ static struct tilemap *bg_tilemap, *fg_tilemap;
 
 ***************************************************************************/
 
-PALETTE_INIT( timelimt ) {
+PALETTE_INIT( timelimt )
+{
 	int i;
+	const int resistances_rg[3] = { 1000, 470, 220 };
+	const int resistances_b [2] = { 470, 220 };
 
-	for (i = 0;i < Machine->drv->total_colors;i++)
+	double weights_r[3], weights_g[3], weights_b[2];
+	compute_resistor_weights(0, 255,    -1.0,
+			3,  resistances_rg, weights_r,  0,  0,
+			3,  resistances_rg, weights_g,  0,  0,
+			2,  resistances_b,  weights_b,  0,  0);
+
+	for (i = 0; i < Machine->drv->total_colors; i++)
 	{
-		int bit0,bit1,bit2,r,g,b;
+		int bit0, bit1, bit2, r, g, b;
 
 		/* red component */
-		bit0 = (*color_prom >> 0) & 0x01;
-		bit1 = (*color_prom >> 1) & 0x01;
-		bit2 = (*color_prom >> 2) & 0x01;
-		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* green component */
-		bit0 = (*color_prom >> 3) & 0x01;
-		bit1 = (*color_prom >> 4) & 0x01;
-		bit2 = (*color_prom >> 5) & 0x01;
-		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* blue component */
-		bit0 = (*color_prom >> 6) & 0x01;
-		bit1 = (*color_prom >> 7) & 0x01;
-		b = 0x4f * bit0 + 0xa8 * bit1;
+		bit0 = BIT(color_prom[i], 0);
+		bit1 = BIT(color_prom[i], 1);
+		bit2 = BIT(color_prom[i], 2);
+		r = combine_3_weights(weights_r, bit0, bit1, bit2);
 
-		palette_set_color(i,r,g,b);
-		color_prom++;
+		/* green component */
+		bit0 = BIT(color_prom[i], 3);
+		bit1 = BIT(color_prom[i], 4);
+		bit2 = BIT(color_prom[i], 5);
+		g = combine_3_weights(weights_g, bit0, bit1, bit2);
+
+		/* blue component */
+		bit0 = BIT(color_prom[i], 6);
+		bit1 = BIT(color_prom[i], 7);
+		b = combine_2_weights(weights_b, bit0, bit1);
+
+		palette_set_color(i, r, g, b);
 	}
 }
 
@@ -149,7 +160,7 @@ static void drawsprites( struct mame_bitmap *bitmap )
 
 		drawgfx( bitmap, Machine->gfx[2],
 				code,
-				attr & 7,
+				attr & 3, /* was & 7, wrong for 3bpp and 32 colors */
 				flipx,flipy,
 				sx,sy,
 				&Machine->visible_area,TRANSPARENCY_PEN,0);

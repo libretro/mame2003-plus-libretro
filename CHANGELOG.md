@@ -329,6 +329,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
 * Timber - Romset `timber`
+* Time Limit - Romset `timelimt` - colors fixed
 * Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
 * Thunder Strike - Romset `tstrike` 
 * Tri-Sports - Romset `trisport`
@@ -629,3 +630,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Funybubl - fixed audio and graphic glitches [mahoneyt944]
 * Updated res_net code to fix colors in strike bowling [mahoneyt944]
 * Fixed color palette in Find Out [mahoneyt944]
+* Fixed colors, gfx, and missing proms in Time Limit [mahoneyt944]
