@@ -272,6 +272,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
 * F1 Super Lap (Japan) - Romset `f1lapj`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
+* Find Out - Romset `findout` - colors fixed
 * Fire Barrel - Romset `firebarr`
 * Funky Jet - Romset `funkyjet`
 * Gardia - Romset `gardia`
@@ -627,3 +628,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Speedspn - fixed selection screen graphic glitches [mahoneyt944]
 * Funybubl - fixed audio and graphic glitches [mahoneyt944]
 * Updated res_net code to fix colors in strike bowling [mahoneyt944]
+* Fixed color palette in Find Out [mahoneyt944]
