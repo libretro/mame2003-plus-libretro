@@ -147,7 +147,7 @@ static WRITE_HANDLER (system_w)
 		-----x-- 1 ?
 		----x--- flip screen/controls
 	*/
-	flip_screen_set(BIT(data, 3);
+	flip_screen_set(BIT(data, 3));
 
 	int offs;
 	for (offs = 0; offs < 0x4000; offs++)
