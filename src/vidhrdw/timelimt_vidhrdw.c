@@ -13,7 +13,7 @@ static struct tilemap *bg_tilemap, *fg_tilemap;
 
   Convert the color PROMs into a more useable format.
 
-  Time Limit has two 32 bytes palette PROM, connected to the RGB output this
+  Time Limit has three 32 bytes palette PROM, connected to the RGB output this
   way:
 
   bit 7 -- 220 ohm resistor  -- BLUE
@@ -32,8 +32,6 @@ PALETTE_INIT( timelimt )
 	int i;
 	const int resistances_rg[3] = { 1000, 470, 220 };
 	const int resistances_b [2] = { 470, 220 };
-
-	const UINT8 *color_prom = memory_region(REGION_PROMS);
 
 	double weights_r[3], weights_g[3], weights_b[2];
 	compute_resistor_weights(0, 255,    -1.0,
