@@ -196,7 +196,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sexy Parodius (Ver AAA) * Mature *
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
-* Target Ball (Romset `tgtballa` - family friendly version)
+* Target Ball * Mature * (Romset `tgtballa`)
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
 * The King of Fighters '97 Plus
