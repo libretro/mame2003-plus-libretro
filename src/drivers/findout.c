@@ -47,7 +47,7 @@ static WRITE_HANDLER( findout_bitmap_w )
 	sy = (sy + yadd) & 0xff;
 
 	for (i = 0; i < 8; i++)
-		plot_pixel(bitmap, sy, sx + i, color[8 - i - 1]);
+		plot_pixel(tmpbitmap, sy, sx + i, color[8 - i - 1]);
 }
 
 PALETTE_INIT(findout)
