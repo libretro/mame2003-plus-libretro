@@ -401,7 +401,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dig Dug
 * Dig Dug II
 * Final Fight - Added OST soundtrack (via KMFDManic)
-* Funny Bubble - `funybubl`
+* Funny Bubble - `funybubl` * Mature *
 * Galaga
 * Galaga 3
 * Galaxy Rescue - (Added lrescue.zip sample support)
