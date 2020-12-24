@@ -295,6 +295,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
 * Mr. TNT - Romset `mrtnt` - colors fixed
+* New Sinbad 7 - Romset `newsin7` - colors fixed
 * Night Slashers - Romset `nslasher`
 * Off Road Challenge - Romset `offroadc` - Requires a fast system
 * Phantasm - Romset `phantasm`
@@ -323,7 +324,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
 * Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
-* Strike Bowling - Romset `sbowling` - fixed colors
+* Strike Bowling - Romset `sbowling` - colors fixed
 * Super Stingray - Romset `sstingry` - colors fixed
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
@@ -631,3 +632,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated res_net code to fix colors in strike bowling [mahoneyt944]
 * Fixed color palette in Find Out [mahoneyt944]
 * Fixed colors, gfx, and missing proms in Time Limit [mahoneyt944]
+* Corrected gfx decode for newsin7 fixing colors [mahoneyt944]
