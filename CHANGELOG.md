@@ -295,6 +295,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
 * Mr. TNT - Romset `mrtnt` - colors fixed
+* New Sinbad 7 - Romset `newsin7` - colors fixed
 * Night Slashers - Romset `nslasher`
 * Off Road Challenge - Romset `offroadc` - Requires a fast system
 * Phantasm - Romset `phantasm`
@@ -314,7 +315,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shisensho II * Mature * - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Shrike Avenger - Romset `shrike`
-* New Sinbad 7 - Romset `newsin7` - colors fixed
 * Sky Army - Romset `skyarmy`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
