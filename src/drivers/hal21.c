@@ -49,7 +49,6 @@ AT08XX03:
 
 [TODO]
  - find out what "really" messes up ASO's scrolling
- - verify color effects in both games
 */
 
 #include "driver.h"
