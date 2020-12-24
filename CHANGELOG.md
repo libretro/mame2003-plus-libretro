@@ -314,6 +314,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shisensho II * Mature * - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Shrike Avenger - Romset `shrike`
+* New Sinbad 7 - Romset `newsin7` - colors fixed
 * Sky Army - Romset `skyarmy`
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
@@ -323,7 +324,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Spy Hunter 2 - Romset `spyhunt2`
 * Star Guards - Romset `stargrds`
 * Street Fighter (With Added Speedups) - Romsets `sf1`, `sf1jp`, `sf1p`, `sf1us`
-* Strike Bowling - Romset `sbowling` - fixed colors
+* Strike Bowling - Romset `sbowling` - colors fixed
 * Super Stingray - Romset `sstingry` - colors fixed
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
@@ -631,3 +632,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated res_net code to fix colors in strike bowling [mahoneyt944]
 * Fixed color palette in Find Out [mahoneyt944]
 * Fixed colors, gfx, and missing proms in Time Limit [mahoneyt944]
+* Corrected gfx decode for newsin7 fixing colors [mahoneyt944]
