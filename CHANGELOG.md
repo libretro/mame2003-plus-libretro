@@ -62,6 +62,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gunbarich
 * GunMaster
 * Hang Zo
+* Head On Channel (Japan, Prototype)
 * Heavy Smash
 * Hoops '96
 * Hyper Crash
@@ -116,6 +117,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Sonic The Hedgehog 2
 * Sega Megaplay : Streets Of Rage II
 * Sega Megaplay : Tecmo World Cup
+* Sega Sonic Bros (Japan, Prototype)
 * Sengoku 3
 * Skull Fang
 * Slap Shooter
