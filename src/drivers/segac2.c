@@ -3776,7 +3776,18 @@ ROM_END
 
 /* ----- System C-2 Games ----- */
 
-ROM_START( ssonicbr )
+ROM_START( headonch ) /* Head On Channel (Prototype) (c)1992 Sega */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "epr-16812.ic32", 0x000000, 0x080000, CRC(091cf538) )
+	ROM_LOAD16_BYTE( "epr-16811.ic31", 0x000001, 0x080000, CRC(91f3b5f1) )
+	ROM_LOAD16_BYTE( "epr-16814.ic34", 0x100000, 0x080000, CRC(d8dc6323) )
+	ROM_LOAD16_BYTE( "epr-16813.ic33", 0x100001, 0x080000, CRC(3268e38b) )
+
+	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
+	ROM_LOAD( "epr-16810.ic4", 0x000000, 0x040000, CRC(90af7301) )
+ROM_END
+
+ROM_START( ssonicbr )  /* Sega Sonic Bros (Prototype) (c)1992 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ssonicbr.ic32", 0x000000, 0x040000, CRC(cf254ecd) SHA1(4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800) )
 	ROM_LOAD16_BYTE( "ssonicbr.ic31", 0x000001, 0x040000, CRC(03709746) SHA1(0b457f557da77acd3f43950428117c1decdfaf26) )
@@ -4932,7 +4943,8 @@ GAME ( 1994, stkclmns, 0,        segac2,   stkclmns, stkclmns, ROT0, "Sega",    
 GAME ( 1994, puyopuy2, 0,        segac2,   puyopuy2, puyopuy2, ROT0, "Compile (Sega license)", "Puyo Puyo 2 (Japan)" )
 GAME ( 1994, potopoto, 0,        segac2,   potopoto, potopoto, ROT0, "Sega",                   "Poto Poto (Japan)" )
 GAME ( 1994, zunkyou,  0,        segac2,   zunkyou,  zunkyou,  ROT0, "Sega",                   "Zunzunkyou No Yabou (Japan)" )
-
+GAME ( 1992, headonch, 0,        segac2,   ichidant, tantr,    ROT0, "Sega",                   "Head On Channel (Japan, prototype)" )
+  
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
 
