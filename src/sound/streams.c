@@ -67,7 +67,7 @@ void apply_RC_filter(int channel,INT16 *buf,int len,int sample_rate)
 
 	Req = (R1*(R2+R3))/(R1+R2+R3);
 
-	K = 0x10000 * exp(-1 / (Req * C) / sample_rate);
+	K = 0x10000 * (1 - (exp(-1 / (Req * C) / sample_rate)));
 
 	buf[0] = buf[0] + (memory[channel] - buf[0]) * K / 0x10000;
 
