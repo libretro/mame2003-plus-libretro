@@ -34,7 +34,7 @@ include:
   # Nintendo 3DS
   - project: 'libretro-infrastructure/ci-templates'
     file: '/ctr-static.yml'
- 
+
   # Nintendo WiiU
   - project: 'libretro-infrastructure/ci-templates'
     file: '/wiiu-static.yml'
