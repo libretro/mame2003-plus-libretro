@@ -420,6 +420,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * NBA Hangtime
 * NBA Jam - Added OST Soundtrack (via KMFDManic)
 * NBA Maximum Hangtime
+* New Sinbad 7
 * Nibbler
 * Open Ice
 * Out Run - Added ost soundtrack (via KMFDManic)
@@ -635,3 +636,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed color palette in Find Out [mahoneyt944]
 * Fixed colors, gfx, and missing proms in Time Limit [mahoneyt944]
 * Corrected gfx decode for newsin7 fixing colors [mahoneyt944]
+* Updated RC filter in streams.c to fix sound issues newsin7 [mahoneyt944]
