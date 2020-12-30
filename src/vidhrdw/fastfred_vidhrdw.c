@@ -88,7 +88,7 @@ PALETTE_INIT( fastfred )
 
 
 	/* characters and sprites use the same palette */
-	for (i = 0; i < TOTAL_COLORS(0); i++)
+	for (i = 0; i < 256; i++)
 	{
 		pen_t color;
 
