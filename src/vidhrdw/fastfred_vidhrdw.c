@@ -387,6 +387,10 @@ VIDEO_START( imago )
 
 	tilemap_set_transparent_pen(fg_tilemap, 0);
 
+	/* web colors */
+	palette_set_color(256+64+0, 0x50, 0x00, 0x00);
+	palette_set_color(256+64+1, 0x00, 0x00, 0x00);
+
 	return 0;
 }
 
