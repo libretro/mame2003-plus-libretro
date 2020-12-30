@@ -35,7 +35,7 @@ static int flip_screen_x;
 static int flip_screen_y;
 int fastfred_hardware_type;
 static const UINT8 *fastfred_color_prom;
-static struct tilemap *bg_tilemap, *fg_tilemap;
+static struct tilemap *bg_tilemap, *fg_tilemap, *web_tilemap;
 
 /***************************************************************************
 
@@ -280,14 +280,8 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		if (fastfred_hardware_type == 3)
 		{
 			/* Imago*/
-
-			/*fastfred_spriteram[offs + 2] & 0xf8 get only set at startup*/
-
-			/*the code is greater than 0x3f only at startup*/
 			code  = (fastfred_spriteram[offs + 1]) & 0x3f;
 
-			/* To Do: find the correct bank for sprites */
-			
 			flipx = 0;
 			flipy = 0;
 		}
@@ -359,6 +353,10 @@ static void imago_get_tile_info_fg(int tile_index)
 	SET_TILE_INFO(2, code, 2, 0)
 }
 
+static void imago_get_tile_info_web(int tile_index)
+{
+	SET_TILE_INFO(3, tile_index & 0x1ff, 0, 0);
+}
 
 WRITE_HANDLER( imago_fg_videoram_w )
 {
@@ -380,8 +378,9 @@ WRITE_HANDLER( imago_charbank_w )
 
 VIDEO_START( imago )
 {
-	bg_tilemap = tilemap_create(imago_get_tile_info_bg,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
-	fg_tilemap = tilemap_create(imago_get_tile_info_fg,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32,32);
+	web_tilemap = tilemap_create(imago_get_tile_info_web,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
+	bg_tilemap  = tilemap_create(imago_get_tile_info_bg, tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
+	fg_tilemap  = tilemap_create(imago_get_tile_info_fg, tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32,32);
 
 	if( !bg_tilemap || !fg_tilemap )
 		return 1;
@@ -393,6 +392,7 @@ VIDEO_START( imago )
 
 VIDEO_UPDATE( imago )
 {
+	tilemap_draw(bitmap,cliprect,web_tilemap,0,0);
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 
 	draw_sprites(bitmap, cliprect);
