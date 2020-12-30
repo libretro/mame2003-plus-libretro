@@ -43,6 +43,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/libnx-static.yml'
 
+  # OpenDingux
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/dingux-mips32.yml'
+
 # Stages for building
 stages:
   - build-prepare
@@ -114,4 +118,10 @@ libretro-build-wiiu:
 libretro-build-libnx-aarch64:
   extends:
     - .libretro-libnx-static-retroarch-master
+    - .core-defs
+
+# OpenDingux
+libretro-build-dingux-mips32:
+  extends:
+    - .libretro-dingux-mips32-make-default
     - .core-defs
