@@ -651,12 +651,12 @@ static struct GfxDecodeInfo imago_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-#define CLOCK 18432000  /* The crystal is 18.432MHz */
+#define CLOCK 12432000
 
 static struct AY8910interface fastfred_ay8910_interface =
 {
 	2,             /* 2 chips */
-	CLOCK/12,       /* ? */
+	CLOCK/8,       /* 1.554 MHz */
 	{ 25, 25 },
 	{ 0 },
 	{ 0 },
@@ -667,7 +667,7 @@ static struct AY8910interface fastfred_ay8910_interface =
 static struct AY8910interface jumpcoas_ay8910_interface =
 {
 	1,             /* 1 chip */
-	CLOCK/12,       /* ? */
+	CLOCK/8,       /* 1.554 MHz */
 	{ 25 },
 	{ 0 },
 	{ 0 },
@@ -679,12 +679,12 @@ static struct AY8910interface jumpcoas_ay8910_interface =
 static MACHINE_DRIVER_START( fastfred )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", Z80, CLOCK/6)     /* 3.072 MHz */
+	MDRV_CPU_ADD_TAG("main", Z80, CLOCK/4)     /* 3.108 MHz */
 	MDRV_CPU_MEMORY(fastfred_readmem,fastfred_writemem)
 	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
 
-	MDRV_CPU_ADD_TAG("audio", Z80, CLOCK/12)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)    /* 1.536 MHz */
+	MDRV_CPU_ADD_TAG("audio", Z80, CLOCK/8)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)    /* 1.554 MHz */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_VBLANK_INT(nmi_line_pulse,4)
 
