@@ -185,6 +185,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hacha Mecha Fighter (bootleg)
 * Hook (Japan Version)
 * Ikari III - The Rescue (World, 8-Way Joystick)
+* Imago (cocktail set)
 * Kabuki-Z (Japan)
 * King of Gladiator
 * Knuckle Bash 2
@@ -285,6 +286,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hard Head 2 - Romset `hardhea2`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * IGMO - Romset `igmo` color fixed
+* Imago - Romsets `imago` and `imagoa`
 * Iron Horse - Romset `ironhors`
 * Joshi Volleyball - Romset `josvolly`
 * Journey - Romset `journey`
@@ -637,3 +639,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed colors, gfx, and missing proms in Time Limit [mahoneyt944]
 * Corrected gfx decode for newsin7 fixing colors [mahoneyt944]
 * Updated RC filter in streams.c to fix sound issues newsin7 [mahoneyt944]
+* Fixed graphics / colors in Imago and added new cocktail clone [mahoneyt944]
