@@ -379,12 +379,13 @@ WRITE_HANDLER( imago_charbank_w )
 VIDEO_START( imago )
 {
 	web_tilemap = tilemap_create(imago_get_tile_info_web,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
-	bg_tilemap  = tilemap_create(imago_get_tile_info_bg, tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32);
+	bg_tilemap  = tilemap_create(imago_get_tile_info_bg, tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32,32);
 	fg_tilemap  = tilemap_create(imago_get_tile_info_fg, tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32,32);
 
 	if( !bg_tilemap || !fg_tilemap )
 		return 1;
 
+	tilemap_set_transparent_pen(bg_tilemap, 0);
 	tilemap_set_transparent_pen(fg_tilemap, 0);
 
 	/* web colors */
