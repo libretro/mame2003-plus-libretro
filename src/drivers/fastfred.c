@@ -138,7 +138,7 @@ static WRITE_HANDLER( imago_sprites_dma_w )
 	sprites_data = rom[imago_sprites_address + 0x2000*2 + imago_sprites_bank * 0x1000];
 	imago_sprites[offset + 0x800*2] = sprites_data;
 
-	decodechar(Machine->gfx[1], offset/32, imago_sprites, &imago_spritelayout);
+	decodechar(Machine->gfx[1], offset/32, imago_sprites, Machine->drv->gfxdecodeinfo[1].gfxlayout);
 }
 
 static READ_HANDLER( imago_sprites_offset_r )
