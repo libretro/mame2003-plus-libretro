@@ -300,7 +300,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( jumpcoas )	/* (c) 1983 Kaneko */
 	DRIVER( boggy84 )	/* bootleg, original is (c)1983 Taito/Kaneko */
 	DRIVER( redrobin )	/* (c) 1986 Elettronolo */
-	DRIVER( imago )
+	DRIVER( imago ) 	/* cocktail set */
+	DRIVER( imagoa )	/* no cocktail set */
 
 	/* "Crazy Climber hardware" games */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
