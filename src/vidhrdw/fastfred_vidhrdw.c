@@ -11,7 +11,7 @@
 
 extern UINT8 galaxian_stars_on;
 extern void galaxian_init_stars(int colors_offset);
-extern void galaxian_draw_stars(mame_bitmap *bitmap);
+extern void galaxian_draw_stars(struct mame_bitmap *bitmap);
 
 data8_t *fastfred_videoram;
 data8_t *fastfred_spriteram;
