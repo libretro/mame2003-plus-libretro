@@ -559,6 +559,30 @@ static struct GfxLayout spritelayout =
 	32*8
 };
 
+static struct GfxLayout imago_spritelayout =
+{
+	16,16,
+	0x40,
+	3,
+	{ 0x800*8*2, 0x800*8*1, 0x800*8*0 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7,
+		8*8+0, 8*8+1, 8*8+2, 8*8+3, 8*8+4, 8*8+5, 8*8+6, 8*8+7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
+		16*8, 17*8, 18*8, 19*8, 20*8, 21*8, 22*8, 23*8 },
+	32*8
+};
+
+static struct GfxLayout imago_char_1bpp =
+{
+	8,8,
+	RGN_FRAC(1,1),
+	1,
+	{ 0 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
+};
+
 static struct GfxDecodeInfo fastfred_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,   0, 32 },
@@ -575,9 +599,10 @@ static struct GfxDecodeInfo jumpcoas_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo imago_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout,	 0, 32 },
-	{ REGION_GFX2, 0, &spritelayout, 0, 32 },
-	{ REGION_GFX3, 0, &charlayout,	 0, 32 },
+	{ REGION_GFX1, 0, &charlayout,           0,     32 },
+	{ REGION_GFX2, 0, &spritelayout,         0,     32 },
+	{ REGION_GFX3, 0, &charlayout,           0,     32 },
+	{ REGION_GFX4, 0, &imago_char_1bpp,      0x140,  1 },
 	{ -1 } /* end of array */
 };
 
