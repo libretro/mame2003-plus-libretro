@@ -9,6 +9,9 @@
 #include "driver.h"
 #include "fastfred.h"
 
+extern UINT8 galaxian_stars_on;
+extern void galaxian_init_stars(int colors_offset);
+extern void galaxian_draw_stars(mame_bitmap *bitmap);
 
 data8_t *fastfred_videoram;
 data8_t *fastfred_spriteram;
@@ -386,6 +389,10 @@ VIDEO_START( imago )
 	tilemap_set_transparent_pen(bg_tilemap, 0);
 	tilemap_set_transparent_pen(fg_tilemap, 0);
 
+	/* the game has a galaxian starfield */
+	galaxian_init_stars(256);
+	galaxian_stars_on = 1;
+
 	/* web colors */
 	palette_set_color(256+64+0, 0x50, 0x00, 0x00);
 	palette_set_color(256+64+1, 0x00, 0x00, 0x00);
@@ -396,6 +403,9 @@ VIDEO_START( imago )
 VIDEO_UPDATE( imago )
 {
 	tilemap_draw(bitmap,cliprect,web_tilemap,0,0);
+
+	galaxian_draw_stars(bitmap);
+
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 
 	draw_sprites(bitmap, cliprect);
