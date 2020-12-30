@@ -7,6 +7,7 @@
 
 #include "driver.h"
 #include "fastfred.h"
+#include "galaxian.h"
 
 
 /* This routine is a big hack, but the only way I can get the game working*/
