@@ -11,7 +11,7 @@
 
 extern UINT8 galaxian_stars_on;
 extern void galaxian_init_stars(int colors_offset);
-extern void galaxian_draw_stars(struct mame_bitmap *bitmap);
+//extern void galaxian_draw_stars(struct mame_bitmap *bitmap);
 
 data8_t *fastfred_videoram;
 data8_t *fastfred_spriteram;
@@ -404,7 +404,7 @@ VIDEO_UPDATE( imago )
 {
 	tilemap_draw(bitmap,cliprect,web_tilemap,0,0);
 
-	galaxian_draw_stars(bitmap);
+	//galaxian_draw_stars(bitmap);
 
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 
