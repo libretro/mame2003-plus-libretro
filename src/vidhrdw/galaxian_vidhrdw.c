@@ -101,7 +101,7 @@ static int timer_adjusted;
        void galaxian_init_stars(void);
 static void (*draw_stars)(struct mame_bitmap *);		/* function to call to draw the star layer */
 static void     noop_draw_stars(struct mame_bitmap *bitmap);
-static void galaxian_draw_stars(struct mame_bitmap *bitmap);
+       void galaxian_draw_stars(struct mame_bitmap *bitmap);
 	   void scramble_draw_stars(struct mame_bitmap *bitmap);
 static void   rescue_draw_stars(struct mame_bitmap *bitmap);
 static void  mariner_draw_stars(struct mame_bitmap *bitmap);
@@ -1553,7 +1553,7 @@ static void noop_draw_stars(struct mame_bitmap *bitmap)
 {
 }
 
-static void galaxian_draw_stars(struct mame_bitmap *bitmap)
+void galaxian_draw_stars(struct mame_bitmap *bitmap)
 {
 	int offs;
 
