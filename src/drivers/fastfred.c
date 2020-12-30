@@ -731,6 +731,8 @@ static MACHINE_DRIVER_START( imago )
 	MDRV_CPU_MEMORY(imago_readmem,imago_writemem)
 
 	/* video hardware */
+	MDRV_PALETTE_LENGTH(256+64+2) /* 256 for characters, 64 for the stars and 2 for the web */
+	MDRV_COLORTABLE_LENGTH(32*8+64+2)
 	MDRV_GFXDECODE(imago_gfxdecodeinfo)
 
 	MDRV_VIDEO_START(imago)
