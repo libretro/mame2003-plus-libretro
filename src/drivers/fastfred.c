@@ -106,6 +106,47 @@ static READ_HANDLER( jumpcoas_custom_io_r )
 	return 0x00;
 }
 
+/*
+	Imago sprites DMA
+*/
+
+static UINT8 imago_sprites[0x800*3];
+static UINT16 imago_sprites_address;
+static UINT8 imago_sprites_bank = 0;
+
+static WRITE_HANDLER( imago_dma_irq_w )
+{
+	cpu_set_irq_line(0, 0, data & 1 ? ASSERT_LINE : CLEAR_LINE);
+}
+
+static WRITE_HANDLER( imago_sprites_bank_w )
+{
+	imago_sprites_bank = (data & 2) >> 1;
+}
+
+static WRITE_HANDLER( imago_sprites_dma_w )
+{
+	UINT8 *rom = (UINT8 *)memory_region(REGION_GFX2);
+	UINT8 sprites_data;
+
+	sprites_data = rom[imago_sprites_address + 0x2000*0 + imago_sprites_bank * 0x1000];
+	imago_sprites[offset + 0x800*0] = sprites_data;
+
+	sprites_data = rom[imago_sprites_address + 0x2000*1 + imago_sprites_bank * 0x1000];
+	imago_sprites[offset + 0x800*1] = sprites_data;
+
+	sprites_data = rom[imago_sprites_address + 0x2000*2 + imago_sprites_bank * 0x1000];
+	imago_sprites[offset + 0x800*2] = sprites_data;
+
+	decodechar(Machine->gfx[1], offset/32, imago_sprites, Machine->drv->gfxdecodeinfo[2].gfxlayout);
+}
+
+static READ_HANDLER( imago_sprites_offset_r )
+{
+	imago_sprites_address = offset;
+	return 0xff; /* not really used */
+}
+
 
 static MEMORY_READ_START( fastfred_readmem )
 	{ 0x0000, 0xbfff, MRA_ROM },
@@ -180,6 +221,7 @@ MEMORY_END
 
 static MEMORY_READ_START( imago_readmem )
 	{ 0x0000, 0x0fff, MRA_ROM },
+	{ 0x1000, 0x1fff, imago_sprites_offset_r },
 	{ 0x2000, 0x6fff, MRA_ROM },
 	{ 0xb000, 0xb3ff, MRA_RAM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
@@ -196,6 +238,7 @@ static MEMORY_WRITE_START( imago_writemem )
 	{ 0x0000, 0x0fff, MWA_ROM },
 	{ 0x2000, 0x6fff, MWA_ROM },
 	{ 0xb000, 0xb3ff, MWA_RAM },
+	{ 0xb800, 0xbfff, imago_sprites_dma_w },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xc800, 0xcbff, imago_fg_videoram_w, &imago_fg_videoram },
 	{ 0xd000, 0xd3ff, fastfred_videoram_w, &fastfred_videoram },
@@ -206,10 +249,12 @@ static MEMORY_WRITE_START( imago_writemem )
 	{ 0xf001, 0xf001, interrupt_enable_w },
 	{ 0xf002, 0xf002, fastfred_colorbank1_w },
 	{ 0xf003, 0xf003, fastfred_colorbank2_w },
-	{ 0xf004, 0xf004, MWA_NOP }, /* initialized with 0 then when written always 1*/
+	{ 0xf004, 0xf004, imago_dma_irq_w },
 	{ 0xf005, 0xf005, imago_charbank_w },
 	{ 0xf006, 0xf006, MWA_NOP }, /* always 0*/
 	{ 0xf007, 0xf007, MWA_NOP }, /* always 0*/
+	{ 0xf400, 0xf400, MWA_NOP },
+	{ 0xf401, 0xf401, imago_sprites_bank_w },
 	{ 0xf800, 0xf800, soundlatch_w },
 MEMORY_END
 
