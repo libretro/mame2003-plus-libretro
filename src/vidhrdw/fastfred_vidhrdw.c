@@ -53,22 +53,20 @@ static void set_color(pen_t pen, int i)
 	UINT8 r,g,b;
 	int bit0, bit1, bit2, bit3;
 
-	pen_t total = Machine->drv->total_colors;
-
-	bit0 = (fastfred_color_prom[i + 0*total] >> 0) & 0x01;
-	bit1 = (fastfred_color_prom[i + 0*total] >> 1) & 0x01;
-	bit2 = (fastfred_color_prom[i + 0*total] >> 2) & 0x01;
-	bit3 = (fastfred_color_prom[i + 0*total] >> 3) & 0x01;
+	bit0 = (fastfred_color_prom[i] >> 0) & 0x01;
+	bit1 = (fastfred_color_prom[i] >> 1) & 0x01;
+	bit2 = (fastfred_color_prom[i] >> 2) & 0x01;
+	bit3 = (fastfred_color_prom[i] >> 3) & 0x01;
 	r = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-	bit0 = (fastfred_color_prom[i + 1*total] >> 0) & 0x01;
-	bit1 = (fastfred_color_prom[i + 1*total] >> 1) & 0x01;
-	bit2 = (fastfred_color_prom[i + 1*total] >> 2) & 0x01;
-	bit3 = (fastfred_color_prom[i + 1*total] >> 3) & 0x01;
+	bit0 = (fastfred_color_prom[i + 0x100] >> 0) & 0x01;
+	bit1 = (fastfred_color_prom[i + 0x100] >> 1) & 0x01;
+	bit2 = (fastfred_color_prom[i + 0x100] >> 2) & 0x01;
+	bit3 = (fastfred_color_prom[i + 0x100] >> 3) & 0x01;
 	g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-	bit0 = (fastfred_color_prom[i + 2*total] >> 0) & 0x01;
-	bit1 = (fastfred_color_prom[i + 2*total] >> 1) & 0x01;
-	bit2 = (fastfred_color_prom[i + 2*total] >> 2) & 0x01;
-	bit3 = (fastfred_color_prom[i + 2*total] >> 3) & 0x01;
+	bit0 = (fastfred_color_prom[i + 0x200] >> 0) & 0x01;
+	bit1 = (fastfred_color_prom[i + 0x200] >> 1) & 0x01;
+	bit2 = (fastfred_color_prom[i + 0x200] >> 2) & 0x01;
+	bit3 = (fastfred_color_prom[i + 0x200] >> 3) & 0x01;
 	b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
 	palette_set_color(pen,r,g,b);
