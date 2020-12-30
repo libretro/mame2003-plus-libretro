@@ -83,7 +83,7 @@ PALETTE_INIT( fastfred )
 
 	fastfred_color_prom = color_prom;	/* we'll need this later */
 
-	for (i = 0;i < Machine->drv->total_colors;i++)
+	for (i = 0;i < 256;i++)
 	{
 		set_color(i, i);
 	}
