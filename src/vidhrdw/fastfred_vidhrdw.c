@@ -356,7 +356,7 @@ static void imago_get_tile_info_bg(int tile_index)
 static void imago_get_tile_info_fg(int tile_index)
 {
 	int code = imago_fg_videoram[tile_index];
-	SET_TILE_INFO(2, code, 0, 0)
+	SET_TILE_INFO(2, code, 2, 0)
 }
 
 
