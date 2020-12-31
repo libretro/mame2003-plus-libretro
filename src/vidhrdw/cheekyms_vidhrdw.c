@@ -139,19 +139,38 @@ VIDEO_UPDATE( cheekyms )
 		}
 		else
 		{
-			drawgfx(bitmap,Machine->gfx[1],
+			if (v1 & 0x02)
+			{
+				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x20,
 					col,
 					0,0,
-					sx,sy,
+					sx, sy,
 					&Machine->visible_area,TRANSPARENCY_PEN,0);
 
-			drawgfx(bitmap,Machine->gfx[1],
+				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
-					sx + 8*(v1 & 2),sy + 8*(~v1 & 2),
+					sx + 0x10, sy,
 					&Machine->visible_area,TRANSPARENCY_PEN,0);
+			}
+			else
+			{
+				drawgfx(bitmap,Machine->gfx[1],
+					code + 0x20,
+					col,
+					0,0,
+					sx, sy,
+					&Machine->visible_area,TRANSPARENCY_PEN,0);
+
+				drawgfx(bitmap,Machine->gfx[1],
+					code + 0x21,
+					col,
+					0,0,
+					sx, sy + 0x10,
+					&Machine->visible_area,TRANSPARENCY_PEN,0);
+			}
 		}
 	}
 
