@@ -99,7 +99,7 @@ VIDEO_UPDATE( cheekyms )
 	}
 
 
-	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
 	/* Draw the sprites first, because they're supposed to appear below
 	   the characters */
@@ -126,7 +126,7 @@ VIDEO_UPDATE( cheekyms )
 					code,col,
 					0,0,
 					sx,sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 		}
 		else
 		{
@@ -137,14 +137,14 @@ VIDEO_UPDATE( cheekyms )
 					col,
 					0,0,
 					sx, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 
 				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
 					sx + 0x10, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 			}
 			else
 			{
@@ -153,14 +153,14 @@ VIDEO_UPDATE( cheekyms )
 					col,
 					0,0,
 					sx, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 
 				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
 					sx, sy + 0x10,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 			}
 		}
 	}
@@ -208,12 +208,12 @@ VIDEO_UPDATE( cheekyms )
 					color,
 					flip_screen,flip_screen,
 					8*sx, 8*sy - (man_area ? man_scroll : 0),
-					&Machine->visible_area,TRANSPARENCY_NONE,0);
+					cliprect,TRANSPARENCY_NONE,0);
 		}
 	}
 
 	redraw_man = 0;
 
 	/* copy the temporary bitmap to the screen over the sprites */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
 }
