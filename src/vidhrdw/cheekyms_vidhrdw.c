@@ -115,7 +115,7 @@ VIDEO_UPDATE( cheekyms )
 	{
 		int v1, sx, sy, col, code;
 
-		if (!(sprites[offs + 3] & 0x08)) continue;
+		if ((sprites[offs + 3] & 0x08) == 0x00) continue;
 
 		v1  = sprites[offs + 0];
 		sy  = sprites[offs + 1];
