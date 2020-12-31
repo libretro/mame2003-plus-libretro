@@ -1100,7 +1100,7 @@ struct AY8910interface scobra_ay8910_interface =
 	2,	/* 2 chips */
 	14318000/8,	/* 1.78975 MHz */
 	/* Ant Eater clips if the volume is set higher than this */
-	{ MIXERG(16,MIXER_GAIN_2x,MIXER_PAN_CENTER), MIXERG(16,MIXER_GAIN_2x,MIXER_PAN_CENTER) },
+	{ 16, 16 },
 	{ 0, soundlatch_r },
 	{ 0, scramble_portB_r },
 	{ 0, 0 },
