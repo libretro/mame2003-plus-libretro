@@ -199,7 +199,7 @@ VIDEO_UPDATE( cheekyms )
 			sy = 31 - sy;
 		}
 
-		drawgfx(tmpbitmap,machine->gfx[0],
+		drawgfx(tmpbitmap,Machine->gfx[0],
 				videoram[offs],
 				color,
 				flip_screen,flip_screen,
