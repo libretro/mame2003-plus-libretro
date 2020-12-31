@@ -100,33 +100,33 @@ INPUT_PORTS_END
 
 static struct GfxLayout charlayout =
 {
-	8,8,	/* 16*16 sprites */
-	256,	/* 64 sprites */
-	2,	/* 2 bits per pixel */
-	{ 0, 256*8*8 },	/* the two bitplanes are separated */
+	8,8,
+	RGN_FRAC(1,2),
+	2,
+	{ 0, RGN_FRAC(1,2) },
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-	8*8	/* every sprite takes 8 consecutive bytes */
+	8*8
 };
 
 static struct GfxLayout spritelayout =
 {
-	16,16,	/* 16*16 sprites */
-	64,	/* 64 sprites */
-	2,	/* 2 bits per pixel */
-	{ 64*32*8, 0 },	/* the two bitplanes are separated */
+	16,16,
+	RGN_FRAC(1,2),
+	2,
+	{ RGN_FRAC(1,2), 0 },
 	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
 	{ 0*16, 1*16,  2*16,  3*16,  4*16,  5*16,  6*16,  7*16,
 			8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
-	32*8	/* every sprite takes 32 consecutive bytes */
+	32*8
 };
 
 
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout,   0,    32 },
-	{ REGION_GFX2, 0, &spritelayout, 32*4, 16 },
+	{ REGION_GFX1, 0, &charlayout,   0x00, 0x20 },
+	{ REGION_GFX2, 0, &spritelayout, 0x80, 0x10 },
 	{ -1 } /* end of array */
 };
 
@@ -190,11 +190,11 @@ ROM_START( cheekyms )
 	ROM_LOAD( "cm08.n6",       0x0800, 0x0800, CRC(b3fbd4ac) SHA1(9f45cc6d9e0bf580149e18de5c3e37d4de347b92) )
 
 	ROM_REGION( 0x0060, REGION_PROMS, 0 )
-	ROM_LOAD( "cm.m8",         0x0000, 0x0020, CRC(2386bc68) SHA1(6676082860cd8678a71339a352d2c6286e78ba44) )	 /* Character colors \ Selected by Bit 6 of Port 0x80 */
-	ROM_LOAD( "cm.m9",         0x0020, 0x0020, CRC(db9c59a5) SHA1(357ed5ac8e954a4c8b4d78d36e57bf2de36c1d57) )	 /* Character colors /                                */
+	ROM_LOAD( "cm.m9",         0x0000, 0x0020, CRC(db9c59a5) SHA1(357ed5ac8e954a4c8b4d78d36e57bf2de36c1d57) )    /* Character colors /                                */
+	ROM_LOAD( "cm.m8",         0x0020, 0x0020, CRC(2386bc68) SHA1(6676082860cd8678a71339a352d2c6286e78ba44) )    /* Character colors \ Selected by Bit 6 of Port 0x80 */
 	ROM_LOAD( "cm.p3",         0x0040, 0x0020, CRC(6ac41516) SHA1(05bf40790a0de1e859362df892f7f158c183e247) )  /* Sprite colors */
 ROM_END
 
 
 
-GAMEX( 1980?, cheekyms, 0, cheekyms, cheekyms, 0, ROT270, "Universal", "Cheeky Mouse", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
+GAMEX( 1980, cheekyms, 0, cheekyms, cheekyms, 0, ROT270, "Universal", "Cheeky Mouse", GAME_IMPERFECT_SOUND )
