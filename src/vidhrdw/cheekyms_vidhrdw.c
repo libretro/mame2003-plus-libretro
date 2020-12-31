@@ -186,7 +186,7 @@ VIDEO_UPDATE( cheekyms )
 			sy = 31 - sy;
 		}
 
-		drawgfx(bitmap,Machine->gfx[0],
+		drawgfx(tmpbitmap,Machine->gfx[0],
 				videoram[offs],
 				color,
 				flip_screen,flip_screen,
@@ -194,5 +194,6 @@ VIDEO_UPDATE( cheekyms )
 				cliprect,TRANSPARENCY_PEN,0);
 	}
 
-	return 0;
+	/* copy the temporary bitmap to the screen over the sprites */
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
 }
