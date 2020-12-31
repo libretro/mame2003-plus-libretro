@@ -158,7 +158,6 @@ static MACHINE_DRIVER_START( cheekyms )
 	MDRV_COLORTABLE_LENGTH(64*3)
 
 	MDRV_PALETTE_INIT(cheekyms)
-	MDRV_VIDEO_START(generic)
 	MDRV_VIDEO_UPDATE(cheekyms)
 
 	/* sound hardware */
