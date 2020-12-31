@@ -193,18 +193,23 @@ VIDEO_UPDATE( cheekyms )
 				color = 0xc + char_palette;
 		}
 
-		if (flip_screen)
+		if (dirtybuffer[offs] || (redraw_man && man_area))
 		{
-			sx = 31 - sx;
-			sy = 31 - sy;
-		}
+			dirtybuffer[offs] = 0;
 
-		drawgfx(tmpbitmap,Machine->gfx[0],
-				videoram[offs],
-				color,
-				flip_screen,flip_screen,
-				8*sx, 8*sy - (man_area ? man_scroll : 0),
-				cliprect,TRANSPARENCY_PEN,0);
+			if (flip_screen)
+			{
+				sx = 31 - sx;
+				sy = 31 - sy;
+			}
+
+			drawgfx(tmpbitmap,Machine->gfx[0],
+					videoram[offs],
+					color,
+					flip_screen,flip_screen,
+					8*sx, 8*sy - (man_area ? man_scroll : 0),
+					cliprect,TRANSPARENCY_NONE,0);
+		}
 	}
 
 	redraw_man = 0;
