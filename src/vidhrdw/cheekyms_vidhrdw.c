@@ -12,9 +12,8 @@ Functions to emulate the video hardware of the machine.
 #include "vidhrdw/generic.h"
 
 
-static int redraw_man = 0;
 static int man_scroll = -1;
-static data8_t sprites[0x20];
+static UINT8 sprites[0x20];
 static int char_palette = 0;
 
 
@@ -50,29 +49,30 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
+	static int last_dac = -1;
+
 	/* The lower bits probably trigger sound samples */
-	DAC_data_w(0, data ? 0x80 : 0);
+
+	if (last_dac != (data & 0x80))
+	{
+		last_dac = data & 0x80;
+
+		DAC_data_w(0, last_dac ? 0x80 : 0);
+	}
 }
 
 
 WRITE_HANDLER( cheekyms_port_80_w )
 {
-	int new_man_scroll;
-
 	/* Bits 0-1 Sound enables, not sure which bit is which */
 
 	/* Bit 2 is interrupt enable */
 	interrupt_enable_w(offset, data & 0x04);
 
 	/* Bit 3-5 Man scroll amount */
-    new_man_scroll = (data >> 3) & 0x07;
-	if (man_scroll != new_man_scroll)
-	{
-		man_scroll = new_man_scroll;
-		redraw_man = 1;
-	}
+	man_scroll = (data >> 3) & 0x07;
 
-	/* Bit 6 is palette select (Selects either 0 = PROM M8, 1 = PROM M9) */
+	/* Bit 6 is palette select (Selects either 0 = PROM M9, 1 = PROM M8) */
 	set_vh_global_attribute(&char_palette, (data >> 2) & 0x10);
 
 	/* Bit 7 is screen flip */
@@ -81,25 +81,12 @@ WRITE_HANDLER( cheekyms_port_80_w )
 
 
 
-/***************************************************************************
-
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
-
-***************************************************************************/
 VIDEO_UPDATE( cheekyms )
 {
 	int offs;
 
 
-	if (get_vh_global_attribute_changed())
-	{
-		memset(dirtybuffer, 1, videoram_size);
-	}
-
-
-	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
 	/* Draw the sprites first, because they're supposed to appear below
 	   the characters */
@@ -123,10 +110,11 @@ VIDEO_UPDATE( cheekyms )
 			}
 
 			drawgfx(bitmap,Machine->gfx[1],
-					code,col,
+					code,
+					col,
 					0,0,
 					sx,sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 		}
 		else
 		{
@@ -137,14 +125,14 @@ VIDEO_UPDATE( cheekyms )
 					col,
 					0,0,
 					sx, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 
 				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
 					sx + 0x10, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 			}
 			else
 			{
@@ -153,20 +141,19 @@ VIDEO_UPDATE( cheekyms )
 					col,
 					0,0,
 					sx, sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 
 				drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
 					sx, sy + 0x10,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 			}
 		}
 	}
 
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
+
 	for (offs = videoram_size - 1;offs >= 0;offs--)
 	{
 		int sx,sy,man_area,color;
@@ -193,27 +180,19 @@ VIDEO_UPDATE( cheekyms )
 				color = 0xc + char_palette;
 		}
 
-		if (dirtybuffer[offs] || (redraw_man && man_area))
+		if (flip_screen)
 		{
-			dirtybuffer[offs] = 0;
-
-			if (flip_screen)
-			{
-				sx = 31 - sx;
-				sy = 31 - sy;
-			}
-
-			drawgfx(tmpbitmap,Machine->gfx[0],
-					videoram[offs],
-					0 + char_palette,
-					flip_screen,flip_screen,
-					8*sx, 8*sy - (man_area ? man_scroll : 0),
-					&Machine->visible_area,TRANSPARENCY_NONE,0);
+			sx = 31 - sx;
+			sy = 31 - sy;
 		}
+
+		drawgfx(bitmap,Machine->gfx[0],
+				videoram[offs],
+				color,
+				flip_screen,flip_screen,
+				8*sx, 8*sy - (man_area ? man_scroll : 0),
+				cliprect,TRANSPARENCY_PEN,0);
 	}
 
-	redraw_man = 0;
-
-	/* copy the temporary bitmap to the screen over the sprites */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
+	return 0;
 }
