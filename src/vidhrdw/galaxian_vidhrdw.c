@@ -92,13 +92,14 @@ struct star
 	int x,y,color;
 };
 static struct star stars[STAR_COUNT];
+static int stars_colors_start;
        int galaxian_stars_on;
 static int stars_scrollpos;
 static int stars_blink_state;
 static void *stars_blink_timer;
 static void *stars_scroll_timer;
 static int timer_adjusted;
-       void galaxian_init_stars(void);
+       void galaxian_init_stars(int colors_offset);
 static void (*draw_stars)(struct mame_bitmap *);		/* function to call to draw the star layer */
 static void     noop_draw_stars(struct mame_bitmap *bitmap);
        void galaxian_draw_stars(struct mame_bitmap *bitmap);
@@ -195,7 +196,7 @@ PALETTE_INIT( galaxian )
 	}
 
 
-	galaxian_init_stars();
+	galaxian_init_stars(STARS_COLOR_BASE);
 
 
 	/* bullets - yellow and white */
@@ -1456,7 +1457,7 @@ static void mariner_draw_background(struct mame_bitmap *bitmap)
 
 /* star drawing functions */
 
-void galaxian_init_stars(void)
+void galaxian_init_stars(int colors_offset)
 {
 	int i;
 	int total_stars;
@@ -1469,6 +1470,7 @@ void galaxian_init_stars(void)
 	stars_blink_timer = timer_alloc(stars_blink_callback);
 	stars_scroll_timer = timer_alloc(stars_scroll_callback);
 	timer_adjusted = 0;
+	stars_colors_start = colors_offset;
 
 
 	for (i = 0;i < 64;i++)
@@ -1483,7 +1485,7 @@ void galaxian_init_stars(void)
 		g = map[bits];
 		bits = (i >> 4) & 0x03;
 		b = map[bits];
-		palette_set_color(STARS_COLOR_BASE+i,r,g,b);
+		palette_set_color(colors_offset+i,r,g,b);
 	}
 
 
@@ -1546,7 +1548,7 @@ static void plot_star(struct mame_bitmap *bitmap, int x, int y, int color)
 		y = 255 - y;
 	}
 
-	plot_pixel(bitmap, x, y, Machine->pens[STARS_COLOR_BASE + color]);
+	plot_pixel(bitmap, x, y, Machine->pens[stars_colors_start + color]);
 }
 
 static void noop_draw_stars(struct mame_bitmap *bitmap)
