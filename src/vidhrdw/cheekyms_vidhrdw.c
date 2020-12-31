@@ -120,7 +120,7 @@ VIDEO_UPDATE( cheekyms )
 		v1  = sprites[offs + 0];
 		sy  = sprites[offs + 1];
 		sx  = 256 - sprites[offs + 2];
-		code =  (~v1 << 1) & 0x0f;
+		code =  (~sprites[offs + 0] & 0x0f) << 1;
 		col = (~sprites[offs + 3] & 0x07);
 
 		if (v1 & 0x80)
