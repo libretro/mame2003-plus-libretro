@@ -111,18 +111,17 @@ VIDEO_UPDATE( cheekyms )
 
 	/* Draw the sprites first, because they're supposed to appear below
 	   the characters */
-	for (offs = 0; offs < sizeof(sprites)/sizeof(sprites[0]); offs += 4)
+	for (offs = 0; offs < 0x20; offs += 4)
 	{
 		int v1, sx, sy, col, code;
+
+		if (!(sprites[offs + 3] & 0x08)) continue;
 
 		v1  = sprites[offs + 0];
 		sy  = sprites[offs + 1];
 		sx  = 256 - sprites[offs + 2];
-		col = (sprites[offs + 3] & 0x07);
-
-		if (!(sprites[offs + 3] & 0x08)) continue;
-
-		code = (~v1 << 1) & 0x1f;
+		code =  (sprites[offs + 0] & 0x0f) << 1;
+		color = (sprites[offs + 3] & 0x07);
 
 		if (v1 & 0x80)
 		{
