@@ -12,9 +12,8 @@ Functions to emulate the video hardware of the machine.
 #include "vidhrdw/generic.h"
 
 
-static int redraw_man = 0;
 static int man_scroll = -1;
-static data8_t sprites[0x20];
+static UINT8 sprites[0x20];
 static int char_palette = 0;
 
 
@@ -22,44 +21,21 @@ PALETTE_INIT( cheekyms )
 {
 	int i,j,bit,r,g,b;
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 6; i++)
 	{
-		const unsigned char* color_prom_save = color_prom;
-
-		/* lower nibble */
-		for (j = 0;j < Machine->drv->total_colors/6;j++)
+		for (j = 0;j < 0x20;j++)
 		{
 			/* red component */
-			bit = (color_prom[0] >> 0) & 0x01;
+			bit = (color_prom[0x20*(i/2)+j] >> ((4*(i&1))+0)) & 0x01;
 			r = 0xff * bit;
 			/* green component */
-			bit = (color_prom[0] >> 1) & 0x01;
+			bit = (color_prom[0x20*(i/2)+j] >> ((4*(i&1))+1)) & 0x01;
 			g = 0xff * bit;
 			/* blue component */
-			bit = (color_prom[0] >> 2) & 0x01;
+			bit = (color_prom[0x20*(i/2)+j] >> ((4*(i&1))+2)) & 0x01;
 			b = 0xff * bit;
 
-			palette_set_color(((i*2)*Machine->drv->total_colors/6)+j,r,g,b);
-			color_prom++;
-		}
-
-		color_prom = color_prom_save;
-
-		/* upper nibble */
-		for (j = 0;j < Machine->drv->total_colors/6;j++)
-		{
-			/* red component */
-			bit = (color_prom[0] >> 4) & 0x01;
-			r = 0xff * bit;
-			/* green component */
-			bit = (color_prom[0] >> 5) & 0x01;
-			g = 0xff * bit;
-			/* blue component */
-			bit = (color_prom[0] >> 6) & 0x01;
-			b = 0xff * bit;
-
-			palette_set_color(((i*2+1)*Machine->drv->total_colors/6)+j,r,g,b);
-			color_prom++;
+			palette_set_color((i*0x20)+j, r,g,b);
 		}
 	}
 }
@@ -88,22 +64,15 @@ WRITE_HANDLER( cheekyms_port_40_w )
 
 WRITE_HANDLER( cheekyms_port_80_w )
 {
-	int new_man_scroll;
-
 	/* Bits 0-1 Sound enables, not sure which bit is which */
 
 	/* Bit 2 is interrupt enable */
 	interrupt_enable_w(offset, data & 0x04);
 
 	/* Bit 3-5 Man scroll amount */
-    new_man_scroll = (data >> 3) & 0x07;
-	if (man_scroll != new_man_scroll)
-	{
-		man_scroll = new_man_scroll;
-		redraw_man = 1;
-	}
+	man_scroll = (data >> 3) & 0x07;
 
-	/* Bit 6 is palette select (Selects either 0 = PROM M8, 1 = PROM M9) */
+	/* Bit 6 is palette select (Selects either 0 = PROM M9, 1 = PROM M8) */
 	set_vh_global_attribute(&char_palette, (data >> 2) & 0x10);
 
 	/* Bit 7 is screen flip */
@@ -112,28 +81,15 @@ WRITE_HANDLER( cheekyms_port_80_w )
 
 
 
-/***************************************************************************
-
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
-
-***************************************************************************/
 VIDEO_UPDATE( cheekyms )
 {
 	int offs;
 
 
-	if (get_vh_global_attribute_changed())
-	{
-		memset(dirtybuffer, 1, videoram_size);
-	}
-
-
-	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
 	/* Draw the sprites first, because they're supposed to appear below
-	   the characters */
+       the characters */
 	for (offs = 0; offs < sizeof(sprites)/sizeof(sprites[0]); offs += 4)
 	{
 		int v1, sx, sy, col, code;
@@ -141,7 +97,7 @@ VIDEO_UPDATE( cheekyms )
 		v1  = sprites[offs + 0];
 		sy  = sprites[offs + 1];
 		sx  = 256 - sprites[offs + 2];
-		col = (sprites[offs + 3] & 0x07);
+		col = (~sprites[offs + 3] & 0x07);
 
 		if (!(sprites[offs + 3] & 0x08)) continue;
 
@@ -155,10 +111,11 @@ VIDEO_UPDATE( cheekyms )
 			}
 
 			drawgfx(bitmap,Machine->gfx[1],
-					code,col,
+					code,
+					col,
 					0,0,
 					sx,sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 		}
 		else
 		{
@@ -167,57 +124,56 @@ VIDEO_UPDATE( cheekyms )
 					col,
 					0,0,
 					sx,sy,
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 
 			drawgfx(bitmap,Machine->gfx[1],
 					code + 0x21,
 					col,
 					0,0,
 					sx + 8*(v1 & 2),sy + 8*(~v1 & 2),
-					&Machine->visible_area,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_PEN,0);
 		}
 	}
 
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
+
 	for (offs = videoram_size - 1;offs >= 0;offs--)
 	{
-		int sx,sy,man_area;
+		int sx,sy,man_area,color;
 
 		sx = offs % 32;
 		sy = offs / 32;
 
-		if (flip_screen)
+
+		man_area = ((sy >=  6) && (sy <= 26) && (sx >=  8) && (sx <= 12));
+
+		if (sx >= 30)
 		{
-			man_area = ((sy >=  5) && (sy <= 25) && (sx >=  8) && (sx <= 12));
+			if (sy < 12)
+				color = 0x15;
+			else if (sy < 20)
+				color = 0x16;
+			else
+				color = 0x14;
 		}
 		else
 		{
-			man_area = ((sy >=  6) && (sy <= 26) && (sx >=  8) && (sx <= 12));
+			color = ((sx >> 1) & 0x0f) + char_palette;
+			if (sy == 4 || sy == 27)
+				color = 0xc + char_palette;
 		}
 
-		if (dirtybuffer[offs] ||
-			(redraw_man && man_area))
+		if (flip_screen)
 		{
-			dirtybuffer[offs] = 0;
-
-			if (flip_screen)
-			{
-				sx = 31 - sx;
-				sy = 31 - sy;
-			}
-
-			drawgfx(tmpbitmap,Machine->gfx[0],
-					videoram[offs],
-					0 + char_palette,
-					flip_screen,flip_screen,
-					8*sx, 8*sy - (man_area ? man_scroll : 0),
-					&Machine->visible_area,TRANSPARENCY_NONE,0);
+			sx = 31 - sx;
+			sy = 31 - sy;
 		}
+
+		drawgfx(bitmap,Machine->gfx[0],
+				videoram[offs],
+				color,
+				flip_screen,flip_screen,
+				8*sx, 8*sy - (man_area ? man_scroll : 0),
+				cliprect,TRANSPARENCY_PEN,0);
 	}
 
-	redraw_man = 0;
-
-	/* copy the temporary bitmap to the screen over the sprites */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
 }
