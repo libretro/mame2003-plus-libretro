@@ -205,7 +205,7 @@ VIDEO_UPDATE( cheekyms )
 
 			drawgfx(tmpbitmap,Machine->gfx[0],
 					videoram[offs],
-					color,
+					0 + char_palette,
 					flip_screen,flip_screen,
 					8*sx, 8*sy - (man_area ? man_scroll : 0),
 					cliprect,TRANSPARENCY_NONE,0);
