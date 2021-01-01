@@ -208,7 +208,7 @@ VIDEO_UPDATE( cheekyms )
 					color,
 					flip_screen,flip_screen,
 					8*sx, 8*sy - (man_area ? man_scroll : 0),
-					cliprect,TRANSPARENCY_PEN,0);
+					cliprect,TRANSPARENCY_NONE,0);
 		}
 	}
 
