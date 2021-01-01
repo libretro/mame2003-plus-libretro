@@ -205,7 +205,7 @@ VIDEO_UPDATE( cheekyms )
 
 			drawgfx(tmpbitmap,Machine->gfx[0],
 					videoram[offs],
-					0 + char_palette,
+					color,
 					flip_screen,flip_screen,
 					8*sx, 8*sy - (man_area ? man_scroll : 0),
 					cliprect,TRANSPARENCY_NONE,0);
@@ -215,5 +215,5 @@ VIDEO_UPDATE( cheekyms )
 	redraw_man = 0;
 
 	/* copy the temporary bitmap to the screen over the sprites */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,Machine->pens[4*color]);
 }
