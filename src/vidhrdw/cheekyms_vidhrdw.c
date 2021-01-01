@@ -188,9 +188,10 @@ VIDEO_UPDATE( cheekyms )
 		}
 		else
 		{
-			color = ((sx >> 1) & 0x0f) + char_palette;
-			if (sy == 4 || sy == 27)
-				color = 0xc + char_palette;
+			if ((sy == 0x04) || (sy == 0x1b))
+				color = char_palette | 0x0c;
+			else
+				color = char_palette | (sx >> 1);
 		}
 
 		if (dirtybuffer[offs] || (redraw_man && man_area))
@@ -215,5 +216,5 @@ VIDEO_UPDATE( cheekyms )
 	redraw_man = 0;
 
 	/* copy the temporary bitmap to the screen over the sprites */
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,0);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect,TRANSPARENCY_PEN,Machine->pens[4*char_palette]);
 }
