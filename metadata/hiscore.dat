@@ -1,9 +1,9 @@
 ;     ___   ___ ___ ________ ______  ________ _____     _______    ______   _______ __________
 ;    /  /  /  //  //       //  ___/ / ____  // _   \   /      /   / __   \ / __   //___   ___/
 ;   /  /__/  //  //  _____//  /    / /   / // /_/  /  /  ____/   / /  \  // /_/  /    /  /
-;  /  __    //  //____   //  /    / /   / //      /  /  ____/   / /   / // __   /    /  /  
-; /  /  /  //  //       //  /___ / /___/ //  /\  \  /      /_  / /___/ // /  / /    /  / 
-;/__/  /__//__//_______//______//_______//__/  \__\/______//_//_______//_/  /_/    /__/               
+;  /  __    //  //____   //  /    / /   / //      /  /  ____/   / /   / // __   /    /  /
+; /  /  /  //  //       //  /___ / /___/ //  /\  \  /      /_  / /___/ // /  / /    /  /
+;/__/  /__//__//_______//______//_______//__/  \__\/______//_//_______//_/  /_/    /__/
 ;_________________________________________________________________________________________
 
 ; MAME 2003-Plus hiscore.dat
@@ -110,7 +110,7 @@ sdibl5:
 sdibl6:
 0:fff800:320:00:20
 0:fffb88:4:00:00
-0:fffbca:3:4b:5a 
+0:fffbca:3:4b:5a
 
 tcobra2:
 tcobra2u:
@@ -175,7 +175,7 @@ phoenixa:
 phoenixb:
 phoenixc:
 phoenixc2:
-phoenixj: 
+phoenixj:
 phoenixt:
 vautour:
 pleiads:
@@ -286,7 +286,7 @@ carhntds:
 0:845e:6:00:04
 0:83a1:6:00:00
 
-berzerk: 
+berzerk:
 berzerk1:
 berzerkg:
 berzerks:
@@ -438,9 +438,9 @@ fixeight:
 fixeightt:
 fixeighth:
 fixeightht:
-fixeightj: 
+fixeightj:
 fixeightjt:
-fixeighta: 
+fixeighta:
 fixeightat:
 fixeightk:
 fixeightkt:
@@ -476,8 +476,8 @@ kangaroob:
 0:e1a0:3c:00:00
 0:e1da:1:50:50
 
-nemesis: 
-nemesisuk: 
+nemesis:
+nemesisuk:
 0:06509a:1:76:76
 0:065010:8c:00:00
 0:060098:4:00:00
@@ -496,7 +496,7 @@ gangwarsj:
 0:43bb2:34:00:45
 
 daitorid:
-0:8042ba:28:00:40  
+0:8042ba:28:00:40
 0:8042e2:28:02:00
 
 daitorida:
@@ -731,7 +731,7 @@ newfanta:
 0:c825b7:62:30:20
 
 ikari3:
-ikari3u:  
+ikari3u:
 ikari3j:
 ikari3k:
 0:4007e:58:00:1d
@@ -806,7 +806,7 @@ teddybbobl:
 0:c578:3:00:00
 0:ef03:31:00:49
 
-satansat: 
+satansat:
 zarzon:
 satansata:
 satansatind:
@@ -927,7 +927,7 @@ ghostmun:
 0:5220:1:40:40
 0:4087:1:01:01
 
-sranger:  
+sranger:
 srangero:
 srangern:
 srangerw:
@@ -973,7 +973,7 @@ gngt:
 makaimur:
 makaimurc:
 makaimurg:
-gngbl:  
+gngbl:
 gngblita:
 gngc:
 0:1518:5a:15:72
@@ -1041,8 +1041,8 @@ rastsagaa:
 0:d000dd:1:2a:2a
 
 knights:
-knightsj: 
-knightsu: 
+knightsj:
+knightsu:
 knightsb:
 knightsja:
 0:ffe53a:257:00:00
@@ -1080,7 +1080,7 @@ brapboysj:
 brapboysu:
 0:1030c5:31:00:4a
 
-birdiy:   
+birdiy:
 0:4c29:1e:00:00
 0:c3ed:6:30:20
 0:4d03:3:00:00
@@ -1107,7 +1107,7 @@ galactic:
 spacmiss:
 0:20a8:3:00:00
 
-bublpong: 
+bublpong:
 0:e64c:32:00:13
 0:e64d:1:30:30
 0:e5df:1:00:00
@@ -1178,7 +1178,7 @@ ddpdojblkbl:
 
 ddpdojblk:
 ddpdojblka:
-0:803824:8c:01:06  
+0:803824:8c:01:06
 
 ket:
 keta:
@@ -1205,7 +1205,7 @@ skykiddxo:
 0:5000:45:00:2f
 0:5001:1:03:03
 
-pzlbreak:  
+pzlbreak:
 0:102d9c:32:50:32
 0:102e0b:3:00:00
 
@@ -1271,7 +1271,7 @@ woodpeca:
 0:43ed:6:40:40
 0:4dda:1:03:03
 
-;**** this saves victorys top 10 todays scores (nvram takes care of the rest)
+;** this saves victorys top 10 todays scores (nvram takes care of the rest) **
 victory:
 victorba:
 0:f01a:46:56:00
@@ -1554,9 +1554,9 @@ hatrisj:
 xevious:
 sxevious:
 sxeviousj:
-xevios: 
+xevios:
 xeviousa:
-battles: 
+battles:
 0:8510:4d:00:24
 0:8024:3:00:00
 0:8025:1:40:40
@@ -1568,9 +1568,9 @@ xeviousc:
 0:8025:1:40:40
 
 sci:
-scia:  
-scij:  
-sciu:  
+scia:
+scij:
+sciu:
 0:101500:28:02:51
 0:10164e:4:02:80
 
@@ -1601,7 +1601,7 @@ ckongpt2b:
 ckongalc:
 ckongs:
 ckongg:
-kkgalax:  
+kkgalax:
 ckongpt2j:
 ckong:
 ckongmc:
@@ -1625,8 +1625,8 @@ aliensa:
 aliensj:
 aliensu:
 aliens2:
-aliens3:  
-aliensj2:  
+aliens3:
+aliensj2:
 0:1e30:38:00:48
 
 asterix:
@@ -1668,7 +1668,7 @@ suprheli:
 0:8200:1e:00:01
 
 masterw:
-masterwu:  
+masterwu:
 masterwj:
 yukiwo:
 0:2030c0:28:00:4f
@@ -1863,7 +1863,7 @@ sfz2jd:
 sfa:
 sfzjr1:
 sfzj:
-sfau:  
+sfau:
 sfar3:
 sfar2:
 sfar1:
@@ -1882,7 +1882,7 @@ sfa3r1:
 sfz3j:
 sfz3jr1:
 sfz3a:
-sfz3jr2:  
+sfz3jr2:
 sfa3b:
 sfa3ur1:
 sfa3ud:
@@ -1900,14 +1900,14 @@ sf2ceuc:
 sf2ceua:
 sf2rb2:
 sf2ceea:
-sf2ceub:  
-sf2cejb:  
-sf2rb:   
+sf2ceub:
+sf2cejb:
+sf2rb:
 sf2hfu:
 sf2hfj:
 sf2m2:
-sf2m1: 
-sf2m4: 
+sf2m1:
+sf2m4:
 sf2m5:
 sf2m6:
 sf2m7:
@@ -1939,7 +1939,7 @@ sf2m10:
 
 xmvsf:
 xmvsfur1:
-xmvsfu:  
+xmvsfu:
 xmvsfar1:
 xmvsfa:
 xmvsfb:
@@ -1955,7 +1955,7 @@ xmvsfar3:
 xmvsfur2:
 0:ff256e:63:00:05
 
-xmcotar1: 
+xmcotar1:
 xmcotaj2:
 xmcotaar1:
 xmcotar1d:
@@ -1993,7 +1993,7 @@ progearj:
 progeara:
 progearjd:
 progearud:
-progearjbl:  
+progearjbl:
 0:ff3dcf:e5:20:04
 
 nwarr:
@@ -2014,8 +2014,8 @@ mvscb:
 mvscj:
 mvscjr1:
 mvsca:
-mvscr1:  
-mvsch:  
+mvscr1:
+mvsch:
 mvscu:
 mvscar1:
 mvscud:
@@ -2064,41 +2064,41 @@ gigawingd:
 dstlk:
 dstlku:
 dstlkur1:
-dstlka: 
-vampj: 
-vampja: 
+dstlka:
+vampj:
+vampja:
 vampjr1:
 dstlku1d:
 dstlkh:
 0:fff4aa:5:00:43
-0:fff4af:37:41:00 
+0:fff4af:37:41:00
 0:ffe976:4:00:00
 
 ddsom:
-ddsoma: 
-ddsomar1: 
-ddsomr1:  
-ddsomjr1:  
-ddsomj:  
-ddsomur1:  
+ddsoma:
+ddsomar1:
+ddsomr1:
+ddsomjr1:
+ddsomj:
+ddsomur1:
 ddsomu:
 ddsomb:
 ddsomr3:
 ddsomr2:
 ddsomud:
-ddsomh:  
+ddsomh:
 0:ff0fd0:8b:12:09
 
 ddtod:
 ddtodu:
-ddtodhr1:  
-ddtodjr1:  
-ddtodj:  
-ddtodur1: 
+ddtodhr1:
+ddtodjr1:
+ddtodj:
+ddtodur1:
 ddtodjr2:
 ddtodd:
 ddtoda:
-ddtodar1: 
+ddtodar1:
 ddtodr1:
 ddtodhr2:
 ddtodh:
@@ -2124,7 +2124,7 @@ avsph:
 19xxj:
 19xxa:
 19xxh:
-19xxjr1:  
+19xxjr1:
 0:ff4dca:4:00:00
 0:ff0443:9f:14:70
 
@@ -2162,8 +2162,8 @@ tnzsop:
 0:ec0a:23:00:55
 
 boogwing:
-boogwinga:  
-ragtime: 
+boogwinga:
+ragtime:
 ragtimea:
 boogwingu:
 0:200f4a:27:00:0b
@@ -2180,13 +2180,13 @@ imago:
 0:c521:4a:00:00
 0:c565:1:01:01
 
-ddragon: 
+ddragon:
 ddragonb:
 ddragonu:
-ddragonw:  
-ddragonw1:  
+ddragonw:
+ddragonw1:
 ddragonua:
-ddragonba:  
+ddragonba:
 ddragonb2:
 ddragonub:
 0:0e73:1e:02:2c
@@ -2264,11 +2264,11 @@ galastrm:
 0:202100:190:01:61
 
 captcomm:
-captcomu: 
+captcomu:
 captcomj:
 captcommb:
 captcommr1:
-captcommjr1: 
+captcommjr1:
 0:ff0000:190:08:00
 0:ff018d:1:01:01
 0:ffa8c2:04:00:00
@@ -2300,7 +2300,7 @@ smgpud:
 
 wrally:
 wrallya:
-wrallyb:  l******world rally (us, 930217)
+wrallyb:
 wrallyat:
 0:fef558:288:5a:ff
 
@@ -2310,9 +2310,9 @@ ghoxa:
 0:80006:4:00:00
 
 demonwld:
-demonwld1:  
-demonwld4:  
-demonwld3:  
+demonwld1:
+demonwld4:
+demonwld3:
 demonwld2:
 0:c001c2:c8:00:2d
 0:c001be:4:00:00
@@ -2381,10 +2381,10 @@ dogfgtu:
 0:609:1:01:01
 
 rfjet:
-rfjeta:  
-rfjetu:  
-rfjets: 
-rfjetj:  
+rfjeta:
+rfjetu:
+rfjets:
+rfjetj:
 rfjet2kc:
 rfjetsa:
 rfjett:
@@ -2444,7 +2444,7 @@ extrmatnur:
 0:e886:01:00:00
 
 toride2g:
-toride2gk: 
+toride2gk:
 0:40c5f4:4:00:00
 0:40c5f6:1:50:50
 0:40c60a:4c:00:40
@@ -2499,7 +2499,7 @@ rongrongj:
 0:614e:ea:f4:01
 0:619b:1:01:01
 
-loht:  
+loht:
 lohtj:
 lohtb2:
 0:a3af4:32:36:20
@@ -2535,7 +2535,7 @@ shinobi1:
 shinobi2:
 shinobi3:
 shinobi4:
-shinobi5:  
+shinobi5:
 shinobld:
 shinobls:
 shinoblda:
@@ -2604,12 +2604,12 @@ fantazia:
 eagle:
 eagle2:
 eagle3:
-mooncrs3:  
-spcdrag:   
-spcdraga:  
+mooncrs3:
+spcdrag:
+spcdraga:
 mooncmw:
 mooncrstu:
-stera: 
+stera:
 mooncrstuk:
 sstarcrs:
 mooncrstuku:
@@ -2646,8 +2646,8 @@ spacbatt:
 spacbat2:
 redufob:
 galaxiana:
-galaxianmo:  
-galaxbsf:  
+galaxianmo:
+galaxbsf:
 galaxiant:
 skyraidr:
 spacempr:
@@ -2699,7 +2699,7 @@ exodus:
 strahla:
 0:f30d1:d9:55:2e
 0:f3239:27:00:88
-0:f0d5b:3:00:50 
+0:f0d5b:3:00:50
 
 jumpcoas:
 jumpcoast:
@@ -2725,7 +2725,7 @@ mstworld:
 0:fc01:9e:00:07
 0:e154:3:00:00
 
-airattck: 
+airattck:
 airattcka:
 0:b9100:80:0:6b
 
@@ -2834,9 +2834,9 @@ hyprduel:
 0:fff2a2:3c:00:01
 0:fff2e2:1:ff:ff
 
-brdrline:  
-starrkr: 
-brdrlinb:  
+brdrline:
+starrkr:
+brdrlinb:
 brdrlins:
 0:938d:2:00:00
 
@@ -2845,7 +2845,7 @@ popnpopu:
 popnpopj:
 0:40a668:d2:00:ba
 
-;** this saves scores 4 - 98 , the nvram file saves scores 1 - 3 **
+;** this saves scores 4 - 98, the nvram file saves scores 1 - 3 **
 tempest:
 tempest1:
 tempest2:
@@ -2866,7 +2866,7 @@ brain:
 0:c017:3:00:05
 
 turtship:
-turtshipk:  
+turtshipk:
 turtshipj:
 turtshipkn:
 turtshipko:
@@ -2893,15 +2893,15 @@ monsterb2:
 0:c910:0b:99:00
 
 ddenlovr:
-0:ff853a:74:82:3c 
+0:ff853a:74:82:3c
 
 tryout:
 0:319:29:90:00
 0:33d:1:01:01
 0:13:3:07:90
 
-nslasher:  
-nslasherj:  
+nslasher:
+nslasherj:
 nslasheru:
 nslashers:
 0:100044:50:13:00
@@ -2931,7 +2931,7 @@ thepitu2:
 amidar:
 amidarb:
 amidaro:
-amidaru: 
+amidaru:
 amigo:
 amidar1:
 0:8200:1e:00:01
@@ -2942,7 +2942,7 @@ amidars:
 0:40a8:03:00:01
 
 realbrk:
-realbrkj:  
+realbrkj:
 realbrkk:
 realbrko:
 0:ff84da:44:52:f8
@@ -2951,7 +2951,7 @@ mangchi:
 0:1c1b02:4c:27:20
 
 cawing:
-cawingj: 
+cawingj:
 cawingu:
 cawingr1:
 cawingbl:
@@ -3024,17 +3024,17 @@ mspacman:
 mspacmnf:
 mschamps:
 newpuc2:
-newpuc2b: 
-joyman: 
+newpuc2b:
+joyman:
 mspacpls:
 pacgal:
 newpuckx:
 alibaba:
-mspacmat: 
+mspacmat:
 puckmod:
 puckmana:
-ctrpllrp:  
-puckmanh: 
+ctrpllrp:
+puckmanh:
 piranhao:
 mspacmbe:
 popeyeman:
@@ -3214,7 +3214,7 @@ polluxn:
 
 outzone:
 outzonea:
-outzoneb: 
+outzoneb:
 outzonec:
 outzoned:
 outzoneh:
@@ -3282,7 +3282,7 @@ sprglobp:
 burnforc:
 burnforco:
 0:100171:bb:00:48
-0:100175:1:08:08 
+0:100175:1:08:08
 
 darkmist:
 0:e01d:8c:00:20
@@ -3314,12 +3314,12 @@ missw96b:
 missw96c:
 0:c025b6:1d:30:53
 
-;** this saves the daily hiscores(daily heros), the legendary heros are saved in nv ram **
+;** this saves the daily hiscores (daily heros), the legendary heros are saved in nvram **
 joust2:
 joust2r1:
 0:cfaa:54:f1:f9
 
-;** this saves the daily hiscores(daily buzzards), the joust champions are saved in nv ram **
+;** this saves the daily hiscores (daily buzzards), the joust champions are saved in nvram **
 joust:
 joustr:
 joustwr:
@@ -3400,7 +3400,7 @@ avengrgsj:
 0:108909:4e:01:52
 
 hvysmsh:
-hvysmshj: 
+hvysmshj:
 hvysmsha:
 0:100400:50:01:00
 0:10000c:04:00:00
@@ -3444,12 +3444,12 @@ mchampdxa:
 0:20a900:200:00:40
 
 arabfgt:
-arabfgtj: 
+arabfgtj:
 arabfgtu:
 0:208300:49:53:00
 0:208345:1:17:17
 
-powerbal:  
+powerbal:
 powerbals:
 0:f8276:7c:56:00
 0:f82f0:1:20:20
@@ -3486,7 +3486,7 @@ stkclmns:
 stkclmnsj:
 0:fffc24:38:4b:88
 
-redclash: 
+redclash:
 redclasha:
 0:6023:4:00:00
 0:6320:6:23:1d
@@ -3505,7 +3505,7 @@ zigzag2:
 0:4280:3:00:00
 0:5242:1:10:10
 0:5222:1:10:10
-0:5202:1:10:10 
+0:5202:1:10:10
 0:51e2:1:10:10
 0:51c2:1:00:00
 0:51a2:1:00:00
@@ -3529,12 +3529,12 @@ trckydoca:
 0:e03c:78:10:46
 
 rohga:
-rohgah:  
-rohgau:  
+rohgah:
+rohgau:
 rohga1:
 rohga2:
 wolffang:
-0:3f0200:50:00:09 
+0:3f0200:50:00:09
 
 metamrph:
 metamrphj:
@@ -3542,7 +3542,7 @@ metamrphu:
 0:203240:35:00:5a
 
 raimais:
-raimaisj:  
+raimaisj:
 raimaisjo:
 0:a237:30:50:4b
 
@@ -3610,7 +3610,7 @@ starwars1:
 0:4a9a:1c:00:55
 0:4abf:15:07:0d
 
-;** top 3 scores saved by nvram, this saves other scoretable data **
+;** top 3 scores saved by nvram, this saves other score table data **
 crkdown:
 crkdownj:
 crkdownu:
@@ -3641,7 +3641,7 @@ wbeachvl3:
 0:ffbfb8:8a:31:00
 
 jollyjgr:
-;** hiscore updates when you start your first game ** 
+;** hiscore updates when you start your first game **
 0:85c8:3:00:00
 0:85c9:1:50:50
 
@@ -3704,7 +3704,7 @@ vspinbalj:
 searchar:
 searcharu:
 searcharj:
-0:437b6:50:00:1f 
+0:437b6:50:00:1f
 0:40118:3:00:01
 
 jajamaru:
@@ -3828,8 +3828,8 @@ chainrec:
 0:400920:a:54:00
 
 cannonb:
-cannonb2: 
-cannonb3: 
+cannonb2:
+cannonb3:
 0:6180:d4:00:01
 0:665c:3:00:01
 
@@ -3943,7 +3943,7 @@ eaglshta:
 
 rdft:
 rdftau:
-rdftj:  
+rdftj:
 rdftadi:
 rdftu:
 rdfta:
@@ -3994,7 +3994,7 @@ ad2083:
 
 welltris:
 welltrisj:
-0:ffb61c:50:0c:00 
+0:ffb61c:50:0c:00
 
 mshuttle:
 mshuttlej:
@@ -4031,7 +4031,7 @@ hcrashc:
 0:80c64:1:20:20
 
 gaiapols:
-gaiapolsj:  
+gaiapolsj:
 gaiapolsu:
 0:60f801:99:00:00
 0:60f896:1:29:29
@@ -4047,9 +4047,9 @@ gardiaj:
 0:c017:3:00:02
 
 rdft22kc:
-rdft2a:  
+rdft2a:
 rdft2:
-rdft2j: 
+rdft2j:
 rdft2a2:
 rdft2us:
 rdft2j2:
@@ -4082,9 +4082,9 @@ calorieb:
 sxyreac2:
 0:7550:a3:4c:4c
 
-survarts:  
+survarts:
 survartsu:
-0:11a5:26:00:45 
+0:11a5:26:00:45
 0:11cb:2:45:00
 
 invaders:
@@ -4102,8 +4102,8 @@ alieninvp2:
 spceking:
 spcewars:
 spacewr3:
-invader4:  
-invadrmr:  
+invader4:
+invadrmr:
 invasion:
 searthin:
 searthina:
@@ -4169,11 +4169,11 @@ ambushh:
 wbbc97:
 0:5023f1:6d:00:02
 
-opwolf:  
+opwolf:
 opwolfb:
 opwolfu:
 opwolfa:
-opwolfj:  
+opwolfj:
 0:100a42:75:00:54
 0:100e28:3b:00:01
 
@@ -4231,18 +4231,18 @@ pbaction5:
 rainbow:
 rainbowo:
 rbisland:
-0:10d0cc:32:00:32 
-0:10e1f2:04:00:00 
+0:10d0cc:32:00:32
+0:10e1f2:04:00:00
 
 jumping:
 jumpinga:
 jumpingi:
-0:10d0cc:32:00:41 
-0:10e1f2:04:00:00 
+0:10d0cc:32:00:41
+0:10e1f2:04:00:00
 
 rainbowe:
 rbislande:
-0:10d0d2:32:00:33 
+0:10d0d2:32:00:33
 0:10e1b6:04:00:00
 
 pclubys:
@@ -4301,7 +4301,7 @@ bullfgtrs:
 0:800b0:1c:00:11
 
 bigstrik:
-bestleag:  
+bestleag:
 bestleaw:
 bigstrkb:
 0:ff890b:49:08:78
@@ -4326,12 +4326,12 @@ buccanrs:
 buccanrsb:
 0:e373:46:20:4f
 
-;*** this saves just the today`s best scores, the all time greatest are ***
-;*** saved using nvram ***
+;** this saves just the today`s best scores, the all time greatest are **
+;** saved using nvram **
 defender:
-startrkd:  
-defenderg:  
-defenderw:  
+startrkd:
+defenderg:
+defenderw:
 defenderb:
 defence:
 defcmnd:
@@ -4591,7 +4591,7 @@ qsangoku:
 shippumd:
 kingdmgp:
 0:1002d0:9e:00:4e
-0:1003c4:53:2a:39 
+0:1003c4:53:2a:39
 
 qndream:
 0:ff40b3:d8:00:00
@@ -4741,10 +4741,10 @@ dumpmtmt:
 0:fffcfa:1:03:03
 
 goldnaxe:
-goldnaxa:  
-goldnaxej:  
+goldnaxa:
+goldnaxej:
 goldnaxeu:
-goldnaxeb2: 
+goldnaxeb2:
 goldnaxeb1:
 goldnaxe1:
 goldnaxe2:
@@ -4778,7 +4778,7 @@ eswatud:
 vanguard:
 vanguardc:
 vanguardj:
-0:220:70:11:30 
+0:220:70:11:30
 0:25:3:00:00
 
 tigeroad:
@@ -4801,7 +4801,7 @@ bootcampa:
 
 mermaid:
 yachtmn:
-0:c008:6:00:00 
+0:c008:6:00:00
 
 asteroid:
 asteroidb:
@@ -4909,8 +4909,8 @@ ikki:
 farmer:
 0:c010:1e:22:00
 0:d61b:1:2a:2a
-0:d65b:1:04:04 
-0:d69b:1:00:00 
+0:d65b:1:04:04
+0:d69b:1:00:00
 0:d6db:1:00:00
 0:d71b:1:00:00
 0:d75b:1:00:00
@@ -4935,7 +4935,7 @@ cookbib2:
 0:1026a2:28:4b:00
 0:1026c4:1:4d:4d
 
-sf2hf:   
+sf2hf:
 0:ffd276:28:00:20
 0:ffd2c6:14:ff:96
 0:ffd2ee:04:00:00
@@ -4977,7 +4977,7 @@ countrunb:
 goldmedl:
 goldmedla:
 0:40a20:a0:00:00
-0:40b22:46:1b:00 
+0:40b22:46:1b:00
 0:40b20:2:00:01
 
 fax:
@@ -5058,7 +5058,7 @@ goldbug:
 0:3D09:1E:00:00
 
 ;** this saves "today`s scores", the game saves the grand master scores using **
-;** nvram (i think !! :0)  **
+;** nvram (I think!! :0) **
 tgmj:
 0:80171198:35:06:64
 
@@ -5217,7 +5217,7 @@ changesa:
 0:8a9a:6:26:27
 0:8aba:6:00:00
 
-viofight: 
+viofight:
 viofightu:
 viofightj:
 0:a02800:28:02:20
@@ -5306,7 +5306,7 @@ bullsdrtg:
 0:5c06:1:00:00
 
 battleg:
-battlegb: 
+battlegb:
 0:10ca4c:ed:00:2a
 0:101241:1:45:45
 
@@ -5621,10 +5621,10 @@ rungun:
 0:380c80:4b:4b:40
 
 lockload:
-0:102703:f6:20:1e 
+0:102703:f6:20:1e
 
 greatgun:
-0:e00b:53:55:50 
+0:e00b:53:55:50
 
 genix:
 0:10bd2c:64:4e:10
@@ -5676,7 +5676,7 @@ retofinv1:
 0:990f:3:00:00
 
 fieldday:
-undoukai: 
+undoukai:
 0:c00d:536:48:11
 0:a190:1:03:03
 
@@ -5705,25 +5705,25 @@ sgunner2j:
 zaviga:
 zavigaj:
 0:0da0:50:00:20
-0:1026:5:14:10 
+0:1026:5:14:10
 
 trckydoc:
-0:e05a:5a:2d:46 
+0:e05a:5a:2d:46
 
 sdtennis:
 0:0200:3c:01:15
 0:0250:3c:3b:43
-0:002c:03:88:01 
+0:002c:03:88:01
 
 msisaac:
-0:e4a5:50:02:4d 
+0:e4a5:50:02:4d
 
 kungfut:
 kungfuta:
-0:c1d3:2c:00:1f 
+0:c1d3:2c:00:1f
 
 kikstart:
-0:816f:3:00:00 
+0:816f:3:00:00
 
 horizon:
 0:e801:96:28:23
@@ -5810,7 +5810,7 @@ hedpanico:
 
 chwrestl:
 0:c009:3:00:00
-0:c00c:3:00:00 
+0:c00c:3:00:00
 
 vasara:
 0:2a32:c5:01:1e
@@ -5985,7 +5985,7 @@ sboblboblc:
 0:e611:1:00:00
 0:e60b:2:00:00
 
-sboblbob:  
+sboblbob:
 sboblboa:
 sboblbobla:
 sboblboblb:
@@ -6259,7 +6259,7 @@ bjourney:
 0:103381:49:05:05
 
 mtwins:
-chikij: 
+chikij:
 0:ff12c8:190:00:00
 0:ff9168:28:02:5b
 0:ffe006:04:00:00
@@ -6311,7 +6311,7 @@ willowuo:
 
 willow:
 willowj:
-willowu: 
+willowu:
 0:ffefc6:50:00:20
 0:fff03e:04:00:00
 
@@ -6516,7 +6516,7 @@ armwarr1:
 armwaru1:
 pgearr1:
 pgear:
-0:ff27d6:256:00:04 
+0:ff27d6:256:00:04
 
 ctornado:
 0:25:3:0:0
@@ -7157,10 +7157,10 @@ uecology:
 ecofghtru:
 0:ff033b:a0:0a:00
 0:ff8106:4:00:00
- 
+
 btlkrodj:
 btlkroad:
-btlkroadk: 
+btlkroadk:
 0:fe1af4:4e:00:04
 
 missb2:
@@ -7170,14 +7170,14 @@ missb2:
 
 kuniokunb:
 kuniokun:
-0:2e:3:00:05 
-0:102c:28:47:00 
+0:2e:3:00:05
+0:102c:28:47:00
 
 rockrage:
 rockragej:
 0:4980:4e:01:53
 0:48be:3:01:80
-0:4fc8:1:54:54 
+0:4fc8:1:54:54
 
 rockragea:
 0:4980:4e:01:53
@@ -7186,7 +7186,7 @@ rockragea:
 
 zerotime:
 0:40a8:3:00:00
- 
+
 scregg:
 eggs:
 0:400:1e:17:00
@@ -7199,42 +7199,42 @@ scorpng:
 sauro:
 saurop:
 0:e000:b4:00:4f
- 
+
 sasuke:
 0:24:2:00:05
 
-samurai: 
+samurai:
 0:971a:12:00:00
 
-;(safari rally) (by GeoMan) - hiscore updates after new game start !!!
+;** (safari rally)(byGeoMan) - hiscore updates after new game start!!! **
 safarir:
 safarirj:
 0:2389:3:00:00
 0:2381:3:00:00
-0:2141:1:20:20 
+0:2141:1:20:20
 0:2161:1:20:20
-0:2181:1:20:20 
+0:2181:1:20:20
 0:21a1:1:20:20
 0:21c1:1:20:20
 0:21e1:1:20:20
- 
-sadari: 
+
+sadari:
 0:c31d:3c:3a:01
 
-ridingf: 
-ridingfu: 
-ridingfj: 
+ridingf:
+ridingfu:
+ridingfj:
 0:408060:80:00:3f
- 
+
 reikaids:
 0:43ca:1e:00:e8
 0:40df:2:13:88
 
 redalert:
 0:301:f:0:0
- 
+
 raiders5:
-raiders5t: 
+raiders5t:
 0:e075:37:00:55
 0:888c:7:22:10
 
@@ -7244,8 +7244,8 @@ raflesia:
 
 pzlbowl:
 0:20a9c4:60:0a:a8
- 
-punkshot: 
+
+punkshot:
 punkshotj:
 punkshot2:
 0:80700:30:00:40
@@ -7253,8 +7253,8 @@ punkshot2:
 pcktgal:
 pcktgalb:
 pcktgal2:
-spool3: 
-spool3i: 
+spool3:
+spool3i:
 pcktgal2j:
 0:0467:2:64:00
 
@@ -7262,36 +7262,36 @@ pballoon:
 pballoonr:
 0:0220:70:11:30
 0:0022:3:00:00
- 
-pettanp: 
+
+pettanp:
 0:c0c2:1e:20:00
 
-perfrman: 
+perfrman:
 perfrmanu:
 0:8006:30:89:12
 0:8609:07:24:00
 
-percuss: 
+percuss:
 0:5da8:37:00:24
- 
+
 peekaboo:
 peekaboou:
 0:1f0278:60:00:fa
 0:1f0380:4:00:00
- 
+
 pass:
 0:81200:50:4b:00
 0:8005e:4:00:00
- 
+
 paddlema:
 0:801a8:28:02:03
 0:82108:a0:00:20
 
-onna34ro: 
+onna34ro:
 onna34roa:
-0:e1d7:82:00:65 
+0:e1d7:82:00:65
 0:e188:3:00:01
- 
+
 nob:
 nobb:
 0:d300:3c:00:2e
@@ -7300,10 +7300,10 @@ nobb:
 ninjakun:
 0:e0a3:37:00:20
 0:c08c:7:22:10
- 
+
 ninjakd2:
-ninjakd2a: 
-ninjakd2b: 
+ninjakd2a:
+ninjakd2b:
 rdaction:
 ninjakd2c:
 0:e0f4:3:00:00
@@ -7315,13 +7315,13 @@ columns2:
 column2j:
 0:fffc1f:90:55:00
 
-newsin7: 
+newsin7:
 newsin7a:
 0:43d3:48:00:10
 0:413d:3:0:0
 
 navalone:
-navarone: 
+navarone:
 0:402d:3:0:0
 
 natodef:
@@ -7333,44 +7333,44 @@ nastarw:
 rastsag2:
 0:601eef:3a:00:42
 0:600545:3:00:77
- 
-hexion: 
+
+hexion:
 hexionb:
 0:a740:3:00:10
 0:a743:27d:00:00
 
 gotya:
-thehand: 
+thehand:
 0:5021:3:00:01
 
 outline:
 radarzon:
-radarzon1: 
-radarzont: 
+radarzon1:
+radarzont:
 0:1c08:35:00:00
 
 invinco:
 0:8398:16:00:00
- 
+
 invho2:
-0:83b6:16:00:00 
+0:83b6:16:00:00
 0:8392:12:30:30
 
-kaos: 
+kaos:
 0:03c8:30:84:44
 
-kengo: 
+kengo:
 kengoa:
 ltswords:
 0:e09f2:82:10:20
- 
-kodure: 
-0:637c0:4:00:00 
+
+kodure:
+0:637c0:4:00:00
 0:635b4:28:00:00
 
 kbash:
 kbashk:
-0:100080:3c:00:30 
+0:100080:3c:00:30
 
 kncljoe:
 kncljoea:
@@ -7382,34 +7382,34 @@ kurikintu:
 kurikintj:
 kurikinta:
 0:8aa3:a0:00:2e
- 
+
 lomakai:
-makaiden: 
-0:ff000:2:00:03 
-0:ff002:7e:00:00 
+makaiden:
+0:ff000:2:00:03
+0:ff002:7e:00:00
 0:fe060:4:00:00
- 
-kyros: 
+
+kyros:
 kyrosj:
-0:20e00:ae:01:02 
+0:20e00:ae:01:02
 0:20020:4:00:00
 
-lizwiz: 
+lizwiz:
 0:4daf:3c:4d:01
 0:43ed:6:00:40
 
-losttomb: 
-losttombh: 
+losttomb:
+losttombh:
 0:8110:50:03:00
 
 machridr:
 0:0714:50:00:4b
- 
+
 madcrash:
 0:c2b3:4b:00:4b
 
 magspot2:
-0:6007:2:00:20 
+0:6007:2:00:20
 0:6009:1:00:00
 
 megatack:
@@ -7419,72 +7419,72 @@ minefld:
 0:80f3:3c:01:43
 minefldfe:
 0:ef3:3c:03:50
- 
+
 bucky:
 buckyuab:
 buckyaab:
 buckyea:
 0:801e0:50:00:04
- 
+
 mrviking:
-mrvikngj: 
+mrvikngj:
 0:d42c:15:59:47
-0:d300:15:00:01 
+0:d300:15:00:01
 0:c086:3:00:02
- 
+
 monymony:
 0:7512:48:0a:00
 0:726d:3:00:00
- 
+
 mysticri:
 gunhohki:
-0:e8af8:38:00:4d 
+0:e8af8:38:00:4d
 0:e8b30:94:2e:00
 
 mystston:
 myststono:
 myststonoi:
 0:0308:37:00:0c
-0:001a:5:00:00 
+0:001a:5:00:00
 0:1033:8:40:41
- 
-cybots: 
+
+cybots:
 cybotsj:
 cybotsu:
 cybotsjd:
 cybotsud:
 0:ffe6a0:5:00:43
 0:ffe6a5:4b:41:00
- 
+
 spacetrk:
 spacetrkc:
 0:838c:4:0:0
 
-spacezap: 
-0:d00f:1:ff:ff 
-0:d041:6:0:0 
+spacezap:
+0:d00f:1:ff:ff
+0:d041:6:0:0
 0:d01d:6:0:0
 
-amspdwy: 
+amspdwy:
 amspdwya:
-0:e402:190:50:00 
-0:e602:190:50:00 
+0:e402:190:50:00
+0:e602:190:50:00
 0:e3de:23:00:5c
- 
-speedbal: 
+
+speedbal:
 0:f800:46:20:50
 
 speedfrk:
 0:128:2:0:0
- 
-spinlbrk: 
-spinlbrku: 
-0:ffac76:8c:00:50 
+
+spinlbrk:
+spinlbrku:
+0:ffac76:8c:00:50
 spinlbrkj:
 0:ffacce:8c:00:50
- 
-sprtmtch: 
-0:7500:30:4a:00 
+
+sprtmtch:
+0:7500:30:4a:00
 0:7743:2:00:00
 
 srdmissn:
@@ -7492,7 +7492,7 @@ fx:
 0:e6ef:5f:00:ff
 
 starjack:
-0:c0e1:1e:00:52 
+0:c0e1:1e:00:52
 0:c0db:3:00:03
 
 starjacks:
@@ -7500,41 +7500,41 @@ starjacks:
 0:c0fb:4:00:00
 
 strnskil:
-guiness: 
+guiness:
 0:c0c4:1e:22:00
 0:c430:60:09:00
- 
+
 superbon:
 0:810f:50:00:48
 
-sia2650: 
-tinv2650: 
+sia2650:
+tinv2650:
 0:1d07:2:0:0
-0:19fa:1:30:30 
+0:19fa:1:30:30
 0:1a1a:1:30:30
 0:1a3a:1:30:30
 0:1a5a:1:30:30
- 
-superbik: 
+
+superbik:
 0:1c08:1e:00:30
 
 syvalion:
-0:1090ec:10:00:01 
-0:1090fc:54:49:00 
+0:1090ec:10:00:01
+0:1090fc:54:49:00
 0:104266:4:00:00
 
 tailg:
 0:d8:4:0:0
 
 timelimt:
-0:80ca:3:0:0 
+0:80ca:3:0:0
 0:8981:1:27:27
-0:89a1:1:00:00 
+0:89a1:1:00:00
 0:89c1:1:27:27
 0:89e1:1:27:27
-0:8a01:1:27:27 
+0:8a01:1:27:27
 0:8a21:1:27:27
- 
+
 timetunl:
 0:801f:6:0:0
 0:c46d:6:63:63
@@ -7548,47 +7548,47 @@ tturfu:
 tturfbl:
 0:200100:4:00:08
 0:200104:7c:08:00
- 
-umanclub: 
-0:200742:2:00:07
-0:2006a2:a0:00:00 
 
-valkyrie: 
-0:100620:4:00:a0 
+umanclub:
+0:200742:2:00:07
+0:2006a2:a0:00:00
+
+valkyrie:
+0:100620:4:00:a0
 0:100624:9c:56:00
 
 vangrd2:
 0:c380:60:0a:00
 0:f620:3:00:00
- 
-vastar: 
+
+vastar:
 vastar2:
 vastar3:
 vastar4:
 0:cda1:1:00:00
-0:cdc1:1:00:00 
-0:cde1:1:00:00 
+0:cdc1:1:00:00
+0:cde1:1:00:00
 0:ce01:1:00:00
-0:ce21:1:02:02 
-0:ce41:1:28:28 
-0:ce61:1:28:28 
-0:f128:85:00:16 
+0:ce21:1:02:02
+0:ce41:1:28:28
+0:ce61:1:28:28
+0:f128:85:00:16
 
 wwjgtin:
-0:0220:70:24:24 
+0:0220:70:24:24
 0:001c:3:00:00
 
 wallst:
 0:1c19:1e:00:00
 
-wmatch: 
-0:c000:3c:84:02 
-0:c086:3:00:02 
-0:d300:15:00:01 
-0:d380:15:41:49 
+wmatch:
+0:c000:3c:84:02
+0:c086:3:00:02
+0:d300:15:00:01
+0:d380:15:41:49
 0:d400:2d0:84:4d
 
-waterski: 
+waterski:
 0:835b:3:0:0
 
 csclubj:
@@ -7598,14 +7598,14 @@ csclub1:
 csclubh:
 csclubjy:
 csclub1d:
-0:ff9894:50:00:b2 
-0:ff98e4:dc:1a:01 
+0:ff9894:50:00:b2
+0:ff98e4:dc:1a:01
 
 inthunt:
 inthuntu:
 kaiteids:
 0:e0180:d8:00:02
- 
+
 wb3bbl:
 wb32:
 wb31:
@@ -7785,7 +7785,7 @@ ninjawj:
 ninjawu:
 0:c4645:3f8:01:47
 
-; ** player scores from last game played also saved - no big deal !!  **
+;** player scores from last game played also saved - no big deal!! **
 invds:
 0:8398:e6:00:09
 
@@ -7882,7 +7882,7 @@ rckman2jregion:
 0:ffefc0:118:00:02
 0:fff047:1:01:01
 
-slammastu: 
+slammastu:
 0:ffa138:02:00:10
 0:ffa13a:ae:00:00
 
@@ -8605,7 +8605,7 @@ cachat:
 0:8d0d:4c:4b:00
 0:8d57:1:10:10
 
-; ** top score updates at start of first game **
+;** top score updates at start of first game **
 bouldash:
 0:306d4d:44:00:52
 0:306aa1:3:00:00
@@ -8866,7 +8866,7 @@ midresj:
 goonies:
 0:7f0:3:00:01
 
-;** ignore first highscore screen, updates on next highscore show !! **
+;** ignore first high score screen, updates on next high score show!! **
 timesold:
 timesold1:
 0:204101:bf:00:0c
@@ -9007,7 +9007,7 @@ rrangerb:
 0:c851:2:00:03
 
 parodius:
-parodiusj: 
+parodiusj:
 parodiusa:
 parodiuse:
 0:1f50:5e:00:00
@@ -9105,10 +9105,10 @@ vsskykid:
 0:10:6:00:00
 0:26:6:00:3f
 
-;*******bosco.c (bosconian)
-; ** highscore beaten at 20,000 every time **
-; ** no way around this **
-; ** highscore table ok though !! :0)      **
+;** bosco.c (bosconian) **
+;** high score beaten at 20,000 every time **
+;** no way around this **
+;** high score table ok though!! :0) **
 boscomd:
 bosco:
 boscomdo:
@@ -9214,7 +9214,7 @@ heartatk:
 logger:
 0:3c09:30:00:00
 
-;** udates highscore at end of 1st game **
+;** updates high score at end of 1st game **
 ;** or after 2nd attract mode **
 dazzler:
 0:3cea:20:00:1b
@@ -9224,8 +9224,8 @@ dazzler:
 8ball1:
 0:3c0c:38:00:00
 
-;*******saves top 10 scores only
-;*****can`t be bothered with lower scores !!
+;** saves top 10 scores only **
+;** can`t be bothered with lower scores!! **
 suprloco:
 suprlocoa:
 suprlocoo:
@@ -9280,13 +9280,13 @@ galxwars2:
 starw1:
 0:2005:06:00:00
 
-; updated when start a game
+;** updated when you start a game **
 helifire:
 helifirea:
 0:6008:3:00:00
 
 invadpt2:
-invaddlx: 
+invaddlx:
 0:20f4:2:00:05
 0:2340:a:1b:1b
 
@@ -9306,11 +9306,11 @@ lagunar:
 0:2011:9:00:00
 0:2005:3:00:00
 
-;updated when start a game
+;** updated when you start a game **
 lrescue:
 warl:
 desterth:
-lrescuem:  
+lrescuem:
 lrescuem2:
 0:20db:1:0a:0a
 0:20cf:a:1b:1b
@@ -9330,9 +9330,9 @@ polaris:
 
 polarisa:
 polarisbr:
-0:2150:14:00:00  
-0:2165:1e:2a:2a 
-0:2314:02:00:00 
+0:2150:14:00:00
+0:2165:1e:2a:2a
+0:2314:02:00:00
 
 rollingc:
 0:2302:0f:00:00
@@ -9394,12 +9394,12 @@ valtric:
 0:fc38:4:00:00
 
 arkanoid:
-ark1ball: 
-arkangc: 
-arkangc2: 
+ark1ball:
+arkangc:
+arkangc2:
 arkbloc2:
 arkblock:
-arkgcbl: 
+arkgcbl:
 arkmcubl:
 arkanoidu:
 arkanoiduo:
@@ -9621,7 +9621,7 @@ bzone2:
 bzonec:
 0:0300:3c:05:38
 
-;*note top score updates after a few seconds
+;** note top score updates after a few seconds **
 redbaron:
 redbarona:
 0:155:23:0:0
@@ -9697,7 +9697,7 @@ f1gpstar:
 0:f2803:5e3:04:4d
 
 citycon:
-citycona: 
+citycona:
 cruisin:
 0:0055:3:00:13
 0:0043:3:00:02
@@ -9765,7 +9765,7 @@ cop01a:
 cosmica:
 cosmica2:
 cosmica1:
-0:400e:3:00:00  
+0:400e:3:00:00
 
 panic:
 panich:
@@ -9774,7 +9774,7 @@ panic2:
 panic3:
 0:40c1:5:00:00
 0:5c00:c:09:15
-0:4004:2:00:00   
+0:4004:2:00:00
 
 1941:
 1941j:
@@ -9786,21 +9786,21 @@ cworld2j:
 0:ff0f6c:9c:00:00
 
 dino:
-dinoj: 
+dinoj:
 dinou:
 dinohunt:
 0:fff03e:310:00:00
 0:fff34e:010:99:00
 
 ghouls:
-ghoulsu: 
+ghoulsu:
 daimakair:
-daimakai: 
+daimakai:
 0:ffbf4c:78:48:a8
 0:ff087a:04:00:00
 
-mbombrd:  
-mbombrdj: 
+mbombrd:
+mbombrdj:
 0:ffa0cc:02:00:10
 0:ffa0ce:ae:00:00
 
@@ -9814,28 +9814,28 @@ mmancp2ur1:
 0:ffef10:28:00:02
 
 mercs:
-mercsur1: 
-mercsj: 
+mercsur1:
+mercsj:
 mercsua:
 0:ff0fd0:a0:00:20
 
 msword:
-mswordu: 
-mswordj: 
+mswordu:
+mswordj:
 mswordr1:
 0:fffe32:98:00:00
 0:fffeca:02:04:00
 0:ffa890:04:00:00
 
 nemo:
-nemoj: 
+nemoj:
 nemor1:
 0:fff004:28:00:20
 0:fff054:14:ff:24
 0:fff07c:04:00:00
 
 pang3:
-pang3j: 
+pang3j:
 pang3b:
 pang3r1:
 0:ff9726:8c:00:09
@@ -9846,8 +9846,8 @@ pnickj:
 0:ff8534:04:00:00
 
 punisher:
-punisheru: 
-punisherj: 
+punisheru:
+punisherj:
 punisherbz:
 punisherh:
 0:ff7896:258:ff:01
@@ -9892,8 +9892,8 @@ sf2jl:
 sf2ed:
 sf2ebbl2:
 sf2ebbl3:
-0:ffd28a:30:00:20 
-0:ffd302:04:00:00            
+0:ffd28a:30:00:20
+0:ffd302:04:00:00
 
 sf2accp2:
 0:ffd276:27:00:4b
@@ -9903,19 +9903,19 @@ sf2red:
 0:ffd276:28:02:20
 0:ffd2ee:04:02:53
 
-slammast: 
-mbomberj: 
+slammast:
+mbomberj:
 0:ffa138:02:00:10
 0:ffa13a:ae:00:00
 
 unsquad:
 area88:
-area88r: 
+area88r:
 0:ff101c:50:00:26
 0:ff107c:08:00:00
 
-crbaloon: 
-crbaloon2: 
+crbaloon:
+crbaloon2:
 0:4016:03:00:00
 0:417f:0a:11:00
 
@@ -9963,12 +9963,12 @@ ddribblep:
 0:4800:70:1d:03
 
 baddudes:
-0:ffa8fe:a0:4d:01 
-0:ff81d4:04:00:00 
+0:ffa8fe:a0:4d:01
+0:ff81d4:04:00:00
 
-drgninja: 
+drgninja:
 drgninjab:
-0:ffa8f8:a0:4d:01 
+0:ffa8f8:a0:4d:01
 0:ff81d4:04:00:00
 
 drgninjab2:
@@ -9986,7 +9986,7 @@ ffantasy:
 ffantasya:
 0:ffbe00:50:08:01
 
-breywood: 
+breywood:
 0:0108:28:31:00
 0:006d:3:04:00
 
@@ -10031,7 +10031,7 @@ oscaru:
 0:075a:46:00:33
 0:0006:3:00:09
 
-shackled: 
+shackled:
 0:0108:28:31:00
 0:006b:3:04:00
 
@@ -10047,7 +10047,7 @@ croquis:
 logicpr2:
 0:ff70e6:46:0a:d0
 
-radarscp: 
+radarscp:
 radarscp1:
 0:6307:a2:00:fc
 0:60a8:3:50:00
@@ -10154,14 +10154,14 @@ phantom:
 rallysa:
 0:00ae:2:00:10
 
-sidetrac: 
+sidetrac:
 0:000f:2:00:00
 
 fastfred:
 0:c04b:3:00:00
 0:c400:3f:00:11
 
-flyboy: 
+flyboy:
 flyboyb:
 0:c400:1e:00:00
 0:c430:64:1b:10
@@ -10274,7 +10274,7 @@ omni:
 piscesb:
 0:4021:3:00:00
 
-;*updates score on 2nd game screen
+;** updates score on 2nd game screen **
 streakng:
 streaknga:
 0:4288:3:00:00
@@ -10392,13 +10392,13 @@ hexaa:
 0:c709:2:00:00
 
 roadf:
-roadf2: 
+roadf2:
 0:3bd0:10a:01:01
 0:3066:3:01:00
 
 ironhors:
 dairesya:
-farwest: 
+farwest:
 0:32f1:3:02:00
 0:3300:40:23:00
 
@@ -10418,7 +10418,7 @@ manhatan:
 0:157e:3:00:30
 
 junofrst:
-junofrstg: 
+junofrstg:
 0:8100:a0:01:3f
 
 diamond:
@@ -10809,14 +10809,14 @@ skyalert:
 mikie:
 mikiej:
 mikiehs:
-0:2a00:01:1d:1d 
-0:2a01:01:2c:2c 
-0:2a02:01:1f:1f 
-0:2a03:01:00:00 
-0:2a04:01:01:01 
-0:2a05:28:00:00 
-0:29f0:04:00:00 
-0:297c:04:00:00 
+0:2a00:01:1d:1d
+0:2a01:01:2c:2c
+0:2a02:01:1f:1f
+0:2a03:01:00:00
+0:2a04:01:01:01
+0:2a05:28:00:00
+0:29f0:04:00:00
+0:297c:04:00:00
 
 block:
 blockr2:
@@ -10838,12 +10838,12 @@ mole:
 00:02E1:0A:00:05
 00:0375:50:19:00
 
-mpatrol: 
-mpatrolw: 
-mranger: 
+mpatrol:
+mpatrolw:
+mranger:
 0:e008:2c:00:00
 
-mrdo:  
+mrdo:
 mrdot:
 mrdofix:
 mrlo:
@@ -11082,7 +11082,7 @@ rallyxm:
 nrallyx:
 nrallyxb:
 rallyxmr:
-0:8060:8:00:02 
+0:8060:8:00:02
 
 renegade:
 0:101b:28:00:4c
@@ -11171,7 +11171,7 @@ scramce:
 0:4200:1e:00:01
 0:40a8:03:00:01
 
-explorer: 
+explorer:
 0:4200:1e:49:01
 0:40a8:03:00:01
 
@@ -11427,7 +11427,7 @@ superpacm:
 
 pacnpal:
 pacnchmp:
-pacnpal2: 
+pacnpal2:
 0:104c:28:00:23
 0:116d:3:00:00
 0:3ed:7:00:24
@@ -11484,7 +11484,7 @@ wboysys2:
 wbmljo:
 wbmljb:
 wbml:
-wbmlbg: 
+wbmlbg:
 wbmlbge:
 wbmlvc:
 wbmld:
@@ -11653,12 +11653,12 @@ dondokod:
 dondokodu:
 dondokodj:
 0:1028e8:28:00:55
- 
+
 gunfront:
 gunfrontj:
 0:10922c:54:00:30
 0:10922e:1:c3:c3
- 
+
 liquidk:
 liquidku:
 mizubaku:
