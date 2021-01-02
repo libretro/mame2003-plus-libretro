@@ -1502,6 +1502,6 @@ GAMEX( 1986, slapfigh, 0,        slapfight,slapfigh, slapfigh, ROT270, "Taito", 
 GAMEX( 1986, slapbtjp, slapfigh, slapfigh, slapfigh, 0,        ROT270, "bootleg",                        "Slap Fight (Japan bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1986, slapbtuk, slapfigh, slapbtuk, slapfigh, 0,        ROT270, "bootleg",                        "Slap Fight (English bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1986, alcon,    slapfigh, slapfight,slapfigh, slapfigh, ROT270, "Taito America Corp",             "Alcon", GAME_NO_COCKTAIL )
-GAMEX( 1986, getstar,  0,        slapfigh, getstar,  0,        ROT0,   "Taito",                          "Guardian", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX( 1986, getstar,  0,        slapfigh, getstar,  0,        ROT0,   "Taito",                          "Guardian (US)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAMEX( 1986, getstarj, getstar,  slapfigh, getstar,  0,        ROT0,   "Taito",                          "Get Star (Japan)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
 GAMEX( 1986, getstarb, getstar,  slapfigh, getstar,  0,        ROT0,   "bootleg",                        "Get Star (bootleg)", GAME_NO_COCKTAIL )
