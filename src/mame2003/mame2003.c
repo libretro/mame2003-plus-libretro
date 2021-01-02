@@ -804,8 +804,7 @@ bool retro_load_game(const struct retro_game_info *game)
   {
     const struct GameDriver *needle = drivers[driverIndex];
 
-    if ((strcasecmp(driver_lookup, needle->description) == 0)
-      || (strcasecmp(driver_lookup, needle->name) == 0) )
+    if ( strcasecmp(driver_lookup, needle->name) == 0 )
     {
       log_cb(RETRO_LOG_INFO, LOGPRE "Driver index counter: %d. Matched game driver: %s\n",  driverIndex, needle->name);
       game_driver = needle;
