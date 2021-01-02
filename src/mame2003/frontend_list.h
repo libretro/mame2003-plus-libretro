@@ -772,7 +772,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Growl (US)"                                                                                            ,"growlu"       , "mame", 3, 0 } ,
 { "Growl (World)"                                                                                         ,"growl"        , "mame", 3, 0 } ,
 { "Gryzor"                                                                                                ,"gryzor"       , "mame", 3, 0 } ,
-{ "Guardian"                                                                                              ,"getstar"      , "mame", 3, 0 } ,
+{ "Guardian (US)"                                                                                         ,"getstar"      , "mame", 3, 0 } ,
 { "Guerrilla War (US)"                                                                                    ,"gwar"         , "mame", 3, 0 } ,
 { "Guerrilla War (Version 1)"                                                                             ,"gwara"        , "mame", 3, 0 } ,
 { "Guerrilla War (bootleg)"                                                                               ,"gwarb"        , "mame", 3, 0 } ,
