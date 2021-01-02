@@ -2175,10 +2175,11 @@ marble4:
 marble5:
 0:401e92:32:00:3a
 
-imagoa:
-imago:
-0:c521:4a:00:00
-0:c565:1:01:01
+;** Commented out because eventually it saves bad values and locks out the high score screen **
+;**imagoa:
+;**imago:
+;**0:c521:4a:00:00
+;**0:c565:1:01:01
 
 ddragon:
 ddragonb:
