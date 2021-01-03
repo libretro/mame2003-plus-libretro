@@ -32,6 +32,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Cute Fighter
+* Daikaiju no Gyakushu
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
