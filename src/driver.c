@@ -1409,6 +1409,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( halleycj )	/* A62 (c) 1986 Taito Corporation (Japan) */
 	DRIVER( lsasquad )	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
 	DRIVER( storming )	/* A64 (c) 1986 Taito Corporation */
+  DRIVER( daikaiju )  /* A64 (c) 1986 Taito Corporation */
 	DRIVER( tokio )		/* A71 1986 */
 	DRIVER( tokiob )	/* bootleg */
 	DRIVER( bublbobl )	/* A78 (c) 1986 Taito Corporation */
