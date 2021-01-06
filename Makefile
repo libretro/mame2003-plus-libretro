@@ -158,20 +158,6 @@ else ifeq ($(platform), tvos-arm64)
 		IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
 	endif
 
-# Nintendo 3DS
-else ifeq ($(platform), ctr)
-	TARGET = $(TARGET_NAME)_libretro_$(platform).a
-	CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
-	CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
-	AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
-	PLATCFLAGS += -DARM11 -D_3DS
-	PLATCFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard -mfpu=vfp
-	PLATCFLAGS += -Wall -mword-relocations
-	PLATCFLAGS += -fomit-frame-pointer -ffast-math
-	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
-	CPU_ARCH := arm
-	STATIC_LINKING = 1
-
 # Raspberry Pi 0
 else ifeq ($(platform), rpi0)
 	TARGET = $(TARGET_NAME)_libretro.so
@@ -315,6 +301,20 @@ else ifeq ($(platform), qnx)
 	CC = qcc -Vgcc_ntoarmv7le
 	AR = qcc -Vgcc_ntoarmv7le
 	LD = QCC -Vgcc_ntoarmv7le
+
+# Nintendo 3DS
+else ifeq ($(platform), ctr)
+	TARGET = $(TARGET_NAME)_libretro_$(platform).a
+	CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
+	CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
+	AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
+	PLATCFLAGS += -DARM11 -D_3DS
+	PLATCFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard -mfpu=vfp
+	PLATCFLAGS += -Wall -mword-relocations
+	PLATCFLAGS += -fomit-frame-pointer -ffast-math
+	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+	CPU_ARCH := arm
+	STATIC_LINKING = 1
 
 # Nintendo Game Cube
 else ifeq ($(platform), ngc)
