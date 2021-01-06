@@ -31,6 +31,10 @@ include:
     file: '/android-jni.yml'
 
   ################################## CONSOLES ################################
+  # PlayStation Portable
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/psp-static.yml'
+
   # PlayStation Vita
   - project: 'libretro-infrastructure/ci-templates'
     file: '/vita-static.yml'
@@ -102,6 +106,12 @@ android-x86:
     - .core-defs
 
 ################################### CONSOLES #################################
+# PlayStation Portable
+libretro-build-psp:
+  extends:
+    - .libretro-psp-static-retroarch-master
+    - .core-defs
+
 # PlayStation Vita
 libretro-build-vita:
   extends:
