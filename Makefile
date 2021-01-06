@@ -665,10 +665,10 @@ else ifneq (,$(findstring windows_msvc2017,$(platform)))
 
 # Windows
 else
-   TARGET := $(TARGET_NAME)_libretro.dll
-   CC ?= gcc
-   LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
-   CFLAGS += -D__WIN32__
+	TARGET := $(TARGET_NAME)_libretro.dll
+	CC ?= gcc
+	LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
+	CFLAGS += -D__WIN32__
 endif
 
 # Architecture-specific flags #############################
@@ -684,7 +684,7 @@ endif
 # explictly use -fsigned-char on all platforms to solve problems with code written/tested on x86 but used on ARM
 # for example, audio on rtype leo is wrong on ARM without this flag
 ifeq (,$(findstring msvc,$(platform)))
-CFLAGS += -fsigned-char
+	CFLAGS += -fsigned-char
 endif
 
 # Use position-independent code for all platforms
@@ -696,26 +696,26 @@ RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 
 ifneq ($(platform), sncps3)
-ifeq (,$(findstring msvc,$(platform)))
-CFLAGS += -Wall -Wunused \
-	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
-	-Wshadow -Wstrict-prototypes \
-	-Wformat-security -Wwrite-strings \
-	-Wdisabled-optimization
-endif
+	ifeq (,$(findstring msvc,$(platform)))
+		CFLAGS += -Wall -Wunused \
+		-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
+		-Wshadow -Wstrict-prototypes \
+		-Wformat-security -Wwrite-strings \
+		-Wdisabled-optimization
+	endif
 endif
 
 ifeq (,$(findstring msvc,$(platform)))
-   CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
+	CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
 endif
 # End of compiler flags for all platforms ######################
 
 
 # Disable optimization when debugging #####################
 ifeq ($(DEBUG), 1)
-   CFLAGS += -O0 -g3
+	CFLAGS += -O0 -g3
 else
-   CFLAGS += -O2 -DNDEBUG
+	CFLAGS += -O2 -DNDEBUG
 endif
 
 # include the various .mak files
