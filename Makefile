@@ -316,7 +316,7 @@ else ifeq ($(platform), ctr)
 	CPU_ARCH := arm
 	STATIC_LINKING = 1
 
-# Nintendo Game Cube
+# Nintendo GameCube
 else ifeq ($(platform), ngc)
 	TARGET := $(TARGET_NAME)_libretro_$(platform).a
 	BIGENDIAN = 1
