@@ -12,9 +12,9 @@ LIBS          ?=
 HIDE ?= @
 
 ifneq ($(SANITIZER),)
-   CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
-   CXXFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
-   LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
+	CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
+	CXXFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
+	LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
 endif
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
@@ -34,32 +34,32 @@ unixcygpath  = /$(subst :,,$(call unixpath,$1))
 ifeq ($(platform),)
 	system_platform = unix
 	platform = unix
-ifeq ($(shell uname -a),)
-	system_platform = win
-	platform = win
-else ifneq ($(findstring MINGW,$(shell uname -a)),)
-	system_platform = win
-	platform = win
-else ifneq ($(findstring Darwin,$(shell uname -a)),)
-	system_platform = osx
-	platform = osx
-else ifneq ($(findstring win,$(shell uname -a)),)
-	system_platform = win
-	platform = win
-endif
+	ifeq ($(shell uname -a),)
+		system_platform = win
+		platform = win
+	else ifneq ($(findstring MINGW,$(shell uname -a)),)
+		system_platform = win
+		platform = win
+	else ifneq ($(findstring Darwin,$(shell uname -a)),)
+		system_platform = osx
+		platform = osx
+	else ifneq ($(findstring win,$(shell uname -a)),)
+		system_platform = win
+		platform = win
+	endif
 endif
 
 #Windows and wsl need to have their linking split up due to cmd length limits
 ifneq ($(findstring Microsoft,$(shell uname -a)),)
-   SPLIT_UP_LINK=1
+	SPLIT_UP_LINK=1
 endif
 
 ifneq ($(findstring MINGW,$(shell uname -a)),)
-   SPLIT_UP_LINK=1
+	SPLIT_UP_LINK=1
 endif
 
 ifeq ($(system_platform), win)
-   SPLIT_UP_LINK=1
+	SPLIT_UP_LINK=1
 endif
 
 
@@ -68,30 +68,30 @@ X86_ASM_68020 = # don't use x86 Assembler 68020 engine by default; set to 1 to e
 X86_MIPS3_DRC = # don't use x86 DRC MIPS3 engine by default;       set to 1 to enable
 
 ifeq ($(ARCH),)
-   # no architecture value passed make; try to determine host platform
-   UNAME_P = $(shell uname -p)
-ifneq ($(findstring powerpc,$(UNAME_P)),)
-   ARCH = ppc
-else ifneq ($(findstring x86_64,$(UNAME_P)),)
-   # catch "x86_64" first to avoid 64-bit architecture being caught by our next search for "86"
-	 # no commands for x86_x64 only at this point
-	 # we could help compile an x86_64 dynarec here or something like that
-else ifneq ($(findstring 86,$(UNAME_P)),)
-   ARCH = x86 # if "86" is found now it must be i386 or i686
-endif
+	# no architecture value passed make; try to determine host platform
+	UNAME_P = $(shell uname -p)
+	ifneq ($(findstring powerpc,$(UNAME_P)),)
+		ARCH = ppc
+	else ifneq ($(findstring x86_64,$(UNAME_P)),)
+		# catch "x86_64" first to avoid 64-bit architecture being caught by our next search for "86"
+		# no commands for x86_x64 only at this point
+		# we could help compile an x86_64 dynarec here or something like that
+	else ifneq ($(findstring 86,$(UNAME_P)),)
+		ARCH = x86 # if "86" is found now it must be i386 or i686
+	endif
 endif
 
 ifeq ($(ARCH), x86)
-   X86_MIPS3_DRC = 1
+	X86_MIPS3_DRC = 1
 endif
 
 
 ifeq (,$(findstring msvc,$(platform)))
-   LIBS += -lm
+	LIBS += -lm
 endif
 
 ifneq (,$(findstring msvc,$(platform)))
-   system_platform = win
+	system_platform = win
 endif
 
 # Unix
