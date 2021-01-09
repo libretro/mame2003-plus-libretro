@@ -54,16 +54,19 @@ int main()
 
 	int found = 0;
 
-
+	/***************** try to open the DAT file *****************/
 	read = fopen(dat, "r");
-	write = fopen("log.txt", "w");
+	printf("\nTry to open the DAT file:  %s\n", dat);
 
 	if (read == NULL)
 	{
-		printf("\nCould not open DAT file:  %s not found in directory.\n\n", dat);
+		printf("Could not open DAT file :  %s not found in directory.\n\n", dat);
 		return 1;
 	}
-	printf("\nOpening DAT file:  %s\n", dat);
+
+	/***************** open log to write to *****************/
+	write = fopen("log.txt", "w");
+	printf("\nProcessing DAT now.\n");
 
 
 	/***************** Search the DAT file line by line for ids *****************/
