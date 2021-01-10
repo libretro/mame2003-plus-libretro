@@ -89,6 +89,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Monster Maulers
 * Mouse Shooter GoGo
 * Multi Champ Deluxe * Mature *
+* Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
 * Oriental Legend Special
 * Osman
@@ -641,3 +642,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Corrected gfx decode for newsin7 fixing colors [mahoneyt944]
 * Updated RC filter in streams.c to fix sound issues newsin7 [mahoneyt944]
 * Fixed graphics / colors in Imago and added new cocktail clone [mahoneyt944]
+* Added three hoarded Sega C2 games Head On Channel, Oo Parts and Sega Sonic Bros to the segac2 driver [arcadez, grant2258]
