@@ -958,6 +958,32 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
 MEMORY_END
 
+static MEMORY_READ16_START( ooparts_readmem )
+	{ 0x000000, 0x1fffff, MRA16_ROM },					/* Main 68k Program Roms */
+	{ 0x800000, 0x800001, prot_r },						/* The Protection Chip? */
+	{ 0x840000, 0x84001f, iochip_r },					/* I/O Chip */
+	{ 0x840100, 0x840107, ym3438_r },					/* Ym3438 Sound Chip Status Register */
+	{ 0x8c0000, 0x8c0fff, palette_r },					/* Palette Ram */
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xe00000, 0xe0ffff, MRA16_RAM },					/* Main Ram */
+	{ 0xfe0000, 0xffffff, MRA16_RAM },					/* Mirror */
+MEMORY_END
+
+static MEMORY_WRITE16_START( ooparts_writemem )
+	{ 0x000000, 0x1fffff, MWA16_ROM },					/* Main 68k Program Roms */
+	{ 0x800000, 0x800001, prot_w },						/* The Protection Chip? */
+	{ 0x800200, 0x800201, control_w },					/* Seems to be global controls */
+	{ 0x840000, 0x84001f, iochip_w },					/* I/O Chip */
+	{ 0x840100, 0x840107, ym3438_w },					/* Ym3438 Sound Chip Writes */
+	{ 0x880000, 0x880001, upd7759_w },					/* UPD7759 Sound Writes */
+	{ 0x880134, 0x880135, counter_timer_w },			/* Bookkeeping */
+	{ 0x880334, 0x880335, counter_timer_w },			/* Bookkeeping (mirror) */
+	{ 0x8c0000, 0x8c0fff, palette_w, &paletteram16 },	/* Palette Ram */
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
+	{ 0xe00000, 0xe0ffff, MWA16_RAM, &main_ram },		/* Main Ram */
+	{ 0xfe0000, 0xffffff, MWA16_RAM, &main_ram },		/* Mirror */
+MEMORY_END
 
 static MEMORY_READ16_START( puckpkmn_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },					/* Main 68k Program Roms */
@@ -2624,14 +2650,14 @@ INPUT_PORTS_START( ichidant ) /*  Ichidant-R and Tant-R Input Ports */
 
 	PORT_START		/* Player 1 Controls */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      /* Button 'Rotate'*/
-    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )      /* Button 2 Unused == Button 1*/
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2  )     /* Button 2 Unused == Button 1 (Oo Parts special weapon) */
     PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )      /* Button 3 Unused == Button 1*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
     JOYSTICK_1
 
 	PORT_START		/* Player 2 Controls */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )    /* Button 'Rotate'*/
-    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED                )    /* Button 2 Unused == Button 1*/
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )    /* Button 2 Unused == Button 1 (Oo Parts special weapon) */
     PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED                )    /* Button 3 Unused == Button 1*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
     JOYSTICK_2
@@ -3518,6 +3544,13 @@ static MACHINE_DRIVER_START( segac2 )
 	MDRV_SOUND_ADD(UPD7759, upd7759_intf)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( ooparts )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( segac2 )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(ooparts_readmem,ooparts_writemem)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( puckpkmn )
 
@@ -3776,26 +3809,6 @@ ROM_END
 
 /* ----- System C-2 Games ----- */
 
-ROM_START( headonch ) /* Head On Channel (Prototype) (c)1992 Sega */
-	ROM_REGION( 0x200000, REGION_CPU1, 0 )
-	ROM_LOAD16_BYTE( "epr-16812.ic32", 0x000000, 0x080000, CRC(091cf538) )
-	ROM_LOAD16_BYTE( "epr-16811.ic31", 0x000001, 0x080000, CRC(91f3b5f1) )
-	ROM_LOAD16_BYTE( "epr-16814.ic34", 0x100000, 0x080000, CRC(d8dc6323) )
-	ROM_LOAD16_BYTE( "epr-16813.ic33", 0x100001, 0x080000, CRC(3268e38b) )
-
-	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
-	ROM_LOAD( "epr-16810.ic4", 0x000000, 0x040000, CRC(90af7301) )
-ROM_END
-
-ROM_START( ssonicbr )  /* Sega Sonic Bros (Prototype) (c)1992 Sega */
-	ROM_REGION( 0x200000, REGION_CPU1, 0 )
-	ROM_LOAD16_BYTE( "ssonicbr.ic32", 0x000000, 0x040000, CRC(cf254ecd) SHA1(4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800) )
-	ROM_LOAD16_BYTE( "ssonicbr.ic31", 0x000001, 0x040000, CRC(03709746) SHA1(0b457f557da77acd3f43950428117c1decdfaf26) )
-
-	ROM_REGION( 0x020000, REGION_SOUND1, 0 )
-	ROM_LOAD( "ssonicbr.ic4", 0x000000, 0x020000, CRC(78e56a51) SHA1(8a72c12975cd74919b4337e0f681273e6b5cbbc6) )
-ROM_END
-
 ROM_START( borench ) /* Borench  (c)1990 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ic32.bin", 0x000000, 0x040000, CRC(2c54457d) SHA1(adf3ea5393d2633ec6215e64f0cd89ad4567e765) )
@@ -3985,6 +3998,37 @@ ROM_START( zunkyou ) /* Zunzunkyou No Yabou  (c)1994 Sega */
 
 	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
 	ROM_LOAD( "epr16810.4", 0x000000, 0x080000, CRC(d542f0fe) SHA1(23ea50110dfe1cd9f286a535d15e0c3bcba73b00) )
+ROM_END
+
+ROM_START( headonch ) /* Head On Channel (Prototype) (c)1994 Sega */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "epr-16812.ic32", 0x000000, 0x080000, CRC(091cf538) )
+	ROM_LOAD16_BYTE( "epr-16811.ic31", 0x000001, 0x080000, CRC(91f3b5f1) )
+	ROM_LOAD16_BYTE( "epr-16814.ic34", 0x100000, 0x080000, CRC(d8dc6323) )
+	ROM_LOAD16_BYTE( "epr-16813.ic33", 0x100001, 0x080000, CRC(3268e38b) )
+
+	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
+	ROM_LOAD( "epr-16810.ic4", 0x000000, 0x040000, CRC(90af7301) )
+ROM_END
+
+ROM_START( ooparts ) /* Oo Parts (Prototype) (c)1992 Sega / Success */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "epr-15614.ic32", 0x000000, 0x080000, CRC(8dcf2940)  )
+	ROM_LOAD16_BYTE( "epr-15613.ic31", 0x000001, 0x080000, CRC(35381899)  )
+	ROM_LOAD16_BYTE( "mpr-15616.ic34", 0x100000, 0x080000, CRC(7192ac29)  )
+	ROM_LOAD16_BYTE( "mpr-15615.ic33", 0x100001, 0x080000, CRC(42755dc2)  )
+
+	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
+	ROM_LOAD( "epr-15617.ic4", 0x000000, 0x040000, CRC(e09961f6)  )
+ROM_END
+
+ROM_START( ssonicbr )  /* Sega Sonic Bros (Prototype) (c)1992 Sega */
+	ROM_REGION( 0x200000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "ssonicbr.ic32", 0x000000, 0x040000, CRC(cf254ecd) SHA1(4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800) )
+	ROM_LOAD16_BYTE( "ssonicbr.ic31", 0x000001, 0x040000, CRC(03709746) SHA1(0b457f557da77acd3f43950428117c1decdfaf26) )
+
+	ROM_REGION( 0x020000, REGION_SOUND1, 0 )
+	ROM_LOAD( "ssonicbr.ic4", 0x000000, 0x020000, CRC(78e56a51) SHA1(8a72c12975cd74919b4337e0f681273e6b5cbbc6) )
 ROM_END
 
 ROM_START( puckpkmn ) /* Puckman Pockimon  (c)2000 Genie */
@@ -4924,7 +4968,6 @@ GAME ( 1990, columnsj, columns,  segac,    columns,  columns,  ROT0, "Sega",    
 GAME ( 1990, columns2, 0,        segac,    columns2, columns2, ROT0, "Sega",                   "Columns II - The Voyage Through Time (Japan)" )
 
 /* System C-2 Games */
-GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",                   "SegaSonic Bros (Japan, prototype)" )
 GAME ( 1990, borench,  0,        segac2,   borench,  borench,  ROT0, "Sega",                   "Borench" )
 GAME ( 1990, tfrceac,  0,        segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC" )
 GAME ( 1990, tfrceacj, tfrceac,  segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC (Japan)" )
@@ -4944,6 +4987,8 @@ GAME ( 1994, puyopuy2, 0,        segac2,   puyopuy2, puyopuy2, ROT0, "Compile (S
 GAME ( 1994, potopoto, 0,        segac2,   potopoto, potopoto, ROT0, "Sega",                   "Poto Poto (Japan)" )
 GAME ( 1994, zunkyou,  0,        segac2,   zunkyou,  zunkyou,  ROT0, "Sega",                   "Zunzunkyou No Yabou (Japan)" )
 GAME ( 1994, headonch, 0,        segac2,   ichidant, tantr,    ROT0, "Sega",                   "Head On Channel (Japan, prototype)" )
+GAME ( 1992, ooparts,  0,        ooparts,  ichidant, tantr,    ROT270, "Sega / Success",       "Oo Parts (Japan, Prototype)" )
+GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",                   "SegaSonic Bros (Japan, prototype)" )
   
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
