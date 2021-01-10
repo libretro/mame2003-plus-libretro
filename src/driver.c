@@ -3010,6 +3010,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( potopoto )	/* (c) 1994 Sega */
 	DRIVER( zunkyou )	/* (c) 1994 Sega */
   DRIVER( headonch ) /* Sega Unreleased */  
+  DRIVER( ooparts ) /* Sega Unreleased */  
 
 	/* Atlus Print Club 'Games' C-2 board */
 	DRIVER( pclubj )
