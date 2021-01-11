@@ -1,13 +1,9 @@
 /*
 
-	Beta version 1  -  Jan. 9th 2021
+	Beta version 2  -  Jan. 11th 2021
 	by: mahoneyt944 - MAME 2003-Plus Team.
 
 	notes: - currently writes to a log, will work on writing to a html table next.
-	       - one issue is present so far, parent roms that use samples are listed as nosampleof
-	         because we scan the game tag for the sample name and parents do not list this here.
-	         Will probably have to scan for the actual sample.wav lines if sampleof is not found
-	         first and end if it reaches a closing tag.
 
 */
 
@@ -45,22 +41,37 @@ int main()
 	FILE *write;
 	char readline[MAXCHAR];
 
-	char game_id[] = "<game name=\"";
-	char driver_id[] = "<driver status=\"";
+	/***************** ID tags *****************/
+	char game_id[]     = "<game name=\"";
+	char sample_id[]   = "<sample name=\"";
+	char bios_id[]     = "<biosset name=\"";
+	char driver_id[]   = "<driver status=\"";
+	char endgame_id[]  = "</game>";
 
-	char sampleof[] = "sampleof=\"";
-	char color[] = "color=\"";
-	char sound[] = "sound=\"";
+	/***************** Search fields *****************/
+	char sampleof[]    = "sampleof=\"";
+	char color[]       = "color=\"";
+	char sound[]       = "sound=\"";
 
-	int found = 0;
+	/***************** Flags and counters *****************/
+	int found, parentsample, clonesample, bios = 0;
+
+	/***************** Allocate memory to use *****************/
+	char *romname      = malloc(sizeof(char) * 20);
+	char *driverstatus = malloc(sizeof(char) * 20);
+	char *colorstatus  = malloc(sizeof(char) * 20);
+	char *soundstatus  = malloc(sizeof(char) * 20);
+	char *sampleused   = malloc(sizeof(char) * 20);
+	char *biosused     = malloc(sizeof(char) * 2);
+
 
 	/***************** Try to open the DAT file *****************/
 	read = fopen(dat, "r");
-	printf("\nTry to open the DAT file:  %s\n", dat);
+	printf("\nTrying to open the DAT file:  %s\n", dat);
 
 	if (read == NULL)
 	{
-		printf("Could not open DAT file :  %s not found in directory.\n\n", dat);
+		printf("Could not open the DAT file:  Not found in directory.\n\n");
 		return 1;
 	}
 
@@ -69,7 +80,7 @@ int main()
 	printf("\nProcessing DAT now.\n");
 
 
-	/***************** Search the DAT file line by line for ids *****************/
+	/***************** Search the DAT file line by line and process IDs *****************/
 	while ( fgets(readline, MAXCHAR, read) != NULL )
 	{
 		char *target = NULL;
@@ -85,9 +96,7 @@ int main()
 				memcpy( target, start, end - start );
 				target[end - start] = '\0';
 
-				fputs(target, write);
-				fputs(":", write);
-				free(target);
+				strcpy( romname, target );
 			}
 
 			/***************** Check for sampleof *****************/
@@ -99,15 +108,25 @@ int main()
 					target = ( char * )malloc( end - start + 1 );
 					memcpy( target, start, end - start );
 					target[end - start] = '\0';
+					clonesample = 1;
 
-					fputs(target, write);
-					fputs(":", write);
-					free(target);
+					strcpy( sampleused, target );
 				}
 			}
-			else fputs("nosampleof:", write);
 
 			found++;
+		}
+
+		/***************** Read sample tag *****************/
+		else if ( (start = strstr( readline, sample_id )) && !(parentsample) )
+		{
+			parentsample = 1;
+		}
+
+		/***************** Read bios tag *****************/
+		else if ( (start = strstr( readline, bios_id )) && !(bios) )
+		{
+			bios = 1;
 		}
 
 		/***************** Read driver status tag *****************/
@@ -120,9 +139,7 @@ int main()
 				memcpy( target, start, end - start );
 				target[end - start] = '\0';
 
-				fputs(target, write);
-				fputs(":", write);
-				free(target);
+				strcpy( driverstatus, target );
 			}
 
 			/***************** Check for color *****************/
@@ -135,9 +152,7 @@ int main()
 					memcpy( target, start, end - start );
 					target[end - start] = '\0';
 
-					fputs(target, write);
-					fputs(":", write);
-					free(target);
+					strcpy( colorstatus, target );
 				}
 			}
 
@@ -151,14 +166,54 @@ int main()
 					memcpy( target, start, end - start );
 					target[end - start] = '\0';
 
-					fputs(target, write);
-					fputs("\n", write);
-					free(target);
+					strcpy( soundstatus, target );
 				}
 			}
 		}
 
+		/***************** Read end game tag *****************/
+		else if ( start = strstr( readline, endgame_id ) )
+		{
+			/***************** Configure parent sample *****************/
+			if ( parentsample && !clonesample ) strcpy( sampleused, romname );
+			else if ( !parentsample && !clonesample ) strcpy( sampleused, "0" );
+
+			/***************** Configure bios *****************/
+			if ( bios ) strcpy( biosused, "1\0" );
+			else strcpy( biosused, "0\0" );
+
+			/***************** Write data out *****************/
+			fputs( romname, write );
+			fputs( ":", write );
+			fputs( driverstatus, write );
+			fputs( ":", write );
+			fputs( colorstatus, write );
+			fputs( ":", write );
+			fputs( soundstatus, write );
+			fputs( ":", write );
+			fputs( sampleused, write );
+			fputs( ":", write );
+			fputs( biosused, write );
+			fputs( "\n", write );
+
+
+			/***************** Reset flags *****************/
+			parentsample = 0;
+			clonesample = 0;
+			bios = 0;
+		}
+
+		free( target );
+
 	}
+
+	/***************** Free memory *****************/
+	free( romname );
+	free( driverstatus );
+	free( colorstatus );
+	free( soundstatus );
+	free( sampleused );
+	free( biosused );
 
 	/***************** Close up our files *****************/
 	printf("Closing DAT file.\n");
