@@ -54,7 +54,7 @@ int main()
 	char sound[]       = "sound=\"";
 
 	/***************** Flags and counters *****************/
-	int found, parentsample, clonesample, bios = 0;
+	int found, parentsample, clonesample, realgame, bios = 0;
 
 	/***************** Allocate memory to use *****************/
 	char *romname      = malloc(sizeof(char) * 20);
@@ -89,6 +89,7 @@ int main()
 		/***************** Read game tag *****************/
 		if ( start = strstr( readline, game_id ) )
 		{
+			realgame = 1;
 			start += strlen( game_id );
 			if ( end = strstr( start, "\"" ) )
 			{
@@ -183,23 +184,27 @@ int main()
 			else strcpy( biosused, "0\0" );
 
 			/***************** Write data out *****************/
-			fputs( romname, write );
-			fputs( ":", write );
-			fputs( driverstatus, write );
-			fputs( ":", write );
-			fputs( colorstatus, write );
-			fputs( ":", write );
-			fputs( soundstatus, write );
-			fputs( ":", write );
-			fputs( sampleused, write );
-			fputs( ":", write );
-			fputs( biosused, write );
-			fputs( "\n", write );
+			if ( realgame )
+			{
+				fputs( romname, write );
+				fputs( ":", write );
+				fputs( driverstatus, write );
+				fputs( ":", write );
+				fputs( colorstatus, write );
+				fputs( ":", write );
+				fputs( soundstatus, write );
+				fputs( ":", write );
+				fputs( sampleused, write );
+				fputs( ":", write );
+				fputs( biosused, write );
+				fputs( "\n", write );
+			}
 
 
 			/***************** Reset flags *****************/
 			parentsample = 0;
 			clonesample = 0;
+			realgame  = 0;
 			bios = 0;
 		}
 
