@@ -52,7 +52,7 @@ int main()
 	char sound[]       = "sound=\"";
 
 	/***************** Flags and counters *****************/
-	int found, parentsample, clonesample, realgame, bios = 0;
+	int found=0, parentsample=0, clonesample=0, realgame=0, bios=0;
 
 	/***************** Allocate memory to use *****************/
 	char *romname      = malloc(sizeof(char) * 20);
@@ -103,11 +103,11 @@ int main()
 		char *start, *end;
 
 		/***************** Read game tag *****************/
-		if ( start = strstr( readline, game_id ) )
+		if (( start = strstr( readline, game_id ) ))
 		{
 			realgame = 1;
 			start += strlen( game_id );
-			if ( end = strstr( start, "\"" ) )
+			if (( end = strstr( start, "\"" ) ))
 			{
 				target = ( char * )malloc( end - start + 1 );
 				memcpy( target, start, end - start );
@@ -117,10 +117,10 @@ int main()
 			}
 
 			/***************** Check for sampleof *****************/
-			if ( start = strstr( readline, sampleof ) )
+			if (( start = strstr( readline, sampleof ) ))
 			{
 				start += strlen( sampleof );
-				if ( end = strstr( start, "\"" ) )
+				if (( end = strstr( start, "\"" ) ))
 				{
 					target = ( char * )malloc( end - start + 1 );
 					memcpy( target, start, end - start );
@@ -147,10 +147,10 @@ int main()
 		}
 
 		/***************** Read driver status tag *****************/
-		else if ( start = strstr( readline, driver_id ) )
+		else if (( start = strstr( readline, driver_id ) ))
 		{
 			start += strlen( driver_id );
-			if ( end = strstr( start, "\"" ) )
+			if (( end = strstr( start, "\"" ) ))
 			{
 				target = ( char * )malloc( end - start + 1 );
 				memcpy( target, start, end - start );
@@ -160,10 +160,10 @@ int main()
 			}
 
 			/***************** Check for color *****************/
-			if ( start = strstr( readline, color ) )
+			if (( start = strstr( readline, color ) ))
 			{
 				start += strlen( color );
-				if ( end = strstr( start, "\"" ) )
+				if (( end = strstr( start, "\"" ) ))
 				{
 					target = ( char * )malloc( end - start + 1 );
 					memcpy( target, start, end - start );
@@ -174,10 +174,10 @@ int main()
 			}
 
 			/***************** Check for sound *****************/
-			if ( start = strstr( readline, sound ) )
+			if (( start = strstr( readline, sound ) ))
 			{
 				start += strlen( sound );
-				if ( end = strstr( start, "\"" ) )
+				if (( end = strstr( start, "\"" ) ))
 				{
 					target = ( char * )malloc( end - start + 1 );
 					memcpy( target, start, end - start );
@@ -189,7 +189,7 @@ int main()
 		}
 
 		/***************** Read end game tag *****************/
-		else if ( start = strstr( readline, endgame_id ) )
+		else if (( start = strstr( readline, endgame_id ) ))
 		{
 			/***************** Configure parent sample *****************/
 			if ( parentsample && !clonesample ) strcpy( sampleused, romname );
