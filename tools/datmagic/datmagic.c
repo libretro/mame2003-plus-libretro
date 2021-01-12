@@ -1,9 +1,7 @@
 /*
 
-	Beta version 2  -  Jan. 11th 2021
+	Beta version 3  -  Jan. 12th 2021
 	by: mahoneyt944 - MAME 2003-Plus Team.
-
-	notes: - currently writes to a log, will work on writing to a html table next.
 
 */
 
@@ -75,9 +73,27 @@ int main()
 		return 1;
 	}
 
-	/***************** Open log to write to *****************/
-	write = fopen("log.txt", "w");
+	/***************** Open new html file to write to *****************/
+	write = fopen("datmagic.html", "w");
 	printf("\nProcessing DAT now.\n");
+
+
+	/***************** Write out html table header *****************/
+	fputs( "<style type=\"text/css\">\n", write );
+	fputs( "\ttable, th, td {border: 1px solid black; border-collapse: collapse;}\n", write );
+	fputs( "\tth, td {padding: 5px;}\n", write );
+	fputs( "\tth {text-align: left;}\n", write );
+	fputs( "</style>\n\n", write );
+	fputs( "<h2>MAME 2003-Plus</h2>\n\n", write );
+	fputs( "<table style=\"width:100%\">\n", write );
+	fputs( "\t<tr bgcolor=\"lightgrey\">\n", write );
+	fputs( "\t\t<th>Roms</th>\n", write );
+	fputs( "\t\t<th>Driver status</th>\n", write );
+	fputs( "\t\t<th>Color</th>\n", write );
+	fputs( "\t\t<th>Sound</th>\n", write );
+	fputs( "\t\t<th>Samples</th>\n", write );
+	fputs( "\t\t<th>Bios</th>\n", write );
+	fputs( "\t</tr>\n", write );
 
 
 	/***************** Search the DAT file line by line and process IDs *****************/
@@ -180,26 +196,56 @@ int main()
 			else if ( !parentsample && !clonesample ) strcpy( sampleused, "0" );
 
 			/***************** Configure bios *****************/
-			if ( bios ) strcpy( biosused, "1\0" );
-			else strcpy( biosused, "0\0" );
+			if ( bios ) strcpy( biosused, "1" );
+			else strcpy( biosused, "0" );
 
-			/***************** Write data out *****************/
+			/***************** Write out html table data *****************/
 			if ( realgame )
 			{
+				fputs( "\t<tr>\n", write );
+				fputs( "\t\t<td>", write );
 				fputs( romname, write );
-				fputs( ":", write );
-				fputs( driverstatus, write );
-				fputs( ":", write );
-				fputs( colorstatus, write );
-				fputs( ":", write );
-				fputs( soundstatus, write );
-				fputs( ":", write );
-				fputs( sampleused, write );
-				fputs( ":", write );
-				fputs( biosused, write );
-				fputs( "\n", write );
-			}
+				fputs( "</td>\n", write );
 
+				if ( strcmp(driverstatus, "good") == 0 )
+					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+				else
+					fputs( "\t\t<td bgcolor=\"pink\">", write );
+				fputs( driverstatus, write );
+				fputs( "</td>\n", write );
+
+				if ( strcmp(colorstatus, "good") == 0 )
+					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+				else if ( strcmp(colorstatus, "imperfect") == 0 )
+					fputs( "\t\t<td bgcolor=\"lightyellow\">", write );
+				else fputs( "\t\t<td bgcolor=\"pink\">", write );
+				fputs( colorstatus, write );
+				fputs( "</td>\n", write );
+
+				if ( strcmp(soundstatus, "good") == 0 )
+					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+				else if ( strcmp(soundstatus, "imperfect") == 0 )
+					fputs( "\t\t<td bgcolor=\"lightyellow\">", write );
+				else fputs( "\t\t<td bgcolor=\"pink\">", write );
+				fputs( soundstatus, write );
+				fputs( "</td>\n", write );
+
+				if ( strcmp(sampleused, "0") == 0 )
+					fputs( "\t\t<td>", write );
+				else
+				{
+					fputs( "\t\t<td>", write );
+					fputs( sampleused, write );
+				}
+				fputs( "</td>\n", write );
+
+				if ( strcmp(biosused, "0") == 0 )
+					fputs( "\t\t<td>", write );
+				else
+					fputs( "\t\t<td>yes", write );
+				fputs( "</td>\n", write );
+				fputs( "\t</tr>\n", write );
+			}
 
 			/***************** Reset flags *****************/
 			parentsample = 0;
@@ -222,6 +268,7 @@ int main()
 
 	/***************** Close up our files *****************/
 	printf("Closing DAT file.\n");
+	fputs( "</table>\n", write );
 	fclose(read);
 	fclose(write);
 
