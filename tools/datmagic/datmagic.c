@@ -221,8 +221,7 @@ int main()
 
 
 				/***************** Write out html table data *****************/
-				fputs( "\t\t<tr>\n", write );
-				fputs( "\t\t\t<td>", write );
+				fputs( "\t\t<tr>\n\t\t\t<td>", write );
 				fputs( romname, write );
 				fputs( "</td>\n", write );
 
@@ -274,8 +273,7 @@ int main()
 					fputs( "\t\t\t<td>", write );
 				else
 					fputs( "\t\t\t<td>yes", write );
-				fputs( "</td>\n", write );
-				fputs( "\t\t</tr>\n", write );
+				fputs( "</td>\n\t\t</tr>\n", write );
 			}
 
 			/***************** Reset flags *****************/
