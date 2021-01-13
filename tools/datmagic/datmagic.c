@@ -1,6 +1,6 @@
 /*
 
-	Beta version 3  -  Jan. 12th 2021
+	Beta version 4  -  Jan. 12th 2021
 	by: mahoneyt944 - MAME 2003-Plus Team.
 
 */
@@ -40,27 +40,29 @@ int main()
 	char readline[MAXCHAR];
 
 	/***************** ID tags *****************/
-	char game_id[]     = "<game name=\"";
-	char sample_id[]   = "<sample name=\"";
-	char bios_id[]     = "<biosset name=\"";
-	char driver_id[]   = "<driver status=\"";
-	char endgame_id[]  = "</game>";
+	char game_id[]        = "<game name=\"";
+	char sample_id[]      = "<sample name=\"";
+	char bios_id[]        = "<biosset name=\"";
+	char driver_id[]      = "<driver status=\"";
+	char endgame_id[]     = "</game>";
 
 	/***************** Search fields *****************/
-	char sampleof[]    = "sampleof=\"";
-	char color[]       = "color=\"";
-	char sound[]       = "sound=\"";
+	char sampleof[]       = "sampleof=\"";
+	char color[]          = "color=\"";
+	char sound[]          = "sound=\"";
+	char graphics[]       = "graphics=\"";
 
 	/***************** Flags and counters *****************/
 	int found=0, parentsample=0, clonesample=0, realgame=0, bios=0;
 
 	/***************** Allocate memory to use *****************/
-	char *romname      = malloc(sizeof(char) * 20);
-	char *driverstatus = malloc(sizeof(char) * 20);
-	char *colorstatus  = malloc(sizeof(char) * 20);
-	char *soundstatus  = malloc(sizeof(char) * 20);
-	char *sampleused   = malloc(sizeof(char) * 20);
-	char *biosused     = malloc(sizeof(char) * 2);
+	char *romname         = malloc(sizeof(char) * 20);
+	char *driverstatus    = malloc(sizeof(char) * 20);
+	char *colorstatus     = malloc(sizeof(char) * 20);
+	char *soundstatus     = malloc(sizeof(char) * 20);
+	char *graphicsstatus  = malloc(sizeof(char) * 20);
+	char *sampleused      = malloc(sizeof(char) * 20);
+	char *biosused        = malloc(sizeof(char) * 2);
 
 
 	/***************** Try to open the DAT file *****************/
@@ -79,21 +81,24 @@ int main()
 
 
 	/***************** Write out html table header *****************/
-	fputs( "<style type=\"text/css\">\n", write );
-	fputs( "\ttable, th, td {border: 1px solid black; border-collapse: collapse;}\n", write );
-	fputs( "\tth, td {padding: 5px;}\n", write );
-	fputs( "\tth {text-align: left;}\n", write );
-	fputs( "</style>\n\n", write );
-	fputs( "<h2>MAME 2003-Plus</h2>\n\n", write );
-	fputs( "<table style=\"width:100%\">\n", write );
-	fputs( "\t<tr style=\"background-color:lightgrey\">\n", write );
-	fputs( "\t\t<th>Roms</th>\n", write );
-	fputs( "\t\t<th>Driver status</th>\n", write );
-	fputs( "\t\t<th>Color</th>\n", write );
-	fputs( "\t\t<th>Sound</th>\n", write );
-	fputs( "\t\t<th>Samples</th>\n", write );
-	fputs( "\t\t<th>Bios</th>\n", write );
-	fputs( "\t</tr>\n", write );
+	fputs( "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n", write );
+	fputs( "\t<meta charset=\"utf-8\"/>\n\t<style type=\"text/css\">\n", write );
+	fputs( "\t\ttable, th, td {border: 1px solid black; border-collapse: collapse;}\n", write );
+	fputs( "\t\tth, td {padding: 5px;}\n", write );
+	fputs( "\t\tth {text-align: left;}\n", write );
+	fputs( "\t</style>\n\t<title>Compatibility Table</title>\n", write );
+	fputs( "</head>\n\n<body>\n", write );
+	fputs( "\t<h2>MAME 2003-Plus</h2>\n\n", write );
+	fputs( "\t<table style=\"width:100%; background-color:#E6FFEA;\">\n", write );
+	fputs( "\t\t<tr style=\"background-color:lightgrey;\">\n", write );
+	fputs( "\t\t\t<th>Roms</th>\n", write );
+	fputs( "\t\t\t<th>Driver status</th>\n", write );
+	fputs( "\t\t\t<th>Color</th>\n", write );
+	fputs( "\t\t\t<th>Sound</th>\n", write );
+	fputs( "\t\t\t<th>Graphics</th>\n", write );
+	fputs( "\t\t\t<th>Samples</th>\n", write );
+	fputs( "\t\t\t<th>Bios</th>\n", write );
+	fputs( "\t\t</tr>\n", write );
 
 
 	/***************** Search the DAT file line by line and process IDs *****************/
@@ -186,65 +191,91 @@ int main()
 					strcpy( soundstatus, target );
 				}
 			}
+			/***************** Check for graphics *****************/
+			if (( start = strstr( readline, graphics ) ))
+			{
+				start += strlen( graphics );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					strcpy( graphicsstatus, target );
+				}
+			}
 		}
 
 		/***************** Read end game tag *****************/
 		else if (( start = strstr( readline, endgame_id ) ))
 		{
-			/***************** Configure parent sample *****************/
-			if ( parentsample && !clonesample ) strcpy( sampleused, romname );
-			else if ( !parentsample && !clonesample ) strcpy( sampleused, "0" );
-
-			/***************** Configure bios *****************/
-			if ( bios ) strcpy( biosused, "1" );
-			else strcpy( biosused, "0" );
-
-			/***************** Write out html table data *****************/
 			if ( realgame )
 			{
-				fputs( "\t<tr>\n", write );
-				fputs( "\t\t<td>", write );
+				/***************** Configure parent sample *****************/
+				if ( parentsample && !clonesample ) strcpy( sampleused, romname );
+				else if ( !parentsample && !clonesample ) strcpy( sampleused, "0" );
+
+				/***************** Configure bios *****************/
+				if ( bios ) strcpy( biosused, "1" );
+				else strcpy( biosused, "0" );
+
+
+				/***************** Write out html table data *****************/
+				fputs( "\t\t<tr>\n", write );
+				fputs( "\t\t\t<td>", write );
 				fputs( romname, write );
 				fputs( "</td>\n", write );
 
-				if ( strcmp(driverstatus, "good") == 0 )
-					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
+				if ( strcmp(driverstatus, "preliminary") == 0 )
+					fputs( "\t\t\t<td style=\"background-color:pink;\">game not working", write );
+				else if ( strcmp(driverstatus, "protection") == 0 )
+					fputs( "\t\t\t<td style=\"background-color:pink;\">unemulated protection", write );
 				else
-					fputs( "\t\t<td style=\"background-color:pink\">", write );
-				fputs( driverstatus, write );
+					fputs( "\t\t\t<td>good", write );
 				fputs( "</td>\n", write );
 
-				if ( strcmp(colorstatus, "good") == 0 )
-					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
+
+				if ( strcmp(colorstatus, "preliminary") == 0 )
+					fputs( "\t\t\t<td style=\"background-color:pink;\">wrong colors", write );
 				else if ( strcmp(colorstatus, "imperfect") == 0 )
-					fputs( "\t\t<td style=\"background-color:lightyellow\">", write );
-				else fputs( "\t\t<td style=\"background-color:pink\">", write );
-				fputs( colorstatus, write );
+					fputs( "\t\t\t<td style=\"background-color:#F4F4B9;\">imperfect colors", write );
+				else
+					fputs( "\t\t\t<td>good", write );
 				fputs( "</td>\n", write );
 
-				if ( strcmp(soundstatus, "good") == 0 )
-					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
+
+				if ( strcmp(soundstatus, "preliminary") == 0 )
+					fputs( "\t\t\t<td style=\"background-color:pink;\">no sound", write );
 				else if ( strcmp(soundstatus, "imperfect") == 0 )
-					fputs( "\t\t<td style=\"background-color:lightyellow\">", write );
-				else fputs( "\t\t<td style=\"background-color:pink\">", write );
-				fputs( soundstatus, write );
+					fputs( "\t\t\t<td style=\"background-color:#F4F4B9;\">imperfect sound", write );
+				else
+					fputs( "\t\t\t<td>good", write );
 				fputs( "</td>\n", write );
+
+
+				if ( strcmp(graphicsstatus, "imperfect") == 0 )
+					fputs( "\t\t\t<td style=\"background-color:#F4F4B9\">imperfect graphics", write );
+				else
+					fputs( "\t\t\t<td>good", write );
+				fputs( "</td>\n", write );
+
 
 				if ( strcmp(sampleused, "0") == 0 )
-					fputs( "\t\t<td>", write );
+					fputs( "\t\t\t<td>", write );
 				else
 				{
-					fputs( "\t\t<td>", write );
+					fputs( "\t\t\t<td>", write );
 					fputs( sampleused, write );
 				}
 				fputs( "</td>\n", write );
 
+
 				if ( strcmp(biosused, "0") == 0 )
-					fputs( "\t\t<td>", write );
+					fputs( "\t\t\t<td>", write );
 				else
-					fputs( "\t\t<td>yes", write );
+					fputs( "\t\t\t<td>yes", write );
 				fputs( "</td>\n", write );
-				fputs( "\t</tr>\n", write );
+				fputs( "\t\t</tr>\n", write );
 			}
 
 			/***************** Reset flags *****************/
@@ -268,7 +299,7 @@ int main()
 
 	/***************** Close up our files *****************/
 	printf("Closing DAT file.\n");
-	fputs( "</table>\n", write );
+	fputs( "\t</table>\n</body>\n\n</html>\n", write );
 	fclose(read);
 	fclose(write);
 
