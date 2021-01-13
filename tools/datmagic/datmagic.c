@@ -86,7 +86,7 @@ int main()
 	fputs( "</style>\n\n", write );
 	fputs( "<h2>MAME 2003-Plus</h2>\n\n", write );
 	fputs( "<table style=\"width:100%\">\n", write );
-	fputs( "\t<tr bgcolor=\"lightgrey\">\n", write );
+	fputs( "\t<tr style=\"background-color:lightgrey\">\n", write );
 	fputs( "\t\t<th>Roms</th>\n", write );
 	fputs( "\t\t<th>Driver status</th>\n", write );
 	fputs( "\t\t<th>Color</th>\n", write );
@@ -208,25 +208,25 @@ int main()
 				fputs( "</td>\n", write );
 
 				if ( strcmp(driverstatus, "good") == 0 )
-					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
 				else
-					fputs( "\t\t<td bgcolor=\"pink\">", write );
+					fputs( "\t\t<td style=\"background-color:pink\">", write );
 				fputs( driverstatus, write );
 				fputs( "</td>\n", write );
 
 				if ( strcmp(colorstatus, "good") == 0 )
-					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
 				else if ( strcmp(colorstatus, "imperfect") == 0 )
-					fputs( "\t\t<td bgcolor=\"lightyellow\">", write );
-				else fputs( "\t\t<td bgcolor=\"pink\">", write );
+					fputs( "\t\t<td style=\"background-color:lightyellow\">", write );
+				else fputs( "\t\t<td style=\"background-color:pink\">", write );
 				fputs( colorstatus, write );
 				fputs( "</td>\n", write );
 
 				if ( strcmp(soundstatus, "good") == 0 )
-					fputs( "\t\t<td bgcolor=\"lightgreen\">", write );
+					fputs( "\t\t<td style=\"background-color:lightgreen\">", write );
 				else if ( strcmp(soundstatus, "imperfect") == 0 )
-					fputs( "\t\t<td bgcolor=\"lightyellow\">", write );
-				else fputs( "\t\t<td bgcolor=\"pink\">", write );
+					fputs( "\t\t<td style=\"background-color:lightyellow\">", write );
+				else fputs( "\t\t<td style=\"background-color:pink\">", write );
 				fputs( soundstatus, write );
 				fputs( "</td>\n", write );
 
