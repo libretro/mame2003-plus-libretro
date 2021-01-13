@@ -683,6 +683,11 @@ static void print_game_driver(FILE* out, const struct GameDriver* game)
 	else
 		fprintf(out, " sound=\"good\"");
 
+	if (game->flags & GAME_IMPERFECT_GRAPHICS)
+		fprintf(out, " graphics=\"imperfect\"");
+	else
+		fprintf(out, " graphics=\"good\"");
+
 	fprintf(out, " palettesize=\"%d\"/>\n", driver.total_colors);
 
 }
@@ -868,6 +873,7 @@ void print_mame_xml()
 		"\t\t\t<!ATTLIST driver status (good|preliminary|test) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver color (good|imperfect|preliminary) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver sound (good|imperfect|preliminary) #REQUIRED>\n"
+		"\t\t\t<!ATTLIST driver graphics (good|imperfect) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver palettesize CDATA #REQUIRED>\n"
 		"]>\n\n"
 		"<" XML_ROOT ">\n"
