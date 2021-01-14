@@ -223,56 +223,56 @@ int main()
 				/***************** Write out html table data *****************/
 				fputs( "\t\t<tr>\n\t\t\t<td>", write );
 				fputs( romname, write );
-				fputs( "</td>\n", write );
+				fputs( "</td>\n\t\t\t", write );
 
 				if ( strcmp(driverstatus, "preliminary") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:pink;\">game not working", write );
+					fputs( "<td style=\"background-color:pink;\">game not working", write );
 				else if ( strcmp(driverstatus, "protection") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:pink;\">unemulated protection", write );
+					fputs( "<td style=\"background-color:pink;\">unemulated protection", write );
 				else
-					fputs( "\t\t\t<td>good", write );
-				fputs( "</td>\n", write );
+					fputs( "<td>good", write );
+				fputs( "</td>\n\t\t\t", write );
 
 
 				if ( strcmp(colorstatus, "preliminary") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:pink;\">wrong colors", write );
+					fputs( "<td style=\"background-color:pink;\">wrong colors", write );
 				else if ( strcmp(colorstatus, "imperfect") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:#F4F4B9;\">imperfect colors", write );
+					fputs( "<td style=\"background-color:#F4F4B9;\">imperfect colors", write );
 				else
-					fputs( "\t\t\t<td>good", write );
-				fputs( "</td>\n", write );
+					fputs( "<td>good", write );
+				fputs( "</td>\n\t\t\t", write );
 
 
 				if ( strcmp(soundstatus, "preliminary") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:pink;\">no sound", write );
+					fputs( "<td style=\"background-color:pink;\">no sound", write );
 				else if ( strcmp(soundstatus, "imperfect") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:#F4F4B9;\">imperfect sound", write );
+					fputs( "<td style=\"background-color:#F4F4B9;\">imperfect sound", write );
 				else
-					fputs( "\t\t\t<td>good", write );
-				fputs( "</td>\n", write );
+					fputs( "<td>good", write );
+				fputs( "</td>\n\t\t\t", write );
 
 
 				if ( strcmp(graphicsstatus, "imperfect") == 0 )
-					fputs( "\t\t\t<td style=\"background-color:#F4F4B9\">imperfect graphics", write );
+					fputs( "<td style=\"background-color:#F4F4B9\">imperfect graphics", write );
 				else
-					fputs( "\t\t\t<td>good", write );
-				fputs( "</td>\n", write );
+					fputs( "<td>good", write );
+				fputs( "</td>\n\t\t\t", write );
 
 
 				if ( strcmp(sampleused, "0") == 0 )
-					fputs( "\t\t\t<td>", write );
+					fputs( "<td>", write );
 				else
 				{
-					fputs( "\t\t\t<td>", write );
+					fputs( "<td>", write );
 					fputs( sampleused, write );
 				}
-				fputs( "</td>\n", write );
+				fputs( "</td>\n\t\t\t", write );
 
 
 				if ( strcmp(biosused, "0") == 0 )
-					fputs( "\t\t\t<td>", write );
+					fputs( "<td>", write );
 				else
-					fputs( "\t\t\t<td>yes", write );
+					fputs( "<td>yes", write );
 				fputs( "</td>\n\t\t</tr>\n", write );
 			}
 
