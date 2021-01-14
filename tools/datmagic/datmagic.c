@@ -261,7 +261,7 @@ int main()
 
 
 				fputs( "<td>", write );
-				if ( strcmp(sampleused, "1") == 0 )
+				if ( strcmp(sampleused, "0") > 0 )
 					fputs( sampleused, write );
 				fputs( "</td>\n\t\t\t", write );
 
