@@ -4000,7 +4000,7 @@ ROM_START( zunkyou ) /* Zunzunkyou No Yabou  (c)1994 Sega */
 	ROM_LOAD( "epr16810.4", 0x000000, 0x080000, CRC(d542f0fe) SHA1(23ea50110dfe1cd9f286a535d15e0c3bcba73b00) )
 ROM_END
 
-ROM_START( headonch ) /* Head On Channel (Prototype) (c)1992 Sega */
+ROM_START( headonch ) /* Head On Channel (Prototype) (c)1994 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "epr-16812.ic32", 0x000000, 0x080000, CRC(091cf538) SHA1(04673678f543743b395edea39ad4ee6177436dc0) )
 	ROM_LOAD16_BYTE( "epr-16811.ic31", 0x000001, 0x080000, CRC(91f3b5f1) SHA1(15cbe7a172dde7de7b73f0c9eeddfee41e8d1f80) )
@@ -4011,7 +4011,7 @@ ROM_START( headonch ) /* Head On Channel (Prototype) (c)1992 Sega */
 	ROM_LOAD( "epr-16810.ic4", 0x000000, 0x040000, CRC(90af7301) SHA1(227227cb5d0df6612bac7b4c94b99e2287686ccd) )
 ROM_END
 
-ROM_START( ooparts ) /* Oo Parts (c)1992 Sega / Success */
+ROM_START( ooparts ) /* Oo Parts (Prototype) (c)1992 Sega / Success */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "epr-15614.ic32", 0x000000, 0x080000, CRC(8dcf2940) SHA1(f72630e8a26e7f2089da56878a1599268c355246) )
 	ROM_LOAD16_BYTE( "epr-15613.ic31", 0x000001, 0x080000, CRC(35381899) SHA1(524f6e1b1292542079589275e20f45c2eb68605c) )
