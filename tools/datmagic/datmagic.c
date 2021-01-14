@@ -225,6 +225,7 @@ int main()
 				fputs( romname, write );
 				fputs( "</td>\n\t\t\t", write );
 
+
 				if ( strcmp(driverstatus, "preliminary") == 0 )
 					fputs( "<td style=\"background-color:pink;\">game not working", write );
 				else if ( strcmp(driverstatus, "protection") == 0 )
@@ -259,20 +260,15 @@ int main()
 				fputs( "</td>\n\t\t\t", write );
 
 
-				if ( strcmp(sampleused, "0") == 0 )
-					fputs( "<td>", write );
-				else
-				{
-					fputs( "<td>", write );
+				fputs( "<td>", write );
+				if ( strcmp(sampleused, "1") == 0 )
 					fputs( sampleused, write );
-				}
 				fputs( "</td>\n\t\t\t", write );
 
 
-				if ( strcmp(biosused, "0") == 0 )
-					fputs( "<td>", write );
-				else
-					fputs( "<td>yes", write );
+				fputs( "<td>", write );
+				if ( strcmp(biosused, "1") == 0 )
+					fputs( "yes", write );
 				fputs( "</td>\n\t\t</tr>\n", write );
 			}
 
