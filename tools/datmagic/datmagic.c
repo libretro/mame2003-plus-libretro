@@ -50,7 +50,7 @@ int main()
 	char sampleof[]       = "sampleof=\"";
 	char color[]          = "color=\"";
 	char sound[]          = "sound=\"";
-	char graphic[]       = "graphic=\"";
+	char graphic[]        = "graphic=\"";
 
 	/***************** Flags and counters *****************/
 	int found=0, parentsample=0, clonesample=0, realgame=0, bios=0;
