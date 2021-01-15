@@ -50,7 +50,7 @@ int main()
 	char sampleof[]       = "sampleof=\"";
 	char color[]          = "color=\"";
 	char sound[]          = "sound=\"";
-	char graphics[]       = "graphics=\"";
+	char graphic[]       = "graphic=\"";
 
 	/***************** Flags and counters *****************/
 	int found=0, parentsample=0, clonesample=0, realgame=0, bios=0;
@@ -60,7 +60,7 @@ int main()
 	char *driverstatus    = malloc(sizeof(char) * 20);
 	char *colorstatus     = malloc(sizeof(char) * 20);
 	char *soundstatus     = malloc(sizeof(char) * 20);
-	char *graphicsstatus  = malloc(sizeof(char) * 20);
+	char *graphicstatus   = malloc(sizeof(char) * 20);
 	char *sampleused      = malloc(sizeof(char) * 20);
 	char *biosused        = malloc(sizeof(char) * 2);
 
@@ -191,17 +191,17 @@ int main()
 					strcpy( soundstatus, target );
 				}
 			}
-			/***************** Check for graphics *****************/
-			if (( start = strstr( readline, graphics ) ))
+			/***************** Check for graphic *****************/
+			if (( start = strstr( readline, graphic ) ))
 			{
-				start += strlen( graphics );
+				start += strlen( graphic );
 				if (( end = strstr( start, "\"" ) ))
 				{
 					target = ( char * )malloc( end - start + 1 );
 					memcpy( target, start, end - start );
 					target[end - start] = '\0';
 
-					strcpy( graphicsstatus, target );
+					strcpy( graphicstatus, target );
 				}
 			}
 		}
@@ -253,7 +253,7 @@ int main()
 				fputs( "</td>\n\t\t\t", write );
 
 
-				if ( strcmp(graphicsstatus, "imperfect") == 0 )
+				if ( strcmp(graphicstatus, "imperfect") == 0 )
 					fputs( "<td style=\"background-color:#F4F4B9\">imperfect graphics", write );
 				else
 					fputs( "<td>good", write );
