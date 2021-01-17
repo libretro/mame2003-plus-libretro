@@ -47,6 +47,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/vita-static.yml'
 
+  # PlayStation2
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ps2-static.yml'
+
   # Nintendo 3DS
   - project: 'libretro-infrastructure/ci-templates'
     file: '/ctr-static.yml'
@@ -136,6 +140,12 @@ libretro-build-psp:
 libretro-build-vita:
   extends:
     - .libretro-vita-static-retroarch-master
+    - .core-defs
+
+# PlayStation2
+libretro-build-ps2:
+  extends:
+    - .libretro-ps2-static-retroarch-master
     - .core-defs
 
 # Nintendo 3DS
