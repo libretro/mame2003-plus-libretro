@@ -1,7 +1,10 @@
 /*
 
-	Beta version 4  -  Jan. 12th 2021
+	Beta version 5  -  Jan. 17th 2021
 	by: mahoneyt944 - MAME 2003-Plus Team.
+
+	- Still need to generalize the XML DAT and h1 header name instead of hardcoded to 2003+
+	- Currently tested to be compatible with MAME2003-Plus, MAME2003, MAME2010, MAME2014, MAME2015
 
 */
 
@@ -9,7 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAXCHAR 200
+#define MAXCHAR 250
 
 void banner(void)
 {
@@ -40,29 +43,38 @@ int main()
 	char readline[MAXCHAR];
 
 	/***************** ID tags *****************/
-	char game_id[]        = "<game name=\"";
-	char sample_id[]      = "<sample name=\"";
-	char bios_id[]        = "<biosset name=\"";
-	char driver_id[]      = "<driver status=\"";
-	char endgame_id[]     = "</game>";
+	char game_id[]         = "<game ";
+	char description_id[]  = "<description>";
+	char sample_id[]       = "<sample ";
+	char bios_id[]         = "<biosset ";
+	char driver_id[]       = "<driver ";
+	char endgame_id[]      = "</game>";
 
 	/***************** Search fields *****************/
-	char sampleof[]       = "sampleof=\"";
-	char color[]          = "color=\"";
-	char sound[]          = "sound=\"";
-	char graphic[]        = "graphic=\"";
+	char name[]            = "name=\"";
+	char sampleof[]        = "sampleof=\"";
+	char runnable[]        = "runnable=\"";
+	char status[]          = "status=\"";
+	char emulation[]       = "emulation=\"";
+	char color[]           = "color=\"";
+	char sound[]           = "sound=\"";
+	char graphic[]         = "graphic=\"";
+	char protection[]      = "protection=\"";
 
 	/***************** Flags and counters *****************/
-	int found=0, parentsample=0, clonesample=0, realgame=0, bios=0;
+	int found=0, parentsample=0, clonesample=0;
 
 	/***************** Allocate memory to use *****************/
-	char *romname         = malloc(sizeof(char) * 20);
-	char *driverstatus    = malloc(sizeof(char) * 20);
-	char *colorstatus     = malloc(sizeof(char) * 20);
-	char *soundstatus     = malloc(sizeof(char) * 20);
-	char *graphicstatus   = malloc(sizeof(char) * 20);
-	char *sampleused      = malloc(sizeof(char) * 20);
-	char *biosused        = malloc(sizeof(char) * 2);
+	char *romname          = malloc(sizeof(char) * 30);
+	char *description      = malloc(sizeof(char) * 150);
+	char *driverstatus     = malloc(sizeof(char) * 20);
+	char *emulationstatus  = malloc(sizeof(char) * 20);
+	char *colorstatus      = malloc(sizeof(char) * 20);
+	char *soundstatus      = malloc(sizeof(char) * 20);
+	char *graphicstatus    = malloc(sizeof(char) * 20);
+	char *protectionstatus = malloc(sizeof(char) * 20);
+	char *sampleused       = malloc(sizeof(char) * 20);
+	char *biosused         = malloc(sizeof(char) * 4);
 
 
 	/***************** Try to open the DAT file *****************/
@@ -88,10 +100,11 @@ int main()
 	fputs( "\t\tth {text-align: left;}\n", write );
 	fputs( "\t</style>\n\t<title>Compatibility Table</title>\n", write );
 	fputs( "</head>\n\n<body>\n", write );
-	fputs( "\t<h2>MAME 2003-Plus</h2>\n\n", write );
+	fputs( "\t<h1>MAME 2003-Plus</h1>\n\n", write );
 	fputs( "\t<table style=\"width:100%; background-color:#E6FFEA;\">\n", write );
 	fputs( "\t\t<tr style=\"background-color:lightgrey;\">\n", write );
 	fputs( "\t\t\t<th>Roms</th>\n", write );
+	fputs( "\t\t\t<th style=\"width:400px;\">description</th>\n", write );
 	fputs( "\t\t\t<th>Driver status</th>\n", write );
 	fputs( "\t\t\t<th>Color</th>\n", write );
 	fputs( "\t\t\t<th>Sound</th>\n", write );
@@ -110,15 +123,40 @@ int main()
 		/***************** Read game tag *****************/
 		if (( start = strstr( readline, game_id ) ))
 		{
-			realgame = 1;
-			start += strlen( game_id );
-			if (( end = strstr( start, "\"" ) ))
-			{
-				target = ( char * )malloc( end - start + 1 );
-				memcpy( target, start, end - start );
-				target[end - start] = '\0';
+			/***************** Clear entries when new game is found *****************/
+			romname[0]         = '\0';		soundstatus[0]      = '\0';
+			description[0]     = '\0';		graphicstatus[0]    = '\0';
+			driverstatus[0]    = '\0';		protectionstatus[0] = '\0';
+			emulationstatus[0] = '\0';		sampleused[0]       = '\0';
+			colorstatus[0]     = '\0';		biosused[0]         = '\0';
 
-				strcpy( romname, target );
+
+			/***************** Check for name *****************/
+			if (( start = strstr( readline, name ) ))
+			{
+				start += strlen( name );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					strcpy( romname, target );
+				}
+			}
+
+			/***************** Check for runnable *****************/
+			if (( start = strstr( readline, runnable ) ))
+			{
+				start += strlen( runnable );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					if ( strcmp( target, "no" ) == 0 ) { romname[0] = '\0'; found--; }
+				}
 			}
 
 			/***************** Check for sampleof *****************/
@@ -139,29 +177,75 @@ int main()
 			found++;
 		}
 
-		/***************** Read sample tag *****************/
-		else if ( (start = strstr( readline, sample_id )) && !(parentsample) )
+		/***************** Read description tag *****************/
+		else if (( start = strstr( readline, description_id ) ))
 		{
-			parentsample = 1;
-		}
-
-		/***************** Read bios tag *****************/
-		else if ( (start = strstr( readline, bios_id )) && !(bios) )
-		{
-			bios = 1;
-		}
-
-		/***************** Read driver status tag *****************/
-		else if (( start = strstr( readline, driver_id ) ))
-		{
-			start += strlen( driver_id );
-			if (( end = strstr( start, "\"" ) ))
+			start += strlen( description_id );
+			if (( end = strstr( start, "<" ) ))
 			{
 				target = ( char * )malloc( end - start + 1 );
 				memcpy( target, start, end - start );
 				target[end - start] = '\0';
 
-				strcpy( driverstatus, target );
+				strcpy( description, target );
+			}
+		}
+
+		/***************** Read sample tag *****************/
+		else if ( (start = strstr( readline, sample_id )) && !(parentsample) )
+		{
+			if (( start = strstr( readline, name ) ))
+			{
+				start += strlen( name );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					parentsample = 1;
+				}
+			}
+		}
+
+		/***************** Read bios tag *****************/
+		else if ( (start = strstr( readline, bios_id )) && (biosused[0] == '\0') )
+		{
+			if (( start = strstr( readline, name ) ))
+			{
+				start += strlen( name );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					strcpy( biosused, "yes" );
+				}
+			}
+		}
+
+		/***************** Read driver tag *****************/
+		else if (( start = strstr( readline, driver_id ) ))
+		{
+			/***************** Check for status *****************/
+			if (( start = strstr( readline, status ) ))
+			{
+				start += strlen( status );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					strcpy( driverstatus, target );
+				}
+			}
+
+			/***************** Check for emulation *****************/
+			if (( start = strstr( readline, emulation ) ))
+			{
+				start += strlen( emulation );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					strcpy( emulationstatus, target );
+				}
 			}
 
 			/***************** Check for color *****************/
@@ -191,6 +275,7 @@ int main()
 					strcpy( soundstatus, target );
 				}
 			}
+
 			/***************** Check for graphic *****************/
 			if (( start = strstr( readline, graphic ) ))
 			{
@@ -204,20 +289,30 @@ int main()
 					strcpy( graphicstatus, target );
 				}
 			}
+
+			/***************** Check for protection *****************/
+			if (( start = strstr( readline, protection ) ))
+			{
+				start += strlen( protection );
+				if (( end = strstr( start, "\"" ) ))
+				{
+					target = ( char * )malloc( end - start + 1 );
+					memcpy( target, start, end - start );
+					target[end - start] = '\0';
+
+					strcpy( protectionstatus, target );
+				}
+			}
 		}
 
 		/***************** Read end game tag *****************/
 		else if (( start = strstr( readline, endgame_id ) ))
 		{
-			if ( realgame )
+			if ( romname[0] != '\0' )
 			{
 				/***************** Configure parent sample *****************/
 				if ( parentsample && !clonesample ) strcpy( sampleused, romname );
-				else if ( !parentsample && !clonesample ) strcpy( sampleused, "0" );
-
-				/***************** Configure bios *****************/
-				if ( bios ) strcpy( biosused, "1" );
-				else strcpy( biosused, "0" );
+				else if ( !parentsample && !clonesample ) sampleused[0] = '\0';
 
 
 				/***************** Write out html table data *****************/
@@ -226,10 +321,19 @@ int main()
 				fputs( "</td>\n\t\t\t", write );
 
 
-				if ( strcmp(driverstatus, "preliminary") == 0 )
+				fputs( "<td>", write );
+				fputs( description, write );
+				fputs( "</td>\n\t\t\t", write );
+
+
+				if ( (strcmp(driverstatus, "preliminary") == 0  && emulationstatus[0] == '\0') || (strcmp(emulationstatus, "preliminary") == 0) )
 					fputs( "<td style=\"background-color:pink;\">game not working", write );
-				else if ( strcmp(driverstatus, "protection") == 0 )
+				else if ( (strcmp(driverstatus, "protection") == 0) || (strcmp(protectionstatus, "preliminary") == 0) )
 					fputs( "<td style=\"background-color:pink;\">unemulated protection", write );
+				else if ( strcmp(driverstatus, "preliminary") == 0 )
+					fputs( "<td style=\"background-color:pink;\">preliminary", write );
+				else if ( strcmp(driverstatus, "imperfect") == 0 )
+					fputs( "<td style=\"background-color:#F4F4B9;\">imperfect", write );
 				else
 					fputs( "<td>good", write );
 				fputs( "</td>\n\t\t\t", write );
@@ -261,13 +365,13 @@ int main()
 
 
 				fputs( "<td>", write );
-				if ( strcmp(sampleused, "0") > 0 )
+				if ( sampleused[0] != '\0' )
 					fputs( sampleused, write );
 				fputs( "</td>\n\t\t\t", write );
 
 
 				fputs( "<td>", write );
-				if ( strcmp(biosused, "1") == 0 )
+				if ( biosused[0] != '\0' )
 					fputs( "yes", write );
 				fputs( "</td>\n\t\t</tr>\n", write );
 			}
@@ -275,8 +379,6 @@ int main()
 			/***************** Reset flags *****************/
 			parentsample = 0;
 			clonesample = 0;
-			realgame  = 0;
-			bios = 0;
 		}
 
 		free( target );
@@ -285,9 +387,13 @@ int main()
 
 	/***************** Free memory *****************/
 	free( romname );
+	free( description );
 	free( driverstatus );
+	free( emulationstatus );
 	free( colorstatus );
 	free( soundstatus );
+	free( graphicstatus );
+	free( protectionstatus );
 	free( sampleused );
 	free( biosused );
 
