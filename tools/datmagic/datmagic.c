@@ -372,7 +372,7 @@ int main()
 
 				fputs( "<td>", write );
 				if ( biosused[0] != '\0' )
-					fputs( "yes", write );
+					fputs( biosused, write );
 				fputs( "</td>\n\t\t</tr>\n", write );
 			}
 
