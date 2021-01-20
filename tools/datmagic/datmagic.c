@@ -88,7 +88,7 @@ int main()
 	}
 
 	/***************** Open new html file to write to *****************/
-	write = fopen("datmagic.html", "w");
+	write = fopen("mame2003-plus.html", "w");
 	printf("\nProcessing DAT now.\n");
 
 
@@ -104,7 +104,7 @@ int main()
 	fputs( "\t<table style=\"width:100%; background-color:#E6FFEA;\">\n", write );
 	fputs( "\t\t<tr style=\"background-color:lightgrey;\">\n", write );
 	fputs( "\t\t\t<th>Roms</th>\n", write );
-	fputs( "\t\t\t<th style=\"width:400px;\">description</th>\n", write );
+	fputs( "\t\t\t<th style=\"width:400px;\">Description</th>\n", write );
 	fputs( "\t\t\t<th>Driver status</th>\n", write );
 	fputs( "\t\t\t<th>Color</th>\n", write );
 	fputs( "\t\t\t<th>Sound</th>\n", write );
