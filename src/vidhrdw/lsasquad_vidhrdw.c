@@ -31,8 +31,8 @@ static void draw_layer(struct mame_bitmap *bitmap,unsigned char *scrollram)
 			if (flip_screen) sy = 248 - sy;
 			sy &= 0xff;
 
-			attr = videoram[base + 2*y + 1];
-			code = videoram[base + 2*y] + ((attr & 0x0f) << 8);
+			attr = videoram[(base + 2*y + 1) & 0x1fff];
+			code = videoram[(base + 2*y) & 0x1fff] + ((attr & 0x0f) << 8);
 			color = attr >> 4;
 
 			drawgfx(bitmap,Machine->gfx[0],
@@ -116,8 +116,8 @@ static int draw_layer_daikaiju(struct mame_bitmap *bitmap, int offs, int  * prev
 			if (flip_screen) sy = 248 - sy;
 			sy &= 0xff;
 
-			attr = videoram[base + 2*y + 1];
-			code = videoram[base + 2*y] + ((attr & 0x0f) << 8);
+			attr = videoram[(base + 2*y + 1) & 0x1fff];
+			code = videoram[(base + 2*y) & 0x1fff] + ((attr & 0x0f) << 8);
 			color = attr >> 4;
 
 
