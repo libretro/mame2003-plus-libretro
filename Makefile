@@ -121,7 +121,7 @@ else ifeq ($(platform), osx)
 	LDFLAGS += $(fpic) -dynamiclib
 	OSXVER = `sw_vers -productVersion | cut -c 4`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
-	ifneq ($(OSX_LT_MAVERICKS), YES)
+	ifeq ($(OSX_LT_MAVERICKS), YES)
 		fpic += -mmacosx-version-min=10.1
 	endif
 
