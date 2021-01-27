@@ -37,6 +37,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/osx-arm64.yml'
 
+  # MacOS PowerPC 32-bit
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/osx-ppc.yml'
+
   ################################## CELLULAR ################################
   # Android
   - project: 'libretro-infrastructure/ci-templates'
@@ -117,6 +121,12 @@ libretro-build-osx-x64:
 libretro-build-osx-arm64:
   extends:
     - .libretro-osx-arm64-make-default
+    - .core-defs
+
+# MacOS PowerPC 32-bit
+libretro-build-osx-ppc:
+  extends:
+    - .libretro-osx-ppc-make-default
     - .core-defs
 
 ################################### CELLULAR #################################
