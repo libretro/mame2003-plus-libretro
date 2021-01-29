@@ -72,7 +72,7 @@ static WRITE_HANDLER( sound_cpu_command_w )
 
 static WRITE_HANDLER( shootout_flipscreen_w )
 {
-	flip_screen_set(data & 0x01);
+	flip_screen_set(~data & 0x01);
 }
 
 static WRITE_HANDLER( shootout_coin_counter_w )
@@ -454,6 +454,7 @@ static DRIVER_INIT( shootout )
 }
 
 
-GAME( 1985, shootout, 0,		shootout, shootout, shootout, ROT0, "Data East USA", "Shoot Out (US)")
-GAME( 1985, shootouj, shootout, shootouj, shootout, 0,		  ROT0, "Data East USA", "Shoot Out (Japan)" )
-GAME( 1985, shootoub, shootout, shootouj, shootout, shootout, ROT0, "bootleg", "Shoot Out (Korean Bootleg)" )
+/* ROT180 confirmed by Kold */
+GAME( 1985, shootout, 0,        shootout, shootout, shootout, ROT180, "Data East USA", "Shoot Out (US)")
+GAME( 1985, shootouj, shootout, shootouj, shootout, 0,        ROT180, "Data East USA", "Shoot Out (Japan)" )
+GAME( 1985, shootoub, shootout, shootouj, shootout, shootout, ROT180, "bootleg",       "Shoot Out (Korean Bootleg)" )
