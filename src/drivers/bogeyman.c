@@ -306,5 +306,6 @@ ROM_START( bogeyman )
 ROM_END
 
 /******************************************************************************/
+
 /* ROT180 confirmed by Kold */
-GAMEX( 1985?, bogeyman, 0, bogeyman, bogeyman, 0, ROT180, "Technos Japan", "Bogey Manor", GAME_IMPERFECT_COLORS )
+GAMEX( 1985, bogeyman, 0, bogeyman, bogeyman, 0, ROT180, "Technos Japan", "Bogey Manor", GAME_IMPERFECT_COLORS )
