@@ -761,12 +761,12 @@ LINKOUT  = -o
 ifneq (,$(findstring msvc,$(platform)))
 	OBJOUT = -Fo
 	LINKOUT = -out:
-	ifeq ($(STATIC_LINKING),1)
-		LD ?= lib.exe
-		STATIC_LINKING=0
-	else
-		LD = link.exe
-	endif
+ifeq ($(STATIC_LINKING),1)
+	LD ?= lib.exe
+	STATIC_LINKING=0
+else
+	LD = link.exe
+endif
 else
 	LD = $(CC)
 endif
@@ -780,22 +780,22 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-	ifeq ($(SPLIT_UP_LINK), 1)
-		$(HIDE)$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
-	else
-		$(HIDE)$(AR) rcs $@ $(OBJECTS)
-	endif
+ifeq ($(SPLIT_UP_LINK), 1)
+	$(HIDE)$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
+else
+	$(HIDE)$(AR) rcs $@ $(OBJECTS)
+endif
 else
 	@echo Linking $@...
 	@echo platform $(system_platform)
-	ifeq ($(SPLIT_UP_LINK), 1)
-		# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
-		$(HIDE)$(file >$@.in,$(OBJECTS))
-		$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
-		@rm $@.in
-	else
-		$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
-	endif
+ifeq ($(SPLIT_UP_LINK), 1)
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(HIDE)$(file >$@.in,$(OBJECTS))
+	$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
+	@rm $@.in
+else
+	$(HIDE)$(LD) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
+endif
 endif
 
 CFLAGS += $(PLATCFLAGS) $(CDEFS)
