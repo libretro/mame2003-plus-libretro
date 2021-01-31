@@ -778,7 +778,6 @@ endef
 
 all:	$(TARGET)
 $(TARGET): $(OBJECTS)
-
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
 	ifeq ($(SPLIT_UP_LINK), 1)
