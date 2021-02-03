@@ -112,9 +112,9 @@
 #define XFERFLAG_DXDYSIGN		0x0020
 #define XFERFLAG_UNKNOWN8		0x0100
 #define XFERFLAG_CLIP			0x0400
-#define XFERFLAG_UNKNOWN15		0x8000
+#define XFERFLAG_WIDTHPIX		0x8000
 
-#define XFERFLAG_KNOWNFLAGS		(XFERFLAG_TRANSPARENT | XFERFLAG_XFLIP | XFERFLAG_YFLIP | XFERFLAG_DSTXSCALE | XFERFLAG_DYDXSIGN | XFERFLAG_DXDYSIGN | XFERFLAG_CLIP)
+#define XFERFLAG_KNOWNFLAGS		(XFERFLAG_TRANSPARENT | XFERFLAG_XFLIP | XFERFLAG_YFLIP | XFERFLAG_DSTXSCALE | XFERFLAG_DYDXSIGN | XFERFLAG_DXDYSIGN | XFERFLAG_CLIP | XFERFLAG_WIDTHPIX)
 
 #define VRAM_WIDTH				512
 
@@ -442,7 +442,7 @@ static void logblit(const char *tag)
 	}
 	else
 	{
-		logerror("%s: e=%d%d f=%04x c=%02x%02x %02x%04x -> (%03x,%03x) %3dx%3d c=(%03x,%03x)-(%03x,%03x) s=%04x %04x %04x %04x %04x %04x", tag,
+		logerror("%s: e=%d%d f=%04x c=%02x%02x %02x%04x -> (%03x,%03x) %3dx%3 c=(%03x,%03x)-(%03x,%03x) s=%04x %04x %04x %04x %04x %04x", tag,
 				enable_latch[0], enable_latch[1],
 				VIDEO_TRANSFER_FLAGS,
 				color_latch[0] >> 8, color_latch[1] >> 8,
@@ -607,6 +607,116 @@ static void draw_raw(UINT16 *base, UINT16 color)
 		enable_clipping();
 }
 
+static void draw_raw_widthpix(UINT16 *base, UINT16 color)
+{
+	UINT8 *src = &grom_base[(grom_bank | ((VIDEO_TRANSFER_ADDRHI & 0xff) << 16) | VIDEO_TRANSFER_ADDRLO) % grom_size];
+	int transparent_pen = (VIDEO_TRANSFER_FLAGS & XFERFLAG_TRANSPARENT) ? 0xff : -1;
+	int width = VIDEO_TRANSFER_WIDTH << 8;
+	int height = ADJUSTED_HEIGHT(VIDEO_TRANSFER_HEIGHT) << 8;
+	int xsrcstep = VIDEO_SRC_XSTEP;
+	int ysrcstep = VIDEO_SRC_YSTEP;
+	int sx, sy = (VIDEO_TRANSFER_Y & 0xfff) << 8;
+	int startx = (VIDEO_TRANSFER_X & 0xfff) << 8;
+	int xdststep = 0x100;
+	int ydststep = VIDEO_DST_YSTEP;
+	int x, y, px;
+
+	/* adjust for (lack of) clipping */
+	if (!(VIDEO_TRANSFER_FLAGS & XFERFLAG_CLIP))
+		disable_clipping();
+
+	/* adjust for scaling */
+	if (VIDEO_TRANSFER_FLAGS & XFERFLAG_DSTXSCALE)
+		xdststep = VIDEO_DST_XSTEP;
+
+	/* adjust for flipping */
+	if (VIDEO_TRANSFER_FLAGS & XFERFLAG_XFLIP)
+		xdststep = -xdststep;
+	if (VIDEO_TRANSFER_FLAGS & XFERFLAG_YFLIP)
+		ydststep = -ydststep;
+
+	/* loop over Y in src pixels */
+	for (y = 0; y < height; y += ysrcstep, sy += ydststep)
+	{
+		UINT8 *rowsrc = &src[(y >> 8) * (width >> 8)];
+		
+		x = 0;
+		px = 0;
+
+		/* simpler case: VIDEO_YSTEP_PER_X is zero */
+		if (VIDEO_YSTEP_PER_X == 0)
+		{
+			/* clip in the Y direction */
+			if (sy >= scaled_clip_rect.min_y && sy < scaled_clip_rect.max_y)
+			{
+				UINT32 dstoffs;
+
+				/* direction matters here */
+				sx = startx;
+				if (xdststep > 0)
+				{
+					/* skip left pixels */
+					for (; px < width && sx < scaled_clip_rect.min_x; x += xsrcstep, px += 0x100, sx += xdststep) ;
+
+					/* compute the address */
+					dstoffs = compute_safe_address(sx >> 8, sy >> 8) - (sx >> 8);
+
+					/* render middle pixels */
+					for ( ; px < width && sx < scaled_clip_rect.max_x; x += xsrcstep, px += 0x100, sx += xdststep)
+					{
+						int pixel = rowsrc[x >> 8];
+						if (pixel != transparent_pen)
+						    base[(dstoffs + (sx >> 8)) & vram_mask] = pixel | color;
+					}
+				}
+				else
+				{
+					/* skip right pixels */
+					for (; px < width && sx >= scaled_clip_rect.max_x; x += xsrcstep, px += 0x100, sx += xdststep) ;
+
+					/* compute the address */
+					dstoffs = compute_safe_address(sx >> 8, sy >> 8) - (sx >> 8);
+
+					/* render middle pixels */
+					for ( ; px < width && sx >= scaled_clip_rect.min_x; x += xsrcstep, px += 0x100, sx += xdststep)
+					{
+						int pixel = rowsrc[x >> 8];
+						if (pixel != transparent_pen)
+							base[(dstoffs + (sx >> 8)) & vram_mask] = pixel | color;
+					}
+				}
+			}
+		}
+
+		/* slow case: VIDEO_YSTEP_PER_X is non-zero */
+		else
+		{
+			int ystep = (VIDEO_TRANSFER_FLAGS & XFERFLAG_DYDXSIGN) ? -VIDEO_YSTEP_PER_X : VIDEO_YSTEP_PER_X;
+			int ty = sy;
+
+			/* render all pixels */
+			sx = startx;
+			for ( ; px < width && sx < scaled_clip_rect.max_x; x += xsrcstep, px += 0x100, sx += xdststep, ty += ystep)
+				if (ty >= scaled_clip_rect.min_y && ty < scaled_clip_rect.max_y &&
+					sx >= scaled_clip_rect.min_x && sx < scaled_clip_rect.max_x)
+				{
+					int pixel = rowsrc[x >> 8];
+					if (pixel != transparent_pen)
+						base[compute_safe_address(sx >> 8, ty >> 8)] = pixel | color;
+				}
+		}
+
+		/* apply skew */
+		if (VIDEO_TRANSFER_FLAGS & XFERFLAG_DXDYSIGN)
+			startx += VIDEO_XSTEP_PER_Y;
+		else
+			startx -= VIDEO_XSTEP_PER_Y;
+	}
+
+	/* restore cliprects */
+	if (!(VIDEO_TRANSFER_FLAGS & XFERFLAG_CLIP))
+		enable_clipping();
+}
 
 static void draw_raw_drivedge(UINT16 *base, UINT16 *zbase, UINT16 color)
 {
@@ -1212,11 +1322,16 @@ static void handle_video_command(void)
 			{
 				if (enable_latch[0]) draw_raw_drivedge(videoplane[0], videoplane[1], color_latch[0]);
 			}
-			else
-			{
-				if (enable_latch[0]) draw_raw(videoplane[0], color_latch[0]);
-				if (enable_latch[1]) draw_raw(videoplane[1], color_latch[1]);
-			}
+		    if (VIDEO_TRANSFER_FLAGS & XFERFLAG_WIDTHPIX)
+	        {
+		    if (enable_latch[0]) draw_raw_widthpix(videoplane[0], color_latch[0]);
+		    if (enable_latch[1]) draw_raw_widthpix(videoplane[1], color_latch[1]);
+	        }
+	        else
+	        {
+		    if (enable_latch[0]) draw_raw(videoplane[0], color_latch[0]);
+		    if (enable_latch[1]) draw_raw(videoplane[1], color_latch[1]);
+	        }
 
 			profiler_mark(PROFILER_END);
 			break;
