@@ -20,6 +20,7 @@
 		* Golden Tee Golf '99
 		* Golden Tee Golf 2K
 		* Golden Tee Golf Classic
+		* Power Up Baseball (1 set)
 
 	Games not supported because IT is still selling them:
 		* World Class Bowling Deluxe
@@ -760,7 +761,7 @@ static MEMORY_READ32_START( gt_readmem )
 	{ 0x500000, 0x5000ff, itech020_video_r },
 	{ 0x578000, 0x57ffff, MRA32_NOP },				/* touched by protection */
 	{ 0x580000, 0x59ffff, MRA32_RAM },
-	{ 0x600000, 0x603fff, MRA32_RAM },
+	{ 0x600000, 0x61ffff, MRA32_RAM }, /* pubball */
 	{ 0x680000, 0x680003, itech020_prot_result_r },
 	{ 0x800000, 0xbfffff, MRA32_ROM },
 MEMORY_END
@@ -775,7 +776,7 @@ static MEMORY_WRITE32_START( gt_writemem )
 	{ 0x480000, 0x480003, sound_data32_w },
 	{ 0x500000, 0x5000ff, itech020_video_w, (data32_t **)&itech32_video },
 	{ 0x580000, 0x59ffff, itech020_paletteram_w, &paletteram32 },
-	{ 0x600000, 0x603fff, MWA32_RAM, &nvram, &nvram_size },
+	{ 0x600000, 0x61ffff, MWA32_RAM, &nvram, &nvram_size }, /* pubball */
 	{ 0x680000, 0x680003, MWA32_NOP },				/* written by protection */
 	{ 0x700000, 0x700003, itech020_plane_w },
 	{ 0x800000, 0xbfffff, MWA32_ROM, (data32_t **)&main_rom },
@@ -1575,6 +1576,66 @@ INPUT_PORTS_START( aama )
     PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL, 35, 47, 0, 255 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( pubball )
+	PORT_START	/* 080000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 First Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Second Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* 100000 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 First Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Second Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* 180000 */
+	PORT_BITX(0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Third Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 Third Base", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1, "P1 Home", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0008, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2, "P2 Home", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0010, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1, "P1 Power Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2, "P2 Power Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+
+	PORT_START	/* 200000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* 280000 */
+	PORT_SERVICE_NO_TOGGLE( 0x0001, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SPECIAL )
+	PORT_DIPNAME( 0x0010, 0x0000, "Video Sync" )
+	PORT_DIPSETTING(      0x0000, "-" )
+	PORT_DIPSETTING(      0x0010, "+" )
+	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Flip_Screen ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0020, DEF_STR( On ))
+	PORT_DIPNAME( 0x0040, 0x0000, DEF_STR( Unknown ))
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ))
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x0080, DEF_STR( On ))
+	
+	PORT_START	/* 78000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+	
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 25, 32, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 25, 32, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_REVERSE, 25, 32, 0, 255 )
+
+	PORT_START	/* analog */
+    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2, 25, 32, 0, 255 )
+INPUT_PORTS_END
+
 
 /*************************************
  *
@@ -1742,6 +1803,16 @@ static MACHINE_DRIVER_START( gt3d )
 	/* video hardware */
 	MDRV_VISIBLE_AREA(0, 383, 0, 239)
 MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( pubball )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(gt3d)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(0, 383, 0, 254)
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( sftmspec )
 
@@ -2706,6 +2777,45 @@ ROM_START( gtclassc ) /* Version 1.00 */
 	ROM_LOAD16_BYTE( "gt_srom1.nr", 0x200000, 0x080000, CRC(1b3f18b6) SHA1(3b65de6a90c5ede183b5f8ca1875736bc1425772) )
 ROM_END
 
+ROM_START( pubball )
+	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+	
+	ROM_REGION32_BE( CODE_SIZE, REGION_USER1, ROMREGION_ERASEFF )
+	ROM_LOAD32_BYTE( "bb0.bin", 0x00000, 0x25a91, CRC(f9350590) SHA1(91352373fb6a41495bb04db01d097e76770c5419) ) /* from SOURCE */
+	ROM_LOAD32_BYTE( "bb1.bin", 0x00001, 0x25a91, CRC(5711f503) SHA1(94765a5e9311fffbf0bc386c3b531c79acd7cada) )
+	ROM_LOAD32_BYTE( "bb2.bin", 0x00002, 0x25a91, CRC(3e202dc6) SHA1(a1a9fdff1957a8e43f002883666f1cd489879258) )
+	ROM_LOAD32_BYTE( "bb3.bin", 0x00003, 0x25a91, CRC(e6d1ba8d) SHA1(c07fe0f9093422505079785ef8e019d1ba69e2ff) )
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 )
+	ROM_LOAD( "bball.bim", 0x10000, 0x18000, CRC(915a9116) SHA1(54dbb9f8eb358c5dbe2022fad86cdd411c893b83) ) /* from SOUNDS */
+	ROM_CONTINUE(          0x08000, 0x08000 )
+
+	ROM_REGION( 0xE00000, REGION_GFX1, 0 )
+	ROM_LOAD32_BYTE( "grom00_0.bin", 0x000000, 0x100000, CRC(46822b0f) SHA1(0b9758a1ccad252973a1fc61dc1a4eb1d0eb1636) ) /* from ART */
+	ROM_LOAD32_BYTE( "grom00_1.bin", 0x000001, 0x100000, CRC(c11236ce) SHA1(1459646b4d947aa63b037c7c5ab19d3261cbaa19) )
+	ROM_LOAD32_BYTE( "grom00_2.bin", 0x000002, 0x100000, CRC(e6be30f3) SHA1(832aff7b9a42fa57ccff09554c9f65f469e1045d) )
+	ROM_LOAD32_BYTE( "grom00_3.bin", 0x000003, 0x100000, CRC(e0d454fb) SHA1(26ca842682ad618619d4311f7ecd1bb326771c2e) )
+	ROM_LOAD32_BYTE( "grom01_0.bin", 0x400000, 0x100000, CRC(115a66f2) SHA1(9f514c82943d3a779bd44c93618a396b1f9184b9) )
+	ROM_LOAD32_BYTE( "grom01_1.bin", 0x400001, 0x100000, CRC(1dfc8dbd) SHA1(2e3018d61b1c7acec4a2f5da8184da33764e7965) )
+	ROM_LOAD32_BYTE( "grom01_2.bin", 0x400002, 0x100000, CRC(23386483) SHA1(9198b9d7e45d0a276947ebfbdda844113aa71928) )
+	ROM_LOAD32_BYTE( "grom01_3.bin", 0x400003, 0x100000, CRC(ac0123ce) SHA1(c6fe79ca8c3efdfaf9310dfab3e0142042319b11) )
+	ROM_LOAD32_BYTE( "grom02_0.bin", 0x800000, 0x100000, CRC(06cd3cca) SHA1(501b0be9388c5a6b89d453f3287217dd286eecff) )
+	ROM_LOAD32_BYTE( "grom02_1.bin", 0x800001, 0x100000, CRC(3df38e91) SHA1(f3adf29598481d050258d266a360d5b40d86f665) )
+	ROM_LOAD32_BYTE( "grom02_2.bin", 0x800002, 0x100000, CRC(7c47dde9) SHA1(654656878676278e0ea73e367337eaac5f1f1d50) )
+	ROM_LOAD32_BYTE( "grom02_3.bin", 0x800003, 0x100000, CRC(e6eb01bf) SHA1(f0e7f2372dfd072e005fbf7489f54242523b4a28) )
+	ROM_LOAD32_BYTE( "grom3_0.bin",  0xC00000, 0x080000, CRC(376beb10) SHA1(2dcea69b5e81d010b4c660df189a560742719ce6) )
+	ROM_LOAD32_BYTE( "grom3_1.bin",  0xC00001, 0x080000, CRC(3b3cb8ba) SHA1(eabac9e381dd652a4575f159dac45499406b2702) )
+	ROM_LOAD32_BYTE( "grom3_2.bin",  0xC00002, 0x080000, CRC(3bdfac73) SHA1(64777cdf92bbdfbfb6806039421a28f9810b6b03) )
+	ROM_LOAD32_BYTE( "grom3_3.bin",  0xC00003, 0x080000, CRC(1de04025) SHA1(25ba2fa49cc2423642020e05586662f67943381b) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "bbsrom0.bin",  0x000000, 0x0f8b8e, CRC(2a69f77e) SHA1(c98ccdb0d79e77bf87077ac29626d84a811d1326) ) /* from SOUNDS */
+	ROM_LOAD16_BYTE( "bbsrom1.bin",  0x200000, 0x0fe442, CRC(4af8c871) SHA1(fe4b0ed0a4ef77147fe150c0cd70dff1929e9aff) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND2, ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "bbsrom2.bin",  0x000000, 0x0fe62d, CRC(e4f9ad52) SHA1(c8bf590de35155937bd656b39658880d9a40f5c3) )
+	ROM_LOAD16_BYTE( "bbsrom3.bin",  0x200000, 0x0f90b3, CRC(b37e2906) SHA1(f8c2fd54fe8579eb2875c77630efa8d715eae022) )
+ROM_END
 
 /*************************************
  *
@@ -2861,6 +2971,18 @@ static DRIVER_INIT( aama )
 	install_mem_read32_handler(0, 0x181000, 0x181003, trackball32_4bit_p2_r);
 }
 
+static DRIVER_INIT( pubball )
+{
+	init_program_rom();
+	itech32_vram_height = 1024;
+	itech32_planes = 2;
+	is_drivedge = 0;
+
+	install_mem_write32_handler(0, 0x300000, 0x300003, itech020_color2_w);
+	install_mem_write32_handler(0, 0x380000, 0x380003, itech020_color1_w);
+	install_mem_read32_handler(0, 0x180800, 0x180803, trackball32_4bit_r);
+	install_mem_read32_handler(0, 0x181000, 0x181003, trackball32_4bit_p2_r);
+}
 
 /*************************************
  *
@@ -2887,6 +3009,7 @@ GAME( 1995, sftm,     0,        sftmspec, sftm,     sftm,     ROT0, "Capcom/Incr
 GAME( 1995, sftm111,  sftm,     sftmspec, sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.11)" )	/* PIC 16C54 labeled as ITSF-1 */
 GAME( 1995, sftm110,  sftm,     sftmspec, sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.10)" )	/* PIC 16C54 labeled as ITSF-1 */
 GAME( 1995, sftmj,    sftm,     sftmspec, sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter - The Movie (v1.12N, Japan)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1996, pubball,  0,        pubball,  pubball,  pubball,  ROT0, "Midway/Incredible Technologies", "Power Up Baseball (V1.5, Prototype)" ) 
 GAME( 1997, shufshot, 0,        sftm,     shufshot, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.39)" ) /* PIC 16C54 labeled as ITSHF-1 */
 GAME( 1997, sshot137, shufshot, sftm,     shufbowl, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.37)" ) /* PIC 16C54 labeled as ITSHF-1 */
 GAME( 1995, gt3d,     0,        gt3d,     gt3d,     aama,     ROT0, "Strata/Incredible Technologies", "Golden Tee 3D Golf (v1.93N)" ) /* PIC 16C54 labeled as ITGF-2 */ 
