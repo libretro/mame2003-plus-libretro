@@ -102,6 +102,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pocket Gal Deluxe * Mature *
 * Power Instinct Legends
 * Power Instinct Matrimelee
+* Power Up Baseball
 * Progear
 * Puzz Loop 2
 * Puzzle Star
