@@ -1322,16 +1322,16 @@ static void handle_video_command(void)
 			{
 				if (enable_latch[0]) draw_raw_drivedge(videoplane[0], videoplane[1], color_latch[0]);
 			}
-		    if (VIDEO_TRANSFER_FLAGS & XFERFLAG_WIDTHPIX)
-	        {
+		  if (VIDEO_TRANSFER_FLAGS & XFERFLAG_WIDTHPIX)
+	    {
 		    if (enable_latch[0]) draw_raw_widthpix(videoplane[0], color_latch[0]);
 		    if (enable_latch[1]) draw_raw_widthpix(videoplane[1], color_latch[1]);
-	        }
-	        else
-	        {
+	    }
+	    else
+	    {
 		    if (enable_latch[0]) draw_raw(videoplane[0], color_latch[0]);
 		    if (enable_latch[1]) draw_raw(videoplane[1], color_latch[1]);
-	        }
+	    }
 
 			profiler_mark(PROFILER_END);
 			break;
