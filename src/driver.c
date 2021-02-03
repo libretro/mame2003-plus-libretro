@@ -2523,6 +2523,7 @@ V-V                           TP-027
 	DRIVER( sftm110 )	/* (c) 1995 Capcom/Incredible Technologies */
 	DRIVER( sftm111 )	/* (c) 1995 Capcom/Incredible Technologies */
 	DRIVER( sftmj )		/* (c) 1995 Capcom/Incredible Technologies */
+  DRIVER( pubball )	/* (c) 1996 Midway/Incredible Technologies (prototype)*/
 	DRIVER( shufshot )	/* (c) Strata/Incredible Technologies */
 	DRIVER( sshot137 )	/* (c) Strata/Incredible Technologies */
 	DRIVER( gt3d )      /* (c) 1995 Incredible Technologies */
