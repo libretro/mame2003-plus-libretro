@@ -53,7 +53,6 @@ int16_t             mouse_y[total_controllers]= {0};
 int16_t             analogjoy[total_controllers][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 int                 running = 0;
-int                 control_flag=-1;
 int                 legacy_flag=-1;
 static struct retro_input_descriptor empty[] = { { 0 } };
 
@@ -87,7 +86,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_STV_BIOS,
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
-  OPT_DPAD_ANALOG,
   OPT_DEADZONE,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
@@ -133,7 +131,6 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
-       void   change_control_type(void);
 
 
 /******************************************************************************
@@ -208,7 +205,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
   init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DPAD_ANALOG],            APPNAME"_analog",                 "Control mapping ; analog|digital");
   init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
@@ -509,32 +505,6 @@ static void update_variables(bool first_time)
             options.dial_share_xy = 0;
             break;
           }
-
-      case OPT_DPAD_ANALOG:
-          if(strcmp(var.value, "analog") == 0)
-          {
-            if( options.analog !=1 && control_flag !=-1) control_flag =1;
-            options.analog = 1;
-            if (running && control_flag == 1)
-            {
-              change_control_type();
-              control_flag =0;
-            }
-          }
-          else
-          {
-            if(options.analog !=0 && control_flag !=-1)  control_flag =1;
-            options.analog = 0;
-            if (running && control_flag == 1)
-            {
-              change_control_type();
-              control_flag =0;
-            }
-          }
-          //skip the first set then there so it doesnt change input general every time you open the options menu if using none legacy mode
-          if(control_flag ==-1) control_flag = 0;
-          break;
-
 
         case OPT_DEADZONE:
             options.deadzone = atoi(var.value);

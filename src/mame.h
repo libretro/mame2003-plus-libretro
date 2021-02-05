@@ -215,7 +215,6 @@ struct GameOptions
   unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
   bool 	   restrict_4_way;                 /* simulate 4-way joystick restrictor */
-  unsigned analog;                         /* analog enable/disable */
   unsigned deadzone;                       /* analog deadzone in percent. 20 corresponds to 20% */
   unsigned tate_mode;
 
