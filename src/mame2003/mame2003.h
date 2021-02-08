@@ -263,7 +263,7 @@ const struct JoystickInfo *osd_get_joy_list(void);
 int osd_is_joy_pressed(int joycode);
 
 
-/* We support 4 players for each analog control / trackball */
+/* We support 6 players for each analog control / trackball */
 #define OSD_MAX_JOY_ANALOG	6
 #define X_AXIS			0
 #define Y_AXIS			1
