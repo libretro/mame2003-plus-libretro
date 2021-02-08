@@ -1615,19 +1615,18 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
   retro_describe_controls();
 }
 
-#define NUMBER_OF_RETRO_TYPES (RETRO_DEVICE_ID_JOYPAD_R3 + 1)
 
 void retro_describe_controls(void)
 {
   int retro_type   = 0;
   int display_idx  = 0;
 
-  struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
+  struct retro_input_descriptor desc[(DISP_PLAYER6 * number_of_controls) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
   for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= DISP_PLAYER6); display_idx++)
   {
-    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
+    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < number_of_controls; retro_type++)
     {
       const char *control_name;
       int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type) & ~IPF_PLAYERMASK ;
