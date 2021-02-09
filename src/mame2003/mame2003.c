@@ -1646,6 +1646,7 @@ void retro_describe_controls(void)
       {
         case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
         case  RETRO_DEVICE_ID_JOYPAD_START: control_name = "Start"; break;
+        case 19:                            control_name = "LL"; break;
         default:                            control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id  ); break;
       }
 
