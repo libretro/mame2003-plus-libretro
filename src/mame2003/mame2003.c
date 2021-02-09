@@ -1063,35 +1063,35 @@ static void set_content_flags(void)
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 10) options.content_flags[CONTENT_BUTTON_COUNT] = 10;
 					break;
 				case IPT_PADDLE:
-          options.content_flags[CONTENT_PADDLE] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
-          break;
+					options.content_flags[CONTENT_PADDLE] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
+					break;
 				case IPT_DIAL:
-          options.content_flags[CONTENT_DIAL] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
+					options.content_flags[CONTENT_DIAL] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
 					break;
 				case IPT_TRACKBALL_X:
 				case IPT_TRACKBALL_Y:
-          options.content_flags[CONTENT_TRACKBALL] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
+					options.content_flags[CONTENT_TRACKBALL] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
 					break;
 				case IPT_AD_STICK_X:
 				case IPT_AD_STICK_Y:
-          options.content_flags[CONTENT_AD_STICK] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					options.content_flags[CONTENT_AD_STICK] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
 					break;
 				case IPT_LIGHTGUN_X:
 				case IPT_LIGHTGUN_Y:
-          options.content_flags[CONTENT_LIGHTGUN] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					options.content_flags[CONTENT_LIGHTGUN] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
 					break;
 				case IPT_SERVICE :
-          options.content_flags[CONTENT_HAS_SERVICE] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
+					options.content_flags[CONTENT_HAS_SERVICE] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
 					break;
 				case IPT_TILT :
-          options.content_flags[CONTENT_HAS_TILT] = true;
-          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
+					options.content_flags[CONTENT_HAS_TILT] = true;
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
 					break;
 			}
 		}
