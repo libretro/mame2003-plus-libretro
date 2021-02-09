@@ -1698,6 +1698,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     case RETRO_DEVICE_ID_JOYPAD_UP:     return (player_flag | IPT_JOYSTICK_UP);
     case RETRO_DEVICE_ID_JOYPAD_DOWN:   return (player_flag | IPT_JOYSTICK_DOWN);
 
+    case 19:   return (player_flag | IPT_JOYSTICKLEFT_LEFT);
+    case 20:   return (player_flag | IPT_JOYSTICKLEFT_RIGHT);
+    case 21:   return (player_flag | IPT_JOYSTICKLEFT_UP);
+    case 22:   return (player_flag | IPT_JOYSTICKLEFT_DOWN);
+    case 23:   return (player_flag | IPT_JOYSTICKRIGHT_LEFT);
+    case 24:   return (player_flag | IPT_JOYSTICKRIGHT_RIGHT);
+    case 25:   return (player_flag | IPT_JOYSTICKRIGHT_UP);
+    case 26:   return (player_flag | IPT_JOYSTICKRIGHT_DOWN);
+
     case RETRO_DEVICE_ID_JOYPAD_SELECT:
     {
       switch(display_idx)
