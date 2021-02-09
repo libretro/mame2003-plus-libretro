@@ -47,7 +47,7 @@ unsigned long             lastled = 0;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-int                 retroJsState[total_controllers * number_of_controls]= {0}; // initialise to zero - we are reading 6 players (6*26)
+int                 retroJsState[total_controllers * number_of_controls]= {0}; // initialise to zero - we are reading 6 players (6*27)
 int16_t             mouse_x[total_controllers]= {0};
 int16_t             mouse_y[total_controllers]= {0};
 int16_t             analogjoy[total_controllers][4]= {0};
@@ -1239,7 +1239,7 @@ void retro_run (void)
 			{
 				retroJsState[16 + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
 				retroJsState[17 + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-				retroJsState[26 + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+				retroJsState[18 + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
 				 
 				mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
 				mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
@@ -1249,6 +1249,7 @@ void retro_run (void)
 				pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
 				retroJsState[16 + offset] = pointer_pressed;
 				retroJsState[17 + offset] = 0; /* padding */
+				retroJsState[18 + offset] = 0; /* padding */
 				mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
 				mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
 			}
@@ -1257,10 +1258,10 @@ void retro_run (void)
 		{
 			retroJsState[16 + offset] = 0;
 			retroJsState[17 + offset] = 0;
+			retroJsState[18 + offset] = 0;
 		}
 
 
-		retroJsState[ 18 + offset] = 0;
 		retroJsState[ 19 + offset] = 0;
 		retroJsState[ 20 + offset] = 0;
 		retroJsState[ 21 + offset] = 0;
@@ -1268,30 +1269,31 @@ void retro_run (void)
 		retroJsState[ 23 + offset] = 0;
 		retroJsState[ 24 + offset] = 0;
 		retroJsState[ 25 + offset] = 0;
+		retroJsState[ 26 + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][0]) < -pressure_check)
-			retroJsState[ 18 + offset] = convert_analog_scale(analogjoy[i][0]);
-
-		if (convert_analog_scale(analogjoy[i][0]) >  pressure_check)
 			retroJsState[ 19 + offset] = convert_analog_scale(analogjoy[i][0]);
 
-		if (convert_analog_scale(analogjoy[i][1]) < -pressure_check)
-			retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][1]);
+		if (convert_analog_scale(analogjoy[i][0]) >  pressure_check)
+			retroJsState[ 20 + offset] = convert_analog_scale(analogjoy[i][0]);
 
-		if (convert_analog_scale(analogjoy[i][1]) >  pressure_check)
+		if (convert_analog_scale(analogjoy[i][1]) < -pressure_check)
 			retroJsState[ 21 + offset] = convert_analog_scale(analogjoy[i][1]);
 
-		if (convert_analog_scale(analogjoy[i][2]) < -pressure_check)
-			retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][2]);
+		if (convert_analog_scale(analogjoy[i][1]) >  pressure_check)
+			retroJsState[ 22 + offset] = convert_analog_scale(analogjoy[i][1]);
 
-		if (convert_analog_scale(analogjoy[i][2]) >  pressure_check)
+		if (convert_analog_scale(analogjoy[i][2]) < -pressure_check)
 			retroJsState[ 23 + offset] = convert_analog_scale(analogjoy[i][2]);
 
+		if (convert_analog_scale(analogjoy[i][2]) >  pressure_check)
+			retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][2]);
+
 		if (convert_analog_scale(analogjoy[i][3]) < -pressure_check)
-			retroJsState[ 24 + offset] = convert_analog_scale(analogjoy[i][3]);
+			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
 
 		if (convert_analog_scale(analogjoy[i][3]) >  pressure_check)
-			retroJsState[ 25 + offset] = convert_analog_scale(analogjoy[i][3]);
+			retroJsState[ 26 + offset] = convert_analog_scale(analogjoy[i][3]);
 	}
    mame_frame();
 }
@@ -1825,15 +1827,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " Select",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
   {"Mouse" #DISPLAY_IDX " LClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"Mouse" #DISPLAY_IDX " RClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 26 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 18 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 18 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 26 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
@@ -1854,15 +1856,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " Select",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
   {"Mouse" #DISPLAY_IDX " LClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"Mouse" #DISPLAY_IDX " RClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 26 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 18 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 18 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 26 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
@@ -1883,15 +1885,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " Select",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
   {"Mouse" #DISPLAY_IDX " LClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"Mouse" #DISPLAY_IDX " RClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 26 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 18 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 18 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 26 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
@@ -1912,15 +1914,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " Select",       ((DISPLAY_IDX - 1) * number_of_controls) + RETRO_DEVICE_ID_JOYPAD_SELECT +1000, JOYCODE_##DISPLAY_IDX##_SELECT}, \
   {"Mouse" #DISPLAY_IDX " LClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 16 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"Mouse" #DISPLAY_IDX " RClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 17 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 26 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 18 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
-  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"Mouse" #DISPLAY_IDX " MClick",      ((DISPLAY_IDX - 1) * number_of_controls) + 18 +1000,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 19 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 0 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 20 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 21 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 1 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 22 +2000,                            JOYCODE_##DISPLAY_IDX##_LEFT_DOWN}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X-",    ((DISPLAY_IDX - 1) * number_of_controls) + 23 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 2 X+",    ((DISPLAY_IDX - 1) * number_of_controls) + 24 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * number_of_controls) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
+  {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * number_of_controls) + 26 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYER_CTRL_COUNT] =
 {
@@ -2067,16 +2069,16 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
     {
       code = analogjoy_input[i];
 
-      if ( code == (player * number_of_controls) + 18 + 2000 || code == (player * number_of_controls) + 19 + 2000 )
+      if ( code == (player * number_of_controls) + 19 + 2000 || code == (player * number_of_controls) + 20 + 2000 )
         value = convert_analog_scale(analogjoy[player][0]);
 
-      else if ( code == (player * number_of_controls) + 20 + 2000 || code == (player * number_of_controls) + 21 + 2000 )
+      else if ( code == (player * number_of_controls) + 21 + 2000 || code == (player * number_of_controls) + 22 + 2000 )
         value = convert_analog_scale(analogjoy[player][1]);
 
-      else if ( code == (player * number_of_controls) + 22 + 2000 || code == (player * number_of_controls) + 23 + 2000 )
+      else if ( code == (player * number_of_controls) + 23 + 2000 || code == (player * number_of_controls) + 24 + 2000 )
         value = convert_analog_scale(analogjoy[player][2]);
 
-      else if ( code == (player * number_of_controls) + 24 + 2000 || code == (player * number_of_controls) + 25 + 2000 )
+      else if ( code == (player * number_of_controls) + 25 + 2000 || code == (player * number_of_controls) + 26 + 2000 )
         value = convert_analog_scale(analogjoy[player][3]);
 
       /* opposite when reversing axis mapping */
