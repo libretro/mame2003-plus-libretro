@@ -2275,6 +2275,7 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 	struct artwork_piece *piece;
 	mame_file *artfile;
 	int result;
+	int opacity;
 
 	/* reset the list of artwork */
 	num_pieces = 0;
@@ -2291,19 +2292,20 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 	/* We handle any overlay opacity options here. */
 	/* A hard-coded overlay opacity of 0 means don't show overlay. */
 	/* A negative values will use the default opacity for the overlay. */
-	int opacity = options.overlay_opacity;
+	opacity = options.overlay_opacity;
 	if (opacity != 0 && list) {
 	    if (opacity < 0) { // Default overlay opacity
 		if (!generate_overlay(list, width, height))
 		    return 0;
 	    } else { // Opacity is > 0
+                struct overlay_piece *newlist;
 		/* Count elements in list */
 		int count = 0;
 		struct overlay_piece *tmp;
 		for (tmp = list; tmp->type != OVERLAY_TYPE_END; count++)
 		    tmp++;
 		/* Create a new list we can modify */
-		struct overlay_piece *newlist = (struct overlay_piece *)
+		newlist = (struct overlay_piece *)
 				    calloc(count + 1, sizeof(struct overlay_piece));
 		memcpy(newlist, list, (count + 1)*sizeof(struct overlay_piece));
 		/* Modify opacity as set to user defined value */
@@ -3281,6 +3283,7 @@ that expects (left,top) and (right, bottom).
 ****************************************************************************/
 static int generate_right_triangle_piece(struct artwork_piece *piece, const struct overlay_piece *data, int width, int height)
 {
+	int reverse, upper;
 	int gfxwidth, gfxheight;
 	struct rectangle temprect;
 
@@ -3316,9 +3319,9 @@ static int generate_right_triangle_piece(struct artwork_piece *piece, const stru
 	erase_rect(piece->rawbitmap, &temprect, MAKE_ARGB(0,0xff,0xff,0xff));
 
 	/* work out rules for upper and reverse used in drawing the right shape */
-	int reverse = (piece->left < piece->right && piece->top > piece->bottom)
+	reverse = (piece->left < piece->right && piece->top > piece->bottom)
 	    || (piece->left > piece->right && piece->top < piece->bottom);
-	int upper = piece->left > piece->right;
+	upper = piece->left > piece->right;
 
 	/* Get the coordinates back to the drawing code expectation that */
 	/* (left, top) is top left, and (right, bottom) is bottom right */
