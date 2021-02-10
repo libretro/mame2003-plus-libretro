@@ -140,6 +140,7 @@ static INTERRUPT_GEN( sbw_interrupt )
 
 static WRITE_HANDLER (system_w)
 {
+	int offs;
 	/*
 		76543210
 		-------x flip screen/controls?
@@ -149,7 +150,6 @@ static WRITE_HANDLER (system_w)
 	*/
 	flip_screen_set(BIT(data, 3));
 
-	int offs;
 	for (offs = 0; offs < 0x4000; offs++)
 		sbw_videoram_w(offs, videoram[offs]);
 
