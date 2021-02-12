@@ -385,6 +385,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
 * Sky Diver
+* Super Slam
 * Super Spacefortress Macross
 * Teki Paki (via Toaplan samples)
 * The Karate Tournament
@@ -644,3 +645,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated RC filter in streams.c to fix sound issues newsin7 [mahoneyt944]
 * Fixed graphics / colors in Imago and added new cocktail clone [mahoneyt944]
 * Added three hoarded Sega C2 games Head On Channel, Oo Parts and Sega Sonic Bros to the segac2 driver [arcadez, grant2258]
+* Added sound support for Super Slam Tennis fixed some graphical niggles and prevent the game from crashing after winning a set [arcadez]
