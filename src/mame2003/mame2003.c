@@ -542,7 +542,7 @@ static void update_variables(bool first_time)
             options.antialias = 0;
           break;
 
-          case OPT_VECTOR_BEAM:
+        case OPT_VECTOR_BEAM:
           options.beam = atof(var.value); /* float: vector beam width */
           break;
 
@@ -606,26 +606,26 @@ static void update_variables(bool first_time)
             options.system_subfolder = false;
           break;
 
-          case OPT_CORE_SAVE_SUBFOLDER:
+        case OPT_CORE_SAVE_SUBFOLDER:
           if(strcmp(var.value, "enabled") == 0)
             options.save_subfolder = true;
           else
             options.save_subfolder = false;
           break;
 
-	    case OPT_Cheat_Input_Ports:
+        case OPT_Cheat_Input_Ports:
           if(strcmp(var.value, "enabled") == 0)
             options.cheat_input_ports = true;
           else
             options.cheat_input_ports = false;
           break;
-	    case OPT_Machine_Timing:
+        case OPT_Machine_Timing:
           if(strcmp(var.value, "enabled") == 0)
             options.machine_timing = true;
           else
             options.machine_timing = false;
           break;
-	  }
+      }
     }
   }
 
