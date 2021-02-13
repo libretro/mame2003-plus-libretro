@@ -2707,19 +2707,25 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 
 				switch(or2)
 				{
-					case JOYCODE_1_BUTTON1:		or3 = JOYCODE_MOUSE_1_BUTTON1;	break;
-					case JOYCODE_1_BUTTON2:		or3 = JOYCODE_MOUSE_1_BUTTON2;	break;
-					case JOYCODE_1_BUTTON3:		or3 = JOYCODE_MOUSE_1_BUTTON3;	break;
-					case JOYCODE_2_BUTTON1:		or3 = JOYCODE_MOUSE_2_BUTTON1;	break;
-					case JOYCODE_2_BUTTON2:		or3 = JOYCODE_MOUSE_2_BUTTON2;	break;
-					case JOYCODE_2_BUTTON3:		or3 = JOYCODE_MOUSE_2_BUTTON3;	break;
-					case JOYCODE_3_BUTTON1:		or3 = JOYCODE_MOUSE_3_BUTTON1;	break;
-					case JOYCODE_3_BUTTON2:		or3 = JOYCODE_MOUSE_3_BUTTON2;	break;
-					case JOYCODE_3_BUTTON3:		or3 = JOYCODE_MOUSE_3_BUTTON3;	break;
-					case JOYCODE_4_BUTTON1:		or3 = JOYCODE_MOUSE_4_BUTTON1;	break;
-					case JOYCODE_4_BUTTON2:		or3 = JOYCODE_MOUSE_4_BUTTON2;	break;
-					case JOYCODE_4_BUTTON3:		or3 = JOYCODE_MOUSE_4_BUTTON3;	break;
-					default:					or3 = CODE_NONE;				break;
+					case JOYCODE_1_BUTTON1:         or3 = JOYCODE_MOUSE_1_BUTTON1;         break;
+					case JOYCODE_1_BUTTON2:         or3 = JOYCODE_MOUSE_1_BUTTON2;         break;
+					case JOYCODE_1_BUTTON3:         or3 = JOYCODE_MOUSE_1_BUTTON3;         break;
+					case JOYCODE_2_BUTTON1:         or3 = JOYCODE_MOUSE_2_BUTTON1;         break;
+					case JOYCODE_2_BUTTON2:         or3 = JOYCODE_MOUSE_2_BUTTON2;         break;
+					case JOYCODE_2_BUTTON3:         or3 = JOYCODE_MOUSE_2_BUTTON3;         break;
+					case JOYCODE_3_BUTTON1:         or3 = JOYCODE_MOUSE_3_BUTTON1;         break;
+					case JOYCODE_3_BUTTON2:         or3 = JOYCODE_MOUSE_3_BUTTON2;         break;
+					case JOYCODE_3_BUTTON3:         or3 = JOYCODE_MOUSE_3_BUTTON3;         break;
+					case JOYCODE_4_BUTTON1:         or3 = JOYCODE_MOUSE_4_BUTTON1;         break;
+					case JOYCODE_4_BUTTON2:         or3 = JOYCODE_MOUSE_4_BUTTON2;         break;
+					case JOYCODE_4_BUTTON3:         or3 = JOYCODE_MOUSE_4_BUTTON3;         break;
+					case JOYCODE_5_BUTTON1:         or3 = JOYCODE_MOUSE_5_BUTTON1;         break;
+					case JOYCODE_5_BUTTON2:         or3 = JOYCODE_MOUSE_5_BUTTON2;         break;
+					case JOYCODE_5_BUTTON3:         or3 = JOYCODE_MOUSE_5_BUTTON3;         break;
+					case JOYCODE_6_BUTTON1:         or3 = JOYCODE_MOUSE_6_BUTTON1;         break;
+					case JOYCODE_6_BUTTON2:         or3 = JOYCODE_MOUSE_6_BUTTON2;         break;
+					case JOYCODE_6_BUTTON3:         or3 = JOYCODE_MOUSE_6_BUTTON3;         break;
+					default:                        or3 = CODE_NONE;                       break;
 				}
 
 				if (or1 < __code_max)
