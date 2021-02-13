@@ -2448,8 +2448,8 @@ profiler_mark(PROFILER_INPUT);
 				{
 					input_vblank[port] ^= in->mask;
 					input_port_value[port] ^= in->mask;
-if (Machine->drv->vblank_duration == 0)
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: you are using IPT_VBLANK with vblank_duration = 0. You need to increase vblank_duration for IPT_VBLANK to work.\n");
+					if (Machine->drv->vblank_duration == 0)
+						log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: you are using IPT_VBLANK with vblank_duration = 0. You need to increase vblank_duration for IPT_VBLANK to work.\n");
 				}
 				/* If it's an analog control, handle it appropriately */
 				else if (((in->type & ~IPF_MASK) > IPT_ANALOG_START)
@@ -2474,13 +2474,13 @@ if (Machine->drv->vblank_duration == 0)
 						/* skip if coin input and it's locked out */
 						if ((in->type & ~IPF_MASK) >= IPT_COIN1 &&
 							(in->type & ~IPF_MASK) <= IPT_COIN4 &&
-                            coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN1])
+							coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN1])
 						{
 							continue;
 						}
 						if ((in->type & ~IPF_MASK) >= IPT_COIN5 &&
 							(in->type & ~IPF_MASK) <= IPT_COIN8 &&
-                            coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN5 + 4])
+							coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN5 + 4])
 						{
 							continue;
 						}
@@ -2493,8 +2493,8 @@ if (Machine->drv->vblank_duration == 0)
 
 						if (in->type & IPF_IMPULSE)
 						{
-if (IP_GET_IMPULSE(in) == 0)
-	log_cb(RETRO_LOG_ERROR, LOGPRE "error in input port definition: IPF_IMPULSE with length = 0\n");
+							if (IP_GET_IMPULSE(in) == 0)
+								log_cb(RETRO_LOG_ERROR, LOGPRE "error in input port definition: IPF_IMPULSE with length = 0\n");
 							if (waspressed[ib] == 0)
 								impulsecount[ib] = IP_GET_IMPULSE(in);
 								/* the input bit will be toggled later */
