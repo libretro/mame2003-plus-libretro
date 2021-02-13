@@ -455,15 +455,15 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_ART_OVERLAY_OPACITY:
-	  if(strcmp(var.value, "default") == 0)
-	    options.overlay_opacity = ARTWORK_OVERLAY_DEFAULT;
-	  else {
-	    options.overlay_opacity = atoi(var.value);
-	    if (options.overlay_opacity < 0 )
-	      options.overlay_opacity = 0;
-	    else if (options.overlay_opacity > 255)
-	      options.overlay_opacity = 255;
-	  }
+          if(strcmp(var.value, "default") == 0)
+            options.overlay_opacity = ARTWORK_OVERLAY_DEFAULT;
+          else {
+            options.overlay_opacity = atoi(var.value);
+            if (options.overlay_opacity < 0 )
+              options.overlay_opacity = 0;
+            else if (options.overlay_opacity > 255)
+              options.overlay_opacity = 255;
+          }
           break;
 
         case OPT_STV_BIOS:
@@ -526,12 +526,12 @@ static void update_variables(bool first_time)
 
         case OPT_VECTOR_RESOLUTION:
           {
-	      int width = 0;
-	      int height = 0;
-	      sscanf(var.value, "%dx%d", &width, &height);
-	      // if they are still 0, mame will set from driver resolution set
-	      options.vector_width = width;
-	      options.vector_height = height;
+            int width = 0;
+            int height = 0;
+            sscanf(var.value, "%dx%d", &width, &height);
+            // if they are still 0, mame will set from driver resolution set
+            options.vector_width = width;
+            options.vector_height = height;
           }
           break;
 
@@ -801,32 +801,32 @@ bool retro_load_game(const struct retro_game_info *game)
 		if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
 		{
 			/* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
-         switch (fe_drivers[i].cores)
-         {
-         case 0:
-            use_cyclone = 0;
-				use_drz80_snd = 0;
-				use_drz80 = 0;
-            break;
-         case 1:
-				use_drz80_snd = 0;
-				use_drz80 = 0;
-            break;
-         case 2:
-            use_cyclone = 0;
-            break;
-         case 4:
-            use_cyclone = 0;
-				use_drz80 = 0;
-            break;
-         case 5:
-				use_drz80 = 0;
-            break;
-         default:
-            break;
-         }
+			switch (fe_drivers[i].cores)
+			{
+				case 0:
+					use_cyclone = 0;
+					use_drz80_snd = 0;
+					use_drz80 = 0;
+					break;
+				case 1:
+					use_drz80_snd = 0;
+					use_drz80 = 0;
+					break;
+				case 2:
+					use_cyclone = 0;
+					break;
+				case 4:
+					use_cyclone = 0;
+					use_drz80 = 0;
+					break;
+				case 5:
+					use_drz80 = 0;
+					break;
+				default:
+					break;
+			}
 
-         break;
+			break;
 		}
 	}
 
