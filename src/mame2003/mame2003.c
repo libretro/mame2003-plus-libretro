@@ -619,6 +619,7 @@ static void update_variables(bool first_time)
           else
             options.cheat_input_ports = false;
           break;
+
         case OPT_Machine_Timing:
           if(strcmp(var.value, "enabled") == 0)
             options.machine_timing = true;
