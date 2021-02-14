@@ -572,7 +572,7 @@ OP( 0x98, i_cbw       ) { I.regs.b[AH] = (I.regs.b[AL] & 0x80) ? 0xff : 0;		CLK(
 OP( 0x99, i_cwd       ) { I.regs.w[DW] = (I.regs.b[AH] & 0x80) ? 0xffff : 0;	CLK(4);	}
 OP( 0x9a, i_call_far  ) { UINT32 tmp, tmp2;	FETCHWORD(tmp); FETCHWORD(tmp2); PUSH(I.sregs[CS]); PUSH(I.ip); I.ip = (WORD)tmp; I.sregs[CS] = (WORD)tmp2; CHANGE_PC; CLKW(29,29,13,29,21,9,I.regs.w[SP]); }
 OP( 0x9b, i_wait      ) { log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: Hardware POLL\n",activecpu_get_pc()); }
-OP( 0x9c, i_pushf     ) { PUSH( CompressFlags() ); CLKS(12,8,3); }
+OP( 0x9c, i_pushf     ) { UINT32 flags = CompressFlags(); PUSH( flags ); CLKS(12,8,3); }
 OP( 0x9d, i_popf      ) { UINT32 tmp; POP(tmp); ExpandFlags(tmp); CLKS(12,8,5); if (I.TF) nec_trap(); }
 OP( 0x9e, i_sahf      ) { UINT32 tmp = (CompressFlags() & 0xff00) | (I.regs.b[AH] & 0xd5); ExpandFlags(tmp); CLKS(3,3,2); }
 OP( 0x9f, i_lahf      ) { I.regs.b[AH] = CompressFlags() & 0xff; CLKS(3,3,2); }

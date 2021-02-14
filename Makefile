@@ -756,6 +756,14 @@ else
 	CFLAGS += -O2 -DNDEBUG
 endif
 
+ifneq (,$(findstring msvc,$(platform)))
+ifeq ($(DEBUG),1)
+	CFLAGS += -MTd
+else
+	CFLAGS += -MT
+endif
+endif
+
 # include the various .mak files
 include Makefile.common
 
@@ -828,7 +836,6 @@ $(OBJ)/%.a:
 	@echo Archiving $@...
 	@$(RM) $@
 	$(HIDE)$(AR) cr $@ $^
-
 
 clean:
 	@echo Cleaning project...
