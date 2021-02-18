@@ -50,9 +50,9 @@ WRITE_HANDLER( cheekyms_sprite_w )
 WRITE_HANDLER( cheekyms_port_40_w )
 {
 int i;
-for(i=0; i<=0x80; i++)
+for(i=0; i < 10000000; i++)
 {
-	DAC_data_w(0, i & 0x80); /* tune                */
+	DAC_data_w(0, data & i); /* tune                */
 }
 }
 
