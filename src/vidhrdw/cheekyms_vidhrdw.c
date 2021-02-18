@@ -52,7 +52,7 @@ WRITE_HANDLER( cheekyms_port_40_w )
 int i;
 for(i=0; i<=0x80; i++)
 {
-	DAC_data_w(0, i); /* tune                */
+	DAC_data_w(0, i & 0x80); /* tune                */
 }
 }
 
