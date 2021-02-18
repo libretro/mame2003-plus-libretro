@@ -49,7 +49,7 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
-	DAC_data_w(0, BIT(data, 7)); /* tune                */
+	DAC_data_w(0, BIT(data, 5)); /* tune                */
 	DAC_data_w(1, BIT(data, 6)); /* mouse eating cheese */
 	DAC_data_w(2, BIT(data, 5)); /* hammer              */
 	DAC_data_w(3, BIT(data, 4)); /* mouse died          */
