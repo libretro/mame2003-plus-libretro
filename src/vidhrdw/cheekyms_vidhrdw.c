@@ -49,7 +49,7 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
-	DAC_data_w(0, BIT(data, 7)); /* tune                */
+	DAC_data_w(0, data & 0x80); /* tune                */
 }
 
 
