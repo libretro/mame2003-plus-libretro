@@ -49,16 +49,14 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
-	static int last_dac = -1;
-
-	/* The lower bits probably trigger sound samples */
-
-	if (last_dac != (data & 0x80))
-	{
-		last_dac = data & 0x80;
-
-		DAC_data_w(0, last_dac ? 0x80 : 0);
-	}
+	DAC_data_w(0, BIT(data, 7)); /* tune                */
+	DAC_data_w(1, BIT(data, 6)); /* mouse eating cheese */
+	DAC_data_w(2, BIT(data, 5)); /* hammer              */
+	DAC_data_w(3, BIT(data, 4)); /* mouse died          */
+	DAC_data_w(4, BIT(data, 3)); /* mystery died        */
+	DAC_data_w(5, BIT(data, 2)); /* mouse appears       */
+	DAC_data_w(6, BIT(data, 1)); /* mystery appears     */
+	DAC_data_w(7, BIT(data, 0));
 }
 
 
