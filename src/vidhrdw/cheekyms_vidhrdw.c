@@ -53,14 +53,14 @@ WRITE_HANDLER( cheekyms_port_40_w )
 
 	for(i=0; i<256; i++)
 	{
-		DAC_data_w(0, data & i); /* tune                */   
-		DAC_data_w(1, data & i); /* mouse eating cheese */
-		DAC_data_w(2, data & i); /* hammer              */
-		DAC_data_w(3, data & i); /* mouse died          */
-		DAC_data_w(4, data & i); /* mystery died        */
-		DAC_data_w(5, data & i); /* mouse appears       */
-		DAC_data_w(6, data & i); /* mystery appears     */
-		DAC_data_w(7, data & i);
+		DAC_data_w(0, BIT(data, i)); /* tune                */   
+		DAC_data_w(1, BIT(data, i)); /* mouse eating cheese */
+		DAC_data_w(2, BIT(data, i)); /* hammer              */
+		DAC_data_w(3, BIT(data, i)); /* mouse died          */
+		DAC_data_w(4, BIT(data, i)); /* mystery died        */
+		DAC_data_w(5, BIT(data, i)); /* mouse appears       */
+		DAC_data_w(6, BIT(data, i)); /* mystery appears     */
+		DAC_data_w(7, BIT(data, i));
 	}
 }
 
