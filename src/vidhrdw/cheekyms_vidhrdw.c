@@ -54,10 +54,7 @@ WRITE_HANDLER( cheekyms_port_40_w )
 	/* Assumimg unsigned, use sound triggers on 1 DAC */
 	for(i=0; i < 256; i++)
 	{
-		if(data & 0x80)
-			DAC_data_w(0, data & i);
-		else
-			DAC_data_w(0, data*2 & i);
+		if( i != 128) DAC_data_w(0, data & i);
 	}
 }
 
