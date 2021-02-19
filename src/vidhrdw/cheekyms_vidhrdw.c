@@ -51,7 +51,7 @@ WRITE_HANDLER( cheekyms_port_40_w )
 {
 	int i;
 
-	for(i=0; i < 256; i=+16)
+	for(i=128; i < 256; i++)
 	{
 		DAC_data_w(0, data & i);
 	}
