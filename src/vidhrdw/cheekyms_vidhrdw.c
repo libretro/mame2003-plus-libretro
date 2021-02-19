@@ -53,6 +53,7 @@ WRITE_HANDLER( cheekyms_port_40_w )
 
 	for(i=0; i < 256; i++)
 	{
+log_cb(RETRO_LOG_INFO, LOGPRE "data= %i  i= %i\n", data, i);
 		DAC_data_w(0, data & i);
 	}
 }
