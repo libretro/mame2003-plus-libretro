@@ -54,9 +54,9 @@ WRITE_HANDLER( cheekyms_port_40_w )
 	for(i=0; i < 256; i++)
 	{
 		if(i==80)
-			DAC_data_w(0, data & i);
+			DAC_data_w(0, BIT(data, 7));
 		else
-			DAC_data_w(1, data & i);
+			DAC_data_w(0, data & i);
 	}
 }
 
