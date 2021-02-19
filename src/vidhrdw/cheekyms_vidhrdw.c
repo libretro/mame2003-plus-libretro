@@ -49,15 +49,11 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
-	static int last_dac = -1;
+	int i;
 
-	/* The lower bits probably trigger sound samples */
-
-	if (last_dac != (data & 0x80))
+	for(i=128; i < 256; i++)
 	{
-		last_dac = data & 0x80;
-
-		DAC_data_w(0, last_dac ? 0x80 : 0);
+		DAC_data_w(0, data & i);
 	}
 }
 
