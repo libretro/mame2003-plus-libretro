@@ -62,7 +62,6 @@ WRITE_HANDLER( cheekyms_port_80_w )
 {
 	/* Bits 0-1 Sound enables, not sure which bit is which */
 	DAC_data_w(0, BIT(data, 1)); /* coin */
-	DAC_data_w(0, BIT(data, 0)); /* mute */
 
 	/* Bit 2 is interrupt enable */
 	interrupt_enable_w(offset, data & 0x04);
