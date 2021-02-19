@@ -49,7 +49,12 @@ WRITE_HANDLER( cheekyms_sprite_w )
 
 WRITE_HANDLER( cheekyms_port_40_w )
 {
-	DAC_data_w(0, 1);
+	int i;
+
+	for(i=0; i < 256; i++)
+	{
+		DAC_data_w(0, data & i);
+	}
 }
 
 
