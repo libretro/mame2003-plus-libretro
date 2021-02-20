@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define MAX_DAC 4
+#define MAX_DAC 8
 
 struct DACinterface
 {
