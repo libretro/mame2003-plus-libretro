@@ -134,7 +134,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct DACinterface dac_interface =
 {
 	8,
-	{ 100, 100, 100, 100, 100, 100, 100, 100 }
+	{ 10, 100, 100, 100, 100, 100, 100, 100 }
 };
 
 
