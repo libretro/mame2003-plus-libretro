@@ -1,17 +1,14 @@
 /* Diver Boy
  (c)1992 Device Electronics
 
- TODO:
-
- Sound doesn't seem entirely correct, but it might just be this bad in the original
 
  ----
 
  Here's the info about this dump:
 
  Name:            DiverBoy
- Manufacturer:    Unknow
- Year:            Unknow
+ Manufacturer:    Unknown
+ Year:            Unknown
  Date Dumped:     17-07-2002 (DD-MM-YYYY)
 
  CPU:             68000, Z80
@@ -72,7 +69,7 @@ static WRITE_HANDLER( okibank_w )
 	/* bit 2 might be reset */
 /*	usrintf_showmessage("%02x",data);*/
 
-	OKIM6295_set_bank_base(0,(data & 3) * 0x20000);
+	OKIM6295_set_bank_base(0,(data & 3) * 0x40000);
 }
 
 
@@ -84,7 +81,6 @@ static MEMORY_READ16_START( diverboy_readmem )
 	{ 0x180000, 0x180001, input_port_0_word_r },
 	{ 0x180002, 0x180003, input_port_1_word_r },
 	{ 0x180008, 0x180009, input_port_2_word_r },
-/*	{ 0x18000a, 0x18000b, MRA16_NOP },*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( diverboy_writemem )
@@ -93,18 +89,15 @@ static MEMORY_WRITE16_START( diverboy_writemem )
 	{ 0x080000, 0x083fff, MWA16_RAM, &diverboy_spriteram, &diverboy_spriteram_size },
 	{ 0x100000, 0x100001, soundcmd_w },
 	{ 0x140000, 0x1407ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
-/*	{ 0x18000c, 0x18000d, MWA16_NOP },*/
 	{ 0x320000, 0x3207ff, MWA16_RAM }, /* ?? */
 	{ 0x322000, 0x3227ff, MWA16_RAM }, /* ?? */
-/*	{ 0x340000, 0x340001, MWA16_NOP },*/
-/*	{ 0x340002, 0x340003, MWA16_NOP },*/
 MEMORY_END
 
 static MEMORY_READ_START( snd_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
-	{ 0xa000, 0xa000, soundlatch_r },
 	{ 0x9800, 0x9800, OKIM6295_status_0_r },
+	{ 0xa000, 0xa000, soundlatch_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( snd_writemem )
@@ -151,7 +144,7 @@ INPUT_PORTS_START( diverboy )
 	PORT_DIPNAME( 0x10, 0x10, "Display Copyright" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x60, 0x00, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0x60, 0x20, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0x20, "Normal" )
 	PORT_DIPSETTING(    0x40, "Hard" )
@@ -200,7 +193,7 @@ static struct OKIM6295interface okim6295_interface =
 	1,				/* 1 chip */
 	{ 10000 },		/* ???? frequency (Hz) */
 	{ REGION_SOUND1 },	/* memory region */
-	{ 100 }
+	{ 50 }
 };
 
 
@@ -221,7 +214,7 @@ static MACHINE_DRIVER_START( diverboy )
 
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
-	MDRV_VISIBLE_AREA(2*8, 40*8-1, 2*8, 32*8-1)
+	MDRV_VISIBLE_AREA(0*8+4, 40*8+1, 2*8, 32*8-1)
 	MDRV_PALETTE_LENGTH(0x400)
 
 	MDRV_VIDEO_START(diverboy)
@@ -251,13 +244,17 @@ ROM_START( diverboy )
 	ROM_LOAD16_BYTE( "db_06.bin", 0x040000, 0x20000, CRC(21b4e352) SHA1(a553de67e5dc751ea81ec4739724e0e46e8c5fab) )
 	ROM_LOAD16_BYTE( "db_11.bin", 0x040001, 0x20000, CRC(41d29c81) SHA1(448fd5c1b16159d03436b8bd71ffe871c8daf7fa) )
 
-	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* Sound */
-	ROM_LOAD( "db_03.bin", 0x00000, 0x80000, CRC(50457505) SHA1(faf1c055ec56d2ed7f5e6993cc04d3317bf1c3cc) )
-
-	ROM_REGION( 0x20000, REGION_SOUND2, 0 ) /* Sound */
-	ROM_LOAD( "db_04.bin", 0x00000, 0x20000, CRC(01b81da0) SHA1(914802f3206dc59a720af9d57eb2285bc8ba822b) ) /* same as tumble pop?, is this used? */
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* Sound */
+	ROM_LOAD( "db_03.bin", 0x00000, 0x20000, CRC(50457505) SHA1(faf1c055ec56d2ed7f5e6993cc04d3317bf1c3cc) )
+	ROM_CONTINUE(          0x40000, 0x20000 )
+	ROM_CONTINUE(          0x80000, 0x20000 )
+	ROM_CONTINUE(          0xc0000, 0x20000 )
+	ROM_LOAD( "db_04.bin", 0x20000, 0x20000, CRC(01b81da0) SHA1(914802f3206dc59a720af9d57eb2285bc8ba822b) ) /* same as tumble pop?, is this used? */
+	ROM_RELOAD(            0x60000, 0x20000 )
+	ROM_RELOAD(            0xa0000, 0x20000 )
+	ROM_RELOAD(            0xe0000, 0x20000 )
 ROM_END
 
 
 
-GAMEX(1992, diverboy, 0, diverboy, diverboy, 0, ORIENTATION_FLIP_X, "Electronic Devices Italy", "Diver Boy", GAME_IMPERFECT_SOUND )
+GAME(1992, diverboy, 0, diverboy, diverboy, 0, ORIENTATION_FLIP_X, "Electronic Devices Italy", "Diver Boy" )
