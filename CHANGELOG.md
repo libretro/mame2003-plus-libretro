@@ -409,6 +409,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Destination Earth - (Added lrescue.zip sample support)
 * Dig Dug
 * Dig Dug II
+* Diver Boy
 * Final Fight - Added OST soundtrack (via KMFDManic)
 * Funny Bubble - `funybubl` * Mature *
 * Galaga
@@ -651,3 +652,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Official support for the middle (3rd) mouse click [mahoneyt944]
 * Fixed colors in cheekyms and added sound triggers [mahoneyt944]
 * Fixed the infinite lives and Invulnerability cheats used by some Toaplan 1 and 2 games so they can now be used correctly via the dip switches [arcadez]
+* Fixed the sound and some graphical niggles in Diver Boy [arcadez]
