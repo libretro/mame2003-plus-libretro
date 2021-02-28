@@ -266,6 +266,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
 * Cheeky Mouse - Romset `cheekyms` - colors fixed
 * Crater Raider - Romset `crater`
+* Crazy Climber 2 - Romset `cclimbr2`
 * Demolition Derby - Romset `demoderb`
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
@@ -653,3 +654,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed colors in cheekyms and added sound triggers [mahoneyt944]
 * Fixed the infinite lives and Invulnerability cheats used by some Toaplan 1 and 2 games so they can now be used correctly via the dip switches [arcadez]
 * Fixed the sound and some graphical niggles in Diver Boy [arcadez]
+* Fixed player progress building silhouette graphics in crazy climber 2 [mahoneyt944]
