@@ -37,7 +37,7 @@ static UINT32 armedf_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 		return (col&0x1f)*32+row+0x400*(col/32);
 
 	default:
-		return 32*(31-row)+(col&0x1f)+0x400*(col/32);
+		return 32*(31-row)+(col&0x1f)+0x800*(col/32);
 	}
 }
 
