@@ -469,6 +469,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * NATO Defense
 * Safari Rally - safarir
 * Sasuke Vs Commander 
+* Sea Wolf II
 * Shark Attack
 * Space Firebird
 * Teki Paki (Toaplan Samples)
