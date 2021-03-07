@@ -118,6 +118,56 @@ WRITE_HANDLER( astrocde_colour_block_w );
 WRITE_HANDLER( ebases_trackball_select_w );
 READ_HANDLER( ebases_trackball_r );
 
+static UINT8 port_1_last;
+static UINT8 port_2_last;
+
+static MACHINE_INIT( seawolf2 )
+{
+	port_1_last = port_2_last = 0xff;
+}
+
+static WRITE_HANDLER( seawolf2_sound_1_w )  /* Port 40 */
+{
+	UINT8 rising_bits = data & ~port_1_last;
+	port_1_last = data;
+
+	if (rising_bits & 0x01) sample_start(1, 1, 0);  /* Left Torpedo */
+	if (rising_bits & 0x02) sample_start(0, 0, 0);  /* Left Ship Hit */
+	if (rising_bits & 0x04) sample_start(4, 4, 0);  /* Left Mine Hit */
+	if (rising_bits & 0x08) sample_start(6, 1, 0);  /* Right Torpedo */
+	if (rising_bits & 0x10) sample_start(5, 0, 0);  /* Right Ship Hit */
+	if (rising_bits & 0x20) sample_start(9, 4, 0);  /* Right Mine Hit */
+}
+
+
+static WRITE_HANDLER( seawolf2_sound_2_w )  /* Port 41 */
+{
+	UINT8 rising_bits = data & ~port_2_last;
+	port_2_last = data;
+
+	sample_set_volume(0, (data & 0x80) ? 100 : 0);
+	sample_set_volume(1, (data & 0x80) ? 100 : 0);
+	sample_set_volume(3, (data & 0x80) ? 100 : 0);
+	sample_set_volume(4, (data & 0x80) ? 100 : 0);
+	sample_set_volume(5, (data & 0x80) ? 100 : 0);
+	sample_set_volume(6, (data & 0x80) ? 100 : 0);
+	sample_set_volume(8, (data & 0x80) ? 100 : 0);
+	sample_set_volume(9, (data & 0x80) ? 100 : 0);
+
+	/* dive panning controlled by low 3 bits */
+	sample_set_volume(2, (float)(~data & 0x07) / 70);
+	sample_set_volume(7, (float)(data & 0x07) / 70);
+
+	if (rising_bits & 0x08)
+	{
+		sample_start(2, 2, 0);
+		sample_start(7, 2, 0);
+	}
+	if (rising_bits & 0x10) sample_start(8, 3, 0);  /* Right Sonar */
+	if (rising_bits & 0x20) sample_start(3, 3, 0);  /* Left Sonar */
+
+	coin_counter_w(0, data & 0x40);    /* Coin Counter */
+}
 
 static WRITE_HANDLER( seawolf2_lamps_w )
 {
@@ -207,7 +257,8 @@ static PORT_WRITE_START( seawolf2_writeport )
 	{ 0x0e, 0x0e, astrocde_interrupt_enable_w },
 	{ 0x0f, 0x0f, astrocde_interrupt_w },
 	{ 0x19, 0x19, astrocde_magic_expand_color_w },
-	{ 0x40, 0x41, MWA_NOP }, /* analog sound */
+	{ 0x40, 0x40, seawolf2_sound_1_w }, /* analog sound */
+	{ 0x41, 0x41, seawolf2_sound_2_w }, /* analog sound */
 	{ 0x42, 0x43, seawolf2_lamps_w },	/* cabinet lamps */
 PORT_END
 
@@ -576,7 +627,23 @@ INPUT_PORTS_START( robby )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
+static const char *seawolf_sample_names[] =
+{
+	"*seawolf",
+	"shiphit.wav",
+	"torpedo.wav",
+	"dive.wav",
+	"sonar.wav",
+	"minehit.wav",
+	0       /* end of array */
+};
 
+struct Samplesinterface seawolf2_samples_interface =
+{
+	10,	/* 5*2 channels */
+	25,	/* volume */
+	seawolf_sample_names
+};
 
 static struct Samplesinterface wow_samples_interface =
 {
@@ -621,8 +688,6 @@ static struct CustomSound_interface wow_custom_interface =
 };
 
 
-
-
 static MACHINE_DRIVER_START( seawolf2 )
 
 	/* basic machine hardware */
@@ -633,6 +698,7 @@ static MACHINE_DRIVER_START( seawolf2 )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_MACHINE_INIT(seawolf2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -645,6 +711,7 @@ static MACHINE_DRIVER_START( seawolf2 )
 	MDRV_VIDEO_UPDATE(seawolf2)
 
 	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, seawolf2_samples_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( spacezap )
@@ -937,7 +1004,7 @@ static DRIVER_INIT( gorf )
 }
 
 
-GAMEX(1978, seawolf2, 0,    seawolf2, seawolf2, seawolf2, ROT0,   "Midway", "Sea Wolf II", GAME_NO_SOUND )
+GAME( 1978, seawolf2, 0,    seawolf2, seawolf2, seawolf2, ROT0,   "Midway", "Sea Wolf II" )
 GAME( 1980, spacezap, 0,    spacezap, spacezap, 0,        ROT0,   "Midway", "Space Zap" )
 GAME( 1980, ebases,   0,    ebases,   ebases,   ebases,   ROT0,   "Midway", "Extra Bases" )
 GAME( 1980, wow,      0,    wow,      wow,      wow,      ROT0,   "Midway", "Wizard of Wor" )
