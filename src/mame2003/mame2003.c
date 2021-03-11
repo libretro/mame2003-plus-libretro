@@ -142,40 +142,6 @@ static void   check_system_specs(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
        int    convert_analog_scale(int input);
 
-int convert_analog_scale(int input)
-{
-	static const int TRIGGER_MAX = 0x8000;
-	int neg_test=0;
-	float scale;
-	int trigger_deadzone;
-
-	trigger_deadzone = (32678 * options.deadzone) / 100;
-
-	if (input < 0) { input =abs(input); neg_test=1; }
-	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
-
-	if ( input > 0 && input > trigger_deadzone )
-	{
-		// Re-scale analog range
-		float scaled = (input - trigger_deadzone)*scale;
-    input = (int)round(scaled);
-
-		if (input > +32767)
-		{
-			input = +32767;
-		}
-		input = input / 327.68;
-	}
-
-	else
-	{
-		input = 0;
-	}
-
-
-	if (neg_test) input =-abs(input);
-	return (int) input * 1.28;
-}
 
 /******************************************************************************
 
@@ -2099,6 +2065,40 @@ const char *osd_joystick_calibrate_next(void) { return 0; }
 void osd_joystick_calibrate(void) { }
 void osd_joystick_end_calibration(void) { }
 
+int convert_analog_scale(int input)
+{
+	static const int TRIGGER_MAX = 0x8000;
+	int neg_test=0;
+	float scale;
+	int trigger_deadzone;
+
+	trigger_deadzone = (32678 * options.deadzone) / 100;
+
+	if (input < 0) { input =abs(input); neg_test=1; }
+	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
+
+	if ( input > 0 && input > trigger_deadzone )
+	{
+		// Re-scale analog range
+		float scaled = (input - trigger_deadzone)*scale;
+    input = (int)round(scaled);
+
+		if (input > +32767)
+		{
+			input = +32767;
+		}
+		input = input / 327.68;
+	}
+
+	else
+	{
+		input = 0;
+	}
+
+
+	if (neg_test) input =-abs(input);
+	return (int) input * 1.28;
+}
 
 /******************************************************************************
 
