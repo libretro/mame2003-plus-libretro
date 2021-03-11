@@ -1891,7 +1891,7 @@ V-V                           TP-027
 	/* Cave games */
 	/* Cave was formed in 1994 from the ruins of Toaplan, like Raizing was. */
 	DRIVER( pwrinst2 )	/* (c) 1994 Atlus */
-	DRIVER( plegends )	/* (c) 1995 Atlus */
+//	DRIVER( plegends )	/* (c) 1995 Atlus */
 	DRIVER( mazinger )	/* (c) 1994 Banpresto (country is in EEPROM) */
 	DRIVER( donpachi )	/* (c) 1995 Atlus/Cave */
 	DRIVER( donpachj )	/* (c) 1995 Atlus/Cave */
@@ -1904,16 +1904,16 @@ V-V                           TP-027
 	DRIVER( hotdogst )	/* (c) 1996 Marble */
 	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
 	DRIVER( ddonpchj )	/* (c) 1997 Atlus/Cave */
-	DRIVER( ddonpacha )	/* (c) 2012 Trap15 Hack */
+	//DRIVER( ddonpacha )	/* (c) 2012 Trap15 Hack */
 	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
 	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
 	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
 	DRIVER( espradeo )	/* (c) 1998 Atlus/Cave (Japan) */
 	DRIVER( uopoko )	/* (c) 1998 Cave + Jaleco license */
 	DRIVER( guwange )	/* (c) 1999 Atlus/Cave */
-	DRIVER( guwanges )	/* (c) 2000 Atlus/Cave */
+	//DRIVER( guwanges )	/* (c) 2000 Atlus/Cave */
 	DRIVER( gaia )		/* (c) 1999 Noise Factory */
-	DRIVER( theroes )	/* (c) 2001 Primetek Investmants */
+	//DRIVER( theroes )	/* (c) 2001 Primetek Investmants */
 
 	/* Kyugo games */
 	/* Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf. */
