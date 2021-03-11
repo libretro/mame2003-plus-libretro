@@ -6,8 +6,9 @@
 
 *********************************************************************/
 
-#define number_of_controls 27
-#define total_controllers   6
+#define number_of_controls    27
+#define total_controllers     6
+#define number_of_input_types 4   /* has to be updated manually! */
 
 #include <stdint.h>
 #include <string/stdstring.h>
@@ -67,6 +68,14 @@ static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1800
+double round(double number)
+{
+  return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
+}
+#endif
+#endif
 
 /******************************************************************************
 
@@ -131,7 +140,42 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
+       int    convert_analog_scale(int input);
 
+int convert_analog_scale(int input)
+{
+	static const int TRIGGER_MAX = 0x8000;
+	int neg_test=0;
+	float scale;
+	int trigger_deadzone;
+
+	trigger_deadzone = (32678 * options.deadzone) / 100;
+
+	if (input < 0) { input =abs(input); neg_test=1; }
+	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
+
+	if ( input > 0 && input > trigger_deadzone )
+	{
+		// Re-scale analog range
+		float scaled = (input - trigger_deadzone)*scale;
+    input = (int)round(scaled);
+
+		if (input > +32767)
+		{
+			input = +32767;
+		}
+		input = input / 327.68;
+	}
+
+	else
+	{
+		input = 0;
+	}
+
+
+	if (neg_test) input =-abs(input);
+	return (int) input * 1.28;
+}
 
 /******************************************************************************
 
@@ -705,11 +749,13 @@ void retro_get_system_info(struct retro_system_info *info)
 #define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
+
 static struct retro_controller_description controllers[] = {
   { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
+  { NULL, 0 },
 };
 
 static struct retro_controller_description unsupported_controllers[] = {
@@ -717,15 +763,16 @@ static struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
+  { NULL, 0 },
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
+  { controllers, number_of_input_types },
+  { controllers, number_of_input_types },
+  { controllers, number_of_input_types },
+  { controllers, number_of_input_types },
+  { controllers, number_of_input_types },
+  { controllers, number_of_input_types },
   { 0 },
 };
 
@@ -1084,7 +1131,7 @@ static void set_content_flags(void)
 				case IPT_LIGHTGUN_X:
 				case IPT_LIGHTGUN_Y:
 					options.content_flags[CONTENT_LIGHTGUN] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using lightgun controls.\n");
 					break;
 				case IPT_SERVICE :
 					options.content_flags[CONTENT_HAS_SERVICE] = true;
@@ -2001,59 +2048,10 @@ if (joycode >= 2000  && joycode < 3000)  return 1;
 	return 0;
 }
 
-void osd_lightgun_read(int player, int *deltax, int *deltay)
-{
-
-}
-
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
     *deltax = mouse_x[player];
     *deltay = mouse_y[player];
-}
-
-#ifdef _MSC_VER
-#if _MSC_VER < 1800
-double round(double number)
-{
-  return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
-}
-#endif
-#endif
-
-int convert_analog_scale(int input)
-{
-	static const int TRIGGER_MAX = 0x8000;
-	int neg_test=0;
-	float scale;
-	int trigger_deadzone;
-
-	trigger_deadzone = (32678 * options.deadzone) / 100;
-
-	if (input < 0) { input =abs(input); neg_test=1; }
-	scale = ((float)TRIGGER_MAX/(float)(TRIGGER_MAX - trigger_deadzone));
-
-	if ( input > 0 && input > trigger_deadzone )
-	{
-		// Re-scale analog range
-		float scaled = (input - trigger_deadzone)*scale;
-    input = (int)round(scaled);
-
-		if (input > +32767)
-		{
-			input = +32767;
-		}
-		input = input / 327.68;
-	}
-
-	else
-	{
-		input = 0;
-	}
-
-
-	if (neg_test) input =-abs(input);
-	return (int) input * 1.28;
 }
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
@@ -2100,6 +2098,30 @@ void osd_joystick_start_calibration(void){ }
 const char *osd_joystick_calibrate_next(void) { return 0; }
 void osd_joystick_calibrate(void) { }
 void osd_joystick_end_calibration(void) { }
+
+
+/******************************************************************************
+
+	Lightgun
+
+******************************************************************************/
+
+/******************************************************************************
+    The OSD lightgun call should return the delta from the middle of the screen
+		when the gun is fired (not the absolute pixel value), and 0 when the gun is
+		inactive.  
+    
+    When the OSD lightgun returns 0, control passes through to the analog joystick,
+    and mouse, in that order.  In other words, when the OSD lightgun returns a 
+    value it overrides both mouse & analog joystick.
+
+		The value returned by the OSD layer should be -128 to 128, same as analog
+		joysticks.
+*******************************************************************************/
+void osd_lightgun_read(int player, int *deltax, int *deltay)
+{
+
+}
 
 
 /******************************************************************************
