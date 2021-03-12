@@ -72,6 +72,7 @@ write:
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/i8039/i8039.h"
+#include "artwork.h"
 
 
 
@@ -113,6 +114,14 @@ struct Samplesinterface frogs_samples_interface;
 WRITE_HANDLER( frogs_sh_port2_w );
 void croak_callback(int param);
 mame_timer *croak_timer;
+
+#define OVERLAY_LTR_BLUE        MAKE_ARGB(0x04,0x2f,0x6d,0xa5)
+
+/* Overlay based on sources: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1701&image=1 */
+OVERLAY_START( depthch_overlay )
+    OVERLAY_RECT(  0, 0,  256, 224, OVERLAY_LTR_BLUE )
+OVERLAY_END
 
 static MACHINE_INIT( frogs )
 {
@@ -1987,6 +1996,9 @@ static DRIVER_INIT( depthch )
 	install_port_write_handler(0, 0x04, 0x04, depthch_sh_port1_w);
 
 	vicdual_decode();
+
+	artwork_set_overlay(depthch_overlay);
+
 }
 
 static DRIVER_INIT( samurai )
