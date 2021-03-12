@@ -138,6 +138,7 @@ else ifneq (,$(findstring ios,$(platform)))
 	fpic = -fPIC
 	LDFLAGS += $(fpic) -dynamiclib
 	PLATCFLAGS += -D__IOS__ -Wcast-align -Wall -Wno-error=implicit-function-declaration
+	MINVERSION :=
 	ifeq ($(IOSSDK),)
 		IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 	endif
@@ -149,14 +150,12 @@ else ifneq (,$(findstring ios,$(platform)))
 		LD = cc -arch armv7 -isysroot $(IOSSDK)
 	endif
 	ifeq ($(platform),$(filter $(platform),ios9 ios-arm64))
-		fpic += -miphoneos-version-min=8.0
-		CC += -miphoneos-version-min=8.0
-		LD += -miphoneos-version-min=8.0
+		MINVERSION = -miphoneos-version-min=8.0
 	else
-		fpic += -miphoneos-version-min=5.0
-		CC += -miphoneos-version-min=5.0
-		LD += -miphoneos-version-min=5.0
+		MINVERSION = -miphoneos-version-min=5.0
 	endif
+	CFLAGS += $(MINVERSION)
+	LDFLAGS += $(MINVERSION)
 
 # tvOS
 else ifeq ($(platform), tvos-arm64)
@@ -167,6 +166,7 @@ else ifeq ($(platform), tvos-arm64)
 	ifeq ($(IOSSDK),)
 		IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
 	endif
+	CC = cc -arch arm64 -isysroot $(IOSSDK)
 
 # Raspberry Pi 0
 else ifeq ($(platform), rpi0)
