@@ -6,6 +6,7 @@ Atari Fire Truck + Super Bug + Monte Carlo driver
 
 #include "driver.h"
 #include "firetrk.h"
+#include "artwork.h"
 
 /* from src\sndhrdw\ataridis.c */
 extern struct discrete_sound_block firetrk_sound_interface[];
@@ -18,15 +19,37 @@ static int steer_flag[2];
 static int attract;
 static int gear;
 
+#define OVERLAY_GREEN           MAKE_ARGB(0x04,0x20,0xff,0x20)
+#define OVERLAY_YELLOW          MAKE_ARGB(0x04,0xff,0xff,0x20)
+
+/* Overlay comes from these sources: */
+/* https://www.youtube.com/watch?v=qLV6xV3rhbE */
+/* https://www.youtube.com/watch?v=N61Lacr9IGs */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=3856&image=2 */
+/* The overlay on the car is originally slightly spikey and larger */
+/* than the car, but this is really larger due to difficulty */
+/* putting physical overlays in the right spot on a monitor. */
+/* We do a little better here by making it just fit, so */
+/* there is less bleed close to edges when driving. */
+OVERLAY_START( superbug_overlay )
+    OVERLAY_RECT( 0, 0, 4*8, 30*8, OVERLAY_GREEN )
+    OVERLAY_RECT( 36*8, 0, 40*8, 30*8, OVERLAY_GREEN )
+    OVERLAY_DISK( 20*8, 15*8, 2*8+1, OVERLAY_YELLOW )
+OVERLAY_END
 
 static DRIVER_INIT( firetrk )
 {
 	firetrk_game = 1;
+	// Note that fire truck does not have an overlay
+	// on the real machine. It was purely B&W.
 }
+
 static DRIVER_INIT( superbug )
 {
 	firetrk_game = 2;
+	artwork_set_overlay(superbug_overlay);
 }
+
 static DRIVER_INIT( montecar )
 {
 	firetrk_game = 3;
