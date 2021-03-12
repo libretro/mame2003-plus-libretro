@@ -32,6 +32,15 @@
 /*   - sstranger (including coctail variant)                              */
 /*   - yosakdon, yosakdoa                                                 */
 /* - Added internal comments on overlays to show source of overlay.       */
+/*                                                                        */
+/* 26 Dec 2020                                                            */
+/*                                                                        */
+/* - Added overlay for:                                                   */
+/*   - seawolf                                                            */
+/* - Confirmed the following did not have coloured overlays:              */
+/*   - blueshrk                                                           */
+/*   - bowler                                                             */
+/*   - desertgu                                                           */
 /**************************************************************************/
 
 #include "driver.h"
@@ -376,6 +385,14 @@ OVERLAY_START( galxwars_overlay )
 OVERLAY_END
 
 
+/* Overlay based on actual arcade video sources: */
+/* https://www.youtube.com/watch?v=sOfa4q3cobM */
+/* https://www.youtube.com/watch?v=XditKdC7G4I&t=238s */
+OVERLAY_START( seawolf_overlay )
+	OVERLAY_RECT(   0, 0, 256, 224, OVERLAY_BLUE )
+OVERLAY_END
+
+
 DRIVER_INIT( 8080bw )
 {
 	videoram_w_p = bw_videoram_w;
@@ -504,6 +521,7 @@ DRIVER_INIT( seawolf )
 {
 	init_8080bw();
 	video_update_p = video_update_seawolf;
+	artwork_set_overlay(seawolf_overlay);
 }
 
 DRIVER_INIT( blueshrk )
