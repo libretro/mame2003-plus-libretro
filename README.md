@@ -6,7 +6,7 @@ MAME 2003-Plus (also referred to as MAME 2003+ and mame2003-plus) is a libretro 
 In order to take advantage of the performance and lower hardware requirements of an earlier MAME architecture, MAME 2003-Plus began with the MAME 2003 codebase which is itself derived from xmame 0.78. Upon that base, MAME 2003-Plus contributors have backported support for an additional 350 games, as well as other functionality not originally present in the underlying codebase.
 
 ## What games are supported?
-View our [live compatibility table](https://buildbot.libretro.com/compatibility_lists/cores/mame2003-plus/mame2003-plus.html) built by datmagic, created by the MAME 2003-Plus team. Datmagic auto generates a compatibility table based on the latest XML DAT file. See an incorrect entry? Create a new issue to let us know! This allows us to keep the compatibility table as accurate as possible by fixing it at the source.
+View our [live compatibility table](https://buildbot.libretro.com/compatibility_lists/cores/mame2003-plus/mame2003-plus.html) built using datmagic, a tool created by the MAME 2003-Plus team. Datmagic auto generates a compatibility table based on the latest XML DAT file. See an incorrect entry? Create a new issue to let us know! This allows us to keep the compatibility table as accurate as possible by fixing it at the source.
 
 **Authors:** MAMEdev, MAME 2003-Plus team, et al (see [LICENSE.md](https://raw.githubusercontent.com/libretro/mame2003-plus-libretro/master/LICENSE.md) and [CHANGELOG.md](https://raw.githubusercontent.com/libretro/mame2003-plus-libretro/master/CHANGELOG.md))
 
