@@ -101,34 +101,34 @@ upright and cocktail modes.
 	{ OVERLAY_TYPE_END } };
 
 #define OVERLAY_RECT(l,t,r,b,c) \
-	{ OVERLAY_TAG, OVERLAY_TYPE_RECTANGLE, (c), (l), (t), (r), (b) },
+	{ (char *) OVERLAY_TAG, OVERLAY_TYPE_RECTANGLE, (c), (l), (t), (r), (b) },
 
 #define OVERLAY_DISK(x,y,r,c) \
-	{ OVERLAY_TAG, OVERLAY_TYPE_DISK, (c), (x), (y), (r), 0 },
+	{ (char *) OVERLAY_TAG, OVERLAY_TYPE_DISK, (c), (x), (y), (r), 0 },
 
 #define OVERLAY_DISK_NOBLEND(x,y,r,c) \
-	{ OVERLAY_TAG, OVERLAY_TYPE_DISK | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (r), 0 },
+	{ (char *) OVERLAY_TAG, OVERLAY_TYPE_DISK | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (r), 0 },
 
 #define OVERLAY_TRI(x,y,z,w,c) \
-	{ OVERLAY_TAG, OVERLAY_TYPE_RIGHT_TRIANGLE, (c), (x), (y), (z), (w) },
+	{ (char *) OVERLAY_TAG, OVERLAY_TYPE_RIGHT_TRIANGLE, (c), (x), (y), (z), (w) },
 
 #define OVERLAY_TRI_NOBLEND(x,y,z,w,c) \
-	{ OVERLAY_TAG, OVERLAY_TYPE_RIGHT_TRIANGLE | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (z), (w) },
+	{ (char *) OVERLAY_TAG, OVERLAY_TYPE_RIGHT_TRIANGLE | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (z), (w) },
 
 #define OVERLAY_RECT_TAG(tag, l,t,r,b,c) \
-	{ (tag), OVERLAY_TYPE_RECTANGLE, (c), (l), (t), (r), (b) },
+	{ (char *) (tag), OVERLAY_TYPE_RECTANGLE, (c), (l), (t), (r), (b) },
 
 #define OVERLAY_DISK_TAG(tag, x,y,r,c) \
-	{ (tag), OVERLAY_TYPE_DISK, (c), (x), (y), (r), 0 },
+	{ (char *) (tag), OVERLAY_TYPE_DISK, (c), (x), (y), (r), 0 },
 
 #define OVERLAY_DISK_NOBLEND_TAG(tag, x,y,r,c) \
-	{ (tag), OVERLAY_TYPE_DISK | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (r), 0 },
+	{ (char *) (tag), OVERLAY_TYPE_DISK | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (r), 0 },
 
 #define OVERLAY_TRI_TAG(tag,x,y,z,w,c) \
-	{ (tag), OVERLAY_TYPE_RIGHT_TRIANGLE, (c), (x), (y), (z), (w) },
+	{ (char *) (tag), OVERLAY_TYPE_RIGHT_TRIANGLE, (c), (x), (y), (z), (w) },
 
 #define OVERLAY_TRI_NOBLEND_TAG(tag,x,y,z,w,c) \
-	{ (tag), OVERLAY_TYPE_RIGHT_TRIANGLE | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (z), (w) },
+	{ (char *) (tag), OVERLAY_TYPE_RIGHT_TRIANGLE | OVERLAY_FLAG_NOBLEND, (c), (x), (y), (z), (w) },
 
 
 /***************************************************************************
