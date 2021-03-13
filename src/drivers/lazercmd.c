@@ -424,22 +424,44 @@ static READ_HANDLER( lazercmd_hardware_r )
 
 /*************************************************************
  *
- * Video overlay
+ * Video overlays
  *
  *************************************************************/
 
-#define JADE	MAKE_ARGB(0x04,0x2e,0xff,0x2e)
+#define JADE	MAKE_ARGB(0x04,0x6f,0xa4,0x78)
 #define MUSTARD MAKE_ARGB(0x04,0xff,0xb9,0x2e)
 
+/* Overlay based on: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1752&image=1 */
+/* The old overlay had colours the reverse of what was shown above */
+/* and also had the green overlay far too bright. This is closer to the */
+/* colours shown in the flyer. Note the flyer seems to have a slight */
+/* variation of the game, where the walls are solid; this does not seem */
+/* to be an option. */
 OVERLAY_START( lazercmd_overlay )
-	OVERLAY_RECT(  0*HORZ_CHR,  0*VERT_CHR, 16*HORZ_CHR,  1*VERT_CHR, MUSTARD )
-	OVERLAY_RECT( 16*HORZ_CHR,  0*VERT_CHR, 32*HORZ_CHR,  1*VERT_CHR, JADE )
-	OVERLAY_RECT(  0*HORZ_CHR,  1*VERT_CHR, 16*HORZ_CHR, 22*VERT_CHR, JADE )
-	OVERLAY_RECT( 16*HORZ_CHR,  1*VERT_CHR, 32*HORZ_CHR, 22*VERT_CHR, MUSTARD )
-	OVERLAY_RECT(  0*HORZ_CHR, 22*VERT_CHR, 16*HORZ_CHR, 23*VERT_CHR, MUSTARD )
-	OVERLAY_RECT( 16*HORZ_CHR, 22*VERT_CHR, 32*HORZ_CHR, 23*VERT_CHR, JADE )
+	OVERLAY_RECT(  0*HORZ_CHR,  0*VERT_CHR,     16*HORZ_CHR,  1*VERT_CHR - 1, JADE )
+	OVERLAY_RECT( 16*HORZ_CHR,  0*VERT_CHR,     32*HORZ_CHR,  1*VERT_CHR - 1, MUSTARD )
+	OVERLAY_RECT(  0*HORZ_CHR,  1*VERT_CHR - 1, 16*HORZ_CHR, 22*VERT_CHR,     MUSTARD )
+	OVERLAY_RECT( 16*HORZ_CHR,  1*VERT_CHR - 1, 32*HORZ_CHR, 22*VERT_CHR,     JADE )
+	OVERLAY_RECT(  0*HORZ_CHR, 22*VERT_CHR,     16*HORZ_CHR, 23*VERT_CHR,     JADE )
+	OVERLAY_RECT( 16*HORZ_CHR, 22*VERT_CHR,     32*HORZ_CHR, 23*VERT_CHR,     MUSTARD )
 OVERLAY_END
 
+#define GREEN	MAKE_ARGB(0x04,0x20,0xff,0x20)
+
+/* Overlay based on: */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1753&image=1 */
+/* https://www.arcade-museum.com/game_detail.php?game_id=8653 */
+/* Basically a green screen. There is a dipswitch option to turn off the */
+/* colour overlay, though this can also be done using artwork settings. */
+OVERLAY_START( medlanes_overlay )
+	OVERLAY_RECT( 0*HORZ_CHR, 0*VERT_CHR, 32*HORZ_CHR, 23*VERT_CHR, GREEN )
+OVERLAY_END
+
+/* Note that there is no evidence of there ever being an overlay for */
+/* Bigfoot Bonkers (bbonk). It seems to be purely black and white. See: */
+/* https://www.youtube.com/watch?v=OIorS22v60M */
+/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1746&image=1 */
 
 
 static MEMORY_WRITE_START( lazercmd_writemem )
@@ -573,7 +595,7 @@ INPUT_PORTS_START( medlanes )
 	PORT_DIPNAME( 0x40, 0x00, "Marker Size" )
 	PORT_DIPSETTING(	0x00, "Small" )
 	PORT_DIPSETTING(	0x40, "Large" )
-	PORT_DIPNAME( 0x80, 0x00, "Color Overlay" )
+	PORT_DIPNAME( 0x80, 0x80, "Color Overlay" )
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
 
@@ -725,6 +747,7 @@ static MACHINE_DRIVER_START( medlanes )
 	MDRV_PALETTE_LENGTH(3)
 	MDRV_COLORTABLE_LENGTH(2*2)
 
+	MDRV_PALETTE_INIT(lazercmd)
 	MDRV_VIDEO_START(lazercmd)
 	MDRV_VIDEO_UPDATE(lazercmd)
 
@@ -857,6 +880,8 @@ unsigned char *s = &memory_region(REGION_GFX1)[4 * 64 * 10 + i * VERT_FNT];
 DRIVER_INIT( medlanes )
 {
 int i, y;
+
+	artwork_set_overlay(medlanes_overlay);
 
 /******************************************************************
  * The ROMs are 1K x 4 bit, so we have to mix
