@@ -1132,20 +1132,8 @@ READ32_HANDLER( midvunit_videoram_r )
 
 WRITE32_HANDLER( midvunit_paletteram_w )
 {
-	int newword, r, g, b;
-
 	COMBINE_DATA(&paletteram32[offset]);
-	newword = paletteram32[offset];
-
-	r = (newword >> 10) & 0x1f;
-	g = (newword >>  5) & 0x1f;
-	b = (newword      ) & 0x1f;
-
-	r = (r << 3) | (r >> 2);
-	g = (g << 3) | (g >> 2);
-	b = (b << 3) | (b >> 2);
-
-	palette_set_color(offset, r, g, b);
+	palette_set_color(offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
 
