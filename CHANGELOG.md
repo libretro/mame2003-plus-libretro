@@ -22,6 +22,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bomb Kick
 * Boogie Wings
 * Botanic (English / Spanish set 1)
+* Bubble Bobble 2 - The Return Of Super Drunk (prototype)
 * Cabal (World, Joystick version)
 * Chain Reaction
 * Charlie Ninja
@@ -29,6 +30,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
 * Cookie & Bibi
+* Command War - Super Special Battle & War Game (prototype)
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Cute Fighter
@@ -108,6 +110,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzzle Star
 * Racing Beat
 * Rage Of The Dragons
+* Recalhorn (prototype)
 * Riot
 * Rolling Crush
 * Rumba Lumber
@@ -656,3 +659,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed the infinite lives and Invulnerability cheats used by some Toaplan 1 and 2 games so they can now be used correctly via the dip switches [arcadez]
 * Fixed the sound and some graphical niggles in Diver Boy [arcadez]
 * Fixed player progress building silhouette graphics in crazy climber 2 [mahoneyt944]
+* Added three prototypes not supported in MAME78 to the taito_f3 driver [arcadez]
