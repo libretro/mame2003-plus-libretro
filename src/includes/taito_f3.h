@@ -34,5 +34,7 @@ enum {
 	PUCHICAR,	/* E46 */
 	PBOBBLE4,	/* E49 */
 	POPNPOP,	/* E51 */
-	LANDMAKR	/* E61 */
+	LANDMAKR,	/* E61 */
+	RECALH,		/* prototype */
+	COMMANDW	/* prototype */
 };
