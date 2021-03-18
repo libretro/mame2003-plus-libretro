@@ -1746,6 +1746,9 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( popnpopu )	/* E51 (c) 1997 Taito Corporation (US) */
 	DRIVER( landmakr )	/* E61 (c) 1998 Taito Corporation (Japan) */
 	DRIVER( landmkrp )	/* E61 (c) 1998 Taito Corporation (World, prototype) */
+  DRIVER( recalh )	/* prototype */
+	DRIVER( commandw )	/* prototype */
+	DRIVER( bublbob2p ) /* prototype */
 
 	/* Toaplan games */
 	DRIVER( perfrman )	/* (c) 1985 Data East Corporation (Japan) */
