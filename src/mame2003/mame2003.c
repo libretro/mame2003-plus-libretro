@@ -42,10 +42,10 @@ unsigned long             lastled = 0;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-int                 retroJsState[TOTAL_CONTROLLERS * NUMBER_OF_CONTROLS]= {0}; /* initialise to zero - we are reading 6 players (6*27) */
-int16_t             mouse_x[TOTAL_CONTROLLERS]= {0};
-int16_t             mouse_y[TOTAL_CONTROLLERS]= {0};
-int16_t             analogjoy[TOTAL_CONTROLLERS][4]= {0};
+int                 retroJsState[MAX_PLAYER_COUNT * NUMBER_OF_CONTROLS]= {0}; /* initialise to zero - we are reading 6 players (6*27) */
+int16_t             mouse_x[MAX_PLAYER_COUNT]= {0};
+int16_t             mouse_y[MAX_PLAYER_COUNT]= {0};
+int16_t             analogjoy[MAX_PLAYER_COUNT][4]= {0};
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 int                 running = 0;
 int                 legacy_flag=-1;
@@ -755,6 +755,8 @@ static void remove_slash (char* temp)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
+  int i;
+
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
@@ -1212,7 +1214,7 @@ void retro_run (void)
 		thisInput ++;
 	}
 
-	for (i = 0; i < TOTAL_CONTROLLERS; i ++)
+	for (i = 0; i < MAX_PLAYER_COUNT; i ++)
 	{
 		unsigned int offset = (i * NUMBER_OF_CONTROLS);
 
@@ -1922,7 +1924,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " AXIS 3 Y-",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + 25 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_UP}, \
   {"RP"   #DISPLAY_IDX " AXIS 3 Y+",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + 26 +2000,                            JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
-struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYER_CTRL_COUNT] =
+struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_PAD_end][PER_PLAYER_CTRL_COUNT] =
 {
   {{EMIT_RETROPAD_CLASSIC(1)},{EMIT_RETROPAD_MODERN(1)},{EMIT_RETROPAD_8BUTTON(1)},{EMIT_RETROPAD_6BUTTON(1)}},
   {{EMIT_RETROPAD_CLASSIC(2)},{EMIT_RETROPAD_MODERN(2)},{EMIT_RETROPAD_8BUTTON(2)},{EMIT_RETROPAD_6BUTTON(2)}},
@@ -1938,7 +1940,7 @@ struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYE
 
 ******************************************************************************/
 
-struct JoystickInfo mame_joy_map[(PLAYER_COUNT * PER_PLAYER_CTRL_COUNT) + 1]; /* + 1 for final zeroed struct */
+struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * PER_PLAYER_CTRL_COUNT) + 1]; /* + 1 for final zeroed struct */
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {

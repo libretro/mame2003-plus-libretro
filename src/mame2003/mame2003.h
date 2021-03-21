@@ -63,7 +63,6 @@ extern "C" {
 #define APPNAME					"mame2003-plus"
 
 #define NUMBER_OF_CONTROLS    27
-#define TOTAL_CONTROLLERS     6
 #define NUMBER_OF_INPUT_TYPES 4   /* has to be updated manually! */
 
 #define PRESSURE_CHECK        25      /* (int)1.28 * 20 */
@@ -76,16 +75,14 @@ extern "C" {
 #define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
-/* We support 6 players for each analog control / trackball */
-#define OSD_MAX_JOY_ANALOG	6
-
 #define X_AXIS          0
 #define Y_AXIS          1
 #define Z_AXIS          2
 #define PEDAL_AXIS      3
 #define MAX_ANALOG_AXES	4
 
-#define PLAYER_COUNT 6
+/* We support a maximum of six simultaneous players */
+#define MAX_PLAYER_COUNT 6
 
 enum
 {
