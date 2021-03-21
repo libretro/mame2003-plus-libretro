@@ -49,6 +49,33 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
+/***************************************************************************
+
+	Parameters
+
+***************************************************************************/
+
+#define FRAMES_PER_FPS_UPDATE		12
+
+#define MAX_GFX_ELEMENTS 32
+#define MAX_MEMORY_REGIONS 32
+
+#define APPNAME					"mame2003-plus"
+
+#define NUMBER_OF_CONTROLS    27
+#define TOTAL_CONTROLLERS     6
+#define NUMBER_OF_INPUT_TYPES 4   /* has to be updated manually! */
+
+#define PRESSURE_CHECK        25      /* (int)1.28 * 20 */
+
+#define DIRECTIONAL_COUNT         12  /* map Left, Right Up, Down as well as B, Y, A, X */
+#define DIRECTIONAL_COUNT_NO_DBL  4
+#define BUTTON_COUNT_PER          12  /* 10 buttons plus Start and Select          */
+#define MOUSE_BUTTON_PER          3
+
+#define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
+#define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
+
 /* We support 6 players for each analog control / trackball */
 #define OSD_MAX_JOY_ANALOG	6
 
@@ -79,8 +106,10 @@ enum /*the "display numbers" for each player, as opposed to their array index */
   DISP_PLAYER6
 };
 
-extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
+
+
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
 /******************************************************************************
 
