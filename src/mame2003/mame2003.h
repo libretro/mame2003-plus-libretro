@@ -49,6 +49,35 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
+/* We support 6 players for each analog control / trackball */
+#define OSD_MAX_JOY_ANALOG	6
+
+#define X_AXIS          0
+#define Y_AXIS          1
+#define Z_AXIS          2
+#define PEDAL_AXIS      3
+#define MAX_ANALOG_AXES	4
+
+#define PLAYER_COUNT 6
+
+enum
+{
+  IDX_CLASSIC = 0,
+  IDX_MODERN,
+  IDX_8BUTTON,
+  IDX_6BUTTON,
+  IDX_PAD_end,
+};
+
+enum /*the "display numbers" for each player, as opposed to their array index */
+{
+  DISP_PLAYER1 = 1,
+  DISP_PLAYER2,
+  DISP_PLAYER3,
+  DISP_PLAYER4,
+  DISP_PLAYER5,
+  DISP_PLAYER6
+};
 
 extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
@@ -75,27 +104,6 @@ struct retro_variable_default
 {
    const char *key;
    const char *defaults_string;
-};
-
-enum
-{
-  IDX_CLASSIC = 0,
-  IDX_MODERN,
-  IDX_8BUTTON,
-  IDX_6BUTTON,
-  IDX_PAD_end,
-};
-
-#define PLAYER_COUNT 6
-
-enum /*the "display numbers" for each player, as opposed to their array index */
-{
-  DISP_PLAYER1 = 1,
-  DISP_PLAYER2,
-  DISP_PLAYER3,
-  DISP_PLAYER4,
-  DISP_PLAYER5,
-  DISP_PLAYER6
 };
 
 
@@ -261,15 +269,6 @@ const struct JoystickInfo *osd_get_joy_list(void);
   osd_get_joy_list().
 */
 int osd_is_joy_pressed(int joycode);
-
-
-/* We support 6 players for each analog control / trackball */
-#define OSD_MAX_JOY_ANALOG	6
-#define X_AXIS			0
-#define Y_AXIS			1
-#define Z_AXIS			2
-#define PEDAL_AXIS		3
-#define MAX_ANALOG_AXES	4
 
 /* added for building joystick seq for analog inputs */
 int osd_is_joystick_axis_code(int joycode);

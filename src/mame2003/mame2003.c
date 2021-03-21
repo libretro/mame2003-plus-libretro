@@ -755,7 +755,6 @@ static void remove_slash (char* temp)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-  int i;
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
