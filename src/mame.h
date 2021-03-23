@@ -26,18 +26,6 @@
 extern int gbPriorityBitmapIsDirty;
 extern retro_environment_t environ_cb;
 
-/***************************************************************************
-
-	Parameters
-
-***************************************************************************/
-
-#define FRAMES_PER_FPS_UPDATE		12
-
-#define MAX_GFX_ELEMENTS 32
-#define MAX_MEMORY_REGIONS 32
-
-#define APPNAME					"mame2003-plus"
 
 /***************************************************************************
 

@@ -320,23 +320,18 @@ static unsigned short input_vblank[MAX_INPUT_PORTS];
 
 /* Assuming a maxium of one analog input device per port BW 101297 */
 static struct InputPort *input_analog[MAX_INPUT_PORTS];
-static int input_analog_current_value[MAX_INPUT_PORTS],input_analog_previous_value[MAX_INPUT_PORTS];
-static int input_analog_init[MAX_INPUT_PORTS];
-static int input_analog_scale[MAX_INPUT_PORTS];
+static int input_analog_current_value[MAX_INPUT_PORTS], input_analog_previous_value[MAX_INPUT_PORTS];
+static int          input_analog_init[MAX_INPUT_PORTS];
+static int         input_analog_scale[MAX_INPUT_PORTS];
 
-static InputCode analogjoy_input[OSD_MAX_JOY_ANALOG][MAX_ANALOG_AXES];	/* [player#][mame axis#] array */
+/* [player#][mame axis#] array */
+static InputCode      analogjoy_input[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
+	
+static int           mouse_delta_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
+static int        lightgun_delta_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
+static int        analog_current_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
+static int       analog_previous_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
 
-static int mouse_delta_axis[OSD_MAX_JOY_ANALOG][MAX_ANALOG_AXES];
-static int lightgun_delta_axis[OSD_MAX_JOY_ANALOG][MAX_ANALOG_AXES];
-static int analog_current_axis[OSD_MAX_JOY_ANALOG][MAX_ANALOG_AXES];
-static int analog_previous_axis[OSD_MAX_JOY_ANALOG][MAX_ANALOG_AXES];
-
-#if 0
-static int mouse_delta_x[OSD_MAX_JOY_ANALOG], mouse_delta_y[OSD_MAX_JOY_ANALOG];			/* replaced by mouse_delta_axis[][] */
-static int lightgun_delta_x[OSD_MAX_JOY_ANALOG], lightgun_delta_y[OSD_MAX_JOY_ANALOG];			/* replaced by lightgun_delta_axis[][] */
-static int analog_current_x[OSD_MAX_JOY_ANALOG], analog_current_y[OSD_MAX_JOY_ANALOG];		/* replaced by analog_current_axis[][] */
-static int analog_previous_x[OSD_MAX_JOY_ANALOG], analog_previous_y[OSD_MAX_JOY_ANALOG];	/* replaced by analog_previous_axis[][] */
-#endif
 
 /***************************************************************************
 
@@ -2610,7 +2605,7 @@ profiler_mark(PROFILER_INPUT);
 	}
 
 	/* update the analog devices */
-	for (i = 0;i < OSD_MAX_JOY_ANALOG;i++)
+	for (i = 0;i < MAX_PLAYER_COUNT;i++)
 	{
 		/* update the analog joystick position */
 		int a;
@@ -2937,7 +2932,7 @@ void init_analog_seq()
 	int player, axis;
 
 /* init analogjoy_input array */
-	for (player=0; player<OSD_MAX_JOY_ANALOG; player++)
+	for (player=0; player<MAX_PLAYER_COUNT; player++)
 	{
 		for (axis=0; axis<MAX_ANALOG_AXES; axis++)
 		{
