@@ -189,24 +189,23 @@ VIDEO_START( bankp )
 
 VIDEO_UPDATE( bankp )
 {
-	/* The tilemap has to be shifted to the left in flip screen mode
-		because the visible tilemap data is not centered in video memory */
 
 	if (flip_screen)
 	{
-		tilemap_set_scrollx(fg_tilemap, 0, -scroll_x - 16);
-		tilemap_set_scrollx(bg_tilemap, 0, -16);
+		tilemap_set_scrollx(fg_tilemap, 0, -scroll_x);
+		tilemap_set_scrollx(bg_tilemap, 0, 0);
 	} 
 	else
 	{
 		tilemap_set_scrollx(fg_tilemap, 0, scroll_x);
 		tilemap_set_scrollx(bg_tilemap, 0, 0);
 	}	
-
+    /* only one bit matters? */
 	switch (priority)
 	{
-	case 0:
-		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); /* just a guess*/
+	case 0: /* combat hawk uses this */
+		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); // just a guess
+		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
 		break;
 	case 1:
 		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0);
@@ -217,7 +216,8 @@ VIDEO_UPDATE( bankp )
 		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 		break;
 	case 3:
-		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); /* just a guess*/
+		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); // just a guess
+		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 		break;
 	}
 }
