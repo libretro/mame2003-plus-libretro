@@ -77,6 +77,8 @@ extern "C" {
 #define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
+#define NUMBER_OF_CONTROLS    27
+
 #define MAX_PLAYER_COUNT       6   /* We support a maximum of six simultaneous players */       
 #define NUMBER_OF_INPUT_TYPES  4   /* has to be updated manually! */
 
