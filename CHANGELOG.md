@@ -29,6 +29,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Chase Bombers
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
+* Combat Hawk
 * Cookie & Bibi
 * Command War - Super Special Battle & War Game (prototype)
 * Counter Run (Bootleg, Set 1)
@@ -660,3 +661,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed the sound and some graphical niggles in Diver Boy [arcadez]
 * Fixed player progress building silhouette graphics in crazy climber 2 [mahoneyt944]
 * Added three prototypes not supported in MAME78 to the taito_f3 driver [arcadez]
+* Added support for Combat Hawk and hooked up sound samples for Sea Wolf II [arcadez]
