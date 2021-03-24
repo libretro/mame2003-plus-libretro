@@ -249,28 +249,6 @@ void osd_stop_audio_stream(void);
 
 /******************************************************************************
 
-	Timing
-
-  As of March 2021, these functions are not implemented in the libretro port.
-
-******************************************************************************/
-
-typedef INT64 cycles_t;
-
-/* return the current number of cycles, or some other high-resolution timer */
-cycles_t osd_cycles(void);
-
-/* return the number of cycles per second */
-cycles_t osd_cycles_per_second(void);
-
-/* return the current number of cycles, or some other high-resolution timer.
-   This call must be the fastest possible because it is called by the profiler;
-   it isn't necessary to know the number of ticks per seconds. */
-cycles_t osd_profiling_ticks(void);
-
-
-/******************************************************************************
-
 	Keyboard
 
 ******************************************************************************/
@@ -401,6 +379,27 @@ void osd_lightgun_read(int player, int *deltax, int *deltay);
  */
 void osd_customize_inputport_defaults(struct ipd *defaults);
 
+
+/******************************************************************************
+
+	Timing
+
+  As of March 2021, these functions are not implemented in the libretro port.
+
+******************************************************************************/
+
+typedef INT64 cycles_t;
+
+/* return the current number of cycles, or some other high-resolution timer */
+cycles_t osd_cycles(void);
+
+/* return the number of cycles per second */
+cycles_t osd_cycles_per_second(void);
+
+/* return the current number of cycles, or some other high-resolution timer.
+   This call must be the fastest possible because it is called by the profiler;
+   it isn't necessary to know the number of ticks per seconds. */
+cycles_t osd_profiling_ticks(void);
 
 #ifdef __cplusplus
 }
