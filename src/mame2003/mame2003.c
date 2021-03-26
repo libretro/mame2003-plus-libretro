@@ -121,6 +121,41 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 
 /******************************************************************************
+ * 
+ * Data structures for libretro controllers
+ * 
+ ******************************************************************************/
+#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
+#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
+
+static struct retro_controller_description controllers[] = {
+  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
+  { "Modern Fightstick",  PAD_MODERN  },
+  { "8-Button",           PAD_8BUTTON },
+  { "6-Button",           PAD_6BUTTON },
+  { NULL, 0 },
+};
+
+static struct retro_controller_description unsupported_controllers[] = {
+  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
+  { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
+  { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
+  { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
+  { NULL, 0 },
+};
+
+static struct retro_controller_info retropad_subdevice_ports[] = {
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { 0 },
+};
+
+/******************************************************************************
 
   private function prototypes
 
@@ -135,6 +170,7 @@ static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
        int    convert_analog_scale(int input);
+static void   remove_slash (char* temp);
 
 
 /******************************************************************************
@@ -165,6 +201,26 @@ void frontend_message_cb(const char *message_string, unsigned frames_to_display)
 
 ******************************************************************************/
 
+unsigned retro_api_version(void)
+{
+  return RETRO_API_VERSION;
+}
+
+
+void retro_get_system_info(struct retro_system_info *info)
+{
+   /* this must match the 'corename' field in mame2003_plus_libretro.info
+    * in order for netplay to work. */
+  info->library_name = "MAME 2003-Plus";
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
+#endif
+  info->library_version = GIT_VERSION;
+  info->valid_extensions = "zip";
+  info->need_fullpath = true;
+  info->block_extract = true;
+}
+
 void retro_init (void)
 {
   struct retro_log_callback log;
@@ -180,12 +236,14 @@ void retro_init (void)
   check_system_specs();
 }
 
+
 static void check_system_specs(void)
 {
    /* Should we set level variably like the API asks? Are there any frontends that implement this? */
    unsigned level = 10; /* For stub purposes, set to the highest level */
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
+
 
 void retro_set_environment(retro_environment_t cb)
 {
@@ -695,72 +753,6 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 }
 
-unsigned retro_api_version(void)
-{
-  return RETRO_API_VERSION;
-}
-
-
-void retro_get_system_info(struct retro_system_info *info)
-{
-   /* this must match the 'corename' field in mame2003_plus_libretro.info
-    * in order for netplay to work. */
-  info->library_name = "MAME 2003-Plus";
-#ifndef GIT_VERSION
-#define GIT_VERSION ""
-#endif
-  info->library_version = GIT_VERSION;
-  info->valid_extensions = "zip";
-  info->need_fullpath = true;
-  info->block_extract = true;
-}
-
-#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
-#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
-#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
-
-static struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
-  { "Modern Fightstick",  PAD_MODERN  },
-  { "8-Button",           PAD_8BUTTON },
-  { "6-Button",           PAD_6BUTTON },
-  { NULL, 0 },
-};
-
-static struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
-  { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
-  { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
-  { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
-  { NULL, 0 },
-};
-
-static struct retro_controller_info retropad_subdevice_ports[] = {
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { 0 },
-};
-
-static void remove_slash (char* temp)
-{
-  int i;
-
-  for(i=0; temp[i] != '\0'; ++i);
-
-  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
-
-  if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
-  {
-    temp[i-1] = 0;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
-  }
-  else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
-}
 
 bool retro_load_game(const struct retro_game_info *game)
 {
@@ -2307,3 +2299,21 @@ const struct KeyboardInfo retroKeys[] =
  * configuration from disk. Scan the list, and change the keys/joysticks you want.
  */
 void osd_customize_inputport_defaults(struct ipd *defaults){}
+
+
+static void remove_slash (char* temp)
+{
+  int i;
+
+  for(i=0; temp[i] != '\0'; ++i);
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
+
+  if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
+  {
+    temp[i-1] = 0;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
+  }
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
+}
