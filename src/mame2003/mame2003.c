@@ -1945,7 +1945,7 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_PAD_end][PER_P
 
 /******************************************************************************
 
-	Joystick & Mouse/Trackball
+	Joystick
 
 ******************************************************************************/
 
@@ -2010,12 +2010,6 @@ if (joycode >= 2000  && joycode < 3000)  return 1;
 	return 0;
 }
 
-void osd_trak_read(int player, int *deltax, int *deltay)
-{
-    *deltax = mouse_x[player];
-    *deltay = mouse_y[player];
-}
-
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
   int i;
@@ -2049,17 +2043,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   }
 }
 
-void osd_customize_inputport_defaults(struct ipd *defaults)
-{
-
-}
-
-/* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
-int osd_joystick_needs_calibration(void) { return 0; }
-void osd_joystick_start_calibration(void){ }
-const char *osd_joystick_calibrate_next(void) { return 0; }
-void osd_joystick_calibrate(void) { }
-void osd_joystick_end_calibration(void) { }
 
 int convert_analog_scale(int input)
 {
@@ -2095,6 +2078,52 @@ int convert_analog_scale(int input)
 	if (neg_test) input =-abs(input);
 	return (int) input * 1.28;
 }
+
+/******************************************************************************
+ * 
+ * Legacy joystick calibration functions
+ * 
+ * As of March 2021: these MAME functions should not actually be used and will not be invoked
+ * as long as needs_calibration always returns 0. The libretro frontend is reponsible for
+ * providing calibrated position data.
+ ******************************************************************************/
+
+/* Joystick calibration routines BW 19981216 */
+int osd_joystick_needs_calibration(void) { return 0; }
+
+/* Preprocessing for joystick calibration. Returns 0 on success */
+void osd_joystick_start_calibration(void){ }
+
+/* Prepare the next calibration step. Return a description of this step. */
+/* (e.g. "move to upper left") */
+const char *osd_joystick_calibrate_next(void) { return 0; }
+
+/* Get the actual joystick calibration data for the current position */
+void osd_joystick_calibrate(void) { }
+
+/* Postprocessing (e.g. saving joystick data to config) */
+void osd_joystick_end_calibration(void) { }
+
+
+
+/******************************************************************************
+
+	Trackball, Spinner, Mouse
+
+******************************************************************************/
+
+/* osd_track_read expects the OSD to return the relative change in mouse or trackball
+ * coordinates since the last reading. If the user has set their mouse type to
+ * `pointer` in the core options, its coordinates are translated from absolute to
+ * relative coordinates before being stored in `mouse_x[]`.
+ */
+void osd_trak_read(int player, int *deltax, int *deltay)
+{
+    *deltax = mouse_x[player];
+    *deltay = mouse_y[player];
+}
+
+
 
 /******************************************************************************
 
@@ -2261,3 +2290,20 @@ const struct KeyboardInfo retroKeys[] =
 
     {0, 0, 0}
 };
+
+/******************************************************************************
+
+	Utility functions
+
+******************************************************************************/
+
+/* inptport.c defines general purpose defaults for key and joystick bindings which
+ * may be further adjusted by the OS dependent code to better match the available
+ * keyboard, e.g. one could map pause to the Pause key instead of P, or snapshot
+ * to PrtScr instead of F12. Of course the user can further change the settings
+ * to anything they like.
+ * 
+ * osd_customize_inputport_defaults is called on startup, before reading the
+ * configuration from disk. Scan the list, and change the keys/joysticks you want.
+ */
+void osd_customize_inputport_defaults(struct ipd *defaults){}

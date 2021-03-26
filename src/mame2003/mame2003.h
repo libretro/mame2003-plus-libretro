@@ -192,6 +192,10 @@ struct osd_create_params
   Returns 0 on success.
 */
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components);
+
+
+
+/* osd_close_display is implemented in video.c */
 void osd_close_display(void);
 
 
@@ -336,7 +340,7 @@ void osd_joystick_end_calibration(void);
 
 /******************************************************************************
 
-	Mouse and trackball
+	Trackball, Spinner, Mouse
 
 ******************************************************************************/
 
