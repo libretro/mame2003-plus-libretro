@@ -102,10 +102,6 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 };
 
 
-
-
-extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
-
 /******************************************************************************
 
 	Shared libretro log interface
@@ -124,6 +120,17 @@ extern retro_log_printf_t log_cb;
 extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
 
+/******************************************************************************
+
+Core options
+
+******************************************************************************/
+
+
+/******************************************************************************
+ * retro_variable_default contains the default value for a libretro core option
+ * 
+ *****************************************************************************/
 struct retro_variable_default
 {
    const char *key;

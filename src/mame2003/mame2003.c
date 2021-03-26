@@ -139,6 +139,16 @@ static void   check_system_specs(void);
 
 /******************************************************************************
 
+  external function prototypes
+
+******************************************************************************/
+
+/* mame2003_video_get_geometry is found in video.c */
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
+/******************************************************************************
+
 	frontend message interface
 
 ******************************************************************************/
@@ -708,7 +718,6 @@ void retro_get_system_info(struct retro_system_info *info)
 #define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
 #define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
-
 
 static struct retro_controller_description controllers[] = {
   { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
