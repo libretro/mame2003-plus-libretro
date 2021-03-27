@@ -22,6 +22,8 @@
 #define COUNT_CYCLES(x)	tms34010_ICount -= x
 #define COUNT_UNKNOWN_CYCLES(x) COUNT_CYCLES(x)
 
+#define CORRECT_ODD_PC(x)	do { if (PC & 0x0f) logerror("%s to PC=%08X\n", x, PC); PC &= ~0x0f; } while (0)
+
 
 
 /*###################################################################################################
@@ -54,6 +56,12 @@ static void unimpl(void)
 	/* kludge for Super High Impact -- this doesn't seem to cause */
 	/* an illegal opcode exception */
 	if (cpu_readop16(TOBYTE(PC - 0x10)) == 0x0007)
+		return;
+
+	/* 9 Ball Shootout calls to FFDF7468, expecting it */
+	/* to execute the next instruction from FFDF7470 */
+	/* but the instruction at FFDF7460 is an 0x0001 */
+	if (cpu_readop16(TOBYTE(PC - 0x10)) == 0x0001)
 		return;
 
 	PUSH(PC);
@@ -1371,7 +1379,8 @@ static void move1_aa (void) { MOVE_AA(1); }
 {																\
 	PUSH(PC);													\
 	PC = R##REG(R##DSTREG);										\
-	change_pc29lew(TOBYTE(PC));									\
+	CORRECT_ODD_PC("CALL");										\
+	change_pc29lew(TOBYTE(PC));										\
 	COUNT_CYCLES(3);											\
 }
 static void call_a (void) { CALL(A); }
@@ -1388,6 +1397,7 @@ static void calla(void)
 {
 	PUSH(PC+0x20);
 	PC = PARAM_LONG_NO_INC();
+	CORRECT_ODD_PC("CALLA");
 	change_pc29lew(TOBYTE(PC));
 	COUNT_CYCLES(4);
 }
@@ -1494,7 +1504,8 @@ static void emu(void)
 	INT32 temppc = *rd;											\
 	*rd = PC;													\
 	PC = temppc;												\
-	change_pc29lew(TOBYTE(PC));									\
+	CORRECT_ODD_PC("EXGPC");									\
+	change_pc29lew(TOBYTE(PC));										\
 	COUNT_CYCLES(2);											\
 }
 static void exgpc_a (void) { EXGPC(A); }
@@ -1533,9 +1544,10 @@ static void getst_b (void) { GETST(B); }
 		if (TAKE)												\
 		{														\
 			PC = PARAM_LONG_NO_INC();							\
-			change_pc29lew(TOBYTE(PC));							\
+			CORRECT_ODD_PC("J_XX_8");							\
+			change_pc29lew(TOBYTE(PC));								\
 			COUNT_CYCLES(3);									\
-		}														\
+		}											            \
 		else													\
 		{														\
 			SKIP_LONG;											\
@@ -1778,7 +1790,8 @@ static void j_NN_x(void)
 #define JUMP(R)													\
 {																\
 	PC = R##REG(R##DSTREG);										\
-	change_pc29lew(TOBYTE(PC));									\
+	CORRECT_ODD_PC("JUMP");										\
+	change_pc29lew(TOBYTE(PC));										\
 	COUNT_CYCLES(2);											\
 }
 static void jump_a (void) { JUMP(A); }
@@ -1808,6 +1821,7 @@ static void reti(void)
 {
 	INT32 st = POP();
 	PC = POP();
+	CORRECT_ODD_PC("RETI");
 	change_pc29lew(TOBYTE(PC));
 	SET_ST(st);
 	COUNT_CYCLES(11);
@@ -1817,6 +1831,7 @@ static void rets(void)
 {
 	UINT32 offs;
 	PC = POP();
+	CORRECT_ODD_PC("RETS");
 	change_pc29lew(TOBYTE(PC));
 	offs = PARAM_N;
 	if (offs)
@@ -1844,6 +1859,7 @@ static void trap(void)
 	}
 	RESET_ST();
 	PC = RLONG(0xffffffe0-(t<<5));
+	CORRECT_ODD_PC("TRAP");
 	change_pc29lew(TOBYTE(PC));
 	COUNT_CYCLES(16);
 }
@@ -2017,6 +2033,7 @@ static void blmove(void)
 			tms34010_ICount -= 2;
 		}
 	}
+
 	/* src is aligned, dst is not */
 	else if (!(src & 0x0f))
 	{
