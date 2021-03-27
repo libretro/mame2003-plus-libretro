@@ -1961,7 +1961,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 READ16_HANDLER( tms34010_io_register_r )
 {
-	int cpunum = cpu_getactivecpu(),
+	int cpunum = cpu_getactivecpu();
 	int result, total;
 
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);*/
