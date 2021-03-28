@@ -33,14 +33,11 @@
 /*   - yosakdon, yosakdoa                                                 */
 /* - Added internal comments on overlays to show source of overlay.       */
 /*                                                                        */
-/* 26 Dec 2020                                                            */
+/* 21 Mar 2021                                                            */
 /*                                                                        */
-/* - Added overlay for:                                                   */
-/*   - seawolf                                                            */
-/* - Confirmed the following did not have coloured overlays:              */
-/*   - blueshrk                                                           */
-/*   - bowler                                                             */
-/*   - desertgu                                                           */
+/* - Added overlay for astropal                                           */
+/* - Added overlay for galactic (including cocktail variant)              */
+/*                                                                        */
 /**************************************************************************/
 
 #include "driver.h"
@@ -385,11 +382,36 @@ OVERLAY_START( galxwars_overlay )
 OVERLAY_END
 
 
-/* Overlay based on actual arcade video sources: */
-/* https://www.youtube.com/watch?v=sOfa4q3cobM */
-/* https://www.youtube.com/watch?v=XditKdC7G4I&t=238s */
-OVERLAY_START( seawolf_overlay )
-	OVERLAY_RECT(   0, 0, 256, 224, OVERLAY_BLUE )
+/* No known flyers or images of game play are available. */
+/* Added a simple overlay to give the game some colour. */
+OVERLAY_START( astropal_overlay )
+	OVERLAY_RECT(   0,   0,   85,  17, OVERLAY_CYAN )
+	OVERLAY_RECT(  85,   0,  155,  17, OVERLAY_BLUE )
+	OVERLAY_RECT( 155,   0,  256,  17, OVERLAY_YELLOW )
+	OVERLAY_RECT(   0,  17,  256, 216, OVERLAY_GREEN )
+	OVERLAY_RECT(   0, 216,  160, 224, OVERLAY_CYAN )
+	OVERLAY_RECT( 160, 216,  256, 224, OVERLAY_PURPLE )
+OVERLAY_END
+
+/* Based on overlay shown on original machine here: */
+/* https://youtu.be/BGcsreq6NEA?t=27 */
+/* Can't find any sources for an overlay for cocktail */
+/* mode, so a simple one has been added. */
+OVERLAY_START( galactic_overlay )
+    // Common
+	OVERLAY_RECT(240,   0, 256, 224, OVERLAY_BLUE )
+
+    // Upright
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 200,   0, 240, 224, OVERLAY_RED )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 136,   0, 200, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  48,   0, 136, 224, OVERLAY_YELLOW )
+	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0,   0,  48, 224, OVERLAY_GREEN )
+
+    // Cocktail
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 208,   0, 240, 224, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  48,  0, 208, 224, OVERLAY_ORANGE )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  16,  0, 48, 224, OVERLAY_GREEN )
+	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 0,   0, 16, 224, OVERLAY_BLUE )
 OVERLAY_END
 
 
@@ -414,6 +436,19 @@ DRIVER_INIT( yosakdon )
 	init_8080bw();
 	artwork_set_overlay(yosakdon_overlay);
 }
+
+DRIVER_INIT( galactic )
+{
+	init_8080bw();
+	artwork_set_overlay(galactic_overlay);
+}
+
+DRIVER_INIT( astropal )
+{
+	init_8080bw();
+	artwork_set_overlay(astropal_overlay);
+}
+
 
 DRIVER_INIT( 280zzzap )
 {
@@ -521,7 +556,6 @@ DRIVER_INIT( seawolf )
 {
 	init_8080bw();
 	video_update_p = video_update_seawolf;
-	artwork_set_overlay(seawolf_overlay);
 }
 
 DRIVER_INIT( blueshrk )
@@ -1095,7 +1129,13 @@ PALETTE_INIT( sflush )
 		int b = 0xff * ((i >> 1) & 1);
 		palette_set_color(i,r,g,b);
 	}
-	palette_set_color(0,0x80,0x80,0xff);
+
+	// Original colour used was way too purple. The colour should be a
+	// medium blue, as confirmed from screen shots here:
+	// https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1088&image=1
+	// Other colours seem to be more accurate.
+	//palette_set_color(0,0x80,0x80,0xff); // Too purple
+	palette_set_color(0,0x1f,0x75,0xfe); // Blue matching OVERLAY_BLUE
 }
 
 
