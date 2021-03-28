@@ -76,7 +76,7 @@
 /*                                                                          */
 /* 27 Mar 2021 - Added sound to invrvnge and invrvgea.                      */
 /*             - Added Sidam game invasion.                                 */
-/*             - Added bootlegs of invasion, invasiona and invasionb.       */
+/*             - Added bootlegs of invasion, invasioa and invasiob.         */
 /*             - Added Sidam game astropal.                                 */
 /*             - Added Taito game galatic.                                  */
 /*             - Added bootleg of galatic, spacmiss.                        */
@@ -4238,49 +4238,49 @@ ROM_START( invasion )
         ROM_LOAD( "10136-7.7k",   0x1c00, 0x0400, CRC(75d7acaf) SHA1(977d146d7df555cea1bb2156d29d88bec9731f98) )
 ROM_END
 
-ROM_START( invasiona )
+ROM_START( invasioa )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "invasiona_0.bin",   0x0000, 0x0400, CRC(c2fe6197) SHA1(823d02c2790711f40c167544a55e1669a97d93b4) )
-        ROM_LOAD( "invasiona_1.bin",   0x0400, 0x0400, CRC(7c86620d) SHA1(9e92ec0aa4eee96a7fa115a14a611c488d13b9dd) )
-        ROM_LOAD( "invasiona_2.bin",   0x0800, 0x0400, CRC(ccaf38f6) SHA1(8eb0456e8abdba0d1dda20a335a9ecbe7c38f9ed) )
-        ROM_LOAD( "invasiona_3.bin",   0x1400, 0x0400, CRC(8ec9eae2) SHA1(48d7a7dc61e0417ca4093e5c2a36efd96e359233) )
-        ROM_LOAD( "invasiona_4.bin",   0x1800, 0x0400, CRC(24b39879) SHA1(c93530ac20c412b516fbcba8220d85a9bd4fa804) )
-        ROM_LOAD( "invasiona_5.bin",   0x1c00, 0x0400, CRC(59134ff8) SHA1(2e6a040066b35b10f867a3e500e3b13922c0eb7a) )
+        ROM_LOAD( "invasioa_0.bin",   0x0000, 0x0400, CRC(c2fe6197) SHA1(823d02c2790711f40c167544a55e1669a97d93b4) )
+        ROM_LOAD( "10136-1.1k",       0x0400, 0x0400, CRC(7c86620d) SHA1(9e92ec0aa4eee96a7fa115a14a611c488d13b9dd) )
+        ROM_LOAD( "10136-2.2k",       0x0800, 0x0400, CRC(ccaf38f6) SHA1(8eb0456e8abdba0d1dda20a335a9ecbe7c38f9ed) )
+        ROM_LOAD( "10136-5.5k",       0x1400, 0x0400, CRC(8ec9eae2) SHA1(48d7a7dc61e0417ca4093e5c2a36efd96e359233) )
+        ROM_LOAD( "invasioa_4.bin",   0x1800, 0x0400, CRC(24b39879) SHA1(c93530ac20c412b516fbcba8220d85a9bd4fa804) )
+        ROM_LOAD( "invasioa_5.bin",   0x1c00, 0x0400, CRC(59134ff8) SHA1(2e6a040066b35b10f867a3e500e3b13922c0eb7a) )
 ROM_END
 
-ROM_START( invasionb )
+ROM_START( invasiob )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "invasionb_0.bin",   0x0000, 0x0400, CRC(7a9b4485) SHA1(dde918ec106971972bf7c7e5085c1262522f7e35) )
-        ROM_LOAD( "invasionb_1.bin",   0x0400, 0x0400, CRC(7c86620d) SHA1(9e92ec0aa4eee96a7fa115a14a611c488d13b9dd) )
-        ROM_LOAD( "invasionb_2.bin",   0x0800, 0x0400, CRC(ccaf38f6) SHA1(8eb0456e8abdba0d1dda20a335a9ecbe7c38f9ed) )
-        ROM_LOAD( "invasionb_5.bin",   0x1400, 0x0400, CRC(8ec9eae2) SHA1(48d7a7dc61e0417ca4093e5c2a36efd96e359233) )
-        ROM_LOAD( "invasionb_6.bin",   0x1800, 0x0400, CRC(ec0edb4a) SHA1(8c6946b50ba5c319fe03c55b43c4e714387719b8) )
-        ROM_LOAD( "invasionb_7.bin",   0x1c00, 0x0400, CRC(6aac1281) SHA1(f071a21de72d2c9f7851195592c828fa501197ce) )
+        ROM_LOAD( "10136-0.0k",       0x0000, 0x0400, CRC(7a9b4485) SHA1(dde918ec106971972bf7c7e5085c1262522f7e35) )
+        ROM_LOAD( "10136-1.1k",       0x0400, 0x0400, CRC(7c86620d) SHA1(9e92ec0aa4eee96a7fa115a14a611c488d13b9dd) )
+        ROM_LOAD( "10136-2.2k",       0x0800, 0x0400, CRC(ccaf38f6) SHA1(8eb0456e8abdba0d1dda20a335a9ecbe7c38f9ed) )
+        ROM_LOAD( "10136-5.5k",       0x1400, 0x0400, CRC(8ec9eae2) SHA1(48d7a7dc61e0417ca4093e5c2a36efd96e359233) )
+        ROM_LOAD( "invasiob_6.bin",   0x1800, 0x0400, CRC(ec0edb4a) SHA1(8c6946b50ba5c319fe03c55b43c4e714387719b8) )
+        ROM_LOAD( "invasiob_7.bin",   0x1c00, 0x0400, CRC(6aac1281) SHA1(f071a21de72d2c9f7851195592c828fa501197ce) )
 ROM_END
 
 ROM_START( galactic )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "1",       0x0000, 0x0800, CRC(b5098f1e) SHA1(9d1d045d8abeafd4716d3052fe93e52c6b347049) ) // sldh
-        ROM_LOAD( "2",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
-        ROM_LOAD( "3",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
-        ROM_LOAD( "4",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
-        ROM_LOAD( "5",       0x4000, 0x0800, CRC(74c9da61) SHA1(cb98105729f0fa4343b71af3c658b378ade1ed46) )
-        ROM_LOAD( "6",       0x4800, 0x0800, CRC(5e7c6c44) SHA1(be7eeef10462377909018cf40503766f38466022) )
-        ROM_LOAD( "7",       0x5000, 0x0800, CRC(02619e18) SHA1(4c59f17fbc96ca08090f08c41ca9fc72c074e9c0) )
+        ROM_LOAD( "galactic_1.bin",       0x0000, 0x0800, CRC(b5098f1e) SHA1(9d1d045d8abeafd4716d3052fe93e52c6b347049) ) // sldh
+        ROM_LOAD( "galactic_2.bin",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
+        ROM_LOAD( "galactic_3.bin",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
+        ROM_LOAD( "galactic_4.bin",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
+        ROM_LOAD( "galactic_5.bin",       0x4000, 0x0800, CRC(74c9da61) SHA1(cb98105729f0fa4343b71af3c658b378ade1ed46) )
+        ROM_LOAD( "galactic_6.bin",       0x4800, 0x0800, CRC(5e7c6c44) SHA1(be7eeef10462377909018cf40503766f38466022) )
+        ROM_LOAD( "galactic_7.bin",       0x5000, 0x0800, CRC(02619e18) SHA1(4c59f17fbc96ca08090f08c41ca9fc72c074e9c0) )
 ROM_END
 
 ROM_START( spacmiss )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "1",       0x0000, 0x0800, CRC(e212dc88) SHA1(bc56052bf43d18081f777b936b2be792e91ba842) ) // sldh
-        ROM_LOAD( "2",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
-        ROM_LOAD( "3",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
-        ROM_LOAD( "4",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
-        ROM_LOAD( "5",       0x4000, 0x0800, CRC(74c9da61) SHA1(cb98105729f0fa4343b71af3c658b378ade1ed46) )
-        ROM_LOAD( "6",       0x4800, 0x0800, CRC(5e7c6c44) SHA1(be7eeef10462377909018cf40503766f38466022) )
-        ROM_LOAD( "7",       0x5000, 0x0800, CRC(02619e18) SHA1(4c59f17fbc96ca08090f08c41ca9fc72c074e9c0) )
+        ROM_LOAD( "spacmiss_1.bin",       0x0000, 0x0800, CRC(e212dc88) SHA1(bc56052bf43d18081f777b936b2be792e91ba842) ) // sldh
+        ROM_LOAD( "galactic_2.bin",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
+        ROM_LOAD( "galactic_3.bin",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
+        ROM_LOAD( "galactic_4.bin",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
+        ROM_LOAD( "galactic_5.bin",       0x4000, 0x0800, CRC(74c9da61) SHA1(cb98105729f0fa4343b71af3c658b378ade1ed46) )
+        ROM_LOAD( "galactic_6.bin",       0x4800, 0x0800, CRC(5e7c6c44) SHA1(be7eeef10462377909018cf40503766f38466022) )
+        ROM_LOAD( "galactic_7.bin",       0x5000, 0x0800, CRC(02619e18) SHA1(4c59f17fbc96ca08090f08c41ca9fc72c074e9c0) )
 
         ROM_REGION( 0x0800, REGION_USER1, 0 )
-        ROM_LOAD( "8",       0x0000, 0x0800, CRC(942e5261) SHA1(e8af51d644eab4e7b31c14dc66bb036ad8940c42) ) // ?
+        ROM_LOAD( "spacmiss_8.bin",       0x0000, 0x0800, CRC(942e5261) SHA1(e8af51d644eab4e7b31c14dc66bb036ad8940c42) ) // ?
 ROM_END
 
 
@@ -4375,8 +4375,8 @@ ROM_END
 	  GAMEX(1979, yosakdon, 0,        yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbei (set 1)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1979, yosakdoa, yosakdon, yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbei (set 2)", GAME_IMPERFECT_SOUND )
 	  GAME( 1980, invasion, 0,        invaders, invaders, invaders, ROT270, "Sidam", "Invasion (Sidam)" )
-	  GAME( 1980, invasiona,0,        invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 1, normal graphics)" ) /* Has Sidam replaced with 'Ufo Monster Attack' and standard Space Invader graphics */
-	  GAME( 1980, invasionb,0,        invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 2, no copyright)" )
+	  GAME( 1980, invasioa,0,         invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 1, normal graphics)" ) /* Has Sidam replaced with 'Ufo Monster Attack' and standard Space Invader graphics */
+	  GAME( 1980, invasiob,0,         invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 2, no copyright)" )
 	  GAMEX(1980, astropal, 0,        astropal, astropal, astropal, ROT0,   "Sidam", "Astropal", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, galactic, 0,        galactic, invaders, galactic, ROT270, "Taito do Brasil", "Galactica - Batalha Espacial", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, spacmiss, galactic, galactic, invaders, galactic, ROT270, "bootleg", "Space Missile - Space Fighting Game", GAME_IMPERFECT_SOUND )
