@@ -45,7 +45,13 @@ MACHINE_INIT( schaser );
 MACHINE_INIT( polaris );
 MACHINE_INIT( clowns );
 MACHINE_INIT( indianbt );
+MACHINE_INIT( lupin3 );
+MACHINE_INIT( yosakdon );
 MACHINE_INIT( lrescue );
+MACHINE_INIT( invrvnge );
+MACHINE_INIT( rollingc );
+MACHINE_INIT( astropal );
+MACHINE_INIT( galactic );
 
 
 extern struct SN76477interface invaders_sn76477_interface;
@@ -94,6 +100,8 @@ DRIVER_INIT( spclaser );
 DRIVER_INIT( galxwars );
 DRIVER_INIT( indianbt );
 DRIVER_INIT( 280zzzap );
+DRIVER_INIT( astropal );
+DRIVER_INIT( galactic );
 
 void c8080bw_flip_screen_w(int data);
 void c8080bw_screen_red_w(int data);
