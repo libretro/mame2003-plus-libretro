@@ -1041,8 +1041,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cosmo )		/* TDS+Mints */
 	DRIVER( astropal )
 	DRIVER( invasion )
-	DRIVER( invasiona )
-	DRIVER( invasionb )
+	DRIVER( invasioa )
+	DRIVER( invasiob )
 	DRIVER( galactic )
 	DRIVER( spacmiss )
 
