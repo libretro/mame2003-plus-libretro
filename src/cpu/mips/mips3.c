@@ -160,8 +160,6 @@
 #define SR			mips3.cpr[0][COP0_Status]
 #define CAUSE		mips3.cpr[0][COP0_Cause]
 
-#define GET_FCC(n)	((mips3.ccr[1][31] >> fcc_shift[n]) & 1)
-#define SET_FCC(n,v) (mips3.ccr[1][31] = (mips3.ccr[1][31] & ~(1 << fcc_shift[n])) | ((v) << fcc_shift[n]))
 
 
 /*###################################################################################################
@@ -259,7 +257,6 @@ static UINT64 readmem32ledw_double(offs_t offset);
 static void writemem32bedw_double(offs_t offset, UINT64 data);
 static void writemem32ledw_double(offs_t offset, UINT64 data);
 
-static UINT8 fcc_shift[8] = { 23, 25, 26, 27, 28, 29, 30, 31 };
 
 
 
@@ -774,10 +771,10 @@ static INLINE void handle_cop1(UINT32 op)
 		case 0x08:	/* BC */
 			switch ((op >> 16) & 3)
 			{
-				case 0x00:	/* BCzF */	if (!GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL);	break;
-				case 0x01:	/* BCzT */	if (GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL);	break;
-				case 0x02:	/* BCzFL */	if (!GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
-				case 0x03:	/* BCzTL */	if (GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
+				case 0x00:	/* BCzF */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
+				case 0x01:	/* BCzT */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
+				case 0x02:	/* BCzFL */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
+				case 0x03:	/* BCzTL */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
 			}
 			break;
 		default:
@@ -956,7 +953,7 @@ static INLINE void handle_cop1(UINT32 op)
 					break;
 
 				case 0x11:	/* R5000 */
-					if (GET_FCC((op >> 18) & 7) == ((op >> 16) & 1))
+					if (!mips3.cf[1][(op >> 18) & 7]) == ((op >> 16) & 1))
 					{
 						if (IS_SINGLE(op))	/* MOVT/F.S */
 							FDVALS = FSVALS;
