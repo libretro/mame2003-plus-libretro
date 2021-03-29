@@ -686,7 +686,7 @@ static INLINE void handle_cop0(UINT32 op)
 		case 0x08:	/* BC */
 			switch (RTREG)
 			{
-				case 0x00:	/* BCzF */	if (!mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
+				case 0x00:	/* BCzF */	if (!mips3.cf[0][0]) ADDPC(SIMMVAL);				break;
 				case 0x01:	/* BCzF */	if (mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
 				case 0x02:	/* BCzFL */	invalid_instruction(op);							break;
 				case 0x03:	/* BCzTL */	invalid_instruction(op);							break;
@@ -952,7 +952,7 @@ static INLINE void handle_cop1(UINT32 op)
 					break;
 
 				case 0x11:	/* R5000 */
-					if (!mips3.cf[1][(op >> 18) & 7]) == ((op >> 16) & 1))
+					if (mips3.cf[1][(op >> 18) & 7] == ((op >> 16) & 1))
 					{
 						if (IS_SINGLE(op))	/* MOVT/F.S */
 							FDVALS = FSVALS;
