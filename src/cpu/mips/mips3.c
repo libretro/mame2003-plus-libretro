@@ -1270,7 +1270,6 @@ int mips3_execute(int cycles)
 	else
 		change_pc32bedw(mips3.pc);
 
-
 	/* check for IRQs */
 	check_irqs();
 
