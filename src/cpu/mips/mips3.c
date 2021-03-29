@@ -375,7 +375,7 @@ static INLINE void invalid_instruction(UINT32 op)
 
 static void check_irqs(void)
 {
-	if ((CAUSE & SR & 0xfc00) && (SR & SR_IE) && !(SR & SR_EXL) && !(SR & SR_ERL))
+	if ((CAUSE & SR & 0xff00) && (SR & SR_IE) && !(SR & SR_EXL) && !(SR & SR_ERL))
 		generate_exception(EXCEPTION_INTERRUPT, 0);
 }
 
