@@ -1078,7 +1078,7 @@ static INLINE void handle_cop1(UINT32 op)
 					if (IS_SINGLE(op))	/* C.ULT.S */
 						mips3.cf[1][(op >> 8) & 7] = (FSVALS < FTVALS);
 					else				/* C.ULT.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD);
 					break;
 
 				case 0x36:
@@ -1086,7 +1086,7 @@ static INLINE void handle_cop1(UINT32 op)
 					if (IS_SINGLE(op))	/* C.OLE.S */
 						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS);
 					else				/* C.OLE.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD);
 					break;
 
 				case 0x37:
@@ -1094,7 +1094,7 @@ static INLINE void handle_cop1(UINT32 op)
 					if (IS_SINGLE(op))	/* C.ULE.S */
 						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS);
 					else				/* C.ULE.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD);
 					break;
 
 				default:
@@ -1539,7 +1539,7 @@ unsigned mips3_get_reg(int regnum)
 		case MIPS3_SR:		return SR;
 		case MIPS3_EPC:		return mips3.cpr[0][COP0_EPC];
 		case MIPS3_CAUSE:	return mips3.cpr[0][COP0_Cause];
-		case MIPS3_COUNT:	return ((activecpu_gettotalcycles64() - mips3.count_zero_time) / 2);
+		case MIPS3_COUNT:	return mips3.cpr[0][COP0_Count];
 		case MIPS3_COMPARE:	return mips3.cpr[0][COP0_Compare];
 
 		case MIPS3_R0:		return (UINT32)mips3.r[0];
