@@ -605,16 +605,8 @@ static INLINE void set_cop0_reg(int idx, UINT64 val)
 	{
 		case COP0_Cause:
 			CAUSE = (CAUSE & 0xfc00) | (val & ~0xfc00);
-			if (CAUSE & 0x300)
-			{
-				/* if we're in a delay slot, propogate the target PC before generating the exception */
-				if (mips3.nextpc != ~0)
-				{
-					mips3.pc = mips3.nextpc;
-					mips3.nextpc = ~0;
-				}
-				generate_exception(EXCEPTION_INTERRUPT, 0);
-			}
+			/* update interrupts -- software ints can occur this way */
+			check_irqs();
 			break;
 
 		case COP0_Status:
