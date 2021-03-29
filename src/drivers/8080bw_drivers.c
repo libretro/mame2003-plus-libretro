@@ -4375,8 +4375,8 @@ ROM_END
 	  GAMEX(1979, yosakdon, 0,        yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbei (set 1)", GAME_IMPERFECT_SOUND )
 	  GAMEX(1979, yosakdoa, yosakdon, yosakdon, lrescue,  yosakdon, ROT270, "Worldwing", "Yosaku To Donbei (set 2)", GAME_IMPERFECT_SOUND )
 	  GAME( 1980, invasion, 0,        invaders, invaders, invaders, ROT270, "Sidam", "Invasion (Sidam)" )
-	  GAME( 1980, invasioa,0,         invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 1, normal graphics)" ) /* Has Sidam replaced with 'Ufo Monster Attack' and standard Space Invader graphics */
-	  GAME( 1980, invasiob,0,         invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 2, no copyright)" )
+	  GAME( 1980, invasioa, invasion, invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 1, normal graphics)" ) /* Has Sidam replaced with 'Ufo Monster Attack' and standard Space Invader graphics */
+	  GAME( 1980, invasiob, invasion, invaders, invaders, invaders, ROT270, "bootleg", "Invasion (bootleg, set 2, no copyright)" )
 	  GAMEX(1980, astropal, 0,        astropal, astropal, astropal, ROT0,   "Sidam", "Astropal", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, galactic, 0,        galactic, invaders, galactic, ROT270, "Taito do Brasil", "Galactica - Batalha Espacial", GAME_IMPERFECT_SOUND )
 	  GAMEX(1980, spacmiss, galactic, galactic, invaders, galactic, ROT270, "bootleg", "Space Missile - Space Fighting Game", GAME_IMPERFECT_SOUND )
