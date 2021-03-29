@@ -15,6 +15,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Attack
 * Air Rescue
 * Argus (Gottlieb, prototype)
+* Astropal
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
@@ -32,6 +33,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Combat Hawk
 * Cookie & Bibi
 * Command War - Super Special Battle & War Game (prototype)
+* Cosmic Monsters II
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Cute Fighter
@@ -53,6 +55,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * FixEight (bootleg)
 * Flying Tiger
 * Gaia: The Last Choice Of Earth
+* Galactica - Batalha Espacial
 * Ghostlop
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Golden Par Golf
@@ -73,6 +76,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hyper Street Fighter II (Asia)
 * In Your Face
 * Inca * Mature *
+* Indian Battle
+* Invasion
 * Joe & Mac Returns
 * Jump Kun
 * Kabuki-Z (World)
@@ -192,6 +197,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hacha Mecha Fighter (bootleg)
 * Hook (Japan Version)
 * Ikari III - The Rescue (World, 8-Way Joystick)
+* Invasion (bootleg set 1, normal graphics)
+* Invasion (bootleg set 2, no copyright)
 * Imago (cocktail set)
 * Kabuki-Z (Japan)
 * King of Gladiator
@@ -226,8 +233,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2004 Ultra Plus
 * The King of Fighters Special Edition 2004
 * Undercover Cops (Alpha Renewal Version)
-* X-men (6 Players ver UCB)
 * World Cup Volley 95 Extra Version
+* X-men (6 Players ver UCB)
+* Yosaku To Donbei (set 2)
+
 
 ## New Hacks
 
@@ -362,6 +371,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Acrobat Mission
 * Asura Blade
+* Balloon Bomber
 * Batsugun (Partial)
 * Bio-ship Paladin
 * Black Heart
@@ -372,12 +382,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ghox (via Toaplan samples)
 * GunNail
 * Hacha Mecha Fighter
+* Invader's Revenge
 * Koutetsu Yousai Strahl
 * Knights Of Valour / Sangoku Senki
 * Knights of Valour Plus / Sangoku Senki Plus
 * Knuckle Bash (Partial)
 * Lady Killer * Mature *
 * Last Fortress - Toride
+* Lupin III
 * Mustache Boy
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
 * Pang Poms
@@ -386,11 +398,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzzli
 * Riding Fight
 * Ring Rage
+* Rolling Crash / Moon Base
 * Same Same Same
 * Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
 * Sky Alert
 * Sky Diver
+* Space Chaser (CV version)
 * Super Slam
 * Super Spacefortress Macross
 * Teki Paki (via Toaplan samples)
@@ -400,6 +414,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * US AAF Mustang
 * Vandyke
 * Vimana
+* Yosaku To Donbei
 * Zhong Guo Long II
 
 
@@ -663,3 +678,15 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added three prototypes not supported in MAME78 to the taito_f3 driver [arcadez]
 * Added support for Combat Hawk and hooked up sound samples for Sea Wolf II [arcadez]
 * Added bootstrap for umk3 and umk3r11 - unlock all charaters, fix volume, set coinage [mahoneyt944]
+* Added ability to change the opacity of the overlay on a game-by-game basis (or turn it off), with new option `mame2003-plus_overlay_opacity` [jamiecurmi]
+* Added ability to scale artwork by more than a resolution factor of 2 (need fast hardware), with new option `mame2003-plus_art_resolution` [jamiecurmi]
+* Added a new overlay shape (triangle) [jamiecurmi]
+* Added tags to overlays to easily allow code to alter overlays based on dip switches (for example, different overlays based on upright/cocktail mode) [jamiecurmi]
+* Added code comments on how to use all the overlay types including the new triangle type [jamiecurmi]
+* Added colour overlays for Super Bug, Depth Charge, Sea Wolf, Cosmic Monsters, Cosmic Monsters II, The Amazing Maze Game, Omega Race, Yosaku To Donbei, SOS, Kaitei Takara Sagashi, Navarone, Ripcord, Galaxy Wars (including cocktail), Datsun 280 ZZZAP, Clowns, Space Invaders Deluxe / Space Invaders Part II [jamiecurmi]
+* Improved colour overlays for Lazer Command, Meadows Lanes, Space Invaders (including support for cocktail mode), Invaders Revenge, Space Invaders II, Space Stranger, Phantom II, Gun Fight, Super Breakout, Avalanche, Star Castle, Tailgunner, Sundance, Solar Quest, Dead Eye, Gypsy Juggler, Gee Bee (including cocktail), Circus, Crash [jamiecurmi]
+* Improved colours for The Master of KIN [jamiecurmi]
+* Added new games Indian Battle, Invasion, Galactic - Batalha Espacial, Astropal, Cosmic Monster II [jamiecurmi]
+* Added clones Yosaku To Donbei (yosakdoa), Invasion (invasioa, invasiob), Space Missile - Space Fighting Game (spacmiss) [jamiecurmi]
+* Fixed the background colour of Straight Flush to match flyer colours [jamiecurmi]
+* Added sound for Invader's Revenge, Space Chaser (CV Version), Lupin III, Balloon Bomber, Rolling Crash / Moon Base. [jamiecurmi]
