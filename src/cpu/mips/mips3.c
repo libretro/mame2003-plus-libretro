@@ -192,7 +192,7 @@ typedef struct
 	/* COP registers */
 	UINT64		cpr[4][32];
 	UINT64		ccr[4][32];
-	UINT8		cf[4];
+	UINT8		cf[4][8];
 
 	/* internal stuff */
 	UINT32		ppc;
@@ -256,7 +256,6 @@ static UINT64 readmem32ledw_double(offs_t offset);
 
 static void writemem32bedw_double(offs_t offset, UINT64 data);
 static void writemem32ledw_double(offs_t offset, UINT64 data);
-
 
 
 
@@ -687,8 +686,8 @@ static INLINE void handle_cop0(UINT32 op)
 		case 0x08:	/* BC */
 			switch (RTREG)
 			{
-				case 0x00:	/* BCzF */	if (!mips3.cf[0]) ADDPC(SIMMVAL);					break;
-				case 0x01:	/* BCzF */	if (mips3.cf[0]) ADDPC(SIMMVAL);					break;
+				case 0x00:	/* BCzF */	if (!mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
+				case 0x01:	/* BCzF */	if (mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
 				case 0x02:	/* BCzFL */	invalid_instruction(op);							break;
 				case 0x03:	/* BCzTL */	invalid_instruction(op);							break;
 				default:	invalid_instruction(op);										break;
@@ -772,9 +771,9 @@ static INLINE void handle_cop1(UINT32 op)
 			switch ((op >> 16) & 3)
 			{
 				case 0x00:	/* BCzF */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
-				case 0x01:	/* BCzT */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
+				case 0x01:	/* BCzT */	if (mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
 				case 0x02:	/* BCzFL */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
-				case 0x03:	/* BCzTL */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
+				case 0x03:	/* BCzTL */	if (mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
 			}
 			break;
 		default:
