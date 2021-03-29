@@ -1270,8 +1270,6 @@ int mips3_execute(int cycles)
 	else
 		change_pc32bedw(mips3.pc);
 
-	/* update timers & such */
-	//update_cycle_counting();
 
 	/* check for IRQs */
 	check_irqs();
