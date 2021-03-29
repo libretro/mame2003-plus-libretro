@@ -160,6 +160,8 @@
 #define SR			mips3.cpr[0][COP0_Status]
 #define CAUSE		mips3.cpr[0][COP0_Cause]
 
+#define GET_FCC(n)	((mips3.ccr[1][31] >> fcc_shift[n]) & 1)
+#define SET_FCC(n,v) (mips3.ccr[1][31] = (mips3.ccr[1][31] & ~(1 << fcc_shift[n])) | ((v) << fcc_shift[n]))
 
 
 /*###################################################################################################
@@ -192,7 +194,7 @@ typedef struct
 	/* COP registers */
 	UINT64		cpr[4][32];
 	UINT64		ccr[4][32];
-	UINT8		cf[4][8];
+	UINT8		cf[4];
 
 	/* internal stuff */
 	UINT32		ppc;
@@ -256,6 +258,8 @@ static UINT64 readmem32ledw_double(offs_t offset);
 
 static void writemem32bedw_double(offs_t offset, UINT64 data);
 static void writemem32ledw_double(offs_t offset, UINT64 data);
+
+static UINT8 fcc_shift[8] = { 23, 25, 26, 27, 28, 29, 30, 31 };
 
 
 
@@ -375,7 +379,7 @@ static INLINE void invalid_instruction(UINT32 op)
 
 static void check_irqs(void)
 {
-	if ((CAUSE & SR & 0xff00) && (SR & SR_IE) && !(SR & SR_EXL) && !(SR & SR_ERL))
+	if ((CAUSE & SR & 0xfc00) && (SR & SR_IE) && !(SR & SR_EXL) && !(SR & SR_ERL))
 		generate_exception(EXCEPTION_INTERRUPT, 0);
 }
 
@@ -601,8 +605,16 @@ static INLINE void set_cop0_reg(int idx, UINT64 val)
 	{
 		case COP0_Cause:
 			CAUSE = (CAUSE & 0xfc00) | (val & ~0xfc00);
-			/* update interrupts -- software ints can occur this way */
-			check_irqs();
+			if (CAUSE & 0x300)
+			{
+				/* if we're in a delay slot, propogate the target PC before generating the exception */
+				if (mips3.nextpc != ~0)
+				{
+					mips3.pc = mips3.nextpc;
+					mips3.nextpc = ~0;
+				}
+				generate_exception(EXCEPTION_INTERRUPT, 0);
+			}
 			break;
 
 		case COP0_Status:
@@ -686,8 +698,8 @@ static INLINE void handle_cop0(UINT32 op)
 		case 0x08:	/* BC */
 			switch (RTREG)
 			{
-				case 0x00:	/* BCzF */	if (!mips3.cf[0][0]) ADDPC(SIMMVAL);				break;
-				case 0x01:	/* BCzF */	if (mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
+				case 0x00:	/* BCzF */	if (!mips3.cf[0]) ADDPC(SIMMVAL);					break;
+				case 0x01:	/* BCzF */	if (mips3.cf[0]) ADDPC(SIMMVAL);					break;
 				case 0x02:	/* BCzFL */	invalid_instruction(op);							break;
 				case 0x03:	/* BCzTL */	invalid_instruction(op);							break;
 				default:	invalid_instruction(op);										break;
@@ -770,10 +782,10 @@ static INLINE void handle_cop1(UINT32 op)
 		case 0x08:	/* BC */
 			switch ((op >> 16) & 3)
 			{
-				case 0x00:	/* BCzF */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
-				case 0x01:	/* BCzT */	if (mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL);	break;
-				case 0x02:	/* BCzFL */	if (!mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
-				case 0x03:	/* BCzTL */	if (mips3.cf[1][(op >> 18) & 7]) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
+				case 0x00:	/* BCzF */	if (!GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL);	break;
+				case 0x01:	/* BCzT */	if (GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL);	break;
+				case 0x02:	/* BCzFL */	if (!GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
+				case 0x03:	/* BCzTL */	if (GET_FCC((op >> 18) & 7)) ADDPC(SIMMVAL); else mips3.pc += 4;	break;
 			}
 			break;
 		default:
@@ -952,7 +964,7 @@ static INLINE void handle_cop1(UINT32 op)
 					break;
 
 				case 0x11:	/* R5000 */
-					if (mips3.cf[1][(op >> 18) & 7] == ((op >> 16) & 1))
+					if (GET_FCC((op >> 18) & 7) == ((op >> 16) & 1))
 					{
 						if (IS_SINGLE(op))	/* MOVT/F.S */
 							FDVALS = FSVALS;
@@ -1036,65 +1048,65 @@ static INLINE void handle_cop1(UINT32 op)
 				case 0x30:
 				case 0x38:
 					if (IS_SINGLE(op))	/* C.F.S */
-						mips3.cf[1][(op >> 8) & 7] = 0;
+						SET_FCC((op >> 8) & 7, 0);
 					else				/* C.F.D */
-						mips3.cf[1][(op >> 8) & 7] = 0;
+						SET_FCC((op >> 8) & 7, 0);
 					break;
 
 				case 0x31:
 				case 0x39:
 					if (IS_SINGLE(op))	/* C.UN.S */
-						mips3.cf[1][(op >> 8) & 7] = 0;
+						SET_FCC((op >> 8) & 7, 0);
 					else				/* C.UN.D */
-						mips3.cf[1][(op >> 8) & 7] = 0;
+						SET_FCC((op >> 8) & 7, 0);
 					break;
 
 				case 0x32:
 				case 0x3a:
 					if (IS_SINGLE(op))	/* C.EQ.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS == FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS == FTVALS));
 					else				/* C.EQ.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD == FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD == FTVALD));
 					break;
 
 				case 0x33:
 				case 0x3b:
 					if (IS_SINGLE(op))	/* C.UEQ.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS == FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS == FTVALS));
 					else				/* C.UEQ.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD == FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD == FTVALD));
 					break;
 
 				case 0x34:
 				case 0x3c:
 					if (IS_SINGLE(op))	/* C.OLT.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS < FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS < FTVALS));
 					else				/* C.OLT.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD < FTVALD));
 					break;
 
 				case 0x35:
 				case 0x3d:
 					if (IS_SINGLE(op))	/* C.ULT.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS < FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS < FTVALS));
 					else				/* C.ULT.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD < FTVALD));
 					break;
 
 				case 0x36:
 				case 0x3e:
 					if (IS_SINGLE(op))	/* C.OLE.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS <= FTVALS));
 					else				/* C.OLE.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD <= FTVALD));
 					break;
 
 				case 0x37:
 				case 0x3f:
 					if (IS_SINGLE(op))	/* C.ULE.S */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS);
+						SET_FCC((op >> 8) & 7, (FSVALS <= FTVALS));
 					else				/* C.ULE.D */
-						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD);
+						SET_FCC((op >> 8) & 7, (FSVALD <= FTVALD));
 					break;
 
 				default:
@@ -1270,6 +1282,7 @@ int mips3_execute(int cycles)
 	else
 		change_pc32bedw(mips3.pc);
 
+
 	/* check for IRQs */
 	check_irqs();
 
@@ -1307,7 +1320,7 @@ int mips3_execute(int cycles)
 				switch (op & 63)
 				{
 					case 0x00:	/* SLL */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 << SHIFT);					break;
-					case 0x01:	/* MOVF - R5000*/if (RDREG && mips3.cf[1][(op >> 18) & 7] == ((op >> 16) & 1)) RDVAL64 = RSVAL64;	break;
+					case 0x01:	/* MOVF - R5000*/if (RDREG && GET_FCC((op >> 18) & 7) == ((op >> 16) & 1)) RDVAL64 = RSVAL64;	break;
 					case 0x02:	/* SRL */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 >> SHIFT);					break;
 					case 0x03:	/* SRA */		if (RDREG) RDVAL64 = (INT32)RTVAL32 >> SHIFT;					break;
 					case 0x04:	/* SLLV */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 << (RSVAL32 & 31));		break;
@@ -1536,7 +1549,7 @@ unsigned mips3_get_reg(int regnum)
 		case MIPS3_SR:		return SR;
 		case MIPS3_EPC:		return mips3.cpr[0][COP0_EPC];
 		case MIPS3_CAUSE:	return mips3.cpr[0][COP0_Cause];
-		case MIPS3_COUNT:	return mips3.cpr[0][COP0_Count];
+		case MIPS3_COUNT:	return ((activecpu_gettotalcycles64() - mips3.count_zero_time) / 2);
 		case MIPS3_COMPARE:	return mips3.cpr[0][COP0_Compare];
 
 		case MIPS3_R0:		return (UINT32)mips3.r[0];
