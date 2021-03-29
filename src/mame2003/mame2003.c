@@ -125,6 +125,10 @@ static struct retro_variable          current_options[OPT_end + 1];
  * Data structures for libretro controllers
  * 
  ******************************************************************************/
+
+/* the first of our controllers can use the base retropad type and rename it,
+ * while any layout variations must subclass the type.
+ */
 #define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
 #define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
@@ -188,6 +192,7 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 	frontend message interface
 
 ******************************************************************************/
+
 void frontend_message_cb(const char *message_string, unsigned frames_to_display)
 {
   frontend_message.msg    = message_string;
@@ -932,6 +937,9 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
   update_variables(true);
 
+  /* Not all drivers support the maximum number of players; start at the highest index and decrement
+   * until the highest supported index, designating the unsupported indexes during the loop.
+   */
   for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
