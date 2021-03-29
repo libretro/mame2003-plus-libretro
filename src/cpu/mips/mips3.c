@@ -1036,65 +1036,65 @@ static INLINE void handle_cop1(UINT32 op)
 				case 0x30:
 				case 0x38:
 					if (IS_SINGLE(op))	/* C.F.S */
-						SET_FCC((op >> 8) & 7, 0);
+						mips3.cf[1][(op >> 8) & 7] = 0;
 					else				/* C.F.D */
-						SET_FCC((op >> 8) & 7, 0);
+						mips3.cf[1][(op >> 8) & 7] = 0;
 					break;
 
 				case 0x31:
 				case 0x39:
 					if (IS_SINGLE(op))	/* C.UN.S */
-						SET_FCC((op >> 8) & 7, 0);
+						mips3.cf[1][(op >> 8) & 7] = 0;
 					else				/* C.UN.D */
-						SET_FCC((op >> 8) & 7, 0);
+						mips3.cf[1][(op >> 8) & 7] = 0;
 					break;
 
 				case 0x32:
 				case 0x3a:
 					if (IS_SINGLE(op))	/* C.EQ.S */
-						SET_FCC((op >> 8) & 7, (FSVALS == FTVALS));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALS == FTVALS));
 					else				/* C.EQ.D */
-						SET_FCC((op >> 8) & 7, (FSVALD == FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD == FTVALD));
 					break;
 
 				case 0x33:
 				case 0x3b:
 					if (IS_SINGLE(op))	/* C.UEQ.S */
-						SET_FCC((op >> 8) & 7, (FSVALS == FTVALS));
+						(FSVALS == FTVALS));
 					else				/* C.UEQ.D */
-						SET_FCC((op >> 8) & 7, (FSVALD == FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD == FTVALD));
 					break;
 
 				case 0x34:
 				case 0x3c:
 					if (IS_SINGLE(op))	/* C.OLT.S */
-						SET_FCC((op >> 8) & 7, (FSVALS < FTVALS));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALS < FTVALS));
 					else				/* C.OLT.D */
-						SET_FCC((op >> 8) & 7, (FSVALD < FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD));
 					break;
 
 				case 0x35:
 				case 0x3d:
 					if (IS_SINGLE(op))	/* C.ULT.S */
-						SET_FCC((op >> 8) & 7, (FSVALS < FTVALS));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALS < FTVALS));
 					else				/* C.ULT.D */
-						SET_FCC((op >> 8) & 7, (FSVALD < FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD < FTVALD));
 					break;
 
 				case 0x36:
 				case 0x3e:
 					if (IS_SINGLE(op))	/* C.OLE.S */
-						SET_FCC((op >> 8) & 7, (FSVALS <= FTVALS));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS));
 					else				/* C.OLE.D */
-						SET_FCC((op >> 8) & 7, (FSVALD <= FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD));
 					break;
 
 				case 0x37:
 				case 0x3f:
 					if (IS_SINGLE(op))	/* C.ULE.S */
-						SET_FCC((op >> 8) & 7, (FSVALS <= FTVALS));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALS <= FTVALS));
 					else				/* C.ULE.D */
-						SET_FCC((op >> 8) & 7, (FSVALD <= FTVALD));
+						mips3.cf[1][(op >> 8) & 7] = (FSVALD <= FTVALD));
 					break;
 
 				default:
@@ -1310,7 +1310,7 @@ int mips3_execute(int cycles)
 				switch (op & 63)
 				{
 					case 0x00:	/* SLL */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 << SHIFT);					break;
-					case 0x01:	/* MOVF - R5000*/if (RDREG && GET_FCC((op >> 18) & 7) == ((op >> 16) & 1)) RDVAL64 = RSVAL64;	break;
+					case 0x01:	/* MOVF - R5000*/if (RDREG && mips3.cf[1][(op >> 8) & 7] == ((op >> 16) & 1)) RDVAL64 = RSVAL64;	break;
 					case 0x02:	/* SRL */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 >> SHIFT);					break;
 					case 0x03:	/* SRA */		if (RDREG) RDVAL64 = (INT32)RTVAL32 >> SHIFT;					break;
 					case 0x04:	/* SLLV */		if (RDREG) RDVAL64 = (INT32)(RTVAL32 << (RSVAL32 & 31));		break;
