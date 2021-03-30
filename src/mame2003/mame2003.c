@@ -1817,6 +1817,11 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   return 0;
 }
 
+/* 
+ * When the control mappings are emitted, the various classes of input codes are incremented by
+ * 1000, 2000, 3000, etc as a simple way to flag them for different treatment or prioritization.
+ */
+
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
@@ -1985,25 +1990,39 @@ const struct JoystickInfo *osd_get_joy_list(void)
   return mame_joy_map;
 }
 
+/* 
+ * When the control mappings are emitted, the various classes of input codes are incremented by
+ * 1000, 2000, 3000, etc as a simple way to flag them for different treatment or prioritization.
+ * osd_is_joy_pressed makes use of this in order to do both; it prioritizes analog directional
+ * input and also ignores analog values that fall below a cutoff threshold. 
+ */
 int osd_is_joy_pressed(int joycode)
 {
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
 
-	if ( joycode  >=1000 &&  joycode  < 2000)
-		return  retroJsState[joycode-1000];
+  /* First priority: Return button control states */
+	if (joycode >= 1000 && joycode < 2000)
+		return retroJsState[joycode-1000];
 
-	if ( joycode >= 2000 && joycode < 3000 )
+  /* Second second: Return analog joystick values, only if they exceed 64 */
+  /* TODO: convert 64 to a parameter that is set in mame2003.h */
+	if (joycode >= 2000 && joycode < 3000 )
 	{
-		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
+		if (retroJsState[joycode-2000] >= 64)  return retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
 
 	}
-	// only send dpad when analog is set or we will get a double input
-	if ( joycode >= 3000) return retroJsState[joycode-3000];
+
+	// Third: Return HAT/dpad when analog is set or we will get a double input
+	if (joycode >= 3000) return retroJsState[joycode-3000];
 
 	return 0;
 }
 
+/* 
+ * When the control mappings are emitted, the axis codes are increased by 2000 as a simple way
+ * to identify the different classes of codes.
+ */
 int osd_is_joystick_axis_code(int joycode)
 {
 if (joycode >= 2000  && joycode < 3000)  return 1;
