@@ -121,6 +121,45 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 
 /******************************************************************************
+ * 
+ * Data structures for libretro controllers
+ * 
+ ******************************************************************************/
+
+/* the first of our controllers can use the base retropad type and rename it,
+ * while any layout variations must subclass the type.
+ */
+#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
+#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
+
+static struct retro_controller_description controllers[] = {
+  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
+  { "Modern Fightstick",  PAD_MODERN  },
+  { "8-Button",           PAD_8BUTTON },
+  { "6-Button",           PAD_6BUTTON },
+  { NULL, 0 },
+};
+
+static struct retro_controller_description unsupported_controllers[] = {
+  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
+  { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
+  { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
+  { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
+  { NULL, 0 },
+};
+
+static struct retro_controller_info retropad_subdevice_ports[] = {
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, NUMBER_OF_INPUT_TYPES },
+  { 0 },
+};
+
+/******************************************************************************
 
   private function prototypes
 
@@ -135,6 +174,17 @@ static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
        int    convert_analog_scale(int input);
+static void   remove_slash (char* temp);
+
+
+/******************************************************************************
+
+  external function prototypes
+
+******************************************************************************/
+
+/* mame2003_video_get_geometry is found in video.c */
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
 
 /******************************************************************************
@@ -142,6 +192,7 @@ static void   check_system_specs(void);
 	frontend message interface
 
 ******************************************************************************/
+
 void frontend_message_cb(const char *message_string, unsigned frames_to_display)
 {
   frontend_message.msg    = message_string;
@@ -154,6 +205,26 @@ void frontend_message_cb(const char *message_string, unsigned frames_to_display)
   implementation of key libretro functions
 
 ******************************************************************************/
+
+unsigned retro_api_version(void)
+{
+  return RETRO_API_VERSION;
+}
+
+
+void retro_get_system_info(struct retro_system_info *info)
+{
+   /* this must match the 'corename' field in mame2003_plus_libretro.info
+    * in order for netplay to work. */
+  info->library_name = "MAME 2003-Plus";
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
+#endif
+  info->library_version = GIT_VERSION;
+  info->valid_extensions = "zip";
+  info->need_fullpath = true;
+  info->block_extract = true;
+}
 
 void retro_init (void)
 {
@@ -170,12 +241,14 @@ void retro_init (void)
   check_system_specs();
 }
 
+
 static void check_system_specs(void)
 {
    /* Should we set level variably like the API asks? Are there any frontends that implement this? */
    unsigned level = 10; /* For stub purposes, set to the highest level */
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
+
 
 void retro_set_environment(retro_environment_t cb)
 {
@@ -685,73 +758,6 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 }
 
-unsigned retro_api_version(void)
-{
-  return RETRO_API_VERSION;
-}
-
-
-void retro_get_system_info(struct retro_system_info *info)
-{
-   /* this must match the 'corename' field in mame2003_plus_libretro.info
-    * in order for netplay to work. */
-  info->library_name = "MAME 2003-Plus";
-#ifndef GIT_VERSION
-#define GIT_VERSION ""
-#endif
-  info->library_version = GIT_VERSION;
-  info->valid_extensions = "zip";
-  info->need_fullpath = true;
-  info->block_extract = true;
-}
-
-#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
-#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
-#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
-
-
-static struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
-  { "Modern Fightstick",  PAD_MODERN  },
-  { "8-Button",           PAD_8BUTTON },
-  { "6-Button",           PAD_6BUTTON },
-  { NULL, 0 },
-};
-
-static struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
-  { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
-  { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
-  { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
-  { NULL, 0 },
-};
-
-static struct retro_controller_info retropad_subdevice_ports[] = {
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { 0 },
-};
-
-static void remove_slash (char* temp)
-{
-  int i;
-
-  for(i=0; temp[i] != '\0'; ++i);
-
-  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
-
-  if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
-  {
-    temp[i-1] = 0;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
-  }
-  else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
-}
 
 bool retro_load_game(const struct retro_game_info *game)
 {
@@ -931,6 +937,9 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
   update_variables(true);
 
+  /* Not all drivers support the maximum number of players; start at the highest index and decrement
+   * until the highest supported index, designating the unsupported indexes during the loop.
+   */
   for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
@@ -1808,6 +1817,11 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   return 0;
 }
 
+/* 
+ * When the control mappings are emitted, the various classes of input codes are incremented by
+ * 1000, 2000, 3000, etc as a simple way to flag them for different treatment or prioritization.
+ */
+
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " HAT Left ",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + RETRO_DEVICE_ID_JOYPAD_LEFT +3000,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RP"   #DISPLAY_IDX " HAT Right",    ((DISPLAY_IDX - 1) * NUMBER_OF_CONTROLS) + RETRO_DEVICE_ID_JOYPAD_RIGHT +3000,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
@@ -1936,7 +1950,7 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_PAD_end][PER_P
 
 /******************************************************************************
 
-	Joystick & Mouse/Trackball
+	Joystick
 
 ******************************************************************************/
 
@@ -1976,35 +1990,42 @@ const struct JoystickInfo *osd_get_joy_list(void)
   return mame_joy_map;
 }
 
+/* 
+ * When the control mappings are emitted, the various classes of input codes are incremented by
+ * 1000, 2000, 3000, etc as a simple way to flag them for different treatment or prioritization.
+ * osd_is_joy_pressed makes use of this in order to do both; it prioritizes analog directional
+ * input and also ignores analog values that fall below a cutoff threshold. 
+ */
 int osd_is_joy_pressed(int joycode)
 {
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
 
-	if ( joycode  >=1000 &&  joycode  < 2000)
-		return  retroJsState[joycode-1000];
+  /* First priority: Return button control states */
+	if (joycode >= 1000 && joycode < 2000)
+		return retroJsState[joycode-1000];
 
-	if ( joycode >= 2000 && joycode < 3000 )
+  /* Second second: Return analog joystick values, only if they exceed 64 */
+  /* TODO: convert 64 to a parameter that is set in mame2003.h */
+	if (joycode >= 2000 && joycode < 3000 )
 	{
-		if (retroJsState[joycode-2000] >= 64) return  retroJsState[joycode-2000];
+		if (retroJsState[joycode-2000] >= 64)  return retroJsState[joycode-2000];
 		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
 
 	}
-	// only send dpad when analog is set or we will get a double input
-	if ( joycode >= 3000) return retroJsState[joycode-3000];
+
+	// Third: Return HAT/dpad after analog or we will get a double input
+	if (joycode >= 3000) return retroJsState[joycode-3000];
 
 	return 0;
 }
 
+/* 
+ * When the control mappings are emitted, the axis codes are increased by 2000.
+ */
 int osd_is_joystick_axis_code(int joycode)
 {
 if (joycode >= 2000  && joycode < 3000)  return 1;
 	return 0;
-}
-
-void osd_trak_read(int player, int *deltax, int *deltay)
-{
-    *deltax = mouse_x[player];
-    *deltay = mouse_y[player];
 }
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
@@ -2040,17 +2061,6 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
   }
 }
 
-void osd_customize_inputport_defaults(struct ipd *defaults)
-{
-
-}
-
-/* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
-int osd_joystick_needs_calibration(void) { return 0; }
-void osd_joystick_start_calibration(void){ }
-const char *osd_joystick_calibrate_next(void) { return 0; }
-void osd_joystick_calibrate(void) { }
-void osd_joystick_end_calibration(void) { }
 
 int convert_analog_scale(int input)
 {
@@ -2086,6 +2096,52 @@ int convert_analog_scale(int input)
 	if (neg_test) input =-abs(input);
 	return (int) input * 1.28;
 }
+
+/******************************************************************************
+ * 
+ * Legacy joystick calibration functions
+ * 
+ * As of March 2021: these MAME functions should not actually be used and will not be invoked
+ * as long as needs_calibration always returns 0. The libretro frontend is reponsible for
+ * providing calibrated position data.
+ ******************************************************************************/
+
+/* Joystick calibration routines BW 19981216 */
+int osd_joystick_needs_calibration(void) { return 0; }
+
+/* Preprocessing for joystick calibration. Returns 0 on success */
+void osd_joystick_start_calibration(void){ }
+
+/* Prepare the next calibration step. Return a description of this step. */
+/* (e.g. "move to upper left") */
+const char *osd_joystick_calibrate_next(void) { return 0; }
+
+/* Get the actual joystick calibration data for the current position */
+void osd_joystick_calibrate(void) { }
+
+/* Postprocessing (e.g. saving joystick data to config) */
+void osd_joystick_end_calibration(void) { }
+
+
+
+/******************************************************************************
+
+	Trackball, Spinner, Mouse
+
+******************************************************************************/
+
+/* osd_track_read expects the OSD to return the relative change in mouse or trackball
+ * coordinates since the last reading. If the user has set their mouse type to
+ * `pointer` in the core options, its coordinates are translated from absolute to
+ * relative coordinates before being stored in `mouse_x[]`.
+ */
+void osd_trak_read(int player, int *deltax, int *deltay)
+{
+    *deltax = mouse_x[player];
+    *deltay = mouse_y[player];
+}
+
+
 
 /******************************************************************************
 
@@ -2252,3 +2308,38 @@ const struct KeyboardInfo retroKeys[] =
 
     {0, 0, 0}
 };
+
+/******************************************************************************
+
+	Utility functions
+
+******************************************************************************/
+
+/* inptport.c defines general purpose defaults for key and joystick bindings which
+ * may be further adjusted by the OS dependent code to better match the available
+ * keyboard, e.g. one could map pause to the Pause key instead of P, or snapshot
+ * to PrtScr instead of F12. Of course the user can further change the settings
+ * to anything they like.
+ * 
+ * osd_customize_inputport_defaults is called on startup, before reading the
+ * configuration from disk. Scan the list, and change the keys/joysticks you want.
+ */
+void osd_customize_inputport_defaults(struct ipd *defaults){}
+
+
+static void remove_slash (char* temp)
+{
+  int i;
+
+  for(i=0; temp[i] != '\0'; ++i);
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
+
+  if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
+  {
+    temp[i-1] = 0;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
+  }
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
+}
