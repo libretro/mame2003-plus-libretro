@@ -2013,15 +2013,14 @@ int osd_is_joy_pressed(int joycode)
 
 	}
 
-	// Third: Return HAT/dpad when analog is set or we will get a double input
+	// Third: Return HAT/dpad after analog or we will get a double input
 	if (joycode >= 3000) return retroJsState[joycode-3000];
 
 	return 0;
 }
 
 /* 
- * When the control mappings are emitted, the axis codes are increased by 2000 as a simple way
- * to identify the different classes of codes.
+ * When the control mappings are emitted, the axis codes are increased by 2000.
  */
 int osd_is_joystick_axis_code(int joycode)
 {
