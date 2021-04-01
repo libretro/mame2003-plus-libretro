@@ -42,7 +42,7 @@ unsigned long             lastled = 0;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-int                 retroJsState[MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER]= {0}; /* initialise to zero - we are reading 6 players (6*27) */
+int                 retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
 int16_t             mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t             mouse_y[MAX_PLAYER_COUNT]= {0};
 int16_t             analogjoy[MAX_PLAYER_COUNT][4]= {0};
@@ -796,14 +796,14 @@ bool retro_load_game(const struct retro_game_info *game)
       options.romset_filename_noext = driver_lookup;
       break;
     }
-	if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
-	{
+    if(driverIndex == total_drivers -2) // we could fix the total drives in drivers c but the it pointless its taken into account here
+    {
       log_cb(RETRO_LOG_ERROR, LOGPRE "Driver index counter: %d. Game driver not found for %s!\n", driverIndex, driver_lookup);
       return false;
-	}
- }
+    }
+  }
 
-   if(!init_game(driverIndex))
+  if(!init_game(driverIndex))
     return false;
 
   #if (HAS_CYCLONE || HAS_DRZ80)
@@ -1225,8 +1225,6 @@ void retro_run (void)
 
 	for (i = 0; i < MAX_PLAYER_COUNT; i ++)
 	{
-		unsigned int offset = (i * OSD_INPUT_CODES_PER_PLAYER);
-
 		/* Analog joystick */
 
 		analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
@@ -1234,90 +1232,90 @@ void retro_run (void)
 		analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
 		analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
 
-		retroJsState[OSD_JOYPAD_B + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-		retroJsState[OSD_JOYPAD_Y + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-		retroJsState[OSD_JOYPAD_SELECT + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
-		retroJsState[OSD_JOYPAD_START  + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
-		retroJsState[OSD_JOYPAD_UP    + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
-		retroJsState[OSD_JOYPAD_DOWN  + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
-		retroJsState[OSD_JOYPAD_LEFT  + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
-		retroJsState[OSD_JOYPAD_RIGHT + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-		retroJsState[OSD_JOYPAD_A + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-		retroJsState[OSD_JOYPAD_X + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-		retroJsState[OSD_JOYPAD_L + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-		retroJsState[OSD_JOYPAD_R + offset]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-		retroJsState[OSD_JOYPAD_L2 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-		retroJsState[OSD_JOYPAD_R2 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
-		retroJsState[OSD_JOYPAD_L3 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
-		retroJsState[OSD_JOYPAD_R3 + offset] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+		retroJsState[i][OSD_JOYPAD_B]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+		retroJsState[i][OSD_JOYPAD_Y]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+		retroJsState[i][OSD_JOYPAD_SELECT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+		retroJsState[i][OSD_JOYPAD_START] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
+		retroJsState[i][OSD_JOYPAD_UP]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+		retroJsState[i][OSD_JOYPAD_DOWN]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+		retroJsState[i][OSD_JOYPAD_LEFT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+		retroJsState[i][OSD_JOYPAD_RIGHT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+		retroJsState[i][OSD_JOYPAD_A]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+		retroJsState[i][OSD_JOYPAD_X]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+		retroJsState[i][OSD_JOYPAD_L]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+		retroJsState[i][OSD_JOYPAD_R]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+		retroJsState[i][OSD_JOYPAD_L2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+		retroJsState[i][OSD_JOYPAD_R2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
+		retroJsState[i][OSD_JOYPAD_L3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+		retroJsState[i][OSD_JOYPAD_R3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
 		if (options.mouse_device)
 		{
 			if (options.mouse_device == RETRO_DEVICE_MOUSE)
 			{
-				retroJsState[OSD_MOUSE_LEFT_CLICK   + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-				retroJsState[OSD_MOUSE_RIGHT_CLICK  + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-				retroJsState[OSD_MOUSE_MIDDLE_CLICK + offset] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+				retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+				retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+				retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
 				mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
 				mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
 			}
 			else /* RETRO_DEVICE_POINTER */
 			{
 				pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-				retroJsState[OSD_MOUSE_LEFT_CLICK   + offset] = pointer_pressed;
-				retroJsState[OSD_MOUSE_RIGHT_CLICK  + offset] = 0; /* padding */
-				retroJsState[OSD_MOUSE_MIDDLE_CLICK + offset] = 0; /* padding */
+				retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
+				retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
+				retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
 				mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
 				mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
 			}
 		}
 		else
 		{
-			retroJsState[OSD_MOUSE_LEFT_CLICK   + offset] = 0;
-			retroJsState[OSD_MOUSE_RIGHT_CLICK  + offset] = 0;
-			retroJsState[OSD_MOUSE_MIDDLE_CLICK + offset] = 0;
+			retroJsState[i][OSD_MOUSE_LEFT_CLICK] = 0;
+			retroJsState[i][OSD_MOUSE_RIGHT_CLICK] = 0;
+			retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
 		}
 
 
 		if (convert_analog_scale(analogjoy[i][0]) < -PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][0]);
+			retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X] = convert_analog_scale(analogjoy[i][0]);
     else
-      retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_X + offset] = 0;
+      retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X] = 0;
 
 		if (convert_analog_scale(analogjoy[i][0]) >  PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_X + offset] = convert_analog_scale(analogjoy[i][0]);
+			retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X] = convert_analog_scale(analogjoy[i][0]);
     else
-      retroJsState[ OSD_ANALOG_LEFT_POSITIVE_X + offset] = 0;
+      retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X] = 0;
 
 		if (convert_analog_scale(analogjoy[i][1]) < -PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_Y + offset] = convert_analog_scale(analogjoy[i][1]);
+			retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y] = convert_analog_scale(analogjoy[i][1]);
     else
-      retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_Y + offset] = 0;
+      retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y] = 0;
 
 		if (convert_analog_scale(analogjoy[i][1]) >  PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_Y + offset] = convert_analog_scale(analogjoy[i][1]);
+			retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y] = convert_analog_scale(analogjoy[i][1]);
     else
-      retroJsState[ OSD_ANALOG_LEFT_POSITIVE_Y + offset] = 0;
+      retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y] = 0;
 
 		if (convert_analog_scale(analogjoy[i][2]) < -PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][2]);
+			retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = convert_analog_scale(analogjoy[i][2]);
     else
-      retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = 0;
+      retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = 0;
 
 		if (convert_analog_scale(analogjoy[i][2]) >  PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = convert_analog_scale(analogjoy[i][2]);
+			retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = convert_analog_scale(analogjoy[i][2]);
     else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
+      retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = 0;
 
 		if (convert_analog_scale(analogjoy[i][3]) < -PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][3]);
+			retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = convert_analog_scale(analogjoy[i][3]);
     else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
+      retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = 0;
 
 		if (convert_analog_scale(analogjoy[i][3]) >  PRESSURE_CHECK)
-			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_Y + offset] = convert_analog_scale(analogjoy[i][3]);
+			retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = convert_analog_scale(analogjoy[i][3]);
     else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_Y + offset] = 0;
+      retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = 0;
 	}
    mame_frame();
 }
@@ -1711,7 +1709,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       case 4: player_flag = IPF_PLAYER4; break;
       case 5: player_flag = IPF_PLAYER5; break;
       case 6: player_flag = IPF_PLAYER6; break;
-	  default: player_flag = IPF_PLAYER1; break;
+	   default: player_flag = IPF_PLAYER1; break;
     }
   }
 
