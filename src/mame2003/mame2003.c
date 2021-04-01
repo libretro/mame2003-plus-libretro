@@ -138,8 +138,6 @@ static struct retro_controller_description controllers[] = {
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
-  { "Trackball/Spinner",  RETRO_DEVICE_MOUSE },
-  { "Lightgun",           RETRO_DEVICE_LIGHTGUN },
   { NULL, 0 },
 };
 
@@ -148,8 +146,6 @@ static struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
-  { "UNSUPPORTED (Trackball/Spinner)",  RETRO_DEVICE_MOUSE },
-  { "UNSUPPORTED (Lightgun)",           RETRO_DEVICE_LIGHTGUN },
   { NULL, 0 },
 };
 
@@ -2016,11 +2012,11 @@ int osd_is_joy_pressed(int joycode)
 {
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
 
-  /* First priority: Return button control states */
+  /* First: Return button control states */
 	if (joycode >= 1000 && joycode < 2000)
 		return retroJsState[joycode-1000];
 
-  /* Second second: Return analog joystick values, only if they exceed the threshold */
+  /* Second: Return analog joystick values, only if they exceed the threshold */
 	if (joycode >= 2000 && joycode < 3000 )
 	{
 		if (retroJsState[joycode-2000] >=  NORMALIZED_ANALOG_THRESHOLD) return retroJsState[joycode-2000];

@@ -61,7 +61,8 @@ extern "C" {
 #define MAX_GFX_ELEMENTS        32
 #define MAX_MEMORY_REGIONS      32
 
-#define PRESSURE_CHECK     25  /* (int)(1.28 * 20) */
+#define PRESSURE_CHECK                25  /* (int)(1.28 * 20) */
+#define NORMALIZED_ANALOG_THRESHOLD   64
 
 #define X_AXIS           0
 #define Y_AXIS           1
