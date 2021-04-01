@@ -1233,22 +1233,22 @@ void retro_run (void)
     analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
     analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
 
-    retroJsState[i][OSD_JOYPAD_B]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-    retroJsState[i][OSD_JOYPAD_Y]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+    retroJsState[i][OSD_JOYPAD_B]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+    retroJsState[i][OSD_JOYPAD_Y]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
     retroJsState[i][OSD_JOYPAD_SELECT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
     retroJsState[i][OSD_JOYPAD_START]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
-    retroJsState[i][OSD_JOYPAD_UP]    = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
-    retroJsState[i][OSD_JOYPAD_DOWN]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
-    retroJsState[i][OSD_JOYPAD_LEFT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
-    retroJsState[i][OSD_JOYPAD_RIGHT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-    retroJsState[i][OSD_JOYPAD_A]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-    retroJsState[i][OSD_JOYPAD_X]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-    retroJsState[i][OSD_JOYPAD_L]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-    retroJsState[i][OSD_JOYPAD_R]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-    retroJsState[i][OSD_JOYPAD_L2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-    retroJsState[i][OSD_JOYPAD_R2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
-    retroJsState[i][OSD_JOYPAD_L3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
-    retroJsState[i][OSD_JOYPAD_R3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+    retroJsState[i][OSD_JOYPAD_UP]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+    retroJsState[i][OSD_JOYPAD_DOWN]   = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+    retroJsState[i][OSD_JOYPAD_LEFT]   = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+    retroJsState[i][OSD_JOYPAD_RIGHT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+    retroJsState[i][OSD_JOYPAD_A]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+    retroJsState[i][OSD_JOYPAD_X]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+    retroJsState[i][OSD_JOYPAD_L]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+    retroJsState[i][OSD_JOYPAD_R]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+    retroJsState[i][OSD_JOYPAD_L2]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+    retroJsState[i][OSD_JOYPAD_R2]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
+    retroJsState[i][OSD_JOYPAD_L3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+    retroJsState[i][OSD_JOYPAD_R3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
     if (options.mouse_device)
     {
@@ -1968,7 +1968,7 @@ int osd_is_joy_pressed(int joycode)
 {
   int player_index, raw_code = -1;
 
-	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
+  if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   player_index = calc_player_index(joycode);
   raw_code = calc_raw_joycode(joycode);
@@ -1979,7 +1979,7 @@ int osd_is_joy_pressed(int joycode)
     if (retroJsState[player_index][raw_code] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][raw_code];
   }
 
-	return retroJsState[player_index][raw_code];
+  return retroJsState[player_index][raw_code];
 }
 
 
@@ -1989,7 +1989,7 @@ int osd_is_joystick_axis_code(int joycode)
   raw_code = calc_raw_joycode(joycode);
   if(raw_code >= OSD_ANALOG_LEFT_NEGATIVE_X && raw_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
 
-	return 0;
+  return 0;
 }
 
 int calc_raw_joycode(int joycode)
