@@ -2009,33 +2009,36 @@ int calc_player_index(int joycode)
   return -1;
 }
 
-void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
+void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
   int i;
   int value;
 
-  for (i = 0; i < MAX_ANALOG_AXES; i ++)
+  for(i = 0; i < MAX_ANALOG_AXES; i ++)
   {
-    int code;
+    int raw_code;
     value = 0;
-    if (analogjoy_input[i] != CODE_NONE)
+    if(analogjoy_input[i] != CODE_NONE)
     {
-      code = analogjoy_input[i];
+      raw_code = calc_raw_code(analogjoy_input[i]);
 
-      if ( code == (player * OSD_INPUT_CODES_PER_PLAYER) + 19 + 2000 || code == (player * OSD_INPUT_CODES_PER_PLAYER) + 20 + 2000 )
+      if(raw_code == OSD_ANALOG_LEFT_NEGATIVE_X || raw_code == OSD_ANALOG_LEFT_POSITIVE_X)
         value = convert_analog_scale(analogjoy[player][0]);
 
-      else if ( code == (player * OSD_INPUT_CODES_PER_PLAYER) + 21 + 2000 || code == (player * OSD_INPUT_CODES_PER_PLAYER) + 22 + 2000 )
+      else if(raw_code == OSD_ANALOG_LEFT_NEGATIVE_Y || raw_code == OSD_ANALOG_LEFT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][1]);
 
-      else if ( code == (player * OSD_INPUT_CODES_PER_PLAYER) + 23 + 2000 || code == (player * OSD_INPUT_CODES_PER_PLAYER) + 24 + 2000 )
+      else if(raw_code == OSD_ANALOG_RIGHT_NEGATIVE_X || raw_code == OSD_ANALOG_RIGHT_POSITIVE_X)
         value = convert_analog_scale(analogjoy[player][2]);
 
-      else if ( code == (player * OSD_INPUT_CODES_PER_PLAYER) + 25 + 2000 || code == (player * OSD_INPUT_CODES_PER_PLAYER) + 26 + 2000 )
+      else if(raw_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || raw_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][3]);
 
-      /* opposite when reversing axis mapping */
-      if (code%2 == 0) value = -value;
+      if( raw_code == OSD_ANALOG_LEFT_NEGATIVE_X  || raw_code == OSD_ANALOG_LEFT_NEGATIVE_Y ||
+          raw_code == OSD_ANALOG_RIGHT_NEGATIVE_X || raw_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
+      {
+        value = -value;
+      }
 
       analog_axis[i]=value;
     }
