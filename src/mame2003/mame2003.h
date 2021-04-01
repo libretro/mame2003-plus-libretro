@@ -78,8 +78,6 @@ extern "C" {
 #define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
 
 #define NUMBER_OF_CONTROLS    27   /* used to allocate and iterate through an array that contains the current state of every possible control */
-
-#define MAX_PLAYER_COUNT       6   /* We support a maximum of six simultaneous players */       
 #define NUMBER_OF_INPUT_TYPES  4   /* has to be updated manually! */
 
 enum
@@ -100,6 +98,8 @@ enum /* the "display numbers" for each player, as opposed to their array index *
   DISP_PLAYER5,
   DISP_PLAYER6
 };
+
+#define MAX_PLAYER_COUNT  DISP_PLAYER6   /* We currently support a maximum of six simultaneous players */       
 
 
 /******************************************************************************
