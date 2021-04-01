@@ -96,11 +96,10 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 
 /******************************************************************************
 
-	The following is a set of OS joystick codes (also including buttons and controls
+    The following is a set of OS joystick codes (also including buttons and controls
     on mice, lightguns, etc). In MAME 2003+, the libretro API takes the role of the
     MAME OSD and these codes are used to represent the full range of input states 
-    that can exist among any of the libretro API abstractions that can be connected
-    to the MAME code.
+    that can exist among any of the libretro API abstractions that can be used.
 
     The names for elements of the enum reflect the fact that these codes parallel
     input codes in libretro.h; because each of the libretro input abstractions uses

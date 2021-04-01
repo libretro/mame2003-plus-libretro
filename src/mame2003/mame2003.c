@@ -2001,7 +2001,8 @@ int calc_raw_joycode(int joycode)
 
 int calc_player_index(int joycode)
 {
-  for(int i = MAX_PLAYER_COUNT; i > 0; i--)
+  int i = -1;
+  for(i = MAX_PLAYER_COUNT; i > 0; i--)
   {
     if(joycode - (i * 1000) > 0)
       return i;
