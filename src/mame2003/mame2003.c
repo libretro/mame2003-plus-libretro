@@ -1207,71 +1207,71 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-	int i;
-	bool pointer_pressed;
-	const struct KeyboardInfo *thisInput;
-	bool updated = false;
-    if (running == 0) running =1;
-	poll_cb();
+  int i;
+  bool pointer_pressed;
+  const struct KeyboardInfo *thisInput;
+  bool updated = false;
+  if (running == 0) running =1;
+  poll_cb();
 
-	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-		update_variables(false);
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+    update_variables(false);
 
-	/* Keyboard */
-	thisInput = retroKeys;
-	while(thisInput->name)
-	{
-		retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
-		thisInput ++;
-	}
+  /* Keyboard */
+  thisInput = retroKeys;
+  while(thisInput->name)
+  {
+    retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
+    thisInput ++;
+  }
 
-	for (i = 0; i < MAX_PLAYER_COUNT; i ++)
-	{
-		/* Analog joystick */
-		analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
-		analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-		analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+  for (i = 0; i < MAX_PLAYER_COUNT; i ++)
+  {
+    /* Analog joystick */
+    analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
+    analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
+    analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+    analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
 
-		retroJsState[i][OSD_JOYPAD_B]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-		retroJsState[i][OSD_JOYPAD_Y]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-		retroJsState[i][OSD_JOYPAD_SELECT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
-		retroJsState[i][OSD_JOYPAD_START]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
-		retroJsState[i][OSD_JOYPAD_UP]    = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
-		retroJsState[i][OSD_JOYPAD_DOWN]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
-		retroJsState[i][OSD_JOYPAD_LEFT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
-		retroJsState[i][OSD_JOYPAD_RIGHT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-		retroJsState[i][OSD_JOYPAD_A]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-		retroJsState[i][OSD_JOYPAD_X]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-		retroJsState[i][OSD_JOYPAD_L]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-		retroJsState[i][OSD_JOYPAD_R]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-		retroJsState[i][OSD_JOYPAD_L2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-		retroJsState[i][OSD_JOYPAD_R2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
-		retroJsState[i][OSD_JOYPAD_L3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
-		retroJsState[i][OSD_JOYPAD_R3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+    retroJsState[i][OSD_JOYPAD_B]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+    retroJsState[i][OSD_JOYPAD_Y]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+    retroJsState[i][OSD_JOYPAD_SELECT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+    retroJsState[i][OSD_JOYPAD_START]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
+    retroJsState[i][OSD_JOYPAD_UP]    = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+    retroJsState[i][OSD_JOYPAD_DOWN]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+    retroJsState[i][OSD_JOYPAD_LEFT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+    retroJsState[i][OSD_JOYPAD_RIGHT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+    retroJsState[i][OSD_JOYPAD_A]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+    retroJsState[i][OSD_JOYPAD_X]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+    retroJsState[i][OSD_JOYPAD_L]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+    retroJsState[i][OSD_JOYPAD_R]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+    retroJsState[i][OSD_JOYPAD_L2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+    retroJsState[i][OSD_JOYPAD_R2] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
+    retroJsState[i][OSD_JOYPAD_L3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+    retroJsState[i][OSD_JOYPAD_R3] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
-		if (options.mouse_device)
-		{
-			if (options.mouse_device == RETRO_DEVICE_MOUSE)
-			{
-				retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-				retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-				retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
-				mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-				mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-			}
-			else /* RETRO_DEVICE_POINTER */
-			{
-				pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-				retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
-				retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
-				retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
-				mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
-				mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
-			}
+    if (options.mouse_device)
+    {
+      if (options.mouse_device == RETRO_DEVICE_MOUSE)
+      {
+        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+        mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+        mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+      }
+      else /* RETRO_DEVICE_POINTER */
+      {
+        pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
+        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
+        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
+        mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
+        mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
+      }
     }
     else
-		{
+    {
       retroJsState[i][OSD_MOUSE_LEFT_CLICK] = 0;
       retroJsState[i][OSD_MOUSE_RIGHT_CLICK] = 0;
       retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
@@ -1316,8 +1316,8 @@ void retro_run (void)
       retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = convert_analog_scale(analogjoy[i][3]);
     else
       retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = 0;
-	}
-   mame_frame();
+  }
+  mame_frame();
 }
 
 void retro_unload_game(void)
