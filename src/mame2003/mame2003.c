@@ -150,12 +150,12 @@ static struct retro_controller_description unsupported_controllers[] = {
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
-  { controllers, NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { 0 },
 };
 
