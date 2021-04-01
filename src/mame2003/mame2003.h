@@ -64,22 +64,14 @@ extern "C" {
 #define PRESSURE_CHECK                25  /* (int)(1.28 * 20) */
 #define NORMALIZED_ANALOG_THRESHOLD   64
 
-#define X_AXIS           0
-#define Y_AXIS           1
-#define Z_AXIS           2
-#define PEDAL_AXIS       3
-#define MAX_ANALOG_AXES  4
-
-#define DIRECTIONAL_COUNT         12  /* map Left, Right Up, Down as well as B, Y, A, X */
-#define DIRECTIONAL_COUNT_NO_DBL   4
-#define BUTTON_COUNT_PER          12  /* 10 buttons plus Start and Select          */
-#define MOUSE_BUTTON_PER           3
-
-#define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
-#define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
-
-#define NUMBER_OF_CONTROLS    27   /* used to allocate and iterate through an array that contains the current state of every possible control */
-#define NUMBER_OF_INPUT_TYPES  4   /* has to be updated manually! */
+enum
+{ 
+  X_AXIS = 0,
+  Y_AXIS,
+  Z_AXIS,
+  PEDAL_AXIS,
+  MAX_ANALOG_AXES
+};
 
 enum
 {
@@ -87,7 +79,7 @@ enum
   IDX_MODERN,
   IDX_8BUTTON,
   IDX_6BUTTON,
-  IDX_PAD_end,
+  IDX_NUMBER_OF_INPUT_TYPES
 };
 
 enum /* the "display numbers" for each player, as opposed to their array index */
