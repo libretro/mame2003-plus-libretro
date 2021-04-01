@@ -1281,43 +1281,43 @@ void retro_run (void)
 
 		if (convert_analog_scale(analogjoy[i][0]) < -PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][0]);
-    else
-      retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_X + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_X + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][0]) >  PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_X + offset] = convert_analog_scale(analogjoy[i][0]);
-    else
-      retroJsState[ OSD_ANALOG_LEFT_POSITIVE_X + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_X + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][1]) < -PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_Y + offset] = convert_analog_scale(analogjoy[i][1]);
-    else
-      retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_Y + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_LEFT_NEGATIVE_Y + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][1]) >  PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_Y + offset] = convert_analog_scale(analogjoy[i][1]);
-    else
-      retroJsState[ OSD_ANALOG_LEFT_POSITIVE_Y + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_LEFT_POSITIVE_Y + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][2]) < -PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][2]);
-    else
-      retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][2]) >  PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = convert_analog_scale(analogjoy[i][2]);
-    else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][3]) < -PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_X + offset] = convert_analog_scale(analogjoy[i][3]);
-    else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_X + offset] = 0;
 
 		if (convert_analog_scale(analogjoy[i][3]) >  PRESSURE_CHECK)
 			retroJsState[ OSD_ANALOG_RIGHT_NEGATIVE_Y + offset] = convert_analog_scale(analogjoy[i][3]);
-    else
-      retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_Y + offset] = 0;
+		else
+			retroJsState[ OSD_ANALOG_RIGHT_POSITIVE_Y + offset] = 0;
 	}
    mame_frame();
 }
