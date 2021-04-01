@@ -940,7 +940,7 @@ bool retro_load_game(const struct retro_game_info *game)
   /* Not all drivers support the maximum number of players; start at the highest index and decrement
    * until the highest supported index, designating the unsupported indexes during the loop.
    */
-  for(port_index = DISP_PLAYER6 - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
+  for(port_index = MAX_PLAYER_COUNT - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
     retropad_subdevice_ports[port_index].num_types   = 4;
@@ -1642,10 +1642,10 @@ void retro_describe_controls(void)
   int retro_type   = 0;
   int display_idx  = 0;
 
-  struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_CONTROLS) +  1]; /* + 1 for the final zeroed record. */
+  struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * NUMBER_OF_CONTROLS) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= DISP_PLAYER6); display_idx++)
+  for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= MAX_PLAYER_COUNT); display_idx++)
   {
     for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_CONTROLS; retro_type++)
     {
@@ -1818,6 +1818,18 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 }
 
 /* 
+ * Each line created by these emitters composes a JoystickInfo struct.
+ * 
+ * struct JoystickInfo
+ * {
+ *   const char *name;        // OS dependant name; 0 terminates the list
+ *   unsigned code;           // OS dependant code
+ *   InputCode standardcode;	// CODE_xxx equivalent from list in input.h, or CODE_OTHER if n/a
+ * };
+ * 
+ * In the context of MAME 2003+, the 'OS' is the libretro, so we determine the unique codes for
+ * our input.
+ * 
  * When the control mappings are emitted, the various classes of input codes are incremented by
  * 1000, 2000, 3000, etc as a simple way to flag them for different treatment or prioritization.
  */
@@ -1962,7 +1974,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int overall_idx    = 0;
   int display_idx    = 0;
 
-  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  for(display_idx = DISP_PLAYER1; display_idx <= MAX_PLAYER_COUNT; display_idx++)
   {
     for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
     {
@@ -2000,17 +2012,15 @@ int osd_is_joy_pressed(int joycode)
 {
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0;
 
-  /* First priority: Return button control states */
+  /* First: Return button control states */
 	if (joycode >= 1000 && joycode < 2000)
 		return retroJsState[joycode-1000];
 
-  /* Second second: Return analog joystick values, only if they exceed 64 */
-  /* TODO: convert 64 to a parameter that is set in mame2003.h */
+  /* Second: Return analog joystick values, only if they exceed the threshold */
 	if (joycode >= 2000 && joycode < 3000 )
 	{
-		if (retroJsState[joycode-2000] >= 64)  return retroJsState[joycode-2000];
-		if (retroJsState[joycode-2000] <= -64) return retroJsState[joycode-2000];
-
+		if (retroJsState[joycode-2000] >=  NORMALIZED_ANALOG_THRESHOLD) return retroJsState[joycode-2000];
+		if (retroJsState[joycode-2000] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[joycode-2000];
 	}
 
 	// Third: Return HAT/dpad after analog or we will get a double input
