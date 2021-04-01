@@ -173,7 +173,7 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
-       int    calc_raw_code(int joycode);
+       int    calc_raw_joycode(int joycode);
        int    calc_player_index(int joycode);
        int    convert_analog_scale(int input);
 static void   remove_slash (char* temp);
@@ -1971,7 +1971,7 @@ int osd_is_joy_pressed(int joycode)
 	if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   player_index = calc_player_index(joycode);
-  raw_code = calc_raw_code(joycode);
+  raw_code = calc_raw_joycode(joycode);
 
   if(osd_is_joystick_axis_code(joycode))
   {
@@ -1986,13 +1986,13 @@ int osd_is_joy_pressed(int joycode)
 int osd_is_joystick_axis_code(int joycode)
 {
   int raw_code = -1;
-  raw_code = calc_raw_code(joycode);
+  raw_code = calc_raw_joycode(joycode);
   if(raw_code >= OSD_ANALOG_LEFT_NEGATIVE_X && raw_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
 
 	return 0;
 }
 
-int calc_raw_code(int joycode)
+int calc_raw_joycode(int joycode)
 {
   int player_index = -1;
   player_index = calc_player_index(joycode);
@@ -2020,7 +2020,7 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
     value = 0;
     if(analogjoy_input[i] != CODE_NONE)
     {
-      raw_code = calc_raw_code(analogjoy_input[i]);
+      raw_code = calc_raw_joycode(analogjoy_input[i]);
 
       if(raw_code == OSD_ANALOG_LEFT_NEGATIVE_X || raw_code == OSD_ANALOG_LEFT_POSITIVE_X)
         value = convert_analog_scale(analogjoy[player][0]);
