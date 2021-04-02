@@ -1980,7 +1980,7 @@ int osd_is_joy_pressed(int joycode)
     if (retroJsState[player_index][osd_code] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][osd_code];
   }
 
-  return retroJsState[player_index][osd_code];
+  return 0;
 }
 
 
