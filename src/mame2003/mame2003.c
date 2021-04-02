@@ -1709,7 +1709,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       case 4: player_flag = IPF_PLAYER4; break;
       case 5: player_flag = IPF_PLAYER5; break;
       case 6: player_flag = IPF_PLAYER6; break;
-	   default: player_flag = IPF_PLAYER1; break;
+     default: player_flag = IPF_PLAYER1; break;
     }
   }
 
@@ -1972,7 +1972,8 @@ int osd_is_joy_pressed(int joycode)
 
   player_index = calc_player_index(joycode);
   osd_code = calc_osd_joycode(joycode);
-  log_cb(RETRO_LOG_INFO, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code);
+
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code); */
 
   if(osd_is_joystick_axis_code(joycode))
   {
@@ -1987,6 +1988,7 @@ int osd_is_joy_pressed(int joycode)
 int osd_is_joystick_axis_code(int joycode)
 {
   int osd_code = -1;
+
   osd_code = calc_osd_joycode(joycode);
   if(osd_code >= OSD_ANALOG_LEFT_NEGATIVE_X && osd_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
     return 1;
@@ -1997,6 +1999,7 @@ int osd_is_joystick_axis_code(int joycode)
 int calc_osd_joycode(int joycode)
 {
   int player_index = -1;
+
   player_index = calc_player_index(joycode);
 
   return (joycode - ((player_index + 1) * 1000));
@@ -2005,6 +2008,7 @@ int calc_osd_joycode(int joycode)
 int calc_player_index(int joycode)
 {
   int i = -1;
+
   for(i = MAX_PLAYER_COUNT; i > 0; i--)
   {
     if(joycode - (i * 1000) >= 0)
@@ -2037,13 +2041,10 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][3]);
-/*
-      if( osd_code == OSD_ANALOG_LEFT_NEGATIVE_X  || osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y ||
-          osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
-      {
+
+      /* opposite when reversing axis mapping */
+      if( osd_code%2 == 0)
         value = -value;
-      }
-*/
 
       analog_axis[i]=value;
     }
