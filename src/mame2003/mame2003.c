@@ -2037,12 +2037,13 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][3]);
-
+/*
       if( osd_code == OSD_ANALOG_LEFT_NEGATIVE_X  || osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y ||
           osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
       {
         value = -value;
       }
+*/
 
       analog_axis[i]=value;
     }
