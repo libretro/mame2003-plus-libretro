@@ -2008,7 +2008,7 @@ int calc_player_index(int joycode)
   for(i = MAX_PLAYER_COUNT; i > 0; i--)
   {
     if(joycode - (i * 1000) >= 0)
-      return i - 1;
+      return i;
   }
   return -1;
 }
