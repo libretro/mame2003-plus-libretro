@@ -1966,7 +1966,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
-  int player_index, osd_code = -1;
+  int player_index = -1, osd_code = -1;
 
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
@@ -1998,6 +1998,7 @@ int calc_osd_joycode(int joycode)
 {
   int player_index = -1;
   player_index = calc_player_index(joycode);
+
   return (joycode - (player_index * 1000));
 }
 
@@ -2065,7 +2066,7 @@ int convert_analog_scale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
-    input = (int)round(scaled);
+		input = (int)round(scaled);
 
 		if (input > +32767)
 		{
