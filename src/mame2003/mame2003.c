@@ -1988,6 +1988,7 @@ int osd_is_joystick_axis_code(int joycode)
   int raw_code = -1;
   raw_code = calc_raw_joycode(joycode);
   if(raw_code >= OSD_ANALOG_LEFT_NEGATIVE_X && raw_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
+    return 1;
 
   return 0;
 }
