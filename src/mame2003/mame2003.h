@@ -64,22 +64,14 @@ extern "C" {
 #define PRESSURE_CHECK                25  /* (int)(1.28 * 20) */
 #define NORMALIZED_ANALOG_THRESHOLD   64
 
-#define X_AXIS           0
-#define Y_AXIS           1
-#define Z_AXIS           2
-#define PEDAL_AXIS       3
-#define MAX_ANALOG_AXES  4
-
-#define DIRECTIONAL_COUNT         12  /* map Left, Right Up, Down as well as B, Y, A, X */
-#define DIRECTIONAL_COUNT_NO_DBL   4
-#define BUTTON_COUNT_PER          12  /* 10 buttons plus Start and Select          */
-#define MOUSE_BUTTON_PER           3
-
-#define PER_PLAYER_CTRL_COUNT                   (DIRECTIONAL_COUNT + BUTTON_COUNT_PER + MOUSE_BUTTON_PER)
-#define PER_PLAYER_CTRL_COUNT_NO_DBL_NO_MOUSE   (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
-
-#define NUMBER_OF_CONTROLS    27   /* used to allocate and iterate through an array that contains the current state of every possible control */
-#define NUMBER_OF_INPUT_TYPES  4   /* has to be updated manually! */
+enum
+{ 
+  X_AXIS = 0,
+  Y_AXIS,
+  Z_AXIS,
+  PEDAL_AXIS,
+  MAX_ANALOG_AXES
+};
 
 enum
 {
@@ -87,7 +79,7 @@ enum
   IDX_MODERN,
   IDX_8BUTTON,
   IDX_6BUTTON,
-  IDX_PAD_end,
+  IDX_NUMBER_OF_INPUT_TYPES
 };
 
 enum /* the "display numbers" for each player, as opposed to their array index */
@@ -101,6 +93,51 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 };
 
 #define MAX_PLAYER_COUNT  DISP_PLAYER6   /* We currently support a maximum of six simultaneous players */       
+
+/******************************************************************************
+
+    The following is a set of OS joystick codes (also including buttons and controls
+    on mice, lightguns, etc). In MAME 2003+, the libretro API takes the role of the
+    MAME OSD and these codes are used to represent the full range of input states 
+    that can exist among any of the libretro API abstractions that can be used.
+
+    The names for elements of the enum reflect the fact that these codes parallel
+    input codes in libretro.h; because each of the libretro input abstractions uses
+    independent, overlapping code ranges, we cannot simply reuse the libretro codes.
+
+******************************************************************************/
+
+enum
+{
+  OSD_JOYPAD_B = 0,
+  OSD_JOYPAD_Y,
+  OSD_JOYPAD_SELECT,
+  OSD_JOYPAD_START,
+  OSD_JOYPAD_UP,
+  OSD_JOYPAD_DOWN,
+  OSD_JOYPAD_LEFT,
+  OSD_JOYPAD_RIGHT,
+  OSD_JOYPAD_A,
+  OSD_JOYPAD_X,
+  OSD_JOYPAD_L,
+  OSD_JOYPAD_R,
+  OSD_JOYPAD_L2,
+  OSD_JOYPAD_R2,
+  OSD_JOYPAD_L3,
+  OSD_JOYPAD_R3,
+  OSD_MOUSE_LEFT_CLICK,
+  OSD_MOUSE_RIGHT_CLICK,
+  OSD_MOUSE_MIDDLE_CLICK,
+  OSD_ANALOG_LEFT_NEGATIVE_X,
+  OSD_ANALOG_LEFT_POSITIVE_X,
+  OSD_ANALOG_LEFT_NEGATIVE_Y,
+  OSD_ANALOG_LEFT_POSITIVE_Y,
+  OSD_ANALOG_RIGHT_NEGATIVE_X,
+  OSD_ANALOG_RIGHT_POSITIVE_X,
+  OSD_ANALOG_RIGHT_NEGATIVE_Y,
+  OSD_ANALOG_RIGHT_POSITIVE_Y,
+  OSD_INPUT_CODES_PER_PLAYER
+};
 
 
 /******************************************************************************
