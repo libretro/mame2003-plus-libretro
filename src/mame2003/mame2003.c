@@ -1966,29 +1966,29 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
-  int player_index, raw_code = -1;
+  int player_index, osd_code = -1;
 
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   player_index = calc_player_index(joycode);
-  raw_code = calc_raw_joycode(joycode);
-  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player idx: %i      raw code %i\n", joycode, player_index, raw_code);*/
+  osd_code = calc_raw_joycode(joycode);
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player idx: %i      raw code %i\n", joycode, player_index, osd_code);*/
 
   if(osd_is_joystick_axis_code(joycode))
   {
-    if (retroJsState[player_index][raw_code] >=  NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][raw_code];
-    if (retroJsState[player_index][raw_code] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][raw_code];
+    if (retroJsState[player_index][osd_code] >=  NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][osd_code];
+    if (retroJsState[player_index][osd_code] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][osd_code];
   }
 
-  return retroJsState[player_index][raw_code];
+  return retroJsState[player_index][osd_code];
 }
 
 
 int osd_is_joystick_axis_code(int joycode)
 {
-  int raw_code = -1;
-  raw_code = calc_raw_joycode(joycode);
-  if(raw_code >= OSD_ANALOG_LEFT_NEGATIVE_X && raw_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
+  int osd_code = -1;
+  osd_code = calc_raw_joycode(joycode);
+  if(osd_code >= OSD_ANALOG_LEFT_NEGATIVE_X && osd_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
     return 1;
 
   return 0;
@@ -2019,26 +2019,26 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
 
   for(i = 0; i < MAX_ANALOG_AXES; i ++)
   {
-    int raw_code;
+    int osd_code;
     value = 0;
     if(analogjoy_input[i] != CODE_NONE)
     {
-      raw_code = calc_raw_joycode(analogjoy_input[i]);
+      osd_code = calc_raw_joycode(analogjoy_input[i]);
 
-      if(raw_code == OSD_ANALOG_LEFT_NEGATIVE_X || raw_code == OSD_ANALOG_LEFT_POSITIVE_X)
+      if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
         value = convert_analog_scale(analogjoy[player][0]);
 
-      else if(raw_code == OSD_ANALOG_LEFT_NEGATIVE_Y || raw_code == OSD_ANALOG_LEFT_POSITIVE_Y)
+      else if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y || osd_code == OSD_ANALOG_LEFT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][1]);
 
-      else if(raw_code == OSD_ANALOG_RIGHT_NEGATIVE_X || raw_code == OSD_ANALOG_RIGHT_POSITIVE_X)
+      else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_POSITIVE_X)
         value = convert_analog_scale(analogjoy[player][2]);
 
-      else if(raw_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || raw_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
+      else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
         value = convert_analog_scale(analogjoy[player][3]);
 
-      if( raw_code == OSD_ANALOG_LEFT_NEGATIVE_X  || raw_code == OSD_ANALOG_LEFT_NEGATIVE_Y ||
-          raw_code == OSD_ANALOG_RIGHT_NEGATIVE_X || raw_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
+      if( osd_code == OSD_ANALOG_LEFT_NEGATIVE_X  || osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y ||
+          osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
       {
         value = -value;
       }
