@@ -1999,7 +1999,7 @@ int calc_osd_joycode(int joycode)
   int player_index = -1;
   player_index = calc_player_index(joycode);
 
-  return (joycode - (player_index * 1000));
+  return (joycode - ((player_index + 1) * 1000));
 }
 
 int calc_player_index(int joycode)
