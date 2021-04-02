@@ -1850,6 +1850,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
+  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
   {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
   {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
   {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
