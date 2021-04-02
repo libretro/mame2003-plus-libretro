@@ -1961,7 +1961,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
 }
 
 /* 
- * When the control mappings are emitted, the various classes of input codes are incremented by
+ * When the control mappings are emitted, the input codes are incremented by
  * 1000, 2000, 3000, etc as a simple way to indicate the corresponding player index.
  */
 int osd_is_joy_pressed(int joycode)
@@ -1972,6 +1972,7 @@ int osd_is_joy_pressed(int joycode)
 
   player_index = calc_player_index(joycode);
   raw_code = calc_raw_joycode(joycode);
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player idx: %i      raw code %i\n", joycode, player_index, raw_code);*/
 
   if(osd_is_joystick_axis_code(joycode))
   {
@@ -2005,7 +2006,7 @@ int calc_player_index(int joycode)
   int i = -1;
   for(i = MAX_PLAYER_COUNT; i > 0; i--)
   {
-    if(joycode - (i * 1000) > 0)
+    if(joycode - (i * 1000) >= 0)
       return i;
   }
   return -1;
