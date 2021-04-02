@@ -1972,7 +1972,7 @@ int osd_is_joy_pressed(int joycode)
 
   player_index = calc_player_index(joycode);
   osd_code = calc_osd_joycode(joycode);
-  log_cb(RETRO_LOG_INFO, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code);
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code);*/
 
   if(osd_is_joystick_axis_code(joycode))
   {
