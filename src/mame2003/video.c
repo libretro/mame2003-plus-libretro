@@ -67,7 +67,7 @@ void mame2003_video_get_geometry(struct retro_game_geometry *geom)
 void mame2003_video_update_visible_area(struct mame_display *display)
 {
    struct retro_game_geometry geom = { 0 };
-   
+
    struct rectangle visible_area = display->game_visible_area;
    vis_width = visible_area.max_x - visible_area.min_x + 1;
    vis_height = visible_area.max_y - visible_area.min_y + 1;
@@ -83,7 +83,7 @@ void mame2003_video_update_visible_area(struct mame_display *display)
    set_ui_visarea(
       visible_area.min_x, visible_area.min_y,
       visible_area.max_x, visible_area.max_y);
-   
+
    /* Notify libretro of the change */
    mame2003_video_get_geometry(&geom);
    environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &geom);
@@ -294,7 +294,7 @@ static void frame_convert(struct mame_display *display)
    int x0 = visible_area.min_x, y0 = visible_area.min_y;
    int x1 = visible_area.max_x, y1 = visible_area.max_y;
    int w = x1 - x0 + 1, h = y1 - y0 + 1;
- 
+
    signed pitch = display->game_bitmap->rowpixels;
    char *input = (char*)display->game_bitmap->base;
    char *output = (char*)video_buffer;
@@ -322,7 +322,7 @@ static void frame_convert(struct mame_display *display)
             in += skip;\
          }\
       }
-   
+
    /* A much less optimized pixel conversion loop macro, with XY swap */
    #define CONVERT_SWAP(CONVERT_FUNC, TYPE_IN, TYPE_OUT, FLIP_X, FLIP_Y)\
       {\
@@ -397,7 +397,7 @@ void osd_update_video_and_audio(struct mame_display *display)
    RETRO_PERFORMANCE_INIT(perf_cb, update_video_and_audio);
    RETRO_PERFORMANCE_START(perf_cb, update_video_and_audio);
 
-   if(display->changed_flags & 
+   if(display->changed_flags &
       ( GAME_BITMAP_CHANGED | GAME_PALETTE_CHANGED
       | GAME_VISIBLE_AREA_CHANGED | VECTOR_PIXELS_CHANGED))
    {
@@ -458,7 +458,7 @@ void osd_update_video_and_audio(struct mame_display *display)
       }
       prev_led_state = display->led_state;
    }
-   
+
    gotFrame = 1;
 
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);
