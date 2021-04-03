@@ -1978,14 +1978,7 @@ int calc_osd_joycode(int joycode)
 
 int calc_player_index(int joycode)
 {
-  int i = -1;
-
-  for(i = MAX_PLAYER_COUNT; i > 0; i--)
-  {
-    if(joycode - (i * 1000) >= 0)
-      return i - 1;
-  }
-  return -1;
+  return (joycode /1000) -1;
 }
 
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
