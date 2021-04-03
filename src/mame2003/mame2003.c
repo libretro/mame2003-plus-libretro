@@ -1982,16 +1982,16 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
       osd_code = calc_osd_joycode(analogjoy_input[i]);
 
       if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
-        value = convert_analog_scale(analogjoy[player][0]);
+        value = analogjoy[player][0];
 
       else if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y || osd_code == OSD_ANALOG_LEFT_POSITIVE_Y)
-        value = convert_analog_scale(analogjoy[player][1]);
+        value = analogjoy[player][1];
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_POSITIVE_X)
-        value = convert_analog_scale(analogjoy[player][2]);
+        value = analogjoy[player][2];
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
-        value = convert_analog_scale(analogjoy[player][3]);
+        value = analogjoy[player][3];
 
       /* opposite when reversing axis mapping */
       if( osd_code%2 == 0)
