@@ -45,9 +45,9 @@ struct ipd  *default_inputs; /* pointer the array of structs with default MAME i
 static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
 /* data structures to store and translate keyboard state */ 
-extern const struct KeyboardInfo retroKeys[];
-extern int          retroKeyState[RETROK_LAST];
-int                 retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
+const struct KeyboardInfo retroKeys[];
+int          retroKeyState[RETROK_LAST];
+int          retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
 
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t     mouse_x[MAX_PLAYER_COUNT]= {0};
