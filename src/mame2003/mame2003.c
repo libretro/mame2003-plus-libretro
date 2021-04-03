@@ -121,9 +121,9 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 
 /******************************************************************************
- * 
+ *
  * Data structures for libretro controllers
- * 
+ *
  ******************************************************************************/
 
 /* the first of our controllers can use the base retropad type and rename it,
@@ -1792,18 +1792,18 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   return 0;
 }
 
-/* 
+/*
  * Each line created by these emitters composes a JoystickInfo struct.
- * 
+ *
  * struct JoystickInfo
  * {
  *   const char *name;        // OS dependant name; 0 terminates the list
  *   unsigned code;           // OS dependant code
  *   InputCode standardcode;	// CODE_xxx equivalent from list in input.h, or CODE_OTHER if n/a
  * };
- * 
+ *
  * In the context of MAME 2003+, the 'OS' is the libretro, so we determine the unique codes for
- * our input. When the control mappings are emitted, the input codes are incremented by 1000 * the 
+ * our input. When the control mappings are emitted, the input codes are incremented by 1000 * the
  * player number so that simple arithmetic can determine which is the associated player.
  */
 
@@ -1931,7 +1931,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
   return mame_joy_map;
 }
 
-/* 
+/*
  * When the control mappings are emitted, the input codes are incremented by
  * 1000, 2000, 3000, etc as a simple way to indicate the corresponding player index.
  */
@@ -2039,9 +2039,9 @@ int convert_analog_scale(int input)
 }
 
 /******************************************************************************
- * 
+ *
  * Legacy joystick calibration functions
- * 
+ *
  * As of March 2021: these MAME functions should not actually be used and will not be invoked
  * as long as needs_calibration always returns 0. The libretro frontend is reponsible for
  * providing calibrated position data.
@@ -2093,10 +2093,10 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 /******************************************************************************
     The OSD lightgun call should return the delta from the middle of the screen
 		when the gun is fired (not the absolute pixel value), and 0 when the gun is
-		inactive.  
-    
+		inactive.
+
     When the OSD lightgun returns 0, control passes through to the analog joystick,
-    and mouse, in that order.  In other words, when the OSD lightgun returns a 
+    and mouse, in that order.  In other words, when the OSD lightgun returns a
     value it overrides both mouse & analog joystick.
 
 		The value returned by the OSD layer should be -128 to 128, same as analog
@@ -2261,7 +2261,7 @@ const struct KeyboardInfo retroKeys[] =
  * keyboard, e.g. one could map pause to the Pause key instead of P, or snapshot
  * to PrtScr instead of F12. Of course the user can further change the settings
  * to anything they like.
- * 
+ *
  * osd_customize_inputport_defaults is called on startup, before reading the
  * configuration from disk. Scan the list, and change the keys/joysticks you want.
  */
