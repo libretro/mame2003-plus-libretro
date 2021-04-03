@@ -64,7 +64,7 @@ extern "C" {
 #define NORMALIZED_ANALOG_THRESHOLD   64
 
 enum
-{ 
+{
   X_AXIS = 0,
   Y_AXIS,
   Z_AXIS,
@@ -91,13 +91,13 @@ enum /* the "display numbers" for each player, as opposed to their array index *
   DISP_PLAYER6
 };
 
-#define MAX_PLAYER_COUNT  DISP_PLAYER6   /* We currently support a maximum of six simultaneous players */       
+#define MAX_PLAYER_COUNT  DISP_PLAYER6   /* We currently support a maximum of six simultaneous players */
 
 /******************************************************************************
 
     The following is a set of OS joystick codes (also including buttons and controls
     on mice, lightguns, etc). In MAME 2003+, the libretro API takes the role of the
-    MAME OSD and these codes are used to represent the full range of input states 
+    MAME OSD and these codes are used to represent the full range of input states
     that can exist among any of the libretro API abstractions that can be used.
 
     The names for elements of the enum reflect the fact that these codes parallel
@@ -142,7 +142,7 @@ enum
 /******************************************************************************
 
 	Shared libretro log interface
-    set in mame2003.c 
+    set in mame2003.c
 
 ******************************************************************************/
 extern retro_log_printf_t log_cb;
@@ -151,7 +151,7 @@ extern retro_log_printf_t log_cb;
 /******************************************************************************
 
 	frontend message interface
-    implemented in mame2003.c 
+    implemented in mame2003.c
 
 ******************************************************************************/
 extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
@@ -166,7 +166,7 @@ Core options
 
 /******************************************************************************
  * retro_variable_default contains the default value for a libretro core option
- * 
+ *
  *****************************************************************************/
 struct retro_variable_default
 {
@@ -345,14 +345,14 @@ int osd_is_joy_pressed(int joycode);
 int osd_is_joystick_axis_code(int joycode);
 
 /* osd_analogjoy_read returns in the range -128 .. 128 (yes, 128, not 127) */
-void osd_analogjoy_read(  int player, 
+void osd_analogjoy_read(  int player,
                           int analog_axis[MAX_ANALOG_AXES],
                           InputCode analogjoy_input[MAX_ANALOG_AXES]  );
 
 /******************************************************************************
- * 
+ *
  * Legacy joystick calibration functions
- * 
+ *
  * As of March 2021: these MAME functions should not actually be used and will not be invoked
  * as long as needs_calibration always returns 0. The libretro frontend is reponsible for
  * providing calibrated position data.
@@ -398,10 +398,10 @@ void osd_trak_read(int player, int *deltax, int *deltay);
 /******************************************************************************
     The osd_lightgun_read call should return the delta from the middle of the screen
 		when the gun is fired (not the absolute pixel value), and 0 when the gun is
-		inactive.  
-    
+		inactive.
+
     When osd_lightgun_read returns 0, control passes through to the analog joystick,
-    and mouse, in that order. In other words, when osd_lightgun_read returns a 
+    and mouse, in that order. In other words, when osd_lightgun_read returns a
     value it overrides both mouse & analog joystick.
 
 		The value returned by the OSD layer should be -128 to 128, same as analog
@@ -421,7 +421,7 @@ void osd_lightgun_read(int player, int *deltax, int *deltay);
  * keyboard, e.g. one could map pause to the Pause key instead of P, or snapshot
  * to PrtScr instead of F12. Of course the user can further change the settings
  * to anything they like.
- * 
+ *
  * osd_customize_inputport_defaults is called on startup, before reading the
  * configuration from disk. Scan the list, and change the keys/joysticks you want.
  */
