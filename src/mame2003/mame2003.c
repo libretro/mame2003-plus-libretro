@@ -1277,14 +1277,14 @@ void retro_run (void)
       retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
     }
 
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (convert_analog_scale(analogjoy[i][0]) < -PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][0]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (convert_analog_scale(analogjoy[i][0]) >  PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][0]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) < -PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][1]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) >  PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][1]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = (convert_analog_scale(analogjoy[i][2]) < -PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][2]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = (convert_analog_scale(analogjoy[i][2]) >  PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][2]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (convert_analog_scale(analogjoy[i][3]) < -PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][3]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (convert_analog_scale(analogjoy[i][3]) >  PRESSURE_CHECK) ? convert_analog_scale(analogjoy[i][3]) : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (convert_analog_scale(analogjoy[i][0]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][0]) : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (convert_analog_scale(analogjoy[i][0]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][0]) : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][1]) : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][1]) : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = (convert_analog_scale(analogjoy[i][2]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][2]) : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = (convert_analog_scale(analogjoy[i][2]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][2]) : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (convert_analog_scale(analogjoy[i][3]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][3]) : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (convert_analog_scale(analogjoy[i][3]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][3]) : 0;
 
   }
   mame_frame();
