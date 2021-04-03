@@ -27,29 +27,40 @@
 #include "usrintrf.h"
 
 
-int gotFrame;
 static const struct GameDriver  *game_driver;
-static float              delta_samples;
-int                       samples_per_frame = 0;
-int                       orig_samples_per_frame =0;
-short*                    samples_buffer;
-short*                    conversion_buffer;
-int                       usestereo = 1;
-int16_t                   prev_pointer_x;
-int16_t                   prev_pointer_y;
-unsigned                  retroColorMode;
-unsigned long             lastled = 0;
 
-extern const struct KeyboardInfo retroKeys[];
-extern int          retroKeyState[512];
-int                 retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
-int16_t             mouse_x[MAX_PLAYER_COUNT]= {0};
-int16_t             mouse_y[MAX_PLAYER_COUNT]= {0};
-int16_t             analogjoy[MAX_PLAYER_COUNT][4]= {0};
-struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
-int                 running = 0;
-int                 legacy_flag=-1;
-static struct retro_input_descriptor empty[] = { { 0 } };
+int            running = 0;
+int            gotFrame;
+static float   delta_samples;
+int            samples_per_frame = 0;
+int            orig_samples_per_frame =0;
+short*         samples_buffer;
+short*         conversion_buffer;
+int            usestereo = 1;
+
+/* comment needed: what does this legacy flag do exactly */
+int legacy_flag = -1;
+
+struct ipd  *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
+static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
+
+/* data structures to store and translate keyboard state */ 
+const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
+int                        retroKeyState[RETROK_LAST] = {0}; /* initialise to zero, polled in retro_run */
+
+/* data structures for joystick/retropad state */
+int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero, polled in retro_run */
+
+/* data structures to store trackball/spinner/mouse coordinates */
+int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
+/* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
+ * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
+int16_t  prev_pointer_x;
+int16_t  prev_pointer_y;
+
+/* data structures to store position data for analog joysicks */
+int16_t  analogjoy[MAX_PLAYER_COUNT][4]= {0};
 
 retro_log_printf_t                 log_cb;
 static struct retro_message        frontend_message;
@@ -121,6 +132,36 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 
 /******************************************************************************
+
+  private function prototypes
+
+******************************************************************************/
+static void   set_content_flags(void);
+static void   init_core_options(void);
+       void   init_default(struct retro_variable_default *option, const char *key, const char *value);
+static void   update_variables(bool first_time);
+static void   set_variables(bool first_time);
+static struct retro_variable_default *spawn_effective_option(int option_index);
+static void   check_system_specs(void);
+       void   retro_describe_controls(void);
+       int    get_mame_ctrl_id(int display_idx, int retro_ID);
+       int    calc_osd_joycode(int joycode);
+       int    calc_player_index(int joycode);
+       int    convert_analog_scale(int input);
+static void   remove_slash (char* temp);
+
+
+/******************************************************************************
+
+  external function prototypes
+
+******************************************************************************/
+
+/* mame2003_video_get_geometry is found in video.c */
+extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
+/******************************************************************************
  *
  * Data structures for libretro controllers
  *
@@ -158,36 +199,6 @@ static struct retro_controller_info retropad_subdevice_ports[] = {
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { 0 },
 };
-
-/******************************************************************************
-
-  private function prototypes
-
-******************************************************************************/
-static void   set_content_flags(void);
-static void   init_core_options(void);
-       void   init_default(struct retro_variable_default *option, const char *key, const char *value);
-static void   update_variables(bool first_time);
-static void   set_variables(bool first_time);
-static struct retro_variable_default *spawn_effective_option(int option_index);
-static void   check_system_specs(void);
-       void   retro_describe_controls(void);
-       int    get_mame_ctrl_id(int display_idx, int retro_ID);
-       int    calc_osd_joycode(int joycode);
-       int    calc_player_index(int joycode);
-       int    convert_analog_scale(int input);
-static void   remove_slash (char* temp);
-
-
-/******************************************************************************
-
-  external function prototypes
-
-******************************************************************************/
-
-/* mame2003_video_get_geometry is found in video.c */
-extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
-
 
 /******************************************************************************
 
@@ -1606,7 +1617,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty); /* is this necessary? it was in the sample code */
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
   options.retropad_layout[in_port] = device;
   retro_describe_controls();
 }
@@ -2114,8 +2125,6 @@ void osd_lightgun_read(int player, int *deltax, int *deltay)
 
 ******************************************************************************/
 
-extern const struct KeyboardInfo retroKeys[];
-int retroKeyState[512];
 
 const struct KeyboardInfo *osd_get_key_list(void)
 {
@@ -2125,11 +2134,12 @@ const struct KeyboardInfo *osd_get_key_list(void)
 int osd_is_key_pressed(int keycode)
 {
 	if (options.input_interface == RETRO_DEVICE_JOYPAD)
-		return 0;
+		return 0; /* do not return keyboard input if the core option is set to retropad/joystick only */
 
-	if (keycode < 512 && keycode >= 0)
+	if (keycode < RETROK_LAST && keycode >= 0)
     return retroKeyState[keycode];
 
+  log_cb(RETRO_LOG_WARN, LOGPRE "Invalid OSD keycode received: %i\n", keycode); /* this should not happen when keycodes are properly registered with MAME */
   return 0;
 }
 
@@ -2146,13 +2156,28 @@ int osd_readkey_unicode(int flush)
 
 ******************************************************************************/
 
-/* Unassigned keycodes*/
-/*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
 
-/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG) */
-/* EMIT1(TAG): The tag value is the same between libretro and the core           */
-/* EMIT2(RTAG, MTAG): The tag value is different between the two                 */
-/* EXITX(TAG): The core has no equivalent key.*/
+/*  MAME requires that we populate an array of KeyboardInfo structs. The code value
+ *  used is up to the OSD, which in this case is the libretro API. libretro.h provides
+ *  a set of keycodes suitable for this purpose, so we use those for populating our
+ *  KeyboardInfo structs with the help of #define emitters.
+ * 
+ *  struct KeyboardInfo
+ *  {
+ *    const char *name;       // OS dependant name; 0 terminates the list
+ *    unsigned code;          // OS dependant code
+ *    InputCode standardcode;	// CODE_xxx equivalent from list below, or CODE_OTHER if n/a
+ * };
+ *
+ * Unassigned keycodes
+ *	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN,
+ *  KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE
+ * 
+ * The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)
+ * EMIT1(TAG): The tag value is the same between libretro and the core
+ * EMIT2(RTAG, MTAG): The tag value is different between the two
+ * EXITX(TAG): The core has no equivalent key.
+ */
 
 #define EMIT2(RETRO, KEY) {(char*)#RETRO, RETROK_##RETRO, KEYCODE_##KEY}
 #define EMIT1(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_##KEY}
