@@ -1937,12 +1937,10 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
-  int player_index = -1, osd_code = -1;
-
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
-  player_index = calc_player_index(joycode);
-  osd_code = calc_osd_joycode(joycode);
+  int player_index = calc_player_index(joycode);
+  int osd_code     = calc_osd_joycode(joycode);
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code); */
 
@@ -1958,9 +1956,8 @@ int osd_is_joy_pressed(int joycode)
 
 int osd_is_joystick_axis_code(int joycode)
 {
-  int osd_code = -1;
+  int osd_code = calc_osd_joycode(joycode);
 
-  osd_code = calc_osd_joycode(joycode);
   if(osd_code >= OSD_ANALOG_LEFT_NEGATIVE_X && osd_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
     return 1;
 
@@ -1969,9 +1966,7 @@ int osd_is_joystick_axis_code(int joycode)
 
 int calc_osd_joycode(int joycode)
 {
-  int player_index = -1;
-
-  player_index = calc_player_index(joycode);
+  int player_index = calc_player_index(joycode);
 
   return (joycode - ((player_index + 1) * 1000));
 }
