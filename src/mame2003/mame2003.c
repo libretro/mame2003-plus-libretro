@@ -45,19 +45,22 @@ struct ipd  *default_inputs; /* pointer the array of structs with default MAME i
 static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
 /* data structures to store and translate keyboard state */ 
-const struct KeyboardInfo retroKeys[];
-int                       retroKeyState[RETROK_LAST];
-int                       retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
+const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
+int                        retroKeyState[RETROK_LAST] = {0}; /* initialise to zero, polled in retro_run */
+
+/* data structures for joystick/retropad state */
+int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero, polled in retro_run */
 
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
-/* absolute coordinates polled by pointer fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
+/* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
+ * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
 int16_t  prev_pointer_x;
 int16_t  prev_pointer_y;
 
 /* data structures to store position data for analog joysicks */
-int16_t     analogjoy[MAX_PLAYER_COUNT][4]= {0};
+int16_t  analogjoy[MAX_PLAYER_COUNT][4]= {0};
 
 retro_log_printf_t                 log_cb;
 static struct retro_message        frontend_message;
