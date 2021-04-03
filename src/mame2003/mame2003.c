@@ -2136,7 +2136,7 @@ int osd_is_key_pressed(int keycode)
 	if (keycode < RETROK_LAST && keycode >= 0)
     return retroKeyState[keycode];
 
-  log_cb(RETRO_LOG_WARN, LOGPRE "Invalid OSD keycode received: %i\n", keycode) /* this should not happen when keycodes are properly registered with MAME */
+  log_cb(RETRO_LOG_WARN, LOGPRE "Invalid OSD keycode received: %i\n", keycode); /* this should not happen when keycodes are properly registered with MAME */
   return 0;
 }
 
