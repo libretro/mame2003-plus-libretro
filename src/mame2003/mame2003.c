@@ -1944,12 +1944,6 @@ int osd_is_joy_pressed(int joycode)
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code); */
 
-  if(osd_is_joystick_axis_code(joycode))
-  {
-    if (retroJsState[player_index][osd_code] >=  NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][osd_code];
-    if (retroJsState[player_index][osd_code] <= -NORMALIZED_ANALOG_THRESHOLD) return retroJsState[player_index][osd_code];
-  }
-
   return retroJsState[player_index][osd_code];
 }
 
