@@ -1228,10 +1228,10 @@ void retro_run (void)
   for (i = 0; i < MAX_PLAYER_COUNT; i ++)
   {
     /* Analog joystick */
-    analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X);
-    analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y);
-    analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-    analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+    analogjoy[i][0] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
+    analogjoy[i][1] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
+    analogjoy[i][2] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
+    analogjoy[i][3] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
     retroJsState[i][OSD_JOYPAD_B]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
     retroJsState[i][OSD_JOYPAD_Y]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
@@ -1277,14 +1277,14 @@ void retro_run (void)
       retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
     }
 
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (convert_analog_scale(analogjoy[i][0]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][0]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (convert_analog_scale(analogjoy[i][0]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][0]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][1]) : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y]  = (convert_analog_scale(analogjoy[i][1]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][1]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = (convert_analog_scale(analogjoy[i][2]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][2]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = (convert_analog_scale(analogjoy[i][2]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][2]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (convert_analog_scale(analogjoy[i][3]) < -NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][3]) : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (convert_analog_scale(analogjoy[i][3]) >  NORMALIZED_ANALOG_THRESHOLD) ? convert_analog_scale(analogjoy[i][3]) : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[i][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[i][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[i][1] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][1] : 0;
+    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[i][1] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][1] : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[i][2] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][2] : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[i][2] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][2] : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[i][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
+    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[i][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
 
   }
   mame_frame();
