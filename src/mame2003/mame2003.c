@@ -46,15 +46,15 @@ static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
 /* data structures to store and translate keyboard state */ 
 const struct KeyboardInfo retroKeys[];
-int          retroKeyState[RETROK_LAST];
-int          retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
+int                       retroKeyState[RETROK_LAST];
+int                       retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero */
 
 /* data structures to store trackball/spinner/mouse coordinates */
-int16_t     mouse_x[MAX_PLAYER_COUNT]= {0};
-int16_t     mouse_y[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
 /* absolute coordinates polled by pointer fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
-int16_t     prev_pointer_x;
-int16_t     prev_pointer_y;
+int16_t  prev_pointer_x;
+int16_t  prev_pointer_y;
 
 /* data structures to store position data for analog joysicks */
 int16_t     analogjoy[MAX_PLAYER_COUNT][4]= {0};
@@ -2153,13 +2153,28 @@ int osd_readkey_unicode(int flush)
 
 ******************************************************************************/
 
-/* Unassigned keycodes*/
-/*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
 
-/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG) */
-/* EMIT1(TAG): The tag value is the same between libretro and the core           */
-/* EMIT2(RTAG, MTAG): The tag value is different between the two                 */
-/* EXITX(TAG): The core has no equivalent key.*/
+/*  MAME requires that we populate an array of KeyboardInfo structs. The code value
+ *  used is up to the OSD, which in this case is the libretro API. libretro.h provides
+ *  a set of keycodes suitable for this purpose, so we use those for populating our
+ *  KeyboardInfo structs with the help of #define emitters.
+ * 
+ *  struct KeyboardInfo
+ *  {
+ *    const char *name;       // OS dependant name; 0 terminates the list
+ *    unsigned code;          // OS dependant code
+ *    InputCode standardcode;	// CODE_xxx equivalent from list below, or CODE_OTHER if n/a
+ * };
+ *
+ * Unassigned keycodes
+ *	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN,
+ *  KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE
+ * 
+ * The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)
+ * EMIT1(TAG): The tag value is the same between libretro and the core
+ * EMIT2(RTAG, MTAG): The tag value is different between the two
+ * EXITX(TAG): The core has no equivalent key.
+ */
 
 #define EMIT2(RETRO, KEY) {(char*)#RETRO, RETROK_##RETRO, KEYCODE_##KEY}
 #define EMIT1(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_##KEY}
