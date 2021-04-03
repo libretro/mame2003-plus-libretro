@@ -1966,9 +1966,7 @@ int osd_is_joystick_axis_code(int joycode)
 
 int calc_osd_joycode(int joycode)
 {
-  int player_index = calc_player_index(joycode);
-
-  return (joycode - ((player_index + 1) * 1000));
+  return (joycode - ((calc_player_index(joycode) + 1) * 1000));
 }
 
 int calc_player_index(int joycode)
