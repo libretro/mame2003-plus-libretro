@@ -407,7 +407,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Chaser (CV version)
 * Super Slam
 * Super Spacefortress Macross
-* Teki Paki (via Toaplan samples)
+* Teki Paki
 * The Karate Tournament
 * Thunder Dragon
 * Toride II Adauchi Gaiden
@@ -491,7 +491,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sea Wolf II
 * Shark Attack
 * Space Firebird
-* Teki Paki (Toaplan Samples)
 * Thief
 * Two Tigers - `twotigra` romset
 
@@ -690,3 +689,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added clones Yosaku To Donbei (yosakdoa), Invasion (invasioa, invasiob), Space Missile - Space Fighting Game (spacmiss) [jamiecurmi]
 * Fixed the background colour of Straight Flush to match flyer colours [jamiecurmi]
 * Added sound for Invader's Revenge, Space Chaser (CV Version), Lupin III, Balloon Bomber, Rolling Crash / Moon Base. [jamiecurmi]
+* Added HD647180 MCU sound support for Teki Paki and Whoopee / Pibi & Bibi removing the need for Teki Paki to require hacked sound samples [dink, arcadez]
