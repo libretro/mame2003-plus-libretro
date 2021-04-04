@@ -44,7 +44,7 @@ int legacy_flag = -1;
 struct ipd  *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
-/* data structures to store and translate keyboard state */ 
+/* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
 int                        retroKeyState[RETROK_LAST] = {0}; /* initialise to zero, polled in retro_run */
 
@@ -54,6 +54,7 @@ int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initia
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
+
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
 int16_t  prev_pointer_x;
@@ -2161,7 +2162,7 @@ int osd_readkey_unicode(int flush)
  *  used is up to the OSD, which in this case is the libretro API. libretro.h provides
  *  a set of keycodes suitable for this purpose, so we use those for populating our
  *  KeyboardInfo structs with the help of #define emitters.
- * 
+ *
  *  struct KeyboardInfo
  *  {
  *    const char *name;       // OS dependant name; 0 terminates the list
@@ -2172,7 +2173,7 @@ int osd_readkey_unicode(int flush)
  * Unassigned keycodes
  *	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN,
  *  KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE
- * 
+ *
  * The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)
  * EMIT1(TAG): The tag value is the same between libretro and the core
  * EMIT2(RTAG, MTAG): The tag value is different between the two
