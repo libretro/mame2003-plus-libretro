@@ -171,22 +171,24 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 /* the first of our controllers can use the base retropad type and rename it,
  * while any layout variations must subclass the type.
  */
-#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_ANALOG, 0)
-#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_ANALOG, 1)
-#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_ANALOG, 2)
+#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
+#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
 static struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",    RETRO_DEVICE_ANALOG },
+  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
+  { NULL, 0 },
 };
 
 static struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_ANALOG },
+  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
+  { NULL, 0 },
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
@@ -426,11 +428,11 @@ static void update_variables(bool first_time)
       {
         case OPT_INPUT_INTERFACE:
           if(strcmp(var.value, "retropad") == 0)
-            options.input_interface = RETRO_DEVICE_ANALOG;
+            options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
 		    else
-			    options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_ANALOG;
+			    options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
         break;
 
         case OPT_4WAY:
@@ -1656,7 +1658,7 @@ void retro_describe_controls(void)
         continue;
 
       needle->port = display_idx - 1;
-      needle->device = RETRO_DEVICE_ANALOG;
+      needle->device = RETRO_DEVICE_JOYPAD;
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
@@ -1729,7 +1731,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   log_cb(RETRO_LOG_DEBUG, "display_idx: %i | options.retropad_layout[display_idx - 1]: %i\n", display_idx, options.retropad_layout[display_idx - 1]);
   switch(options.retropad_layout[display_idx - 1])
   {
-    case RETRO_DEVICE_ANALOG:
+    case RETRO_DEVICE_JOYPAD:
     {
       switch(retro_ID)
       {
@@ -1923,7 +1925,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
       switch(coded_layout)
       {
-        case RETRO_DEVICE_ANALOG: layout_idx = IDX_CLASSIC; break;
+        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_CLASSIC; break;
         case PAD_MODERN:          layout_idx = IDX_MODERN;  break;
         case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
         case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
@@ -2132,7 +2134,7 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-	if (options.input_interface == RETRO_DEVICE_ANALOG)
+	if (options.input_interface == RETRO_DEVICE_JOYPAD)
 		return 0; /* do not return keyboard input if the core option is set to retropad/joystick only */
 
 	if (keycode < RETROK_LAST && keycode >= 0)
