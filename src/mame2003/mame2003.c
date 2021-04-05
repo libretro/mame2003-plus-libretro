@@ -1640,7 +1640,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
-  options.retropad_layout[in_port] = device;
+  options.active_control_type[in_port] = device;
   retro_describe_controls();
 }
 
@@ -1648,17 +1648,17 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 void retro_describe_controls(void)
 {
   int retro_type   = 0;
-  int display_idx  = 0;
+  int player_number  = 0;
 
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= MAX_PLAYER_COUNT); display_idx++)
+  for(player_number = DISP_PLAYER1; (player_number <= options.content_flags[CONTENT_CTRL_COUNT] && player_number <= MAX_PLAYER_COUNT); player_number++)
   {
     for(retro_type = 0; retro_type < OSD_INPUT_CODES_PER_PLAYER; retro_type++)
     {
       const char *control_name;
-      int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type) & ~IPF_PLAYERMASK;
+      int mame_ctrl_id = get_mame_ctrl_id(player_number, retro_type) & ~IPF_PLAYERMASK;
 
       if(mame_ctrl_id >= IPT_BUTTON1 && mame_ctrl_id <= IPT_BUTTON10)
       {
@@ -1672,18 +1672,22 @@ void retro_describe_controls(void)
       {
         case OSD_JOYPAD_SELECT: 
         case OSD_LIGHTGUN_SELECT:
-          control_name = "Coin"; break;
+          control_name = "Coin";
+          break;
         case OSD_JOYPAD_START: 
         case OSD_LIGHTGUN_START:
-          control_name = "Start"; break;
-        default: control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id); break;
+          control_name = "Start";
+          break;
+        default:
+          control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id);
+          break;
       }
 
       if(string_is_empty(control_name))
         continue;
 
       needle->port = display_idx - 1;
-      needle->device = options.retropad_layout[display_idx - 1];
+      needle->device = options.active_control_type[player_number - 1];
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
@@ -1705,9 +1709,9 @@ void retro_describe_controls(void)
 
 int get_mame_ctrl_id(int player_number, int retro_ID)
 {
-  log_cb(RETRO_LOG_DEBUG, "player_number: %i | options.retropad_layout[player_number - 1]: %i\n", player_number, options.retropad_layout[player_number - 1]);
+  log_cb(RETRO_LOG_DEBUG, "player_number: %i | options.active_control_type[player_number - 1]: %i\n", player_number, options.active_control_type[player_number - 1]);
 
-  switch(options.retropad_layout[player_number - 1])
+  switch(options.active_control_type[player_number - 1])
   {
     case RETRO_DEVICE_ANALOG:
     {
@@ -1977,7 +1981,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
     for(player_map_idx = 0; player_map_idx < OSD_INPUT_CODES_PER_PLAYER; player_map_idx++)
     {
       int data_idx     = display_idx - 1;
-      int coded_layout = options.retropad_layout[data_idx];
+      int coded_layout = options.active_control_type[data_idx];
       int layout_idx   = 0;
 
       switch(coded_layout)
@@ -2155,7 +2159,7 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 {
   /* if this player has specified lightgun input in the frontend, do not fall through
    * to the mouse interface for that player */
-  if(options.retropad_layout[player-1] == RETRO_DEVICE_LIGHTGUN)
+  if(options.active_control_type[player-1] == RETRO_DEVICE_LIGHTGUN)
   {
     *deltax = 0;
     *deltay = 0;
