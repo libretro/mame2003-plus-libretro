@@ -3,6 +3,11 @@
 
 typedef unsigned InputCode;
 
+/* Subtype of codes */
+#define CODE_TYPE_NONE 0U /* code not assigned */
+#define CODE_TYPE_KEYBOARD 1U /* keyboard code */
+#define CODE_TYPE_JOYSTICK 2U /* joystick code */
+
 struct KeyboardInfo
 {
   const char *name; /* OS dependant name; 0 terminates the list */
@@ -145,9 +150,12 @@ int code_init(void);
 void code_close(void);
 
 InputCode keyoscode_to_code(unsigned oscode);
-InputCode joyoscode_to_code(unsigned oscode);
+InputCode joyoscode_to_code(unsigned oscode);          /* insert if missing */
 InputCode savecode_to_code(unsigned savecode);
+int oscode_find(unsigned oscode, unsigned type);       /* does not insert if missing */
 unsigned code_to_savecode(InputCode code);
+
+void internal_code_update(void);
 
 const char *code_name(InputCode code);
 int code_pressed(InputCode code);
@@ -209,9 +217,5 @@ int input_ui_pressed_repeat(int code, int speed);
 int is_joystick_axis_code(unsigned code);
 int return_os_joycode(InputCode code);
 
-#define LIBRETRO_ANALOG_MIN -32768
-#define LIBRETRO_ANALOG_MAX 32767
-#define ANALOG_MIN -128
-#define ANALOG_MAX 128
 
 #endif

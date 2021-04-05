@@ -14,11 +14,6 @@
 /***************************************************************************/
 /* Codes */
 
-/* Subtype of codes */
-#define CODE_TYPE_NONE 0U /* code not assigned */
-#define CODE_TYPE_KEYBOARD 1U /* keyboard code */
-#define CODE_TYPE_JOYSTICK 2U /* joystick code */
-
 /* Informations for every input code */
 struct code_info {
 	int memory; /* boolean memory */
@@ -125,6 +120,11 @@ static int internal_oscode_find(unsigned oscode, unsigned type)
 
 	/* oscode not found */
 	return CODE_NONE;
+}
+
+int oscode_find(unsigned oscode, unsigned type)
+{
+  return internal_oscode_find(oscode, type);
 }
 
 /* Add a new oscode in the table */
@@ -257,7 +257,7 @@ static const char* internal_code_name(InputCode code)
 }
 
 /* Update the code table */
-static void internal_code_update(void)
+void internal_code_update(void)
 {
   const struct KeyboardInfo *keyinfo;
   const struct JoystickInfo *joyinfo;
