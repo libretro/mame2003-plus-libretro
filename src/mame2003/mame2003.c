@@ -148,7 +148,7 @@ static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
-       int    get_mame_ctrl_id(int display_idx, int retro_ID);
+       int    get_mame_ctrl_id(int player_number, int retro_ID);
        int    encode_osd_joycode(int player_number, int raw_code);
        int    unencode_osd_joycode(int joycode);
        int    calc_player_index(int joycode);
@@ -1686,12 +1686,12 @@ void retro_describe_controls(void)
       if(string_is_empty(control_name))
         continue;
 
-      needle->port = display_idx - 1;
+      needle->port = player_number - 1;
       needle->device = options.active_control_type[player_number - 1];
       needle->index = 0;
       needle->id = retro_type;
       needle->description = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for: player_number: %i | retro_type: %i | id: %i | desc: %s\n", player_number, retro_type, needle->id, needle->description);
       needle++;
     }
   }
@@ -1974,13 +1974,13 @@ const struct JoystickInfo *osd_get_joy_list(void)
 {
   int player_map_idx = 0;
   int overall_idx    = 0;
-  int display_idx    = 0;
+  int player_number  = 0;
 
-  for(display_idx = DISP_PLAYER1; display_idx <= MAX_PLAYER_COUNT; display_idx++)
+  for(player_number = DISP_PLAYER1; player_number <= MAX_PLAYER_COUNT; player_number++)
   {
     for(player_map_idx = 0; player_map_idx < OSD_INPUT_CODES_PER_PLAYER; player_map_idx++)
     {
-      int data_idx     = display_idx - 1;
+      int data_idx     = player_number - 1;
       int coded_layout = options.active_control_type[data_idx];
       int layout_idx   = 0;
 
