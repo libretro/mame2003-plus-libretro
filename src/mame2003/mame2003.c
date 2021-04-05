@@ -154,6 +154,7 @@ static void   check_system_specs(void);
        int    calc_player_index(int joycode);
        int    normalize_lightgun(int libretro_coordinate);
        int    convert_analog_scale(int input);
+    unsigned  get_button_number(unsigned standard_code);
 static void   remove_slash (char* temp);
 
 
@@ -2386,6 +2387,53 @@ const struct KeyboardInfo retroKeys[] =
  */
 void osd_customize_inputport_defaults(struct ipd *defaults){}
 
+/* surely there is a MAME function already for JOYCODE_BUTTON_COMPARE and get_button_number, etc
+ * but I haven't found it */
+#define JOYCODE_BUTTON_COMPARE(BUTTON_NO) \
+  switch(standard_code) \
+    case JOYCODE_1_BUTTON## BUTTON_NO: \
+    case JOYCODE_2_BUTTON## BUTTON_NO: \
+    case JOYCODE_3_BUTTON## BUTTON_NO: \
+    case JOYCODE_4_BUTTON## BUTTON_NO: \
+    case JOYCODE_5_BUTTON## BUTTON_NO: \
+    case JOYCODE_6_BUTTON## BUTTON_NO: \
+    case JOYCODE_7_BUTTON## BUTTON_NO: \
+    case JOYCODE_8_BUTTON## BUTTON_NO: \
+      return BUTTON_NO; \
+
+#define MOUSECODE_BUTTON_COMPARE(BUTTON_NO) \
+  switch(standard_code) \
+    case JOYCODE_MOUSE_1_BUTTON## BUTTON_NO: \
+    case JOYCODE_MOUSE_2_BUTTON## BUTTON_NO: \
+    case JOYCODE_MOUSE_3_BUTTON## BUTTON_NO: \
+    case JOYCODE_MOUSE_4_BUTTON## BUTTON_NO: \
+    case JOYCODE_MOUSE_5_BUTTON## BUTTON_NO: \
+    case JOYCODE_MOUSE_6_BUTTON## BUTTON_NO: \
+      return BUTTON_NO; \
+
+unsigned get_button_number(unsigned standard_code)
+{
+  /* use macros to hide simple and verbose implementation */
+JOYCODE_BUTTON_COMPARE(1)
+JOYCODE_BUTTON_COMPARE(2)
+JOYCODE_BUTTON_COMPARE(3)
+JOYCODE_BUTTON_COMPARE(4)
+JOYCODE_BUTTON_COMPARE(5)
+JOYCODE_BUTTON_COMPARE(6)
+JOYCODE_BUTTON_COMPARE(7)
+JOYCODE_BUTTON_COMPARE(8)
+JOYCODE_BUTTON_COMPARE(9)
+JOYCODE_BUTTON_COMPARE(10)
+
+MOUSECODE_BUTTON_COMPARE(1)
+MOUSECODE_BUTTON_COMPARE(2)
+MOUSECODE_BUTTON_COMPARE(3)
+MOUSECODE_BUTTON_COMPARE(4)
+MOUSECODE_BUTTON_COMPARE(5)
+MOUSECODE_BUTTON_COMPARE(6)
+
+  return 0;
+}
 
 static void remove_slash (char* temp)
 {
