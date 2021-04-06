@@ -1701,9 +1701,12 @@ void retro_describe_controls(void)
         control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
       if(string_is_empty(control_name))
         continue;
-
+      
+      /* As of April 2021, there may be a RetroArch bug which doesn't accept the
+       * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
+       * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD */
       needle->port         = player_number - 1;
-      needle->device       = RETRO_DEVICE_JOYPAD;
+      needle->device       = /*options.active_control_type[player_number - 1]*/ RETRO_DEVICE_JOYPAD;
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
