@@ -1128,9 +1128,10 @@ static void set_content_flags(void)
   if(game_driver->bootstrap != NULL)
     options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
 
-  /************ LOG THE FINAL STATE OF THE CONTENT FLAGS ************/
+
+  /************ LOG THE STATE OF THE CONTENT FLAGS ************/
   
-  log_cb(RETRO_LOG_INFO, LOGPRE "==== DRIVER CONTENT ATTRIBUTES ====\n");
+  log_cb(RETRO_LOG_INFO, LOGPRE "==== BEGIN DRIVER CONTENT ATTRIBUTES ====\n");
   
   if(options.content_flags[CONTENT_NEOGEO])     log_cb(RETRO_LOG_INFO, LOGPRE "* Neo Geo BIOS required.\n");
   if(options.content_flags[CONTENT_STV])        log_cb(RETRO_LOG_INFO, LOGPRE "* STV BIOS required.\n");
@@ -1160,6 +1161,7 @@ static void set_content_flags(void)
 
   if(options.content_flags[CONTENT_NVRAM_BOOTSTRAP])    log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an NVRAM bootstrap controlled via core option.\n");
 
+  log_cb(RETRO_LOG_INFO, LOGPRE "==== END DRIVER CONTENT ATTRIBUTES ====\n");
 }
 
 void retro_reset (void)
