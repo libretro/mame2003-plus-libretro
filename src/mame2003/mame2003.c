@@ -1029,8 +1029,8 @@ static void set_content_flags(void)
 					break;
 			}
 
-      if (input->type & IPF_4WAY) /* the controls use a 4-way joystick */
-        options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
+			if (input->type & IPF_4WAY) /* the controls use a 4-way joystick */
+				options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
 
 			switch (input->type & ~IPF_MASK)
 			{
@@ -1042,8 +1042,8 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-          options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
-          break;
+					options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
+					break;
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
 					break;
