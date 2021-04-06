@@ -208,7 +208,7 @@ static struct retro_controller_info retropad_subdevice_ports[] = {
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { 0 },
+  { NULL, 0 },
 };
 
 /******************************************************************************
@@ -958,7 +958,7 @@ bool retro_load_game(const struct retro_game_info *game)
   for(port_index = MAX_PLAYER_COUNT - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
   {
     retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
-    retropad_subdevice_ports[port_index].num_types   = 4;
+    retropad_subdevice_ports[port_index].num_types   = IDX_NUMBER_OF_INPUT_TYPES;
   }
 
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
@@ -1702,7 +1702,7 @@ void retro_describe_controls(void)
        * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
        * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD if it's a JOYPAD at all.
        * Lightgun control names don't seem to be showing up in RetroArch either at present.
-       * */
+       */
       needle->port         = player_number - 1;
       needle->device       = retropad_type ? RETRO_DEVICE_JOYPAD : device_type;
       needle->index        = 0;
