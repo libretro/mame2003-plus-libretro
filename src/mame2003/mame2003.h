@@ -62,6 +62,10 @@ extern "C" {
 #define MAX_MEMORY_REGIONS      32
 
 #define NORMALIZED_ANALOG_THRESHOLD   64
+#define LIBRETRO_ANALOG_MIN -32768
+#define LIBRETRO_ANALOG_MAX 32767
+#define ANALOG_MIN -128
+#define ANALOG_MAX 128
 
 enum
 {
@@ -137,7 +141,6 @@ enum
   OSD_ANALOG_RIGHT_POSITIVE_Y,
   OSD_INPUT_CODES_PER_PLAYER
 };
-
 
 /******************************************************************************
 
@@ -342,7 +345,7 @@ const struct JoystickInfo *osd_get_joy_list(void);
 int osd_is_joy_pressed(int joycode);
 
 /* added for building joystick seq for analog inputs */
-int osd_is_joystick_axis_code(int joycode);
+int osd_is_joystick_axis_code(unsigned joycode);
 
 /* osd_analogjoy_read returns in the range -128 .. 128 (yes, 128, not 127) */
 void osd_analogjoy_read(  int player,

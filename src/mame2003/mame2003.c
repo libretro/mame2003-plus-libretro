@@ -108,7 +108,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_VECTOR_TRANSLUCENCY,
   OPT_VECTOR_FLICKER,
   OPT_VECTOR_INTENSITY,
-  OPT_DCS_SPEEDHACK,
   OPT_CORE_SYS_SUBFOLDER,
   OPT_CORE_SAVE_SUBFOLDER,
   OPT_TATE_MODE,
@@ -145,10 +144,12 @@ static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
-       int    get_mame_ctrl_id(int display_idx, int retro_ID);
-       int    calc_osd_joycode(int joycode);
-       int    calc_player_index(int joycode);
-       int    convert_analog_scale(int input);
+        int   get_retropad_code(unsigned osd_code);
+   unsigned   get_button_ipt_code(unsigned player_number, unsigned standard_code);
+   unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
+   unsigned   decode_osd_joycode(unsigned joycode);
+   unsigned   calc_player_number(unsigned joycode);
+        int   convert_analog_scale(int input);
 static void   remove_slash (char* temp);
 
 
@@ -171,24 +172,24 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 /* the first of our controllers can use the base retropad type and rename it,
  * while any layout variations must subclass the type.
  */
-#define PAD_MODERN  RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
-#define PAD_8BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
-#define PAD_6BUTTON RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
+
+#define PAD_CLASSIC   RETRO_DEVICE_JOYPAD
+#define PAD_MODERN    RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
+#define PAD_8BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define PAD_6BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
 static struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",    RETRO_DEVICE_JOYPAD },
+  { "Classic Gamepad",    PAD_CLASSIC },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
-  { NULL, 0 },
 };
 
 static struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Classic Gamepad)",    RETRO_DEVICE_JOYPAD },
+  { "UNSUPPORTED (Classic Gamepad)",    PAD_CLASSIC },
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
-  { NULL, 0 },
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
@@ -306,7 +307,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_VECTOR_INTENSITY],       APPNAME"_vector_intensity",       "Vector intensity; 1.5|0.5|1|2|2.5|3");
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],        APPNAME"_nvram_bootstraps",       "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
-  init_default(&default_options[OPT_DCS_SPEEDHACK],          APPNAME"_dcs_speedhack",          "DCS Speedhack; enabled|disabled");
   init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
   init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
@@ -360,10 +360,6 @@ static void set_variables(bool first_time)
       case OPT_VECTOR_FLICKER:
       case OPT_VECTOR_INTENSITY:
          if(!options.content_flags[CONTENT_VECTOR])
-           continue;
-         break;
-      case OPT_DCS_SPEEDHACK:
-         if(!options.content_flags[CONTENT_DCS_SPEEDHACK])
            continue;
          break;
       case OPT_NVRAM_BOOTSTRAP:
@@ -663,13 +659,6 @@ static void update_variables(bool first_time)
           options.samplerate = atoi(var.value);
           break;
 
-        case OPT_DCS_SPEEDHACK:
-          if(strcmp(var.value, "enabled") == 0)
-            options.activate_dcs_speedhack = 1;
-          else
-            options.activate_dcs_speedhack = 0;
-          break;
-
         case OPT_MAME_REMAPPING:
           if(strcmp(var.value, "enabled") == 0)
           {
@@ -917,6 +906,8 @@ bool retro_load_game(const struct retro_game_info *game)
 
   set_content_flags();
 
+  options.activate_dcs_speedhack = true; /* formerly a core option, now always on. */
+
   options.libretro_content_path = strdup(game->path);
   path_basedir(options.libretro_content_path);
 
@@ -949,6 +940,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
 
   init_core_options();
+
   update_variables(true);
 
   /* Not all drivers support the maximum number of players; start at the highest index and decrement
@@ -984,7 +976,6 @@ static void set_content_flags(void)
       if (strcmp("OST Samples",  Machine->drv->sound[i].tag) == 0)
       {
         options.content_flags[CONTENT_ALT_SOUND] = true;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
       }
   }
 
@@ -993,31 +984,22 @@ static void set_content_flags(void)
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
   {
     options.content_flags[CONTENT_NEOGEO] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a Neo Geo game.\n");
   }
   else if (game_driver->clone_of == &driver_stvbios
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_stvbios))
   {
     options.content_flags[CONTENT_STV] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
   }
 
   /************ DIE HARD: ARCADE ************/
   if(strcasecmp(game_driver->name, "diehard") == 0)
-  {
     options.content_flags[CONTENT_DIEHARD] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
-  }
 
   /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/
   if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-  {
     options.content_flags[CONTENT_VECTOR] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");
-  }
 
   /************ INPUT-BASED CONTENT FLAGS ************/
-
   options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 8; /* default behavior is 8-way joystick, even for 2-way games */
 
 	while ((input->type & ~IPF_MASK) != IPT_END)
@@ -1047,10 +1029,8 @@ static void set_content_flags(void)
 					break;
 			}
 
-      if (input->type & IPF_4WAY) /* original controls used a 4-way joystick */
-      {
-        options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
-      }
+			if (input->type & IPF_4WAY) /* the controls use a 4-way joystick */
+				options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
 
 			switch (input->type & ~IPF_MASK)
 			{
@@ -1062,7 +1042,7 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dual joystick controls controls.\n");
+					options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
 					break;
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
@@ -1096,53 +1076,32 @@ static void set_content_flags(void)
 					break;
 				case IPT_PADDLE:
 					options.content_flags[CONTENT_PADDLE] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
 					break;
 				case IPT_DIAL:
 					options.content_flags[CONTENT_DIAL] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
 					break;
 				case IPT_TRACKBALL_X:
 				case IPT_TRACKBALL_Y:
 					options.content_flags[CONTENT_TRACKBALL] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
 					break;
 				case IPT_AD_STICK_X:
 				case IPT_AD_STICK_Y:
 					options.content_flags[CONTENT_AD_STICK] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
 					break;
 				case IPT_LIGHTGUN_X:
 				case IPT_LIGHTGUN_Y:
 					options.content_flags[CONTENT_LIGHTGUN] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using lightgun controls.\n");
 					break;
 				case IPT_SERVICE :
 					options.content_flags[CONTENT_HAS_SERVICE] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
 					break;
 				case IPT_TILT :
 					options.content_flags[CONTENT_HAS_TILT] = true;
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
 					break;
 			}
 		}
 		++input;
 	}
-
-  if (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 4-way joystick controls.\n");
-  else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using 8-way joystick controls.\n");
-
-  /************ DRIVERS FLAGGED IN CONTROLS.C WITH 45-DEGREE JOYSTICK ROTATION ************/
-  if(game_driver->ctrl_dat->rotate_joy_45)
-  {
-    options.content_flags[CONTENT_ROTATE_JOY_45] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as joysticks rotated 45-degrees with respect to the cabinet.\n");
-  }
-  else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having joysticks on axis with respect to the cabinet.\n");
 
   /************ DRIVERS FLAGGED IN CONTROLS.C WITH ALTERNATING CONTROLS ************/
   if(game_driver->ctrl_dat->alternating_controls)
@@ -1157,39 +1116,52 @@ static void set_content_flags(void)
   else
     options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);
-
+  /************ DRIVERS FLAGGED IN CONTROLS.C WITH 45-DEGREE JOYSTICK ROTATION ************/
+  if(game_driver->ctrl_dat->rotate_joy_45)
+    options.content_flags[CONTENT_ROTATE_JOY_45] = true;
 
   /************ DRIVERS FLAGGED IN CONTROLS.C WITH MIRRORED CONTROLS ************/
   if(game_driver->ctrl_dat->mirrored_controls)
-  {
     options.content_flags[CONTENT_MIRRORED_CTRLS] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having mirrored multiplayer control labels.\n");
-  }
-  else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having non-mirrored multiplayer control labels.\n");
-
-
-  /************ DCS DRIVERS WITH SPEEDDUP HACKS ************/
-  while(/*dcs_drivers[i]*/true)
-  {
-    if(/*strcmp(dcs_drivers[i], game_driver->name) == 0*/true)
-    {
-      options.content_flags[CONTENT_DCS_SPEEDHACK] = true;
-      /*log_cb(RETRO_LOG_INFO, LOGPRE "DCS content has a speedup hack controlled via core option.\n");*/
-      break;
-    }
-    i++;
-  }
 
   /************ DRIVERS WITH NVRAM BOOTSTRAP PATCHES ************/
   if(game_driver->bootstrap != NULL)
-  {
     options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content has an NVRAM bootstrap controlled via core option.\n");
-  }
 
+
+  /************ LOG THE STATE OF THE CONTENT FLAGS ************/
+  
+  log_cb(RETRO_LOG_INFO, LOGPRE "==== BEGIN DRIVER CONTENT ATTRIBUTES ====\n");
+  
+  if(options.content_flags[CONTENT_NEOGEO])     log_cb(RETRO_LOG_INFO, LOGPRE "* Neo Geo BIOS required.\n");
+  if(options.content_flags[CONTENT_STV])        log_cb(RETRO_LOG_INFO, LOGPRE "* STV BIOS required.\n");
+  if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
+  if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
+  if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
+  
+  log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
+  log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i distinct button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);
+
+  if(options.content_flags[CONTENT_DIAL])               log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a dial.\n");
+  if(options.content_flags[CONTENT_TRACKBALL])          log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a trackball.\n");
+  if(options.content_flags[CONTENT_LIGHTGUN])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a lightgun.\n");
+  if(options.content_flags[CONTENT_PADDLE])             log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an paddle.\n");
+  if(options.content_flags[CONTENT_AD_STICK])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an analog joystick.\n");
+  if(options.content_flags[CONTENT_HAS_SERVICE])        log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a service button.\n");
+  if(options.content_flags[CONTENT_HAS_TILT])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a tilt function.\n");
+
+  if(options.content_flags[CONTENT_ALTERNATING_CTRLS])  log_cb(RETRO_LOG_INFO, LOGPRE "* Uses alternating controls.\n");
+  if(options.content_flags[CONTENT_MIRRORED_CTRLS])     log_cb(RETRO_LOG_INFO, LOGPRE "* Uses multiplayer control labels.\n");
+  if(options.content_flags[CONTENT_ROTATE_JOY_45])      log_cb(RETRO_LOG_INFO, LOGPRE "* Uses joysticks rotated 45-degrees with respect to the cabinet.\n");
+  if(options.content_flags[CONTENT_DUAL_JOYSTICK])      log_cb(RETRO_LOG_INFO, LOGPRE "* Uses dual joysticks.\n");
+  if(options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4)
+      log_cb(RETRO_LOG_INFO, LOGPRE "* Uses 4-way joystick controls.\n");
+  else
+      log_cb(RETRO_LOG_INFO, LOGPRE "* Uses 8-way joystick controls.\n");
+
+  if(options.content_flags[CONTENT_NVRAM_BOOTSTRAP])    log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an NVRAM bootstrap controlled via core option.\n");
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "==== END DRIVER CONTENT ATTRIBUTES ====\n");
 }
 
 void retro_reset (void)
@@ -1223,7 +1195,11 @@ void retro_run (void)
   bool pointer_pressed;
   const struct KeyboardInfo *thisInput;
   bool updated = false;
-  if (running == 0) running =1;
+  if (running == 0) /* first time through the loop */
+  {
+    running = 1;
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Entering retro_run() for the first time.\n");
+  }
   poll_cb();
 
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
@@ -1618,51 +1594,91 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
-  options.retropad_layout[in_port] = device;
-  retro_describe_controls();
+  options.active_control_type[in_port] = device;
+  internal_code_update();     /* update MAME data structures for controls */
+  retro_describe_controls();  /* update libretro data structures for controls */
 }
 
 
 void retro_describe_controls(void)
 {
-  int retro_type   = 0;
-  int display_idx  = 0;
-
+  unsigned player_number = 0;
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  for(display_idx = DISP_PLAYER1; (display_idx <= options.content_flags[CONTENT_CTRL_COUNT] && display_idx <= MAX_PLAYER_COUNT); display_idx++)
+  for(player_number = DISP_PLAYER1; (player_number <= options.content_flags[CONTENT_CTRL_COUNT] && player_number <= MAX_PLAYER_COUNT); player_number++)
   {
-    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < OSD_INPUT_CODES_PER_PLAYER; retro_type++)
-    {
-      const char *control_name;
-      int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type) & ~IPF_PLAYERMASK ;
+    unsigned retro_code       = 0;       /* using the constants defined in libretro.h */
+    unsigned osd_index        = 0;
+    unsigned osd_code         = 0;      /* the unique code (including across players) created by the libretro OSD */
+    unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
+    unsigned button_ipt_id    = 0;      /* input code connects an input port with standard input code */
+    bool retropad_type        = false;
 
-      if(mame_ctrl_id >= IPT_BUTTON1 && mame_ctrl_id <= IPT_BUTTON10)
-      {
-        if((mame_ctrl_id - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+    log_cb(RETRO_LOG_DEBUG, "player_number: %i | active_control_type: %i\n", player_number, options.active_control_type[player_number - 1]);
+
+    if(options.active_control_type[player_number-1] == RETRO_DEVICE_NONE)
+      continue; /* the null input device is selected; move on to the next player */
+
+    switch(options.active_control_type[player_number-1])
+    {
+      case PAD_CLASSIC: case PAD_MODERN: case PAD_8BUTTON: case PAD_6BUTTON:
+        retropad_type = true; break;
+    }
+
+    for(osd_index = OSD_JOYPAD_B; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
+    {
+      const char *control_name  = NULL;
+
+        if(retropad_type)
         {
-          continue;
+          if(osd_index >= OSD_MOUSE_LEFT_CLICK) break; /* can't describe non-retropad controls on a retropad */
+
+          switch(osd_index) /* universal default mappings */
+          {
+            case OSD_JOYPAD_LEFT:   control_name = "Left";  break;
+            case OSD_JOYPAD_RIGHT:  control_name = "Right"; break;
+            case OSD_JOYPAD_UP:     control_name = "Up";    break;
+            case OSD_JOYPAD_DOWN:   control_name = "Down";  break;
+
+            case OSD_JOYPAD_SELECT: control_name = "Coin";  break;
+            case OSD_JOYPAD_START:  control_name = "Start"; break;
+          }
+
+        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
+      }
+
+      osd_code = encode_osd_joycode(player_number, osd_index);
+      standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
+      if(standard_code == CODE_NONE) continue;
+
+      button_ipt_id = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
+      if(button_ipt_id == CODE_NONE) continue;
+
+      if(button_ipt_id >= IPT_BUTTON1 && button_ipt_id <= IPT_BUTTON10)
+      {
+        if((button_ipt_id - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+        {
+          continue; /* button is a higher index than supported by the current driver, so it has no name */
         }
       }
 
-      switch(retro_type)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-        case  RETRO_DEVICE_ID_JOYPAD_START: control_name = "Start"; break;
-        default:                            control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id  ); break;
-      }
-
+      if(string_is_empty(control_name))
+        control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
       if(string_is_empty(control_name))
         continue;
-
-      needle->port = display_idx - 1;
-      needle->device = RETRO_DEVICE_JOYPAD;
-      needle->index = 0;
-      needle->id = retro_type;
-      needle->description = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      
+      /* As of April 2021, there may be a RetroArch bug which doesn't accept the
+       * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
+       * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD */
+      needle->port         = player_number - 1;
+      needle->device       = /*options.active_control_type[player_number - 1]*/ RETRO_DEVICE_JOYPAD;
+      needle->index        = 0;
+      needle->id           = retro_code;
+      needle->description  = control_name;
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for player_number: %i | osd_code: %i | id: %i | desc: %s\n", player_number, osd_code, needle->id, needle->description);
       needle++;
     }
   }
@@ -1678,131 +1694,99 @@ void retro_describe_controls(void)
 
 }
 
-int get_mame_ctrl_id(int display_idx, int retro_ID)
+/* converts from OSD_ in mame2003.h to the codes from libretro.h */
+int get_retropad_code(unsigned osd_id)
 {
-  int player_flag;
-
-  {
-    switch(display_idx)
-    {
-      case 1: player_flag = IPF_PLAYER1; break;
-      case 2: player_flag = IPF_PLAYER2; break;
-      case 3: player_flag = IPF_PLAYER3; break;
-      case 4: player_flag = IPF_PLAYER4; break;
-      case 5: player_flag = IPF_PLAYER5; break;
-      case 6: player_flag = IPF_PLAYER6; break;
-     default: player_flag = IPF_PLAYER1; break;
-    }
-  }
-
-
-  switch(retro_ID) /* universal default mappings */
-  {
-    case RETRO_DEVICE_ID_JOYPAD_LEFT:   return (player_flag | IPT_JOYSTICK_LEFT);
-    case RETRO_DEVICE_ID_JOYPAD_RIGHT:  return (player_flag | IPT_JOYSTICK_RIGHT);
-    case RETRO_DEVICE_ID_JOYPAD_UP:     return (player_flag | IPT_JOYSTICK_UP);
-    case RETRO_DEVICE_ID_JOYPAD_DOWN:   return (player_flag | IPT_JOYSTICK_DOWN);
-
-    case RETRO_DEVICE_ID_JOYPAD_SELECT:
-    {
-      switch(display_idx)
-      {
-        case 1: return IPT_COIN1;
-        case 2: return IPT_COIN2;
-        case 3: return IPT_COIN3;
-        case 4: return IPT_COIN4;
-        case 5: return IPT_COIN5;
-        case 6: return IPT_COIN6;
-      }
-    }
-    case RETRO_DEVICE_ID_JOYPAD_START:
-    {
-      switch(display_idx)
-      {
-        case 1: return IPT_START1;
-        case 2: return IPT_START2;
-        case 3: return IPT_START3;
-        case 4: return IPT_START4;
-        case 5: return IPT_START5;
-        case 6: return IPT_START6;
-      }
-    }
-  }
-  log_cb(RETRO_LOG_DEBUG, "display_idx: %i | options.retropad_layout[display_idx - 1]: %i\n", display_idx, options.retropad_layout[display_idx - 1]);
-  switch(options.retropad_layout[display_idx - 1])
-  {
-    case RETRO_DEVICE_JOYPAD:
-    {
-      switch(retro_ID)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
-      }
-      return 0;
-    }
-    case PAD_MODERN:
-    {
-      switch(retro_ID)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
-      }
-      return 0;
-    }
-    case PAD_8BUTTON:
-    {
-      switch(retro_ID)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
-      }
-      return 0;
-    }
-    case PAD_6BUTTON:
-    {
-      switch(retro_ID)
-      {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
-      }
-      return 0;
-    }
-
-  }
-  return 0;
+  if(osd_id >= OSD_JOYPAD_B && osd_id <= OSD_JOYPAD_R3) return osd_id;  /* the retropad and osd enums have the same numbering */
+  return INT_MAX;
 }
+
+/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
+ * MOUSECODE_BUTTON_COMPARE, and get_button_ipt_code(), etc. but I haven't found it.
+ */
+
+#define BUTTON_CODE_COMPARE(BUTTON_NO)                \
+  switch(standard_code)                               \
+  {                                                   \
+    case JOYCODE_1_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_2_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_3_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_4_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_5_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_6_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_7_BUTTON##BUTTON_NO:                 \
+    case JOYCODE_8_BUTTON##BUTTON_NO:                 \
+      return player_flag | IPT_BUTTON##BUTTON_NO;   \
+  }                                                   \
+
+#define MOUSE_CODE_COMPARE(BUTTON_NO)                 \
+  switch(standard_code)                               \
+  {                                                   \
+    case JOYCODE_MOUSE_1_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_2_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_3_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_4_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_5_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_6_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_7_BUTTON##BUTTON_NO:           \
+    case JOYCODE_MOUSE_8_BUTTON##BUTTON_NO:           \
+      return player_flag | IPT_BUTTON##BUTTON_NO;     \
+  }                                                   \
+
+#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                      \
+  switch(standard_code)                                                               \
+  {                                                                                   \
+    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;         \
+    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;         \
+    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;     \
+    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;   \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;   \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;  \
+  }                                                                                   \
+
+unsigned get_button_ipt_code(unsigned player_number, unsigned standard_code)
+{
+  int player_flag = 0;
+
+  switch(player_number)
+  {
+    case 1: player_flag = IPF_PLAYER1; break;
+    case 2: player_flag = IPF_PLAYER2; break;
+    case 3: player_flag = IPF_PLAYER3; break;
+    case 4: player_flag = IPF_PLAYER4; break;
+    case 5: player_flag = IPF_PLAYER5; break;
+    case 6: player_flag = IPF_PLAYER6; break;
+    default: player_flag = IPF_PLAYER1; break;
+  }
+  /* use macros to hide simplistic and verbose implementation */
+  BUTTON_CODE_COMPARE(1) /* look for "button 1" */
+  BUTTON_CODE_COMPARE(2) /* button 2 */
+  BUTTON_CODE_COMPARE(3) /* button 3 */
+  BUTTON_CODE_COMPARE(4)
+  BUTTON_CODE_COMPARE(5)
+  BUTTON_CODE_COMPARE(6)
+  BUTTON_CODE_COMPARE(7)
+  BUTTON_CODE_COMPARE(8)
+  BUTTON_CODE_COMPARE(9)
+  BUTTON_CODE_COMPARE(10)
+
+  MOUSE_CODE_COMPARE(1) /* look for "mouse button 1" */
+  MOUSE_CODE_COMPARE(2) /* mouse button 2 */
+  MOUSE_CODE_COMPARE(3) /* mouse button 3 */
+  MOUSE_CODE_COMPARE(4)
+  MOUSE_CODE_COMPARE(5)
+  MOUSE_CODE_COMPARE(6)
+
+  COMMON_CONTROLS_COMPARE(1) /* player 1 */
+  COMMON_CONTROLS_COMPARE(2) /* player 2 */
+  COMMON_CONTROLS_COMPARE(3) /* player 3 */
+  COMMON_CONTROLS_COMPARE(4) /* player 4 */
+  COMMON_CONTROLS_COMPARE(5) /* player 5 */
+  COMMON_CONTROLS_COMPARE(6) /* player 6 */
+
+  return CODE_NONE; /* not any of the BUTTON joycodes or mouse codes */
+}
+
 
 /*
  * Each line created by these emitters composes a JoystickInfo struct.
@@ -1920,15 +1904,15 @@ const struct JoystickInfo *osd_get_joy_list(void)
     for(player_map_idx = 0; player_map_idx < OSD_INPUT_CODES_PER_PLAYER; player_map_idx++)
     {
       int data_idx     = display_idx - 1;
-      int coded_layout = options.retropad_layout[data_idx];
+      int coded_layout = options.active_control_type[data_idx];
       int layout_idx   = 0;
 
       switch(coded_layout)
       {
-        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_CLASSIC; break;
-        case PAD_MODERN:          layout_idx = IDX_MODERN;  break;
-        case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC; break;
+        case PAD_MODERN:   layout_idx = IDX_MODERN;  break;
+        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON; break;
+        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
       }
 
       mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
@@ -1951,18 +1935,17 @@ int osd_is_joy_pressed(int joycode)
 {
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
-  int player_index = calc_player_index(joycode);
-  int osd_code     = calc_osd_joycode(joycode);
+  unsigned player_number = calc_player_number(joycode);
+  unsigned osd_code      = decode_osd_joycode(joycode);
 
-  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_index: %i      osd_code: %i\n", joycode, player_index, osd_code); */
-
-  return retroJsState[player_index][osd_code];
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code); */
+  return retroJsState[player_number-1][osd_code];
 }
 
 
-int osd_is_joystick_axis_code(int joycode)
+int osd_is_joystick_axis_code(unsigned joycode)
 {
-  int osd_code = calc_osd_joycode(joycode);
+  unsigned osd_code = decode_osd_joycode(joycode);
 
   if(osd_code >= OSD_ANALOG_LEFT_NEGATIVE_X && osd_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
     return 1;
@@ -1970,14 +1953,19 @@ int osd_is_joystick_axis_code(int joycode)
   return 0;
 }
 
-int calc_osd_joycode(int joycode)
+unsigned calc_player_number(unsigned joycode)
 {
-  return (joycode - ((calc_player_index(joycode) + 1) * 1000));
+  return (joycode / 1000);
 }
 
-int calc_player_index(int joycode)
+unsigned encode_osd_joycode(unsigned player_number, unsigned raw_code)
 {
-  return (joycode /1000) -1;
+  return (raw_code + (player_number * 1000));
+}
+
+unsigned decode_osd_joycode(unsigned joycode)
+{
+  return (joycode - (calc_player_number(joycode) * 1000));
 }
 
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
@@ -1991,7 +1979,7 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
     value = 0;
     if(analogjoy_input[i] != CODE_NONE)
     {
-      osd_code = calc_osd_joycode(analogjoy_input[i]);
+      osd_code = decode_osd_joycode(analogjoy_input[i]);
 
       if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
         value = analogjoy[player][0];
@@ -2006,7 +1994,7 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
         value = analogjoy[player][3];
 
       /* opposite when reversing axis mapping */
-      if( osd_code%2 == 0)
+      if((osd_code % 2) == 0) /* if osd_code is an even number */
         value = -value;
 
       analog_axis[i]=value;
@@ -2300,13 +2288,11 @@ static void remove_slash (char* temp)
 
   for(i=0; temp[i] != '\0'; ++i);
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
-
   if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
   {
     temp[i-1] = 0;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Removed a trailing slash in path: %s\n", temp);
   }
   else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Trailing slash removal was not necessary path: %s.\n", temp);
 }

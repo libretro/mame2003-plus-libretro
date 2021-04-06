@@ -169,9 +169,9 @@ enum /* used to index content-specific flags */
   CONTENT_ROTATE_JOY_45,
   CONTENT_PLAYER_COUNT,
   CONTENT_CTRL_COUNT,
+  CONTENT_DUAL_JOYSTICK,
   CONTENT_BUTTON_COUNT,
   CONTENT_JOYSTICK_DIRECTIONS,
-  CONTENT_DCS_SPEEDHACK,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_end,
 };
@@ -200,14 +200,15 @@ struct GameOptions
 
   unsigned dial_share_xy;
   unsigned mouse_device;
-  unsigned input_interface;                    /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
-  unsigned retropad_layout[MAX_PLAYER_COUNT];  /* flags to indicate the default layout for each player */
-  bool 	   restrict_4_way;                     /* simulate 4-way joystick restrictor */
-  unsigned deadzone;                           /* analog deadzone in percent. 20 corresponds to 20% */
+  unsigned input_interface;                         /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
+  unsigned active_control_type[MAX_PLAYER_COUNT];   /* register to indicate the default control layout for each player as currently set in the frontend */
+  bool     restrict_4_way;                          /* simulate 4-way joystick restrictor */
+  unsigned deadzone;                                /* analog deadzone in percent. 20 corresponds to 20% */
   unsigned tate_mode;
 
   int      crosshair_enable;
-  unsigned activate_dcs_speedhack;
+  bool     activate_dcs_speedhack;
+
   bool     mame_remapping;       /* display MAME input remapping menu */
 
   int      samplerate;		       /* sound sample playback rate, in KHz */

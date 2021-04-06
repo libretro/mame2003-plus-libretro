@@ -1898,7 +1898,6 @@ InputSeq* input_port_type_seq(int type)
 
 InputSeq* input_port_seq(const struct InputPort *in)
 {
-// mark change the (! 0 && ((in-1)->type & IPF_CHEAT))) to a variable name if you want to make it a core option just disable for now until you make a choice
 	int i,type;
 
 	static InputSeq ip_none = SEQ_DEF_1(CODE_NONE);
