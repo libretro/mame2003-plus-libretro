@@ -60,6 +60,10 @@ int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
 int16_t  prev_pointer_x;
 int16_t  prev_pointer_y;
 
+/* data structures to store lightgun coordinates */
+int16_t  lightgun_x[MAX_PLAYER_COUNT]= {0};
+int16_t  lightgun_y[MAX_PLAYER_COUNT]= {0};
+
 /* data structures to store position data for analog joysicks */
 int16_t  analogjoy[MAX_PLAYER_COUNT][4]= {0};
 
@@ -145,10 +149,12 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
         int   get_retropad_code(unsigned osd_code);
+        int   get_lightgun_code(unsigned osd_code);
    unsigned   get_button_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
    unsigned   calc_player_number(unsigned joycode);
+        int   normalize_lightgun(int libretro_coordinate);
         int   convert_analog_scale(int input);
 static void   remove_slash (char* temp);
 
@@ -177,12 +183,14 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define PAD_MODERN    RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
 #define PAD_8BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
+#define RETRO_GUN     RETRO_DEVICE_LIGHTGUN
 
 static struct retro_controller_description controllers[] = {
   { "Classic Gamepad",    PAD_CLASSIC },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
+  { "Lightgun",           RETRO_GUN   },
 };
 
 static struct retro_controller_description unsupported_controllers[] = {
@@ -190,6 +198,7 @@ static struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
+  { "UNSUPPORTED (Lightgun)",           RETRO_GUN   },
 };
 
 static struct retro_controller_info retropad_subdevice_ports[] = {
@@ -1238,7 +1247,7 @@ void retro_run (void)
     retroJsState[i][OSD_JOYPAD_L3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
     retroJsState[i][OSD_JOYPAD_R3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
-    if (options.mouse_device)
+    if (options.mouse_device && options.active_control_type[i] != RETRO_GUN) /* do not poll mouse interface when this user explicitly selects Lightgun */
     {
       if (options.mouse_device == RETRO_DEVICE_MOUSE)
       {
@@ -1264,6 +1273,23 @@ void retro_run (void)
       retroJsState[i][OSD_MOUSE_RIGHT_CLICK] = 0;
       retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
     }
+
+    /* poll lightgun position */
+    lightgun_x[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+    lightgun_y[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+
+    /* poll lightgun digital controls */
+    retroJsState[i][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
+    retroJsState[i][OSD_LIGHTGUN_RELOAD]      = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
+    retroJsState[i][OSD_LIGHTGUN_AUX_A]       = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
+    retroJsState[i][OSD_LIGHTGUN_AUX_B]       = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
+    retroJsState[i][OSD_LIGHTGUN_START]       = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
+    retroJsState[i][OSD_LIGHTGUN_SELECT]      = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
+    retroJsState[i][OSD_LIGHTGUN_AUX_C]       = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
+    retroJsState[i][OSD_LIGHTGUN_DPAD_UP]     = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
+    retroJsState[i][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
+    retroJsState[i][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
+    retroJsState[i][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
 
     retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[i][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
     retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[i][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
@@ -1604,77 +1630,81 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 
 void retro_describe_controls(void)
 {
-  unsigned player_number = 0;
+          int device_type   = RETRO_DEVICE_NONE;
+          int retro_code    = 0;    /* uses the constants defined in libretro.h */
+    unsigned player_number  = 0;
+    unsigned osd_index      = 0;    /* code from the OSD_ enum in mame2003.h */
+    unsigned osd_code       = 0;    /* the unique code (including across players) created by the libretro OSD */
+    unsigned standard_code  = 0;    /* standard code is the MAME term for the internal input code, associated with a controller */
+    unsigned button_ipt_id  = 0;    /* input code connects an input port with standard input code */
+  const char *control_name  = NULL;
+
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
   for(player_number = DISP_PLAYER1; (player_number <= options.content_flags[CONTENT_CTRL_COUNT] && player_number <= MAX_PLAYER_COUNT); player_number++)
   {
-    unsigned retro_code       = 0;       /* using the constants defined in libretro.h */
-    unsigned osd_index        = 0;
-    unsigned osd_code         = 0;      /* the unique code (including across players) created by the libretro OSD */
-    unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
-    unsigned button_ipt_id    = 0;      /* input code connects an input port with standard input code */
-    bool retropad_type        = false;
+    bool retropad_type = false;
 
-    log_cb(RETRO_LOG_DEBUG, "player_number: %i | active_control_type: %i\n", player_number, options.active_control_type[player_number - 1]);
+    device_type = options.active_control_type[player_number-1];
+    log_cb(RETRO_LOG_DEBUG, "Describing controls for player_number: %i | device_type: %i\n", player_number, device_type);
 
-    if(options.active_control_type[player_number-1] == RETRO_DEVICE_NONE)
+    if(device_type == RETRO_DEVICE_NONE)
       continue; /* the null input device is selected; move on to the next player */
 
-    switch(options.active_control_type[player_number-1])
-    {
-      case PAD_CLASSIC: case PAD_MODERN: case PAD_8BUTTON: case PAD_6BUTTON:
-        retropad_type = true; break;
-    }
+    if(device_type == PAD_CLASSIC || device_type == PAD_MODERN || device_type == PAD_8BUTTON || device_type == PAD_6BUTTON)
+      retropad_type = true;
 
     for(osd_index = OSD_JOYPAD_B; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
     {
-      const char *control_name  = NULL;
-
-        if(retropad_type)
-        {
-          if(osd_index >= OSD_MOUSE_LEFT_CLICK) break; /* can't describe non-retropad controls on a retropad */
-
-          switch(osd_index) /* universal default mappings */
-          {
-            case OSD_JOYPAD_LEFT:   control_name = "Left";  break;
-            case OSD_JOYPAD_RIGHT:  control_name = "Right"; break;
-            case OSD_JOYPAD_UP:     control_name = "Up";    break;
-            case OSD_JOYPAD_DOWN:   control_name = "Down";  break;
-
-            case OSD_JOYPAD_SELECT: control_name = "Coin";  break;
-            case OSD_JOYPAD_START:  control_name = "Start"; break;
-          }
-
-        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
-      }
-
       osd_code = encode_osd_joycode(player_number, osd_index);
       standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
-      if(standard_code == CODE_NONE) continue;
+      if(standard_code == CODE_NONE)  continue;
 
       button_ipt_id = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
-      if(button_ipt_id == CODE_NONE) continue;
-
-      if(button_ipt_id >= IPT_BUTTON1 && button_ipt_id <= IPT_BUTTON10)
+      if(button_ipt_id == CODE_NONE)  continue;
+      
+      if(retropad_type)
       {
-        if((button_ipt_id - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h    */
+        if(retro_code == INT_MAX) continue;        /* from the retropad section, or return INT_MAX if not valid  */
+
+        switch(osd_index) /* universal default mappings */
         {
-          continue; /* button is a higher index than supported by the current driver, so it has no name */
+          case OSD_JOYPAD_LEFT:   control_name = "Left";  break;
+          case OSD_JOYPAD_RIGHT:  control_name = "Right"; break;
+          case OSD_JOYPAD_UP:     control_name = "Up";    break;
+          case OSD_JOYPAD_DOWN:   control_name = "Down";  break;
+          case OSD_JOYPAD_SELECT: control_name = "Coin";  break;
+          case OSD_JOYPAD_START:  control_name = "Start"; break;
+        }
+      }
+      else if(options.active_control_type[player_number-1] == RETRO_GUN)
+      {
+        retro_code = get_lightgun_code(osd_index); /* get the corresponding ID for this control in libretro.h  */
+        if(retro_code == INT_MAX) continue;        /* from the lightgun section, or INT_MAX if not valid       */
+ 
+        switch(osd_index)
+        {
+          case OSD_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+          case OSD_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+          case OSD_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+          case OSD_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+          case OSD_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+          case OSD_LIGHTGUN_START:      control_name = "Start"; break;
         }
       }
 
-      if(string_is_empty(control_name))
-        control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
-      if(string_is_empty(control_name))
-        continue;
+      if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
+      if(string_is_empty(control_name))  continue;
       
       /* As of April 2021, there may be a RetroArch bug which doesn't accept the
        * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
-       * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD */
+       * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD if it's a JOYPAD at all.
+       * Lightgun control names don't seem to be showing up in RetroArch either at present.
+       * */
       needle->port         = player_number - 1;
-      needle->device       = /*options.active_control_type[player_number - 1]*/ RETRO_DEVICE_JOYPAD;
+      needle->device       = retropad_type ? RETRO_DEVICE_JOYPAD : device_type;
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
@@ -1682,23 +1712,49 @@ void retro_describe_controls(void)
       needle++;
     }
   }
-
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
-  needle->port = 0;
-  needle->device = 0;
-  needle->index = 0;
-  needle->id = 0;
+  needle->port        = 0;
+  needle->device      = 0;
+  needle->index       = 0;
+  needle->id          = 0;
   needle->description = NULL;
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-
 }
 
-/* converts from OSD_ in mame2003.h to the codes from libretro.h */
+/* get_retropad_code
+ * converts from OSD_ in mame2003.h to the codes from libretro.h 
+ * we rely on retropad codes all being in a continuous sequence,
+ * which may not be true in the long run. for example: get_lightgun_code()
+ */
 int get_retropad_code(unsigned osd_id)
 {
   if(osd_id >= OSD_JOYPAD_B && osd_id <= OSD_JOYPAD_R3) return osd_id;  /* the retropad and osd enums have the same numbering */
   return INT_MAX;
+}
+
+/* converts from OSD_ in mame2003.h to the codes from libretro.h */
+int get_lightgun_code(unsigned osd_id)
+{
+  if(osd_id < OSD_LIGHTGUN_IS_OFFSCREEN || osd_id > OSD_LIGHTGUN_DPAD_RIGHT) 
+    return INT_MAX; /* this code is not in the range for lightgun */
+  
+  switch(osd_id)
+  {
+    case  OSD_LIGHTGUN_IS_OFFSCREEN:    return RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN;
+    case  OSD_LIGHTGUN_IS_TRIGGER:      return RETRO_DEVICE_ID_LIGHTGUN_TRIGGER;       /*Status Check*/
+    case  OSD_LIGHTGUN_RELOAD:          return RETRO_DEVICE_ID_LIGHTGUN_RELOAD;        /*Forced off-screen shot*/
+    case  OSD_LIGHTGUN_AUX_A:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_A;
+    case  OSD_LIGHTGUN_AUX_B:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_B;
+    case  OSD_LIGHTGUN_START:           return RETRO_DEVICE_ID_LIGHTGUN_START;
+    case  OSD_LIGHTGUN_SELECT:          return RETRO_DEVICE_ID_LIGHTGUN_SELECT;
+    case  OSD_LIGHTGUN_AUX_C:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_C;
+    case  OSD_LIGHTGUN_DPAD_UP:         return RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP;
+    case  OSD_LIGHTGUN_DPAD_DOWN:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN;
+    case  OSD_LIGHTGUN_DPAD_LEFT:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT;
+    case  OSD_LIGHTGUN_DPAD_RIGHT:      return RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT;
+  }
+  return INT_MAX; /* no match found */
 }
 
 /* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
@@ -1875,14 +1931,26 @@ unsigned get_button_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"    #DISPLAY_IDX " AXIS 3 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
   {"RP"    #DISPLAY_IDX " AXIS 3 Y+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
+#define EMIT_LIGHTGUN(DISPLAY_IDX) \
+  {"Gun "  #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Gun "  #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Gun "  #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Gun "  #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},  \
+  {"Gun "  #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"Gun "  #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"Gun "  #DISPLAY_IDX " DPad Left ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"Gun "  #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"Gun "  #DISPLAY_IDX " DPad Up   ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"Gun "  #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
 {
-  {{EMIT_RETROPAD_CLASSIC(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_MODERN(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_8BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_6BUTTON(1) EMIT_COMMON_CODES(1)}},
-  {{EMIT_RETROPAD_CLASSIC(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_MODERN(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_8BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_6BUTTON(2) EMIT_COMMON_CODES(2)}},
-  {{EMIT_RETROPAD_CLASSIC(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_MODERN(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_8BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_6BUTTON(3) EMIT_COMMON_CODES(3)}},
-  {{EMIT_RETROPAD_CLASSIC(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_MODERN(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_8BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_6BUTTON(4) EMIT_COMMON_CODES(4)}},
-  {{EMIT_RETROPAD_CLASSIC(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_MODERN(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_8BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_6BUTTON(5) EMIT_COMMON_CODES(5)}},
-  {{EMIT_RETROPAD_CLASSIC(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_MODERN(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_8BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_6BUTTON(6) EMIT_COMMON_CODES(6)}},
+  {{EMIT_RETROPAD_CLASSIC(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_MODERN(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_8BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_6BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_LIGHTGUN(1)}},
+  {{EMIT_RETROPAD_CLASSIC(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_MODERN(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_8BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_6BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_LIGHTGUN(2)}},
+  {{EMIT_RETROPAD_CLASSIC(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_MODERN(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_8BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_6BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_LIGHTGUN(3)}},
+  {{EMIT_RETROPAD_CLASSIC(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_MODERN(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_8BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_6BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_LIGHTGUN(4)}},
+  {{EMIT_RETROPAD_CLASSIC(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_MODERN(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_8BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_6BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_LIGHTGUN(5)}},
+  {{EMIT_RETROPAD_CLASSIC(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_MODERN(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_8BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_6BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_LIGHTGUN(6)}},
 };
 
 /******************************************************************************
@@ -1909,10 +1977,11 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
       switch(coded_layout)
       {
-        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC; break;
-        case PAD_MODERN:   layout_idx = IDX_MODERN;  break;
-        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC;  break;
+        case PAD_MODERN:   layout_idx = IDX_MODERN;   break;
+        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON;  break;
+        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON;  break;
+        case RETRO_GUN:    layout_idx = IDX_LIGHTGUN; break;
       }
 
       mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
@@ -2078,34 +2147,59 @@ void osd_joystick_end_calibration(void) { }
  */
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
-    *deltax = mouse_x[player];
-    *deltay = mouse_y[player];
+  /* if this player has specified lightgun input in the frontend, do not fall through
+   * to the mouse interface for that player */
+  if(options.active_control_type[player-1] == RETRO_DEVICE_LIGHTGUN)
+  {
+    *deltax = 0;
+    *deltay = 0;
+    return;
+  }
+
+  *deltax = mouse_x[player];
+  *deltay = mouse_y[player];
 }
 
 
-
 /******************************************************************************
-
-	Lightgun
-
+  Lightgun
 ******************************************************************************/
 
 /******************************************************************************
-    The OSD lightgun call should return the delta from the middle of the screen
-		when the gun is fired (not the absolute pixel value), and 0 when the gun is
-		inactive.
-
-    When the OSD lightgun returns 0, control passes through to the analog joystick,
-    and mouse, in that order.  In other words, when the OSD lightgun returns a
-    value it overrides both mouse & analog joystick.
-
-		The value returned by the OSD layer should be -128 to 128, same as analog
-		joysticks.
-*******************************************************************************/
+ *  osd_lightgun_read should return the delta from the middle of the screen
+ *  when the gun is fired and 0 when the gun is inactive. The value returned
+ *  by the OSD layer should be -128 to 128, same as analog joysticks.
+ *
+ *  When the OSD lightgun returns 0, control passes through to the analog joystick,
+ *  and mouse, in that order. In other words, when the OSD lightgun returns a
+ *  value it overrides both mouse & analog joystick.
+ ******************************************************************************/
 void osd_lightgun_read(int player, int *deltax, int *deltay)
 {
-
+  *deltax = lightgun_x[player];
+  *deltay = lightgun_y[player];
 }
+
+/******************************************************************************
+ * normalize_lightgun converts between the libretro coordinate system and the
+ * MAME OSD coordinate system.
+ * 
+ * RETRO_DEVICE_LIGHTGUN reports X/Y coordinates in screen space in the range 
+ * [-0x8000, 0x7fff] in both axes, with zero being center and -0x8000 being
+ * out of bounds.
+ * 
+ * Meanwhile the MAME OSD uses delta from the middle of the screen
+ * when the lightgun is fired and 0 when the gun is inactive. The value returned
+ * by the OSD layer should be -128 to 128, same as analog joysticks.
+ ******************************************************************************/
+int normalize_lightgun(int libretro_coordinate)
+{
+  if (libretro_coordinate == 0 || libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
+
+  return round(((float)libretro_coordinate / LIBRETRO_ANALOG_MAX) * ANALOG_MAX);
+}
+
+
 
 
 /******************************************************************************
