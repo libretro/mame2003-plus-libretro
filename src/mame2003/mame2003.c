@@ -1066,7 +1066,6 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-					log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dual joystick controls controls.\n");
 					break;
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
