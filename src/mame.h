@@ -169,9 +169,9 @@ enum /* used to index content-specific flags */
   CONTENT_ROTATE_JOY_45,
   CONTENT_PLAYER_COUNT,
   CONTENT_CTRL_COUNT,
+  CONTENT_DUAL_JOYSTICK,
   CONTENT_BUTTON_COUNT,
   CONTENT_JOYSTICK_DIRECTIONS,
-  CONTENT_DCS_SPEEDHACK,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_end,
 };
@@ -207,7 +207,8 @@ struct GameOptions
   unsigned tate_mode;
 
   int      crosshair_enable;
-  unsigned activate_dcs_speedhack;
+  bool     activate_dcs_speedhack;
+
   bool     mame_remapping;       /* display MAME input remapping menu */
 
   int      samplerate;		       /* sound sample playback rate, in KHz */
