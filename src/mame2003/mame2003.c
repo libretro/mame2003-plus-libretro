@@ -1066,7 +1066,16 @@ static void set_content_flags(void)
 				case IPT_JOYSTICKLEFT_DOWN:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-					break;
+        {
+          static bool dualjoy_first_announce = false;
+          if(!dualjoy_first_announce)
+          {
+            log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dual joystick controls controls.\n");
+            dualjoy_first_announce = true;
+          }
+          /* As of now, we don't have an option flag for this field. */
+          break;
+        }
 				case IPT_BUTTON1:
 					if (options.content_flags[CONTENT_BUTTON_COUNT] < 1) options.content_flags[CONTENT_BUTTON_COUNT] = 1;
 					break;
@@ -1648,7 +1657,7 @@ void retro_describe_controls(void)
     unsigned button_ipt_id    = 0;      /* input code connects an input port with standard input code */
     bool retropad_type        = false;
 
-    log_cb(RETRO_LOG_DEBUG, "player_number: %i | active_control_type[player_number - 1]: %i\n", player_number, options.active_control_type[player_number - 1]);
+    log_cb(RETRO_LOG_DEBUG, "player_number: %i | active_control_type: %i\n", player_number, options.active_control_type[player_number - 1]);
 
     if(options.active_control_type[player_number-1] == RETRO_DEVICE_NONE)
       continue; /* the null input device is selected; move on to the next player */
@@ -2319,13 +2328,11 @@ static void remove_slash (char* temp)
 
   for(i=0; temp[i] != '\0'; ++i);
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Check for trailing slash in path: %s\n", temp);
-
   if( (temp[i-1] == '/' || temp[i-1] == '\\') && (i > 1) )
   {
     temp[i-1] = 0;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Removed a trailing slash in path: %s\n", temp);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Removed a trailing slash in path: %s\n", temp);
   }
   else
-    log_cb(RETRO_LOG_INFO, LOGPRE "Trailing slash removal was not necessary for path given.\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Trailing slash removal was not necessary path: %s.\n", temp);
 }
