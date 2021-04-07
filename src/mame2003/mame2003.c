@@ -42,7 +42,6 @@ int            usestereo = 1;
 int legacy_flag = -1;
 
 struct ipd  *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
-static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
 /* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
@@ -149,7 +148,8 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
         int   get_retropad_code(unsigned osd_code);
-        int   get_lightgun_code(unsigned osd_code);
+        int   get_retromouse_code(unsigned osd_code);
+        int   get_retrogun_code(unsigned osd_code);
    unsigned   get_button_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
@@ -773,11 +773,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-  int i;
-
-  int              driverIndex    = 0;
-  int              port_index;
-  char             *driver_lookup = NULL;
+  int    driverIndex    = 0;
+  int    port_index;
+  char   *driver_lookup = NULL;
 
   if(string_is_empty(game->path))
   {
@@ -819,6 +817,7 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
 
   #if (HAS_CYCLONE || HAS_DRZ80)
+   int i;
    int use_cyclone = 1;
    int use_drz80 = 1;
    int use_drz80_snd = 1;
@@ -1620,6 +1619,8 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
+  static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
+
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
   options.active_control_type[in_port] = device;
@@ -1642,56 +1643,57 @@ void retro_describe_controls(void)
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  for(player_number = DISP_PLAYER1; (player_number <= options.content_flags[CONTENT_CTRL_COUNT] && player_number <= MAX_PLAYER_COUNT); player_number++)
+  for(player_number = DISP_PLAYER1; (player_number <= MAX_PLAYER_COUNT) && (player_number <= options.content_flags[CONTENT_CTRL_COUNT]); player_number++)
   {
     bool retropad_type = false;
 
-    device_type = options.active_control_type[player_number-1];
+    device_type = options.active_control_type[player_number-1]; /* as declared to libretro */
     log_cb(RETRO_LOG_DEBUG, "Describing controls for player_number: %i | device_type: %i\n", player_number, device_type);
 
-    if(device_type == RETRO_DEVICE_NONE)
-      continue; /* the null input device is selected; move on to the next player */
+    if(device_type == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
     if(device_type == PAD_CLASSIC || device_type == PAD_MODERN || device_type == PAD_8BUTTON || device_type == PAD_6BUTTON)
       retropad_type = true;
 
-    for(osd_index = OSD_JOYPAD_B; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
+    for(osd_index = 0; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
     {
-      osd_code = encode_osd_joycode(player_number, osd_index);
+      control_name = NULL;
+
+      osd_code =      encode_osd_joycode(player_number, osd_index);
       standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
       if(standard_code == CODE_NONE)  continue;
 
       button_ipt_id = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
       if(button_ipt_id == CODE_NONE)  continue;
-      
+
       if(retropad_type)
       {
         retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h    */
         if(retro_code == INT_MAX) continue;        /* from the retropad section, or return INT_MAX if not valid  */
 
-        switch(osd_index) /* universal default mappings */
+        switch(retro_code) /* universal default mappings */
         {
-          case OSD_JOYPAD_LEFT:   control_name = "Left";  break;
-          case OSD_JOYPAD_RIGHT:  control_name = "Right"; break;
-          case OSD_JOYPAD_UP:     control_name = "Up";    break;
-          case OSD_JOYPAD_DOWN:   control_name = "Down";  break;
-          case OSD_JOYPAD_SELECT: control_name = "Coin";  break;
-          case OSD_JOYPAD_START:  control_name = "Start"; break;
+          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+          case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+          case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
         }
       }
-      else if(options.active_control_type[player_number-1] == RETRO_GUN)
+      else if(device_type == RETRO_GUN)
       {
-        retro_code = get_lightgun_code(osd_index); /* get the corresponding ID for this control in libretro.h  */
+        retro_code = get_retrogun_code(osd_index); /* get the corresponding ID for this control in libretro.h  */
         if(retro_code == INT_MAX) continue;        /* from the lightgun section, or INT_MAX if not valid       */
  
-        switch(osd_index)
+        switch(retro_code)
         {
-          case OSD_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-          case OSD_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-          case OSD_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-          case OSD_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-          case OSD_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-          case OSD_LIGHTGUN_START:      control_name = "Start"; break;
+          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+          case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+          case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
         }
       }
 
@@ -1705,10 +1707,10 @@ void retro_describe_controls(void)
        */
       needle->port         = player_number - 1;
       needle->device       = retropad_type ? RETRO_DEVICE_JOYPAD : device_type;
-      needle->index        = 0;
+      needle->index        = 0;  /* 0 for digital controls, use #defines in libretro.h for analog indexes */
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for player_number: %i | osd_code: %i | id: %i | desc: %s\n", player_number, osd_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for player_number: %i | device_type: %i | described device_type: %i, osd_code: %i | retro_code: %i | desc: %s\n", player_number, device_type, needle->device, osd_code, retro_code, needle->description);
       needle++;
     }
   }
@@ -1725,7 +1727,7 @@ void retro_describe_controls(void)
 /* get_retropad_code
  * converts from OSD_ in mame2003.h to the codes from libretro.h 
  * we rely on retropad codes all being in a continuous sequence,
- * which may not be true in the long run. for example: get_lightgun_code()
+ * which may not be true in the long run. for example: get_retrogun_code()
  */
 int get_retropad_code(unsigned osd_id)
 {
@@ -1733,12 +1735,22 @@ int get_retropad_code(unsigned osd_id)
   return INT_MAX;
 }
 
+
 /* converts from OSD_ in mame2003.h to the codes from libretro.h */
-int get_lightgun_code(unsigned osd_id)
+int get_retromouse_code(unsigned osd_id)
 {
-  if(osd_id < OSD_LIGHTGUN_IS_OFFSCREEN || osd_id > OSD_LIGHTGUN_DPAD_RIGHT) 
-    return INT_MAX; /* this code is not in the range for lightgun */
-  
+  switch(osd_id)
+  {
+    case  OSD_MOUSE_LEFT_CLICK:    return RETRO_DEVICE_ID_MOUSE_LEFT;
+    case  OSD_MOUSE_RIGHT_CLICK:   return RETRO_DEVICE_ID_LIGHTGUN_TRIGGER;       /*Status Check*/
+    case  OSD_MOUSE_MIDDLE_CLICK:  return RETRO_DEVICE_ID_LIGHTGUN_RELOAD;        /*Forced off-screen shot*/
+  }
+  return INT_MAX; /* no match found */
+}
+
+/* converts from OSD_ in mame2003.h to the codes from libretro.h */
+int get_retrogun_code(unsigned osd_id)
+{
   switch(osd_id)
   {
     case  OSD_LIGHTGUN_IS_OFFSCREEN:    return RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN;
@@ -1757,6 +1769,8 @@ int get_lightgun_code(unsigned osd_id)
   return INT_MAX; /* no match found */
 }
 
+
+
 /* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
  * MOUSECODE_BUTTON_COMPARE, and get_button_ipt_code(), etc. but I haven't found it.
  */
@@ -1772,7 +1786,7 @@ int get_lightgun_code(unsigned osd_id)
     case JOYCODE_6_BUTTON##BUTTON_NO:                 \
     case JOYCODE_7_BUTTON##BUTTON_NO:                 \
     case JOYCODE_8_BUTTON##BUTTON_NO:                 \
-      return player_flag | IPT_BUTTON##BUTTON_NO;   \
+      return player_flag | IPT_BUTTON##BUTTON_NO;     \
   }                                                   \
 
 #define MOUSE_CODE_COMPARE(BUTTON_NO)                 \
@@ -1789,15 +1803,15 @@ int get_lightgun_code(unsigned osd_id)
       return player_flag | IPT_BUTTON##BUTTON_NO;     \
   }                                                   \
 
-#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                      \
+#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                        \
   switch(standard_code)                                                               \
   {                                                                                   \
-    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;         \
-    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;         \
-    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;     \
-    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;   \
-    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;   \
-    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;  \
+    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;            \
+    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;           \
+    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;      \
+    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;    \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;    \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;   \
   }                                                                                   \
 
 unsigned get_button_ipt_code(unsigned player_number, unsigned standard_code)
@@ -2088,7 +2102,7 @@ int convert_analog_scale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
-		input = (int)round(scaled);
+		input = round(scaled);
 
 		if (input > +32767)
 		{
