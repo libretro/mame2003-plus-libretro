@@ -1619,10 +1619,10 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
-  static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
+  static struct retro_input_descriptor empty_input_descriptor[] = { 0 };
 
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor);
   options.active_control_type[in_port] = device;
   internal_code_update();     /* update MAME data structures for controls */
   retro_describe_controls();  /* update libretro data structures for controls */
@@ -1640,7 +1640,7 @@ void retro_describe_controls(void)
     unsigned button_ipt_id  = 0;    /* input code connects an input port with standard input code */
   const char *control_name  = NULL;
 
-  struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
+  struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1] = { { 0 } };  /* max possible descriptions + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
   for(player_number = DISP_PLAYER1; (player_number <= MAX_PLAYER_COUNT) && (player_number <= options.content_flags[CONTENT_CTRL_COUNT]); player_number++)
