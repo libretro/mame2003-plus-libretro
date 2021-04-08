@@ -755,8 +755,6 @@ static void remove_slash (char* temp)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-  int i;
-
   int              driverIndex    = 0;
   int              port_index;
   char             *driver_lookup = NULL;
@@ -801,6 +799,7 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
 
   #if (HAS_CYCLONE || HAS_DRZ80)
+   int i;
    int use_cyclone = 1;
    int use_drz80 = 1;
    int use_drz80_snd = 1;
@@ -2068,7 +2067,7 @@ int convert_analog_scale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
-    input = (int)round(scaled);
+    input = round(scaled);
 
 		if (input > +32767)
 		{
