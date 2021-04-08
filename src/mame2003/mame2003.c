@@ -42,7 +42,6 @@ int            usestereo = 1;
 int legacy_flag = -1;
 
 struct ipd  *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
-static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
 
 /* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
@@ -1600,9 +1599,8 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions per the sample code */
   options.active_control_type[in_port] = device;
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
   internal_code_update();     /* update MAME data structures for controls */
   retro_describe_controls();  /* update libretro data structures for controls */
 }
@@ -1611,6 +1609,7 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 void retro_describe_controls(void)
 {
   int port_number = 0;
+  static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
@@ -1684,6 +1683,7 @@ void retro_describe_controls(void)
   needle->id = 0;
   needle->description = NULL;
 
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
