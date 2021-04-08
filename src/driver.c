@@ -1039,6 +1039,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spceking )
 	DRIVER( spcewars )
 	DRIVER( cosmo )		/* TDS+Mints */
+	DRIVER( astropal )
+	DRIVER( invasion )
+	DRIVER( invasioa )
+	DRIVER( invasiob )
+	DRIVER( galactic )
+	DRIVER( spacmiss )
+
 
 	DRIVER( sspeedr )	/* 1979 Midway */
 

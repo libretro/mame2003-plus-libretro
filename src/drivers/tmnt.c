@@ -346,15 +346,14 @@ static int tmnt_decode_sample(const struct MachineSound *msound)
 	 *	(Sound info courtesy of Dave <dave@finalburn.com>)
 	 */
 
-	for (i = 0;i < 0x40000;i++)
+	for (i = 0; i < 0x40000; i++)
 	{
-		int val = source[2*i] + source[2*i+1] * 256;
+		int val = source[2 * i] + source[2 * i + 1] * 256;
 		int expo = val >> 13;
+		val = (val >> 3) & (0x3ff); /* 10 bit, Max Amplitude 0x400 */
+		val -= 0x200;                   /* Centralize value */
 
-	  	val = (val >> 3) & (0x3ff);	/* 10 bit, Max Amplitude 0x400 */
-		val -= 0x200;					/* Centralize value	*/
-
-		val <<= (expo-3);
+		val = (val << expo) >> 3;
 
 		dest[i] = val;
 	}

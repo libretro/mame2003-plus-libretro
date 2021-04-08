@@ -522,12 +522,12 @@ static INLINE void WLONG(offs_t offset,data32_t data)
 static INLINE void PUSH(UINT32 data)
 {
 	SP -= 0x20;
-	TMS34010_WRMEM_DWORD(TOBYTE(SP), data);
+	WLONG(SP, data);
 }
 
 static INLINE INT32 POP(void)
 {
-	INT32 ret = TMS34010_RDMEM_DWORD(TOBYTE(SP));
+	INT32 ret = RLONG(SP);
 	SP += 0x20;
 	return ret;
 }
@@ -1961,7 +1961,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 READ16_HANDLER( tms34010_io_register_r )
 {
-	/*int cpunum = cpu_getactivecpu();*/
+	int cpunum = cpu_getactivecpu();
 	int result, total;
 
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);*/
@@ -1991,6 +1991,16 @@ READ16_HANDLER( tms34010_io_register_r )
 
 		case REG_REFCNT:
 			return (activecpu_gettotalcycles() / 16) & 0xfffc;
+			
+		case REG_INTPEND:
+			result = IOREG(offset);
+
+			/* Cool Pool loops in mainline code on the appearance of the DI, even though they */
+			/* have an IRQ handler. For this reason, we return it signalled a bit early in order */
+			/* to make it past these loops. */
+			if (dpyint_timer[cpunum] && timer_timeleft(dpyint_timer[cpunum]) < 3 * TIME_IN_HZ(40000000/TMS34010_CLOCK_DIVIDER))
+				result |= TMS34010_DI;
+			return result;
 	}
 
 	return IOREG(offset);

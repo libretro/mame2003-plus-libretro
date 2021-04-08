@@ -6,7 +6,7 @@
 /******************************************************************************
 
 	Shared libretro log interface
-    set in mame2003.c 
+    set in mame2003.c
 
 ******************************************************************************/
 
@@ -19,12 +19,12 @@ extern retro_log_printf_t log_cb;
    trying to standardize on logerror but the standardization was not complete,
    with a dozen variations on indicating loging verbosity via defines,
    some code still using printf, etc.
-   
+
    Due to the fact that the logging in MAME was not internally consistent,
    and that MAME's logging levels don't necessarily correspond to libretro's
    levels of RETRO_LOG_DEBUG, RETRO_LOG_INFO, RETRO_LOG_WARN, and RETRO_LOG_ERROR,
    there is manual correction to the logging levels needed in some cases.
-      
+
    TODO: Remove logerror once the conversion to libretro logging is "done.
 */
 

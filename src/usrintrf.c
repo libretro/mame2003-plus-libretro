@@ -2382,7 +2382,7 @@ void generate_gameinfo(void)
 {
 	int i;
 	char buf2[32];
-  
+
   message_buffer[0] = '\0';
 
 	sprintf(message_buffer,"CONTROLS: %s\n\nGAMEINFO: %s\n%s %s\n\n%s:\n",Machine->gamedrv->ctrl_dat->control_details, Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer,
@@ -2502,7 +2502,7 @@ void ui_copyright_and_warnings(void)
   buffer[0]='\0';
   if(!options.skip_disclaimer)
     snprintf(buffer, MAX_MESSAGE_LENGTH, "%s", ui_getstring(UI_copyright));
-  
+
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
 			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
@@ -2574,7 +2574,7 @@ void ui_copyright_and_warnings(void)
     {
       const struct GameDriver *maindrv;
       int foundworking;
-      
+
       if (Machine->gamedrv->flags & GAME_NOT_WORKING)
       {
         if(!first_warning)
@@ -2634,17 +2634,17 @@ void ui_copyright_and_warnings(void)
         frontend_message_cb(warning_buffer, 180);
       }
     }
-   
+
     log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", warning_buffer); /* log warning list to the console */
 
   }
- 
+
   generate_gameinfo();
   log_cb(RETRO_LOG_INFO, LOGPRE "\n\n%s", message_buffer);
-  
+
   if(strlen(buffer))
     usrintf_showmessage_secs(8, "%s", buffer);
-  
+
 }
 
 /* Word-wraps the text in the specified buffer to fit in maxwidth characters per line.
@@ -3043,8 +3043,8 @@ void setup_menu_init(void)
   {
 	  menu_item[menu_total] = ui_getstring (UI_inputgeneral);      menu_action[menu_total++] = UI_DEFCODE;
     menu_item[menu_total] = ui_getstring (UI_inputspecific);     menu_action[menu_total++] = UI_CODE;
-    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;    
-    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;    
+    //menu_item[menu_total] = ui_getstring (UI_flush_current_cfg); menu_action[menu_total++] = UI_FLUSH_CURRENT_CFG;
+    //menu_item[menu_total] = ui_getstring (UI_flush_all_cfg);     menu_action[menu_total++] = UI_FLUSH_ALL_CFG;
   }
 
 	/* Determine if there are any dip switches */
@@ -3113,7 +3113,7 @@ void setup_menu_init(void)
     menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 
 #endif
-  if(!options.display_setup) 
+  if(!options.display_setup)
   {
     menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
   }
@@ -3125,7 +3125,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
- 
+
   if(generate_DAT)
   {
     print_mame_xml();

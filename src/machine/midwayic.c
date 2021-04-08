@@ -72,7 +72,7 @@ struct ioasic_state
 	UINT8	irq_state;
 	UINT16	sound_irq_state;
 	UINT8	auto_ack;
-	
+
 	UINT16	fifo[FIFO_SIZE];
 	UINT16	fifo_in;
 	UINT16	fifo_out;
@@ -487,13 +487,13 @@ void midway_ioasic_init(int shuffle, int upper, int yearoffs, void (*irq_callbac
 	ioasic.shuffle_map = &shuffle_maps[shuffle][0];
 	ioasic.auto_ack = 0;
 	ioasic.irq_callback = irq_callback;
-	
+
 	/* initialize the PIC */
 	midway_serial_pic2_init(upper, yearoffs);
-	
+
 	/* reset the chip */
 	midway_ioasic_reset();
-	
+
 	/* configure the fifo */
 	if (ioasic.has_dcs)
 	{
@@ -501,7 +501,7 @@ void midway_ioasic_init(int shuffle, int upper, int yearoffs, void (*irq_callbac
 		dcs_set_io_callbacks(ioasic_output_full, ioasic_input_empty);
 	}
 	ioasic_fifo_reset_w(1);
-	
+
 	/* configure the CAGE IRQ */
 	if (ioasic.has_cage)
 		cage_set_irq_handler(cage_irq_handler);
@@ -530,7 +530,7 @@ static void update_ioasic_irq(void)
 	UINT16 fifo_state = ioasic_fifo_status_r();
 	UINT16 irqbits = 0x2000;
 	UINT8 new_state;
-	
+
 	irqbits |= ioasic.sound_irq_state;
 	if (fifo_state & 8)
 		irqbits |= 0x0008;
@@ -538,7 +538,7 @@ static void update_ioasic_irq(void)
 		irqbits |= 0x0001;
 
 	ioasic.reg[IOASIC_INTSTAT] = irqbits;
-	
+
 	new_state = ((ioasic.reg[IOASIC_INTCTL] & 0x0001) != 0) && ((ioasic.reg[IOASIC_INTSTAT] & ioasic.reg[IOASIC_INTCTL] & 0x3ffe) != 0);
 	if (new_state != ioasic.irq_state)
 	{
@@ -593,7 +593,7 @@ static void ioasic_output_full(int state)
 static UINT16 ioasic_fifo_r(void)
 {
 	UINT16 result = 0;
-	
+
 	/* we can only read data if there's some to read! */
 	if (ioasic.fifo_bytes != 0)
 	{
@@ -604,7 +604,7 @@ static UINT16 ioasic_fifo_r(void)
 
 		if (LOG_FIFO && (ioasic.fifo_bytes < 4 || ioasic.fifo_bytes >= FIFO_SIZE - 4))
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_r(%04X): FIFO bytes = %d!\n", result, ioasic.fifo_bytes);
-		
+
 		/* if we just cleared the buffer, this may generate an IRQ on the master CPU */
 		/* because of the way the streaming code works, we need to make sure that the */
 		/* next status read indicates an empty buffer, even if we've timesliced and the */
@@ -628,14 +628,14 @@ static UINT16 ioasic_fifo_r(void)
 static UINT16 ioasic_fifo_status_r(void)
 {
 	UINT16 result = 0;
-	
+
 	if (ioasic.fifo_bytes == 0)
 		result |= 0x08;
 	if (ioasic.fifo_bytes >= FIFO_SIZE/2)
 		result |= 0x10;
 	if (ioasic.fifo_bytes >= FIFO_SIZE)
 		result |= 0x20;
-	
+
 	/* kludge alert: if we're reading this from the DCS CPU itself, and we recently cleared */
 	/* the FIFO, and we're within 16 instructions of the read that cleared the FIFO, make */
 	/* sure the FIFO clear bit is set */
@@ -710,7 +710,7 @@ READ32_HANDLER( midway_ioasic_packed_r )
 READ32_HANDLER( midway_ioasic_r )
 {
 	data32_t result;
-	
+
 	offset = ioasic.shuffle_active ? ioasic.shuffle_map[offset & 15] : offset;
 	result = ioasic.reg[offset];
 
@@ -727,19 +727,19 @@ READ32_HANDLER( midway_ioasic_r )
 				result |= 0x2000;
 			}
 			break;
-			
+
 		case IOASIC_PORT1:
 			result = readinputport(1);
 			break;
-		
+
 		case IOASIC_PORT2:
 			result = readinputport(2);
 			break;
-		
+
 		case IOASIC_PORT3:
 			result = readinputport(3);
 			break;
-		
+
 		case IOASIC_SOUNDSTAT:
 			/* status from sound CPU */
 			result = 0;
@@ -773,11 +773,11 @@ READ32_HANDLER( midway_ioasic_r )
 				result = val = ~val;
 			}
 			break;
-		
+
 		case IOASIC_PICIN:
 			result = midway_serial_pic2_r() | (midway_serial_pic2_status_r() << 8);
 			break;
-		
+
 		default:
 			break;
 	}
@@ -801,7 +801,7 @@ WRITE32_HANDLER( midway_ioasic_packed_w )
 WRITE32_HANDLER( midway_ioasic_w )
 {
 	UINT32 oldreg, newreg;
-	
+
 	offset = ioasic.shuffle_active ? ioasic.shuffle_map[offset & 15] : offset;
 	oldreg = ioasic.reg[offset];
 	COMBINE_DATA(&ioasic.reg[offset]);
@@ -822,25 +822,25 @@ WRITE32_HANDLER( midway_ioasic_w )
 				ioasic.reg[IOASIC_UNKNOWN4] = 0;	/* bug in 10th Degree assumes this */
 			}
 			break;
-			
+
 		case IOASIC_PORT2:
 		case IOASIC_PORT3:
 			/* ignore writes here if we're not shuffling yet */
 			if (!ioasic.shuffle_active)
 				break;
 			break;
-	
+
 		case IOASIC_DEBUGOUT:
 			if (PRINTF_DEBUG)
 				log_cb(RETRO_LOG_DEBUG, LOGPRE "%c", data & 0xff);
 			break;
-			
+
 		case IOASIC_SOUNDCTL:
 			/* sound reset? */
 			if (ioasic.has_dcs)
 			{
 				dcs_reset_w(newreg & 1);
-				
+
 			}
 			else if (ioasic.has_cage)
 			{
@@ -851,7 +851,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 						cage_control_w(3);
 				}
 			}
-			
+
 			/* FIFO reset? */
 			ioasic_fifo_reset_w(~newreg & 4);
 			break;
@@ -871,7 +871,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 		case IOASIC_PICOUT:
 			midway_serial_pic2_w(newreg);
 			break;
-		
+
 		case IOASIC_INTCTL:
 			/* interrupt enables */
 			/* bit  0 = global interrupt enable */

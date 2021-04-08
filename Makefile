@@ -468,14 +468,13 @@ else ifneq (,$(findstring armv,$(platform)))
 # GCW0
 else ifeq ($(platform), gcw0)
 	TARGET := $(TARGET_NAME)_libretro.so
-	CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc-4.9.1
+	CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc
 	CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
 	AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
 	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
 	PLATCFLAGS += -D__GCW0__
-	LIBS := -lc -lgcc
+	LIBS := -lc -lgcc -lm
 	fpic := -fPIC -nostdlib
-	LIBS =
 	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
 
 # Emscripten

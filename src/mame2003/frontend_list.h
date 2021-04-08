@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2277
+#define NUMGAMES 2283
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
@@ -142,6 +142,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Astro Fighter (set 2)"                                                                                 ,"astrof2"      , "mame", 3, 0 } ,
 { "Astro Fighter (set 3)"                                                                                 ,"astrof3"      , "mame", 3, 0 } ,
 { "Astro Invader"                                                                                         ,"astinvad"     , "mame", 3, 0 } ,
+{ "Astropal"                                                                                              ,"astropal"     , "mame", 3, 0 } ,
 { "Astyanax, The"                                                                                         ,"astyanax"     , "mame", 3, 0 } ,
 { "Atari Baseball (set 1)"                                                                                ,"abaseb"       , "mame", 3, 0 } ,
 { "Atari Baseball (set 2)"                                                                                ,"abaseb2"      , "mame", 3, 0 } ,
@@ -676,6 +677,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Funny Mouse (bootleg?)"                                                                                ,"suprmou2"     , "mame", 3, 0 } ,
 { "Future Spy"                                                                                            ,"futspy"       , "mame", 1, 0 } ,
 { "Galactic Warriors"                                                                                     ,"gwarrior"     , "mame", 3, 0 } ,
+{ "Galactica - Batalha Espacial"                                                                          ,"galactic"     , "mame", 3, 0 } ,
 { "Galaga '84"                                                                                            ,"galaga84"     , "mame", 3, 0 } ,
 { "Galaga '88 (Japan)"                                                                                    ,"galag88j"     , "mame", 3, 0 } ,
 { "Galaga '88 (set 1)"                                                                                    ,"galaga88"     , "mame", 3, 0 } ,
@@ -881,6 +883,9 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Intrepid (set 2)"                                                                                      ,"intrepi2"     , "mame", 3, 0 } ,
 { "Invader's Revenge (Dutchford)"                                                                         ,"invrvnga"     , "mame", 3, 0 } ,
 { "Invader's Revenge"                                                                                     ,"invrvnge"     , "mame", 3, 0 } ,
+{ "Invasion (bootleg, set 1, normal graphics)"                                                            ,"invasioa"     , "mame", 3, 0 } ,
+{ "Invasion (bootleg, set 2, no copyright)"                                                               ,"invasiob"     , "mame", 3, 0 } ,
+{ "Invasion (Sidam)"                                                                                      ,"invasion"     , "mame", 3, 0 } ,
 { "Invinco / Deep Scan"                                                                                   ,"invds"        , "mame", 3, 0 } ,
 { "Invinco / Head On 2"                                                                                   ,"invho2"       , "mame", 3, 0 } ,
 { "Invinco"                                                                                               ,"invinco"      , "mame", 3, 0 } ,
@@ -1785,6 +1790,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Space Invasion"                                                                                        ,"spaceinv"     , "mame", 5, 0 } ,
 { "Space King"                                                                                            ,"spceking"     , "mame", 3, 0 } ,
 { "Space Laser"                                                                                           ,"spclaser"     , "mame", 3, 0 } ,
+{ "Space Missile - Space Fighting Game"                                                                   ,"spacmiss"     , "mame", 3, 0 } ,
 { "Space Odyssey"                                                                                         ,"spaceod"      , "mame", 1, 0 } ,
 { "Space Panic (German)"                                                                                  ,"panicger"     , "mame", 1, 0 } ,
 { "Space Panic (set 1)"                                                                                   ,"panic"        , "mame", 1, 0 } ,

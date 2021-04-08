@@ -179,20 +179,20 @@ Battle Bakraid			L7A0498 GP9001 TOA PLAN 9335
 
 Game status:
 
-Teki Paki                      Working, but no sound. Missing sound MCU dump
+Teki Paki                      Working.
 Ghox                           Working, but no sound. Missing sound MCU dump
 Dogyuun                        Working, but no sound. MCU type unknown - its a Z?80 of some sort.
-Knuckle Bash                   Working, but no sound. MCU dump exists, its a Z?80 of some sort.
+Knuckle Bash                   Working, partial sound. MCU dump exists, its a Z?80 of some sort.
 Truxton 2                      Working.
 Pipi & Bibis                   Working.
-Whoopee                        Working. Missing sound MCU dump. Using bootleg sound CPU dump for now
+Whoopee                        Working.
 Pipi & Bibis (Ryouta Kikaku)   Working.
 FixEight                       Not working properly. Missing background GFX (controlled by MCU). MCU type unknown - its a Z?80 of some sort.
 FixEight bootleg               Working. One unknown ROM (same as pipibibi one). Region hardcoded to Korea (@ $4d8)
 Grind Stormer                  Working, but no sound. MCU type unknown - its a Z?80 of some sort.
 VFive                          Working, but no sound. MCU type unknown - its a Z?80 of some sort.
-Batsugun                       Working, but no sound and wrong GFX priorities. MCU type unknown - its a Z?80 of some sort.
-Batsugun Sp'                   Working, but no sound and wrong GFX priorities. MCU type unknown - its a Z?80 of some sort.
+Batsugun                       Working, partial sound MCU type unknown - its a Z?80 of some sort.
+Batsugun Sp'                   Working, partial sound MCU type unknown - its a Z?80 of some sort.
 Snow Bros. 2                   Working.
 Mahou Daisakusen               Working.
 Shippu Mahou Daisakusen        Working.
@@ -210,9 +210,6 @@ Notes:
 To Do / Unknowns:
 	- Whoopee/Teki Paki sometimes tests bit 5 of the territory port
 		just after testing for vblank. Why ?
-	- Whoppee is currently using the sound CPU ROM (Z80) from a differnt
-		(pirate ?) version of Pipi and Bibis (Ryouta Kikaku copyright).
-		It really has a HD647180 CPU, and its internal ROM needs to be dumped.
 	- Fix top character text layer (implement the line position table).
 	- Priority problem on 2nd player side of selection screen in FixEight (both original and bootleg)
 	- Fixeight bootleg text in sound check mode does not display properly
@@ -233,6 +230,7 @@ To Do / Unknowns:
 #include "vidhrdw/generic.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/z80/z80.h"
+#include "cpu/z180/z180.h"
 #include "machine/eeprom.h"
 
 
@@ -334,7 +332,12 @@ WRITE16_HANDLER( pipibibi_scroll_w );
 /********** Sound Stuff ***********************/
 void batsugun_okisnd_w(int data);
 void kbash_okisnd_w(int data);
+data8_t m_cmdavailable;
 
+READ_HANDLER(tekipaki_soundlatch_r);
+READ_HANDLER(tekipaki_cmdavailable_r);
+
+/* Sample Code lifted from ThunderMAME */
 int fadeout_ready = 0;
 int fadeout_stop = 0;
 int counter1 = 0;
@@ -673,94 +676,20 @@ static WRITE16_HANDLER( toaplan2_shared_w )
 
 static WRITE16_HANDLER( toaplan2_hd647180_cpu_w )
 {
-	/* Command sent to secondary CPU. Support for HD647180 will be
-	   required when a ROM dump becomes available for this hardware */
-
 	if (ACCESSING_LSB)
-	{
-		if (toaplan2_sub_cpu == CPU_2_Z80)			/* Whoopee */
-		{
-			toaplan2_shared_ram[0] = data & 0xff;
-		}
-		else										/* Teki Paki */
-		{
-			mcu_data = data & 0xff;
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "PC:%08x Writing command (%04x) to secondary CPU shared port\n",activecpu_get_previouspc(),mcu_data);
-		}
-	}
-}
-
-static WRITE16_HANDLER( tekipaki_hd647180_w )
-{
-	if (data == 0xfe)
-	{
-		sample_stop(0);sample_stop(1);sample_stop(2);sample_stop(3);
-		sample_stop(4);sample_stop(5);sample_stop(6);sample_stop(7);
-	}
-	
-	if (data >= 0x01 && data <= 0x03)
-		sample_start (0, data, 1);
-	
-	if (data >= 0x04 && data <= 0x05)
-		sample_start (0, data, 0);
-	
-	if (data == 0x06)
-		sample_start (1, data ,0);
-	
-	if (data == 0x07)
-		sample_start (1, data ,0);
-	
-	if (data >= 0x08 && data <= 0x09)
-		sample_start (2, data, 0);
-	
-	if (data >= 0x0a && data <= 0x0d)
-		sample_start (3, data, 0);
-	
-	if (data >= 0x0e && data <= 0x12)
-		sample_start (4, data, 0);
-	
-	if (data >= 0x13 && data <= 0x14)
-		sample_start (5, data, 0);
-	
-	if (data == 0x15)
-		sample_start (6, data, 0);
-	
-	if (ACCESSING_LSB)
-	{
+	{	
 		mcu_data = data & 0xff;
-		/* logerror("PC:%08x Writing command (%04x) to secondary CPU shared port\n",activecpu_get_previouspc(),mcu_data); */
+        m_cmdavailable = 1;
 	}
 }
-
-static const char *tekipaki_sample_names[] =
-{
-	"*tekipaki",
-	"dm.wav","01.wav","02.wav","03.wav","04.wav","05.wav","06.wav","07.wav",
-	"08.wav","09.wav","0a.wav","0b.wav","0c.wav","0d.wav","0e.wav","0f.wav",
-	"10.wav","11.wav","12.wav","13.wav","14.wav","15.wav",0
-};
-
-struct Samplesinterface tekipaki_samples_interface =
-{
-	8,
-    75,
-    tekipaki_sample_names
-};
 
 static READ16_HANDLER( c2map_port_6_r )
 {
 	/* For Teki Paki hardware */
 	/* bit 4 high signifies secondary CPU is ready */
 	/* bit 5 is tested low before V-Blank bit ??? */
-	switch (toaplan2_sub_cpu)
-	{
-		case CPU_2_Z80:			mcu_data = toaplan2_shared_ram[0]; break; /* Whoopee */
-		case CPU_2_HD647180:	mcu_data = 0xff; break;					  /* Teki Paki */
-		default:				mcu_data = 0x00; break;
-	}
-	if (mcu_data == 0xff) mcu_data = 0x10;
-	else mcu_data = 0x00;
-	return ( mcu_data | input_port_6_r(0) );
+    return (((m_cmdavailable) ? 0x00 : 0x10) | (input_port_6_r(0) & 0x0f)); /* dink */
+
 }
 
 static READ16_HANDLER( pipibibi_z80_status_r )
@@ -1590,7 +1519,7 @@ static MEMORY_WRITE16_START( tekipaki_writemem )
 	{ 0x140008, 0x140009, toaplan2_0_scroll_reg_select_w },
 	{ 0x14000c, 0x14000d, toaplan2_0_scroll_reg_data_w },
 	{ 0x180040, 0x180041, toaplan2_coin_word_w },	/* Coin count/lock */
-	{ 0x180070, 0x180071, tekipaki_hd647180_w },
+	{ 0x180070, 0x180071, toaplan2_hd647180_cpu_w }, /* MCU commands */
 MEMORY_END
 
 static MEMORY_READ16_START( ghox_readmem )
@@ -2374,18 +2303,39 @@ static PORT_WRITE_START( bbakraid_sound_writeport )
 	{ 0x81, 0x81, YMZ280B_data_0_w },
 PORT_END
 
+READ_HANDLER(tekipaki_soundlatch_r)
+{
+	m_cmdavailable = 0;
+	return mcu_data;
+};
 
-#if HD64x180
+READ_HANDLER(tekipaki_cmdavailable_r)
+{
+	if (m_cmdavailable) return 0xff;
+	else return 0x00;
+};
+
 static MEMORY_READ_START( hd647180_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0xfe00, 0xffff, MRA_RAM },			/* Internal 512 bytes of RAM */
+	{ 0x00000, 0x03fff, MRA_ROM },
+	{ 0x0fe00, 0x0ffff, MRA_RAM },			/* Internal 512 bytes of RAM */
 MEMORY_END
 
 static MEMORY_WRITE_START( hd647180_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0xfe00, 0xffff, MWA_RAM },			/* Internal 512 bytes of RAM */
+	{ 0x00000, 0x03fff, MWA_ROM },
+	{ 0x0fe00, 0x0ffff, MWA_RAM },			/* Internal 512 bytes of RAM */
 MEMORY_END
-#endif
+
+static PORT_READ_START( hd647180_port_readmem )
+	{ 0x60, 0x60, tekipaki_cmdavailable_r },
+	{ 0x82, 0x82, YM3812_status_port_0_r },
+	{ 0x83, 0x83, YM3812_status_port_0_r },
+	{ 0x84, 0x84, tekipaki_soundlatch_r },
+PORT_END
+
+static PORT_WRITE_START( hd647180_port_writemem )
+	{ 0x82, 0x82, YM3812_control_port_0_w },
+	{ 0x83, 0x83, YM3812_write_port_0_w },
+PORT_END
 
 
 #if Zx80
@@ -4406,13 +4356,13 @@ static MACHINE_DRIVER_START( tekipaki )
 	MDRV_CPU_MEMORY(tekipaki_readmem,tekipaki_writemem)
 	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
 
-#if HD64x180
 	MDRV_CPU_ADD(Z180, 10000000)			/* HD647180 CPU actually */
 	MDRV_CPU_MEMORY(hd647180_readmem,hd647180_writemem)
-#endif
+	MDRV_CPU_PORTS(hd647180_port_readmem,hd647180_port_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+  MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_INIT(toaplan2)
 
@@ -4428,10 +4378,7 @@ static MACHINE_DRIVER_START( tekipaki )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-/*	
 	MDRV_SOUND_ADD(YM3812, ym3812_interface)
-*/
-	MDRV_SOUND_ADD(SAMPLES, tekipaki_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -4608,39 +4555,6 @@ static MACHINE_DRIVER_START( pipibibs )
 	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
 
 	MDRV_CPU_ADD(Z80,27000000/8)			/* ??? 3.37MHz , 27MHz Oscillator */
-	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(10)
-
-	MDRV_MACHINE_INIT(toaplan2)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
-	MDRV_VISIBLE_AREA(0, 319, 0, 239)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(2048)
-
-	MDRV_VIDEO_START(toaplan2_0)
-	MDRV_VIDEO_EOF(toaplan2_0)
-	MDRV_VIDEO_UPDATE(toaplan2_0)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(YM3812, ym3812_interface)
-MACHINE_DRIVER_END
-
-
-static MACHINE_DRIVER_START( whoopee )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
-	MDRV_CPU_MEMORY(tekipaki_readmem,tekipaki_writemem)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
-
-	MDRV_CPU_ADD(Z80, 27000000/8)			/* This should be a HD647180 */
-											/* Change this to 10MHz when HD647180 gets dumped. 10MHz Oscillator */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -5039,15 +4953,12 @@ MACHINE_DRIVER_END
 
 /* -------------------------- Toaplan games ------------------------- */
 ROM_START( tekipaki )
-	ROM_REGION( 0x020000, REGION_CPU1, 0 )			/* Main 68K code */
+	ROM_REGION( 0x040000, REGION_CPU1, 0 )			/* Main 68K code */
 	ROM_LOAD16_BYTE( "tp020-1.bin", 0x000000, 0x010000, CRC(d8420bd5) SHA1(30c1ad9e053cd7e79adb42aa428ebee28e144755) )
 	ROM_LOAD16_BYTE( "tp020-2.bin", 0x000001, 0x010000, CRC(7222de8e) SHA1(8352ae23efc24a2e20cc24b6d37cb8fc6b1a730c) )
-
-#if HD64x180
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.020", 0x00000, 0x08000, NO_DUMP )
-#endif
+	
+	ROM_REGION( 0x8000, REGION_CPU2, 0 )    /* Sound HD647180 code */
+	ROM_LOAD( "hd647180.020", 0x00000, 0x08000, CRC(d5157c12) SHA1(b2c6c087bb539456a9e562d0b40f05dde26cacd3) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "tp020-4.bin", 0x000000, 0x080000, CRC(3ebbe41e) SHA1(cea196c5f83e1a23d5b538a0db9bbbffa7af5118) )
@@ -5166,12 +5077,10 @@ ROM_START( whoopee )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 )			/* Main 68K code */
 	ROM_LOAD16_BYTE( "whoopee.1", 0x000000, 0x020000, CRC(28882e7e) SHA1(8fcd278a7d005eb81cd9e461139c0c0f756a4fa4) )
 	ROM_LOAD16_BYTE( "whoopee.2", 0x000001, 0x020000, CRC(6796f133) SHA1(d4e657be260ba3fd3f0556ade617882513b52685) )
-
+	
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound Z80 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	/* use the Z80 version from the bootleg Pipi & Bibis set for now */
-	ROM_LOAD( "hd647180.025", 0x00000, 0x08000, BAD_DUMP CRC(101c0358) SHA1(162e02d00b7bdcdd3b48a0cd0527b7428435ec50)  )
-
+    ROM_LOAD( "hd647180.025", 0x00000, 0x08000, CRC(c02436f6) SHA1(385343f88991646ec23b385eaea82718f1251ea6) )
+	
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "tp025-4.bin", 0x000000, 0x100000, CRC(ab97f744) SHA1(c1620e614345dbd5c6567e4cb6f55c61b900d0ee) )
 	ROM_LOAD( "tp025-3.bin", 0x100000, 0x100000, CRC(7b16101e) SHA1(ae0119bbfa0937d18c4fbb0a3ef7cdc3b9fa6b56) )
@@ -5626,7 +5535,7 @@ GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan"
 GAME(  1999, kbash2,   0,        kbash2,   kbash2,   T2_noZ80, ROT0,   "Toaplan", "Knuckle Bash 2" )
 GAME ( 1992, truxton2, 0,        truxton2, truxton2, T2_noZ80, ROT270, "Toaplan", "Truxton II - Tatsujin II - Tatsujin Oh (Japan)" )
 GAME ( 1991, pipibibs, 0,        pipibibs, pipibibs, T2_Z80,   ROT0,   "Toaplan", "Pipi and Bibis - Whoopee!!" )
-GAME ( 1991, whoopee,  pipibibs, whoopee,  whoopee,  T2_Z80,   ROT0,   "Toaplan", "Whoopee!! - Pipi and Bibis" )
+GAME ( 1991, whoopee,  pipibibs, tekipaki, whoopee,  T2_Z180,  ROT0,   "Toaplan", "Whoopee!! - Pipi and Bibis" )
 GAME ( 1991, pipibibi, pipibibs, pipibibi, pipibibi, pipibibi, ROT0,   "[Toaplan] Ryouta Kikaku", "Pipi and Bibis - Whoopee!! (bootleg [Q])" )
 GAMEX( 1992, fixeight, 0,        fixeight, fixeight, fixeight, ROT270, "Toaplan", "FixEight", GAME_NOT_WORKING )
 GAME ( 1992, fixeighb, fixeight, fixeighb, fixeighb, fixeighb, ROT270, "Toaplan", "FixEight (Bootleg)" )

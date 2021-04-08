@@ -45,6 +45,22 @@ static WRITE_HANDLER( lrescue_sh_port5_w );
 static WRITE_HANDLER( indianbt_sh_port3_w );
 static WRITE_HANDLER( indianbt_sh_port5_w );
 
+static WRITE_HANDLER( lupin3_sh_port3_w );
+static WRITE_HANDLER( lupin3_sh_port5_w );
+
+static WRITE_HANDLER( invrvnge_sh_port3_w );
+static WRITE_HANDLER( invrvnge_sh_port5_w );
+
+static WRITE_HANDLER( yosakdon_sh_port3_w );
+static WRITE_HANDLER( yosakdon_sh_port5_w );
+
+static WRITE_HANDLER( rollingc_sh_port0_w );
+
+static WRITE_HANDLER( astropal_sh_port3_w );
+
+static WRITE_HANDLER( galactic_sh_port3_w );
+static WRITE_HANDLER( galactic_sh_port5_w );
+
 static WRITE_HANDLER( ballbomb_sh_port3_w );
 static WRITE_HANDLER( ballbomb_sh_port5_w );
 
@@ -512,12 +528,33 @@ MACHINE_INIT( ballbomb )
 
 static WRITE_HANDLER( ballbomb_sh_port3_w )
 {
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x01) sample_start(1, 2, 0);		/* Hit a balloon */
+	if (rising_bits & 0x02) sample_start(2, 0, 0);		/* Shot */
+	if (rising_bits & 0x04) sample_start(2, 1, 0);		/* Base hit */
+	if (rising_bits & 0x08) sample_start(1, 7, 0);		/* Hit a bomb */
+	if (rising_bits & 0x10) sample_start(3, 8, 0);		/* Bonus base at 1500 points */
+
+	mixer_sound_enable_global_w(data & 0x20);
 	c8080bw_screen_red_w(data & 0x04);
+
+	last = data;
 }
 
 static WRITE_HANDLER( ballbomb_sh_port5_w )
 {
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (data & 0x01) sample_start(0, 7, 0);		/* Indicates plane will drop bombs */
+	if (data & 0x04) sample_start(0, 4, 0);		/* Plane is dropping new balloons at start of level */
+	if (rising_bits & 0x10) sample_start(2, 2, 0);		/* Balloon hit and bomb drops */
+
 	c8080bw_flip_screen_w(data & 0x20);
+
+	last = data;
 }
 
 
@@ -1194,16 +1231,349 @@ MACHINE_INIT( indianbt )
 
 static WRITE_HANDLER( indianbt_sh_port3_w )
 {
-	if (data & 0x01) sample_start(1, 7, 0);     /* Death */
-	if (data & 0x02) sample_start(0, 1, 0);     /* Shot Sound */
-	if (data & 0x04) sample_start(2, 3, 0);     /* Move */
-	if (data & 0x08) sample_start(3, 2, 0);     /* Hit */
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x01) sample_start(1, 7, 0);     /* Death */
+	if (rising_bits & 0x02) sample_start(0, 1, 0);     /* Shot Sound */
+	if (rising_bits & 0x04) sample_start(2, 3, 0);     /* Move */
+	if (rising_bits & 0x08) sample_start(3, 2, 0);     /* Hit */
+
+	mixer_sound_enable_global_w(data & 0x20);
+	c8080bw_screen_red_w(data & 0x01);
+
+	last = data;
 }
 
 static WRITE_HANDLER( indianbt_sh_port5_w )
 {
-    	if (data & 0x01) sample_start(4, 0, 0);     /* Bird dropped an egg, Lasso used */
-	if (data & 0x02) sample_start(4, 2, 0);     /* Egg hatches, egg shot */
-	if (data & 0x08) sample_start(5, 0, 0);     /* Grabber, Lasso caught something */
-	if (data & 0x10) sample_start(3, 7, 0);     /* Lasso sound */
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+    	if (rising_bits & 0x01) sample_start(4, 0, 0);     /* Bird dropped an egg, Lasso used */
+	if (rising_bits & 0x02) sample_start(4, 2, 0);     /* Egg hatches, egg shot */
+	if (rising_bits & 0x08) sample_start(5, 0, 0);     /* Grabber, Lasso caught something */
+	if (rising_bits & 0x10) sample_start(3, 7, 0);     /* Lasso sound */
+
+	last = data;
+}
+
+
+/*******************************************************/
+/*                                                     */
+/* Taito "Lupin  III"	                               */
+/* Based on invader settings and sample choices from   */
+/* https://github.com/mamedev/mame                     */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( lupin3 )
+{
+	install_port_write_handler(0, 0x03, 0x03, lupin3_sh_port3_w);
+	install_port_write_handler(0, 0x05, 0x05, lupin3_sh_port5_w);
+
+	SN76477_envelope_1_w(0, 1);
+	SN76477_envelope_2_w(0, 0);
+	SN76477_mixer_a_w(0, 0);
+	SN76477_mixer_b_w(0, 0);
+	SN76477_mixer_c_w(0, 0);
+	SN76477_vco_w(0, 1);
+}
+
+static WRITE_HANDLER( lupin3_sh_port3_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x01) sample_start(0, 6, 0);		/* Walking, get money */
+	SN76477_enable_w(0, !(data & 0x02));			/* Helicopter */
+	if (rising_bits & 0x04) sample_start(0, 7, 0);		/* Translocate */
+	if (rising_bits & 0x08) sample_start(0, 1, 0);		/* Jail */
+	if (rising_bits & 0x10) sample_start(3, 8, 0);		/* Bonus man */
+
+	last = data;
+}
+
+static WRITE_HANDLER( lupin3_sh_port5_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+    	if (rising_bits & 0x01) sample_start(0, 3, 0);		/* Land on building, wife kicks man */
+	if (rising_bits & 0x02) sample_start(1, 2, 0);		/* Deposit money, start intermission, end game */
+	if (rising_bits & 0x04) sample_start(2, 5, 0);		/* Deposit money, start intermission, Slides down rope */
+	if (rising_bits & 0x08) sample_start(3, 0, 0);		/* Start intermission, end game */
+	//if (rising_bits & 0x10) sample_start(3, 9, 0);	/* Dog barking */
+
+	c8080bw_flip_screen_w(data & 0x20);
+
+	last = data;
+}
+
+
+/*******************************************************/
+/*                                                     */
+/* Zenitone Microsec "Invader's Revenge"               */
+/* Based on invader settings and sample choices from   */
+/* https://github.com/mamedev/mame                     */
+/*                                                     */
+/* Sounds are not accurate.                            */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( invrvnge )
+{
+	install_port_write_handler(0, 0x03, 0x03, invrvnge_sh_port3_w);
+	install_port_write_handler(0, 0x05, 0x05, invrvnge_sh_port5_w);
+}
+
+static WRITE_HANDLER( invrvnge_sh_port3_w )
+{
+        switch (data)
+	{
+	        case 0x06:				/* Shoot */
+                        sample_start(1, 0, 0);
+                        break;
+                case 0x14:				/* Hit alien */
+                        sample_start(2, 2, 0); 
+                        break;
+                case 0x16:				/* Hit asteroid */
+                        sample_start(2, 5, 0);
+                        break;
+                case 0x1e:				/* Death (followed by 0x0a byte), also bit 4 of port 5 */
+                        sample_start(3, 1, 0);
+                        break;
+                case 0x18:				/* Fuel low */
+                case 0x30:				/* Fuel bar filling up */
+                        sample_start(3, 7, 0);
+                        break;
+                case 0x02:				/* Coin */
+                case 0x24:				/* Alien dropping to steal fuel */
+                case 0x26:				/* Alien lifting with fuel */
+                        break;
+                case 0x32:				/* UFO drops bomb */
+                        sample_start(2, 5, 0);
+                        break;
+                case 0x3a:				/* Thrust, docking, extra ship? */
+                        sample_start(0, 8, 0);
+                        break;
+	}
+}
+
+static WRITE_HANDLER( invrvnge_sh_port5_w )
+{
+    // No operations
+}
+
+
+/*******************************************************/
+/*                                                     */
+/* Worldwing "Yosaku To Donbee"	                       */
+/* Based on invader settings and sample choices from   */
+/* https://github.com/mamedev/mame                     */
+/*                                                     */
+/* Sounds are unknown so some from invaders are used.  */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( yosakdon )
+{
+	install_port_write_handler(0, 0x03, 0x03, yosakdon_sh_port3_w);
+	install_port_write_handler(0, 0x05, 0x05, yosakdon_sh_port5_w);
+}
+
+static WRITE_HANDLER( yosakdon_sh_port3_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x01) sample_start(0, 3, 0);     /* Game over */
+	if (rising_bits & 0x02) sample_start(2, 0, 0);     /* Bird dead */
+	if (rising_bits & 0x04) sample_start(0, 1, 0);     /* Rifle shot */
+	if (rising_bits & 0x08) sample_start(1, 2, 0);     /* Man dead */
+	if (rising_bits & 0x10) sample_start(5, 8, 0);     /* Bonus man? */
+
+	mixer_sound_enable_global_w(data & 0x20);
+
+	last = data;
+}
+
+static WRITE_HANDLER( yosakdon_sh_port5_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+    	if (rising_bits & 0x01) sample_start(1, 6, 0);	/* Ready? */
+	if (rising_bits & 0x04) sample_start(3, 7, 0);	/* Big bird dead */
+	SN76477_enable_w(0, !(data & 0x08));		/* Big bird */
+	if (rising_bits & 0x10) sample_start(2, 7, 0);	/* Game over */
+
+	c8080bw_flip_screen_w(data & 0x20);
+
+	last = data;
+}
+
+/*******************************************************/
+/*                                                     */
+/* Nichibutsu's "Rolling Crash / Moon Base"            */
+/* Based on invader settings and sample choices from   */
+/* https://github.com/mamedev/mame                     */
+/*                                                     */
+/* Sounds are not accurate. */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( rollingc )
+{
+	install_port_write_handler(0, 0x00, 0x00, rollingc_sh_port0_w); // Rolling Crash
+	// Note Rolling Crash also uses some of the sounds from Moon Base.
+	// Though we basically use the Invaders sounds for Moon Base.
+	install_port_write_handler(0, 0x03, 0x03, invaders_sh_port3_w); // Moon Base
+	install_port_write_handler(0, 0x05, 0x05, invaders_sh_port5_w); // Moon Base
+
+	SN76477_envelope_1_w(0, 1);
+	SN76477_envelope_2_w(0, 0);
+	SN76477_mixer_a_w(0, 0);
+	SN76477_mixer_b_w(0, 0);
+	SN76477_mixer_c_w(0, 0);
+	SN76477_vco_w(0, 1);
+}
+
+static WRITE_HANDLER( rollingc_sh_port0_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x02) sample_start(2, 0, 0);	/* Steering */
+	if (rising_bits & 0x04) sample_start(0, 1, 0);	/* Collision */
+	if (rising_bits & 0x10) sample_start(1, 8, 0);	/* Computer car is starting to move */
+
+	// Note sound of hitting a dot seem to come from Moon Base port handlers.
+
+	last = data;
+}
+
+/*******************************************************/
+/*                                                     */
+/* Sidam's "Astropal"                                  */
+/* Based on invader samples                            */
+/*                                                     */
+/* Sounds are not accurate.                            */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( astropal )
+{
+	install_port_write_handler(0, 0x03, 0x03, astropal_sh_port3_w);
+	// Can use invaders handler for port 0x05
+	install_port_write_handler(0, 0x05, 0x05, invaders_sh_port5_w);
+
+	SN76477_envelope_1_w(0, 1);
+	SN76477_envelope_2_w(0, 0);
+	SN76477_mixer_a_w(0, 0);
+	SN76477_mixer_b_w(0, 0);
+	SN76477_mixer_c_w(0, 0);
+	SN76477_vco_w(0, 1);
+}
+
+static WRITE_HANDLER( astropal_sh_port3_w )
+{
+	static unsigned char last = 0;
+	static int exploding = 0; // Work around to stop exploding sound repeating
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x02) {
+		sample_start (0, 0, 0);		/* Shot Sound */
+		exploding = 0; // Use this to reset exploding sound
+	}
+
+	if (rising_bits & 0x04 && !exploding)  {
+		sample_start (1, 1, 0);		/* Your Ship Hit */
+		exploding = 1;
+	}
+
+	if (rising_bits & 0x08)
+		sample_start (0, 2, 0);		/* Asteroid Hit */
+
+	if (rising_bits & 0x10)
+		sample_start (2, 8, 0);		/* Bonus Man? */
+
+	c8080bw_screen_red_w(data & 0x04);
+
+	last = data;
+}
+
+
+/*******************************************************/
+/* Taito do Brasil's "Galactica - Batalha Espacial"    */
+/* Based on invader samples                            */
+/*                                                     */
+/* Sounds are not accurate. Actual sounds can be       */
+/* heard in:                                           */
+/*   https://youtu.be/XRA5h--ikW8                      */
+/*   https://youtu.be/z60ewMRyqSs                      */
+/*   https://youtu.be/d1-Uoyhg5fI                      */
+/*   https://youtu.be/6CWoN31NUsg                      */
+/*                                                     */
+/* Not sure these sounds can be reproduced from        */
+/* Invader samples. Also, did not figure out what      */
+/* port triggers a dive sound.                         */
+/*                                                     */
+/*******************************************************/
+
+MACHINE_INIT( galactic )
+{
+	install_port_write_handler(0, 0x03, 0x03, galactic_sh_port3_w);
+	install_port_write_handler(0, 0x05, 0x05, galactic_sh_port5_w);
+}
+
+static WRITE_HANDLER( galactic_sh_port3_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	if (rising_bits & 0x02)
+		sample_start (0, 2, 0);		/* Enemy hit */
+
+	if (rising_bits & 0x04)
+		sample_start (1, 1, 0);		/* Your ship hit */
+
+	//if (data & 0x08)
+		//sample_start (1, 6, 0);	/* Background continual? */
+
+	if (rising_bits & 0x10)
+		sample_start (2, 8, 0);		/* Bonus Man? */
+
+	c8080bw_screen_red_w(data & 0x04);
+
+	last = data;
+}
+
+static WRITE_HANDLER( galactic_sh_port5_w )
+{
+	static unsigned char last = 0;
+	UINT8 rising_bits = data & ~last;
+
+	// These are meant to be a deep base background.
+	// Can simulate by changing "rising_bits" to "data"
+	// But the result sounds rough, and your explosion
+	// cuts out.
+	if (rising_bits & 0x01)
+		sample_start (1, 3, 0);		/* Background beat */
+
+	if (rising_bits & 0x02)
+		sample_start (1, 4, 0);		/* Background beat */
+
+	if (rising_bits & 0x04)
+		sample_start (1, 5, 0);		/* Background beat */
+
+	if (rising_bits & 0x08)
+		sample_start (1, 6, 0);		/* Background beat */
+
+	if (data & 0x10)
+		sample_start (0, 0, 0);		/* Your shot */
+
+	c8080bw_flip_screen_w(data & 0x20);
+
+	last = data;
 }
