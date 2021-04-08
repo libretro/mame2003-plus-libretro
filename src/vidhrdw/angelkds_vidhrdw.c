@@ -105,7 +105,7 @@ static void get_bgbot_tile_info(int tile_index)
 	tileno = angelkds_bgbotvideoram[tile_index];
 
 	tileno += angelkds_bgbotbank * 0x100 ;
-	SET_TILE_INFO(1,tileno,1,0)
+	SET_TILE_INFO(2,tileno,1,0)
 }
 
 WRITE_HANDLER( angelkds_bgbotvideoram_w )
@@ -150,11 +150,11 @@ a split down the middle of the screen
 
 static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int enable_n)
 {
-	const UINT8 *source = spriteram;
-	const UINT8 *finish = source+0x0100;
-	const struct GfxElement *gfx = Machine->gfx[2];
+	const UINT8 *source = spriteram+0x100-4;
+	const UINT8 *finish = spriteram;
+	const struct GfxElement *gfx = Machine->gfx[3];
 
-	while( source<finish )
+	while( source>=finish )
 	{
 	/*
 
@@ -242,7 +242,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 
 	}
 
-	source+=0x04;
+	source-=0x04;
 
 	}
 
