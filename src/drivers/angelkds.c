@@ -20,8 +20,6 @@ for details on this encryption scheme
 
 /* notes / todo:
 
-Decrypt Space Position Somehow (not something I
-can do)
 Unknown Reads / Writes
 Whats the Prom for? nothing important?
 Clock Speeds etc.
@@ -131,8 +129,10 @@ Dumped by Chackn
 #include "cpu/z80/z80.h"
 #include "machine/segacrpt.h"
 
-static READ_HANDLER( angelkds_sound_r );
-static WRITE_HANDLER( angelkds_sound_w );
+static READ_HANDLER( angelkds_main_sound_r );
+static WRITE_HANDLER( angelkds_main_sound_w );
+static READ_HANDLER( angelkds_sub_sound_r );
+static WRITE_HANDLER( angelkds_sub_sound_w );
 
 extern data8_t *angelkds_txvideoram, *angelkds_bgtopvideoram, *angelkds_bgbotvideoram;
 
@@ -239,6 +239,7 @@ static PORT_READ_START( readport_main )
 	{ 0x42, 0x42, input_port_2_r },	/* Players inputs (not needed ?) */
 	{ 0x80, 0x80, input_port_3_r },	/* System inputs */
 	{ 0x81, 0x82, angelkds_input_r },	/* Players inputs */
+	{ 0xc0, 0xc3, angelkds_main_sound_r }, /* needed by spcpostn */
 PORT_END
 
 static PORT_WRITE_START( writeport_main )
@@ -246,7 +247,7 @@ static PORT_WRITE_START( writeport_main )
 	{ 0x42, 0x42, angelkds_cpu_bank_write },
 	{ 0x43, 0x43, MWA_NOP }, /* 9a on start-up, not again*/
 	{ 0x83, 0x83, MWA_NOP }, /* 9b on start-up, not again*/
-	{ 0xc0, 0xc3, angelkds_sound_w }, /* 02 various points*/
+	{ 0xc0, 0xc3, angelkds_main_sound_w }, /* 02 various points*/
 PORT_END
 
 /* sub cpu */
@@ -267,7 +268,7 @@ MEMORY_END
 static PORT_READ_START( readport_sub )
 	{ 0x00, 0x00, YM2203_status_port_0_r },
 	{ 0x40, 0x40, YM2203_status_port_1_r },
-	{ 0x80, 0x83, angelkds_sound_r },
+	{ 0x80, 0x83, angelkds_sub_sound_r },
 PORT_END
 
 static PORT_WRITE_START( writeport_sub)
@@ -275,10 +276,7 @@ static PORT_WRITE_START( writeport_sub)
 	{ 0x01, 0x01, YM2203_write_port_0_w },
 	{ 0x40, 0x40, YM2203_control_port_1_w },
 	{ 0x41, 0x41, YM2203_write_port_1_w },
-	{ 0x80, 0x80, MWA_NOP },
-	{ 0x81, 0x81, MWA_NOP },
-	{ 0x82, 0x82, MWA_NOP },
-	{ 0x83, 0x83, MWA_NOP },
+	{ 0x80, 0x83, angelkds_sub_sound_w }, /* spcpostn */
 PORT_END
 
 
@@ -421,6 +419,109 @@ INPUT_PORTS_START( angelkds )
 
 INPUT_PORTS_END
 
+INPUT_PORTS_START( spcpostn )
+	PORT_START		/* inport $40 */
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_5C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 1C_7C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x50, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 2C_5C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
+
+	PORT_START		/* inport $41 */
+	PORT_DIPNAME( 0x01, 0x01, "Allow_Continue" )
+	PORT_DIPSETTING(    0x01, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x02, 0x02, "Obstruction Car" )
+	PORT_DIPSETTING(    0x02, "Normal" )
+	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPNAME( 0x0c, 0x08, "Time Limit" )
+	PORT_DIPSETTING(    0x00, "1:10" )
+	PORT_DIPSETTING(    0x04, "1:20" )
+	PORT_DIPSETTING(    0x08, "1:30" )
+	PORT_DIPSETTING(    0x0c, "1:40" )
+	PORT_DIPNAME( 0x30, 0x20, "Power Down" )
+	PORT_DIPSETTING(    0x30, "Slow" )
+	PORT_DIPSETTING(    0x20, "Normal" )
+	PORT_DIPSETTING(    0x10, "Fast" )
+	PORT_DIPSETTING(    0x00, "Fastest" )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START		/* inport $42 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START		/* inport $80 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START		/* inport $81 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED | IPF_PLAYER1 ) /* probably unused */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED | IPF_PLAYER1 ) /* probably unused */
+
+	PORT_START		/* inport $82 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED | IPF_PLAYER2 ) /* probably unused */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED | IPF_PLAYER2 ) /* probably unused */
+
+INPUT_PORTS_END
+
 /*** Sound Hardware
 
 todo: verify / correct things
@@ -430,13 +531,24 @@ sound related ?
 */
 
 static UINT8 angelkds_sound[4];
+static UINT8 angelkds_sound2[4];
 
-static WRITE_HANDLER( angelkds_sound_w )
+static WRITE_HANDLER( angelkds_main_sound_w )
 {
 	angelkds_sound[offset]=data;
 }
 
-static READ_HANDLER( angelkds_sound_r )
+static READ_HANDLER( angelkds_main_sound_r )
+{
+	return angelkds_sound2[offset];
+}
+
+static WRITE_HANDLER( angelkds_sub_sound_w )
+{
+	angelkds_sound2[offset]=data;
+}
+
+static READ_HANDLER( angelkds_sub_sound_r )
 {
 	return angelkds_sound[offset];
 }
@@ -491,6 +603,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &angelkds_charlayout,   0x30, 1  },
 	{ REGION_GFX3, 0, &angelkds_charlayout,   0, 16 },
+	{ REGION_GFX4, 0, &angelkds_charlayout,   0, 16 },
 	{ REGION_GFX2, 0, &angelkds_spritelayout, 0x20, 0x0d },
 	{ -1 } /* end of array */
 };
@@ -539,7 +652,8 @@ MACHINE_DRIVER_END
  REGION_CPU2 for the sound cpu code
  REGION_GFX1 for the 8x8 Txt Layer Tiles
  REGION_GFX2 for the 16x16 Sprites
- REGION_GFX3 for the 8x8 Bg Layer Tiles
+ REGION_GFX3 for the 8x8 Bg Layer Tiles (top tilemap)
+ REGION_GFX4 for the 8x8 Bg Layer Tiles (bottom tilemap)
  REGION_PROMS for the Prom (same between games)
 
 */
@@ -566,7 +680,8 @@ ROM_START( angelkds )
 	ROM_LOAD( "11447.f7",     0x08000, 0x08000, CRC(b3afc5b3) SHA1(376d527f60e9044f18d19a5535bca77606efbd4c) )
 	ROM_LOAD( "11448.h7",     0x00000, 0x08000, CRC(05dab626) SHA1(73feaca6e23c673a7d8c9e972714b20bd8f2d51e) )
 
-	ROM_REGION( 0x80000, REGION_GFX3, 0 )
+	/* both tilemaps on angelkds use the same gfx */
+	ROM_REGION( 0x40000, REGION_GFX3, 0 )
 	ROM_LOAD( "11437",        0x00000, 0x08000, CRC(a520b628) SHA1(2b51f59e760e740e5e6b06dad61bbc23fc84a72b) )
 	ROM_LOAD( "11436",        0x08000, 0x08000, CRC(469ab216) SHA1(8223f072a6f9135ff84841c95410368bcea073d8) )
 	ROM_LOAD( "11435",        0x10000, 0x08000, CRC(b0f8c245) SHA1(882e27eaceac46c397fdae8427a082caa7d6b7dc) )
@@ -575,14 +690,16 @@ ROM_START( angelkds )
 	ROM_LOAD( "11432",        0x28000, 0x08000, CRC(00dc747b) SHA1(041b73aa48b45162af33b5f416ccc0c0dbbd995b) )
 	ROM_LOAD( "11431",        0x30000, 0x08000, CRC(ac2025af) SHA1(2aba145df3ccdb1a7f0fec524bd2de3f9aab4161) )
 	ROM_LOAD( "11430",        0x38000, 0x08000, CRC(d640f89e) SHA1(38fb67bcb2a3d1ad614fc62e42f22a66bc757137) )
-	ROM_LOAD( "11445",        0x40000, 0x08000, CRC(a520b628) SHA1(2b51f59e760e740e5e6b06dad61bbc23fc84a72b) )
-	ROM_LOAD( "11444",        0x48000, 0x08000, CRC(469ab216) SHA1(8223f072a6f9135ff84841c95410368bcea073d8) )
-	ROM_LOAD( "11443",        0x50000, 0x08000, CRC(b0f8c245) SHA1(882e27eaceac46c397fdae8427a082caa7d6b7dc) )
-	ROM_LOAD( "11442",        0x58000, 0x08000, CRC(cbde81f5) SHA1(5d5b8e709c9dd09a45dfced6f3d4a9c52500da6b) )
-	ROM_LOAD( "11441",        0x60000, 0x08000, CRC(b63fa414) SHA1(25adcafd7e17ab0be0fed2ec44245124febd74b3) )
-	ROM_LOAD( "11440",        0x68000, 0x08000, CRC(00dc747b) SHA1(041b73aa48b45162af33b5f416ccc0c0dbbd995b) )
-	ROM_LOAD( "11439",        0x70000, 0x08000, CRC(ac2025af) SHA1(2aba145df3ccdb1a7f0fec524bd2de3f9aab4161) )
-	ROM_LOAD( "11438",        0x78000, 0x08000, CRC(d640f89e) SHA1(38fb67bcb2a3d1ad614fc62e42f22a66bc757137) )
+
+	ROM_REGION( 0x40000, REGION_GFX4, 0 )
+	ROM_LOAD( "11445",        0x00000, 0x08000, CRC(a520b628) SHA1(2b51f59e760e740e5e6b06dad61bbc23fc84a72b) )
+	ROM_LOAD( "11444",        0x08000, 0x08000, CRC(469ab216) SHA1(8223f072a6f9135ff84841c95410368bcea073d8) )
+	ROM_LOAD( "11443",        0x10000, 0x08000, CRC(b0f8c245) SHA1(882e27eaceac46c397fdae8427a082caa7d6b7dc) )
+	ROM_LOAD( "11442",        0x18000, 0x08000, CRC(cbde81f5) SHA1(5d5b8e709c9dd09a45dfced6f3d4a9c52500da6b) )
+	ROM_LOAD( "11441",        0x20000, 0x08000, CRC(b63fa414) SHA1(25adcafd7e17ab0be0fed2ec44245124febd74b3) )
+	ROM_LOAD( "11440",        0x28000, 0x08000, CRC(00dc747b) SHA1(041b73aa48b45162af33b5f416ccc0c0dbbd995b) )
+	ROM_LOAD( "11439",        0x30000, 0x08000, CRC(ac2025af) SHA1(2aba145df3ccdb1a7f0fec524bd2de3f9aab4161) )
+	ROM_LOAD( "11438",        0x38000, 0x08000, CRC(d640f89e) SHA1(38fb67bcb2a3d1ad614fc62e42f22a66bc757137) )
 
 	ROM_REGION( 0x20, REGION_PROMS, 0 )
 	ROM_LOAD( "63s081n.u5",	  0x00,    0x20,    CRC(36b98627) SHA1(d2d54d92d1d47e7cc85104989ee421ce5d80a42a) )
@@ -608,16 +725,18 @@ ROM_START( spcpostn )
 	ROM_LOAD( "epr10133.17",  0x00000, 0x08000, CRC(642e6609) SHA1(2dfb4cc66f89543b55ed2a5b914e2c9304e821ca) )
 
 	ROM_REGION( 0x10000, REGION_GFX2, 0 )
-	ROM_LOAD( "epr10134.18",  0x00000, 0x08000, CRC(c674ff88) SHA1(9f240910a1ffb7c9e09d2326de280e6a5dd84565) )
-	ROM_LOAD( "epr10135.19",  0x08000, 0x08000, CRC(0685c4fa) SHA1(6950d9ad9ec13236cf24e83e87adb62aa53af7bb) )
+	ROM_LOAD( "epr10134.18",  0x08000, 0x08000, CRC(c674ff88) SHA1(9f240910a1ffb7c9e09d2326de280e6a5dd84565) )
+	ROM_LOAD( "epr10135.19",  0x00000, 0x08000, CRC(0685c4fa) SHA1(6950d9ad9ec13236cf24e83e87adb62aa53af7bb) )
 
 	ROM_REGION( 0x30000, REGION_GFX3, 0 )
-	ROM_LOAD( "epr10127.06",  0x00000, 0x08000, CRC(b68fcb36) SHA1(3943dd550b13f2911d56d8dad675410da79196e6) )
+	ROM_LOAD( "epr10130.14",  0x10000, 0x08000, CRC(b68fcb36) SHA1(3943dd550b13f2911d56d8dad675410da79196e6) )
+	ROM_LOAD( "epr10131.15",  0x08000, 0x08000, CRC(de223817) SHA1(1860db0a19c926fcfaabe676cb57fff38c4df8e6) )
+	ROM_LOAD( "epr10132.16",  0x00000, 0x08000, CRC(2df8b1bd) SHA1(cad8befa3f2c158d2aa74073066ccd2b54e68825) )
+
+	ROM_REGION( 0x18000, REGION_GFX4, 0 )
+	ROM_LOAD( "epr10127.06",  0x10000, 0x08000, CRC(b68fcb36) SHA1(3943dd550b13f2911d56d8dad675410da79196e6) )
 	ROM_LOAD( "epr10128.07",  0x08000, 0x08000, CRC(de223817) SHA1(1860db0a19c926fcfaabe676cb57fff38c4df8e6) )
-	ROM_LOAD( "epr10129.08",  0x10000, 0x08000, CRC(a6f21023) SHA1(8d573446a2d3d3428409707d0c59b118d1463131) )
-	ROM_LOAD( "epr10130.14",  0x18000, 0x08000, CRC(b68fcb36) SHA1(3943dd550b13f2911d56d8dad675410da79196e6) )
-	ROM_LOAD( "epr10131.15",  0x20000, 0x08000, CRC(de223817) SHA1(1860db0a19c926fcfaabe676cb57fff38c4df8e6) )
-	ROM_LOAD( "epr10132.16",  0x28000, 0x08000, CRC(2df8b1bd) SHA1(cad8befa3f2c158d2aa74073066ccd2b54e68825) )
+	ROM_LOAD( "epr10129.08",  0x00000, 0x08000, CRC(a6f21023) SHA1(8d573446a2d3d3428409707d0c59b118d1463131) )
 
 	ROM_REGION( 0x20, REGION_PROMS, 0 )
 	ROM_LOAD( "63s081n.u5",   0x00,    0x20,    CRC(36b98627) SHA1(d2d54d92d1d47e7cc85104989ee421ce5d80a42a) )
@@ -627,5 +746,5 @@ ROM_END
 static DRIVER_INIT( spcpostn )	{ spcpostn_decode(); }
 
 
-GAME( 1988, angelkds, 0, angelkds, angelkds,        0,  ROT90,  "Sega / Nasco?", "Angel Kids (Japan)" ) /* Nasco not displayed but 'Exa Planning' is */
-GAMEX(1986, spcpostn, 0, angelkds, angelkds, spcpostn,  ROT90,  "Sega / Nasco", "Space Position (Japan)", GAME_NOT_WORKING ) /* encrypted */
+GAME(1988, angelkds, 0, angelkds, angelkds,        0,  ROT90,  "Sega / Nasco?", "Angel Kids (Japan)" ) /* Nasco not displayed but 'Exa Planning' is */
+GAME(1986, spcpostn, 0, angelkds, spcpostn, spcpostn,  ROT90,  "Sega / Nasco", "Space Position (Japan)" ) /* encrypted */
