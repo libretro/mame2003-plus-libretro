@@ -809,7 +809,7 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
 
-#if (HAS_CYCLONE || HAS_DRZ80)
+  #if (HAS_CYCLONE || HAS_DRZ80)
    int i;
    int use_cyclone = 1;
    int use_drz80 = 1;
@@ -2070,7 +2070,7 @@ int convert_analog_scale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
-		input = round(scaled);
+    input = round(scaled);
 
 		if (input > +32767)
 		{
