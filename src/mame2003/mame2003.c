@@ -1962,7 +1962,8 @@ const struct JoystickInfo *osd_get_joy_list(void)
         case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
       }
 
-      mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+      mame_joy_map[overall_idx] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+      if(!string_is_empty(mame_joy_map->name)) overall_idx++;
     }
   }
 
