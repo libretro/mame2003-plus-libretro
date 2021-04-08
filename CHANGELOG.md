@@ -341,6 +341,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Slap Fight (Official Version) - Romset `slapfigh`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
+* Space Position - Romset `spcpostn`
 * Speed Spin - Romset `speedspn` - gfx glitches
 * Spy Hunter - Romset `spyhunt`
 * Spy Hunter 2 - Romset `spyhunt2`
