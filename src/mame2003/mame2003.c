@@ -1637,7 +1637,7 @@ void retro_describe_controls(void)
     unsigned osd_index      = 0;    /* code from the OSD_ enum in mame2003.h */
     unsigned osd_code       = 0;    /* the unique code (including across players) created by the libretro OSD */
     unsigned standard_code  = 0;    /* standard code is the MAME term for the internal input code, associated with a controller */
-    unsigned button_ipt_id  = 0;    /* input code connects an input port with standard input code */
+    unsigned ctrl_ipt_code    = 0;    /* input code connects an input port with standard input code */
   const char *control_name  = NULL;
 
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1] = { { 0 } };  /* max possible descriptions + 1 for the final zeroed record. */
@@ -1660,11 +1660,23 @@ void retro_describe_controls(void)
       control_name = NULL;
 
       osd_code =      encode_osd_joycode(player_number, osd_index);
+      if(osd_code == CODE_NONE)  continue;
+
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Found osd_code %i\n", osd_code);
+
       standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
       if(standard_code == CODE_NONE)  continue;
 
-      button_ipt_id = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
-      if(button_ipt_id == CODE_NONE)  continue;
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Found standard_code %i\n", standard_code);
+
+      ctrl_ipt_code = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
+
+      if(ctrl_ipt_code == CODE_NONE)  continue;
+      if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
+        if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+          continue; /* button is a higher index than supported by the current driver, so it has no description */
+
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Found ctrl_ipt_code, %i\n", ctrl_ipt_code);
 
       if(retropad_type)
       {
@@ -1697,7 +1709,7 @@ void retro_describe_controls(void)
         }
       }
 
-      if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
+      if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
       
       /* As of April 2021, there may be a RetroArch bug which doesn't accept the
@@ -1710,7 +1722,7 @@ void retro_describe_controls(void)
       needle->index        = 0;  /* 0 for digital controls, use #defines in libretro.h for analog indexes */
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for player_number: %i | device_type: %i | described device_type: %i, osd_code: %i | retro_code: %i | desc: %s\n", player_number, device_type, needle->device, osd_code, retro_code, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Input || port index: %i | device_type: %i | described device type: %i | osd_code: %i | retro_code: %i | desc: %s\n", player_number - 1, device_type, needle->device, osd_code, retro_code, needle->description);
       needle++;
     }
   }
@@ -1720,6 +1732,20 @@ void retro_describe_controls(void)
   needle->index       = 0;
   needle->id          = 0;
   needle->description = NULL;
+
+  /* output entire description array for debugging */
+  needle = &desc[0];
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning control descriptions.\n");
+  while(true)
+  {
+    if(needle->port == 0 && needle->device == 0 && needle->id == 0 && needle->description == 0)
+    {
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "End of control descriptions reached.\n");
+      break;
+    }
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Description || port index: %i | device type: %i |  id: %i | desc: %s\n", needle->port, needle->device, needle->id, needle->description);
+    needle++;
+  }
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
@@ -1874,16 +1900,16 @@ unsigned get_button_ipt_code(unsigned player_number, unsigned standard_code)
  */
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"   #DISPLAY_IDX " B",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"   #DISPLAY_IDX " A",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"   #DISPLAY_IDX " Y",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"   #DISPLAY_IDX " X",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"   #DISPLAY_IDX " L",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"   #DISPLAY_IDX " R",            (#DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"   #DISPLAY_IDX " L2",           (#DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"   #DISPLAY_IDX " R2",           (#DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"   #DISPLAY_IDX " L3",           (#DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"   #DISPLAY_IDX " R3",           (#DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -2043,6 +2069,9 @@ unsigned calc_player_number(unsigned joycode)
 
 unsigned encode_osd_joycode(unsigned player_number, unsigned raw_code)
 {
+  if(player_number > MAX_PLAYER_COUNT || raw_code > OSD_INPUT_CODES_PER_PLAYER)
+    return CODE_NONE;
+
   return (raw_code + (player_number * 1000));
 }
 
