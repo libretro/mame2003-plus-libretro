@@ -144,8 +144,10 @@ static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
+   unsigned   get_parent_device(unsigned device_id);
         int   get_retropad_code(unsigned osd_code);
-   unsigned   get_button_ipt_code(unsigned player_number, unsigned standard_code);
+        int   get_retromouse_code(unsigned osd_code);
+   unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
    unsigned   calc_player_number(unsigned joycode);
@@ -192,7 +194,7 @@ static struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
 };
 
-static struct retro_controller_info retropad_subdevice_ports[] = {
+static struct retro_controller_info input_subdevice_ports[] = {
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
@@ -764,9 +766,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-  int              driverIndex    = 0;
-  int              port_index;
-  char             *driver_lookup = NULL;
+  int   driverIndex    = 0;
+  int   port_index;
+  char  *driver_lookup = NULL;
 
   if(string_is_empty(game->path))
   {
@@ -945,13 +947,13 @@ bool retro_load_game(const struct retro_game_info *game)
   /* Not all drivers support the maximum number of players; start at the highest index and decrement
    * until the highest supported index, designating the unsupported indexes during the loop.
    */
-  for(port_index = MAX_PLAYER_COUNT - 1; port_index > (options.content_flags[CONTENT_CTRL_COUNT] - 1); port_index--)
+  for(port_index = MAX_PLAYER_COUNT - 1; port_index >= options.content_flags[CONTENT_CTRL_COUNT]; port_index--)
   {
-    retropad_subdevice_ports[port_index].types       = &unsupported_controllers[0];
-    retropad_subdevice_ports[port_index].num_types   = 4;
+    input_subdevice_ports[port_index].types       = &unsupported_controllers[0];
+    input_subdevice_ports[port_index].num_types   = IDX_NUMBER_OF_INPUT_TYPES;
   }
 
-  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
+  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)input_subdevice_ports);
 
   if(!run_game(driverIndex))
     return true;
@@ -1106,14 +1108,19 @@ static void set_content_flags(void)
   if(game_driver->ctrl_dat->alternating_controls)
   {
     options.content_flags[CONTENT_ALTERNATING_CTRLS] = true;
-    /* there may or may not be some need to have a ctrl_count different than player_count, perhaps because of some
-       alternating controls layout. this is a place to check some condition and make the two numbers different
-       if that should ever prove useful. */
-    if(true)
-      options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
   }
-  else
-    options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
+
+  /************ NUMBER OF DISTINCT CONTROL LAYOUTS ************/
+  options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
+
+  /* There may be a future need to have a ctrl_count different than player_count,
+   * perhaps because of some alternating controls layout. This is a place to check 
+   * some condition and make the two numbers different if that should ever prove useful.
+   */
+  if(false/*options.content_flags[CONTENT_ALTERNATING_CTRLS]*/)
+  {
+    options.content_flags[CONTENT_CTRL_COUNT] = 1;
+  }
 
   /************ DRIVERS FLAGGED IN CONTROLS.C WITH 45-DEGREE JOYSTICK ROTATION ************/
   if(game_driver->ctrl_dat->rotate_joy_45)
@@ -1594,7 +1601,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* is this necessary? it was in the sample code */
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions per the sample code */
   options.active_control_type[in_port] = device;
   internal_code_update();     /* update MAME data structures for controls */
   retro_describe_controls();  /* update libretro data structures for controls */
@@ -1603,81 +1610,69 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 
 void retro_describe_controls(void)
 {
-  unsigned player_number = 0;
+  int port_number = 0;
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  for(player_number = DISP_PLAYER1; (player_number <= options.content_flags[CONTENT_CTRL_COUNT] && player_number <= MAX_PLAYER_COUNT); player_number++)
+  for(port_number = 0; port_number < options.content_flags[CONTENT_CTRL_COUNT]; port_number++)
   {
-    unsigned retro_code       = 0;       /* using the constants defined in libretro.h */
-    unsigned osd_index        = 0;
-    unsigned osd_code         = 0;      /* the unique code (including across players) created by the libretro OSD */
-    unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
-    unsigned button_ipt_id    = 0;      /* input code connects an input port with standard input code */
-    bool retropad_type        = false;
+    unsigned osd_index   = 0;
+    unsigned device_code = options.active_control_type[port_number];
 
-    log_cb(RETRO_LOG_DEBUG, "player_number: %i | active_control_type: %i\n", player_number, options.active_control_type[player_number - 1]);
+    log_cb(RETRO_LOG_DEBUG, "port_number: %i | active device type: %i\n", port_number, device_code);
 
-    if(options.active_control_type[player_number-1] == RETRO_DEVICE_NONE)
-      continue; /* the null input device is selected; move on to the next player */
-
-    switch(options.active_control_type[player_number-1])
-    {
-      case PAD_CLASSIC: case PAD_MODERN: case PAD_8BUTTON: case PAD_6BUTTON:
-        retropad_type = true; break;
-    }
+    if(device_code == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
     for(osd_index = OSD_JOYPAD_B; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
     {
+      unsigned osd_code         = 0;      /* the unique code (including across players) created by the libretro OSD */
+      unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
+      unsigned ctrl_ipt_code    = 0;      /* input code connects an input port with standard input code */
+      unsigned retro_code       = 0;      /* #define code from the libretro.h input API scheme */
       const char *control_name  = NULL;
 
-        if(retropad_type)
-        {
-          if(osd_index >= OSD_MOUSE_LEFT_CLICK) break; /* can't describe non-retropad controls on a retropad */
+      osd_code = encode_osd_joycode(port_number + 1, osd_index);
+      if(osd_code == INT_MAX) continue;
 
-          switch(osd_index) /* universal default mappings */
-          {
-            case OSD_JOYPAD_LEFT:   control_name = "Left";  break;
-            case OSD_JOYPAD_RIGHT:  control_name = "Right"; break;
-            case OSD_JOYPAD_UP:     control_name = "Up";    break;
-            case OSD_JOYPAD_DOWN:   control_name = "Down";  break;
-
-            case OSD_JOYPAD_SELECT: control_name = "Coin";  break;
-            case OSD_JOYPAD_START:  control_name = "Start"; break;
-          }
-
-        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
-      }
-
-      osd_code = encode_osd_joycode(player_number, osd_index);
       standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
       if(standard_code == CODE_NONE) continue;
 
-      button_ipt_id = get_button_ipt_code(player_number, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
-      if(button_ipt_id == CODE_NONE) continue;
+      ctrl_ipt_code = get_ctrl_ipt_code(port_number + 1, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
+      if(ctrl_ipt_code == CODE_NONE) continue;
 
-      if(button_ipt_id >= IPT_BUTTON1 && button_ipt_id <= IPT_BUTTON10)
+      if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
+        if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+          continue; /* button has a higher index than supported by the driver */
+
+      if(get_parent_device(device_code) == RETRO_DEVICE_JOYPAD)
       {
-        if((button_ipt_id - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
+        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
+        if(retro_code == INT_MAX) continue;
+
+        switch(retro_code) /* universal default mappings */
         {
-          continue; /* button is a higher index than supported by the current driver, so it has no name */
+          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+          case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+          case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
         }
       }
 
-      if(string_is_empty(control_name))
-        control_name = game_driver->ctrl_dat->get_name(button_ipt_id);
-      if(string_is_empty(control_name))
-        continue;
+      if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
+      if(string_is_empty(control_name))  continue;
       
       /* As of April 2021, there may be a RetroArch bug which doesn't accept the
        * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
-       * For now, the device is hard-coded as RETRO_DEVICE_JOYPAD */
-      needle->port         = player_number - 1;
-      needle->device       = /*options.active_control_type[player_number - 1]*/ RETRO_DEVICE_JOYPAD;
+       * Therefore, get_get_parent_device() as a workaround
+       */
+      needle->port         = port_number;
+      needle->device       = get_parent_device(device_code);
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for player_number: %i | osd_code: %i | id: %i | desc: %s\n", player_number, osd_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | id: %i | desc: %s\n", port_number, osd_code, needle->device, get_parent_device(needle->device), needle->id, needle->description);
       needle++;
     }
   }
@@ -1690,18 +1685,71 @@ void retro_describe_controls(void)
   needle->description = NULL;
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-
 }
 
-/* converts from OSD_ in mame2003.h to the codes from libretro.h */
-int get_retropad_code(unsigned osd_id)
+/* get_parent_device
+ * returns the "base" libretro device type, which we may sometimes need
+ */
+unsigned get_parent_device(unsigned device_id)
 {
-  if(osd_id >= OSD_JOYPAD_B && osd_id <= OSD_JOYPAD_R3) return osd_id;  /* the retropad and osd enums have the same numbering */
+  if(device_id == RETRO_DEVICE_NONE) return RETRO_DEVICE_NONE;
+
+  switch(device_id)
+  {
+    case PAD_CLASSIC:
+    case PAD_MODERN:
+    case PAD_8BUTTON:
+    case PAD_6BUTTON:
+      return RETRO_DEVICE_JOYPAD;
+  }
+
   return INT_MAX;
 }
 
+/* get_retropad_code
+ * converts from OSD_ in mame2003.h to the codes from libretro.h
+ * returns INT_MAX if the code is not valid
+ */
+int get_retropad_code(unsigned osd_id)
+{
+  switch(osd_id)
+  {
+    case  OSD_JOYPAD_B:       return RETRO_DEVICE_ID_JOYPAD_B;
+    case  OSD_JOYPAD_Y:       return RETRO_DEVICE_ID_JOYPAD_Y;
+    case  OSD_JOYPAD_SELECT:  return RETRO_DEVICE_ID_JOYPAD_SELECT;
+    case  OSD_JOYPAD_START:   return RETRO_DEVICE_ID_JOYPAD_START;
+    case  OSD_JOYPAD_UP:      return RETRO_DEVICE_ID_JOYPAD_UP;
+    case  OSD_JOYPAD_DOWN:    return RETRO_DEVICE_ID_JOYPAD_DOWN;
+    case  OSD_JOYPAD_LEFT:    return RETRO_DEVICE_ID_JOYPAD_LEFT;
+    case  OSD_JOYPAD_RIGHT:   return RETRO_DEVICE_ID_JOYPAD_RIGHT;
+    case  OSD_JOYPAD_A:       return RETRO_DEVICE_ID_JOYPAD_A;
+    case  OSD_JOYPAD_X:       return RETRO_DEVICE_ID_JOYPAD_X;
+    case  OSD_JOYPAD_L:       return RETRO_DEVICE_ID_JOYPAD_L;
+    case  OSD_JOYPAD_R:       return RETRO_DEVICE_ID_JOYPAD_R;
+    case  OSD_JOYPAD_L2:      return RETRO_DEVICE_ID_JOYPAD_L2;
+    case  OSD_JOYPAD_R2:      return RETRO_DEVICE_ID_JOYPAD_R2;
+    case  OSD_JOYPAD_L3:      return RETRO_DEVICE_ID_JOYPAD_L3;
+    case  OSD_JOYPAD_R3:      return RETRO_DEVICE_ID_JOYPAD_R3;
+  }
+  return INT_MAX; /* no match found */
+}
+
+/* converts from OSD_ in mame2003.h to the codes from libretro.h
+ * returns INT_MAX if the code is not _VA_LIST_DEFINED
+ */
+int get_retromouse_code(unsigned osd_id)
+{
+  switch(osd_id)
+  {
+    case  OSD_MOUSE_LEFT_CLICK:    return RETRO_DEVICE_ID_MOUSE_LEFT;
+    case  OSD_MOUSE_RIGHT_CLICK:   return RETRO_DEVICE_ID_MOUSE_RIGHT;
+    case  OSD_MOUSE_MIDDLE_CLICK:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+  }
+  return INT_MAX; /* no match found */
+}
+
 /* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
- * MOUSECODE_BUTTON_COMPARE, and get_button_ipt_code(), etc. but I haven't found it.
+ * MOUSECODE_BUTTON_COMPARE, and get_ctrl_ipt_code(), etc. but I haven't found it.
  */
 
 #define BUTTON_CODE_COMPARE(BUTTON_NO)                \
@@ -1743,7 +1791,7 @@ int get_retropad_code(unsigned osd_id)
     case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;  \
   }                                                                                   \
 
-unsigned get_button_ipt_code(unsigned player_number, unsigned standard_code)
+unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 {
   int player_flag = 0;
 
@@ -1914,7 +1962,8 @@ const struct JoystickInfo *osd_get_joy_list(void)
         case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
       }
 
-      mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+      mame_joy_map[overall_idx] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+      if(!string_is_empty(mame_joy_map->name)) overall_idx++;
     }
   }
 
@@ -1959,6 +2008,9 @@ unsigned calc_player_number(unsigned joycode)
 
 unsigned encode_osd_joycode(unsigned player_number, unsigned raw_code)
 {
+  if(raw_code >= OSD_INPUT_CODES_PER_PLAYER)
+    return INT_MAX;
+
   return (raw_code + (player_number * 1000));
 }
 
