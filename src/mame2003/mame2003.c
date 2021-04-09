@@ -1322,6 +1322,13 @@ void retro_run (void)
       retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
       retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
       retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
+      /* simulated lightgun reload hack */
+      if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
+      {
+        retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
+        lightgun_x[port] = -128;
+        lightgun_y[port] = -128;
+      }
     }
 
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
@@ -1332,14 +1339,6 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][2] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
-
-    /* simulated lightgun reload hack */
-    if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
-    {
-      retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
-      lightgun_x[port] = -128;
-      lightgun_y[port] = -128;
-    }
   }
   mame_frame();
 }
