@@ -200,6 +200,7 @@ struct GameOptions
 
   unsigned dial_share_xy;
   unsigned mouse_device;
+  bool     lightgun_with_pad;
   unsigned input_interface;                         /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned active_control_type[MAX_PLAYER_COUNT];   /* register to indicate the default control layout for each player as currently set in the frontend */
   bool     restrict_4_way;                          /* simulate 4-way joystick restrictor */

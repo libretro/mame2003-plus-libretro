@@ -96,6 +96,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
 {
   OPT_4WAY = 0,
   OPT_MOUSE_DEVICE,
+  OPT_LIGHTGUN_WITH_PAD,
   OPT_CROSSHAIR_ENABLED,
   OPT_SKIP_DISCLAIMER,
   OPT_SKIP_WARNINGS,
@@ -294,7 +295,8 @@ static void init_core_options(void)
 #else
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
 #endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshair; enabled|disabled");
+  init_default(&default_options[OPT_LIGHTGUN_WITH_PAD],      APPNAME"_lightgun_with_retropad", "Poll Lightgun with gamepads; enabled|disabled");
+  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
   init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
@@ -466,7 +468,14 @@ static void update_variables(bool first_time)
           else if(strcmp(var.value, "mouse") == 0)
             options.mouse_device = RETRO_DEVICE_MOUSE;
           else
-            options.mouse_device = 0;
+            options.mouse_device = RETRO_DEVICE_NONE;
+          break;
+
+        case OPT_LIGHTGUN_WITH_PAD:
+          if(strcmp(var.value, "enabled") == 0)
+            options.lightgun_with_pad = true;
+          else
+            options.lightgun_with_pad = false;
           break;
 
         case OPT_CROSSHAIR_ENABLED:
@@ -1206,7 +1215,6 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 void retro_run (void)
 {
   int i;
-  bool pointer_pressed;
   const struct KeyboardInfo *thisInput;
   bool updated = false;
   if (running == 0) /* first time through the loop */
@@ -1252,31 +1260,30 @@ void retro_run (void)
     retroJsState[i][OSD_JOYPAD_L3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
     retroJsState[i][OSD_JOYPAD_R3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
-    if (options.mouse_device && options.active_control_type[i] != RETRO_GUN) /* do not poll mouse interface when this user explicitly selects Lightgun */
+    if(options.mouse_device != RETRO_DEVICE_NONE || options.active_control_type[i] != RETRO_GUN) /* do not poll mouse interface when this user explicitly selects Lightgun */
     {
-      if (options.mouse_device == RETRO_DEVICE_MOUSE)
-      {
-        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
-        mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-        mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-      }
-      else /* RETRO_DEVICE_POINTER */
-      {
-        pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
-        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
-        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
-        mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
-        mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
-      }
-    }
-    else
-    {
-      retroJsState[i][OSD_MOUSE_LEFT_CLICK] = 0;
-      retroJsState[i][OSD_MOUSE_RIGHT_CLICK] = 0;
+      retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = 0;
+      retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0;
       retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
+      mouse_x[i] = 0;
+      mouse_y[i] = 0;
+    }
+    else if(options.mouse_device == RETRO_DEVICE_MOUSE)
+    {
+      retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+      retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+      retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+      mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+      mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+    }
+    else if (options.mouse_device == RETRO_DEVICE_POINTER)
+    {
+      bool pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+      retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
+      retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
+      retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
+      mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
+      mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
     }
 
     /* poll lightgun position */
@@ -2237,15 +2244,6 @@ void osd_joystick_end_calibration(void) { }
  */
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
-  /* if this player has specified lightgun input in the frontend, do not fall through
-   * to the mouse interface for that player */
-  if(options.active_control_type[player-1] == RETRO_DEVICE_LIGHTGUN)
-  {
-    *deltax = 0;
-    *deltay = 0;
-    return;
-  }
-
   *deltax = mouse_x[player];
   *deltay = mouse_y[player];
 }
@@ -2269,11 +2267,6 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 *******************************************************************************/
 void osd_lightgun_read(int player, int *deltax, int *deltay)
 {
-  if(get_parent_device(options.active_control_type[player-1]) != RETRO_DEVICE_LIGHTGUN)
-  {
-    *deltax = 0;
-    *deltay = 0;
-  }
   *deltax = lightgun_x[player];
   *deltay = lightgun_y[player];
 }
