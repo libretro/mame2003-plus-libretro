@@ -1305,6 +1305,13 @@ void retro_run (void)
     retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[i][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
     retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[i][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
 
+    /* simulated lightgun reload hack */
+    if(retroJsState[i][OSD_LIGHTGUN_RELOAD])
+    {
+      retroJsState[i][OSD_LIGHTGUN_IS_TRIGGER] = true;
+      lightgun_x[i] = -128;
+      lightgun_y[i] = -128;
+    }
   }
   mame_frame();
 }
