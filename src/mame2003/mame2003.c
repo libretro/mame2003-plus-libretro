@@ -1307,7 +1307,7 @@ void retro_run (void)
     }
 
     /* poll lightgun */
-    if( get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || ( get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && !options.use_lightgun_with_pad ) )
+    if( get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || ( get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad ) )
     {
       lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
       lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
