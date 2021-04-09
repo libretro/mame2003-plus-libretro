@@ -53,6 +53,8 @@ int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initia
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_prev_x[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_prev_y[MAX_PLAYER_COUNT]= {0};
 
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
@@ -1249,6 +1251,8 @@ void retro_run (void)
     analogjoy[port][1] = 0;
     analogjoy[port][2] = 0;
     analogjoy[port][3] = 0;
+    mouse_prev_x[port] = mouse_x[port];
+    mouse_prev_y[port] = mouse_y[port];
     mouse_x[port]      = 0;
     mouse_y[port]      = 0;
     lightgun_x[port]   = 0;
@@ -1257,7 +1261,8 @@ void retro_run (void)
 
   for(port = 0; port < MAX_PLAYER_COUNT; port++)
   {
-    int device_type = options.active_control_type[port];
+    bool gun_fallback_active = false;
+    int device_type          = options.active_control_type[port];
 
     if(device_type == RETRO_DEVICE_NONE) continue;
 
@@ -1307,22 +1312,23 @@ void retro_run (void)
     }
 
     /* poll lightgun */
-    if( get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || ( get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad ) )
+    lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+    lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+    retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
+    retroJsState[port][OSD_LIGHTGUN_RELOAD]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
+    retroJsState[port][OSD_LIGHTGUN_AUX_A]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
+    retroJsState[port][OSD_LIGHTGUN_AUX_B]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
+    retroJsState[port][OSD_LIGHTGUN_START]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
+    retroJsState[port][OSD_LIGHTGUN_SELECT]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
+    retroJsState[port][OSD_LIGHTGUN_AUX_C]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
+    retroJsState[port][OSD_LIGHTGUN_DPAD_UP]     = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
+    retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
+    retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
+    retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
+
+    /* simulated lightgun reload hack */
+    if(get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || gun_fallback_active)
     {
-      lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-      lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
-      retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
-      retroJsState[port][OSD_LIGHTGUN_RELOAD]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
-      retroJsState[port][OSD_LIGHTGUN_AUX_A]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
-      retroJsState[port][OSD_LIGHTGUN_AUX_B]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
-      retroJsState[port][OSD_LIGHTGUN_START]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
-      retroJsState[port][OSD_LIGHTGUN_SELECT]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
-      retroJsState[port][OSD_LIGHTGUN_AUX_C]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
-      retroJsState[port][OSD_LIGHTGUN_DPAD_UP]     = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
-      retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
-      retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
-      retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
-      /* simulated lightgun reload hack */
       if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
       {
         retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
@@ -1330,7 +1336,19 @@ void retro_run (void)
         lightgun_y[port] = -128;
       }
     }
-
+    if(get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad)
+      gun_fallback_active = true;
+  
+    if(gun_fallback_active) /* hack to use gun even when joypad and mouse inputs are already taken */
+    {
+      if(!retroJsState[port][OSD_MOUSE_LEFT_CLICK])
+        retroJsState[port][OSD_MOUSE_LEFT_CLICK]   = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
+      if(!retroJsState[port][OSD_MOUSE_MIDDLE_CLICK])
+        retroJsState[port][OSD_MOUSE_MIDDLE_CLICK] = retroJsState[port][OSD_LIGHTGUN_AUX_A];
+      if(!retroJsState[port][OSD_MOUSE_RIGHT_CLICK])
+        retroJsState[port][OSD_MOUSE_RIGHT_CLICK]  = retroJsState[port][OSD_LIGHTGUN_AUX_B];
+    }
+    
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
     retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][1] : 0;
@@ -1965,58 +1983,58 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
  */
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
   EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
   EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
   EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10},\
   EMIT_COMMON_CODES(DISPLAY_IDX) \
   EMIT_LIGHTGUN(DISPLAY_IDX)
 
@@ -2024,46 +2042,46 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
-  {"RP"    #DISPLAY_IDX " HAT Left ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"RP"    #DISPLAY_IDX " HAT Right",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"    #DISPLAY_IDX " HAT Up   ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"RP"    #DISPLAY_IDX " HAT Down ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"RP"    #DISPLAY_IDX " HAT Left ",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"RP"    #DISPLAY_IDX " HAT Right ",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP"    #DISPLAY_IDX " HAT Up ",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"RP"    #DISPLAY_IDX " HAT Down ",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 \
-  {"RP"    #DISPLAY_IDX " Start",        (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
-  {"RP"    #DISPLAY_IDX " Select",       (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"RP"    #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
+  {"RP"    #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
 \
-  {"Mouse" #DISPLAY_IDX " LClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_LEFT_CLICK,   JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Mouse" #DISPLAY_IDX " RClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_RIGHT_CLICK,  JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_MIDDLE_CLICK, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Trigger/LClick",      (DISPLAY_IDX * 1000) + OSD_MOUSE_LEFT_CLICK,   JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Button 2/RClick",      (DISPLAY_IDX * 1000) + OSD_MOUSE_RIGHT_CLICK,  JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Button 3/MClick",      (DISPLAY_IDX * 1000) + OSD_MOUSE_MIDDLE_CLICK, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
 \
-  {"RP"    #DISPLAY_IDX " AXIS 0 X-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
-  {"RP"    #DISPLAY_IDX " AXIS 0 X+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
-  {"RP"    #DISPLAY_IDX " AXIS 1 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_UP},     \
-  {"RP"    #DISPLAY_IDX " AXIS 1 Y+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_DOWN},   \
-  {"RP"    #DISPLAY_IDX " AXIS 2 X-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT},  \
-  {"RP"    #DISPLAY_IDX " AXIS 2 X+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"    #DISPLAY_IDX " AXIS 3 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
-  {"RP"    #DISPLAY_IDX " AXIS 3 Y+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"RP"    #DISPLAY_IDX " AXIS 0 X-",   (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
+  {"RP"    #DISPLAY_IDX " AXIS 0 X+",   (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
+  {"RP"    #DISPLAY_IDX " AXIS 1 Y-",   (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_UP},     \
+  {"RP"    #DISPLAY_IDX " AXIS 1 Y+",   (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_DOWN},   \
+  {"RP"    #DISPLAY_IDX " AXIS 2 X-",   (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT},  \
+  {"RP"    #DISPLAY_IDX " AXIS 2 X+",   (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP"    #DISPLAY_IDX " AXIS 3 Y-",   (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
+  {"RP"    #DISPLAY_IDX " AXIS 3 Y+",   (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
 
 #define EMIT_LIGHTGUN(DISPLAY_IDX) \
-  {"Gun "  #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Gun "  #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Gun "  #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"Gun "  #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},   \
-  {"Gun "  #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT},  \
-  {"Gun "  #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"Gun "  #DISPLAY_IDX " DPad Left ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},    \
-  {"Gun "  #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT},   \
-  {"Gun "  #DISPLAY_IDX " DPad Up   ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},      \
-  {"Gun "  #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},
+  {"Gun"   #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Gun"   #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Gun"   #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Gun"   #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},   \
+  {"Gun"   #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT},  \
+  {"Gun"   #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"Gun"   #DISPLAY_IDX " DPad Left ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},    \
+  {"Gun"   #DISPLAY_IDX " DPad Right ", (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT},   \
+  {"Gun"   #DISPLAY_IDX " DPad Up ",    (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},      \
+  {"Gun"   #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},
 
-#define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)    \
-  {                                           \
-    {EMIT_RETROPAD_CLASSIC(DISPLAY_IDX)},     \
-    {EMIT_RETROPAD_MODERN(DISPLAY_IDX)},      \
-    {EMIT_RETROPAD_8BUTTON(DISPLAY_IDX)},     \
-    {EMIT_RETROPAD_6BUTTON(DISPLAY_IDX)},     \
-    {EMIT_LIGHTGUN(DISPLAY_IDX)}              \
+#define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)      \
+  {                                             \
+    { EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) },     \
+    { EMIT_RETROPAD_MODERN(DISPLAY_IDX)  },     \
+    { EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) },     \
+    { EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) },     \
+    { EMIT_LIGHTGUN(DISPLAY_IDX)         }      \
   },
 
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
