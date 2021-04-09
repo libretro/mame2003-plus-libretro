@@ -1754,6 +1754,7 @@ void retro_describe_controls(void)
   needle->id          = 0;
   needle->description = NULL;
 
+#if 0
   needle = &desc[0];
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning of description list.\n");
   while(needle->description != NULL)
@@ -1762,6 +1763,7 @@ void retro_describe_controls(void)
     needle++;
   }
   log_cb(RETRO_LOG_DEBUG, LOGPRE "End of description list.\n");
+#endif
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
