@@ -148,7 +148,7 @@ static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
-   unsigned   get_parent_device(unsigned device_id);
+   unsigned   get_device_parent(unsigned device_id);
         int   get_retropad_code(unsigned osd_code);
         int   get_retromouse_code(unsigned osd_code);
         int   get_retrogun_code(unsigned osd_code);
@@ -473,9 +473,9 @@ static void update_variables(bool first_time)
 
         case OPT_LIGHTGUN_WITH_PAD:
           if(strcmp(var.value, "enabled") == 0)
-            options.lightgun_with_pad = true;
+            options.use_lightgun_with_pad = true;
           else
-            options.lightgun_with_pad = false;
+            options.use_lightgun_with_pad = false;
           break;
 
         case OPT_CROSSHAIR_ENABLED:
@@ -1237,6 +1237,10 @@ void retro_run (void)
 
   for (i = 0; i < MAX_PLAYER_COUNT; i ++)
   {
+    int device_type = options.active_control_type[i];
+
+    if(device_type == RETRO_DEVICE_NONE) continue;
+
     /* Analog joystick */
     analogjoy[i][0] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
     analogjoy[i][1] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
@@ -1260,7 +1264,8 @@ void retro_run (void)
     retroJsState[i][OSD_JOYPAD_L3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
     retroJsState[i][OSD_JOYPAD_R3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
-    if(options.mouse_device != RETRO_DEVICE_NONE || options.active_control_type[i] != RETRO_GUN) /* do not poll mouse interface when this user explicitly selects Lightgun */
+    /* do not poll mouse abstraction when disabled by the core option or if user explicitly selects Lightgun */
+    if(options.mouse_device == RETRO_DEVICE_NONE || get_device_parent(device_type) != RETRO_DEVICE_LIGHTGUN)
     {
       retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = 0;
       retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0;
@@ -1287,8 +1292,16 @@ void retro_run (void)
     }
 
     /* poll lightgun position */
-    lightgun_x[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-    lightgun_y[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+    if( get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || ( get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && !options.use_lightgun_with_pad ) )
+    {
+      lightgun_x[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+      lightgun_y[i] = normalize_lightgun(input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+    }
+    else
+    {
+      lightgun_x[i] = 0;
+      lightgun_y[i] = 0;
+    }
 
     /* poll lightgun digital controls */
     retroJsState[i][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(i, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
@@ -1683,7 +1696,7 @@ void retro_describe_controls(void)
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
           continue; /* button has a higher index than supported by the driver */
 
-      if(get_parent_device(device_code) == RETRO_DEVICE_JOYPAD)
+      if(get_device_parent(device_code) == RETRO_DEVICE_JOYPAD)
       {
         retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
         if(retro_code == INT_MAX) continue;
@@ -1698,7 +1711,7 @@ void retro_describe_controls(void)
           case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
         }
       }
-      else if(get_parent_device(device_code) == RETRO_DEVICE_LIGHTGUN)
+      else if(get_device_parent(device_code) == RETRO_DEVICE_LIGHTGUN)
       {
         retro_code = get_retrogun_code(osd_index); /* get the corresponding ID for this control in libretro.h  */
         if(retro_code == INT_MAX) continue;        /* from the lightgun section, or INT_MAX if not valid       */
@@ -1721,14 +1734,14 @@ void retro_describe_controls(void)
        * libretro.h which says we "should only poll input based on the base input device
        * types". That seems to be true in here too, because using the result of 
        * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
-       * of the descriptions. Therefore, get_get_parent_device() is used.
+       * of the descriptions. Therefore, get_get_device_parent() is used.
        */
       needle->port         = port_number;
-      needle->device       = get_parent_device(device_code);
+      needle->device       = get_device_parent(device_code);
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_parent_device(device_code), osd_code, standard_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), osd_code, standard_code, needle->id, needle->description);
       needle++;
     }
   }
@@ -1754,10 +1767,10 @@ void retro_describe_controls(void)
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
-/* get_parent_device
+/* get_device_parent
  * returns the "base" libretro device type, which we may sometimes need
  */
-unsigned get_parent_device(unsigned device_id)
+unsigned get_device_parent(unsigned device_id)
 {
   if(device_id == RETRO_DEVICE_NONE) return RETRO_DEVICE_NONE;
 
