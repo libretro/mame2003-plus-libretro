@@ -1969,6 +1969,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
+  EMIT_LIGHTGUN(DISPLAY_IDX)     \
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -1995,6 +1996,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
+  EMIT_LIGHTGUN(DISPLAY_IDX)     \
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
@@ -2008,6 +2010,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
+  EMIT_LIGHTGUN(DISPLAY_IDX)     \
 
 /* RetroPad-type input devices: */
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
