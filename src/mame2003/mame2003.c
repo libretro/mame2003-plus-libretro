@@ -1712,17 +1712,28 @@ void retro_describe_controls(void)
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | id: %i | desc: %s\n", port_number, osd_code, needle->device, get_parent_device(needle->device), needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_parent_device(device_code), osd_code, standard_code, needle->id, needle->description);
       needle++;
     }
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
-  needle->port = 0;
-  needle->device = 0;
-  needle->index = 0;
-  needle->id = 0;
+  needle->port        = 0;
+  needle->device      = 0;
+  needle->index       = 0;
+  needle->id          = 0;
   needle->description = NULL;
+
+  needle = &desc[0];
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning of description list.\n");
+  while(true)
+  {
+    if(needle->port == 0 && needle->device == 0 && needle->index == 0 && needle->id == 0 && needle->description == NULL)
+      break;
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Description || port: %i | device: %i | index: %i | id: %i \t| name: %s\n", needle->port, needle->device, needle->index, needle->id, needle->description);
+    needle++;
+  }
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "End of description list.\n");
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
@@ -1742,6 +1753,8 @@ unsigned get_parent_device(unsigned device_id)
     case PAD_8BUTTON:
     case PAD_6BUTTON:
       return RETRO_DEVICE_JOYPAD;
+    case RETRO_GUN:
+      return RETRO_DEVICE_LIGHTGUN;
   }
 
   return INT_MAX;
@@ -1925,6 +1938,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX) \
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -1937,6 +1951,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX) \
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -1949,6 +1964,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX) \
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
@@ -1961,8 +1977,10 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX) \
 
-/* the dpad, start, select, mouse, and analog axes are the same regardless of controller layout */
+/* RetroPad-type input devices: */
+/* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
   {"RP"    #DISPLAY_IDX " HAT Left ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
@@ -1998,14 +2016,23 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"Gun "  #DISPLAY_IDX " DPad Up   ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
   {"Gun "  #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 
+#define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)    \
+  {                                           \
+    {EMIT_RETROPAD_CLASSIC(DISPLAY_IDX)},     \
+    {EMIT_RETROPAD_MODERN(DISPLAY_IDX)},      \
+    {EMIT_RETROPAD_8BUTTON(DISPLAY_IDX)},     \
+    {EMIT_RETROPAD_6BUTTON(DISPLAY_IDX)},     \
+    {EMIT_LIGHTGUN(DISPLAY_IDX)}              \
+  },                                          \
+
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
 {
-  {{EMIT_RETROPAD_CLASSIC(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_MODERN(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_8BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_6BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_LIGHTGUN(1)}},
-  {{EMIT_RETROPAD_CLASSIC(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_MODERN(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_8BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_6BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_LIGHTGUN(2)}},
-  {{EMIT_RETROPAD_CLASSIC(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_MODERN(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_8BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_6BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_LIGHTGUN(3)}},
-  {{EMIT_RETROPAD_CLASSIC(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_MODERN(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_8BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_6BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_LIGHTGUN(4)}},
-  {{EMIT_RETROPAD_CLASSIC(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_MODERN(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_8BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_6BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_LIGHTGUN(5)}},
-  {{EMIT_RETROPAD_CLASSIC(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_MODERN(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_8BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_6BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_LIGHTGUN(6)}},
+  EMIT_JOYSTICK_OPTIONS(1)
+  EMIT_JOYSTICK_OPTIONS(2)
+  EMIT_JOYSTICK_OPTIONS(3)
+  EMIT_JOYSTICK_OPTIONS(4)
+  EMIT_JOYSTICK_OPTIONS(5)
+  EMIT_JOYSTICK_OPTIONS(6)
 };
 
 /******************************************************************************
@@ -2014,39 +2041,36 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPU
 
 ******************************************************************************/
 
-struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) + 1]; /* + 1 for final zeroed struct */
+struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) + 1] = { { 0 } }; /* + 1 for final zeroed struct */
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {
-  int player_map_idx = 0;
-  int overall_idx    = 0;
-  int display_idx    = 0;
+  unsigned needle      = 0;
+  unsigned port_number = 0;
 
-  for(display_idx = DISP_PLAYER1; display_idx <= MAX_PLAYER_COUNT; display_idx++)
+  for(port_number = 0; port_number < MAX_PLAYER_COUNT; port_number++)
   {
-    for(player_map_idx = 0; player_map_idx < OSD_INPUT_CODES_PER_PLAYER; player_map_idx++)
+    int control_idx = 0;
+    for(control_idx = 0; control_idx < OSD_INPUT_CODES_PER_PLAYER; control_idx++)
     {
-      int data_idx     = display_idx - 1;
-      int coded_layout = options.active_control_type[data_idx];
       int layout_idx   = 0;
-
-      switch(coded_layout)
+      switch(options.active_control_type[port_number])
       {
-        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC; break;
-        case PAD_MODERN:   layout_idx = IDX_MODERN;  break;
-        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC;  break;
+        case PAD_MODERN:   layout_idx = IDX_MODERN;   break;
+        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON;  break;
+        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON;  break;
+        case RETRO_GUN:    layout_idx = IDX_LIGHTGUN; break;
       }
-
-      mame_joy_map[overall_idx] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
-      if(!string_is_empty(mame_joy_map->name)) overall_idx++;
+      mame_joy_map[needle] = alternate_joystick_maps[port_number][layout_idx][control_idx];
+      if(!string_is_empty(mame_joy_map[needle].name)) needle++;
     }
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
-  mame_joy_map[overall_idx].name         = NULL;
-  mame_joy_map[overall_idx].code         = 0;
-  mame_joy_map[overall_idx].standardcode = 0;
+  mame_joy_map[needle].name         = NULL;
+  mame_joy_map[needle].code         = 0;
+  mame_joy_map[needle].standardcode = 0;
 
   return mame_joy_map;
 }
