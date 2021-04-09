@@ -186,7 +186,7 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define PAD_6BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 #define RETRO_GUN     RETRO_DEVICE_LIGHTGUN
 
-static struct retro_controller_description controllers[] = {
+const struct retro_controller_description controllers[] = {
   { "Classic Gamepad",    PAD_CLASSIC },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
@@ -194,7 +194,7 @@ static struct retro_controller_description controllers[] = {
   { "Lightgun",           RETRO_GUN },
 };
 
-static struct retro_controller_description unsupported_controllers[] = {
+const struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Classic Gamepad)",    PAD_CLASSIC },
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
@@ -202,14 +202,14 @@ static struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Lightgun)",           RETRO_GUN },
 };
 
-static struct retro_controller_info input_subdevice_ports[] = {
+struct retro_controller_info input_subdevice_ports[] = {
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { 0 },
+  { 0, 0 },
 };
 
 /******************************************************************************
@@ -1703,9 +1703,11 @@ void retro_describe_controls(void)
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
       
-      /* As of April 2021, there may be a RetroArch bug which doesn't accept the
-       * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
-       * Therefore, get_get_parent_device() as a workaround
+      /* With regard to the device number, we refer to the input polling comments in 
+       * libretro.h which says we "should only poll input based on the base input device
+       * types". That seems to be true in here too, because using the result of 
+       * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
+       * of the descriptions. Therefore, get_get_parent_device() is used.
        */
       needle->port         = port_number;
       needle->device       = get_parent_device(device_code);
@@ -1718,6 +1720,7 @@ void retro_describe_controls(void)
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
+  /* which specifically looks at the description field to be NULL per libretro.h */
   needle->port        = 0;
   needle->device      = 0;
   needle->index       = 0;
@@ -1726,10 +1729,8 @@ void retro_describe_controls(void)
 
   needle = &desc[0];
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning of description list.\n");
-  while(true)
+  while(needle->description != NULL)
   {
-    if(needle->port == 0 && needle->device == 0 && needle->index == 0 && needle->id == 0 && needle->description == NULL)
-      break;
     log_cb(RETRO_LOG_DEBUG, LOGPRE "Description || port: %i | device: %i | index: %i | id: %i \t| name: %s\n", needle->port, needle->device, needle->index, needle->id, needle->description);
     needle++;
   }
