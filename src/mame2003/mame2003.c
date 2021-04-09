@@ -1976,7 +1976,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
-  EMIT_LIGHTGUN(DISPLAY_IDX)     \
+  EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -1990,6 +1990,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
+  EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
@@ -2003,7 +2004,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
-  EMIT_LIGHTGUN(DISPLAY_IDX)     \
+  EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
   {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
@@ -2017,7 +2018,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
   {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
   EMIT_COMMON_CODES(DISPLAY_IDX) \
-  EMIT_LIGHTGUN(DISPLAY_IDX)     \
+  EMIT_LIGHTGUN(DISPLAY_IDX)
 
 /* RetroPad-type input devices: */
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
@@ -2034,7 +2035,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"Mouse" #DISPLAY_IDX " LClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_LEFT_CLICK,   JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"Mouse" #DISPLAY_IDX " RClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_RIGHT_CLICK,  JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
   {"Mouse" #DISPLAY_IDX " MClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_MIDDLE_CLICK, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
- \
+\
   {"RP"    #DISPLAY_IDX " AXIS 0 X-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
   {"RP"    #DISPLAY_IDX " AXIS 0 X+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
   {"RP"    #DISPLAY_IDX " AXIS 1 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_UP},     \
@@ -2048,13 +2049,13 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"Gun "  #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
   {"Gun "  #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
   {"Gun "  #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"Gun "  #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},  \
-  {"Gun "  #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"Gun "  #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},   \
+  {"Gun "  #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT},  \
   {"Gun "  #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"Gun "  #DISPLAY_IDX " DPad Left ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"Gun "  #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"Gun "  #DISPLAY_IDX " DPad Up   ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"Gun "  #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"Gun "  #DISPLAY_IDX " DPad Left ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},    \
+  {"Gun "  #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT},   \
+  {"Gun "  #DISPLAY_IDX " DPad Up   ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},      \
+  {"Gun "  #DISPLAY_IDX " DPad Down ",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},
 
 #define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)    \
   {                                           \
@@ -2063,7 +2064,7 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
     {EMIT_RETROPAD_8BUTTON(DISPLAY_IDX)},     \
     {EMIT_RETROPAD_6BUTTON(DISPLAY_IDX)},     \
     {EMIT_LIGHTGUN(DISPLAY_IDX)}              \
-  },                                          \
+  },
 
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
 {
