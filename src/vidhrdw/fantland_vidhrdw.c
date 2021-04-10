@@ -1,54 +1,76 @@
-/***************************************************************************
+/***************************************************************************************
 
-					  -= Fantasy Land / Galaxy Gunners =-
+                      -= Electronic Devices / International Games =-
 
-					driver by	Luca Elia (l.elia@tin.it)
+                    driver by   Luca Elia (l.elia@tin.it)
 
-	This game has sprites only:
+    This game has sprites only:
 
-	tiles are 16 x 16 x 6. There are $400 sprites, each one is allotted
-	8 bytes of memory (but only 5 are used) :
+    tiles are 16 x 16 x 6. There are 0x400 sprites, each one is allotted
+    8 bytes of memory (but only 5 are used) in spriteram (0x54000):
 
-	Offset: 	Bits:			Value:
+    Offset:     Bits:           Value:
 
-		0						X (low bits)
+        0                       X (low bits)
 
-		1		7--- ----		X (high bit)
-				-6-- ----		Y (high bit)
-				--5- ----		Flip X
-				---4 ----		Flip Y
-				---- 32--
-				---- --10		Color
+        1       7--- ----       X (high bit)
+                -6-- ----       Y (high bit)
+                --5- ----       Flip X
+                ---4 ----       Flip Y
+                ---- 32--
+                ---- --10       Color
 
-		2						Code (high bits)
+        2                       Code (high bits)
 
-		3						Code (low bits)
+        3                       Code (low bits)
 
-		4						Y (low bits)
+        4                       Y (low bits)
 
-	Then follows a table with 1 byte per sprite: the index of a x,y
-	and code offset	that sprite will use, from a table with 256 entries:
+    Then 2 tables follow, 0x400 bytes each:
 
-		0						Y offset (low bits)
+    - the first table  (0x56000) contains 1 byte per sprite: an index in the second table
+    - the second table (0x56400) is either an x,y offset or an index in spriteram_2 (0x60000):
 
-		1		7654 321-		Code offset
-				---- ---0		Y offset (high bit)
+        0                       X offset (low bits)
 
-		2						X offset (low bits)
+        1                       Y offset (low bits)
 
-		3						X offset (high bit)
+        2       7--- ----       If 1, the following bits are an index in spriteram_2 for the real X&Y & Code offsets
+                -654 321-
+                ---- ---0       X offset (high bit)
 
-***************************************************************************/
+        3       7654 321-
+                ---- ---0       Y offset (high bit)
 
+
+    Spriteram_2 contains 0x4000 X&Y & Code offsets:
+
+        0                       Y offset (low bits)
+
+        1       7--- ----       Flip X (xor with that in spriteram)
+                -6-- ----       Flip Y ""
+                --54 321-       Code offset
+                ---- ---0       Y offset (high bit)
+
+        2                       X offset (low bits)
+
+        3                       X offset (high bit)
+
+***************************************************************************************/
+#include "driver.h"
 #include "vidhrdw/generic.h"
 
 static void fantland_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
-	data8_t	*ram	=	spriteram,		/* spriteram start*/
-			*end	=	ram + 0x2000,	/* spriteram end*/
-			*ram2	=	ram + 0x2000;	/* table of indexes into the table of offsets*/
+	data8_t	*indx_ram	=	spriteram + 0x2000,	/* this ram contains indexes into offs_ram */
+			*offs_ram	=	spriteram + 0x2400,	/* this ram contains x,y offsets or indexes into spriteram_2 */
+			*ram		=	spriteram,			/* current sprite pointer in spriteram */
+			*ram2		=	indx_ram;			/* current sprite pointer in indx_ram */
 
-	for ( ; ram < end; ram += 8,ram2 ++)
+	/* wheelrun is the only game with a smaller visible area */
+	int special = (Machine->visible_area.max_y - Machine->visible_area.min_y + 1) < 0x100;
+
+	for ( ; ram < indx_ram; ram += 8,ram2++)
 	{
 		int attr,code,color, x,y,xoffs,yoffs,flipx,flipy, idx;
 
@@ -59,22 +81,50 @@ static void fantland_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		y		=	ram[4];
 
 		color	=	(attr & 0x03);
-		flipy	=	(attr & 0x10);
-		flipx	=	(attr & 0x20);
+		flipy	=	(attr & 0x10) ? 1 : 0;
+		flipx	=	(attr & 0x20) ? 1 : 0;
 
 		y		+=	(attr & 0x40) << 2;
 		x		+=	(attr & 0x80) << 1;
 
 		/* Index in the table of offsets */
+
 		idx		=	ram2[0] * 4;
 
 		/* Fetch the offsets */
-		yoffs	=	spriteram_2[idx + 0] + (spriteram_2[idx + 1] << 8);
-		xoffs	=	spriteram_2[idx + 2] + (spriteram_2[idx + 3] << 8);
+
+		if (offs_ram[idx + 2] & 0x80)
+		{
+			/* x,y & code offset is in spriteram_2, this is its index */
+
+			idx		=	(((offs_ram[idx + 2] << 8) + offs_ram[idx + 3]) & 0x3fff) * 4;
+
+			yoffs	=	spriteram_2[idx + 0] + (spriteram_2[idx + 1] << 8);
+			xoffs	=	spriteram_2[idx + 2] + (spriteram_2[idx + 3] << 8);
+
+			code	+=	(yoffs & 0x3e00) >> 9;
+			flipy	^=	(yoffs & 0x4000) ? 1 : 0;
+			flipx	^=	(yoffs & 0x8000) ? 1 : 0;
+		}
+		else
+		{
+			/* this is an x,y offset */
+
+			yoffs	=	((offs_ram[idx + 3] & 0x01) << 8) + offs_ram[idx + 1];
+			xoffs	=	((offs_ram[idx + 2] & 0x01) << 8) + offs_ram[idx + 0];
+		}
+
+		yoffs	=	(yoffs & 0xff) - (yoffs & 0x100);
+		xoffs	=	(xoffs & 0x1ff);
+
+		if (xoffs >= 0x180)		xoffs -= 0x200;
 
 		y		+=	yoffs;
 		x		+=	xoffs;
-		code	+=	yoffs >> 9;
+
+		/* wheelrun needs y=0xf0 & yoffs=0x50 to be rendered at screen y 0x40 */
+		if (special && y > 0)
+			y &= 0xff;
 
 		y		=	(y & 0xff) - (y & 0x100);
 		x		=	(x & 0x1ff);
@@ -88,5 +138,5 @@ static void fantland_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 VIDEO_UPDATE( fantland )
 {
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
-	fantland_draw_sprites(bitmap,cliprect);
+    fantland_draw_sprites(bitmap,cliprect);
 }
