@@ -1344,25 +1344,25 @@ void retro_run (void)
     if(gun_fallback_active) /* hack to use gun even when joypad and mouse inputs are already taken */
     {
       if(!retroJsState[port][OSD_MOUSE_BUTTON_1])
-        retroJsState[port][OSD_MOUSE_BUTTON_1]   = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
+        retroJsState[port][OSD_MOUSE_BUTTON_1]    = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
       if(!retroJsState[port][OSD_MOUSE_BUTTON_3])
-        retroJsState[port][OSD_MOUSE_BUTTON_3] = retroJsState[port][OSD_LIGHTGUN_AUX_A];
+        retroJsState[port][OSD_MOUSE_BUTTON_3]    = retroJsState[port][OSD_LIGHTGUN_AUX_A];
       if(!retroJsState[port][OSD_MOUSE_BUTTON_2])
-        retroJsState[port][OSD_MOUSE_BUTTON_2]  = retroJsState[port][OSD_LIGHTGUN_AUX_B];
+        retroJsState[port][OSD_MOUSE_BUTTON_2]    = retroJsState[port][OSD_LIGHTGUN_AUX_B];
       if(!retroJsState[port][OSD_MOUSE_BUTTON_4])
-        retroJsState[port][OSD_MOUSE_BUTTON_4]  = retroJsState[port][OSD_LIGHTGUN_AUX_C];
+        retroJsState[port][OSD_MOUSE_BUTTON_4]    = retroJsState[port][OSD_LIGHTGUN_AUX_C];
       if(!retroJsState[port][OSD_JOYPAD_SELECT])
-        retroJsState[port][OSD_JOYPAD_SELECT]  = retroJsState[port][OSD_LIGHTGUN_SELECT];
+        retroJsState[port][OSD_JOYPAD_SELECT]     = retroJsState[port][OSD_LIGHTGUN_SELECT];
       if(!retroJsState[port][OSD_JOYPAD_START])
-        retroJsState[port][OSD_JOYPAD_START]  = retroJsState[port][OSD_LIGHTGUN_START];
+        retroJsState[port][OSD_JOYPAD_START]      = retroJsState[port][OSD_LIGHTGUN_START];
       if(!retroJsState[port][OSD_JOYPAD_UP])
-        retroJsState[port][OSD_JOYPAD_UP]  = retroJsState[port][OSD_LIGHTGUN_DPAD_UP];
+        retroJsState[port][OSD_JOYPAD_UP]         = retroJsState[port][OSD_LIGHTGUN_DPAD_UP];
       if(!retroJsState[port][OSD_JOYPAD_DOWN])
-        retroJsState[port][OSD_JOYPAD_DOWN]  = retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN];
+        retroJsState[port][OSD_JOYPAD_DOWN]       = retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN];
       if(!retroJsState[port][OSD_JOYPAD_LEFT])
-        retroJsState[port][OSD_JOYPAD_LEFT]  = retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT];
+        retroJsState[port][OSD_JOYPAD_LEFT]       = retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT];
       if(!retroJsState[port][OSD_JOYPAD_RIGHT])
-        retroJsState[port][OSD_JOYPAD_RIGHT]  = retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT];
+        retroJsState[port][OSD_JOYPAD_RIGHT]      = retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT];
     }
     
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
@@ -1866,9 +1866,11 @@ int get_retromouse_code(unsigned osd_id)
 {
   switch(osd_id)
   {
-    case  OSD_MOUSE_BUTTON_1:    return RETRO_DEVICE_ID_MOUSE_LEFT;
-    case  OSD_MOUSE_BUTTON_2:   return RETRO_DEVICE_ID_MOUSE_RIGHT;
+    case  OSD_MOUSE_BUTTON_1:  return RETRO_DEVICE_ID_MOUSE_LEFT;
+    case  OSD_MOUSE_BUTTON_2:  return RETRO_DEVICE_ID_MOUSE_RIGHT;
     case  OSD_MOUSE_BUTTON_3:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+    case  OSD_MOUSE_BUTTON_4:  return RETRO_DEVICE_ID_MOUSE_BUTTON_4;
+    case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
   }
   return INT_MAX; /* no match found */
 }
