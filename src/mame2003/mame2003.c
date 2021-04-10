@@ -1294,20 +1294,20 @@ void retro_run (void)
     {
       if(options.mouse_device == RETRO_DEVICE_MOUSE)
       {
-        retroJsState[port][OSD_MOUSE_LEFT_CLICK]   = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-        retroJsState[port][OSD_MOUSE_RIGHT_CLICK]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-        retroJsState[port][OSD_MOUSE_MIDDLE_CLICK] = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
-        retroJsState[port][OSD_MOUSE_BUTTON4]      = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_4);
-        retroJsState[port][OSD_MOUSE_BUTTON5]      = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_5);
+        retroJsState[port][OSD_MOUSE_BUTTON_1]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+        retroJsState[port][OSD_MOUSE_BUTTON_2]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+        retroJsState[port][OSD_MOUSE_BUTTON_3]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+        retroJsState[port][OSD_MOUSE_BUTTON_4]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_4);
+        retroJsState[port][OSD_MOUSE_BUTTON_5]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_5);
         mouse_x[port] = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
         mouse_y[port] = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
       }
       else if (options.mouse_device == RETRO_DEVICE_POINTER)
       {
         bool pointer_pressed = input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-        retroJsState[port][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
-        retroJsState[port][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
-        retroJsState[port][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
+        retroJsState[port][OSD_MOUSE_BUTTON_1]  = pointer_pressed;
+        retroJsState[port][OSD_MOUSE_BUTTON_2]  = 0; /* no right click for a pointer */
+        retroJsState[port][OSD_MOUSE_BUTTON_3]  = 0; /* no middle click for a pointer */
         mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
         mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
       }
@@ -1343,14 +1343,14 @@ void retro_run (void)
   
     if(gun_fallback_active) /* hack to use gun even when joypad and mouse inputs are already taken */
     {
-      if(!retroJsState[port][OSD_MOUSE_LEFT_CLICK])
-        retroJsState[port][OSD_MOUSE_LEFT_CLICK]   = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
-      if(!retroJsState[port][OSD_MOUSE_MIDDLE_CLICK])
-        retroJsState[port][OSD_MOUSE_MIDDLE_CLICK] = retroJsState[port][OSD_LIGHTGUN_AUX_A];
-      if(!retroJsState[port][OSD_MOUSE_RIGHT_CLICK])
-        retroJsState[port][OSD_MOUSE_RIGHT_CLICK]  = retroJsState[port][OSD_LIGHTGUN_AUX_B];
-      if(!retroJsState[port][OSD_MOUSE_BUTTON4])
-        retroJsState[port][OSD_MOUSE_BUTTON4]  = retroJsState[port][OSD_LIGHTGUN_AUX_C];
+      if(!retroJsState[port][OSD_MOUSE_BUTTON_1])
+        retroJsState[port][OSD_MOUSE_BUTTON_1]   = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
+      if(!retroJsState[port][OSD_MOUSE_BUTTON_3])
+        retroJsState[port][OSD_MOUSE_BUTTON_3] = retroJsState[port][OSD_LIGHTGUN_AUX_A];
+      if(!retroJsState[port][OSD_MOUSE_BUTTON_2])
+        retroJsState[port][OSD_MOUSE_BUTTON_2]  = retroJsState[port][OSD_LIGHTGUN_AUX_B];
+      if(!retroJsState[port][OSD_MOUSE_BUTTON_4])
+        retroJsState[port][OSD_MOUSE_BUTTON_4]  = retroJsState[port][OSD_LIGHTGUN_AUX_C];
       if(!retroJsState[port][OSD_JOYPAD_SELECT])
         retroJsState[port][OSD_JOYPAD_SELECT]  = retroJsState[port][OSD_LIGHTGUN_SELECT];
       if(!retroJsState[port][OSD_JOYPAD_START])
@@ -1866,9 +1866,9 @@ int get_retromouse_code(unsigned osd_id)
 {
   switch(osd_id)
   {
-    case  OSD_MOUSE_LEFT_CLICK:    return RETRO_DEVICE_ID_MOUSE_LEFT;
-    case  OSD_MOUSE_RIGHT_CLICK:   return RETRO_DEVICE_ID_MOUSE_RIGHT;
-    case  OSD_MOUSE_MIDDLE_CLICK:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+    case  OSD_MOUSE_BUTTON_1:    return RETRO_DEVICE_ID_MOUSE_LEFT;
+    case  OSD_MOUSE_BUTTON_2:   return RETRO_DEVICE_ID_MOUSE_RIGHT;
+    case  OSD_MOUSE_BUTTON_3:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
   }
   return INT_MAX; /* no match found */
 }
@@ -2071,11 +2071,11 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP" #DISPLAY_IDX " AXIS 3 Y-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
   {"RP" #DISPLAY_IDX " AXIS 3 Y+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},  \
 \
-  {"Gun/Mouse" #DISPLAY_IDX " Trigger/LClick", (DISPLAY_IDX * 1000) + OSD_MOUSE_LEFT_CLICK,   JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux A/RClick",   (DISPLAY_IDX * 1000) + OSD_MOUSE_RIGHT_CLICK,  JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux B/MClick",   (DISPLAY_IDX * 1000) + OSD_MOUSE_MIDDLE_CLICK, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux C/Button4",  (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON4,      JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
-  {"Mouse" #DISPLAY_IDX " Button5",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON5, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON5}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Trigger/Button1", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_1, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Aux A/Button2",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_2, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Aux B/Button3",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_3, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Gun/Mouse" #DISPLAY_IDX " Aux C/Button4",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_4, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
+  {"Mouse" #DISPLAY_IDX " Button5",             (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_5, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON5}, \
 
 #define EMIT_LIGHTGUN(DISPLAY_IDX) \
   {"Gun" #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
