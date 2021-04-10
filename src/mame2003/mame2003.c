@@ -2038,10 +2038,10 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
-  {"RP"    #DISPLAY_IDX " HAT Left ",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"RP"    #DISPLAY_IDX " HAT Right ",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"    #DISPLAY_IDX " HAT Up ",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"RP"    #DISPLAY_IDX " HAT Down ",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"RP"    #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"RP"    #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP"    #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"RP"    #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 \
   {"RP"    #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
   {"RP"    #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
