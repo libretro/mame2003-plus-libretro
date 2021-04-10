@@ -3,9 +3,6 @@
 	Beta version 5  -  Jan. 17th 2021
 	by: mahoneyt944 - MAME 2003-Plus Team.
 
-	- Still need to generalize the XML DAT and h1 header name instead of hardcoded to 2003+
-	- Currently tested to be compatible with MAME2003-Plus, MAME2003, MAME2010, MAME2014, MAME2015
-
 */
 
 #include <stdio.h>
