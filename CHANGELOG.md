@@ -22,6 +22,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Baryon: Future Assault
 * Bomb Kick
 * Boogie Wings
+* Born To Fight
 * Botanic (English / Spanish set 1)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
 * Cabal (World, Joystick version)
@@ -691,3 +692,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed the background colour of Straight Flush to match flyer colours [jamiecurmi]
 * Added sound for Invader's Revenge, Space Chaser (CV Version), Lupin III, Balloon Bomber, Rolling Crash / Moon Base. [jamiecurmi]
 * Added HD647180 MCU sound support for Teki Paki and Whoopee / Pibi & Bibi removing the need for Teki Paki to require hacked sound samples [dink, arcadez]
+* Added support for Born To Fight to the fantland driver [arcadez]
