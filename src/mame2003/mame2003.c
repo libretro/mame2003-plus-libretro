@@ -1263,6 +1263,7 @@ void retro_run (void)
   {
     bool gun_fallback_active = false;
     int device_type          = options.active_control_type[port];
+    int device_parent        = get_device_parent(device_type);
 
     if(device_type == RETRO_DEVICE_NONE) continue;
 
@@ -1328,8 +1329,12 @@ void retro_run (void)
     retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
     retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
 
+    if(device_parent == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad)
+      gun_fallback_active = true;
+
+#if 0
     /* simulated lightgun reload hack */
-    if(get_device_parent(device_type) == RETRO_DEVICE_LIGHTGUN || gun_fallback_active)
+    if(device_parent == RETRO_DEVICE_LIGHTGUN || gun_fallback_active)
     {
       if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
       {
@@ -1338,17 +1343,15 @@ void retro_run (void)
         lightgun_y[port] = -128;
       }
     }
-    if(get_device_parent(device_type) == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad)
-      gun_fallback_active = true;
-  
+#endif
     if(gun_fallback_active) /* hack to use gun even when joypad and mouse inputs are already taken */
     {
       if(!retroJsState[port][OSD_MOUSE_BUTTON_1])
         retroJsState[port][OSD_MOUSE_BUTTON_1]    = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
-      if(!retroJsState[port][OSD_MOUSE_BUTTON_3])
-        retroJsState[port][OSD_MOUSE_BUTTON_3]    = retroJsState[port][OSD_LIGHTGUN_AUX_A];
       if(!retroJsState[port][OSD_MOUSE_BUTTON_2])
-        retroJsState[port][OSD_MOUSE_BUTTON_2]    = retroJsState[port][OSD_LIGHTGUN_AUX_B];
+        retroJsState[port][OSD_MOUSE_BUTTON_2]    = retroJsState[port][OSD_LIGHTGUN_AUX_A];
+      if(!retroJsState[port][OSD_MOUSE_BUTTON_3])
+        retroJsState[port][OSD_MOUSE_BUTTON_3]    = retroJsState[port][OSD_LIGHTGUN_AUX_B];
       if(!retroJsState[port][OSD_MOUSE_BUTTON_4])
         retroJsState[port][OSD_MOUSE_BUTTON_4]    = retroJsState[port][OSD_LIGHTGUN_AUX_C];
       if(!retroJsState[port][OSD_JOYPAD_SELECT])
