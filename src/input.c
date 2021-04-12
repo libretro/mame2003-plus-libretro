@@ -82,12 +82,15 @@ static INLINE const struct JoystickInfo* internal_oscode_find_joystick(unsigned 
 {
 	const struct JoystickInfo *joyinfo;
 	joyinfo = osd_get_joy_list();
+	/*log_cb(RETRO_LOG_DEBUG, "checking for oscode: %i\n", oscode);*/
 	while (joyinfo->name)
 	{
+		/*log_cb(RETRO_LOG_DEBUG, "examining code: %i | name: %s\n", joyinfo->code, joyinfo->name);*/
 		if (joyinfo->code == oscode)
 			return joyinfo;
 		++joyinfo;
 	}
+	/*log_cb(RETRO_LOG_DEBUG, "oscode not found\n");*/
 	return 0;
 }
 

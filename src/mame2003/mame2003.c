@@ -53,6 +53,8 @@ int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initia
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_prev_x[MAX_PLAYER_COUNT]= {0};
+int16_t  mouse_prev_y[MAX_PLAYER_COUNT]= {0};
 
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
@@ -143,7 +145,7 @@ static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
-   unsigned   get_parent_device(unsigned device_id);
+   unsigned   get_device_parent(unsigned device_id);
         int   get_retropad_code(unsigned osd_code);
         int   get_retromouse_code(unsigned osd_code);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
@@ -179,28 +181,28 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define PAD_8BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
-static struct retro_controller_description controllers[] = {
+const struct retro_controller_description controllers[] = {
   { "Classic Gamepad",    PAD_CLASSIC },
   { "Modern Fightstick",  PAD_MODERN  },
   { "8-Button",           PAD_8BUTTON },
   { "6-Button",           PAD_6BUTTON },
 };
 
-static struct retro_controller_description unsupported_controllers[] = {
+const struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Classic Gamepad)",    PAD_CLASSIC },
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
 };
 
-static struct retro_controller_info input_subdevice_ports[] = {
+struct retro_controller_info input_subdevice_ports[] = {
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { 0 },
+  { 0, 0 },
 };
 
 /******************************************************************************
@@ -285,7 +287,7 @@ static void init_core_options(void)
 #else
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
 #endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshair; enabled|disabled");
+  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
   init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
@@ -457,7 +459,7 @@ static void update_variables(bool first_time)
           else if(strcmp(var.value, "mouse") == 0)
             options.mouse_device = RETRO_DEVICE_MOUSE;
           else
-            options.mouse_device = 0;
+            options.mouse_device = RETRO_DEVICE_NONE;
           break;
 
         case OPT_CROSSHAIR_ENABLED:
@@ -1196,8 +1198,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-  int i;
-  bool pointer_pressed;
+  int port = 0;
   const struct KeyboardInfo *thisInput;
   bool updated = false;
   if (running == 0) /* first time through the loop */
@@ -1218,67 +1219,85 @@ void retro_run (void)
     thisInput ++;
   }
 
-  for (i = 0; i < MAX_PLAYER_COUNT; i ++)
+  /* retroJS */
+  /* A combination of the non-keyboard input types into an abstracted MAME joystick */
+
+  /* begin by blanking the old values */
+  for(port = 0; port < MAX_PLAYER_COUNT; port++)
   {
+    int code_idx = 0;
+    for(code_idx = 0; code_idx < OSD_INPUT_CODES_PER_PLAYER; code_idx++)
+      retroJsState[port][code_idx] = 0;
+
+    analogjoy[port][0] = 0;
+    analogjoy[port][1] = 0;
+    analogjoy[port][2] = 0;
+    analogjoy[port][3] = 0;
+    mouse_x[port]      = 0;
+    mouse_y[port]      = 0;
+  }
+
+  for(port = 0; port < MAX_PLAYER_COUNT; port++)
+  {
+    bool gun_fallback_active = false;
+    int device_type          = options.active_control_type[port];
+    int device_parent        = get_device_parent(device_type);
+
+    if(device_type == RETRO_DEVICE_NONE) continue;
+
     /* Analog joystick */
-    analogjoy[i][0] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
-    analogjoy[i][1] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
-    analogjoy[i][2] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
-    analogjoy[i][3] = convert_analog_scale( input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
+    analogjoy[port][0] = convert_analog_scale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
+    analogjoy[port][1] = convert_analog_scale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
+    analogjoy[port][2] = convert_analog_scale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
+    analogjoy[port][3] = convert_analog_scale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
-    retroJsState[i][OSD_JOYPAD_B]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-    retroJsState[i][OSD_JOYPAD_Y]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-    retroJsState[i][OSD_JOYPAD_SELECT] = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
-    retroJsState[i][OSD_JOYPAD_START]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
-    retroJsState[i][OSD_JOYPAD_UP]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
-    retroJsState[i][OSD_JOYPAD_DOWN]   = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
-    retroJsState[i][OSD_JOYPAD_LEFT]   = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
-    retroJsState[i][OSD_JOYPAD_RIGHT]  = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-    retroJsState[i][OSD_JOYPAD_A]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-    retroJsState[i][OSD_JOYPAD_X]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-    retroJsState[i][OSD_JOYPAD_L]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-    retroJsState[i][OSD_JOYPAD_R]      = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-    retroJsState[i][OSD_JOYPAD_L2]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-    retroJsState[i][OSD_JOYPAD_R2]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
-    retroJsState[i][OSD_JOYPAD_L3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
-    retroJsState[i][OSD_JOYPAD_R3]     = input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+    retroJsState[port][OSD_JOYPAD_B]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+    retroJsState[port][OSD_JOYPAD_Y]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+    retroJsState[port][OSD_JOYPAD_SELECT] = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+    retroJsState[port][OSD_JOYPAD_START]  = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
+    retroJsState[port][OSD_JOYPAD_UP]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+    retroJsState[port][OSD_JOYPAD_DOWN]   = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+    retroJsState[port][OSD_JOYPAD_LEFT]   = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+    retroJsState[port][OSD_JOYPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+    retroJsState[port][OSD_JOYPAD_A]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+    retroJsState[port][OSD_JOYPAD_X]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+    retroJsState[port][OSD_JOYPAD_L]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+    retroJsState[port][OSD_JOYPAD_R]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+    retroJsState[port][OSD_JOYPAD_L2]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+    retroJsState[port][OSD_JOYPAD_R2]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
+    retroJsState[port][OSD_JOYPAD_L3]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+    retroJsState[port][OSD_JOYPAD_R3]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
 
-    if (options.mouse_device)
+    /* do not poll mouse abstraction when disabled by the core option */
+    if(options.mouse_device != RETRO_DEVICE_NONE)
     {
-      if (options.mouse_device == RETRO_DEVICE_MOUSE)
+      if(options.mouse_device == RETRO_DEVICE_MOUSE)
       {
-        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
-        mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-        mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+        retroJsState[port][OSD_MOUSE_BUTTON_1]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+        retroJsState[port][OSD_MOUSE_BUTTON_2]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+        retroJsState[port][OSD_MOUSE_BUTTON_3]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_MIDDLE);
+        retroJsState[port][OSD_MOUSE_BUTTON_4]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_4);
+        retroJsState[port][OSD_MOUSE_BUTTON_5]  = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_BUTTON_5);
+        mouse_x[port] = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+        mouse_y[port] = input_cb(port, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
       }
-      else /* RETRO_DEVICE_POINTER */
+      else if (options.mouse_device == RETRO_DEVICE_POINTER)
       {
-        pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-        retroJsState[i][OSD_MOUSE_LEFT_CLICK]   = pointer_pressed;
-        retroJsState[i][OSD_MOUSE_RIGHT_CLICK]  = 0; /* no right click for a pointer */
-        retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0; /* no middle click for a pointer */
-        mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
-        mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
+        bool pointer_pressed = input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+        retroJsState[port][OSD_MOUSE_BUTTON_1]  = pointer_pressed;
+        mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
+        mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
       }
     }
-    else
-    {
-      retroJsState[i][OSD_MOUSE_LEFT_CLICK] = 0;
-      retroJsState[i][OSD_MOUSE_RIGHT_CLICK] = 0;
-      retroJsState[i][OSD_MOUSE_MIDDLE_CLICK] = 0;
-    }
-
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[i][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[i][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][0] : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[i][1] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][1] : 0;
-    retroJsState[i][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[i][1] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][1] : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[i][2] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][2] : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[i][2] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][2] : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[i][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
-    retroJsState[i][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[i][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[i][3] : 0;
-
+    
+    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][1] : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[port][1] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][1] : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[port][2] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][2] : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][2] : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
   }
   mame_frame();
 }
@@ -1643,7 +1662,7 @@ void retro_describe_controls(void)
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
           continue; /* button has a higher index than supported by the driver */
 
-      if(get_parent_device(device_code) == RETRO_DEVICE_JOYPAD)
+      if(get_device_parent(device_code) == RETRO_DEVICE_JOYPAD)
       {
         retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
         if(retro_code == INT_MAX) continue;
@@ -1662,35 +1681,38 @@ void retro_describe_controls(void)
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
       
-      /* As of April 2021, there may be a RetroArch bug which doesn't accept the
-       * result of RETRO_DEVICE_SUBCLASS when passed as part of this description.
-       * Therefore, get_get_parent_device() as a workaround
+      /* With regard to the device number, we refer to the input polling comments in 
+       * libretro.h which says we "should only poll input based on the base input device
+       * types". That seems to be true in here too, because using the result of 
+       * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
+       * of the descriptions. Therefore, get_get_device_parent() is used.
        */
       needle->port         = port_number;
-      needle->device       = get_parent_device(device_code);
+      needle->device       = get_device_parent(device_code);
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | id: %i | desc: %s\n", port_number, osd_code, needle->device, get_parent_device(needle->device), needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), osd_code, standard_code, needle->id, needle->description);
       needle++;
     }
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
-  needle->port = 0;
-  needle->device = 0;
-  needle->index = 0;
-  needle->id = 0;
+  /* which specifically looks at the description field to be NULL per libretro.h */
+  needle->port        = 0;
+  needle->device      = 0;
+  needle->index       = 0;
+  needle->id          = 0;
   needle->description = NULL;
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
-/* get_parent_device
+/* get_device_parent
  * returns the "base" libretro device type, which we may sometimes need
  */
-unsigned get_parent_device(unsigned device_id)
+unsigned get_device_parent(unsigned device_id)
 {
   if(device_id == RETRO_DEVICE_NONE) return RETRO_DEVICE_NONE;
 
@@ -1735,18 +1757,21 @@ int get_retropad_code(unsigned osd_id)
 }
 
 /* converts from OSD_ in mame2003.h to the codes from libretro.h
- * returns INT_MAX if the code is not _VA_LIST_DEFINED
+ * returns INT_MAX if the code is not valid
  */
 int get_retromouse_code(unsigned osd_id)
 {
   switch(osd_id)
   {
-    case  OSD_MOUSE_LEFT_CLICK:    return RETRO_DEVICE_ID_MOUSE_LEFT;
-    case  OSD_MOUSE_RIGHT_CLICK:   return RETRO_DEVICE_ID_MOUSE_RIGHT;
-    case  OSD_MOUSE_MIDDLE_CLICK:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+    case  OSD_MOUSE_BUTTON_1:  return RETRO_DEVICE_ID_MOUSE_LEFT;
+    case  OSD_MOUSE_BUTTON_2:  return RETRO_DEVICE_ID_MOUSE_RIGHT;
+    case  OSD_MOUSE_BUTTON_3:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+    case  OSD_MOUSE_BUTTON_4:  return RETRO_DEVICE_ID_MOUSE_BUTTON_4;
+    case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
   }
   return INT_MAX; /* no match found */
 }
+
 
 /* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
  * MOUSECODE_BUTTON_COMPARE, and get_ctrl_ipt_code(), etc. but I haven't found it.
@@ -1763,7 +1788,7 @@ int get_retromouse_code(unsigned osd_id)
     case JOYCODE_6_BUTTON##BUTTON_NO:                 \
     case JOYCODE_7_BUTTON##BUTTON_NO:                 \
     case JOYCODE_8_BUTTON##BUTTON_NO:                 \
-      return player_flag | IPT_BUTTON##BUTTON_NO;   \
+      return player_flag | IPT_BUTTON##BUTTON_NO;     \
   }                                                   \
 
 #define MOUSE_CODE_COMPARE(BUTTON_NO)                 \
@@ -1780,15 +1805,15 @@ int get_retromouse_code(unsigned osd_id)
       return player_flag | IPT_BUTTON##BUTTON_NO;     \
   }                                                   \
 
-#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                      \
+#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                        \
   switch(standard_code)                                                               \
   {                                                                                   \
-    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;         \
-    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;         \
-    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;     \
-    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;   \
-    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;   \
-    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;  \
+    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;            \
+    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;           \
+    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;      \
+    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;    \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;    \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;   \
   }                                                                                   \
 
 unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
@@ -1851,85 +1876,100 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
  */
 
 #define EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_MODERN(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1},  \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2},  \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3},  \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4},  \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5},  \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON6},  \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON7},  \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8},  \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9},  \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  EMIT_COMMON_CODES(DISPLAY_IDX)
 
 #define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
-  {"RP"   #DISPLAY_IDX " Y",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"RP"   #DISPLAY_IDX " X",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RP"   #DISPLAY_IDX " L",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RP"   #DISPLAY_IDX " B",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"RP"   #DISPLAY_IDX " A",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
-  {"RP"   #DISPLAY_IDX " R",            (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
-  {"RP"   #DISPLAY_IDX " L2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
-  {"RP"   #DISPLAY_IDX " R2",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
-  {"RP"   #DISPLAY_IDX " L3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
-  {"RP"   #DISPLAY_IDX " R3",           (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
+  {"RP"  #DISPLAY_IDX " Y",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_Y,   JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RP"  #DISPLAY_IDX " X",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_X,   JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RP"  #DISPLAY_IDX " L",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_L,   JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RP"  #DISPLAY_IDX " B",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_B,   JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RP"  #DISPLAY_IDX " A",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_A,   JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RP"  #DISPLAY_IDX " R",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_R,   JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
+  {"RP"  #DISPLAY_IDX " L2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L2,  JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
+  {"RP"  #DISPLAY_IDX " R2",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R2,  JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
+  {"RP"  #DISPLAY_IDX " L3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_L3,  JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
+  {"RP"  #DISPLAY_IDX " R3",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_R3,  JOYCODE_##DISPLAY_IDX##_BUTTON10},\
+  EMIT_COMMON_CODES(DISPLAY_IDX)
 
-/* the dpad, start, select, mouse, and analog axes are the same regardless of controller layout */
+/* RetroPad-type input devices: */
+/* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
-  {"RP"    #DISPLAY_IDX " HAT Left ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"RP"    #DISPLAY_IDX " HAT Right",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP"    #DISPLAY_IDX " HAT Up   ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"RP"    #DISPLAY_IDX " HAT Down ",    (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"RP" #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"RP" #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP" #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"RP" #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 \
-  {"RP"    #DISPLAY_IDX " Start",        (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
-  {"RP"    #DISPLAY_IDX " Select",       (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"RP" #DISPLAY_IDX " Start",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
+  {"RP" #DISPLAY_IDX " Select",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
 \
-  {"Mouse" #DISPLAY_IDX " LClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_LEFT_CLICK,   JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Mouse" #DISPLAY_IDX " RClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_RIGHT_CLICK,  JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Mouse" #DISPLAY_IDX " MClick",       (DISPLAY_IDX * 1000) + OSD_MOUSE_MIDDLE_CLICK, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
- \
-  {"RP"    #DISPLAY_IDX " AXIS 0 X-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
-  {"RP"    #DISPLAY_IDX " AXIS 0 X+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
-  {"RP"    #DISPLAY_IDX " AXIS 1 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_UP},     \
-  {"RP"    #DISPLAY_IDX " AXIS 1 Y+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_DOWN},   \
-  {"RP"    #DISPLAY_IDX " AXIS 2 X-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT},  \
-  {"RP"    #DISPLAY_IDX " AXIS 2 X+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
-  {"RP"    #DISPLAY_IDX " AXIS 3 Y-",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
-  {"RP"    #DISPLAY_IDX " AXIS 3 Y+",    (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},
+  {"RP" #DISPLAY_IDX " AXIS 0 X-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
+  {"RP" #DISPLAY_IDX " AXIS 0 X+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
+  {"RP" #DISPLAY_IDX " AXIS 1 Y-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_UP},     \
+  {"RP" #DISPLAY_IDX " AXIS 1 Y+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_Y,  JOYCODE_##DISPLAY_IDX##_LEFT_DOWN},   \
+  {"RP" #DISPLAY_IDX " AXIS 2 X-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_LEFT},  \
+  {"RP" #DISPLAY_IDX " AXIS 2 X+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_X, JOYCODE_##DISPLAY_IDX##_RIGHT_RIGHT}, \
+  {"RP" #DISPLAY_IDX " AXIS 3 Y-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
+  {"RP" #DISPLAY_IDX " AXIS 3 Y+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},  \
+\
+  {"Mouse" #DISPLAY_IDX " Button1", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_1, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Mouse" #DISPLAY_IDX " Button2", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_2, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Mouse" #DISPLAY_IDX " Button3", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_3, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Mouse" #DISPLAY_IDX " Button4", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_4, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
+  {"Mouse" #DISPLAY_IDX " Button5", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_5, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON5}, \
+
+#define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)      \
+  {                                             \
+    { EMIT_RETROPAD_CLASSIC(DISPLAY_IDX) },     \
+    { EMIT_RETROPAD_MODERN(DISPLAY_IDX)  },     \
+    { EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) },     \
+    { EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) },     \
+  },
 
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
 {
-  {{EMIT_RETROPAD_CLASSIC(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_MODERN(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_8BUTTON(1) EMIT_COMMON_CODES(1)}, {EMIT_RETROPAD_6BUTTON(1) EMIT_COMMON_CODES(1)}},
-  {{EMIT_RETROPAD_CLASSIC(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_MODERN(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_8BUTTON(2) EMIT_COMMON_CODES(2)}, {EMIT_RETROPAD_6BUTTON(2) EMIT_COMMON_CODES(2)}},
-  {{EMIT_RETROPAD_CLASSIC(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_MODERN(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_8BUTTON(3) EMIT_COMMON_CODES(3)}, {EMIT_RETROPAD_6BUTTON(3) EMIT_COMMON_CODES(3)}},
-  {{EMIT_RETROPAD_CLASSIC(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_MODERN(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_8BUTTON(4) EMIT_COMMON_CODES(4)}, {EMIT_RETROPAD_6BUTTON(4) EMIT_COMMON_CODES(4)}},
-  {{EMIT_RETROPAD_CLASSIC(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_MODERN(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_8BUTTON(5) EMIT_COMMON_CODES(5)}, {EMIT_RETROPAD_6BUTTON(5) EMIT_COMMON_CODES(5)}},
-  {{EMIT_RETROPAD_CLASSIC(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_MODERN(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_8BUTTON(6) EMIT_COMMON_CODES(6)}, {EMIT_RETROPAD_6BUTTON(6) EMIT_COMMON_CODES(6)}},
+  EMIT_JOYSTICK_OPTIONS(1)
+  EMIT_JOYSTICK_OPTIONS(2)
+  EMIT_JOYSTICK_OPTIONS(3)
+  EMIT_JOYSTICK_OPTIONS(4)
+  EMIT_JOYSTICK_OPTIONS(5)
+  EMIT_JOYSTICK_OPTIONS(6)
 };
 
 /******************************************************************************
@@ -1938,39 +1978,35 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPU
 
 ******************************************************************************/
 
-struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) + 1]; /* + 1 for final zeroed struct */
+struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) + 1] = { { 0 } }; /* + 1 for final zeroed struct */
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {
-  int player_map_idx = 0;
-  int overall_idx    = 0;
-  int display_idx    = 0;
+  unsigned needle      = 0;
+  unsigned port_number = 0;
 
-  for(display_idx = DISP_PLAYER1; display_idx <= MAX_PLAYER_COUNT; display_idx++)
+  for(port_number = 0; port_number < MAX_PLAYER_COUNT; port_number++)
   {
-    for(player_map_idx = 0; player_map_idx < OSD_INPUT_CODES_PER_PLAYER; player_map_idx++)
+    int control_idx = 0;
+    for(control_idx = 0; control_idx < OSD_INPUT_CODES_PER_PLAYER; control_idx++)
     {
-      int data_idx     = display_idx - 1;
-      int coded_layout = options.active_control_type[data_idx];
       int layout_idx   = 0;
-
-      switch(coded_layout)
+      switch(options.active_control_type[port_number])
       {
-        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC; break;
-        case PAD_MODERN:   layout_idx = IDX_MODERN;  break;
-        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC:  layout_idx = IDX_CLASSIC;  break;
+        case PAD_MODERN:   layout_idx = IDX_MODERN;   break;
+        case PAD_8BUTTON:  layout_idx = IDX_8BUTTON;  break;
+        case PAD_6BUTTON:  layout_idx = IDX_6BUTTON;  break;
       }
-
-      mame_joy_map[overall_idx] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
-      if(!string_is_empty(mame_joy_map->name)) overall_idx++;
+      mame_joy_map[needle] = alternate_joystick_maps[port_number][layout_idx][control_idx];
+      if(!string_is_empty(mame_joy_map[needle].name)) needle++;
     }
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */
-  mame_joy_map[overall_idx].name         = NULL;
-  mame_joy_map[overall_idx].code         = 0;
-  mame_joy_map[overall_idx].standardcode = 0;
+  mame_joy_map[needle].name         = NULL;
+  mame_joy_map[needle].code         = 0;
+  mame_joy_map[needle].standardcode = 0;
 
   return mame_joy_map;
 }
@@ -2129,8 +2165,8 @@ void osd_joystick_end_calibration(void) { }
  */
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
-    *deltax = mouse_x[player];
-    *deltay = mouse_y[player];
+  *deltax = mouse_x[player];
+  *deltay = mouse_y[player];
 }
 
 
@@ -2142,20 +2178,16 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 ******************************************************************************/
 
 /******************************************************************************
-    The OSD lightgun call should return the delta from the middle of the screen
-		when the gun is fired (not the absolute pixel value), and 0 when the gun is
-		inactive.
-
-    When the OSD lightgun returns 0, control passes through to the analog joystick,
-    and mouse, in that order.  In other words, when the OSD lightgun returns a
-    value it overrides both mouse & analog joystick.
-
-		The value returned by the OSD layer should be -128 to 128, same as analog
-		joysticks.
+ *  osd_lightgun_read should return the delta from the middle of the screen
+ *  when the gun is fired and 0 when the gun is inactive. The value returned
+ *  by the OSD layer should be -128 to 128, same as analog joysticks.
+ *
+ *  When the OSD lightgun returns 0, control passes through to the analog joystick,
+ *  and mouse, in that order. In other words, when the OSD lightgun returns a
+ *  value it overrides both mouse & analog joystick.
 *******************************************************************************/
 void osd_lightgun_read(int player, int *deltax, int *deltay)
 {
-
 }
 
 
