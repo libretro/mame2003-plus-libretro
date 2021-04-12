@@ -53,8 +53,6 @@ int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initia
 /* data structures to store trackball/spinner/mouse coordinates */
 int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
 int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
-int16_t  mouse_prev_x[MAX_PLAYER_COUNT]= {0};
-int16_t  mouse_prev_y[MAX_PLAYER_COUNT]= {0};
 
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
@@ -1251,8 +1249,6 @@ void retro_run (void)
     analogjoy[port][1] = 0;
     analogjoy[port][2] = 0;
     analogjoy[port][3] = 0;
-    mouse_prev_x[port] = mouse_x[port];
-    mouse_prev_y[port] = mouse_y[port];
     mouse_x[port]      = 0;
     mouse_y[port]      = 0;
     lightgun_x[port]   = 0;
@@ -1778,7 +1774,7 @@ void retro_describe_controls(void)
        * libretro.h which says we "should only poll input based on the base input device
        * types". That seems to be true in here too, because using the result of 
        * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
-       * of the descriptions. Therefore, get_get_device_parent() is used.
+       * of the descriptions. Therefore, get_device_parent() is used.
        */
       needle->port         = port_number;
       needle->device       = get_device_parent(device_code);
