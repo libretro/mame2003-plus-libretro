@@ -148,7 +148,6 @@ static void   check_system_specs(void);
    unsigned   get_device_parent(unsigned device_id);
         int   get_retropad_code(unsigned osd_code);
         int   get_retromouse_code(unsigned osd_code);
-        int   get_retrogun_code(unsigned osd_code);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
@@ -1934,13 +1933,13 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
-  {"RP/Gun" #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"RP/Gun" #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP/Gun" #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"RP/Gun" #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"RP" #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"RP" #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP" #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"RP" #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 \
-  {"RP/Gun" #DISPLAY_IDX " Start",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
-  {"RP/Gun" #DISPLAY_IDX " Select",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"RP" #DISPLAY_IDX " Start",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
+  {"RP" #DISPLAY_IDX " Select",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
 \
   {"RP" #DISPLAY_IDX " AXIS 0 X-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
   {"RP" #DISPLAY_IDX " AXIS 0 X+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
