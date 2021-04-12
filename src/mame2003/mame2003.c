@@ -1685,7 +1685,7 @@ void retro_describe_controls(void)
        * libretro.h which says we "should only poll input based on the base input device
        * types". That seems to be true in here too, because using the result of 
        * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
-       * of the descriptions. Therefore, get_get_device_parent() is used.
+       * of the descriptions. Therefore, get_device_parent() is used.
        */
       needle->port         = port_number;
       needle->device       = get_device_parent(device_code);
