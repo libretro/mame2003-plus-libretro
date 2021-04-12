@@ -37,6 +37,7 @@ Notes:
 #include "vidhrdw/generic.h"
 
 VIDEO_UPDATE( fantland );
+VIDEO_UPDATE( borntofi );
 
 /***************************************************************************
 
@@ -809,7 +810,7 @@ static MACHINE_DRIVER_START( borntofi )
 	MDRV_GFXDECODE(fantland_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(256)
 
-	MDRV_VIDEO_UPDATE(fantland)
+	MDRV_VIDEO_UPDATE(borntofi)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
