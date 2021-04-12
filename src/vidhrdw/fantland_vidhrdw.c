@@ -137,6 +137,33 @@ static void fantland_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 
 VIDEO_UPDATE( fantland )
 {
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
-    fantland_draw_sprites(bitmap,cliprect);
+  fillbitmap(bitmap,Machine->pens[0],cliprect);
+  fantland_draw_sprites(bitmap,cliprect);
+}
+
+VIDEO_UPDATE( borntofi )
+{
+  fillbitmap(bitmap,Machine->pens[0],cliprect);
+  fantland_draw_sprites(bitmap,cliprect);
+
+  /* Draw the crosshairs for lightgun games */
+
+  if( (readinputport(7) & 3) != 3)	
+    return;
+
+  if ( (readinputport(8) > 0) && (readinputport(9) > 0) )
+  {
+    draw_crosshair(bitmap,
+    readinputport(9) * 2 - 0x0e,
+    readinputport(8) * 2 - 0xf8,
+    cliprect);
+  }
+
+  if ( (readinputport(10) > 0) && (readinputport(11) > 0) )
+  {
+    draw_crosshair(bitmap,
+    readinputport(11) * 2 - 0x0e,
+    readinputport(10) * 2 - 0xf8,
+    cliprect);
+  }
 }
