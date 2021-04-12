@@ -2656,9 +2656,7 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/mame-chd/mame_sha1.c
 
 SOURCES_C += \
-	$(CORE_DIR)/libretro-deps/libFLAC/bitmath.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/bitreader.c \
-	$(CORE_DIR)/libretro-deps/libFLAC/bitwriter.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/cpu.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/crc.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/fixed.c \
@@ -2668,8 +2666,6 @@ SOURCES_C += \
 	$(CORE_DIR)/libretro-deps/libFLAC/md5.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/memory.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/stream_decoder.c \
-	$(CORE_DIR)/libretro-deps/libFLAC/stream_encoder.c \
-	$(CORE_DIR)/libretro-deps/libFLAC/stream_encoder_framing.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/window.c
 
 ifeq ($(STATIC_LINKING),1)
@@ -2689,13 +2685,8 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
 	$(LIBRETRO_COMM_DIR)/time/rtime.c \
 	$(CORE_DIR)/lib/zlib/adler32.c \
-	$(CORE_DIR)/lib/zlib/compress.c \
 	$(CORE_DIR)/lib/zlib/crc32.c \
 	$(CORE_DIR)/lib/zlib/deflate.c \
-	$(CORE_DIR)/lib/zlib/gzclose.c \
-	$(CORE_DIR)/lib/zlib/gzlib.c \
-	$(CORE_DIR)/lib/zlib/gzread.c \
-	$(CORE_DIR)/lib/zlib/gzwrite.c \
 	$(CORE_DIR)/lib/zlib/inffast.c \
 	$(CORE_DIR)/lib/zlib/inflate.c \
 	$(CORE_DIR)/lib/zlib/inftrees.c \
