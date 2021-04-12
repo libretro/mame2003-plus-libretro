@@ -287,7 +287,7 @@ static void init_core_options(void)
 #else
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
 #endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED], APPNAME "_crosshair_enabled", "Show Lightgun crosshairs; enabled|disabled");
+  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
   init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
