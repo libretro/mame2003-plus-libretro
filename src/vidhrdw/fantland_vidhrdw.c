@@ -150,7 +150,7 @@ VIDEO_UPDATE( fantland )
     draw_crosshair(bitmap,
     readinputport(9) * 2 - 0x0e,
     readinputport(8) * 2 - 0xf8,
-    cliprect,0);
+    cliprect);
   }
 
   if ( (readinputport(10) > 0) && (readinputport(11) > 0) )
@@ -158,6 +158,6 @@ VIDEO_UPDATE( fantland )
     draw_crosshair(bitmap,
     readinputport(11) * 2 - 0x0e,
     readinputport(10) * 2 - 0xf8,
-    cliprect,1);
+    cliprect);
   }
 }
