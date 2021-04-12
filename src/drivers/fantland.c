@@ -179,7 +179,7 @@ static READ_HANDLER( borntofi_inputs_r )
 }
 
 static MEMORY_READ_START( borntofi_readmem )
-    { 0x00000, 0x07fff, MRA_RAM	},
+	{ 0x00000, 0x07fff, MRA_RAM	},
 	{ 0x10000, 0x2ffff, MRA_ROM	},
 	{ 0x53000, 0x53001, borntofi_inputs_r },
 	{ 0x53002, 0x53002, input_port_6_r },
@@ -188,12 +188,12 @@ static MEMORY_READ_START( borntofi_readmem )
 	{ 0x57001, 0x57001, input_port_9_r },
 	{ 0x57002, 0x57002, input_port_10_r	},
 	{ 0x57003, 0x57003, input_port_11_r	},
-    { 0x70000, 0x7ffff, MRA_ROM	},
+	{ 0x70000, 0x7ffff, MRA_ROM	},
 	{ 0xf0000, 0xfffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( borntofi_writemem )
-    { 0x00000, 0x07fff, MWA_RAM },
+	{ 0x00000, 0x07fff, MWA_RAM },
 	{ 0x52000, 0x521ff, paletteram_xRRRRRGGGGGBBBBB_w, &paletteram },
 	{ 0x53000, 0x53000, borntofi_nmi_enable_w },
 	{ 0x53002, 0x53002, fantland_soundlatch_w },
@@ -309,20 +309,20 @@ static void borntofi_adpcm_int(int voice)
 	}
 	else
 	{
-        MSM5205_data_w( voice, rom[start/2] >> ((start & 1) * 4) );
+		MSM5205_data_w( voice, rom[start/2] >> ((start & 1) * 4) );
 		borntofi_adpcm[voice].nibble++;
 	}
 }
 
 static MEMORY_READ_START( borntofi_sound_readmem )
-    { 0x00000, 0x003ff, MRA_RAM },
+	{ 0x00000, 0x003ff, MRA_RAM },
 	{ 0x04000, 0x04000, soundlatch_r },
 	{ 0x08000, 0x0ffff, MRA_ROM	},
 	{ 0xf8000, 0xfffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( borntofi_sound_writemem )
-    { 0x00000, 0x003ff, MWA_RAM },
+	{ 0x00000, 0x003ff, MWA_RAM },
 	{ 0x04000, 0x0401f, borntofi_msm5205_w },
 MEMORY_END
 
@@ -614,13 +614,13 @@ INPUT_PORTS_START( borntofi )
 	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 10, 5, 0xff, 0x00 )
 
 	PORT_START	/* IN7 - 53003 */
-    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1, 10, 5, 0xff, 0x00 )
+	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1, 10, 5, 0xff, 0x00 )
 
 	PORT_START	/* IN7 - 53003 */
 	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 10, 5, 0xff, 0x00 )
 
 	PORT_START	/* IN7 - 53003 */
-    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 10, 5, 0xff, 0x00 )
+	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 10, 5, 0xff, 0x00 )
 INPUT_PORTS_END
 
 
@@ -766,11 +766,11 @@ MACHINE_DRIVER_END
 /* OKI M5205 running at 384kHz [18.432/48]. Sample rate = 384000 / 48 */
 static struct MSM5205interface msm5205_interface =
 {
-    1,
+	1,
 	384000, /* 384000 / 48 kills the sound */
 	{ borntofi_adpcm_int },	/* IRQ handler */
 	{ MSM5205_S48_4B },		/* 8 kHz, 4 Bits  */
-    { 100 }
+	{ 50 }
 };
 
 
@@ -812,7 +812,7 @@ static MACHINE_DRIVER_START( borntofi )
 	MDRV_VIDEO_UPDATE(fantland)
 
 	/* sound hardware */
-    MDRV_SOUND_ADD(MSM5205, msm5205_interface)
+	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 MACHINE_DRIVER_END
 
 
