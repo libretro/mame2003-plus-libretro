@@ -40,7 +40,6 @@ VIDEO_UPDATE( fantland );
 VIDEO_UPDATE( borntofi );
 static data8_t param;
 static data8_t delta;
-static READ_HANDLER( wheelrun_wheel_r );
 static READ_HANDLER( wheelrun_dial_0_r );
 static READ_HANDLER( wheelrun_dial_1_r );
 
@@ -684,7 +683,7 @@ INPUT_PORTS_END
                            Wheels Runner
 ***************************************************************************/
 
-static READ_HANDLER( wheelrun_wheel_r )
+static int wheelrun_wheel_r( int data )
 {
 	int player = data; // should point to player port, sets at 0 or 1. Hardcode to player1 for testing
 	int delta = readinputport(4 + player);
