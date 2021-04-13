@@ -703,15 +703,15 @@ static CUSTOM_INPUT( wheelrun_wheel_r )
 */
 static READ_HANDLER( wheelrun_wheel_r )
 {
-	//int player = (FPTR)param;
-	int player = (readinputport(0)) | (readinputport(1)); //correct.??
+	int player = (0); // should point to player port, sets at 0 or 1. Hardcode to player1 for testing
 	int delta = readinputport(4 + player);
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
-	if		(delta > 7)	delta = 7;
-	else if	(delta < 1)	delta = 1;
+	if(delta > 7)
+		delta = 7;
 
-//	if (player == 0) popmessage("%x",delta);
+	else if	(delta < 1)
+		delta = 1;
 
 	return delta;
 }
