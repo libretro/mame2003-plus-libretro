@@ -693,7 +693,7 @@ static int wheelrun_wheel_r( int player )
 	else if	(delta < 1)
 		delta = 1;
 
-	usrintf_showmessage("player:%i  delta:%x  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
+	if (player == 0) usrintf_showmessage("player:%i  delta:%x  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
 	return delta | readinputport(0 + player);
 }
@@ -766,10 +766,10 @@ INPUT_PORTS_START( wheelrun )
 	PORT_DIPSETTING(    0xfe, "7" )
 	
 	PORT_START /* IN4 */
-	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_REVERSE | IPF_PLAYER1, 25, 10, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_CENTER | IPF_REVERSE | IPF_PLAYER1, 25, 10, 0, 0 )
 	
 	PORT_START /* IN5 */
-	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_CENTER | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0 )
 INPUT_PORTS_END
 
 /***************************************************************************
