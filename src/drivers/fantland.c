@@ -684,18 +684,16 @@ INPUT_PORTS_END
 
 static int wheelrun_wheel_r( int player )
 {
-	int delta = readinputport(4 + player);
-	delta = (delta & 0x7f) - (delta & 0x80) + 4;
-
-	if(delta > 7)
-		delta = 7;
-
-	else if	(delta < 1)
-		delta = 1;
-
-	usrintf_showmessage("player:%i  delta:%x  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
-
-	return delta | readinputport(0 + player);
+	static data8_t wheel_old, ret;
+	data8_t wheel = readinputport(4 + player);
+	if (wheel != wheel_old)
+	{
+		wheel = (wheel & 0x7f) - (wheel & 0x80);
+		if (wheel > wheel_old)	ret = ((+wheel) & 0xf) | 0x00;
+		else ret = ((-wheel) & 0xf) | 0x10;
+		wheel_old = wheel;
+	}
+	return ret | readinputport(0 + player);
 }
 
 static READ_HANDLER( wheelrun_dial_0_r )
