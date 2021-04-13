@@ -695,7 +695,7 @@ static int wheelrun_wheel_r( int player )
 
 	if (player == 0) usrintf_showmessage("player:%i  delta:%x  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
-	return delta & readinputport(0 + player);
+	return delta | readinputport(0 + player);
 }
 
 static READ_HANDLER( wheelrun_dial_0_r )
