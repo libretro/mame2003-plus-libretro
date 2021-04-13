@@ -684,7 +684,7 @@ INPUT_PORTS_END
 
 static int wheelrun_wheel_r( int player )
 {
-	int delta = readinputport(4 + player) << 6;
+	int delta = readinputport(4 + player) << 8;
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
 	if(delta > 7)
