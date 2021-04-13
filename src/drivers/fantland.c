@@ -217,7 +217,9 @@ static MEMORY_READ_START( wheelrun_readmem )
 	{ 0x70000, 0x7ffff, MRA_ROM },
 	{ 0x52000, 0x521ff, MRA_RAM },
 	{ 0x53000, 0x53000, input_port_0_r },
+	{ 0x53000, 0x53000, wheelrun_dial_0_r },
 	{ 0x53001, 0x53001, input_port_1_r },
+	{ 0x53001, 0x53001, wheelrun_dial_1_r },
 	{ 0x53002, 0x53002, input_port_2_r },
 	{ 0x53003, 0x53003, input_port_3_r },
 	{ 0x54000, 0x567ff, MRA_RAM },
@@ -684,7 +686,7 @@ INPUT_PORTS_END
 
 static READ_HANDLER( wheelrun_wheel_r )
 {
-	int player = (0); // should point to player port, sets at 0 or 1. Hardcode to player1 for testing
+	int player = data; // should point to player port, sets at 0 or 1. Hardcode to player1 for testing
 	int delta = readinputport(4 + player);
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
@@ -981,11 +983,6 @@ static MACHINE_DRIVER_START( wheelrun )
 	MDRV_CPU_ADD(I86, 9000000 )		// D701080C-8 (V20)
 	MDRV_CPU_MEMORY(wheelrun_readmem, wheelrun_writemem)
 	MDRV_CPU_VBLANK_INT(fantland_irq,1)
-
-	/* hook to player input ports */
-	install_mem_read_handler(0,  0x53000, 0x53000, wheelrun_dial_0_r );
-	install_mem_read_handler(0,  0x53001, 0x53001, wheelrun_dial_1_r );
-
 
 	/* audio CPU */
 	MDRV_CPU_ADD(Z80, 9000000)		// Z8400BB1 (Z80B)
