@@ -38,6 +38,11 @@ Notes:
 
 VIDEO_UPDATE( fantland );
 VIDEO_UPDATE( borntofi );
+static data8_t param;
+static data8_t delta;
+static READ_HANDLER( wheelrun_wheel_r );
+static READ_HANDLER( wheelrun_dial_0_r );
+static READ_HANDLER( wheelrun_dial_1_r );
 
 /***************************************************************************
 
@@ -131,9 +136,9 @@ static WRITE_HANDLER( borntofi_nmi_enable_w )
 	/* data & 0x31 changes when lightgun fires */
 
 	if ((fantland_nmi_enable != 0) && (fantland_nmi_enable != 8))
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC = %04X: nmi_enable = %02x\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC = %04X: nmi_enable = %02x\n", activecpu_get_pc(), data);
 
-/*  usrintf_showmessage("%02X",data); */
+	/*  usrintf_showmessage("%02X",data); */
 }
 
 /* Trackball doesn't work correctly */
@@ -203,6 +208,41 @@ static MEMORY_WRITE_START( borntofi_writemem )
 MEMORY_END
 
 /***************************************************************************
+                           Wheels Runner
+***************************************************************************/
+
+static MEMORY_READ_START( wheelrun_readmem )
+	{ 0x00000, 0x07fff, MRA_RAM },
+	{ 0x30000, 0x3ffff, MRA_ROM },
+	{ 0x70000, 0x7ffff, MRA_ROM },
+	{ 0x52000, 0x521ff, MRA_RAM },
+	{ 0x53000, 0x53000, input_port_0_r },
+//	{ 0x53000, 0x53000, wheelrun_dial_0_r }, // via IN0.??
+	{ 0x53001, 0x53001, input_port_1_r },
+//	{ 0x53001, 0x53001, wheelrun_dial_1_r }, // via IN1.??
+	{ 0x53002, 0x53002, input_port_2_r },
+	{ 0x53003, 0x53003, input_port_3_r },
+//	{ 0x53004, 0x53004, wheelrun_dial_0_r }, //IN4.??
+//	{ 0x53005, 0x53005, wheelrun_dial_1_r }, //IN5.??
+	{ 0x54000, 0x567ff, MRA_RAM },
+	{ 0x60000, 0x6ffff, MRA_RAM },
+	{ 0xf0000, 0xfffff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( wheelrun_writemem )
+	{ 0x00000, 0x07fff, MWA_RAM },
+	{ 0x30000, 0x3ffff, MWA_ROM },
+	{ 0x70000, 0x7ffff, MWA_ROM },
+	{ 0x52000, 0x521ff, paletteram_xRRRRRGGGGGBBBBB_w, &paletteram },
+	{ 0x53000, 0x53000, borntofi_nmi_enable_w },
+	{ 0x53002, 0x53002, fantland_soundlatch_w },
+	{ 0x53003, 0x53003, MWA_NOP },
+	{ 0x54000, 0x567ff, MWA_RAM, &spriteram	},
+	{ 0x60000, 0x6ffff, MWA_RAM, &spriteram_2 },
+	{ 0xf0000, 0xfffff, MWA_ROM },
+MEMORY_END
+
+/***************************************************************************
 
 							Memory Maps - Sound CPU
 
@@ -248,7 +288,7 @@ static void borntofi_adpcm_start(int voice)
 	MSM5205_reset_w(voice,0);
 	borntofi_adpcm[voice].playing = 1;
 	borntofi_adpcm[voice].nibble  = 0;
-/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC = %04X: adpcm start = %06x, stop = %06x\n", activecpu_get_pc(), borntofi_adpcm[voice].addr[0], borntofi_adpcm[voice].addr[1]); */
+	/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC = %04X: adpcm start = %06x, stop = %06x\n", activecpu_get_pc(), borntofi_adpcm[voice].addr[0], borntofi_adpcm[voice].addr[1]); */
 }
 
 static void borntofi_adpcm_stop(int voice)
@@ -327,6 +367,25 @@ static MEMORY_WRITE_START( borntofi_sound_writemem )
 	{ 0x04000, 0x0401f, borntofi_msm5205_w },
 MEMORY_END
 
+/***************************************************************************
+                           Wheels Runner
+***************************************************************************/
+
+static MEMORY_READ_START( wheelrun_sound_readmem )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0x87ff, MRA_RAM },
+	{ 0xa000, 0xa000, YM3526_status_port_0_r },
+	{ 0xd000, 0xd000, soundlatch_r },	// during NMI
+MEMORY_END
+
+static MEMORY_WRITE_START( wheelrun_sound_writemem )
+	{ 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0x87ff, MWA_RAM },
+	{ 0xa000, 0xa000, YM3526_control_port_0_w },
+	{ 0xa001, 0xa001, YM3526_write_port_0_w },
+	{ 0xb000, 0xb000, MWA_NOP },	// on a car crash / hit
+	{ 0xc000, 0xc000, MWA_NOP },	// ""
+MEMORY_END
 
 /***************************************************************************
 
@@ -623,7 +682,115 @@ INPUT_PORTS_START( borntofi )
 	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 10, 5, 0xff, 0x00 )
 INPUT_PORTS_END
 
+/***************************************************************************
+                           Wheels Runner
+***************************************************************************/
 
+/*
+static CUSTOM_INPUT( wheelrun_wheel_r )
+{
+	int player = (FPTR)param;
+	int delta = readinputport(4 + player);
+	delta = (delta & 0x7f) - (delta & 0x80) + 4;
+
+	if		(delta > 7)	delta = 7;
+	else if	(delta < 1)	delta = 1;
+
+//	if (player == 0) popmessage("%x",delta);
+
+	return delta;
+}
+*/
+static READ_HANDLER( wheelrun_wheel_r )
+{
+	//int player = (FPTR)param;
+	int player = (readinputport(0)) | (readinputport(1)); //correct.??
+	int delta = readinputport(4 + player);
+	delta = (delta & 0x7f) - (delta & 0x80) + 4;
+
+	if		(delta > 7)	delta = 7;
+	else if	(delta < 1)	delta = 1;
+
+//	if (player == 0) popmessage("%x",delta);
+
+	return delta;
+}
+
+static READ_HANDLER( wheelrun_dial_0_r )
+{
+	return wheelrun_wheel_r(0);
+}
+
+static READ_HANDLER( wheelrun_dial_1_r )
+{
+	return wheelrun_wheel_r(1);
+}
+
+
+static DRIVER_INIT( wheelrun )
+ {
+	//install_mem_read_handler(0,  0x53000, 0x53000, wheelrun_dial_0_r ); // port fails on boot use mem
+	//install_mem_read_handler(0,  0x53001, 0x53001, wheelrun_dial_1_r ); // ^^
+ }
+
+INPUT_PORTS_START( wheelrun )
+	PORT_START /* IN0 - 53000 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1	)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+//	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+
+	PORT_START /* IN1 - 53001 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN2	)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+//	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
+
+	
+	PORT_START /* IN2 - 53002 */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, "Allow_Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x60, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x20, "Harder" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START	/* IN3 - 53003 */
+	PORT_DIPNAME( 0xff, 0xdf, "Wheel Sensitivity" )
+	PORT_DIPSETTING(    0x7f, "0" )
+	PORT_DIPSETTING(    0xbf, "1" )
+	PORT_DIPSETTING(    0xdf, "2" )
+	PORT_DIPSETTING(    0xef, "3" )
+	PORT_DIPSETTING(    0xf7, "4" )
+	PORT_DIPSETTING(    0xfb, "5" )
+	PORT_DIPSETTING(    0xfd, "6" )
+	PORT_DIPSETTING(    0xfe, "7" )
+	
+	PORT_START /* IN4 */
+	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_CENTER | IPF_REVERSE | IPF_PLAYER1, 25, 10, 0, 0 )
+	
+	PORT_START /* IN5 */
+	PORT_ANALOG( 0xff, 0, IPT_DIAL | IPF_CENTER | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0 )
+INPUT_PORTS_END
 
 /***************************************************************************
 
@@ -815,7 +982,47 @@ static MACHINE_DRIVER_START( borntofi )
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 MACHINE_DRIVER_END
 
+static void wheelrun_ym3526_irqhandler(int state)
+{
+	cpu_set_irq_line(1, 0, state);
+}
 
+static const struct YM3526interface wheelrun_ym3526_interface =
+{
+	1,              /* 1 chip */
+	3500000,        /* 3 MHz ??? */
+	{ 100 },         /* volume */
+	wheelrun_ym3526_irqhandler
+};
+
+static MACHINE_DRIVER_START( wheelrun )
+	/* basic machine hardware */
+	MDRV_CPU_ADD(I86, 9000000 )		// D701080C-8 (V20)
+	MDRV_CPU_MEMORY(wheelrun_readmem, wheelrun_writemem)
+	MDRV_CPU_VBLANK_INT(fantland_irq,1)
+
+	/* audio CPU */
+	MDRV_CPU_ADD(Z80, 9000000)		// Z8400BB1 (Z80B)
+	MDRV_CPU_MEMORY(wheelrun_sound_readmem, wheelrun_sound_writemem)
+	// IRQ by YM3526, NMI when soundlatch is written
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(fantland)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(256,224)
+	MDRV_VISIBLE_AREA(0, 256-1, 0, 224-1)
+	MDRV_GFXDECODE(fantland_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(256)
+
+	MDRV_VIDEO_UPDATE(fantland)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM3526, wheelrun_ym3526_interface )
+MACHINE_DRIVER_END
 
 
 /***************************************************************************
@@ -1059,7 +1266,72 @@ ROM_START( borntofi )
 	ROMX_LOAD( "63.bin",  0x1b0000, 0x10000, CRC(5f530559) SHA1(d1d3edc2082985ccec9fe8ca0b27810623cb5b89), ROM_SKIP(2) )
 ROM_END
 
+/***************************************************************************
+
+Wheels Runner by International Games
+
+PCB:
+(revision 8801)
+
+1x NEC D70108C-8 (NEC V20)
+1x SGS Z8400BB1 (Z80B)
+1x YM3526 (sound)
+1x Y3014B (DAC)
+1x LM324A (sound)
+1x TDA2002 (sound)
+1x oscillator 18.000
+1x oscillator 14.000
+1x ALTERA EP1210PC
+2x INGA (black quad chips with 84 legs, maybe FPGA)
+
+ROMs:
+
+15x M27512
+3x PAL16R6CN (read protected)
+2x PAL20L8aCNS (read protected)
+5x TIBPAL16l8-25CN (read protected)
+4x TIBPAL16r4-25CN (read protected)
+1x TIBPAL16r8-25CN (read protected)
+eprom location 2,5,6 are empty
+
+Notes:
+
+1x JAMMA edge connector
+1x trimmer (volume)
+2x 8 bit dip switch
+
+Hardware info by f205v
+
+***************************************************************************/
+
+ROM_START( wheelrun )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) // V20
+	ROM_LOAD( "4.4", 0x30000, 0x10000, CRC(359303df) SHA1(583b70f65b775e99856ffda61334be3b85046ed1) )
+	ROM_LOAD( "3.3", 0x70000, 0x10000, CRC(c28d0b31) SHA1(add8c4ffe529755c101b72a3b0530e796948876b) )
+	ROM_COPY( REGION_CPU1, 0x70000, 0xf0000, 0x10000 )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) // Z80
+	ROM_LOAD( "1.1", 0x00000, 0x10000, CRC(67b5f31f) SHA1(5553b132077686221fb7a21a0246fd55cb443332) )	// 1xxxxxxxxxxxxxxx = 0xFF
+
+	ROM_REGION( 0xc0000, REGION_GFX1,0 ) // gfx
+	ROMX_LOAD( "7.7",   0x00000, 0x10000, CRC(e0e5ff64) SHA1(e2ed5ea5b75ed627a9d305864196160267cad438), ROM_SKIP(2) )
+	ROMX_LOAD( "11.11", 0x00001, 0x10000, CRC(ce9718fb) SHA1(ade47deedd5d0c927fdf8626aa1b0fac470f03a0), ROM_SKIP(2) )
+	ROMX_LOAD( "15.15", 0x00002, 0x10000, CRC(f6665f31) SHA1(e308a049697622bcda9d3c630e061d30c2b70687), ROM_SKIP(2) )
+
+	ROMX_LOAD( "8.8",   0x30000, 0x10000, CRC(fa1ec091) SHA1(bd436788651fc2f679897ccd0f7ec51014eb9e90), ROM_SKIP(2) )
+	ROMX_LOAD( "12.12", 0x30001, 0x10000, CRC(8923dce4) SHA1(a8f8aeb6f214454c6125a36043aebdf7cc79c253), ROM_SKIP(2) )
+	ROMX_LOAD( "16.16", 0x30002, 0x10000, CRC(49801733) SHA1(4d8f79afbb5bf33787ad437d04b95a17e4008894), ROM_SKIP(2) )
+
+	ROMX_LOAD( "9.9",   0x60000, 0x10000, CRC(9fea30d0) SHA1(308caa360f556e085ce05f35e26856d6944b03af), ROM_SKIP(2) )
+	ROMX_LOAD( "13.13", 0x60001, 0x10000, CRC(8b0aae8d) SHA1(413821fdbf599004b57f3588360ccf881547e104), ROM_SKIP(2) )
+	ROMX_LOAD( "17.17", 0x60002, 0x10000, CRC(be8ab48d) SHA1(1520d70eb9c65f84deddc2d7c8de7ae2cbb1ec09), ROM_SKIP(2) )
+
+	ROMX_LOAD( "10.10", 0x90000, 0x10000, CRC(c5bdd367) SHA1(c432762d23b8799643fd5f1775a44d31582e7290), ROM_SKIP(2) )	// 1111xxxxxxxxxxxx = 0x00
+	ROMX_LOAD( "14.14", 0x90001, 0x10000, CRC(e592302f) SHA1(d4f668d259ec649e3126db27d990a2e5fa9cad8d), ROM_SKIP(2) )
+	ROMX_LOAD( "18.18", 0x90002, 0x10000, CRC(6bd42d8e) SHA1(0745428a54da85707d4435f20cc2094576a95e5b), ROM_SKIP(2) )	// 1111xxxxxxxxxxxx = 0x00
+ROM_END
 
 GAME( 1987, borntofi, 0, borntofi, borntofi, 0, ROT0,  "International Games",       "Born To Fight" )
 GAME( 1987, fantland, 0, fantland, fantland, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land" )
 GAME( 1989, galaxygn, 0, galaxygn, galaxygn, 0, ROT90, "Electronic Devices Italy",  "Galaxy Gunners" )
+GAME( 1987, wheelrun, 0, wheelrun, wheelrun, wheelrun, ROT0,  "International Games",       "Wheels Runner" )
