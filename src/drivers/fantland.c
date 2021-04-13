@@ -685,7 +685,7 @@ INPUT_PORTS_END
 
 static int wheelrun_wheel_r( int data )
 {
-	int player = data; // should point to player port, sets at 0 or 1. Hardcode to player1 for testing
+	int player = data;
 	int delta = readinputport(4 + player);
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
@@ -702,11 +702,13 @@ static int wheelrun_wheel_r( int data )
 
 static READ_HANDLER( wheelrun_dial_0_r )
 {
+	install_mem_read_handler(0,  0x53000, 0x53000, input_port_0_r );
 	return wheelrun_wheel_r(0);
 }
 
 static READ_HANDLER( wheelrun_dial_1_r )
 {
+	install_mem_read_handler(0,  0x53001, 0x53001, input_port_1_r );
 	return wheelrun_wheel_r(1);
 }
 
