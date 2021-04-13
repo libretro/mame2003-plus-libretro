@@ -684,7 +684,7 @@ INPUT_PORTS_END
 
 static int wheelrun_wheel_r( int player )
 {
-	int delta = readinputport(4 + player) >> 8;
+	int delta = readinputport(4 + player);
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
 	if(delta > 7)
@@ -700,18 +700,12 @@ static int wheelrun_wheel_r( int player )
 
 static READ_HANDLER( wheelrun_dial_0_r )
 {
-	if ( readinputport(4) > 0 )
-		return wheelrun_wheel_r(0);
-
-	return readinputport(0);
+	return wheelrun_wheel_r(0);
 }
 
 static READ_HANDLER( wheelrun_dial_1_r )
 {
-	if ( readinputport(5) > 0 )
-		return wheelrun_wheel_r(1);
-
-	return readinputport(1);
+	return wheelrun_wheel_r(1);
 }
 
 
