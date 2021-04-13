@@ -216,14 +216,12 @@ static MEMORY_READ_START( wheelrun_readmem )
 	{ 0x30000, 0x3ffff, MRA_ROM },
 	{ 0x70000, 0x7ffff, MRA_ROM },
 	{ 0x52000, 0x521ff, MRA_RAM },
-	{ 0x53000, 0x53000, input_port_0_r },
-//	{ 0x53000, 0x53000, wheelrun_dial_0_r }, // via IN0.??
-	{ 0x53001, 0x53001, input_port_1_r },
-//	{ 0x53001, 0x53001, wheelrun_dial_1_r }, // via IN1.??
+//	{ 0x53000, 0x53000, input_port_0_r },
+	{ 0x53000, 0x53000, wheelrun_dial_0_r }, // via IN0.??
+//	{ 0x53001, 0x53001, input_port_1_r },
+	{ 0x53001, 0x53001, wheelrun_dial_1_r }, // via IN1.??
 	{ 0x53002, 0x53002, input_port_2_r },
 	{ 0x53003, 0x53003, input_port_3_r },
-//	{ 0x53004, 0x53004, wheelrun_dial_0_r }, //IN4.??
-//	{ 0x53005, 0x53005, wheelrun_dial_1_r }, //IN5.??
 	{ 0x54000, 0x567ff, MRA_RAM },
 	{ 0x60000, 0x6ffff, MRA_RAM },
 	{ 0xf0000, 0xfffff, MRA_ROM },
@@ -741,7 +739,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-//	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	PORT_START /* IN1 - 53001 */
@@ -749,7 +747,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-//	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	
