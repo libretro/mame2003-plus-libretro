@@ -713,6 +713,8 @@ static READ_HANDLER( wheelrun_wheel_r )
 	else if	(delta < 1)
 		delta = 1;
 
+	usrintf_showmessage("%x",delta);
+
 	return delta;
 }
 
