@@ -38,8 +38,7 @@ Notes:
 
 VIDEO_UPDATE( fantland );
 VIDEO_UPDATE( borntofi );
-static data8_t param;
-static data8_t delta;
+
 static READ_HANDLER( wheelrun_dial_0_r );
 static READ_HANDLER( wheelrun_dial_1_r );
 
@@ -701,16 +700,18 @@ static int wheelrun_wheel_r( int player )
 
 static READ_HANDLER( wheelrun_dial_0_r )
 {
-	if (!(readinputport(0) & 0x70)) 
-		return readinputport(0);
-	return wheelrun_wheel_r(0);
+	if (readinputport(4) > 0)
+		return wheelrun_wheel_r(0);
+
+	return readinputport(0);
 }
 
 static READ_HANDLER( wheelrun_dial_1_r )
 {
-	if (!(readinputport(1) & 0x70)) 
-		return readinputport(1);
-	return wheelrun_wheel_r(1);
+	if (readinputport(5) > 0)
+		return wheelrun_wheel_r(1);
+
+	return readinputport(1);
 }
 
 
