@@ -695,4 +695,3 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added HD647180 MCU sound support for Teki Paki and Whoopee / Pibi & Bibi removing the need for Teki Paki to require hacked sound samples [dink, arcadez]
 * Added support for Born To Fight to the fantland driver [arcadez]
 * Added support for Wheels Runner to the fantland driver [arcadez, mahoneyt944]
-
