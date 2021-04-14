@@ -687,16 +687,19 @@ static int wheelrun_wheel_r( int player )
 	int delta = readinputport(4 + player);
 	delta = (delta & 0x7f) - (delta & 0x80) + 4;
 
-	if(delta > 7)
-		delta = 7;
+	if (delta > 7) delta = 7;
+	else if (delta < 1) delta = 1;
 
-	else if	(delta < 1)
-		delta = 1;
+	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
-	delta = ( (delta | readinputport(0 + player)) < readinputport(0 + player) ) ? (delta | readinputport(0 + player)) : readinputport(0 + player);
-	if (player == 0) usrintf_showmessage("player:%i  return:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
-	return delta;
+	if (delta > 4)
+		return readinputport(0 + player);
+	if (delta < 4)
+		return ( readinputport(0 + player) - 112 )
+
+	return 144;
+
 }
 
 static READ_HANDLER( wheelrun_dial_0_r )
