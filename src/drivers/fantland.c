@@ -694,11 +694,11 @@ static int wheelrun_wheel_r( int player )
 
 
 	if (delta > 4)
-		return readinputport(0 + player);
+		return readinputport(0 + player) + 0x70;
 	if (delta < 4)
-		return ( readinputport(0 + player) - 112 );
+		return readinputport(0 + player);
 
-	return ( 255 - readinputport(0 + player) );
+	return 199;
 
 }
 
@@ -723,7 +723,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	PORT_START /* IN1 - 53001 */
@@ -731,7 +731,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	
