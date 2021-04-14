@@ -696,7 +696,7 @@ static int wheelrun_wheel_r( int player )
 	if (delta > 4)
 		return readinputport(0 + player);
 	if (delta < 4)
-		return ( readinputport(0 + player) - 112 )
+		return ( readinputport(0 + player) - 112 );
 
 	return 144;
 
