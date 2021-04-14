@@ -712,11 +712,6 @@ static READ_HANDLER( wheelrun_dial_1_r )
 	return wheelrun_wheel_r(1);
 }
 
-
-static DRIVER_INIT( wheelrun )
- {
- }
-
 INPUT_PORTS_START( wheelrun )
 	PORT_START /* IN0 - 53000 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1	)
@@ -1318,4 +1313,4 @@ ROM_END
 GAME( 1987, borntofi, 0, borntofi, borntofi, 0, ROT0,  "International Games",       "Born To Fight" )
 GAME( 1987, fantland, 0, fantland, fantland, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land" )
 GAME( 1989, galaxygn, 0, galaxygn, galaxygn, 0, ROT90, "Electronic Devices Italy",  "Galaxy Gunners" )
-GAME( 1987, wheelrun, 0, wheelrun, wheelrun, wheelrun, ROT0,  "International Games",       "Wheels Runner" )
+GAME( 1987, wheelrun, 0, wheelrun, wheelrun, 0, ROT0,  "International Games",       "Wheels Runner" )
