@@ -5505,6 +5505,7 @@ Other Sun games
 	DRIVER( fantland )	/* (c) 1987 Electronic Devices Italy */
 	DRIVER( galaxygn )	/* (c) 1989 Electronic Devices Italy */
 	DRIVER( borntofi )	/* (c) 1987 International Games */
+	DRIVER( wheelrun )	/* (c) 1987 International Games */
 	DRIVER( gcpinbal )	/* (c) 1994 Excellent System */
 	DRIVER( aquarium )	/* (c) 1996 Excellent System */
 	DRIVER( policetr )	/* (c) 1996 P&P Marketing */

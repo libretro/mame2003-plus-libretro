@@ -169,6 +169,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Vasara 2
 * Virtua Bowling
 * Virtua Fighter
+* Wheels Runner
 * Wing Force
 * Wing Shooting Championship
 * Wiz Warz
@@ -693,3 +694,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added sound for Invader's Revenge, Space Chaser (CV Version), Lupin III, Balloon Bomber, Rolling Crash / Moon Base. [jamiecurmi]
 * Added HD647180 MCU sound support for Teki Paki and Whoopee / Pibi & Bibi removing the need for Teki Paki to require hacked sound samples [dink, arcadez]
 * Added support for Born To Fight to the fantland driver [arcadez]
+* Added support for Wheels Runner to the fantland driver [arcadez, mahoneyt944]
