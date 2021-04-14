@@ -690,16 +690,16 @@ static int wheelrun_wheel_r( int player )
 	if (delta > 7) delta = 7;
 	else if (delta < 1) delta = 1;
 
-	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
+/*	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));*/
 
 
+	/* Use delta to determine high bit steering position */
 	if (delta > 4)
 		return readinputport(0 + player) + 0x70;
 	if (delta < 4)
 		return readinputport(0 + player);
 
 	return readinputport(0 + player) + 0x38;
-
 }
 
 static READ_HANDLER( wheelrun_dial_0_r )
