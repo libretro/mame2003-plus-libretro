@@ -690,7 +690,7 @@ static int wheelrun_wheel_r( int player )
 	/* Use delta to determine high bit steering position */
 	if      (delta > 4) delta = 0x70;
 	else if (delta < 4) delta = 0x00;
-	else                delta = 57;
+	else                delta = 67;
 
 	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
