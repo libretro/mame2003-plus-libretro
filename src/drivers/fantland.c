@@ -688,7 +688,7 @@ static int wheelrun_wheel_r( int player )
 	delta = (delta & 0x7f) - (delta & 0x80);
 
 	/* Use delta to determine high bit steering position */
-	if      (delta > 0) delta = 0x70; /* Left   */
+	if      (delta > 0) delta = 0x44; /* Left   */
 	else if (delta < 0) delta = 0x30; /* Right  */
 	else                delta = 0x38; /* Center */
 
