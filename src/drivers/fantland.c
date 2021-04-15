@@ -692,7 +692,7 @@ static int wheelrun_wheel_r( int player )
 	else if (delta < 4) delta = 0x00;
 	else                delta = 0x38;
 
-/*	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));*/
+	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));
 
 	return readinputport(0 + player) + delta;
 }
