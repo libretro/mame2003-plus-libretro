@@ -685,12 +685,12 @@ INPUT_PORTS_END
 static int wheelrun_wheel_r( int player )
 {
 	int delta = readinputport(4 + player);
-	delta = (delta & 0x7f) - (delta & 0x80) + 4;
+	delta = (delta & 0x7f) - (delta & 0x80);
 
 	/* Use delta to determine high bit steering position */
-	if      (delta > 4) delta = 0x70;
-	else if (delta < 4) delta = 0x00;
-	else                delta = 0x38;
+	if      (delta > 0) delta = 0x44; /* Left   */
+	else if (delta < 0) delta = 0x30; /* Right  */
+	else                delta = 0x38; /* Center */
 
 /*	if (player == 0) usrintf_showmessage("player:%i  delta:%i  port4:%i  port0:%i", player, delta, readinputport(4), readinputport(0));*/
 
