@@ -379,8 +379,8 @@ static MEMORY_WRITE_START( wheelrun_sound_writemem )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xa000, 0xa000, YM3526_control_port_0_w },
 	{ 0xa001, 0xa001, YM3526_write_port_0_w },
-	{ 0xb000, 0xb000, MWA_NOP },	// on a car crash / hit
-	{ 0xc000, 0xc000, MWA_NOP },	// ""
+	{ 0xb000, 0xb000, SN76496_0_w },	// on a car crash / hit
+	{ 0xc000, 0xc000, SN76496_1_w },	// ""
 MEMORY_END
 
 /***************************************************************************
@@ -969,6 +969,13 @@ static const struct YM3526interface wheelrun_ym3526_interface =
 	wheelrun_ym3526_irqhandler
 };
 
+static struct SN76496interface wheelrun_sn76496_interface =
+{
+	2,	/* 2 chips */
+	{ 9000000, 9000000 },	/* ?? */
+	{ 75, 75 }
+};
+
 static MACHINE_DRIVER_START( wheelrun )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(I86, 9000000 )		// D701080C-8 (V20)
@@ -996,6 +1003,7 @@ static MACHINE_DRIVER_START( wheelrun )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM3526, wheelrun_ym3526_interface )
+  MDRV_SOUND_ADD(SN76496, wheelrun_sn76496_interface)
 MACHINE_DRIVER_END
 
 
