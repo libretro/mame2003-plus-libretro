@@ -3008,14 +3008,16 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tfrceacb )	/* bootleg */
 	DRIVER( ribbit )	/* (c) 1991 Sega */
 	DRIVER( tantr )		/* (c) 1992 Sega */
+  DRIVER( tantrkor )	/* (c) 1993 Sega */
 	DRIVER( tantrbl )	/* bootleg */
 	DRIVER( tantrbl2 )	/* bootleg */
 	DRIVER( puyopuyo )	/* (c) 1992 Sega / Compile */
 	DRIVER( puyopuya )	/* (c) 1992 Sega / Compile */
 	DRIVER( puyopuyb )	/* bootleg */
-	DRIVER( ichidant )	/* (c) 1994 Sega */
-	DRIVER( ichidnte )	/* (c) 1994 Sega */
-	DRIVER( ichidntb )	/* bootleg */
+	DRIVER( ichir )	    /* (c) 1994 Sega */
+	DRIVER( ichirk )	/* (c) 1994 Sega */
+	DRIVER( ichirj )	/* (c) 1994 Sega */
+	DRIVER( ichirjbl )	/* bootleg */
 	DRIVER( stkclmns )	/* (c) 1994 Sega */
 	DRIVER( puyopuy2 )	/* (c) 1994 Compile + Sega license */
 	DRIVER( potopoto )	/* (c) 1994 Sega */
