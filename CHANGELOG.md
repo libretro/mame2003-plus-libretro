@@ -24,6 +24,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Boogie Wings
 * Born To Fight
 * Botanic (English / Spanish set 1)
+* Bronx (Cycle Shooting bootleg)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
 * Cabal (World, Joystick version)
 * Chain Reaction
