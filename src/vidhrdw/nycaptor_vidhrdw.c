@@ -8,13 +8,6 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-#define nycaptor_spot (nycaptor_sharedram[0x299]?nycaptor_sharedram[0x298]:0)
-/*
- 298 (e298) - spot (0-3) , 299 (e299) - lives
- spot number isn't set to 0 in main menu ; lives - yes
- sprites in main menu req priority 'type' 0
-*/
-
 
 #ifdef MAME_DEBUG
  int nycaptor_mask=0;
@@ -27,6 +20,21 @@ UINT8 *nycaptor_scrlram;
 
 UINT8 *nycaptor_spriteram;
 extern UINT8 *nycaptor_sharedram;
+extern int nyc_gametype;
+
+/*
+ 298 (e298) - spot (0-3) , 299 (e299) - lives
+ spot number isn't set to 0 in main menu ; lives - yes
+ sprites in main menu req priority 'type' 0
+*/
+static int nycaptor_spot(void)
+{
+	if(nyc_gametype==0 || nyc_gametype==2)
+		return nycaptor_sharedram[0x299]?nycaptor_sharedram[0x298]:0;
+	else
+		return 0;
+}
+
 WRITE_HANDLER(nycaptor_spriteram_w)
 {
 	nycaptor_spriteram[offset]=data;
@@ -43,13 +51,13 @@ static void get_tile_info(int tile_index)
 	tile_info.priority = (videoram[tile_index*2 + 1] & 0x30)>>4;
 	pal=videoram[tile_index*2+1]&0x0f;
   flags=TILE_SPLIT(0);
-  if((!nycaptor_spot)&&(pal==6))flags=TILE_SPLIT(1);
-	if(((nycaptor_spot==3)&&(pal==8))||((nycaptor_spot==1)&&(pal==0xc)))flags=TILE_SPLIT(2);
-	if((nycaptor_spot==1)&&(tile_info.priority==2))flags=TILE_SPLIT(3);
+  if((!nycaptor_spot())&&(pal==6))flags=TILE_SPLIT(1);
+	if(((nycaptor_spot()==3)&&(pal==8))||((nycaptor_spot()==1)&&(pal==0xc)))flags=TILE_SPLIT(2);
+	if((nycaptor_spot()==1)&&(tile_info.priority==2))flags=TILE_SPLIT(3);
 #ifdef MAME_DEBUG
   if(nycaptor_mask&(1<<tile_info.priority))
   {
-    if(nycaptor_spot)pal=0xe;else pal=4;
+    if(nycaptor_spot())pal=0xe;else pal=4;
   }
 #endif
 
@@ -90,6 +98,9 @@ READ_HANDLER( nycaptor_videoram_r )
 
 WRITE_HANDLER( nycaptor_palette_w )
 {
+	if(nyc_gametype==2) //colt
+		return;
+
 	if (offset & 0x100)
 		paletteram_xxxxBBBBGGGGRRRR_split2_w((offset & 0xff) + (palette_bank << 8),data);
 	else
@@ -240,7 +251,7 @@ VIDEO_UPDATE( nycaptor )
   }
  else
 #endif
- switch (nycaptor_spot&3)
+ switch (nycaptor_spot()&3)
  {
   case 0:
   	tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_BACK|3,0);
@@ -295,5 +306,8 @@ VIDEO_UPDATE( nycaptor )
     tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_FRONT|0,0);
   break;
  }
+ if(nyc_gametype==1)
+ 	draw_crosshair(bitmap,readinputport(5),255-readinputport(6),cliprect);
+ else
  	draw_crosshair(bitmap,readinputport(5),readinputport(6),cliprect);
 }
