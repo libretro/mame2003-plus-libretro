@@ -98,7 +98,7 @@ READ_HANDLER( nycaptor_videoram_r )
 
 WRITE_HANDLER( nycaptor_palette_w )
 {
-	if(nyc_gametype==2) //colt
+	if(nyc_gametype==2) /* colt */
 		return;
 
 	if (offset & 0x100)
