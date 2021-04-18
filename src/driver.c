@@ -1410,6 +1410,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ogonsiro )	/* ??? (c) 1986 Taito Corporation (Japan) */
 	DRIVER( nycaptor )	/* A50 (c) 1985 Taito Corporation */
 	DRIVER( cyclshtg )	/* A97 (c) 1986 Taito Corporation */
+  DRIVER( bronx )	    /* 1986 bootleg */
 	DRIVER( benberob )	/* A26 */
 	DRIVER( halleys )	/* A62 (c) 1986 Taito America Corporation + Coin It (US) */
 	DRIVER( halleysc )	/* A62 (c) 1986 Taito Corporation (Japan) */
