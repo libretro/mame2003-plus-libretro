@@ -258,786 +258,787 @@ SOUNDS+=YMF271@
 SOUNDS+=PSXSPU@
 SOUNDS+=ICS2115@
 
-SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
-				 $(CORE_DIR)/machine/mspacman.c \
-				 $(CORE_DIR)/machine/pacplus.c \
-				 $(CORE_DIR)/machine/jumpshot.c \
-				 $(CORE_DIR)/machine/theglobp.c \
-				 $(CORE_DIR)/machine/acitya.c \
-				 $(CORE_DIR)/drivers/jrpacman.c \
-				 $(CORE_DIR)/vidhrdw/jrpacman_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/pengo_vidhrdw.c \
-				 $(CORE_DIR)/drivers/pengo.c \
-				 $(CORE_DIR)/drivers/epos.c \
-				 $(CORE_DIR)/vidhrdw/epos_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
-				 $(CORE_DIR)/sndhrdw/cclimber_sndhrdw.c \
-				 $(CORE_DIR)/drivers/cclimber.c \
-				 $(CORE_DIR)/drivers/yamato.c \
-				 $(CORE_DIR)/vidhrdw/gomoku_vidhrdw.c $(CORE_DIR)/sndhrdw/gomoku_sndhrdw.c $(CORE_DIR)/drivers/gomoku.c \
-				 $(CORE_DIR)/vidhrdw/wiping_vidhrdw.c $(CORE_DIR)/sndhrdw/wiping_sndhrdw.c $(CORE_DIR)/drivers/wiping.c \
-				 $(CORE_DIR)/vidhrdw/seicross_vidhrdw.c $(CORE_DIR)/drivers/seicross.c \
-				 $(CORE_DIR)/vidhrdw/clshroad_vidhrdw.c $(CORE_DIR)/drivers/clshroad.c \
-				 $(CORE_DIR)/vidhrdw/tubep_vidhrdw.c $(CORE_DIR)/drivers/tubep.c \
-				 $(CORE_DIR)/vidhrdw/magmax_vidhrdw.c $(CORE_DIR)/drivers/magmax.c \
-				 $(CORE_DIR)/vidhrdw/cop01_vidhrdw.c $(CORE_DIR)/drivers/cop01.c \
-				 $(CORE_DIR)/vidhrdw/terracre_vidhrdw.c $(CORE_DIR)/drivers/terracre.c \
-				 $(CORE_DIR)/vidhrdw/galivan_vidhrdw.c $(CORE_DIR)/drivers/galivan.c \
-				 $(CORE_DIR)/vidhrdw/armedf_vidhrdw.c $(CORE_DIR)/drivers/armedf.c \
-				 $(CORE_DIR)/machine/nb1413m3.c \
-				 $(CORE_DIR)/vidhrdw/hyhoo_vidhrdw.c $(CORE_DIR)/drivers/hyhoo.c \
-				 $(CORE_DIR)/vidhrdw/pastelgl_vidhrdw.c $(CORE_DIR)/drivers/pastelgl.c \
-				 $(CORE_DIR)/vidhrdw/nbmj8688_vidhrdw.c $(CORE_DIR)/drivers/nbmj8688.c \
-				 $(CORE_DIR)/vidhrdw/nbmj8891_vidhrdw.c $(CORE_DIR)/drivers/nbmj8891.c \
-				 $(CORE_DIR)/vidhrdw/nbmj8991_vidhrdw.c $(CORE_DIR)/drivers/nbmj8991.c \
-				 $(CORE_DIR)/vidhrdw/nbmj9195_vidhrdw.c $(CORE_DIR)/drivers/nbmj9195.c \
-				 $(CORE_DIR)/vidhrdw/niyanpai_vidhrdw.c $(CORE_DIR)/drivers/niyanpai.c $(CORE_DIR)/machine/m68kfmly.c \
-				 $(CORE_DIR)/drivers/safarir.c \
-				 $(CORE_DIR)/vidhrdw/phoenix_vidhrdw.c $(CORE_DIR)/sndhrdw/phoenix_sndhrdw.c $(CORE_DIR)/drivers/phoenix.c \
-				 $(CORE_DIR)/sndhrdw/pleiads.c \
-				 $(CORE_DIR)/vidhrdw/naughtyb_vidhrdw.c $(CORE_DIR)/drivers/naughtyb.c \
-				 $(CORE_DIR)/machine/geebee_machine.c $(CORE_DIR)/vidhrdw/geebee_vidhrdw.c $(CORE_DIR)/sndhrdw/geebee_sndhrdw.c $(CORE_DIR)/drivers/geebee.c \
-				 $(CORE_DIR)/vidhrdw/warpwarp_vidhrdw.c $(CORE_DIR)/sndhrdw/warpwarp_sndhrdw.c $(CORE_DIR)/drivers/warpwarp.c \
-				 $(CORE_DIR)/vidhrdw/tankbatt_vidhrdw.c $(CORE_DIR)/drivers/tankbatt.c \
-				 $(CORE_DIR)/vidhrdw/galaxian_vidhrdw.c $(CORE_DIR)/sndhrdw/galaxian_sndhrdw.c $(CORE_DIR)/drivers/galaxian.c \
-				 $(CORE_DIR)/vidhrdw/rallyx_vidhrdw.c $(CORE_DIR)/drivers/rallyx.c \
-				 $(CORE_DIR)/drivers/locomotn.c \
-				 $(CORE_DIR)/vidhrdw/bosco_vidhrdw.c  \
-				 $(CORE_DIR)/vidhrdw/galaga_vidhrdw.c $(CORE_DIR)/drivers/galaga.c \
-				 $(CORE_DIR)/vidhrdw/digdug_vidhrdw.c  \
-				 $(CORE_DIR)/vidhrdw/xevious_vidhrdw.c $(CORE_DIR)/machine/xevious_machine.c \
-				 $(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
-				 $(CORE_DIR)/machine/gaplus_machine.c $(CORE_DIR)/vidhrdw/gaplus_vidhrdw.c $(CORE_DIR)/drivers/gaplus.c \
-				 $(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
-				 $(CORE_DIR)/drivers/polepos.c   $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c  \
-				 $(CORE_DIR)/vidhrdw/pacland_vidhrdw.c $(CORE_DIR)/drivers/pacland.c \
-				 $(CORE_DIR)/vidhrdw/skykid_vidhrdw.c $(CORE_DIR)/drivers/skykid.c \
-				 $(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c $(CORE_DIR)/drivers/baraduke.c \
-				 $(CORE_DIR)/vidhrdw/namcos86_vidhrdw.c $(CORE_DIR)/drivers/namcos86.c \
-				 $(CORE_DIR)/vidhrdw/tceptor_vidhrdw.c $(CORE_DIR)/drivers/tceptor.c \
-				 $(CORE_DIR)/machine/namcos1_machine.c $(CORE_DIR)/vidhrdw/namcos1_vidhrdw.c $(CORE_DIR)/drivers/namcos1.c \
-				 $(CORE_DIR)/machine/namcos2_machine.c $(CORE_DIR)/vidhrdw/namcos2_vidhrdw.c $(CORE_DIR)/drivers/namcos2.c \
-				 $(CORE_DIR)/drivers/namcoic.c \
-				 $(CORE_DIR)/vidhrdw/namcona1_vidhrdw.c $(CORE_DIR)/drivers/namcona1.c \
-				 $(CORE_DIR)/vidhrdw/namconb1_vidhrdw.c $(CORE_DIR)/drivers/namconb1.c \
-				 $(CORE_DIR)/machine/namcond1_machine.c $(CORE_DIR)/vidhrdw/ygv608.c $(CORE_DIR)/drivers/namcond1.c \
-				 $(CORE_DIR)/vidhrdw/psx_vidhrdw.c $(CORE_DIR)/machine/psx_machine.c \
-				 $(CORE_DIR)/drivers/namcos10.c \
-				 $(CORE_DIR)/drivers/namcos11.c \
-				 $(CORE_DIR)/drivers/namcos12.c \
-				 $(CORE_DIR)/vidhrdw/namcos3d.c \
-				 $(CORE_DIR)/vidhrdw/namcos21_vidhrdw.c $(CORE_DIR)/drivers/namcos21.c \
-				 $(CORE_DIR)/vidhrdw/namcos22_vidhrdw.c $(CORE_DIR)/drivers/namcos22.c \
-				 $(CORE_DIR)/vidhrdw/cosmic_vidhrdw.c $(CORE_DIR)/drivers/cosmic.c \
-				 $(CORE_DIR)/vidhrdw/redclash_vidhrdw.c $(CORE_DIR)/drivers/redclash.c \
-				 $(CORE_DIR)/vidhrdw/ladybug_vidhrdw.c $(CORE_DIR)/drivers/ladybug.c \
-				 $(CORE_DIR)/vidhrdw/cheekyms_vidhrdw.c $(CORE_DIR)/drivers/cheekyms.c \
-				 $(CORE_DIR)/vidhrdw/mrdo_vidhrdw.c $(CORE_DIR)/drivers/mrdo.c \
-				 $(CORE_DIR)/machine/docastle_machine.c $(CORE_DIR)/vidhrdw/docastle_vidhrdw.c $(CORE_DIR)/drivers/docastle.c \
-				 $(CORE_DIR)/vidhrdw/dkong_vidhrdw.c $(CORE_DIR)/sndhrdw/dkong_sndhrdw.c $(CORE_DIR)/drivers/dkong.c \
-				 $(CORE_DIR)/machine/strtheat.c \
-				 $(CORE_DIR)/vidhrdw/mario_vidhrdw.c $(CORE_DIR)/sndhrdw/mario_sndhrdw.c $(CORE_DIR)/drivers/mario.c \
-				 $(CORE_DIR)/vidhrdw/popeye_vidhrdw.c $(CORE_DIR)/drivers/popeye.c \
-				 $(CORE_DIR)/vidhrdw/punchout_vidhrdw.c $(CORE_DIR)/drivers/punchout.c \
-				 $(CORE_DIR)/machine/rp5h01.c $(CORE_DIR)/vidhrdw/ppu2c03b.c \
-				 $(CORE_DIR)/machine/playch10_machine.c $(CORE_DIR)/vidhrdw/playch10_vidhrdw.c $(CORE_DIR)/drivers/playch10.c \
-				 $(CORE_DIR)/machine/vsnes_machine.c $(CORE_DIR)/vidhrdw/vsnes_vidhrdw.c $(CORE_DIR)/drivers/vsnes.c \
-				 $(CORE_DIR)/machine/snes_machine.c $(CORE_DIR)/vidhrdw/snes_vidhrdw.c \
-				 $(CORE_DIR)/sndhrdw/snes_sndhrdw.c \
-				 $(CORE_DIR)/drivers/nss.c \
-				 $(CORE_DIR)/machine/8080bw.c \
-				 $(CORE_DIR)/vidhrdw/8080bw_vidhrdw.c $(CORE_DIR)/sndhrdw/8080bw_sndhrdw.c $(CORE_DIR)/drivers/8080bw_drivers.c \
-				 $(CORE_DIR)/vidhrdw/sspeedr_vidhrdw.c $(CORE_DIR)/drivers/sspeedr.c \
-				 $(CORE_DIR)/vidhrdw/m79amb_vidhrdw.c $(CORE_DIR)/drivers/m79amb.c $(CORE_DIR)/drivers/rotaryf.c \
-				 $(CORE_DIR)/drivers/lazercmd.c $(CORE_DIR)/vidhrdw/lazercmd_vidhrdw.c \
-				 $(CORE_DIR)/drivers/meadows.c $(CORE_DIR)/sndhrdw/meadows_sndhrdw.c $(CORE_DIR)/vidhrdw/meadows_vidhrdw.c \
-				 $(CORE_DIR)/drivers/cvs.c $(CORE_DIR)/vidhrdw/cvs_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/s2636_vidhrdw.c \
-				 $(CORE_DIR)/machine/astrocde_machine.c $(CORE_DIR)/vidhrdw/astrocde_vidhrdw.c $(CORE_DIR)/drivers/astrocde.c $(CORE_DIR)/sndhrdw/astrocde_sndhrdw.c \
-				 $(CORE_DIR)/sndhrdw/gorf.c \
-				 $(CORE_DIR)/machine/mcr.c $(CORE_DIR)/sndhrdw/mcr_sndhrdw.c \
-				 $(CORE_DIR)/vidhrdw/mcr12_vidhrdw.c $(CORE_DIR)/vidhrdw/mcr3_vidhrdw.c \
-				 $(CORE_DIR)/drivers/mcr1.c $(CORE_DIR)/drivers/mcr2.c $(CORE_DIR)/drivers/mcr3.c \
-				 $(CORE_DIR)/vidhrdw/mcr68_vidhrdw.c $(CORE_DIR)/drivers/mcr68.c \
-				 $(CORE_DIR)/vidhrdw/balsente_vidhrdw.c $(CORE_DIR)/machine/balsente_machine.c $(CORE_DIR)/drivers/balsente.c \
-				 $(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
-				 $(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
-				 $(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
-				 $(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
-				 $(CORE_DIR)/drivers/midxunit.c \
-				 $(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
-				 $(CORE_DIR)/vidhrdw/midvunit_vidhrdw.c $(CORE_DIR)/drivers/midvunit.c \
-				 $(CORE_DIR)/machine/midtunit_machine.c $(CORE_DIR)/vidhrdw/midtunit_vidhrdw.c $(CORE_DIR)/drivers/midtunit.c \
-				 $(CORE_DIR)/vidhrdw/skychut_vidhrdw.c $(CORE_DIR)/drivers/skychut.c \
-				 $(CORE_DIR)/drivers/olibochu.c \
-				 $(CORE_DIR)/sndhrdw/irem.c \
-				 $(CORE_DIR)/vidhrdw/mpatrol_vidhrdw.c $(CORE_DIR)/drivers/mpatrol.c \
-				 $(CORE_DIR)/vidhrdw/troangel_vidhrdw.c $(CORE_DIR)/drivers/troangel.c \
-				 $(CORE_DIR)/vidhrdw/yard_vidhrdw.c $(CORE_DIR)/drivers/yard.c \
-				 $(CORE_DIR)/vidhrdw/travrusa_vidhrdw.c $(CORE_DIR)/drivers/travrusa.c \
-				 $(CORE_DIR)/drivers/wilytowr.c \
-				 $(CORE_DIR)/vidhrdw/m62_vidhrdw.c $(CORE_DIR)/drivers/m62.c \
-				 $(CORE_DIR)/vidhrdw/vigilant_vidhrdw.c $(CORE_DIR)/drivers/vigilant.c \
-				 $(CORE_DIR)/vidhrdw/m72_vidhrdw.c $(CORE_DIR)/sndhrdw/m72_sndhrdw.c $(CORE_DIR)/drivers/m72.c \
-				 $(CORE_DIR)/vidhrdw/shisen_vidhrdw.c $(CORE_DIR)/drivers/shisen.c \
-				 $(CORE_DIR)/machine/irem_cpu.c \
-				 $(CORE_DIR)/vidhrdw/m90_vidhrdw.c $(CORE_DIR)/drivers/m90.c \
-				 $(CORE_DIR)/vidhrdw/m92_vidhrdw.c $(CORE_DIR)/drivers/m92.c \
-				 $(CORE_DIR)/vidhrdw/m107_vidhrdw.c $(CORE_DIR)/drivers/m107.c \
-				 $(CORE_DIR)/vidhrdw/gottlieb_vidhrdw.c $(CORE_DIR)/sndhrdw/gottlieb_sndhrdw.c $(CORE_DIR)/drivers/gottlieb.c \
-				 $(CORE_DIR)/drivers/sbowling.c \
-				 $(CORE_DIR)/machine/chaknpop_machine.c $(CORE_DIR)/vidhrdw/chaknpop_vidhrdw.c $(CORE_DIR)/drivers/chaknpop.c \
-				 $(CORE_DIR)/machine/qix_machine.c $(CORE_DIR)/vidhrdw/qix_vidhrdw.c $(CORE_DIR)/drivers/qix.c \
-				 $(CORE_DIR)/machine/taitosj_machine.c $(CORE_DIR)/vidhrdw/taitosj_vidhrdw.c $(CORE_DIR)/drivers/taitosj.c \
-				 $(CORE_DIR)/machine/grchamp_machine.c $(CORE_DIR)/vidhrdw/grchamp_vidhrdw.c $(CORE_DIR)/drivers/grchamp.c \
-				 $(CORE_DIR)/machine/pitnrun_machine.c $(CORE_DIR)/vidhrdw/pitnrun_vidhrdw.c $(CORE_DIR)/drivers/pitnrun.c \
-				 $(CORE_DIR)/drivers/marinedt.c \
-				 $(CORE_DIR)/vidhrdw/crbaloon_vidhrdw.c $(CORE_DIR)/drivers/crbaloon.c \
-				 $(CORE_DIR)/vidhrdw/bking2_vidhrdw.c $(CORE_DIR)/drivers/bking2.c \
-				 $(CORE_DIR)/vidhrdw/gsword_vidhrdw.c $(CORE_DIR)/drivers/gsword.c $(CORE_DIR)/machine/tait8741.c \
-				 $(CORE_DIR)/vidhrdw/msisaac_vidhrdw.c $(CORE_DIR)/drivers/msisaac.c \
-				 $(CORE_DIR)/machine/retofinv_machine.c $(CORE_DIR)/vidhrdw/retofinv_vidhrdw.c $(CORE_DIR)/drivers/retofinv.c \
-				 $(CORE_DIR)/vidhrdw/rollrace_vidhrdw.c $(CORE_DIR)/drivers/rollrace.c \
-				 $(CORE_DIR)/vidhrdw/40love_vidhrdw.c $(CORE_DIR)/drivers/40love.c \
-				 $(CORE_DIR)/vidhrdw/ssrj_vidhrdw.c $(CORE_DIR)/drivers/ssrj.c \
-				 $(CORE_DIR)/machine/bigevglf_machine.c $(CORE_DIR)/vidhrdw/bigevglf_vidhrdw.c $(CORE_DIR)/drivers/bigevglf.c \
-				 $(CORE_DIR)/vidhrdw/tsamurai_vidhrdw.c $(CORE_DIR)/drivers/tsamurai.c \
-				 $(CORE_DIR)/machine/flstory_machine.c $(CORE_DIR)/vidhrdw/flstory_vidhrdw.c $(CORE_DIR)/drivers/flstory.c \
-				 $(CORE_DIR)/vidhrdw/gladiatr_vidhrdw.c $(CORE_DIR)/drivers/gladiatr.c \
-				 $(CORE_DIR)/machine/nycaptor_machine.c $(CORE_DIR)/vidhrdw/nycaptor_vidhrdw.c $(CORE_DIR)/drivers/nycaptor.c \
-				 $(CORE_DIR)/drivers/halleys.c \
-				 $(CORE_DIR)/machine/lsasquad_machine.c $(CORE_DIR)/vidhrdw/lsasquad_vidhrdw.c $(CORE_DIR)/drivers/lsasquad.c \
-				 $(CORE_DIR)/machine/bublbobl_machine.c $(CORE_DIR)/vidhrdw/bublbobl_vidhrdw.c $(CORE_DIR)/drivers/bublbobl.c \
-				 $(CORE_DIR)/drivers/missb2.c \
-				 $(CORE_DIR)/machine/mexico86_machine.c $(CORE_DIR)/vidhrdw/mexico86_vidhrdw.c $(CORE_DIR)/drivers/mexico86.c \
-				 $(CORE_DIR)/vidhrdw/darius_vidhrdw.c $(CORE_DIR)/drivers/darius.c \
-				 $(CORE_DIR)/vidhrdw/rastan_vidhrdw.c $(CORE_DIR)/sndhrdw/rastan_sndhrdw.c $(CORE_DIR)/drivers/rastan.c \
-				 $(CORE_DIR)/machine/rainbow_machine.c $(CORE_DIR)/drivers/rainbow.c \
-				 $(CORE_DIR)/machine/opwolf_machine.c $(CORE_DIR)/drivers/opwolf.c \
-				 $(CORE_DIR)/vidhrdw/othunder_vidhrdw.c $(CORE_DIR)/drivers/othunder.c \
-				 $(CORE_DIR)/vidhrdw/topspeed_vidhrdw.c $(CORE_DIR)/drivers/topspeed.c \
-				 $(CORE_DIR)/machine/arkanoid_machine.c $(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c $(CORE_DIR)/drivers/arkanoid.c \
-				 $(CORE_DIR)/vidhrdw/superqix_vidhrdw.c $(CORE_DIR)/drivers/superqix.c \
-				 $(CORE_DIR)/vidhrdw/pbillian_vidhrdw.c $(CORE_DIR)/drivers/pbillian.c $(CORE_DIR)/sndhrdw/pbillian_sndhrdw.c \
-				 $(CORE_DIR)/vidhrdw/exzisus_vidhrdw.c $(CORE_DIR)/drivers/exzisus.c \
-				 $(CORE_DIR)/drivers/taito_x.c $(CORE_DIR)/machine/cchip.c \
-				 $(CORE_DIR)/vidhrdw/minivadr_vidhrdw.c $(CORE_DIR)/drivers/minivadr.c \
-				 $(CORE_DIR)/drivers/ashnojoe.c $(CORE_DIR)/vidhrdw/ashnojoe_vidhrdw.c \
-				 $(CORE_DIR)/machine/volfied_machine.c $(CORE_DIR)/vidhrdw/volfied_vidhrdw.c $(CORE_DIR)/drivers/volfied.c \
-				 $(CORE_DIR)/machine/bonzeadv.c $(CORE_DIR)/vidhrdw/asuka_vidhrdw.c $(CORE_DIR)/drivers/asuka.c \
-				 $(CORE_DIR)/vidhrdw/wgp_vidhrdw.c $(CORE_DIR)/drivers/wgp.c \
-				 $(CORE_DIR)/vidhrdw/slapshot_vidhrdw.c $(CORE_DIR)/drivers/slapshot.c \
-				 $(CORE_DIR)/vidhrdw/ninjaw_vidhrdw.c $(CORE_DIR)/drivers/ninjaw.c \
-				 $(CORE_DIR)/vidhrdw/warriorb_vidhrdw.c $(CORE_DIR)/drivers/warriorb.c \
-				 $(CORE_DIR)/machine/tnzs_machine.c $(CORE_DIR)/vidhrdw/tnzs_vidhrdw.c $(CORE_DIR)/drivers/tnzs.c \
-				 $(CORE_DIR)/machine/buggychl_machine.c $(CORE_DIR)/vidhrdw/buggychl_vidhrdw.c $(CORE_DIR)/drivers/buggychl.c \
-				 $(CORE_DIR)/machine/lkage_machine.c $(CORE_DIR)/vidhrdw/lkage_vidhrdw.c $(CORE_DIR)/drivers/lkage.c \
-				 $(CORE_DIR)/vidhrdw/taitoic.c $(CORE_DIR)/sndhrdw/taitosnd.c \
-				 $(CORE_DIR)/vidhrdw/taito_l_vidhrdw.c $(CORE_DIR)/drivers/taito_l.c \
-				 $(CORE_DIR)/vidhrdw/taito_h_vidhrdw.c $(CORE_DIR)/drivers/taito_h.c \
-				 $(CORE_DIR)/vidhrdw/taito_b_vidhrdw.c $(CORE_DIR)/drivers/taito_b.c \
-				 $(CORE_DIR)/vidhrdw/taito_z_vidhrdw.c $(CORE_DIR)/drivers/taito_z.c \
-				 $(CORE_DIR)/vidhrdw/gunbustr_vidhrdw.c $(CORE_DIR)/drivers/gunbustr.c \
-				 $(CORE_DIR)/vidhrdw/superchs_vidhrdw.c $(CORE_DIR)/drivers/superchs.c \
-				 $(CORE_DIR)/vidhrdw/undrfire_vidhrdw.c $(CORE_DIR)/drivers/undrfire.c \
-				 $(CORE_DIR)/vidhrdw/groundfx_vidhrdw.c $(CORE_DIR)/drivers/groundfx.c \
-				 $(CORE_DIR)/vidhrdw/taito_f2_vidhrdw.c $(CORE_DIR)/drivers/taito_f2.c \
-				 $(CORE_DIR)/vidhrdw/taito_f3_vidhrdw.c $(CORE_DIR)/sndhrdw/taito_f3_sndhrdw.c $(CORE_DIR)/drivers/taito_f3.c \
-				 $(CORE_DIR)/vidhrdw/taitoair_vidhrdw.c $(CORE_DIR)/drivers/taitoair.c \
-				 $(CORE_DIR)/machine/slapfght_machine.c $(CORE_DIR)/vidhrdw/slapfght_vidhrdw.c $(CORE_DIR)/drivers/slapfght.c \
-				 $(CORE_DIR)/machine/twincobr_machine.c $(CORE_DIR)/vidhrdw/twincobr_vidhrdw.c $(CORE_DIR)/drivers/twincobr.c \
-				 $(CORE_DIR)/drivers/wardner.c \
-				 $(CORE_DIR)/drivers/mjsister.c $(CORE_DIR)/vidhrdw/mjsister_vidhrdw.c \
-				 $(CORE_DIR)/machine/toaplan1_machine.c $(CORE_DIR)/vidhrdw/toaplan1_vidhrdw.c $(CORE_DIR)/drivers/toaplan1.c \
-				 $(CORE_DIR)/vidhrdw/snowbros_vidhrdw.c $(CORE_DIR)/drivers/snowbros.c \
-				 $(CORE_DIR)/vidhrdw/toaplan2_vidhrdw.c $(CORE_DIR)/drivers/toaplan2.c \
-				 $(CORE_DIR)/vidhrdw/cave_vidhrdw.c \
-				 $(CORE_DIR)/drivers/cave.c \
-				 $(CORE_DIR)/vidhrdw/kyugo_vidhrdw.c $(CORE_DIR)/machine/kyugo_machine.c $(CORE_DIR)/drivers/kyugo.c \
-				 $(CORE_DIR)/machine/williams_machine.c $(CORE_DIR)/vidhrdw/williams_vidhrdw.c $(CORE_DIR)/sndhrdw/williams_sndhrdw.c $(CORE_DIR)/drivers/williams.c \
-				 $(CORE_DIR)/vidhrdw/vulgus_vidhrdw.c $(CORE_DIR)/drivers/vulgus.c \
-				 $(CORE_DIR)/vidhrdw/sonson_vidhrdw.c $(CORE_DIR)/drivers/sonson.c \
-				 $(CORE_DIR)/vidhrdw/higemaru_vidhrdw.c $(CORE_DIR)/drivers/higemaru.c \
-				 $(CORE_DIR)/vidhrdw/1942_vidhrdw.c $(CORE_DIR)/drivers/1942.c \
-				 $(CORE_DIR)/vidhrdw/exedexes_vidhrdw.c $(CORE_DIR)/drivers/exedexes.c \
-				 $(CORE_DIR)/vidhrdw/commando_vidhrdw.c $(CORE_DIR)/drivers/commando.c \
-				 $(CORE_DIR)/vidhrdw/gng_vidhrdw.c $(CORE_DIR)/drivers/gng.c \
-				 $(CORE_DIR)/vidhrdw/gunsmoke_vidhrdw.c $(CORE_DIR)/drivers/gunsmoke.c \
-				 $(CORE_DIR)/vidhrdw/srumbler_vidhrdw.c $(CORE_DIR)/drivers/srumbler.c \
-				 $(CORE_DIR)/vidhrdw/lwings_vidhrdw.c $(CORE_DIR)/drivers/lwings.c \
-				 $(CORE_DIR)/vidhrdw/sidearms_vidhrdw.c $(CORE_DIR)/drivers/sidearms.c \
-				 $(CORE_DIR)/vidhrdw/bionicc_vidhrdw.c $(CORE_DIR)/drivers/bionicc.c \
-				 $(CORE_DIR)/vidhrdw/1943_vidhrdw.c $(CORE_DIR)/drivers/1943.c \
-				 $(CORE_DIR)/vidhrdw/blktiger_vidhrdw.c $(CORE_DIR)/drivers/blktiger.c \
-				 $(CORE_DIR)/vidhrdw/tigeroad_vidhrdw.c $(CORE_DIR)/drivers/tigeroad.c \
-				 $(CORE_DIR)/vidhrdw/lastduel_vidhrdw.c $(CORE_DIR)/drivers/lastduel.c \
-				 $(CORE_DIR)/vidhrdw/sf1_vidhrdw.c $(CORE_DIR)/drivers/sf1.c \
-				 $(CORE_DIR)/machine/kabuki.c \
-				 $(CORE_DIR)/vidhrdw/mitchell_vidhrdw.c $(CORE_DIR)/drivers/mitchell.c \
-				 $(CORE_DIR)/vidhrdw/cbasebal_vidhrdw.c $(CORE_DIR)/drivers/cbasebal.c \
-				 $(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c \
-				 $(CORE_DIR)/drivers/zn.c \
-				 $(CORE_DIR)/vidhrdw/tms34061_vidhrdw.c \
-				 $(CORE_DIR)/machine/capbowl_machine.c $(CORE_DIR)/vidhrdw/capbowl_vidhrdw.c $(CORE_DIR)/drivers/capbowl.c \
-				 $(CORE_DIR)/vidhrdw/itech8_vidhrdw.c $(CORE_DIR)/drivers/itech8.c \
-				 $(CORE_DIR)/vidhrdw/itech32_vidhrdw.c $(CORE_DIR)/drivers/itech32.c \
-				 $(CORE_DIR)/machine/slikshot.c \
-				 $(CORE_DIR)/vidhrdw/blockade_vidhrdw.c $(CORE_DIR)/drivers/blockade.c \
-				 $(CORE_DIR)/vidhrdw/vicdual_vidhrdw.c $(CORE_DIR)/drivers/vicdual.c \
-				 $(CORE_DIR)/sndhrdw/carnival.c $(CORE_DIR)/sndhrdw/depthch.c $(CORE_DIR)/sndhrdw/invinco.c $(CORE_DIR)/sndhrdw/pulsar.c \
-				 $(CORE_DIR)/machine/segacrpt.c $(CORE_DIR)/sndhrdw/segasnd.c \
-				 $(CORE_DIR)/vidhrdw/sega_vidhrdw.c $(CORE_DIR)/sndhrdw/sega_sndhrdw.c $(CORE_DIR)/machine/sega_machine.c $(CORE_DIR)/drivers/sega.c \
-				 $(CORE_DIR)/vidhrdw/segar_vidhrdw.c $(CORE_DIR)/sndhrdw/segar_sndhrdw.c $(CORE_DIR)/machine/segar_machine.c $(CORE_DIR)/drivers/segar.c \
-				 $(CORE_DIR)/vidhrdw/tms9928a.c $(CORE_DIR)/drivers/sg1000a.c \
-				 $(CORE_DIR)/vidhrdw/zaxxon_vidhrdw.c $(CORE_DIR)/sndhrdw/zaxxon_sndhrdw.c $(CORE_DIR)/drivers/zaxxon.c \
-				 $(CORE_DIR)/machine/turbo_machine.c $(CORE_DIR)/vidhrdw/turbo_vidhrdw.c $(CORE_DIR)/drivers/turbo.c \
-				 $(CORE_DIR)/drivers/kopunch.c $(CORE_DIR)/vidhrdw/kopunch_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/suprloco_vidhrdw.c $(CORE_DIR)/drivers/suprloco.c \
-				 $(CORE_DIR)/vidhrdw/dotrikun_vidhrdw.c $(CORE_DIR)/drivers/dotrikun.c \
-				 $(CORE_DIR)/vidhrdw/angelkds_vidhrdw.c $(CORE_DIR)/drivers/angelkds.c \
-				 $(CORE_DIR)/vidhrdw/system1_vidhrdw.c $(CORE_DIR)/drivers/system1.c \
-				 $(CORE_DIR)/vidhrdw/segasyse_vidhrdw.c $(CORE_DIR)/drivers/segasyse.c \
-				 $(CORE_DIR)/machine/system16_machine.c $(CORE_DIR)/vidhrdw/system16_vidhrdw.c $(CORE_DIR)/vidhrdw/sys16spr.c \
-				 $(CORE_DIR)/sndhrdw/system16_sndhrdw.c \
-				 $(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c \
-				 $(CORE_DIR)/drivers/sharrier.c $(CORE_DIR)/drivers/system18.c \
-				 $(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/segaic24.c \
-				 $(CORE_DIR)/drivers/system32.c $(CORE_DIR)/drivers/multi32.c $(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c \
-				 $(CORE_DIR)/drivers/stv.c $(CORE_DIR)/drivers/stvhacks.c $(CORE_DIR)/machine/stvcd.c \
-				 $(CORE_DIR)/machine/scudsp.c \
-				 $(CORE_DIR)/vidhrdw/stvvdp1_vidhrdw.c $(CORE_DIR)/vidhrdw/stvvdp2_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/deniam_vidhrdw.c $(CORE_DIR)/drivers/deniam.c \
-				 $(CORE_DIR)/machine/btime_machine.c $(CORE_DIR)/vidhrdw/btime_vidhrdw.c $(CORE_DIR)/drivers/btime.c \
-				 $(CORE_DIR)/machine/decocass_machine.c $(CORE_DIR)/vidhrdw/decocass_vidhrdw.c $(CORE_DIR)/drivers/decocass.c \
-				 $(CORE_DIR)/vidhrdw/astrof_vidhrdw.c $(CORE_DIR)/sndhrdw/astrof_sndhrdw.c $(CORE_DIR)/drivers/astrof.c \
-				 $(CORE_DIR)/vidhrdw/liberate_vidhrdw.c $(CORE_DIR)/drivers/liberate.c \
-				 $(CORE_DIR)/vidhrdw/bwing_vidhrdw.c $(CORE_DIR)/drivers/bwing.c \
-				 $(CORE_DIR)/vidhrdw/kchamp_vidhrdw.c $(CORE_DIR)/drivers/kchamp.c \
-				 $(CORE_DIR)/vidhrdw/firetrap_vidhrdw.c $(CORE_DIR)/drivers/firetrap.c \
-				 $(CORE_DIR)/vidhrdw/brkthru_vidhrdw.c $(CORE_DIR)/drivers/brkthru.c \
-				 $(CORE_DIR)/vidhrdw/metlclsh_vidhrdw.c $(CORE_DIR)/drivers/metlclsh.c \
-				 $(CORE_DIR)/drivers/compgolf.c \
-				 $(CORE_DIR)/drivers/tryout.c \
-				 $(CORE_DIR)/vidhrdw/shootout_vidhrdw.c $(CORE_DIR)/drivers/shootout.c \
-				 $(CORE_DIR)/vidhrdw/sidepckt_vidhrdw.c $(CORE_DIR)/drivers/sidepckt.c \
-				 $(CORE_DIR)/vidhrdw/exprraid_vidhrdw.c $(CORE_DIR)/drivers/exprraid.c \
-				 $(CORE_DIR)/vidhrdw/pcktgal_vidhrdw.c $(CORE_DIR)/drivers/pcktgal.c \
-				 $(CORE_DIR)/vidhrdw/battlera_vidhrdw.c $(CORE_DIR)/drivers/battlera.c \
-				 $(CORE_DIR)/vidhrdw/actfancr_vidhrdw.c $(CORE_DIR)/drivers/actfancr.c \
-				 $(CORE_DIR)/vidhrdw/dec8_vidhrdw.c $(CORE_DIR)/drivers/dec8.c \
-				 $(CORE_DIR)/vidhrdw/karnov_vidhrdw.c $(CORE_DIR)/drivers/karnov.c \
-				 $(CORE_DIR)/machine/decocrpt.c $(CORE_DIR)/machine/decoprot.c \
-				 $(CORE_DIR)/vidhrdw/deco16ic.c \
-				 $(CORE_DIR)/machine/dec0_machine.c $(CORE_DIR)/vidhrdw/dec0_vidhrdw.c $(CORE_DIR)/drivers/dec0.c \
-				 $(CORE_DIR)/vidhrdw/stadhero_vidhrdw.c $(CORE_DIR)/drivers/stadhero.c \
-				 $(CORE_DIR)/vidhrdw/madmotor_vidhrdw.c $(CORE_DIR)/drivers/madmotor.c \
-				 $(CORE_DIR)/vidhrdw/vaportra_vidhrdw.c $(CORE_DIR)/drivers/vaportra.c \
-				 $(CORE_DIR)/vidhrdw/cbuster_vidhrdw.c $(CORE_DIR)/drivers/cbuster.c \
-				 $(CORE_DIR)/vidhrdw/darkseal_vidhrdw.c $(CORE_DIR)/drivers/darkseal.c \
-				 $(CORE_DIR)/vidhrdw/supbtime_vidhrdw.c $(CORE_DIR)/drivers/supbtime.c \
-				 $(CORE_DIR)/vidhrdw/cninja_vidhrdw.c $(CORE_DIR)/drivers/cninja.c \
-				 $(CORE_DIR)/vidhrdw/dassault_vidhrdw.c $(CORE_DIR)/drivers/dassault.c \
-				 $(CORE_DIR)/vidhrdw/rohga_vidhrdw.c $(CORE_DIR)/drivers/rohga.c \
-				 $(CORE_DIR)/vidhrdw/tumblep_vidhrdw.c $(CORE_DIR)/drivers/tumblep.c \
-				 $(CORE_DIR)/vidhrdw/lemmings_vidhrdw.c $(CORE_DIR)/drivers/lemmings.c \
-				 $(CORE_DIR)/vidhrdw/funkyjet_vidhrdw.c $(CORE_DIR)/drivers/funkyjet.c \
-				 $(CORE_DIR)/vidhrdw/deco32_vidhrdw.c $(CORE_DIR)/drivers/deco32.c \
-				 $(CORE_DIR)/vidhrdw/deco_mlc_vidhrdw.c $(CORE_DIR)/drivers/deco_mlc.c \
-				 $(CORE_DIR)/vidhrdw/sshangha_vidhrdw.c $(CORE_DIR)/drivers/sshangha.c \
-				 $(CORE_DIR)/sndhrdw/senjyo_sndhrdw.c $(CORE_DIR)/vidhrdw/senjyo_vidhrdw.c $(CORE_DIR)/drivers/senjyo.c \
-				 $(CORE_DIR)/vidhrdw/bombjack_vidhrdw.c $(CORE_DIR)/drivers/bombjack.c \
-				 $(CORE_DIR)/vidhrdw/pbaction_vidhrdw.c $(CORE_DIR)/drivers/pbaction.c \
-				 $(CORE_DIR)/vidhrdw/tehkanwc_vidhrdw.c $(CORE_DIR)/drivers/tehkanwc.c \
-				 $(CORE_DIR)/vidhrdw/solomon_vidhrdw.c $(CORE_DIR)/drivers/solomon.c \
-				 $(CORE_DIR)/vidhrdw/tecmo_vidhrdw.c $(CORE_DIR)/drivers/tecmo.c \
-				 $(CORE_DIR)/vidhrdw/tbowl_vidhrdw.c $(CORE_DIR)/drivers/tbowl.c \
-				 $(CORE_DIR)/vidhrdw/gaiden_vidhrdw.c $(CORE_DIR)/drivers/gaiden.c \
-				 $(CORE_DIR)/vidhrdw/wc90_vidhrdw.c $(CORE_DIR)/drivers/wc90.c \
-				 $(CORE_DIR)/vidhrdw/wc90b_vidhrdw.c $(CORE_DIR)/drivers/wc90b.c \
-				 $(CORE_DIR)/vidhrdw/spbactn_vidhrdw.c $(CORE_DIR)/drivers/spbactn.c \
-				 $(CORE_DIR)/vidhrdw/tecmo16_vidhrdw.c $(CORE_DIR)/drivers/tecmo16.c \
-				 $(CORE_DIR)/drivers/tecmosys.c \
-				 $(CORE_DIR)/machine/scramble_machine.c $(CORE_DIR)/sndhrdw/scramble_sndhrdw.c $(CORE_DIR)/drivers/scramble.c \
-				 $(CORE_DIR)/drivers/frogger.c \
-				 $(CORE_DIR)/drivers/scobra.c \
-				 $(CORE_DIR)/drivers/amidar.c \
-				 $(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c \
-				 $(CORE_DIR)/vidhrdw/tutankhm_vidhrdw.c $(CORE_DIR)/drivers/tutankhm.c \
-				 $(CORE_DIR)/drivers/junofrst.c \
-				 $(CORE_DIR)/vidhrdw/pooyan_vidhrdw.c $(CORE_DIR)/drivers/pooyan.c \
-				 $(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c $(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
-				 $(CORE_DIR)/vidhrdw/megazone_vidhrdw.c $(CORE_DIR)/drivers/megazone.c \
-				 $(CORE_DIR)/vidhrdw/pandoras_vidhrdw.c $(CORE_DIR)/drivers/pandoras.c \
-				 $(CORE_DIR)/sndhrdw/gyruss_sndhrdw.c $(CORE_DIR)/vidhrdw/gyruss_vidhrdw.c $(CORE_DIR)/drivers/gyruss.c \
-				 $(CORE_DIR)/machine/konami_machine.c \
-				 $(CORE_DIR)/vidhrdw/trackfld_vidhrdw.c $(CORE_DIR)/sndhrdw/trackfld_sndhrdw.c $(CORE_DIR)/drivers/trackfld.c \
-				 $(CORE_DIR)/vidhrdw/rocnrope_vidhrdw.c $(CORE_DIR)/drivers/rocnrope.c \
-				 $(CORE_DIR)/vidhrdw/circusc_vidhrdw.c $(CORE_DIR)/drivers/circusc.c \
-				 $(CORE_DIR)/vidhrdw/tp84_vidhrdw.c $(CORE_DIR)/drivers/tp84.c \
-				 $(CORE_DIR)/vidhrdw/hyperspt_vidhrdw.c $(CORE_DIR)/drivers/hyperspt.c \
-				 $(CORE_DIR)/vidhrdw/sbasketb_vidhrdw.c $(CORE_DIR)/drivers/sbasketb.c \
-				 $(CORE_DIR)/vidhrdw/mikie_vidhrdw.c $(CORE_DIR)/drivers/mikie.c \
-				 $(CORE_DIR)/vidhrdw/yiear_vidhrdw.c $(CORE_DIR)/drivers/yiear.c \
-				 $(CORE_DIR)/vidhrdw/shaolins_vidhrdw.c $(CORE_DIR)/drivers/shaolins.c \
-				 $(CORE_DIR)/vidhrdw/pingpong_vidhrdw.c $(CORE_DIR)/drivers/pingpong.c \
-				 $(CORE_DIR)/vidhrdw/gberet_vidhrdw.c $(CORE_DIR)/drivers/gberet.c \
-				 $(CORE_DIR)/vidhrdw/jailbrek_vidhrdw.c $(CORE_DIR)/drivers/jailbrek.c \
-				 $(CORE_DIR)/vidhrdw/finalizr_vidhrdw.c $(CORE_DIR)/drivers/finalizr.c \
-				 $(CORE_DIR)/vidhrdw/ironhors_vidhrdw.c $(CORE_DIR)/drivers/ironhors.c \
-				 $(CORE_DIR)/machine/jackal_machine.c $(CORE_DIR)/vidhrdw/jackal_vidhrdw.c $(CORE_DIR)/drivers/jackal.c \
-				 $(CORE_DIR)/vidhrdw/ddrible_vidhrdw.c $(CORE_DIR)/drivers/ddrible.c \
-				 $(CORE_DIR)/vidhrdw/contra_vidhrdw.c $(CORE_DIR)/drivers/contra.c \
-				 $(CORE_DIR)/vidhrdw/combatsc_vidhrdw.c $(CORE_DIR)/drivers/combatsc.c \
-				 $(CORE_DIR)/vidhrdw/hcastle_vidhrdw.c $(CORE_DIR)/drivers/hcastle.c \
-				 $(CORE_DIR)/vidhrdw/nemesis_vidhrdw.c $(CORE_DIR)/drivers/nemesis.c \
-				 $(CORE_DIR)/vidhrdw/konamiic.c \
-				 $(CORE_DIR)/vidhrdw/rockrage_vidhrdw.c $(CORE_DIR)/drivers/rockrage.c \
-				 $(CORE_DIR)/vidhrdw/flkatck_vidhrdw.c $(CORE_DIR)/drivers/flkatck.c \
-				 $(CORE_DIR)/vidhrdw/fastlane_vidhrdw.c $(CORE_DIR)/drivers/fastlane.c \
-				 $(CORE_DIR)/vidhrdw/labyrunr_vidhrdw.c $(CORE_DIR)/drivers/labyrunr.c \
-				 $(CORE_DIR)/vidhrdw/battlnts_vidhrdw.c $(CORE_DIR)/drivers/battlnts.c \
-				 $(CORE_DIR)/vidhrdw/bladestl_vidhrdw.c $(CORE_DIR)/drivers/bladestl.c \
-				 $(CORE_DIR)/machine/ajax_machine.c $(CORE_DIR)/vidhrdw/ajax_vidhrdw.c $(CORE_DIR)/drivers/ajax.c \
-				 $(CORE_DIR)/vidhrdw/thunderx_vidhrdw.c $(CORE_DIR)/drivers/thunderx.c \
-				 $(CORE_DIR)/vidhrdw/mainevt_vidhrdw.c $(CORE_DIR)/drivers/mainevt.c \
-				 $(CORE_DIR)/vidhrdw/88games_vidhrdw.c $(CORE_DIR)/drivers/88games.c \
-				 $(CORE_DIR)/vidhrdw/gbusters_vidhrdw.c $(CORE_DIR)/drivers/gbusters.c \
-				 $(CORE_DIR)/vidhrdw/crimfght_vidhrdw.c $(CORE_DIR)/drivers/crimfght.c \
-				 $(CORE_DIR)/vidhrdw/spy_vidhrdw.c $(CORE_DIR)/drivers/spy.c \
-				 $(CORE_DIR)/vidhrdw/bottom9_vidhrdw.c $(CORE_DIR)/drivers/bottom9.c \
-				 $(CORE_DIR)/vidhrdw/blockhl_vidhrdw.c $(CORE_DIR)/drivers/blockhl.c \
-				 $(CORE_DIR)/vidhrdw/aliens_vidhrdw.c $(CORE_DIR)/drivers/aliens.c \
-				 $(CORE_DIR)/vidhrdw/surpratk_vidhrdw.c $(CORE_DIR)/drivers/surpratk.c \
-				 $(CORE_DIR)/vidhrdw/parodius_vidhrdw.c $(CORE_DIR)/drivers/parodius.c \
-				 $(CORE_DIR)/vidhrdw/rollerg_vidhrdw.c $(CORE_DIR)/drivers/rollerg.c \
-				 $(CORE_DIR)/vidhrdw/xexex_vidhrdw.c $(CORE_DIR)/drivers/xexex.c \
-				 $(CORE_DIR)/vidhrdw/asterix_vidhrdw.c $(CORE_DIR)/drivers/asterix.c \
-				 $(CORE_DIR)/vidhrdw/gijoe_vidhrdw.c $(CORE_DIR)/drivers/gijoe.c \
-				 $(CORE_DIR)/machine/simpsons_machine.c $(CORE_DIR)/vidhrdw/simpsons_vidhrdw.c $(CORE_DIR)/drivers/simpsons.c \
-				 $(CORE_DIR)/vidhrdw/vendetta_vidhrdw.c $(CORE_DIR)/drivers/vendetta.c \
-				 $(CORE_DIR)/vidhrdw/wecleman_vidhrdw.c $(CORE_DIR)/drivers/wecleman.c \
-				 $(CORE_DIR)/vidhrdw/chqflag_vidhrdw.c $(CORE_DIR)/drivers/chqflag.c \
-				 $(CORE_DIR)/vidhrdw/ultraman_vidhrdw.c $(CORE_DIR)/drivers/ultraman.c \
-				 $(CORE_DIR)/vidhrdw/hexion_vidhrdw.c $(CORE_DIR)/drivers/hexion.c \
-				 $(CORE_DIR)/vidhrdw/twin16_vidhrdw.c $(CORE_DIR)/drivers/twin16.c \
-				 $(CORE_DIR)/vidhrdw/tmnt_vidhrdw.c $(CORE_DIR)/drivers/tmnt.c \
-				 $(CORE_DIR)/vidhrdw/xmen_vidhrdw.c $(CORE_DIR)/drivers/xmen.c \
-				 $(CORE_DIR)/vidhrdw/overdriv_vidhrdw.c $(CORE_DIR)/drivers/overdriv.c \
-				 $(CORE_DIR)/vidhrdw/gradius3_vidhrdw.c $(CORE_DIR)/drivers/gradius3.c \
-				 $(CORE_DIR)/vidhrdw/moo_vidhrdw.c $(CORE_DIR)/drivers/moo.c \
-				 $(CORE_DIR)/vidhrdw/mystwarr_vidhrdw.c $(CORE_DIR)/drivers/mystwarr.c \
-				 $(CORE_DIR)/vidhrdw/rungun_vidhrdw.c $(CORE_DIR)/drivers/rungun.c \
-				 $(CORE_DIR)/vidhrdw/dbz2_vidhrdw.c $(CORE_DIR)/drivers/dbz2.c \
-				 $(CORE_DIR)/vidhrdw/bishi_vidhrdw.c $(CORE_DIR)/drivers/bishi.c \
-				 $(CORE_DIR)/vidhrdw/lethal_vidhrdw.c $(CORE_DIR)/drivers/lethal.c \
-				 $(CORE_DIR)/machine/konamigx_machine.c $(CORE_DIR)/vidhrdw/konamigx_vidhrdw.c $(CORE_DIR)/drivers/konamigx.c \
-				 $(CORE_DIR)/vidhrdw/djmain_vidhrdw.c $(CORE_DIR)/drivers/djmain.c \
-				 $(CORE_DIR)/vidhrdw/plygonet_vidhrdw.c $(CORE_DIR)/drivers/plygonet.c \
-				 $(CORE_DIR)/drivers/mogura.c \
-				 $(CORE_DIR)/machine/am53cf96.c $(CORE_DIR)/drivers/konamigq.c \
-				 $(CORE_DIR)/machine/carpolo_machine.c $(CORE_DIR)/vidhrdw/carpolo_vidhrdw.c $(CORE_DIR)/drivers/carpolo.c \
-				 $(CORE_DIR)/vidhrdw/exidy_vidhrdw.c $(CORE_DIR)/sndhrdw/exidy_sndhrdw.c $(CORE_DIR)/drivers/exidy.c \
-				 $(CORE_DIR)/sndhrdw/targ.c \
-				 $(CORE_DIR)/vidhrdw/circus_vidhrdw.c $(CORE_DIR)/drivers/circus.c \
-				 $(CORE_DIR)/vidhrdw/starfire_vidhrdw.c $(CORE_DIR)/drivers/starfire.c \
-				 $(CORE_DIR)/vidhrdw/victory_vidhrdw.c $(CORE_DIR)/drivers/victory.c \
-				 $(CORE_DIR)/sndhrdw/exidy440_sndhrdw.c $(CORE_DIR)/vidhrdw/exidy440_vidhrdw.c $(CORE_DIR)/drivers/exidy440.c \
-				 $(CORE_DIR)/machine/atari_vg.c \
-				 $(CORE_DIR)/vidhrdw/tia.c $(CORE_DIR)/drivers/tourtabl.c \
-				 $(CORE_DIR)/machine/asteroid_machine.c $(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c $(CORE_DIR)/drivers/asteroid.c \
-				 $(CORE_DIR)/sndhrdw/llander.c \
-				 $(CORE_DIR)/drivers/bwidow.c \
-				 $(CORE_DIR)/sndhrdw/bzone_sndhrdw.c	$(CORE_DIR)/drivers/bzone.c \
-				 $(CORE_DIR)/sndhrdw/redbaron.c \
-				 $(CORE_DIR)/drivers/tempest.c \
-				 $(CORE_DIR)/machine/starwars_machine.c $(CORE_DIR)/drivers/starwars.c $(CORE_DIR)/sndhrdw/starwars_sndhrdw.c \
-				 $(CORE_DIR)/machine/mhavoc_machine.c $(CORE_DIR)/drivers/mhavoc.c \
-				 $(CORE_DIR)/drivers/quantum.c \
-				 $(CORE_DIR)/vidhrdw/copsnrob_vidhrdw.c $(CORE_DIR)/machine/copsnrob_machine.c $(CORE_DIR)/drivers/copsnrob.c \
-				 $(CORE_DIR)/vidhrdw/flyball_vidhrdw.c $(CORE_DIR)/drivers/flyball.c \
-				 $(CORE_DIR)/vidhrdw/sprint2_vidhrdw.c $(CORE_DIR)/drivers/sprint2.c \
-				 $(CORE_DIR)/vidhrdw/sprint4_vidhrdw.c $(CORE_DIR)/drivers/sprint4.c \
-				 $(CORE_DIR)/vidhrdw/sprint8_vidhrdw.c $(CORE_DIR)/drivers/sprint8.c \
-				 $(CORE_DIR)/vidhrdw/nitedrvr_vidhrdw.c $(CORE_DIR)/machine/nitedrvr_machine.c $(CORE_DIR)/drivers/nitedrvr.c \
-				 $(CORE_DIR)/machine/dominos.c \
-				 $(CORE_DIR)/vidhrdw/triplhnt_vidhrdw.c $(CORE_DIR)/drivers/triplhnt.c \
-				 $(CORE_DIR)/vidhrdw/dragrace_vidhrdw.c $(CORE_DIR)/drivers/dragrace.c \
-				 $(CORE_DIR)/vidhrdw/poolshrk_vidhrdw.c $(CORE_DIR)/drivers/poolshrk.c \
-				 $(CORE_DIR)/vidhrdw/starshp1_vidhrdw.c $(CORE_DIR)/drivers/starshp1.c \
-				 $(CORE_DIR)/vidhrdw/canyon_vidhrdw.c $(CORE_DIR)/drivers/canyon.c \
-				 $(CORE_DIR)/vidhrdw/destroyr_vidhrdw.c $(CORE_DIR)/drivers/destroyr.c \
-				 $(CORE_DIR)/drivers/ultratnk.c \
-				 $(CORE_DIR)/vidhrdw/wolfpack_vidhrdw.c $(CORE_DIR)/drivers/wolfpack.c \
-				 $(CORE_DIR)/vidhrdw/boxer_vidhrdw.c $(CORE_DIR)/drivers/boxer.c \
-				 $(CORE_DIR)/vidhrdw/skyraid_vidhrdw.c $(CORE_DIR)/drivers/skyraid.c \
-				 $(CORE_DIR)/machine/avalnche_machine.c $(CORE_DIR)/vidhrdw/avalnche_vidhrdw.c $(CORE_DIR)/drivers/avalnche.c \
-				 $(CORE_DIR)/drivers/firetrk.c $(CORE_DIR)/vidhrdw/firetrk_vidhrdw.c $(CORE_DIR)/sndhrdw/ataridis_sndhrdw.c \
-				 $(CORE_DIR)/vidhrdw/skydiver_vidhrdw.c $(CORE_DIR)/drivers/skydiver.c \
-				 $(CORE_DIR)/machine/sbrkout_machine.c $(CORE_DIR)/vidhrdw/sbrkout_vidhrdw.c $(CORE_DIR)/drivers/sbrkout.c \
-				 $(CORE_DIR)/machine/atarifb_machine.c $(CORE_DIR)/vidhrdw/atarifb_vidhrdw.c $(CORE_DIR)/drivers/atarifb.c \
-				 $(CORE_DIR)/vidhrdw/orbit_vidhrdw.c $(CORE_DIR)/drivers/orbit.c \
-				 $(CORE_DIR)/vidhrdw/videopin_vidhrdw.c $(CORE_DIR)/drivers/videopin.c \
-				 $(CORE_DIR)/machine/subs_machine.c $(CORE_DIR)/vidhrdw/subs_vidhrdw.c $(CORE_DIR)/drivers/subs.c \
-				 $(CORE_DIR)/vidhrdw/bsktball_vidhrdw.c $(CORE_DIR)/machine/bsktball_machine.c $(CORE_DIR)/drivers/bsktball.c \
-				 $(CORE_DIR)/vidhrdw/centiped_vidhrdw.c $(CORE_DIR)/drivers/centiped.c \
-				 $(CORE_DIR)/vidhrdw/runaway_vidhrdw.c $(CORE_DIR)/drivers/runaway.c \
-				 $(CORE_DIR)/machine/missile_machine.c $(CORE_DIR)/vidhrdw/missile_vidhrdw.c $(CORE_DIR)/drivers/missile.c \
-				 $(CORE_DIR)/vidhrdw/foodf_vidhrdw.c $(CORE_DIR)/drivers/foodf.c \
-				 $(CORE_DIR)/drivers/tunhunt.c $(CORE_DIR)/vidhrdw/tunhunt_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/liberatr_vidhrdw.c $(CORE_DIR)/drivers/liberatr.c \
-				 $(CORE_DIR)/vidhrdw/ccastles_vidhrdw.c $(CORE_DIR)/drivers/ccastles.c \
-				 $(CORE_DIR)/vidhrdw/cloak_vidhrdw.c $(CORE_DIR)/drivers/cloak.c \
-				 $(CORE_DIR)/vidhrdw/cloud9_vidhrdw.c $(CORE_DIR)/drivers/cloud9.c \
-				 $(CORE_DIR)/vidhrdw/jedi_vidhrdw.c $(CORE_DIR)/drivers/jedi.c \
-				 $(CORE_DIR)/machine/atarigen.c $(CORE_DIR)/sndhrdw/atarijsa.c \
-				 $(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c $(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
-				 $(CORE_DIR)/machine/slapstic.c \
-				 $(CORE_DIR)/vidhrdw/atarisy1_vidhrdw.c $(CORE_DIR)/drivers/atarisy1.c \
-				 $(CORE_DIR)/vidhrdw/atarisy2_vidhrdw.c $(CORE_DIR)/drivers/atarisy2.c \
-				 $(CORE_DIR)/machine/irobot_machine.c $(CORE_DIR)/vidhrdw/irobot_vidhrdw.c $(CORE_DIR)/drivers/irobot.c \
-				 $(CORE_DIR)/machine/harddriv_machine.c $(CORE_DIR)/vidhrdw/harddriv_vidhrdw.c $(CORE_DIR)/sndhrdw/harddriv_sndhrdw.c $(CORE_DIR)/drivers/harddriv.c \
-				 $(CORE_DIR)/vidhrdw/gauntlet_vidhrdw.c $(CORE_DIR)/drivers/gauntlet.c \
-				 $(CORE_DIR)/vidhrdw/atetris_vidhrdw.c $(CORE_DIR)/drivers/atetris.c \
-				 $(CORE_DIR)/vidhrdw/toobin_vidhrdw.c $(CORE_DIR)/drivers/toobin.c \
-				 $(CORE_DIR)/vidhrdw/vindictr_vidhrdw.c $(CORE_DIR)/drivers/vindictr.c \
-				 $(CORE_DIR)/vidhrdw/klax_vidhrdw.c $(CORE_DIR)/drivers/klax.c \
-				 $(CORE_DIR)/vidhrdw/blstroid_vidhrdw.c $(CORE_DIR)/drivers/blstroid.c \
-				 $(CORE_DIR)/vidhrdw/xybots_vidhrdw.c $(CORE_DIR)/drivers/xybots.c \
-				 $(CORE_DIR)/vidhrdw/eprom_vidhrdw.c $(CORE_DIR)/drivers/eprom.c \
-				 $(CORE_DIR)/vidhrdw/skullxbo_vidhrdw.c $(CORE_DIR)/drivers/skullxbo.c \
-				 $(CORE_DIR)/vidhrdw/badlands_vidhrdw.c $(CORE_DIR)/drivers/badlands.c \
-				 $(CORE_DIR)/vidhrdw/cyberbal_vidhrdw.c $(CORE_DIR)/sndhrdw/cyberbal_sndhrdw.c $(CORE_DIR)/drivers/cyberbal.c \
-				 $(CORE_DIR)/vidhrdw/rampart_vidhrdw.c $(CORE_DIR)/drivers/rampart.c \
-				 $(CORE_DIR)/vidhrdw/shuuz_vidhrdw.c $(CORE_DIR)/drivers/shuuz.c \
-				 $(CORE_DIR)/vidhrdw/atarig1_vidhrdw.c $(CORE_DIR)/drivers/atarig1.c \
-				 $(CORE_DIR)/vidhrdw/thunderj_vidhrdw.c $(CORE_DIR)/drivers/thunderj.c \
-				 $(CORE_DIR)/vidhrdw/batman_vidhrdw.c $(CORE_DIR)/drivers/batman.c \
-				 $(CORE_DIR)/vidhrdw/relief_vidhrdw.c $(CORE_DIR)/drivers/relief.c \
-				 $(CORE_DIR)/vidhrdw/offtwall_vidhrdw.c $(CORE_DIR)/drivers/offtwall.c \
-				 $(CORE_DIR)/vidhrdw/arcadecl_vidhrdw.c $(CORE_DIR)/drivers/arcadecl.c \
-				 $(CORE_DIR)/vidhrdw/beathead_vidhrdw.c $(CORE_DIR)/drivers/beathead.c \
-				 $(CORE_DIR)/vidhrdw/atarig42_vidhrdw.c $(CORE_DIR)/drivers/atarig42.c \
-				 $(CORE_DIR)/machine/asic65.c \
-				 $(CORE_DIR)/vidhrdw/atarigx2_vidhrdw.c $(CORE_DIR)/drivers/atarigx2.c \
-				 $(CORE_DIR)/vidhrdw/atarigt_vidhrdw.c $(CORE_DIR)/drivers/atarigt.c \
-				 $(CORE_DIR)/vidhrdw/jaguar_vidhrdw.c $(CORE_DIR)/sndhrdw/jaguar_sndhrdw.c $(CORE_DIR)/drivers/cojag.c \
-				 $(CORE_DIR)/sndhrdw/cage_sndhrdw.c \
-				 $(CORE_DIR)/vidhrdw/rockola_vidhrdw.c $(CORE_DIR)/sndhrdw/rockola_sndhrdw.c $(CORE_DIR)/drivers/rockola.c \
-				 $(CORE_DIR)/vidhrdw/lasso_vidhrdw.c $(CORE_DIR)/drivers/lasso.c \
-				 $(CORE_DIR)/drivers/munchmo.c $(CORE_DIR)/vidhrdw/munchmo_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/marvins_vidhrdw.c $(CORE_DIR)/drivers/marvins.c \
-				 $(CORE_DIR)/vidhrdw/jcross_vidhrdw.c $(CORE_DIR)/drivers/jcross.c \
-				 $(CORE_DIR)/vidhrdw/mainsnk_vidhrdw.c $(CORE_DIR)/drivers/mainsnk.c \
-				 $(CORE_DIR)/drivers/hal21.c \
-				 $(CORE_DIR)/vidhrdw/snk_vidhrdw.c $(CORE_DIR)/drivers/snk.c \
-				 $(CORE_DIR)/drivers/sgladiat.c \
-				 $(CORE_DIR)/vidhrdw/snk68_vidhrdw.c $(CORE_DIR)/drivers/snk68.c \
-				 $(CORE_DIR)/vidhrdw/prehisle_vidhrdw.c $(CORE_DIR)/drivers/prehisle.c \
-				 $(CORE_DIR)/vidhrdw/bbusters_vidhrdw.c $(CORE_DIR)/drivers/bbusters.c \
-				 $(CORE_DIR)/drivers/shougi.c \
-				 $(CORE_DIR)/machine/equites_machine.c $(CORE_DIR)/vidhrdw/equites_vidhrdw.c $(CORE_DIR)/drivers/equites.c \
-				 $(CORE_DIR)/vidhrdw/alpha68k_vidhrdw.c $(CORE_DIR)/drivers/alpha68k.c \
-				 $(CORE_DIR)/vidhrdw/champbas_vidhrdw.c $(CORE_DIR)/drivers/champbas.c \
-				 $(CORE_DIR)/machine/exctsccr_machine.c $(CORE_DIR)/vidhrdw/exctsccr_vidhrdw.c $(CORE_DIR)/drivers/exctsccr.c \
-				 $(CORE_DIR)/drivers/scregg.c \
-				 $(CORE_DIR)/vidhrdw/tagteam_vidhrdw.c $(CORE_DIR)/drivers/tagteam.c \
-				 $(CORE_DIR)/vidhrdw/ssozumo_vidhrdw.c $(CORE_DIR)/drivers/ssozumo.c \
-				 $(CORE_DIR)/vidhrdw/mystston_vidhrdw.c $(CORE_DIR)/drivers/mystston.c \
-				 $(CORE_DIR)/vidhrdw/dogfgt_vidhrdw.c $(CORE_DIR)/drivers/dogfgt.c \
-				 $(CORE_DIR)/vidhrdw/bogeyman_vidhrdw.c $(CORE_DIR)/drivers/bogeyman.c \
-				 $(CORE_DIR)/vidhrdw/matmania_vidhrdw.c $(CORE_DIR)/drivers/matmania.c $(CORE_DIR)/machine/maniach.c \
-				 $(CORE_DIR)/vidhrdw/renegade_vidhrdw.c $(CORE_DIR)/drivers/renegade.c \
-				 $(CORE_DIR)/vidhrdw/xain_vidhrdw.c $(CORE_DIR)/drivers/xain.c \
-				 $(CORE_DIR)/vidhrdw/battlane_vidhrdw.c $(CORE_DIR)/drivers/battlane.c \
-				 $(CORE_DIR)/vidhrdw/ddragon_vidhrdw.c $(CORE_DIR)/drivers/ddragon.c \
-				 $(CORE_DIR)/drivers/chinagat.c \
-				 $(CORE_DIR)/vidhrdw/spdodgeb_vidhrdw.c $(CORE_DIR)/drivers/spdodgeb.c \
-				 $(CORE_DIR)/vidhrdw/wwfsstar_vidhrdw.c $(CORE_DIR)/drivers/wwfsstar.c \
-				 $(CORE_DIR)/vidhrdw/vball_vidhrdw.c $(CORE_DIR)/drivers/vball.c \
-				 $(CORE_DIR)/vidhrdw/blockout_vidhrdw.c $(CORE_DIR)/drivers/blockout.c \
-				 $(CORE_DIR)/vidhrdw/ddragon3_vidhrdw.c $(CORE_DIR)/drivers/ddragon3.c \
-				 $(CORE_DIR)/vidhrdw/wwfwfest_vidhrdw.c $(CORE_DIR)/drivers/wwfwfest.c \
-				 $(CORE_DIR)/vidhrdw/shadfrce_vidhrdw.c $(CORE_DIR)/drivers/shadfrce.c \
-				 $(CORE_DIR)/machine/berzerk_machine.c $(CORE_DIR)/vidhrdw/berzerk_vidhrdw.c $(CORE_DIR)/sndhrdw/berzerk_sndhrdw.c $(CORE_DIR)/drivers/berzerk.c \
-				 $(CORE_DIR)/drivers/mazerbla.c \
-				 $(CORE_DIR)/drivers/supdrapo.c \
-				 $(CORE_DIR)/drivers/toratora.c \
-				 $(CORE_DIR)/vidhrdw/gameplan_vidhrdw.c $(CORE_DIR)/drivers/gameplan.c \
-				 $(CORE_DIR)/vidhrdw/zac2650_vidhrdw.c $(CORE_DIR)/drivers/zac2650.c \
-				 $(CORE_DIR)/vidhrdw/zaccaria_vidhrdw.c $(CORE_DIR)/drivers/zaccaria.c \
-				 $(CORE_DIR)/vidhrdw/mouser_vidhrdw.c $(CORE_DIR)/drivers/mouser.c \
-				 $(CORE_DIR)/vidhrdw/nova2001_vidhrdw.c $(CORE_DIR)/drivers/nova2001.c \
-				 $(CORE_DIR)/vidhrdw/ninjakid_vidhrdw.c $(CORE_DIR)/drivers/ninjakid.c \
-				 $(CORE_DIR)/vidhrdw/raiders5_vidhrdw.c $(CORE_DIR)/drivers/raiders5.c \
-				 $(CORE_DIR)/vidhrdw/pkunwar_vidhrdw.c $(CORE_DIR)/drivers/pkunwar.c \
-				 $(CORE_DIR)/vidhrdw/xxmissio_vidhrdw.c $(CORE_DIR)/drivers/xxmissio.c \
-				 $(CORE_DIR)/vidhrdw/ninjakd2_vidhrdw.c $(CORE_DIR)/drivers/ninjakd2.c \
-				 $(CORE_DIR)/vidhrdw/mnight_vidhrdw.c $(CORE_DIR)/drivers/mnight.c \
-				 $(CORE_DIR)/vidhrdw/omegaf_vidhrdw.c $(CORE_DIR)/drivers/omegaf.c \
-				 $(CORE_DIR)/vidhrdw/nmk16_vidhrdw.c $(CORE_DIR)/machine/nmk004.c $(CORE_DIR)/drivers/nmk16.c \
-				 $(CORE_DIR)/drivers/jalmah.c \
-				 $(CORE_DIR)/drivers/quizpani.c $(CORE_DIR)/vidhrdw/quizpani_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/macrossp_vidhrdw.c $(CORE_DIR)/drivers/macrossp.c \
-				 $(CORE_DIR)/vidhrdw/quizdna_vidhrdw.c $(CORE_DIR)/drivers/quizdna.c \
-				 $(CORE_DIR)/vidhrdw/jack_vidhrdw.c $(CORE_DIR)/drivers/jack.c \
-				 $(CORE_DIR)/drivers/embargo.c \
-				 $(CORE_DIR)/sndhrdw/cinemat_sndhrdw.c $(CORE_DIR)/drivers/cinemat.c \
-				 $(CORE_DIR)/machine/cchasm_machine.c $(CORE_DIR)/vidhrdw/cchasm_vidhrdw.c $(CORE_DIR)/sndhrdw/cchasm_sndhrdw.c $(CORE_DIR)/drivers/cchasm.c \
-				 $(CORE_DIR)/vidhrdw/thepit_vidhrdw.c $(CORE_DIR)/drivers/thepit.c \
-				 $(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c \
-				 $(CORE_DIR)/machine/bagman_machine.c $(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c \
-				 $(CORE_DIR)/vidhrdw/tankbust_vidhrdw.c $(CORE_DIR)/drivers/tankbust.c \
-				 $(CORE_DIR)/vidhrdw/wiz_vidhrdw.c $(CORE_DIR)/drivers/wiz.c \
-				 $(CORE_DIR)/vidhrdw/kncljoe_vidhrdw.c $(CORE_DIR)/drivers/kncljoe.c \
-				 $(CORE_DIR)/machine/stfight_machine.c $(CORE_DIR)/vidhrdw/stfight_vidhrdw.c $(CORE_DIR)/drivers/stfight.c \
-				 $(CORE_DIR)/drivers/cshooter.c \
-				 $(CORE_DIR)/sndhrdw/seibu.c \
-				 $(CORE_DIR)/vidhrdw/deadang_vidhrdw.c $(CORE_DIR)/drivers/deadang.c \
-				 $(CORE_DIR)/vidhrdw/dynduke_vidhrdw.c $(CORE_DIR)/drivers/dynduke.c \
-				 $(CORE_DIR)/vidhrdw/raiden_vidhrdw.c $(CORE_DIR)/drivers/raiden.c $(CORE_DIR)/drivers/raiden2.c \
-				 $(CORE_DIR)/vidhrdw/dcon_vidhrdw.c $(CORE_DIR)/drivers/dcon.c \
-				 $(CORE_DIR)/vidhrdw/sengokmj_vidhrdw.c $(CORE_DIR)/drivers/sengokmj.c \
-				 $(CORE_DIR)/sndhrdw/t5182.c \
-				 $(CORE_DIR)/vidhrdw/mustache_vidhrdw.c $(CORE_DIR)/drivers/mustache.c \
-				 $(CORE_DIR)/vidhrdw/darkmist_vidhrdw.c $(CORE_DIR)/drivers/darkmist.c \
-				 $(CORE_DIR)/vidhrdw/cabal_vidhrdw.c $(CORE_DIR)/drivers/cabal.c \
-				 $(CORE_DIR)/vidhrdw/toki_vidhrdw.c $(CORE_DIR)/drivers/toki.c \
-				 $(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c $(CORE_DIR)/drivers/bloodbro.c \
-				 $(CORE_DIR)/vidhrdw/legionna_vidhrdw.c $(CORE_DIR)/drivers/legionna.c \
-				 $(CORE_DIR)/vidhrdw/goal92_vidhrdw.c $(CORE_DIR)/drivers/goal92.c \
-				 $(CORE_DIR)/vidhrdw/exerion_vidhrdw.c $(CORE_DIR)/drivers/exerion.c \
-				 $(CORE_DIR)/drivers/fcombat.c \
-				 $(CORE_DIR)/vidhrdw/aeroboto_vidhrdw.c $(CORE_DIR)/drivers/aeroboto.c \
-				 $(CORE_DIR)/vidhrdw/citycon_vidhrdw.c $(CORE_DIR)/drivers/citycon.c \
-				 $(CORE_DIR)/vidhrdw/momoko_vidhrdw.c $(CORE_DIR)/drivers/momoko.c \
-				 $(CORE_DIR)/vidhrdw/argus_vidhrdw.c $(CORE_DIR)/drivers/argus.c \
-				 $(CORE_DIR)/vidhrdw/psychic5_vidhrdw.c $(CORE_DIR)/drivers/psychic5.c \
-				 $(CORE_DIR)/vidhrdw/ginganin_vidhrdw.c $(CORE_DIR)/drivers/ginganin.c \
-				 $(CORE_DIR)/vidhrdw/skyfox_vidhrdw.c $(CORE_DIR)/drivers/skyfox.c \
-				 $(CORE_DIR)/vidhrdw/homerun_vidhrdw.c $(CORE_DIR)/drivers/homerun.c \
-				 $(CORE_DIR)/vidhrdw/cischeat_vidhrdw.c $(CORE_DIR)/drivers/cischeat.c \
-				 $(CORE_DIR)/vidhrdw/tetrisp2_vidhrdw.c $(CORE_DIR)/drivers/tetrisp2.c \
-				 $(CORE_DIR)/vidhrdw/megasys1_vidhrdw.c $(CORE_DIR)/drivers/megasys1.c \
-				 $(CORE_DIR)/vidhrdw/ms32_vidhrdw.c $(CORE_DIR)/drivers/ms32.c \
-				 $(CORE_DIR)/vidhrdw/bigstrkb_vidhrdw.c $(CORE_DIR)/drivers/bigstrkb.c \
-				 $(CORE_DIR)/vidhrdw/rpunch_vidhrdw.c $(CORE_DIR)/drivers/rpunch.c \
-				 $(CORE_DIR)/vidhrdw/tail2nos_vidhrdw.c $(CORE_DIR)/drivers/tail2nos.c \
-				 $(CORE_DIR)/vidhrdw/ojankohs_vidhrdw.c $(CORE_DIR)/drivers/ojankohs.c \
-				 $(CORE_DIR)/vidhrdw/fromance_vidhrdw.c $(CORE_DIR)/drivers/fromance.c $(CORE_DIR)/drivers/pipedrm.c \
-				 $(CORE_DIR)/vidhrdw/aerofgt_vidhrdw.c $(CORE_DIR)/drivers/aerofgt.c \
-				 $(CORE_DIR)/vidhrdw/welltris_vidhrdw.c $(CORE_DIR)/drivers/welltris.c \
-				 $(CORE_DIR)/vidhrdw/f1gp_vidhrdw.c $(CORE_DIR)/drivers/f1gp.c \
-				 $(CORE_DIR)/vidhrdw/taotaido_vidhrdw.c $(CORE_DIR)/drivers/taotaido.c \
-				 $(CORE_DIR)/vidhrdw/crshrace_vidhrdw.c $(CORE_DIR)/drivers/crshrace.c \
-				 $(CORE_DIR)/vidhrdw/gstriker_vidhrdw.c $(CORE_DIR)/drivers/gstriker.c \
-				 $(CORE_DIR)/vidhrdw/suprslam_vidhrdw.c $(CORE_DIR)/drivers/suprslam.c \
-				 $(CORE_DIR)/vidhrdw/fromanc2_vidhrdw.c $(CORE_DIR)/drivers/fromanc2.c \
-				 $(CORE_DIR)/vidhrdw/inufuku_vidhrdw.c $(CORE_DIR)/drivers/inufuku.c \
-				 $(CORE_DIR)/vidhrdw/psikyo_vidhrdw.c $(CORE_DIR)/drivers/psikyo.c \
-				 $(CORE_DIR)/vidhrdw/psikyosh_vidhrdw.c $(CORE_DIR)/drivers/psikyosh.c \
-				 $(CORE_DIR)/vidhrdw/psikyo4_vidhrdw.c $(CORE_DIR)/drivers/psikyo4.c \
-				 $(CORE_DIR)/machine/8254pit.c $(CORE_DIR)/drivers/leland.c $(CORE_DIR)/vidhrdw/leland_vidhrdw.c $(CORE_DIR)/machine/leland_machine.c $(CORE_DIR)/sndhrdw/leland_sndhrdw.c \
-				 $(CORE_DIR)/drivers/ataxx.c \
-				 $(CORE_DIR)/vidhrdw/marineb_vidhrdw.c $(CORE_DIR)/drivers/marineb.c \
-				 $(CORE_DIR)/vidhrdw/funkybee_vidhrdw.c $(CORE_DIR)/drivers/funkybee.c \
-				 $(CORE_DIR)/vidhrdw/zodiack_vidhrdw.c $(CORE_DIR)/drivers/zodiack.c \
-				 $(CORE_DIR)/vidhrdw/espial_vidhrdw.c $(CORE_DIR)/drivers/espial.c \
-				 $(CORE_DIR)/vidhrdw/vastar_vidhrdw.c $(CORE_DIR)/drivers/vastar.c \
-				 $(CORE_DIR)/vidhrdw/xorworld_vidhrdw.c $(CORE_DIR)/drivers/xorworld.c \
-				 $(CORE_DIR)/vidhrdw/splash_vidhrdw.c $(CORE_DIR)/drivers/splash.c \
-				 $(CORE_DIR)/vidhrdw/thoop2_vidhrdw.c $(CORE_DIR)/drivers/thoop2.c \
-				 $(CORE_DIR)/vidhrdw/gaelco_vidhrdw.c $(CORE_DIR)/drivers/gaelco.c \
-				 $(CORE_DIR)/machine/wrally_machine.c $(CORE_DIR)/vidhrdw/wrally_vidhrdw.c $(CORE_DIR)/drivers/wrally.c \
-				 $(CORE_DIR)/vidhrdw/targeth_vidhrdw.c $(CORE_DIR)/drivers/targeth.c \
-				 $(CORE_DIR)/machine/gaelco2_machine.c $(CORE_DIR)/vidhrdw/gaelco2_vidhrdw.c $(CORE_DIR)/drivers/gaelco2.c \
-				 $(CORE_DIR)/vidhrdw/glass_vidhrdw.c $(CORE_DIR)/drivers/glass.c \
-				 $(CORE_DIR)/vidhrdw/airbustr_vidhrdw.c $(CORE_DIR)/drivers/airbustr.c \
-				 $(CORE_DIR)/vidhrdw/djboy_vidhrdw.c $(CORE_DIR)/drivers/djboy.c \
-				 $(CORE_DIR)/vidhrdw/galpanic_vidhrdw.c $(CORE_DIR)/drivers/galpanic.c \
-				 $(CORE_DIR)/vidhrdw/galpani2_vidhrdw.c $(CORE_DIR)/drivers/galpani2.c \
-				 $(CORE_DIR)/drivers/jchan.c \
-				 $(CORE_DIR)/vidhrdw/kaneko16_vidhrdw.c $(CORE_DIR)/drivers/kaneko16.c \
-				 $(CORE_DIR)/vidhrdw/suprnova_vidhrdw.c $(CORE_DIR)/drivers/suprnova.c \
-				 $(CORE_DIR)/machine/pd4990a.c $(CORE_DIR)/machine/neocrypt.c \
-				 $(CORE_DIR)/machine/neogeo_machine.c $(CORE_DIR)/vidhrdw/neogeo_vidhrdw.c $(CORE_DIR)/drivers/neogeo.c \
-				 $(CORE_DIR)/vidhrdw/hanaawas_vidhrdw.c $(CORE_DIR)/drivers/hanaawas.c \
-				 $(CORE_DIR)/vidhrdw/speedatk_vidhrdw.c $(CORE_DIR)/drivers/speedatk.c \
-				 $(CORE_DIR)/vidhrdw/srmp2_vidhrdw.c $(CORE_DIR)/drivers/srmp2.c \
-				 $(CORE_DIR)/vidhrdw/seta_vidhrdw.c $(CORE_DIR)/drivers/seta.c \
-				 $(CORE_DIR)/vidhrdw/seta2_vidhrdw.c $(CORE_DIR)/drivers/seta2.c \
-				 $(CORE_DIR)/vidhrdw/ssv_vidhrdw.c $(CORE_DIR)/drivers/ssv.c \
-				 $(CORE_DIR)/vidhrdw/powerins_vidhrdw.c $(CORE_DIR)/drivers/powerins.c \
-				 $(CORE_DIR)/vidhrdw/ohmygod_vidhrdw.c $(CORE_DIR)/drivers/ohmygod.c \
-				 $(CORE_DIR)/vidhrdw/blmbycar_vidhrdw.c $(CORE_DIR)/drivers/blmbycar.c \
-				 $(CORE_DIR)/vidhrdw/route16_vidhrdw.c $(CORE_DIR)/drivers/route16.c \
-				 $(CORE_DIR)/vidhrdw/ttmahjng_vidhrdw.c $(CORE_DIR)/drivers/ttmahjng.c \
-				 $(CORE_DIR)/vidhrdw/kangaroo_vidhrdw.c $(CORE_DIR)/drivers/kangaroo.c \
-				 $(CORE_DIR)/vidhrdw/arabian_vidhrdw.c $(CORE_DIR)/drivers/arabian.c \
-				 $(CORE_DIR)/vidhrdw/markham_vidhrdw.c $(CORE_DIR)/drivers/markham.c \
-				 $(CORE_DIR)/vidhrdw/strnskil_vidhrdw.c $(CORE_DIR)/drivers/strnskil.c \
-				 $(CORE_DIR)/vidhrdw/ikki_vidhrdw.c $(CORE_DIR)/drivers/ikki.c \
-				 $(CORE_DIR)/drivers/shanghai.c \
-				 $(CORE_DIR)/vidhrdw/shangha3_vidhrdw.c $(CORE_DIR)/drivers/shangha3.c \
-				 $(CORE_DIR)/vidhrdw/goindol_vidhrdw.c $(CORE_DIR)/drivers/goindol.c \
-				 $(CORE_DIR)/vidhrdw/suna8_vidhrdw.c $(CORE_DIR)/drivers/suna8.c \
-				 $(CORE_DIR)/vidhrdw/suna16_vidhrdw.c $(CORE_DIR)/drivers/suna16.c \
-				 $(CORE_DIR)/vidhrdw/gundealr_vidhrdw.c $(CORE_DIR)/drivers/gundealr.c \
-				 $(CORE_DIR)/vidhrdw/dooyong_vidhrdw.c $(CORE_DIR)/drivers/dooyong.c \
-				 $(CORE_DIR)/machine/leprechn_machine.c $(CORE_DIR)/vidhrdw/leprechn_vidhrdw.c $(CORE_DIR)/drivers/leprechn.c \
-				 $(CORE_DIR)/machine/beezer_machine.c $(CORE_DIR)/vidhrdw/beezer_vidhrdw.c $(CORE_DIR)/drivers/beezer.c \
-				 $(CORE_DIR)/vidhrdw/pushman_vidhrdw.c $(CORE_DIR)/drivers/pushman.c \
-				 $(CORE_DIR)/vidhrdw/zerozone_vidhrdw.c $(CORE_DIR)/drivers/zerozone.c \
-				 $(CORE_DIR)/vidhrdw/galspnbl_vidhrdw.c $(CORE_DIR)/drivers/galspnbl.c \
-				 $(CORE_DIR)/vidhrdw/sslam_vidhrdw.c $(CORE_DIR)/drivers/sslam.c \
-				 $(CORE_DIR)/vidhrdw/playmark_vidhrdw.c $(CORE_DIR)/drivers/playmark.c \
-				 $(CORE_DIR)/vidhrdw/thief_vidhrdw.c $(CORE_DIR)/drivers/thief.c \
-				 $(CORE_DIR)/vidhrdw/mrflea_vidhrdw.c $(CORE_DIR)/drivers/mrflea.c \
-				 $(CORE_DIR)/vidhrdw/holeland_vidhrdw.c $(CORE_DIR)/drivers/holeland.c \
-				 $(CORE_DIR)/vidhrdw/speedbal_vidhrdw.c $(CORE_DIR)/drivers/speedbal.c \
-				 $(CORE_DIR)/vidhrdw/sauro_vidhrdw.c $(CORE_DIR)/drivers/sauro.c \
-				 $(CORE_DIR)/vidhrdw/metro_vidhrdw.c $(CORE_DIR)/drivers/metro.c \
-				 $(CORE_DIR)/vidhrdw/hyprduel_vidhrdw.c $(CORE_DIR)/drivers/hyprduel.c \
-				 $(CORE_DIR)/vidhrdw/spcforce_vidhrdw.c $(CORE_DIR)/drivers/spcforce.c \
-				 $(CORE_DIR)/drivers/looping.c \
-				 $(CORE_DIR)/vidhrdw/paradise_vidhrdw.c $(CORE_DIR)/drivers/paradise.c \
-				 $(CORE_DIR)/vidhrdw/yunsung8_vidhrdw.c $(CORE_DIR)/drivers/yunsung8.c \
-				 $(CORE_DIR)/vidhrdw/yunsun16_vidhrdw.c $(CORE_DIR)/drivers/yunsun16.c \
-				 $(CORE_DIR)/vidhrdw/blueprnt_vidhrdw.c $(CORE_DIR)/drivers/blueprnt.c \
-				 $(CORE_DIR)/vidhrdw/fuukifg2_vidhrdw.c $(CORE_DIR)/drivers/fuukifg2.c \
-				 $(CORE_DIR)/vidhrdw/fuukifg3_vidhrdw.c $(CORE_DIR)/drivers/fuukifg3.c \
-				 $(CORE_DIR)/vidhrdw/drgnmst_vidhrdw.c $(CORE_DIR)/drivers/drgnmst.c \
-				 $(CORE_DIR)/vidhrdw/unico_vidhrdw.c $(CORE_DIR)/drivers/unico.c \
-				 $(CORE_DIR)/vidhrdw/silkroad_vidhrdw.c $(CORE_DIR)/drivers/silkroad.c \
-				 $(CORE_DIR)/vidhrdw/afega_vidhrdw.c $(CORE_DIR)/drivers/afega.c \
-				 $(CORE_DIR)/vidhrdw/esd16_vidhrdw.c $(CORE_DIR)/drivers/esd16.c \
-				 $(CORE_DIR)/drivers/royalmah.c \
-				 $(CORE_DIR)/vidhrdw/hnayayoi_vidhrdw.c $(CORE_DIR)/drivers/hnayayoi.c \
-				 $(CORE_DIR)/vidhrdw/dynax_vidhrdw.c $(CORE_DIR)/drivers/dynax.c \
-				 $(CORE_DIR)/drivers/ddenlovr.c \
-				 $(CORE_DIR)/drivers/realbrk.c $(CORE_DIR)/vidhrdw/realbrk_vidhrdw.c \
-				 $(CORE_DIR)/vidhrdw/crtc6845.c \
-				 $(CORE_DIR)/vidhrdw/nyny_vidhrdw.c $(CORE_DIR)/drivers/nyny.c \
-				 $(CORE_DIR)/drivers/r2dtank.c \
-				 $(CORE_DIR)/machine/spiders_machine.c $(CORE_DIR)/vidhrdw/spiders_vidhrdw.c $(CORE_DIR)/drivers/spiders.c \
-				 $(CORE_DIR)/vidhrdw/iqblock_vidhrdw.c $(CORE_DIR)/drivers/iqblock.c \
-				 $(CORE_DIR)/drivers/chindrag.c \
-				 $(CORE_DIR)/drivers/grtwall.c \
-				 $(CORE_DIR)/vidhrdw/pgm_vidhrdw.c $(CORE_DIR)/drivers/pgm.c \
-				 $(CORE_DIR)/machine/pgmprot_machine.c $(CORE_DIR)/machine/pgmcrypt.c $(CORE_DIR)/machine/pgmy2ks.c \
-				 $(CORE_DIR)/vidhrdw/hitme_vidhrdw.c $(CORE_DIR)/drivers/hitme.c \
-				 $(CORE_DIR)/vidhrdw/starcrus_vidhrdw.c $(CORE_DIR)/drivers/starcrus.c \
-				 $(CORE_DIR)/vidhrdw/battlex_vidhrdw.c $(CORE_DIR)/drivers/battlex.c \
-				 $(CORE_DIR)/vidhrdw/carjmbre_vidhrdw.c $(CORE_DIR)/drivers/carjmbre.c \
-				 $(CORE_DIR)/vidhrdw/popper_vidhrdw.c $(CORE_DIR)/drivers/popper.c \
-				 $(CORE_DIR)/vidhrdw/speedspn_vidhrdw.c $(CORE_DIR)/drivers/speedspn.c \
-				 $(CORE_DIR)/vidhrdw/kickgoal_vidhrdw.c $(CORE_DIR)/drivers/kickgoal.c \
-				 $(CORE_DIR)/vidhrdw/usgames_vidhrdw.c $(CORE_DIR)/drivers/usgames.c \
-				 $(CORE_DIR)/vidhrdw/mermaid_vidhrdw.c $(CORE_DIR)/drivers/mermaid.c \
-				 $(CORE_DIR)/vidhrdw/drmicro_vidhrdw.c $(CORE_DIR)/drivers/drmicro.c \
-				 $(CORE_DIR)/vidhrdw/appoooh_vidhrdw.c $(CORE_DIR)/drivers/appoooh.c \
-				 $(CORE_DIR)/vidhrdw/bankp_vidhrdw.c $(CORE_DIR)/drivers/bankp.c \
-				 $(CORE_DIR)/vidhrdw/mjkjidai_vidhrdw.c $(CORE_DIR)/drivers/mjkjidai.c \
-				 $(CORE_DIR)/vidhrdw/mayumi_vidhrdw.c $(CORE_DIR)/drivers/mayumi.c \
-				 $(CORE_DIR)/vidhrdw/btoads_vidhrdw.c $(CORE_DIR)/drivers/btoads.c \
-				 $(CORE_DIR)/vidhrdw/kinst_vidhrdw.c $(CORE_DIR)/drivers/kinst.c \
-				 $(CORE_DIR)/vidhrdw/freekick_vidhrdw.c $(CORE_DIR)/drivers/freekick.c \
-				 $(CORE_DIR)/drivers/rmhaihai.c \
-				 $(CORE_DIR)/drivers/hanaroku.c \
-				 $(CORE_DIR)/drivers/yumefuda.c \
-				 $(CORE_DIR)/vidhrdw/homedata_vidhrdw.c $(CORE_DIR)/drivers/homedata.c \
-				 $(CORE_DIR)/vidhrdw/artmagic_vidhrdw.c $(CORE_DIR)/drivers/artmagic.c \
-				 $(CORE_DIR)/vidhrdw/shangkid_vidhrdw.c $(CORE_DIR)/drivers/shangkid.c \
-				 $(CORE_DIR)/vidhrdw/astinvad_vidhrdw.c $(CORE_DIR)/sndhrdw/astinvad_sndhrdw.c $(CORE_DIR)/drivers/astinvad.c \
-				 $(CORE_DIR)/vidhrdw/spacefb_vidhrdw.c $(CORE_DIR)/drivers/spacefb.c \
-				 $(CORE_DIR)/drivers/omegrace.c \
-				 $(CORE_DIR)/vidhrdw/dday_vidhrdw.c $(CORE_DIR)/drivers/dday.c \
-				 $(CORE_DIR)/vidhrdw/hexa_vidhrdw.c $(CORE_DIR)/drivers/hexa.c \
-				 $(CORE_DIR)/vidhrdw/redalert_vidhrdw.c $(CORE_DIR)/sndhrdw/redalert_sndhrdw.c $(CORE_DIR)/drivers/redalert.c \
-				 $(CORE_DIR)/machine/stactics_machine.c $(CORE_DIR)/vidhrdw/stactics_vidhrdw.c $(CORE_DIR)/drivers/stactics.c \
-				 $(CORE_DIR)/vidhrdw/kingobox_vidhrdw.c $(CORE_DIR)/drivers/kingobox.c \
-				 $(CORE_DIR)/vidhrdw/ambush_vidhrdw.c $(CORE_DIR)/drivers/ambush.c \
-				 $(CORE_DIR)/drivers/dlair.c \
-				 $(CORE_DIR)/vidhrdw/aztarac_vidhrdw.c $(CORE_DIR)/sndhrdw/aztarac_sndhrdw.c $(CORE_DIR)/drivers/aztarac.c \
-				 $(CORE_DIR)/vidhrdw/mole_vidhrdw.c $(CORE_DIR)/drivers/mole.c \
-				 $(CORE_DIR)/vidhrdw/gotya_vidhrdw.c $(CORE_DIR)/sndhrdw/gotya_sndhrdw.c $(CORE_DIR)/drivers/gotya.c \
-				 $(CORE_DIR)/vidhrdw/mrjong_vidhrdw.c $(CORE_DIR)/drivers/mrjong.c \
-				 $(CORE_DIR)/vidhrdw/polyplay_vidhrdw.c $(CORE_DIR)/sndhrdw/polyplay_sndhrdw.c $(CORE_DIR)/drivers/polyplay.c \
-				 $(CORE_DIR)/vidhrdw/amspdwy_vidhrdw.c $(CORE_DIR)/drivers/amspdwy.c \
-				 $(CORE_DIR)/vidhrdw/othldrby_vidhrdw.c $(CORE_DIR)/drivers/othldrby.c \
-				 $(CORE_DIR)/vidhrdw/mosaic_vidhrdw.c $(CORE_DIR)/drivers/mosaic.c \
-				 $(CORE_DIR)/drivers/spdbuggy.c \
-				 $(CORE_DIR)/vidhrdw/sprcros2_vidhrdw.c $(CORE_DIR)/drivers/sprcros2.c \
-				 $(CORE_DIR)/vidhrdw/mugsmash_vidhrdw.c $(CORE_DIR)/drivers/mugsmash.c \
-				 $(CORE_DIR)/vidhrdw/stlforce_vidhrdw.c $(CORE_DIR)/drivers/stlforce.c \
-				 $(CORE_DIR)/vidhrdw/gcpinbal_vidhrdw.c $(CORE_DIR)/drivers/gcpinbal.c \
-				 $(CORE_DIR)/vidhrdw/aquarium_vidhrdw.c $(CORE_DIR)/drivers/aquarium.c \
-				 $(CORE_DIR)/vidhrdw/policetr_vidhrdw.c $(CORE_DIR)/drivers/policetr.c \
-				 $(CORE_DIR)/vidhrdw/pass_vidhrdw.c $(CORE_DIR)/drivers/pass.c \
-				 $(CORE_DIR)/vidhrdw/news_vidhrdw.c $(CORE_DIR)/drivers/news.c \
-				 $(CORE_DIR)/vidhrdw/taxidrvr_vidhrdw.c $(CORE_DIR)/drivers/taxidrvr.c \
-				 $(CORE_DIR)/vidhrdw/xyonix_vidhrdw.c $(CORE_DIR)/drivers/xyonix.c \
-				 $(CORE_DIR)/drivers/findout.c \
-				 $(CORE_DIR)/vidhrdw/dribling_vidhrdw.c $(CORE_DIR)/drivers/dribling.c \
-				 $(CORE_DIR)/drivers/ace.c \
-				 $(CORE_DIR)/vidhrdw/clayshoo_vidhrdw.c $(CORE_DIR)/machine/clayshoo_machine.c $(CORE_DIR)/drivers/clayshoo.c \
-				 $(CORE_DIR)/vidhrdw/pirates_vidhrdw.c $(CORE_DIR)/drivers/pirates.c \
-				 $(CORE_DIR)/vidhrdw/fitfight_vidhrdw.c $(CORE_DIR)/drivers/fitfight.c \
-				 $(CORE_DIR)/vidhrdw/flower_vidhrdw.c $(CORE_DIR)/sndhrdw/flower_sndhrdw.c $(CORE_DIR)/drivers/flower.c \
-				 $(CORE_DIR)/vidhrdw/diverboy_vidhrdw.c $(CORE_DIR)/drivers/diverboy.c \
-				 $(CORE_DIR)/vidhrdw/beaminv_vidhrdw.c $(CORE_DIR)/drivers/beaminv.c \
-				 $(CORE_DIR)/vidhrdw/mcatadv_vidhrdw.c $(CORE_DIR)/drivers/mcatadv.c \
-				 $(CORE_DIR)/vidhrdw/4enraya_vidhrdw.c $(CORE_DIR)/drivers/4enraya.c \
-				 $(CORE_DIR)/vidhrdw/oneshot_vidhrdw.c $(CORE_DIR)/drivers/oneshot.c \
-				 $(CORE_DIR)/drivers/tugboat.c \
-				 $(CORE_DIR)/vidhrdw/gotcha_vidhrdw.c $(CORE_DIR)/drivers/gotcha.c \
-				 $(CORE_DIR)/drivers/coolpool.c \
-				 $(CORE_DIR)/vidhrdw/gumbo_vidhrdw.c $(CORE_DIR)/drivers/gumbo.c \
-				 $(CORE_DIR)/drivers/statriv2.c \
-				 $(CORE_DIR)/vidhrdw/tickee_vidhrdw.c $(CORE_DIR)/drivers/tickee.c \
-				 $(CORE_DIR)/vidhrdw/crgolf_vidhrdw.c $(CORE_DIR)/drivers/crgolf.c \
-				 $(CORE_DIR)/vidhrdw/truco_vidhrdw.c $(CORE_DIR)/drivers/truco.c \
-				 $(CORE_DIR)/vidhrdw/thedeep_vidhrdw.c $(CORE_DIR)/drivers/thedeep.c \
-				 $(CORE_DIR)/vidhrdw/fantland_vidhrdw.c $(CORE_DIR)/drivers/fantland.c \
-				 $(CORE_DIR)/drivers/wallc.c \
-				 $(CORE_DIR)/drivers/skyarmy.c \
-				 $(CORE_DIR)/vidhrdw/lethalj_vidhrdw.c $(CORE_DIR)/drivers/lethalj.c \
-				 $(CORE_DIR)/vidhrdw/sbugger_vidhrdw.c $(CORE_DIR)/drivers/sbugger.c \
-				 $(CORE_DIR)/vidhrdw/portrait_vidhrdw.c $(CORE_DIR)/drivers/portrait.c \
-				 $(CORE_DIR)/drivers/enigma2.c \
-				 $(CORE_DIR)/drivers/ltcasino.c \
-				 $(CORE_DIR)/drivers/vamphalf.c \
-				 $(CORE_DIR)/drivers/strvmstr.c \
-				 $(CORE_DIR)/vidhrdw/dorachan_vidhrdw.c $(CORE_DIR)/drivers/dorachan.c \
-				 $(CORE_DIR)/vidhrdw/ladyfrog_vidhrdw.c $(CORE_DIR)/drivers/ladyfrog.c \
-				 $(CORE_DIR)/drivers/rabbit.c \
-				 $(CORE_DIR)/drivers/malzak.c $(CORE_DIR)/vidhrdw/malzak_vidhrdw.c \
-				 $(CORE_DIR)/drivers/supertnk.c \
-				 $(CORE_DIR)/vidhrdw/crospang_vidhrdw.c $(CORE_DIR)/drivers/crospang.c \
-				 $(CORE_DIR)/drivers/funybubl.c \
-				 $(CORE_DIR)/drivers/dreamwld.c \
-				 $(CORE_DIR)/machine/seicop.c \
-				 $(CORE_DIR)/vidhrdw/denjinmk.c \
-				 $(CORE_DIR)/drivers/driver_denjinmk.c \
-				 $(CORE_DIR)/drivers/simpl156.c \
-				 $(CORE_DIR)/drivers/boogwing.c \
-				 $(CORE_DIR)/drivers/dietgo.c \
-				 $(CORE_DIR)/drivers/pktgaldx.c \
-				 $(CORE_DIR)/drivers/dblewing.c \
-				 $(CORE_DIR)/drivers/mwarr.c \
-				 $(CORE_DIR)/drivers/backfire.c \
-				 $(CORE_DIR)/drivers/pturn.c \
-				 $(CORE_DIR)/vidhrdw/suprridr_vidhrdw.c $(CORE_DIR)/drivers/suprridr.c \
-				 $(CORE_DIR)/drivers/vmetal.c \
-				 $(CORE_DIR)/drivers/deco156.c \
-				 $(CORE_DIR)/drivers/1945kiii.c \
-				 $(CORE_DIR)/drivers/madalien.c \
-				 $(CORE_DIR)/drivers/n8080.c \
-				 $(CORE_DIR)/drivers/mirax.c \
-				 $(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
-				 $(CORE_DIR)/machine/namcoio_machine.c
+SOURCES_C += \
+	$(CORE_DIR)/drivers/pacman.c \
+	$(CORE_DIR)/machine/mspacman.c \
+	$(CORE_DIR)/machine/pacplus.c \
+	$(CORE_DIR)/machine/jumpshot.c \
+	$(CORE_DIR)/machine/theglobp.c \
+	$(CORE_DIR)/machine/acitya.c \
+	$(CORE_DIR)/drivers/jrpacman.c \
+	$(CORE_DIR)/vidhrdw/jrpacman_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/pengo_vidhrdw.c \
+	$(CORE_DIR)/drivers/pengo.c \
+	$(CORE_DIR)/drivers/epos.c \
+	$(CORE_DIR)/vidhrdw/epos_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
+	$(CORE_DIR)/sndhrdw/cclimber_sndhrdw.c \
+	$(CORE_DIR)/drivers/cclimber.c \
+	$(CORE_DIR)/drivers/yamato.c \
+	$(CORE_DIR)/vidhrdw/gomoku_vidhrdw.c $(CORE_DIR)/sndhrdw/gomoku_sndhrdw.c $(CORE_DIR)/drivers/gomoku.c \
+	$(CORE_DIR)/vidhrdw/wiping_vidhrdw.c $(CORE_DIR)/sndhrdw/wiping_sndhrdw.c $(CORE_DIR)/drivers/wiping.c \
+	$(CORE_DIR)/vidhrdw/seicross_vidhrdw.c $(CORE_DIR)/drivers/seicross.c \
+	$(CORE_DIR)/vidhrdw/clshroad_vidhrdw.c $(CORE_DIR)/drivers/clshroad.c \
+	$(CORE_DIR)/vidhrdw/tubep_vidhrdw.c $(CORE_DIR)/drivers/tubep.c \
+	$(CORE_DIR)/vidhrdw/magmax_vidhrdw.c $(CORE_DIR)/drivers/magmax.c \
+	$(CORE_DIR)/vidhrdw/cop01_vidhrdw.c $(CORE_DIR)/drivers/cop01.c \
+	$(CORE_DIR)/vidhrdw/terracre_vidhrdw.c $(CORE_DIR)/drivers/terracre.c \
+	$(CORE_DIR)/vidhrdw/galivan_vidhrdw.c $(CORE_DIR)/drivers/galivan.c \
+	$(CORE_DIR)/vidhrdw/armedf_vidhrdw.c $(CORE_DIR)/drivers/armedf.c \
+	$(CORE_DIR)/machine/nb1413m3.c \
+	$(CORE_DIR)/vidhrdw/hyhoo_vidhrdw.c $(CORE_DIR)/drivers/hyhoo.c \
+	$(CORE_DIR)/vidhrdw/pastelgl_vidhrdw.c $(CORE_DIR)/drivers/pastelgl.c \
+	$(CORE_DIR)/vidhrdw/nbmj8688_vidhrdw.c $(CORE_DIR)/drivers/nbmj8688.c \
+	$(CORE_DIR)/vidhrdw/nbmj8891_vidhrdw.c $(CORE_DIR)/drivers/nbmj8891.c \
+	$(CORE_DIR)/vidhrdw/nbmj8991_vidhrdw.c $(CORE_DIR)/drivers/nbmj8991.c \
+	$(CORE_DIR)/vidhrdw/nbmj9195_vidhrdw.c $(CORE_DIR)/drivers/nbmj9195.c \
+	$(CORE_DIR)/vidhrdw/niyanpai_vidhrdw.c $(CORE_DIR)/drivers/niyanpai.c $(CORE_DIR)/machine/m68kfmly.c \
+	$(CORE_DIR)/drivers/safarir.c \
+	$(CORE_DIR)/vidhrdw/phoenix_vidhrdw.c $(CORE_DIR)/sndhrdw/phoenix_sndhrdw.c $(CORE_DIR)/drivers/phoenix.c \
+	$(CORE_DIR)/sndhrdw/pleiads.c \
+	$(CORE_DIR)/vidhrdw/naughtyb_vidhrdw.c $(CORE_DIR)/drivers/naughtyb.c \
+	$(CORE_DIR)/machine/geebee_machine.c $(CORE_DIR)/vidhrdw/geebee_vidhrdw.c $(CORE_DIR)/sndhrdw/geebee_sndhrdw.c $(CORE_DIR)/drivers/geebee.c \
+	$(CORE_DIR)/vidhrdw/warpwarp_vidhrdw.c $(CORE_DIR)/sndhrdw/warpwarp_sndhrdw.c $(CORE_DIR)/drivers/warpwarp.c \
+	$(CORE_DIR)/vidhrdw/tankbatt_vidhrdw.c $(CORE_DIR)/drivers/tankbatt.c \
+	$(CORE_DIR)/vidhrdw/galaxian_vidhrdw.c $(CORE_DIR)/sndhrdw/galaxian_sndhrdw.c $(CORE_DIR)/drivers/galaxian.c \
+	$(CORE_DIR)/vidhrdw/rallyx_vidhrdw.c $(CORE_DIR)/drivers/rallyx.c \
+	$(CORE_DIR)/drivers/locomotn.c \
+	$(CORE_DIR)/vidhrdw/bosco_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/galaga_vidhrdw.c $(CORE_DIR)/drivers/galaga.c \
+	$(CORE_DIR)/vidhrdw/digdug_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/xevious_vidhrdw.c $(CORE_DIR)/machine/xevious_machine.c \
+	$(CORE_DIR)/vidhrdw/mappy_vidhrdw.c $(CORE_DIR)/drivers/mappy.c \
+	$(CORE_DIR)/machine/gaplus_machine.c $(CORE_DIR)/vidhrdw/gaplus_vidhrdw.c $(CORE_DIR)/drivers/gaplus.c \
+	$(CORE_DIR)/vidhrdw/toypop_vidhrdw.c $(CORE_DIR)/drivers/toypop.c \
+	$(CORE_DIR)/drivers/polepos.c $(CORE_DIR)/vidhrdw/polepos_vidhrdw.c $(CORE_DIR)/sndhrdw/polepos_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/pacland_vidhrdw.c $(CORE_DIR)/drivers/pacland.c \
+	$(CORE_DIR)/vidhrdw/skykid_vidhrdw.c $(CORE_DIR)/drivers/skykid.c \
+	$(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c $(CORE_DIR)/drivers/baraduke.c \
+	$(CORE_DIR)/vidhrdw/namcos86_vidhrdw.c $(CORE_DIR)/drivers/namcos86.c \
+	$(CORE_DIR)/vidhrdw/tceptor_vidhrdw.c $(CORE_DIR)/drivers/tceptor.c \
+	$(CORE_DIR)/machine/namcos1_machine.c $(CORE_DIR)/vidhrdw/namcos1_vidhrdw.c $(CORE_DIR)/drivers/namcos1.c \
+	$(CORE_DIR)/machine/namcos2_machine.c $(CORE_DIR)/vidhrdw/namcos2_vidhrdw.c $(CORE_DIR)/drivers/namcos2.c \
+	$(CORE_DIR)/drivers/namcoic.c \
+	$(CORE_DIR)/vidhrdw/namcona1_vidhrdw.c $(CORE_DIR)/drivers/namcona1.c \
+	$(CORE_DIR)/vidhrdw/namconb1_vidhrdw.c $(CORE_DIR)/drivers/namconb1.c \
+	$(CORE_DIR)/machine/namcond1_machine.c $(CORE_DIR)/vidhrdw/ygv608.c $(CORE_DIR)/drivers/namcond1.c \
+	$(CORE_DIR)/vidhrdw/psx_vidhrdw.c $(CORE_DIR)/machine/psx_machine.c \
+	$(CORE_DIR)/drivers/namcos10.c \
+	$(CORE_DIR)/drivers/namcos11.c \
+	$(CORE_DIR)/drivers/namcos12.c \
+	$(CORE_DIR)/vidhrdw/namcos3d.c \
+	$(CORE_DIR)/vidhrdw/namcos21_vidhrdw.c $(CORE_DIR)/drivers/namcos21.c \
+	$(CORE_DIR)/vidhrdw/namcos22_vidhrdw.c $(CORE_DIR)/drivers/namcos22.c \
+	$(CORE_DIR)/vidhrdw/cosmic_vidhrdw.c $(CORE_DIR)/drivers/cosmic.c \
+	$(CORE_DIR)/vidhrdw/redclash_vidhrdw.c $(CORE_DIR)/drivers/redclash.c \
+	$(CORE_DIR)/vidhrdw/ladybug_vidhrdw.c $(CORE_DIR)/drivers/ladybug.c \
+	$(CORE_DIR)/vidhrdw/cheekyms_vidhrdw.c $(CORE_DIR)/drivers/cheekyms.c \
+	$(CORE_DIR)/vidhrdw/mrdo_vidhrdw.c $(CORE_DIR)/drivers/mrdo.c \
+	$(CORE_DIR)/machine/docastle_machine.c $(CORE_DIR)/vidhrdw/docastle_vidhrdw.c $(CORE_DIR)/drivers/docastle.c \
+	$(CORE_DIR)/vidhrdw/dkong_vidhrdw.c $(CORE_DIR)/sndhrdw/dkong_sndhrdw.c $(CORE_DIR)/drivers/dkong.c \
+	$(CORE_DIR)/machine/strtheat.c \
+	$(CORE_DIR)/vidhrdw/mario_vidhrdw.c $(CORE_DIR)/sndhrdw/mario_sndhrdw.c $(CORE_DIR)/drivers/mario.c \
+	$(CORE_DIR)/vidhrdw/popeye_vidhrdw.c $(CORE_DIR)/drivers/popeye.c \
+	$(CORE_DIR)/vidhrdw/punchout_vidhrdw.c $(CORE_DIR)/drivers/punchout.c \
+	$(CORE_DIR)/machine/rp5h01.c $(CORE_DIR)/vidhrdw/ppu2c03b.c \
+	$(CORE_DIR)/machine/playch10_machine.c $(CORE_DIR)/vidhrdw/playch10_vidhrdw.c $(CORE_DIR)/drivers/playch10.c \
+	$(CORE_DIR)/machine/vsnes_machine.c $(CORE_DIR)/vidhrdw/vsnes_vidhrdw.c $(CORE_DIR)/drivers/vsnes.c \
+	$(CORE_DIR)/machine/snes_machine.c $(CORE_DIR)/vidhrdw/snes_vidhrdw.c \
+	$(CORE_DIR)/sndhrdw/snes_sndhrdw.c \
+	$(CORE_DIR)/drivers/nss.c \
+	$(CORE_DIR)/machine/8080bw.c \
+	$(CORE_DIR)/vidhrdw/8080bw_vidhrdw.c $(CORE_DIR)/sndhrdw/8080bw_sndhrdw.c $(CORE_DIR)/drivers/8080bw_drivers.c \
+	$(CORE_DIR)/vidhrdw/sspeedr_vidhrdw.c $(CORE_DIR)/drivers/sspeedr.c \
+	$(CORE_DIR)/vidhrdw/m79amb_vidhrdw.c $(CORE_DIR)/drivers/m79amb.c $(CORE_DIR)/drivers/rotaryf.c \
+	$(CORE_DIR)/drivers/lazercmd.c $(CORE_DIR)/vidhrdw/lazercmd_vidhrdw.c \
+	$(CORE_DIR)/drivers/meadows.c $(CORE_DIR)/sndhrdw/meadows_sndhrdw.c $(CORE_DIR)/vidhrdw/meadows_vidhrdw.c \
+	$(CORE_DIR)/drivers/cvs.c $(CORE_DIR)/vidhrdw/cvs_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/s2636_vidhrdw.c \
+	$(CORE_DIR)/machine/astrocde_machine.c $(CORE_DIR)/vidhrdw/astrocde_vidhrdw.c $(CORE_DIR)/drivers/astrocde.c $(CORE_DIR)/sndhrdw/astrocde_sndhrdw.c \
+	$(CORE_DIR)/sndhrdw/gorf.c \
+	$(CORE_DIR)/machine/mcr.c $(CORE_DIR)/sndhrdw/mcr_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/mcr12_vidhrdw.c $(CORE_DIR)/vidhrdw/mcr3_vidhrdw.c \
+	$(CORE_DIR)/drivers/mcr1.c $(CORE_DIR)/drivers/mcr2.c $(CORE_DIR)/drivers/mcr3.c \
+	$(CORE_DIR)/vidhrdw/mcr68_vidhrdw.c $(CORE_DIR)/drivers/mcr68.c \
+	$(CORE_DIR)/vidhrdw/balsente_vidhrdw.c $(CORE_DIR)/machine/balsente_machine.c $(CORE_DIR)/drivers/balsente.c \
+	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
+	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
+	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
+	$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
+	$(CORE_DIR)/drivers/midxunit.c \
+	$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
+	$(CORE_DIR)/vidhrdw/midvunit_vidhrdw.c $(CORE_DIR)/drivers/midvunit.c \
+	$(CORE_DIR)/machine/midtunit_machine.c $(CORE_DIR)/vidhrdw/midtunit_vidhrdw.c $(CORE_DIR)/drivers/midtunit.c \
+	$(CORE_DIR)/vidhrdw/skychut_vidhrdw.c $(CORE_DIR)/drivers/skychut.c \
+	$(CORE_DIR)/drivers/olibochu.c \
+	$(CORE_DIR)/sndhrdw/irem.c \
+	$(CORE_DIR)/vidhrdw/mpatrol_vidhrdw.c $(CORE_DIR)/drivers/mpatrol.c \
+	$(CORE_DIR)/vidhrdw/troangel_vidhrdw.c $(CORE_DIR)/drivers/troangel.c \
+	$(CORE_DIR)/vidhrdw/yard_vidhrdw.c $(CORE_DIR)/drivers/yard.c \
+	$(CORE_DIR)/vidhrdw/travrusa_vidhrdw.c $(CORE_DIR)/drivers/travrusa.c \
+	$(CORE_DIR)/drivers/wilytowr.c \
+	$(CORE_DIR)/vidhrdw/m62_vidhrdw.c $(CORE_DIR)/drivers/m62.c \
+	$(CORE_DIR)/vidhrdw/vigilant_vidhrdw.c $(CORE_DIR)/drivers/vigilant.c \
+	$(CORE_DIR)/vidhrdw/m72_vidhrdw.c $(CORE_DIR)/sndhrdw/m72_sndhrdw.c $(CORE_DIR)/drivers/m72.c \
+	$(CORE_DIR)/vidhrdw/shisen_vidhrdw.c $(CORE_DIR)/drivers/shisen.c \
+	$(CORE_DIR)/machine/irem_cpu.c \
+	$(CORE_DIR)/vidhrdw/m90_vidhrdw.c $(CORE_DIR)/drivers/m90.c \
+	$(CORE_DIR)/vidhrdw/m92_vidhrdw.c $(CORE_DIR)/drivers/m92.c \
+	$(CORE_DIR)/vidhrdw/m107_vidhrdw.c $(CORE_DIR)/drivers/m107.c \
+	$(CORE_DIR)/vidhrdw/gottlieb_vidhrdw.c $(CORE_DIR)/sndhrdw/gottlieb_sndhrdw.c $(CORE_DIR)/drivers/gottlieb.c \
+	$(CORE_DIR)/drivers/sbowling.c \
+	$(CORE_DIR)/machine/chaknpop_machine.c $(CORE_DIR)/vidhrdw/chaknpop_vidhrdw.c $(CORE_DIR)/drivers/chaknpop.c \
+	$(CORE_DIR)/machine/qix_machine.c $(CORE_DIR)/vidhrdw/qix_vidhrdw.c $(CORE_DIR)/drivers/qix.c \
+	$(CORE_DIR)/machine/taitosj_machine.c $(CORE_DIR)/vidhrdw/taitosj_vidhrdw.c $(CORE_DIR)/drivers/taitosj.c \
+	$(CORE_DIR)/machine/grchamp_machine.c $(CORE_DIR)/vidhrdw/grchamp_vidhrdw.c $(CORE_DIR)/drivers/grchamp.c \
+	$(CORE_DIR)/machine/pitnrun_machine.c $(CORE_DIR)/vidhrdw/pitnrun_vidhrdw.c $(CORE_DIR)/drivers/pitnrun.c \
+	$(CORE_DIR)/drivers/marinedt.c \
+	$(CORE_DIR)/vidhrdw/crbaloon_vidhrdw.c $(CORE_DIR)/drivers/crbaloon.c \
+	$(CORE_DIR)/vidhrdw/bking2_vidhrdw.c $(CORE_DIR)/drivers/bking2.c \
+	$(CORE_DIR)/vidhrdw/gsword_vidhrdw.c $(CORE_DIR)/drivers/gsword.c $(CORE_DIR)/machine/tait8741.c \
+	$(CORE_DIR)/vidhrdw/msisaac_vidhrdw.c $(CORE_DIR)/drivers/msisaac.c \
+	$(CORE_DIR)/machine/retofinv_machine.c $(CORE_DIR)/vidhrdw/retofinv_vidhrdw.c $(CORE_DIR)/drivers/retofinv.c \
+	$(CORE_DIR)/vidhrdw/rollrace_vidhrdw.c $(CORE_DIR)/drivers/rollrace.c \
+	$(CORE_DIR)/vidhrdw/40love_vidhrdw.c $(CORE_DIR)/drivers/40love.c \
+	$(CORE_DIR)/vidhrdw/ssrj_vidhrdw.c $(CORE_DIR)/drivers/ssrj.c \
+	$(CORE_DIR)/machine/bigevglf_machine.c $(CORE_DIR)/vidhrdw/bigevglf_vidhrdw.c $(CORE_DIR)/drivers/bigevglf.c \
+	$(CORE_DIR)/vidhrdw/tsamurai_vidhrdw.c $(CORE_DIR)/drivers/tsamurai.c \
+	$(CORE_DIR)/machine/flstory_machine.c $(CORE_DIR)/vidhrdw/flstory_vidhrdw.c $(CORE_DIR)/drivers/flstory.c \
+	$(CORE_DIR)/vidhrdw/gladiatr_vidhrdw.c $(CORE_DIR)/drivers/gladiatr.c \
+	$(CORE_DIR)/machine/nycaptor_machine.c $(CORE_DIR)/vidhrdw/nycaptor_vidhrdw.c $(CORE_DIR)/drivers/nycaptor.c \
+	$(CORE_DIR)/drivers/halleys.c \
+	$(CORE_DIR)/machine/lsasquad_machine.c $(CORE_DIR)/vidhrdw/lsasquad_vidhrdw.c $(CORE_DIR)/drivers/lsasquad.c \
+	$(CORE_DIR)/machine/bublbobl_machine.c $(CORE_DIR)/vidhrdw/bublbobl_vidhrdw.c $(CORE_DIR)/drivers/bublbobl.c \
+	$(CORE_DIR)/drivers/missb2.c \
+	$(CORE_DIR)/machine/mexico86_machine.c $(CORE_DIR)/vidhrdw/mexico86_vidhrdw.c $(CORE_DIR)/drivers/mexico86.c \
+	$(CORE_DIR)/vidhrdw/darius_vidhrdw.c $(CORE_DIR)/drivers/darius.c \
+	$(CORE_DIR)/vidhrdw/rastan_vidhrdw.c $(CORE_DIR)/sndhrdw/rastan_sndhrdw.c $(CORE_DIR)/drivers/rastan.c \
+	$(CORE_DIR)/machine/rainbow_machine.c $(CORE_DIR)/drivers/rainbow.c \
+	$(CORE_DIR)/machine/opwolf_machine.c $(CORE_DIR)/drivers/opwolf.c \
+	$(CORE_DIR)/vidhrdw/othunder_vidhrdw.c $(CORE_DIR)/drivers/othunder.c \
+	$(CORE_DIR)/vidhrdw/topspeed_vidhrdw.c $(CORE_DIR)/drivers/topspeed.c \
+	$(CORE_DIR)/machine/arkanoid_machine.c $(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c $(CORE_DIR)/drivers/arkanoid.c \
+	$(CORE_DIR)/vidhrdw/superqix_vidhrdw.c $(CORE_DIR)/drivers/superqix.c \
+	$(CORE_DIR)/vidhrdw/pbillian_vidhrdw.c $(CORE_DIR)/drivers/pbillian.c $(CORE_DIR)/sndhrdw/pbillian_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/exzisus_vidhrdw.c $(CORE_DIR)/drivers/exzisus.c \
+	$(CORE_DIR)/drivers/taito_x.c $(CORE_DIR)/machine/cchip.c \
+	$(CORE_DIR)/vidhrdw/minivadr_vidhrdw.c $(CORE_DIR)/drivers/minivadr.c \
+	$(CORE_DIR)/drivers/ashnojoe.c $(CORE_DIR)/vidhrdw/ashnojoe_vidhrdw.c \
+	$(CORE_DIR)/machine/volfied_machine.c $(CORE_DIR)/vidhrdw/volfied_vidhrdw.c $(CORE_DIR)/drivers/volfied.c \
+	$(CORE_DIR)/machine/bonzeadv.c $(CORE_DIR)/vidhrdw/asuka_vidhrdw.c $(CORE_DIR)/drivers/asuka.c \
+	$(CORE_DIR)/vidhrdw/wgp_vidhrdw.c $(CORE_DIR)/drivers/wgp.c \
+	$(CORE_DIR)/vidhrdw/slapshot_vidhrdw.c $(CORE_DIR)/drivers/slapshot.c \
+	$(CORE_DIR)/vidhrdw/ninjaw_vidhrdw.c $(CORE_DIR)/drivers/ninjaw.c \
+	$(CORE_DIR)/vidhrdw/warriorb_vidhrdw.c $(CORE_DIR)/drivers/warriorb.c \
+	$(CORE_DIR)/machine/tnzs_machine.c $(CORE_DIR)/vidhrdw/tnzs_vidhrdw.c $(CORE_DIR)/drivers/tnzs.c \
+	$(CORE_DIR)/machine/buggychl_machine.c $(CORE_DIR)/vidhrdw/buggychl_vidhrdw.c $(CORE_DIR)/drivers/buggychl.c \
+	$(CORE_DIR)/machine/lkage_machine.c $(CORE_DIR)/vidhrdw/lkage_vidhrdw.c $(CORE_DIR)/drivers/lkage.c \
+	$(CORE_DIR)/vidhrdw/taitoic.c $(CORE_DIR)/sndhrdw/taitosnd.c \
+	$(CORE_DIR)/vidhrdw/taito_l_vidhrdw.c $(CORE_DIR)/drivers/taito_l.c \
+	$(CORE_DIR)/vidhrdw/taito_h_vidhrdw.c $(CORE_DIR)/drivers/taito_h.c \
+	$(CORE_DIR)/vidhrdw/taito_b_vidhrdw.c $(CORE_DIR)/drivers/taito_b.c \
+	$(CORE_DIR)/vidhrdw/taito_z_vidhrdw.c $(CORE_DIR)/drivers/taito_z.c \
+	$(CORE_DIR)/vidhrdw/gunbustr_vidhrdw.c $(CORE_DIR)/drivers/gunbustr.c \
+	$(CORE_DIR)/vidhrdw/superchs_vidhrdw.c $(CORE_DIR)/drivers/superchs.c \
+	$(CORE_DIR)/vidhrdw/undrfire_vidhrdw.c $(CORE_DIR)/drivers/undrfire.c \
+	$(CORE_DIR)/vidhrdw/groundfx_vidhrdw.c $(CORE_DIR)/drivers/groundfx.c \
+	$(CORE_DIR)/vidhrdw/taito_f2_vidhrdw.c $(CORE_DIR)/drivers/taito_f2.c \
+	$(CORE_DIR)/vidhrdw/taito_f3_vidhrdw.c $(CORE_DIR)/sndhrdw/taito_f3_sndhrdw.c $(CORE_DIR)/drivers/taito_f3.c \
+	$(CORE_DIR)/vidhrdw/taitoair_vidhrdw.c $(CORE_DIR)/drivers/taitoair.c \
+	$(CORE_DIR)/machine/slapfght_machine.c $(CORE_DIR)/vidhrdw/slapfght_vidhrdw.c $(CORE_DIR)/drivers/slapfght.c \
+	$(CORE_DIR)/machine/twincobr_machine.c $(CORE_DIR)/vidhrdw/twincobr_vidhrdw.c $(CORE_DIR)/drivers/twincobr.c \
+	$(CORE_DIR)/drivers/wardner.c \
+	$(CORE_DIR)/drivers/mjsister.c $(CORE_DIR)/vidhrdw/mjsister_vidhrdw.c \
+	$(CORE_DIR)/machine/toaplan1_machine.c $(CORE_DIR)/vidhrdw/toaplan1_vidhrdw.c $(CORE_DIR)/drivers/toaplan1.c \
+	$(CORE_DIR)/vidhrdw/snowbros_vidhrdw.c $(CORE_DIR)/drivers/snowbros.c \
+	$(CORE_DIR)/vidhrdw/toaplan2_vidhrdw.c $(CORE_DIR)/drivers/toaplan2.c \
+	$(CORE_DIR)/vidhrdw/cave_vidhrdw.c \
+	$(CORE_DIR)/drivers/cave.c \
+	$(CORE_DIR)/vidhrdw/kyugo_vidhrdw.c $(CORE_DIR)/machine/kyugo_machine.c $(CORE_DIR)/drivers/kyugo.c \
+	$(CORE_DIR)/machine/williams_machine.c $(CORE_DIR)/vidhrdw/williams_vidhrdw.c $(CORE_DIR)/sndhrdw/williams_sndhrdw.c $(CORE_DIR)/drivers/williams.c \
+	$(CORE_DIR)/vidhrdw/vulgus_vidhrdw.c $(CORE_DIR)/drivers/vulgus.c \
+	$(CORE_DIR)/vidhrdw/sonson_vidhrdw.c $(CORE_DIR)/drivers/sonson.c \
+	$(CORE_DIR)/vidhrdw/higemaru_vidhrdw.c $(CORE_DIR)/drivers/higemaru.c \
+	$(CORE_DIR)/vidhrdw/1942_vidhrdw.c $(CORE_DIR)/drivers/1942.c \
+	$(CORE_DIR)/vidhrdw/exedexes_vidhrdw.c $(CORE_DIR)/drivers/exedexes.c \
+	$(CORE_DIR)/vidhrdw/commando_vidhrdw.c $(CORE_DIR)/drivers/commando.c \
+	$(CORE_DIR)/vidhrdw/gng_vidhrdw.c $(CORE_DIR)/drivers/gng.c \
+	$(CORE_DIR)/vidhrdw/gunsmoke_vidhrdw.c $(CORE_DIR)/drivers/gunsmoke.c \
+	$(CORE_DIR)/vidhrdw/srumbler_vidhrdw.c $(CORE_DIR)/drivers/srumbler.c \
+	$(CORE_DIR)/vidhrdw/lwings_vidhrdw.c $(CORE_DIR)/drivers/lwings.c \
+	$(CORE_DIR)/vidhrdw/sidearms_vidhrdw.c $(CORE_DIR)/drivers/sidearms.c \
+	$(CORE_DIR)/vidhrdw/bionicc_vidhrdw.c $(CORE_DIR)/drivers/bionicc.c \
+	$(CORE_DIR)/vidhrdw/1943_vidhrdw.c $(CORE_DIR)/drivers/1943.c \
+	$(CORE_DIR)/vidhrdw/blktiger_vidhrdw.c $(CORE_DIR)/drivers/blktiger.c \
+	$(CORE_DIR)/vidhrdw/tigeroad_vidhrdw.c $(CORE_DIR)/drivers/tigeroad.c \
+	$(CORE_DIR)/vidhrdw/lastduel_vidhrdw.c $(CORE_DIR)/drivers/lastduel.c \
+	$(CORE_DIR)/vidhrdw/sf1_vidhrdw.c $(CORE_DIR)/drivers/sf1.c \
+	$(CORE_DIR)/machine/kabuki.c \
+	$(CORE_DIR)/vidhrdw/mitchell_vidhrdw.c $(CORE_DIR)/drivers/mitchell.c \
+	$(CORE_DIR)/vidhrdw/cbasebal_vidhrdw.c $(CORE_DIR)/drivers/cbasebal.c \
+	$(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c \
+	$(CORE_DIR)/drivers/zn.c \
+	$(CORE_DIR)/vidhrdw/tms34061_vidhrdw.c \
+	$(CORE_DIR)/machine/capbowl_machine.c $(CORE_DIR)/vidhrdw/capbowl_vidhrdw.c $(CORE_DIR)/drivers/capbowl.c \
+	$(CORE_DIR)/vidhrdw/itech8_vidhrdw.c $(CORE_DIR)/drivers/itech8.c \
+	$(CORE_DIR)/vidhrdw/itech32_vidhrdw.c $(CORE_DIR)/drivers/itech32.c \
+	$(CORE_DIR)/machine/slikshot.c \
+	$(CORE_DIR)/vidhrdw/blockade_vidhrdw.c $(CORE_DIR)/drivers/blockade.c \
+	$(CORE_DIR)/vidhrdw/vicdual_vidhrdw.c $(CORE_DIR)/drivers/vicdual.c \
+	$(CORE_DIR)/sndhrdw/carnival.c $(CORE_DIR)/sndhrdw/depthch.c $(CORE_DIR)/sndhrdw/invinco.c $(CORE_DIR)/sndhrdw/pulsar.c \
+	$(CORE_DIR)/machine/segacrpt.c $(CORE_DIR)/sndhrdw/segasnd.c \
+	$(CORE_DIR)/vidhrdw/sega_vidhrdw.c $(CORE_DIR)/sndhrdw/sega_sndhrdw.c $(CORE_DIR)/machine/sega_machine.c $(CORE_DIR)/drivers/sega.c \
+	$(CORE_DIR)/vidhrdw/segar_vidhrdw.c $(CORE_DIR)/sndhrdw/segar_sndhrdw.c $(CORE_DIR)/machine/segar_machine.c $(CORE_DIR)/drivers/segar.c \
+	$(CORE_DIR)/vidhrdw/tms9928a.c $(CORE_DIR)/drivers/sg1000a.c \
+	$(CORE_DIR)/vidhrdw/zaxxon_vidhrdw.c $(CORE_DIR)/sndhrdw/zaxxon_sndhrdw.c $(CORE_DIR)/drivers/zaxxon.c \
+	$(CORE_DIR)/machine/turbo_machine.c $(CORE_DIR)/vidhrdw/turbo_vidhrdw.c $(CORE_DIR)/drivers/turbo.c \
+	$(CORE_DIR)/drivers/kopunch.c $(CORE_DIR)/vidhrdw/kopunch_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/suprloco_vidhrdw.c $(CORE_DIR)/drivers/suprloco.c \
+	$(CORE_DIR)/vidhrdw/dotrikun_vidhrdw.c $(CORE_DIR)/drivers/dotrikun.c \
+	$(CORE_DIR)/vidhrdw/angelkds_vidhrdw.c $(CORE_DIR)/drivers/angelkds.c \
+	$(CORE_DIR)/vidhrdw/system1_vidhrdw.c $(CORE_DIR)/drivers/system1.c \
+	$(CORE_DIR)/vidhrdw/segasyse_vidhrdw.c $(CORE_DIR)/drivers/segasyse.c \
+	$(CORE_DIR)/machine/system16_machine.c $(CORE_DIR)/vidhrdw/system16_vidhrdw.c $(CORE_DIR)/vidhrdw/sys16spr.c \
+	$(CORE_DIR)/sndhrdw/system16_sndhrdw.c \
+	$(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c \
+	$(CORE_DIR)/drivers/sharrier.c $(CORE_DIR)/drivers/system18.c \
+	$(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/segaic24.c \
+	$(CORE_DIR)/drivers/system32.c $(CORE_DIR)/drivers/multi32.c $(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c \
+	$(CORE_DIR)/drivers/stv.c $(CORE_DIR)/drivers/stvhacks.c $(CORE_DIR)/machine/stvcd.c \
+	$(CORE_DIR)/machine/scudsp.c \
+	$(CORE_DIR)/vidhrdw/stvvdp1_vidhrdw.c $(CORE_DIR)/vidhrdw/stvvdp2_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/deniam_vidhrdw.c $(CORE_DIR)/drivers/deniam.c \
+	$(CORE_DIR)/machine/btime_machine.c $(CORE_DIR)/vidhrdw/btime_vidhrdw.c $(CORE_DIR)/drivers/btime.c \
+	$(CORE_DIR)/machine/decocass_machine.c $(CORE_DIR)/vidhrdw/decocass_vidhrdw.c $(CORE_DIR)/drivers/decocass.c \
+	$(CORE_DIR)/vidhrdw/astrof_vidhrdw.c $(CORE_DIR)/sndhrdw/astrof_sndhrdw.c $(CORE_DIR)/drivers/astrof.c \
+	$(CORE_DIR)/vidhrdw/liberate_vidhrdw.c $(CORE_DIR)/drivers/liberate.c \
+	$(CORE_DIR)/vidhrdw/bwing_vidhrdw.c $(CORE_DIR)/drivers/bwing.c \
+	$(CORE_DIR)/vidhrdw/kchamp_vidhrdw.c $(CORE_DIR)/drivers/kchamp.c \
+	$(CORE_DIR)/vidhrdw/firetrap_vidhrdw.c $(CORE_DIR)/drivers/firetrap.c \
+	$(CORE_DIR)/vidhrdw/brkthru_vidhrdw.c $(CORE_DIR)/drivers/brkthru.c \
+	$(CORE_DIR)/vidhrdw/metlclsh_vidhrdw.c $(CORE_DIR)/drivers/metlclsh.c \
+	$(CORE_DIR)/drivers/compgolf.c \
+	$(CORE_DIR)/drivers/tryout.c \
+	$(CORE_DIR)/vidhrdw/shootout_vidhrdw.c $(CORE_DIR)/drivers/shootout.c \
+	$(CORE_DIR)/vidhrdw/sidepckt_vidhrdw.c $(CORE_DIR)/drivers/sidepckt.c \
+	$(CORE_DIR)/vidhrdw/exprraid_vidhrdw.c $(CORE_DIR)/drivers/exprraid.c \
+	$(CORE_DIR)/vidhrdw/pcktgal_vidhrdw.c $(CORE_DIR)/drivers/pcktgal.c \
+	$(CORE_DIR)/vidhrdw/battlera_vidhrdw.c $(CORE_DIR)/drivers/battlera.c \
+	$(CORE_DIR)/vidhrdw/actfancr_vidhrdw.c $(CORE_DIR)/drivers/actfancr.c \
+	$(CORE_DIR)/vidhrdw/dec8_vidhrdw.c $(CORE_DIR)/drivers/dec8.c \
+	$(CORE_DIR)/vidhrdw/karnov_vidhrdw.c $(CORE_DIR)/drivers/karnov.c \
+	$(CORE_DIR)/machine/decocrpt.c $(CORE_DIR)/machine/decoprot.c \
+	$(CORE_DIR)/vidhrdw/deco16ic.c \
+	$(CORE_DIR)/machine/dec0_machine.c $(CORE_DIR)/vidhrdw/dec0_vidhrdw.c $(CORE_DIR)/drivers/dec0.c \
+	$(CORE_DIR)/vidhrdw/stadhero_vidhrdw.c $(CORE_DIR)/drivers/stadhero.c \
+	$(CORE_DIR)/vidhrdw/madmotor_vidhrdw.c $(CORE_DIR)/drivers/madmotor.c \
+	$(CORE_DIR)/vidhrdw/vaportra_vidhrdw.c $(CORE_DIR)/drivers/vaportra.c \
+	$(CORE_DIR)/vidhrdw/cbuster_vidhrdw.c $(CORE_DIR)/drivers/cbuster.c \
+	$(CORE_DIR)/vidhrdw/darkseal_vidhrdw.c $(CORE_DIR)/drivers/darkseal.c \
+	$(CORE_DIR)/vidhrdw/supbtime_vidhrdw.c $(CORE_DIR)/drivers/supbtime.c \
+	$(CORE_DIR)/vidhrdw/cninja_vidhrdw.c $(CORE_DIR)/drivers/cninja.c \
+	$(CORE_DIR)/vidhrdw/dassault_vidhrdw.c $(CORE_DIR)/drivers/dassault.c \
+	$(CORE_DIR)/vidhrdw/rohga_vidhrdw.c $(CORE_DIR)/drivers/rohga.c \
+	$(CORE_DIR)/vidhrdw/tumblep_vidhrdw.c $(CORE_DIR)/drivers/tumblep.c \
+	$(CORE_DIR)/vidhrdw/lemmings_vidhrdw.c $(CORE_DIR)/drivers/lemmings.c \
+	$(CORE_DIR)/vidhrdw/funkyjet_vidhrdw.c $(CORE_DIR)/drivers/funkyjet.c \
+	$(CORE_DIR)/vidhrdw/deco32_vidhrdw.c $(CORE_DIR)/drivers/deco32.c \
+	$(CORE_DIR)/vidhrdw/deco_mlc_vidhrdw.c $(CORE_DIR)/drivers/deco_mlc.c \
+	$(CORE_DIR)/vidhrdw/sshangha_vidhrdw.c $(CORE_DIR)/drivers/sshangha.c \
+	$(CORE_DIR)/sndhrdw/senjyo_sndhrdw.c $(CORE_DIR)/vidhrdw/senjyo_vidhrdw.c $(CORE_DIR)/drivers/senjyo.c \
+	$(CORE_DIR)/vidhrdw/bombjack_vidhrdw.c $(CORE_DIR)/drivers/bombjack.c \
+	$(CORE_DIR)/vidhrdw/pbaction_vidhrdw.c $(CORE_DIR)/drivers/pbaction.c \
+	$(CORE_DIR)/vidhrdw/tehkanwc_vidhrdw.c $(CORE_DIR)/drivers/tehkanwc.c \
+	$(CORE_DIR)/vidhrdw/solomon_vidhrdw.c $(CORE_DIR)/drivers/solomon.c \
+	$(CORE_DIR)/vidhrdw/tecmo_vidhrdw.c $(CORE_DIR)/drivers/tecmo.c \
+	$(CORE_DIR)/vidhrdw/tbowl_vidhrdw.c $(CORE_DIR)/drivers/tbowl.c \
+	$(CORE_DIR)/vidhrdw/gaiden_vidhrdw.c $(CORE_DIR)/drivers/gaiden.c \
+	$(CORE_DIR)/vidhrdw/wc90_vidhrdw.c $(CORE_DIR)/drivers/wc90.c \
+	$(CORE_DIR)/vidhrdw/wc90b_vidhrdw.c $(CORE_DIR)/drivers/wc90b.c \
+	$(CORE_DIR)/vidhrdw/spbactn_vidhrdw.c $(CORE_DIR)/drivers/spbactn.c \
+	$(CORE_DIR)/vidhrdw/tecmo16_vidhrdw.c $(CORE_DIR)/drivers/tecmo16.c \
+	$(CORE_DIR)/drivers/tecmosys.c \
+	$(CORE_DIR)/machine/scramble_machine.c $(CORE_DIR)/sndhrdw/scramble_sndhrdw.c $(CORE_DIR)/drivers/scramble.c \
+	$(CORE_DIR)/drivers/frogger.c \
+	$(CORE_DIR)/drivers/scobra.c \
+	$(CORE_DIR)/drivers/amidar.c \
+	$(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c \
+	$(CORE_DIR)/vidhrdw/tutankhm_vidhrdw.c $(CORE_DIR)/drivers/tutankhm.c \
+	$(CORE_DIR)/drivers/junofrst.c \
+	$(CORE_DIR)/vidhrdw/pooyan_vidhrdw.c $(CORE_DIR)/drivers/pooyan.c \
+	$(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c $(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/megazone_vidhrdw.c $(CORE_DIR)/drivers/megazone.c \
+	$(CORE_DIR)/vidhrdw/pandoras_vidhrdw.c $(CORE_DIR)/drivers/pandoras.c \
+	$(CORE_DIR)/sndhrdw/gyruss_sndhrdw.c $(CORE_DIR)/vidhrdw/gyruss_vidhrdw.c $(CORE_DIR)/drivers/gyruss.c \
+	$(CORE_DIR)/machine/konami_machine.c \
+	$(CORE_DIR)/vidhrdw/trackfld_vidhrdw.c $(CORE_DIR)/sndhrdw/trackfld_sndhrdw.c $(CORE_DIR)/drivers/trackfld.c \
+	$(CORE_DIR)/vidhrdw/rocnrope_vidhrdw.c $(CORE_DIR)/drivers/rocnrope.c \
+	$(CORE_DIR)/vidhrdw/circusc_vidhrdw.c $(CORE_DIR)/drivers/circusc.c \
+	$(CORE_DIR)/vidhrdw/tp84_vidhrdw.c $(CORE_DIR)/drivers/tp84.c \
+	$(CORE_DIR)/vidhrdw/hyperspt_vidhrdw.c $(CORE_DIR)/drivers/hyperspt.c \
+	$(CORE_DIR)/vidhrdw/sbasketb_vidhrdw.c $(CORE_DIR)/drivers/sbasketb.c \
+	$(CORE_DIR)/vidhrdw/mikie_vidhrdw.c $(CORE_DIR)/drivers/mikie.c \
+	$(CORE_DIR)/vidhrdw/yiear_vidhrdw.c $(CORE_DIR)/drivers/yiear.c \
+	$(CORE_DIR)/vidhrdw/shaolins_vidhrdw.c $(CORE_DIR)/drivers/shaolins.c \
+	$(CORE_DIR)/vidhrdw/pingpong_vidhrdw.c $(CORE_DIR)/drivers/pingpong.c \
+	$(CORE_DIR)/vidhrdw/gberet_vidhrdw.c $(CORE_DIR)/drivers/gberet.c \
+	$(CORE_DIR)/vidhrdw/jailbrek_vidhrdw.c $(CORE_DIR)/drivers/jailbrek.c \
+	$(CORE_DIR)/vidhrdw/finalizr_vidhrdw.c $(CORE_DIR)/drivers/finalizr.c \
+	$(CORE_DIR)/vidhrdw/ironhors_vidhrdw.c $(CORE_DIR)/drivers/ironhors.c \
+	$(CORE_DIR)/machine/jackal_machine.c $(CORE_DIR)/vidhrdw/jackal_vidhrdw.c $(CORE_DIR)/drivers/jackal.c \
+	$(CORE_DIR)/vidhrdw/ddrible_vidhrdw.c $(CORE_DIR)/drivers/ddrible.c \
+	$(CORE_DIR)/vidhrdw/contra_vidhrdw.c $(CORE_DIR)/drivers/contra.c \
+	$(CORE_DIR)/vidhrdw/combatsc_vidhrdw.c $(CORE_DIR)/drivers/combatsc.c \
+	$(CORE_DIR)/vidhrdw/hcastle_vidhrdw.c $(CORE_DIR)/drivers/hcastle.c \
+	$(CORE_DIR)/vidhrdw/nemesis_vidhrdw.c $(CORE_DIR)/drivers/nemesis.c \
+	$(CORE_DIR)/vidhrdw/konamiic.c \
+	$(CORE_DIR)/vidhrdw/rockrage_vidhrdw.c $(CORE_DIR)/drivers/rockrage.c \
+	$(CORE_DIR)/vidhrdw/flkatck_vidhrdw.c $(CORE_DIR)/drivers/flkatck.c \
+	$(CORE_DIR)/vidhrdw/fastlane_vidhrdw.c $(CORE_DIR)/drivers/fastlane.c \
+	$(CORE_DIR)/vidhrdw/labyrunr_vidhrdw.c $(CORE_DIR)/drivers/labyrunr.c \
+	$(CORE_DIR)/vidhrdw/battlnts_vidhrdw.c $(CORE_DIR)/drivers/battlnts.c \
+	$(CORE_DIR)/vidhrdw/bladestl_vidhrdw.c $(CORE_DIR)/drivers/bladestl.c \
+	$(CORE_DIR)/machine/ajax_machine.c $(CORE_DIR)/vidhrdw/ajax_vidhrdw.c $(CORE_DIR)/drivers/ajax.c \
+	$(CORE_DIR)/vidhrdw/thunderx_vidhrdw.c $(CORE_DIR)/drivers/thunderx.c \
+	$(CORE_DIR)/vidhrdw/mainevt_vidhrdw.c $(CORE_DIR)/drivers/mainevt.c \
+	$(CORE_DIR)/vidhrdw/88games_vidhrdw.c $(CORE_DIR)/drivers/88games.c \
+	$(CORE_DIR)/vidhrdw/gbusters_vidhrdw.c $(CORE_DIR)/drivers/gbusters.c \
+	$(CORE_DIR)/vidhrdw/crimfght_vidhrdw.c $(CORE_DIR)/drivers/crimfght.c \
+	$(CORE_DIR)/vidhrdw/spy_vidhrdw.c $(CORE_DIR)/drivers/spy.c \
+	$(CORE_DIR)/vidhrdw/bottom9_vidhrdw.c $(CORE_DIR)/drivers/bottom9.c \
+	$(CORE_DIR)/vidhrdw/blockhl_vidhrdw.c $(CORE_DIR)/drivers/blockhl.c \
+	$(CORE_DIR)/vidhrdw/aliens_vidhrdw.c $(CORE_DIR)/drivers/aliens.c \
+	$(CORE_DIR)/vidhrdw/surpratk_vidhrdw.c $(CORE_DIR)/drivers/surpratk.c \
+	$(CORE_DIR)/vidhrdw/parodius_vidhrdw.c $(CORE_DIR)/drivers/parodius.c \
+	$(CORE_DIR)/vidhrdw/rollerg_vidhrdw.c $(CORE_DIR)/drivers/rollerg.c \
+	$(CORE_DIR)/vidhrdw/xexex_vidhrdw.c $(CORE_DIR)/drivers/xexex.c \
+	$(CORE_DIR)/vidhrdw/asterix_vidhrdw.c $(CORE_DIR)/drivers/asterix.c \
+	$(CORE_DIR)/vidhrdw/gijoe_vidhrdw.c $(CORE_DIR)/drivers/gijoe.c \
+	$(CORE_DIR)/machine/simpsons_machine.c $(CORE_DIR)/vidhrdw/simpsons_vidhrdw.c $(CORE_DIR)/drivers/simpsons.c \
+	$(CORE_DIR)/vidhrdw/vendetta_vidhrdw.c $(CORE_DIR)/drivers/vendetta.c \
+	$(CORE_DIR)/vidhrdw/wecleman_vidhrdw.c $(CORE_DIR)/drivers/wecleman.c \
+	$(CORE_DIR)/vidhrdw/chqflag_vidhrdw.c $(CORE_DIR)/drivers/chqflag.c \
+	$(CORE_DIR)/vidhrdw/ultraman_vidhrdw.c $(CORE_DIR)/drivers/ultraman.c \
+	$(CORE_DIR)/vidhrdw/hexion_vidhrdw.c $(CORE_DIR)/drivers/hexion.c \
+	$(CORE_DIR)/vidhrdw/twin16_vidhrdw.c $(CORE_DIR)/drivers/twin16.c \
+	$(CORE_DIR)/vidhrdw/tmnt_vidhrdw.c $(CORE_DIR)/drivers/tmnt.c \
+	$(CORE_DIR)/vidhrdw/xmen_vidhrdw.c $(CORE_DIR)/drivers/xmen.c \
+	$(CORE_DIR)/vidhrdw/overdriv_vidhrdw.c $(CORE_DIR)/drivers/overdriv.c \
+	$(CORE_DIR)/vidhrdw/gradius3_vidhrdw.c $(CORE_DIR)/drivers/gradius3.c \
+	$(CORE_DIR)/vidhrdw/moo_vidhrdw.c $(CORE_DIR)/drivers/moo.c \
+	$(CORE_DIR)/vidhrdw/mystwarr_vidhrdw.c $(CORE_DIR)/drivers/mystwarr.c \
+	$(CORE_DIR)/vidhrdw/rungun_vidhrdw.c $(CORE_DIR)/drivers/rungun.c \
+	$(CORE_DIR)/vidhrdw/dbz2_vidhrdw.c $(CORE_DIR)/drivers/dbz2.c \
+	$(CORE_DIR)/vidhrdw/bishi_vidhrdw.c $(CORE_DIR)/drivers/bishi.c \
+	$(CORE_DIR)/vidhrdw/lethal_vidhrdw.c $(CORE_DIR)/drivers/lethal.c \
+	$(CORE_DIR)/machine/konamigx_machine.c $(CORE_DIR)/vidhrdw/konamigx_vidhrdw.c $(CORE_DIR)/drivers/konamigx.c \
+	$(CORE_DIR)/vidhrdw/djmain_vidhrdw.c $(CORE_DIR)/drivers/djmain.c \
+	$(CORE_DIR)/vidhrdw/plygonet_vidhrdw.c $(CORE_DIR)/drivers/plygonet.c \
+	$(CORE_DIR)/drivers/mogura.c \
+	$(CORE_DIR)/machine/am53cf96.c $(CORE_DIR)/drivers/konamigq.c \
+	$(CORE_DIR)/machine/carpolo_machine.c $(CORE_DIR)/vidhrdw/carpolo_vidhrdw.c $(CORE_DIR)/drivers/carpolo.c \
+	$(CORE_DIR)/vidhrdw/exidy_vidhrdw.c $(CORE_DIR)/sndhrdw/exidy_sndhrdw.c $(CORE_DIR)/drivers/exidy.c \
+	$(CORE_DIR)/sndhrdw/targ.c \
+	$(CORE_DIR)/vidhrdw/circus_vidhrdw.c $(CORE_DIR)/drivers/circus.c \
+	$(CORE_DIR)/vidhrdw/starfire_vidhrdw.c $(CORE_DIR)/drivers/starfire.c \
+	$(CORE_DIR)/vidhrdw/victory_vidhrdw.c $(CORE_DIR)/drivers/victory.c \
+	$(CORE_DIR)/sndhrdw/exidy440_sndhrdw.c $(CORE_DIR)/vidhrdw/exidy440_vidhrdw.c $(CORE_DIR)/drivers/exidy440.c \
+	$(CORE_DIR)/machine/atari_vg.c \
+	$(CORE_DIR)/vidhrdw/tia.c $(CORE_DIR)/drivers/tourtabl.c \
+	$(CORE_DIR)/machine/asteroid_machine.c $(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c $(CORE_DIR)/drivers/asteroid.c \
+	$(CORE_DIR)/sndhrdw/llander.c \
+	$(CORE_DIR)/drivers/bwidow.c \
+	$(CORE_DIR)/sndhrdw/bzone_sndhrdw.c	$(CORE_DIR)/drivers/bzone.c \
+	$(CORE_DIR)/sndhrdw/redbaron.c \
+	$(CORE_DIR)/drivers/tempest.c \
+	$(CORE_DIR)/machine/starwars_machine.c $(CORE_DIR)/drivers/starwars.c $(CORE_DIR)/sndhrdw/starwars_sndhrdw.c \
+	$(CORE_DIR)/machine/mhavoc_machine.c $(CORE_DIR)/drivers/mhavoc.c \
+	$(CORE_DIR)/drivers/quantum.c \
+	$(CORE_DIR)/vidhrdw/copsnrob_vidhrdw.c $(CORE_DIR)/machine/copsnrob_machine.c $(CORE_DIR)/drivers/copsnrob.c \
+	$(CORE_DIR)/vidhrdw/flyball_vidhrdw.c $(CORE_DIR)/drivers/flyball.c \
+	$(CORE_DIR)/vidhrdw/sprint2_vidhrdw.c $(CORE_DIR)/drivers/sprint2.c \
+	$(CORE_DIR)/vidhrdw/sprint4_vidhrdw.c $(CORE_DIR)/drivers/sprint4.c \
+	$(CORE_DIR)/vidhrdw/sprint8_vidhrdw.c $(CORE_DIR)/drivers/sprint8.c \
+	$(CORE_DIR)/vidhrdw/nitedrvr_vidhrdw.c $(CORE_DIR)/machine/nitedrvr_machine.c $(CORE_DIR)/drivers/nitedrvr.c \
+	$(CORE_DIR)/machine/dominos.c \
+	$(CORE_DIR)/vidhrdw/triplhnt_vidhrdw.c $(CORE_DIR)/drivers/triplhnt.c \
+	$(CORE_DIR)/vidhrdw/dragrace_vidhrdw.c $(CORE_DIR)/drivers/dragrace.c \
+	$(CORE_DIR)/vidhrdw/poolshrk_vidhrdw.c $(CORE_DIR)/drivers/poolshrk.c \
+	$(CORE_DIR)/vidhrdw/starshp1_vidhrdw.c $(CORE_DIR)/drivers/starshp1.c \
+	$(CORE_DIR)/vidhrdw/canyon_vidhrdw.c $(CORE_DIR)/drivers/canyon.c \
+	$(CORE_DIR)/vidhrdw/destroyr_vidhrdw.c $(CORE_DIR)/drivers/destroyr.c \
+	$(CORE_DIR)/drivers/ultratnk.c \
+	$(CORE_DIR)/vidhrdw/wolfpack_vidhrdw.c $(CORE_DIR)/drivers/wolfpack.c \
+	$(CORE_DIR)/vidhrdw/boxer_vidhrdw.c $(CORE_DIR)/drivers/boxer.c \
+	$(CORE_DIR)/vidhrdw/skyraid_vidhrdw.c $(CORE_DIR)/drivers/skyraid.c \
+	$(CORE_DIR)/machine/avalnche_machine.c $(CORE_DIR)/vidhrdw/avalnche_vidhrdw.c $(CORE_DIR)/drivers/avalnche.c \
+	$(CORE_DIR)/drivers/firetrk.c $(CORE_DIR)/vidhrdw/firetrk_vidhrdw.c $(CORE_DIR)/sndhrdw/ataridis_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/skydiver_vidhrdw.c $(CORE_DIR)/drivers/skydiver.c \
+	$(CORE_DIR)/machine/sbrkout_machine.c $(CORE_DIR)/vidhrdw/sbrkout_vidhrdw.c $(CORE_DIR)/drivers/sbrkout.c \
+	$(CORE_DIR)/machine/atarifb_machine.c $(CORE_DIR)/vidhrdw/atarifb_vidhrdw.c $(CORE_DIR)/drivers/atarifb.c \
+	$(CORE_DIR)/vidhrdw/orbit_vidhrdw.c $(CORE_DIR)/drivers/orbit.c \
+	$(CORE_DIR)/vidhrdw/videopin_vidhrdw.c $(CORE_DIR)/drivers/videopin.c \
+	$(CORE_DIR)/machine/subs_machine.c $(CORE_DIR)/vidhrdw/subs_vidhrdw.c $(CORE_DIR)/drivers/subs.c \
+	$(CORE_DIR)/vidhrdw/bsktball_vidhrdw.c $(CORE_DIR)/machine/bsktball_machine.c $(CORE_DIR)/drivers/bsktball.c \
+	$(CORE_DIR)/vidhrdw/centiped_vidhrdw.c $(CORE_DIR)/drivers/centiped.c \
+	$(CORE_DIR)/vidhrdw/runaway_vidhrdw.c $(CORE_DIR)/drivers/runaway.c \
+	$(CORE_DIR)/machine/missile_machine.c $(CORE_DIR)/vidhrdw/missile_vidhrdw.c $(CORE_DIR)/drivers/missile.c \
+	$(CORE_DIR)/vidhrdw/foodf_vidhrdw.c $(CORE_DIR)/drivers/foodf.c \
+	$(CORE_DIR)/drivers/tunhunt.c $(CORE_DIR)/vidhrdw/tunhunt_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/liberatr_vidhrdw.c $(CORE_DIR)/drivers/liberatr.c \
+	$(CORE_DIR)/vidhrdw/ccastles_vidhrdw.c $(CORE_DIR)/drivers/ccastles.c \
+	$(CORE_DIR)/vidhrdw/cloak_vidhrdw.c $(CORE_DIR)/drivers/cloak.c \
+	$(CORE_DIR)/vidhrdw/cloud9_vidhrdw.c $(CORE_DIR)/drivers/cloud9.c \
+	$(CORE_DIR)/vidhrdw/jedi_vidhrdw.c $(CORE_DIR)/drivers/jedi.c \
+	$(CORE_DIR)/machine/atarigen.c $(CORE_DIR)/sndhrdw/atarijsa.c \
+	$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c $(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
+	$(CORE_DIR)/machine/slapstic.c \
+	$(CORE_DIR)/vidhrdw/atarisy1_vidhrdw.c $(CORE_DIR)/drivers/atarisy1.c \
+	$(CORE_DIR)/vidhrdw/atarisy2_vidhrdw.c $(CORE_DIR)/drivers/atarisy2.c \
+	$(CORE_DIR)/machine/irobot_machine.c $(CORE_DIR)/vidhrdw/irobot_vidhrdw.c $(CORE_DIR)/drivers/irobot.c \
+	$(CORE_DIR)/machine/harddriv_machine.c $(CORE_DIR)/vidhrdw/harddriv_vidhrdw.c $(CORE_DIR)/sndhrdw/harddriv_sndhrdw.c $(CORE_DIR)/drivers/harddriv.c \
+	$(CORE_DIR)/vidhrdw/gauntlet_vidhrdw.c $(CORE_DIR)/drivers/gauntlet.c \
+	$(CORE_DIR)/vidhrdw/atetris_vidhrdw.c $(CORE_DIR)/drivers/atetris.c \
+	$(CORE_DIR)/vidhrdw/toobin_vidhrdw.c $(CORE_DIR)/drivers/toobin.c \
+	$(CORE_DIR)/vidhrdw/vindictr_vidhrdw.c $(CORE_DIR)/drivers/vindictr.c \
+	$(CORE_DIR)/vidhrdw/klax_vidhrdw.c $(CORE_DIR)/drivers/klax.c \
+	$(CORE_DIR)/vidhrdw/blstroid_vidhrdw.c $(CORE_DIR)/drivers/blstroid.c \
+	$(CORE_DIR)/vidhrdw/xybots_vidhrdw.c $(CORE_DIR)/drivers/xybots.c \
+	$(CORE_DIR)/vidhrdw/eprom_vidhrdw.c $(CORE_DIR)/drivers/eprom.c \
+	$(CORE_DIR)/vidhrdw/skullxbo_vidhrdw.c $(CORE_DIR)/drivers/skullxbo.c \
+	$(CORE_DIR)/vidhrdw/badlands_vidhrdw.c $(CORE_DIR)/drivers/badlands.c \
+	$(CORE_DIR)/vidhrdw/cyberbal_vidhrdw.c $(CORE_DIR)/sndhrdw/cyberbal_sndhrdw.c $(CORE_DIR)/drivers/cyberbal.c \
+	$(CORE_DIR)/vidhrdw/rampart_vidhrdw.c $(CORE_DIR)/drivers/rampart.c \
+	$(CORE_DIR)/vidhrdw/shuuz_vidhrdw.c $(CORE_DIR)/drivers/shuuz.c \
+	$(CORE_DIR)/vidhrdw/atarig1_vidhrdw.c $(CORE_DIR)/drivers/atarig1.c \
+	$(CORE_DIR)/vidhrdw/thunderj_vidhrdw.c $(CORE_DIR)/drivers/thunderj.c \
+	$(CORE_DIR)/vidhrdw/batman_vidhrdw.c $(CORE_DIR)/drivers/batman.c \
+	$(CORE_DIR)/vidhrdw/relief_vidhrdw.c $(CORE_DIR)/drivers/relief.c \
+	$(CORE_DIR)/vidhrdw/offtwall_vidhrdw.c $(CORE_DIR)/drivers/offtwall.c \
+	$(CORE_DIR)/vidhrdw/arcadecl_vidhrdw.c $(CORE_DIR)/drivers/arcadecl.c \
+	$(CORE_DIR)/vidhrdw/beathead_vidhrdw.c $(CORE_DIR)/drivers/beathead.c \
+	$(CORE_DIR)/vidhrdw/atarig42_vidhrdw.c $(CORE_DIR)/drivers/atarig42.c \
+	$(CORE_DIR)/machine/asic65.c \
+	$(CORE_DIR)/vidhrdw/atarigx2_vidhrdw.c $(CORE_DIR)/drivers/atarigx2.c \
+	$(CORE_DIR)/vidhrdw/atarigt_vidhrdw.c $(CORE_DIR)/drivers/atarigt.c \
+	$(CORE_DIR)/vidhrdw/jaguar_vidhrdw.c $(CORE_DIR)/sndhrdw/jaguar_sndhrdw.c $(CORE_DIR)/drivers/cojag.c \
+	$(CORE_DIR)/sndhrdw/cage_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/rockola_vidhrdw.c $(CORE_DIR)/sndhrdw/rockola_sndhrdw.c $(CORE_DIR)/drivers/rockola.c \
+	$(CORE_DIR)/vidhrdw/lasso_vidhrdw.c $(CORE_DIR)/drivers/lasso.c \
+	$(CORE_DIR)/drivers/munchmo.c $(CORE_DIR)/vidhrdw/munchmo_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/marvins_vidhrdw.c $(CORE_DIR)/drivers/marvins.c \
+	$(CORE_DIR)/vidhrdw/jcross_vidhrdw.c $(CORE_DIR)/drivers/jcross.c \
+	$(CORE_DIR)/vidhrdw/mainsnk_vidhrdw.c $(CORE_DIR)/drivers/mainsnk.c \
+	$(CORE_DIR)/drivers/hal21.c \
+	$(CORE_DIR)/vidhrdw/snk_vidhrdw.c $(CORE_DIR)/drivers/snk.c \
+	$(CORE_DIR)/drivers/sgladiat.c \
+	$(CORE_DIR)/vidhrdw/snk68_vidhrdw.c $(CORE_DIR)/drivers/snk68.c \
+	$(CORE_DIR)/vidhrdw/prehisle_vidhrdw.c $(CORE_DIR)/drivers/prehisle.c \
+	$(CORE_DIR)/vidhrdw/bbusters_vidhrdw.c $(CORE_DIR)/drivers/bbusters.c \
+	$(CORE_DIR)/drivers/shougi.c \
+	$(CORE_DIR)/machine/equites_machine.c $(CORE_DIR)/vidhrdw/equites_vidhrdw.c $(CORE_DIR)/drivers/equites.c \
+	$(CORE_DIR)/vidhrdw/alpha68k_vidhrdw.c $(CORE_DIR)/drivers/alpha68k.c \
+	$(CORE_DIR)/vidhrdw/champbas_vidhrdw.c $(CORE_DIR)/drivers/champbas.c \
+	$(CORE_DIR)/machine/exctsccr_machine.c $(CORE_DIR)/vidhrdw/exctsccr_vidhrdw.c $(CORE_DIR)/drivers/exctsccr.c \
+	$(CORE_DIR)/drivers/scregg.c \
+	$(CORE_DIR)/vidhrdw/tagteam_vidhrdw.c $(CORE_DIR)/drivers/tagteam.c \
+	$(CORE_DIR)/vidhrdw/ssozumo_vidhrdw.c $(CORE_DIR)/drivers/ssozumo.c \
+	$(CORE_DIR)/vidhrdw/mystston_vidhrdw.c $(CORE_DIR)/drivers/mystston.c \
+	$(CORE_DIR)/vidhrdw/dogfgt_vidhrdw.c $(CORE_DIR)/drivers/dogfgt.c \
+	$(CORE_DIR)/vidhrdw/bogeyman_vidhrdw.c $(CORE_DIR)/drivers/bogeyman.c \
+	$(CORE_DIR)/vidhrdw/matmania_vidhrdw.c $(CORE_DIR)/drivers/matmania.c $(CORE_DIR)/machine/maniach.c \
+	$(CORE_DIR)/vidhrdw/renegade_vidhrdw.c $(CORE_DIR)/drivers/renegade.c \
+	$(CORE_DIR)/vidhrdw/xain_vidhrdw.c $(CORE_DIR)/drivers/xain.c \
+	$(CORE_DIR)/vidhrdw/battlane_vidhrdw.c $(CORE_DIR)/drivers/battlane.c \
+	$(CORE_DIR)/vidhrdw/ddragon_vidhrdw.c $(CORE_DIR)/drivers/ddragon.c \
+	$(CORE_DIR)/drivers/chinagat.c \
+	$(CORE_DIR)/vidhrdw/spdodgeb_vidhrdw.c $(CORE_DIR)/drivers/spdodgeb.c \
+	$(CORE_DIR)/vidhrdw/wwfsstar_vidhrdw.c $(CORE_DIR)/drivers/wwfsstar.c \
+	$(CORE_DIR)/vidhrdw/vball_vidhrdw.c $(CORE_DIR)/drivers/vball.c \
+	$(CORE_DIR)/vidhrdw/blockout_vidhrdw.c $(CORE_DIR)/drivers/blockout.c \
+	$(CORE_DIR)/vidhrdw/ddragon3_vidhrdw.c $(CORE_DIR)/drivers/ddragon3.c \
+	$(CORE_DIR)/vidhrdw/wwfwfest_vidhrdw.c $(CORE_DIR)/drivers/wwfwfest.c \
+	$(CORE_DIR)/vidhrdw/shadfrce_vidhrdw.c $(CORE_DIR)/drivers/shadfrce.c \
+	$(CORE_DIR)/machine/berzerk_machine.c $(CORE_DIR)/vidhrdw/berzerk_vidhrdw.c $(CORE_DIR)/sndhrdw/berzerk_sndhrdw.c $(CORE_DIR)/drivers/berzerk.c \
+	$(CORE_DIR)/drivers/mazerbla.c \
+	$(CORE_DIR)/drivers/supdrapo.c \
+	$(CORE_DIR)/drivers/toratora.c \
+	$(CORE_DIR)/vidhrdw/gameplan_vidhrdw.c $(CORE_DIR)/drivers/gameplan.c \
+	$(CORE_DIR)/vidhrdw/zac2650_vidhrdw.c $(CORE_DIR)/drivers/zac2650.c \
+	$(CORE_DIR)/vidhrdw/zaccaria_vidhrdw.c $(CORE_DIR)/drivers/zaccaria.c \
+	$(CORE_DIR)/vidhrdw/mouser_vidhrdw.c $(CORE_DIR)/drivers/mouser.c \
+	$(CORE_DIR)/vidhrdw/nova2001_vidhrdw.c $(CORE_DIR)/drivers/nova2001.c \
+	$(CORE_DIR)/vidhrdw/ninjakid_vidhrdw.c $(CORE_DIR)/drivers/ninjakid.c \
+	$(CORE_DIR)/vidhrdw/raiders5_vidhrdw.c $(CORE_DIR)/drivers/raiders5.c \
+	$(CORE_DIR)/vidhrdw/pkunwar_vidhrdw.c $(CORE_DIR)/drivers/pkunwar.c \
+	$(CORE_DIR)/vidhrdw/xxmissio_vidhrdw.c $(CORE_DIR)/drivers/xxmissio.c \
+	$(CORE_DIR)/vidhrdw/ninjakd2_vidhrdw.c $(CORE_DIR)/drivers/ninjakd2.c \
+	$(CORE_DIR)/vidhrdw/mnight_vidhrdw.c $(CORE_DIR)/drivers/mnight.c \
+	$(CORE_DIR)/vidhrdw/omegaf_vidhrdw.c $(CORE_DIR)/drivers/omegaf.c \
+	$(CORE_DIR)/vidhrdw/nmk16_vidhrdw.c $(CORE_DIR)/machine/nmk004.c $(CORE_DIR)/drivers/nmk16.c \
+	$(CORE_DIR)/drivers/jalmah.c \
+	$(CORE_DIR)/drivers/quizpani.c $(CORE_DIR)/vidhrdw/quizpani_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/macrossp_vidhrdw.c $(CORE_DIR)/drivers/macrossp.c \
+	$(CORE_DIR)/vidhrdw/quizdna_vidhrdw.c $(CORE_DIR)/drivers/quizdna.c \
+	$(CORE_DIR)/vidhrdw/jack_vidhrdw.c $(CORE_DIR)/drivers/jack.c \
+	$(CORE_DIR)/drivers/embargo.c \
+	$(CORE_DIR)/sndhrdw/cinemat_sndhrdw.c $(CORE_DIR)/drivers/cinemat.c \
+	$(CORE_DIR)/machine/cchasm_machine.c $(CORE_DIR)/vidhrdw/cchasm_vidhrdw.c $(CORE_DIR)/sndhrdw/cchasm_sndhrdw.c $(CORE_DIR)/drivers/cchasm.c \
+	$(CORE_DIR)/vidhrdw/thepit_vidhrdw.c $(CORE_DIR)/drivers/thepit.c \
+	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c \
+	$(CORE_DIR)/machine/bagman_machine.c $(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c \
+	$(CORE_DIR)/vidhrdw/tankbust_vidhrdw.c $(CORE_DIR)/drivers/tankbust.c \
+	$(CORE_DIR)/vidhrdw/wiz_vidhrdw.c $(CORE_DIR)/drivers/wiz.c \
+	$(CORE_DIR)/vidhrdw/kncljoe_vidhrdw.c $(CORE_DIR)/drivers/kncljoe.c \
+	$(CORE_DIR)/machine/stfight_machine.c $(CORE_DIR)/vidhrdw/stfight_vidhrdw.c $(CORE_DIR)/drivers/stfight.c \
+	$(CORE_DIR)/drivers/cshooter.c \
+	$(CORE_DIR)/sndhrdw/seibu.c \
+	$(CORE_DIR)/vidhrdw/deadang_vidhrdw.c $(CORE_DIR)/drivers/deadang.c \
+	$(CORE_DIR)/vidhrdw/dynduke_vidhrdw.c $(CORE_DIR)/drivers/dynduke.c \
+	$(CORE_DIR)/vidhrdw/raiden_vidhrdw.c $(CORE_DIR)/drivers/raiden.c $(CORE_DIR)/drivers/raiden2.c \
+	$(CORE_DIR)/vidhrdw/dcon_vidhrdw.c $(CORE_DIR)/drivers/dcon.c \
+	$(CORE_DIR)/vidhrdw/sengokmj_vidhrdw.c $(CORE_DIR)/drivers/sengokmj.c \
+	$(CORE_DIR)/sndhrdw/t5182.c \
+	$(CORE_DIR)/vidhrdw/mustache_vidhrdw.c $(CORE_DIR)/drivers/mustache.c \
+	$(CORE_DIR)/vidhrdw/darkmist_vidhrdw.c $(CORE_DIR)/drivers/darkmist.c \
+	$(CORE_DIR)/vidhrdw/cabal_vidhrdw.c $(CORE_DIR)/drivers/cabal.c \
+	$(CORE_DIR)/vidhrdw/toki_vidhrdw.c $(CORE_DIR)/drivers/toki.c \
+	$(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c $(CORE_DIR)/drivers/bloodbro.c \
+	$(CORE_DIR)/vidhrdw/legionna_vidhrdw.c $(CORE_DIR)/drivers/legionna.c \
+	$(CORE_DIR)/vidhrdw/goal92_vidhrdw.c $(CORE_DIR)/drivers/goal92.c \
+	$(CORE_DIR)/vidhrdw/exerion_vidhrdw.c $(CORE_DIR)/drivers/exerion.c \
+	$(CORE_DIR)/drivers/fcombat.c \
+	$(CORE_DIR)/vidhrdw/aeroboto_vidhrdw.c $(CORE_DIR)/drivers/aeroboto.c \
+	$(CORE_DIR)/vidhrdw/citycon_vidhrdw.c $(CORE_DIR)/drivers/citycon.c \
+	$(CORE_DIR)/vidhrdw/momoko_vidhrdw.c $(CORE_DIR)/drivers/momoko.c \
+	$(CORE_DIR)/vidhrdw/argus_vidhrdw.c $(CORE_DIR)/drivers/argus.c \
+	$(CORE_DIR)/vidhrdw/psychic5_vidhrdw.c $(CORE_DIR)/drivers/psychic5.c \
+	$(CORE_DIR)/vidhrdw/ginganin_vidhrdw.c $(CORE_DIR)/drivers/ginganin.c \
+	$(CORE_DIR)/vidhrdw/skyfox_vidhrdw.c $(CORE_DIR)/drivers/skyfox.c \
+	$(CORE_DIR)/vidhrdw/homerun_vidhrdw.c $(CORE_DIR)/drivers/homerun.c \
+	$(CORE_DIR)/vidhrdw/cischeat_vidhrdw.c $(CORE_DIR)/drivers/cischeat.c \
+	$(CORE_DIR)/vidhrdw/tetrisp2_vidhrdw.c $(CORE_DIR)/drivers/tetrisp2.c \
+	$(CORE_DIR)/vidhrdw/megasys1_vidhrdw.c $(CORE_DIR)/drivers/megasys1.c \
+	$(CORE_DIR)/vidhrdw/ms32_vidhrdw.c $(CORE_DIR)/drivers/ms32.c \
+	$(CORE_DIR)/vidhrdw/bigstrkb_vidhrdw.c $(CORE_DIR)/drivers/bigstrkb.c \
+	$(CORE_DIR)/vidhrdw/rpunch_vidhrdw.c $(CORE_DIR)/drivers/rpunch.c \
+	$(CORE_DIR)/vidhrdw/tail2nos_vidhrdw.c $(CORE_DIR)/drivers/tail2nos.c \
+	$(CORE_DIR)/vidhrdw/ojankohs_vidhrdw.c $(CORE_DIR)/drivers/ojankohs.c \
+	$(CORE_DIR)/vidhrdw/fromance_vidhrdw.c $(CORE_DIR)/drivers/fromance.c $(CORE_DIR)/drivers/pipedrm.c \
+	$(CORE_DIR)/vidhrdw/aerofgt_vidhrdw.c $(CORE_DIR)/drivers/aerofgt.c \
+	$(CORE_DIR)/vidhrdw/welltris_vidhrdw.c $(CORE_DIR)/drivers/welltris.c \
+	$(CORE_DIR)/vidhrdw/f1gp_vidhrdw.c $(CORE_DIR)/drivers/f1gp.c \
+	$(CORE_DIR)/vidhrdw/taotaido_vidhrdw.c $(CORE_DIR)/drivers/taotaido.c \
+	$(CORE_DIR)/vidhrdw/crshrace_vidhrdw.c $(CORE_DIR)/drivers/crshrace.c \
+	$(CORE_DIR)/vidhrdw/gstriker_vidhrdw.c $(CORE_DIR)/drivers/gstriker.c \
+	$(CORE_DIR)/vidhrdw/suprslam_vidhrdw.c $(CORE_DIR)/drivers/suprslam.c \
+	$(CORE_DIR)/vidhrdw/fromanc2_vidhrdw.c $(CORE_DIR)/drivers/fromanc2.c \
+	$(CORE_DIR)/vidhrdw/inufuku_vidhrdw.c $(CORE_DIR)/drivers/inufuku.c \
+	$(CORE_DIR)/vidhrdw/psikyo_vidhrdw.c $(CORE_DIR)/drivers/psikyo.c \
+	$(CORE_DIR)/vidhrdw/psikyosh_vidhrdw.c $(CORE_DIR)/drivers/psikyosh.c \
+	$(CORE_DIR)/vidhrdw/psikyo4_vidhrdw.c $(CORE_DIR)/drivers/psikyo4.c \
+	$(CORE_DIR)/machine/8254pit.c $(CORE_DIR)/drivers/leland.c $(CORE_DIR)/vidhrdw/leland_vidhrdw.c $(CORE_DIR)/machine/leland_machine.c $(CORE_DIR)/sndhrdw/leland_sndhrdw.c \
+	$(CORE_DIR)/drivers/ataxx.c \
+	$(CORE_DIR)/vidhrdw/marineb_vidhrdw.c $(CORE_DIR)/drivers/marineb.c \
+	$(CORE_DIR)/vidhrdw/funkybee_vidhrdw.c $(CORE_DIR)/drivers/funkybee.c \
+	$(CORE_DIR)/vidhrdw/zodiack_vidhrdw.c $(CORE_DIR)/drivers/zodiack.c \
+	$(CORE_DIR)/vidhrdw/espial_vidhrdw.c $(CORE_DIR)/drivers/espial.c \
+	$(CORE_DIR)/vidhrdw/vastar_vidhrdw.c $(CORE_DIR)/drivers/vastar.c \
+	$(CORE_DIR)/vidhrdw/xorworld_vidhrdw.c $(CORE_DIR)/drivers/xorworld.c \
+	$(CORE_DIR)/vidhrdw/splash_vidhrdw.c $(CORE_DIR)/drivers/splash.c \
+	$(CORE_DIR)/vidhrdw/thoop2_vidhrdw.c $(CORE_DIR)/drivers/thoop2.c \
+	$(CORE_DIR)/vidhrdw/gaelco_vidhrdw.c $(CORE_DIR)/drivers/gaelco.c \
+	$(CORE_DIR)/machine/wrally_machine.c $(CORE_DIR)/vidhrdw/wrally_vidhrdw.c $(CORE_DIR)/drivers/wrally.c \
+	$(CORE_DIR)/vidhrdw/targeth_vidhrdw.c $(CORE_DIR)/drivers/targeth.c \
+	$(CORE_DIR)/machine/gaelco2_machine.c $(CORE_DIR)/vidhrdw/gaelco2_vidhrdw.c $(CORE_DIR)/drivers/gaelco2.c \
+	$(CORE_DIR)/vidhrdw/glass_vidhrdw.c $(CORE_DIR)/drivers/glass.c \
+	$(CORE_DIR)/vidhrdw/airbustr_vidhrdw.c $(CORE_DIR)/drivers/airbustr.c \
+	$(CORE_DIR)/vidhrdw/djboy_vidhrdw.c $(CORE_DIR)/drivers/djboy.c \
+	$(CORE_DIR)/vidhrdw/galpanic_vidhrdw.c $(CORE_DIR)/drivers/galpanic.c \
+	$(CORE_DIR)/vidhrdw/galpani2_vidhrdw.c $(CORE_DIR)/drivers/galpani2.c \
+	$(CORE_DIR)/drivers/jchan.c \
+	$(CORE_DIR)/vidhrdw/kaneko16_vidhrdw.c $(CORE_DIR)/drivers/kaneko16.c \
+	$(CORE_DIR)/vidhrdw/suprnova_vidhrdw.c $(CORE_DIR)/drivers/suprnova.c \
+	$(CORE_DIR)/machine/pd4990a.c $(CORE_DIR)/machine/neocrypt.c \
+	$(CORE_DIR)/machine/neogeo_machine.c $(CORE_DIR)/vidhrdw/neogeo_vidhrdw.c $(CORE_DIR)/drivers/neogeo.c \
+	$(CORE_DIR)/vidhrdw/hanaawas_vidhrdw.c $(CORE_DIR)/drivers/hanaawas.c \
+	$(CORE_DIR)/vidhrdw/speedatk_vidhrdw.c $(CORE_DIR)/drivers/speedatk.c \
+	$(CORE_DIR)/vidhrdw/srmp2_vidhrdw.c $(CORE_DIR)/drivers/srmp2.c \
+	$(CORE_DIR)/vidhrdw/seta_vidhrdw.c $(CORE_DIR)/drivers/seta.c \
+	$(CORE_DIR)/vidhrdw/seta2_vidhrdw.c $(CORE_DIR)/drivers/seta2.c \
+	$(CORE_DIR)/vidhrdw/ssv_vidhrdw.c $(CORE_DIR)/drivers/ssv.c \
+	$(CORE_DIR)/vidhrdw/powerins_vidhrdw.c $(CORE_DIR)/drivers/powerins.c \
+	$(CORE_DIR)/vidhrdw/ohmygod_vidhrdw.c $(CORE_DIR)/drivers/ohmygod.c \
+	$(CORE_DIR)/vidhrdw/blmbycar_vidhrdw.c $(CORE_DIR)/drivers/blmbycar.c \
+	$(CORE_DIR)/vidhrdw/route16_vidhrdw.c $(CORE_DIR)/drivers/route16.c \
+	$(CORE_DIR)/vidhrdw/ttmahjng_vidhrdw.c $(CORE_DIR)/drivers/ttmahjng.c \
+	$(CORE_DIR)/vidhrdw/kangaroo_vidhrdw.c $(CORE_DIR)/drivers/kangaroo.c \
+	$(CORE_DIR)/vidhrdw/arabian_vidhrdw.c $(CORE_DIR)/drivers/arabian.c \
+	$(CORE_DIR)/vidhrdw/markham_vidhrdw.c $(CORE_DIR)/drivers/markham.c \
+	$(CORE_DIR)/vidhrdw/strnskil_vidhrdw.c $(CORE_DIR)/drivers/strnskil.c \
+	$(CORE_DIR)/vidhrdw/ikki_vidhrdw.c $(CORE_DIR)/drivers/ikki.c \
+	$(CORE_DIR)/drivers/shanghai.c \
+	$(CORE_DIR)/vidhrdw/shangha3_vidhrdw.c $(CORE_DIR)/drivers/shangha3.c \
+	$(CORE_DIR)/vidhrdw/goindol_vidhrdw.c $(CORE_DIR)/drivers/goindol.c \
+	$(CORE_DIR)/vidhrdw/suna8_vidhrdw.c $(CORE_DIR)/drivers/suna8.c \
+	$(CORE_DIR)/vidhrdw/suna16_vidhrdw.c $(CORE_DIR)/drivers/suna16.c \
+	$(CORE_DIR)/vidhrdw/gundealr_vidhrdw.c $(CORE_DIR)/drivers/gundealr.c \
+	$(CORE_DIR)/vidhrdw/dooyong_vidhrdw.c $(CORE_DIR)/drivers/dooyong.c \
+	$(CORE_DIR)/machine/leprechn_machine.c $(CORE_DIR)/vidhrdw/leprechn_vidhrdw.c $(CORE_DIR)/drivers/leprechn.c \
+	$(CORE_DIR)/machine/beezer_machine.c $(CORE_DIR)/vidhrdw/beezer_vidhrdw.c $(CORE_DIR)/drivers/beezer.c \
+	$(CORE_DIR)/vidhrdw/pushman_vidhrdw.c $(CORE_DIR)/drivers/pushman.c \
+	$(CORE_DIR)/vidhrdw/zerozone_vidhrdw.c $(CORE_DIR)/drivers/zerozone.c \
+	$(CORE_DIR)/vidhrdw/galspnbl_vidhrdw.c $(CORE_DIR)/drivers/galspnbl.c \
+	$(CORE_DIR)/vidhrdw/sslam_vidhrdw.c $(CORE_DIR)/drivers/sslam.c \
+	$(CORE_DIR)/vidhrdw/playmark_vidhrdw.c $(CORE_DIR)/drivers/playmark.c \
+	$(CORE_DIR)/vidhrdw/thief_vidhrdw.c $(CORE_DIR)/drivers/thief.c \
+	$(CORE_DIR)/vidhrdw/mrflea_vidhrdw.c $(CORE_DIR)/drivers/mrflea.c \
+	$(CORE_DIR)/vidhrdw/holeland_vidhrdw.c $(CORE_DIR)/drivers/holeland.c \
+	$(CORE_DIR)/vidhrdw/speedbal_vidhrdw.c $(CORE_DIR)/drivers/speedbal.c \
+	$(CORE_DIR)/vidhrdw/sauro_vidhrdw.c $(CORE_DIR)/drivers/sauro.c \
+	$(CORE_DIR)/vidhrdw/metro_vidhrdw.c $(CORE_DIR)/drivers/metro.c \
+	$(CORE_DIR)/vidhrdw/hyprduel_vidhrdw.c $(CORE_DIR)/drivers/hyprduel.c \
+	$(CORE_DIR)/vidhrdw/spcforce_vidhrdw.c $(CORE_DIR)/drivers/spcforce.c \
+	$(CORE_DIR)/drivers/looping.c \
+	$(CORE_DIR)/vidhrdw/paradise_vidhrdw.c $(CORE_DIR)/drivers/paradise.c \
+	$(CORE_DIR)/vidhrdw/yunsung8_vidhrdw.c $(CORE_DIR)/drivers/yunsung8.c \
+	$(CORE_DIR)/vidhrdw/yunsun16_vidhrdw.c $(CORE_DIR)/drivers/yunsun16.c \
+	$(CORE_DIR)/vidhrdw/blueprnt_vidhrdw.c $(CORE_DIR)/drivers/blueprnt.c \
+	$(CORE_DIR)/vidhrdw/fuukifg2_vidhrdw.c $(CORE_DIR)/drivers/fuukifg2.c \
+	$(CORE_DIR)/vidhrdw/fuukifg3_vidhrdw.c $(CORE_DIR)/drivers/fuukifg3.c \
+	$(CORE_DIR)/vidhrdw/drgnmst_vidhrdw.c $(CORE_DIR)/drivers/drgnmst.c \
+	$(CORE_DIR)/vidhrdw/unico_vidhrdw.c $(CORE_DIR)/drivers/unico.c \
+	$(CORE_DIR)/vidhrdw/silkroad_vidhrdw.c $(CORE_DIR)/drivers/silkroad.c \
+	$(CORE_DIR)/vidhrdw/afega_vidhrdw.c $(CORE_DIR)/drivers/afega.c \
+	$(CORE_DIR)/vidhrdw/esd16_vidhrdw.c $(CORE_DIR)/drivers/esd16.c \
+	$(CORE_DIR)/drivers/royalmah.c \
+	$(CORE_DIR)/vidhrdw/hnayayoi_vidhrdw.c $(CORE_DIR)/drivers/hnayayoi.c \
+	$(CORE_DIR)/vidhrdw/dynax_vidhrdw.c $(CORE_DIR)/drivers/dynax.c \
+	$(CORE_DIR)/drivers/ddenlovr.c \
+	$(CORE_DIR)/drivers/realbrk.c $(CORE_DIR)/vidhrdw/realbrk_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/crtc6845.c \
+	$(CORE_DIR)/vidhrdw/nyny_vidhrdw.c $(CORE_DIR)/drivers/nyny.c \
+	$(CORE_DIR)/drivers/r2dtank.c \
+	$(CORE_DIR)/machine/spiders_machine.c $(CORE_DIR)/vidhrdw/spiders_vidhrdw.c $(CORE_DIR)/drivers/spiders.c \
+	$(CORE_DIR)/vidhrdw/iqblock_vidhrdw.c $(CORE_DIR)/drivers/iqblock.c \
+	$(CORE_DIR)/drivers/chindrag.c \
+	$(CORE_DIR)/drivers/grtwall.c \
+	$(CORE_DIR)/vidhrdw/pgm_vidhrdw.c $(CORE_DIR)/drivers/pgm.c \
+	$(CORE_DIR)/machine/pgmprot_machine.c $(CORE_DIR)/machine/pgmcrypt.c $(CORE_DIR)/machine/pgmy2ks.c \
+	$(CORE_DIR)/vidhrdw/hitme_vidhrdw.c $(CORE_DIR)/drivers/hitme.c \
+	$(CORE_DIR)/vidhrdw/starcrus_vidhrdw.c $(CORE_DIR)/drivers/starcrus.c \
+	$(CORE_DIR)/vidhrdw/battlex_vidhrdw.c $(CORE_DIR)/drivers/battlex.c \
+	$(CORE_DIR)/vidhrdw/carjmbre_vidhrdw.c $(CORE_DIR)/drivers/carjmbre.c \
+	$(CORE_DIR)/vidhrdw/popper_vidhrdw.c $(CORE_DIR)/drivers/popper.c \
+	$(CORE_DIR)/vidhrdw/speedspn_vidhrdw.c $(CORE_DIR)/drivers/speedspn.c \
+	$(CORE_DIR)/vidhrdw/kickgoal_vidhrdw.c $(CORE_DIR)/drivers/kickgoal.c \
+	$(CORE_DIR)/vidhrdw/usgames_vidhrdw.c $(CORE_DIR)/drivers/usgames.c \
+	$(CORE_DIR)/vidhrdw/mermaid_vidhrdw.c $(CORE_DIR)/drivers/mermaid.c \
+	$(CORE_DIR)/vidhrdw/drmicro_vidhrdw.c $(CORE_DIR)/drivers/drmicro.c \
+	$(CORE_DIR)/vidhrdw/appoooh_vidhrdw.c $(CORE_DIR)/drivers/appoooh.c \
+	$(CORE_DIR)/vidhrdw/bankp_vidhrdw.c $(CORE_DIR)/drivers/bankp.c \
+	$(CORE_DIR)/vidhrdw/mjkjidai_vidhrdw.c $(CORE_DIR)/drivers/mjkjidai.c \
+	$(CORE_DIR)/vidhrdw/mayumi_vidhrdw.c $(CORE_DIR)/drivers/mayumi.c \
+	$(CORE_DIR)/vidhrdw/btoads_vidhrdw.c $(CORE_DIR)/drivers/btoads.c \
+	$(CORE_DIR)/vidhrdw/kinst_vidhrdw.c $(CORE_DIR)/drivers/kinst.c \
+	$(CORE_DIR)/vidhrdw/freekick_vidhrdw.c $(CORE_DIR)/drivers/freekick.c \
+	$(CORE_DIR)/drivers/rmhaihai.c \
+	$(CORE_DIR)/drivers/hanaroku.c \
+	$(CORE_DIR)/drivers/yumefuda.c \
+	$(CORE_DIR)/vidhrdw/homedata_vidhrdw.c $(CORE_DIR)/drivers/homedata.c \
+	$(CORE_DIR)/vidhrdw/artmagic_vidhrdw.c $(CORE_DIR)/drivers/artmagic.c \
+	$(CORE_DIR)/vidhrdw/shangkid_vidhrdw.c $(CORE_DIR)/drivers/shangkid.c \
+	$(CORE_DIR)/vidhrdw/astinvad_vidhrdw.c $(CORE_DIR)/sndhrdw/astinvad_sndhrdw.c $(CORE_DIR)/drivers/astinvad.c \
+	$(CORE_DIR)/vidhrdw/spacefb_vidhrdw.c $(CORE_DIR)/drivers/spacefb.c \
+	$(CORE_DIR)/drivers/omegrace.c \
+	$(CORE_DIR)/vidhrdw/dday_vidhrdw.c $(CORE_DIR)/drivers/dday.c \
+	$(CORE_DIR)/vidhrdw/hexa_vidhrdw.c $(CORE_DIR)/drivers/hexa.c \
+	$(CORE_DIR)/vidhrdw/redalert_vidhrdw.c $(CORE_DIR)/sndhrdw/redalert_sndhrdw.c $(CORE_DIR)/drivers/redalert.c \
+	$(CORE_DIR)/machine/stactics_machine.c $(CORE_DIR)/vidhrdw/stactics_vidhrdw.c $(CORE_DIR)/drivers/stactics.c \
+	$(CORE_DIR)/vidhrdw/kingobox_vidhrdw.c $(CORE_DIR)/drivers/kingobox.c \
+	$(CORE_DIR)/vidhrdw/ambush_vidhrdw.c $(CORE_DIR)/drivers/ambush.c \
+	$(CORE_DIR)/drivers/dlair.c \
+	$(CORE_DIR)/vidhrdw/aztarac_vidhrdw.c $(CORE_DIR)/sndhrdw/aztarac_sndhrdw.c $(CORE_DIR)/drivers/aztarac.c \
+	$(CORE_DIR)/vidhrdw/mole_vidhrdw.c $(CORE_DIR)/drivers/mole.c \
+	$(CORE_DIR)/vidhrdw/gotya_vidhrdw.c $(CORE_DIR)/sndhrdw/gotya_sndhrdw.c $(CORE_DIR)/drivers/gotya.c \
+	$(CORE_DIR)/vidhrdw/mrjong_vidhrdw.c $(CORE_DIR)/drivers/mrjong.c \
+	$(CORE_DIR)/vidhrdw/polyplay_vidhrdw.c $(CORE_DIR)/sndhrdw/polyplay_sndhrdw.c $(CORE_DIR)/drivers/polyplay.c \
+	$(CORE_DIR)/vidhrdw/amspdwy_vidhrdw.c $(CORE_DIR)/drivers/amspdwy.c \
+	$(CORE_DIR)/vidhrdw/othldrby_vidhrdw.c $(CORE_DIR)/drivers/othldrby.c \
+	$(CORE_DIR)/vidhrdw/mosaic_vidhrdw.c $(CORE_DIR)/drivers/mosaic.c \
+	$(CORE_DIR)/drivers/spdbuggy.c \
+	$(CORE_DIR)/vidhrdw/sprcros2_vidhrdw.c $(CORE_DIR)/drivers/sprcros2.c \
+	$(CORE_DIR)/vidhrdw/mugsmash_vidhrdw.c $(CORE_DIR)/drivers/mugsmash.c \
+	$(CORE_DIR)/vidhrdw/stlforce_vidhrdw.c $(CORE_DIR)/drivers/stlforce.c \
+	$(CORE_DIR)/vidhrdw/gcpinbal_vidhrdw.c $(CORE_DIR)/drivers/gcpinbal.c \
+	$(CORE_DIR)/vidhrdw/aquarium_vidhrdw.c $(CORE_DIR)/drivers/aquarium.c \
+	$(CORE_DIR)/vidhrdw/policetr_vidhrdw.c $(CORE_DIR)/drivers/policetr.c \
+	$(CORE_DIR)/vidhrdw/pass_vidhrdw.c $(CORE_DIR)/drivers/pass.c \
+	$(CORE_DIR)/vidhrdw/news_vidhrdw.c $(CORE_DIR)/drivers/news.c \
+	$(CORE_DIR)/vidhrdw/taxidrvr_vidhrdw.c $(CORE_DIR)/drivers/taxidrvr.c \
+	$(CORE_DIR)/vidhrdw/xyonix_vidhrdw.c $(CORE_DIR)/drivers/xyonix.c \
+	$(CORE_DIR)/drivers/findout.c \
+	$(CORE_DIR)/vidhrdw/dribling_vidhrdw.c $(CORE_DIR)/drivers/dribling.c \
+	$(CORE_DIR)/drivers/ace.c \
+	$(CORE_DIR)/vidhrdw/clayshoo_vidhrdw.c $(CORE_DIR)/machine/clayshoo_machine.c $(CORE_DIR)/drivers/clayshoo.c \
+	$(CORE_DIR)/vidhrdw/pirates_vidhrdw.c $(CORE_DIR)/drivers/pirates.c \
+	$(CORE_DIR)/vidhrdw/fitfight_vidhrdw.c $(CORE_DIR)/drivers/fitfight.c \
+	$(CORE_DIR)/vidhrdw/flower_vidhrdw.c $(CORE_DIR)/sndhrdw/flower_sndhrdw.c $(CORE_DIR)/drivers/flower.c \
+	$(CORE_DIR)/vidhrdw/diverboy_vidhrdw.c $(CORE_DIR)/drivers/diverboy.c \
+	$(CORE_DIR)/vidhrdw/beaminv_vidhrdw.c $(CORE_DIR)/drivers/beaminv.c \
+	$(CORE_DIR)/vidhrdw/mcatadv_vidhrdw.c $(CORE_DIR)/drivers/mcatadv.c \
+	$(CORE_DIR)/vidhrdw/4enraya_vidhrdw.c $(CORE_DIR)/drivers/4enraya.c \
+	$(CORE_DIR)/vidhrdw/oneshot_vidhrdw.c $(CORE_DIR)/drivers/oneshot.c \
+	$(CORE_DIR)/drivers/tugboat.c \
+	$(CORE_DIR)/vidhrdw/gotcha_vidhrdw.c $(CORE_DIR)/drivers/gotcha.c \
+	$(CORE_DIR)/drivers/coolpool.c \
+	$(CORE_DIR)/vidhrdw/gumbo_vidhrdw.c $(CORE_DIR)/drivers/gumbo.c \
+	$(CORE_DIR)/drivers/statriv2.c \
+	$(CORE_DIR)/vidhrdw/tickee_vidhrdw.c $(CORE_DIR)/drivers/tickee.c \
+	$(CORE_DIR)/vidhrdw/crgolf_vidhrdw.c $(CORE_DIR)/drivers/crgolf.c \
+	$(CORE_DIR)/vidhrdw/truco_vidhrdw.c $(CORE_DIR)/drivers/truco.c \
+	$(CORE_DIR)/vidhrdw/thedeep_vidhrdw.c $(CORE_DIR)/drivers/thedeep.c \
+	$(CORE_DIR)/vidhrdw/fantland_vidhrdw.c $(CORE_DIR)/drivers/fantland.c \
+	$(CORE_DIR)/drivers/wallc.c \
+	$(CORE_DIR)/drivers/skyarmy.c \
+	$(CORE_DIR)/vidhrdw/lethalj_vidhrdw.c $(CORE_DIR)/drivers/lethalj.c \
+	$(CORE_DIR)/vidhrdw/sbugger_vidhrdw.c $(CORE_DIR)/drivers/sbugger.c \
+	$(CORE_DIR)/vidhrdw/portrait_vidhrdw.c $(CORE_DIR)/drivers/portrait.c \
+	$(CORE_DIR)/drivers/enigma2.c \
+	$(CORE_DIR)/drivers/ltcasino.c \
+	$(CORE_DIR)/drivers/vamphalf.c \
+	$(CORE_DIR)/drivers/strvmstr.c \
+	$(CORE_DIR)/vidhrdw/dorachan_vidhrdw.c $(CORE_DIR)/drivers/dorachan.c \
+	$(CORE_DIR)/vidhrdw/ladyfrog_vidhrdw.c $(CORE_DIR)/drivers/ladyfrog.c \
+	$(CORE_DIR)/drivers/rabbit.c \
+	$(CORE_DIR)/drivers/malzak.c $(CORE_DIR)/vidhrdw/malzak_vidhrdw.c \
+	$(CORE_DIR)/drivers/supertnk.c \
+	$(CORE_DIR)/vidhrdw/crospang_vidhrdw.c $(CORE_DIR)/drivers/crospang.c \
+	$(CORE_DIR)/drivers/funybubl.c \
+	$(CORE_DIR)/drivers/dreamwld.c \
+	$(CORE_DIR)/machine/seicop.c \
+	$(CORE_DIR)/vidhrdw/denjinmk.c \
+	$(CORE_DIR)/drivers/driver_denjinmk.c \
+	$(CORE_DIR)/drivers/simpl156.c \
+	$(CORE_DIR)/drivers/boogwing.c \
+	$(CORE_DIR)/drivers/dietgo.c \
+	$(CORE_DIR)/drivers/pktgaldx.c \
+	$(CORE_DIR)/drivers/dblewing.c \
+	$(CORE_DIR)/drivers/mwarr.c \
+	$(CORE_DIR)/drivers/backfire.c \
+	$(CORE_DIR)/drivers/pturn.c \
+	$(CORE_DIR)/vidhrdw/suprridr_vidhrdw.c $(CORE_DIR)/drivers/suprridr.c \
+	$(CORE_DIR)/drivers/vmetal.c \
+	$(CORE_DIR)/drivers/deco156.c \
+	$(CORE_DIR)/drivers/1945kiii.c \
+	$(CORE_DIR)/drivers/madalien.c \
+	$(CORE_DIR)/drivers/n8080.c \
+	$(CORE_DIR)/drivers/mirax.c \
+	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
+	$(CORE_DIR)/machine/namcoio_machine.c
 
 
 
