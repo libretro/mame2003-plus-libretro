@@ -7,6 +7,8 @@
 #include "driver.h"
 #include "k053260.h"
 
+/* 2004-02-28: Fixed ppcm decoding. Games sound much better now.*/
+
 #define LOG 0
 
 #define BASE_SHIFT	16
@@ -48,7 +50,7 @@ static void InitDeltaTable( int chip ) {
 
 	for( i = 0; i < 0x1000; i++ ) {
 		double v = ( double )( 0x1000 - i );
-		double target = max / v;
+		double target = (max) / v;
 		double fixed = ( double )( 1 << BASE_SHIFT );
 
 		if ( target && base ) {
@@ -85,7 +87,7 @@ static void K053260_reset( int chip ) {
 #define MINOUT -0x8000
 
 void K053260_update( int param, INT16 **buffer, int length ) {
-	static long dpcmcnv[] = { 0, 1, 4, 9, 16, 25, 36, 49, -64, -49, -36, -25, -16, -9, -4, -1 };
+	static long dpcmcnv[] = { 0,1,2,4,8,16,32,64, -128, -64, -32, -16, -8, -4, -2, -1};
 
 	int i, j, lvol[4], rvol[4], play[4], loop[4], ppcm_data[4], ppcm[4];
 	unsigned char *rom[4];
@@ -121,7 +123,6 @@ void K053260_update( int param, INT16 **buffer, int length ) {
 					if ( ( pos[i] >> BASE_SHIFT ) >= end[i] ) {
 
 						ppcm_data[i] = 0;
-
 						if ( loop[i] )
 							pos[i] = 0;
 						else {
@@ -133,22 +134,29 @@ void K053260_update( int param, INT16 **buffer, int length ) {
 					if ( ppcm[i] ) { /* Packed PCM */
 						/* we only update the signal if we're starting or a real sound sample has gone by */
 						/* this is all due to the dynamic sample rate convertion */
-						if ( pos[i] == 0 || ( ( pos[i] ^ ( pos[i] - delta[i] ) ) & 0x8000 ) == 0x8000 ) {
+						if ( pos[i] == 0 || ( ( pos[i] ^ ( pos[i] - delta[i] ) ) & 0x8000 ) == 0x8000 )
+								
+						 {
 							int newdata;
-							if ( pos[i] & 0x8000 )
-								newdata = rom[i][pos[i] >> BASE_SHIFT] & 0x0f;
-							else
-								newdata = ( ( rom[i][pos[i] >> BASE_SHIFT] ) >> 4 ) & 0x0f;
+							if ( pos[i] & 0x8000 ){
+													
+								newdata = ((rom[i][pos[i] >> BASE_SHIFT]) >> 4) & 0x0f; /*high nybble*/
+							}
+							else{
+								newdata = ( ( rom[i][pos[i] >> BASE_SHIFT] ) ) & 0x0f; /*low nybble*/
+							}
 
-							ppcm_data[i] = ( ( ppcm_data[i] * 62 ) >> 6 ) + dpcmcnv[newdata];
-
+							ppcm_data[i] = (( ( ppcm_data[i] * 62 ) >> 6 ) + dpcmcnv[newdata]);
+							
 							if ( ppcm_data[i] > 127 )
 								ppcm_data[i] = 127;
 							else
 								if ( ppcm_data[i] < -128 )
 									ppcm_data[i] = -128;
 						}
-
+                                                                                   
+                                               
+                                           		
 						d = ppcm_data[i];
 
 						pos[i] += delta[i];
