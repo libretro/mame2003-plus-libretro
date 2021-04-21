@@ -88,7 +88,8 @@ static void K051649_update(int ch, INT16 *buffer, int length)
 		v=voice[j].volume;
 		f=voice[j].frequency;
 		k=voice[j].key;
-		if (v && f && k)
+		/* SY 20040109: the SCC produces no sound for freq < 9 */
+		if (v && f > 8 && k)
 		{
 			const signed char *w = voice[j].waveform;			/* 19991207.CAB */
 			int c=voice[j].counter;
@@ -121,9 +122,7 @@ static void K051649_update(int ch, INT16 *buffer, int length)
 int K051649_sh_start(const struct MachineSound *msound)
 {
 	const char *snd_name = "K051649";
-	k051649_sound_channel *voice=channel_list;
 	const struct k051649_interface *intf = msound->sound_interface;
-	int i;
 
 	/* get stream channels */
 	stream = stream_init(snd_name, intf->volume, Machine->sample_rate, 0, K051649_update);
@@ -141,14 +140,20 @@ int K051649_sh_start(const struct MachineSound *msound)
 		return 1;
 	}
 
+	return 0;
+}
+
+void K051649_sh_reset(void)
+{
+	k051649_sound_channel *voice = channel_list;
+	int i;
+
 	/* reset all the voices */
 	for (i=0; i<5; i++) {
 		voice[i].frequency = 0;
 		voice[i].volume = 0;
 		voice[i].counter = 0;
 	}
-
-	return 0;
 }
 
 void K051649_sh_stop(void)
@@ -166,6 +171,11 @@ WRITE_HANDLER( K051649_waveform_w )
 	/* SY 20001114: Channel 5 shares the waveform with channel 4 */
     if (offset >= 0x60)
 		channel_list[4].waveform[offset&0x1f]=data;
+}
+
+READ_HANDLER ( K051649_waveform_r )
+{
+	return channel_list[offset>>5].waveform[offset&0x1f];
 }
 
 /* SY 20001114: Channel 5 doesn't share the waveform with channel 4 on this chip */
