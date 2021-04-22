@@ -96,7 +96,6 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
 {
   OPT_4WAY = 0,
   OPT_MOUSE_DEVICE,
-  OPT_LIGHTGUN_WITH_PAD,
   OPT_CROSSHAIR_ENABLED,
   OPT_SKIP_DISCLAIMER,
   OPT_SKIP_WARNINGS,
@@ -188,11 +187,11 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define RETRO_GUN     RETRO_DEVICE_LIGHTGUN
 
 const struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",    PAD_CLASSIC },
-  { "Modern Fightstick",  PAD_MODERN  },
-  { "8-Button",           PAD_8BUTTON },
-  { "6-Button",           PAD_6BUTTON },
-  { "Lightgun",           RETRO_GUN },
+  { "Classic Gamepad",              PAD_CLASSIC },
+  { "Modern Fightstick",            PAD_MODERN  },
+  { "8-Button",                     PAD_8BUTTON },
+  { "6-Button",                     PAD_6BUTTON },
+  { "Lightgun + Keyboard Encoder",  RETRO_GUN },
 };
 
 const struct retro_controller_description unsupported_controllers[] = {
@@ -295,7 +294,6 @@ static void init_core_options(void)
 #else
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
 #endif
-  init_default(&default_options[OPT_LIGHTGUN_WITH_PAD],      APPNAME"_lightgun_with_retropad", "Poll Lightgun with gamepads; enabled|disabled");
   init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
@@ -469,13 +467,6 @@ static void update_variables(bool first_time)
             options.mouse_device = RETRO_DEVICE_MOUSE;
           else
             options.mouse_device = RETRO_DEVICE_NONE;
-          break;
-
-        case OPT_LIGHTGUN_WITH_PAD:
-          if(strcmp(var.value, "enabled") == 0)
-            options.use_lightgun_with_pad = true;
-          else
-            options.use_lightgun_with_pad = false;
           break;
 
         case OPT_CROSSHAIR_ENABLED:
@@ -1257,7 +1248,6 @@ void retro_run (void)
 
   for(port = 0; port < MAX_PLAYER_COUNT; port++)
   {
-    bool gun_fallback_active = false;
     int device_type          = options.active_control_type[port];
     int device_parent        = get_device_parent(device_type);
 
@@ -1325,12 +1315,8 @@ void retro_run (void)
     retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
     retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
 
-    if(device_parent == RETRO_DEVICE_JOYPAD && options.use_lightgun_with_pad)
-      gun_fallback_active = true;
-
-#if 0
     /* simulated lightgun reload hack */
-    if(device_parent == RETRO_DEVICE_LIGHTGUN || gun_fallback_active)
+    if(device_parent == RETRO_DEVICE_LIGHTGUN)
     {
       if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
       {
@@ -1338,30 +1324,6 @@ void retro_run (void)
         lightgun_x[port] = -128;
         lightgun_y[port] = -128;
       }
-    }
-#endif
-    if(gun_fallback_active) /* hack to use gun even when joypad and mouse inputs are already taken */
-    {
-      if(!retroJsState[port][OSD_MOUSE_BUTTON_1])
-        retroJsState[port][OSD_MOUSE_BUTTON_1]    = retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER];
-      if(!retroJsState[port][OSD_MOUSE_BUTTON_2])
-        retroJsState[port][OSD_MOUSE_BUTTON_2]    = retroJsState[port][OSD_LIGHTGUN_AUX_A];
-      if(!retroJsState[port][OSD_MOUSE_BUTTON_3])
-        retroJsState[port][OSD_MOUSE_BUTTON_3]    = retroJsState[port][OSD_LIGHTGUN_AUX_B];
-      if(!retroJsState[port][OSD_MOUSE_BUTTON_4])
-        retroJsState[port][OSD_MOUSE_BUTTON_4]    = retroJsState[port][OSD_LIGHTGUN_AUX_C];
-      if(!retroJsState[port][OSD_JOYPAD_SELECT])
-        retroJsState[port][OSD_JOYPAD_SELECT]     = retroJsState[port][OSD_LIGHTGUN_SELECT];
-      if(!retroJsState[port][OSD_JOYPAD_START])
-        retroJsState[port][OSD_JOYPAD_START]      = retroJsState[port][OSD_LIGHTGUN_START];
-      if(!retroJsState[port][OSD_JOYPAD_UP])
-        retroJsState[port][OSD_JOYPAD_UP]         = retroJsState[port][OSD_LIGHTGUN_DPAD_UP];
-      if(!retroJsState[port][OSD_JOYPAD_DOWN])
-        retroJsState[port][OSD_JOYPAD_DOWN]       = retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN];
-      if(!retroJsState[port][OSD_JOYPAD_LEFT])
-        retroJsState[port][OSD_JOYPAD_LEFT]       = retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT];
-      if(!retroJsState[port][OSD_JOYPAD_RIGHT])
-        retroJsState[port][OSD_JOYPAD_RIGHT]      = retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT];
     }
     
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
@@ -1373,6 +1335,7 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][3] : 0;
   }
+
   mame_frame();
 }
 
@@ -2055,13 +2018,13 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 /* The dpad, start, select, mouse, and analog axes are the same regardless of layout */
 #define EMIT_COMMON_CODES(DISPLAY_IDX) \
 \
-  {"RP/Gun" #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
-  {"RP/Gun" #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
-  {"RP/Gun" #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
-  {"RP/Gun" #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
+  {"RP" #DISPLAY_IDX " HAT Left",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},  \
+  {"RP" #DISPLAY_IDX " HAT Right",  (DISPLAY_IDX * 1000) + OSD_JOYPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT}, \
+  {"RP" #DISPLAY_IDX " HAT Up",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},    \
+  {"RP" #DISPLAY_IDX " HAT Down",   (DISPLAY_IDX * 1000) + OSD_JOYPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},  \
 \
-  {"RP/Gun" #DISPLAY_IDX " Start",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
-  {"RP/Gun" #DISPLAY_IDX " Select",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
+  {"RP" #DISPLAY_IDX " Start",      (DISPLAY_IDX * 1000) + OSD_JOYPAD_START,  JOYCODE_##DISPLAY_IDX##_START},  \
+  {"RP" #DISPLAY_IDX " Select",     (DISPLAY_IDX * 1000) + OSD_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}, \
 \
   {"RP" #DISPLAY_IDX " AXIS 0 X-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_NEGATIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_LEFT},   \
   {"RP" #DISPLAY_IDX " AXIS 0 X+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_LEFT_POSITIVE_X,  JOYCODE_##DISPLAY_IDX##_LEFT_RIGHT},  \
@@ -2072,10 +2035,10 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"RP" #DISPLAY_IDX " AXIS 3 Y-",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_NEGATIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_UP},    \
   {"RP" #DISPLAY_IDX " AXIS 3 Y+",  (DISPLAY_IDX * 1000) + OSD_ANALOG_RIGHT_POSITIVE_Y, JOYCODE_##DISPLAY_IDX##_RIGHT_DOWN},  \
 \
-  {"Gun/Mouse" #DISPLAY_IDX " Trigger/Button1", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_1, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux A/Button2",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_2, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux B/Button3",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_3, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
-  {"Gun/Mouse" #DISPLAY_IDX " Aux C/Button4",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_4, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
+  {"Mouse" #DISPLAY_IDX " Button1", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_1, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
+  {"Mouse" #DISPLAY_IDX " Button2",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_2, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2}, \
+  {"Mouse" #DISPLAY_IDX " Button3",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_3, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
+  {"Mouse" #DISPLAY_IDX " Button4",   (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_4, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
   {"Mouse" #DISPLAY_IDX " Button5",             (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_5, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON5}, \
 
 #define EMIT_LIGHTGUN(DISPLAY_IDX) \
