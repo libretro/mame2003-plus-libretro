@@ -432,6 +432,7 @@ void osd_lightgun_read(int player, int *deltax, int *deltay);
  */
 void osd_customize_inputport_defaults(struct ipd *defaults);
 
+void poll_retro_input(void);
 
 /******************************************************************************
 

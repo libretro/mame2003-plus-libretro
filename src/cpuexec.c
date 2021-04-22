@@ -1330,11 +1330,9 @@ static void cpu_vblankreset(void)
 {
 	int cpunum;
 
-	/* read hi scores from disk */
-	hs_update();
-
-	/* read keyboard & update the status of the input ports */
-	update_input_ports();
+	hs_update();           /* read hi scores from disk */
+	poll_retro_input();    /* poll libretro input abstractions */
+	update_input_ports();  /* read & update the status of the input ports */
 
 	/* reset the cycle counters */
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
