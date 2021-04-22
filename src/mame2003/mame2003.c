@@ -1245,6 +1245,7 @@ void retro_run (void)
 
     if(device_type == RETRO_DEVICE_NONE) continue;
 
+    /* Standard retropad */
     retroJsState[port][OSD_JOYPAD_B]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
     retroJsState[port][OSD_JOYPAD_Y]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
     retroJsState[port][OSD_JOYPAD_SELECT] = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
@@ -1267,7 +1268,6 @@ void retro_run (void)
     analogjoy[port][1] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
     analogjoy[port][2] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
     analogjoy[port][3] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
-
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
     retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][0] : 0;
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -NORMALIZED_ANALOG_THRESHOLD) ? analogjoy[port][1] : 0;
