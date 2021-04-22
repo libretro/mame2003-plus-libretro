@@ -1294,8 +1294,6 @@ void retro_run (void)
       {
         bool pointer_pressed = input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
         retroJsState[port][OSD_MOUSE_BUTTON_1]  = pointer_pressed;
-        retroJsState[port][OSD_MOUSE_BUTTON_2]  = 0; /* no right click for a pointer */
-        retroJsState[port][OSD_MOUSE_BUTTON_3]  = 0; /* no middle click for a pointer */
         mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
         mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
       }
