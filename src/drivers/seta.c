@@ -1624,6 +1624,30 @@ WRITE16_HANDLER( usclssic_lockout_w )
 	}
 }
 
+/* palette can probably be handled in a better way (better colortable / palette init..) */
+
+static INLINE void usc_changecolor_xRRRRRGGGGGBBBBB(pen_t color,int data)
+{
+	int r,g,b;
+
+
+	r = (data >> 10) & 0x1f;
+	g = (data >>  5) & 0x1f;
+	b = (data >>  0) & 0x1f;
+
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
+
+	if (color>=0x100) palette_set_color(color-0x100,r,g,b);
+	else palette_set_color(color+0x200,r,g,b);
+}
+
+WRITE16_HANDLER( usc_paletteram16_xRRRRRGGGGGBBBBB_word_w )
+{
+	COMBINE_DATA(&paletteram16[offset]);
+	usc_changecolor_xRRRRRGGGGGBBBBB(offset,paletteram16[offset]);
+}
 
 static MEMORY_READ16_START( usclssic_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
@@ -1650,7 +1674,7 @@ static MEMORY_WRITE16_START( usclssic_writemem )
 	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
 	{ 0x900000, 0x900001, MWA16_RAM						},	/* ? $4000*/
 	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xb00000, 0xb003ff, usc_paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
 	{ 0xb40000, 0xb40001, usclssic_lockout_w			},	/* Coin Lockout + Tiles Banking*/
 	{ 0xb40010, 0xb40011, calibr50_soundlatch_w			},	/* To Sub CPU*/
 	{ 0xb40018, 0xb40019, watchdog_reset16_w			},	/* Watchdog*/
@@ -5918,13 +5942,10 @@ static struct GfxDecodeInfo tndrcade_gfxdecodeinfo[] =
 								U.S. Classic
 ***************************************************************************/
 
-/* 6 bit layer. The colors are still WRONG.
-   Remember there's a vh_init_palette function */
-
 static struct GfxDecodeInfo usclssic_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0+256, 32/2 }, /* [0] Sprites*/
-	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512*1, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX1, 0, &layout_planes_2roms,         0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512, 32 }, /* [1] Layer 1*/
 	{ -1 }
 };
 
@@ -6175,7 +6196,7 @@ static MACHINE_DRIVER_START( usclssic )
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
 	MDRV_GFXDECODE(usclssic_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16*32)
+	MDRV_PALETTE_LENGTH(16*32+0x200)
 	MDRV_COLORTABLE_LENGTH(16*32 + 64*32)		/* sprites, layer */
 
 	MDRV_PALETTE_INIT(usclssic)	/* layer is 6 planes deep */
@@ -7297,6 +7318,10 @@ ROM_START( usclssic )
 	ROM_LOAD( "ue001020.130", 0x500000, 0x080000, CRC(bc07403f) SHA1(f994b6d1dee23f5dabdb328f955f4380a8ca9d52) )
 	ROM_LOAD( "ue001021.131", 0x580000, 0x080000, CRC(98c03efd) SHA1(761c51d5573e6f35c48b8b9ee5d88cbde02e92a7) )
 
+	ROM_REGION( 0x400, REGION_PROMS, 0 )	/* Extra Colors */
+	ROM_LOAD16_BYTE( "ue1-022.prm", 0x000, 0x200, CRC(1a23129e) SHA1(110eb54ab83ecb8375164a5c96f522b2737c379c) )
+	ROM_LOAD16_BYTE( "ue1-023.prm", 0x001, 0x200, CRC(a13192a4) SHA1(86e312e0f7400b7fa08fbe8fced1eb95a32502ca) )
+
 	ROM_REGION( 0x080000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "ue001005.132", 0x000000, 0x080000, CRC(c5fea37c) SHA1(af4f09dd36af06e50262f607ff14eedc33beffd2) )
 ROM_END
@@ -8257,7 +8282,7 @@ GAME( 1987, tndrcadj, tndrcade, tndrcade, tndrcadj, 0,        ROT270, "[Seta] (T
 GAME( 1988, twineagl, 0,        twineagl, twineagl, twineagl, ROT270, "Seta (Taito license)",   "Twin Eagle - Revenge Joe's Brother" ) /* Country/License: DSW*/
 GAME( 1989, downtown, 0,        downtown, downtown, downtown, ROT270, "Seta",                   "DownTown" ) /* Country/License: DSW*/
 GAME( 1989, downtowj, downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown (joystick hack)" ) /* Country/License: DSW*/
-GAMEX(1989, usclssic, 0,        usclssic, usclssic, 0,        ROT270, "Seta",                   "U.S. Classic", GAME_WRONG_COLORS ) /* Country/License: DSW*/
+GAME( 1989, usclssic, 0,        usclssic, usclssic, 0,        ROT270, "Seta",                   "U.S. Classic" ) /* Country/License: DSW*/
 GAME( 1989, calibr50, 0,        calibr50, calibr50, 0,        ROT270, "Athena / Seta",          "Caliber 50" ) /* Country/License: DSW*/
 GAME( 1989, arbalest, 0,        metafox,  arbalest, arbalest, ROT270, "Seta",                   "Arbalester" ) /* Country/License: DSW*/
 GAME( 1989, metafox,  0,        metafox,  metafox,  metafox,  ROT270, "Seta",                   "Meta Fox" ) /* Country/License: DSW*/
