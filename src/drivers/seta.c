@@ -5942,13 +5942,10 @@ static struct GfxDecodeInfo tndrcade_gfxdecodeinfo[] =
 								U.S. Classic
 ***************************************************************************/
 
-/* 6 bit layer. The colors are still WRONG.
-   Remember there's a vh_init_palette function */
-
 static struct GfxDecodeInfo usclssic_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0+256, 32/2 }, /* [0] Sprites*/
-	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512*1, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX1, 0, &layout_planes_2roms,         0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512, 32 }, /* [1] Layer 1*/
 	{ -1 }
 };
 
@@ -6199,7 +6196,7 @@ static MACHINE_DRIVER_START( usclssic )
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
 	MDRV_GFXDECODE(usclssic_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16*32)
+	MDRV_PALETTE_LENGTH(16*32+0x200)
 	MDRV_COLORTABLE_LENGTH(16*32 + 64*32)		/* sprites, layer */
 
 	MDRV_PALETTE_INIT(usclssic)	/* layer is 6 planes deep */
