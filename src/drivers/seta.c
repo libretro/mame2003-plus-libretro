@@ -1626,7 +1626,7 @@ WRITE16_HANDLER( usclssic_lockout_w )
 
 /* palette can probably be handled in a better way (better colortable / palette init..) */
 
-INLINE void usc_changecolor_xRRRRRGGGGGBBBBB(pen_t color,int data)
+static INLINE void usc_changecolor_xRRRRRGGGGGBBBBB(pen_t color,int data)
 {
 	int r,g,b;
 
