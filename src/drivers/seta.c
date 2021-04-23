@@ -1624,6 +1624,30 @@ WRITE16_HANDLER( usclssic_lockout_w )
 	}
 }
 
+/* palette can probably be handled in a better way (better colortable / palette init..) */
+
+INLINE void usc_changecolor_xRRRRRGGGGGBBBBB(pen_t color,int data)
+{
+	int r,g,b;
+
+
+	r = (data >> 10) & 0x1f;
+	g = (data >>  5) & 0x1f;
+	b = (data >>  0) & 0x1f;
+
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
+
+	if (color>=0x100) palette_set_color(color-0x100,r,g,b);
+	else palette_set_color(color+0x200,r,g,b);
+}
+
+WRITE16_HANDLER( usc_paletteram16_xRRRRRGGGGGBBBBB_word_w )
+{
+	COMBINE_DATA(&paletteram16[offset]);
+	usc_changecolor_xRRRRRGGGGGBBBBB(offset,paletteram16[offset]);
+}
 
 static MEMORY_READ16_START( usclssic_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
@@ -1650,7 +1674,7 @@ static MEMORY_WRITE16_START( usclssic_writemem )
 	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
 	{ 0x900000, 0x900001, MWA16_RAM						},	/* ? $4000*/
 	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xb00000, 0xb003ff, usc_paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
 	{ 0xb40000, 0xb40001, usclssic_lockout_w			},	/* Coin Lockout + Tiles Banking*/
 	{ 0xb40010, 0xb40011, calibr50_soundlatch_w			},	/* To Sub CPU*/
 	{ 0xb40018, 0xb40019, watchdog_reset16_w			},	/* Watchdog*/
