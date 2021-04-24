@@ -55,17 +55,17 @@ extern "C" {
 
 ***************************************************************************/
 
-#define APPNAME      "mame2003-plus"
+#define APPNAME         "mame2003-plus"
 
-#define FRAMES_PER_FPS_UPDATE    12
-#define MAX_GFX_ELEMENTS         32
-#define MAX_MEMORY_REGIONS       32
+#define FRAMES_PER_FPS_UPDATE		12
+#define MAX_GFX_ELEMENTS        32
+#define MAX_MEMORY_REGIONS      32
 
-#define LIBRETRO_ANALOG_MIN  -32768
-#define LIBRETRO_ANALOG_MAX   32767
-#define MAME_ANALOG_MIN        -128
-#define MAME_ANALOG_MAX         128
-#define MAX_ANALOG_AXES           4
+#define NORMALIZED_ANALOG_THRESHOLD   64
+#define LIBRETRO_ANALOG_MIN -32768
+#define LIBRETRO_ANALOG_MAX 32767
+#define ANALOG_MIN -128
+#define ANALOG_MAX 128
 
 enum
 {
@@ -73,6 +73,7 @@ enum
   Y_AXIS,
   Z_AXIS,
   PEDAL_AXIS,
+  MAX_ANALOG_AXES
 };
 
 enum
