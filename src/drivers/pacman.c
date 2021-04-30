@@ -2693,7 +2693,7 @@ static MACHINE_DRIVER_START( mspactwin )
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
 	MDRV_CPU_VBLANK_INT(mspacman_interrupt,1)
 
-	MDRV_MACHINE_INIT(mspacman)
+	MDRV_MACHINE_INIT(mspactwin)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( theglobp )
