@@ -731,6 +731,41 @@ static MEMORY_WRITE_START( mspacman_writemem )
 MEMORY_END
 
 
+static MEMORY_READ_START( mspactwin_readmem )
+	{ 0x0000, 0x3fff, MRA_BANK1 },
+	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
+	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
+	{ 0x5000, 0x503f, input_port_0_r },	/* IN0 */
+	{ 0x5040, 0x507f, input_port_1_r },	/* IN1 */
+	{ 0x5080, 0x50bf, input_port_2_r },	/* DSW1 */
+	{ 0x50c0, 0x50ff, input_port_3_r },	/* DSW2 */
+	{ 0x8000, 0xbfff, MRA_BANK1 },
+MEMORY_END
+
+
+static MEMORY_WRITE_START( mspactwin_writemem )
+	{ 0x0000, 0x3fff, MWA_BANK1 },
+	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4c00, 0x4fef, MWA_RAM },
+	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0x5000, 0x5000, interrupt_enable_w },
+	{ 0x5001, 0x5001, pengo_sound_enable_w },
+	{ 0x5002, 0x5002, MWA_NOP },
+	{ 0x5003, 0x5003, pengo_flipscreen_w },
+ 	{ 0x5004, 0x5005, pacman_leds_w },
+	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
+ 	{ 0x5007, 0x5007, pacman_coin_counter_w },
+	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
+	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
+	{ 0x50c0, 0x50c0, watchdog_reset_w },
+	{ 0x8000, 0xbfff, MWA_BANK1 },	/* Ms. Pac-Man / Ponpoko only */
+	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
+MEMORY_END
+
+
 static MEMORY_READ_START( alibaba_readmem )
 	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
@@ -2649,6 +2684,18 @@ static MACHINE_DRIVER_START( mschamp )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( mspactwin )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(pacman)
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
+	MDRV_CPU_VBLANK_INT(mspacman_interrupt,1)
+
+	MDRV_MACHINE_INIT(mspacman)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( theglobp )
 
 	/* basic machine hardware */
@@ -4533,7 +4580,7 @@ GAME( 1981, mspacmat, mspacman, mspacman, mspacman, 0,        ROT90,  "hack", "M
 GAME( 1981, mspacpls, mspacman, mspacpls, mspacpls, 0,        ROT90,  "hack", "Ms. Pac-Man Plus" )
 GAME( 1981, pacgal,   mspacman, pacman,   mspacman, 0,        ROT90,  "hack", "Pac-Gal" )
 GAME( 1995, mschamp,  mspacman, mschamp,  mschamp,  0,        ROT90,  "hack", "Ms. Pacman Champion Edition - Super Zola Pac Gal" )
-GAME( 1992, mspactwin, 0,      mspacman, mspactwin, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
+GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
 GAME( 1981, crush,    0,        pacman,   maketrax, maketrax, ROT90,  "Kural Samno Electric", "Crush Roller (Kural Samno)" )
 GAME( 1981, crush2,   crush,    pacman,   maketrax, 0,        ROT90,  "Kural Esco Electric", "Crush Roller (Kural Esco - bootleg[Q])" )
 GAME( 1981, crush3,   crush,    pacman,   maketrax, eyes,     ROT90,  "Kural Electric", "Crush Roller (Kural - bootleg[Q])" )
