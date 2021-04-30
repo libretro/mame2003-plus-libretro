@@ -1017,14 +1017,14 @@ WRITE_HANDLER( mspactwin_decrypted_opcodes_high_w )
 }
 
 static MEMORY_READ_START( mspactwin_decrypted_readmem )
-    { 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
-	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
+	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
+	//{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
-    { 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
-	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
+	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
+	//{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_w, &decrypted_opcodes_high },
 MEMORY_END
 
@@ -4573,8 +4573,8 @@ static DRIVER_INIT( porky )
 
 static DRIVER_INIT( mspactwin )
 {
-  UINT8 *rom = memory_region(REGION_CPU1);
-  int A;
+	UINT8 *rom = memory_region(REGION_CPU1);
+	int A;
 
 	for (A = 0x0000; A < 0x4000; A+=2) {
 
@@ -4589,7 +4589,6 @@ static DRIVER_INIT( mspactwin )
 		rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
 		rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
 		rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
-
 	}
 
 	for (A = 0x0000; A < 0x2000; A++) {
