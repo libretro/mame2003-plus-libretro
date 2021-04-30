@@ -4483,6 +4483,21 @@ static DRIVER_INIT( porky )
 
 }
 
+static DRIVER_INIT( mspactwin )
+{
+  UINT8 *rom = memory_region(REGION_CPU1);
+  int A;
+
+  for (int A = 0x0000; A < 0x4000; A+=2)
+  {
+    // decode operand
+    rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+    rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+    rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+    rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+  }
+}
+
 
 /*************************************
  *
