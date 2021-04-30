@@ -4631,7 +4631,7 @@ GAME( 1981, mspacmat, mspacman, mspacman, mspacman, 0,        ROT90,  "hack", "M
 GAME( 1981, mspacpls, mspacman, mspacpls, mspacpls, 0,        ROT90,  "hack", "Ms. Pac-Man Plus" )
 GAME( 1981, pacgal,   mspacman, pacman,   mspacman, 0,        ROT90,  "hack", "Pac-Gal" )
 GAME( 1995, mschamp,  mspacman, mschamp,  mschamp,  0,        ROT90,  "hack", "Ms. Pacman Champion Edition - Super Zola Pac Gal" )
-GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
+GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, 0, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
 GAME( 1981, crush,    0,        pacman,   maketrax, maketrax, ROT90,  "Kural Samno Electric", "Crush Roller (Kural Samno)" )
 GAME( 1981, crush2,   crush,    pacman,   maketrax, 0,        ROT90,  "Kural Esco Electric", "Crush Roller (Kural Esco - bootleg[Q])" )
 GAME( 1981, crush3,   crush,    pacman,   maketrax, eyes,     ROT90,  "Kural Electric", "Crush Roller (Kural - bootleg[Q])" )
