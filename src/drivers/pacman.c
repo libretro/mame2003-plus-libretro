@@ -1142,7 +1142,7 @@ INPUT_PORTS_START( mspactwin )
 	PORT_DIPSETTING(    0x20, "20000" )
 	PORT_DIPSETTING(    0x30, "None"  )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-INPUT_PORT_END
+INPUT_PORTS_END
 
 
 /* Same as 'mspacman', but no fake input port */
