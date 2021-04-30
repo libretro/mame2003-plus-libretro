@@ -3492,7 +3492,7 @@ ROM_END
 
 
 ROM_START( mspactwin )
-	ROM_REGION( 2*0x10000, REGION_CPU1, 0 )	/* 64k for encrypted code */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for encrypted code */
 	ROM_LOAD( "m27256.bin",  0x0000, 0x4000, CRC(77a99184) SHA1(9dcb1a1b78994aa401d653bec571cb3e6f9d900b) )
 	ROM_CONTINUE(0x8000,0x4000)
 
@@ -4631,7 +4631,7 @@ GAME( 1981, mspacmat, mspacman, mspacman, mspacman, 0,        ROT90,  "hack", "M
 GAME( 1981, mspacpls, mspacman, mspacpls, mspacpls, 0,        ROT90,  "hack", "Ms. Pac-Man Plus" )
 GAME( 1981, pacgal,   mspacman, pacman,   mspacman, 0,        ROT90,  "hack", "Pac-Gal" )
 GAME( 1995, mschamp,  mspacman, mschamp,  mschamp,  0,        ROT90,  "hack", "Ms. Pacman Champion Edition - Super Zola Pac Gal" )
-GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, 0, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
+GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
 GAME( 1981, crush,    0,        pacman,   maketrax, maketrax, ROT90,  "Kural Samno Electric", "Crush Roller (Kural Samno)" )
 GAME( 1981, crush2,   crush,    pacman,   maketrax, 0,        ROT90,  "Kural Esco Electric", "Crush Roller (Kural Esco - bootleg[Q])" )
 GAME( 1981, crush3,   crush,    pacman,   maketrax, eyes,     ROT90,  "Kural Electric", "Crush Roller (Kural - bootleg[Q])" )
