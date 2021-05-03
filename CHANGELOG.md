@@ -362,6 +362,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tri-Sports - Romset `trisport`
 * Tron - Romset `tron`
 * Turbo Tag - Romset `turbotag`
+* Turbo Out Run - Romsets `toutrun` and `toutruna`
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
 * U.S. Classic - Romset `usclssic` - colors fixed
@@ -702,3 +703,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Backported some K051649 and K053260 sound improvements for many Konami games from later MAME [arcadez]
 * Added missing color proms and decoding for U.S. Classic [mahoneyt944]
 * Added Konami 007452 multiplier/divider fixes which sorts rolling mines and bullet trajectories in contra during the 3D Sections of the game [arcadez]
+* Updated outrun.c to MAME89 and then fixed the sound and graphical road drawing plus hooked up the inputs so that Turbo Out Run can now be played in this core [arcadez]
