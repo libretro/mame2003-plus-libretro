@@ -361,8 +361,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thunder Strike - Romset `tstrike` 
 * Tri-Sports - Romset `trisport`
 * Tron - Romset `tron`
-* Turbo Tag - Romset `turbotag`
 * Turbo Out Run - Romsets `toutrun` and `toutruna`
+* Turbo Tag - Romset `turbotag`
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
 * U.S. Classic - Romset `usclssic` - colors fixed
