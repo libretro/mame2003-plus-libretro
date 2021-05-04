@@ -85,6 +85,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_USE_ALT_SOUND,
   OPT_SHARE_DIAL,
   OPT_DEADZONE,
+  OPT_INPUT_BUTTON_AXIS_THRESHOLD,
   OPT_VECTOR_RESOLUTION,
   OPT_VECTOR_ANTIALIAS,
   OPT_VECTOR_BEAM,
@@ -131,10 +132,11 @@ static void   check_system_specs(void);
         int   get_retropad_code(unsigned osd_code);
         int   get_retromouse_code(unsigned osd_code);
         int   get_retrogun_code(unsigned osd_code);
+        int   get_axis_scaled_abs_value(unsigned joycode);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
-   unsigned   calc_player_number(unsigned joycode);
+   unsigned   calc_port(unsigned joycode);
         int   rescale_analog(int libretro_coordinate);
 static void   remove_slash (char* temp);
 
@@ -266,43 +268,44 @@ void retro_set_environment(retro_environment_t cb)
  */
 static void init_core_options(void)
 {
-  init_default(&default_options[OPT_4WAY],                   APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
+  init_default(&default_options[OPT_4WAY],                        APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; pointer|mouse|lightgun|disabled");
 #else
   init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; mouse|pointer|lightgun|disabled");
 #endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
-  init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
-  init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
-  init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
-  init_default(&default_options[OPT_BRIGHTNESS],             APPNAME"_brightness",             "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_GAMMA],                  APPNAME"_gamma",                  "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_ARTWORK],                APPNAME"_display_artwork",        "Display artwork (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2|3|4|5|6|7|8");
-  init_default(&default_options[OPT_ART_OVERLAY_OPACITY],    APPNAME"_art_overlay_opacity",    "Artwork hardcoded overlay opacity (Restart core); default|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|50|70");
-  init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
-  init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
-  init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
-  init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
-  init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
-  init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
-  init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_BEAM],            APPNAME"_vector_beam_width",      "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
-  init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_FLICKER],         APPNAME"_vector_flicker",         "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
-  init_default(&default_options[OPT_VECTOR_INTENSITY],       APPNAME"_vector_intensity",       "Vector intensity; 1.5|0.5|1|2|2.5|3");
-  init_default(&default_options[OPT_NVRAM_BOOTSTRAP],        APPNAME"_nvram_bootstraps",       "NVRAM Bootstraps; enabled|disabled");
-  init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
-  init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
-  init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
-  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
-  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
-  init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
-  init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
+  init_default(&default_options[OPT_CROSSHAIR_ENABLED],           APPNAME"_crosshair_enabled",            "Show Lightgun crosshairs; enabled|disabled");
+  init_default(&default_options[OPT_SKIP_DISCLAIMER],             APPNAME"_skip_disclaimer",              "Skip Disclaimer; disabled|enabled");
+  init_default(&default_options[OPT_SKIP_WARNINGS],               APPNAME"_skip_warnings",                "Skip Warnings; disabled|enabled");
+  init_default(&default_options[OPT_DISPLAY_SETUP],               APPNAME"_display_setup",                "Display MAME menu; disabled|enabled");
+  init_default(&default_options[OPT_BRIGHTNESS],                  APPNAME"_brightness",                   "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_default(&default_options[OPT_GAMMA],                       APPNAME"_gamma",                        "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_default(&default_options[OPT_ARTWORK],                     APPNAME"_display_artwork",              "Display artwork (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_ART_RESOLUTION],              APPNAME"_art_resolution",               "Artwork resolution multiplier (Restart core); 1|2|3|4|5|6|7|8");
+  init_default(&default_options[OPT_ART_OVERLAY_OPACITY],         APPNAME"_art_overlay_opacity",          "Artwork hardcoded overlay opacity (Restart core); default|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|50|70");
+  init_default(&default_options[OPT_NEOGEO_BIOS],                 APPNAME"_neogeo_bios",                  "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
+  init_default(&default_options[OPT_STV_BIOS],                    APPNAME"_stv_bios",                     "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
+  init_default(&default_options[OPT_USE_ALT_SOUND],               APPNAME"_use_alt_sound",                "Use CD soundtrack (Restart core); disabled|enabled");
+  init_default(&default_options[OPT_SHARE_DIAL],                  APPNAME"_dialsharexy",                  "Share 2 player dial controls across one X/Y device; disabled|enabled");
+  init_default(&default_options[OPT_DEADZONE],                    APPNAME"_deadzone",                     "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
+  init_default(&default_options[OPT_INPUT_BUTTON_AXIS_THRESHOLD], APPNAME"_input_button_axis_threshold",  "Input button axis threshold for analog-to-digital conversion; 50|0|5|10|15|20|25|30|35|40|45|55|60|65|70|75|80|85|90|95");
+  init_default(&default_options[OPT_TATE_MODE],                   APPNAME"_tate_mode",                    "TATE Mode - Rotating display (Restart core); disabled|enabled");
+  init_default(&default_options[OPT_VECTOR_RESOLUTION],           APPNAME"_vector_resolution",            "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
+  init_default(&default_options[OPT_VECTOR_ANTIALIAS],            APPNAME"_vector_antialias",             "Vector antialiasing; enabled|disabled");
+  init_default(&default_options[OPT_VECTOR_BEAM],                 APPNAME"_vector_beam_width",            "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
+  init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],         APPNAME"_vector_translucency",          "Vector translucency; enabled|disabled");
+  init_default(&default_options[OPT_VECTOR_FLICKER],              APPNAME"_vector_flicker",               "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
+  init_default(&default_options[OPT_VECTOR_INTENSITY],            APPNAME"_vector_intensity",             "Vector intensity; 1.5|0.5|1|2|2.5|3");
+  init_default(&default_options[OPT_NVRAM_BOOTSTRAP],             APPNAME"_nvram_bootstraps",             "NVRAM Bootstraps; enabled|disabled");
+  init_default(&default_options[OPT_SAMPLE_RATE],                 APPNAME"_sample_rate",                  "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
+  init_default(&default_options[OPT_INPUT_INTERFACE],             APPNAME"_input_interface",              "Input interface; simultaneous|retropad|keyboard");
+  init_default(&default_options[OPT_MAME_REMAPPING],              APPNAME"_mame_remapping",               "Legacy Remapping (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_FRAMESKIP],                   APPNAME"_frameskip",                    "Frameskip; 0|1|2|3|4|5");
+  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],          APPNAME"_core_sys_subfolder",           "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
+  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],         APPNAME"_core_save_subfolder",          "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
+  init_default(&default_options[OPT_CHEAT_INPUT_PORTS],           APPNAME"_cheat_input_ports",            "Dip switch/Cheat input ports; disabled|enabled");
+  init_default(&default_options[OPT_MACHINE_TIMING],              APPNAME"_machine_timing",               "Bypass audio skew (Restart core); enabled|disabled");
+  init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],       APPNAME"_digital_joy_centering",        "Center joystick axis for digital controls; enabled|disabled");
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -584,7 +587,11 @@ static void update_variables(bool first_time)
           }
 
         case OPT_DEADZONE:
-            options.deadzone = atoi(var.value);
+          options.deadzone = atoi(var.value);
+          break;
+
+        case OPT_INPUT_BUTTON_AXIS_THRESHOLD:
+          options.input_button_axis_threshold = atoi(var.value);
           break;
 
         case OPT_TATE_MODE:
@@ -1680,6 +1687,7 @@ int get_retropad_code(unsigned osd_id)
   return INT_MAX; /* no match found */
 }
 
+
 /* converts from OSD_ in mame2003.h to the codes from libretro.h
  * returns INT_MAX if the code is not valid
  */
@@ -1999,7 +2007,7 @@ int osd_is_joy_pressed(int joycode)
 {
   int retro_code         = -1;
   unsigned osd_code      = decode_osd_joycode(joycode);
-  unsigned player_number = calc_player_number(joycode);
+  unsigned player_number = calc_port(joycode);
   unsigned port          = player_number - 1;
   unsigned control_type  = options.active_control_type[port];
 
@@ -2040,7 +2048,66 @@ int osd_is_joy_pressed(int joycode)
     return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
   }
 
+  /**** check for simulated/analog-digital codes ****/
+  if(osd_code >= OSD_ANALOG_LEFT_NEGATIVE_X && osd_code <= OSD_ANALOG_RIGHT_POSITIVE_Y)
+  {
+    int effective_threshold = round(MAME_ANALOG_MAX * (options.input_button_axis_threshold / 100));
+    if(get_axis_scaled_abs_value(joycode) >= effective_threshold)
+      return 1;
+  }
+
   return 0; /* should not reach this point */
+}
+
+
+int get_axis_scaled_abs_value(unsigned joycode)
+{
+    int value = 0;
+    int port = calc_port(joycode);
+    int osd_code = decode_osd_joycode(joycode);
+    int deadzone = round(((float)options.deadzone / 100) * 128);
+    float deadzone_factor = (float)MAME_ANALOG_MAX / (MAME_ANALOG_MAX - deadzone);
+
+    switch(osd_code)
+    {
+      case OSD_ANALOG_LEFT_NEGATIVE_X:
+      case OSD_ANALOG_LEFT_POSITIVE_X:
+        value = rescale_analog( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
+        if(value > deadzone && osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
+          return value * deadzone_factor;
+        else if(value < -deadzone && osd_code == OSD_ANALOG_LEFT_NEGATIVE_X)
+          return abs(value) * deadzone_factor;
+        return 0; /* below threshold */
+
+      case OSD_ANALOG_LEFT_NEGATIVE_Y:
+      case OSD_ANALOG_LEFT_POSITIVE_Y:
+        value = rescale_analog( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
+        if(value > deadzone && osd_code == OSD_ANALOG_LEFT_POSITIVE_Y)
+          return value * deadzone_factor;
+        else if(value < -deadzone && osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y)
+          return abs(value) * deadzone_factor;
+        return 0; /* below threshold */
+
+      case OSD_ANALOG_RIGHT_NEGATIVE_X:
+      case OSD_ANALOG_RIGHT_POSITIVE_X:
+        value = rescale_analog( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT,  RETRO_DEVICE_ID_ANALOG_X) );
+        if(value > deadzone && osd_code == OSD_ANALOG_RIGHT_POSITIVE_X)
+          return value * deadzone_factor;
+        else if(value < -deadzone && osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X)
+          return abs(value) * deadzone_factor;
+        return 0; /* below threshold */
+
+      case OSD_ANALOG_RIGHT_NEGATIVE_Y:
+      case OSD_ANALOG_RIGHT_POSITIVE_Y:
+        value = rescale_analog( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT,  RETRO_DEVICE_ID_ANALOG_Y) );
+        if(value > deadzone && osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
+          return value * deadzone_factor;
+        else if(value < -deadzone && osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y)
+          return abs(value) * deadzone_factor;
+        return 0; /* below threshold */
+    }
+
+    return 0;
 }
 
 /******************************************************************************
@@ -2052,38 +2119,11 @@ int osd_is_joy_pressed(int joycode)
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
   int axis;
-  int value;
 
   for(axis = 0; axis < MAX_ANALOG_AXES; axis++)
   {
-    int osd_code;
-    int deadzone = round(((float)options.deadzone / 100) * 128);
-    value = 0;
     if(analogjoy_input[axis] != CODE_NONE)
-    {
-      osd_code = decode_osd_joycode(analogjoy_input[axis]);
-
-      if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
-        value = rescale_analog(input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X));
-
-      else if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y || osd_code == OSD_ANALOG_LEFT_POSITIVE_Y)
-        value = rescale_analog(input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y));
-
-      else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_POSITIVE_X)
-        value = rescale_analog(input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X));
-
-      else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
-        value = rescale_analog(input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y));
-
-      /**** check against deadzone ****/
-      if(abs(value) <= deadzone) value = 0; /* falls within the deadzone, report as zero */
-
-      /**** use correct numerical sign for analog value ****/
-      if((osd_code % 2) == 0) /* if osd_code is an even number, axis is expressed in negative values (e.g. NEGATIVE_X) */
-        value = -value;
-
-      analog_axis[axis]=value;
-    }
+      analog_axis[axis] = get_axis_scaled_abs_value(analogjoy_input[axis]);
   }
 }
 
@@ -2099,7 +2139,7 @@ int osd_is_joystick_axis_code(unsigned joycode)
 }
 
 
-unsigned calc_player_number(unsigned joycode)
+unsigned calc_port(unsigned joycode)
 {
   return (joycode / 1000);
 }
@@ -2116,7 +2156,7 @@ unsigned encode_osd_joycode(unsigned player_number, unsigned raw_code)
 
 unsigned decode_osd_joycode(unsigned joycode)
 {
-  return (joycode - (calc_player_number(joycode) * 1000));
+  return (joycode - (calc_port(joycode) * 1000));
 }
 
 

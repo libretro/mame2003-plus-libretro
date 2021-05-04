@@ -205,6 +205,7 @@ struct GameOptions
   unsigned active_control_type[MAX_PLAYER_COUNT];   /* register to indicate the default control layout for each player as currently set in the frontend */
   bool     restrict_4_way;                          /* simulate 4-way joystick restrictor */
   unsigned deadzone;                                /* analog deadzone in percent. 20 corresponds to 20% */
+  unsigned input_button_axis_threshold;             /* the percent an analog button must be pressed to register a digital press in the core's internal Analog-Digital conversion */
   unsigned tate_mode;
 
   int      crosshair_enable;
