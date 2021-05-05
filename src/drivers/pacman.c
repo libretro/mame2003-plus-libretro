@@ -2730,7 +2730,7 @@ static MACHINE_DRIVER_START( mspactwin )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
-	MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
+	//MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
