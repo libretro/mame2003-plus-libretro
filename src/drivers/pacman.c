@@ -183,6 +183,7 @@ Dave Widel
 #include "cpu/s2650/s2650.h"
 
 
+static UINT8 *decrypted_opcodes,*decrypted_opcodes_mirror,*decrypted_opcodes_high;
 static UINT8 speedcheat = 0;	/* a well known hack allows to make Pac Man run at four times */
 								/* his usual speed. When we start the emulation, we check if the */
 								/* hack can be applied, and set this flag accordingly. */
@@ -985,6 +986,48 @@ PORT_END
 static PORT_WRITE_START( s2650games_writeport )
 	{ S2650_DATA_PORT, S2650_DATA_PORT, SN76496_0_w },
 PORT_END
+
+READ_HANDLER( mspactwin_decrypted_opcodes_r )
+{
+	return decrypted_opcodes[offset];
+}
+
+WRITE_HANDLER( mspactwin_decrypted_opcodes_w )
+{
+	decrypted_opcodes[offset] = data;
+}
+
+READ_HANDLER( mspactwin_decrypted_opcodes_mirror_r )
+{
+	return decrypted_opcodes_mirror[offset];
+}
+
+WRITE_HANDLER( mspactwin_decrypted_opcodes_mirror_w )
+{
+	decrypted_opcodes_mirror[offset] = data;
+}
+
+READ_HANDLER( mspactwin_decrypted_opcodes_high_r )
+{
+	return decrypted_opcodes_high[offset];
+}
+
+WRITE_HANDLER( mspactwin_decrypted_opcodes_high_w )
+{
+	decrypted_opcodes_high[offset] = data;
+}
+
+static MEMORY_READ_START( mspactwin_decrypted_readmem )
+	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
+	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
+	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
+	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
+	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
+	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_w, &decrypted_opcodes_high },
+MEMORY_END
 
 
 /*************************************
@@ -2660,6 +2703,7 @@ static MACHINE_DRIVER_START( mspactwin )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
+	MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspacman_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
@@ -4537,20 +4581,20 @@ static DRIVER_INIT( mspactwin )
 	for (A = 0x0000; A < 0x4000; A+=2) {
 
 		// decode opcode
-		//decrypted_opcodes     [A  ] = BITSWAP8(rom[       A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
-		//decrypted_opcodes     [A+1] = BITSWAP8(rom[       A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
-		//decrypted_opcodes_high[A  ] = BITSWAP8(rom[0x8000+A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
-		//decrypted_opcodes_high[A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
+		decrypted_opcodes     [A  ] = BITSWAP8(rom[       A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
+		decrypted_opcodes     [A+1] = BITSWAP8(rom[       A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
+		decrypted_opcodes_high[A  ] = BITSWAP8(rom[0x8000+A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
+		decrypted_opcodes_high[A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
 
 		// decode operand
-		//rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
-		//rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
-		//rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
-		//rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+		rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+		rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+		rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+		rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
 	}
 
 	for (A = 0x0000; A < 0x2000; A++) {
-		//decrypted_opcodes_mirror[A] = decrypted_opcodes[A+0x2000];
+		decrypted_opcodes_mirror[A] = decrypted_opcodes[A+0x2000];
 	}
 }
 
