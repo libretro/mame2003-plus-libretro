@@ -732,7 +732,8 @@ static MEMORY_WRITE_START( mspacman_writemem )
 MEMORY_END
 
 static MEMORY_READ_START( mspactwin_readmem )
-	{ 0x0000, 0x3fff, MRA_BANK1 },
+	{ 0x0000, 0x1fff, MRA_BANK1 },
+	{ 0x2000, 0x3fff, MRA_RAM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
 	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
 	{ 0x5000, 0x503f, input_port_0_r },	/* IN0 */
@@ -744,7 +745,8 @@ MEMORY_END
 
 
 static MEMORY_WRITE_START( mspactwin_writemem )
-	{ 0x0000, 0x3fff, MWA_BANK1 },
+	{ 0x0000, 0x1fff, MWA_BANK1 },
+	{ 0x2000, 0x3fff, MWA_RAM },
 	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
 	{ 0x4400, 0x47ff, colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
