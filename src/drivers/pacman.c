@@ -320,6 +320,11 @@ static INTERRUPT_GEN( mspacman_interrupt )
 	irq0_line_hold();
 }
 
+static INTERRUPT_GEN( mspactwin_interrupt )
+{
+	irq0_line_hold();
+}
+
 /*
    The piranha board has a sync bus controler card similar to Midway's pacman. It
    stores the LSB of the interupt vector using port 00 but it alters the byte to prevent
@@ -731,23 +736,43 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
+static WRITE_HANDLER(mspactwin_videoram_w)
+{
+	if (videoram[offset] != data)
+	{
+		dirtybuffer[offset] = 1;
+
+		videoram[offset] = data;
+
+		force_partial_update(cpu_getscanline());
+	}
+}
+
+/*
+WRITE_LINE_MEMBER(mspactwin_state::flipscreen_w)
+{
+	m_flipscreen = state;
+	m_bg_tilemap->set_flip(m_flipscreen * ( TILEMAP_FLIPX + TILEMAP_FLIPY ) );
+//	logerror("Flip: %02x\n", state);
+}
+*/
 static MEMORY_READ_START( mspactwin_readmem )
-	{ 0x0000, 0x1fff, MRA_BANK1 },
-	{ 0x2000, 0x3fff, MRA_RAM },
+	{ 0x0000, 0x1fff, MRA_ROM },
+	{ 0x2000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
 	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
 	{ 0x5000, 0x503f, input_port_0_r },	/* IN0 */
 	{ 0x5040, 0x507f, input_port_1_r },	/* IN1 */
 	{ 0x5080, 0x50bf, input_port_2_r },	/* DSW1 */
 	{ 0x50c0, 0x50ff, input_port_3_r },	/* DSW2 */
-	{ 0x8000, 0xbfff, MRA_BANK1 },
+	{ 0x8000, 0xbfff, MRA_ROM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( mspactwin_writemem )
-	{ 0x0000, 0x1fff, MWA_BANK1 },
-	{ 0x2000, 0x3fff, MWA_RAM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
+	{ 0x0000, 0x1fff, MWA_ROM },
+	{ 0x2000, 0x3fff, MWA_ROM },
+	{ 0x4000, 0x43ff, mspactwin_videoram_w, &videoram, &videoram_size },
 	{ 0x4400, 0x47ff, colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
@@ -761,7 +786,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
-	{ 0x8000, 0xbfff, MWA_BANK1 },	/* Ms. Pac-Man / Ponpoko only */
+	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
 	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
 	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
@@ -2706,9 +2731,9 @@ static MACHINE_DRIVER_START( mspactwin )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
 	MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
-	MDRV_CPU_VBLANK_INT(mspacman_interrupt,1)
+	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
-	MDRV_MACHINE_INIT(mspacman)
+	MDRV_MACHINE_INIT(NULL)
 MACHINE_DRIVER_END
 
 
@@ -3496,7 +3521,7 @@ ROM_END
 
 
 ROM_START( mspactwin )
-	ROM_REGION( 20*0x20000, REGION_CPU1, 0 )	/* 64k for encrypted code */
+	ROM_REGION( 2*0x20000, REGION_CPU1, 0 )	/* 64k for encrypted code */
 	ROM_LOAD( "m27256.bin",  0x0000, 0x4000, CRC(77a99184) SHA1(9dcb1a1b78994aa401d653bec571cb3e6f9d900b) )
 	ROM_CONTINUE(0x8000,0x4000)
 
@@ -4578,7 +4603,7 @@ static DRIVER_INIT( porky )
 static DRIVER_INIT( mspactwin )
 {
 	UINT8 *rom = memory_region(REGION_CPU1);
-	int A;
+	int A;// = memory_region_length(REGION_CPU1) / 2;
 
 	for (A = 0x0000; A < 0x4000; A+=2) {
 
