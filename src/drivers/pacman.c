@@ -736,14 +736,7 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
-/*
-WRITE_LINE_MEMBER(mspactwin_state::flipscreen_w)
-{
-	m_flipscreen = state;
-	m_bg_tilemap->set_flip(m_flipscreen * ( TILEMAP_FLIPX + TILEMAP_FLIPY ) );
-//	logerror("Flip: %02x\n", state);
-}
-*/
+
 static MEMORY_READ_START( mspactwin_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
 	{ 0x2000, 0x3fff, MRA_ROM },
