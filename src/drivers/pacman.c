@@ -3521,7 +3521,7 @@ ROM_END
 
 
 ROM_START( mspactwin )
-	ROM_REGION( 2*0x20000, REGION_CPU1, 0 )	/* 64k for encrypted code */
+	ROM_REGION( 0x20000, REGION_CPU1, 0 )	/* 64k for encrypted code */
 	ROM_LOAD( "m27256.bin",  0x0000, 0x4000, CRC(77a99184) SHA1(9dcb1a1b78994aa401d653bec571cb3e6f9d900b) )
 	ROM_CONTINUE(0x8000,0x4000)
 
