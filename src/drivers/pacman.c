@@ -183,7 +183,7 @@ Dave Widel
 #include "cpu/s2650/s2650.h"
 
 
-static UINT8 *decrypted_opcodes,*decrypted_opcodes_mirror,*decrypted_opcodes_high;
+static UINT8 *decrypted_opcodes, *decrypted_opcodes_mirror, *decrypted_opcodes_high;
 static UINT8 speedcheat = 0;	/* a well known hack allows to make Pac Man run at four times */
 								/* his usual speed. When we start the emulation, we check if the */
 								/* hack can be applied, and set this flag accordingly. */
