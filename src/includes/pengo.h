@@ -28,3 +28,5 @@ WRITE_HANDLER( s2650games_tilesbank_w );
 WRITE_HANDLER( s2650games_flipscreen_w );
 VIDEO_START( s2650games );
 VIDEO_UPDATE( s2650games );
+
+WRITE_HANDLER( mspactwin_videoram_w );
