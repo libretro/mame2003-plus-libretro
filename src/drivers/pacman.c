@@ -1044,17 +1044,17 @@ WRITE_HANDLER( mspactwin_decrypted_opcodes_high_w )
 	decrypted_opcodes_high[offset] = data;
 }
 
-static MEMORY_READ_START( mspactwin_decrypted_readmem )
+static PORT_READ_START( mspactwin_decrypted_readmem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
 	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_r },
-MEMORY_END
+PORT_END
 
-static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
+static PORT_WRITE_START( mspactwin_decrypted_writemem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
 	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_w, &decrypted_opcodes_high },
-MEMORY_END
+PORT_END
 
 
 /*************************************
@@ -2730,7 +2730,7 @@ static MACHINE_DRIVER_START( mspactwin )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
-	MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
+	MDRV_CPU_PORT(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
