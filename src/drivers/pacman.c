@@ -787,7 +787,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
+	{ 0xc000, 0xc3ff, mspactwin_videoram_w }, /* mirror address for video ram, */
 	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
