@@ -2733,7 +2733,7 @@ static MACHINE_DRIVER_START( mspactwin )
 	//MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
-	MDRV_MACHINE_INIT(mspacman)
+	MDRV_MACHINE_INIT(NULL)
 
 	/* video hardware */
 	MDRV_GFXDECODE(mschampgfxdecodeinfo)
