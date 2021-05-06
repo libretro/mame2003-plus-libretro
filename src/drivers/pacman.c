@@ -2730,7 +2730,7 @@ static MACHINE_DRIVER_START( mspactwin )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
-	//MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
+	MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
@@ -4601,7 +4601,7 @@ static DRIVER_INIT( porky )
 }
 
 static DRIVER_INIT( mspactwin )
-{/*
+{
 	UINT8 *rom = memory_region(REGION_CPU1);
 	int A;// = memory_region_length(REGION_CPU1) / 2;
 
@@ -4622,7 +4622,7 @@ static DRIVER_INIT( mspactwin )
 
 	for (A = 0x0000; A < 0x2000; A++) {
 		decrypted_opcodes_mirror[A] = decrypted_opcodes[A+0x2000];
-	}*/
+	}
 }
 
 
