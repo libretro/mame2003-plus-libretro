@@ -765,7 +765,7 @@ static MEMORY_READ_START( mspactwin_readmem )
 	{ 0x5040, 0x507f, input_port_1_r },	/* IN1 */
 	{ 0x5080, 0x50bf, input_port_2_r },	/* DSW1 */
 	{ 0x50c0, 0x50ff, input_port_3_r },	/* DSW2 */
-	{ 0x8000, 0xbfff, MRA_ROM },	/* Ms. Pac-Man / Ponpoko only */
+	{ 0x8000, 0xbfff, MRA_ROM },
 MEMORY_END
 
 
@@ -781,7 +781,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5002, 0x5002, MWA_NOP },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
-/* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
+	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -1044,17 +1044,17 @@ WRITE_HANDLER( mspactwin_decrypted_opcodes_high_w )
 	decrypted_opcodes_high[offset] = data;
 }
 
-static PORT_READ_START( mspactwin_decrypted_readmem )
+static MEMORY_READ_START( mspactwin_decrypted_readmem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
 	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_r },
-PORT_END
+MEMORY_END
 
-static PORT_WRITE_START( mspactwin_decrypted_writemem )
+static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
 	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
 	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_w, &decrypted_opcodes_high },
-PORT_END
+MEMORY_END
 
 
 /*************************************
@@ -2730,7 +2730,7 @@ static MACHINE_DRIVER_START( mspactwin )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mspactwin_readmem,mspactwin_writemem)
-	MDRV_CPU_PORTS(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
+	//MDRV_CPU_MEMORY(mspactwin_decrypted_readmem,mspactwin_decrypted_writemem)
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
@@ -4601,7 +4601,7 @@ static DRIVER_INIT( porky )
 }
 
 static DRIVER_INIT( mspactwin )
-{
+{/*
 	UINT8 *rom = memory_region(REGION_CPU1);
 	int A;// = memory_region_length(REGION_CPU1) / 2;
 
@@ -4622,7 +4622,7 @@ static DRIVER_INIT( mspactwin )
 
 	for (A = 0x0000; A < 0x2000; A++) {
 		decrypted_opcodes_mirror[A] = decrypted_opcodes[A+0x2000];
-	}
+	}*/
 }
 
 
