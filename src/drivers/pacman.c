@@ -736,20 +736,6 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
-static WRITE_HANDLER(mspactwin_videoram_w)
-{
-	if (videoram[offset] != data)
-	{
-		//dirtybuffer[offset] = 1;
-
-		videoram[offset] = data;
-
-		tilemap_mark_tile_dirty(tilemap,offset);
-
-		force_partial_update(cpu_getscanline());
-	}
-}
-
 /*
 WRITE_LINE_MEMBER(mspactwin_state::flipscreen_w)
 {
