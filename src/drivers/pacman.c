@@ -765,7 +765,7 @@ static MEMORY_READ_START( mspactwin_readmem )
 	{ 0x5040, 0x507f, input_port_1_r },	/* IN1 */
 	{ 0x5080, 0x50bf, input_port_2_r },	/* DSW1 */
 	{ 0x50c0, 0x50ff, input_port_3_r },	/* DSW2 */
-	{ 0x8000, 0xbfff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_ROM },	/* Ms. Pac-Man / Ponpoko only */
 MEMORY_END
 
 
@@ -781,7 +781,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5002, 0x5002, MWA_NOP },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
-	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
+/* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
