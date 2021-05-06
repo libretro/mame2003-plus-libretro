@@ -740,9 +740,11 @@ static WRITE_HANDLER(mspactwin_videoram_w)
 {
 	if (videoram[offset] != data)
 	{
-		dirtybuffer[offset] = 1;
+		//dirtybuffer[offset] = 1;
 
 		videoram[offset] = data;
+
+		tilemap_mark_tile_dirty(tilemap,offset);
 
 		force_partial_update(cpu_getscanline());
 	}
