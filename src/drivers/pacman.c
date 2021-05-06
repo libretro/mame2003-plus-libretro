@@ -2734,6 +2734,9 @@ static MACHINE_DRIVER_START( mspactwin )
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
+
+	/* video hardware */
+	MDRV_GFXDECODE(mschampgfxdecodeinfo)
 MACHINE_DRIVER_END
 
 
