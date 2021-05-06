@@ -781,7 +781,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5002, 0x5002, MWA_NOP },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
-	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
+	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	/* Not actually, just handy */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
