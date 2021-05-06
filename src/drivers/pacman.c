@@ -781,7 +781,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5002, 0x5002, MWA_NOP },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
-	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	/* Not actually, just handy */
+	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -4662,7 +4662,7 @@ GAME( 1981, mspacmat, mspacman, mspacman, mspacman, 0,        ROT90,  "hack", "M
 GAME( 1981, mspacpls, mspacman, mspacpls, mspacpls, 0,        ROT90,  "hack", "Ms. Pac-Man Plus" )
 GAME( 1981, pacgal,   mspacman, pacman,   mspacman, 0,        ROT90,  "hack", "Pac-Gal" )
 GAME( 1995, mschamp,  mspacman, mschamp,  mschamp,  0,        ROT90,  "hack", "Ms. Pacman Champion Edition - Super Zola Pac Gal" )
-GAME( 1992, mspactwin, 0,      mspactwin, mspactwin, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
+GAME( 1992, mspactwin, 0,      mspactwin, mspacman, mspactwin, ROT90,  "SUSILU", "Ms. Pac-Man Twin (Argentina)" )
 GAME( 1981, crush,    0,        pacman,   maketrax, maketrax, ROT90,  "Kural Samno Electric", "Crush Roller (Kural Samno)" )
 GAME( 1981, crush2,   crush,    pacman,   maketrax, 0,        ROT90,  "Kural Esco Electric", "Crush Roller (Kural Esco - bootleg[Q])" )
 GAME( 1981, crush3,   crush,    pacman,   maketrax, eyes,     ROT90,  "Kural Electric", "Crush Roller (Kural - bootleg[Q])" )
