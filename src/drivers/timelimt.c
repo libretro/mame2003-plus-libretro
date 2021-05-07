@@ -66,7 +66,9 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x9000, 0x97ff, timelimt_bg_videoram_w, &timelimt_bg_videoram, &timelimt_bg_videoram_size },/* background ram */
 	{ 0x9800, 0x98ff, MWA_RAM, &spriteram, &spriteram_size },	/* sprite ram */
 	{ 0xb000, 0xb000, nmi_enable_w },	/* nmi enable */
-	{ 0xb003, 0xb003, sound_reset_w },	/* sound reset ? */
+	{ 0xb003, 0xb003, MWA_NOP },	/* PSG mute control on thepit not used properly in timelimt (only set at startup, reset at game over) */
+	{ 0xb006, 0xb006, MWA_NOP },	/* probably horizontal flip, as on thepit */
+	{ 0xb007, 0xb007, MWA_NOP },	/* probably vertical flip, as on thepit */
 	{ 0xb800, 0xb800, soundlatch_w }, 	/* sound write */
 	{ 0xc800, 0xc800, timelimt_scroll_x_lsb_w },
 	{ 0xc801, 0xc801, timelimt_scroll_x_msb_w },
