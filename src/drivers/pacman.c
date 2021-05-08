@@ -250,13 +250,13 @@ MACHINE_INIT( mspactwin )
 
 	for (A = 0x0000; A < 0x4000; A+=2) {
 
-		// decode opcode
+		/* decode opcode */
 		decrypted_opcodes     [A  ] = BITSWAP8(rom[       A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
 		decrypted_opcodes     [A+1] = BITSWAP8(rom[       A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
 		decrypted_opcodes[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
 		decrypted_opcodes[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
 
-		// decode operand
+		/* decode operand */
 		rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
 		rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
 		rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
@@ -1211,7 +1211,7 @@ INPUT_PORTS_START( mspactwin )
 	PORT_DIPSETTING(    0x10, "15000" )
 	PORT_DIPSETTING(    0x20, "20000" )
 	PORT_DIPSETTING(    0x30, "None"  )
-	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
+	//PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 
@@ -1260,7 +1260,7 @@ INPUT_PORTS_START( mspacpls )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x40, "Normal" )
 	PORT_DIPSETTING(    0x00, "Hard" )
-	//PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* DSW 2 */
 	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -4053,18 +4053,18 @@ ROM_END
 ROM_START( alibabab )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )   /* 64k for code */
 	ROM_LOAD( "6e",           0x0000, 0x1000, CRC(38d701aa) SHA1(4e886a4a17f441f6d1d213c4c433b40dd38eefbc) )
-	ROM_LOAD( "6f",           0x1000, 0x1000, CRC(3d0e35f3) SHA1(6b9a1fd11db9f521417566ae4c7065151aa272b5) ) // ab2.bin
-        ROM_LOAD( "6h",           0x2000, 0x1000, CRC(823bee89) SHA1(5381a4fcbc9fa97574c6df2978c7500164df75e5) ) // ab3.bin
-        ROM_LOAD( "6k",           0x3000, 0x1000, CRC(474d032f) SHA1(4516a60ec83e3c3388cd56f538f49afc86a50983) ) // ab4.bin
+	ROM_LOAD( "6f",           0x1000, 0x1000, CRC(3d0e35f3) SHA1(6b9a1fd11db9f521417566ae4c7065151aa272b5) ) /* ab2.bin  */
+        ROM_LOAD( "6h",           0x2000, 0x1000, CRC(823bee89) SHA1(5381a4fcbc9fa97574c6df2978c7500164df75e5) ) /* ab3.bin  */
+        ROM_LOAD( "6k",           0x3000, 0x1000, CRC(474d032f) SHA1(4516a60ec83e3c3388cd56f538f49afc86a50983) ) /* ab4.bin  */
         ROM_LOAD( "ab5.bin",      0x8000, 0x1000, CRC(ae2f4aac) SHA1(8583514e4a876ecdb1bc2c65f9829f0bebfdee0d) )
-        ROM_LOAD( "6m",           0xa000, 0x0800, CRC(438d0357) SHA1(7caaf668906b76d4947e988c444723b33f8e9726) ) // ab6.bin
+        ROM_LOAD( "6m",           0xa000, 0x0800, CRC(438d0357) SHA1(7caaf668906b76d4947e988c444723b33f8e9726) ) /* ab6.bin  */
 
 	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
-        ROM_LOAD( "5e",           0x0000, 0x0800, CRC(85bcb8f8) SHA1(986170627953582b1e6fbca59e5c15cf8c4de9c7) ) // ab8.bin
-        ROM_LOAD( "5h",           0x0800, 0x0800, CRC(38e50862) SHA1(094d090bd0563f75d6ff1bfe2302cae941a89504) ) // ab10.bin
+        ROM_LOAD( "5e",           0x0000, 0x0800, CRC(85bcb8f8) SHA1(986170627953582b1e6fbca59e5c15cf8c4de9c7) ) /* ab8.bin  */
+        ROM_LOAD( "5h",           0x0800, 0x0800, CRC(38e50862) SHA1(094d090bd0563f75d6ff1bfe2302cae941a89504) ) /* ab10.bin */
 	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "5f",           0x0000, 0x0800, CRC(b5715c86) SHA1(ed6aee778295b0182d32846b5e41776b5b15420c) ) // ab9.bin
-        ROM_LOAD( "5k",           0x0800, 0x0800, CRC(713086b3) SHA1(a1609bae637207a82920678f05bcc10a5ff096de) ) // ab11.bin
+	ROM_LOAD( "5f",           0x0000, 0x0800, CRC(b5715c86) SHA1(ed6aee778295b0182d32846b5e41776b5b15420c) ) /* ab9.bin  */
+        ROM_LOAD( "5k",           0x0800, 0x0800, CRC(713086b3) SHA1(a1609bae637207a82920678f05bcc10a5ff096de) ) /* ab11.bin */
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
         ROM_LOAD( "82s123.e7",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
