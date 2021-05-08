@@ -1025,24 +1025,6 @@ static PORT_WRITE_START( s2650games_writeport )
 	{ S2650_DATA_PORT, S2650_DATA_PORT, SN76496_0_w },
 PORT_END
 
-READ_HANDLER( mspactwin_decrypted_opcodes_r )
-{
-	return decrypted_opcodes[offset];
-}
-
-WRITE_HANDLER( mspactwin_decrypted_opcodes_w )
-{
-	decrypted_opcodes[offset] = data;
-}
-
-static MEMORY_READ_START( mspactwin_decrypted_readmem )
-	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
-MEMORY_END
-
-static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
-	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
-MEMORY_END
-
 
 /*************************************
  *
