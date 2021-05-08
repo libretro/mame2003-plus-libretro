@@ -417,6 +417,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Karate Tournament
 * Thunder Dragon
 * Toride II Adauchi Gaiden
+* Truco-Tron
 * US AAF Mustang
 * Vandyke
 * Vimana
