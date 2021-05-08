@@ -2539,7 +2539,7 @@ INPUT_PORTS_END
 static struct GfxLayout tilelayout =
 {
 	8,8,	/* 8*8 characters */
-	RGN_FRAC(1,1),
+	RGN_FRAC(1,2),
     2,  /* 2 bits per pixel */
     { 0, 4 },   /* the two bitplanes for 4 pixels are packed into one byte */
     { 8*8+0, 8*8+1, 8*8+2, 8*8+3, 0, 1, 2, 3 }, /* bits are packed in groups of four */
@@ -2551,7 +2551,7 @@ static struct GfxLayout tilelayout =
 static struct GfxLayout spritelayout =
 {
 	16,16,	/* 16*16 sprites */
-	RGN_FRAC(1,1),
+	RGN_FRAC(1,2),
 	2,	/* 2 bits per pixel */
 	{ 0, 4 },	/* the two bitplanes for 4 pixels are packed into one byte */
 	{ 8*8, 8*8+1, 8*8+2, 8*8+3, 16*8+0, 16*8+1, 16*8+2, 16*8+3,
