@@ -183,7 +183,7 @@ Dave Widel
 #include "cpu/s2650/s2650.h"
 
 
-static UINT8 *decrypted_opcodes, *decrypted_opcodes_mirror, *decrypted_opcodes_high;
+static UINT8 *decrypted_opcodes;
 static UINT8 speedcheat = 0;	/* a well known hack allows to make Pac Man run at four times */
 								/* his usual speed. When we start the emulation, we check if the */
 								/* hack can be applied, and set this flag accordingly. */
@@ -1035,36 +1035,12 @@ WRITE_HANDLER( mspactwin_decrypted_opcodes_w )
 	decrypted_opcodes[offset] = data;
 }
 
-READ_HANDLER( mspactwin_decrypted_opcodes_mirror_r )
-{
-	return decrypted_opcodes_mirror[offset];
-}
-
-WRITE_HANDLER( mspactwin_decrypted_opcodes_mirror_w )
-{
-	decrypted_opcodes_mirror[offset] = data;
-}
-
-READ_HANDLER( mspactwin_decrypted_opcodes_high_r )
-{
-	return decrypted_opcodes_high[offset];
-}
-
-WRITE_HANDLER( mspactwin_decrypted_opcodes_high_w )
-{
-	decrypted_opcodes_high[offset] = data;
-}
-
 static MEMORY_READ_START( mspactwin_decrypted_readmem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_r },
-	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_r },
-	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( mspactwin_decrypted_writemem )
 	{ 0x0000, 0x3fff, mspactwin_decrypted_opcodes_w, &decrypted_opcodes },
-	{ 0x6000, 0x7fff, mspactwin_decrypted_opcodes_mirror_w, &decrypted_opcodes_mirror },
-	{ 0x8000, 0xbfff, mspactwin_decrypted_opcodes_high_w, &decrypted_opcodes_high },
 MEMORY_END
 
 
