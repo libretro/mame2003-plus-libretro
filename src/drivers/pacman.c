@@ -773,10 +773,10 @@ static MEMORY_READ_START( mspactwin_readmem )
 	{ 0x2000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
 	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
-	{ 0x5000, 0x503f, input_port_0_r },	/* IN0 */
-	{ 0x5040, 0x507f, input_port_1_r },	/* IN1 */
-	{ 0x5080, 0x50bf, input_port_2_r },	/* DSW1 */
-	{ 0x50c0, 0x50ff, input_port_3_r },	/* DSW2 */
+	{ 0x5000, 0x5000, input_port_0_r },	/* IN0 */
+	{ 0x5040, 0x5040, input_port_1_r },	/* IN1 */
+	{ 0x5080, 0x50bf, input_port_4_r },	/* DSW1 */
+/*	{ 0x50c0, 0x50c0, input_port_3_r },	should be sublatch read */
 	{ 0x8000, 0xbfff, MRA_ROM },
 MEMORY_END
 
@@ -1024,7 +1024,6 @@ PORT_END
 static PORT_WRITE_START( s2650games_writeport )
 	{ S2650_DATA_PORT, S2650_DATA_PORT, SN76496_0_w },
 PORT_END
-
 
 /*************************************
  *
@@ -2538,49 +2537,49 @@ INPUT_PORTS_END
 
 static struct GfxLayout tilelayout =
 {
-	8,8,	/* 8*8 characters */
-	RGN_FRAC(1,1),
-    2,  /* 2 bits per pixel */
-    { 0, 4 },   /* the two bitplanes for 4 pixels are packed into one byte */
-    { 8*8+0, 8*8+1, 8*8+2, 8*8+3, 0, 1, 2, 3 }, /* bits are packed in groups of four */
-    { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-    16*8    /* every char takes 16 bytes */
+	8,8,    /* 8*8 characters */
+	RGN_FRAC(1,2),    /* 256 characters */
+	2,  /* 2 bits per pixel */
+	{ 0, 4 },   /* the two bitplanes for 4 pixels are packed into one byte */
+	{ 8*8+0, 8*8+1, 8*8+2, 8*8+3, 0, 1, 2, 3 }, /* bits are packed in groups of four */
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	16*8    /* every char takes 16 bytes */
 };
 
 
 static struct GfxLayout spritelayout =
 {
-	16,16,	/* 16*16 sprites */
-	RGN_FRAC(1,1),
-	2,	/* 2 bits per pixel */
-	{ 0, 4 },	/* the two bitplanes for 4 pixels are packed into one byte */
+	16,16,  /* 16*16 sprites */
+	RGN_FRAC(1,2),  /* 64 sprites */
+	2,  /* 2 bits per pixel */
+	{ 0, 4 },   /* the two bitplanes for 4 pixels are packed into one byte */
 	{ 8*8, 8*8+1, 8*8+2, 8*8+3, 16*8+0, 16*8+1, 16*8+2, 16*8+3,
 			24*8+0, 24*8+1, 24*8+2, 24*8+3, 0, 1, 2, 3 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			32*8, 33*8, 34*8, 35*8, 36*8, 37*8, 38*8, 39*8 },
-	64*8	/* every sprite takes 64 bytes */
+	64*8    /* every sprite takes 64 bytes */
 };
 
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &tilelayout,   0, 32 },
-	{ REGION_GFX2, 0, &spritelayout, 0, 32 },
-	{ -1 } /* end of array */
+   { REGION_GFX1, 0,      &tilelayout,   0, 32 },
+   { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
+   { -1 } /* end of array */
 };
 
 
 static struct GfxDecodeInfo mschampgfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-	{ REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
-	{ -1 } /* end of array */
+    { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
+    { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
+    { -1 } /* end of array */
 };
 
 
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0x0000, &tilelayout,      0, 32 },
+    { REGION_GFX1, 0x0000, &tilelayout,      0, 32 },
     { REGION_GFX1, 0x0000, &spritelayout,    0, 32 },
     { -1 } /* end of array */
 };
@@ -2919,11 +2918,9 @@ ROM_START( puckman )
 	ROM_LOAD( "namcopac.6h",  0x2000, 0x1000, CRC(02083b03) SHA1(7e1945f6eb51f2e51806d0439f975f7a2889b9b8) )
 	ROM_LOAD( "namcopac.6j",  0x3000, 0x1000, CRC(7a36fe55) SHA1(01b4c38108d9dc4e48da4f8d685248e1e6821377) )
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1,0 )
 	ROM_LOAD( "pacman.5e",    0x0000, 0x1000, CRC(0c944964) SHA1(06ef227747a440831c9a3a613b76693d52a2f0a9) )
-
-	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "pacman.5f",    0x0000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
+	ROM_LOAD( "pacman.5f",    0x1000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.7f",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
@@ -2942,11 +2939,9 @@ ROM_START( puckmod )
 	ROM_LOAD( "namcopac.6h",  0x2000, 0x1000, CRC(02083b03) SHA1(7e1945f6eb51f2e51806d0439f975f7a2889b9b8) )
 	ROM_LOAD( "npacmod.6j",   0x3000, 0x1000, CRC(7d98d5f5) SHA1(39939bcd6fb785d0d06fd29f0287158ab1267dfc) )
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "pacman.5e",    0x0000, 0x1000, CRC(0c944964) SHA1(06ef227747a440831c9a3a613b76693d52a2f0a9) )
-
-	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "pacman.5f",    0x0000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
+	ROM_LOAD( "pacman.5f",    0x1000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.7f",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
@@ -2966,12 +2961,10 @@ ROM_START( puckmana )
 	ROM_LOAD( "prg7",         0x3000, 0x0800, CRC(b6289b26) SHA1(d249fa9cdde774d5fee7258147cd25fa3f4dc2b3) )
 	ROM_LOAD( "prg8",         0x3800, 0x0800, CRC(17a88c13) SHA1(eb462de79f49b7aa8adb0cc6d31535b10550c0ce) )
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "chg1",         0x0000, 0x0800, CRC(2066a0b7) SHA1(6d4ccc27d6be185589e08aa9f18702b679e49a4a) )
 	ROM_LOAD( "chg2",         0x0800, 0x0800, CRC(3591b89d) SHA1(79bb456be6c39c1ccd7d077fbe181523131fb300) )
-
-	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "pacman.5f",    0x0000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
+	ROM_LOAD( "pacman.5f",    0x1000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.7f",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
@@ -2990,11 +2983,9 @@ ROM_START( pacman )
 	ROM_LOAD( "pacman.6h",    0x2000, 0x1000, CRC(bcdd1beb) SHA1(8e47e8c2c4d6117d174cdac150392042d3e0a881) )
 	ROM_LOAD( "pacman.6j",    0x3000, 0x1000, CRC(817d94e3) SHA1(d4a70d56bb01d27d094d73db8667ffb00ca69cb9) )
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "pacman.5e",    0x0000, 0x1000, CRC(0c944964) SHA1(06ef227747a440831c9a3a613b76693d52a2f0a9) )
-
-	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "pacman.5f",    0x0000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
+	ROM_LOAD( "pacman.5f",    0x1000, 0x1000, CRC(958fedf9) SHA1(4a937ac02216ea8c96477d4a15522070507fb599) )
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.7f",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
@@ -4071,8 +4062,8 @@ ROM_START( alibabab )
 	ROM_LOAD( "82s129.a4",    0x0020, 0x0100, CRC(3eb3a8e4) SHA1(19097b5f60d1030f8b82d9f1d3a241f93e5c75d6) )
 
 	ROM_REGION( 0x0200, REGION_SOUND1, 0 )  /* sound PROMs */
-	ROM_LOAD( "82s126.1m",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
-	ROM_LOAD( "82s126.3m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )    /* timing - not used */
+	ROM_ROM_LOAD( "82s126.1m",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
+	ROM_ROM_LOAD( "82s126.3m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )    /* timing - not used */
 
 	/* unknown, used for the mystery items ? */
 	ROM_REGION( 0x1000, REGION_USER1, 0 )
