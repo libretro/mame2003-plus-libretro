@@ -416,6 +416,16 @@ WRITE_HANDLER( s2650games_videoram_w )
 	tilemap_mark_tile_dirty(tilemap,offset);
 }
 
+WRITE_HANDLER( mspactwin_videoram_w )
+{
+	if (videoram[offset] != data)
+	{
+		dirtybuffer[offset] = 1;
+		videoram[offset] = data;
+		force_partial_update(cpu_getscanline());
+	}
+}
+
 WRITE_HANDLER( s2650games_colorram_w )
 {
 	int i;

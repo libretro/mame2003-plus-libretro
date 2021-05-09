@@ -102,6 +102,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( mspacpls )	/* hack */
 	DRIVER( pacgal )	/* hack */
 	DRIVER( mschamp )	/* hack */
+	DRIVER( mspactwin )	/* hack */
 	DRIVER( maketrax )	/* (c) 1981 Williams, high score table says KRL (fur Kural) */
 	DRIVER( maketrxb )	/* (c) 1981 [Kural] (Williams license) */
 	DRIVER( korosuke )	/* (c) 1981 Kural Electric */

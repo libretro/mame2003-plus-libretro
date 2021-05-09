@@ -98,6 +98,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
 * Mouse Shooter GoGo
+* Ms. Pacman Twin
 * Multi Champ Deluxe * Mature *
 * Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
@@ -705,3 +706,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added missing color proms and decoding for U.S. Classic [mahoneyt944]
 * Added Konami 007452 multiplier/divider fixes which sorts rolling mines and bullet trajectories in contra during the 3D Sections of the game [arcadez]
 * Updated outrun.c to MAME89 and then fixed the sound and graphical road drawing plus hooked up the inputs so that Turbo Out Run can now be played in this core [arcadez]
+* Added support for rare, Ms. Pacman Twin (mspactwin) simultaneous 2 player play [arcadez, grant2258, mahoneyt944]
