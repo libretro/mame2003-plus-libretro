@@ -2563,24 +2563,16 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-   { REGION_GFX1, 0,      &tilelayout,   0, 32 },
+   { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
    { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
    { -1 } /* end of array */
 };
 
 
-static struct GfxDecodeInfo mschampgfxdecodeinfo[] =
-{
-    { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-    { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
-    { -1 } /* end of array */
-};
-
-
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
-    { REGION_GFX1, 0x0000, &tilelayout,      0, 32 },
-    { REGION_GFX1, 0x0000, &spritelayout,    0, 32 },
+    { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
+    { REGION_GFX1, 0x0000, &spritelayout, 0, 32 },
     { -1 } /* end of array */
 };
 
@@ -2698,9 +2690,6 @@ static MACHINE_DRIVER_START( mspactwin )
 	MDRV_CPU_VBLANK_INT(mspactwin_interrupt,1)
 
 	MDRV_MACHINE_INIT(mspactwin)
-
-	/* video hardware */
-	MDRV_GFXDECODE(mschampgfxdecodeinfo)
 MACHINE_DRIVER_END
 
 
@@ -2727,9 +2716,6 @@ static MACHINE_DRIVER_START( mschamp )
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
 	MDRV_MACHINE_INIT(mschamp)
-
-	/* video hardware */
-	MDRV_GFXDECODE(mschampgfxdecodeinfo)
 MACHINE_DRIVER_END
 
 
