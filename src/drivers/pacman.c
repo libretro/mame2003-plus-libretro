@@ -2572,7 +2572,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
     { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-    { REGION_GFX1, 0x0000, &spritelayout, 0, 32 },
+    { REGION_GFX1, 0x4000, &spritelayout, 0, 32 },
     { -1 } /* end of array */
 };
 
@@ -3413,7 +3413,7 @@ ROM_START( mschamp )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 )
 	ROM_LOAD( "pm4.bin", 0x10000, 0x10000, CRC(7d6b6303) SHA1(65ad72a9188422653c02a48c07ed2661e1e36961) )	/* banked */
 
-	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "pm5.bin", 0x0000, 0x0800, CRC(7fe6b9e2) SHA1(bfd0d84c7ef909ae078d8f60340682b3ff230aa6) )
 	ROM_CONTINUE(        0x1000, 0x0800 )
 	ROM_CONTINUE(        0x0800, 0x0800 )
@@ -4167,11 +4167,8 @@ ROM_START( bigbucks )
 	ROM_LOAD( "p.rom",        0x0000, 0x4000, CRC(eea6c1c9) SHA1(eaea4ffbcdfbb38364887830fd00ac87fe838006) )
 	ROM_LOAD( "m.rom",        0x8000, 0x2000, CRC(bb8f7363) SHA1(11ebdb1a3c589515240d006646f2fb3ead06bdcf) )
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "5e.cpu",       0x0000, 0x1000, CRC(18442c37) SHA1(fac445d15731532364315852492b48470039c0ca) )
-
-	ROM_REGION( 0x1000, REGION_GFX2, 0 )
-	/* Not Used */
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.7f",    0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
@@ -4204,11 +4201,15 @@ ROM_START( drivfrcp )
 	ROM_CONTINUE(             0x4000, 0x1000 )
 	ROM_CONTINUE(             0x6000, 0x1000 )
 
-	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x8000, REGION_GFX1, 0 )
 	ROM_LOAD( "drivforc.2",   0x0000, 0x1000, CRC(56331cb5) SHA1(520f2a18ebbdfb093c8e4d144749a3f5cbce19bf) )
 	ROM_CONTINUE(             0x2000, 0x1000 )
 	ROM_CONTINUE(             0x1000, 0x1000 )
 	ROM_CONTINUE(             0x3000, 0x1000 )
+	ROM_RELOAD(               0x4000, 0x1000 )
+	ROM_CONTINUE(             0x6000, 0x1000 )
+	ROM_CONTINUE(             0x5000, 0x1000 )
+	ROM_CONTINUE(             0x7000, 0x1000 )
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
 	ROM_LOAD( "drivforc.pr1", 0x0000, 0x0020, CRC(045aa47f) SHA1(ea9034f441937df43a7c0bdb502165fb27d06635) )
@@ -4241,24 +4242,29 @@ ROM_END
 
 ROM_START( porky )
 	ROM_REGION( 0x8000, REGION_CPU1, 0 )	/* 32k for code */
-	ROM_LOAD( "pp",			  0x0000, 0x1000, CRC(00592624) SHA1(41e554178a89b95bed1f570fab28e2a04f7a68d6) )
-	ROM_CONTINUE(			  0x2000, 0x1000 )
-	ROM_CONTINUE(			  0x4000, 0x1000 )
-	ROM_CONTINUE(			  0x6000, 0x1000 )
+	ROM_LOAD( "pp",     0x0000, 0x1000, CRC(00592624) SHA1(41e554178a89b95bed1f570fab28e2a04f7a68d6) )
+	ROM_CONTINUE(       0x2000, 0x1000 )
+	ROM_CONTINUE(       0x4000, 0x1000 )
+	ROM_CONTINUE(       0x6000, 0x1000 )
 
 	/* what is it used for ? */
 	ROM_REGION( 0x4000, REGION_USER1, 0 )
 	ROM_LOAD( "ps",			  0x0000, 0x4000, CRC(2efb9861) SHA1(8c5a23ed15bd985af78a54d2121fe058e53703bb) )
 
-	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "pc",			  0x0000, 0x1000, CRC(a20e3d39) SHA1(3762289a495d597d6b9540ea7fa663128a9d543c) )
-	ROM_CONTINUE(			  0x2000, 0x1000 )
-	ROM_CONTINUE(			  0x1000, 0x1000 )
-	ROM_CONTINUE(			  0x3000, 0x1000 )
+	ROM_REGION( 0x8000, REGION_GFX1, 0 )
+	ROM_LOAD( "pc",     0x0000, 0x1000, CRC(a20e3d39) SHA1(3762289a495d597d6b9540ea7fa663128a9d543c) )
+	ROM_CONTINUE(       0x2000, 0x1000 )
+	ROM_CONTINUE(       0x1000, 0x1000 )
+	ROM_CONTINUE(       0x3000, 0x1000 )
+	ROM_RELOAD(         0x4000, 0x1000 )
+	ROM_CONTINUE(       0x6000, 0x1000 )
+	ROM_CONTINUE(       0x5000, 0x1000 )
+	ROM_CONTINUE(       0x7000, 0x1000 )
+
 
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
-	ROM_LOAD( "7f",			  0x0000, 0x0020, CRC(98bce7cc) SHA1(e461862ccaf7526421631ac6ebb9b09cd0bc9909) )
-	ROM_LOAD( "4a",			  0x0020, 0x0100, CRC(30fe0266) SHA1(5081a19ceaeb937ee1378f3374e9d5949d17c3e8) )
+	ROM_LOAD( "7f",     0x0000, 0x0020, CRC(98bce7cc) SHA1(e461862ccaf7526421631ac6ebb9b09cd0bc9909) )
+	ROM_LOAD( "4a",     0x0020, 0x0100, CRC(30fe0266) SHA1(5081a19ceaeb937ee1378f3374e9d5949d17c3e8) )
 ROM_END
 
 /*************************************
@@ -4341,7 +4347,7 @@ static DRIVER_INIT( ponpoko )
 
 	/* Characters */
 	RAM = memory_region(REGION_GFX1);
-	for (i = 0;i < memory_region_length(REGION_GFX1);i += 0x10)
+	for (i = 0;i < memory_region_length(REGION_GFX1) / 2;i += 0x10)
 	{
 		for (j = 0; j < 8; j++)
 		{
@@ -4352,8 +4358,7 @@ static DRIVER_INIT( ponpoko )
 	}
 
 	/* Sprites */
-	RAM = memory_region(REGION_GFX2);
-	for (i = 0;i < memory_region_length(REGION_GFX2);i += 0x20)
+	for (i = 0x1000;i < memory_region_length(REGION_GFX1);i += 0x20)
 	{
 		for (j = 0; j < 8; j++)
 		{
