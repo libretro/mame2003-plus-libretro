@@ -146,7 +146,7 @@ static int build_decoded_waveform(int region)
 
 
 /* generate sound by oversampling */
-INLINE UINT32 namco_update_one(INT16 *buffer, int length, const INT16 *wave, UINT32 counter, UINT32 freq)
+static INLINE UINT32 namco_update_one(INT16 *buffer, int length, const INT16 *wave, UINT32 counter, UINT32 freq)
 {
 	while (length-- > 0)
 	{
