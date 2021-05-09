@@ -4347,7 +4347,7 @@ static DRIVER_INIT( ponpoko )
 
 	/* Characters */
 	RAM = memory_region(REGION_GFX1);
-	for (i = 0;i < memory_region_length(REGION_GFX1) / 2;i += 0x10)
+	for (i = 0;i < memory_region_length(REGION_GFX1) / 2 ;i += 0x10)
 	{
 		for (j = 0; j < 8; j++)
 		{
