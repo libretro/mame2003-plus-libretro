@@ -193,14 +193,6 @@ WRITE_HANDLER( pengo_flipscreen_w )
 	}
 }
 
-/*
-WRITE_HANDLER( mspactwin_flipscreen_w )
-{
-	m_flipscreen = state;
-	m_bg_tilemap->set_flip(m_flipscreen * ( TILEMAP_FLIPX + TILEMAP_FLIPY ) );
-}
-*/
-
 
 
 /***************************************************************************
