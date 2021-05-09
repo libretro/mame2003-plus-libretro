@@ -362,6 +362,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thunder Strike - Romset `tstrike` 
 * Tri-Sports - Romset `trisport`
 * Tron - Romset `tron`
+* Turbo Out Run - Romsets `toutrun` and `toutrun3`
 * Turbo Tag - Romset `turbotag`
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
@@ -417,6 +418,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The Karate Tournament
 * Thunder Dragon
 * Toride II Adauchi Gaiden
+* Truco-Tron
 * US AAF Mustang
 * Vandyke
 * Vimana
@@ -470,6 +472,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Fever
 * Space Fever High Splitter
 * Space Launcher
+* Steel Force
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
@@ -701,5 +704,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Bronx a working bootleg of Cycle Shooter to the nycaptor.c driver [arcadez]
 * Backported some K051649 and K053260 sound improvements for many Konami games from later MAME [arcadez]
 * Added missing color proms and decoding for U.S. Classic [mahoneyt944]
-* Added Konami 007452 multiplier/divider fixes which sorts rolling mines trajectories in contra during the 3D Sections of the game [arcadez]
+* Added Konami 007452 multiplier/divider fixes which sorts rolling mines and bullet trajectories in contra during the 3D Sections of the game [arcadez]
+* Updated outrun.c to MAME89 and then fixed the sound and graphical road drawing plus hooked up the inputs so that Turbo Out Run can now be played in this core [arcadez]
 * Added support for rare, Ms. Pacman Twin (mspactwin) simultaneous 2 player play [arcadez, grant2258, mahoneyt944]
