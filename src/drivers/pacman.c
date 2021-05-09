@@ -183,7 +183,6 @@ Dave Widel
 #include "cpu/s2650/s2650.h"
 
 
-static UINT8 *decrypted_opcodes;
 static UINT8 speedcheat = 0;	/* a well known hack allows to make Pac Man run at four times */
 								/* his usual speed. When we start the emulation, we check if the */
 								/* hack can be applied, and set this flag accordingly. */
@@ -242,33 +241,42 @@ MACHINE_INIT( piranha )
 
 MACHINE_INIT( mspactwin )
 {
-	UINT8 *rom = memory_region(REGION_CPU1);
-	int A;
+	static bool firstrun = 0;
+	static UINT8 *decrypted_opcodes; 
+	static UINT8 data_holder[0xc000];
 
-	decrypted_opcodes = auto_malloc(0xc000);
+	if (!firstrun)
+	{
+		UINT8 *rom = memory_region(REGION_CPU1);
+		int A;
+
+		decrypted_opcodes = data_holder; /* auto_malloc(0xc000); */
+		for (A = 0x0000; A < 0x4000; A+=2) {
+
+			/* decode opcode */
+			decrypted_opcodes     [A  ] = BITSWAP8(rom[       A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
+			decrypted_opcodes     [A+1] = BITSWAP8(rom[       A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
+			decrypted_opcodes[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
+			decrypted_opcodes[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
+
+			/* decode operand */
+			rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+			rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+			rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+			rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+		}
+
+		for (A = 0x0000; A < 0x2000; A++) {
+
+			decrypted_opcodes[0x6000+A] = decrypted_opcodes[A+0x2000];
+			rom[0x6000+A  ] = BITSWAP8(rom[0x6000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
+			rom[0x6000+A+1] = BITSWAP8(rom[0x6000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
+		}
+		firstrun=1;
+		memory_set_opcode_base(0,decrypted_opcodes);
+	}
+	else
 	memory_set_opcode_base(0,decrypted_opcodes);
-
-	for (A = 0x0000; A < 0x4000; A+=2) {
-
-		/* decode opcode */
-		decrypted_opcodes     [A  ] = BITSWAP8(rom[       A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
-		decrypted_opcodes     [A+1] = BITSWAP8(rom[       A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
-		decrypted_opcodes[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 4, 5, 6, 7, 0, 1, 2, 3);
-		decrypted_opcodes[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0x9A, 6, 4, 5, 7, 2, 0, 3, 1);
-
-		/* decode operand */
-		rom[       A  ] = BITSWAP8(rom[       A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
-		rom[       A+1] = BITSWAP8(rom[       A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
-		rom[0x8000+A  ] = BITSWAP8(rom[0x8000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
-		rom[0x8000+A+1] = BITSWAP8(rom[0x8000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
-	}
-
-	for (A = 0x0000; A < 0x2000; A++) {
-
-		decrypted_opcodes[0x6000+A] = decrypted_opcodes[A+0x2000];
-		rom[0x6000+A  ] = BITSWAP8(rom[0x6000+A  ]       , 0, 1, 2, 3, 4, 5, 6, 7);
-		rom[0x6000+A+1] = BITSWAP8(rom[0x6000+A+1] ^ 0xA3, 2, 4, 6, 3, 7, 0, 5, 1);
-	}
 }
 
 /*************************************
