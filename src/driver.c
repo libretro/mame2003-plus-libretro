@@ -2797,8 +2797,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( suprleag )  /* (protected) */
 	DRIVER( thndrbld )	/* (protected) */
 	DRIVER( thndrbdj )  /* (protected?) */
-	DRIVER( toutrun )	/* (protected) */
-	DRIVER( toutruna )	/* (protected) */
 
 	/* Working */
 	DRIVER( aburner )	/* (c) 1987 */
@@ -2851,6 +2849,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( tetrisbl )	/* (c) 1988 (but bootleg) */
 	DRIVER( timscanr )	/* (c) 1987 */
 	DRIVER( toryumon )	/* (c) 1995 */
+  DRIVER( toutrun )	  /* (c) 1989 */
+	DRIVER( toutrun3 )  /* (c) 1989 */
 	DRIVER( tturf )		/* (c) 1989 Sega / Sunsoft */
 	DRIVER( tturfbl )	/* (c) 1989 (Datsu bootleg) */
 	DRIVER( tturfu )	/* (c) 1989 Sega / Sunsoft */

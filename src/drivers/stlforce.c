@@ -82,6 +82,11 @@ WRITE16_HANDLER( stlforce_mhigh_videoram_w );
 WRITE16_HANDLER( stlforce_mlow_videoram_w );
 WRITE16_HANDLER( stlforce_bg_videoram_w );
 
+static WRITE16_HANDLER( oki_bank_w )
+{
+	OKIM6295_set_bank_base(0, 0x40000 * ((data>>8) & 3));
+}
+
 static MEMORY_READ16_START( stlforce_readmem )
 	{ 0x000000, 0x03ffff, MRA16_ROM }, /* rom */
 	{ 0x100000, 0x1007ff, MRA16_RAM }, /* bg ram */
@@ -95,6 +100,7 @@ static MEMORY_READ16_START( stlforce_readmem )
 	{ 0x109000, 0x11ffff, MRA16_RAM }, /* unknown / ram */
 	{ 0x400000, 0x400001, input_port_0_word_r },
 	{ 0x400002, 0x400003, input_port_1_word_r },
+	{ 0x410000, 0x410001, OKIM6295_status_0_lsb_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( stlforce_writemem )
@@ -114,6 +120,7 @@ static MEMORY_WRITE16_START( stlforce_writemem )
 	{ 0x109000, 0x11ffff, MWA16_RAM },
 /*	{ 0x400010, 0x400013, MWA16_NOP },*/
 /*	{ 0x40001E, 0x40001F, MWA16_NOP },*/
+	{ 0x400012, 0x400013, oki_bank_w },
 	{ 0x410000, 0x410001, OKIM6295_data_0_lsb_w },
 MEMORY_END
 
@@ -192,9 +199,9 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct OKIM6295interface okim6295_interface =
 {
 	1,				/* 1 chip */
-	{ 8500 },		/* frequency (Hz) */
+	{ 937500 / 132 },	/* frequency (Hz) */
 	{ REGION_SOUND1 },	/* memory region */
-	{ 47 }
+	{ 75 }
 };
 
 static MACHINE_DRIVER_START( stlforce )
@@ -217,16 +224,13 @@ static MACHINE_DRIVER_START( stlforce )
 	MDRV_VIDEO_UPDATE(stlforce)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface) /* guess*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
 ROM_START( stlforce )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "stlforce.105", 0x00000, 0x20000, CRC(3ec804ca) SHA1(4efcf3321b7111644ac3ee0a83ad95d0571a4021) )
 	ROM_LOAD16_BYTE( "stlforce.104", 0x00001, 0x20000, CRC(69b5f429) SHA1(5bd20fad91a22f4d62f85a5190d72dd824ee26a5) )
-
-	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* samples */
-	ROM_LOAD( "stlforce.u1", 0x00000, 0x80000, CRC(0a55edf1) SHA1(091f12e8110c62df22b370a2e710c930ba06e8ca) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF (can probably be cut)*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* 16x16 bg tiles & 8x8 tx tiles merged */
 	ROM_LOAD16_BYTE( "stlforce.u27", 0x000001, 0x080000, CRC(c42ef365) SHA1(40e9ee29ea14b3bc2fbfa4e6acb7d680cf72f01a) )
@@ -239,6 +243,10 @@ ROM_START( stlforce )
 	ROM_LOAD( "stlforce.u32", 0x80000, 0x40000, CRC(760e8601) SHA1(a61f1d8566e09ce811382c6e23f3881e6c438f15) )
 	ROM_LOAD( "stlforce.u33", 0xc0000, 0x40000, CRC(19415cf3) SHA1(31490a1f3321558f82667b63f3963b2ec3fa0c59) )
 	ROM_LOAD( "stlforce.u36", 0x00000, 0x40000, CRC(037dfa9f) SHA1(224f5cd1a95d55b065aef5c0bd03b50cabcb619b) )
+	
+	/* only one bank */
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* samples */
+	ROM_LOAD( "stlforce.u1", 0x00000, 0x80000, CRC(0a55edf1) SHA1(091f12e8110c62df22b370a2e710c930ba06e8ca) )
 ROM_END
 
-GAMEX(1994, stlforce, 0, stlforce, stlforce, 0, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force", GAME_IMPERFECT_SOUND )
+GAME(1994, stlforce, 0, stlforce, stlforce, 0, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force" )
