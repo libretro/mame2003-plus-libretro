@@ -777,19 +777,19 @@ MEMORY_END
 
 
 static MEMORY_READ_START( mspactwin_readmem )
-	{ 0x0000, 0x3fff, MRA_BANK1 },
+	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
 	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
 	{ 0x5000, 0x5000, input_port_0_r },	/* IN0 */
 	{ 0x5040, 0x5040, input_port_1_r },	/* IN1 */
 	{ 0x5080, 0x50bf, input_port_4_r },	/* DSW1 */
 /*	{ 0x50c0, 0x50c0, input_port_3_r },	should be sublatch read */
-	{ 0x8000, 0xbfff, MRA_BANK1 },
+	{ 0x8000, 0xbfff, MRA_ROM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( mspactwin_writemem )
-	{ 0x0000, 0x3fff, MWA_BANK1 },
+	{ 0x0000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0x43ff, mspactwin_videoram_w, &videoram, &videoram_size },
 	{ 0x4400, 0x47ff, colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
@@ -804,7 +804,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
-	{ 0x8000, 0xbfff, MWA_BANK1 },	/* Ms. Pac-Man / Ponpoko only */
+	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
 	{ 0xc000, 0xc3ff, mspactwin_videoram_w }, /* mirror address for video ram, */
 	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
 MEMORY_END
