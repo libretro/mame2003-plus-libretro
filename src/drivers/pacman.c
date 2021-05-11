@@ -790,7 +790,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, mspactwin_videoram_w, &videoram, &videoram_size },
+	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
 	{ 0x4400, 0x47ff, colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
@@ -805,7 +805,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, mspactwin_videoram_w }, /* mirror address for video ram, */
+	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
 	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
 MEMORY_END
 
