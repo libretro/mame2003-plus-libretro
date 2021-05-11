@@ -2974,6 +2974,7 @@ static DRIVER_INIT( aama )
 static DRIVER_INIT( pubball )
 {
 	init_program_rom();
+  init_sound_speedup(0x2011, 0x9067);
 	itech32_vram_height = 1024;
 	itech32_planes = 2;
 	is_drivedge = 0;
