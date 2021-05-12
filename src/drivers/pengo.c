@@ -94,7 +94,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x9040, 0x9040, interrupt_enable_w },
 	{ 0x9041, 0x9041, pengo_sound_enable_w },
 	{ 0x9042, 0x9042, MWA_NOP },
-	{ 0x9043, 0x9043, pengo_flipscreen_w },
+	{ 0x9043, 0x9043, pacman_flipscreen_w },
 	{ 0x9044, 0x9046, MWA_NOP },
 	{ 0x9047, 0x9047, pengo_gfxbank_w },
 	{ 0x9070, 0x9070, MWA_NOP },
