@@ -421,13 +421,9 @@ WRITE_HANDLER( mspactwin_videoram_w )
 	if (videoram[offset] != data)
 	{
 		dirtybuffer[offset] = 1;
-		videoram[offset] = data;
-
-		INT32 i;
-		for (i = 0; i < 264; i++)
-		{
-			force_partial_update(i + 8);
-		}
+		videoram[offset] = data:
+		usrintf_showmessage("scanline= %i", cpu_getscanline());
+		force_partial_update(cpu_getscanline() + 8);
 	}
 }
 
