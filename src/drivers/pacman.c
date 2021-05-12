@@ -945,7 +945,7 @@ static MEMORY_WRITE_START( s2650games_writemem )
 	{ 0x14a0, 0x14bf, s2650games_tilesbank_w, &tiles_bankram },
 	{ 0x14c0, 0x14ff, MWA_RAM },
 	{ 0x1500, 0x1502, MWA_NOP },
-	{ 0x1503, 0x1503, s2650games_flipscreen_w },
+	{ 0x1503, 0x1503, pacman_flipscreen_w },
 	{ 0x1504, 0x1506, MWA_NOP },
 	{ 0x1507, 0x1507, pacman_coin_counter_w },
 	{ 0x1508, 0x155f, MWA_RAM },
