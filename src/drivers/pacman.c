@@ -2745,7 +2745,6 @@ static MACHINE_DRIVER_START( vanvan )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(2*8, 34*8-1, 0*8, 28*8-1)
-	MDRV_VIDEO_UPDATE(vanvan)
 
 	/* sound hardware */
 	MDRV_SOUND_REPLACE("namco", SN76496, sn76496_interface)
