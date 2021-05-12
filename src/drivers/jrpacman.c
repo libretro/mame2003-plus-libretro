@@ -179,7 +179,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
-	{ 0x5003, 0x5003, jrpacman_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x5070, 0x5070, jrpacman_palettebank_w, &jrpacman_palettebank },
