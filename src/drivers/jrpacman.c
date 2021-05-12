@@ -182,8 +182,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
-	{ 0x5070, 0x5070, jrpacman_palettebank_w, &jrpacman_palettebank },
-	{ 0x5071, 0x5071, jrpacman_colortablebank_w, &jrpacman_colortablebank },
+	{ 0x5070, 0x5070, pengo_palettebank_w, &jrpacman_palettebank },
+	{ 0x5071, 0x5071, pengo_colortablebank_w, &jrpacman_colortablebank },
 	{ 0x5073, 0x5073, MWA_RAM, &jrpacman_bgpriority },
 	{ 0x5074, 0x5074, jrpacman_charbank_w, &jrpacman_charbank },
 	{ 0x5075, 0x5075, MWA_RAM, &jrpacman_spritebank },
@@ -354,9 +354,9 @@ static MACHINE_DRIVER_START( jrpacman )
 	MDRV_PALETTE_LENGTH(32)
 	MDRV_COLORTABLE_LENGTH(128*4)
 
-	MDRV_PALETTE_INIT(jrpacman)
+	MDRV_PALETTE_INIT(pacman)
 	MDRV_VIDEO_START(jrpacman)
-	MDRV_VIDEO_UPDATE(jrpacman)
+	MDRV_VIDEO_UPDATE(pacman)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
