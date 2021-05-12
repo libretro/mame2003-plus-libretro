@@ -707,8 +707,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
@@ -722,8 +722,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
@@ -753,8 +753,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x0000, 0x3fff, MWA_BANK1 },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
@@ -769,8 +769,8 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_BANK1 },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
@@ -828,8 +828,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( alibaba_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4ef0, 0x4eff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x4c00, 0x4fff, MWA_RAM },
 	{ 0x5000, 0x5000, watchdog_reset_w },
@@ -844,8 +844,8 @@ static MEMORY_WRITE_START( alibaba_writemem )
 	{ 0x8000, 0x8fff, MWA_ROM },
 	{ 0x9000, 0x93ff, MWA_RAM },
 	{ 0xa000, 0xa7ff, MWA_ROM },
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 MEMORY_END
 
 
@@ -874,8 +874,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( vanvan_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4800, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
@@ -907,8 +907,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( bigbucks_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fbf, MWA_RAM },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
