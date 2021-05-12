@@ -393,7 +393,7 @@ ROM_START( pengo3u )
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "ep1640.92",    0x0000, 0x1000, CRC(d7eec6cd) SHA1(e542bcc28f292be9a0a29d949de726e0b55e654a) ) /* tiles (bank 1) */
-	ROM_CONTINUE(             0x3000, 0x1000 ) /* sprites (bank 1) */
+	ROM_CONTINUE(             0x2000, 0x1000 ) /* sprites (bank 1) */
 	ROM_LOAD( "ep1695.105",   0x1000, 0x1000, CRC(5bfd26e9) SHA1(bdec535e486b43a8f5550334beff423eeace10b2) ) /* tiles (bank 2) */
 	ROM_CONTINUE(             0x3000, 0x1000 ) /* sprites (bank 2) */
 
@@ -446,7 +446,7 @@ ROM_START( penta )
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "092_pn09.bin", 0x0000, 0x1000, CRC(6afeba9d) SHA1(cd723fb94aa90dbaac9a6fe085c0f4786d2fa092) ) /* tiles (bank 1) */
 	ROM_CONTINUE(             0x2000, 0x1000 ) /* sprites (bank 1) */
-	ROM_LOAD( "ep1695.105",   0x0000, 0x1000, CRC(5bfd26e9) SHA1(bdec535e486b43a8f5550334beff423eeace10b2) ) /* tiles (bank 2) */
+	ROM_LOAD( "ep1695.105",   0x1000, 0x1000, CRC(5bfd26e9) SHA1(bdec535e486b43a8f5550334beff423eeace10b2) ) /* tiles (bank 2) */
 	ROM_CONTINUE(             0x3000, 0x1000 ) /* sprites (bank 2) */
 
 	ROM_REGION( 0x0420, REGION_PROMS, 0 )
