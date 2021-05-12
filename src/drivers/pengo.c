@@ -63,7 +63,7 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "machine/segacrpt.h"
-#include "pengo.h"
+#include "pacman.h"
 
 
 
