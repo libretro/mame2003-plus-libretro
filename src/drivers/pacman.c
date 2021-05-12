@@ -179,7 +179,6 @@ Dave Widel
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "pacman.h"
-#include "pengo.h"
 #include "cpu/s2650/s2650.h"
 
 
