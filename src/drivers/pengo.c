@@ -85,8 +85,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0x83ff, videoram_w, &videoram, &videoram_size },
-	{ 0x8400, 0x87ff, colorram_w, &colorram },
+	{ 0x8000, 0x83ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x8400, 0x87ff, pacman_colorram_w, &colorram },
 	{ 0x8800, 0x8fef, MWA_RAMROM },
 	{ 0x8ff0, 0x8fff, MWA_RAM, &spriteram, &spriteram_size},
 	{ 0x9000, 0x901f, pengo_sound_w, &pengo_soundregs },
