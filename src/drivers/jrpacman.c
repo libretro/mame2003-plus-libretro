@@ -100,7 +100,7 @@
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
-#include "jrpacman.h"
+#include "pacman.h"
 
 
 static UINT8 speedcheat = 0;	/* a well known hack allows to make JrPac Man run at four times */
