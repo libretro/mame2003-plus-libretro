@@ -714,7 +714,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 /* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
@@ -760,7 +760,7 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
 /* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
@@ -798,7 +798,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
@@ -839,7 +839,7 @@ static MEMORY_WRITE_START( alibaba_writemem )
 	{ 0x5040, 0x506f, alibaba_sound_w, &pengo_soundregs },  /* the sound region is not contiguous */
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 }, /* actually at 5050-505f, here to point to free RAM */
 	{ 0x50c0, 0x50c0, pengo_sound_enable_w },
-	{ 0x50c1, 0x50c1, pengo_flipscreen_w },
+	{ 0x50c1, 0x50c1, pacman_flipscreen_w },
 	{ 0x50c2, 0x50c2, interrupt_enable_w },
 	{ 0x8000, 0x8fff, MWA_ROM },
 	{ 0x9000, 0x93ff, MWA_RAM },
@@ -880,7 +880,7 @@ static MEMORY_WRITE_START( vanvan_writemem )
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, vanvan_bgcolor_w },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5005, 0x5006, MWA_NOP },	/* always written together with 5001 */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -912,7 +912,7 @@ static MEMORY_WRITE_START( bigbucks_writemem )
 	{ 0x4c00, 0x4fbf, MWA_RAM },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5007, 0x5007, MWA_NOP }, /*?*/
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
