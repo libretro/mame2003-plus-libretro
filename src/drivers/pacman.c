@@ -2563,16 +2563,16 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-   { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-   { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
+   { REGION_GFX1, 0x0000, &tilelayout,   0, 128 },
+   { REGION_GFX1, 0x1000, &spritelayout, 0, 128 },
    { -1 } /* end of array */
 };
 
 
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
-    { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-    { REGION_GFX1, 0x4000, &spritelayout, 0, 32 },
+    { REGION_GFX1, 0x0000, &tilelayout,   0, 128 },
+    { REGION_GFX1, 0x4000, &spritelayout, 0, 128 },
     { -1 } /* end of array */
 };
 
@@ -2644,8 +2644,8 @@ static MACHINE_DRIVER_START( pacman )
 	MDRV_SCREEN_SIZE(36*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16)
-	MDRV_COLORTABLE_LENGTH(4*32)
+	MDRV_PALETTE_LENGTH(32)
+	MDRV_COLORTABLE_LENGTH(4*128)
 
 	MDRV_PALETTE_INIT(pacman)
 	MDRV_VIDEO_START(pacman)
