@@ -23,7 +23,7 @@ WRITE_HANDLER( pengo_colortablebank_w );
 WRITE_HANDLER( pengo_gfxbank_w );
 
 
-WRITE8_HANDLER( vanvan_bgcolor_w );
+WRITE_HANDLER( vanvan_bgcolor_w );
 
 
 VIDEO_START( s2650games );
