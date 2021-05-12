@@ -422,7 +422,12 @@ WRITE_HANDLER( mspactwin_videoram_w )
 	{
 		dirtybuffer[offset] = 1;
 		videoram[offset] = data;
-		force_partial_update(cpu_getscanline() + 8);
+
+		INT32 i;
+		for (i = 0; i < 264; i++)
+		{
+			force_partial_update(i + 8);
+		}
 	}
 }
 
