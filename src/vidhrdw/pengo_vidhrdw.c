@@ -185,6 +185,16 @@ WRITE_HANDLER( pacman_videoram_w )
 	}
 }
 
+WRITE_HANDLER( mspactwin_videoram_w )
+{
+	if (videoram[offset] != data)
+	{
+		videoram[offset] = data;
+		tilemap_mark_tile_dirty( tilemap, offset );
+		force_partial_update(cpu_getscanline() + 8);
+	}
+}
+
 WRITE_HANDLER( pacman_colorram_w )
 {
 	if (colorram[offset] != data)
@@ -361,12 +371,6 @@ static void s2650_get_tile_info(int tile_index)
 
 	code = videoram[tile_index] + (colbank << 8);
 	attr = colorram[tile_index & 0x1f];
-
-	/* remove when we have proms dumps for it */
-	if (!strcmp(Machine->gamedrv->name, "8bpm"))
-	{
-		attr = 1;
-	}
 
 	SET_TILE_INFO(0,code,attr & 0x1f,0)
 }
