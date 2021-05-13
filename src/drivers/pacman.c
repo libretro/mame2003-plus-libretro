@@ -938,7 +938,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( s2650games_writemem )
 	{ 0x0000, 0x0fff, MWA_ROM },
-	{ 0x1000, 0x13ff, s2650games_colorram_w },
+	{ 0x1000, 0x13ff, s2650games_colorram_w, &colorram },
 	{ 0x1400, 0x141f, s2650games_scroll_w },
 	{ 0x1420, 0x148f, MWA_RAM },
 	{ 0x1490, 0x149f, MWA_RAM, &sprite_bank },
