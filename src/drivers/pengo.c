@@ -364,7 +364,7 @@ ROM_START( pengo2u )
 	ROM_LOAD( "ep5126.32",    0x6000, 0x1000, CRC(e5920728) SHA1(0ac5ffdad7bdcb32e630b9582e1b1aaece5198c9) )
 	ROM_LOAD( "pengo.u31",    0x7000, 0x1000, CRC(13de47ed) SHA1(332b484d47c9921ed93432755bb2d7a9d4628939) )
 
-	ROM_REGION( 0x4000, REGION_GFX1,  )
+	ROM_REGION( 0x4000, REGION_GFX1, 0 )
 	ROM_LOAD( "ep1640.92",    0x0000, 0x1000, CRC(d7eec6cd) SHA1(e542bcc28f292be9a0a29d949de726e0b55e654a) ) /* tiles (bank 1) */
 	ROM_CONTINUE(             0x2000, 0x1000 ) /* sprites (bank 1) */
 	ROM_LOAD( "ep1695.105",   0x1000, 0x1000, CRC(5bfd26e9) SHA1(bdec535e486b43a8f5550334beff423eeace10b2) ) /* tiles (bank 2) */
