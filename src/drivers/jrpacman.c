@@ -100,7 +100,7 @@
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
-#include "jrpacman.h"
+#include "pacman.h"
 
 
 static UINT8 speedcheat = 0;	/* a well known hack allows to make JrPac Man run at four times */
@@ -179,15 +179,15 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
-	{ 0x5003, 0x5003, jrpacman_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
-	{ 0x5070, 0x5070, jrpacman_palettebank_w, &jrpacman_palettebank },
-	{ 0x5071, 0x5071, jrpacman_colortablebank_w, &jrpacman_colortablebank },
-	{ 0x5073, 0x5073, MWA_RAM, &jrpacman_bgpriority },
-	{ 0x5074, 0x5074, jrpacman_charbank_w, &jrpacman_charbank },
-	{ 0x5075, 0x5075, MWA_RAM, &jrpacman_spritebank },
-	{ 0x5080, 0x5080, MWA_RAM, &jrpacman_scroll },
+	{ 0x5070, 0x5070, pengo_palettebank_w },
+	{ 0x5071, 0x5071, pengo_colortablebank_w },
+	{ 0x5073, 0x5073, jrpacman_bgpriority_w },
+	{ 0x5074, 0x5074, jrpacman_charbank_w },
+	{ 0x5075, 0x5075, jrpacman_spritebank_w },
+	{ 0x5080, 0x5080, jrpacman_scroll_w },
 	{ 0x50c0, 0x50c0, MWA_NOP },
 	{ 0x8000, 0xdfff, MWA_ROM },
 MEMORY_END
@@ -276,36 +276,36 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static struct GfxLayout charlayout =
+static struct GfxLayout tilelayout =
 {
-	8,8,
-	RGN_FRAC(1,1),
-	2,
-	{ 0, 4 },
-	{ 8*8+0, 8*8+1, 8*8+2, 8*8+3, 0, 1, 2, 3 },
-	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-	16*8
+	8,8,	/* 8*8 characters */
+    RGN_FRAC(1,2),    /* 256 characters */
+    2,  /* 2 bits per pixel */
+    { 0, 4 },   /* the two bitplanes for 4 pixels are packed into one byte */
+    { 8*8+0, 8*8+1, 8*8+2, 8*8+3, 0, 1, 2, 3 }, /* bits are packed in groups of four */
+    { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+    16*8    /* every char takes 16 bytes */
 };
 
 
 static struct GfxLayout spritelayout =
 {
-	16,16,
-	RGN_FRAC(1,1),
-	2,
-	{ 0, 4 },
+	16,16,	/* 16*16 sprites */
+	RGN_FRAC(1,2),	/* 64 sprites */
+	2,	/* 2 bits per pixel */
+	{ 0, 4 },	/* the two bitplanes for 4 pixels are packed into one byte */
 	{ 8*8, 8*8+1, 8*8+2, 8*8+3, 16*8+0, 16*8+1, 16*8+2, 16*8+3,
 			24*8+0, 24*8+1, 24*8+2, 24*8+3, 0, 1, 2, 3 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			32*8, 33*8, 34*8, 35*8, 36*8, 37*8, 38*8, 39*8 },
-	64*8
+	64*8	/* every sprite takes 64 bytes */
 };
 
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout,      0, 128 },
-	{ REGION_GFX2, 0, &spritelayout,    0, 128 },
+	{ REGION_GFX1, 0x0000, &tilelayout,      0, 128 },
+	{ REGION_GFX1, 0x2000, &spritelayout,    0, 128 },
 	{ -1 } /* end of array */
 };
 
@@ -354,9 +354,9 @@ static MACHINE_DRIVER_START( jrpacman )
 	MDRV_PALETTE_LENGTH(32)
 	MDRV_COLORTABLE_LENGTH(128*4)
 
-	MDRV_PALETTE_INIT(jrpacman)
+	MDRV_PALETTE_INIT(pacman)
 	MDRV_VIDEO_START(jrpacman)
-	MDRV_VIDEO_UPDATE(jrpacman)
+	MDRV_VIDEO_UPDATE(pacman)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
@@ -372,51 +372,47 @@ MACHINE_DRIVER_END
 
 ROM_START( jrpacman )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
-	ROM_LOAD( "jrp8d.bin",    0x0000, 0x2000, CRC(e3fa972e) SHA1(5ea34621213c649ca2848ab31aab2cbe751723d4) )
-	ROM_LOAD( "jrp8e.bin",    0x2000, 0x2000, CRC(ec889e94) SHA1(8294e9e79f8fd19a419431fa690e6ac4a1302f58) )
-	ROM_LOAD( "jrp8h.bin",    0x8000, 0x2000, CRC(35f1fc6e) SHA1(b84b34560b9aae18b24274712b052283faa01730) )
-	ROM_LOAD( "jrp8j.bin",    0xa000, 0x2000, CRC(9737099e) SHA1(07d912a61824323c8fc1b8bd0da89172d4f70b91) )
-	ROM_LOAD( "jrp8k.bin",    0xc000, 0x2000, CRC(5252dd97) SHA1(18bd4d5381656120e4242811006c20776774de4d) )
+	ROM_LOAD( "jrp8d.bin",             0x0000, 0x2000, CRC(e3fa972e) SHA1(5ea34621213c649ca2848ab31aab2cbe751723d4) )
+	ROM_LOAD( "jrp8e.bin",             0x2000, 0x2000, CRC(ec889e94) SHA1(8294e9e79f8fd19a419431fa690e6ac4a1302f58) )
+	ROM_LOAD( "jrp8h.bin",             0x8000, 0x2000, CRC(35f1fc6e) SHA1(b84b34560b9aae18b24274712b052283faa01730) )
+	ROM_LOAD( "jrp8j.bin",             0xa000, 0x2000, CRC(9737099e) SHA1(07d912a61824323c8fc1b8bd0da89172d4f70b91) )
+	ROM_LOAD( "jrp8k.bin",             0xc000, 0x2000, CRC(5252dd97) SHA1(18bd4d5381656120e4242811006c20776774de4d) )
 
-	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "jrp2c.bin",    0x0000, 0x2000, CRC(0527ff9b) SHA1(37fe3176b0d125b7d629e108e7ebdc1196e4a132) )
+	ROM_REGION( 0x4000, REGION_GFX1, 0 )
+	ROM_LOAD( "jrp2c.bin",             0x0000, 0x2000, CRC(0527ff9b) SHA1(37fe3176b0d125b7d629e108e7ebdc1196e4a132) ) /* tiles (bank 1 & 2) */
+	ROM_LOAD( "jrp2e.bin",             0x2000, 0x2000, CRC(73477193) SHA1(f00a488958ea0438642d345693787bdf771219ad) ) /* sprites (bank 1 & 2) */
 
-	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "jrp2e.bin",    0x0000, 0x2000, CRC(73477193) SHA1(f00a488958ea0438642d345693787bdf771219ad) )
+	ROM_REGION( 0x0120, REGION_PROMS, 0 )
+	ROM_LOAD_NIB_LOW ( "jrprom.9e",    0x0000, 0x0100, CRC(029d35c4) SHA1(d9aa2dc442e9ac36cf3c346b9fb1aa745eaf3cb8) ) /* color palette (low bits) */
+	ROM_LOAD_NIB_HIGH( "jrprom.9f",    0x0000, 0x0100, CRC(eee34a79) SHA1(7561f8ccab2af85c111af6a02af6986eb67503e5) ) /* color palette (high bits) */
+	ROM_LOAD( "jrprom.9p",             0x0020, 0x0100, CRC(9f6ea9d8) SHA1(62cf15513934d34641433c891a7f73bef82e2fb1) ) /* color lookup table */
 
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "jrprom.9e",    0x0000, 0x0100, CRC(029d35c4) SHA1(d9aa2dc442e9ac36cf3c346b9fb1aa745eaf3cb8) ) /* palette low bits */
-	ROM_LOAD( "jrprom.9f",    0x0100, 0x0100, CRC(eee34a79) SHA1(7561f8ccab2af85c111af6a02af6986eb67503e5) ) /* palette high bits */
-	ROM_LOAD( "jrprom.9p",    0x0200, 0x0100, CRC(9f6ea9d8) SHA1(62cf15513934d34641433c891a7f73bef82e2fb1) ) /* color lookup table */
-
-	ROM_REGION( 0x0200, REGION_SOUND1, 0 )	/* sound prom */
-	ROM_LOAD( "jrprom.7p",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
-	ROM_LOAD( "jrprom.5s",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )	/* timing - not used */
+	ROM_REGION( 0x0200, REGION_SOUND1, 0 )
+	ROM_LOAD( "jrprom.7p",             0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) ) /* waveform */
+	ROM_LOAD( "jrprom.5s",             0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) ) /* timing - not used */
 ROM_END
 
 
 ROM_START( jrpacmnf )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
-	ROM_LOAD( "fast_jr.8d",   0x0000, 0x2000, CRC(461e8b57) SHA1(42e25d384e653efb95a97bd64f55a8c3b3f71239) )
-	ROM_LOAD( "jrp8e.8e",     0x2000, 0x2000, CRC(ec889e94) SHA1(8294e9e79f8fd19a419431fa690e6ac4a1302f58) )
-	ROM_LOAD( "jrp8h.8h",     0x8000, 0x2000, CRC(35f1fc6e) SHA1(b84b34560b9aae18b24274712b052283faa01730) )
-	ROM_LOAD( "jrp8j.8j",     0xa000, 0x2000, CRC(9737099e) SHA1(07d912a61824323c8fc1b8bd0da89172d4f70b91) )
-	ROM_LOAD( "jrp8k.8k",     0xc000, 0x2000, CRC(5252dd97) SHA1(18bd4d5381656120e4242811006c20776774de4d) )
+	ROM_LOAD( "fast_jr.8d",                   0x0000, 0x2000, CRC(461e8b57) SHA1(42e25d384e653efb95a97bd64f55a8c3b3f71239) )
+	ROM_LOAD( "jrp8e.8e",                     0x2000, 0x2000, CRC(ec889e94) SHA1(8294e9e79f8fd19a419431fa690e6ac4a1302f58) )
+	ROM_LOAD( "jrp8h.8h",                     0x8000, 0x2000, CRC(35f1fc6e) SHA1(b84b34560b9aae18b24274712b052283faa01730) )
+	ROM_LOAD( "jrp8j.8j",                     0xa000, 0x2000, CRC(9737099e) SHA1(07d912a61824323c8fc1b8bd0da89172d4f70b91) )
+	ROM_LOAD( "jrp8k.8k",                     0xc000, 0x2000, CRC(5252dd97) SHA1(18bd4d5381656120e4242811006c20776774de4d) )
 
-	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "jrp2c.2c",     0x0000, 0x2000, CRC(0527ff9b) SHA1(37fe3176b0d125b7d629e108e7ebdc1196e4a132) )
+	ROM_REGION( 0x4000, REGION_GFX1, 0 )
+	ROM_LOAD( "jrp2c.2c",                     0x0000, 0x2000, CRC(0527ff9b) SHA1(37fe3176b0d125b7d629e108e7ebdc1196e4a132) ) /* tiles (bank 1 & 2) */
+	ROM_LOAD( "jrp2e.2e",                     0x2000, 0x2000, CRC(73477193) SHA1(f00a488958ea0438642d345693787bdf771219ad) ) /* sprites (bank 1 & 2) */
 
-	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "jrp2e.2e",     0x0000, 0x2000, CRC(73477193) SHA1(f00a488958ea0438642d345693787bdf771219ad) )
+	ROM_REGION( 0x0120, REGION_PROMS, 0 )
+	ROM_LOAD_NIB_LOW( "a290-27axv-bxhd.9e",   0x0000, 0x0100, CRC(029d35c4) SHA1(d9aa2dc442e9ac36cf3c346b9fb1aa745eaf3cb8) ) /* color palette (low bits) */
+	ROM_LOAD_NIB_HIGH( "a290-27axv-cxhd.9f",  0x0000, 0x0100, CRC(eee34a79) SHA1(7561f8ccab2af85c111af6a02af6986eb67503e5) ) /* color palette (high bits) */
+	ROM_LOAD( "a290-27axv-axhd.9p",           0x0020, 0x0100, CRC(9f6ea9d8) SHA1(62cf15513934d34641433c891a7f73bef82e2fb1) ) /* color lookup table */
 
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "a290-27axv-bxhd.9e",    0x0000, 0x0100, CRC(029d35c4) SHA1(d9aa2dc442e9ac36cf3c346b9fb1aa745eaf3cb8) ) /* palette low bits */
-	ROM_LOAD( "a290-27axv-cxhd.9f",    0x0100, 0x0100, CRC(eee34a79) SHA1(7561f8ccab2af85c111af6a02af6986eb67503e5) ) /* palette high bits */
-	ROM_LOAD( "a290-27axv-axhd.9p",    0x0200, 0x0100, CRC(9f6ea9d8) SHA1(62cf15513934d34641433c891a7f73bef82e2fb1) ) /* color lookup table */
-
-	ROM_REGION( 0x0200, REGION_SOUND1, 0 )	/* sound prom */
-	ROM_LOAD( "a290-27axv-dxhd.7p",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
-	ROM_LOAD( "a290-27axv-exhd.5s",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )	/* timing - not used */
+	ROM_REGION( 0x0200, REGION_SOUND1, 0 )
+	ROM_LOAD( "a290-27axv-dxhd.7p",           0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) ) /* waveform */
+	ROM_LOAD( "a290-27axv-exhd.5s",           0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) ) /* timing - not used */
 ROM_END
 
 

@@ -179,7 +179,6 @@ Dave Widel
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "pacman.h"
-#include "pengo.h"
 #include "cpu/s2650/s2650.h"
 
 
@@ -708,14 +707,14 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 /* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
@@ -723,8 +722,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
@@ -754,14 +753,14 @@ MEMORY_END
 
 static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x0000, 0x3fff, MWA_BANK1 },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
 /* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
@@ -770,8 +769,8 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_BANK1 },	/* Ms. Pac-Man / Ponpoko only */
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 	{ 0xffff, 0xffff, MWA_NOP },	/* Eyes writes to this location to simplify code */
 MEMORY_END
 
@@ -793,13 +792,13 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x0000, 0x1fff, MWA_ROM },
 	{ 0x2000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0x43ff, mspactwin_videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5002, 0x5002, MWA_NOP },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
@@ -808,7 +807,7 @@ static MEMORY_WRITE_START( mspactwin_writemem )
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
 	{ 0x8000, 0xbfff, MWA_ROM },	/* Ms. Pac-Man / Ponpoko only */
 	{ 0xc000, 0xc3ff, mspactwin_videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 MEMORY_END
 
 
@@ -829,8 +828,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( alibaba_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4ef0, 0x4eff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x4c00, 0x4fff, MWA_RAM },
 	{ 0x5000, 0x5000, watchdog_reset_w },
@@ -840,13 +839,13 @@ static MEMORY_WRITE_START( alibaba_writemem )
 	{ 0x5040, 0x506f, alibaba_sound_w, &pengo_soundregs },  /* the sound region is not contiguous */
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 }, /* actually at 5050-505f, here to point to free RAM */
 	{ 0x50c0, 0x50c0, pengo_sound_enable_w },
-	{ 0x50c1, 0x50c1, pengo_flipscreen_w },
+	{ 0x50c1, 0x50c1, pacman_flipscreen_w },
 	{ 0x50c2, 0x50c2, interrupt_enable_w },
 	{ 0x8000, 0x8fff, MWA_ROM },
 	{ 0x9000, 0x93ff, MWA_RAM },
 	{ 0xa000, 0xa7ff, MWA_ROM },
-	{ 0xc000, 0xc3ff, videoram_w }, /* mirror address for video ram, */
-	{ 0xc400, 0xc7ef, colorram_w }, /* used to display HIGH SCORE and CREDITS */
+	{ 0xc000, 0xc3ff, pacman_videoram_w }, /* mirror address for video ram, */
+	{ 0xc400, 0xc7ef, pacman_colorram_w }, /* used to display HIGH SCORE and CREDITS */
 MEMORY_END
 
 
@@ -875,13 +874,13 @@ MEMORY_END
 
 static MEMORY_WRITE_START( vanvan_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4800, 0x4fef, MWA_RAM },
 	{ 0x4ff0, 0x4fff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, vanvan_bgcolor_w },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5005, 0x5006, MWA_NOP },	/* always written together with 5001 */
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -908,12 +907,12 @@ MEMORY_END
 
 static MEMORY_WRITE_START( bigbucks_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
-	{ 0x4400, 0x47ff, colorram_w, &colorram },
+	{ 0x4000, 0x43ff, pacman_videoram_w, &videoram, &videoram_size },
+	{ 0x4400, 0x47ff, pacman_colorram_w, &colorram },
 	{ 0x4c00, 0x4fbf, MWA_RAM },
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
-	{ 0x5003, 0x5003, pengo_flipscreen_w },
+	{ 0x5003, 0x5003, pacman_flipscreen_w },
 	{ 0x5007, 0x5007, MWA_NOP }, /*?*/
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
@@ -939,14 +938,14 @@ MEMORY_END
 
 static MEMORY_WRITE_START( s2650games_writemem )
 	{ 0x0000, 0x0fff, MWA_ROM },
-	{ 0x1000, 0x13ff, s2650games_colorram_w },
+	{ 0x1000, 0x13ff, s2650games_colorram_w, &colorram },
 	{ 0x1400, 0x141f, s2650games_scroll_w },
 	{ 0x1420, 0x148f, MWA_RAM },
 	{ 0x1490, 0x149f, MWA_RAM, &sprite_bank },
 	{ 0x14a0, 0x14bf, s2650games_tilesbank_w, &tiles_bankram },
 	{ 0x14c0, 0x14ff, MWA_RAM },
 	{ 0x1500, 0x1502, MWA_NOP },
-	{ 0x1503, 0x1503, s2650games_flipscreen_w },
+	{ 0x1503, 0x1503, pacman_flipscreen_w },
 	{ 0x1504, 0x1506, MWA_NOP },
 	{ 0x1507, 0x1507, pacman_coin_counter_w },
 	{ 0x1508, 0x155f, MWA_RAM },
@@ -2563,16 +2562,16 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-   { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-   { REGION_GFX1, 0x1000, &spritelayout, 0, 32 },
+   { REGION_GFX1, 0x0000, &tilelayout,   0, 128 },
+   { REGION_GFX1, 0x1000, &spritelayout, 0, 128 },
    { -1 } /* end of array */
 };
 
 
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
-    { REGION_GFX1, 0x0000, &tilelayout,   0, 32 },
-    { REGION_GFX1, 0x4000, &spritelayout, 0, 32 },
+    { REGION_GFX1, 0x0000, &tilelayout,   0, 128 },
+    { REGION_GFX1, 0x4000, &spritelayout, 0, 128 },
     { -1 } /* end of array */
 };
 
@@ -2644,12 +2643,12 @@ static MACHINE_DRIVER_START( pacman )
 	MDRV_SCREEN_SIZE(36*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16)
-	MDRV_COLORTABLE_LENGTH(4*32)
+	MDRV_PALETTE_LENGTH(32)
+	MDRV_COLORTABLE_LENGTH(4*128)
 
 	MDRV_PALETTE_INIT(pacman)
 	MDRV_VIDEO_START(pacman)
-	MDRV_VIDEO_UPDATE(pengo)
+	MDRV_VIDEO_UPDATE(pacman)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("namco", NAMCO_15XX, namco_interface)
@@ -2746,7 +2745,6 @@ static MACHINE_DRIVER_START( vanvan )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA(2*8, 34*8-1, 0*8, 28*8-1)
-	MDRV_VIDEO_UPDATE(vanvan)
 
 	/* sound hardware */
 	MDRV_SOUND_REPLACE("namco", SN76496, sn76496_interface)
