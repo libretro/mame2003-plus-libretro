@@ -189,6 +189,8 @@ void seq_set_2(InputSeq* seq, InputCode code1, InputCode code2);
 void seq_set_3(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3);
 void seq_set_4(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4);
 void seq_set_5(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5);
+void seq_set_6(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5, InputCode code6);
+void seq_set_7(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5, InputCode code6, InputCode code7);
 void seq_copy(InputSeq* seqdst, InputSeq* seqsrc);
 int seq_cmp(InputSeq* seq1, InputSeq* seq2);
 void seq_name(InputSeq* seq, char* buffer, unsigned max);

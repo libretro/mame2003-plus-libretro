@@ -775,11 +775,17 @@ static MEMORY_WRITE_START( mspacman_writemem )
 MEMORY_END
 
 
+READ_HANDLER(mspactwin_spriteram_r)
+{
+	return spriteram[offset];
+}
+
 static MEMORY_READ_START( mspactwin_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
 	{ 0x2000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },	/* video and color RAM */
-	{ 0x4c00, 0x4fff, MRA_RAM },	/* including sprite codes at 4ff0-4fff */
+	{ 0x4c00, 0x4fef, MRA_RAM },
+	{ 0x4ff0, 0x4fff, mspactwin_spriteram_r },	/*sprite codes at 4ff0-4fff */
 	{ 0x5000, 0x5000, input_port_0_r },	/* IN0 */
 	{ 0x5040, 0x5040, input_port_1_r },	/* IN1 */
 	{ 0x5080, 0x50bf, input_port_4_r },	/* DSW1 */
