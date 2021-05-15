@@ -189,7 +189,7 @@ WRITE_HANDLER( mspactwin_videoram_w )
 	{
 		videoram[offset] = data;
 		tilemap_mark_tile_dirty( tilemap, offset );
-		force_partial_update(cpu_getscanline() + 8);
+		force_partial_update(cpu_getscanline() + 29);
 	}
 }
 
