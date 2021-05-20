@@ -1269,7 +1269,7 @@ void retro_run (void)
     analogjoy[port][2] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
     analogjoy[port][3] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
-    /* Analog joystick - read as digital button /*
+    /* Analog joystick - read as digital button */
     /* If the analog value (normalized for MAME to the range -128, 128) is greater in absolute   */
     /* terms than INPUT_BUTTON_AXIS_THRESHOLD, record it as a binary/digital signal.             */
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
