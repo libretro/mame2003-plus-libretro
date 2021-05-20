@@ -189,6 +189,8 @@ void seq_set_2(InputSeq* seq, InputCode code1, InputCode code2);
 void seq_set_3(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3);
 void seq_set_4(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4);
 void seq_set_5(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5);
+void seq_set_6(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5, InputCode code6);
+void seq_set_7(InputSeq* seq, InputCode code1, InputCode code2, InputCode code3, InputCode code4, InputCode code5, InputCode code6, InputCode code7);
 void seq_copy(InputSeq* seqdst, InputSeq* seqsrc);
 int seq_cmp(InputSeq* seq1, InputSeq* seq2);
 void seq_name(InputSeq* seq, char* buffer, unsigned max);
@@ -196,8 +198,9 @@ int seq_pressed(InputSeq* seq);
 void seq_read_async_start(void);
 int seq_read_async(InputSeq* code, int first);
 
-/* NOTE: It's very important that this sequence is EXACLY long SEQ_MAX */
-#define SEQ_DEF_6(a,b,c,d,e,f) { a, b, c, d, e, f, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE }
+/* NOTE: It's very important that this sequence is EXACTLY long SEQ_MAX */
+#define SEQ_DEF_7(a,b,c,d,e,f,g) { a, b, c, d, e, f, g, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE }
+#define SEQ_DEF_6(a,b,c,d,e,f) SEQ_DEF_7(a,b,c,d,e,f,CODE_NONE)
 #define SEQ_DEF_5(a,b,c,d,e) SEQ_DEF_6(a,b,c,d,e,CODE_NONE)
 #define SEQ_DEF_4(a,b,c,d) SEQ_DEF_5(a,b,c,d,CODE_NONE)
 #define SEQ_DEF_3(a,b,c) SEQ_DEF_4(a,b,c,CODE_NONE)
