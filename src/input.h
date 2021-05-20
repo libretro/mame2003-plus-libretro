@@ -198,8 +198,9 @@ int seq_pressed(InputSeq* seq);
 void seq_read_async_start(void);
 int seq_read_async(InputSeq* code, int first);
 
-/* NOTE: It's very important that this sequence is EXACLY long SEQ_MAX */
-#define SEQ_DEF_6(a,b,c,d,e,f) { a, b, c, d, e, f, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE }
+/* NOTE: It's very important that this sequence is EXACTLY long SEQ_MAX */
+#define SEQ_DEF_7(a,b,c,d,e,f,g) { a, b, c, d, e, f, g, h, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE, CODE_NONE }
+#define SEQ_DEF_6(a,b,c,d,e,f) SEQ_DEF_7(a,b,c,d,e,f,g,CODE_NONE)
 #define SEQ_DEF_5(a,b,c,d,e) SEQ_DEF_6(a,b,c,d,e,CODE_NONE)
 #define SEQ_DEF_4(a,b,c,d) SEQ_DEF_5(a,b,c,d,CODE_NONE)
 #define SEQ_DEF_3(a,b,c) SEQ_DEF_4(a,b,c,CODE_NONE)
