@@ -22,6 +22,13 @@ struct JoystickInfo
   InputCode standardcode;	/* CODE_xxx equivalent from list below, or CODE_OTHER if n/a */
 };
 
+#define EMIT_GUN_CODES(PLAYER_NUM) \
+  JOYCODE_GUN_##PLAYER_NUM##_BUTTON1,   JOYCODE_GUN_##PLAYER_NUM##_BUTTON2,    \
+  JOYCODE_GUN_##PLAYER_NUM##_BUTTON3,   JOYCODE_GUN_##PLAYER_NUM##_BUTTON4,   \
+  JOYCODE_GUN_##PLAYER_NUM##_START,     JOYCODE_GUN_##PLAYER_NUM##_SELECT,     \
+  JOYCODE_GUN_##PLAYER_NUM##_DPAD_UP,   JOYCODE_GUN_##PLAYER_NUM##_DPAD_DOWN,  \
+  JOYCODE_GUN_##PLAYER_NUM##_DPAD_LEFT, JOYCODE_GUN_##PLAYER_NUM##_DPAD_RIGHT,
+
 enum
 {
   /* key */
@@ -143,10 +150,19 @@ enum
   JOYCODE_7_RIGHT_LEFT,JOYCODE_7_RIGHT_RIGHT,JOYCODE_7_RIGHT_UP,JOYCODE_7_RIGHT_DOWN,
   JOYCODE_8_RIGHT_LEFT,JOYCODE_8_RIGHT_RIGHT,JOYCODE_8_RIGHT_UP,JOYCODE_8_RIGHT_DOWN,
 
+  EMIT_GUN_CODES(1)
+  EMIT_GUN_CODES(2)
+  EMIT_GUN_CODES(3)
+  EMIT_GUN_CODES(4)
+  EMIT_GUN_CODES(5)
+  EMIT_GUN_CODES(6)
+  EMIT_GUN_CODES(7)
+  EMIT_GUN_CODES(8)
+
 #define __code_joy_first JOYCODE_1_LEFT
 #define __code_joy_last JOYCODE_GUN_8_DPAD_RIGHT
 
-  __code_max, /* Temination of standard code */
+  __code_max, /* Termination of standard code */
 
   /* special */
   CODE_NONE = 0x8000, /* no code, also marker of sequence end */
