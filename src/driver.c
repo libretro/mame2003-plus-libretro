@@ -769,6 +769,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cavenger )	/* (c) 1981 */
 	DRIVER( dorodon )	/* Falcon */
 	DRIVER( dorodon2 )	/* Falcon */
+  DRIVER( sraider )	/* (c) 1982 */
+	DRIVER( mrsdyna )	/* (c) 1982 */
 	DRIVER( mrdo )		/* (c) 1982 */
 	DRIVER( mrdoy )		/* (c) 1982 */
 	DRIVER( mrdot )		/* (c) 1982 + Taito license */
