@@ -1,7 +1,7 @@
 #ifndef SN76496_H
 #define SN76496_H
 
-#define MAX_76496 4
+#define MAX_76496 5
 
 struct SN76496interface
 {
@@ -15,5 +15,5 @@ WRITE_HANDLER( SN76496_0_w );
 WRITE_HANDLER( SN76496_1_w );
 WRITE_HANDLER( SN76496_2_w );
 WRITE_HANDLER( SN76496_3_w );
-
+WRITE_HANDLER( SN76496_4_w );
 #endif
