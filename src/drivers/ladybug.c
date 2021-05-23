@@ -38,6 +38,15 @@ TODO:
 
 ***************************************************************************/
 
+/*
+ * Space Raider todo list:
+ *
+ * decode cpu#2 writes to port 0x30 and 0x38 - resistors for sound
+ * decode cpu#2 writes to port 0x28-0x2f - ???
+ * examine other bits from cpu#2 write to 0xe800
+ * one unknown dip
+ */
+
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
@@ -54,6 +63,31 @@ extern PALETTE_INIT( ladybug );
 extern VIDEO_START( ladybug );
 extern VIDEO_UPDATE( ladybug );
 
+extern PALETTE_INIT( sraider );
+extern VIDEO_START( sraider );
+extern VIDEO_UPDATE( sraider );
+extern VIDEO_EOF( sraider );
+extern WRITE_HANDLER( sraider_grid_color_w );
+extern WRITE_HANDLER( sraider_grid_data_w );
+
+extern READ_HANDLER( sraider_8005_r );
+extern WRITE_HANDLER( sraider_sound_low_w );
+extern WRITE_HANDLER( sraider_sound_high_w );
+extern READ_HANDLER( sraider_sound_low_r );
+extern READ_HANDLER( sraider_sound_high_r );
+extern WRITE_HANDLER( sraider_io_w );
+extern WRITE_HANDLER( sraider_misc_w );
+
+extern PALETTE_INIT( mrsdyna );
+extern VIDEO_UPDATE( mrsdyna );
+extern WRITE_HANDLER( mrsdyna_io_w );
+
+
+
+READ_HANDLER( mrsdyna_rnd_r )
+{
+	return rand() % 4;
+}
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x5fff, MRA_ROM },
@@ -457,6 +491,156 @@ INPUT_PORTS_START( dorodon )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( sraider )
+	PORT_START	/* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START	/* DSW0 */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Medium" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, "High Score Names" )
+	PORT_DIPSETTING(    0x00, "3 Letters" )
+	PORT_DIPSETTING(    0x04, "10 Letters" )
+	PORT_DIPNAME( 0x08, 0x08, "Allow_Continue" )
+	PORT_DIPSETTING(    0x08, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0xc0, "3" )
+	PORT_DIPSETTING(    0x80, "4" )
+	PORT_DIPSETTING(    0x40, "5" )
+
+	/* Free Play setting works when it's set for both */
+	PORT_START	/* DSW1 */
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	/* settings 0x00 thru 0x05 all give 1 Coin/1 Credit */
+	PORT_DIPSETTING(    0x06, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 2C_2C ) )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	/* settings 0x00 thru 0x50 all give 1 Coin/1 Credit */
+	PORT_DIPSETTING(    0x60, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 2C_2C ) )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( mrsdyna )
+	PORT_START   /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* JAMMA PIN 12 */
+
+	PORT_START   /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* VBLANK???? */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START  /* DSW0 @ R3 via '244 @ R2 */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "High Score Names" )
+	PORT_DIPSETTING(    0x00, "3 Letters" )
+	PORT_DIPSETTING(    0x04, "12 Letters" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0xc0, "3" )
+	PORT_DIPSETTING(    0x80, "4" )
+	PORT_DIPSETTING(    0x40, "5" )
+
+	/* Free Play setting works when it's set for both */
+	PORT_START  /* DSW1 @ P3 via '244 @ P2 */
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	/* settings 0x00 through 0x05 all give 1 Coin/1 Credit */
+	PORT_DIPSETTING(    0x06, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 2C_2C ) )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	/* settings 0x00 through 0x50 all give 1 Coin/1 Credit */
+	PORT_DIPSETTING(    0x60, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 2C_2C ) )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+INPUT_PORTS_END
 
 static struct GfxLayout charlayout =
 {
@@ -491,6 +675,28 @@ static struct GfxLayout spritelayout2 =
 	16*8	/* every sprite takes 16 consecutive bytes */
 };
 
+static struct GfxLayout gridlayout =
+{
+	8,8,	/* 8*8 characters */
+	512,	/* 512 characters */
+	1,	/* 1 bit per pixel */
+	{ 0 },
+	{ 7, 6, 5, 4, 3, 2, 1, 0 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8},
+	8*8	/* every char takes 8 consecutive bytes */
+};
+
+static struct GfxLayout gridlayout2 =
+{
+	8,8,	/* 8*8 characters */
+	512,	/* 512 characters */
+	1,	/* 2 bits per pixel */
+	{ 0 },
+	{ 7, 6, 5, 4, 3, 2, 1, 0 },
+	{ 7*8, 6*8, 5*8, 4*8, 3*8, 2*8, 1*8, 0*8 },
+	8*8	/* every char takes 8 consecutive bytes */
+};
+
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,      0,  8 },
@@ -499,6 +705,15 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static struct GfxDecodeInfo sraider_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &charlayout,      0,  8 },
+	{ REGION_GFX2, 0, &spritelayout,  4*8, 16 },
+	{ REGION_GFX2, 0, &spritelayout2, 4*8, 16 },
+	{ REGION_USER1, 0, &gridlayout, 32+64, 1 },
+	{ REGION_USER1, 0, &gridlayout2, 32+64, 1 },
+	{ -1 } /* end of array */
+};
 
 static struct SN76496interface sn76496_interface =
 {
@@ -507,6 +722,12 @@ static struct SN76496interface sn76496_interface =
 	{ 100, 100 }
 };
 
+static struct SN76496interface sraider_sn76496_interface =
+{
+	5,	/* 5 chips */
+	{ 4000000, 4000000, 4000000, 4000000, 4000000 },	/* 4 MHz */
+	{ 100, 100, 100, 100, 100 }
+};
 
 
 static MACHINE_DRIVER_START( ladybug )
@@ -536,6 +757,124 @@ static MACHINE_DRIVER_START( ladybug )
 MACHINE_DRIVER_END
 
 
+
+static MEMORY_READ_START( sraider_cpu1_readmem )
+    { 0x0000, 0x5fff, MRA_ROM },
+	{ 0x6000, 0x6fff, MRA_RAM },
+	{ 0x8005, 0x8005, sraider_8005_r },  /* protection check? */
+	{ 0x9000, 0x9000, input_port_0_r },	/* IN0 */
+	{ 0x9001, 0x9001, input_port_1_r },	/* IN1 */
+	{ 0x9002, 0x9002, input_port_2_r },	/* DSW0 */
+	{ 0x9003, 0x9003, input_port_3_r },	/* DSW1 */
+MEMORY_END
+
+static MEMORY_WRITE_START( sraider_cpu1_writemem )
+    { 0x0000, 0x5fff, MWA_ROM },
+	{ 0x6000, 0x6fff, MWA_RAM },
+	{ 0x7000, 0x73ff, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0x8006, 0x8006, sraider_sound_low_w },
+	{ 0x8007, 0x8007, sraider_sound_high_w },
+	{ 0xd000, 0xd3ff, ladybug_videoram_w, &videoram },
+	{ 0xd400, 0xd7ff, ladybug_colorram_w, &colorram },
+	{ 0xe000, 0xe000, MWA_NOP },  /* unknown */
+	/* 0x10 when in attract, 0x20 when coined/playing */
+MEMORY_END
+
+static MEMORY_READ_START( sraider_cpu2_readmem )
+    { 0x0000, 0x5fff, MRA_ROM },
+	{ 0x6000, 0x63ff, MRA_RAM },
+	{ 0x8000, 0x8000, sraider_sound_low_r },
+	{ 0xa000, 0xa000, sraider_sound_high_r },
+    { 0xc000, 0xc000, mrsdyna_rnd_r }, /* some kind of sync */
+MEMORY_END
+
+static MEMORY_WRITE_START( sraider_cpu2_writemem )
+    { 0x0000, 0x5fff, MWA_ROM },
+	{ 0x6000, 0x63ff, MWA_RAM },
+	{ 0xe000, 0xe0ff, sraider_grid_data_w },
+	{ 0xe800, 0xe800, sraider_io_w },
+MEMORY_END
+
+static MEMORY_WRITE_START( mrsdyna_cpu2_writemem )
+    { 0x0000, 0x5fff, MWA_ROM },
+	{ 0x6000, 0x63ff, MWA_RAM },
+	{ 0xe000, 0xe0ff, sraider_grid_data_w },
+	{ 0xe800, 0xe800, mrsdyna_io_w },
+MEMORY_END
+
+static PORT_WRITE_START( sraider_cpu2_writeport )
+PORT_ADDRESS_BITS(8)
+	{ 0x00, 0x00, SN76496_0_w },
+	{ 0x08, 0x08, SN76496_1_w },
+	{ 0x10, 0x10, SN76496_2_w },
+	{ 0x18, 0x18, SN76496_3_w },
+	{ 0x20, 0x20, SN76496_4_w },
+	{ 0x28, 0x3f, sraider_misc_w },  /* lots unknown */
+PORT_END
+
+
+static MACHINE_DRIVER_START( sraider )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_MEMORY(sraider_cpu1_readmem,sraider_cpu1_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
+
+	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_MEMORY(sraider_cpu2_readmem,sraider_cpu2_writemem)
+	MDRV_CPU_PORTS(0,sraider_cpu2_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 28*8-1)
+	MDRV_GFXDECODE(sraider_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(65)
+	MDRV_COLORTABLE_LENGTH(32+64+2)
+
+	MDRV_PALETTE_INIT(sraider)
+	MDRV_VIDEO_START(sraider)
+	MDRV_VIDEO_UPDATE(sraider)
+	MDRV_VIDEO_EOF(sraider)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SN76496, sraider_sn76496_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( mrsdyna )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_MEMORY(sraider_cpu1_readmem,sraider_cpu1_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
+
+	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_MEMORY(sraider_cpu2_readmem,mrsdyna_cpu2_writemem)
+	MDRV_CPU_PORTS(0,sraider_cpu2_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 28*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(65)
+	MDRV_COLORTABLE_LENGTH(32+64+2)
+
+	MDRV_PALETTE_INIT(mrsdyna)
+	MDRV_VIDEO_START(sraider)
+	MDRV_VIDEO_UPDATE(mrsdyna)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SN76496, sraider_sn76496_interface)
+MACHINE_DRIVER_END
 
 /***************************************************************************
 
@@ -690,6 +1029,60 @@ ROM_START( dorodon2 )
 	ROM_LOAD( "dorodon.bp2", 0x0040, 0x0020, CRC(27fa3a50) SHA1(7cf59b7a37c156640d6ea91554d1c4276c1780e0) ) /* timing?? */
 ROM_END
 
+ROM_START( sraider )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
+	ROM_LOAD( "sraid3.r4",    0x0000, 0x2000, CRC(0f389774) SHA1(c67596e6bf00175ff0a241506cd2f88114d05933) )
+	ROM_LOAD( "sraid2.n4",    0x2000, 0x2000, CRC(38a48db0) SHA1(6f4f384d702fb8ee4bb2ef579638239d57e32ddd) )
+	ROM_LOAD( "sraid1.m4",    0x4000, 0x2000, CRC(2f302a4e) SHA1(3a902ce6858f38df88b60830bef4b1d45b09b2df) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for code */
+	ROM_LOAD( "sraid-s4.h6",  0x0000, 0x2000, CRC(57173a12) SHA1(6cb8fd4826e499f9a4e63621d58bc4b596cc261e) )
+	ROM_LOAD( "sraid-s5.j6",  0x2000, 0x2000, CRC(5a459179) SHA1(a261c8f3c7c4cd4587c003bbbe815d2c4e01ffbc) )
+	ROM_LOAD( "sraid-s6.l6",  0x4000, 0x2000, CRC(ea3aa25d) SHA1(353c0d075d5e0a3bc25a65e2748f5eb5212a844d) )
+
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "sraid-s0.k6",  0x0000, 0x1000, CRC(a0373909) SHA1(00e3bd5dd90769d670fc3c51edd1cd4b69e6132d) )
+	ROM_LOAD( "sraids11.l6",  0x1000, 0x1000, CRC(ba22d949) SHA1(83762ced1df92ff594887e44d5b783826bbfb0c9) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
+    ROM_LOAD( "sraid-s7.m2",  0x0000, 0x1000, CRC(299f8e07) SHA1(1de71f251286088487da7285d6f8070147002af5) )
+	ROM_LOAD( "sraid-s8.n2",  0x1000, 0x1000, CRC(57ba8888) SHA1(2aa1a5f682d146a55a96e471bb78e5c60da02bf9) )
+
+	ROM_REGION( 0x0060, REGION_PROMS, 0 )
+	ROM_LOAD( "srpr10-1.a2",  0x0000, 0x0020, CRC(121fdb99) SHA1(3bc092da40beb129a4df3db2f55d22bbbcf7bad8) )
+	ROM_LOAD( "srpr10-2.l3",  0x0020, 0x0020, CRC(88b67e70) SHA1(e21ee2939e96dffee101bd92c62ed975b6b64001) )
+	ROM_LOAD( "srpr10-3.c1",  0x0040, 0x0020, CRC(27fa3a50) SHA1(7cf59b7a37c156640d6ea91554d1c4276c1780e0) )
+
+	/* fixed portion of the grid */
+	ROM_REGION( 0x1000, REGION_USER1, 0 )
+	ROM_LOAD( "sraid-s9.f6",  0x0000, 0x1000, CRC(2380b90f) SHA1(0310554e3f2ec973c2bb6e816d04e5c0c1e0a0b9) )
+ROM_END
+
+ROM_START( mrsdyna )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "mrsd-8203a-r4.f3", 0x0000, 0x2000, CRC(c944062c) SHA1(c61fc327d67595e601f6a7e5e337646f5f9d351b) )
+	ROM_LOAD( "mrsd-8203a-n4.f2", 0x2000, 0x2000, CRC(d1b9c7bb) SHA1(c139c8ae5b14924eb04a265095a7ab95ac5370af) )
+	ROM_LOAD( "mrsd-8203a-m4.f1", 0x4000, 0x2000, CRC(d25b1dfe) SHA1(f68c6fb2cda37fcffbe7c3c2a3cc5cb372c4101b) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "mrsd-8203a-h6.f4", 0x0000, 0x2000, CRC(04f8617b) SHA1(64deef2269790d8460d0ad510548e178f0f61607) )
+	ROM_LOAD( "mrsd-8203a-j6.f5", 0x2000, 0x2000, CRC(1ffb5fc3) SHA1(e8fc7b95663a396ef7d46ba6ce24973a3c343381) )
+	ROM_LOAD( "mrsd-8203a-l6.f6", 0x4000, 0x2000, CRC(5a0f5030) SHA1(d1530230fe6c666f7920cb82cb47f5fcc7e1ecc8) )
+
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "mrsd-8203b-k6.f10", 0x0000, 0x1000, CRC(e33cb26e) SHA1(207fa986754f8d7cd0bb3e56fd271ee0c1990269) )
+	ROM_LOAD( "mrsd-8203b-l6.f11", 0x1000, 0x1000, CRC(a327ba05) SHA1(5eac27b48d14fec179919fe0902a6c7ada95f2b2) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "mrsd-8203b-m2.f7", 0x0000, 0x1000, CRC(a00ae797) SHA1(adff7f38870b7e8fa114886792a3acbb7a5726ab) )
+	ROM_LOAD( "mrsd-8203b-n2.f8", 0x1000, 0x1000, CRC(81f2bdbd) SHA1(45ee1d62462cfadf7d2c46767f03ccfb3c876c08) )
+
+	ROM_REGION( 0x0060, REGION_PROMS, 0 )
+	ROM_LOAD( "mrsd-10-1.a2",  0x0000, 0x0020, CRC(4a819ad4) SHA1(d9072af7e52b506c1bcf8a327242d470eb240857) )
+	ROM_LOAD( "mrsd-10-2.l3",  0x0020, 0x0020, CRC(2d926a3a) SHA1(129fb60ce3df67614e39dcaac9c93f0652addbbb) )
+	ROM_LOAD( "mrsd-10-3.c1",  0x0040, 0x0020, CRC(27fa3a50) SHA1(7cf59b7a37c156640d6ea91554d1c4276c1780e0) ) /* ?? */
+ROM_END
+
 
 DRIVER_INIT( dorodon )
 {
@@ -708,9 +1101,15 @@ DRIVER_INIT( dorodon )
 	}
 }
 
+DRIVER_INIT( sraider )
+{
+}
+
 GAME( 1981, cavenger, 0,       ladybug, cavenger, 0,       ROT0,   "Universal", "Cosmic Avenger" )
 GAME( 1981, ladybug,  0,       ladybug, ladybug,  0,       ROT270, "Universal", "Lady Bug" )
 GAME( 1981, ladybugb, ladybug, ladybug, ladybug,  0,       ROT270, "bootleg",   "Lady Bug (bootleg)" )
 GAME( 1982, dorodon,  0,       ladybug, dorodon,  dorodon, ROT270, "Falcon",    "Dorodon (set 1)" )
 GAME( 1982, dorodon2, dorodon, ladybug, dorodon,  dorodon, ROT270, "Falcon",    "Dorodon (set 2)" )
 GAME( 1982, snapjack, 0,       ladybug, snapjack, 0,       ROT0,   "Universal", "Snap Jack" )
+GAME( 1982, sraider,  0,       sraider, sraider,  sraider, ROT270, "Universal", "Space Raider" )
+GAME( 1982, mrsdyna,  0,       mrsdyna, mrsdyna,  0,       ROT270, "Universal", "Mrs. Dynamite" )
