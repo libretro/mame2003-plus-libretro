@@ -43,6 +43,22 @@ PALETTE_INIT( redclash )
 		palette_set_color(i,r,g,b);
 	}
 
+	/* This is for the stars colors */
+	for (i = 32;i < 64;i++)
+	{
+			int bit1,bit2,r,g,b;
+
+			bit2 = (i >> 4) & 0x01;
+			bit1 = (i >> 3) & 0x01;
+			b = 0x47 * bit1 + 0x97 * bit2;
+			bit2 = (i >> 2) & 0x01;
+			bit1 = (i >> 1) & 0x01;
+			g = 0x47 * bit1 + 0x97 * bit2;
+			bit1 = i & 0x01;
+			r = 0x47 * bit1;
+			palette_set_color(i,r,g,b);
+	}
+
 	/* characters */
 	for (i = 0;i < 8;i++)
 	{
@@ -97,6 +113,9 @@ WRITE_HANDLER( redclash_flipscreen_w )
 	flip_screen_set(data & 0x01);
 }
 
+void redclash_set_stars_enable( UINT8 on ); /* temp */
+void redclash_set_stars_speed( UINT8 speed );  /* temp */
+
 /*
 star_speed:
 0 = unused
@@ -108,10 +127,26 @@ star_speed:
 6 = backwards medium
 7 = backwards fast
 */
-WRITE_HANDLER( redclash_star0_w ) { star_speed = (star_speed & ~1) | ((data & 1) << 0); }
-WRITE_HANDLER( redclash_star1_w ) { star_speed = (star_speed & ~2) | ((data & 1) << 1); }
-WRITE_HANDLER( redclash_star2_w ) { star_speed = (star_speed & ~4) | ((data & 1) << 2); }
-WRITE_HANDLER( redclash_star_reset_w ) { }
+WRITE_HANDLER( redclash_star0_w )
+{
+	star_speed = (star_speed & ~1) | ((data & 1) << 0);
+	redclash_set_stars_speed(star_speed);
+}
+
+WRITE_HANDLER( redclash_star1_w )
+{
+	star_speed = (star_speed & ~2) | ((data & 1) << 1);
+	redclash_set_stars_speed(star_speed);
+}
+WRITE_HANDLER( redclash_star2_w )
+{
+	star_speed = (star_speed & ~4) | ((data & 1) << 2);
+	redclash_set_stars_speed(star_speed);
+}
+WRITE_HANDLER( redclash_star_reset_w )
+{
+	redclash_set_stars_enable(1);
+}
 
 static void get_fg_tile_info(int tile_index)
 {
@@ -242,9 +277,144 @@ static void redclash_draw_bullets( struct mame_bitmap *bitmap )
 	}
 }
 
+/*
+ * These functions emulate the star generator board
+ * All this comes from the schematics for Zero Hour
+ *
+ * It has a 17-bit LFSR which has a period of 2^17-1 clocks
+ * (This is one pixel shy of "two screens" worth.)
+ * So, there are two starfields drawn on alternate frames
+ * These will scroll at a rate controlled by the speed register
+ *
+ * I'm basically doing the same thing by drawing each
+ *  starfield on alternate frames, and then offseting them
+ */
+
+static UINT8 stars_enable = 0;
+static UINT8 stars_speed = 0;
+static UINT32 stars_state = 0;
+static UINT16 stars_offset = 0;
+
+/* This line can reset the LFSR to zero and disables the star generator */
+void redclash_set_stars_enable( UINT8 on )
+{
+	if ((stars_enable == 0) && (on == 1))
+	{
+		stars_offset = 0;
+	}
+	stars_enable = on;
+}
+
+/* This sets up which starfield to draw and the offset, */
+/* To be called from VIDEO_EOF() */
+
+void redclash_update_stars_state(void)
+{
+	static UINT8 count = 0;
+
+	if (stars_enable == 0)
+		return;
+
+	count++;
+	count%=2;
+
+	if (count == 0)
+	{
+		stars_offset += ((stars_speed*2) - 0x09);
+		stars_offset %= 256*256;
+		stars_state = 0;
+	}
+	else
+	{
+		stars_state = 0x1fc71;
+	}
+}
+
+/* Set the speed register (3 bits) */
+
+/*
+ * 0 left/down fastest (-9/2 pix per frame)
+ * 1 left/down faster  (-7/2 pix per frame)
+ * 2 left/down fast    (-5/2 pix per frame)
+ * 3 left/down medium  (-3/2 pix per frame)
+ * 4 left/down slow    (-1/2 pix per frame)
+ * 5 right/up slow     (+1/2 pix per frame)
+ * 6 right/up medium   (+3/2 pix per frame)
+ * 7 right/up fast     (+5/2 pix per frame)
+ */
+
+void redclash_set_stars_speed( UINT8 speed )
+{
+	stars_speed = speed;
+}
+
+/* Draw the stars */
+
+/* Space Raider doesn't use the Va bit, and it is also set up to */
+/* window the stars to a certain x range */
+
+void redclash_draw_stars( struct mame_bitmap *bitmap, UINT8 palette_offset, UINT8 sraider, UINT8 firstx, UINT8 lastx)
+{
+	int i;
+	UINT8 tempbit, feedback, star_color, xloc, yloc;
+	UINT32 state;
+	UINT8 hcond,vcond;
+
+	if (stars_enable == 0)
+		return;
+
+	state = stars_state;
+
+	for(i=0;i<256*256;i++)
+	{
+		xloc = (stars_offset+i)%256;
+		yloc = ((stars_offset+i)/256)%256;
+
+		if ((state & 0x10000) == 0)
+			tempbit = 1;
+		else
+			tempbit = 0;
+		if ((state & 0x00020) != 0)
+			feedback = tempbit ^ 1;
+		else
+			feedback = tempbit ^ 0;
+
+		hcond = ((xloc+8) & 0x10) >> 4;
+
+		/* sraider doesn't have Va hooked up */
+		if (sraider)
+			vcond = 1;
+		else
+			vcond = yloc & 0x01;
+
+		if ((hcond ^ vcond) == 0)
+		{
+			/* enable condition */
+			if (((state & 0x000ff) == 0x000ff) && (feedback == 0))
+			{
+				/* used by space raider */
+				if ((xloc>=firstx) && (xloc<=lastx))
+				{
+					star_color = (state >> 9) & 0x1f;
+					plot_pixel(bitmap,xloc,yloc,Machine->pens[palette_offset+star_color]);
+				}
+			}
+		}
+
+		/* update LFSR state */
+		state = ((state<<1) & 0x1fffe) | feedback;
+	}
+}
+
+VIDEO_EOF( redclash )
+{
+	redclash_update_stars_state();
+}
+
 VIDEO_UPDATE( redclash )
 {
 	fillbitmap(bitmap, get_black_pen(), &Machine->visible_area);
+	redclash_draw_stars(bitmap, 32, 0, 0x00, 0xff);
 	redclash_draw_sprites(bitmap);
 	redclash_draw_bullets(bitmap);
 	tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);

@@ -11,8 +11,6 @@ Notes:
   Gameplay is different too.
 
 TODO:
-- Missing Galaxian-like starfield (speed is controlled by three output ports)
-
 - Colors might be right, need screen shots to verify
 
 - Some graphical problems in both games, but without screenshots its hard to
@@ -38,6 +36,7 @@ extern WRITE_HANDLER( redclash_star_reset_w );
 extern PALETTE_INIT( redclash );
 extern VIDEO_START( redclash );
 extern VIDEO_UPDATE( redclash );
+extern VIDEO_EOF( redclash );
 
 /*
   This game doesn't have VBlank interrupts.
@@ -374,12 +373,13 @@ static MACHINE_DRIVER_START( zerohour )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(32)
+	MDRV_PALETTE_LENGTH(64)
 	MDRV_COLORTABLE_LENGTH(4*24)
 
 	MDRV_PALETTE_INIT(redclash)
 	MDRV_VIDEO_START(redclash)
 	MDRV_VIDEO_UPDATE(redclash)
+	MDRV_VIDEO_EOF(redclash)
 
 	/* sound hardware */
 MACHINE_DRIVER_END
@@ -400,12 +400,13 @@ static MACHINE_DRIVER_START( redclash )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 4*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(32)
+	MDRV_PALETTE_LENGTH(64)
 	MDRV_COLORTABLE_LENGTH(4*24)
 
 	MDRV_PALETTE_INIT(redclash)
 	MDRV_VIDEO_START(redclash)
 	MDRV_VIDEO_UPDATE(redclash)
+	MDRV_VIDEO_EOF(redclash)
 
 	/* sound hardware */
 MACHINE_DRIVER_END

@@ -404,12 +404,6 @@ struct ik
 	UINT32 val;
 };
 
-
-extern struct ik input_keywords[];
-extern struct ik *osd_input_keywords;
-extern int num_ik;
-
-void seq_set_string(InputSeq* a, const char *buf);
 const char *generic_ctrl_label(int input);
 
 /* 
