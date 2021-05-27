@@ -1655,7 +1655,9 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 			dst->mask = src->mask;
 			dst->default_value = src->default_value;
 			dst->name = src->name;
-
+			
+			/* PORT_BITX declarations that specify JOYCODE_a_BUTTONb for their default code */
+			/* will also get JOYCODE_MOUSE_a_BUTTONb or'd in. */
   			if (ext->type == IPT_EXTENSION)
   			{
 				InputCode or1 =	IP_GET_CODE_OR1(ext);
