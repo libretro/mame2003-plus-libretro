@@ -1661,12 +1661,11 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 				InputCode or1 =	IP_GET_CODE_OR1(ext);
 				InputCode or2 =	IP_GET_CODE_OR2(ext);
 				InputCode or3 = CODE_NONE;
-				InputCode or4 = CODE_NONE;
 
 				#define MATCH_ANALOG_JOYCODE(PLAYER_NUM) \
-				case JOYCODE_##PLAYER_NUM##_BUTTON1:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON1;      or4 = JOYCODE_GUN_##PLAYER_NUM##_BUTTON1;      break; \
-				case JOYCODE_##PLAYER_NUM##_BUTTON2:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON2;      or4 = JOYCODE_GUN_##PLAYER_NUM##_BUTTON2;      break; \
-				case JOYCODE_##PLAYER_NUM##_BUTTON3:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON3;      or4 = JOYCODE_GUN_##PLAYER_NUM##_BUTTON3;      break;
+				case JOYCODE_##PLAYER_NUM##_BUTTON1:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON1;      break; \
+				case JOYCODE_##PLAYER_NUM##_BUTTON2:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON2;      break; \
+				case JOYCODE_##PLAYER_NUM##_BUTTON3:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON3;      break;
 
 				switch(or2)
 				{
@@ -1680,14 +1679,13 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 					MATCH_ANALOG_JOYCODE(8)
 					default:
 						or3 = CODE_NONE;
-						or4 = CODE_NONE;
 						break;
 				}
 
 				if (or1 < __code_max)
 				{
 					if (or3 < __code_max)
-						seq_set_7(&dst->seq, or1, CODE_OR, or2, CODE_OR, or3, CODE_OR, or4);
+						seq_set_5(&dst->seq, or1, CODE_OR, or2, CODE_OR, or3);
 					else if (or2 < __code_max)
 						seq_set_3(&dst->seq, or1, CODE_OR, or2);
 					else
