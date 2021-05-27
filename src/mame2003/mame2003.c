@@ -187,11 +187,11 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define RETRO_GUN     RETRO_DEVICE_LIGHTGUN
 
 const struct retro_controller_description controllers[] = {
-  { "Classic Gamepad",              PAD_CLASSIC },
-  { "Modern Fightstick",            PAD_MODERN  },
-  { "8-Button",                     PAD_8BUTTON },
-  { "6-Button",                     PAD_6BUTTON },
-  { "Lightgun + Keyboard Encoder",  RETRO_GUN },
+  { "Gamepad",    PAD_CLASSIC },
+  { "Fightstick", PAD_MODERN  },
+  { "8-Button",   PAD_8BUTTON },
+  { "6-Button",   PAD_6BUTTON },
+  { "Lightgun + Keyboard Only",  RETRO_GUN  },
 };
 
 const struct retro_controller_description unsupported_controllers[] = {
@@ -1269,7 +1269,7 @@ void retro_run (void)
     analogjoy[port][2] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
     analogjoy[port][3] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
-    /* Analog joystick - read as digital button /*
+    /* Analog joystick - read as digital button */
     /* If the analog value (normalized for MAME to the range -128, 128) is greater in absolute   */
     /* terms than INPUT_BUTTON_AXIS_THRESHOLD, record it as a binary/digital signal.             */
     retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
@@ -1894,6 +1894,20 @@ int get_retrogun_code(unsigned osd_id)
       return player_flag | IPT_BUTTON##BUTTON_NO;     \
   }                                                   \
 
+#define GUN_CODE_COMPARE(BUTTON_NO)                 \
+  switch(standard_code)                               \
+  {                                                   \
+    case JOYCODE_GUN_1_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_2_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_3_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_4_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_5_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_6_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_7_BUTTON##BUTTON_NO:           \
+    case JOYCODE_GUN_8_BUTTON##BUTTON_NO:           \
+      return player_flag | IPT_BUTTON##BUTTON_NO;     \
+  }                                                   \
+
 #define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                        \
   switch(standard_code)                                                               \
   {                                                                                   \
@@ -1937,6 +1951,11 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   MOUSE_CODE_COMPARE(4)
   MOUSE_CODE_COMPARE(5)
   MOUSE_CODE_COMPARE(6)
+
+  GUN_CODE_COMPARE(1)
+  GUN_CODE_COMPARE(2)
+  GUN_CODE_COMPARE(3)
+  GUN_CODE_COMPARE(4)
 
   COMMON_CONTROLS_COMPARE(1) /* player 1 */
   COMMON_CONTROLS_COMPARE(2) /* player 2 */
@@ -2042,18 +2061,20 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   {"Mouse" #DISPLAY_IDX " Button3", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_3, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON3}, \
   {"Mouse" #DISPLAY_IDX " Button4", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_4, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON4}, \
   {"Mouse" #DISPLAY_IDX " Button5", (DISPLAY_IDX * 1000) + OSD_MOUSE_BUTTON_5, JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON5}, \
+\
+  EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_LIGHTGUN(DISPLAY_IDX) \
-  {"Gun" #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"Gun" #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"Gun" #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"Gun" #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_##DISPLAY_IDX##_START},   \
-  {"Gun" #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_##DISPLAY_IDX##_SELECT},  \
-  {"Gun" #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"Gun" #DISPLAY_IDX " DPad Left",   (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_##DISPLAY_IDX##_LEFT},    \
-  {"Gun" #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_##DISPLAY_IDX##_RIGHT},   \
-  {"Gun" #DISPLAY_IDX " DPad Up",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_##DISPLAY_IDX##_UP},      \
-  {"Gun" #DISPLAY_IDX " DPad Down",   (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_##DISPLAY_IDX##_DOWN},
+  {"Gun" #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_GUN_##DISPLAY_IDX##_BUTTON1    }, \
+  {"Gun" #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON2    }, \
+  {"Gun" #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON3    }, \
+  {"Gun" #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON4    }, \
+  {"Gun" #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_GUN_##DISPLAY_IDX##_START       }, \
+  {"Gun" #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_GUN_##DISPLAY_IDX##_SELECT      }, \
+  {"Gun" #DISPLAY_IDX " DPad Left",   (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_GUN_##DISPLAY_IDX##_DPAD_LEFT   }, \
+  {"Gun" #DISPLAY_IDX " DPad Right",  (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_RIGHT, JOYCODE_GUN_##DISPLAY_IDX##_DPAD_RIGHT  }, \
+  {"Gun" #DISPLAY_IDX " DPad Up",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_UP,    JOYCODE_GUN_##DISPLAY_IDX##_DPAD_UP     }, \
+  {"Gun" #DISPLAY_IDX " DPad Down",   (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_DOWN,  JOYCODE_GUN_##DISPLAY_IDX##_DPAD_DOWN   },
 
 #define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)      \
   {                                             \
