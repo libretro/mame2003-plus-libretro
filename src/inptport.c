@@ -1662,7 +1662,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
   			{
 				InputCode or1 =	IP_GET_CODE_OR1(ext);
 				InputCode or2 =	IP_GET_CODE_OR2(ext);
-				InputCode or3 = CODE_NONE;
+				InputCode or3;
 
 				#define MATCH_ANALOG_JOYCODE(PLAYER_NUM) \
 				case JOYCODE_##PLAYER_NUM##_BUTTON1:    or3 = JOYCODE_MOUSE_##PLAYER_NUM##_BUTTON1;      break; \
