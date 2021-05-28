@@ -92,10 +92,12 @@ enum /* the "display numbers" for each player, as opposed to their array index *
   DISP_PLAYER3,
   DISP_PLAYER4,
   DISP_PLAYER5,
-  DISP_PLAYER6
+  DISP_PLAYER6,
+  DISP_PLAYER7,
+  DISP_PLAYER8
 };
 
-#define MAX_PLAYER_COUNT  DISP_PLAYER6   /* We currently support a maximum of six simultaneous players */
+#define MAX_PLAYER_COUNT  DISP_PLAYER8   /* We currently support a maximum of eight simultaneous players */
 
 /******************************************************************************
 
