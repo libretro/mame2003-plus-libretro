@@ -1283,7 +1283,7 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
 
-    /* do not poll mouse abstraction when disabled by the core option or if user explicitly selects Lightgun */
+    /* Only poll X-Y device if selected by its core option */
     if(options.mouse_device != RETRO_DEVICE_NONE)
     {
       if(options.mouse_device == RETRO_DEVICE_MOUSE)
@@ -1327,7 +1327,6 @@ void retro_run (void)
           lightgun_y[port] = -128;
         }
       }
-
     }
   }
 
