@@ -1702,33 +1702,39 @@ void retro_describe_controls(void)
 
       if(get_device_parent(device_code) == RETRO_DEVICE_JOYPAD)
       {
-        retro_code = get_retropad_code(osd_index); /* get the corresponding ID for this control in libretro.h from the retropad section */
-        if(retro_code == INT_MAX) continue;
-
-        switch(retro_code) /* universal default mappings */
+        /* try to get the corresponding ID for this control in libretro.h  */
+        /* from the retropad section, or INT_MAX if not valid */
+        retro_code = get_retropad_code(osd_index);
+        if(retro_code != INT_MAX)
         {
-          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
-          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
-          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
-          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
-          case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-          case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          switch(retro_code) /* universal default mappings */
+          {
+            case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+            case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+            case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+            case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          }
         }
-      }
-      else if(get_device_parent(device_code) == RETRO_DEVICE_LIGHTGUN)
-      {
-        retro_code = get_retrogun_code(osd_index); /* get the corresponding ID for this control in libretro.h  */
-        if(retro_code == INT_MAX) continue;        /* from the lightgun section, or INT_MAX if not valid       */
 
-        switch(retro_code)
+        /* try to get the corresponding ID for this control in libretro.h  */
+        /* from the lightgun section, or INT_MAX if not valid              */
+        retro_code = get_retrogun_code(osd_index);
+        if(retro_code != INT_MAX)
         {
-          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-          case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-          case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-          case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
+          switch(retro_code)
+          {
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
+          }
         }
+
+        continue; /* no matching codes found */
       }
 
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
@@ -2079,7 +2085,6 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
     { EMIT_RETROPAD_MODERN(DISPLAY_IDX)  },     \
     { EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) },     \
     { EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) },     \
-    { EMIT_LIGHTGUN(DISPLAY_IDX)         }      \
   },
 
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
