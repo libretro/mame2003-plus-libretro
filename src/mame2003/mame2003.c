@@ -270,9 +270,9 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_4WAY],                        APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; pointer|mouse|lightgun|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],                APPNAME"_mouse_device",           "X-Y Device; pointer|mouse|lightgun|disabled");
 #else
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; mouse|pointer|lightgun|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],                APPNAME"_mouse_device",           "X-Y Device; mouse|pointer|lightgun|disabled");
 #endif
   init_default(&default_options[OPT_CROSSHAIR_ENABLED],           APPNAME"_crosshair_enabled",            "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],             APPNAME"_skip_disclaimer",              "Skip Disclaimer; disabled|enabled");
