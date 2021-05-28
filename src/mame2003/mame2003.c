@@ -184,14 +184,12 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define PAD_MODERN    RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0)
 #define PAD_8BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
 #define PAD_6BUTTON   RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
-#define RETRO_GUN     RETRO_DEVICE_LIGHTGUN
 
 const struct retro_controller_description controllers[] = {
   { "Gamepad",    PAD_CLASSIC },
   { "Fightstick", PAD_MODERN  },
   { "8-Button",   PAD_8BUTTON },
   { "6-Button",   PAD_6BUTTON },
-  { "Lightgun + Keyboard Only",  RETRO_GUN  },
 };
 
 const struct retro_controller_description unsupported_controllers[] = {
@@ -199,10 +197,11 @@ const struct retro_controller_description unsupported_controllers[] = {
   { "UNSUPPORTED (Modern Fightstick)",  PAD_MODERN  },
   { "UNSUPPORTED (8-Button)",           PAD_8BUTTON },
   { "UNSUPPORTED (6-Button)",           PAD_6BUTTON },
-  { "UNSUPPORTED (Lightgun)",           RETRO_GUN },
 };
 
 struct retro_controller_info input_subdevice_ports[] = {
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
+  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
   { controllers, IDX_NUMBER_OF_INPUT_TYPES },
@@ -1788,8 +1787,6 @@ unsigned get_device_parent(unsigned device_id)
     case PAD_8BUTTON:
     case PAD_6BUTTON:
       return RETRO_DEVICE_JOYPAD;
-    case RETRO_GUN:
-      return RETRO_DEVICE_LIGHTGUN;
   }
 
   return INT_MAX;
@@ -2120,7 +2117,6 @@ const struct JoystickInfo *osd_get_joy_list(void)
         case PAD_MODERN:   layout_idx = IDX_MODERN;   break;
         case PAD_8BUTTON:  layout_idx = IDX_8BUTTON;  break;
         case PAD_6BUTTON:  layout_idx = IDX_6BUTTON;  break;
-        case RETRO_GUN:    layout_idx = IDX_LIGHTGUN; break;
       }
       mame_joy_map[needle] = alternate_joystick_maps[port_number][layout_idx][control_idx];
       if(!string_is_empty(mame_joy_map[needle].name)) needle++;
