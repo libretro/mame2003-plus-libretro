@@ -1037,6 +1037,12 @@ static void set_content_flags(void)
 				case IPF_PLAYER6:
 					if (options.content_flags[CONTENT_PLAYER_COUNT] < 6) options.content_flags[CONTENT_PLAYER_COUNT] = 6;
 					break;
+				case IPF_PLAYER7:
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 7) options.content_flags[CONTENT_PLAYER_COUNT] = 7;
+					break;
+				case IPF_PLAYER8:
+					if (options.content_flags[CONTENT_PLAYER_COUNT] < 8) options.content_flags[CONTENT_PLAYER_COUNT] = 8;
+					break;
 			}
 
 			if (input->type & IPF_4WAY) /* the controls use a 4-way joystick */
@@ -1934,6 +1940,8 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
     case 4: player_flag = IPF_PLAYER4; break;
     case 5: player_flag = IPF_PLAYER5; break;
     case 6: player_flag = IPF_PLAYER6; break;
+    case 7: player_flag = IPF_PLAYER7; break;
+    case 8: player_flag = IPF_PLAYER8; break;
     default: player_flag = IPF_PLAYER1; break;
   }
   /* use macros to hide simplistic and verbose implementation */
@@ -1966,6 +1974,8 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   COMMON_CONTROLS_COMPARE(4) /* player 4 */
   COMMON_CONTROLS_COMPARE(5) /* player 5 */
   COMMON_CONTROLS_COMPARE(6) /* player 6 */
+  COMMON_CONTROLS_COMPARE(7) /* player 7 */
+  COMMON_CONTROLS_COMPARE(8) /* player 8 */
 
   return CODE_NONE; /* not any of the BUTTON joycodes or mouse codes */
 }
@@ -2095,6 +2105,8 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPU
   EMIT_JOYSTICK_OPTIONS(4)
   EMIT_JOYSTICK_OPTIONS(5)
   EMIT_JOYSTICK_OPTIONS(6)
+  EMIT_JOYSTICK_OPTIONS(7)
+  EMIT_JOYSTICK_OPTIONS(8)
 };
 
 /******************************************************************************
@@ -2231,7 +2243,7 @@ int analog_deadzone_rescale(int input)
 	{
 		// Re-scale analog range
 		float scaled = (input - trigger_deadzone)*scale;
-    input = round(scaled);
+		input = round(scaled);
 
 		if (input > +32767)
 		{
