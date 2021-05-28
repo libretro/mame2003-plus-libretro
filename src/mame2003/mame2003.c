@@ -290,9 +290,9 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_4WAY],                   APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
 #if defined(__IOS__)
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; pointer|mouse|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; pointer|mouse|lightgun|disabled");
 #else
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "Mouse Device; mouse|pointer|disabled");
+  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; mouse|pointer|lightgun|disabled");
 #endif
   init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
   init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
@@ -465,6 +465,8 @@ static void update_variables(bool first_time)
             options.mouse_device = RETRO_DEVICE_POINTER;
           else if(strcmp(var.value, "mouse") == 0)
             options.mouse_device = RETRO_DEVICE_MOUSE;
+          else if(strcmp(var.value, "lightgun") == 0)
+            options.mouse_device = RETRO_DEVICE_LIGHTGUN;
           else
             options.mouse_device = RETRO_DEVICE_NONE;
           break;
@@ -1281,8 +1283,8 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
 
-    /* do not poll mouse abstraction when disabled by the core option or if user explicitly selects Lightgun */
-    if(options.mouse_device != RETRO_DEVICE_NONE && get_device_parent(device_type) != RETRO_DEVICE_LIGHTGUN)
+    /* Only poll X-Y device if selected by its core option */
+    if(options.mouse_device != RETRO_DEVICE_NONE)
     {
       if(options.mouse_device == RETRO_DEVICE_MOUSE)
       {
@@ -1301,31 +1303,29 @@ void retro_run (void)
         mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
         mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
       }
-    }
-
-    /* poll lightgun */
-    lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-    lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
-    retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
-    retroJsState[port][OSD_LIGHTGUN_RELOAD]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
-    retroJsState[port][OSD_LIGHTGUN_AUX_A]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
-    retroJsState[port][OSD_LIGHTGUN_AUX_B]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
-    retroJsState[port][OSD_LIGHTGUN_START]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
-    retroJsState[port][OSD_LIGHTGUN_SELECT]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
-    retroJsState[port][OSD_LIGHTGUN_AUX_C]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
-    retroJsState[port][OSD_LIGHTGUN_DPAD_UP]     = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
-    retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
-    retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
-    retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
-
-    /* simulated lightgun reload hack */
-    if(device_parent == RETRO_DEVICE_LIGHTGUN)
-    {
-      if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
+      else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
       {
-        retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
-        lightgun_x[port] = -128;
-        lightgun_y[port] = -128;
+        lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+        lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+        retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
+        retroJsState[port][OSD_LIGHTGUN_RELOAD]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
+        retroJsState[port][OSD_LIGHTGUN_AUX_A]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
+        retroJsState[port][OSD_LIGHTGUN_AUX_B]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
+        retroJsState[port][OSD_LIGHTGUN_START]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
+        retroJsState[port][OSD_LIGHTGUN_SELECT]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
+        retroJsState[port][OSD_LIGHTGUN_AUX_C]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
+        retroJsState[port][OSD_LIGHTGUN_DPAD_UP]     = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
+        retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
+        retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
+        retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
+
+        /* simulated lightgun reload hack */
+        if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
+        {
+          retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
+          lightgun_x[port] = -128;
+          lightgun_y[port] = -128;
+        }
       }
     }
   }
