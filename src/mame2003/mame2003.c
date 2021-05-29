@@ -193,10 +193,10 @@ const struct retro_controller_description controllers[] = {
 };
 
 const struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Gamepad)",    PAD_CLASSIC     },
-  { "UNSUPPORTED (Fightstick)", PAD_FIGHTSTICK  },
-  { "UNSUPPORTED (8-Button)",   PAD_8BUTTON     },
-  { "UNSUPPORTED (6-Button)",   PAD_6BUTTON     },
+  { "UNSUPPORTED (Gamepad)",    PAD_CLASSIC    },
+  { "UNSUPPORTED (Fightstick)", PAD_FIGHTSTICK },
+  { "UNSUPPORTED (8-Button)",   PAD_8BUTTON    },
+  { "UNSUPPORTED (6-Button)",   PAD_6BUTTON    },
 };
 
 struct retro_controller_info input_subdevice_ports[] = {
@@ -2091,10 +2091,10 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 
 #define EMIT_JOYSTICK_OPTIONS(DISPLAY_IDX)      \
   {                                             \
-    { EMIT_RETROPAD_CLASSIC(DISPLAY_IDX)     },     \
-    { EMIT_RETROPAD_FIGHTSTICK(DISPLAY_IDX)  },     \
-    { EMIT_RETROPAD_8BUTTON(DISPLAY_IDX)     },     \
-    { EMIT_RETROPAD_6BUTTON(DISPLAY_IDX)     },     \
+    { EMIT_RETROPAD_CLASSIC(DISPLAY_IDX)    },     \
+    { EMIT_RETROPAD_FIGHTSTICK(DISPLAY_IDX) },     \
+    { EMIT_RETROPAD_8BUTTON(DISPLAY_IDX)    },     \
+    { EMIT_RETROPAD_6BUTTON(DISPLAY_IDX)    },     \
   },
 
 struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPUT_TYPES][OSD_INPUT_CODES_PER_PLAYER] =
