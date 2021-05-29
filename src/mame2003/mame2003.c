@@ -1607,34 +1607,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *
    * key: [Button code/Street Fighter II move]
    *
-   * PAD_GAMEPAD
-   * ========================
-   * Uses the fight stick & pad layout popularised by Street Figher IV.
-   * Needs an 8+ button controller by default.
    *
-   * [8/-]                                     [6/HK]  |
-   * [7/-]                                     [3/HP]  |
-   *                                                   |        [2/MP]  [3/HP]  [7/-]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * PAD_6BUTTON
-   * ========================
-   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
-   *
-   * [7/-]                                      [8/-]  |
-   * [3/HP]                                    [6/HK]  |
-   *                                                   |        [2/MP]  [6/HK]  [3/HP]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
    *
    * PAD_CLASSIC
    * ========================
@@ -1650,6 +1623,38 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *                                                   |  [1/LP]
    *     [v]                               [1/LP]      |
    *                                                   |
+   *
+   *
+   * PAD_FIGHTSTICK
+   * ========================
+   * Uses the fight stick & pad layout popularised by Street Figher IV.
+   * Needs an 8+ button controller by default.
+   *
+   * [8/-]                                     [6/HK]  |
+   * [7/-]                                     [3/HP]  |
+   *                                                   |        [2/MP]  [3/HP]  [7/-]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   *
+   * PAD_6BUTTON
+   * ========================
+   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+   *
+   * [7/-]                                      [8/-]  |
+   * [3/HP]                                    [6/HK]  |
+   *                                                   |        [2/MP]  [6/HK]  [3/HP]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
    */
 
 
