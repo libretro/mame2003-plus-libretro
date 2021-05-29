@@ -186,10 +186,10 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 #define PAD_6BUTTON       RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
 const struct retro_controller_description controllers[] = {
-  { "Gamepad",    PAD_CLASSIC     },
-  { "Fightstick", PAD_FIGHTSTICK  },
-  { "8-Button",   PAD_8BUTTON     },
-  { "6-Button",   PAD_6BUTTON     },
+  { "Gamepad",    PAD_CLASSIC    },
+  { "Fightstick", PAD_FIGHTSTICK },
+  { "8-Button",   PAD_8BUTTON    },
+  { "6-Button",   PAD_6BUTTON    },
 };
 
 const struct retro_controller_description unsupported_controllers[] = {
