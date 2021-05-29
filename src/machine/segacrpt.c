@@ -1346,3 +1346,5 @@ static void sega_decode_317(int order, int opcode_shift, int data_shift)
 void spcpostn_decode(void)	{ sega_decode_317( 0, 0, 1 ); }
 void gardia_decode(void)	{ sega_decode_317( 1, 1, 1 ); }
 void gardiab_decode(void)	{ sega_decode_317( 0, 1, 2 ); }
+void calorie_decode(void)	{ sega_decode_317( 1, 0, 0 ); }
+
