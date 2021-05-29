@@ -1224,7 +1224,7 @@ void wboy2_decode(void)
 }
 
 
-/* Gardia / Space Position */
+/* Calorie Kun / Gardia / Space Position */
 /******************************************************************************
 
   New encryption
