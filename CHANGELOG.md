@@ -27,6 +27,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bronx (Cycle Shooting bootleg)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
 * Cabal (World, Joystick version)
+* Calorie Kun vs Moguranian
 * Chain Reaction
 * Charlie Ninja
 * Chase Bombers
@@ -187,6 +188,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Battle Shark (Japan, Joystick)
 * Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
+* Calorie Kun vs Moguranian (bootleg)
 * Cannon Dancer
 * Crouching Tiger Hidden Dragon 2003
 * Crouching Tiger Hidden Dragon 2003 Super Plus
@@ -712,3 +714,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for rare, Ms. Pacman Twin (mspactwin) simultaneous 2 player play [arcadez, grant2258, mahoneyt944]
 * Hooked up HD647180 MCU sound support for Ghox removing the need for hacked samples plus added a dedicated joystick version of the game [grant2258, arcadez]
 * Added support for Mrs. Dynamite and Space Raider to ladybug.c also updated the SN76496 sound core to allow for 5 chips to be used for both of these games [arcadez]
+* Fixed gardia in system1.c by updating the Sega decryption to support the newer 317 routines then added a working non encrypted version of Ufo Senshi Yohko Chan [arcadez]
+* Added a new driver for Calorie Kun vs Moguranian then added support for Space Position to angelkds.c and hooked both games upto the Sega 317 Decryption [arcadez]
+* Added support for the English Virtual console version of Wonder Boy in Monster Land then added the mc8123 decryption so that the official Japanese versions will work [arcadez]
+* Fixed missing enemies level 2 onwards for Noboranka in the Sega system1.c driver [arcadez]
