@@ -2753,6 +2753,8 @@ DokiDoki Penguin Land *not confirmed
   DRIVER( dotriman )
 	DRIVER( spcpostn )	/* (c) 1986 Sega / Nasco" */
 	DRIVER( angelkds )	/* 833-6599 (c) 1988 Sega / Nasco? */
+  DRIVER( calorie )   /* (c) 1986 Sega */
+	DRIVER( calorieb )  /* bootleg */
 
 	/* Sega System 16 games */
 	/* Not working */
