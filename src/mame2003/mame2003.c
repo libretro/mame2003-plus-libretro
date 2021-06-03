@@ -59,10 +59,6 @@ int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
 int16_t  prev_pointer_x;
 int16_t  prev_pointer_y;
 
-/* data structures to store lightgun coordinates */
-int16_t  lightgun_x[MAX_PLAYER_COUNT]= {0};
-int16_t  lightgun_y[MAX_PLAYER_COUNT]= {0};
-
 /* data structures to store position data for analog joysticks */
 int16_t  analogjoy[MAX_PLAYER_COUNT][4]= {0};
 
@@ -155,7 +151,7 @@ static void   check_system_specs(void);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
    unsigned   calc_player_number(unsigned joycode);
-        int   normalize_lightgun(int libretro_coordinate);
+        int   rescale_analog(int libretro_coordinate);
         int   analog_deadzone_rescale(int input);
 static void   remove_slash (char* temp);
 
@@ -1241,8 +1237,6 @@ void retro_run (void)
     analogjoy[port][3] = 0;
     mouse_x[port]      = 0;
     mouse_y[port]      = 0;
-    lightgun_x[port]   = 0;
-    lightgun_y[port]   = 0;
   }
 
   for(port = 0; port < MAX_PLAYER_COUNT; port++)
@@ -1307,30 +1301,6 @@ void retro_run (void)
         retroJsState[port][OSD_MOUSE_BUTTON_1]  = pointer_pressed;
         mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
         mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
-      }
-      else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
-      {
-        lightgun_x[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-        lightgun_y[port] = normalize_lightgun(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
-        retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_TRIGGER); /*Status Check*/
-        retroJsState[port][OSD_LIGHTGUN_RELOAD]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD);  /*Forced off-screen shot*/
-        retroJsState[port][OSD_LIGHTGUN_AUX_A]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_A);
-        retroJsState[port][OSD_LIGHTGUN_AUX_B]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_B);
-        retroJsState[port][OSD_LIGHTGUN_START]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_START);
-        retroJsState[port][OSD_LIGHTGUN_SELECT]      = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SELECT);
-        retroJsState[port][OSD_LIGHTGUN_AUX_C]       = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_AUX_C);
-        retroJsState[port][OSD_LIGHTGUN_DPAD_UP]     = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP);
-        retroJsState[port][OSD_LIGHTGUN_DPAD_DOWN]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN);
-        retroJsState[port][OSD_LIGHTGUN_DPAD_LEFT]   = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT);
-        retroJsState[port][OSD_LIGHTGUN_DPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT);
-
-        /* simulated lightgun reload hack */
-        if(retroJsState[port][OSD_LIGHTGUN_RELOAD])
-        {
-          retroJsState[port][OSD_LIGHTGUN_IS_TRIGGER] = true;
-          lightgun_x[port] = -128;
-          lightgun_y[port] = -128;
-        }
       }
     }
   }
@@ -2162,9 +2132,25 @@ int osd_is_joy_pressed(int joycode)
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   unsigned player_number = calc_player_number(joycode);
+  unsigned port          = player_number - 1;
   unsigned osd_code      = decode_osd_joycode(joycode);
+  unsigned retro_code    = INT_MAX;
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code); */
+  
+  /*** Check whether this is an osd code from the range for lightguns ***/
+  retro_code = get_retrogun_code(osd_code);
+  if(retro_code != INT_MAX)
+  {
+    if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
+    {
+      if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+        return 1; /* lightgun reload hack, report trigger as being pressed no matter what */
+    }
+    return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
+  }
+
+  /*** Use the cached input states ***/
   return retroJsState[player_number-1][osd_code];
 }
 
@@ -2330,27 +2316,48 @@ void osd_trak_read(int player, int *deltax, int *deltay)
 *******************************************************************************/
 void osd_lightgun_read(int player, int *deltax, int *deltay)
 {
-  *deltax = lightgun_x[player];
-  *deltay = lightgun_y[player];
+  if (options.mouse_device != RETRO_DEVICE_LIGHTGUN)
+  {
+    *deltax = 0;
+    *deltay = 0;
+    return;
+  }
+
+  /* simulated lightgun reload hack */
+  if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+  {
+    retroJsState[player][OSD_LIGHTGUN_IS_TRIGGER] = true;
+    *deltax = -128;
+    *deltay = -128;
+    return;
+  }
+
+  *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+  *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
 }
 
 /******************************************************************************
- * normalize_lightgun converts between the libretro coordinate system and the
+ * rescale_analog converts between the libretro coordinate system and the
  * MAME OSD coordinate system.
  * 
- * RETRO_DEVICE_LIGHTGUN reports X/Y coordinates in screen space in the range 
- * [-0x8000, 0x7fff] in both axes, with zero being center and -0x8000 being
- * out of bounds.
+ * RETRO_DEVICE_LIGHTGUN report X/Y coordinates in the range [-0x8000, 0x7fff]
+ * in both axes, with zero being center and -0x8000 being out of bounds.
+ * RETRO_DEVICE_ANALOG uses the same [-0x8000, 0x7fff] range.
  * 
- * Meanwhile the MAME OSD uses delta from the middle of the screen
- * when the lightgun is fired and 0 when the gun is inactive. The value returned
- * by the OSD layer should be -128 to 128, same as analog joysticks.
+ * For lightguns, the MAME OSD uses delta from the middle of the screen when
+ * the lightgun is fired, and 0 when the gun is inactive with a range of 
+ * -128 to 128. MAME OSD uses this same range for analog joysticks.
+ * 
+ * Therefore we can use a common function to scale input from lightguns and
+ * analog controls.
  ******************************************************************************/
-int normalize_lightgun(int libretro_coordinate)
+int rescale_analog(int libretro_coordinate)
 {
+  static const float scale_factor = (float)MAME_ANALOG_MAX / LIBRETRO_ANALOG_MAX;
+
   if (libretro_coordinate == 0 || libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
 
-  return round(((float)libretro_coordinate / LIBRETRO_ANALOG_MAX) * ANALOG_MAX);
+  return round(scale_factor * libretro_coordinate);
 }
 
 /******************************************************************************
