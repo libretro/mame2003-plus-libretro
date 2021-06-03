@@ -2328,7 +2328,6 @@ void osd_lightgun_read(int player, int *deltax, int *deltay)
   /* simulated lightgun reload hack */
   if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
   {
-    retroJsState[player][OSD_LIGHTGUN_IS_TRIGGER] = true;
     *deltax = -128;
     *deltay = -128;
     return;
