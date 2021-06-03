@@ -2138,16 +2138,18 @@ int osd_is_joy_pressed(int joycode)
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code); */
   
-  /*** Check whether this is an osd code from the range for lightguns ***/
-  retro_code = get_retrogun_code(osd_code);
-  if(retro_code != INT_MAX)
+  if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
   {
-    if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
+    retro_code = get_retrogun_code(osd_code);
+    if(retro_code != INT_MAX)
     {
-      if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
-        return 1; /* lightgun reload hack, report trigger as being pressed no matter what */
+      if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
+      {
+        if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+          return 1; /* lightgun reload hack, report trigger as being pressed no matter what */
+      }
+      return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
     }
-    return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
   }
 
   /*** Use the cached input states ***/
