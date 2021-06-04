@@ -2136,7 +2136,7 @@ int osd_is_joy_pressed(int joycode)
   unsigned osd_code      = decode_osd_joycode(joycode);
   unsigned retro_code    = INT_MAX;
 
-  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code); */
+  /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
   
   if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
   {
@@ -2145,8 +2145,12 @@ int osd_is_joy_pressed(int joycode)
     {
       if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
       {
+        log_cb(RETRO_LOG_DEBUG, "MAME is polling a trigger -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);
         if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+        {
+          log_cb(RETRO_LOG_DEBUG, "Trigger true\n", joycode, player_number, osd_code);
           return 1; /* lightgun reload hack, report trigger as being pressed no matter what */
+        }
       }
       return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
     }
