@@ -481,6 +481,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
+* Tecmo Bowl
 * Thief
 * Tower Of Druaga
 * Toypop
@@ -718,3 +719,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added a new driver for Calorie Kun vs Moguranian then added support for Space Position to angelkds.c and hooked both games upto the Sega 317 Decryption [arcadez]
 * Added support for the English Virtual console version of Wonder Boy in Monster Land and added the mc8123 decryption so that the Japanese versions work [arcadez]
 * Fixed missing enemies level 2 onwards for Noboranka in the Sega system1.c driver [arcadez]
+* Hooked up missing MSM5205 sample sounds which are for crowd cheers, game sfx and speech in Tecmo Bowl [arcadez]
