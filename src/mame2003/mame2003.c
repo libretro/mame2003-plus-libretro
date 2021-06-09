@@ -2137,22 +2137,38 @@ int osd_is_joy_pressed(int joycode)
   unsigned retro_code    = INT_MAX;
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
-  
+
   if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
   {
     retro_code = get_retrogun_code(osd_code);
     if(retro_code != INT_MAX)
     {
+#if defined(__ANDROID__)
+      if(port > 0) return 0;
+#endif
       if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
       {
-        log_cb(RETRO_LOG_DEBUG, "MAME is polling a trigger -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);
+        /*log_cb(RETRO_LOG_DEBUG, "MAME is polling a trigger -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
         if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
         {
-          log_cb(RETRO_LOG_DEBUG, "Trigger true\n", joycode, player_number, osd_code);
+          /*log_cb(RETRO_LOG_DEBUG, "Trigger true\n", joycode, player_number, osd_code);*/
           return 1; /* lightgun reload hack, report trigger as being pressed no matter what */
         }
       }
       return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
+    }
+  }
+
+  if (options.mouse_device == RETRO_DEVICE_MOUSE || options.mouse_device == RETRO_DEVICE_POINTER)
+  {
+    retro_code = get_retromouse_code(osd_code);
+    if(retro_code != INT_MAX)
+    {
+#if defined(__ANDROID__)
+      if(port > 0) return 0;
+#endif
+
+      /*non-cached mouse and pointer input polling to be added here */
     }
   }
 
@@ -2299,6 +2315,14 @@ void osd_joystick_end_calibration(void) { }
  */
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
+#if defined(__ANDROID__)
+    if(player > 0)
+    {
+      *deltax = 0;
+      *deltay = 0;
+      return;
+    }
+#endif
   *deltax = mouse_x[player];
   *deltay = mouse_y[player];
 }
@@ -2328,6 +2352,15 @@ void osd_lightgun_read(int player, int *deltax, int *deltay)
     *deltay = 0;
     return;
   }
+
+#if defined(__ANDROID__)
+    if(player > 0)
+    {
+      *deltax = 0;
+      *deltay = 0;
+      return;
+    }
+#endif
 
   /* simulated lightgun reload hack */
   if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
