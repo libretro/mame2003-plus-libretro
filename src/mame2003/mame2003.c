@@ -240,12 +240,7 @@ void retro_get_system_info(struct retro_system_info *info)
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
 #endif
-
-#ifdef __ANDROID__
-  info->library_version = "ANDROID TESTING";
-#else 
   info->library_version = GIT_VERSION;
-#endif
   info->valid_extensions = "zip";
   info->need_fullpath = true;
   info->block_extract = true;
