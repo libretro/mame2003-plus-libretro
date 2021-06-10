@@ -2157,7 +2157,7 @@ int osd_is_joy_pressed(int joycode)
 
 
   /*** Use the cached input states ***/
-  return retroJsState[player_number-1][osd_code];
+  return retroJsState[port][osd_code];
 }
 
 
