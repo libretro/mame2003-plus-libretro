@@ -2113,7 +2113,7 @@ int osd_is_joy_pressed(int joycode)
   if (options.mouse_device == RETRO_DEVICE_POINTER)
   {
     retro_code = get_retromouse_code(osd_code);
-    if(retro_code != INT_MAX)
+    if(retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
     {
 #ifdef __ANDROID__
       if(port > 0) return 0;
