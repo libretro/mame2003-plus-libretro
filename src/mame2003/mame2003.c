@@ -2118,7 +2118,7 @@ int osd_is_joy_pressed(int joycode)
 #ifdef __ANDROID__
       if(port > 0) return 0;
 #endif
-      return input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+      return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
     }
   }
 
@@ -2130,7 +2130,7 @@ int osd_is_joy_pressed(int joycode)
 #ifdef __ANDROID__
       if(port > 0) return 0;
 #endif
-      return input_cb(player, RETRO_DEVICE_MOUSE, 0, retro_code);
+      return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
     }
   }
 
