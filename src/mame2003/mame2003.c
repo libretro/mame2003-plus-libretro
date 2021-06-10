@@ -2142,7 +2142,7 @@ int osd_is_joy_pressed(int joycode)
   /* Standard retropad */
   retro_code = get_retropad_code(osd_code);
   if (retro_code != INT_MAX)
-    return = input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
+    return input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
 
 
   /*** Use the cached input states ***/
