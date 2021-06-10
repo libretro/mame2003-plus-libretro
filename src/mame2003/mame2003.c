@@ -50,10 +50,6 @@ int                        retroKeyState[RETROK_LAST] = {0}; /* initialise to ze
 /* data structures for joystick/retropad state */
 int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero, polled in retro_run */
 
-/* data structures to store trackball/spinner/mouse coordinates */
-int16_t  mouse_x[MAX_PLAYER_COUNT]= {0};
-int16_t  mouse_y[MAX_PLAYER_COUNT]= {0};
-
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
 int16_t  prev_pointer_x;
@@ -1235,8 +1231,6 @@ void retro_run (void)
     analogjoy[port][1] = 0;
     analogjoy[port][2] = 0;
     analogjoy[port][3] = 0;
-    mouse_x[port]      = 0;
-    mouse_y[port]      = 0;
   }
 
   for(port = 0; port < MAX_PLAYER_COUNT; port++)
@@ -1281,18 +1275,6 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
-
-    /* Only poll X-Y device if selected by its core option */
-    if(options.mouse_device != RETRO_DEVICE_NONE)
-    {
-      if (options.mouse_device == RETRO_DEVICE_POINTER)
-      {
-        bool pointer_pressed = input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-        retroJsState[port][OSD_MOUSE_BUTTON_1]  = pointer_pressed;
-        mouse_x[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
-        mouse_y[port] = pointer_pressed ? get_pointer_delta(input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
-      }
-    }
   }
 
   /* poll libretro keyboard abstraction */
@@ -2312,8 +2294,9 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
 
   if (options.mouse_device == RETRO_DEVICE_POINTER)
   {
-    *deltax = mouse_x[player]; /* temp use of cache */
-    *deltay = mouse_y[player];
+    bool pointer_pressed = input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+    *deltax = pointer_pressed ? get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
+    *deltay = pointer_pressed ? get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
   }
 
   else if (options.mouse_device == RETRO_DEVICE_MOUSE)
