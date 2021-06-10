@@ -240,7 +240,12 @@ void retro_get_system_info(struct retro_system_info *info)
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
 #endif
+
+#ifdef __ANDROID__
+  info->library_version = "ANDROID TESTING";
+#else 
   info->library_version = GIT_VERSION;
+#endif
   info->valid_extensions = "zip";
   info->need_fullpath = true;
   info->block_extract = true;
@@ -2143,7 +2148,7 @@ int osd_is_joy_pressed(int joycode)
     retro_code = get_retrogun_code(osd_code);
     if(retro_code != INT_MAX)
     {
-#if defined(__ANDROID__)
+#ifdef __ANDROID__
       if(port > 0) return 0;
 #endif
       if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
@@ -2164,7 +2169,8 @@ int osd_is_joy_pressed(int joycode)
     retro_code = get_retromouse_code(osd_code);
     if(retro_code != INT_MAX)
     {
-#if defined(__ANDROID__)
+
+#ifdef __ANDROID__
       if(port > 0) return 0;
 #endif
 
@@ -2315,7 +2321,7 @@ void osd_joystick_end_calibration(void) { }
  */
 void osd_trak_read(int player, int *deltax, int *deltay)
 {
-#if defined(__ANDROID__)
+#ifdef __ANDROID__
     if(player > 0)
     {
       *deltax = 0;
@@ -2353,7 +2359,7 @@ void osd_lightgun_read(int player, int *deltax, int *deltay)
     return;
   }
 
-#if defined(__ANDROID__)
+#ifdef __ANDROID__
     if(player > 0)
     {
       *deltax = 0;
