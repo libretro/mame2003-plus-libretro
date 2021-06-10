@@ -2110,7 +2110,31 @@ int osd_is_joy_pressed(int joycode)
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
 
-  if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
+  if (options.mouse_device == RETRO_DEVICE_POINTER)
+  {
+    retro_code = get_retromouse_code(osd_code);
+    if(retro_code != INT_MAX)
+    {
+#ifdef __ANDROID__
+      if(port > 0) return 0;
+#endif
+      return input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+    }
+  }
+
+  else if (options.mouse_device == RETRO_DEVICE_MOUSE)
+  {
+    retro_code = get_retromouse_code(osd_code);
+    if(retro_code != INT_MAX)
+    {
+#ifdef __ANDROID__
+      if(port > 0) return 0;
+#endif
+      return input_cb(player, RETRO_DEVICE_MOUSE, 0, retro_code);
+    }
+  }
+
+  else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
   {
     retro_code = get_retrogun_code(osd_code);
     if(retro_code != INT_MAX)
@@ -2131,19 +2155,6 @@ int osd_is_joy_pressed(int joycode)
     }
   }
 
-  if (options.mouse_device == RETRO_DEVICE_MOUSE || options.mouse_device == RETRO_DEVICE_POINTER)
-  {
-    retro_code = get_retromouse_code(osd_code);
-    if(retro_code != INT_MAX)
-    {
-
-#ifdef __ANDROID__
-      if(port > 0) return 0;
-#endif
-
-      /*non-cached mouse and pointer input polling to be added here */
-    }
-  }
 
   /*** Use the cached input states ***/
   return retroJsState[player_number-1][osd_code];
