@@ -1240,6 +1240,24 @@ void retro_run (void)
 
     if(device_type == RETRO_DEVICE_NONE) continue;
 
+    /* Standard retropad */
+    retroJsState[port][OSD_JOYPAD_B]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+    retroJsState[port][OSD_JOYPAD_Y]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+    retroJsState[port][OSD_JOYPAD_SELECT] = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+    retroJsState[port][OSD_JOYPAD_START]  = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
+    retroJsState[port][OSD_JOYPAD_UP]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+    retroJsState[port][OSD_JOYPAD_DOWN]   = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+    retroJsState[port][OSD_JOYPAD_LEFT]   = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+    retroJsState[port][OSD_JOYPAD_RIGHT]  = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+    retroJsState[port][OSD_JOYPAD_A]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+    retroJsState[port][OSD_JOYPAD_X]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+    retroJsState[port][OSD_JOYPAD_L]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+    retroJsState[port][OSD_JOYPAD_R]      = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+    retroJsState[port][OSD_JOYPAD_L2]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+    retroJsState[port][OSD_JOYPAD_R2]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
+    retroJsState[port][OSD_JOYPAD_L3]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+    retroJsState[port][OSD_JOYPAD_R3]     = input_cb(port, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+
     /* Analog joystick - read as analog axis and rescale for MAME value range */
     analogjoy[port][0] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
     analogjoy[port][1] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
@@ -2135,13 +2153,6 @@ int osd_is_joy_pressed(int joycode)
       }
       return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
     }
-  }
-
-  /* Standard retropad */
-  retro_code = get_retropad_code(osd_code);
-  if (retro_code != INT_MAX)
-  {
-    return input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
   }
 
 
