@@ -397,37 +397,12 @@ void osd_joystick_end_calibration(void);
 
 /******************************************************************************
 
-	Trackball, Spinner, Mouse
+	Trackball, Spinner, Mouse, Pointer, Lightgun
 
 ******************************************************************************/
 
-/* osd_track_read expects the OSD to return the relative change in mouse or trackball
- * coordinates since the last reading. If the user has set their mouse type to
- * `pointer` in the core options, its coordinates are translated from absolute to
- * relative coordinates before being stored in `mouse_x[]`.
- */
-void osd_trak_read(int player, int *deltax, int *deltay);
-
-
-/******************************************************************************
-
-	Lightgun
-
-******************************************************************************/
-
-/******************************************************************************
-    The osd_lightgun_read call should return the delta from the middle of the screen
-		when the gun is fired (not the absolute pixel value), and 0 when the gun is
-		inactive.
-
-    When osd_lightgun_read returns 0, control passes through to the analog joystick,
-    and mouse, in that order. In other words, when osd_lightgun_read returns a
-    value it overrides both mouse & analog joystick.
-
-		The value returned by the OSD layer should be -128 to 128, same as analog
-		joysticks. (yes, 128, not 127).
-*******************************************************************************/
-void osd_lightgun_read(int player, int *deltax, int *deltay);
+/* TO DO: notes */
+void osd_xy_device_read(int player, int *deltax, int *deltay);
 
 
 /******************************************************************************
