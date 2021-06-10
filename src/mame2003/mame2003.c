@@ -2103,12 +2103,12 @@ int osd_is_joy_pressed(int joycode)
   if (options.mouse_device == RETRO_DEVICE_POINTER || options.mouse_device == RETRO_DEVICE_MOUSE)
   {
     retro_code = get_retromouse_code(osd_code);
-    if(retro_code != INT_MAX)
+    if (retro_code != INT_MAX)
     {
 #ifdef __ANDROID__
-      if(port > 0) return 0;
+      if (port > 0) return 0;
 #endif
-      if(options.mouse_device == RETRO_DEVICE_MOUSE)
+      if (options.mouse_device == RETRO_DEVICE_MOUSE)
         return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
       if (options.mouse_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
         return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
@@ -2118,14 +2118,14 @@ int osd_is_joy_pressed(int joycode)
   else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
   {
     retro_code = get_retrogun_code(osd_code);
-    if(retro_code != INT_MAX)
+    if (retro_code != INT_MAX)
     {
 #ifdef __ANDROID__
-      if(port > 0) return 0;
+      if (port > 0) return 0;
 #endif
-      if(retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
+      if (retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
       {
-        if(input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+        if (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
           return 1; /* lightgun reload hack, report trigger as being pressed */
       }
       return input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, retro_code);
