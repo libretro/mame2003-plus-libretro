@@ -2305,16 +2305,11 @@ void osd_joystick_end_calibration(void) { }
 
 /******************************************************************************
 
-	Trackball, Spinner, Mouse
+	Trackball, Spinner, Mouse, Pointer, Lightgun
 
 ******************************************************************************/
 
-/* osd_track_read expects the OSD to return the relative change in mouse or trackball
- * coordinates since the last reading. If the user has set their mouse type to
- * `pointer` in the core options, its coordinates are translated from absolute to
- * relative coordinates before being stored in `mouse_x[]`.
- */
-void osd_trak_read(int player, int *deltax, int *deltay)
+void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
 #ifdef __ANDROID__
     if(player > 0)
@@ -2324,55 +2319,37 @@ void osd_trak_read(int player, int *deltax, int *deltay)
       return;
     }
 #endif
-  *deltax = mouse_x[player];
-  *deltay = mouse_y[player];
-}
 
+  if (options.mouse_device == RETRO_DEVICE_POINTER)
+  {
+    *deltax = mouse_x[player]; /* temp use of cache */
+    *deltay = mouse_y[player];
+  }
 
+  else if (options.mouse_device == RETRO_DEVICE_MOUSE)
+  {
+    *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+    *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+  }
 
-/******************************************************************************
+  else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
+  {
+    /* simulated lightgun reload hack */
+    if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+    {
+      *deltax = -128;
+      *deltay = -128;
+      return;
+    }
+    *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+    *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+  }
 
-	Lightgun
-
-******************************************************************************/
-
-/******************************************************************************
- *  osd_lightgun_read should return the delta from the middle of the screen
- *  when the gun is fired and 0 when the gun is inactive. The value returned
- *  by the OSD layer should be -128 to 128, same as analog joysticks.
- *
- *  When the OSD lightgun returns 0, control passes through to the analog joystick,
- *  and mouse, in that order. In other words, when the OSD lightgun returns a
- *  value it overrides both mouse & analog joystick.
-*******************************************************************************/
-void osd_lightgun_read(int player, int *deltax, int *deltay)
-{
-  if (options.mouse_device != RETRO_DEVICE_LIGHTGUN)
+  else    /* RETRO_DEVICE_NONE */
   {
     *deltax = 0;
     *deltay = 0;
-    return;
   }
-
-#ifdef __ANDROID__
-    if(player > 0)
-    {
-      *deltax = 0;
-      *deltay = 0;
-      return;
-    }
-#endif
-
-  /* simulated lightgun reload hack */
-  if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
-  {
-    *deltax = -128;
-    *deltay = -128;
-    return;
-  }
-
-  *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-  *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
 }
 
 /******************************************************************************
