@@ -401,7 +401,7 @@ void osd_joystick_end_calibration(void);
 
 ******************************************************************************/
 
-/* TO DO: notes */
+/*** TO DO: notes ***/
 void osd_xy_device_read(int player, int *deltax, int *deltay);
 
 
