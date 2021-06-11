@@ -427,9 +427,9 @@ static void update_variables(bool first_time)
             options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
-		    else
-			    options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
-        break;
+          else
+            options.input_interface = RETRO_DEVICE_KEYBOARD + RETRO_DEVICE_JOYPAD;
+          break;
 
         case OPT_4WAY:
           if( (strcmp(var.value, "enabled") == 0) && (options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] == 4) )
