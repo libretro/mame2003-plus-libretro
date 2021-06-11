@@ -29,7 +29,7 @@
 
 static const struct GameDriver  *game_driver;
 
-int            running = 0;
+int            retro_running = 0;
 int            gotFrame;
 static float   delta_samples;
 int            samples_per_frame = 0;
@@ -1205,11 +1205,11 @@ void retro_run (void)
 {
   int port = 0;
   bool updated = false;
-  poll_cb();
+  poll_cb(); /* execute input callback */
 
-  if (running == 0) /* first time through the loop */
+  if (retro_running == 0) /* first time through the loop */
   {
-    running = 1;
+    retro_running = 1;
     log_cb(RETRO_LOG_DEBUG, LOGPRE "Entering retro_run() for the first time.\n");
   }
 
@@ -2071,8 +2071,8 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
+  if (!retro_running)                                   return 0; /* input callback has not yet been polled */
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
-  if (!running) return 0; /* polling must be completed in retro_run */
 
   unsigned player_number = calc_player_number(joycode);
   unsigned port          = player_number - 1;
@@ -2337,10 +2337,10 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-  if(!running)                                        return 0; /* input callback has not yet been polled */
-  if(options.input_interface == RETRO_DEVICE_JOYPAD)  return 0; /* core option is set to retropad/joystick only */
+  if (!retro_running)                                  return 0; /* input callback has not yet been polled */
+  if (options.input_interface == RETRO_DEVICE_JOYPAD)  return 0; /* core option is set to retropad/joystick only */
 
-  if(keycode < RETROK_LAST && keycode >= 0)
+  if (keycode < RETROK_LAST && keycode >= 0)
     return input_cb(0, RETRO_DEVICE_KEYBOARD, 0, keycode);
 
   log_cb(RETRO_LOG_WARN, LOGPRE "Invalid OSD keycode received: %i\n", keycode); /* this should not happen when keycodes are properly registered with MAME */
