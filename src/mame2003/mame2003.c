@@ -45,7 +45,6 @@ struct ipd  *default_inputs; /* pointer the array of structs with default MAME i
 
 /* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
-int                        retroKeyState[RETROK_LAST] = {0}; /* initialise to zero, polled in retro_run */
 
 /* data structures for joystick/retropad state */
 int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero, polled in retro_run */
@@ -1205,7 +1204,6 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 void retro_run (void)
 {
   int port = 0;
-  const struct KeyboardInfo *thisInput;
   bool updated = false;
   poll_cb();
 
@@ -1217,9 +1215,6 @@ void retro_run (void)
 
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
     update_variables(false);
-
-  /* retroJS */
-  /* A combination of the non-keyboard input types into an abstracted MAME joystick */
 
   /* begin by blanking the old values */
   for(port = 0; port < MAX_PLAYER_COUNT; port++)
@@ -1258,14 +1253,6 @@ void retro_run (void)
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
     retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
-  }
-
-  /* poll libretro keyboard abstraction */
-  thisInput = retroKeys;
-  while(thisInput->name)
-  {
-    retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
-    thisInput ++;
   }
 
   mame_frame();
@@ -2350,11 +2337,11 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-	if (options.input_interface == RETRO_DEVICE_JOYPAD)
-		return 0; /* do not return keyboard input if the core option is set to retropad/joystick only */
+  if(!running)                                        return 0; /* input callback has not yet been polled */
+  if(options.input_interface == RETRO_DEVICE_JOYPAD)  return 0; /* core option is set to retropad/joystick only */
 
-	if (keycode < RETROK_LAST && keycode >= 0)
-    return retroKeyState[keycode];
+  if(keycode < RETROK_LAST && keycode >= 0)
+    return input_cb(0, RETRO_DEVICE_KEYBOARD, 0, keycode);
 
   log_cb(RETRO_LOG_WARN, LOGPRE "Invalid OSD keycode received: %i\n", keycode); /* this should not happen when keycodes are properly registered with MAME */
   return 0;
