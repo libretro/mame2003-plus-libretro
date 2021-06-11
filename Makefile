@@ -708,6 +708,14 @@ else
 	CFLAGS += -D__WIN32__
 endif
 
+
+# All Android platforms       #############################
+ifneq ($(findstring Android, $(platform)), )
+	PLATCFLAGS += -D__ANDROID__
+else ifneq ($(findstring android, $(platform)), )
+	PLATCFLAGS += -D__ANDROID__
+endif
+
 # Architecture-specific flags #############################
 
 ifeq ($(BIGENDIAN), 1)
@@ -716,9 +724,10 @@ endif
 
 # End of architecture-specific flags ######################
 
-# Compiler flags for all platforms #############################
+# Compiler flags for all platforms ########################
 
-# explictly use -fsigned-char on all platforms to solve problems with code written/tested on x86 but used on ARM
+# explictly use -fsigned-char on all platforms to solve problems
+# with code written/tested on x86 but used on ARM
 # for example, audio on rtype leo is wrong on ARM without this flag
 ifeq (,$(findstring msvc,$(platform)))
 	CFLAGS += -fsigned-char

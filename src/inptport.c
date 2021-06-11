@@ -1491,10 +1491,12 @@ profiler_mark(PROFILER_INPUT);
 		osd_analogjoy_read (i, analog_current_axis[i], analogjoy_input[i]);
 
 		/* update mouse/trackball position */
-		osd_trak_read (i, &(mouse_delta_axis[i])[X_AXIS], &(mouse_delta_axis[i])[Y_AXIS]);
+		if(options.mouse_device == RETRO_DEVICE_MOUSE || options.mouse_device == RETRO_DEVICE_POINTER)
+			osd_xy_device_read (i, &(mouse_delta_axis[i])[X_AXIS], &(mouse_delta_axis[i])[Y_AXIS]);
 
 		/* update lightgun position, if any */
- 		osd_lightgun_read (i, &(lightgun_delta_axis[i])[X_AXIS], &(lightgun_delta_axis[i])[Y_AXIS]);
+		else if(options.mouse_device == RETRO_DEVICE_LIGHTGUN)
+ 			osd_xy_device_read (i, &(lightgun_delta_axis[i])[X_AXIS], &(lightgun_delta_axis[i])[Y_AXIS]);
 	}
 
 	for (i = 0;i < MAX_INPUT_PORTS;i++)
