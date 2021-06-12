@@ -1641,24 +1641,24 @@ void retro_describe_controls(void)
           }
         }
       }
-        else
+      else
+      {
+        /* try to get the corresponding ID for this control in libretro.h  */
+        /* from the lightgun section, or INT_MAX if not valid              */
+        retro_code = get_retrogun_code(osd_index);
+        if(retro_code != INT_MAX)
         {
-          /* try to get the corresponding ID for this control in libretro.h  */
-          /* from the lightgun section, or INT_MAX if not valid              */
-          retro_code = get_retrogun_code(osd_index);
-          if(retro_code != INT_MAX)
+          switch(retro_code)
           {
-            switch(retro_code)
-            {
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
-            }
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
           }
         }
+      }
 
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
