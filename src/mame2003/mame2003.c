@@ -1641,23 +1641,24 @@ void retro_describe_controls(void)
           }
         }
 
-        /* try to get the corresponding ID for this control in libretro.h  */
-        /* from the lightgun section, or INT_MAX if not valid              */
-        retro_code = get_retrogun_code(osd_index);
-        if(retro_code != INT_MAX)
+        else
         {
-          switch(retro_code)
+          /* try to get the corresponding ID for this control in libretro.h  */
+          /* from the lightgun section, or INT_MAX if not valid              */
+          retro_code = get_retrogun_code(osd_index);
+          if(retro_code != INT_MAX)
           {
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
+            switch(retro_code)
+            {
+              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+              case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+              case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
+            }
           }
         }
-
-        continue; /* no matching codes found */
       }
 
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
@@ -2258,12 +2259,12 @@ void osd_joystick_end_calibration(void) { }
 void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
 #ifdef __ANDROID__
-    if(player > 0)
-    {
-      *deltax = 0;
-      *deltay = 0;
-      return;
-    }
+  if(player > 0)
+  {
+    *deltax = 0;
+    *deltay = 0;
+    return;
+  }
 #endif
 
   if (options.mouse_device == RETRO_DEVICE_POINTER)
