@@ -1598,7 +1598,7 @@ void retro_describe_controls(void)
     unsigned osd_index   = 0;
     unsigned device_code = options.active_control_type[port_number];
 
-    log_cb(RETRO_LOG_DEBUG, "port_number: %i | active device type: %i\n", port_number, device_code);
+    log_cb(RETRO_LOG_INFO, "port_number: %i | active device type: %i\n", port_number, device_code);
 
     if(device_code == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
@@ -1643,23 +1643,25 @@ void retro_describe_controls(void)
 
         /* try to get the corresponding ID for this control in libretro.h  */
         /* from the lightgun section, or INT_MAX if not valid              */
-        retro_code = get_retrogun_code(osd_index);
-        if(retro_code != INT_MAX)
+        else 
         {
-          switch(retro_code)
-          {
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-            case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-            case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
-          }
-        }
+			retro_code = get_retrogun_code(osd_index);
+			if (retro_code != INT_MAX)
+			{
+				switch(retro_code)
+				{
+					case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
+					case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
+					case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
+					case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
+					case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
+					case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
+				}
+			}
 
-        continue; /* no matching codes found */
-      }
-
+        //continue; /* no matching codes found */
+		}
+	  }
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
       
@@ -1674,7 +1676,7 @@ void retro_describe_controls(void)
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), osd_code, standard_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), osd_code, standard_code, needle->id, needle->description);
       needle++;
     }
   }
@@ -1687,16 +1689,15 @@ void retro_describe_controls(void)
   needle->id          = 0;
   needle->description = NULL;
 
-#if 0
+
   needle = &desc[0];
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "Beginning of description list.\n");
+  log_cb(RETRO_LOG_INFO, LOGPRE "Beginning of description list.\n");
   while(needle->description != NULL)
   {
-    log_cb(RETRO_LOG_DEBUG, LOGPRE "Description || port: %i | device: %i | index: %i | id: %i \t| name: %s\n", needle->port, needle->device, needle->index, needle->id, needle->description);
+    log_cb(RETRO_LOG_INFO, LOGPRE "Description || port: %i | device: %i | index: %i | id: %i \t| name: %s\n", needle->port, needle->device, needle->index, needle->id, needle->description);
     needle++;
   }
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "End of description list.\n");
-#endif
+  log_cb(RETRO_LOG_INFO, LOGPRE "End of description list.\n");
 
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
