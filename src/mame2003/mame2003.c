@@ -1608,7 +1608,7 @@ void retro_describe_controls(void)
       unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
       unsigned ctrl_ipt_code    = 0;      /* input code connects an input port with standard input code */
       unsigned retro_code       = 0;      /* #define code from the libretro.h input API scheme */
-      const char *control_name  = NULL;
+      const char *control_name  = 0;
 
       osd_code = encode_osd_joycode(port_number + 1, osd_index);
       if(osd_code == INT_MAX) continue;
@@ -1661,7 +1661,7 @@ void retro_describe_controls(void)
         }
       }
 
-      if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
+      if(string_is_empty(control_name) && retro_code != INT_MAX)  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
       
       /* With regard to the device number, we refer to the input polling comments in 
