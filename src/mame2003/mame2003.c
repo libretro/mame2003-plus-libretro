@@ -1623,41 +1623,19 @@ void retro_describe_controls(void)
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
           continue; /* button has a higher index than supported by the driver */
 
-      if(get_device_parent(device_code) == RETRO_DEVICE_JOYPAD)
+      /* try to get the corresponding ID for this control in libretro.h  */
+      /* from the retropad section, or INT_MAX if not valid */
+      retro_code = get_retropad_code(osd_index);
+      if(retro_code != INT_MAX)
       {
-        /* try to get the corresponding ID for this control in libretro.h  */
-        /* from the retropad section, or INT_MAX if not valid */
-        retro_code = get_retropad_code(osd_index);
-        if(retro_code != INT_MAX)
+        switch(retro_code) /* universal default mappings */
         {
-          switch(retro_code) /* universal default mappings */
-          {
-            case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
-            case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
-            case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
-            case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
-            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
-          }
-        }
-
-        else
-        {
-          /* try to get the corresponding ID for this control in libretro.h  */
-          /* from the lightgun section, or INT_MAX if not valid              */
-          retro_code = get_retrogun_code(osd_index);
-          if(retro_code != INT_MAX)
-          {
-            switch(retro_code)
-            {
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT:  control_name = "Left";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT: control_name = "Right"; break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP:    control_name = "Up";    break;
-              case RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN:  control_name = "Down";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_SELECT:     control_name = "Coin";  break;
-              case RETRO_DEVICE_ID_LIGHTGUN_START:      control_name = "Start"; break;
-            }
-          }
+          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+          case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+          case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
         }
       }
 
