@@ -1640,7 +1640,7 @@ void retro_describe_controls(void)
             case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
           }
         }
-
+      }
         else
         {
           /* try to get the corresponding ID for this control in libretro.h  */
@@ -1659,7 +1659,6 @@ void retro_describe_controls(void)
             }
           }
         }
-      }
 
       if(string_is_empty(control_name))  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
