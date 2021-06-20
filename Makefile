@@ -709,6 +709,13 @@ else
 endif
 
 
+# Architecture-specific flags #############################
+ifeq ($(BIGENDIAN), 1)
+	PLATCFLAGS += -DMSB_FIRST
+endif
+# End of architecture-specific flags ######################
+
+# Platform-specific flags #################################
 # All Android platforms       #############################
 ifneq ($(findstring Android, $(platform)), )
 	PLATCFLAGS += -D__ANDROID__
@@ -716,31 +723,12 @@ else ifneq ($(findstring android, $(platform)), )
 	PLATCFLAGS += -D__ANDROID__
 endif
 
-# Architecture-specific flags #############################
-
-ifeq ($(BIGENDIAN), 1)
-	PLATCFLAGS += -DMSB_FIRST
-endif
-
-# End of architecture-specific flags ######################
-
-# Compiler flags for all platforms ########################
-
-# explictly use -fsigned-char on all platforms to solve problems
-# with code written/tested on x86 but used on ARM
-# for example, audio on rtype leo is wrong on ARM without this flag
+# All MSVC platforms
 ifeq (,$(findstring msvc,$(platform)))
-	CFLAGS += -fsigned-char
+	CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
 endif
 
-# Use position-independent code for all platforms
-CFLAGS += $(fpic)
-
-CFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESET -DHAVE_SOCKLEN_T -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-
-RETRO_PROFILE = 0
-CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
-
+# All MSVC platforms except the SNC PS3
 ifneq ($(platform), sncps3)
 	ifeq (,$(findstring msvc,$(platform)))
 		CFLAGS += -Wall -Wunused \
@@ -751,10 +739,32 @@ ifneq ($(platform), sncps3)
 	endif
 endif
 
-ifeq (,$(findstring msvc,$(platform)))
-	CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
-endif
-# End of compiler flags for all platforms ######################
+# End of platform-specific flags ##########################
+
+# Compiler flags for all platforms and architectures ######
+
+CFLAGS += $(fpic)        # Position-independent code
+CFLAGS += -fsigned-char  # Older MAME code assumes signed character type (x86 platform)
+
+CFLAGS += -DFLAC__NO_ASM -DFLAC__NO_DLL
+CFLAGS += -DHAVE_INTTYPES_H
+CFLAGS += -DHAVE_ICONV
+CFLAGS += -DHAVE_LANGINFO_CODESET
+CFLAGS += -DHAVE_SOCKLEN_T
+CFLAGS += -D_LARGEFILE_SOURCE
+CFLAGS += -D_FILE_OFFSET_BITS=64
+
+# As of 2021, the libretro performance profile callback is not known
+# to be implemented by any frontends.
+# In theory, the RETRO_PROFILE could be set to different values for different
+# architectures or for special builds to hint to the host system how many
+# resources to allocate. In practice, there seems to be no standard way to 
+# rate performance needs and no point in doing so.
+# 10 is the maximum value, so that is what we use.
+RETRO_PROFILE = 10
+CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
+
+# End compiler flags for all platforms and architectures ##
 
 
 # Disable optimization when debugging #####################
@@ -778,8 +788,6 @@ include Makefile.common
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
 DEFS = $(COREDEFINES) -Dasm=__asm__
-
-DEFS += -DFLAC__NO_DLL
 
 CFLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 

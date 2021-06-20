@@ -2071,9 +2071,6 @@ int osd_is_joy_pressed(int joycode)
     retro_code = get_retromouse_code(osd_code);
     if (retro_code != INT_MAX)
     {
-#ifdef __ANDROID__
-      if (port > 0) return 0;
-#endif
       if (options.mouse_device == RETRO_DEVICE_MOUSE)
         return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
       if (options.mouse_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
@@ -2086,9 +2083,6 @@ int osd_is_joy_pressed(int joycode)
     retro_code = get_retrogun_code(osd_code);
     if (retro_code != INT_MAX)
     {
-#ifdef __ANDROID__
-      if (port > 0) return 0;
-#endif
       if (retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
       {
         if (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
@@ -2236,14 +2230,6 @@ void osd_joystick_end_calibration(void) { }
 
 void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
-#ifdef __ANDROID__
-  if(player > 0)
-  {
-    *deltax = 0;
-    *deltay = 0;
-    return;
-  }
-#endif
 
   if (options.mouse_device == RETRO_DEVICE_POINTER)
   {
