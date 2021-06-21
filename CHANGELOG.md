@@ -523,6 +523,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 
 ## Changes
+* Added support for using the libretro lightgun [markwkidd, mahoneyt944]
+* Refactor libretro input code, add new lightgun joycodes for libretro and MAME [markwkidd, mahoneyt944]
+* Coordinate with RetroArch on mouse and lightgun input driver fixes [grant2258, mahoneyt944, markwkidd]
 * Added HD647180 MCU sound support for Fire Shark and Vimana [arcadez]
 * Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
 * Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]
