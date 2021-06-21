@@ -260,11 +260,8 @@ void retro_init (void)
 static void check_system_specs(void)
 {
    /* Should we set level variably like the API asks? Are there any frontends that implement this? */
-
-#ifndef RETRO_PROFILE
-#define RETRO_PROFILE 10 /* For stub purposes, set to the highest level */
-#endif
-   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, RETRO_PROFILE);
+   unsigned level = 10; /* For stub purposes, set to the highest level */
+   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
 
