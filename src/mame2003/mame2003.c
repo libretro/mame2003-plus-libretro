@@ -2050,13 +2050,13 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
-  if (!retro_running)                                   return 0; /* input callback has not yet been polled */
-  if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
-
   unsigned player_number = calc_player_number(joycode);
   unsigned port          = player_number - 1;
   unsigned osd_code      = decode_osd_joycode(joycode);
   unsigned retro_code    = INT_MAX;
+
+  if (!retro_running)                                   return 0; /* input callback has not yet been polled */
+  if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
 
@@ -2196,11 +2196,11 @@ int analog_deadzone_rescale(int input)
 }
 
 /******************************************************************************
- *
+ * 
  * Legacy joystick calibration functions
  *
  * As of March 2021: these MAME functions should not actually be used and will not be invoked
- * as long as needs_calibration always returns 0. The libretro frontend is reponsible for
+ * as long as needs_calibration always returns 0. The libretro frontend is responsible for
  * providing calibrated position data.
  ******************************************************************************/
 
