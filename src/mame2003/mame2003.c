@@ -259,8 +259,14 @@ void retro_init (void)
 
 static void check_system_specs(void)
 {
-   /* Should we set level variably like the API asks? Are there any frontends that implement this? */
-   unsigned level = 10; /* For stub purposes, set to the highest level */
+  #ifndef RETRO_PROFILE
+  #define RETRO_PROFILE 10
+  #endif
+   /* Should we set level variably like the API asks?
+    * That can be done in the Makefile, and then modified here before being passed,
+    * even down to an individual game basis. But are there any frontends that implement it?
+    */
+   unsigned level = (unsigned)RETRO_PROFILE;
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
