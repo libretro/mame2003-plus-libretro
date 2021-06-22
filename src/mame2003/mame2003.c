@@ -267,7 +267,7 @@ static void check_system_specs(void)
     * even down to an individual game basis. But are there any frontends that implement it?
     */
    unsigned level = (unsigned)RETRO_PROFILE;
-   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, level);
 }
 
 
