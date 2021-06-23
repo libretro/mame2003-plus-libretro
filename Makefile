@@ -754,13 +754,14 @@ CFLAGS += -DHAVE_SOCKLEN_T
 CFLAGS += -D_LARGEFILE_SOURCE
 CFLAGS += -D_FILE_OFFSET_BITS=64
 
-# As of 2021, the libretro performance profile callback is not known
-# to be implemented by any frontends.
 # In theory, the RETRO_PROFILE could be set to different values for different
 # architectures or for special builds to hint to the host system how many
 # resources to allocate. In practice, there seems to be no standard way to 
 # rate performance needs and no point in doing so.
-# 10 is the maximum value, so that is what we use.
+# As of June 2021, the libretro performance profile callback is not known
+# to be implemented by any frontends. RetroArch does not use this callback
+# and its developers do not have a suggested range of values. We use 10 by
+# convention (copying other cores).
 RETRO_PROFILE = 10
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 
