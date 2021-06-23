@@ -262,9 +262,11 @@ static void check_system_specs(void)
   #ifndef RETRO_PROFILE
   #define RETRO_PROFILE 10
   #endif
-   /* Should we set level variably like the API asks?
-    * That can be done in the Makefile, and then modified here before being passed,
-    * even down to an individual game basis. But are there any frontends that implement it?
+   /* This value can be set in the Makefile, and then modified here before being passed,
+    * even on an individual game basis.
+    * However, as of June 2021, the libretro performance profile callback is not known
+    * to be implemented by any frontends including RetroArch. The RA developers do not
+    * have a suggested range of values. We use 10 by convention (copying other cores).
     */
    unsigned level = (unsigned)RETRO_PROFILE;
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
