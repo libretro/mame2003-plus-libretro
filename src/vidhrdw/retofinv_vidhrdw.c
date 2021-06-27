@@ -7,31 +7,16 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "vidhrdw/generic.h"
 
-size_t retofinv_videoram_size;
-unsigned char *retofinv_sprite_ram1;
-unsigned char *retofinv_sprite_ram2;
-unsigned char *retofinv_sprite_ram3;
-unsigned char *retofinv_fg_char_bank;
-unsigned char *retofinv_bg_char_bank;
-unsigned char *retofinv_bg_videoram;
-unsigned char *retofinv_fg_videoram;
-unsigned char *retofinv_bg_colorram;
-unsigned char *retofinv_fg_colorram;
+data8_t *retofinv_bg_videoram;
+data8_t *retofinv_fg_videoram;
+data8_t *retofinv_sharedram;
 
-static unsigned char flipscreen=0;
-static unsigned char *bg_dirtybuffer;
-static unsigned bg_bank; /* last background bank active, 0 or 1 */
-static struct mame_bitmap *bitmap_bg;
+static int fg_bank,bg_bank;
+static struct tilemap *bg_tilemap,*fg_tilemap;
 
 
-/* data corrections for color rom */
-static unsigned adj_data(unsigned v)
-{
-	/* reverse bits 4-7 */
-	return (v & 0xF) |
-			((v & 0x80) >> 3) | ((v & 0x40) >> 1) | ((v & 0x20) << 1) | ((v & 0x10) << 3);
-}
 
 PALETTE_INIT( retofinv )
 {
@@ -44,32 +29,31 @@ PALETTE_INIT( retofinv )
 	{
 		int bit0,bit1,bit2,bit3,r,g,b;
 
-		bit0 = (color_prom[2*Machine->drv->total_colors] >> 0) & 0x01;
-		bit1 = (color_prom[2*Machine->drv->total_colors] >> 1) & 0x01;
-		bit2 = (color_prom[2*Machine->drv->total_colors] >> 2) & 0x01;
-		bit3 = (color_prom[2*Machine->drv->total_colors] >> 3) & 0x01;
+		bit0 = (color_prom[i + 0*Machine->drv->total_colors] >> 0) & 0x01;
+		bit1 = (color_prom[i + 0*Machine->drv->total_colors] >> 1) & 0x01;
+		bit2 = (color_prom[i + 0*Machine->drv->total_colors] >> 2) & 0x01;
+		bit3 = (color_prom[i + 0*Machine->drv->total_colors] >> 3) & 0x01;
 		r = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[1*Machine->drv->total_colors] >> 0) & 0x01;
-		bit1 = (color_prom[1*Machine->drv->total_colors] >> 1) & 0x01;
-		bit2 = (color_prom[1*Machine->drv->total_colors] >> 2) & 0x01;
-		bit3 = (color_prom[1*Machine->drv->total_colors] >> 3) & 0x01;
+		bit0 = (color_prom[i + 1*Machine->drv->total_colors] >> 0) & 0x01;
+		bit1 = (color_prom[i + 1*Machine->drv->total_colors] >> 1) & 0x01;
+		bit2 = (color_prom[i + 1*Machine->drv->total_colors] >> 2) & 0x01;
+		bit3 = (color_prom[i + 1*Machine->drv->total_colors] >> 3) & 0x01;
 		g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[0*Machine->drv->total_colors] >> 0) & 0x01;
-		bit1 = (color_prom[0*Machine->drv->total_colors] >> 1) & 0x01;
-		bit2 = (color_prom[0*Machine->drv->total_colors] >> 2) & 0x01;
-		bit3 = (color_prom[0*Machine->drv->total_colors] >> 3) & 0x01;
+		bit0 = (color_prom[i + 2*Machine->drv->total_colors] >> 0) & 0x01;
+		bit1 = (color_prom[i + 2*Machine->drv->total_colors] >> 1) & 0x01;
+		bit2 = (color_prom[i + 2*Machine->drv->total_colors] >> 2) & 0x01;
+		bit3 = (color_prom[i + 2*Machine->drv->total_colors] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
 		palette_set_color(i,r,g,b);
-		color_prom++;
 	}
 
-	color_prom += 2*Machine->drv->total_colors;
+	color_prom += 3*Machine->drv->total_colors;
 	/* color_prom now points to the beginning of the lookup table */
 
-	/* foreground colors */
+	/* fg chars (1bpp) */
 	for (i = 0;i < TOTAL_COLORS(0);i++)
 	{
 		if (i % 2)
@@ -80,34 +64,83 @@ PALETTE_INIT( retofinv )
 
 	/* sprites */
 	for(i = 0;i < TOTAL_COLORS(2);i++)
-		COLOR(2,i) = adj_data(*color_prom++);
+		COLOR(2,i) = BITSWAP8(color_prom[i],4,5,6,7,3,2,1,0);
 
-	/* background bank 0 (gameplay) */
-	/* background bank 1 (title screen) */
+	/* bg tiles */
 	for(i = 0;i < TOTAL_COLORS(1);i++)
-		COLOR(1,i) = adj_data(color_prom[i]);
+		COLOR(1,i) = BITSWAP8(color_prom[TOTAL_COLORS(2) + i],4,5,6,7,3,2,1,0);
 }
 
+
+
+/***************************************************************************
+
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+/* convert from 32x32 to 36x28 */
+static UINT32 tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	row += 2;
+	col -= 2;
+	if (col  & 0x20)
+		return ((col & 0x1f) << 5) + row;
+	else
+		return (row << 5) + col;
+}
+
+static void bg_get_tile_info(int tile_index)
+{
+	SET_TILE_INFO(
+			1,
+			retofinv_bg_videoram[tile_index] + 256 * bg_bank,
+			retofinv_bg_videoram[0x400 + tile_index] & 0x3f,
+			0)
+}
+
+static void fg_get_tile_info(int tile_index)
+{
+	/* not sure about the transparency thing, but it makes sense */
+	SET_TILE_INFO(
+			0,
+			retofinv_fg_videoram[tile_index] + 256 * fg_bank,
+			retofinv_fg_videoram[0x400 + tile_index],
+			(tile_index < 0x40 || tile_index >= 0x3c0) ? TILE_IGNORE_TRANSPARENCY : 0)
+}
+
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
+
+***************************************************************************/
 
 VIDEO_START( retofinv )
 {
-	if ((bg_dirtybuffer = auto_malloc(retofinv_videoram_size)) == 0)
+	bg_tilemap = tilemap_create(bg_get_tile_info,tilemap_scan,TILEMAP_OPAQUE,8,8,36,28);
+	fg_tilemap = tilemap_create(fg_get_tile_info,tilemap_scan,TILEMAP_TRANSPARENT_COLOR,8,8,36,28);
+
+	if (!bg_tilemap || !fg_tilemap)
 		return 1;
 
-	if ((bitmap_bg = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height)) == 0)
-		return 1;
+	tilemap_set_transparent_pen(fg_tilemap,0);
 
-	memset(bg_dirtybuffer,1,retofinv_videoram_size);
-	bg_bank = 0;
+	spriteram = retofinv_sharedram + 0x0780;
+	spriteram_2 = retofinv_sharedram + 0x0f80;
+	spriteram_3 = retofinv_sharedram + 0x1780;
+
 	return 0;
 }
 
-WRITE_HANDLER( retofinv_flip_screen_w )
-{
-	flipscreen = data;
-	memset(bg_dirtybuffer,1,retofinv_videoram_size);
-	fillbitmap(bitmap_bg,Machine->pens[0],0);
-}
+
+
+/***************************************************************************
+
+  Memory handlers
+
+***************************************************************************/
 
 READ_HANDLER( retofinv_bg_videoram_r )
 {
@@ -119,290 +152,117 @@ READ_HANDLER( retofinv_fg_videoram_r )
 	return retofinv_fg_videoram[offset];
 }
 
-READ_HANDLER( retofinv_bg_colorram_r )
-{
-	return retofinv_bg_colorram[offset];
-}
-
-READ_HANDLER( retofinv_fg_colorram_r )
-{
-	return retofinv_fg_colorram[offset];
-}
-
 WRITE_HANDLER( retofinv_bg_videoram_w )
 {
 	if (retofinv_bg_videoram[offset] != data)
 	{
-		bg_dirtybuffer[offset] = 1;
 		retofinv_bg_videoram[offset] = data;
+		tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
 	}
 }
 
 WRITE_HANDLER( retofinv_fg_videoram_w )
 {
 	if (retofinv_fg_videoram[offset] != data)
+	{
 		retofinv_fg_videoram[offset] = data;
+		tilemap_mark_tile_dirty(fg_tilemap,offset & 0x3ff);
+	}
 }
 
-WRITE_HANDLER( retofinv_bg_colorram_w )
+WRITE_HANDLER( retofinv_gfx_ctrl_w )
 {
-	if (retofinv_bg_colorram[offset] != data)
+	switch (offset)
 	{
-		bg_dirtybuffer[offset] = 1;
-		retofinv_bg_colorram[offset] = data;
+		case 0:
+			flip_screen_set(data & 1);
+			break;
+
+		case 1:
+			if (fg_bank != (data & 1))
+			{
+				fg_bank = data & 1;
+				tilemap_mark_all_tiles_dirty(fg_tilemap);
+			}
+			break;
+
+		case 2:
+			if (bg_bank != (data & 1))
+			{
+				bg_bank = data & 1;
+				tilemap_mark_all_tiles_dirty(bg_tilemap);
+			}
+			break;
 	}
 }
 
-WRITE_HANDLER( retofinv_fg_colorram_w )
-{
-	if (retofinv_fg_colorram[offset] != data)
-		retofinv_fg_colorram[offset] = data;
-}
-
-void retofinv_render_sprites(struct mame_bitmap *bitmap)
-{
-	int offs,sx,sy,flipx,flipy,tile,palette,size;
-	int tileofs0,tileofs1,tileofs2,tileofs3;
-
-	for (offs = 0; offs<127; offs+=2)
-	{
-		{
-			sx = 311-(((retofinv_sprite_ram2[offs+1] & 127) << 1) +
-			     	  ((retofinv_sprite_ram3[offs+1] & 128) >> 7) +
-			     	  ((retofinv_sprite_ram2[offs+1] & 128) << 1));
-
-			sy = 	  ((retofinv_sprite_ram2[offs] & 127) << 1) +
-			     	  ((retofinv_sprite_ram3[offs] & 128) >> 7) +
-			     	  ((retofinv_sprite_ram2[offs] & 128) << 1);
-
-			tile    = retofinv_sprite_ram1[offs];
-			size	= retofinv_sprite_ram3[offs];
-			palette = retofinv_sprite_ram1[offs+1] & 0x3f;
-
-			flipx = 0;
-			flipy = 0;
-			tileofs0 = 0;
-			tileofs1 = 1;
-			tileofs2 = 2;
-			tileofs3 = 3;
-
-			if (flipscreen)
-			{
-				tileofs0 = 2;
-				tileofs2 = 0;
-				tileofs1 = 3;
-				tileofs3 = 1;
-				flipx = flipy = 1;
-			}
-
-			if (!(size & 12))
-			{
-				/* Patch for disappearing invadres' missile,
-					     could it be Z80 bug ? */
-				if (tile==0x98) tile--;
-
-				drawgfx(bitmap,Machine->gfx[2],
-							tile,
-							palette,
-							flipx,flipy,
-							sx,sy,
-							&Machine->visible_area,TRANSPARENCY_PEN,0);
-			}
-			if (size & 4)
-			{
-				if ((size & 8) && (flipscreen)) sx-=16;
-				drawgfx(bitmap,Machine->gfx[2],
-							tile+tileofs0,
-							palette,
-							flipx,flipy,
-							sx,sy+16,
-							&Machine->visible_area,TRANSPARENCY_PEN,0);
-
-				drawgfx(bitmap,Machine->gfx[2],
-							tile+tileofs2,
-							palette,
-							flipx,flipy,
-							sx,sy,
-							&Machine->visible_area,TRANSPARENCY_PEN,0);
-			}
-			if (size & 8)
-			{
-				if (flipscreen) sx+=32;
-				drawgfx(bitmap,Machine->gfx[2],
-							tile+tileofs1,
-							palette,
-							flipx,flipy,
-							sx-16,sy+16,
-							&Machine->visible_area,TRANSPARENCY_PEN,0);
-
-				drawgfx(bitmap,Machine->gfx[2],
-							tile+tileofs3,
-							palette,
-							flipx,flipy,
-							sx-16,sy,
-							&Machine->visible_area,TRANSPARENCY_PEN,0);
-			}
-		}
-	}
-}
-
-
-void retofinv_draw_background(struct mame_bitmap *bitmap)
-{
-	int x,y,offs;
-	int sx,sy,tile,palette;
-	int bg_dirtybank;
-
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
-
-	/* if bank differ redraw all */
-	bg_dirtybank = (retofinv_bg_char_bank[0] & 1) != bg_bank;
-
-	/* save active bank */
-	bg_bank = (retofinv_bg_char_bank[0] & 1);
-
-	for (y = 31; y>=0; y--)
-	{
-		for (x = 31; x>=0; x--)
-		{
-			offs = y*32+x;
-
-			if (bg_dirtybank || bg_dirtybuffer[offs])
-			{
-				sx = 31-x;
-				sy = 31-y;
-
-				if (flipscreen)
-				{
-					sx = 31 - sx;
-					sy = 31 - sy;
-				}
-
-				bg_dirtybuffer[offs] = 0;
-				tile = retofinv_bg_videoram[offs] + 256 * bg_bank;
-				palette = retofinv_bg_colorram[offs] & 0x3f;
-
-				drawgfx(bitmap_bg,Machine->gfx[1],
-						tile,
-						palette,
-						flipscreen,flipscreen,
-						8*sx+16,8*sy,
-						&Machine->visible_area,TRANSPARENCY_NONE,0);
-			}
-		}
-	}
-
-	copybitmap(bitmap,bitmap_bg,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-}
-
-
-void retofinv_draw_foreground(struct mame_bitmap *bitmap)
-{
-	int x,y,offs;
-	int sx,sy,tile,palette,flipx,flipy;
-
-	for (x=0; x<32; x++)
-	{
-		for (y = 30; y<=31; y++)
-		{
-			offs = y*32+x;
-
-			sx = ((62-y)+3) << 3;
-			sy = (31-x) << 3;
-
-			flipx = flipy = 0;
-
-			if (flipscreen)
-			{
-				sx = 280 - sx;
-				sy = 248 - sy;
-				flipx = flipy = 1;
-			}
-
-			tile = retofinv_fg_videoram[offs]+(retofinv_fg_char_bank[0]*256);
-			palette = retofinv_fg_colorram[offs];
-
-			drawgfx(bitmap,Machine->gfx[0],
-						  tile,
-						  palette,
-						  flipx,flipy,
-						  sx,sy,
-						  &Machine->visible_area,TRANSPARENCY_NONE,0);
-		}
-	}
-
-	for (x = 29; x>=2 ;x--)
-	{
-		for (y = 31; y>=0; y--)
-		{
-			offs = x*32+y;
-			sy = ((31-x) << 3);
-			sx = ((33-y)) << 3;
-
-			flipx = flipy = 0;
-
-			if (flipscreen)
-			{
-				sx = 280 - sx;
-				sy = 248 - sy;
-				flipx = flipy = 1;
-			}
-
-			tile = retofinv_fg_videoram[offs]+(retofinv_fg_char_bank[0]*256);
-			palette = retofinv_fg_colorram[offs];
-
-			drawgfx(bitmap,Machine->gfx[0],
-						  tile,
-						  palette,
-						  flipx,flipy,
-						  sx,sy,
-						  &Machine->visible_area,TRANSPARENCY_PEN,0);
-		}
-	}
-
-	for (x=0; x<32; x++)
-	{
-		for (y = 1; y>=0; y--)
-		{
-			offs = y*32+x;
-			sx = (1-y) << 3;
-			sy = (31-x) << 3;
-
-			flipx = flipy = 0;
-
-			if (flipscreen)
-			{
-				sx = 280 - sx;
-				sy = 248 - sy;
-				flipx = flipy = 1;
-			}
-
-			tile = retofinv_fg_videoram[offs]+(retofinv_fg_char_bank[0]*256);
-			palette = retofinv_fg_colorram[offs];
-
-			drawgfx(bitmap,Machine->gfx[0],
-						  tile,
-						  palette,
-						  flipx,flipy,
-						  sx,sy,
-						  &Machine->visible_area,TRANSPARENCY_NONE,0);
-		}
-	}
-}
 
 
 /***************************************************************************
 
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
+  Display refresh
 
 ***************************************************************************/
 
+void draw_sprites(struct mame_bitmap *bitmap)
+{
+	int offs;
+	static struct rectangle spritevisiblearea =
+	{
+		2*8, 34*8-1,
+		0*8, 28*8-1
+	};
+
+	for (offs = 0;offs < 0x80;offs += 2)
+	{
+		static int gfx_offs[2][2] =
+		{
+			{ 0, 1 },
+			{ 2, 3 }
+		};
+		int sprite = spriteram[offs];
+		int color = spriteram[offs+1] & 0x3f;
+		int sx = ((spriteram_2[offs+1] << 1) + ((spriteram_3[offs+1] & 0x80) >> 7)) - 39;
+		int sy = 256 - ((spriteram_2[offs] << 1) + ((spriteram_3[offs] & 0x80) >> 7)) + 1;
+		/* not sure about the flipping, it's hardly ever used (mostly for shots) */
+		int flipx = (spriteram_3[offs] & 0x01);
+		int flipy = (spriteram_3[offs] & 0x02) >> 1;
+		int sizey = (spriteram_3[offs] & 0x04) >> 2;
+		int sizex = (spriteram_3[offs] & 0x08) >> 3;
+		int x,y;
+
+		sprite &= ~sizex;
+		sprite &= ~(sizey << 1);
+
+		if (flip_screen)
+		{
+			flipx ^= 1;
+			flipy ^= 1;
+		}
+
+		sy -= 16 * sizey;
+		sy = (sy & 0xff) - 32;	/* fix wraparound */
+
+		for (y = 0;y <= sizey;y++)
+		{
+			for (x = 0;x <= sizex;x++)
+			{
+				drawgfx(bitmap,Machine->gfx[2],
+					sprite + gfx_offs[y ^ (sizey * flipy)][x ^ (sizex * flipx)],
+					color,
+					flipx,flipy,
+					sx + 16*x,sy + 16*y,
+					&spritevisiblearea,TRANSPARENCY_COLOR,0xff);
+			}
+		}
+	}
+}
+
+
+
 VIDEO_UPDATE( retofinv )
 {
-	retofinv_draw_background(bitmap);
-	retofinv_render_sprites(bitmap);
-	retofinv_draw_foreground(bitmap);
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
+	draw_sprites(bitmap);
+	tilemap_draw(bitmap,cliprect,fg_tilemap,0,0);
 }
