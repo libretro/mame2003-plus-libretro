@@ -319,6 +319,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
+* Kick N Run- Romset `kicknrun`
 * Kozmik Kroozr - Romset `kroozr`
 * Macho Mouse - Romset `machomou` - colors fixed
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
@@ -726,3 +727,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Improved the C-Chip mcu simulation for Bonze Adventure so the game no longer has respawn issues after you die on level 6 [arcadez]
 * Filled out the dip switches and hooked up the protection mcu for Kick N Run which makes the game 100% in the emulation dept and now fully playable [arcadez]
 * Removed the Knight Boy bootleg mcu from Kiki Kai Kai and replaced it with a simulation of the proper mcu fixing some game logic problems [arcadez]
+* Removed simulation code and hooked up the proper protection mcu for Daikaiju no Gyakushu [arcadez]
+* Updated the retofinv.c driver to MAME94 fixing some gfx niggles "lives left" display etc etc and hooked up the proper mcu for Return Of The Invaders [arcadez]
