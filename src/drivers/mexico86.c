@@ -829,7 +829,7 @@ ROM_START( mexico86 )
 ROM_END
 
 
-GAME( 1986, kikikai,  0,        kikikai,  kikikai,  0,        ROT90, "Taito Corporation", "KiKi KaiKai" )
-GAME( 1986, kicknrun, 0,        kicknrun, kicknrun, 0,        ROT0,  "Taito Corporation", "Kick and Run" )
-GAME( 1986, mexico86, kicknrun, mexico86, mexico86, 0,        ROT0,  "bootleg", "Mexico 86" )
+GAME( 1986, kikikai,  0,        kikikai,  kikikai,   0,  ROT90, "Taito Corporation", "KiKi KaiKai" )
+GAME( 1986, kicknrun, 0,        kicknrun, kicknrun,  0,  ROT0,  "Taito Corporation", "Kick and Run" )
+GAME( 1986, mexico86, kicknrun, mexico86, mexico86,  0,  ROT0,  "bootleg", "Mexico 86" )
 
