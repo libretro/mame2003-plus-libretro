@@ -6,16 +6,22 @@
  */
 
 #include "driver.h"
+#include "cpu/z80/z80.h"
+#include "cpu/m6805/m6805.h"
 
 /* machine/chaknpop.c */
-DRIVER_INIT( chaknpop );
-MACHINE_INIT( chaknpop );
-READ_HANDLER( chaknpop_mcu_portA_r );
-READ_HANDLER( chaknpop_mcu_portB_r );
-READ_HANDLER( chaknpop_mcu_portC_r );
-WRITE_HANDLER( chaknpop_mcu_portA_w );
-WRITE_HANDLER( chaknpop_mcu_portB_w );
-WRITE_HANDLER( chaknpop_mcu_portC_w );
+READ_HANDLER( chaknpop_68705_portA_r );
+WRITE_HANDLER( chaknpop_68705_portA_w );
+READ_HANDLER( chaknpop_68705_portB_r );
+WRITE_HANDLER( chaknpop_68705_portB_w );
+READ_HANDLER( chaknpop_68705_portC_r );
+WRITE_HANDLER( chaknpop_68705_portC_w );
+WRITE_HANDLER( chaknpop_68705_ddrA_w );
+WRITE_HANDLER( chaknpop_68705_ddrB_w );
+WRITE_HANDLER( chaknpop_68705_ddrC_w );
+WRITE_HANDLER( chaknpop_mcu_w );
+READ_HANDLER( chaknpop_mcu_r );
+READ_HANDLER( chaknpop_mcu_status_r );
 
 
 /* vidhrdw/chaknpop.c */
@@ -68,9 +74,9 @@ static WRITE_HANDLER ( coinlock_w )
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
-	{ 0x8800, 0x8800, chaknpop_mcu_portA_r },
-	{ 0x8801, 0x8801, chaknpop_mcu_portB_r },
-	{ 0x8802, 0x8802, chaknpop_mcu_portC_r },
+	{ 0x8800, 0x8800, chaknpop_mcu_r },
+	{ 0x8801, 0x8801, chaknpop_mcu_status_r },
+	{ 0x8802, 0x8802, MRA_NOP },            /* watchdog? */
 	{ 0x8805, 0x8805, AY8910_read_port_0_r },
 	{ 0x8807, 0x8807, AY8910_read_port_1_r },
 	{ 0x8808, 0x8808, input_port_3_r },		/* DSW C*/
@@ -88,9 +94,8 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
-	{ 0x8800, 0x8800, chaknpop_mcu_portA_w },
-	{ 0x8801, 0x8801, chaknpop_mcu_portB_w },
-	{ 0x8802, 0x8802, chaknpop_mcu_portC_w },
+	{ 0x8800, 0x8800, chaknpop_mcu_w },
+	{ 0x8802, 0x8802, MWA_NOP }, 
 	{ 0x8804, 0x8804, AY8910_control_port_0_w },
 	{ 0x8805, 0x8805, AY8910_write_port_0_w },
 	{ 0x8806, 0x8806, AY8910_control_port_1_w },
@@ -101,13 +106,32 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x9800, 0x983f, chaknpop_attrram_w, &chaknpop_attrram },
 	{ 0x9840, 0x98ff, MWA_RAM, &chaknpop_sprram, &chaknpop_sprram_size },
 	{ 0xa000, 0xbfff, MWA_ROM },
-	{ 0xc000, 0xffff, MWA_BANK1 },			/* bitmap plane 1-4*/
+	{ 0xc000, 0xffff, MWA_BANK1 },			/* bitmap plane 1-4 */
+MEMORY_END
+
+static MEMORY_READ_START( chaknpop_m68705_readmem )
+	{ 0x0000, 0x0000, chaknpop_68705_portA_r },
+	{ 0x0001, 0x0001, chaknpop_68705_portB_r },
+	{ 0x0002, 0x0002, chaknpop_68705_portC_r },
+	{ 0x0010, 0x007f, MRA_RAM },
+	{ 0x0080, 0x07ff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( chaknpop_m68705_writemem )
+	{ 0x0000, 0x0000, chaknpop_68705_portA_w },
+	{ 0x0001, 0x0001, chaknpop_68705_portB_w },
+	{ 0x0002, 0x0002, chaknpop_68705_portC_w },
+	{ 0x0004, 0x0004, chaknpop_68705_ddrA_w },
+	{ 0x0005, 0x0005, chaknpop_68705_ddrB_w },
+	{ 0x0006, 0x0006, chaknpop_68705_ddrC_w },
+	{ 0x0010, 0x007f, MWA_RAM },
+	{ 0x0080, 0x07ff, MWA_ROM },
 MEMORY_END
 
 static struct AY8910interface ay8910_interface =
 {
 	2,		/* 2 chips */
-	18432000 / 12,	/* 1.536 MHz? */
+	18000000 / 12,	/* Verified on PCB */
 	{ 15, 10 },
 	{ input_port_5_r, 0 },		/* DSW A*/
 	{ input_port_4_r, 0 },		/* DSW B*/
@@ -281,16 +305,17 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( chaknpop )
 
 	/* basic machine hardware */
-	/* the real board is 3.072MHz, but it is faster for MAME */
-	/*MDRV_CPU_ADD(Z80, 18432000 / 6)	 // 3.072 MHz /*/
-	MDRV_CPU_ADD(Z80, 2860000)
+	MDRV_CPU_ADD(Z80, 18000000 / 6)	/* Verified on PCB */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	
+	MDRV_CPU_ADD(M68705, 18000000 / 6)	/* Verified on PCB */
+	MDRV_CPU_MEMORY(chaknpop_m68705_readmem,chaknpop_m68705_writemem)
 
-	MDRV_FRAMES_PER_SECOND(60.606060)
+	MDRV_FRAMES_PER_SECOND(59.1828)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	MDRV_MACHINE_INIT(chaknpop)
+	MDRV_INTERLEAVE(100)	/* 100 CPU slices per frame - an high value to ensure proper */
+							/* synchronization of the CPUs */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -315,17 +340,15 @@ MACHINE_DRIVER_END
 ***************************************************************************/
 
 ROM_START( chaknpop )
-	ROM_REGION( 0x18000, REGION_CPU1, 0 )			/* Main CPU */
+	ROM_REGION( 0x18000, REGION_CPU1, 0 )	/* Main CPU */
 	ROM_LOAD( "a04-01.28",    0x00000, 0x2000, CRC(386fe1c8) SHA1(cca24abfb8a7f439251e7936036475c694002561) )
 	ROM_LOAD( "a04-02.27",    0x02000, 0x2000, CRC(5562a6a7) SHA1(0c5d81f9aaf858f88007a6bca7f83dc3ef59c5b5) )
 	ROM_LOAD( "a04-03.26",    0x04000, 0x2000, CRC(3e2f0a9c) SHA1(f1cf87a4cb07f77104d4a4d369807dac522e052c) )
 	ROM_LOAD( "a04-04.25",    0x06000, 0x2000, CRC(5209c7d4) SHA1(dcba785a697df55d84d65735de38365869a1da9d) )
 	ROM_LOAD( "a04-05.3",     0x0a000, 0x2000, CRC(8720e024) SHA1(99e445c117d1501a245f9eb8d014abc4712b4963) )
 
-	ROM_REGION( 0x0800, REGION_CPU2, 0 )	/* 2k for the microcontroller */
-	/* MCU isn't dumped (its protected) however we simulate it using data
-	   extracted with a trojan, see machine/chaknpop.c */
-	ROM_LOAD( "68705.mcu",   0x0000, 0x0800, NO_DUMP )
+	ROM_REGION( 0x0800,  REGION_CPU2, 0 )	/* 2k for the microcontroller */
+    ROM_LOAD( "ao4_06.ic23", 0x0000, 0x0800, CRC(9c78c24c) SHA1(f74c7f3ee106e5c45c907e590ec09614a2bc6751) )
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprite */
 	ROM_LOAD( "a04-08.14",     0x0000, 0x2000, CRC(5575a021) SHA1(c2fad53fe6a12c19cec69d27c13fce6aea2502f2) )
@@ -342,4 +365,4 @@ ROM_END
 
 
 /*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR  COMPANY              FULLNAME ) */
-GAME( 1983, chaknpop, 0,        chaknpop, chaknpop, chaknpop, ROT0,    "Taito Corporation", "Chack'n Pop")
+GAME( 1983, chaknpop, 0,        chaknpop, chaknpop, 0,        ROT0,    "Taito Corporation", "Chack'n Pop")
