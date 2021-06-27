@@ -1,170 +1,135 @@
 /*
  *	Chack'n Pop (C) 1983 TAITO Corp.
- *	simulate 68705 MCU
- */
+ *	68705 MCU
+*/
 
 #include "driver.h"
-#include "cpu/z80/z80.h"
-#include "state.h"
 
-#define MCU_INITIAL_SEED	0x81
 
-static data8_t mcu_seed;
-static data8_t mcu_select;
-static data8_t mcu_result;
-static data8_t mcu_wait;
-
-/* mcu data that is extracted from the real board! */
-/* updated on 2st Jun 2003 */
-static data8_t mcu_data[256] = {
-	0x3a, 0xe6, 0x80, 0xc6, 0x0e, 0xdd, 0x77, 0xfd,
-	0x7e, 0xfe, 0x10, 0x38, 0x10, 0xdd, 0x7e, 0x03,
-	0xc6, 0x08, 0xdd, 0x77, 0x03, 0xdd, 0x7e, 0xff,
-	0xc6, 0x08, 0xdd, 0x77, 0xff, 0x34, 0x23, 0xc9,
-	0x06, 0x10, 0xdd, 0xe5, 0xe1, 0x23, 0x23, 0x23,
-	0x4e, 0x23, 0x5e, 0x23, 0x56, 0x23, 0x23, 0x7b,
-	0xb2, 0x28, 0x02, 0x79, 0x12, 0x10, 0xf1, 0xc9,
-	0xe6, 0x03, 0x87, 0x87, 0x6f, 0x26, 0x00, 0x29,
-	0x29, 0x29, 0xe5, 0x29, 0x29, 0x29, 0xc1, 0x09,
-	0x01, 0xc3, 0x81, 0x09, 0xe5, 0xdd, 0xe1, 0xc9,
-	0x10, 0x00, 0x08, 0x10, 0x20, 0x64, 0x50, 0x00,
-	0x08, 0x50, 0xb0, 0x01, 0x34, 0xa0, 0x13, 0x34,
-	0xb0, 0x05, 0x34, 0xc0, 0x04, 0x34, 0xd0, 0x02,
-	0x34, 0xf0, 0x02, 0x34, 0x00, 0x60, 0x00, 0x00,
-	0x3f, 0x00, 0x0c, 0x1f, 0xa0, 0x3f, 0x1e, 0xa2,
-	0x01, 0x1e, 0xa1, 0x0a, 0x1e, 0xa2, 0x07, 0x1e,
-	0x92, 0x05, 0x1e, 0x02, 0x04, 0x1e, 0x12, 0x09,
-	0x3f, 0x22, 0x06, 0x3f, 0x21, 0x03, 0x3f, 0x20,
-	0x02, 0x00, 0x00, 0x3f, 0x00, 0x04, 0x02, 0xa0,
-	0x40, 0x12, 0xa1, 0x06, 0x12, 0xa2, 0x02, 0x12,
-	0xa1, 0x0a, 0x12, 0xa2, 0x07, 0x10, 0x92, 0x05,
-	0x10, 0x02, 0x04, 0x12, 0x12, 0x09, 0x12, 0x22,
-	0x06, 0x12, 0x21, 0x03, 0x12, 0x20, 0x02, 0x26,
-	0x00, 0x14, 0x12, 0x00, 0x00, 0x00, 0x3f, 0x00,
-	0x04, 0x1a, 0xa0, 0x40, 0x3f, 0x00, 0x00, 0x00,
-	0x3e, 0x3a, 0x87, 0x83, 0x3c, 0x32, 0x87, 0x83,
-	0x0f, 0x0f, 0xe6, 0x07, 0xfe, 0x02, 0x20, 0x01,
-	0xaf, 0x11, 0x40, 0x98, 0x1d, 0x12, 0x1d, 0x20,
-	0xfb, 0x2a, 0x89, 0x83, 0x2b, 0x22, 0x89, 0x83,
-	0xc9, 0x3a, 0x5b, 0x81, 0xa7, 0xc0, 0x21, 0x80,
-	0x81, 0x11, 0x04, 0x00, 0x06, 0x09, 0x34, 0x19,
-	0x10, 0xfc, 0x3e, 0x01, 0x32, 0x5b, 0x81, 0xc9
-};
-
-static void mcu_update_seed(data8_t data)
-{
-	if (!(data & 0x80))
-	{
-		mcu_seed += 0x83;
-		mcu_seed = (mcu_seed & 0x80) | (mcu_seed >> 1);
-	}
-
-	mcu_seed += 0x19;
-	/*logerror("New seed: 0x%02x\n", mcu_seed);*/
-}
+static unsigned char from_main,from_mcu;
+static int mcu_sent = 0,main_sent = 0;
 
 
 /***************************************************************************
-  Memory handlers
+
+ Chack'n Pop 68705 protection interface
+
+ The following is ENTIRELY GUESSWORK!!!
+
+ It seems, however, to be identical to Buggy Challenge.
+
 ***************************************************************************/
 
-READ_HANDLER( chaknpop_mcu_portA_r )
+static unsigned char portA_in,portA_out,ddrA;
+
+READ_HANDLER( chaknpop_68705_portA_r )
 {
-	/*logerror("%04x: MCU portA read\n", activecpu_get_pc());*/
-	return mcu_result;
+/*logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in); */
+	return (portA_out & ddrA) | (portA_in & ~ddrA);
+}
+
+WRITE_HANDLER( chaknpop_68705_portA_w )
+{
+/*logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data); */
+	portA_out = data;
+}
+
+WRITE_HANDLER( chaknpop_68705_ddrA_w )
+{
+	ddrA = data;
 }
 
 
-READ_HANDLER( chaknpop_mcu_portB_r )
+
+/*
+ *  Port B connections:
+ *
+ *  all bits are logical 1 when read (+5V pullup)
+ *
+ *  1   W  when 1->0, enables latch which brings the command from main CPU (read from port A)
+ *  2   W  when 0->1, copies port A to the latch for the main CPU
+ */
+
+static unsigned char portB_in,portB_out,ddrB;
+
+READ_HANDLER( chaknpop_68705_portB_r )
 {
-	/*logerror("%04x: MCU portB read\n", activecpu_get_pc());*/
-
-	if (--mcu_wait)
-		return 0x00;
-
-	return 0xff;
+	return (portB_out & ddrB) | (portB_in & ~ddrB);
 }
 
-READ_HANDLER( chaknpop_mcu_portC_r )
+WRITE_HANDLER( chaknpop_68705_portB_w )
 {
-	/*logerror("%04x: MCU portC read\n", activecpu_get_pc());*/
-	return 0x00;
-}
+/*logerror("%04x: 68705 port B write %02x\n",activecpu_get_pc(),data); */
 
-WRITE_HANDLER( chaknpop_mcu_portA_w )
-{
-	data8_t *RAM = memory_region(REGION_CPU1);
-	data8_t mcu_command;
-
-	mcu_command = data + mcu_seed;
-	mcu_result = 0;
-
-	if (mcu_command < 0x08)
+	if ((ddrB & 0x02) && (~data & 0x02) && (portB_out & 0x02))
 	{
-		mcu_update_seed(data);
-
-		mcu_result = mcu_data[mcu_select * 8 + mcu_command];
-		mcu_result -=  mcu_seed;
-
-		mcu_update_seed(mcu_result);
-
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
+		portA_in = from_main;
+		if (main_sent) cpu_set_irq_line(1,0,CLEAR_LINE);
+		main_sent = 0;
+log_cb(RETRO_LOG_DEBUG, LOGPRE "read command %02x from main cpu\n",portA_in);
 	}
-	else if (mcu_command >= 0x28 && mcu_command <= 0x2a)
+	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
 	{
-		mcu_update_seed(data);
-
-		mcu_result = RAM[0x8380 + mcu_command];
-		mcu_result -=  mcu_seed;
-
-		mcu_update_seed(mcu_result);
-
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "send command %02x to main cpu\n",portA_out);
+		from_mcu = portA_out;
+		mcu_sent = 1;
 	}
-	else if (mcu_command < 0x80)
-	{
-		mcu_update_seed(data);
 
-		if (mcu_command >= 0x40 && mcu_command < 0x60)
-		{
-			mcu_select = mcu_command - 0x40;
-
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: MCU select 0x%02x\n", activecpu_get_pc(), mcu_select);
-		}
-	}
-	else if (mcu_command == 0x9c|| mcu_command == 0xde)
-	{
-		mcu_update_seed(data);
-
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: MCU command 0x%02x\n", activecpu_get_pc(), mcu_command);
-	}
+	portB_out = data;
 }
 
-WRITE_HANDLER( chaknpop_mcu_portB_w )
+WRITE_HANDLER( chaknpop_68705_ddrB_w )
 {
-	/*logerror("%04x: MCU portB write 0x%02x\n", activecpu_get_pc(), data);*/
-}
-
-WRITE_HANDLER( chaknpop_mcu_portC_w )
-{
-	/*logerror("%04x: MCU portC write 0x%02x\n", activecpu_get_pc(), data);*/
+	ddrB = data;
 }
 
 
-/***************************************************************************
-  Initialize mcu emulation
-***************************************************************************/
+static unsigned char portC_in,portC_out,ddrC;
 
-DRIVER_INIT( chaknpop )
+READ_HANDLER( chaknpop_68705_portC_r )
 {
-	state_save_register_UINT8("chankpop", 0, "mcu_seed",    &mcu_seed,    1);
-	state_save_register_UINT8("chankpop", 0, "mcu_result",  &mcu_result,  1);
-	state_save_register_UINT8("chankpop", 0, "mcu_select",  &mcu_select,  1);
-	state_save_register_UINT8("chankpop", 0, "mcu_wait",    &mcu_wait,    1);
+	portC_in = 0;
+	if (main_sent) portC_in |= 0x01;
+	if (!mcu_sent) portC_in |= 0x02;
+/*logerror("%04x: 68705 port C read %02x\n",activecpu_get_pc(),portC_in); */
+	return (portC_out & ddrC) | (portC_in & ~ddrC);
 }
 
-MACHINE_INIT( chaknpop )
+WRITE_HANDLER( chaknpop_68705_portC_w )
 {
-	mcu_seed = MCU_INITIAL_SEED;
-	mcu_wait = 0;
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
+	portC_out = data;
+}
+
+WRITE_HANDLER( chaknpop_68705_ddrC_w )
+{
+	ddrC = data;
+}
+
+WRITE_HANDLER( chaknpop_mcu_w )
+{
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
+	from_main = data;
+	main_sent = 1;
+	cpu_set_irq_line(1,0,ASSERT_LINE);
+}
+
+READ_HANDLER( chaknpop_mcu_r )
+{
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
+	mcu_sent = 0;
+	return from_mcu;
+}
+
+READ_HANDLER( chaknpop_mcu_status_r )
+{
+	int res = 0;
+
+	/* bit 0 = when 1, mcu is ready to receive data from main cpu */
+	/* bit 1 = when 1, mcu has sent data to the main cpu */
+/*logerror("%04x: mcu_status_r\n",activecpu_get_pc()); */
+	if (!main_sent) res |= 0x01;
+	if (mcu_sent) res |= 0x02;
+
+	return res;
 }
