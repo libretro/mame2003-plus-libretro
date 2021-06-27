@@ -319,7 +319,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Journey - Romset `journey`
 * Juno First - Romset `junofrst`
 * Kick - Romset `kick`
-* Kick N Run- Romset `kicknrun`
+* Kick'N Run- Romset `kicknrun`
 * Kozmik Kroozr - Romset `kroozr`
 * Macho Mouse - Romset `machomou` - colors fixed
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
