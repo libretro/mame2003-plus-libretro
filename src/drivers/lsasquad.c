@@ -7,19 +7,24 @@ driver by Nicola Salmoria
 TODO:
 - I think storming is supposed to be a bootleg without mcu, so I should verify
   if it works with the mcu not hooked up.
+  
 - Wrong sprite/tilemap priority. Sprites can appear above and below the middle
   layer, it's not clear how this is selected since there are no free attribute
   bits.
+  
   The priority seems to involve split transparency on the tilemap and also
   priority on sprites (so that people pass below doors but airplanes above).
   It is confirmed that priority is controlled by PROM a64-06.9 (grounding A9
   makes sprites disappear).
+  
 - Scrollram not entirely understood - it's most likely wrong, but more than
   enough to run this particular game.
+  
 - The video driver is pretty slow and could be optimized using temporary bitmaps
   (or tilemaps), however I haven't done that because the video circuitry is not
   entirely understood and if other games are found running on this hardware, they
   might not like the optimizations.
+  
 - Unknown writes to YM2203 output ports (filters?)
 
 ***************************************************************************/
@@ -52,14 +57,9 @@ WRITE_HANDLER( lsasquad_mcu_w );
 READ_HANDLER( lsasquad_mcu_r );
 READ_HANDLER( lsasquad_mcu_status_r );
 
-READ_HANDLER( daikaiju_mcu_r);
-WRITE_HANDLER( daikaiju_mcu_w);
-READ_HANDLER( daikaiju_mcu_status_r);
-
 READ_HANDLER( daikaiju_sound_status_r );
 READ_HANDLER( daikaiju_sh_sound_command_r );
-
-MACHINE_INIT(daikaiju);
+READ_HANDLER( daikaiju_mcu_status_r );
 
 
 WRITE_HANDLER( lsasquad_bankswitch_w )
@@ -164,7 +164,7 @@ static MEMORY_READ_START( daikaiju_readmem )
 	{ 0xe806, 0xe806, input_port_6_r },	/* START */
 	{ 0xe807, 0xe807, input_port_7_r },	/* SERVICE/TILT */
 	{ 0xec01, 0xec01, lsasquad_sound_status_r },
-	{ 0xee00, 0xee00, daikaiju_mcu_r },
+	{ 0xee00, 0xee00, lsasquad_mcu_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( daikaiju_writemem )
@@ -175,7 +175,7 @@ static MEMORY_WRITE_START( daikaiju_writemem )
 	{ 0xe400, 0xe7ff, MWA_RAM, &spriteram, &spriteram_size },	/* OBJECT RAM */
 	{ 0xea00, 0xea00, lsasquad_bankswitch_w },
 	{ 0xec00, 0xec00, lsasquad_sound_command_w },
-	{ 0xee00, 0xee00, daikaiju_mcu_w },
+	{ 0xee00, 0xee00, lsasquad_mcu_w },
 MEMORY_END
 
 static MEMORY_READ_START( daikaiju_sound_readmem )
@@ -548,14 +548,15 @@ static MACHINE_DRIVER_START( daikaiju )
 	/* audio CPU */
 	MDRV_CPU_MEMORY(daikaiju_sound_readmem, daikaiju_sound_writemem)
 	/* IRQs are triggered by the YM2203 */
+	
+	MDRV_CPU_ADD(M68705,4000000/2)	/* ? */
+	MDRV_CPU_MEMORY(m68705_readmem,m68705_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(500)	/* 500 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 							/* main<->sound synchronization depends on this */
-
-	MDRV_MACHINE_INIT(daikaiju)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -655,7 +656,7 @@ ROM_START( daikaiju )
 	ROM_LOAD( "a74_04.ic44",    0x0000, 0x8000, CRC(98a6a703) SHA1(0c169a7a5f8b26606f67ee7f14bd487951536ac5) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )
-/*	ROM_LOAD( "a74_05.ic35",    0x0000, 0x0800, NO_DUMP ) */
+    ROM_LOAD( "a74_05.ic35",    0x0000, 0x0800, CRC(d66df06f) SHA1(6a61eb15aef7f3b7a66ec9d87c0bdd731d6cb079) )
 
 	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a74_10.ic27",    0x00000, 0x8000, CRC(3123158e) SHA1(cdebf63c283c5c042596b0a13361fd01245e9c42) )
