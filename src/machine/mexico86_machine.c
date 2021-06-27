@@ -2,7 +2,191 @@
 
 
 unsigned char *mexico86_protection_ram;
+unsigned char *kicknrun_sharedram;
+static int kikikai_mcu_running, kikikai_mcu_initialised;
+READ_HANDLER( kicknrun_sharedram_r );
+WRITE_HANDLER( kicknrun_sharedram_w );
 
+/*
+$f008 - write
+bit 7 = ? (unused?)
+bit 6 = ? (unused?)
+bit 5 = ? (unused?)
+bit 4 = ? (usually set in game)
+bit 3 = ? (usually set in game)
+bit 2 = sound cpu reset line
+bit 1 = microcontroller reset line
+bit 0 = ? (unused?)
+*/
+WRITE_HANDLER( mexico86_f008_w )
+{
+	cpu_set_reset_line(1,(data & 4) ? CLEAR_LINE : ASSERT_LINE);
+ 	if (Machine->drv->cpu[2].cpu_type != CPU_DUMMY)
+	{
+		/* mexico 86 */
+		cpu_set_reset_line(2,(data & 2) ? CLEAR_LINE : ASSERT_LINE);
+	}
+	else
+	{
+		/* simulation for KiKi KaiKai */
+		kikikai_mcu_running = data & 2;
+		if (!kikikai_mcu_running)
+			kikikai_mcu_initialised = 0;
+	}
+}
+
+WRITE_HANDLER( kicknrun_f008_w )
+{
+	cpu_set_reset_line(1,(data & 4) ? CLEAR_LINE : ASSERT_LINE);
+	cpu_set_reset_line(2,(data & 2) ? CLEAR_LINE : ASSERT_LINE);
+
+}
+
+/***************************************************************************
+
+ KiKi KaiKai MCU simulation
+
+ This is derived from examination of the bootleg 68705 MCU code, with an
+ addition to fix collision detection which is missing from the bootleg.
+
+***************************************************************************/
+
+static void mcu_simulate(void)
+{
+	if (!kikikai_mcu_initialised)
+	{
+		if (mexico86_protection_ram[0x01] == 0x00)
+		{
+log_cb(RETRO_LOG_DEBUG, LOGPRE "initialising MCU\n");
+			mexico86_protection_ram[0x04] = 0xfc;	/* coin inputs */
+			mexico86_protection_ram[0x02] = 0xff;	/* player 1 */
+			mexico86_protection_ram[0x03] = 0xff;	/* player 2 */
+			mexico86_protection_ram[0x1b] = 0xff;	/* active player */
+			mexico86_protection_ram[0x06] = 0xff;	/* must be FF otherwise PS4 ERROR */
+			mexico86_protection_ram[0x07] = 0x03;	/* must be 03 otherwise PS4 ERROR */
+			mexico86_protection_ram[0x00] = 0x00;
+			kikikai_mcu_initialised = 1;
+		}
+	}
+
+	if (kikikai_mcu_initialised)
+	{
+		int i;
+		static int coin_last;
+		int coin_curr;
+
+
+		coin_curr = ~readinputport(0) & 1;
+		if (coin_curr && !coin_last && mexico86_protection_ram[0x01] < 9)
+		{
+			mexico86_protection_ram[0x01]++;	/* increase credits counter */
+			mexico86_protection_ram[0x0a] = 0x01;	/* set flag (coin inserted sound is not played otherwise) */
+		}
+		coin_last = coin_curr;
+
+		mexico86_protection_ram[0x04] = 0x3c;	/* coin inputs */
+
+		mexico86_protection_ram[0x02] = BITSWAP8(readinputport(1), 7,6,5,4,2,3,1,0);	/* player 1 */
+		mexico86_protection_ram[0x03] = BITSWAP8(readinputport(2), 7,6,5,4,2,3,1,0);	/* player 2 */
+
+		if (mexico86_protection_ram[0x19] == 0xaa)	/* player 2 active */
+			mexico86_protection_ram[0x1b] = mexico86_protection_ram[0x03];
+		else
+			mexico86_protection_ram[0x1b] = mexico86_protection_ram[0x02];
+
+
+		for (i = 0; i < 0x10; i += 2)
+			mexico86_protection_ram[i + 0xb1] = mexico86_protection_ram[i + 0xb0];
+
+		for (i = 0; i < 0x0a; i++)
+			mexico86_protection_ram[i + 0xc0] = mexico86_protection_ram[i + 0x90] + 1;
+
+		if (mexico86_protection_ram[0xd1] == 0xff)
+		{
+			if (mexico86_protection_ram[0xd0] > 0 && mexico86_protection_ram[0xd0] < 4)
+			{
+				mexico86_protection_ram[0xd2] = 0x81;
+				mexico86_protection_ram[0xd0] = 0xff;
+			}
+		}
+
+
+		if (mexico86_protection_ram[0xe0] > 0 && mexico86_protection_ram[0xe0] < 4)
+		{
+			static UINT8 answers[3][16] =
+			{
+				{ 0x00,0x40,0x48,0x50,0x58,0x60,0x68,0x70,0x78,0x80,0x88,0x00,0x00,0x00,0x00,0x00 },
+				{ 0x00,0x04,0x08,0x0C,0x10,0x14,0x18,0x1C,0x20,0x31,0x2B,0x35,0x00,0x00,0x00,0x00 },
+				{ 0x00,0x0C,0x0D,0x0E,0x0F,0x10,0x11,0x12,0x03,0x0A,0x0B,0x14,0x00,0x00,0x00,0x00 },
+			};
+			int table = mexico86_protection_ram[0xe0] - 1;
+
+			for (i = 1; i < 0x10; i++)
+				mexico86_protection_ram[0xe0 + i] = answers[table][i];
+			mexico86_protection_ram[0xe0] = 0xff;
+		}
+
+		if (mexico86_protection_ram[0xf0] > 0 && mexico86_protection_ram[0xf0] < 4)
+		{
+			mexico86_protection_ram[0xf1] = 0xb3;
+			mexico86_protection_ram[0xf0] = 0xff;
+		}
+
+
+		/* The following is missing from Knight Boy
+		   this should be equivalent to the obfuscated kiki_clogic() below */
+		{
+			static UINT8 db[16]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x10,0x18,0x00,0x00,0x00,0x00};
+			UINT16 sy = mexico86_protection_ram[0xa0] + ((0x18)>>1);
+			UINT16 sx = mexico86_protection_ram[0xa1] + ((0x18)>>1);
+
+			for (i = 0; i < 0x38; i += 8)
+			{
+                UINT8 hw = db[mexico86_protection_ram[0x20 + i] & 0xf];
+
+				if (hw)
+				{
+					UINT16 xdiff = sx - ((UINT16)mexico86_protection_ram[0x20 + i+6] << 8 | mexico86_protection_ram[0x20 + i+7]);
+					if (xdiff < hw)
+					{
+						UINT16 ydiff = sy - ((UINT16)mexico86_protection_ram[0x20 + i+4] << 8 | mexico86_protection_ram[0x20 + i+5]);
+						if (ydiff < hw)
+							mexico86_protection_ram[0xa2] = 1; /* we have a collision */
+					}
+				}
+			}
+		}
+	}
+}
+
+
+INTERRUPT_GEN( kikikai_interrupt )
+{
+	if (kikikai_mcu_running)
+		mcu_simulate();
+
+	cpu_irq_line_vector_w(0,0,mexico86_protection_ram[0]);
+	cpu_set_irq_line(0,0,HOLD_LINE);
+}
+
+READ_HANDLER( kicknrun_sharedram_r )
+{
+	return kicknrun_sharedram[offset];
+}
+
+WRITE_HANDLER( kicknrun_sharedram_w )
+{
+	kicknrun_sharedram[offset] = data;
+}
+
+INTERRUPT_GEN( kicknrun_interrupt )
+{
+	cpu_irq_line_vector_w(0,0,kicknrun_sharedram[0]);
+	cpu_set_irq_line(0,0,HOLD_LINE);
+}
+
+
+#if 0
 /*AT*/
 /***************************************************************************
 
@@ -49,6 +233,8 @@ static void kiki_clogic(int address, int latch)
 	}
 }
 /*ZT*/
+#endif
+
 
 /***************************************************************************
 
@@ -136,7 +322,6 @@ WRITE_HANDLER( mexico86_68705_portB_w )
 			{
 /*logerror("%04x: 68705 read %02x from address %04x\n",activecpu_get_pc(),shared[0x800+address],address);*/
 				latch = mexico86_protection_ram[address];
-				kiki_clogic(address, latch); /*AT*/
 			}
 			else
 			{
