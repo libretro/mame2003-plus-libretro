@@ -44,7 +44,6 @@ WRITE_HANDLER( flstory_68705_ddrA_w )
 }
 
 
-
 /*
  *  Port B connections:
  *
@@ -134,45 +133,6 @@ READ_HANDLER( flstory_mcu_status_r )
 /*logerror("%04x: mcu_status_r\n",activecpu_get_pc());*/
 	if (!main_sent) res |= 0x01;
 	if (mcu_sent) res |= 0x02;
-
-	return res;
-}
-
-WRITE_HANDLER( onna34ro_mcu_w )
-{
-	data8_t *RAM = memory_region(REGION_CPU1);
-	UINT16 score_adr = RAM[0xe29e]*0x100 + RAM[0xe29d];
-
-	switch (data)
-	{
-		case 0x0e:
-			from_mcu = 0xff;
-			break;
-		case 0x01:
-			from_mcu = 0x6a;
-			break;
-		case 0x40:
-			from_mcu = RAM[score_adr];			/* score l*/
-			break;
-		case 0x41:
-			from_mcu = RAM[score_adr+1];		/* score m*/
-			break;
-		case 0x42:
-			from_mcu = RAM[score_adr+2] & 0x0f;	/* score h*/
-			break;
-		default:
-			from_mcu = 0x80;
-	}
-}
-
-READ_HANDLER( onna34ro_mcu_r )
-{
-	return from_mcu;
-}
-
-READ_HANDLER( onna34ro_mcu_status_r )
-{
-	int res = 3;
 
 	return res;
 }
