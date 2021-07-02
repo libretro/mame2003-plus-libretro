@@ -63,13 +63,13 @@ static MEMORY_READ_START( readmem )
 	{ 0xe001, 0xe001, input_port_1_r },
 	{ 0xe002, 0xe002, input_port_2_r },
 	{ 0xe003, 0xe003, input_port_3_r },
-	{ 0xf000, 0xffff, MRA_ROM },
+	{ 0xfff0, 0xffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x1000, 0x17ff, tryout_videoram_w , &videoram },
-	{ 0x2000, 0x3fff, MWA_BANK1 },
+	{ 0x2000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0xbfff, MWA_ROM },
 	{ 0xc800, 0xc87f, MWA_RAM, &spriteram },
 	{ 0xcc00, 0xcc7f, MWA_RAM, &spriteram_2 },
@@ -80,7 +80,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xe402, 0xe404, MWA_RAM, &tryout_gfx_control },
 	{ 0xe414, 0xe414, tryout_sound_w },
 	{ 0xe417, 0xe417, tryout_nmi_ack_w },
-	{ 0xf000, 0xffff, MWA_ROM },
+	{ 0xfff0, 0xffff, MWA_ROM },
 MEMORY_END
 
 /*
