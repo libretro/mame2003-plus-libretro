@@ -56,6 +56,8 @@ static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x07ff, MRA_RAM },
 	{ 0x2000, 0x3fff, MRA_BANK1 },
 	{ 0x4000, 0xbfff, MRA_ROM },
+	{ 0xc800, 0xc87f, MRA_RAM },
+	{ 0xcc00, 0xcc7f, MRA_RAM },
 	{ 0xd000, 0xd7ff, tryout_vram_r },
 	{ 0xe000, 0xe000, input_port_0_r },
 	{ 0xe001, 0xe001, input_port_1_r },
@@ -69,6 +71,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x1000, 0x17ff, tryout_videoram_w , &videoram },
 	{ 0x2000, 0x3fff, MWA_BANK1 },
 	{ 0x4000, 0xbfff, MWA_ROM },
+	{ 0xc800, 0xc87f, MWA_RAM, &spriteram },
+	{ 0xcc00, 0xcc7f, MWA_RAM, &spriteram_2 },
 	{ 0xd000, 0xd7ff, tryout_vram_w },
 	{ 0xe301, 0xe301, tryout_flipscreen_w },
 	{ 0xe302, 0xe302, tryout_bankswitch_w },
@@ -78,6 +82,10 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xe417, 0xe417, tryout_nmi_ack_w },
 	{ 0xf000, 0xffff, MWA_ROM },
 MEMORY_END
+
+/*
+	AM_RANGE(0xfff0, 0xffff) AM_ROM AM_REGION(REGION_CPU1, 0xbff0)
+*/
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x07ff, MRA_RAM },
@@ -93,14 +101,6 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0xd000, 0xd000, tryout_sound_irq_ack_w },
 	{ 0xc000, 0xffff, MWA_ROM },
 MEMORY_END
-
-/*
-static ADDRESS_MAP_START( main_cpu, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0xc800, 0xc87f) AM_RAM AM_BASE(&spriteram)
-	AM_RANGE(0xcc00, 0xcc7f) AM_RAM AM_BASE(&spriteram_2)
-	AM_RANGE(0xfff0, 0xffff) AM_ROM AM_REGION(REGION_CPU1, 0xbff0)
-ADDRESS_MAP_END
-*/
 
 INPUT_PORTS_START( tryout )
 	PORT_START
