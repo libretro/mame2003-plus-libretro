@@ -213,7 +213,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			x = 240 - x;
 			fx = !fx;
 
-			y = 240 - y;	
+			y = 240 - y;
 			fy = !fy;
 
 			inc = -inc;
