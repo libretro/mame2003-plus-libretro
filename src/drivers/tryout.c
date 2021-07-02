@@ -74,7 +74,6 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xe302, 0xe302, tryout_bankswitch_w },
 	{ 0xe401, 0xe401, tryout_vram_bankswitch_w },
 	{ 0xe402, 0xe404, MWA_RAM, &tryout_gfx_control },
-	{ 0xe410, 0xe410, MWA_RAM },
 	{ 0xe414, 0xe414, tryout_sound_w },
 	{ 0xe417, 0xe417, tryout_nmi_ack_w },
 	{ 0xf000, 0xffff, MWA_ROM },
