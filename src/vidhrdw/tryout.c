@@ -58,12 +58,12 @@ static void get_bg_tile_info(int tile_index)
 	SET_TILE_INFO(2, tryout_vram[tile_index] & 0x7f, 0, 0)
 }
 
-READ8_HANDLER( tryout_vram_r )
+READ_HANDLER( tryout_vram_r )
 {
 	return tryout_vram[offset]; // debug only
 }
 
-WRITE8_HANDLER( tryout_videoram_w )
+WRITE_HANDLER( tryout_videoram_w )
 {
 	if( videoram[offset] != data )
 	{
@@ -72,7 +72,7 @@ WRITE8_HANDLER( tryout_videoram_w )
 	}
 }
 
-WRITE8_HANDLER( tryout_vram_w )
+WRITE_HANDLER( tryout_vram_w )
 {
 	/*  There are eight banks of vram - in bank 0 the first 0x400 bytes
 	is reserved for the tilemap.  In banks 2, 4 and 6 the game never
@@ -148,12 +148,12 @@ WRITE8_HANDLER( tryout_vram_w )
 	tilemap_mark_all_tiles_dirty(bg_tilemap);
 }
 
-WRITE8_HANDLER( tryout_vram_bankswitch_w )
+WRITE_HANDLER( tryout_vram_bankswitch_w )
 {
 	vram_bank = data;
 }
 
-WRITE8_HANDLER( tryout_flipscreen_w )
+WRITE_HANDLER( tryout_flipscreen_w )
 {
 	flip_screen_set(data & 1);
 }
