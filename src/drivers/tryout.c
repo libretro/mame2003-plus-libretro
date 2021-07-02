@@ -67,7 +67,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x1000, 0x17ff, tryout_videoram_w , &videoram },
-	{ 0x2000, 0x3fff, MWA_ROM },
+	{ 0x2000, 0x3fff, MWA_BANK1 },
 	{ 0x4000, 0xbfff, MWA_ROM },
 	{ 0xd000, 0xd7ff, tryout_vram_w },
 	{ 0xe301, 0xe301, tryout_flipscreen_w },
