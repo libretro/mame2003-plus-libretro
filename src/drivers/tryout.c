@@ -206,7 +206,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static INTERRUPT_GEN( tryout_interrupt )
 {
 	if ((input_port_3_r(0) & 0x1c)!=0x1c)
-		cpu_set_irq_line(0, INPUT_LINE_NMI, ASSERT_LINE);
+		cpu_set_nmi_line(0, ASSERT_LINE);
 }
 
 static struct YM2203interface ym2203_interface =
