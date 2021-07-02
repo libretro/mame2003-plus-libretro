@@ -54,7 +54,7 @@ static WRITE_HANDLER( tryout_bankswitch_w )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x07ff, MRA_RAM },
-	{ 0x2000, 0x3fff, MRA_ROM },
+	{ 0x2000, 0x3fff, MRA_BANK1 },
 	{ 0x4000, 0xbfff, MRA_ROM },
 	{ 0xc800, 0xc87f, MRA_RAM },
 	{ 0xcc00, 0xcc7f, MRA_RAM },
@@ -69,7 +69,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x1000, 0x17ff, tryout_videoram_w , &videoram },
-	{ 0x2000, 0x3fff, MWA_ROM },
+	{ 0x2000, 0x3fff, MWA_BANK1 },
 	{ 0x4000, 0xbfff, MWA_ROM },
 	{ 0xc800, 0xc87f, MWA_RAM, &spriteram },
 	{ 0xcc00, 0xcc7f, MWA_RAM, &spriteram_2 },
