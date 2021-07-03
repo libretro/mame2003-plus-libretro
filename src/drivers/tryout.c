@@ -84,10 +84,6 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xfff0, 0xffff, MWA_ROM, &tryout_rom },
 MEMORY_END
 
-/*
-	AM_RANGE(0xfff0, 0xffff) AM_ROM AM_REGION(REGION_CPU1, 0xbff0)
-*/
-
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x07ff, MRA_RAM },
 	{ 0x4000, 0x4000, YM2203_status_port_0_r },
@@ -197,9 +193,9 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout,   0, 0x20 },
-	{ REGION_GFX2, 0, &spritelayout, 0, 0x20 },
-	{ 0,           0, &vramlayout,   0, 0x20 },
+	{ REGION_GFX1, 0, &charlayout,   0, 8 },
+	{ REGION_GFX2, 0, &spritelayout, 0, 4 },
+	{ 0,           0, &vramlayout,   0, 4 },
 	{ -1 }
 };
 
@@ -238,7 +234,7 @@ static MACHINE_DRIVER_START( tryout )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(256, 256)
-	MDRV_VISIBLE_AREA(1*8, 32*8-1, 1*8, 31*8-1)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(0x20)
