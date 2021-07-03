@@ -16,7 +16,7 @@ data8_t *tryout_gfx_control;
 PALETTE_INIT( tryout )
 {
 	int i;
- 
+
 	for (i = 0;i < Machine->drv->total_colors;i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
@@ -81,10 +81,10 @@ WRITE_HANDLER( tryout_vram_w )
 
 	The rest of the vram is tile data which has the bitplanes arranged
 	in a very strange format.  For Mame's sake we reformat this on
-	the fly for easier gfx decode.  
+	the fly for easier gfx decode.
 
 	Bit 0 of the bank register seems special - it's kept low when uploading
-	gfx data and then set high from that point onwards. 
+	gfx data and then set high from that point onwards.
 
 	*/
 	const data8_t bank=(vram_bank>>1)&0x7;
@@ -252,7 +252,7 @@ VIDEO_UPDATE( tryout )
 	tilemap_set_scrollx(bg_tilemap, 0, scrollx+2); /* why +2? hard-wired? */
 	tilemap_set_scrolly(bg_tilemap, 0, -tryout_gfx_control[2]);
 
-	if(!(tryout_gfx_control[0] & 0x8)) // screen disable
+	if(!(tryout_gfx_control[0] & 0x8)) /* screen disable */
 	{
 		/* TODO: Color might be different, needs a video from an original pcb. */
 		fillbitmap(bitmap, Machine->pens[0x10], cliprect);
