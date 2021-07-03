@@ -16,6 +16,7 @@
 #include "vidhrdw/generic.h"
 
 extern data8_t *tryout_gfx_control;
+static data8_t *tryout_rom;
 
 extern READ_HANDLER( tryout_vram_r );
 extern WRITE_HANDLER( tryout_videoram_w );
@@ -80,7 +81,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xe402, 0xe404, MWA_RAM, &tryout_gfx_control },
 	{ 0xe414, 0xe414, tryout_sound_w },
 	{ 0xe417, 0xe417, tryout_nmi_ack_w },
-	{ 0xfff0, 0xffff, MWA_ROM },
+	{ 0xfff0, 0xffff, MWA_ROM, &tryout_rom },
 MEMORY_END
 
 /*
@@ -277,4 +278,10 @@ ROM_START( tryout )
 	ROM_LOAD( "ch14.bpr",     0x00000, 0x0020, CRC(8ce19925) SHA1(12f8f6022f1148b6ba1d019a34247452637063a7) )
 ROM_END
 
-GAMEX( 1985, tryout, 0, tryout, tryout, 0, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_IMPERFECT_GRAPHICS )
+DRIVER_INIT( tryout )
+{
+  /* set up data ROMs */
+  memcpy(tryout_rom, memory_region(REGION_CPU1, 0xbff0), memory_region_length(REGION_CPU1, 0xbff0));
+}
+
+GAMEX( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_IMPERFECT_GRAPHICS )
