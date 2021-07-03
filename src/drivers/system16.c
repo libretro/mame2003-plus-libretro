@@ -152,6 +152,8 @@ Notes:
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
 
+extern void mc8123_decrypt_0066(void);
+
 /***************************************************************************/
 
 // 7751 emulation
@@ -1154,6 +1156,12 @@ static MACHINE_INIT( altbeas2 ){
 static DRIVER_INIT( altbeast )
 {
 	machine_init_sys16_onetime();
+}
+
+static DRIVER_INIT( altbeas2 )
+{
+	machine_init_sys16_onetime();
+	mc8123_decrypt_0066();
 }
 
 /***************************************************************************/
@@ -7164,7 +7172,7 @@ GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",   
 GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
 GAMEX(1987, aliensyb, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 3)", GAME_NOT_WORKING )
 GAME( 1988, altbeast, 0,        altbeast, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 1)" )
-GAMEX(1988, altbeas2, altbeast, altbeas2, altbeast, altbeast, ROT0,   "Sega",    "Altered Beast (Version 2)", GAME_NO_SOUND )
+GAME( 1988, altbeas2, altbeast, altbeas2, altbeast, altbeas2, ROT0,   "Sega",    "Altered Beast (Version 2)" )
 GAMEX(1988, jyuohki,  altbeast, altbeast, altbeast, altbeast, ROT0,   "Sega",    "Jyuohki (Japan)",           GAME_NOT_WORKING )
 GAME( 1990, aurail,   0,        aurail,   aurail,   aurail,   ROT0,   "Sega / Westone", "Aurail (set 1)" )
 GAME( 1990, auraila,  aurail,   aurail,   aurail,   auraila,  ROT0,   "Sega / Westone", "Aurail (set 2)" )
