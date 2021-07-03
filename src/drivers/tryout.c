@@ -281,7 +281,7 @@ ROM_END
 DRIVER_INIT( tryout )
 {
   /* set up data ROMs */
-  memcpy(tryout_rom, &memory_region(REGION_CPU1)[0xbff0], 0x6000);
+  memcpy(tryout_rom, &memory_region(REGION_CPU1)[0xbff0], 0x1000);
 }
 
 GAMEX( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_IMPERFECT_GRAPHICS )
