@@ -5,9 +5,6 @@
 
  Driver by Pierpaolo Prazzoli and Bryan McPhail
 
- TODO:
- - Fix sprite position in cocktail mode
-
 ****************************************************************/
 
 #include "driver.h"
@@ -278,4 +275,4 @@ DRIVER_INIT( tryout )
   memcpy(tryout_rom, &memory_region(REGION_CPU1)[0xbff0], 0x10);
 }
 
-GAMEX( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_NO_COCKTAIL )
+GAME( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)" )
