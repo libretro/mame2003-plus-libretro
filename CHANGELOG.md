@@ -334,6 +334,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
 * Power Drive - Romset `powerdrv`
+* Pro Baseball Skill Tryout - `tryout`
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -731,3 +732,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the retofinv.c driver to MAME94 fixing some gfx niggles "lives left" display etc etc and hooked up the proper mcu for Return Of The Invaders [arcadez]
 * Fixed some graphical problems "dragon attacks" in the final level of The Fairyland Story [arcadez]
 * Removed a bootleg mcu and some fake mcu simulation code and hooked up the proper Taito mcu's for both The Fairyland Story and Onna Sansirou - Typhoon Gal [arcadez]
+* Fixed up Pro Baseball Skill Tryout drivers, now fully playable [arcadez, grant2258, mahoneyt944]
