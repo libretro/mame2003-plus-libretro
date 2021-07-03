@@ -64,7 +64,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xe001, 0xe001, input_port_1_r },
 	{ 0xe002, 0xe002, input_port_2_r },
 	{ 0xe003, 0xe003, input_port_3_r },
-	{ 0xfff0, 0xffff, MRA_ROM },
+	{ 0xfff0, 0xffff, MRA_ROM, &tryout_rom },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
