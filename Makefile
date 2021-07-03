@@ -465,6 +465,18 @@ else ifneq (,$(findstring armv,$(platform)))
 	CFLAGS += -fPIC
 	LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
+# RS90
+else ifeq ($(platform), rs90)
+	TARGET := $(TARGET_NAME)_libretro.so
+	CC = /opt/rs90-toolchain/usr/bin/mipsel-linux-gcc
+	CXX = /opt/rs90-toolchain/usr/bin/mipsel-linux-g++
+	AR = /opt/rs90-toolchain/usr/bin/mipsel-linux-ar
+	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
+	PLATCFLAGS += -D__GCW0__
+	LIBS := -lc -lgcc -lm
+	fpic := -fPIC -nostdlib
+	CFLAGS += -lm -march=mips32 -mtune=mips32
+
 # GCW0
 else ifeq ($(platform), gcw0)
 	TARGET := $(TARGET_NAME)_libretro.so
