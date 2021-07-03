@@ -6,8 +6,6 @@
  Driver by Pierpaolo Prazzoli and Bryan McPhail
 
  TODO:
- - Fix the scroll properly
- - Some colors problems
  - Fix sprite position in cocktail mode
 
 ****************************************************************/
@@ -230,7 +228,7 @@ static MACHINE_DRIVER_START( tryout )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-	
+
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(256, 256)
@@ -280,4 +278,4 @@ DRIVER_INIT( tryout )
   memcpy(tryout_rom, &memory_region(REGION_CPU1)[0xbff0], 0x10);
 }
 
-GAMEX( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1985, tryout, 0, tryout, tryout, tryout, ROT90, "Data East Corporation", "Pro Baseball Skill Tryout (Japan)", GAME_NO_COCKTAIL )
