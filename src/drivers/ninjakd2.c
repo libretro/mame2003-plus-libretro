@@ -224,21 +224,15 @@ The first sprite data is located at fa0b,then fa1b and so on.
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-WRITE_HANDLER( ninjakd2_bgvideoram_w );
-WRITE_HANDLER( ninjakd2_fgvideoram_w );
-WRITE_HANDLER( ninjakd2_sprite_overdraw_w );
-WRITE_HANDLER( ninjakd2_background_enable_w );
-VIDEO_START( ninjakd2 );
-VIDEO_UPDATE( ninjakd2 );
-
-extern unsigned char 	*ninjakd2_scrolly_ram;
-extern unsigned char 	*ninjakd2_scrollx_ram;
-extern unsigned char 	*ninjakd2_bgenable_ram;
-extern unsigned char 	*ninjakd2_spoverdraw_ram;
-extern unsigned char 	*ninjakd2_background_videoram;
-extern unsigned char 	*ninjakd2_foreground_videoram;
-extern size_t ninjakd2_backgroundram_size;
-extern size_t ninjakd2_foregroundram_size;
+extern WRITE_HANDLER( ninjakd2_bgvideoram_w );
+extern WRITE_HANDLER( ninjakd2_fgvideoram_w );
+extern WRITE_HANDLER( ninjakd2_scrollx_w );
+extern WRITE_HANDLER( ninjakd2_scrolly_w );
+extern WRITE_HANDLER( ninjakd2_sprite_overdraw_w );
+extern WRITE_HANDLER( ninjakd2_background_enable_w );
+extern VIDEO_START( ninjakd2 );
+extern VIDEO_UPDATE( ninjakd2 );
+extern UINT8 *ninjakd2_bg_videoram, *ninjakd2_fg_videoram;
 
 static int ninjakd2_bank_latch = 255;
 
@@ -288,7 +282,7 @@ READ_HANDLER( ninjakd2_bankselect_r )
 
 WRITE_HANDLER( ninjakd2_bankselect_w )
 {
-	unsigned char *RAM = memory_region(REGION_CPU1);
+	unsigned char *ROM = memory_region(REGION_CPU1);
 	int bankaddress;
 
 	if (data != ninjakd2_bank_latch)
@@ -296,7 +290,7 @@ WRITE_HANDLER( ninjakd2_bankselect_w )
 		ninjakd2_bank_latch = data;
 
 		bankaddress = 0x10000 + ((data & 0x7) * 0x4000);
-		cpu_setbank(1,&RAM[bankaddress]);	 /* Select 8 banks of 16k */
+		cpu_setbank(1,&ROM[bankaddress]);	 /* Select 8 banks of 16k */
 	}
 }
 
@@ -322,29 +316,32 @@ static MEMORY_READ_START( readmem )
 	{ 0xc002, 0xc002, input_port_1_r },
 	{ 0xc003, 0xc003, input_port_3_r },
 	{ 0xc004, 0xc004, input_port_4_r },
-	{ 0xc200, 0xc200, MRA_RAM },
-	{ 0xc201, 0xc201, MRA_RAM },		/* unknown but used*/
-	{ 0xc202, 0xc202, ninjakd2_bankselect_r },
+	{ 0xc201, 0xc201, MRA_NOP },		/* unknown but used */
+	{ 0xc202, 0xc202, MRA_RAM },
 	{ 0xc203, 0xc203, MRA_RAM },
 	{ 0xc208, 0xc209, MRA_RAM },
 	{ 0xc20a, 0xc20b, MRA_RAM },
 	{ 0xc20c, 0xc20c, MRA_RAM },
-	{ 0xc800, 0xffff, MRA_RAM },
+	{ 0xc800, 0xcdff, MRA_RAM },
+	{ 0xd000, 0xd7ff, MRA_RAM },
+	{ 0xd800, 0xdfff, MRA_RAM },
+	{ 0xe000, 0xf9ff, MRA_RAM },
+	{ 0xfa00, 0xffff, MRA_RAM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( writemem )
-	{ 0x0000, 0xbfff, MWA_ROM },
+	{ 0x0000, 0xbfff, MWA_BANK1 },
 	{ 0xc200, 0xc200, soundlatch_w },
-	{ 0xc201, 0xc201, MWA_RAM },		/* unknown but used*/
+	{ 0xc201, 0xc201, MWA_NOP },		/* unknown but used */
 	{ 0xc202, 0xc202, ninjakd2_bankselect_w },
-	{ 0xc203, 0xc203, ninjakd2_sprite_overdraw_w, &ninjakd2_spoverdraw_ram },
-	{ 0xc208, 0xc209, MWA_RAM, &ninjakd2_scrollx_ram },
-	{ 0xc20a, 0xc20b, MWA_RAM, &ninjakd2_scrolly_ram },
-	{ 0xc20c, 0xc20c, ninjakd2_background_enable_w, &ninjakd2_bgenable_ram },
+	{ 0xc203, 0xc203, ninjakd2_sprite_overdraw_w },
+	{ 0xc208, 0xc209, ninjakd2_scrollx_w },
+	{ 0xc20a, 0xc20b, ninjakd2_scrolly_w },
+	{ 0xc20c, 0xc20c, ninjakd2_background_enable_w },
 	{ 0xc800, 0xcdff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram },
-	{ 0xd000, 0xd7ff, ninjakd2_fgvideoram_w, &ninjakd2_foreground_videoram, &ninjakd2_foregroundram_size },
-	{ 0xd800, 0xdfff, ninjakd2_bgvideoram_w, &ninjakd2_background_videoram, &ninjakd2_backgroundram_size },
+	{ 0xd000, 0xd7ff, ninjakd2_fgvideoram_w, &ninjakd2_fg_videoram },
+	{ 0xd800, 0xdfff, ninjakd2_bgvideoram_w, &ninjakd2_bg_videoram },
 	{ 0xe000, 0xf9ff, MWA_RAM },
 	{ 0xfa00, 0xffff, MWA_RAM, &spriteram, &spriteram_size },
 MEMORY_END
@@ -492,7 +489,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct Samplesinterface samples_interface =
 {
 	1,	/* 1 channel */
-	25	/* volume */
+	30	/* volume */
 };
 
 static struct CustomSound_interface custom_interface =
@@ -512,7 +509,7 @@ static struct YM2203interface ym2203_interface =
 {
 	2, 	 /* 2 chips */
 	1500000, /* 12000000/8 MHz */
-	{ YM2203_VOL(25,25), YM2203_VOL(25,25) },
+	{ YM2203_VOL(30,30), YM2203_VOL(25,25) },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -524,43 +521,17 @@ static struct YM2203interface ym2203_interface =
 static MACHINE_DRIVER_START( ninjakd2 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)		/* 12000000/2 ??? */
+	MDRV_CPU_ADD(Z80, 12000000/2)		/* 12000000/2 ??? */
 	MDRV_CPU_MEMORY(readmem,writemem)	/* very sensitive to these settings */
 	MDRV_CPU_VBLANK_INT(ninjakd2_interrupt,1)
 
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(10000)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(768)
-
-	MDRV_VIDEO_START(ninjakd2)
-	MDRV_VIDEO_UPDATE(ninjakd2)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-MACHINE_DRIVER_END
-
-
-static MACHINE_DRIVER_START( ninjak2a )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)		/* 12000000/2 ??? */
-	MDRV_CPU_MEMORY(readmem,writemem)	/* very sensitive to these settings */
-	MDRV_CPU_VBLANK_INT(ninjakd2_interrupt,1)
-
-	MDRV_CPU_ADD(Z80, 4000000)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)		/* 12000000/3 ??? */
+	MDRV_CPU_ADD(Z80, 5000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)		/* 5mhz crystal ??? */
 	MDRV_CPU_MEMORY(snd_readmem,snd_writemem)
 	MDRV_CPU_PORTS(0,snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(10000)
-	MDRV_INTERLEAVE(10)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -588,8 +559,8 @@ ROM_START( ninjakd2 )
 	ROM_LOAD( "nk2_04.rom",   0x20000, 0x8000, CRC(e7692a77) SHA1(84beb8b02c564bffa9cc00313214e8f109bd40f9) )
 	ROM_LOAD( "nk2_05.rom",   0x28000, 0x8000, CRC(5dac9426) SHA1(0916cddbbe1e93c32b96fe28e145d34b2a892e80) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )
-	ROM_LOAD( "nk2_06.rom",   0x0000, 0x10000, CRC(d3a18a79) SHA1(e4df713f89d8a8b43ef831b14864c50ec9b53f0b) )  /* sound z80 code encrypted*/
+	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "nk2_06.rom",   0x0000, 0x10000, CRC(d3a18a79) SHA1(e4df713f89d8a8b43ef831b14864c50ec9b53f0b) )  /* sound z80 code encrypted */
 
 	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "nk2_11.rom",   0x00000, 0x4000, CRC(41a714b3) SHA1(b05f48d71a9837914c12c13e0b479c8a6dc8c25e) )	/* background tiles */
@@ -714,8 +685,7 @@ ROM_START( rdaction )
 	ROM_LOAD( "nk2_05.bin",   0x28000, 0x8000, CRC(960725fb) SHA1(160c8bfaf089cbeeef2023f12379793079bff93b) )
 
 	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )	/* 64k for code + 64k for decrypted opcodes */
-	ROM_LOAD( "nk2_06.bin",   0x10000, 0x8000, CRC(7bfe6c9e) SHA1(aef8cbeb0024939bf65f77113a5cf777f6613722) )	/* decrypted opcodes */
-	ROM_CONTINUE(             0x00000, 0x8000 )				/* decrypted data */
+    ROM_LOAD( "nk2_06.rom",   0x0000, 0x10000, CRC(d3a18a79) SHA1(e4df713f89d8a8b43ef831b14864c50ec9b53f0b) )  /* sound z80 code encrypted */
 
 	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "nk2_11.rom",   0x00000, 0x4000, CRC(41a714b3) SHA1(b05f48d71a9837914c12c13e0b479c8a6dc8c25e) )	/* background tiles */
@@ -749,6 +719,13 @@ ROM_END
 
 
 
+void mc8123_decrypt_ninjakid2(void);
+
+DRIVER_INIT( ninjakd2 )
+{
+	mc8123_decrypt_ninjakid2();
+}
+
 DRIVER_INIT( ninjak2a )
 {
 	unsigned char *rom = memory_region(REGION_CPU2);
@@ -758,8 +735,7 @@ DRIVER_INIT( ninjak2a )
 }
 
 
-
-GAMEX(1987, ninjakd2, 0,        ninjakd2, ninjakd2, 0,        ROT0, "UPL", "Ninja-Kid II (set 1)", GAME_NO_SOUND )	/* sound program is encrypted */
-GAME( 1987, ninjak2a, ninjakd2, ninjak2a, ninjakd2, ninjak2a, ROT0, "UPL", "Ninja-Kid II (set 2)" )
-GAME( 1987, ninjak2b, ninjakd2, ninjak2a, ninjakd2, ninjak2a, ROT0, "UPL", "Ninja-Kid II (set 3)" )
-GAME( 1987, rdaction, ninjakd2, ninjak2a, ninjakd2, ninjak2a, ROT0, "UPL (World Games license)", "Rad Action" )
+GAME( 1987, ninjakd2, 0,        ninjakd2, ninjakd2, ninjakd2, ROT0, "UPL", "Ninja-Kid II (set 1)" )	/* sound program is encrypted */
+GAME( 1987, ninjak2a, ninjakd2, ninjakd2, ninjakd2, ninjak2a, ROT0, "UPL", "Ninja-Kid II (set 2)" )
+GAME( 1987, ninjak2b, ninjakd2, ninjakd2, ninjakd2, ninjak2a, ROT0, "UPL", "Ninja-Kid II (set 3)" )
+GAME( 1987, rdaction, ninjakd2, ninjakd2, ninjakd2, ninjakd2, ROT0, "UPL (World Games license)", "Rad Action" )
