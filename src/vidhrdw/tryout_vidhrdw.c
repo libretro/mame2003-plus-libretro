@@ -55,7 +55,7 @@ static void get_fg_tile_info(int tile_index)
 
 static void get_bg_tile_info(int tile_index)
 {
-	SET_TILE_INFO(2, tryout_vram[tile_index] & 0x7f, 0, 0)
+	SET_TILE_INFO(2, tryout_vram[tile_index] & 0x7f, 2, 0)
 }
 
 READ_HANDLER( tryout_vram_r )
