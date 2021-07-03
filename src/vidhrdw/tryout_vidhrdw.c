@@ -196,8 +196,8 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		sprite = spriteram[offs+1] + ((spriteram_2[offs]&7)<<8);
 		x = spriteram[offs+3]-3;
 		y = spriteram[offs+2];
-		color = (spriteram[offs] & 8)>>3;
-		fx = 0;
+		color = 0;
+		fx = (spriteram[offs] & 8)>>3;
 		fy = 0;
 		inc = 16;
 
