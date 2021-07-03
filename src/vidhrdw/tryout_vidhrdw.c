@@ -237,28 +237,32 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 VIDEO_UPDATE( tryout )
 {
-//	data8_t* mem=memory_region(REGION_CPU1);
-
-	int scrollx;
+	int scrollx = 0;
 
 	if (!flip_screen)
 		tilemap_set_scrollx(fg_tilemap, 0, 16); /* Assumed hard-wired */
 	else
 		tilemap_set_scrollx(fg_tilemap, 0, -8); /* Assumed hard-wired */
 
-	if(tryout_gfx_control[0] == 0xc)
-		scrollx = tryout_gfx_control[1];
-	if(tryout_gfx_control[0] == 0x8 && !tryout_gfx_control[1])
-		scrollx = 0x100;
-	else
-		scrollx = tryout_gfx_control[1] | ((tryout_gfx_control[0]&1)<<8) | ((tryout_gfx_control[0]&4)<<7);
+	scrollx = tryout_gfx_control[1] + ((tryout_gfx_control[0]&1)<<8) + ((tryout_gfx_control[0]&4)<<7) - ((tryout_gfx_control[0] & 2) ? 0 : 0x100);
 
-	tilemap_set_scrollx(bg_tilemap, 0, scrollx);
+	/* wrap-around */
+	if(tryout_gfx_control[1] == 0) { scrollx+=0x100; }
+
+	tilemap_set_scrollx(bg_tilemap, 0, scrollx+2); /* why +2? hard-wired? */
 	tilemap_set_scrolly(bg_tilemap, 0, -tryout_gfx_control[2]);
 
-	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
-	tilemap_draw(bitmap,cliprect,fg_tilemap,0,0);
-	draw_sprites(bitmap,cliprect);
+	if(!(tryout_gfx_control[0] & 0x8)) // screen disable
+	{
+		/* TODO: Color might be different, needs a video from an original pcb. */
+		fillbitmap(bitmap, Machine->pens[0x10], cliprect);
+	}
+	else
+	{
+		tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
+		tilemap_draw(bitmap,cliprect,fg_tilemap,0,0);
+		draw_sprites(bitmap,cliprect);
+	}
 
-//	usrintf_showmessage("%02x %02x %02x - %04x",mem[0xe402],mem[0xe403],mem[0xe404], ((tryout_gfx_control[0]&1)<<8) | ((tryout_gfx_control[0]&4)<<7));
+//  usrintf_showmessage("%02x %02x %02x %02x",tryout_gfx_control[0],tryout_gfx_control[1],tryout_gfx_control[2],scrollx);
 }
