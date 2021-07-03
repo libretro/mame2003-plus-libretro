@@ -1,151 +1,83 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-#define COLORTABLE_START(gfxn,color)	Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + \
-					color * Machine->gfx[gfxn]->color_granularity
-#define GFX_COLOR_CODES(gfxn) 		Machine->gfx[gfxn]->total_colors
-#define GFX_ELEM_COLORS(gfxn) 		Machine->gfx[gfxn]->color_granularity
 
-unsigned char 	*ninjakd2_scrolly_ram;
-unsigned char 	*ninjakd2_scrollx_ram;
-unsigned char 	*ninjakd2_bgenable_ram;
-unsigned char 	*ninjakd2_spoverdraw_ram;
-unsigned char 	*ninjakd2_background_videoram;
-size_t ninjakd2_backgroundram_size;
-unsigned char 	*ninjakd2_foreground_videoram;
-size_t ninjakd2_foregroundram_size;
+UINT8 *ninjakd2_bg_videoram, *ninjakd2_fg_videoram;
 
-static struct mame_bitmap *bitmap_bg;
-static struct mame_bitmap *bitmap_sp;
+static UINT8  ninjakd2_bg_enable = 1, sprite_overdraw_enabled = 0;
+static UINT16 ninjakd2_scrollx, ninjakd2_scrolly;
+static struct tilemap *fg_tilemap, *bg_tilemap;
+static struct mame_bitmap *bitmap_sp;	/* for sprite overdraw */
 
-static unsigned char 	 *bg_dirtybuffer;
-static int 		 bg_enable = 1;
-static int 		 sp_overdraw = 0;
+static void get_bg_tile_info(int tile_index)
+{
+	int code = ((ninjakd2_bg_videoram[tile_index*2 + 1] & 0xc0) << 2) | ninjakd2_bg_videoram[tile_index*2];
+	int color = ninjakd2_bg_videoram[tile_index*2 + 1] & 0xf;
+	SET_TILE_INFO(0, code, color, TILE_FLIPYX((ninjakd2_bg_videoram[tile_index*2 + 1] & 0x30) >> 4))
+}
+
+static void get_fg_tile_info(int tile_index)
+{
+	int code = ((ninjakd2_fg_videoram[tile_index*2 + 1] & 0xc0) << 2) | ninjakd2_fg_videoram[tile_index*2];
+	int color = ninjakd2_fg_videoram[tile_index*2 + 1] & 0xf;
+	SET_TILE_INFO(2, code, color, TILE_FLIPYX((ninjakd2_fg_videoram[tile_index*2 + 1] & 0x30) >> 4))
+}
 
 VIDEO_START( ninjakd2 )
 {
-	if ((bg_dirtybuffer = auto_malloc(1024)) == 0)
-		return 1;
+	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE,      16, 16, 32, 32);
+	fg_tilemap = tilemap_create(get_fg_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT,  8,  8,  32, 32);
 
-	if ((bitmap_bg = auto_bitmap_alloc(Machine->drv->screen_width*2,Machine->drv->screen_height*2)) == 0)
-		return 1;
+	tilemap_set_transparent_pen(fg_tilemap, 15);
 
 	if ((bitmap_sp = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height)) == 0)
 		return 1;
-
-	memset(bg_dirtybuffer,1,1024);
 
 	return 0;
 }
 
 WRITE_HANDLER( ninjakd2_bgvideoram_w )
 {
-	if (ninjakd2_background_videoram[offset] != data)
-	{
-		bg_dirtybuffer[offset >> 1] = 1;
-		ninjakd2_background_videoram[offset] = data;
-	}
+	ninjakd2_bg_videoram[offset] = data;
+	tilemap_mark_tile_dirty(bg_tilemap, offset >> 1);
 }
 
 WRITE_HANDLER( ninjakd2_fgvideoram_w )
 {
-	if (ninjakd2_foreground_videoram[offset] != data)
-		ninjakd2_foreground_videoram[offset] = data;
+	ninjakd2_fg_videoram[offset] = data;
+	tilemap_mark_tile_dirty(fg_tilemap, offset >> 1);
+}
+
+WRITE_HANDLER( ninjakd2_scrollx_w )
+{
+	if(offset)
+		ninjakd2_scrollx = ((ninjakd2_scrollx & 0x0ff) | data*256) & 0x1ff;
+	else
+		ninjakd2_scrollx = ((ninjakd2_scrollx & 0x100) | data) & 0x1ff;
+}
+
+WRITE_HANDLER( ninjakd2_scrolly_w )
+{
+	if(offset)
+		ninjakd2_scrolly = ((ninjakd2_scrolly & 0x0ff) | data*256) & 0x1ff;
+	else
+		ninjakd2_scrolly = ((ninjakd2_scrolly & 0x100) | data) & 0x1ff;
 }
 
 WRITE_HANDLER( ninjakd2_background_enable_w )
 {
-	if (bg_enable!=data)
-	{
-		ninjakd2_bgenable_ram[offset] = data;
-		bg_enable = data;
-		if (bg_enable)
-		 memset(bg_dirtybuffer, 1, ninjakd2_backgroundram_size / 2);
-		else
-		 fillbitmap(bitmap_bg, Machine->pens[0],0);
-	}
+	ninjakd2_bg_enable = data & 1;
 }
 
 WRITE_HANDLER( ninjakd2_sprite_overdraw_w )
 {
-	if (sp_overdraw!=data)
-	{
-		ninjakd2_spoverdraw_ram[offset] = data;
+	sprite_overdraw_enabled = data & 1;
+
+	if(sprite_overdraw_enabled)
 		fillbitmap(bitmap_sp,15,&Machine->visible_area);
-		sp_overdraw = data;
-	}
 }
 
-void ninjakd2_draw_foreground(struct mame_bitmap *bitmap)
-{
-	int offs;
-
-	/* Draw the foreground text */
-
-	for (offs = 0 ;offs < ninjakd2_foregroundram_size / 2; offs++)
-	{
-		int sx,sy,tile,palette,flipx,flipy,lo,hi;
-
-		if (ninjakd2_foreground_videoram[offs*2] | ninjakd2_foreground_videoram[offs*2+1])
-		{
-			sx = (offs % 32) << 3;
-			sy = (offs >> 5) << 3;
-
-			lo = ninjakd2_foreground_videoram[offs*2];
-			hi = ninjakd2_foreground_videoram[offs*2+1];
-			tile = ((hi & 0xc0) << 2) | lo;
-			flipx = hi & 0x10;
-			flipy = hi & 0x20;
-			palette = hi & 0x0f;
-
-			drawgfx(bitmap,Machine->gfx[2],
-						tile,
-						palette,
-						flipx,flipy,
-						sx,sy,
-						&Machine->visible_area,TRANSPARENCY_PEN, 15);
-		}
-
-	}
-}
-
-
-void ninjakd2_draw_background(struct mame_bitmap *bitmap)
-{
-	int offs;
-
-	/* for every character in the Video RAM, check if it has been modified */
-	/* since last time and update it accordingly. */
-
-	for (offs = 0 ;offs < ninjakd2_backgroundram_size / 2; offs++)
-	{
-		int sx,sy,tile,palette,flipx,flipy,lo,hi;
-
-		if (bg_dirtybuffer[offs])
-		{
-			sx = (offs % 32) << 4;
-			sy = (offs >> 5) << 4;
-
-			bg_dirtybuffer[offs] = 0;
-
-			lo = ninjakd2_background_videoram[offs*2];
-			hi = ninjakd2_background_videoram[offs*2+1];
-			tile = ((hi & 0xc0) << 2) | lo;
-			flipx = hi & 0x10;
-			flipy = hi & 0x20;
-			palette = hi & 0x0f;
-			drawgfx(bitmap,Machine->gfx[0],
-					  tile,
-					  palette,
-					  flipx,flipy,
-					  sx,sy,
-					  0,TRANSPARENCY_NONE,0);
-		}
-
-	}
-}
-
-void ninjakd2_draw_sprites(struct mame_bitmap *bitmap)
+void ninjakd2_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
 
@@ -153,7 +85,7 @@ void ninjakd2_draw_sprites(struct mame_bitmap *bitmap)
 
 	for (offs = 11 ;offs < spriteram_size; offs+=16)
 	{
-		int sx,sy,tile,palette,flipx,flipy;
+		int sx,sy,tile,color,flipx,flipy;
 
 		if (spriteram[offs+2] & 2)
 		{
@@ -163,48 +95,69 @@ void ninjakd2_draw_sprites(struct mame_bitmap *bitmap)
 			tile = spriteram[offs+3]+((spriteram[offs+2] & 0xc0)<<2);
 			flipx = spriteram[offs+2] & 0x10;
 			flipy = spriteram[offs+2] & 0x20;
-			palette = spriteram[offs+4] & 0x0f;
-			drawgfx(bitmap,Machine->gfx[1],
+			color = spriteram[offs+4] & 0x0f;
+
+			if(sprite_overdraw_enabled && (color >= 0x0c && color <= 0x0e) )
+			{
+				/* "static" sprites */
+				drawgfx(bitmap_sp,Machine->gfx[1],
 						tile,
-						palette,
+						color,
 						flipx,flipy,
 						sx,sy,
-						&Machine->visible_area,
+						cliprect,
 						TRANSPARENCY_PEN, 15);
+			}
+			else
+			{
+				drawgfx(bitmap,Machine->gfx[1],
+						tile,
+						color,
+						flipx,flipy,
+						sx,sy,
+						cliprect,
+						TRANSPARENCY_PEN, 15);
+
+				/* "normal" sprites with color = 0x0f clear the "static" ones */
+				if(sprite_overdraw_enabled && color == 0x0f)
+				{
+					int x,y,offset = 0;
+					const struct GfxElement *gfx = Machine->gfx[1];
+					UINT8 *srcgfx = gfx->gfxdata + tile * gfx->char_modulo;
+
+					for(y = 0; y < gfx->height; y++)
+					{
+						for(x = 0; x < gfx->width; x++)
+						{
+							if(srcgfx[offset] != 15)
+							{
+								plot_pixel(bitmap_sp, sx + x, sy + y, 15);
+							}
+
+							offset++;
+						}
+					}
+				}
+			}
 		}
 	}
+
+	if(sprite_overdraw_enabled)
+		copybitmap(bitmap, bitmap_sp, 0, 0, 0, 0, cliprect, TRANSPARENCY_PEN, 15);
 }
 
-
-/***************************************************************************
-
-  Draw the game screen in the given mame_bitmap.
-  Do NOT call osd_update_display() from this function, it will be called by
-  the main emulation engine.
-
-***************************************************************************/
 VIDEO_UPDATE( ninjakd2 )
 {
-	int scrollx,scrolly;
+	fillbitmap(bitmap, Machine->pens[0],0);
 
-	if (bg_enable)
-		ninjakd2_draw_background(bitmap_bg);
+	tilemap_set_scrollx(bg_tilemap, 0, ninjakd2_scrollx);
+	tilemap_set_scrolly(bg_tilemap, 0, ninjakd2_scrolly);
 
-	scrollx = -((ninjakd2_scrollx_ram[0]+ninjakd2_scrollx_ram[1]*256) & 0x1FF);
-	scrolly = -((ninjakd2_scrolly_ram[0]+ninjakd2_scrolly_ram[1]*256) & 0x1FF);
+	if (ninjakd2_bg_enable)
+		tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
 
-	if (sp_overdraw)	/* overdraw sprite mode */
-	{
-		ninjakd2_draw_sprites(bitmap_sp);
-		ninjakd2_draw_foreground(bitmap_sp);
-		copyscrollbitmap(bitmap,bitmap_bg,1,&scrollx,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
-		copybitmap(bitmap,bitmap_sp,0,0,0,0,&Machine->visible_area,TRANSPARENCY_PEN, 15);
-	}
-	else 			/* normal sprite mode */
-	{
-		copyscrollbitmap(bitmap,bitmap_bg,1,&scrollx,1,&scrolly,&Machine->visible_area,TRANSPARENCY_NONE,0);
-		ninjakd2_draw_sprites(bitmap);
-		ninjakd2_draw_foreground(bitmap);
-	}
+	ninjakd2_draw_sprites(bitmap, cliprect);
+	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
 
 }
+
