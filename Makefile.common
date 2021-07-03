@@ -520,7 +520,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/brkthru_vidhrdw.c $(CORE_DIR)/drivers/brkthru.c \
 	$(CORE_DIR)/vidhrdw/metlclsh_vidhrdw.c $(CORE_DIR)/drivers/metlclsh.c \
 	$(CORE_DIR)/drivers/compgolf.c \
-	$(CORE_DIR)/drivers/tryout.c \
+	$(CORE_DIR)/vidhrdw/tryout_vidhrdw.c $(CORE_DIR)/drivers/tryout.c \
 	$(CORE_DIR)/vidhrdw/shootout_vidhrdw.c $(CORE_DIR)/drivers/shootout.c \
 	$(CORE_DIR)/vidhrdw/sidepckt_vidhrdw.c $(CORE_DIR)/drivers/sidepckt.c \
 	$(CORE_DIR)/vidhrdw/exprraid_vidhrdw.c $(CORE_DIR)/drivers/exprraid.c \
