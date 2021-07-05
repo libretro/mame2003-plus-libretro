@@ -132,7 +132,7 @@ INPUT_PORTS_START( compgolf )
 	PORT_DIPNAME( 0x01,   0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(	  0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02,   0x02, "Freeze" ) // this is more likely a switch...
+	PORT_DIPNAME( 0x02,   0x02, "Freeze" ) /* this is more likely a switch... */
 	PORT_DIPSETTING(      0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04,   0x04, DEF_STR( Unknown ) )
@@ -241,10 +241,10 @@ ROM_START( compgolf )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "cv05-3.bin",   0x08000, 0x8000, CRC(af9805bf) SHA1(bdde482906bb267e76317067785ac0ab7816df63) )
 
-	ROM_REGION( 0x8000, REGION_USER1, 0 ) // background data
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* background data */
 	ROM_LOAD( "cv06.bin",     0x00000, 0x8000, CRC(8f76979d) SHA1(432f6a1402fd3276669f5f45f03fd12380900178) )
 
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) // Sprites
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* Sprites */
 	ROM_LOAD( "cv00.bin",     0x00000, 0x8000, CRC(aa3d3b99) SHA1(eb968e40bcc7e7dd1acc0bbe885fd3f7d70d4bb5) )
 	ROM_LOAD( "cv01.bin",     0x08000, 0x8000, CRC(f68c2ff6) SHA1(dda9159fb59d3855025b98c272722b031617c89a) )
 	ROM_LOAD( "cv02.bin",     0x10000, 0x8000, CRC(979cdb5a) SHA1(25c1f3e6ddf50168c7e1a967bfa2753bea6106ec) )
@@ -267,10 +267,10 @@ ROM_START( compglfo )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "cv05.bin",     0x08000, 0x8000, CRC(3cef62c9) SHA1(c4827b45faf7aa4c80ddd3c57f1ed6ba76b5c49b) )
 
-	ROM_REGION( 0x8000, REGION_USER1, 0 ) // background data
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* background data */
 	ROM_LOAD( "cv06.bin",     0x00000, 0x8000, CRC(8f76979d) SHA1(432f6a1402fd3276669f5f45f03fd12380900178) )
 
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) // Sprites
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* Sprites */
 	ROM_LOAD( "cv00.bin",     0x00000, 0x8000, CRC(aa3d3b99) SHA1(eb968e40bcc7e7dd1acc0bbe885fd3f7d70d4bb5) )
 	ROM_LOAD( "cv01.bin",     0x08000, 0x8000, CRC(f68c2ff6) SHA1(dda9159fb59d3855025b98c272722b031617c89a) )
 	ROM_LOAD( "cv02.bin",     0x10000, 0x8000, CRC(979cdb5a) SHA1(25c1f3e6ddf50168c7e1a967bfa2753bea6106ec) )
