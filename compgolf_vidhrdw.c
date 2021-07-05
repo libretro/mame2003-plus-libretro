@@ -37,13 +37,13 @@ PALETTE_INIT( compgolf )
 	}
 }
 
-WRITE8_HANDLER( compgolf_video_w )
+WRITE_HANDLER( compgolf_video_w )
 {
 	videoram[offset] = data;
 	tilemap_mark_tile_dirty(text_tilemap, offset/2);
 }
 
-WRITE8_HANDLER( compgolf_back_w )
+WRITE_HANDLER( compgolf_back_w )
 {
 	compgolf_bg_ram[offset] = data;
 	tilemap_mark_tile_dirty(background_tilemap, offset/2);
