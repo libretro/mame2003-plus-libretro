@@ -3190,7 +3190,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( karatedo )	/* (c) 1984 Data East Corporation (Japan) */
 	DRIVER( kchampvs )	/* (c) 1984 Data East USA (US) */
 	DRIVER( karatevs )	/* (c) 1984 Data East Corporation (Japan) */
-	DRIVER( compgolf )	/* (c) 1985 Data East Corporation (Japan) */
+	DRIVER( compgolf )	/* (c) 1986 Data East Corporation (Japan) */
+	DRIVER( compglfo )	/* (c) 1985 Data East Corporation (Japan) */
 	DRIVER( tryout )	/* (c) 1985 Data East Corporation (Japan) */
 	DRIVER( firetrap )	/* (c) 1986 Data East USA (US) */
 	DRIVER( firetpbl )	/* bootleg */
