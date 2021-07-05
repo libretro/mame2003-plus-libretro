@@ -190,6 +190,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bubble Bobble (prototype on tokio hardware)
 * Calorie Kun vs Moguranian (bootleg)
 * Cannon Dancer
+* Competition Golf Final Round (old version) - `compglfo`
 * Crouching Tiger Hidden Dragon 2003
 * Crouching Tiger Hidden Dragon 2003 Super Plus
 * Crystal Castles (Joystick Version)
@@ -287,6 +288,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
 * Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
 * Cheeky Mouse - Romset `cheekyms` - colors fixed
+* Competition Golf Final Round (revision 3) - `compgolf`
 * Crater Raider - Romset `crater`
 * Crazy Climber 2 - Romset `cclimbr2`
 * Demolition Derby - Romset `demoderb`
@@ -733,3 +735,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some graphical problems "dragon attacks" in the final level of The Fairyland Story [arcadez]
 * Removed a bootleg mcu and some fake mcu simulation code and hooked up the proper Taito mcu's for both The Fairyland Story and Onna Sansirou - Typhoon Gal [arcadez]
 * Fixed up Pro Baseball Skill Tryout drivers, now fully playable [arcadez, grant2258, mahoneyt944]
+* Updated drivers to support Competition Golf Final Round and new clone [mahoneyt944]
