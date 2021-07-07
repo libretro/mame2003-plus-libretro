@@ -875,7 +875,7 @@ static READ_HANDLER( hardhead_ip_r )
 		case 2:	return readinputport(2);
 		case 3:	return readinputport(3);
 		default:
-			logerror("CPU #0 - PC %04X: Unknown IP read: %02X\n",activecpu_get_pc(),*hardhead_ip);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 - PC %04X: Unknown IP read: %02X\n",activecpu_get_pc(),*hardhead_ip);
 			return 0xff;
 	}
 }
