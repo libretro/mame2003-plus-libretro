@@ -75,6 +75,39 @@ static WRITE_HANDLER( irem_msm5205_w )
 	MSM5205_reset_w(1,data & 2);
 }
 
+static WRITE_HANDLER( irem_samples_w )
+{
+	if (data == 0xff) {
+		//bprintf(0, _T("M62 Analog drumkit init.\n"));
+		return;
+	}
+
+/* ripped from FBN
+	if (data > 0) {
+		if (data & 0x01) // bass drum
+			BurnSamplePlay(2);
+		if (data & 0x02) // snare drum
+			BurnSamplePlay(1);
+		if (data & 0x04) // open hat
+			BurnSamplePlay(3);
+		if (data & 0x08) // closed hat
+			BurnSamplePlay(0);
+	}
+*/	
+
+	/* not sure if these values are correct */
+	if (data > 0) {
+		if (data & 0x01) // bass drum
+			sample_start(2, 2, 0); // correct ??
+		if (data & 0x02) // snare drum
+			sample_start(1, 1, 0); // correct ??
+		if (data & 0x04) // open hat
+			sample_start(3, 3, 0); // correct ??
+		if (data & 0x08) // closed hat
+			sample_start(0, 0, 0); // correct ??
+	}
+}
+
 static WRITE_HANDLER( irem_adpcm_w )
 {
 	MSM5205_data_w(offset,data);
@@ -105,7 +138,7 @@ struct AY8910interface irem_ay8910_interface =
 	{ soundlatch_r, 0 },
 	{ 0 },
 	{ 0, irem_analog_w },
-	{ irem_msm5205_w, 0 }
+	{ irem_msm5205_w, irem_samples_w }
 };
 
 struct MSM5205interface irem_msm5205_interface =
