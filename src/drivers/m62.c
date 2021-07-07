@@ -1377,7 +1377,7 @@ static const char *tr606_sample_names[] =
 
 struct Samplesinterface tr606_samples_interface =
 {
-	7, // correct ??
+	7,
 	50,
 	tr606_sample_names
 };
