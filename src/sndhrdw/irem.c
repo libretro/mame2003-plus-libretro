@@ -80,7 +80,8 @@ static WRITE_HANDLER( irem_samples_w )
 	if (data == 0xff)
 		return;
 
-	sample_start(0, 0, 0); //test
+	if (data > 0)
+		sample_start(0, 0, 0); //test
 
 /* not sure if these values are correct
 	if (data > 0) {
