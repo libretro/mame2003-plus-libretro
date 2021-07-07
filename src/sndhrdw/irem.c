@@ -80,6 +80,8 @@ static WRITE_HANDLER( irem_samples_w )
 	if (data == 0xff)
 		return;
 
+	usrintf_showmessage("data:  %i", data);
+
 	if (data > 0)
 		sample_start(0, 0, 0); //test
 
