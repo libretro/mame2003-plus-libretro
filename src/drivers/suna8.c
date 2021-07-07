@@ -1336,10 +1336,11 @@ static WRITE_HANDLER( suna8_wram_w )
 	7654 321-
 	---- ---0	Flip Screen
 */
-static WRITE_HANDLER( sparkman_flipscreen_w )
+static WRITE_HANDLER( sparkman_spritebank_latch_w )
 {
 	flip_screen_set(data & 0x01);
-	if (data & ~0x01) 	logerror("CPU #0 - PC %04X: unknown flipscreen bits: %02X\n",activecpu_get_pc(),data);
+	spritebank_latch  =   (data >> 4) & 0x03;
+	logerror("CPU #0 - PC %04X: spritebank latch = %02X\n",activecpu_get_pc(),data);
 }
 
 WRITE_HANDLER( sparkman_leds_w )
@@ -1357,8 +1358,11 @@ WRITE_HANDLER( sparkman_leds_w )
 */
 static WRITE_HANDLER( sparkman_spritebank_w )
 {
-	suna8_spritebank = (data >> 1) & 1;
-	if (data & ~0x02) 	logerror("CPU #0 - PC %04X: unknown spritebank bits: %02X\n",activecpu_get_pc(),data);
+	suna8_spritebank = ((data >> 1) & 0x01) | ((data << 1) & 0x02);
+	if ((spritebank_latch >> 1) & 0x01)
+		suna8_spritebank ^= 0x03;
+
+	logerror("CPU #0 - PC %04X: spritebank = %02X (%X)\n",activecpu_get_pc(),data,suna8_spritebank);
 }
 
 /*
@@ -1402,7 +1406,7 @@ static MEMORY_WRITE_START( sparkman_writemem )
 	{ 0x8000, 0xbfff, MWA_ROM					},	// Banked ROM
 	{ 0xc200, 0xc200, sparkman_spritebank_w		},	// Sprite RAM Bank
 	{ 0xc280, 0xc280, sparkman_rombank_w		},	// ROM Bank (?mirrored up to c2ff?)
-	{ 0xc300, 0xc300, sparkman_flipscreen_w		},	// Flip Screen
+	{ 0xc300, 0xc37f, sparkman_spritebank_latch_w		},	// Sprite RAM Bank Latch (Invert) + Flip Screen
 	{ 0xc380, 0xc3ff, sparkman_cmd_prot_w			},	// Protection
 	{ 0xc400, 0xc400, sparkman_leds_w			},	// Leds + Coin Counter
 	{ 0xc500, 0xc500, soundlatch_w				},	// To Sound CPU
