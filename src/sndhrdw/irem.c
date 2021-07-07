@@ -77,25 +77,12 @@ static WRITE_HANDLER( irem_msm5205_w )
 
 static WRITE_HANDLER( irem_samples_w )
 {
-	if (data == 0xff) {
-		//bprintf(0, _T("M62 Analog drumkit init.\n"));
+	if (data == 0xff)
 		return;
-	}
 
-/* ripped from FBN
-	if (data > 0) {
-		if (data & 0x01) // bass drum
-			BurnSamplePlay(2);
-		if (data & 0x02) // snare drum
-			BurnSamplePlay(1);
-		if (data & 0x04) // open hat
-			BurnSamplePlay(3);
-		if (data & 0x08) // closed hat
-			BurnSamplePlay(0);
-	}
-*/	
+	sample_start(0, 0, 0); //test
 
-	/* not sure if these values are correct */
+/* not sure if these values are correct
 	if (data > 0) {
 		if (data & 0x01) // bass drum
 			sample_start(2, 2, 0); // correct ??
@@ -106,6 +93,8 @@ static WRITE_HANDLER( irem_samples_w )
 		if (data & 0x08) // closed hat
 			sample_start(0, 0, 0); // correct ??
 	}
+*/
+
 }
 
 static WRITE_HANDLER( irem_adpcm_w )
