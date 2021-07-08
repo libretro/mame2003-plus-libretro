@@ -119,7 +119,7 @@ const char *tr606_sample_names[] =
 struct Samplesinterface tr606_samples_interface =
 {
 	7,
-	50,
+	30,
 	tr606_sample_names
 };
 
