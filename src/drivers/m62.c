@@ -1362,9 +1362,6 @@ static struct GfxDecodeInfo youjyudn_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-
-
-
 static MACHINE_DRIVER_START( ldrun )
 
 	/* basic machine hardware */
@@ -1494,6 +1491,9 @@ static MACHINE_DRIVER_START( kidniki )
 
 	MDRV_VIDEO_START(kidniki)
 	MDRV_VIDEO_UPDATE(kidniki)
+	
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, tr606_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1509,6 +1509,9 @@ static MACHINE_DRIVER_START( spelunkr )
 
 	MDRV_VIDEO_START(spelunkr)
 	MDRV_VIDEO_UPDATE(spelunkr)
+	
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, tr606_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1526,6 +1529,9 @@ static MACHINE_DRIVER_START( spelunk2 )
 	MDRV_PALETTE_INIT(spelunk2)
 	MDRV_VIDEO_START(spelunk2)
 	MDRV_VIDEO_UPDATE(spelunk2)
+	
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, tr606_samples_interface )
 MACHINE_DRIVER_END
 
 
@@ -1558,6 +1564,9 @@ static MACHINE_DRIVER_START( horizon )
 
 	MDRV_VIDEO_START(horizon)
 	MDRV_VIDEO_UPDATE(horizon)
+	
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, tr606_samples_interface )
 MACHINE_DRIVER_END
 
 

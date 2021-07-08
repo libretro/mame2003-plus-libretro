@@ -91,11 +91,37 @@ static void irem_adpcm_int(int data)
 
 static WRITE_HANDLER( irem_analog_w )
 {
-#ifdef MAME_DEBUG
-if (data&0x0f) usrintf_showmessage("analog sound %x",data&0x0f);
-#endif
+	if (data == 0xff)
+		return;
+
+	if (data > 0)
+	{
+		if (data & 0x01) sample_start(2, 2, 0);  // TR606 - Kick
+		if (data & 0x02) sample_start(1, 1, 0);  // TR606 - Snare
+		if (data & 0x04) sample_start(3, 3, 0);  // TR606 - Open Hat
+		if (data & 0x08) sample_start(0, 0, 0);  // TR606 - Hat
+	}
 }
 
+const char *tr606_sample_names[] =
+{
+	"*tr606drumkit",
+	"TR606 - Hat",
+	"TR606 - Snare",
+	"TR606 - Kick",
+	"TR606 - Open Hat",
+	"TR606 - High Tom",
+	"TR606 - Low Tom",
+	"TR606 - Cymbal",
+	0
+};
+
+struct Samplesinterface tr606_samples_interface =
+{
+	7,
+	50,
+	tr606_sample_names
+};
 
 struct AY8910interface irem_ay8910_interface =
 {
