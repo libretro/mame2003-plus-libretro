@@ -1365,13 +1365,13 @@ static struct GfxDecodeInfo youjyudn_gfxdecodeinfo[] =
 static const char *tr606_sample_names[] =
 {
 	"*tr606",
-	"Hat.wav",
-	"Snare.wav",
-	"Kick.wav",
-	"Open Hat.wav",
-	"High Tom.wav",
-	"Low Tom.wav",
-	"Cymbal.wav",
+	"Hat",
+	"Snare",
+	"Kick",
+	"Open Hat",
+	"High Tom",
+	"Low Tom",
+	"Cymbal",
 	0
 };
 
