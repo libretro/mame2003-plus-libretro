@@ -97,11 +97,11 @@ static WRITE_HANDLER( irem_analog_w )
 	if (data > 0)
 	{
 		if (data & 0x01) // bass drum
-			sample_start(0, 2, 0);
+			sample_start(2, 2, 0);
 		if (data & 0x02) // snare drum
-			sample_start(0, 1, 0);
+			sample_start(1, 1, 0);
 		if (data & 0x04) // open hat
-			sample_start(0, 3, 0);
+			sample_start(3, 3, 0);
 		if (data & 0x08) // closed hat
 			sample_start(0, 0, 0);
 	}
@@ -122,7 +122,7 @@ const char *tr606_sample_names[] =
 
 struct Samplesinterface tr606_samples_interface =
 {
-	2,
+	7,
 	50,
 	tr606_sample_names
 };
