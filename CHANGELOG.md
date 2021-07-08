@@ -169,7 +169,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Tylz
-* Ufo Senshi Yohko Chan (not encrypted)
+* Ufo Senshi Yohko Chan
 * Varia Metal
 * Vasara 2
 * Virtua Bowling
@@ -242,6 +242,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2004 Plus / Hero
 * The King of Fighters 2004 Ultra Plus
 * The King of Fighters Special Edition 2004
+* Ufo Senshi Yohko Chan (not encrypted)
 * Undercover Cops (Alpha Renewal Version)
 * World Cup Volley 95 Extra Version
 * X-men (6 Players ver UCB)
@@ -386,6 +387,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with sound
 
 * Acrobat Mission
+* Altered Beast (version 2)
 * Asura Blade
 * Balloon Bomber
 * Batsugun (Partial)
@@ -407,6 +409,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Last Fortress - Toride
 * Lupin III
 * Mustache Boy
+* Ninja Kid II
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
 * Pang Poms
 * Poitto!
@@ -737,3 +740,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed up Pro Baseball Skill Tryout drivers, now fully playable [arcadez, grant2258, mahoneyt944]
 * Updated drivers to support Competition Golf Final Round and new clone [mahoneyt944]
 * Added web app core support for mame2003-plus at web.libretro.com [mahoneyt944]
+* Updated the mc8123 decryption and hooked it upto Altered Beast, Ninja Kid II, Ufo Senshi Yohko Chan and Wonderboy In Monsterland [arcadez]
+* Altered Beast (version 2) and Ninja Kid II now have sound plus some graphical problems on levels 2 and 6 in Ninja Kid II are now sorted [arcadez]
+* The original version of Ufo Senshi Yohko Chan now works as per the above update [arcadez]
