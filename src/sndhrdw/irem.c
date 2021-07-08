@@ -96,14 +96,10 @@ static WRITE_HANDLER( irem_analog_w )
 
 	if (data > 0)
 	{
-		if (data & 0x01) // bass drum
-			sample_start(2, 2, 0);
-		if (data & 0x02) // snare drum
-			sample_start(1, 1, 0);
-		if (data & 0x04) // open hat
-			sample_start(3, 3, 0);
-		if (data & 0x08) // closed hat
-			sample_start(0, 0, 0);
+		if (data & 0x01) sample_start(2, 2, 0);  // TR606 - Kick
+		if (data & 0x02) sample_start(1, 1, 0);  // TR606 - Snare
+		if (data & 0x04) sample_start(3, 3, 0);  // TR606 - Open Hat
+		if (data & 0x08) sample_start(0, 0, 0);  // TR606 - Hat
 	}
 }
 
