@@ -457,7 +457,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Galaxy Rescue - (Added lrescue.zip sample support)
 * Gaplus
 * Grobda
+* Horizon
 * Journey (Added sepways.wav sample)
+* Kaiketsu Yanchamaru
+* Kid Niki - Radical Ninja (US)
 * Legion
 * Libble Rabble
 * Lunar Rescue - (Added lrescue.zip sample support)
@@ -485,6 +488,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Fever High Splitter
 * Space Launcher
 * Steel Force
+* Spelunker
+* Spelunker (Japan)
+* Spelunker II
 * Super Pacman
 * Super Spacefortress Macross II
 * Super Xevious
@@ -743,3 +749,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the mc8123 decryption and hooked it upto Altered Beast, Ninja Kid II, Ufo Senshi Yohko Chan and Wonderboy In Monsterland [arcadez]
 * Altered Beast (version 2) and Ninja Kid II now have sound plus some graphical problems on levels 2 and 6 in Ninja Kid II are now sorted [arcadez]
 * The original version of Ufo Senshi Yohko Chan now works as per the above update [arcadez]
+* Added tr606drumkit.zip sample support used in FBNeo to Irem titles improving game sounds [arcadez, grant2258, KMFDManic, mahoneyt944] - special thanks to FBNeo Team
