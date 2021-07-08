@@ -18,6 +18,22 @@ static int port1,port2;
 static WRITE_HANDLER( irem_port1_w )
 {
 	port1 = data;
+
+	if (port1 == 0xff)
+		return;
+
+	/* not sure if these values are correct */
+	if (port1 > 0)
+	{
+		if (port1 & 0x01) // bass drum
+			sample_start(2, 2, 0); // correct ??
+		if (port1 & 0x02) // snare drum
+			sample_start(1, 1, 0); // correct ??
+		if (port1 & 0x04) // open hat
+			sample_start(3, 3, 0); // correct ??
+		if (port1 & 0x08) // closed hat
+			sample_start(0, 0, 0); // correct ??
+	}
 }
 
 static WRITE_HANDLER( irem_port2_w )
@@ -75,31 +91,6 @@ static WRITE_HANDLER( irem_msm5205_w )
 	MSM5205_reset_w(1,data & 2);
 }
 
-static WRITE_HANDLER( irem_samples_w )
-{
-	if (data == 0xff)
-		return;
-
-	usrintf_showmessage("data:  %i", data);
-
-	if (data > 0)
-		sample_start(0, 0, 0); //test
-
-/* not sure if these values are correct
-	if (data > 0) {
-		if (data & 0x01) // bass drum
-			sample_start(2, 2, 0); // correct ??
-		if (data & 0x02) // snare drum
-			sample_start(1, 1, 0); // correct ??
-		if (data & 0x04) // open hat
-			sample_start(3, 3, 0); // correct ??
-		if (data & 0x08) // closed hat
-			sample_start(0, 0, 0); // correct ??
-	}
-*/
-
-}
-
 static WRITE_HANDLER( irem_adpcm_w )
 {
 	MSM5205_data_w(offset,data);
@@ -130,7 +121,7 @@ struct AY8910interface irem_ay8910_interface =
 	{ soundlatch_r, 0 },
 	{ 0 },
 	{ 0, irem_analog_w },
-	{ irem_msm5205_w, irem_samples_w }
+	{ irem_msm5205_w, 0 }
 };
 
 struct MSM5205interface irem_msm5205_interface =
