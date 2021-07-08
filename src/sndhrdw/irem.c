@@ -19,21 +19,22 @@ static WRITE_HANDLER( irem_port1_w )
 {
 	port1 = data;
 
-	if (port1 == 0xff)
+/*
+	if (data == 0xff)
 		return;
 
-	/* not sure if these values are correct */
-	if (port1 > 0)
+	if (data > 0)
 	{
-		if (port1 & 0x01) // bass drum
-			sample_start(2, 2, 0); // correct ??
-		if (port1 & 0x02) // snare drum
-			sample_start(1, 1, 0); // correct ??
-		if (port1 & 0x04) // open hat
-			sample_start(3, 3, 0); // correct ??
-		if (port1 & 0x08) // closed hat
-			sample_start(0, 0, 0); // correct ??
+		if (data & 0x01) // bass drum
+			sample_start(2, 2, 0);
+		if (data & 0x02) // snare drum
+			sample_start(1, 1, 0);
+		if (data & 0x04) // open hat
+			sample_start(3, 3, 0);
+		if (data & 0x08) // closed hat
+			sample_start(0, 0, 0);
 	}
+*/
 }
 
 static WRITE_HANDLER( irem_port2_w )
