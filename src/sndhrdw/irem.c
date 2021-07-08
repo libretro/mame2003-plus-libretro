@@ -109,14 +109,14 @@ static WRITE_HANDLER( irem_analog_w )
 
 const char *tr606_sample_names[] =
 {
-	"*tr606",
-	"Hat",
-	"Snare",
-	"Kick",
-	"Open Hat",
-	"High Tom",
-	"Low Tom",
-	"Cymbal",
+	"*tr606drumkit",
+	"TR606 - Hat",
+	"TR606 - Snare",
+	"TR606 - Kick",
+	"TR606 - Open Hat",
+	"TR606 - High Tom",
+	"TR606 - Low Tom",
+	"TR606 - Cymbal",
 	0
 };
 
