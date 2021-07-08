@@ -4028,7 +4028,7 @@ ROM_START( dakkochn )
 ROM_END
 
 ROM_START( ufosensi )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
+	ROM_REGION( 2*0x20000, REGION_CPU1, 0 )
 	ROM_LOAD( "epr11661.90",  0x00000, 0x8000, CRC(f3e394e2) SHA1(a295a2aa80a164a548995822c46f32fd9fad7a0b) ) /* encrypted */
 	ROM_LOAD( "epr11662.91",  0x10000, 0x8000, CRC(0c2e4120) SHA1(d81fbefa95868e3efd29ef3bacf108329781ca17) ) /* encrypted */
 	ROM_LOAD( "epr11663.92",  0x18000, 0x8000, CRC(4515ebae) SHA1(9b823f10999746292762c2f0a1ca9039efa22506) ) /* encrypted */
@@ -4132,6 +4132,8 @@ static DRIVER_INIT( gardia )	{ gardia_decode(); }
 static DRIVER_INIT( gardiab )	{ gardiab_decode(); }
 
 void mc8123_decrypt_0043(void);
+void mc8123_decrypt_0064(void);
+static DRIVER_INIT( ufosensi )  { mc8123_decrypt_0064(); }
 static DRIVER_INIT( wbml )  { mc8123_decrypt_0043(); }
 
 
@@ -4272,5 +4274,5 @@ GAMEX(1987, wbmljb,   wbml,     wbml,     wbml,     bootleg,  ROT0,   "bootleg",
 GAMEX(1987, wbmlb,    wbml,     wbml,     wbml,     bootleg,  ROT0,   "bootleg", 		     "Wonder Boy in Monster Land", GAME_NO_COCKTAIL )
 GAMEX(2009, wbmlvc,   wbml,     wbml,     wbml,     bootleg,  ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (English, Virtual Console)", GAME_NO_COCKTAIL )
 GAMEX(1987, dakkochn, 0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "DakkoChan Jansoh", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX(1988, ufosensi, 0,        ufosensi, ufosensi, 0,        ROT0,   "Sega", 			 	   "Ufo Senshi Yohko Chan", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX(1988, ufosensi, 0,        ufosensi, ufosensi, ufosensi, ROT0,   "Sega", 			 	   "Ufo Senshi Yohko Chan", GAME_NO_COCKTAIL )
 GAMEX(1988, ufosensb, ufosensi, ufosensi, ufosensi, bootleg,  ROT0,   "bootleg", 			   "Ufo Senshi Yohko Chan (not encrypted)", GAME_NO_COCKTAIL )
