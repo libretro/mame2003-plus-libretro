@@ -1362,27 +1362,6 @@ static struct GfxDecodeInfo youjyudn_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-static const char *tr606_sample_names[] =
-{
-	"*tr606",
-	"Hat",
-	"Snare",
-	"Kick",
-	"Open Hat",
-	"High Tom",
-	"Low Tom",
-	"Cymbal",
-	0
-};
-
-struct Samplesinterface tr606_samples_interface =
-{
-	7,
-	50,
-	tr606_sample_names
-};
-
-
 static MACHINE_DRIVER_START( ldrun )
 
 	/* basic machine hardware */
