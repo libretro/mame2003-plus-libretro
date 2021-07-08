@@ -18,23 +18,6 @@ static int port1,port2;
 static WRITE_HANDLER( irem_port1_w )
 {
 	port1 = data;
-
-/*
-	if (data == 0xff)
-		return;
-
-	if (data > 0)
-	{
-		if (data & 0x01) // bass drum
-			sample_start(2, 2, 0);
-		if (data & 0x02) // snare drum
-			sample_start(1, 1, 0);
-		if (data & 0x04) // open hat
-			sample_start(3, 3, 0);
-		if (data & 0x08) // closed hat
-			sample_start(0, 0, 0);
-	}
-*/
 }
 
 static WRITE_HANDLER( irem_port2_w )
@@ -108,11 +91,41 @@ static void irem_adpcm_int(int data)
 
 static WRITE_HANDLER( irem_analog_w )
 {
-#ifdef MAME_DEBUG
-if (data&0x0f) usrintf_showmessage("analog sound %x",data&0x0f);
-#endif
+	if (data == 0xff)
+		return;
+
+	if (data > 0)
+	{
+		if (data & 0x01) // bass drum
+			sample_start(0, 2, 0);
+		if (data & 0x02) // snare drum
+			sample_start(0, 1, 0);
+		if (data & 0x04) // open hat
+			sample_start(0, 3, 0);
+		if (data & 0x08) // closed hat
+			sample_start(0, 0, 0);
+	}
 }
 
+const char *tr606_sample_names[] =
+{
+	"*tr606",
+	"Hat",
+	"Snare",
+	"Kick",
+	"Open Hat",
+	"High Tom",
+	"Low Tom",
+	"Cymbal",
+	0
+};
+
+struct Samplesinterface tr606_samples_interface =
+{
+	2,
+	50,
+	tr606_sample_names
+};
 
 struct AY8910interface irem_ay8910_interface =
 {
