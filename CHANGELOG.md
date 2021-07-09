@@ -750,3 +750,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Altered Beast (version 2) and Ninja Kid II now have sound plus some graphical problems on levels 2 and 6 in Ninja Kid II are now sorted [arcadez]
 * The original version of Ufo Senshi Yohko Chan now works as per the above update [arcadez]
 * Added tr606drumkit.zip sample support used in FBNeo to Irem titles improving game sounds [arcadez, grant2258, KMFDManic, mahoneyt944] - special thanks to FBNeo Team
+* Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
