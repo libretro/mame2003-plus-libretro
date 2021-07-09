@@ -722,32 +722,25 @@ static void update_variables(bool first_time)
           else
             options.machine_timing = false;
           break;
-		#if (HAS_CYCLONE || HAS_DRZ80)  
-	    case OPT_ENABLE_CYCLONE:
-		
-		 /* ASM cores: 0=None,1=Default,2=Cyclone,3=DrZ80,4=Cyclone+DrZ80,5=DrZ80(snd),6=Cyclone+DrZ80(snd) */
-         // "Enable cyclone; None|Default|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Entered in OPT_ENABLE_CYCLONE VarValue=%s \n",var.value);
-         if(strcmp(var.value, "None") == 0)
-            options.enable_cyclone = 0;
-         else if(strcmp(var.value, "Default") == 0)
+
+#if (HAS_CYCLONE || HAS_DRZ80)  
+        case OPT_ENABLE_CYCLONE:
+          if(strcmp(var.value, "Default") == 0)
             options.enable_cyclone = 1;
-         else if(strcmp(var.value, "Cyclone") == 0)
+          else if(strcmp(var.value, "Cyclone") == 0)
             options.enable_cyclone = 2;
-         else if(strcmp(var.value, "DrZ80") == 0)
+          else if(strcmp(var.value, "DrZ80") == 0)
             options.enable_cyclone = 3;
-         else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+          else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
             options.enable_cyclone = 4;
-         else if(strcmp(var.value, "DrZ80(snd)") == 0)
+          else if(strcmp(var.value, "DrZ80(snd)") == 0)
             options.enable_cyclone = 5;
-         else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+          else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
             options.enable_cyclone = 6;    
-		 else
-			options.enable_cyclone = 0;
-	   
-	   log_cb(RETRO_LOG_ERROR, LOGPRE "Read enable_cyclone: %d. \n", options.enable_cyclone);
- 	    break;	
-        #endif 	
+          else /* None */
+            options.enable_cyclone = 0;
+          break;	
+#endif 	
       }
     }
   }
