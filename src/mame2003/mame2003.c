@@ -875,6 +875,7 @@ bool retro_load_game(const struct retro_game_info *game)
   {
     for (i=0;i<NUMGAMES;i++)
     {
+      /* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
       if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
       {
         switch (fe_drivers[i].cores)
