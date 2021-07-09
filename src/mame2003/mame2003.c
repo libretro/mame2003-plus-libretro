@@ -327,7 +327,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
 #if (HAS_CYCLONE || HAS_DRZ80)
-  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone; None|Default|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone; default|none|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
@@ -725,7 +725,7 @@ static void update_variables(bool first_time)
 
 #if (HAS_CYCLONE || HAS_DRZ80)
         case OPT_ENABLE_CYCLONE:
-          if(strcmp(var.value, "Default") == 0)
+          if(strcmp(var.value, "default") == 0)
             options.enable_cyclone = 1;
           else if(strcmp(var.value, "Cyclone") == 0)
             options.enable_cyclone = 2;
@@ -737,7 +737,7 @@ static void update_variables(bool first_time)
             options.enable_cyclone = 5;
           else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
             options.enable_cyclone = 6;
-          else /* None */
+          else /* none */
             options.enable_cyclone = 0;
           break;
 #endif
@@ -850,7 +850,7 @@ bool retro_load_game(const struct retro_game_info *game)
   var.key = default_options[OPT_ENABLE_CYCLONE].key;
   environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var);
 
-  if(strcmp(var.value, "Default") == 0)
+  if(strcmp(var.value, "default") == 0)
     options.enable_cyclone = 1;
   else if(strcmp(var.value, "Cyclone") == 0)
     options.enable_cyclone = 2;
@@ -862,7 +862,7 @@ bool retro_load_game(const struct retro_game_info *game)
     options.enable_cyclone = 5;
   else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
     options.enable_cyclone = 6;
-  else /* None */
+  else /* none */
     options.enable_cyclone = 0;
 
   int i;
