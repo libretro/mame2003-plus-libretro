@@ -26,17 +26,17 @@ WRITE16_HANDLER( volfied_sprite_ctrl_w );
 WRITE16_HANDLER( volfied_video_ram_w );
 WRITE16_HANDLER( volfied_video_ctrl_w );
 WRITE16_HANDLER( volfied_video_mask_w );
-WRITE16_HANDLER( volfied_cchip_w );
 
 READ16_HANDLER( volfied_video_ram_r );
 READ16_HANDLER( volfied_video_ctrl_r );
-READ16_HANDLER( volfied_cchip_r );
-
 VIDEO_UPDATE( volfied );
-
 VIDEO_START( volfied );
 
 void volfied_cchip_init(void);
+READ16_HANDLER( volfied_cchip_status_r );
+READ16_HANDLER( volfied_cchip_data_r );
+WRITE16_HANDLER( volfied_cchip_data_w );
+WRITE16_HANDLER( volfied_cchip_bank_w );
 
 
 /***********************************************************
@@ -52,7 +52,8 @@ static MEMORY_READ16_START( volfied_readmem )
 	{ 0x500000, 0x503fff, paletteram16_word_r },
 	{ 0xd00000, 0xd00001, volfied_video_ctrl_r },
 	{ 0xe00002, 0xe00003, taitosound_comm16_lsb_r },
-	{ 0xf00000, 0xf00803, volfied_cchip_r },
+	{ 0xf00000, 0xf007ff, volfied_cchip_data_r },
+	{ 0xf00802, 0xf00803, volfied_cchip_status_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( volfied_writemem )
@@ -67,7 +68,8 @@ static MEMORY_WRITE16_START( volfied_writemem )
 	{ 0xd00000, 0xd00001, volfied_video_ctrl_w },
 	{ 0xe00000, 0xe00001, taitosound_port16_lsb_w },
 	{ 0xe00002, 0xe00003, taitosound_comm16_lsb_w },
-	{ 0xf00000, 0xf00c01, volfied_cchip_w },
+	{ 0xf00000, 0xf007ff, volfied_cchip_data_w },
+	{ 0xf00c00, 0xf00c01, volfied_cchip_bank_w },
 MEMORY_END
 
 static MEMORY_READ_START( z80_readmem )
@@ -105,17 +107,17 @@ MEMORY_END
 	                                                                              \
 	PORT_START                                                                    \
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )                                     \
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY )                \
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )                \
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )                \
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )                \
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )                \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )                \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )                \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )                \
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )                                  \
 	                                                                              \
 	PORT_START                                                                    \
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL ) \
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL ) \
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL ) \
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL ) \
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
 
 
@@ -340,7 +342,7 @@ static MACHINE_DRIVER_START( volfied )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(320, 256)
-	MDRV_VISIBLE_AREA(0, 319, 0, 255)
+	MDRV_VISIBLE_AREA(0, 319, 8, 247)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(8192)
 
@@ -432,6 +434,6 @@ ROM_START( volfiedj )
 ROM_END
 
 
-GAMEX( 1989, volfied,  0,       volfied, volfied,  volfied, ROT270, "Taito Corporation Japan", "Volfied (World)", GAME_UNEMULATED_PROTECTION )
-GAMEX( 1989, volfiedu, volfied, volfied, volfiedu, volfied, ROT270, "Taito America Corporation", "Volfied (US)", GAME_UNEMULATED_PROTECTION )
-GAMEX( 1989, volfiedj, volfied, volfied, volfiedj, volfied, ROT270, "Taito Corporation", "Volfied (Japan)", GAME_UNEMULATED_PROTECTION )
+GAME( 1989, volfied,  0,       volfied, volfied,  volfied, ROT270, "Taito Corporation Japan", "Volfied (World)" )
+GAME( 1989, volfiedu, volfied, volfied, volfiedu, volfied, ROT270, "Taito America Corporation", "Volfied (US)" )
+GAME( 1989, volfiedj, volfied, volfied, volfiedj, volfied, ROT270, "Taito Corporation", "Volfied (Japan)" )
