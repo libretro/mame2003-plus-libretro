@@ -919,8 +919,7 @@ bool retro_load_game(const struct retro_game_info *game)
   /* Force cyclone with user selected core option */
   else
   {
-    int cores=0;
-    cores=options.enable_cyclone-1;
+    int cores = options.enable_cyclone - 1;
 
     switch (cores)
     {
