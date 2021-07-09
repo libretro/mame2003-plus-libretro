@@ -119,7 +119,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_MACHINE_TIMING,
   OPT_DIGITAL_JOY_CENTERING,
 #if (HAS_CYCLONE || HAS_DRZ80)
-  OPT_ENABLE_CYCLONE,
+  OPT_CYCLONE_MODE,
 #endif
   OPT_end /* dummy last entry */
 };
@@ -327,7 +327,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
 #if (HAS_CYCLONE || HAS_DRZ80)
-  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone (Restart core); default|none|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+  init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
@@ -724,21 +724,21 @@ static void update_variables(bool first_time)
           break;
 
 #if (HAS_CYCLONE || HAS_DRZ80)
-        case OPT_ENABLE_CYCLONE:
+        case OPT_CYCLONE_MODE:
           if(strcmp(var.value, "default") == 0)
-            options.enable_cyclone = 1;
+            options.cyclone_mode = 1;
           else if(strcmp(var.value, "Cyclone") == 0)
-            options.enable_cyclone = 2;
+            options.cyclone_mode = 2;
           else if(strcmp(var.value, "DrZ80") == 0)
-            options.enable_cyclone = 3;
+            options.cyclone_mode = 3;
           else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
-            options.enable_cyclone = 4;
+            options.cyclone_mode = 4;
           else if(strcmp(var.value, "DrZ80(snd)") == 0)
-            options.enable_cyclone = 5;
+            options.cyclone_mode = 5;
           else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
-            options.enable_cyclone = 6;
-          else /* none */
-            options.enable_cyclone = 0;
+            options.cyclone_mode = 6;
+          else /* disabled */
+            options.cyclone_mode = 0;
           break;
 #endif
       }
@@ -848,8 +848,8 @@ bool retro_load_game(const struct retro_game_info *game)
   int use_drz80 = 1;
   int use_drz80_snd = 1;
 
-  /* cyclone enable core option: 0=none, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
-  switch (options.enable_cyclone)
+  /* cyclone enable core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+  switch (options.cyclone_mode)
   {
     case 0:
       use_cyclone = 0;
@@ -860,7 +860,7 @@ bool retro_load_game(const struct retro_game_info *game)
     case 1:
       for (i=0;i<NUMGAMES;i++)
       {
-        /* ASM cores: 0=None, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
+        /* ASM cores: 0=disabled, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
         if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
         {
           switch (fe_drivers[i].cores)
