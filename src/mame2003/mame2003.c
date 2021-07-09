@@ -723,7 +723,7 @@ static void update_variables(bool first_time)
             options.machine_timing = false;
           break;
 
-#if (HAS_CYCLONE || HAS_DRZ80)  
+#if (HAS_CYCLONE || HAS_DRZ80)
         case OPT_ENABLE_CYCLONE:
           if(strcmp(var.value, "Default") == 0)
             options.enable_cyclone = 1;
@@ -736,11 +736,11 @@ static void update_variables(bool first_time)
           else if(strcmp(var.value, "DrZ80(snd)") == 0)
             options.enable_cyclone = 5;
           else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
-            options.enable_cyclone = 6;    
+            options.enable_cyclone = 6;
           else /* None */
             options.enable_cyclone = 0;
-          break;	
-#endif 	
+          break;
+#endif
       }
     }
   }
@@ -948,7 +948,7 @@ bool retro_load_game(const struct retro_game_info *game)
         break;
     }
   }
-  
+
 
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
@@ -1221,7 +1221,7 @@ static void set_content_flags(void)
   options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
 
   /* There may be a future need to have a ctrl_count different than player_count,
-   * perhaps because of some alternating controls layout. This is a place to check 
+   * perhaps because of some alternating controls layout. This is a place to check
    * some condition and make the two numbers different if that should ever prove useful.
    */
   if(false/*options.content_flags[CONTENT_ALTERNATING_CTRLS]*/)
@@ -1243,15 +1243,15 @@ static void set_content_flags(void)
 
 
   /************ LOG THE STATE OF THE CONTENT FLAGS ************/
-  
+
   log_cb(RETRO_LOG_INFO, LOGPRE "==== BEGIN DRIVER CONTENT ATTRIBUTES ====\n");
-  
+
   if(options.content_flags[CONTENT_NEOGEO])     log_cb(RETRO_LOG_INFO, LOGPRE "* Neo Geo BIOS required.\n");
   if(options.content_flags[CONTENT_STV])        log_cb(RETRO_LOG_INFO, LOGPRE "* STV BIOS required.\n");
   if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
   if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
   if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
-  
+
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i distinct button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);
 
@@ -1742,10 +1742,10 @@ void retro_describe_controls(void)
 
       if(string_is_empty(control_name) && retro_code != INT_MAX)  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
-      
-      /* With regard to the device number, we refer to the input polling comments in 
+
+      /* With regard to the device number, we refer to the input polling comments in
        * libretro.h which says we "should only poll input based on the base input device
-       * types". That seems to be true in here too, because using the result of 
+       * types". That seems to be true in here too, because using the result of
        * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
        * of the descriptions. Therefore, get_device_parent() is used.
        */
@@ -1868,7 +1868,7 @@ int get_retrogun_code(unsigned osd_id)
   return INT_MAX; /* no match found */
 }
 
-/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
+/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE,
  * MOUSECODE_BUTTON_COMPARE, and get_ctrl_ipt_code(), etc. but I haven't found it.
  */
 
@@ -2297,7 +2297,7 @@ int analog_deadzone_rescale(int input)
 }
 
 /******************************************************************************
- * 
+ *
  * Legacy joystick calibration functions
  *
  * As of March 2021: these MAME functions should not actually be used and will not be invoked
@@ -2368,15 +2368,15 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
 /******************************************************************************
  * rescale_analog converts between the libretro coordinate system and the
  * MAME OSD coordinate system.
- * 
+ *
  * RETRO_DEVICE_LIGHTGUN report X/Y coordinates in the range [-0x8000, 0x7fff]
  * in both axes, with zero being center and -0x8000 being out of bounds.
  * RETRO_DEVICE_ANALOG uses the same [-0x8000, 0x7fff] range.
- * 
+ *
  * For lightguns, the MAME OSD uses delta from the middle of the screen when
- * the lightgun is fired, and 0 when the gun is inactive with a range of 
+ * the lightgun is fired, and 0 when the gun is inactive with a range of
  * -128 to 128. MAME OSD uses this same range for analog joysticks.
- * 
+ *
  * Therefore we can use a common function to scale input from lightguns and
  * analog controls.
  ******************************************************************************/
