@@ -849,7 +849,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int use_drz80_snd = 1;
 
   /* default - cyclone core option */
-  if (options.enable_cyclone==1)
+  if (options.enable_cyclone == 1)
   {
     for (i=0;i<NUMGAMES;i++)
     {
