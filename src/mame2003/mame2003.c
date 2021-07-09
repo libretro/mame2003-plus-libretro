@@ -889,10 +889,11 @@ bool retro_load_game(const struct retro_game_info *game)
   /* User decides how to configure cylone settings with core option */
   else
   {
-    /* core option: 0=none, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+    /* core option: 0=none, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
     switch (options.enable_cyclone)
     {
       case 0:
+      case 1: /* disable for default selection if caught here, core needs reset */
         use_cyclone = 0;
         use_drz80_snd = 0;
         use_drz80 = 0;
