@@ -254,7 +254,7 @@ struct GameOptions
 #if (HAS_CYCLONE || HAS_DRZ80)
   int      enable_cyclone;
 #endif
-  };
+};
 
 
 
