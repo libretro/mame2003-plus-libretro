@@ -938,7 +938,7 @@ bool retro_load_game(const struct retro_game_info *game)
         use_cyclone = 0;
         use_drz80 = 0;
         break;
-        case 5:
+      case 5:
         use_drz80 = 0;
         break;
       default:
