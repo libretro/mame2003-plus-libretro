@@ -848,73 +848,71 @@ bool retro_load_game(const struct retro_game_info *game)
   int use_drz80 = 1;
   int use_drz80_snd = 1;
 
-  /* default - cyclone core option */
-  if (options.enable_cyclone == 1)
+  /* cyclone enable core option: 0=none, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+  switch (options.enable_cyclone)
   {
-    for (i=0;i<NUMGAMES;i++)
-    {
-      /* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
-      if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
+    case 0:
+      use_cyclone = 0;
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
+
+    case 1:
+      for (i=0;i<NUMGAMES;i++)
       {
-        switch (fe_drivers[i].cores)
+        /* ASM cores: 0=None, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
+        if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
         {
-          case 0:
-            use_cyclone = 0;
-            use_drz80_snd = 0;
-            use_drz80 = 0;
-            break;
-          case 1:
-            use_drz80_snd = 0;
-            use_drz80 = 0;
-            break;
-           case 2:
-             use_cyclone = 0;
-             break;
-           case 4:
-             use_cyclone = 0;
-             use_drz80 = 0;
-             break;
-           case 5:
-             use_drz80 = 0;
-             break;
-           default:
-             break;
+          switch (fe_drivers[i].cores)
+          {
+            case 0:
+              use_cyclone = 0;
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 1:
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 2:
+              use_cyclone = 0;
+              break;
+            case 4:
+              use_cyclone = 0;
+              use_drz80 = 0;
+              break;
+            case 5:
+              use_drz80 = 0;
+              break;
+            default:
+              break;
+          }
+
+          break; /* end for loop */
         }
-
-        break;
       }
-    }
-  }
+      break; /* end case 1 */
 
-  /* User decides how to configure cyclone settings with core option */
-  else
-  {
-    /* core option: 0=none, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
-    switch (options.enable_cyclone)
-    {
-      case 0:
-      case 1: /* disable for default selection if caught here, core needs reset */
-        use_cyclone = 0;
-        use_drz80_snd = 0;
-        use_drz80 = 0;
-        break;
-      case 2:
-        use_drz80_snd = 0;
-        use_drz80 = 0;
-        break;
-      case 3:
-        use_cyclone = 0;
-        break;
-      case 5:
-        use_cyclone = 0;
-        use_drz80 = 0;
-        break;
-      case 6:
-        use_drz80 = 0;
-        break;
-      default:
-        break;
-    }
+    case 2:
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
+
+    case 3:
+      use_cyclone = 0;
+      break;
+
+    case 5:
+      use_cyclone = 0;
+      use_drz80 = 0;
+      break;
+
+    case 6:
+      use_drz80 = 0;
+      break;
+
+    default:
+      break;
   }
 
 #if (HAS_CYCLONE)
