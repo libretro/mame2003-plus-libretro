@@ -327,7 +327,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
   #if (HAS_CYCLONE || HAS_DRZ80)
-  /* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
   init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone; None|Default|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
   #endif
   init_default(&default_options[OPT_end], NULL, NULL);
