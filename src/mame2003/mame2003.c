@@ -327,7 +327,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
 #if (HAS_CYCLONE || HAS_DRZ80)
-  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone; default|none|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone (Restart core); default|none|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
@@ -842,29 +842,7 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
 
-  init_core_options();
-
 #if (HAS_CYCLONE || HAS_DRZ80)
-  struct retro_variable var;
-  var.value = NULL;
-  var.key = default_options[OPT_ENABLE_CYCLONE].key;
-  environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var);
-
-  if(strcmp(var.value, "default") == 0)
-    options.enable_cyclone = 1;
-  else if(strcmp(var.value, "Cyclone") == 0)
-    options.enable_cyclone = 2;
-  else if(strcmp(var.value, "DrZ80") == 0)
-    options.enable_cyclone = 3;
-  else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
-    options.enable_cyclone = 4;
-  else if(strcmp(var.value, "DrZ80(snd)") == 0)
-    options.enable_cyclone = 5;
-  else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
-    options.enable_cyclone = 6;
-  else /* none */
-    options.enable_cyclone = 0;
-
   int i;
   int use_cyclone = 1;
   int use_drz80 = 1;
@@ -908,101 +886,88 @@ bool retro_load_game(const struct retro_game_info *game)
     }
   }
 
-  /* none - cyclone core option */
-  else if (options.enable_cyclone==0)
-  {
-    use_cyclone = 0;
-    use_drz80_snd = 0;
-    use_drz80 = 0;
-  }
-
-  /* Force cyclone with user selected core option */
+  /* User decides how to configure cylone settings with core option */
   else
   {
-    int cores = options.enable_cyclone - 1;
-
-    switch (cores)
+    /* core option: 0=none, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+    switch (options.enable_cyclone)
     {
       case 0:
         use_cyclone = 0;
         use_drz80_snd = 0;
         use_drz80 = 0;
         break;
-      case 1:
+      case 2:
         use_drz80_snd = 0;
         use_drz80 = 0;
         break;
-      case 2:
+      case 3:
         use_cyclone = 0;
         break;
-      case 4:
+      case 5:
         use_cyclone = 0;
         use_drz80 = 0;
         break;
-      case 5:
+      case 6:
         use_drz80 = 0;
         break;
       default:
-        use_cyclone = 0;
-        use_drz80_snd = 0;
-        use_drz80 = 0;
         break;
     }
   }
 
-
-   /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
-   if (use_cyclone)
-   {
-	   for (i=0;i<MAX_CPU;i++)
-	   {
-		   unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+  /* Replace M68000 by CYCLONE */
+  if (use_cyclone)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+
 #ifdef NEOMAME
-		   if (*type==CPU_M68000)
+      if (*type==CPU_M68000)
 #else
-			   if (*type==CPU_M68000 || *type==CPU_M68010 )
+      if (*type==CPU_M68000 || *type==CPU_M68010 )
 #endif
-			   {
-				   *type=CPU_CYCLONE;
-                   log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
-			   }
-        if(!(*type)){
-          break;
-        }
-	   }
-   }
+      {
+        *type=CPU_CYCLONE;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
+      }
+
+      if (!(*type)) break;
+    }
+  }
 #endif
 
 #if (HAS_DRZ80)
-	/* Replace Z80 by DRZ80 */
-	if (use_drz80)
-	{
-		for (i=0;i<MAX_CPU;i++)
-		{
-			unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-			if (type==CPU_Z80)
-			{
-				*type=CPU_DRZ80;
+  /* Replace Z80 by DRZ80 */
+  if (use_drz80)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80)
+      {
+        *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
-			}
-		}
-	}
+      }
+    }
+  }
 
-	/* Replace Z80 with DRZ80 only for sound CPUs */
-	if (use_drz80_snd)
-	{
-		for (i=0;i<MAX_CPU;i++)
-		{
-			int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
-			if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
-			{
-				*type=CPU_DRZ80;
+  /* Replace Z80 with DRZ80 only for sound CPUs */
+  if (use_drz80_snd)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+      {
+        *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
 
-			}
-		}
-	}
+      }
+    }
+  }
 #endif
 
 #endif
@@ -1042,7 +1007,7 @@ bool retro_load_game(const struct retro_game_info *game)
   log_cb(RETRO_LOG_INFO, LOGPRE "   save path: %s\n", options.libretro_save_path);
 
 
-  //init_core_options();
+  init_core_options();
 
   update_variables(true);
 
