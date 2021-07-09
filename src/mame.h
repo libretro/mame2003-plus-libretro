@@ -252,7 +252,7 @@ struct GameOptions
   bool     machine_timing;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
 #if (HAS_CYCLONE || HAS_DRZ80)
-  int      enable_cyclone;
+  int      cyclone_mode;
 #endif
 };
 
