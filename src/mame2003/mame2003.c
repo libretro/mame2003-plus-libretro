@@ -848,7 +848,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int use_drz80 = 1;
   int use_drz80_snd = 1;
 
-  /* cyclone enable core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+  /* cyclone mode core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
   switch (options.cyclone_mode)
   {
     case 0:
