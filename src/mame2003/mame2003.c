@@ -118,9 +118,9 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_CHEAT_INPUT_PORTS,
   OPT_MACHINE_TIMING,
   OPT_DIGITAL_JOY_CENTERING,
-  #if (HAS_CYCLONE || HAS_DRZ80)
+#if (HAS_CYCLONE || HAS_DRZ80)
   OPT_ENABLE_CYCLONE,
-  #endif
+#endif
   OPT_end /* dummy last entry */
 };
 
