@@ -901,6 +901,7 @@ bool retro_load_game(const struct retro_game_info *game)
            default:
              break;
         }
+
         break;
       }
     }
