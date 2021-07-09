@@ -118,6 +118,9 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_CHEAT_INPUT_PORTS,
   OPT_MACHINE_TIMING,
   OPT_DIGITAL_JOY_CENTERING,
+  #if (HAS_CYCLONE || HAS_DRZ80)
+  OPT_ENABLE_CYCLONE,
+  #endif
   OPT_end /* dummy last entry */
 };
 
@@ -323,6 +326,10 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
+  #if (HAS_CYCLONE || HAS_DRZ80)
+  /* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
+  init_default(&default_options[OPT_ENABLE_CYCLONE],         APPNAME"_enable_cyclone",         "Enable cyclone; None|Default|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+  #endif
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -716,6 +723,32 @@ static void update_variables(bool first_time)
           else
             options.machine_timing = false;
           break;
+		#if (HAS_CYCLONE || HAS_DRZ80)  
+	    case OPT_ENABLE_CYCLONE:
+		
+		 /* ASM cores: 0=None,1=Default,2=Cyclone,3=DrZ80,4=Cyclone+DrZ80,5=DrZ80(snd),6=Cyclone+DrZ80(snd) */
+         // "Enable cyclone; None|Default|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Entered in OPT_ENABLE_CYCLONE VarValue=%s \n",var.value);
+         if(strcmp(var.value, "None") == 0)
+            options.enable_cyclone = 0;
+         else if(strcmp(var.value, "Default") == 0)
+            options.enable_cyclone = 1;
+         else if(strcmp(var.value, "Cyclone") == 0)
+            options.enable_cyclone = 2;
+         else if(strcmp(var.value, "DrZ80") == 0)
+            options.enable_cyclone = 3;
+         else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+            options.enable_cyclone = 4;
+         else if(strcmp(var.value, "DrZ80(snd)") == 0)
+            options.enable_cyclone = 5;
+         else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+            options.enable_cyclone = 6;    
+		 else
+			options.enable_cyclone = 0;
+	   
+	   log_cb(RETRO_LOG_ERROR, LOGPRE "Read enable_cyclone: %d. \n", options.enable_cyclone);
+ 	    break;	
+        #endif 	
       }
     }
   }
@@ -816,13 +849,38 @@ bool retro_load_game(const struct retro_game_info *game)
 
   if(!init_game(driverIndex))
     return false;
-
+     init_core_options();
   #if (HAS_CYCLONE || HAS_DRZ80)
+	  struct retro_variable var;
+	var.value = NULL;
+	var.key = default_options[OPT_ENABLE_CYCLONE].key;
+	environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) ;
+	if(strcmp(var.value, "None") == 0)
+		options.enable_cyclone = 0;
+	 else if(strcmp(var.value, "Default") == 0)
+		options.enable_cyclone = 1;
+	 else if(strcmp(var.value, "Cyclone") == 0)
+		options.enable_cyclone = 2;
+	 else if(strcmp(var.value, "DrZ80") == 0)
+		options.enable_cyclone = 3;
+	 else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+		options.enable_cyclone = 4;
+	 else if(strcmp(var.value, "DrZ80(snd)") == 0)
+		options.enable_cyclone = 5;
+	 else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+		options.enable_cyclone = 6;    
+	 else
+		options.enable_cyclone = 0;
+	
    int i;
    int use_cyclone = 1;
    int use_drz80 = 1;
    int use_drz80_snd = 1;
-
+ log_cb(RETRO_LOG_ERROR, LOGPRE "enable_cyclone: %d. \n", options.enable_cyclone);
+   //Default cycle    
+   if (options.enable_cyclone==1)
+   {
+	
 	for (i=0;i<NUMGAMES;i++)
  	{
 		if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
@@ -856,6 +914,51 @@ bool retro_load_game(const struct retro_game_info *game)
 			break;
 		}
 	}
+   
+  }	
+  //cyclone disabled
+  else if (options.enable_cyclone==0)
+  {
+	 //fe_drivers[i].cores=0;
+	   use_cyclone = 0;
+	   use_drz80_snd = 0;
+	   use_drz80 = 0;
+  }	   
+  //Force cyclone type
+  else
+  {
+	  int cores=0;
+	  cores=options.enable_cyclone-1;
+	   log_cb(RETRO_LOG_ERROR, LOGPRE " Set Cyclone enable_cyclone: %d. \n", cores);
+	  switch (cores)
+	  {
+			case 0:
+				use_cyclone = 0;
+				use_drz80_snd = 0;
+				use_drz80 = 0;
+				break;
+			case 1:
+				use_drz80_snd = 0;
+				use_drz80 = 0;
+				break;
+			case 2:
+				use_cyclone = 0;
+				break;
+			case 4:
+				use_cyclone = 0;
+				use_drz80 = 0;
+				break;
+			case 5:
+				use_drz80 = 0;
+				break;
+			default:
+				use_cyclone = 0;
+				use_drz80_snd = 0;
+				use_drz80 = 0;
+				break;
+		}
+  }
+  
 
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
@@ -948,7 +1051,7 @@ bool retro_load_game(const struct retro_game_info *game)
   log_cb(RETRO_LOG_INFO, LOGPRE "   save path: %s\n", options.libretro_save_path);
 
 
-  init_core_options();
+  //init_core_options();
 
   update_variables(true);
 
