@@ -870,7 +870,7 @@ bool retro_load_game(const struct retro_game_info *game)
   int use_drz80 = 1;
   int use_drz80_snd = 1;
 
-  /* Default cycle */
+  /* default - cyclone core option */
   if (options.enable_cyclone==1)
   {
     for (i=0;i<NUMGAMES;i++)
@@ -908,7 +908,7 @@ bool retro_load_game(const struct retro_game_info *game)
     }
   }
 
-  /* Cyclone disabled */
+  /* none - cyclone core option */
   else if (options.enable_cyclone==0)
   {
     use_cyclone = 0;
@@ -916,7 +916,7 @@ bool retro_load_game(const struct retro_game_info *game)
     use_drz80 = 0;
   }
 
-  /* Force cyclone type */
+  /* Force cyclone with user selected core option */
   else
   {
     int cores=0;
