@@ -130,7 +130,7 @@ static void refresh_pixel_layer(void)
 	{
 		if (line_dirty[y])
 		{
-			for (x = 0; x < Machine->drv->screen_width; x++)
+			for (x = 1; x < Machine->drv->screen_width + 1; x++) /* Hmm, 1 pixel offset is needed to align properly with sprites */
 			{
 				int color = (p[x] << 2) & 0x700;
 
@@ -148,7 +148,7 @@ static void refresh_pixel_layer(void)
 					color |= p[x] & 0xf;
 				}
 
-				plot_pixel(pixel_layer, x, y, Machine->pens[color]);
+				plot_pixel(pixel_layer, x - 1, y, Machine->pens[color]);
 			}
 
 			line_dirty[y] = 0;
