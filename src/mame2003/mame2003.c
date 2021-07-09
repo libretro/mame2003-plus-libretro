@@ -118,6 +118,9 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_CHEAT_INPUT_PORTS,
   OPT_MACHINE_TIMING,
   OPT_DIGITAL_JOY_CENTERING,
+#if (HAS_CYCLONE || HAS_DRZ80)
+  OPT_CYCLONE_MODE,
+#endif
   OPT_end /* dummy last entry */
 };
 
@@ -323,6 +326,9 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
+#if (HAS_CYCLONE || HAS_DRZ80)
+  init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
+#endif
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
 }
@@ -716,6 +722,25 @@ static void update_variables(bool first_time)
           else
             options.machine_timing = false;
           break;
+
+#if (HAS_CYCLONE || HAS_DRZ80)
+        case OPT_CYCLONE_MODE:
+          if(strcmp(var.value, "default") == 0)
+            options.cyclone_mode = 1;
+          else if(strcmp(var.value, "Cyclone") == 0)
+            options.cyclone_mode = 2;
+          else if(strcmp(var.value, "DrZ80") == 0)
+            options.cyclone_mode = 3;
+          else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+            options.cyclone_mode = 4;
+          else if(strcmp(var.value, "DrZ80(snd)") == 0)
+            options.cyclone_mode = 5;
+          else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+            options.cyclone_mode = 6;
+          else /* disabled */
+            options.cyclone_mode = 0;
+          break;
+#endif
       }
     }
   }
@@ -817,98 +842,131 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
 
-  #if (HAS_CYCLONE || HAS_DRZ80)
-   int i;
-   int use_cyclone = 1;
-   int use_drz80 = 1;
-   int use_drz80_snd = 1;
+#if (HAS_CYCLONE || HAS_DRZ80)
+  int i;
+  int use_cyclone = 1;
+  int use_drz80 = 1;
+  int use_drz80_snd = 1;
 
-	for (i=0;i<NUMGAMES;i++)
- 	{
-		if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
-		{
-			/* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
-			switch (fe_drivers[i].cores)
-			{
-				case 0:
-					use_cyclone = 0;
-					use_drz80_snd = 0;
-					use_drz80 = 0;
-					break;
-				case 1:
-					use_drz80_snd = 0;
-					use_drz80 = 0;
-					break;
-				case 2:
-					use_cyclone = 0;
-					break;
-				case 4:
-					use_cyclone = 0;
-					use_drz80 = 0;
-					break;
-				case 5:
-					use_drz80 = 0;
-					break;
-				default:
-					break;
-			}
+  /* cyclone mode core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+  switch (options.cyclone_mode)
+  {
+    case 0:
+      use_cyclone = 0;
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
 
-			break;
-		}
-	}
+    case 1:
+      for (i=0;i<NUMGAMES;i++)
+      {
+        /* ASM cores: 0=disabled, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
+        if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
+        {
+          switch (fe_drivers[i].cores)
+          {
+            case 0:
+              use_cyclone = 0;
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 1:
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 2:
+              use_cyclone = 0;
+              break;
+            case 4:
+              use_cyclone = 0;
+              use_drz80 = 0;
+              break;
+            case 5:
+              use_drz80 = 0;
+              break;
+            default:
+              break;
+          }
 
-   /* Replace M68000 by CYCLONE */
-#if (HAS_CYCLONE)
-   if (use_cyclone)
-   {
-	   for (i=0;i<MAX_CPU;i++)
-	   {
-		   unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-#ifdef NEOMAME
-		   if (*type==CPU_M68000)
-#else
-			   if (*type==CPU_M68000 || *type==CPU_M68010 )
-#endif
-			   {
-				   *type=CPU_CYCLONE;
-                   log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
-			   }
-        if(!(*type)){
-          break;
+          break; /* end for loop */
         }
-	   }
-   }
+      }
+      break; /* end case 1 */
+
+    case 2:
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
+
+    case 3:
+      use_cyclone = 0;
+      break;
+
+    case 5:
+      use_cyclone = 0;
+      use_drz80 = 0;
+      break;
+
+    case 6:
+      use_drz80 = 0;
+      break;
+
+    default:
+      break;
+  }
+
+#if (HAS_CYCLONE)
+  /* Replace M68000 by CYCLONE */
+  if (use_cyclone)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+
+#ifdef NEOMAME
+      if (*type==CPU_M68000)
+#else
+      if (*type==CPU_M68000 || *type==CPU_M68010 )
+#endif
+      {
+        *type=CPU_CYCLONE;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
+      }
+
+      if (!(*type)) break;
+    }
+  }
 #endif
 
 #if (HAS_DRZ80)
-	/* Replace Z80 by DRZ80 */
-	if (use_drz80)
-	{
-		for (i=0;i<MAX_CPU;i++)
-		{
-			unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-			if (type==CPU_Z80)
-			{
-				*type=CPU_DRZ80;
+  /* Replace Z80 by DRZ80 */
+  if (use_drz80)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80)
+      {
+        *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
-			}
-		}
-	}
+      }
+    }
+  }
 
-	/* Replace Z80 with DRZ80 only for sound CPUs */
-	if (use_drz80_snd)
-	{
-		for (i=0;i<MAX_CPU;i++)
-		{
-			int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
-			if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
-			{
-				*type=CPU_DRZ80;
+  /* Replace Z80 with DRZ80 only for sound CPUs */
+  if (use_drz80_snd)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+      {
+        *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
 
-			}
-		}
-	}
+      }
+    }
+  }
 #endif
 
 #endif
@@ -1128,7 +1186,7 @@ static void set_content_flags(void)
   options.content_flags[CONTENT_CTRL_COUNT] = options.content_flags[CONTENT_PLAYER_COUNT];
 
   /* There may be a future need to have a ctrl_count different than player_count,
-   * perhaps because of some alternating controls layout. This is a place to check 
+   * perhaps because of some alternating controls layout. This is a place to check
    * some condition and make the two numbers different if that should ever prove useful.
    */
   if(false/*options.content_flags[CONTENT_ALTERNATING_CTRLS]*/)
@@ -1150,15 +1208,15 @@ static void set_content_flags(void)
 
 
   /************ LOG THE STATE OF THE CONTENT FLAGS ************/
-  
+
   log_cb(RETRO_LOG_INFO, LOGPRE "==== BEGIN DRIVER CONTENT ATTRIBUTES ====\n");
-  
+
   if(options.content_flags[CONTENT_NEOGEO])     log_cb(RETRO_LOG_INFO, LOGPRE "* Neo Geo BIOS required.\n");
   if(options.content_flags[CONTENT_STV])        log_cb(RETRO_LOG_INFO, LOGPRE "* STV BIOS required.\n");
   if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
   if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
   if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
-  
+
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i distinct button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);
 
@@ -1649,10 +1707,10 @@ void retro_describe_controls(void)
 
       if(string_is_empty(control_name) && retro_code != INT_MAX)  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
-      
-      /* With regard to the device number, we refer to the input polling comments in 
+
+      /* With regard to the device number, we refer to the input polling comments in
        * libretro.h which says we "should only poll input based on the base input device
-       * types". That seems to be true in here too, because using the result of 
+       * types". That seems to be true in here too, because using the result of
        * RETRO_DEVICE_SUBCLASS does not work in RetroArch in April 2021 when passed as part
        * of the descriptions. Therefore, get_device_parent() is used.
        */
@@ -1775,7 +1833,7 @@ int get_retrogun_code(unsigned osd_id)
   return INT_MAX; /* no match found */
 }
 
-/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE, 
+/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE,
  * MOUSECODE_BUTTON_COMPARE, and get_ctrl_ipt_code(), etc. but I haven't found it.
  */
 
@@ -2204,7 +2262,7 @@ int analog_deadzone_rescale(int input)
 }
 
 /******************************************************************************
- * 
+ *
  * Legacy joystick calibration functions
  *
  * As of March 2021: these MAME functions should not actually be used and will not be invoked
@@ -2275,15 +2333,15 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
 /******************************************************************************
  * rescale_analog converts between the libretro coordinate system and the
  * MAME OSD coordinate system.
- * 
+ *
  * RETRO_DEVICE_LIGHTGUN report X/Y coordinates in the range [-0x8000, 0x7fff]
  * in both axes, with zero being center and -0x8000 being out of bounds.
  * RETRO_DEVICE_ANALOG uses the same [-0x8000, 0x7fff] range.
- * 
+ *
  * For lightguns, the MAME OSD uses delta from the middle of the screen when
- * the lightgun is fired, and 0 when the gun is inactive with a range of 
+ * the lightgun is fired, and 0 when the gun is inactive with a range of
  * -128 to 128. MAME OSD uses this same range for analog joysticks.
- * 
+ *
  * Therefore we can use a common function to scale input from lightguns and
  * analog controls.
  ******************************************************************************/
