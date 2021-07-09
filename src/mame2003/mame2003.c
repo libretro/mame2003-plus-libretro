@@ -841,114 +841,112 @@ bool retro_load_game(const struct retro_game_info *game)
 
   if(!init_game(driverIndex))
     return false;
-     init_core_options();
-  #if (HAS_CYCLONE || HAS_DRZ80)
-	  struct retro_variable var;
-	var.value = NULL;
-	var.key = default_options[OPT_ENABLE_CYCLONE].key;
-	environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) ;
-	if(strcmp(var.value, "None") == 0)
-		options.enable_cyclone = 0;
-	 else if(strcmp(var.value, "Default") == 0)
-		options.enable_cyclone = 1;
-	 else if(strcmp(var.value, "Cyclone") == 0)
-		options.enable_cyclone = 2;
-	 else if(strcmp(var.value, "DrZ80") == 0)
-		options.enable_cyclone = 3;
-	 else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
-		options.enable_cyclone = 4;
-	 else if(strcmp(var.value, "DrZ80(snd)") == 0)
-		options.enable_cyclone = 5;
-	 else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
-		options.enable_cyclone = 6;    
-	 else
-		options.enable_cyclone = 0;
-	
-   int i;
-   int use_cyclone = 1;
-   int use_drz80 = 1;
-   int use_drz80_snd = 1;
- log_cb(RETRO_LOG_ERROR, LOGPRE "enable_cyclone: %d. \n", options.enable_cyclone);
-   //Default cycle    
-   if (options.enable_cyclone==1)
-   {
-	
-	for (i=0;i<NUMGAMES;i++)
- 	{
-		if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
-		{
-			/* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
-			switch (fe_drivers[i].cores)
-			{
-				case 0:
-					use_cyclone = 0;
-					use_drz80_snd = 0;
-					use_drz80 = 0;
-					break;
-				case 1:
-					use_drz80_snd = 0;
-					use_drz80 = 0;
-					break;
-				case 2:
-					use_cyclone = 0;
-					break;
-				case 4:
-					use_cyclone = 0;
-					use_drz80 = 0;
-					break;
-				case 5:
-					use_drz80 = 0;
-					break;
-				default:
-					break;
-			}
 
-			break;
-		}
-	}
-   
-  }	
-  //cyclone disabled
+  init_core_options();
+
+#if (HAS_CYCLONE || HAS_DRZ80)
+  struct retro_variable var;
+  var.value = NULL;
+  var.key = default_options[OPT_ENABLE_CYCLONE].key;
+  environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var);
+
+  if(strcmp(var.value, "Default") == 0)
+    options.enable_cyclone = 1;
+  else if(strcmp(var.value, "Cyclone") == 0)
+    options.enable_cyclone = 2;
+  else if(strcmp(var.value, "DrZ80") == 0)
+    options.enable_cyclone = 3;
+  else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+    options.enable_cyclone = 4;
+  else if(strcmp(var.value, "DrZ80(snd)") == 0)
+    options.enable_cyclone = 5;
+  else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+    options.enable_cyclone = 6;
+  else /* None */
+    options.enable_cyclone = 0;
+
+  int i;
+  int use_cyclone = 1;
+  int use_drz80 = 1;
+  int use_drz80_snd = 1;
+
+  /* Default cycle */
+  if (options.enable_cyclone==1)
+  {
+    for (i=0;i<NUMGAMES;i++)
+    {
+      if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
+      {
+        switch (fe_drivers[i].cores)
+        {
+          case 0:
+            use_cyclone = 0;
+            use_drz80_snd = 0;
+            use_drz80 = 0;
+            break;
+          case 1:
+            use_drz80_snd = 0;
+            use_drz80 = 0;
+            break;
+           case 2:
+             use_cyclone = 0;
+             break;
+           case 4:
+             use_cyclone = 0;
+             use_drz80 = 0;
+             break;
+           case 5:
+             use_drz80 = 0;
+             break;
+           default:
+             break;
+        }
+        break;
+      }
+    }
+  }
+
+  /* Cyclone disabled */
   else if (options.enable_cyclone==0)
   {
-	 //fe_drivers[i].cores=0;
-	   use_cyclone = 0;
-	   use_drz80_snd = 0;
-	   use_drz80 = 0;
-  }	   
-  //Force cyclone type
+    use_cyclone = 0;
+    use_drz80_snd = 0;
+    use_drz80 = 0;
+  }
+
+  /* Force cyclone type */
   else
   {
-	  int cores=0;
-	  cores=options.enable_cyclone-1;
-	   log_cb(RETRO_LOG_ERROR, LOGPRE " Set Cyclone enable_cyclone: %d. \n", cores);
-	  switch (cores)
-	  {
-			case 0:
-				use_cyclone = 0;
-				use_drz80_snd = 0;
-				use_drz80 = 0;
-				break;
-			case 1:
-				use_drz80_snd = 0;
-				use_drz80 = 0;
-				break;
-			case 2:
-				use_cyclone = 0;
-				break;
-			case 4:
-				use_cyclone = 0;
-				use_drz80 = 0;
-				break;
-			case 5:
-				use_drz80 = 0;
-				break;
-			default:
-				use_cyclone = 0;
-				use_drz80_snd = 0;
-				use_drz80 = 0;
-				break;
-		}
+    int cores=0;
+    cores=options.enable_cyclone-1;
+
+    switch (cores)
+    {
+      case 0:
+        use_cyclone = 0;
+        use_drz80_snd = 0;
+        use_drz80 = 0;
+        break;
+      case 1:
+        use_drz80_snd = 0;
+        use_drz80 = 0;
+        break;
+      case 2:
+        use_cyclone = 0;
+        break;
+      case 4:
+        use_cyclone = 0;
+        use_drz80 = 0;
+        break;
+        case 5:
+        use_drz80 = 0;
+        break;
+      default:
+        use_cyclone = 0;
+        use_drz80_snd = 0;
+        use_drz80 = 0;
+        break;
+    }
   }
   
 
