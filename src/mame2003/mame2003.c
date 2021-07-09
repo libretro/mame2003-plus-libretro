@@ -886,7 +886,7 @@ bool retro_load_game(const struct retro_game_info *game)
     }
   }
 
-  /* User decides how to configure cylone settings with core option */
+  /* User decides how to configure cyclone settings with core option */
   else
   {
     /* core option: 0=none, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
