@@ -152,6 +152,7 @@ static void   check_system_specs(void);
         int   rescale_analog(int libretro_coordinate);
         int   analog_deadzone_rescale(int input);
 static void   remove_slash (char* temp);
+static void   configure_cyclone_mode (void);
 
 
 /******************************************************************************
@@ -842,135 +843,6 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
 
-#if (HAS_CYCLONE || HAS_DRZ80)
-  int i;
-  int use_cyclone = 1;
-  int use_drz80 = 1;
-  int use_drz80_snd = 1;
-
-  /* cyclone mode core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
-  switch (options.cyclone_mode)
-  {
-    case 0:
-      use_cyclone = 0;
-      use_drz80_snd = 0;
-      use_drz80 = 0;
-      break;
-
-    case 1:
-      for (i=0;i<NUMGAMES;i++)
-      {
-        /* ASM cores: 0=disabled, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
-        if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
-        {
-          switch (fe_drivers[i].cores)
-          {
-            case 0:
-              use_cyclone = 0;
-              use_drz80_snd = 0;
-              use_drz80 = 0;
-              break;
-            case 1:
-              use_drz80_snd = 0;
-              use_drz80 = 0;
-              break;
-            case 2:
-              use_cyclone = 0;
-              break;
-            case 4:
-              use_cyclone = 0;
-              use_drz80 = 0;
-              break;
-            case 5:
-              use_drz80 = 0;
-              break;
-            default:
-              break;
-          }
-
-          break; /* end for loop */
-        }
-      }
-      break; /* end case 1 */
-
-    case 2:
-      use_drz80_snd = 0;
-      use_drz80 = 0;
-      break;
-
-    case 3:
-      use_cyclone = 0;
-      break;
-
-    case 5:
-      use_cyclone = 0;
-      use_drz80 = 0;
-      break;
-
-    case 6:
-      use_drz80 = 0;
-      break;
-
-    default:
-      break;
-  }
-
-#if (HAS_CYCLONE)
-  /* Replace M68000 by CYCLONE */
-  if (use_cyclone)
-  {
-    for (i=0;i<MAX_CPU;i++)
-    {
-      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-
-#ifdef NEOMAME
-      if (*type==CPU_M68000)
-#else
-      if (*type==CPU_M68000 || *type==CPU_M68010 )
-#endif
-      {
-        *type=CPU_CYCLONE;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
-      }
-
-      if (!(*type)) break;
-    }
-  }
-#endif
-
-#if (HAS_DRZ80)
-  /* Replace Z80 by DRZ80 */
-  if (use_drz80)
-  {
-    for (i=0;i<MAX_CPU;i++)
-    {
-      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-      if (type==CPU_Z80)
-      {
-        *type=CPU_DRZ80;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
-      }
-    }
-  }
-
-  /* Replace Z80 with DRZ80 only for sound CPUs */
-  if (use_drz80_snd)
-  {
-    for (i=0;i<MAX_CPU;i++)
-    {
-      int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
-      if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
-      {
-        *type=CPU_DRZ80;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
-
-      }
-    }
-  }
-#endif
-
-#endif
-
   set_content_flags();
 
   options.activate_dcs_speedhack = true; /* formerly a core option, now always on. */
@@ -1009,6 +881,8 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
 
   update_variables(true);
+
+  configure_cyclone_mode();
 
   /* Not all drivers support the maximum number of players; start at the highest index and decrement
    * until the highest supported index, designating the unsupported indexes during the loop.
@@ -2541,4 +2415,137 @@ static void remove_slash (char* temp)
   }
   else
     log_cb(RETRO_LOG_DEBUG, LOGPRE "Trailing slash removal was not necessary path: %s.\n", temp);
+}
+
+static void configure_cyclone_mode (void)
+{
+  /* Determine how to use cyclone if available to the platform */
+
+#if (HAS_CYCLONE || HAS_DRZ80)
+  int i;
+  int use_cyclone = 1;
+  int use_drz80 = 1;
+  int use_drz80_snd = 1;
+
+  /* cyclone mode core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
+  switch (options.cyclone_mode)
+  {
+    case 0:
+      use_cyclone = 0;
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
+
+    case 1:
+      for (i=0;i<NUMGAMES;i++)
+      {
+        /* ASM cores: 0=disabled, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
+        if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
+        {
+          switch (fe_drivers[i].cores)
+          {
+            case 0:
+              use_cyclone = 0;
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 1:
+              use_drz80_snd = 0;
+              use_drz80 = 0;
+              break;
+            case 2:
+              use_cyclone = 0;
+              break;
+            case 4:
+              use_cyclone = 0;
+              use_drz80 = 0;
+              break;
+            case 5:
+              use_drz80 = 0;
+              break;
+            default:
+              break;
+          }
+
+          break; /* end for loop */
+        }
+      }
+      break; /* end case 1 */
+
+    case 2:
+      use_drz80_snd = 0;
+      use_drz80 = 0;
+      break;
+
+    case 3:
+      use_cyclone = 0;
+      break;
+
+    case 5:
+      use_cyclone = 0;
+      use_drz80 = 0;
+      break;
+
+    case 6:
+      use_drz80 = 0;
+      break;
+
+    default:
+      break;
+  }
+
+#if (HAS_CYCLONE)
+  /* Replace M68000 by CYCLONE */
+  if (use_cyclone)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+
+#ifdef NEOMAME
+      if (*type==CPU_M68000)
+#else
+      if (*type==CPU_M68000 || *type==CPU_M68010 )
+#endif
+      {
+        *type=CPU_CYCLONE;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
+      }
+
+      if (!(*type)) break;
+    }
+  }
+#endif
+
+#if (HAS_DRZ80)
+  /* Replace Z80 by DRZ80 */
+  if (use_drz80)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80)
+      {
+        *type=CPU_DRZ80;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
+      }
+    }
+  }
+
+  /* Replace Z80 with DRZ80 only for sound CPUs */
+  if (use_drz80_snd)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+      int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
+      if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+      {
+        *type=CPU_DRZ80;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
+      }
+    }
+  }
+#endif
+
+#endif
 }
