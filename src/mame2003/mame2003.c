@@ -152,7 +152,7 @@ static void   check_system_specs(void);
         int   rescale_analog(int libretro_coordinate);
         int   analog_deadzone_rescale(int input);
 static void   remove_slash (char* temp);
-static void   configure_cyclone_mode (void);
+static void   configure_cyclone_mode (int driverIndex);
 
 
 /******************************************************************************
@@ -882,7 +882,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
   update_variables(true);
 
-  configure_cyclone_mode();
+  configure_cyclone_mode(driverIndex);
 
   /* Not all drivers support the maximum number of players; start at the highest index and decrement
    * until the highest supported index, designating the unsupported indexes during the loop.
@@ -2417,7 +2417,7 @@ static void remove_slash (char* temp)
     log_cb(RETRO_LOG_DEBUG, LOGPRE "Trailing slash removal was not necessary path: %s.\n", temp);
 }
 
-static void configure_cyclone_mode (void)
+static void configure_cyclone_mode (int driverIndex)
 {
   /* Determine how to use cyclone if available to the platform */
 
