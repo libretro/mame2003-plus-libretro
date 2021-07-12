@@ -2419,7 +2419,7 @@ static void remove_slash (char* temp)
 
 static void configure_cyclone_mode (void)
 {
-  /* Determines how use cyclone if available to the platform */
+  /* Determine how to use cyclone if available to the platform */
 
 #if (HAS_CYCLONE || HAS_DRZ80)
   int i;
