@@ -46,9 +46,6 @@ struct ipd  *default_inputs; /* pointer the array of structs with default MAME i
 /* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
 
-/* data structures for joystick/retropad state */
-int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initialise to zero, polled in retro_run */
-
 /* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
  * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
 int16_t  prev_pointer_x;
