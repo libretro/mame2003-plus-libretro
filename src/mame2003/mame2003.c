@@ -1185,14 +1185,14 @@ void retro_run (void)
     /* Analog joystick - read as digital button */
     /* If the analog value (normalized for MAME to the range -128, 128) is greater in absolute   */
     /* terms than INPUT_BUTTON_AXIS_THRESHOLD, record it as a binary/digital signal.             */
-    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][1] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[port][1] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][1] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[port][2] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[port][1] >  INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[port][2] < -INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
+    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? 1 : 0;
   }
 
   mame_frame();
