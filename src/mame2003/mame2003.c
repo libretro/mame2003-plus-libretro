@@ -54,9 +54,6 @@ int retroJsState[MAX_PLAYER_COUNT][OSD_INPUT_CODES_PER_PLAYER]= {{0}}; /* initia
 int16_t  prev_pointer_x;
 int16_t  prev_pointer_y;
 
-/* data structures to store position data for analog joysticks */
-int16_t  analogjoy[MAX_PLAYER_COUNT][4]= {0};
-
 retro_log_printf_t                 log_cb;
 static struct retro_message        frontend_message;
 
@@ -1143,7 +1140,6 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-  int port = 0;
   bool updated = false;
   poll_cb(); /* execute input callback */
 
@@ -1155,45 +1151,6 @@ void retro_run (void)
 
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
     update_variables(false);
-
-  /* begin by blanking the old values */
-  for(port = 0; port < MAX_PLAYER_COUNT; port++)
-  {
-    int code_idx = 0;
-    for(code_idx = 0; code_idx < OSD_INPUT_CODES_PER_PLAYER; code_idx++)
-      retroJsState[port][code_idx] = 0;
-
-    analogjoy[port][0] = 0;
-    analogjoy[port][1] = 0;
-    analogjoy[port][2] = 0;
-    analogjoy[port][3] = 0;
-  }
-
-  for(port = 0; port < MAX_PLAYER_COUNT; port++)
-  {
-    int device_type          = options.active_control_type[port];
-    int device_parent        = get_device_parent(device_type);
-
-    if(device_type == RETRO_DEVICE_NONE) continue;
-
-    /* Analog joystick - read as analog axis and rescale for MAME value range */
-    analogjoy[port][0] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
-    analogjoy[port][1] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
-    analogjoy[port][2] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
-    analogjoy[port][3] = analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
-
-    /* Analog joystick - read as digital button */
-    /* If the analog value (normalized for MAME to the range -128, 128) is greater in absolute   */
-    /* terms than INPUT_BUTTON_AXIS_THRESHOLD, record it as a binary/digital signal.             */
-    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_X]  = (analogjoy[port][0] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_X]  = (analogjoy[port][0] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][0] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_NEGATIVE_Y]  = (analogjoy[port][1] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][1] : 0;
-    retroJsState[port][OSD_ANALOG_LEFT_POSITIVE_Y]  = (analogjoy[port][1] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][1] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_X] = (analogjoy[port][2] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_X] = (analogjoy[port][2] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][2] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_NEGATIVE_Y] = (analogjoy[port][3] < -INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
-    retroJsState[port][OSD_ANALOG_RIGHT_POSITIVE_Y] = (analogjoy[port][3] >  INPUT_BUTTON_AXIS_THRESHOLD) ? analogjoy[port][3] : 0;
-  }
 
   mame_frame();
 }
@@ -2032,8 +1989,40 @@ int osd_is_joy_pressed(int joycode)
     }
   }
 
-  /* Use the cached input states */
-  return retroJsState[port][osd_code];
+  /* Analog joystick - read as digital button */
+  /* If the analog value (normalized for MAME to the range -128, 128) is greater in absolute   */
+  /* terms than INPUT_BUTTON_AXIS_THRESHOLD, return it as a binary/digital signal.             */
+  if (osd_is_joystick_axis_code(joycode))
+  {
+    if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_LEFT_POSITIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_LEFT_POSITIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+
+    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_POSITIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+  }
+
+  /* return not pressed */
+  return 0;
 }
 
 
@@ -2079,16 +2068,16 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
       osd_code = decode_osd_joycode(analogjoy_input[i]);
 
       if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X)
-        value = analogjoy[player][0];
+        value = analog_deadzone_rescale( input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) );
 
       else if(osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y || osd_code == OSD_ANALOG_LEFT_POSITIVE_Y)
-        value = analogjoy[player][1];
+        value = analog_deadzone_rescale( input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) );
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_POSITIVE_X)
-        value = analogjoy[player][2];
+        value = analog_deadzone_rescale( input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) );
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
-        value = analogjoy[player][3];
+        value = analog_deadzone_rescale( input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) );
 
       /* opposite when reversing axis mapping */
       if((osd_code % 2) == 0) /* if osd_code is an even number */
