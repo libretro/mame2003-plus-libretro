@@ -46,11 +46,6 @@ struct ipd  *default_inputs; /* pointer the array of structs with default MAME i
 /* data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
 
-/* temporary variables to convert absolute coordinates polled by pointer fallback, which is used
- * as a fallback for libretro frontends without DEVICE_RETRO_MOUSE implementations */
-int16_t  prev_pointer_x;
-int16_t  prev_pointer_y;
-
 retro_log_printf_t                 log_cb;
 static struct retro_message        frontend_message;
 
@@ -2157,11 +2152,12 @@ void osd_joystick_end_calibration(void) { }
 void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
 
-  if (options.mouse_device == RETRO_DEVICE_POINTER)
+  if (options.mouse_device == RETRO_DEVICE_POINTER && input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
   {
-    bool pointer_pressed = input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
-    *deltax = pointer_pressed ? get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
-    *deltay = pointer_pressed ? get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
+    static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
+    static int16_t prev_pointer_y;
+    *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
+    *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
   }
 
   else if (options.mouse_device == RETRO_DEVICE_MOUSE)
