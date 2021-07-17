@@ -56,6 +56,7 @@ static retro_input_poll_t          poll_cb                       = NULL;
 static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
+struct retro_audio_buffer_status_callback buf_status_cb;
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
@@ -213,6 +214,39 @@ void frontend_message_cb(const char *message_string, unsigned frames_to_display)
   implementation of key libretro functions
 
 ******************************************************************************/
+bool retro_audio_buff_active        = false;
+unsigned retro_audio_buff_occupancy = 0;
+bool retro_audio_buff_underrun      = false;
+
+static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool underrun_likely)
+{
+   retro_audio_buff_active    = active;
+   retro_audio_buff_occupancy = occupancy;
+   retro_audio_buff_underrun  = underrun_likely;
+}
+
+void retro_set_audio_buff_status_cb(void)
+{
+  if (options.frameskip >0 && options.frameskip >= 12)
+  {
+
+      if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
+            &buf_status_cb))
+      {
+         if (log_cb)
+            log_cb(RETRO_LOG_WARN, "Frameskip disabled - frontend does not support audio buffer status monitoring.\n");
+
+         retro_audio_buff_active    = false;
+         retro_audio_buff_occupancy = 0;
+         retro_audio_buff_underrun  = false;
+      }
+      else
+      log_cb(RETRO_LOG_INFO, "Frameskip Enabled\n");
+  }
+   else
+      environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,NULL);
+
+}
 
 unsigned retro_api_version(void)
 {
@@ -310,7 +344,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
   init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
-  init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; 0|1|2|3|4|5");
+  init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; disabled|1|2|3|4|5|6|7|9|10|11|auto|auto_aggressive|auto_max");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
@@ -682,7 +716,16 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_FRAMESKIP:
-          options.frameskip = atoi(var.value);
+          if (strcmp(var.value, "auto") == 0)
+            options.frameskip = 12;
+          else if (strcmp(var.value, "auto_aggressive") == 0)
+            options.frameskip = 13;
+          else if(strcmp(var.value, "auto_max") == 0)
+            options.frameskip = 14;
+          else
+            options.frameskip = atoi(var.value);
+
+          retro_set_audio_buff_status_cb();
           break;
 
         case OPT_CORE_SYS_SUBFOLDER:
