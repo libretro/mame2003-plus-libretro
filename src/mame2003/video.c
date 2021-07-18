@@ -395,7 +395,7 @@ int osd_skip_this_frame(void)
 {
 	static unsigned auto_frameskip_counter = 0;
 
-	bool skip_frame;
+	bool skip_frame = 0;
 
 	if (pause_action)  return 0;  // dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key)
 
