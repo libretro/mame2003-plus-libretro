@@ -406,13 +406,13 @@ int osd_skip_this_frame(void)
 		{
 			switch ( options.frameskip)
 			{
-				case 6: /* auto */
+				case 12: /* auto */
 					skip_frame = retro_audio_buff_underrun;
 				break;
-				case 7: /* aggressive */
+				case 13: /* aggressive */
 					skip_frame = (retro_audio_buff_occupancy < 33);
 				break;
-				case 8: /* max */
+				case 14: /* max */
 					skip_frame = (retro_audio_buff_occupancy < 50);
 				break;
 				default:
