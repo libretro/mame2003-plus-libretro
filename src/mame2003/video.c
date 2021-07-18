@@ -395,7 +395,7 @@ int osd_skip_this_frame(void)
 {
 	static unsigned auto_frameskip_counter = 0;
 
-	bool skip_frame;
+	bool skip_frame = 0;
 
 	if (pause_action)  return 0;  // dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key)
 
@@ -406,13 +406,13 @@ int osd_skip_this_frame(void)
 		{
 			switch ( options.frameskip)
 			{
-				case 6: /* auto */
+				case 12: /* auto */
 					skip_frame = retro_audio_buff_underrun;
 				break;
-				case 7: /* aggressive */
+				case 13: /* aggressive */
 					skip_frame = (retro_audio_buff_occupancy < 33);
 				break;
-				case 8: /* max */
+				case 14: /* max */
 					skip_frame = (retro_audio_buff_occupancy < 50);
 				break;
 				default:
