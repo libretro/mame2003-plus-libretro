@@ -351,7 +351,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
-  init_default(&default_options[OPT_CPU_CLOCK_SCALE],        APPNAME"_cpu_clock_scale",        "CPU clock scale; default|5|10|15|20|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|105|110|115|120|125|130|135|140|145|150|155|160|165|170|175|180|185|190|195|200");
+  init_default(&default_options[OPT_CPU_CLOCK_SCALE],        APPNAME"_cpu_clock_scale",        "CPU clock scale; default|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|105|110|115|120|125");
 #if (HAS_CYCLONE || HAS_DRZ80)
   init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
