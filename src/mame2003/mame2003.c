@@ -98,6 +98,7 @@ enum CORE_OPTIONS/* controls the order in which core options appear. common, imp
   OPT_BRIGHTNESS,
   OPT_GAMMA,
   OPT_FRAMESKIP,
+  OPT_CPU_CLOCK_SCALE,
   OPT_SAMPLE_RATE,
   OPT_INPUT_INTERFACE,
   OPT_MAME_REMAPPING,
@@ -350,6 +351,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
+  init_default(&default_options[OPT_CPU_CLOCK_SCALE],        APPNAME"_cpu_clock_scale",        "CPU clock scale; default|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|105|110|115|120|125");
 #if (HAS_CYCLONE || HAS_DRZ80)
   init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
@@ -539,37 +541,6 @@ static void update_variables(bool first_time)
             palette_set_global_gamma(options.gamma);
           break;
 
-          /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
-          /*
-
-          double overclock;
-          int cpu, doallcpus = 0, oc;
-
-          if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
-            doallcpus = 1;
-          if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
-            increment *= 5;
-          if( increment :
-            overclock = timer_get_overclock(arg);
-            overclock += 0.01 * increment;
-            if (overclock < 0.01) overclock = 0.01;
-            if (overclock > 2.0) overclock = 2.0;
-            if( doallcpus )
-              for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
-                timer_set_overclock(cpu, overclock);
-            else
-              timer_set_overclock(arg, overclock);
-          }
-
-          oc = 100 * timer_get_overclock(arg) + 0.5;
-
-          if( doallcpus )
-            sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
-          else
-            sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
-          displayosd(bitmap,buf,oc/2,100/2);
-        */
-
         case OPT_ARTWORK:
           if(strcmp(var.value, "enabled") == 0)
             options.use_artwork = ARTWORK_USE_ALL;
@@ -726,6 +697,13 @@ static void update_variables(bool first_time)
             options.frameskip = atoi(var.value);
 
           retro_set_audio_buff_status_cb();
+          break;
+
+        case OPT_CPU_CLOCK_SCALE:
+          if(strcmp(var.value, "default") == 0)
+            options.cpu_clock_scale = 1;
+          else
+            options.cpu_clock_scale = (double) atoi(var.value) / 100;
           break;
 
         case OPT_CORE_SYS_SUBFOLDER:
@@ -1186,6 +1164,15 @@ void retro_run (void)
 
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
     update_variables(false);
+
+  if (options.cpu_clock_scale)
+  {
+    if (cpunum_get_clockscale(0) != options.cpu_clock_scale)
+    {
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing cpu clock scale from %lf to %lf\n",cpunum_get_clockscale(0),options.cpu_clock_scale);
+      cpunum_set_clockscale(0, options.cpu_clock_scale);
+    }
+  }
 
   mame_frame();
 }
