@@ -1341,17 +1341,17 @@ int osd_update_audio_stream(INT16 *buffer)
 	int i,j;
 	if ( Machine->sample_rate !=0 && buffer )
 	{
-   		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
 		{
 			for (i = 0, j = 0; i < samples_per_frame; i++)
-        		{
+			{
 				conversion_buffer[j++] = samples_buffer[i];
 				conversion_buffer[j++] = samples_buffer[i];
-		        }
-         		audio_batch_cb(conversion_buffer,samples_per_frame);
+			}
+			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
 
 
@@ -1367,7 +1367,7 @@ int osd_update_audio_stream(INT16 *buffer)
 
 			int integer_delta = (int)delta_samples;
 			if (integer_delta <= 16 )
-                        {
+			{
 				log_cb(RETRO_LOG_DEBUG,"sound: Delta added value %d added to frame\n",integer_delta);
 				samples_per_frame += integer_delta;
 			}
@@ -1377,7 +1377,7 @@ int osd_update_audio_stream(INT16 *buffer)
 
 		}
 	}
-        return samples_per_frame;
+	return samples_per_frame;
 }
 
 
