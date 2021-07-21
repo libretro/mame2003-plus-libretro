@@ -1,8 +1,8 @@
 /*********************************************************************
 
-	mame2003.c
+  mame2003.c
 
-    an updated port of Xmame 0.78 to the libretro API
+  an updated port of Xmame 0.78 to the libretro API
 
 *********************************************************************/
 
@@ -33,7 +33,7 @@ int            retro_running = 0;
 int            gotFrame;
 static float   delta_samples;
 int            samples_per_frame = 0;
-int            orig_samples_per_frame =0;
+int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
@@ -41,22 +41,23 @@ int            usestereo = 1;
 /* comment needed: what does this legacy flag do exactly */
 int legacy_flag = -1;
 
-struct ipd  *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
+/* pointer to the array of structs with default MAME input mappings and labels */
+struct ipd  *default_inputs;
 
-/* data structures to store and translate keyboard state */
-const struct KeyboardInfo  retroKeys[]; /* MAME data structure keymapping */
+/* MAME data structures to store and translate keyboard state */
+const struct KeyboardInfo  retroKeys[];
 
-retro_log_printf_t                 log_cb;
-static struct retro_message        frontend_message;
+retro_log_printf_t                         log_cb;
+static struct retro_message                frontend_message;
 
-struct                             retro_perf_callback perf_cb;
-retro_environment_t                environ_cb                    = NULL;
-retro_video_refresh_t              video_cb                      = NULL;
-static retro_input_poll_t          poll_cb                       = NULL;
-static retro_input_state_t         input_cb                      = NULL;
-static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
-retro_set_led_state_t              led_state_cb                  = NULL;
-struct retro_audio_buffer_status_callback buf_status_cb;
+struct retro_perf_callback                 perf_cb;
+retro_environment_t                        environ_cb         = NULL;
+retro_video_refresh_t                      video_cb           = NULL;
+static retro_input_poll_t                  poll_cb            = NULL;
+static retro_input_state_t                 input_cb           = NULL;
+static retro_audio_sample_batch_t          audio_batch_cb     = NULL;
+retro_set_led_state_t                      led_state_cb       = NULL;
+struct retro_audio_buffer_status_callback  buf_status_cb;
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
@@ -69,11 +70,11 @@ double round(double number)
 
 /******************************************************************************
 
-Core options
+  Core options
 
 ******************************************************************************/
 
-enum CORE_OPTIONS/* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
+enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
   OPT_4WAY = 0,
   OPT_MOUSE_DEVICE,
@@ -157,10 +158,10 @@ extern void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
 
 /******************************************************************************
- *
- * Data structures for libretro controllers
- *
- ******************************************************************************/
+
+  Data structures for libretro controllers
+
+*******************************************************************************/
 
 /* the first of our controllers can use the base retropad type and rename it,
  * while any layout variations must subclass the type.
@@ -199,7 +200,7 @@ struct retro_controller_info input_subdevice_ports[] = {
 
 /******************************************************************************
 
-	frontend message interface
+  frontend message interface
 
 ******************************************************************************/
 
@@ -257,8 +258,8 @@ unsigned retro_api_version(void)
 
 void retro_get_system_info(struct retro_system_info *info)
 {
-   /* this must match the 'corename' field in mame2003_plus_libretro.info
-    * in order for netplay to work. */
+  /* this must match the 'corename' field in mame2003_plus_libretro.info
+   * in order for netplay to work. */
   info->library_name = "MAME 2003-Plus";
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
@@ -296,8 +297,8 @@ static void check_system_specs(void)
     * to be implemented by any frontends including RetroArch. The RA developers do not
     * have a suggested range of values. We use 10 by convention (copying other cores).
     */
-   unsigned level = (unsigned)RETRO_PROFILE;
-   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+  unsigned level = (unsigned)RETRO_PROFILE;
+  environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
 
@@ -889,7 +890,6 @@ bool retro_load_game(const struct retro_game_info *game)
 
 
   init_core_options();
-
   update_variables(true);
 
   configure_cyclone_mode(driverIndex);
@@ -1389,7 +1389,7 @@ void osd_stop_audio_stream(void)
 
 /******************************************************************************
 
-Miscellaneous
+  Miscellaneous
 
 ******************************************************************************/
 
@@ -1408,7 +1408,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 /******************************************************************************
 
-	RetroPad mapping
+  RetroPad mapping
 
 ******************************************************************************/
 
@@ -1926,7 +1926,7 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPU
 
 /******************************************************************************
 
-	Joystick
+  Joystick
 
 ******************************************************************************/
 
@@ -2175,7 +2175,7 @@ void osd_joystick_end_calibration(void) { }
 
 /******************************************************************************
 
-	Trackball, Spinner, Mouse, Pointer, Lightgun
+  Trackball, Spinner, Mouse, Pointer, Lightgun
 
 ******************************************************************************/
 
@@ -2242,7 +2242,7 @@ int rescale_analog(int libretro_coordinate)
 
 /******************************************************************************
 
-	Keyboard
+  Keyboard
 
 ******************************************************************************/
 
@@ -2273,7 +2273,7 @@ int osd_readkey_unicode(int flush)
 
 /******************************************************************************
 
-	Keymapping
+  Keymapping
 
 ******************************************************************************/
 
@@ -2398,7 +2398,7 @@ const struct KeyboardInfo retroKeys[] =
 
 /******************************************************************************
 
-	Utility functions
+  Utility functions
 
 ******************************************************************************/
 
