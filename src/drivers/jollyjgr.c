@@ -759,5 +759,5 @@ ROM_START( fspiderb )
 	ROM_LOAD( "82s123.1f", 0x0000, 0x0020, CRC(cda6001a) SHA1(e10fe848e8123e53bd2db8a14cfa2d8c6621d6aa) )
 ROM_END
 
-GAME( 1981, fspiderb, 0, fspider,  fspider, 0, ROT90, "Taito Corporation", "Frog & Spiders (bootleg?)" ) /* comes from a Fawaz Group bootleg(?) board */
+GAME( 1981, fspiderb, 0, fspider,  fspider,  0, ROT90, "Taito Corporation", "Frog & Spiders (bootleg?)" ) /* comes from a Fawaz Group bootleg(?) board */
 GAME( 1982, jollyjgr, 0, jollyjgr, jollyjgr, 0, ROT90, "Taito Corporation", "Jolly Jogger" )
