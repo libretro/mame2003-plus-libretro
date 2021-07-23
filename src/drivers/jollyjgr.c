@@ -594,8 +594,7 @@ VIDEO_UPDATE( fspider )
 		if (sy>=cliprect->min_y && sy<=cliprect->max_y)
 			for (x=sx-4;x<sx;x++)
 				if (x>=cliprect->min_x && x<=cliprect->max_x)
-					/*BITMAP_ADDR16(bitmap,sy,x)=bc; */
-				((UINT16 *)(bitmap->line[sy]))[x] =bc;
+				((UINT16 *)(bitmap->line[sy]))[x]=bc;
 	}
 
 }
@@ -753,12 +752,12 @@ ROM_START( fspiderb )
 	ROM_REGION( 0x1000, REGION_GFX3, ROMREGION_ERASE00 )
 	ROM_COPY( REGION_USER1, 0x0800, 0x0400, 0x400)
 	ROM_COPY( REGION_USER1, 0x1800, 0x0c00, 0x400)
-/*	ROM_COPY( "gfx_bank", 0x2800, 0x1000, 0x800) */
-/*	ROM_COPY( "gfx_bank", 0x3800, 0x1800, 0x800) */
+/*	ROM_COPY( REGION_USER1, 0x2800, 0x1000, 0x800) */
+/*	ROM_COPY( REGION_USER1, 0x3800, 0x1800, 0x800) */
 
 	ROM_REGION( 0x1000, REGION_PROMS, 0 )
 	ROM_LOAD( "82s123.1f", 0x0000, 0x0020, CRC(cda6001a) SHA1(e10fe848e8123e53bd2db8a14cfa2d8c6621d6aa) )
 ROM_END
 
-GAME( 1981, fspiderb, 0, fspider,  fspider, 0, ROT90, "Taito Corporation", "Frog & Spiders (bootleg)" ) /* comes from a Fawaz Group bootleg board */
+GAME( 1981, fspiderb, 0, fspider,  fspider, 0, ROT90, "Taito Corporation", "Frog & Spiders (bootleg?)" ) /* comes from a Fawaz Group bootleg(?) board */
 GAME( 1982, jollyjgr, 0, jollyjgr, jollyjgr, 0, ROT90, "Taito Corporation", "Jolly Jogger" )
