@@ -135,7 +135,7 @@ static WRITE_HANDLER( jollyjgr_misc_w )
 	/* they could be swapped, because it always set "data & 3" */
 	jullyjgr_flip_screen_x = data & 1;
 	jullyjgr_flip_screen_y = data & 2;
-	
+
 	/* same for these two (used by Frog & Spiders) */
 	bitmap_disable = data & 0x40;
 	tilemap_bank = data & 0x20;
@@ -353,7 +353,7 @@ INPUT_PORTS_START( fspider )
 	PORT_DIPSETTING(    0x04, "20000" )
 	PORT_DIPSETTING(    0x08, "30000" )
 	PORT_DIPSETTING(    0x0c, "40000" )
-	PORT_DIPNAME( 0x10, 0x10, "Display Coinage Settings" )	
+	PORT_DIPNAME( 0x10, 0x10, "Display Coinage Settings" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x20, 0x20, "Show only 1P Coinage" )
@@ -597,7 +597,7 @@ VIDEO_UPDATE( fspider )
 					/*BITMAP_ADDR16(bitmap,sy,x)=bc; */
 				((UINT16 *)(bitmap->line[sy]))[x] =bc;
 	}
-	
+
 }
 
 
@@ -673,7 +673,7 @@ static MACHINE_DRIVER_START( jollyjgr )
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
 MACHINE_DRIVER_END
-	
+
 static MACHINE_DRIVER_START( fspider )
 	MDRV_CPU_ADD(Z80, 3579545)		 /* 3,579545 MHz */
 	MDRV_CPU_MEMORY(fspider_readmem,fspider_writemem)
@@ -717,7 +717,7 @@ ROM_START( jollyjgr )
 	ROM_REGION( 0x1000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "kd11.5h",      0x0000, 0x0800, CRC(d686245c) SHA1(73567b15d9399e450121ad01ad2dcb91bedc1099) )
 	ROM_LOAD( "kd12.7h",      0x0800, 0x0800, CRC(d69cbb4e) SHA1(f33cc161f93cae9cc314067fa2453838fa8ac3ba) )
-	
+
 	ROM_REGION( 0x2000, REGION_GFX3, ROMREGION_ERASE00 )
 
 	/* it's identical to kd14.8a, except for the first 32 bytes which are palette bytes */
