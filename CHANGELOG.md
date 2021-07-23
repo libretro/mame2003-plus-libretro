@@ -57,6 +57,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * F1 Super Lap (World)
 * FixEight (bootleg)
 * Flying Tiger
+* Frog & Spiders (bootleg)
 * Gaia: The Last Choice Of Earth
 * Galactica - Batalha Espacial
 * Ghostlop
@@ -82,6 +83,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Indian Battle
 * Invasion
 * Joe & Mac Returns
+* Jolly Jogger
 * Jump Kun
 * Kabuki-Z (World)
 * Ketsui: Kizuna Jigoku Tachi
@@ -751,3 +753,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * The original version of Ufo Senshi Yohko Chan now works as per the above update [arcadez]
 * Added tr606drumkit.zip sample support used in FBNeo to Irem titles improving game sounds [arcadez, grant2258, KMFDManic, mahoneyt944] - special thanks to FBNeo Team
 * Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
+* Added new game driver jollyjgr.c supporting new games, Jolly Jogger / Frog & Spiders [arcadez, mahoneyt944]
