@@ -407,6 +407,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gladiatr_vidhrdw.c $(CORE_DIR)/drivers/gladiatr.c \
 	$(CORE_DIR)/machine/nycaptor_machine.c $(CORE_DIR)/vidhrdw/nycaptor_vidhrdw.c $(CORE_DIR)/drivers/nycaptor.c \
 	$(CORE_DIR)/drivers/halleys.c \
+	$(CORE_DIR)/drivers/jollyjgr.c \
 	$(CORE_DIR)/machine/lsasquad_machine.c $(CORE_DIR)/vidhrdw/lsasquad_vidhrdw.c $(CORE_DIR)/drivers/lsasquad.c \
 	$(CORE_DIR)/machine/bublbobl_machine.c $(CORE_DIR)/vidhrdw/bublbobl_vidhrdw.c $(CORE_DIR)/drivers/bublbobl.c \
 	$(CORE_DIR)/drivers/missb2.c \
@@ -692,7 +693,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/cloak_vidhrdw.c $(CORE_DIR)/drivers/cloak.c \
 	$(CORE_DIR)/vidhrdw/cloud9_vidhrdw.c $(CORE_DIR)/drivers/cloud9.c \
 	$(CORE_DIR)/vidhrdw/jedi_vidhrdw.c $(CORE_DIR)/drivers/jedi.c \
-	$(CORE_DIR)/drivers/jollyjgr.c \
 	$(CORE_DIR)/machine/atarigen.c $(CORE_DIR)/sndhrdw/atarijsa.c \
 	$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c $(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
 	$(CORE_DIR)/machine/slapstic.c \
