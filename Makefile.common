@@ -692,6 +692,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/cloak_vidhrdw.c $(CORE_DIR)/drivers/cloak.c \
 	$(CORE_DIR)/vidhrdw/cloud9_vidhrdw.c $(CORE_DIR)/drivers/cloud9.c \
 	$(CORE_DIR)/vidhrdw/jedi_vidhrdw.c $(CORE_DIR)/drivers/jedi.c \
+	$(CORE_DIR)/drivers/jollyjgr.c \
 	$(CORE_DIR)/machine/atarigen.c $(CORE_DIR)/sndhrdw/atarijsa.c \
 	$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c $(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
 	$(CORE_DIR)/machine/slapstic.c \
