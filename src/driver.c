@@ -1368,6 +1368,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sbowling )	/* KB  (c) 1982 Taito Corporation */
 	DRIVER( grchamp )	/* GM  (c) 1981 Taito Corporation */
 	DRIVER( marinedt )	/* ??? (c) 1981 Taito Corporation */
+	DRIVER( fspiderb )	/* bootleg */
+	DRIVER( jollyjgr )	/* KD  (c) 1982 Taito Corporation */
 	DRIVER( bking )		/* DM  (c) 1982 Taito Corporation */
 	DRIVER( bking2 )	/* AD6 (c) 1983 Taito Corporation */
 	DRIVER( bking3 )	/* A24 (c) 1984 Taito Corporation */

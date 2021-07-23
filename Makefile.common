@@ -407,6 +407,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gladiatr_vidhrdw.c $(CORE_DIR)/drivers/gladiatr.c \
 	$(CORE_DIR)/machine/nycaptor_machine.c $(CORE_DIR)/vidhrdw/nycaptor_vidhrdw.c $(CORE_DIR)/drivers/nycaptor.c \
 	$(CORE_DIR)/drivers/halleys.c \
+	$(CORE_DIR)/drivers/jollyjgr.c \
 	$(CORE_DIR)/machine/lsasquad_machine.c $(CORE_DIR)/vidhrdw/lsasquad_vidhrdw.c $(CORE_DIR)/drivers/lsasquad.c \
 	$(CORE_DIR)/machine/bublbobl_machine.c $(CORE_DIR)/vidhrdw/bublbobl_vidhrdw.c $(CORE_DIR)/drivers/bublbobl.c \
 	$(CORE_DIR)/drivers/missb2.c \
