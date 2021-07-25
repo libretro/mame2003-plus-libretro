@@ -398,13 +398,7 @@ static PALETTE_INIT( jollyjgr )
 
 	/* bitmap palette */
 	for (i = 0;i < 8;i++)
-	{
-		int r = (i >> 0) & 1;
-		int g = (i >> 1) & 1;
-		int b = (i >> 2) & 1;
-
-		palette_set_color(32 + i,r * 0xff,g * 0xff,b * 0xff);
-	}
+		palette_set_color(32 + i, pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
 }
 
 /* Tilemap is the same as in Galaxian */
