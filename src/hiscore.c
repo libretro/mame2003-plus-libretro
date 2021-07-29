@@ -10,12 +10,15 @@
 #include "../precompile/hiscore_dat.h"
 
 #define MAX_CONFIG_LINE_SIZE 48
+#define HISCORE_SYNC_FILE_DELAY	1000
 
 const char *db_filename = "hiscore.dat"; /* high score definition file */
 
 static struct
 {
 	int hiscores_have_been_loaded;
+	int hs_sync_delay;
+	mame_file *hs_file;
 
 	struct mem_range
 	{
@@ -162,6 +165,7 @@ static void hs_load (void)
 {
 	mame_file *f = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 0);
 	state.hiscores_have_been_loaded = 1;
+	state.hs_sync_delay = HISCORE_SYNC_FILE_DELAY;
     
 	if (f)
 	{
@@ -183,17 +187,22 @@ static void hs_load (void)
 			}
 			mem_range = mem_range->next;
 		}
-		mame_fclose (f);
+		mame_fclose(f);
 	}
 }
 
 static void hs_save (void)
 {
-	mame_file *f = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 1);
-	if (f)
+	if (!state.hs_file)
+	{
+		state.hs_file = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 1);
+	}
+
+	if (state.hs_file)
 	{
 		struct mem_range *mem_range = state.mem_range;
 		log_cb(RETRO_LOG_INFO, LOGPRE "saving %s.hi hiscore memory file...\n", Machine->gamedrv->name);
+		mame_fseek(state.hs_file, 0, SEEK_SET);
 		while (mem_range)
 		{
 			UINT8 *data = malloc (mem_range->num_bytes);
@@ -204,11 +213,10 @@ static void hs_save (void)
 					avoid memory trashing just in case
 				*/
 				copy_from_memory (mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
-				mame_fwrite(f, data, mem_range->num_bytes);
+				mame_fwrite(state.hs_file, data, mem_range->num_bytes);
 			}
 			mem_range = mem_range->next;
 		}
-		mame_fclose(f);
 	}
 }
 
@@ -218,80 +226,80 @@ static void hs_save (void)
 /* call hs_open once after loading a game */
 void hs_open (const char *name)
 {   
-  char buffer[MAX_CONFIG_LINE_SIZE];
-  enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
-  mame_file *db_file = NULL;
+	char buffer[MAX_CONFIG_LINE_SIZE];
+	enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
+	mame_file *db_file = NULL;
 
-  state.mem_range = NULL;
-  mode = FIND_NAME;
+	state.mem_range = NULL;
+	mode = FIND_NAME;
 
-  db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
-  
-  if(!db_file)
-  {
-      log_cb(RETRO_LOG_INFO, LOGPRE "hiscore.dat not found: generating new hiscore.dat\n");
-    	db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 1);
-			mame_fwrite(db_file, hiscoredat_bytes, hiscoredat_length); 
-			mame_fclose(db_file);
-  }
-  
-  db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
-  if(!db_file)
-  {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Failure generating hiscore.dat!\n");
-    return;
-  }
+	db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
 
-  while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, db_file))
-  {
-    if (mode==FIND_NAME)
-    {
-      if (matching_game_name (buffer, name))
-      {
-        mode = FIND_DATA;
-        log_cb(RETRO_LOG_INFO, LOGPRE "%s hiscore memory map found in hiscore.dat!\n", name);
-      }
-    }
-    else if (is_mem_range (buffer))
-    {
-      const char            *pBuf = buffer;
-      struct mem_range *mem_range = (struct mem_range*)
-      malloc(sizeof(struct mem_range));
+	if(!db_file)
+	{
+		log_cb(RETRO_LOG_INFO, LOGPRE "hiscore.dat not found: generating new hiscore.dat\n");
+		db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 1);
+		mame_fwrite(db_file, hiscoredat_bytes, hiscoredat_length); 
+		mame_fclose(db_file);
+	}
 
-      if (mem_range)
-      {
-        mem_range->cpu = hexstr2num (&pBuf);
-        mem_range->addr = hexstr2num (&pBuf);
-        mem_range->num_bytes = hexstr2num (&pBuf);
-        mem_range->start_value = hexstr2num (&pBuf);
-        mem_range->end_value = hexstr2num (&pBuf);
+	db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
+	if(!db_file)
+	{
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Failure generating hiscore.dat!\n");
+		return;
+	}
 
-        mem_range->next = NULL;
-        {
-          struct mem_range *last = state.mem_range;
-          while (last && last->next) last = last->next;
-          if (last == NULL)
-            state.mem_range = mem_range;
-          else
-            last->next = mem_range;
-        }
+	while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, db_file))
+	{
+		if (mode==FIND_NAME)
+		{
+			if (matching_game_name (buffer, name))
+			{
+				mode = FIND_DATA;
+				log_cb(RETRO_LOG_INFO, LOGPRE "%s hiscore memory map found in hiscore.dat!\n", name);
+			}
+		}
+		else if (is_mem_range (buffer))
+		{
+			const char            *pBuf = buffer;
+			struct mem_range *mem_range = (struct mem_range*)
+				malloc(sizeof(struct mem_range));
 
-        mode = FETCH_DATA;
-      }
-      else
-      {
-        hs_free();
-        break;
-      }
-    }
-    else
-    {
-      /* line is a game name */
-      if (mode == FETCH_DATA)
-        break;
-    }
-  }
-  mame_fclose(db_file);
+			if (mem_range)
+			{
+				mem_range->cpu = hexstr2num (&pBuf);
+				mem_range->addr = hexstr2num (&pBuf);
+				mem_range->num_bytes = hexstr2num (&pBuf);
+				mem_range->start_value = hexstr2num (&pBuf);
+				mem_range->end_value = hexstr2num (&pBuf);
+
+				mem_range->next = NULL;
+				{
+					struct mem_range *last = state.mem_range;
+					while (last && last->next) last = last->next;
+					if (last == NULL)
+						state.mem_range = mem_range;
+					else
+						last->next = mem_range;
+				}
+
+				mode = FETCH_DATA;
+			}
+			else
+			{
+				hs_free();
+				break;
+			}
+		}
+		else
+		{
+			/* line is a game name */
+			if (mode == FETCH_DATA)
+				break;
+		}
+	}
+	mame_fclose(db_file);
 }
 
 
@@ -324,10 +332,15 @@ void hs_update (void)
 	if (state.mem_range)
 	{
 		if (!state.hiscores_have_been_loaded)
-      {
-         if (safe_to_load())
-            hs_load();
-      }
+		{
+			if (safe_to_load())
+				hs_load();
+		}
+		else if (state.hs_sync_delay-- <= 0)
+		{
+			hs_save();
+			state.hs_sync_delay = HISCORE_SYNC_FILE_DELAY;
+		}
 	}
 }
 
@@ -335,6 +348,15 @@ void hs_update (void)
 void hs_close (void)
 {
 	if (state.hiscores_have_been_loaded)
-      hs_save();
+	{
+		hs_save();
+
+		if (state.hs_file)
+		{
+			mame_fclose(state.hs_file);
+			state.hs_file = NULL;
+		}
+	}
+
 	hs_free();
 }
