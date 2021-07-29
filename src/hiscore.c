@@ -336,7 +336,7 @@ void hs_update (void)
 			if (safe_to_load())
 				hs_load();
 		}
-		else if (state.hs_sync_delay-- <= 0)
+		else if ( (state.hs_sync_delay-- <= 0) && (options.autosave_hiscore) )
 		{
 			hs_save();
 			state.hs_sync_delay = HISCORE_SYNC_FILE_DELAY;
