@@ -95,6 +95,7 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_VECTOR_INTENSITY,
   OPT_CORE_SYS_SUBFOLDER,
   OPT_CORE_SAVE_SUBFOLDER,
+  OPT_AUTOSAVE_HISCORE,
   OPT_TATE_MODE,
   OPT_BRIGHTNESS,
   OPT_GAMMA,
@@ -349,6 +350,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; disabled|1|2|3|4|5|6|7|9|10|11|auto|auto_aggressive|auto_max");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
+  init_default(&default_options[OPT_AUTOSAVE_HISCORE],       APPNAME"_autosave_hiscore",       "Autosave hiscore; default|recursively");
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
@@ -719,6 +721,13 @@ static void update_variables(bool first_time)
             options.save_subfolder = true;
           else
             options.save_subfolder = false;
+          break;
+
+        case OPT_AUTOSAVE_HISCORE:
+          if(strcmp(var.value, "recursively") == 0)
+            options.autosave_hiscore = true;
+          else
+            options.autosave_hiscore = false;
           break;
 
         case OPT_CHEAT_INPUT_PORTS:
