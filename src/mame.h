@@ -252,7 +252,7 @@ struct GameOptions
   bool     machine_timing;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
   double   cpu_clock_scale;
-  int      autosave_hiscore;
+  bool     autosave_hiscore;
 #if (HAS_CYCLONE || HAS_DRZ80)
   int      cyclone_mode;
 #endif
