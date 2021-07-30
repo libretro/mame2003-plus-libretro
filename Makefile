@@ -489,6 +489,18 @@ else ifeq ($(platform), gcw0)
 	fpic := -fPIC -nostdlib
 	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
 
+# RetroFW
+else ifeq ($(platform), retrofw)
+	TARGET := $(TARGET_NAME)_libretro.so
+	CC = /opt/retrofw-toolchain/usr/bin/mipsel-linux-gcc
+	CXX = /opt/retrofw-toolchain/usr/bin/mipsel-linux-g++
+	AR = /opt/retrofw-toolchain/usr/bin/mipsel-linux-ar
+	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
+	PLATCFLAGS += -D__GCW0__
+	LIBS := -lc -lgcc -lm
+	fpic := -fPIC -nostdlib
+	CFLAGS += -lm -march=mips32 -mtune=mips32 -mhard-float
+
 # Emscripten
 else ifeq ($(platform), emscripten)
 	TARGET := $(TARGET_NAME)_libretro_$(platform).bc
