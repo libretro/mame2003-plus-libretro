@@ -7,7 +7,7 @@
 
 	Latest Changes :
 	-----+-------------------------------------------------------------------------------------
-   0.81u7| Various Megaplay Improvements (BR, GreyRouge) (using version number of mame)
+	0.81u7| Various Megaplay Improvements (BR, GreyRouge) (using version number of mame)
 	0.73 | More of the Megaplay Bios Tests Pass (BR)
 	0.722| Improvements to Megaplay (BR) Added a few more Megatech sets but some are bad (DH)
 		 | --2 screens is going to cause problems with partial refresh and get_scanlines for
@@ -37,8 +37,8 @@
 		 | differences from c2emu which caused problems in Puyo Puyo.
 	0.47 | Fixed Thunder Force hanging problem. No longer calling the UPD7759 on the C-system
 		 | games.
-    0.46 | Cleaned up the Dip Switches. Added Ichidant and Puyopuy2 Dips.
-         | Todo: Complete Columns and Bloxeedc Dips.
+	0.46 | Cleaned up the Dip Switches. Added Ichidant and Puyopuy2 Dips.
+		 | Todo: Complete Columns and Bloxeedc Dips.
 	0.45 | Fixed interrupt timing to match c2emu, which fixes scroll effects in several games.
 		 | Swapped sample ROM loading in some bootlegs. Added support for screen disable.
 	0.44 | Major cleanup. Figured out general protection mechanism. Added INT 4 and INT 2
@@ -5359,7 +5359,7 @@ DRIVER_INIT(sbubsm)
 {
 	// needed to boot, somme kind of hardware ident?
 	install_mem_read16_handler(0, 0x400000, 0x400001, sbubsm_400000_r);
-    install_mem_read16_handler(0, 0x400002, 0x400003, sbubsm_400002_r );
+	install_mem_read16_handler(0, 0x400002, 0x400003, sbubsm_400002_r );
 
 	install_mem_read16_handler(0, 0x200050, 0x200051, sbubsm_200051_r );
 	install_mem_read16_handler(0, 0x200042, 0x200043, input_port_0_word_r );
