@@ -84,6 +84,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Invasion
 * Joe & Mac Returns
 * Jolly Jogger
+* Juezhan Tianhuang
 * Jump Kun
 * Kabuki-Z (World)
 * Ketsui: Kizuna Jigoku Tachi
@@ -150,6 +151,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Steel Worker
 * Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
+* Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)
 * Super Rider
 * Super Trio
 * SWAT Police
@@ -754,3 +756,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added tr606drumkit.zip sample support used in FBNeo to Irem titles improving game sounds [arcadez, grant2258, KMFDManic, mahoneyt944] - special thanks to FBNeo Team
 * Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
 * Added new game driver jollyjgr.c supporting new games, Jolly Jogger / Frog & Spiders [arcadez, mahoneyt944]
+* Core option created to autosave hiscores recursively during gameplay, recommended default will save on exit. [LuoZhongYao, mahoneyt944]
+* Added Juezhan Tianhuang and Super Bubble Bobble to segac2.c driver [arcadez]
