@@ -1690,7 +1690,7 @@ static MEMORY_WRITE16_START( sbubsm_writemem )
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
 	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
-//	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
+	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
 	{ 0xfe0000, 0xfeffff, MWA16_BANK4 },
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
 MEMORY_END
@@ -4373,6 +4373,7 @@ ROM_START( sbubsm )
 	ROM_REGION( 0x1000, REGION_CPU2, 0 ) /* could be the same as topshoot (same PCB) */
 //	ROM_LOAD( "89c51.bin", 0x0000, 0x1000, NO_DUMP )
 ROM_END
+
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "epr18171.32", 0x000000, 0x080000, CRC(6c8eb8e2) SHA1(bbd885a83269524215c1d8470544086e3e82c05c) )
