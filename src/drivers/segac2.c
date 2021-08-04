@@ -1314,7 +1314,7 @@ static READ16_HANDLER ( megaplay_68k_to_z80_r )
 	if ((offset >= 0x0000) && (offset <= 0x1fff))
 	{
 		offset &=0x1fff;
-//		logerror("soundram_r returning %x\n",(gen_z80_shared[offset] << 8) + gen_z80_shared[offset+1]);
+//		log_cb(RETRO_LOG_DEBUG, LOGPRE "soundram_r returning %x\n",(gen_z80_shared[offset] << 8) + gen_z80_shared[offset+1]);
 		return (genesis_z80_ram[offset] << 8) + genesis_z80_ram[offset+1];
 	}
 
@@ -1494,7 +1494,7 @@ READ16_HANDLER ( genesis_io_r )
 			}
 
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
-/*			logerror ("reading joypad 1 , type %02x %02x\n",genesis_io_ram[offset] & 0x80, return_value &0x7f);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "reading joypad 1 , type %02x %02x\n",genesis_io_ram[offset] & 0x80, return_value &0x7f);*/
 			if(bios_ctrl_inputs & 0x04) return_value = 0xff;
 			break;
 
@@ -1515,7 +1515,7 @@ READ16_HANDLER ( genesis_io_r )
 					return_value+=1;
 			}
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
-/*			logerror ("reading joypad 2 , type %02x %02x\n",genesis_io_ram[offset] & 0x80, return_value &0x7f);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "reading joypad 2 , type %02x %02x\n",genesis_io_ram[offset] & 0x80, return_value &0x7f);*/
 			if(bios_ctrl_inputs & 0x04) return_value = 0xff;
 			break;
 
@@ -1558,7 +1558,7 @@ READ16_HANDLER ( megaplay_genesis_io_r )
 				return_value |= readinputport(1) & 0x03;
 			}
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
-//			logerror ("reading joypad 1 , type %02x %02x\n",genesis_io_ram[offset] & 0xb0, return_value &0x7f);
+//			log_cb(RETRO_LOG_DEBUG, LOGPRE "reading joypad 1 , type %02x %02x\n",genesis_io_ram[offset] & 0xb0, return_value &0x7f);
 			break;
 
 		case 2: /* port B data (joypad 2) */
@@ -1571,7 +1571,7 @@ READ16_HANDLER ( megaplay_genesis_io_r )
 				return_value |= readinputport(3) & 0x03;
 			}
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
-//			logerror ("reading joypad 2 , type %02x %02x\n",genesis_io_ram[offset] & 0xb0, return_value &0x7f);
+//			log_cb(RETRO_LOG_DEBUG, LOGPRE "reading joypad 2 , type %02x %02x\n",genesis_io_ram[offset] & 0xb0, return_value &0x7f);
 			break;
 
 //		case 3: /* port C data */
@@ -1587,7 +1587,7 @@ READ16_HANDLER ( megaplay_genesis_io_r )
 
 WRITE16_HANDLER ( genesis_io_w )
 {
-//	logerror ("write io offset :%02x data %04x PC: 0x%06x\n",offset,data,activecpu_get_previouspc());
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "write io offset :%02x data %04x PC: 0x%06x\n",offset,data,activecpu_get_previouspc());
 
 	switch (offset)
 	{
@@ -1989,7 +1989,7 @@ static WRITE_HANDLER( megaplay_bios_6402_w )
 
 static READ_HANDLER( megaplay_bios_6404_r )
 {
-//	logerror("BIOS: 0x6404 read: returned 0x%02x\n",bios_6404 | (bios_6403 & 0x10) >> 4);
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "BIOS: 0x6404 read: returned 0x%02x\n",bios_6404 | (bios_6403 & 0x10) >> 4);
 	return (bios_6404 & 0xfe) | ((bios_6403 & 0x10) >> 4);
 //	return bios_6404 | (bios_6403 & 0x10) >> 4;
 }
@@ -2000,7 +2000,7 @@ static WRITE_HANDLER( megaplay_bios_6404_w )
 		cpu_set_reset_line(0, PULSE_LINE);
 	bios_6404 = data;
 
-//	logerror("BIOS: 0x6404 write: 0x%02x\n",data);
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "BIOS: 0x6404 write: 0x%02x\n",data);
 }
 
 static READ_HANDLER( megaplay_bios_6204_r )
@@ -2014,7 +2014,7 @@ static WRITE_HANDLER( megaplay_bios_width_w )
 	bios_width = data;
 	genesis_io_ram[3] = (genesis_io_ram[3] & 0x07) | ((data & 0xf8));
 
-//	logerror("BIOS: 0x6204 - Width write: %02x\n",data);
+//	log_cb(RETRO_LOG_DEBUG, LOGPRE "BIOS: 0x6204 - Width write: %02x\n",data);
 }
 
 static READ_HANDLER( megaplay_bios_6600_r )
@@ -5345,13 +5345,13 @@ static READ16_HANDLER(sbubsm_200051_r)
 
 static READ16_HANDLER(sbubsm_400000_r)
 {
-	logerror("%s: sbubsm_400000_r\n");//, machine().describe_context().c_str());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400000_r\n");//, machine().describe_context().c_str());
 	return 0x5500;
 }
 
 static READ16_HANDLER(sbubsm_400002_r)
 {
-	logerror("%s: sbubsm_400002_r\n");//, machine().describe_context().c_str());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400002_r\n");//, machine().describe_context().c_str());
 	return 0x0f00;
 }
 
