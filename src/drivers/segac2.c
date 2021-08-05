@@ -1672,26 +1672,27 @@ static MEMORY_WRITE16_START( megaplay_genesis_writemem )
 MEMORY_END
 
 static MEMORY_READ16_START( sbubsm_readmem )
-  { 0x000000, 0x1fffff, MRA16_ROM },					/* Cartridge Program Rom */
+  { 0x000000, 0x0fffff, MRA16_ROM },					/* Cartridge Program Rom */
 	{ 0x202000, 0x2023ff, MRA16_RAM },
-	{ 0xa10000, 0xa1001f, genesis_io_r },				/* Genesis Input */
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },			    /* VDP Access */
-	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },			/* VDP Access */
+	{ 0xe00000, 0xe1ffff, MRA16_BANK3 },
+	{ 0xfe0000, 0xfeffff, MRA16_BANK4 },
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
 
 
 static MEMORY_WRITE16_START( sbubsm_writemem )
-  { 0x000000, 0x1fffff, MWA16_ROM },					                  /* Cartridge Program Rom */
+  { 0x000000, 0x0fffff, MWA16_ROM },					/* Cartridge Program Rom */
+//{ 0x200000, 0x20007f, MWA16_RAM },
   { 0x200000, 0x2023ff, MWA16_RAM }, // tested
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
-	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
-	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
-	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
+  { 0xfe0000, 0xfeffff, MWA16_BANK4 },
+	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
 MEMORY_END
 
 /* Z80 Sound Hardware - based on MESS code, to be improved, it can do some strange things */
@@ -5359,7 +5360,7 @@ DRIVER_INIT(sbubsm)
 {
 	// needed to boot, somme kind of hardware ident?
 	install_mem_read16_handler(0, 0x400000, 0x400001, sbubsm_400000_r);
-	install_mem_read16_handler(0, 0x400002, 0x400003, sbubsm_400002_r );
+  install_mem_read16_handler(0, 0x400002, 0x400003, sbubsm_400002_r );
 
 	install_mem_read16_handler(0, 0x200050, 0x200051, sbubsm_200051_r );
 	install_mem_read16_handler(0, 0x200042, 0x200043, input_port_0_word_r );
@@ -5367,6 +5368,9 @@ DRIVER_INIT(sbubsm)
 	install_mem_read16_handler(0, 0x200046, 0x200047, input_port_2_word_r );
 	install_mem_read16_handler(0, 0x200048, 0x200049, input_port_3_word_r );
 	install_mem_read16_handler(0, 0x20007e, 0x20007f, input_port_4_word_r );
+
+	cpu_setbank(3, memory_region(REGION_CPU1) );
+	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	init_segac2();
 }
