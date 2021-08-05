@@ -1687,7 +1687,7 @@ static MEMORY_WRITE16_START( sbubsm_writemem )
   { 0x200000, 0x2023ff, MWA16_RAM }, // tested
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
-	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_w },
+	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
 	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
