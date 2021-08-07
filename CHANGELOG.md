@@ -755,6 +755,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * The original version of Ufo Senshi Yohko Chan now works as per the above update [arcadez]
 * Added tr606drumkit.zip sample support used in FBNeo to Irem titles improving game sounds [arcadez, grant2258, KMFDManic, mahoneyt944] - special thanks to FBNeo Team
 * Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
-* Added new game driver jollyjgr.c supporting new games, Jolly Jogger / Frog & Spiders [arcadez, mahoneyt944]
+* Added new driver jollyjgr.c to the MAME2003+ core supporting new games, Jolly Jogger and Frog & Spiders [arcadez, mahoneyt944]
 * Core option created to autosave hiscores recursively during gameplay, recommended default will save on exit. [LuoZhongYao, mahoneyt944]
-* Added Juezhan Tianhuang and Super Bubble Bobble to segac2.c driver [arcadez]
+* Added Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, dink]
