@@ -1793,7 +1793,13 @@ static WRITE_HANDLER ( genesis_z80_w )
 	/* VDP */
 	if ((offset >= 0x7f00) && (offset <= 0x7fff))
 	{
-
+		offset &= 0x1f;
+ 
+		if ( (offset >= 0x10) && (offset <=0x17) )
+		{
+			SN76496_0_w(0, data & 0xff);
+		}
+ 
 	}
 }
 
@@ -3889,7 +3895,6 @@ static MACHINE_DRIVER_START( sbubsm )
 	MDRV_CPU_MEMORY(sbubsm_readmem,sbubsm_writemem)
 
 	MDRV_VISIBLE_AREA(0, 319, 0, 223)
-//	MDRV_SOUND_ADD(SN76496, sn76489_intf)
 MACHINE_DRIVER_END
 
 
@@ -5426,7 +5431,7 @@ GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",    
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
 GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>",              "Juezhan Tianhuang", GAME_IMPERFECT_SOUND )
-GAMEX( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)", GAME_IMPERFECT_SOUND )
+GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
 
 /* Atlus Print Club 'Games' (C-2 Hardware, might not be possible to support them because they use camera + printer, really just put here for reference) */
