@@ -757,4 +757,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
 * Added new driver jollyjgr.c to the MAME2003+ core supporting new games, Jolly Jogger and Frog & Spiders [arcadez, mahoneyt944]
 * Core option created to autosave hiscores recursively during gameplay, recommended default will save on exit. [LuoZhongYao, mahoneyt944]
-* Added Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, dink, mahoneyt944]
+* Added Bare Knuckle III, Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, mahoneyt944]
+* fixed SN76496 sound in Super Bubble Bobble (Sun Mixing) and ported across from MESS extra genesis input code so that Bare Knuckle is playable [arcadez, dink }
