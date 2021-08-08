@@ -21,10 +21,14 @@ static struct retro_variable          current_options[OPT_end + 1];
 static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 
+       void   retro_set_audio_buff_status_cb(void);
+       void   retro_describe_controls(void);
+
 extern const struct GameDriver *game_driver;
 extern retro_set_led_state_t led_state_cb;
 extern int frameskip_init_status;
 extern struct retro_audio_buffer_status_callback buf_status_cb;
+
 
 /* used in inptport.c when saving input port settings */
 int legacy_flag = -1;
