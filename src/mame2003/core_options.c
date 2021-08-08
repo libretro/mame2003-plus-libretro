@@ -48,10 +48,9 @@ extern struct retro_audio_buffer_status_callback buf_status_cb;
 int legacy_flag = -1;
 
 
-/* void init_core_options(void)
- *
+/*
  * Note that core options are not presented in order they are initialized here,
- * but rather by their order in the OPT_ enum
+ * but rather by their order in the OPT_ enum found in mame2003.h
  */
 void init_core_options(void)
 {
