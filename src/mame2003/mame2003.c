@@ -87,6 +87,10 @@ static void   check_system_specs(void);
 static void   remove_slash (char* temp);
 static void   configure_cyclone_mode (int driverIndex);
 
+       void   set_content_flags(void);
+       void   init_core_options(void);
+       void   update_variables(bool first_time);
+
 
 /******************************************************************************
 
