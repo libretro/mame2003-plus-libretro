@@ -27,7 +27,7 @@
 #include "usrintrf.h"
 
 
-static const struct GameDriver  *game_driver;
+const struct GameDriver  *game_driver;
 
 int            retro_running = 0;
 int            gotFrame;
