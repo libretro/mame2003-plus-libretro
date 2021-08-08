@@ -19,6 +19,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
+* Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
 * Bomb Kick
 * Boogie Wings
@@ -94,6 +95,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Lethal Enforcers
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
+* Magic Purple 
 * Match It II * Mature *
 * Metal Slug 4
 * Metal Slug 5
@@ -758,4 +760,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added new driver jollyjgr.c to the MAME2003+ core supporting new games, Jolly Jogger and Frog & Spiders [arcadez, mahoneyt944]
 * Core option created to autosave hiscores recursively during gameplay, recommended default will save on exit. [LuoZhongYao, mahoneyt944]
 * Added Bare Knuckle III, Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, mahoneyt944]
-* fixed SN76496 sound in Super Bubble Bobble (Sun Mixing) and ported across from MESS extra genesis input code so that Bare Knuckle is playable [arcadez, dink }
+* Fixed SN76496 sound in Super Bubble Bobble (Sun Mixing) and ported across from MESS extra genesis input code so that Bare Knuckle III is playable [arcadez, dink]
+* Added Magic Purple to the Tumble Pop driver [arcadez]
