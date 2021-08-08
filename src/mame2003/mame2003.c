@@ -38,9 +38,6 @@ short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
 
-/* comment needed: what does this legacy flag do exactly */
-int legacy_flag = -1;
-
 /* pointer to the array of structs with default MAME input mappings and labels */
 struct ipd  *default_inputs;
 

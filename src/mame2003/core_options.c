@@ -26,6 +26,9 @@ extern retro_set_led_state_t led_state_cb;
 extern int frameskip_init_status;
 extern struct retro_audio_buffer_status_callback buf_status_cb;
 
+/* used in inptport.c when saving input port settings */
+int legacy_flag = -1;
+
 
 /* void init_core_options(void)
  *
