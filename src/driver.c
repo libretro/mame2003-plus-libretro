@@ -3044,6 +3044,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( puckpkmn )	/* (c) 2000 Genie */
 	DRIVER( jzth )		/* (c) 2000 <unknown> */
 	DRIVER( sbubsm )	/* (c) 1996 Sun Mixing */
+  DRIVER( barek3mb ) /* (c) 1994 bootleg / Sega */  
 
 	/* Sega MegaTech, the number shown ia on the label of the instruction rom */
 	DRIVER( mt_beast )	/* 01 */
@@ -3330,7 +3331,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tumblepb )	/* bootleg */
 	DRIVER( tumblep2 )	/* bootleg */
 	DRIVER( jumpkids )	/* (c) 1993 Comad */
-	DRIVER( fncywld )	/* (c) 1996 Unico */
+	DRIVER( fncywld )	  /* (c) 1996 Unico */
+  DRIVER( magipur )	  /* (c) 1996 Unico */
 	DRIVER( suprtrio )  /* (c) 1994 GameAce */
 	DRIVER( lemmings )	/* prototype (c) 1991 Data East USA (US) */
 	/* MAQ ?? */
