@@ -14,6 +14,13 @@
 static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_variable          current_options[OPT_end + 1];
 
+
+/******************************************************************************
+
+  private function prototypes
+
+******************************************************************************/
+
        void   set_content_flags(void);
        void   init_core_options(void);
        void   init_default(struct retro_variable_default *option, const char *key, const char *value);
@@ -21,8 +28,15 @@ static struct retro_variable          current_options[OPT_end + 1];
 static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 
-       void   retro_set_audio_buff_status_cb(void);
-       void   retro_describe_controls(void);
+
+/******************************************************************************
+
+  external function prototypes and variables
+
+******************************************************************************/
+
+extern void retro_set_audio_buff_status_cb(void);
+extern void retro_describe_controls(void);
 
 extern const struct GameDriver *game_driver;
 extern retro_set_led_state_t led_state_cb;
