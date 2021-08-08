@@ -1630,6 +1630,245 @@ WRITE16_HANDLER ( genesis_io_w )
 
 }
 
+/* Bare Knuckle III */
+int genesis_region;
+
+void genesis_init_io (void)
+{
+
+	genesis_io_ram[0x00] = (genesis_region & 0xc0)| (0x00 & 0x3f); // region / pal / segacd etc. important!
+	genesis_io_ram[0x01] = 0x7f;
+	genesis_io_ram[0x02] = 0x7f;
+	genesis_io_ram[0x03] = 0x7f;
+	genesis_io_ram[0x04] = 0x00;
+	genesis_io_ram[0x05] = 0x00;
+	genesis_io_ram[0x06] = 0x00;
+	genesis_io_ram[0x07] = 0xff;
+	genesis_io_ram[0x08] = 0x00;
+	genesis_io_ram[0x09] = 0x00;
+	genesis_io_ram[0x0a] = 0xff;
+	genesis_io_ram[0x0b] = 0x00;
+	genesis_io_ram[0x0c] = 0x00;
+	genesis_io_ram[0x0d] = 0xfb;
+	genesis_io_ram[0x0e] = 0x00;
+	genesis_io_ram[0x0f] = 0x00;
+
+
+  /*
+  	$A10001 = $80 (Bits 7,6,5 depend on the domestic/export, PAL/NTSC jumpers and having a Sega CD or not)
+    $A10003 = $7F
+    $A10005 = $7F
+    $A10007 = $7F
+    $A10009 = $00
+    $A1000B = $00
+    $A1000D = $00
+    $A1000F = $FF
+    $A10011 = $00
+    $A10013 = $00
+    $A10015 = $FF
+    $A10017 = $00
+    $A10019 = $00
+    $A1001B = $FB
+    $A1001D = $00
+    $A1001F = $00
+*/
+
+}
+
+READ16_HANDLER ( genesis_68000_io_r )
+{
+	int paddata,p;
+	int inlines, outlines;
+
+//printf("I/O read .. offset %02x data %02x\n",offset,genesis_io_ram[offset]);
+
+	switch (offset)
+	{
+		case 0x00: // version register
+			return genesis_io_ram[offset];
+		case 0x01:
+//			printf("I/O Data A read \n");
+
+/*
+                When TH=0          When TH=1
+    D6 : (TH)   0                  1
+    D5 : (TR)   Start button       Button C
+    D4 : (TL)   Button A           Button B
+    D3 : (D3)   0                  D-pad Right
+    D2 : (D2)   0                  D-pad Left
+    D1 : (D1)   D-pad Down         D-pad Down
+    D0 : (D0)   D-pad Up           D-pad Up
+
+*/
+
+			/* process pad input for std 3 button pad */
+
+
+			p = readinputport(0);
+			if (genesis_io_ram[offset]&0x40)
+			{
+				paddata = ((p&0x0f)>>0) | ((p&0xc0)>>2) | 0x40;
+			}
+			else
+			{
+				paddata = ((p&0x03)>>0) | ((p&0x30)>>0) | 0x00;
+			}
+
+			inlines = (genesis_io_ram[0x04]^0xff)&0x7f;
+			outlines = (genesis_io_ram[0x04] | 0x80);
+
+//			printf ("ioram %02x inlines %02x paddata %02x outlines %02x othdata %02x\n",genesis_io_ram[0x04], inlines, paddata, outlines, genesis_io_ram[0x01]);
+
+
+
+			p = (paddata & inlines) | (genesis_io_ram[0x01] & outlines);
+
+			return p | p << 8;
+
+
+			return genesis_io_ram[offset];
+		case 0x02:
+//			printf("I/O Data B read \n");
+
+			p = readinputport(1);
+			if (genesis_io_ram[offset]&0x40)
+			{
+				paddata = ((p&0x0f)>>0) | ((p&0xc0)>>2) | 0x40;
+			}
+			else
+			{
+				paddata = ((p&0x03)>>0) | ((p&0x30)>>0) | 0x00;
+			}
+
+			inlines = (genesis_io_ram[0x05]^0xff)&0x7f;
+			outlines = (genesis_io_ram[0x05] | 0x80);
+
+
+			p = (paddata & inlines) | (genesis_io_ram[0x02] & outlines);
+
+			return p | p <<8;
+
+		case 0x03:
+//			printf("I/O Data C read \n");
+			return genesis_io_ram[offset];
+
+		case 0x04:
+		case 0x05:
+		case 0x06:
+		case 0x07:
+		case 0x08:
+		case 0x09:
+		case 0x0a:
+		case 0x0b:
+		case 0x0c:
+		case 0x0d:
+		case 0x0e:
+		case 0x0f:
+		default:
+			printf("Unhandled I/O read \n");
+			return genesis_io_ram[offset];
+
+	}
+
+	return genesis_io_ram[offset];
+
+/*
+   D7 : Console is 1= Export (USA, Europe, etc.) 0= Domestic (Japan)
+    D6 : Video type is 1= PAL, 0= NTSC
+    D5 : Sega CD unit is 1= not present, 0= connected.
+    D4 : Unused (always returns zero)
+    D3 : Bit 3 of version number
+    D2 : Bit 2 of version number
+    D1 : Bit 1 of version number
+    D0 : Bit 0 of version number
+    */
+
+
+//	return 0x30;
+//	return mame_rand();
+//	return 0xff;
+}
+
+/*
+
+ The I/O chip is mapped to $A10000-$A1001F in the 68000/VDP/Z80 banked address space.
+ It is normally read and written in byte units at odd addresses. The chip gets /LWR only,
+ so writing to even addresses has no effect. Reading even addresses returns the same data
+ ou'd get from an odd address. If a word-sized write is done, the LSB is sent to the I/O chip
+ and the MSB is ignored.
+
+ */
+
+/*
+
+$A10001  	Version
+$A10003 	Port A data
+$A10005 	Port B data
+$A10007 	Port C data
+$A10009 	Port A control
+$A1000B 	Port B control
+$A1000D 	Port C control
+$A1000F 	Port A TxData
+$A10011 	Port A RxData
+$A10013 	Port A serial control
+$A10015 	Port B TxData
+$A10017 	Port B RxData
+$A10019 	Port B serial control
+$A1001B 	Port C TxData
+$A1001D 	Port C RxData
+$A1001F 	Port C serial contro
+
+*/
+
+WRITE16_HANDLER ( genesis_68000_io_w )
+{
+
+//	printf("I/O write offset %02x data %04x\n",offset,data);
+
+	switch (offset)
+	{
+		case 0x00:  // Version (read only?)
+			printf("attempted write to version register?!\n");
+			break;
+		case 0x01: // Port A data
+//			printf("write to data port A with control register A %02x step1 %02x step2 %02x\n", genesis_io_ram[0x04], (genesis_io_ram[0x01] & !((genesis_io_ram[0x04]&0x7f)|0x80)),  (data & ((genesis_io_ram[0x04]&0x7f)|0x80))   );
+			genesis_io_ram[0x01] = (genesis_io_ram[0x01] & ((genesis_io_ram[0x04]^0xff)|0x80)) | (data & ((genesis_io_ram[0x04]&0x7f)|0x80));
+			break;
+		case 0x02: // Port B data
+//			printf("write to data port B with control register B %02x\n", genesis_io_ram[0x05]);
+			genesis_io_ram[0x02] = (genesis_io_ram[0x02] & ((genesis_io_ram[0x05]^0xff)|0x80)) | (data & ((genesis_io_ram[0x05]&0x7f)|0x80));
+			break;
+		case 0x03: // Port C data
+//			printf("write to data port C with control register C %02x\n", genesis_io_ram[0x06]);
+			genesis_io_ram[0x03] = (genesis_io_ram[0x03] & ((genesis_io_ram[0x06]^0xff)|0x80)) | (data & ((genesis_io_ram[0x06]&0x7f)|0x80));
+			break;
+		case 0x04: // Port A control
+			genesis_io_ram[offset]=data;
+			break;
+		case 0x05: // Port B control
+			genesis_io_ram[offset]=data;
+			break;
+		case 0x06: // Port C control
+			genesis_io_ram[offset]=data;
+			break;
+
+		/* unhandled */
+		case 0x07:
+		case 0x08:
+		case 0x09:
+		case 0x0a:
+		case 0x0b:
+		case 0x0c:
+		case 0x0d:
+		case 0x0e:
+		case 0x0f:
+		default:
+			genesis_io_ram[offset]=data;
+			printf("unhandled IO write (offset %02x data %02x)\n",offset,data);
+			break;
+	}
+}
+
 static MEMORY_READ16_START( genesis_readmem )
 	{ 0x000000, 0x3fffff, MRA16_ROM },					/* Cartridge Program Rom */
 	{ 0xa10000, 0xa1001f, genesis_io_r },				/* Genesis Input */
@@ -1672,7 +1911,7 @@ static MEMORY_WRITE16_START( megaplay_genesis_writemem )
 MEMORY_END
 
 static MEMORY_READ16_START( sbubsm_readmem )
-  { 0x000000, 0x0fffff, MRA16_ROM },					/* Cartridge Program Rom */
+    { 0x000000, 0x0fffff, MRA16_ROM },					/* Cartridge Program Rom */
 	{ 0x202000, 0x2023ff, MRA16_RAM },
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
 	{ 0xc00000, 0xc0001f, segac2_vdp_r },			/* VDP Access */
@@ -1683,16 +1922,37 @@ MEMORY_END
 
 
 static MEMORY_WRITE16_START( sbubsm_writemem )
-  { 0x000000, 0x0fffff, MWA16_ROM },					/* Cartridge Program Rom */
-//{ 0x200000, 0x20007f, MWA16_RAM },
-  { 0x200000, 0x2023ff, MWA16_RAM }, // tested
+    { 0x000000, 0x0fffff, MWA16_ROM },					/* Cartridge Program Rom */
+//  { 0x200000, 0x20007f, MWA16_RAM },
+    { 0x200000, 0x2023ff, MWA16_RAM }, // tested
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
 	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
-  { 0xfe0000, 0xfeffff, MWA16_BANK4 },
+    { 0xfe0000, 0xfeffff, MWA16_BANK4 },
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
+MEMORY_END
+
+static MEMORY_READ16_START( barek3_readmem )
+	{ 0x000000, 0x3fffff, MRA16_ROM },					/* Cartridge Program Rom */
+	{ 0xa10000, 0xa1001f, genesis_68000_io_r },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_r },
+	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
+	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
+MEMORY_END
+
+static MEMORY_WRITE16_START( barek3_writemem )
+	{ 0x000000, 0x3fffff, MWA16_ROM },					/* Cartridge Program Rom */
+	{ 0xa10000, 0xa1001f, genesis_68000_io_w, &genesis_io_ram },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_w },
+	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
+	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
+	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
 MEMORY_END
 
 /* Z80 Sound Hardware - based on MESS code, to be improved, it can do some strange things */
@@ -3702,6 +3962,53 @@ INPUT_PORTS_START ( mp_shnb3 )
     PORT_DIPSETTING( 0x0c, "Normal" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( barek3 )
+	PORT_START	/* IN0 player 1 controller */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Button B" )
+	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Button C" )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Button A" )
+	PORT_BIT_NAME( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1, "P1 Start" )
+	
+	PORT_START	/* IN1 player 2 controller */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Button B" )
+	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 Button C" )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Button A" )
+	PORT_BIT_NAME( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2, "P2 Start" )
+	
+	PORT_START
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x18, "1" )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0xe0, 0xe0, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x60, "Very_Easy" )
+	PORT_DIPSETTING(    0x40, "Easy" )
+	PORT_DIPSETTING(    0xe0, "Normal" )
+	PORT_DIPSETTING(    0x20, "Hard" )
+	PORT_DIPSETTING(    0x00, "Very_Hard" )
+INPUT_PORTS_END
 
 /******************************************************************************
 	Sound interfaces
@@ -3897,6 +4204,12 @@ static MACHINE_DRIVER_START( sbubsm )
 	MDRV_VISIBLE_AREA(0, 319, 0, 223)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( barek3 )
+
+	MDRV_IMPORT_FROM( genesis )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(barek3_readmem,barek3_writemem)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( megatech )
 
@@ -4376,8 +4689,21 @@ ROM_START( sbubsm )
 	ROM_LOAD16_BYTE( "u12.bin", 0x000001, 0x080000, CRC(f5374835) SHA1(3a97910f5f7327ec7ad6425dfdfa72c86196ed33) )
 
 	ROM_REGION( 0x1000, REGION_CPU2, 0 ) /* could be the same as topshoot (same PCB) */
-//	ROM_LOAD( "89c51.bin", 0x0000, 0x1000, NO_DUMP )
+/*	ROM_LOAD( "89c51.bin", 0x0000, 0x1000, NO_DUMP ) */
 ROM_END
+
+
+ROM_START( barek3mb )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) // 68000 Code
+	ROM_LOAD16_BYTE( "6.u19", 0x000000, 0x080000,  CRC(2de19519) SHA1(f5fcef1da8b5370e399f0451382e3c6e7754c9c8) )
+	ROM_LOAD16_BYTE( "3.u18", 0x000001, 0x080000,  CRC(db900e82) SHA1(172a4fe01a0ffd1ea3aed74f2c58234fd55b876d) )
+	ROM_LOAD16_BYTE( "4.u15", 0x100000, 0x080000,  CRC(6353b4b1) SHA1(9f89a2f02170496ca798b89e37e1f2bae0e9155d) )
+	ROM_LOAD16_BYTE( "1.u14", 0x100001, 0x080000,  CRC(24d31e12) SHA1(64c1b968e1ee5d0355d902e280f33e4466f27b07) )
+	ROM_LOAD16_BYTE( "5.u17", 0x200000, 0x080000,  CRC(0feb974f) SHA1(ed1a25b6f1669dc6061d519985b6373fa89176c7) )
+	ROM_LOAD16_BYTE( "2.u16", 0x200001, 0x080000,  CRC(bba4a585) SHA1(32c59729943d7b4c1a39f2a2b0dae9ce16991e9c) )
+ROM_END
+
+
 
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
@@ -5351,19 +5677,19 @@ static READ16_HANDLER(sbubsm_200051_r)
 
 static READ16_HANDLER(sbubsm_400000_r)
 {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400000_r\n");//, machine().describe_context().c_str());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400000_r\n");
 	return 0x5500;
 }
 
 static READ16_HANDLER(sbubsm_400002_r)
 {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400002_r\n");//, machine().describe_context().c_str());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: sbubsm_400002_r\n");
 	return 0x0f00;
 }
 
-DRIVER_INIT(sbubsm)
+DRIVER_INIT( sbubsm )
 {
-	// needed to boot, somme kind of hardware ident?
+	/* needed to boot, somme kind of hardware ident? */
 	install_mem_read16_handler(0, 0x400000, 0x400001, sbubsm_400000_r);
   install_mem_read16_handler(0, 0x400002, 0x400003, sbubsm_400002_r );
 
@@ -5377,6 +5703,24 @@ DRIVER_INIT(sbubsm)
 	cpu_setbank(3, memory_region(REGION_CPU1) );
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
+	init_segac2();
+}
+
+DRIVER_INIT( barek3 )
+{
+	data8_t *rom	=	memory_region(REGION_CPU1);
+  int x;
+	
+	for (x = 0x00001; x < 0x300000; x += 2)
+	{
+		rom[x] = BITSWAP8(rom[x], 6,2,4,0,7,1,3,5);
+	}
+
+	install_mem_read16_handler(0, 0x380070, 0x380071, input_port_2_word_r );
+	install_mem_read16_handler(0, 0x380078, 0x380078, input_port_3_word_r );
+	
+	genesis_region = 0x00; /* read via io */
+	
 	init_segac2();
 }
 
@@ -5431,8 +5775,10 @@ GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",    
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
 GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>",              "Juezhan Tianhuang", GAME_IMPERFECT_SOUND )
-GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
+/* Bootlegs Using Genesis Hardware */
+GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" ) 
+GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
 /* Atlus Print Club 'Games' (C-2 Hardware, might not be possible to support them because they use camera + printer, really just put here for reference) */
 GAMEX( 1995, pclubj,   0,        segac2, pclub,    pclub,    ROT0, "Atlus",                   "Print Club (Japan Vol.1)", GAME_NOT_WORKING )
