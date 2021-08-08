@@ -158,6 +158,9 @@ UINT16* tumblep_mainram;
 UINT16* jumppop_control;
 UINT16* suprtrio_control;
 
+/* magipur */
+static data16_t *mainram;
+static data16_t *maincpu;
 
 /******************************************************************************/
 
@@ -305,6 +308,42 @@ static MEMORY_WRITE16_START( fncywld_writemem )
 	{ 0xff0000, 0xffffff, MWA16_RAM }, // RAM
 MEMORY_END
 
+static MEMORY_READ16_START( magipur_readmem )
+    { 0x000000, 0x00ffff, MRA16_RAM },
+	{ 0xf00000, 0xffffff, MRA16_ROM },
+	{ 0x100000, 0x100001, YM2151_status_port_0_lsb_r },
+	{ 0x100002, 0x100003, MRA16_NOP }, // ym?
+	{ 0x100004, 0x100005, OKIM6295_status_0_lsb_r },
+	{ 0x140000, 0x140fff, MRA16_RAM },
+	{ 0x160000, 0x1607ff, MRA16_RAM },
+	{ 0x180000, 0x18000f, tumblepop_controls_r },
+	{ 0x320000, 0x321fff, MRA16_RAM },
+	{ 0x322000, 0x323fff, MRA16_RAM },
+	{ 0x1a0000, 0x1a07ff, MRA16_RAM },
+	{ 0xff0000, 0xffffff, MRA16_RAM }, // RAM
+MEMORY_END
+
+static MEMORY_WRITE16_START( magipur_writemem )
+    { 0x000000, 0x00ffff, MWA16_RAM, &mainram },
+	{ 0xf00000, 0xffffff, MWA16_ROM, &maincpu },
+	{ 0x100000, 0x100001, YM2151_register_port_0_lsb_w },
+	{ 0x100002, 0x100003, YM2151_data_port_0_lsb_w },
+	{ 0x100004, 0x100005, OKIM6295_data_0_lsb_w },
+	{ 0x100010, 0x100011, MWA16_NOP },
+	{ 0x140000, 0x140fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
+	{ 0x160000, 0x1607ff, MWA16_RAM, &spriteram16 }, /* sprites */
+	{ 0x160800, 0x16080f, MWA16_RAM }, /* goes slightly past the end of spriteram? */
+	{ 0x18000c, 0x18000d, MWA16_NOP },
+	{ 0x1a0000, 0x1a07ff, MWA16_RAM },
+	{ 0x300000, 0x30000f, tumblep_control_0_w },
+	{ 0x320000, 0x321fff, fncywld_pf1_data_w, &tumblep_pf1_data },
+	{ 0x322000, 0x323fff, fncywld_pf2_data_w, &tumblep_pf2_data },
+	{ 0x340000, 0x3401ff, MWA16_NOP }, /* Unused row scroll */
+	{ 0x340400, 0x34047f, MWA16_NOP }, /* Unused col scroll */
+	{ 0x342000, 0x3421ff, MWA16_NOP },
+	{ 0x342400, 0x34247f, MWA16_NOP },
+	{ 0xff0000, 0xffffff, MWA16_RAM }, // RAM
+MEMORY_END
 
 static MEMORY_READ16_START( htchctch_readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },
@@ -601,6 +640,88 @@ INPUT_PORTS_START( fncywld )
 #else
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		// See notes
 #endif
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( magipur )
+	PORT_START	/* Player 1 controls */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START	/* Player 2 controls */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START	/* Credits */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_VBLANK )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* Dip switch bank 1 */
+	PORT_DIPNAME( 0xe0, 0xe0, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 2C_1C ) )
+//	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )		// duplicated setting
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x10, 0x10, "Allow Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Demo_Sounds ) )	// to be confirmed
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x01, 0x01, "2 Coins to Start, 1 to Continue" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* Dip switch bank 2 */
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x80, "1" )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0xc0, "3" )
+	PORT_DIPSETTING(    0x40, "4" )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )	// to be confirmed
+	PORT_DIPSETTING(    0x30, "Easy" )
+	PORT_DIPSETTING(    0x20, "Normal" )
+	PORT_DIPSETTING(    0x10, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		// See notes
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		// See notes
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unused ) )
@@ -1224,6 +1345,15 @@ static struct YM2151interface fncy_ym2151_interface =
 	{ 0 }
 };
 
+
+static struct YM2151interface magipur_ym2151_interface =
+{
+	1,
+	4000000,
+	{ YM3012_VOL(20,MIXER_PAN_LEFT,20,MIXER_PAN_RIGHT) },
+	{ 0 }
+};
+
 static MACHINE_DRIVER_START( tumblep )
 
 	/* basic machine hardware */
@@ -1330,7 +1460,30 @@ static MACHINE_DRIVER_START( fncywld )
 	MDRV_SOUND_ADD(OKIM6295, fncy_okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( magipur )
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)
+	MDRV_CPU_MEMORY(magipur_readmem,magipur_writemem)
+	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
 
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(529)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MDRV_GFXDECODE(fncywld_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(0x800)
+
+	MDRV_VIDEO_START(fncywld)
+	MDRV_VIDEO_UPDATE(fncywld)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2151, magipur_ym2151_interface)
+	MDRV_SOUND_ADD(OKIM6295, fncy_okim6295_interface)
+MACHINE_DRIVER_END
 
 static void semicom_irqhandler(int irq)
 {
@@ -1562,6 +1715,27 @@ ROM_START( fncywld )
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "00_fw01.bin", 0x000000, 0x040000, CRC(b395fe01) SHA1(ac7f2e21413658f8d2a1abf3a76b7817a4e050c9) )
+ROM_END
+
+ROM_START( magipur )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )        /* 68000 Code */
+	ROM_LOAD16_BYTE( "2-27c040.bin", 0x000000, 0x080000, CRC(135c5de7) SHA1(95c75e9e69793f67df9378391ae45915ef9bbb89) )
+	ROM_LOAD16_BYTE( "3-27c040.bin", 0x000001, 0x080000, CRC(ee4b16da) SHA1(82391ed4d21d3944ca482be00ab7c0838cf190ff) )
+
+	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "4-27c040.bin",  0x80000, 0x40000, CRC(e460a77d) SHA1(bde15705750e002bd576098700161b0944984401) )
+	ROM_CONTINUE(0x80001, 0x40000)
+	ROM_LOAD16_BYTE( "5-27c040.bin",  0x00000, 0x40000, CRC(79c53627) SHA1(9e2673b3becf0508f630f3bd8ff5fc30520b120b) )
+	ROM_CONTINUE(0x00001, 0x40000)
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "6-27c040.bin", 0x00001, 0x40000, CRC(b25b5872) SHA1(88a6a110073060c3b7b2987cc41d23c4ca412b43) )
+	ROM_CONTINUE(0x00000, 0x40000)
+	ROM_LOAD16_BYTE( "7-27c040.bin", 0x80001, 0x40000, CRC(d3c3a672) SHA1(5bbd67a953e1d47d05006a4ef4aa7a23e807f11b) )
+	ROM_CONTINUE(0x80000, 0x40000)
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "1-27c020.bin", 0x000000, 0x040000, CRC(84dcf771) SHA1(f8a693a11b14608a582a90b7fd7d3be92e46a0e1) )
 ROM_END
 
 /* Hatch Catch
@@ -1944,6 +2118,18 @@ static DRIVER_INIT( fncywld )
 	tumblepb_gfx1_decrypt();
 }
 
+static DRIVER_INIT( magipur )
+{
+	
+	UINT16 *src = (UINT16 *)memory_region(REGION_CPU1);
+	// copy vector table? game expects RAM at 0, and ROM at f00000?!
+	memcpy(mainram, src, 0x80);
+	memcpy(maincpu, memory_region(REGION_CPU1), memory_region_length(REGION_CPU1));
+
+    tumblepb_gfx1_decrypt();
+	
+}
+
 
 static READ16_HANDLER( bcstory_1a0_read )
 {
@@ -2279,10 +2465,11 @@ GAME( 1991, tumblep,  0,       tumblep,   tumblep,  tumblep,  ROT0, "Data East C
 GAME( 1991, tumblepj, tumblep, tumblep,   tumblep,  tumblep,  ROT0, "Data East Corporation", "Tumble Pop (Japan)" )
 GAMEX(1991, tumblepb, tumblep, tumblepb,  tumblep,  tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 1)", GAME_IMPERFECT_SOUND )
 GAMEX(1991, tumblep2, tumblep, tumblepb,  tumblep,  tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 2)", GAME_IMPERFECT_SOUND )
-GAMEX(1993, jumpkids, 0,       jumpkids,  tumblep,  jumpkids, ROT0, "Comad", "Jump Kids", GAME_NO_SOUND )
-GAME (1996, fncywld,  0,       fncywld,   fncywld,  fncywld,  ROT0, "Unico", "Fancy World - Earth of Crisis" ) // game says 1996, testmode 1995?
-GAME (1995, htchctch, 0,       htchctch,  htchctch, htchctch, ROT0, "SemiCom", "Hatch Catch" ) // not 100% sure about gfx offsets
-GAME (1995, cookbib,  0,       cookbib,   cookbib,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" ) // not 100% sure about gfx offsets
+GAMEX(1993, jumpkids, 0,       jumpkids,  tumblep,  jumpkids, ROT0, "Comad",   "Jump Kids", GAME_NO_SOUND )
+GAME( 1996, fncywld,  0,       fncywld,   fncywld,  fncywld,  ROT0, "Unico",   "Fancy World - Earth of Crisis" ) // game says 1996, testmode 1995?
+GAME( 1996, magipur,  0,       magipur,   magipur,  magipur,  ROT0, "Unico",   "Magic Purple" )
+GAME( 1995, htchctch, 0,       htchctch,  htchctch, htchctch, ROT0, "SemiCom", "Hatch Catch" ) // not 100% sure about gfx offsets
+GAME( 1995, cookbib,  0,       cookbib,   cookbib,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" ) // not 100% sure about gfx offsets
 GAMEX(1995, chokchok, 0,       cookbib,   chokchok, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS ) // corruption during attract mode (tmap disable?)
 GAMEX(1997, bcstry,   0,       bcstory,   bcstory,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 1)", GAME_IMPERFECT_GRAPHICS) // gfx offsets?
 GAMEX(1997, bcstrya,  bcstry,  bcstory,   bcstory,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 2)", GAME_IMPERFECT_GRAPHICS) // gfx offsets?
