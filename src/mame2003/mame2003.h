@@ -302,6 +302,10 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 void osd_close_display(void);
 
 
+/* defined in video.c */
+void mame2003_video_get_geometry(struct retro_game_geometry *geom);
+
+
 /*
   osd_skip_this_frame() must return 0 if the current frame will be displayed.
   This can be used by drivers to skip cpu intensive processing for skipped
