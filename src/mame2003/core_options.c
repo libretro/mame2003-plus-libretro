@@ -169,7 +169,7 @@ static struct retro_variable *spawn_effective_option(int option_index)
    *    is the currently selected option the first in the default pipe-delimited list?
    *      if so, just return default_options[option_index]
    *    else
-   *       create a copy of default_options[option_index].defaults_string.
+   *       create a copy of default_options[option_index].value.
    *       First add the stringified current option as the first in the pipe-delimited list for this copied string
    *       then remove the option from wherever it was originally in the defaults string
    */
@@ -179,7 +179,7 @@ static struct retro_variable *spawn_effective_option(int option_index)
 static void init_default(struct retro_variable *def, const char *key, const char *value)
 {
   def->key = key;
-  def->defaults_string = value;
+  def->value = value;
 }
 
 void update_variables(bool first_time)
