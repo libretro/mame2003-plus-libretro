@@ -21,7 +21,7 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 ******************************************************************************/
 
-       void   init_default(struct retro_variable_default *option, const char *key, const char *value);
+static void   init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 
@@ -176,7 +176,7 @@ static struct retro_variable_default *spawn_effective_option(int option_index)
   return encoded_option;
 }
 
-void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
+static void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
 {
   def->key = key;
   def->defaults_string = label_and_values;
