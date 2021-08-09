@@ -179,19 +179,54 @@ extern void frontend_message_cb(const char *message_string, unsigned frames_to_d
 
 /******************************************************************************
 
-Core options
+  Core options
 
 ******************************************************************************/
+void set_content_flags(void);
+void init_core_options(void);
+void update_variables(bool first_time);
 
-
-/******************************************************************************
- * retro_variable_default contains the default value for a libretro core option
- *
- *****************************************************************************/
-struct retro_variable_default
+enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
-   const char *key;
-   const char *defaults_string;
+  OPT_4WAY = 0,
+  OPT_MOUSE_DEVICE,
+  OPT_CROSSHAIR_ENABLED,
+  OPT_SKIP_DISCLAIMER,
+  OPT_SKIP_WARNINGS,
+  OPT_DISPLAY_SETUP,
+  OPT_NEOGEO_BIOS,
+  OPT_STV_BIOS,
+  OPT_USE_ALT_SOUND,
+  OPT_SHARE_DIAL,
+  OPT_DEADZONE,
+  OPT_VECTOR_RESOLUTION,
+  OPT_VECTOR_ANTIALIAS,
+  OPT_VECTOR_BEAM,
+  OPT_VECTOR_TRANSLUCENCY,
+  OPT_VECTOR_FLICKER,
+  OPT_VECTOR_INTENSITY,
+  OPT_CORE_SYS_SUBFOLDER,
+  OPT_CORE_SAVE_SUBFOLDER,
+  OPT_AUTOSAVE_HISCORE,
+  OPT_TATE_MODE,
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,
+  OPT_FRAMESKIP,
+  OPT_CPU_CLOCK_SCALE,
+  OPT_SAMPLE_RATE,
+  OPT_INPUT_INTERFACE,
+  OPT_MAME_REMAPPING,
+  OPT_ARTWORK,
+  OPT_ART_RESOLUTION,
+  OPT_ART_OVERLAY_OPACITY,
+  OPT_NVRAM_BOOTSTRAP,
+  OPT_CHEAT_INPUT_PORTS,
+  OPT_MACHINE_TIMING,
+  OPT_DIGITAL_JOY_CENTERING,
+#if (HAS_CYCLONE || HAS_DRZ80)
+  OPT_CYCLONE_MODE,
+#endif
+  OPT_end /* dummy last entry */
 };
 
 
@@ -254,6 +289,10 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 
 /* osd_close_display is implemented in video.c */
 void osd_close_display(void);
+
+
+/* defined in video.c */
+void mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
 
 /*

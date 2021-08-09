@@ -209,6 +209,8 @@ android-arm64-v8a:
   extends:
     - .libretro-android-jni-arm64-v8a
     - .core-defs
+  only:
+    - master
 
 # Android 64-bit x86
 android-x86_64:
