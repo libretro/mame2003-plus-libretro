@@ -21,10 +21,7 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 ******************************************************************************/
 
-       void   set_content_flags(void);
-       void   init_core_options(void);
        void   init_default(struct retro_variable_default *option, const char *key, const char *value);
-       void   update_variables(bool first_time);
 static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_option(int option_index);
 
