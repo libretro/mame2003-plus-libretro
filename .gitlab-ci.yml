@@ -116,42 +116,56 @@ libretro-build-windows-x64:
   extends:
     - .libretro-windows-x64-mingw-make-default
     - .core-defs
+  only:
+    - master
 
 # Windows 32-bit
 libretro-build-windows-i686:
   extends:
     - .libretro-windows-i686-mingw-make-default
     - .core-defs
+  only:
+    - master
 
 # Windows msvc10 64-bit
 libretro-build-windows-msvc10-x64:
   extends:
     - .libretro-windows-x64-msvc10-msys2-make-default
     - .core-defs
+  only:
+    - master
 
 # Windows msvc10 32-bit
 libretro-build-windows-msvc10-i686:
   extends:
     - .libretro-windows-i686-msvc10-msys2-make-default
     - .core-defs
+  only:
+    - master
 
 # Windows msvc05 32-bit
 libretro-build-windows-msvc05-i686:
   extends:
     - .libretro-windows-i686-msvc05-msys2-make-default
     - .core-defs
+  only:
+    - master
 
 # Linux 64-bit
 libretro-build-linux-x64:
   extends:
     - .libretro-linux-x64-make-default
     - .core-defs
+  only:
+    - master
 
 # Linux 32-bit
 libretro-build-linux-i686:
   extends:
     - .libretro-linux-i686-make-default
     - .core-defs
+  only:
+    - master
 
 # MacOS 64-bit
 libretro-build-osx-x64:
@@ -160,6 +174,8 @@ libretro-build-osx-x64:
   extends:
     - .libretro-osx-x64-make-default
     - .core-defs
+  only:
+    - master
 
 # MacOS ARM 64-bit
 libretro-build-osx-arm64:
@@ -168,12 +184,16 @@ libretro-build-osx-arm64:
   extends:
     - .libretro-osx-arm64-make-default
     - .core-defs
+  only:
+    - master
 
 # MacOS PowerPC 32-bit
 libretro-build-osx-ppc:
   extends:
     - .libretro-osx-ppc-make-default
     - .core-defs
+  only:
+    - master
 
 ################################### CELLULAR #################################
 # Android ARMv7a
@@ -181,42 +201,57 @@ android-armeabi-v7a:
   extends:
     - .libretro-android-jni-armeabi-v7a
     - .core-defs
+  only:
+    - master
 
 # Android ARMv8a
 android-arm64-v8a:
   extends:
     - .libretro-android-jni-arm64-v8a
     - .core-defs
+  only:
+    - master
+    - isolation
 
 # Android 64-bit x86
 android-x86_64:
   extends:
     - .libretro-android-jni-x86_64
     - .core-defs
+  only:
+    - master
 
 # Android 32-bit x86
 android-x86:
   extends:
     - .libretro-android-jni-x86
     - .core-defs
+  only:
+    - master
 
 # iOS
 libretro-build-ios-arm64:
   extends:
     - .libretro-ios-arm64-make-default
     - .core-defs
+  only:
+    - master
 
 # iOS (armv7) [iOS 9 and up]
 libretro-build-ios9:
   extends:
     - .libretro-ios9-make-default
     - .core-defs
+  only:
+    - master
 
 # tvOS
 libretro-build-tvos-arm64:
   extends:
     - .libretro-tvos-arm64-make-default
     - .core-defs
+  only:
+    - master
 
 ################################### CONSOLES #################################
 # PlayStation Portable
@@ -224,54 +259,72 @@ libretro-build-psp:
   extends:
     - .libretro-psp-static-retroarch-master
     - .core-defs
+  only:
+    - master
 
 # PlayStation Vita
 libretro-build-vita:
   extends:
     - .libretro-vita-static-retroarch-master
     - .core-defs
+  only:
+    - master
 
 # Nintendo 3DS
 libretro-build-ctr:
   extends:
     - .libretro-ctr-static-retroarch-master
     - .core-defs
+  only:
+    - master
 
 # Nintendo WiiU
 libretro-build-wiiu:
   extends:
     - .libretro-wiiu-static-retroarch-master
     - .core-defs
+  only:
+    - master
 
 # Nintendo Switch
 libretro-build-libnx-aarch64:
   extends:
     - .libretro-libnx-static-retroarch-master
     - .core-defs
+  only:
+    - master
 
 # OpenDingux
 libretro-build-dingux-mips32:
   extends:
     - .libretro-dingux-mips32-make-default
     - .core-defs
+  only:
+    - master
 
 # OpenDingux Beta
 libretro-build-dingux-odbeta-mips32:
   extends:
     - .libretro-dingux-odbeta-mips32-make-default
     - .core-defs
+  only:
+    - master
 
 # RS-90 OpenDingux Beta
 libretro-build-rs90-odbeta-mips32:
   extends:
     - .libretro-rs90-odbeta-mips32-make-default
     - .core-defs
+  only:
+    - master
 
 # RetroFW
 libretro-build-retrofw-mips32:
   extends:
     - .libretro-retrofw-mips32-make-default
     - .core-defs
+  only:
+    - master
 
 #################################### MISC ####################################
 # Emscripten
@@ -279,3 +332,5 @@ libretro-build-emscripten:
   extends:
     - .libretro-emscripten-static-retroarch-master
     - .core-defs
+  only:
+    - master
