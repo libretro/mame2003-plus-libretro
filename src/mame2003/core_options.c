@@ -92,7 +92,7 @@ void init_core_options(void)
   init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
   init_default(&default_options[OPT_end], NULL, NULL);
-  set_variables(void);
+  set_variables();
 }
 
 static void set_variables(void)
