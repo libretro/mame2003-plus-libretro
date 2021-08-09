@@ -182,6 +182,9 @@ extern void frontend_message_cb(const char *message_string, unsigned frames_to_d
   Core options
 
 ******************************************************************************/
+extern void set_content_flags(void);
+extern void init_core_options(void);
+extern void update_variables(bool first_time);
 
 enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
