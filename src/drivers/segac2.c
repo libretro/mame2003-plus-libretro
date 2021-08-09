@@ -5717,7 +5717,7 @@ DRIVER_INIT( barek3 )
 	}
 
 	install_mem_read16_handler(0, 0x380070, 0x380071, input_port_2_word_r );
-	install_mem_read16_handler(0, 0x380078, 0x380078, input_port_3_word_r );
+	install_mem_read16_handler(0, 0x380078, 0x380079, input_port_3_word_r );
 	
 	genesis_region = 0x00; /* read via io */
 	
