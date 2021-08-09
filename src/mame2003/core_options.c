@@ -176,10 +176,10 @@ static struct retro_variable *spawn_effective_option(int option_index)
   return encoded_option;
 }
 
-static void init_default(struct retro_variable *def, const char *key, const char *label_and_values)
+static void init_default(struct retro_variable *def, const char *key, const char *value)
 {
   def->key = key;
-  def->defaults_string = label_and_values;
+  def->defaults_string = value;
 }
 
 void update_variables(bool first_time)
