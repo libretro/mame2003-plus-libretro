@@ -35,8 +35,9 @@ static struct retro_variable_default *spawn_effective_option(int option_index);
 
 ******************************************************************************/
 
-extern void retro_set_audio_buff_status_cb(void);
-extern void retro_describe_controls(void);
+/* found in mame2003.c */
+extern void   retro_set_audio_buff_status_cb(void);
+extern void   retro_describe_controls(void);
 
 extern const struct GameDriver *game_driver;
 extern retro_set_led_state_t led_state_cb;
