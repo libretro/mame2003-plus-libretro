@@ -231,17 +231,6 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
 
 
 /******************************************************************************
- * retro_variable_default contains the default value for a libretro core option
- *
- *****************************************************************************/
-struct retro_variable_default
-{
-   const char *key;
-   const char *defaults_string;
-};
-
-
-/******************************************************************************
 
 	Display
 
