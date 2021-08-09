@@ -97,11 +97,6 @@ static void   configure_cyclone_mode (int driverIndex);
 /* found in video.c */
 extern void   mame2003_video_get_geometry(struct retro_game_geometry *geom);
 
-/* found in core_options.c */
-extern void   set_content_flags(void);
-extern void   init_core_options(void);
-extern void   update_variables(bool first_time);
-
 
 /******************************************************************************
 
