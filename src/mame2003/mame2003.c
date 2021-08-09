@@ -90,16 +90,6 @@ static void   configure_cyclone_mode (int driverIndex);
 
 /******************************************************************************
 
-  external function prototypes
-
-******************************************************************************/
-
-/* found in video.c */
-extern void   mame2003_video_get_geometry(struct retro_game_geometry *geom);
-
-
-/******************************************************************************
-
   Data structures for libretro controllers
 
 *******************************************************************************/
