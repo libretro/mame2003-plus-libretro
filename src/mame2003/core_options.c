@@ -11,7 +11,7 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_variable          default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_variable          current_options[OPT_end + 1];
 
 
@@ -21,9 +21,9 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 ******************************************************************************/
 
-static void   init_default(struct retro_variable_default *option, const char *key, const char *value);
+static void   init_default(struct retro_variable *option, const char *key, const char *value);
 static void   set_variables(bool first_time);
-static struct retro_variable_default *spawn_effective_option(int option_index);
+static struct retro_variable *spawn_effective_option(int option_index);
 
 
 /******************************************************************************
@@ -98,7 +98,7 @@ void init_core_options(void)
 
 static void set_variables(bool first_time)
 {
-  static struct retro_variable_default  effective_defaults[OPT_end + 1];
+  static struct retro_variable  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
   int option_index   = 0;
 
@@ -154,9 +154,9 @@ static void set_variables(bool first_time)
 
 }
 
-static struct retro_variable_default *spawn_effective_option(int option_index)
+static struct retro_variable *spawn_effective_option(int option_index)
 {
-  static struct retro_variable_default *encoded_option = NULL;
+  static struct retro_variable *encoded_option = NULL;
 
   /* implementing this function will allow the core to change a core option within the core and then report that that change to the frontend
    * currently core options only flow one way: from the frontend to mame2003-plus
@@ -176,7 +176,7 @@ static struct retro_variable_default *spawn_effective_option(int option_index)
   return encoded_option;
 }
 
-static void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
+static void init_default(struct retro_variable *def, const char *key, const char *label_and_values)
 {
   def->key = key;
   def->defaults_string = label_and_values;
