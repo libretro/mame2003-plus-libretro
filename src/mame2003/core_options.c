@@ -11,8 +11,8 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-static struct retro_variable          default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable          current_options[OPT_end + 1];
+static struct retro_variable  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_variable  current_options[OPT_end + 1];
 
 
 /******************************************************************************
