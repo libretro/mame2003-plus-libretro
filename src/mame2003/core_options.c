@@ -12,7 +12,6 @@
 #include <string/stdstring.h>
 
 static struct retro_variable  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable  current_options[OPT_end + 1];
 
 
 /******************************************************************************
@@ -172,8 +171,6 @@ void update_variables(bool first_time)
     var.key = default_options[index].key;
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value)) /* the frontend sends a value for this core option */
     {
-      current_options[index].value = var.value; /* keep the state of core options matched with the frontend */
-
       switch(index)
       {
         case OPT_INPUT_INTERFACE:
