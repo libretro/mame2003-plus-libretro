@@ -11,8 +11,8 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-static struct retro_variable          default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable          current_options[OPT_end + 1];
+static struct retro_core_options_v2          default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_core_options_v2          current_options[OPT_end + 1];
 
 
 /******************************************************************************
@@ -21,9 +21,9 @@ static struct retro_variable          current_options[OPT_end + 1];
 
 ******************************************************************************/
 
-static void   init_default(struct retro_variable *option, const char *key, const char *value);
+static void   init_default(struct retro_core_options_v2 *option, const char *key, const char *value);
 static void   set_variables(bool first_time);
-static struct retro_variable *spawn_effective_option(int option_index);
+static struct retro_core_options_v2 *spawn_effective_option(int option_index);
 
 
 /******************************************************************************
@@ -98,7 +98,7 @@ void init_core_options(void)
 
 static void set_variables(bool first_time)
 {
-  static struct retro_variable  effective_defaults[OPT_end + 1];
+  static struct retro_core_options_v2  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
   int option_index   = 0;
 
@@ -154,9 +154,9 @@ static void set_variables(bool first_time)
 
 }
 
-static struct retro_variable *spawn_effective_option(int option_index)
+static struct retro_core_options_v2 *spawn_effective_option(int option_index)
 {
-  static struct retro_variable *encoded_option = NULL;
+  static struct retro_core_options_v2 *encoded_option = NULL;
 
   /* implementing this function will allow the core to change a core option within the core and then report that that change to the frontend
    * currently core options only flow one way: from the frontend to mame2003-plus
@@ -176,7 +176,7 @@ static struct retro_variable *spawn_effective_option(int option_index)
   return encoded_option;
 }
 
-static void init_default(struct retro_variable *def, const char *key, const char *value)
+static void init_default(struct retro_core_options_v2 *def, const char *key, const char *value)
 {
   def->key = key;
   def->value = value;
@@ -185,7 +185,7 @@ static void init_default(struct retro_variable *def, const char *key, const char
 void update_variables(bool first_time)
 {
   struct retro_led_interface ledintf;
-  struct retro_variable var;
+  struct retro_core_options_v2 var;
   int index;
   bool reset_control_descriptions = false;
 
