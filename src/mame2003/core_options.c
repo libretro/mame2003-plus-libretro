@@ -770,8 +770,45 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
 
 void init_core_options(void)
 {
+  default_options[OPT_4WAY]                      =
+  default_options[OPT_MOUSE_DEVICE]              =
+  default_options[OPT_CROSSHAIR_ENABLED]         =
+  default_options[OPT_SKIP_DISCLAIMER]           =
+  default_options[OPT_SKIP_WARNINGS]             =
+  default_options[OPT_DISPLAY_SETUP]             =
+  default_options[OPT_BRIGHTNESS]                =
+  default_options[OPT_GAMMA]                     =
+  default_options[OPT_ARTWORK]                   =
+  default_options[OPT_ART_RESOLUTION]            =
+  default_options[OPT_ART_OVERLAY_OPACITY]       =
+  default_options[OPT_NEOGEO_BIOS]               =
+  default_options[OPT_STV_BIOS]                  =
+  default_options[OPT_USE_ALT_SOUND]             =
+  default_options[OPT_SHARE_DIAL]                =
+  default_options[OPT_DEADZONE]                  =
+  default_options[OPT_TATE_MODE]                 =
+  default_options[OPT_VECTOR_RESOLUTION]         =
+  default_options[OPT_VECTOR_ANTIALIAS]          =
+  default_options[OPT_VECTOR_BEAM]               =
+  default_options[OPT_VECTOR_TRANSLUCENCY]       =
+  default_options[OPT_VECTOR_FLICKER]            =
+  default_options[OPT_VECTOR_INTENSITY]          =
+  default_options[OPT_NVRAM_BOOTSTRAP]           =
+  default_options[OPT_SAMPLE_RATE]               =
+  default_options[OPT_INPUT_INTERFACE]           =
+  default_options[OPT_MAME_REMAPPING]            =
+  default_options[OPT_FRAMESKIP]                 =
+  default_options[OPT_CORE_SYS_SUBFOLDER]        =
+  default_options[OPT_CORE_SAVE_SUBFOLDER]       =
+  default_options[OPT_AUTOSAVE_HISCORE]          =
+  default_options[OPT_CHEAT_INPUT_PORTS]         =
+  default_options[OPT_MACHINE_TIMING]            =
+  default_options[OPT_DIGITAL_JOY_CENTERING]     =
+  default_options[OPT_CPU_CLOCK_SCALE]           =
 #if (HAS_CYCLONE || HAS_DRZ80)
+  default_options[OPT_CYCLONE_MODE]              =
 #endif
+  default_options[OPT_end]                       =
   set_variables();
 }
 
