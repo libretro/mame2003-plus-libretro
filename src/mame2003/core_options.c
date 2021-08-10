@@ -753,7 +753,7 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone mode",
    NULL,
-   "Restart core required. Forces the selected cyclone mode to be used when available to the platform.",
+   "Restart core required. Forces the selected cyclone mode to be used.",
    NULL,
    NULL,
    {
