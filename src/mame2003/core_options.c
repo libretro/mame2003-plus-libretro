@@ -924,13 +924,13 @@ void update_variables(bool first_time)
 
         case OPT_XY_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
-            options.mouse_device = RETRO_DEVICE_POINTER;
+            options.xy_device = RETRO_DEVICE_POINTER;
           else if(strcmp(var.value, "mouse") == 0)
-            options.mouse_device = RETRO_DEVICE_MOUSE;
+            options.xy_device = RETRO_DEVICE_MOUSE;
           else if(strcmp(var.value, "lightgun") == 0)
-            options.mouse_device = RETRO_DEVICE_LIGHTGUN;
+            options.xy_device = RETRO_DEVICE_LIGHTGUN;
           else
-            options.mouse_device = RETRO_DEVICE_NONE;
+            options.xy_device = RETRO_DEVICE_NONE;
           break;
 
         case OPT_CROSSHAIR_ENABLED:
