@@ -547,19 +547,23 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_sample_rate = {
+   APPNAME"_sample_rate",
+   "Sample Rate (KHz)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "8000",  NULL },
+      { "11025", NULL },
+      { "22050", NULL },
+      { "30000", NULL },
+      { "44100", NULL },
+      { "48000", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "48000"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -746,7 +750,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
   init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
   init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; disabled|1|2|3|4|5|6|7|9|10|11|auto|auto_aggressive|auto_max");
