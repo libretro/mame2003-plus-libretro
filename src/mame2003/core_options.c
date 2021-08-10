@@ -47,7 +47,7 @@ int legacy_flag = -1;
  */
 
 
-static struct retro_core_option_v2_definition option_def_4way = {
+static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    APPNAME"_four_way_emulation",
    "4-way joystick emulation on 8-way joysticks",
    NULL,
@@ -83,7 +83,7 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
 #endif
 };
 
-static struct retro_core_option_v2_definition option_def_crosshair = {
+static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
    APPNAME"_crosshair_enabled",
    "Show Lightgun crosshairs",
    NULL,
@@ -98,7 +98,7 @@ static struct retro_core_option_v2_definition option_def_crosshair = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_disclaimer = {
+static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
    APPNAME"_skip_disclaimer,
    "Skip Disclaimer",
    NULL,
@@ -113,7 +113,7 @@ static struct retro_core_option_v2_definition option_def_disclaimer = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_warnings = {
+static struct retro_core_option_v2_definition option_def_skip_warnings = {
    APPNAME"_skip_warnings",
    "Skip Warnings",
    NULL,
