@@ -1238,19 +1238,19 @@ int osd_is_joy_pressed(int joycode)
     return input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
 
   /* pointer, mouse, or lightgun states if selected by core option */
-  if (options.mouse_device == RETRO_DEVICE_POINTER || options.mouse_device == RETRO_DEVICE_MOUSE)
+  if (options.xy_device == RETRO_DEVICE_POINTER || options.xy_device == RETRO_DEVICE_MOUSE)
   {
     retro_code = get_retromouse_code(osd_code);
     if (retro_code != INT_MAX)
     {
-      if (options.mouse_device == RETRO_DEVICE_MOUSE)
+      if (options.xy_device == RETRO_DEVICE_MOUSE)
         return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
-      if (options.mouse_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
+      if (options.xy_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
         return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
     }
   }
 
-  else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
+  else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
   {
     retro_code = get_retrogun_code(osd_code);
     if (retro_code != INT_MAX)
@@ -1435,7 +1435,7 @@ void osd_joystick_end_calibration(void) { }
 void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
 
-  if (options.mouse_device == RETRO_DEVICE_POINTER && input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
+  if (options.xy_device == RETRO_DEVICE_POINTER && input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
   {
     static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
     static int16_t prev_pointer_y;
@@ -1443,13 +1443,13 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
     *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
   }
 
-  else if (options.mouse_device == RETRO_DEVICE_MOUSE)
+  else if (options.xy_device == RETRO_DEVICE_MOUSE)
   {
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
   }
 
-  else if (options.mouse_device == RETRO_DEVICE_LIGHTGUN)
+  else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
   {
     /* simulated lightgun reload hack */
     if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
