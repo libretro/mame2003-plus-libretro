@@ -808,7 +808,7 @@ void init_core_options(void)
 #if (HAS_CYCLONE || HAS_DRZ80)
   default_options[OPT_CYCLONE_MODE]              = &option_def_cyclone_mode;
 #endif
-  default_options[OPT_end]                       = &;
+  default_options[OPT_end]                       = { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
   set_variables();
 }
 
