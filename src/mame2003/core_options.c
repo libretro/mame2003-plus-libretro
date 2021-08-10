@@ -768,6 +768,9 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    "default"
 };
 
+static struct retro_core_option_v2_definition option_def_null = 
+   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
+
 void init_core_options(void)
 {
   default_options[OPT_4WAY]                      = option_def_four_way_emulation;
@@ -808,7 +811,7 @@ void init_core_options(void)
 #if (HAS_CYCLONE || HAS_DRZ80)
   default_options[OPT_CYCLONE_MODE]              = option_def_cyclone_mode;
 #endif
-  default_options[OPT_end]                       = { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
+  default_options[OPT_end]                       = option_def_null;
   set_variables();
 }
 
