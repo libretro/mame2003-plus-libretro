@@ -566,34 +566,35 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    "48000"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_input_interface = {
+   APPNAME"_input_interface",
+   "Input interface",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "simultaneous", NULL },
+      { "retropad",     NULL },
+      { "keyboard",     NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "simultaneous"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_mame_remapping = {
+   APPNAME"_mame_remapping",
+   "Legacy Remapping (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -750,8 +751,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_INPUT_INTERFACE],        APPNAME"_input_interface",        "Input interface; simultaneous|retropad|keyboard");
-  init_default(&default_options[OPT_MAME_REMAPPING],         APPNAME"_mame_remapping",         "Legacy Remapping (Restart core); enabled|disabled");
   init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; disabled|1|2|3|4|5|6|7|9|10|11|auto|auto_aggressive|auto_max");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
