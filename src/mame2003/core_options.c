@@ -659,7 +659,7 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
    APPNAME"_autosave_hiscore",
    "Autosave hiscore",
    NULL,
-   "Recommend to use default which will save the hiscore when closing content. Recursively saves repeatedly the entire time during gameplay.",
+   "Recommended to use default which will save the hiscore when closing content. Recursively will save repeatedly the entire time during gameplay.",
    NULL,
    NULL,
    {
