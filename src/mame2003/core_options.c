@@ -14,7 +14,8 @@
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 
-
+/* used in inptport.c when saving input port settings */
+int legacy_flag = -1;
 
 /******************************************************************************
 
@@ -38,9 +39,6 @@ extern void   retro_describe_controls(void);
 extern const struct GameDriver *game_driver;
 extern retro_set_led_state_t led_state_cb;
 
-
-/* used in inptport.c when saving input port settings */
-int legacy_flag = -1;
 
 
 /*
