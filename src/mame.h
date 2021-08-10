@@ -199,7 +199,7 @@ struct GameOptions
   bool     all_ctrls;            /* show unused controls in the frontend remapper */
 
   unsigned dial_share_xy;
-  unsigned mouse_device;
+  unsigned xy_device;
   bool     use_lightgun_with_pad;
   unsigned input_interface;                         /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned active_control_type[MAX_PLAYER_COUNT];   /* register to indicate the default control layout for each player as currently set in the frontend */
