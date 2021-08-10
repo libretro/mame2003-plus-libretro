@@ -24,7 +24,7 @@ int legacy_flag = -1;
 ******************************************************************************/
 
 static void   set_variables(void);
-static void   configure_core_options_version();
+static void   determine_core_options_version();
 
 
 /******************************************************************************
@@ -1429,7 +1429,7 @@ void set_content_flags(void)
 }
 
 
-static void configure_core_options_version(void)
+static void determine_core_options_version(void)
 {
    unsigned version  = 0;
 
