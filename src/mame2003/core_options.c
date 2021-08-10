@@ -99,7 +99,7 @@ static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
 };
 
 static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
-   APPNAME"_skip_disclaimer,
+   APPNAME"_skip_disclaimer",
    "Skip Disclaimer",
    NULL,
    NULL,
