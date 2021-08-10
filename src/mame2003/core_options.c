@@ -877,7 +877,7 @@ static void set_variables(void)
    effective_options_count++;
   }
 
-  determine_core_options_version( options_us );
+  determine_core_options_version( &options_us );
 
 }
 
