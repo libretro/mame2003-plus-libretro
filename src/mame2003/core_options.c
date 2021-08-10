@@ -624,34 +624,34 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
+   APPNAME"_core_sys_subfolder",
+   "Locate system files within a subfolder",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
+   APPNAME"_core_save_subfolder",
+   "Locate save files within a subfolder",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -763,8 +763,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
-  init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_AUTOSAVE_HISCORE],       APPNAME"_autosave_hiscore",       "Autosave hiscore; default|recursively");
   init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
   init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
