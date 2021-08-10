@@ -770,45 +770,45 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
 
 void init_core_options(void)
 {
-  default_options[OPT_4WAY]                      =
-  default_options[OPT_MOUSE_DEVICE]              =
-  default_options[OPT_CROSSHAIR_ENABLED]         =
-  default_options[OPT_SKIP_DISCLAIMER]           =
-  default_options[OPT_SKIP_WARNINGS]             =
-  default_options[OPT_DISPLAY_SETUP]             =
-  default_options[OPT_BRIGHTNESS]                =
-  default_options[OPT_GAMMA]                     =
-  default_options[OPT_ARTWORK]                   =
-  default_options[OPT_ART_RESOLUTION]            =
-  default_options[OPT_ART_OVERLAY_OPACITY]       =
-  default_options[OPT_NEOGEO_BIOS]               =
-  default_options[OPT_STV_BIOS]                  =
-  default_options[OPT_USE_ALT_SOUND]             =
-  default_options[OPT_SHARE_DIAL]                =
-  default_options[OPT_DEADZONE]                  =
-  default_options[OPT_TATE_MODE]                 =
-  default_options[OPT_VECTOR_RESOLUTION]         =
-  default_options[OPT_VECTOR_ANTIALIAS]          =
-  default_options[OPT_VECTOR_BEAM]               =
-  default_options[OPT_VECTOR_TRANSLUCENCY]       =
-  default_options[OPT_VECTOR_FLICKER]            =
-  default_options[OPT_VECTOR_INTENSITY]          =
-  default_options[OPT_NVRAM_BOOTSTRAP]           =
-  default_options[OPT_SAMPLE_RATE]               =
-  default_options[OPT_INPUT_INTERFACE]           =
-  default_options[OPT_MAME_REMAPPING]            =
-  default_options[OPT_FRAMESKIP]                 =
-  default_options[OPT_CORE_SYS_SUBFOLDER]        =
-  default_options[OPT_CORE_SAVE_SUBFOLDER]       =
-  default_options[OPT_AUTOSAVE_HISCORE]          =
-  default_options[OPT_CHEAT_INPUT_PORTS]         =
-  default_options[OPT_MACHINE_TIMING]            =
-  default_options[OPT_DIGITAL_JOY_CENTERING]     =
-  default_options[OPT_CPU_CLOCK_SCALE]           =
+  default_options[OPT_4WAY]                      = &option_def_four_way_emulation;
+  default_options[OPT_XY_DEVICE]                 = &option_def_xy_device;
+  default_options[OPT_CROSSHAIR_ENABLED]         = &option_def_crosshair_enabled;
+  default_options[OPT_SKIP_DISCLAIMER]           = &option_def_skip_disclaimer;
+  default_options[OPT_SKIP_WARNINGS]             = &option_def_skip_warnings;
+  default_options[OPT_DISPLAY_SETUP]             = &option_def_display_setup;
+  default_options[OPT_BRIGHTNESS]                = &option_def_brightness;
+  default_options[OPT_GAMMA]                     = &option_def_gamma;
+  default_options[OPT_ARTWORK]                   = &option_def_display_artwork;
+  default_options[OPT_ART_RESOLUTION]            = &option_def_art_resolution;
+  default_options[OPT_ART_OVERLAY_OPACITY]       = &option_def_art_overlay_opacity;
+  default_options[OPT_NEOGEO_BIOS]               = &option_def_neogeo_bios;
+  default_options[OPT_STV_BIOS]                  = &option_def_stv_bios;
+  default_options[OPT_USE_ALT_SOUND]             = &option_def_use_alt_sound;
+  default_options[OPT_SHARE_DIAL]                = &option_def_dialsharexy;
+  default_options[OPT_DEADZONE]                  = &option_def_deadzone;
+  default_options[OPT_TATE_MODE]                 = &option_def_tate_mode;
+  default_options[OPT_VECTOR_RESOLUTION]         = &option_def_vector_resolution;
+  default_options[OPT_VECTOR_ANTIALIAS]          = &option_def_vector_antialias;
+  default_options[OPT_VECTOR_BEAM]               = &option_def_vector_beam_width;
+  default_options[OPT_VECTOR_TRANSLUCENCY]       = &option_def_vector_translucency;
+  default_options[OPT_VECTOR_FLICKER]            = &option_def_vector_flicker;
+  default_options[OPT_VECTOR_INTENSITY]          = &option_def_vector_intensity;
+  default_options[OPT_NVRAM_BOOTSTRAP]           = &option_def_nvram_bootstraps;
+  default_options[OPT_SAMPLE_RATE]               = &option_def_sample_rate;
+  default_options[OPT_INPUT_INTERFACE]           = &option_def_input_interface;
+  default_options[OPT_MAME_REMAPPING]            = &option_def_mame_remapping;
+  default_options[OPT_FRAMESKIP]                 = &option_def_frameskip;
+  default_options[OPT_CORE_SYS_SUBFOLDER]        = &option_def_core_sys_subfolder;
+  default_options[OPT_CORE_SAVE_SUBFOLDER]       = &option_def_core_save_subfolder;
+  default_options[OPT_AUTOSAVE_HISCORE]          = &option_def_autosave_hiscore;
+  default_options[OPT_CHEAT_INPUT_PORTS]         = &option_def_cheat_input_ports;
+  default_options[OPT_MACHINE_TIMING]            = &option_def_machine_timing;
+  default_options[OPT_DIGITAL_JOY_CENTERING]     = &option_def_digital_joy_centering;
+  default_options[OPT_CPU_CLOCK_SCALE]           = &option_def_cpu_clock_scale;
 #if (HAS_CYCLONE || HAS_DRZ80)
-  default_options[OPT_CYCLONE_MODE]              =
+  default_options[OPT_CYCLONE_MODE]              = &option_def_cyclone_mode;
 #endif
-  default_options[OPT_end]                       =
+  default_options[OPT_end]                       = &;
   set_variables();
 }
 
