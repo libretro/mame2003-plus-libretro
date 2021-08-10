@@ -219,34 +219,67 @@ static struct retro_core_option_v2_definition option_def_display_artwork = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_art_resolution = {
+   APPNAME"_art_resolution",
+   "Artwork resolution multiplier (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "1",  NULL },
+      { "2",  NULL },
+      { "3",  NULL },
+      { "4",  NULL },
+      { "5",  NULL },
+      { "6",  NULL },
+      { "7",  NULL },
+      { "8",  NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "1"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
+   APPNAME"_art_overlay_opacity",
+   "Artwork hardcoded overlay opacity (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "default", NULL },
+      { "0",       NULL },
+      { "1",       NULL },
+      { "2",       NULL },
+      { "3",       NULL },
+      { "4",       NULL },
+      { "5",       NULL },
+      { "6",       NULL },
+      { "7",       NULL },
+      { "8",       NULL },
+      { "9",       NULL },
+      { "10",      NULL },
+      { "11",      NULL },
+      { "12",      NULL },
+      { "13",      NULL },
+      { "14",      NULL },
+      { "15",      NULL },
+      { "16",      NULL },
+      { "17",      NULL },
+      { "18",      NULL },
+      { "19",      NULL },
+      { "20",      NULL },
+      { "21",      NULL },
+      { "22",      NULL },
+      { "23",      NULL },
+      { "24",      NULL },
+      { "25",      NULL },
+      { "50",      NULL },
+      { "70",      NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -643,8 +676,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2|3|4|5|6|7|8");
-  init_default(&default_options[OPT_ART_OVERLAY_OPACITY],    APPNAME"_art_overlay_opacity",    "Artwork hardcoded overlay opacity (Restart core); default|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|50|70");
   init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
