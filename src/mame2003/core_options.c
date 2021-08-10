@@ -180,7 +180,7 @@ static struct retro_core_option_v2_definition option_def_gamma = {
    APPNAME"_gamma",
    "Gamma correction",
    NULL,
-   Modifies the gamma level being used.,
+   "Modifies the gamma level being used.",
    NULL,
    NULL,
    {
