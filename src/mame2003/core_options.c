@@ -394,9 +394,9 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
    "20"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_tate_mode = {
+   APPNAME"_tate_mode",
+   "TATE Mode - Rotating display (Restart core)",
    NULL,
    NULL,
    NULL,
@@ -409,19 +409,24 @@ static struct retro_core_option_v2_definition option_def_ = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_vector_resolution = {
+   APPNAME"_vector_resolution",
+   "Vector resolution (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "640x480",   NULL },
+      { "1024x768",  NULL },
+      { "1280x960",  NULL },
+      { "1440x1080", NULL },
+      { "1600x1200", NULL },
+      { "1707x1280", NULL },
+      { "original",  NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "1024x768"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -713,8 +718,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
-  init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],            APPNAME"_vector_beam_width",      "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
