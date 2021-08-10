@@ -429,34 +429,49 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
    "1024x768"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_vector_antialias = {
+   APPNAME"_vector_antialias",
+   "Vector antialiasing",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_vector_beam_width = {
+   APPNAME"_vector_beam_width",
+   "Vector beam width (only with antialiasing)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
-      { NULL, NULL },
+      { "1",   NULL },
+      { "1.2", NULL },
+      { "1.4", NULL },
+      { "1.6", NULL },
+      { "1.8", NULL },
+      { "2",   NULL },
+      { "2.5", NULL },
+      { "3",   NULL },
+      { "4",   NULL },
+      { "5",   NULL },
+      { "6",   NULL },
+      { "7",   NULL },
+      { "8",   NULL },
+      { "9",   NULL },
+      { "10",  NULL },
+      { "11",  NULL },
+      { "12",  NULL },
+      { NULL,  NULL },
    },
-   "disabled"
+   "2"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -718,8 +733,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_BEAM],            APPNAME"_vector_beam_width",      "Vector beam width (only with antialiasing); 2|1|1.2|1.4|1.6|1.8|2.5|3|4|5|6|7|8|9|10|11|12");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_FLICKER],         APPNAME"_vector_flicker",         "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
   init_default(&default_options[OPT_VECTOR_INTENSITY],       APPNAME"_vector_intensity",       "Vector intensity; 1.5|0.5|1|2|2.5|3");
