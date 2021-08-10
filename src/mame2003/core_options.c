@@ -399,7 +399,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
    APPNAME"_tate_mode",
    "TATE Mode",
    NULL,
-   "When enabled, the display will be rotated to the orientation used by the actual hardware.",
+   "When enabled, the display will be rotated to the orientation used by actual hardware.",
    NULL,
    NULL,
    {
