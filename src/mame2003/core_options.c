@@ -1433,17 +1433,15 @@ static void determine_core_options_version(struct retro_core_options_v2 *options
 {
    unsigned version  = 0;
 
-   if (!environ_cb || !categories_supported)
+   if (!environ_cb)
       return;
-
-   *categories_supported = false;
 
    if (!environ_cb(RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION, &version))
       version = 0;
 
    if (version >= 2)
    {
-      *categories_supported = environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
+      environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
             &options_us);
    }
    else
