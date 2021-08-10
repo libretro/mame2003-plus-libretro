@@ -654,9 +654,24 @@ static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
+   APPNAME"_autosave_hiscore",
+   "Autosave hiscore",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "default",     NULL },
+      { "recursively", NULL },
+      { NULL, NULL },
+   },
+   "default"
+};
+
+static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
+   APPNAME"_cheat_input_ports",
+   "Dip switch/Cheat input ports",
    NULL,
    NULL,
    NULL,
@@ -669,34 +684,19 @@ static struct retro_core_option_v2_definition option_def_ = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_machine_timing = {
+   APPNAME"_machine_timing",
+   "Bypass audio skew (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
-};
-
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   {
-      { "disabled", NULL },
-      { "enabled",  NULL },
-      { NULL, NULL },
-   },
-   "disabled"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -763,9 +763,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_AUTOSAVE_HISCORE],       APPNAME"_autosave_hiscore",       "Autosave hiscore; default|recursively");
-  init_default(&default_options[OPT_CHEAT_INPUT_PORTS],      APPNAME"_cheat_input_ports",      "Dip switch/Cheat input ports; disabled|enabled");
-  init_default(&default_options[OPT_MACHINE_TIMING],         APPNAME"_machine_timing",         "Bypass audio skew (Restart core); enabled|disabled");
   init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
   init_default(&default_options[OPT_CPU_CLOCK_SCALE],        APPNAME"_cpu_clock_scale",        "CPU clock scale; default|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|105|110|115|120|125");
 #if (HAS_CYCLONE || HAS_DRZ80)
