@@ -189,7 +189,7 @@ void update_variables(bool first_time);
 enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
   OPT_4WAY = 0,
-  OPT_MOUSE_DEVICE,
+  OPT_XY_DEVICE,
   OPT_CROSSHAIR_ENABLED,
   OPT_SKIP_DISCLAIMER,
   OPT_SKIP_WARNINGS,
