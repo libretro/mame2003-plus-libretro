@@ -1459,7 +1459,7 @@ static void configure_core_options_version(void)
       /* Determine total number of options */
       while (true)
       {
-         if (option_defs_us[num_options].key)
+         if (effective_options[num_options].key)
             num_options++;
          else
             break;
@@ -1471,10 +1471,10 @@ static void configure_core_options_version(void)
          option_v1_defs_us = (struct retro_core_option_definition *)
                calloc(num_options + 1, sizeof(struct retro_core_option_definition));
 
-         /* Copy parameters from option_defs_us array */
+         /* Copy parameters from effective_options array */
          for (i = 0; i < num_options; i++)
          {
-            struct retro_core_option_v2_definition *option_def_us = &option_defs_us[i];
+            struct retro_core_option_v2_definition *option_def_us = &effective_options[i];
             struct retro_core_option_value *option_values         = option_def_us->values;
             struct retro_core_option_definition *option_v1_def_us = &option_v1_defs_us[i];
             struct retro_core_option_value *option_v1_values      = option_v1_def_us->values;
@@ -1507,13 +1507,13 @@ static void configure_core_options_version(void)
          if (!variables || !values_buf)
             goto error;
 
-         /* Copy parameters from option_defs_us array */
+         /* Copy parameters from effective_options array */
          for (i = 0; i < num_options; i++)
          {
-            const char *key                        = option_defs_us[i].key;
-            const char *desc                       = option_defs_us[i].desc;
-            const char *default_value              = option_defs_us[i].default_value;
-            struct retro_core_option_value *values = option_defs_us[i].values;
+            const char *key                        = effective_options[i].key;
+            const char *desc                       = effective_options[i].desc;
+            const char *default_value              = effective_options[i].default_value;
+            struct retro_core_option_value *values = effective_options[i].values;
             size_t buf_len                         = 3;
             size_t default_index                   = 0;
 
