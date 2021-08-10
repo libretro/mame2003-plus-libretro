@@ -537,7 +537,7 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
    APPNAME"_nvram_bootstraps",
    "NVRAM Bootstraps",
    NULL,
-   "Used to automatically initialize games that otherwise require special startup procedures.",
+   "Used to automatically initialize games that otherwise require special startup procedures or configurations.",
    NULL,
    NULL,
    {
