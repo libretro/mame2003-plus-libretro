@@ -282,19 +282,33 @@ static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
    "default"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_neogeo_bios = {
+   APPNAME"_neogeo_bios",
+   "Specify Neo Geo BIOS (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "default",   NULL },
+      { "euro",      NULL },
+      { "euro-s1",   NULL },
+      { "us",        NULL },
+      { "us-e",      NULL },
+      { "asia",      NULL },
+      { "japan",     NULL },
+      { "japan-s2",  NULL },
+      { "unibios40", NULL },
+      { "unibios33", NULL },
+      { "unibios20", NULL },
+      { "unibios13", NULL },
+      { "unibios11", NULL },
+      { "unibios10", NULL },
+      { "debug",     NULL },
+      { "asia-aes",  NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -676,7 +690,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
   init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
   init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
