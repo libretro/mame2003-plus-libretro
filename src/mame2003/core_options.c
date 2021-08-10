@@ -748,44 +748,30 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    "default"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_cyclone_mode = {
+   APPNAME"_cyclone_mode",
+   "Cyclone mode (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "default",            NULL },
+      { "disabled",           NULL },
+      { "Cyclone",            NULL },
+      { "DrZ80",              NULL },
+      { "Cyclone+DrZ80",      NULL },
+      { "DrZ80(snd)",         NULL },
+      { "Cyclone+DrZ80(snd)", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "default"
 };
-
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   {
-      { "disabled", NULL },
-      { "enabled",  NULL },
-      { NULL, NULL },
-   },
-   "disabled"
-};
-
-
 
 void init_core_options(void)
 {
 #if (HAS_CYCLONE || HAS_DRZ80)
-  init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
-  init_default(&default_options[OPT_end], NULL, NULL);
   set_variables();
 }
 
