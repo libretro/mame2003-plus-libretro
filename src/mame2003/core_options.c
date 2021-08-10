@@ -118,7 +118,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
    APPNAME"_skip_warnings",
    "Skip Warnings",
    NULL,
-   NULL,
+   "Displays a warning message to the user when loading content containing known issues with the emulation of the rom.",
    NULL,
    NULL,
    {
