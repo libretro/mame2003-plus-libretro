@@ -346,9 +346,9 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_dialsharexy = {
+   APPNAME"_dialsharexy",
+   "Share 2 player dial controls across one X/Y device",
    NULL,
    NULL,
    NULL,
@@ -361,19 +361,37 @@ static struct retro_core_option_v2_definition option_def_ = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_deadzone = {
+   APPNAME"_deadzone",
+   "Analog deadzone",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "0",  NULL },
+      { "5",  NULL },
+      { "10", NULL },
+      { "15", NULL },
+      { "20", NULL },
+      { "25", NULL },
+      { "30", NULL },
+      { "35", NULL },
+      { "40", NULL },
+      { "45", NULL },
+      { "50", NULL },
+      { "55", NULL },
+      { "60", NULL },
+      { "65", NULL },
+      { "70", NULL },
+      { "75", NULL },
+      { "80", NULL },
+      { "85", NULL },
+      { "90", NULL },
+      { "95", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "20"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -695,8 +713,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],      APPNAME"_vector_resolution",      "Vector resolution (Restart core); 1024x768|640x480|1280x960|1440x1080|1600x1200|1707x1280|original");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],       APPNAME"_vector_antialias",       "Vector antialiasing; enabled|disabled");
