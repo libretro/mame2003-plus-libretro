@@ -873,7 +873,7 @@ static void set_variables(void)
 void update_variables(bool first_time)
 {
   struct retro_led_interface ledintf;
-  struct retro_core_option_v2_definition var;
+  struct retro_variable var;
   int index;
   bool reset_control_descriptions = false;
 
