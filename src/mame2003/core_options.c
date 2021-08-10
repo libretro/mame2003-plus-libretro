@@ -913,7 +913,7 @@ void update_variables(bool first_time)
           }
           break;
 
-        case OPT_MOUSE_DEVICE:
+        case OPT_XY_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
           else if(strcmp(var.value, "mouse") == 0)
