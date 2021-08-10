@@ -771,6 +771,13 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
 static struct retro_core_option_v2_definition option_def_null = 
    { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
 
+
+struct retro_core_options_v2 options_us = {
+   options_us.categories  = NULL; /* currently unused */
+   options_us.definitions = effective_defaults;
+};
+
+
 void init_core_options(void)
 {
   default_options[OPT_4WAY]                      = option_def_four_way_emulation;
@@ -869,7 +876,7 @@ static void set_variables(void)
    effective_options_count++;
   }
 
-  environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
+  environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2, (void*)&options_us);
 
 }
 
