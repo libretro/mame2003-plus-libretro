@@ -773,8 +773,8 @@ static struct retro_core_option_v2_definition option_def_null =
 
 
 struct retro_core_options_v2 options_us = {
-   options_us.categories  = NULL; /* currently unused */
-   options_us.definitions = effective_defaults;
+   NULL, /* currently unused */
+   effective_defaults
 };
 
 
