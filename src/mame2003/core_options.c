@@ -42,7 +42,7 @@ int legacy_flag = -1;
 
 
 /*
- * Note that core options are not presented in order they are initialized here,
+ * Note that core options are not presented in order they are defined here,
  * but rather by their order in the OPT_ enum found in mame2003.h
  */
 
@@ -311,24 +311,29 @@ static struct retro_core_option_v2_definition option_def_neogeo_bios = {
    "default"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_stv_bios = {
+   APPNAME"_stv_bios",
+   "Specify Sega ST-V BIOS (Restart core)",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "default", NULL },
+      { "japan",   NULL },
+      { "japana",  NULL },
+      { "us",      NULL },
+      { "japan_b", NULL },
+      { "taiwan",  NULL },
+      { "europe",  NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "default"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_use_alt_sound = {
+   APPNAME"_use_alt_sound",
+   "Use CD soundtrack (Restart core)",
    NULL,
    NULL,
    NULL,
@@ -690,8 +695,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_STV_BIOS],               APPNAME"_stv_bios",               "Specify Sega ST-V BIOS (Restart core); default|japan|japana|us|japan_b|taiwan|europe");
-  init_default(&default_options[OPT_USE_ALT_SOUND],          APPNAME"_use_alt_sound",          "Use CD soundtrack (Restart core); disabled|enabled");
   init_default(&default_options[OPT_SHARE_DIAL],             APPNAME"_dialsharexy",            "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DEADZONE],               APPNAME"_deadzone",               "Analog deadzone; 20|0|5|10|15|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95");
   init_default(&default_options[OPT_TATE_MODE],              APPNAME"_tate_mode",              "TATE Mode - Rotating display (Restart core); disabled|enabled");
