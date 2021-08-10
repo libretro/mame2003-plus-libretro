@@ -699,34 +699,53 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
+   APPNAME"_digital_joy_centering",
+   "Center joystick axis for digital controls",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
+   APPNAME"_cpu_clock_scale",
+   "CPU clock scale",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "default", NULL },
+      { "25",      NULL },
+      { "30",      NULL },
+      { "35",      NULL },
+      { "40",      NULL },
+      { "45",      NULL },
+      { "50",      NULL },
+      { "55",      NULL },
+      { "60",      NULL },
+      { "65",      NULL },
+      { "70",      NULL },
+      { "75",      NULL },
+      { "80",      NULL },
+      { "85",      NULL },
+      { "90",      NULL },
+      { "95",      NULL },
+      { "105",     NULL },
+      { "110",     NULL },
+      { "115",     NULL },
+      { "120",     NULL },
+      { "125",     NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -763,8 +782,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_DIGITAL_JOY_CENTERING],  APPNAME"_digital_joy_centering",  "Center joystick axis for digital controls; enabled|disabled");
-  init_default(&default_options[OPT_CPU_CLOCK_SCALE],        APPNAME"_cpu_clock_scale",        "CPU clock scale; default|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|105|110|115|120|125");
 #if (HAS_CYCLONE || HAS_DRZ80)
   init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
