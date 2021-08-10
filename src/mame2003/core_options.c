@@ -52,7 +52,7 @@ static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    APPNAME"_four_way_emulation",
    "4-way joystick emulation on 8-way joysticks",
    NULL,
-   NULL,
+   "Improves issues with hitting diagonals when playing 4-way games.",
    NULL,
    NULL,
    {
@@ -67,7 +67,7 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
    APPNAME"_xy_device",
    "X-Y Device",
    NULL,
-   NULL,
+   "Selects a specific x-y coordinates input device to read.",
    NULL,
    NULL,
    {
@@ -88,7 +88,7 @@ static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
    APPNAME"_crosshair_enabled",
    "Show Lightgun crosshairs",
    NULL,
-   NULL,
+   "Displays a generic crosshair for each player.",
    NULL,
    NULL,
    {
@@ -103,7 +103,7 @@ static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
    APPNAME"_skip_disclaimer",
    "Skip Disclaimer",
    NULL,
-   NULL,
+   "Bypasses a copyright warning from being displayed when loading content.",
    NULL,
    NULL,
    {
@@ -118,7 +118,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
    APPNAME"_skip_warnings",
    "Skip Warnings",
    NULL,
-   "Displays a warning message to the user when loading content containing known issues with the emulation of the rom.",
+   "Bypasses a warning message from being displayed when loading content containing known issues.",
    NULL,
    NULL,
    {
@@ -133,7 +133,7 @@ static struct retro_core_option_v2_definition option_def_display_setup = {
    APPNAME"_display_setup",
    "Display MAME menu",
    NULL,
-   NULL,
+   "Toggles the visibility of the internal MAME menu.",
    NULL,
    NULL,
    {
@@ -148,7 +148,7 @@ static struct retro_core_option_v2_definition option_def_brightness = {
    APPNAME"_brightness",
    "Brightness",
    NULL,
-   NULL,
+   "Modifies the brightness level being used.",
    NULL,
    NULL,
    {
@@ -180,7 +180,7 @@ static struct retro_core_option_v2_definition option_def_gamma = {
    APPNAME"_gamma",
    "Gamma correction",
    NULL,
-   NULL,
+   Modifies the gamma level being used.,
    NULL,
    NULL,
    {
@@ -207,9 +207,9 @@ static struct retro_core_option_v2_definition option_def_gamma = {
 
 static struct retro_core_option_v2_definition option_def_display_artwork = {
    APPNAME"_display_artwork",
-   "Display artwork (Restart core)",
+   "Display artwork",
    NULL,
-   NULL,
+   "Restart core required. Used to display custom artwork when available.",
    NULL,
    NULL,
    {
@@ -222,9 +222,9 @@ static struct retro_core_option_v2_definition option_def_display_artwork = {
 
 static struct retro_core_option_v2_definition option_def_art_resolution = {
    APPNAME"_art_resolution",
-   "Artwork resolution multiplier (Restart core)",
+   "Artwork resolution multiplier",
    NULL,
-   NULL,
+   "Restart core required. Increases the artwork resolution by the selected multiplier value.",
    NULL,
    NULL,
    {
@@ -243,9 +243,9 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
 
 static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
    APPNAME"_art_overlay_opacity",
-   "Artwork hardcoded overlay opacity (Restart core)",
+   "Artwork hardcoded overlay opacity",
    NULL,
-   NULL,
+   "Restart core required.",
    NULL,
    NULL,
    {
@@ -285,9 +285,9 @@ static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
 
 static struct retro_core_option_v2_definition option_def_neogeo_bios = {
    APPNAME"_neogeo_bios",
-   "Specify Neo Geo BIOS (Restart core)",
+   "Specify Neo Geo BIOS",
    NULL,
-   NULL,
+   "Restart core required. Select alternative bios files.",
    NULL,
    NULL,
    {
@@ -314,9 +314,9 @@ static struct retro_core_option_v2_definition option_def_neogeo_bios = {
 
 static struct retro_core_option_v2_definition option_def_stv_bios = {
    APPNAME"_stv_bios",
-   "Specify Sega ST-V BIOS (Restart core)",
+   "Specify Sega ST-V BIOS",
    NULL,
-   NULL,
+   "Restart core required. Select alternative bios files.",
    NULL,
    NULL,
    {
@@ -334,9 +334,9 @@ static struct retro_core_option_v2_definition option_def_stv_bios = {
 
 static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    APPNAME"_use_alt_sound",
-   "Use CD soundtrack (Restart core)",
+   "Use CD soundtrack",
    NULL,
-   NULL,
+   "Restart core required. Replaces original hardware sounds with external audio files when available.",
    NULL,
    NULL,
    {
@@ -366,7 +366,7 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
    APPNAME"_deadzone",
    "Analog deadzone",
    NULL,
-   NULL,
+   "Modifies the deadzone travel distance by a set percentage.",
    NULL,
    NULL,
    {
@@ -397,9 +397,9 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
 
 static struct retro_core_option_v2_definition option_def_tate_mode = {
    APPNAME"_tate_mode",
-   "TATE Mode - Rotating display (Restart core)",
+   "TATE Mode",
    NULL,
-   NULL,
+   "When enabled, the display will be rotated to the orientation used by the actual hardware.",
    NULL,
    NULL,
    {
@@ -412,9 +412,9 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
 
 static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
-   "Vector resolution (Restart core)",
+   "Vector resolution",
    NULL,
-   NULL,
+   "Restart core required.",
    NULL,
    NULL,
    {
@@ -447,9 +447,9 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
 
 static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    APPNAME"_vector_beam_width",
-   "Vector beam width (only with antialiasing)",
+   "Vector beam width",
    NULL,
-   NULL,
+   "Only used with antialiasing.",
    NULL,
    NULL,
    {
@@ -537,7 +537,7 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
    APPNAME"_nvram_bootstraps",
    "NVRAM Bootstraps",
    NULL,
-   NULL,
+   "Used to automatically initialize games that otherwise require special startup procedures.",
    NULL,
    NULL,
    {
@@ -571,7 +571,7 @@ static struct retro_core_option_v2_definition option_def_input_interface = {
    APPNAME"_input_interface",
    "Input interface",
    NULL,
-   NULL,
+   "Configures which input types are being read.",
    NULL,
    NULL,
    {
@@ -585,9 +585,9 @@ static struct retro_core_option_v2_definition option_def_input_interface = {
 
 static struct retro_core_option_v2_definition option_def_mame_remapping = {
    APPNAME"_mame_remapping",
-   "Legacy Remapping (Restart core)",
+   "Legacy Remapping",
    NULL,
-   NULL,
+   "Restart core required. Enables MAME menu input remapping.",
    NULL,
    NULL,
    {
@@ -602,7 +602,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
    APPNAME"_frameskip",
    "Frameskip",
    NULL,
-   NULL,
+   "Skips a number of frames from being displayed. Can be used to squeeze performance out of lower spec platforms.",
    NULL,
    NULL,
    {
@@ -659,7 +659,7 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
    APPNAME"_autosave_hiscore",
    "Autosave hiscore",
    NULL,
-   NULL,
+   "Recommend to use default which will save the hiscore when closing content. Recursively saves repeatedly the entire time during gameplay.",
    NULL,
    NULL,
    {
@@ -687,9 +687,9 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
 
 static struct retro_core_option_v2_definition option_def_machine_timing = {
    APPNAME"_machine_timing",
-   "Bypass audio skew (Restart core)",
+   "Bypass audio skew",
    NULL,
-   NULL,
+   "Restart core required.",
    NULL,
    NULL,
    {
@@ -704,7 +704,7 @@ static struct retro_core_option_v2_definition option_def_digital_joy_centering =
    APPNAME"_digital_joy_centering",
    "Center joystick axis for digital controls",
    NULL,
-   NULL,
+   "Emulates the center position of an analog joystick when using digital controls. Automatically returns the center position when no direction is being applied.",
    NULL,
    NULL,
    {
@@ -719,7 +719,7 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    APPNAME"_cpu_clock_scale",
    "CPU clock scale",
    NULL,
-   NULL,
+   "Used to under or over clock the emulated CPU by a specified percentage.",
    NULL,
    NULL,
    {
@@ -751,9 +751,9 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
 
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
-   "Cyclone mode (Restart core)",
+   "Cyclone mode",
    NULL,
-   NULL,
+   "Restart core required. Forces the selected cyclone mode to be used when available to the platform.",
    NULL,
    NULL,
    {
