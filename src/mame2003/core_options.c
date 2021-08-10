@@ -11,7 +11,7 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-static struct retro_variable  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 
 
 /******************************************************************************
@@ -20,7 +20,6 @@ static struct retro_variable  default_options[OPT_end + 1];    /* need the plus 
 
 ******************************************************************************/
 
-static void   init_default(struct retro_variable *option, const char *key, const char *value);
 static void   set_variables(void);
 
 
@@ -46,21 +45,604 @@ int legacy_flag = -1;
  * Note that core options are not presented in order they are initialized here,
  * but rather by their order in the OPT_ enum found in mame2003.h
  */
+
+
+static struct retro_core_option_v2_definition option_def_4way = {
+   APPNAME"_four_way_emulation",
+   "4-way joystick emulation on 8-way joysticks",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_xy_device = {
+   APPNAME"_xy_device",
+   "X-Y Device",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "mouse",    NULL },
+      { "pointer",  NULL },
+      { "lightgun", NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+#if defined(__IOS__)
+   "pointer"
+#else
+   "mouse"
+#endif
+};
+
+static struct retro_core_option_v2_definition option_def_crosshair = {
+   APPNAME"_crosshair_enabled",
+   "Show Lightgun crosshairs",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
+static struct retro_core_option_v2_definition option_def_disclaimer = {
+   APPNAME"_skip_disclaimer,
+   "Skip Disclaimer",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_warnings = {
+   APPNAME"_skip_warnings",
+   "Skip Warnings",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_display_setup = {
+   APPNAME"_display_setup",
+   "Display MAME menu",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_brightness = {
+   APPNAME"_brightness",
+   "Brightness",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "0.2", NULL },
+      { "0.3", NULL },
+      { "0.4", NULL },
+      { "0.5", NULL },
+      { "0.6", NULL },
+      { "0.7", NULL },
+      { "0.8", NULL },
+      { "0.9", NULL },
+      { "1.0", NULL },
+      { "1.1", NULL },
+      { "1.2", NULL },
+      { "1.3", NULL },
+      { "1.4", NULL },
+      { "1.5", NULL },
+      { "1.6", NULL },
+      { "1.7", NULL },
+      { "1.8", NULL },
+      { "1.9", NULL },
+      { "2.0", NULL },
+      { NULL, NULL },
+   },
+   "1.0"
+};
+
+static struct retro_core_option_v2_definition option_def_gamma = {
+   APPNAME"_gamma",
+   "Gamma correction",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "0.5", NULL },
+      { "0.6", NULL },
+      { "0.7", NULL },
+      { "0.8", NULL },
+      { "0.9", NULL },
+      { "1.0", NULL },
+      { "1.1", NULL },
+      { "1.2", NULL },
+      { "1.3", NULL },
+      { "1.4", NULL },
+      { "1.5", NULL },
+      { "1.6", NULL },
+      { "1.7", NULL },
+      { "1.8", NULL },
+      { "1.9", NULL },
+      { "2.0", NULL },
+      { NULL, NULL },
+   },
+   "1.0"
+};
+
+static struct retro_core_option_v2_definition option_def_display_artwork = {
+   APPNAME"_display_artwork",
+   "Display artwork (Restart core)",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_ = {
+   APPNAME,
+   "",
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+
+
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_4WAY],                   APPNAME"_four_way_emulation",     "4-way joystick emulation on 8-way joysticks; disabled|enabled");
-#if defined(__IOS__)
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; pointer|mouse|lightgun|disabled");
-#else
-  init_default(&default_options[OPT_MOUSE_DEVICE],           APPNAME"_mouse_device",           "X-Y Device; mouse|pointer|lightgun|disabled");
-#endif
-  init_default(&default_options[OPT_CROSSHAIR_ENABLED],      APPNAME"_crosshair_enabled",      "Show Lightgun crosshairs; enabled|disabled");
-  init_default(&default_options[OPT_SKIP_DISCLAIMER],        APPNAME"_skip_disclaimer",        "Skip Disclaimer; disabled|enabled");
-  init_default(&default_options[OPT_SKIP_WARNINGS],          APPNAME"_skip_warnings",          "Skip Warnings; disabled|enabled");
-  init_default(&default_options[OPT_DISPLAY_SETUP],          APPNAME"_display_setup",          "Display MAME menu; disabled|enabled");
-  init_default(&default_options[OPT_BRIGHTNESS],             APPNAME"_brightness",             "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_GAMMA],                  APPNAME"_gamma",                  "Gamma correction; 1.0|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
-  init_default(&default_options[OPT_ARTWORK],                APPNAME"_display_artwork",        "Display artwork (Restart core); enabled|disabled");
   init_default(&default_options[OPT_ART_RESOLUTION],         APPNAME"_art_resolution",         "Artwork resolution multiplier (Restart core); 1|2|3|4|5|6|7|8");
   init_default(&default_options[OPT_ART_OVERLAY_OPACITY],    APPNAME"_art_overlay_opacity",    "Artwork hardcoded overlay opacity (Restart core); default|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|50|70");
   init_default(&default_options[OPT_NEOGEO_BIOS],            APPNAME"_neogeo_bios",            "Specify Neo Geo BIOS (Restart core); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios40|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
@@ -96,7 +678,7 @@ void init_core_options(void)
 
 static void set_variables(void)
 {
-  static struct retro_variable  effective_defaults[OPT_end + 1];
+  static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
   int option_index   = 0;
 
@@ -152,16 +734,10 @@ static void set_variables(void)
 
 }
 
-static void init_default(struct retro_variable *def, const char *key, const char *value)
-{
-  def->key = key;
-  def->value = value;
-}
-
 void update_variables(bool first_time)
 {
   struct retro_led_interface ledintf;
-  struct retro_variable var;
+  struct retro_core_option_v2_definition var;
   int index;
   bool reset_control_descriptions = false;
 
