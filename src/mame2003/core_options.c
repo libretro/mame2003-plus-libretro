@@ -597,16 +597,28 @@ static struct retro_core_option_v2_definition option_def_mame_remapping = {
    "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_frameskip = {
+   APPNAME"_frameskip",
+   "Frameskip",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "disabled",        NULL },
+      { "1",               NULL },
+      { "2",               NULL },
+      { "3",               NULL },
+      { "4",               NULL },
+      { "5",               NULL },
+      { "6",               NULL },
+      { "7",               NULL },
+      { "9",               NULL },
+      { "10",              NULL },
+      { "11",              NULL },
+      { "auto",            NULL },
+      { "auto_aggressive", NULL },
+      { "auto_max",        NULL },
       { NULL, NULL },
    },
    "disabled"
@@ -751,7 +763,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_FRAMESKIP],              APPNAME"_frameskip",              "Frameskip; disabled|1|2|3|4|5|6|7|9|10|11|auto|auto_aggressive|auto_max");
   init_default(&default_options[OPT_CORE_SYS_SUBFOLDER],     APPNAME"_core_sys_subfolder",     "Locate system files within a subfolder; enabled|disabled"); /* This should be probably handled by the frontend and not by cores per discussions in Fall 2018 but RetroArch for example doesn't provide this as an option. */
   init_default(&default_options[OPT_CORE_SAVE_SUBFOLDER],    APPNAME"_core_save_subfolder",    "Locate save files within a subfolder; enabled|disabled"); /* This is already available as an option in RetroArch although it is left enabled by default as of November 2018 for consistency with past practice. At least for now.*/
   init_default(&default_options[OPT_AUTOSAVE_HISCORE],       APPNAME"_autosave_hiscore",       "Autosave hiscore; default|recursively");
