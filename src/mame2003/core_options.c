@@ -12,6 +12,8 @@
 #include <string/stdstring.h>
 
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
+
 
 
 /******************************************************************************
@@ -824,7 +826,6 @@ void init_core_options(void)
 
 static void set_variables(void)
 {
-  static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
   int option_index   = 0;
 
