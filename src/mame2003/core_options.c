@@ -11,8 +11,7 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-static struct retro_variable          default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable          current_options[OPT_end + 1];
+static struct retro_variable  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 
 
 /******************************************************************************
@@ -22,8 +21,7 @@ static struct retro_variable          current_options[OPT_end + 1];
 ******************************************************************************/
 
 static void   init_default(struct retro_variable *option, const char *key, const char *value);
-static void   set_variables(bool first_time);
-static struct retro_variable *spawn_effective_option(int option_index);
+static void   set_variables(void);
 
 
 /******************************************************************************
@@ -93,10 +91,10 @@ void init_core_options(void)
   init_default(&default_options[OPT_CYCLONE_MODE],           APPNAME"_cyclone_mode",           "Cyclone mode (Restart core); default|disabled|Cyclone|DrZ80|Cyclone+DrZ80|DrZ80(snd)|Cyclone+DrZ80(snd)");
 #endif
   init_default(&default_options[OPT_end], NULL, NULL);
-  set_variables(true);
+  set_variables();
 }
 
-static void set_variables(bool first_time)
+static void set_variables(void)
 {
   static struct retro_variable  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
@@ -146,34 +144,12 @@ static void set_variables(bool first_time)
 
 
    }
-   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_option(option_index);
+   effective_defaults[effective_options_count] = default_options[option_index];
    effective_options_count++;
   }
 
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
 
-}
-
-static struct retro_variable *spawn_effective_option(int option_index)
-{
-  static struct retro_variable *encoded_option = NULL;
-
-  /* implementing this function will allow the core to change a core option within the core and then report that that change to the frontend
-   * currently core options only flow one way: from the frontend to mame2003-plus
-   *
-   * search for the string "; " as the delimiter between the option display name and the values
-   * stringify the current value for this option
-   * see if the current option string is already listed first in the original default --
-   *    if the current selected option is not in the original defaults string at all
-   *      log an error message and bail. that shouldn't be possible.
-   *    is the currently selected option the first in the default pipe-delimited list?
-   *      if so, just return default_options[option_index]
-   *    else
-   *       create a copy of default_options[option_index].value.
-   *       First add the stringified current option as the first in the pipe-delimited list for this copied string
-   *       then remove the option from wherever it was originally in the defaults string
-   */
-  return encoded_option;
 }
 
 static void init_default(struct retro_variable *def, const char *key, const char *value)
@@ -195,8 +171,6 @@ void update_variables(bool first_time)
     var.key = default_options[index].key;
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value)) /* the frontend sends a value for this core option */
     {
-      current_options[index].value = var.value; /* keep the state of core options matched with the frontend */
-
       switch(index)
       {
         case OPT_INPUT_INTERFACE:
