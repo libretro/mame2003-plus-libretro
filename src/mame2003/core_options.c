@@ -474,34 +474,43 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    "2"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_vector_translucency = {
+   APPNAME"_vector_translucency",
+   "Vector translucency",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
       { "enabled",  NULL },
+      { "disabled", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "enabled"
 };
 
-static struct retro_core_option_v2_definition option_def_ = {
-   APPNAME,
-   "",
+static struct retro_core_option_v2_definition option_def_vector_flicker = {
+   APPNAME"_vector_flicker",
+   "Vector flicker",
    NULL,
    NULL,
    NULL,
    NULL,
    {
-      { "disabled", NULL },
-      { "enabled",  NULL },
+      { "0",   NULL },
+      { "10",  NULL },
+      { "20",  NULL },
+      { "30",  NULL },
+      { "40",  NULL },
+      { "50",  NULL },
+      { "60",  NULL },
+      { "70",  NULL },
+      { "80",  NULL },
+      { "90",  NULL },
+      { "100", NULL },
       { NULL, NULL },
    },
-   "disabled"
+   "20"
 };
 
 static struct retro_core_option_v2_definition option_def_ = {
@@ -733,8 +742,6 @@ static struct retro_core_option_v2_definition option_def_ = {
 
 void init_core_options(void)
 {
-  init_default(&default_options[OPT_VECTOR_TRANSLUCENCY],    APPNAME"_vector_translucency",    "Vector translucency; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_FLICKER],         APPNAME"_vector_flicker",         "Vector flicker; 20|0|10|30|40|50|60|70|80|90|100");
   init_default(&default_options[OPT_VECTOR_INTENSITY],       APPNAME"_vector_intensity",       "Vector intensity; 1.5|0.5|1|2|2.5|3");
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],        APPNAME"_nvram_bootstraps",       "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],            APPNAME"_sample_rate",            "Sample Rate (KHz); 48000|8000|11025|22050|30000|44100|");
