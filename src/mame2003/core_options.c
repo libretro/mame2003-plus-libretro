@@ -54,7 +54,7 @@ static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    NULL,
    "Improves issues with hitting diagonals when playing 4-way games.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -69,7 +69,7 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
    NULL,
    "Selects a specific x-y coordinates input device to read.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "mouse",    NULL },
       { "pointer",  NULL },
@@ -86,11 +86,11 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
 
 static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
    APPNAME"_crosshair_enabled",
-   "Show Lightgun crosshairs",
+   "Show Lightgun Crosshairs",
    NULL,
    "Displays a generic crosshair for each player.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -105,7 +105,7 @@ static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
    NULL,
    "Bypasses a copyright warning from being displayed when loading content.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -120,7 +120,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
    NULL,
    "Bypasses a warning message from being displayed when loading content containing known issues.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -135,7 +135,7 @@ static struct retro_core_option_v2_definition option_def_display_setup = {
    NULL,
    "Toggles the visibility of the internal MAME menu.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -150,7 +150,7 @@ static struct retro_core_option_v2_definition option_def_brightness = {
    NULL,
    "Modifies the brightness level being used.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "0.2", NULL },
       { "0.3", NULL },
@@ -182,7 +182,7 @@ static struct retro_core_option_v2_definition option_def_gamma = {
    NULL,
    "Modifies the gamma level being used.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "0.5", NULL },
       { "0.6", NULL },
@@ -207,11 +207,11 @@ static struct retro_core_option_v2_definition option_def_gamma = {
 
 static struct retro_core_option_v2_definition option_def_display_artwork = {
    APPNAME"_display_artwork",
-   "Display artwork",
+   "Display Artwork",
    NULL,
    "Restart core required. Used to display custom artwork when available.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -222,11 +222,11 @@ static struct retro_core_option_v2_definition option_def_display_artwork = {
 
 static struct retro_core_option_v2_definition option_def_art_resolution = {
    APPNAME"_art_resolution",
-   "Artwork resolution multiplier",
-   NULL,
+   "Artwork Resolution Multiplier",
+   "Resolution Multiplier",
    "Restart core required. Increases the artwork resolution by the selected multiplier value.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "1",  NULL },
       { "2",  NULL },
@@ -243,11 +243,11 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
 
 static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
    APPNAME"_art_overlay_opacity",
-   "Artwork hardcoded overlay opacity",
-   NULL,
+   "Artwork Hardcoded Overlay Opacity",
+   "Hardcoded Overlay Opacity",
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "default", NULL },
       { "0",       NULL },
@@ -338,7 +338,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    NULL,
    "Restart core required. Replaces original hardware sounds with external audio files when available.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -353,7 +353,7 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -364,11 +364,11 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
 
 static struct retro_core_option_v2_definition option_def_deadzone = {
    APPNAME"_deadzone",
-   "Analog deadzone",
+   "Analog Deadzone",
    NULL,
    "Modifies the deadzone travel distance by a set percentage.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "0",   "0%" },
       { "5",   "5%" },
@@ -401,7 +401,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
    NULL,
    "When enabled, the display will be rotated to the orientation used by actual hardware.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -539,7 +539,7 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
    NULL,
    "Used to automatically initialize games that otherwise require special startup procedures or configurations.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -554,7 +554,7 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    NULL,
    "Number of samples taken per second. Higher rates provide better quality audio.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "8000",   "8000 KHz" },
       { "11025", "11025 KHz" },
@@ -569,11 +569,11 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
 
 static struct retro_core_option_v2_definition option_def_input_interface = {
    APPNAME"_input_interface",
-   "Input interface",
+   "Input Interface",
    NULL,
    "Configures which input types are being read.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "simultaneous", NULL },
       { "retropad",     NULL },
@@ -589,7 +589,7 @@ static struct retro_core_option_v2_definition option_def_mame_remapping = {
    NULL,
    "Restart core required. Enables MAME menu input remapping.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -604,7 +604,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
    NULL,
    "Skips a number of frames from being displayed. Can be used to squeeze performance out of lower spec platforms.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "disabled",        NULL },
       { "1",               NULL },
@@ -631,7 +631,7 @@ static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -646,7 +646,7 @@ static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -657,11 +657,11 @@ static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
 
 static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
    APPNAME"_autosave_hiscore",
-   "Autosave hiscore",
+   "Autosave Hiscore",
    NULL,
    "Recommended to use default which will save the hiscore when closing content. Recursively will save repeatedly the entire time during gameplay.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "default",     NULL },
       { "recursively", NULL },
@@ -676,7 +676,7 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -691,7 +691,7 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
    NULL,
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -706,7 +706,7 @@ static struct retro_core_option_v2_definition option_def_digital_joy_centering =
    NULL,
    "Emulates the center position of an analog joystick when using digital controls. Automatically returns the center position when no direction is being applied.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -774,6 +774,31 @@ static struct retro_core_option_v2_definition option_def_null =
 
 
 struct retro_core_option_v2_category option_cats_us[] = {
+   {
+      "cat_key_system",
+      "System Settings",
+      "Configure system options."
+   },
+   {
+      "cat_key_audio",
+      "Audio Settings",
+      "Configure audio options."
+   },
+   {
+      "cat_key_video",
+      "Video Settings",
+      "Configure video options."
+   },
+   {
+      "cat_key_input",
+      "Input Settings",
+      "Configure input options."
+   },
+   {
+      "cat_key_artwork",
+      "Artwork Settings",
+      "Configure artwork options."
+   },
    {
       "cat_key_vector",
       "Vector Settings",
