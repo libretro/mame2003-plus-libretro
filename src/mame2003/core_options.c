@@ -1451,7 +1451,7 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
    if (version >= 2)
    {
       environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
-            &effective_options_us);
+            effective_options_us);
    }
    else
    {
