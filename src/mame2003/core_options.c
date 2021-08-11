@@ -50,7 +50,7 @@ extern retro_set_led_state_t led_state_cb;
 
 static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    APPNAME"_four_way_emulation",
-   "4-way joystick emulation on 8-way joysticks",
+   "4-Way Joystick Emulation on 8-Way Joysticks",
    NULL,
    "Improves issues with hitting diagonals when playing 4-way games.",
    NULL,
@@ -349,7 +349,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
 
 static struct retro_core_option_v2_definition option_def_dialsharexy = {
    APPNAME"_dialsharexy",
-   "Share 2 player dial controls across one X/Y device",
+   "Share 2 Player Dial Controls Across One X/Y Device",
    NULL,
    NULL,
    NULL,
@@ -627,7 +627,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
 
 static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
    APPNAME"_core_sys_subfolder",
-   "Locate system files within a subfolder",
+   "Locate System Files Within a Subfolder",
    NULL,
    NULL,
    NULL,
@@ -642,7 +642,7 @@ static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
 
 static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
    APPNAME"_core_save_subfolder",
-   "Locate save files within a subfolder",
+   "Locate Save Files Within a Subfolder",
    NULL,
    NULL,
    NULL,
@@ -672,7 +672,7 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
 
 static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    APPNAME"_cheat_input_ports",
-   "Dip switch/Cheat input ports",
+   "Dip Switch/Cheat Input Ports",
    NULL,
    NULL,
    NULL,
@@ -702,7 +702,7 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
 
 static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
    APPNAME"_digital_joy_centering",
-   "Center joystick axis for digital controls",
+   "Center Joystick Axis for Digital Controls",
    NULL,
    "Emulates the center position of an analog joystick when using digital controls. Automatically returns the center position when no direction is being applied.",
    NULL,
