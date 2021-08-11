@@ -150,7 +150,7 @@ static struct retro_core_option_v2_definition option_def_brightness = {
    NULL,
    "Modifies the brightness level being used.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "0.2", NULL },
       { "0.3", NULL },
@@ -182,7 +182,7 @@ static struct retro_core_option_v2_definition option_def_gamma = {
    NULL,
    "Modifies the gamma level being used.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "0.5", NULL },
       { "0.6", NULL },
@@ -338,7 +338,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    NULL,
    "Restart core required. Replaces original hardware sounds with external audio files when available.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -401,7 +401,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
    NULL,
    "When enabled, the display will be rotated to the orientation used by actual hardware.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -554,7 +554,7 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    NULL,
    "Number of samples taken per second. Higher rates provide better quality audio.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "8000",   "8000 KHz" },
       { "11025", "11025 KHz" },
@@ -604,7 +604,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
    NULL,
    "Skips a number of frames from being displayed. Can be used to squeeze performance out of lower spec platforms.",
    NULL,
-   NULL,
+   "cat_key_video",
    {
       { "disabled",        NULL },
       { "1",               NULL },
@@ -691,7 +691,7 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
    NULL,
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_audio",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -778,6 +778,16 @@ struct retro_core_option_v2_category option_cats_us[] = {
       "cat_key_system",
       "System Settings",
       "Configure system options."
+   },
+   {
+      "cat_key_audio",
+      "Audio Settings",
+      "Configure audio options."
+   },
+   {
+      "cat_key_video",
+      "Video Settings",
+      "Configure video options."
    },
    {
       "cat_key_vector",
