@@ -776,32 +776,32 @@ static struct retro_core_option_v2_definition option_def_null =
 struct retro_core_option_v2_category option_cats_us[] = {
    {
       "cat_key_system",
-      "System Settings",
+      "System",
       "Configure system options."
    },
    {
       "cat_key_audio",
-      "Audio Settings",
+      "Audio",
       "Configure audio options."
    },
    {
       "cat_key_video",
-      "Video Settings",
+      "Video",
       "Configure video options."
    },
    {
       "cat_key_input",
-      "Input Settings",
+      "Input",
       "Configure input options."
    },
    {
       "cat_key_artwork",
-      "Artwork Settings",
+      "Artwork",
       "Configure artwork options."
    },
    {
       "cat_key_vector",
-      "Vector Settings",
+      "Vector",
       "Configure vector options."
    },
    { NULL, NULL, NULL },
