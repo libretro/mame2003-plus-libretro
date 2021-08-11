@@ -50,7 +50,7 @@ extern retro_set_led_state_t led_state_cb;
 
 static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    APPNAME"_four_way_emulation",
-   "4-way joystick emulation on 8-way joysticks",
+   "4-Way Joystick Emulation on 8-Way Joysticks",
    NULL,
    "Improves issues with hitting diagonals when playing 4-way games.",
    NULL,
@@ -131,7 +131,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
 
 static struct retro_core_option_v2_definition option_def_display_setup = {
    APPNAME"_display_setup",
-   "Display MAME menu",
+   "Display MAME Menu",
    NULL,
    "Toggles the visibility of the internal MAME menu.",
    NULL,
@@ -178,7 +178,7 @@ static struct retro_core_option_v2_definition option_def_brightness = {
 
 static struct retro_core_option_v2_definition option_def_gamma = {
    APPNAME"_gamma",
-   "Gamma correction",
+   "Gamma Correction",
    NULL,
    "Modifies the gamma level being used.",
    NULL,
@@ -334,7 +334,7 @@ static struct retro_core_option_v2_definition option_def_stv_bios = {
 
 static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    APPNAME"_use_alt_sound",
-   "Use CD soundtrack",
+   "Use CD Soundtrack",
    NULL,
    "Restart core required. Replaces original hardware sounds with external audio files when available.",
    NULL,
@@ -349,7 +349,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
 
 static struct retro_core_option_v2_definition option_def_dialsharexy = {
    APPNAME"_dialsharexy",
-   "Share 2 player dial controls across one X/Y device",
+   "Share 2 Player Dial Controls Across One X/Y Device",
    NULL,
    NULL,
    NULL,
@@ -412,7 +412,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
 
 static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
-   "Vector resolution",
+   "Vector Resolution",
    "Resolution",
    "Restart core required.",
    NULL,
@@ -432,7 +432,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
 
 static struct retro_core_option_v2_definition option_def_vector_antialias = {
    APPNAME"_vector_antialias",
-   "Vector antialiasing",
+   "Vector Antialiasing",
    "Antialiasing",
    NULL,
    NULL,
@@ -447,8 +447,8 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
 
 static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    APPNAME"_vector_beam_width",
-   "Vector beam width",
-   "Beam width",
+   "Vector Beam Width",
+   "Beam Width",
    "Only used with antialiasing.",
    NULL,
    "cat_key_vector",
@@ -477,7 +477,7 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
 
 static struct retro_core_option_v2_definition option_def_vector_translucency = {
    APPNAME"_vector_translucency",
-   "Vector translucency",
+   "Vector Translucency",
    "Translucency",
    NULL,
    NULL,
@@ -492,7 +492,7 @@ static struct retro_core_option_v2_definition option_def_vector_translucency = {
 
 static struct retro_core_option_v2_definition option_def_vector_flicker = {
    APPNAME"_vector_flicker",
-   "Vector flicker",
+   "Vector Flicker",
    "Flicker",
    NULL,
    NULL,
@@ -516,7 +516,7 @@ static struct retro_core_option_v2_definition option_def_vector_flicker = {
 
 static struct retro_core_option_v2_definition option_def_vector_intensity = {
    APPNAME"_vector_intensity",
-   "Vector intensity",
+   "Vector Intensity",
    "Intensity",
    NULL,
    NULL,
@@ -627,7 +627,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
 
 static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
    APPNAME"_core_sys_subfolder",
-   "Locate system files within a subfolder",
+   "Locate System Files Within a Subfolder",
    NULL,
    NULL,
    NULL,
@@ -642,7 +642,7 @@ static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
 
 static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
    APPNAME"_core_save_subfolder",
-   "Locate save files within a subfolder",
+   "Locate Save Files Within a Subfolder",
    NULL,
    NULL,
    NULL,
@@ -672,7 +672,7 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
 
 static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    APPNAME"_cheat_input_ports",
-   "Dip switch/Cheat input ports",
+   "Dip Switch/Cheat Input Ports",
    NULL,
    NULL,
    NULL,
@@ -687,7 +687,7 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
 
 static struct retro_core_option_v2_definition option_def_machine_timing = {
    APPNAME"_machine_timing",
-   "Bypass audio skew",
+   "Bypass Audio Skew",
    NULL,
    "Restart core required.",
    NULL,
@@ -702,7 +702,7 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
 
 static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
    APPNAME"_digital_joy_centering",
-   "Center joystick axis for digital controls",
+   "Center Joystick Axis for Digital Controls",
    NULL,
    "Emulates the center position of an analog joystick when using digital controls. Automatically returns the center position when no direction is being applied.",
    NULL,
@@ -717,7 +717,7 @@ static struct retro_core_option_v2_definition option_def_digital_joy_centering =
 
 static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    APPNAME"_cpu_clock_scale",
-   "CPU clock scale",
+   "CPU Clock Scale",
    NULL,
    "Used to under or over clock the emulated CPU by a specified percentage.",
    NULL,
@@ -751,7 +751,7 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
 
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
-   "Cyclone mode",
+   "Cyclone Mode",
    NULL,
    "Restart core required. Forces the selected cyclone mode to be used.",
    NULL,
