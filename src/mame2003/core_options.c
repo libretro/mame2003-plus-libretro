@@ -24,7 +24,7 @@ int legacy_flag = -1;
 ******************************************************************************/
 
 static void   set_variables(void);
-static void   determine_core_options_version(struct retro_core_options_v2 *effective_options_us);
+static void   determine_core_options_version(struct retro_core_options_v2 *core_options_us);
 
 
 /******************************************************************************
