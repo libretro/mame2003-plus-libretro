@@ -24,7 +24,7 @@ int legacy_flag = -1;
 ******************************************************************************/
 
 static void   set_variables(void);
-static void   determine_core_options_version(struct retro_core_options_v2 *options_us);
+static void   determine_core_options_version(struct retro_core_options_v2 *effective_options_us);
 
 
 /******************************************************************************
@@ -1438,7 +1438,7 @@ void set_content_flags(void)
 }
 
 
-static void determine_core_options_version(struct retro_core_options_v2 *options_us)
+static void determine_core_options_version(struct retro_core_options_v2 *effective_options_us)
 {
    unsigned version  = 0;
 
@@ -1451,7 +1451,7 @@ static void determine_core_options_version(struct retro_core_options_v2 *options
    if (version >= 2)
    {
       environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
-            &options_us);
+            &effective_options_us);
    }
    else
    {
