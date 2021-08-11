@@ -370,26 +370,26 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
    NULL,
    NULL,
    {
-      { "0",  NULL },
-      { "5",  NULL },
-      { "10", NULL },
-      { "15", NULL },
-      { "20", NULL },
-      { "25", NULL },
-      { "30", NULL },
-      { "35", NULL },
-      { "40", NULL },
-      { "45", NULL },
-      { "50", NULL },
-      { "55", NULL },
-      { "60", NULL },
-      { "65", NULL },
-      { "70", NULL },
-      { "75", NULL },
-      { "80", NULL },
-      { "85", NULL },
-      { "90", NULL },
-      { "95", NULL },
+      { "0",   "0%" },
+      { "5",   "5%" },
+      { "10", "10%" },
+      { "15", "15%" },
+      { "20", "20%" },
+      { "25", "25%" },
+      { "30", "30%" },
+      { "35", "35%" },
+      { "40", "40%" },
+      { "45", "45%" },
+      { "50", "50%" },
+      { "55", "55%" },
+      { "60", "60%" },
+      { "65", "65%" },
+      { "70", "70%" },
+      { "75", "75%" },
+      { "80", "80%" },
+      { "85", "85%" },
+      { "90", "90%" },
+      { "95", "95%" },
       { NULL, NULL },
    },
    "20"
@@ -413,10 +413,10 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
 static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
    "Vector resolution",
-   NULL,
+   "Resolution",
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "640x480",   NULL },
       { "1024x768",  NULL },
@@ -433,10 +433,10 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
 static struct retro_core_option_v2_definition option_def_vector_antialias = {
    APPNAME"_vector_antialias",
    "Vector antialiasing",
+   "Antialiasing",
    NULL,
    NULL,
-   NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -448,10 +448,10 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
 static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    APPNAME"_vector_beam_width",
    "Vector beam width",
-   NULL,
+   "Beam width",
    "Only used with antialiasing.",
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "1",   NULL },
       { "1.2", NULL },
@@ -478,10 +478,10 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
 static struct retro_core_option_v2_definition option_def_vector_translucency = {
    APPNAME"_vector_translucency",
    "Vector translucency",
+   "Translucency",
    NULL,
    NULL,
-   NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -493,10 +493,10 @@ static struct retro_core_option_v2_definition option_def_vector_translucency = {
 static struct retro_core_option_v2_definition option_def_vector_flicker = {
    APPNAME"_vector_flicker",
    "Vector flicker",
+   "Flicker",
    NULL,
    NULL,
-   NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "0",   NULL },
       { "10",  NULL },
@@ -517,10 +517,10 @@ static struct retro_core_option_v2_definition option_def_vector_flicker = {
 static struct retro_core_option_v2_definition option_def_vector_intensity = {
    APPNAME"_vector_intensity",
    "Vector intensity",
+   "Intensity",
    NULL,
    NULL,
-   NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "0.5", NULL },
       { "1",   NULL },
@@ -550,18 +550,18 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
 
 static struct retro_core_option_v2_definition option_def_sample_rate = {
    APPNAME"_sample_rate",
-   "Sample Rate (KHz)",
+   "Sample Rate",
    NULL,
-   NULL,
+   "Number of samples taken per second. Higher rates provide better quality audio.",
    NULL,
    NULL,
    {
-      { "8000",  NULL },
-      { "11025", NULL },
-      { "22050", NULL },
-      { "30000", NULL },
-      { "44100", NULL },
-      { "48000", NULL },
+      { "8000",   "8000 KHz" },
+      { "11025", "11025 KHz" },
+      { "22050", "22050 KHz" },
+      { "30000", "30000 KHz" },
+      { "44100", "44100 KHz" },
+      { "48000", "48000 KHz" },
       { NULL, NULL },
    },
    "48000"
@@ -618,8 +618,8 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
       { "10",              NULL },
       { "11",              NULL },
       { "auto",            NULL },
-      { "auto_aggressive", NULL },
-      { "auto_max",        NULL },
+      { "auto_aggressive", "auto aggressive" },
+      { "auto_max",        "auto max"        },
       { NULL, NULL },
    },
    "disabled"
@@ -724,26 +724,26 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    NULL,
    {
       { "default", NULL },
-      { "25",      NULL },
-      { "30",      NULL },
-      { "35",      NULL },
-      { "40",      NULL },
-      { "45",      NULL },
-      { "50",      NULL },
-      { "55",      NULL },
-      { "60",      NULL },
-      { "65",      NULL },
-      { "70",      NULL },
-      { "75",      NULL },
-      { "80",      NULL },
-      { "85",      NULL },
-      { "90",      NULL },
-      { "95",      NULL },
-      { "105",     NULL },
-      { "110",     NULL },
-      { "115",     NULL },
-      { "120",     NULL },
-      { "125",     NULL },
+      { "25",     "25%" },
+      { "30",     "30%" },
+      { "35",     "35%" },
+      { "40",     "40%" },
+      { "45",     "45%" },
+      { "50",     "50%" },
+      { "55",     "55%" },
+      { "60",     "60%" },
+      { "65",     "65%" },
+      { "70",     "70%" },
+      { "75",     "75%" },
+      { "80",     "80%" },
+      { "85",     "85%" },
+      { "90",     "90%" },
+      { "95",     "95%" },
+      { "105",   "105%" },
+      { "110",   "110%" },
+      { "115",   "115%" },
+      { "120",   "120%" },
+      { "125",   "125%" },
       { NULL, NULL },
    },
    "default"
@@ -773,8 +773,17 @@ static struct retro_core_option_v2_definition option_def_null =
    { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
 
 
+struct retro_core_option_v2_category option_cats_us[] = {
+   {
+      "cat_key_vector",
+      "Vector Settings",
+      "Configure vector options."
+   },
+   { NULL, NULL, NULL },
+};
+
 struct retro_core_options_v2 options_us = {
-   NULL, /* currently unused */
+   option_cats_us,
    effective_defaults
 };
 
@@ -1442,7 +1451,7 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
    if (version >= 2)
    {
       environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
-            &effective_options_us);
+            effective_options_us);
    }
    else
    {
