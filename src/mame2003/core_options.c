@@ -416,7 +416,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
    NULL,
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "640x480",   NULL },
       { "1024x768",  NULL },
@@ -436,7 +436,7 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -451,7 +451,7 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    NULL,
    "Only used with antialiasing.",
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "1",   NULL },
       { "1.2", NULL },
@@ -481,7 +481,7 @@ static struct retro_core_option_v2_definition option_def_vector_translucency = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -496,7 +496,7 @@ static struct retro_core_option_v2_definition option_def_vector_flicker = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "0",   NULL },
       { "10",  NULL },
@@ -520,7 +520,7 @@ static struct retro_core_option_v2_definition option_def_vector_intensity = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_vector",
    {
       { "0.5", NULL },
       { "1",   NULL },
@@ -552,7 +552,7 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    APPNAME"_sample_rate",
    "Sample Rate",
    NULL,
-   "Number of samples taken per second. Higher rates provide better quality.",
+   "Number of samples taken per second. Higher rates provide better quality audio.",
    NULL,
    NULL,
    {
@@ -773,8 +773,17 @@ static struct retro_core_option_v2_definition option_def_null =
    { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
 
 
+struct retro_core_option_v2_category option_cats_us[] = {
+   {
+      "cat_key_vector",
+      "Vector Settings",
+      "Configure vector options."
+   },
+   { NULL, NULL, NULL },
+};
+
 struct retro_core_options_v2 options_us = {
-   NULL, /* currently unused */
+   option_cats_us,
    effective_defaults
 };
 
