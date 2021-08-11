@@ -374,7 +374,7 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
       { "5",  NULL },
       { "10", NULL },
       { "15", NULL },
-      { "20", NULL },
+      { "20", "20%" },
       { "25", NULL },
       { "30", NULL },
       { "35", NULL },
