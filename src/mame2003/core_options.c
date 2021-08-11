@@ -54,7 +54,7 @@ static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    NULL,
    "Improves issues with hitting diagonals when playing 4-way games.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -69,7 +69,7 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
    NULL,
    "Selects a specific x-y coordinates input device to read.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "mouse",    NULL },
       { "pointer",  NULL },
@@ -86,11 +86,11 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
 
 static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
    APPNAME"_crosshair_enabled",
-   "Show Lightgun crosshairs",
+   "Show Lightgun Crosshairs",
    NULL,
    "Displays a generic crosshair for each player.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -353,7 +353,7 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -364,11 +364,11 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
 
 static struct retro_core_option_v2_definition option_def_deadzone = {
    APPNAME"_deadzone",
-   "Analog deadzone",
+   "Analog Deadzone",
    NULL,
    "Modifies the deadzone travel distance by a set percentage.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "0",   "0%" },
       { "5",   "5%" },
@@ -569,11 +569,11 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
 
 static struct retro_core_option_v2_definition option_def_input_interface = {
    APPNAME"_input_interface",
-   "Input interface",
+   "Input Interface",
    NULL,
    "Configures which input types are being read.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "simultaneous", NULL },
       { "retropad",     NULL },
@@ -676,7 +676,7 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -706,7 +706,7 @@ static struct retro_core_option_v2_definition option_def_digital_joy_centering =
    NULL,
    "Emulates the center position of an analog joystick when using digital controls. Automatically returns the center position when no direction is being applied.",
    NULL,
-   NULL,
+   "cat_key_input",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -788,6 +788,11 @@ struct retro_core_option_v2_category option_cats_us[] = {
       "cat_key_video",
       "Video Settings",
       "Configure video options."
+   },
+   {
+      "cat_key_input",
+      "Input Settings",
+      "Configure input options."
    },
    {
       "cat_key_vector",
