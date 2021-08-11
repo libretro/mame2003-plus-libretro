@@ -413,7 +413,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
 static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
    "Vector resolution",
-   NULL,
+   "Resolution",
    "Restart core required.",
    NULL,
    "cat_key_vector",
@@ -433,7 +433,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
 static struct retro_core_option_v2_definition option_def_vector_antialias = {
    APPNAME"_vector_antialias",
    "Vector antialiasing",
-   NULL,
+   "Antialiasing",
    NULL,
    NULL,
    "cat_key_vector",
@@ -448,7 +448,7 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
 static struct retro_core_option_v2_definition option_def_vector_beam_width = {
    APPNAME"_vector_beam_width",
    "Vector beam width",
-   NULL,
+   "Beam width",
    "Only used with antialiasing.",
    NULL,
    "cat_key_vector",
@@ -478,7 +478,7 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
 static struct retro_core_option_v2_definition option_def_vector_translucency = {
    APPNAME"_vector_translucency",
    "Vector translucency",
-   NULL,
+   "Translucency",
    NULL,
    NULL,
    "cat_key_vector",
@@ -493,7 +493,7 @@ static struct retro_core_option_v2_definition option_def_vector_translucency = {
 static struct retro_core_option_v2_definition option_def_vector_flicker = {
    APPNAME"_vector_flicker",
    "Vector flicker",
-   NULL,
+   "Flicker",
    NULL,
    NULL,
    "cat_key_vector",
@@ -517,7 +517,7 @@ static struct retro_core_option_v2_definition option_def_vector_flicker = {
 static struct retro_core_option_v2_definition option_def_vector_intensity = {
    APPNAME"_vector_intensity",
    "Vector intensity",
-   NULL,
+   "Intensity",
    NULL,
    NULL,
    "cat_key_vector",
