@@ -105,7 +105,7 @@ static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
    NULL,
    "Bypasses a copyright warning from being displayed when loading content.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -120,7 +120,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
    NULL,
    "Bypasses a warning message from being displayed when loading content containing known issues.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -135,7 +135,7 @@ static struct retro_core_option_v2_definition option_def_display_setup = {
    NULL,
    "Toggles the visibility of the internal MAME menu.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "disabled", NULL },
       { "enabled",  NULL },
@@ -589,7 +589,7 @@ static struct retro_core_option_v2_definition option_def_mame_remapping = {
    NULL,
    "Restart core required. Enables MAME menu input remapping.",
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -631,7 +631,7 @@ static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -646,7 +646,7 @@ static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
    NULL,
    NULL,
    NULL,
-   NULL,
+   "cat_key_system",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -774,6 +774,11 @@ static struct retro_core_option_v2_definition option_def_null =
 
 
 struct retro_core_option_v2_category option_cats_us[] = {
+   {
+      "cat_key_system",
+      "System Settings",
+      "Configure system options."
+   },
    {
       "cat_key_vector",
       "Vector Settings",
