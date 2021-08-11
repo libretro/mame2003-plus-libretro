@@ -1463,7 +1463,7 @@ void set_content_flags(void)
 }
 
 
-static void determine_core_options_version(struct retro_core_options_v2 *effective_options_us)
+static void determine_core_options_version(struct retro_core_options_v2 *core_options_us)
 {
    unsigned version  = 0;
 
@@ -1476,13 +1476,15 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
    if (version >= 2)
    {
       environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2,
-            effective_options_us);
+            core_options_us);
    }
    else
    {
       size_t i, j;
       size_t option_index              = 0;
       size_t num_options               = 0;
+      struct retro_core_option_v2_definition
+            *option_defs_us            = core_options_us->definitions;
       struct retro_core_option_definition
             *option_v1_defs_us         = NULL;
       struct retro_variable *variables = NULL;
@@ -1491,7 +1493,7 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
       /* Determine total number of options */
       while (true)
       {
-         if (effective_defaults[num_options].key)
+         if (option_defs_us[num_options].key)
             num_options++;
          else
             break;
@@ -1503,10 +1505,10 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
          option_v1_defs_us = (struct retro_core_option_definition *)
                calloc(num_options + 1, sizeof(struct retro_core_option_definition));
 
-         /* Copy parameters from effective_defaults array */
+         /* Copy parameters from option_defs_us array */
          for (i = 0; i < num_options; i++)
          {
-            struct retro_core_option_v2_definition *option_def_us = &effective_defaults[i];
+            struct retro_core_option_v2_definition *option_def_us = &option_defs_us[i];
             struct retro_core_option_value *option_values         = option_def_us->values;
             struct retro_core_option_definition *option_v1_def_us = &option_v1_defs_us[i];
             struct retro_core_option_value *option_v1_values      = option_v1_def_us->values;
@@ -1539,13 +1541,13 @@ static void determine_core_options_version(struct retro_core_options_v2 *effecti
          if (!variables || !values_buf)
             goto error;
 
-         /* Copy parameters from effective_defaults array */
+         /* Copy parameters from option_defs_us array */
          for (i = 0; i < num_options; i++)
          {
-            const char *key                        = effective_defaults[i].key;
-            const char *desc                       = effective_defaults[i].desc;
-            const char *default_value              = effective_defaults[i].default_value;
-            struct retro_core_option_value *values = effective_defaults[i].values;
+            const char *key                        = option_defs_us[i].key;
+            const char *desc                       = option_defs_us[i].desc;
+            const char *default_value              = option_defs_us[i].default_value;
+            struct retro_core_option_value *values = option_defs_us[i].values;
             size_t buf_len                         = 3;
             size_t default_index                   = 0;
 
