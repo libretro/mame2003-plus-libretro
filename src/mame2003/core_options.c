@@ -207,11 +207,11 @@ static struct retro_core_option_v2_definition option_def_gamma = {
 
 static struct retro_core_option_v2_definition option_def_display_artwork = {
    APPNAME"_display_artwork",
-   "Display artwork",
+   "Display Artwork",
    NULL,
    "Restart core required. Used to display custom artwork when available.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "enabled",  NULL },
       { "disabled", NULL },
@@ -222,11 +222,11 @@ static struct retro_core_option_v2_definition option_def_display_artwork = {
 
 static struct retro_core_option_v2_definition option_def_art_resolution = {
    APPNAME"_art_resolution",
-   "Artwork resolution multiplier",
-   NULL,
+   "Artwork Resolution Multiplier",
+   "Resolution Multiplier",
    "Restart core required. Increases the artwork resolution by the selected multiplier value.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "1",  NULL },
       { "2",  NULL },
@@ -243,11 +243,11 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
 
 static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
    APPNAME"_art_overlay_opacity",
-   "Artwork hardcoded overlay opacity",
-   NULL,
+   "Artwork Hardcoded Overlay Opacity",
+   "Hardcoded Overlay Opacity",
    "Restart core required.",
    NULL,
-   NULL,
+   "cat_key_artwork",
    {
       { "default", NULL },
       { "0",       NULL },
@@ -793,6 +793,11 @@ struct retro_core_option_v2_category option_cats_us[] = {
       "cat_key_input",
       "Input Settings",
       "Configure input options."
+   },
+   {
+      "cat_key_artwork",
+      "Artwork Settings",
+      "Configure artwork options."
    },
    {
       "cat_key_vector",
