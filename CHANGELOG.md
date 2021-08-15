@@ -463,6 +463,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Galaxy Rescue - (Added lrescue.zip sample support)
 * Gaplus
 * Grobda
+* Hit The Ice
 * Horizon
 * Journey (Added sepways.wav sample)
 * Kaiketsu Yanchamaru
@@ -766,3 +767,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Isolated the core options into its own file `core_options.c` in preparation to update to new V2 structuring [mahoneyt944]
 * Updated the core options structure to V2. Can now use sublabels and categories when supported by the frontend [mahoneyt944]
 * Core options are now created dynamically based on the core options version supported by the frontend for backwards compatibility [jdgleaver, mahoneyt944]
+* Fixed missing OKIM6295 sound speech samples in Hit The Ice [arcadez]
