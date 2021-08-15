@@ -85,7 +85,7 @@ List of known B-System games:
 	Ryujin							(YM2610 sound)
 
 	Violence Fight					(YM2203 sound, 1xMSM6295 )
-	Hit The Ice						(YM2203 sound, 2xMSM6295 )
+	Hit The Ice						(YM2203 sound, 1xMSM6295 )
 	Master of Weapons				(YM2203 sound)
 
 	Quiz Sekai wa SHOW by shobai	(YM2610-B sound, MB87078 - electronic volume control)
@@ -1016,17 +1016,6 @@ static MEMORY_READ_START( hitice_sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( hitice_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0x8fff, MWA_RAM },
-	{ 0x9000, 0x9000, YM2203_control_port_0_w },
-	{ 0x9001, 0x9001, YM2203_write_port_0_w },
-	{ 0xb000, 0xb000, OKIM6295_data_0_w },
-	{ 0xb001, 0xb001, OKIM6295_data_1_w },
-	{ 0xa000, 0xa000, taitosound_slave_port_w },
-	{ 0xa001, 0xa001, taitosound_slave_comm_w },
-MEMORY_END
-
-static MEMORY_WRITE_START( viofight_sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x8fff, MWA_RAM },
 	{ 0x9000, 0x9000, YM2203_control_port_0_w },
@@ -2603,13 +2592,6 @@ static struct YM2203interface ym2203_interface =
 
 static struct OKIM6295interface okim6295_interface =
 {
-	2,
-	{ 8000,8000 },			/* ?? */
-	{ REGION_SOUND1,REGION_SOUND1 }, /* memory regions */
-	{ 50,65 }				/* ?? */
-};
-static struct OKIM6295interface okim6295_interface_viofight =
-{
 	1,	/* 1 chip */
 	{ 8000 },			/* 8KHz, verified on viofight PCB */
 	{ REGION_SOUND1 }, /* memory region */
@@ -3008,7 +2990,7 @@ static MACHINE_DRIVER_START( viofight )
 	MDRV_CPU_VBLANK_INT(viofight_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 6000000)	/* 6 MHz verified */
-	MDRV_CPU_MEMORY(hitice_sound_readmem, viofight_sound_writemem)
+	MDRV_CPU_MEMORY(hitice_sound_readmem, hitice_sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3027,7 +3009,7 @@ static MACHINE_DRIVER_START( viofight )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface_viofight)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
 #if 0
