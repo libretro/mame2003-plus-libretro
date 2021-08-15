@@ -769,8 +769,9 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    "default"
 };
 
-static struct retro_core_option_v2_definition option_def_null = 
-   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
+static struct retro_core_option_v2_definition option_def_null = {
+   NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL
+};
 
 
 struct retro_core_option_v2_category option_cats_us[] = {
@@ -806,6 +807,7 @@ struct retro_core_option_v2_category option_cats_us[] = {
    },
    { NULL, NULL, NULL },
 };
+
 
 struct retro_core_options_v2 options_us = {
    option_cats_us,
@@ -904,15 +906,13 @@ static void set_variables(void)
          if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
+    }
 
-
-   }
-   effective_defaults[effective_options_count] = default_options[option_index];
-   effective_options_count++;
+    effective_defaults[effective_options_count] = default_options[option_index];
+    effective_options_count++;
   }
 
   determine_core_options_version( &options_us );
-
 }
 
 
