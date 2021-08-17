@@ -807,7 +807,7 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
 };
 
 static struct retro_core_option_v2_definition option_def_null = {
-   NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL
+   NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL, NULL
 };
 
 
