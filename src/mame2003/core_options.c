@@ -60,8 +60,7 @@ static struct retro_core_option_v2_definition option_def_four_way_emulation = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_xy_device = {
@@ -83,8 +82,6 @@ static struct retro_core_option_v2_definition option_def_xy_device = {
 #else
    "mouse"
 #endif
-,
-   NULL
 };
 
 static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
@@ -99,8 +96,7 @@ static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
@@ -115,8 +111,7 @@ static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_skip_warnings = {
@@ -131,8 +126,7 @@ static struct retro_core_option_v2_definition option_def_skip_warnings = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_display_setup = {
@@ -147,8 +141,7 @@ static struct retro_core_option_v2_definition option_def_display_setup = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_brightness = {
@@ -180,8 +173,7 @@ static struct retro_core_option_v2_definition option_def_brightness = {
       { "2.0", NULL },
       { NULL, NULL },
    },
-   "1.0",
-   "float"
+   "1.0"
 };
 
 static struct retro_core_option_v2_definition option_def_gamma = {
@@ -210,8 +202,7 @@ static struct retro_core_option_v2_definition option_def_gamma = {
       { "2.0", NULL },
       { NULL, NULL },
    },
-   "1.0",
-   "float"
+   "1.0"
 };
 
 static struct retro_core_option_v2_definition option_def_display_artwork = {
@@ -226,8 +217,7 @@ static struct retro_core_option_v2_definition option_def_display_artwork = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_art_resolution = {
@@ -248,8 +238,7 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
       { "8",  NULL },
       { NULL, NULL },
    },
-   "1",
-   "int"
+   "1"
 };
 
 static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
@@ -291,8 +280,7 @@ static struct retro_core_option_v2_definition option_def_art_overlay_opacity = {
       { "70",      NULL },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_neogeo_bios = {
@@ -321,8 +309,7 @@ static struct retro_core_option_v2_definition option_def_neogeo_bios = {
       { "asia-aes",  NULL },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_stv_bios = {
@@ -342,8 +329,7 @@ static struct retro_core_option_v2_definition option_def_stv_bios = {
       { "europe",  NULL },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_use_alt_sound = {
@@ -358,8 +344,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_dialsharexy = {
@@ -374,8 +359,7 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_deadzone = {
@@ -408,8 +392,7 @@ static struct retro_core_option_v2_definition option_def_deadzone = {
       { "95", "95%" },
       { NULL, NULL },
    },
-   "20",
-   "int"
+   "20"
 };
 
 static struct retro_core_option_v2_definition option_def_tate_mode = {
@@ -424,8 +407,7 @@ static struct retro_core_option_v2_definition option_def_tate_mode = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_resolution = {
@@ -445,8 +427,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
       { "original",  NULL },
       { NULL, NULL },
    },
-   "1024x768",
-   NULL
+   "1024x768"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_antialias = {
@@ -461,8 +442,7 @@ static struct retro_core_option_v2_definition option_def_vector_antialias = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_beam_width = {
@@ -492,8 +472,7 @@ static struct retro_core_option_v2_definition option_def_vector_beam_width = {
       { "12",  NULL },
       { NULL,  NULL },
    },
-   "2",
-   NULL
+   "2"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_translucency = {
@@ -508,8 +487,7 @@ static struct retro_core_option_v2_definition option_def_vector_translucency = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_flicker = {
@@ -533,8 +511,7 @@ static struct retro_core_option_v2_definition option_def_vector_flicker = {
       { "100", NULL },
       { NULL, NULL },
    },
-   "20",
-   "int"
+   "20"
 };
 
 static struct retro_core_option_v2_definition option_def_vector_intensity = {
@@ -553,8 +530,7 @@ static struct retro_core_option_v2_definition option_def_vector_intensity = {
       { "3",   NULL },
       { NULL, NULL },
    },
-   "1.5",
-   NULL
+   "1.5"
 };
 
 static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
@@ -569,8 +545,7 @@ static struct retro_core_option_v2_definition option_def_nvram_bootstraps = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_sample_rate = {
@@ -589,8 +564,7 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
       { "48000", "48000 KHz" },
       { NULL, NULL },
    },
-   "48000",
-   NULL
+   "48000"
 };
 
 static struct retro_core_option_v2_definition option_def_input_interface = {
@@ -606,8 +580,7 @@ static struct retro_core_option_v2_definition option_def_input_interface = {
       { "keyboard",     NULL },
       { NULL, NULL },
    },
-   "simultaneous",
-   NULL
+   "simultaneous"
 };
 
 static struct retro_core_option_v2_definition option_def_mame_remapping = {
@@ -622,8 +595,7 @@ static struct retro_core_option_v2_definition option_def_mame_remapping = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_frameskip = {
@@ -650,8 +622,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
       { "auto_max",        "auto max"        },
       { NULL, NULL },
    },
-   "disabled",
-   NULL
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
@@ -666,8 +637,7 @@ static struct retro_core_option_v2_definition option_def_core_sys_subfolder = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
@@ -682,8 +652,7 @@ static struct retro_core_option_v2_definition option_def_core_save_subfolder = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
@@ -698,8 +667,7 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
       { "recursively", NULL },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
@@ -714,8 +682,7 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
       { "enabled",  NULL },
       { NULL, NULL },
    },
-   "disabled",
-   "bool"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_machine_timing = {
@@ -730,8 +697,7 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
@@ -746,8 +712,7 @@ static struct retro_core_option_v2_definition option_def_digital_joy_centering =
       { "disabled", NULL },
       { NULL, NULL },
    },
-   "enabled",
-   "bool"
+   "enabled"
 };
 
 static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
@@ -781,8 +746,7 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
       { "125",   "125%" },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
@@ -802,8 +766,7 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
       { "Cyclone+DrZ80(snd)", NULL },
       { NULL, NULL },
    },
-   "default",
-   NULL
+   "default"
 };
 
 static struct retro_core_option_v2_definition option_def_null = {
