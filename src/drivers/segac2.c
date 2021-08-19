@@ -3392,7 +3392,7 @@ INPUT_PORTS_START( jzth )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sbubsm )
-	// the bit ordering in the ports is strange here because this is being read through shared RAM, the MCU presumably reads the real inputs then scrambles them in RAM for the 68k to sort out
+	/* the bit ordering in the ports is strange here because this is being read through shared RAM, the MCU presumably reads the real inputs then scrambles them in RAM for the 68k to sort out */
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -3415,7 +3415,7 @@ INPUT_PORTS_START( sbubsm )
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_LOW, IPT_COIN1, 10 )
+	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_LOW, IPT_COIN1, 1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -3442,7 +3442,7 @@ INPUT_PORTS_START( sbubsm )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
-	// no service mode here?
+	/* no service mode here? */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( pclub ) /* Print Club Input Ports */
@@ -3960,6 +3960,39 @@ INPUT_PORTS_START ( mp_shnb3 )
     PORT_DIPSETTING( 0x04, "Hard" )
     PORT_DIPSETTING( 0x08, "Easy" )
     PORT_DIPSETTING( 0x0c, "Normal" )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( aladbl )
+	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Throw" )
+	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Sword" )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Jump" )
+    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 ) /* start */
+
+	PORT_START /* Joypad 2 (3 button + start) Not used */
+
+	PORT_START /* 3rd I/O port */
+
+    /* As I don't know how it is on real hardware, this is more a guess than anything */
+	PORT_START /* MCU hooked up via readinputport (3) */
+	PORT_DIPNAME( 0x07, 0x01, DEF_STR( Coinage ) )          /* code at 0x1b2a50 - unsure if there are so many settings */
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_6C ) )
+    PORT_DIPSETTING(    0x07, DEF_STR( 1C_7C ) )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL )         /* to avoid it being changed and corrupting Coinage settings */
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Difficulty ) )       /* code at 0x1b2680 */
+	PORT_DIPSETTING(    0x10, "Easy" )             /* "PRACTICE" */
+	PORT_DIPSETTING(    0x00, "Normal" )           /* "NORMAL" */
+	PORT_DIPSETTING(    0x20, "Hard" )             /* "DIFFICULT" */
+	PORT_BIT_IMPULSE(   0x100, IP_ACTIVE_HIGH, IPT_COIN1, 1 ) /* needed to avoid credits getting mad */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( barek3 )
@@ -4692,6 +4725,13 @@ ROM_START( sbubsm )
 /*	ROM_LOAD( "89c51.bin", 0x0000, 0x1000, NO_DUMP ) */
 ROM_END
 
+ROM_START( aladmdb )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "m1.bin", 0x000001, 0x080000,  CRC(5e2671e4) SHA1(54705c7614fc7b5a1065478fa41f51dd1d8045b7) )
+	ROM_LOAD16_BYTE( "m2.bin", 0x000000, 0x080000,  CRC(142a0366) SHA1(6c94aa9936cd11ccda503b52019a6721e64a32f0) )
+	ROM_LOAD16_BYTE( "m3.bin", 0x100001, 0x080000,  CRC(0feeeb19) SHA1(bd567a33077ab9997871d21736066140d50e3d70) )
+	ROM_LOAD16_BYTE( "m4.bin", 0x100000, 0x080000,  CRC(bc712661) SHA1(dfd554d000399e17b4ddc69761e572195ed4e1f0))
+ROM_END
 
 ROM_START( barek3mb )
 	ROM_REGION( 0x400000, REGION_CPU1, 0 ) // 68000 Code
@@ -4702,8 +4742,6 @@ ROM_START( barek3mb )
 	ROM_LOAD16_BYTE( "5.u17", 0x200000, 0x080000,  CRC(0feb974f) SHA1(ed1a25b6f1669dc6061d519985b6373fa89176c7) )
 	ROM_LOAD16_BYTE( "2.u16", 0x200001, 0x080000,  CRC(bba4a585) SHA1(32c59729943d7b4c1a39f2a2b0dae9ce16991e9c) )
 ROM_END
-
-
 
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
@@ -5706,6 +5744,63 @@ DRIVER_INIT( sbubsm )
 	init_segac2();
 }
 
+WRITE16_HANDLER( aladbl_w )
+{
+    /*
+    Values returned from the log file :
+      - aladbl_w : 1b2a6c - data = 6600 (each time a coin is inserted)
+      - aladbl_w : 1b2a82 - data = 0000 (each time a coin is inserted)
+      - aladbl_w : 1b2d18 - data = aa00 (only once on reset)
+      - aladbl_w : 1b2d42 - data = 0000 (only once on reset)
+    */
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "aladbl_w : %06x - data = %04x\n",activecpu_get_pc(),data);
+}
+
+
+READ16_HANDLER( aladbl_r )
+{
+	if (activecpu_get_pc()==0x1b2a56)
+	{
+		static UINT16 mcu_port;
+
+		mcu_port = readinputport(3);
+
+		if(mcu_port & 0x100)
+			return ((mcu_port & 0x0f) | 0x100); /* coin inserted, calculate the number of coins */
+		else
+			return (0x100); /* MCU status, needed if you fall into a pitfall */
+	}
+	if (activecpu_get_pc()==0x1b2a72) return 0x0000;
+	if (activecpu_get_pc()==0x1b2d24) return (readinputport(3) & 0x00f0) | 0x1200;    /* difficulty */
+	if (activecpu_get_pc()==0x1b2d4e) return 0x0000;
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "aladbl_r : %06x\n",activecpu_get_pc());
+
+	return 0x0000;
+}
+
+#define ENERGY_CONSOLE_MODE 1
+
+DRIVER_INIT( aladbl )
+{
+/*
+Game does a check @ 1afc00 with work ram fff57c that makes it play like it was intended 
+(i.e. 8 energy hits instead of 2) enabled for MAME2003 as it makes the game sweeter to play.
+*/
+	#if ENERGY_CONSOLE_MODE
+	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+	rom[0x1afc08/2] = 0x6600;
+	#endif
+
+	// 220000 = writes to mcu? 330000 = reads?
+	install_mem_write16_handler(0, 0x220000, 0x220001, aladbl_w);
+	install_mem_read16_handler(0, 0x330000, 0x330001, aladbl_r);
+	
+	genesis_region = 0x00; /* read via io */
+
+	init_segac2();
+}
+
 DRIVER_INIT( barek3 )
 {
 	data8_t *rom	=	memory_region(REGION_CPU1);
@@ -5777,6 +5872,7 @@ GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",   
 GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>",              "Juezhan Tianhuang", GAME_IMPERFECT_SOUND )
 
 /* Bootlegs Using Genesis Hardware */
+GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
 GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" ) 
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
