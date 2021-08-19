@@ -3045,7 +3045,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( jzth )		/* (c) 2000 <unknown> */
 	DRIVER( sbubsm )	/* (c) 1996 Sun Mixing */
   DRIVER( barek3mb ) /* (c) 1994 bootleg / Sega */  
-
+  DRIVER( aladmdb ) /*  (c) 1993 bootleg / Sega */
 	/* Sega MegaTech, the number shown ia on the label of the instruction rom */
 	DRIVER( mt_beast )	/* 01 */
 	DRIVER( mt_shar2 )	/* 02 */
