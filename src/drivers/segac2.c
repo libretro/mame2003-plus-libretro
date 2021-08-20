@@ -3971,13 +3971,13 @@ INPUT_PORTS_START( aladbl )
 	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Throw" )
 	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Sword" )
 	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Jump" )
-    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 ) /* start */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 ) /* start */
 
 	PORT_START /* Joypad 2 (3 button + start) Not used */
 
 	PORT_START /* 3rd I/O port */
 
-    /* As I don't know how it is on real hardware, this is more a guess than anything */
+	/* As I don't know how it is on real hardware, this is more a guess than anything */
 	PORT_START /* MCU hooked up via readinputport (3) */
 	PORT_DIPNAME( 0x07, 0x01, DEF_STR( Coinage ) )          /* code at 0x1b2a50 - unsure if there are so many settings */
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
@@ -3986,7 +3986,7 @@ INPUT_PORTS_START( aladbl )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_6C ) )
-    PORT_DIPSETTING(    0x07, DEF_STR( 1C_7C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_7C ) )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL )         /* to avoid it being changed and corrupting Coinage settings */
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Difficulty ) )       /* code at 0x1b2680 */
 	PORT_DIPSETTING(    0x10, "Easy" )             /* "PRACTICE" */
