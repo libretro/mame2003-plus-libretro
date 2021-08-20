@@ -3974,6 +3974,7 @@ INPUT_PORTS_START( aladbl )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 ) /* start */
 
 	PORT_START /* Joypad 2 (3 button + start) Not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START /* 3rd I/O port */
 
