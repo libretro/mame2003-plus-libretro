@@ -781,6 +781,11 @@ struct retro_core_option_v2_category option_cats_us[] = {
       "Configure system options."
    },
    {
+      "cat_key_input",
+      "Input",
+      "Configure input options."
+   },
+   {
       "cat_key_audio",
       "Audio",
       "Configure audio options."
@@ -789,11 +794,6 @@ struct retro_core_option_v2_category option_cats_us[] = {
       "cat_key_video",
       "Video",
       "Configure video options."
-   },
-   {
-      "cat_key_input",
-      "Input",
-      "Configure input options."
    },
    {
       "cat_key_artwork",
