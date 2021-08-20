@@ -2054,12 +2054,12 @@ static WRITE_HANDLER ( genesis_z80_w )
 	if ((offset >= 0x7f00) && (offset <= 0x7fff))
 	{
 		offset &= 0x1f;
- 
+
 		if ( (offset >= 0x10) && (offset <=0x17) )
 		{
 			SN76496_0_w(0, data & 0xff);
 		}
- 
+
 	}
 }
 
@@ -4003,20 +4003,20 @@ INPUT_PORTS_START( barek3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Button B" )
-	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Button C" )
-	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Button A" )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Button A" )
+	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1, "P1 Start" )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Button B" )
+	PORT_BIT_NAME( 0x80, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Button C" )
 
 	PORT_START	/* IN1 player 2 controller */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Button B" )
-	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 Button C" )
-	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Button A" )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Button A" )
+	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2, "P2 Start" )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Button B" )
+	PORT_BIT_NAME( 0x80, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 Button C" )
 
 	PORT_START
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -5786,7 +5786,7 @@ READ16_HANDLER( aladbl_r )
 DRIVER_INIT( aladbl )
 {
 /*
-Game does a check @ 1afc00 with work ram fff57c that makes it play like it was intended 
+Game does a check @ 1afc00 with work ram fff57c that makes it play like it was intended
 (i.e. 8 energy hits instead of 2) enabled for MAME2003 as it makes the game sweeter to play.
 */
 	#if ENERGY_CONSOLE_MODE
@@ -5797,7 +5797,7 @@ Game does a check @ 1afc00 with work ram fff57c that makes it play like it was i
 	// 220000 = writes to mcu? 330000 = reads?
 	install_mem_write16_handler(0, 0x220000, 0x220001, aladbl_w);
 	install_mem_read16_handler(0, 0x330000, 0x330001, aladbl_r);
-	
+
 	genesis_region = 0x00; /* read via io */
 
 	init_segac2();
@@ -5807,7 +5807,7 @@ DRIVER_INIT( barek3 )
 {
 	data8_t *rom	=	memory_region(REGION_CPU1);
   int x;
-	
+
 	for (x = 0x00001; x < 0x300000; x += 2)
 	{
 		rom[x] = BITSWAP8(rom[x], 6,2,4,0,7,1,3,5);
@@ -5815,9 +5815,9 @@ DRIVER_INIT( barek3 )
 
 	install_mem_read16_handler(0, 0x380070, 0x380071, input_port_2_word_r );
 	install_mem_read16_handler(0, 0x380078, 0x380079, input_port_3_word_r );
-	
+
 	genesis_region = 0x00; /* read via io */
-	
+
 	init_segac2();
 }
 
@@ -5875,7 +5875,7 @@ GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>"
 
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
-GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" ) 
+GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" )
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
 /* Atlus Print Club 'Games' (C-2 Hardware, might not be possible to support them because they use camera + printer, really just put here for reference) */
