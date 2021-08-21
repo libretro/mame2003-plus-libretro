@@ -20,6 +20,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
+* Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
 * Bomb Kick
@@ -761,8 +762,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Improved the C-Chip simulation for Volfied fixing the sprite and background colours and in game level timers and logic [arcadez]
 * Added new driver jollyjgr.c to the MAME2003+ core supporting new games, Jolly Jogger and Frog & Spiders [arcadez, mahoneyt944]
 * Core option created to autosave hiscores recursively during gameplay, recommended default will save on exit. [LuoZhongYao, mahoneyt944]
-* Added Aladdin, Bare Knuckle III, Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, mahoneyt944]
-* Fixed SN76496 sound in Super Bubble Bobble (Sun Mixing) and ported across from MESS extra genesis input code so that Bare Knuckle III is playable [arcadez, dink]
+* Added Aladdin, Bare Knuckle II, Bare Knuckle III, Juezhan Tianhuang and Super Bubble Bobble (Sun Mixing version) to the segac2.c driver [arcadez, mahoneyt944]
+* Fixed SN76496 sound in Super Bubble Bobble (Sun Mixing) and ported across from MESS extra genesis input code so that Aladdin, Bare Knuckle II + III are playable [arcadez, dink]
 * Added Magic Purple to the Tumble Pop driver [arcadez]
 * Fixed game timers removed simulation code and hooked up the proper protection mcu for Chack'n Pop [arcadez]
 * Isolated the core options into its own file `core_options.c` in preparation to update to new V2 structuring [mahoneyt944]
