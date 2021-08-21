@@ -1920,12 +1920,36 @@ static MEMORY_READ16_START( sbubsm_readmem )
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
 
-
 static MEMORY_WRITE16_START( sbubsm_writemem )
     { 0x000000, 0x0fffff, MWA16_ROM },					/* Cartridge Program Rom */
 //  { 0x200000, 0x20007f, MWA16_RAM },
     { 0x200000, 0x2023ff, MWA16_RAM }, // tested
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_w },
+	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
+    { 0xfe0000, 0xfeffff, MWA16_BANK4 },
+	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
+MEMORY_END
+
+static MEMORY_READ16_START( barek2ch_readmem )
+    { 0x000000, 0x1fffff, MRA16_ROM },					/* Cartridge Program Rom */
+	{ 0x202000, 0x2023ff, MRA16_RAM },
+	{ 0xa10000, 0xa1001f, genesis_68000_io_r },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_r },
+	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },			/* VDP Access */
+	{ 0xe00000, 0xe1ffff, MRA16_BANK3 },
+	{ 0xfe0000, 0xfeffff, MRA16_BANK4 },
+	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
+MEMORY_END
+
+static MEMORY_WRITE16_START( barek2ch_writemem )
+    { 0x000000, 0x1fffff, MWA16_ROM },					/* Cartridge Program Rom */
+//  { 0x200000, 0x20007f, MWA16_RAM },
+    { 0x200000, 0x2023ff, MWA16_RAM }, // tested
+	{ 0xa10000, 0xa1001f, genesis_68000_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
 	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
@@ -3997,6 +4021,110 @@ INPUT_PORTS_START( aladbl )
 	PORT_BIT_IMPULSE(   0x100, IP_ACTIVE_HIGH, IPT_COIN1, 1 ) /* needed to avoid credits getting mad */
 INPUT_PORTS_END
 
+INPUT_PORTS_START( barek2ch )
+	PORT_START	/* IN0 player 1 controller */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+
+	PORT_START	/* IN1 player 2 controller */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+
+	PORT_START
+	PORT_BIT(  0x3f, IP_ACTIVE_LOW, IPT_UNUSED ) // apparently no use for these
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0x08, 0x08, "SW1:4" )
+    PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x10, 0x10, "SW1:5" )
+    PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x20, 0x20, "SW1:6" )
+    PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x40, 0x40, "SW1:7" )
+    PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x80, 0x80, "SW1:8" )
+    PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, "SW2:1" ) // at least some of the first 3 seem to control difficulty (enemies attack later / less frequently by switching these)
+    PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x02, 0x02, "SW2:2" )
+    PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x04, 0x04, "SW2:3" )
+    PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x18, "1" )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0xe0, 0xe0, "Starting Level" )
+	PORT_DIPSETTING(    0xe0, "1" )
+	PORT_DIPSETTING(    0xc0, "2" )
+	PORT_DIPSETTING(    0xa0, "3" )
+	PORT_DIPSETTING(    0x80, "4" )
+	PORT_DIPSETTING(    0x60, "5" )
+	PORT_DIPSETTING(    0x40, "6" )
+	PORT_DIPSETTING(    0x20, "7" )
+	PORT_DIPSETTING(    0x00, "8" )
+
+	PORT_START // present on PCB but there doesn't seem to be any read for them
+	PORT_DIPNAME( 0x01, 0x01, "SW3:1" )
+    PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x02, 0x02, "SW3:2" )
+    PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x04, 0x04, "SW3:3" )
+    PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x08, 0x08, "SW3:4" )
+    PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x10, 0x10, "SW3:5" )
+    PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x20, 0x20, "SW3:6")
+    PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x40, 0x40, "SW3:7" )
+    PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x80, 0x80, "SW3:8" )
+    PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( barek3 )
 	PORT_START	/* IN0 player 1 controller */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
@@ -4237,6 +4365,13 @@ static MACHINE_DRIVER_START( sbubsm )
 	MDRV_CPU_MEMORY(sbubsm_readmem,sbubsm_writemem)
 
 	MDRV_VISIBLE_AREA(0, 319, 0, 223)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( barek2ch )
+
+	MDRV_IMPORT_FROM( genesis )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(barek2ch_readmem,barek2ch_writemem)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( barek3 )
@@ -4733,6 +4868,14 @@ ROM_START( aladmdb )
 	ROM_LOAD16_BYTE( "m2.bin", 0x000000, 0x080000,  CRC(142a0366) SHA1(6c94aa9936cd11ccda503b52019a6721e64a32f0) )
 	ROM_LOAD16_BYTE( "m3.bin", 0x100001, 0x080000,  CRC(0feeeb19) SHA1(bd567a33077ab9997871d21736066140d50e3d70) )
 	ROM_LOAD16_BYTE( "m4.bin", 0x100000, 0x080000,  CRC(bc712661) SHA1(dfd554d000399e17b4ddc69761e572195ed4e1f0))
+ROM_END
+
+ROM_START( barek2ch ) // all 27c4001
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "u14", 0x000001, 0x080000, CRC(b0ee177f) SHA1(d63e6ee30fe7f4aaab098d3920eabc456730b2c5) )
+	ROM_LOAD16_BYTE( "u15", 0x000000, 0x080000, CRC(09264195) SHA1(c5439731d932c90a57d68c4d82c9ebed8a01bd53) )
+	ROM_LOAD16_BYTE( "u16", 0x100001, 0x080000, CRC(6c814fc4) SHA1(edaf5117b19d3fb40218c5f7c4b5099c9189f1be) )
+	ROM_LOAD16_BYTE( "u17", 0x100000, 0x080000, CRC(cae1922e) SHA1(811c2164b6c467a49af4b0d22f151cd13c9efbc9) )
 ROM_END
 
 ROM_START( barek3mb )
@@ -5803,6 +5946,28 @@ Game does a check @ 1afc00 with work ram fff57c that makes it play like it was i
 	init_segac2();
 }
 
+DRIVER_INIT( barek2ch )
+{
+	UINT16 *src = (UINT16 *)memory_region(REGION_CPU1);
+	int i;
+	
+	for (i = 0x000000; i < 0x200000 / 2; i++)
+		src[i] = BITSWAP16(src[i], 8, 11, 10, 13, 12, 14, 15, 9, 7, 6, 5, 4, 3, 2, 1, 0);
+
+	src[0x06 / 2] = 0x0210; // TODO: why is this needed?
+
+	install_mem_read16_handler(0, 0x380070, 0x380071, input_port_2_word_r );
+	install_mem_read16_handler(0, 0x380078, 0x380079, input_port_3_word_r );
+	install_mem_read16_handler(0, 0x38007a, 0x38007b, input_port_4_word_r );
+	
+	genesis_region = 0x00; /* read via io */
+		
+	cpu_setbank(3, memory_region(REGION_CPU1) );
+	cpu_setbank(4, &genesis_68k_ram[0]);
+
+	init_segac2();
+}
+
 DRIVER_INIT( barek3 )
 {
 	data8_t *rom	=	memory_region(REGION_CPU1);
@@ -5875,6 +6040,7 @@ GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>"
 
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
+GAME ( 1994, barek2ch, 0,        barek2ch, barek2ch, barek2ch, ROT0, "bootleg / Sega",         "Bare Knuckle II (Chinese bootleg of Megadrive version)" )
 GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" )
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
 
