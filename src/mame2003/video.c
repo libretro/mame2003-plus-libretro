@@ -224,7 +224,7 @@ void mame2003_video_init_conversion(UINT32 *rgb_components)
 /* Do a soft reinit to process new video output parameters */
 void mame2003_video_reinit(void)
 {
-   UINT32 rgb_components;
+   UINT32 rgb_components[3];
    struct osd_create_params old_params = video_config;
    osd_close_display();
    osd_create_display(&old_params, &rgb_components);
