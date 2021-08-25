@@ -4201,6 +4201,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( offtwall )	/* 136090			(c) 1991 */
 	DRIVER( offtwalc )	/* 136090			(c) 1991 */
 	DRIVER( guardian )	/* 136092			(c) 1992 */
+	DRIVER( dangerex )	/* (proto)			(c) 1992 */
 	DRIVER( relief )	/* 136093			(c) 1992 */
 	DRIVER( relief2 )	/* 136093			(c) 1992 */
 	DRIVER( arcadecl )	/* (proto)			(c) 1992 */
