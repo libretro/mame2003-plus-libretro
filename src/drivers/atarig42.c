@@ -6,7 +6,7 @@
 
 	Games supported:
 		* Road Riot 4WD (1991)
-        * Danger Express (1992)
+		* Danger Express (1992)
 		* Guardians of the 'Hood (1992)
 
 	Known bugs:
@@ -282,7 +282,7 @@ static WRITE16_HANDLER( roadriot_sloop_data_w )
 static void guardians_sloop_tweak(int offset)
 {
 	static UINT32 last_accesses[8];
-	
+
 	if (offset >= 0x7f7c0/2)
 	{
 		last_accesses[0] = last_accesses[1];
@@ -293,20 +293,20 @@ static void guardians_sloop_tweak(int offset)
 		last_accesses[5] = last_accesses[6];
 		last_accesses[6] = last_accesses[7];
 		last_accesses[7] = offset;
-		
-		if (last_accesses[0] == 0x7f7c0/2 && last_accesses[1] == 0x7f7ce/2 && last_accesses[2] == 0x7f7c2/2 && last_accesses[3] == 0x7f7cc/2 && 
+
+		if (last_accesses[0] == 0x7f7c0/2 && last_accesses[1] == 0x7f7ce/2 && last_accesses[2] == 0x7f7c2/2 && last_accesses[3] == 0x7f7cc/2 &&
 			last_accesses[4] == 0x7f7c4/2 && last_accesses[5] == 0x7f7ca/2 && last_accesses[6] == 0x7f7c6/2 && last_accesses[7] == 0x7f7c8/2)
 			sloop_bank = 0;
-	
-		if (last_accesses[0] == 0x7f7d0/2 && last_accesses[1] == 0x7f7de/2 && last_accesses[2] == 0x7f7d2/2 && last_accesses[3] == 0x7f7dc/2 && 
+
+		if (last_accesses[0] == 0x7f7d0/2 && last_accesses[1] == 0x7f7de/2 && last_accesses[2] == 0x7f7d2/2 && last_accesses[3] == 0x7f7dc/2 &&
 			last_accesses[4] == 0x7f7d4/2 && last_accesses[5] == 0x7f7da/2 && last_accesses[6] == 0x7f7d6/2 && last_accesses[7] == 0x7f7d8/2)
 			sloop_bank = 1;
-	
-		if (last_accesses[0] == 0x7f7e0/2 && last_accesses[1] == 0x7f7ee/2 && last_accesses[2] == 0x7f7e2/2 && last_accesses[3] == 0x7f7ec/2 && 
+
+		if (last_accesses[0] == 0x7f7e0/2 && last_accesses[1] == 0x7f7ee/2 && last_accesses[2] == 0x7f7e2/2 && last_accesses[3] == 0x7f7ec/2 &&
 			last_accesses[4] == 0x7f7e4/2 && last_accesses[5] == 0x7f7ea/2 && last_accesses[6] == 0x7f7e6/2 && last_accesses[7] == 0x7f7e8/2)
 			sloop_bank = 2;
-	
-		if (last_accesses[0] == 0x7f7f0/2 && last_accesses[1] == 0x7f7fe/2 && last_accesses[2] == 0x7f7f2/2 && last_accesses[3] == 0x7f7fc/2 && 
+
+		if (last_accesses[0] == 0x7f7f0/2 && last_accesses[1] == 0x7f7fe/2 && last_accesses[2] == 0x7f7f2/2 && last_accesses[3] == 0x7f7fc/2 &&
 			last_accesses[4] == 0x7f7f4/2 && last_accesses[5] == 0x7f7fa/2 && last_accesses[6] == 0x7f7f6/2 && last_accesses[7] == 0x7f7f8/2)
 			sloop_bank = 3;
 	}
@@ -488,7 +488,7 @@ INPUT_PORTS_START( dangerex )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
-	
+
 	PORT_START		/* e00010 */
 	PORT_BIT( 0x003f, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
@@ -737,7 +737,7 @@ ROM_START( dangerex )
 	ROM_LOAD( "dx17e-1.17e",  0xa0000, 0x20000, CRC(ccb73a18) SHA1(3e853f7c7ab32b18fdb6529d37d28eb96c5365dc) )
 	ROM_LOAD( "dx15e-2.15e",  0xc0000, 0x20000, CRC(11596234) SHA1(77eab7cb4ad83a50c23127b4fb1bbfd4aa2c6f8d) )
 	ROM_LOAD( "dx12e-3.12e",  0xe0000, 0x20000, CRC(c0ffd43c) SHA1(dcd7e3cc5d46db0d0a7fe3806bddbca235492d35) )
-	
+
 	ROM_REGION( 0x0600, REGION_PROMS, ROMREGION_DISPOSE )	/* microcode for growth renderer */
 	ROM_LOAD( "092-1001.20p",  0x0000, 0x0200, NO_DUMP CRC(b3251eeb) SHA1(5e83baa70aaa28f07f32657bf974fd87719972d3) )
 	ROM_LOAD( "092-1002.22p",  0x0200, 0x0200, NO_DUMP CRC(0c5314da) SHA1(a9c7ee3ab015c7f3ada4200acd2854eb9a5c74b0) )
