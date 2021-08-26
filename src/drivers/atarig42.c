@@ -25,6 +25,8 @@
 #include "sndhrdw/atarijsa.h"
 #include "vidhrdw/atarirle.h"
 #include "atarig42.h"
+#include "bootstrap.h"
+#include "inptport.h"
 
 
 /*************************************
@@ -908,4 +910,4 @@ static DRIVER_INIT( dangerex )
 
 GAMEX( 1991, roadriot, 0,        atarig42, roadriot, roadriot, ROT0, "Atari Games", "Road Riot 4WD", GAME_UNEMULATED_PROTECTION )
 GAME ( 1992, guardian, 0,        atarig42, guardian, guardian, ROT0, "Atari Games", "Guardians of the Hood" )
-GAME ( 1992, dangerex, 0,        atarig42, dangerex, dangerex, ROT0, "Atari Games", "Danger Express (prototype)" )
+GAMEC( 1992, dangerex, 0,        atarig42, dangerex, dangerex, ROT0, "Atari Games", "Danger Express (prototype)", &generic_ctrl, &dangerex_bootstrap )

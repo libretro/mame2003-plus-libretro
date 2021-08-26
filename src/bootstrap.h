@@ -19,6 +19,7 @@ extern const struct bin2cFILE charlien_bootstrap;
 extern const struct bin2cFILE crusnu21_bootstrap;
 extern const struct bin2cFILE crusnu40_bootstrap;
 extern const struct bin2cFILE crusnusa_bootstrap;
+extern const struct bin2cFILE dangerex_bootstrap;
 extern const struct bin2cFILE ddsom_bootstrap;
 extern const struct bin2cFILE ddsoma_bootstrap;
 extern const struct bin2cFILE ddsomj_bootstrap;
