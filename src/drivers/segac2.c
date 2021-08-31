@@ -3160,6 +3160,121 @@ INPUT_PORTS_START( bloxeedc ) /*  Bloxeed Input Ports */
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( headonch ) /*  Ichidant-R and Tant-R Input Ports */
+	PORT_START		/* Coins, Start, Service etc, Same for All */
+    COINS
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START		/* Player 1 Controls */
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      /* 'Accelerate' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    JOYSTICK_1
+
+	PORT_START		/* Player 2 Controls */
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )    /* 'Accelerate' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    JOYSTICK_2
+
+	PORT_START		/* Coinage */
+    COIN_A
+    COIN_B
+
+	PORT_START		 /* Game Options */
+    PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
+    PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )
+    PORT_DIPSETTING(    0x04, "Easy" )
+    PORT_DIPSETTING(    0x06, "Medium" )
+    PORT_DIPSETTING(    0x02, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+    PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x18, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x00, "5" )
+    PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( ooparts ) /*  Ichidant-R and Tant-R Input Ports */
+	PORT_START		/* Coins, Start, Service etc, Same for All */
+    COINS
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	
+	PORT_START		/* Player 1 Controls */
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      /* 'Paddle' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )      /* 'Special weapon' */
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    JOYSTICK_1
+
+	PORT_START		/* Player 2 Controls */
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )    /* 'Paddle' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )    /* 'Special Weapon' */
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    JOYSTICK_2
+
+	PORT_START		/* Coinage */
+    COIN_A
+    COIN_B
+
+	PORT_START		 /* Game Options */
+    PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
+    PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x04, "2" )
+	PORT_DIPSETTING(    0x06, "3" )
+	PORT_DIPSETTING(    0x02, "4" )
+	PORT_DIPSETTING(    0x00, "5" )
+    PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x10, "Easy" )
+	PORT_DIPSETTING(    0x18, "Medium" )
+	PORT_DIPSETTING(    0x08, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+    PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x60, 0x60, "Region" )  /* undocumented */
+	PORT_DIPSETTING(    0x60, "Japan" )
+	PORT_DIPSETTING(    0x40, "USA" )
+	PORT_DIPSETTING(    0x20, "Export" )
+	PORT_DIPSETTING(    0x00, "Export" )
+    PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
+    PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( ssonicbr )
 	PORT_START		/* Coins, Start, Service etc, Same for All */
     COINS
@@ -3167,16 +3282,16 @@ INPUT_PORTS_START( ssonicbr )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START		/* Player 1 Controls */
-    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      // Button 'Rotate'
-    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )      // Button 2 Unused == Button 1
-    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )      // Button 3 Unused == Button 1
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      /* 'Rotate' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
     JOYSTICK_1
 
 	PORT_START		/* Player 2 Controls */
-    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )     // Button 'Rotate'
-    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED                )     // Button 2 Unused == Button 1
-    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED                )     // Button 3 Unused == Button 1
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )     /* 'Rotate' */
+    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED  )
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED  )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
     JOYSTICK_2
 
@@ -3194,6 +3309,11 @@ INPUT_PORTS_START( ssonicbr )
     PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
     PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x04, "Easy" )
+	PORT_DIPSETTING(    0x06, "Medium" )
+	PORT_DIPSETTING(    0x02, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
     PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
     PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -4797,31 +4917,31 @@ ROM_END
 
 ROM_START( headonch ) /* Head On Channel (Prototype) (c)1994 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
-	ROM_LOAD16_BYTE( "epr-16812.ic32", 0x000000, 0x080000, CRC(091cf538) SHA1(04673678f543743b395edea39ad4ee6177436dc0) )
-	ROM_LOAD16_BYTE( "epr-16811.ic31", 0x000001, 0x080000, CRC(91f3b5f1) SHA1(15cbe7a172dde7de7b73f0c9eeddfee41e8d1f80) )
-	ROM_LOAD16_BYTE( "epr-16814.ic34", 0x100000, 0x080000, CRC(d8dc6323) SHA1(e7e891324764641691dcb63e5222f2ed9207fb96) )
-	ROM_LOAD16_BYTE( "epr-16813.ic33", 0x100001, 0x080000, CRC(3268e38b) SHA1(10ded2be01465014ca9e6c64ffab1190ec985359) )
-
+	ROM_LOAD16_BYTE( "headonch.ic32", 0x000000, 0x080000, CRC(091cf538) SHA1(04673678f543743b395edea39ad4ee6177436dc0) )
+	ROM_LOAD16_BYTE( "headonch.ic31", 0x000001, 0x080000, CRC(91f3b5f1) SHA1(15cbe7a172dde7de7b73f0c9eeddfee41e8d1f80) )
+	ROM_LOAD16_BYTE( "headonch.ic34", 0x100000, 0x080000, CRC(d8dc6323) SHA1(e7e891324764641691dcb63e5222f2ed9207fb96) )
+	ROM_LOAD16_BYTE( "headonch.ic33", 0x100001, 0x080000, CRC(3268e38b) SHA1(10ded2be01465014ca9e6c64ffab1190ec985359) )
+	
 	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
-	ROM_LOAD( "epr-16810.ic4", 0x000000, 0x040000, CRC(90af7301) SHA1(227227cb5d0df6612bac7b4c94b99e2287686ccd) )
+    ROM_LOAD( "headonch.ic4", 0x000000, 0x040000, CRC(90af7301) SHA1(227227cb5d0df6612bac7b4c94b99e2287686ccd) )
 ROM_END
 
 ROM_START( ooparts ) /* Oo Parts (Prototype) (c)1992 Sega / Success */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
-	ROM_LOAD16_BYTE( "epr-15614.ic32", 0x000000, 0x080000, CRC(8dcf2940) SHA1(f72630e8a26e7f2089da56878a1599268c355246) )
-	ROM_LOAD16_BYTE( "epr-15613.ic31", 0x000001, 0x080000, CRC(35381899) SHA1(524f6e1b1292542079589275e20f45c2eb68605c) )
-	ROM_LOAD16_BYTE( "mpr-15616.ic34", 0x100000, 0x080000, CRC(7192ac29) SHA1(d3028a9bbb7faa733285cf7e47fd840ec0d0bf69) )
-	ROM_LOAD16_BYTE( "mpr-15615.ic33", 0x100001, 0x080000, CRC(42755dc2) SHA1(cd0aa79418b922266c5d41bf24b9136f9f105dc5) )
-
+	ROM_LOAD16_BYTE( "ooparts.ic32", 0x000000, 0x080000, CRC(8dcf2940) SHA1(f72630e8a26e7f2089da56878a1599268c355246) )
+	ROM_LOAD16_BYTE( "ooparts.ic31", 0x000001, 0x080000, CRC(35381899) SHA1(524f6e1b1292542079589275e20f45c2eb68605c) )
+	ROM_LOAD16_BYTE( "ooparts.ic34", 0x100000, 0x080000, CRC(7192ac29) SHA1(d3028a9bbb7faa733285cf7e47fd840ec0d0bf69) )
+	ROM_LOAD16_BYTE( "ooparts.ic33", 0x100001, 0x080000, CRC(42755dc2) SHA1(cd0aa79418b922266c5d41bf24b9136f9f105dc5) )
+	
 	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
-	ROM_LOAD( "epr-15617.ic4", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
+	ROM_LOAD( "epr-13655.ic4", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
 ROM_END
 
 ROM_START( ssonicbr )  /* Sega Sonic Bros (Prototype) (c)1992 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ssonicbr.ic32", 0x000000, 0x040000, CRC(cf254ecd) SHA1(4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800) )
 	ROM_LOAD16_BYTE( "ssonicbr.ic31", 0x000001, 0x040000, CRC(03709746) SHA1(0b457f557da77acd3f43950428117c1decdfaf26) )
-
+	
 	ROM_REGION( 0x020000, REGION_SOUND1, 0 )
 	ROM_LOAD( "ssonicbr.ic4", 0x000000, 0x020000, CRC(78e56a51) SHA1(8a72c12975cd74919b4337e0f681273e6b5cbbc6) )
 ROM_END
@@ -6015,6 +6135,8 @@ GAME ( 1990, tfrceac,  0,        segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Tec
 GAME ( 1990, tfrceacj, tfrceac,  segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC (Japan)" )
 GAME ( 1990, tfrceacb, tfrceac,  segac2,   tfrceac,  tfrceacb, ROT0, "bootleg",                "ThunderForce AC (bootleg)" )
 GAME ( 1991, ribbit,   0,        segac2,   ribbit,   ribbit,   ROT0, "Sega",                   "Ribbit!" )
+GAME ( 1992, ooparts,  0,        ooparts,  ooparts,  segac2,   ROT270, "Sega / Success",       "OOPArts (Japan, Prototype)" )
+GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",                   "SegaSonic Bros (Japan, prototype)" )
 GAME ( 1992, tantr,    0,        segac2,   ichidant, tantr,    ROT0, "Sega",                   "Puzzle & Action: Tant-R (Japan)" )
 GAME ( 1993, tantrkor, tantr,    segac2,   ichidant, tantrkor, ROT0, "Sega",                   "Puzzle & Action: Tant-R (Korea)" )
 GAME ( 1992, tantrbl,  tantr,    segac2,   ichidant, segac2,   ROT0, "bootleg",                "Puzzle & Action: Tant-R (Japan) (bootleg set 1)" )
@@ -6030,9 +6152,7 @@ GAME ( 1994, stkclmns, 0,        segac2,   stkclmns, stkclmns, ROT0, "Sega",    
 GAME ( 1994, puyopuy2, 0,        segac2,   puyopuy2, puyopuy2, ROT0, "Compile (Sega license)", "Puyo Puyo 2 (Japan)" )
 GAME ( 1994, potopoto, 0,        segac2,   potopoto, potopoto, ROT0, "Sega",                   "Poto Poto (Japan)" )
 GAME ( 1994, zunkyou,  0,        segac2,   zunkyou,  zunkyou,  ROT0, "Sega",                   "Zunzunkyou No Yabou (Japan)" )
-GAME ( 1994, headonch, 0,        segac2,   ichidant, tantr,    ROT0, "Sega",                   "Head On Channel (Japan, prototype)" )
-GAME ( 1992, ooparts,  0,        ooparts,  ichidant, tantr,    ROT270, "Sega / Success",       "Oo Parts (Japan, Prototype)" )
-GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",                   "SegaSonic Bros (Japan, prototype)" )
+GAME ( 1994, headonch, 0,        segac2,   headonch, segac2,   ROT0, "Sega",                   "Head On Channel (Japan, prototype)" )
 
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
