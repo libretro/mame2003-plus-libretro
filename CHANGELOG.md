@@ -771,4 +771,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the core options structure to V2. Can now use sublabels and categories when supported by the frontend [mahoneyt944]
 * Core options are now created dynamically based on the core options version supported by the frontend for backwards compatibility [jdgleaver, mahoneyt944]
 * Fixed missing OKIM6295 sound speech samples in Hit The Ice [arcadez]
-* Added new game, Danger Express (prototype) to atarig42.c [arcadez, mahoneyt944]
+* Added Danger Express a super rare Atari prototype to the atarig42 driver [arcadez, mahoneyt944]
+* Filled out dip switch options for Head On Channel, OOPArts and SegaSonic Bros and updated the romsets to latest MAME [arcadez, mahoneyt944]
+
