@@ -5546,6 +5546,7 @@ Other Sun games
 	DRIVER( histryma )	/* bootleg of Fighter's History */
 	DRIVER( bbprot )
 	DRIVER( flower )	/* (c) 1986 Komax */
+  DRIVER( flowerbl )	/* (c) 1986 bootleg */
 	DRIVER( diverboy )	/* (c) 1992 Electronic Devices */
 	DRIVER( beaminv )	/* Tekunon Kougyou */
 	DRIVER( mcatadv )	/* (c) 1993 Wintechno */
