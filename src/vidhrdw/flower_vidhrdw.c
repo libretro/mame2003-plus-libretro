@@ -4,7 +4,7 @@
 #include "vidhrdw/generic.h"
 
 static struct tilemap *flower_bg0_tilemap, *flower_bg1_tilemap, *flower_text_tilemap, *flower_text_right_tilemap;
-data8_t *flower_ram, *flower_textram, *spriteram, *flower_ram2, *flower_bg0ram, *flower_bg1ram, *flower_bg0_scroll, *flower_bg1_scroll;
+data8_t *flower_ram, *flower_textram, *flower_ram2, *flower_bg0ram, *flower_bg1ram, *flower_bg0_scroll, *flower_bg1_scroll;
 
 
 
