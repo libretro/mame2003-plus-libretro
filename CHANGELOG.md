@@ -207,6 +207,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
 * Escape Kids (Asia 4 Players)
+* Flower (bootleg)
 * Fujiyama Buster
 * Gals Panic DX * Mature *
 * Ghox (Joystick)
@@ -316,6 +317,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Find Out - Romset `findout` - colors fixed
 * Fire Barrel - Romset `firebarr`
+* Flower - Romset `flower`
 * Funky Jet - Romset `funkyjet`
 * Gardia - Romset `gardia`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
@@ -460,6 +462,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dig Dug II
 * Diver Boy
 * Final Fight - Added OST soundtrack (via KMFDManic)
+* Flower
 * Funny Bubble - `funybubl` * Mature *
 * Galaga
 * Galaga 3
@@ -773,4 +776,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed missing OKIM6295 sound speech samples in Hit The Ice [arcadez]
 * Added Danger Express a super rare Atari prototype to the atarig42 driver [arcadez, mahoneyt944]
 * Filled out dip switch options for Head On Channel, OOPArts and SegaSonic Bros and updated the romsets to latest MAME [arcadez, mahoneyt944]
+* Updated some parts of flower.c to later MAME fixing some major graphical problems also sorted an issue where the game wouldn't always start [arcadez]
+* Filled out dips and enabled a little hack in the Flower sound core which prevents certain sound samples playing constantly [arcadez]
+
 
