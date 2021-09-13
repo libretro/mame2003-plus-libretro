@@ -320,6 +320,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Flower - Romset `flower`
 * Funky Jet - Romset `funkyjet`
 * Gardia - Romset `gardia`
+* Get Star / Guardian - Romsets `getstar` and `getstarj`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
 * Green Beret - Romset `greenber`
 * Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
@@ -778,5 +779,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Filled out dip switch options for Head On Channel, OOPArts and SegaSonic Bros and updated the romsets to latest MAME [arcadez, mahoneyt944]
 * Updated some parts of flower.c to later MAME fixing some major graphical problems also sorted an issue where the game wouldn't always start [arcadez]
 * Filled out dips and enabled a little hack in the Flower sound core which prevents certain sound samples playing constantly [arcadez]
+* Hooked up the Taito M68705 protection mcu for Get Star / Guardian both versions are now playable [arcadez]
 
 
