@@ -780,5 +780,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated some parts of flower.c to later MAME fixing some major graphical problems also sorted an issue where the game wouldn't always start [arcadez]
 * Filled out dips and enabled a little hack in the Flower sound core which prevents certain sound samples playing constantly [arcadez]
 * Hooked up the Taito M68705 protection mcu for Get Star / Guardian both versions are now playable [arcadez]
-
+* Fixed the tile layers in Flower which were incorrectly reversed causing numerous gfx niggles throughout the game [dink]
 
