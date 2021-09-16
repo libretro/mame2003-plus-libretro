@@ -1322,9 +1322,10 @@ INPUT_PORTS_START( bandido )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unused ))
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ))
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown )) /* don't know if this is used */
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ))
-	PORT_DIPSETTING(    0x00, DEF_STR( On ))
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x80, DEF_STR( Upright ))
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
+
 INPUT_PORTS_END
 
 
