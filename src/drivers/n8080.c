@@ -255,7 +255,7 @@ static VIDEO_START( helifire )
 
 static VIDEO_UPDATE( spacefev )
 {
-	UINT8 mask = flip_screen ? 0xff : 0x00;
+	UINT8 mask = 0 /*flip_screen ? 0xff : 0x00*/;
 
 	int x;
 	int y;
