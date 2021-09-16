@@ -257,6 +257,9 @@ static VIDEO_UPDATE( spacefev )
 {
 	UINT8 mask = flip_screen ? 0xff : 0x00;
 
+	/* Fake dip switch for cocktail mode */
+	if (readinputport(4) == 0x01) mask = 0;
+
 	int x;
 	int y;
 
@@ -1099,6 +1102,11 @@ INPUT_PORTS_START( spacefev )
 
 	PORT_START
 
+	PORT_START	/* fake port for cocktail mode */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
+	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
+
 INPUT_PORTS_END
 
 
@@ -1149,6 +1157,11 @@ INPUT_PORTS_START( highsplt )
 
 	PORT_START
 
+	PORT_START	/* fake port for cocktail mode */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
+	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
+
 INPUT_PORTS_END
 
 
@@ -1198,6 +1211,11 @@ INPUT_PORTS_START( spacelnc )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
 
 	PORT_START
+
+	PORT_START	/* fake port for cocktail mode */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
+	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
 
 INPUT_PORTS_END
 
