@@ -257,13 +257,13 @@ static VIDEO_UPDATE( spacefev )
 {
 	UINT8 mask = flip_screen ? 0xff : 0x00;
 
-	/* Fake dip switch for cocktail mode */
-	if (readinputport(4) == 0x01) mask = 0;
-
 	int x;
 	int y;
 
 	const UINT8* pRAM = n8080_videoram;
+
+	/* Fake dip switch for cocktail mode */
+	if (readinputport(4) == 0x01) mask = 0;
 
 	for (y = 0; y < 256; y++)
 	{
