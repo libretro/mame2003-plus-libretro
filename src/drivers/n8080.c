@@ -222,6 +222,33 @@ static PALETTE_INIT( helifire )
 }
 
 
+static void helifire_next_line(void)
+{
+	helifire_mv++;
+
+	if (helifire_sc % 4 == 2)
+	{
+		helifire_mv %= 256;
+	}
+	else
+	{
+		if (flip_screen)
+		{
+			helifire_mv %= 255;
+		}
+		else
+		{
+			helifire_mv %= 257;
+		}
+	}
+
+	if (helifire_mv == 128)
+	{
+		helifire_sc++;
+	}
+}
+
+
 static VIDEO_START( spacefev )
 {
 	spacefev_ufo_frame = 0;
@@ -654,31 +681,6 @@ static void stop_red_cannon(int dummy)
 	timer_adjust(spacefev_red_cannon_timer, TIME_NEVER, 0, 0);
 }
 
-void helifire_next_line(void)
-{
-	helifire_mv++;
-
-	if (helifire_sc % 4 == 2)
-	{
-		helifire_mv %= 256;
-	}
-	else
-	{
-		if (flip_screen)
-		{
-			helifire_mv %= 255;
-		}
-		else
-		{
-			helifire_mv %= 257;
-		}
-	}
-
-	if (helifire_mv == 128)
-	{
-		helifire_sc++;
-	}
-}
 
 static void spacefev_sound_pins_changed(void)
 {
