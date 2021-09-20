@@ -1128,34 +1128,25 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( helifire )
 
+	MDRV_IMPORT_FROM(n8080)
+
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", 8080, 20160000 / 10)
+	MDRV_MACHINE_INIT(helifire)
+
+	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(helifire_main_cpu_readmem, helifire_main_cpu_writemem)
 	MDRV_CPU_PORTS(n8080_main_io_readport, n8080_main_io_writeport)
-	MDRV_CPU_VBLANK_INT(interrupt, 2)
 
-	MDRV_CPU_ADD_TAG("sound", I8035, 6000000 / I8039_CLOCK_DIVIDER)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MODIFY("sound")
 	MDRV_CPU_MEMORY(sound_cpu_readmem, sound_cpu_writemem)
 	MDRV_CPU_PORTS(helifire_sound_io_readport, helifire_sound_io_writeport)
 
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(256, 256)
-	MDRV_VISIBLE_AREA(0, 255, 16, 239)
 	MDRV_PALETTE_LENGTH(0x400 + 8)
 	MDRV_PALETTE_INIT(helifire)
 	MDRV_VIDEO_START(helifire)
 	MDRV_VIDEO_UPDATE(helifire)
 	MDRV_VIDEO_EOF(helifire)
-
-	MDRV_MACHINE_INIT(helifire)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(DAC, n8080_dac_interface)
 MACHINE_DRIVER_END
 
 
