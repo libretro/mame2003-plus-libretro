@@ -477,14 +477,14 @@ static VIDEO_UPDATE( helifire )
 			{
 				if (flip_screen)
 				{
-					if ((videoram[offset ^ 0x1fff] << n) & 0x80)
+					if ((n8080_videoram[offset ^ 0x1fff] << n) & 0x80)
 					{
 						pLine[x + n] = n8080_colorram[offset ^ 0x1fff] & 7;
 					}
 				}
 				else
 				{
-					if ((videoram[offset] >> n) & 1)
+					if ((n8080_videoram[offset] >> n) & 1)
 					{
 						pLine[x + n] = n8080_colorram[offset] & 7;
 					}
