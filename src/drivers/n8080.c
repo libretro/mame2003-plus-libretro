@@ -47,8 +47,6 @@ static unsigned shift_bits;
 static UINT16 prev_sound_pins;
 static UINT16 curr_sound_pins;
 
-static int flip_screen;
-
 static unsigned helifire_mv;
 static unsigned helifire_sc; /* IC56 */
 
