@@ -27,7 +27,6 @@ static int mono_flop[3];
 static int sheriff_color_mode;
 static int sheriff_color_data;
 
-static int helifire_scroll;
 static int helifire_decay;
 
 static UINT8 helifire_LSFR[63];
@@ -51,6 +50,9 @@ static UINT16 prev_sound_pins;
 static UINT16 curr_sound_pins;
 
 static int flip_screen;
+
+static unsigned helifire_mv;
+static unsigned helifire_sc; /* IC56 */
 
 
 /* following data is based on screen shots */
@@ -238,6 +240,9 @@ static VIDEO_START( helifire )
 
 	int i;
 
+	helifire_mv = 0;
+	helifire_sc = 0;
+
 	for (i = 0; i < 63; i++)
 	{
 		int bit =
@@ -249,7 +254,7 @@ static VIDEO_START( helifire )
 		helifire_LSFR[i] = data;
 	}
 
-	helifire_scroll = 0;
+	flip_screen = 0;
 
 	helifire_flash = 0;
 
@@ -374,29 +379,22 @@ static VIDEO_UPDATE( sheriff )
 
 static VIDEO_UPDATE( helifire )
 {
-	UINT8 mask = flip_screen ? 0xff : 0x00;
-
-	int x;
-	int y;
-
-	const UINT8* pRAM = n8080_videoram;
-
 	int SUN_BRIGHTNESS = readinputport(4);
 	int SEA_BRIGHTNESS = readinputport(5);
 
 	static const int wave[8] = { 0, 1, 2, 2, 2, 1, 0, 0 };
 
-	int level;
-
-	int counter = helifire_scroll;
+	unsigned saved_mv = helifire_mv;
+	unsigned saved_sc = helifire_sc;
+	
+	int x;
+	int y;
 
 	for (y = 0; y < 256; y++)
 	{
-		UINT16* pLine = bitmap->line[y ^ mask];
+		UINT16* pLine = bitmap->line[y];
 
-		counter = (counter + 1) % 257;
-
-		level = 120 + wave[counter & 7];
+		int level = 120 + wave[helifire_mv & 7];
 
 		/* draw sky */
 
@@ -407,9 +405,9 @@ static VIDEO_UPDATE( helifire )
 
 		/* draw stars */
 
-		if (counter % 8 == 4) /* upper half */
+		if (helifire_mv % 8 == 4) /* upper half */
 		{
-			int step = (320 * counter) % sizeof helifire_LSFR;
+			int step = (320 * (helifire_mv - 0)) % sizeof helifire_LSFR;
 
 			int data =
 				((helifire_LSFR[step] & 1) << 6) |
@@ -420,9 +418,9 @@ static VIDEO_UPDATE( helifire )
 			pLine[0x80 + data] |= 0x100;
 		}
 
-		if (counter % 8 == 5) /* lower half */
+		if (helifire_mv % 8 == 5) /* lower half */
 		{
-			int step = (320 * (counter - 1)) % sizeof helifire_LSFR;
+			int step = (320 * (helifire_mv - 1)) % sizeof helifire_LSFR;
 
 			int data =
 				((helifire_LSFR[step] & 1) << 6) |
@@ -444,37 +442,41 @@ static VIDEO_UPDATE( helifire )
 
 		for (x = 0; x < 256; x += 8)
 		{
-			int n;
-
 			int offset = 32 * y + (x >> 3);
+
+			int n;
 
 			for (n = 0; n < 8; n++)
 			{
-				if (pRAM[offset] & (1 << n))
+				if (flip_screen)
 				{
-					pLine[(x + n) ^ mask] = n8080_colorram[offset] & 7;
+					if ((videoram[offset ^ 0x1fff] << n) & 0x80)
+					{
+						pLine[x + n] = n8080_colorram[offset ^ 0x1fff] & 7;
+					}
+				}
+				else
+				{
+					if ((videoram[offset] >> n) & 1)
+					{
+						pLine[x + n] = n8080_colorram[offset] & 7;
+					}
 				}
 			}
 		}
+
+		/* next line */
+
+		helifire_next_line();
 	}
-}
 
-
-static VIDEO_EOF( spacefev )
-{
-	spacefev_ufo_frame = (spacefev_ufo_frame + 1) % 32;
-
-	if (spacefev_ufo_frame == 0)
-	{
-		spacefev_ufo_cycle = (spacefev_ufo_cycle + 1) % 6;
-	}
+	helifire_mv = saved_mv;
+	helifire_sc = saved_sc;
 }
 
 
 static VIDEO_EOF( helifire )
 {
-	helifire_scroll = (helifire_scroll + 256) % 257;
-
 	int n = (cpu_getcurrentframe() >> 1) % sizeof helifire_LSFR;
 
 	int i;
@@ -502,6 +504,22 @@ static VIDEO_EOF( helifire )
 			R ? 255 : 0,
 			G ? 255 : 0,
 			B ? 255 : 0);
+	}
+
+	for (i = 0; i < 256; i++)
+	{
+		helifire_next_line();
+	}
+}
+
+
+static VIDEO_EOF( spacefev )
+{
+	spacefev_ufo_frame = (spacefev_ufo_frame + 1) % 32;
+
+	if (spacefev_ufo_frame == 0)
+	{
+		spacefev_ufo_cycle = (spacefev_ufo_cycle + 1) % 6;
 	}
 }
 
@@ -636,6 +654,31 @@ static void stop_red_cannon(int dummy)
 	timer_adjust(spacefev_red_cannon_timer, TIME_NEVER, 0, 0);
 }
 
+void helifire_next_line(void)
+{
+	helifire_mv++;
+
+	if (helifire_sc % 4 == 2)
+	{
+		helifire_mv %= 256;
+	}
+	else
+	{
+		if (flip_screen)
+		{
+			helifire_mv %= 255;
+		}
+		else
+		{
+			helifire_mv %= 257;
+		}
+	}
+
+	if (helifire_mv == 128)
+	{
+		helifire_sc++;
+	}
+}
 
 static void spacefev_sound_pins_changed(void)
 {
