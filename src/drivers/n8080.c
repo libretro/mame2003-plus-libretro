@@ -403,7 +403,7 @@ static VIDEO_UPDATE( helifire )
 
 		/* draw stars */
 
-		if (counter % 8 == 4)
+		if (counter % 8 == 4) /* upper half */
 		{
 			int step = (320 * counter) % sizeof helifire_LSFR;
 
@@ -414,6 +414,19 @@ static VIDEO_UPDATE( helifire )
 				((helifire_LSFR[step] & 8) << 0);
 
 			pLine[0x80 + data] |= 0x100;
+		}
+
+		if (counter % 8 == 5) /* lower half */
+		{
+			int step = (320 * counter) % sizeof helifire_LSFR;
+
+			int data =
+				((helifire_LSFR[step] & 1) << 6) |
+				((helifire_LSFR[step] & 2) << 4) |
+				((helifire_LSFR[step] & 4) << 2) |
+				((helifire_LSFR[step] & 8) << 0);
+
+			pLine[0x00 + data] |= 0x100;
 		}
 
 		/* draw sea */
