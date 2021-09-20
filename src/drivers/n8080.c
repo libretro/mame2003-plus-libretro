@@ -31,9 +31,6 @@ static int helifire_decay;
 
 static UINT8 helifire_LSFR[63];
 
-static UINT8* n8080_videoram;
-static UINT8* n8080_colorram;
-
 static int spacefev_ufo_frame;
 static int spacefev_ufo_cycle;
 static int spacefev_red_screen;
@@ -296,7 +293,7 @@ static VIDEO_UPDATE( spacefev )
 	int x;
 	int y;
 
-	const UINT8* pRAM = n8080_videoram;
+	const UINT8* pRAM = videoram;
 
 	/* Fake dip switch for cocktail mode */
 	if (readinputport(4) == 0x01) mask = 0;
@@ -366,7 +363,7 @@ static VIDEO_UPDATE( sheriff )
 	int x;
 	int y;
 
-	const UINT8* pRAM = n8080_videoram;
+	const UINT8* pRAM = videoram;
 
 	for (y = 0; y < 256; y++)
 	{
@@ -477,16 +474,16 @@ static VIDEO_UPDATE( helifire )
 			{
 				if (flip_screen)
 				{
-					if ((n8080_videoram[offset ^ 0x1fff] << n) & 0x80)
+					if ((videoram[offset ^ 0x1fff] << n) & 0x80)
 					{
-						pLine[x + n] = n8080_colorram[offset ^ 0x1fff] & 7;
+						pLine[x + n] = colorram[offset ^ 0x1fff] & 7;
 					}
 				}
 				else
 				{
-					if ((n8080_videoram[offset] >> n) & 1)
+					if ((videoram[offset] >> n) & 1)
 					{
-						pLine[x + n] = n8080_colorram[offset] & 7;
+						pLine[x + n] = colorram[offset] & 7;
 					}
 				}
 			}
@@ -930,7 +927,7 @@ MEMORY_END
 static MEMORY_WRITE_START( main_cpu_writemem )
 MEMORY_ADDRESS_BITS(15)
     { 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x7fff, MWA_RAM, &n8080_videoram },
+	{ 0x4000, 0x7fff, MWA_RAM, &videoram },
 MEMORY_END
 
 
@@ -942,8 +939,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( helifire_main_cpu_writemem )
     { 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x7fff, MWA_RAM, &n8080_videoram },
-	{ 0xc000, 0xdfff, MWA_RAM, &n8080_colorram },
+	{ 0x4000, 0x7fff, MWA_RAM, &videoram },
+	{ 0xc000, 0xdfff, MWA_RAM, &colorram },
 MEMORY_END
 
 
