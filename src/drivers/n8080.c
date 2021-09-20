@@ -40,6 +40,8 @@ static int spacefev_ufo_cycle;
 static int spacefev_red_screen;
 static int spacefev_red_cannon;
 
+int helifire_flash;
+
 static mame_timer* spacefev_red_cannon_timer;
 
 static unsigned shift_data;
@@ -248,6 +250,8 @@ static VIDEO_START( helifire )
 	}
 
 	helifire_scroll = 0;
+
+	helifire_flash = 0;
 
 	return 0;
 }
@@ -470,6 +474,35 @@ static VIDEO_EOF( spacefev )
 static VIDEO_EOF( helifire )
 {
 	helifire_scroll = (helifire_scroll + 256) % 257;
+
+	int n = (cpu_getcurrentframe() >> 1) % sizeof helifire_LSFR;
+
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		int R = (i & 1);
+		int G = (i & 2);
+		int B = (i & 4);
+
+		if (helifire_flash)
+		{
+			if (helifire_LSFR[n] & 0x20)
+			{
+				G |= B;
+			}
+
+			if (cpu_getcurrentframe() & 0x04)
+			{
+				R |= G;
+			}
+		}
+
+		palette_set_color(i,
+			R ? 255 : 0,
+			G ? 255 : 0,
+			B ? 255 : 0);
+	}
 }
 
 
