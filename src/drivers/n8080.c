@@ -1059,11 +1059,11 @@ static MACHINE_DRIVER_START( helifire )
 	MDRV_CPU_PORTS(helifire_sound_io_readport, helifire_sound_io_writeport)
 
 	/* video hardware */
+	MDRV_PALETTE_LENGTH(0x400 + 8)
+	MDRV_PALETTE_INIT(helifire)
 	MDRV_VIDEO_START(helifire)
 	MDRV_VIDEO_UPDATE(helifire)
 	MDRV_VIDEO_EOF(helifire)
-	MDRV_PALETTE_LENGTH(0x400 + 8)
-	MDRV_PALETTE_INIT(helifire)
 MACHINE_DRIVER_END
 
 
