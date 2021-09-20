@@ -418,7 +418,7 @@ static VIDEO_UPDATE( helifire )
 
 		if (counter % 8 == 5) /* lower half */
 		{
-			int step = (320 * counter) % sizeof helifire_LSFR;
+			int step = (320 * (counter - 1)) % sizeof helifire_LSFR;
 
 			int data =
 				((helifire_LSFR[step] & 1) << 6) |
