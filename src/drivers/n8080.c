@@ -780,6 +780,11 @@ static void delayed_sound_2(int data)
 		flip_screen = data & 0x20;
 	}
 
+	if (HARDWARE_IS_HELIFIRE)
+	{
+		helifire_flash = data & 0x20;
+	}
+
 	sound_pins_changed();
 }
 
