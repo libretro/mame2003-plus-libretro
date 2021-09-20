@@ -1060,7 +1060,7 @@ static MACHINE_INIT( helifire )
 	delayed_sound_1(0);
 	delayed_sound_2(0);
 
-	n8080_video_control_w(0, 0);
+//	n8080_video_control_w(0, 0);
 
 	helifire_decay = 0;
 }
