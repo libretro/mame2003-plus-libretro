@@ -504,7 +504,7 @@ static VIDEO_EOF( helifire )
 
 	int i;
 
-	for (i = 0; i < 8; i++)
+	for (i = 1; i < 8; i++)
 	{
 		int R = (i & 1);
 		int G = (i & 2);
@@ -524,7 +524,7 @@ static VIDEO_EOF( helifire )
 		}
 
 		palette_set_color(i,
-			1 ? 255 : 0,
+			R ? 255 : 0,
 			G ? 255 : 0,
 			B ? 255 : 0);
 	}
