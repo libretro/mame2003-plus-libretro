@@ -203,7 +203,8 @@ static PALETTE_INIT( helifire )
 {
 	int i;
 
-	palette_init_n8080(NULL, NULL);
+	for (i = 0; i < 8; i++)
+		palette_set_color(i, pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
 
 	for (i = 0; i < 0x100; i++)
 	{
