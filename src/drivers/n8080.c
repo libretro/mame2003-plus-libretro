@@ -526,7 +526,7 @@ static VIDEO_EOF( helifire )
 			}
 		}
 
-		log_cb(RETRO_LOG_INFO, "set: i=%i   %i, %i, %i\n",i,R,G,B);
+		log_cb(RETRO_LOG_INFO, "set: i=%i   %i, %i, %i\n",i,R ? 255 : 0,G ? 255 : 0,B ? 255 : 0);
 		palette_set_color(i,
 			R ? 255 : 0,
 			G ? 255 : 0,
