@@ -524,7 +524,7 @@ static VIDEO_EOF( helifire )
 			}
 		}
 
-		palette_set_color(i,r,g,b);
+		palette_set_color(i,R,G,B);
 	}
 
 	for (i = 0; i < 256; i++)
