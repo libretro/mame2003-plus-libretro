@@ -508,7 +508,7 @@ static VIDEO_EOF( helifire )
 	for (i = 0; i < 8; i++)
 	{
 		int R = (i & 1);
-		int G = (i & 2);
+		int G = 1/*(i & 2)*/;
 		int B = (i & 4);
 
 		if (helifire_flash)
