@@ -511,7 +511,9 @@ static VIDEO_EOF( helifire )
 		int G = (i & 2);
 		int B = (i & 4);
 
-		if (0/*helifire_flash*/)
+		log_cb(RETRO_LOG_INFO, "init: i=%i   %i, %i, %i\n",i,R,G,B);
+
+		if (helifire_flash)
 		{
 			if (helifire_LSFR[n] & 0x20)
 			{
@@ -524,6 +526,7 @@ static VIDEO_EOF( helifire )
 			}
 		}
 
+		log_cb(RETRO_LOG_INFO, "set: i=%i   %i, %i, %i\n",i,R,G,B);
 		palette_set_color(i,
 			R ? 255 : 0,
 			G ? 255 : 0,
