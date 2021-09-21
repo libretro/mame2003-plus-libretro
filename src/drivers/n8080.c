@@ -507,11 +507,11 @@ static VIDEO_EOF( helifire )
 
 	for (i = 0; i < 8; i++)
 	{
-		int R = 0xff * ((i >> 0) & 1);
-		int G = 0xff * ((i >> 1) & 1);
-		int B = 0xff * ((i >> 2) & 1);
+		int R = (i & 1);
+		int G = (i & 2);
+		int B = (i & 4);
 
-		if (helifire_flash)
+		if (0/*helifire_flash*/)
 		{
 			if (helifire_LSFR[n] & 0x20)
 			{
@@ -524,7 +524,10 @@ static VIDEO_EOF( helifire )
 			}
 		}
 
-		palette_set_color(i,R,G,B);
+		palette_set_color(i,
+			R ? 255 : 0,
+			G ? 255 : 0,
+			B ? 255 : 0);
 	}
 
 	for (i = 0; i < 256; i++)
