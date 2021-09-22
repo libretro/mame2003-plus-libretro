@@ -1671,5 +1671,5 @@ GAME (1979, highspla, highsplt, spacefev, highsplt, 0, ROT270, "Nintendo", "Spac
 GAME (1979, spacelnc, 0,        spacefev, spacelnc, 0, ROT270, "Nintendo", "Space Launcher" )
 GAME (1979, sheriff,  0,        sheriff,  sheriff,  0, ROT270, "Nintendo", "Sheriff" )
 GAME (1980, bandido,  sheriff,  sheriff,  bandido,  0, ROT270, "Exidy",    "Bandido" )
-GAMEX(1980, helifire, 0,        helifire, helifire, 0, ROT270, "Nintendo", "HeliFire (set 1)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
-GAMEX(1980, helifira, helifire, helifire, helifire, 0, ROT270, "Nintendo", "HeliFire (set 2)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAMEX(1980, helifire, 0,        helifire, helifire, 0, ROT270, "Nintendo", "HeliFire (set 1)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX(1980, helifira, helifire, helifire, helifire, 0, ROT270, "Nintendo", "HeliFire (set 2)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
