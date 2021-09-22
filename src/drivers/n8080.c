@@ -504,7 +504,7 @@ static VIDEO_EOF( helifire )
 
 	int i;
 
-	for (i = 1; i < 8; i++)
+	for (i = 0; i < 8; i++)
 	{
 		int R = (i & 1);
 		int G = (i & 2);
@@ -523,10 +523,19 @@ static VIDEO_EOF( helifire )
 			}
 		}
 
-		palette_set_color(i,
+		/*palette_set_color(i,
 			R ? 255 : 0,
 			G ? 255 : 0,
-			B ? 255 : 0);
+			B ? 255 : 0);*/
+
+		palette_set_color(0, 255,   0,   0); // red
+		palette_set_color(1, 255, 255,   0); // brown
+		palette_set_color(2,   0, 255,   0); // green
+		palette_set_color(3, 255,   0, 255); // purple
+		palette_set_color(4,   0,   0, 255); // blue
+		palette_set_color(5,   0, 255, 255); // cyan
+		palette_set_color(6, 255, 255, 255);
+		palette_set_color(7,   0,   0,   0);
 	}
 
 	for (i = 0; i < 256; i++)
