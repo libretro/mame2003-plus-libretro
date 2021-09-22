@@ -178,6 +178,8 @@ static WRITE_HANDLER( n8080_shift_bits_w )
 {
 	shift_bits = data & 7;
 }
+
+
 static WRITE_HANDLER( n8080_shift_data_w )
 {
 	shift_data = (shift_data >> 8) | (data << 8);
@@ -830,6 +832,8 @@ static WRITE_HANDLER( n8080_sound_1_w )
 {
 	timer_set(TIME_NOW, data, delayed_sound_1); /* force CPUs to sync */
 }
+
+
 static WRITE_HANDLER( n8080_sound_2_w )
 {
 	timer_set(TIME_NOW, data, delayed_sound_2); /* force CPUs to sync */
@@ -870,6 +874,8 @@ static READ_HANDLER( n8080_8035_t0_r )
 {
 	return (curr_sound_pins & (1 << 0x7)) ? 1 : 0;
 }
+
+
 static READ_HANDLER( n8080_8035_t1_r )
 {
 	return (curr_sound_pins & (1 << 0xC)) ? 1 : 0;
@@ -880,6 +886,8 @@ static READ_HANDLER( helifire_8035_t0_r )
 {
 	return (curr_sound_pins & (1 << 0x3)) ? 1 : 0;
 }
+
+
 static READ_HANDLER( helifire_8035_t1_r )
 {
 	return (curr_sound_pins & (1 << 0x4)) ? 1 : 0;
@@ -919,6 +927,7 @@ MEMORY_ADDRESS_BITS(15)
 	{ 0x4000, 0x7fff, MRA_RAM },
 MEMORY_END
 
+
 static MEMORY_WRITE_START( main_cpu_writemem )
 MEMORY_ADDRESS_BITS(15)
     { 0x0000, 0x3fff, MWA_ROM },
@@ -948,6 +957,7 @@ PORT_ADDRESS_BITS(3)
 	{ 0x04, 0x04, input_port_3_r },
 PORT_END
 
+
 static PORT_WRITE_START( n8080_main_io_writeport )
 PORT_ADDRESS_BITS(3)
     { 0x02, 0x02, n8080_shift_bits_w },
@@ -962,6 +972,7 @@ static MEMORY_READ_START( sound_cpu_readmem )
 MEMORY_ADDRESS_BITS(10)
     { 0x0000, 0x03ff, MRA_ROM },
 MEMORY_END
+
 
 static MEMORY_WRITE_START( sound_cpu_writemem )
 MEMORY_ADDRESS_BITS(10)
