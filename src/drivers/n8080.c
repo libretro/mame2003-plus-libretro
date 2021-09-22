@@ -922,35 +922,35 @@ static WRITE_HANDLER( n8080_video_control_w )
 
 
 static MEMORY_READ_START( main_cpu_readmem )
-MEMORY_ADDRESS_BITS(15)
-    { 0x0000, 0x3fff, MRA_ROM },
+	MEMORY_ADDRESS_BITS(15)
+	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x7fff, MRA_RAM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( main_cpu_writemem )
-MEMORY_ADDRESS_BITS(15)
-    { 0x0000, 0x3fff, MWA_ROM },
+	MEMORY_ADDRESS_BITS(15)
+	{ 0x0000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0x7fff, MWA_RAM, &videoram },
 MEMORY_END
 
 
 static MEMORY_READ_START( helifire_main_cpu_readmem )
-    { 0x0000, 0x3fff, MRA_ROM },
+	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x7fff, MRA_RAM },
 	{ 0xc000, 0xdfff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( helifire_main_cpu_writemem )
-    { 0x0000, 0x3fff, MWA_ROM },
+	{ 0x0000, 0x3fff, MWA_ROM },
 	{ 0x4000, 0x7fff, MWA_RAM, &videoram },
 	{ 0xc000, 0xdfff, MWA_RAM, &colorram },
 MEMORY_END
 
 
 static PORT_READ_START( n8080_main_io_readport )
-PORT_ADDRESS_BITS(3)
-    { 0x00, 0x00, input_port_0_r },
+	PORT_ADDRESS_BITS(3)
+	{ 0x00, 0x00, input_port_0_r },
 	{ 0x01, 0x01, input_port_1_r },
 	{ 0x02, 0x02, input_port_2_r },
 	{ 0x03, 0x03, n8080_shift_r },
@@ -959,8 +959,8 @@ PORT_END
 
 
 static PORT_WRITE_START( n8080_main_io_writeport )
-PORT_ADDRESS_BITS(3)
-    { 0x02, 0x02, n8080_shift_bits_w },
+	PORT_ADDRESS_BITS(3)
+	{ 0x02, 0x02, n8080_shift_bits_w },
 	{ 0x03, 0x03, n8080_shift_data_w },
 	{ 0x04, 0x04, n8080_sound_1_w },
 	{ 0x05, 0x05, n8080_sound_2_w },
@@ -969,35 +969,38 @@ PORT_END
 
 
 static MEMORY_READ_START( sound_cpu_readmem )
-MEMORY_ADDRESS_BITS(10)
-    { 0x0000, 0x03ff, MRA_ROM },
+	MEMORY_ADDRESS_BITS(10)
+	{ 0x0000, 0x03ff, MRA_ROM },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( sound_cpu_writemem )
-MEMORY_ADDRESS_BITS(10)
-    { 0x0000, 0x03ff, MWA_ROM },
+	MEMORY_ADDRESS_BITS(10)
+	{ 0x0000, 0x03ff, MWA_ROM },
 MEMORY_END
 
+
 static PORT_READ_START( n8080_sound_io_readport )
-    { I8039_t0, I8039_t0, n8080_8035_t0_r },
+	{ I8039_t0, I8039_t0, n8080_8035_t0_r },
 	{ I8039_t1, I8039_t1, n8080_8035_t1_r },
 	{ I8039_p1, I8039_p1, n8080_8035_p1_r },
 PORT_END
 
+
 static PORT_WRITE_START( n8080_sound_io_writeport )
-    { I8039_p2, I8039_p2, n8080_dac_w },
+	{ I8039_p2, I8039_p2, n8080_dac_w },
 PORT_END
 
 
 static PORT_READ_START( helifire_sound_io_readport )
-    { I8039_t0, I8039_t0, helifire_8035_t0_r },
+	{ I8039_t0, I8039_t0, helifire_8035_t0_r },
 	{ I8039_t1, I8039_t1, helifire_8035_t1_r },
 	{ 0x00, 0x7f, helifire_8035_extended_ram_r },
 PORT_END
 
+
 static PORT_WRITE_START( helifire_sound_io_writeport )
-    { I8039_p1, I8039_p1, helifire_dac_data_w },
+	{ I8039_p1, I8039_p1, helifire_dac_data_w },
 	{ I8039_p2, I8039_p2, helifire_dac_vref_w },
 PORT_END
 
@@ -1205,7 +1208,6 @@ INPUT_PORTS_START( spacefev )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
-
 INPUT_PORTS_END
 
 
@@ -1260,7 +1262,6 @@ INPUT_PORTS_START( highsplt )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
-
 INPUT_PORTS_END
 
 
@@ -1315,7 +1316,6 @@ INPUT_PORTS_START( spacelnc )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ))
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ))
-
 INPUT_PORTS_END
 
 
@@ -1424,7 +1424,6 @@ INPUT_PORTS_START( bandido )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Cabinet ))
 	PORT_DIPSETTING(    0x80, DEF_STR( Upright ))
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ))
-
 INPUT_PORTS_END
 
 
@@ -1500,7 +1499,6 @@ INPUT_PORTS_START( helifire )
 	PORT_DIPSETTING(    0x50, "50" )
 	PORT_DIPSETTING(    0x60, "60" )
 	PORT_DIPSETTING(    0x70, "70" )
-
 INPUT_PORTS_END
 
 
@@ -1568,7 +1566,7 @@ ROM_START( highspla )
 	ROM_LOAD( "i2-ha-.bin",  0x1c00, 0x0400, CRC(eff9f82d) SHA1(5004e52dfa652ceefca9ed4210c0fa8f0591dc08) )
 
 	ROM_REGION( 0x0400, REGION_CPU2, 0 )
-    ROM_LOAD( "ss4.bin",     0x0000, 0x0400, CRC(939e01d4) SHA1(7c9ccd24e5da03831cd0aa821da17e3b81cd8381) )
+	ROM_LOAD( "ss4.bin",     0x0000, 0x0400, CRC(939e01d4) SHA1(7c9ccd24e5da03831cd0aa821da17e3b81cd8381) )
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
 	ROM_LOAD( "f5-i-.bin",   0x0000, 0x0020, CRC(c5914ec1) SHA1(198875fcab36d09c8726bb21e2fdff9882f6721a) )
@@ -1625,7 +1623,7 @@ ROM_START( bandido )
 	ROM_LOAD( "sh-a.j2",  0x2400, 0x0400, CRC(a10b848a) SHA1(c045f1f6a11cbf49a1bae06c701b659d587292a3) )
 
 	ROM_REGION( 0x0400, REGION_CPU2, 0 )
-    ROM_LOAD( "sh.snd",   0x0000, 0x0400, CRC(75731745) SHA1(538a63c9c60f1886fca4caf3eb1e0bada2d3f162) )
+	ROM_LOAD( "sh.snd",   0x0000, 0x0400, CRC(75731745) SHA1(538a63c9c60f1886fca4caf3eb1e0bada2d3f162) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
 	ROM_LOAD( "82s137.3l", 0x0000, 0x0400, CRC(820f8cdd) SHA1(197eeb008c140558e7c1ab2b2bd0f6a27096877c) )
@@ -1649,7 +1647,7 @@ ROM_START( helifire )
 ROM_END
 
 ROM_START( helifira )
-	ROM_REGION( 0x8000, REGION_CPU1, 0 )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "hf-a.f1",  0x0000, 0x0400, CRC(92c9d6c1) SHA1(860a7b3980e9e11d48769fad347c965e04ed3f89) )
 	ROM_LOAD( "hf-a.f2",  0x0400, 0x0400, CRC(a264dde8) SHA1(48f972ad5af6c2ab61117f60d9244df6df6d313c) )
 	ROM_LOAD( "hf.g1",    0x0800, 0x0400, CRC(b5ad6e8a) SHA1(1eb4931e85bd6a559e85a2b978d383216d3988a7) )
@@ -1661,7 +1659,7 @@ ROM_START( helifira )
 	ROM_LOAD( "hf.j1",    0x2000, 0x0400, CRC(98ef24db) SHA1(70ad8dd6e1e8f4bf4ce431737ca1856eecc03d53) )
 	ROM_LOAD( "hf.j2",    0x2400, 0x0400, CRC(5e2b5877) SHA1(f7c747e8a1d9fe2dda71ee6304636cf3cdf727a7) )
 
-	ROM_REGION( 0x0400, REGION_CPU2, 0 )
+	ROM_REGION( 0x1000, REGION_CPU2, 0 )
 	ROM_LOAD( "hf.snd",   0x0000, 0x0400, CRC(9d77a31f) SHA1(36db9b5087b6661de88042854874bc247c92d985) )
 ROM_END
 
