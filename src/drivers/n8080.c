@@ -684,6 +684,8 @@ static void spacefev_sound_pins_changed(void)
 {
 	UINT16 changes = ~curr_sound_pins & prev_sound_pins;
 
+	bool irq_active;
+
 	if (changes & (1 << 0x3))
 	{
 		stop_mono_flop(1);
@@ -705,7 +707,7 @@ static void spacefev_sound_pins_changed(void)
 		start_mono_flop(2, TIME_IN_MSEC(0.55 * 22 * 33));
 	}
 
-	bool irq_active = (~curr_sound_pins & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5))) != 0;
+	irq_active = (~curr_sound_pins & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5))) != 0;
 	cpu_set_irq_line(1, 0, irq_active ? ASSERT_LINE : CLEAR_LINE);
 }
 
@@ -713,6 +715,8 @@ static void spacefev_sound_pins_changed(void)
 static void sheriff_sound_pins_changed(void)
 {
 	UINT16 changes = ~curr_sound_pins & prev_sound_pins;
+
+	bool irq_active;
 
 	if (changes & (1 << 0x6))
 	{
@@ -727,7 +731,7 @@ static void sheriff_sound_pins_changed(void)
 		start_mono_flop(1, TIME_IN_MSEC(0.55 * 33 * 33));
 	}
 
-	bool irq_active = (~curr_sound_pins & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5))) != 0;
+	irq_active = (~curr_sound_pins & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5))) != 0;
 	cpu_set_irq_line(1, 0, irq_active ? ASSERT_LINE : CLEAR_LINE);
 }
 
@@ -736,9 +740,11 @@ static void helifire_sound_pins_changed(void)
 {
 	/*UINT16 changes = ~curr_sound_pins & prev_sound_pins;*/
 
+	bool irq_active;
+
 	/* lacking emulation of sound bits 10, 11, 12 and 4 */
 
-	bool irq_active = (~curr_sound_pins & (1 << 6)) != 0;
+	irq_active = (~curr_sound_pins & (1 << 6)) != 0;
 	cpu_set_irq_line(1, 0, irq_active ? ASSERT_LINE : CLEAR_LINE);
 }
 
