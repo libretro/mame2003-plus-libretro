@@ -14,7 +14,6 @@ extern int sidearms_gameid;
 UINT8 *sidearms_bg_scrollx;
 UINT8 *sidearms_bg_scrolly;
 
-static int tilebank_base[4] = { 0, 0x100, 0x200, 0x100 };
 static UINT8 *tilerom;
 static int bgon, objon, staron, charon, flipon;
 static unsigned int hflop_74a_n, hcount_191, vcount_191, latch_374;
@@ -127,23 +126,7 @@ static INLINE void get_philko_bg_tile_info(int offs)
 
 	code = tilerom[offs];
 	attr = tilerom[offs + 1];
-	code |= tilebank_base[(attr>>6 & 0x02) | (attr & 0x01)];
-	color = attr>>3 & 0x0f;
-	flags = attr>>1 & 0x03;
-
-	SET_TILE_INFO(1, code, color, flags)
-}
-
-static INLINE void get_whizz_bg_tile_info(int offs)
-{
-	int code, attr, color, flags;
-
-	code = tilerom[offs];
-	attr = tilerom[offs + 1];
-	code |= ((attr&0xc0)<<2);
-	if((attr&40))code+=256*4;/* test only */
-	
-
+	code |= (((attr>>6 & 0x02) | (attr & 0x01)) * 0x100);
 	color = attr>>3 & 0x0f;
 	flags = attr>>1 & 0x03;
 
@@ -183,12 +166,7 @@ VIDEO_START( sidearms )
 	}
 	else
 	{
-		if(sidearms_gameid==3)
-			bg_tilemap = tilemap_create(get_whizz_bg_tile_info, sidearms_tilemap_scan,TILEMAP_OPAQUE, 32, 32, 128, 128);
-		else
-			bg_tilemap = tilemap_create(get_philko_bg_tile_info, sidearms_tilemap_scan,TILEMAP_OPAQUE, 32, 32, 128, 128);
-	
-		
+		bg_tilemap = tilemap_create(get_philko_bg_tile_info, sidearms_tilemap_scan,TILEMAP_OPAQUE, 32, 32, 128, 128);
 
 		if ( !bg_tilemap ) return 1;
 	}
@@ -366,7 +344,7 @@ static void sidearms_draw_starfield( struct mame_bitmap *bitmap )
 
 static void sidearms_draw_sprites( struct mame_bitmap *bitmap )
 {
-	if (sidearms_gameid == 2) /* Dyger has simple front-to-back sprite priority*/
+	if (sidearms_gameid == 2 || sidearms_gameid == 3) /* Dyger and Whizz have simple front-to-back sprite priority*/
 		sidearms_draw_sprites_region(bitmap, 0x0000, 0x1000);
 	else
 	{
