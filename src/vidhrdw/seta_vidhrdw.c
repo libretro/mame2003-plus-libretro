@@ -673,8 +673,11 @@ static void seta_draw_sprites_map(struct mame_bitmap *bitmap,const struct rectan
 	if (numcol == 1)	numcol = 16;
 
 
-	/* The first column is the frontmost, see twineagl test mode */
-	for ( col = numcol - 1 ; col >= 0; col -- )
+	/* The first column is the frontmost, see twineagl test mode
+        BM 071204 - first column frontmost breaks superman.
+    */
+/*  for ( col = numcol - 1 ; col >= 0; col -- )*/
+	for ( col = 0 ; col < numcol; col ++ )
 	{
 		int x	=	spriteram16[(col * 0x20 + 0x08 + 0x400)/2] & 0xff;
 		int y	=	spriteram16[(col * 0x20 + 0x00 + 0x400)/2] & 0xff;
