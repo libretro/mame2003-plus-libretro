@@ -394,6 +394,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Xenophobe - Romset `xenophob`
 * X-men (6 players) - Romset `xmen6p` and `xmen6pu`
 * Wacko - Romset `wacko`
+* Whizz - Romset `whizz`
 * Zwackery - Romset `zwackery`
 
 ## Games now with sound
@@ -781,4 +782,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Filled out dips and enabled a little hack in the Flower sound core which prevents certain sound samples playing constantly [arcadez]
 * Hooked up the Taito M68705 protection mcu for Get Star / Guardian both versions are now playable [arcadez]
 * Fixed the tile layers in Flower which were incorrectly reversed causing numerous gfx niggles throughout the game [dink]
-
+* Updated sidearms drivers to allow Whizz to be fully playable [mahoneyt944]
