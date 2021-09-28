@@ -1,134 +1,134 @@
 /***************************************************************************
 
-							-= Seta Hardware =-
+                            -= Seta Hardware =-
 
-					driver by	Luca Elia (l.elia@tin.it)
-
-
-Note:	if MAME_DEBUG is defined, pressing Z with:
-
-		Q			shows layer 0
-		W			shows layer 1
-		A			shows the sprites
-
-		Keys can be used together!
+                    driver by   Luca Elia (l.elia@tin.it)
 
 
-						[ 0, 1 Or 2 Scrolling Layers ]
+Note:   if MAME_DEBUG is defined, pressing Z with:
 
-	Each layer consists of 2 tilemaps: only one can be displayed at a
-	given time (the games usually flip continuously between the two).
-	The two tilemaps share the same scrolling registers.
+        Q           shows layer 0
+        W           shows layer 1
+        A           shows the sprites
 
-		Layer Size:				1024 x 512
-		Tiles:					16x16x4 (16x16x6 in some games)
-		Tile Format:
-
-			Offset + 0x0000:
-							f--- ---- ---- ----		Flip X
-							-e-- ---- ---- ----		Flip Y
-							--dc ba98 7654 3210		Code
-
-			Offset + 0x1000:
-
-							fedc ba98 765- ----		-
-							---- ---- ---4 3210		Color
-
-			The other tilemap for this layer (always?) starts at
-			Offset + 0x2000.
+        Keys can be used together!
 
 
-							[ 1024 Sprites ]
+                        [ 0, 1 Or 2 Scrolling Layers ]
 
-	Sprites are 16x16x4. They are just like those in "The Newzealand Story",
-	"Revenge of DOH" etc (tnzs.c). Obviously they're hooked to a 16 bit
-	CPU here, so they're mapped a bit differently in memory. Additionally,
-	there are two banks of sprites. The game can flip between the two to
-	do double buffering, writing to a bit of a control register(see below)
+    Each layer consists of 2 tilemaps: only one can be displayed at a
+    given time (the games usually flip continuously between the two).
+    The two tilemaps share the same scrolling registers.
 
+        Layer Size:             1024 x 512
+        Tiles:                  16x16x4 (16x16x6 in some games)
+        Tile Format:
 
-		Spriteram16_2 + 0x000.w
+            Offset + 0x0000:
+                            f--- ---- ---- ----     Flip X
+                            -e-- ---- ---- ----     Flip Y
+                            --dc ba98 7654 3210     Code
 
-						f--- ---- ---- ----		Flip X
-						-e-- ---- ---- ----		Flip Y
-						--dc b--- ---- ----		-
-						---- --98 7654 3210		Code (Lower bits)
+            Offset + 0x1000:
 
-		Spriteram16_2 + 0x400.w
+                            fedc ba98 765- ----     -
+                            ---- ---- ---4 3210     Color
 
-						fedc b--- ---- ----		Color
-						---- -a9- ---- ----		Code (Upper Bits)
-						---- ---8 7654 3210		X
-
-		Spriteram16   + 0x000.w
-
-						fedc ba98 ---- ----		-
-						---- ---- 7654 3210		Y
+            The other tilemap for this layer (always?) starts at
+            Offset + 0x2000.
 
 
+                            [ 1024 Sprites ]
 
-							[ Floating Tilemap ]
-
-	There's a floating tilemap made of vertical colums composed of 2x16
-	"sprites". Each 32 consecutive "sprites" define a column.
-
-	For column I:
-
-		Spriteram16_2 + 0x800 + 0x40 * I:
-
-						f--- ---- ---- ----		Flip X
-						-e-- ---- ---- ----		Flip Y
-						--dc b--- ---- ----		-
-						---- --98 7654 3210		Code (Lower bits)
-
-		Spriteram16_2 + 0xc00 + 0x40 * I:
-
-						fedc b--- ---- ----		Color
-						---- -a9- ---- ----		Code (Upper Bits)
-						---- ---8 7654 3210		-
-
-	Each column	has a variable horizontal position and a vertical scrolling
-	value (see also the Sprite Control Registers). For column I:
+    Sprites are 16x16x4. They are just like those in "The Newzealand Story",
+    "Revenge of DOH" etc (tnzs.c). Obviously they're hooked to a 16 bit
+    CPU here, so they're mapped a bit differently in memory. Additionally,
+    there are two banks of sprites. The game can flip between the two to
+    do double buffering, writing to a bit of a control register(see below)
 
 
-		Spriteram16   + 0x400 + 0x20 * I:
+        Spriteram16_2 + 0x000.w
 
-						fedc ba98 ---- ----		-
-						---- ---- 7654 3210		Y
+                        f--- ---- ---- ----     Flip X
+                        -e-- ---- ---- ----     Flip Y
+                        --dc ba-- ---- ----     -
+                        ---- --98 7654 3210     Code (Lower bits)
 
-		Spriteram16   + 0x408 + 0x20 * I:
+        Spriteram16_2 + 0x400.w
 
-						fedc ba98 ---- ----		-
-						---- ---- 7654 3210		Low Bits Of X
+                        fedc b--- ---- ----     Color
+                        ---- -a9- ---- ----     Code (Upper Bits)
+                        ---- ---8 7654 3210     X
+
+        Spriteram16   + 0x000.w
+
+                        fedc ba98 ---- ----     -
+                        ---- ---- 7654 3210     Y
 
 
 
-						[ Sprites Control Registers ]
+                            [ Floating Tilemap ]
+
+    There's a floating tilemap made of vertical colums composed of 2x16
+    "sprites". Each 32 consecutive "sprites" define a column.
+
+    For column I:
+
+        Spriteram16_2 + 0x800 + 0x40 * I:
+
+                        f--- ---- ---- ----     Flip X
+                        -e-- ---- ---- ----     Flip Y
+                        --dc b--- ---- ----     -
+                        ---- --98 7654 3210     Code (Lower bits)
+
+        Spriteram16_2 + 0xc00 + 0x40 * I:
+
+                        fedc b--- ---- ----     Color
+                        ---- -a9- ---- ----     Code (Upper Bits)
+                        ---- ---8 7654 3210     -
+
+    Each column has a variable horizontal position and a vertical scrolling
+    value (see also the Sprite Control Registers). For column I:
 
 
-		Spriteram16   + 0x601.b
+        Spriteram16   + 0x400 + 0x20 * I:
 
-						7--- ----		0
-						-6-- ----		Flip Screen
-						--5- ----		0
-						---4 ----		1 (Sprite Enable?)
-						---- 3210		???
+                        fedc ba98 ---- ----     -
+                        ---- ---- 7654 3210     Y
 
-		Spriteram16   + 0x603.b
+        Spriteram16   + 0x408 + 0x20 * I:
 
-						7--- ----		0
-						-6-- ----		Sprite Bank
-						--5- ----		0 = Sprite Buffering (blandia,msgundam,qzkklogy)
-						---4 ----		0
-						---- 3210		Columns To Draw (1 is the special value for 16)
+                        fedc ba98 ---- ----     -
+                        ---- ---- 7654 3210     Low Bits Of X
 
-		Spriteram16   + 0x605.b
 
-						7654 3210		High Bit Of X For Columns 7-0
 
-		Spriteram16   + 0x607.b
+                        [ Sprites Control Registers ]
 
-						7654 3210		High Bit Of X For Columns f-8
+
+        Spriteram16   + 0x601.b
+
+                        7--- ----       0
+                        -6-- ----       Flip Screen
+                        --5- ----       0
+                        ---4 ----       1 (Sprite Enable?)
+                        ---- 3210       ???
+
+        Spriteram16   + 0x603.b
+
+                        7--- ----       0
+                        -6-- ----       Sprite Bank
+                        --5- ----       0 = Sprite Buffering (blandia,msgundam,qzkklogy)
+                        ---4 ----       0
+                        ---- 3210       Columns To Draw (1 is the special value for 16)
+
+        Spriteram16   + 0x605.b
+
+                        7654 3210       High Bit Of X For Columns 7-0
+
+        Spriteram16   + 0x607.b
+
+                        7654 3210       High Bit Of X For Columns f-8
 
 
 
