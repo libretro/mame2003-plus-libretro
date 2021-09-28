@@ -553,8 +553,8 @@ PALETTE_INIT( blandia )
 	for( color = 0; color < 32; color++ )
 		for( pen = 0; pen < 64; pen++ )
 		{
-			colortable[color * 64 + pen + 16*32]       = (pen%16) + 16*32*1;
-			colortable[color * 64 + pen + 16*32+64*32] = pen      + 16*32*2;
+			colortable[color * 64 + pen + 16*32]       = (pen % 16) + color * 0x10 + 16*32*1;
+			colortable[color * 64 + pen + 16*32+64*32] = pen        + 16*32*2;
 		}
 }
 
@@ -820,7 +820,7 @@ static void zombraid_drawcrosshairs( struct mame_bitmap *bitmap, const struct re
 /* For games without tilemaps */
 VIDEO_UPDATE( seta_no_layers )
 {
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
+	fillbitmap(bitmap,Machine->pens[0x1f0],cliprect);
 	seta_draw_sprites(bitmap,cliprect);
 }
 
