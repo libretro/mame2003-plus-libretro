@@ -110,7 +110,12 @@ NVRAM_HANDLER( namcos2 ){
 		}
 		else
 		{
-			memset (namcos2_eeprom, 0xff, namcos2_eeprom_size);
+			int pat = 0xff; /* default */
+			if( namcos2_gametype == NAMCOS21_STARBLADE )
+			{
+				pat = 0x00;
+			}
+			memset (namcos2_eeprom, pat, namcos2_eeprom_size);
 		}
 	}
 }
