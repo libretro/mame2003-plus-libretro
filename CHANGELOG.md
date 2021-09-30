@@ -514,6 +514,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tower Of Druaga
 * Toypop
 * Trojan / Tatakai No Banka 
+* Twin Hawk
 * Two Tigers - `twotigra` romset
 * WWF Wrestlemania
 * Xevious
@@ -783,3 +784,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Hooked up the Taito M68705 protection mcu for Get Star / Guardian both versions are now playable [arcadez]
 * Fixed the tile layers in Flower which were incorrectly reversed causing numerous gfx niggles throughout the game [dink]
 * Updated sidearms drivers to allow Whizz to be fully playable [mahoneyt944]
+* Fixed some incorrect tile layer handling which was causing missing and or broken graphics in Superman and Twin Hawk [mahoneyt944]
+* Sorted some sound niggles in Twin Hawk which would occur when the screen gets fairly busy [arcadez]
