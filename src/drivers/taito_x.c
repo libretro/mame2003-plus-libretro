@@ -307,7 +307,7 @@ static WRITE16_HANDLER( kyustrkr_input_w )
 
 /**************************************************************************/
 
-static int banknum = -1;
+static INT32 banknum = -1;
 
 static void reset_sound_region(void)
 {
@@ -1083,7 +1083,8 @@ static MACHINE_DRIVER_START( superman )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
+	MDRV_INTERLEAVE(10) /* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+  
 	MDRV_MACHINE_INIT(cchip1)
 
 	/* video hardware */
@@ -1114,8 +1115,7 @@ static MACHINE_DRIVER_START( daisenpu )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	MDRV_MACHINE_INIT(cchip1)
+	MDRV_INTERLEAVE(10) /* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1144,8 +1144,7 @@ static MACHINE_DRIVER_START( gigandes )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	MDRV_MACHINE_INIT(cchip1)
+	MDRV_INTERLEAVE(10) /* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1175,8 +1174,7 @@ static MACHINE_DRIVER_START( ballbros )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	MDRV_MACHINE_INIT(cchip1)
+	MDRV_INTERLEAVE(10) /* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
