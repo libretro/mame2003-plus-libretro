@@ -898,7 +898,6 @@ int get_retro_code(const char* type, unsigned osd_id)
       case  OSD_JOYPAD_R3:      return RETRO_DEVICE_ID_JOYPAD_R3;
     }
   }
-
   else if(strcmp(type, "mouse") == 0)
   {
     switch(osd_id)
@@ -910,7 +909,6 @@ int get_retro_code(const char* type, unsigned osd_id)
       case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
     }
   }
-
   else if(strcmp(type, "gun") == 0)
   {
     switch(osd_id)
@@ -929,6 +927,8 @@ int get_retro_code(const char* type, unsigned osd_id)
       case  OSD_LIGHTGUN_DPAD_RIGHT:      return RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT;
     }
   }
+  else
+    log_cb(RETRO_LOG_WARN, LOGPRE "get_retro_code() called with invalid type! %s\n", type);
 
   return INT_MAX; /* no match found */
 }
