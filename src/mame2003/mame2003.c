@@ -75,9 +75,7 @@ double round(double number)
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
    unsigned   get_device_parent(unsigned device_id);
-        int   get_retropad_code(unsigned osd_code);
-        int   get_retromouse_code(unsigned osd_code);
-        int   get_retrogun_code(unsigned osd_code);
+        int   get_retro_code(const char* type, unsigned osd_code);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
    unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
    unsigned   decode_osd_joycode(unsigned joycode);
@@ -797,7 +795,7 @@ void retro_describe_controls(void)
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
-      retro_code = get_retropad_code(osd_index);
+      retro_code = get_retro_code("retropad", osd_index);
       if(retro_code != INT_MAX)
       {
         switch(retro_code) /* universal default mappings */
@@ -872,70 +870,66 @@ unsigned get_device_parent(unsigned device_id)
   return INT_MAX;
 }
 
-/* get_retropad_code
+/* get_retro_code
  * converts from OSD_ in mame2003.h to the codes from libretro.h
  * returns INT_MAX if the code is not valid
  */
-int get_retropad_code(unsigned osd_id)
+int get_retro_code(const char* type, unsigned osd_code)
 {
-  switch(osd_id)
+  if(strcmp(type, "retropad") == 0)
   {
-    case  OSD_JOYPAD_B:       return RETRO_DEVICE_ID_JOYPAD_B;
-    case  OSD_JOYPAD_Y:       return RETRO_DEVICE_ID_JOYPAD_Y;
-    case  OSD_JOYPAD_SELECT:  return RETRO_DEVICE_ID_JOYPAD_SELECT;
-    case  OSD_JOYPAD_START:   return RETRO_DEVICE_ID_JOYPAD_START;
-    case  OSD_JOYPAD_UP:      return RETRO_DEVICE_ID_JOYPAD_UP;
-    case  OSD_JOYPAD_DOWN:    return RETRO_DEVICE_ID_JOYPAD_DOWN;
-    case  OSD_JOYPAD_LEFT:    return RETRO_DEVICE_ID_JOYPAD_LEFT;
-    case  OSD_JOYPAD_RIGHT:   return RETRO_DEVICE_ID_JOYPAD_RIGHT;
-    case  OSD_JOYPAD_A:       return RETRO_DEVICE_ID_JOYPAD_A;
-    case  OSD_JOYPAD_X:       return RETRO_DEVICE_ID_JOYPAD_X;
-    case  OSD_JOYPAD_L:       return RETRO_DEVICE_ID_JOYPAD_L;
-    case  OSD_JOYPAD_R:       return RETRO_DEVICE_ID_JOYPAD_R;
-    case  OSD_JOYPAD_L2:      return RETRO_DEVICE_ID_JOYPAD_L2;
-    case  OSD_JOYPAD_R2:      return RETRO_DEVICE_ID_JOYPAD_R2;
-    case  OSD_JOYPAD_L3:      return RETRO_DEVICE_ID_JOYPAD_L3;
-    case  OSD_JOYPAD_R3:      return RETRO_DEVICE_ID_JOYPAD_R3;
+    switch(osd_code)
+    {
+      case  OSD_JOYPAD_B:       return RETRO_DEVICE_ID_JOYPAD_B;
+      case  OSD_JOYPAD_Y:       return RETRO_DEVICE_ID_JOYPAD_Y;
+      case  OSD_JOYPAD_SELECT:  return RETRO_DEVICE_ID_JOYPAD_SELECT;
+      case  OSD_JOYPAD_START:   return RETRO_DEVICE_ID_JOYPAD_START;
+      case  OSD_JOYPAD_UP:      return RETRO_DEVICE_ID_JOYPAD_UP;
+      case  OSD_JOYPAD_DOWN:    return RETRO_DEVICE_ID_JOYPAD_DOWN;
+      case  OSD_JOYPAD_LEFT:    return RETRO_DEVICE_ID_JOYPAD_LEFT;
+      case  OSD_JOYPAD_RIGHT:   return RETRO_DEVICE_ID_JOYPAD_RIGHT;
+      case  OSD_JOYPAD_A:       return RETRO_DEVICE_ID_JOYPAD_A;
+      case  OSD_JOYPAD_X:       return RETRO_DEVICE_ID_JOYPAD_X;
+      case  OSD_JOYPAD_L:       return RETRO_DEVICE_ID_JOYPAD_L;
+      case  OSD_JOYPAD_R:       return RETRO_DEVICE_ID_JOYPAD_R;
+      case  OSD_JOYPAD_L2:      return RETRO_DEVICE_ID_JOYPAD_L2;
+      case  OSD_JOYPAD_R2:      return RETRO_DEVICE_ID_JOYPAD_R2;
+      case  OSD_JOYPAD_L3:      return RETRO_DEVICE_ID_JOYPAD_L3;
+      case  OSD_JOYPAD_R3:      return RETRO_DEVICE_ID_JOYPAD_R3;
+    }
   }
-  return INT_MAX; /* no match found */
-}
+  else if(strcmp(type, "mouse") == 0)
+  {
+    switch(osd_code)
+    {
+      case  OSD_MOUSE_BUTTON_1:  return RETRO_DEVICE_ID_MOUSE_LEFT;
+      case  OSD_MOUSE_BUTTON_2:  return RETRO_DEVICE_ID_MOUSE_RIGHT;
+      case  OSD_MOUSE_BUTTON_3:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
+      case  OSD_MOUSE_BUTTON_4:  return RETRO_DEVICE_ID_MOUSE_BUTTON_4;
+      case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
+    }
+  }
+  else if(strcmp(type, "lightgun") == 0)
+  {
+    switch(osd_code)
+    {
+      case  OSD_LIGHTGUN_IS_OFFSCREEN:    return RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN;
+      case  OSD_LIGHTGUN_IS_TRIGGER:      return RETRO_DEVICE_ID_LIGHTGUN_TRIGGER;       /*Status Check*/
+      case  OSD_LIGHTGUN_RELOAD:          return RETRO_DEVICE_ID_LIGHTGUN_RELOAD;        /*Forced off-screen shot*/
+      case  OSD_LIGHTGUN_AUX_A:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_A;
+      case  OSD_LIGHTGUN_AUX_B:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_B;
+      case  OSD_LIGHTGUN_START:           return RETRO_DEVICE_ID_LIGHTGUN_START;
+      case  OSD_LIGHTGUN_SELECT:          return RETRO_DEVICE_ID_LIGHTGUN_SELECT;
+      case  OSD_LIGHTGUN_AUX_C:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_C;
+      case  OSD_LIGHTGUN_DPAD_UP:         return RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP;
+      case  OSD_LIGHTGUN_DPAD_DOWN:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN;
+      case  OSD_LIGHTGUN_DPAD_LEFT:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT;
+      case  OSD_LIGHTGUN_DPAD_RIGHT:      return RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT;
+    }
+  }
+  else
+    log_cb(RETRO_LOG_WARN, LOGPRE "get_retro_code() called with invalid type! %s\n", type);
 
-/* converts from OSD_ in mame2003.h to the codes from libretro.h
- * returns INT_MAX if the code is not valid
- */
-int get_retromouse_code(unsigned osd_id)
-{
-  switch(osd_id)
-  {
-    case  OSD_MOUSE_BUTTON_1:  return RETRO_DEVICE_ID_MOUSE_LEFT;
-    case  OSD_MOUSE_BUTTON_2:  return RETRO_DEVICE_ID_MOUSE_RIGHT;
-    case  OSD_MOUSE_BUTTON_3:  return RETRO_DEVICE_ID_MOUSE_MIDDLE;
-    case  OSD_MOUSE_BUTTON_4:  return RETRO_DEVICE_ID_MOUSE_BUTTON_4;
-    case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
-  }
-  return INT_MAX; /* no match found */
-}
-
-/* converts from OSD_ in mame2003.h to the codes from libretro.h
- * returns INT_MAX if the code is not valid
- */
-int get_retrogun_code(unsigned osd_id)
-{
-  switch(osd_id)
-  {
-    case  OSD_LIGHTGUN_IS_OFFSCREEN:    return RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN;
-    case  OSD_LIGHTGUN_IS_TRIGGER:      return RETRO_DEVICE_ID_LIGHTGUN_TRIGGER;       /*Status Check*/
-    case  OSD_LIGHTGUN_RELOAD:          return RETRO_DEVICE_ID_LIGHTGUN_RELOAD;        /*Forced off-screen shot*/
-    case  OSD_LIGHTGUN_AUX_A:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_A;
-    case  OSD_LIGHTGUN_AUX_B:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_B;
-    case  OSD_LIGHTGUN_START:           return RETRO_DEVICE_ID_LIGHTGUN_START;
-    case  OSD_LIGHTGUN_SELECT:          return RETRO_DEVICE_ID_LIGHTGUN_SELECT;
-    case  OSD_LIGHTGUN_AUX_C:           return RETRO_DEVICE_ID_LIGHTGUN_AUX_C;
-    case  OSD_LIGHTGUN_DPAD_UP:         return RETRO_DEVICE_ID_LIGHTGUN_DPAD_UP;
-    case  OSD_LIGHTGUN_DPAD_DOWN:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_DOWN;
-    case  OSD_LIGHTGUN_DPAD_LEFT:       return RETRO_DEVICE_ID_LIGHTGUN_DPAD_LEFT;
-    case  OSD_LIGHTGUN_DPAD_RIGHT:      return RETRO_DEVICE_ID_LIGHTGUN_DPAD_RIGHT;
-  }
   return INT_MAX; /* no match found */
 }
 
@@ -1233,14 +1227,14 @@ int osd_is_joy_pressed(int joycode)
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
 
   /* standard retropad states */
-  retro_code = get_retropad_code(osd_code);
+  retro_code = get_retro_code("retropad", osd_code);
   if (retro_code != INT_MAX)
     return input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
 
   /* pointer, mouse, or lightgun states if selected by core option */
   if (options.xy_device == RETRO_DEVICE_POINTER || options.xy_device == RETRO_DEVICE_MOUSE)
   {
-    retro_code = get_retromouse_code(osd_code);
+    retro_code = get_retro_code("mouse", osd_code);
     if (retro_code != INT_MAX)
     {
       if (options.xy_device == RETRO_DEVICE_MOUSE)
@@ -1252,7 +1246,7 @@ int osd_is_joy_pressed(int joycode)
 
   else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
   {
-    retro_code = get_retrogun_code(osd_code);
+    retro_code = get_retro_code("lightgun", osd_code);
     if (retro_code != INT_MAX)
     {
       if (retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
