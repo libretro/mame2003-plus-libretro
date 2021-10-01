@@ -874,11 +874,11 @@ unsigned get_device_parent(unsigned device_id)
  * converts from OSD_ in mame2003.h to the codes from libretro.h
  * returns INT_MAX if the code is not valid
  */
-int get_retro_code(const char* type, unsigned osd_id)
+int get_retro_code(const char* type, unsigned osd_code)
 {
   if(strcmp(type, "retropad") == 0)
   {
-    switch(osd_id)
+    switch(osd_code)
     {
       case  OSD_JOYPAD_B:       return RETRO_DEVICE_ID_JOYPAD_B;
       case  OSD_JOYPAD_Y:       return RETRO_DEVICE_ID_JOYPAD_Y;
@@ -900,7 +900,7 @@ int get_retro_code(const char* type, unsigned osd_id)
   }
   else if(strcmp(type, "mouse") == 0)
   {
-    switch(osd_id)
+    switch(osd_code)
     {
       case  OSD_MOUSE_BUTTON_1:  return RETRO_DEVICE_ID_MOUSE_LEFT;
       case  OSD_MOUSE_BUTTON_2:  return RETRO_DEVICE_ID_MOUSE_RIGHT;
@@ -911,7 +911,7 @@ int get_retro_code(const char* type, unsigned osd_id)
   }
   else if(strcmp(type, "lightgun") == 0)
   {
-    switch(osd_id)
+    switch(osd_code)
     {
       case  OSD_LIGHTGUN_IS_OFFSCREEN:    return RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN;
       case  OSD_LIGHTGUN_IS_TRIGGER:      return RETRO_DEVICE_ID_LIGHTGUN_TRIGGER;       /*Status Check*/
