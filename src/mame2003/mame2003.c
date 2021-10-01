@@ -38,8 +38,6 @@ short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
 
-/* pointer to the array of structs with default MAME input mappings and labels */
-struct ipd  *default_inputs;
 
 /* MAME data structures to store and translate keyboard state */
 const struct KeyboardInfo  retroKeys[];
@@ -77,7 +75,7 @@ static void   check_system_specs(void);
    unsigned   get_device_parent(unsigned device_id);
         int   get_retro_code(const char* type, unsigned osd_code);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
-   unsigned   encode_osd_joycode(unsigned player_number, unsigned joycode);
+   unsigned   encode_osd_joycode(unsigned player_number, unsigned raw_code);
    unsigned   decode_osd_joycode(unsigned joycode);
    unsigned   calc_player_number(unsigned joycode);
         int   rescale_analog(int libretro_coordinate);
@@ -158,7 +156,7 @@ static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool und
 
 void retro_set_audio_buff_status_cb(void)
 {
-  if (options.frameskip >0 && options.frameskip >= 12)
+  if (options.frameskip > 0 && options.frameskip >= 12)
   {
 
       if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
