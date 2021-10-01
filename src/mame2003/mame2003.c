@@ -75,7 +75,7 @@ static void   check_system_specs(void);
    unsigned   get_device_parent(unsigned device_id);
         int   get_retro_code(const char* type, unsigned osd_code);
    unsigned   get_ctrl_ipt_code(unsigned player_number, unsigned standard_code);
-   unsigned   encode_osd_joycode(unsigned player_number, unsigned raw_code);
+   unsigned   encode_osd_joycode(unsigned player_number, unsigned osd_code);
    unsigned   decode_osd_joycode(unsigned joycode);
    unsigned   calc_player_number(unsigned joycode);
         int   rescale_analog(int libretro_coordinate);
@@ -763,25 +763,25 @@ void retro_describe_controls(void)
 
   for(port_number = 0; port_number < options.content_flags[CONTENT_CTRL_COUNT]; port_number++)
   {
-    unsigned osd_index   = 0;
+    unsigned osd_code    = 0;
     unsigned device_code = options.active_control_type[port_number];
 
     log_cb(RETRO_LOG_DEBUG, "port_number: %i | active device type: %i\n", port_number, device_code);
 
     if(device_code == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
-    for(osd_index = OSD_JOYPAD_B; osd_index < OSD_INPUT_CODES_PER_PLAYER; osd_index++)
+    for(osd_code = OSD_JOYPAD_B; osd_code < OSD_INPUT_CODES_PER_PLAYER; osd_code++)
     {
-      unsigned osd_code         = 0;      /* the unique code (including across players) created by the libretro OSD */
+      unsigned joycode          = 0;      /* the unique code (including across players) created by the libretro OSD */
       unsigned standard_code    = 0;      /* standard code is the MAME term for the internal input code, associated with a controller */
       unsigned ctrl_ipt_code    = 0;      /* input code connects an input port with standard input code */
       unsigned retro_code       = 0;      /* #define code from the libretro.h input API scheme */
       const char *control_name  = 0;
 
-      osd_code = encode_osd_joycode(port_number + 1, osd_index);
-      if(osd_code == INT_MAX) continue;
+      joycode = encode_osd_joycode(port_number + 1, osd_code);
+      if(joycode == INT_MAX) continue;
 
-      standard_code = oscode_find(osd_code, CODE_TYPE_JOYSTICK);
+      standard_code = oscode_find(joycode, CODE_TYPE_JOYSTICK);
       if(standard_code == CODE_NONE) continue;
 
       ctrl_ipt_code = get_ctrl_ipt_code(port_number + 1, standard_code) & ~IPF_PLAYERMASK; /* discard the player mask, although later we may want to distinguish control names by player number */
@@ -793,7 +793,7 @@ void retro_describe_controls(void)
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
-      retro_code = get_retro_code("retropad", osd_index);
+      retro_code = get_retro_code("retropad", osd_code);
       if(retro_code != INT_MAX)
       {
         switch(retro_code) /* universal default mappings */
@@ -821,7 +821,7 @@ void retro_describe_controls(void)
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | osd_code: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), osd_code, standard_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing controls for port_number: %i | device type: %i | parent type: %i | joycode: %i | standard code: %i | retro id: %i | desc: %s\n", port_number, device_code, get_device_parent(device_code), joycode, standard_code, needle->id, needle->description);
       needle++;
     }
   }
@@ -1184,8 +1184,9 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
   for(port_number = 0; port_number < MAX_PLAYER_COUNT; port_number++)
   {
-    int control_idx = 0;
-    for(control_idx = 0; control_idx < OSD_INPUT_CODES_PER_PLAYER; control_idx++)
+    int osd_code;
+
+    for(osd_code = 0; osd_code < OSD_INPUT_CODES_PER_PLAYER; osd_code++)
     {
       int layout_idx   = 0;
       switch(options.active_control_type[port_number])
@@ -1195,7 +1196,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
         case PAD_8BUTTON:      layout_idx = IDX_8BUTTON;      break;
         case PAD_6BUTTON:      layout_idx = IDX_6BUTTON;      break;
       }
-      mame_joy_map[needle] = alternate_joystick_maps[port_number][layout_idx][control_idx];
+      mame_joy_map[needle] = alternate_joystick_maps[port_number][layout_idx][osd_code];
       if(!string_is_empty(mame_joy_map[needle].name)) needle++;
     }
   }
@@ -1308,12 +1309,12 @@ unsigned calc_player_number(unsigned joycode)
   return (joycode / 1000);
 }
 
-unsigned encode_osd_joycode(unsigned player_number, unsigned raw_code)
+unsigned encode_osd_joycode(unsigned player_number, unsigned osd_code)
 {
-  if(raw_code >= OSD_INPUT_CODES_PER_PLAYER)
+  if(osd_code >= OSD_INPUT_CODES_PER_PLAYER)
     return INT_MAX;
 
-  return (raw_code + (player_number * 1000));
+  return (osd_code + (player_number * 1000));
 }
 
 unsigned decode_osd_joycode(unsigned joycode)
