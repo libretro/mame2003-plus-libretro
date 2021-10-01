@@ -211,7 +211,6 @@ android-arm64-v8a:
     - .core-defs
   only:
     - master
-    - Get_retro
 
 # Android 64-bit x86
 android-x86_64:
