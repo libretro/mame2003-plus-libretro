@@ -401,7 +401,7 @@ const struct JoystickInfo *osd_get_joy_list(void);
 int osd_is_joy_pressed(int joycode);
 
 /* added for building joystick seq for analog inputs */
-int osd_is_joystick_axis_code(unsigned osd_code);
+int osd_is_joystick_axis_code(unsigned joycode);
 
 /* osd_analogjoy_read returns in the range -128 .. 128 (yes, 128, not 127) */
 void osd_analogjoy_read(  int player,
