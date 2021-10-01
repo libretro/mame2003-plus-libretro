@@ -909,7 +909,7 @@ int get_retro_code(const char* type, unsigned osd_id)
       case  OSD_MOUSE_BUTTON_5:  return RETRO_DEVICE_ID_MOUSE_BUTTON_5;
     }
   }
-  else if(strcmp(type, "gun") == 0)
+  else if(strcmp(type, "lightgun") == 0)
   {
     switch(osd_id)
     {
@@ -1246,7 +1246,7 @@ int osd_is_joy_pressed(int joycode)
 
   else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
   {
-    retro_code = get_retro_code("gun", osd_code);
+    retro_code = get_retro_code("lightgun", osd_code);
     if (retro_code != INT_MAX)
     {
       if (retro_code == RETRO_DEVICE_ID_LIGHTGUN_TRIGGER)
