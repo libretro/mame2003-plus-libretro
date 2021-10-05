@@ -174,7 +174,7 @@ else ifeq ($(platform), rpi0)
 	fpic = -fPIC
 	CFLAGS += $(fpic)
 	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-	PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+	PLATCFLAGS += -marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard
 	PLATCFLAGS += -fomit-frame-pointer -ffast-math
 	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
 	CPU_ARCH := arm
@@ -186,7 +186,7 @@ else ifeq ($(platform), rpi1)
 	fpic = -fPIC
 	CFLAGS += $(fpic)
 	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-	PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+	PLATCFLAGS += -marm -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard
 	PLATCFLAGS += -fomit-frame-pointer -ffast-math
 	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
 	CPU_ARCH := arm
