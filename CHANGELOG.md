@@ -54,6 +54,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou
 * Doki Doki Penguin Land
 * Double Wings
+* Dragon Bowl
 * Dream World
 * Dyna Gear
 * Eeekk!
@@ -786,3 +787,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated sidearms drivers to allow Whizz to be fully playable [mahoneyt944]
 * Fixed some incorrect tile layer handling which was causing missing and or broken graphics in Superman and Twin Hawk [mahoneyt944]
 * Sorted some sound niggles in Twin Hawk which would occur when the screen gets fairly busy [arcadez]
+* Added support for Dragon Bowl to gaiden.c [arcadez]
