@@ -121,6 +121,25 @@ VIDEO_START( raiga )
 	return 0;
 }
 
+VIDEO_START( drgnbowl )
+{
+	/* set up tile layers */
+	background = tilemap_create(get_bg_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE,      16, 16, 64, 32);
+	foreground = tilemap_create(get_fg_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16, 16, 64, 32);
+	text_layer = tilemap_create(get_tx_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT,  8,  8, 32, 32);
+
+	if (!text_layer || !foreground || !background)
+		return 1;
+
+	tilemap_set_transparent_pen(foreground, 15);
+	tilemap_set_transparent_pen(text_layer, 15);
+
+	tilemap_set_scrolldx(background, -248, 248);
+	tilemap_set_scrolldx(foreground, -252, 252);
+
+	return 0;
+}
+
 
 
 /***************************************************************************
@@ -332,7 +351,7 @@ static void blendbitmaps(
 
 /* sprite format:
  *
- *	word		bit					usage
+ *  word        bit                 usage
  * --------+-fedcba9876543210-+----------------
  *    0    | ---------------x | flip x
  *         | --------------x- | flip y
@@ -477,6 +496,66 @@ skip_sprite:
 	}
 }
 
+
+/* sprite format:
+ *
+ *  word        bit                 usage
+ * --------+-fedcba9876543210-+----------------
+ *    0    | --------xxxxxxxx | sprite code (lower bits)
+ *         | ---xxxxx-------- | unused ?
+ *    1    | --------xxxxxxxx | y position
+ *         | ------x--------- | unused ?
+ *    2    | --------xxxxxxxx | x position
+ *         | -------x-------- | unused ?
+ *    3    | -----------xxxxx | sprite code (upper bits)
+ *         | ----------x----- | sprite-tile priority
+ *         | ---------x------ | flip x
+ *         | --------x------- | flip y
+ * 0x400   |-------------xxxx | color
+ *         |---------x------- | x position (high bit)
+ */
+
+static void drgnbowl_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int i, code, color, x, y, flipx, flipy, priority_mask;
+
+	for( i = 0; i < 0x800/2; i += 4 )
+	{
+		code = (spriteram16[i + 0] & 0xff) | ((spriteram16[i + 3] & 0x1f) << 8);
+		y = 256 - (spriteram16[i + 1] & 0xff) - 12;
+		x = spriteram16[i + 2] & 0xff;
+		color = (spriteram16[(0x800/2) + i] & 0x0f);
+		flipx = spriteram16[i + 3] & 0x40;
+		flipy = spriteram16[i + 3] & 0x80;
+
+		if(spriteram16[(0x800/2) + i] & 0x80)
+			x -= 256;
+
+		x += 256;
+
+		if(spriteram16[i + 3] & 0x20)
+			priority_mask = 0xf0 | 0xcc; /* obscured by foreground */
+		else
+			priority_mask = 0;
+
+		pdrawgfx(bitmap,Machine->gfx[3],
+				code,
+				color,flipx,flipy,x,y,
+				cliprect,
+				TRANSPARENCY_PEN,15,
+				priority_mask);
+
+		/* wrap x*/
+		pdrawgfx(bitmap,Machine->gfx[3],
+				code,
+				color,flipx,flipy,x-512,y,
+				cliprect,
+				TRANSPARENCY_PEN,15,
+				priority_mask);
+
+	}
+}
+
 VIDEO_UPDATE( gaiden )
 {
 	fillbitmap(priority_bitmap,                    0, cliprect);
@@ -510,4 +589,14 @@ VIDEO_UPDATE( raiga )
 
 	/* mix & blend the tilemaps and sprites into a 32-bit bitmap */
 	blendbitmaps(bitmap, tile_bitmap_bg, tile_bitmap_fg, sprite_bitmap, 0, 0, cliprect);
+}
+
+VIDEO_UPDATE( drgnbowl )
+{
+	fillbitmap(priority_bitmap, 0, cliprect);
+
+	tilemap_draw(bitmap, cliprect, background, 0, 1);
+	tilemap_draw(bitmap, cliprect, foreground, 0, 2);
+	tilemap_draw(bitmap, cliprect, text_layer, 0, 4);
+	drgnbowl_draw_sprites(bitmap, cliprect);
 }
