@@ -58,7 +58,7 @@ extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int lastcoin[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
 
-extern int legacy_flag;
+extern bool save_protection;
 
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
@@ -708,7 +708,7 @@ getout:
 
 void save_input_port_settings(void)
 {
-	if (legacy_flag)
+	if (save_protection == options.mame_remapping)
 	{
 		config_file *cfg;
 		struct mixer_config mixercfg;

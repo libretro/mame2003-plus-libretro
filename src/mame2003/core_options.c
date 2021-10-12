@@ -14,8 +14,8 @@
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 
-/* used in inptport.c when saving input port settings */
-int legacy_flag = -1;
+/* prevent saving corrupt cfgs when the save type does not match the type initiated */
+bool save_protection;
 
 /******************************************************************************
 
@@ -1141,18 +1141,14 @@ void update_variables(bool first_time)
 
         case OPT_MAME_REMAPPING:
           if(strcmp(var.value, "enabled") == 0)
-          {
-            if( !options.mame_remapping && legacy_flag != -1) legacy_flag =0;
             options.mame_remapping = true;
-          }
           else
-          {
-            if( options.mame_remapping && legacy_flag != -1) legacy_flag =0;
             options.mame_remapping = false;
-          }
-          if(!first_time)
+
+          if(first_time)
+            save_protection = options.mame_remapping;
+          else
             setup_menu_init();
-          if(legacy_flag ==-1) legacy_flag = 1;
           break;
 
         case OPT_FRAMESKIP:
