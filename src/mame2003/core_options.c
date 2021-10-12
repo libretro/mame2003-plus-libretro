@@ -14,7 +14,7 @@
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 
-/* prevent saving corrupt cfgs when the save type does not match the type initiated */
+/* prevent saving corrupt cfgs when the save type does not match the type initialized */
 bool save_protection;
 
 /******************************************************************************
