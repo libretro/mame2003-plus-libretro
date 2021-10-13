@@ -521,7 +521,7 @@ else ifeq ($(platform), miyoo)
 	fpic := -fPIC
 	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
 	PLATCFLAGS := -DNO_UNALIGNED_ACCESS
-	PLATCFLAGS += -O3 -fomit-frame-pointer -march=armv5te -mtune=arm926ej-s -ffast-math
+	PLATCFLAGS += -fomit-frame-pointer -march=armv5te -mtune=arm926ej-s -ffast-math
 	CXXFLAGS += -fno-rtti -fno-exceptions
 
 # Emscripten
