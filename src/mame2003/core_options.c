@@ -1049,13 +1049,10 @@ void update_variables(bool first_time)
           break;
 
         case OPT_USE_ALT_SOUND:
-          if(options.content_flags[CONTENT_ALT_SOUND])
-          {
-            if(strcmp(var.value, "enabled") == 0)
-              options.use_samples = true;
-            else
+          if(options.content_flags[CONTENT_ALT_SOUND] && (strcmp(var.value, "disabled") == 0))
               options.use_samples = false;
-          }
+          else
+            options.use_samples = true; 
           break;
 
         case OPT_SHARE_DIAL:
@@ -1219,9 +1216,6 @@ void update_variables(bool first_time)
       }
     }
   }
-
-  if(!options.content_flags[CONTENT_ALT_SOUND])
-    options.use_samples = true;
 
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
