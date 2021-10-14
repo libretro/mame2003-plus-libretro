@@ -319,8 +319,6 @@ bool retro_load_game(const struct retro_game_info *game)
 
   set_content_flags();
 
-  options.activate_dcs_speedhack = true; /* formerly a core option, now always on. */
-
   options.libretro_content_path = strdup(game->path);
   path_basedir(options.libretro_content_path);
 
