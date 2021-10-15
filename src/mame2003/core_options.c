@@ -886,10 +886,8 @@ static void set_variables(void)
             continue; /* only offer BIOS selection when it is relevant */
           break;
       case OPT_USE_ALT_SOUND:
-         if(!options.content_flags[CONTENT_ALT_SOUND]) {
-           options.use_samples = true; /* default sample behavior */
+         if(!options.content_flags[CONTENT_ALT_SOUND])
            continue;
-         }
          break;
       case OPT_SHARE_DIAL:
          if(!options.content_flags[CONTENT_DIAL])
