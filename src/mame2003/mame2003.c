@@ -764,8 +764,6 @@ void retro_describe_controls(void)
     unsigned osd_code    = 0;
     unsigned device_code = options.active_control_type[port_number];
 
-    log_cb(RETRO_LOG_DEBUG, "port_number: %i | active device type: %i\n", port_number, device_code);
-
     if(device_code == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
     for(osd_code = OSD_JOYPAD_B; osd_code < OSD_INPUT_CODES_PER_PLAYER; osd_code++)
