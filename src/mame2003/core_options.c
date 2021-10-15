@@ -1051,10 +1051,10 @@ void update_variables(bool first_time)
           break;
 
         case OPT_USE_ALT_SOUND:
-          if(options.content_flags[CONTENT_ALT_SOUND] && (strcmp(var.value, "disabled") == 0))
-              options.use_samples = false;
-          else
+          if(strcmp(var.value, "enabled") == 0)
             options.use_samples = true;
+          else
+            options.use_samples = false;
           break;
 
         case OPT_SHARE_DIAL:
