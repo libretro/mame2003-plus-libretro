@@ -106,25 +106,6 @@ const struct retro_controller_description controllers[] = {
   { "6-Button",   PAD_6BUTTON    },
 };
 
-const struct retro_controller_description unsupported_controllers[] = {
-  { "UNSUPPORTED (Gamepad)",    PAD_CLASSIC    },
-  { "UNSUPPORTED (Fightstick)", PAD_FIGHTSTICK },
-  { "UNSUPPORTED (8-Button)",   PAD_8BUTTON    },
-  { "UNSUPPORTED (6-Button)",   PAD_6BUTTON    },
-};
-
-struct retro_controller_info input_subdevice_ports[] = {
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { controllers, IDX_NUMBER_OF_INPUT_TYPES },
-  { 0, 0 },
-};
-
 /******************************************************************************
 
   frontend message interface
@@ -355,14 +336,18 @@ bool retro_load_game(const struct retro_game_info *game)
 
   configure_cyclone_mode(driverIndex);
 
-  /* Not all drivers support the maximum number of players; start at the highest index and decrement
-   * until the highest supported index, designating the unsupported indexes during the loop.
+  /* Not all drivers support the maximum number of players. Only send controller info
+   * for the number or players the content supports then zero the final record.
    */
-  for(port_index = MAX_PLAYER_COUNT - 1; port_index >= options.content_flags[CONTENT_CTRL_COUNT]; port_index--)
+  struct retro_controller_info input_subdevice_ports[options.content_flags[CONTENT_CTRL_COUNT]];
+
+  for(port_index = 0; port_index < options.content_flags[CONTENT_CTRL_COUNT]; port_index++)
   {
-    input_subdevice_ports[port_index].types       = &unsupported_controllers[0];
+    input_subdevice_ports[port_index].types       = controllers;
     input_subdevice_ports[port_index].num_types   = IDX_NUMBER_OF_INPUT_TYPES;
   }
+  input_subdevice_ports[options.content_flags[CONTENT_CTRL_COUNT]].types       = 0;
+  input_subdevice_ports[options.content_flags[CONTENT_CTRL_COUNT]].num_types   = 0;
 
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)input_subdevice_ports);
 
