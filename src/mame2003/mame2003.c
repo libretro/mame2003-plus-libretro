@@ -339,7 +339,7 @@ bool retro_load_game(const struct retro_game_info *game)
   configure_cyclone_mode(driverIndex);
 
   /* Not all drivers support the maximum number of players. Only send controller info
-   * for the number or players the content supports then zero the final record.
+   * to the frontend for the number of players supported then zero the final record.
    */
   for(port_index = 0; port_index < options.content_flags[CONTENT_CTRL_COUNT]; port_index++)
   {
