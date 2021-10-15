@@ -255,6 +255,8 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
+  struct retro_controller_info input_subdevice_ports[options.content_flags[CONTENT_CTRL_COUNT] + 1];
+
   int   driverIndex    = 0;
   int   port_index;
   char  *driver_lookup = NULL;
@@ -339,8 +341,6 @@ bool retro_load_game(const struct retro_game_info *game)
   /* Not all drivers support the maximum number of players. Only send controller info
    * for the number or players the content supports then zero the final record.
    */
-  struct retro_controller_info input_subdevice_ports[options.content_flags[CONTENT_CTRL_COUNT] + 1];
-
   for(port_index = 0; port_index < options.content_flags[CONTENT_CTRL_COUNT]; port_index++)
   {
     input_subdevice_ports[port_index].types       = controllers;
