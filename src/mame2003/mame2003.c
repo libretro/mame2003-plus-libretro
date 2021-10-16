@@ -1415,12 +1415,14 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
     static int16_t prev_pointer_y;
     *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
     *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
+    return;
   }
 
   else if (options.xy_device == RETRO_DEVICE_MOUSE)
   {
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+    return;
   }
 
   else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
@@ -1434,13 +1436,12 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
     }
     *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
     *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+    return;
   }
 
-  else    /* RETRO_DEVICE_NONE */
-  {
+    /* default return zero */
     *deltax = 0;
     *deltay = 0;
-  }
 }
 
 /******************************************************************************
