@@ -1411,7 +1411,6 @@ void osd_xy_device_read(int player, int *deltax, int *deltay)
 
   if (options.xy_device == RETRO_DEVICE_POINTER)
   {
-   
     *deltax =  rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X));
     *deltay =  rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y));
   }
