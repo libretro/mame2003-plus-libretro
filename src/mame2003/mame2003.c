@@ -1219,7 +1219,7 @@ int osd_is_joy_pressed(int joycode)
     {
       if (options.xy_device == RETRO_DEVICE_MOUSE)
         return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
-      if (options.xy_device == RETRO_DEVICE_POINTER)
+      if (options.xy_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT) /* only return the left mouse button pointer only has one button atm */
         return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
     }
   }
