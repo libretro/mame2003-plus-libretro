@@ -1219,7 +1219,7 @@ int osd_is_joy_pressed(int joycode)
     {
       if (options.xy_device == RETRO_DEVICE_MOUSE)
         return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
-      if (options.xy_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
+      if (options.xy_device == RETRO_DEVICE_POINTER)
         return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
     }
   }
@@ -1409,12 +1409,11 @@ void osd_joystick_end_calibration(void) { }
 void osd_xy_device_read(int player, int *deltax, int *deltay)
 {
 
-  if (options.xy_device == RETRO_DEVICE_POINTER && input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
+  if (options.xy_device == RETRO_DEVICE_POINTER)
   {
-    static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
-    static int16_t prev_pointer_y;
-    *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
-    *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
+   
+    *deltax =  rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X));
+    *deltay =  rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y));
   }
 
   else if (options.xy_device == RETRO_DEVICE_MOUSE)
