@@ -1419,15 +1419,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
       *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
     }
 
-    else if (options.xy_device == RETRO_DEVICE_POINTER)
-    {
-      static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
-      static int16_t prev_pointer_y;
-      *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
-      *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
-    }
-
-    else /* RETRO_DEVICE_LIGHTGUN */
+    else /* return zero for absolute devices */
     {
       *deltax = 0;
       *deltay = 0;
