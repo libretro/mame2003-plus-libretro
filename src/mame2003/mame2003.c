@@ -1408,16 +1408,33 @@ void osd_joystick_end_calibration(void) { }
 
 void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
 {
-  if ((strcmp(type, "relative") == 0) && options.xy_device)
-  {
-    /* always read the device as a relative mouse. Mame will prioritize the lightgun read if analog is available.
-     * Mouse, dial, trackball, etc is updated regardless of the absolute pointer type you want */
+  /* return zero when no device is set */
+  if (options.xy_device == RETRO_DEVICE_NONE) { *deltax = 0; *deltay = 0; return; }
 
-    *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-    *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+  if (strcmp(type, "relative") == 0)
+  {
+    if (options.xy_device == RETRO_DEVICE_MOUSE)
+    {
+      *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+      *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+    }
+
+    else if (options.xy_device == RETRO_DEVICE_POINTER)
+    {
+      static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
+      static int16_t prev_pointer_y;
+      *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
+      *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
+    }
+
+    else /* RETRO_DEVICE_LIGHTGUN */
+    {
+      *deltax = 0;
+      *deltay = 0;
+    }
   }
 
-  else if ((strcmp(type, "absolute") == 0) && options.xy_device)
+  else if (strcmp(type, "absolute") == 0)
   {
     if (options.xy_device == RETRO_DEVICE_POINTER )
     {
@@ -1438,17 +1455,11 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
     }
 
-    else /* if there are no matches, set the delta to zero abs so we don't mess with the rel mouse tracking in mame code as analog overides */
+    else /* RETRO_DEVICE_MOUSE, return zero so we don't mess with the relative mouse tracking in mame code as analog overides */
     {
       *deltax = 0;
       *deltay = 0;
     }
-  }
-
-  else    /* RETRO_DEVICE_NONE */
-  {
-    *deltax = 0;
-    *deltay = 0;
   }
 }
 
