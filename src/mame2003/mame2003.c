@@ -1413,17 +1413,8 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
 
   if (strcmp(type, "relative") == 0)
   {
-    if (options.xy_device == RETRO_DEVICE_MOUSE)
-    {
-      *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-      *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-    }
-
-    else /* return zero for absolute devices */
-    {
-      *deltax = 0;
-      *deltay = 0;
-    }
+    *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+    *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
   }
 
   else if (strcmp(type, "absolute") == 0)
