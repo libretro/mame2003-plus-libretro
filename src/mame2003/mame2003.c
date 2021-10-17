@@ -1406,11 +1406,11 @@ void osd_joystick_end_calibration(void) { }
 
 ******************************************************************************/
 
-void osd_xy_device_read(int player, int *deltax, int *deltay, bool type /*0 = rel(mouse), 1=abs*/) 
+void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type) 
 {
 
 
-  if (!type && options.xy_device)
+  if ((strcmp(type, "relative") == 0) && options.xy_device)
   {
     /* always read the device as a mouse for relative mames will priortize the ligtgun read if analog is avaialble
      * this is do mouse and dial trackball ect is updated regardless of your abs pointer type you want */
@@ -1420,7 +1420,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, bool type /*0 = re
   }
 
 
-  else if (type && options.xy_device)
+  else if ((strcmp(type, "absolute") == 0) && options.xy_device)
   {
     if (options.xy_device == RETRO_DEVICE_POINTER ) 
     {
@@ -1440,6 +1440,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, bool type /*0 = re
       *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
     }
+
     else /* if there are no matches set the delta to zero abs so we dont mess with the rel mouse tracking in mame code as analog overides */
     {
       *deltax = 0;
