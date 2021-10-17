@@ -1406,40 +1406,50 @@ void osd_joystick_end_calibration(void) { }
 
 ******************************************************************************/
 
-void osd_xy_device_read(int player, int *deltax, int *deltay)
+void osd_xy_device_read(int player, int *deltax, int *deltay, bool type /*0 = rel(mouse), 1=abs*/) 
 {
 
-  if (options.xy_device == RETRO_DEVICE_POINTER && input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
-  {
-    static int16_t prev_pointer_x; /* temporary variables to convert absolute coordinates polled by pointer to relative mouse coordinates */
-    static int16_t prev_pointer_y;
-    *deltax = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x);
-    *deltay = get_pointer_delta(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y);
-  }
 
-  else if (options.xy_device == RETRO_DEVICE_MOUSE)
+  if (type == 0 && options.xy_device)
   {
+    /* always read the device as a mouse for relative */
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
   }
 
-  else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
+
+  else if (type == 1 && options.xy_device)
   {
-    /* simulated lightgun reload hack */
-    if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+    if (options.xy_device == RETRO_DEVICE_POINTER) 
     {
-      *deltax = -128;
-      *deltay = -128;
-      return;
+      *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X));
+      *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y));
     }
-    *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
-    *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+
+    else if (RETRO_DEVICE_LIGHTGUN )
+    {
+      /* simulated lightgun reload hack */
+      if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+      {
+        *deltax = -128;
+        *deltay = -128;
+        return;
+      }
+      *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X));
+      *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
+    }
+    else /* if there are no matches set the delta to zero abs so we dont mess with the rel mouse tracking in mame code as analog overides */
+    {
+      *deltax = 0;
+      *deltay = 0;
+    }
   }
 
-  else    /* RETRO_DEVICE_NONE */
+  else if (!options.xy_device)
   {
-    *deltax = 0;
-    *deltay = 0;
+      *deltax = 0;
+      *deltay = 0;
+
   }
 }
 
