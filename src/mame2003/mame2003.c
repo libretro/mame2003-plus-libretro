@@ -732,8 +732,15 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
   options.active_control_type[in_port] = device;
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
-  internal_code_update();     /* update MAME data structures for controls */
-  retro_describe_controls();  /* update libretro data structures for controls */
+
+  /* Once we determine how many controllers we are connecting with the current content loaded, update
+   * and describe our controls. The last controller port will be 1 less than the CONTENT_CTRL_COUNT.
+   */
+  if (in_port == (options.content_flags[CONTENT_CTRL_COUNT] - 1) )
+  {
+    internal_code_update();     /* update MAME data structures for controls */
+    retro_describe_controls();  /* update libretro data structures for controls */
+  }
 }
 
 
@@ -744,12 +751,12 @@ void retro_describe_controls(void)
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing %i controllers supported by the content loaded\n, options.content_flags[CONTENT_CTRL_COUNT]);
+
   for(port_number = 0; port_number < options.content_flags[CONTENT_CTRL_COUNT]; port_number++)
   {
     unsigned osd_code    = 0;
     unsigned device_code = options.active_control_type[port_number];
-
-    if(device_code == RETRO_DEVICE_NONE)  continue; /* move on to the next player */
 
     for(osd_code = OSD_JOYPAD_B; osd_code < OSD_INPUT_CODES_PER_PLAYER; osd_code++)
     {
