@@ -1410,8 +1410,8 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
 {
   if ((strcmp(type, "relative") == 0) && options.xy_device)
   {
-    /* always read the device as a mouse for relative mames will priortize the ligtgun read if analog is avaialble
-     * this is do mouse and dial trackball ect is updated regardless of your abs pointer type you want */
+    /* always read the device as a relative mouse. Mame will prioritize the lightgun read if analog is available.
+     * Mouse, dial, trackball, etc is updated regardless of the absolute pointer type you want */
 
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
@@ -1438,17 +1438,17 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
     }
 
-    else /* if there are no matches set the delta to zero abs so we dont mess with the rel mouse tracking in mame code as analog overides */
+    else /* if there are no matches, set the delta to zero abs so we don't mess with the rel mouse tracking in mame code as analog overides */
     {
       *deltax = 0;
       *deltay = 0;
     }
   }
 
-  else if (!options.xy_device)
+  else /* RETRO_DEVICE_NONE */
   {
-      *deltax = 0;
-      *deltay = 0;
+    *deltax = 0;
+    *deltay = 0;
   }
 }
 
