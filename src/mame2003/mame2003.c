@@ -1445,7 +1445,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
     }
   }
 
-  else /* RETRO_DEVICE_NONE */
+  else    /* RETRO_DEVICE_NONE */
   {
     *deltax = 0;
     *deltay = 0;
