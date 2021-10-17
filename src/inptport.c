@@ -931,20 +931,20 @@ void update_analog_port(int port)
 		needs rewritten...
 		*/
 		if (axis == X_AXIS) {
-			if (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) {
+			if ( (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) && (options.xy_device == RETRO_DEVICE_LIGHTGUN) ) {
 				analog_previous_axis[player][X_AXIS]=0;
 				analog_current_axis[player][X_AXIS]=lightgun_delta_axis[player][X_AXIS];
 				input_analog_scale[port]=0;
-				if (options.xy_device == RETRO_DEVICE_LIGHTGUN) sensitivity=100;
+				sensitivity=100;
 			}
 		}
 		else
 		{
-			if (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) {
+			if ( (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) && (options.xy_device == RETRO_DEVICE_LIGHTGUN) ) {
 				analog_previous_axis[player][Y_AXIS]=0;
 				analog_current_axis[player][Y_AXIS]=lightgun_delta_axis[player][Y_AXIS];
 				input_analog_scale[port]=0;
-				if (options.xy_device == RETRO_DEVICE_LIGHTGUN) sensitivity=100;
+				sensitivity=100;
 			}
 		}
 	}
