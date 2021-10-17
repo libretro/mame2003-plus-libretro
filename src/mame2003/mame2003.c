@@ -1408,8 +1408,6 @@ void osd_joystick_end_calibration(void) { }
 
 void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type) 
 {
-
-
   if ((strcmp(type, "relative") == 0) && options.xy_device)
   {
     /* always read the device as a mouse for relative mames will priortize the ligtgun read if analog is avaialble
@@ -1418,7 +1416,6 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
   }
-
 
   else if ((strcmp(type, "absolute") == 0) && options.xy_device)
   {
@@ -1452,7 +1449,6 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
   {
       *deltax = 0;
       *deltay = 0;
-
   }
 }
 
