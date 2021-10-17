@@ -1410,17 +1410,19 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, bool type /*0 = re
 {
 
 
-  if (type == 0 && options.xy_device)
+  if (!type && options.xy_device)
   {
-    /* always read the device as a mouse for relative */
+    /* always read the device as a mouse for relative mames will priortize the ligtgun read if analog is avaialble
+     * this is do mouse and dial trackball ect is updated regardless of your abs pointer type you want */
+     
     *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
     *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
   }
 
 
-  else if (type == 1 && options.xy_device)
+  else if (type && options.xy_device)
   {
-    if (options.xy_device == RETRO_DEVICE_POINTER) 
+    if (options.xy_device == RETRO_DEVICE_POINTER ) 
     {
       *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X));
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y));
