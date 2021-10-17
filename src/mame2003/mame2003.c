@@ -1447,7 +1447,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y));
     }
 
-    else /* RETRO_DEVICE_MOUSE, return zero so we don't mess with the relative mouse tracking in mame code as analog overides */
+    else /* return zero for relative devices, to avoid tracking issues when analog overrides */
     {
       *deltax = 0;
       *deltay = 0;
