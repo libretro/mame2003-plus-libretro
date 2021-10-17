@@ -935,7 +935,7 @@ void update_analog_port(int port)
 				analog_previous_axis[player][X_AXIS]=0;
 				analog_current_axis[player][X_AXIS]=lightgun_delta_axis[player][X_AXIS];
 				input_analog_scale[port]=0;
-				sensitivity=100;
+				if (options.xy_device == RETRO_DEVICE_LIGHTGUN) sensitivity=100;
 			}
 		}
 		else
@@ -944,7 +944,7 @@ void update_analog_port(int port)
 				analog_previous_axis[player][Y_AXIS]=0;
 				analog_current_axis[player][Y_AXIS]=lightgun_delta_axis[player][Y_AXIS];
 				input_analog_scale[port]=0;
-				sensitivity=100;
+				if (options.xy_device == RETRO_DEVICE_LIGHTGUN) sensitivity=100;
 			}
 		}
 	}
