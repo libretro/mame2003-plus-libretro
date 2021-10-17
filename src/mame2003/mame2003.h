@@ -440,8 +440,8 @@ void osd_joystick_end_calibration(void);
 
 ******************************************************************************/
 
-/*** TO DO: notes ***/
-void osd_xy_device_read(int player, int *deltax, int *deltay);
+/* Returns relative or absolute positions for various X-Y coordinate devices */
+void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type);
 
 
 /******************************************************************************
