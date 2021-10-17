@@ -1436,13 +1436,13 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
 
   else if (strcmp(type, "absolute") == 0)
   {
-    if (options.xy_device == RETRO_DEVICE_POINTER )
+    if (options.xy_device == RETRO_DEVICE_POINTER)
     {
       *deltax = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X));
       *deltay = rescale_analog(input_cb(player, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y));
     }
 
-    else if (options.xy_device == RETRO_DEVICE_LIGHTGUN )
+    else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
     {
       /* simulated lightgun reload hack */
       if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
