@@ -751,7 +751,7 @@ void retro_describe_controls(void)
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing %i controllers supported by the content loaded\n, options.content_flags[CONTENT_CTRL_COUNT]);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Describing %i controllers supported by the content loaded\n", options.content_flags[CONTENT_CTRL_COUNT]);
 
   for(port_number = 0; port_number < options.content_flags[CONTENT_CTRL_COUNT]; port_number++)
   {
