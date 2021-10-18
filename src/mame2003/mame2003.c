@@ -730,13 +730,16 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
+  static int port_count = 0;
+  if (port_count < (options.content_flags[CONTENT_CTRL_COUNT] - 1) ) port_count++;
+
   options.active_control_type[in_port] = device;
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
 
-  /* Once we determine how many controllers we are connecting with the current content loaded, update
-   * and describe our controls. The last controller port will be 1 less than the CONTENT_CTRL_COUNT.
+  /* During core init we update and describe the controls when we encounter the last controller port connected
+   * to prevent spamming the frontend. On subsequent calls, we update and describe the structures each time.
    */
-  if (in_port == (options.content_flags[CONTENT_CTRL_COUNT] - 1) )
+  if (in_port == port_count)
   {
     internal_code_update();     /* update MAME data structures for controls */
     retro_describe_controls();  /* update libretro data structures for controls */
