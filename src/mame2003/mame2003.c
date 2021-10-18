@@ -100,7 +100,7 @@ static void   configure_cyclone_mode (int driverIndex);
 #define PAD_6BUTTON       RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 2)
 
 const struct retro_controller_description controllers[] = {
-  { "Gamepad",    PAD_CLASSIC    },
+  { "RetroPad",   PAD_CLASSIC    },
   { "Fightstick", PAD_FIGHTSTICK },
   { "8-Button",   PAD_8BUTTON    },
   { "6-Button",   PAD_6BUTTON    },
