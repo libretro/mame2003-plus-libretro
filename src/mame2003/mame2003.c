@@ -736,8 +736,8 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
   options.active_control_type[in_port] = device;
   log_cb(RETRO_LOG_DEBUG, LOGPRE "Preparing to connect input    in_port: %i    device: %i\n", in_port, device);
 
-  /* During core init we update and describe the controls when we encounter the last controller port connected to
-   * prevent spamming the frontend. On subsequential calls, we will update and describe the structures each time.
+  /* During core init we update and describe the controls when we encounter the last controller port connected
+   * to prevent spamming the frontend. On subsequent calls, we update and describe the structures each time.
    */
   if (in_port == port_count)
   {
