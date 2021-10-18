@@ -747,7 +747,6 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
 void retro_describe_controls(void)
 {
   int port_number = 0;
-  static struct retro_input_descriptor empty_input_descriptor[] = { { 0 } };
   struct retro_input_descriptor desc[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) +  1]; /* + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
 
@@ -833,7 +832,6 @@ void retro_describe_controls(void)
   log_cb(RETRO_LOG_DEBUG, LOGPRE "End of description list.\n");
 #endif
 
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty_input_descriptor); /* flush descriptions, per the sample code */
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
