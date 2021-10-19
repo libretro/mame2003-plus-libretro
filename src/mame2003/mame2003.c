@@ -813,7 +813,7 @@ void retro_describe_controls(void)
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "joycode: %i | standard code: %i | retro id: %2i | desc: %s\n", joycode, standard_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "joycode: %i | standard code: %i | id: %2i | desc: %s\n", joycode, standard_code, needle->id, needle->description);
       needle++;
     }
   }
