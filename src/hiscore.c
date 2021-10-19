@@ -193,6 +193,9 @@ static void hs_load (void)
 
 static void hs_save (void)
 {
+	/* bail if the core option has changed and is now disabled */
+	if (!options.autosave_hiscore) return;
+
 	if (!state.hs_file)
 	{
 		state.hs_file = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 1);
