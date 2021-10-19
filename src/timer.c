@@ -92,7 +92,7 @@ static INLINE double get_relative_time(void)
 
 	/* if we're executing as a particular CPU, use its local time as a base */
 	activecpu = cpu_getactivecpu();
-	if (activecpu >= 0)
+	if (activecpu >= 0 && cpu_getactivecpu())
 		return cpunum_get_localtime(activecpu);
 	
 	/* if we're currently in a callback, use the timer's expiration time as a base */
