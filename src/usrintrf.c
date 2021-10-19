@@ -2635,7 +2635,7 @@ void ui_copyright_and_warnings(void)
       }
     }
 
-    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", warning_buffer); /* log warning list to the console */
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s\n", warning_buffer); /* log warning list to the console */
 
   }
 
