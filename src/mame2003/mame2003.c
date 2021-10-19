@@ -760,7 +760,7 @@ void retro_describe_controls(void)
     unsigned osd_code    = 0;
     unsigned device_code = options.active_control_type[port_number];
 
-    log_cb(RETRO_LOG_DEBUG, LOGPRE "Controller %i =>  port: %i   device type: %i   parent type: %i\n", (port_number+1), port_number, device_code, get_device_parent(device_code));
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Controller port: %i   device type: %i   parent type: %i\n", port_number, device_code, get_device_parent(device_code));
 
     for(osd_code = OSD_JOYPAD_B; osd_code < OSD_INPUT_CODES_PER_PLAYER; osd_code++)
     {
@@ -813,7 +813,7 @@ void retro_describe_controls(void)
       needle->index        = 0;
       needle->id           = retro_code;
       needle->description  = control_name;
-      log_cb(RETRO_LOG_DEBUG, INDENT "joycode: %i | standard code: %i | retro id: %i | desc: %s\n", joycode, standard_code, needle->id, needle->description);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "joycode: %i | standard code: %i | retro id: %2i | desc: %s\n", joycode, standard_code, needle->id, needle->description);
       needle++;
     }
   }
