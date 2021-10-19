@@ -11,6 +11,7 @@
 ******************************************************************************/
 
 #define LOGPRE          "[MAME 2003+] "
+#define INDENT          "             "
 
 extern retro_log_printf_t log_cb;
 
