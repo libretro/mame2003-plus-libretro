@@ -241,13 +241,13 @@ void hs_open (const char *name)
 		db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 1);
 		mame_fwrite(db_file, hiscoredat_bytes, hiscoredat_length); 
 		mame_fclose(db_file);
-	}
 
-	db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
-	if(!db_file)
-	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Failure generating hiscore.dat!\n");
-		return;
+		db_file = mame_fopen(NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
+		if(!db_file)
+		{
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Failure generating hiscore.dat!\n");
+			return;
+		}
 	}
 
 	while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, db_file))
