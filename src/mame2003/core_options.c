@@ -659,12 +659,13 @@ static struct retro_core_option_v2_definition option_def_autosave_hiscore = {
    APPNAME"_autosave_hiscore",
    "Autosave Hiscore",
    NULL,
-   "Recommended to use default which will save the hiscore when closing content. Recursively will save repeatedly the entire time during gameplay.",
+   "Recommended to use default which will save the hiscore when closing content. Recursively will save repeatedly the entire time during gameplay. Disabled will bypass the use of the hiscore.dat file entirely.",
    NULL,
    "cat_key_system",
    {
       { "default",     NULL },
       { "recursively", NULL },
+      { "disabled",    NULL },
       { NULL, NULL },
    },
    "default"
@@ -1175,10 +1176,12 @@ void update_variables(bool first_time)
           break;
 
         case OPT_AUTOSAVE_HISCORE:
-          if(strcmp(var.value, "recursively") == 0)
-            options.autosave_hiscore = true;
+          if(strcmp(var.value, "default") == 0)
+            options.autosave_hiscore = 1;
+          else if(strcmp(var.value, "recursively") == 0)
+            options.autosave_hiscore = 2;
           else
-            options.autosave_hiscore = false;
+            options.autosave_hiscore = 0;
           break;
 
         case OPT_CHEAT_INPUT_PORTS:
