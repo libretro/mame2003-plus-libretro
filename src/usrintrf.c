@@ -2640,7 +2640,7 @@ void ui_copyright_and_warnings(void)
   }
 
   generate_gameinfo();
-  log_cb(RETRO_LOG_INFO, LOGPRE "\n\n%s", message_buffer);
+  log_cb(RETRO_LOG_INFO, LOGPRE "\n\n%s\n", message_buffer);
 
   if(strlen(buffer))
     usrintf_showmessage_secs(8, "%s", buffer);
