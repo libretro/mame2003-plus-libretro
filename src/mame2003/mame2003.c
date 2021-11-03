@@ -922,62 +922,40 @@ int get_retro_code(const char* type, unsigned osd_code)
   return INT_MAX; /* no match found */
 }
 
-/* surely there is a MAME function equivalent already for JOYCODE_BUTTON_COMPARE,
- * MOUSECODE_BUTTON_COMPARE, and get_ctrl_ipt_code(), etc. but I haven't found it.
+/* surely there is a MAME function equivalent already for PLAYER_CODE_COMPARE
+ * and get_ctrl_ipt_code(). but I haven't found it.
  */
 
-#define BUTTON_CODE_COMPARE(BUTTON_NO)                \
-  switch(standard_code)                               \
-  {                                                   \
-    case JOYCODE_1_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_2_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_3_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_4_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_5_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_6_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_7_BUTTON##BUTTON_NO:                 \
-    case JOYCODE_8_BUTTON##BUTTON_NO:                 \
-      return player_flag | IPT_BUTTON##BUTTON_NO;     \
-  }                                                   \
-
-#define MOUSE_CODE_COMPARE(BUTTON_NO)                 \
-  switch(standard_code)                               \
-  {                                                   \
-    case JOYCODE_MOUSE_1_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_2_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_3_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_4_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_5_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_6_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_7_BUTTON##BUTTON_NO:           \
-    case JOYCODE_MOUSE_8_BUTTON##BUTTON_NO:           \
-      return player_flag | IPT_BUTTON##BUTTON_NO;     \
-  }                                                   \
-
-#define GUN_CODE_COMPARE(BUTTON_NO)                 \
-  switch(standard_code)                               \
-  {                                                   \
-    case JOYCODE_GUN_1_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_2_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_3_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_4_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_5_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_6_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_7_BUTTON##BUTTON_NO:           \
-    case JOYCODE_GUN_8_BUTTON##BUTTON_NO:           \
-      return player_flag | IPT_BUTTON##BUTTON_NO;     \
-  }                                                   \
-
-#define COMMON_CONTROLS_COMPARE(PLAYER_NUMBER)                                        \
-  switch(standard_code)                                                               \
-  {                                                                                   \
-    case JOYCODE_##PLAYER_NUMBER##_SELECT: return IPT_COIN##PLAYER_NUMBER;            \
-    case JOYCODE_##PLAYER_NUMBER##_START:  return IPT_START##PLAYER_NUMBER;           \
-    case JOYCODE_##PLAYER_NUMBER##_UP:     return player_flag | IPT_JOYSTICK_UP;      \
-    case JOYCODE_##PLAYER_NUMBER##_DOWN:   return player_flag | IPT_JOYSTICK_DOWN;    \
-    case JOYCODE_##PLAYER_NUMBER##_LEFT:   return player_flag | IPT_JOYSTICK_LEFT;    \
-    case JOYCODE_##PLAYER_NUMBER##_RIGHT:  return player_flag | IPT_JOYSTICK_RIGHT;   \
-  }                                                                                   \
+#define PLAYER_CODE_COMPARE(PLAYER_NUMBER)                                                    \
+  switch(standard_code)                                                                       \
+  {                                                                                           \
+    case JOYCODE_##PLAYER_NUMBER##_SELECT:         return IPT_COIN##PLAYER_NUMBER;            \
+    case JOYCODE_##PLAYER_NUMBER##_START:          return IPT_START##PLAYER_NUMBER;           \
+    case JOYCODE_##PLAYER_NUMBER##_UP:             return player_flag | IPT_JOYSTICK_UP;      \
+    case JOYCODE_##PLAYER_NUMBER##_DOWN:           return player_flag | IPT_JOYSTICK_DOWN;    \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT:           return player_flag | IPT_JOYSTICK_LEFT;    \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT:          return player_flag | IPT_JOYSTICK_RIGHT;   \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON1:        return player_flag | IPT_BUTTON1;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON2:        return player_flag | IPT_BUTTON2;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON3:        return player_flag | IPT_BUTTON3;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON4:        return player_flag | IPT_BUTTON4;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON5:        return player_flag | IPT_BUTTON5;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON6:        return player_flag | IPT_BUTTON6;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON7:        return player_flag | IPT_BUTTON7;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON8:        return player_flag | IPT_BUTTON8;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON9:        return player_flag | IPT_BUTTON9;          \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON10:       return player_flag | IPT_BUTTON10;         \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON1:  return player_flag | IPT_BUTTON1;          \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON2:  return player_flag | IPT_BUTTON2;          \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON3:  return player_flag | IPT_BUTTON3;          \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON4:  return player_flag | IPT_BUTTON4;          \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON5:  return player_flag | IPT_BUTTON5;          \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON6:  return player_flag | IPT_BUTTON6;          \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON1:    return player_flag | IPT_BUTTON1;          \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON2:    return player_flag | IPT_BUTTON2;          \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON3:    return player_flag | IPT_BUTTON3;          \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON4:    return player_flag | IPT_BUTTON4;          \
+  }                                                                                           \
 
 unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 {
@@ -985,50 +963,18 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 
   switch(player_number)
   {
-    case 1: player_flag = IPF_PLAYER1; break;
-    case 2: player_flag = IPF_PLAYER2; break;
-    case 3: player_flag = IPF_PLAYER3; break;
-    case 4: player_flag = IPF_PLAYER4; break;
-    case 5: player_flag = IPF_PLAYER5; break;
-    case 6: player_flag = IPF_PLAYER6; break;
-    case 7: player_flag = IPF_PLAYER7; break;
-    case 8: player_flag = IPF_PLAYER8; break;
-    default: player_flag = IPF_PLAYER1; break;
+    case 1:  player_flag = IPF_PLAYER1; PLAYER_CODE_COMPARE(1) break;
+    case 2:  player_flag = IPF_PLAYER2; PLAYER_CODE_COMPARE(2) break;
+    case 3:  player_flag = IPF_PLAYER3; PLAYER_CODE_COMPARE(3) break;
+    case 4:  player_flag = IPF_PLAYER4; PLAYER_CODE_COMPARE(4) break;
+    case 5:  player_flag = IPF_PLAYER5; PLAYER_CODE_COMPARE(5) break;
+    case 6:  player_flag = IPF_PLAYER6; PLAYER_CODE_COMPARE(6) break;
+    case 7:  player_flag = IPF_PLAYER7; PLAYER_CODE_COMPARE(7) break;
+    case 8:  player_flag = IPF_PLAYER8; PLAYER_CODE_COMPARE(8) break;
+    default: player_flag = IPF_PLAYER1; PLAYER_CODE_COMPARE(1) break;
   }
-  /* use macros to hide simplistic and verbose implementation */
-  BUTTON_CODE_COMPARE(1) /* look for "button 1" */
-  BUTTON_CODE_COMPARE(2) /* button 2 */
-  BUTTON_CODE_COMPARE(3) /* button 3 */
-  BUTTON_CODE_COMPARE(4)
-  BUTTON_CODE_COMPARE(5)
-  BUTTON_CODE_COMPARE(6)
-  BUTTON_CODE_COMPARE(7)
-  BUTTON_CODE_COMPARE(8)
-  BUTTON_CODE_COMPARE(9)
-  BUTTON_CODE_COMPARE(10)
 
-  MOUSE_CODE_COMPARE(1) /* look for "mouse button 1" */
-  MOUSE_CODE_COMPARE(2) /* mouse button 2 */
-  MOUSE_CODE_COMPARE(3) /* mouse button 3 */
-  MOUSE_CODE_COMPARE(4)
-  MOUSE_CODE_COMPARE(5)
-  MOUSE_CODE_COMPARE(6)
-
-  GUN_CODE_COMPARE(1)
-  GUN_CODE_COMPARE(2)
-  GUN_CODE_COMPARE(3)
-  GUN_CODE_COMPARE(4)
-
-  COMMON_CONTROLS_COMPARE(1) /* player 1 */
-  COMMON_CONTROLS_COMPARE(2) /* player 2 */
-  COMMON_CONTROLS_COMPARE(3) /* player 3 */
-  COMMON_CONTROLS_COMPARE(4) /* player 4 */
-  COMMON_CONTROLS_COMPARE(5) /* player 5 */
-  COMMON_CONTROLS_COMPARE(6) /* player 6 */
-  COMMON_CONTROLS_COMPARE(7) /* player 7 */
-  COMMON_CONTROLS_COMPARE(8) /* player 8 */
-
-  return CODE_NONE; /* not any of the BUTTON joycodes or mouse codes */
+  return CODE_NONE; /* no match was found */
 }
 
 
