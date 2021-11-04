@@ -50,6 +50,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Deer Hunting
 * Diet Go Go
 * Digger (CVS)
+* Dolmen
 * Dodge Man
 * DoDonPachi Dai-Ou-Jou
 * Doki Doki Penguin Land
@@ -178,6 +179,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Title Fight
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
+* Twin Action
 * Tylz
 * Ufo Senshi Yohko Chan
 * Varia Metal
@@ -788,3 +790,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some incorrect tile layer handling which was causing missing and or broken graphics in Superman and Twin Hawk [mahoneyt944]
 * Sorted some sound niggles in Twin Hawk which would occur when the screen gets fairly busy [arcadez]
 * Added support for Dragon Bowl to gaiden.c [arcadez]
+* Added Dolmen and Twin Action to the nmk16.c driver [iq_132, BritneysPAIRS, arcadez]
