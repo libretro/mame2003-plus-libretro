@@ -5299,8 +5299,10 @@ Other Sun games
 	DRIVER( silkroad )	/* (c) 1999 */
 
 	/* Afega games */
+  DRIVER( dolmen )    /* (c) 1995 */
+	DRIVER( twinactn )  /* (c) 1995 */
 	DRIVER( stagger1 )	/* (c) 1998 */
-	DRIVER( redhawk )	/* (c) 1997 */
+	DRIVER( redhawk )	  /* (c) 1997 */
 	DRIVER( grdnstrm )	/* (c) 1998 */
 	DRIVER( bubl2000 )	/* (c) 1998 Tuning */
 
