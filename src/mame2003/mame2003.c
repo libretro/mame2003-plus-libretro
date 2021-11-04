@@ -926,36 +926,50 @@ int get_retro_code(const char* type, unsigned osd_code)
  * and get_ctrl_ipt_code(). but I haven't found it.
  */
 
-#define PLAYER_CODE_COMPARE(PLAYER_NUMBER)                                                    \
-  switch(standard_code)                                                                       \
-  {                                                                                           \
-    case JOYCODE_##PLAYER_NUMBER##_SELECT:         return IPT_COIN##PLAYER_NUMBER;            \
-    case JOYCODE_##PLAYER_NUMBER##_START:          return IPT_START##PLAYER_NUMBER;           \
-    case JOYCODE_##PLAYER_NUMBER##_UP:             return player_flag | IPT_JOYSTICK_UP;      \
-    case JOYCODE_##PLAYER_NUMBER##_DOWN:           return player_flag | IPT_JOYSTICK_DOWN;    \
-    case JOYCODE_##PLAYER_NUMBER##_LEFT:           return player_flag | IPT_JOYSTICK_LEFT;    \
-    case JOYCODE_##PLAYER_NUMBER##_RIGHT:          return player_flag | IPT_JOYSTICK_RIGHT;   \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON1:        return player_flag | IPT_BUTTON1;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON2:        return player_flag | IPT_BUTTON2;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON3:        return player_flag | IPT_BUTTON3;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON4:        return player_flag | IPT_BUTTON4;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON5:        return player_flag | IPT_BUTTON5;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON6:        return player_flag | IPT_BUTTON6;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON7:        return player_flag | IPT_BUTTON7;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON8:        return player_flag | IPT_BUTTON8;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON9:        return player_flag | IPT_BUTTON9;          \
-    case JOYCODE_##PLAYER_NUMBER##_BUTTON10:       return player_flag | IPT_BUTTON10;         \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON1:  return player_flag | IPT_BUTTON1;          \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON2:  return player_flag | IPT_BUTTON2;          \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON3:  return player_flag | IPT_BUTTON3;          \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON4:  return player_flag | IPT_BUTTON4;          \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON5:  return player_flag | IPT_BUTTON5;          \
-    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON6:  return player_flag | IPT_BUTTON6;          \
-    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON1:    return player_flag | IPT_BUTTON1;          \
-    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON2:    return player_flag | IPT_BUTTON2;          \
-    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON3:    return player_flag | IPT_BUTTON3;          \
-    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON4:    return player_flag | IPT_BUTTON4;          \
-  }                                                                                           \
+#define PLAYER_CODE_COMPARE(PLAYER_NUMBER)                                                        \
+  switch(standard_code)                                                                           \
+  {                                                                                               \
+    case JOYCODE_##PLAYER_NUMBER##_SELECT:         return IPT_COIN##PLAYER_NUMBER;                \
+    case JOYCODE_##PLAYER_NUMBER##_START:          return IPT_START##PLAYER_NUMBER;               \
+    case JOYCODE_##PLAYER_NUMBER##_UP:             return player_flag | IPT_JOYSTICK_UP;          \
+    case JOYCODE_##PLAYER_NUMBER##_DOWN:           return player_flag | IPT_JOYSTICK_DOWN;        \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT:           return player_flag | IPT_JOYSTICK_LEFT;        \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT:          return player_flag | IPT_JOYSTICK_RIGHT;       \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON1:        return player_flag | IPT_BUTTON1;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON2:        return player_flag | IPT_BUTTON2;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON3:        return player_flag | IPT_BUTTON3;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON4:        return player_flag | IPT_BUTTON4;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON5:        return player_flag | IPT_BUTTON5;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON6:        return player_flag | IPT_BUTTON6;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON7:        return player_flag | IPT_BUTTON7;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON8:        return player_flag | IPT_BUTTON8;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON9:        return player_flag | IPT_BUTTON9;              \
+    case JOYCODE_##PLAYER_NUMBER##_BUTTON10:       return player_flag | IPT_BUTTON10;             \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT_UP:        return player_flag | IPT_JOYSTICKLEFT_UP;      \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT_DOWN:      return player_flag | IPT_JOYSTICKLEFT_DOWN;    \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT_LEFT:      return player_flag | IPT_JOYSTICKLEFT_LEFT;    \
+    case JOYCODE_##PLAYER_NUMBER##_LEFT_RIGHT:     return player_flag | IPT_JOYSTICKLEFT_RIGHT;   \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT_UP:       return player_flag | IPT_JOYSTICKRIGHT_UP;     \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT_DOWN:     return player_flag | IPT_JOYSTICKRIGHT_DOWN;   \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT_LEFT:     return player_flag | IPT_JOYSTICKRIGHT_LEFT;   \
+    case JOYCODE_##PLAYER_NUMBER##_RIGHT_RIGHT:    return player_flag | IPT_JOYSTICKRIGHT_RIGHT;  \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON1:  return player_flag | IPT_BUTTON1;              \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON2:  return player_flag | IPT_BUTTON2;              \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON3:  return player_flag | IPT_BUTTON3;              \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON4:  return player_flag | IPT_BUTTON4;              \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON5:  return player_flag | IPT_BUTTON5;              \
+    case JOYCODE_MOUSE_##PLAYER_NUMBER##_BUTTON6:  return player_flag | IPT_BUTTON6;              \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON1:    return player_flag | IPT_BUTTON1;              \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON2:    return player_flag | IPT_BUTTON2;              \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON3:    return player_flag | IPT_BUTTON3;              \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_BUTTON4:    return player_flag | IPT_BUTTON4;              \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_START:      return IPT_START##PLAYER_NUMBER;               \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_SELECT:     return IPT_COIN##PLAYER_NUMBER;                \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_DPAD_UP:    return player_flag | IPT_JOYSTICK_UP;          \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_DPAD_DOWN:  return player_flag | IPT_JOYSTICK_DOWN;        \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_DPAD_LEFT:  return player_flag | IPT_JOYSTICK_LEFT;        \
+    case JOYCODE_GUN_##PLAYER_NUMBER##_DPAD_RIGHT: return player_flag | IPT_JOYSTICK_RIGHT;       \
+  }                                                                                               \
 
 unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
 {
@@ -1075,10 +1089,10 @@ unsigned get_ctrl_ipt_code(unsigned player_number, unsigned standard_code)
   EMIT_LIGHTGUN(DISPLAY_IDX)
 
 #define EMIT_LIGHTGUN(DISPLAY_IDX) \
-  {"Gun" #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_GUN_##DISPLAY_IDX##_BUTTON1    }, \
-  {"Gun" #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON2    }, \
-  {"Gun" #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON3    }, \
-  {"Gun" #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON4    }, \
+  {"Gun" #DISPLAY_IDX " Trigger",     (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_IS_TRIGGER, JOYCODE_GUN_##DISPLAY_IDX##_BUTTON1     }, \
+  {"Gun" #DISPLAY_IDX " Aux A",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_A,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON2     }, \
+  {"Gun" #DISPLAY_IDX " Aux B",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_B,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON3     }, \
+  {"Gun" #DISPLAY_IDX " Aux C",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_AUX_C,      JOYCODE_GUN_##DISPLAY_IDX##_BUTTON4     }, \
   {"Gun" #DISPLAY_IDX " Start",       (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_START,      JOYCODE_GUN_##DISPLAY_IDX##_START       }, \
   {"Gun" #DISPLAY_IDX " Select",      (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_SELECT,     JOYCODE_GUN_##DISPLAY_IDX##_SELECT      }, \
   {"Gun" #DISPLAY_IDX " DPad Left",   (DISPLAY_IDX * 1000) + OSD_LIGHTGUN_DPAD_LEFT,  JOYCODE_GUN_##DISPLAY_IDX##_DPAD_LEFT   }, \
