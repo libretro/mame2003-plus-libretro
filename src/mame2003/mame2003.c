@@ -790,10 +790,10 @@ void retro_describe_controls(void)
       {
         switch(retro_code) /* universal default mappings */
         {
-          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
-          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
-          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
-          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+          //case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+          //case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+          //case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+          //case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
           case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
           case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
         }
