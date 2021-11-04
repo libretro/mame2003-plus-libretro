@@ -788,18 +788,23 @@ void retro_describe_controls(void)
       retro_code = get_retro_code("retropad", osd_code);
       if(retro_code != INT_MAX)
       {
-        switch(retro_code) /* universal default mappings */
+        /* First try to get specific name */
+        control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
+
+        if(string_is_empty(control_name))
         {
-          case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
-          case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
-          case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
-          case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
-          case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-          case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          switch(retro_code) /* universal default mappings */
+          {
+            case RETRO_DEVICE_ID_JOYPAD_LEFT:   control_name = "Left";  break;
+            case RETRO_DEVICE_ID_JOYPAD_RIGHT:  control_name = "Right"; break;
+            case RETRO_DEVICE_ID_JOYPAD_UP:     control_name = "Up";    break;
+            case RETRO_DEVICE_ID_JOYPAD_DOWN:   control_name = "Down";  break;
+            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          }
         }
       }
 
-      if(string_is_empty(control_name) && retro_code != INT_MAX)  control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
       if(string_is_empty(control_name))  continue;
 
       /* With regard to the device number, we refer to the input polling comments in
