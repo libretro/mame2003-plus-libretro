@@ -374,6 +374,35 @@ WRITE16_HANDLER( vandyke_scroll_w )
 	tilemap_set_scrolly(bg_tilemap,0,scroll[2] * 256 + (scroll[3] >> 8));
 }
 
+static int mustang_bg_xscroll;
+
+WRITE16_HANDLER( twinactn_scroll_w )
+{
+/*  mame_printf_debug("mustang %04x %04x %04x\n",offset,data,mem_mask); */
+
+	switch (data & 0xff00)
+	{
+		case 0x0000:
+			mustang_bg_xscroll = (mustang_bg_xscroll & 0x00ff) | ((data & 0x00ff)<<8);
+			break;
+
+		case 0x0100:
+			mustang_bg_xscroll = (mustang_bg_xscroll & 0xff00) | (data & 0x00ff);
+			break;
+
+		case 0x0200:
+			break;
+
+		case 0x0300:
+			break;
+
+		default:
+			break;
+	}
+
+	tilemap_set_scrollx(bg_tilemap,0,mustang_bg_xscroll - videoshift);
+}
+
 WRITE16_HANDLER( nmk_flipscreen_w )
 {
 	if (ACCESSING_LSB)
