@@ -3201,9 +3201,9 @@ static struct OKIM6295interface okim6295_interface_ssmissin =
 static struct OKIM6295interface okim6295_interface_twinactn =
 {
 	1,              	/* 1 chip */
-	{ 1000000/165 },	/* 24242Hz frequency? */
+	{ 1000000/132 },	/* 24242Hz frequency? */
 	{ REGION_SOUND1 },	/* memory region */
-	{ 100 }				/* volume */
+	{ 70 }				/* volume */
 };
 
 
