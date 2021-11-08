@@ -362,6 +362,21 @@ static struct retro_core_option_v2_definition option_def_dialsharexy = {
    "disabled"
 };
 
+static struct retro_core_option_v2_definition option_def_dial_swap_xy = {
+   APPNAME"_dial_swap_xy",
+   "Swap X and Y Dial Axis",
+   NULL,
+   "When enabled, the X axis will be returned for the Y axis and vice versa. This is useful when the device is improperly wired or the device does not support this feature in software.",
+   NULL,
+   "cat_key_input",
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
 static struct retro_core_option_v2_definition option_def_deadzone = {
    APPNAME"_deadzone",
    "Analog Deadzone",
@@ -833,6 +848,7 @@ void init_core_options(void)
   default_options[OPT_STV_BIOS]                  = option_def_stv_bios;
   default_options[OPT_USE_ALT_SOUND]             = option_def_use_alt_sound;
   default_options[OPT_SHARE_DIAL]                = option_def_dialsharexy;
+  default_options[OPT_DIAL_SWAP_XY]              = option_def_dial_swap_xy;
   default_options[OPT_DEADZONE]                  = option_def_deadzone;
   default_options[OPT_TATE_MODE]                 = option_def_tate_mode;
   default_options[OPT_VECTOR_RESOLUTION]         = option_def_vector_resolution;
@@ -891,6 +907,7 @@ static void set_variables(void)
            continue;
          break;
       case OPT_SHARE_DIAL:
+      case OPT_DIAL_SWAP_XY:
          if(!options.content_flags[CONTENT_DIAL])
            continue;
          break;
@@ -1057,10 +1074,17 @@ void update_variables(bool first_time)
           break;
 
         case OPT_SHARE_DIAL:
-          if(options.content_flags[CONTENT_DIAL] && (strcmp(var.value, "enabled") == 0))
+          if(strcmp(var.value, "enabled") == 0)
             options.dial_share_xy = 1;
           else
             options.dial_share_xy = 0;
+          break;
+
+        case OPT_DIAL_SWAP_XY:
+          if(strcmp(var.value, "enabled") == 0)
+            options.dial_swap_xy = true;
+          else
+            options.dial_swap_xy = false;
           break;
 
         case OPT_DEADZONE:
