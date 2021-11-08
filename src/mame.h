@@ -199,6 +199,7 @@ struct GameOptions
   bool     all_ctrls;            /* show unused controls in the frontend remapper */
 
   unsigned dial_share_xy;
+  bool     dial_swap_xy;
   unsigned xy_device;
   bool     use_lightgun_with_pad;
   unsigned input_interface;                         /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
