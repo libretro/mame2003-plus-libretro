@@ -690,7 +690,7 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    APPNAME"_cheat_input_ports",
    "Dip Switch/Cheat Input Ports",
    NULL,
-   NULL,
+   "Used to display fake dip switches and input control options within the MAME menu when available.",
    NULL,
    "cat_key_input",
    {
