@@ -924,7 +924,7 @@ static void set_variables(void)
          if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
-      case CONTENT_CHEAT_INPUT_PORT:
+      case OPT_CHEAT_INPUT_PORTS:
          if(!options.content_flags[CONTENT_CHEAT_INPUT_PORT])
            continue;
          break;
