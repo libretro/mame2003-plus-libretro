@@ -706,9 +706,9 @@ READ_HANDLER( defender_input_port_0_r )
 		keys |= altkeys;
 		if (memory_region(REGION_CPU1)[0xa0bb] == 0xfd)
 		{
-			if (keys & 0x02)
+			if (altkeys & 0x02)
 				keys = (keys & 0xfd) | 0x40;
-			else if (keys & 0x40)
+			else if (altkeys & 0x40)
 				keys = (keys & 0xbf) | 0x02;
 		}
 	}
@@ -794,9 +794,9 @@ READ_HANDLER( stargate_input_port_0_r )
 		keys |= altkeys;
 		if (memory_region(REGION_CPU1)[0x9c92] == 0xfd)
 		{
-			if (keys & 0x02)
+			if (altkeys & 0x02)
 				keys = (keys & 0xfd) | 0x40;
-			else if (keys & 0x40)
+			else if (altkeys & 0x40)
 				keys = (keys & 0xbf) | 0x02;
 		}
 	}
