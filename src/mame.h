@@ -173,6 +173,7 @@ enum /* used to index content-specific flags */
   CONTENT_BUTTON_COUNT,
   CONTENT_JOYSTICK_DIRECTIONS,
   CONTENT_NVRAM_BOOTSTRAP,
+  CONTENT_CHEAT_INPUT_PORT,
   CONTENT_end,
 };
 
