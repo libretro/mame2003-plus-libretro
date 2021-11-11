@@ -924,6 +924,10 @@ static void set_variables(void)
          if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
+      case OPT_CHEAT_INPUT_PORTS:
+         if(!options.content_flags[CONTENT_CHEAT_INPUT_PORT])
+           continue;
+         break;
     }
 
     effective_defaults[effective_options_count] = default_options[option_index];
@@ -1336,6 +1340,9 @@ void set_content_flags(void)
 			if (input->type & IPF_4WAY) /* the controls use a 4-way joystick */
 				options.content_flags[CONTENT_JOYSTICK_DIRECTIONS] = 4;
 
+			if (input->type & IPF_CHEAT) /* uses a cheat input port */
+				options.content_flags[CONTENT_CHEAT_INPUT_PORT] = true;
+
 			switch (input->type & ~IPF_MASK)
 			{
 				case IPT_JOYSTICKRIGHT_UP:
@@ -1469,6 +1476,7 @@ void set_content_flags(void)
       log_cb(RETRO_LOG_INFO, LOGPRE "* Uses 8-way joystick controls.\n");
 
   if(options.content_flags[CONTENT_NVRAM_BOOTSTRAP])    log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an NVRAM bootstrap controlled via core option.\n");
+  if(options.content_flags[CONTENT_CHEAT_INPUT_PORT])   log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a cheat input port / dip switch.\n");
 
   log_cb(RETRO_LOG_INFO, LOGPRE "==== END DRIVER CONTENT ATTRIBUTES ====\n");
 }
