@@ -1790,7 +1790,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( twincobr )	/* TP-011 (c) 1987 Taito Corporation (World) */
 	DRIVER( twincobu )	/* TP-011 (c) 1987 Taito America Corporation + Romstar license (US) */
 	DRIVER( ktiger )	/* TP-011 (c) 1987 Taito Corporation (Japan) */
-  DRIVER( ktiger2p )	/* TP-011 (c) 1987 Taito Corporation (Japan) */
+  DRIVER( ktiger2p )	/* (c) 2021 M2 Co Ltd */
 	DRIVER( gulfwar2 )	/* (c) 1991 Comad */
 
 	DRIVER( rallybik )	/* TP-012 (c) 1988 Taito */
