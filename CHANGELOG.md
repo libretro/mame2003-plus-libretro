@@ -226,6 +226,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Kabuki-Z (Japan)
 * King of Gladiator
 * Knuckle Bash 2
+* Kyukyoku Tiger (Japan, 2 Players) 
 * Mad Ball V2.0 * Mature * - Romset `madball`
 * Magical Drop
 * Magical Drop Plus 1
@@ -791,3 +792,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Sorted some sound niggles in Twin Hawk which would occur when the screen gets fairly busy [arcadez]
 * Added support for Dragon Bowl to gaiden.c [arcadez]
 * Added Dolmen and Twin Action to the nmk16.c driver [iq_132, BritneysPAIRS, arcadez]
+* Added Kyukyoku Tiger (Japan, 2 Players) to the twincobr.c driver [DsNo, dink, arcadez]
