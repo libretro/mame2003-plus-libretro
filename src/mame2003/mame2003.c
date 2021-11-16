@@ -1218,17 +1218,30 @@ int osd_is_joy_pressed(int joycode)
   /* terms than INPUT_BUTTON_AXIS_THRESHOLD, return it as a binary/digital signal.             */
   if (osd_is_joystick_axis_code(joycode))
   {
-    if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_X || osd_code == OSD_ANALOG_LEFT_POSITIVE_X) {
-      if (abs( analog_deadzone_rescale(input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X)) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+    if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
         return 1; }
-    else if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y || osd_code == OSD_ANALOG_LEFT_POSITIVE_Y) {
-      if (abs( analog_deadzone_rescale(input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y)) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+    else if (osd_code == OSD_ANALOG_LEFT_POSITIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_X) ) > INPUT_BUTTON_AXIS_THRESHOLD)
         return 1; }
-    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X || osd_code == OSD_ANALOG_RIGHT_POSITIVE_X) {
-      if (abs( analog_deadzone_rescale(input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X)) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+    else if (osd_code == OSD_ANALOG_LEFT_NEGATIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
         return 1; }
-    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y) {
-      if (abs( analog_deadzone_rescale(input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y)) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+    else if (osd_code == OSD_ANALOG_LEFT_POSITIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT,  RETRO_DEVICE_ID_ANALOG_Y) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+
+    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_POSITIVE_X) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X) ) > INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) ) < -INPUT_BUTTON_AXIS_THRESHOLD)
+        return 1; }
+    else if (osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y) {
+      if (analog_deadzone_rescale( input_cb(port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y) ) > INPUT_BUTTON_AXIS_THRESHOLD)
         return 1; }
   }
 
