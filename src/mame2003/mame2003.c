@@ -252,8 +252,10 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
         info->timing.sample_rate = 22050;
       else if ( Machine->drv->frames_per_second * 1000 > 11025)
         info->timing.sample_rate = 11025;
-      else
+      else if ( Machine->drv->frames_per_second * 1000 > 8000)
         info->timing.sample_rate = 8000;
+      else
+        info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
     }
 
     else
@@ -565,8 +567,10 @@ int osd_start_audio_stream(int stereo)
         Machine->sample_rate = 22050;
       else if ( Machine->drv->frames_per_second * 1000 > 11025)
         Machine->sample_rate = 11025;
-      else
+      else if ( Machine->drv->frames_per_second * 1000 > 8000)
         Machine->sample_rate = 8000;
+      else
+        Machine->sample_rate = Machine->drv->frames_per_second * 1000;
     }
 
     else
