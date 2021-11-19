@@ -834,7 +834,20 @@ static void init_game_options(void)
   else
   {
     if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-      Machine->sample_rate=22050;
+    {
+      if ( Machine->drv->frames_per_second * 1000 > 44100)
+        Machine->sample_rate = 44100;
+      else if ( Machine->drv->frames_per_second * 1000 > 30000)
+        Machine->sample_rate = 30000;
+      else if ( Machine->drv->frames_per_second * 1000 > 22050)
+        Machine->sample_rate = 22050;
+      else if ( Machine->drv->frames_per_second * 1000 > 11025)
+        Machine->sample_rate = 11025;
+      else if ( Machine->drv->frames_per_second * 1000 > 8000)
+        Machine->sample_rate = 8000;
+      else
+        Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+    }
 
     else
       Machine->sample_rate = options.samplerate;
