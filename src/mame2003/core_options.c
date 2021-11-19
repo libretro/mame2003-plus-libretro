@@ -709,11 +709,11 @@ static struct retro_core_option_v2_definition option_def_machine_timing = {
    NULL,
    "cat_key_audio",
    {
-      { "enabled",  NULL },
       { "disabled", NULL },
+      { "enabled",  NULL },
       { NULL, NULL },
    },
-   "enabled"
+   "disabled"
 };
 
 static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
