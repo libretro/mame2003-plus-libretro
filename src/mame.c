@@ -843,8 +843,10 @@ static void init_game_options(void)
         Machine->sample_rate = 22050;
       else if ( Machine->drv->frames_per_second * 1000 > 11025)
         Machine->sample_rate = 11025;
-      else
+      else if ( Machine->drv->frames_per_second * 1000 > 8000)
         Machine->sample_rate = 8000;
+      else
+        Machine->sample_rate = Machine->drv->frames_per_second * 1000;
     }
 
     else
