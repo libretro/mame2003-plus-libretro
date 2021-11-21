@@ -142,7 +142,6 @@ void mame2003_video_init_orientation(void)
       video_hw_transpose = orientation & ORIENTATION_SWAP_XY;
       orientation = 0;
    }
-
    /* Otherwise try to use it to do a transpose */
    rotate_mode = 3; /* ROT90 */
    if (orientation & ORIENTATION_SWAP_XY
@@ -151,7 +150,14 @@ void mame2003_video_init_orientation(void)
       video_hw_transpose = true;
       orientation = reverse_orientation(orientation ^ ROT270);
    }
-
+  /*If Ra fails do it ourself a recent addition to the code allows this check*/
+   if (orientation & ORIENTATION_SWAP_XY
+      && !environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode))
+   {
+       video_hw_transpose = true;
+       orientation = orientation & ROT270;
+       log_cb(RETRO_LOG_INFO,"Run to the hills RA rotation failed mame is taking over the show\n");
+   }
    /* Set up native orientation flags that aren't handled by libretro */
    video_flip_x = orientation & ORIENTATION_FLIP_X;
    video_flip_y = orientation & ORIENTATION_FLIP_Y;
