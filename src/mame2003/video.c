@@ -150,6 +150,7 @@ void mame2003_video_init_orientation(void)
       video_hw_transpose = true;
       orientation = reverse_orientation(orientation ^ ROT270);
    }
+   #ifdef WIIU
   /*If Ra fails to rotate through settings->core  or doesnt implement rotation adjust for it recent addition to the code allows this check*/
    if (!environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode))
    {
@@ -164,7 +165,7 @@ void mame2003_video_init_orientation(void)
           orientation = orientation & ROT270;
        }
     }
- 
+    #endif
    /* Set up native orientation flags that aren't handled by libretro */
    video_flip_x = orientation & ORIENTATION_FLIP_X;
    video_flip_y = orientation & ORIENTATION_FLIP_Y;
