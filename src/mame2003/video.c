@@ -62,6 +62,7 @@ void mame2003_video_get_geometry(struct retro_game_geometry *geom)
    geom->base_height = video_hw_transpose ? vis_w : vis_h;
 
    geom->aspect_ratio = video_hw_transpose ? (float)video_config.aspect_y / (float)video_config.aspect_x : (float)video_config.aspect_x / (float)video_config.aspect_y;
+
 }
 
 void mame2003_video_update_visible_area(struct mame_display *display)
@@ -110,63 +111,49 @@ void mame2003_video_init_orientation(void)
    unsigned orientation = Machine->gamedrv->flags & ORIENTATION_MASK;
    unsigned rotate_mode;
 
-   /* Acknowledge that the TATE mode is handled */
-   tate_mode = options.tate_mode;
+   rotate_mode = 0; /* Known invalid value */
+   tate_mode = options.tate_mode;   /* Acknowledge that the TATE mode is handled */
+   video_hw_transpose = false;
 
-   /*
-      The UI is always oriented properly at start, but the externally applied
-      orientation needs to be countered.
-   */
+   /* test RA if rotation is working if not dont alter the orientation let mame handle it */
    options.ui_orientation = reverse_orientation(orientation);
 
-   /* Do a 90 degree CCW rotation for vertical games in TATE mode */
    if (tate_mode && (orientation & ORIENTATION_SWAP_XY))
       orientation = reverse_orientation(orientation) ^ ROT270;
 
-   /* Try to reset libretro orientation */
-   rotate_mode = 0;
-   environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode);
 
-   /* Try to match orientation to a supported libretro rotation */
-   rotate_mode = 0; /* Known invalid value */
-   rotate_mode = (orientation == ROT270) ? 1 : rotate_mode;
-   rotate_mode = (orientation == ROT180) ? 2 : rotate_mode;
-   rotate_mode = (orientation == ROT90) ? 3 : rotate_mode;
-
-   video_hw_transpose = false;
-
-   /* Try to use libretro to do a rotation */
-   if (rotate_mode != 0 ) /* Known invalid value */
-      if (environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode))
-      {
-         video_hw_transpose = orientation & ORIENTATION_SWAP_XY;
-         orientation = 0;
-      }
-   /* Otherwise try to use it to do a transpose */
-   if (rotate_mode == 3 && orientation & ORIENTATION_SWAP_XY) /* ROT90 */
-      if (environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode))
-      {
-         video_hw_transpose = true;
-         orientation = reverse_orientation(orientation ^ ROT270);
-      }
-   #ifdef WIIU
-  /*If Ra fails to rotate through settings->core  or doesnt implement rotation adjust for it recent addition to the code allows this check*/
-   if (!environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode))
+   if (orientation == ROT0 || orientation == ROT90 || orientation == ROT180 || orientation == ROT270)
    {
-      
-      log_cb(RETRO_LOG_INFO,"RA rotation failed mame will assume its duties\n"); 
+      if (environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode) )
+      {
+        log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch will perform the rotation\n");
 
-      if (orientation & ORIENTATION_SWAP_XY )   
-         video_hw_transpose = true;
+        rotate_mode = (orientation == ROT270) ? 1 : rotate_mode;
+        rotate_mode = (orientation == ROT180) ? 2 : rotate_mode;
+        rotate_mode = (orientation == ROT90) ? 3 : rotate_mode;
+        if (orientation & ORIENTATION_SWAP_XY) video_hw_transpose = true; /*do this before the rotation reverse*/
+        orientation = reverse_orientation(orientation ^ orientation); /* undo mame rotation if retroarch can do it */
+        environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode);
+      }
 
-    }
-    #endif
+      else
+        log_cb(RETRO_LOG_INFO, LOGPRE "This port of RetroArch does not support rotation or it has been disabled. Mame will rotate internally\n");
+
+   }
+   else
+     log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch does not support this type of rotation, using mame internal rotation instead\n");
+
+   tate_mode = options.tate_mode;
+
    /* Set up native orientation flags that aren't handled by libretro */
+   if (orientation & ORIENTATION_SWAP_XY) video_hw_transpose = true; /*dont set this to false if RA changes the flags else vertical games swap the xy*/
    video_flip_x = orientation & ORIENTATION_FLIP_X;
    video_flip_y = orientation & ORIENTATION_FLIP_Y;
    video_swap_xy = orientation & ORIENTATION_SWAP_XY;
-
+   log_cb(RETRO_LOG_INFO,"mame internal: video_flip_x:%u video_flip_y:%u video_swap_xy:%u video_hw_transpose:%u\n",video_flip_x,video_flip_y,video_swap_xy,video_hw_transpose);
    Machine->ui_orientation = options.ui_orientation;
+
+
 }
 
 /* Init video format conversion settings */
@@ -236,7 +223,7 @@ void mame2003_video_reinit(void)
    UINT32 rgb_components[3];
    struct osd_create_params old_params = video_config;
    osd_close_display();
-   osd_create_display(&old_params, &rgb_components);
+   osd_create_display(&old_params, &rgb_components[0]);
 }
 
 int osd_create_display(
@@ -251,7 +238,6 @@ int osd_create_display(
    video_do_bypass =
       !video_flip_x && !video_flip_y && !video_swap_xy &&
       ((video_config.depth == 15) || (video_config.depth == 32));
-
    /* Allocate an output video buffer, if necessary */
    if (!video_do_bypass)
    {
