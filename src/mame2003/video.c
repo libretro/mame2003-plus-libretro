@@ -126,7 +126,7 @@ void mame2003_video_init_orientation(void)
    {
       if (environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode) )
       {
-        log_cb(RETRO_LOG_INFO,"retroarch doing the rotation\n");
+        log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch will perform the rotation\n");
 
         rotate_mode = (orientation == ROT270) ? 1 : rotate_mode;
         rotate_mode = (orientation == ROT180) ? 2 : rotate_mode;
@@ -137,11 +137,11 @@ void mame2003_video_init_orientation(void)
       }
 
       else
-        log_cb(RETRO_LOG_INFO,"This port of Retroarch does not support rotation or its been disabled mame will rotate internally\n");
+        log_cb(RETRO_LOG_INFO, LOGPRE "This port of RetroArch does not support rotation or it has been disabled. Mame will rotate internally\n");
 
    }
    else
-     log_cb(RETRO_LOG_INFO,"retroarch does not support this type of rotation using mame internal rotation\n");
+     log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch does not support this type of rotation, using mame internal rotation instead\n");
 
    tate_mode = options.tate_mode;
 
