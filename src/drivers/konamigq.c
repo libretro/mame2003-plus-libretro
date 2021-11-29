@@ -112,7 +112,7 @@ static READ32_HANDLER( mb89371_r )
 
 static READ32_HANDLER( gun1_x_r )
 {
-	return readinputport( 5 );
+	return readinputport( 5 ) + 125;
 }
 
 static READ32_HANDLER( gun1_y_r )
@@ -122,7 +122,7 @@ static READ32_HANDLER( gun1_y_r )
 
 static READ32_HANDLER( gun2_x_r )
 {
-	return readinputport( 7 );
+	return readinputport( 7 ) + 125;
 }
 
 static READ32_HANDLER( gun2_y_r )
@@ -132,7 +132,7 @@ static READ32_HANDLER( gun2_y_r )
 
 static READ32_HANDLER( gun3_x_r )
 {
-	return readinputport( 9 );
+	return readinputport( 9 ) + 125;
 }
 
 static READ32_HANDLER( gun3_y_r )
