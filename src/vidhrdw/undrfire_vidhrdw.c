@@ -493,8 +493,8 @@ VIDEO_UPDATE( undrfire )
 
 	if (input_port_7_word_r(0,0) & 0x1)	/* Fake DSW */
 	{
-		draw_crosshair( bitmap, round((255 - readinputport(3)) * 1.255), readinputport(4) + 8, cliprect );
-		draw_crosshair( bitmap, round((255 - readinputport(5)) * 1.255), readinputport(6) + 8, cliprect );
+		draw_crosshair( bitmap, round((255 - readinputport(3)) * 1.255), readinputport(4) + 9, cliprect );
+		draw_crosshair( bitmap, round((255 - readinputport(5)) * 1.255), readinputport(6) + 9, cliprect );
 	}
 
 /* Enable this to see rotation (?) control words */
