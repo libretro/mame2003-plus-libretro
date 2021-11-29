@@ -476,14 +476,14 @@ static READ_HANDLER(guns_r)
 			if ((GUNY(3)<=0x0b) || (GUNY(3)>=0xe8))
 				return 0;
 			else
-				return (232 - GUNY(3));
+				return (236 - GUNY(3));
 		case 2:
 			return GUNX(4) >> 1;
 		case 3:
 			if ((GUNY(5)<=0x0b) || (GUNY(5)>=0xe8))
 				return 0;
 			else
-				return (232 - GUNY(5));
+				return (236 - GUNY(5));
 	}
 
 	return 0;
