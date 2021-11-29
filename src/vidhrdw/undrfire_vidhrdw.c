@@ -489,8 +489,8 @@ VIDEO_UPDATE( undrfire )
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,0);	/* TC0480SCP text layer */
 
 	/* draw artificial gun targets */
-	draw_crosshair( bitmap, round((255 - readinputport(3)) * 1.255), readinputport(4) + 9, cliprect );
-	draw_crosshair( bitmap, round((255 - readinputport(5)) * 1.255), readinputport(6) + 9, cliprect );
+	draw_crosshair( bitmap, (255 - readinputport(3)) * 1.255, readinputport(4) + 9, cliprect );
+	draw_crosshair( bitmap, (255 - readinputport(5)) * 1.255, readinputport(6) + 9, cliprect );
 
 /* Enable this to see rotation (?) control words */
 #if 0
