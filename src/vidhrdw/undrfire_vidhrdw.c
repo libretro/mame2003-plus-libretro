@@ -493,7 +493,8 @@ VIDEO_UPDATE( undrfire )
 
 	if (input_port_7_word_r(0,0) & 0x1)	/* Fake DSW */
 	{
-		usrintf_showmessage("Gunsights on");
+		draw_crosshair( bitmap, readinputport(3)<<6, readinputport(4)<<6, cliprect );
+		draw_crosshair( bitmap, readinputport(5)<<6, readinputport(6)<<6, cliprect );
 	}
 
 /* Enable this to see rotation (?) control words */
