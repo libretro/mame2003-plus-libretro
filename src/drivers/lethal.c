@@ -174,8 +174,9 @@ maybe some priority issues / sprite placement issues..
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
 
-#define GUNX( a ) (( ( readinputport( a ) * 287 ) / 0xff ) + 16)
-#define GUNY( a ) (( ( readinputport( a ) * 223 ) / 0xff ) + 10)
+/* a = 1, 2 = player # */
+#define GUNX( a ) (( ( readinputport( 2*a ) * 287 ) / 0xff ) + 16)
+#define GUNY( a ) (( ( readinputport( (2*a)+1 ) * 223 ) / 0xff ) + 10)
 
 VIDEO_START(lethalen);
 VIDEO_UPDATE(lethalen);
@@ -471,23 +472,19 @@ static READ_HANDLER(guns_r)
 	switch (offset)
 	{
 		case 0:
-			return GUNX(2)>>1;
-			break;
+			return GUNX(1) >> 1;
 		case 1:
-			if ((240-GUNY(3)) == 7)
+			if ((GUNY(1)<=0x0b) || (GUNY(1)>=0xe8))
 				return 0;
 			else
-				return (240-GUNY(3));
-			break;
+				return (235 - GUNY(1));
 		case 2:
-			return GUNX(4)>>1;
-			break;
+			return GUNX(2) >> 1;
 		case 3:
-			if ((240-GUNY(5)) == 7)
+			if ((GUNY(2)<=0x0b) || (GUNY(2)>=0xe8))
 				return 0;
 			else
-				return (240-GUNY(5));
-			break;
+				return (235 - GUNY(2));
 	}
 
 	return 0;
@@ -497,8 +494,8 @@ static READ_HANDLER(gunsaux_r)
 {
 	int res = 0;
 
-	if (GUNX(2) & 1) res |= 0x80;
-	if (GUNX(4) & 1) res |= 0x40;
+	if (GUNX(1) & 1) res |= 0x80;
+	if (GUNX(2) & 1) res |= 0x40;
 
 	return res;
 }
@@ -582,19 +579,19 @@ INPUT_PORTS_START( lethalen )
 
 	/* IN 2 */
 	PORT_START
-	PORT_ANALOG( 0xff, 0x00, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0, 0xff)
 
 	/* IN 3 */
 	PORT_START
-	PORT_ANALOG( 0xff, 0x00, IPT_LIGHTGUN_Y | IPF_PLAYER1, 25, 15, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 25, 15, 0, 0xff)
 
 	/* IN 4 */
 	PORT_START
-	PORT_ANALOG( 0xff, 0x00, IPT_LIGHTGUN_X | IPF_PLAYER2, 25, 15, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 25, 15, 0, 0xff)
 
 	/* IN 5 */
 	PORT_START
-	PORT_ANALOG( 0xff, 0x00, IPT_LIGHTGUN_Y | IPF_PLAYER2, 25, 15, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 25, 15, 0, 0xff)
 INPUT_PORTS_END
 
 
