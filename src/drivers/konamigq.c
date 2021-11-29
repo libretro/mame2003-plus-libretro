@@ -110,34 +110,37 @@ static READ32_HANDLER( mb89371_r )
 
 /* Inputs */
 
+#define GUNX( a ) ( ( readinputport( a ) * 319 ) / 0xff )
+#define GUNY( a ) ( ( readinputport( a ) * 239 ) / 0xff )
+
 static READ32_HANDLER( gun1_x_r )
 {
-	return readinputport( 5 );
+	return GUNX( 5 ) + 125;
 }
 
 static READ32_HANDLER( gun1_y_r )
 {
-	return readinputport( 6 );
+	return GUNY( 6 );
 }
 
 static READ32_HANDLER( gun2_x_r )
 {
-	return readinputport( 7 );
+	return GUNX( 7 ) + 125;
 }
 
 static READ32_HANDLER( gun2_y_r )
 {
-	return readinputport( 8 );
+	return GUNY( 8 );
 }
 
 static READ32_HANDLER( gun3_x_r )
 {
-	return readinputport( 9 );
+	return GUNX( 9 ) + 125;
 }
 
 static READ32_HANDLER( gun3_y_r )
 {
-	return readinputport( 10 );
+	return GUNY( 10 );
 }
 
 static READ32_HANDLER( read_inputs_0 )
@@ -224,9 +227,9 @@ static VIDEO_UPDATE( konamigq )
 {
 	video_update_psx( bitmap, cliprect );
 
-	draw_crosshair( bitmap, readinputport( 5 ) - 125, readinputport( 6 ), cliprect );
-	draw_crosshair( bitmap, readinputport( 7 ) - 125, readinputport( 8 ), cliprect );
-	draw_crosshair( bitmap, readinputport( 9 ) - 125, readinputport( 10 ), cliprect );
+	draw_crosshair( bitmap, GUNX( 5 ), GUNY( 6 ), cliprect );
+	draw_crosshair( bitmap, GUNX( 7 ), GUNY( 8 ), cliprect );
+	draw_crosshair( bitmap, GUNX( 9 ), GUNY( 10 ), cliprect );
 }
 
 static MEMORY_WRITE32_START( konamigq_writemem )
@@ -544,27 +547,27 @@ INPUT_PORTS_START( konamigq )
 
 	/* IN 5 */
 	PORT_START /* mask default type                     sens delta min max */
-	PORT_ANALOG( 0x01ff, 0x011d, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0x007d, 0x01bc )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0, 0xff )
 
 	/* IN 6 */
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0078, IPT_LIGHTGUN_Y | IPF_PLAYER1, 25, 15, 0x0000, 0x00ef )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 25, 15, 0, 0xff )
 
 	/* IN 7 */
 	PORT_START
-	PORT_ANALOG( 0x01ff, 0x011d, IPT_LIGHTGUN_X | IPF_PLAYER2, 25, 15, 0x007d, 0x01bc )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 25, 15, 0, 0xff )
 
 	/* IN 8 */
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0078, IPT_LIGHTGUN_Y | IPF_PLAYER2, 25, 15, 0x0000, 0x00ef )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 25, 15, 0, 0xff )
 
 	/* IN 9 */
 	PORT_START
-	PORT_ANALOG( 0x01ff, 0x011d, IPT_LIGHTGUN_X | IPF_PLAYER3, 25, 15, 0x007d, 0x01bc )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER3, 25, 15, 0, 0xff )
 
 	/* IN 10 */
 	PORT_START
-	PORT_ANALOG( 0x00ff, 0x0078, IPT_LIGHTGUN_Y | IPF_PLAYER3, 25, 15, 0x0000, 0x00ef )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER3, 25, 15, 0, 0xff )
 INPUT_PORTS_END
 
 ROM_START( cryptklr )
