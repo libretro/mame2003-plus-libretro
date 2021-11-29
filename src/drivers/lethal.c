@@ -471,23 +471,19 @@ static READ_HANDLER(guns_r)
 	switch (offset)
 	{
 		case 0:
-			return GUNX(2)>>1;
-			break;
+			return GUNX(2) >> 1;
 		case 1:
-			if ((240-GUNY(3)) == 7)
+			if ((GUNY(3)<=0x0b) || (GUNY(3)>=0xe8))
 				return 0;
 			else
-				return (240-GUNY(3));
-			break;
+				return (232 - GUNY(3));
 		case 2:
-			return GUNX(4)>>1;
-			break;
+			return GUNX(4) >> 1;
 		case 3:
-			if ((240-GUNY(5)) == 7)
+			if ((GUNY(5)<=0x0b) || (GUNY(5)>=0xe8))
 				return 0;
 			else
-				return (240-GUNY(5));
-			break;
+				return (232 - GUNY(5));
 	}
 
 	return 0;
