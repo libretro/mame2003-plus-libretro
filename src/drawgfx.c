@@ -3539,8 +3539,17 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	/* Crosshair - enhanced, adds to simple design above */
 	if(options.crosshair_appearance == 1)
 	{
-		/* Outter lines */
+		/* Outter long lines */
 		for (i = -3;i < 4;i++)
+		{
+			plotclip(bitmap,x+7,y+i,white,clip);
+			plotclip(bitmap,x-7,y+i,white,clip);
+			plotclip(bitmap,x+i,y+7,white,clip);
+			plotclip(bitmap,x+i,y-7,white,clip);
+		}
+
+		/* Inner short lines */
+		for (i = -1;i < 2;i++)
 		{
 			plotclip(bitmap,x+6,y+i,white,clip);
 			plotclip(bitmap,x-6,y+i,white,clip);
@@ -3549,24 +3558,18 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		}
 
 		/* 45 degrees */
-		plotclip(bitmap,x+4,y+5,white,clip);
-		plotclip(bitmap,x+5,y+4,white,clip);
-		plotclip(bitmap,x-4,y+5,white,clip);
-		plotclip(bitmap,x-5,y+4,white,clip);
-		plotclip(bitmap,x-4,y-5,white,clip);
-		plotclip(bitmap,x-5,y-4,white,clip);
-		plotclip(bitmap,x+4,y-5,white,clip);
-		plotclip(bitmap,x+5,y-4,white,clip);
-
-		/* Corner fill */
-		plotclip(bitmap,x+1,y+5,white,clip);
-		plotclip(bitmap,x+5,y+1,white,clip);
-		plotclip(bitmap,x-1,y+5,white,clip);
-		plotclip(bitmap,x-5,y+1,white,clip);
-		plotclip(bitmap,x-1,y-5,white,clip);
-		plotclip(bitmap,x-5,y-1,white,clip);
-		plotclip(bitmap,x+1,y-5,white,clip);
-		plotclip(bitmap,x+5,y-1,white,clip);
+		plotclip(bitmap,x-4,y+6,white,clip);
+		plotclip(bitmap,x-5,y+5,white,clip);
+		plotclip(bitmap,x-6,y+4,white,clip);
+		plotclip(bitmap,x-4,y-6,white,clip);
+		plotclip(bitmap,x-5,y-5,white,clip);
+		plotclip(bitmap,x-6,y-4,white,clip);
+		plotclip(bitmap,x+4,y-6,white,clip);
+		plotclip(bitmap,x+5,y-5,white,clip);
+		plotclip(bitmap,x+6,y-4,white,clip);
+		plotclip(bitmap,x+4,y+6,white,clip);
+		plotclip(bitmap,x+5,y+5,white,clip);
+		plotclip(bitmap,x+6,y+4,white,clip);
 	}
 }
 
