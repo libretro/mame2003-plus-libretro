@@ -3553,7 +3553,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	plotclip(bitmap,x-4,y-5,white,clip);
 	plotclip(bitmap,x-5,y-4,white,clip);
 	plotclip(bitmap,x+4,y-5,white,clip);
-	plotclip(bitmap,x+4,y-4,white,clip);
+	plotclip(bitmap,x+5,y-4,white,clip);
 
 	/* Corner fill */
 	plotclip(bitmap,x+1,y+5,white,clip);
