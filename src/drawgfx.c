@@ -3527,7 +3527,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
 
-	/* Crosshair */
+	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
 	{
 		plotclip(bitmap,x+i,y,white,clip);
@@ -3536,34 +3536,38 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x,y-i,white,clip);
 	}
 
-	/* Outter lines */
-	for (i = -3;i < 4;i++)
+	/* Crosshair - enhanced, adds to simple design above */
+	if(options.crosshair_appearance == 1)
 	{
-		plotclip(bitmap,x+6,y+i,white,clip);
-		plotclip(bitmap,x-6,y+i,white,clip);
-		plotclip(bitmap,x+i,y+6,white,clip);
-		plotclip(bitmap,x+i,y-6,white,clip);
+		/* Outter lines */
+		for (i = -3;i < 4;i++)
+		{
+			plotclip(bitmap,x+6,y+i,white,clip);
+			plotclip(bitmap,x-6,y+i,white,clip);
+			plotclip(bitmap,x+i,y+6,white,clip);
+			plotclip(bitmap,x+i,y-6,white,clip);
+		}
+
+		/* 45 degrees */
+		plotclip(bitmap,x+4,y+5,white,clip);
+		plotclip(bitmap,x+5,y+4,white,clip);
+		plotclip(bitmap,x-4,y+5,white,clip);
+		plotclip(bitmap,x-5,y+4,white,clip);
+		plotclip(bitmap,x-4,y-5,white,clip);
+		plotclip(bitmap,x-5,y-4,white,clip);
+		plotclip(bitmap,x+4,y-5,white,clip);
+		plotclip(bitmap,x+5,y-4,white,clip);
+
+		/* Corner fill */
+		plotclip(bitmap,x+1,y+5,white,clip);
+		plotclip(bitmap,x+5,y+1,white,clip);
+		plotclip(bitmap,x-1,y+5,white,clip);
+		plotclip(bitmap,x-5,y+1,white,clip);
+		plotclip(bitmap,x-1,y-5,white,clip);
+		plotclip(bitmap,x-5,y-1,white,clip);
+		plotclip(bitmap,x+1,y-5,white,clip);
+		plotclip(bitmap,x+5,y-1,white,clip);
 	}
-
-	/* 45 degrees */
-	plotclip(bitmap,x+4,y+5,white,clip);
-	plotclip(bitmap,x+5,y+4,white,clip);
-	plotclip(bitmap,x-4,y+5,white,clip);
-	plotclip(bitmap,x-5,y+4,white,clip);
-	plotclip(bitmap,x-4,y-5,white,clip);
-	plotclip(bitmap,x-5,y-4,white,clip);
-	plotclip(bitmap,x+4,y-5,white,clip);
-	plotclip(bitmap,x+5,y-4,white,clip);
-
-	/* Corner fill */
-	plotclip(bitmap,x+1,y+5,white,clip);
-	plotclip(bitmap,x+5,y+1,white,clip);
-	plotclip(bitmap,x-1,y+5,white,clip);
-	plotclip(bitmap,x-5,y+1,white,clip);
-	plotclip(bitmap,x-1,y-5,white,clip);
-	plotclip(bitmap,x-5,y-1,white,clip);
-	plotclip(bitmap,x+1,y-5,white,clip);
-	plotclip(bitmap,x+5,y-1,white,clip);
 }
 
 
