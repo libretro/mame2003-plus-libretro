@@ -210,6 +210,7 @@ struct GameOptions
   unsigned tate_mode;
 
   int      crosshair_enable;
+  int      crosshair_appearance;
   bool     activate_dcs_speedhack;
 
   bool     mame_remapping;       /* display MAME input remapping menu */
