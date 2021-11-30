@@ -488,13 +488,9 @@ VIDEO_UPDATE( undrfire )
 
 	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,0);	/* TC0480SCP text layer */
 
-	/* See if we should draw artificial gun targets */
-	/* (not yet implemented...) */
-
-	if (input_port_7_word_r(0,0) & 0x1)	/* Fake DSW */
-	{
-		usrintf_showmessage("Gunsights on");
-	}
+	/* draw artificial gun targets */
+	draw_crosshair( bitmap, (255 - readinputport(3)) * 1.255, readinputport(4) + 9, cliprect );
+	draw_crosshair( bitmap, (255 - readinputport(5)) * 1.255, readinputport(6) + 9, cliprect );
 
 /* Enable this to see rotation (?) control words */
 #if 0
