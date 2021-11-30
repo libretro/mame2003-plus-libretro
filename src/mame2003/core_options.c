@@ -99,6 +99,21 @@ static struct retro_core_option_v2_definition option_def_crosshair_enabled = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_crosshair_appearance = {
+   APPNAME"_crosshair_appearance",
+   "Lightgun Crosshair Appearance",
+   NULL,
+   "Changes the appearance of the crosshairs for each player.",
+   NULL,
+   "cat_key_input",
+   {
+      { "simple",    NULL },
+      { "enhanced",  NULL },
+      { NULL, NULL },
+   },
+   "simple"
+};
+
 static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
    APPNAME"_skip_disclaimer",
    "Skip Disclaimer",
@@ -836,6 +851,7 @@ void init_core_options(void)
   default_options[OPT_4WAY]                      = option_def_four_way_emulation;
   default_options[OPT_XY_DEVICE]                 = option_def_xy_device;
   default_options[OPT_CROSSHAIR_ENABLED]         = option_def_crosshair_enabled;
+  default_options[OPT_CROSSHAIR_APPEARANCE]      = option_def_crosshair_appearance;
   default_options[OPT_SKIP_DISCLAIMER]           = option_def_skip_disclaimer;
   default_options[OPT_SKIP_WARNINGS]             = option_def_skip_warnings;
   default_options[OPT_DISPLAY_SETUP]             = option_def_display_setup;
@@ -891,6 +907,7 @@ static void set_variables(void)
            continue;
          break;
       case OPT_CROSSHAIR_ENABLED:
+      case OPT_CROSSHAIR_APPEARANCE:
          if(!options.content_flags[CONTENT_LIGHTGUN])
            continue;
          break;
@@ -997,6 +1014,13 @@ void update_variables(bool first_time)
             options.crosshair_enable = 1;
           else
             options.crosshair_enable = 0;
+          break;
+
+        case OPT_CROSSHAIR_APPEARANCE:
+          if(strcmp(var.value, "enhanced") == 0)
+            options.crosshair_appearance = 1;
+          else
+            options.crosshair_appearance = 0;
           break;
 
         case OPT_SKIP_DISCLAIMER:

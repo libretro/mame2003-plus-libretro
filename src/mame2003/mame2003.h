@@ -201,6 +201,7 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_DEADZONE,
   OPT_4WAY,
   OPT_CROSSHAIR_ENABLED,
+  OPT_CROSSHAIR_APPEARANCE,
   OPT_SHARE_DIAL,
   OPT_DIAL_SWAP_XY,
   OPT_CHEAT_INPUT_PORTS,
