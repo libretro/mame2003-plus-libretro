@@ -107,11 +107,11 @@ static struct retro_core_option_v2_definition option_def_crosshair_appearance = 
    NULL,
    "cat_key_input",
    {
+      { "simple",    NULL },
       { "enhanced",  NULL },
-      { "simple", NULL },
       { NULL, NULL },
    },
-   "enhanced"
+   "simple"
 };
 
 static struct retro_core_option_v2_definition option_def_skip_disclaimer = {
