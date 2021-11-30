@@ -3486,7 +3486,7 @@ GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", 
 /* Type 2: totally stock, sometimes with funny protection chips on the ROM board */
 /* these games work and are playable with minor graphics glitches */
 GAMEX( 1994, le2,      konamigx, le2,      le2,      konamigx, ROT0, "Konami", "Lethal Enforcers II - Gun Fighters (ver EAA)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1994, le2u,     le2,      le2_flip, le2,      konamigx, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers II - Gun Fighters (ver UAA)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1994, le2u,     le2,      le2,      le2_flip, konamigx, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers II - Gun Fighters (ver UAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, gokuparo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Gokujyou Parodius (ver JAD)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, puzldama, konamigx, konamigx, puzldama, konamigx, ROT0, "Konami", "Taisen Puzzle-dama (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tbyahhoo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Twin Bee Yahhoo! (ver JAA)", GAME_IMPERFECT_GRAPHICS )
