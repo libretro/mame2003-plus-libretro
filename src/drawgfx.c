@@ -3536,7 +3536,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x,y-i,white,clip);
 	}
 
-	/* straight bars */
+	/* Outter lines */
 	for (i = -3;i < 4;i++)
 	{
 		plotclip(bitmap,x+6,y+i,white,clip);
