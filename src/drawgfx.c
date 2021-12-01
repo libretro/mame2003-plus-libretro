@@ -3518,7 +3518,7 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
-	unsigned short black,white;
+	unsigned long black,white;
 	int i;
 
 	if (!options.crosshair_enable)
@@ -3526,6 +3526,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
+	/*usrintf_showmessage("white value: %i", white);*/
 
 	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
