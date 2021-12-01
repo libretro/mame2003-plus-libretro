@@ -16,6 +16,7 @@
 #include "machine/random.h"
 #include "math.h"
 
+extern int gx_le2_textcolour_hack;
 
 static struct
 {
@@ -1109,6 +1110,10 @@ int K055555GX_decode_vmixcolor(int layer, int *color) /* (see p.62 7.2.6 and p.2
 	pal   |=  pl45;
 	emx   |=  vmx;
 	pal   |=  vcb;
+
+	if (gx_le2_textcolour_hack)
+		if (layer==0)
+			pal |= 0x1c0;
 
 	if (von == 3) emx = -1; /* invalidate external mix code if all bits are from internal*/
 	*color =  pal;
