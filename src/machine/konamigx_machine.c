@@ -16,6 +16,7 @@
 #include "machine/random.h"
 #include "math.h"
 
+extern int gx_le2_textcolour_hack;
 
 static struct
 {
