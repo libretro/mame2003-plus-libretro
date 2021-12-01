@@ -910,6 +910,10 @@ static READ32_HANDLER( le2_gun_H_r )
 	int p1x = readinputport(9)*290/0xff+20;
 	int p2x = readinputport(11)*290/0xff+20;
 
+	/* make "off the left" reload too */
+	if (p1x <= 0x15) p1x = 310;
+	if (p2x <= 0x15) p2x = 310;
+
 	return (p1x<<16)|p2x;
 }
 
