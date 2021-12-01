@@ -288,7 +288,7 @@ VIDEO_START(le2)
 	gx_invertlayersBC = 1;
 	konamigx_mixer_primode(-1); /* swapped layer B and C priorities?*/
 
-	gx_le2_textcolour_hack = 1;
+	gx_le2_textcolour_hack = 1; /* force text layer to use the right palette */
 
 	return 0;
 }
