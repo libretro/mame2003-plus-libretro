@@ -911,7 +911,8 @@ static READ32_HANDLER( le2_gun_H_r )
 	int p2x = readinputport(11)*290/0xff+20;
 
 	/* make "off the left" reload too */
-	usrintf_showmessage("p1x: %i", p1x);
+	if (p1x <= 0x15) p1x = 0;
+	if (p2x <= 0x15) p2x = 0;
 
 	return (p1x<<16)|p2x;
 }
