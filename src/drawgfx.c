@@ -3526,6 +3526,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
+	usrintf_showmessage("white: %i", white);
 
 	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
