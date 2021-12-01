@@ -907,16 +907,20 @@ static WRITE32_HANDLER( adc0834_w )
 
 static READ32_HANDLER( le2_gun_H_r )
 {
-	int p1x = readinputport(9)*287/0xff+22;
-	int p2x = readinputport(11)*287/0xff+22;
+	int p1x = readinputport(9)*290/0xff+20;
+	int p2x = readinputport(11)*290/0xff+20;
 
 	return (p1x<<16)|p2x;
 }
 
 static READ32_HANDLER( le2_gun_V_r )
 {
-	int p1y = readinputport(10)*223/0xff+1;
-	int p2y = readinputport(12)*223/0xff+1;
+	int p1y = readinputport(10)*224/0xff;
+	int p2y = readinputport(12)*224/0xff;
+
+	/* make "off the bottom" reload too */
+	if (p1y >= 0xdf) p1y = 0;
+	if (p2y >= 0xdf) p2y = 0;
 
 	return (p1y<<16)|p2y;
 }
