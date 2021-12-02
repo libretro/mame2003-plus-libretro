@@ -3542,7 +3542,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	if(polarity) color = white;
 	else color = black;
 
-	if(player_number == 2) color = MAKE_RGB(0xff,0x00,0x00);
+	if(player_number == 2) color = black;
 	if(player_number == 3) color = white;
 
 	/* Crosshair - simple */
