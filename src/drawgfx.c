@@ -3536,7 +3536,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	else polar = false;
 	white += strobe;
 
-	/*usrintf_showmessage("white value: %i", white);*/
+	usrintf_showmessage("white value: %i", white);
 
 	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
