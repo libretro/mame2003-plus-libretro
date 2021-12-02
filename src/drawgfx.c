@@ -3530,7 +3530,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	white = Machine->uifont->colortable[1];
 
 	/* Strobe light effect */
-	if( (strobe < 2*options.content_flags[CONTENT_LIGHTGUN_COUNT]) && (polar == true) ) strobe++;
+	if( (strobe < 3*options.content_flags[CONTENT_LIGHTGUN_COUNT]) && (polar == true) ) strobe++;
 	else polar = false;
 	if( (strobe > 0) && (polar == false) ) strobe--;
 	else polar = true;
