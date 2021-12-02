@@ -3542,9 +3542,6 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	if(polarity) color = white;
 	else color = black;
 
-	log_cb(RETRO_LOG_INFO, LOGPRE "P%i: color: %i\n", player_number, color);
-
-
 	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
 	{
@@ -3590,7 +3587,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x+6,y+4,color,clip);
 	}
 
-	/* Basing player number with calls to draw_crosshairs vs supported guns */
+	/* Basing player number with calls to draw_crosshair against supported guns */
 	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
 	else player_number++;
 
