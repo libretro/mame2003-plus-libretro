@@ -1,7 +1,6 @@
 #ifndef DECLARE
 
 #include "driver.h"
-#include <math.h>
 
 
 #ifdef MSB_FIRST
@@ -3521,8 +3520,9 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 {
 	unsigned long color,black,white;
 	int i;
-	static int  strobe = 0;
-	static bool polar  = true;
+	static int strobe = 0;
+	static bool polarity = true;
+	static int player_number = 1;
 
 	if (!options.crosshair_enable)
 		return;
@@ -3531,12 +3531,15 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	white = Machine->uifont->colortable[1];
 
 	/* Strobe light effect */
-	if( (strobe < pow(3, options.content_flags[CONTENT_LIGHTGUN_COUNT])) && (polar == true) ) strobe++;
-	else polar = false;
-	if( (strobe > 0) && (polar == false) ) strobe--;
-	else polar = true;
+ 	if(player_number == 1)
+	{
+		if( (strobe < 3) && (polarity == true) ) strobe++;
+		else polarity = false;
+		if( (strobe > 0) && (polarity == false) ) strobe--;
+		else polarity = true;
+	}
 
-	if(polar) color = white;
+	if(polarity) color = white;
 	else color = black;
 
 	usrintf_showmessage("color value: %i", color);
@@ -3585,6 +3588,11 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x+5,y+5,color,clip);
 		plotclip(bitmap,x+6,y+4,color,clip);
 	}
+
+	/* Basing player number with calls to draw_crosshairs vs supported guns */
+	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
+	else player_number++;
+
 }
 
 
