@@ -3542,8 +3542,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	if(polarity) color = white;
 	else color = black;
 
-	log_cb(RETRO_LOG_INFO, LOGPRE "P%i: color: " +(color == black?'black':'white'), player_number);
-	log_cb(RETRO_LOG_INFO, LOGPRE "\n");
+	log_cb(RETRO_LOG_INFO, LOGPRE "P%i: color: %i\n", player_number, color);
 
 
 	/* Crosshair - simple */
