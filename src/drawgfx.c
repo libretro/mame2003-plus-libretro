@@ -3518,7 +3518,7 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
-	unsigned long black,white;
+	unsigned long color,black,white;
 	int i;
 	static int  strobe = 0;
 	static bool polar  = true;
@@ -3532,21 +3532,21 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	/* Strobe light effect */
 	if( (strobe < 5) && (polar == true) ) strobe++;
 	else polar = false;
-	if( (strobe > 1) && (polar == false) ) strobe--;
+	if( (strobe > 0) && (polar == false) ) strobe--;
 	else polar = true;
 
-	if(polar) white *= strobe;
-	else white /= strobe;
+	if(polar) color = white;
+	else color = black;
 
-	usrintf_showmessage("white value: %i", white);
+	usrintf_showmessage("color value: %i", color);
 
 	/* Crosshair - simple */
 	for (i = 1;i < 6;i++)
 	{
-		plotclip(bitmap,x+i,y,white,clip);
-		plotclip(bitmap,x-i,y,white,clip);
-		plotclip(bitmap,x,y+i,white,clip);
-		plotclip(bitmap,x,y-i,white,clip);
+		plotclip(bitmap,x+i,y,color,clip);
+		plotclip(bitmap,x-i,y,color,clip);
+		plotclip(bitmap,x,y+i,color,clip);
+		plotclip(bitmap,x,y-i,color,clip);
 	}
 
 	/* Crosshair - enhanced, adds to simple design above */
@@ -3555,34 +3555,34 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		/* Outter long lines */
 		for (i = -3;i < 4;i++)
 		{
-			plotclip(bitmap,x+7,y+i,white,clip);
-			plotclip(bitmap,x-7,y+i,white,clip);
-			plotclip(bitmap,x+i,y+7,white,clip);
-			plotclip(bitmap,x+i,y-7,white,clip);
+			plotclip(bitmap,x+7,y+i,color,clip);
+			plotclip(bitmap,x-7,y+i,color,clip);
+			plotclip(bitmap,x+i,y+7,color,clip);
+			plotclip(bitmap,x+i,y-7,color,clip);
 		}
 
 		/* Inner short lines */
 		for (i = -1;i < 2;i++)
 		{
-			plotclip(bitmap,x+6,y+i,white,clip);
-			plotclip(bitmap,x-6,y+i,white,clip);
-			plotclip(bitmap,x+i,y+6,white,clip);
-			plotclip(bitmap,x+i,y-6,white,clip);
+			plotclip(bitmap,x+6,y+i,color,clip);
+			plotclip(bitmap,x-6,y+i,color,clip);
+			plotclip(bitmap,x+i,y+6,color,clip);
+			plotclip(bitmap,x+i,y-6,color,clip);
 		}
 
 		/* 45 degrees */
-		plotclip(bitmap,x-4,y+6,white,clip);
-		plotclip(bitmap,x-5,y+5,white,clip);
-		plotclip(bitmap,x-6,y+4,white,clip);
-		plotclip(bitmap,x-4,y-6,white,clip);
-		plotclip(bitmap,x-5,y-5,white,clip);
-		plotclip(bitmap,x-6,y-4,white,clip);
-		plotclip(bitmap,x+4,y-6,white,clip);
-		plotclip(bitmap,x+5,y-5,white,clip);
-		plotclip(bitmap,x+6,y-4,white,clip);
-		plotclip(bitmap,x+4,y+6,white,clip);
-		plotclip(bitmap,x+5,y+5,white,clip);
-		plotclip(bitmap,x+6,y+4,white,clip);
+		plotclip(bitmap,x-4,y+6,color,clip);
+		plotclip(bitmap,x-5,y+5,color,clip);
+		plotclip(bitmap,x-6,y+4,color,clip);
+		plotclip(bitmap,x-4,y-6,color,clip);
+		plotclip(bitmap,x-5,y-5,color,clip);
+		plotclip(bitmap,x-6,y-4,color,clip);
+		plotclip(bitmap,x+4,y-6,color,clip);
+		plotclip(bitmap,x+5,y-5,color,clip);
+		plotclip(bitmap,x+6,y-4,color,clip);
+		plotclip(bitmap,x+4,y+6,color,clip);
+		plotclip(bitmap,x+5,y+5,color,clip);
+		plotclip(bitmap,x+6,y+4,color,clip);
 	}
 }
 
