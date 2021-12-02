@@ -3520,12 +3520,22 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 {
 	unsigned long black,white;
 	int i;
+	static int  strobe = 0;
+	static bool polar  = false;
 
 	if (!options.crosshair_enable)
 		return;
 
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
+
+	/* Strobe light effect */
+	if( (strobe > -1000) && (polar == false) ) strobe--;
+	else polar = true;
+	if( (strobe < 0) && (polar == true) ) strobe++;
+	else polar = false;
+	white += strobe;
+
 	/*usrintf_showmessage("white value: %i", white);*/
 
 	/* Crosshair - simple */
