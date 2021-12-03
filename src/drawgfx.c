@@ -3531,7 +3531,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
 
-	/* Check for inactive players */
+	/* Hide crosshairs for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
 	{
 		if(inactive_xy[player_number-1][2] < 1000)
