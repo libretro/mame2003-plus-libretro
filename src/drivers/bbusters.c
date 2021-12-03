@@ -304,21 +304,21 @@ static READ16_HANDLER( mechatt_gun_r )
 /*******************************************************************************/
 
 static MEMORY_READ16_START( bbuster_readmem )
-    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x080000, 0x08ffff, MRA16_RAM },
 	{ 0x090000, 0x090fff, MRA16_RAM },
 	{ 0x0a0000, 0x0a0fff, MRA16_RAM },
-    { 0x0a1000, 0x0a7fff, MRA16_RAM },	/* service mode */
+	{ 0x0a1000, 0x0a7fff, MRA16_RAM },	/* service mode */
 	{ 0x0a8000, 0x0a8fff, MRA16_RAM },
-    { 0x0a9000, 0x0affff, MRA16_RAM },	/* service mode */
+	{ 0x0a9000, 0x0affff, MRA16_RAM },	/* service mode */
 	{ 0x0b0000, 0x0b1fff, MRA16_RAM },
 	{ 0x0b2000, 0x0b3fff, MRA16_RAM },
-    { 0x0b4000, 0x0b5fff, MRA16_RAM }, 	/* service mode */
+	{ 0x0b4000, 0x0b5fff, MRA16_RAM }, 	/* service mode */
 	{ 0x0d0000, 0x0d0fff, MRA16_RAM },
 	{ 0x0e0000, 0x0e0001, input_port_2_word_r }, /* Coins */
 	{ 0x0e0002, 0x0e0003, input_port_0_word_r }, /* Player 1 & 2 */
 	{ 0x0e0004, 0x0e0005, input_port_1_word_r }, /* Player 3 */
-    { 0x0e0008, 0x0e0009, input_port_3_word_r }, /* Dip 1 */
+	{ 0x0e0008, 0x0e0009, input_port_3_word_r }, /* Dip 1 */
 	{ 0x0e000a, 0x0e000b, input_port_4_word_r }, /* Dip 2 */
 	{ 0x0e0018, 0x0e0019, sound_status_r },
 	{ 0x0e8000, 0x0e8001, kludge_r },
@@ -328,16 +328,16 @@ MEMORY_END
 
 
 static MEMORY_WRITE16_START( bbuster_writemem )
-    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x080000, 0x08ffff, MWA16_RAM, &bbuster_ram },
 	{ 0x090000, 0x090fff, bbuster_video_w, &videoram16 },
 	{ 0x0a0000, 0x0a0fff, MWA16_RAM, &spriteram16, &spriteram_size },
-    { 0x0a1000, 0x0a7fff, MWA16_RAM },	/* service mode */
+	{ 0x0a1000, 0x0a7fff, MWA16_RAM },	/* service mode */
 	{ 0x0a8000, 0x0a8fff, MWA16_RAM, &spriteram16_2, &spriteram_2_size },
-    { 0x0a9000, 0x0affff, MWA16_RAM },	/* service mode */
+	{ 0x0a9000, 0x0affff, MWA16_RAM },	/* service mode */
 	{ 0x0b0000, 0x0b1fff, bbuster_pf1_w, &bbuster_pf1_data },
 	{ 0x0b2000, 0x0b3fff, bbuster_pf2_w, &bbuster_pf2_data },
-    { 0x0b4000, 0x0b5fff, MWA16_RAM },	/* service mode */
+	{ 0x0b4000, 0x0b5fff, MWA16_RAM },	/* service mode */
 	{ 0x0b8000, 0x0b8003, MWA16_RAM, &bbuster_pf1_scroll_data },
 	{ 0x0b8008, 0x0b800b, MWA16_RAM, &bbuster_pf2_scroll_data },
 	{ 0x0d0000, 0x0d0fff, paletteram16_RRRRGGGGBBBBxxxx_word_w, &paletteram16 },
@@ -350,11 +350,11 @@ MEMORY_END
 /*******************************************************************************/
 
 static MEMORY_READ16_START( mechatt_readmem )
-    { 0x000000, 0x06ffff, MRA16_ROM },
+	{ 0x000000, 0x06ffff, MRA16_ROM },
 	{ 0x070000, 0x07ffff, MRA16_RAM },
 	{ 0x090000, 0x090fff, MRA16_RAM },
 	{ 0x0a0000, 0x0a0fff, MRA16_RAM },
-    { 0x0b0000, 0x0b3fff, MRA16_RAM },
+	{ 0x0b0000, 0x0b3fff, MRA16_RAM },
 	{ 0x0c0000, 0x0c3fff, MRA16_RAM },
 	{ 0x0d0000, 0x0d07ff, MRA16_RAM },
 	{ 0x0e0000, 0x0e0001, input_port_0_word_r },
@@ -364,7 +364,7 @@ static MEMORY_READ16_START( mechatt_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( mechatt_writemem )
-    { 0x000000, 0x06ffff, MWA16_ROM },
+	{ 0x000000, 0x06ffff, MWA16_ROM },
 	{ 0x070000, 0x07ffff, MWA16_RAM, &bbuster_ram },
 	{ 0x090000, 0x090fff, bbuster_video_w, &videoram16 },
 	{ 0x0a0000, 0x0a0fff, MWA16_RAM, &spriteram16, &spriteram_size },
@@ -381,24 +381,24 @@ MEMORY_END
 /******************************************************************************/
 
 static MEMORY_READ_START( sound_readmem )
-    { 0x0000, 0xefff, MRA_ROM },
+	{ 0x0000, 0xefff, MRA_ROM },
 	{ 0xf000, 0xf7ff, MRA_RAM },
 	{ 0xf800, 0xf800, soundlatch_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
-    { 0x0000, 0xefff, MWA_ROM },
+	{ 0x0000, 0xefff, MWA_ROM },
 	{ 0xf000, 0xf7ff, MWA_RAM },
 	{ 0xf800, 0xf800, sound_status_w },
 MEMORY_END
 
 static PORT_READ_START( sound_readport )
-    { 0x00, 0x00, YM2610_status_port_0_A_r },
+	{ 0x00, 0x00, YM2610_status_port_0_A_r },
 	{ 0x02, 0x02, YM2610_status_port_0_B_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
-    { 0x00, 0x00, YM2610_control_port_0_A_w },
+	{ 0x00, 0x00, YM2610_control_port_0_A_w },
 	{ 0x01, 0x01, YM2610_data_port_0_A_w },
 	{ 0x02, 0x02, YM2610_control_port_0_B_w },
 	{ 0x03, 0x03, YM2610_data_port_0_B_w },
@@ -406,12 +406,12 @@ static PORT_WRITE_START( sound_writeport )
 PORT_END
 
 static PORT_READ_START( sounda_readport )
-    { 0x00, 0x00, YM2608_status_port_0_A_r },
+	{ 0x00, 0x00, YM2608_status_port_0_A_r },
 	{ 0x02, 0x02, YM2608_status_port_0_B_r },
 PORT_END
 
 static PORT_WRITE_START( sounda_writeport )
-    { 0x00, 0x00, YM2608_control_port_0_A_w },
+	{ 0x00, 0x00, YM2608_control_port_0_A_w },
 	{ 0x01, 0x01, YM2608_data_port_0_A_w },
 	{ 0x02, 0x02, YM2608_control_port_0_B_w },
 	{ 0x03, 0x03, YM2608_data_port_0_B_w },
