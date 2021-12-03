@@ -3590,7 +3590,11 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x+6,y+4,color,clip);
 	}
 
-	/* Basing player number with calls to draw_crosshair against supported guns */
+	/* We rely on each frame calling draw_crosshair for each supported lightgun to
+	   track the player_number. Each frame should end with the last lightgun / player
+	   being drawn to reset the player_number for the next frame. This is important
+	   when toggling options.crosshair_enable to keep the player_number in sync.
+	*/
 	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
 	else player_number++;
 
