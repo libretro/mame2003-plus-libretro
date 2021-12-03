@@ -3523,7 +3523,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	static int strobe = 0;
 	static bool polarity = true;
 	static int player_number = 1;
-	static int inactive_xy [options.content_flags[CONTENT_LIGHTGUN_COUNT]][3];
+	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
 		return;
