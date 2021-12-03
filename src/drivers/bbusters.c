@@ -253,7 +253,7 @@ static WRITE16_HANDLER( sound_cpu_w )
 	    cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
 	}
  }
- 
+
 /* Eprom is byte wide, top half of word _must_ be 0xff */
 static READ16_HANDLER( eprom_r )
 {
@@ -274,7 +274,7 @@ static WRITE16_HANDLER( gun_select_w )
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: gun r\n",activecpu_get_pc());
 
 	cpu_set_irq_line(0, 2, HOLD_LINE);
-	
+
 	gun_select=5 + (data&0xff);
 }
 
