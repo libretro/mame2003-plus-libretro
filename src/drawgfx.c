@@ -3523,9 +3523,24 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	static int strobe = 0;
 	static bool polarity = true;
 	static int player_number = 1;
+	static int inactive_xy [options.content_flags[CONTENT_LIGHTGUN_COUNT]][3];
 
 	if (!options.crosshair_enable)
 		return;
+
+	/* Check for inactive players */
+	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
+	{
+		if(inactive_xy[player_number-1][2] < 1000)
+			inactive_xy[player_number-1][2]++;
+		else goto next_player;
+	}
+	else
+	{
+		inactive_xy[player_number-1][0] = x;
+		inactive_xy[player_number-1][1] = y;
+		inactive_xy[player_number-1][2] = 0;
+	}
 
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
@@ -3595,6 +3610,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	   being drawn to reset the player_number for the next frame. This is important
 	   when toggling options.crosshair_enable to keep the player_number in sync.
 	*/
+	next_player:
 	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
 	else player_number++;
 
