@@ -218,10 +218,10 @@ static void draw_sprites(struct mame_bitmap *bitmap, const data16_t *source, int
 			continue;
 
 	    y=source[offs+3];
-		/* if (y>254) continue; /* Speedup */
+		/* if (y>254) continue;  Speedup */
 	    x=source[offs+2];
 		if (x&0x200) x=-(0x100-(x&0xff));
-		/* if (x>256) continue; /* Speedup */
+		/* if (x>256) continue;  Speedup */
 
 		/*
 			Source[0]:
