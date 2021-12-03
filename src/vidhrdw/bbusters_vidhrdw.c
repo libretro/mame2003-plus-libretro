@@ -117,9 +117,8 @@ VIDEO_START( mechatt )
 		else if (dy&0x40) code+=32;				\
 		else if (dx&0x40) code+=16
 
-static INLINE const data8_t *get_source_ptr(unsigned int sprite, int dx, int dy, int bank, int block)
+static INLINE const data8_t *get_source_ptr(unsigned int sprite, int dx, int dy, int block, const struct GfxElement *gfx )
 {
-	const struct GfxElement *gfx=Machine->gfx[bank];
 	int source_base,code=0;
 
 	/* Get a tile index from the x,y position in the block */
@@ -159,7 +158,8 @@ static INLINE const data8_t *get_source_ptr(unsigned int sprite, int dx, int dy,
 
 static void bbusters_draw_block(struct mame_bitmap *dest,int x,int y,int size,int flipx,int flipy,unsigned int sprite,int color,int bank,int block)
 {
-	const pen_t *pal = &Machine->gfx[bank]->colortable[Machine->gfx[bank]->color_granularity * (color % Machine->gfx[bank]->total_colors)];
+	const struct GfxElement *gfx=Machine->gfx[bank];
+	const pen_t *pal = gfx->colortable + gfx->color_granularity * (color % gfx->total_colors);
 	unsigned int xinc=(scale_line_count * 0x10000 ) / size;
 	data8_t pixel;
 	int x_index;
@@ -183,11 +183,11 @@ static void bbusters_draw_block(struct mame_bitmap *dest,int x,int y,int size,in
 
 			for (sx=0; sx<size; sx++) {
 				if ((sx%16)==0)
-					srcptr=get_source_ptr(sprite,sx,srcline,bank,block);
+					srcptr=get_source_ptr(sprite,sx,srcline,block,gfx);
 
 				pixel=*srcptr++;
-				if (x+(x_index>>16)>=0 && x+(x_index>>16)<256 && pixel!=15)
-					destline[x+(x_index>>16)]=pal[pixel];
+				if (pixel!=15)
+					destline[(x+(x_index>>16)) & 0x1ff]=pal[pixel];
 
 				if (flipx)
 					x_index-=xinc;
@@ -218,10 +218,10 @@ static void draw_sprites(struct mame_bitmap *bitmap, const data16_t *source, int
 			continue;
 
 	    y=source[offs+3];
-		if (y>254) continue; /* Speedup */
+		/* if (y>254) continue;  Speedup */
 	    x=source[offs+2];
 		if (x&0x200) x=-(0x100-(x&0xff));
-		if (x>256) continue; /* Speedup */
+		/* if (x>256) continue;  Speedup */
 
 		/*
 			Source[0]:
