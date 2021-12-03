@@ -3528,6 +3528,9 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	if (!options.crosshair_enable)
 		return;
 
+	black = Machine->uifont->colortable[0];
+	white = Machine->uifont->colortable[1];
+
 	/* Check for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
 	{
@@ -3541,9 +3544,6 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		inactive_xy[player_number-1][1] = y;
 		inactive_xy[player_number-1][2] = 0;
 	}
-
-	black = Machine->uifont->colortable[0];
-	white = Machine->uifont->colortable[1];
 
 	/* Strobe light effect */
  	if(player_number == 1)
