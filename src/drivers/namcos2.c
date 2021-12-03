@@ -4388,16 +4388,7 @@ DRIVER_INIT( luckywld ){
 	for( i=0; i<32*0x4000; i++ )
 	{ /* unscramble gfx mask */
 		int code = pData[i];
-		int out = 0;
-		if( code&0x01 ) out |= 0x80;
-		if( code&0x02 ) out |= 0x40;
-		if( code&0x04 ) out |= 0x20;
-		if( code&0x08 ) out |= 0x10;
-		if( code&0x10 ) out |= 0x08;
-		if( code&0x20 ) out |= 0x04;
-		if( code&0x40 ) out |= 0x02;
-		if( code&0x80 ) out |= 0x01;
-		pData[i] = out;
+		pData[i] = BITSWAP8(code,0,1,2,3,4,5,6,7);
 	}
 	namcos2_gametype=NAMCOS2_LUCKY_AND_WILD;
 }
