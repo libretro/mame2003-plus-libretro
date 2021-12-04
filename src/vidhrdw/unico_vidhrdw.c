@@ -383,12 +383,12 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 
 	/* Draw the gunsight for ligth gun games */
 	if (unico_has_lightgun) {
-		draw_crosshair(bitmap,
+		draw_crosshair(1, bitmap,
 			readinputport(6)*384/256,
 			readinputport(5)*224/256,
 			cliprect);
 
-		draw_crosshair(bitmap,
+		draw_crosshair(2, bitmap,
 			readinputport(4)*384/256,
 			readinputport(3)*224/256,
 			cliprect);
@@ -433,12 +433,12 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 
 	/* Draw the gunsight for ligth gun games */
 	if (unico_has_lightgun) {
-		draw_crosshair(bitmap,
+		draw_crosshair(1, bitmap,
 			readinputport(6)*384/256,
 			readinputport(5)*224/256,
 			cliprect);
 
-		draw_crosshair(bitmap,
+		draw_crosshair(2, bitmap,
 			readinputport(4)*384/256,
 			readinputport(3)*224/256,
 			cliprect);
