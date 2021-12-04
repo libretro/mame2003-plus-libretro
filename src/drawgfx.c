@@ -3614,7 +3614,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	   when toggling options.crosshair_enable to keep the player_number in sync.
 	*/
 	next_player:
-	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
+	if(player_number >= options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
 	else player_number++;
 
 }
