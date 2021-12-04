@@ -138,7 +138,7 @@ VIDEO_UPDATE( playch10 )
 			int x_center = readinputport( 5 );
 			int y_center = readinputport( 6 ) + 30*8;
 
-			draw_crosshair(bitmap, x_center, y_center, &bottom_monitor);
+			draw_crosshair(1, bitmap, x_center, y_center, &bottom_monitor);
 		}
 	}
 
