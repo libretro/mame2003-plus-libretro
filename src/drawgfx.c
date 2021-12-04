@@ -3526,7 +3526,10 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
+	{
+		for (i = 0;i < MAX_PLAYER_COUNT;i++) inactive_xy[i][2] = 0;
 		return;
+	}
 
 	black = Machine->uifont->colortable[0];
 	white = Machine->uifont->colortable[1];
