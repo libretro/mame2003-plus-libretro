@@ -1034,7 +1034,7 @@ VIDEO_UPDATE( spacegun )
 		--screenx;
 		screeny += 15;
 
-		draw_crosshair(bitmap,screenx,screeny,cliprect);
+		draw_crosshair(1, bitmap,screenx,screeny,cliprect);
 
 		/* calculate p2 screen co-ords by matching routine at $196EA */
 		rawx = taitoz_sharedram[0xd98/2];
@@ -1081,7 +1081,7 @@ VIDEO_UPDATE( spacegun )
 		--screenx;
 		screeny += 15;
 
-		draw_crosshair(bitmap,screenx,screeny,cliprect);
+		draw_crosshair(2, bitmap,screenx,screeny,cliprect);
 	}
 }
 
