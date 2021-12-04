@@ -467,7 +467,7 @@ static void update_screen(struct mame_bitmap *bitmap, const struct rectangle *cl
 		beamx = ((input_port_4_r(0) & 0xff) * 320) >> 8;
 		beamy = ((input_port_5_r(0) & 0xff) * 240) >> 8;
 
-		draw_crosshair(bitmap, beamx, beamy, cliprect);
+		draw_crosshair(1, bitmap, beamx, beamy, cliprect);
 	}
 }
 
