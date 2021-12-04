@@ -153,7 +153,7 @@ VIDEO_UPDATE( borntofi )
 
   if ( (readinputport(8) > 0) && (readinputport(9) > 0) )
   {
-    draw_crosshair(bitmap,
+    draw_crosshair(1, bitmap,
     readinputport(9) * 2 - 0x0e,
     readinputport(8) * 2 - 0xf8,
     cliprect);
@@ -161,7 +161,7 @@ VIDEO_UPDATE( borntofi )
 
   if ( (readinputport(10) > 0) && (readinputport(11) > 0) )
   {
-    draw_crosshair(bitmap,
+    draw_crosshair(2, bitmap,
     readinputport(11) * 2 - 0x0e,
     readinputport(10) * 2 - 0xf8,
     cliprect);
