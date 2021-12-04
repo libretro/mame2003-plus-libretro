@@ -812,8 +812,8 @@ static void zombraid_drawcrosshairs( struct mame_bitmap *bitmap, const struct re
 	int p2_x = seta_workram[0xC4AE/2];
 	int p2_y = 0x08+0xff - seta_workram[0xC4B0/2];
 
-	draw_crosshair(bitmap,p1_x,p1_y,cliprect);
-	draw_crosshair(bitmap,p2_x,p2_y,cliprect);
+	draw_crosshair(1, bitmap,p1_x,p1_y,cliprect);
+	draw_crosshair(2, bitmap,p2_x,p2_y,cliprect);
 }
 
 

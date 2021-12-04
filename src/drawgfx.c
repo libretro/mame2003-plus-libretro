@@ -3516,13 +3516,12 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 		plot_pixel(bitmap,x,y,pen);
 }
 
-void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
+void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
 	unsigned long color,black,white;
 	int i;
 	static int strobe = 0;
 	static bool polarity = true;
-	static int player_number = 1;
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
@@ -3537,7 +3536,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 	{
 		if(inactive_xy[player_number-1][2] < 1000)
 			inactive_xy[player_number-1][2]++;
-		else goto next_player;
+		else return;
 	}
 	else
 	{
@@ -3607,16 +3606,6 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x+5,y+5,color,clip);
 		plotclip(bitmap,x+6,y+4,color,clip);
 	}
-
-	/* We rely on each frame calling draw_crosshair for each supported lightgun to
-	   track the player_number. Each frame should end with the last lightgun / player
-	   being drawn to reset the player_number for the next frame. This is important
-	   when toggling options.crosshair_enable to keep the player_number in sync.
-	*/
-	next_player:
-	if(player_number >= options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
-	else player_number++;
-
 }
 
 

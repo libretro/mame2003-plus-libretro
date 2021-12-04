@@ -293,9 +293,9 @@ VIDEO_UPDATE( bbuster )
 	draw_sprites(bitmap,buffered_spriteram16,1,0,0);
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 
-	draw_crosshair(bitmap,readinputport(6),readinputport(5),cliprect);
-	draw_crosshair(bitmap,readinputport(8),readinputport(7),cliprect);
-	draw_crosshair(bitmap,readinputport(10),readinputport(9),cliprect);
+	draw_crosshair(1, bitmap,readinputport(6),readinputport(5),cliprect);
+	draw_crosshair(2, bitmap,readinputport(8),readinputport(7),cliprect);
+	draw_crosshair(3, bitmap,readinputport(10),readinputport(9),cliprect);
 }
 
 VIDEO_UPDATE( mechatt )
@@ -310,6 +310,6 @@ VIDEO_UPDATE( mechatt )
 	draw_sprites(bitmap,buffered_spriteram16,1,0,0);
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 
-	draw_crosshair(bitmap,readinputport(2),readinputport(3),cliprect);
-	draw_crosshair(bitmap,readinputport(4),readinputport(5),cliprect);
+	draw_crosshair(1, bitmap,readinputport(2),readinputport(3),cliprect);
+	draw_crosshair(2, bitmap,readinputport(4),readinputport(5),cliprect);
 }

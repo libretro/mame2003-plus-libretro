@@ -105,7 +105,7 @@ static void oneshot_drawcrosshairs( struct mame_bitmap *bitmap, const struct rec
         gun_y_p1=0;
 
     /* draw crosshair */
-    draw_crosshair( bitmap, xpos, ypos, cliprect );
+    draw_crosshair( 1, bitmap, xpos, ypos, cliprect );
 
 
     /* get gun raw coordonates (player 2) */
@@ -120,7 +120,7 @@ static void oneshot_drawcrosshairs( struct mame_bitmap *bitmap, const struct rec
         gun_x_p2=0;
 
     /* draw crosshair */
-    draw_crosshair( bitmap, xpos, ypos, cliprect );
+    draw_crosshair( 2, bitmap, xpos, ypos, cliprect );
 }
 
 static void oneshot_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )

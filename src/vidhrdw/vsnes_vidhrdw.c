@@ -69,7 +69,7 @@ VIDEO_UPDATE( vsnes )
 			int x_center = readinputport( 4 );
 			int y_center = readinputport( 5 );
 
-			draw_crosshair(bitmap,x_center,y_center,&Machine->visible_area);
+			draw_crosshair(1, bitmap,x_center,y_center,&Machine->visible_area);
 
 		}
 

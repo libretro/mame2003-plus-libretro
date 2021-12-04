@@ -227,9 +227,9 @@ static VIDEO_UPDATE( konamigq )
 {
 	video_update_psx( bitmap, cliprect );
 
-	draw_crosshair( bitmap, GUNX( 5 ), GUNY( 6 ), cliprect );
-	draw_crosshair( bitmap, GUNX( 7 ), GUNY( 8 ), cliprect );
-	draw_crosshair( bitmap, GUNX( 9 ), GUNY( 10 ), cliprect );
+	draw_crosshair( 1, bitmap, GUNX( 5 ), GUNY( 6 ), cliprect );
+	draw_crosshair( 2, bitmap, GUNX( 7 ), GUNY( 8 ), cliprect );
+	draw_crosshair( 3, bitmap, GUNX( 9 ), GUNY( 10 ), cliprect );
 }
 
 static MEMORY_WRITE32_START( konamigq_writemem )

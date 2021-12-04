@@ -166,7 +166,7 @@ VIDEO_UPDATE( opwolf )
 	if (1) /*input_port_4_word_r(0,0) &0x1)	// Fake DSW */
 	{
 		/* Draw an aiming crosshair */
-		draw_crosshair(bitmap,(input_port_4_word_r(0,0xffff)*320)/256,input_port_5_word_r(0,0xffff),cliprect);
+		draw_crosshair(1, bitmap,(input_port_4_word_r(0,0xffff)*320)/256,input_port_5_word_r(0,0xffff),cliprect);
 	}
 }
 
