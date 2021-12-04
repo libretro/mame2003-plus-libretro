@@ -761,11 +761,11 @@ VIDEO_UPDATE( cojag )
 
 		/* draw player 1's crosshair */
 		get_crosshair_xy(0, &beamx, &beamy);
-		draw_crosshair(bitmap, beamx, beamy, cliprect);
+		draw_crosshair(1, bitmap, beamx, beamy, cliprect);
 
 		/* draw player 2's crosshair */
 		get_crosshair_xy(1, &beamx, &beamy);
-		draw_crosshair(bitmap, beamx, beamy, cliprect);
+		draw_crosshair(2, bitmap, beamx, beamy, cliprect);
 	}
 }
 
