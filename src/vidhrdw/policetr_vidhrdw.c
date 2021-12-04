@@ -368,10 +368,10 @@ VIDEO_UPDATE( policetr )
 	/* draw player 1's crosshair */
 	beamx = ((readinputport(3) & 0xff) * Machine->drv->screen_width) >> 8;
 	beamy = ((readinputport(4) & 0xff) * Machine->drv->screen_height) >> 8;
-	draw_crosshair(bitmap, beamx, beamy, cliprect);
+	draw_crosshair(1, bitmap, beamx, beamy, cliprect);
 
 	/* draw player 2's crosshair */
 	beamx = ((readinputport(5) & 0xff) * Machine->drv->screen_width) >> 8;
 	beamy = ((readinputport(6) & 0xff) * Machine->drv->screen_height) >> 8;
-	draw_crosshair(bitmap, beamx, beamy, cliprect);
+	draw_crosshair(2, bitmap, beamx, beamy, cliprect);
 }
