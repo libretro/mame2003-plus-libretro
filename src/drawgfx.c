@@ -3518,60 +3518,105 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
-	unsigned long black,white;
+	unsigned long color,black,white;
 	int i;
+	static int strobe = 0;
+	static bool polarity = true;
+	static int player_number = 1;
+	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
-		return;
-
-	black = Machine->uifont->colortable[0];
-	white = Machine->uifont->colortable[1];
-	/*usrintf_showmessage("white value: %i", white);*/
-
-	/* Crosshair - simple */
-	for (i = 1;i < 6;i++)
 	{
-		plotclip(bitmap,x+i,y,white,clip);
-		plotclip(bitmap,x-i,y,white,clip);
-		plotclip(bitmap,x,y+i,white,clip);
-		plotclip(bitmap,x,y-i,white,clip);
+		for (i = 0;i < options.content_flags[CONTENT_LIGHTGUN_COUNT];i++)
+			inactive_xy[i][2] = 0; /* reset inactive count */
+		return;
 	}
 
-	/* Crosshair - enhanced, adds to simple design above */
+	/* Hide crosshairs for inactive players */
+	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
+	{
+		if(inactive_xy[player_number-1][2] < 1000)
+			inactive_xy[player_number-1][2]++;
+		else goto next_player;
+	}
+	else
+	{
+		inactive_xy[player_number-1][0] = x;
+		inactive_xy[player_number-1][1] = y;
+		inactive_xy[player_number-1][2] = 0;
+	}
+
+	/* Color crosshairs */
+	black = Machine->uifont->colortable[0];
+	white = Machine->uifont->colortable[1];
+	color = white; /* default */
+
+/*
+ 	if(player_number == 1)
+	{
+		if( (strobe < 3) && (polarity == true) ) strobe++;
+		else polarity = false;
+		if( (strobe > 0) && (polarity == false) ) strobe--;
+		else polarity = true;
+		if(polarity) color = white;
+		else color = black;
+	}
+*/
+
+	/* Draw crosshair - simple */
+	for (i = 1;i < 6;i++)
+	{
+		plotclip(bitmap,x+i,y,color,clip);
+		plotclip(bitmap,x-i,y,color,clip);
+		plotclip(bitmap,x,y+i,color,clip);
+		plotclip(bitmap,x,y-i,color,clip);
+	}
+
+	/* Draw crosshair - enhanced, adds to simple design above */
 	if(options.crosshair_appearance == 1)
 	{
 		/* Outter long lines */
 		for (i = -3;i < 4;i++)
 		{
-			plotclip(bitmap,x+7,y+i,white,clip);
-			plotclip(bitmap,x-7,y+i,white,clip);
-			plotclip(bitmap,x+i,y+7,white,clip);
-			plotclip(bitmap,x+i,y-7,white,clip);
+			plotclip(bitmap,x+7,y+i,color,clip);
+			plotclip(bitmap,x-7,y+i,color,clip);
+			plotclip(bitmap,x+i,y+7,color,clip);
+			plotclip(bitmap,x+i,y-7,color,clip);
 		}
 
 		/* Inner short lines */
 		for (i = -1;i < 2;i++)
 		{
-			plotclip(bitmap,x+6,y+i,white,clip);
-			plotclip(bitmap,x-6,y+i,white,clip);
-			plotclip(bitmap,x+i,y+6,white,clip);
-			plotclip(bitmap,x+i,y-6,white,clip);
+			plotclip(bitmap,x+6,y+i,color,clip);
+			plotclip(bitmap,x-6,y+i,color,clip);
+			plotclip(bitmap,x+i,y+6,color,clip);
+			plotclip(bitmap,x+i,y-6,color,clip);
 		}
 
 		/* 45 degrees */
-		plotclip(bitmap,x-4,y+6,white,clip);
-		plotclip(bitmap,x-5,y+5,white,clip);
-		plotclip(bitmap,x-6,y+4,white,clip);
-		plotclip(bitmap,x-4,y-6,white,clip);
-		plotclip(bitmap,x-5,y-5,white,clip);
-		plotclip(bitmap,x-6,y-4,white,clip);
-		plotclip(bitmap,x+4,y-6,white,clip);
-		plotclip(bitmap,x+5,y-5,white,clip);
-		plotclip(bitmap,x+6,y-4,white,clip);
-		plotclip(bitmap,x+4,y+6,white,clip);
-		plotclip(bitmap,x+5,y+5,white,clip);
-		plotclip(bitmap,x+6,y+4,white,clip);
+		plotclip(bitmap,x-4,y+6,color,clip);
+		plotclip(bitmap,x-5,y+5,color,clip);
+		plotclip(bitmap,x-6,y+4,color,clip);
+		plotclip(bitmap,x-4,y-6,color,clip);
+		plotclip(bitmap,x-5,y-5,color,clip);
+		plotclip(bitmap,x-6,y-4,color,clip);
+		plotclip(bitmap,x+4,y-6,color,clip);
+		plotclip(bitmap,x+5,y-5,color,clip);
+		plotclip(bitmap,x+6,y-4,color,clip);
+		plotclip(bitmap,x+4,y+6,color,clip);
+		plotclip(bitmap,x+5,y+5,color,clip);
+		plotclip(bitmap,x+6,y+4,color,clip);
 	}
+
+	/* We rely on each frame calling draw_crosshair for each supported lightgun to
+	   track the player_number. Each frame should end with the last lightgun / player
+	   being drawn to reset the player_number for the next frame. This is important
+	   when toggling options.crosshair_enable to keep the player_number in sync.
+	*/
+	next_player:
+	if(player_number == options.content_flags[CONTENT_LIGHTGUN_COUNT]) player_number = 1;
+	else player_number++;
+
 }
 
 

@@ -1424,6 +1424,7 @@ void set_content_flags(void)
 					options.content_flags[CONTENT_AD_STICK] = true;
 					break;
 				case IPT_LIGHTGUN_X:
+					options.content_flags[CONTENT_LIGHTGUN_COUNT]++; /* only count x to prevent double counting lightguns */
 				case IPT_LIGHTGUN_Y:
 					options.content_flags[CONTENT_LIGHTGUN] = true;
 					break;
@@ -1484,7 +1485,7 @@ void set_content_flags(void)
 
   if(options.content_flags[CONTENT_DIAL])               log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a dial.\n");
   if(options.content_flags[CONTENT_TRACKBALL])          log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a trackball.\n");
-  if(options.content_flags[CONTENT_LIGHTGUN])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a lightgun.\n");
+  if(options.content_flags[CONTENT_LIGHTGUN])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses %i lightgun(s).\n", options.content_flags[CONTENT_LIGHTGUN_COUNT]);
   if(options.content_flags[CONTENT_PADDLE])             log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an paddle.\n");
   if(options.content_flags[CONTENT_AD_STICK])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an analog joystick.\n");
   if(options.content_flags[CONTENT_HAS_SERVICE])        log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a service button.\n");
