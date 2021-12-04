@@ -1510,12 +1510,12 @@ VIDEO_UPDATE( gdfs )
 	tilemap_draw(bitmap,cliprect, gdfs_tmap, 0, 0);
 
 #if 0
-	draw_crosshair(bitmap,
+	draw_crosshair(1, bitmap,
 		Machine->visible_area.min_x + ((Machine->visible_area.max_x - Machine->visible_area.min_x) * readinputport(5)) / 255,
 		Machine->visible_area.min_y + ((Machine->visible_area.max_y - Machine->visible_area.min_y) * readinputport(6)) / 255,
 		cliprect,0);
 
-	draw_crosshair(bitmap,
+	draw_crosshair(2, bitmap,
 		Machine->visible_area.min_x + ((Machine->visible_area.max_x - Machine->visible_area.min_x) * readinputport(7)) / 255,
 		Machine->visible_area.min_y + ((Machine->visible_area.max_y - Machine->visible_area.min_y) * readinputport(8)) / 255,
 		cliprect,1);
