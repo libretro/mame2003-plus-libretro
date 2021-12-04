@@ -138,8 +138,8 @@ VIDEO_UPDATE(lethalen)
 	/* force "A" layer over top of everything */
 	K056832_tilemap_draw(bitmap, cliprect, 0, 0, 0);
 
-	draw_crosshair(bitmap, GUNX(1)+216, 240-GUNY(1), cliprect );
-	draw_crosshair(bitmap, GUNX(2)+216, 240-GUNY(2), cliprect );
+	draw_crosshair(1, bitmap, GUNX(1)+216, 240-GUNY(1), cliprect );
+	draw_crosshair(2, bitmap, GUNX(2)+216, 240-GUNY(2), cliprect );
  
 
 #if 0
