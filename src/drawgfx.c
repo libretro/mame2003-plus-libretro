@@ -3527,12 +3527,10 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 
 	if (!options.crosshair_enable)
 	{
-		for (i = 0;i < MAX_PLAYER_COUNT;i++) inactive_xy[i][2] = 0;
+		for (i = 0;i < options.content_flags[CONTENT_LIGHTGUN_COUNT];i++)
+			inactive_xy[i][2] = 0; /* reset inactive count */
 		return;
 	}
-
-	black = Machine->uifont->colortable[0];
-	white = Machine->uifont->colortable[1];
 
 	/* Hide crosshairs for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
@@ -3548,22 +3546,24 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		inactive_xy[player_number-1][2] = 0;
 	}
 
-	/* Strobe light effect */
+	/* Color crosshairs */
+	black = Machine->uifont->colortable[0];
+	white = Machine->uifont->colortable[1];
+	color = white; /* default */
+
+/*
  	if(player_number == 1)
 	{
 		if( (strobe < 3) && (polarity == true) ) strobe++;
 		else polarity = false;
 		if( (strobe > 0) && (polarity == false) ) strobe--;
 		else polarity = true;
+		if(polarity) color = white;
+		else color = black;
 	}
+*/
 
-	if(polarity) color = white;
-	else color = black;
-
-	if(player_number == 2) color = black;
-	if(player_number == 3) color = white;
-
-	/* Crosshair - simple */
+	/* Draw crosshair - simple */
 	for (i = 1;i < 6;i++)
 	{
 		plotclip(bitmap,x+i,y,color,clip);
@@ -3572,7 +3572,7 @@ void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangl
 		plotclip(bitmap,x,y-i,color,clip);
 	}
 
-	/* Crosshair - enhanced, adds to simple design above */
+	/* Draw crosshair - enhanced, adds to simple design above */
 	if(options.crosshair_appearance == 1)
 	{
 		/* Outter long lines */
