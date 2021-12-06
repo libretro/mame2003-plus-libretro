@@ -1988,13 +1988,13 @@ INPUT_PORTS_START( jpark )
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 50, 5, 0, 0xff )
 
 	PORT_START	/* 0xc00052 - port 8  - player 1 analog Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 50, 5, 0x40, 0xbf )
 
 	PORT_START	/* 0xc00054 - port 9  - player 2 analog X axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 50, 5, 0, 0xff )
 
 	PORT_START	/* 0xc00056 - port 10 - player 2 analog Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 50, 5, 0x40, 0xbf )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( darkedge )
