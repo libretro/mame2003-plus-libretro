@@ -1200,14 +1200,14 @@ static data16_t sys32_gun_p2_x_c00054_data;
 static data16_t sys32_gun_p2_y_c00056_data;
 
 static WRITE16_HANDLER ( sys32_gun_p1_x_c00050_w ) { sys32_gun_p1_x_c00050_data = readinputport(7); }
-static WRITE16_HANDLER ( sys32_gun_p1_y_c00052_w ) { sys32_gun_p1_y_c00052_data = readinputport(8); sys32_gun_p1_y_c00052_data = (sys32_gun_p1_y_c00052_data+1)&0xff; }
+static WRITE16_HANDLER ( sys32_gun_p1_y_c00052_w ) { sys32_gun_p1_y_c00052_data = readinputport(8); }
 static WRITE16_HANDLER ( sys32_gun_p2_x_c00054_w ) { sys32_gun_p2_x_c00054_data = readinputport(9); }
-static WRITE16_HANDLER ( sys32_gun_p2_y_c00056_w ) { sys32_gun_p2_y_c00056_data = readinputport(10); sys32_gun_p2_y_c00056_data = (sys32_gun_p2_y_c00056_data+1)&0xff; }
+static WRITE16_HANDLER ( sys32_gun_p2_y_c00056_w ) { sys32_gun_p2_y_c00056_data = readinputport(10); }
 
-static READ16_HANDLER ( sys32_gun_p1_x_c00050_r ) { int retdata; retdata = sys32_gun_p1_x_c00050_data & 0x80; sys32_gun_p1_x_c00050_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p1_y_c00052_r ) { int retdata; retdata = sys32_gun_p1_y_c00052_data & 0x80; sys32_gun_p1_y_c00052_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p2_x_c00054_r ) { int retdata; retdata = sys32_gun_p2_x_c00054_data & 0x80; sys32_gun_p2_x_c00054_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p2_y_c00056_r ) { int retdata; retdata = sys32_gun_p2_y_c00056_data & 0x80; sys32_gun_p2_y_c00056_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p1_x_c00050_r ) { int retdata; retdata = sys32_gun_p1_x_c00050_data | 0x7f; sys32_gun_p1_x_c00050_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p1_y_c00052_r ) { int retdata; retdata = sys32_gun_p1_y_c00052_data | 0x7f; sys32_gun_p1_y_c00052_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p2_x_c00054_r ) { int retdata; retdata = sys32_gun_p2_x_c00054_data | 0x7f; sys32_gun_p2_x_c00054_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p2_y_c00056_r ) { int retdata; retdata = sys32_gun_p2_y_c00056_data | 0x7f; sys32_gun_p2_y_c00056_data <<= 1; return retdata; }
 
 /* end analog input bits */
 
