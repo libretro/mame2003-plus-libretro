@@ -102,12 +102,12 @@ DISCRETE_SOUND_START(triplhnt_discrete_interface)
 	/************************************************/
 	/* Input register mapping for triplhnt          */
 	/************************************************/
-	/*                   NODE                 GAIN      OFFSET  INIT */
-	DISCRETE_INPUTX_DATA(TRIPLHNT_BEAR_ROAR_DATA, -1, 0x0f, 0)
-	DISCRETE_INPUT_NOT  (TRIPLHNT_BEAR_EN)
-	DISCRETE_INPUTX_DATA(TRIPLHNT_SHOT_DATA, 0,0,0)	// disabled until hooked up
-	DISCRETE_INPUT_LOGIC(TRIPLHNT_SCREECH_EN)
-	DISCRETE_INPUT_NOT  (TRIPLHNT_LAMP_EN)
+	/*              NODE                    ADDR  MASK     GAIN      OFFSET  INIT */
+	DISCRETE_INPUT(TRIPLHNT_BEAR_ROAR_DATA, 0x00, 0x000f,                    15.0)
+	DISCRETE_INPUT(TRIPLHNT_BEAR_EN,        0x01, 0x000f,                     1.0)
+	DISCRETE_INPUT(TRIPLHNT_SHOT_DATA,      0x02, 0x000f,                     0.0)	// should init to 15 when hooked up
+	DISCRETE_INPUT(TRIPLHNT_SCREECH_EN,     0x03, 0x000f,                     0.0)
+	DISCRETE_INPUT(TRIPLHNT_LAMP_EN,        0x04, 0x000f,                     1.0)
 	/************************************************/
 
 	DISCRETE_LFSR_NOISE(TRIPLHNT_NOISE,			// Output A7 pin 13
