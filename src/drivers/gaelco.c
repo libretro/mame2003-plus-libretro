@@ -947,7 +947,7 @@ static MACHINE_DRIVER_START( thoop )
 	MDRV_PALETTE_LENGTH(1024)
 
 	MDRV_VIDEO_START(maniacsq)
-	MDRV_VIDEO_UPDATE(maniacsq)
+	MDRV_VIDEO_UPDATE(bigkarnk)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(OKIM6295, bigkarnk_okim6295_interface)
