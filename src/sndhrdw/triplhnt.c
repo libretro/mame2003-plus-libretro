@@ -121,7 +121,7 @@ DISCRETE_SOUND_START(triplhnt_discrete_interface)
 	/*              NODE                    ADDR  MASK     GAIN      OFFSET  INIT */
 	DISCRETE_INPUT(TRIPLHNT_BEAR_ROAR_DATA, 0x00, 0x000f,                    15.0)
 	DISCRETE_INPUT(TRIPLHNT_BEAR_EN,        0x01, 0x000f,                     1.0)
-	DISCRETE_INPUT(TRIPLHNT_SHOT_DATA,      0x02, 0x000f,                     0.0)	// should init to 15 when hooked up
+	DISCRETE_INPUT(TRIPLHNT_SHOT_DATA,      0x02, 0x000f,                    15.0)
 	DISCRETE_INPUT(TRIPLHNT_SCREECH_EN,     0x03, 0x000f,                     0.0)
 	DISCRETE_INPUT(TRIPLHNT_LAMP_EN,        0x04, 0x000f,                     1.0)
 	/************************************************/
