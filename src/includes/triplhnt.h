@@ -18,7 +18,7 @@ extern struct discrete_sound_block triplhnt_discrete_interface[];
 extern struct Samplesinterface triplhnt_samples_interface;
 
 
-/*----------- defined in vidhrdw/triplhnt.c -----------*/
+/*----------- defined in vidhrdw/triplhnt_vidhrdw.c -----------*/
 
 VIDEO_START( triplhnt );
 VIDEO_UPDATE( triplhnt );
