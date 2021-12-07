@@ -12,6 +12,11 @@
 #define TRIPLHNT_LAMP_EN		NODE_05
 
 
+/*----------- defined in drivers/triplhnt.c -----------*/
+
+extern void triplhnt_hit_callback(int);
+
+
 /*----------- defined in sndhrdw/triplhnt.c -----------*/
 
 extern struct discrete_sound_block triplhnt_discrete_interface[];
