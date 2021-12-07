@@ -1200,14 +1200,14 @@ static data16_t sys32_gun_p2_x_c00054_data;
 static data16_t sys32_gun_p2_y_c00056_data;
 
 static WRITE16_HANDLER ( sys32_gun_p1_x_c00050_w ) { sys32_gun_p1_x_c00050_data = readinputport(7); }
-static WRITE16_HANDLER ( sys32_gun_p1_y_c00052_w ) { sys32_gun_p1_y_c00052_data = readinputport(8); sys32_gun_p1_y_c00052_data = (sys32_gun_p1_y_c00052_data+1)&0xff; }
+static WRITE16_HANDLER ( sys32_gun_p1_y_c00052_w ) { sys32_gun_p1_y_c00052_data = readinputport(8); }
 static WRITE16_HANDLER ( sys32_gun_p2_x_c00054_w ) { sys32_gun_p2_x_c00054_data = readinputport(9); }
-static WRITE16_HANDLER ( sys32_gun_p2_y_c00056_w ) { sys32_gun_p2_y_c00056_data = readinputport(10); sys32_gun_p2_y_c00056_data = (sys32_gun_p2_y_c00056_data+1)&0xff; }
+static WRITE16_HANDLER ( sys32_gun_p2_y_c00056_w ) { sys32_gun_p2_y_c00056_data = readinputport(10); }
 
-static READ16_HANDLER ( sys32_gun_p1_x_c00050_r ) { int retdata; retdata = sys32_gun_p1_x_c00050_data & 0x80; sys32_gun_p1_x_c00050_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p1_y_c00052_r ) { int retdata; retdata = sys32_gun_p1_y_c00052_data & 0x80; sys32_gun_p1_y_c00052_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p2_x_c00054_r ) { int retdata; retdata = sys32_gun_p2_x_c00054_data & 0x80; sys32_gun_p2_x_c00054_data <<= 1; return retdata; }
-static READ16_HANDLER ( sys32_gun_p2_y_c00056_r ) { int retdata; retdata = sys32_gun_p2_y_c00056_data & 0x80; sys32_gun_p2_y_c00056_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p1_x_c00050_r ) { int retdata; retdata = sys32_gun_p1_x_c00050_data | 0x7f; sys32_gun_p1_x_c00050_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p1_y_c00052_r ) { int retdata; retdata = sys32_gun_p1_y_c00052_data | 0x7f; sys32_gun_p1_y_c00052_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p2_x_c00054_r ) { int retdata; retdata = sys32_gun_p2_x_c00054_data | 0x7f; sys32_gun_p2_x_c00054_data <<= 1; return retdata; }
+static READ16_HANDLER ( sys32_gun_p2_y_c00056_r ) { int retdata; retdata = sys32_gun_p2_y_c00056_data | 0x7f; sys32_gun_p2_y_c00056_data <<= 1; return retdata; }
 
 /* end analog input bits */
 
@@ -1885,16 +1885,16 @@ INPUT_PORTS_START( alien3 )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* 0xc00050 - port 7  - player 1 lightgun X axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0, 0xfe )
 
 	PORT_START	/* 0xc00052 - port 8  - player 1 lightgun Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 1, 0xff )
 
 	PORT_START	/* 0xc00054 - port 9  - player 2 lightgun X axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0, 0xfe )
 
 	PORT_START	/* 0xc00056 - port 10 - player 2 lightgun Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 1, 0xff )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sonic )
@@ -1985,16 +1985,16 @@ INPUT_PORTS_START( jpark )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* 0xc00050 - port 7  - player 1 analog X axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 50, 5, 0x40, 0xc0 )
 
 	PORT_START	/* 0xc00052 - port 8  - player 1 analog Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 50, 5, 0x40, 0xc0 )
 
 	PORT_START	/* 0xc00054 - port 9  - player 2 analog X axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 50, 5, 0x40, 0xc0 )
 
 	PORT_START	/* 0xc00056 - port 10 - player 2 analog Y axis*/
-	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 50, 5, 0, 0xff )
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 50, 5, 0x40, 0xc0 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( darkedge )
