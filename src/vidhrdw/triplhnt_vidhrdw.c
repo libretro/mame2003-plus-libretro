@@ -7,7 +7,6 @@ Atari Triple Hunt video emulation
 #include "driver.h"
 #include "triplhnt.h"
 
-extern void triplhnt_hit_callback(int);
 
 UINT8* triplhnt_playfield_ram;
 UINT8* triplhnt_hpos_ram;
