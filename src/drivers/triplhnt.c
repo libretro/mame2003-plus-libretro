@@ -67,9 +67,9 @@ static void triplhnt_update_misc(int offset)
 	coin_lockout_w(0, !(triplhnt_misc_flags & 0x08));
 	coin_lockout_w(1, !(triplhnt_misc_flags & 0x08));
 
-	discrete_sound_w(3, (triplhnt_misc_flags >> 2) & 1);	// screech
-	discrete_sound_w(4, (~triplhnt_misc_flags >> 1) & 1);	// Lamp is used to reset noise
-	discrete_sound_w(1, (~triplhnt_misc_flags >> 7) & 1);	// bear
+	discrete_sound_w(3/*TRIPLHNT_SCREECH_EN*/, triplhnt_misc_flags & 0x04);	// screech
+	discrete_sound_w(4/*TRIPLHNT_LAMP_EN*/, triplhnt_misc_flags & 0x02);	// Lamp is used to reset noise
+	discrete_sound_w(1/*TRIPLHNT_BEAR_EN*/, triplhnt_misc_flags & 0x80);	// bear
 
 	is_witch_hunt = readinputport(2) == 0x40;
 	bit = ~triplhnt_misc_flags & 0x40;
