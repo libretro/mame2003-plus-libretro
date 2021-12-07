@@ -15,3 +15,4 @@
 /*----------- defined in sndhrdw/triplhnt.c -----------*/
 
 extern struct discrete_sound_block triplhnt_discrete_interface[];
+extern struct Samplesinterface triplhnt_samples_interface;
