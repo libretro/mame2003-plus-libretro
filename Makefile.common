@@ -665,7 +665,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/sprint8_vidhrdw.c $(CORE_DIR)/drivers/sprint8.c \
 	$(CORE_DIR)/vidhrdw/nitedrvr_vidhrdw.c $(CORE_DIR)/machine/nitedrvr_machine.c $(CORE_DIR)/drivers/nitedrvr.c \
 	$(CORE_DIR)/machine/dominos.c \
-	$(CORE_DIR)/vidhrdw/triplhnt_vidhrdw.c $(CORE_DIR)/drivers/triplhnt.c \
+	$(CORE_DIR)/vidhrdw/triplhnt_vidhrdw.c $(CORE_DIR)/drivers/triplhnt.c $(CORE_DIR)/sndhrdw/triplhnt.c \
 	$(CORE_DIR)/vidhrdw/dragrace_vidhrdw.c $(CORE_DIR)/drivers/dragrace.c \
 	$(CORE_DIR)/vidhrdw/poolshrk_vidhrdw.c $(CORE_DIR)/drivers/poolshrk.c \
 	$(CORE_DIR)/vidhrdw/starshp1_vidhrdw.c $(CORE_DIR)/drivers/starshp1.c \
