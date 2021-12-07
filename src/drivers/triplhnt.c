@@ -9,18 +9,6 @@ Atari Triple Hunt Driver
 #include "driver.h"
 #include "triplhnt.h"
 
-extern VIDEO_START( triplhnt );
-extern VIDEO_UPDATE( triplhnt );
-
-extern UINT8* triplhnt_playfield_ram;
-extern UINT8* triplhnt_vpos_ram;
-extern UINT8* triplhnt_hpos_ram;
-extern UINT8* triplhnt_code_ram;
-extern UINT8* triplhnt_orga_ram;
-
-extern int triplhnt_sprite_zoom;
-extern int triplhnt_sprite_bank;
-
 static UINT8 triplhnt_cmos[16];
 static UINT8 triplhnt_da_latch;
 static UINT8 triplhnt_misc_flags;
