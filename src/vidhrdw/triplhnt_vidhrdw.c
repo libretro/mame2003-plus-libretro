@@ -157,5 +157,5 @@ VIDEO_UPDATE( triplhnt )
 	draw_crosshair(1, bitmap, cross_x, cross_y, cliprect);
 
 	//discrete_sound_w(0/*TRIPLHNT_BEAR_ROAR_DATA*/, triplhnt_playfield_ram[0xfa] & 15);
-	//discrete_sound_w(2/*TRIPLHNT_SHOT_DATA*/, triplhnt_playfield_ram[0xfc] & 15);
+	discrete_sound_w(2/*TRIPLHNT_SHOT_DATA*/, triplhnt_playfield_ram[0xfc] & 15);
 }
