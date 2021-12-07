@@ -45,6 +45,7 @@ void triplhnt_hit_callback(int code)
 
 static void triplhnt_update_misc(int offset)
 {
+	UINT8 is_witch_hunt;
 	UINT8 bit = offset >> 1;
 
 	/* BIT0 => UNUSED      */
@@ -81,6 +82,19 @@ static void triplhnt_update_misc(int offset)
 	discrete_sound_w(3, (triplhnt_misc_flags >> 2) & 1);	// screech
 	discrete_sound_w(4, (~triplhnt_misc_flags >> 1) & 1);	// Lamp is used to reset noise
 	discrete_sound_w(1, (~triplhnt_misc_flags >> 7) & 1);	// bear
+
+	is_witch_hunt = readinputport(2) == 0x40;
+	bit = ~triplhnt_misc_flags & 0x40;
+
+	/* if we're not playing the sample yet, start it */
+	if (!sample_playing(0))
+		sample_start(0, 0, 1);
+	if (!sample_playing(1))
+		sample_start(1, 1, 1);
+
+	/* bit 6 turns cassette on/off */
+	sample_set_pause(0,  is_witch_hunt || bit);
+	sample_set_pause(1, !is_witch_hunt || bit);
 }
 
 
@@ -342,6 +356,7 @@ static MACHINE_DRIVER_START( triplhnt )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("discrete", DISCRETE, triplhnt_discrete_interface)
+	MDRV_SOUND_ADD(SAMPLES, triplhnt_samples_interface)
 MACHINE_DRIVER_END
 
 
