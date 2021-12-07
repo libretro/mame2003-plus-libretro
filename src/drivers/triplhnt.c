@@ -218,6 +218,9 @@ INPUT_PORTS_START( triplhnt )
 
 	PORT_START
 	PORT_ANALOG( 0xff, 0x78, IPT_LIGHTGUN_Y, 25, 15, 0x00, 0xef)
+
+	PORT_START		/* 10 */
+	PORT_ADJUSTER( 50, "Bear Roar Frequency" )
 INPUT_PORTS_END
 
 
@@ -434,7 +437,7 @@ static DISCRETE_SOUND_START(triplhnt_sound_interface)
 	DISCRETE_ADJUSTMENT(NODE_20, 1,
 				10000,	// R86 + R88 @ 0
 				260000,	// R86 + R88 @ max
-				120000, DISC_LOGADJ, "Bear Roar Frequency")
+				DISC_LOGADJ, 10)
 	DISCRETE_DAC_R1(NODE_21, 1,			// base of Q2
 			TRIPLHNT_BEAR_ROAR_DATA,	// IC B10, Q0-Q3
 			3.4,				// TTL ON level
