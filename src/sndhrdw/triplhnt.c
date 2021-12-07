@@ -18,6 +18,7 @@ static const char *triplhnt_sample_names[] =
 struct Samplesinterface triplhnt_samples_interface =
 {
 	2,	/* 2 channels */
+	20,	/* volume */
 	triplhnt_sample_names
 };
 
