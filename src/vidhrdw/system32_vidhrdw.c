@@ -1567,7 +1567,4 @@ VIDEO_UPDATE( system32 ) {
 		}
 	}
 	system32_draw_text_layer (bitmap, cliprect);
-
-	draw_crosshair(1, bitmap, readinputport(7), readinputport(8), cliprect);
-	draw_crosshair(2, bitmap, readinputport(9), readinputport(10), cliprect);
 }
