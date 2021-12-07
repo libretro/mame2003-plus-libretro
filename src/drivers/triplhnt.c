@@ -223,7 +223,7 @@ INPUT_PORTS_START( triplhnt )
 	PORT_ANALOG( 0xff, 0x78, IPT_LIGHTGUN_Y, 25, 15, 0x00, 0xef)
 
 	PORT_START		/* 10 */
-	PORT_ADJUSTER( 50, "Bear Roar Frequency" )
+	PORT_ADJUSTER( 35, "Bear Roar Frequency" )
 INPUT_PORTS_END
 
 
