@@ -7,6 +7,7 @@ Atari Triple Hunt Driver
 ***************************************************************************/
 
 #include "driver.h"
+#include "triplhnt.h"
 
 extern VIDEO_START( triplhnt );
 extern VIDEO_UPDATE( triplhnt );
@@ -401,12 +402,6 @@ const struct discrete_mixer_desc triplhnt_mixer =
 	150000
 };
 
-/* Nodes - Inputs */
-#define TRIPLHNT_BEAR_ROAR_DATA	NODE_01
-#define TRIPLHNT_BEAR_EN	NODE_02
-#define TRIPLHNT_SHOT_DATA	NODE_03
-#define TRIPLHNT_SCREECH_EN	NODE_04
-#define TRIPLHNT_LAMP_EN	NODE_05
 /* Nodes - Sounds */
 #define TRIPLHNT_NOISE		NODE_10
 #define TRIPLHNT_BEAR_ROAR_SND	NODE_11
