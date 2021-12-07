@@ -7,6 +7,21 @@
 #include "triplhnt.h"
 
 
+static const char *triplhnt_sample_names[] =
+{
+	"*triplhnt",
+	"bear_rac.wav",
+	"witch.wav",
+	0
+};
+
+struct Samplesinterface triplhnt_samples_interface =
+{
+	2,	/* 2 channels */
+	triplhnt_sample_names
+};
+
+
 /************************************************************************/
 /* triplhnt Sound System Analog emulation                               */
 /* Feb 2004, Derrick Renaud                                             */
