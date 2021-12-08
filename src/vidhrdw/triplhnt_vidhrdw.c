@@ -5,8 +5,8 @@ Atari Triple Hunt video emulation
 ***************************************************************************/
 
 #include "driver.h"
+#include "triplhnt.h"
 
-extern void triplhnt_hit_callback(int);
 
 UINT8* triplhnt_playfield_ram;
 UINT8* triplhnt_hpos_ram;
@@ -154,4 +154,7 @@ VIDEO_UPDATE( triplhnt )
 	triplhnt_draw_sprites(bitmap, cliprect);
 
 	draw_crosshair(1, bitmap, cross_x, cross_y, cliprect);
+
+	//discrete_sound_w(0/*TRIPLHNT_BEAR_ROAR_DATA*/, triplhnt_playfield_ram[0xfa] & 15);
+	//discrete_sound_w(2/*TRIPLHNT_SHOT_DATA*/, triplhnt_playfield_ram[0xfc] & 15);
 }

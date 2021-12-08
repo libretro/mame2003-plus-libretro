@@ -7,18 +7,7 @@ Atari Triple Hunt Driver
 ***************************************************************************/
 
 #include "driver.h"
-
-extern VIDEO_START( triplhnt );
-extern VIDEO_UPDATE( triplhnt );
-
-extern UINT8* triplhnt_playfield_ram;
-extern UINT8* triplhnt_vpos_ram;
-extern UINT8* triplhnt_hpos_ram;
-extern UINT8* triplhnt_code_ram;
-extern UINT8* triplhnt_orga_ram;
-
-extern int triplhnt_sprite_zoom;
-extern int triplhnt_sprite_bank;
+#include "triplhnt.h"
 
 static UINT8 triplhnt_cmos[16];
 static UINT8 triplhnt_da_latch;
@@ -44,6 +33,7 @@ void triplhnt_hit_callback(int code)
 
 static void triplhnt_update_misc(int offset)
 {
+	UINT8 is_witch_hunt;
 	UINT8 bit = offset >> 1;
 
 	/* BIT0 => UNUSED      */
@@ -76,6 +66,24 @@ static void triplhnt_update_misc(int offset)
 
 	coin_lockout_w(0, !(triplhnt_misc_flags & 0x08));
 	coin_lockout_w(1, !(triplhnt_misc_flags & 0x08));
+
+	discrete_sound_w(3, (triplhnt_misc_flags >> 2) & 1);	// screech
+	discrete_sound_w(4, (~triplhnt_misc_flags >> 1) & 1);	// Lamp is used to reset noise
+	discrete_sound_w(1, (~triplhnt_misc_flags >> 7) & 1);	// bear
+
+
+	is_witch_hunt = readinputport(2) == 0x40;
+	bit = ~triplhnt_misc_flags & 0x40;
+
+	/* if we're not playing the sample yet, start it */
+	if (!sample_playing(0))
+		sample_start(0, 0, 1);
+	if (!sample_playing(1))
+		sample_start(1, 1, 1);
+
+	/* bit 6 turns cassette on/off */
+	sample_set_pause(0,  is_witch_hunt || bit);
+	sample_set_pause(1, !is_witch_hunt || bit);
 }
 
 
@@ -214,6 +222,9 @@ INPUT_PORTS_START( triplhnt )
 
 	PORT_START
 	PORT_ANALOG( 0xff, 0x78, IPT_LIGHTGUN_Y, 25, 15, 0x00, 0xef)
+
+	PORT_START		/* 10 */
+	PORT_ADJUSTER( 35, "Bear Roar Frequency" )
 INPUT_PORTS_END
 
 
@@ -333,6 +344,8 @@ static MACHINE_DRIVER_START( triplhnt )
 	MDRV_VIDEO_UPDATE(triplhnt)
 
 	/* sound hardware */
+	MDRV_SOUND_ADD_TAG("discrete", DISCRETE, triplhnt_discrete_interface)
+	MDRV_SOUND_ADD(SAMPLES, triplhnt_samples_interface)
 MACHINE_DRIVER_END
 
 
@@ -359,4 +372,4 @@ ROM_START( triplhnt )
 ROM_END
 
 
-GAMEX( 1977, triplhnt, 0, triplhnt, triplhnt, triplhnt, 0, "Atari", "Triple Hunt", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1977, triplhnt, 0, triplhnt, triplhnt, triplhnt, 0, "Atari", "Triple Hunt", GAME_IMPERFECT_SOUND )
