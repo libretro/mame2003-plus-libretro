@@ -1985,7 +1985,7 @@ INPUT_PORTS_START( jpark )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* 0xc00050 - port 7  - player 1 analog X axis*/
-	PORT_ANALOG( 0xff, 0x9a, IPT_LIGHTGUN_X | IPF_PLAYER1, 50, 5, 0x40, 0xc0 )
+	PORT_ANALOG( 0xff, 0x99, IPT_LIGHTGUN_X | IPF_PLAYER1, 50, 5, 0x40, 0xc0 )
 
 	PORT_START	/* 0xc00052 - port 8  - player 1 analog Y axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 50, 5, 0x40, 0xc0 )
