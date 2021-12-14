@@ -67,6 +67,8 @@ extern const struct bin2cFILE robotryo_bootstrap;
 extern const struct bin2cFILE rungun_bootstrap;
 extern const struct bin2cFILE rungunu_bootstrap;
 extern const struct bin2cFILE sgunner_bootstrap;
+extern const struct bin2cFILE sgunner2_bootstrap;
+extern const struct bin2cFILE sgunnr2j_bootstrap;
 extern const struct bin2cFILE shimpacp_bootstrap;
 extern const struct bin2cFILE shimpact_bootstrap;
 extern const struct bin2cFILE sinistar_bootstrap;
