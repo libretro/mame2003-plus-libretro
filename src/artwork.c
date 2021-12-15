@@ -1392,7 +1392,7 @@ static void update_palette_lookup(struct mame_display *display)
 
 			/* loop over all 32 bits and update dirty entries */
 			for (j = 0; j < 32; j++, dirtyflags >>= 1)
-				if (dirtyflags & 1)
+				if ( (dirtyflags & 1) && (i + j < display->game_palette_entries ) )
 				{
 					/* extract the RGB values */
 					rgb_t rgbvalue = display->game_palette[i + j];
