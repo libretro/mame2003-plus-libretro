@@ -3520,6 +3520,7 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 {
 	unsigned long color,black,white;
 	int i;
+	float seconds = 15;
 	static int strobe = 0;
 	static bool polarity = true;
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
@@ -3531,11 +3532,16 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 		return;
 	}
 
+	/* Penalize seconds */
+	if(Machine->drv->frames_per_second > 60)
+		seconds += (Machine->drv->frames_per_second / 60);
+	else
+	seconds -= (Machine->drv->frames_per_second / 60);
+
 	/* Hide crosshairs for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
 	{
-		usrintf_showmessage("%i", inactive_xy[player_number-1][2]);
-		if(inactive_xy[player_number-1][2] < (Machine->drv->frames_per_second * 15))
+		if(inactive_xy[player_number-1][2] < (Machine->drv->frames_per_second * seconds))
 			inactive_xy[player_number-1][2]++;
 		else return;
 	}
