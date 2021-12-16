@@ -811,10 +811,11 @@ void artwork_update_video_and_audio(struct mame_display *display)
 
 	profiler_mark(PROFILER_ARTWORK);
 
-	/* if the visible area has changed, update it */
+/* dont do this here in this core i missed this when backporting
+
 	if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
 		artwork_update_visible_area(display);
-
+*/
 
 	/* update the palette */
 	if (display->changed_flags & GAME_PALETTE_CHANGED)
