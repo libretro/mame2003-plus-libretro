@@ -3534,7 +3534,7 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	/* Hide crosshairs for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
 	{
-		if(inactive_xy[player_number-1][2] < 1000)
+		if(inactive_xy[player_number-1][2] < (Machine->drv->frames_per_second * 15))
 			inactive_xy[player_number-1][2]++;
 		else return;
 	}
