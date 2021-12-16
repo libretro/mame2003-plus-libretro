@@ -3527,22 +3527,21 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	if (!options.crosshair_enable)
 	{
 		for (i = 0;i < MAX_PLAYER_COUNT;i++)
-			inactive_xy[i][2] = 0; /* reset inactive count */
+			inactive_xy[i][2] = cpu_getcurrentframe(); /* reset inactive count */
 		return;
 	}
 
 	/* Hide crosshairs for inactive players */
 	if(inactive_xy[player_number-1][0] == x && inactive_xy[player_number-1][1] == y)
 	{
-		if(inactive_xy[player_number-1][2] < 1000)
-			inactive_xy[player_number-1][2]++;
-		else return;
+		if(inactive_xy[player_number-1][2] + (Machine->drv->frames_per_second * 15) < cpu_getcurrentframe())
+			return;
 	}
 	else
 	{
 		inactive_xy[player_number-1][0] = x;
 		inactive_xy[player_number-1][1] = y;
-		inactive_xy[player_number-1][2] = 0;
+		inactive_xy[player_number-1][2] = cpu_getcurrentframe();
 	}
 
 	/* Color crosshairs */
