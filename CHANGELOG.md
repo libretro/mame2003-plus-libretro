@@ -192,6 +192,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
 * World Cup Volley 95
+* Xeno Crisis
 * Zintrick
 * Zupapa
 
@@ -797,3 +798,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed level four crash in Thunder Hoop and continue screen text distortions in Squash due to previously unknown refresh rate protection in both games [MAME Dev Team, arcadez]
 * Fixed lightgun calibration plus some graphical and sound niggles in Beast Busters [arcadez, mahoneyt944]
 * Fixed graphical priorities in Thunder Hoop by using bigkarnak video update call [dink, arcadez]
+* Added support for the MVS version of Xeno Crisis to the Neo Geo driver [arcadez]
