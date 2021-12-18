@@ -69,6 +69,7 @@ conversion kit which could be applied to a bootleg double dragon :-p?
 #include "cpu/m6809/m6809.h"
 #include "cpu/z80/z80.h"
 #include "vidhrdw/generic.h"
+#include "ost_samples.h"
 
 /* from vidhrdw */
 extern unsigned char *ddragon_bgvideoram,*ddragon_fgvideoram;
@@ -93,46 +94,6 @@ static int VBLK;
 static UINT8 bank_data;
 /* end of private globals */
 
-bool		ddragon_playing = false;
-int			ddragon_current_music = 0;
-int			ddragon_stage = 0;
-int			d_title_counter = 0;
-const char *const ddragon_samples_set_names[] =
-{
-	"*ddragon",
-	"title-01",
-	"title-02",
-	"stage1-01",
-	"stage1-02",
-	"stage2-01",
-	"stage2-02",
-	"stage3-01",
-	"stage3-02",
-	"stage3-alt-01",
-	"stage3-alt-02",
-	"stage4-01",
-	"stage4-02",
-	"credits-01",
-	"credits-02",
-	"diddy-01",
-	"diddy-02",
-	"complete-01",
-	"complete-02",
-	"boss-01",
-	"boss-02",
-	"boss-alt-01",
-	"boss-alt-02",
-	"finalboss-01",
-	"finalboss-02",
-	0
-};
-
-static struct Samplesinterface ddragon_samples_set =
-{
-	2,	// 2 channels
-	100, // volume
-	ddragon_samples_set_names
-};
 
 static MACHINE_INIT( ddragon )
 {
@@ -1267,7 +1228,7 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ddragon_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
 	ddragon_playing = true;
 	ddragon_current_music = 0;
 	ddragon_stage = 0;

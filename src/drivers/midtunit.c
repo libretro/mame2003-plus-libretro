@@ -30,102 +30,7 @@
 #include "bootstrap.h"
 #include "inptport.h"
 #include "controls.h"
-
-const char *const mk_sample_names_tunit[] =
-{
-	"*mk",
-	"title-01",
-	"title-02",
-	"c-select-01",
-	"c-select-02",
-	"battle-menu-01",
-	"battle-menu-02",
-	"continue-01",
-	"continue-02",
-	"fatality-01",
-	"fatality-02",
-	"courtyard-01",
-	"courtyard-02",
-	"courtyard-end-01",
-	"courtyard-end-02",
-	"courtyard-finish-him-01",
-	"courtyard-finish-him-02",
-	"test-your-might-01",
-	"test-your-might-02",
-	"test-your-might-end-01",
-	"test-your-might-end-02",
-	"gameover-01",
-	"gameover-02",
-	"warriors-shrine-01",
-	"warriors-shrine-02",
-	"warriors-shrine-end-01",
-	"warriors-shrine-end-02",
-	"warriors-shrine-finish-him-01",
-	"warriors-shrine-finish-him-02",
-	"pit-01",
-	"pit-02",
-	"pit-end-01",
-	"pit-end-02",
-	"pit-finish-him-01",
-	"pit-finish-him-02",
-	"throne-room-01",
-	"throne-room-02",
-	"throne-room-end-01",
-	"throne-room-end-02",
-	"throne-room-finish-him-01",
-	"throne-room-finish-him-02",
-	"goros-lair-01",
-	"goros-lair-02",
-	"goros-lair-end-01",
-	"goros-lair-end-02",
-	"goros-lair-finish-him-01",
-	"goros-lair-finish-him-02",
-	"endurance-switch-01",
-	"endurance-switch-02",
-	"victory-01",
-	"victory-02",
-	"palace-gates-01",
-	"palace-gates-02",
-	"palace-gates-end-01",
-	"palace-gates-end-02",
-	"palace-gates-finish-him-01",
-	"palace-gates-finish-him-02",
-	0
-};
-
-static struct Samplesinterface mk_samples_tunit =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	mk_sample_names_tunit
-};
-
-const char *const nba_jam_sample_names_tunit[] =
-{
-	"*nbajam",
-	"main-theme-01",
-	"main-theme-02",
-	"team-select-01",
-	"team-select-02",
-	"ingame-01", /* First & third quarter*/
-	"ingame-02",
-	"ingame-03", /* Second & fourth quarter*/
-	"ingame-04",
-	"intermission-01",
-	"intermission-02",
-	"halftime-01",
-	"halftime-02",
-	"theme-end-01",
-	"theme-end-02",
-	0
-};
-
-static struct Samplesinterface nba_jam_samples_tunit =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	nba_jam_sample_names_tunit
-};
+#include "ost_samples.h"
 
 /*************************************
  *
@@ -754,7 +659,7 @@ static MACHINE_DRIVER_START( mk )
 
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, mk_samples_tunit)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
@@ -775,7 +680,7 @@ static MACHINE_DRIVER_START( nbajam )
 
 	/* Lets add our NBA Jam music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, nba_jam_samples_tunit)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
 MACHINE_DRIVER_END
 
 
