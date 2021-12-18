@@ -6628,6 +6628,28 @@ ROM_START( lasthope )
 	ROM_LOAD16_BYTE( "NGDT-300-C4.bin", 0x800001, 0x400000, CRC(8486ad9e) SHA1(19a2a73c825687e0cb9fd62bde00db91b5409529)) /* Plane 2,3 */
 ROM_END
 
+/* Xeno Crisis */
+
+ROM_START( xeno )
+	ROM_REGION( 0x200000, REGION_CPU1, ROMREGION_ERASEFF )
+	ROM_LOAD16_WORD_SWAP( "BB01-p1.p1", 0x000000, 0x100000, CRC(637605a6) SHA1(179ebcdeaac3e561fd7acb72022eda8c3c74cb8a) )
+	ROM_LOAD16_WORD_SWAP( "BB01-p2.p2", 0x100000, 0x100000, CRC(84838145) SHA1(c1f48d333dfc85b9371f811dd449a42d8cdecf3f) )
+
+	NEO_SFIX_128K( "BB01-s1.s1", CRC(7537ea79) SHA1(b7242a6dd7b2ad8ccf7a223c08d626abf013f366) )
+
+	NEO_BIOS_SOUND_64K( "BB01-m1.m1", CRC(28c13ed9) SHA1(a3c8cf36906293a24f1ed49376c9d561560d2730) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "BB01-v1.v1", 0x000000, 0x1000000, CRC(60d57867) SHA1(e1f3f759b4af4404f19dd5b75135e6968b6be3c5) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x400000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "BB01-c1.c1", 0x000000, 0x200000, CRC(ae51ef89) SHA1(da82214263a99520364a2b7ab8140bdc68940f6d) )
+	ROM_LOAD16_BYTE( "BB01-c2.c2", 0x000001, 0x200000, CRC(a8610100) SHA1(aded6eaa17a518a8f4af9c3779c41ef8dd32a316) )
+ROM_END
+
+
 ROM_START( pnyaa ) /* Encrypted Set */
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "267-p1.bin", 0x000000, 0x100000, CRC(112fe2c0) SHA1(01420e051f0bdbd4f68ce306a3738161b96f8ba8) )
@@ -8023,6 +8045,10 @@ GAMEB( 1994, b2b,      neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 	
 /* NG:DEV.TEAM */
 GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DEV.TEAM", "Last Hope", &neogeo_ctrl, NULL )
+  
+  /* Bitmap Bureau */
+GAMEB( 2019, xeno,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Bitmap Bureau", "Xeno Crisis (Neo Geo MVS)", &neogeo_ctrl, NULL )
+
 	
 #if 0
 GAMEB( 2000, bangbedp, bangbead, neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", &neogeo_ctrl, NULL )
