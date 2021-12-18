@@ -4,7 +4,7 @@
 
 *********************************************************************/
 
-#include <stdbool.h>
+#include "driver.h"
 
 bool     ddragon_playing = false;
 int      ddragon_current_music = 0;
