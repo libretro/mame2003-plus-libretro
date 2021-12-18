@@ -4,6 +4,7 @@
 
 *********************************************************************/
 
+#include <stdbool.h>
 
 extern bool     ddragon_playing;
 extern int      ddragon_current_music;
