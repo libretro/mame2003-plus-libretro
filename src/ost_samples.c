@@ -6,6 +6,7 @@
 
 #include "driver.h"
 
+
 bool     ddragon_playing = false;
 int      ddragon_current_music = 0;
 int      ddragon_stage = 0;
@@ -37,6 +38,7 @@ bool     outrun_title_diddy = false;
 bool     outrun_title = false;
 bool     outrun_lastwave = false;
 int      outrun_start_counter = 0;
+
 
 const char *const ddragon_sample_set_names[] =
 {
