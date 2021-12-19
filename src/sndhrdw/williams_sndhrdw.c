@@ -602,13 +602,13 @@ static READ_HANDLER( adpcm_command_r )
 void williams_adpcm_data_w(int data)
 {
 	if(nba_jam_playing && options.use_samples) {
-		generate_ost_sound_nba_jam();
+		generate_ost_sound_nba_jam( data );
 	}
 	else if(mk_playing_mortal_kombat && options.use_samples) {
-		generate_ost_sound_mk();
+		generate_ost_sound_mk( data );
 	}
 	else if(mk_playing_mortal_kombat_t && options.use_samples) {
-		generate_ost_sound_mk_tunit();
+		generate_ost_sound_mk_tunit( data );
 	}
 	else
 		soundlatch_w(0, data & 0xff);

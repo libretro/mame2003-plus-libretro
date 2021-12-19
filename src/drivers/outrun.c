@@ -697,7 +697,7 @@ static READ16_HANDLER( or_io_service_r )
 static WRITE16_HANDLER( outrun_sound_write_w )
 {
 	if(outrun_playing && options.use_samples) {
-		generate_ost_sound_outrun();
+		generate_ost_sound_outrun( data );
 	}
 	else
 		sound_shared_ram[0]=data&0xff;

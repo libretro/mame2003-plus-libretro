@@ -279,7 +279,7 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		break;
 	case 3: /* 380e - SND irq */
 		if(ddragon_playing && options.use_samples) {
-			generate_ost_sound_ddragon();
+			generate_ost_sound_ddragon( data );
 		}
 		else {
 			soundlatch_w( 0, data );
