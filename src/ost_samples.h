@@ -44,3 +44,12 @@ extern struct Samplesinterface ost_mk;
 extern struct Samplesinterface ost_moonwalker;
 extern struct Samplesinterface ost_nba_jam;
 extern struct Samplesinterface ost_outrun;
+
+
+extern void generate_ost_sound_ddragon    (int* data);
+extern void generate_ost_sound_ffight     (int* data);
+extern void generate_ost_sound_mk         (int* data);
+extern void generate_ost_sound_mk_tunit   (int* data);
+extern void generate_ost_sound_moonwalker (int* data);
+extern void generate_ost_sound_nba_jam    (int* data);
+extern void generate_ost_sound_outrun     (int* data);
