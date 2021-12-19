@@ -65,38 +65,9 @@ Other notes:
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "system16.h"
+#include "ost_samples.h"
 
 /***************************************************************************/
-
-bool		moonwalker_playing = false;
-bool		moon_diddy = false;
-int			mj_current_music = 0;
-
-const char *const moonwalker_samples_set_names[] =
-{
-	"*moonwalk",
-	"bad-01",
-	"bad-02",
-	"smoothcriminal-01",
-	"smoothcriminal-02",	
-	"beatit-01",
-	"beatit-02",
-	"thriller-01",
-	"thriller-02",	
-	"billiejean-01",
-	"billiejean-02",
-	"title-01",
-	"title-02",
-	0
-};
-
-static struct Samplesinterface moonwalker_samples_set =
-{
-	2,	// 2 channels
-	100, // volume
-	moonwalker_samples_set_names
-};
-
 
 static WRITE16_HANDLER( sys18_refreshenable_w )
 {
@@ -1608,7 +1579,7 @@ static MACHINE_DRIVER_START( moonwalk )
 	MDRV_CPU_MEMORY(moonwalk_readmem,moonwalk_writemem)
 
 	MDRV_MACHINE_INIT(moonwalk)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, moonwalker_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
 	moonwalker_playing = true;
 	moon_diddy = false;
 MACHINE_DRIVER_END

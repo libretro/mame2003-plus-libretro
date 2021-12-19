@@ -15,12 +15,9 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
-
+#include "ost_samples.h"
 #include "cps1.h"       /* External CPS1 definitions */
 
-bool	ff_provision_alt_song;
-bool	ff_play_alternate_song;
-bool	ff_playing_final_fight;
 
 /* in machine/kabuki.c */
 void wof_decode(void);
@@ -28,69 +25,6 @@ void dino_decode(void);
 void punisher_decode(void);
 void slammast_decode(void);
 
-
-const char *const ffight_sample_names[] =
-{
-	"*ffight",
-	"track02-01",
-	"track02-02",
-	"track03-01",
-	"track03-02",
-	"track04-01",
-	"track04-02",
-	"track05-01",
-	"track05-02",
-	"track06-01",
-	"track06-02",
-	"track07-01",
-	"track07-02",
-	"track08-01",
-	"track08-02",
-	"track09-01",
-	"track09-02",
-	"track10-01",
-	"track10-02",
-	"track11-01",
-	"track11-02",
-	"track12-01",
-	"track12-02",
-	"track13-01",
-	"track13-02",
-	"track14-01",
-	"track14-02",
-	"track15-01",
-	"track15-02",
-	"track16-01",
-	"track16-02",
-	"track17-01",
-	"track17-02",
-	"track18-01",
-	"track18-02",
-	"track19-01",
-	"track19-02",
-	"track20-01",
-	"track20-02",
-	"track21-01",
-	"track21-02",
-	"track22-01",
-	"track22-02",
-	"track23-01",
-	"track23-02",
-	"track24-01",
-	"track24-02",
-	"track25-01",
-	"track25-02",
-	"track26-01",
-	"track26-02",
-	0
-};
-
-static struct Samplesinterface ff_samples =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	ffight_sample_names
-};
 
 static READ16_HANDLER( cps1_input_r )
 {
@@ -4242,7 +4176,7 @@ static MACHINE_DRIVER_START( ffight_hack )
 
 	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ff_samples)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
 MACHINE_DRIVER_END
 
 

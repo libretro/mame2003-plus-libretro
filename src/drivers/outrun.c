@@ -26,39 +26,8 @@
 #include "cpu/z80/z80.h"
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
+#include "ost_samples.h"
 
-bool	outrun_playing = false;
-bool	outrun_start = false;
-bool	outrun_diddy = false;
-bool	outrun_title_diddy = false;
-bool	outrun_title = false;
-bool	outrun_lastwave = false;
-int		outrun_start_counter = 0;
-
-const char *const outrun_samples_set_names[] =
-{
-	"*outrun",
-	"intro-01",
-	"intro-02",
-	"title-cut-01",
-	"title-cut-02",
-	"map-01",
-	"map-02",	
-	"track1-01",
-	"track1-02",
-	"track3-01",
-	"track3-02",
-	"track4-01",
-	"track4-02",
-	0
-};
-
-static struct Samplesinterface outrun_samples_set =
-{
-	2,	// 2 channels
-	100, // volume
-	outrun_samples_set_names
-};
 
 static void set_fg_page( int data ){
 	sys16_fg_page[0] = data>>12;
@@ -1326,7 +1295,7 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k)
 
 	// Lets add our Out Run music sample packs.
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, outrun_samples_set)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
 	outrun_playing = true;
 	outrun_start = true;
 	outrun_diddy = false;

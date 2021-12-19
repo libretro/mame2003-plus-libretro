@@ -54,6 +54,7 @@ SOURCES_C += \
 	$(CORE_DIR)/mame.c \
 	$(CORE_DIR)/mamedbg.c \
 	$(CORE_DIR)/mame_unzip.c \
+	$(CORE_DIR)/ost_samples.c \
 	$(CORE_DIR)/palette.c \
 	$(CORE_DIR)/png.c \
 	$(CORE_DIR)/profiler.c \
