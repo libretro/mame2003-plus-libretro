@@ -288,7 +288,7 @@ struct Samplesinterface ost_outrun =
 };
 
 
-void generate_ost_sound_ddragon(int* data)
+extern INLINE void generate_ost_sound_ddragon(void)
 {
 	int a = 0;
 	int o_max_samples = 23;
@@ -494,7 +494,7 @@ void generate_ost_sound_ddragon(int* data)
 	}
 }
 
-void generate_ost_sound_ffight(int* data)
+extern INLINE void generate_ost_sound_ffight(void)
 {
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -678,7 +678,7 @@ void generate_ost_sound_ffight(int* data)
 	}
 }
 
-void generate_ost_sound_mk(int* data)
+extern INLINE void generate_ost_sound_mk(void)
 {
 	int a = 0;
 	bool mk_do_nothing = false;
@@ -1156,7 +1156,7 @@ void generate_ost_sound_mk(int* data)
 	}
 }
 
-void generate_ost_sound_mk_tunit(int* data)
+extern INLINE void generate_ost_sound_mk_tunit(void)
 {
 	int a = 0;
 	bool mk_do_nothing = false;
@@ -1477,7 +1477,7 @@ void generate_ost_sound_mk_tunit(int* data)
 	}
 }
 
-void generate_ost_sound_moonwalker(int* data)
+extern INLINE void generate_ost_sound_moonwalker(void)
 {
 	int a = 0;
 	int o_max_samples = 12;
@@ -1741,7 +1741,7 @@ void generate_ost_sound_moonwalker(int* data)
 	}
 }
 
-void generate_ost_sound_nba_jam(int* data)
+extern INLINE void generate_ost_sound_nba_jam(void)
 {
 	int a = 0;
 	bool nba_jam_do_nothing = false;
@@ -2040,7 +2040,7 @@ void generate_ost_sound_nba_jam(int* data)
 	m_nba_last_offset = data;
 }
 
-void generate_ost_sound_outrun(int* data)
+extern INLINE void generate_ost_sound_outrun(void)
 {
 	int a = 0;
 	int o_max_samples = 12;
