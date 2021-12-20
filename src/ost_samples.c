@@ -5,6 +5,7 @@
 *********************************************************************/
 
 #include "driver.h"
+#include "ost_samples.h"
 
 
 bool     ddragon_playing = false;
