@@ -1961,6 +1961,8 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	struct InputPort *in;
 	int total,total2;
 	int arrowize;
+	char label[30][40];
+	char setting[30][40];
 
 
 	sel = selected - 1;
@@ -2001,8 +2003,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	{
 		if (i < total2 - 1)
 		{
-			char label[30][40];
-			char setting[30][40];
 			int sensitivity,delta;
 			int reverse;
 
