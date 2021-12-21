@@ -2055,7 +2055,7 @@ bool generate_ost_sound_outrun(int data)
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
 			
-		if( ost_mix_samples() == 0 ) {
+		if( !ost_mix_samples() ) {
 			/* samples not playing */
 		}
 
