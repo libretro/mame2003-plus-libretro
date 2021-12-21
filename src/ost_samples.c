@@ -8,6 +8,20 @@
 #include "ost_samples.h"
 
 
+/* universal */
+static int  sa_count;
+static int  sa_left;
+static int  sa_right;
+static int  sa_volume;
+static bool sa_loop;
+static bool sa_play_sample;
+static bool sa_play_original;
+static bool sa_play_default;
+static bool sa_do_nothing;
+static bool sa_stop;
+
+
+/* game specific */
 bool     ddragon_playing = false;
 int      ddragon_current_music = 0;
 int      ddragon_stage = 0;
@@ -39,6 +53,11 @@ bool     outrun_title_diddy = false;
 bool     outrun_title = false;
 bool     outrun_lastwave = false;
 int      outrun_start_counter = 0;
+
+
+/* ost functions */
+static void ost_stop_samples(void);
+static void ost_mix_samples(void);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -289,19 +308,32 @@ struct Samplesinterface ost_outrun =
 };
 
 
+static void ost_stop_samples(void)
+{
+  int i;
+
+  for(i = 0; i <= sa_count; i++)
+    sample_stop(i);
+}
+
+
+static void ost_mix_samples(void)
+{
+}
+
+
 void generate_ost_sound_ddragon(int data)
 {
-	int a = 0;
-	int o_max_samples = 23;
-	int sa_left = 0;
-	int sa_right = 1;
-	int sa_volume = 40;
-	bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool ddragon_do_nothing = false;
-	bool ddragon_stop_samples = false;
-	bool ddragon_play_default = false;
+	sa_count = 23;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 40;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_play_default = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 
 	switch(data) {
 		// Use for a counter flag on the title screen and stopping music.
@@ -310,14 +342,14 @@ void generate_ost_sound_ddragon(int data)
 			if(ddragon_current_music == 10 && ddragon_stage != 4) {
 					// A coin has been inserted, lets stop the title music, about to start the first stage.
 					if(d_title_counter > 5) {
-						ddragon_stop_samples = true;
+						sa_stop = true;
 						d_title_counter = 0;
 					}
 					else
 						d_title_counter++;
 			}
 			else {
-				ddragon_stop_samples = true;
+				sa_stop = true;
 				ddragon_stage = 0;
 				d_title_counter = 0;
 			}
@@ -440,11 +472,7 @@ void generate_ost_sound_ddragon(int data)
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -476,13 +504,9 @@ void generate_ost_sound_ddragon(int data)
 	else if(ddragon_do_nothing == true) {
 		// --> Do nothing.
 	}
-	else if(ddragon_stop_samples == true) {
+	else if(sa_stop == true) {
 		ddragon_current_music = 0;
-		a = 0;
-
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		// Now play the default sound.
 		soundlatch_w( 0, data );
@@ -497,6 +521,9 @@ void generate_ost_sound_ddragon(int data)
 
 void generate_ost_sound_ffight(int data)
 {
+	sa_count = 50;
+	sa_volume = 100;
+
 	switch (data) {
 		/* stage 1 upper level music*/
 		case 0x40:
@@ -652,11 +679,7 @@ void generate_ost_sound_ffight(int data)
 
 			/* Lets stop the Final Fight sample music.*/
 			if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
-				int a = 0;
-
-				for(a = 0; a <= 50; a++) {
-					sample_stop(a);
-				}
+				ost_stop_samples();
 			}
 		break;
 	}
@@ -681,15 +704,15 @@ void generate_ost_sound_ffight(int data)
 
 void generate_ost_sound_mk(int data)
 {
-	int a = 0;
-	bool mk_do_nothing = false;
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool mk_stop_samples = false;
-
-	int sa_left = 0;
-	int sa_right = 1;
-	bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop.*/
+	sa_count = 55;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 100;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1104,23 +1127,13 @@ void generate_ost_sound_mk(int data)
 
 			/* Time to stop the Mortal Kombat music samples.*/
 			if(data == 0xFD00 || data == 0xFF00) {
-				a = 0;
-
-				/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-				for(a = 0; a <= 55; a++) {
-					sample_stop(a);
-				}
+				ost_stop_samples();
 			}
 			break;
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-
-		/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 55; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -1144,13 +1157,8 @@ void generate_ost_sound_mk(int data)
 		if(sa_play_original == true)
 			soundlatch_w(0, data & 0xff);
 	}
-	else if(mk_stop_samples == true) {
-		a = 0;
-
-		/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 55; a++) {
-			sample_stop(a);
-		}
+	else if(sa_stop == true) {
+		ost_stop_samples();
 
 		/* Now play the default sound.*/
 		soundlatch_w(0, data & 0xff);
@@ -1159,15 +1167,15 @@ void generate_ost_sound_mk(int data)
 
 void generate_ost_sound_mk_tunit(int data)
 {
-	int a = 0;
-	bool mk_do_nothing = false;
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool mk_stop_samples = false;
-		
-	int sa_left = 0;
-	int sa_right = 1;
-	bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop.*/
+	sa_count = 55;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 100;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1425,23 +1433,13 @@ void generate_ost_sound_mk_tunit(int data)
 
 			/* Time to stop the Mortal Kombat music samples.*/
 			if(data == 0x0) {
-				a = 0;
-						
-				/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-				for(a = 0; a <= 55; a++) {
-					sample_stop(a);
-				}
+				ost_stop_samples();
 			}		
 			break;
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-
-		/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 55; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -1465,13 +1463,8 @@ void generate_ost_sound_mk_tunit(int data)
 		if(sa_play_original == true)
 			soundlatch_w(0, data & 0xff);
 	}
-	else if(mk_stop_samples == true) {
-		a = 0;
-
-		/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 55; a++) {
-			sample_stop(a);
-		}
+	else if(sa_stop == true) {
+		ost_stop_samples();
 
 		/* Now play the default sound.*/
 		soundlatch_w(0, data & 0xff);
@@ -1480,22 +1473,23 @@ void generate_ost_sound_mk_tunit(int data)
 
 void generate_ost_sound_moonwalker(int data)
 {
-	int a = 0;
-	int o_max_samples = 12;
-	int sa_left = 0;
-	int sa_right = 1;
 	int mj_fade = 30;
-	bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool moonwalker_do_nothing = false;
-	bool moonwalker_stop_samples = false;
-	bool moonwalker_play_default = false;
+
+	sa_count = 12;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 100;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_play_default = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 
 	switch (data) {
 		// Reset music. Title screen.
 		case 0x0:
-			moonwalker_stop_samples = true;
+			sa_stop = true;
 			mj_current_music = 0;
 			moon_diddy = false;	
 			break;
@@ -1687,11 +1681,7 @@ void generate_ost_sound_moonwalker(int data)
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-					
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 				
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -1723,13 +1713,9 @@ void generate_ost_sound_moonwalker(int data)
 	else if(moonwalker_do_nothing == true) {
 		// --> Do nothing.
 	}
-	else if(moonwalker_stop_samples == true) {
+	else if(sa_stop == true) {
 		mj_current_music = 0;
-		a = 0;
-
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		// Now play the default sound.
 		soundlatch_w( 0,data&0xff );
@@ -1744,16 +1730,16 @@ void generate_ost_sound_moonwalker(int data)
 
 void generate_ost_sound_nba_jam(int data)
 {
-	int a = 0;
-	bool nba_jam_do_nothing = false;
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool nba_jam_stop_samples = false;
-	bool nba_jam_play_default = false;
-
-	int sa_left = 0;
-	int sa_right = 1;
-	bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop.		*/
+	sa_count = 13;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 100;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_play_default = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 
 	switch (data) {
 		case 0x8C:
@@ -1786,7 +1772,7 @@ void generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					nba_jam_do_nothing = true;
 				else
-					nba_jam_stop_samples = true;
+					sa_stop = true;
 			}
 			else {
 				if(m_nba_start_counter == 2) {
@@ -1821,7 +1807,7 @@ void generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					nba_jam_do_nothing = true;
 				else
-					nba_jam_stop_samples = true;
+					sa_stop = true;
 			}
 			break;
 
@@ -1981,23 +1967,13 @@ void generate_ost_sound_nba_jam(int data)
 
 			/* Time to stop the NBA Jam music samples.*/
 			if(data == 0x0 && nba_jam_title_screen == false) {
-				a = 0;
-
-				/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
-				for(a = 0; a <= 13; a++) {
-					sample_stop(a);
-				}
+				ost_stop_samples();
 			}
 			break;
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-
-		/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 13; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -2024,13 +2000,8 @@ void generate_ost_sound_nba_jam(int data)
 	else if(nba_jam_do_nothing == true) {
 		/* --> Do nothing.*/
 	}
-	else if(nba_jam_stop_samples == true) {
-		a = 0;
-
-		/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
-		for(a = 0; a <= 13; a++) {
-			sample_stop(a);
-		}
+	else if(sa_stop == true) {
+		ost_stop_samples();
 
 		/* Now play the default sound.*/
 		soundlatch_w(0, data & 0xff);
@@ -2043,16 +2014,16 @@ void generate_ost_sound_nba_jam(int data)
 
 void generate_ost_sound_outrun(int data)
 {
-	int a = 0;
-	int o_max_samples = 12;
-	int sa_left = 0;
-	int sa_right = 1;
-	bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
-	bool sa_play_sample = false;
-	bool sa_play_original = false;
-	bool outrun_do_nothing = false;
-	bool outrun_stop_samples = false;
-	bool outrun_play_default = false;
+	sa_count = 12;
+	sa_left = 0;
+	sa_right = 1;
+	sa_volume = 100;
+	sa_loop = 1;
+	sa_play_sample = false;
+	sa_play_original = false;
+	sa_play_default = false;
+	sa_do_nothing = false;
+	sa_stop = false;
 				
 	if(outrun_start == true) {
 		sa_play_sample = true;
@@ -2147,11 +2118,7 @@ void generate_ost_sound_outrun(int data)
 	}
 
 	if(sa_play_sample == true) {
-		a = 0;
-
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+		ost_stop_samples();
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
@@ -2178,12 +2145,8 @@ void generate_ost_sound_outrun(int data)
 	else if(outrun_do_nothing == true) {
 		// --> Do nothing.
 	}
-	else if(outrun_stop_samples == true) {
-		a = 0;
-
-		for(a = 0; a <= o_max_samples; a++) {
-			sample_stop(a);
-		}
+	else if(sa_stop == true) {
+		ost_stop_samples();
 
 		// Now play the default sound.
 		sound_shared_ram[0]=data&0xff;
