@@ -690,14 +690,14 @@ bool generate_ost_sound_ffight(int data)
 
 	/* Determine how we should mix these samples together.*/
 	if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
-		sample_set_stereo_volume(1, 100, 100);
+		sample_set_stereo_volume(1, sa_volume, sa_volume);
 	}
 	else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
-		sample_set_stereo_volume(0, 100, 100);
+		sample_set_stereo_volume(0, sa_volume, sa_volume);
 	}
 	else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
-		sample_set_stereo_volume(0, 100, 0);
-		sample_set_stereo_volume(1, 0, 100);
+		sample_set_stereo_volume(0, sa_volume, 0);
+		sample_set_stereo_volume(1, 0, sa_volume);
 	}
 	else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
 		schedule_default_sound = true;
@@ -1140,14 +1140,14 @@ bool generate_ost_sound_mk(int data)
 			
 		/* Determine how we should mix these samples together.*/
 		if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(1, 100, 100);
+			sample_set_stereo_volume(1, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(0, 100, 100);
+			sample_set_stereo_volume(0, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
-			sample_set_stereo_volume(0, 100, 0);
-			sample_set_stereo_volume(1, 0, 100);
+			sample_set_stereo_volume(0, sa_volume, 0);
+			sample_set_stereo_volume(1, 0, sa_volume);
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
@@ -1444,14 +1444,14 @@ bool generate_ost_sound_mk_tunit(int data)
 			
 		/* Determine how we should mix these samples together.*/
 		if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(1, 100, 100);
+			sample_set_stereo_volume(1, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(0, 100, 100);
+			sample_set_stereo_volume(0, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
-			sample_set_stereo_volume(0, 100, 0);
-			sample_set_stereo_volume(1, 0, 100);
+			sample_set_stereo_volume(0, sa_volume, 0);
+			sample_set_stereo_volume(1, 0, sa_volume);
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
@@ -1963,14 +1963,14 @@ bool generate_ost_sound_nba_jam(int data)
 			
 		/* Determine how we should mix these samples together.*/
 		if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(1, 100, 100);
+			sample_set_stereo_volume(1, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
-			sample_set_stereo_volume(0, 100, 100);
+			sample_set_stereo_volume(0, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
-			sample_set_stereo_volume(0, 100, 0);
-			sample_set_stereo_volume(1, 0, 100);
+			sample_set_stereo_volume(0, sa_volume, 0);
+			sample_set_stereo_volume(1, 0, sa_volume);
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
@@ -2103,14 +2103,14 @@ bool generate_ost_sound_outrun(int data)
 			
 		// Determine how we should mix these samples together.
 		if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
-			sample_set_stereo_volume(1, 100, 100);
+			sample_set_stereo_volume(1, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
-			sample_set_stereo_volume(0, 100, 100);
+			sample_set_stereo_volume(0, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
-			sample_set_stereo_volume(0, 100, 0);
-			sample_set_stereo_volume(1, 0, 100);
+			sample_set_stereo_volume(0, sa_volume, 0);
+			sample_set_stereo_volume(1, 0, sa_volume);
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { // No sample playing, revert to the default sound.
 			sa_play_original = false;
