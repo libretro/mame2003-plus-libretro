@@ -5,6 +5,8 @@
 *********************************************************************/
 
 
+extern bool     schedule_default_sound;
+
 extern bool     ddragon_playing;
 extern int      ddragon_current_music;
 extern int      ddragon_stage;
