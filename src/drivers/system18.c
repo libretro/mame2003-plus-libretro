@@ -1322,6 +1322,7 @@ static MACHINE_DRIVER_START( moonwalk )
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
 	moonwalker_playing = true;
 	moon_diddy = false;
+	mj_current_sample = 0;
 MACHINE_DRIVER_END
 
 
