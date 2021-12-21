@@ -24,6 +24,12 @@ extern bool     nba_jam_boot_up;
 extern bool     nba_jam_playing_title_music;
 
 extern bool     outrun_playing;
+extern bool     outrun_start;
+extern bool     outrun_diddy;
+extern bool     outrun_title_diddy;
+extern bool     outrun_title;
+extern bool     outrun_lastwave;
+extern int      outrun_start_counter;
 
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
