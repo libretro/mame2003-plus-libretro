@@ -37,6 +37,7 @@ extern bool     outrun_title;
 extern bool     outrun_lastwave;
 extern int      outrun_start_counter;
 
+
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
 extern struct Samplesinterface ost_mk;
