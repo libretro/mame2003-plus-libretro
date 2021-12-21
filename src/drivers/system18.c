@@ -324,7 +324,7 @@ static WRITE16_HANDLER( sound_command_nmi_w ){
 
 	if( ACCESSING_LSB ){
 		if(moonwalker_playing && options.use_samples) {
-			if(generate_ost_sound_moonwalker( data ) == 0) {
+			if(generate_ost_sound_moonwalker( data )) {
 				soundlatch_w( 0,data&0xff );
 				cpu_set_nmi_line(1, PULSE_LINE);
 			}
