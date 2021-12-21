@@ -48,12 +48,12 @@ bool     nba_jam_boot_up;
 bool     nba_jam_playing_title_music;
 
 bool     outrun_playing = false;
-bool     outrun_start;
-bool     outrun_diddy;
-bool     outrun_title_diddy;
-bool     outrun_title;
-bool     outrun_lastwave;
-int      outrun_start_counter;
+bool     outrun_start = false;
+bool     outrun_diddy = false;
+bool     outrun_title_diddy = false;
+bool     outrun_title = false;
+bool     outrun_lastwave = false;
+int      outrun_start_counter = 0;
 
 
 /* ost functions */
