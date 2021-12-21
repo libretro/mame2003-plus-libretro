@@ -534,47 +534,47 @@ bool generate_ost_sound_ffight(int data)
 		/* stage 1 upper level music*/
 		case 0x40:
 			/* Play the left channel.*/
-			sample_start(0, 0, 1);
+			sample_start(0, 0, sa_loop);
 
 			/* Play the right channel.*/
-			sample_start(1, 1, 1);
+			sample_start(1, 1, sa_loop);
 		break;
 
 		/* stage #1: basement*/
 		case 0x41:
-			sample_start(0, 2, 1);
-			sample_start(1, 3, 1);
+			sample_start(0, 2, sa_loop);
+			sample_start(1, 3, sa_loop);
 		break;
 
 		/* stage #2: subway intro*/
 		case 0x42:
 			/* play the normal version of the song unless playAlternateSong is true*/
 			if (ff_play_alternate_song == false) {
-				sample_start(0, 4, 1);
-				sample_start(1, 5, 1);
+				sample_start(0, 4, sa_loop);
+				sample_start(1, 5, sa_loop);
 			}
 			else {
-				sample_start(0, 40, 1);
-				sample_start(1, 41, 1);
+				sample_start(0, 40, sa_loop);
+				sample_start(1, 41, sa_loop);
 			}
 		break;
 
 		/* stage #2 exiting subway/alley*/
 		case 0x43:
-			sample_start(0, 6, 1);
-			sample_start(1, 7, 1);
+			sample_start(0, 6, sa_loop);
+			sample_start(1, 7, sa_loop);
 		break;
 
 		/* double andore cage fight music*/
 		case 0x44:
-			sample_start(0, 8, 1);
-			sample_start(1, 9, 1);
+			sample_start(0, 8, sa_loop);
+			sample_start(1, 9, sa_loop);
 		break;
 
 		/* bay area sea side theme*/
 		case 0x45:
-			sample_start(0, 10, 1);
-			sample_start(1, 11, 1);
+			sample_start(0, 10, sa_loop);
+			sample_start(1, 11, sa_loop);
 
 			/* we'll provision the alternate songs if they're not already*/
 			if (ff_provision_alt_song == false) {
@@ -584,45 +584,46 @@ bool generate_ost_sound_ffight(int data)
 
 		/* bathroom music for bay area*/
 		case 0x46:
-			sample_start(0, 12, 1);
-			sample_start(1, 13, 1);
+			sample_start(0, 12, sa_loop);
+			sample_start(1, 13, sa_loop);
 		break;
 
 		/* bay area post-bathroom ending/boss / final boss room entrance*/
 		case 0x47:
 			/* play the normal version of the song unless playAlternateSong is true*/
 			if (ff_provision_alt_song == false) {
-				sample_start(0, 14, 1);
-				sample_start(1, 15, 1);
+				sample_start(0, 14, sa_loop);
+				sample_start(1, 15, sa_loop);
 			}
 			else {
-				sample_start(0, 36, 1);
-				sample_start(1, 37, 1);
+				sample_start(0, 36, sa_loop);
+				sample_start(1, 37, sa_loop);
 			}
 		break;
 
 		/* bonus stage music*/
 		case 0x4c:
-			sample_start(0, 20, 1);
-			sample_start(1, 21, 1);
+			sample_start(0, 20, sa_loop);
+			sample_start(1, 21, sa_loop);
 		break;
 
 		/* industrial music theme*/
 		case 0x48:
-			sample_start(0, 16, 1);
-			sample_start(1, 17, 1);
+			sample_start(0, 16, sa_loop);
+			sample_start(1, 17, sa_loop);
 		break;
 
 		/* industrial zone elevator ride music*/
 		case 0x49:
-			sample_start(0, 18, 1);
-			sample_start(1, 19, 1);
+			sample_start(0, 18, sa_loop);
+			sample_start(1, 19, sa_loop);
 		break;
 
 		/* game start ditty*/
 		case 0x50:
-			sample_start(0, 22, 0);
-			sample_start(1, 23, 0);
+			sa_loop = 0;
+			sample_start(0, 22, sa_loop);
+			sample_start(1, 23, sa_loop);
 
 			/* when the game starts, we'll reset all the alternate songs*/
 			ff_provision_alt_song = false;
@@ -631,38 +632,42 @@ bool generate_ost_sound_ffight(int data)
 
 		/* post explosion ditty*/
 		case 0x51:
-			sample_start(0, 24, 0);
-			sample_start(1, 25, 0);
+			sa_loop = 0;
+			sample_start(0, 24, sa_loop);
+			sample_start(1, 25, sa_loop);
 		break;
 
 		/* opening cinematic song*/
 		case 0x52:
-			sample_start(0, 46, 0);
-			sample_start(1, 47, 0);
+			sa_loop = 0;
+			sample_start(0, 46, sa_loop);
+			sample_start(1, 47, sa_loop);
 		break;
 
 		/* continue/dynamite song*/
 		case 0x53:
-			sample_start(0, 32, 1);
-			sample_start(1, 33, 1);
+			sample_start(0, 32, sa_loop);
+			sample_start(1, 33, sa_loop);
 		break;
 
 		/* homosexual cheesy ending music*/
 		case 0x54:
-			sample_start(0, 48, 1);
-			sample_start(1, 49, 1);
+			sample_start(0, 48, sa_loop);
+			sample_start(1, 49, sa_loop);
 		break;
 
 		/* player select song*/
 		case 0x55:
-			sample_start(0, 30, 0);
-			sample_start(1, 31, 0);
+			sa_loop = 0;
+			sample_start(0, 30, sa_loop);
+			sample_start(1, 31, sa_loop);
 		break;
 
 		/* stage end/victory song*/
 		case 0x57:
-			sample_start(0, 28, 0);
-			sample_start(1, 29, 0);
+			sa_loop = 0;
+			sample_start(0, 28, sa_loop);
+			sample_start(1, 29, sa_loop);
 
 			/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
 			if (ff_provision_alt_song == true) {
@@ -672,8 +677,9 @@ bool generate_ost_sound_ffight(int data)
 
 		/* final stage clear ditty*/
 		case 0x58:
-			sample_start(0, 26, 0);
-			sample_start(1, 27, 0);
+			sa_loop = 0;
+			sample_start(0, 26, sa_loop);
+			sample_start(1, 27, sa_loop);
 
 			ff_provision_alt_song = false;
 			ff_play_alternate_song = false;
