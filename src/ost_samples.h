@@ -6,6 +6,8 @@
 
 
 extern bool     schedule_default_sound;
+extern int      m_nba_last_offset;
+extern int      m_nba_start_counter;
 
 extern bool     ddragon_playing;
 extern int      ddragon_current_music;
