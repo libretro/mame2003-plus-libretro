@@ -59,6 +59,7 @@ int      outrun_start_counter = 0;
 /* ost functions */
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
+static void ost_default_config(void);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -323,18 +324,26 @@ static void ost_mix_samples(void)
 }
 
 
+static void ost_default_config(void)
+{
+  sa_volume = 100;
+  sa_loop = 1;
+  sa_play_sample = false;
+  sa_play_original = false;
+  sa_do_nothing = false;
+  sa_stop = false;
+  schedule_default_sound = false;
+}
+
+
 bool generate_ost_sound_ddragon(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 23;
 	sa_left = 0;
 	sa_right = 1;
 	sa_volume = 40;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 
 	switch(data) {
 		// Use for a counter flag on the title screen and stopping music.
@@ -516,10 +525,9 @@ bool generate_ost_sound_ddragon(int data)
 
 bool generate_ost_sound_ffight(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 50;
-	sa_volume = 100;
-	sa_do_nothing = false;
-	schedule_default_sound = false;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -700,16 +708,11 @@ bool generate_ost_sound_ffight(int data)
 
 bool generate_ost_sound_mk(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 55;
 	sa_left = 0;
 	sa_right = 1;
-	sa_volume = 100;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1166,16 +1169,11 @@ bool generate_ost_sound_mk(int data)
 
 bool generate_ost_sound_mk_tunit(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 55;
 	sa_left = 0;
 	sa_right = 1;
-	sa_volume = 100;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1477,16 +1475,11 @@ bool generate_ost_sound_moonwalker(int data)
 {
 	int mj_fade = 30;
 
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 12;
 	sa_left = 0;
 	sa_right = 1;
-	sa_volume = 100;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 
 	switch (data) {
 		// Reset music. Title screen.
@@ -1725,16 +1718,11 @@ bool generate_ost_sound_moonwalker(int data)
 
 bool generate_ost_sound_nba_jam(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 13;
 	sa_left = 0;
 	sa_right = 1;
-	sa_volume = 100;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 
 	switch (data) {
 		case 0x8C:
@@ -2009,16 +1997,11 @@ bool generate_ost_sound_nba_jam(int data)
 
 bool generate_ost_sound_outrun(int data)
 {
+	/* initialize game config */
+	ost_default_config();
 	sa_count = 12;
 	sa_left = 0;
 	sa_right = 1;
-	sa_volume = 100;
-	sa_loop = 1;
-	sa_play_sample = false;
-	sa_play_original = false;
-	sa_do_nothing = false;
-	sa_stop = false;
-	schedule_default_sound = false;
 				
 	if(outrun_start == true) {
 		sa_play_sample = true;
