@@ -700,8 +700,9 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 		generate_ost_sound_outrun( data );
 		if(schedule_default_sound) sound_shared_ram[0]=data&0xff;
 	}
-	else
+	else {
 		sound_shared_ram[0]=data&0xff;
+	}
 }
 
 static WRITE16_HANDLER( outrun_ctrl2_w )
