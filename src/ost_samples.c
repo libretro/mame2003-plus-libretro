@@ -15,7 +15,6 @@ static int  sa_right;
 static int  sa_volume;
 static bool sa_loop;
 static bool sa_play_sample;
-static bool sa_play_original;
 static bool sa_do_nothing;
 static bool sa_stop;
 static bool schedule_default_sound;
@@ -338,7 +337,6 @@ static bool ost_mix_samples(void)
   }
 
   else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { /* No sample playing, revert to the default sound.*/
-    sa_play_original = false;
     schedule_default_sound = true;
     ost_sample_is_playing = 0;
   }
@@ -352,7 +350,6 @@ static void ost_default_config(void)
   sa_volume = 100;
   sa_loop = 1;
   sa_play_sample = false;
-  sa_play_original = false;
   sa_do_nothing = false;
   sa_stop = false;
   schedule_default_sound = false;
@@ -511,11 +508,6 @@ bool generate_ost_sound_ddragon(int data)
 
 		if( ost_mix_samples() == 0 ) {
 			ddragon_current_music = 0;
-		}
-
-		if(sa_play_original == true) {
-			ddragon_current_music = 0;
-			schedule_default_sound = true;
 		}
 	}
 	else if(sa_do_nothing == true) {
@@ -1146,9 +1138,6 @@ bool generate_ost_sound_mk(int data)
 		if( ost_mix_samples() == 0 ) {
 			/* samples not playing */
 		}
-
-		if(sa_play_original == true)
-			schedule_default_sound = true;
 	}
 	else if(sa_stop == true) {
 		ost_stop_samples();
@@ -1438,9 +1427,6 @@ bool generate_ost_sound_mk_tunit(int data)
 		if( ost_mix_samples() == 0 ) {
 			/* samples not playing */
 		}
-
-		if(sa_play_original == true)
-			schedule_default_sound = true;
 	}
 	else if(sa_stop == true) {
 		ost_stop_samples();
@@ -1485,16 +1471,20 @@ bool generate_ost_sound_moonwalker(int data)
 		case 0x86:
 			if(mj_current_music == 85)
 				sa_do_nothing = true;
-			else
-				sa_play_original = true;	
+			else {
+				mj_current_music = 0;
+				schedule_default_sound = true;
+			}
 			break;
 
 		// Title screen magic.
 		case 0x87:
 			if(mj_current_music == 85)
 				sa_do_nothing = true;
-			else
-				sa_play_original = true;
+			else {
+				mj_current_music = 0;
+				schedule_default_sound = true;
+			}
 			break;
 										
 		// Stage 1 and Stage 5. Bad.
@@ -1660,11 +1650,6 @@ bool generate_ost_sound_moonwalker(int data)
 				
 		if( ost_mix_samples() == 0 ) {
 			mj_current_music = 0;
-		}
-
-		if(sa_play_original == true) {
-			mj_current_music = 0;
-			schedule_default_sound = true;
 		}
 	}
 	else if(sa_do_nothing == true) {
@@ -1930,9 +1915,6 @@ bool generate_ost_sound_nba_jam(int data)
 		if( ost_mix_samples() == 0 ) {
 			/* samples not playing */
 		}
-
-		if(sa_play_original == true)
-			schedule_default_sound = true;
 	}
 	else if(sa_do_nothing == true) {
 		/* --> Do nothing.*/
@@ -2058,9 +2040,6 @@ bool generate_ost_sound_outrun(int data)
 		if( ost_mix_samples() == 0 ) {
 			/* samples not playing */
 		}
-
-		if(sa_play_original == true)
-			schedule_default_sound = true;
 	}
 	else if(sa_do_nothing == true) {
 		// --> Do nothing.
