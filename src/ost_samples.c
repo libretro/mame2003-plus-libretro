@@ -8,7 +8,7 @@
 #include "ost_samples.h"
 
 
-/* universal */
+/* ost configuration */
 static int  sa_count;
 static int  sa_left;
 static int  sa_right;
@@ -16,12 +16,13 @@ static int  sa_volume;
 static bool sa_loop;
 static bool sa_play_sample;
 static bool sa_play_original;
-static bool sa_play_default;
 static bool sa_do_nothing;
 static bool sa_stop;
 
 
 /* game specific */
+bool     schedule_default_sound;
+
 bool     ddragon_playing = false;
 int      ddragon_current_music = 0;
 int      ddragon_stage = 0;
@@ -331,9 +332,9 @@ void generate_ost_sound_ddragon(int data)
 	sa_loop = 1;
 	sa_play_sample = false;
 	sa_play_original = false;
-	sa_play_default = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 
 	switch(data) {
 		// Use for a counter flag on the title screen and stopping music.
@@ -466,8 +467,7 @@ void generate_ost_sound_ddragon(int data)
 		break;
 
 		default:
-			soundlatch_w( 0, data );
-			cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			schedule_default_sound = true;
 		break;
 	}
 
@@ -491,14 +491,12 @@ void generate_ost_sound_ddragon(int data)
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && ddragon_do_nothing == false) { // No sample playing, revert to the default sound.
 			sa_play_original = false;
 			ddragon_current_music = 0;
-			soundlatch_w( 0, data );
-			cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true) {
 			ddragon_current_music = 0;
-			soundlatch_w( 0, data );
-			cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			schedule_default_sound = true;
 		}
 	}
 	else if(ddragon_do_nothing == true) {
@@ -509,20 +507,18 @@ void generate_ost_sound_ddragon(int data)
 		ost_stop_samples();
 
 		// Now play the default sound.
-		soundlatch_w( 0, data );
-		cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+		schedule_default_sound = true;
 	}
-	else if(ddragon_play_default == true) {
-		ddragon_current_music = 0;
-		soundlatch_w( 0, data );
-		cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
-	}
+
+// Fix me 	ddragon_current_music = 0;
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_ffight(int data)
 {
 	sa_count = 50;
 	sa_volume = 100;
+	schedule_default_sound = false;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -674,8 +670,7 @@ void generate_ost_sound_ffight(int data)
 		break;
 
 		default:
-			if(ACCESSING_LSB)
-				soundlatch_w(0,data & 0xff);
+			schedule_default_sound = true;
 
 			/* Lets stop the Final Fight sample music.*/
 			if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
@@ -696,10 +691,10 @@ void generate_ost_sound_ffight(int data)
 		sample_set_stereo_volume(1, 0, 100);
 	}
 	else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
-		if(ACCESSING_LSB) {
-			soundlatch_w(0,data & 0xff);
-		}
+		schedule_default_sound = true;
 	}
+
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_mk(int data)
@@ -713,6 +708,7 @@ void generate_ost_sound_mk(int data)
 	sa_play_original = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1123,7 +1119,7 @@ void generate_ost_sound_mk(int data)
 			break;								
 																
 		default:
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 
 			/* Time to stop the Mortal Kombat music samples.*/
 			if(data == 0xFD00 || data == 0xFF00) {
@@ -1151,18 +1147,20 @@ void generate_ost_sound_mk(int data)
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && mk_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true)
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 	}
 	else if(sa_stop == true) {
 		ost_stop_samples();
 
 		/* Now play the default sound.*/
-		soundlatch_w(0, data & 0xff);
+		schedule_default_sound = true;
 	}
+
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_mk_tunit(int data)
@@ -1176,6 +1174,7 @@ void generate_ost_sound_mk_tunit(int data)
 	sa_play_original = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1429,7 +1428,7 @@ void generate_ost_sound_mk_tunit(int data)
 			break;								
 																
 		default:
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 
 			/* Time to stop the Mortal Kombat music samples.*/
 			if(data == 0x0) {
@@ -1457,18 +1456,20 @@ void generate_ost_sound_mk_tunit(int data)
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && mk_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true)
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 	}
 	else if(sa_stop == true) {
 		ost_stop_samples();
 
 		/* Now play the default sound.*/
-		soundlatch_w(0, data & 0xff);
+		schedule_default_sound = true;
 	}
+
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_moonwalker(int data)
@@ -1482,9 +1483,9 @@ void generate_ost_sound_moonwalker(int data)
 	sa_loop = 1;
 	sa_play_sample = false;
 	sa_play_original = false;
-	sa_play_default = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 
 	switch (data) {
 		// Reset music. Title screen.
@@ -1600,7 +1601,7 @@ void generate_ost_sound_moonwalker(int data)
 							
 		// Special move music diddy.
 		case 0xFA:
-			moonwalker_play_default = true;
+			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
@@ -1618,7 +1619,7 @@ void generate_ost_sound_moonwalker(int data)
 
 		// Special move music diddy.
 		case 0xFB:
-			moonwalker_play_default = true;
+			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
@@ -1636,7 +1637,7 @@ void generate_ost_sound_moonwalker(int data)
 
 		// Special move music diddy.
 		case 0xF6:
-			moonwalker_play_default = true;
+			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
@@ -1654,7 +1655,7 @@ void generate_ost_sound_moonwalker(int data)
 
 		// Special move "owww" sound effect. This plays after the special move has always finished.
 		case 0xC3:
-			moonwalker_play_default = true;
+			schedule_default_sound = true;
 						
 			if(moon_diddy == true) {
 				moon_diddy = false;
@@ -1674,9 +1675,7 @@ void generate_ost_sound_moonwalker(int data)
 			break;
 				
 		default:
-			soundlatch_w( 0,data&0xff );
-			cpu_set_nmi_line(1, PULSE_LINE);
-
+			schedule_default_sound = true;
 			break;
 	}
 
@@ -1700,14 +1699,12 @@ void generate_ost_sound_moonwalker(int data)
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && moonwalker_do_nothing == false) { // No sample playing, revert to the default sound.
 			sa_play_original = false;
 			mj_current_music = 0;
-			soundlatch_w( 0,data&0xff );
-			cpu_set_nmi_line(1, PULSE_LINE);
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true) {
 			mj_current_music = 0;
-			soundlatch_w( 0,data&0xff );
-			cpu_set_nmi_line(1, PULSE_LINE);
+			schedule_default_sound = true;
 		}
 	}
 	else if(moonwalker_do_nothing == true) {
@@ -1718,14 +1715,11 @@ void generate_ost_sound_moonwalker(int data)
 		ost_stop_samples();
 
 		// Now play the default sound.
-		soundlatch_w( 0,data&0xff );
-		cpu_set_nmi_line(1, PULSE_LINE);
+		schedule_default_sound = true;
 	}
-	else if(moonwalker_play_default == true) {
-		mj_current_music = 0;
-		soundlatch_w( 0,data&0xff );
-		cpu_set_nmi_line(1, PULSE_LINE);
-	}
+
+// Fix me	mj_current_music = 0;
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_nba_jam(int data)
@@ -1737,9 +1731,9 @@ void generate_ost_sound_nba_jam(int data)
 	sa_loop = 1;
 	sa_play_sample = false;
 	sa_play_original = false;
-	sa_play_default = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 
 	switch (data) {
 		case 0x8C:
@@ -1959,11 +1953,11 @@ void generate_ost_sound_nba_jam(int data)
 			if(nba_jam_select_screen == true)
 				nba_jam_do_nothing = true;
 			else
-				nba_jam_play_default = true;
+				schedule_default_sound = true;
 			break;
 			
 		default:
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 
 			/* Time to stop the NBA Jam music samples.*/
 			if(data == 0x0 && nba_jam_title_screen == false) {
@@ -1991,11 +1985,11 @@ void generate_ost_sound_nba_jam(int data)
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && nba_jam_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 			sa_play_original = false;
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true)
-			soundlatch_w(0, data & 0xff);
+			schedule_default_sound = true;
 	}
 	else if(nba_jam_do_nothing == true) {
 		/* --> Do nothing.*/
@@ -2004,12 +1998,12 @@ void generate_ost_sound_nba_jam(int data)
 		ost_stop_samples();
 
 		/* Now play the default sound.*/
-		soundlatch_w(0, data & 0xff);
+		schedule_default_sound = true;
 	}
-	else if(nba_jam_play_default == true)
-		soundlatch_w(0, data & 0xff);
 
 	m_nba_last_offset = data;
+
+	return schedule_default_sound;
 }
 
 void generate_ost_sound_outrun(int data)
@@ -2021,9 +2015,9 @@ void generate_ost_sound_outrun(int data)
 	sa_loop = 1;
 	sa_play_sample = false;
 	sa_play_original = false;
-	sa_play_default = false;
 	sa_do_nothing = false;
 	sa_stop = false;
+	schedule_default_sound = false;
 				
 	if(outrun_start == true) {
 		sa_play_sample = true;
@@ -2113,7 +2107,7 @@ void generate_ost_sound_outrun(int data)
 			break;
 
 		default:
-			sound_shared_ram[0]=data&0xff;
+			schedule_default_sound = true;
 			break;
 	}
 
@@ -2136,11 +2130,11 @@ void generate_ost_sound_outrun(int data)
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && outrun_do_nothing == false) { // No sample playing, revert to the default sound.
 			sa_play_original = false;
-			sound_shared_ram[0]=data&0xff;
+			schedule_default_sound = true;
 		}
 
 		if(sa_play_original == true)
-			sound_shared_ram[0]=data&0xff;
+			schedule_default_sound = true;
 	}
 	else if(outrun_do_nothing == true) {
 		// --> Do nothing.
@@ -2149,9 +2143,8 @@ void generate_ost_sound_outrun(int data)
 		ost_stop_samples();
 
 		// Now play the default sound.
-		sound_shared_ram[0]=data&0xff;
+		schedule_default_sound = true;
 	}
-	else if(outrun_play_default == true) {
-		sound_shared_ram[0]=data&0xff;
-	}
+
+	return schedule_default_sound;
 }
