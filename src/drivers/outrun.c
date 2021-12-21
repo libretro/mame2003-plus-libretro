@@ -698,9 +698,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 {
 	if(outrun_playing && options.use_samples) {
 		generate_ost_sound_outrun( data );
-		if(schedule_default_sound) {
-			sound_shared_ram[0]=data&0xff;
-		}
+		if(schedule_default_sound) sound_shared_ram[0]=data&0xff;
 	}
 	else
 		sound_shared_ram[0]=data&0xff;
