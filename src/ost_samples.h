@@ -9,15 +9,21 @@ extern bool     schedule_default_sound;
 extern int      m_nba_last_offset;
 extern int      m_nba_start_counter;
 
-
 extern bool     ddragon_playing;
 extern bool     ff_playing_final_fight;
 extern bool     mk_playing_mortal_kombat;
 extern bool     mk_playing_mortal_kombat_t;
 extern bool     moonwalker_playing;
-extern bool     nba_jam_playing;
-extern bool     outrun_playing;
 
+extern bool     nba_jam_playing;
+extern bool     nba_jam_title_screen;
+extern bool     nba_jam_select_screen;
+extern bool     nba_jam_intermission;
+extern bool     nba_jam_in_game;
+extern bool     nba_jam_boot_up;
+extern bool     nba_jam_playing_title_music;
+
+extern bool     outrun_playing;
 
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
