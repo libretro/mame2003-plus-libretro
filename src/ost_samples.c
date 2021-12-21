@@ -20,13 +20,13 @@ static bool sa_do_nothing;
 static bool sa_stop;
 
 
-/* game specific */
+/* game specific - initialized by the driver */
 bool     schedule_default_sound;
 
 bool     ddragon_playing = false;
-int      ddragon_current_music = 0;
-int      ddragon_stage = 0;
-int      d_title_counter = 0;
+int      ddragon_current_music;
+int      ddragon_stage;
+int      d_title_counter;
 
 bool     ff_playing_final_fight = false;
 bool     ff_provision_alt_song;
@@ -36,9 +36,9 @@ bool     mk_playing_mortal_kombat = false;
 bool     mk_playing_mortal_kombat_t = false;
 
 bool     moonwalker_playing = false;
-bool     moon_diddy = false;
-int      mj_current_music = 0;
-int      mj_fade = 30;
+bool     moon_diddy;
+int      mj_current_music;
+int      mj_fade = 30; /* static value */
 
 bool     nba_jam_playing = false;
 bool     nba_jam_title_screen;
@@ -49,12 +49,12 @@ bool     nba_jam_boot_up;
 bool     nba_jam_playing_title_music;
 
 bool     outrun_playing = false;
-bool     outrun_start = false;
-bool     outrun_diddy = false;
-bool     outrun_title_diddy = false;
-bool     outrun_title = false;
-bool     outrun_lastwave = false;
-int      outrun_start_counter = 0;
+bool     outrun_start;
+bool     outrun_diddy;
+bool     outrun_title_diddy;
+bool     outrun_title;
+bool     outrun_lastwave;
+int      outrun_start_counter;
 
 
 /* ost functions */
