@@ -38,6 +38,7 @@ bool     mk_playing_mortal_kombat_t = false;
 bool     moonwalker_playing = false;
 bool     moon_diddy = false;
 int      mj_current_music = 0;
+int      mj_fade = 30;
 
 bool     nba_jam_playing = false;
 bool     nba_jam_title_screen;
@@ -1473,8 +1474,6 @@ bool generate_ost_sound_mk_tunit(int data)
 
 bool generate_ost_sound_moonwalker(int data)
 {
-	int mj_fade = 30;
-
 	/* initialize game config */
 	ost_default_config();
 	sa_count = 12;
@@ -1656,14 +1655,14 @@ bool generate_ost_sound_moonwalker(int data)
 
 				// The special move is finished, lets return the level music volume back to 100%.
 				if(sample_playing(0) == 0 && sample_playing(1) == 1) {
-					sample_set_stereo_volume(1, 100, 100);
+					sample_set_stereo_volume(1, sa_volume, sa_volume);
 				}
 				else if(sample_playing(0) == 1 && sample_playing(1) == 0) {
-					sample_set_stereo_volume(0, 100, 100);
+					sample_set_stereo_volume(0, sa_volume, sa_volume);
 				}
 				else if(sample_playing(0) == 1 && sample_playing(1) == 1) {
-					sample_set_stereo_volume(0, 100, 0);
-					sample_set_stereo_volume(1, 0, 100);
+					sample_set_stereo_volume(0, sa_volume, 0);
+					sample_set_stereo_volume(1, 0, sa_volume);
 				}							
 			}						
 			break;
@@ -1681,14 +1680,14 @@ bool generate_ost_sound_moonwalker(int data)
 				
 		// Determine how we should mix these samples together.
 		if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
-			sample_set_stereo_volume(1, 100, 100);
+			sample_set_stereo_volume(1, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
-			sample_set_stereo_volume(0, 100, 100);
+			sample_set_stereo_volume(0, sa_volume, sa_volume);
 		}
 		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
-			sample_set_stereo_volume(0, 100, 0);
-			sample_set_stereo_volume(1, 0, 100);
+			sample_set_stereo_volume(0, sa_volume, 0);
+			sample_set_stereo_volume(1, 0, sa_volume);
 		}
 		else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { // No sample playing, revert to the default sound.
 			sa_play_original = false;
