@@ -18,11 +18,10 @@ static bool sa_play_sample;
 static bool sa_play_original;
 static bool sa_do_nothing;
 static bool sa_stop;
+static bool schedule_default_sound;
 
 
 /* game specific - initialized by the driver */
-bool     schedule_default_sound;
-
 bool     ddragon_playing = false;
 int      ddragon_current_music;
 int      ddragon_stage;
