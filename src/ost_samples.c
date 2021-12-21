@@ -15,7 +15,6 @@ static int  sa_right;
 static int  sa_volume;
 static bool sa_loop;
 static bool sa_play_sample;
-static bool sa_do_nothing;
 static bool sa_stop;
 static bool schedule_default_sound;
 
@@ -336,7 +335,7 @@ static bool ost_mix_samples(void)
     sample_set_stereo_volume(1, 0, sa_volume);
   }
 
-  else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sa_do_nothing == false) { /* No sample playing, revert to the default sound.*/
+  else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
     schedule_default_sound = true;
     ost_sample_is_playing = 0;
   }
@@ -350,7 +349,6 @@ static void ost_default_config(void)
   sa_volume = 100;
   sa_loop = 1;
   sa_play_sample = false;
-  sa_do_nothing = false;
   sa_stop = false;
   schedule_default_sound = false;
 }
@@ -400,7 +398,7 @@ bool generate_ost_sound_ddragon(int data)
 				sa_right = 23;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 
 			d_title_counter = 0;
 		break;
@@ -438,7 +436,7 @@ bool generate_ost_sound_ddragon(int data)
 				sa_right = 9;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 		break;
 
 		// Stage 4.
@@ -510,9 +508,7 @@ bool generate_ost_sound_ddragon(int data)
 			ddragon_current_music = 0;
 		}
 	}
-	else if(sa_do_nothing == true) {
-		// --> Do nothing.
-	}
+
 	else if(sa_stop == true) {
 		ddragon_current_music = 0;
 		ost_stop_samples();
@@ -713,8 +709,7 @@ bool generate_ost_sound_mk(int data)
 	switch (data) {
 		/* Intro title screen diddy*/
 		case 0xFD13:
-			/* --> Do nothing.*/
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Intro title screen diddy*/
@@ -728,8 +723,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Second player joining diddy*/
 		case 0xFD18:
-			/* --> Do nothing.*/
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Second player joining diddy*/
@@ -743,7 +737,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Character selection screen.*/
 		case 0xFD01:
-			sa_do_nothing = true; /* --> Do nothing.*/
+			return 0; /* do nothing */
 			break;
 
 		/* Character selection screen.*/
@@ -755,7 +749,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map*/
 		case 0xFD12:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Scrolling character map*/
@@ -768,17 +762,17 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map end*/
 		case 0xFD1E:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Scrolling character map end*/
 		case 0xFF1E:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Continue music*/
 		case 0xFD06:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Continue music*/
@@ -791,7 +785,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Game over music*/
 		case 0xFD02:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Game over music*/
@@ -804,7 +798,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Test your might music.*/
 		case 0xFD19:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Test your might music.*/
@@ -817,7 +811,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Test your end (fail).*/
 		case 0xFD1A:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Test your end (fail).*/
@@ -831,7 +825,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Fatality music*/
 		case 0xFDEE:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Fatality music*/
@@ -845,17 +839,17 @@ bool generate_ost_sound_mk(int data)
 
 		/* Fatality music echo loop*/
 		case 0xFDDE:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Fatality music echo loop*/
 		case 0xFFDE:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Courtyard music*/
 		case 0xFD03:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Courtyard music*/
@@ -868,7 +862,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Courtyard end music*/
 		case 0xFD05:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Courtyard end music*/
@@ -882,7 +876,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Courtyard finish him music*/
 		case 0xFD04:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Courtyard finish him music*/
@@ -895,7 +889,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine music*/
 		case 0xFD0A:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Warrior Shrine music*/
@@ -908,7 +902,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine end music*/
 		case 0xFD0C:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Warrior Shrine end music*/
@@ -922,7 +916,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine finish him music*/
 		case 0xFD0B:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Warrior Shrine finish him music*/
@@ -935,7 +929,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit music*/
 		case 0xFD0D:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* The Pit music*/
@@ -948,7 +942,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit end music*/
 		case 0xFD0F:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* The Pit end music*/
@@ -962,7 +956,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit finish him music*/
 		case 0xFD0E:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* The Pit finish him music*/
@@ -975,7 +969,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room music*/
 		case 0xFD1B:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Throne Room music*/
@@ -988,7 +982,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room end music*/
 		case 0xFD1D:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Throne Room end music*/
@@ -1002,7 +996,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room finish him music*/
 		case 0xFD1C:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Throne Room finish him music*/
@@ -1015,7 +1009,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair music*/
 		case 0xFD14:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Goro's Lair music*/
@@ -1028,7 +1022,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair end music*/
 		case 0xFD17:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Goro's Lair end music*/
@@ -1042,7 +1036,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair finish him music*/
 		case 0xFD16:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Goro's Lair finish him music*/
@@ -1055,7 +1049,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Endurance switch characters chime*/
 		case 0xFD10:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Endurance switch characters chime*/
@@ -1068,7 +1062,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Victory music*/
 		case 0xFD1F:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Victory music*/
@@ -1081,7 +1075,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace gates music*/
 		case 0xFD07:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Palace gates music*/
@@ -1094,7 +1088,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace Gates end music*/
 		case 0xFD09:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Palace Gates end music*/
@@ -1108,7 +1102,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace Gates finish him music*/
 		case 0xFD08:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Palace Gates finish him music*/
@@ -1192,7 +1186,7 @@ bool generate_ost_sound_mk_tunit(int data)
 
 		/* Scrolling character map end*/
 		case 0x1E:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Continue music*/
@@ -1239,7 +1233,7 @@ bool generate_ost_sound_mk_tunit(int data)
 
 		/* Fatality music echo loop*/
 		case 0xDE:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Courtyard music*/
@@ -1463,13 +1457,13 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 11;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// Title screen magic.
 		case 0x86:
 			if(mj_current_music == 85)
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			else {
 				mj_current_music = 0;
 				schedule_default_sound = true;
@@ -1479,7 +1473,7 @@ bool generate_ost_sound_moonwalker(int data)
 		// Title screen magic.
 		case 0x87:
 			if(mj_current_music == 85)
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			else {
 				mj_current_music = 0;
 				schedule_default_sound = true;
@@ -1495,7 +1489,7 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 1;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// Stage 2. Smooth Criminal.
@@ -1507,7 +1501,7 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 3;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// Stage 3. Beat It.
@@ -1519,7 +1513,7 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 5;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// Stage 4. Thriller.
@@ -1531,7 +1525,7 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 7;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// Ending. Billie Jean.
@@ -1543,22 +1537,22 @@ bool generate_ost_sound_moonwalker(int data)
 				sa_right = 9;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		// First boss music
 		case 0x8B:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		// Second boss music
 		case 0x83:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		// Third boss music
 		case 0x8E:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		// Special move music diddy.
@@ -1651,9 +1645,7 @@ bool generate_ost_sound_moonwalker(int data)
 			mj_current_music = 0;
 		}
 	}
-	else if(sa_do_nothing == true) {
-		// --> Do nothing.
-	}
+
 	else if(sa_stop == true) {
 		mj_current_music = 0;
 		ost_stop_samples();
@@ -1675,7 +1667,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 	switch (data) {
 		case 0x8C:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		case 0x0:
@@ -1702,7 +1694,7 @@ bool generate_ost_sound_nba_jam(int data)
 					sa_right = 1; /* Right channel.*/
 				}
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
-					sa_do_nothing = true;
+					return 0; /* do nothing */
 				else
 					sa_stop = true;
 			}
@@ -1737,7 +1729,7 @@ bool generate_ost_sound_nba_jam(int data)
 					sa_right = 1; /* Right channel.*/
 				}
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
-					sa_do_nothing = true;
+					return 0; /* do nothing */
 				else
 					sa_stop = true;
 			}
@@ -1835,7 +1827,7 @@ bool generate_ost_sound_nba_jam(int data)
 			nba_jam_intermission = false;
 			nba_jam_in_game = false;
 			nba_jam_playing_title_music = false;
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Game stats after playing a full game.*/
@@ -1878,18 +1870,18 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* NBA Jam halftime report.*/
 		case 0x71:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Altitude with a attitude.*/
 		case 0xCC:
-			sa_do_nothing = true;
+			return 0; /* do nothing */
 			break;
 
 		/* Welcome to NBA Jam.*/
 		case 0xCB:
 			if(nba_jam_select_screen == true)
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			else
 				schedule_default_sound = true;
 			break;
@@ -1914,9 +1906,7 @@ bool generate_ost_sound_nba_jam(int data)
 			/* samples not playing */
 		}
 	}
-	else if(sa_do_nothing == true) {
-		/* --> Do nothing.*/
-	}
+
 	else if(sa_stop == true) {
 		ost_stop_samples();
 
@@ -2021,7 +2011,7 @@ bool generate_ost_sound_outrun(int data)
 				sa_right = 5;
 			}
 			else
-				sa_do_nothing = true;
+				return 0; /* do nothing */
 			break;
 
 		default:
@@ -2039,9 +2029,7 @@ bool generate_ost_sound_outrun(int data)
 			/* samples not playing */
 		}
 	}
-	else if(sa_do_nothing == true) {
-		// --> Do nothing.
-	}
+
 	else if(sa_stop == true) {
 		ost_stop_samples();
 
