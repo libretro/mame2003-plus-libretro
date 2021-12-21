@@ -3991,7 +3991,6 @@ MACHINE_DRIVER_END
 
 /* For Final Fight.*/
 static MACHINE_DRIVER_START( ffight_hack )
-	ff_playing_final_fight = true;
 	
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
@@ -3999,6 +3998,9 @@ static MACHINE_DRIVER_START( ffight_hack )
 	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
+	ff_playing_final_fight = true;
+	ff_provision_alt_song = false;
+	ff_play_alternate_song = false;
 MACHINE_DRIVER_END
 
 
