@@ -21,7 +21,7 @@ static bool sa_stop;
 
 
 /* game specific */
-bool     schedule_default_sound;
+static bool schedule_default_sound;
 
 bool     ddragon_playing = false;
 int      ddragon_current_music = 0;
