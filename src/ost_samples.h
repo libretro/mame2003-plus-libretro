@@ -13,7 +13,9 @@ extern bool     ddragon_playing;
 extern bool     ff_playing_final_fight;
 extern bool     mk_playing_mortal_kombat;
 extern bool     mk_playing_mortal_kombat_t;
+
 extern bool     moonwalker_playing;
+extern bool     moon_diddy;
 
 extern bool     nba_jam_playing;
 extern bool     nba_jam_title_screen;
