@@ -613,8 +613,9 @@ void williams_adpcm_data_w(int data)
 		generate_ost_sound_mk_tunit( data );
 		if(schedule_default_sound) soundlatch_w(0, data & 0xff);
 	}
-	else
+	else {
 		soundlatch_w(0, data & 0xff);
+	}
 
 	if (!(data & 0x200))
 	{
