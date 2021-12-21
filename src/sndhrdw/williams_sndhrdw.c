@@ -602,16 +602,13 @@ static READ_HANDLER( adpcm_command_r )
 void williams_adpcm_data_w(int data)
 {
 	if(nba_jam_playing && options.use_samples) {
-		generate_ost_sound_nba_jam( data );
-		if(schedule_default_sound) soundlatch_w(0, data & 0xff);
+		if(generate_ost_sound_nba_jam( data ) == 0) soundlatch_w(0, data & 0xff);
 	}
 	else if(mk_playing_mortal_kombat && options.use_samples) {
-		generate_ost_sound_mk( data );
-		if(schedule_default_sound) soundlatch_w(0, data & 0xff);
+		if(generate_ost_sound_mk( data ) == 0) soundlatch_w(0, data & 0xff);
 	}
 	else if(mk_playing_mortal_kombat_t && options.use_samples) {
-		generate_ost_sound_mk_tunit( data );
-		if(schedule_default_sound) soundlatch_w(0, data & 0xff);
+		if(generate_ost_sound_mk_tunit( data ) == 0) soundlatch_w(0, data & 0xff);
 	}
 	else {
 		soundlatch_w(0, data & 0xff);
