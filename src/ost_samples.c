@@ -9,7 +9,6 @@
 
 
 /* ost configuration */
-static int  sa_count;
 static int  sa_left;
 static int  sa_right;
 static int  sa_volume;
@@ -310,10 +309,8 @@ struct Samplesinterface ost_outrun =
 
 static void ost_stop_samples(void)
 {
-  int i;
-
-  for(i = 0; i <= sa_count; i++)
-    sample_stop(i);
+  sample_stop(0);
+  sample_stop(1);
 }
 
 
@@ -358,7 +355,6 @@ bool generate_ost_sound_ddragon(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 23;
 	sa_left = 0;
 	sa_right = 1;
 	sa_volume = 40;
@@ -524,7 +520,6 @@ bool generate_ost_sound_ffight(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 50;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -702,7 +697,6 @@ bool generate_ost_sound_mk(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 55;
 	sa_left = 0;
 	sa_right = 1;
 
@@ -1146,7 +1140,6 @@ bool generate_ost_sound_mk_tunit(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 55;
 	sa_left = 0;
 	sa_right = 1;
 
@@ -1435,7 +1428,6 @@ bool generate_ost_sound_moonwalker(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 12;
 	sa_left = 0;
 	sa_right = 1;
 
@@ -1661,7 +1653,6 @@ bool generate_ost_sound_nba_jam(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 13;
 	sa_left = 0;
 	sa_right = 1;
 
@@ -1923,7 +1914,6 @@ bool generate_ost_sound_outrun(int data)
 {
 	/* initialize game config */
 	ost_default_config();
-	sa_count = 12;
 	sa_left = 0;
 	sa_right = 1;
 
