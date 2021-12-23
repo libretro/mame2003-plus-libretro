@@ -54,8 +54,7 @@ int      outrun_start_counter;
 
 /* ost functions */
 static void ost_stop_samples(void);
-static void ost_stop_and_fallback(void);
-static bool ost_mix_samples(void);
+static void ost_mix_samples(void);
 static void ost_default_config(void);
 
 
@@ -314,17 +313,8 @@ static void ost_stop_samples(void)
 }
 
 
-static void ost_stop_and_fallback(void)
+static void ost_mix_samples(void)
 {
-  ost_stop_samples();
-  schedule_default_sound = true;
-}
-
-
-static bool ost_mix_samples(void)
-{
-  bool ost_sample_is_playing = 1;
-
   /* Determine how we should mix these samples together.*/
   if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
     sample_set_stereo_volume(1, sa_volume, sa_volume);
@@ -341,10 +331,10 @@ static bool ost_mix_samples(void)
 
   else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
     schedule_default_sound = true;
-    ost_sample_is_playing = 0;
-  }
 
-  return ost_sample_is_playing;
+    ddragon_current_music = 0;
+    mj_current_music = 0;
+  }
 }
 
 
@@ -372,7 +362,7 @@ bool generate_ost_sound_ddragon(int data)
 			if(ddragon_current_music == 10 && ddragon_stage != 4) {
 				// A coin has been inserted, lets stop the title music, about to start the first stage.
 				if(d_title_counter > 5) {
-					ost_stop_and_fallback();
+					ost_stop_samples();
 					ddragon_current_music = 0;
 					d_title_counter = 0;
 				}
@@ -380,7 +370,7 @@ bool generate_ost_sound_ddragon(int data)
 					d_title_counter++;
 			}
 			else {
-				ost_stop_and_fallback();
+				ost_stop_samples();
 				ddragon_current_music = 0;
 				ddragon_stage = 0;
 				d_title_counter = 0;
@@ -507,11 +497,9 @@ bool generate_ost_sound_ddragon(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			ddragon_current_music = 0;
-		}
 	}
+
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
@@ -686,9 +674,7 @@ bool generate_ost_sound_ffight(int data)
 		break;
 	}
 
-	if( ost_mix_samples() == 0 ) {
-		/* samples not playing */
-	}
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
@@ -1119,11 +1105,9 @@ bool generate_ost_sound_mk(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			/* samples not playing */
-		}
 	}
+
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
@@ -1399,11 +1383,9 @@ bool generate_ost_sound_mk_tunit(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			/* samples not playing */
-		}
 	}
+
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
@@ -1416,7 +1398,7 @@ bool generate_ost_sound_moonwalker(int data)
 	switch (data) {
 		// Reset music. Title screen.
 		case 0x0:
-			ost_stop_and_fallback();
+			ost_stop_samples();
 			mj_current_music = 0;
 			moon_diddy = false;
 			break;
@@ -1614,11 +1596,9 @@ bool generate_ost_sound_moonwalker(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			mj_current_music = 0;
-		}
 	}
+
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
@@ -1659,7 +1639,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					ost_stop_and_fallback();
+					ost_stop_sample();
 			}
 			else {
 				if(m_nba_start_counter == 2) {
@@ -1694,7 +1674,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					ost_stop_and_fallback();
+					ost_stop_sample();
 			}
 			break;
 
@@ -1864,11 +1844,9 @@ bool generate_ost_sound_nba_jam(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			/* samples not playing */
-		}
 	}
+
+	ost_mix_samples();
 
 	m_nba_last_offset = data;
 
@@ -1977,11 +1955,9 @@ bool generate_ost_sound_outrun(int data)
 
 		sample_start(0, sa_left, sa_loop);
 		sample_start(1, sa_right, sa_loop);
-
-		if( ost_mix_samples() == 0 ) {
-			/* samples not playing */
-		}
 	}
+
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
