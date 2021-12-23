@@ -29,7 +29,6 @@ bool     mk_playing_mortal_kombat_t = false;
 bool     moonwalker_playing = false;
 bool     moon_diddy;
 int      mj_current_music;
-int      mj_fade = 30; /* static value */
 
 bool     nba_jam_playing = false;
 bool     nba_jam_title_screen;
@@ -49,10 +48,10 @@ int      outrun_start_counter;
 
 
 /* ost functions */
-static void ost_start_samples (int sa_left, int sa_right, int sa_loop);
-static void ost_stop_samples (void);
-static void ost_mix_samples (void);
-static void ost_default_config (void);
+static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
+static void ost_stop_samples(void);
+static void ost_mix_samples(void);
+static void ost_default_config(void);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -365,7 +364,6 @@ bool generate_ost_sound_ddragon(int data)
 				// A coin has been inserted, lets stop the title music, about to start the first stage.
 				if(d_title_counter > 5) {
 					ost_stop_samples();
-					ddragon_current_music = 0;
 					d_title_counter = 0;
 				}
 				else
@@ -373,7 +371,6 @@ bool generate_ost_sound_ddragon(int data)
 			}
 			else {
 				ost_stop_samples();
-				ddragon_current_music = 0;
 				ddragon_stage = 0;
 				d_title_counter = 0;
 			}
@@ -1135,7 +1132,6 @@ bool generate_ost_sound_moonwalker(int data)
 		// Reset music. Title screen.
 		case 0x0:
 			ost_stop_samples();
-			mj_current_music = 0;
 			moon_diddy = false;
 			break;
 
