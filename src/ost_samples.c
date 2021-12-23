@@ -1513,76 +1513,44 @@ bool generate_ost_sound_moonwalker(int data)
 
 		// Special move music diddy.
 		case 0xFA:
+			mj_current_music = 0;
 			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(1, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) {
-				sample_set_stereo_volume(0, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(0, mj_fade, 0);
-				sample_set_stereo_volume(1, 0, mj_fade);
-			}
+			sa_volume = 30;
 			break;
 
 		// Special move music diddy.
 		case 0xFB:
+			mj_current_music = 0;
 			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(1, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) {
-				sample_set_stereo_volume(0, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(0, mj_fade, 0);
-				sample_set_stereo_volume(1, 0, mj_fade);
-			}
+			sa_volume = 30;
 			break;
 
 		// Special move music diddy.
 		case 0xF6:
+			mj_current_music = 0;
 			schedule_default_sound = true;
 			moon_diddy = true;
 
 			// While the special move is playing, lets adjust the level music volume lower temporary to 30%.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(1, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) {
-				sample_set_stereo_volume(0, mj_fade, mj_fade);
-			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) {
-				sample_set_stereo_volume(0, mj_fade, 0);
-				sample_set_stereo_volume(1, 0, mj_fade);
-			}
+			sa_volume = 30;
 			break;
 
 		// Special move "owww" sound effect. This plays after the special move has always finished.
 		case 0xC3:
+			mj_current_music = 0;
 			schedule_default_sound = true;
 
 			if(moon_diddy == true) {
 				moon_diddy = false;
 
 				// The special move is finished, lets return the level music volume back to 100%.
-				if(sample_playing(0) == 0 && sample_playing(1) == 1) {
-					sample_set_stereo_volume(1, sa_volume, sa_volume);
-				}
-				else if(sample_playing(0) == 1 && sample_playing(1) == 0) {
-					sample_set_stereo_volume(0, sa_volume, sa_volume);
-				}
-				else if(sample_playing(0) == 1 && sample_playing(1) == 1) {
-					sample_set_stereo_volume(0, sa_volume, 0);
-					sample_set_stereo_volume(1, 0, sa_volume);
-				}
+				sa_volume = 40;
 			}
 			break;
 
