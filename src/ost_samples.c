@@ -1639,7 +1639,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					ost_stop_sample();
+					ost_stop_samples();
 			}
 			else {
 				if(m_nba_start_counter == 2) {
@@ -1674,7 +1674,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					ost_stop_sample();
+					ost_stop_samples();
 			}
 			break;
 
