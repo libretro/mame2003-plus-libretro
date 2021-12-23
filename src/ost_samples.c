@@ -51,7 +51,6 @@ int      outrun_start_counter;
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
-static void ost_default_config(void);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -343,17 +342,10 @@ static void ost_mix_samples(void)
 }
 
 
-static void ost_default_config(void)
-{
-  sa_volume = 100;
-  schedule_default_sound = false;
-}
-
-
 bool generate_ost_sound_ddragon(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
 	sa_volume = 40;
 
 	switch(data) {
@@ -472,7 +464,8 @@ bool generate_ost_sound_ddragon(int data)
 bool generate_ost_sound_ffight(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -618,7 +611,8 @@ bool generate_ost_sound_ffight(int data)
 bool generate_ost_sound_mk(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -950,7 +944,8 @@ bool generate_ost_sound_mk(int data)
 bool generate_ost_sound_mk_tunit(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	switch (data) {
 		/* Intro title screen diddy*/
@@ -1126,7 +1121,8 @@ bool generate_ost_sound_mk_tunit(int data)
 bool generate_ost_sound_moonwalker(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	switch (data) {
 		// Reset music. Title screen.
@@ -1255,7 +1251,8 @@ bool generate_ost_sound_moonwalker(int data)
 bool generate_ost_sound_nba_jam(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	switch (data) {
 		case 0x8C:
@@ -1462,7 +1459,8 @@ bool generate_ost_sound_nba_jam(int data)
 bool generate_ost_sound_outrun(int data)
 {
 	/* initialize game config */
-	ost_default_config();
+	schedule_default_sound = false;
+	sa_volume = 100;
 
 	if(outrun_start == true) {
 		ost_start_samples(0, 1, 1);
