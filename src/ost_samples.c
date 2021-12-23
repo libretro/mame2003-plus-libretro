@@ -14,7 +14,6 @@ static int  sa_right;
 static int  sa_volume;
 static bool sa_loop;
 static bool sa_play;
-static bool sa_stop;
 static bool schedule_default_sound;
 
 
@@ -55,6 +54,7 @@ int      outrun_start_counter;
 
 /* ost functions */
 static void ost_stop_samples(void);
+static void ost_stop_and_fallback(void);
 static bool ost_mix_samples(void);
 static void ost_default_config(void);
 
@@ -314,6 +314,13 @@ static void ost_stop_samples(void)
 }
 
 
+static void ost_stop_and_fallback(void)
+{
+  ost_stop_samples();
+  schedule_default_sound = true;
+}
+
+
 static bool ost_mix_samples(void)
 {
   bool ost_sample_is_playing = 1;
@@ -348,7 +355,6 @@ static void ost_default_config(void)
   sa_volume = 100;
   sa_loop   = 1;
   sa_play   = false;
-  sa_stop   = false;
   schedule_default_sound = false;
 }
 
@@ -366,14 +372,16 @@ bool generate_ost_sound_ddragon(int data)
 			if(ddragon_current_music == 10 && ddragon_stage != 4) {
 				// A coin has been inserted, lets stop the title music, about to start the first stage.
 				if(d_title_counter > 5) {
-					sa_stop = true;
+					ost_stop_and_fallback();
+					ddragon_current_music = 0;
 					d_title_counter = 0;
 				}
 				else
 					d_title_counter++;
 			}
 			else {
-				sa_stop = true;
+				ost_stop_and_fallback();
+				ddragon_current_music = 0;
 				ddragon_stage = 0;
 				d_title_counter = 0;
 			}
@@ -503,14 +511,6 @@ bool generate_ost_sound_ddragon(int data)
 		if( ost_mix_samples() == 0 ) {
 			ddragon_current_music = 0;
 		}
-	}
-
-	else if(sa_stop == true) {
-		ddragon_current_music = 0;
-		ost_stop_samples();
-
-		// Now play the default sound.
-		schedule_default_sound = true;
 	}
 
 	return schedule_default_sound;
@@ -1124,12 +1124,6 @@ bool generate_ost_sound_mk(int data)
 			/* samples not playing */
 		}
 	}
-	else if(sa_stop == true) {
-		ost_stop_samples();
-
-		/* Now play the default sound.*/
-		schedule_default_sound = true;
-	}
 
 	return schedule_default_sound;
 }
@@ -1410,12 +1404,6 @@ bool generate_ost_sound_mk_tunit(int data)
 			/* samples not playing */
 		}
 	}
-	else if(sa_stop == true) {
-		ost_stop_samples();
-
-		/* Now play the default sound.*/
-		schedule_default_sound = true;
-	}
 
 	return schedule_default_sound;
 }
@@ -1428,7 +1416,7 @@ bool generate_ost_sound_moonwalker(int data)
 	switch (data) {
 		// Reset music. Title screen.
 		case 0x0:
-			sa_stop = true;
+			ost_stop_and_fallback();
 			mj_current_music = 0;
 			moon_diddy = false;
 			break;
@@ -1632,14 +1620,6 @@ bool generate_ost_sound_moonwalker(int data)
 		}
 	}
 
-	else if(sa_stop == true) {
-		mj_current_music = 0;
-		ost_stop_samples();
-
-		// Now play the default sound.
-		schedule_default_sound = true;
-	}
-
 	return schedule_default_sound;
 }
 
@@ -1679,7 +1659,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					sa_stop = true;
+					ost_stop_and_fallback();
 			}
 			else {
 				if(m_nba_start_counter == 2) {
@@ -1714,7 +1694,7 @@ bool generate_ost_sound_nba_jam(int data)
 				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 					return 0; /* do nothing */
 				else
-					sa_stop = true;
+					ost_stop_and_fallback();
 			}
 			break;
 
@@ -1890,13 +1870,6 @@ bool generate_ost_sound_nba_jam(int data)
 		}
 	}
 
-	else if(sa_stop == true) {
-		ost_stop_samples();
-
-		/* Now play the default sound.*/
-		schedule_default_sound = true;
-	}
-
 	m_nba_last_offset = data;
 
 	return schedule_default_sound;
@@ -2008,13 +1981,6 @@ bool generate_ost_sound_outrun(int data)
 		if( ost_mix_samples() == 0 ) {
 			/* samples not playing */
 		}
-	}
-
-	else if(sa_stop == true) {
-		ost_stop_samples();
-
-		// Now play the default sound.
-		schedule_default_sound = true;
 	}
 
 	return schedule_default_sound;
