@@ -1457,7 +1457,7 @@ bool generate_ost_sound_nba_jam(int data)
 }
 
 bool generate_ost_sound_outrun(int data)
-{ if(data != 128) usrintf_showmessage("%i", data);
+{
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
