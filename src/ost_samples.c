@@ -1532,6 +1532,11 @@ bool generate_ost_sound_outrun(int data)
 				return 0; /* do nothing */
 			break;
 
+		// --> Enter Highscore
+		case 0xA5:
+			return 0; /* do nothing */
+			break;
+
 		default:
 			schedule_default_sound = true;
 			break;
