@@ -123,7 +123,8 @@ void sample_stop(int channel)
 	mixer_stop_sample(channel + firstchannel);
 
 	//respect samples being disabled
-	if ( (!options.use_samples) || (!options.content_flags[CONTENT_ALT_SOUND]) ) return;
+	if ( !options.use_samples ) return;
+	if ( (!options.use_alt_sound) || (!options.content_flags[CONTENT_ALT_SOUND]) ) return;
 	if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
 
 	if (Machine->samples->sample[c_sample] != NULL) {

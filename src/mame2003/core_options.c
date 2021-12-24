@@ -347,11 +347,26 @@ static struct retro_core_option_v2_definition option_def_stv_bios = {
    "default"
 };
 
+static struct retro_core_option_v2_definition option_def_use_samples = {
+   APPNAME"_use_samples",
+   "Use Samples",
+   NULL,
+   "Restart core required. Loads required audio sample files when provided in the samples directory.",
+   NULL,
+   "cat_key_audio",
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
 static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    APPNAME"_use_alt_sound",
    "Use CD Soundtrack",
    NULL,
-   "Restart core required. Replaces original hardware sounds with external audio files when available.",
+   "Restart core required. Replaces original hardware sounds with external audio files when provided in the samples directory.",
    NULL,
    "cat_key_audio",
    {
@@ -862,6 +877,7 @@ void init_core_options(void)
   default_options[OPT_ART_OVERLAY_OPACITY]       = option_def_art_overlay_opacity;
   default_options[OPT_NEOGEO_BIOS]               = option_def_neogeo_bios;
   default_options[OPT_STV_BIOS]                  = option_def_stv_bios;
+  default_options[OPT_USE_SAMPLES]               = option_def_use_samples;
   default_options[OPT_USE_ALT_SOUND]             = option_def_use_alt_sound;
   default_options[OPT_SHARE_DIAL]                = option_def_dialsharexy;
   default_options[OPT_DIAL_SWAP_XY]              = option_def_dial_swap_xy;
@@ -1094,11 +1110,18 @@ void update_variables(bool first_time)
           options.bios = (strcmp(var.value, "default") == 0) ? NULL : var.value;
           break;
 
-        case OPT_USE_ALT_SOUND:
+        case OPT_USE_SAMPLES:
           if(strcmp(var.value, "enabled") == 0)
             options.use_samples = true;
           else
             options.use_samples = false;
+          break;
+
+        case OPT_USE_ALT_SOUND:
+          if(strcmp(var.value, "enabled") == 0)
+            options.use_alt_sound = true;
+          else
+            options.use_alt_sound = false;
           break;
 
         case OPT_SHARE_DIAL:

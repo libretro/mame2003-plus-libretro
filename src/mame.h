@@ -218,6 +218,7 @@ struct GameOptions
 
   int      samplerate;		       /* sound sample playback rate, in KHz */
   bool     use_samples;	         /* 1 to enable external .wav samples */
+  bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */
   float	   pause_bright;		     /* additional brightness when in pause */
