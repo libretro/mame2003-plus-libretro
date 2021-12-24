@@ -351,7 +351,7 @@ static struct retro_core_option_v2_definition option_def_use_samples = {
    APPNAME"_use_samples",
    "Use Samples",
    NULL,
-   "Restart core required. Loads required audio sample files when provided in the samples directory.",
+   "Restart core required. Allow audio sample files to be loaded when provided in the samples directory.",
    NULL,
    "cat_key_audio",
    {
@@ -366,7 +366,7 @@ static struct retro_core_option_v2_definition option_def_use_alt_sound = {
    APPNAME"_use_alt_sound",
    "Use CD Soundtrack",
    NULL,
-   "Restart core required. Replaces original hardware sounds with external audio files when provided in the samples directory.",
+   "Restart core required. Replace original hardware sounds with optional audio sample files when provided in the samples directory.",
    NULL,
    "cat_key_audio",
    {
