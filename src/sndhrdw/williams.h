@@ -19,6 +19,3 @@ void williams_adpcm_reset_w(int state);
 void williams_narc_init(int cpunum);
 void williams_narc_data_w(int data);
 void williams_narc_reset_w(int state);
-
-extern int		m_nba_last_offset;
-extern int		m_nba_start_counter;
