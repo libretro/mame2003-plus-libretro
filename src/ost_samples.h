@@ -14,8 +14,8 @@ extern int      ddragon_stage;
 extern int      d_title_counter;
 
 extern bool     ff_playing_final_fight;
-extern bool     ff_provision_alt_song;
-extern bool     ff_play_alternate_song;
+extern bool     ff_alternate_song_1;
+extern bool     ff_alternate_song_2;
 
 extern bool     mk_playing_mortal_kombat;
 extern bool     mk_playing_mortal_kombat_t;
