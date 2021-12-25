@@ -20,8 +20,8 @@ int      ddragon_stage;
 int      d_title_counter;
 
 bool     ff_playing_final_fight = false;
-bool     ff_provision_alt_song;
-bool     ff_play_alternate_song;
+bool     ff_alternate_song_1;
+bool     ff_alternate_song_2;
 
 bool     mk_playing_mortal_kombat = false;
 bool     mk_playing_mortal_kombat_t = false;
@@ -480,13 +480,10 @@ bool generate_ost_sound_ffight(int data)
 
 		/* stage #2: subway intro*/
 		case 0x42:
-			/* play the normal version of the song unless playAlternateSong is true*/
-			if (ff_play_alternate_song == false) {
-				ost_start_samples(4, 5, 1);
-			}
-			else {
-				ost_start_samples(40, 41, 1);
-			}
+			if (ff_alternate_song_2 == false)
+				ost_start_samples(4, 5, 1); /* play normal */
+			else
+				ost_start_samples(40, 41, 1); /* play alternate */
 			break;
 
 		/* stage #2 exiting subway/alley*/
@@ -503,10 +500,8 @@ bool generate_ost_sound_ffight(int data)
 		case 0x45:
 			ost_start_samples(10, 11, 1);
 
-			/* we'll provision the alternate songs if they're not already*/
-			if (ff_provision_alt_song == false) {
-				ff_provision_alt_song = true;
-			}
+			/* enable 1st alternate song */
+			ff_alternate_song_1 = true;
 			break;
 
 		/* bathroom music for bay area*/
@@ -516,13 +511,10 @@ bool generate_ost_sound_ffight(int data)
 
 		/* bay area post-bathroom ending/boss / final boss room entrance*/
 		case 0x47:
-			/* play the normal version of the song unless playAlternateSong is true*/
-			if (ff_provision_alt_song == false) {
-				ost_start_samples(14, 15, 1);
-			}
-			else {
-				ost_start_samples(36, 37, 1);
-			}
+			if (ff_alternate_song_1 == false)
+				ost_start_samples(14, 15, 1); /* play normal */
+			else
+				ost_start_samples(36, 37, 1); /* play alternate */
 			break;
 
 		/* bonus stage music*/
@@ -544,9 +536,9 @@ bool generate_ost_sound_ffight(int data)
 		case 0x50:
 			ost_start_samples(22, 23, 0);
 
-			/* when the game starts, we'll reset all the alternate songs*/
-			ff_provision_alt_song = false;
-			ff_play_alternate_song = false;
+			/* reset alternate songs */
+			ff_alternate_song_1 = false;
+			ff_alternate_song_2 = false;
 			break;
 
 		/* post explosion ditty*/
@@ -578,20 +570,19 @@ bool generate_ost_sound_ffight(int data)
 		case 0x57:
 			ost_start_samples(28, 29, 0);
 
-			/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
-			if (ff_provision_alt_song == true) {
-				ff_play_alternate_song = true;
-			}
+			/* enable 2nd alternate song if 1st has been enabled */
+			if (ff_alternate_song_1 == true)
+				ff_alternate_song_2 = true;
 			break;
 
 		/* final stage clear ditty*/
 		case 0x58:
 			ost_start_samples(26, 27, 0);
-			ff_provision_alt_song = false;
-			ff_play_alternate_song = false;
+			ff_alternate_song_1 = false;
+			ff_alternate_song_2 = false;
 			break;
 
-    /* Lets stop the Final Fight sample music.*/
+		/* Lets stop the Final Fight sample music.*/
 		case 0xf0:
 		case 0xf2:
 		case 0xf7:
