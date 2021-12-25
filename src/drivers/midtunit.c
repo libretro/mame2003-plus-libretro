@@ -651,8 +651,7 @@ static MACHINE_DRIVER_START( tunit_adpcm )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( mk )
-	mk_playing_mortal_kombat_t = true; /* --> Let the sound hardware know we are playing Mortal Kombat.*/
-	
+
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
@@ -660,6 +659,7 @@ static MACHINE_DRIVER_START( mk )
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
+	mk_playing_mortal_kombat_t = true;
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
