@@ -1011,8 +1011,7 @@ MACHINE_DRIVER_END
 
 
 static MACHINE_DRIVER_START( mk )
-	mk_playing_mortal_kombat = true; /* --> Let the sound hardware know we are playing Mortal Kombat.*/
-	
+
 	MDRV_IMPORT_FROM(yunit_adpcm)
 	MDRV_VBLANK_DURATION(COMPUTED_VBLANK(254, 288, MKLA5_FPS))
 	MDRV_VISIBLE_AREA(0, 399, 0, 253)
@@ -1020,6 +1019,7 @@ static MACHINE_DRIVER_START( mk )
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
+	mk_playing_mortal_kombat = true;
 MACHINE_DRIVER_END
 
 

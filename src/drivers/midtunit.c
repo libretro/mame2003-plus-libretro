@@ -651,8 +651,7 @@ static MACHINE_DRIVER_START( tunit_adpcm )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( mk )
-	mk_playing_mortal_kombat_t = true; /* --> Let the sound hardware know we are playing Mortal Kombat.*/
-	
+
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
@@ -660,20 +659,11 @@ static MACHINE_DRIVER_START( mk )
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
+	mk_playing_mortal_kombat_t = true;
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
-	nba_jam_playing = true; /* --> Let the sound hardware know we are playing NBA Jam.*/
-	nba_jam_title_screen = false;
-	nba_jam_select_screen = false;
-	nba_jam_intermission = false;
-	nba_jam_in_game = false;
-	nba_jam_boot_up	= true;
-	nba_jam_playing_title_music = false;
-	
-	m_nba_last_offset = 0;
-	m_nba_start_counter = 0;
-	
+
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
@@ -681,6 +671,15 @@ static MACHINE_DRIVER_START( nbajam )
 	/* Lets add our NBA Jam music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
+	nba_jam_playing = true;
+	nba_jam_title_screen = false;
+	nba_jam_select_screen = false;
+	nba_jam_intermission = false;
+	nba_jam_in_game = false;
+	nba_jam_boot_up	= true;
+	nba_jam_playing_title_music = false;
+	m_nba_last_offset = 0;
+	m_nba_start_counter = 0;
 MACHINE_DRIVER_END
 
 

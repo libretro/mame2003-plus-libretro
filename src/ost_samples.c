@@ -37,6 +37,8 @@ bool     nba_jam_intermission;
 bool     nba_jam_in_game;
 bool     nba_jam_boot_up;
 bool     nba_jam_playing_title_music;
+int      m_nba_last_offset;
+int      m_nba_start_counter;
 
 bool     outrun_playing = false;
 bool     outrun_start;

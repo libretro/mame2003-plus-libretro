@@ -5,9 +5,6 @@
 *********************************************************************/
 
 
-extern int      m_nba_last_offset;
-extern int      m_nba_start_counter;
-
 extern bool     ddragon_playing;
 extern int      ddragon_current_music;
 extern int      ddragon_stage;
@@ -31,6 +28,8 @@ extern bool     nba_jam_intermission;
 extern bool     nba_jam_in_game;
 extern bool     nba_jam_boot_up;
 extern bool     nba_jam_playing_title_music;
+extern int      m_nba_last_offset;
+extern int      m_nba_start_counter;
 
 extern bool     outrun_playing;
 extern bool     outrun_start;
