@@ -25,8 +25,6 @@
 	STATIC GLOBALS
 ****************************************************************************/
 
-int		m_nba_last_offset;
-int		m_nba_start_counter;
 
 UINT8 williams_sound_int_state;
 
