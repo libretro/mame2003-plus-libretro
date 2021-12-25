@@ -3998,8 +3998,8 @@ static MACHINE_DRIVER_START( ffight_hack )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
 	ff_playing_final_fight = true;
-	ff_provision_alt_song = false;
-	ff_play_alternate_song = false;
+	ff_alternate_song_1 = false;
+	ff_alternate_song_2 = false;
 MACHINE_DRIVER_END
 
 
