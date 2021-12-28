@@ -24,6 +24,15 @@ static void get_drgnmst_fg_tile_info(int tile_index)
 	tileno = drgnmst_fg_videoram[tile_index*2] & 0xfff;
 	colour = drgnmst_fg_videoram[tile_index*2+1] & 0x1f;
 	flipyx = (drgnmst_fg_videoram[tile_index*2+1] & 0x60)>>5;
+	
+	if ((drgnmst_fg_videoram[tile_index * 2] & 0x4000))
+		tileno |= 0x10000;
+
+	/* tileno |= (BIT(tile_index, 5)) << 15; */ /* 8x8 tile bank seems like cps1 (not on mastfury? or because bad dump) */
+	if ((drgnmst_fg_videoram[tile_index * 2] & 0x8000))
+		tileno |= 0x8000;
+
+	tileno ^= 0x18000;
 
 	SET_TILE_INFO(1,tileno,colour,TILE_FLIPYX(flipyx))
 }
@@ -39,9 +48,15 @@ WRITE16_HANDLER( drgnmst_fg_videoram_w )
 static void get_drgnmst_bg_tile_info(int tile_index)
 {
 	int tileno,colour,flipyx;
-	tileno = (drgnmst_bg_videoram[tile_index*2]& 0x1fff)+0x800;
+	tileno = (drgnmst_bg_videoram[tile_index*2]& 0x3ff) + 0xc00;
 	colour = drgnmst_bg_videoram[tile_index*2+1] & 0x1f;
 	flipyx = (drgnmst_bg_videoram[tile_index*2+1] & 0x60)>>5;
+	
+	
+	if ((drgnmst_bg_videoram[tile_index * 2] & 0x1000))
+		tileno |= 0x1000;
+
+	tileno ^= 0x1000;
 
 	SET_TILE_INFO(3,tileno,colour,TILE_FLIPYX(flipyx))
 }
@@ -55,10 +70,17 @@ WRITE16_HANDLER( drgnmst_bg_videoram_w )
 static void get_drgnmst_md_tile_info(int tile_index)
 {
 	int tileno,colour,flipyx;
-	tileno = (drgnmst_md_videoram[tile_index*2]& 0x7fff)-0x2000;
+	tileno = (drgnmst_md_videoram[tile_index*2]& 0x3fff)-0x2000;
 
 	colour = drgnmst_md_videoram[tile_index*2+1] & 0x1f;
 	flipyx = (drgnmst_md_videoram[tile_index*2+1] & 0x60)>>5;
+	
+	if ((drgnmst_md_videoram[tile_index * 2] & 0x4000))
+		tileno |= 0x4000;
+
+	tileno ^= 0x4000;
+
+
 
 	SET_TILE_INFO(2,tileno,colour,TILE_FLIPYX(flipyx))
 }
@@ -151,59 +173,161 @@ VIDEO_START(drgnmst)
 
 VIDEO_UPDATE(drgnmst)
 {
-	int y;
+	int y, rowscroll_bank;
+	
+	rowscroll_bank = (drgnmst_vidregs[4] & 0x30) >> 4;
+	
+	/* drgnmst scrolling */
+	
+	tilemap_set_scrollx(drgnmst_fg_tilemap,0, drgnmst_vidregs[0x6]-18); /* verify (test mode colour test needs it) */
+	tilemap_set_scrolly(drgnmst_fg_tilemap,0, drgnmst_vidregs[0x7]); /* verify */
 
-	tilemap_set_scrollx(drgnmst_bg_tilemap,0, drgnmst_vidregs[10]-18); /* verify*/
-	tilemap_set_scrolly(drgnmst_bg_tilemap,0, drgnmst_vidregs[11]); /* verify*/
-
-/*	tilemap_set_scrollx(drgnmst_md_tilemap,0, drgnmst_vidregs[8]-16); // rowscrolled*/
-	tilemap_set_scrolly(drgnmst_md_tilemap,0, drgnmst_vidregs[9]); /* verify*/
-
-	tilemap_set_scrollx(drgnmst_fg_tilemap,0, drgnmst_vidregs[6]-18); /* verify (test mode colour test needs it)*/
-	tilemap_set_scrolly(drgnmst_fg_tilemap,0, drgnmst_vidregs[7]); /* verify*/
+	tilemap_set_scrolly(drgnmst_md_tilemap,0, drgnmst_vidregs[0x9]); /* verify */
 
 	for (y = 0; y < 1024; y++)
-		tilemap_set_scrollx(drgnmst_md_tilemap,y, drgnmst_vidregs[8]-16+drgnmst_rowscrollram[y]);
+         tilemap_set_scrollx(drgnmst_md_tilemap,y, drgnmst_vidregs[0x8]-16+drgnmst_rowscrollram[y+0x800*rowscroll_bank]);
+	
+	tilemap_set_scrollx(drgnmst_bg_tilemap,0, drgnmst_vidregs[0xa]-18); /* verify */
+	tilemap_set_scrolly(drgnmst_bg_tilemap,0, drgnmst_vidregs[0xb]); /* verify */
 
-	/* todo: figure out which bits relate to the order*/
+	/* TODO: figure out which bits relate to the order, like cps1?
+	23da mastfury before attract portraits, ending
+    12c8 mastfury power on */
 	switch (drgnmst_vidregs2[0])
 	{
-		case 0x2451: /* fg unsure*/
-		case 0x2d9a: /* fg unsure*/
-		case 0x2440: /* all ok*/
-		case 0x245a: /* fg unsure, title screen*/
-			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
-			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
-			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
-			break;
-		case 0x23c0: /* all ok*/
+		case 0x23c0: /* all ok */
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			break;
-		case 0x38da: /* fg unsure*/
-		case 0x215a: /* fg unsure*/
-		case 0x2140: /* all ok*/
+		case 0x2cc0: /* mastfury mr daeth stage all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x38c0: /* mastfury Sakamoto stage, Sya Ki stage same as above? but see note
+			should fg also go above sprites? (it partially obscures 'time over' and bonus stage items on Sakamoto stage
+		    but explicitly changes from 2cc0 to display scores, which indicates there is maybe a difference) */
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x2780: /* mastfury skyscraper lift stage all ok */
+		case 0x279a: /* mastfury continue screen all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			break;
+		case 0x2d80: /* all ok */
+		case 0x2cda: /* mastfury win quotes all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x38da: /* fg unsure */
+		case 0x215a: /* fg unsure (mastfury title) */
+		case 0x2140: /* all ok */
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			break;
-		case 0x2d80: /* all ok*/
-			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+		case 0x2451: /* fg unsure */
+		case 0x2d9a: /* fg unsure */
+		case 0x2440: /* all ok */
+		case 0x245a: /* fg unsure, title screen */
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
-			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
 			break;
 		default:
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
-			logerror ("unknown video priority regs %04x\n", drgnmst_vidregs2[0]);
+            break;
 
 	}
 
 	drgnmst_draw_sprites(bitmap,cliprect);
 
-/*	usrintf_showmessage	("x %04x x %04x x %04x x %04x x %04x", drgnmst_vidregs2[0], drgnmst_vidregs[12], drgnmst_vidregs[13], drgnmst_vidregs[14], drgnmst_vidregs[15]);*/
-/*	usrintf_showmessage	("x %04x x %04x y %04x y %04x z %04x z %04x",drgnmst_vidregs[0],drgnmst_vidregs[1],drgnmst_vidregs[2],drgnmst_vidregs[3],drgnmst_vidregs[4],drgnmst_vidregs[5]);*/
+}
+
+VIDEO_UPDATE(mastfury)
+{
+	int y, rowscroll_bank;
+	
+	rowscroll_bank = (drgnmst_vidregs[4] & 0x30) >> 4;
+	
+	/* mastfury scrolling
+	 does layer order change scroll offsets? */
+	
+	tilemap_set_scrollx(drgnmst_fg_tilemap,0, drgnmst_vidregs[0x6]-14); /* 14 = continue screen background */
+	tilemap_set_scrolly(drgnmst_fg_tilemap,0, drgnmst_vidregs[0x7]); /* verify */
+
+	tilemap_set_scrolly(drgnmst_md_tilemap,0, drgnmst_vidregs[0x8]); /* skyscraper lift stage confirms this reg? */
+
+	for (y = 0; y < 1024; y++)
+         tilemap_set_scrollx(drgnmst_md_tilemap,y, drgnmst_vidregs[0x9]-14+drgnmst_rowscrollram[y+0x800*rowscroll_bank]);
+	
+	tilemap_set_scrollx(drgnmst_bg_tilemap,0, drgnmst_vidregs[0xa]-18); /* 14 = char select backround, but vs screen is 16? */
+	tilemap_set_scrolly(drgnmst_bg_tilemap,0, drgnmst_vidregs[0x10]); /* skyscraper lift stage confirms this reg? */
+
+	/* TODO: figure out which bits relate to the order, like cps1?
+	23da mastfury before attract portraits, ending
+    12c8 mastfury power on */
+	switch (drgnmst_vidregs2[0])
+	{
+		case 0x23c0: /* all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			break;
+		case 0x2cc0: /* mastfury mr daeth stage all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x38c0: /* mastfury Sakamoto stage, Sya Ki stage same as above? but see note
+			should fg also go above sprites? (it partially obscures 'time over' and bonus stage items on Sakamoto stage
+		    but explicitly changes from 2cc0 to display scores, which indicates there is maybe a difference) */
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x2780: /* mastfury skyscraper lift stage all ok */
+		case 0x279a: /* mastfury continue screen all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			break;
+		case 0x2d80: /* all ok */
+		case 0x2cda: /* mastfury win quotes all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			break;
+		case 0x38da: /* fg unsure */
+		case 0x215a: /* fg unsure (mastfury title) */
+		case 0x2140: /* all ok */
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			break;
+		case 0x2451: /* fg unsure */
+		case 0x2d9a: /* fg unsure */
+		case 0x2440: /* all ok */
+		case 0x245a: /* fg unsure, title screen */
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
+			break;
+		default:
+			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
+			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
+            break;
+
+	}
+
+	drgnmst_draw_sprites(bitmap,cliprect);
 
 }
