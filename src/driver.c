@@ -5294,6 +5294,7 @@ Other Sun games
 
 	/* Unico games */
 	DRIVER( drgnmst )	/* (c) 1994 */
+  DRIVER( mastfury )	/* (c) 1996 */
 	DRIVER( burglarx )	/* (c) 1997 */
 	DRIVER( zeropnt )	/* (c) 1998 */
 	DRIVER( zeropnta )	/* (c) 1998 */
