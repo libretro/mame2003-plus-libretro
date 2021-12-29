@@ -101,6 +101,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
 * Magic Purple 
+* Master's Fury
 * Match It II * Mature *
 * Metal Slug 4
 * Metal Slug 5
@@ -393,6 +394,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Turbo Tag - Romset `turbotag`
 * Twin Eagle 2 - Romsets `twineagl` and `twineag2`
 * Two Tigers - Romset `twotiger`
+* Under Fire - Romset `undrfire`
 * U.S. Classic - Romset `usclssic` - colors fixed
 * Wonder Boy in Monster Land (Japan New Ver.) - Romset `wbml`
 * Wonder Boy in Monster Land (Japan Old Ver.) - Romset `wbmljo`
@@ -799,3 +801,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed lightgun calibration plus some graphical and sound niggles in Beast Busters [arcadez, mahoneyt944]
 * Fixed graphical priorities in Thunder Hoop by using bigkarnak video update call [dink, arcadez]
 * Added support for the MVS version of Xeno Crisis to the Neo Geo driver [arcadez]
+* Added fake gunsights for Under Fire making this game now playable in MAME2003+ [mahoneyt944]
+* Fixed some graphical niggles in Dragon Master and added support for Master's Fury to the drgnmst.c driver [arcadez]
