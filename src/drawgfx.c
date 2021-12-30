@@ -3520,8 +3520,7 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 {
 	unsigned long color,black,white;
 	int i;
-	static int strobe = 0;
-	static bool polarity = true;
+	static int time_wizard [2] = { cpu_getcurrentframe(), 0 };
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
@@ -3549,17 +3548,13 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	white = Machine->uifont->colortable[1];
 	color = white; /* default */
 
-/*
- 	if(player_number == 1)
+	/* Flashing effect */
+	if( cpu_getcurrentframe() > (time_wizard[0] + (Machine->drv->frames_per_second / 2) )
 	{
-		if( (strobe < 3) && (polarity == true) ) strobe++;
-		else polarity = false;
-		if( (strobe > 0) && (polarity == false) ) strobe--;
-		else polarity = true;
-		if(polarity) color = white;
-		else color = black;
+		time_wizard[0] = cpu_getcurrentframe();
+		time_wizard[1] = (time_wizard[1]) ? 0 : 1;
 	}
-*/
+	if(time_wizard[1]) color = black;
 
 	/* Draw crosshair - simple */
 	for (i = 1;i < 6;i++)
