@@ -3550,7 +3550,10 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 
 	/* Flashing effect */
 	if( cpu_getcurrentframe() > (flash[0] + (Machine->drv->frames_per_second / 4)) )
-		flash = { cpu_getcurrentframe(), (flash[1]?0:1) };
+	{
+		flash[0] = cpu_getcurrentframe();
+		flash[1] = flash[1] ? 0:1;
+	}
 	if(flash[1]) color = black;
 
 	/* Draw crosshair - simple */
