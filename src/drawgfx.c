@@ -3520,7 +3520,7 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 {
 	unsigned long color,black,white;
 	int i;
-	static int time_wizard [2] = { 0, 0 };
+	static int flash [2] = { 0, 0 };
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
@@ -3549,12 +3549,9 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	color = white; /* default */
 
 	/* Flashing effect */
-	if( cpu_getcurrentframe() > (time_wizard[0] + (Machine->drv->frames_per_second / 2)) )
-	{
-		time_wizard[0] = cpu_getcurrentframe();
-		time_wizard[1] = (time_wizard[1]) ? 0 : 1;
-	}
-	if(time_wizard[1]) color = black;
+	if( cpu_getcurrentframe() > (flash[0] + (Machine->drv->frames_per_second / 4)) )
+		flash = { cpu_getcurrentframe(), (flash[1])?0:1 };
+	if(flash[1]) color = black;
 
 	/* Draw crosshair - simple */
 	for (i = 1;i < 6;i++)
