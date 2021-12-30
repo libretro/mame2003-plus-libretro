@@ -3548,13 +3548,13 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	white = Machine->uifont->colortable[1];
 	color = white; /* default */
 
-	/* Flashing effect */
+	/* Flashing effect
 	if( cpu_getcurrentframe() > flash[0] + 4 )
 	{
 		flash[0] = cpu_getcurrentframe();
 		flash[1] = flash[1] ? 0:1;
 	}
-	if(flash[1]) color = black;
+	if(flash[1]) color = black;*/
 
 	/* Draw crosshair - simple */
 	for (i = 1;i < 6;i++)
