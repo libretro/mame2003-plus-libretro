@@ -156,6 +156,7 @@ extern void armedf_setgfxtype( int type );
 VIDEO_UPDATE( armedf );
 VIDEO_EOF( armedf );
 VIDEO_START( armedf );
+VIDEO_START( legion );
 
 WRITE16_HANDLER( armedf_bg_videoram_w );
 WRITE16_HANDLER( armedf_fg_videoram_w );
@@ -167,12 +168,16 @@ WRITE16_HANDLER( armedf_fg_scrollx_w );
 WRITE16_HANDLER( armedf_fg_scrolly_w );
 WRITE16_HANDLER( armedf_bg_scrollx_w );
 WRITE16_HANDLER( armedf_bg_scrolly_w );
+WRITE16_HANDLER( armedf_mcu_cmd );
 
 extern data16_t armedf_vreg;
+extern data16_t *spr_pal_clut;
 extern data16_t *armedf_bg_videoram;
 extern data16_t *armedf_fg_videoram;
 extern data16_t *terraf_text_videoram;
 
+extern data16_t *legion_cmd;
+extern struct tilemap *armedf_tx_tilemap;
 
 static WRITE16_HANDLER( io_w )
 {
@@ -200,6 +205,32 @@ static WRITE16_HANDLER( kodure_io_w )
 	}
 }
 
+static WRITE16_HANDLER( terraf_io_w )
+{
+	COMBINE_DATA(&armedf_vreg);
+	/* bits 0 and 1 of armedf_vreg are coin counters */
+	/* bit 12 seems to handle screen flipping */
+	flip_screen_set(armedf_vreg & 0x1000);
+
+	if ((armedf_vreg & 0x4000) && !(armedf_vreg & 0x0100))
+	{
+		int i;
+		for (i = 0x10; i < 0x1000; i++)
+		{
+			terraf_text_videoram[i]=0x20;
+		}
+		tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
+		//logerror("vreg WIPE TX\n");
+	}
+	//logerror("VReg = %04x\n", armedf_vreg);
+}
+
+static WRITE16_HANDLER( legion_command_c )
+{
+	COMBINE_DATA(&legion_cmd[offset]);
+	//logerror("Legion CMD %04x=%04x", offset, data);
+}
+
 static WRITE16_HANDLER( sound_command_w )
 {
 	if (ACCESSING_LSB)
@@ -214,7 +245,7 @@ static MEMORY_READ16_START( terraf_readmem )
 	{ 0x064000, 0x064fff, MRA16_RAM },
 	{ 0x068000, 0x069fff, MRA16_RAM },
 	{ 0x06a000, 0x06a9ff, MRA16_RAM },
-	{ 0x06C000, 0x06C9ff, MRA16_RAM },
+	{ 0x06C000, 0x06Cfff, MRA16_RAM },
 	{ 0x070000, 0x070fff, MRA16_RAM },
 	{ 0x074000, 0x074fff, MRA16_RAM },
 	{ 0x078000, 0x078001, input_port_0_word_r },
@@ -230,15 +261,17 @@ static MEMORY_WRITE16_START( terraf_writemem )
 	{ 0x064000, 0x064fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
 	{ 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x06a000, 0x06a9ff, MWA16_RAM },
-	{ 0x06C000, 0x06C9ff, MWA16_RAM },
+	{ 0x06C000, 0x06Cfff, MWA16_RAM, &spr_pal_clut },
 	{ 0x070000, 0x070fff, armedf_fg_videoram_w, &armedf_fg_videoram },
 	{ 0x074000, 0x074fff, armedf_bg_videoram_w, &armedf_bg_videoram },
-	{ 0x07c000, 0x07c001, io_w },
+	{ 0x07c000, 0x07c001, terraf_io_w },
 	{ 0x07c002, 0x07c003, armedf_bg_scrollx_w },
 	{ 0x07c004, 0x07c005, armedf_bg_scrolly_w },
-	{ 0x07c006, 0x07c007, terraf_fg_scrollx_w },
+	{ 0x07c006, 0x07c007, terraf_fg_scrollx_w },    /* not use in terrafu, 0x07c008 neither */
 	{ 0x07c008, 0x07c009, terraf_fg_scrolly_w },	/* written twice, lsb and msb */
 	{ 0x07c00a, 0x07c00b, sound_command_w },
+	{ 0x07c00c, 0x07c00d, MWA16_NOP },		    /* Watchdog ? cycle 0000 -> 0100 -> 0200 back to 0000 */
+	{ 0x07c00e, 0x07c00f, armedf_mcu_cmd },		/* MCU Command ? */
 	{ 0x0c0000, 0x0c0001, terraf_fg_scroll_msb_arm_w }, /* written between two consecutive writes to 7c008 */
 MEMORY_END
 
@@ -248,7 +281,7 @@ static MEMORY_READ16_START( kodure_readmem )
 	{ 0x064000, 0x064fff, MRA16_RAM },
 	{ 0x068000, 0x069fff, MRA16_RAM },
 	{ 0x06a000, 0x06a9ff, MRA16_RAM },
-	{ 0x06C000, 0x06C9ff, MRA16_RAM },
+	{ 0x06C000, 0x06Cfff, MRA16_RAM },
 	{ 0x070000, 0x070fff, MRA16_RAM },
 	{ 0x074000, 0x074fff, MRA16_RAM },
 	{ 0x078000, 0x078001, input_port_0_word_r },
@@ -264,7 +297,7 @@ static MEMORY_WRITE16_START( kodure_writemem )
 	{ 0x064000, 0x064fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
 	{ 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x06a000, 0x06a9ff, MWA16_RAM },
-	{ 0x06C000, 0x06C9ff, MWA16_RAM },
+	{ 0x06C000, 0x06Cfff, MWA16_RAM, &spr_pal_clut },
 	{ 0x070000, 0x070fff, armedf_fg_videoram_w, &armedf_fg_videoram },
 	{ 0x074000, 0x074fff, armedf_bg_videoram_w, &armedf_bg_videoram },
 	{ 0x07c000, 0x07c001, kodure_io_w },
@@ -281,7 +314,7 @@ static MEMORY_READ16_START( cclimbr2_readmem )
 	{ 0x064000, 0x064fff, MRA16_RAM },
 	{ 0x068000, 0x069fff, MRA16_RAM },
 	{ 0x06a000, 0x06a9ff, MRA16_RAM },
-	{ 0x06c000, 0x06c9ff, MRA16_RAM },
+	{ 0x06c000, 0x06cfff, MRA16_RAM },
 	{ 0x070000, 0x070fff, MRA16_RAM },
 	{ 0x074000, 0x074fff, MRA16_RAM },
 	{ 0x078000, 0x078001, input_port_0_word_r },
@@ -297,11 +330,51 @@ static MEMORY_WRITE16_START( cclimbr2_writemem )
 	{ 0x064000, 0x064fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
 	{ 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x06a000, 0x06a9ff, MWA16_RAM },
-	{ 0x06c000, 0x06c9ff, MWA16_RAM },
 	{ 0x06ca00, 0x06cbff, MWA16_RAM },
+	{ 0x06c000, 0x06cfff, MWA16_RAM, &spr_pal_clut },
 	{ 0x070000, 0x070fff, armedf_fg_videoram_w, &armedf_fg_videoram },
 	{ 0x074000, 0x074fff, armedf_bg_videoram_w, &armedf_bg_videoram },
 	{ 0x07c000, 0x07c001, io_w },
+	{ 0x07c002, 0x07c003, armedf_bg_scrollx_w },
+	{ 0x07c004, 0x07c005, armedf_bg_scrolly_w },
+	{ 0x07c00a, 0x07c00b, sound_command_w },
+	{ 0x07c00e, 0x07c00f, MWA16_NOP },		/* ? */
+	{ 0x07c00c, 0x07c00d, MWA16_NOP },		/* Watchdog ? cycle 0000 -> 0100 -> 0200 back to 0000 */
+MEMORY_END
+
+static MEMORY_WRITE16_START( legion_writemem )
+    { 0x000000, 0x05ffff, MWA16_ROM },
+	{ 0x060000, 0x060fff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0x061000, 0x063fff, MWA16_RAM },
+	{ 0x064000, 0x064fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
+	{ 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
+    { 0x06a000, 0x06a9ff, MWA16_RAM },
+	{ 0x06ca00, 0x06cbff, MWA16_RAM },
+	{ 0x06c000, 0x06cfff, MWA16_RAM, &spr_pal_clut },
+	{ 0x070000, 0x070fff, armedf_fg_videoram_w, &armedf_fg_videoram },
+	{ 0x074000, 0x074fff, armedf_bg_videoram_w, &armedf_bg_videoram },
+	{ 0x07c000, 0x07c001, terraf_io_w },
+	{ 0x07c002, 0x07c003, armedf_bg_scrollx_w },
+	{ 0x07c004, 0x07c005, armedf_bg_scrolly_w },
+	{ 0x07c00a, 0x07c00b, sound_command_w },
+	{ 0x07c00e, 0x07c00f, armedf_mcu_cmd },	/* MCU Command ? */
+	{ 0x07c00c, 0x07c00d, MWA16_NOP },		/* Watchdog ? cycle 0000 -> 0100 -> 0200 back to 0000 */
+MEMORY_END
+
+static MEMORY_WRITE16_START( legiono_writemem )
+    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x040000, 0x04003f, MWA16_RAM, &legion_cmd },
+	{ 0x040040, 0x05ffff, MWA16_ROM },
+	{ 0x060000, 0x060fff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0x061000, 0x063fff, MWA16_RAM },
+	{ 0x064000, 0x064fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
+    { 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
+	{ 0x06a000, 0x06a9ff, MWA16_RAM },
+	{ 0x06ca00, 0x06cbff, MWA16_RAM },
+	{ 0x06c000, 0x06cfff, MWA16_RAM, &spr_pal_clut },
+	{ 0x070000, 0x070fff, armedf_fg_videoram_w, &armedf_fg_videoram },
+	{ 0x074000, 0x074fff, armedf_bg_videoram_w, &armedf_bg_videoram },
+	{ 0x07c000, 0x07c001, terraf_io_w },
 	{ 0x07c002, 0x07c003, armedf_bg_scrollx_w },
 	{ 0x07c004, 0x07c005, armedf_bg_scrolly_w },
 	{ 0x07c00a, 0x07c00b, sound_command_w },
@@ -330,7 +403,7 @@ static MEMORY_WRITE16_START( armedf_writemem )
 	{ 0x067000, 0x067fff, armedf_fg_videoram_w, &armedf_fg_videoram },
 	{ 0x068000, 0x069fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x06a000, 0x06afff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
-	{ 0x06b000, 0x06bfff, MWA16_RAM },
+	{ 0x06b000, 0x06bfff, MWA16_RAM, &spr_pal_clut },
 	{ 0x06c000, 0x06c7ff, MWA16_RAM },
 	{ 0x06d000, 0x06d001, io_w },
 	{ 0x06d002, 0x06d003, armedf_bg_scrollx_w },
@@ -596,9 +669,9 @@ INPUT_PORTS_START( kodure )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+  PORT_DIPNAME( 0x80, 0x80, "Infinite Timer (Cheat)" )
+	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( cclimbr2 )
@@ -917,9 +990,72 @@ static MACHINE_DRIVER_START( cclimbr2 )
 	MDRV_SOUND_ADD(DAC, cclimbr2_dac_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( legion )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 8000000) /* 8 MHz?? */
+	MDRV_CPU_MEMORY(cclimbr2_readmem,legion_writemem)
+	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 3072000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 3.072 MHz???? */
+	MDRV_CPU_MEMORY(cclimbr2_soundreadmem,cclimbr2_soundwritemem)
+	MDRV_CPU_PORTS(readport,writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,128)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_EOF(armedf)
+	MDRV_VIDEO_START(legion)
+	MDRV_VIDEO_UPDATE(armedf)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM3812, ym3812_interface)
+	MDRV_SOUND_ADD(DAC, cclimbr2_dac_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( legiono )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 8000000) /* 8 MHz?? */
+	MDRV_CPU_MEMORY(cclimbr2_readmem,legiono_writemem)
+	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 3072000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 3.072 MHz???? */
+	MDRV_CPU_MEMORY(cclimbr2_soundreadmem,cclimbr2_soundwritemem)
+	MDRV_CPU_PORTS(readport,writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,128)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_EOF(armedf)
+	MDRV_VIDEO_START(armedf)
+	MDRV_VIDEO_UPDATE(armedf)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM3812, ym3812_interface)
+	MDRV_SOUND_ADD(DAC, cclimbr2_dac_interface)
+MACHINE_DRIVER_END
 
 ROM_START( legion )
-	ROM_REGION( 0x50000, REGION_CPU1, 0 )	/* 64K*8 for 68000 code */
+	ROM_REGION( 0x60000, REGION_CPU1, 0 )	/* 64K*8 for 68000 code */
 	ROM_LOAD16_BYTE( "lg1.bin", 0x000001, 0x010000, CRC(c4aeb724) SHA1(b4c0383f3b1fa6b1d5bdab0f3a5293c89a82a474) )
 	ROM_LOAD16_BYTE( "lg3.bin", 0x000000, 0x010000, CRC(777e4935) SHA1(225766940059b4c12e69332ea77eb618dbd1467b) )
 	ROM_LOAD16_BYTE( "legion.1b", 0x020001, 0x010000, CRC(c306660a) SHA1(31c6b868ba07677b5110c577335873354bff596f) ) /* lg2*/
@@ -948,7 +1084,7 @@ ROM_START( legion )
 ROM_END
 
 ROM_START( legiono )
-	ROM_REGION( 0x50000, REGION_CPU1, 0 )	/* 64K*8 for 68000 code */
+	ROM_REGION( 0x60000, REGION_CPU1, 0 )	/* 64K*8 for 68000 code */
 	ROM_LOAD16_BYTE( "legion.1a", 0x000001, 0x010000, CRC(8c0cda1d) SHA1(14b93d4fb4381ebc6a4ccdb480089bf69c6f474b) )
 	ROM_LOAD16_BYTE( "legion.1c", 0x000000, 0x010000, CRC(21226660) SHA1(ee48812d6ec9d4dccc58684164916f91b71aabf2) )
 	ROM_LOAD16_BYTE( "legion.1b", 0x020001, 0x010000, CRC(c306660a) SHA1(31c6b868ba07677b5110c577335873354bff596f) )
@@ -971,8 +1107,6 @@ ROM_START( legiono )
 	ROM_REGION( 0x20000, REGION_GFX4, ROMREGION_DISPOSE )
 	ROM_LOAD( "legion.1k", 0x000000, 0x010000, CRC(ff5a0db9) SHA1(9308deb363d3b7686cc69485ec14201dd68f9a97) )
 	ROM_LOAD( "legion.1j", 0x010000, 0x010000, CRC(bae220c8) SHA1(392ae0fb0351dcad7b0e8e0ed4a1dc6e07f493df) )
-
-	/* should lg7.bin be loaded here too? The ROM wasn't included in this set */
 ROM_END
 
 ROM_START( terraf )
@@ -1144,6 +1278,11 @@ DRIVER_INIT( terraf )
 	armedf_setgfxtype(0);
 }
 
+DRIVER_INIT( terrafu )
+{
+	armedf_setgfxtype(5);
+}
+
 DRIVER_INIT( armedf )
 {
 	armedf_setgfxtype(1);
@@ -1151,6 +1290,13 @@ DRIVER_INIT( armedf )
 
 DRIVER_INIT( kodure )
 {
+  data16_t *ROM = (data16_t *)memory_region(REGION_CPU1);
+
+	/* patch "time over" bug. */
+	ROM[0x1016c/2] = 0x4e71;
+	/* ROM check at POST. */
+	ROM[0x04fc6/2] = 0x4e71;
+  
 	armedf_setgfxtype(2);
 }
 
@@ -1178,7 +1324,7 @@ DRIVER_INIT( legiono )
 	/* No need to patch the checksum routine (see notes) ! */
 #endif
 
-	armedf_setgfxtype(3);
+	armedf_setgfxtype(6);
 }
 
 DRIVER_INIT( cclimbr2 )
@@ -1188,10 +1334,10 @@ DRIVER_INIT( cclimbr2 )
 
 
 /*     YEAR, NAME,   PARENT,   MACHINE,  INPUT,    INIT,     MONITOR, COMPANY,     FULLNAME, FLAGS */
-GAMEX( 1987, legion,   0,      cclimbr2, legion,   legion,   ROT270, "Nichibutsu", "Legion (ver 2.03)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
-GAMEX( 1987, legiono,  legion, cclimbr2, legion,   legiono,  ROT270, "Nichibutsu", "Legion (ver 1.05)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1987, legion,   0,      legion,   legion,   legion,   ROT270, "Nichibutsu", "Legion (ver 2.03)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1987, legiono,  legion, legiono,  legion,   legiono,  ROT270, "Nichibutsu", "Legion (ver 1.05)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAMEX( 1987, terraf,   0,      terraf,   terraf,   terraf,   ROT0,   "Nichibutsu", "Terra Force",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
-GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terraf,   ROT0,   "Nichibutsu USA", "Terra Force (US)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu USA", "Terra Force (US)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1987, kodure,   0,      kodure,   kodure,   kodure,   ROT0,   "Nichibutsu", "Kodure Ookami (Japan)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
-GAME( 1988, cclimbr2, 0,      cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu", "Crazy Climber 2 (Japan)")
-GAME( 1988, armedf,   0,      armedf,   armedf,   armedf,   ROT270, "Nichibutsu", "Armed Formation")
+GAMEX( 1988, cclimbr2, 0,      cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu", "Crazy Climber 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1988, armedf,   0,      armedf,   armedf,   armedf,   ROT270, "Nichibutsu", "Armed Formation", GAME_IMPERFECT_GRAPHICS )
