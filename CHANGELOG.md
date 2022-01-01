@@ -342,6 +342,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Kick - Romset `kick`
 * Kick'N Run- Romset `kicknrun`
 * Kozmik Kroozr - Romset `kroozr`
+* Legion (ver 2.03) - Romset `legion`
 * Macho Mouse - Romset `machomou` - colors fixed
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
 * Max RPM - Romset `maxrpm`
@@ -803,3 +804,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for the MVS version of Xeno Crisis to the Neo Geo driver [arcadez]
 * Added fake gunsights for Under Fire making this game now playable in MAME2003+ [mahoneyt944]
 * Fixed some graphical niggles in Dragon Master and added support for Master's Fury to the drgnmst.c driver [arcadez]
+* Backported some fixes for a couple of games in the armedf.c driver garbage sprites covering the entire playfield in Legion and a timer crash bug in Kodore Ookami [arcadez]
+* Added sprite clut cycling colour effects for all games in the armedf.c driver fixes red ninja display in Kodore Ookami and makes Armed Formation etc etc look far prettier [arcadez]
