@@ -132,7 +132,6 @@ VIDEO_START( armedf )
 		sprite_offy = 128;
 	}
 
-	//bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,16,16,64,32);
 	bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,64,32);
 	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,64,32);
 	armedf_tx_tilemap = tilemap_create(get_tx_tile_info,armedf_scan,TILEMAP_TRANSPARENT,8,8,64,32);
@@ -165,7 +164,6 @@ VIDEO_START( legion )
 		sprite_offy = 128;
 	}
 
-	//bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,16,16,64,32);
 	bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,64,32);
 	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,64,32);
 	armedf_tx_tilemap = tilemap_create(get_legion_tx_tile_info,armedf_scan,TILEMAP_TRANSPARENT,8,8,64,32);
@@ -296,9 +294,7 @@ static void armedf_drawgfx(struct mame_bitmap *dest_bmp, const struct rectangle 
 							UINT32 code,UINT32 color, UINT32 clut,int flipx,int flipy,int offsx,int offsy,
 							int transparent_color)
 {
-//	const pen_t *pal = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * (color % gfx->total_colors)];
 	const pen_t *pal = &gfx->colortable[0 + gfx->color_granularity * (color % gfx->total_colors)];
-//	const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
 	const UINT8 *source_base = gfx->gfxdata + (code % gfx->total_elements) * gfx->char_modulo;
 	int x_index_base, y_index, sx, sy, ex, ey;
 	int xinc, yinc;
@@ -349,7 +345,6 @@ static void armedf_drawgfx(struct mame_bitmap *dest_bmp, const struct rectangle 
 			for (y = sy; y < ey; y++)
 			{
 				const UINT8 *source = source_base + y_index*gfx->line_modulo;
-                //UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
 				UINT16 *dest = (UINT16*)dest_bmp->line[y];
 				int x_index = x_index_base;
 				for (x = sx; x < ex; x++)
@@ -415,7 +410,7 @@ static void copy_textmap(int index)
 	*/
 
 	UINT8 * data = (UINT8 *)memory_region(REGION_GFX5);
-    int i;
+  int i;
 	for(i=0;i<0x400;++i)
 	{
 		if(i<0x10) continue;
@@ -433,7 +428,7 @@ static void copy_textmap(int index)
 		}
 		else
 		{
-			//clear - not used
+			/* clear - not used */
 			terraf_text_videoram[i]=0x20;
 			terraf_text_videoram[i+0x400]=0;
 		}
@@ -455,19 +450,19 @@ VIDEO_UPDATE( armedf )
 
 	if ((scroll_type == 0)||(scroll_type == 5 )) {
 		if (old_mcu_mode!=mcu_mode) {
-			if ((mcu_mode&0x000f)==0x0004) {		// transparent tx
+			if ((mcu_mode&0x000f)==0x0004) {		/* transparent tx */
 				tilemap_set_transparent_pen(armedf_tx_tilemap, 0x0f);
 				tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
-				//logerror("? Transparent TX 0x0f\n");
+				/* logerror("? Transparent TX 0x0f\n"); */
 			}
-			if ((mcu_mode&0x000f)==0x000f) {		// opaque tx
+			if ((mcu_mode&0x000f)==0x000f) {		/* opaque tx */
 				tilemap_set_transparent_pen(armedf_tx_tilemap, 0x10);
 				tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
-				//logerror("? Opaque TX\n");
+				/* logerror("? Opaque TX\n"); */
 			}
 			
 			old_mcu_mode = mcu_mode;
-			//logerror("MCU Change => %04x\n",mcu_mode);
+			/* logerror("MCU Change => %04x\n",mcu_mode); */
 		}
 	}
 
