@@ -1158,12 +1158,14 @@ VIDEO_UPDATE( bigrun )
 	cischeat_tmap_SET_SCROLL(1)
 	cischeat_tmap_SET_SCROLL(2)
 
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
+	fillbitmap(bitmap,Machine->pens[0x1000],cliprect);
 
 	for (i = 7; i >= 4; i--)
 	{											/* bitmap, road, min_priority, max_priority, transparency */
-		if (megasys1_active_layers & 0x10)	cischeat_draw_road(bitmap,cliprect,0,i,i,TRANSPARENCY_NONE);
+		if (megasys1_active_layers & 0x10)	cischeat_draw_road(bitmap,cliprect,0,i,i,(i != 7));
 		if (megasys1_active_layers & 0x20)	cischeat_draw_road(bitmap,cliprect,1,i,i,TRANSPARENCY_PEN);
+	  if (megasys1_active_layers & 0x08)	bigrun_draw_sprites(bitmap,cliprect,i+1,i);
+
 	}
 
 	flag = 0;
@@ -1174,9 +1176,10 @@ VIDEO_UPDATE( bigrun )
 	{											/* bitmap, road, min_priority, max_priority, transparency */
 		if (megasys1_active_layers & 0x10)	cischeat_draw_road(bitmap,cliprect,0,i,i,TRANSPARENCY_PEN);
 		if (megasys1_active_layers & 0x20)	cischeat_draw_road(bitmap,cliprect,1,i,i,TRANSPARENCY_PEN);
+	  if (megasys1_active_layers & 0x08)	bigrun_draw_sprites(bitmap,cliprect,i+1,i);
 	}
 
-	if (megasys1_active_layers & 0x08)	bigrun_draw_sprites(bitmap,cliprect,15,0);
+/*	if (megasys1_active_layers & 0x08)	bigrun_draw_sprites(bitmap,cliprect,15,0); */
 
 	cischeat_tmap_DRAW(2)
 
