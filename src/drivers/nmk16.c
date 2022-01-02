@@ -221,7 +221,7 @@ static READ16_HANDLER( tharrier_mcu_r )
 		else
 		{
 			res = to_main[prot_count++];
-			if (prot_count > sizeof(to_main))
+			if (prot_count == sizeof(to_main))
 				prot_count = 0;
 		}
 
@@ -4831,7 +4831,7 @@ ROM_START( twinactn )
 	ROM_LOAD16_BYTE( "afega.uj13", 0x00000, 0x20000, CRC(9187701d) SHA1(1da8d1e3969f60c7b0521cd22c723cb51619df9d) )
 	ROM_LOAD16_BYTE( "afega.uj12", 0x00001, 0x20000, CRC(fe8cff9c) SHA1(a1a04deff9e2cb54c69601898cf4e5133c2bc437) )
 
-	ROM_REGION( 0x8000, REGION_CPU2, 0 )		/* Z80 Code */
+	ROM_REGION( 0x48000, REGION_CPU2, 0 )		/* Z80 Code */
 	ROM_LOAD( "afega.su6", 0x0000, 0x8000, CRC(3a52dc88) SHA1(87941987d34d93df6df9ff33ccfbd1f5d4a39c51) )	/* 1111xxxxxxxxxxx = 0x00 */
 
 	ROM_REGION( 0x100000, REGION_GFX3, 0 )	/* Sprites, 16x16x4 */
@@ -4860,7 +4860,7 @@ ROM_START( dolmen )
 	ROM_LOAD16_BYTE( "afega8.uj3", 0x00000, 0x20000, CRC(f1b73e4c) SHA1(fe5bbd1e91d1a81744c373effbd96adbbc896133) )
 	ROM_LOAD16_BYTE( "afega7.uj2", 0x00001, 0x20000, CRC(c91bda0b) SHA1(8c09e3020e72e8ab2ca3a3dad708d64f9bf75a4f) )
 
-	ROM_REGION( 0x8000, REGION_CPU2, 0 )     /* Z80 Code */
+	ROM_REGION( 0x48000, REGION_CPU2, 0 )     /* Z80 Code */
 	ROM_LOAD( "afega1.su6", 0x0000, 0x8000, CRC(166b53cb) SHA1(44864d1518205bdc445dc95e5825924f73d334b2) )   /* 1111xxxxxxxxxxx = 0x00 */
 
 	ROM_REGION( 0x100000, REGION_GFX3, 0 )   /* Sprites, 16x16x4 */
