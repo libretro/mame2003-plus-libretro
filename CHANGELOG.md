@@ -471,6 +471,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dig Dug
 * Dig Dug II
 * Diver Boy
+* Dolmen
 * Final Fight - Added OST soundtrack (via KMFDManic)
 * Flower
 * Funny Bubble - `funybubl` * Mature *
@@ -522,6 +523,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tower Of Druaga
 * Toypop
 * Trojan / Tatakai No Banka 
+* Twin Action
 * Twin Hawk
 * Two Tigers - `twotigra` romset
 * WWF Wrestlemania
@@ -806,3 +808,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some graphical niggles in Dragon Master and added support for Master's Fury to the drgnmst.c driver [arcadez]
 * Backported some fixes for a couple of games in the armedf.c driver garbage sprites covering the entire playfield in Legion and a timer crash bug in Kodore Ookami [arcadez]
 * Added sprite clut cycling colour effects for all games in the armedf.c driver fixes red ninja display in Kodore Ookami and makes Armed Formation etc etc look far prettier [arcadez]
+* Fixed sound in Dolmen and Twin Action then sorted an mcu simulation issue in Task Force Harrier [grant2258]
+* Improved road vs scenery priorities meaning you dont see things that should be hidden behind the hills appearing all over the road in Jaleco's Big Run [arcadez]
