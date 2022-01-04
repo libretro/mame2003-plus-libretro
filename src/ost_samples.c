@@ -1136,15 +1136,6 @@ bool generate_ost_sound_moonwalker(int data)
 
 		// Title screen magic.
 		case 0x86:
-			if(mj_current_music == 85)
-				return 0; /* do nothing */
-			else {
-				mj_current_music = 0;
-				schedule_default_sound = true;
-			}
-			break;
-
-		// Title screen magic.
 		case 0x87:
 			if(mj_current_music == 85)
 				return 0; /* do nothing */
@@ -1224,8 +1215,7 @@ bool generate_ost_sound_moonwalker(int data)
 		case 0xC3:
 			mj_current_music = 0;
 			schedule_default_sound = true;
-
-			if(moon_diddy) moon_diddy = false; /* The special move is finished, return volume back to 100%. */
+			moon_diddy = false; /* return volume back to 100%. */
 			break;
 
 		default:
