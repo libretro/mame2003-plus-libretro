@@ -244,9 +244,9 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 	{
 		/* Volume port */
 	}
-  
+
   deco32_pri_w(0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
-  
+
 }
 
 /**********************************************************************************/
@@ -959,20 +959,20 @@ static MEMORY_READ32_START( nslasher_readmem )
     { 0x000000, 0x0fffff, MRA32_ROM       },
 	{ 0x100000, 0x11ffff, MRA32_RAM       },
 	{ 0x120000, 0x1200ff, MRA32_NOP	      },						/* ACIA (unused) */
-	
+
 	{ 0x163000, 0x16309f, MRA32_RAM       },                        /* 'Ace' RAM!? */
 	{ 0x168000, 0x169fff, MRA32_RAM       },
 	{ 0x170000, 0x171fff, MRA32_RAM       },
 	{ 0x178000, 0x179fff, MRA32_RAM       },
 	{ 0x182000, 0x183fff, MRA32_RAM       },
 	{ 0x184000, 0x185fff, MRA32_RAM       },
-	
+
 	{ 0x192000, 0x193fff, MRA32_RAM       },
 	{ 0x194000, 0x195fff, MRA32_RAM       },
 	{ 0x1a0000, 0x1a001f, MRA32_RAM       },
 	{ 0x1c2000, 0x1c3fff, MRA32_RAM       },
 	{ 0x1c4000, 0x1c5fff, MRA32_RAM       },
-	
+
 	{ 0x1d2000, 0x1d3fff, MRA32_RAM       },
 	{ 0x1d4000, 0x1d5fff, MRA32_RAM       },
 	{ 0x1e0000, 0x1e001f, MRA32_RAM       },
@@ -990,9 +990,9 @@ static MEMORY_WRITE32_START( nslasher_writemem )
 	{ 0x164000, 0x164003, MWA32_NOP	                        },	 /* Palette control BG2/3 ($1a constant) */
 	{ 0x164004, 0x164007, MWA32_NOP	                        },	 /* Palette control Obj1 ($4 constant) */
 	{ 0x164008, 0x16400b, MWA32_NOP	                        },	 /* Palette control Obj2 ($6 constant) */
-	{ 0x16400c, 0x16400f, MWA32_NOP	                        },	
+	{ 0x16400c, 0x16400f, MWA32_NOP	                        },
 	{ 0x168000, 0x169fff, deco32_buffered_palette_w, &paletteram32 },
-	{ 0x16c000, 0x16c003, MWA32_NOP	                        },	
+	{ 0x16c000, 0x16c003, MWA32_NOP	                        },
 	{ 0x16c008, 0x16c00b, deco32_palette_dma_w              },
 
 	{ 0x170000, 0x171fff, MWA32_RAM, &spriteram32, &spriteram_size },
@@ -1079,7 +1079,7 @@ static READ_HANDLER(latch_r)
 {
 	/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 	nslasher_sound_irq &= ~0x02;
-	cpu_set_irq_line(1, 0, (nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE); 
+	cpu_set_irq_line(1, 0, (nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	return soundlatch_r(0);
 }
 
@@ -1413,26 +1413,15 @@ INPUT_PORTS_START( lockload )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 ) /*reset button??*/
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )  /*service??*/
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*check  */ /*test BUTTON F2*/
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_SERVICE1 ) /* Service */
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_SERVICE2 ) /* Only on some games */
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_SERVICE3 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_START3 )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START4 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*check */ /*test BUTTON F2*/
+	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
 	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED ) /* Would be a dipswitch, but only 1 present on board */
-	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unknown ) )
@@ -1450,23 +1439,18 @@ INPUT_PORTS_START( lockload )
 	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x4000, 0x0000, "Reset" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x4000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x8000, 0x8000, "Debug Mode" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 ) /*IPT_VBLANK )*/
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BITX(0x0004, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-/*	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )*/
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 ) /*check  */ /*test BUTTON F2*/
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_SERVICE( 0x0004, IP_ACTIVE_LOW )
+	PORT_BIT( 0x00f8, IP_ACTIVE_LOW, IPT_UNUSED ) /*check  */ /*test BUTTON F2*/
 
 	PORT_START
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) /* mirror of fire buttons */
@@ -1483,10 +1467,10 @@ INPUT_PORTS_START( lockload )
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 20, 25, 0, 0xff)
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 20, 25, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 20, 25, 0, 0xff)
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 20, 25, 0, 0xff)
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 20, 25, 0, 0xff)
 INPUT_PORTS_END
 
 INPUT_PORTS_START( tattass )
@@ -3000,7 +2984,7 @@ static DRIVER_INIT( fghthist )
 {
 	deco56_decrypt(REGION_GFX1);
 	deco74_decrypt(REGION_GFX2);
-	
+
 	decoprot_reset();
 }
 
