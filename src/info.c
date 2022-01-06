@@ -724,8 +724,8 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	print_free_string(out, game->description);
 	fprintf(out, "</description>\n");
 
-	/* print the year only if is a number */
-	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
+	/* print the year */
+	if (game->year != NULL)
 		fprintf(out, "\t\t<year>%s</year>\n", game->year );
 
 	if (game->manufacturer)
@@ -761,8 +761,8 @@ static void print_resource_info(FILE* out, const struct GameDriver* game)
 		fprintf(out, "</description>\n");
 	}
 
-	/* print the year only if it's a number */
-	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
+	/* print the year */
+	if (game->year != NULL)
 		fprintf(out, "\t\t<year>%s</year>\n", game->year );
 
 	if (game->manufacturer)
