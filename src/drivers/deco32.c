@@ -244,9 +244,9 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 	{
 		/* Volume port */
 	}
-  
+
   deco32_pri_w(0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
-  
+
 }
 
 /**********************************************************************************/
@@ -959,20 +959,20 @@ static MEMORY_READ32_START( nslasher_readmem )
     { 0x000000, 0x0fffff, MRA32_ROM       },
 	{ 0x100000, 0x11ffff, MRA32_RAM       },
 	{ 0x120000, 0x1200ff, MRA32_NOP	      },						/* ACIA (unused) */
-	
+
 	{ 0x163000, 0x16309f, MRA32_RAM       },                        /* 'Ace' RAM!? */
 	{ 0x168000, 0x169fff, MRA32_RAM       },
 	{ 0x170000, 0x171fff, MRA32_RAM       },
 	{ 0x178000, 0x179fff, MRA32_RAM       },
 	{ 0x182000, 0x183fff, MRA32_RAM       },
 	{ 0x184000, 0x185fff, MRA32_RAM       },
-	
+
 	{ 0x192000, 0x193fff, MRA32_RAM       },
 	{ 0x194000, 0x195fff, MRA32_RAM       },
 	{ 0x1a0000, 0x1a001f, MRA32_RAM       },
 	{ 0x1c2000, 0x1c3fff, MRA32_RAM       },
 	{ 0x1c4000, 0x1c5fff, MRA32_RAM       },
-	
+
 	{ 0x1d2000, 0x1d3fff, MRA32_RAM       },
 	{ 0x1d4000, 0x1d5fff, MRA32_RAM       },
 	{ 0x1e0000, 0x1e001f, MRA32_RAM       },
@@ -990,9 +990,9 @@ static MEMORY_WRITE32_START( nslasher_writemem )
 	{ 0x164000, 0x164003, MWA32_NOP	                        },	 /* Palette control BG2/3 ($1a constant) */
 	{ 0x164004, 0x164007, MWA32_NOP	                        },	 /* Palette control Obj1 ($4 constant) */
 	{ 0x164008, 0x16400b, MWA32_NOP	                        },	 /* Palette control Obj2 ($6 constant) */
-	{ 0x16400c, 0x16400f, MWA32_NOP	                        },	
+	{ 0x16400c, 0x16400f, MWA32_NOP	                        },
 	{ 0x168000, 0x169fff, deco32_buffered_palette_w, &paletteram32 },
-	{ 0x16c000, 0x16c003, MWA32_NOP	                        },	
+	{ 0x16c000, 0x16c003, MWA32_NOP	                        },
 	{ 0x16c008, 0x16c00b, deco32_palette_dma_w              },
 
 	{ 0x170000, 0x171fff, MWA32_RAM, &spriteram32, &spriteram_size },
@@ -1079,7 +1079,7 @@ static READ_HANDLER(latch_r)
 {
 	/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 	nslasher_sound_irq &= ~0x02;
-	cpu_set_irq_line(1, 0, (nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE); 
+	cpu_set_irq_line(1, 0, (nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	return soundlatch_r(0);
 }
 
@@ -2984,7 +2984,7 @@ static DRIVER_INIT( fghthist )
 {
 	deco56_decrypt(REGION_GFX1);
 	deco74_decrypt(REGION_GFX2);
-	
+
 	decoprot_reset();
 }
 
