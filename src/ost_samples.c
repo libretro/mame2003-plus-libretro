@@ -49,6 +49,7 @@ bool     outrun_lastwave;
 int      outrun_start_counter;
 
 bool     sf2_playing_street_fighter = false;
+bool     fadingMusic;
 
 
 /* ost functions */
@@ -453,6 +454,10 @@ static void ost_mix_samples(void)
 
 void ost_fade_volume(void)
 {
+  if(fadingMusic == false) return;
+
+  /* Need to adjust sa_volume before remixing */
+  ost_mix_samples();
 }
 
 
