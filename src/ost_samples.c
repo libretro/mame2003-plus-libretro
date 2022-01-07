@@ -1939,9 +1939,9 @@ bool generate_ost_sound_sf2(int data)
 			ost_start_samples(80, 81, 1);
 			break;
 
-		case 0xf9:
+		case 0x53: /* Win  */
+		case 0x54: /* Lose */
 			fadingMusic = true;
-			schedule_default_sound = true;
 			break;
 
 		/* Time to stop the Street Fighter 2 music samples.*/
