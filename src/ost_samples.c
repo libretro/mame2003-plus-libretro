@@ -53,7 +53,6 @@ int      outrun_start_counter;
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
-       void ost_fade_volume(void);
 
 
 const char *const ddragon_sample_set_names[] =
