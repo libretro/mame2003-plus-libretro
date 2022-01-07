@@ -48,6 +48,8 @@ bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
+bool     sf2_playing_street_fighter = false;
+
 
 /* ost functions */
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
