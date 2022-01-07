@@ -1640,3 +1640,16 @@ bool generate_ost_sound_outrun(int data)
 
 	return schedule_default_sound;
 }
+
+bool generate_ost_sound_sf2(int data)
+{
+	/* initialize game config */
+	schedule_default_sound = false;
+	sa_volume = 100;
+
+	/* switch data */
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
