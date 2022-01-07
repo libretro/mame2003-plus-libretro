@@ -1646,332 +1646,282 @@ bool generate_ost_sound_sf2(int data)
 {
 	/* initialize game config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data)
 	{
 		case 0x1:
-			fadeMusicVolume = 1.0f;
-
 			// ryu music slow
+			sa_volume = 100;
 			ost_start_samples(0, 1, 1);
 			break;
 
 		case 0x2:
-			fadeMusicVolume = 1.0f;
-
 			// e honda music slow
+			sa_volume = 100;
 			ost_start_samples(12, 13, 1);
 			break;
 
 		case 0x3:
-			fadeMusicVolume = 1.0f;
-
 			// blanka music slow
+			sa_volume = 100;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		case 0x4:
-			fadeMusicVolume = 1.0f;
-
 			// ken music slow
+			sa_volume = 100;
 			ost_start_samples(52, 53, 1);
 			break;
 
 		case 0x5:
-			fadeMusicVolume = 1.0f;
-
 			// guile music slow
+			sa_volume = 100;
 			ost_start_samples(16, 17, 1);
 			break;
 
 		case 0x6:
-			fadeMusicVolume = 1.0f;
-
 			// chun li music slow
+			sa_volume = 100;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		case 0x7:
-			fadeMusicVolume = 1.0f;
-
 			// zangief music slow
+			sa_volume = 100;
 			ost_start_samples(56, 57, 1);
 			break;
 
 		case 0x8:
-			fadeMusicVolume = 1.0f;
-
 			// dhalsim music slow
+			sa_volume = 100;
 			ost_start_samples(20, 21, 1);
 			break;
 
 		case 0x9:
-			fadeMusicVolume = 1.0f;
-
 			// balrog music slow
+			sa_volume = 100;
 			ost_start_samples(24, 25, 1);
 			break;
 
 		case 0xa:
-			fadeMusicVolume = 1.0f;
-
 			// vega music slow
+			sa_volume = 100;
 			ost_start_samples(60, 61, 1);
 			break;
 
 		case 0xb:
-			fadeMusicVolume = 1.0f;
-
 			// sagat music slow
+			sa_volume = 100;
 			ost_start_samples(28, 29, 1);
 			break;
 
 		case 0xc:
-			fadeMusicVolume = 1.0f;
-
 			// m. bison music slow
+			sa_volume = 100;
 			ost_start_samples(32, 33, 1);
 			break;
 
 		case 0xd:
-			fadeMusicVolume = 1.0f;
-
 			// bonus stage music
+			sa_volume = 100;
 			ost_start_samples(64, 65, 1);
 			break;
 
 		case 0xe:
-			fadeMusicVolume = 1.0f;
-
 			// character select stage
+			sa_volume = 100;
 			ost_start_samples(48, 49, 1);
 			break;
 
 		case 0xf:
-			fadeMusicVolume = 1.0f;
-
 			// versus screen ditty
+			sa_volume = 100;
 			ost_start_samples(36, 37, 0);
 			break;
 
 		case 0x10:
-			fadeMusicVolume = 1.0f;
-
 			// end of fight dialog/resolution screen
+			sa_volume = 100;
 			ost_start_samples(38, 39, 0);
 			break;
 
 		case 0x11:
-			fadeMusicVolume = 1.0f;
-
 			// continue music
+			sa_volume = 100;
 			ost_start_samples(40, 41, 0);
 			break;
 
 		case 0x13:
-			fadeMusicVolume = 1.0f;
-
 			// failed to continue?
+			sa_volume = 100;
 			ost_start_samples(90, 91, 0);
 			break;
 
 		case 0x14:
-			fadeMusicVolume = 1.0f;
-
 			// high score screen
+			sa_volume = 100;
 			ost_start_samples(42, 43, 0);
 			break;
 
 		case 0x15:
-			fadeMusicVolume = 1.0f;
-
 			// player joined music
+			sa_volume = 100;
 			ost_start_samples(46, 47, 0);
 			break;
 
 		case 0x16:
-			fadeMusicVolume = 1.0f;
-
 			// intro music
+			sa_volume = 100;
 			ost_start_samples(44, 45, 1);
 			break;
 
 		case 0x18:
-			fadeMusicVolume = 1.0f;
-
 			// ryu ending music
+			sa_volume = 100;
 			ost_start_samples(82, 83, 0);
 			break;
 
 		case 0x19:
-			fadeMusicVolume = 1.0f;
-
 			// e.honda ending music
+			sa_volume = 100;
 			ost_start_samples(72, 73, 1);
 			break;
 
 		case 0x1a:
-			ost_stop_samples();
-
 			fadingMusic = false;
-			fadeMusicVolume = 1.0f;
 
 			// blanka ending music
+			sa_volume = 100;
 			ost_start_samples(74, 75, 1);
 			break;
 
 		case 0x1b:
-			fadeMusicVolume = 1.0f;
-
 			// guile ending music
+			sa_volume = 100;
 			ost_start_samples(76, 77, 1);
 			break;
 
 		case 0x1c:
-			fadeMusicVolume = 1.0f;
-
 			// ken ending music
+			sa_volume = 100;
 			ost_start_samples(68, 69, 1);
 			break;
 
 		case 0x1d:
-			fadeMusicVolume = 1.0f;
-
 			// chun li ending music?
+			sa_volume = 100;
 			ost_start_samples(86, 87, 1);
 			break;
 
 		case 0x1e:
-			fadeMusicVolume = 1.0f;
-
 			// zangief ending music
+			sa_volume = 100;
 			ost_start_samples(78, 79, 1);
 			break;
 
 		case 0x1f:
-			ost_stop_samples();
-
 			fadingMusic = false;
-			fadeMusicVolume = 1.0f;
 
 			// dhalsim ending music
+			sa_volume = 100;
 			ost_start_samples(84, 85, 1);
 			break;
 
 		case 0x34:
-			fadeMusicVolume = 1.0f;
-
 			// wedding music -- ken ending
+			sa_volume = 100;
 			ost_start_samples(70, 71, 1);
 			break;
 
 		case 0x35:
-			fadeMusicVolume = 1.0f;
-
 			// chun li ending #2
+			sa_volume = 100;
 			ost_start_samples(88, 89, 1);
 			break;
 
 		case 0x79:
-			fadeMusicVolume = 1.0f;
-
 			// ryu music fast
+			sa_volume = 100;
 			ost_start_samples(2, 3, 1);
 			break;
 
 		case 0x7a:
-			fadeMusicVolume = 1.0f;
-
 			// e. honda music fast
+			sa_volume = 100;
 			ost_start_samples(14, 15, 1);
 			break;
 
 		case 0x7b:
-			fadeMusicVolume = 1.0f;
-
 			// blanka music fast
+			sa_volume = 100;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		case 0x7c:
-			fadeMusicVolume = 1.0f;
-
 			// guile music fast
+			sa_volume = 100;
 			ost_start_samples(18, 19, 1);
 			break;
 
 		case 0x7d:
-			fadeMusicVolume = 1.0f;
-
 			// ken music fast
+			sa_volume = 100;
 			ost_start_samples(54, 55, 1);
 			break;
 
 		case 0x7e:
-			fadeMusicVolume = 1.0f;
-
 			// fast chun li music
+			sa_volume = 100;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		case 0x7f:
-			fadeMusicVolume = 1.0f;
-
 			// zangief music fast
+			sa_volume = 100;
 			ost_start_samples(58, 59, 1);
 			break;
 
 		case 0x80:
-			fadeMusicVolume = 1.0f;
-
 			// dhalsim music fast
+			sa_volume = 100;
 			ost_start_samples(22, 23, 1);
 			break;
 
 		case 0x81:
-			fadeMusicVolume = 1.0f;
-
 			// fast balrog music
+			sa_volume = 100;
 			ost_start_samples(26, 27, 1);
 			break;
 
 		case 0x82:
-			fadeMusicVolume = 1.0f;
-
 			// fast vega music
+			sa_volume = 100;
 			ost_start_samples(62, 63, 1);
 			break;
 
 		case 0x83:
-			fadeMusicVolume = 1.0f;
-
 			// fast sagat music
+			sa_volume = 100;
 			ost_start_samples(30, 31, 1);
 			break;
 
 		case 0x84:
-			fadeMusicVolume = 1.0f;
-
 			// fast m. bison music
+			sa_volume = 100;
 			ost_start_samples(34, 35, 1);
 			break;
 
 		case 0x8c:
-			fadeMusicVolume = 1.0f;
-
 			// m. bison ending
+			sa_volume = 100;
 			ost_start_samples(66, 67, 1);
 			break;
 
 		case 0x8d:
-			// there's no stop music command after the ending music plays for some of them so we have to make sure that we're still not stuck in fading mode
-			ost_stop_samples();
-
 			fadingMusic = false;
-			// special ending
-			fadeMusicVolume = 1.0f;
 
+			// special ending
+			sa_volume = 100;
 			ost_start_samples(80, 81, 1);
 			break;
 
