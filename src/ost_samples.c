@@ -1648,7 +1648,445 @@ bool generate_ost_sound_sf2(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	/* switch data */
+		switch (data)
+		{
+			case 0x1:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu music slow
+				sample_start(0, 0, 1);
+				sample_start(1, 1, 1);
+				break;
+			}
+			case 0x2:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e honda music slow
+				sample_start(0, 12, 1);
+				sample_start(1, 13, 1);
+				break;
+			}
+			case 0x3:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// blanka music slow
+				sample_start(0, 4, 1);
+				sample_start(1, 5, 1);
+				break;
+			}
+			case 0x4:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken music slow
+				sample_start(0, 52, 1);
+				sample_start(1, 53, 1);
+				break;
+			}
+			case 0x5:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile music slow
+				sample_start(0, 16, 1);
+				sample_start(1, 17, 1);
+				break;
+			}
+			case 0x6:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li music slow
+				sample_start(0, 8, 1);
+				sample_start(1, 9, 1);
+				break;
+			}
+			case 0x7:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief music slow
+				sample_start(0, 56, 1);
+				sample_start(1, 57, 1);
+				break;
+			}
+			case 0x8:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim music slow
+				sample_start(0, 20, 1);
+				sample_start(1, 21, 1);
+				break;
+			}
+			case 0x9:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// balrog music slow
+				sample_start(0, 24, 1);
+				sample_start(1, 25, 1);
+				break;
+			}
+			case 0xa:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// vega music slow
+				sample_start(0, 60, 1);
+				sample_start(1, 61, 1);
+				break;
+			}
+			case 0xb:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// sagat music slow
+				sample_start(0, 28, 1);
+				sample_start(1, 29, 1);
+				break;
+			}
+			case 0xc:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// m. bison music slow
+				sample_start(0, 32, 1);
+				sample_start(1, 33, 1);
+				break;
+			}
+			case 0xd:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// bonus stage music
+				sample_start(0, 64, 1);
+				sample_start(1, 65, 1);
+				break;
+			}
+			case 0xe:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// character select stage
+				sample_start(0, 48, 1);
+				sample_start(1, 49, 1);
+				break;
+			}
+			case 0xf:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// versus screen ditty
+				sample_start(0, 36, 0);
+				sample_start(1, 37, 0);
+				break;
+			}
+			case 0x10:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// end of fight dialog/resolution screen
+				sample_start(0, 38, 0);
+				sample_start(1, 39, 0);
+				break;
+			}
+			case 0x11:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// continue music
+				sample_start(0, 40, 0);
+				sample_start(1, 41, 0);
+				break;
+			}
+			case 0x13:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// failed to continue?
+				sample_start(0, 90, 0);
+				sample_start(1, 91, 0);
+				break;
+			}
+			case 0x14:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// high score screen
+				sample_start(0, 42, 0);
+				sample_start(1, 43, 0);
+				break;
+			}
+			case 0x15:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// player joined music
+				sample_start(0, 46, 0);
+				sample_start(1, 47, 0);
+				break;
+			}
+			case 0x16:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// intro music
+				sample_start(0, 44, 1);
+				sample_start(1, 45, 1);
+				break;
+			}
+			case 0x18:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu ending music
+				sample_start(0, 82, 0);
+				sample_start(1, 83, 0);
+				break;
+			}
+			case 0x19:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e.honda ending music
+				sample_start(0, 72, 1);
+				sample_start(1, 73, 1);
+				break;
+			}
+			case 0x1a:
+			{
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				fadeMusicVolume = 1.0f;
+
+				// blanka ending music
+				sample_start(0, 74, 1);
+				sample_start(1, 75, 1);
+				break;
+			}
+			case 0x1b:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile ending music
+				sample_start(0, 76, 1);
+				sample_start(1, 77, 1);
+				break;
+			}
+			case 0x1c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken ending music
+				sample_start(0, 68, 1);
+				sample_start(1, 69, 1);
+				break;
+			}
+			case 0x1d:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li ending music?
+				sample_start(0, 86, 1);
+				sample_start(1, 87, 1);
+				break;
+			}
+			case 0x1e:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief ending music
+				sample_start(0, 78, 1);
+				sample_start(1, 79, 1);
+				break;
+			}
+			case 0x1f:
+			{
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim ending music
+				sample_start(0, 84, 1);
+				sample_start(1, 85, 1);
+				break;
+			}
+			case 0x34:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// wedding music -- ken ending
+				sample_start(0, 70, 1);
+				sample_start(1, 71, 1);
+				break;
+			}
+			case 0x35:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// chun li ending #2
+				sample_start(0, 88, 1);
+				sample_start(1, 89, 1);
+				break;
+			}
+			case 0x79:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ryu music fast
+				sample_start(0, 2, 1);
+				sample_start(1, 3, 1);
+				break;
+			}
+			case 0x7a:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// e. honda music fast
+				sample_start(0, 14, 1);
+				sample_start(1, 15, 1);
+				break;
+			}
+			case 0x7b:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// blanka music fast
+				sample_start(0, 6, 1);
+				sample_start(1, 7, 1);
+				break;
+			}
+			case 0x7c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// guile music fast
+				sample_start(0, 18, 1);
+				sample_start(1, 19, 1);
+				break;
+			}
+			case 0x7d:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// ken music fast
+				sample_start(0, 54, 1);
+				sample_start(1, 55, 1);
+				break;
+			}
+			case 0x7e:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast chun li music
+				sample_start(0, 10, 1);
+				sample_start(1, 11, 1);
+				break;
+			}
+			case 0x7f:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// zangief music fast
+				sample_start(0, 58, 1);
+				sample_start(1, 59, 1);
+				break;
+			}
+			case 0x80:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// dhalsim music fast
+				sample_start(0, 22, 1);
+				sample_start(1, 23, 1);
+				break;
+			}
+			case 0x81:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast balrog music
+				sample_start(0, 26, 1);
+				sample_start(1, 27, 1);
+				break;
+			}
+			case 0x82:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast vega music
+				sample_start(0, 62, 1);
+				sample_start(1, 63, 1);
+				break;
+			}
+			case 0x83:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast sagat music
+				sample_start(0, 30, 1);
+				sample_start(1, 31, 1);
+				break;
+			}
+			case 0x84:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// fast m. bison music
+				sample_start(0, 34, 1);
+				sample_start(1, 35, 1);
+				break;
+			}
+			case 0x8c:
+			{
+				fadeMusicVolume = 1.0f;
+
+				// m. bison ending
+				sample_start(0, 66, 1);
+				sample_start(1, 67, 1);
+				break;
+			}
+			case 0x8d:
+			{
+				// there's no stop music command after the ending music plays for some of them so we have to make sure that we're still not stuck in fading mode
+				sample_stop(0);
+				sample_stop(1);
+
+				fadingMusic = false;
+				// special ending
+				fadeMusicVolume = 1.0f;
+
+				sample_start(0, 80, 1);
+				sample_start(1, 81, 1);
+				break;
+			}
+			case 0xf9:
+			{
+				fadingMusic = true;
+
+				schedule_default_sound = true;
+
+				break;
+			}
+
+			default:
+				schedule_default_sound = true;
+
+				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
+					sample_stop(0);
+					sample_stop(1);
+				}
+
+				break;
+		}
 
 	ost_mix_samples();
 
