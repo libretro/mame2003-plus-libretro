@@ -1952,7 +1952,7 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		default:
-			usrintf_showmessage("data: %i", data);
+			if(data != 255) usrintf_showmessage("data: %i", data);
 			schedule_default_sound = true;
 			break;
 	}
