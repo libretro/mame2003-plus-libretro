@@ -455,6 +455,7 @@ static void ost_mix_samples(void)
 void ost_fade_volume(void)
 {
   static bool allow_fade = true;
+  usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);
 
   if(fadingMusic == false) return;
 
