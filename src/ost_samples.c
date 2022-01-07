@@ -53,6 +53,7 @@ int      outrun_start_counter;
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
+       void ost_fade_volume(void);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -259,6 +260,104 @@ const char *const outrun_sample_set_names[] =
 	0
 };
 
+const char *const sf2_sample_set_names[] =
+{
+	"*sf2",
+	"ryuslow-01",
+	"ryuslow-02",
+	"ryufast-01",
+	"ryufast-02",
+	"blankaslow-01",
+	"blankaslow-02",
+	"blankafast-01",
+	"blankafast-02",
+	"chunlislow-01",
+	"chunlislow-02",
+	"chunlifast-01",
+	"chunlifast-02",
+	"ehondaslow-01",
+	"ehondaslow-02",
+	"ehondafast-01",
+	"ehondafast-02",
+	"guileslow-01",
+	"guileslow-02",
+	"guilefast-01",
+	"guilefast-02",
+	"dhalsimslow-01",
+	"dhalsimslow-02",
+	"dhalsimfast-01",
+	"dhalsimfast-02",
+	"balrogslow-01",
+	"balrogslow-02",
+	"balrogfast-01",
+	"balrogfast-02",
+	"sagatslow-01",
+	"sagatslow-02",
+	"sagatfast-01",
+	"sagatfast-02",
+	"mbisonslow-01",
+	"mbisonslow-02",
+	"mbisonfast-01",
+	"mbisonfast-02",
+	"versus-01",
+	"versus-02",
+	"endfight-01",
+	"endfight-02",
+	"continue-01",
+	"continue-02",
+	"highscore-01",
+	"highscore-02",
+	"intro-01",
+	"intro-02",
+	"playerjoin-01",
+	"playerjoin-02",
+	"playerselect-01",
+	"playerselect-02",
+	"gameover-01",
+	"gameover-02",
+	"kenslow-01",
+	"kenslow-02",
+	"kenfast-01",
+	"kenfast-02",
+	"zangiefslow-01",
+	"zangiefslow-02",
+	"zangieffast-01",
+	"zangieffast-02",
+	"vegaslow-01",
+	"vegaslow-02",
+	"vegafast-01",
+	"vegafast-02",
+	"bonusstage-01",
+	"bonusstage-02",
+	"mbisonending-01",
+	"mbisonending-02",
+	"kenendinga-01",
+	"kenendinga-02",
+	"kenendingb-01",
+	"kenendingb-02",
+	"ehondaending-01",
+	"ehondaending-02",
+	"blankaending-01",
+	"blankaending-02",
+	"guileending-01",
+	"guileending-02",
+	"zangiefending-01",
+	"zangiefending-02",
+	"specialending-01",
+	"specialending-02",
+	"ryuending-01",
+	"ryuending-02",
+	"dhalsimending-01",
+	"dhalsimending-02",
+	"chunliendinga-01",
+	"chunliendinga-02",
+	"chunliendingb-01",
+	"chunliendingb-02",
+	"gameover-01",
+	"gameover-02",
+	0
+};
+
 
 struct Samplesinterface ost_ddragon =
 {
@@ -302,6 +401,13 @@ struct Samplesinterface ost_outrun =
 	outrun_sample_set_names
 };
 
+struct Samplesinterface ost_sf2 =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	sf2_sample_set_names
+};
+
 
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 {
@@ -341,6 +447,11 @@ static void ost_mix_samples(void)
     ddragon_current_music = 0;
     mj_current_music = 0;
   }
+}
+
+
+void ost_fade_volume(void)
+{
 }
 
 
