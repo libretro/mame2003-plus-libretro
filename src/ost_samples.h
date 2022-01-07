@@ -39,6 +39,8 @@ extern bool     outrun_title;
 extern bool     outrun_lastwave;
 extern int      outrun_start_counter;
 
+extern bool     sf2_playing_street_fighter;
+
 
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
