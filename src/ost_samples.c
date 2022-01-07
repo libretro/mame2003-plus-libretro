@@ -1802,8 +1802,6 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		case 0x1a:
-			fadingMusic = false;
-
 			// blanka ending music
 			sa_volume = 100;
 			ost_start_samples(74, 75, 1);
@@ -1834,8 +1832,6 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		case 0x1f:
-			fadingMusic = false;
-
 			// dhalsim ending music
 			sa_volume = 100;
 			ost_start_samples(84, 85, 1);
@@ -1932,8 +1928,6 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		case 0x8d:
-			fadingMusic = false;
-
 			// special ending
 			sa_volume = 100;
 			ost_start_samples(80, 81, 1);
@@ -1942,6 +1936,7 @@ bool generate_ost_sound_sf2(int data)
 		case 0x53: /* Win  */
 		case 0x54: /* Lose */
 			fadingMusic = true;
+			schedule_default_sound = true;
 			break;
 
 		/* Time to stop the Street Fighter 2 music samples.*/
