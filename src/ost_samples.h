@@ -40,6 +40,7 @@ extern bool     outrun_lastwave;
 extern int      outrun_start_counter;
 
 extern bool     sf2_playing_street_fighter;
+extern bool     fadingMusic;
 
 
 extern struct Samplesinterface ost_ddragon;
