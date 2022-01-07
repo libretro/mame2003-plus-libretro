@@ -454,9 +454,14 @@ static void ost_mix_samples(void)
 
 void ost_fade_volume(void)
 {
+  static bool allow_fade = true;
+
   if(fadingMusic == false) return;
 
-  /* Need to adjust sa_volume before remixing */
+  /* slow volume fading */
+  allow_fade = (allow_fade) ? 0:1;
+  if(allow_fade && sa_volume > 0) sa_volume -= 1;
+
   ost_mix_samples();
 }
 
