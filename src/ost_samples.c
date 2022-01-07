@@ -462,6 +462,9 @@ void ost_fade_volume(void)
   allow_fade = (allow_fade) ? 0:1;
   if(allow_fade && sa_volume > 0) sa_volume -= 1;
 
+  /* end fading */
+  if(sa_volume == 0) fadingMusic = false;
+
   ost_mix_samples();
 }
 
