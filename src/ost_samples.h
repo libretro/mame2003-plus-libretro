@@ -39,6 +39,9 @@ extern bool     outrun_title;
 extern bool     outrun_lastwave;
 extern int      outrun_start_counter;
 
+extern bool     sf2_playing_street_fighter;
+extern bool     fadingMusic;
+
 
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
@@ -46,6 +49,7 @@ extern struct Samplesinterface ost_mk;
 extern struct Samplesinterface ost_moonwalker;
 extern struct Samplesinterface ost_nba_jam;
 extern struct Samplesinterface ost_outrun;
+extern struct Samplesinterface ost_sf2;
 
 
 extern bool generate_ost_sound_ddragon    (int data);
@@ -55,3 +59,6 @@ extern bool generate_ost_sound_mk_tunit   (int data);
 extern bool generate_ost_sound_moonwalker (int data);
 extern bool generate_ost_sound_nba_jam    (int data);
 extern bool generate_ost_sound_outrun     (int data);
+extern bool generate_ost_sound_sf2        (int data);
+
+extern void ost_fade_volume (void);

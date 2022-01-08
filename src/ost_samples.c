@@ -48,6 +48,9 @@ bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
+bool     sf2_playing_street_fighter = false;
+bool     fadingMusic;
+
 
 /* ost functions */
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
@@ -259,6 +262,102 @@ const char *const outrun_sample_set_names[] =
 	0
 };
 
+const char *const sf2_sample_set_names[] =
+{
+	"*sf2",
+	"ryuslow-01",
+	"ryuslow-02",
+	"ryufast-01",
+	"ryufast-02",
+	"blankaslow-01",
+	"blankaslow-02",
+	"blankafast-01",
+	"blankafast-02",
+	"chunlislow-01",
+	"chunlislow-02",
+	"chunlifast-01",
+	"chunlifast-02",
+	"ehondaslow-01",
+	"ehondaslow-02",
+	"ehondafast-01",
+	"ehondafast-02",
+	"guileslow-01",
+	"guileslow-02",
+	"guilefast-01",
+	"guilefast-02",
+	"dhalsimslow-01",
+	"dhalsimslow-02",
+	"dhalsimfast-01",
+	"dhalsimfast-02",
+	"balrogslow-01",
+	"balrogslow-02",
+	"balrogfast-01",
+	"balrogfast-02",
+	"sagatslow-01",
+	"sagatslow-02",
+	"sagatfast-01",
+	"sagatfast-02",
+	"mbisonslow-01",
+	"mbisonslow-02",
+	"mbisonfast-01",
+	"mbisonfast-02",
+	"versus-01",
+	"versus-02",
+	"endfight-01",
+	"endfight-02",
+	"continue-01",
+	"continue-02",
+	"highscore-01",
+	"highscore-02",
+	"intro-01",
+	"intro-02",
+	"playerjoin-01",
+	"playerjoin-02",
+	"playerselect-01",
+	"playerselect-02",
+	"gameover-01",
+	"gameover-02",
+	"kenslow-01",
+	"kenslow-02",
+	"kenfast-01",
+	"kenfast-02",
+	"zangiefslow-01",
+	"zangiefslow-02",
+	"zangieffast-01",
+	"zangieffast-02",
+	"vegaslow-01",
+	"vegaslow-02",
+	"vegafast-01",
+	"vegafast-02",
+	"bonusstage-01",
+	"bonusstage-02",
+	"mbisonending-01",
+	"mbisonending-02",
+	"kenendinga-01",
+	"kenendinga-02",
+	"kenendingb-01",
+	"kenendingb-02",
+	"ehondaending-01",
+	"ehondaending-02",
+	"blankaending-01",
+	"blankaending-02",
+	"guileending-01",
+	"guileending-02",
+	"zangiefending-01",
+	"zangiefending-02",
+	"specialending-01",
+	"specialending-02",
+	"ryuending-01",
+	"ryuending-02",
+	"dhalsimending-01",
+	"dhalsimending-02",
+	"chunliendinga-01",
+	"chunliendinga-02",
+	"chunliendingb-01",
+	"chunliendingb-02",
+	0
+};
+
 
 struct Samplesinterface ost_ddragon =
 {
@@ -302,6 +401,13 @@ struct Samplesinterface ost_outrun =
 	outrun_sample_set_names
 };
 
+struct Samplesinterface ost_sf2 =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	sf2_sample_set_names
+};
+
 
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 {
@@ -341,6 +447,24 @@ static void ost_mix_samples(void)
     ddragon_current_music = 0;
     mj_current_music = 0;
   }
+}
+
+
+void ost_fade_volume(void)
+{
+  static bool allow_fade = true;
+  /*usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);*/
+
+  if(fadingMusic == false) return;
+
+  /* slow volume fading */
+  allow_fade = (allow_fade) ? 0:1;
+  if(allow_fade && sa_volume > 0) sa_volume -= 1;
+
+  /* end fading */
+  if(sa_volume == 0) fadingMusic = false;
+
+  ost_mix_samples();
 }
 
 
@@ -1518,6 +1642,351 @@ bool generate_ost_sound_outrun(int data)
 		// --> Enter Highscore
 		case 0xA5:
 			return 0; /* do nothing */
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
+bool generate_ost_sound_sf2(int data)
+{
+	/* initialize game config */
+	schedule_default_sound = false;
+
+	switch (data)
+	{
+		case 0x1:
+			// ryu music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(0, 1, 1);
+			break;
+
+		case 0x2:
+			// e honda music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(12, 13, 1);
+			break;
+
+		case 0x3:
+			// blanka music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(4, 5, 1);
+			break;
+
+		case 0x4:
+			// ken music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(52, 53, 1);
+			break;
+
+		case 0x5:
+			// guile music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(16, 17, 1);
+			break;
+
+		case 0x6:
+			// chun li music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(8, 9, 1);
+			break;
+
+		case 0x7:
+			// zangief music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(56, 57, 1);
+			break;
+
+		case 0x8:
+			// dhalsim music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(20, 21, 1);
+			break;
+
+		case 0x9:
+			// balrog music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(24, 25, 1);
+			break;
+
+		case 0xa:
+			// vega music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(60, 61, 1);
+			break;
+
+		case 0xb:
+			// sagat music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(28, 29, 1);
+			break;
+
+		case 0xc:
+			// m. bison music slow
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(32, 33, 1);
+			break;
+
+		case 0xd:
+			// bonus stage music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(64, 65, 1);
+			break;
+
+		case 0xe:
+			// character select stage
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(48, 49, 1);
+			break;
+
+		case 0xf:
+			// versus screen ditty
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(36, 37, 0);
+			break;
+
+		case 0x10:
+			// end of fight dialog/resolution screen
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(38, 39, 0);
+			break;
+
+		case 0x11:
+			// continue music, loop for ending credits
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(40, 41, 1);
+			break;
+
+		case 0x13:
+			// game over
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(50, 51, 0);
+			break;
+
+		case 0x14:
+			// high score screen
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(42, 43, 0);
+			break;
+
+		case 0x15:
+			// player joined music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(46, 47, 0);
+			break;
+
+		case 0x16:
+			// intro music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(44, 45, 1);
+			break;
+
+		case 0x18:
+			// ryu ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(82, 83, 0);
+			break;
+
+		case 0x19:
+			// e.honda ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(72, 73, 1);
+			break;
+
+		case 0x1a:
+			// blanka ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(74, 75, 1);
+			break;
+
+		case 0x1b:
+			// guile ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(76, 77, 1);
+			break;
+
+		case 0x1c:
+			// ken ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(68, 69, 1);
+			break;
+
+		case 0x1d:
+			// chun li ending music?
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(86, 87, 1);
+			break;
+
+		case 0x1e:
+			// zangief ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(78, 79, 1);
+			break;
+
+		case 0x1f:
+			// dhalsim ending music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(84, 85, 1);
+			break;
+
+		case 0x34:
+			// wedding music -- ken ending
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(70, 71, 1);
+			break;
+
+		case 0x35:
+			// chun li ending #2
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(88, 89, 1);
+			break;
+
+		case 0x79:
+			// ryu music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(2, 3, 1);
+			break;
+
+		case 0x7a:
+			// e. honda music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(14, 15, 1);
+			break;
+
+		case 0x7b:
+			// blanka music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(6, 7, 1);
+			break;
+
+		case 0x7c:
+			// guile music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(18, 19, 1);
+			break;
+
+		case 0x7d:
+			// ken music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(54, 55, 1);
+			break;
+
+		case 0x7e:
+			// fast chun li music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(10, 11, 1);
+			break;
+
+		case 0x7f:
+			// zangief music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(58, 59, 1);
+			break;
+
+		case 0x80:
+			// dhalsim music fast
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(22, 23, 1);
+			break;
+
+		case 0x81:
+			// fast balrog music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(26, 27, 1);
+			break;
+
+		case 0x82:
+			// fast vega music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(62, 63, 1);
+			break;
+
+		case 0x83:
+			// fast sagat music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(30, 31, 1);
+			break;
+
+		case 0x84:
+			// fast m. bison music
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(34, 35, 1);
+			break;
+
+		case 0x8c:
+			// m. bison ending
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(66, 67, 1);
+			break;
+
+		case 0x8d:
+			// special ending
+			fadingMusic = false;
+			sa_volume = 100;
+			ost_start_samples(80, 81, 1);
+			break;
+
+		case 0x52: /* you win or lose */
+		case 0x24: /* adding bonus points */
+			fadingMusic = true;
+			schedule_default_sound = true;
+			break;
+
+		/* Time to stop the Street Fighter 2 music samples.*/
+		case 0xf0:
+		case 0xf2:
+		case 0xf7:
+			ost_stop_samples();
 			break;
 
 		default:

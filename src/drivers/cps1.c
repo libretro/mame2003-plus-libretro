@@ -102,9 +102,15 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	}
 	*/
 	
-	/* We are playing Final Fight. Let's use the samples.*/
+	/* We are playing Final Fight. */
 	if(ff_playing_final_fight && options.use_alt_sound) {
 		if(generate_ost_sound_ffight( data )) {
+			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
+		}
+	}
+	/* We are playing Street Fighter 2. */
+	else if(sf2_playing_street_fighter && options.use_alt_sound) {
+		if(generate_ost_sound_sf2( data )) {
 			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
 		}
 	}
@@ -158,6 +164,9 @@ static INTERRUPT_GEN( cps1_interrupt )
 	/* works without it (maybe it's used to multiplex controls). It is the */
 	/* *only* game to have that. */
 	cpu_set_irq_line(0, 2, HOLD_LINE);
+
+	if(sf2_playing_street_fighter && options.use_alt_sound)
+		ost_fade_volume();
 }
 
 /********************************************************************
@@ -4018,6 +4027,13 @@ static MACHINE_DRIVER_START( sf2 )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
 	MDRV_CPU_REPLACE("main", M68000, 12000000)
+
+	/* Lets add our Street Fighter 2 music sample packs.*/
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
+	sf2_playing_street_fighter = true;
+	fadingMusic = false;
+
 MACHINE_DRIVER_END
 
 
