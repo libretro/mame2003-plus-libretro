@@ -355,8 +355,6 @@ const char *const sf2_sample_set_names[] =
 	"chunliendinga-02",
 	"chunliendingb-01",
 	"chunliendingb-02",
-	"gameover-01",
-	"gameover-02",
 	0
 };
 
