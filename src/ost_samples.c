@@ -1658,7 +1658,7 @@ bool generate_ost_sound_sf2(int data)
 {
 	/* initialize game config */
 	schedule_default_sound = false;
-	if(data == 249) usrintf("%i", data);
+	if(data == 249) usrintf_showmessage("%i", data);
 
 	switch (data)
 	{
