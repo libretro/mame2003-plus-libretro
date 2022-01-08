@@ -453,7 +453,7 @@ static void ost_mix_samples(void)
 void ost_fade_volume(void)
 {
   static bool allow_fade = true;
-  /*usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);*/
+  usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);
 
   if(fadingMusic == false) return;
 
@@ -1944,7 +1944,6 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		default:
-			if(data != 255 && data != 67 && data != 249 && data != 0) usrintf_showmessage("data: %i", data);
 			schedule_default_sound = true;
 			break;
 	}
