@@ -453,7 +453,7 @@ static void ost_mix_samples(void)
 void ost_fade_volume(void)
 {
   static bool allow_fade = true;
-  usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);
+  /*usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);*/
 
   if(fadingMusic == false) return;
 
@@ -1658,6 +1658,7 @@ bool generate_ost_sound_sf2(int data)
 {
 	/* initialize game config */
 	schedule_default_sound = false;
+	if(data == 249) usrintf("%i", data);
 
 	switch (data)
 	{
