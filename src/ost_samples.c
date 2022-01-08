@@ -1658,7 +1658,7 @@ bool generate_ost_sound_sf2(int data)
 {
 	/* initialize game config */
 	schedule_default_sound = false;
-	if(data == 249) usrintf_showmessage("%i", data);
+	if(data == 36) usrintf_showmessage("%i", data);
 
 	switch (data)
 	{
@@ -1977,7 +1977,8 @@ bool generate_ost_sound_sf2(int data)
 			ost_start_samples(80, 81, 1);
 			break;
 
-		case 0x52: /* You win or lose */
+		case 0x52: /* you win or lose */
+		case 0x24: /* adding bonus points */
 			fadingMusic = true;
 			schedule_default_sound = true;
 			break;
