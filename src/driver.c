@@ -1815,18 +1815,28 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( wintbob )	/* bootleg */
 
 	/* SemiCom games */
-	DRIVER( 3in1semi )
-	DRIVER( 4in1boot )	/* bootleg? */
-	DRIVER( bcstry )    /* (c) 1997 SemiCom */
-	DRIVER( bcstrya )   /* (c) 1997 SemiCom */
-	DRIVER( chokchok )  /* (c) 1995 SemiCom */
-	DRIVER( cookbib )   /* (c) 1995 SemiCom */
-	DRIVER( cookbib2 )  /* (c) 1996 SemiCom */
 	DRIVER( htchctch )	/* (c) 1995 SemiCom */
 	DRIVER( hyperpac )	/* (c) 1995 SemiCom */
 	DRIVER( hyperpcb )	/* bootleg */
-	DRIVER( moremorp )  /* (c) 1999 SemiCom / Exit */
+	DRIVER( chokchok )  /* (c) 1995 SemiCom */
+	DRIVER( cookbib )   /* (c) 1995 SemiCom */
+	DRIVER( cookbib2 )  /* (c) 1996 SemiCom */
 	DRIVER( sdfight )   /* (c) 1996 SemiCom */
+	DRIVER( toppyrap )	/* (c) 1996 SemiCom */
+	DRIVER( bcstry )    /* (c) 1997 SemiCom */
+	DRIVER( bcstrya )   /* (c) 1997 SemiCom */
+	DRIVER( cookbib3 )  /* (c) 1997 SemiCom */
+	DRIVER( pzlbreak )	/* (c) 1997 SemiCom */
+	DRIVER( twinkle )	/* (c) 1997 SemiCom */
+	DRIVER( 3in1semi )  /* (c) 1998 SemiCom */
+	DRIVER( moremore )  /* (c) 1999 SemiCom / Exit */
+	DRIVER( moremorp )  /* (c) 1999 SemiCom / Exit */
+	
+	/* Cloned snow bros hardware */
+	DRIVER( finalttr )  /* (c) 1993 Jeil */
+	DRIVER( toto )	    /* (c) 1996 SoftClub */
+	DRIVER( 4in1boot )	/* (c) 1999 K1 Soft */
+	DRIVER( snowbro3 )  /* (c) 2002 Syrmex */
 
 
 	/* More Toaplan Games */
