@@ -1764,9 +1764,9 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		case 0x13:
-			// failed to continue?
+			// game over
 			sa_volume = 100;
-			ost_start_samples(90, 91, 0);
+			ost_start_samples(50, 51, 0);
 			break;
 
 		case 0x14:
