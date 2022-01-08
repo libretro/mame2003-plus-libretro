@@ -37,7 +37,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
 * Combat Hawk
+* Come Back Toto
 * Cookie & Bibi
+* Cookie & Bibi 3
 * Command War - Super Special Battle & War Game (prototype)
 * Cosmic Monsters II
 * Counter Run (Bootleg, Set 1)
@@ -61,6 +63,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Eeekk!
 * ESPGaluda
 * F1 Super Lap (World)
+* Final Tetris
 * FixEight (bootleg)
 * Flying Tiger
 * Frog & Spiders (bootleg)
@@ -109,6 +112,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mirax
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
+* More More
 * Mouse Shooter GoGo
 * Ms. Pacman Twin
 * Mrs. Dynamite
@@ -129,6 +133,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Up Baseball
 * Progear
 * Puzz Loop 2
+* Puzzle Break
 * Puzzle Star
 * Racing Beat
 * Rage Of The Dragons
@@ -149,6 +154,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sengoku 3
 * Skull Fang
 * Slap Shooter
+* Snow Brothers 3 - Magical Adventure
 * Snk Vs Capcom : Svc Chaos (MVS)
 * Sonic Boom
 * Space Fever High Splitter
@@ -173,6 +179,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2002
 * The King of Fighters 2003
 * The Lost Castle In Darkmist
+* Toppy & Rappy
 * Torus * Mature *
 * Touch & Go (Korea, unprotected)
 * Thunder Heroes
@@ -181,6 +188,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Twin Action
+* Twinkle
 * Tylz
 * Ufo Senshi Yohko Chan
 * Varia Metal
@@ -348,7 +356,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Max RPM - Romset `maxrpm`
 * Metroid (Playchoice 10) - Romset `pc_mtoid`
 * Monster Slider - Romset `mslider`
+* More More Plus - Romset `moremorp`
 * Mr. TNT - Romset `mrtnt` - colors fixed
+* New HyperMan (3-in-1 with Cookie & Bibi & HyperMan) - Romset `3in1semi`
 * New Sinbad 7 - Romset `newsin7` - colors fixed
 * Night Slashers - Romset `nslasher`
 * Off Road Challenge - Romset `offroadc` - Requires a fast system
@@ -357,6 +367,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pigskin 621AD - Romset `pigskin`
 * Power Drive - Romset `powerdrv`
 * Pro Baseball Skill Tryout - `tryout`
+* Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -466,6 +477,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Athena
 * Bandito
 * Bosconian
+* Cookie & Bibi 2
 * Crazy Balloon
 * Destination Earth - (Added lrescue.zip sample support)
 * Dig Dug
@@ -810,3 +822,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added sprite clut cycling colour effects for all games in the armedf.c driver fixes red ninja display in Kodore Ookami and makes Armed Formation etc etc look far prettier [arcadez]
 * Fixed sound in Dolmen and Twin Action then sorted an mcu simulation issue in Task Force Harrier [grant2258]
 * Improved road vs scenery priorities meaning you dont see things that should be hidden behind the hills appearing all over the road in Jaleco's Big Run [arcadez]
+* Updated the snowbros.c driver fixing three games and adding support for eight new games this also sorted the sound from cutting out in Cookie & Bibi 2 [arcadez]
