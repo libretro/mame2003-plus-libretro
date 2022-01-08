@@ -1758,9 +1758,9 @@ bool generate_ost_sound_sf2(int data)
 			break;
 
 		case 0x11:
-			// continue music
+			// continue music, loop for ending credits
 			sa_volume = 100;
-			ost_start_samples(40, 41, 0);
+			ost_start_samples(40, 41, 1);
 			break;
 
 		case 0x13:
