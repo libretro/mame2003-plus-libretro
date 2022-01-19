@@ -430,34 +430,18 @@ else ifeq ($(platform), ps2)
 	CXXFLAGS += -fno-rtti -fno-exceptions -ffast-math
 	STATIC_LINKING = 1
 
-# PS3
-else ifeq ($(platform), ps3)
-	TARGET = $(TARGET_NAME)_libretro_$(platform).a
-	BIGENDIAN = 1
-	CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
-	AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
-	PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
-	STATIC_LINKING = 1
-	SPLIT_UP_LINK=1
-
-# snc PS3
-else ifeq ($(platform), sncps3)
-	TARGET = $(TARGET_NAME)_libretro_ps3.a
-	BIGENDIAN = 1
-	CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
-	AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
-	PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
-	STATIC_LINKING = 1
-	SPLIT_UP_LINK=1
-
 # Lightweight PS3 Homebrew SDK
-else ifeq ($(platform), psl1ght)
-	TARGET = $(TARGET_NAME)_libretro_$(platform).a
+else ifneq (,$(filter $(platform), ps3 psl1ght))
+	TARGET := $(TARGET_NAME)_libretro_$(platform).a
 	BIGENDIAN = 1
-	CC = $(PS3DEV)/ppu/bin/ppu-gcc$
-	AR = $(PS3DEV)/ppu/bin/ppu-ar$
-	PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
+	CC = $(PS3DEV)/ppu/bin/ppu-$(COMMONLV)gcc$(EXE_EXT)
+	AR = $(PS3DEV)/ppu/bin/ppu-$(COMMONLV)ar$(EXE_EXT)
+	PLATCFLAGS += -D__PS3__ -D__ppc__ -D__POWERPC__
+	ifeq ($(platform), psl1ght)
+		PLATFORM_DEFINES += -D__PSL1GHT__
+	endif
 	STATIC_LINKING = 1
+	SPLIT_UP_LINK=1
 
 # PSP
 else ifeq ($(platform), psp1)
@@ -820,7 +804,7 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 
 # In theory, the RETRO_PROFILE could be set to different values for different
 # architectures or for special builds to hint to the host system how many
-# resources to allocate. In practice, there seems to be no standard way to 
+# resources to allocate. In practice, there seems to be no standard way to
 # rate performance needs and no point in doing so.
 # As of June 2021, the libretro performance profile callback is not known
 # to be implemented by any frontends. RetroArch does not use this callback
