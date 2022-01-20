@@ -8243,6 +8243,7 @@ static void LoadCheatFile(char * fileName)
 	char		buf[2048];
 	int			recordNames = 0;
 
+	log_cb(RETRO_LOG_INFO, "CHEAT_LOG: %s\n", filename);
 	theFile = mame_fopen(NULL, fileName, FILETYPE_CHEAT, 0);
 
 	if(!theFile)
