@@ -8228,7 +8228,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 static void LoadCheatDatabase()
 {
-	intfstream_t	* RZIP_FILE;
+	intfstream_t	* RZIP_FILE = NULL;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -8247,7 +8247,7 @@ static void LoadCheatDatabase()
 
 	if(!RZIP_FILE)
 	{
-		intfstream_t         * DAT_FILE;
+		intfstream_t         * DAT_FILE = NULL;
 		int64_t data_read    = 0;
 		int64_t data_write   = 0;
 		uint8_t buffer[4096];
