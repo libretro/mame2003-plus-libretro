@@ -8231,10 +8231,14 @@ static void LoadCheatDatabase()
 	char		oldFormatString[256];
 	char		buf[2048];
 	int			recordNames = 0;
+	char 		cheat_directory[PATH_MAX_LENGTH];
 	char 		cheat_path[PATH_MAX_LENGTH];
 
-	cheat_path[0] = '\0';
-	osd_get_path(FILETYPE_CHEAT, cheat_path);
+	cheat_directory[0] = '\0';
+	cheat_path[0]      = '\0';
+
+	osd_get_path(FILETYPE_CHEAT, cheat_directory);
+	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
 	log_cb(RETRO_LOG_INFO, "dir:  %s\n", cheat_path);
 
 	theFile = mame_fopen(NULL, CHEAT_DATABASE_FILENAME, FILETYPE_CHEAT, 0);
