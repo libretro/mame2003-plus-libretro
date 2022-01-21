@@ -376,10 +376,12 @@ is selected
 #include "artwork.h"
 #include "machine/eeprom.h"
 #include <ctype.h>
+#include <interface_stream.h>
 
 
-#define CHEAT_DATABASE_FILENAME  "cheat.dat"
-#define CHEAT_SAVE_FILENAME      "save_cheat.dat"
+#define CHEAT_DATABASE_RZIP_FILENAME  "cheat.rzip"
+#define CHEAT_DATABASE_FILENAME       "cheat.dat"
+#define CHEAT_SAVE_FILENAME           "save_cheat.dat"
 
 #define OSD_READKEY_KLUDGE	1
 
@@ -8238,13 +8240,20 @@ static void LoadCheatDatabase()
 	cheat_path[0]      = '\0';
 
 	osd_get_path(FILETYPE_CHEAT, cheat_directory);
-	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
-	log_cb(RETRO_LOG_INFO, "dir:  %s\n", cheat_path);
+	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 
 	theFile = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 
-	if(!theFile)
-		return;
+	if(!theFile) {
+		cheat_path[0] = '\0';
+		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
+		theFile = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+
+		if(!theFile)
+			return;
+
+		//Compression loop
+	}
 
 	foundCheatDatabase = 1;
 
