@@ -376,7 +376,7 @@ is selected
 #include "artwork.h"
 #include "machine/eeprom.h"
 #include <ctype.h>
-#include <interface_stream.h>
+#include <streams/interface_stream.h>
 
 
 #define CHEAT_DATABASE_RZIP_FILENAME  "cheat.rzip"
