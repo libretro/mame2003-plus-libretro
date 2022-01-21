@@ -825,10 +825,6 @@ struct MenuItemInfoStruct
 
 typedef struct MenuItemInfoStruct	MenuItemInfoStruct;
 
-/**** Exported Globals *******************************************************/
-
-int			he_did_cheat = 0;
-
 /**** Local Globals **********************************************************/
 
 static CheatEntry			* cheatList = NULL;
@@ -1668,8 +1664,6 @@ void InitCheat(void)
 	int	screenWidth, screenHeight;
 
 	artwork_get_screensize(&screenWidth, &screenHeight);
-
-	he_did_cheat =			0;
 
 	cheatList =				NULL;
 	cheatListLength =		0;
@@ -9546,8 +9540,6 @@ static void ActivateCheat(CheatEntry * entry)
 	}
 
 	entry->flags |= kCheatFlag_Active;
-
-	he_did_cheat = 1;
 }
 
 static void DeactivateCheat(CheatEntry * entry)
