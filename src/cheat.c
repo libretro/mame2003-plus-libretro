@@ -8272,6 +8272,7 @@ static void LoadCheatDatabase()
 			data_read = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
 			if (data_read == 0);
 			{
+				intfstream_flush(RZIP_FILE);
 				intfstream_close(RZIP_FILE);
 				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 				goto end;
