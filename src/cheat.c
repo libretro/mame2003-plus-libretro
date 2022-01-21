@@ -8226,7 +8226,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 static void LoadCheatDatabase()
 {
-	mame_file	* theFile;
+	intfstream_t	* theFile;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -8241,7 +8241,7 @@ static void LoadCheatDatabase()
 	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
 	log_cb(RETRO_LOG_INFO, "dir:  %s\n", cheat_path);
 
-	theFile = mame_fopen(NULL, CHEAT_DATABASE_FILENAME, FILETYPE_CHEAT, 0);
+	theFile = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 
 	if(!theFile)
 		return;
@@ -8252,7 +8252,7 @@ static void LoadCheatDatabase()
 	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
 	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
 
-	while(mame_fgets(buf, 2048, theFile))
+	while(intfstream_gets(theFile, buf, 2048))
 	{
 		int			type;
 		int			address;
@@ -8374,8 +8374,8 @@ static void LoadCheatDatabase()
 
 	bail:
 
-	mame_fclose(theFile);
-
+	intfstream_close(theFile);
+	free(theFile);
 	UpdateAllCheatInfo();
 }
 
