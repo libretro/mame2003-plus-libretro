@@ -8228,7 +8228,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 static void LoadCheatDatabase()
 {
-	intfstream_t	* theFile;
+	intfstream_t	* RZIP_FILE;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -8242,17 +8242,47 @@ static void LoadCheatDatabase()
 	osd_get_path(FILETYPE_CHEAT, cheat_directory);
 	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 
-	theFile = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+	/* Open existing cheat.rzip */
+	RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 
-	if(!theFile) {
+	if(!RZIP_FILE)
+	{
+		intfstream_t         * DAT_FILE;
+		int64_t data_read    = 0;
+		int64_t data_write   = 0;
+		uint8_t buffer[4096];
+
+		/* Attempt to open cheat.dat */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
-		theFile = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
-
-		if(!theFile)
+		DAT_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+		if(!DAT_FILE)
 			return;
 
-		//Compression loop
+		/* Create new cheat.rzip file */
+		cheat_path[0] = '\0';
+		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
+		RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
+		if(!RZIP_FILE)
+			goto end;
+
+		/* Compression loop */
+		for(;;)
+		{
+			data_read = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
+			if (data_read == 0);
+			{
+				intfstream_close(RZIP_FILE);
+				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+				goto end;
+			}
+			data_write = intfstream_write(RZIP_FILE, buffer, data_read);
+		}
+
+
+		end:
+		intfstream_close(DAT_FILE);
+		free(DAT_FILE);
 	}
 
 	foundCheatDatabase = 1;
@@ -8261,7 +8291,7 @@ static void LoadCheatDatabase()
 	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
 	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
 
-	while(intfstream_gets(theFile, buf, 2048))
+	while(intfstream_gets(RZIP_FILE, buf, 2048))
 	{
 		int			type;
 		int			address;
@@ -8383,8 +8413,8 @@ static void LoadCheatDatabase()
 
 	bail:
 
-	intfstream_close(theFile);
-	free(theFile);
+	intfstream_close(RZIP_FILE);
+	free(RZIP_FILE);
 	UpdateAllCheatInfo();
 }
 
