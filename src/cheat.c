@@ -8253,8 +8253,8 @@ static void LoadCheatDatabase()
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
 		DAT_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
-		if(!DAT_FILE)
-			return;
+		//if(!DAT_FILE)
+			//return;
 log_cb(RETRO_LOG_INFO, "LOG....... dat found\n");
 		/* Create new cheat.rzip file */
 		cheat_path[0] = '\0';
