@@ -8258,14 +8258,14 @@ static void LoadCheatDatabase()
 		DAT_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 		if(!DAT_FILE)
 			return;
-
+log_cb(RETRO_LOG_INFO, "LOG....... dat found\n");
 		/* Create new cheat.rzip file */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 		RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
 		if(!RZIP_FILE)
 			goto end;
-
+log_cb(RETRO_LOG_INFO, "LOG....... rzip open\n");
 		/* Compression loop */
 		for(;;)
 		{
@@ -8274,6 +8274,7 @@ static void LoadCheatDatabase()
 			{
 				intfstream_flush(RZIP_FILE);
 				intfstream_close(RZIP_FILE);
+log_cb(RETRO_LOG_INFO, "LOG....... Rzip close\n");
 				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 				goto end;
 			}
