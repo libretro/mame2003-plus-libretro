@@ -8230,6 +8230,9 @@ static void LoadCheatDatabase()
 	char		oldFormatString[256];
 	char		buf[2048];
 	int			recordNames = 0;
+	char		* directory;
+
+	osd_get_path(FILETYPE_CHEAT, directory);
 
 	theFile = mame_fopen(NULL, CHEAT_DATABASE_FILENAME, FILETYPE_CHEAT, 0);
 
