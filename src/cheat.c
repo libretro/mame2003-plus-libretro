@@ -379,8 +379,6 @@ is selected
 
 
 #define CHEAT_DATABASE_FILENAME  "cheat.dat"
-#define CHEAT_SAVE_FILENAME      "save_cheat.dat"
-
 
 #define OSD_READKEY_KLUDGE	1
 
