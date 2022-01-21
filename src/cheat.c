@@ -8403,10 +8403,8 @@ static void SaveCheat(CheatEntry * entry)
 
 	theFile = mame_fopen(NULL, CHEAT_SAVE_FILENAME, FILETYPE_CHEAT, 1);
 
-	if(!theFile) {
-		mame_fopen("save_cheat", 0, FILETYPE_CHEAT, 1);
-		if(!theFile) return;
-	}
+	if(!theFile)
+		return;
 
 	mame_fseek(theFile, 0, SEEK_END);
 
