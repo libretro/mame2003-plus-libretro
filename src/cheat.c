@@ -8232,7 +8232,7 @@ static void LoadCheatDatabase()
 	int			recordNames = 0;
 	char		* directory;
 
-	osd_get_path(FILETYPE_CHEAT, directory);
+	//osd_get_path(FILETYPE_CHEAT, directory);
 	log_cb(RETRO_LOG_INFO, "dir:  %s\n", directory);
 
 	theFile = mame_fopen(NULL, CHEAT_DATABASE_FILENAME, FILETYPE_CHEAT, 0);
