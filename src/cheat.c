@@ -8244,14 +8244,11 @@ static void LoadCheatDatabase()
 
 	/* Open existing cheat.rzip */
 	RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
-log_cb(RETRO_LOG_INFO, "LOG....... Check start\n");
+
 	if(!RZIP_FILE)
 	{
-		intfstream_t         * DAT_FILE = NULL;
-		int64_t data_read    = 0;
-		int64_t data_write   = 0;
-		uint8_t buffer[4096];
-log_cb(RETRO_LOG_INFO, "LOG....... No rzip\n");
+		intfstream_t	* DAT_FILE = NULL;
+
 		/* Attempt to open cheat.dat */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
@@ -8269,7 +8266,10 @@ log_cb(RETRO_LOG_INFO, "LOG....... rzip open\n");
 		/* Compression loop */
 		for(;;)
 		{
-			data_read = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
+			uint8_t buffer[4096];
+			int64_t data_read    = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
+			int64_t data_write   = 0;
+	
 			if (data_read == 0);
 			{
 				intfstream_flush(RZIP_FILE);
