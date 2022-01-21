@@ -829,7 +829,6 @@ typedef struct MenuItemInfoStruct	MenuItemInfoStruct;
 /**** Exported Globals *******************************************************/
 
 int			he_did_cheat = 0;
-const char	* cheatfile = NULL;
 
 /**** Local Globals **********************************************************/
 
@@ -8382,52 +8381,7 @@ static void LoadCheatFile(char * fileName)
 
 static void LoadCheatDatabase(void)
 {
-	char	buf[4096];
-	const char	* inTraverse;
-	char	* outTraverse;
-	char	* mainTraverse;
-	int		first = 1;
-	char	data;
-
-	if(!cheatfile)
-		cheatfile = "cheat.dat";
-
-	inTraverse = cheatfile;
-	outTraverse = buf;
-	mainTraverse = mainDatabaseName;
-
-	buf[0] = 0;
-
-	do
-	{
-		data = *inTraverse;
-
-		if(	(data == ';') ||
-			(data == 0))
-		{
-			*outTraverse++ = 0;
-			if(first)
-				*mainTraverse++ = 0;
-
-			if(buf[0])
-			{
-				LoadCheatFile(buf);
-
-				outTraverse = buf;
-				buf[0] = 0;
-				first = 0;
-			}
-		}
-		else
-		{
-			*outTraverse++ = data;
-			if(first)
-				*mainTraverse++ = data;
-		}
-
-		inTraverse++;
-	}
-	while(data);
+	LoadCheatFile("cheat.dat");
 
 	UpdateAllCheatInfo();
 }
