@@ -379,7 +379,6 @@ is selected
 
 
 #define CHEAT_DATABASE_FILENAME  "cheat.dat"
-#define CHEAT_SAVE_FILENAME      "save_cheat.dat"
 
 #define OSD_READKEY_KLUDGE	1
 
@@ -8403,7 +8402,7 @@ static void SaveCheat(CheatEntry * entry)
 	if(!entry || !entry->actionList)
 		return;
 
-	theFile = mame_fopen(NULL, CHEAT_SAVE_FILENAME, FILETYPE_CHEAT, 1);
+	theFile = mame_fopen(NULL, CHEAT_DATABASE_FILENAME, FILETYPE_CHEAT, 1);
 
 	if(!theFile)
 		return;
