@@ -8278,7 +8278,7 @@ static void LoadCheatDatabase()
 				goto bail;
 			}
 	
-			if (data_read == 0);
+			if (data_read == 0)
 			{
 				/* Finished, close cheat.rzip and re-open as read file */
 				intfstream_close(RZIP_FILE);
