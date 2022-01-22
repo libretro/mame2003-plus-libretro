@@ -8261,7 +8261,7 @@ static void LoadCheatDatabase()
 		rzip_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
 		if(!rzip_file)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip  path: %s\n", cheat_path);
 			goto bail;
 		}
 
