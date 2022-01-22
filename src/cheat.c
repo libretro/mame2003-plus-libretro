@@ -8228,8 +8228,8 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 static void LoadCheatDatabase()
 {
-	intfstream_t	* RZIP_FILE = NULL;
-	intfstream_t	* DAT_FILE  = NULL;
+	intfstream_t	* rzip_file = NULL;
+	intfstream_t	* dat_file  = NULL;
 	char 		cheat_directory[PATH_MAX_LENGTH];
 	char 		cheat_path[PATH_MAX_LENGTH];
 	char		formatString[256];
@@ -8244,22 +8244,22 @@ static void LoadCheatDatabase()
 	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 
 	/* Open existing cheat.rzip */
-	RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+	rzip_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 
-	if(!RZIP_FILE)
+	if(!rzip_file)
 	{
 		/* Try to open cheat.dat */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
-		DAT_FILE = intfstream_open_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ, RETRO_VFS_FILE_ACCESS_HINT_NONE);
-		if(!DAT_FILE)
+		dat_file = intfstream_open_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ, RETRO_VFS_FILE_ACCESS_HINT_NONE);
+		if(!dat_file)
 			goto bail;
 
 		/* Create new cheat.rzip file */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
-		RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
-		if(!RZIP_FILE)
+		rzip_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
+		if(!rzip_file)
 		{
 			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip\n");
 			goto bail;
@@ -8269,7 +8269,7 @@ static void LoadCheatDatabase()
 		for(;;)
 		{
 			uint8_t buffer[4096];
-			int64_t data_read    = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
+			int64_t data_read    = intfstream_read(dat_file, buffer, sizeof(buffer));
 			int64_t data_write   = 0;
 
 			if (data_read < 0)
@@ -8281,9 +8281,9 @@ static void LoadCheatDatabase()
 			if (data_read == 0)
 			{
 				/* Finished, close cheat.rzip and re-open as read file */
-				intfstream_close(RZIP_FILE);
-				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
-				if(!RZIP_FILE)
+				intfstream_close(rzip_file);
+				rzip_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+				if(!rzip_file)
 				{
 					log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to open cheat.rzip\n");
 					goto bail;
@@ -8291,7 +8291,7 @@ static void LoadCheatDatabase()
 				break;
 			}
 
-			data_write = intfstream_write(RZIP_FILE, buffer, data_read);
+			data_write = intfstream_write(rzip_file, buffer, data_read);
 
 			if (data_write != data_read)
 			{
@@ -8307,7 +8307,7 @@ static void LoadCheatDatabase()
 	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
 	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
 
-	while(intfstream_gets(RZIP_FILE, buf, 2048))
+	while(intfstream_gets(rzip_file, buf, 2048))
 	{
 		int			type;
 		int			address;
@@ -8429,16 +8429,16 @@ static void LoadCheatDatabase()
 
 	bail:
 
-	if(DAT_FILE)
+	if(dat_file)
 	{
-		intfstream_close(DAT_FILE);
-		free(DAT_FILE);
+		intfstream_close(dat_file);
+		free(dat_file);
 	}
 
-	if(RZIP_FILE)
+	if(rzip_file)
 	{
-		intfstream_close(RZIP_FILE);
-		free(RZIP_FILE);
+		intfstream_close(rzip_file);
+		free(rzip_file);
 	}
 
 	UpdateAllCheatInfo();
