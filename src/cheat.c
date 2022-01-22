@@ -8284,7 +8284,10 @@ static void LoadCheatDatabase()
 				intfstream_close(RZIP_FILE);
 				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 				if(!RZIP_FILE)
+				{
+					log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to open cheat.rzip\n");
 					goto bail;
+				}
 				break;
 			}
 
