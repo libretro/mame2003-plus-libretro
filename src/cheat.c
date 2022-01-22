@@ -8260,25 +8260,41 @@ static void LoadCheatDatabase()
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 		RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
 		if(!RZIP_FILE)
+		{
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip\n");
 			goto bail;
+		}
 
-		/* Compress cheat.dat */
+		/* Compression loop */
 		for(;;)
 		{
 			uint8_t buffer[4096];
 			int64_t data_read    = intfstream_read(DAT_FILE, buffer, sizeof(buffer));
 			int64_t data_write   = 0;
+
+			if (data_read < 0)
+			{
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to read from cheat.dat\n");
+				goto bail;
+			}
 	
 			if (data_read == 0);
 			{
-				/* Finished, close cheat.rzip and re-open to read */
+				/* Finished, close cheat.rzip and re-open as read file */
 				intfstream_close(RZIP_FILE);
 				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 				if(!RZIP_FILE)
 					goto bail;
 				break;
 			}
+
 			data_write = intfstream_write(RZIP_FILE, buffer, data_read);
+
+			if (data_write != data_read)
+			{
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to write to cheat.rzip\n");
+				goto bail;
+			}
 		}
 	}
 
