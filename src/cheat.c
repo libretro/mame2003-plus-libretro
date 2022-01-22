@@ -8230,12 +8230,12 @@ static void LoadCheatDatabase()
 {
 	intfstream_t	* RZIP_FILE = NULL;
 	intfstream_t	* DAT_FILE  = NULL;
+	char 		cheat_directory[PATH_MAX_LENGTH];
+	char 		cheat_path[PATH_MAX_LENGTH];
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
 	int			recordNames = 0;
-	char 		cheat_directory[PATH_MAX_LENGTH];
-	char 		cheat_path[PATH_MAX_LENGTH];
 
 	cheat_directory[0] = '\0';
 	cheat_path[0]      = '\0';
