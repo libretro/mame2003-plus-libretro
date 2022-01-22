@@ -8229,6 +8229,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 static void LoadCheatDatabase()
 {
 	intfstream_t	* RZIP_FILE = NULL;
+	intfstream_t	* DAT_FILE  = NULL;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -8247,23 +8248,21 @@ static void LoadCheatDatabase()
 
 	if(!RZIP_FILE)
 	{
-		intfstream_t	* DAT_FILE = NULL;
-
 		/* Try to open cheat.dat */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
 		DAT_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 		if(!DAT_FILE)
-			return;
+			goto bail;
 
 		/* Create new cheat.rzip file */
 		cheat_path[0] = '\0';
 		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
 		RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
 		if(!RZIP_FILE)
-			goto end;
+			goto bail;
 
-		/* Compression loop */
+		/* Compress cheat.dat */
 		for(;;)
 		{
 			uint8_t buffer[4096];
@@ -8272,17 +8271,15 @@ static void LoadCheatDatabase()
 	
 			if (data_read == 0);
 			{
-				intfstream_flush(RZIP_FILE);
+				/* Finished, close cheat.rzip and re-open to read */
 				intfstream_close(RZIP_FILE);
 				RZIP_FILE = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
-				goto end;
+				if(!RZIP_FILE)
+					goto bail;
+				break;
 			}
 			data_write = intfstream_write(RZIP_FILE, buffer, data_read);
 		}
-
-		end:
-		intfstream_close(DAT_FILE);
-		free(DAT_FILE);
 	}
 
 	foundCheatDatabase = 1;
@@ -8413,8 +8410,18 @@ static void LoadCheatDatabase()
 
 	bail:
 
-	intfstream_close(RZIP_FILE);
-	free(RZIP_FILE);
+	if(DAT_FILE)
+	{
+		intfstream_close(DAT_FILE);
+		free(DAT_FILE);
+	}
+
+	if(RZIP_FILE)
+	{
+		intfstream_close(RZIP_FILE);
+		free(RZIP_FILE);
+	}
+
 	UpdateAllCheatInfo();
 }
 
