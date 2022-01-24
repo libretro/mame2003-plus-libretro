@@ -77,7 +77,7 @@ include:
 
   # Nintendo 3DS
   - project: 'libretro-infrastructure/ci-templates'
-    file: '/ctr-static.yml'
+    file: '/ctr-legacy-static.yml'
 
   # Nintendo WiiU
   - project: 'libretro-infrastructure/ci-templates'
