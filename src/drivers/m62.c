@@ -67,9 +67,11 @@ WRITE_HANDLER( m62_hscroll_high_w );
 WRITE_HANDLER( m62_vscroll_low_w );
 WRITE_HANDLER( m62_vscroll_high_w );
 extern data8_t *m62_tileram;
+extern data8_t *kungfum2_tileram;
 extern data8_t *m62_textram;
 
 VIDEO_START( kungfum );
+VIDEO_START( kungfum2 );
 VIDEO_UPDATE( kungfum );
 WRITE_HANDLER( kungfum_tileram_w );
 
@@ -106,6 +108,12 @@ VIDEO_START( horizon );
 VIDEO_UPDATE( horizon );
 WRITE_HANDLER( horizon_scrollram_w );
 extern data8_t *horizon_scrollram;
+
+extern data8_t *blitterdatarom;
+extern data8_t *blittercmdram;
+
+extern data8_t kungfum2_blitter_r(offs_t offset);
+extern void kungfum2_blitter_w(offs_t offset, data8_t data);
 
 static int bankaddress;
 static int bankaddress2;
@@ -245,6 +253,20 @@ static MEMORY_WRITE_START( kungfum_writemem )
 	{ 0xe000, 0xefff, MWA_RAM },
 MEMORY_END
 
+static MEMORY_READ_START( kungfum2_readmem )
+	{ 0x0000, 0xbfff, MRA_ROM },
+    { 0xc000, 0xc0ff, MRA_RAM },
+	{ 0xc800, 0xcfff, kungfum2_blitter_r },
+	{ 0xe000, 0xefff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( kungfum2_writemem )
+	{ 0x0000, 0xbfff, MWA_ROM },
+	{ 0xc000, 0xc0ff, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0xc800, 0xcfff, kungfum2_blitter_w, &blittercmdram }, // should be a share but maybe ok like this.??
+	{ 0xe000, 0xefff, MWA_RAM },
+MEMORY_END
+
 static PORT_READ_START( kungfum_readport )
 	{ 0x00, 0x00, input_port_0_r },   /* coin */
 	{ 0x01, 0x01, input_port_1_r },   /* player 1 control */
@@ -258,6 +280,21 @@ static PORT_WRITE_START( kungfum_writeport )
 	{ 0x01, 0x01, m62_flipscreen_w },	/* + coin counters */
 PORT_END
 
+static PORT_READ_START( kungfum2_readport )
+	{ 0x00, 0x00, input_port_0_r },   /* coin */
+	{ 0x01, 0x01, input_port_1_r },   /* player 1 control */
+	{ 0x02, 0x02, input_port_2_r },   /* player 2 control */
+	{ 0x03, 0x03, input_port_3_r },   /* DSW 1 */
+	{ 0x04, 0x04, input_port_4_r },   /* DSW 2 */
+PORT_END
+
+static PORT_WRITE_START( kungfum2_writeport )
+	{ 0x00, 0x00, irem_sound_cmd_w },
+	{ 0x01, 0x01, m62_flipscreen_w },	/* + coin counters */
+	{ 0x81, 0x81, m62_hscroll_high_w },
+	{ 0x80, 0x80, m62_hscroll_low_w },
+	{ 0x83, 0x83, kidniki_background_bank_w },
+PORT_END
 
 static MEMORY_READ_START( battroad_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -1401,6 +1438,20 @@ static MACHINE_DRIVER_START( kungfum )
 	MDRV_VIDEO_UPDATE(kungfum)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( kungfum2 )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(ldrun)
+	MDRV_CPU_REPLACE("main", Z80, 18432000/6)
+	MDRV_CPU_MEMORY(kungfum2_readmem,kungfum2_writemem)
+	MDRV_CPU_PORTS(kungfum2_readport,kungfum2_writeport)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA((64*8-256)/2, 64*8-(64*8-256)/2-1, 0*8, 32*8-1)
+
+	MDRV_VIDEO_START(kungfum2)
+	MDRV_VIDEO_UPDATE(kungfum)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( battroad )
 
@@ -1776,6 +1827,51 @@ ROM_START( kungfub2 )
 	ROM_LOAD( "b-5f-.bin",    0x0600, 0x0020, CRC(7a601c3d) SHA1(5c5cdf51b2c9fdb2b05402d9c260208ae73fe245) )	/* sprite height, one entry per 32 */
 															/* sprites. Used at run time! */
 	ROM_LOAD( "b-6f-.bin",    0x0620, 0x0100, CRC(82c20d12) SHA1(268903f7d9be58a70d030b02bf31a2d6b5b6e249) )	/* video timing - same as battroad */
+ROM_END
+
+ROM_START( kungfum2 )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* main CPU */
+    ROM_LOAD( "km-a.4e", 0x00000, 0x4000, CRC(083632aa) SHA1(0a52c6162b2fb55057735a54c59f7cb88d870593) )
+	ROM_LOAD( "km-a.4d", 0x04000, 0x4000, CRC(08b14684) SHA1(8d60abe5f06e1b3ce465ec740df3f4ee8e9398bc) )
+	ROM_LOAD( "km-z.7j", 0x08000, 0x4000, CRC(2bd2aa83) SHA1(422ef2a64f040a0974311ff692726c6f3a8f8b13) )
+
+	ROM_REGION( 0x10000, REGION_USER1, ROMREGION_ERASEFF )
+	ROM_LOAD( "km-z.4h", 0x0000, 0x8000, CRC(252bb4a9) SHA1(2a69ee113950ea58895b42102bbb5263865ace9d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "km-a.3a", 0x4000, 0x4000, CRC(bb709dd6) SHA1(aa491ec2d64b096927546b4362fa41c4784659c9) )
+	ROM_LOAD( "km-a.3d", 0x8000, 0x4000, CRC(ef8551cb) SHA1(2a26feeae8ea7ddc5d899592bc4c17b40571fe8f) )
+	ROM_LOAD( "km-a.3f", 0xc000, 0x4000, CRC(bec93bdc) SHA1(e287d3e689e18b192d686f313c63b6ed4e10a83f) )
+
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
+    ROM_LOAD( "km-z.3d", 0x00000, 0x8000, CRC(a8007429) SHA1(5e315ba41bbb2248cf49b1fd0a1601c08bf891b4) )
+	ROM_LOAD( "km-z.3c", 0x08000, 0x8000, CRC(a99be837) SHA1(48b720462b359ef3551d50b8a41d2e3a2e146a60) )
+	ROM_LOAD( "km-z.3a", 0x10000, 0x8000, CRC(0bb7fda0) SHA1(aaab12b5e5402f3bbd1a2700ecc65dc588f0e590) )
+
+	ROM_REGION( 0x30000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "km-b.4k", 0x00000, 0x4000, CRC(7e8bec97) SHA1(6ca5939bd64df63124de997b53c9ac9975450ab5) )
+	ROM_LOAD( "km-b.4f", 0x04000, 0x4000, CRC(3a75305b) SHA1(f62e7a293647be8aabbdd0b366459f634de593c6) )
+	ROM_LOAD( "km-b.4l", 0x08000, 0x4000, CRC(fe746127) SHA1(53f446a28466e0a749c27aa2eeb7d7bad4bd8d9b) )
+	ROM_LOAD( "km-b.4h", 0x0c000, 0x4000, CRC(f322c5dd) SHA1(03cb9658f31853f1ba41d8bf7e8cbc87353cc432) )
+	ROM_LOAD( "km-b.3n", 0x10000, 0x4000, CRC(b88a4d16) SHA1(2ab45a4bf44b5827def8166b30faa08514e7a814) )
+	ROM_LOAD( "km-b.4n", 0x14000, 0x4000, CRC(f92be992) SHA1(dd3ddc1ba76ceba71435a63c43f1be24a3272011) )
+	ROM_LOAD( "km-b.4m", 0x18000, 0x4000, CRC(53623913) SHA1(efb3de824df15b95e5eb91b5907ae2232501e3e3) )
+	ROM_LOAD( "km-b.3m", 0x1c000, 0x4000, CRC(1d1ec6f2) SHA1(fcdaf34529166701aad87d013176f4709cb5d540) )
+	ROM_LOAD( "km-b.4c", 0x20000, 0x4000, CRC(31cb5b98) SHA1(54bb88d668c59ec5248098a053a99132a121df74) )
+	ROM_LOAD( "km-b.4e", 0x24000, 0x4000, CRC(942e60fc) SHA1(d14553854b8300e80d7556b3be47544c537daac3) )
+	ROM_LOAD( "km-b.4d", 0x28000, 0x4000, CRC(90a03502) SHA1(bf4efc5e170f8ae479411eef98d8c38bb32d2648) )
+	ROM_LOAD( "km-b.4a", 0x2c000, 0x4000, CRC(018509c2) SHA1(844f3d79a4f358ccce1023deb76c052914570aed) )
+
+
+    ROM_REGION( 0x0720, REGION_PROMS, 0 )
+    ROM_LOAD( "km-z-1j", 0x0000, 0x0100, CRC(1da0ad7f) SHA1(3b3ba444efa8f5481c64b3c9ef1c0ab6561c9f16) )
+    ROM_LOAD( "km-b.1m", 0x0100, 0x0100, CRC(73638418) SHA1(ad3f9cf08d334e76294bd796b7f8849014f05b8e) )
+	ROM_LOAD( "km-z-1f", 0x0200, 0x0100, CRC(ec9df4f2) SHA1(702f7d536a5f79987342521c66d703153a888010) )
+	ROM_LOAD( "km-b.1n", 0x0300, 0x0100, CRC(7967dfdf) SHA1(95f5aac75ce902287c0d0ada6ee9e1e1bd9d87c0) )
+	ROM_LOAD( "km-z-1h", 0x0400, 0x0100, CRC(23a217c0) SHA1(723738cd8875c5bb449be2da75ef0b04cca8dd55) )
+	ROM_LOAD( "km-b.1l", 0x0500, 0x0100, CRC(4f44ef5c) SHA1(094e6ab24a5663208fc9d54203ed200c9e4a9fc3) )
+	ROM_LOAD( "km-b.5p", 0x0600, 0x0020, CRC(33409e90) SHA1(b84f7df9c27aa18255099b0473c6088c6fd7adfa) )
+	ROM_LOAD( "km-b.6f", 0x0620, 0x0100, CRC(82c20d12) SHA1(268903f7d9be58a70d030b02bf31a2d6b5b6e249) )
 ROM_END
 
 ROM_START( battroad )
@@ -2475,11 +2571,22 @@ static DRIVER_INIT( kidniki )
 	init_m62();
 }
 
+static void init_kungfum2(void)
+{
+	state_save_register_int("main", 0, "bankaddress", &bankaddress);
+	state_save_register_func_postload(set_m64_bank);
+	
+	blitterdatarom = (data8_t*) auto_malloc(0x10000);
+    blittercmdram = (data8_t*) auto_malloc(0x10000);
+}
+
+
 GAME( 1984, kungfum,  0,        kungfum,  kungfum,  m62,      ROT0,   "Irem", "Kung-Fu Master" )
 GAME( 1984, kungfud,  kungfum,  kungfum,  kungfum,  m62,      ROT0,   "Irem (Data East license)", "Kung-Fu Master (Data East)" )
 GAME( 1984, spartanx, kungfum,  kungfum,  kungfum,  m62,      ROT0,   "Irem", "Spartan X (Japan)" )
 GAME( 1984, kungfub,  kungfum,  kungfum,  kungfum,  m62,      ROT0,   "bootleg", "Kung-Fu Master (bootleg set 1)" )
 GAME( 1984, kungfub2, kungfum,  kungfum,  kungfum,  m62,      ROT0,   "bootleg", "Kung-Fu Master (bootleg set 2)" )
+GAME( 1987, kungfum2, 0,        kungfum2, kungfum,  kungfum2, ROT0,   "Irem", "Beyond Kung-Fu (location test)" )
 GAME( 1984, battroad, 0,        battroad, battroad, m62,      ROT90,  "Irem", "The Battle-Road" )
 GAME( 1984, ldrun,    0,        ldrun,    ldrun,    m62,      ROT0,   "Irem (licensed from Broderbund)", "Lode Runner (set 1)" )
 GAME( 1984, ldruna,   ldrun,    ldrun,    ldrun,    m62,      ROT0,   "Irem (licensed from Broderbund)", "Lode Runner (set 2)" )
