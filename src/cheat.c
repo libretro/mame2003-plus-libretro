@@ -8267,6 +8267,7 @@ static void LoadCheatDatabase()
 		}
 
 		/* Compression loop */
+		usrintf_showmessage_secs(1, "RZIP: compressing cheat.dat");
 		for(;;)
 		{
 			int64_t data_read  = intfstream_read(in_file, buf, sizeof(buf));
