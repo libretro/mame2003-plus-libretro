@@ -77,7 +77,7 @@ include:
 
   # Nintendo 3DS
   - project: 'libretro-infrastructure/ci-templates'
-    file: '/ctr-static.yml'
+    file: '/ctr-legacy-static.yml'
 
   # Nintendo WiiU
   - project: 'libretro-infrastructure/ci-templates'
@@ -276,7 +276,7 @@ libretro-build-vita:
 # Nintendo 3DS
 libretro-build-ctr:
   extends:
-    - .libretro-ctr-static-retroarch-master
+    - .libretro-ctr-legacy-static-retroarch-master
     - .core-defs
   only:
     - master
