@@ -276,7 +276,7 @@ libretro-build-vita:
 # Nintendo 3DS
 libretro-build-ctr:
   extends:
-    - .libretro-ctr-static-retroarch-master
+    - .libretro-ctr-legacy-static-retroarch-master
     - .core-defs
   only:
     - master
