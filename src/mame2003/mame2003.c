@@ -10,6 +10,7 @@
 #include <string/stdstring.h>
 #include <libretro.h>
 #include <file/file_path.h>
+#include <streams/file_stream.h>
 #include <math.h>
 
 #if (HAS_DRZ80 || HAS_CYCLONE)
@@ -211,7 +212,15 @@ static void check_system_specs(void)
 
 void retro_set_environment(retro_environment_t cb)
 {
+  struct retro_vfs_interface_info vfs_iface_info;
+
   environ_cb = cb;
+
+  /* Initialise VFS */
+  vfs_iface_info.required_interface_version = 1;
+  vfs_iface_info.iface                      = NULL;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VFS_INTERFACE, &vfs_iface_info))
+    filestream_vfs_init(&vfs_iface_info);
 }
 
 
