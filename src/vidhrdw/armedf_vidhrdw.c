@@ -83,6 +83,15 @@ static void get_legion_tx_tile_info(int tile_index)
 	{
 		attributes = terraf_text_videoram[tile_index+0x400]&0xff;
 	}
+	
+	
+	tile_info.priority = 0;
+
+	if((attributes & 0x3) == 3)
+	{
+		tile_info.priority = 1;	
+	}
+	
 	SET_TILE_INFO(
 			0,
 			tile_number + 256 * (attributes & 0x3),
@@ -404,34 +413,28 @@ static void copy_textmap(int index)
 		(partially simulated)
 		2nd half of the MCu external ROM contains text tilemaps:
 		 4 - title screen
-		 5 - ??? - should be (when comapred with legiono set) displayed(? inivisble? different prority?) during game 
-		 6 - test mode screen
+		 5 - bottom layer gfx, visible  in later levels, during boss fight
+		 6 - test mode screen (not hooked up)
 		 7 - portraits (title)
 	*/
 
 	UINT8 * data = (UINT8 *)memory_region(REGION_GFX5);
-  int i;
+	int bank;
+	int tile;
+    int i;
 	for(i=0;i<0x400;++i)
 	{
 		if(i<0x10) continue;
 
-		if(index>0)
+		tile=data[0x800*index+i];
+		bank=data[0x800*index+i+0x400]&3;
+			
+		if( (tile|(bank<<8))!=0x20)
 		{
-			int tile=data[0x800*index+i];
-			int bank=data[0x800*index+i+0x400]&3;
-
-			if( (tile|(bank<<8))!=0x20)
-			{
-				terraf_text_videoram[i]=tile;
-				terraf_text_videoram[i+0x400]=data[0x800*index+i+0x400];
-			}
+			terraf_text_videoram[i]=tile;
+			terraf_text_videoram[i+0x400]=data[0x800*index+i+0x400];
 		}
-		else
-		{
-			/* clear - not used */
-			terraf_text_videoram[i]=0x20;
-			terraf_text_videoram[i+0x400]=0;
-		}
+	
 	}
 
 	tilemap_mark_all_tiles_dirty(armedf_tx_tilemap);
@@ -453,16 +456,16 @@ VIDEO_UPDATE( armedf )
 			if ((mcu_mode&0x000f)==0x0004) {		/* transparent tx */
 				tilemap_set_transparent_pen(armedf_tx_tilemap, 0x0f);
 				tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
-				/* logerror("? Transparent TX 0x0f\n"); */
+				/*logerror("? Transparent TX 0x0f\n");*/
 			}
-			if ((mcu_mode&0x000f)==0x000f) {		/* opaque tx */
+			if ((mcu_mode&0x000f)==0x000f) {		/* opaque tx*/
 				tilemap_set_transparent_pen(armedf_tx_tilemap, 0x10);
 				tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
-				/* logerror("? Opaque TX\n"); */
+				/*logerror("? Opaque TX\n");*/
 			}
 			
 			old_mcu_mode = mcu_mode;
-			/* logerror("MCU Change => %04x\n",mcu_mode); */
+			/*logerror("MCU Change => %04x\n",mcu_mode);*/
 		}
 	}
 
@@ -504,6 +507,13 @@ VIDEO_UPDATE( armedf )
 
 
 	fillbitmap( bitmap, 0xff, cliprect );
+
+
+	if(scroll_type == 3 || scroll_type == 6) /* legion / legiono */
+	{
+		tilemap_draw(bitmap, cliprect, armedf_tx_tilemap, 1, 0);
+	}
+
 	if (armedf_vreg & 0x0800) tilemap_draw( bitmap, cliprect, bg_tilemap, 0, 0);
 	/*if( armedf_vreg & 0x0800 )
     {
@@ -525,34 +535,22 @@ VIDEO_UPDATE( armedf )
 	
 	if(scroll_type == 3) /* legion */
 	{
-		/*  Hack to clear the garbage draw in place of "GAME OVER" after
-			continue. Game code copies there '@ABCDEFG' (from location $13fad),
-			to fix tilemap (index 5) currently not displayed in game 
-			(visible in legiono (unprotected) set - it covers the playfield,
-			but should be not visible? or draw under the tilemaps)
-		*/	
-
-		if(	(terraf_text_videoram[0]&0xff) == 0x0e && 
-			(terraf_text_videoram[0x40e/2]&0xff)==' ' && 
-			(terraf_text_videoram[0x410/2]&0xff)=='@' && 
-			(terraf_text_videoram[0x412/2]&0xff)=='A')
+		static int oldmode=-1;	
+	
+		int mode=terraf_text_videoram[1]&0xff;
+		
+		if (mode != oldmode)
 		{
-		    int i;
-			for(i=0;i<16;++i)
+			oldmode=mode;
+			switch(mode)
 			{
-				terraf_text_videoram[0x410/2+i]=0x20;
-				terraf_text_videoram[0x410/2+i+0x400]=0;
+				case 0x01: copy_textmap(4); break; /* title screen */
+				case 0x06: copy_textmap(7); break; /* portraits on title screen */
+				case 0x1c: copy_textmap(5); break; /* bottom, in-game layer */
+				default: log_cb(RETRO_LOG_DEBUG, LOGPRE "unknown mode %d\n", mode); break;
 			}
-			tilemap_mark_all_tiles_dirty(armedf_tx_tilemap);
 		}
-
-		switch(terraf_text_videoram[1]&0xff)
-		{
-			case 1: copy_textmap(4); break; /* title screen */
-			case 6: copy_textmap(7); break; /* portraits on title screen */
-			/* display tilemap 5 during game .. but it makes the game unplayable */
-		}
-
+			
 	}
 	
 }
