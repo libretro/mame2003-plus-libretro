@@ -313,6 +313,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Blood Warrior - Romset `bloodwar` - Playable with minor remaining graphical issues
 * Bonk's Adventure - Romset `bonkadv` - Playable with minor remaining graphical issues
 * Cheeky Mouse - Romset `cheekyms` - colors fixed
+* Chouji Meikyuu Legion (ver 1.05) - Romset `legiono`
 * Competition Golf Final Round (revision 3) - `compgolf`
 * Crater Raider - Romset `crater`
 * Crazy Climber 2 - Romset `cclimbr2`
