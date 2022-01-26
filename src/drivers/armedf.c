@@ -1335,7 +1335,7 @@ DRIVER_INIT( cclimbr2 )
 
 /*     YEAR, NAME,   PARENT,   MACHINE,  INPUT,    INIT,     MONITOR, COMPANY,     FULLNAME, FLAGS */
 GAMEX( 1987, legion,   0,      legion,   legion,   legion,   ROT270, "Nichibutsu", "Legion - Spinner-87 (World ver 2.03)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
-GAMEX( 1987, legiono,  legion, legiono,  legion,   legiono,  ROT270, "Nichibutsu", "'Chouji Meikyuu Legion (Japan bootleg ver 1.05)",  GAME_IMPERFECT_GRAPHICS ) /* blitter protection removed */
+GAMEX( 1987, legiono,  legion, legiono,  legion,   legiono,  ROT270, "Nichibutsu", "Chouji Meikyuu Legion (Japan bootleg ver 1.05)",  GAME_IMPERFECT_GRAPHICS ) /* blitter protection removed */
 GAMEX( 1987, terraf,   0,      terraf,   terraf,   terraf,   ROT0,   "Nichibutsu", "Terra Force",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu USA", "Terra Force (US)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1987, kodure,   0,      kodure,   kodure,   kodure,   ROT0,   "Nichibutsu", "Kodure Ookami (Japan)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
