@@ -1341,6 +1341,13 @@ static struct GfxDecodeInfo kungfum_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static struct GfxDecodeInfo kungfum2_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &tilelayout_4096,       0, 32 },	/* use colors   0-255 */
+	{ REGION_GFX2, 0, &spritelayout,        256, 32 },	/* use colors 256-511 */
+	{ -1 } /* end of array */
+};
+
 static struct GfxDecodeInfo battroad_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &tilelayout_1024,       0, 32 },	/* use colors   0-255 */
@@ -1448,6 +1455,7 @@ static MACHINE_DRIVER_START( kungfum2 )
 
 	/* video hardware */
 	MDRV_VISIBLE_AREA((64*8-256)/2, 64*8-(64*8-256)/2-1, 0*8, 32*8-1)
+  MDRV_GFXDECODE(kungfum2_gfxdecodeinfo)
 
 	MDRV_VIDEO_START(kungfum2)
 	MDRV_VIDEO_UPDATE(kungfum)
