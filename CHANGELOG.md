@@ -50,6 +50,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
+* Dice - The Dice Game
 * Diet Go Go
 * Digger (CVS)
 * Dolmen
@@ -824,3 +825,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed sound in Dolmen and Twin Action then sorted an mcu simulation issue in Task Force Harrier [grant2258]
 * Improved road vs scenery priorities meaning you dont see things that should be hidden behind the hills appearing all over the road in Jaleco's Big Run [arcadez]
 * Updated the snowbros.c driver fixing three games and adding support for eight new games this also sorted the sound from cutting out in Cookie & Bibi 2 [arcadez]
+* Fixed some graphical problems where the colours were wrong on level 3 and half the screen was missing eg rendered black in Buggy Challenge [arcadez]
+* Added support for Dice - The Dice Game a bootleg of the undumped DiceDiceDice by IREM to the M90 driver [arcadez]
