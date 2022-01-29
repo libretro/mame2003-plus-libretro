@@ -20,7 +20,7 @@ PALETTE_INIT( buggychl )
 
 	/* arbitrary blue shading for the sky */
 	for (i = 0;i < 128;i++)
-		palette_set_color(i+128,0,i,2*i);
+		palette_set_color(i+128,0,240-i,255);
 }
 
 
@@ -96,7 +96,7 @@ WRITE_HANDLER( buggychl_bg_scrollx_w )
 
 
 
-static void draw_sky(struct mame_bitmap *bitmap)
+static void draw_sky(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int x,y;
 
@@ -110,10 +110,19 @@ static void draw_sky(struct mame_bitmap *bitmap)
 }
 
 
-static void draw_bg(struct mame_bitmap *bitmap)
+static void draw_bg(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
+	struct rectangle clip = *cliprect;
 	int offs;
 	int scroll[256];
+
+	/* prevent wraparound */
+	/* enable clipping if on (title screen disable this to cover all of the area) */
+	if(bg_on)
+	{
+	    if (flip_screen_x) clip.min_x += 8*8;
+		else clip.max_x -= 8*8;
+	}
 
 	for (offs = 0;offs < 0x400;offs++)
 	{
@@ -148,11 +157,11 @@ static void draw_bg(struct mame_bitmap *bitmap)
 	for (offs = 0;offs < 256;offs++)
 		scroll[offs] = -buggychl_scrollh[offs];
 
-	copyscrollbitmap(bitmap,tmpbitmap2,256,scroll,0,0,&Machine->visible_area,TRANSPARENCY_COLOR,32);
+	copyscrollbitmap(bitmap,tmpbitmap2,256,scroll,0,0,&clip,TRANSPARENCY_COLOR,32);
 }
 
 
-static void draw_fg(struct mame_bitmap *bitmap)
+static void draw_fg(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
 
@@ -161,9 +170,6 @@ static void draw_fg(struct mame_bitmap *bitmap)
 	{
 		int sx = offs % 32;
 		int sy = offs / 32;
-		/* the following line is most likely wrong */
-		int transp = (bg_on && sx >= 22) ? TRANSPARENCY_NONE : TRANSPARENCY_PEN;
-
 		int code = videoram[offs];
 
 		if (flip_screen_x) sx = 31 - sx;
@@ -174,12 +180,12 @@ static void draw_fg(struct mame_bitmap *bitmap)
 				0,
 				flip_screen_x,flip_screen_y,
 				8*sx,8*sy,
-				&Machine->visible_area,transp,0);
+				cliprect,TRANSPARENCY_PEN,0);
 	}
 }
 
 
-static void draw_sprites(struct mame_bitmap *bitmap)
+static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
 
@@ -256,9 +262,9 @@ VIDEO_UPDATE( buggychl )
 
 
 	if (sky_on)
-		draw_sky(bitmap);
+		draw_sky(bitmap, cliprect);
 	else
-		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+		fillbitmap(bitmap,0x20,cliprect); /* stage 3 disables sky, wants background pen to be blue */
 
 	/* decode modified characters */
 	for (code = 0;code < 256;code++)
@@ -267,12 +273,11 @@ VIDEO_UPDATE( buggychl )
 			decodechar(Machine->gfx[0],code,buggychl_character_ram,Machine->drv->gfxdecodeinfo[0].gfxlayout);
 	}
 
-	if (bg_on)
-		draw_bg(bitmap);
+	draw_bg(bitmap,cliprect);
 
-	draw_sprites(bitmap);
+	draw_sprites(bitmap,cliprect);
 
-	draw_fg(bitmap);
+	draw_fg(bitmap,cliprect);
 
 	for (code = 0;code < 256;code++)
 		dirtychar[code] = 0;
