@@ -1254,6 +1254,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hasamu )	/* (c) 1991 Irem (Japan) */
 	DRIVER( dynablst )	/* (c) 1991 Irem (World) */
 	DRIVER( dynablsb )	/* bootleg */
+  DRIVER( dicegame )  /* bootleg */  
 	DRIVER( bombrman )	/* (c) 1991 Irem (Japan) */
 	/* M97 */
 	DRIVER( bbmanw )	/* (c) 1992 Irem (World) */
