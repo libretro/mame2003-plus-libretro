@@ -291,8 +291,8 @@ PORT_END
 static PORT_WRITE_START( kungfum2_writeport )
 	{ 0x00, 0x00, irem_sound_cmd_w },
 	{ 0x01, 0x01, m62_flipscreen_w },	/* + coin counters */
+  { 0x80, 0x80, m62_hscroll_low_w },
 	{ 0x81, 0x81, m62_hscroll_high_w },
-	{ 0x80, 0x80, m62_hscroll_low_w },
 	{ 0x83, 0x83, kidniki_background_bank_w },
 PORT_END
 
