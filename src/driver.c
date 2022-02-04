@@ -1215,7 +1215,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spelunk2 )	/* (c) 1986 licensed from Broderbund */
 	DRIVER( horizon )	/* (c) 1985 */
 	DRIVER( youjyudn )	/* (c) 1986 (Japan) */
-	DRIVER( bkungfu )	/* (c) 1987 */
 	DRIVER( vigilant )	/* (c) 1988 (World) */
 	DRIVER( vigilntu )	/* (c) 1988 (US) */
 	DRIVER( vigilntj )	/* (c) 1988 (Japan) */
