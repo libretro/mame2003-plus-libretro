@@ -18,7 +18,6 @@ Tile/sprite priority system (for the Kung Fu Master M62 board):
 #include "state.h"
 
 data8_t *m62_tileram;
-data8_t *kungfum2_tileram;
 data8_t *m62_textram;
 data8_t *horizon_scrollram;
 
@@ -36,12 +35,6 @@ static int kidniki_background_bank;
 static int kidniki_text_vscroll;
 
 static int spelunkr_palbank;
-
-data8_t *blitterdatarom;
-data8_t *blittercmdram; 
-data8_t kungfum2_blitter_r(offs_t offset);
-void kungfum2_blitter_w(offs_t offset, data8_t data);
-
 
 /***************************************************************************
 
@@ -292,15 +285,6 @@ WRITE_HANDLER( m62_textram_w )
 	tilemap_mark_tile_dirty( m62_foreground, offset >> 1 );
 }
 
-WRITE_HANDLER( kidniki_background_bank_w )
-{
-	if (kidniki_background_bank != (data & 1))
-	{
-		kidniki_background_bank = data & 1;
-		memset(dirtybuffer,1,videoram_size);
-	}
-}
-
 /***************************************************************************
 
   Draw the game screen in the given mame_bitmap.
@@ -443,134 +427,6 @@ static void get_kungfum_bg_tile_info( int offs )
 	}
 }
 
-static void get_kungfum2_bg_tile_info( int offs )
-{
-	int code;
-	int color;
-	code = kungfum2_tileram[(offs << 1)];
-	color = kungfum2_tileram[(offs << 1) | 1];
-
-	SET_TILE_INFO(0, code | ((color & 0xe0) << 3) | (kidniki_background_bank << 11), color & 0x1f, 0);
-
-
-	/* is the following right? */
-	if ((offs / 64) < 6 || ((color & 0x1f) >> 1) > 0x0c)
-	{
-		tile_info.priority = 1;
-	}
-	else
-	{
-		tile_info.priority = 0;
-	}
-}
-
-data8_t kungfum2_blitter_r(offs_t offset)
-{
-	return 0xfe;
-}
-
-void kungfum2_blitter_w(offs_t offset, data8_t data)
-{
-    data8_t *blitterdatarom = memory_region(REGION_USER1);
-	blittercmdram[offset] = data;
-
-	if (offset == 0x00)
-	{
-		if (data == 0x14)
-		{
-			//logerror("%s: blitter: draw text from ROM\n", machine().describe_context());
-
-			data16_t blitterromptr = blittercmdram[0x001] * 2;
-			data16_t blitterromdataptr = blitterdatarom[blitterromptr] | (blitterdatarom[blitterromptr + 1] << 8);
-
-			data8_t blitdat = blitterdatarom[blitterromdataptr++];
-			while (blitdat != 0x00)
-			{
-				if (blitdat == 0x01)
-				{
-					// change color value during blit
-					blittercmdram[0x004] = blitterdatarom[blitterromdataptr++];
-				}
-				else if (blitdat == 0x02)
-				{
-					// change position params during blit
-					blittercmdram[0x002] = blitterdatarom[blitterromdataptr++];
-					blittercmdram[0x003] = blitterdatarom[blitterromdataptr++];
-				}
-				else
-				{
-					data16_t position = (blittercmdram[0x003] << 8) | blittercmdram[0x002];
-
-					kungfum2_tileram[(position) & 0xfff] = blitdat;
-					kungfum2_tileram[(position + 1) & 0xfff] = blittercmdram[0x004];
-					tilemap_mark_tile_dirty(m62_background, (position & 0xfff) >> 1);
-
-					position += 2;
-					blittercmdram[0x002] = position & 0xff;
-					blittercmdram[0x003] = (position & 0xff00) >> 8;
-				}
-
-				blitdat = blitterdatarom[blitterromdataptr++];
-			}
-		}
-		else if (data == 0x08) // clear layer to fixed value
-		{
-            int position = 0;
-			for (position = 0; position < 0x1000; position += 2)
-			{
-				kungfum2_tileram[(position) & 0xfff] = blittercmdram[0x002];
-				kungfum2_tileram[(position + 1) & 0xfff] = blittercmdram[0x001];
-				tilemap_mark_tile_dirty(m62_background, (position & 0xfff) >> 1);
-			}
-		}
-		else if (data == 0x02)
-		{
-			//logerror("%s: blitter: draw level from ROM(2)\n", machine().describe_context());
-		}
-		else if (data == 0x01)
-		{
-			//logerror("%s: blitter: draw level from ROM(1)\n", machine().describe_context());
-		}
-		else if (data == 0x0a)
-		{
-			// level data is in custom format. draws 14x4 tile blocks. compression?
-			//logerror("%s: blitter: draw level from ROM initialize\n", machine().describe_context());
-
-			//data16_t blitterromptr = blittercmdram[0x001] << 1;
-			//data16_t blitterromdataptr = blitterdatarom[0x200 + blitterromptr] | (blitterdatarom[0x200 + blitterromptr + 1] << 8);
-			//logerror("source address is % 04x\n", blitterromdataptr);
-		}
-		else if (data == 0x05)
-		{
-			//logerror("%s: blitter: draw level ROM on level 3+\n", machine().describe_context());
-		}
-		else if (data == 0x0f)
-		{
-			//logerror("%s: blitter: draw title animation flames\n", machine().describe_context());
-		}
-		else if (data == 0x0d)
-		{
-			//logerror("%s: blitter: draw title animation flames(2)\n", machine().describe_context());
-		}
-		else if (data == 0x10)
-		{
-			//logerror("%s: blitter: coin up\n", machine().describe_context());
-		}
-		else if (data == 0xfe)
-		{
-			//logerror("%s: blitter: start up\n", machine().describe_context());
-		}
-		else
-		{
-			//logerror("%s: blitter: unknown\n", machine().describe_context());
-		}
-	}
-	else
-	{
-		// higher offsets used for score & timer display
-	}
-}
-
 VIDEO_UPDATE( kungfum )
 {
 	int i;
@@ -590,13 +446,6 @@ VIDEO_UPDATE( kungfum )
 VIDEO_START( kungfum )
 {
 	return m62_start( get_kungfum_bg_tile_info, 32, 0, 8, 8, 64, 32 );
-}
-
-VIDEO_START( kungfum2 )
-{
-	/* tileram is private to blitter */
-    kungfum2_tileram = (data8_t*) auto_malloc(64*32*2);
-	return m62_start( get_kungfum2_bg_tile_info, 32, 0, 8, 8, 64, 32 );
 }
 
 
@@ -771,6 +620,15 @@ WRITE_HANDLER( kidniki_text_vscroll_low_w )
 WRITE_HANDLER( kidniki_text_vscroll_high_w )
 {
 	kidniki_text_vscroll = (kidniki_text_vscroll & 0xff) | (data << 8);
+}
+
+WRITE_HANDLER( kidniki_background_bank_w )
+{
+	if (kidniki_background_bank != (data & 1))
+	{
+		kidniki_background_bank = data & 1;
+		memset(dirtybuffer,1,videoram_size);
+	}
 }
 
 static void get_kidniki_bg_tile_info( int offs )
