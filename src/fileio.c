@@ -258,11 +258,10 @@ void osd_get_path(int pathtype, char* path)
          snprintf(path, PATH_MAX_LENGTH, "%s", sys_path_buffer);
          break;
    }
+
    /* Create path if it doesn't exist and log create failures */
    if (!path_is_directory(path))
      if (!path_mkdir(path)) log_cb(RETRO_LOG_ERROR, LOGPRE "(osd_get_path) failed to create path:  %s\n", path);
-
-   log_cb(RETRO_LOG_DEBUG, LOGPRE "(osd_get_path) %s\n", path);
 }
 
 int osd_get_path_info(int pathtype, int pathindex, const char *filename)
