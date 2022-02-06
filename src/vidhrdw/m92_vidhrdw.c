@@ -590,6 +590,7 @@ static void m92_drawsprites(struct mame_bitmap *bitmap, const struct rectangle *
 
 VIDEO_UPDATE( m92 )
 {
+#ifdef MAME_DEBUG
 	/* Screen refresh is handled by raster interrupt routine, here
 		we just check the keyboard */
 	if (keyboard_pressed_memory(KEYCODE_F1)) {
@@ -599,6 +600,7 @@ VIDEO_UPDATE( m92 )
 		else
 			usrintf_showmessage("Raster IRQ disabled");
 	}
+#endif
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
 	if (readinputport(5)&1)
