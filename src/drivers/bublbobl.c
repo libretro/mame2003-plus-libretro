@@ -1,5 +1,8 @@
 /***************************************************************************
-Bubble Bobble / Tokio
+Tokio          (c) 1986 Taito
+Bubble Bobble  (c) 1986 Taito
+driver by Chris Moore, Nicola Salmoria
+also based on Tokio driver by Marcelo de G. Malheiros <malheiro@dca.fee.unicamp.br>
 
 Main clock: XTAL = 24 MHz
 Horizontal video frequency: HSYNC = XTAL/4/384 = 15.625 kHz
@@ -134,6 +137,7 @@ CPU 3
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "cpu/m6805/m6805.h"
 
 static int ddr1, ddr2, ddr3, ddr4;
 static int port1_in, port2_in, port3_in, port4_in;
@@ -161,7 +165,6 @@ WRITE_HANDLER( bublbobl_bankswitch_w );
 WRITE_HANDLER( tokio_bankswitch_w );
 WRITE_HANDLER( tokio_videoctrl_w );
 WRITE_HANDLER( bublbobl_nmitrigger_w );
-READ_HANDLER( tokio_fake_r );
 WRITE_HANDLER( bublbobl_sound_command_w );
 WRITE_HANDLER( bublbobl_sh_nmi_disable_w );
 WRITE_HANDLER( bublbobl_sh_nmi_enable_w );
@@ -276,6 +279,122 @@ READ_HANDLER( bublbobl_mcu_port4_r )
 WRITE_HANDLER( bublbobl_mcu_port4_w )
 {
 	port4_out = data;
+}
+
+/* tokio mcu */
+READ_HANDLER ( tokio_68705_portA_r );
+WRITE_HANDLER( tokio_68705_portA_w );
+READ_HANDLER ( tokio_68705_portB_r );
+WRITE_HANDLER( tokio_68705_portB_w );
+READ_HANDLER ( tokio_68705_portC_r );
+WRITE_HANDLER( tokio_68705_portC_w );
+WRITE_HANDLER( tokio_68705_ddrA_w );
+WRITE_HANDLER( tokio_68705_ddrB_w );
+WRITE_HANDLER( tokio_68705_ddrC_w );
+WRITE_HANDLER( tokio_mcu_w );
+READ_HANDLER ( tokio_mcu_r );
+READ_HANDLER ( tokio_mcu_status_r );
+READ_HANDLER ( tokio_fake_r ); /* faked mcu commands for bootleg */
+
+static unsigned char from_main,from_mcu;
+static int mcu_sent = 0,main_sent = 0;
+static unsigned char portA_in,portA_out,ddrA;
+static unsigned char portB_in,portB_out,ddrB;
+static unsigned char portC_in,portC_out,ddrC;
+
+READ_HANDLER( tokio_68705_portA_r )
+{
+	return (portA_out & ddrA) | (portA_in & ~ddrA);
+}
+
+WRITE_HANDLER( tokio_68705_portA_w )
+{
+	portA_out = data;
+}
+
+WRITE_HANDLER( tokio_68705_ddrA_w )
+{
+	ddrA = data;
+}
+
+READ_HANDLER( tokio_68705_portB_r )
+{
+	return (portB_out & ddrB) | (portB_in & ~ddrB);
+}
+
+WRITE_HANDLER( tokio_68705_portB_w )
+{
+	if ((ddrB & 0x02) && (~data & 0x02) && (portB_out & 0x02))
+	{
+		portA_in = from_main;
+		if (main_sent) cpu_set_irq_line(3,0,CLEAR_LINE);
+		main_sent = 0;
+	}
+	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
+	{
+		from_mcu = portA_out;
+		mcu_sent = 1;
+	}
+
+	portB_out = data;
+}
+
+WRITE_HANDLER( tokio_68705_ddrB_w )
+{
+	ddrB = data;
+}
+
+
+READ_HANDLER( tokio_68705_portC_r )
+{
+	data8_t ret = 0;
+
+	if (!main_sent)
+		ret |= 0x01;
+	if (mcu_sent)
+		ret |= 0x02;
+
+	ret ^= 0x3; /* inverted logic compared to tigerh */
+
+	return ret;
+
+}
+
+WRITE_HANDLER( tokio_68705_portC_w )
+{
+	portC_out = data;
+}
+
+WRITE_HANDLER( tokio_68705_ddrC_w )
+{
+	ddrC = data;
+}
+
+WRITE_HANDLER( tokio_mcu_w )
+{
+	from_main = data;
+	main_sent = 1;
+	cpu_set_irq_line(3,0,ASSERT_LINE);
+}
+
+READ_HANDLER( tokio_mcu_r )
+{
+	mcu_sent = 0;
+	return from_mcu;
+}
+
+READ_HANDLER( tokio_mcu_status_r )
+{
+    int res = input_port_2_r(0);
+ 
+    res &= ~0x30; /* clear 3 bits in top nibble to make room for mcu status */
+ 
+    if (!main_sent)
+        res |= 0x10;
+    if (!mcu_sent)
+        res |= 0x20;
+ 
+    return res;
 }
 
 
@@ -400,13 +519,42 @@ static MEMORY_READ_START( tokio_readmem )
 	{ 0xf800, 0xf9ff, paletteram_r },
 	{ 0xfa03, 0xfa03, input_port_0_r },
 	{ 0xfa04, 0xfa04, input_port_1_r },
+	{ 0xfa05, 0xfa05, tokio_mcu_status_r }, /* M68705 commands */
+	{ 0xfa06, 0xfa06, input_port_3_r },
+	{ 0xfa07, 0xfa07, input_port_4_r },
+	{ 0xfe00, 0xfe00, tokio_mcu_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( tokio_writemem )
+	{ 0x0000, 0xbfff, MWA_ROM },
+	{ 0xc000, 0xdcff, MWA_RAM, &videoram, &videoram_size },
+	{ 0xdd00, 0xdfff, MWA_RAM, &bublbobl_objectram, &bublbobl_objectram_size },
+	{ 0xe000, 0xf7ff, bublbobl_sharedram1_w, &bublbobl_sharedram1 },
+	{ 0xf800, 0xf9ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram },
+	{ 0xfa00, 0xfa00, MWA_NOP },
+	{ 0xfa80, 0xfa80, tokio_bankswitch_w },
+	{ 0xfb00, 0xfb00, tokio_videoctrl_w },
+	{ 0xfb80, 0xfb80, bublbobl_nmitrigger_w },
+	{ 0xfc00, 0xfc00, bublbobl_sound_command_w },
+	{ 0xfe00, 0xfe00, tokio_mcu_w },
+MEMORY_END
+
+/* bootleg uses fake mcu hookup */
+static MEMORY_READ_START( tokiob_readmem )
+	{ 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK1 },
+	{ 0xc000, 0xdfff, MRA_RAM },
+	{ 0xe000, 0xf7ff, bublbobl_sharedram1_r },
+	{ 0xf800, 0xf9ff, paletteram_r },
+	{ 0xfa03, 0xfa03, input_port_0_r },
+	{ 0xfa04, 0xfa04, input_port_1_r },
 	{ 0xfa05, 0xfa05, input_port_2_r },
 	{ 0xfa06, 0xfa06, input_port_3_r },
 	{ 0xfa07, 0xfa07, input_port_4_r },
 	{ 0xfe00, 0xfe00, tokio_fake_r },
 MEMORY_END
 
-static MEMORY_WRITE_START( tokio_writemem )
+static MEMORY_WRITE_START( tokiob_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xdcff, MWA_RAM, &videoram, &videoram_size },
 	{ 0xdd00, 0xdfff, MWA_RAM, &bublbobl_objectram, &bublbobl_objectram_size },
@@ -434,24 +582,41 @@ static MEMORY_READ_START( tokio_sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x8fff, MRA_RAM },
 	{ 0x9000, 0x9000, soundlatch_r },
-/*	{ 0x9800, 0x9800, MRA_NOP },	 // ??? /*/
+	{ 0x9800, 0x9800, MRA_NOP },	/* ??? */
 	{ 0xb000, 0xb000, YM2203_status_port_0_r },
 	{ 0xb001, 0xb001, YM2203_read_port_0_r },
-	{ 0xe000, 0xefff, MRA_ROM },	/* space for diagnostic ROM? */
+	{ 0xe000, 0xffff, MRA_ROM },	/* space for diagnostic ROM? */
 MEMORY_END
 
 static MEMORY_WRITE_START( tokio_sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x8fff, MWA_RAM },
-/*	{ 0x9000, 0x9000, MWA_NOP },	 // ??? /*/
+	{ 0x9000, 0x9000, MWA_NOP },	/* ??? */
 	{ 0xa000, 0xa000, bublbobl_sh_nmi_disable_w },
 	{ 0xa800, 0xa800, bublbobl_sh_nmi_enable_w },
 	{ 0xb000, 0xb000, YM2203_control_port_0_w },
 	{ 0xb001, 0xb001, YM2203_write_port_0_w },
-	{ 0xe000, 0xefff, MWA_ROM },	/* space for diagnostic ROM? */
+	{ 0xe000, 0xffff, MWA_ROM },	/* space for diagnostic ROM? */
 MEMORY_END
 
+static MEMORY_READ_START( tokio_m68705_readmem )
+	{ 0x0000, 0x0000, tokio_68705_portA_r },
+	{ 0x0001, 0x0001, tokio_68705_portB_r },
+	{ 0x0002, 0x0002, tokio_68705_portC_r },
+	{ 0x0010, 0x007f, MRA_RAM },
+	{ 0x0080, 0x07ff, MRA_ROM },
+MEMORY_END
 
+static MEMORY_WRITE_START( tokio_m68705_writemem )
+	{ 0x0000, 0x0000, tokio_68705_portA_w },
+	{ 0x0001, 0x0001, tokio_68705_portB_w },
+	{ 0x0002, 0x0002, tokio_68705_portC_w },
+	{ 0x0004, 0x0004, tokio_68705_ddrA_w },
+	{ 0x0005, 0x0005, tokio_68705_ddrB_w },
+	{ 0x0006, 0x0006, tokio_68705_ddrC_w },
+	{ 0x0010, 0x007f, MWA_RAM },
+	{ 0x0080, 0x07ff, MWA_ROM },
+MEMORY_END
 
 INPUT_PORTS_START( bublbobl )
 	PORT_START      /* IN0 */
@@ -763,16 +928,96 @@ INPUT_PORTS_START( tokio )
 	PORT_DIPSETTING(    0x80, DEF_STR( 1C_2C ) )
 
 	PORT_START      /* DSW1 */
-	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, "Easy" )
-	PORT_DIPSETTING(    0x02, "Medium" )
-	PORT_DIPSETTING(    0x01, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(    0x0C, "100000 400000" )
-	PORT_DIPSETTING(    0x08, "200000 400000" )
-	PORT_DIPSETTING(    0x04, "300000 400000" )
-	PORT_DIPSETTING(    0x00, "400000 400000" )
+	PORT_DIPNAME( 0x01, 0x01, "Enemies" )
+	PORT_DIPSETTING(    0x01, "Few (Easy)" )
+	PORT_DIPSETTING(    0x00, "Many (Hard)" )
+	PORT_DIPNAME( 0x02, 0x02, "Enemy Shots" )
+	PORT_DIPSETTING(    0x02, "Few (Easy)" )
+	PORT_DIPSETTING(    0x00, "Many (Hard)" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x0c, "100K 400K" )
+	PORT_DIPSETTING(    0x08, "200K 400K" )
+	PORT_DIPSETTING(    0x04, "300K 400K" )
+	PORT_DIPSETTING(    0x00, "400K 400K" )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x30, "3" )
+	PORT_DIPSETTING(    0x20, "4" )
+	PORT_DIPSETTING(    0x10, "5" )
+	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "99", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x00, "Language" )
+	PORT_DIPSETTING(    0x00, "English" )
+	PORT_DIPSETTING(    0x80, "Japanese" )
+
+	PORT_START      /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+    PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* M68705 commands */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* M68705 commands */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
+/* bootleg no mcu */
+INPUT_PORTS_START( tokiob )
+	PORT_START      /* DSW0 */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_2C ) )
+
+	PORT_START      /* DSW1 */
+	PORT_DIPNAME( 0x01, 0x01, "Enemies" )
+	PORT_DIPSETTING(    0x01, "Few (Easy)" )
+	PORT_DIPSETTING(    0x00, "Many (Hard)" )
+	PORT_DIPNAME( 0x02, 0x02, "Enemy Shots" )
+	PORT_DIPSETTING(    0x02, "Few (Easy)" )
+	PORT_DIPSETTING(    0x00, "Many (Hard)" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x0c, "100K 400K" )
+	PORT_DIPSETTING(    0x08, "200K 400K" )
+	PORT_DIPSETTING(    0x04, "300K 400K" )
+	PORT_DIPSETTING(    0x00, "400K 400K" )
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x30, "3" )
 	PORT_DIPSETTING(    0x20, "4" )
@@ -796,26 +1041,25 @@ INPUT_PORTS_START( tokio )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START      /* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_2WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_2WAY )
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START      /* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_2WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_2WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_2WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
-
 
 
 static struct GfxLayout charlayout =
@@ -871,7 +1115,7 @@ static struct YM2203interface tokio_ym2203_interface =
 {
 	1,		/* 1 chip */
 	MAIN_XTAL/8,	/* 3 MHz */
-	{ YM2203_VOL(100,20) },
+	{ YM2203_VOL(100,10) },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -957,6 +1201,45 @@ static MACHINE_DRIVER_START( tokio )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, MAIN_XTAL/4)	/* 6 MHz */
 	MDRV_CPU_MEMORY(tokio_readmem,tokio_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, MAIN_XTAL/4)	/* 6 MHz */
+	MDRV_CPU_MEMORY(tokio_readmem2,tokio_writemem2)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, MAIN_XTAL/8)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 3 MHz */
+	MDRV_CPU_MEMORY(tokio_sound_readmem,tokio_sound_writemem)
+						/* NMIs are triggered by the main CPU */
+						/* IRQs are triggered by the YM2203 */
+	MDRV_CPU_ADD(M68705, MAIN_XTAL/8)  /* 3 MHz */
+	MDRV_CPU_MEMORY(tokio_m68705_readmem,tokio_m68705_writemem)
+		
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION) /* frames/second, vblank duration */
+	MDRV_INTERLEAVE(100)	/* 100 CPU slices per frame - an high value to ensure proper */
+							/* synchronization of the CPUs */
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(256)
+
+	MDRV_VIDEO_UPDATE(bublbobl)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM2203, tokio_ym2203_interface)
+MACHINE_DRIVER_END
+
+/* Bubble Bobble Prototype - Tokio bootleg hookup no mcu */
+static MACHINE_DRIVER_START( tokiob )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, MAIN_XTAL/4)	/* 6 MHz */
+	MDRV_CPU_MEMORY(tokiob_readmem,tokiob_writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
 	MDRV_CPU_ADD(Z80, MAIN_XTAL/4)	/* 6 MHz */
@@ -1364,8 +1647,8 @@ ROM_START( tokio )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* audio CPU */
 	ROM_LOAD( "a71-07.256",   0x0000, 0x08000, CRC(f298cc7b) SHA1(ebf5c804aa07b7f198ec3e1f8d1e111cd89ebdf3) )
 
-	ROM_REGION( 0x0800, REGION_CPU4, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000, 0x0800, NO_DUMP )
+	ROM_REGION( 0x0800,  REGION_CPU4, 0 )	/* 2k for the microcontroller */
+	ROM_LOAD( "a71__24.ic57", 0x0000, 0x0800, CRC(0f4b25de) SHA1(e2d82aa8d8cc6a86aaf5715ef9cb62f526fd5b11) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a71-08.256",   0x00000, 0x8000, CRC(0439ab13) SHA1(84142220a6a29f0e34f7c7c751b583bf394df8ce) )    /* 1st plane */
@@ -1470,11 +1753,11 @@ GAME( 1986, bublbobl, 0,        bublbobl, bublbobl, bublbobl, ROT0,  "Taito Corp
 GAME( 1986, bublbob1, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble (older)" )
 GAME( 1986, bublbobr, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US with mode select)" )
 GAME( 1986, bubbobr1, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US)" )
-GAME( 1986, bublboblp,bublbobl, tokio,    bublboblp,bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble (prototype on Tokio hardware)" )
+GAME( 1986, bublboblp,bublbobl, tokiob,   bublboblp,bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble (prototype on Tokio hardware)" )
 GAME( 1986, boblbobl, bublbobl, boblbobl, boblbobl, boblbobl, ROT0,  "bootleg", "Bobble Bobble" )
 GAME( 1986, sboblbob, bublbobl, boblbobl, sboblbob, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble" )
-GAMEX(1986, tokio,    0,        tokio,    tokio,    tokio,    ROT90, "Taito",   "Tokio - Scramble Formation", GAME_NOT_WORKING )
-GAME( 1986, tokiob,   tokio,    tokio,    tokio,    tokio,    ROT90, "bootleg", "Tokio - Scramble Formation (bootleg)" )
+GAME( 1986, tokio,    0,        tokio,    tokio,    tokio,    ROT90, "Taito America Corporation (Romstar license)", "Tokio / Scramble Formation (US)" )
+GAME( 1986, tokiob,   tokio,    tokiob,   tokiob,   tokio,    ROT90, "bootleg", "Tokio / Scramble Formation (bootleg)" )
 
 /* hacks */
 GAME( 2012, bublboblu,bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "hack", "Bubble Bobble (Ultra Version)(USA)" )
