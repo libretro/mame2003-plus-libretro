@@ -398,10 +398,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
+* Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
+* Thunder Strike - Romset `tstrike`
 * Timber - Romset `timber`
 * Time Limit - Romset `timelimt` - colors fixed
-* Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
-* Thunder Strike - Romset `tstrike` 
+* Tokio / Scramble Formation (US) - Romset `tokio`
 * Tri-Sports - Romset `trisport`
 * Tron - Romset `tron`
 * Turbo Out Run - Romsets `toutrun` and `toutrun3`
@@ -828,3 +829,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some graphical problems where the colours were wrong on level 3 and half the screen was missing eg rendered black in Buggy Challenge [arcadez]
 * Added support for Dice - The Dice Game a bootleg of the undumped DiceDiceDice by IREM to the M90 driver [arcadez]
 * Improved pgm.c driver support for ( Oriental Legend Special - Xi You Shi E Zhuan Super ) [arcadez]
+* Hookup for the M68705 MCU used in Tokio, game now playable  [arcadez]
