@@ -4,102 +4,34 @@
   ================================
 
   The C-Chip (Taito TC0030CMD) is an unidentified mask programmed
-  microcontroller of some sort with 64 pins used for copy protection.
-  It probably has about 2k of ROM and 8k of RAM.  The simulation in this file
-  is verified from the unprotected prototype game and the observed behaviour
-  of the real pcb running.  It should give 100% accurate gameplay.  The bootleg
-  Operation Wolf uses a Z80 and custom program to replace the c-chip.  However
-  it's clear that bootlegger done the minimum to make the game work, with both
-  major and minor differences to the original game, which are outlined below.
-
-  Operation Wolf has interesting software architecture.  Unlike most games of this
-  era which have a simple main loop and linear code flow, Operation Wolf
-  implements a co-operative threading model where routines run in 68K user mode
-  until giving up their timeslice and a supervisor mode scheduler picks the next
-  thread to run.  There are 32 thread slots, and each enemy in game run as its
-  own thread/object as well as a thread for coins, scrolling the level, level
-  specific gameplay and so on.  The code is very robust when creating threads,
-  for example if there are no free slots, the creating thread just spins until
-  a slot frees up.  The rest of the game just keeps on playing in the background.
-  Another interesting detail is that a thread can give up it's timeslice for more
-  than 1 frame - this makes it really easy to implement timed events.  The 'WARNING'
-  text at the end of level 2 is handled by a thread that prints to screen, then just
-  waits a second before spawning the boss enemy thread.
-
-  Each level in the game implements its own logic thread and often sub-threads -
-  this is the major difference between the protected game and the bootleg - the bootleg
-  mostly implements the parts that are generic between all levels rather than all of
-  the details.  The biggest single area the bootleg did not implement revolves
-  around location 0x5f in the shared c-chip RAM.  The original code sets up a thread
-  that just waits for this value to become non-zero.  It then jumps to a set of
-  functions defined in a look-up table (that can then spawn further threads).  There
-  are 10 non-null functions tied to this routine.
-
-  1:  Enemy spawn for level 7 (first 'Located' cut-scene)
-  2:  Enemy spawn for level 8 (second 'Located' cut-scene) - zoom in helicopters
-  3:  Enemy spawn for level 9 (third 'Located' cut-scene)
-  4:  Boss & hostage sequence for level 2
-  5:  Enemy spawn when less than 45 enemies in level 2 (paratrooper drop-down)
-  6:  Enemy spawn when less than 25 enemies in level 2
-  7:  Enemy spawn when 0 men left in levels 2,4,5,6
-  8:  Enemy spawn when 0 men left in level 3
-  9:  Enemy spawn when 0 men left in level 1
-  10:  Special explosion animation when level 4 (Powder Dump) is completed
-
-  The bootleg also misses some other details, for example in level 5 the c-chip
-  sets a flag when all men are destroyed (not vehicles) and this triggers the 68K
-  to scroll the screen vertically to focus on the remaining helicopter enemies.
-
-  The 'Enemy has located you' cut-scenes appear 'randomly' between levels in the
-  original game, but are deliberately disabled in the bootleg.  The exact formula
-  for determining if the cut-scene appears is '(frameCount & levelNumber)==0'.
-  See code at 0x2D68 for this logic.
-
+  microcontroller of some sort with 64 pins.  It probably has
+  about 2k of ROM and 8k of RAM.
 
   Interesting memory locations shared by cchip/68k:
 
-  0a/xx - copy of 3a0000
-  28/14 - dip switch A (written by 68k at start)
-  2a/15 - dip switch B (written by 68k at start)
-  2c/ ???      (mapped to $982,A5) [word] in prototype)
-  2e/          (mapped to $984,A5) [word] in prototype)
-  58/2c         m_cchip_ram[0x2c] = 0x31;
-  ee/77         m_cchip_ram[0x77] = 0x05;
-  4a/25         m_cchip_ram[0x25] = 0x0f;
-  4c/26         m_cchip_ram[0x26] = 0x0b;
-  36/1b - Current level number (1-6)
-  38/1c - Number of men remaining in level
-  3c/1e - Number of helicopters remaining in level
-  3e/1f - Number of tanks remaining in level
-  40/20 - Number of boats remaining in level
-  42/21 - Hostages in plane (last level)
-  44/22 - Hostages remaining (last level)/Hostages saved (2nd last level)
-  4e/27 - Set to 1 when final boss is destroyed
-  64/32 - Set to 1 by cchip when level complete (no more enemies remaining)
-  68/34 - Game state (0=attract mode, 1=intro, 2=in-game, 3=end-screen)
-  69/xx - variable mapped from ($980,A5) [byte] in prototype
-  6B/xx - variable mapped from ($981,A5) [byte] in prototype
-  A6/xx - variable mapped from ($d6e,A5) [word] in prototype
-  A8/54 - ?
-  xx/51/52 - Used by cchip to signal change in credit level to 68k
-  xx/53 - Credit count
-  EA/75 - Set to 1 to trigger end of game boss
-  EC/76 - used near above
-  xx/7a - Used to trigger level data select command
+    14 - dip switch A (written by 68k at start)
+    15 - dip switch B (written by 68k at start)
+    1b - Current level number (1-6)
+    1c - Number of men remaining in level
+    1e - Number of helicopters remaining in level
+    1f - Number of tanks remaining in level
+    20 - Number of boats remaining in level
+    21 - Hostages in plane (last level)
+    22 - Hostages remaining (last level)/Hostages saved (2nd last level)#
+    27 - Set to 1 when final boss is destroyed
+    32 - Set to 1 by cchip when level complete (no more enemies remaining)
+    34 - Game state (0=attract mode, 1=intro, 2=in-game, 3=end-screen)
+    51/52 - Used by cchip to signal change in credit level to 68k
+    53 - Credit count
+    75 - Set to 1 to trigger end of game boss
+    7a - Used to trigger level data select command
 
-  Notes on bootleg c-chip compared to original:
+  Notes on bootleg c-chip:
     Bootleg cchip forces english language mode
     Bootleg forces round 4 in attract mode
     Bootleg doesn't support service switch
     If you die after round 6 then the bootleg fails to reset the difficulty
-      for the next game.
-	The bootleg does not contain data for the 3 mini-levels ('Enemy has located you'),
-	  instead it prevents them running by writing 0 to location 70 in the shared memory.
-	The bootleg does not play the special powder magazine (level 4) animation.
-	The bootleg does not vertically scroll the screen when all men killed in level 5
-	The bootleg does not update the enemy spawn tables at various points.
-
-  Notes by bmcphail@vcmame.net
+    for the next game.
 
 *************************************************************************/
 
@@ -116,17 +48,6 @@ static UINT8 cchip_coins_for_credit_a=1;
 static UINT8 cchip_credit_for_coin_b=2;
 static UINT8 cchip_coins=0;
 static UINT8 c588=0, c589=0, c58a=0; /* These variables derived from the bootleg */
-static UINT8 triggeredLevel1b; /* These variables derived from comparison to unprotection version */
-static UINT8 triggeredLevel2;
-static UINT8 triggeredLevel2b;
-static UINT8 triggeredLevel2c;
-static UINT8 triggeredLevel3b;
-static UINT8 triggeredLevel13b;
-static UINT8 triggeredLevel4;
-static UINT8 triggeredLevel5;
-static UINT8 triggeredLevel7;
-static UINT8 triggeredLevel8;
-static UINT8 triggeredLevel9;
 
 static const UINT16 level_data_00[] = {
 	0x0480, 0x1008, 0x0300,   0x5701, 0x0001, 0x0010,
@@ -506,43 +427,29 @@ static void timer_callback(int param)
 			cchip_ram[0x200 + i*2 + 5] = level_data[i+2]&0xff;
 		}
 
-		/* The bootleg cchip writes 0 to these locations - we can probably assume the real one
-		does similar as this is just zeroing out work variables used in the level. 
-		*/
-		cchip_ram[0x0] = 0;
-		cchip_ram[0x76] = 0;
-		cchip_ram[0x75] = 0;
-		cchip_ram[0x74] = 0;
-		cchip_ram[0x72] = 0;
-		cchip_ram[0x71] = 0;
-		/* cchip_ram[0x70] = 0; The bootleg writes this to disable mini-levels.  The real c-chip does not do this. */
-		cchip_ram[0x66] = 0;
-		cchip_ram[0x2b] = 0;
-		cchip_ram[0x30] = 0;
-		cchip_ram[0x31] = 0;
-		cchip_ram[0x32] = 0;
-		cchip_ram[0x27] = 0;
-		c588 = 0;
-		c589 = 0;
-		c58a = 0;
-		triggeredLevel1b = 0;
-		triggeredLevel13b = 0;
-		triggeredLevel2 = 0;
-		triggeredLevel2b = 0;
-		triggeredLevel2c = 0;
-		triggeredLevel3b = 0;
-		triggeredLevel4 = 0;
-		triggeredLevel5 = 0;
-		triggeredLevel7 = 0;
-		triggeredLevel8 = 0;
-		triggeredLevel9 = 0;
+		/* The bootleg cchip writes 0 to these locations - hard to tell what the real one writes */
+		cchip_ram[0x0]=0;
+		cchip_ram[0x76]=0;
+		cchip_ram[0x75]=0;
+		cchip_ram[0x74]=0;
+		cchip_ram[0x72]=0;
+		cchip_ram[0x71]=0;
+/*		cchip_ram[0x70]=0;  */ /* The bootleg writes this to disable mini-levels.  The real c-chip does not do this. */
+		cchip_ram[0x66]=0;
+		cchip_ram[0x2b]=0;
+		cchip_ram[0x30]=0;
+		cchip_ram[0x31]=0;
+		cchip_ram[0x32]=0;
+		cchip_ram[0x27]=0;
+		c588=0;
+		c589=0;
+		c58a=0;
 
-		cchip_ram[0x1a] = 0;
-		cchip_ram[0x7a] = 1; /* Signal command complete */
-
+		cchip_ram[0x1a]=0;
+		cchip_ram[0x7a]=1; /* Signal command complete */
 	}
 
-	current_cmd = 0;
+	current_cmd=0;
 }
 
 static void updateDifficulty(int mode)
@@ -752,202 +659,56 @@ static void cchip_timer(int dummy)
 	coin_counter_w(0, 0);
 	coin_counter_w(1, 0);
 
-	/* These variables are cleared every frame during attract mode and the intro. */
-	if (cchip_ram[0x34] < 2)
-	{
-		updateDifficulty(0);
-		cchip_ram[0x76] = 0;
-		cchip_ram[0x75] = 0;
-		cchip_ram[0x74] = 0;
-		cchip_ram[0x72] = 0;
-		cchip_ram[0x71] = 0;
-		cchip_ram[0x70] = 0;
-		cchip_ram[0x66] = 0;
-		cchip_ram[0x2b] = 0;
-		cchip_ram[0x30] = 0;
-		cchip_ram[0x31] = 0;
-		cchip_ram[0x32] = 0;
-		cchip_ram[0x27] = 0;
-		c588 = 0;
-		c589 = 0;
-		c58a = 0;
-	}
-
-	/* The unprotected Operation Wolf (prototype) shows the game sets up a special thread function specific to each level of the game.
-	This includes the end of level check as different levels have different rules.  In the protected version this logic is moved
-	to the c-chip, so we simulate it here. 
-	*/
-	if (cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0 && cchip_ram[0x1e] == 0 && cchip_ram[0x1f] == 0 && cchip_ram[0x20] == 0)
-	{
-		/* Special handling for end of level 6 */
-		if (cchip_ram[0x1b] == 0x6)
-		{
-			/* Don't signal end of level until final boss is destroyed */
-			if (cchip_ram[0x27] == 0x1)
-				cchip_ram[0x32] = 1;
-		}
-		/* Level 2 - Boss check - cross-referenced from logic at 0x91CE in OpWolfP
-		When all enemies are destroyed c-chip signals function 4 in the level function table, which
-		starts the 'WARNING' sequences for the boss. 
-		*/
-		else if (cchip_ram[0x1b] == 0x2)
-		{
-			if (triggeredLevel2==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f) */
-		    {
- 			    cchip_ram[0x5f] = 4; /* 0xBE at 68K side */
-				triggeredLevel2=1;
-			}
-
-			/* When the level 2 boss has been defeated the 68K will write 0xff to $ff0ba.l - this should signal
-			the c-chip to start the end of level routine.  See code at 0xC370 in OpWolf and 0x933e in OpWolfP 
-			*/
-			if (triggeredLevel2 && cchip_ram[0x5d]!=0)
-			{
-			/* Signal end of level */
- 			cchip_ram[0x32] = 1;
-			cchip_ram[0x5d] = 0; /* acknowledge 68K command */
-			}
-		}
-		else if (cchip_ram[0x1b] == 0x4)
-		{
-			cchip_ram[0x32] = 1;
-
-		/* When level 4 (powder magazine) is complete the c-chip triggers an explosion animation. */
-			if (triggeredLevel4==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-			{
-				cchip_ram[0x5f]=10;				
-			    triggeredLevel4=1;
-			}
-		}
-		else
-		{
-			/* Signal end of level */
-			cchip_ram[0x32] = 1;
-		}
-	}
-
-	/* When all men are destroyed (not necessarily vehicles) the enemy look up table changes
-	Reference functions around 0x96A4 in the unprotected prototype.
-    Level 1 has a specific table.
-	Level 3 has an additional flag set 
-	*/
-	if (cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0)
-	{
-		/* Compare code at 0x96DC in prototype with 0xC3A2 in protected version */
-		if (cchip_ram[0x1b] == 0x1 && triggeredLevel1b==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-		{
-			cchip_ram[0x5f]=7;
-			triggeredLevel1b=1;
-		}
-
-		/* Compare code at 0x96BC in prototype with 0xC3B2 in protected version */
-		if (cchip_ram[0x1b] == 0x3 && triggeredLevel3b==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-		{
-			cchip_ram[0x5f]=8;
-			triggeredLevel3b=1;
-		}
-
-		/* Compare code at 0x96BC in prototype with 0xC3C8 in protected version */
-		if ((cchip_ram[0x1b] != 0x1 && cchip_ram[0x1b] != 0x3) && triggeredLevel13b==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-		{
-			cchip_ram[0x5f]=9;
-			triggeredLevel13b=1;
-		}
-	}
-
-	/*-------------------------------------------------------------------------------------------------
-	Level 2.  On level 2 specifically when there are less than 45 men left the enemy lookup table is
-	switched.  This drops down a wave of paratroopers.  When there are less than 25 men left the lookup
-	table is switched again.
-	See code at 0xC37A and 0xc390 in protected version against 0x9648 in prototype. 
-	*/
-	if (cchip_ram[0x1b] == 0x2)
-	{
-		/* (Note:  it's correct that 25 decimal is represented as 0x25 in hex here). */
-		int numMen=(cchip_ram[0x1d]<<8) + cchip_ram[0x1c];
-		if (numMen<0x25 && triggeredLevel2b==1 && triggeredLevel2c==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-		{
-			cchip_ram[0x5f]=6;
-			triggeredLevel2c=1;
-		}
-
-		/* (Note:  it's correct that 45 decimal is represented as 0x45 in hex here). */
-		if (numMen<0x45 && triggeredLevel2b==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-		{
-			cchip_ram[0x5f]=5;
-			triggeredLevel2b=1;
-		}
-	}
-
-	/*-------------------------------------------------------------------------------------------------
-	Level 5 
-	*/
-	if (cchip_ram[0x1b] == 0x5)
-	{
-		/* When all men are destroyed (not necessarily vehicles), the c-chip writes 1 to location
-		0x2f to spawn a thread that scrolls the screen upwards to focus on the helicopter
-		enemies.  The 68K acknowledges this by writing 2 to 0x2f.
-		See code at 0x4ED6 in prototype and 0x687e in original. 
-		*/
-		if (cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0 && triggeredLevel5==0)
-		{
-			cchip_ram[0x2f] = 1;
-			triggeredLevel5 = 1;
-		}
-	}
-
-	/*-------------------------------------------------------------------------------------------------
-	Level 6 
-	*/
-	if (cchip_ram[0x1b] == 0x6)
+	/* Special handling for last level */
+	if (cchip_ram[0x1b]==0x6)
 	{
 		/* Check for triggering final helicopter (end boss) */
-		if (c58a == 0)
+		if (c58a==0)
 		{
-			if ((cchip_ram[0x72] & 0x7f) >= 8 && cchip_ram[0x74] == 0 && cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0 && cchip_ram[0x1f] == 0)
+			if ((cchip_ram[0x72]&0x7f) >= 8 && cchip_ram[0x74]==0 && cchip_ram[0x1c]==0 && cchip_ram[0x1d]==0 && cchip_ram[0x1f]==0)
 			{
-				cchip_ram[0x30] = 1;
-				cchip_ram[0x74] = 1;
-				c58a = 1;
+				cchip_ram[0x30]=1;
+				cchip_ram[0x74]=1;
+				c58a=1;
 			}
 		}
 
-		if (cchip_ram[0x1a] == 0x90)
-			cchip_ram[0x74] = 0;
+		if (cchip_ram[0x1a]==0x90)
+			cchip_ram[0x74]=0;
 
-		if (c58a != 0)
+		if (c58a!=0)
 		{
-			if (c589 == 0 && cchip_ram[0x27] == 0 && cchip_ram[0x75] == 0 && cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0 && cchip_ram[0x1e] == 0 && cchip_ram[0x1f] == 0)
+			if (c589==0 && cchip_ram[0x27]==0 && cchip_ram[0x75]==0 && cchip_ram[0x1c]==0 && cchip_ram[0x1d]==0 && cchip_ram[0x1e]==0 && cchip_ram[0x1f]==0)
 			{
-				cchip_ram[0x31] = 1;
-				cchip_ram[0x75] = 1;
-				c589 = 1;
+				cchip_ram[0x31]=1;
+				cchip_ram[0x75]=1;
+				c589=1;
 			}
 		}
 
-		if (cchip_ram[0x2b] == 0x1)
+		if (cchip_ram[0x2b]==0x1)
 		{
-			cchip_ram[0x2b] = 0;
+			cchip_ram[0x2b]=0;
 
-			if (cchip_ram[0x30] == 0x1)
+			if (cchip_ram[0x30]==0x1)
 			{
-				if (cchip_ram[0x1a] != 0x90)
+				if (cchip_ram[0x1a]!=0x90)
 					cchip_ram[0x1a]--;
 			}
 
-			if (cchip_ram[0x72] == 0x9)
+			if (cchip_ram[0x72]==0x9)
 			{
-				if (cchip_ram[0x76] != 0x4)
+				if (cchip_ram[0x76]!=0x4)
 				{
-					cchip_ram[0x76] = 3;
+					cchip_ram[0x76]=3;
 				}
 			}
 			else
 			{
 				/* This timer is derived from the bootleg rather than the real board, I'm not 100% sure about it */
-				c588 |= 0x80;
+				c588|=0x80;
 
-				cchip_ram[0x72] = c588;
+				cchip_ram[0x72]=c588;
 				c588++;
 
 				cchip_ram[0x1a]--;
@@ -957,71 +718,79 @@ static void cchip_timer(int dummy)
 		}
 
 		/* Update difficulty settings */
-		if (cchip_ram[0x76] == 0)
+		if (cchip_ram[0x76]==0)
 		{
-			cchip_ram[0x76] = 1;
+			cchip_ram[0x76]=1;
 			updateDifficulty(1);
 		}
 	}
 
-	/*-------------------------------------------------------------------------------------------------
-	Start of level 7 - should trigger '1' in level thread table (compare 0xC164 in protected to 0x9468 in unprotected) */
-	if (cchip_ram[0x1b] == 0x7 && triggeredLevel7==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
+	/* These variables are cleared every frame during attract mode and the intro. */
+	if (cchip_ram[0x34] < 2)
 	{
-		triggeredLevel7 = 1;
-		cchip_ram[0x5f] = 1;
+		updateDifficulty(0);
+		cchip_ram[0x76]=0;
+		cchip_ram[0x75]=0;
+		cchip_ram[0x74]=0;
+		cchip_ram[0x72]=0;
+		cchip_ram[0x71]=0;
+		cchip_ram[0x70]=0;
+		cchip_ram[0x66]=0;
+		cchip_ram[0x2b]=0;
+		cchip_ram[0x30]=0;
+		cchip_ram[0x31]=0;
+		cchip_ram[0x32]=0;
+		cchip_ram[0x27]=0;
+		c588=0;
+		c589=0;
+		c58a=0;
 	}
 
-	/*-------------------------------------------------------------------------------------------------
-	Start of level 8 - should trigger '2' in level thread table (compare 0xC18E in protected to 0x9358 in unprotected)
-	This controls the 'zoom in helicopters' enemy 
-	*/
-	if (cchip_ram[0x1b] == 0x8 && triggeredLevel8==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
+	/* Check for level completion (all enemies destroyed) */
+	if (cchip_ram[0x1c] == 0 && cchip_ram[0x1d] == 0 && cchip_ram[0x1e] == 0 && cchip_ram[0x1f] == 0 && cchip_ram[0x20] == 0)
 	{
-		triggeredLevel8 = 1;
-		cchip_ram[0x5f] = 2;
-	}
-
-	/*-------------------------------------------------------------------------------------------------
-	Start of level 9 - should trigger '3' in level thread table (compare 0xC1B0 in protected to 0x9500 in unprotected)
-	This controls the 'zoom in helicopters' enemy 
-	*/
-	if (cchip_ram[0x1b] == 0x9 && triggeredLevel9==0 && cchip_ram[0x5f]==0) /* Don't write unless 68K is ready (0 at 0x5f)) */
-	{
-		triggeredLevel9 = 1;
-		cchip_ram[0x5f] = 3;
+		/* Special handling for end of level 6 */
+		if (cchip_ram[0x1b]==0x6)
+		{
+			/* Don't signal end of level until final boss is destroyed */
+			if (cchip_ram[0x27]==0x1)
+				cchip_ram[0x32]=1;
+		}
+		else
+		{
+			/* Signal end of level */
+			cchip_ram[0x32]=1;
+		}
 	}
 
 	if (cchip_ram[0xe] == 1)
 	{
-		cchip_ram[0xe] = 0xfd;
-		cchip_ram[0x61] = 0x04;
+		cchip_ram[0xe]=0xfd;
+		cchip_ram[0x61]=0x04;
 	}
 
 	/* Access level data command (address 0xf5 goes from 1 -> 0) */
-	if (cchip_ram[0x7a] == 0 && cchip_last_7a != 0 && current_cmd != 0xf5)
+	if (cchip_ram[0x7a]==0 && cchip_last_7a!=0 && current_cmd!=0xf5)
 	{
 		/* Simulate time for command to execute (exact timing unknown, this is close) */
-		current_cmd = 0xf5;
+		current_cmd=0xf5;
 		timer_set(TIME_IN_CYCLES(80000,0), 0, timer_callback);
 	}
-	cchip_last_7a = cchip_ram[0x7a];
-
-	/* This seems to some kind of periodic counter - results are expected
-	by the 68k when the counter reaches 0xa 
-	*/
-	if (cchip_ram[0x7f] == 0xa)
+	cchip_last_7a=cchip_ram[0x7a];
+/*
+	This seems to some kind of periodic counter - results are expected
+	by the 68k when the counter reaches 0xa
+*/	
+	if (cchip_ram[0x7f]==0xa)
 	{
-		cchip_ram[0xfe] = 0xf7;
-		cchip_ram[0xff] = 0x6e;
+		cchip_ram[0xfe]=0xf7;
+		cchip_ram[0xff]=0x6e;
 	}
 
 	/* These are set every frame */
-	cchip_ram[0x64] = 0;
-	cchip_ram[0x66] = 0;
+	cchip_ram[0x64]=0;
+	cchip_ram[0x66]=0;
 }
-
-	
 
 /*************************************
  *
@@ -1044,30 +813,8 @@ void opwolf_cchip_init(void)
 	state_save_register_UINT8("opwolf", 0, "cc", &cchip_coins, 1);
 	state_save_register_UINT8("opwolf", 0, "ca", &cchip_coins_for_credit_a, 1);
 	state_save_register_UINT8("opwolf", 0, "cb", &cchip_credit_for_coin_b, 1);
-	state_save_register_UINT8("opwolf", 0, "1b", &triggeredLevel1b, 1);
-	state_save_register_UINT8("opwolf", 0, "2",  &triggeredLevel2, 1);
-	state_save_register_UINT8("opwolf", 0, "2b", &triggeredLevel2b, 1);
-	state_save_register_UINT8("opwolf", 0, "2c", &triggeredLevel2c, 1);
-	state_save_register_UINT8("opwolf", 0, "3b", &triggeredLevel3b, 1);
-	state_save_register_UINT8("opwolf", 0, "13b",&triggeredLevel13b, 1);
-    state_save_register_UINT8("opwolf", 0, "4",  &triggeredLevel4, 1);
-	state_save_register_UINT8("opwolf", 0, "5",  &triggeredLevel5, 1);
-	state_save_register_UINT8("opwolf", 0, "7",  &triggeredLevel7, 1);
-	state_save_register_UINT8("opwolf", 0, "8",  &triggeredLevel8, 1);
-	state_save_register_UINT8("opwolf", 0, "9",  &triggeredLevel9, 1);
 	state_save_register_UINT8("opwolf", 0, "cc_ram", cchip_ram, 0x400 * 8);
 
-	triggeredLevel1b = 0;
-	triggeredLevel2 = 0;
-	triggeredLevel2b = 0;
-	triggeredLevel2c = 0;
-	triggeredLevel3b = 0;
-	triggeredLevel13b = 0;
-	triggeredLevel4 = 0;
-	triggeredLevel5 = 0;
-	triggeredLevel7 = 0;
-	triggeredLevel8 = 0;
-	triggeredLevel9 = 0;
 	cchip_last_7a=0;
 	cchip_last_04=0xfc;
 	cchip_last_05=0xff;
