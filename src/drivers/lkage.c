@@ -6,23 +6,23 @@ CPU: Z80 (x2), MC68705
 Sound: YM2203 (x2)
 
 Phil Stroffolino
-pjstroff@hotmail.com
+ptroffo@yahoo.com
 
 TODO:
+
+- The high score display uses a video attribute flag whose pupose isn't known.
+
+- purpose of the 0x200 byte prom, "a54-10.2" is unknown.  It contains values in range 0x0..0xf.
+
+- SOUND: lots of unknown writes to the YM2203 I/O ports
+
 - Note that all the bootlegs are derived from a different version of the
   original which hasn't been found yet.
-- SOUND: lots of unknown writes to the YM2203 I/O ports
-- lkage is verfied to be an original set, but it seems to work regardless of what
-  the mcu does. Moreover, the mcu returns a checksum which is different from the
-  one I think the game expects (89, while the game seems to expect 5d). But the
-  game works anyway, it never gives the usual Taito "BAD HW" message.
-- sprite and tilemap placement is most certainly wrong
 
-Take the following observations with a grain of salt (might not be true):
-- attract mode is bogus (observe the behavior of the player)
-- the second stage isn't supposed to have (red) Samurai, only Ninja.
-- The final stage is almost impossible in MAME! On the arcade, I could make my
-  way to the top fairly easily, but in MAME I have to use invulnerability.
+- lkage is verfied to be an original set, but it seems to work regardless of what
+  the mcu does. Moreover, the mcu returns a checksum which is different from what
+  is expected - the MCU computes 0x89, but the main CPU expects 0x5d.
+  The game works anyway, it never gives the usual Taito "BAD HW" message.
 
 ***************************************************************************/
 
@@ -80,42 +80,38 @@ static WRITE_HANDLER( lkage_sh_nmi_enable_w )
 	}
 }
 
-
-
 static MEMORY_READ_START( readmem )
-	{ 0x0000, 0xdfff, MRA_ROM },
-	{ 0xe000, 0xe7ff, MRA_RAM },
+    { 0x0000, 0xdfff, MRA_ROM },
+	{ 0xe000, 0xe7ff, MRA_RAM },      /* work ram */
 	{ 0xe800, 0xefff, paletteram_r },
-	{ 0xf000, 0xf003, MRA_RAM },
+	{ 0xf000, 0xf003, MRA_RAM },       /* video registers */
 	{ 0xf062, 0xf062, lkage_mcu_r },
 	{ 0xf080, 0xf080, input_port_0_r }, /* DSW1 */
 	{ 0xf081, 0xf081, input_port_1_r }, /* DSW2 (coinage) */
 	{ 0xf082, 0xf082, input_port_2_r }, /* DSW3 */
-	{ 0xf083, 0xf083, input_port_3_r },	/* start buttons, insert coin, tilt */
-	{ 0xf084, 0xf084, input_port_4_r },	/* P1 controls */
-	{ 0xf086, 0xf086, input_port_5_r },	/* P2 controls */
+	{ 0xf083, 0xf083, input_port_3_r }, /* start, insert coin, tilt */
+	{ 0xf084, 0xf084, input_port_4_r }, /* P1 controls */
+	{ 0xf086, 0xf086, input_port_5_r }, /* P2 controls */
 	{ 0xf087, 0xf087, lkage_mcu_status_r },
-/*	{ 0xf0a3, 0xf0a3, MRA_NOP },  // unknown /*/
+	{ 0xf0a0, 0xf0a3, MRA_RAM }, /* unknown */
 	{ 0xf0c0, 0xf0c5, MRA_RAM },
 	{ 0xf100, 0xf15f, MRA_RAM },
-	{ 0xf400, 0xffff, MRA_RAM },
+	{ 0xf400, 0xffff, MRA_RAM },  /* videoram */
 MEMORY_END
 
-static MEMORY_WRITE_START( writemem )
-	{ 0x0000, 0xdfff, MWA_ROM },
-	{ 0xe000, 0xe7ff, MWA_RAM },
-	{ 0xe800, 0xefff, MWA_RAM, &paletteram },
-/*	paletteram_xxxxRRRRGGGGBBBB_w, &paletteram },*/
+static MEMORY_WRITE_START( writemem)
+    { 0x0000, 0xdfff, MWA_ROM },
+	{ 0xe000, 0xe7ff, MWA_RAM }, /* work ram */
+	{ 0xe800, 0xefff, paletteram_xxxxRRRRGGGGBBBB_w, &paletteram },
 	{ 0xf000, 0xf003, MWA_RAM, &lkage_vreg }, /* video registers */
 	{ 0xf060, 0xf060, lkage_sound_command_w },
-	{ 0xf061, 0xf061, MWA_NOP }, /* unknown */
+	{ 0xf061, 0xf061, MWA_NOP },
 	{ 0xf062, 0xf062, lkage_mcu_w },
-/*	{ 0xf063, 0xf063, MWA_NOP },  // unknown /*/
-/*	{ 0xf0a2, 0xf0a2, MWA_NOP },  // unknown /*/
-/*	{ 0xf0a3, 0xf0a3, MWA_NOP },  // unknown /*/
-	{ 0xf0c0, 0xf0c5, MWA_RAM, &lkage_scroll }, /* scrolling */
-/*	{ 0xf0e1, 0xf0e1, MWA_NOP },  // unknown /*/
-	{ 0xf100, 0xf15f, MWA_RAM, &spriteram }, /* spriteram */
+	{ 0xf063, 0xf063, MWA_NOP }, /* pulsed; nmi on sound cpu? */
+	{ 0xf0a0, 0xf0a3, MWA_RAM }, /* unknown */
+	{ 0xf0c0, 0xf0c5, MWA_RAM, &lkage_scroll },
+	{ 0xf0e1, 0xf0e1, MWA_NOP }, /* pulsed */
+	{ 0xf100, 0xf15f, MWA_RAM, &spriteram },
 	{ 0xf400, 0xffff, lkage_videoram_w, &videoram }, /* videoram */
 MEMORY_END
 
@@ -182,10 +178,10 @@ MEMORY_END
 INPUT_PORTS_START( lkage )
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(    0x03, "10000" ) /* unconfirmed */
-	PORT_DIPSETTING(    0x02, "15000" ) /* unconfirmed */
-	PORT_DIPSETTING(    0x01, "20000" ) /* unconfirmed */
-	PORT_DIPSETTING(    0x00, "24000" ) /* unconfirmed */
+	PORT_DIPSETTING(    0x03, "30000 100000" ) /* unverified */
+	PORT_DIPSETTING(    0x02, "30000 70000" ) /* unverified */
+	PORT_DIPSETTING(    0x01, "20000 70000" ) /* unverified */
+	PORT_DIPSETTING(    0x00, "20000 50000" ) /* unverified */
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -240,18 +236,18 @@ INPUT_PORTS_START( lkage )
 	PORT_DIPSETTING(    0x60, DEF_STR( 1C_7C ) )
 	PORT_DIPSETTING(    0x70, DEF_STR( 1C_8C ) )
 
-	PORT_START      /* DSW3 */
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, "Easiest" ) /* unconfirmed */
-	PORT_DIPSETTING(    0x02, "Easy" )    /* unconfirmed */
-	PORT_DIPSETTING(    0x01, "Normal" )  /* unconfirmed */
-	PORT_DIPSETTING(    0x00, "Hard" )    /* unconfirmed */
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, "Initial Season" )
+	PORT_DIPSETTING(    0x02, "Spring" )
+	PORT_DIPSETTING(    0x00, "Winter" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x0c, "Easiest" )
+	PORT_DIPSETTING(    0x08, "Easy" )
+	PORT_DIPSETTING(    0x04, "Normal" )
+	PORT_DIPSETTING(    0x00, "Hard" )
 	PORT_DIPNAME( 0x10, 0x10, "Coinage Display" )
 	PORT_DIPSETTING(    0x10, "Coins/Credits" )
 	PORT_DIPSETTING(    0x00, "Insert Coin" )
@@ -325,8 +321,8 @@ static struct GfxLayout sprite_layout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0x0000, &tile_layout,  128, 3 },
-	{ REGION_GFX1, 0x0000, &sprite_layout,  0, 8 },
+	{ REGION_GFX1, 0x0000, &tile_layout,  /*128*/0, 64 },
+	{ REGION_GFX1, 0x0000, &sprite_layout,  0, 16 },
 	{ -1 }
 };
 
@@ -373,13 +369,9 @@ static MACHINE_DRIVER_START( lkage )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_VISIBLE_AREA(2*8, 32*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(176)
-		/*
-			there are actually 1024 colors in paletteram, however, we use a 100% correct
-			reduced "virtual palette" to achieve some optimizations in the video driver.
-		*/
+	MDRV_PALETTE_LENGTH(1024)
 
 	MDRV_VIDEO_START(lkage)
 	MDRV_VIDEO_UPDATE(lkage)
@@ -408,13 +400,9 @@ static MACHINE_DRIVER_START( lkageb )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_VISIBLE_AREA(2*8, 31*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(176)
-		/*
-			there are actually 1024 colors in paletteram, however, we use a 100% correct
-			reduced "virtual palette" to achieve some optimizations in the video driver.
-		*/
+	MDRV_PALETTE_LENGTH(1024)
 
 	MDRV_VIDEO_START(lkage)
 	MDRV_VIDEO_UPDATE(lkage)
@@ -517,36 +505,51 @@ ROM_END
 
 static unsigned char mcu_val;
 
-/*Note:This probably uses another MCU dump,which is undumped.*/
+/*Note: This probably uses another MCU dump,which is undumped.*/
 
 static READ_HANDLER( fake_mcu_r )
 {
+	int result = 0;
+
 	switch(mcu_val)
 	{
 		/*These are for the attract mode*/
-		case 0x01: return (mcu_val-1);
-		case 0x90: return (mcu_val+0x43);
-		/*Gameplay Protection,checked in this order at a start of a play*/
-		case 0xa6: return (mcu_val+0x27);
-		case 0x34: return (mcu_val+0x7f);
-		case 0x48: return (mcu_val+0xb7);
+		case 0x01:
+			result = mcu_val-1;
+			break;
 
-		default:   return (mcu_val);
+		case 0x90:
+			result = mcu_val+0x43;
+			break;
+
+		/*Gameplay Protection,checked in this order at a start of a play*/
+		case 0xa6:
+			result = mcu_val+0x27;
+			break;
+
+		case 0x34:
+			result = mcu_val+0x7f;
+			break;
+
+		case 0x48:
+			result = mcu_val+0xb7;
+			break;
+
+		default:
+			result = mcu_val;
+			break;
 	}
+	return result;
 }
 
 static WRITE_HANDLER( fake_mcu_w )
 {
-	/*if(data != 1 && data != 0xa6 && data != 0x34 && data != 0x48)*/
-	/*	usrintf_showmessage("PC = %04x %02x",activecpu_get_pc(),data);*/
-
 	mcu_val = data;
 }
 
 static READ_HANDLER( fake_status_r )
 {
-	static int res = 3;/* cpu data/mcu ready status*/
-
+	static int res = 3; /* cpu data/mcu ready status */
 	return res;
 }
 
@@ -560,5 +563,5 @@ DRIVER_INIT( lkageb )
 
 GAME( 1984, lkage,   0,     lkage,  lkage, 0,       ROT0, "Taito Corporation", "The Legend of Kage" )
 GAME( 1984, lkageb,  lkage, lkageb, lkage, lkageb,  ROT0, "bootleg", "The Legend of Kage (bootleg set 1)" )
-GAME( 1984, lkageb2, lkage, lkageb, lkage, 0,       ROT0, "bootleg", "The Legend of Kage (bootleg set 2)" )
-GAME( 1984, lkageb3, lkage, lkageb, lkage, 0,       ROT0, "bootleg", "The Legend of Kage (bootleg set 3)" )
+GAME( 1984, lkageb2, lkage, lkageb, lkage, lkageb,  ROT0, "bootleg", "The Legend of Kage (bootleg set 2)" )
+GAME( 1984, lkageb3, lkage, lkageb, lkage, lkageb,  ROT0, "bootleg", "The Legend of Kage (bootleg set 3)" )
