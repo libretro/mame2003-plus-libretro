@@ -120,7 +120,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Multi Champ Deluxe * Mature *
 * Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
-* Oriental Legend Special
+* Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)
+* Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)
 * Osman
 * Pack'n Bang Bang
 * Parallel Turn
@@ -654,7 +655,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Ported Mamesick's fix for the sound in Super Spacefortress Macross II level 2 onwards [arcadez]
 * Backported Kale's Taito F3 sound fixes for Riding Fight and Ring Rage from MAME 144 [arcadez]
 * Backported Stefan Jokisch's graphical and sound improvemnets for the Nintendo 8080 based games from MAME81 [arcadez]
-* Added Bryan McPhail's C-Chip simulation code for Operation Wolf from MAME98 and MAME176 respectively [arcadez]
 * Fixed graphical problems in GunNail and better balanced the sound for the games using the NMK004 [arcadez]
 * Removed imperfect MCU simulation code and hooked the proper M68705 MCU's for Renegade and Nekketsu Kouha Kunio-kun [dink, arcadez]
 * Hooked up the sepways.wav sample for journey in mcr2.c [mahoneyt944, grant2258, arcadez]
@@ -828,5 +828,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the snowbros.c driver fixing three games and adding support for eight new games this also sorted the sound from cutting out in Cookie & Bibi 2 [arcadez]
 * Fixed some graphical problems where the colours were wrong on level 3 and half the screen was missing eg rendered black in Buggy Challenge [arcadez]
 * Added support for Dice - The Dice Game a bootleg of the undumped DiceDiceDice by IREM to the M90 driver [arcadez]
-* Improved pgm.c driver support for ( Oriental Legend Special - Xi You Shi E Zhuan Super ) [arcadez]
-* Hookup for the M68705 MCU used in Tokio, game now playable  [arcadez]
+* Added a new protection simulation to pgm.c so that Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board) now works in this core [arcadez]
+* Hooked up the M68705 protection MCU for the official Taito USA version of Tokio / Scramble Formation game now playable [arcadez]
+* Fixed some graphical priority and screen display area niggles which affected The Legend Of Kage [arcadez]
+* Added Bryan McPhail's C-Chip sim code for Operation Wolf from MAME98 and modded it slightly so the final end boss and enemy has located you mini levels can now be played [arcadez]
