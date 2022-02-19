@@ -561,6 +561,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sea Wolf II
 * Shark Attack
 * Space Firebird
+* Tailgunner
 * Thief
 * Two Tigers - `twotigra` romset
 
@@ -832,3 +833,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Hooked up the M68705 protection MCU for the official Taito USA version of Tokio / Scramble Formation game now playable [arcadez]
 * Fixed some graphical priority and screen display area niggles which affected The Legend Of Kage [arcadez]
 * Added Bryan McPhail's C-Chip sim code for Operation Wolf from MAME98 and modded it slightly so the final end boss and enemy has located you mini levels can now be played [arcadez]
+* Added new sample support in cinemat drivers for tailgunner - tailg [mahoneyt944]
