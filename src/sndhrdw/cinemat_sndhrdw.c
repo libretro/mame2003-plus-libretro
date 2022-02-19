@@ -102,7 +102,7 @@ static const char *sundance_sample_names[] =
 	"ping1.wav",
 	"ping2.wav",
 	"hatch.wav",
-	
+
     0	/* end of array */
 };
 
@@ -115,39 +115,39 @@ struct Samplesinterface sundance_samples_interface =
 
 void sundance_sound_w(UINT8 sound_val, UINT8 bits_changed)
 {
-	
+
 if (bits_changed & 0x01) /*Bong*/
 	{
 		if (sound_val & 0x01)
 		{
-            
+
                 sample_start(0, 0, 0);
-                
+
 		}
 	}
 
 
-if ((bits_changed & 0x02) && (0 == (sound_val & 0x02)))  
-		sample_start(1, 1, 0);				
+if ((bits_changed & 0x02) && (0 == (sound_val & 0x02)))
+		sample_start(1, 1, 0);
 
 
-if ((bits_changed & 0x04) && (0 == (sound_val & 0x04)))  
-		sample_start(2, 2, 0);			
+if ((bits_changed & 0x04) && (0 == (sound_val & 0x04)))
+		sample_start(2, 2, 0);
 
 
 if ((bits_changed & 0x08) && (0 == (sound_val & 0x08)))
-	        sample_start(3, 3, 0);			
+	        sample_start(3, 3, 0);
 
 
 if ((bits_changed & 0x10) && (0 == (sound_val & 0x10)))
 	{
-		sample_start(4, 4, 0);			
+		sample_start(4, 4, 0);
 	}
 
 
 if ((bits_changed & 0x80) && (0 == (sound_val & 0x80)))
-		sample_start(5, 5, 0);			
-	
+		sample_start(5, 5, 0);
+
 }
 
 
@@ -436,7 +436,7 @@ static const char *armora_sample_names[] =   /*Added retrocade samples 10-27-03 
 	"*armora",
 	"tankfire.wav",
 	"hiexp.wav",
-	"jeepfire.wav", 
+	"jeepfire.wav",
 	"loexp.wav",
 	"tankeng.wav",
 	"beep.wav",
@@ -485,7 +485,7 @@ void armora_sound_w(UINT8 sound_val, UINT8 bits_changed)
     if (bits_changed & 0x2)   /* Fixed incorrect inverted triggering 10-27-03 Tim C.*/
     {                         /*Still not totally correct. Should be 2 speeds*/
         if (sound_val & 0x2)
-           sample_stop(4); 
+           sample_stop(4);
         else
            sample_start(4, 4, 1);	/* Tank +            */
 
@@ -493,7 +493,7 @@ void armora_sound_w(UINT8 sound_val, UINT8 bits_changed)
     if (bits_changed & 0x4)  /* Fixed incorrect inverted triggering 10-27-03 Tim C.*/
     {
         if (sound_val & 0x4)
-          sample_stop(5);            
+          sample_stop(5);
         else
           sample_start(5, 5, 1);	       /* Beep +   */
     }
@@ -954,9 +954,9 @@ MACHINE_DRIVER_START( demon_sound )
 	MDRV_CPU_CONFIG(daisy_chain)
 	MDRV_CPU_MEMORY(demon_sound_readmem,demon_sound_writemem)
 	MDRV_CPU_PORTS(0,demon_sound_writeport)
-	
+
 	MDRV_MACHINE_INIT( demon_sound )
-	
+
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, demon_ay8910_interface)
 MACHINE_DRIVER_END
