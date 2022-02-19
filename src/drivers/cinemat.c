@@ -1019,6 +1019,16 @@ static MACHINE_DRIVER_START( starcas )
 MACHINE_DRIVER_END
 
 
+static MACHINE_DRIVER_START( tailg )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cinemat)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, tailg_samples_interface)
+MACHINE_DRIVER_END
+
+
 static MACHINE_DRIVER_START( ripoff )
 
 	/* basic machine hardware */
@@ -1316,7 +1326,7 @@ static DRIVER_INIT( starcas )
 static DRIVER_INIT( tailg )
 {
 	ccpu_Config(0, CCPU_MEMSIZE_8K, CCPU_MONITOR_BILEV);
-	cinemat_sound_handler = 0;
+	cinemat_sound_handler = tailg_sound_w;
 	artwork_set_overlay(tailg_overlay);
 }
 
@@ -1425,7 +1435,7 @@ GAME( 1980, starcas1, starcas, starcas,  starcas,  starcas,  ROT0,   "Cinematron
 GAME( 1980, starcasp, starcas, starcas,  starcas,  starcas,  ROT0,   "Cinematronics", "Star Castle (prototype)" )
 GAME( 1980, starcase, starcas, starcas,  starcas,  starcas,  ROT0,   "Cinematronics (Mottoeis license)", "Star Castle (Mottoeis)" )
 GAME( 1980, stellcas, starcas, starcas,  starcas,  starcas,  ROT0,   "bootleg", "Stellar Castle (Elettronolo)" )
-GAMEX(1979, tailg,    0,       cinemat,  tailg,    tailg,    ROT0,   "Cinematronics", "Tailgunner", GAME_NO_SOUND )
+GAME( 1979, tailg,    0,       tailg,    tailg,    tailg,    ROT0,   "Cinematronics", "Tailgunner" )
 GAME( 1979, ripoff,   0,       ripoff,   ripoff,   ripoff,   ROT0,   "Cinematronics", "Rip Off" )
 GAMEX(1979, speedfrk, 0,       cinemat,  speedfrk, speedfrk, ROT0,   "Vectorbeam", "Speed Freak", GAME_NO_SOUND )
 GAME( 1979, sundance, 0,       sundance,  sundance, sundance, ROT270, "Cinematronics", "Sundance" )
