@@ -151,6 +151,112 @@ if ((bits_changed & 0x80) && (0 == (sound_val & 0x80)))
 }
 
 
+/*************************************
+ *
+ *	Tail Gunner
+ *
+ *************************************/
+
+static const char *tailg_sample_names[] =
+{
+	"*tailg",
+	"hypersp.wav",
+	"sexplode.wav",
+	"slaser.wav",
+	"shield.wav",
+	"bounce.wav",
+	"thrust1.wav",
+    0	/* end of array */
+};
+
+struct Samplesinterface tailg_samples_interface =
+{
+	8,	/* 8 channels */
+	25,	/* volume */
+	tailg_sample_names
+};
+
+void tailg_sound_w(UINT8 sound_val, UINT8 bits_changed)
+{
+	/*logerror ("Error %d soundval %d bitschanged\n",sound_val,bits_changed);*/
+
+	static UINT8 OldOutReg = 0;
+	static UINT8 XRreg = 0;
+	static UINT8 OldXRreg = 0x22;
+
+	UINT8   outReg;
+	UINT8   outDiff;		/* changed bits */
+	UINT8	outLow;			/* changed bits that have just gone low */
+	UINT8	xrDiff;			/* changed bits */
+	UINT8   xrHigh;			/* changed bits that have just gone high */
+	UINT8	xrLow;			/* changed bits that have just gone low */
+	UINT8	mask;
+
+	/* outReg = New value of the CCPU's OUT register. */
+	outReg = sound_val;
+
+	outDiff = outReg ^ OldOutReg;		/* get bits that have changed state */
+	outLow = outDiff & ~outReg;			/* get bits that have just gone low */
+
+	//logerror ("xrDiff %d XRreg %d \n",xrDiff,XRreg);
+
+	if (outLow & 0x10)
+	{
+		mask = 0x01 << (outReg & 0x07);	/* get address of bit as a mask */
+
+		if (outReg & 0x08)
+			XRreg |= mask;		/* If DATA set, set bit */
+		else
+			XRreg &= ~mask;		/* else reset bit */
+
+		/* check for new MUX sounds */
+
+		xrDiff = XRreg ^ OldXRreg;	/* get diff's */
+		xrLow = xrDiff & ~XRreg;	/* get bits that just went low */
+		xrHigh = xrDiff & XRreg;	/* get bits that just went high */
+
+		/*
+		HYPERSPACE	0x20
+		BOUNCE	    0x10
+		SHIELD		0x08
+		LASER		0x04
+		RUMBLE	    0x02
+		EXPLOSION   0x01
+		*/
+
+		if (xrLow & 0x20)
+			sample_start(0, 0, 0);
+
+		if (xrLow & 0x10)
+			sample_start(4, 4, 0);
+
+		if (xrLow & 0x08)
+			sample_start(3, 3, 1);
+
+		if (xrHigh & 0x08)
+			sample_stop(3);
+
+		if (xrLow & 0x04)
+			sample_start(2, 2, 0);
+
+		if (xrHigh & 0x04)
+			sample_stop(2);
+
+		if (xrLow & 0x02)
+			sample_start(5, 5, 1);
+
+		if (xrHigh & 0x02)
+			sample_stop(5);
+
+		if (xrLow & 0x01)
+			sample_start(1, 1, 0);
+
+		OldXRreg = XRreg;
+	}
+
+	OldOutReg = outReg;	/* save new OUT register */
+}
+
 
 /*************************************
  *
@@ -330,11 +436,11 @@ static const char *armora_sample_names[] =   /*Added retrocade samples 10-27-03 
 	"*armora",
 	"tankfire.wav",
 	"hiexp.wav",
-                  "jeepfire.wav", 
-                  "loexp.wav",
+	"jeepfire.wav", 
+	"loexp.wav",
 	"tankeng.wav",
 	"beep.wav",
-	"jeepfire.wav",
+	"chopper.wav",
     0	/* end of array */
 };
 
