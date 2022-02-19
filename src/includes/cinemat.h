@@ -21,7 +21,9 @@ extern struct Samplesinterface solarq_samples_interface;
 extern struct Samplesinterface spacewar_samples_interface;
 extern struct Samplesinterface armora_samples_interface;
 extern struct Samplesinterface sundance_samples_interface;
+extern struct Samplesinterface tailg_samples_interface;
 
+void tailg_sound_w(UINT8 sound_val, UINT8 bits_changed);
 void starcas_sound_w(UINT8 sound_val, UINT8 bits_changed);
 void warrior_sound_w(UINT8 sound_val, UINT8 bits_changed);
 void armora_sound_w(UINT8 sound_val, UINT8 bits_changed);
