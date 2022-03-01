@@ -3212,6 +3212,51 @@ static MEMORY_WRITE16_START( berlwall_writemem )
 	{ 0xd00000, 0xd0001f, kaneko16_layers_0_regs_w, &kaneko16_layers_0_regs	},	/* Layers Regs*/
 MEMORY_END
 
+/***************************************************************************
+								Pack'n Bang Bang
+***************************************************************************/
+
+static MEMORY_READ16_START( packbang_readmem )
+    { 0x000000, 0x03ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM					},	/* Work RAM*/
+	{ 0x30e000, 0x30ffff, MRA16_RAM					},	/* Sprites*/
+	{ 0x400000, 0x400fff, MRA16_RAM					},	/* Palette*/
+/*	{ 0x480000, 0x480001, MRA16_RAM					},	*/ /* ?*/
+	{ 0x500000, 0x500001, kaneko16_bg15_reg_r		},	/* High Color Background*/
+	{ 0x580000, 0x580001, kaneko16_bg15_select_r	},
+	{ 0x600000, 0x60003f, MRA16_RAM					},	/* Sprites Regs*/
+	{ 0x680000, 0x680001, input_port_0_word_r		},	/* Inputs*/
+	{ 0x680002, 0x680003, input_port_1_word_r		},
+	{ 0x680004, 0x680005, input_port_2_word_r		},
+/*	{ 0x680006, 0x680007, input_port_3_word_r		},*/
+	{ 0x780000, 0x780001, watchdog_reset16_r		},	/* Watchdog*/
+	{ 0x800000, 0x80001f, kaneko16_YM2149_0_r		},	/* Sound*/
+	{ 0x800200, 0x80021f, kaneko16_YM2149_1_r		},
+	{ 0x800400, 0x800401, OKIM6295_status_0_msb_r	},  /* packbang */
+	{ 0xc00000, 0xc03fff, MRA16_RAM					},	/* Layers*/
+	{ 0xd00000, 0xd0001f, MRA16_RAM					},	/* Layers Regs*/
+MEMORY_END
+
+static MEMORY_WRITE16_START( packbang_writemem )
+    { 0x000000, 0x03ffff, MWA16_ROM											},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM											},	/* Work RAM*/
+	{ 0x30e000, 0x30ffff, MWA16_RAM, &spriteram16, &spriteram_size			},	/* Sprites*/
+	{ 0x400000, 0x400fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16	},	/* Palette*/
+/*	{ 0x480000, 0x480001, MWA16_RAM											},	*/ /* ?*/
+	{ 0x500000, 0x500001, kaneko16_bg15_reg_w, &kaneko16_bg15_reg		},	/* High Color Background*/
+	{ 0x580000, 0x580001, kaneko16_bg15_select_w, &kaneko16_bg15_select	},
+	{ 0x600000, 0x60003f, kaneko16_sprites_regs_w, &kaneko16_sprites_regs	},	/* Sprites Regs*/
+	{ 0x700000, 0x700001, kaneko16_coin_lockout_w							},	/* Coin Lockout*/
+	{ 0x800000, 0x80001f, kaneko16_YM2149_0_w								},	/* Sound*/
+	{ 0x800200, 0x80021f, kaneko16_YM2149_1_w								},
+	{ 0x800400, 0x800401, OKIM6295_data_0_msb_w								},  /* packbang */
+	{ 0xc00000, 0xc00fff, kaneko16_vram_1_w, &kaneko16_vram_1				},	/* Layers*/
+	{ 0xc01000, 0xc01fff, kaneko16_vram_0_w, &kaneko16_vram_0				},	/**/
+	{ 0xc02000, 0xc02fff, MWA16_RAM, &kaneko16_vscroll_1,					},	/**/
+	{ 0xc03000, 0xc03fff, MWA16_RAM, &kaneko16_vscroll_0,					},	/**/
+	{ 0xd00000, 0xd0001f, kaneko16_layers_0_regs_w, &kaneko16_layers_0_regs	},	/* Layers Regs*/
+MEMORY_END
+
 
 /***************************************************************************
 							Bakuretsu Breaker
@@ -3836,7 +3881,7 @@ static WRITE16_HANDLER( bloodwar_oki_0_bank_w )
 {
 	if (ACCESSING_LSB)
 	{
-		OKIM6295_set_bank_base(0, 0x40000 * (data & 0x3) );
+		OKIM6295_set_bank_base(0, 0x40000 * (data & 0xF) );
 /*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0  bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
@@ -3845,7 +3890,7 @@ static WRITE16_HANDLER( bloodwar_oki_1_bank_w )
 {
 	if (ACCESSING_LSB)
 	{
-		OKIM6295_set_bank_base(1, 0x40000 * (data & 0x3) );
+		OKIM6295_set_bank_base(1, 0x40000 * data );
 /*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI1  bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
@@ -5386,6 +5431,39 @@ static MACHINE_DRIVER_START( berlwall )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 12000000)	/* MC68000P12 */
 	MDRV_CPU_MEMORY(berlwall_readmem,berlwall_writemem)
+	MDRV_CPU_VBLANK_INT(kaneko16_interrupt,KANEKO16_INTERRUPTS_NUM)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(berlwall)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_AFTER_VBLANK)	/* mangled sprites otherwise*/
+	MDRV_SCREEN_SIZE(256, 256)
+	MDRV_VISIBLE_AREA(0, 256-1, 16, 240-1)
+	MDRV_GFXDECODE(kaneko16_gfx_1x4bit_1x4bit)
+	MDRV_PALETTE_LENGTH(2048 + 32768)	/* 32768 static colors for the bg */
+
+	MDRV_PALETTE_INIT(berlwall)
+	MDRV_VIDEO_START(berlwall)
+	MDRV_VIDEO_UPDATE(kaneko16)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(AY8910, ay8910_intf_2x1MHz_DSW)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_12kHz)
+MACHINE_DRIVER_END
+
+/***************************************************************************
+								Pack'n Bang Bang
+***************************************************************************/
+
+static MACHINE_DRIVER_START( packbang )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* MC68000P12 */
+	MDRV_CPU_MEMORY(packbang_readmem,packbang_writemem)
 	MDRV_CPU_VBLANK_INT(kaneko16_interrupt,KANEKO16_INTERRUPTS_NUM)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -7279,5 +7357,5 @@ GAMEX(1992, brapboys, 0,        brapboys, brapboys, brapboys,   ROT0,  "Kaneko",
 GAMEX(1992, brapboysj,brapboys, brapboys, brapboys, brapboys,   ROT0,  "Kaneko", "B.Rap Boys Special (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, bloodwar, 0,        bloodwar, bloodwar, bloodwar,   ROT0,  "Kaneko", "Blood Warrior", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, bonkadv,  0,        bonkadv , bonkadv,  bloodwar,   ROT0,  "Kaneko", "Bonk's Adventure", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, packbang, 0,        berlwall, packbang, berlwall,   ROT90, "Kaneko", "Pack'n Bang Bang (prototype)", GAME_IMPERFECT_GRAPHICS ) /* priorities between stages?*/
+GAMEX(1994, packbang, 0,        packbang, packbang, berlwall,   ROT90, "Kaneko", "Pack'n Bang Bang (prototype)", GAME_IMPERFECT_GRAPHICS ) /* priorities between stages?*/
 GAME( 1993, wingforc, 0,        wingforc, wingforc, kaneko16,   ROT270,"Atlus",  "Wing Force (Japan, prototype)" )
