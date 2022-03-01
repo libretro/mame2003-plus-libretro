@@ -515,6 +515,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Nibbler
 * Open Ice
 * Out Run - Added ost soundtrack (via KMFDManic)
+* Pack 'n Bang Bang
 * Pacman & Chomp Chomp
 * Pac & Pal
 * Pole Position
@@ -834,3 +835,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some graphical priority and screen display area niggles which affected The Legend Of Kage [arcadez]
 * Added Bryan McPhail's C-Chip sim code for Operation Wolf from MAME98 and modded it slightly so the final end boss and enemy has located you mini levels can now be played [arcadez]
 * Added new sample support in cinemat drivers for tailgunner - tailg [mahoneyt944]
+* Fixed missing adpcm sound effects in Pack 'n Bang Bang and hooked up the sound correctly for Blood Warrior [arcadez]
+* Added support for a special sprite effect to kaneko16 video used by Magical Crystals on the first boss [arcadez]
