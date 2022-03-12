@@ -476,6 +476,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games now with improved sound
 
+* 1945kIII
 * Ashita no Joe
 * Asterix
 * Athena
@@ -837,3 +838,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added new sample support in cinemat drivers for tailgunner - tailg [mahoneyt944]
 * Fixed missing adpcm sound effects in Pack 'n Bang Bang and hooked up the sound correctly for Blood Warrior [arcadez]
 * Added support for a special sprite effect to kaneko16 video used by Magical Crystals on the first boss [arcadez]
+* Added a missing graphical sprite effect which handles enemy damage flashes and improved the sound for 1945k III [arcadez]
