@@ -79,15 +79,16 @@ static void k3_draw_sprites ( struct mame_bitmap *bitmap, const struct rectangle
 	while( source<finish )
 	{
 		int xpos, ypos;
-		int tileno;
-		xpos = (source[0] & 0xff00) >> 8;
+		int tileno, color;
+        xpos = (source[0] & 0xff00) >> 8 | (source2[0] & 0x0001) << 8;
 		ypos = (source[0] & 0x00ff) >> 0;
 		tileno = (source2[0] & 0x7ffe) >> 1;
-		xpos |=  (source2[0] & 0x0001) << 8;
-		drawgfx(bitmap,gfx, tileno,1,0,0,xpos,ypos,cliprect,TRANSPARENCY_PEN,0);
-		drawgfx(bitmap,gfx, tileno,1,0,0,xpos,ypos-0x100,cliprect,TRANSPARENCY_PEN,0); // wrap
-		drawgfx(bitmap,gfx, tileno,1,0,0,xpos-0x200,ypos,cliprect,TRANSPARENCY_PEN,0); // wrap
-		drawgfx(bitmap,gfx, tileno,1,0,0,xpos-0x200,ypos-0x100,cliprect,TRANSPARENCY_PEN,0); // wrap
+		color = BIT(source2[0], 15) ? 0 : 1;
+
+		drawgfx(bitmap,gfx, tileno,color,0,0,xpos,ypos,cliprect,TRANSPARENCY_PEN,0);
+		drawgfx(bitmap,gfx, tileno,color,0,0,xpos,ypos-0x100,cliprect,TRANSPARENCY_PEN,0); /* wrap */
+		drawgfx(bitmap,gfx, tileno,color,0,0,xpos-0x200,ypos,cliprect,TRANSPARENCY_PEN,0); /* wrap */
+		drawgfx(bitmap,gfx, tileno,color,0,0,xpos-0x200,ypos-0x100,cliprect,TRANSPARENCY_PEN,0); /* wrap */
 
 		source++;source2++;
 	}
@@ -112,8 +113,8 @@ WRITE16_HANDLER( k3_scrolly_w )
 
 WRITE16_HANDLER( k3_soundbanks_w )
 {
-	OKIM6295_set_bank_base(0, (data & 4) ? 0x40000 : 0 );
-	OKIM6295_set_bank_base(1, (data & 1) ? 0 : 0x40000);
+	OKIM6295_set_bank_base(0, (data & 4) ? 0x40000 : 0);
+	OKIM6295_set_bank_base(1, (data & 2) ? 0x40000 : 0);
 }
 
 WRITE16_HANDLER( flagrall_soundbanks_w )
@@ -131,7 +132,7 @@ WRITE16_HANDLER( flagrall_soundbanks_w )
 static MEMORY_READ16_START( k3_readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, MRA16_RAM },
-	{ 0x200000, 0x200fff, MRA16_RAM },
+	{ 0x200000, 0x2003ff, MRA16_RAM },
 	{ 0x240000, 0x240fff, MRA16_RAM },
 	{ 0x280000, 0x280fff, MRA16_RAM },
 	{ 0x2c0000, 0x2c07ff, MRA16_RAM },
@@ -146,10 +147,11 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( k3_writemem )
     { 0x0009CE, 0x0009CF, MWA16_NOP }, /* bug in code? (clean up log) */
+	{ 0x0009D0, 0x0009D1, MWA16_NOP },
 	{ 0x0009D2, 0x0009D3, MWA16_NOP }, /* bug in code? (clean up log) */
 	{ 0x000000, 0x0fffff, MWA16_ROM }, /* ROM */
 	{ 0x100000, 0x10ffff, MWA16_RAM },/* Main Ram */
-	{ 0x200000, 0x200fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, // palette
+	{ 0x200000, 0x2003ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, /* palette */
 	{ 0x240000, 0x240fff, MWA16_RAM, &k3_spriteram_1 },
 	{ 0x280000, 0x280fff, MWA16_RAM, &k3_spriteram_2 },
 	{ 0x2c0000, 0x2c07ff, k3_bgram_w, &k3_bgram },
@@ -166,7 +168,7 @@ MEMORY_END
 static MEMORY_READ16_START( flagrall_readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, MRA16_RAM },
-	{ 0x200000, 0x200fff, MRA16_RAM },
+	{ 0x200000, 0x2003ff, MRA16_RAM },
 	{ 0x240000, 0x240fff, MRA16_RAM },
 	{ 0x280000, 0x280fff, MRA16_RAM },
 	{ 0x2c0000, 0x2c07ff, MRA16_RAM },
@@ -179,10 +181,11 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( flagrall_writemem )
     { 0x0009CE, 0x0009CF, MWA16_NOP },/* bug in code? (clean up log) */
+    { 0x0009D0, 0x0009D1, MWA16_NOP },
 	{ 0x0009D2, 0x0009D3, MWA16_NOP }, /* bug in code? (clean up log) */
 	{ 0x000000, 0x0fffff, MWA16_ROM }, /* ROM */
 	{ 0x100000, 0x10ffff, MWA16_RAM }, /* Main Ram */
-	{ 0x200000, 0x200fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, /* palette */
+	{ 0x200000, 0x2003ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, /* palette */
 	{ 0x240000, 0x240fff, MWA16_RAM, &k3_spriteram_1 },
 	{ 0x280000, 0x280fff, MWA16_RAM, &k3_spriteram_2 },
     { 0x2c0000, 0x2c07ff, k3_bgram_w, &k3_bgram },
@@ -379,12 +382,11 @@ static MACHINE_DRIVER_START( flagrall )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MDRV_PALETTE_LENGTH(0x800)
+	MDRV_PALETTE_LENGTH(0x200)
 
 	MDRV_VIDEO_START(k3)
 	MDRV_VIDEO_UPDATE(k3)
 
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(OKIM6295, flagrall_okim6295_interface)
 MACHINE_DRIVER_END
 
@@ -401,7 +403,7 @@ static MACHINE_DRIVER_START( k3 )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MDRV_PALETTE_LENGTH(0x800)
+	MDRV_PALETTE_LENGTH(0x200)
 
 	MDRV_VIDEO_START(k3)
 	MDRV_VIDEO_UPDATE(k3)
@@ -437,7 +439,7 @@ ROM_START( flagrall )
 	ROM_LOAD16_BYTE( "12_u35.bin", 0x00000, 0x40000, CRC(373b71a5) SHA1(be9ab93129e2ffd9bfe296c341dbdf47f1949ac7) )
 
     ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* Samples */
-	// 3x banks
+	/* 3x banks */
 	ROM_LOAD( "13_su4.bin", 0x00000, 0x80000, CRC(7b0630b3) SHA1(c615e6630ffd12c122762751c25c249393bf7abd) )
 	ROM_LOAD( "14_su6.bin", 0x80000, 0x40000, CRC(593b038f) SHA1(b00dcf321fe541ee52c34b79e69c44f3d7a9cd7c) )
 
