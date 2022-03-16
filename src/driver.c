@@ -3163,6 +3163,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( cmissnx )	/* 21 (c) 1982 */
 	DRIVER( cptennis )	/* 22 (c) 1982 */
 	DRIVER( cexplore )	/* ?? (c) 1982 */
+  DRIVER( cadanglr )  /* 25 (c) 1982 */
+  DRIVER( cfishing )  /* 25 (c) 1982 */
 	DRIVER( cbtime )	/* 26 (c) 1982 */
 	DRIVER( cburnrub )	/* ?? (c) 1982 */
 	DRIVER( cburnrb2 )	/* ?? (c) 1982 */
