@@ -15,6 +15,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Attack
 * Air Rescue
 * Aladdin (bootleg of Megadrive version)
+* Angler Dangler
 * Argus (Gottlieb, prototype)
 * Astropal
 * Asura Buster
@@ -222,6 +223,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
 * Escape Kids (Asia 4 Players)
+* Fishing
 * Flower (bootleg)
 * Fujiyama Buster
 * Gals Panic DX * Mature *
@@ -839,3 +841,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed missing adpcm sound effects in Pack 'n Bang Bang and hooked up the sound correctly for Blood Warrior [arcadez]
 * Added support for a special sprite effect to kaneko16 video used by Magical Crystals on the first boss [arcadez]
 * Added a missing graphical sprite effect which handles enemy damage flashes and improved the sound for 1945k III [arcadez]
+* Added support for Angler Dangler and the clone japanese set Fishing to the decocass.c driver [arcadez]
