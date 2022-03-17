@@ -219,6 +219,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Crouching Tiger Hidden Dragon 2003
 * Crouching Tiger Hidden Dragon 2003 Super Plus
 * Crystal Castles (Joystick Version)
+* DJ Boy (Japan)
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
@@ -479,6 +480,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## Games now with improved sound
 
 * 1945kIII
+* Air Buster
 * Ashita no Joe
 * Asterix
 * Athena
@@ -842,3 +844,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for a special sprite effect to kaneko16 video used by Magical Crystals on the first boss [arcadez]
 * Added a missing graphical sprite effect which handles enemy damage flashes and improved the sound for 1945k III [arcadez]
 * Added support for Angler Dangler and the clone japanese set Fishing to the decocass.c driver [arcadez]
+* Better balanced the music and Sfx levels in Kaneko's Air Buster and added the Japan version of DJ Boy [arcadez]
