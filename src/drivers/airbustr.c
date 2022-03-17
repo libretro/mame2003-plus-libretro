@@ -765,12 +765,11 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 };
 
 
-
 static struct YM2203interface ym2203_interface =
 {
 	1,
 	3000000,					/* ?? */
-	{ YM2203_VOL(0xff,0xff) },	/* gain,volume */
+	{ YM2203_VOL(50,25) },	/* gain,volume - adjusted */
 	{ input_port_3_r },			/* DSW-1 connected to port A */
 	{ input_port_4_r },			/* DSW-2 connected to port B */
 	{ 0 },
@@ -783,8 +782,9 @@ static struct OKIM6295interface okim6295_interface =
 	1,
 	{ 12000000/4/165 }, /* 3MHz -> 6295 (mode A) */
 	{ REGION_SOUND1 },
-	{ 50 }
+	{ 80 }  /* adjusted */
 };
+
 
 
 static MACHINE_DRIVER_START( airbustr )
