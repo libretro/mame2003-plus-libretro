@@ -4963,9 +4963,10 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* Kaneko games */
 	DRIVER( jumpkun )   /* (c) 1984 Kaneko */
+  DRIVER( djboy )		  /* (c) 1989 Kaneko */
+	DRIVER( djboyj )	  /* (c) 1989 Kaneko */
 	DRIVER( airbustr )	/* (c) 1990 Kaneko + Namco */
 	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
-	DRIVER( djboy )		/* ?? */
 	DRIVER( galpanic )	/* (c) 1990 Kaneko */
 	DRIVER( galpanib )	/* (c) 1990 Kaneko */
 	DRIVER( galpani2 )	/* (c) 1993 Kaneko */
