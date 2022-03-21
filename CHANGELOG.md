@@ -294,6 +294,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * TANK III (joystick hack bootleg)
 * Tron freeplay custom rom
 * Ultimate Mortal Kombat 3 Plus Beta 1
+* Ultimate Mortal Kombat 3 Plus Beta 2
 
 
 ## Games fixed and now working
