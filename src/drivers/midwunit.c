@@ -834,7 +834,7 @@ ROM_START( umk3r11 )
 ROM_END
 
 
-ROM_START( umk3p )
+ROM_START( umk3pb1 )
 	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
 
 	ROM_REGION( ADSP2100_SIZE + 0x400000, REGION_CPU2, 0 )	/* ADSP-2105 data */
@@ -844,8 +844,8 @@ ROM_START( umk3p )
 	ROM_LOAD( "umk3-u5.bin",  ADSP2100_SIZE + 0x300000, 0x100000, CRC(3b98a09f) SHA1(edf1d02a56dcf3349e6b4bb4097acfe7592305f4) )
 
 	ROM_REGION16_LE( 0x100000, REGION_USER1, ROMREGION_DISPOSE )	/* 34010 code */
-	ROM_LOAD16_BYTE( "um312u54.bin",  0x00000, 0x80000, CRC(a46ee73c) SHA1(2ad13bf20b9e42729773307b55fa67e430b1cf87) )
-	ROM_LOAD16_BYTE( "um312u63.bin",  0x00001, 0x80000, CRC(4f200db2) SHA1(25bab2c52df59056e3018d88491de1f2b1a8eed2) )
+	ROM_LOAD16_BYTE( "umk3plusu54.bin",  0x00000, 0x80000, CRC(a46ee73c) SHA1(2ad13bf20b9e42729773307b55fa67e430b1cf87) )
+	ROM_LOAD16_BYTE( "umk3plusu63.bin",  0x00001, 0x80000, CRC(4f200db2) SHA1(25bab2c52df59056e3018d88491de1f2b1a8eed2) )
 
 	ROM_REGION( 0x2000000, REGION_GFX1, 0 )
 	ROM_LOAD( "umk-u133.bin",  0x0000000, 0x100000, CRC(79b94667) SHA1(31bba640c351fdccc6685cadb74dd79a3f910ce8) )
@@ -868,10 +868,56 @@ ROM_START( umk3p )
 	ROM_LOAD( "umk-u119.bin",  0x0e00000, 0x100000, CRC(5f10c543) SHA1(24dc83b7aa531ebd399258ffa7b2e028f1c4a28e) )
 	ROM_LOAD( "umk-u118.bin",  0x0f00000, 0x100000, CRC(de0c4488) SHA1(227cab34798c440b2a45223567113df5f17d913f) )
 
-	ROM_LOAD( "umk-u117.bin",  0x1000000, 0x80000, CRC(52ee547e) SHA1(97dba4d6dd503a623dad5709767e4617de211af0) )
-	ROM_LOAD( "umk-u116.bin",  0x1100000, 0x80000, CRC(f6df5c98) SHA1(e8317cf46d23738223f034c10f0f6f874d72165f) )
-	ROM_LOAD( "umk-u115.bin",  0x1200000, 0x80000, CRC(e003a51b) SHA1(e11c0cb0a9d647f17398b48d0b7d088526a18af8) )
-	ROM_LOAD( "umk-u114.bin",  0x1300000, 0x80000, CRC(b8504598) SHA1(fce32581d6ff9e1a7455c30fb10812ba9dc70db5) )
+	ROM_LOAD( "umk3plus-u117.bin",  0x1000000, 0x80000, CRC(52ee547e) SHA1(97dba4d6dd503a623dad5709767e4617de211af0) )
+	ROM_LOAD( "umk3plus-u116.bin",  0x1100000, 0x80000, CRC(f6df5c98) SHA1(e8317cf46d23738223f034c10f0f6f874d72165f) )
+	ROM_LOAD( "umk3plus-u115.bin",  0x1200000, 0x80000, CRC(e003a51b) SHA1(e11c0cb0a9d647f17398b48d0b7d088526a18af8) )
+	ROM_LOAD( "umk3plus-u114.bin",  0x1300000, 0x80000, CRC(b8504598) SHA1(fce32581d6ff9e1a7455c30fb10812ba9dc70db5) )
+
+	ROM_LOAD( "umk-u113.bin",  0x1400000, 0x100000, CRC(99d74a1e) SHA1(ed3068afa98287ea290d1f537f5009d3b6d683da) )
+	ROM_LOAD( "umk-u112.bin",  0x1500000, 0x100000, CRC(b5a46488) SHA1(dbf22e55d200eb9ff550f48b223cf0c6114a9357) )
+	ROM_LOAD( "umk-u111.bin",  0x1600000, 0x100000, CRC(a87523c8) SHA1(e70b7599fef82001f762fc2c48f7b85474431ccc) )
+	ROM_LOAD( "umk-u110.bin",  0x1700000, 0x100000, CRC(0038f205) SHA1(059c1c71a2d92ee6db36c09831d213a48a7e81d0) )
+ROM_END
+
+
+ROM_START( umk3pb2 )
+	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
+
+	ROM_REGION( ADSP2100_SIZE + 0x400000, REGION_CPU2, 0 )	/* ADSP-2105 data */
+	ROM_LOAD( "umk3plus-u2.bin",  ADSP2100_SIZE + 0x000000, 0x100000, CRC(2c7f4a1d) SHA1(7c0cb857be3ffa12adc58f9256631ec7b8ff5446) )
+	ROM_LOAD( "umk3-u3.bin",  ADSP2100_SIZE + 0x100000, 0x100000, CRC(856fe411) SHA1(6165ebecfce7500e948d84492ffa19eed7f47091) )
+	ROM_LOAD( "umk3-u4.bin",  ADSP2100_SIZE + 0x200000, 0x100000, CRC(428a406f) SHA1(e70ec83cd054de0da1e178720ed0035b8887f797) )
+	ROM_LOAD( "umk3-u5.bin",  ADSP2100_SIZE + 0x300000, 0x100000, CRC(3b98a09f) SHA1(edf1d02a56dcf3349e6b4bb4097acfe7592305f4) )
+
+	ROM_REGION16_LE( 0x100000, REGION_USER1, ROMREGION_DISPOSE )	/* 34010 code */
+	ROM_LOAD16_BYTE( "umk3plusu54.bin",  0x00000, 0x80000, CRC(54a5359f) SHA1(94c90c1b21123e06cbdc66cd0b9499fc60d56642) )
+	ROM_LOAD16_BYTE( "umk3plusu63.bin",  0x00001, 0x80000, CRC(fb83320d) SHA1(d0af81a24977d62fb168991022dbd083e471d8de) )
+
+	ROM_REGION( 0x2000000, REGION_GFX1, 0 )
+	ROM_LOAD( "umk-u133.bin",  0x0000000, 0x100000, CRC(79b94667) SHA1(31bba640c351fdccc6685cadb74dd79a3f910ce8) )
+	ROM_LOAD( "umk-u132.bin",  0x0100000, 0x100000, CRC(13e95228) SHA1(405b05f5a5a55667c2be17d4b399129bdacefd90) )
+	ROM_LOAD( "umk-u131.bin",  0x0200000, 0x100000, CRC(41001e30) SHA1(2cec91116771951c0380cec5debf4cbb40c14c61) )
+	ROM_LOAD( "umk-u130.bin",  0x0300000, 0x100000, CRC(49379dd7) SHA1(e6dfab4e23d9cc38ae56c1bbf10ccd160e8fad5e) )
+
+	ROM_LOAD( "umk-u129.bin",  0x0400000, 0x100000, CRC(a8b41803) SHA1(9697e35e8bb51d6d36b1d7ae47377b446e57682f) )
+	ROM_LOAD( "umk-u128.bin",  0x0500000, 0x100000, CRC(b410d72f) SHA1(ac5c1c6f744186540f4ab100d9bd4ce6007e600b) )
+	ROM_LOAD( "umk-u127.bin",  0x0600000, 0x100000, CRC(bd985be7) SHA1(f5183abea2e5eb2c2c8cefa72c9ed321679f5128) )
+	ROM_LOAD( "umk-u126.bin",  0x0700000, 0x100000, CRC(e7c32cf4) SHA1(94ea7b2eed7dae66f5dd676c20d6b360140e3e0e) )
+
+	ROM_LOAD( "umk-u125.bin",  0x0800000, 0x100000, CRC(9a52227e) SHA1(0474a14fa8dbfea0b0889c1d1756b86391683558) )
+	ROM_LOAD( "umk-u124.bin",  0x0900000, 0x100000, CRC(5c750ebc) SHA1(45d68af1a56994376e086d840502453c8d6be700) )
+	ROM_LOAD( "umk-u123.bin",  0x0a00000, 0x100000, CRC(f0ab88a8) SHA1(cdc9dc12e162255845c6627b1e35182b7e8502d0) )
+	ROM_LOAD( "umk-u122.bin",  0x0b00000, 0x100000, CRC(9b87cdac) SHA1(a5f8db559293978f23e6f105543d8b2e170a2e0d) )
+
+	ROM_LOAD( "umk-u121.bin",  0x0c00000, 0x100000, CRC(cc4b95db) SHA1(3d53180eec649e9616c4b87db55573f12d9bfee3) )
+	ROM_LOAD( "umk-u120.bin",  0x0d00000, 0x100000, CRC(1c8144cd) SHA1(77cdc1eaf630ccb7233f5532f8b08191d00f0816) )
+	ROM_LOAD( "umk-u119.bin",  0x0e00000, 0x100000, CRC(5f10c543) SHA1(24dc83b7aa531ebd399258ffa7b2e028f1c4a28e) )
+	ROM_LOAD( "umk-u118.bin",  0x0f00000, 0x100000, CRC(de0c4488) SHA1(227cab34798c440b2a45223567113df5f17d913f) )
+
+	ROM_LOAD( "umk3plus-u117.bin",  0x1000000, 0x80000, CRC(52ee547e) SHA1(97dba4d6dd503a623dad5709767e4617de211af0) )
+	ROM_LOAD( "umk3plus-u116.bin",  0x1100000, 0x80000, CRC(f6df5c98) SHA1(e8317cf46d23738223f034c10f0f6f874d72165f) )
+	ROM_LOAD( "umk3plus-u115.bin",  0x1200000, 0x80000, CRC(e003a51b) SHA1(e11c0cb0a9d647f17398b48d0b7d088526a18af8) )
+	ROM_LOAD( "umk3plus-u114.bin",  0x1300000, 0x80000, CRC(b8504598) SHA1(fce32581d6ff9e1a7455c30fb10812ba9dc70db5) )
 
 	ROM_LOAD( "umk-u113.bin",  0x1400000, 0x100000, CRC(99d74a1e) SHA1(ed3068afa98287ea290d1f537f5009d3b6d683da) )
 	ROM_LOAD( "umk-u112.bin",  0x1500000, 0x100000, CRC(b5a46488) SHA1(dbf22e55d200eb9ff550f48b223cf0c6114a9357) )
@@ -1157,7 +1203,8 @@ GAME ( 1994, mk3r20,  mk3,       wunit, mk3,     mk3r20,  ROT0, "Midway", "Morta
 GAME ( 1994, mk3r10,  mk3,       wunit, mk3,     mk3r10,  ROT0, "Midway", "Mortal Kombat 3 (rev 1.0)" )
 GAMEC( 1994, umk3,    mk3,       wunit, mk3,     umk3,    ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.2)", &mk3_ctrl, &umk3_bootstrap )
 GAMEC( 1994, umk3r11, mk3,       wunit, mk3,     umk3r11, ROT0, "Midway", "Ultimate Mortal Kombat 3 (rev 1.1)", &mk3_ctrl, &umk3r11_bootstrap )
-GAMEC( 2019, umk3p,   mk3,       wunit, mk3,     umk3p,   ROT0, "hack",   "Ultimate Mortal Kombat 3 Plus (Beta 1)", &mk3_ctrl, &umk3p_bootstrap )
+GAMEC( 2019, umk3pb1, mk3,       wunit, mk3,     umk3pb1, ROT0, "hack",   "Ultimate Mortal Kombat 3 Plus (Beta 1)", &mk3_ctrl, &umk3pb1_bootstrap )
+GAMEC( 2022, umk3pb2, mk3,       wunit, mk3,     umk3pb2, ROT0, "hack",   "Ultimate Mortal Kombat 3 Plus (Beta 2)", &mk3_ctrl, &umk3pb2_bootstrap )
 
 GAMEC( 1995, wwfmania,0,         wunit, wwfmania,wwfmania,ROT0, "Midway", "WWF - Wrestlemania (rev 1.30 08-10-95)", &wwfmania_ctrl, &wwfmania_bootstrap )
 GAMEC( 1995, openice, 0,         wunit, openice, openice, ROT0, "Midway", "2 On 2 Open Ice Challenge (rev 1.21)", &openice_ctrl, &openice_bootstrap )
