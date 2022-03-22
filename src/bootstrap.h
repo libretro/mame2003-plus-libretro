@@ -88,7 +88,7 @@ extern const struct bin2cFILE trog3_bootstrap;
 extern const struct bin2cFILE trogp_bootstrap;
 extern const struct bin2cFILE trogpa6_bootstrap;
 extern const struct bin2cFILE umk3_bootstrap;
-extern const struct bin2cFILE umk3p_bootstrap;
+extern const struct bin2cFILE umk3pb1_bootstrap;
 extern const struct bin2cFILE umk3r11_bootstrap;
 extern const struct bin2cFILE viostorm_bootstrap;
 extern const struct bin2cFILE viostrma_bootstrap;
