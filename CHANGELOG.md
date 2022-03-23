@@ -297,6 +297,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * TANK III (joystick hack bootleg)
 * Tron freeplay custom rom
 * Ultimate Mortal Kombat 3 Plus Beta 1
+* Ultimate Mortal Kombat 3 Plus Beta 2
 
 
 ## Games fixed and now working
@@ -685,7 +686,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Hooked up x-men 6 players [arcadez, mahoneyt944, KMFDManic]
 * Removed gauntlet entry from highscore dat to fix game glitches [mahoneyt944]
 * Set flag in Ost drivers to allow them to be fully bypassed [mahoneyt944]
-* Hooked up mk2p and umk3p romsets [Zoltan45, mahoneyt944]
+* Hooked up mk2p, umk3pb1, and umk3pb2 romsets [Zoltan45, palmerj, mahoneyt944]
 * Ashita no Joe sound fixes / CPU clock frequencies [arcadez]
 * Success Joe new game support added [mahoneyt944]
 * Fixed directory and file creation for WiiU - should be working for all platforms now [mahoneyt944]
