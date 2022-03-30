@@ -9,7 +9,7 @@ struct fe_driver {
 	int available;
 };
 
-#define NUMGAMES 2284
+#define NUMGAMES 2283
 
 struct fe_driver fe_drivers[NUMGAMES] = {
 
@@ -2139,8 +2139,7 @@ struct fe_driver fe_drivers[NUMGAMES] = {
 { "Ultimate 11 / Tokuten Ou - Honoo no Libero, The"                                                       ,"ssideki4"     , "neomame", 3, 0 } ,
 { "Ultimate Mortal Kombat 3 (rev 1.1)"                                                                    ,"umk3r11"      , "mame", 3, 0 } ,
 { "Ultimate Mortal Kombat 3 (rev 1.2)"                                                                    ,"umk3"         , "mame", 3, 0 } ,
-{ "Ultimate Mortal Kombat 3 Plus (Beta 1)"                                                                ,"umk3pb1"      , "mame", 3, 0 } ,
-{ "Ultimate Mortal Kombat 3 Plus (Beta 2)"                                                                ,"umk3pb2"      , "mame", 3, 0 } ,
+{ "Ultimate Mortal Kombat 3 Plus (Beta 2)"                                                                ,"umk3p"        , "mame", 3, 0 } ,
 { "Ultraman (Japan)"                                                                                      ,"ultraman"     , "mame", 3, 0 } ,
 { "Undercover Cops (Japan)"                                                                               ,"uccopsj"      , "mame", 3, 0 } ,
 { "Undercover Cops (World)"                                                                               ,"uccops"       , "mame", 3, 0 } ,
