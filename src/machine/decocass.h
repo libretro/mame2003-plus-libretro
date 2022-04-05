@@ -66,6 +66,7 @@ extern MACHINE_INIT( cprosocc );
 extern MACHINE_INIT( cppicf );
 extern MACHINE_INIT( cscrtry );
 extern MACHINE_INIT( cbdash );
+extern MACHINE_INIT( czeroize );
 
 extern WRITE_HANDLER( i8041_p1_w );
 extern READ_HANDLER( i8041_p1_r );
