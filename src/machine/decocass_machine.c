@@ -64,6 +64,7 @@ enum {
 	TYPE3_SWAP_01,
 	TYPE3_SWAP_12,
 	TYPE3_SWAP_13,
+	TYPE3_SWAP_23_56,
 	TYPE3_SWAP_24,
 	TYPE3_SWAP_25,
 	TYPE3_SWAP_34_0,
@@ -1051,6 +1052,20 @@ READ_HANDLER( decocass_type3_r )
 					type3_d0_latch = save & 1;
 				}
 				else
+				if (type3_swap == TYPE3_SWAP_23_56)
+				{
+					data =
+					(type3_d0_latch << 0) |
+						(BIT1(save) << 1) |
+						(BIT3(save) << 2) |
+						(BIT2(save) << 3) |
+						(BIT4(save) << 4) |
+						(BIT6(save) << 5) |
+						(BIT5(save) << 6) |
+						(BIT7(save) << 7);
+					type3_d0_latch = save & 1;
+				}
+				else
 				if (type3_swap == TYPE3_SWAP_24)
 				{
 					data =
@@ -1759,6 +1774,27 @@ MACHINE_INIT( cbdash )
 	LOG(0,("dongle type #5 (NOP)\n"));
 	decocass_dongle_r = decocass_type5_r;
 	decocass_dongle_w = decocass_type5_w;
+}
+
+MACHINE_INIT( czeroize )
+{
+	UINT8 *mem = memory_region(REGION_USER1);
+	decocass_init_common();
+	LOG(0,("dongle type #3 (PAL)\n"));
+	decocass_dongle_r = decocass_type3_r;
+	decocass_dongle_w = decocass_type3_w;
+	type3_swap = TYPE3_SWAP_23_56;
+
+	/*
+     * FIXME: remove if the original ROM is available.
+     * The Zeroize 6502 code at 0x3707 issues LODCTRS with 0x8a,
+     * and expects to read 0x18 from 0x08a0 ff. within 7 bytes.
+     * This hack seems to be sufficient to get around
+     * the missing dongle ROM contents and play the game.
+     */
+	memset(mem,0x00,0x1000);
+	mem[0x08a0] = 0x18;
+	mem[0x08a1] = 0xf7;
 }
 
 /***************************************************************************
