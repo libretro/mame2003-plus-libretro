@@ -421,6 +421,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * X-men (6 players) - Romset `xmen6p` and `xmen6pu`
 * Wacko - Romset `wacko`
 * Whizz - Romset `whizz`
+* Zeroize - Romset `czeroize`
 * Zwackery - Romset `zwackery`
 
 ## Games now with sound
@@ -845,3 +846,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added a missing graphical sprite effect which handles enemy damage flashes and improved the sound for 1945k III [arcadez]
 * Added support for Angler Dangler and the clone japanese set Fishing to the decocass.c driver [arcadez]
 * Better balanced the music and Sfx levels in Kaneko's Air Buster and added the Japan version of DJ Boy [arcadez]
+* Fixed Deco Cassette game Zeroize in the decocass.c driver game now playable [arcadez]
