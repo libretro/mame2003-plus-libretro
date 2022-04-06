@@ -658,6 +658,13 @@ static MACHINE_DRIVER_START( cscrtry )
 	MDRV_MACHINE_INIT(cscrtry)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( czeroize )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(decocass)
+	MDRV_MACHINE_INIT(czeroize)
+	MDRV_VISIBLE_AREA(1*8, 32*8-1, 1*8, 31*8-1)
+MACHINE_DRIVER_END
 
 
 #define DECOCASS_COMMON_ROMS	\
@@ -1084,7 +1091,8 @@ ROM_END
 ROM_START( czeroize )
 	DECOCASS_COMMON_ROMS
 
-	/* no dumped dongle data */
+	ROM_REGION( 0x01000, REGION_USER1, 0 )	  /* dongle data */
+	/* missing dongle data */
 
 	ROM_REGION( 0x10000, REGION_USER2, 0 )	  /* (max) 64k for cassette image */
 	ROM_LOAD( "czeroize.cas",   0x0000, 0x10000, CRC(3ef0a406) SHA1(645b34cd477e0bb5539c8fe937a7a2dbd8369003) )
@@ -1131,6 +1139,7 @@ GAME ( 1983, cgraplop, decocass, cgraplop, decocass, decocass, ROT270, "DECO", "
 GAMEX( 1983, cgraplp2, cgraplop, cgraplop, decocass, decocass, ROT270, "DECO", "Cassette: Graplop (aka Cluster Buster) (set 2)", GAME_NOT_WORKING ) /* Different Protection / Bitswap? */
 GAME ( 1983, clapapa,  decocass, clapapa,  decocass, decocass, ROT270, "DECO", "Cassette: Rootin' Tootin' (aka La.Pa.Pa)" ) /* Displays 'LaPaPa during attract */
 GAME ( 1983, clapapa2, clapapa,  clapapa,  decocass, decocass, ROT270, "DECO", "Cassette: Rootin' Tootin'" )				/* Displays 'Rootin' Tootin' during attract */
+GAME ( 1983, czeroize, decocass, czeroize, decocass, decocass, ROT270, "DECO", "Cassette: Zeroize" )
 GAME ( 1984, cfghtice, decocass, cfghtice, decocass, decocass, ROT270, "DECO", "Cassette: Fighting Ice Hockey" )
 GAME ( 1983, cprobowl, decocass, cprobowl, decocass, decocass, ROT270, "DECO", "Cassette: Pro Bowling" )
 GAME ( 1983, cnightst, decocass, cnightst, decocass, decocass, ROT270, "DECO", "Cassette: Night Star (set 1)" )
@@ -1145,4 +1154,3 @@ GAME ( 1985, cbdash,   decocass, cbdash,   decocass, decocass, ROT270, "DECO", "
 /* The following may be missing dongle data if they're not Type 1 */
 GAMEX( 1985, chwy,     decocass, decocass,   decocass, decocass, ROT270, "DECO", "Cassette: Highway Chase[Q]", GAME_NOT_WORKING )
 GAMEX( 1985, cflyball, decocass, decocass,   decocass, decocass, ROT270, "DECO", "Cassette: Flying Ball[Q]", GAME_NOT_WORKING )
-GAMEX( 1985, czeroize, decocass, decocass,   decocass, decocass, ROT270, "DECO", "Cassette: Zeroize[Q]", GAME_NOT_WORKING )
