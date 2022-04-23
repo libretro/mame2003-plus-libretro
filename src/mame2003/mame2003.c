@@ -1205,8 +1205,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
  */
 int osd_is_joy_pressed(int joycode)
 {
-  unsigned player_number = calc_player_number(joycode);
-  unsigned port          = player_number - 1;
+  unsigned port          = calc_player_number(joycode) - 1;
   unsigned osd_code      = decode_osd_joycode(joycode);
   unsigned retro_code    = INT_MAX;
 
@@ -1221,20 +1220,19 @@ int osd_is_joy_pressed(int joycode)
     return input_cb(port, RETRO_DEVICE_JOYPAD, 0, retro_code);
 
   /* pointer, mouse, or lightgun states if selected by core option */
-  if (options.xy_device == RETRO_DEVICE_POINTER || options.xy_device == RETRO_DEVICE_MOUSE)
+  if (options.xy_device != RETRO_DEVICE_NONE)
   {
     retro_code = get_retro_code("mouse", osd_code);
     if (retro_code != INT_MAX)
     {
-      if (options.xy_device == RETRO_DEVICE_MOUSE)
-        return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
-      if (options.xy_device == RETRO_DEVICE_POINTER && retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
-        return input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+      if (retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
+      {
+        if (input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED)
+          return 1; /* check if pointer is pressed */
+      }
+      return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
     }
-  }
 
-  else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
-  {
     retro_code = get_retro_code("lightgun", osd_code);
     if (retro_code != INT_MAX)
     {
