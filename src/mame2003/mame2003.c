@@ -1227,7 +1227,7 @@ int osd_is_joy_pressed(int joycode)
     {
       if (retro_code == RETRO_DEVICE_ID_MOUSE_LEFT)
       {
-        if (input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED)
+        if (input_cb(port, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED))
           return 1; /* check if pointer is pressed */
       }
       return input_cb(port, RETRO_DEVICE_MOUSE, 0, retro_code);
