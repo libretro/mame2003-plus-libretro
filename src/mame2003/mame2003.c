@@ -1418,7 +1418,8 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
     else if (options.xy_device == RETRO_DEVICE_LIGHTGUN)
     {
       /* simulated lightgun reload hack */
-      if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD))
+      if(input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_RELOAD) ||
+         input_cb(player, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN) )
       {
         *deltax = -128;
         *deltay = -128;
