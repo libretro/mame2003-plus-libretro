@@ -126,7 +126,7 @@ void mame2003_video_init_orientation(void)
    {
       if (environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode) )
       {
-        log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch will perform the rotation\n");
+        log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch will perform the rotation.\n");
 
         rotate_mode = (orientation == ROT270) ? 1 : rotate_mode;
         rotate_mode = (orientation == ROT180) ? 2 : rotate_mode;
@@ -137,11 +137,11 @@ void mame2003_video_init_orientation(void)
       }
 
       else
-        log_cb(RETRO_LOG_INFO, LOGPRE "This port of RetroArch does not support rotation or it has been disabled. Mame will rotate internally\n");
+        log_cb(RETRO_LOG_INFO, LOGPRE "This port of RetroArch does not support rotation or it has been disabled. Mame will rotate internally.\n");
 
    }
    else
-     log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch does not support this type of rotation, using mame internal rotation instead\n");
+     log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch does not support this type of rotation, using mame internal rotation instead.\n");
 
    tate_mode = options.tate_mode;
 
@@ -150,7 +150,7 @@ void mame2003_video_init_orientation(void)
    video_flip_x = orientation & ORIENTATION_FLIP_X;
    video_flip_y = orientation & ORIENTATION_FLIP_Y;
    video_swap_xy = orientation & ORIENTATION_SWAP_XY;
-   log_cb(RETRO_LOG_INFO,"mame internal: video_flip_x:%u video_flip_y:%u video_swap_xy:%u video_hw_transpose:%u\n",video_flip_x,video_flip_y,video_swap_xy,video_hw_transpose);
+   log_cb(RETRO_LOG_DEBUG,"mame internal: video_flip_x:%u video_flip_y:%u video_swap_xy:%u video_hw_transpose:%u\n",video_flip_x,video_flip_y,video_swap_xy,video_hw_transpose);
    Machine->ui_orientation = options.ui_orientation;
 
 
