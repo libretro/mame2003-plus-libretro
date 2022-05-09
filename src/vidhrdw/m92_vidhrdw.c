@@ -129,7 +129,7 @@ WRITE_HANDLER( m92_videocontrol_w )
 	if (offset==0)
 	{
 		/* Access to upper palette bank */
-		if ((data & 0x2) == 0x2 && m92_game_kludge!=3) m92_palette_bank = 1;
+    if ((data & 0x2) == 0x2 && (m92_game_kludge!=3 && m92_game_kludge!=1)) m92_palette_bank = 1;
 		else                     m92_palette_bank = 0;
 	}
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: m92_videocontrol_w %d = %02x\n",activecpu_get_pc(),offset,data);*/
