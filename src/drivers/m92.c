@@ -2421,7 +2421,7 @@ static DRIVER_INIT( rtypeleo )
 	install_mem_read_handler(0, 0xe0032, 0xe0033, rtypeleo_cycle_r);
 	init_m92(rtypeleo_decryption_table);
 	m92_irq_vectorbase=0x20;
-	m92_game_kludge=1;
+	m92_game_kludge=3;
 }
 
 static DRIVER_INIT( rtypelej )
@@ -2429,7 +2429,7 @@ static DRIVER_INIT( rtypelej )
 	install_mem_read_handler(0, 0xe0032, 0xe0033, rtypelej_cycle_r);
 	init_m92(rtypeleo_decryption_table);
 	m92_irq_vectorbase=0x20;
-	m92_game_kludge=1;
+	m92_game_kludge=3;
 }
 
 static DRIVER_INIT( majtitl2 )
