@@ -529,6 +529,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rampage World Tour
 * Revolution X
 * Rohga Armor Force
+* R-Type Leo
 * Shark Attack
 * Sheriff
 * Space Fever
@@ -847,3 +848,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Angler Dangler and the clone japanese set Fishing to the decocass.c driver [arcadez]
 * Better balanced the music and Sfx levels in Kaneko's Air Buster and added the Japan version of DJ Boy [arcadez]
 * Fixed Deco Cassette game Zeroize in the decocass.c driver game now playable [arcadez]
+* Disabled palette banking for R-Type leo - fixes invincibiliy flashing [Haze]
+* Fixed some serious graphical problems in R-Type Leo by disabling a gfx based speedup which caused issues throughout the game [arcadez]
+* Updated the Irem GRA20 soundcore to MAME 81 which fixes missing voices and improves the sound more generally for R-Type Leo [arcadez]
