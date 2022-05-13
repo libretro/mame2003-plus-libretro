@@ -659,6 +659,7 @@ static struct retro_core_option_v2_definition option_def_frameskip = {
       { "5",               NULL },
       { "6",               NULL },
       { "7",               NULL },
+      { "8",               NULL },
       { "9",               NULL },
       { "10",              NULL },
       { "11",              NULL },
