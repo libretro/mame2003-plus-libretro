@@ -139,6 +139,7 @@ void retro_set_audio_buff_status_cb(void)
 {
   if (options.frameskip > 0 && options.frameskip >= 12)
   {
+      buf_status_cb.callback = &retro_audio_buff_status_cb;
 
       if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
             &buf_status_cb))
