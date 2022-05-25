@@ -89,6 +89,16 @@ VIDEO_UPDATE( segae )
 		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],15);
 }
 
+VIDEO_UPDATE( megrescu )
+{
+	int i;
+
+	/*- Draw from cache_bitmap to screen -*/
+
+	for (i = 0;i < 192;i++)
+		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],-1);
+}
+
 /* these are used by megatech */
 
 /* starts vdp for bios screen only */
@@ -455,6 +465,7 @@ void segae_drawscanline(int line, int chips, int blank)
 	{
 		if (strcmp(Machine->gamedrv->name,"tetrisse")) /* and we really don't want to do it on tetrise */
 			if (strcmp(Machine->gamedrv->name,"opaopan")) /* and we really don't want to do it on opaopa */
+               if (strcmp(Machine->gamedrv->name,"megrescu")) /* and we really don't want to do it on opaopa */
 			memset(dest+16, 32+16, 8); /* Clear Leftmost column, there should be a register for this like on the SMS i imagine    */
 							   			  /* on the SMS this is bit 5 of register 0 (according to CMD's SMS docs) for system E this  */							   			  /* appears to be incorrect, most games need it blanked 99% of the time so we blank it      */
 	}
@@ -550,6 +561,7 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 
 	if (!strcmp(Machine->gamedrv->name,"ridleofp")) nosprites = 63; /* why, there must be a bug elsewhere i guess ?! */
         if (!strcmp(Machine->gamedrv->name,"slapshtr")) nosprites = 63; /* why, there must be a bug elsewhere i guess ?! */
+         if (!strcmp(Machine->gamedrv->name,"megrescu")) nosprites = 63; /* why, there must be a bug elsewhere i guess ?! */
 			
 	/*- draw sprites IN REVERSE ORDER -*/
 
