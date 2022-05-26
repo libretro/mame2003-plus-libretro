@@ -553,7 +553,7 @@ static DRIVER_INIT( marblmd2 )
 	atarigen_eeprom_default = default_eeprom;
 	atarijsa_init(1, 3, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
-	atarigen_init_6502_speedup(1, 0x4163, 0x417b);
+	//atarigen_init_6502_speedup(1, 0x4163, 0x417b);
 }
 
 
