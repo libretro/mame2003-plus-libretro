@@ -65,6 +65,7 @@ static MACHINE_INIT( batman )
 	atarijsa_reset();
 }
 
+
 static MACHINE_INIT( marblmd2 )
 {
 	atarigen_eeprom_reset();
@@ -152,6 +153,7 @@ static MEMORY_WRITE16_START( main_writemem )
 	{ 0x3f9000, 0x3fffff, MWA16_RAM },
 MEMORY_END
 
+
 static MEMORY_READ16_START( mm2_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x600000, 0x600001, input_port_0_word_r },
@@ -165,7 +167,6 @@ static MEMORY_READ16_START( mm2_readmem )
 	{ 0x7c0000, 0x7c03ff, MRA16_RAM },	
 	{ 0x7cffc0, 0x7cffff, atarivc_r },
 	{ 0x7d0000, 0x7fbfff, MRA16_RAM },
-	
 MEMORY_END
 
 
@@ -176,7 +177,7 @@ static MEMORY_WRITE16_START( mm2_writemem )
 	{ 0x600060, 0x600061, atarigen_eeprom_enable_w },
 	{ 0x601000, 0x601fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
 	{ 0x601000, 0x6013ff, MWA16_RAM }, // some kind of NVRAM?
-    { 0x607000, 0x607000, MWA16_NOP },
+	{ 0x607000, 0x607000, MWA16_NOP },
 	{ 0x7d8000, 0x7d9fff, atarigen_playfield_latched_lsb_w, &atarigen_playfield },
  	{ 0x7da000, 0x7dbeff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
 	{ 0x7dbf00, 0x7dbf7f, MWA16_RAM, &atarivc_eof_data },
