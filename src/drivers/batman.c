@@ -65,7 +65,14 @@ static MACHINE_INIT( batman )
 	atarijsa_reset();
 }
 
-
+static MACHINE_INIT( marblmd2 )
+{
+	atarigen_eeprom_reset();
+	atarivc_reset(atarivc_eof_data, 2);
+	atarigen_interrupt_reset(update_interrupts);
+	atarigen_scanline_timer_reset(mm2_scanline_update, 8);
+	atarijsa_reset();
+}
 
 /*************************************
  *
@@ -110,6 +117,7 @@ static WRITE16_HANDLER( latch_w )
  *
  *************************************/
 
+
 static MEMORY_READ16_START( main_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, MRA16_RAM },
@@ -144,13 +152,143 @@ static MEMORY_WRITE16_START( main_writemem )
 	{ 0x3f9000, 0x3fffff, MWA16_RAM },
 MEMORY_END
 
+static MEMORY_READ16_START( mm2_readmem )
+	{ 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x600000, 0x600001, input_port_0_word_r },
+	{ 0x600002, 0x600003, input_port_1_word_r },
+	{ 0x600010, 0x600011, special_port2_r },
+	{ 0x600012, 0x600013, input_port_3_word_r },
+	{ 0x600020, 0x600021, input_port_4_word_r }, 
+	{ 0x600030, 0x600031, atarigen_sound_r },
+	{ 0x601000, 0x601fff, atarigen_eeprom_r },
+	{ 0x601000, 0x6013ff, MRA16_RAM }, // some kind of NVRAM?
+	{ 0x7c0000, 0x7c03ff, MRA16_RAM },	
+	{ 0x7cffc0, 0x7cffff, atarivc_r },
+	{ 0x7d0000, 0x7fbfff, MRA16_RAM },
+	
+MEMORY_END
 
+
+static MEMORY_WRITE16_START( mm2_writemem )
+	{ 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x600050, 0x600051, latch_w },
+	{ 0x600040, 0x600041, atarigen_sound_w  },
+	{ 0x600060, 0x600061, atarigen_eeprom_enable_w },
+	{ 0x601000, 0x601fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
+	{ 0x601000, 0x6013ff, MWA16_RAM }, // some kind of NVRAM?
+    { 0x607000, 0x607000, MWA16_NOP },
+	{ 0x7d8000, 0x7d9fff, atarigen_playfield_latched_lsb_w, &atarigen_playfield },
+ 	{ 0x7da000, 0x7dbeff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
+	{ 0x7dbf00, 0x7dbf7f, MWA16_RAM, &atarivc_eof_data },
+	{ 0x7dbf80, 0x7dbfff, atarimo_0_slipram_w, &atarimo_0_slipram },
+	{ 0x7c0000, 0x7c03ff, atarigen_666_paletteram_w, &paletteram16 },
+	{ 0x7cffc0, 0x7cffff, atarivc_w, &atarivc_data },
+	{ 0x7d0000, 0x7dffff, MWA16_RAM },
+	{ 0x7f8000, 0x7fbfff, MWA16_RAM },
+MEMORY_END
+
+/*
+map.unmap_value_high();
+	map.global_mask(0x3fffff);
+	map(0x000000, 0x0bffff).rom();
+	map(0x100000, 0x10ffff).mirror(0x010000).ram();
+	map(0x120000, 0x120fff).mirror(0x01f000).rw("eeprom", FUNC(eeprom_parallel_28xx_device::read), FUNC(eeprom_parallel_28xx_device::write)).umask16(0x00ff);
+	map(0x260000, 0x260001).mirror(0x11ff8c).portr("260000");
+	map(0x260002, 0x260003).mirror(0x11ff8c).portr("260002");
+	map(0x260010, 0x260011).mirror(0x11ff8e).portr("260010");
+	map(0x260031, 0x260031).mirror(0x11ff8e).r(m_jsa, FUNC(atari_jsa_iii_device::main_response_r));
+	map(0x260041, 0x260041).mirror(0x11ff8e).w(m_jsa, FUNC(atari_jsa_iii_device::main_command_w));
+	map(0x260050, 0x260051).mirror(0x11ff8e).w(FUNC(batman_state::latch_w));
+	map(0x260060, 0x260061).mirror(0x11ff8e).w("eeprom", FUNC(eeprom_parallel_28xx_device::unlock_write16));
+	map(0x2a0000, 0x2a0001).mirror(0x11fffe).w("watchdog", FUNC(watchdog_timer_device::reset16_w));
+	map(0x2e0000, 0x2e0fff).mirror(0x100000).ram().w("palette", FUNC(palette_device::write16)).share("palette");
+	map(0x2effc0, 0x2effff).mirror(0x100000).rw(m_vad, FUNC(atari_vad_device::control_read), FUNC(atari_vad_device::control_write));
+	map(0x2f0000, 0x2f1fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield2_latched_msb_w)).share("vad:playfield2");
+	map(0x2f2000, 0x2f3fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield_latched_lsb_w)).share("vad:playfield");
+	map(0x2f4000, 0x2f5fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield_upper_w)).share("vad:playfield_ext");
+	map(0x2f6000, 0x2f7fff).mirror(0x100000).ram().share("vad:mob");
+	map(0x2f8000, 0x2f8eff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::alpha_w)).share("vad:alpha");
+	map(0x2f8f00, 0x2f8f7f).mirror(0x100000).ram().share("vad:eof");
+	map(0x2f8f80, 0x2f8fff).mirror(0x100000).ram().share("vad:mob:slip");
+	map(0x2f9000, 0x2fffff).mirror(0x100000).ram();
+}
+
+*/
 
 /*************************************
  *
  *	Port definitions
  *
  *************************************/
+
+INPUT_PORTS_START( marblmd2 )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 ) // also acts as START3
+	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) // also acts as START1
+	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN ) // acts as a 'freeze' input, probably not connected
+	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) // also acts as START2
+	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START // assume at least one bank of 8 dips lives here, but could be something else
+	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0020, 0x0020, "Number of Players (Test Mode)" ) // this one controls 'number of players' in Control Test
+	PORT_DIPSETTING(      0x0000, "2" )
+	PORT_DIPSETTING(      0x0020, "3" )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0080, "Number of Players (Game)" )
+	PORT_DIPSETTING(      0x0000, "2" )
+	PORT_DIPSETTING(      0x0080, "3" )
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	JSA_III_PORT	/* audio board port */
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER3 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER3 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER3 )
+	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )	/* Input buffer full (@260030) */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )	/* Output buffer full (@260040) */
+	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
+
 
 INPUT_PORTS_START( batman )
 	PORT_START		/* 26000 */
@@ -173,6 +311,7 @@ INPUT_PORTS_START( batman )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )	/* Output buffer full (@260040) */
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
+
 
 	JSA_III_PORT	/* audio board port */
 INPUT_PORTS_END
@@ -219,6 +358,44 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 
 
+
+
+
+
+
+
+static struct GfxLayout pflayout =
+{
+	8,8,
+	RGN_FRAC(1,2),
+	8,
+	{ 0,1,2,3,4,5,6,7 },
+	{ 0,RGN_FRAC(1,2) + 0, 8,RGN_FRAC(1,2) + 8,  16,RGN_FRAC(1,2) + 16,24,RGN_FRAC(1,2) + 24 },
+	{ 0 * 32, 1 * 32, 2 * 32, 3 * 32, 4 * 32, 5 * 32, 6 * 32, 7 * 32 },
+	8 * 32
+};
+
+static struct GfxLayout molayout =
+{
+	8,8,
+	RGN_FRAC(1,2),
+	4,
+	{ 0, 1, 2, 3 },
+	{ RGN_FRAC(1,2) + 0, RGN_FRAC(1,2) + 4, 0, 4, RGN_FRAC(1,2) + 8, RGN_FRAC(1,2) + 12, 8, 12  },
+	{ 0 * 16, 1 * 16, 2 * 16, 3 * 16, 4 * 16, 5 * 16, 6 * 16, 7 * 16 },
+	16 * 8
+};
+
+
+static struct GfxDecodeInfo gfxdecodeinfo2[] =
+{
+	{  REGION_GFX1, 0, &pflayout,   0x0, 1  },
+	{  REGION_GFX2, 0, &molayout,   0x0, 0x10  },
+	{ -1 }
+};
+
+
+
 /*************************************
  *
  *	Machine driver
@@ -253,6 +430,33 @@ static MACHINE_DRIVER_START( batman )
 MACHINE_DRIVER_END
 
 
+
+static MACHINE_DRIVER_START( marblmd2 )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, ATARI_CLOCK_14MHz)
+	MDRV_CPU_MEMORY(mm2_readmem,mm2_writemem)
+	
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(batman)
+	MDRV_NVRAM_HANDLER(atarigen)
+	
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(42*8, 30*8)
+	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo2)
+	MDRV_PALETTE_LENGTH(2048)
+	MDRV_COLORTABLE_LENGTH(2048) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
+	
+	MDRV_VIDEO_START(mm2)
+	MDRV_VIDEO_UPDATE(mm2)
+	
+	/* sound hardware */
+	MDRV_IMPORT_FROM(jsa_iii_mono )
+MACHINE_DRIVER_END
 
 /*************************************
  *
@@ -304,6 +508,39 @@ ROM_START( batman )
 ROM_END
 
 
+ROM_START( marblmd2 )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )	/* 6*128k for 68000 code */
+	ROM_LOAD16_BYTE( "rom0l.18c",  0x00001, 0x20000, CRC(a4db40d9) SHA1(ae8313c9bb513143472347a7705bec33783bad7e) )
+	ROM_LOAD16_BYTE( "rom0h.20c",  0x00000, 0x20000, CRC(d1a17d67) SHA1(7ac434858fa94e4bb4bb7d0603f699667494aa0d) )
+	ROM_LOAD16_BYTE( "rom1l.18e",  0x40001, 0x20000, CRC(b6fb08b5) SHA1(0ce9c1a5d70133ffc879cfe548646c04de371e13) )
+	ROM_LOAD16_BYTE( "rom1h.20e",  0x40000, 0x20000, CRC(b2a361a8) SHA1(b7c58404642a494532597cceb946463e3a6f56b3) )
+
+	ROM_REGION( 0x14000, REGION_CPU2, 0 )	/* 64k + 16k for 6502 code */
+	ROM_LOAD( "aud0.12c",  0x10000, 0x4000, CRC(89a8d90a) SHA1(cd73483d0bcfe2c8134d005c4417975f9a2cb658) )
+    ROM_CONTINUE(          0x04000, 0xc000 )
+
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "pf0l.3p",  0x00000, 0x20000, CRC(a4fe377a) SHA1(a8a1a8027da778e5ad406a65814eec999b0f81af) )
+	ROM_LOAD( "pf1l.3m",  0x20000, 0x20000, CRC(5dc7aaa8) SHA1(4fb815e9bcf6bcdf1b7976a3dea2b6d1dd6a8f6b) )
+	ROM_LOAD( "pf2l.3k",  0x40000, 0x20000, CRC(0c7c5f74) SHA1(26f1d36f70f4e8354537d0d67764a1c9be35e8f7) )
+	ROM_LOAD( "pf3l.3j",  0x60000, 0x20000, CRC(0a780429) SHA1(a9d7d564507c31dafc448726b04293d6a582cff5) )
+	ROM_LOAD( "pf0h.1p",  0x80000, 0x20000, CRC(a6297a83) SHA1(ffe9ea41d1ba7bb3d0260f3fcf0e970112098d46) )
+	ROM_LOAD( "pf1h.1m",  0xa0000, 0x20000, CRC(5b40f1bb) SHA1(cf0de8679ab0dd9460324ce72b4bfac029591506) )
+	ROM_LOAD( "pf2h.1k",  0xc0000, 0x20000, CRC(18323df9) SHA1(9c4add4733bcfe7202b53d86f1bca4b9d207e22a) )
+	ROM_LOAD( "pf3h.1j",  0xe0000, 0x20000, CRC(05d86ef8) SHA1(47eefd7112a3a3be16f0b4496cf034c8f7a69b1b) )
+
+	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_INVERT ) //do we invert.??
+	ROM_LOAD( "mo0l.7p",  0x00000, 0x20000, CRC(950d95a3) SHA1(3f38da7b6eeaa87cc84b98c9d535468b0c060f6d) )
+	ROM_LOAD( "mo1l.10p", 0x20000, 0x20000, CRC(b62b6ebf) SHA1(3781cd81780c10cd245871bb8f7b6260f7bb53b7) )
+	ROM_LOAD( "mo0h.12p", 0x40000, 0x20000, CRC(e47d92b0) SHA1(7953e8342450c02408e4d90f132144d55de2f491) )
+	ROM_LOAD( "mo1h.14p", 0x60000, 0x20000, CRC(317a03fb) SHA1(23a7cfe7c5601c858e8b346de31441788c7a8e97) )
+
+	// loading based on batman, there are 2 unpopulated positions on the PCB
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 )	/* 1MB for ADPCM */
+	ROM_LOAD( "sound.19e",  0x00000, 0x20000, CRC(e916bef7) SHA1(e07ddc8a3e1656d7307b767e692cf4a575ca47a3) )
+	ROM_LOAD( "sound.12e",  0x60000, 0x20000, CRC(bab2f8e5) SHA1(bbe2d693d40e5eeba315fe7b6380a2030b66f23e) )
+ROM_END
 
 /*************************************
  *
@@ -331,7 +568,6 @@ static DRIVER_INIT( batman )
 	atarigen_eeprom_default = default_eeprom;
 	atarijsa_init(1, 3, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
-	atarigen_init_6502_speedup(1, 0x4163, 0x417b);
 }
 
 
@@ -342,4 +578,6 @@ static DRIVER_INIT( batman )
  *
  *************************************/
 
-GAME( 1991, batman, 0, batman, batman, batman, ROT0, "Atari Games", "Batman" )
+GAME( 1991, batman,   0, batman,   batman,   batman, ROT0, "Atari Games", "Batman" )
+GAME( 1991, marblmd2, 0, marblmd2, marblmd2, batman, ROT0, "Atari Games", "Marble Madness II (prototype)" )
+
