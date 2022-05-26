@@ -223,7 +223,6 @@ map.unmap_value_high();
  *************************************/
 
 INPUT_PORTS_START( marblmd2 )
-
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 ) // also acts as START3
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -313,7 +312,6 @@ INPUT_PORTS_START( batman )
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
 
-
 	JSA_III_PORT	/* audio board port */
 INPUT_PORTS_END
 
@@ -358,13 +356,6 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 };
 
 
-
-
-
-
-
-
-
 static struct GfxLayout pflayout =
 {
 	8,8,
@@ -375,6 +366,7 @@ static struct GfxLayout pflayout =
 	{ 0 * 32, 1 * 32, 2 * 32, 3 * 32, 4 * 32, 5 * 32, 6 * 32, 7 * 32 },
 	8 * 32
 };
+
 
 static struct GfxLayout molayout =
 {
@@ -394,7 +386,6 @@ static struct GfxDecodeInfo gfxdecodeinfo2[] =
 	{  REGION_GFX2, 0, &molayout,   0x0, 0x10  },
 	{ -1 }
 };
-
 
 
 /*************************************
@@ -429,7 +420,6 @@ static MACHINE_DRIVER_START( batman )
 	/* sound hardware */
 	MDRV_IMPORT_FROM(jsa_iii_mono)
 MACHINE_DRIVER_END
-
 
 
 static MACHINE_DRIVER_START( marblmd2 )
@@ -518,8 +508,7 @@ ROM_START( marblmd2 )
 
 	ROM_REGION( 0x14000, REGION_CPU2, 0 )	/* 64k + 16k for 6502 code */
 	ROM_LOAD( "aud0.12c",  0x10000, 0x4000, CRC(89a8d90a) SHA1(cd73483d0bcfe2c8134d005c4417975f9a2cb658) )
-    ROM_CONTINUE(          0x04000, 0xc000 )
-
+	ROM_CONTINUE(          0x04000, 0xc000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "pf0l.3p",  0x00000, 0x20000, CRC(a4fe377a) SHA1(a8a1a8027da778e5ad406a65814eec999b0f81af) )
@@ -569,6 +558,30 @@ static DRIVER_INIT( batman )
 	atarigen_eeprom_default = default_eeprom;
 	atarijsa_init(1, 3, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
+	atarigen_init_6502_speedup(1, 0x4163, 0x417b);
+}
+
+
+static DRIVER_INIT( marblmd2 )
+{
+	static const data16_t default_eeprom[] =
+	{
+		0x0001,0x01F1,0x0154,0x01C5,0x0100,0x0113,0x0300,0x0173,
+		0x0700,0x0154,0x0200,0x0107,0x0100,0x0120,0x0300,0x0165,
+		0x0125,0x0100,0x0149,0x019D,0x016C,0x018B,0x01F1,0x0154,
+		0x01C5,0x0100,0x0113,0x0300,0x0173,0x0700,0x0154,0x0200,
+		0x0107,0x0100,0x0120,0x0300,0x0165,0x0125,0x0100,0x0149,
+		0x019D,0x016C,0x018B,0x6800,0x0134,0x0113,0x0148,0x0100,
+		0x019A,0x0105,0x01DC,0x01A2,0x013A,0x0139,0x0100,0x0105,
+		0x01AB,0x016A,0x0149,0x0100,0x01ED,0x0105,0x0185,0x01B2,
+		0x0134,0x0100,0x0105,0x0160,0x01AA,0x0149,0x0100,0x0105,
+		0x012A,0x0152,0x0110,0x0100,0x0168,0x0105,0x0113,0x012E,
+		0x0150,0x0218,0x01D0,0x0100,0x01D0,0x0300,0x01D0,0x0600,
+		0x01D0,0x02C8,0x0000
+	};
+	atarigen_eeprom_default = default_eeprom;
+	atarijsa_init(1, 3, 2, 0x0040);
+	atarijsa3_init_adpcm(REGION_SOUND1);
 }
 
 
@@ -579,5 +592,5 @@ static DRIVER_INIT( batman )
  *
  *************************************/
 
-GAME( 1991, batman,   0, batman,   batman,   batman, ROT0, "Atari Games", "Batman" )
-GAME( 1991, marblmd2, 0, marblmd2, marblmd2, batman, ROT0, "Atari Games", "Marble Madness II (prototype)" )
+GAME( 1991, batman,   0, batman,   batman,   batman,   ROT0, "Atari Games", "Batman" )
+GAME( 1991, marblmd2, 0, marblmd2, marblmd2, marblmd2, ROT0, "Atari Games", "Marble Madness II (prototype)" )
