@@ -440,7 +440,7 @@ static MACHINE_DRIVER_START( marblmd2 )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
-	MDRV_MACHINE_INIT(batman)
+	MDRV_MACHINE_INIT(marblmd2)
 	MDRV_NVRAM_HANDLER(atarigen)
 	
 	/* video hardware */
@@ -580,4 +580,3 @@ static DRIVER_INIT( batman )
 
 GAME( 1991, batman,   0, batman,   batman,   batman, ROT0, "Atari Games", "Batman" )
 GAME( 1991, marblmd2, 0, marblmd2, marblmd2, batman, ROT0, "Atari Games", "Marble Madness II (prototype)" )
-
