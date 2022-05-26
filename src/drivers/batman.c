@@ -118,7 +118,6 @@ static WRITE16_HANDLER( latch_w )
  *
  *************************************/
 
-
 static MEMORY_READ16_START( main_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, MRA16_RAM },
@@ -188,33 +187,6 @@ static MEMORY_WRITE16_START( mm2_writemem )
 	{ 0x7f8000, 0x7fbfff, MWA16_RAM },
 MEMORY_END
 
-/*
-map.unmap_value_high();
-	map.global_mask(0x3fffff);
-	map(0x000000, 0x0bffff).rom();
-	map(0x100000, 0x10ffff).mirror(0x010000).ram();
-	map(0x120000, 0x120fff).mirror(0x01f000).rw("eeprom", FUNC(eeprom_parallel_28xx_device::read), FUNC(eeprom_parallel_28xx_device::write)).umask16(0x00ff);
-	map(0x260000, 0x260001).mirror(0x11ff8c).portr("260000");
-	map(0x260002, 0x260003).mirror(0x11ff8c).portr("260002");
-	map(0x260010, 0x260011).mirror(0x11ff8e).portr("260010");
-	map(0x260031, 0x260031).mirror(0x11ff8e).r(m_jsa, FUNC(atari_jsa_iii_device::main_response_r));
-	map(0x260041, 0x260041).mirror(0x11ff8e).w(m_jsa, FUNC(atari_jsa_iii_device::main_command_w));
-	map(0x260050, 0x260051).mirror(0x11ff8e).w(FUNC(batman_state::latch_w));
-	map(0x260060, 0x260061).mirror(0x11ff8e).w("eeprom", FUNC(eeprom_parallel_28xx_device::unlock_write16));
-	map(0x2a0000, 0x2a0001).mirror(0x11fffe).w("watchdog", FUNC(watchdog_timer_device::reset16_w));
-	map(0x2e0000, 0x2e0fff).mirror(0x100000).ram().w("palette", FUNC(palette_device::write16)).share("palette");
-	map(0x2effc0, 0x2effff).mirror(0x100000).rw(m_vad, FUNC(atari_vad_device::control_read), FUNC(atari_vad_device::control_write));
-	map(0x2f0000, 0x2f1fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield2_latched_msb_w)).share("vad:playfield2");
-	map(0x2f2000, 0x2f3fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield_latched_lsb_w)).share("vad:playfield");
-	map(0x2f4000, 0x2f5fff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::playfield_upper_w)).share("vad:playfield_ext");
-	map(0x2f6000, 0x2f7fff).mirror(0x100000).ram().share("vad:mob");
-	map(0x2f8000, 0x2f8eff).mirror(0x100000).ram().w(m_vad, FUNC(atari_vad_device::alpha_w)).share("vad:alpha");
-	map(0x2f8f00, 0x2f8f7f).mirror(0x100000).ram().share("vad:eof");
-	map(0x2f8f80, 0x2f8fff).mirror(0x100000).ram().share("vad:mob:slip");
-	map(0x2f9000, 0x2fffff).mirror(0x100000).ram();
-}
-
-*/
 
 /*************************************
  *
