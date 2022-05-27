@@ -353,8 +353,8 @@ static struct GfxLayout molayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo2[] =
 {
-	{  REGION_GFX1, 0, &pflayout,   256, 64  },
-	{  REGION_GFX2, 0, &molayout,   0, 64  },
+	{  REGION_GFX1, 0, &pflayout,   256, 1  },
+	{  REGION_GFX2, 0, &molayout,   0, 0x10  },
 	{ -1 }
 };
 
@@ -410,8 +410,8 @@ static MACHINE_DRIVER_START( marblmd2 )
 	MDRV_SCREEN_SIZE(42*8, 30*8)
 	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
-	MDRV_PALETTE_LENGTH(2048)
-	MDRV_COLORTABLE_LENGTH(2048) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
+	MDRV_PALETTE_LENGTH(256)
+	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
 	
 	MDRV_VIDEO_START(mm2)
 	MDRV_VIDEO_UPDATE(mm2)
