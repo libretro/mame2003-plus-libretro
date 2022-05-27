@@ -69,7 +69,7 @@ static MACHINE_INIT( batman )
 static MACHINE_INIT( marblmd2 )
 {
 	atarigen_eeprom_reset();
-	atarivc_reset(atarivc_eof_data, 2);
+	atarivc_reset(atarivc_eof_data, 1);
 	atarigen_interrupt_reset(update_interrupts);
 	atarigen_scanline_timer_reset(mm2_scanline_update, 8);
 	atarijsa_reset();
@@ -407,8 +407,8 @@ static MACHINE_DRIVER_START( marblmd2 )
 	
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
-	MDRV_SCREEN_SIZE(456, 262)
-	MDRV_VISIBLE_AREA(0*8, 455, 0*8, 261)
+	MDRV_SCREEN_SIZE(42*8, 30*8)
+	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
 	MDRV_PALETTE_LENGTH(256)
 	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
