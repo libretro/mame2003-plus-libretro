@@ -10,5 +10,8 @@ extern UINT8 batman_alpha_tile_bank;
 
 VIDEO_START( batman );
 VIDEO_UPDATE( batman );
+VIDEO_START( mm2 );
+VIDEO_UPDATE( mm2 );
 
 void batman_scanline_update(int scanline);
+void mm2_scanline_update(int scanline);
