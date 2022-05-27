@@ -74,7 +74,6 @@ static void get_playfield2_mm2_tile_info(int tile_index)
 	int color = data2 & 0x0f;
 	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
 	tile_info.priority = (data2 >> 4) & 3;
-
 }
 
 /*************************************
