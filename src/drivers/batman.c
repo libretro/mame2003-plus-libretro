@@ -6,6 +6,7 @@
 
 	Games supported:
 		* Batman (1991)
+		* Marble Madness II (prototype)
 
 	Known bugs:
 		* none at this time
@@ -69,7 +70,7 @@ static MACHINE_INIT( batman )
 static MACHINE_INIT( marblmd2 )
 {
 	atarigen_eeprom_reset();
-	atarivc_reset(atarivc_eof_data, 1);
+	atarivc_reset(atarivc_eof_data, 2);
 	atarigen_interrupt_reset(update_interrupts);
 	atarigen_scanline_timer_reset(mm2_scanline_update, 8);
 	atarijsa_reset();
