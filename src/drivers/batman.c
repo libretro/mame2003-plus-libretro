@@ -181,7 +181,7 @@ static MEMORY_WRITE16_START( mm2_writemem )
  	{ 0x7da000, 0x7dbeff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
 	{ 0x7dbf00, 0x7dbf7f, MWA16_RAM, &atarivc_eof_data },
 	{ 0x7dbf80, 0x7dbfff, atarimo_0_slipram_w, &atarimo_0_slipram },
-	{ 0x7c0000, 0x7c03ff, atarigen_666_paletteram_w, &paletteram16 },
+	{ 0x7c0000, 0x7c03ff, atarigen_expanded_666_paletteram_w, &paletteram16 },
 	{ 0x7cffc0, 0x7cffff, atarivc_w, &atarivc_data },
 	{ 0x7d0000, 0x7dffff, MWA16_RAM },
 	{ 0x7f8000, 0x7fbfff, MWA16_RAM },
@@ -353,8 +353,8 @@ static struct GfxLayout molayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo2[] =
 {
-	{  REGION_GFX1, 0, &pflayout,   256, 1  },
-	{  REGION_GFX2, 0, &molayout,   0, 0x10  },
+	{  REGION_GFX1, 0, &pflayout,   0x0, 1  },
+	{  REGION_GFX2, 0, &molayout,   0x0, 0x10  },
 	{ -1 }
 };
 
@@ -410,8 +410,8 @@ static MACHINE_DRIVER_START( marblmd2 )
 	MDRV_SCREEN_SIZE(42*8, 30*8)
 	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
-	MDRV_PALETTE_LENGTH(2048)
-	MDRV_COLORTABLE_LENGTH(2048) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
+	MDRV_PALETTE_LENGTH(256)
+	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
 	
 	MDRV_VIDEO_START(mm2)
 	MDRV_VIDEO_UPDATE(mm2)
@@ -491,7 +491,7 @@ ROM_START( marblmd2 )
 	ROM_LOAD( "pf2h.1k",  0xc0000, 0x20000, CRC(18323df9) SHA1(9c4add4733bcfe7202b53d86f1bca4b9d207e22a) )
 	ROM_LOAD( "pf3h.1j",  0xe0000, 0x20000, CRC(05d86ef8) SHA1(47eefd7112a3a3be16f0b4496cf034c8f7a69b1b) )
 
-	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_INVERT ) //do we invert.??
+	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "mo0l.7p",  0x00000, 0x20000, CRC(950d95a3) SHA1(3f38da7b6eeaa87cc84b98c9d535468b0c060f6d) )
 	ROM_LOAD( "mo1l.10p", 0x20000, 0x20000, CRC(b62b6ebf) SHA1(3781cd81780c10cd245871bb8f7b6260f7bb53b7) )
 	ROM_LOAD( "mo0h.12p", 0x40000, 0x20000, CRC(e47d92b0) SHA1(7953e8342450c02408e4d90f132144d55de2f491) )
