@@ -160,7 +160,7 @@ VIDEO_START( mm2 )
 		0,					/* pixel offset for SLIPs */
 		0,					/* maximum number of links to visit/scanline (0=all) */
 
-		0x100,				/* base palette entry */
+		0x000,				/* base palette entry */
 		0x100,				/* maximum number of colors */
 		0,					/* transparent pen index */
 
