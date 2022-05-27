@@ -420,7 +420,7 @@ static MACHINE_DRIVER_START( marblmd2 )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_SIZE(42*8, 30*8)
-	MDRV_VISIBLE_AREA(8, 42*8-1, 0*8, 30*8-1)
+	MDRV_VISIBLE_AREA(6, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
 	MDRV_PALETTE_LENGTH(256)
 	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
@@ -550,7 +550,6 @@ static DRIVER_INIT( marblmd2 )
 	atarigen_eeprom_default = NULL;
 	atarijsa_init(1, 3, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
-	//atarigen_init_6502_speedup(1, 0x4163, 0x417b);
 }
 
 
