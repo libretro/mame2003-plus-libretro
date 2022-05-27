@@ -14,4 +14,3 @@ VIDEO_START( mm2 );
 VIDEO_UPDATE( mm2 );
 
 void batman_scanline_update(int scanline);
-void mm2_scanline_update(int scanline);
