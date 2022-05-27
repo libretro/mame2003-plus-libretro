@@ -74,6 +74,7 @@ static void get_playfield2_mm2_tile_info(int tile_index)
 	int color = data2 & 0x0f;
 	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
 	tile_info.priority = (data2 >> 4) & 3;
+
 }
 
 /*************************************
@@ -160,11 +161,11 @@ VIDEO_START( mm2 )
 		0,					/* pixel offset for SLIPs */
 		0,					/* maximum number of links to visit/scanline (0=all) */
 
-		0x100,				/* base palette entry */
+		0x000,				/* base palette entry */
 		0x100,				/* maximum number of colors */
 		0,					/* transparent pen index */
 
-		{{ 0x03ff,0,0,0 }},	/* mask for the link */
+		{{ 0x3ff,0,0,0 }},	/* mask for the link */
 		{{ 0 }},			/* mask for the graphics bank */
 		{{ 0,0x7fff,0,0 }},	/* mask for the code index */
 		{{ 0 }},			/* mask for the upper code index */
@@ -181,7 +182,7 @@ VIDEO_START( mm2 )
 
 		{{ 0 }},			/* mask for the special value */
 		0,					/* resulting value to indicate "special" */
-		NULL				/* callback routine for special entries */
+		0				/* callback routine for special entries */
 	};
 
 	/* initialize the playfield */
@@ -472,7 +473,8 @@ VIDEO_UPDATE( mm2 )
 		// top bit of the gfxdata appears to be priority, so we don't want it in the render bitmap
 		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
 		{
-			dst[x] = src[x] & 0x007f;
+			dst[x] = src[x];
+			src[x] &= 0x007f;
 		}
 	}
 
@@ -488,7 +490,7 @@ VIDEO_UPDATE( mm2 )
 			{
 				if (mo[x] != 0xffff)
 				{
-					if (pf2[x] & 0x80) // check against top bit of temp pf render
+					if (pri[x] & 0x80) // check against top bit of temp pf render
 					{
 						if (mo[x] & 0x80)
 							pf2[x] = mo[x];
@@ -497,6 +499,7 @@ VIDEO_UPDATE( mm2 )
 					{
 						pf2[x] = mo[x] | 0x80;
 					}
+					mo[x] = 0xffff;
 				}
 			}
 		}
