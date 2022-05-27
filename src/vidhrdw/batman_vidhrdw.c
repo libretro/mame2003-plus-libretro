@@ -76,6 +76,7 @@ static void get_playfield2_mm2_tile_info(int tile_index)
 	tile_info.priority = (data2 >> 4) & 3;
 }
 
+
 /*************************************
  *
  *	Video system start
