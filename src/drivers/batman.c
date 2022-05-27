@@ -499,8 +499,8 @@ ROM_START( marblmd2 )
 
 	// loading based on batman, there are 2 unpopulated positions on the PCB
 	ROM_REGION( 0x200000, REGION_SOUND1, 0 )	/* 1MB for ADPCM */
-	ROM_LOAD( "sound.19e",  0x00000, 0x20000, CRC(e916bef7) SHA1(e07ddc8a3e1656d7307b767e692cf4a575ca47a3) )
-	ROM_LOAD( "sound.12e",  0x60000, 0x20000, CRC(bab2f8e5) SHA1(bbe2d693d40e5eeba315fe7b6380a2030b66f23e) )
+	ROM_LOAD( "sound.19e",  0x80000, 0x20000, CRC(e916bef7) SHA1(e07ddc8a3e1656d7307b767e692cf4a575ca47a3) )
+	ROM_LOAD( "sound.12e",  0xe0000, 0x20000, CRC(bab2f8e5) SHA1(bbe2d693d40e5eeba315fe7b6380a2030b66f23e) )
 ROM_END
 
 /*************************************
