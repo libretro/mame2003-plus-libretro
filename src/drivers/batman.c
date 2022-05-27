@@ -410,8 +410,8 @@ static MACHINE_DRIVER_START( marblmd2 )
 	MDRV_SCREEN_SIZE(42*8, 30*8)
 	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
+	MDRV_PALETTE_LENGTH(512)
+	MDRV_COLORTABLE_LENGTH(512) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
 	
 	MDRV_VIDEO_START(mm2)
 	MDRV_VIDEO_UPDATE(mm2)
