@@ -353,7 +353,7 @@ static struct GfxLayout molayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo2[] =
 {
-	{  REGION_GFX1, 0, &pflayout,   512, 64  },
+	{  REGION_GFX1, 0, &pflayout,   256, 64  },
 	{  REGION_GFX2, 0, &molayout,   256, 64  },
 	{ -1 }
 };
