@@ -72,7 +72,7 @@ static MACHINE_INIT( marblmd2 )
 	atarigen_eeprom_reset();
 	atarivc_reset(atarivc_eof_data, 2);
 	atarigen_interrupt_reset(update_interrupts);
-	atarigen_scanline_timer_reset(mm2_scanline_update, 8);
+	atarigen_scanline_timer_reset(batman_scanline_update, 8);
 	atarijsa_reset();
 }
 
@@ -111,7 +111,18 @@ static WRITE16_HANDLER( latch_w )
 	}
 }
 
+static WRITE16_HANDLER( mm2_latch_w )
+{
+	int oldword = latch_data;
+	COMBINE_DATA(&latch_data);
 
+	/* bit 4 is connected to the /RESET pin on the 6502 */
+	if (latch_data & 0x0010)
+		cpu_set_reset_line(1, CLEAR_LINE);
+	else
+		cpu_set_reset_line(1, ASSERT_LINE);
+
+}
 
 /*************************************
  *
@@ -172,7 +183,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( mm2_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
-	{ 0x600050, 0x600051, latch_w },
+	{ 0x600050, 0x600051, mm2_latch_w },
 	{ 0x600040, 0x600041, atarigen_sound_w  },
 	{ 0x600060, 0x600061, atarigen_eeprom_enable_w },
 	{ 0x601000, 0x601fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
@@ -409,7 +420,7 @@ static MACHINE_DRIVER_START( marblmd2 )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_SIZE(42*8, 30*8)
-	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
+	MDRV_VISIBLE_AREA(8, 42*8-1, 0*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo2)
 	MDRV_PALETTE_LENGTH(256)
 	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
