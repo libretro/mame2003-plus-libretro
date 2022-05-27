@@ -53,7 +53,6 @@ static void get_playfield_mm2_tile_info(int tile_index)
   
 	int code = data1 & 0x3fff;
 	SET_TILE_INFO(0, code, 0, (data1 >> 15) & 1);
-	tile_info.priority = (data1 >> 4) & 3;
 }
 
 static void get_playfield2_tile_info(int tile_index)
@@ -61,16 +60,6 @@ static void get_playfield2_tile_info(int tile_index)
 	UINT16 data1 = atarigen_playfield2[tile_index];
 	UINT16 data2 = atarigen_playfield_upper[tile_index] >> 8;
 	int code = data1 & 0x7fff;
-	int color = data2 & 0x0f;
-	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
-	tile_info.priority = (data2 >> 4) & 3;
-}
-
-static void get_playfield2_mm2_tile_info(int tile_index)
-{
-	UINT16 data1 = atarigen_playfield[tile_index];
-	UINT16 data2 = atarigen_playfield[tile_index] >> 8;
-	int code = data1 & 0x3fff;
 	int color = data2 & 0x0f;
 	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
 	tile_info.priority = (data2 >> 4) & 3;
@@ -200,12 +189,6 @@ VIDEO_START( mm2 )
 	if (!atarimo_init(0, &modesc))
 		return 1;
 
-	/* initialize the alphanumerics */
-//	atarigen_alpha_tilemap = tilemap_create(get_alpha_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8,8, 64,32);
-//	if (!atarigen_alpha_tilemap)
-//		return 1;
-//	tilemap_set_transparent_pen(atarigen_alpha_tilemap, 0);
-
 	return 0;
 }
 
@@ -272,62 +255,6 @@ void batman_scanline_update(int scanline)
 	}
 }
 
-void mm2_scanline_update(int scanline)
-{
-	/* update the scanline parameters */
-	if (scanline <= Machine->visible_area.max_y && atarivc_state.rowscroll_enable)
-	{
-		data16_t *base = &atarigen_alpha[scanline / 8 * 64 + 48];
-		int scan, i;
-
-		for (scan = 0; scan < 8; scan++, scanline++)
-			for (i = 0; i < 2; i++)
-			{
-				int data = *base++;
-				switch (data & 15)
-				{
-					case 9:
-						force_partial_update(scanline - 1);
-						atarivc_state.mo_xscroll = (data >> 7) & 0x1ff;
-						atarimo_set_xscroll(0, atarivc_state.mo_xscroll);
-						break;
-
-					case 10:
-						force_partial_update(scanline - 1);
-						atarivc_state.pf1_xscroll_raw = (data >> 7) & 0x1ff;
-						atarivc_update_pf_xscrolls();
-						tilemap_set_scrollx(atarigen_playfield_tilemap, 0, atarivc_state.pf0_xscroll);
-						tilemap_set_scrollx(atarigen_playfield2_tilemap, 0, atarivc_state.pf1_xscroll);
-						break;
-
-					case 11:
-						force_partial_update(scanline - 1);
-						atarivc_state.pf0_xscroll_raw = (data >> 7) & 0x1ff;
-						atarivc_update_pf_xscrolls();
-						tilemap_set_scrollx(atarigen_playfield_tilemap, 0, atarivc_state.pf0_xscroll);
-						break;
-
-					case 13:
-						force_partial_update(scanline - 1);
-						atarivc_state.mo_yscroll = (data >> 7) & 0x1ff;
-						atarimo_set_yscroll(0, atarivc_state.mo_yscroll);
-						break;
-
-					case 14:
-						force_partial_update(scanline - 1);
-						atarivc_state.pf1_yscroll = (data >> 7) & 0x1ff;
-						tilemap_set_scrolly(atarigen_playfield2_tilemap, 0, atarivc_state.pf1_yscroll);
-						break;
-
-					case 15:
-						force_partial_update(scanline - 1);
-						atarivc_state.pf0_yscroll = (data >> 7) & 0x1ff;
-						tilemap_set_scrolly(atarigen_playfield_tilemap, 0, atarivc_state.pf0_yscroll);
-						break;
-				}
-			}
-	}
-}
 
 /*************************************
  *
