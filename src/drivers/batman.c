@@ -74,6 +74,7 @@ static MACHINE_INIT( marblmd2 )
 	atarigen_interrupt_reset(update_interrupts);
 	atarigen_scanline_timer_reset(batman_scanline_update, 8);
 	atarijsa_reset();
+	mm2_startup = 0;
 }
 
 /*************************************
@@ -554,7 +555,7 @@ static DRIVER_INIT( batman )
 static DRIVER_INIT( marblmd2 )
 {
 	atarigen_eeprom_default = NULL;
-	atarijsa_init(1, 2, 1, 0x0100);
+	atarijsa_init(1, 3, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
 }
 
