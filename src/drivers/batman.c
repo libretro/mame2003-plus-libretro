@@ -176,7 +176,7 @@ static MEMORY_READ16_START( mm2_readmem )
 	{ 0x600000, 0x600001, input_port_0_word_r },
 	{ 0x600002, 0x600003, input_port_1_word_r },
 	{ 0x600010, 0x600011, special_port2_r },
-	{ 0x600012, 0x600013, input_port_3_word_r },
+	{ 0x600012, 0x600013, input_port_2_word_r },
 	{ 0x600020, 0x600021, input_port_4_word_r }, 
 	{ 0x600030, 0x600031, atarigen_sound_r },
 	{ 0x601000, 0x601fff, atarigen_eeprom_r },
