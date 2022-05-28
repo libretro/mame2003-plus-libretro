@@ -84,7 +84,13 @@ static MACHINE_INIT( marblmd2 )
 
 static READ16_HANDLER( special_port2_r )
 {
-	int result = readinputport(2);
+	int result;
+
+ 	if (!strcmp (Machine->gamedrv->name,"marblmd2") )
+	   result = readinputport(5);
+	else
+	   result = readinputport(2);
+
 	if (atarigen_sound_to_cpu_ready) result ^= 0x0010;
 	if (atarigen_cpu_to_sound_ready) result ^= 0x0020;
 	return result;
