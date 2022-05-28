@@ -554,7 +554,7 @@ static DRIVER_INIT( batman )
 static DRIVER_INIT( marblmd2 )
 {
 	atarigen_eeprom_default = NULL;
-	atarijsa_init(1, 3, 2, 0x0040);
+	atarijsa_init(1, 2, 1, 0x0100);
 	atarijsa3_init_adpcm(REGION_SOUND1);
 }
 
