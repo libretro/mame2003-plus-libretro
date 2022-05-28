@@ -107,6 +107,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
 * Magic Purple 
+* Marble Madness II (prototype)
 * Master's Fury
 * Match It II * Mature *
 * Megumi Rescue
@@ -855,3 +856,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the Irem GRA20 soundcore to MAME 81 which fixes missing voices and improves the sound more generally for R-Type Leo [arcadez]
 * Added support for Hypernoid to the neogeo driver [arcadez, mahoneyt944]
 * Added Megumi Rescue to the Sega System E driver [Haze, arcadez]
+* Added Marble Madness II (prototype) to the batman driver [arcadez, dink, iq_132, mahoneyt944, MistyDreams]
