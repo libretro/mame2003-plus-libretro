@@ -18,6 +18,7 @@
  *************************************/
 
 UINT8 batman_alpha_tile_bank;
+INT32 mm2_startup; 
 
 
 
@@ -393,11 +394,9 @@ VIDEO_UPDATE( mm2 )
 
     for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-        //uint16_t const *const src = &m_tempbitmap.pix(y);
-		//uint16_t *const dst = &bitmap.pix(y);
             UINT16 *src = (UINT16 *)bitmap->base + bitmap->rowpixels * y;
 			UINT8 *dst = (UINT8 *)priority_bitmap->base + priority_bitmap->rowpixels * y;
-		// top bit of the gfxdata appears to be priority, so we don't want it in the render bitmap
+		/* top bit of the gfxdata appears to be priority, so we don't want it in the render bitmap */
 		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
 		{
 			dst[x] = src[x];
@@ -407,6 +406,21 @@ VIDEO_UPDATE( mm2 )
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
+
+	if (mm2_startup == 0)
+	{
+		mm2_startup = 1;
+		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		{
+			UINT16 *mo = (UINT16 *)mobitmap->base + mobitmap->rowpixels * y;
+
+			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			{
+				mo[x] = 0xffff;
+			}
+		}
+	}
+
 	for (r = 0; r < rectlist.numrects; r++, rectlist.rect++)
 		for (y = rectlist.rect->min_y; y <= rectlist.rect->max_y; y++)
 		{
@@ -417,7 +431,7 @@ VIDEO_UPDATE( mm2 )
 			{
 				if (mo[x] != 0xffff)
 				{
-					if (pri[x] & 0x80) // check against top bit of temp pf render
+					if (pri[x] & 0x80) /* check against top bit of temp pf render */
 					{
 						if (mo[x] & 0x80)
 							pf2[x] = mo[x];
