@@ -6731,9 +6731,9 @@ ROM_START( fantzn2x )
 	ROM_RELOAD  ( 0x220000, 0x10000 )
 	ROM_CONTINUE( 0x260000, 0x10000 )
 	ROM_LOAD16_BYTE( "fz2.a2",  0x280001, 0x10000, CRC(3b4050b7) SHA1(8c7c8051c577a4b2ca54d7e60c100fbd5391551f) )
-	ROM_CONTINUE( 0x2a0001, 0x10000 )
+	ROM_RELOAD( 0x2a0001, 0x10000 )
 	ROM_LOAD16_BYTE( "fz2.b11", 0x280000, 0x10000, CRC(da8a95dc) SHA1(d44e1515008d4ee302f940ce7799fa9a790799e9) )
-	ROM_CONTINUE( 0x2a0000, 0x10000 )
+	ROM_RELOAD( 0x2a0000, 0x10000 )
 
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "fz2.a10", 0x00000, 0x08000, CRC(92c92924) SHA1(3c98cea8f42c316405b28ae03469c6876de5e806) )
@@ -6788,8 +6788,8 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
 	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
 	{ 0xffe082, 0xffe083, ww_io_service_r }, // used or normal port 2 service input.??
-	//{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
-	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
+	{ 0xffc000, 0xfbffff, SYS16_MRA16_WORKINGRAM },
+	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM2 }, // correct for extra ram board.??
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
@@ -6803,8 +6803,8 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xc43034, 0xc43035, MWA16_NOP },
 	{ 0xffe08e, 0xffe08f, sound_command_w },
-//	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
-	{ 0xfc0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, // correct for extra ram board.??
+	{ 0xffc000, 0xfbffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xfc0000, 0xffffff, SYS16_MWA16_WORKINGRAM2, &sys16_workingram2 }, // correct for extra ram board.??
 MEMORY_END
 
 /***************************************************************************/
