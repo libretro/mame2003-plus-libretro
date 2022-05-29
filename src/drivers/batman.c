@@ -56,10 +56,10 @@ static void update_interrupts(void)
 		cpu_set_irq_line(0, 7, CLEAR_LINE);
 }
 
-void mm2_interupt_update(int freq)
+static void mm2_interupt_update(int freq)
 {
 	update_interrupts();
-}	
+}
 
 static MACHINE_INIT( batman )
 {
@@ -180,7 +180,7 @@ static MEMORY_READ16_START( mm2_readmem )
 	{ 0x600030, 0x600031, atarigen_sound_r },
 	{ 0x601000, 0x601fff, atarigen_eeprom_r },
 	{ 0x601000, 0x6013ff, MRA16_RAM }, // some kind of NVRAM?
-	{ 0x7c0000, 0x7c03ff, MRA16_RAM },	
+	{ 0x7c0000, 0x7c03ff, MRA16_RAM },
 	{ 0x7cffc0, 0x7cffff, atarivc_r },
 	{ 0x7d0000, 0x7fbfff, MRA16_RAM },
 MEMORY_END
@@ -218,21 +218,21 @@ INPUT_PORTS_START( marblmd2 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) // also acts as START1
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START /* 600002 input_port_1_word_r */ 
+	PORT_START /* 600002 input_port_1_word_r */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN ) // acts as a 'freeze' input, probably not connected
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) // also acts as START2
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START /* 600010 input_port_2_word_r */ 
+	PORT_START /* 600010 input_port_2_word_r */
 	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )	/* Input buffer full (@260030) */
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )	/* Output buffer full (@260040) */
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	
-	PORT_START /* 600012 input_port_3_word_r */ 
+
+	PORT_START /* 600012 input_port_3_word_r */
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -259,7 +259,7 @@ INPUT_PORTS_START( marblmd2 )
 	PORT_DIPSETTING(      0x0080, "3" )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START /* 600020 input_port_4_word_r */ 
+	PORT_START /* 600020 input_port_4_word_r */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
@@ -388,13 +388,13 @@ static MACHINE_DRIVER_START( batman )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, ATARI_CLOCK_14MHz)
 	MDRV_CPU_MEMORY(main_readmem,main_writemem)
-	
+
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-	
+
 	MDRV_MACHINE_INIT(batman)
 	MDRV_NVRAM_HANDLER(atarigen)
-	
+
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_SIZE(42*8, 30*8)
@@ -402,10 +402,10 @@ static MACHINE_DRIVER_START( batman )
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
 	MDRV_COLORTABLE_LENGTH(2048) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
-	
+
 	MDRV_VIDEO_START(batman)
 	MDRV_VIDEO_UPDATE(batman)
-	
+
 	/* sound hardware */
 	MDRV_IMPORT_FROM(jsa_iii_mono)
 MACHINE_DRIVER_END
@@ -416,13 +416,13 @@ static MACHINE_DRIVER_START( marblmd2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, ATARI_CLOCK_14MHz)
 	MDRV_CPU_MEMORY(mm2_readmem,mm2_writemem)
-	
+
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(marblmd2)
 	MDRV_NVRAM_HANDLER(atarigen)
-	
+
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_SIZE(42*8, 30*8)
@@ -430,10 +430,10 @@ static MACHINE_DRIVER_START( marblmd2 )
 	MDRV_GFXDECODE(gfxdecodeinfo2)
 	MDRV_PALETTE_LENGTH(256)
 	MDRV_COLORTABLE_LENGTH(256) /* can't make colortable_len = 0 because of 0xffff transparency kludge */
-	
+
 	MDRV_VIDEO_START(mm2)
 	MDRV_VIDEO_UPDATE(mm2)
-	
+
 	/* sound hardware */
 	MDRV_IMPORT_FROM(jsa_iii_mono )
 MACHINE_DRIVER_END
