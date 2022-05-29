@@ -6804,7 +6804,7 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0xc43034, 0xc43035, MWA16_NOP },
 	{ 0xffe08e, 0xffe08f, sound_command_w },
 //	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
-	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM, &sys16_workingram }, // correct for extra ram board.??
+	{ 0xfc0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, // correct for extra ram board.??
 MEMORY_END
 
 /***************************************************************************/
