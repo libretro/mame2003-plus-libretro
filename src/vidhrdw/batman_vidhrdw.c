@@ -188,7 +188,6 @@ VIDEO_START( mm2 )
 
 	/* Align playfields */
 	tilemap_set_scrolldx(atarigen_playfield_tilemap, -4, 0);
-	tilemap_set_scrolldx(atarigen_playfield2_tilemap, -4, 0);
 
 	/* initialize the motion objects */
 	if (!atarimo_init(0, &modesc))
