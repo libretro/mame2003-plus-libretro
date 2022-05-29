@@ -56,7 +56,7 @@ static void update_interrupts(void)
 		cpu_set_irq_line(0, 7, CLEAR_LINE);
 }
 
-void mm2_interupt_update(int freq)
+static void mm2_interupt_update(int freq)
 {
 	update_interrupts();
 }
