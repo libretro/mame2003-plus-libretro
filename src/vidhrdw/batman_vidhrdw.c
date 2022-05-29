@@ -18,7 +18,7 @@
  *************************************/
 
 UINT8 batman_alpha_tile_bank;
-INT32 mm2_startup; 
+INT32 mm2_startup;
 
 
 
@@ -51,7 +51,7 @@ static void get_playfield_tile_info(int tile_index)
 static void get_playfield_mm2_tile_info(int tile_index)
 {
 	UINT16 data1 = atarigen_playfield[tile_index];
-  
+
 	int code = data1 & 0x3fff;
 	SET_TILE_INFO(0, code, 0, (data1 >> 15) & 1);
 }
