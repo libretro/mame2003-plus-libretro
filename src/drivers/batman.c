@@ -179,28 +179,31 @@ static MEMORY_READ16_START( mm2_readmem )
 	{ 0x600020, 0x600021, /*600020*/ input_port_4_word_r},
 	{ 0x600030, 0x600031, atarigen_sound_r },
 	{ 0x601000, 0x601fff, atarigen_eeprom_r },
-	{ 0x601000, 0x6013ff, MRA16_RAM }, // some kind of NVRAM?
 	{ 0x7c0000, 0x7c03ff, MRA16_RAM },
 	{ 0x7cffc0, 0x7cffff, atarivc_r },
-	{ 0x7d0000, 0x7fbfff, MRA16_RAM },
+	{ 0x7d0000, 0x7d7fff, MRA16_RAM },
+	{ 0x7d8000, 0x7d9fff, MRA16_RAM },
+	{ 0x7da000, 0x7dbeff, MRA16_RAM },
+	{ 0x7dbf00, 0x7dbf7f, MRA16_RAM },
+	{ 0x7dbf80, 0x7dbfff, MRA16_RAM },
+	{ 0x7f8000, 0x7fbfff, MRA16_RAM },
 MEMORY_END
 
 
 static MEMORY_WRITE16_START( mm2_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
-	{ 0x600050, 0x600051, mm2_latch_w },
 	{ 0x600040, 0x600041, atarigen_sound_w  },
+	{ 0x600050, 0x600051, mm2_latch_w },
 	{ 0x600060, 0x600061, atarigen_eeprom_enable_w },
 	{ 0x601000, 0x601fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
-	{ 0x601000, 0x6013ff, MWA16_RAM }, // some kind of NVRAM?
 	{ 0x607000, 0x607000, MWA16_NOP },
-	{ 0x7d8000, 0x7d9fff, atarigen_playfield_latched_lsb_w, &atarigen_playfield },
- 	{ 0x7da000, 0x7dbeff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
-	{ 0x7dbf00, 0x7dbf7f, MWA16_RAM, &atarivc_eof_data },
-	{ 0x7dbf80, 0x7dbfff, atarimo_0_slipram_w, &atarimo_0_slipram },
 	{ 0x7c0000, 0x7c03ff, atarigen_expanded_666_paletteram_w, &paletteram16 },
 	{ 0x7cffc0, 0x7cffff, atarivc_w, &atarivc_data },
-	{ 0x7d0000, 0x7dffff, MWA16_RAM },
+	{ 0x7d0000, 0x7d7fff, MWA16_RAM },
+	{ 0x7d8000, 0x7d9fff, atarigen_playfield_latched_lsb_w, &atarigen_playfield },
+	{ 0x7da000, 0x7dbeff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
+	{ 0x7dbf00, 0x7dbf7f, MWA16_RAM, &atarivc_eof_data },
+	{ 0x7dbf80, 0x7dbfff, atarimo_0_slipram_w, &atarimo_0_slipram },
 	{ 0x7f8000, 0x7fbfff, MWA16_RAM },
 MEMORY_END
 
