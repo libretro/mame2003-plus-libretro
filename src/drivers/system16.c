@@ -6676,6 +6676,70 @@ ROM_START( wrestwar )
 	ROM_LOAD( "ww.a12", 0x30000, 0x20000, CRC(d6617b19) SHA1(aa36d257eaa52c8c871a39aaa2f29c203525dbaf) )
 ROM_END
 
+ROM_START( fantzn2x )
+	ROM_REGION( 0xc0000, REGION_CPU1, 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "fz2.a7", 0x00000, 0x20000, CRC(94c05f0b) SHA1(53da68a919776a46ae96dbc094ff941308d13613) )
+	ROM_LOAD16_BYTE( "fz2.a5", 0x00001, 0x20000, CRC(f3526895) SHA1(3197956608138601192f111d3bcc26662a7d6ec1) )
+	/* empty 0x40000 - 0x80000 */
+	ROM_LOAD16_BYTE( "fz2.a8", 0x80000, 0x20000, CRC(b2ebb209) SHA1(bd40c90a372ab92a869bdd28d12cf52b45ecc80e) )
+	ROM_LOAD16_BYTE( "fz2.a6", 0x80001, 0x20000, CRC(6833f546) SHA1(b4503cdb5bdb1322c34b9da3ff4227c740dad707) )
+
+	ROM_REGION( 0x60000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
+	ROM_LOAD( "fz2.a14", 0x00000, 0x20000, CRC(1c0a4537) SHA1(3abdf51ea81780309bcfaf12c04efdf7cb15a649) )
+	ROM_LOAD( "fz2.a15", 0x20000, 0x20000, CRC(2b933344) SHA1(5b53ea8d58cc3d157aec6926db048359984e4276) )
+	ROM_LOAD( "fz2.a16", 0x40000, 0x20000, CRC(e63281a1) SHA1(72379c579484c1ef7784a9598d373446ef0a472b) )
+
+	ROM_REGION( 0x300000, REGION_GFX2, 0 ) //* sprites */
+	ROM_LOAD16_BYTE( "fz2.b1",  0x000001, 0x10000, CRC(46bba615) SHA1(b291df4a83d7155eb7606f86ed733c24362a4db3) )
+	ROM_CONTINUE( 0x040001, 0x10000 )
+	ROM_RELOAD  ( 0x020001, 0x10000 )
+	ROM_CONTINUE( 0x060001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b5",  0x000000, 0x10000, CRC(bebeee5d) SHA1(9e57e62c6b9136667aa90d7d423fc33ac6df4352) )
+	ROM_CONTINUE( 0x040000, 0x10000 )
+	ROM_RELOAD  ( 0x020000, 0x10000 )
+	ROM_CONTINUE( 0x060000, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b2",  0x080001, 0x10000, CRC(6681a7b6) SHA1(228df38601ba3895e9449921a64850941715b421) )
+	ROM_CONTINUE( 0x0c0001, 0x10000 )
+	ROM_RELOAD  ( 0x0a0001, 0x10000 )
+	ROM_CONTINUE( 0x0e0001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b6",  0x080000, 0x10000, CRC(42d3241f) SHA1(c3240e3e1d7d398e74e76ba65adca6b06f0f67a9) )
+	ROM_CONTINUE( 0x0c0000, 0x10000 )
+	ROM_RELOAD  ( 0x0a0000, 0x10000 )
+	ROM_CONTINUE( 0x0e0000, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b3",  0x100001, 0x10000, CRC(5863926f) SHA1(0e591c4b85e5d572b3311bec2c1f6d2484204db6) )
+	ROM_CONTINUE( 0x140001, 0x10000 )
+	ROM_RELOAD  ( 0x120001, 0x10000 )
+	ROM_CONTINUE( 0x160001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b7",  0x100000, 0x10000, CRC(cd830510) SHA1(8a32a1aa43f8af5e86f552f05da40b6e4ba12495) )
+	ROM_CONTINUE( 0x140000, 0x10000 )
+	ROM_RELOAD  ( 0x120000, 0x10000 )
+	ROM_CONTINUE( 0x160000, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b4",  0x180001, 0x10000, CRC(b98fa5b6) SHA1(c3f8891f81e80321e2ee5cc1f4d93b1867ed1868) )
+	ROM_CONTINUE( 0x1c0001, 0x10000 )
+	ROM_RELOAD  ( 0x1a0001, 0x10000 )
+	ROM_CONTINUE( 0x1e0001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b8",  0x180000, 0x10000, CRC(e8248f68) SHA1(7876945d2baf1d7bdb9cc3a23be9f1a1681cede9) )
+	ROM_CONTINUE( 0x1c0000, 0x10000 )
+	ROM_RELOAD  ( 0x1a0000, 0x10000 )
+	ROM_CONTINUE( 0x1e0000, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.a1",  0x200001, 0x10000, CRC(9d2f41f3) SHA1(54f5dc47d854cd26b108695f55263d8b8c29ce0e) )
+	ROM_CONTINUE( 0x240001, 0x10000 )
+	ROM_RELOAD  ( 0x220001, 0x10000 )
+	ROM_CONTINUE( 0x260001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b10", 0x200000, 0x10000, CRC(7686ea33) SHA1(812a638f42500b30f80f9a3956c5eb4553cc35d0) )
+	ROM_CONTINUE( 0x240000, 0x10000 )
+	ROM_RELOAD  ( 0x220000, 0x10000 )
+	ROM_CONTINUE( 0x260000, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.a2",  0x280001, 0x10000, CRC(3b4050b7) SHA1(8c7c8051c577a4b2ca54d7e60c100fbd5391551f) )
+	ROM_CONTINUE( 0x2a0001, 0x10000 )
+	ROM_LOAD16_BYTE( "fz2.b11", 0x280000, 0x10000, CRC(da8a95dc) SHA1(d44e1515008d4ee302f940ce7799fa9a790799e9) )
+	ROM_CONTINUE( 0x2a0000, 0x10000 )
+
+	ROM_REGION( 0x50000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_LOAD( "fz2.a10", 0x00000, 0x08000, CRC(92c92924) SHA1(3c98cea8f42c316405b28ae03469c6876de5e806) )
+	ROM_LOAD( "fz2.a11", 0x10000, 0x20000, CRC(8c641bb9) SHA1(920da63961d2f3457c80d4c5f6d4f405374bb23a) )
+ROM_END
+
 /***************************************************************************/
 
 static READ16_HANDLER( ww_io_service_r ){
@@ -6710,6 +6774,39 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
+static MEMORY_READ16_START( fantzn2x_readmem )
+    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
+	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM }, //*
+	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
+	{ 0x300000, 0x300fff, SYS16_MRA16_PALETTERAM },
+	{ 0x400000, 0x400003, SYS16_MRA16_EXTRAM2 },
+	{ 0x500000, 0x53ffff, SYS16_MRA16_EXTRAM3 }, // correct.??
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
+	//{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xffe082, 0xffe083, ww_io_service_r }, // used or normal port 2 service input.??
+	//{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
+MEMORY_END
+
+static MEMORY_WRITE16_START( fantzn2x_writemem )
+    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x110000, 0x111fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x300000, 0x300fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x400000, 0x400003, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
+	{ 0x500000, 0x53ffff, SYS16_MWA16_EXTRAM3, &sys16_extraram3 },
+	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
+	{ 0xc43034, 0xc43035, MWA16_NOP },
+	{ 0xffe08e, 0xffe08f, sound_command_w },
+//	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM, &sys16_workingram }, // correct for extra ram board.??
+MEMORY_END
+
 /***************************************************************************/
 
 static void wrestwar_update_proc( void ){
@@ -6727,7 +6824,7 @@ static MACHINE_INIT( wrestwar ){
 	sys16_bg_priority_mode=2;
 	sys16_bg_priority_value=0x0a00;
 	sys16_update_proc = wrestwar_update_proc;
-	sys16_wwfix = 1; //*
+	sys16_wwfix = 1; 
 }
 
 static DRIVER_INIT( wrestwar ){
@@ -6772,6 +6869,47 @@ PORT_START	/* DSW1 */
 
 INPUT_PORTS_END
 
+INPUT_PORTS_START( fantzn2x )
+	SYS16_JOY1
+	SYS16_JOY2
+	SYS16_SERVICE
+	SYS16_COINAGE
+
+PORT_START	/* DSW1 */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+    PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) ) 
+	PORT_DIPSETTING(    0x08, "2" )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x04, "4" )
+	PORT_DIPSETTING(    0x00, "240 (Cheat)")
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x80, "Easy" )
+	PORT_DIPSETTING(    0xc0, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+INPUT_PORTS_END
+
 /***************************************************************************/
 
 static MACHINE_DRIVER_START( wrestwar )
@@ -6780,6 +6918,16 @@ static MACHINE_DRIVER_START( wrestwar )
 	MDRV_IMPORT_FROM(system16_7759)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(wrestwar_readmem,wrestwar_writemem)
+
+	MDRV_MACHINE_INIT(wrestwar)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( fantzn2x )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 
 	MDRV_MACHINE_INIT(wrestwar)
 MACHINE_DRIVER_END
@@ -7222,3 +7370,4 @@ GAME( 1988, wb3,      0,        wb3,      wb3,      wb3,      ROT0,   "Sega / We
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      wb3,      ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
+GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, wrestwar, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
