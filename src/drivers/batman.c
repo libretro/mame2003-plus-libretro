@@ -56,6 +56,10 @@ static void update_interrupts(void)
 		cpu_set_irq_line(0, 7, CLEAR_LINE);
 }
 
+void mm2_interupt_update(int freq)
+{
+	update_interrupts();
+}	
 
 static MACHINE_INIT( batman )
 {
@@ -72,7 +76,7 @@ static MACHINE_INIT( marblmd2 )
 	atarigen_eeprom_reset();
 	atarivc_reset(atarivc_eof_data, 2);
 	atarigen_interrupt_reset(update_interrupts);
-	atarigen_scanline_timer_reset(batman_scanline_update, 8);
+	atarigen_scanline_timer_reset(mm2_interupt_update,60);
 	atarijsa_reset();
 	mm2_startup = 0;
 }
@@ -87,10 +91,7 @@ static READ16_HANDLER( special_port2_r )
 {
 	int result;
 
- 	if (!strcmp (Machine->gamedrv->name,"marblmd2") )
-	   result = readinputport(5);
-	else
-	   result = readinputport(2);
+   result = readinputport(2);
 
 	if (atarigen_sound_to_cpu_ready) result ^= 0x0010;
 	if (atarigen_cpu_to_sound_ready) result ^= 0x0020;
@@ -118,7 +119,7 @@ static WRITE16_HANDLER( latch_w )
 	}
 }
 
-static WRITE16_HANDLER( mm2_latch_w )
+static WRITE16_HANDLER(latch_w )
 {
 	int oldword = latch_data;
 	COMBINE_DATA(&latch_data);
@@ -128,6 +129,17 @@ static WRITE16_HANDLER( mm2_latch_w )
 		cpu_set_reset_line(1, CLEAR_LINE);
 	else
 		cpu_set_reset_line(1, ASSERT_LINE);
+}
+
+
+static WRITE16_HANDLER( mm2_latch_w )
+{
+	int oldword = latch_data;
+	COMBINE_DATA(&latch_data);
+
+	/* bit 4 is connected to the /RESET pin on the 6502 */
+	if (latch_data & 0x0010)
+		cpu_set_reset_line(1, CLEAR_LINE);
 
 }
 
@@ -174,11 +186,11 @@ MEMORY_END
 
 static MEMORY_READ16_START( mm2_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
-	{ 0x600000, 0x600001, input_port_0_word_r },
-	{ 0x600002, 0x600003, input_port_1_word_r },
-	{ 0x600010, 0x600011, special_port2_r },
-	{ 0x600012, 0x600013, input_port_2_word_r },
-	{ 0x600020, 0x600021, input_port_4_word_r }, 
+	{ 0x600000, 0x600001, /*600000 */ input_port_0_word_r },
+	{ 0x600002, 0x600003, /*600002*/ input_port_1_word_r },
+	{ 0x600010, 0x600011, /*600010*/ special_port2_r },
+	{ 0x600012, 0x600013, /*600012*/ input_port_3_word_r },
+	{ 0x600020, 0x600021, /*600020*/ input_port_4_word_r},
 	{ 0x600030, 0x600031, atarigen_sound_r },
 	{ 0x601000, 0x601fff, atarigen_eeprom_r },
 	{ 0x601000, 0x6013ff, MRA16_RAM }, // some kind of NVRAM?
@@ -213,20 +225,28 @@ MEMORY_END
  *
  *************************************/
 
-INPUT_PORTS_START( marblmd2 )
-	PORT_START	/* 600000 */
+INPUT_PORTS_START( marblmd2 ) /*600000 input_port_0_word_r*/ 
+	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 ) // also acts as START3
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) // also acts as START1
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	/* 600002 */
+	PORT_START /*600002 input_port_1_word_r*/ 
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN ) // acts as a 'freeze' input, probably not connected
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) // also acts as START2
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	/* 600012 */
+	PORT_START /*600010 input_port_2_word_r */ 
+	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )	/* Input buffer full (@260030) */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )	/* Output buffer full (@260040) */
+	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	
+	PORT_START /*600012 input_port_3_word_r */ 
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -253,9 +273,9 @@ INPUT_PORTS_START( marblmd2 )
 	PORT_DIPSETTING(      0x0080, "3" )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	JSA_III_PORT	/* audio board port */
+	
 
-	PORT_START	/* 600020 */
+	PORT_START /*600020 input_port_4_word_r*/ 
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
@@ -270,13 +290,7 @@ INPUT_PORTS_START( marblmd2 )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER3 )
 	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	/* 600010 */
-	PORT_BIT( 0x000f, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )	/* Input buffer full (@260030) */
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )	/* Output buffer full (@260040) */
-	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK )
-	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    JSA_III_PORT	/* audio board port */
 INPUT_PORTS_END
 
 
@@ -304,6 +318,7 @@ INPUT_PORTS_START( batman )
 
 	JSA_III_PORT	/* audio board port */
 INPUT_PORTS_END
+
 
 
 
@@ -555,7 +570,7 @@ static DRIVER_INIT( batman )
 static DRIVER_INIT( marblmd2 )
 {
 	atarigen_eeprom_default = NULL;
-	atarijsa_init(1, 3, 2, 0x0040);
+	atarijsa_init(1, 5, 2, 0x0040);
 	atarijsa3_init_adpcm(REGION_SOUND1);
 }
 
