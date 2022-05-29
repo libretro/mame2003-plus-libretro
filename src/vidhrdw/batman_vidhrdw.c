@@ -410,7 +410,7 @@ VIDEO_UPDATE( mm2 )
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
 
-/*	if (mm2_startup == 0)
+	if (mm2_startup == 0)
 	{
 		mm2_startup = 1;
 		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -423,7 +423,7 @@ VIDEO_UPDATE( mm2 )
 			}
 		}
 	}
-*/
+
 	for (r = 0; r < rectlist.numrects; r++, rectlist.rect++)
 		for (y = rectlist.rect->min_y; y <= rectlist.rect->max_y; y++)
 		{
