@@ -126,6 +126,8 @@ static WRITE16_HANDLER( mm2_latch_w )
 	/* bit 4 is connected to the /RESET pin on the 6502 */
 	if (latch_data & 0x0010)
 		cpu_set_reset_line(1, CLEAR_LINE);
+	else
+		cpu_set_reset_line(1, ASSERT_LINE);
 
 }
 
