@@ -74,6 +74,7 @@ static MACHINE_INIT( marblmd2 )
 	atarigen_interrupt_reset(update_interrupts);
 	atarigen_scanline_timer_reset(batman_scanline_update, 8);
 	atarijsa_reset();
+	mm2_startup = 0;
 }
 
 /*************************************
