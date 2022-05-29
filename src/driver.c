@@ -2876,6 +2876,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( wb3 )		/* (c) 1988 Sega / Westone */
 	DRIVER( wb3bl )		/* (c) 1988 Sega / Westone (but bootleg) */
 	DRIVER( wrestwar )	/* (c) 1989 */
+	DRIVER( fantzn2x )	/* (c) 2008 */
 
 /*
 Sega System 24 game list
