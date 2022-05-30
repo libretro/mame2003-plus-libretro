@@ -6797,8 +6797,8 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x4407FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
-	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0x840000, 0x840FFF, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xFE0006, 0xFE0006, sound_command_w }, // this was best guess need verfied
 MEMORY_END
 
