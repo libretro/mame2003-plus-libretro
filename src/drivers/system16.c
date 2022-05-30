@@ -6892,7 +6892,7 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x30, 0x30, "Timer" ) PORT_DIPLOCATION("SW2:5,6")
+	PORT_DIPNAME( 0x30, 0x30, "Timer" )
 	PORT_DIPSETTING(    0x20, "90" )    /* 210 seconds */
 	PORT_DIPSETTING(    0x30, "80" )    /* 180 seconds */
 	PORT_DIPSETTING(    0x10, "70" )    /* 150 seconds */
