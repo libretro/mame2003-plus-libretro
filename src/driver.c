@@ -5893,6 +5893,5 @@ Other Sun games
   /* Current Tech */
 	DRIVER( mirax )	  /* (c) Current Technologies */
 	DRIVER( miraxa )  /* (c) Current Technologies */
-
-
+	DRIVER( fantzn2x )
 #endif	/* DRIVER_RECURSIVE */
