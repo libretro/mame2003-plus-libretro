@@ -65,6 +65,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Eeekk!
 * ESPGaluda
 * F1 Super Lap (World)
+* Fantasy Zone II - The Tears of Opa-Opa (System 16C version)
 * Final Tetris
 * FixEight (bootleg)
 * Flying Tiger
@@ -857,3 +858,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Hypernoid to the neogeo driver [arcadez, mahoneyt944]
 * Added Megumi Rescue to the Sega System E driver [Haze, arcadez]
 * Added Marble Madness II (prototype) to the batman driver [Haze, MistyDreams, dink, iq_132, arcadez, mahoneyt944]
+* Added Fantasy Zone II - The Tears of Opa-Opa (fantzn2x) to system16 driver [MistyDreams, mahoneyt944, arcadez]
