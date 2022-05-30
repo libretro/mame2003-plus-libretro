@@ -6777,15 +6777,15 @@ MEMORY_END
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
-	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, //rom_5704_bank
+	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
-	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM }, //*
+	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840FFF, SYS16_MRA16_PALETTERAM },
 	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
 	{ 0XC41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dsw1
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // coinage
 	{ 0xFE0006, 0xFE0006, ww_io_service_r },
 MEMORY_END
