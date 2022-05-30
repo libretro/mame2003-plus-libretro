@@ -6780,7 +6780,7 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
-	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
+	{ 0x440000, 0x440FFF, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840FFF, SYS16_MRA16_PALETTERAM },
 	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
 	{ 0XC41002, 0xc41003, input_port_0_word_r }, // player1
@@ -6796,7 +6796,7 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x3F0000, 0x3FFFFF, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x440000, 0x4407FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x440000, 0x440FFF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840FFF, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xFE0006, 0xFE0006, sound_command_w }, // this was best guess need verfied
