@@ -6875,7 +6875,7 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
@@ -6892,6 +6892,11 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x30, "Timer" ) PORT_DIPLOCATION("SW2:5,6")
+	PORT_DIPSETTING(    0x20, "90" )    /* 210 seconds */
+	PORT_DIPSETTING(    0x30, "80" )    /* 180 seconds */
+	PORT_DIPSETTING(    0x10, "70" )    /* 150 seconds */
+	PORT_DIPSETTING(    0x00, "60" )    /* 120 seconds */
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x80, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
