@@ -6783,11 +6783,11 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840FFF, SYS16_MRA16_PALETTERAM },
     // none of these are are confirmed what they do just filled the space
-	{ 0xc41000, 0xc41001, input_port_4_word_r }, 
-	{ 0XC41002, 0xc41003, input_port_3_word_r },
-	{ 0xc41006, 0xc41007, input_port_0_word_r }, // player2
-	{ 0xc42000, 0xc42001, input_port_1_word_r }, // dip2
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
+	{ 0XC41002, 0xc41003, input_port_0_word_r }, // player1
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, // coinage
 	{ 0xFE0006, 0xFE0006, ww_io_service_r },
 MEMORY_END
 
