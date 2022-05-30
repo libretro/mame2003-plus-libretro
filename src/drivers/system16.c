@@ -6775,7 +6775,7 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 MEMORY_END
 
 static MEMORY_READ16_START( fantzn2x_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
 	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM }, //*
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
@@ -6788,12 +6788,12 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
 	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
 	{ 0xffe082, 0xffe083, ww_io_service_r }, // used or normal port 2 service input.??
-	{ 0xffc000, 0xfbffff, SYS16_MRA16_WORKINGRAM },
-	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM2 }, // correct for extra ram board.??
+	//{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+	{ 0xfc0000, 0xffffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x110000, 0x111fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -6803,8 +6803,8 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xc43034, 0xc43035, MWA16_NOP },
 	{ 0xffe08e, 0xffe08f, sound_command_w },
-	{ 0xffc000, 0xfbffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
-	{ 0xfc0000, 0xffffff, SYS16_MWA16_WORKINGRAM2, &sys16_workingram2 }, // correct for extra ram board.??
+	//{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xfc0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, // correct for extra ram board.??
 MEMORY_END
 
 /***************************************************************************/
@@ -6875,7 +6875,7 @@ INPUT_PORTS_START( fantzn2x )
 	SYS16_SERVICE
 	SYS16_COINAGE
 
-PORT_START	/* DSW1 */
+	PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -6888,7 +6888,7 @@ PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) ) 
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) ) 
 	PORT_DIPSETTING(    0x08, "2" )
 	PORT_DIPSETTING(    0x0c, "3" )
 	PORT_DIPSETTING(    0x04, "4" )
@@ -6907,7 +6907,6 @@ PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
 INPUT_PORTS_END
 
 /***************************************************************************/
