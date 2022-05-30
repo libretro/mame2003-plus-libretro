@@ -6782,12 +6782,12 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
+	{ 0xc41000, 0xc41001, ww_io_service_r }, // service
 	{ 0Xc41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
 	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dsw1
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // coinage
-	{ 0xffe082, 0xffe083, ww_io_service_r },
+	//{ 0xfe0006, 0xfe0007, ww_io_service_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
