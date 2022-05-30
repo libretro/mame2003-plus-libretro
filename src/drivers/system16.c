@@ -6787,7 +6787,6 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
 	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dsw1
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // coinage
-	//{ 0xfe0006, 0xfe0007, ww_io_service_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
