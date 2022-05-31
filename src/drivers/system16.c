@@ -6830,7 +6830,8 @@ static DRIVER_INIT( wrestwar ){
 	sys16_rowscroll_scroll=0x8000;
 }
 
-static void fantzn2x_update_proc( void ){
+static void fantzn2x_update_proc( void )
+{
 	set_fg_page( sys16_textram[0x740] );
 	set_bg_page( sys16_textram[0x741] );
 	sys16_fg_scrolly = sys16_textram[0x748];
