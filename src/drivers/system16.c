@@ -6830,6 +6830,18 @@ static DRIVER_INIT( wrestwar ){
 	sys18_splittab_fg_y=&sys16_textram[0x0f00];
 	sys16_rowscroll_scroll=0x8000;
 }
+
+static MACHINE_INIT( fantzn2x )
+{
+	sys16_bg_priority_mode=2;
+	sys16_bg_priority_value=0x0a00;
+	sys16_update_proc = wrestwar_update_proc;
+}
+
+static DRIVER_INIT( fantzn2x )
+{
+	machine_init_sys16_onetime();
+}
 /***************************************************************************/
 
 INPUT_PORTS_START( wrestwar )
@@ -6923,7 +6935,7 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 
-	MDRV_MACHINE_INIT(wrestwar)
+	MDRV_MACHINE_INIT(fantzn2x)
 MACHINE_DRIVER_END
 
 /*****************************************************************************/
@@ -7364,4 +7376,4 @@ GAME( 1988, wb3,      0,        wb3,      wb3,      wb3,      ROT0,   "Sega / We
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      wb3,      ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
-GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, fantzone, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, fantzn2x, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
