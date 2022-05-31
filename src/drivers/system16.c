@@ -6923,7 +6923,7 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 
-	MDRV_MACHINE_INIT(fantzone)
+	MDRV_MACHINE_INIT(wrestwar)
 MACHINE_DRIVER_END
 
 /*****************************************************************************/
