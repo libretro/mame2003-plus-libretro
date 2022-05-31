@@ -552,7 +552,7 @@ static MACHINE_DRIVER_START( opwolfb )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 12000000)	/* 12 MHz ??? */
-	MDRV_CPU_MEMORY(opwolf_readmem,opwolf_writemem)
+	MDRV_CPU_MEMORY(opwolfb_readmem,opwolfb_writemem)
 	MDRV_CPU_VBLANK_INT(irq5_line_hold,1)
 
 	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz ??? */
