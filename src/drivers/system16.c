@@ -6830,9 +6830,22 @@ static DRIVER_INIT( wrestwar ){
 	sys16_rowscroll_scroll=0x8000;
 }
 
+static void fantzn2x_update_proc( void ){
+	set_fg_page( sys16_textram[0x740] );
+	set_bg_page( sys16_textram[0x741] );
+	sys16_fg_scrolly = sys16_textram[0x748];
+	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg_scrollx = sys16_textram[0x74c];
+	sys16_bg_scrollx = sys16_textram[0x74d];
+
+	//set_tile_bank( sys16_extraram[1] );
+	sys16_tile_bank0 = sys16_extraram[0]&0xf;
+	sys16_tile_bank1 = sys16_extraram[1]&0xf;
+}
+
 static MACHINE_INIT( fantzn2x )
 {
-	sys16_update_proc = wrestwar_update_proc;
+	sys16_update_proc = fantzn2_update_proc;
 	sys16_wwfix = 1;
 }
 
