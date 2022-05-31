@@ -6774,9 +6774,28 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
+
+ /*notes
+ wrest war intializes this 
+    set_fg_page( sys16_textram[0x740] );
+	set_bg_page( sys16_textram[0x741] );
+	sys16_fg_scrolly = sys16_textram[0x748];
+	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg_scrollx = sys16_textram[0x74c];
+	sys16_bg_scrollx = sys16_textram[0x74d];
+	set_tile_bank( sys16_extraram[1] );
+	 
+		
+	if you let the attract mode run long enough
+    heap-buffer-overflow src/vidhrdw/system16_vidhrdw.c:1064 in sys16_vh_refresh_helper == 			scroll = sys18_splittab_bg_y[(i+24)>>1];
+	
+	todo check the recent wrest war maps and see exactly where we need to check the bank
+	 
+	*/
+
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM },
+	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM2 },
 	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
@@ -6794,7 +6813,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
     { 0x000000, 0x0bffff, MWA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM },
+	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM2, &sys16_workingram2  },
 	{ 0x3F0000, 0x3FFFFF, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram },
