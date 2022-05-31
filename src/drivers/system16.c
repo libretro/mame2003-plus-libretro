@@ -6773,9 +6773,69 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 	{ 0xffe08e, 0xffe08f, sound_command_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
-
-
  /*notes
+
+available variables
+
+***************************************************************************************************************************************
+int sys16_sh_shadowpal;
+int sys16_MaxShadowColors;
+
+//video driver constants (potentially different for each game) 
+int sys16_gr_bitmap_width;
+int (*sys16_spritesystem)( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
+int *sys16_obj_bank;
+int sys16_sprxoffset;
+int sys16_bgxoffset;
+int sys16_fgxoffset;
+int sys16_textmode;
+int sys16_textlayer_lo_min;
+int sys16_textlayer_lo_max;
+int sys16_textlayer_hi_min;
+int sys16_textlayer_hi_max;
+int sys16_bg1_trans; // alien syn + sys18
+int sys16_bg_priority_mode;
+int sys16_fg_priority_mode;
+int sys16_bg_priority_value;
+int sys16_fg_priority_value;
+int sys16_18_mode;
+int sys16_tilebank_switch;
+int sys16_rowscroll_scroll;
+int sys16_quartet_title_kludge;
+
+// video registers
+int sys16_tile_bank1;
+int sys16_tile_bank0;
+int sys16_refreshenable;
+
+int sys16_bg_scrollx, sys16_bg_scrolly;
+int sys16_bg2_scrollx, sys16_bg2_scrolly;
+int sys16_fg_scrollx, sys16_fg_scrolly;
+int sys16_fg2_scrollx, sys16_fg2_scrolly;
+
+int sys16_bg_page[4];
+int sys16_bg2_page[4];
+int sys16_fg_page[4];
+int sys16_fg2_page[4];
+
+int sys18_bg2_active;
+int sys18_fg2_active;
+data16_t *sys18_splittab_bg_x;
+data16_t *sys18_splittab_bg_y;
+data16_t *sys18_splittab_fg_x;
+data16_t *sys18_splittab_fg_y;
+
+data16_t *sys16_gr_ver;
+data16_t *sys16_gr_hor;
+data16_t *sys16_gr_pal;
+data16_t *sys16_gr_flip;
+int sys16_gr_palette;
+int sys16_gr_palette_default;
+unsigned char sys16_gr_colorflip[2][4];
+data16_t *sys16_gr_second_road;
+
+***************************************************************************************************************************************
+
  wrest war intializes this 
     set_fg_page( sys16_textram[0x740] );
 	set_bg_page( sys16_textram[0x741] );
@@ -6785,13 +6845,14 @@ MEMORY_END
 	sys16_bg_scrollx = sys16_textram[0x74d];
 	set_tile_bank( sys16_extraram[1] );
 	 
-		
+***************************************************************************************************************************************
 	if you let the attract mode run long enough
     heap-buffer-overflow src/vidhrdw/system16_vidhrdw.c:1064 in sys16_vh_refresh_helper == 			scroll = sys18_splittab_bg_y[(i+24)>>1];
+
+
 	
-	todo check the recent wrest war maps and see exactly where we need to check the bank
-	 
-	*/
+	todo check the recent check ecverything lol
+***************************************************************************************************************************************/
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
