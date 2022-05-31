@@ -6833,9 +6833,10 @@ static DRIVER_INIT( wrestwar ){
 
 static MACHINE_INIT( fantzn2x )
 {
-	sys16_bg_priority_mode=2;
+	sys16_bg_priority_mode=1;
 	sys16_bg_priority_value=0x0a00;
 	sys16_update_proc = wrestwar_update_proc;
+	sys16_wwfix = 1;
 }
 
 static DRIVER_INIT( fantzn2x )
