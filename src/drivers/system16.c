@@ -6812,7 +6812,7 @@ static void wrestwar_update_proc( void ){
 	sys16_fg_scrollx = sys16_textram[0x74c];
 	sys16_bg_scrollx = sys16_textram[0x74d];
 
-	set_tile_bank( sys16_extraram[1] );
+	set_tile_bank( sys16_extraram[0] );
 }
 
 static MACHINE_INIT( wrestwar ){
