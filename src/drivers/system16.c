@@ -6788,7 +6788,7 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0xc41006, 0xc41007, input_port_2_word_r }, // needs checked
 	{ 0xc42000, 0xc42001, input_port_3_word_r }, // needs checked
 	{ 0xc42002, 0xc42003, input_port_4_word_r }, // needs ckecked
-	{ 0xFE0006, 0xFE0006, ww_io_service_r },
+	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 
 MEMORY_END
 
@@ -6802,6 +6802,7 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0x840000, 0x840FFF, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xFE0006, 0xFE0006, sound_command_w }, // this was best guess need verfied
+	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
 /***************************************************************************/
