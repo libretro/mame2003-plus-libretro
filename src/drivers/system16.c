@@ -6837,13 +6837,21 @@ data16_t *sys16_gr_second_road;
 ***************************************************************************************************************************************
 
  wrest war intializes this 
-    set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-	set_tile_bank( sys16_extraram[1] );
+  static MACHINE_INIT( wrestwar ){
+	sys16_bg_priority_mode=2;
+	sys16_bg_priority_value=0x0a00;
+	sys16_update_proc = wrestwar_update_proc;
+	sys16_wwfix = 1;
+}
+
+static DRIVER_INIT( wrestwar ){
+	machine_init_sys16_onetime();
+	sys16_bg1_trans=1;
+	sys16_MaxShadowColors=16;
+	sys18_splittab_bg_y=&sys16_textram[0x0f40];
+	sys18_splittab_fg_y=&sys16_textram[0x0f00];
+	sys16_rowscroll_scroll=0x8000;
+}
 	 
 ***************************************************************************************************************************************
 	if you let the attract mode run long enough
@@ -6851,7 +6859,7 @@ data16_t *sys16_gr_second_road;
 
 
 	
-	todo check the recent check ecverything lol
+	todo check the recent check everything lol
 ***************************************************************************************************************************************/
 
 static MEMORY_READ16_START( fantzn2x_readmem )
