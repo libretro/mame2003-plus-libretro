@@ -6773,7 +6773,8 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 	{ 0xffe08e, 0xffe08f, sound_command_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
- /*notes
+
+/*notes
 
 available variables
 
@@ -6857,17 +6858,37 @@ static DRIVER_INIT( wrestwar ){
 	if you let the attract mode run long enough
     heap-buffer-overflow src/vidhrdw/system16_vidhrdw.c:1064 in sys16_vh_refresh_helper == 			scroll = sys18_splittab_bg_y[(i+24)>>1];
 
-
+***************************************************************************************************************************************
 	
-	todo check the recent check everything lol
+see if we need any of these mapped
+
+unmapped memory word write to 00FE0020 = 0002 & 00FF
+unmapped memory word write to 00FE0022 = 0000 & 00FF
+unmapped memory word write to 00FE0024 = 0002 & 00FF
+unmapped memory word write to 00FE0026 = 0008 & 00FF
+unmapped memory word write to 00FE0028 = 0000 & 00FF
+unmapped memory word write to 00FE002A = 003F & 00FF
+unmapped memory word write to 00FE002C = 0002 & 00FF
+unmapped memory word write to 00FE002E = 0020 & 00FF
+unmapped memory word write to 00FE0030 = 0004 & 00FF
+unmapped memory word write to 00FE0032 = 0044 & 00FF
+unmapped memory word write to 00FE0034 = 000D & 00FF
+unmapped memory word write to 00FE0036 = 0040 & 00FF
+unmapped memory word write to 00FE0038 = 0000 & 00FF
+unmapped memory word write to 00FE003A = 0084 & 00FF
+unmapped memory word write to 00FE003C = 0000 & 00FF
+unmapped memory word write to 00FE003E = 00C4 & 00FF
+
 ***************************************************************************************************************************************/
+
+
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM2 },
+	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM },
 	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
-	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
+	{ 0x410000, 0x411FFF, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840FFF, SYS16_MRA16_PALETTERAM },
 	// none of these are are confirmed what they do just filled the space
@@ -6876,21 +6897,20 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0xc41006, 0xc41007, input_port_2_word_r }, // needs checked
 	{ 0xc42000, 0xc42001, input_port_3_word_r }, // needs checked
 	{ 0xc42002, 0xc42003, input_port_4_word_r }, // needs ckecked
-	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
     { 0x000000, 0x0bffff, MWA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM2, &sys16_workingram2  },
+	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM, &sys16_workingram  },
 	{ 0x3F0000, 0x3FFFFF, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
-	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram }, //should be  0x410FFF scroll = sys18_splittab_bg_y[(i+24)>>1]; will cause segfault if its not set higher see notes
 	{ 0x440000, 0x4407FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0x840000, 0x840FFF, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xFE0006, 0xFE0006, sound_command_w }, // this was best guess need verfied
-	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+
 MEMORY_END
 
 /***************************************************************************/
