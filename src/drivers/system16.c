@@ -6885,8 +6885,8 @@ unmapped memory word write to 00FE003E = 00C4 & 00FF
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM },
-	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, //rom_5704_bank
+	{ 0x200000, 0x23FFFF, MRA16_RAM }, 
+	{ 0x3F0000, 0x3FFFFF, MRA16_RAM, }, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x411FFF, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
@@ -6902,8 +6902,8 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
     { 0x000000, 0x0bffff, MWA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM, &sys16_workingram  },
-	{ 0x3F0000, 0x3FFFFF, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
+	{ 0x200000, 0x23FFFF, MWA16_RAM }, //workingram
+	{ 0x3F0000, 0x3FFFFF, sys16_tilebank_w }, //rom_5704_bank
 	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram }, //should be  0x410FFF scroll = sys18_splittab_bg_y[(i+24)>>1]; will cause segfault if its not set higher see notes
 	{ 0x440000, 0x4407FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -6915,6 +6915,33 @@ MEMORY_END
 
 /***************************************************************************/
 
+
+static void fantzn2x_update_proc( void ){
+	set_fg_page( sys16_textram[0x740] );
+	set_bg_page( sys16_textram[0x741] );
+	sys16_fg_scrolly = sys16_textram[0x748];
+	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg_scrollx = sys16_textram[0x74c];
+	sys16_bg_scrollx = sys16_textram[0x74d];
+	
+}
+
+
+static MACHINE_INIT( fantzn2x ){
+	sys16_update_proc = fantzn2x_update_proc;
+	sys16_wwfix = 1;
+}
+
+static DRIVER_INIT( fantzn2x ){
+	machine_init_sys16_onetime();
+	sys16_bg1_trans=1;
+	sys16_MaxShadowColors=16;
+    sys18_splittab_fg_x= &sys16_textram[0x7c0];
+	sys18_splittab_bg_x= &sys16_textram[0x7e0];
+}
+
+
+
 static void wrestwar_update_proc( void ){
 	set_fg_page( sys16_textram[0x740] );
 	set_bg_page( sys16_textram[0x741] );
@@ -6922,7 +6949,6 @@ static void wrestwar_update_proc( void ){
 	sys16_bg_scrolly = sys16_textram[0x749];
 	sys16_fg_scrollx = sys16_textram[0x74c];
 	sys16_bg_scrollx = sys16_textram[0x74d];
-
 	set_tile_bank( sys16_extraram[1] );
 }
 
@@ -7035,7 +7061,7 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 
-	MDRV_MACHINE_INIT(wrestwar)
+	MDRV_MACHINE_INIT(fantzn2x)
 MACHINE_DRIVER_END
 
 /*****************************************************************************/
@@ -7476,4 +7502,4 @@ GAME( 1988, wb3,      0,        wb3,      wb3,      wb3,      ROT0,   "Sega / We
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      wb3,      ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
-GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, wrestwar, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, fantzn2x, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
