@@ -6836,10 +6836,16 @@ static void fantzn2x_update_proc( void )
 	set_bg_page( sys16_textram[0x741] );
 	sys16_fg_scrolly = sys16_textram[0x748];
 	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg2_scrolly= sys16_textram[0x74a];
+	sys16_bg2_scrolly= sys16_textram[0x74b];
 	sys16_fg_scrollx = sys16_textram[0x74c];
 	sys16_bg_scrollx = sys16_textram[0x74d];
+	sys16_fg2_scrollx= sys16_textram[0x74e];
+	sys16_bg2_scrollx= sys16_textram[0x74f];
 
-	//set_tile_bank( sys16_extraram[1] );
+	sys18_splittab_fg_x= &sys16_textram[0x7c0];
+	sys18_splittab_bg_x= &sys16_textram[0x7e0];
+
 	sys16_tile_bank0 = sys16_extraram[0]&0xf;
 	sys16_tile_bank1 = sys16_extraram[1]&0xf;
 }
