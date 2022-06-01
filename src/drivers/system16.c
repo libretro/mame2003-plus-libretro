@@ -7060,7 +7060,8 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_IMPORT_FROM(system16_7759)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
-
+    MDRV_VIDEO_START(system18)
+	MDRV_VIDEO_UPDATE(system18)
 	MDRV_MACHINE_INIT(fantzn2x)
 MACHINE_DRIVER_END
 
