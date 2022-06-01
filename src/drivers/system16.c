@@ -6776,30 +6776,29 @@ MEMORY_END
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
-	{ 0x3F0000, 0x3FFFFF, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
-	{ 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
-	{ 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
-	{ 0x440000, 0x4407FF, SYS16_MRA16_SPRITERAM },
-	{ 0x840000, 0x840FFF, SYS16_MRA16_PALETTERAM },
+	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
+	{ 0x3f0000, 0x3fffff, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
+	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
+	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
+	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
+	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0XC41002, 0xc41003, input_port_0_word_r }, // player1
+	{ 0Xc41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
 	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dsw1
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // coinage
-	{ 0xFE0006, 0xFE0006, ww_io_service_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
-	{ 0x200000, 0x23FFFF, SYS16_MWA16_WORKINGRAM },
-	{ 0x3F0000, 0x3FFFFF, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
-	{ 0x400000, 0x40FFFF, SYS16_MWA16_TILERAM, &sys16_tileram },
-	{ 0x410000, 0x410FFF, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x440000, 0x4407FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x200000, 0x23ffff, SYS16_MWA16_WORKINGRAM },
+	{ 0x3f0000, 0x3fffff, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
+	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0x840000, 0x840FFF, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0xFE0006, 0xFE0006, sound_command_w }, // this was best guess need verfied
+	{ 0xfe0006, 0xfe0007, sound_command_w }, // this was best guess need verfied
 MEMORY_END
 
 /***************************************************************************/
@@ -6829,6 +6828,30 @@ static DRIVER_INIT( wrestwar ){
 	sys18_splittab_bg_y=&sys16_textram[0x0f40];
 	sys18_splittab_fg_y=&sys16_textram[0x0f00];
 	sys16_rowscroll_scroll=0x8000;
+}
+
+static void fantzn2x_update_proc( void )
+{
+	set_fg_page( sys16_textram[0x740] );
+	set_bg_page( sys16_textram[0x741] );
+	sys16_fg_scrolly = sys16_textram[0x748];
+	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg_scrollx = sys16_textram[0x74c];
+	sys16_bg_scrollx = sys16_textram[0x74d];
+
+	sys16_tile_bank0 = sys16_extraram[0]&0xf;
+	sys16_tile_bank1 = sys16_extraram[1]&0xf;
+}
+
+static MACHINE_INIT( fantzn2x )
+{
+	sys16_update_proc = fantzn2x_update_proc;
+	sys16_wwfix = 1;
+}
+
+static DRIVER_INIT( fantzn2x )
+{
+	machine_init_sys16_onetime();
 }
 /***************************************************************************/
 
@@ -6923,7 +6946,7 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 
-	MDRV_MACHINE_INIT(wrestwar)
+	MDRV_MACHINE_INIT(fantzn2x)
 MACHINE_DRIVER_END
 
 /*****************************************************************************/
@@ -7364,4 +7387,4 @@ GAME( 1988, wb3,      0,        wb3,      wb3,      wb3,      ROT0,   "Sega / We
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      wb3,      ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
-GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, wrestwar, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, fantzn2x, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
