@@ -1180,6 +1180,8 @@ static void sys18_vh_screenrefresh_helper( void ){
 }
 
 VIDEO_UPDATE( system16 ){
+	usrintf_showmessage("%s", sys16_sprxoffset);
+
 	if (!sys16_refreshenable) return;
 
 	if( sys16_update_proc ) sys16_update_proc();
