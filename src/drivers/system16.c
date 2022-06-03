@@ -6663,7 +6663,8 @@ MEMORY_END
 
 static void wrestwar_update_proc( void ){
 	type0_sys16_textram();
-	set_tile_bank( sys16_extraram[1] );
+	sys16_tile_bank0 = sys16_extraram[0]&0xf;
+	sys16_tile_bank1 = sys16_extraram[1]&0xf;
 }
 
 static MACHINE_INIT( wrestwar ){
