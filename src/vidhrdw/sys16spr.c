@@ -69,7 +69,7 @@ int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *
 		// Having zoomy set to zoomx when zoomy is zero heavily distorts the multi-sprite opponents in hwchamp
 		//if( zoomy==0 || source[6]==0xffff ) zoomy = zoomx; /* if zoomy is 0, use zoomx instead */
 		
-		sprite->x = source[1] + sys16_sprxoffset;
+		sprite->x = (source[1] &0x1ff) + sys16_sprxoffset;
 		sprite->y = top;
 		sprite->priority = (attributes>>6)&0x3;
 		sprite->color = 1024/16 + (attributes&0x3f);
