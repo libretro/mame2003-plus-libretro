@@ -7063,7 +7063,7 @@ GAME( 1986, quartt2j, quartet,  quartet2, quartet2, s16dummy, ROT0,   "Sega",   
 
 /* System16A */
 /*          rom       parent    machine   inp       init */
-GAMEX(19??, afighter, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",     "Action Fighter", GAME_NOT_WORKING )
+GAMEX(19??, afighter, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Action Fighter", GAME_NOT_WORKING )
 GAMEX(1986, alexkidd, 0,        alexkidd, alexkidd, s16dummy, ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 1)", GAME_NOT_WORKING )
 GAME( 1986, alexkida, alexkidd, alexkidd, alexkidd, s16dummy, ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 2)" )
 GAME( 1986, fantzone, 0,        fantzone, fantzone, s16dummy, ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
@@ -7081,7 +7081,7 @@ GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   s16dummy, ROT0,   "Sega",   
 
 /* System16B */
 /*          rom       parent    machine   inp       init */
-GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Ace Attacker", GAME_NOT_WORKING )
+GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
 GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  s16dummy, ROT0,   "Philko",  "Atomic Point", GAME_NO_SOUND )
 GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
 GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
@@ -7098,15 +7098,15 @@ GAMEX(1989, bayrtbl1, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg",
 GAMEX(1989, bayrtbl2, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 2)", GAME_NOT_WORKING )
 /* Bullet */
 /* Charon */
-GAMEX(19??, cotton,   0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Cotton (Japan)", GAME_NOT_WORKING )
-GAMEX(19??, cottona,  cotton,   s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Cotton", GAME_NOT_WORKING )
-GAMEX(19??, dunkshot, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Dunk Shot", GAME_NOT_WORKING )
+GAMEX(19??, cotton,   0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Cotton (Japan)", GAME_NOT_WORKING )
+GAMEX(19??, cottona,  cotton,   s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Cotton", GAME_NOT_WORKING )
+GAMEX(19??, dunkshot, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Dunk Shot", GAME_NOT_WORKING )
 GAME( 1989, dduxbl,   0,        dduxbl,   dduxbl,   dduxbl,   ROT0,   "bootleg", "Dynamite Dux (bootleg)" )
 GAMEX(1989, eswat,    0,        eswat,    eswat,    eswat,    ROT0,   "Sega",    "E-Swat - Cyber Police", GAME_NOT_WORKING )
 GAME( 1989, eswatbl,  eswat,    eswat,    eswat,    eswat,    ROT0,   "bootleg", "E-Swat - Cyber Police (bootleg)" )
-GAMEX(19??, exctleag, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Excite League", GAME_NOT_WORKING )
+GAMEX(19??, exctleag, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Excite League", GAME_NOT_WORKING )
 
-GAMEX(1989, fpoint,   0,        fpoint,   fpoint,   s16dummy,   ROT0,   "Sega",    "Flash Point", GAME_NOT_WORKING )
+GAMEX(1989, fpoint,   0,        fpoint,   fpoint,   s16dummy, ROT0,   "Sega",    "Flash Point", GAME_NOT_WORKING )
 GAME( 1989, fpointbl, fpoint,   fpointbl, fpoint,   fpointbl, ROT0,   "bootleg", "Flash Point (World, bootleg)" )
 GAME( 1989, fpointbj, fpoint,   fpointbl, fpointbj, fpointbl, ROT0,   "bootleg", "Flash Point (Japan, bootleg)" )
 
@@ -7127,7 +7127,7 @@ GAME( 1991, riotcity, 0,        riotcity, riotcity, s16dummy, ROT0,   "Sega / We
 GAME( 1987, sonicbom, 0,        sonicbom, sonicbom, sonicbom, ROT270, "Sega",    "Sonic Boom" )
 /* SDI */
 /* Sukeban Jansi Ryuko */
-GAMEX(19??, suprleag, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega", "Super League", GAME_NOT_WORKING )
+GAMEX(19??, suprleag, 0,        s16dummy, s16dummy, s16dummy, ROT0,   "Sega",    "Super League", GAME_NOT_WORKING )
 /* Tetris */
 GAME( 1987, timscanr, 0,        timscanr, timscanr, s16dummy, ROT270, "Sega",    "Time Scanner" )
 GAME (1994, toryumon, 0,        toryumon, toryumon, s16dummy, ROT0,   "Sega",    "Toryumon" )
@@ -7138,4 +7138,4 @@ GAME( 1988, wb3,      0,        wb3,      wb3,      s16dummy, ROT0,   "Sega / We
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      s16dummy, ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
-GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, s16dummy, ROT0,   "Sega",  "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, s16dummy, ROT0,   "Sega",    "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
