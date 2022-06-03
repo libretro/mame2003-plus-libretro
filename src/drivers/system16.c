@@ -1503,7 +1503,7 @@ static DRIVER_INIT( auraila )
 	data16_t *rom = (data16_t *)memory_region(REGION_CPU1);
 	int diff = 0x40000;	/* place decrypted opcodes in a empty hole */
 
-	init_aurail();
+	init_s16dummy();
 
 	memory_set_opcode_base(0,rom+diff/2);
 
