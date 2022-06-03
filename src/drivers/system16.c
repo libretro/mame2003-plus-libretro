@@ -6845,6 +6845,7 @@ static void fantzn2x_update_proc( void )
 
 static MACHINE_INIT( fantzn2x )
 {
+	sys16_spritesystem = sys16_sprite_fantzn2x;
 	sys16_update_proc = fantzn2x_update_proc;
 	sys16_wwfix = 1;
 }
