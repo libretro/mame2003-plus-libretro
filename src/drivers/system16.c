@@ -588,6 +588,17 @@ static void set_bg2_page( int data ){
 }
 #endif
 
+
+static void type0_sys16_textram( void )
+{
+	set_fg_page( sys16_textram[0x740] );
+	set_bg_page( sys16_textram[0x741] );
+	sys16_fg_scrolly = sys16_textram[0x748];
+	sys16_bg_scrolly = sys16_textram[0x749];
+	sys16_fg_scrollx = sys16_textram[0x74c];
+	sys16_bg_scrollx = sys16_textram[0x74d];
+}
+
 /***************************************************************************/
 // sys16A
 ROM_START( alexkidd )
@@ -920,14 +931,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void aliensyn_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( aliensyn ){
 	static int bank[16] = {
@@ -941,7 +944,7 @@ static MACHINE_INIT( aliensyn ){
 	sys16_bg_priority_mode=1;
 	sys16_fg_priority_mode=1;
 
-	sys16_update_proc = aliensyn_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 
 	sys16_alienfix = 1; //*
 }
@@ -1125,17 +1128,9 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void altbeast_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( altbeast ){
-	sys16_update_proc = altbeast_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static MACHINE_INIT( altbeas2 ){
@@ -1150,7 +1145,7 @@ static MACHINE_INIT( altbeas2 ){
 		0x07,0x00
 	};
 	sys16_obj_bank = bank;
-	sys16_update_proc = altbeast_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( altbeast )
@@ -1274,17 +1269,9 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void atomicp_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( atomicp ){
-	sys16_update_proc = atomicp_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( atomicp )
@@ -1522,20 +1509,11 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void aurail_update_proc (void){
-	sys16_fg_scrollx = sys16_textram[0x0e98/2];
-	sys16_bg_scrollx = sys16_textram[0x0e9a/2];
-	sys16_fg_scrolly = sys16_textram[0x0e90/2];
-	sys16_bg_scrolly = sys16_textram[0x0e92/2];
-
-	set_fg_page( sys16_textram[0x0e80/2] );
-	set_bg_page( sys16_textram[0x0e82/2] );
-}
 
 static MACHINE_INIT( aurail ){
   	sys16_spritesystem = sys16_sprite_shinobi;
 	sys16_bg_priority_mode=1;
-	sys16_update_proc = aurail_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( aurail )
@@ -1754,14 +1732,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void bayroute_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( bayroute ){
 	static int bank[16] = {
@@ -1771,7 +1741,7 @@ static MACHINE_INIT( bayroute ){
 		0,1,0,0
 	};
 	sys16_obj_bank = bank;
-	sys16_update_proc = bayroute_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_spritesystem = sys16_sprite_shinobi;
 }
 
@@ -2775,14 +2745,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void fpoint_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( fpoint ){
 
@@ -2810,7 +2772,7 @@ static MACHINE_INIT( fpoint ){
 	sys16_patch_code( 0x2c8, 0x4e );
 	sys16_patch_code( 0x2c9, 0x75 );
 
-	sys16_update_proc = fpoint_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( fpoint ){
@@ -3127,13 +3089,7 @@ MEMORY_END
 /***************************************************************************/
 
 static void goldnaxe_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
+	type0_sys16_textram();
 	set_tile_bank( sys16_workingram[0x2c94/2] );
 }
 
@@ -3368,16 +3324,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void goldnaxa_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
-	set_tile_bank( sys16_workingram[0x2c94/2] );
-}
 
 static MACHINE_INIT( goldnaxa ){
 	static int bank[16] = {
@@ -3391,7 +3337,7 @@ static MACHINE_INIT( goldnaxa ){
 	sys16_patch_code( 0x3CA2, 0x60 );
 	sys16_patch_code( 0x3CA3, 0x1e );
 	sys16_sprxoffset = -0xb8;
-	sys16_update_proc = goldnaxa_update_proc;
+	sys16_update_proc = goldnaxe_update_proc;
 }
 
 /***************************************************************************/
@@ -3555,13 +3501,7 @@ MEMORY_END
 /***************************************************************************/
 
 static void hwchamp_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
+	type0_sys16_textram();
 	sys16_tile_bank0 = sys16_extraram[0]&0xf;
 	sys16_tile_bank1 = sys16_extraram[1]&0xf;
 }
@@ -4746,16 +4686,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void riotcity_update_proc (void)
-{
-	sys16_fg_scrollx = sys16_textram[0x0e98/2];
-	sys16_bg_scrollx = sys16_textram[0x0e9a/2];
-	sys16_fg_scrolly = sys16_textram[0x0e90/2];
-	sys16_bg_scrolly = sys16_textram[0x0e92/2];
-
-	set_fg_page( sys16_textram[0x0e80/2] );
-	set_bg_page( sys16_textram[0x0e82/2] );
-}
 
 static MACHINE_INIT( riotcity ){
 	static int bank[16] = {
@@ -4768,7 +4698,7 @@ static MACHINE_INIT( riotcity ){
 	sys16_spritesystem = sys16_sprite_shinobi;
 	sys16_bg_priority_mode=1;
 
-	sys16_update_proc = riotcity_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( riotcity )
@@ -4927,14 +4857,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void sdi_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( sdi ){
 	static int bank[16] = {
@@ -4948,7 +4870,7 @@ static MACHINE_INIT( sdi ){
 	sys16_patch_code( 0x102f2, 0x00 );
 	sys16_patch_code( 0x102f3, 0x02 );
 
-	sys16_update_proc = sdi_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( sdi ){
@@ -5133,14 +5055,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void shinobi_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( shinobi ){
 	static int bank[16] = {
@@ -5150,7 +5064,7 @@ static MACHINE_INIT( shinobi ){
 		0,1,0,0
 	};
 	sys16_obj_bank = bank;
-	sys16_update_proc = shinobi_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( shinobi )
@@ -5374,22 +5288,12 @@ static MEMORY_WRITE16_START( sonicbom_writemem )
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
-static void sonicbom_update_proc( void )
-{
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
-	set_fg_page( sys16_textram[0xe80/2] );
-	set_bg_page( sys16_textram[0xe82/2] );
-}
 
 static MACHINE_INIT( sonicbom )
 {
 //	fd1094_machine_init(); using the decrypted version
 //	sys16_sprxoffset = -0x40;
-	sys16_update_proc = sonicbom_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( sonicbom )
@@ -5703,14 +5607,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void timscanr_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( timscanr ){
 	static int bank[16] = {
@@ -5722,7 +5618,7 @@ static MACHINE_INIT( timscanr ){
 	sys16_obj_bank = bank;
 
 	sys16_textmode=1;
-	sys16_update_proc = timscanr_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = -1; //*
 }
 
@@ -5870,17 +5766,9 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void toryumon_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( toryumon ){
-	sys16_update_proc = toryumon_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( toryumon )
@@ -6091,19 +5979,11 @@ static WRITE16_HANDLER( tturf_mcu_sound_trigger_w )
 }
 
 
-static void tturf_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( tturf ){
 	static int bank[16] = { 0,0,1,0,2,0,3,0 };
 	sys16_obj_bank = bank;
-	sys16_update_proc = tturf_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 
 	install_mem_write16_handler(0, 0x2001d6, 0x2001e5, tturf_mcu_sound_trigger_w );
 
@@ -6117,7 +5997,7 @@ static MACHINE_INIT( tturfu ){
 		0,2,3,0
 	};
 	sys16_obj_bank = bank;
-	sys16_update_proc = tturf_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	install_mem_write16_handler(0, 0x2001d6, 0x2001e5, tturfu_mcu_sound_trigger_w );
 }
 
@@ -6402,14 +6282,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void wb3_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-}
 
 static MACHINE_INIT( wb3 ){
 	static int bank[16] = {
@@ -6423,7 +6295,7 @@ static MACHINE_INIT( wb3 ){
 		0,0
 	};
 	sys16_obj_bank = bank;
-	sys16_update_proc = wb3_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( wb3 ){
@@ -6804,13 +6676,7 @@ MEMORY_END
 /***************************************************************************/
 
 static void wrestwar_update_proc( void ){
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
+	type0_sys16_textram();
 	set_tile_bank( sys16_extraram[1] );
 }
 
@@ -6832,13 +6698,7 @@ static DRIVER_INIT( wrestwar ){
 
 static void fantzn2x_update_proc( void )
 {
-	set_fg_page( sys16_textram[0x740] );
-	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
-
+	type0_sys16_textram();
 	sys16_tile_bank0 = sys16_extraram[0]&0xf;
 	sys16_tile_bank1 = sys16_extraram[1]&0xf;
 }
