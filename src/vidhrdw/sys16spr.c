@@ -435,3 +435,55 @@ int sys16_sprite_aburner( struct sys16_sprite_attributes *sprite, const UINT16 *
 	}
 	return 0;
 }
+
+int sys16_sprite_fantzn2x( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor ){
+/*
+	0	YYYYYYYY	YYYYYYYY	top, bottom (screen coordinates)
+	1	-------X	XXXXXXXX	left (screen coordinate)
+	2	EH------F	WWWWWWWW	end list flag, hide sprite flag, flipx, signed pitch
+	3	TTTTTTTT	TTTTTTTT	word offset for start of sprite data; each word is 16 bits (4 pixels)
+	4	----BBBB	PPCCCCCC	attributes: bank, priority, color
+	5	------YY	YYYXXXXX	zoomy, zoomx
+	6	--------	--------	
+	7	--------	--------
+*/
+	extern int sys16_wwfix; //*
+	UINT16 ypos = source[0];
+	UINT16 width = source[2];
+	int top = ypos&0xff;
+	int bottom = ypos>>8;
+	if(width & 0x8000) return 1; // End of list bit set
+	if(width & 0x4000) return 0; // Hide this sprite bit set
+	if(top >= bottom || top >= 0xe0) return 0; // Invalid height or off-screen
+	if(bottom >= 0xe0) bottom = 0xe0; // Clip bottom of sprite
+	
+	{
+		UINT16 attributes = source[4];
+
+		UINT16 zoomx = source[5] & 0x1F;
+		UINT16 zoomy = (source[5] >> 5) & 0x1F;
+			
+		// Rest of rendering code expects zoom to be 10 bits
+		zoomx <<= 5;
+		zoomy <<= 5;
+
+		// Having zoomy set to zoomx when zoomy is zero heavily distorts the multi-sprite opponents in hwchamp
+		//if( zoomy==0 || source[6]==0xffff ) zoomy = zoomx; /* if zoomy is 0, use zoomx instead */
+		
+		sprite->x = ((source[1] & 0x1ff) + sys16_sprxoffset);
+		sprite->y = top;
+		sprite->priority = (attributes>>6)&0x3;
+		sprite->color = 1024/16 + (attributes&0x3f);
+		sprite->screen_height = bottom-top;
+		sprite->flags = SYS16_SPR_VISIBLE;
+		if( width&0x100 ) sprite->flags |= SYS16_SPR_FLIPX;
+#ifdef TRANSPARENT_SHADOWS
+		if ((attributes&0x3f)==0x3f) sprite->flags|= SYS16_SPR_SHADOW;
+#endif
+		sprite->zoomx = zoomx;
+		sprite->zoomy = zoomy;
+		sprite->pitch = source[2]&0xff;
+		sprite->gfx = ( source[3] + (sys16_obj_bank[(attributes>>8)&0xf]<<(16+sys16_wwfix)) ) << 1; //*
+	}
+	return 0;
+}
