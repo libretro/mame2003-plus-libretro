@@ -28,6 +28,7 @@ extern int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UI
 extern int sys16_sprite_sharrier( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_outrun( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_aburner( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
+extern int sys16_sprite_fantzn2x( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 
 #define TRANSPARENT_SHADOWS
 
