@@ -931,7 +931,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( aliensyn ){
 	static int bank[16] = {
 		0,0,0,0,
@@ -1128,7 +1127,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( altbeast ){
 	sys16_update_proc = type0_sys16_textram;
 }
@@ -1268,7 +1266,6 @@ static MEMORY_WRITE16_START( atomicp_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( atomicp ){
 	sys16_update_proc = type0_sys16_textram;
@@ -1509,7 +1506,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( aurail ){
   	sys16_spritesystem = sys16_sprite_shinobi;
 	sys16_bg_priority_mode=1;
@@ -1731,7 +1727,6 @@ static MEMORY_WRITE16_START( bayroute_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( bayroute ){
 	static int bank[16] = {
@@ -2745,7 +2740,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( fpoint ){
 
 	sys16_patch_code( 0x454, 0x33 );
@@ -3323,7 +3317,6 @@ static MEMORY_WRITE16_START( goldnaxa_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( goldnaxa ){
 	static int bank[16] = {
@@ -4686,7 +4679,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( riotcity ){
 	static int bank[16] = {
 		0x0,0x1,0x4,0x5,
@@ -4856,7 +4848,6 @@ static MEMORY_WRITE16_START( sdi_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( sdi ){
 	static int bank[16] = {
@@ -5054,7 +5045,6 @@ static MEMORY_WRITE16_START( shinobi_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( shinobi ){
 	static int bank[16] = {
@@ -5607,7 +5597,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-
 static MACHINE_INIT( timscanr ){
 	static int bank[16] = {
 		0,0,0,0,
@@ -5765,7 +5754,6 @@ static MEMORY_WRITE16_START( toryumon_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( toryumon ){
 	sys16_update_proc = type0_sys16_textram;
@@ -5977,7 +5965,6 @@ static WRITE16_HANDLER( tturf_mcu_sound_trigger_w )
 		cpu_set_irq_line(1, 0, HOLD_LINE);
 	}
 }
-
 
 
 static MACHINE_INIT( tturf ){
@@ -6281,7 +6268,6 @@ static MEMORY_WRITE16_START( wb3_writemem )
 MEMORY_END
 
 /***************************************************************************/
-
 
 static MACHINE_INIT( wb3 ){
 	static int bank[16] = {
