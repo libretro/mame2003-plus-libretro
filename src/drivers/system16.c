@@ -6542,7 +6542,6 @@ MEMORY_END
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
-	{ 0x3f0000, 0x3fffff, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -6557,7 +6556,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, SYS16_MWA16_WORKINGRAM },
-	{ 0x3f0000, 0x3fffff, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
+	{ 0x3f0000, 0x3fffff, sys16_tilebank_w }, //rom_5704_bank
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -6589,17 +6588,10 @@ static DRIVER_INIT( wrestwar ){
 	sys16_rowscroll_scroll=0x8000;
 }
 
-static void fantzn2x_update_proc( void )
-{
-	type0_sys16_textram();
-	sys16_tile_bank0 = sys16_extraram[0]&0xf;
-	sys16_tile_bank1 = sys16_extraram[1]&0xf;
-}
-
 static MACHINE_INIT( fantzn2x )
 {
 	sys16_spritesystem = sys16_sprite_fantzn2x;
-	sys16_update_proc = fantzn2x_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = 1;
 }
 
