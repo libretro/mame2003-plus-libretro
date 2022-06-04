@@ -3426,7 +3426,6 @@ static WRITE16_HANDLER( hwc_ctrl2_w ){
 
 static MEMORY_READ16_START( hwchamp_readmem )
     { 0x000000, 0x03ffff, MRA16_ROM },
-	{ 0x3f0000, 0x3fffff, SYS16_MRA16_EXTRAM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3439,8 +3438,8 @@ static MEMORY_READ16_START( hwchamp_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( hwchamp_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x3f0000, 0x3fffff, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -3454,14 +3453,8 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void hwchamp_update_proc( void ){
-	type0_sys16_textram();
-	sys16_tile_bank0 = sys16_extraram[0]&0xf;
-	sys16_tile_bank1 = sys16_extraram[1]&0xf;
-}
-
 static MACHINE_INIT( hwchamp ){
-	sys16_update_proc = hwchamp_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = 1; //*
 }
 
@@ -6541,7 +6534,7 @@ MEMORY_END
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
+	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -6562,7 +6555,7 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0xfe0006, 0xfe0007, sound_command_w }, // this was best guess need verfied
+	{ 0xfe0006, 0xfe0007, sound_command_w },
 MEMORY_END
 
 /***************************************************************************/
@@ -6576,7 +6569,7 @@ static MACHINE_INIT( wrestwar ){
 	sys16_bg_priority_mode=2;
 	sys16_bg_priority_value=0x0a00;
 	sys16_update_proc = wrestwar_update_proc;
-	sys16_wwfix = 1; 
+	sys16_wwfix = 1;
 }
 
 static DRIVER_INIT( wrestwar ){
@@ -6648,7 +6641,7 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) ) 
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x08, "2" )
 	PORT_DIPSETTING(    0x0c, "3" )
 	PORT_DIPSETTING(    0x04, "4" )
