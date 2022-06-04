@@ -171,7 +171,7 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 /***************************************************************************/
 
-int sys16_wwfix=0, sys16_alienfix=0; //*
+int sys16_wwfix=0, sys16_alienfix=0;
 
 static data16_t coinctrl;
 
@@ -296,14 +296,14 @@ static WRITE_HANDLER( tturfbl_soundbank_w )
 }
 
 static MEMORY_READ_START( tturfbl_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, tturfbl_soundbank_r },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( tturfbl_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0xbfff, MWA_NOP },/* ROM bank */
 	{ 0xe000, 0xe000, tturfbl_soundbank_w },
 	{ 0xf000, 0xf000, tturfbl_msm5205_data_w },
@@ -311,12 +311,12 @@ static MEMORY_WRITE_START( tturfbl_sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( tturfbl_sound_readport )
-    { 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0x80, 0x80, MRA_NOP },
 PORT_END
 
 static PORT_WRITE_START( tturfbl_sound_writeport )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, MWA_NOP },
 	{ 0x80, 0x80, MWA_NOP },
@@ -325,61 +325,61 @@ PORT_END
 /*******************************************************************************/
 
 static MEMORY_READ_START( sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( sound_readport )
-    { 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 PORT_END
 
 // 7751 Sound
 static MEMORY_READ_START( sound_readmem_7751 )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static PORT_READ_START( sound_readport_7751 )
-    { 0x01, 0x01, YM2151_status_port_0_r },
-//  { 0x0e, 0x0e, sys16_7751_audio_8255_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
+	//{ 0x0e, 0x0e, sys16_7751_audio_8255_r },
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport_7751 )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x80, 0x80, sys16_7751_audio_8255_w },
 PORT_END
 
 static MEMORY_READ_START( readmem_7751 )
-    { 0x0000, 0x03ff, MRA_ROM },
+	{ 0x0000, 0x03ff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_7751 )
-    { 0x0000, 0x03ff, MWA_ROM },
+	{ 0x0000, 0x03ff, MWA_ROM },
 MEMORY_END
 
 static PORT_READ_START( readport_7751 )
-    { I8039_t1, I8039_t1, sys16_7751_sh_t1_r },
+	{ I8039_t1, I8039_t1, sys16_7751_sh_t1_r },
 	{ I8039_p2, I8039_p2, sys16_7751_sh_command_r },
 	{ I8039_bus, I8039_bus, sys16_7751_sh_rom_r },
 PORT_END
 
 static PORT_WRITE_START( writeport_7751 )
-    { I8039_p1, I8039_p1, sys16_7751_sh_dac_w },
+	{ I8039_p1, I8039_p1, sys16_7751_sh_dac_w },
 	{ I8039_p2, I8039_p2, sys16_7751_sh_busy_w },
 	{ I8039_p4, I8039_p4, sys16_7751_sh_offset_a0_a3_w },
 	{ I8039_p5, I8039_p5, sys16_7751_sh_offset_a4_a7_w },
@@ -389,14 +389,14 @@ PORT_END
 
 // 7759
 static MEMORY_READ_START( sound_readmem_7759 )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xdfff, MRA_BANK1 },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 
-static WRITE_HANDLER( UPD7759_bank_w ) //*
+static WRITE_HANDLER( UPD7759_bank_w )
 {
 	int offs, size = memory_region_length(REGION_CPU2) - 0x10000;
 
@@ -408,7 +408,7 @@ static WRITE_HANDLER( UPD7759_bank_w ) //*
 
 
 static PORT_WRITE_START( sound_writeport_7759 )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, UPD7759_bank_w },
 	{ 0x80, 0x80, UPD7759_0_port_w },
@@ -675,7 +675,7 @@ static READ16_HANDLER( alexkidd_skip_r ){
 }
 
 static MEMORY_READ16_START( alexkidd_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -692,7 +692,7 @@ static MEMORY_READ16_START( alexkidd_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( alexkidd_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -794,10 +794,10 @@ ROM_START( aliensyn )
 	ROM_LOAD16_BYTE( "10712.b4", 0x60001, 0x10000, CRC(876ad019) SHA1(39973ddb5a5746e0e094c759447bff1130c72c84) )
 	ROM_LOAD16_BYTE( "10716.b8", 0x60000, 0x10000, CRC(40ba1d48) SHA1(e2d4d2689bb9b9bdc85e7f72a6665e5fd4c583aa) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "10723.a7", 0x00000, 0x8000, CRC(99953526) SHA1(4a980370923fd5d3dc9e25d42a032c9e78c7ff47) )
 	ROM_LOAD( "10724.a8", 0x10000, 0x8000, CRC(f971a817) SHA1(502c95638e4fd5f87e5fc837cb44b39a5d62f4e4) )
-	ROM_LOAD( "10726.a10",0x18000, 0x8000, CRC(d50b7736) SHA1(b1f8e3b0cf2ffee5382098100cfabe21b383cd51) ) //*
+	ROM_LOAD( "10726.a10",0x18000, 0x8000, CRC(d50b7736) SHA1(b1f8e3b0cf2ffee5382098100cfabe21b383cd51) )
 	ROM_LOAD( "10725.a9", 0x20000, 0x8000, CRC(6a50e08f) SHA1(d34b2ccadb8b07d5ad99cab5c5b5b79642c65574) )
 ROM_END
 
@@ -826,7 +826,7 @@ ROM_START( aliensya )
 	ROM_LOAD16_BYTE( "10712.b4", 0x60001, 0x10000, CRC(876ad019) SHA1(39973ddb5a5746e0e094c759447bff1130c72c84) )
 	ROM_LOAD16_BYTE( "10716.b8", 0x60000, 0x10000, CRC(40ba1d48) SHA1(e2d4d2689bb9b9bdc85e7f72a6665e5fd4c583aa) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "10705", 0x00000, 0x8000, CRC(777b749e) SHA1(086b03100064a98228f95db7962b2671121c46ea) )
 	ROM_LOAD( "10706", 0x10000, 0x8000, CRC(aa114acc) SHA1(81a2b3586ae90bc7fc55b82478ffe182ac49983e) )
 	ROM_LOAD( "10707", 0x18000, 0x8000, CRC(800c1d82) SHA1(aac4123bd35f87da09264649f4cf8326b2ba3cb8) )
@@ -858,7 +858,7 @@ ROM_START( aliensyj )
 	ROM_LOAD16_BYTE( "10712.b4", 0x60001, 0x10000, CRC(876ad019) SHA1(39973ddb5a5746e0e094c759447bff1130c72c84) )
 	ROM_LOAD16_BYTE( "10716.b8", 0x60000, 0x10000, CRC(40ba1d48) SHA1(e2d4d2689bb9b9bdc85e7f72a6665e5fd4c583aa) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "10705", 0x00000, 0x8000, CRC(777b749e) SHA1(086b03100064a98228f95db7962b2671121c46ea) )
 	ROM_LOAD( "10706", 0x10000, 0x8000, CRC(aa114acc) SHA1(81a2b3586ae90bc7fc55b82478ffe182ac49983e) )
 	ROM_LOAD( "10707", 0x18000, 0x8000, CRC(800c1d82) SHA1(aac4123bd35f87da09264649f4cf8326b2ba3cb8) )
@@ -890,7 +890,7 @@ ROM_START( aliensyb )
 	ROM_LOAD16_BYTE( "10712.b4", 0x60001, 0x10000, CRC(876ad019) SHA1(39973ddb5a5746e0e094c759447bff1130c72c84) )
 	ROM_LOAD16_BYTE( "10716.b8", 0x60000, 0x10000, CRC(40ba1d48) SHA1(e2d4d2689bb9b9bdc85e7f72a6665e5fd4c583aa) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "10723.a7", 0x0000, 0x8000, CRC(99953526) SHA1(4a980370923fd5d3dc9e25d42a032c9e78c7ff47) )
 	ROM_LOAD( "10724.a8", 0x10000, 0x8000, CRC(f971a817) SHA1(502c95638e4fd5f87e5fc837cb44b39a5d62f4e4) )
 	ROM_LOAD( "10725.a9", 0x18000, 0x8000, CRC(6a50e08f) SHA1(d34b2ccadb8b07d5ad99cab5c5b5b79642c65574) )
@@ -900,7 +900,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( aliensyn_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -914,7 +914,7 @@ static MEMORY_READ16_START( aliensyn_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( aliensyn_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -941,7 +941,7 @@ static MACHINE_INIT( aliensyn ){
 
 	sys16_update_proc = type0_sys16_textram;
 
-	sys16_alienfix = 1; //*
+	sys16_alienfix = 1;
 }
 
 static DRIVER_INIT( aliensyn )
@@ -1091,7 +1091,7 @@ static READ16_HANDLER( altbeast_io_r )
 }
 
 static MEMORY_READ16_START( altbeast_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -1108,7 +1108,7 @@ static MEMORY_READ16_START( altbeast_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( altbeast_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -1230,7 +1230,7 @@ static READ16_HANDLER( atomicp_skip_r ){
 
 
 static MEMORY_READ16_START( atomicp_readmem )
-    { 0x000000, 0x01ffff, MRA16_ROM },
+	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -1243,7 +1243,7 @@ static MEMORY_READ16_START( atomicp_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( atomicp_writemem )
-    { 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0x080000, 0x080003, MWA16_NOP }, // looks like sound chip, but isn't YM2413 data
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
@@ -1463,7 +1463,7 @@ static READ16_HANDLER( aurail_skip_r )
 }
 
 static MEMORY_READ16_START( aurail_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -1478,7 +1478,7 @@ static MEMORY_READ16_START( aurail_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( aurail_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -1681,7 +1681,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( bayroute_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x500000, 0x503fff, SYS16_MRA16_WORKINGRAM },
 	{ 0x600000, 0x600fff, SYS16_MRA16_SPRITERAM },
 	{ 0x700000, 0x70ffff, SYS16_MRA16_TILERAM },
@@ -1695,7 +1695,7 @@ static MEMORY_READ16_START( bayroute_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( bayroute_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x100000, 0x100003, MWA16_NOP }, // tilebank control?
 	{ 0x500000, 0x503fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 	{ 0x600000, 0x600fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -1858,7 +1858,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( bodyslam_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -1872,7 +1872,7 @@ static MEMORY_READ16_START( bodyslam_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( bodyslam_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -2025,7 +2025,7 @@ ROM_START( dduxbl )
 	ROM_LOAD( "dduxb15.bin", 0x10000, 0x10000, CRC(ce0d2b30) SHA1(e60521c46f1650c9bdc76f2ceb91a6d61aaa0a09) )
 	ROM_LOAD( "dduxb16.bin", 0x20000, 0x10000, CRC(6de95434) SHA1(7bed2a0261cf6c2fbb3756633f05f0bb2173977c) )
 
-	ROM_REGION( 0xa0000, REGION_GFX2, 0 ) //* sprites */
+	ROM_REGION( 0xa0000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "dduxb10.bin", 0x00001, 0x010000, CRC(0be3aee5) SHA1(48fc779b7398abbb82cd0d0d28705ece75b3c4e3) )
 	ROM_RELOAD( 0x20001, 0x010000 )
 	ROM_LOAD16_BYTE( "dduxb06.bin", 0x00000, 0x010000, CRC(b0079e99) SHA1(9bb4d3fa804a3d05a6e06b45a1280d7064e96ac6) )
@@ -2048,7 +2048,7 @@ static READ16_HANDLER( dduxbl_skip_r ){
 }
 
 static MEMORY_READ16_START( dduxbl_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -2063,7 +2063,7 @@ static MEMORY_READ16_START( dduxbl_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( dduxbl_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -2117,7 +2117,7 @@ static void dduxbl_update_proc( void ){
 }
 
 static MACHINE_INIT( dduxbl ){
-	static int bank[16] = { //*
+	static int bank[16] = {
 		0,0,0,0,
 		0,0,0,4,
 		0,0,0,3,
@@ -2257,9 +2257,9 @@ static READ16_HANDLER( eswatbl_skip_r ){
 }
 
 static MEMORY_READ16_START( eswat_readmem )
-    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
-	{ 0x410000, 0x418fff, SYS16_MRA16_TEXTRAM }, //*
+	{ 0x410000, 0x418fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
@@ -2280,7 +2280,7 @@ static WRITE16_HANDLER( eswat_tilebank0_w ){
 }
 
 static MEMORY_WRITE16_START( eswat_writemem )
-    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x3e2000, 0x3e2001, eswat_tilebank0_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x418fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -2436,7 +2436,7 @@ static READ16_HANDLER( fantzone_skip_r ){
 }
 
 static MEMORY_READ16_START( fantzono_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -2452,7 +2452,7 @@ static MEMORY_READ16_START( fantzono_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzono_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -2464,7 +2464,7 @@ static MEMORY_WRITE16_START( fantzono_writemem )
 MEMORY_END
 
 static MEMORY_READ16_START( fantzone_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -2479,7 +2479,7 @@ static MEMORY_READ16_START( fantzone_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( fantzone_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -2681,7 +2681,7 @@ static READ16_HANDLER( fp_io_service_dummy_r ){
 }
 
 static MEMORY_READ16_START( fpoint_readmem )
-    { 0x000000, 0x01ffff, MRA16_ROM },
+	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x02002e, 0x020049, fp_io_service_dummy_r },
 	{ 0x601002, 0x601003, input_port_0_word_r }, // player1
 	{ 0x601004, 0x601005, input_port_1_word_r }, // player2
@@ -2698,7 +2698,7 @@ static MEMORY_READ16_START( fpoint_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( fpoint_writemem )
-    { 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0x600006, 0x600007, sound_command_w },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
@@ -2868,7 +2868,7 @@ MACHINE_DRIVER_END
 	Has sound latch at $E000 instead of I/O ports $C0-FF
 */
 static MEMORY_READ_START( fpointbl_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe000, 0xe000, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
@@ -2996,7 +2996,7 @@ static READ16_HANDLER( ga_io_service_r ){
 }
 
 static MEMORY_READ16_START( goldnaxe_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
 	{ 0x110000, 0x110fff, SYS16_MRA16_TEXTRAM },
 	{ 0x140000, 0x140fff, SYS16_MRA16_PALETTERAM },
@@ -3030,7 +3030,7 @@ static WRITE16_HANDLER( goldnaxe_prot_w ){
 }
 
 static MEMORY_WRITE16_START( goldnaxe_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x110000, 0x110fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x140000, 0x140fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
@@ -3242,7 +3242,7 @@ static READ16_HANDLER( ga_hardware_multiplier_r ){
 }
 
 static MEMORY_READ16_START( goldnaxa_readmem )
-    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
 	{ 0x110000, 0x110fff, SYS16_MRA16_TEXTRAM },
 	{ 0x140000, 0x140fff, SYS16_MRA16_PALETTERAM },
@@ -3263,7 +3263,7 @@ static MEMORY_READ16_START( goldnaxa_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( goldnaxa_writemem )
-    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x110000, 0x110fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x140000, 0x140fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
@@ -3321,7 +3321,7 @@ ROM_START( hwchamp )
 	ROM_LOAD( "scr03.bin", 0x80000, 0x20000, CRC(f30cd5fd) SHA1(df6118ca4b724c37b11e18d9f2ea18e9591ae7aa) )
 	ROM_LOAD( "scr13.bin", 0xA0000, 0x20000, CRC(5b8494a8) SHA1(9e3f09f4037a007b6a188dd81ec8f9c635e87650) )
 
-	ROM_REGION( 0x200000, REGION_GFX2, 0 ) //* sprites */
+	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "obj0-o.bin", 0x000001, 0x010000, CRC(fc098a13) SHA1(b4a6e00d4765265bad170dabf0b2a4a58e063b16) )
 	ROM_CONTINUE( 0x040001, 0x10000 )
 	ROM_RELOAD  ( 0x020001, 0x10000 )
@@ -3425,8 +3425,7 @@ static WRITE16_HANDLER( hwc_ctrl2_w ){
 }
 
 static MEMORY_READ16_START( hwchamp_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
-	{ 0x3f0000, 0x3fffff, SYS16_MRA16_EXTRAM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3439,8 +3438,8 @@ static MEMORY_READ16_START( hwchamp_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( hwchamp_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x3f0000, 0x3fffff, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -3454,15 +3453,9 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void hwchamp_update_proc( void ){
-	type0_sys16_textram();
-	sys16_tile_bank0 = sys16_extraram[0]&0xf;
-	sys16_tile_bank1 = sys16_extraram[1]&0xf;
-}
-
 static MACHINE_INIT( hwchamp ){
-	sys16_update_proc = hwchamp_update_proc;
-	sys16_wwfix = 1; //*
+	sys16_update_proc = type0_sys16_textram;
+	sys16_wwfix = 1;
 }
 
 /***************************************************************************/
@@ -3624,7 +3617,7 @@ static READ16_HANDLER( mjl_io_bat_r )
 }
 
 static MEMORY_READ16_START( mjleague_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3643,7 +3636,7 @@ static MEMORY_READ16_START( mjleague_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( mjleague_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -3835,7 +3828,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( passsht_readmem )
-    { 0x000000, 0x01ffff, MRA16_ROM },
+	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3849,7 +3842,7 @@ static MEMORY_READ16_START( passsht_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( passsht_writemem )
-    { 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -3903,7 +3896,7 @@ static READ16_HANDLER( passht4b_io2_r ) {	return passht4b_io2_val;}
 static READ16_HANDLER( passht4b_io3_r ) {	return passht4b_io3_val;}
 
 static MEMORY_READ16_START( passht4b_readmem )
-    { 0x000000, 0x01ffff, MRA16_ROM },
+	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3922,7 +3915,7 @@ static MEMORY_READ16_START( passht4b_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( passht4b_writemem )
-    { 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -4224,7 +4217,7 @@ static READ16_HANDLER( quartet_skip_r ){
 #endif
 
 static MEMORY_READ16_START( quartet_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -4241,7 +4234,7 @@ static MEMORY_READ16_START( quartet_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( quartet_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -4448,7 +4441,7 @@ static READ16_HANDLER( quartet2_skip_r ){
 #endif
 
 static MEMORY_READ16_START( quartet2_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -4464,7 +4457,7 @@ static MEMORY_READ16_START( quartet2_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( quartet2_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -4590,7 +4583,7 @@ static READ16_HANDLER( riotcity_skip_r ){
 }
 
 static MEMORY_READ16_START( riotcity_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0xf40000, 0xf40fff, SYS16_MRA16_SPRITERAM },
 	{ 0xf60000, 0xf60fff, SYS16_MRA16_PALETTERAM },
 	{ 0xf81002, 0xf81003, input_port_0_word_r }, // player1
@@ -4605,7 +4598,7 @@ static MEMORY_READ16_START( riotcity_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( riotcity_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0xf00006, 0xf00007, sound_command_w },
 	{ 0xf00020, 0xf0003f, MWA16_NOP }, // config regs
 	{ 0xf20000, 0xf2ffff, sys16_tilebank_w },
@@ -4750,9 +4743,9 @@ static READ16_HANDLER( sdi_skip_r ){
 }
 
 static MEMORY_READ16_START( sdi_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
-	{ 0x410000, 0x411fff, SYS16_MRA16_TEXTRAM }, //*
+	{ 0x410000, 0x411fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc41004, 0xc41005, input_port_0_word_r },// player1
@@ -4772,7 +4765,7 @@ static MEMORY_READ16_START( sdi_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( sdi_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x123406, 0x123407, sound_command_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x411fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -4952,7 +4945,7 @@ static READ16_HANDLER( shinobi_skip_r ){
 }
 
 static MEMORY_READ16_START( shinobi_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -4968,7 +4961,7 @@ static MEMORY_READ16_START( shinobi_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( shinobi_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -5117,7 +5110,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( shinobl_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -5131,7 +5124,7 @@ static MEMORY_READ16_START( shinobl_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( shinobl_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -5184,7 +5177,7 @@ MACHINE_DRIVER_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( sonicbom_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -5198,7 +5191,7 @@ static MEMORY_READ16_START( sonicbom_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( sonicbom_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -5356,7 +5349,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( tetris_readmem )
-    { 0x000000, 0x01ffff, MRA16_ROM },
+	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x418000, 0x41803f, SYS16_MRA16_EXTRAM2 },
@@ -5372,7 +5365,7 @@ static MEMORY_READ16_START( tetris_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( tetris_writemem )
-    { 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x418000, 0x41803f, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
@@ -5489,7 +5482,7 @@ static READ16_HANDLER( timscanr_skip_r ){
 }
 
 static MEMORY_READ16_START( timscanr_readmem )
-    { 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -5505,7 +5498,7 @@ static MEMORY_READ16_START( timscanr_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( timscanr_writemem )
-    { 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -5529,7 +5522,7 @@ static MACHINE_INIT( timscanr ){
 
 	sys16_textmode=1;
 	sys16_update_proc = type0_sys16_textram;
-	sys16_wwfix = -1; //*
+	sys16_wwfix = -1;
 }
 
 /***************************************************************************/
@@ -5643,7 +5636,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( toryumon_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -5658,7 +5651,7 @@ static MEMORY_READ16_START( toryumon_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( toryumon_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x3e2000, 0x3e2003, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -5792,7 +5785,7 @@ static READ16_HANDLER( tt_io_player2_r ){ return input_port_1_r( offset ) << 8; 
 static READ16_HANDLER( tt_io_service_r ){ return input_port_2_r( offset ) << 8; }
 
 static MEMORY_READ16_START( tturf_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x2001e6, 0x2001e7, tt_io_service_r },
 	{ 0x2001e8, 0x2001e9, tt_io_player1_r },
 	{ 0x2001ea, 0x2001eb, tt_io_player2_r },
@@ -5806,7 +5799,7 @@ static MEMORY_READ16_START( tturf_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( tturf_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x200000, 0x203fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
 	{ 0x300000, 0x300fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
@@ -5978,7 +5971,7 @@ ROM_START( tturfbl )
 	ROM_LOAD16_BYTE( "12276.4b", 0x60001, 0x10000, CRC(838bd71f) SHA1(82d9d127438f5e1906b1cf40bf3b4727f2ee5685) )
 	ROM_LOAD16_BYTE( "12280.8b", 0x60000, 0x10000, CRC(639a57cb) SHA1(84fd8b96758d38f9e1ba1a3c2cf8099ec0452784) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "tt014d68.rom", 0x10000, 0x10000, CRC(d4aab1d9) SHA1(94885896d59da1ecabe2377a194fcf61eaae3765) )
 	ROM_LOAD( "tt0246ff.rom", 0x20000, 0x10000, CRC(bb4bba8f) SHA1(b182a7e1d0425e93c2c1b93472aafd30a6af6907) )
 ROM_END
@@ -5986,7 +5979,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( tturfbl_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x2001e6, 0x2001e7, tt_io_service_r },
 	{ 0x2001e8, 0x2001e9, tt_io_player1_r },
 	{ 0x2001ea, 0x2001eb, tt_io_player2_r },
@@ -6006,7 +5999,7 @@ static MEMORY_READ16_START( tturfbl_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( tturfbl_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x200000, 0x203fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
 	{ 0x300000, 0x300fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
@@ -6149,7 +6142,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( wb3_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -6163,11 +6156,11 @@ static MEMORY_READ16_START( wb3_readmem )
 MEMORY_END
 
 static WRITE16_HANDLER( wb3_sound_command_w ){
-	if( ACCESSING_MSB ) sound_command_w(offset,data>>8,0xff00); //*
+	if( ACCESSING_MSB ) sound_command_w(offset,data>>8,0xff00);
 }
 
 static MEMORY_WRITE16_START( wb3_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -6272,7 +6265,7 @@ ROM_END
 /***************************************************************************/
 
 static MEMORY_READ16_START( wb3bl_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -6287,7 +6280,7 @@ static MEMORY_READ16_START( wb3bl_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( wb3bl_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
@@ -6389,7 +6382,7 @@ ROM_START( wrestwar )
 	ROM_LOAD( "ww.a15", 0x20000, 0x20000, CRC(2b1a0751) SHA1(8cb1027ef3728f5bdfdb5e2df0f0421f743cdc0a) )
 	ROM_LOAD( "ww.a16", 0x40000, 0x20000, CRC(f6e190fe) SHA1(4c8b334fb22c449d8d00c8f49f5eccbe008e244f) )
 
-	ROM_REGION( 0x300000, REGION_GFX2, 0 ) //* sprites */
+	ROM_REGION( 0x300000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "ww.b1",  0x000001, 0x10000, CRC(ffa7d368) SHA1(e5663ef1cbe8ab27be0919a3cd78d9a7747bbac6) )
 	ROM_CONTINUE( 0x040001, 0x10000 )
 	ROM_RELOAD  ( 0x020001, 0x10000 )
@@ -6454,7 +6447,7 @@ ROM_START( fantzn2x )
 	ROM_LOAD( "fz2.a15", 0x20000, 0x20000, CRC(2b933344) SHA1(5b53ea8d58cc3d157aec6926db048359984e4276) )
 	ROM_LOAD( "fz2.a16", 0x40000, 0x20000, CRC(e63281a1) SHA1(72379c579484c1ef7784a9598d373446ef0a472b) )
 
-	ROM_REGION( 0x300000, REGION_GFX2, 0 ) //* sprites */
+	ROM_REGION( 0x300000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "fz2.b1",  0x000001, 0x10000, CRC(46bba615) SHA1(b291df4a83d7155eb7606f86ed733c24362a4db3) )
 	ROM_CONTINUE( 0x040001, 0x10000 )
 	ROM_RELOAD  ( 0x020001, 0x10000 )
@@ -6512,9 +6505,9 @@ static READ16_HANDLER( ww_io_service_r ){
 }
 
 static MEMORY_READ16_START( wrestwar_readmem )
-    { 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
-	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM }, //*
+	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM },
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
 	{ 0x300000, 0x300fff, SYS16_MRA16_PALETTERAM },
 	{ 0x400000, 0x400003, SYS16_MRA16_EXTRAM },
@@ -6527,7 +6520,7 @@ static MEMORY_READ16_START( wrestwar_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( wrestwar_writemem )
-    { 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x110000, 0x111fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
@@ -6541,8 +6534,7 @@ MEMORY_END
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
-	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM }, // correct for extra ram board.??
-	{ 0x3f0000, 0x3fffff, SYS16_MRA16_EXTRAM, }, // rom_5704_bank
+	{ 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -6557,13 +6549,13 @@ MEMORY_END
 static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, SYS16_MWA16_WORKINGRAM },
-	{ 0x3f0000, 0x3fffff, SYS16_MWA16_EXTRAM, &sys16_extraram}, //rom_5704_bank
+	{ 0x3f0000, 0x3fffff, sys16_tilebank_w }, //rom_5704_bank
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0xfe0006, 0xfe0007, sound_command_w }, // this was best guess need verfied
+	{ 0xfe0006, 0xfe0007, sound_command_w },
 MEMORY_END
 
 /***************************************************************************/
@@ -6577,7 +6569,7 @@ static MACHINE_INIT( wrestwar ){
 	sys16_bg_priority_mode=2;
 	sys16_bg_priority_value=0x0a00;
 	sys16_update_proc = wrestwar_update_proc;
-	sys16_wwfix = 1; 
+	sys16_wwfix = 1;
 }
 
 static DRIVER_INIT( wrestwar ){
@@ -6589,17 +6581,10 @@ static DRIVER_INIT( wrestwar ){
 	sys16_rowscroll_scroll=0x8000;
 }
 
-static void fantzn2x_update_proc( void )
-{
-	type0_sys16_textram();
-	sys16_tile_bank0 = sys16_extraram[0]&0xf;
-	sys16_tile_bank1 = sys16_extraram[1]&0xf;
-}
-
 static MACHINE_INIT( fantzn2x )
 {
 	sys16_spritesystem = sys16_sprite_fantzn2x;
-	sys16_update_proc = fantzn2x_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = 1;
 }
 
@@ -6656,7 +6641,7 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) ) 
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x08, "2" )
 	PORT_DIPSETTING(    0x0c, "3" )
 	PORT_DIPSETTING(    0x04, "4" )
@@ -6707,12 +6692,12 @@ MACHINE_DRIVER_END
 /*****************************************************************************/
 
 static MEMORY_READ16_START( sys16_dummy_readmem )
-    { 0x000000, 0x0fffff, MRA16_ROM },
+	{ 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( sys16_dummy_writemem )
-    { 0x000000, 0x0fffff, MWA16_ROM },
+	{ 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -6847,7 +6832,7 @@ ROM_START( dunkshot )
 	ROM_LOAD16_BYTE( "10484.bin", 0x30001, 0x8000, CRC(bcb5fcc9) SHA1(eb8d557c908e6265f96a5a7e832e19776a9e576c) )
 	ROM_LOAD16_BYTE( "10480.bin", 0x30000, 0x8000, CRC(5dffd9dd) SHA1(256b24613c952d89dbb9971c9091d5a8a7f363b0) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) //* sound CPU */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "10473.bin",	 0x00000, 0x08000, CRC(7f1f5a27) SHA1(7ff91b95c883b395ab4ff5e440d78e553a09e623) )
 	ROM_LOAD( "10474.bin",   0x10000, 0x08000, CRC(419a656e) SHA1(aa734ae835761badeb069f99acc5fded2a19b3a3) )
 	ROM_LOAD( "10475.bin",   0x18000, 0x08000, CRC(17d55e85) SHA1(0c414bafecbfaa82679cc155f15f5255c186358d) )
@@ -7133,7 +7118,7 @@ GAME (1994, toryumon, 0,        toryumon, toryumon, s16dummy, ROT0,   "Sega",   
 GAME (1989, tturf,    0,        tturf,    tturf,    s16dummy, ROT0,   "Sega / Sunsoft", "Tough Turf (Japan)")
 GAME (1989, tturfu,   tturf,    tturfu,   tturf,    s16dummy, ROT0,   "Sega / Sunsoft", "Tough Turf (US)")
 GAMEX(1989, tturfbl,  tturf,    tturfbl,  tturf,    tturfbl,  ROT0,   "bootleg", "Tough Turf (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
-GAME( 1988, wb3,      0,        wb3,      wb3,      s16dummy, ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 1)" ) //*
+GAME( 1988, wb3,      0,        wb3,      wb3,      s16dummy, ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 1)" )
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      s16dummy, ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
 GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
