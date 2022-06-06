@@ -6510,7 +6510,6 @@ static MEMORY_READ16_START( wrestwar_readmem )
 	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM },
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
 	{ 0x300000, 0x300fff, SYS16_MRA16_PALETTERAM },
-	{ 0x400000, 0x400003, SYS16_MRA16_EXTRAM },
 	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
 	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
@@ -6525,7 +6524,7 @@ static MEMORY_WRITE16_START( wrestwar_writemem )
 	{ 0x110000, 0x111fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x300000, 0x300fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0x400000, 0x400003, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x400000, 0x400003, sys16_tilebank_w },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xc43034, 0xc43035, MWA16_NOP },
 	{ 0xffe08e, 0xffe08f, sound_command_w },
@@ -6560,15 +6559,10 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void wrestwar_update_proc( void ){
-	type0_sys16_textram();
-	set_tile_bank( sys16_extraram[1] );
-}
-
 static MACHINE_INIT( wrestwar ){
 	sys16_bg_priority_mode=2;
 	sys16_bg_priority_value=0x0a00;
-	sys16_update_proc = wrestwar_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = 1;
 }
 
@@ -6576,8 +6570,8 @@ static DRIVER_INIT( wrestwar ){
 	machine_init_sys16_onetime();
 	sys16_bg1_trans=1;
 	sys16_MaxShadowColors=16;
-	sys18_splittab_bg_y=&sys16_textram[0x0f40];
-	sys18_splittab_fg_y=&sys16_textram[0x0f00];
+	sys18_splittab_bg_y=&sys16_textram[0x0f40 /2];
+	sys18_splittab_fg_y=&sys16_textram[0x0f00 /2];
 	sys16_rowscroll_scroll=0x8000;
 }
 
