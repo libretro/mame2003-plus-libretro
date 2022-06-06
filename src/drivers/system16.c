@@ -6570,8 +6570,8 @@ static DRIVER_INIT( wrestwar ){
 	machine_init_sys16_onetime();
 	sys16_bg1_trans=1;
 	sys16_MaxShadowColors=16;
-	sys18_splittab_bg_y=&sys16_textram[0x0f40];
-	sys18_splittab_fg_y=&sys16_textram[0x0f00];
+	sys18_splittab_bg_y=&sys16_textram[0x0f40 /2];
+	sys18_splittab_fg_y=&sys16_textram[0x0f00 /2];
 	sys16_rowscroll_scroll=0x8000;
 }
 
