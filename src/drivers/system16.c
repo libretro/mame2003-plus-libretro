@@ -5805,7 +5805,7 @@ static MEMORY_WRITE16_START( tturf_writemem )
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x500000, 0x500fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0x600000, 0x600005, sys16_coinctrl_w },
+	{ 0x600000, 0x600001, sys16_coinctrl_w },
 	{ 0xff0020, 0xff003f, MWA16_NOP }, // config regs
 MEMORY_END
 
@@ -6016,7 +6016,7 @@ MEMORY_END
 
 static void tturfbl_update_proc( void ){
 	sys16_fg_scrollx = sys16_textram[0x74c] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x74d/2] & 0x01ff;
+	sys16_bg_scrollx = sys16_textram[0x74d] & 0x01ff;
 	sys16_fg_scrolly = sys16_textram[0x748];
 	sys16_bg_scrolly = sys16_textram[0x749];
 
