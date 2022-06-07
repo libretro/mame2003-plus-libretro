@@ -22,7 +22,6 @@ Changes:
 
 To do:
 - tturf and tturfu have some invalid data written to the UPD7759. I think this causes the 'pop' sound when level 1 starts.
-- tturfbl has some serious problems with tilemap scrolling
 - bayroute has a bad sprite in the door of the level 1 boss
 - altbeast writes to mirrored sprite RAM at $441000
 - tturfu has bad single sprite frame when main character walks
