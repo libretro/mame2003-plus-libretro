@@ -6016,7 +6016,7 @@ MEMORY_END
 
 static void tturfbl_update_proc( void ){
 	sys16_fg_scrollx = sys16_textram[0x74c] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x74d/2] & 0x01ff;
+	sys16_bg_scrollx = sys16_textram[0x74d] & 0x01ff;
 	sys16_fg_scrolly = sys16_textram[0x748];
 	sys16_bg_scrolly = sys16_textram[0x749];
 
