@@ -3647,14 +3647,14 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void mjleague_update_proc( void ){
+static void mjleague_update_proc( void )
+{
 	set_bg_page1( sys16_textram[0x746] );
 	set_fg_page1( sys16_textram[0x747] );
-
-	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
+	sys16_fg_scrolly = sys16_textram[0x792];
+	sys16_bg_scrolly = sys16_textram[0x793];
+	sys16_fg_scrollx = sys16_textram[0x7fc];
+	sys16_bg_scrollx = sys16_textram[0x7fd];
 }
 
 static MACHINE_INIT( mjleague ){
