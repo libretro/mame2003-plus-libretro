@@ -3621,6 +3621,7 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
+	{ 0xc40002, 0xc40007, SYS16_MRA16_EXTRAM2 },
 	{ 0xc41000, 0xc41001, mjl_io_service_r },
 	{ 0xc41002, 0xc41003, mjl_io_player1_r },
 	{ 0xc41006, 0xc41007, mjl_io_player2_r },
@@ -3638,7 +3639,7 @@ static MEMORY_WRITE16_START( mjleague_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
-	{ 0xc40002, 0xc40003, sys16_3d_coinctrl_w },
+	{ 0xc40002, 0xc40007, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
