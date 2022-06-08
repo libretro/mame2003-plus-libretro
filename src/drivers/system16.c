@@ -3663,7 +3663,7 @@ static MACHINE_INIT( mjleague ){
 	// remove memory test because it fails.
 	sys16_patch_code( 0xBD42, 0x66 );
 
-	sys16_update_proc = mjleague_update_proc;
+	sys16_update_proc = type0_sys16_textram;
 }
 
 /***************************************************************************/
