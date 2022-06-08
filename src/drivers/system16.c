@@ -3621,8 +3621,6 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-
-	{ 0xc40002, 0xc40003, sys16_coinctrl_r },
 	{ 0xc41000, 0xc41001, mjl_io_service_r },
 	{ 0xc41002, 0xc41003, mjl_io_player1_r },
 	{ 0xc41006, 0xc41007, mjl_io_player2_r },
@@ -3630,7 +3628,6 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
 	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
 	{ 0xc60000, 0xc60001, MRA16_NOP }, /* What is this? Watchdog? */
-
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -3658,9 +3655,6 @@ static void mjleague_update_proc( void )
 }
 
 static MACHINE_INIT( mjleague ){
-	static int bank[16] = { 00,01,02,03,00,01,02,03 };
-
-	sys16_obj_bank = bank;
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbd;
