@@ -3645,16 +3645,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void mjleague_update_proc( void )
-{
-	set_bg_page1( sys16_textram[0x746] );
-	set_fg_page1( sys16_textram[0x747] );
-	sys16_fg_scrolly = sys16_textram[0x792];
-	sys16_bg_scrolly = sys16_textram[0x793];
-	sys16_fg_scrollx = sys16_textram[0x7fc];
-	sys16_bg_scrollx = sys16_textram[0x7fd];
-}
-
 static MACHINE_INIT( mjleague ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
@@ -3662,7 +3652,7 @@ static MACHINE_INIT( mjleague ){
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 
 	// remove memory test because it fails.
-	//sys16_patch_code( 0xBD42, 0x66 );
+	sys16_patch_code( 0xBD42, 0x66 );
 
 	sys16_update_proc = type0_sys16_textram;
 }
