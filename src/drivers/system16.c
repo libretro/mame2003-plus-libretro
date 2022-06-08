@@ -598,6 +598,16 @@ static void type0_sys16_textram( void )
 	sys16_bg_scrollx = sys16_textram[0x74d];
 }
 
+static void type1_sys16_textram( void )
+{
+	set_bg_page1( sys16_textram[0x74e] );
+	set_fg_page1( sys16_textram[0x74f] );
+	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
+	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
+	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
+	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
+}
+
 /***************************************************************************/
 // sys16A
 ROM_START( alexkidd )
@@ -703,15 +713,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void alexkidd_update_proc( void ){
-	set_bg_page1( sys16_textram[0x74e] );
-	set_fg_page1( sys16_textram[0x74f] );
-	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
-}
-
 static MACHINE_INIT( alexkidd ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
@@ -719,7 +720,7 @@ static MACHINE_INIT( alexkidd ){
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_bg_priority_mode=1;
 
-	sys16_update_proc = alexkidd_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 /***************************************************************************/
@@ -2491,15 +2492,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void fantzone_update_proc( void ){
-	set_bg_page1( sys16_textram[0x74e] );
-	set_fg_page1( sys16_textram[0x74f] );
-	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
-}
-
 static MACHINE_INIT( fantzono ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_fantzone;
@@ -2531,7 +2523,7 @@ static MACHINE_INIT( fantzono ){
 	sys16_patch_code(0x25c3,0x71);
 */
 
-	sys16_update_proc = fantzone_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 static MACHINE_INIT( fantzone ){
@@ -2547,7 +2539,7 @@ static MACHINE_INIT( fantzone ){
 	// hack? solving Fantasy Zone scrolling bug
 	sys16_patch_code(0x35e9,0x00);
 
-	sys16_update_proc = fantzone_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 /***************************************************************************/
@@ -3621,8 +3613,7 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-
-	{ 0xc40002, 0xc40003, sys16_coinctrl_r },
+	{ 0xc40002, 0xc40007, SYS16_MRA16_EXTRAM2 },
 	{ 0xc41000, 0xc41001, mjl_io_service_r },
 	{ 0xc41002, 0xc41003, mjl_io_player1_r },
 	{ 0xc41006, 0xc41007, mjl_io_player2_r },
@@ -3630,7 +3621,6 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
 	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
 	{ 0xc60000, 0xc60001, MRA16_NOP }, /* What is this? Watchdog? */
-
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -3641,21 +3631,11 @@ static MEMORY_WRITE16_START( mjleague_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
-	{ 0xc40002, 0xc40003, sys16_3d_coinctrl_w },
+	{ 0xc40002, 0xc40007, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
 /***************************************************************************/
-
-static void mjleague_update_proc( void ){
-	set_bg_page1( sys16_textram[0x746] );
-	set_fg_page1( sys16_textram[0x747] );
-
-	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
-}
 
 static MACHINE_INIT( mjleague ){
 	sys16_textmode=1;
@@ -3666,7 +3646,7 @@ static MACHINE_INIT( mjleague ){
 	// remove memory test because it fails.
 	sys16_patch_code( 0xBD42, 0x66 );
 
-	sys16_update_proc = mjleague_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 /***************************************************************************/
@@ -5135,15 +5115,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void shinobl_update_proc( void ){
-	set_bg_page( sys16_textram[0x74e] );
-	set_fg_page( sys16_textram[0x74f] );
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
-	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-}
-
 static MACHINE_INIT( shinobl ){
 	static int bank[] = {
 		0,2,4,6,
@@ -5156,7 +5127,7 @@ static MACHINE_INIT( shinobl ){
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_tilebank_switch=0x2000;
 
-	sys16_update_proc = shinobl_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 
