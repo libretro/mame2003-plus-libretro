@@ -4225,19 +4225,20 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void quartet_update_proc( void ){
-	sys16_fg_scrollx = sys16_workingram[0x0d14/2] & 0x01ff;
-	sys16_bg_scrollx = sys16_workingram[0x0d18/2] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x0f24/2] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x0f26/2] & 0x01ff;
-
-//	if(((*(UINT16 *)(&sys16_extraram[4])) & 0xff) == 1)
-//		\=1;
-//	else
-		sys16_quartet_title_kludge=0;
-
+static void quartet_update_proc( void )
+{
 	set_fg_page1( sys16_workingram[0x0d1c/2] );
 	set_bg_page1( sys16_workingram[0x0d1e/2] );
+	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
+	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
+	sys16_fg_scrollx = sys16_workingram[0x0d14/2] & 0x01ff;
+	sys16_bg_scrollx = sys16_workingram[0x0d18/2] & 0x01ff;
+
+//let's fix this properly
+//	if(((*(UINT16 *)(&sys16_extraram[4])) & 0xff) == 1)
+//		sys16_quartet_title_kludge=1;
+//	else
+		sys16_quartet_title_kludge=0;
 }
 
 static MACHINE_INIT( quartet ){
@@ -4448,29 +4449,13 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void quartet2_update_proc( void ){
-	sys16_fg_scrollx = sys16_workingram[0x0d14/2] & 0x01ff;
-	sys16_bg_scrollx = sys16_workingram[0x0d18/2] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
-
-//let's fix this properly
-//	if(((*(UINT16 *)(&sys16_extraram[4])) & 0xff) == 1)
-//		sys16_quartet_title_kludge=1;
-//	else
-		sys16_quartet_title_kludge=0;
-
-	set_fg_page1( sys16_workingram[0x0d1c/2] );
-	set_bg_page1( sys16_workingram[0x0d1e/2] );
-}
-
 static MACHINE_INIT( quartet2 ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbc;
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 
-	sys16_update_proc = quartet2_update_proc;
+	sys16_update_proc = quartet_update_proc;
 }
 
 /***************************************************************************/
