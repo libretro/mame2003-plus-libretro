@@ -3658,6 +3658,9 @@ static void mjleague_update_proc( void )
 }
 
 static MACHINE_INIT( mjleague ){
+	static int bank[16] = { 00,01,02,03,00,01,02,03 };
+
+	sys16_obj_bank = bank;
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbd;
