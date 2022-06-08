@@ -3661,7 +3661,7 @@ static MACHINE_INIT( mjleague ){
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 
 	// remove memory test because it fails.
-	sys16_patch_code( 0xBD42, 0x66 );
+	//sys16_patch_code( 0xBD42, 0x66 );
 
 	sys16_update_proc = type0_sys16_textram;
 }
