@@ -40,6 +40,7 @@ extern int sys16_sprite_fantzn2x( struct sys16_sprite_attributes *sprite, const 
 #define ShadowColorsMultiplier 1
 #endif
 
+extern int sys16_sprite_draw;
 extern int sys16_sh_shadowpal;
 extern int sys16_MaxShadowColors;
 
