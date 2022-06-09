@@ -5675,7 +5675,7 @@ ROM_START( tturf )
 	ROM_LOAD( "12269.15a", 0x10000, 0x10000, CRC(457a8790) SHA1(b701e1a1745cefb31083c8a3daa3b23181f89576) )
 	ROM_LOAD( "12270.16a", 0x20000, 0x10000, CRC(69fc025b) SHA1(20be1242de27f1b997d43890051cc5d5ac8a127a) )
 
-	ROM_REGION( 0x80000, REGION_GFX2, 0 ) /* sprites */
+	ROM_REGION16_BE( 0x80000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "12279.1b", 0x00001, 0x10000, CRC(7a169fb1) SHA1(1ec6da0d2cfcf727e61f61c847fd8b975b64f944) )
 	ROM_LOAD16_BYTE( "12283.5b", 0x00000, 0x10000, CRC(ae0fa085) SHA1(ae9af92d4dd0c8a0f064d24e647522b588fbd7f7) )
 	ROM_LOAD16_BYTE( "12278.2b", 0x20001, 0x10000, CRC(961d06b7) SHA1(b1a9dea63785bfa2c0e7b931387b91dfcd27d79b) )
@@ -5823,6 +5823,7 @@ static WRITE16_HANDLER( tturf_mcu_sound_trigger_w )
 static MACHINE_INIT( tturf ){
 	static int bank[16] = { 0,0,1,0,2,0,3,0 };
 	sys16_obj_bank = bank;
+	sys16_sprite_draw = 1;
 	sys16_update_proc = type0_sys16_textram;
 
 	install_mem_write16_handler(0, 0x2001d6, 0x2001e5, tturf_mcu_sound_trigger_w );
