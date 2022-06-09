@@ -55,6 +55,7 @@ extern int sys16_wwfix, sys16_alienfix;
 
 MACHINE_INIT( sys16_onetime ){
 	sys16_wwfix = sys16_alienfix = 0;
+	sys16_sprite_draw=0;
 	sys16_bg1_trans=0;
 	sys16_rowscroll_scroll=0;
 	sys18_splittab_bg_x=0;
