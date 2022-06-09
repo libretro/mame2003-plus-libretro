@@ -1793,7 +1793,7 @@ ROM_START( bodyslam )
 	ROM_LOAD( "epr10322.c10", 0x08000, 0x8000, CRC(b53d3217) SHA1(baebf20925e9f8ab6660f041a24721716d5b7d92) ) /* plane 2 */
 	ROM_LOAD( "epr10323.c11", 0x10000, 0x8000, CRC(915a3e61) SHA1(6504a8b26b7b4880971cd69ac2c8aae30dcfa18c) ) /* plane 3 */
 
-	ROM_REGION16_BE( 0x40000, REGION_GFX2, 0 ) /* sprites */
+	ROM_REGION( 0x40000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "epr10012.c5",  0x00001, 0x08000, CRC(990824e8) SHA1(bd45f75d07cb4e17583c2d76050e5f819f4b7efe) )
 	ROM_LOAD16_BYTE( "epr10016.b2",  0x00000, 0x08000, CRC(af5dc72f) SHA1(97bbb76940c702e642d8222dda71447b8f60b616) )
 	ROM_LOAD16_BYTE( "epr10013.c6",  0x10001, 0x08000, CRC(9a0919c5) SHA1(e39e60c1e834b3b46bf2ef1c5952841bebe66ade) )
@@ -1861,7 +1861,7 @@ static MEMORY_READ16_START( bodyslam_readmem )
 	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-	{ 0x440000, 0x4407ff, SYS16_MRA16_SPRITERAM },
+	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
@@ -1875,7 +1875,7 @@ static MEMORY_WRITE16_START( bodyslam_writemem )
 	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
 	{ 0xc40002, 0xc40003, sys16_3d_coinctrl_w },
@@ -1891,7 +1891,7 @@ static MACHINE_INIT( bodyslam ){
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_bg_priority_mode = 2;
 	sys16_bg_priority_value=0x0e00;
-	sys16_sprite_draw = 1;
+
 	sys16_textlayer_lo_min=0;
 	sys16_textlayer_lo_max=0x1f;
 	sys16_textlayer_hi_min=0x20;
