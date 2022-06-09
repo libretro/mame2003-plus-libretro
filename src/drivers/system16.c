@@ -1884,16 +1884,6 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void bodyslam_update_proc (void){
-	sys16_fg_scrollx = sys16_textram[0x0ffa/2] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x0ff8/2] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x0f26/2] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x0f24/2] & 0x01ff;
-
-	set_fg_page1( sys16_textram[0x0e9e/2] );
-	set_bg_page1( sys16_textram[0x0e9c/2] );
-}
-
 static MACHINE_INIT( bodyslam ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
@@ -1907,7 +1897,7 @@ static MACHINE_INIT( bodyslam ){
 	sys16_textlayer_hi_min=0x20;
 	sys16_textlayer_hi_max=0xff;
 
-	sys16_update_proc = bodyslam_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 // I have no idea if this is needed, but I cannot find any code for the countdown
