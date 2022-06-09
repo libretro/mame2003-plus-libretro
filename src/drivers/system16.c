@@ -1890,12 +1890,12 @@ static MACHINE_INIT( bodyslam ){
 	sys16_sprxoffset = -0xbc;
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_bg_priority_mode = 2;
-	sys16_bg_priority_value=0x0e00;
+	//sys16_bg_priority_value=0x0e00;
 	sys16_sprite_draw = 1;
-	sys16_textlayer_lo_min=0;
-	sys16_textlayer_lo_max=0x1f;
-	sys16_textlayer_hi_min=0x20;
-	sys16_textlayer_hi_max=0xff;
+	//sys16_textlayer_lo_min=0;
+	//sys16_textlayer_lo_max=0x1f;
+	//sys16_textlayer_hi_min=0x20;
+	//sys16_textlayer_hi_max=0xff;
 
 	sys16_update_proc = type1_sys16_textram;
 }
