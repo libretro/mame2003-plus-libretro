@@ -1793,7 +1793,7 @@ ROM_START( bodyslam )
 	ROM_LOAD( "epr10322.c10", 0x08000, 0x8000, CRC(b53d3217) SHA1(baebf20925e9f8ab6660f041a24721716d5b7d92) ) /* plane 2 */
 	ROM_LOAD( "epr10323.c11", 0x10000, 0x8000, CRC(915a3e61) SHA1(6504a8b26b7b4880971cd69ac2c8aae30dcfa18c) ) /* plane 3 */
 
-	ROM_REGION16_BE( 0x40000, REGION_GFX2, 0 ) /* sprites */
+	ROM_REGION( 0x40000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "epr10012.c5",  0x00001, 0x08000, CRC(990824e8) SHA1(bd45f75d07cb4e17583c2d76050e5f819f4b7efe) )
 	ROM_LOAD16_BYTE( "epr10016.b2",  0x00000, 0x08000, CRC(af5dc72f) SHA1(97bbb76940c702e642d8222dda71447b8f60b616) )
 	ROM_LOAD16_BYTE( "epr10013.c6",  0x10001, 0x08000, CRC(9a0919c5) SHA1(e39e60c1e834b3b46bf2ef1c5952841bebe66ade) )
@@ -1884,18 +1884,7 @@ MEMORY_END
 
 /***************************************************************************/
 
-static void bodyslam_update_proc (void){
-	sys16_fg_scrollx = sys16_textram[0x0ffa/2] & 0x01ff;
-	sys16_bg_scrollx = sys16_textram[0x0ff8/2] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x0f26/2] & 0x00ff;
-	sys16_bg_scrolly = sys16_textram[0x0f24/2] & 0x01ff;
-
-	set_fg_page1( sys16_textram[0x0e9e/2] );
-	set_bg_page1( sys16_textram[0x0e9c/2] );
-}
-
 static MACHINE_INIT( bodyslam ){
-	sys16_sprite_draw = 1;
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbc;
@@ -1908,7 +1897,7 @@ static MACHINE_INIT( bodyslam ){
 	sys16_textlayer_hi_min=0x20;
 	sys16_textlayer_hi_max=0xff;
 
-	sys16_update_proc = bodyslam_update_proc;
+	sys16_update_proc = type1_sys16_textram;
 }
 
 // I have no idea if this is needed, but I cannot find any code for the countdown
