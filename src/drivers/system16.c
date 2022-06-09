@@ -1861,7 +1861,7 @@ static MEMORY_READ16_START( bodyslam_readmem )
 	{ 0x000000, 0x02ffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
+	{ 0x440000, 0x4407ff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
 	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
@@ -1875,7 +1875,7 @@ static MEMORY_WRITE16_START( bodyslam_writemem )
 	{ 0x000000, 0x02ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
 	{ 0xc40002, 0xc40003, sys16_3d_coinctrl_w },
@@ -1890,12 +1890,12 @@ static MACHINE_INIT( bodyslam ){
 	sys16_sprxoffset = -0xbc;
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_bg_priority_mode = 2;
-	//sys16_bg_priority_value=0x0e00;
+	sys16_bg_priority_value=0x0e00;
 	sys16_sprite_draw = 1;
-	//sys16_textlayer_lo_min=0;
-	//sys16_textlayer_lo_max=0x1f;
-	//sys16_textlayer_hi_min=0x20;
-	//sys16_textlayer_hi_max=0xff;
+	sys16_textlayer_lo_min=0;
+	sys16_textlayer_lo_max=0x1f;
+	sys16_textlayer_hi_min=0x20;
+	sys16_textlayer_hi_max=0xff;
 
 	sys16_update_proc = type1_sys16_textram;
 }
