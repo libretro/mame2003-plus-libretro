@@ -133,7 +133,7 @@ data16_t *sys16_roadram;
 static int num_sprites;
 
 #define MAXCOLOURS 0x2000 /* 8192 */
-
+int sys16_sprite_draw;
 int sys16_sh_shadowpal;
 int sys16_MaxShadowColors;
 
@@ -217,6 +217,151 @@ READ16_HANDLER( sys16_tileram_r ){
 
 	Each sprite has 4 levels of priority, specifying where they are placed between bg(lo) and text.
 */
+
+
+#define draw_pixel() 														\
+	/* only draw if onscreen, not 0 or 15, and high enough priority */		\
+	if (x >= cliprect->min_x && pix != 0 && pix != 15 && sprpri > pri[x])	\
+	{																		\
+		/* shadow/hilight mode? */											\
+		if (color == 1024 + (0x3f << 4))									\
+			dest[x] += (paletteram16[dest[x]] & 0x8000) ? 4096 : 2048;		\
+																			\
+		/* regular draw */													\
+		else																\
+			dest[x] = pix | color;											\
+																			\
+		/* always mark priority so no one else draws here */				\
+		pri[x] = 0xff;														\
+	}																		\
+
+
+static void draw_one_sprite_new(struct mame_bitmap *bitmap, const struct rectangle *cliprect, UINT16 *data)
+{
+	int bottom  = data[0] >> 8;
+	int top     = data[0] & 0xff;
+	int xpos    = (data[1] & 0x1ff) + sys16_sprxoffset;
+	int hide    = data[2] & 0x4000;
+	int flip    = data[2] & 0x100;
+	int pitch   = (INT8)(data[2] & 0xff);
+	UINT16 addr = data[3];
+	int bank    = sys16_obj_bank[(data[4] >> 8) & 0xf];
+	int sprpri  = 1 << ((data[4] >> 6) & 0x3);
+	int color   = 1024 + ((data[4] & 0x3f) << 4);
+	int vzoom   = (data[5] >> 5) & 0x1f;
+	int hzoom   = data[5] & 0x1f;
+	int x, y, pix, numbanks;
+	UINT16 *spritedata;
+
+	/* initialize the end address to the start address */
+	data[7] = addr;
+
+	/* if hidden, or top greater than/equal to bottom, or invalid bank, punt */
+	if (hide || (top >= bottom) || bank == 255)
+		return;
+
+	/* clamp to within the memory region size */
+	numbanks = memory_region_length(REGION_GFX2) / 0x20000;
+	if (numbanks)
+		bank %= numbanks;
+	spritedata = (UINT16 *)memory_region(REGION_GFX2) + 0x10000 * bank;
+
+	/* reset the yzoom counter */
+	data[5] &= 0x03ff;
+
+	/* for the non-flipped case, we start one row ahead */
+	if (!flip)
+		addr += pitch;
+
+	/* loop from top to bottom */
+	for (y = top; y < bottom; y++)
+	{
+		/* skip drawing if not within the cliprect */
+		if (y >= cliprect->min_y && y <= cliprect->max_y)
+		{
+			UINT16 *dest = (UINT16 *)bitmap->line[y];
+			UINT8 *pri = (UINT8 *)priority_bitmap->line[y];
+			int xacc = 0x20;
+
+			/* non-flipped case */
+			if (!flip)
+			{
+				/* start at the word before because we preincrement below */
+				data[7] = addr - 1;
+				for (x = xpos; x <= cliprect->max_x; )
+				{
+					UINT16 pixels = spritedata[++data[7]];
+
+					/* draw four pixels */
+					pix = (pixels >> 12) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >>  8) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >>  4) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >>  0) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+
+					/* stop if the last pixel in the group was 0xf */
+					if (pix == 15)
+						break;
+				}
+			}
+
+			/* flipped case */
+			else
+			{
+				/* start at the word after because we predecrement below */
+				data[7] = addr + pitch + 1;
+				for (x = xpos; x <= cliprect->max_x; )
+				{
+					UINT16 pixels = spritedata[--data[7]];
+
+					/* draw four pixels */
+					pix = (pixels >>  0) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >>  4) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >>  8) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+					pix = (pixels >> 12) & 0xf; if (xacc < 0x40) { draw_pixel(); x++; } else xacc -= 0x40; xacc += hzoom;
+
+					/* stop if the last pixel in the group was 0xf */
+					if (pix == 15)
+						break;
+				}
+			}
+		}
+
+		/* advance a row */
+		addr += pitch;
+
+		/* accumulate zoom factors; if we carry into the high bit, skip an extra row */
+		data[5] += vzoom << 10;
+		if (data[5] & 0x8000)
+		{
+			addr += pitch;
+			data[5] &= ~0x8000;
+		}
+	}
+}
+
+
+
+/*************************************
+ *
+ *	Sprite drawing
+ *
+ *************************************/
+
+static void draw_sprites_new(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	UINT16 *cursprite;
+
+	/* first scan forward to find the end of the list */
+	for (cursprite = sys16_spriteram; cursprite < sys16_spriteram + 0x7ff/2; cursprite += 8)
+		if (cursprite[2] & 0x8000)
+			break;
+
+	/* now scan backwards and render the sprites in order */
+	for (cursprite -= 8; cursprite >= sys16_spriteram; cursprite -= 8)
+		draw_one_sprite_new(bitmap, cliprect, cursprite);
+}
+
+
 
 static void draw_sprite( //*
 	struct mame_bitmap *bitmap,
@@ -487,15 +632,15 @@ UINT32 sys16_text_map( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows 
 
 /*
 	Color generation details
-	
+
 	Each color is made up of 5 bits, connected through one or more resistors like so:
-	
+
 	Bit 0 = 1 x 3.9K ohm
 	Bit 1 = 1 x 2.0K ohm
 	Bit 2 = 1 x 1.0K ohm
 	Bit 3 = 2 x 1.0K ohm
 	Bit 4 = 4 x 1.0K ohm
-	
+
 	Another data bit is connected by a tristate buffer to the color output through a 470 ohm resistor.
 	The buffer allows the resistor to have no effect (tristate), halve brightness (pull-down) or double brightness (pull-up).
 	The data bit source is a PPI pin in some of the earlier hardware (Hang-On, Pre-System 16) or bit 15 of each
@@ -512,14 +657,14 @@ WRITE16_HANDLER( sys16_paletteram_w )
 	data16_t newword;
 	COMBINE_DATA( &paletteram16[offset] );
 	newword = paletteram16[offset];
-	
+
 	if( oldword!=newword )
-	{ 
+	{
 		/* we can do this, because we initialize palette RAM to all black in vh_start */
 		/*	   byte 0    byte 1 */
 		/*	sBGR BBBB GGGG RRRR */
 		/*	x000 4321 4321 4321 */
-		
+
 		int r, g, b, rs, gs, bs, rh, gh, bh;
 		int r0 = (newword >> 12) & 1;
 		int r1 = (newword >>  0) & 1;
@@ -541,7 +686,7 @@ WRITE16_HANDLER( sys16_paletteram_w )
 		r = combine_6_weights(weights[0][0], r0, r1, r2, r3, r4, 0);
 		g = combine_6_weights(weights[0][1], g0, g1, g2, g3, g4, 0);
 		b = combine_6_weights(weights[0][2], b0, b1, b2, b3, b4, 0);
-		
+
 		/* Shadow colors */
 		rs = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 0);
 		gs = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 0);
@@ -550,14 +695,14 @@ WRITE16_HANDLER( sys16_paletteram_w )
 		/* Highlight colors */
 		rh = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 1);
 		gh = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 1);
-		bh = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 1);	
-	
+		bh = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 1);
+
 		palette_set_color( offset, r, g, b );
-		
+
 #ifdef TRANSPARENT_SHADOWS
-		palette_set_color( offset+Machine->drv->total_colors/2,rs,gs,bs); 
-#endif		
-		
+		palette_set_color( offset+Machine->drv->total_colors/2,rs,gs,bs);
+#endif
+
 	}
 }
 
@@ -843,21 +988,22 @@ VIDEO_START( system16 ){
 		0x8,0x9,0xa,0xb,
 		0xc,0xd,0xe,0xf
 	};
-	sys16_obj_bank = bank_default;
+	if (!sys16_obj_bank)
+		sys16_obj_bank = bank_default;
 
 	/* Normal colors */
-	compute_resistor_weights(0, 255, -1.0,  
+	compute_resistor_weights(0, 255, -1.0,
 		6, resistances_normal, weights[0][0], 0, 0,
 		6, resistances_normal, weights[0][1], 0, 0,
 		6, resistances_normal, weights[0][2], 0, 0
-		);	
+		);
 
 	/* Shadow/Highlight colors */
-	compute_resistor_weights(0, 255, -1.0,  
+	compute_resistor_weights(0, 255, -1.0,
 		6, resistances_sh, weights[1][0], 0, 0,
 		6, resistances_sh, weights[1][1], 0, 0,
 		6, resistances_sh, weights[1][2], 0, 0
-		);	
+		);
 
 	if( !sys16_bg1_trans )
 		background = tilemap_create(
@@ -889,7 +1035,7 @@ VIDEO_START( system16 ){
 		40,28 );
 
 	num_sprites = 128*2; /* only 128 for most games; aburner uses 256 */
-	
+
 	if(!strcmp(Machine->gamedrv->name, "hangon"))
 		num_sprites = 128;
 
@@ -918,7 +1064,8 @@ VIDEO_START( system16 ){
 		/* common defaults */
 		sys16_update_proc = 0;
 		sys16_spritesystem = sys16_sprite_shinobi;
-		sys16_sprxoffset = -0xb8;
+		if (!sys16_sprxoffset)
+			sys16_sprxoffset = -0xb8;
 		sys16_textmode = 0;
 		sys16_bgxoffset = 0;
 		sys16_bg_priority_mode=0;
@@ -1201,7 +1348,12 @@ VIDEO_UPDATE( system16 ){
 //	sprite_draw(sprite_list,0);
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
 
-	draw_sprites( bitmap,cliprect,0 );
+	if (!sys16_sprite_draw)
+	{
+		draw_sprites( bitmap,cliprect,0 );
+	}
+	else
+		draw_sprites_new( bitmap,cliprect);
 }
 
 VIDEO_UPDATE( system18 ){
@@ -1235,7 +1387,12 @@ VIDEO_UPDATE( system18 ){
 //	sprite_draw(sprite_list,0);
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
 
-	draw_sprites( bitmap,cliprect, 0 );
+	if (!sys16_sprite_draw)
+	{
+		draw_sprites( bitmap,cliprect,0 );
+	}
+	else
+		draw_sprites_new( bitmap,cliprect);
 }
 
 
@@ -1433,7 +1590,12 @@ VIDEO_UPDATE( hangon ){
 	render_gr(bitmap,cliprect,1); /* floor */
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
 
-	draw_sprites( bitmap,cliprect, 0 );
+	if (!sys16_sprite_draw)
+	{
+		draw_sprites( bitmap,cliprect,0 );
+	}
+	else
+		draw_sprites_new( bitmap,cliprect);
 }
 
 static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *cliprect,int priority)
@@ -1630,8 +1792,12 @@ VIDEO_UPDATE( outrun ){
 		tilemap_draw( bitmap,cliprect, foreground, 0, 0 );
 		render_grv2(bitmap,cliprect,0);
 
-		draw_sprites( bitmap,cliprect, 1 );
-
+	if (!sys16_sprite_draw)
+	{
+		draw_sprites( bitmap,cliprect,1 );
+	}
+	else
+		draw_sprites_new( bitmap,cliprect);
 		tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
 	}
 }
@@ -1947,7 +2113,13 @@ VIDEO_UPDATE( aburner ){
 	tilemap_draw( bitmap,cliprect, foreground, 1, 7 );
 
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 7 );
-	draw_sprites( bitmap,cliprect, 2 );
+
+	if (!sys16_sprite_draw)
+	{
+		draw_sprites( bitmap,cliprect,2 );
+	}
+	else
+		draw_sprites_new( bitmap,cliprect);
 
 //	debug_draw( bitmap,cliprect, 8,8,sys16_roadram[0x1000] );
 }
