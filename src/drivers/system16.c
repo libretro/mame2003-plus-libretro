@@ -5988,10 +5988,15 @@ static void tturfbl_update_proc( void ){
 }
 
 static MACHINE_INIT( tturfbl ){
-	static int bank[16] = { 0,255,255,255, 255,255,255,3, 255,255,255,2, 255,1,0,255 };
+	static int bank[16] = {
+		0,0,0,0,
+		0,0,0,3,
+		0,0,0,2,
+		0,1,0,0
+	};
 	sys16_obj_bank = bank;
 	sys16_sprite_draw = 1;
-	sys16_sprxoffset = -0x48;
+	sys16_sprxoffset = 183;
 
 	sys16_update_proc = tturfbl_update_proc;
 }
