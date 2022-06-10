@@ -240,7 +240,7 @@ static void draw_one_sprite_new(struct mame_bitmap *bitmap, const struct rectang
 {
 	int bottom  = data[0] >> 8;
 	int top     = data[0] & 0xff;
-	int xpos    = (data[1] & 0x1ff) - 0xb8;
+	int xpos    = (data[1] & 0x1ff) - sys16_sprxoffset;
 	int hide    = data[2] & 0x4000;
 	int flip    = data[2] & 0x100;
 	int pitch   = (INT8)(data[2] & 0xff);
@@ -1064,7 +1064,8 @@ VIDEO_START( system16 ){
 		/* common defaults */
 		sys16_update_proc = 0;
 		sys16_spritesystem = sys16_sprite_shinobi;
-		sys16_sprxoffset = -0xb8;
+		if (!sys16_sprxoffset)
+			sys16_sprxoffset = -0xb8;
 		sys16_textmode = 0;
 		sys16_bgxoffset = 0;
 		sys16_bg_priority_mode=0;
