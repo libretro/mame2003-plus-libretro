@@ -3188,7 +3188,7 @@ static READ16_HANDLER( goldnaxa_skip_r ){
 
 // This version has somekind of hardware comparitor for collision detection,
 // and a hardware multiplier.
-static data16_t *ga_hardware_collision_data;
+static data16_t ga_hardware_collision_data[5];
 static WRITE16_HANDLER( ga_hardware_collision_w )
 {
 	static int bit=1;
@@ -3211,7 +3211,7 @@ static READ16_HANDLER( ga_hardware_collision_r )
 	return ga_hardware_collision_data[4];
 }
 
-static data16_t *ga_hardware_multiplier_data;
+static data16_t ga_hardware_multiplier_data[4];
 static WRITE16_HANDLER( ga_hardware_multiplier_w )
 {
 	COMBINE_DATA( &ga_hardware_multiplier_data[offset] );
