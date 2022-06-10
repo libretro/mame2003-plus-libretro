@@ -240,7 +240,7 @@ static void draw_one_sprite_new(struct mame_bitmap *bitmap, const struct rectang
 {
 	int bottom  = data[0] >> 8;
 	int top     = data[0] & 0xff;
-	int xpos    = (data[1] & 0x1ff) - sys16_sprxoffset;
+	int xpos    = (data[1] & 0x1ff) + sys16_sprxoffset;
 	int hide    = data[2] & 0x4000;
 	int flip    = data[2] & 0x100;
 	int pitch   = (INT8)(data[2] & 0xff);
