@@ -5909,7 +5909,7 @@ ROM_START( tturfbl )
 	ROM_LOAD( "tt16cf44.rom", 0x10000, 0x10000, CRC(4c467735) SHA1(8338b6605cbe2e076da0b3e3a47630409a79f002) )
 	ROM_LOAD( "tt17d59e.rom", 0x20000, 0x10000, CRC(60c0f2fe) SHA1(3fea4ed757d47628f59ff940e40cb86b3b5b443b) )
 
-	ROM_REGION( 0x80000, REGION_GFX2, 0 ) /* sprites */
+	ROM_REGION16_BE( 0x80000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "12279.1b", 0x00001, 0x10000, CRC(7a169fb1) SHA1(1ec6da0d2cfcf727e61f61c847fd8b975b64f944) )
 	ROM_LOAD16_BYTE( "12283.5b", 0x00000, 0x10000, CRC(ae0fa085) SHA1(ae9af92d4dd0c8a0f064d24e647522b588fbd7f7) )
 	ROM_LOAD16_BYTE( "12278.2b", 0x20001, 0x10000, CRC(961d06b7) SHA1(b1a9dea63785bfa2c0e7b931387b91dfcd27d79b) )
@@ -5988,12 +5988,7 @@ static void tturfbl_update_proc( void ){
 }
 
 static MACHINE_INIT( tturfbl ){
-	static int bank[16] = {
-		0,0,0,0,
-		0,0,0,3,
-		0,0,0,2,
-		0,1,0,0
-	};
+	static int bank[16] = { 0,255,255,255, 255,255,255,3, 255,255,255,2, 255,1,0,255 };
 	sys16_obj_bank = bank;
 	sys16_sprite_draw = 1;
 	sys16_sprxoffset = -0x48;
