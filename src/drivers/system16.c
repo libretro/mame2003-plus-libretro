@@ -5995,6 +5995,7 @@ static MACHINE_INIT( tturfbl ){
 		0,1,0,0
 	};
 	sys16_obj_bank = bank;
+	sys16_sprite_draw = 1;
 	sys16_sprxoffset = -0x48;
 
 	sys16_update_proc = tturfbl_update_proc;
