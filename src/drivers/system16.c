@@ -3192,9 +3192,10 @@ static data16_t ga_hardware_collision_data[5];
 static WRITE16_HANDLER( ga_hardware_collision_w )
 {
 	static int bit=1;
-//TBA
-//	COMBINE_DATA( &ga_hardware_collision_data );
-	if( offset==4/2 ){
+
+	COMBINE_DATA( &ga_hardware_collision_data[offset] );
+	if( offset==4/2 )
+{
 		if( ga_hardware_collision_data[2] <= ga_hardware_collision_data[0] &&
 			ga_hardware_collision_data[2] >= ga_hardware_collision_data[1])
 		{
@@ -3205,17 +3206,19 @@ static WRITE16_HANDLER( ga_hardware_collision_w )
 	else if( offset==8/2 ) bit=1;
 }
 
-static READ16_HANDLER( ga_hardware_collision_r ){
+static READ16_HANDLER( ga_hardware_collision_r )
+{
 	return ga_hardware_collision_data[4];
 }
 
-static int ga_hardware_multiplier_data[4];
-static WRITE16_HANDLER( ga_hardware_multiplier_w ){
-//TBA
-//	COMBINE_DATA( &ga_hardware_multiplier_data );
+static data16_t ga_hardware_multiplier_data[4];
+static WRITE16_HANDLER( ga_hardware_multiplier_w )
+{
+	COMBINE_DATA( &ga_hardware_multiplier_data[offset] );
 }
 
-static READ16_HANDLER( ga_hardware_multiplier_r ){
+static READ16_HANDLER( ga_hardware_multiplier_r )
+{
 	if(offset==6/2)
 		return ga_hardware_multiplier_data[0] * ga_hardware_multiplier_data[1];
 	else
