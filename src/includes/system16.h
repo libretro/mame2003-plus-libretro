@@ -216,6 +216,8 @@ void aurail_decode_opcode2(data16_t *dest,data16_t *source,int size);
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) ) \
 	PORT_DIPSETTING(    0x00, "Free Play (if Coin A too) or 1/1" )
 
+#define SYS16_UNUSED PORT_START \
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 /* video hardware */
 extern READ16_HANDLER( sys16_tileram_r );

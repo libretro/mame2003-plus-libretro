@@ -1253,7 +1253,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hasamu )	/* (c) 1991 Irem (Japan) */
 	DRIVER( dynablst )	/* (c) 1991 Irem (World) */
 	DRIVER( dynablsb )	/* bootleg */
-  DRIVER( dicegame )  /* bootleg */  
+  DRIVER( dicegame )  /* bootleg */
 	DRIVER( bombrman )	/* (c) 1991 Irem (Japan) */
 	/* M97 */
 	DRIVER( bbmanw )	/* (c) 1992 Irem (World) */
@@ -1831,7 +1831,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 3in1semi )  /* (c) 1998 SemiCom */
 	DRIVER( moremore )  /* (c) 1999 SemiCom / Exit */
 	DRIVER( moremorp )  /* (c) 1999 SemiCom / Exit */
-	
+
 	/* Cloned snow bros hardware */
 	DRIVER( finalttr )  /* (c) 1993 Jeil */
 	DRIVER( toto )	    /* (c) 1996 SoftClub */
@@ -2827,8 +2827,10 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( astormbl )	/* bootleg */
 	DRIVER( atomicp )	/* (c) 1990 Philko */
 	DRIVER( aurail )	/* (c) 1990 Sega / Westone */
+	DRIVER( bulletd )	/* (protected) */
 	DRIVER( bayroute )	/* (c) 1989 Sunsoft / Sega */
 	DRIVER( bodyslam )	/* (c) 1986 */
+	DRIVER( cottond )
 	DRIVER( dduxbl )	/* (c) 1989 (Datsu bootleg) */
 	DRIVER( dumpmtmt )	/* (c) 1986 (Japan) */
 	DRIVER( endurob2 )	/* (c) 1985 (Beta bootleg) */
@@ -3057,10 +3059,10 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( puckpkmn )	/* (c) 2000 Genie */
 	DRIVER( jzth )		/* (c) 2000 <unknown> */
 	DRIVER( sbubsm )	/* (c) 1996 Sun Mixing */
-  DRIVER( barek3mb ) /* (c) 1994 bootleg / Sega */  
+  DRIVER( barek3mb ) /* (c) 1994 bootleg / Sega */
   DRIVER( aladmdb ) /*  (c) 1993 bootleg / Sega */
-  DRIVER( barek2ch ) /* (c) 1994 bootleg / Sega */ 
-    
+  DRIVER( barek2ch ) /* (c) 1994 bootleg / Sega */
+
 	/* Sega MegaTech, the number shown ia on the label of the instruction rom */
 	DRIVER( mt_beast )	/* 01 */
 	DRIVER( mt_shar2 )	/* 02 */
