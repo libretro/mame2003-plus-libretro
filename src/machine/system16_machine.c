@@ -2145,8 +2145,7 @@ void aurail_decode_opcode2(data16_t *dest,data16_t *source,int size)
 
 static void sound_cause_nmi( int chip ){
 	/* upd7759 callback */
-	if (chip)
-		cpu_set_nmi_line(1, PULSE_LINE);
+	cpu_set_nmi_line(1, PULSE_LINE);
 }
 
 struct SEGAPCMinterface sys16_segapcm_interface_15k = {
