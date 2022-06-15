@@ -6800,8 +6800,8 @@ static MACHINE_DRIVER_START( cotton )
 	MDRV_IMPORT_FROM(system16_7759_cotton)
 	MDRV_CPU_MODIFY("main")
    	MDRV_CPU_MEMORY(cotton_readmem,cotton_writemem)
-	MDRV_VIDEO_START(system16)
-	MDRV_VIDEO_UPDATE(system16)
+	MDRV_VIDEO_START(system18)
+	MDRV_VIDEO_UPDATE(system18)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( bullet )
