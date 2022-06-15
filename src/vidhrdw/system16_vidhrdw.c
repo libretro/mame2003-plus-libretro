@@ -1062,10 +1062,7 @@ VIDEO_START( system16 ){
 		sys16_refreshenable = 1;
 
 		/* common defaults */
-		sys16_update_proc = 0;
 		sys16_spritesystem = sys16_sprite_shinobi;
-		if (!sys16_sprxoffset)
-			sys16_sprxoffset = -0xb8;
 		sys16_textmode = 0;
 		sys16_bgxoffset = 0;
 		sys16_bg_priority_mode=0;

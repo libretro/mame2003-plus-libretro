@@ -571,7 +571,6 @@ static void set_bg_page1( int data ){
 	sys16_bg_page[2] = data&0xf;
 }
 
-#if 0
 static void set_fg2_page( int data ){
 	sys16_fg2_page[0] = data>>12;
 	sys16_fg2_page[1] = (data>>8)&0xf;
@@ -585,17 +584,23 @@ static void set_bg2_page( int data ){
 	sys16_bg2_page[2] = (data>>4)&0xf;
 	sys16_bg2_page[3] = data&0xf;
 }
-#endif
-
 
 static void type0_sys16_textram( void )
 {
 	set_fg_page( sys16_textram[0x740] );
 	set_bg_page( sys16_textram[0x741] );
-	sys16_fg_scrolly = sys16_textram[0x748];
-	sys16_bg_scrolly = sys16_textram[0x749];
-	sys16_fg_scrollx = sys16_textram[0x74c];
-	sys16_bg_scrollx = sys16_textram[0x74d];
+	set_fg2_page( sys16_textram[0x742] );
+	set_bg2_page( sys16_textram[0x743] );
+
+	sys16_fg_scrolly  = sys16_textram[0x748];
+	sys16_bg_scrolly  = sys16_textram[0x749];
+	sys16_fg2_scrolly = sys16_textram[0x74a];
+	sys16_bg2_scrolly = sys16_textram[0x74b];
+
+	sys16_fg_scrollx  = sys16_textram[0x74c];
+	sys16_bg_scrollx  = sys16_textram[0x74d];
+	sys16_fg2_scrollx = sys16_textram[0x74e];
+	sys16_bg2_scrollx = sys16_textram[0x74f];
 }
 
 static void type1_sys16_textram( void )
