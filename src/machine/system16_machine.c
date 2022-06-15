@@ -62,8 +62,10 @@ MACHINE_INIT( sys16_onetime ){
 	sys18_splittab_bg_y=0;
 	sys18_splittab_fg_x=0;
 	sys18_splittab_fg_y=0;
-
+	sys16_update_proc = 0;
 	sys16_quartet_title_kludge=0;
+	if (!sys16_sprxoffset)
+         sys16_sprxoffset = -0xb8;
 
 	sys16_custom_irq=NULL;
 
