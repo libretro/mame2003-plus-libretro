@@ -394,6 +394,12 @@ static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
+static MEMORY_WRITE_START( sound_writemem_7759 )
+	{ 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xdfff, MWA_BANK1 },
+	{ 0xf800, 0xffff, MWA_RAM },
+MEMORY_END
+
 
 static WRITE_HANDLER( UPD7759_bank_w )
 {
@@ -403,8 +409,31 @@ static WRITE_HANDLER( UPD7759_bank_w )
 	if (sys16_alienfix && (data&0x30)==0x20) data-=2;
 	offs = 0x10000 + (data * 0x4000) % size;
 	cpu_setbank(1, memory_region(REGION_CPU2) + offs);
+
 }
 
+static WRITE_HANDLER( UPD7759_bank_w_cotton )
+{
+	int size = memory_region_length(REGION_CPU2) - 0x10000;
+	if (size > 0)
+	{
+		int bankoffs=0;
+		/* it is important to write in this order: if the /START line goes low
+		   at the same time /RESET goes low, no sample should be started */
+		UPD7759_start_w(0, data & 0x80);
+		UPD7759_reset_w(0, data & 0x40);
+
+
+		if (sys16_alienfix == 2)
+		{
+			// cotton banking
+			bankoffs = ((data & 0x08) >> 3) * 0x20000;
+			bankoffs += (data & 0x07) * 0x4000;
+        }
+		cpu_setbank(1, memory_region(REGION_CPU2) + 0x10000 + (bankoffs % size));
+
+	}
+}
 
 static PORT_WRITE_START( sound_writeport_7759 )
 	{ 0x00, 0x00, YM2151_register_port_0_w },
@@ -413,6 +442,12 @@ static PORT_WRITE_START( sound_writeport_7759 )
 	{ 0x80, 0x80, UPD7759_0_port_w },
 PORT_END
 
+static PORT_WRITE_START( sound_writeport_7759_cotton )
+	{ 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x01, 0x01, YM2151_data_port_0_w },
+	{ 0x40, 0x40, UPD7759_bank_w_cotton },
+	{ 0x80, 0x80, UPD7759_0_port_w },
+PORT_END
 
 static WRITE16_HANDLER( sound_command_w ){
 	if( ACCESSING_LSB ){
@@ -540,13 +575,25 @@ static MACHINE_DRIVER_START( system16_7759 )
 	MDRV_IMPORT_FROM(system16)
 
 	MDRV_CPU_MODIFY("sound")
-    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem)
+    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16_upd7759_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( system16_7759_cotton )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system16)
+
+	MDRV_CPU_MODIFY("sound")
+    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
+	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759_cotton)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16_upd7759_interface)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( system16_7751 )
 
@@ -6739,6 +6786,7 @@ sys16_obj_bank = bank;
 static DRIVER_INIT( cotton ){
 	machine_init_sys16_onetime();
 	sys16_update_proc =  system16_update_0_proc;
+    sys16_alienfix = 2;
   	sys16_sprite_draw =1;
   	sys16_rowscroll_scroll=0x8000;
     sys18_splittab_fg_x= &sys16_textram[0x7c0];
@@ -6749,7 +6797,7 @@ static DRIVER_INIT( cotton ){
 
 static MACHINE_DRIVER_START( cotton )
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759_cotton)
 	MDRV_CPU_MODIFY("main")
    	MDRV_CPU_MEMORY(cotton_readmem,cotton_writemem)
 	MDRV_VIDEO_START(system16)
