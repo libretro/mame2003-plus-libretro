@@ -372,7 +372,7 @@ static void pio( void *dest, const void *source, int count, UINT8 *pri, UINT32 p
 	if (pcode)
 		for( i=0; i<count; i++ )
 		{
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 }
 
@@ -385,7 +385,7 @@ static void pit( void *dest, const void *source, const UINT8 *pMask, int mask, i
 		{
 			if( (pMask[i]&mask)==value )
 			{
-				pri[i] |= pcode;
+				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
 		}
 }
@@ -399,7 +399,7 @@ static void pdo16( UINT16 *dest, const UINT16 *source, int count, UINT8 *pri, UI
 	memcpy( dest,source,count*sizeof(UINT16) );
 	for( i=0; i<count; i++ )
 	{
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 #endif
@@ -412,7 +412,7 @@ static void pdo16pal( UINT16 *dest, const UINT16 *source, int count, UINT8 *pri,
 	for( i=0; i<count; i++ )
 	{
 		dest[i] = source[i] + pal;
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 #endif
@@ -431,7 +431,7 @@ static void pdo15( UINT16 *dest, const UINT16 *source, int count, UINT8 *pri, UI
 	for( i=0; i<count; i++ )
 	{
 		dest[i] = clut[source[i]];
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 
@@ -443,7 +443,7 @@ static void pdo32( UINT32 *dest, const UINT16 *source, int count, UINT8 *pri, UI
 	for( i=0; i<count; i++ )
 	{
 		dest[i] = clut[source[i]];
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 #endif
@@ -491,7 +491,7 @@ static void pdt16( UINT16 *dest, const UINT16 *source, const UINT8 *pMask, int m
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = source[i];
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -508,7 +508,7 @@ static void pdt16pal( UINT16 *dest, const UINT16 *source, const UINT8 *pMask, in
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = source[i] + pal;
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -536,7 +536,7 @@ static void pdt15( UINT16 *dest, const UINT16 *source, const UINT8 *pMask, int m
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = clut[source[i]];
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -551,7 +551,7 @@ static void pdt32( UINT32 *dest, const UINT16 *source, const UINT8 *pMask, int m
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = clut[source[i]];
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -589,7 +589,7 @@ static void pbo15( UINT16 *dest, const UINT16 *source, int count, UINT8 *pri, UI
 	for( i=0; i<count; i++ )
 	{
 		dest[i] = alpha_blend16(dest[i], clut[source[i]]);
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 
@@ -601,7 +601,7 @@ static void pbo32( UINT32 *dest, const UINT16 *source, int count, UINT8 *pri, UI
 	for( i=0; i<count; i++ )
 	{
 		dest[i] = alpha_blend32(dest[i], clut[source[i]]);
-		pri[i] |= pcode;
+		pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
 #endif
@@ -639,7 +639,7 @@ static void pbt15( UINT16 *dest, const UINT16 *source, const UINT8 *pMask, int m
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = alpha_blend16(dest[i], clut[source[i]]);
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -654,7 +654,7 @@ static void pbt32( UINT32 *dest, const UINT16 *source, const UINT8 *pMask, int m
 		if( (pMask[i]&mask)==value )
 		{
 			dest[i] = alpha_blend32(dest[i], clut[source[i]]);
-			pri[i] |= pcode;
+			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 		}
 	}
 }
@@ -684,6 +684,16 @@ static void npbt32( UINT32 *dest, const UINT16 *source, const UINT8 *pMask, int 
 #endif
 
 /***********************************************************************************/
+
+#define DEPTH 16
+#define DATA_TYPE UINT16
+#define DECLARE(function,args,body) static void function##16BPP args body
+#include "tilemap.c"
+
+#define DEPTH 32
+#define DATA_TYPE UINT32
+#define DECLARE(function,args,body) static void function##32BPP args body
+#include "tilemap.c"
 
 #define PAL_INIT const pen_t *pPalData = tile_info.pal_data
 #define PAL_GET(pen) pPalData[pen]
@@ -729,835 +739,6 @@ static void install_draw_handlers( struct tilemap *tilemap )
 		else
 			tilemap->draw_tile = HandleTransparencyNone_raw;
 	}
-}
-
-static void copyroz_core16BPP (
-      struct mame_bitmap *bitmap,
-      struct tilemap *tilemap,
-      UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,
-      int incyy,int wraparound, const struct rectangle *clip, int mask,
-      int value, UINT32 priority,UINT32 palette_offset)
-{
-   UINT32 cx;
-   UINT32 cy;
-   int x;
-   int sx;
-   int sy;
-   int ex;
-   int ey;
-   struct mame_bitmap *srcbitmap = tilemap->pixmap;
-   struct mame_bitmap *transparency_bitmap = tilemap->transparency_bitmap;
-   const int xmask = srcbitmap->width-1;
-   const int ymask = srcbitmap->height-1;
-   const int widthshifted = srcbitmap->width << 16;
-   const int heightshifted = srcbitmap->height << 16;
-   UINT16 *dest;
-   UINT8 *pri;
-   const UINT16 *src;
-   const UINT8 *pMask;
-   
-   if (clip)
-   {
-      startx += clip->min_x * incxx + clip->min_y * incyx;
-      starty += clip->min_x * incxy + clip->min_y * incyy;
-      sx = clip->min_x;
-      sy = clip->min_y;
-      ex = clip->max_x;
-      ey = clip->max_y;
-   }
-   else
-   {
-      sx = 0;
-      sy = 0;
-      ex = bitmap->width-1;
-      ey = bitmap->height-1;
-   }
-   
-   if (Machine->orientation & 0x0004)
-   {
-      int t;
-      t = startx;
-      startx = starty;
-      starty = t;
-      t = sx;
-      sx = sy;
-      sy = t;
-      t = ex;
-      ex = ey;
-      ey = t;
-      t = incxx;
-      incxx = incyy;
-      incyy = t;
-      t = incxy;
-      incxy = incyx;
-      incyx = t;
-   }
-   
-   if (Machine->orientation & 0x0001)
-   {
-      int w = ex - sx;
-      incxy = -incxy;
-      incyx = -incyx;
-      startx = widthshifted - startx - 1;
-      startx -= incxx * w;
-      starty -= incxy * w;
-      w = sx;
-      sx = bitmap->width-1 - ex;
-      ex = bitmap->width-1 - w;
-   }
-   
-   if (Machine->orientation & 0x0002)
-   {
-      int h = ey - sy;
-      incxy = -incxy;
-      incyx = -incyx;
-      starty = heightshifted - starty - 1;
-      startx -= incyx * h;
-      starty -= incyy * h;
-      h = sy;
-      sy = bitmap->height-1 - ey;
-      ey = bitmap->height-1 - h;
-   }
-   
-   if (incxy == 0 && incyx == 0 && !wraparound)
-   {
-      if (incxx == 0x10000)
-      {
-         startx = ((INT32)startx) >> 16;
-         if (startx >= srcbitmap->width)
-         {
-            sx += -startx; startx = 0;
-         }
-         
-         if (sx <= ex)
-         {
-            while (sy <= ey)
-            {
-               if (starty < heightshifted)
-               {
-                  x = sx;
-                  cx = startx;
-                  cy = starty >> 16;
-                  dest = ((UINT16 *)bitmap->line[sy]) + sx;
-                  pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-                  src = (UINT16 *)srcbitmap->line[cy];
-                  pMask = (UINT8 *)transparency_bitmap->line[cy];
-                  
-                  while (x <= ex && cx < srcbitmap->width)
-                  {
-                     if ( (pMask[cx]&mask) == value )
-                     {
-                        *dest = src[cx]+palette_offset;
-                        *pri |= priority;
-                     }
-                     cx++;
-                     x++;
-                     dest++;
-                     pri++;
-                  }
-               }
-               starty += incyy;
-               sy++;
-            }
-         }
-      }
-      else
-      {
-         while (startx >= widthshifted && sx <= ex)
-         {
-            startx += incxx;
-            sx++;
-         }
-         
-         if (sx <= ex)
-         {
-            while (sy <= ey)
-            {
-               if (starty < heightshifted)
-               {
-                  x = sx;
-                  cx = startx;
-                  cy = starty >> 16;
-                  dest = ((UINT16 *)bitmap->line[sy]) + sx;
-                  pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-                  src = (UINT16 *)srcbitmap->line[cy];
-                  pMask = (UINT8 *)transparency_bitmap->line[cy];
-                  while (x <= ex && cx < widthshifted)
-                  {
-                     if ( (pMask[cx>>16]&mask) == value )
-                     {
-                        *dest = src[cx >> 16]+palette_offset;
-                        *pri |= priority;
-                     }
-                     cx += incxx;
-                     x++;
-                     dest++;
-                     pri++;
-                  }
-               }
-               starty += incyy;
-               sy++;
-            }
-         }
-      }
-   }
-   else
-   {
-      if (wraparound)
-      {
-         while (sy <= ey)
-         {
-            x = sx;
-            cx = startx;
-            cy = starty;
-            dest = ((UINT16 *)bitmap->line[sy]) + sx;
-            pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-
-            while (x <= ex)
-            {
-               if( (((UINT8 *)transparency_bitmap->line[(cy>>16)&ymask])[(cx>>16)&xmask]&mask) == value )
-               {
-                  *dest = ((UINT16 *)srcbitmap->line[(cy >> 16) & ymask])[(cx >> 16) & xmask]+palette_offset;
-                  *pri |= priority;
-               }
-
-               cx += incxx;
-               cy += incxy;
-               x++;
-               dest++;
-               pri++;
-            }
-            startx += incyx;
-            starty += incyy;
-            sy++;
-         }
-      }
-      else
-      {
-         while (sy <= ey)
-         {
-            x = sx;
-            cx = startx;
-            cy = starty;
-            dest = ((UINT16 *)bitmap->line[sy]) + sx;
-            pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-
-            while (x <= ex)
-            {
-               if (cx < widthshifted && cy < heightshifted)
-               {
-                  if( (((UINT8 *)transparency_bitmap->line[cy>>16])[cx>>16]&mask)==value )
-                  {
-                     *dest = ((UINT16 *)srcbitmap->line[cy >> 16])[cx >> 16]+palette_offset;
-                     *pri |= priority;
-                  }
-               }
-               cx += incxx;
-               cy += incxy;
-               x++;
-               dest++;
-               pri++;
-            }
-            startx += incyx;
-            starty += incyy;
-            sy++;
-         }
-      }
-   }
-}
-
-static void draw16BPP (struct tilemap *tilemap, int xpos, int ypos, int mask, int value )
-{
-   trans_t transPrev;
-   trans_t transCur;
-   const UINT8 *pTrans;
-   UINT32 cached_indx;
-   struct mame_bitmap *screen = blit.screen_bitmap;
-   int tilemap_priority_code = blit.tilemap_priority_code;
-   int x1 = xpos;
-   int y1 = ypos;
-   int x2 = xpos+tilemap->cached_width;
-   int y2 = ypos+tilemap->cached_height;
-   UINT16 *dest_baseaddr = ((void *)0);
-   UINT16 *dest_next;
-   int dy;
-   int count;
-   const UINT16 *source0;
-   UINT16 *dest0;
-   UINT8 *pmap0;
-   int i;
-   int row;
-   int x_start;
-   int x_end;
-   int column;
-   int c1;
-   int c2;
-   int y;
-   int y_next;
-   UINT8 *priority_bitmap_baseaddr;
-   UINT8 *priority_bitmap_next;
-   const UINT16 *source_baseaddr;
-   const UINT16 *source_next;
-   const UINT8 *mask0;
-   const UINT8 *mask_baseaddr;
-   const UINT8 *mask_next;
-
-   if( x1<blit.clip_left )
-      x1 = blit.clip_left;
-   if( x2>blit.clip_right )
-      x2 = blit.clip_right;
-   if( y1<blit.clip_top )
-      y1 = blit.clip_top;
-   if( y2>blit.clip_bottom )
-      y2 = blit.clip_bottom;
-   if( x1<x2 && y1<y2 )
-   {
-      priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
-
-      if( screen )
-         dest_baseaddr = xpos + (UINT16 *)screen->line[y1];
-
-      x1 -= xpos;
-      y1 -= ypos;
-      x2 -= xpos;
-      y2 -= ypos;
-      source_baseaddr = (UINT16 *)tilemap->pixmap->line[y1];
-      mask_baseaddr = tilemap->transparency_bitmap->line[y1];
-      c1 = x1/tilemap->cached_tile_width;
-      c2 = (x2+tilemap->cached_tile_width-1)/tilemap->cached_tile_width;
-      y = y1;
-      y_next = tilemap->cached_tile_height*(y1/tilemap->cached_tile_height) + tilemap->cached_tile_height;
-
-      if( y_next>y2 )
-         y_next = y2;
-      dy = y_next-y;
-      dest_next = dest_baseaddr + dy*blit.screen_bitmap_pitch_line;
-      priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_pitch_line;
-      source_next = source_baseaddr + dy*tilemap->pixmap_pitch_line;
-      mask_next = mask_baseaddr + dy*tilemap->transparency_bitmap_pitch_line;
-
-      for(;;)
-      {
-         row = y/tilemap->cached_tile_height;
-         x_start = x1;
-         transPrev = eWHOLLY_TRANSPARENT;
-         pTrans = mask_baseaddr + x_start;
-         cached_indx = row*tilemap->num_cached_cols + c1;
-
-         for( column=c1; column<=c2; column++ )
-         {
-            if( column == c2 )
-            {
-               transCur = eWHOLLY_TRANSPARENT;
-               goto L_Skip;
-            }
-
-            if( tilemap->transparency_data[cached_indx]==(0x80) )
-            {
-               update_tile_info( tilemap, cached_indx, column, row );
-            }
-            if( (tilemap->transparency_data[cached_indx]&mask)!=0 )
-            {
-               transCur = eMASKED;
-            }
-            else
-            {
-               transCur = (((*pTrans)&mask) == value)?eWHOLLY_OPAQUE:eWHOLLY_TRANSPARENT;
-            }
-
-            pTrans += tilemap->cached_tile_width;
-L_Skip:
-            if( transCur!=transPrev )
-            {
-               x_end = column*tilemap->cached_tile_width;
-
-               if( x_end<x1 )
-                  x_end = x1;
-               if( x_end>x2 )
-                  x_end = x2;
-               if( transPrev != eWHOLLY_TRANSPARENT )
-               {
-                  count = x_end - x_start;
-                  source0 = source_baseaddr + x_start;
-                  dest0 = dest_baseaddr + x_start;
-                  pmap0 = priority_bitmap_baseaddr + x_start;
-
-                  if( transPrev == eWHOLLY_OPAQUE )
-                  {
-                     i = y;
-
-                     for(;;)
-                     {
-                        blit.draw_opaque( dest0, source0, count, pmap0, tilemap_priority_code );
-
-                        if( ++i == y_next )
-                           break;
-
-                        dest0 += blit.screen_bitmap_pitch_line;
-                        source0 += tilemap->pixmap_pitch_line;
-                        pmap0 += priority_bitmap_pitch_line;
-                     }
-                  }
-                  else
-                  {
-                     mask0 = mask_baseaddr + x_start;
-                     i = y;
-
-                     for(;;)
-                     {
-                        blit.draw_masked( dest0, source0, mask0, mask, value, 
-                              count, pmap0, tilemap_priority_code );
-
-                        if( ++i == y_next )
-                           break;
-
-                        dest0 += blit.screen_bitmap_pitch_line;
-                        source0 += tilemap->pixmap_pitch_line;
-                        mask0 += tilemap->transparency_bitmap_pitch_line;
-                        pmap0 += priority_bitmap_pitch_line;
-                     }
-                  }
-               }
-               x_start = x_end;
-               transPrev = transCur;
-            }
-
-            cached_indx++;
-         }
-
-         if( y_next==y2 )
-            break;
-         priority_bitmap_baseaddr = priority_bitmap_next;
-         dest_baseaddr = dest_next;
-         source_baseaddr = source_next;
-         mask_baseaddr = mask_next;
-         y = y_next;
-         y_next += tilemap->cached_tile_height;
-
-         if( y_next>=y2 )
-            y_next = y2;
-         else
-         {
-            dest_next += blit.screen_bitmap_pitch_row;
-            priority_bitmap_next += priority_bitmap_pitch_row;
-            source_next += tilemap->pixmap_pitch_row;
-            mask_next += tilemap->transparency_bitmap_pitch_row;
-         }
-      }
-   }
-}
-
-static void copyroz_core32BPP(struct mame_bitmap *bitmap,struct tilemap *tilemap,
-		UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,int incyy,int wraparound,
-		const struct rectangle *clip,
-		int mask,int value,
-		UINT32 priority,UINT32 palette_offset)
-{
-	UINT32 cx;
-	UINT32 cy;
-	int x;
-	int sx;
-	int sy;
-	int ex;
-	int ey;
-	struct mame_bitmap *srcbitmap = tilemap->pixmap;
-	struct mame_bitmap *transparency_bitmap = tilemap->transparency_bitmap;
-	const int xmask = srcbitmap->width-1;
-	const int ymask = srcbitmap->height-1;
-	const int widthshifted = srcbitmap->width << 16;
-	const int heightshifted = srcbitmap->height << 16;
-	UINT32 *dest;
-	UINT8 *pri;
-	const UINT16 *src;
-	const UINT8 *pMask;
-
-	if (clip)
-	{
-		startx += clip->min_x * incxx + clip->min_y * incyx;
-		starty += clip->min_x * incxy + clip->min_y * incyy;
-
-		sx = clip->min_x;
-		sy = clip->min_y;
-		ex = clip->max_x;
-		ey = clip->max_y;
-	}
-	else
-	{
-		sx = 0;
-		sy = 0;
-		ex = bitmap->width-1;
-		ey = bitmap->height-1;
-	}
-
-
-	if (Machine->orientation & ORIENTATION_SWAP_XY)
-	{
-		int t;
-
-		t = startx; startx = starty; starty = t;
-		t = sx; sx = sy; sy = t;
-		t = ex; ex = ey; ey = t;
-		t = incxx; incxx = incyy; incyy = t;
-		t = incxy; incxy = incyx; incyx = t;
-	}
-
-	if (Machine->orientation & ORIENTATION_FLIP_X)
-	{
-		int w = ex - sx;
-
-		incxy = -incxy;
-		incyx = -incyx;
-		startx = widthshifted - startx - 1;
-		startx -= incxx * w;
-		starty -= incxy * w;
-
-		w = sx;
-		sx = bitmap->width-1 - ex;
-		ex = bitmap->width-1 - w;
-	}
-
-	if (Machine->orientation & ORIENTATION_FLIP_Y)
-	{
-		int h = ey - sy;
-
-		incxy = -incxy;
-		incyx = -incyx;
-		starty = heightshifted - starty - 1;
-		startx -= incyx * h;
-		starty -= incyy * h;
-
-		h = sy;
-		sy = bitmap->height-1 - ey;
-		ey = bitmap->height-1 - h;
-	}
-
-	if (incxy == 0 && incyx == 0 && !wraparound)
-	{
-		/* optimized loop for the not rotated case */
-
-		if (incxx == 0x10000)
-		{
-			/* optimized loop for the not zoomed case */
-
-			/* startx is unsigned */
-			startx = ((INT32)startx) >> 16;
-
-			if (startx >= srcbitmap->width)
-			{
-				sx += -startx;
-				startx = 0;
-			}
-
-			if (sx <= ex)
-			{
-				while (sy <= ey)
-				{
-					if (starty < heightshifted)
-					{
-						x = sx;
-						cx = startx;
-						cy = starty >> 16;
-						dest = ((UINT32 *)bitmap->line[sy]) + sx;
-
-						pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-						src = (UINT16 *)srcbitmap->line[cy];
-						pMask = (UINT8 *)transparency_bitmap->line[cy];
-
-						while (x <= ex && cx < srcbitmap->width)
-						{
-							if ( (pMask[cx]&mask) == value )
-							{
-								*dest = src[cx]+palette_offset;
-								*pri |= priority;
-							}
-							cx++;
-							x++;
-							dest++;
-							pri++;
-						}
-					}
-					starty += incyy;
-					sy++;
-				}
-			}
-		}
-		else
-		{
-			while (startx >= widthshifted && sx <= ex)
-			{
-				startx += incxx;
-				sx++;
-			}
-
-			if (sx <= ex)
-			{
-				while (sy <= ey)
-				{
-					if (starty < heightshifted)
-					{
-						x = sx;
-						cx = startx;
-						cy = starty >> 16;
-						dest = ((UINT32 *)bitmap->line[sy]) + sx;
-
-						pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-						src = (UINT16 *)srcbitmap->line[cy];
-						pMask = (UINT8 *)transparency_bitmap->line[cy];
-						while (x <= ex && cx < widthshifted)
-						{
-							if ( (pMask[cx>>16]&mask) == value )
-							{
-								*dest = src[cx >> 16]+palette_offset;
-								*pri |= priority;
-							}
-							cx += incxx;
-							x++;
-							dest++;
-							pri++;
-						}
-					}
-					starty += incyy;
-					sy++;
-				}
-			}
-		}
-	}
-	else
-	{
-		if (wraparound)
-		{
-			/* plot with wraparound */
-			while (sy <= ey)
-			{
-				x = sx;
-				cx = startx;
-				cy = starty;
-				dest = ((UINT32 *)bitmap->line[sy]) + sx;
-				pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-				while (x <= ex)
-				{
-					if( (((UINT8 *)transparency_bitmap->line[(cy>>16)&ymask])[(cx>>16)&xmask]&mask) == value )
-					{
-						*dest = ((UINT16 *)srcbitmap->line[(cy >> 16) & ymask])[(cx >> 16) & xmask]+palette_offset;
-						*pri |= priority;
-					}
-					cx += incxx;
-					cy += incxy;
-					x++;
-					dest++;
-					pri++;
-				}
-				startx += incyx;
-				starty += incyy;
-				sy++;
-			}
-		}
-		else
-		{
-			while (sy <= ey)
-			{
-				x = sx;
-				cx = startx;
-				cy = starty;
-				dest = ((UINT32 *)bitmap->line[sy]) + sx;
-				pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
-				while (x <= ex)
-				{
-					if (cx < widthshifted && cy < heightshifted)
-					{
-						if( (((UINT8 *)transparency_bitmap->line[cy>>16])[cx>>16]&mask)==value )
-						{
-							*dest = ((UINT16 *)srcbitmap->line[cy >> 16])[cx >> 16]+palette_offset;
-							*pri |= priority;
-						}
-					}
-					cx += incxx;
-					cy += incxy;
-					x++;
-					dest++;
-					pri++;
-				}
-				startx += incyx;
-				starty += incyy;
-				sy++;
-			}
-		}
-	}
-}
-
-static void draw32BPP(struct tilemap *tilemap, int xpos, int ypos, int mask, int value )
-{
-   trans_t transPrev;
-   trans_t transCur;
-   const UINT8 *pTrans;
-   UINT32 cached_indx;
-   struct mame_bitmap *screen = blit.screen_bitmap;
-   int tilemap_priority_code = blit.tilemap_priority_code;
-   int x1 = xpos;
-   int y1 = ypos;
-   int x2 = xpos+tilemap->cached_width;
-   int y2 = ypos+tilemap->cached_height;
-   UINT32 *dest_baseaddr = NULL;
-   UINT32 *dest_next;
-   int dy;
-   int count;
-   const UINT16 *source0;
-   UINT32 *dest0;
-   UINT8 *pmap0;
-   int i;
-   int row;
-   int x_start;
-   int x_end;
-   int column;
-   int c1; /* leftmost visible column in source tilemap */
-   int c2; /* rightmost visible column in source tilemap */
-   int y; /* current screen line to render */
-   int y_next;
-   UINT8 *priority_bitmap_baseaddr;
-   UINT8 *priority_bitmap_next;
-   const UINT16 *source_baseaddr;
-   const UINT16 *source_next;
-   const UINT8 *mask0;
-   const UINT8 *mask_baseaddr;
-   const UINT8 *mask_next;
-
-   /* clip source coordinates */
-   if( x1<blit.clip_left ) x1 = blit.clip_left;
-   if( x2>blit.clip_right ) x2 = blit.clip_right;
-   if( y1<blit.clip_top ) y1 = blit.clip_top;
-   if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
-
-   if( x1<x2 && y1<y2 ) /* do nothing if totally clipped */
-   {
-      priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
-      if( screen )
-      {
-         dest_baseaddr = xpos + (UINT32 *)screen->line[y1];
-      }
-
-      /* convert screen coordinates to source tilemap coordinates */
-      x1 -= xpos;
-      y1 -= ypos;
-      x2 -= xpos;
-      y2 -= ypos;
-
-      source_baseaddr = (UINT16 *)tilemap->pixmap->line[y1];
-      mask_baseaddr = tilemap->transparency_bitmap->line[y1];
-
-      c1 = x1/tilemap->cached_tile_width; /* round down */
-      c2 = (x2+tilemap->cached_tile_width-1)/tilemap->cached_tile_width; /* round up */
-
-      y = y1;
-      y_next = tilemap->cached_tile_height*(y1/tilemap->cached_tile_height) + tilemap->cached_tile_height;
-      if( y_next>y2 ) y_next = y2;
-
-      dy = y_next-y;
-      dest_next = dest_baseaddr + dy*blit.screen_bitmap_pitch_line;
-      priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_pitch_line;
-      source_next = source_baseaddr + dy*tilemap->pixmap_pitch_line;
-      mask_next = mask_baseaddr + dy*tilemap->transparency_bitmap_pitch_line;
-      for(;;)
-      {
-         row = y/tilemap->cached_tile_height;
-         x_start = x1;
-
-         transPrev = eWHOLLY_TRANSPARENT;
-         pTrans = mask_baseaddr + x_start;
-
-         cached_indx = row*tilemap->num_cached_cols + c1;
-         for( column=c1; column<=c2; column++ )
-         {
-            if( column == c2 )
-            {
-               transCur = eWHOLLY_TRANSPARENT;
-               goto L_Skip;
-            }
-
-            if( tilemap->transparency_data[cached_indx]==TILE_FLAG_DIRTY )
-            {
-               update_tile_info( tilemap, cached_indx, column, row );
-            }
-
-            if( (tilemap->transparency_data[cached_indx]&mask)!=0 )
-            {
-               transCur = eMASKED;
-            }
-            else
-            {
-               transCur = (((*pTrans)&mask) == value)?eWHOLLY_OPAQUE:eWHOLLY_TRANSPARENT;
-            }
-            pTrans += tilemap->cached_tile_width;
-
-L_Skip:
-            if( transCur!=transPrev )
-            {
-               x_end = column*tilemap->cached_tile_width;
-               if( x_end<x1 ) x_end = x1;
-               if( x_end>x2 ) x_end = x2;
-
-               if( transPrev != eWHOLLY_TRANSPARENT )
-               {
-                  count = x_end - x_start;
-                  source0 = source_baseaddr + x_start;
-                  dest0 = dest_baseaddr + x_start;
-                  pmap0 = priority_bitmap_baseaddr + x_start;
-
-                  if( transPrev == eWHOLLY_OPAQUE )
-                  {
-                     i = y;
-                     for(;;)
-                     {
-                        blit.draw_opaque( dest0, source0, count, pmap0, tilemap_priority_code );
-                        if( ++i == y_next ) break;
-
-                        dest0 += blit.screen_bitmap_pitch_line;
-                        source0 += tilemap->pixmap_pitch_line;
-                        pmap0 += priority_bitmap_pitch_line;
-                     }
-                  } /* transPrev == eWHOLLY_OPAQUE */
-                  else /* transPrev == eMASKED */
-                  {
-                     mask0 = mask_baseaddr + x_start;
-                     i = y;
-                     for(;;)
-                     {
-                        blit.draw_masked( dest0, source0, mask0, mask, value, count, pmap0, tilemap_priority_code );
-                        if( ++i == y_next ) break;
-
-                        dest0 += blit.screen_bitmap_pitch_line;
-                        source0 += tilemap->pixmap_pitch_line;
-                        mask0 += tilemap->transparency_bitmap_pitch_line;
-                        pmap0 += priority_bitmap_pitch_line;
-                     }
-                  } /* transPrev == eMASKED */
-               } /* transPrev != eWHOLLY_TRANSPARENT */
-               x_start = x_end;
-               transPrev = transCur;
-            }
-            cached_indx++;
-         }
-         if( y_next==y2 ) break; /* we are done! */
-
-         priority_bitmap_baseaddr = priority_bitmap_next;
-         dest_baseaddr = dest_next;
-         source_baseaddr = source_next;
-         mask_baseaddr = mask_next;
-         y = y_next;
-         y_next += tilemap->cached_tile_height;
-
-         if( y_next>=y2 )
-         {
-            y_next = y2;
-         }
-         else
-         {
-            dest_next += blit.screen_bitmap_pitch_row;
-            priority_bitmap_next += priority_bitmap_pitch_row;
-            source_next += tilemap->pixmap_pitch_row;
-            mask_next += tilemap->transparency_bitmap_pitch_row;
-         }
-      } /* process next row */
-   } /* not totally clipped */
 }
 
 static INLINE tilemap_draw_func pick_draw_func( struct mame_bitmap *dest )
@@ -2024,6 +1205,11 @@ void tilemap_set_palette_offset( struct tilemap *tilemap, int offset )
 
 void tilemap_draw( struct mame_bitmap *dest, const struct rectangle *cliprect, struct tilemap *tilemap, UINT32 flags, UINT32 priority )
 {
+	tilemap_draw_primask( dest, cliprect, tilemap, flags, priority, 0xff );
+}
+
+void tilemap_draw_primask( struct mame_bitmap *dest, const struct rectangle *cliprect, struct tilemap *tilemap, UINT32 flags, UINT32 priority, UINT32 priority_mask )
+{
 	tilemap_draw_func drawfunc = pick_draw_func(dest);
 	int xpos,ypos,mask,value;
 	int rows, cols;
@@ -2187,7 +1373,7 @@ profiler_mark(PROFILER_TILEMAP_DRAW);
 			}
 		}
 
-		blit.tilemap_priority_code = (priority & 0xffff) | (tilemap->palette_offset << 16);
+		blit.tilemap_priority_code = (priority & 0xff) | ((priority_mask & 0xff) << 8) | (tilemap->palette_offset << 16);
 
 		if( rows == 1 && cols == 1 )
 		{ /* XY scrolling playfield */
@@ -2367,6 +1553,14 @@ void tilemap_draw_roz( struct mame_bitmap *dest,const struct rectangle *cliprect
 		int wraparound,
 		UINT32 flags, UINT32 priority )
 {
+	tilemap_draw_roz_primask( dest,cliprect,tilemap,startx,starty,incxx,incxy,incyx,incyy,wraparound,flags,priority, 0xff );
+}
+
+void tilemap_draw_roz_primask( struct mame_bitmap *dest,const struct rectangle *cliprect,struct tilemap *tilemap,
+		UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,int incyy,
+		int wraparound,
+		UINT32 flags, UINT32 priority, UINT32 priority_mask )
+{
 	if( (incxx == 1<<16) && !incxy & !incyx && (incyy == 1<<16) && wraparound )
 	{
 		tilemap_set_scrollx( tilemap, 0, startx >> 16 );
@@ -2404,14 +1598,49 @@ profiler_mark(PROFILER_TILEMAP_DRAW_ROZ);
 			{
 
 			case 32:
+
+				/* Opaque drawing routines not present due to difficulty with
+				optimization using current ROZ methods
+				*/
+				if (priority)
+				{
+					if( flags&TILEMAP_ALPHA )
+						blit.draw_masked = (blitmask_t)pbt32;
+					else
+						blit.draw_masked = (blitmask_t)pdt32;
+				}
+				else
+				{
+					if( flags&TILEMAP_ALPHA )
+						blit.draw_masked = (blitmask_t)npbt32;
+					else
+						blit.draw_masked = (blitmask_t)npdt32;
+				}
+
 				copyroz_core32BPP(dest,tilemap,startx,starty,incxx,incxy,incyx,incyy,
-					wraparound,cliprect,mask,value,priority,tilemap->palette_offset);
+					wraparound,cliprect,mask,value,priority,priority_mask,tilemap->palette_offset);
 				break;
 
 			case 15:
-			case 16:
+				if( flags&TILEMAP_ALPHA )
+					blit.draw_masked = (blitmask_t)pbt15;
+				else
+					blit.draw_masked = (blitmask_t)pdt15;
+
 				copyroz_core16BPP(dest,tilemap,startx,starty,incxx,incxy,incyx,incyy,
-					wraparound,cliprect,mask,value,priority,tilemap->palette_offset);
+					wraparound,cliprect,mask,value,priority,priority_mask,tilemap->palette_offset);
+				break;
+
+			case 16:
+				if (tilemap->palette_offset)
+					blit.draw_masked = (blitmask_t)pdt16pal;
+				else if (priority)
+					blit.draw_masked = (blitmask_t)pdt16;
+				else
+					blit.draw_masked = (blitmask_t)pdt16np;
+
+				copyroz_core16BPP(dest,tilemap,startx,starty,incxx,incxy,incyx,incyy,
+					wraparound,cliprect,mask,value,priority,priority_mask,tilemap->palette_offset);
 				break;
 
 			default:
@@ -2521,7 +1750,484 @@ void tilemap_nb_draw( struct mame_bitmap *dest, UINT32 number, UINT32 scrollx, U
 
 /***********************************************************************************/
 
-#endif /* !DECLARE && !TRANSP*/
+#endif // !DECLARE && !TRANSP
+
+#define ROZ_PLOT_PIXEL(INPUT_VAL)										\
+	if (blit.draw_masked == (blitmask_t)pbt32)							\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = alpha_blend32(*dest, clut[INPUT_VAL]);					\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pdt32)						\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = clut[INPUT_VAL] ;										\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)npbt32)					\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = alpha_blend32(*dest, clut[INPUT_VAL]) ;					\
+/*		logerror("PARTIALLY IMPLEMENTED ROZ VIDEO MODE - npbt32\n") ;*/	\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)npdt32)					\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = clut[INPUT_VAL] ;										\
+/*		logerror("PARTIALLY IMPLEMENTED ROZ VIDEO MODE - npbt32\n") ;*/	\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pbt15)						\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = alpha_blend16(*dest, clut[INPUT_VAL]) ;					\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pdt15)						\
+	{																	\
+		clut = &Machine->remapped_colortable[priority >> 16] ;			\
+		*dest = clut[INPUT_VAL] ;										\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pdt16pal)					\
+	{																	\
+		*dest = (INPUT_VAL) + (priority >> 16) ;						\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pdt16)						\
+	{																	\
+		*dest = INPUT_VAL ;												\
+		*pri = (*pri & priority_mask) | priority;						\
+	}																	\
+	else if (blit.draw_masked == (blitmask_t)pdt16np)					\
+	{																	\
+		*dest = INPUT_VAL ;												\
+	}
+
+#ifdef DECLARE
+
+DECLARE(copyroz_core,(struct mame_bitmap *bitmap,struct tilemap *tilemap,
+		UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,int incyy,int wraparound,
+		const struct rectangle *clip,
+		int mask,int value,
+		UINT32 priority,UINT32 priority_mask,UINT32 palette_offset),
+{
+	UINT32 cx;
+	UINT32 cy;
+	int x;
+	int sx;
+	int sy;
+	int ex;
+	int ey;
+	struct mame_bitmap *srcbitmap = tilemap->pixmap;
+	struct mame_bitmap *transparency_bitmap = tilemap->transparency_bitmap;
+	const int xmask = srcbitmap->width-1;
+	const int ymask = srcbitmap->height-1;
+	const int widthshifted = srcbitmap->width << 16;
+	const int heightshifted = srcbitmap->height << 16;
+	DATA_TYPE *dest;
+	UINT8 *pri;
+	const UINT16 *src;
+	const UINT8 *pMask;
+
+	pen_t *clut ;
+
+	if (clip)
+	{
+		startx += clip->min_x * incxx + clip->min_y * incyx;
+		starty += clip->min_x * incxy + clip->min_y * incyy;
+
+		sx = clip->min_x;
+		sy = clip->min_y;
+		ex = clip->max_x;
+		ey = clip->max_y;
+	}
+	else
+	{
+		sx = 0;
+		sy = 0;
+		ex = bitmap->width-1;
+		ey = bitmap->height-1;
+	}
+
+
+	if (Machine->orientation & ORIENTATION_SWAP_XY)
+	{
+		int t;
+
+		t = startx; startx = starty; starty = t;
+		t = sx; sx = sy; sy = t;
+		t = ex; ex = ey; ey = t;
+		t = incxx; incxx = incyy; incyy = t;
+		t = incxy; incxy = incyx; incyx = t;
+	}
+
+	if (Machine->orientation & ORIENTATION_FLIP_X)
+	{
+		int w = ex - sx;
+
+		incxy = -incxy;
+		incyx = -incyx;
+		startx = widthshifted - startx - 1;
+		startx -= incxx * w;
+		starty -= incxy * w;
+
+		w = sx;
+		sx = bitmap->width-1 - ex;
+		ex = bitmap->width-1 - w;
+	}
+
+	if (Machine->orientation & ORIENTATION_FLIP_Y)
+	{
+		int h = ey - sy;
+
+		incxy = -incxy;
+		incyx = -incyx;
+		starty = heightshifted - starty - 1;
+		startx -= incyx * h;
+		starty -= incyy * h;
+
+		h = sy;
+		sy = bitmap->height-1 - ey;
+		ey = bitmap->height-1 - h;
+	}
+
+	if (incxy == 0 && incyx == 0 && !wraparound)
+	{
+		/* optimized loop for the not rotated case */
+
+		if (incxx == 0x10000)
+		{
+			/* optimized loop for the not zoomed case */
+
+			/* startx is unsigned */
+			startx = ((INT32)startx) >> 16;
+
+			if (startx >= srcbitmap->width)
+			{
+				sx += -startx;
+				startx = 0;
+			}
+
+			if (sx <= ex)
+			{
+				while (sy <= ey)
+				{
+					if (starty < heightshifted)
+					{
+						x = sx;
+						cx = startx;
+						cy = starty >> 16;
+						dest = ((DATA_TYPE *)bitmap->line[sy]) + sx;
+
+						pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
+						src = (UINT16 *)srcbitmap->line[cy];
+						pMask = (UINT8 *)transparency_bitmap->line[cy];
+
+						while (x <= ex && cx < srcbitmap->width)
+						{
+							if ( (pMask[cx]&mask) == value )
+							{
+								ROZ_PLOT_PIXEL((src[cx]+palette_offset)) ;
+							}
+							cx++;
+							x++;
+							dest++;
+							pri++;
+						}
+					}
+					starty += incyy;
+					sy++;
+				}
+			}
+		}
+		else
+		{
+			while (startx >= widthshifted && sx <= ex)
+			{
+				startx += incxx;
+				sx++;
+			}
+
+			if (sx <= ex)
+			{
+				while (sy <= ey)
+				{
+					if (starty < heightshifted)
+					{
+						x = sx;
+						cx = startx;
+						cy = starty >> 16;
+						dest = ((DATA_TYPE *)bitmap->line[sy]) + sx;
+
+						pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
+						src = (UINT16 *)srcbitmap->line[cy];
+						pMask = (UINT8 *)transparency_bitmap->line[cy];
+
+						while (x <= ex && cx < widthshifted)
+						{
+							if ( (pMask[cx>>16]&mask) == value )
+							{
+								ROZ_PLOT_PIXEL((src[cx >> 16]+palette_offset)) ;
+							}
+							cx += incxx;
+							x++;
+							dest++;
+							pri++;
+						}
+					}
+					starty += incyy;
+					sy++;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (wraparound)
+		{
+			/* plot with wraparound */
+			while (sy <= ey)
+			{
+				x = sx;
+				cx = startx;
+				cy = starty;
+				dest = ((DATA_TYPE *)bitmap->line[sy]) + sx;
+				pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
+				while (x <= ex)
+				{
+					if( (((UINT8 *)transparency_bitmap->line[(cy>>16)&ymask])[(cx>>16)&xmask]&mask) == value )
+					{
+						ROZ_PLOT_PIXEL(((((UINT16 *)srcbitmap->line[(cy >> 16) & ymask])[(cx >> 16) & xmask]+palette_offset))) ;
+					}
+					cx += incxx;
+					cy += incxy;
+					x++;
+					dest++;
+					pri++;
+				}
+				startx += incyx;
+				starty += incyy;
+				sy++;
+			}
+		}
+		else
+		{
+			while (sy <= ey)
+			{
+				x = sx;
+				cx = startx;
+				cy = starty;
+				dest = ((DATA_TYPE *)bitmap->line[sy]) + sx;
+				pri = ((UINT8 *)priority_bitmap->line[sy]) + sx;
+				while (x <= ex)
+				{
+					if (cx < widthshifted && cy < heightshifted)
+					{
+						if( (((UINT8 *)transparency_bitmap->line[cy>>16])[cx>>16]&mask)==value )
+						{
+							ROZ_PLOT_PIXEL((((UINT16 *)srcbitmap->line[cy >> 16])[cx >> 16]+palette_offset)) ;
+						}
+					}
+					cx += incxx;
+					cy += incxy;
+					x++;
+					dest++;
+					pri++;
+				}
+				startx += incyx;
+				starty += incyy;
+				sy++;
+			}
+		}
+	}
+})
+
+#ifndef osd_pend
+#define osd_pend() do { } while (0)
+#endif
+
+DECLARE( draw, (struct tilemap *tilemap, int xpos, int ypos, int mask, int value ),
+{
+	trans_t transPrev;
+	trans_t transCur;
+	const UINT8 *pTrans;
+	UINT32 cached_indx;
+	struct mame_bitmap *screen = blit.screen_bitmap;
+	int tilemap_priority_code = blit.tilemap_priority_code;
+	int x1 = xpos;
+	int y1 = ypos;
+	int x2 = xpos+tilemap->cached_width;
+	int y2 = ypos+tilemap->cached_height;
+	DATA_TYPE *dest_baseaddr = NULL;
+	DATA_TYPE *dest_next;
+	int dy;
+	int count;
+	const UINT16 *source0;
+	DATA_TYPE *dest0;
+	UINT8 *pmap0;
+	int i;
+	int row;
+	int x_start;
+	int x_end;
+	int column;
+	int c1; /* leftmost visible column in source tilemap */
+	int c2; /* rightmost visible column in source tilemap */
+	int y; /* current screen line to render */
+	int y_next;
+	UINT8 *priority_bitmap_baseaddr;
+	UINT8 *priority_bitmap_next;
+	const UINT16 *source_baseaddr;
+	const UINT16 *source_next;
+	const UINT8 *mask0;
+	const UINT8 *mask_baseaddr;
+	const UINT8 *mask_next;
+
+	/* clip source coordinates */
+	if( x1<blit.clip_left ) x1 = blit.clip_left;
+	if( x2>blit.clip_right ) x2 = blit.clip_right;
+	if( y1<blit.clip_top ) y1 = blit.clip_top;
+	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+
+	if( x1<x2 && y1<y2 ) /* do nothing if totally clipped */
+	{
+		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+		if( screen )
+		{
+			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+		}
+
+		/* convert screen coordinates to source tilemap coordinates */
+		x1 -= xpos;
+		y1 -= ypos;
+		x2 -= xpos;
+		y2 -= ypos;
+
+		source_baseaddr = (UINT16 *)tilemap->pixmap->line[y1];
+		mask_baseaddr = tilemap->transparency_bitmap->line[y1];
+
+		c1 = x1/tilemap->cached_tile_width; /* round down */
+		c2 = (x2+tilemap->cached_tile_width-1)/tilemap->cached_tile_width; /* round up */
+
+		y = y1;
+		y_next = tilemap->cached_tile_height*(y1/tilemap->cached_tile_height) + tilemap->cached_tile_height;
+		if( y_next>y2 ) y_next = y2;
+
+		dy = y_next-y;
+		dest_next = dest_baseaddr + dy*blit.screen_bitmap_pitch_line;
+		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_pitch_line;
+		source_next = source_baseaddr + dy*tilemap->pixmap_pitch_line;
+		mask_next = mask_baseaddr + dy*tilemap->transparency_bitmap_pitch_line;
+		for(;;)
+		{
+			row = y/tilemap->cached_tile_height;
+			x_start = x1;
+
+			transPrev = eWHOLLY_TRANSPARENT;
+			pTrans = mask_baseaddr + x_start;
+
+			cached_indx = row*tilemap->num_cached_cols + c1;
+			for( column=c1; column<=c2; column++ )
+			{
+				if( column == c2 )
+				{
+					transCur = eWHOLLY_TRANSPARENT;
+					goto L_Skip;
+				}
+
+				if( tilemap->transparency_data[cached_indx]==TILE_FLAG_DIRTY )
+				{
+					update_tile_info( tilemap, cached_indx, column, row );
+				}
+
+				if( (tilemap->transparency_data[cached_indx]&mask)!=0 )
+				{
+					transCur = eMASKED;
+				}
+				else
+				{
+					transCur = (((*pTrans)&mask) == value)?eWHOLLY_OPAQUE:eWHOLLY_TRANSPARENT;
+				}
+				pTrans += tilemap->cached_tile_width;
+
+			L_Skip:
+				if( transCur!=transPrev )
+				{
+					x_end = column*tilemap->cached_tile_width;
+					if( x_end<x1 ) x_end = x1;
+					if( x_end>x2 ) x_end = x2;
+
+					if( transPrev != eWHOLLY_TRANSPARENT )
+					{
+						count = x_end - x_start;
+						source0 = source_baseaddr + x_start;
+						dest0 = dest_baseaddr + x_start;
+						pmap0 = priority_bitmap_baseaddr + x_start;
+
+						if( transPrev == eWHOLLY_OPAQUE )
+						{
+							i = y;
+							for(;;)
+							{
+								blit.draw_opaque( dest0, source0, count, pmap0, tilemap_priority_code );
+								if( ++i == y_next ) break;
+
+								dest0 += blit.screen_bitmap_pitch_line;
+								source0 += tilemap->pixmap_pitch_line;
+								pmap0 += priority_bitmap_pitch_line;
+							}
+						} /* transPrev == eWHOLLY_OPAQUE */
+						else /* transPrev == eMASKED */
+						{
+							mask0 = mask_baseaddr + x_start;
+							i = y;
+							for(;;)
+							{
+								blit.draw_masked( dest0, source0, mask0, mask, value, count, pmap0, tilemap_priority_code );
+								if( ++i == y_next ) break;
+
+								dest0 += blit.screen_bitmap_pitch_line;
+								source0 += tilemap->pixmap_pitch_line;
+								mask0 += tilemap->transparency_bitmap_pitch_line;
+								pmap0 += priority_bitmap_pitch_line;
+							}
+						} /* transPrev == eMASKED */
+					} /* transPrev != eWHOLLY_TRANSPARENT */
+					x_start = x_end;
+					transPrev = transCur;
+				}
+				cached_indx++;
+			}
+			if( y_next==y2 ) break; /* we are done! */
+
+			priority_bitmap_baseaddr = priority_bitmap_next;
+			dest_baseaddr = dest_next;
+			source_baseaddr = source_next;
+			mask_baseaddr = mask_next;
+			y = y_next;
+			y_next += tilemap->cached_tile_height;
+
+			if( y_next>=y2 )
+			{
+				y_next = y2;
+			}
+			else
+			{
+				dest_next += blit.screen_bitmap_pitch_row;
+				priority_bitmap_next += priority_bitmap_pitch_row;
+				source_next += tilemap->pixmap_pitch_row;
+				mask_next += tilemap->transparency_bitmap_pitch_row;
+			}
+		} /* process next row */
+	} /* not totally clipped */
+
+	osd_pend();
+})
+
+#undef DATA_TYPE
+#undef DEPTH
+#undef DECLARE
+#endif /* DECLARE */
 
 #ifdef TRANSP
 /*************************************************************************************************/
@@ -3067,5 +2773,5 @@ static UINT8 TRANSP(HandleTransparencyNone)(struct tilemap *tilemap, UINT32 x0, 
 #undef TRANSP
 #undef PAL_INIT
 #undef PAL_GET
-#endif /* TRANSP*/
+#endif // TRANSP
 

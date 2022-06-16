@@ -128,11 +128,17 @@ void tilemap_set_flip( struct tilemap *tilemap, int attributes );
 void tilemap_set_enable( struct tilemap *tilemap, int enable );
 
 void tilemap_draw( struct mame_bitmap *dest, const struct rectangle *cliprect, struct tilemap *tilemap, UINT32 flags, UINT32 priority );
+void tilemap_draw_primask( struct mame_bitmap *dest, const struct rectangle *cliprect, struct tilemap *tilemap, UINT32 flags, UINT32 priority, UINT32 priority_mask );
 
 void tilemap_draw_roz(struct mame_bitmap *dest,const struct rectangle *cliprect,struct tilemap *tilemap,
 		UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,int incyy,
 		int wraparound,
 		UINT32 flags, UINT32 priority );
+
+void tilemap_draw_roz_primask(struct mame_bitmap *dest,const struct rectangle *cliprect,struct tilemap *tilemap,
+		UINT32 startx,UINT32 starty,int incxx,int incxy,int incyx,int incyy,
+		int wraparound,
+		UINT32 flags, UINT32 priority, UINT32 priority_mask );
 
 /* ----xxxx tile priority
  * ---x---- opaque in foreground
@@ -146,7 +152,7 @@ void tilemap_draw_roz(struct mame_bitmap *dest,const struct rectangle *cliprect,
 
 struct mame_bitmap *tilemap_get_pixmap( struct tilemap * tilemap );
 struct mame_bitmap *tilemap_get_transparency_bitmap( struct tilemap * tilemap );
-UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap );  /***/
+UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap );  //*
 
 /*********************************************************************/
 

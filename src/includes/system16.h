@@ -229,7 +229,8 @@ extern WRITE16_HANDLER( sys16_paletteram_w );
 /* "normal" video hardware */
 extern VIDEO_START( system16 );
 extern VIDEO_UPDATE( system16 );
-
+extern VIDEO_START( system16b );
+extern VIDEO_UPDATE( system16b );
 /* hang-on video hardware */
 extern VIDEO_START( hangon );
 extern VIDEO_UPDATE( hangon );
