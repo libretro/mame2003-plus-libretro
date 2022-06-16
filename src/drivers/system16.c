@@ -6537,6 +6537,11 @@ static MACHINE_INIT( fantzn2x )
 	sys16_spritesystem = sys16_sprite_fantzn2x;
 	sys16_update_proc = type0_sys16_textram;
 	sys16_wwfix = 1;
+	sys16_rowscroll_scroll=0x8000;
+	sys18_splittab_fg_x= &sys16_textram[0x7c0];
+	sys18_splittab_bg_x= &sys16_textram[0x7e0];
+	sys18_splittab_bg_y=&sys16_textram[0x0f40 /2];
+	sys18_splittab_fg_y=&sys16_textram[0x0f00 /2];
 }
 
 /***************************************************************************/
