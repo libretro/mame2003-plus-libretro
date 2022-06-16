@@ -18,8 +18,11 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 //todo fix sound up not hooked up properly
 
 extern WRITE16_HANDLER( system16b_textram_w );
+static WRITE_HANDLER( UPD7759_bank_w );
 
 static data16_t coinctrl;
+static int sys16_soundbanktype=0;
+static int sys16_soundinttype=0;
 
 
 static MEMORY_READ_START( sound_readmem )
@@ -94,18 +97,87 @@ static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
-
-static WRITE_HANDLER( UPD7759_bank_w ) //*
-{
-}
-
-
 static PORT_WRITE_START( sound_writeport_7759 )
     { 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, UPD7759_bank_w },
 	{ 0x80, 0x80, UPD7759_0_port_w },
 PORT_END
+
+static WRITE_HANDLER( UPD7759_bank_w )
+{
+	int bankoffs=0;
+
+	int size = memory_region_length(REGION_CPU2) - 0x10000;
+	if (size > 0)
+	/* banking depends on the ROM board */
+	{
+		UPD7759_start_w(0, data & 0x80);
+		UPD7759_reset_w(0, data & 0x40);
+
+		switch (sys16_soundbanktype)
+		{
+			case 1:
+
+				/*
+				D5 : /CS for ROM at A11
+				D4 : /CS for ROM at A10
+				D3 : /CS for ROM at A9
+				D2 : /CS for ROM at A8
+				D1 : A15 for all ROMs (Or ignored for 27256's)
+				D0 : A14 for all ROMs
+				*/
+				if (!(data & 0x04)) bankoffs = 0x00000;
+				if (!(data & 0x08)) bankoffs = 0x10000;
+				if (!(data & 0x10)) bankoffs = 0x20000;
+				if (!(data & 0x20)) bankoffs = 0x30000;
+				bankoffs += (data & 0x03) * 0x4000;
+				break;
+
+
+			case 2:  // Cotton Fantasy Zone II etc etc
+				/*
+				D5 : Unused
+				D4 : Unused
+				D3 : ROM select 0=A11, 1=A12
+				D2 : A16 for all ROMs
+				D1 : A15 for all ROMs
+				D0 : A14 for all ROMs
+				*/
+				bankoffs = ((data & 0x08) >> 3) * 0x20000;
+				bankoffs += (data & 0x07) * 0x4000;
+				break;
+
+			case 3:
+				/*
+				D5 : Unused
+				D4 : A17 for all ROMs
+				D3 : ROM select 0=A11, 1=A12
+				D2 : A16 for all ROMs
+				D1 : A15 for all ROMs
+				D0 : A14 for all ROMs
+				*/
+				bankoffs = ((data & 0x08) >> 3) * 0x40000;
+				bankoffs += ((data & 0x10) >> 4) * 0x20000;
+				bankoffs += (data & 0x07) * 0x04000;
+				break;
+		}
+		cpu_setbank(1, memory_region(REGION_CPU2) + 0x10000 + (bankoffs % size));
+	}
+}
+
+static void sound_cause_a_nmi( int state )
+{
+	switch (sys16_soundinttype)
+		{
+			case 1://cotton
+					if (state) /* upd7759 callback */
+						cpu_set_nmi_line(1, PULSE_LINE);
+					break;
+			default:
+						cpu_set_nmi_line(1, PULSE_LINE);
+		}
+}
 
 
 static WRITE16_HANDLER( sound_command_w ){
@@ -121,6 +193,17 @@ static WRITE16_HANDLER( sound_command_nmi_w ){
 		cpu_set_nmi_line(1, PULSE_LINE);
 	}
 }
+
+struct UPD7759_interface sys16b_upd7759_interface =
+{
+	1,			/* 1 chip */
+	{ 60 }, 	/* volumes */
+	{ REGION_CPU2 },			/* memory region 3 contains the sample data */
+    UPD7759_SLAVE_MODE,
+	{ sound_cause_a_nmi },
+};
+
+
 
 static READ16_HANDLER( standard_io_r )
 {
@@ -404,7 +487,7 @@ static MACHINE_DRIVER_START( system16_7759 )
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16_upd7759_interface)
+	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16b_upd7759_interface)
 MACHINE_DRIVER_END
 
 
@@ -427,12 +510,21 @@ static MACHINE_DRIVER_START( system16_7751 )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
+
+static MACHINE_INIT( cotton )
+{
+machine_init_sys16_onetime();
+system16b_configure_sprite_banks(1);
+sys16_soundinttype=1;
+sys16_soundbanktype=2;
+}
+
 static MACHINE_DRIVER_START( cotton )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system16_7759)
 	MDRV_CPU_MODIFY("main")
    	MDRV_CPU_MEMORY(cotton_readmem,cotton_writemem)
-	MDRV_MACHINE_INIT(bank1)
+	MDRV_MACHINE_INIT(cotton)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( fantzn2x )
