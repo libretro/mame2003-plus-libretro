@@ -871,7 +871,6 @@ static MACHINE_INIT( outrun ){
 
 static DRIVER_INIT( outrun )
 {
-	machine_init_sys16_onetime();
 	sys16_interleave_sprite_data( 0x100000 );
 	generate_gr_screen(512,2048,0,0,3,0x8000);
 
@@ -879,7 +878,6 @@ static DRIVER_INIT( outrun )
 
 static DRIVER_INIT( toutrun )
 {
-	machine_init_sys16_onetime();
 	sys16_interleave_sprite_data( 0x100000 );
 	generate_gr_screen(512,2048,0,0,0,0x8000); /* fixes road 2 */
 
@@ -890,7 +888,6 @@ static DRIVER_INIT( outrunb )
 	data16_t *RAM = (data16_t *)memory_region(REGION_CPU1);
 	int i;
 
-	machine_init_sys16_onetime();
 /*
   Main Processor
 	Comparing the bootleg with the custom bootleg, it seems that:-
@@ -1141,6 +1138,9 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(4096*ShadowColorsMultiplier)
 
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
 	MDRV_VIDEO_START(outrun)
 	MDRV_VIDEO_UPDATE(outrun)
 
@@ -1198,6 +1198,9 @@ static MACHINE_DRIVER_START( toutrun )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(4096*ShadowColorsMultiplier)
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
 
 	MDRV_VIDEO_START(outrun)
 	MDRV_VIDEO_UPDATE(outrun)
@@ -1323,7 +1326,6 @@ static MACHINE_INIT( shangon ){
 }
 
 static DRIVER_INIT( shangon ){
-	machine_init_sys16_onetime();
 	generate_gr_screen(512,1024,0,0,4,0x8000);
 
 	sys16_patch_z80code( 0x1087, 0x20);
@@ -1331,7 +1333,6 @@ static DRIVER_INIT( shangon ){
 }
 
 static DRIVER_INIT( shangonb ){
-	machine_init_sys16_onetime();
 	generate_gr_screen(512,1024,8,0,4,0x8000);
 }
 /***************************************************************************/
@@ -1427,6 +1428,9 @@ static MACHINE_DRIVER_START( shangon )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
 
 	MDRV_VIDEO_START(hangon)
 	MDRV_VIDEO_UPDATE(hangon)
