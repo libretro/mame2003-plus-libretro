@@ -135,7 +135,6 @@ static int num_sprites;
 #define MAXCOLOURS 0x2000 /* 8192 */
 int sys16_sprite_draw;
 int sys16_wwfix;
-int sys16_alienfix;
 int sys16_sh_shadowpal;
 int sys16_MaxShadowColors;
 
