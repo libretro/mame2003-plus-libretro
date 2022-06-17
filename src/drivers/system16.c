@@ -170,6 +170,8 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 /***************************************************************************/
 
+int sys16_alienfix;
+
 static data16_t coinctrl;
 
 static WRITE16_HANDLER( sys16_3d_coinctrl_w )
