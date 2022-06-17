@@ -55,7 +55,8 @@ extern int sys16_wwfix, sys16_alienfix;
 
 MACHINE_INIT( sys16_onetime ){
 	log_cb(RETRO_LOG_INFO, LOGPRE "test- sys16_onetime machine init called\n");
-	sys16_wwfix = sys16_alienfix = 0;
+	sys16_wwfix = 0;
+	sys16_alienfix = 0;
 	sys16_sprite_draw=0;
 	sys16_bg1_trans=0;
 	sys16_rowscroll_scroll=0;
