@@ -472,7 +472,7 @@ static MACHINE_DRIVER_START( system16 )
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
 
-	/* initilize system16 variables prior to video start */
+	/* initilize system16 variables prior to driver_init and video_start */
 	machine_init_sys16_onetime();
 
 	MDRV_VIDEO_START(system16)
