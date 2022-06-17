@@ -983,7 +983,6 @@ WRITE16_HANDLER( sys16_textram_w ){
 /***************************************************************************/
 
 VIDEO_START( system16 ){
-	log_cb(RETRO_LOG_INFO, LOGPRE "test- video start called\n");
 	static int bank_default[16] = {
 		0x0,0x1,0x2,0x3,
 		0x4,0x5,0x6,0x7,
