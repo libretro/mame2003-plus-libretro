@@ -6435,7 +6435,6 @@ MEMORY_END
 /***************************************************************************/
 
 static MACHINE_INIT( wrestwar ){
-	log_cb(RETRO_LOG_INFO, LOGPRE "test- wrestwar machine init called\n");
 	sys16_bg_priority_mode=2;
 	sys16_bg_priority_value=0x0a00;
 	sys16_update_proc = type0_sys16_textram;
@@ -6444,7 +6443,6 @@ static MACHINE_INIT( wrestwar ){
 }
 
 static DRIVER_INIT( wrestwar ){
-	log_cb(RETRO_LOG_INFO, LOGPRE "test- wrestwar driver init called\n");
 	sys16_bg1_trans=1;
 	sys16_MaxShadowColors=16;
 	sys18_splittab_bg_y=&sys16_textram[0x0f40 /2];
