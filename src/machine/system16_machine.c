@@ -53,7 +53,6 @@ void (*sys16_custom_irq)(void);
 
 
 MACHINE_INIT( sys16_onetime ){
-	log_cb(RETRO_LOG_INFO, LOGPRE "test- sys16_onetime machine init called\n");
 	sys16_wwfix = 0;
 	sys16_alienfix = 0;
 	sys16_sprite_draw=0;
