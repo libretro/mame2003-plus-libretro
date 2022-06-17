@@ -51,7 +51,6 @@ READ16_HANDLER( SYS16_CPU2_RESET_HACK ){
 
 void (*sys16_custom_irq)(void);
 
-extern int sys16_wwfix, sys16_alienfix;
 
 MACHINE_INIT( sys16_onetime ){
 	log_cb(RETRO_LOG_INFO, LOGPRE "test- sys16_onetime machine init called\n");
