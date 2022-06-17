@@ -734,7 +734,6 @@ static DRIVER_INIT( shdancer ){
 		0x1f, 0xA0000  // ROM #4 = 256K
 	};
 
-	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
 	sys18_splittab_bg_x=&sys16_textram[0x0fc0/2];
 	sys16_MaxShadowColors=0;
@@ -770,7 +769,6 @@ static DRIVER_INIT( shdancrj ){
 		0x1f, 0xA0000  // ROM #4 = 256K
 	};
 
-	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
 	sys18_splittab_bg_x=&sys16_textram[0x0fc0/2];
 	sys16_MaxShadowColors=0;
@@ -811,7 +809,6 @@ static DRIVER_INIT( shdancrb ){
 		0x1f, 0xA0000  // ROM #4 = 256K
 	};
 
-	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
 	sys18_splittab_bg_x=&sys16_textram[0x0fc0/2];
 	sys16_MaxShadowColors=0;
@@ -945,7 +942,6 @@ static DRIVER_INIT( shdancbl )
 	for(i = 0; i < 0xc0000; i++)
 		mem[i] ^= 0xFF;
 
-	machine_init_sys16_onetime();
 	install_mem_read16_handler(0, 0xffc000, 0xffc001, shdancbl_skip_r );
 
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
@@ -1087,7 +1083,6 @@ static DRIVER_INIT( moonwalk ){
 		0x1f, 0xA0000  // ROM #4 = 256K
 	};
 
-	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
 	sys18_splittab_bg_x=&sys16_textram[0x0fc0/2];
 
@@ -1258,7 +1253,6 @@ static DRIVER_INIT( astorm ){
 		0x1f, 0xA0000  // ROM #4 = 256K
 	};
 
-	machine_init_sys16_onetime();
 	sys18_splittab_fg_x=&sys16_textram[0x0f80/2];
 	sys18_splittab_bg_x=&sys16_textram[0x0fc0/2];
 	sys16_MaxShadowColors = 0; // doesn't seem to use transparent shadows
@@ -1289,6 +1283,9 @@ static MACHINE_DRIVER_START( system18 )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
 
 	MDRV_VIDEO_START(system18)
 	MDRV_VIDEO_UPDATE(system18)

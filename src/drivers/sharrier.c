@@ -533,7 +533,6 @@ static MACHINE_INIT( hangon ){
 }
 
 static DRIVER_INIT( hangon ){
-	machine_init_sys16_onetime();
 	generate_gr_screen(512,1024,8,0,4,0x8000);
 }
 
@@ -568,7 +567,10 @@ static MACHINE_DRIVER_START( hangon )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-	
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
 	MDRV_VIDEO_START(hangon)
 	MDRV_VIDEO_UPDATE(hangon)
 	
@@ -725,7 +727,6 @@ static MACHINE_INIT( harrier ){
 
 static DRIVER_INIT( sharrier )
 {
-	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
 	sys16_interleave_sprite_data( 0x100000 );
 	generate_gr_screen(512,512,0,0,4,0x8000);
@@ -761,7 +762,10 @@ static MACHINE_DRIVER_START( sharrier )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-	
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
 	MDRV_VIDEO_START(hangon)
 	MDRV_VIDEO_UPDATE(hangon)
 	
@@ -1025,7 +1029,6 @@ static void endurob2_opcode_decode( void )
 
 static DRIVER_INIT( enduror )
 {
-	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
 /*	sys16_MaxShadowColors=0;*/
 
@@ -1034,7 +1037,6 @@ static DRIVER_INIT( enduror )
 
 static DRIVER_INIT( endurobl )
 {
-	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
 /*	sys16_MaxShadowColors=0;*/
 
@@ -1044,7 +1046,6 @@ static DRIVER_INIT( endurobl )
 
 static DRIVER_INIT( endurob2 )
 {
-	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
 /*	sys16_MaxShadowColors=0;*/
 
@@ -1083,7 +1084,10 @@ static MACHINE_DRIVER_START( enduror )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-	
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
 	MDRV_VIDEO_START(hangon)
 	MDRV_VIDEO_UPDATE(hangon)
 	
@@ -1122,7 +1126,10 @@ static MACHINE_DRIVER_START( endurob2 )
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-	
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
 	MDRV_VIDEO_START(hangon)
 	MDRV_VIDEO_UPDATE(hangon)
 	
