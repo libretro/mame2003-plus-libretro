@@ -46,7 +46,7 @@ int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *
 	6	--------	--------	
 	7	--------	--------
 */
-	extern int sys16_wwfix; //*
+
 	UINT16 ypos = source[0];
 	UINT16 width = source[2];
 	int top = ypos&0xff;
