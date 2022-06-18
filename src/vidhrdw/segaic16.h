@@ -20,3 +20,4 @@ int segaic16_init_virtual_tilemaps(int numpages, void (*tile_cb)(int));
 void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rectangle *cliprect, UINT16 pages, UINT16 xscroll, UINT16 yscroll, UINT32 flags, UINT32 priority);
 WRITE16_HANDLER( segaic16_tileram_w );
 
+void system16b_set_tile_bank(int which, int bank);

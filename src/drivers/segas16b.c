@@ -22,8 +22,6 @@ static WRITE_HANDLER( UPD7759_bank_w );
 
 static data16_t coinctrl;
 static int sys16_soundbanktype=0;
-static int sys16_soundinttype=0;
-
 
 static MEMORY_READ_START( sound_readmem )
     { 0x0000, 0x7fff, MRA_ROM },
@@ -93,6 +91,13 @@ PORT_END
 static MEMORY_READ_START( sound_readmem_7759 )
     { 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xdfff, MRA_BANK1 },
+	{ 0xe800, 0xe800, soundlatch_r },
+	{ 0xf800, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_READ_START( sound_writemem_7759 )
+    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xdfff, MWA_BANK1 },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
@@ -168,30 +173,14 @@ static WRITE_HANDLER( UPD7759_bank_w )
 
 static void sound_cause_a_nmi( int state )
 {
-	switch (sys16_soundinttype)
-		{
-			case 1://cotton
-					if (state) /* upd7759 callback */
-						cpu_set_nmi_line(1, PULSE_LINE);
-					break;
-			default:
-						cpu_set_nmi_line(1, PULSE_LINE);
-		}
+	if (state) /* upd7759 callback */
+		cpu_set_nmi_line(1, PULSE_LINE);
 }
 
-
-static WRITE16_HANDLER( sound_command_w ){
-	if( ACCESSING_LSB ){
+static WRITE16_HANDLER( sound_command_w )
+{
 		soundlatch_w( 0,data&0xff );
 		cpu_set_irq_line( 1, 0, HOLD_LINE );
-	}
-}
-
-static WRITE16_HANDLER( sound_command_nmi_w ){
-	if( ACCESSING_LSB ){
-		soundlatch_w( 0,data&0xff );
-		cpu_set_nmi_line(1, PULSE_LINE);
-	}
 }
 
 struct UPD7759_interface sys16b_upd7759_interface =
@@ -202,8 +191,6 @@ struct UPD7759_interface sys16b_upd7759_interface =
     UPD7759_SLAVE_MODE,
 	{ sound_cause_a_nmi },
 };
-
-
 
 static READ16_HANDLER( standard_io_r )
 {
@@ -245,9 +232,9 @@ coinctrl = data&0xff;
                 D1 : (Output to coin counter 2?)
                 D0 : Output to coin counter 1
             */
-	    //segaic16_tilemap_set_flip(0, data & 0x40);
-		//segaic16_sprites_set_flip(0, data & 0x40);
-	    sys16_refreshenable = coinctrl & 0x20;
+	    //segaic16_tilemap_set_flip(0, data & 0x40); // this needs fixed
+		//segaic16_sprites_set_flip(0, data & 0x40); // this needs fixed
+	    //sys16_refreshenable = coinctrl & 0x20; // this needs fixed
 		set_led_status(1,coinctrl & 0x08);
 		set_led_status(0,coinctrl & 0x04);
 		coin_counter_w(1,coinctrl & 0x02);
@@ -563,19 +550,19 @@ static INTERRUPT_GEN( sys16_interrupt )
 	cpu_set_irq_line(0, 4, HOLD_LINE); /* Interrupt vector 4, used by VBlank */
 }
 
-static MACHINE_DRIVER_START( system16 )
+static MACHINE_DRIVER_START( system16b )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD_TAG("main", M68000, 10000000)
 	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, 4000000)
+	MDRV_CPU_ADD_TAG("sound", Z80, 5000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
     MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -595,7 +582,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( system16_7759 )
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16)
+	MDRV_IMPORT_FROM(system16b)
 
 	MDRV_CPU_MODIFY("sound")
     MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem)
@@ -609,7 +596,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( system16_7751 )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16)
+	MDRV_IMPORT_FROM(system16b)
 
 	MDRV_CPU_MODIFY("sound")
 	MDRV_CPU_MEMORY(sound_readmem_7751,sound_writemem)
@@ -630,7 +617,6 @@ static MACHINE_INIT( cotton )
 {
 	machine_init_sys16_onetime();
 	machine_init_bank1();
-	sys16_soundinttype=1;
 	sys16_soundbanktype=2;
 }
 static MACHINE_INIT( bullet )
