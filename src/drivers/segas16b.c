@@ -15,13 +15,11 @@ WRITE_HANDLER( sys16_7751_sh_offset_a4_a7_w );
 WRITE_HANDLER( sys16_7751_sh_offset_a8_a11_w );
 WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
-//todo fix sound up not hooked up properly
 
-extern WRITE16_HANDLER( system16b_textram_w );
-static WRITE_HANDLER( UPD7759_bank_w );
-
-static data16_t coinctrl;
+static UINT8 disable_screen_blanking;
 static int sys16_soundbanktype=0;
+
+static WRITE_HANDLER( UPD7759_bank_w );
 
 static MEMORY_READ_START( sound_readmem )
     { 0x0000, 0x7fff, MRA_ROM },
@@ -31,7 +29,6 @@ MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
     { 0x0000, 0x7fff, MWA_ROM },
-    { 0x8000, 0xdfff, MWA_BANK1 },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
@@ -95,11 +92,10 @@ static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
-static MEMORY_READ_START( sound_writemem_7759 )
+static MEMORY_WRITE_START( sound_writemem_7759 )
     { 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0xdfff, MWA_BANK1 },
-	{ 0xe800, 0xe800, soundlatch_r },
-	{ 0xf800, 0xffff, MRA_RAM },
+	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_WRITE_START( sound_writeport_7759 )
@@ -217,7 +213,6 @@ static READ16_HANDLER( standard_io_r )
 
 static WRITE16_HANDLER( standard_io_w )
 {
-coinctrl = data&0xff;
 	offset &= 0x1fff;
 	switch (offset & (0x3000/2))
 	{
@@ -232,13 +227,13 @@ coinctrl = data&0xff;
                 D1 : (Output to coin counter 2?)
                 D0 : Output to coin counter 1
             */
-	    //segaic16_tilemap_set_flip(0, data & 0x40); // this needs fixed
-		//segaic16_sprites_set_flip(0, data & 0x40); // this needs fixed
-	    //sys16_refreshenable = coinctrl & 0x20; // this needs fixed
-		set_led_status(1,coinctrl & 0x08);
-		set_led_status(0,coinctrl & 0x04);
-		coin_counter_w(1,coinctrl & 0x02);
-		coin_counter_w(0,coinctrl & 0x01);
+	   	system16b_set_screen_flip(data & 0x40);
+		if (!disable_screen_blanking)
+			system16b_set_draw_enable(data & 0x20);
+		set_led_status(1, data & 0x08);
+		set_led_status(0, data & 0x04);
+		coin_counter_w(1, data & 0x02);
+		coin_counter_w(0, data & 0x01);
 			return;
 	}
 	logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", activecpu_get_pc(), offset * 2, data, mem_mask ^ 0xffff);
@@ -585,7 +580,7 @@ static MACHINE_DRIVER_START( system16_7759 )
 	MDRV_IMPORT_FROM(system16b)
 
 	MDRV_CPU_MODIFY("sound")
-    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem)
+    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
