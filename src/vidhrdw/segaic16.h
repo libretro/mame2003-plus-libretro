@@ -26,3 +26,6 @@ void system16b_set_tile_bank(int which, int bank);
 void system16b_set_draw_enable(int enable);
 void system16b_set_screen_flip(int flip);
 void system16b_configure_sprite_banks(int use_default);
+
+VIDEO_START( system16b );
+VIDEO_UPDATE( system16b );
