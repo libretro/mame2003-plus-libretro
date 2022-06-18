@@ -2828,6 +2828,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( atomicp )	/* (c) 1990 Philko */
 	DRIVER( aurail )	/* (c) 1990 Sega / Westone */
 	DRIVER( bayroute )	/* (c) 1989 Sunsoft / Sega */
+	DRIVER( cottond )
+	DRIVER( bulletd )
 	DRIVER( bodyslam )	/* (c) 1986 */
 	DRIVER( dduxbl )	/* (c) 1989 (Datsu bootleg) */
 	DRIVER( dumpmtmt )	/* (c) 1986 (Japan) */
