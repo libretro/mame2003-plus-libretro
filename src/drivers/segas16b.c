@@ -22,61 +22,61 @@ static int sys16_soundbanktype=0;
 static WRITE_HANDLER( UPD7759_bank_w );
 
 static MEMORY_READ_START( sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( sound_readport )
-    { 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 PORT_END
 
 // 7751 Sound
 static MEMORY_READ_START( sound_readmem_7751 )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static PORT_READ_START( sound_readport_7751 )
-    { 0x01, 0x01, YM2151_status_port_0_r },
-//  { 0x0e, 0x0e, sys16_7751_audio_8255_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
+	//{ 0x0e, 0x0e, sys16_7751_audio_8255_r },
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport_7751 )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x80, 0x80, sys16_7751_audio_8255_w },
 PORT_END
 
 static MEMORY_READ_START( readmem_7751 )
-    { 0x0000, 0x03ff, MRA_ROM },
+	{ 0x0000, 0x03ff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_7751 )
-    { 0x0000, 0x03ff, MWA_ROM },
+	{ 0x0000, 0x03ff, MWA_ROM },
 MEMORY_END
 
 static PORT_READ_START( readport_7751 )
-    { I8039_t1, I8039_t1, sys16_7751_sh_t1_r },
+	{ I8039_t1, I8039_t1, sys16_7751_sh_t1_r },
 	{ I8039_p2, I8039_p2, sys16_7751_sh_command_r },
 	{ I8039_bus, I8039_bus, sys16_7751_sh_rom_r },
 PORT_END
 
 static PORT_WRITE_START( writeport_7751 )
-    { I8039_p1, I8039_p1, sys16_7751_sh_dac_w },
+	{ I8039_p1, I8039_p1, sys16_7751_sh_dac_w },
 	{ I8039_p2, I8039_p2, sys16_7751_sh_busy_w },
 	{ I8039_p4, I8039_p4, sys16_7751_sh_offset_a0_a3_w },
 	{ I8039_p5, I8039_p5, sys16_7751_sh_offset_a4_a7_w },
@@ -86,20 +86,20 @@ PORT_END
 
 // 7759
 static MEMORY_READ_START( sound_readmem_7759 )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xdfff, MRA_BANK1 },
 	{ 0xe800, 0xe800, soundlatch_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem_7759 )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0xdfff, MWA_BANK1 },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_WRITE_START( sound_writeport_7759 )
-    { 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, UPD7759_bank_w },
 	{ 0x80, 0x80, UPD7759_0_port_w },
@@ -175,8 +175,8 @@ static void sound_cause_a_nmi( int state )
 
 static WRITE16_HANDLER( sound_command_w )
 {
-		soundlatch_w( 0,data&0xff );
-		cpu_set_irq_line( 1, 0, HOLD_LINE );
+	soundlatch_w( 0,data&0xff );
+	cpu_set_irq_line( 1, 0, HOLD_LINE );
 }
 
 struct UPD7759_interface sys16b_upd7759_interface =
@@ -527,14 +527,14 @@ ROM_END
 
 static MACHINE_INIT( bank1 )
 {
-machine_init_sys16_onetime();
-system16b_configure_sprite_banks(1);
+	machine_init_sys16_onetime();
+	system16b_configure_sprite_banks(1);
 }
 
 static MACHINE_INIT( bank0 )
 {
-machine_init_sys16_onetime();
-system16b_configure_sprite_banks(0);
+	machine_init_sys16_onetime();
+	system16b_configure_sprite_banks(0);
 }
 
 /***************************************************************************/
