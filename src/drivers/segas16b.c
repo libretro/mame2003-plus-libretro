@@ -118,6 +118,11 @@ static WRITE_HANDLER( UPD7759_bank_w )
 
     switch (sys16_soundbanktype)
     {
+      case 0:
+
+        bankoffs =  (data * 0x4000);
+        break;
+
       case 1:
 
         /*
@@ -194,21 +199,13 @@ static READ16_HANDLER( standard_io_r )
   switch (offset & (0x3000/2))
   {
     case 0x1000/2:
-    {
-                //log_cb(RETRO_LOG_DEBUG, LOGPRE " standard_io_r input offset:%06x to input port %02x \n",offset * 2,  (offset & 3 ));
-
-        return readinputport(offset & 3);
-    }
-
+      return readinputport(offset & 3);
+    
     case 0x2000/2:
-    {
-         // log_cb(RETRO_LOG_DEBUG, LOGPRE " standard_io_r DSW offset:%06x to input port %02x %s\n",offset * 2,  (offset & 1 ) +4,((offset & 1) ? "DSW1" : "DSW2") );
-           return  ((offset & 1) ? readinputport(4)  : readinputport(5));
-    }
-
-     }
+      return  ((offset & 1) ? readinputport(4)  : readinputport(5));
+  }
   logerror("CPU #0 PC %06x: standard_io_r - unknown read access to address %06x\n", activecpu_get_pc(), offset);
-   return 0;
+  return 0;
 }
 
 static WRITE16_HANDLER( standard_io_w )
@@ -226,15 +223,15 @@ static WRITE16_HANDLER( standard_io_w )
                 D2 : Output to lamp 1 (1= On, 0= Off)
                 D1 : (Output to coin counter 2?)
                 D0 : Output to coin counter 1
-            */
-      system16b_set_screen_flip(data & 0x40);
+       */
+    system16b_set_screen_flip(data & 0x40);
     if (!disable_screen_blanking)
       system16b_set_draw_enable(data & 0x20);
     set_led_status(1, data & 0x08);
     set_led_status(0, data & 0x04);
     coin_counter_w(1, data & 0x02);
     coin_counter_w(0, data & 0x01);
-      return;
+    return;
   }
   logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", activecpu_get_pc(), offset * 2, data, mem_mask ^ 0xffff);
 }
