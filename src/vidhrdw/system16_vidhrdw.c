@@ -1326,9 +1326,9 @@ static void sys18_vh_screenrefresh_helper( void ){
 
 VIDEO_UPDATE( system16 ){
 	if (!sys16_refreshenable) 
-  	{
+	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
-    return;
+		return;
 	}
 
 	if( sys16_update_proc ) sys16_update_proc();
