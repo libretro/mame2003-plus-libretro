@@ -645,6 +645,6 @@ static MACHINE_DRIVER_START( fantzn2x )
 MACHINE_DRIVER_END
 
 /*          rom       parent    machine   inp       init */
-GAME( 1991, cottond,  cotton,   cotton,   cotton,   0,       ROT0,   "Sega",    "Cotton (set 4, World) (unprotected of FD1094 317-0181a set)" )
-GAME( 1987, bulletd,  0,        bullet,   bullet,   0,       ROT0,   "Sega",    "Bullet (unprotected of FD1094 317-0041 set)" )
-GAME( 2008, fantzn2x, 0,        fantzn2x, fantzn2x, 0,       ROT0,   "Sega",    "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+GAME( 1991, cottond,  cotton,   cotton,    cotton,    0,     ROT0,   "Sega / Success",  "Cotton (set 4, World) (unprotected of FD1094 317-0181a set)" )
+GAME( 1987, bulletd,  0,        bullet,    bullet,    0,     ROT0,   "Sega",            "Bullet (unprotected of FD1094 317-0041 set)" )
+GAME( 2008, fantzn2x, 0,        fantzn2x,  fantzn2x,  0,     ROT0,   "Sega / M2",       "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
