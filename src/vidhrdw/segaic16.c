@@ -106,6 +106,7 @@ Quick review of the system16 hardware:
 data16_t *segaic16_tileram;
 data16_t *segaic16_textram;
 data16_t *segaic16_spriteram;
+data16_t *segaic16_roadram;
 
 struct tilemap *segaic16_tilemaps[16];
 UINT8 segaic16_tilemap_page;
@@ -118,6 +119,7 @@ UINT8 segaic16_tilemap_page;
  *
  *************************************/
 
+static int palette_entries;
 static UINT8 normal_pal[32];
 static UINT8 shadow_pal[32];
 static UINT8 hilight_pal[32];
@@ -147,12 +149,15 @@ static UINT8 hilight_pal[32];
 	is bit 15 of each color RAM entry.
 */
 
-void segaic16_init_palette(void)
+void segaic16_init_palette(int entries)
 {
 	static const int resistances_normal[6] = { 3900, 2000, 1000, 1000/2, 1000/4, 0   };
 	static const int resistances_sh[6]     = { 3900, 2000, 1000, 1000/2, 1000/4, 470 };
 	double weights[2][6];
 	int i;
+	
+	/* compute the number of palette entries */
+	palette_entries = entries;
 
 	/* compute weight table for regular palette entries */
 	compute_resistor_weights(0, 255, -1.0,
@@ -207,9 +212,9 @@ WRITE16_HANDLER( segaic16_paletteram_w )
 	b = ((newval >> 14) & 0x01) | ((newval >> 7) & 0x1e);
 
 	/* normal colors */
-	palette_set_color(offset,        normal_pal[r],  normal_pal[g],  normal_pal[b]);
-	palette_set_color(offset + 2048, shadow_pal[r],  shadow_pal[g],  shadow_pal[b]);
-	palette_set_color(offset + 4096, hilight_pal[r], hilight_pal[g], hilight_pal[b]);
+	palette_set_color(offset + 0 * palette_entries, normal_pal[r],  normal_pal[g],  normal_pal[b]);
+	palette_set_color(offset + 1 * palette_entries, shadow_pal[r],  shadow_pal[g],  shadow_pal[b]);
+	palette_set_color(offset + 2 * palette_entries, hilight_pal[r], hilight_pal[g], hilight_pal[b]);
 }
 
 
@@ -220,7 +225,7 @@ WRITE16_HANDLER( segaic16_paletteram_w )
  *
  *************************************/
 
-int segaic16_init_virtual_tilemaps(int numpages, void (*tile_cb)(int))
+int segaic16_init_virtual_tilemaps(int numpages, int palette_offset, void (*tile_cb)(int))
 {
 	int pagenum;
 
@@ -233,6 +238,7 @@ int segaic16_init_virtual_tilemaps(int numpages, void (*tile_cb)(int))
 			return 0;
 
 		/* configure the tilemap */
+		tilemap_set_palette_offset(segaic16_tilemaps[pagenum], palette_offset);
 		tilemap_set_transparent_pen(segaic16_tilemaps[pagenum], 0);
 	}
 	return 1;
@@ -318,7 +324,7 @@ void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rect
 		pageclip.max_y = (topmax > cliprect->max_y) ? cliprect->max_y : topmax;
 		if (pageclip.min_x <= pageclip.max_x && pageclip.min_y <= pageclip.max_y)
 		{
-			segaic16_tilemap_page = (pages >> 12) & 0xf;
+			segaic16_tilemap_page = (pages >> 0) & 0xf;
 			tilemap_set_scrollx(segaic16_tilemaps[segaic16_tilemap_page], 0, xscroll);
 			tilemap_set_scrolly(segaic16_tilemaps[segaic16_tilemap_page], 0, yscroll);
 			tilemap_draw(bitmap, &pageclip, segaic16_tilemaps[segaic16_tilemap_page], flags, priority);
@@ -334,7 +340,7 @@ void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rect
 		pageclip.max_y = (topmax > cliprect->max_y) ? cliprect->max_y : topmax;
 		if (pageclip.min_x <= pageclip.max_x && pageclip.min_y <= pageclip.max_y)
 		{
-			segaic16_tilemap_page = (pages >> 8) & 0xf;
+			segaic16_tilemap_page = (pages >> 4) & 0xf;
 			tilemap_set_scrollx(segaic16_tilemaps[segaic16_tilemap_page], 0, xscroll);
 			tilemap_set_scrolly(segaic16_tilemaps[segaic16_tilemap_page], 0, yscroll);
 			tilemap_draw(bitmap, &pageclip, segaic16_tilemaps[segaic16_tilemap_page], flags, priority);
@@ -350,7 +356,7 @@ void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rect
 		pageclip.max_y = (bottommax > cliprect->max_y) ? cliprect->max_y : bottommax;
 		if (pageclip.min_x <= pageclip.max_x && pageclip.min_y <= pageclip.max_y)
 		{
-			segaic16_tilemap_page = (pages >> 4) & 0xf;
+			segaic16_tilemap_page = (pages >> 8) & 0xf;
 			tilemap_set_scrollx(segaic16_tilemaps[segaic16_tilemap_page], 0, xscroll);
 			tilemap_set_scrolly(segaic16_tilemaps[segaic16_tilemap_page], 0, yscroll);
 			tilemap_draw(bitmap, &pageclip, segaic16_tilemaps[segaic16_tilemap_page], flags, priority);
@@ -366,7 +372,7 @@ void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rect
 		pageclip.max_y = (bottommax > cliprect->max_y) ? cliprect->max_y : bottommax;
 		if (pageclip.min_x <= pageclip.max_x && pageclip.min_y <= pageclip.max_y)
 		{
-			segaic16_tilemap_page = (pages >> 0) & 0xf;
+			segaic16_tilemap_page = (pages >> 12) & 0xf;
 			tilemap_set_scrollx(segaic16_tilemaps[segaic16_tilemap_page], 0, xscroll);
 			tilemap_set_scrolly(segaic16_tilemaps[segaic16_tilemap_page], 0, yscroll);
 			tilemap_draw(bitmap, &pageclip, segaic16_tilemaps[segaic16_tilemap_page], flags, priority);
