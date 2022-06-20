@@ -854,7 +854,7 @@ struct snd_interface sndintf[] =
 		"uPD7759",
 		0,
 		0,
-		UPD7759_sh_start,
+		upd7759_sh_start,
 		0,
 		0,
 		0

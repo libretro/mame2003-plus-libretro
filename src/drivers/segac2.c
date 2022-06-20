@@ -464,7 +464,7 @@ static WRITE16_HANDLER( puckpkmn_YM3438_w )
 
 
 /* handle writes to the UPD7759 */
-static WRITE16_HANDLER( upd7759_w )
+static WRITE16_HANDLER( UPD7759_w )
 {
 	/* make sure we have a UPD chip */
 	if (!sound_banks)
@@ -473,11 +473,11 @@ static WRITE16_HANDLER( upd7759_w )
 	/* only works if we're accessing the low byte */
 	if (ACCESSING_LSB)
 	{
-		UPD7759_reset_w(0, 0);
-		UPD7759_reset_w(0, 1);
-		UPD7759_port_w(0, data & 0xff);
-		UPD7759_start_w(0, 0);
-		UPD7759_start_w(0, 1);
+		upd7759_reset_w(0, 0);
+		upd7759_reset_w(0, 1);
+		upd7759_port_w(0, data & 0xff);
+		upd7759_start_w(0, 0);
+		upd7759_start_w(0, 1);
 	}
 }
 
@@ -639,7 +639,7 @@ static READ16_HANDLER( iochip_r )
 		case 0x00:	return 0xff00 | readinputport(1);
 		case 0x01:	return 0xff00 | readinputport(2);
 		case 0x02:	if (sound_banks)
-						return 0xff00 | (UPD7759_0_busy_r(0) << 6) | 0xbf; /* must return high bit on */
+						return 0xff00 | (upd7759_0_busy_r(0) << 6) | 0xbf; /* must return high bit on */
 					else
 						return 0xffff;
 		case 0x04:	return 0xff00 | readinputport(0);
@@ -688,7 +688,7 @@ static WRITE16_HANDLER( iochip_w )
 			if (sound_banks > 1)
 			{
 				newbank = (data >> 2) & (sound_banks - 1);
-				UPD7759_set_bank_base(0, newbank * 0x20000);
+				upd7759_set_bank_base(0, newbank * 0x20000);
 			}
 			break;
 
@@ -949,7 +949,7 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x800200, 0x800201, control_w },					/* Seems to be global controls */
 	{ 0x840000, 0x84001f, iochip_w },					/* I/O Chip */
 	{ 0x840100, 0x840107, ym3438_w },					/* Ym3438 Sound Chip Writes */
-	{ 0x880000, 0x880001, upd7759_w },					/* UPD7759 Sound Writes */
+	{ 0x880000, 0x880001, UPD7759_w },					/* UPD7759 Sound Writes */
 	{ 0x880134, 0x880135, counter_timer_w },			/* Bookkeeping */
 	{ 0x880334, 0x880335, counter_timer_w },			/* Bookkeeping (mirror) */
 	{ 0x8c0000, 0x8c0fff, palette_w, &paletteram16 },	/* Palette Ram */
@@ -975,7 +975,7 @@ static MEMORY_WRITE16_START( ooparts_writemem )
 	{ 0x800200, 0x800201, control_w },					/* Seems to be global controls */
 	{ 0x840000, 0x84001f, iochip_w },					/* I/O Chip */
 	{ 0x840100, 0x840107, ym3438_w },					/* Ym3438 Sound Chip Writes */
-	{ 0x880000, 0x880001, upd7759_w },					/* UPD7759 Sound Writes */
+	{ 0x880000, 0x880001, UPD7759_w },					/* UPD7759 Sound Writes */
 	{ 0x880134, 0x880135, counter_timer_w },			/* Bookkeeping */
 	{ 0x880334, 0x880335, counter_timer_w },			/* Bookkeeping (mirror) */
 	{ 0x8c0000, 0x8c0fff, palette_w, &paletteram16 },	/* Palette Ram */
@@ -3220,7 +3220,7 @@ INPUT_PORTS_START( ooparts ) /*  Ichidant-R and Tant-R Input Ports */
     COINS
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	
+
 	PORT_START		/* Player 1 Controls */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )      /* 'Paddle' */
     PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )      /* 'Special weapon' */
@@ -4192,7 +4192,7 @@ INPUT_PORTS_START( barek2ch )
     PORT_DIPNAME( 0x80, 0x80, "SW1:8" )
     PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	
+
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x01, "SW2:1" ) // at least some of the first 3 seem to control difficulty (enemies attack later / less frequently by switching these)
     PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
@@ -4297,12 +4297,12 @@ INPUT_PORTS_END
 	Sound interfaces
 ******************************************************************************/
 
-static struct UPD7759_interface upd7759_intf =
+static struct upd7759_interface upd7759_intf =
 {
 	1,								/* One chip */
+	{ UPD7759_STANDARD_CLOCK },
 	{ 50 },							/* Volume */
 	{ REGION_SOUND1 },				/* Memory pointer (gen.h) */
-	UPD7759_STANDALONE_MODE			/* Chip mode */
 };
 
 static struct YM2612interface ym3438_intf =
@@ -4921,7 +4921,7 @@ ROM_START( headonch ) /* Head On Channel (Prototype) (c)1994 Sega */
 	ROM_LOAD16_BYTE( "headonch.ic31", 0x000001, 0x080000, CRC(91f3b5f1) SHA1(15cbe7a172dde7de7b73f0c9eeddfee41e8d1f80) )
 	ROM_LOAD16_BYTE( "headonch.ic34", 0x100000, 0x080000, CRC(d8dc6323) SHA1(e7e891324764641691dcb63e5222f2ed9207fb96) )
 	ROM_LOAD16_BYTE( "headonch.ic33", 0x100001, 0x080000, CRC(3268e38b) SHA1(10ded2be01465014ca9e6c64ffab1190ec985359) )
-	
+
 	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
     ROM_LOAD( "headonch.ic4", 0x000000, 0x040000, CRC(90af7301) SHA1(227227cb5d0df6612bac7b4c94b99e2287686ccd) )
 ROM_END
@@ -4932,7 +4932,7 @@ ROM_START( ooparts ) /* Oo Parts (Prototype) (c)1992 Sega / Success */
 	ROM_LOAD16_BYTE( "ooparts.ic31", 0x000001, 0x080000, CRC(35381899) SHA1(524f6e1b1292542079589275e20f45c2eb68605c) )
 	ROM_LOAD16_BYTE( "ooparts.ic34", 0x100000, 0x080000, CRC(7192ac29) SHA1(d3028a9bbb7faa733285cf7e47fd840ec0d0bf69) )
 	ROM_LOAD16_BYTE( "ooparts.ic33", 0x100001, 0x080000, CRC(42755dc2) SHA1(cd0aa79418b922266c5d41bf24b9136f9f105dc5) )
-	
+
 	ROM_REGION( 0x040000, REGION_SOUND1, 0 )
 	ROM_LOAD( "epr-13655.ic4", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
 ROM_END
@@ -4941,7 +4941,7 @@ ROM_START( ssonicbr )  /* Sega Sonic Bros (Prototype) (c)1992 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ssonicbr.ic32", 0x000000, 0x040000, CRC(cf254ecd) SHA1(4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800) )
 	ROM_LOAD16_BYTE( "ssonicbr.ic31", 0x000001, 0x040000, CRC(03709746) SHA1(0b457f557da77acd3f43950428117c1decdfaf26) )
-	
+
 	ROM_REGION( 0x020000, REGION_SOUND1, 0 )
 	ROM_LOAD( "ssonicbr.ic4", 0x000000, 0x020000, CRC(78e56a51) SHA1(8a72c12975cd74919b4337e0f681273e6b5cbbc6) )
 ROM_END
@@ -6070,7 +6070,7 @@ DRIVER_INIT( barek2ch )
 {
 	UINT16 *src = (UINT16 *)memory_region(REGION_CPU1);
 	int i;
-	
+
 	for (i = 0x000000; i < 0x200000 / 2; i++)
 		src[i] = BITSWAP16(src[i], 8, 11, 10, 13, 12, 14, 15, 9, 7, 6, 5, 4, 3, 2, 1, 0);
 
@@ -6079,9 +6079,9 @@ DRIVER_INIT( barek2ch )
 	install_mem_read16_handler(0, 0x380070, 0x380071, input_port_2_word_r );
 	install_mem_read16_handler(0, 0x380078, 0x380079, input_port_3_word_r );
 	install_mem_read16_handler(0, 0x38007a, 0x38007b, input_port_4_word_r );
-	
+
 	genesis_region = 0x00; /* read via io */
-		
+
 	cpu_setbank(3, memory_region(REGION_CPU1) );
 	cpu_setbank(4, &genesis_68k_ram[0]);
 

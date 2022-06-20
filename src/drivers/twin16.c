@@ -238,7 +238,7 @@ static READ_HANDLER( twin16_sres_r )
 static WRITE_HANDLER( twin16_sres_w )
 {
 	/* bit 1 resets the UPD7795C sound chip */
-	UPD7759_reset_w(0, data & 0x02);
+	upd7759_reset_w(0, data & 0x02);
 	twin16_soundlatch = data;
 }
 
@@ -266,7 +266,7 @@ static MEMORY_READ_START( readmem_sound )
 	{ 0xa000, 0xa000, soundlatch_r },
 	{ 0xb000, 0xb00d, K007232_read_port_0_r },
 	{ 0xc001, 0xc001, YM2151_status_port_0_r },
-	{ 0xf000, 0xf000, UPD7759_0_busy_r },
+	{ 0xf000, 0xf000, upd7759_0_busy_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_sound )
@@ -276,8 +276,8 @@ static MEMORY_WRITE_START( writemem_sound )
 	{ 0xb000, 0xb00d, K007232_write_port_0_w  },
 	{ 0xc000, 0xc000, YM2151_register_port_0_w },
 	{ 0xc001, 0xc001, YM2151_data_port_0_w },
-	{ 0xd000, 0xd000, UPD7759_0_port_w },
-	{ 0xe000, 0xe000, UPD7759_0_start_w },
+	{ 0xd000, 0xd000, upd7759_0_port_w },
+	{ 0xe000, 0xe000, upd7759_0_start_w },
 	{ 0xf000, 0xf000, MWA_NOP },	/* ???*/
 MEMORY_END
 
@@ -942,12 +942,12 @@ static struct K007232_interface k007232_interface =
 	{ volume_callback }	/* external port callback */
 };
 
-static struct UPD7759_interface upd7759_interface =
+static struct upd7759_interface upd7759_interface =
 {
 	1,		/* number of chips */
+	{ UPD7759_STANDARD_CLOCK },
 	{ 20 }, /* volume */
 	{ REGION_SOUND2 }, /* memory region */
-	UPD7759_STANDALONE_MODE, /* chip mode */
 	{0}
 };
 
@@ -1447,7 +1447,7 @@ ROM_END
 /* Driver Initialization */
 
 static void gfx_untangle( void )
-{ 
+{
 	/* sprite, tile data*/
 
 	int i;
