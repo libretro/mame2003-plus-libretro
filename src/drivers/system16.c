@@ -7031,7 +7031,7 @@ GAME( 1987, timscanr, 0,        timscanr, timscanr, 0,        ROT270, "Sega",   
 GAME (1994, toryumon, 0,        toryumon, toryumon, 0,        ROT0,   "Sega",    "Toryumon" )
 GAME (1989, tturf,    0,        tturf,    tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (Japan)")
 GAME (1989, tturfu,   tturf,    tturfu,   tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (US)")
-GAMEX(1989, tturfbl,  tturf,    tturfbl,  tturf,    tturfbl,  ROT0,   "bootleg", "Tough Turf (bootleg)")
+GAME( 1989, tturfbl,  tturf,    tturfbl,  tturf,    tturfbl,  ROT0,   "bootleg", "Tough Turf (bootleg)")
 GAME( 1988, wb3,      0,        wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 1)" )
 GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
 GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
