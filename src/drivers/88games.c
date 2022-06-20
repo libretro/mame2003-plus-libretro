@@ -107,13 +107,13 @@ static int speech_chip;
 static WRITE_HANDLER( speech_control_w )
 {
 	speech_chip = ( data & 4 ) ? 1 : 0;
-	UPD7759_reset_w( speech_chip, data & 2 );
-	UPD7759_start_w( speech_chip, data & 1 );
+	upd7759_reset_w( speech_chip, data & 2 );
+	upd7759_start_w( speech_chip, data & 1 );
 }
 
 static WRITE_HANDLER( speech_msg_w )
 {
-	UPD7759_port_w( speech_chip, data );
+	upd7759_port_w( speech_chip, data );
 }
 
 static MEMORY_READ_START( readmem )
@@ -281,13 +281,13 @@ static struct YM2151interface ym2151_interface =
 	{ 0 }
 };
 
-static struct UPD7759_interface upd7759_interface =
+static struct upd7759_interface upd7759_interface =
 {
 	2,							/* number of chips */
+	{ UPD7759_STANDARD_CLOCK, UPD7759_STANDARD_CLOCK },
 	{ 30, 30 },					/* volume */
 	{ REGION_SOUND1, REGION_SOUND2 },	/* memory region */
-	UPD7759_STANDALONE_MODE,	/* chip mode */
-	{0}
+	{0, 0}
 };
 
 

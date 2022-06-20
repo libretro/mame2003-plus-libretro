@@ -170,7 +170,7 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 /***************************************************************************/
 
-int sys16_alienfix;
+int sys16_soundbanktype;
 
 static data16_t coinctrl;
 
@@ -394,23 +394,17 @@ static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
-
-static WRITE_HANDLER( UPD7759_bank_w )
-{
-	int offs, size = memory_region_length(REGION_CPU2) - 0x10000;
-
-	UPD7759_reset_w(0, data & 0x40);
-	if (sys16_alienfix && (data&0x30)==0x20) data-=2;
-	offs = 0x10000 + (data * 0x4000) % size;
-	cpu_setbank(1, memory_region(REGION_CPU2) + offs);
-}
-
+static MEMORY_WRITE_START( sound_writemem_7759 )
+	{ 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0xdfff, MWA_BANK1 },
+	{ 0xf800, 0xffff, MWA_RAM },
+MEMORY_END
 
 static PORT_WRITE_START( sound_writeport_7759 )
 	{ 0x00, 0x00, YM2151_register_port_0_w },
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, UPD7759_bank_w },
-	{ 0x80, 0x80, UPD7759_0_port_w },
+	{ 0x80, 0x80, upd7759_0_port_w },
 PORT_END
 
 
@@ -483,6 +477,38 @@ static MACHINE_DRIVER_START( system16 )
 	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( system16b )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD_TAG("main", M68000, 10000000)
+	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
+
+	MDRV_CPU_ADD_TAG("sound", Z80, 5000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+	MDRV_CPU_PORTS(sound_readport,sound_writeport)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
+	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
+	MDRV_VIDEO_START(system16)
+	MDRV_VIDEO_UPDATE(system16)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( system16_7759 )
 
@@ -490,11 +516,24 @@ static MACHINE_DRIVER_START( system16_7759 )
 	MDRV_IMPORT_FROM(system16)
 
 	MDRV_CPU_MODIFY("sound")
-    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem)
+    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16_upd7759_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( system16_7759b )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system16b)
+
+	MDRV_CPU_MODIFY("sound")
+    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
+	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD_TAG("7759", UPD7759, sys16b_upd7759_interface)
 MACHINE_DRIVER_END
 
 
@@ -898,11 +937,11 @@ ROM_START( aliensyb )
 	ROM_LOAD16_BYTE( "10712.b4", 0x60001, 0x10000, CRC(876ad019) SHA1(39973ddb5a5746e0e094c759447bff1130c72c84) )
 	ROM_LOAD16_BYTE( "10716.b8", 0x60000, 0x10000, CRC(40ba1d48) SHA1(e2d4d2689bb9b9bdc85e7f72a6665e5fd4c583aa) )
 
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "10723.a7", 0x0000, 0x8000, CRC(99953526) SHA1(4a980370923fd5d3dc9e25d42a032c9e78c7ff47) )
-	ROM_LOAD( "10724.a8", 0x10000, 0x8000, CRC(f971a817) SHA1(502c95638e4fd5f87e5fc837cb44b39a5d62f4e4) )
-	ROM_LOAD( "10725.a9", 0x18000, 0x8000, CRC(6a50e08f) SHA1(d34b2ccadb8b07d5ad99cab5c5b5b79642c65574) )
-	ROM_LOAD( "10726.a10",0x20000, 0x8000, CRC(d50b7736) SHA1(b1f8e3b0cf2ffee5382098100cfabe21b383cd51) )
+	ROM_REGION( 0x50000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_LOAD( "epr-10723.a7",  0x00000, 0x8000, CRC(99953526) SHA1(4a980370923fd5d3dc9e25d42a032c9e78c7ff47) )
+	ROM_LOAD( "epr-10724.a8",  0x10000, 0x8000, CRC(f971a817) SHA1(502c95638e4fd5f87e5fc837cb44b39a5d62f4e4) )
+	ROM_LOAD( "epr-10725.a9",  0x20000, 0x8000, CRC(6a50e08f) SHA1(d34b2ccadb8b07d5ad99cab5c5b5b79642c65574) )
+	ROM_LOAD( "epr-10726.a10", 0x30000, 0x8000, CRC(d50b7736) SHA1(b1f8e3b0cf2ffee5382098100cfabe21b383cd51) )
 ROM_END
 
 /***************************************************************************/
@@ -949,7 +988,7 @@ static MACHINE_INIT( aliensyn ){
 
 	sys16_update_proc = type0_sys16_textram;
 
-	sys16_alienfix = 1;
+	sys16_soundbanktype = 1;
 }
 
 static DRIVER_INIT( aliensyn )
@@ -994,7 +1033,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( aliensyn )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(aliensyn_readmem,aliensyn_writemem)
 
@@ -1191,7 +1230,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( altbeast )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(altbeast_readmem,altbeast_writemem)
 
@@ -1202,7 +1241,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( altbeas2 )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(altbeast_readmem,altbeast_writemem)
 
@@ -1557,7 +1596,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( aurail )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(aurail_readmem,aurail_writemem)
 
@@ -1770,11 +1809,12 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( bayroute )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(bayroute_readmem,bayroute_writemem)
 
 	MDRV_MACHINE_INIT(bayroute)
+/* notes sample missing from title screen same problem before update */
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -2356,7 +2396,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( eswat )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(eswat_readmem,eswat_writemem)
 
@@ -3094,7 +3134,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( goldnaxe )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(goldnaxe_readmem,goldnaxe_writemem)
 
@@ -3279,7 +3319,7 @@ static MACHINE_INIT( goldnaxa ){
 static MACHINE_DRIVER_START( goldnaxa )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(goldnaxa_readmem,goldnaxa_writemem)
 
@@ -3489,7 +3529,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( hwchamp )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(hwchamp_readmem,hwchamp_writemem)
 
@@ -4078,7 +4118,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( passsht )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passsht_readmem,passsht_writemem)
 
@@ -4089,11 +4129,12 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( passht4b )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
 
 	MDRV_MACHINE_INIT(passht4b)
+//sound needs fixed same on master gfx messed up
 MACHINE_DRIVER_END
 
 /***************************************************************************/
@@ -4615,7 +4656,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( riotcity )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(riotcity_readmem,riotcity_writemem)
 
@@ -4974,7 +5015,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( shinobi )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(shinobi_readmem,shinobi_writemem)
 
@@ -5190,7 +5231,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( sonicbom )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(sonicbom_readmem,sonicbom_writemem)
 
@@ -5536,7 +5577,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( timscanr )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(timscanr_readmem,timscanr_writemem)
 
@@ -5649,7 +5690,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( toryumon )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(toryumon_readmem,toryumon_writemem)
 
@@ -5874,7 +5915,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( tturf )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(tturf_readmem,tturf_writemem)
 
@@ -6013,7 +6054,7 @@ static DRIVER_INIT( tturfbl )
 static MACHINE_DRIVER_START( tturfbl )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(tturfbl_readmem,tturfbl_writemem)
 
@@ -6542,7 +6583,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( wrestwar )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(wrestwar_readmem,wrestwar_writemem)
 
@@ -6552,7 +6593,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( fantzn2x )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_IMPORT_FROM(system16_7759b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
 

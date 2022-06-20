@@ -219,15 +219,15 @@ WRITE_HANDLER( upd_control_w )
 		upd_rom_bank = data & 1;
 		memcpy(memory_region(REGION_SOUND1), memory_region(REGION_SOUND1) + 0x20000 * (upd_rom_bank + 1), 0x20000);
 	}
-	UPD7759_reset_w(0, data >> 7);
+	upd7759_reset_w(0, data >> 7);
 }
 
 
 WRITE_HANDLER( upd_data_w )
 {
-	UPD7759_port_w(0, data);
-	UPD7759_start_w(0, 0);
-	UPD7759_start_w(0, 1);
+	upd7759_port_w(0, data);
+	upd7759_start_w(0, 0);
+	upd7759_start_w(0, 1);
 }
 
 
@@ -605,12 +605,12 @@ static struct YM2151interface ym2151_interface =
 };
 
 
-static struct UPD7759_interface upd7759_interface =
+static struct upd7759_interface upd7759_interface =
 {
 	1,			/* 1 chip */
+	{ UPD7759_STANDARD_CLOCK },
 	{ 50 },
 	{ REGION_SOUND1 },
-	UPD7759_STANDALONE_MODE,
 	{ 0 }
 };
 

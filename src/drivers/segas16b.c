@@ -17,9 +17,6 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 
 static UINT8 disable_screen_blanking;
-static int sys16_soundbanktype=0;
-
-static WRITE_HANDLER( UPD7759_bank_w );
 
 static MEMORY_READ_START( sound_readmem )
   { 0x0000, 0x7fff, MRA_ROM },
@@ -102,10 +99,10 @@ static PORT_WRITE_START( sound_writeport_7759 )
   { 0x00, 0x00, YM2151_register_port_0_w },
   { 0x01, 0x01, YM2151_data_port_0_w },
   { 0x40, 0x40, UPD7759_bank_w },
-  { 0x80, 0x80, UPD7759_0_port_w },
+  { 0x80, 0x80, upd7759_0_port_w },
 PORT_END
 
-static WRITE_HANDLER( UPD7759_bank_w )
+WRITE_HANDLER( UPD7759_bank_w )
 {
   int bankoffs=0;
 
@@ -113,8 +110,8 @@ static WRITE_HANDLER( UPD7759_bank_w )
   if (size > 0)
   /* banking depends on the ROM board */
   {
-    UPD7759_start_w(0, data & 0x80);
-    UPD7759_reset_w(0, data & 0x40);
+    upd7759_start_w(0, data & 0x80);
+    upd7759_reset_w(0, data & 0x40);
 
     switch (sys16_soundbanktype)
     {
@@ -184,13 +181,13 @@ static WRITE16_HANDLER( sound_command_w )
   cpu_set_irq_line( 1, 0, HOLD_LINE );
 }
 
-struct UPD7759_interface sys16b_upd7759_interface =
+struct upd7759_interface sys16b_upd7759_interface =
 {
-  1,      /* 1 chip */
-  { 60 },   /* volumes */
-  { REGION_CPU2 },      /* memory region 3 contains the sample data */
-    UPD7759_SLAVE_MODE,
-  { sound_cause_a_nmi },
+	1,							/* number of chips */
+	{ UPD7759_STANDARD_CLOCK }, /* clock */
+	{ 60  },					/* volume */
+	{ 0 },						/* memory regions */
+	{ sound_cause_a_nmi }		/* drq callback (per chip, slave mode only) */
 };
 
 static READ16_HANDLER( standard_io_r )
@@ -200,7 +197,7 @@ static READ16_HANDLER( standard_io_r )
   {
     case 0x1000/2:
       return readinputport(offset & 3);
-    
+
     case 0x2000/2:
       return  ((offset & 1) ? readinputport(4)  : readinputport(5));
   }
