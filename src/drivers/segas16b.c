@@ -200,7 +200,7 @@ static READ16_HANDLER( standard_io_r )
   {
     case 0x1000/2:
       return readinputport(offset & 3);
-    
+
     case 0x2000/2:
       return  ((offset & 1) ? readinputport(4)  : readinputport(5));
   }
@@ -526,12 +526,14 @@ static MACHINE_INIT( bank1 )
 {
   machine_init_sys16_onetime();
   system16b_configure_sprite_banks(1);
+  system16b_reset_video();
 }
 
 static MACHINE_INIT( bank0 )
 {
   machine_init_sys16_onetime();
   system16b_configure_sprite_banks(0);
+  system16b_reset_video();
 }
 
 /***************************************************************************/
