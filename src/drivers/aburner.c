@@ -827,12 +827,6 @@ static MACHINE_INIT( aburner ){
 }
 
 static DRIVER_INIT( thndrbdj ){
-	int i;
-
-	/* invert the graphics bits on the tiles */
-	for (i = 0; i < 0x30000; i++)
-		memory_region(REGION_GFX1)[i] ^= 0xff;
-
 	sys16_bg1_trans = 1;
 	sys16_interleave_sprite_data( 0x200000 );
 }
