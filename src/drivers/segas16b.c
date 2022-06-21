@@ -518,21 +518,6 @@ ROM_START( fantzn2x )
   ROM_LOAD( "fz2.a11", 0x10000, 0x20000, CRC(8c641bb9) SHA1(920da63961d2f3457c80d4c5f6d4f405374bb23a) )
 ROM_END
 
-
-static MACHINE_INIT( bank1 )
-{
-  machine_init_sys16_onetime();
-  system16b_configure_sprite_banks(1);
-  system16b_reset_video();
-}
-
-static MACHINE_INIT( bank0 )
-{
-  machine_init_sys16_onetime();
-  system16b_configure_sprite_banks(0);
-  system16b_reset_video();
-}
-
 /***************************************************************************/
 
 static INTERRUPT_GEN( sys16_interrupt )
@@ -604,25 +589,28 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
-static MACHINE_INIT( cotton )
+static MACHINE_INIT( generic_5704 )
 {
   machine_init_sys16_onetime();
-  machine_init_bank1();
+  system16b_configure_sprite_banks(1);
+  system16b_reset_video();
   sys16_soundbanktype=2;
 }
-static MACHINE_INIT( bullet )
+
+static MACHINE_INIT( generic_5358 )
 {
   machine_init_sys16_onetime();
-  machine_init_bank0();
+  system16b_configure_sprite_banks(0);
+  system16b_reset_video();
   sys16_soundbanktype=1;
 }
-static MACHINE_DRIVER_START( bullet )
 
+static MACHINE_DRIVER_START( bullet )
   /* basic machine hardware */
   MDRV_IMPORT_FROM(system16_7759)
   MDRV_CPU_MODIFY("main")
   MDRV_CPU_MEMORY(bullet_readmem,bullet_writemem)
-  MDRV_MACHINE_INIT(bullet)
+  MDRV_MACHINE_INIT(generic_5358)
 MACHINE_DRIVER_END
 
 
@@ -630,8 +618,8 @@ static MACHINE_DRIVER_START( cotton )
   /* basic machine hardware */
   MDRV_IMPORT_FROM(system16_7759)
   MDRV_CPU_MODIFY("main")
-    MDRV_CPU_MEMORY(cotton_readmem,cotton_writemem)
-  MDRV_MACHINE_INIT(cotton)
+  MDRV_CPU_MEMORY(cotton_readmem,cotton_writemem)
+  MDRV_MACHINE_INIT(generic_5704)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( fantzn2x )
@@ -640,8 +628,7 @@ static MACHINE_DRIVER_START( fantzn2x )
   MDRV_IMPORT_FROM(system16_7759)
   MDRV_CPU_MODIFY("main")
   MDRV_CPU_MEMORY(fantzn2x_readmem,fantzn2x_writemem)
-
-  MDRV_MACHINE_INIT(bank1)
+  MDRV_MACHINE_INIT(generic_5704)
 MACHINE_DRIVER_END
 
 /*          rom       parent    machine   inp       init */
