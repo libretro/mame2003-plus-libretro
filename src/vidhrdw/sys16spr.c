@@ -291,7 +291,7 @@ int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UINT16 *s
 //			sprite->shadow_pen=10;
 		sprite->zoomx = zoomx;
 		sprite->zoomy = zoomy;
-		sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[bank] << 17))/2;
+		sprite->gfx = (gfx &0x3ffff) + ((sys16_obj_bank[bank] << 17)/2);
 	}
 	return 0;
 }
