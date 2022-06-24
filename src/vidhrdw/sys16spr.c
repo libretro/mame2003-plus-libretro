@@ -205,6 +205,7 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 		UINT16 width;
 		int gfx;
 
+usrintf_showmessage("%i", spr_pri);
 			tsource[2]=source[2];
 			tsource[3]=source[3];
 #ifndef TRANSPARENT_SHADOWS
