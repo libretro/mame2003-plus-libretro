@@ -205,7 +205,6 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 		UINT16 width;
 		int gfx;
 
-		if (spr_pri) { /* MASH - ?? */
 			tsource[2]=source[2];
 			tsource[3]=source[3];
 #ifndef TRANSPARENT_SHADOWS
@@ -227,7 +226,7 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			sprite->x = source[1] + sys16_sprxoffset;
 			if(sprite->x > 0x140) sprite->x-=0x200;
 			sprite->y = top;
-			sprite->priority = spr_pri;
+			sprite->priority = 3 - spr_pri;
 			sprite->color = 1024/16 + pal;
 			sprite->screen_height = bottom-top;
 			sprite->pitch = width&0xff;
@@ -237,7 +236,6 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			if( pal==0x3f ) sprite->flags|= SYS16_SPR_SHADOW; // shadow sprite
 #endif
 			sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[bank] << 17))/2;
-		}
 	}
 	return 0;
 }
@@ -291,7 +289,7 @@ int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UINT16 *s
 //			sprite->shadow_pen=10;
 		sprite->zoomx = zoomx;
 		sprite->zoomy = zoomy;
-		sprite->gfx = (gfx &0x3ffff) + ((sys16_obj_bank[bank] << 17)/2);
+		sprite->gfx = ((gfx &0x3ffff) + (sys16_obj_bank[bank] << 17))/2;
 	}
 	return 0;
 }
