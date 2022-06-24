@@ -2054,7 +2054,7 @@ static MACHINE_INIT( bodyslam ){
 	sys16_sprxoffset = -0xbd;
 	sys16_fgxoffset = sys16_bgxoffset = 7;
 	sys16_bg_priority_mode = 2;
-	sys16_fg_priority_mode = 2;
+	sys16_bg_priority_value = 0x0a00;
 
 	sys16_textlayer_lo_min=0;
 	sys16_textlayer_lo_max=0x1f;
