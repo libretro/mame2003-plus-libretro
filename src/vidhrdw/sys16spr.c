@@ -194,8 +194,8 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 	7	-------- --------
 */
 	UINT16 ypos = source[0];
-	int top = ypos&0xff;
-	int bottom = ypos>>8;
+	int top = (ypos&0xff) + 1;
+	int bottom = (ypos>>8) + 1;
 	if( bottom == 0xff ) return 1;
 	if(bottom !=0 && bottom > top){
 		UINT16 spr_pri=(source[4])&0xf; /* ?? */
@@ -225,7 +225,7 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			//bottom++;
 			sprite->x = source[1] + sys16_sprxoffset;
 			if(sprite->x > 0x140) sprite->x-=0x200;
-			sprite->y = top + 1;
+			sprite->y = top;
 			sprite->priority = spr_pri;
 			sprite->color = 1024/16 + pal;
 			sprite->screen_height = bottom-top;
