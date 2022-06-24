@@ -2052,7 +2052,7 @@ static MACHINE_INIT( bodyslam ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbd;
-	sys16_fgxoffset = sys16_bgxoffset = 20;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 	sys16_bg_priority_mode = 2;
 	sys16_fg_priority_mode = 2;
 
