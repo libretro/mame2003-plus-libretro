@@ -226,7 +226,7 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 			sprite->x = source[1] + sys16_sprxoffset;
 			if(sprite->x > 0x140) sprite->x-=0x200;
 			sprite->y = top;
-			sprite->priority = 3 - spr_pri;
+			sprite->priority = spr_pri;
 			sprite->color = 1024/16 + pal;
 			sprite->screen_height = bottom-top;
 			sprite->pitch = width&0xff;
