@@ -1345,7 +1345,7 @@ ROM_END
 
 
 
-GAMEX(1994, aligator, 0,        alighunt, alighunt, alighunt, ROT0, "Gaelco", "Alligator Hunt", GAME_UNEMULATED_PROTECTION )
+GAMEX(1994, aligator, 0,        alighunt, alighunt, alighunt, ROT0, "Gaelco", "Alligator Hunt", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1994, aligatun, aligator, alighunt, alighunt, alighunt, ROT0, "Gaelco", "Alligator Hunt (unprotected)" )
 GAMEX(1995, touchgo,  0,        touchgo,  touchgo,  touchgo,  ROT0, "Gaelco", "Touch and Go", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAMEX(1995, touchgok, touchgo,  touchgo,  touchgo,  touchgo,  ROT0, "Gaelco", "Touch and Go (Korea, unprotected)", GAME_IMPERFECT_SOUND )
