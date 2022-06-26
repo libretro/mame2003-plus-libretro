@@ -205,6 +205,7 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_SHARE_DIAL,
   OPT_DIAL_SWAP_XY,
   OPT_CHEAT_INPUT_PORTS,
+  OPT_OVERRIDE_AD_STICK,
   OPT_DIGITAL_JOY_CENTERING,
   OPT_USE_SAMPLES,
   OPT_USE_ALT_SOUND,
