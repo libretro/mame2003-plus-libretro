@@ -820,7 +820,7 @@ static struct retro_core_option_v2_definition option_def_override_ad_stick = {
    APPNAME"_override_ad_stick",
    "Use Lightgun as an Analogue Stick",
    NULL,
-   "Allows the input from a lightgun to override games which use analogue controls.",
+   "Restart core required. Allows the input from a lightgun to override games which use analogue controls.",
    NULL,
    "cat_key_input",
    {
