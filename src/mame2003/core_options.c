@@ -816,6 +816,21 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    "default"
 };
 
+static struct retro_core_option_v2_definition option_def_override_ad_stick = {
+   APPNAME"_override_ad_stick",
+   "Use Lightgun as an Analogue Stick",
+   NULL,
+   "Allows the input from a lightgun to override games which use analogue controls.",
+   NULL,
+   "cat_key_input",
+   {
+      { "disabled", NULL },
+      { "enabled",  NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
 static struct retro_core_option_v2_definition option_def_null = {
    NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL
 };
@@ -902,6 +917,7 @@ void init_core_options(void)
   default_options[OPT_MACHINE_TIMING]            = option_def_machine_timing;
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
+  default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
 #if (HAS_CYCLONE || HAS_DRZ80)
   default_options[OPT_CYCLONE_MODE]              = option_def_cyclone_mode;
 #endif
@@ -960,6 +976,10 @@ static void set_variables(void)
          break;
       case OPT_CHEAT_INPUT_PORTS:
          if(!options.content_flags[CONTENT_CHEAT_INPUT_PORT])
+           continue;
+         break;
+      case OPT_OVERRIDE_AD_STICK:
+         if(!options.content_flags[CONTENT_AD_STICK])
            continue;
          break;
     }
@@ -1272,6 +1292,13 @@ void update_variables(bool first_time)
             options.machine_timing = true;
           else
             options.machine_timing = false;
+          break;
+
+        case OPT_OVERRIDE_AD_STICK:
+          if(strcmp(var.value, "enabled") == 0)
+            options.override_ad_stick = 1;
+          else
+            options.override_ad_stick = 0;
           break;
 
 #if (HAS_CYCLONE || HAS_DRZ80)
