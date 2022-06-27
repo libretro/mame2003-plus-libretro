@@ -3201,7 +3201,6 @@ static MACHINE_INIT( goldnaxe ){
 //	sys16_patch_code( 0x3CB2, 0x60 );
 //	sys16_patch_code( 0x3CB3, 0x1e );
 
-	sys16_sprxoffset = -0xb8;
 	sys16_update_proc = goldnaxe_update_proc;
 }
 
@@ -3427,7 +3426,7 @@ static MACHINE_INIT( goldnaxa ){
 	//?
 	sys16_patch_code( 0x3CA2, 0x60 );
 	sys16_patch_code( 0x3CA3, 0x1e );
-	sys16_sprxoffset = -0xb8;
+
 	sys16_update_proc = goldnaxe_update_proc;
 }
 
@@ -4083,7 +4082,6 @@ static MACHINE_INIT( passsht ){
 }
 
 static MACHINE_INIT( passht4b ){
-	sys16_sprxoffset = -0xb8;
 	sys16_spritesystem = sys16_sprite_passshot;
 
 	// fix name entry
