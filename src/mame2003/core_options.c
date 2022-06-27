@@ -818,9 +818,9 @@ static struct retro_core_option_v2_definition option_def_cyclone_mode = {
 
 static struct retro_core_option_v2_definition option_def_override_ad_stick = {
    APPNAME"_override_ad_stick",
-   "Use Lightgun as an Analogue Stick",
+   "Use Lightgun as an Analog Stick",
    NULL,
-   "Restart core required. Allows the input from a lightgun to override games which use analogue sticks.",
+   "Restart core required. Allows the input from a lightgun to override games which use analog sticks.",
    NULL,
    "cat_key_input",
    {
