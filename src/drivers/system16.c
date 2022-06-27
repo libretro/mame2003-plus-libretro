@@ -819,8 +819,8 @@ MEMORY_END
 static MACHINE_INIT( alexkidd ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
-	sys16_sprxoffset = -0xbc;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_sprxoffset = -0xbd;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 	sys16_bg_priority_mode=1;
 
 	sys16_update_proc = type1_sys16_textram;
@@ -4389,8 +4389,8 @@ static void quartet_update_proc( void )
 static MACHINE_INIT( quartet ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
-	sys16_sprxoffset = -0xbc;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_sprxoffset = -0xbd;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 
 	sys16_update_proc = quartet_update_proc;
 }
@@ -4597,8 +4597,8 @@ MEMORY_END
 static MACHINE_INIT( quartet2 ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
-	sys16_sprxoffset = -0xbc;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_sprxoffset = -0xbd;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 
 	sys16_update_proc = quartet_update_proc;
 }
@@ -5252,8 +5252,8 @@ static MACHINE_INIT( shinobl ){
 	sys16_obj_bank = bank;
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
-	sys16_sprxoffset = -0xbc;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_sprxoffset = -0xbd;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 	sys16_tilebank_switch=0x2000;
 
 	sys16_update_proc = type1_sys16_textram;
