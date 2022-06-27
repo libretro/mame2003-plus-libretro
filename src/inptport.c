@@ -78,7 +78,7 @@ static int         input_analog_scale[MAX_INPUT_PORTS];
 
 /* [player#][mame axis#] array */
 static InputCode      analogjoy_input[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
-	
+
 static int           mouse_delta_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
 static int        lightgun_delta_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
 static int        analog_current_axis[MAX_PLAYER_COUNT][MAX_ANALOG_AXES];
@@ -930,22 +930,29 @@ void update_analog_port(int port)
 		There is an ugly hack to stop scaling of lightgun returned values.  It really
 		needs rewritten...
 		*/
-		if (axis == X_AXIS) {
-			if (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) {
+
+
+		if (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS])
+		{
+			if (axis == X_AXIS)
+			{
 				analog_previous_axis[player][X_AXIS]=0;
 				analog_current_axis[player][X_AXIS]=lightgun_delta_axis[player][X_AXIS];
+				input_analog_scale[port]=0;
+				sensitivity=100;
+			}
+			else if (axis == Y_AXIS)
+			{
+				analog_previous_axis[player][Y_AXIS]=0;
+				analog_current_axis[player][Y_AXIS]=lightgun_delta_axis[player][Y_AXIS];
 				input_analog_scale[port]=0;
 				sensitivity=100;
 			}
 		}
 		else
 		{
-			if (lightgun_delta_axis[player][X_AXIS] || lightgun_delta_axis[player][Y_AXIS]) {
-				analog_previous_axis[player][Y_AXIS]=0;
-				analog_current_axis[player][Y_AXIS]=lightgun_delta_axis[player][Y_AXIS];
-				input_analog_scale[port]=0;
-				sensitivity=100;
-			}
+			/* this must unset what the above could have set if port isint active to switch xy devices with working scaling */
+			input_analog_scale[port]=1;
 		}
 	}
 
@@ -1655,7 +1662,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 			dst->mask = src->mask;
 			dst->default_value = src->default_value;
 			dst->name = src->name;
-			
+
 			/* PORT_BITX declarations that specify JOYCODE_a_BUTTONb for their default code */
 			/* will also get JOYCODE_MOUSE_a_BUTTONb or'd in. */
   			if (ext->type == IPT_EXTENSION)
