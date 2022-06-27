@@ -829,8 +829,8 @@ static MACHINE_INIT( alexkidd ){
 static MACHINE_INIT( afighter ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
-	sys16_sprxoffset = -0xbc;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_sprxoffset = -0xbd;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 	sys16_bg_priority_mode=1;
 	sys16_tilebank_switch=0x2000; // fixes bg tiles
 
@@ -3787,7 +3787,7 @@ static MACHINE_INIT( mjleague ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_quartet2;
 	sys16_sprxoffset = -0xbd;
-	sys16_fgxoffset = sys16_bgxoffset = 7;
+	sys16_fgxoffset = sys16_bgxoffset = 8;
 
 	// remove memory test because it fails.
 	sys16_patch_code( 0xBD42, 0x66 );
