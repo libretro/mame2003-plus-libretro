@@ -2068,46 +2068,43 @@ static MACHINE_INIT( bodyslam ){
 // timer in the code and this seems to work ok.
 static void bodyslam_irq_timer(void)
 {
-	int flag=(*(UINT16 *)(&sys16_workingram[0x200/2]))>>8;
-	int tick=(*(UINT16 *)(&sys16_workingram[0x200/2]))&0xff;
-	int sec=(*(UINT16 *)(&sys16_workingram[0x202/2]))>>8;
-	int min=(*(UINT16 *)(&sys16_workingram[0x202/2]))&0xff;
+	UINT8 flag = sys16_workingram[0x200/2] >> 8;
+	UINT8 tick = sys16_workingram[0x200/2] & 0xff;
+	UINT8 sec = sys16_workingram[0x202/2] >> 8;
+	UINT8 min = sys16_workingram[0x202/2] & 0xff;
 
-	if(tick == 0 && sec == 0 && min == 0)
-		flag=1;
+	/* out of time? set the flag */
+	if (tick == 0 && sec == 0 && min == 0)
+		flag = 1;
 	else
 	{
-		if(tick==0)
+		if (tick != 0)
+			tick--;
+		else
 		{
-			tick=0x40;	// The game initialise this to 0x40
-			if(sec==0)
-			{
-				sec=0x59;
-				if(min==0)
-				{
-					flag=1;
-					tick=sec=min=0;
-				}
-				else
-					min--;
-			}
+			/* the game counts 64 ticks per second */
+			tick = 0x40;
+
+			/* seconds are counted in BCD */
+			if (sec != 0)
+				sec = (sec & 0xf) ? sec - 1 : (sec - 0x10) + 9;
 			else
 			{
-				if((sec&0xf)==0)
-				{
-					sec-=0x10;
-					sec|=9;
-				}
-				else
-					sec--;
+				sec = 0x59;
 
+				/* minutes are counted normally */
+				if (min != 0)
+					min--;
+				else
+				{
+					flag = 1;
+					tick = sec = min = 0;
+				}
 			}
 		}
-		else
-			tick--;
 	}
-	sys16_workingram[0x200/2] = (flag<<8)+tick;
-	sys16_workingram[0x202/2] = (sec<<8)+min;
+	sys16_workingram[0x200/2] = (flag << 8) + tick;
+	sys16_workingram[0x202/2] = (sec << 8) + min;
 }
 
 static DRIVER_INIT( bodyslam ){
