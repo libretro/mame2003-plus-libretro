@@ -106,8 +106,8 @@ int sys16_sprite_passshot( struct sys16_sprite_attributes *sprite, const UINT16 
 
 	if (!strcmp(Machine->gamedrv->name,"passht4b"))
 	{
-		bottom =- 0x23;
-		top    =- 0x23;
+		bottom -= 0x23;
+		top    -= 0x23;
 		passshot_width = 1;
 	}
 
