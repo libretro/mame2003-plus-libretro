@@ -1383,6 +1383,19 @@ ROM_START( atomicp )
 	ROM_REGION( 0x1, REGION_GFX2, 0 ) /* sprites */
 ROM_END
 
+ROM_START( snapper )
+	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "snap2.r01", 0x000000, 0x10000, CRC(9a9e4ed3) SHA1(df3df13b70d4c0d1caaf42e78d355c0492fac96b) )
+	ROM_LOAD16_BYTE( "snap1.r02", 0x000001, 0x10000, CRC(cd468d6a) SHA1(28b5e1f533f5e3fd9ebffe63bda7e6d9ebe4ffaa) )
+
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
+	ROM_LOAD( "snap4.r03",  0x00000, 0x8000, CRC(0f848e1e) SHA1(79a63ff0e5775400716f7294eabda9a0b838d656) )
+	ROM_LOAD( "snap3.r04",  0x08000, 0x8000, CRC(c7f8cf0e) SHA1(08376f7941bc740ce85c6f32be7b54ced192599c) )
+	ROM_LOAD( "snap5.r05",  0x10000, 0x8000, CRC(378e08eb) SHA1(f2c10bd9e885c185ac2d0d51d907ceca1f21dd7a) )
+
+	ROM_REGION( 0x1, REGION_GFX2, 0 ) /* sprites */
+ROM_END
+
 /***************************************************************************/
 
 #if 0
@@ -1431,7 +1444,7 @@ static MACHINE_INIT( atomicp ){
 
 INPUT_PORTS_START( atomicp )
 
-PORT_START
+	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
@@ -1441,7 +1454,7 @@ PORT_START
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
 
-PORT_START
+	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
@@ -1451,9 +1464,9 @@ PORT_START
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
 
-PORT_START	// dummy
+	PORT_START	// dummy
 
-PORT_START	// dip1
+	PORT_START	// dip1
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 3C_1C ) )
@@ -1480,7 +1493,7 @@ PORT_START	// dip1
 	PORT_DIPSETTING(    0x40, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-PORT_START  //dip2
+	PORT_START  // dip2
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1503,6 +1516,75 @@ PORT_START  //dip2
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( snapper )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	// dummy
+
+	PORT_START	// dip1
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0xC0, 0xC0, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0xC0, "1" )
+	PORT_DIPSETTING(    0x80, "2" )
+	PORT_DIPSETTING(    0x40, "3" )
+	PORT_DIPSETTING(    0x00, "5" )
+
+	PORT_START	// dip2
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE(       0x80, IP_ACTIVE_LOW )
 INPUT_PORTS_END
 
 /***************************************************************************/
@@ -7064,7 +7146,8 @@ GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   0,        ROT0,   "Sega",   
 /* System16B */
 /*          rom       parent    machine   inp       init */
 GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
-GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point", GAME_NO_SOUND )
+GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
+GAMEX(1990, snapper,  0,        atomicp,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)", GAME_NO_SOUND ) // korean clone board..
 GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
 GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
 GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )

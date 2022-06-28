@@ -2826,6 +2826,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( altbeast )	/* (c) 1988 */
 	DRIVER( astormbl )	/* bootleg */
 	DRIVER( atomicp )	/* (c) 1990 Philko */
+	DRIVER( snapper )	/* (c) 1990 Philko */
 	DRIVER( aurail )	/* (c) 1990 Sega / Westone */
 	DRIVER( bayroute )	/* (c) 1989 Sunsoft / Sega */
 	DRIVER( cottond )
