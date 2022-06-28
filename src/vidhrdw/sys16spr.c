@@ -88,7 +88,7 @@ int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *
 }
 
 int sys16_sprite_passshot( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor ){
-/* Passing shot 4p needs:	passshot_y=-0x23; passshot_width=1;
+/* Passing shot 4p needs:	y -0x23; passshot_width=1;
 	0	-------X	XXXXXXXX	left (screen coordinate)
 	1	YYYYYYYY	YYYYYYYY	bottom, top (screen coordinates)
 	2	XTTTTTTT	TTTTTTTT	(pen data, flipx, flipy)
@@ -98,19 +98,19 @@ int sys16_sprite_passshot( struct sys16_sprite_attributes *sprite, const UINT16 
 	6	--------	--------
 	7	--------	--------
 */
-	int passshot_y=0;
 	int passshot_width=0;
+	UINT16 attributes = source[5];
+	UINT16 ypos = source[1];
+	int bottom = (ypos>>8);
+	int top = (ypos&0xff);
 
 	if (!strcmp(Machine->gamedrv->name,"passht4b"))
 	{
-		passshot_y = -0x23;
+		bottom =- 0x23;
+		top    =- 0x23;
 		passshot_width = 1;
 	}
 
-	UINT16 attributes = source[5];
-	UINT16 ypos = source[1];
-	int bottom = (ypos>>8)+passshot_y;
-	int top = (ypos&0xff)+passshot_y;
 	if( bottom>top && ypos!=0xffff ){
 		int bank = (attributes>>4)&0xf;
 		UINT16 number = source[2];
