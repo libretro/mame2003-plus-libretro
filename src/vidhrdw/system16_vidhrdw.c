@@ -843,7 +843,7 @@ static void get_fg_tile_info( int offset ){
 
 	case 4:
 		tile_info.priority = ( ((data&0xff00)>=sys16_fg_priority_value)  ||  ((data&0xff00)>=0x1000 && (data&0xff00)<=0x2000) )?1:0;
-if ((data&0xff00)>=0x1000 && (data&0xff00)<=0x2000)
+if ((data&0xff00)>=0x1000 && (data&0xff00)<=0x1800)
 usrintf_showmessage("%i", (data&0xff00));
 		break;
 
