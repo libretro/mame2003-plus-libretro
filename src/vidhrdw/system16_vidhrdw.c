@@ -841,6 +841,10 @@ static void get_fg_tile_info( int offset ){
 		tile_info.priority = ((data&0xff00) >= sys16_fg_priority_value)?1:0;
 		break;
 
+	case 4:
+		tile_info.priority = ( ((data&0xff00)>=sys16_fg_priority_value)  ||  ((data&0xff00)>=0x1000 && (data&0xff00)<=0x2000) )?1:0;
+		break;
+
 	default:
 		if( sys16_fg_priority_mode>=0 ){
 			tile_info.priority = (data&0x8000)?1:0;
