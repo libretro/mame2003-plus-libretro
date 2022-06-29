@@ -201,8 +201,8 @@ int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 
 	7	-------- --------
 */
 	UINT16 ypos = source[0];
-	int top = (ypos&0xff);
-	int bottom = (ypos>>8);
+	int top = (ypos&0xff) + 1;
+	int bottom = (ypos>>8) + 1;
 	if( bottom == 0xff ) return 1;
 	if(bottom !=0 && bottom > top){
 		UINT16 spr_pri=(source[4])&0xf; /* ?? */
