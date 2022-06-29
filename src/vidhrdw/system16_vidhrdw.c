@@ -842,7 +842,7 @@ static void get_fg_tile_info( int offset ){
 		break;
 
 	case 4:
-		tile_info.priority = ( ((data&0xff00)>=0x1000 && (data&0xff00)<=0x2000)  ||  ((data&0xff00)>=0x3000 && (data&0xff00)<=0x4000)  ||  ((data&0xff00)>=0xb000) && (data&0xff00)<=0xc000) )?1:0;
+		tile_info.priority = ( ((data&0xff00)>=0x1000 && (data&0xff00)<=0x2000)  ||  ((data&0xff00)>=0x3000 && (data&0xff00)<=0x4000)  ||  ((data&0xff00)>=0xb000 && (data&0xff00)<=0xc000) )?1:0;
 		break;
 
 	default:
