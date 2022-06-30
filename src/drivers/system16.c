@@ -4355,7 +4355,7 @@ static struct YM2203interface ym2203_interface =
 {
 	2,		/* 2 chips */
 	4000000,	/* 4 MHz */
-	{ YM2203_VOL(50,50), YM2203_VOL(50,50) },
+	{ YM2203_VOL(50,80), YM2203_VOL(50,80) },
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -4380,6 +4380,7 @@ static MACHINE_DRIVER_START( passht4b )
 
 	/* sound needs fixed same on master gfx messed up */
 	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(0)
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
