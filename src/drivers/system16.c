@@ -4383,7 +4383,7 @@ MACHINE_DRIVER_END
 static struct YM2203interface ym2203_interface =
 {
 	2,			/* 2 chips */
-	4096000,	/* 4 MHz */
+	5000000,	/* 5 MHz */
 	{ YM2203_VOL(50,80), YM2203_VOL(50,80) },
 	{ 0 },
 	{ 0 },
