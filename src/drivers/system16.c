@@ -4354,7 +4354,7 @@ MACHINE_DRIVER_END
 static struct YM2203interface ym2203_interface =
 {
 	2,		/* 2 chips */
-	5000000,	/* 5 MHz */
+	4000000,	/* 4 MHz */
 	{ YM2203_VOL(50,80), YM2203_VOL(50,80) },
 	{ 0 },
 	{ 0 },
@@ -4365,7 +4365,7 @@ static struct YM2203interface ym2203_interface =
 static MACHINE_DRIVER_START( passht4b )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16b)
+	MDRV_IMPORT_FROM(system16)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
 
