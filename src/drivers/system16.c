@@ -509,42 +509,13 @@ static MACHINE_DRIVER_START( system16b )
 	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( system16b_no2151)
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", M68000, 10000000)
-	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
-
-	MDRV_CPU_ADD_TAG("sound", Z80, 5000000)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
-	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
-	MDRV_CPU_PORTS(sound_readport,sound_writeport)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(40*8, 28*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-
-	/* initilize system16 variables prior to driver_init and video_start */
-	machine_init_sys16_onetime();
-
-	MDRV_VIDEO_START(system16)
-	MDRV_VIDEO_UPDATE(system16)
-MACHINE_DRIVER_END
-
-
 static MACHINE_DRIVER_START( system16_7759 )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system16)
 
 	MDRV_CPU_MODIFY("sound")
-    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
+	MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
@@ -557,7 +528,7 @@ static MACHINE_DRIVER_START( system16_7759b )
 	MDRV_IMPORT_FROM(system16b)
 
 	MDRV_CPU_MODIFY("sound")
-    MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
+	MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_7759)
 
 	/* sound hardware */
@@ -1631,7 +1602,7 @@ static MACHINE_DRIVER_START( atomicp )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system16)
 	MDRV_CPU_MODIFY("main")
-    MDRV_CPU_MEMORY(atomicp_readmem,atomicp_writemem)
+	MDRV_CPU_MEMORY(atomicp_readmem,atomicp_writemem)
 	MDRV_CPU_VBLANK_INT(ap_interrupt,2)
 
 	MDRV_CPU_REMOVE("sound")
@@ -4382,7 +4353,7 @@ MACHINE_DRIVER_END
 
 static struct YM2203interface ym2203_interface =
 {
-	2,			/* 2 chips */
+	2,		/* 2 chips */
 	5000000,	/* 5 MHz */
 	{ YM2203_VOL(50,80), YM2203_VOL(50,80) },
 	{ 0 },
@@ -4394,19 +4365,21 @@ static struct YM2203interface ym2203_interface =
 static MACHINE_DRIVER_START( passht4b )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16b_no2151)
+	MDRV_IMPORT_FROM(system16b)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
-  
-  MDRV_CPU_MODIFY("sound")
-	MDRV_CPU_PERIODIC_INT(nmi_line_pulse,  3000) /* or from the YM2203? */
-	MDRV_CPU_MEMORY(passht4b_readmem_sound,passht4b_writemem_sound)
-  MDRV_CPU_PORTS(passht4b_read_sound_port,passht4b_write_sound_port)
 
+	MDRV_CPU_MODIFY("sound")
+	MDRV_CPU_PERIODIC_INT(nmi_line_pulse,  2300) /* music tempo */
+	MDRV_CPU_MEMORY(passht4b_readmem_sound,passht4b_writemem_sound)
+	MDRV_CPU_PORTS(passht4b_read_sound_port,passht4b_write_sound_port)
+
+	MDRV_SOUND_REMOVE("2151")
 
 	MDRV_MACHINE_INIT(passht4b)
-  /* sound needs fixed same on master gfx messed up */
-  /* sound hardware */
+
+	/* sound needs fixed same on master gfx messed up */
+	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
