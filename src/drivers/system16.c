@@ -509,6 +509,34 @@ static MACHINE_DRIVER_START( system16b )
 	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( system16b_no2151)
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD_TAG("main", M68000, 10000000)
+	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
+
+	MDRV_CPU_ADD_TAG("sound", Z80, 5000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+	MDRV_CPU_PORTS(sound_readport,sound_writeport)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
+	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+
+	/* initilize system16 variables prior to driver_init and video_start */
+	machine_init_sys16_onetime();
+
+	MDRV_VIDEO_START(system16)
+	MDRV_VIDEO_UPDATE(system16)
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( system16_7759 )
 
@@ -4133,6 +4161,34 @@ static MEMORY_WRITE16_START( passht4b_writemem )
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
+/* YM2203 no msm5205 hookup as yet */
+static MEMORY_READ_START(passht4b_readmem_sound )
+  { 0x0000, 0x7fff, MRA_ROM },
+	{ 0xe000, 0xe000, YM2203_status_port_0_r },
+	{ 0xe001, 0xe001, YM2203_read_port_0_r },
+	{ 0xe400, 0xe400, YM2203_status_port_1_r },
+	{ 0xe401, 0xe401, YM2203_read_port_1_r },
+	{ 0xe800, 0xe800, soundlatch_r },
+	{ 0xf800, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START(passht4b_writemem_sound )
+  { 0x0000, 0x7fff, MWA_ROM },
+	{ 0xe000, 0xe000, YM2203_control_port_0_w },
+	{ 0xe001, 0xe001, YM2203_write_port_0_w },
+	{ 0xe400, 0xe400, YM2203_control_port_1_w },
+	{ 0xe401, 0xe401, YM2203_write_port_1_w },
+	{ 0xf800, 0xffff, MWA_RAM },
+MEMORY_END
+
+static PORT_READ_START( passht4b_read_sound_port  )
+//	ADDRESS_MAP_GLOBAL_MASK(0xff)
+PORT_END
+
+static PORT_WRITE_START( passht4b_write_sound_port )
+//	ADDRESS_MAP_GLOBAL_MASK(0xff)
+PORT_END
+
 /***************************************************************************/
 
 static void passsht_update_proc( void ){
@@ -4324,16 +4380,34 @@ static MACHINE_DRIVER_START( passsht )
 	MDRV_MACHINE_INIT(passsht)
 MACHINE_DRIVER_END
 
+static struct YM2203interface ym2203_interface =
+{
+	2,			/* 2 chips */
+	 4000000,	/* 4 MHz */
+	{ YM2203_VOL(50,80), YM2203_VOL(50,80) },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{ 0 }
+};
 
 static MACHINE_DRIVER_START( passht4b )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759b)
+	MDRV_IMPORT_FROM(system16_7759b_no2151)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
+  
+  MDRV_CPU_MODIFY("sound")
+	MDRV_CPU_PERIODIC_INT(nmi_line_pulse,  3000) /* or from the YM2203? */
+	MDRV_CPU_MEMORY(passht4b_readmem_sound,passht4b_writemem_sound)
+  MDRV_CPU_PORTS(passht4b_read_sound_port,passht4b_write_sound_port)
+
 
 	MDRV_MACHINE_INIT(passht4b)
-//sound needs fixed same on master gfx messed up
+  /* sound needs fixed same on master gfx messed up */
+  /* sound hardware */
+	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
 /***************************************************************************/
@@ -7187,7 +7261,7 @@ GAME( 1987, hwchamp,  0,        hwchamp,  hwchamp,  0,        ROT0,   "Sega",   
 GAMEX(19??, mvp,      0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "MVP", GAME_NOT_WORKING )
 GAMEX(1988, passsht,  0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
 GAME( 1988, passshtb, passsht,  passsht,  passsht,  0,        ROT270, "bootleg", "Passing Shot (2 Players) (bootleg)" )
-GAMEX(1988, passht4b, passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_NO_SOUND )
+GAMEX(1988, passht4b, passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_IMPERFECT_SOUND )
 GAME( 1991, riotcity, 0,        riotcity, riotcity, 0,        ROT0,   "Sega / Westone", "Riot City" )
 /* Ryukyu */
 /* Shinobi */
