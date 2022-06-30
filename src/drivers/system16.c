@@ -4394,7 +4394,7 @@ static struct YM2203interface ym2203_interface =
 static MACHINE_DRIVER_START( passht4b )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759b_no2151)
+	MDRV_IMPORT_FROM(system16b_no2151)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
   
