@@ -1435,10 +1435,45 @@ static MEMORY_WRITE16_START( atomicp_writemem )
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
+
+static WRITE16_HANDLER( snapper_sound_w )
+{
+	if (ACCESSING_MSB)
+		switch (offset & 1)
+		{
+			case 0:	YM2413_register_port_0_w(0, data >> 8);	break;
+			case 1:	YM2413_data_port_0_w(0, data >> 8);		break;
+		}
+}
+
+static MEMORY_WRITE16_START( snapper_writemem )
+	{ 0x000000, 0x01ffff, MWA16_ROM },
+	{ 0x080000, 0x080003, snapper_sound_w }, // looks like sound chip, but isn't YM2413 data // seems correct for Snapper
+	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
+	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x440000, 0x44ffff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x123406, 0x123407, MWA16_NOP }, // ?
+	{ 0xc40000, 0xc40001, MWA16_NOP },// ?
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+MEMORY_END
+
 /***************************************************************************/
+
+static void snapper_sound_irq(int param)
+{
+	cpu_set_irq_line(0, 2, HOLD_LINE);
+}
 
 static MACHINE_INIT( atomicp ){
 	sys16_update_proc = type0_sys16_textram;
+}
+
+static MACHINE_INIT( atomicp ){
+	sys16_update_proc = type0_sys16_textram;
+  timer_pulse(TIME_IN_HZ(2500), 0, snapper_sound_irq);
 }
 
 /***************************************************************************/
@@ -1612,6 +1647,23 @@ static MACHINE_DRIVER_START( atomicp )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(0)
 	MDRV_SOUND_REPLACE("2151", YM2413, sys16_ym2413_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( snapper)
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system16)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(atomicp_readmem,snapper_writemem)
+
+	MDRV_CPU_REMOVE("sound")
+
+	MDRV_MACHINE_INIT(snapper)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(0)
+	MDRV_SOUND_REPLACE("2151", YM2413, sys16_ym2413_interface)
+  MDRV_SOUND_REMOVE("7759")
 MACHINE_DRIVER_END
 
 
@@ -7197,7 +7249,7 @@ GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   0,        ROT0,   "Sega",   
 /*          rom       parent    machine   inp       init */
 GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
 GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
-GAMEX(1990, snapper,  0,        atomicp,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)", GAME_NO_SOUND ) // korean clone board..
+GAMX( 1990, snapper,  0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
 GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
 GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
 GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
