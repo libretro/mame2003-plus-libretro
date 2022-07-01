@@ -1471,7 +1471,7 @@ static MACHINE_INIT( atomicp ){
 	sys16_update_proc = type0_sys16_textram;
 }
 
-static MACHINE_INIT( atomicp ){
+static MACHINE_INIT( snapper ){
 	sys16_update_proc = type0_sys16_textram;
   timer_pulse(TIME_IN_HZ(2500), 0, snapper_sound_irq);
 }
