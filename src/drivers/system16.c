@@ -4380,6 +4380,7 @@ static MACHINE_DRIVER_START( passht4b )
 
 	/* sound needs fixed same on master gfx messed up */
 	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(0)
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
