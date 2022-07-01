@@ -7249,7 +7249,7 @@ GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   0,        ROT0,   "Sega",   
 /*          rom       parent    machine   inp       init */
 GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
 GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
-GAMX( 1990, snapper,  0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
+GAME( 1990, snapper,  0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
 GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
 GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
 GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
