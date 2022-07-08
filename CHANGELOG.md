@@ -1,7 +1,7 @@
 # MAME 2003-Plus CHANGELOG
 
-* Current repository maintainers: mahoneyt944, markwkidd, twinaphex
-* Past repository maintiners: arcadez, arnoldsecret, grant2258
+* Current repository maintainers: arcadez, mahoneyt944, markwkidd, twinaphex
+* Past repository maintiners: arnoldsecret, grant2258
 * Significant code contributors to this project: AMadvanceMAME, BritneysPAIRS, dink, FBN Dev, grant2258, iq_132, MAME Dev, ShmupMAME
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
@@ -30,6 +30,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Botanic (English / Spanish set 1)
 * Bronx (Cycle Shooting bootleg)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
+* Bullet (unprotected of FD1094 317-0041 set)" )
 * Cabal (World, Joystick version)
 * Calorie Kun vs Moguranian
 * Chain Reaction
@@ -43,6 +44,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cookie & Bibi 3
 * Command War - Super Special Battle & War Game (prototype)
 * Cosmic Monsters II
+* Cotton (set 4, World) (unprotected of FD1094 317-0181a set)
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Cute Fighter
@@ -163,6 +165,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Slap Shooter
 * Snow Brothers 3 - Magical Adventure
 * Snk Vs Capcom : Svc Chaos (MVS)
+* Snapper
 * Sonic Boom
 * Space Fever High Splitter
 * Space Launcher
@@ -305,6 +308,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games fixed and now working
 
+* Action Fighter - Romset `afighter`
 * Agent Super Bond - Romset `superbon` - colors fixed
 * Alcon - Romset: `alcon`
 * Arch Rivals - Romset: `archrivl`
@@ -372,6 +376,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * New Sinbad 7 - Romset `newsin7` - colors fixed
 * Night Slashers - Romset `nslasher`
 * Off Road Challenge - Romset `offroadc` - Requires a fast system
+* Passing Shot 4 player bootleg - Romset `passht4b`
 * Phantasm - Romset `phantasm`
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
@@ -528,6 +533,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pack 'n Bang Bang
 * Pacman & Chomp Chomp
 * Pac & Pal
+* Passing Shot (4 Player Bootleg)
 * Pole Position
 * Pole Position II
 * Rampage World Tour
@@ -548,6 +554,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Xevious
 * Tecmo Bowl
 * Thief
+* Tough Turf (Japan)
 * Tower Of Druaga
 * Toypop
 * Trojan / Tatakai No Banka 
@@ -859,3 +866,11 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Megumi Rescue to the Sega System E driver [Haze, arcadez]
 * Added Marble Madness II (prototype) to the batman driver [Haze, MistyDreams, dink, iq_132, arcadez, mahoneyt944]
 * Added Fantasy Zone II - The Tears of Opa-Opa (fantzn2x) to system16 driver [MistyDreams, mahoneyt944, arcadez]
+* Fixed Action Fighter in the system16 driver by adding the unprotected system A set and hooking up the sound plus some new gfx calls [arcadez, mahoneyt944]
+* Added support for Snapper to the system16 driver and hooked up the sound [mahoneyt944, arcadez]
+* Added and integrated a new segas16b driver to support decrypted versions of Bullet, Cotton and now Fantasy Zone II also [MistyDreams]
+* Added new Sega system16 graphical drawing routines and updated the UPD7759 soundcore plus all related drivers to MAME92 as per the above [MistyDreams]
+* Fixed some graphical niggles in Body Slam, Major League, Shinobi (bootleg), Tough Turf and Wrestlewar by switching them over to use the new Sega drawing routines [mahoneyt944]
+* Fixed missing speech samples in Tough Turf and some broken graphics in Passing Shot 4 player bootleg making the game now playable [mahoneyt944]
+* Added partial sound to Passing Shot 4 player bootleg [arcadez, mahoneyt944]
+* Fixed collisions in Golden Axe (Version 2) and improved the irq timers for Body Slam [mahoneyt944]
