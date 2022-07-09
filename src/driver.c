@@ -2820,6 +2820,7 @@ DokiDoki Penguin Land *not confirmed
 	/* Working */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
+  DRIVER( afightera )	/* (c) 1986 (Unprotected) */
 	DRIVER( alexkida )	/* (c) 1986 */
 	DRIVER( aliensyn )	/* (c) 1987 */
 	DRIVER( altbeas2 )	/* (c) 1988 */
