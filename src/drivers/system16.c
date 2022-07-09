@@ -722,7 +722,47 @@ ROM_START( alexkida )
 	ROM_LOAD( "10436.2", 0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
 ROM_END
 
+/*
+	Action Fighter, Sega System 16A
+	CPU: Protected FD1089
+*/
+
 ROM_START( afighter )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
+// cpu 317-0018
+	ROM_LOAD16_BYTE( "10348",0x00000,0x08000, CRC(e51e3012) SHA1(bb5522aacb55b5f04aa4cb7a642e202f0ddd7c84) )
+	ROM_LOAD16_BYTE( "10349",0x00001,0x08000, CRC(4b434c37) SHA1(5f3afbdb9cdb0762e56b702a195274f30193b472) )
+	ROM_LOAD16_BYTE( "10350",0x20000,0x08000, CRC(f2cd6b3f) SHA1(380f75b8c1696b388179641866cd1d23f78664e7) )
+	ROM_LOAD16_BYTE( "10351",0x20001,0x08000, CRC(ede21d8d) SHA1(b3e3944d706c606fd01e00d9511f020ce9aec9f0) )
+	ROM_LOAD16_BYTE( "10352",0x40000,0x08000, CRC(f8abb143) SHA1(97e78291c15bdf95fd35adca6b9e002480137b12) )
+	ROM_LOAD16_BYTE( "10353",0x40001,0x08000, CRC(5a757dc9) SHA1(b0540844c8a09195f5d12312f8e27c334641d7b8) )
+
+	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
+	ROM_LOAD( "10281",0x00000,0x10000, CRC(30e92cda) SHA1(36293a2a8a22dca5350571f19f3d5d04e1b27458) )
+	ROM_LOAD( "10282",0x10000,0x10000, CRC(b67b8910) SHA1(f3f029a3e6547114cec28e5cf8fda65ef434c353) )
+	ROM_LOAD( "10283",0x20000,0x10000, CRC(e7dbfd2d) SHA1(91bae3fbc4a3c612dc507eecfa8de1c2e1e7afee) )
+
+	ROM_REGION( 0x40000, REGION_GFX2, 0 ) /* sprites */
+	ROM_LOAD16_BYTE( "10285",0x00001,0x08000, CRC(98aa3d04) SHA1(1d26d17a72e55281e3444fee9c5af69ffb9e3c69) )
+	ROM_LOAD16_BYTE( "10286",0x00000,0x08000, CRC(8da050cf) SHA1(c28e8968dbd9c110672581f4486f70d5f45df7f5) )
+	ROM_LOAD16_BYTE( "10287",0x10001,0x08000, CRC(7989b74a) SHA1(a87acafe82b37a11d8f8b1f2ee4c9b2e1bb8161c) )
+	ROM_LOAD16_BYTE( "10288",0x10000,0x08000, CRC(d3ce551a) SHA1(0ff2170d9ef89058273025dd8d5e1021094adef1) )
+	ROM_LOAD16_BYTE( "10289",0x20001,0x08000, CRC(c59d1b98) SHA1(e232f2519234981c0e4ffecdd25c48083d9f93a8) )
+	ROM_LOAD16_BYTE( "10290",0x20000,0x08000, CRC(39354223) SHA1(d8a73d3f7fc2d83d23bb7434f43bc8804f35cc16) )
+	ROM_LOAD16_BYTE( "10291",0x30001,0x08000, CRC(6e4b245c) SHA1(1f8cecf7ea2d2dfa5ce18d7ee34b0da2cc40221e) )
+	ROM_LOAD16_BYTE( "10292",0x30000,0x08000, CRC(cef289a3) SHA1(7ab817b6348c168f79be325fb3cc2cca14ee0f8e) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_LOAD( "10284",0x00000,0x8000, CRC(8ff09116) SHA1(8b99b6d2499897cfbd037a7e7cf5bc53bce8a63a) )
+
+ROM_END
+
+/*
+	Action Fighter, Sega System 16A
+	CPU: Unprotected
+*/
+
+ROM_START( afightera )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr10315.bin", 0x00001, 0x08000, CRC(2ea55eae) SHA1(91d582eaa0483d547d1a37dedb8f029a0fccb526) ) // decrypted version of 10350
 	ROM_LOAD16_BYTE( "epr10318.bin", 0x00000, 0x08000, CRC(d05b240d) SHA1(aa4aa7b18b53ac7b533855a44f9a4a0c14e1da2a) )
@@ -798,7 +838,6 @@ static MEMORY_READ16_START( afighter_readmem )
 	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
 	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
 	{ 0xc60000, 0xc60001, MRA16_NOP },
-//	{ 0xfff108, 0xfff109, alexkidd_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -7219,92 +7258,93 @@ ROM_END
 /* pre-System16 */
 /*          rom       parent    machine   inp       init */
 /* Alien Syndrome */
-GAME( 1985, mjleague, 0,        mjleague, mjleague, 0,        ROT270, "Sega",    "Major League" )
-GAME( 1986, bodyslam, 0,        bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Body Slam" )
-GAME( 1986, dumpmtmt, bodyslam, bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Dump Matsumoto (Japan)" )
-GAMEX(1986, quartet,  0,        quartet,  quartet,  0,        ROT0,   "Sega",    "Quartet (Rev A, 8751 315-5194)", GAME_UNEMULATED_PROTECTION )
-GAMEX(1986, quartetj, quartet,  quartet,  quartet,  0,        ROT0,   "Sega",    "Quartet (8751 315-5194)", GAME_UNEMULATED_PROTECTION )
-GAMEX(1986, quartet2, quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",    "Quartet 2 (8751 317-0010)", GAME_UNEMULATED_PROTECTION )
-GAME( 1986, quartt2j, quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",    "Quartet 2 (unprotected)" )
+GAME( 1985, mjleague,  0,        mjleague, mjleague, 0,        ROT270, "Sega",    "Major League" )
+GAME( 1986, bodyslam,  0,        bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Body Slam" )
+GAME( 1986, dumpmtmt,  bodyslam, bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Dump Matsumoto (Japan)" )
+GAMEX(1986, quartet,   0,        quartet,  quartet,  0,        ROT0,   "Sega",    "Quartet (Rev A, 8751 315-5194)", GAME_UNEMULATED_PROTECTION )
+GAMEX(1986, quartetj,  quartet,  quartet,  quartet,  0,        ROT0,   "Sega",    "Quartet (8751 315-5194)", GAME_UNEMULATED_PROTECTION )
+GAMEX(1986, quartet2,  quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",    "Quartet 2 (8751 317-0010)", GAME_UNEMULATED_PROTECTION )
+GAME( 1986, quartt2j,  quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",    "Quartet 2 (unprotected)" )
 
 /* System16A */
 /*          rom       parent    machine   inp       init */
-GAME( 1986, afighter, 0,        afighter, afighter, 0,        ROT270, "Sega",    "Action Fighter (unprotected)" )
-GAMEX(1986, alexkidd, 0,        alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 1)", GAME_NOT_WORKING )
-GAME( 1986, alexkida, alexkidd, alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 2)" )
-GAME( 1986, fantzone, 0,        fantzone, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
-GAME( 1986, fantzono, fantzone, fantzono, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Old Ver.)" )
-GAMEX(19??, ryukyu  , 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ryukyu", GAME_NOT_WORKING )
-GAME( 1987, shinobi,  0,        shinobi,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 1)" )
-GAMEX(1987, shinobib, shinobi,  shinobi,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 3)", GAME_NOT_WORKING )
-GAMEX(1987, shinobia, shinobi,  shinobl,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 2)", GAME_NOT_WORKING )
-GAME( 1987, shinobl,  shinobi,  shinobl,  shinobi,  0,        ROT0,   "bootleg", "Shinobi (bootleg)" )
-GAME( 1987, sdi,      0,        sdi,      sdi,      sdi,      ROT0,   "Sega",    "SDI - Strategic Defense Initiative" )
-GAMEX(1987, sdioj,    sdi,      sdi,      sdi,      sdi,      ROT0,   "Sega",    "SDI - Strategic Defense Initiative (Japan)", GAME_NOT_WORKING )
-GAMEX(1988, tetris,   0,        tetris,   tetris,   0,        ROT0,   "Sega",    "Tetris (Sega Set 1)", GAME_NOT_WORKING )
-GAME( 1988, tetrisbl, tetris,   tetris,   tetris,   0,        ROT0,   "bootleg", "Tetris (Sega bootleg)" )
-GAMEX(1988, tetrisa,  tetris,   tetris,   tetris,   0,        ROT0,   "Sega",    "Tetris (Sega Set 2)", GAME_NOT_WORKING )
+GAMEX(1986, afighter,  0,        afighter, afighter, afighter, ROT270, "Sega",    "Action Fighter (FD1089A 317-0018)", GAME_NOT_WORKING )
+GAME( 1986, afightera, afighter, afighter, afighter, afighter, ROT270, "Sega",    "Action Fighter (unprotected)" )
+GAMEX(1986, alexkidd,  0,        alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 1)", GAME_NOT_WORKING )
+GAME( 1986, alexkida,  alexkidd, alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 2)" )
+GAME( 1986, fantzone,  0,        fantzone, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
+GAME( 1986, fantzono,  fantzone, fantzono, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Old Ver.)" )
+GAMEX(19??, ryukyu  ,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ryukyu", GAME_NOT_WORKING )
+GAME( 1987, shinobi,   0,        shinobi,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 1)" )
+GAMEX(1987, shinobib,  shinobi,  shinobi,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 3)", GAME_NOT_WORKING )
+GAMEX(1987, shinobia,  shinobi,  shinobl,  shinobi,  0,        ROT0,   "Sega",    "Shinobi (set 2)", GAME_NOT_WORKING )
+GAME( 1987, shinobl,   shinobi,  shinobl,  shinobi,  0,        ROT0,   "bootleg", "Shinobi (bootleg)" )
+GAME( 1987, sdi,       0,        sdi,      sdi,      sdi,      ROT0,   "Sega",    "SDI - Strategic Defense Initiative" )
+GAMEX(1987, sdioj,     sdi,      sdi,      sdi,      sdi,      ROT0,   "Sega",    "SDI - Strategic Defense Initiative (Japan)", GAME_NOT_WORKING )
+GAMEX(1988, tetris,    0,        tetris,   tetris,   0,        ROT0,   "Sega",    "Tetris (Sega Set 1)", GAME_NOT_WORKING )
+GAME( 1988, tetrisbl,  tetris,   tetris,   tetris,   0,        ROT0,   "bootleg", "Tetris (Sega bootleg)" )
+GAMEX(1988, tetrisa,   tetris,   tetris,   tetris,   0,        ROT0,   "Sega",    "Tetris (Sega Set 2)", GAME_NOT_WORKING )
 
 /* System16B */
 /*          rom       parent    machine   inp       init */
-GAMEX(19??, aceattac, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
-GAMEX(1990, atomicp,  0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
-GAME( 1990, snapper,  0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
-GAME( 1987, aliensyn, 0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
-GAMEX(1987, aliensya, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
-GAMEX(1987, aliensyj, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
-GAMEX(1987, aliensyb, aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 3)", GAME_NOT_WORKING )
-GAME( 1988, altbeast, 0,        altbeast, altbeast, 0,        ROT0,   "Sega",    "Altered Beast (Version 1)" )
-GAME( 1988, altbeas2, altbeast, altbeas2, altbeast, altbeas2, ROT0,   "Sega",    "Altered Beast (Version 2)" )
-GAMEX(1988, jyuohki,  altbeast, altbeast, altbeast, 0,        ROT0,   "Sega",    "Jyuohki (Japan)",           GAME_NOT_WORKING )
-GAME( 1990, aurail,   0,        aurail,   aurail,   0,        ROT0,   "Sega / Westone", "Aurail (set 1)" )
-GAME( 1990, auraila,  aurail,   aurail,   aurail,   auraila,  ROT0,   "Sega / Westone", "Aurail (set 2)" )
-GAME( 1989, bayroute, 0,        bayroute, bayroute, 0,        ROT0,   "Sunsoft / Sega", "Bay Route (set 1)" )
-GAMEX(1989, bayrouta, bayroute, bayroute, bayroute, 0,        ROT0,   "Sunsoft / Sega", "Bay Route (set 2)", GAME_NOT_WORKING )
-GAMEX(1989, bayrtbl1, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 1)", GAME_NOT_WORKING )
-GAMEX(1989, bayrtbl2, bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 2)", GAME_NOT_WORKING )
+GAMEX(19??, aceattac,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
+GAMEX(1990, atomicp,   0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
+GAME( 1990, snapper,   0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
+GAME( 1987, aliensyn,  0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
+GAMEX(1987, aliensya,  aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
+GAMEX(1987, aliensyj,  aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )
+GAMEX(1987, aliensyb,  aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 3)", GAME_NOT_WORKING )
+GAME( 1988, altbeast,  0,        altbeast, altbeast, 0,        ROT0,   "Sega",    "Altered Beast (Version 1)" )
+GAME( 1988, altbeas2,  altbeast, altbeas2, altbeast, altbeas2, ROT0,   "Sega",    "Altered Beast (Version 2)" )
+GAMEX(1988, jyuohki,   altbeast, altbeast, altbeast, 0,        ROT0,   "Sega",    "Jyuohki (Japan)",           GAME_NOT_WORKING )
+GAME( 1990, aurail,    0,        aurail,   aurail,   0,        ROT0,   "Sega / Westone", "Aurail (set 1)" )
+GAME( 1990, auraila,   aurail,   aurail,   aurail,   auraila,  ROT0,   "Sega / Westone", "Aurail (set 2)" )
+GAME( 1989, bayroute,  0,        bayroute, bayroute, 0,        ROT0,   "Sunsoft / Sega", "Bay Route (set 1)" )
+GAMEX(1989, bayrouta,  bayroute, bayroute, bayroute, 0,        ROT0,   "Sunsoft / Sega", "Bay Route (set 2)", GAME_NOT_WORKING )
+GAMEX(1989, bayrtbl1,  bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 1)", GAME_NOT_WORKING )
+GAMEX(1989, bayrtbl2,  bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg", "Bay Route (bootleg set 2)", GAME_NOT_WORKING )
 /* Bullet */
 /* Charon */
-GAMEX(19??, cotton,   0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton (Japan)", GAME_NOT_WORKING )
-GAMEX(19??, cottona,  cotton,   s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton", GAME_NOT_WORKING )
-GAMEX(19??, dunkshot, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Dunk Shot", GAME_NOT_WORKING )
-GAME( 1989, dduxbl,   0,        dduxbl,   dduxbl,   dduxbl,   ROT0,   "bootleg", "Dynamite Dux (bootleg)" )
-GAMEX(1989, eswat,    0,        eswat,    eswat,    eswat,    ROT0,   "Sega",    "E-Swat - Cyber Police", GAME_NOT_WORKING )
-GAME( 1989, eswatbl,  eswat,    eswat,    eswat,    eswat,    ROT0,   "bootleg", "E-Swat - Cyber Police (bootleg)" )
-GAMEX(19??, exctleag, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Excite League", GAME_NOT_WORKING )
+GAMEX(19??, cotton,    0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton (Japan)", GAME_NOT_WORKING )
+GAMEX(19??, cottona,   cotton,   s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton", GAME_NOT_WORKING )
+GAMEX(19??, dunkshot,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Dunk Shot", GAME_NOT_WORKING )
+GAME( 1989, dduxbl,    0,        dduxbl,   dduxbl,   dduxbl,   ROT0,   "bootleg", "Dynamite Dux (bootleg)" )
+GAMEX(1989, eswat,     0,        eswat,    eswat,    eswat,    ROT0,   "Sega",    "E-Swat - Cyber Police", GAME_NOT_WORKING )
+GAME( 1989, eswatbl,   eswat,    eswat,    eswat,    eswat,    ROT0,   "bootleg", "E-Swat - Cyber Police (bootleg)" )
+GAMEX(19??, exctleag,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Excite League", GAME_NOT_WORKING )
 
-GAMEX(1989, fpoint,   0,        fpoint,   fpoint,   0,        ROT0,   "Sega",    "Flash Point", GAME_NOT_WORKING )
-GAME( 1989, fpointbl, fpoint,   fpointbl, fpoint,   fpointbl, ROT0,   "bootleg", "Flash Point (World, bootleg)" )
-GAME( 1989, fpointbj, fpoint,   fpointbl, fpointbj, fpointbl, ROT0,   "bootleg", "Flash Point (Japan, bootleg)" )
+GAMEX(1989, fpoint,    0,        fpoint,   fpoint,   0,        ROT0,   "Sega",    "Flash Point", GAME_NOT_WORKING )
+GAME( 1989, fpointbl,  fpoint,   fpointbl, fpoint,   fpointbl, ROT0,   "bootleg", "Flash Point (World, bootleg)" )
+GAME( 1989, fpointbj,  fpoint,   fpointbl, fpointbj, fpointbl, ROT0,   "bootleg", "Flash Point (Japan, bootleg)" )
 
-GAME( 1989, goldnaxe, 0,        goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1)" )
-GAMEX(1989, goldnaxj, goldnaxe, goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1, Japan)", GAME_NOT_WORKING )
-GAMEX(1989, goldnabl, goldnaxe, goldnaxe, goldnaxe, goldnabl, ROT0,   "bootleg", "Golden Axe (bootleg)", GAME_NOT_WORKING )
-GAME( 1989, goldnaxa, goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (set 6, US) (8751 317-123A)" )
-GAMEX(1989, goldnaxb, goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0110)", GAME_NOT_WORKING )
-GAMEX(1989, goldnaxc, goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0122)", GAME_NOT_WORKING )
-GAME( 1987, hwchamp,  0,        hwchamp,  hwchamp,  0,        ROT0,   "Sega",    "Heavyweight Champ" )
-GAMEX(19??, mvp,      0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "MVP", GAME_NOT_WORKING )
-GAMEX(1988, passsht,  0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
-GAME( 1988, passshtb, passsht,  passsht,  passsht,  0,        ROT270, "bootleg", "Passing Shot (2 Players) (bootleg)" )
-GAMEX(1988, passht4b, passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1991, riotcity, 0,        riotcity, riotcity, 0,        ROT0,   "Sega / Westone", "Riot City" )
+GAME( 1989, goldnaxe,  0,        goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1)" )
+GAMEX(1989, goldnaxj,  goldnaxe, goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1, Japan)", GAME_NOT_WORKING )
+GAMEX(1989, goldnabl,  goldnaxe, goldnaxe, goldnaxe, goldnabl, ROT0,   "bootleg", "Golden Axe (bootleg)", GAME_NOT_WORKING )
+GAME( 1989, goldnaxa,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (set 6, US) (8751 317-123A)" )
+GAMEX(1989, goldnaxb,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0110)", GAME_NOT_WORKING )
+GAMEX(1989, goldnaxc,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0122)", GAME_NOT_WORKING )
+GAME( 1987, hwchamp,   0,        hwchamp,  hwchamp,  0,        ROT0,   "Sega",    "Heavyweight Champ" )
+GAMEX(19??, mvp,       0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "MVP", GAME_NOT_WORKING )
+GAMEX(1988, passsht,   0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
+GAME( 1988, passshtb,  passsht,  passsht,  passsht,  0,        ROT270, "bootleg", "Passing Shot (2 Players) (bootleg)" )
+GAMEX(1988, passht4b,  passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1991, riotcity,  0,        riotcity, riotcity, 0,        ROT0,   "Sega / Westone", "Riot City" )
 /* Ryukyu */
 /* Shinobi */
-GAME( 1987, sonicbom, 0,        sonicbom, sonicbom, sonicbom, ROT270, "Sega",    "Sonic Boom" )
+GAME( 1987, sonicbom,  0,        sonicbom, sonicbom, sonicbom, ROT270, "Sega",    "Sonic Boom" )
 /* SDI */
 /* Sukeban Jansi Ryuko */
-GAMEX(19??, suprleag, 0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Super League", GAME_NOT_WORKING )
+GAMEX(19??, suprleag,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Super League", GAME_NOT_WORKING )
 /* Tetris */
-GAME( 1987, timscanr, 0,        timscanr, timscanr, 0,        ROT270, "Sega",    "Time Scanner" )
-GAME (1994, toryumon, 0,        toryumon, toryumon, 0,        ROT0,   "Sega",    "Toryumon" )
-GAME (1989, tturf,    0,        tturf,    tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (Japan)")
-GAME (1989, tturfu,   tturf,    tturfu,   tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (US)")
-GAME( 1989, tturfbl,  tturf,    tturfbl,  tturf,    tturfbl,  ROT0,   "bootleg", "Tough Turf (bootleg)")
-GAME( 1988, wb3,      0,        wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 1)" )
-GAMEX(1988, wb3a,     wb3,      wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
-GAME( 1988, wb3bl,    wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
-GAME( 1989, wrestwar, 0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
+GAME( 1987, timscanr,  0,        timscanr, timscanr, 0,        ROT270, "Sega",    "Time Scanner" )
+GAME (1994, toryumon,  0,        toryumon, toryumon, 0,        ROT0,   "Sega",    "Toryumon" )
+GAME (1989, tturf,     0,        tturf,    tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (Japan)")
+GAME (1989, tturfu,    tturf,    tturfu,   tturf,    0,        ROT0,   "Sega / Sunsoft", "Tough Turf (US)")
+GAME( 1989, tturfbl,   tturf,    tturfbl,  tturf,    tturfbl,  ROT0,   "bootleg", "Tough Turf (bootleg)")
+GAME( 1988, wb3,       0,        wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 1)" )
+GAMEX(1988, wb3a,      wb3,      wb3,      wb3,      0,        ROT0,   "Sega / Westone", "Wonder Boy III - Monster Lair (set 2)", GAME_NOT_WORKING )
+GAME( 1988, wb3bl,     wb3,      wb3bl,    wb3,      wb3bl,    ROT0,   "bootleg", "Wonder Boy III - Monster Lair (bootleg)" )
+GAME( 1989, wrestwar,  0,        wrestwar, wrestwar, wrestwar, ROT270, "Sega",    "Wrestle War" )
 
 /* System16C */
 /*          rom       parent    machine   inp       init */
