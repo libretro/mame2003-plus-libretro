@@ -11,6 +11,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * 96 Flag Rally
 * 1943 - The Battle Of Midway Mark II
 * 1945k III
+* Action Fighter (Unprotected)
 * Action Hollywood
 * Air Attack
 * Air Rescue
@@ -308,7 +309,6 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games fixed and now working
 
-* Action Fighter - Romset `afighter`
 * Agent Super Bond - Romset `superbon` - colors fixed
 * Alcon - Romset: `alcon`
 * Arch Rivals - Romset: `archrivl`
@@ -866,8 +866,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Megumi Rescue to the Sega System E driver [Haze, arcadez]
 * Added Marble Madness II (prototype) to the batman driver [Haze, MistyDreams, dink, iq_132, arcadez, mahoneyt944]
 * Added Fantasy Zone II - The Tears of Opa-Opa (fantzn2x) to system16 driver [MistyDreams, mahoneyt944, arcadez]
-* Fixed Action Fighter in the system16 driver by adding the unprotected system A set and hooking up the sound plus some new gfx calls [arcadez, mahoneyt944]
-* Added support for Snapper to the system16 driver and hooked up the sound [mahoneyt944, arcadez]
+* Added Action Fighter Sega System A unprotected set to the system16 driver hooked up the inputs and sound plus some new gfx calls game now playable [arcadez, mahoneyt944]
+* Added support for Snapper to the system16 driver and hooked up the sound and music [mahoneyt944, arcadez]
 * Added and integrated a new segas16b driver to support decrypted versions of Bullet, Cotton and now Fantasy Zone II also [MistyDreams]
 * Added new Sega system16 graphical drawing routines and updated the UPD7759 soundcore plus all related drivers to MAME92 as per the above [MistyDreams]
 * Fixed some graphical niggles in Body Slam, Major League, Shinobi (bootleg), Tough Turf and Wrestlewar by switching them over to use the new Sega drawing routines [mahoneyt944]
