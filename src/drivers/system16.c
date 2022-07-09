@@ -7256,7 +7256,7 @@ ROM_END
 
 
 /* pre-System16 */
-/*          rom       parent    machine   inp       init */
+/*          rom        parent    machine   inp       init */
 /* Alien Syndrome */
 GAME( 1985, mjleague,  0,        mjleague, mjleague, 0,        ROT270, "Sega",    "Major League" )
 GAME( 1986, bodyslam,  0,        bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Body Slam" )
@@ -7267,9 +7267,9 @@ GAMEX(1986, quartet2,  quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",  
 GAME( 1986, quartt2j,  quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",    "Quartet 2 (unprotected)" )
 
 /* System16A */
-/*          rom       parent    machine   inp       init */
-GAMEX(1986, afighter,  0,        afighter, afighter, afighter, ROT270, "Sega",    "Action Fighter (FD1089A 317-0018)", GAME_NOT_WORKING )
-GAME( 1986, afightera, afighter, afighter, afighter, afighter, ROT270, "Sega",    "Action Fighter (unprotected)" )
+/*          rom        parent    machine   inp       init */
+GAMEX(1986, afighter,  0,        afighter, afighter, 0,        ROT270, "Sega",    "Action Fighter (FD1089A 317-0018)", GAME_NOT_WORKING )
+GAME( 1986, afightera, afighter, afighter, afighter, 0,        ROT270, "Sega",    "Action Fighter (unprotected)" )
 GAMEX(1986, alexkidd,  0,        alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 1)", GAME_NOT_WORKING )
 GAME( 1986, alexkida,  alexkidd, alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 2)" )
 GAME( 1986, fantzone,  0,        fantzone, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
@@ -7286,7 +7286,7 @@ GAME( 1988, tetrisbl,  tetris,   tetris,   tetris,   0,        ROT0,   "bootleg"
 GAMEX(1988, tetrisa,   tetris,   tetris,   tetris,   0,        ROT0,   "Sega",    "Tetris (Sega Set 2)", GAME_NOT_WORKING )
 
 /* System16B */
-/*          rom       parent    machine   inp       init */
+/*          rom        parent    machine   inp       init */
 GAMEX(19??, aceattac,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
 GAMEX(1990, atomicp,   0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
 GAME( 1990, snapper,   0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
