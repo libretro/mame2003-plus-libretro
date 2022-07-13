@@ -46,20 +46,27 @@ static data8_t playmark_oki_command;
 
 
 extern data16_t *bigtwin_bgvideoram;
-extern size_t bigtwin_bgvideoram_size;
+//extern size_t bigtwin_bgvideoram_size;
 extern data16_t *wbeachvl_videoram1,*wbeachvl_videoram2,*wbeachvl_videoram3;
+extern data16_t *wbeachvl_rowscroll;
 
 VIDEO_START( bigtwin );
 VIDEO_START( wbeachvl );
+VIDEO_START( hrdtimes );
 WRITE16_HANDLER( wbeachvl_txvideoram_w );
 WRITE16_HANDLER( wbeachvl_fgvideoram_w );
 WRITE16_HANDLER( wbeachvl_bgvideoram_w );
+WRITE16_HANDLER( hrdtimes_txvideoram_w );
+WRITE16_HANDLER( hrdtimes_fgvideoram_w );
+WRITE16_HANDLER( hrdtimes_bgvideoram_w );
 WRITE16_HANDLER( bigtwin_paletteram_w );
 WRITE16_HANDLER( bigtwin_bgvideoram_w );
 WRITE16_HANDLER( bigtwin_scroll_w );
 WRITE16_HANDLER( wbeachvl_scroll_w );
+WRITE16_HANDLER( hrdtimes_scroll_w );
 VIDEO_UPDATE( bigtwin );
 VIDEO_UPDATE( wbeachvl );
+VIDEO_UPDATE( hrdtimes );
 
 
 
@@ -141,6 +148,11 @@ static WRITE16_HANDLER( wbeachvl_coin_eeprom_w )
 	}
 }
 
+static WRITE16_HANDLER( hrdtimes_coin_w )
+{
+	coin_counter_w(0,data & 0x01);
+	coin_counter_w(1,data & 0x02);
+}
 
 static WRITE16_HANDLER( playmark_snd_command_w )
 {
@@ -157,7 +169,7 @@ static READ_HANDLER( playmark_snd_command_r )
 
 	if ((playmark_oki_control & 0x38) == 0x30) {
 		data = playmark_snd_command;
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "PortB reading %02x from the 68K\n",data);
+//		log_cb(RETRO_LOG_DEBUG, LOGPRE "PortB reading %02x from the 68K\n",data);
 	}
 	else if ((playmark_oki_control & 0x38) == 0x28) {
 		data = (OKIM6295_status_0_r(0) & 0x0f);
@@ -177,6 +189,21 @@ static READ_HANDLER( playmark_snd_flag_r )
 	return 0x40;
 }
 
+
+static WRITE_HANDLER( playmark_oki_banking_w )
+{
+	static int old_bank = 0;
+
+	if(old_bank != (data & 7))
+	{
+		old_bank = data & 7;
+
+		if(((old_bank - 1) * 0x40000) < memory_region_length(REGION_SOUND1))
+		{
+			OKIM6295_set_bank_base(0, 0x40000 * (old_bank - 1));
+		}
+	}
+}
 
 static WRITE_HANDLER( playmark_oki_w )
 {
@@ -209,16 +236,45 @@ static WRITE_HANDLER( playmark_snd_control_w )
 }
 
 
+static WRITE_HANDLER( hrdtimes_snd_control_w )
+{
+	//  This port controls communications to and from the 68K and the OKI device. See playmark_snd_control_w above. OKI banking is also handled here.
+	
+	static int old_bank = 0;
+
+	if(old_bank != (data & 3))
+	{
+		old_bank = data & 3;
+
+		if(((old_bank - 1) * 0x40000) < memory_region_length(REGION_SOUND1))
+		{
+			OKIM6295_set_bank_base(0, 0x40000 * (old_bank - 1));
+		}
+	}
+
+	playmark_oki_control = data;
+
+	if ((data & 0x38) == 0x18)
+	{
+//		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);
+		OKIM6295_data_0_w(0, playmark_oki_command);
+	}
+}
+
+
 static READ_HANDLER( PIC16C5X_T0_clk_r )
 {
 	return 0;
 }
 
 
+/***************************** 68000 Memory Maps ****************************/
 
 static MEMORY_READ16_START( bigtwin_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM },
+    { 0x000000, 0x0fffff, MRA16_RAM },
+	{ 0x304000, 0x304001, MRA16_NOP	},			/* watchdog? irq ack? */
 	{ 0x440000, 0x4403ff, MRA16_RAM },
+	{ 0x600000, 0x67ffff, MRA16_RAM },
 	{ 0x700010, 0x700011, input_port_0_word_r },
 	{ 0x700012, 0x700013, input_port_1_word_r },
 	{ 0x700014, 0x700015, input_port_2_word_r },
@@ -228,56 +284,90 @@ static MEMORY_READ16_START( bigtwin_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( bigtwin_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM },
-	{ 0x304000, 0x304001, MWA16_NOP },	/* watchdog? irq ack? */
+    { 0x000000, 0x0fffff, MWA16_RAM },
+	{ 0x304000, 0x304001, MWA16_NOP	},			/* watchdog? irq ack? */
 	{ 0x440000, 0x4403ff, MWA16_RAM, &spriteram16, &spriteram_size },
-	{ 0x500000, 0x5007ff, wbeachvl_fgvideoram_w, &wbeachvl_videoram2 },
-{ 0x500800, 0x501fff, MWA16_NOP },	/* unused RAM? */
+	{ 0x500000, 0x500fff, wbeachvl_fgvideoram_w, &wbeachvl_videoram2 },
+	{ 0x501000, 0x501fff, MWA16_NOP },	/* unused RAM? */
 	{ 0x502000, 0x503fff, wbeachvl_txvideoram_w, &wbeachvl_videoram1 },
-{ 0x504000, 0x50ffff, MWA16_NOP },	/* unused RAM? */
+	{ 0x504000, 0x50ffff, MWA16_NOP },	/* unused RAM? */
 	{ 0x510000, 0x51000b, bigtwin_scroll_w },
 	{ 0x51000c, 0x51000d, MWA16_NOP },	/* always 3? */
-	{ 0x600000, 0x67ffff, bigtwin_bgvideoram_w, &bigtwin_bgvideoram, &bigtwin_bgvideoram_size },
+	{ 0x600000, 0x67ffff, MWA16_RAM, &bigtwin_bgvideoram },
 	{ 0x700016, 0x700017, coinctrl_w },
 	{ 0x70001e, 0x70001f, playmark_snd_command_w },
 	{ 0x780000, 0x7807ff, bigtwin_paletteram_w, &paletteram16 },
-/*	{ 0xe00000, 0xe00001, ?? written on startup*/
 	{ 0xff0000, 0xffffff, MWA16_RAM },
 MEMORY_END
 
 static MEMORY_READ16_START( wbeachvl_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM },
+    { 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x440000, 0x440fff, MRA16_RAM },
-	{ 0x500000, 0x501fff, MRA16_RAM },
+    { 0x500000, 0x501fff, MRA16_RAM },
 	{ 0x504000, 0x505fff, MRA16_RAM },
 	{ 0x508000, 0x509fff, MRA16_RAM },
-	{ 0xff0000, 0xffffff, MRA16_RAM },
+	{ 0x50f000, 0x50ffff, MRA16_RAM },
 	{ 0x710010, 0x710011, wbeachvl_port0_r },
 	{ 0x710012, 0x710013, input_port_1_word_r },
 	{ 0x710014, 0x710015, input_port_2_word_r },
 	{ 0x710018, 0x710019, input_port_3_word_r },
 	{ 0x71001a, 0x71001b, input_port_4_word_r },
-/*	{ 0x71001c, 0x71001d, playmark_snd_status??? },*/
+	{ 0xff0000, 0xffffff, MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( wbeachvl_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM },
+    { 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x440000, 0x440fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x500000, 0x501fff, wbeachvl_bgvideoram_w, &wbeachvl_videoram3 },
 	{ 0x504000, 0x505fff, wbeachvl_fgvideoram_w, &wbeachvl_videoram2 },
 	{ 0x508000, 0x509fff, wbeachvl_txvideoram_w, &wbeachvl_videoram1 },
+	{ 0x50f000, 0x50ffff, MWA16_RAM, &wbeachvl_rowscroll },
 	{ 0x510000, 0x51000b, wbeachvl_scroll_w },
-	{ 0x51000c, 0x51000d, MWA16_NOP },	/* always 3? */
-/*	{ 0x700000, 0x700001, ?? written on startup*/
+	{ 0x51000c, 0x51000d, MWA16_NOP	}, /* 2 and 3 */
 	{ 0x710016, 0x710017, wbeachvl_coin_eeprom_w },
-	{ 0x71001e, 0x71001f, MWA16_NOP },/*playmark_snd_command_w },*/
+// disabled sound calls for now	
+//    { 0x71001e, 0x71001f, playmark_snd_command_w },
 	{ 0x780000, 0x780fff, paletteram16_RRRRRGGGGGBBBBBx_word_w, &paletteram16 },
 	{ 0xff0000, 0xffffff, MWA16_RAM },
-#if 0
-	{ 0x700016, 0x700017, coinctrl_w },
-#endif
 MEMORY_END
 
+static data16_t *hrdtimes_rom; /* trampoline */
+
+static MEMORY_READ16_START( hrdtimes_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x080000, 0x0bffff, MRA16_RAM },
+	{ 0x0c0000, 0x0fffff, MRA16_ROM }, //AM_REGION(REGION_CPU1, 0x0c0000)
+	{ 0x100000, 0x103fff, MRA16_RAM },
+	{ 0x104000, 0x107fff, MRA16_RAM },
+	{ 0x108000, 0x10ffff, MRA16_RAM },
+	{ 0x10c000, 0x10ffff, MRA16_RAM }, // Unused
+	{ 0x200000, 0x200fff, MRA16_RAM },
+	{ 0x280000, 0x2807ff, MRA16_RAM },
+	{ 0x280800, 0x280fff, MRA16_RAM }, // unused
+	{ 0x300010, 0x300011, input_port_0_word_r },
+	{ 0x300012, 0x300013, input_port_1_word_r },
+	{ 0x300014, 0x300015, input_port_2_word_r },
+	{ 0x30001a, 0x30001b, input_port_3_word_r },
+	{ 0x30001c, 0x30001d, input_port_4_word_r },
+MEMORY_END
+
+static MEMORY_WRITE16_START( hrdtimes_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x080000, 0x0bffff, MWA16_RAM },
+	{ 0x0c0000, 0x0fffff, MWA16_ROM, &hrdtimes_rom }, // correct.?? //AM_REGION(REGION_CPU1, 0x0c0000)
+	{ 0x100000, 0x103fff, hrdtimes_bgvideoram_w, &wbeachvl_videoram3 },
+	{ 0x104000, 0x107fff, hrdtimes_fgvideoram_w, &wbeachvl_videoram2 },
+	{ 0x108000, 0x10ffff, hrdtimes_txvideoram_w, &wbeachvl_videoram1 },
+	{ 0x10c000, 0x10ffff, MWA16_RAM }, // Unused
+	{ 0x110000, 0x11000d, hrdtimes_scroll_w },
+	{ 0x200000, 0x200fff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0x280000, 0x2807ff, bigtwin_paletteram_w, &paletteram16 },
+	{ 0x280800, 0x280fff, MWA16_RAM },// unused
+	{ 0x300016, 0x300017, hrdtimes_coin_w },
+// disable sound command for now	
+//	{ 0x30001e, 0x30001f, playmark_snd_command_w },
+	{ 0x304000, 0x304001, MWA16_NOP	},	/* watchdog? irq ack? */
+MEMORY_END
 
 static MEMORY_READ_START( playmark_sound_readmem )
 	{ PIC16C57_MEMORY_READ },
@@ -298,12 +388,23 @@ static PORT_READ_START( playmark_sound_readport )
 PORT_END
 
 static PORT_WRITE_START( playmark_sound_writeport )
-	{ 0x00, 0x00, IOWP_NOP },				/* 4 bit port */
+    { 0x00, 0x00, playmark_oki_banking_w },	/* 4 bit port */
 	{ 0x01, 0x01, playmark_oki_w },
 	{ 0x02, 0x02, playmark_snd_control_w },
 PORT_END
 
+static PORT_READ_START( hrdtimes_sound_readport )
+	{ 0x00, 0x00, IORP_NOP },				/* 4 bit port */
+	{ 0x01, 0x01, playmark_snd_command_r },
+	{ 0x02, 0x02, playmark_snd_flag_r },
+	{ PIC16C5x_T0, PIC16C5x_T0, PIC16C5X_T0_clk_r },
+PORT_END
 
+static PORT_WRITE_START( hrdtimes_sound_writeport )
+	{ 0x00, 0x00, IOWP_NOP },				/* 4 bit port */
+	{ 0x01, 0x01, playmark_oki_w },
+	{ 0x02, 0x02, hrdtimes_snd_control_w }, /* OKI banking via this port */
+PORT_END
 
 
 INPUT_PORTS_START( bigtwin )
@@ -460,6 +561,102 @@ INPUT_PORTS_START( wbeachvl )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( hrdtimes )
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x03, "3" )
+	PORT_DIPSETTING(    0x01, "5" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x0c, "Every 300k - 500k" )
+	PORT_DIPSETTING(    0x08, "Every 500k - 500k" )
+	PORT_DIPSETTING(    0x04, "Only 500k" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x20, "Easy" )
+	PORT_DIPSETTING(    0x30, "Normal" )
+	PORT_DIPSETTING(    0x10, "Hard" )
+	PORT_DIPSETTING(    0x00, "Very_Hard" )
+	PORT_DIPNAME( 0x40, 0x40, "Allow_Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, "Coin Mode" )
+	PORT_DIPSETTING(    0x01, "Mode 1" )
+	PORT_DIPSETTING(    0x00, "Mode 2" )
+	/* TODO: support coin mode 2 */
+	PORT_DIPNAME( 0x1e, 0x1e, "Coinage Mode 1" )
+	PORT_DIPSETTING(    0x14, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(    0x16, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x1a, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 8C_3C ) )
+	PORT_DIPSETTING(    0x1c, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 5C_3C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x1e, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x12, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+#if 0
+	PORT_DIPNAME( 0x06, 0x06, "Coin A Mode 2" )
+	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_1C ) )
+	PORT_DIPNAME( 0x18, 0x18, "Coin B Mode 2" )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_6C ) )
+#endif
+	PORT_DIPNAME( 0x20, 0x20, "Minimum Credits to Start" )
+	PORT_DIPSETTING(    0x20, "1" )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPNAME( 0x40, 0x40, "1 Life If Continue" )
+	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+INPUT_PORTS_END
 
 
 static struct GfxLayout charlayout =
@@ -472,6 +669,19 @@ static struct GfxLayout charlayout =
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
 	32*8
 };
+
+
+static struct GfxLayout hrdtimes_charlayout =
+{
+	8,8,
+	RGN_FRAC(1,4),
+	4,
+	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
+};
+
 
 static struct GfxLayout tilelayout =
 {
@@ -559,6 +769,15 @@ static struct GfxDecodeInfo wbeachvl_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static struct GfxDecodeInfo hrdtimes_gfxdecodeinfo[] =
+{
+	{ REGION_GFX2, 0, &tilelayout,  0x200, 32 },	/* colors 0x200-0x2ff */
+	{ REGION_GFX1, 0, &tilelayout,  0x000, 16 },	/* colors 0x000-0x0ff */
+	{ REGION_GFX1, 0, &hrdtimes_charlayout,  0x100,  8 },	/* colors 0x100-0x17f */
+	{ -1 } /* end of array */
+};
+
+
 
 
 static struct OKIM6295interface okim6295_interface =
@@ -570,6 +789,19 @@ static struct OKIM6295interface okim6295_interface =
 };
 
 
+static struct OKIM6295interface hrdtimes_okim6295_interface =
+{
+	1,		                /* 1 chip */
+//	{ 1000000/132 },	    /* frequency? */
+/* Usually a divider is required in ole cores for the OKI
+but it's silent unless a straight up 1mhz is used but that
+doesn't seem right at all and no other freq around 7575 - 1mhz
+works.
+*/
+	{ 1000000 },	        /* frequency? */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 100 }
+};
 
 static MACHINE_DRIVER_START( bigtwin )
 
@@ -578,16 +810,16 @@ static MACHINE_DRIVER_START( bigtwin )
 	MDRV_CPU_MEMORY(bigtwin_readmem,bigtwin_writemem)
 	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
 
-	MDRV_CPU_ADD(PIC16C57, ((32000000/8)/PIC16C5x_CLOCK_DIVIDER))	/* 4MHz ? */
+    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))	/* 3MHz */
 	MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem)
 	MDRV_CPU_PORTS(playmark_sound_readport,playmark_sound_writeport)
 
-	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_FRAMES_PER_SECOND(50)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(1024)
@@ -607,14 +839,20 @@ static MACHINE_DRIVER_START( wbeachvl )
 	MDRV_CPU_MEMORY(wbeachvl_readmem,wbeachvl_writemem)
 	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
 
-	MDRV_FRAMES_PER_SECOND(60)
+// disabled sound cpu as game fails to boot with it active
+//    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))	/* 3MHz */
+	/* Program and Data Maps are internal to the MCU */
+// 	MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem)
+//	MDRV_CPU_PORTS(playmark_sound_readport,playmark_sound_writeport)
+
+	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_NVRAM_HANDLER(wbeachvl)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MDRV_GFXDECODE(wbeachvl_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -623,8 +861,39 @@ static MACHINE_DRIVER_START( wbeachvl )
 	MDRV_VIDEO_UPDATE(wbeachvl)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, hrdtimes_okim6295_interface)
 MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( hrdtimes )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* 12 MHz */
+	MDRV_CPU_MEMORY(hrdtimes_readmem,hrdtimes_writemem)
+	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
+
+// disable sound cpu for now
+//    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))	/* 3MHz */
+	/* Program and Data Maps are internal to the MCU */
+//    MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem)
+//	MDRV_CPU_PORTS(hrdtimes_sound_readport,hrdtimes_sound_writeport)
+
+	MDRV_FRAMES_PER_SECOND(58)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(64*8, 64*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(hrdtimes_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(1024)
+
+	MDRV_VIDEO_START(hrdtimes)
+	MDRV_VIDEO_UPDATE(hrdtimes)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, hrdtimes_okim6295_interface)
+MACHINE_DRIVER_END
+
 
 
 /***************************************************************************
@@ -666,8 +935,9 @@ ROM_START( wbeachvl )
 	ROM_LOAD16_BYTE( "wbv_02.bin",   0x000000, 0x40000, CRC(c7cca29e) SHA1(03af361081d688c4204a95f7f5babcc598b72c23) )
 	ROM_LOAD16_BYTE( "wbv_03.bin",   0x000001, 0x40000, CRC(db4e69d5) SHA1(119bf35a463d279ddde67ab08f6f1bab9f05cf0c) )
 
-	ROM_REGION( 0x4000, REGION_CPU2, 0 )	/* sound (missing) */
-	ROM_LOAD( "pic16c57",     PIC16C57_PGM_OFFSET, 0x1000, NO_DUMP )
+//	ROM_REGION( 0x1009, REGION_CPU2, 0 ) /* sound (PIC16C57) */
+	// 0x1000 rom data (actually 0x800 12-bit words), + 0x9 config bytes
+//	ROM_LOAD( "pic16c57",   0x0000, 0x1009, CRC(35439064) SHA1(ab0c5bafd76a2cb2a2e5ddb9d0578fd7e2241e43) )
 
 	ROM_REGION( 0x600000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "wbv_10.bin",   0x000000, 0x80000, CRC(50680f0b) SHA1(ed76ef6ced70ba7e9558162aa94bbe9f19bbabe6) )
@@ -684,10 +954,59 @@ ROM_START( wbeachvl )
 	ROM_LOAD( "wbv_09.bin",   0x580000, 0x20000, CRC(894ce354) SHA1(331aeabbe10cd645776da2dc0829acc2275e72dc) )
 	/* 5a0000-5fffff is empty */
 
-	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
+	ROM_REGION( 0x100000, REGION_USER2, 0 )	/* OKIM6295 samples */
 	ROM_LOAD( "wbv_01.bin",   0x00000, 0x100000, CRC(ac33f25f) SHA1(5d9ed16650aeb297d565376a99b31c88ab611668) )
+	
+	/* $00000-$20000 stays the same in all sound banks, */
+	/* the second half of the bank is what gets switched */
+	ROM_REGION( 0x1c0000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_COPY( REGION_USER2, 0x000000, 0x000000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x020000, 0x020000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x040000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x040000, 0x060000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x080000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x060000, 0x0a0000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x0c0000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x080000, 0x0e0000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x100000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x0a0000, 0x120000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x140000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x0c0000, 0x160000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x180000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x0e0000, 0x1a0000, 0x020000)
 ROM_END
 
+ROM_START( hrdtimes )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "31.u67",       0x00000, 0x80000, CRC(53eb041b) SHA1(7437da1ceb26e9518a3085560b8a42f37e77ace9) )
+	ROM_LOAD16_BYTE( "32.u66",       0x00001, 0x80000, CRC(f2c6b382) SHA1(d73affed091a261c4bfe17f409657e0a46b6c163) )
+
+//	ROM_REGION( 0x1000, REGION_CPU2, 0 )
+//	ROM_LOAD( "pic16c57.bin", 0x0000, 0x1000, CRC(db307198) SHA1(21e98a69e673f6d48eb48239b4c51f6e7aa19a66) )  /* PIC CPU dump */
+	
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "33.u36",       0x000000, 0x80000, CRC(d1239ce5) SHA1(8e966a39a47f66c5e904ec4357c751e896ed47cb) )
+	ROM_LOAD( "37.u42",       0x080000, 0x80000, CRC(aa692005) SHA1(1e274da358a25ceebdc71cb8f7228ef39348a895) )
+	ROM_LOAD( "34.u39",       0x100000, 0x80000, CRC(e4108c59) SHA1(15f7b53a7bbdc4aefdae31a00be64c419326bfd1) )
+	ROM_LOAD( "38.u45",       0x180000, 0x80000, CRC(ff7cacf3) SHA1(5ed93e86fe3b0b594bdd62e314cd9e2ffd3c2a2a) )
+
+	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "36.u86",       0x000000, 0x80000, CRC(f2fc1ca3) SHA1(f70913d9b89338932e62ca6bb60e5f5e412d7f64) )
+	ROM_LOAD( "40.u85",       0x080000, 0x80000, CRC(368c15f4) SHA1(8ae95fd672448921964c4d0312d7366903362e27) )
+	ROM_LOAD( "35.u84",       0x100000, 0x80000, CRC(7bde46ec) SHA1(1d26d268e1fc937e23ae7d93a1f86386b899a0c2) )
+	ROM_LOAD( "39.u83",       0x180000, 0x80000, CRC(a0bae586) SHA1(0b2bb0c5c51b2717b820f0176d5775df21652667) )
+
+
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "io13.bin",     0x00000, 0x20000, CRC(fa5e50ae) SHA1(f3bd87c83fca9269cc2f19db1fbf55540c96f931) )
+	ROM_CONTINUE(             0x60000, 0x20000 )
+	ROM_CONTINUE(             0xa0000, 0x20000 )
+	ROM_CONTINUE(             0xe0000, 0x20000 )
+	ROM_COPY( REGION_SOUND1,  0x00000, 0x20000, 0x20000 )
+	ROM_COPY( REGION_SOUND1,  0x00000, 0x40000, 0x20000 )
+	ROM_COPY( REGION_SOUND1,  0x00000, 0x80000, 0x20000 )
+	ROM_COPY( REGION_SOUND1,  0x00000, 0xc0000, 0x20000 )
+ROM_END
 
 static UINT8 playmark_asciitohex(UINT8 data)
 {
@@ -759,7 +1078,12 @@ static DRIVER_INIT( bigtwin )
 	} while (src_pos < 0x2d4c);		/* 0x2d4c is the size of the HEX rom loaded */
 }
 
+static DRIVER_INIT( hrdtimes )
+{
+  /* set up data ROMs */
+  memcpy(hrdtimes_rom, &memory_region(REGION_CPU1)[0x0c0000], 0x10); /* correct i think */
+}
 
-
-GAMEX( 1995, bigtwin,  0, bigtwin,  bigtwin,  bigtwin, ROT0, "Playmark", "Big Twin", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1995, wbeachvl, 0, wbeachvl, wbeachvl, 0,       ROT0, "Playmark", "World Beach Volley", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1995, bigtwin,  0, bigtwin,  bigtwin,  bigtwin,  ROT0, "Playmark", "Big Twin", GAME_NO_COCKTAIL )
+GAMEX( 1995, wbeachvl, 0, wbeachvl, wbeachvl, 0,        ROT0, "Playmark", "World Beach Volley", GAME_NO_COCKTAIL | GAME_NO_SOUND )
+GAMEX( 1994, hrdtimes, 0, hrdtimes, hrdtimes, hrdtimes, ROT0, "Playmark", "Hard Times", GAME_NO_SOUND )
