@@ -1084,6 +1084,327 @@ static DRIVER_INIT( hrdtimes )
   memcpy(hrdtimes_rom, &memory_region(REGION_CPU1)[0x0c0000], 0x10); /* correct i think */
 }
 
-GAMEX( 1995, bigtwin,  0, bigtwin,  bigtwin,  bigtwin,  ROT0, "Playmark", "Big Twin", GAME_NO_COCKTAIL )
-GAMEX( 1995, wbeachvl, 0, wbeachvl, wbeachvl, 0,        ROT0, "Playmark", "World Beach Volley", GAME_NO_COCKTAIL | GAME_NO_SOUND )
-GAMEX( 1994, hrdtimes, 0, hrdtimes, hrdtimes, hrdtimes, ROT0, "Playmark", "Hard Times", GAME_NO_SOUND )
+/*
+
+Power Balls  (c) 1994 Playmark
+
+driver by David Haywood & Pierpaolo Prazzoli
+
+*/
+
+static struct tilemap *bg_tilemap;
+static UINT16 *magicstk_videoram;
+static int magicstk_tilebank;
+
+static int bg_yoffset;
+static int xoffset;
+static int yoffset;
+
+static WRITE16_HANDLER( magicstk_bgvideoram_w )
+{
+	COMBINE_DATA(&magicstk_videoram[offset]);
+	tilemap_mark_tile_dirty(bg_tilemap,offset);
+}
+
+static WRITE16_HANDLER( tile_banking_w )
+{
+	if(((data >> 12) & 0x0f) != magicstk_tilebank)
+	{
+		magicstk_tilebank = (data >> 12) & 0x0f;
+		tilemap_mark_all_tiles_dirty(bg_tilemap);
+	}
+}
+
+static WRITE16_HANDLER( oki_banking )
+{
+	if(data & 3)
+	{
+		int addr = 0x40000 * ((data & 3) - 1);
+
+		if(addr < memory_region_length(REGION_SOUND1))
+			OKIM6295_set_bank_base(0, addr);
+	}
+}
+
+static MEMORY_READ16_START( powerbal_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x088000, 0x0883ff, MRA16_RAM },
+	{ 0x098000, 0x098fff, MRA16_RAM },
+	{ 0x099000, 0x09bfff, MRA16_RAM }, // not used
+	{ 0x0c2010, 0x0c2011, input_port_0_word_r },
+	{ 0x0c2012, 0x0c2013, input_port_1_word_r },
+	{ 0x0c2014, 0x0c2015, input_port_2_word_r },
+	{ 0x0c2016, 0x0c2017, input_port_3_word_r },
+	{ 0x0c2018, 0x0c2019, input_port_4_word_r },
+	{ 0x0c201e, 0x0c201f, OKIM6295_status_0_lsb_r },
+	{ 0x0f0000, 0x0fffff, MRA16_RAM },
+	{ 0x101000, 0x101fff, MRA16_RAM },
+	{ 0x103000, 0x103fff, MRA16_RAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( powerbal_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x088000, 0x0883ff, bigtwin_paletteram_w, &paletteram16 },
+	{ 0x094000, 0x094001, MWA16_NOP },
+	{ 0x094002, 0x094003, MWA16_NOP },
+	{ 0x094004, 0x094005, tile_banking_w },
+	{ 0x098000, 0x098fff, magicstk_bgvideoram_w, &magicstk_videoram },
+	{ 0x099000, 0x09bfff, MWA16_RAM }, // not used
+	{ 0x0c201c, 0x0c201d, oki_banking },
+	{ 0x0c201e, 0x0c201f, OKIM6295_data_0_lsb_w },
+	{ 0x0c4000, 0x0c4001, MWA16_NOP },
+	{ 0x0f0000, 0x0fffff, MWA16_RAM },
+	{ 0x101000, 0x101fff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0x102000, 0x10200d, MWA16_NOP }, // not used scroll regs?
+	{ 0x103000, 0x103fff, MWA16_RAM },
+MEMORY_END
+
+
+INPUT_PORTS_START( powerbal )
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, "Allow_Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x1c, 0x1c, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x14, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x1c, DEF_STR( 1C_1C ) )
+	PORT_DIPNAME( 0xe0, 0xe0, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 1C_6C ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Language" )
+	PORT_DIPSETTING(    0x08, "English" )
+	PORT_DIPSETTING(    0x00, "Italian" )
+	PORT_DIPNAME( 0x30, 0x20, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x30, "1" )
+	PORT_DIPSETTING(    0x20, "2" )
+	PORT_DIPSETTING(    0x10, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0xc0, "Easy" )
+	PORT_DIPSETTING(    0x80, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x00, "Very_Hard" )
+INPUT_PORTS_END
+
+static void powerbal_get_bg_tile_info(int tile_index)
+{
+	int code = (magicstk_videoram[tile_index] & 0x07ff) + magicstk_tilebank * 0x800;
+	int colr = magicstk_videoram[tile_index] & 0xf000;
+
+	if (magicstk_videoram[tile_index] & 0x800) code |= 0x8000;
+
+	SET_TILE_INFO(1,code,colr >> 12,0)
+}
+
+static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
+{
+	int offs;
+	int height = Machine->gfx[0]->height;
+
+	for (offs = 4;offs < spriteram_size/2;offs += 4)
+	{
+		int sx,sy,code,color,flipx;
+
+		sy = spriteram16[offs+3-4];	/* typical Playmark style... */
+		if (sy & 0x8000) return;	/* end of list marker */
+
+		flipx = sy & 0x4000;
+		sx = (spriteram16[offs+1] & 0x01ff) - 16-7;
+		sy = (256-8-height - sy) & 0xff;
+		code = spriteram16[offs+2];
+		color = (spriteram16[offs+1] & 0xf000) >> 12;
+
+		drawgfx(bitmap,Machine->gfx[0],
+				code,
+				color,
+				flipx,0,
+				sx + xoffset,sy + yoffset,
+				cliprect,TRANSPARENCY_PEN,0);
+	}
+}
+
+VIDEO_START( powerbal )
+{
+	bg_tilemap = tilemap_create(powerbal_get_bg_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE, 8, 8,64,32);
+
+	if (!bg_tilemap)
+		return 1;
+
+	xoffset = -20;
+
+	tilemap_set_scrolly(bg_tilemap, 0, bg_yoffset);
+
+	return 0;
+}
+
+VIDEO_UPDATE( powerbal )
+{
+	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
+	draw_sprites(bitmap,cliprect);
+}
+
+static struct GfxLayout magicstk_charlayout =
+{
+	8,8,
+	RGN_FRAC(1,4),
+	4,
+	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
+};
+
+static struct GfxLayout magicstk_tilelayout =
+{
+	16,16,
+	RGN_FRAC(1,4),
+	4,
+	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
+	{ 0, 1, 2, 3, 4, 5, 6, 7,
+			16*8+0, 16*8+1, 16*8+2, 16*8+3, 16*8+4, 16*8+5, 16*8+6, 16*8+7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
+			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
+	32*8
+};
+
+
+
+static struct GfxDecodeInfo powerbal_gfxdecodeinfo[] =
+{
+	{ REGION_GFX2, 0, &magicstk_tilelayout, 0x100, 16 },	/* colors 0x100-0x1ff */
+	{ REGION_GFX1, 0, &magicstk_charlayout, 0x000, 16 },	/* colors 0x000-0x0ff */
+	{ -1 } /* end of array */
+};
+
+static struct OKIM6295interface powerbal_okim6295_interface =
+{
+	1,		                /* 1 chip */
+	{ 1000000/132 },	    /* frequency? */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 100 }
+};
+
+static MACHINE_DRIVER_START( powerbal )
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* 12 MHz */
+	MDRV_CPU_MEMORY(powerbal_readmem,powerbal_writemem)
+	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(61)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(128*8, 64*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
+	MDRV_GFXDECODE(powerbal_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(512)
+
+	MDRV_VIDEO_START(powerbal)
+	MDRV_VIDEO_UPDATE(powerbal)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, powerbal_okim6295_interface)
+MACHINE_DRIVER_END
+
+
+
+/*
+Power Balls
+Playmark, 1994
+*/
+
+ROM_START( powerbal )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "3.u67",  0x00000, 0x40000, CRC(3aecdde4) SHA1(e78373246d55f120e8d94f4606da874df439b823) )
+	ROM_LOAD16_BYTE( "2.u66",  0x00001, 0x40000, CRC(a4552a19) SHA1(88b84daa1fd36d5c683cf0d6dce341aedbc360d1) )
+
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "4.u38",        0x000000, 0x80000, CRC(a60aa981) SHA1(46a5d2d2a353a45127a03a104e877ffd150daa92) )
+	ROM_LOAD( "5.u42",        0x080000, 0x80000, CRC(966c71df) SHA1(daf4bcf3d2ef10ea9a5e2e7ea71b3783b9f5b1f0) )
+	ROM_LOAD( "6.u39",        0x100000, 0x80000, CRC(668957b9) SHA1(31fc9328ff6044e17834b6d61a886a8ef2e6570c) )
+	ROM_LOAD( "7.u45",        0x180000, 0x80000, CRC(f5721c66) SHA1(1e8b3a8e82da60378dad7727af21157c4059b071) )
+
+	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "8.u86",        0x000000, 0x80000, CRC(4130694c) SHA1(581d0035ce1624568f635bd79290be6c587a2533) )
+	ROM_LOAD( "9.u85",        0x080000, 0x80000, CRC(e7bcd2e7) SHA1(01a5e5ac5da2fd79a0c9088f775096b9915bae92) )
+	ROM_LOAD( "10.u84",       0x100000, 0x80000, CRC(90412135) SHA1(499619c72613a1dd63a6504e39b159a18a71f4fa) )
+	ROM_LOAD( "11.u83",       0x180000, 0x80000, CRC(92d7d40a) SHA1(81879945790feb9aeb45750e9b5ded3356571503) )
+
+	/* $00000-$20000 stays the same in all sound banks, */
+	/* the second half of the bank is the area that gets switched */
+	ROM_REGION( 0xc0000, REGION_SOUND1, 0 ) /* OKI Samples */
+	ROM_LOAD( "1.u16",        0x00000, 0x40000, CRC(12776dbc) SHA1(9ab9930fd581296642834d2cb4ba65264a588af3) )
+	ROM_CONTINUE(             0x60000, 0x20000 )
+	ROM_CONTINUE(             0xa0000, 0x20000 )
+	ROM_COPY( REGION_SOUND1,  0x00000, 0x40000, 0x20000)
+	ROM_COPY( REGION_SOUND1,  0x00000, 0x80000, 0x20000)
+ROM_END
+
+DRIVER_INIT( powerbal )
+{
+	bg_yoffset = 16;
+	yoffset = -8;
+}
+
+
+GAMEX(1995, bigtwin,  0, bigtwin,  bigtwin,  bigtwin,  ROT0, "Playmark", "Big Twin", GAME_NO_COCKTAIL )
+GAMEX(1995, wbeachvl, 0, wbeachvl, wbeachvl, 0,        ROT0, "Playmark", "World Beach Volley", GAME_NO_COCKTAIL | GAME_NO_SOUND )
+GAMEX(1994, hrdtimes, 0, hrdtimes, hrdtimes, hrdtimes, ROT0, "Playmark", "Hard Times", GAME_NO_SOUND )
+GAME( 1994, powerbal, 0, powerbal, powerbal, powerbal, ROT0, "Playmark", "Power Balls" )
