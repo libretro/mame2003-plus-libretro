@@ -88,6 +88,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gunbarich
 * GunMaster
 * Hang Zo
+* Hard Times
 * Head On Channel (Japan, Prototype)
 * Heavy Smash
 * Hoops '96
@@ -138,6 +139,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Planet Probe
 * Pochi & Nyaa
 * Pocket Gal Deluxe * Mature *
+* Power Balls
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Power Up Baseball
@@ -874,3 +876,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed missing speech samples in Tough Turf and some broken graphics in Passing Shot 4 player bootleg making the game now playable [mahoneyt944]
 * Added partial sound to Passing Shot 4 player bootleg [arcadez, mahoneyt944]
 * Fixed collisions in Golden Axe (Version 2) and improved the irq timers for Body Slam [mahoneyt944]
+* Added Hard Times and Power Balls to the playmark driver, no sound in Hard Times as yet [arcadez]
