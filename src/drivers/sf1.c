@@ -15,6 +15,67 @@ TODO:
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
 
+bool	sf1_playing = false;
+bool	sf1_start = false;
+bool	sf1_diddy = false;
+bool	sf1_title_diddy = false;
+bool	sf1_title = false;
+bool	sf1_lastwave = false;
+int		sf1_start_counter = 0;
+
+
+const char *const sf1_sample_names[] =
+{
+	"*sf1",
+	"retsu-01",
+	"retsu-02",
+	"geki-01",
+	"geki-02",
+	"joe-01",
+	"joe-02",
+	"mike-01",
+	"mike-02",
+	"birdie-01",
+	"birdie-02",
+	"eagle-01",
+	"eagle-02",
+	"lee-01",
+	"lee-02",
+	"gen-01",
+	"gen-02",
+	"adon-01",
+	"adon-02",
+	"sagat-01",
+	"sagat-02",
+	"ending-01",
+	"ending-02",
+	"vs-01",
+	"vs-02",
+	"select-01",
+	"select-02",
+	"credits-01",
+	"credits-02",
+	"bonus1-01",
+	"bonus1-02",
+	"bonus2-01",
+	"bonus2-02",
+	"score-01",
+	"score-02",
+	"theend-01",
+	"theend-02",
+	"won-01",
+	"won-02",
+	0
+};
+
+static struct Samplesinterface sf1_samples =
+{
+	2,	// 2 channels
+	100, // volume
+	sf1_sample_names
+};
+
+
 
 extern data16_t *sf1_objectram,*sf1_videoram;
 extern int sf1_deltaxb;
@@ -50,13 +111,262 @@ static WRITE16_HANDLER( sf1_coin_w )
 
 static WRITE16_HANDLER( soundcmd_w )
 {
-	if (ACCESSING_LSB)
-	{
-		soundlatch_w(offset,data & 0xff);
-		cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
-	}
-}
+	if(sf1_playing == true) {
+		int a = 0;
+		int o_max_samples = 41;
+		int sa_left = 0;
+		int sa_right = 1;
+		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
+		bool sa_play_sample = false;
+		bool sa_play_original = false;
+		bool sf1_do_nothing = false;
+		bool sf1_stop_samples = false;
+		bool sf1_play_default = false;
+		
+		if(sf1_start == true) {
+			sa_play_sample = true;
+			sa_left = 0;
+			sa_right = 1;
+			sf1_start = false;
+			sf1_diddy = true;
+			sf1_lastwave = false;
+		}
+			
+		switch (data) {	
+            // Retsu
+			case 0x28:
+			    sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 0;
+				sa_right = 1;			
+				break;
+			// Geki
+			case 0x29:
+			    sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 2;
+				sa_right = 3;			
+				break;
+			// Joe
+			case 0x2A:
+		        sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 4;
+				sa_right = 5;			
+				break;
+			// Mike
+			case 0x2B:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 6;
+				sa_right = 7;			
+				break;
+			// Birdie
+			case 0x2C:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 8;
+				sa_right = 9;			
+				break;
+			// Eagle
+			case 0x2D:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 10;
+				sa_right = 11;			
 
+			    break;
+			// Lee
+			case 0x2E:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 12;
+				sa_right = 13;			
+				break;
+			// Gen
+			case 0x2F:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 14;
+				sa_right = 15;							
+				break;
+			// Adon
+			case 0x30:
+		        sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 16;
+				sa_right = 17;			
+				break;
+			// Sagat
+			case 0x31:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 18;
+				sa_right = 19;			
+				break;
+			// Ending
+			case 0x32:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 20;
+				sa_right = 21;			
+				break;
+			// VS
+			case 0x33:
+	            sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 22;
+				sa_right = 23;			
+
+				break;
+			// Stage Select
+			case 0x34:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 24;
+				sa_right = 25;			
+				break;
+			// Credits
+			case 0x36:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 26;
+				sa_right = 27;			
+				break;
+			//Bonus 1
+			case 0x3A:
+			    sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 28;
+				sa_right = 29;			
+				break;
+			// Bonus 2
+			case 0x3B:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 30;
+				sa_right = 1;			
+				break;
+			// Score
+			case 0x3C:
+                sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 32;
+				sa_right = 33;			
+				break;
+			// the end?
+			case 0x3E:
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = false;
+				sa_play_sample = true;
+				sa_left = 34;
+				sa_right = 35;			
+				break;
+			// Won
+			case 0x37:
+			    if(sf1_lastwave == false) {
+					sf1_diddy = false;
+					sf1_title_diddy = false;
+					sf1_lastwave = true;
+					sa_play_sample = true;
+					sa_left = 36;
+					sa_right = 37;								
+	            }
+				else
+					sf1_do_nothing = true;
+				break;    
+                default:
+				soundlatch_w(offset,data);
+	            cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+			break;
+		}
+
+		if(sa_play_sample == true) {
+			a = 0;
+
+			for(a = 0; a <= o_max_samples; a++) {
+				sample_stop(a);
+			}
+
+			sample_start(0, sa_left, sa_loop);
+			sample_start(1, sa_right, sa_loop);
+			
+			// Determine how we should mix these samples together.
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(1, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(0, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+				sample_set_stereo_volume(0, 100, 0);
+				sample_set_stereo_volume(1, 0, 100);
+			}
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && sf1_do_nothing == false) { // No sample playing, revert to the default sound.
+				sa_play_original = false;
+				soundlatch_w(offset,data & 0xff);
+				cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+			}
+
+			if(sa_play_original == true)
+				soundlatch_w(offset,data & 0xff);
+			    cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		}
+		else if(sf1_do_nothing == true) {
+			// --> Do nothing.
+		}
+		else if(sf1_stop_samples == true) {
+			a = 0;
+
+			for(a = 0; a <= o_max_samples; a++) {
+				sample_stop(a);
+			}
+		    
+            // Now play the default sound.
+			soundlatch_w(offset,data & 0xff);
+			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		}
+		else if(sf1_play_default == true) {
+			soundlatch_w(offset,data & 0xff);
+			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		}
+	}				
+}
 
 /* The protection of the japanese version */
 /* I'd love to see someone dump the 68705 rom */
@@ -149,8 +459,8 @@ static WRITE16_HANDLER( protection_w )
 		}
 	default:
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Write protection at %06x (%04x)\n", activecpu_get_pc(), data&0xffff);
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Unknown protection %d\n", cpu_readmem24bew(0xffc684));
+			logerror("Write protection at %06x (%04x)\n", activecpu_get_pc(), data&0xffff);
+			logerror("*** Unknown protection %d\n", cpu_readmem24bew(0xffc684));
 			break;
 		}
 	}
@@ -801,6 +1111,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static void irq_handler(int irq)
 {
 	cpu_set_irq_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);
+	
 }
 
 static struct YM2151interface ym2151_interface =
@@ -854,6 +1165,9 @@ static MACHINE_DRIVER_START( sf1 )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
+	MDRV_SOUND_ADD(SAMPLES, sf1_samples)
+	sf1_playing = true;
+	sf1_start = 0;
 MACHINE_DRIVER_END
 
 
