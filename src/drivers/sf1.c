@@ -14,6 +14,7 @@ TODO:
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
+#include "ost_samples.h"
 
 
 extern data16_t *sf1_objectram,*sf1_videoram;
@@ -854,6 +855,16 @@ static MACHINE_DRIVER_START( sf1 )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
+
+	// Lets add our SF1 music sample packs.
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
+	sf1_playing = true;
+	sf1_start = true;
+	sf1_diddy = false;
+	sf1_title_diddy = false;
+	sf1_title = false;
+	sf1_lastwave = false;
+	sf1_start_counter = 0;
 MACHINE_DRIVER_END
 
 
