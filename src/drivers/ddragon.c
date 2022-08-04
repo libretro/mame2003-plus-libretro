@@ -1031,10 +1031,7 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
-	ddragon_playing = true;
-	ddragon_current_music = 0;
-	ddragon_stage = 0;
-	d_title_counter = 0;
+	init_ost_settings(OST_SUPPORT_DDRAGON);
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( darktowr )
