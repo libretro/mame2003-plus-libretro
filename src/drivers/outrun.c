@@ -1151,13 +1151,7 @@ static MACHINE_DRIVER_START( outrun )
 
 	// Lets add our Out Run music sample packs.
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-	outrun_playing = true;
-	outrun_start = true;
-	outrun_diddy = false;
-	outrun_title_diddy = false;
-	outrun_title = false;
-	outrun_lastwave = false;
-	outrun_start_counter = 0;
+	init_ost_settings(OST_SUPPORT_OUTRUN);
 MACHINE_DRIVER_END
 
 #if 0
