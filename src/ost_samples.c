@@ -86,6 +86,9 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_MOONWALKER:
+      moonwalker_playing = true;
+      moon_diddy = false;
+      mj_current_music = 0;
       break;
 
     case OST_SUPPORT_NBA_JAM:
