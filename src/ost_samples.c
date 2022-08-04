@@ -104,6 +104,13 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_OUTRUN:
+      outrun_playing = true;
+      outrun_start = true;
+      outrun_diddy = false;
+      outrun_title_diddy = false;
+      outrun_title = false;
+      outrun_lastwave = false;
+      outrun_start_counter = 0;
       break;
 
     case OST_SUPPORT_SF1:
