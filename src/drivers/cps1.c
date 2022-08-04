@@ -4029,9 +4029,7 @@ static MACHINE_DRIVER_START( sf2 )
 	/* Lets add our Street Fighter 2 music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
-	sf2_playing_street_fighter = true;
-	fadingMusic = false;
-
+	init_ost_settings(OST_SUPPORT_SF2);
 MACHINE_DRIVER_END
 
 
