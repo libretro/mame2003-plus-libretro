@@ -13,7 +13,7 @@ static int  sa_volume;
 static bool schedule_default_sound;
 
 
-/* game specific - initialized by the driver */
+/* game specific */
 bool     ddragon_playing = false;
 int      ddragon_current_music;
 int      ddragon_stage;
@@ -58,6 +58,40 @@ bool     sf1_title_diddy;
 bool     sf1_title;
 bool     sf1_lastwave;
 int      sf1_start_counter;
+
+
+void initialize_ost_settings( int ost )
+{
+  switch(ost)
+  {
+    case OST_SUPPORT_DDRAGON:
+      break;
+
+    case OST_SUPPORT_FFIGHT:
+      break;
+
+    case OST_SUPPORT_MK:
+      break;
+
+    case OST_SUPPORT_MK_T:
+      break;
+
+    case OST_SUPPORT_MOONWALKER:
+      break;
+
+    case OST_SUPPORT_NBA_JAM:
+      break;
+
+    case OST_SUPPORT_OUTRUN:
+      break;
+
+    case OST_SUPPORT_SF1:
+      break;
+
+    case OST_SUPPORT_SF2:
+      break;
+  }
+}
 
 
 /* ost functions */
