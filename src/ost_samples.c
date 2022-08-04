@@ -124,6 +124,8 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_SF2:
+      sf2_playing_street_fighter = true;
+      fadingMusic = false;
       break;
   }
 }
