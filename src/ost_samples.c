@@ -62,7 +62,6 @@ bool     fadingMusic;
 
 void init_ost_settings(int ost)
 {
-
   /* Reset */
   ddragon_playing = false;
   ff_playing_final_fight = false;
