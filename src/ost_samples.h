@@ -18,17 +18,7 @@ enum
 };
 
 
-extern bool    ddragon_playing;
-extern bool    ff_playing_final_fight;
-extern bool    mk_playing_mortal_kombat;
-extern bool    mk_playing_mortal_kombat_t;
-extern bool    moonwalker_playing;
-extern bool    nba_jam_playing;
-extern bool    outrun_playing;
-extern bool    sf1_playing;
-extern bool    sf2_playing_street_fighter;
-
-
+extern int  ost_support;
 extern void init_ost_settings(int ost);
 
 
