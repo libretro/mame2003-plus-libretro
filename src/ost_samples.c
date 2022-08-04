@@ -65,6 +65,10 @@ void initialize_ost_settings( int ost )
   switch(ost)
   {
     case OST_SUPPORT_DDRAGON:
+      ddragon_playing = true;
+      ddragon_current_music = 0;
+      ddragon_stage = 0;
+      d_title_counter = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
