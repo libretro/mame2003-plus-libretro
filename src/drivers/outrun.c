@@ -696,7 +696,7 @@ static READ16_HANDLER( or_io_service_r )
 
 static WRITE16_HANDLER( outrun_sound_write_w )
 {
-	if(outrun_playing && options.use_alt_sound) {
+	if(ost_support == OST_SUPPORT_OUTRUN && options.use_alt_sound) {
 		if(generate_ost_sound_outrun( data )) sound_shared_ram[0]=data&0xff;
 	}
 	else {
