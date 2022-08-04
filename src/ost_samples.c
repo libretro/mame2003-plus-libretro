@@ -72,6 +72,9 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_FFIGHT:
+      ff_playing_final_fight = true;
+      ff_alternate_song_1 = false;
+      ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_MK:
