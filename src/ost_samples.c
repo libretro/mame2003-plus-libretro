@@ -13,24 +13,19 @@ static int  sa_volume;
 static bool schedule_default_sound;
 
 
-/* game specific */
-bool     ddragon_playing;
+/* game specific variables */
+int      ost_support;
+
 int      ddragon_current_music;
 int      ddragon_stage;
 int      d_title_counter;
 
-bool     ff_playing_final_fight;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     mk_playing_mortal_kombat;
-bool     mk_playing_mortal_kombat_t;
-
-bool     moonwalker_playing;
 bool     moon_diddy;
 int      mj_current_music;
 
-bool     nba_jam_playing;
 bool     nba_jam_title_screen;
 bool     nba_jam_select_screen;
 bool     nba_jam_intermission;
@@ -40,7 +35,6 @@ bool     nba_jam_playing_title_music;
 int      m_nba_last_offset;
 int      m_nba_start_counter;
 
-bool     outrun_playing;
 bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
@@ -48,7 +42,6 @@ bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
-bool     sf1_playing;
 bool     sf1_start;
 bool     sf1_diddy;
 bool     sf1_title_diddy;
@@ -56,54 +49,41 @@ bool     sf1_title;
 bool     sf1_lastwave;
 int      sf1_start_counter;
 
-bool     sf2_playing_street_fighter;
 bool     fadingMusic;
 
 
 void init_ost_settings(int ost)
 {
-  /* Reset */
-  ddragon_playing = false;
-  ff_playing_final_fight = false;
-  mk_playing_mortal_kombat = false;
-  mk_playing_mortal_kombat_t = false;
-  moonwalker_playing = false;
-  nba_jam_playing = false;
-  outrun_playing = false;
-  sf1_playing = false;
-  sf2_playing_street_fighter = false;
+  /* set */
+  ost_support = ost;
 
   switch(ost)
   {
     case OST_SUPPORT_DDRAGON:
-      ddragon_playing = true;
       ddragon_current_music = 0;
       ddragon_stage = 0;
       d_title_counter = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
-      ff_playing_final_fight = true;
       ff_alternate_song_1 = false;
       ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_MK:
-      mk_playing_mortal_kombat = true;
+      /* no settings */
       break;
 
     case OST_SUPPORT_MK_T:
-      mk_playing_mortal_kombat_t = true;
+      /* no settings */
       break;
 
     case OST_SUPPORT_MOONWALKER:
-      moonwalker_playing = true;
       moon_diddy = false;
       mj_current_music = 0;
       break;
 
     case OST_SUPPORT_NBA_JAM:
-      nba_jam_playing = true;
       nba_jam_title_screen = false;
       nba_jam_select_screen = false;
       nba_jam_intermission = false;
@@ -115,7 +95,6 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_OUTRUN:
-      outrun_playing = true;
       outrun_start = true;
       outrun_diddy = false;
       outrun_title_diddy = false;
@@ -125,7 +104,6 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_SF1:
-      sf1_playing = true;
       sf1_start = true;
       sf1_diddy = false;
       sf1_title_diddy = false;
@@ -135,7 +113,6 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_SF2:
-      sf2_playing_street_fighter = true;
       fadingMusic = false;
       break;
   }
