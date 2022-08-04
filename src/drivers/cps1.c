@@ -165,7 +165,7 @@ static INTERRUPT_GEN( cps1_interrupt )
 	/* *only* game to have that. */
 	cpu_set_irq_line(0, 2, HOLD_LINE);
 
-	if(sf2_playing_street_fighter && options.use_alt_sound)
+	if(ost_support == OST_SUPPORT_SF2 && options.use_alt_sound)
 		ost_fade_volume();
 }
 
