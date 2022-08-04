@@ -866,13 +866,7 @@ static MACHINE_DRIVER_START( sf1 )
 
 	// Lets add our SF1 music sample packs.
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
-	sf1_playing = true;
-	sf1_start = true;
-	sf1_diddy = false;
-	sf1_title_diddy = false;
-	sf1_title = false;
-	sf1_lastwave = false;
-	sf1_start_counter = 0;
+	init_ost_settings(OST_SUPPORT_SF1);
 MACHINE_DRIVER_END
 
 
