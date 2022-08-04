@@ -78,9 +78,11 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_MK:
+      mk_playing_mortal_kombat = true;
       break;
 
     case OST_SUPPORT_MK_T:
+      mk_playing_mortal_kombat_t = true;
       break;
 
     case OST_SUPPORT_MOONWALKER:
