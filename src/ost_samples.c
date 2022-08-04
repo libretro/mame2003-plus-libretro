@@ -89,6 +89,15 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_NBA_JAM:
+      nba_jam_playing = true;
+      nba_jam_title_screen = false;
+      nba_jam_select_screen = false;
+      nba_jam_intermission = false;
+      nba_jam_in_game = false;
+      nba_jam_boot_up	= true;
+      nba_jam_playing_title_music = false;
+      m_nba_last_offset = 0;
+      m_nba_start_counter = 0;
       break;
 
     case OST_SUPPORT_OUTRUN:
