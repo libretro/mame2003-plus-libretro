@@ -53,8 +53,16 @@ static WRITE16_HANDLER( soundcmd_w )
 {
 	if (ACCESSING_LSB)
 	{
-		soundlatch_w(offset,data & 0xff);
-		cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		if(sf1_playing && options.use_alt_sound) {
+			if(generate_ost_sound_sf1( data )) {
+				soundlatch_w(offset,data & 0xff);
+				cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+			}
+		}
+		else {
+			soundlatch_w(offset,data & 0xff);
+			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		}
 	}
 }
 
