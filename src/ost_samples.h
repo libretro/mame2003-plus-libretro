@@ -18,7 +18,7 @@ enum
 };
 
 
-extern void initialize_ost_settings(int ost);
+extern void init_ost_settings(int ost);
 
 
 extern struct Samplesinterface ost_ddragon;
