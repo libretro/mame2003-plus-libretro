@@ -14,23 +14,23 @@ static bool schedule_default_sound;
 
 
 /* game specific */
-bool     ddragon_playing = false;
+bool     ddragon_playing;
 int      ddragon_current_music;
 int      ddragon_stage;
 int      d_title_counter;
 
-bool     ff_playing_final_fight = false;
+bool     ff_playing_final_fight;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     mk_playing_mortal_kombat = false;
-bool     mk_playing_mortal_kombat_t = false;
+bool     mk_playing_mortal_kombat;
+bool     mk_playing_mortal_kombat_t;
 
-bool     moonwalker_playing = false;
+bool     moonwalker_playing;
 bool     moon_diddy;
 int      mj_current_music;
 
-bool     nba_jam_playing = false;
+bool     nba_jam_playing;
 bool     nba_jam_title_screen;
 bool     nba_jam_select_screen;
 bool     nba_jam_intermission;
@@ -40,7 +40,7 @@ bool     nba_jam_playing_title_music;
 int      m_nba_last_offset;
 int      m_nba_start_counter;
 
-bool     outrun_playing = false;
+bool     outrun_playing;
 bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
@@ -48,10 +48,7 @@ bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
-bool     sf2_playing_street_fighter = false;
-bool     fadingMusic;
-
-bool     sf1_playing = false;
+bool     sf1_playing;
 bool     sf1_start;
 bool     sf1_diddy;
 bool     sf1_title_diddy;
@@ -59,9 +56,24 @@ bool     sf1_title;
 bool     sf1_lastwave;
 int      sf1_start_counter;
 
+bool     sf2_playing_street_fighter;
+bool     fadingMusic;
+
 
 void init_ost_settings(int ost)
 {
+
+  /* Reset */
+  ddragon_playing = false;
+  ff_playing_final_fight = false;
+  mk_playing_mortal_kombat = false;
+  mk_playing_mortal_kombat_t = false;
+  moonwalker_playing = false;
+  nba_jam_playing = false;
+  outrun_playing = false;
+  sf1_playing = false;
+  sf2_playing_street_fighter = false;
+
   switch(ost)
   {
     case OST_SUPPORT_DDRAGON:
