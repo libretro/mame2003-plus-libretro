@@ -60,7 +60,7 @@ bool     sf1_lastwave;
 int      sf1_start_counter;
 
 
-void initialize_ost_settings( int ost )
+void init_ost_settings( int ost )
 {
   switch(ost)
   {
