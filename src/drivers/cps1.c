@@ -103,13 +103,13 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	*/
 	
 	/* We are playing Final Fight. */
-	if(ff_playing_final_fight && options.use_alt_sound) {
+	if(ost_support == OST_SUPPORT_FFIGHT && options.use_alt_sound) {
 		if(generate_ost_sound_ffight( data )) {
 			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
 		}
 	}
 	/* We are playing Street Fighter 2. */
-	else if(sf2_playing_street_fighter && options.use_alt_sound) {
+	else if(ost_support == OST_SUPPORT_SF2 && options.use_alt_sound) {
 		if(generate_ost_sound_sf2( data )) {
 			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
 		}
