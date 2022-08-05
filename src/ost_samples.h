@@ -18,8 +18,8 @@ enum
 };
 
 
-extern int  ost_support;
-extern void init_ost_settings(int ost);
+extern bool ost_support_enabled (int ost);
+extern void init_ost_settings (int ost);
 
 
 extern struct Samplesinterface ost_ddragon;
