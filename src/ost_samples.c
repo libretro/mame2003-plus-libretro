@@ -52,7 +52,7 @@ int      sf1_start_counter;
 bool     fadingMusic;
 
 
-bool ost_support_enabled (int ost);
+bool ost_support_enabled(int ost)
 {
   if (!options.use_alt_sound) return false;
 
