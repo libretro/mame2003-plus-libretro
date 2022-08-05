@@ -52,6 +52,16 @@ int      sf1_start_counter;
 bool     fadingMusic;
 
 
+bool ost_support_enabled(int ost)
+{
+  if (!options.use_alt_sound) return false;
+
+  if (ost_support == ost) return true;
+
+  return false;
+}
+
+
 void init_ost_settings(int ost)
 {
   /* set */
@@ -512,18 +522,18 @@ struct Samplesinterface ost_outrun =
 	outrun_sample_set_names
 };
 
-struct Samplesinterface ost_sf2 =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	sf2_sample_set_names
-};
-
 struct Samplesinterface ost_sf1 =
 {
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf1_sample_set_names
+};
+
+struct Samplesinterface ost_sf2 =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	sf2_sample_set_names
 };
 
 

@@ -599,13 +599,13 @@ static READ_HANDLER( adpcm_command_r )
 
 void williams_adpcm_data_w(int data)
 {
-	if(ost_support == OST_SUPPORT_NBA_JAM && options.use_alt_sound) {
+	if( ost_support_enabled(OST_SUPPORT_NBA_JAM) ) {
 		if(generate_ost_sound_nba_jam( data )) soundlatch_w(0, data & 0xff);
 	}
-	else if(ost_support == OST_SUPPORT_MK && options.use_alt_sound) {
+	else if( ost_support_enabled(OST_SUPPORT_MK) ) {
 		if(generate_ost_sound_mk( data )) soundlatch_w(0, data & 0xff);
 	}
-	else if(ost_support == OST_SUPPORT_MK_T && options.use_alt_sound) {
+	else if( ost_support_enabled(OST_SUPPORT_MK_T) ) {
 		if(generate_ost_sound_mk_tunit( data )) soundlatch_w(0, data & 0xff);
 	}
 	else {
