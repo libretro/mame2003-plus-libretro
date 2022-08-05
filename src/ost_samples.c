@@ -522,18 +522,18 @@ struct Samplesinterface ost_outrun =
 	outrun_sample_set_names
 };
 
-struct Samplesinterface ost_sf2 =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	sf2_sample_set_names
-};
-
 struct Samplesinterface ost_sf1 =
 {
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf1_sample_set_names
+};
+
+struct Samplesinterface ost_sf2 =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	sf2_sample_set_names
 };
 
 
