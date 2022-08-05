@@ -101,21 +101,20 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "%X\n", data);
 	}
 	*/
-	
-	/* We are playing Final Fight. */
-	if( ost_support_enabled(OST_SUPPORT_FFIGHT) ) {
-		if(generate_ost_sound_ffight( data )) {
-			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
+
+	if(ACCESSING_LSB) {
+		/* We are playing Final Fight. */
+		if( ost_support_enabled(OST_SUPPORT_FFIGHT) ) {
+			if(generate_ost_sound_ffight( data ))
+				soundlatch_w(0,data & 0xff);
 		}
-	}
-	/* We are playing Street Fighter 2. */
-	else if( ost_support_enabled(OST_SUPPORT_SF2) ) {
-		if(generate_ost_sound_sf2( data )) {
-			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
+		/* We are playing Street Fighter 2. */
+		else if( ost_support_enabled(OST_SUPPORT_SF2) ) {
+			if(generate_ost_sound_sf2( data ))
+				soundlatch_w(0,data & 0xff);
 		}
-	}
-	else {
-		if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
+		else
+			soundlatch_w(0,data & 0xff);
 	}
 }
 
