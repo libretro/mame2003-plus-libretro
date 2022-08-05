@@ -52,6 +52,16 @@ int      sf1_start_counter;
 bool     fadingMusic;
 
 
+bool ost_support_enabled (int ost);
+{
+  if (!options.use_alt_sound) return false;
+
+  if (ost_support == ost) return true;
+
+  return false;
+}
+
+
 void init_ost_settings(int ost)
 {
   /* set */
