@@ -14,6 +14,7 @@ TODO:
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
+#include "ost_samples.h"
 
 
 extern data16_t *sf1_objectram,*sf1_videoram;
@@ -52,8 +53,16 @@ static WRITE16_HANDLER( soundcmd_w )
 {
 	if (ACCESSING_LSB)
 	{
-		soundlatch_w(offset,data & 0xff);
-		cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		if(ost_support == OST_SUPPORT_SF1 && options.use_alt_sound) {
+			if(generate_ost_sound_sf1( data )) {
+				soundlatch_w(offset,data & 0xff);
+				cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+			}
+		}
+		else {
+			soundlatch_w(offset,data & 0xff);
+			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+		}
 	}
 }
 
@@ -854,6 +863,10 @@ static MACHINE_DRIVER_START( sf1 )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
+
+	// Lets add our SF1 music sample packs.
+	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
+	init_ost_settings(OST_SUPPORT_SF1);
 MACHINE_DRIVER_END
 
 

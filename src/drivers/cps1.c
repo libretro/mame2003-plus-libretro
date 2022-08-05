@@ -103,13 +103,13 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	*/
 	
 	/* We are playing Final Fight. */
-	if(ff_playing_final_fight && options.use_alt_sound) {
+	if(ost_support == OST_SUPPORT_FFIGHT && options.use_alt_sound) {
 		if(generate_ost_sound_ffight( data )) {
 			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
 		}
 	}
 	/* We are playing Street Fighter 2. */
-	else if(sf2_playing_street_fighter && options.use_alt_sound) {
+	else if(ost_support == OST_SUPPORT_SF2 && options.use_alt_sound) {
 		if(generate_ost_sound_sf2( data )) {
 			if(ACCESSING_LSB) soundlatch_w(0,data & 0xff);
 		}
@@ -165,7 +165,7 @@ static INTERRUPT_GEN( cps1_interrupt )
 	/* *only* game to have that. */
 	cpu_set_irq_line(0, 2, HOLD_LINE);
 
-	if(sf2_playing_street_fighter && options.use_alt_sound)
+	if(ost_support == OST_SUPPORT_SF2 && options.use_alt_sound)
 		ost_fade_volume();
 }
 
@@ -4006,9 +4006,7 @@ static MACHINE_DRIVER_START( ffight_hack )
 	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
-	ff_playing_final_fight = true;
-	ff_alternate_song_1 = false;
-	ff_alternate_song_2 = false;
+	init_ost_settings(OST_SUPPORT_FFIGHT);
 MACHINE_DRIVER_END
 
 
@@ -4031,9 +4029,7 @@ static MACHINE_DRIVER_START( sf2 )
 	/* Lets add our Street Fighter 2 music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
-	sf2_playing_street_fighter = true;
-	fadingMusic = false;
-
+	init_ost_settings(OST_SUPPORT_SF2);
 MACHINE_DRIVER_END
 
 

@@ -13,24 +13,19 @@ static int  sa_volume;
 static bool schedule_default_sound;
 
 
-/* game specific - initialized by the driver */
-bool     ddragon_playing = false;
+/* game specific variables */
+int      ost_support;
+
 int      ddragon_current_music;
 int      ddragon_stage;
 int      d_title_counter;
 
-bool     ff_playing_final_fight = false;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     mk_playing_mortal_kombat = false;
-bool     mk_playing_mortal_kombat_t = false;
-
-bool     moonwalker_playing = false;
 bool     moon_diddy;
 int      mj_current_music;
 
-bool     nba_jam_playing = false;
 bool     nba_jam_title_screen;
 bool     nba_jam_select_screen;
 bool     nba_jam_intermission;
@@ -40,7 +35,6 @@ bool     nba_jam_playing_title_music;
 int      m_nba_last_offset;
 int      m_nba_start_counter;
 
-bool     outrun_playing = false;
 bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
@@ -48,8 +42,81 @@ bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
-bool     sf2_playing_street_fighter = false;
+bool     sf1_start;
+bool     sf1_diddy;
+bool     sf1_title_diddy;
+bool     sf1_title;
+bool     sf1_lastwave;
+int      sf1_start_counter;
+
 bool     fadingMusic;
+
+
+void init_ost_settings(int ost)
+{
+  /* set */
+  ost_support = ost;
+
+  switch(ost)
+  {
+    case OST_SUPPORT_DDRAGON:
+      ddragon_current_music = 0;
+      ddragon_stage = 0;
+      d_title_counter = 0;
+      break;
+
+    case OST_SUPPORT_FFIGHT:
+      ff_alternate_song_1 = false;
+      ff_alternate_song_2 = false;
+      break;
+
+    case OST_SUPPORT_MK:
+      /* no settings */
+      break;
+
+    case OST_SUPPORT_MK_T:
+      /* no settings */
+      break;
+
+    case OST_SUPPORT_MOONWALKER:
+      moon_diddy = false;
+      mj_current_music = 0;
+      break;
+
+    case OST_SUPPORT_NBA_JAM:
+      nba_jam_title_screen = false;
+      nba_jam_select_screen = false;
+      nba_jam_intermission = false;
+      nba_jam_in_game = false;
+      nba_jam_boot_up	= true;
+      nba_jam_playing_title_music = false;
+      m_nba_last_offset = 0;
+      m_nba_start_counter = 0;
+      break;
+
+    case OST_SUPPORT_OUTRUN:
+      outrun_start = true;
+      outrun_diddy = false;
+      outrun_title_diddy = false;
+      outrun_title = false;
+      outrun_lastwave = false;
+      outrun_start_counter = 0;
+      break;
+
+    case OST_SUPPORT_SF1:
+      sf1_start = true;
+      sf1_diddy = false;
+      sf1_title_diddy = false;
+      sf1_title = false;
+      sf1_lastwave = false;
+      sf1_start_counter = 0;
+      break;
+
+    case OST_SUPPORT_SF2:
+      fadingMusic = false;
+      break;
+  }
+}
 
 
 /* ost functions */
@@ -358,6 +425,50 @@ const char *const sf2_sample_set_names[] =
 	0
 };
 
+const char *const sf1_sample_set_names[] =
+{
+	"*sf1",
+	"retsu-01",
+	"retsu-02",
+	"geki-01",
+	"geki-02",
+	"joe-01",
+	"joe-02",
+	"mike-01",
+	"mike-02",
+	"birdie-01",
+	"birdie-02",
+	"eagle-01",
+	"eagle-02",
+	"lee-01",
+	"lee-02",
+	"gen-01",
+	"gen-02",
+	"adon-01",
+	"adon-02",
+	"sagat-01",
+	"sagat-02",
+	"ending-01",
+	"ending-02",
+	"vs-01",
+	"vs-02",
+	"select-01",
+	"select-02",
+	"credits-01",
+	"credits-02",
+	"bonus1-01",
+	"bonus1-02",
+	"bonus2-01",
+	"bonus2-02",
+	"score-01",
+	"score-02",
+	"theend-01",
+	"theend-02",
+	"won-01",
+	"won-02",
+	0
+};
+
 
 struct Samplesinterface ost_ddragon =
 {
@@ -406,6 +517,13 @@ struct Samplesinterface ost_sf2 =
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf2_sample_set_names
+};
+
+struct Samplesinterface ost_sf1 =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	sf1_sample_set_names
 };
 
 
@@ -1642,6 +1760,186 @@ bool generate_ost_sound_outrun(int data)
 		// --> Enter Highscore
 		case 0xA5:
 			return 0; /* do nothing */
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
+bool generate_ost_sound_sf1(int data)
+{
+	/* initialize game config */
+	schedule_default_sound = false;
+	sa_volume = 100;
+
+	if(sf1_start == true) {
+		sf1_start = false;
+		sf1_diddy = true;
+		sf1_lastwave = false;
+		ost_start_samples(0, 1, 1);
+	}
+
+	switch (data) {
+		// Retsu
+		case 0x28:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(0, 1, 1);
+			break;
+
+		// Geki
+		case 0x29:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(2, 3, 1);
+			break;
+
+		// Joe
+		case 0x2A:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(4, 5, 1);
+			break;
+
+		// Mike
+		case 0x2B:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(6, 7, 1);
+			break;
+
+		// Birdie
+		case 0x2C:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(8, 9, 1);
+			break;
+
+		// Eagle
+		case 0x2D:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(10, 11, 1);
+			break;
+
+		// Lee
+		case 0x2E:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(12, 13, 1);
+			break;
+
+		// Gen
+		case 0x2F:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(14, 15, 1);
+			break;
+
+		// Adon
+		case 0x30:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(16, 17, 1);
+			break;
+
+		// Sagat
+		case 0x31:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(18, 19, 1);
+			break;
+
+		// Ending
+		case 0x32:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(20, 21, 1);
+			break;
+
+		// VS
+		case 0x33:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(22, 23, 1);
+			break;
+
+		// Stage Select
+		case 0x34:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(24, 25, 1);
+			break;
+
+		// Credits
+		case 0x36:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(26, 27, 1);
+			break;
+
+		// Bonus 1
+		case 0x3A:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(28, 29, 1);
+			break;
+
+		// Bonus 2
+		case 0x3B:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(30, 31, 1);
+			break;
+
+		// Score
+		case 0x3C:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(32, 33, 1);
+			break;
+
+		// the end?
+		case 0x3E:
+			sf1_diddy = false;
+			sf1_title_diddy = false;
+			sf1_lastwave = false;
+			ost_start_samples(34, 35, 1);
+			break;
+
+		// Won
+		case 0x37:
+			if(sf1_lastwave == false) {
+				sf1_diddy = false;
+				sf1_title_diddy = false;
+				sf1_lastwave = true;
+				ost_start_samples(36, 37, 1);
+			}
+			else
+				return 0; /* do nothing */
 			break;
 
 		default:
