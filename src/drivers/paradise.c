@@ -1,6 +1,6 @@
 /***************************************************************************
 
-							  -= Paradise / Target Ball / Torus =-
+							  -= Paradise / Penky / Target Ball / Torus =-
 
 					driver by	Luca Elia (l.elia@tin.it)
 
@@ -53,6 +53,15 @@ static WRITE_HANDLER( torus_coin_counter_w )
 	coin_counter_w(0, data ^ 0xff);
 }
 
+static irq_count = 0;
+
+static INTERRUPT_GEN(paradise_irq)
+{
+	if (irq_count<300)
+		irq_count++;
+	else
+		cpu_set_irq_line(0, 0, HOLD_LINE);
+}
 
 static MEMORY_READ_START( paradise_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM		},	/* ROM*/
@@ -444,6 +453,85 @@ INPUT_PORTS_START( madball )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( penky )
+	PORT_START	/* port $2020 */
+	PORT_DIPNAME( 0x03, 0x03, "Time" )	
+	PORT_DIPSETTING(    0x00, "0:40" )
+	PORT_DIPSETTING(    0x01, "0:50" )
+	PORT_DIPSETTING(    0x02, "1:00" )
+	PORT_DIPSETTING(    0x03, "1:10" )
+	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x0c, "Easy" )
+	PORT_DIPSETTING(    0x08, "Normal" )
+	PORT_DIPSETTING(    0x04, "Hard" )
+	PORT_DIPSETTING(    0x00, "Very_Hard" )
+	PORT_DIPNAME( 0x30, 0x30, "Fill % to Win" )
+	PORT_DIPSETTING(    0x30, "Majority at Time or 99.9%" )
+	PORT_DIPSETTING(    0x20, "Majority at Time or 90%" )
+	PORT_DIPSETTING(    0x10, "Majority at Time or 85%" )
+	PORT_DIPSETTING(    0x00, "Majority at Time or 80%" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* port $2021 */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, "Vs. Matches" )		
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0x10, "3" )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )	
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Slide Show" ) /* Player1 button used to advance one time through the backgrounds */
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* port $2022 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START	/* port $2023 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START	/* port $2024 */
+	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 5 )
+	PORT_BIT_IMPULSE(  0x02, IP_ACTIVE_LOW, IPT_COIN2, 5 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
 
 /***************************************************************************
 
@@ -592,6 +680,14 @@ static MACHINE_DRIVER_START( madball )
 	MDRV_VIDEO_UPDATE(madball)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( penky )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(paradise)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(paradise_readmem,torus_writemem)
+	MDRV_CPU_PORTS(paradise_readport,paradise_writeport)
+	MDRV_CPU_VBLANK_INT(paradise_irq,4)	/* No nmi routine */
+MACHINE_DRIVER_END
 
 /***************************************************************************
 
@@ -789,6 +885,64 @@ ROM_START( madballn ) /* Even numbered stages show topless models.  Is nudity co
 	ROM_LOAD( "s.u28",     0x00000, 0x80000, CRC(78f02584) SHA1(70542e126db73a573db9ef41399d3a07fb7ea94b) )
 ROM_END
 
+/***************************************************************************
+                          Penky
+YS951004
+  CPU: Z8400B PS (Z80 6Mhz)
+Sound: OKI M6295 x 2
+Video: Actel A1020A PL84C
+  OSC: 12.000MHz & 4.000MHz
+YS951004
++--------------------------------------------+
+|    M6295 M6295   Z80    4MHz    U110  U111 |
+|        U113*    U128                  U92  |
+|        U85     6264                   U93  |
+|                                       U94  |
+|               6116                         |
+|J                     +-------+             |
+|A                     | Actel |  6116       |
+|M              6116   |A1020A |             |
+|M                     | PL84C |             |
+|A              6116   +-------+             |
+|       12MHz                                |
+| DSW1                                  6116 |
+|                     4464              6116 |
+|                     4464  U114        6116 |
+| DSW2                4464  U115             |
+|                     4464                   |
++--------------------------------------------+
+U113 is not populated on this PCB
+Notes, the clocks should be the same as other boards of this era/type. IE:
+      Z80 clock: 6.000MHz
+     6295 clock: 1.000MHz (both), sample rate = 1000000/132 (both)
+***************************************************************************/
+
+ROM_START( penky )
+	ROM_REGION( 0x44000, REGION_CPU1, 0 )		/* Z80 Code */
+	ROM_LOAD( "yunsung.u128", 0x00000, 0x0c000, CRC(57baeada) SHA1(360fd2d352b201e57436ed9c9f0510a052452738) )
+	ROM_CONTINUE(             0x10000, 0x34000 )
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 16x16x8 Sprites */
+	ROM_LOAD( "yunsung.u114", 0x00000, 0x80000, CRC(cb6b1cfd) SHA1(22406f70fc2ad839d5ca4d00d503a2857b295cf5) )
+	ROM_LOAD( "yunsung.u115", 0x80000, 0x80000, CRC(55c5ff90) SHA1(f68a22628b9da77c3e301fa57bf673c572760869) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x4 Background */
+	ROM_LOAD( "yunsung.u94", 0x00000, 0x20000, CRC(58b31c0e) SHA1(eea9a0c17737ce071895f818499edee7790d98f7) )
+
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Foreground */
+	ROM_LOAD( "yunsung.u92", 0x00000, 0x80000, CRC(31993a6c) SHA1(8cdcae52472768f40dc7cbefaa459982d008deaa) )
+	ROM_LOAD( "yunsung.u93", 0x80000, 0x80000, CRC(b570dc0c) SHA1(1f55681412db144e2d5cbb7a89783edc5059add7) )
+
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE | ROMREGION_INVERT)	/* 8x8x8 Midground */
+	ROM_LOAD( "yunsung.u110", 0x00000, 0x80000, CRC(ba3173a1) SHA1(6667bced70eb6be9853239feb69d4b30daf2d0c1) )
+	ROM_LOAD( "yunsung.u111", 0x80000, 0x80000, CRC(9223ef85) SHA1(f8da8fc5c8178165e8142eb52889b4ef1c710e24) )
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_LOAD( "yunsung.u85", 0x00000, 0x40000, CRC(c664d0cc) SHA1(52d5122407e727d4c98bc6f2f939534de4b725ae) )
+
+	ROM_REGION( 0x80000, REGION_SOUND2, ROMREGION_ERASE00 )	/* Samples (banked) */
+	/* not populated for this game */
+ROM_END
 
 DRIVER_INIT (paradise)
 {
@@ -818,6 +972,7 @@ DRIVER_INIT (torus)
 GAME( 1994+, paradise, 0,       paradise, paradise, paradise, ROT90, "Yun Sung", "Paradise" )
 GAME( 1995,  tgtball,  0,       tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)" )
 GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball" )
+GAME( 1995,  penky,    0,       penky,    penky,    tgtball,  ROT0,  "Yun Sung", "Penky" )
 GAME( 1996,  torus,    0,       torus,    torus,    torus,    ROT90, "Yun Sung", "Torus" )
 GAME( 1998,  madball,  0,       madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0" )
 GAME( 1997,  madballn, madball, madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0 (With Nudity)" )
