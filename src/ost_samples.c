@@ -14,7 +14,7 @@ static bool schedule_default_sound;
 
 
 /* game specific variables */
-int      ost_support;
+int      ost_support = OST_SUPPORT_DISABLED;
 
 int      ddragon_current_music;
 int      ddragon_stage;
