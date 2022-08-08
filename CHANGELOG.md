@@ -70,6 +70,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * F1 Super Lap (World)
 * Fantasy Zone II - The Tears of Opa-Opa (System 16C version)
 * Final Tetris
+* Fire Hawk
 * FixEight (bootleg)
 * Flying Tiger
 * Frog & Spiders (bootleg)
@@ -135,6 +136,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pack'n Bang Bang
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 * Mature *
+* Penky
 * Pirate Treasure
 * Planet Probe
 * Pochi & Nyaa
@@ -173,6 +175,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Fever High Splitter
 * Space Launcher
 * Space Raider
+* Spectrum 2000 (Euro)
 * Squash
 * Star Fire 2
 * Steel Worker
@@ -877,3 +880,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added partial sound to Passing Shot 4 player bootleg [arcadez, mahoneyt944]
 * Fixed collisions in Golden Axe (Version 2) and improved the irq timers for Body Slam [mahoneyt944]
 * Added Hard Times and Power Balls to the playmark driver, no sound in Hard Times as yet [arcadez]
+* Added Penky to paradise.c plus Fire Hawk and Spectrum 2000 to afega.c [arcadez]
