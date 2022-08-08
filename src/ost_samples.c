@@ -38,7 +38,6 @@ int      m_nba_start_counter;
 bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
-bool     outrun_title;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
@@ -104,7 +103,6 @@ void init_ost_settings(int ost)
       outrun_start = true;
       outrun_diddy = false;
       outrun_title_diddy = false;
-      outrun_title = false;
       outrun_lastwave = false;
       outrun_start_counter = 0;
       break;
@@ -1715,7 +1713,7 @@ bool generate_ost_sound_outrun(int data)
 				if(outrun_start_counter > 5)
 					outrun_title_diddy = false;
 			}
-			else if(outrun_diddy == false && outrun_title_diddy == false && outrun_title == false) {
+			else if(outrun_diddy == false && outrun_title_diddy == false) {
 				ost_start_samples(0, 1, 1);
 				outrun_diddy = true;
 				outrun_start_counter = 1;
