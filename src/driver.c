@@ -5331,6 +5331,7 @@ Other Sun games
 	DRIVER( redhawk )	  /* (c) 1997 */
 	DRIVER( grdnstrm )	/* (c) 1998 */
 	DRIVER( bubl2000 )	/* (c) 1998 Tuning */
+  DRIVER( spec2k )    /* (c) 2000 Yonatech */
 
 	/* ESD games */
 	/* http://www.esdgame.co.kr/english/ */
@@ -5343,6 +5344,7 @@ Other Sun games
 	DRIVER( mchampdxa )	/* (c) 1999 ESD (ver. 1126) */
 	DRIVER( deluxe5 )	/* (c) 2000 ESD (ver. 0107) */
 	DRIVER( tangtang )	/* (c) 2000 ESD (ver. 0526) */
+  DRIVER( firehawk )  /* (c) 2001 ESD */
 	DRIVER( swatpolc )	/* (c) 2001 ESD */
 
 	/* Dyna Electronics / Dynax / Nakanihon games */
