@@ -91,10 +91,21 @@ PALETTE_INIT( grdnstrm )
 #define TILES_PER_PAGE_Y	(0x10)
 #define PAGES_PER_TMAP_X	(0x4)
 #define PAGES_PER_TMAP_Y	(0x4)
+#define FIREHAWK_PAGES_PER_TMAP_X	(0x1)
+#define FIREHAWK_PAGES_PER_TMAP_Y	(0x1)
 
 UINT32 afega_tilemap_scan_pages(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 {
 	return	(row / TILES_PER_PAGE_Y) * TILES_PER_PAGE_X * TILES_PER_PAGE_Y * PAGES_PER_TMAP_X +
+			(row % TILES_PER_PAGE_Y) +
+
+			(col / TILES_PER_PAGE_X) * TILES_PER_PAGE_X * TILES_PER_PAGE_Y +
+			(col % TILES_PER_PAGE_X) * TILES_PER_PAGE_Y;
+}
+
+UINT32 firehawk_tilemap_scan_pages(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+{
+	return	(row / TILES_PER_PAGE_Y) * TILES_PER_PAGE_X * TILES_PER_PAGE_Y * FIREHAWK_PAGES_PER_TMAP_X +
 			(row % TILES_PER_PAGE_Y) +
 
 			(col / TILES_PER_PAGE_X) * TILES_PER_PAGE_X * TILES_PER_PAGE_Y +
@@ -164,6 +175,25 @@ VIDEO_START( afega )
 	return 0;
 }
 
+VIDEO_START( firehawk )
+{
+	tilemap_0 = tilemap_create(	get_tile_info_0, firehawk_tilemap_scan_pages,
+								TILEMAP_OPAQUE,
+								16,16,
+								TILES_PER_PAGE_X*FIREHAWK_PAGES_PER_TMAP_X,TILES_PER_PAGE_Y*FIREHAWK_PAGES_PER_TMAP_Y);
+
+	tilemap_1 = tilemap_create(	get_tile_info_1, tilemap_scan_cols,
+								TILEMAP_TRANSPARENT,
+								8,8,
+								32,32);
+
+	if ( !tilemap_0 || !tilemap_1 )
+		return 1;
+
+	tilemap_set_transparent_pen(tilemap_0,0x0);
+	tilemap_set_transparent_pen(tilemap_1,0xf);
+	return 0;
+}
 
 /***************************************************************************
 
@@ -342,3 +372,13 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,tilemap_1,0,0);
 }
+
+VIDEO_UPDATE( firehawk )
+{
+	tilemap_set_scrolly(tilemap_0, 0, afega_scroll_1[1] + 0x100);
+	tilemap_set_scrollx(tilemap_0, 0, afega_scroll_1[0]);
+
+	tilemap_draw(bitmap,cliprect,tilemap_0,0,0);
+	afega_draw_sprites(bitmap,cliprect);
+}
+
