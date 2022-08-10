@@ -100,6 +100,7 @@
 
 #include "cps1.h"       /* External CPS1 definitions */
 
+extern DRIVER_INIT( my_cps2 );
 /*
 Export this function so that the vidhrdw routine can drive the
 Q-Sound hardware
@@ -6312,7 +6313,7 @@ GAMEX(1995, sfzh,     sfa,     cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fi
 GAMEX(1995, sfzb,     sfa,     cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero (Brazil 951109)", GAME_NOT_WORKING )
 GAME( 1996, 19xx,     0,       cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (USA 951207)" )
 GAMEX(1996, 19xxa,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Asia 951207)", GAME_NOT_WORKING )
-GAMEX(1996, 19xxj,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Japan 951225)", GAME_NOT_WORKING )
+GAMEX(1996, 19xxj,    19xx,    cps2, 19xx, my_cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Japan 951225)", GAME_NOT_WORKING )
 GAME( 1996, 19xxjr1,  19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Japan 951207)" )
 GAME( 1996, 19xxh,    19xx,    cps2, 19xx,    cps2, ROT270, "Capcom", "19XX: The War Against Destiny (Hispanic 951218)" )
 GAMEC( 1996, ddsom,    0,       cps2, ddtod,   cps2, ROT0,   "Capcom", "Dungeons and Dragons: Shadow over Mystara (Euro 960619)", &ddsom_ctrl, &ddsom_bootstrap )
