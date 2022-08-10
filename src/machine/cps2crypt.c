@@ -745,7 +745,9 @@ DRIVER_INIT( my_cps2 )
 {
 	data8_t *m_region_key = (data8_t *)memory_region(REGION_USER5);
 	data16_t *rom = (data16_t *)memory_region(REGION_CPU1);
-	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1);
+//	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1);
+	data16_t *decrypted_opcodes = (data16_t *)auto_malloc(0x0400000);
+
 	if (m_region_key)
 	{
 		uint32_t key[2];
