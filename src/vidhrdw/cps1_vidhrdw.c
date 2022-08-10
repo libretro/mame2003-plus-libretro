@@ -731,7 +731,7 @@ static void unshuffle(UINT64 *buf,int len)
 	}
 }
 
-static void cps2_gfx_decode(void)
+void cps2_gfx_decode(void)
 {
 	const int banksize=0x200000;
 	int size=memory_region_length(REGION_GFX1);
