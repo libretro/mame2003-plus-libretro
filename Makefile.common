@@ -479,7 +479,7 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/kabuki.c \
 	$(CORE_DIR)/vidhrdw/mitchell_vidhrdw.c $(CORE_DIR)/drivers/mitchell.c \
 	$(CORE_DIR)/vidhrdw/cbasebal_vidhrdw.c $(CORE_DIR)/drivers/cbasebal.c \
-	$(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c \
+	$(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c $(CORE_DIR)/machine/cps2crypt.c\
 	$(CORE_DIR)/drivers/zn.c \
 	$(CORE_DIR)/vidhrdw/tms34061_vidhrdw.c \
 	$(CORE_DIR)/machine/capbowl_machine.c $(CORE_DIR)/vidhrdw/capbowl_vidhrdw.c $(CORE_DIR)/drivers/capbowl.c \
