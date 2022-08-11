@@ -2374,10 +2374,16 @@ V-V                           TP-027
 	DRIVER( mmatrixj )	/* 12/04/2000 (c) 2000 Takumi (Japan) */
 	DRIVER( 1944 )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) */
 	DRIVER( 1944j )		/* 20/06/2000 (c) 2000 Eighting/Raizing (Japan) */
+	DRIVER( mpang )	/* 11/10/2000 (c) 2000 Mitchell */
+	DRIVER( mpangr1 )	/* 11/10/2000 (c) 2000 Mitchell */
+	DRIVER( mpangu )	/* 11/10/2000 (c) 2000 Mitchell */
 	DRIVER( mpangj )	/* 11/10/2000 (c) 2000 Mitchell */
+	DRIVER( mpanga )	/* 11/10/2000 (c) 2000 Mitchell */
 	DRIVER( progear )	/* 17/01/2001 (c) 2001 Cave (US) */
 	DRIVER( progearj )	/* 17/01/2001 (c) 2001 Cave (Japan) */
+	DRIVER( pzloop2 )	/* 05/02/2001 (c) 2001 Mitchell */
 	DRIVER( pzloop2j )	/* 05/02/2001 (c) 2001 Mitchell */
+	DRIVER( pzloop2jr1 )	/* 05/02/2001 (c) 2001 Mitchell */
 
 
 
