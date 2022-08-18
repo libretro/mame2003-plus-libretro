@@ -10,6 +10,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * 96 Flag Rally
 * 1943 - The Battle Of Midway Mark II
+* 19XX: The War Against Destiny (All Sets)
 * 1945k III
 * Action Fighter (Unprotected)
 * Action Hollywood
@@ -95,7 +96,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hoops '96
 * Hypernoid
 * Hyper Crash
-* Hyper Street Fighter II (Asia)
+* Hyper Street Fighter II (All Sets)
 * In Your Face
 * Inca * Mature *
 * Indian Battle
@@ -119,6 +120,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Megumi Rescue
 * Metal Slug 4
 * Metal Slug 5
+* Mighty Pang (All Sets)
 * Mighty Warriors
 * Mirax
 * Mobile Suit Gundam Final Shooting
@@ -146,7 +148,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Instinct Matrimelee
 * Power Up Baseball
 * Progear
-* Puzz Loop 2
+* Puzz Loop 2 (All Sets)
 * Puzzle Break
 * Puzzle Star
 * Racing Beat
@@ -881,3 +883,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed collisions in Golden Axe (Version 2) and improved the irq timers for Body Slam [mahoneyt944]
 * Added Hard Times and Power Balls to the playmark driver, no sound in Hard Times as yet [arcadez]
 * Added Penky to paradise.c plus Fire Hawk and Spectrum 2000 to afega.c [arcadez]
+* Added new style MAME cps2 decryption many more Capcom Play System 2 sets are now supported and more games are now playable [MistyDreams]
