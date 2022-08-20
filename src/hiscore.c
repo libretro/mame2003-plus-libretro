@@ -181,8 +181,10 @@ static void hs_load (void)
 					enough to be dynamically allocated, but let's
 					avoid memory trashing just in case
 				*/
-				mame_fread (f, data, mem_range->num_bytes);
-				copy_to_memory (mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+				if (mem_range->num_bytes == mame_fread (f, data, mem_range->num_bytes))
+				{
+					copy_to_memory (mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+				}
 				free (data);
 			}
 			mem_range = mem_range->next;
