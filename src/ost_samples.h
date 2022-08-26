@@ -22,6 +22,8 @@ enum
 extern bool ost_support_enabled (int ost);
 extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
+#define MDRV_INSTALL_OST_SUPPORT(ost)	/
+	install_ost_support(machine, ost);	/
 
 extern struct Samplesinterface ost_ddragon;
 extern struct Samplesinterface ost_ffight;
