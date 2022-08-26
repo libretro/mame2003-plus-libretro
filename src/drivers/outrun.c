@@ -1150,8 +1150,7 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k)
 
 	// Lets add our Out Run music sample packs.
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-	init_ost_settings(OST_SUPPORT_OUTRUN);
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_OUTRUN)
 MACHINE_DRIVER_END
 
 #if 0

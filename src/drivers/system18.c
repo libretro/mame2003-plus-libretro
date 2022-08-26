@@ -1315,8 +1315,8 @@ static MACHINE_DRIVER_START( moonwalk )
 	MDRV_CPU_MEMORY(moonwalk_readmem,moonwalk_writemem)
 
 	MDRV_MACHINE_INIT(moonwalk)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
-	init_ost_settings(OST_SUPPORT_MOONWALKER);
+
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_MOONWALKER)
 MACHINE_DRIVER_END
 
 

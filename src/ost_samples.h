@@ -20,18 +20,10 @@ enum
 
 
 extern bool ost_support_enabled (int ost);
-extern void init_ost_settings (int ost);
+extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
-
-extern struct Samplesinterface ost_ddragon;
-extern struct Samplesinterface ost_ffight;
-extern struct Samplesinterface ost_mk;
-extern struct Samplesinterface ost_moonwalker;
-extern struct Samplesinterface ost_nba_jam;
-extern struct Samplesinterface ost_outrun;
-extern struct Samplesinterface ost_sf1;
-extern struct Samplesinterface ost_sf2;
-
+#define MDRV_INSTALL_OST_SUPPORT(ost)		\
+	install_ost_support(machine, ost);		\
 
 extern bool generate_ost_sound_ddragon    (int data);
 extern bool generate_ost_sound_ffight     (int data);

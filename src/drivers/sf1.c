@@ -865,8 +865,7 @@ static MACHINE_DRIVER_START( sf1 )
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 
 	// Lets add our SF1 music sample packs.
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
-	init_ost_settings(OST_SUPPORT_SF1);
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_SF1)
 MACHINE_DRIVER_END
 
 
