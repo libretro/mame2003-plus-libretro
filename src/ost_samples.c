@@ -67,30 +67,36 @@ void init_ost_settings(int ost)
   switch(ost)
   {
     case OST_SUPPORT_DDRAGON:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
       ddragon_current_music = 0;
       ddragon_stage = 0;
       d_title_counter = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
       ff_alternate_song_1 = false;
       ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_MK:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
       /* no settings */
       break;
 
     case OST_SUPPORT_MK_T:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
       /* no settings */
       break;
 
     case OST_SUPPORT_MOONWALKER:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
       moon_diddy = false;
       mj_current_music = 0;
       break;
 
     case OST_SUPPORT_NBA_JAM:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
       nba_jam_title_screen = false;
       nba_jam_select_screen = false;
       nba_jam_intermission = false;
@@ -102,6 +108,7 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_OUTRUN:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
       outrun_start = true;
       outrun_diddy = false;
       outrun_title_diddy = false;
@@ -110,11 +117,13 @@ void init_ost_settings(int ost)
       break;
 
     case OST_SUPPORT_SF1:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
       sf1_start = true;
       sf1_won = false;
       break;
 
     case OST_SUPPORT_SF2:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
       fadingMusic = false;
       break;
   }
