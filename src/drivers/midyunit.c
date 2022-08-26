@@ -1018,8 +1018,7 @@ static MACHINE_DRIVER_START( mk )
 
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
-	init_ost_settings(OST_SUPPORT_MK);
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_MK)
 MACHINE_DRIVER_END
 
 
