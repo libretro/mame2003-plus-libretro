@@ -20,7 +20,7 @@ enum
 
 
 extern bool ost_support_enabled (int ost);
-extern void init_ost_settings (struct InternalMachineDriver *machine, int ost);
+extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
 
 extern struct Samplesinterface ost_ddragon;
