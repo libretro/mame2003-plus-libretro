@@ -59,7 +59,7 @@ bool ost_support_enabled(int ost)
 }
 
 
-void init_ost_settings(struct InternalMachineDriver *machine, int ost)
+void install_ost_support(struct InternalMachineDriver *machine, int ost)
 {
   /* set */
   ost_support = ost;
