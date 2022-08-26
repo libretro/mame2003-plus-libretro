@@ -658,8 +658,7 @@ static MACHINE_DRIVER_START( mk )
 
 	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
-	init_ost_settings(OST_SUPPORT_MK_T);
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_MK_T)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
@@ -670,8 +669,7 @@ static MACHINE_DRIVER_START( nbajam )
 
 	/* Lets add our NBA Jam music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
-	init_ost_settings(OST_SUPPORT_NBA_JAM);
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_NBA_JAM)
 MACHINE_DRIVER_END
 
 
