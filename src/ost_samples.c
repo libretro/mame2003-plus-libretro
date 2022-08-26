@@ -49,6 +49,7 @@ bool     fadingMusic;
 
 bool ost_support_enabled(int ost)
 {
+  if (!options.use_samples) return false;
   if (!options.use_alt_sound) return false;
   if (!options.content_flags[CONTENT_ALT_SOUND]) return false;
 
