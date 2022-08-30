@@ -23,7 +23,6 @@ int      d_title_counter;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     ikari_start;
 bool     ikari_glory;
 
 bool     moon_diddy;
@@ -519,7 +518,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
-      ikari_start = true;
       ikari_glory = false;
       break;
 
@@ -897,12 +895,6 @@ bool generate_ost_sound_ikari(int data)
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
-
-	if(ikari_start == true) {
-		ikari_start = false;
-		ikari_glory = false;
-		ost_start_samples(0, 1, 1);
-	}
 
 	switch (data) {
 		// Title Demo
