@@ -898,7 +898,7 @@ bool generate_ost_sound_ikari(int data)
 			break;
 
 		// Credit
-		/*case 0x90:
+		/*case 0xBF:
 			ost_start_samples(2, 3, 1);
 			break;*/
 
