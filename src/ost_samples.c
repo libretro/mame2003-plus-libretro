@@ -23,6 +23,9 @@ int      d_title_counter;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
+bool     ikari_start;
+bool     ikari_glory;
+
 bool     moon_diddy;
 int      mj_current_music;
 
@@ -277,6 +280,50 @@ const char *const outrun_sample_set_names[] =
 	0
 };
 
+const char *const sf1_sample_set_names[] =
+{
+	"*sf1",
+	"retsu-01",
+	"retsu-02",
+	"geki-01",
+	"geki-02",
+	"joe-01",
+	"joe-02",
+	"mike-01",
+	"mike-02",
+	"birdie-01",
+	"birdie-02",
+	"eagle-01",
+	"eagle-02",
+	"lee-01",
+	"lee-02",
+	"gen-01",
+	"gen-02",
+	"adon-01",
+	"adon-02",
+	"sagat-01",
+	"sagat-02",
+	"ending-01",
+	"ending-02",
+	"vs-01",
+	"vs-02",
+	"select-01",
+	"select-02",
+	"credits-01",
+	"credits-02",
+	"bonus1-01",
+	"bonus1-02",
+	"bonus2-01",
+	"bonus2-02",
+	"score-01",
+	"score-02",
+	"theend-01",
+	"theend-02",
+	"won-01",
+	"won-02",
+	0
+};
+
 const char *const sf2_sample_set_names[] =
 {
 	"*sf2",
@@ -370,50 +417,6 @@ const char *const sf2_sample_set_names[] =
 	"chunliendinga-02",
 	"chunliendingb-01",
 	"chunliendingb-02",
-	0
-};
-
-const char *const sf1_sample_set_names[] =
-{
-	"*sf1",
-	"retsu-01",
-	"retsu-02",
-	"geki-01",
-	"geki-02",
-	"joe-01",
-	"joe-02",
-	"mike-01",
-	"mike-02",
-	"birdie-01",
-	"birdie-02",
-	"eagle-01",
-	"eagle-02",
-	"lee-01",
-	"lee-02",
-	"gen-01",
-	"gen-02",
-	"adon-01",
-	"adon-02",
-	"sagat-01",
-	"sagat-02",
-	"ending-01",
-	"ending-02",
-	"vs-01",
-	"vs-02",
-	"select-01",
-	"select-02",
-	"credits-01",
-	"credits-02",
-	"bonus1-01",
-	"bonus1-02",
-	"bonus2-01",
-	"bonus2-02",
-	"score-01",
-	"score-02",
-	"theend-01",
-	"theend-02",
-	"won-01",
-	"won-02",
 	0
 };
 
@@ -516,6 +519,8 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
+      ikari_start = true;
+      ikari_glory = false;
       break;
 
     case OST_SUPPORT_MK:
@@ -890,6 +895,68 @@ bool generate_ost_sound_ikari(int data)
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
+
+	if(ikari_start == true) {
+		ikari_start = false;
+		ikari_glory = false;
+		ost_start_samples(0, 1, 1);
+	}
+
+	switch (data) {
+		// Title Demo
+		case 0x70:
+			ikari_glory = false;
+			ost_start_samples(0, 1, 1);
+			break;
+
+		// Credit
+		case 0x90:
+			ikari_glory = false;
+			ost_start_samples(2, 3, 1);
+			break;
+
+		// Force landing
+		case 0xA5:
+			ikari_glory = false;
+			ost_start_samples(4, 5, 1);
+			break;
+
+		// Theme of Ikari
+		case 0x41:
+			ikari_glory = false;
+			ost_start_samples(6, 7, 1);
+			break;
+
+		// Gate
+		case 0x48:
+			ikari_glory = false;
+			ost_start_samples(8, 9, 1);
+			break;
+
+		// Victory
+		case 0x68:
+			ikari_glory = false;
+			ost_start_samples(10, 11, 1);
+			break;
+
+		// Game Over and Glory
+		case 0x60:
+			if(ikari_glory == false) {
+				ikari_glory = true;
+				ost_start_samples(12, 13, 1);
+			}
+			else
+				return 0; /* do nothing */
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
 }
 
 bool generate_ost_sound_mk(int data)
