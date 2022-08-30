@@ -23,9 +23,6 @@ int      d_title_counter;
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     ikari_start;
-bool     ikari_glory;
-
 bool     moon_diddy;
 int      mj_current_music;
 
@@ -519,8 +516,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
-      ikari_start = true;
-      ikari_glory = false;
       break;
 
     case OST_SUPPORT_MK:
@@ -896,57 +891,40 @@ bool generate_ost_sound_ikari(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	if(ikari_start == true) {
-		ikari_start = false;
-		ikari_glory = false;
-		ost_start_samples(0, 1, 1);
-	}
-
 	switch (data) {
 		// Title Demo
 		case 0x70:
-			ikari_glory = false;
 			ost_start_samples(0, 1, 1);
 			break;
 
 		// Credit
-		case 0x90:
-			ikari_glory = false;
+		/*case 0x90:
 			ost_start_samples(2, 3, 1);
-			break;
+			break;*/
 
 		// Force landing
 		case 0xA5:
-			ikari_glory = false;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		// Theme of Ikari
 		case 0x41:
-			ikari_glory = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		// Gate
 		case 0x48:
-			ikari_glory = false;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		// Victory
 		case 0x68:
-			ikari_glory = false;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		// Game Over and Glory
 		case 0x60:
-			if(ikari_glory == false) {
-				ikari_glory = true;
-				ost_start_samples(12, 13, 1);
-			}
-			else
-				return 0; /* do nothing */
+			ost_start_samples(12, 13, 1);
 			break;
 
 		default:
