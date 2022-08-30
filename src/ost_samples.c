@@ -514,6 +514,10 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
       ff_alternate_song_2 = false;
       break;
 
+    case OST_SUPPORT_IKARI:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
+      break;
+
     case OST_SUPPORT_MK:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
       /* no settings */
