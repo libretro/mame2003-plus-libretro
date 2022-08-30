@@ -139,6 +139,26 @@ const char *const ffight_sample_set_names[] =
 	0
 };
 
+const char *const ikari_sample_set_names[] =
+{
+	"*ikari",
+	"title-01",
+	"title-02",
+	"credit-01",
+	"credit-02",
+	"landing-01",
+	"landing-02",
+	"theme-01",
+	"theme-02",
+	"gate-01",
+	"gate-02",
+	"victory-01",
+	"victory-02",
+	"glory-01",
+	"glory-02",
+	0
+};
+
 const char *const mk_sample_set_names[] =
 {
 	"*mk",
@@ -397,26 +417,6 @@ const char *const sf1_sample_set_names[] =
 	0
 };
 
-const char *const ikari_sample_set_names[] =
-{
-	"*ikari",
-	"title-01",
-	"title-02",
-	"credit-01",
-	"credit-02",
-	"landing-01",
-	"landing-02",
-	"theme-01",
-	"theme-02",
-	"gate-01",
-	"gate-02",
-	"victory-01",
-	"victory-02",
-	"glory-01",
-	"glory-02",
-	0
-};
-
 
 struct Samplesinterface ost_ddragon =
 {
@@ -430,6 +430,13 @@ struct Samplesinterface ost_ffight =
 	2,	/* 2 channels*/
 	100, /* volume*/
 	ffight_sample_set_names
+};
+
+struct Samplesinterface ost_ikari =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	ikari_sample_set_names
 };
 
 struct Samplesinterface ost_mk =
@@ -472,13 +479,6 @@ struct Samplesinterface ost_sf2 =
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf2_sample_set_names
-};
-
-struct Samplesinterface ost_ikari =
-{
-	2,	/* 2 channels*/
-	100, /* volume*/
-	ikari_sample_set_names
 };
 
 
@@ -879,6 +879,13 @@ bool generate_ost_sound_ffight(int data)
 	ost_mix_samples();
 
 	return schedule_default_sound;
+}
+
+bool generate_ost_sound_ikari(int data)
+{
+	/* initialize game config */
+	schedule_default_sound = false;
+	sa_volume = 100;
 }
 
 bool generate_ost_sound_mk(int data)
