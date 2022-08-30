@@ -9,6 +9,7 @@ enum
   OST_SUPPORT_DISABLED = 0,
   OST_SUPPORT_DDRAGON,
   OST_SUPPORT_FFIGHT,
+  OST_SUPPORT_IKARI,
   OST_SUPPORT_MK,
   OST_SUPPORT_MK_T,
   OST_SUPPORT_MOONWALKER,
@@ -27,6 +28,7 @@ extern void install_ost_support (struct InternalMachineDriver *machine, int ost)
 
 extern bool generate_ost_sound_ddragon    (int data);
 extern bool generate_ost_sound_ffight     (int data);
+extern bool generate_ost_sound_ikari      (int data);
 extern bool generate_ost_sound_mk         (int data);
 extern bool generate_ost_sound_mk_tunit   (int data);
 extern bool generate_ost_sound_moonwalker (int data);

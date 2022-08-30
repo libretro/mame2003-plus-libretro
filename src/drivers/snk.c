@@ -219,6 +219,7 @@ Credits (in alphabetical order)
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "snk.h"
+#include "ost_samples.h"
 
 /*********************************************************************/
 /* Variables and Interrupt Handlers Common to All SNK Triple Z80 Games*/
@@ -491,7 +492,12 @@ static struct YM3812interface ym3812_interface = {
 
 static WRITE_HANDLER( snk_soundlatch_w ){
 	snk_sound_register |= 0x08 | 0x04;
-	soundlatch_w( offset, data );
+
+	if( ost_support_enabled(OST_SUPPORT_IKARI) ) {
+		if(generate_ost_sound_ikari( data )) soundlatch_w( offset, data );
+	}
+	else
+		soundlatch_w( offset, data );
 }
 
 static READ_HANDLER( snk_soundlatch_clear_r ){ /* TNK3 */
@@ -1109,6 +1115,8 @@ static MACHINE_DRIVER_START( ikari )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM3526, ym3526_ym3526_interface)
+
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_IKARI)
 MACHINE_DRIVER_END
 
 
