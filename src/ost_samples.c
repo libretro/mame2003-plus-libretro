@@ -904,10 +904,10 @@ bool generate_ost_sound_ikari(int data)
 			break;
 
 		// Credit
-		case 0x90:
+		/*case 0x90:
 			ikari_glory = false;
 			ost_start_samples(2, 3, 1);
-			break;
+			break;*/
 
 		// Force landing
 		case 0xA5:
@@ -935,7 +935,7 @@ bool generate_ost_sound_ikari(int data)
 
 		// Game Over and Glory
 		case 0x60:
-			if(ikari_glory == false) {
+			if(/*ikari_glory == false*/1) {
 				ikari_glory = true;
 				ost_start_samples(12, 13, 1);
 			}
