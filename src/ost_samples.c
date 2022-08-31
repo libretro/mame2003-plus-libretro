@@ -946,7 +946,10 @@ bool generate_ost_sound_ikari(int data)
 
 		// Game Over and Glory
 		case 0x60:
-			ost_start_samples(12, 13, 1);
+			if (!ost_last_played(10, 11)) /* ignore if playing Victory */
+				ost_start_samples(12, 13, 1);
+			else
+				return 0; /* do nothing */
 			break;
 
 		default:
