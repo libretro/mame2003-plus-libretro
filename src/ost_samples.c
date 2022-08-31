@@ -10,6 +10,8 @@
 
 /* ost configuration */
 static int  sa_volume;
+static int  last_left;
+static int  last_right;
 static bool schedule_default_sound;
 
 
@@ -51,6 +53,8 @@ bool     fadingMusic;
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
+static void ost_set_last_played(int sa_left, int sa_right);
+static bool ost_last_played(int sa_left, int sa_right);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -575,6 +579,8 @@ static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 
   sample_start(0, sa_left, sa_loop);
   sample_start(1, sa_right, sa_loop);
+
+  ost_set_last_played(sa_left, sa_right);
 }
 
 
@@ -607,6 +613,20 @@ static void ost_mix_samples(void)
     ddragon_current_music = 0;
     mj_current_music = 0;
   }
+}
+
+static void ost_set_last_played(int sa_left, int sa_right)
+{
+  last_left  = sa_left;
+  last_right = sa_right;
+}
+
+static bool ost_last_played(int sa_left, int sa_right)
+{
+  if ( (last_left == sa_left) && (last_right == sa_right) )
+    return true;
+
+  return false;
 }
 
 
