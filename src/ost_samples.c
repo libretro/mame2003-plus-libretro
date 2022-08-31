@@ -615,11 +615,13 @@ static void ost_mix_samples(void)
   }
 }
 
+
 static void ost_set_last_played(int sa_left, int sa_right)
 {
   last_left  = sa_left;
   last_right = sa_right;
 }
+
 
 static bool ost_last_played(int sa_left, int sa_right)
 {
