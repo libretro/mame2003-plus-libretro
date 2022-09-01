@@ -16,9 +16,6 @@
 	than just ram.  Beast Busters has 4 sprite chips as it has two sprite
 	banks.
 
-	Todo: Sprite priority looks to be wrong on level 2 (some sprites should
-	be behind the playfield).
-
 ***************************************************************************/
 
 #include "driver.h"
@@ -202,25 +199,27 @@ static void bbusters_draw_block(struct mame_bitmap *dest,int x,int y,int size,in
 	}
 }
 
-static void draw_sprites(struct mame_bitmap *bitmap, const data16_t *source, int bank, int colval, int colmask)
+static void draw_sprites(struct mame_bitmap *bitmap, const data16_t *source, int bank, int pass)
 {
 	const data8_t *scale_table=memory_region(REGION_USER1);
 	int offs;
 
 	for (offs = 0;offs <0x800 ;offs += 4) {
-		int x,y,sprite,colour,fx,fy,scale;
+		int x,sprite,colour,fx,fy,scale;
+		INT16 y;
 		int block;
 
 	    sprite=source[offs+1];
 	    colour=source[offs+0];
 
-		if (colour==0xf7 && (sprite==0x3fff || sprite==0xffff))
-			continue;
+	    if ((colour==0xf7 || colour==0xffff || colour == 0x43f9) && (sprite==0x3fff || sprite==0xffff || sprite==0x0001))
+			continue; /* sprite 1, color 0x43f9 is the dead sprite in the top-right of the screen in Mechanized Attack's High Score table. */
 
 	    y=source[offs+3];
 		/* if (y>254) continue;  Speedup */
 	    x=source[offs+2];
 		if (x&0x200) x=-(0x100-(x&0xff));
+		if (y > 320 || y < -256) y &= 0x1ff; /* fix for bbusters ending & "Zing!" attract-mode fullscreen zombie & Helicopter on the 3rd rotation of the attractmode sequence */
 		/* if (x>256) continue;  Speedup */
 
 		/*
@@ -245,7 +244,11 @@ static void draw_sprites(struct mame_bitmap *bitmap, const data16_t *source, int
 		fx=source[offs+0]&0x800;
 	    sprite=sprite&0x3fff;
 
-		if ((colour&colmask)!=colval)
+		/* Palettes 0xc-0xf confirmed to be behind tilemap on Beast Busters */
+		if (pass==1 && (colour&0xc)!=0xc)
+			continue;
+		
+		if (pass==0 && (colour&0xc)==0xc)
 			continue;
 
 		switch ((source[offs+0]>>8)&0x3) {
@@ -287,10 +290,10 @@ VIDEO_UPDATE( bbuster )
 	tilemap_set_scrolly( pf2_tilemap,0, bbuster_pf2_scroll_data[1] );
 
 	tilemap_draw(bitmap,cliprect,pf2_tilemap,0,0);
-/*	draw_sprites(bitmap,buffered_spriteram16_2,2,0x8,0x8);*/
+	draw_sprites(bitmap,buffered_spriteram16_2,2,1);
 	tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
-	draw_sprites(bitmap,buffered_spriteram16_2,2,0,0);
-	draw_sprites(bitmap,buffered_spriteram16,1,0,0);
+	draw_sprites(bitmap,buffered_spriteram16_2,2,0);
+	draw_sprites(bitmap,buffered_spriteram16,1,-1);
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 
 	draw_crosshair(1, bitmap,readinputport(6),readinputport(5),cliprect);
@@ -307,7 +310,7 @@ VIDEO_UPDATE( mechatt )
 
 	tilemap_draw(bitmap,cliprect,pf2_tilemap,0,0);
 	tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
-	draw_sprites(bitmap,buffered_spriteram16,1,0,0);
+	draw_sprites(bitmap,buffered_spriteram16,1,-1);
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 
 	draw_crosshair(1, bitmap,readinputport(2),readinputport(3),cliprect);
