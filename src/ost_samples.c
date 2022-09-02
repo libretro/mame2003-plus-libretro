@@ -10,6 +10,8 @@
 
 /* ost configuration */
 static int  sa_volume;
+static int  last_left;
+static int  last_right;
 static bool schedule_default_sound;
 
 
@@ -51,6 +53,8 @@ bool     fadingMusic;
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
+static void ost_set_last_played(int sa_left, int sa_right);
+static bool ost_last_played(int sa_left, int sa_right);
 
 
 const char *const ddragon_sample_set_names[] =
@@ -144,8 +148,6 @@ const char *const ikari_sample_set_names[] =
 	"*ikari",
 	"title-01",
 	"title-02",
-	"credit-01",
-	"credit-02",
 	"landing-01",
 	"landing-02",
 	"theme-01",
@@ -575,6 +577,8 @@ static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 
   sample_start(0, sa_left, sa_loop);
   sample_start(1, sa_right, sa_loop);
+
+  ost_set_last_played(sa_left, sa_right);
 }
 
 
@@ -607,6 +611,22 @@ static void ost_mix_samples(void)
     ddragon_current_music = 0;
     mj_current_music = 0;
   }
+}
+
+
+static void ost_set_last_played(int sa_left, int sa_right)
+{
+  last_left  = sa_left;
+  last_right = sa_right;
+}
+
+
+static bool ost_last_played(int sa_left, int sa_right)
+{
+  if ( (last_left == sa_left) && (last_right == sa_right) )
+    return true;
+
+  return false;
 }
 
 
@@ -897,34 +917,33 @@ bool generate_ost_sound_ikari(int data)
 			ost_start_samples(0, 1, 1);
 			break;
 
-		// Credit
-		/*case 0xBF:
-			ost_start_samples(2, 3, 1);
-			break;*/
-
-		// Force landing
+		// Force landing - it's up to you
 		case 0xA5:
-			ost_start_samples(4, 5, 1);
+			schedule_default_sound = true;
+			ost_start_samples(2, 3, 0);
 			break;
 
 		// Theme of Ikari
 		case 0x41:
-			ost_start_samples(6, 7, 1);
+			ost_start_samples(4, 5, 1);
 			break;
 
 		// Gate
 		case 0x48:
-			ost_start_samples(8, 9, 1);
+			ost_start_samples(6, 7, 1);
 			break;
 
 		// Victory
 		case 0x68:
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(8, 9, 1);
 			break;
 
 		// Game Over and Glory
 		case 0x60:
-			ost_start_samples(12, 13, 1);
+			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
+				ost_start_samples(10, 11, 1);
+			else
+				return 0; /* do nothing */
 			break;
 
 		default:
