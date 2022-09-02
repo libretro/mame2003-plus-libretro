@@ -914,7 +914,10 @@ bool generate_ost_sound_ikari(int data)
 	switch (data) {
 		// Title Demo
 		case 0x70:
-			ost_start_samples(0, 1, 1);
+			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
+				ost_start_samples(0, 1, 1);
+			else
+				return 0; /* do nothing */
 			break;
 
 		// Force landing - it's up to you
@@ -935,7 +938,10 @@ bool generate_ost_sound_ikari(int data)
 
 		// Victory
 		case 0x68:
-			ost_start_samples(8, 9, 1);
+			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invisibility is active */
+				ost_start_samples(8, 9, 1);
+			else
+				return 0; /* do nothing */
 			break;
 
 		// Game Over and Glory
