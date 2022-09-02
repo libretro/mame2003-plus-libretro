@@ -2009,7 +2009,7 @@ bool generate_ost_sound_sf1(int data)
 		// the end?
 		case 0x3E:
 			sf1_won = false;
-			ost_start_samples(34, 35, 1);
+			ost_start_samples(34, 35, 0);
 			break;
 
 		// Won
