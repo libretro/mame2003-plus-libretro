@@ -44,7 +44,6 @@ bool     outrun_lastwave;
 int      outrun_start_counter;
 
 bool     sf1_start;
-bool     sf1_won;
 
 bool     fadingMusic;
 
@@ -316,8 +315,6 @@ const char *const sf1_sample_set_names[] =
 	"bonus2-02",
 	"score-01",
 	"score-02",
-	"theend-01",
-	"theend-02",
 	"won-01",
 	"won-02",
 	0
@@ -560,7 +557,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_SF1:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
       sf1_start = true;
-      sf1_won = false;
       break;
 
     case OST_SUPPORT_SF2:
@@ -1899,127 +1895,98 @@ bool generate_ost_sound_sf1(int data)
 
 	if(sf1_start == true) {
 		sf1_start = false;
-		sf1_won = false;
 		ost_start_samples(0, 1, 1);
 	}
 
 	switch (data) {
 		// Retsu
 		case 0x28:
-			sf1_won = false;
 			ost_start_samples(0, 1, 1);
 			break;
 
 		// Geki
 		case 0x29:
-			sf1_won = false;
 			ost_start_samples(2, 3, 1);
 			break;
 
 		// Joe
 		case 0x2A:
-			sf1_won = false;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		// Mike
 		case 0x2B:
-			sf1_won = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		// Birdie
 		case 0x2C:
-			sf1_won = false;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		// Eagle
 		case 0x2D:
-			sf1_won = false;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		// Lee
 		case 0x2E:
-			sf1_won = false;
 			ost_start_samples(12, 13, 1);
 			break;
 
 		// Gen
 		case 0x2F:
-			sf1_won = false;
 			ost_start_samples(14, 15, 1);
 			break;
 
 		// Adon
 		case 0x30:
-			sf1_won = false;
 			ost_start_samples(16, 17, 1);
 			break;
 
 		// Sagat
 		case 0x31:
-			sf1_won = false;
 			ost_start_samples(18, 19, 1);
 			break;
 
 		// Ending
 		case 0x32:
-			sf1_won = false;
-			ost_start_samples(20, 21, 1);
+			ost_start_samples(20, 21, 0);
 			break;
 
 		// VS
 		case 0x33:
-			sf1_won = false;
 			ost_start_samples(22, 23, 1);
 			break;
 
 		// Stage Select
 		case 0x34:
-			sf1_won = false;
 			ost_start_samples(24, 25, 1);
 			break;
 
 		// Credits
 		case 0x36:
-			sf1_won = false;
 			ost_start_samples(26, 27, 1);
 			break;
 
 		// Bonus 1
 		case 0x3A:
-			sf1_won = false;
 			ost_start_samples(28, 29, 1);
 			break;
 
 		// Bonus 2
 		case 0x3B:
-			sf1_won = false;
 			ost_start_samples(30, 31, 1);
 			break;
 
 		// Score
 		case 0x3C:
-			sf1_won = false;
 			ost_start_samples(32, 33, 1);
-			break;
-
-		// the end?
-		case 0x3E:
-			sf1_won = false;
-			ost_start_samples(34, 35, 0);
 			break;
 
 		// Won
 		case 0x37:
-			if(sf1_won == false) {
-				sf1_won = true;
-				ost_start_samples(36, 37, 1);
-			}
-			else
-				return 0; /* do nothing */
+			ost_start_samples(34, 35, 0);
 			break;
 
 		default:
