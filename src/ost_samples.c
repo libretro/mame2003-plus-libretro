@@ -938,7 +938,7 @@ bool generate_ost_sound_ikari(int data)
 
 		// Victory
 		case 0x68:
-			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invisibility is active */
+			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invincibility is active */
 				ost_start_samples(8, 9, 1);
 			else
 				return 0; /* do nothing */
