@@ -148,8 +148,6 @@ const char *const ikari_sample_set_names[] =
 	"*ikari",
 	"title-01",
 	"title-02",
-	"credit-01",
-	"credit-02",
 	"landing-01",
 	"landing-02",
 	"theme-01",
@@ -919,35 +917,31 @@ bool generate_ost_sound_ikari(int data)
 			ost_start_samples(0, 1, 1);
 			break;
 
-		// Credit
-		/*case 0xBF:
-			ost_start_samples(2, 3, 1);
-			break;*/
-
-		// Force landing
+		// Force landing - it's up to you
 		case 0xA5:
-			ost_start_samples(4, 5, 1);
+			schedule_default_sound = true;
+			ost_start_samples(2, 3, 0);
 			break;
 
 		// Theme of Ikari
 		case 0x41:
-			ost_start_samples(6, 7, 1);
+			ost_start_samples(4, 5, 1);
 			break;
 
 		// Gate
 		case 0x48:
-			ost_start_samples(8, 9, 1);
+			ost_start_samples(6, 7, 1);
 			break;
 
 		// Victory
 		case 0x68:
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(8, 9, 1);
 			break;
 
 		// Game Over and Glory
 		case 0x60:
-			if (!ost_last_played(10, 11)) /* ignore if playing Victory */
-				ost_start_samples(12, 13, 1);
+			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
+				ost_start_samples(10, 11, 1);
 			else
 				return 0; /* do nothing */
 			break;
