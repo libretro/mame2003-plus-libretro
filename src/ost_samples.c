@@ -307,8 +307,6 @@ const char *const sf1_sample_set_names[] =
 	"vs-02",
 	"select-01",
 	"select-02",
-	"credits-01",
-	"credits-02",
 	"bonus1-01",
 	"bonus1-02",
 	"bonus2-01",
@@ -911,7 +909,7 @@ bool generate_ost_sound_ikari(int data)
 		// Title Demo
 		case 0x70:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
-				ost_start_samples(0, 1, 1);
+				ost_start_samples(0, 1, 0);
 			else
 				return 0; /* do nothing */
 			break;
@@ -935,7 +933,7 @@ bool generate_ost_sound_ikari(int data)
 		// Victory
 		case 0x68:
 			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invincibility is active */
-				ost_start_samples(8, 9, 1);
+				ost_start_samples(8, 9, 0);
 			else
 				return 0; /* do nothing */
 			break;
@@ -943,7 +941,7 @@ bool generate_ost_sound_ikari(int data)
 		// Game Over and Glory
 		case 0x60:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
-				ost_start_samples(10, 11, 1);
+				ost_start_samples(10, 11, 0);
 			else
 				return 0; /* do nothing */
 			break;
@@ -1964,29 +1962,24 @@ bool generate_ost_sound_sf1(int data)
 			ost_start_samples(24, 25, 1);
 			break;
 
-		// Credits
-		case 0x36:
-			ost_start_samples(26, 27, 1);
-			break;
-
 		// Bonus 1
 		case 0x3A:
-			ost_start_samples(28, 29, 1);
+			ost_start_samples(26, 27, 1);
 			break;
 
 		// Bonus 2
 		case 0x3B:
-			ost_start_samples(30, 31, 1);
+			ost_start_samples(28, 29, 1);
 			break;
 
 		// Score
 		case 0x3C:
-			ost_start_samples(32, 33, 1);
+			ost_start_samples(30, 31, 1);
 			break;
 
 		// Won
 		case 0x37:
-			ost_start_samples(34, 35, 0);
+			ost_start_samples(32, 33, 0);
 			break;
 
 		default:
