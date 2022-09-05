@@ -1,15 +1,15 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-unsigned char *blktiger_txvideoram;
+UINT8 *blktiger_txvideoram;
 
 #define BGRAM_BANK_SIZE 0x1000
 #define BGRAM_BANKS 4
 
-static int blktiger_scroll_bank;
-static unsigned char *scroll_ram;
-static int screen_layout;
-static int chon,objon,bgon;
+static UINT32 blktiger_scroll_bank;
+static UINT8 *scroll_ram;
+static UINT8 screen_layout;
+static UINT8 chon,objon,bgon;
 
 static struct tilemap *tx_tilemap,*bg_tilemap8x4,*bg_tilemap4x8;
 
@@ -38,12 +38,12 @@ static void get_bg_tile_info(int tile_index)
 	   was not derived from a PROM so it could be wrong. */
 	static int split_table[16] =
 	{
-		3,3,0,0,
-		0,0,0,0,
+		3,0,2,2,	/* the fourth could be 1 instead of 2 */
+		0,1,0,0,
 		0,0,0,0,
 		0,0,0,0
 	};
-	unsigned char attr = scroll_ram[2*tile_index + 1];
+	UINT8 attr = scroll_ram[2*tile_index + 1];
 	int color = (attr & 0x78) >> 3;
 	SET_TILE_INFO(
 			1,
@@ -54,7 +54,7 @@ static void get_bg_tile_info(int tile_index)
 
 static void get_tx_tile_info(int tile_index)
 {
-	unsigned char attr = blktiger_txvideoram[tile_index + 0x400];
+	UINT8 attr = blktiger_txvideoram[tile_index + 0x400];
 	SET_TILE_INFO(
 			0,
 			blktiger_txvideoram[tile_index] + ((attr & 0xe0) << 3),
@@ -77,8 +77,6 @@ VIDEO_START( blktiger )
 	bg_tilemap8x4 = tilemap_create(get_bg_tile_info,bg8x4_scan,       TILEMAP_SPLIT,   16,16,128,64);
 	bg_tilemap4x8 = tilemap_create(get_bg_tile_info,bg4x8_scan,       TILEMAP_SPLIT,   16,16,64,128);
 
-	if (!scroll_ram || !tx_tilemap || !bg_tilemap8x4 || !bg_tilemap4x8)
-		return 1;
 
 	tilemap_set_transparent_pen(tx_tilemap,3);
 
@@ -104,11 +102,8 @@ VIDEO_START( blktiger )
 
 WRITE_HANDLER( blktiger_txvideoram_w )
 {
-	if (blktiger_txvideoram[offset] != data)
-	{
-		blktiger_txvideoram[offset] = data;
-		tilemap_mark_tile_dirty(tx_tilemap,offset & 0x3ff);
-	}
+	blktiger_txvideoram[offset] = data;
+	tilemap_mark_tile_dirty(tx_tilemap,offset & 0x3ff);
 }
 
 READ_HANDLER( blktiger_bgvideoram_r )
@@ -120,12 +115,9 @@ WRITE_HANDLER( blktiger_bgvideoram_w )
 {
 	offset += blktiger_scroll_bank;
 
-	if (scroll_ram[offset] != data)
-	{
-		scroll_ram[offset] = data;
-		tilemap_mark_tile_dirty(bg_tilemap8x4,offset/2);
-		tilemap_mark_tile_dirty(bg_tilemap4x8,offset/2);
-	}
+	scroll_ram[offset] = data;
+	tilemap_mark_tile_dirty(bg_tilemap8x4,offset/2);
+	tilemap_mark_tile_dirty(bg_tilemap4x8,offset/2);
 }
 
 WRITE_HANDLER( blktiger_bgvideoram_bank_w )
@@ -136,7 +128,7 @@ WRITE_HANDLER( blktiger_bgvideoram_bank_w )
 
 WRITE_HANDLER( blktiger_scrolly_w )
 {
-	static unsigned char scroll[2];
+	static UINT8 scroll[2];
 	int scrolly;
 
 	scroll[offset] = data;
@@ -147,7 +139,7 @@ WRITE_HANDLER( blktiger_scrolly_w )
 
 WRITE_HANDLER( blktiger_scrollx_w )
 {
-	static unsigned char scroll[2];
+	static UINT8 scroll[2];
 	int scrollx;
 
 	scroll[offset] = data;
