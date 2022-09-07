@@ -272,7 +272,7 @@ static struct YM2203interface ym2203_interface =
 static MACHINE_DRIVER_START( blktiger )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz (?) */
+	MDRV_CPU_ADD(Z80, 6000000)	/* 4 MHz (?) */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
