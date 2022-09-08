@@ -1935,9 +1935,9 @@ bool generate_ost_sound_robocop(int data)
 
 	switch (data) {
 		// Level start
-		case 0x30:
+		/*case 0x30:
 			ost_start_samples(0, 1, 1);
-			break;
+			break;*/
 
 		// Title
 		case 0x31:
@@ -1949,7 +1949,7 @@ bool generate_ost_sound_robocop(int data)
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Main theme
+		// Main Theme
 		case 0x33:
 			ost_start_samples(6, 7, 1);
 			break;
@@ -1959,22 +1959,22 @@ bool generate_ost_sound_robocop(int data)
 			ost_start_samples(8, 9, 1);
 			break;
 
-		// Last battle BGM 3
+		// Last Battle BGM 3
 		case 0x37:
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// Boss 1
+		// Stage Boss
 		case 0x38:
 			ost_start_samples(12, 13, 1);
 			break;
 
-		// Last theme. Boss2
+		// Final Boss
 		case 0x39:
 			ost_start_samples(14, 15, 1);
 			break;
 
-		// Bonus shoot
+		// Bonus Shoot
 		case 0x3A:
 			ost_start_samples(16, 17, 1);
 			break;
@@ -1989,7 +1989,7 @@ bool generate_ost_sound_robocop(int data)
 			ost_start_samples(20, 21, 0);
 			break;
 
-		// Name entry
+		// Name Entry
 		case 0x3D:
 			ost_start_samples(22, 23, 1);
 			break;
