@@ -611,8 +611,6 @@ static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 {
   ost_stop_samples();
 
-  usrintf_showmessage("%i  %i", sa_left, sa_right);
-
   sample_start(0, sa_left, sa_loop);
   sample_start(1, sa_right, sa_loop);
 
@@ -1934,6 +1932,8 @@ bool generate_ost_sound_robocop(int data)
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
+
+	usrintf_showmessage("%i  %i", last_left, last_right);
 
 	switch (data) {
 		// Level start
