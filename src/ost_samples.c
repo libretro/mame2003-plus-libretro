@@ -281,8 +281,6 @@ const char *const outrun_sample_set_names[] =
 const char *const robocop_sample_set_names[] =
 {
 	"*robocop",
-	"intro-01",
-	"intro-02",
 	"title-01",
 	"title-02",
 	"opening-01",
@@ -1937,62 +1935,61 @@ bool generate_ost_sound_robocop(int data)
 		// Level start
 		case 0x30:
 			ost_stop_samples();
-			//ost_start_samples(0, 1, 1);
 			break;
 
 		// Title
 		case 0x31:
-			ost_start_samples(2, 3, 1);
+			ost_start_samples(0, 1, 1);
 			break;
 
 		// Opening
 		case 0x32:
-			ost_start_samples(4, 5, 1);
+			ost_start_samples(2, 3, 1);
 			break;
 
 		// Main Theme
 		case 0x33:
-			ost_start_samples(6, 7, 1);
+			ost_start_samples(4, 5, 1);
 			break;
 
 		// Crime Field BGM 2
 		case 0x35:
-			ost_start_samples(8, 9, 1);
+			ost_start_samples(6, 7, 1);
 			break;
 
 		// Last Battle BGM 3
 		case 0x37:
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(8, 9, 1);
 			break;
 
 		// Stage Boss
 		case 0x38:
-			ost_start_samples(12, 13, 1);
+			ost_start_samples(10, 11, 1);
 			break;
 
 		// Final Boss
 		case 0x39:
-			ost_start_samples(14, 15, 1);
+			ost_start_samples(12, 13, 1);
 			break;
 
 		// Bonus Shoot
 		case 0x3A:
-			ost_start_samples(16, 17, 1);
+			ost_start_samples(14, 15, 1);
 			break;
 
 		// Stage Clear
 		case 0x3B:
-			ost_start_samples(18, 19, 0);
+			ost_start_samples(16, 17, 0);
 			break;
 
 		// Game Over
 		case 0x3C:
-			ost_start_samples(20, 21, 0);
+			ost_start_samples(18, 19, 0);
 			break;
 
 		// Name Entry
 		case 0x3D:
-			ost_start_samples(22, 23, 1);
+			ost_start_samples(20, 21, 1);
 			break;
 
 		default:
