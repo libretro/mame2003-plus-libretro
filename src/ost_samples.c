@@ -43,6 +43,8 @@ bool     outrun_title_diddy;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
+bool     robocop_start;
+
 bool     sf1_start;
 
 bool     fadingMusic;
@@ -278,6 +280,36 @@ const char *const outrun_sample_set_names[] =
 	0
 };
 
+const char *const robocop_sample_set_names[] =
+{
+	"*robocop",
+	"intro-01",
+	"intro-02",
+	"title-01",
+	"title-02",
+	"opening-01",
+	"opening-02",
+	"main-01",
+	"main-02",
+	"crfield-01",
+	"crfield-02",
+	"lstbattle-01",
+	"lstbattle-02",
+	"boss-01",
+	"boss-02",
+	"bigboss-01",
+	"bigboss-02",
+	"bonus-01",
+	"bonus-02",
+	"clear-01",
+	"clear-02",
+	"over-01",
+	"over-02",
+	"entry-01",
+	"entry-02",
+	0
+};
+
 const char *const sf1_sample_set_names[] =
 {
 	"*sf1",
@@ -464,6 +496,13 @@ struct Samplesinterface ost_outrun =
 	outrun_sample_set_names
 };
 
+struct Samplesinterface ost_robocop =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	robocop_sample_set_names
+};
+
 struct Samplesinterface ost_sf1 =
 {
 	2,	/* 2 channels*/
@@ -550,6 +589,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
       outrun_title_diddy = false;
       outrun_lastwave = false;
       outrun_start_counter = 0;
+      break;
+
+    case OST_SUPPORT_ROBOCOP:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_robocop)
+      robocop_start = true;
       break;
 
     case OST_SUPPORT_SF1:
@@ -1873,6 +1917,88 @@ bool generate_ost_sound_outrun(int data)
 		// --> Enter Highscore
 		case 0xA5:
 			return 0; /* do nothing */
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
+bool generate_ost_sound_robocop(int data)
+{
+	/* initialize game config */
+	schedule_default_sound = false;
+	sa_volume = 100;
+
+	if(robocop_start == true) {
+		robocop_start = false;
+		ost_start_samples(0, 1, 1);
+	}
+
+	switch (data) {
+		// Leval start
+		case 0x30:
+			ost_start_samples(0, 1, 1);
+			break;
+
+		// Title
+		case 0x31:
+			ost_start_samples(2, 3, 1);
+			break;
+
+		// opening
+		case 0x32:
+			ost_start_samples(4, 5, 1);
+			break;
+
+		//  Main theme
+		case 0x33:
+			ost_start_samples(6, 7, 1);
+			break;
+
+		// Crime Field BGM 2
+		case 0x35:
+			ost_start_samples(8, 9, 1);
+			break;
+
+		// Last battle BGM 3
+		case 0x37:
+			ost_start_samples(10, 11, 1);
+			break;
+
+		// Boss 1
+		case 0x38:
+			ost_start_samples(12, 13, 1);
+			break;
+
+		//  Last theme. Boss2
+		case 0x39:
+			ost_start_samples(14, 15, 1);
+			break;
+
+		// Bonus shoot
+		case 0x3A:
+			ost_start_samples(16, 17, 1);
+			break;
+
+		// Stage Clear
+		case 0x3B:
+			ost_start_samples(18, 19, 1);
+			break;
+
+		// Game Over
+		case 0x3C:
+			ost_start_samples(20, 21, 1);
+			break;
+
+		// Name entry
+		case 0x3D:
+			ost_start_samples(22, 23, 1);
 			break;
 
 		default:
