@@ -43,8 +43,6 @@ bool     outrun_title_diddy;
 bool     outrun_lastwave;
 int      outrun_start_counter;
 
-bool     robocop_start;
-
 bool     sf1_start;
 
 bool     fadingMusic;
@@ -593,7 +591,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_ROBOCOP:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_robocop)
-      robocop_start = true;
+      /* no settings */
       break;
 
     case OST_SUPPORT_SF1:
@@ -1934,12 +1932,7 @@ bool generate_ost_sound_robocop(int data)
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
-/*
-	if(robocop_start == true) {
-		robocop_start = false;
-		ost_start_samples(0, 1, 1);
-	}
-*/
+
 	switch (data) {
 		// Level start
 		case 0x30:
@@ -1988,12 +1981,12 @@ bool generate_ost_sound_robocop(int data)
 
 		// Stage Clear
 		case 0x3B:
-			ost_start_samples(18, 19, 1);
+			ost_start_samples(18, 19, 0);
 			break;
 
 		// Game Over
 		case 0x3C:
-			ost_start_samples(20, 21, 1);
+			ost_start_samples(20, 21, 0);
 			break;
 
 		// Name entry
