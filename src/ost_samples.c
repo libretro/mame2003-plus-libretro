@@ -1933,9 +1933,9 @@ bool generate_ost_sound_robocop(int data)
 
 	switch (data) {
 		// Level start
-		/*case 0x30:
+		case 0x30:
 			ost_stop_samples();
-			break;*/
+			break;
 
 		// Title
 		case 0x31:
