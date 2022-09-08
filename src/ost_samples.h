@@ -15,6 +15,7 @@ enum
   OST_SUPPORT_MOONWALKER,
   OST_SUPPORT_NBA_JAM,
   OST_SUPPORT_OUTRUN,
+  OST_SUPPORT_ROBOCOP,
   OST_SUPPORT_SF1,
   OST_SUPPORT_SF2
 };
@@ -34,6 +35,7 @@ extern bool generate_ost_sound_mk_tunit   (int data);
 extern bool generate_ost_sound_moonwalker (int data);
 extern bool generate_ost_sound_nba_jam    (int data);
 extern bool generate_ost_sound_outrun     (int data);
+extern bool generate_ost_sound_robocop    (int data);
 extern bool generate_ost_sound_sf1        (int data);
 extern bool generate_ost_sound_sf2        (int data);
 
