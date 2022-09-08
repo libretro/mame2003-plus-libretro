@@ -447,7 +447,7 @@ static int run_machine(void)
 					}
 
 				ui_copyright_and_warnings();
-        pause_action = pause_action_start_emulator;
+				pause_action_start_emulator(); // this needs call before retrorun else serialization can fail on different sizes
 				return 0;
 			}
 
