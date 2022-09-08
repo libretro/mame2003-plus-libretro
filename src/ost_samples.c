@@ -1934,12 +1934,12 @@ bool generate_ost_sound_robocop(int data)
 	/* initialize game config */
 	schedule_default_sound = false;
 	sa_volume = 100;
-
+/*
 	if(robocop_start == true) {
 		robocop_start = false;
 		ost_start_samples(0, 1, 1);
 	}
-
+*/
 	switch (data) {
 		// Level start
 		case 0x30:
