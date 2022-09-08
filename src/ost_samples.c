@@ -1933,8 +1933,6 @@ bool generate_ost_sound_robocop(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	usrintf_showmessage("%i  %i", last_left, last_right);
-
 	switch (data) {
 		// Level start
 		case 0x30:
@@ -2000,6 +1998,8 @@ bool generate_ost_sound_robocop(int data)
 			schedule_default_sound = true;
 			break;
 	}
+
+	usrintf_showmessage("%i  %i", last_left, last_right);
 
 	ost_mix_samples();
 
