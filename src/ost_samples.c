@@ -1939,12 +1939,12 @@ bool generate_ost_sound_robocop(int data)
 
 		// Title
 		case 0x31:
-			ost_start_samples(0, 1, 1);
+			ost_start_samples(0, 1, 0);
 			break;
 
 		// Opening
 		case 0x32:
-			ost_start_samples(2, 3, 1);
+			ost_start_samples(2, 3, 0);
 			break;
 
 		// Main Theme
@@ -1989,7 +1989,7 @@ bool generate_ost_sound_robocop(int data)
 
 		// Name Entry
 		case 0x3D:
-			ost_start_samples(20, 21, 1);
+			ost_start_samples(20, 21, 0);
 			break;
 
 		default:
