@@ -1941,7 +1941,7 @@ bool generate_ost_sound_robocop(int data)
 	}
 
 	switch (data) {
-		// Leval start
+		// Level start
 		case 0x30:
 			ost_start_samples(0, 1, 1);
 			break;
@@ -1951,12 +1951,12 @@ bool generate_ost_sound_robocop(int data)
 			ost_start_samples(2, 3, 1);
 			break;
 
-		// opening
+		// Opening
 		case 0x32:
 			ost_start_samples(4, 5, 1);
 			break;
 
-		//  Main theme
+		// Main theme
 		case 0x33:
 			ost_start_samples(6, 7, 1);
 			break;
@@ -1976,7 +1976,7 @@ bool generate_ost_sound_robocop(int data)
 			ost_start_samples(12, 13, 1);
 			break;
 
-		//  Last theme. Boss2
+		// Last theme. Boss2
 		case 0x39:
 			ost_start_samples(14, 15, 1);
 			break;
