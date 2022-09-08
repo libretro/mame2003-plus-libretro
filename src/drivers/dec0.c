@@ -40,6 +40,7 @@ Boulderdash use the same graphics chips but are different pcbs.
 #include "cpu/m6502/m6502.h"
 #include "cpu/h6280/h6280.h"
 #include "dec0.h"
+#include "ost_samples.h"
 
 data16_t *dec0_ram;
 data8_t *robocop_shared_ram;
@@ -61,8 +62,16 @@ static WRITE16_HANDLER( dec0_control_w )
 		case 4: /* 6502 sound cpu */
 			if (ACCESSING_LSB)
 			{
-				soundlatch_w(0,data & 0xff);
-				cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+				if( ost_support_enabled(OST_SUPPORT_ROBOCOP) ) {
+					if(generate_ost_sound_robocop( data )) {
+						soundlatch_w(0,data & 0xff);
+						cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+					}
+				}
+				else {
+					soundlatch_w(0,data & 0xff);
+					cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+				}
 			}
 			break;
 
@@ -1050,6 +1059,8 @@ static MACHINE_DRIVER_START( robocop )
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 	MDRV_SOUND_ADD(YM3812, ym3812_interface)
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_ROBOCOP)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( robocopb )
