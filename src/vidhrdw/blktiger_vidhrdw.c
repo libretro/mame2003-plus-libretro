@@ -38,8 +38,8 @@ static void get_bg_tile_info(int tile_index)
 	   was not derived from a PROM so it could be wrong. */
 	static int split_table[16] =
 	{
-		3,0,2,2,	/* the fourth could be 1 instead of 2 */
-		0,1,0,0,
+		3,3,2,2,
+		1,1,0,0,
 		0,0,0,0,
 		0,0,0,0
 	};
