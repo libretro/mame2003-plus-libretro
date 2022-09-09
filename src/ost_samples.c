@@ -36,8 +36,6 @@ bool     nba_jam_playing_title_music;
 int      m_nba_last_offset;
 int      m_nba_start_counter;
 
-bool     outrun_diddy;
-bool     outrun_title_diddy;
 int      outrun_start_counter;
 
 bool     fadingMusic;
@@ -574,8 +572,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-      outrun_diddy = true;
-      outrun_title_diddy = false;
       outrun_start_counter = 0;
       break;
 
@@ -1798,57 +1794,42 @@ bool generate_ost_sound_outrun(int data)
 
 	switch (data) {
 		case 0x0:
-			if(outrun_diddy == true) {
-				outrun_start_counter++;
+			if(outrun_start_counter == 0)
+				if(!ost_last_played(0, 1))
+					ost_start_samples(0, 1, 1);
 
-				if(outrun_start_counter == 2) {
-					ost_start_samples(2, 3, 0);
-					outrun_diddy = false;
-					outrun_title_diddy = true;
-				}
-			}
-			else if(outrun_title_diddy == true) {
-				outrun_diddy = false;
-				outrun_start_counter++;
+			outrun_start_counter++;
 
-				if(outrun_start_counter > 5)
-					outrun_title_diddy = false;
-			}
-			else if(outrun_diddy == false && outrun_title_diddy == false) {
-				ost_start_samples(0, 1, 1);
-				outrun_diddy = true;
-				outrun_start_counter = 1;
-			}
+			if(outrun_start_counter == 2)
+				ost_start_samples(2, 3, 0);
+
+			if(outrun_start_counter == 6)
+				outrun_start_counter = 0;
 			break;
 
 		// 2. --> Passing Breeze
 		case 0x81:
-			outrun_diddy = false;
-			outrun_title_diddy = false;
+			outrun_start_counter = 0;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		// 1. --> Splash wave
 		case 0x82:
-			outrun_diddy = false;
-			outrun_title_diddy = false;
+			outrun_start_counter = 0;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		// 3 --> Magical Sound Shower
 		case 0x85:
-			outrun_diddy = false;
-			outrun_title_diddy = false;
+			outrun_start_counter = 0;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		// --> Last Wave
 		case 0x93:
-			if(!ost_last_played(4, 5)) {
-				outrun_diddy = false;
-				outrun_title_diddy = false;
+			outrun_start_counter = 0;
+			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
-			}
 			break;
 
 		// --> Enter Highscore
