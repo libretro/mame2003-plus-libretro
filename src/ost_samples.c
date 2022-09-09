@@ -1803,11 +1803,10 @@ bool generate_ost_sound_outrun(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	if(outrun_start == true) {
+	/*if(outrun_start == true) {
 		ost_start_samples(0, 1, 1);
 		outrun_start = false;
-		outrun_diddy = true;
-	}
+	}*/
 
 	switch (data) {
 		case 0x0:
