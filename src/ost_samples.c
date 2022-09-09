@@ -1524,6 +1524,7 @@ bool generate_ost_sound_moonwalker(int data)
 		// Title screen magic.
 		case 0x86:
 		case 0x87:
+			usrintf_showmessage("||||||||||||");
 			if(ost_last_played(10, 11))
 				return 0; /* do nothing */
 			else
