@@ -1839,6 +1839,7 @@ bool generate_ost_sound_outrun(int data)
 
 		default:
 			schedule_default_sound = true;
+usrintf_showmessage("%i",data);
 			break;
 	}
 
