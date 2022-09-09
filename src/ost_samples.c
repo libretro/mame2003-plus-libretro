@@ -10,8 +10,8 @@
 
 /* ost configuration */
 static int  sa_volume;
-static int  last_left;
-static int  last_right;
+static int  last_left  = 0;
+static int  last_right = 0;
 static bool schedule_default_sound;
 
 
@@ -36,12 +36,9 @@ bool     nba_jam_playing_title_music;
 int      m_nba_last_offset;
 int      m_nba_start_counter;
 
-bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
 int      outrun_start_counter;
-
-bool     sf1_start;
 
 bool     fadingMusic;
 
@@ -577,8 +574,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-      outrun_start = true;
-      outrun_diddy = false;
+      outrun_diddy = true;
       outrun_title_diddy = false;
       outrun_start_counter = 0;
       break;
@@ -590,7 +586,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_SF1:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
-      sf1_start = true;
+      /* no settings */
       break;
 
     case OST_SUPPORT_SF2:
@@ -1803,10 +1799,8 @@ bool generate_ost_sound_outrun(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	/*if(outrun_start == true) {
+	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
-		outrun_start = false;
-	}*/
 
 	switch (data) {
 		case 0x0:
@@ -1961,10 +1955,8 @@ bool generate_ost_sound_sf1(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	if(sf1_start == true) {
-		sf1_start = false;
+	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
-	}
 
 	switch (data) {
 		// Retsu
