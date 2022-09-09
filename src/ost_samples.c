@@ -941,8 +941,6 @@ bool generate_ost_sound_ikari(int data)
 		case 0x70:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
 				ost_start_samples(0, 1, 0);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Force landing - it's up to you
@@ -965,16 +963,12 @@ bool generate_ost_sound_ikari(int data)
 		case 0x68:
 			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invincibility is active */
 				ost_start_samples(8, 9, 0);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Game Over and Glory
 		case 0x60:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
 				ost_start_samples(10, 11, 0);
-			else
-				return 0; /* do nothing */
 			break;
 
 		default:
