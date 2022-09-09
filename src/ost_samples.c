@@ -1518,10 +1518,7 @@ bool generate_ost_sound_moonwalker(int data)
 
 		// Title screen stuff.
 		case 0x85:
-			if(!ost_last_played(10, 11))
-				ost_start_samples(10, 11, 0);
-			else
-				return 0; /* do nothing */
+			ost_start_samples(10, 11, 0);
 			break;
 
 		// Title screen magic.
