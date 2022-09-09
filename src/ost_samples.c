@@ -1871,13 +1871,11 @@ bool generate_ost_sound_outrun(int data)
 				outrun_lastwave = true;
 				ost_start_samples(4, 5, 1);
 			}
-			else
-				return 0; /* do nothing */
 			break;
 
 		// --> Enter Highscore
 		case 0xA5:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		default:
