@@ -26,7 +26,6 @@ bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
 bool     moon_diddy;
-int      mj_current_music;
 
 bool     nba_jam_title_screen;
 bool     nba_jam_select_screen;
@@ -563,7 +562,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_MOONWALKER:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
       moon_diddy = false;
-      mj_current_music = 0;
       break;
 
     case OST_SUPPORT_NBA_JAM:
@@ -643,7 +641,6 @@ static void ost_mix_samples(void)
     schedule_default_sound = true;
 
     ddragon_current_music = 0;
-    mj_current_music = 0;
   }
 }
 
@@ -1521,10 +1518,8 @@ bool generate_ost_sound_moonwalker(int data)
 
 		// Title screen stuff.
 		case 0x85:
-			if(mj_current_music != 85) {
-				mj_current_music = 85;
+			if(!ost_last_played(10, 11))
 				ost_start_samples(10, 11, 0);
-			}
 			else
 				return 0; /* do nothing */
 			break;
@@ -1532,60 +1527,48 @@ bool generate_ost_sound_moonwalker(int data)
 		// Title screen magic.
 		case 0x86:
 		case 0x87:
-			if(mj_current_music == 85)
+			if(ost_last_played(10, 11))
 				return 0; /* do nothing */
-			else {
-				mj_current_music = 0;
+			else
 				schedule_default_sound = true;
-			}
 			break;
 
 		// Stage 1 and Stage 5. Bad.
 		case 0x81:
-			if(mj_current_music != 81) {
-				mj_current_music = 81;
+			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
-			}
 			else
 				return 0; /* do nothing */
 			break;
 
 		// Stage 2. Smooth Criminal.
 		case 0x82:
-			if(mj_current_music != 82) {
-				mj_current_music = 82;
+			if(!ost_last_played(2, 3))
 				ost_start_samples(2, 3, 1);
-			}
 			else
 				return 0; /* do nothing */
 			break;
 
 		// Stage 3. Beat It.
 		case 0x84:
-			if(mj_current_music != 83) {
-				mj_current_music = 83;
+			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
-			}
 			else
 				return 0; /* do nothing */
 			break;
 
 		// Stage 4. Thriller.
 		case 0x8A:
-			if(mj_current_music != 8) {
-				mj_current_music = 8;
+			if(!ost_last_played(6, 7))
 				ost_start_samples(6, 7, 1);
-			}
 			else
 				return 0; /* do nothing */
 			break;
 
 		// Ending. Billie Jean.
 		case 0x89:
-			if(mj_current_music != 89) {
-				mj_current_music = 89;
+			if(!ost_last_played(8, 9))
 				ost_start_samples(8, 9, 1);
-			}
 			else
 				return 0; /* do nothing */
 			break;
@@ -1601,14 +1584,12 @@ bool generate_ost_sound_moonwalker(int data)
 		case 0xFA:
 		case 0xFB:
 		case 0xF6:
-			mj_current_music = 0;
 			schedule_default_sound = true;
 			moon_diddy = true;
 			break;
 
 		// Special move "owww" sound effect. This plays after the special move has always finished.
 		case 0xC3:
-			mj_current_music = 0;
 			schedule_default_sound = true;
 			moon_diddy = false; /* return volume back to 100%. */
 			break;
