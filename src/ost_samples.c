@@ -1524,58 +1524,44 @@ bool generate_ost_sound_moonwalker(int data)
 		// Title screen magic.
 		case 0x86:
 		case 0x87:
-			usrintf_showmessage("||||||||||||");
-			if(ost_last_played(10, 11))
-				return 0; /* do nothing */
-			else
-				schedule_default_sound = true;
+			/* do nothing */
 			break;
 
 		// Stage 1 and Stage 5. Bad.
 		case 0x81:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Stage 2. Smooth Criminal.
 		case 0x82:
 			if(!ost_last_played(2, 3))
 				ost_start_samples(2, 3, 1);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Stage 3. Beat It.
 		case 0x84:
 			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Stage 4. Thriller.
 		case 0x8A:
 			if(!ost_last_played(6, 7))
 				ost_start_samples(6, 7, 1);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Ending. Billie Jean.
 		case 0x89:
 			if(!ost_last_played(8, 9))
 				ost_start_samples(8, 9, 1);
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Boss music
 		case 0x8B:  /* First */
 		case 0x83:  /* Second */
 		case 0x8E:  /* Third */
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		// Special move music diddy.
