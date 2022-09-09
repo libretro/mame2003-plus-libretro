@@ -39,7 +39,6 @@ int      m_nba_start_counter;
 bool     outrun_start;
 bool     outrun_diddy;
 bool     outrun_title_diddy;
-bool     outrun_lastwave;
 int      outrun_start_counter;
 
 bool     sf1_start;
@@ -581,7 +580,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
       outrun_start = true;
       outrun_diddy = false;
       outrun_title_diddy = false;
-      outrun_lastwave = false;
       outrun_start_counter = 0;
       break;
 
@@ -1809,7 +1807,6 @@ bool generate_ost_sound_outrun(int data)
 		ost_start_samples(0, 1, 1);
 		outrun_start = false;
 		outrun_diddy = true;
-		outrun_lastwave = false;
 	}
 
 	switch (data) {
@@ -1821,7 +1818,6 @@ bool generate_ost_sound_outrun(int data)
 					ost_start_samples(2, 3, 0);
 					outrun_diddy = false;
 					outrun_title_diddy = true;
-					outrun_lastwave = false;
 				}
 			}
 			else if(outrun_title_diddy == true) {
@@ -1835,7 +1831,6 @@ bool generate_ost_sound_outrun(int data)
 				ost_start_samples(0, 1, 1);
 				outrun_diddy = true;
 				outrun_start_counter = 1;
-				outrun_lastwave = false;
 			}
 			break;
 
@@ -1843,7 +1838,6 @@ bool generate_ost_sound_outrun(int data)
 		case 0x81:
 			outrun_diddy = false;
 			outrun_title_diddy = false;
-			outrun_lastwave = false;
 			ost_start_samples(8, 9, 1);
 			break;
 
@@ -1851,7 +1845,6 @@ bool generate_ost_sound_outrun(int data)
 		case 0x82:
 			outrun_diddy = false;
 			outrun_title_diddy = false;
-			outrun_lastwave = false;
 			ost_start_samples(10, 11, 1);
 			break;
 
@@ -1859,16 +1852,14 @@ bool generate_ost_sound_outrun(int data)
 		case 0x85:
 			outrun_diddy = false;
 			outrun_title_diddy = false;
-			outrun_lastwave = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		// --> Last Wave
 		case 0x93:
-			if(outrun_lastwave == false) {
+			if(!ost_last_played(4, 5)) {
 				outrun_diddy = false;
 				outrun_title_diddy = false;
-				outrun_lastwave = true;
 				ost_start_samples(4, 5, 1);
 			}
 			break;
