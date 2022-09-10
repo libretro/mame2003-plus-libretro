@@ -732,21 +732,6 @@ static struct retro_core_option_v2_definition option_def_cheat_input_ports = {
    "disabled"
 };
 
-static struct retro_core_option_v2_definition option_def_machine_timing = {
-   APPNAME"_machine_timing",
-   "Bypass Audio Skew",
-   NULL,
-   "Restart core required.",
-   NULL,
-   "cat_key_audio",
-   {
-      { "disabled", NULL },
-      { "enabled",  NULL },
-      { NULL, NULL },
-   },
-   "disabled"
-};
-
 static struct retro_core_option_v2_definition option_def_digital_joy_centering = {
    APPNAME"_digital_joy_centering",
    "Center Joystick Axis for Digital Controls",
@@ -914,7 +899,6 @@ void init_core_options(void)
   default_options[OPT_CORE_SAVE_SUBFOLDER]       = option_def_core_save_subfolder;
   default_options[OPT_AUTOSAVE_HISCORE]          = option_def_autosave_hiscore;
   default_options[OPT_CHEAT_INPUT_PORTS]         = option_def_cheat_input_ports;
-  default_options[OPT_MACHINE_TIMING]            = option_def_machine_timing;
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
@@ -1285,13 +1269,6 @@ void update_variables(bool first_time)
             options.cheat_input_ports = true;
           else
             options.cheat_input_ports = false;
-          break;
-
-        case OPT_MACHINE_TIMING:
-          if(strcmp(var.value, "enabled") == 0)
-            options.machine_timing = true;
-          else
-            options.machine_timing = false;
           break;
 
         case OPT_OVERRIDE_AD_STICK:

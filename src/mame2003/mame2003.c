@@ -228,50 +228,9 @@ void retro_set_environment(retro_environment_t cb)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
-  if(options.machine_timing)
-  {
-    if (Machine->drv->frames_per_second < 60.0 )
-      info->timing.fps = 60.0;
-    else
-      info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
-
-    if ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) )
-    {
-      info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f\n",  Machine->drv->frames_per_second * 1000);
-    }
-
-    else
-    {
-      info->timing.sample_rate = options.samplerate;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d\n",options.samplerate);
-    }
-  }
-
-  else
-  {
-    info->timing.fps = Machine->drv->frames_per_second;
-
-    if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-    {
-      if ( Machine->drv->frames_per_second * 1000 > 44100)
-        info->timing.sample_rate = 44100;
-      else if ( Machine->drv->frames_per_second * 1000 > 30000)
-        info->timing.sample_rate = 30000;
-      else if ( Machine->drv->frames_per_second * 1000 > 22050)
-        info->timing.sample_rate = 22050;
-      else if ( Machine->drv->frames_per_second * 1000 > 11025)
-        info->timing.sample_rate = 11025;
-      else if ( Machine->drv->frames_per_second * 1000 > 8000)
-        info->timing.sample_rate = 8000;
-      else
-        info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
-    }
-
-    else
-     info->timing.sample_rate = options.samplerate;
-  }
-
+  
+  info->timing.fps = Machine->drv->frames_per_second;
+  info->timing.sample_rate = options.samplerate ;
 }
 
 
@@ -557,35 +516,8 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-  if (options.machine_timing)
-  {
-    if ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )
-      Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-
-    else Machine->sample_rate = options.samplerate;
-  }
-
-  else
-  {
-    if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-    {
-      if ( Machine->drv->frames_per_second * 1000 > 44100)
-        Machine->sample_rate = 44100;
-      else if ( Machine->drv->frames_per_second * 1000 > 30000)
-        Machine->sample_rate = 30000;
-      else if ( Machine->drv->frames_per_second * 1000 > 22050)
-        Machine->sample_rate = 22050;
-      else if ( Machine->drv->frames_per_second * 1000 > 11025)
-        Machine->sample_rate = 11025;
-      else if ( Machine->drv->frames_per_second * 1000 > 8000)
-        Machine->sample_rate = 8000;
-      else
-        Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-    }
-
-    else
-      Machine->sample_rate = options.samplerate;
-  }
+ 
+  Machine->sample_rate = options.samplerate;
 
   delta_samples = 0.0f;
   usestereo = stereo ? 1 : 0;

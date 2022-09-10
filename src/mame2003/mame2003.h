@@ -210,7 +210,6 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_USE_SAMPLES,
   OPT_USE_ALT_SOUND,
   OPT_SAMPLE_RATE,
-  OPT_MACHINE_TIMING,
   OPT_BRIGHTNESS,
   OPT_GAMMA,
   OPT_TATE_MODE,
