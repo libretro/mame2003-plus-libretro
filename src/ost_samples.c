@@ -1825,16 +1825,16 @@ bool generate_ost_sound_outrun(int data)
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// --> Are You Ready
-		case 0x8D:
-			return 0;
-			break;
-
 		// --> Last Wave
 		case 0x93:
 			outrun_start_counter = 0;
 			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
+			break;
+
+		// --> Are You Ready
+		case 0x9F:
+			return 0;
 			break;
 
 		// --> Enter Highscore
