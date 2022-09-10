@@ -1825,6 +1825,11 @@ bool generate_ost_sound_outrun(int data)
 			ost_start_samples(6, 7, 1);
 			break;
 
+		// --> Are You Ready
+		case 0x8D:
+			return 0;
+			break;
+
 		// --> Last Wave
 		case 0x93:
 			outrun_start_counter = 0;
