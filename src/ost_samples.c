@@ -1789,12 +1789,11 @@ bool generate_ost_sound_outrun(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-usrintf_showmessage("%i",outrun_start_counter);
-
 	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
 
 	switch (data) {
+		// --> Title screen
 		case 0x0:
 			if(outrun_start_counter == 0)
 				if(!ost_last_played(0, 1))
@@ -1809,17 +1808,17 @@ usrintf_showmessage("%i",outrun_start_counter);
 				outrun_start_counter = 0;
 			break;
 
-		// 2. --> Passing Breeze
+		// --> Passing breeze
 		case 0x81:
 			ost_start_samples(8, 9, 1);
 			break;
 
-		// 1. --> Splash wave
+		// --> Splash wave
 		case 0x82:
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// 3 --> Magical Sound Shower
+		// --> Magical sound shower
 		case 0x85:
 			ost_start_samples(6, 7, 1);
 			break;
