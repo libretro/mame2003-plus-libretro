@@ -820,39 +820,8 @@ static void init_game_options(void)
   Machine->orientation    = ROT0;
   Machine->ui_orientation = options.ui_orientation;
 
-
-// set sample rate here as osd_start_audio_stream the logic must be the same in both some soundcores require setting here as well
-// ie ymf271 will segfault without this.
- if (options.machine_timing)
-  {
-    if ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )
-      Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-
-    else Machine->sample_rate = options.samplerate;
-  }
-
-  else
-  {
-    if ( Machine->drv->frames_per_second * 1000 < options.samplerate)
-    {
-      if ( Machine->drv->frames_per_second * 1000 > 44100)
-        Machine->sample_rate = 44100;
-      else if ( Machine->drv->frames_per_second * 1000 > 30000)
-        Machine->sample_rate = 30000;
-      else if ( Machine->drv->frames_per_second * 1000 > 22050)
-        Machine->sample_rate = 22050;
-      else if ( Machine->drv->frames_per_second * 1000 > 11025)
-        Machine->sample_rate = 11025;
-      else if ( Machine->drv->frames_per_second * 1000 > 8000)
-        Machine->sample_rate = 8000;
-      else
-        Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-    }
-
-    else
-      Machine->sample_rate = options.samplerate;
-  }
-
+  Machine->sample_rate = options.samplerate;
+ 
 }
 
 

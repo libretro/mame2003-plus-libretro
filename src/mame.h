@@ -254,7 +254,6 @@ struct GameOptions
   int      debug_height;	       /* requested height of debugger bitmap */
   int      debug_depth;	         /* requested depth of debugger bitmap */
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
-  bool     machine_timing;
   int      override_ad_stick;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
   double   cpu_clock_scale;
