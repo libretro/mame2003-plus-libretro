@@ -1300,8 +1300,6 @@ void update_variables(bool first_time)
     }
   }
 
-  options.activate_dcs_speedhack = true; /* formerly a core option, now always on. */
-
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
   led_state_cb = ledintf.set_led_state;
