@@ -212,8 +212,7 @@ struct GameOptions
 
   int      crosshair_enable;
   int      crosshair_appearance;
-  bool     activate_dcs_speedhack;
-
+  
   bool     mame_remapping;       /* display MAME input remapping menu */
 
   int      samplerate;		       /* sound sample playback rate, in KHz */
