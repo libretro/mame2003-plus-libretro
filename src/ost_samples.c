@@ -18,7 +18,6 @@ static bool schedule_default_sound;
 /* game specific variables */
 int      ost_support = OST_SUPPORT_DISABLED;
 
-int      ddragon_current_music;
 int      ddragon_stage;
 int      d_title_counter;
 
@@ -528,7 +527,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
   {
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
-      ddragon_current_music = 0;
       ddragon_stage = 0;
       d_title_counter = 0;
       break;
@@ -629,8 +627,6 @@ static void ost_mix_samples(void)
 
   else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
     schedule_default_sound = true;
-
-    ddragon_current_music = 0;
   }
 }
 
@@ -679,7 +675,7 @@ bool generate_ost_sound_ddragon(int data)
 		// Use for a counter flag on the title screen and stopping music.
 		case 0xFF:
 			// We are at the title screen.
-			if(ddragon_current_music == 10 && ddragon_stage != 4) {
+			if(ost_last_played(0, 1) && ddragon_stage != 4) {
 				// A coin has been inserted, lets stop the title music, about to start the first stage.
 				if(d_title_counter > 5) {
 					ost_stop_samples();
@@ -697,14 +693,10 @@ bool generate_ost_sound_ddragon(int data)
 
 		// Title screen.
 		case 0x1:
-			if(ddragon_current_music != 10 && ddragon_stage != 4) {
-				ddragon_current_music = 10;
+			if(!ost_last_played(0, 1) && ddragon_stage != 4)
 				ost_start_samples(0, 1, 1);
-			}
-			else if(ddragon_stage == 4 && ddragon_current_music != 15) { // Final boss fight.
-				ddragon_current_music = 15;
+			else if(ddragon_stage == 4 && !ost_last_played(22, 23)) // Final boss fight.
 				ost_start_samples(22, 23, 1);
-			}
 
 			d_title_counter = 0;
 			break;
@@ -712,22 +704,19 @@ bool generate_ost_sound_ddragon(int data)
 		// Stage 1.
 		case 0x9:
 			ddragon_stage = 1;
-			ddragon_current_music = 1;
 			ost_start_samples(2, 3, 1);
 			break;
 
 		// Stage 2.
 		case 0x7:
 			ddragon_stage = 2;
-			ddragon_current_music = 2;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		// Stage 3.
 		case 0xA:
-			if(ddragon_current_music != 3 && ddragon_stage != 3) {
+			if(!ost_last_played(6, 7) && ddragon_stage != 3) {
 				ddragon_stage = 3;
-				ddragon_current_music = 3;
 				ost_start_samples(6, 7, 1);
 			}
 			else if(ddragon_stage == 3) {
@@ -738,7 +727,6 @@ bool generate_ost_sound_ddragon(int data)
 		// Stage 4.
 		case 0xD:
 			ddragon_stage = 4;
-			ddragon_current_music = 4;
 			ost_start_samples(10, 11, 1);
 			break;
 
@@ -746,32 +734,25 @@ bool generate_ost_sound_ddragon(int data)
 		case 0x6:
 			sa_volume = 100;
 			ddragon_stage = 5;
-			ddragon_current_music = 5;
 			ost_start_samples(12, 13, 0);
 			break;
 
 		// Level finished.
 		case 0xE:
-			ddragon_current_music = 11;
 			ost_start_samples(14, 15, 0);
 			break;
 
 		// Short diddy after boss battle.
 		case 0xC:
-			ddragon_current_music = 12;
 			ost_start_samples(16, 17, 0);
 			break;
 
 		// Boss battle music.
 		case 0x3:
-			if(ddragon_stage == 3) {
-				ddragon_current_music = 14;
+			if(ddragon_stage == 3)
 				ost_start_samples(20, 21, 1);
-			}
-			else {
-				ddragon_current_music = 13;
+			else
 				ost_start_samples(18, 19, 1);
-			}
 			break;
 
 		default:
