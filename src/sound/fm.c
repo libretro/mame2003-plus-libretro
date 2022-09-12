@@ -661,10 +661,10 @@ typedef struct
 	UINT32	mode;		/* mode  CSM / 3SLOT	*/
 	UINT8	prescaler_sel;/* prescaler selector	*/
 	UINT8	fn_h;		/* freq latch			*/
-	int		TA;			/* timer a				*/
-	int		TAC;		/* timer a counter		*/
+	INT32		TA;			/* timer a				*/
+	INT32		TAC;		/* timer a counter		*/
 	UINT8	TB;			/* timer b				*/
-	int		TBC;		/* timer b counter		*/
+	INT32		TBC;		/* timer b counter		*/
 	/* local time tables */
 	INT32	dt_tab[8][32];/* DeTune table		*/
 	/* Extention Timer and IRQ handler */
@@ -2523,11 +2523,11 @@ typedef struct
 	UINT8		addr_A1;			/* address line A1		*/
 
 	/* ADPCM-A unit */
-	UINT8		*pcmbuf;			/* pcm rom buffer		*/
-	UINT32		pcm_size;			/* size of pcm rom		*/
-	UINT8		adpcmTL;			/* adpcmA total level	*/
-	ADPCM_CH 	adpcm[6];			/* adpcm channels		*/
-	UINT32		adpcmreg[0x30];		/* registers			*/
+	const UINT8	*pcmbuf;			/* pcm rom buffer       */
+	UINT32		pcm_size;			/* size of pcm rom      */
+	UINT8		adpcmTL;			/* adpcmA total level   */
+	ADPCM_CH 	adpcm[6];			/* adpcm channels       */
+	UINT32		adpcmreg[0x30];		/* registers            */
 	UINT8		adpcm_arrivedEndAddress;
 	YM_DELTAT 	deltaT;				/* Delta-T ADPCM unit	*/
 
@@ -3759,7 +3759,7 @@ void YM2608ResetChip(int num)
 	DELTAT->output_pointer = out_delta;
 	DELTAT->portshift = 5;		/* always 5bits shift */ /* ASG */
 	DELTAT->output_range = 1<<23;
-	YM_DELTAT_ADPCM_Reset(DELTAT,OUTD_CENTER);
+	YM_DELTAT_ADPCM_Reset(DELTAT,OUTD_CENTER,YM_DELTAT_EMULATION_MODE_NORMAL);
 }
 
 /* YM2608 write */
@@ -4449,7 +4449,7 @@ void YM2610ResetChip(int num)
 	DELTAT->output_pointer = out_delta;
 	DELTAT->portshift = 8;		/* allways 8bits shift */
 	DELTAT->output_range = 1<<23;
-	YM_DELTAT_ADPCM_Reset(DELTAT,OUTD_CENTER);
+	YM_DELTAT_ADPCM_Reset(DELTAT,OUTD_CENTER,YM_DELTAT_EMULATION_MODE_YM2610);
 }
 
 /* YM2610 write */
@@ -4766,7 +4766,7 @@ static void YM2612_postload(void)
 	for(num=0;num<YM2612NumChips;num++)
 	{
 		/* DAC data & port */
-		FM2612[num].dacout = ((int)FM2612[num].REGS[0x2a] - 0x80) << 0;	/* level unknown */
+		FM2612[num].dacout = ((int)FM2612[num].REGS[0x2a] - 0x80) << 6;	/* level unknown */
 		FM2612[num].dacen  = FM2612[num].REGS[0x2d] & 0x80;
 		/* OPN registers */
 		/* DT / MULTI , TL , KS / AR , AMON / DR , SR , SL / RR , SSG-EG */
