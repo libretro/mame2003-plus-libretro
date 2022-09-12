@@ -705,8 +705,6 @@ bool generate_ost_sound_ddragon(int data)
 				ddragon_current_music = 15;
 				ost_start_samples(22, 23, 1);
 			}
-			else
-				return 0; /* do nothing */
 
 			d_title_counter = 0;
 			break;
@@ -735,8 +733,6 @@ bool generate_ost_sound_ddragon(int data)
 			else if(ddragon_stage == 3) {
 				ost_start_samples(8, 9, 1);
 			}
-			else
-				return 0; /* do nothing */
 			break;
 
 		// Stage 4.
