@@ -239,7 +239,7 @@ typedef struct{
 	UINT8	vib;		/* LFO Phase Modulation enable flag (active high)*/
 
 	/* waveform select */
-	unsigned int wavetable;
+	UINT16	wavetable;
 } OPL_SLOT;
 
 typedef struct{
@@ -279,8 +279,8 @@ typedef struct fm_opl_f {
 
 	UINT8	wavesel;				/* waveform select enable flag	*/
 
-	int		T[2];					/* timer counters				*/
-	UINT8	st[2];					/* timer enable					*/
+	UINT32	T[2];					/* timer counters               */
+	UINT8	st[2];					/* timer enable                 */
 
 #if BUILD_Y8950
 	/* Delta-T ADPCM unit (Y8950) */
@@ -312,8 +312,8 @@ typedef struct fm_opl_f {
 	UINT8 statusmask;				/* status mask					*/
 	UINT8 mode;						/* Reg.08 : CSM,notesel,etc.	*/
 
-	int clock;						/* master clock  (Hz)			*/
-	int rate;						/* sampling rate (Hz)			*/
+	UINT32 clock;						/* master clock  (Hz)			*/
+	UINT32 rate;						/* sampling rate (Hz)			*/
 	double freqbase;				/* frequency base				*/
 	double TimerBase;				/* Timer base time (==sampling time)*/
 } FM_OPL;
@@ -643,6 +643,18 @@ static INT32 output_deltat[4];		/* for Y8950 DELTA-T, chip is mono, that 4 here 
 static UINT32	LFO_AM;
 static INT32	LFO_PM;
 
+
+
+static INLINE int limit( int val, int max, int min ) {
+	if ( val > max )
+		val = max;
+	else if ( val < min )
+		val = min;
+
+	return val;
+}
+
+
 /* status set and IRQ handling */
 static INLINE void OPL_STATUS_SET(FM_OPL *OPL,int flag)
 {
@@ -692,8 +704,8 @@ static INLINE void advance_lfo(FM_OPL *OPL)
 
 	/* LFO */
 	OPL->lfo_am_cnt += OPL->lfo_am_inc;
-	if (OPL->lfo_am_cnt >= (LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
-		OPL->lfo_am_cnt -= (LFO_AM_TAB_ELEMENTS<<LFO_SH);
+	if (OPL->lfo_am_cnt >= ((UINT32)LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
+		OPL->lfo_am_cnt -= ((UINT32)LFO_AM_TAB_ELEMENTS<<LFO_SH);
 
 	tmp = lfo_am_table[ OPL->lfo_am_cnt >> LFO_SH ];
 
@@ -1795,7 +1807,7 @@ static void OPLResetChip(FM_OPL *OPL)
 		DELTAT->output_pointer = &output_deltat[0];
 		DELTAT->portshift = 5;
 		DELTAT->output_range = 1<<23;
-		YM_DELTAT_ADPCM_Reset(DELTAT,0);
+		YM_DELTAT_ADPCM_Reset(DELTAT,0,YM_DELTAT_EMULATION_MODE_NORMAL);
 	}
 #endif
 }
@@ -1803,7 +1815,7 @@ static void OPLResetChip(FM_OPL *OPL)
 /* Create one of virtual YM3812/YM3526/Y8950 */
 /* 'clock' is chip clock in Hz  */
 /* 'rate'  is sampling rate  */
-static FM_OPL *OPLCreate(int type, int clock, int rate)
+static FM_OPL *OPLCreate(int type, UINT32 clock, UINT32 rate)
 {
 	char *ptr;
 	FM_OPL *OPL;
@@ -2124,7 +2136,8 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-      MAME_CLAMP_SAMPLE(lt);
+		/* limit check */
+		lt = limit( lt , MAXOUT, MINOUT );
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)
@@ -2274,7 +2287,8 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-      MAME_CLAMP_SAMPLE(lt);
+		/* limit check */
+		lt = limit( lt , MAXOUT, MINOUT );
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)
@@ -2454,7 +2468,8 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-      MAME_CLAMP_SAMPLE(lt);
+		/* limit check */
+		lt = limit( lt , MAXOUT, MINOUT );
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)
