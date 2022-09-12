@@ -2,9 +2,11 @@
   File: fm.h -- header file for software emulation for FM sound generator
 
 */
-#ifndef _H_FM_FM_
-#define _H_FM_FM_
 
+#pragma once
+
+#ifndef __FM_H__
+#define __FM_H__
 #include <retro_inline.h>
 
 /* --- select emulation chips --- */
@@ -12,9 +14,8 @@
 #define BUILD_YM2608  (HAS_YM2608)		/* build YM2608(OPNA)  emulator */
 #define BUILD_YM2610  (HAS_YM2610)		/* build YM2610(OPNB)  emulator */
 #define BUILD_YM2610B (HAS_YM2610B)		/* build YM2610B(OPNB?)emulator */
-#define BUILD_YM2612  (HAS_YM2612 || HAS_YM3438)		/* build YM2612(OPN2)  emulator */
-
-/*#define BUILD_YM2151  (HAS_YM2151)		// build YM2151(OPM)   emulator */
+#define BUILD_YM2612  (HAS_YM2612)		/* build YM2612(OPN2)  emulator */
+#define BUILD_YM3438  (HAS_YM3438)		/* build YM3438(OPN) emulator */
 
 /* select bit size of output : 8 or 16 */
 #define FM_SAMPLE_BITS 16
@@ -202,26 +203,5 @@ int YM2612Write(int n, int a,unsigned char v);
 unsigned char YM2612Read(int n,int a);
 int YM2612TimerOver(int n, int c );
 #endif /* BUILD_YM2612 */
-
-#if 0 /*BUILD_YM2151*/
-/* -------------------- YM2151(OPM) Interface -------------------- */
-int OPMInit(int num, int baseclock, int rate,
-               FM_TIMERHANDLER TimerHandler,FM_IRQHANDLER IRQHandler);
-void OPMShutdown(void);
-void OPMResetChip(int num);
-
-void OPMUpdateOne(int num, INT16 **buffer, int length );
-/* ---- set callback hander when port CT0/1 write ----- */
-/* CT.bit0 = CT0 , CT.bit1 = CT1 */
-/*
-typedef void (*mem_write_handler)(int offset,int data);
-*/
-void OPMSetPortHander(int n,mem_write_handler PortWrite);
-/* JB 981119  - so it will match MAME's memory write functions scheme*/
-
-int YM2151Write(int n,int a,unsigned char v);
-unsigned char YM2151Read(int n,int a);
-int YM2151TimerOver(int n,int c);
-#endif /* BUILD_YM2151 */
 
 #endif /* _H_FM_FM_ */
