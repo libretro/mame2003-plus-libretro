@@ -670,13 +670,6 @@ bool generate_ost_sound_ddragon(int data)
 	sa_volume = 40;
 
 	switch(data) {
-		// Stop music when a coin is inserted on the title screen.
-		case 0xFF:
-			if(ost_last_played(0, 1) && ddragon_stage != 4) {
-				ddragon_stage = 0;
-				ost_stop_samples();
-			}
-			break;
 
 		// Title screen.
 		case 0x1:
@@ -745,7 +738,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	usrintf_showmessage("stage:%i  sample:%i  %i", ddragon_stage, last_left, last_right);
+	usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
