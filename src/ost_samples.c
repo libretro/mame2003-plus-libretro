@@ -783,7 +783,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	usrintf_showmessage("%i  %i", last_left, last_right);
+	usrintf_showmessage("count:%i  stage:%i  sample:%i  %i", d_title_counter, ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
