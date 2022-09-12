@@ -670,13 +670,20 @@ bool generate_ost_sound_ddragon(int data)
 	sa_volume = 40;
 
 	switch(data) {
-
 		// Title screen.
 		case 0x1:
 			if(!ost_last_played(0, 1) && ddragon_stage != 4)
 				ost_start_samples(0, 1, 1);
 			else if(ddragon_stage == 4 && !ost_last_played(22, 23)) // Final boss fight.
 				ost_start_samples(22, 23, 1);
+			break;
+
+		// Coin inserted, stop music on title screen.
+		case 0x2:
+			schedule_default_sound = true;
+
+			if(ost_last_played(0, 1))
+				ost_stop_samples();
 			break;
 
 		// Stage 1.
