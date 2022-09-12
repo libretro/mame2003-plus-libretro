@@ -19,7 +19,6 @@ static bool schedule_default_sound;
 int      ost_support = OST_SUPPORT_DISABLED;
 
 int      ddragon_stage;
-int      d_title_counter;
 
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
@@ -528,7 +527,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
       ddragon_stage = 0;
-      d_title_counter = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
@@ -672,22 +670,11 @@ bool generate_ost_sound_ddragon(int data)
 	sa_volume = 40;
 
 	switch(data) {
-		// Use for a counter flag on the title screen and stopping music.
+		// Stop music when a coin is inserted on the title screen.
 		case 0xFF:
-			// We are at the title screen.
 			if(ost_last_played(0, 1) && ddragon_stage != 4) {
-				// A coin has been inserted, lets stop the title music, about to start the first stage.
-				if(d_title_counter > 5) {
-					ost_stop_samples();
-					d_title_counter = 0;
-				}
-				else
-					d_title_counter++;
-			}
-			else {
-				ost_stop_samples();
 				ddragon_stage = 0;
-				d_title_counter = 0;
+				ost_stop_samples();
 			}
 			break;
 
@@ -697,8 +684,6 @@ bool generate_ost_sound_ddragon(int data)
 				ost_start_samples(0, 1, 1);
 			else if(ddragon_stage == 4 && !ost_last_played(22, 23)) // Final boss fight.
 				ost_start_samples(22, 23, 1);
-
-			d_title_counter = 0;
 			break;
 
 		// Stage 1.
@@ -760,7 +745,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	usrintf_showmessage("count:%i  stage:%i  sample:%i  %i", d_title_counter, ddragon_stage, last_left, last_right);
+	usrintf_showmessage("stage:%i  sample:%i  %i", ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
