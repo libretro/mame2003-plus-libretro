@@ -671,12 +671,12 @@ bool generate_ost_sound_ddragon(int data)
 
 	switch(data) {
 		// Return to title screen, stop music.
-		/*case 0xFE:
+		case 0xFF:
 			if(!ost_last_played(0, 1)) {
 				ddragon_stage = 0;
 				ost_stop_samples();
 			}
-			break;*/
+			break;
 
 		// Title screen.
 		case 0x1:
@@ -754,7 +754,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	if(data != 255 && data != 254) usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
+	usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
