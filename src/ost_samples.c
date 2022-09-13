@@ -684,7 +684,7 @@ bool generate_ost_sound_ddragon(int data)
 				ddragon_stage = 0;
 				ost_start_samples(0, 1, 1);
 			}
-			else if(ddragon_stage == 4 && !ost_last_played(22, 23)) // Final boss fight.
+			else if(ddragon_stage == 4) // Final boss fight.
 				ost_start_samples(22, 23, 1);
 			break;
 
@@ -710,13 +710,12 @@ bool generate_ost_sound_ddragon(int data)
 
 		// Stage 3.
 		case 0xA:
-			if(!ost_last_played(6, 7) && ddragon_stage != 3) {
+			if(ddragon_stage != 3) {
 				ddragon_stage = 3;
 				ost_start_samples(6, 7, 1);
 			}
-			else if(ddragon_stage == 3) {
+			else
 				ost_start_samples(8, 9, 1);
-			}
 			break;
 
 		// Stage 4.
