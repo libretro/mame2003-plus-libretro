@@ -754,7 +754,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	if(data != 255) usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
+	if(data != 255 && data != 254) usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
