@@ -670,7 +670,7 @@ bool generate_ost_sound_ddragon(int data)
 	sa_volume = 40;
 
 	switch(data) {
-		// Title screen.
+		// Return to title screen, stop music.
 		case 0xFE:
 			if(!ost_last_played(0, 1)) {
 				ddragon_stage = 0;
