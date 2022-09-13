@@ -71,6 +71,7 @@ conversion kit which could be applied to a bootleg double dragon :-p?
 #include "vidhrdw/generic.h"
 #include "ost_samples.h"
 
+static void ddragon_restore_state(void);
 /* from vidhrdw */
 extern unsigned char *ddragon_bgvideoram,*ddragon_fgvideoram;
 extern int ddragon_scrollx_hi, ddragon_scrolly_hi;
@@ -89,6 +90,7 @@ extern int technos_video_hw;
 static int dd_sub_cpu_busy;
 static int sprite_irq, sound_irq, ym_irq, snd_cpu;
 static int adpcm_pos[2],adpcm_end[2],adpcm_idle[2];
+static int adpcm_data[2] = { -1, -1 };
 static UINT8* darktowr_mcu_ports, *darktowr_ram;
 static int VBLK;
 static UINT8 bank_data;
@@ -102,9 +104,36 @@ static MACHINE_INIT( ddragon )
 	ym_irq = M6809_FIRQ_LINE;
 	technos_video_hw = 0;
 	dd_sub_cpu_busy = 0x10;
-	adpcm_idle[0] = adpcm_idle[1] = 1;
 	snd_cpu = 2;
+	adpcm_pos[0] = adpcm_pos[1] = 0;
+	adpcm_end[0] = adpcm_end[1] = 0;
+	adpcm_idle[0] = adpcm_idle[1] = -1;
+	adpcm_data[0] = adpcm_data[1] = -1;
+	state_save_register_int("ddragon", 0, "dd_sub_cpu_busy", &dd_sub_cpu_busy);
+	state_save_register_int("ddragon", 0, "sprite_irq", &sprite_irq);
+	state_save_register_int("ddragon", 0, "sound_irq", &sound_irq);
+	state_save_register_int("ddragon", 0, "snd_cpu", &snd_cpu);
+	state_save_register_int("ddragon", 0, "ym_irq", &ym_irq);
+	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
+	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[0]", &adpcm_pos[0]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
+
+	state_save_register_int("ddragon", 0, "ddragon_scrollx_hi", &ddragon_scrollx_hi);
+	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
+
+	state_save_register_int("ddragon", 0, "technos_video_hw", &technos_video_hw);
+	state_save_register_int("ddragon", 0, "VBLK", &VBLK);
+
+	state_save_register_UINT8("ddragon", 0, "bank_data", &bank_data, 1);
+	state_save_register_func_postload(ddragon_restore_state);
+//msm5205 soundcore needs savestates added
 }
+
 
 static MACHINE_INIT( toffy )
 {
@@ -390,8 +419,6 @@ static WRITE_HANDLER( dd_adpcm_w )
 
 static void dd_adpcm_int(int chip)
 {
-	static int adpcm_data[2] = { -1, -1 };
-
 	if (adpcm_pos[chip] >= adpcm_end[chip] || adpcm_pos[chip] >= 0x10000)
 	{
 		adpcm_idle[chip] = 1;
@@ -1021,7 +1048,7 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(384)
+	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_START(ddragon)
 	MDRV_VIDEO_UPDATE(ddragon)
@@ -1583,9 +1610,12 @@ toffy / stoffy are 'encrytped
 
 */
 
-static void ddragon_restore_state(int dummy)
+static void ddragon_restore_state(void)
 {
 	ddragon_bankswitch_w(0, bank_data);
+	dd_adpcm_int(0);
+	dd_adpcm_int(1);
+	
 }
 
 static DRIVER_INIT( toffy )

@@ -1497,7 +1497,7 @@ static void ym2151_state_save_register( int numchips )
 		state_save_register_UINT32 (buf1, i, "TimBold" , &YMPSG[i].timer_B_index_old, 1);
 		
 #ifdef USE_MAME_TIMERS
-	    state_save_register_UINT32 (buf1, i, "sndindex", &YMPSG[i].irqlinestate, 1);
+	    state_save_register_int (buf1, i, "sndindex", &YMPSG[i].irqlinestate);
 #endif
 
 		state_save_register_UINT8  (buf1, i, "connect" , &YMPSG[i].connect[0], 8);
