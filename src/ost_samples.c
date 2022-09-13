@@ -754,8 +754,6 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
-
 	ost_mix_samples();
 
 	return schedule_default_sound;
