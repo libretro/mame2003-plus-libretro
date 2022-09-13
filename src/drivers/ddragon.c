@@ -110,25 +110,16 @@ static MACHINE_INIT( ddragon )
 	adpcm_idle[0] = adpcm_idle[1] = -1;
 	adpcm_data[0] = adpcm_data[1] = -1;
 	state_save_register_int("ddragon", 0, "dd_sub_cpu_busy", &dd_sub_cpu_busy);
-	state_save_register_int("ddragon", 0, "sprite_irq", &sprite_irq);
-	state_save_register_int("ddragon", 0, "sound_irq", &sound_irq);
-	state_save_register_int("ddragon", 0, "snd_cpu", &snd_cpu);
-	state_save_register_int("ddragon", 0, "ym_irq", &ym_irq);
-//	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
-//	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
-//	state_save_register_int("ddragon", 0, "adpcm_pos[0]", &adpcm_pos[0]);
-//	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
-//	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
-//	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
-//	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
-//	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
-
+	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
+	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[0]", &adpcm_pos[0]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
 	state_save_register_int("ddragon", 0, "ddragon_scrollx_hi", &ddragon_scrollx_hi);
 	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
-
-	state_save_register_int("ddragon", 0, "technos_video_hw", &technos_video_hw);
-	state_save_register_int("ddragon", 0, "VBLK", &VBLK);
-
 	state_save_register_UINT8("ddragon", 0, "bank_data", &bank_data, 1);
 	state_save_register_func_postload(ddragon_restore_state);
 //msm5205 soundcore needs savestates added
