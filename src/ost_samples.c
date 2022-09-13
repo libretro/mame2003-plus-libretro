@@ -671,6 +671,12 @@ bool generate_ost_sound_ddragon(int data)
 
 	switch(data) {
 		// Title screen.
+		case 0xFE:
+			ddragon_stage = 0;
+			ost_stop_samples();
+			break;
+
+		// Title screen.
 		case 0x1:
 			if(!ost_last_played(0, 1) && ddragon_stage != 4) {
 				ddragon_stage = 0;
@@ -680,7 +686,7 @@ bool generate_ost_sound_ddragon(int data)
 				ost_start_samples(22, 23, 1);
 			break;
 
-		// Coin inserted, stop music on title screen.
+		// Coin inserted on the title screen, stop music.
 		case 0x2:
 			schedule_default_sound = true;
 
