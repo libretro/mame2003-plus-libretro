@@ -671,12 +671,12 @@ bool generate_ost_sound_ddragon(int data)
 
 	switch(data) {
 		// Return to title screen, stop music.
-		case 0xFE:
+		/*case 0xFE:
 			if(!ost_last_played(0, 1)) {
 				ddragon_stage = 0;
 				ost_stop_samples();
 			}
-			break;
+			break;*/
 
 		// Title screen.
 		case 0x1:
