@@ -672,8 +672,10 @@ bool generate_ost_sound_ddragon(int data)
 	switch(data) {
 		// Title screen.
 		case 0x1:
-			if(!ost_last_played(0, 1) && ddragon_stage != 4)
+			if(!ost_last_played(0, 1) && ddragon_stage != 4) {
+				ddragon_stage = 0;
 				ost_start_samples(0, 1, 1);
+			}
 			else if(ddragon_stage == 4 && !ost_last_played(22, 23)) // Final boss fight.
 				ost_start_samples(22, 23, 1);
 			break;
@@ -745,7 +747,7 @@ bool generate_ost_sound_ddragon(int data)
 			break;
 	}
 
-	usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
+	if(data != 255) usrintf_showmessage("data:%i  stage:%i  sample:%i  %i", data, ddragon_stage, last_left, last_right);
 
 	ost_mix_samples();
 
