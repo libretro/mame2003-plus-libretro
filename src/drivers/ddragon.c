@@ -65,12 +65,14 @@ conversion kit which could be applied to a bootleg double dragon :-p?
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/m6800/m6800.h"
 #include "cpu/m6809/m6809.h"
 #include "cpu/z80/z80.h"
 #include "vidhrdw/generic.h"
 #include "ost_samples.h"
 
+static void ddragon_restore_state(void);
 /* from vidhrdw */
 extern unsigned char *ddragon_bgvideoram,*ddragon_fgvideoram;
 extern int ddragon_scrollx_hi, ddragon_scrolly_hi;
@@ -87,28 +89,47 @@ extern int technos_video_hw;
 
 /* private globals */
 static int dd_sub_cpu_busy;
-static int sprite_irq, sound_irq, ym_irq, snd_cpu;
+static int m_sprite_irq, m_sound_irq, ym_irq, snd_cpu;
 static int adpcm_pos[2],adpcm_end[2],adpcm_idle[2];
+static int adpcm_data[2] = { -1, -1 };
 static UINT8* darktowr_mcu_ports, *darktowr_ram;
 static int VBLK;
-static UINT8 bank_data;
+static UINT8 m_ddragon_sub_port;
 /* end of private globals */
 
 
 static MACHINE_INIT( ddragon )
 {
-	sprite_irq = IRQ_LINE_NMI;
-	sound_irq = M6809_IRQ_LINE;
+	m_sprite_irq = IRQ_LINE_NMI;
+	m_sound_irq = M6809_IRQ_LINE;
 	ym_irq = M6809_FIRQ_LINE;
 	technos_video_hw = 0;
 	dd_sub_cpu_busy = 0x10;
-	adpcm_idle[0] = adpcm_idle[1] = 1;
 	snd_cpu = 2;
+	adpcm_pos[0] = adpcm_pos[1] = 0;
+	adpcm_end[0] = adpcm_end[1] = 0;
+	adpcm_idle[0] = adpcm_idle[1] = -1;
+	adpcm_data[0] = adpcm_data[1] = -1;
+	state_save_register_int("ddragon", 0, "dd_sub_cpu_busy", &dd_sub_cpu_busy);
+	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
+	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[0]", &adpcm_pos[0]);
+	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
+	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
+	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
+	state_save_register_int("ddragon", 0, "ddragon_scrollx_hi", &ddragon_scrollx_hi);
+	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
+	state_save_register_UINT8("ddragon", 0, "m_ddragon_sub_port", &m_ddragon_sub_port, 1);
+	state_save_register_func_postload(ddragon_restore_state);
+//msm5205 soundcore needs savestates added
 }
+
 
 static MACHINE_INIT( toffy )
 {
-	sound_irq = M6809_IRQ_LINE;
+	m_sound_irq = M6809_IRQ_LINE;
 	ym_irq = M6809_FIRQ_LINE;
 	technos_video_hw = 0;
 	dd_sub_cpu_busy = 0x10;
@@ -118,8 +139,8 @@ static MACHINE_INIT( toffy )
 
 static MACHINE_INIT( ddragonb )
 {
-	sprite_irq = IRQ_LINE_NMI;
-	sound_irq = M6809_IRQ_LINE;
+	m_sprite_irq = IRQ_LINE_NMI;
+	m_sound_irq = M6809_IRQ_LINE;
 	ym_irq = M6809_FIRQ_LINE;
 	technos_video_hw = 0;
 	dd_sub_cpu_busy = 0x10;
@@ -129,8 +150,8 @@ static MACHINE_INIT( ddragonb )
 
 static MACHINE_INIT( ddragon2 )
 {
-	sprite_irq = IRQ_LINE_NMI;
-	sound_irq = IRQ_LINE_NMI;
+	m_sprite_irq = IRQ_LINE_NMI;
+	m_sound_irq = IRQ_LINE_NMI;
 	ym_irq = 0;
 	technos_video_hw = 2;
 	dd_sub_cpu_busy = 0x10;
@@ -153,11 +174,11 @@ static WRITE_HANDLER( ddragon_bankswitch_w )
 	if (data & 0x10)
 		dd_sub_cpu_busy = 0x00;
 	else if (dd_sub_cpu_busy == 0x00)
-		cpu_set_irq_line( 1, sprite_irq, (sprite_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+		cpu_set_irq_line( 1, m_sprite_irq, (m_sprite_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 
 	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );
 
-	bank_data=data;
+	m_ddragon_sub_port=data;
 }
 
 static WRITE_HANDLER( toffy_bankswitch_w )
@@ -191,7 +212,7 @@ static WRITE_HANDLER( darktowr_bankswitch_w )
 	if (data & 0x10)
 		dd_sub_cpu_busy = 0x00;
 	else if (dd_sub_cpu_busy == 0x00)
-		cpu_set_irq_line( 1, sprite_irq, (sprite_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+		cpu_set_irq_line( 1, m_sprite_irq, (m_sprite_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 
 	darktowr_bank=(data & 0xe0) >> 5;
 /*	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );*/
@@ -281,12 +302,12 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		if( ost_support_enabled(OST_SUPPORT_DDRAGON) ) {
 			if(generate_ost_sound_ddragon( data )) {
 				soundlatch_w( 0, data );
-				cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+				cpu_set_irq_line( snd_cpu, m_sound_irq, (m_sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 			}
 		}
 		else {
 			soundlatch_w( 0, data );
-			cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+			cpu_set_irq_line( snd_cpu, m_sound_irq, (m_sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 		}
 		break;
 	case 4: /* 380f - ? */
@@ -304,21 +325,23 @@ static READ_HANDLER( ddragon_hd63701_internal_registers_r )
 
 static WRITE_HANDLER( ddragon_hd63701_internal_registers_w )
 {
-	/* I don't know why port 0x17 is used..  Doesn't seem to be a standard MCU port */
-	if (offset==0x17) {
-		/* This is a guess, but makes sense.. The mcu definitely interrupts the main cpu.
-        I don't know what bit is the assert and what is the clear though (in comparison
-        it's quite obvious from the Double Dragon 2 code, below). */
-		if (data&3) {
+
+// Port 6
+	if (offset == 0x17)
+	{
+		if ((data & 0x1) == 0)
 			cpu_set_irq_line(0,M6809_IRQ_LINE,ASSERT_LINE);
-         cpu_set_irq_line(1,sprite_irq, CLEAR_LINE );
-		}
+
+		if (!(m_ddragon_sub_port & 0x2) && (data & 0x2))
+			cpu_set_irq_line(0,M6809_IRQ_LINE,ASSERT_LINE);
+
+		m_ddragon_sub_port = data;
 	}
 }
 
 static WRITE_HANDLER( ddragon2_sub_irq_ack_w )
 {
-	cpu_set_irq_line(1,sprite_irq, CLEAR_LINE );
+	cpu_set_irq_line(1,m_sprite_irq, CLEAR_LINE );
 }
 
 static WRITE_HANDLER( ddragon2_sub_irq_w )
@@ -335,12 +358,6 @@ static READ_HANDLER( port4_r )
 
 static READ_HANDLER( ddragon_spriteram_r )
 {
-	/* Double Dragon crash fix - see notes above */
-	if(strcmp(Machine->gamedrv->name, "ddragon") == 0)
-	{
-		if (offset==0x49 && activecpu_get_pc()==0x6261 && ddragon_spriteram[offset]==0x1f)
-			return 0x1;
-	}
 	return ddragon_spriteram[offset];
 }
 
@@ -358,7 +375,7 @@ static WRITE_HANDLER( ddragon_spriteram_w )
 static WRITE_HANDLER( cpu_sound_command_w )
 {
 	soundlatch_w( offset, data );
-	cpu_set_irq_line( snd_cpu, sound_irq, (sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
+	cpu_set_irq_line( snd_cpu, m_sound_irq, (m_sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 }
 #endif
 
@@ -390,8 +407,6 @@ static WRITE_HANDLER( dd_adpcm_w )
 
 static void dd_adpcm_int(int chip)
 {
-	static int adpcm_data[2] = { -1, -1 };
-
 	if (adpcm_pos[chip] >= adpcm_end[chip] || adpcm_pos[chip] >= 0x10000)
 	{
 		adpcm_idle[chip] = 1;
@@ -1021,7 +1036,7 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(384)
+	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_START(ddragon)
 	MDRV_VIDEO_UPDATE(ddragon)
@@ -1583,9 +1598,9 @@ toffy / stoffy are 'encrytped
 
 */
 
-static void ddragon_restore_state(int dummy)
+static void ddragon_restore_state(void)
 {
-	ddragon_bankswitch_w(0, bank_data);
+	ddragon_bankswitch_w(0, m_ddragon_sub_port);
 }
 
 static DRIVER_INIT( toffy )
