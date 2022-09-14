@@ -1014,15 +1014,15 @@ static INTERRUPT_GEN( ddragon_interrupt )
 static MACHINE_DRIVER_START( ddragon )
 
 	/* basic machine hardware */
- 	MDRV_CPU_ADD(HD6309, 3579545)	/* 3.579545 MHz */
-    MDRV_CPU_MEMORY(readmem,writemem)
+	MDRV_CPU_ADD(HD6309, 3579545 * 2)/* 3.579545 MHz */
+	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(ddragon_interrupt,272)
 
-    MDRV_CPU_ADD(HD63701,3579545 / 3) /* This divider seems correct by comparison to real board */
+	MDRV_CPU_ADD(HD63701, (3579545 / 3) * 2) /* This divider seems correct by comparison to real board */
 	MDRV_CPU_MEMORY(sub_readmem,sub_writemem)
 
- 	MDRV_CPU_ADD(HD6309, 3579545)
- 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_ADD(HD6309, 3579545 * 2)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(((12000000.0 / 256.0) / 3.0) / 272.0)
