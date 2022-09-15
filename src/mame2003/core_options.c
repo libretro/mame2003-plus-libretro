@@ -776,6 +776,9 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
       { "115",   "115%" },
       { "120",   "120%" },
       { "125",   "125%" },
+      { "200",   "200%" },
+      { "250",   "250%" },
+      { "300",   "300%" },
       { NULL, NULL },
    },
    "default"
