@@ -537,6 +537,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
+      /* no settings */
       break;
 
     case OST_SUPPORT_MK:
@@ -726,7 +727,6 @@ bool generate_ost_sound_ddragon(int data)
 
 		// Credits.
 		case 0x6:
-			sa_volume = 100;
 			ddragon_stage = 5;
 			ost_start_samples(12, 13, 0);
 			break;
@@ -753,6 +753,9 @@ bool generate_ost_sound_ddragon(int data)
 			schedule_default_sound = true;
 			break;
 	}
+
+	/* Raise volume during credits */
+	if (ddragon_stage == 5) sa_volume = 100;
 
 	ost_mix_samples();
 
