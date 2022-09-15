@@ -666,7 +666,7 @@ void ost_fade_volume(void)
 
 bool generate_ost_sound_ddragon(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 40;
 
@@ -764,7 +764,7 @@ bool generate_ost_sound_ddragon(int data)
 
 bool generate_ost_sound_ffight(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -902,7 +902,7 @@ bool generate_ost_sound_ffight(int data)
 
 bool generate_ost_sound_ikari(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -953,7 +953,7 @@ bool generate_ost_sound_ikari(int data)
 
 bool generate_ost_sound_mk(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -1286,7 +1286,7 @@ bool generate_ost_sound_mk(int data)
 
 bool generate_ost_sound_mk_tunit(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -1463,7 +1463,7 @@ bool generate_ost_sound_mk_tunit(int data)
 
 bool generate_ost_sound_moonwalker(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -1551,7 +1551,7 @@ bool generate_ost_sound_moonwalker(int data)
 
 bool generate_ost_sound_nba_jam(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -1759,7 +1759,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 bool generate_ost_sound_outrun(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -1826,12 +1826,12 @@ bool generate_ost_sound_outrun(int data)
 
 bool generate_ost_sound_robocop(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
 	switch (data) {
-		// Level start
+		// Visor open and close
 		case 0x30:
 			ost_stop_samples();
 			break;
@@ -1903,7 +1903,7 @@ bool generate_ost_sound_robocop(int data)
 
 bool generate_ost_sound_sf1(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
@@ -2008,7 +2008,7 @@ bool generate_ost_sound_sf1(int data)
 
 bool generate_ost_sound_sf2(int data)
 {
-	/* initialize game config */
+	/* initialize ost config */
 	schedule_default_sound = false;
 
 	switch (data)
