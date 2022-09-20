@@ -729,41 +729,40 @@ bool generate_ost_sound_contra(int data)
 			break;
 
 		// Ranking
-		case 0x45:
-			ost_start_samples(8, 9, 1);
-			break;
+		/*case 0x45:
+			break;*/
 
 		// Stage 5 Snowfield
 		case 0x46:
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(8, 9, 1);
 			break;
 
 		// Boss
 		case 0x47:
-			ost_start_samples(12, 13, 1);
+			ost_start_samples(10, 11, 1);
 			break;
 
 		// Stage 8 Alien Base
 		case 0x48:
-			ost_start_samples(14, 15, 1);
+			ost_start_samples(12, 13, 1);
 			break;
 
 		// Ending
 		case 0x49:
-			ost_start_samples(16, 17, 1);
+			ost_start_samples(14, 15, 1);
 			break;
 
 		// Game Over
 		case 0x4A:
-			ost_start_samples(18, 19, 1);
+			ost_start_samples(16, 17, 1);
 			break;
 
-		// Stage Clear
+		// Stage Clear - diddy
 		case 0x4B:
 			ost_start_samples(18, 19, 1);
 			break;
 
-		//  Clear 2
+		// Stage Clear - complete
 		case 0x4C:
 			ost_start_samples(20, 21, 1);
 			break;
