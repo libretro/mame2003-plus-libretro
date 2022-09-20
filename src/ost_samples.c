@@ -767,7 +767,7 @@ bool generate_ost_sound_contra(int data)
 			ost_start_samples(18, 19, 0);
 			break;
 
-		// Stage Clear - complete
+		// Game Completed
 		case 0x4C:
 			ost_start_samples(20, 21, 0);
 			break;
