@@ -664,6 +664,88 @@ void ost_fade_volume(void)
 }
 
 
+bool generate_ost_sound_contra(int data)
+{
+	/* initialize ost config */
+	schedule_default_sound = false;
+	sa_volume = 100;
+
+	switch(data) {
+		// Stage 1 Jungle
+		case 0x40:
+			ost_start_samples(0, 1, 1);
+			break;
+
+		// Stage 3 Waterfalls
+		case 0x42:
+			ost_start_samples(2, 3, 1);
+			break;
+
+		//  Stage 6 Energy Zone and Hangar
+		case 0x43:
+			ost_start_samples(4, 5, 1);
+			break;
+
+		// Stage 2 The Base
+		case 0x44:
+			ost_start_samples(6, 7, 1);
+			break;
+
+		// Ranking
+		case 0x45:
+			ost_start_samples(8, 9, 1);
+			break;
+
+		// Stage 5 Snowfield
+		case 0x46:
+			ost_start_samples(10, 11, 1);
+			break;
+
+		// Boss
+		case 0x47:
+			ost_start_samples(12, 13, 1);
+			break;
+
+		// Stage 8 Alien Base
+		case 0x48:
+			ost_start_samples(14, 15, 1);
+			break;
+
+		// Ending
+		case 0x49:
+			ost_start_samples(16, 17, 1);
+			break;
+
+		// Game Over
+		case 0x4A:
+			ost_start_samples(18, 19, 1);
+			break;
+
+		// Stage Clear
+		case 0x4B:
+			ost_start_samples(18, 19, 1);
+			break;
+
+		//  Clear 2
+		case 0x4C:
+			ost_start_samples(20, 21, 1);
+			break;
+
+		// Title
+		case 0x4D:
+			ost_start_samples(22, 23, 1);
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
 bool generate_ost_sound_ddragon(int data)
 {
 	/* initialize ost config */
