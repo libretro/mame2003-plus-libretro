@@ -752,7 +752,7 @@ bool generate_ost_sound_contra(int data)
 			ost_start_samples(12, 13, 1);
 			break;
 
-		// Ending
+		// Credits
 		case 0x49:
 			ost_start_samples(14, 15, 1);
 			break;
@@ -764,12 +764,12 @@ bool generate_ost_sound_contra(int data)
 
 		// Stage Clear - diddy
 		case 0x4B:
-			ost_start_samples(18, 19, 1);
+			ost_start_samples(18, 19, 0);
 			break;
 
 		// Stage Clear - complete
 		case 0x4C:
-			ost_start_samples(20, 21, 1);
+			ost_start_samples(20, 21, 0);
 			break;
 
 		// Title
