@@ -16,6 +16,7 @@ Credits:
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/m6809/m6809.h"
+#include "ost_samples.h"
 
 extern unsigned char *contra_fg_vram,*contra_fg_cram;
 extern unsigned char *contra_bg_vram,*contra_bg_cram;
@@ -60,7 +61,12 @@ WRITE_HANDLER( contra_coin_counter_w )
 
 static WRITE_HANDLER( cpu_sound_command_w )
 {
-	soundlatch_w(offset,data);
+	if( ost_support_enabled(OST_SUPPORT_CONTRA) ) {
+		if(generate_ost_sound_contra( data ))
+			soundlatch_w(offset,data);
+	}
+	else
+		soundlatch_w(offset,data);
 }
 
 UINT32 math_regs[6];
@@ -331,6 +337,8 @@ static MACHINE_DRIVER_START( contra )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_CONTRA)
 MACHINE_DRIVER_END
 
 
