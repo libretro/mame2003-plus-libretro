@@ -782,6 +782,8 @@ bool generate_ost_sound_contra(int data)
 			break;
 	}
 
+	usrintf_showmessage("%i %i", last_left, last_right);
+
 	ost_mix_samples();
 
 	return schedule_default_sound;
