@@ -763,11 +763,11 @@ bool generate_ost_sound_contra(int data)
 			break;
 
 		// Stage Clear - diddy
-		case 0x4B:
+		case 0x4B: // 1st boss
 			ost_start_samples(18, 19, 0);
 			break;
 
-		// Game Completed
+		// Complete - destroyed the heart
 		case 0x4C:
 			ost_start_samples(20, 21, 0);
 			break;
@@ -782,7 +782,7 @@ bool generate_ost_sound_contra(int data)
 			break;
 	}
 
-	usrintf_showmessage("%i %i", last_left, last_right);
+	usrintf_showmessage("data:%i  %i %i", data, last_left, last_right);
 
 	ost_mix_samples();
 
