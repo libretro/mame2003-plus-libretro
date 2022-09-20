@@ -47,6 +47,36 @@ static void ost_set_last_played(int sa_left, int sa_right);
 static bool ost_last_played(int sa_left, int sa_right);
 
 
+const char *const contra_sample_set_names[] =
+{
+	"*contra",
+	"stage1-01",
+	"stage1-02",
+	"stage3-01",
+	"stage3-02",
+	"stage6-01",
+	"stage6-02",
+	"stage2-01",
+	"stage2-02",
+	"stage5-01",
+	"stage5-02",
+	"boss-01",
+	"boss-02",
+	"stage8-01",
+	"stage8-02",
+	"credits-01",
+	"credits-02",
+	"over-01",
+	"over-02",
+	"diddy-01",
+	"diddy-02",
+	"complete-01",
+	"complete-02",
+	"title-01",
+	"title-02",
+	0
+};
+
 const char *const ddragon_sample_set_names[] =
 {
 	"*ddragon",
@@ -433,6 +463,13 @@ const char *const sf2_sample_set_names[] =
 	0
 };
 
+
+struct Samplesinterface ost_contra =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	contra_sample_set_names
+};
 
 struct Samplesinterface ost_ddragon =
 {
