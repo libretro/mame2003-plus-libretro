@@ -561,6 +561,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
   switch(ost)
   {
+    case OST_SUPPORT_CONTRA:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_contra)
+      /* no settings */
+      break;
+
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
       ddragon_stage = 0;
