@@ -51,6 +51,9 @@ WRITE_HANDLER( contra_bankswitch_w )
 WRITE_HANDLER( contra_sh_irqtrigger_w )
 {
 	cpu_set_irq_line(1,M6809_IRQ_LINE,HOLD_LINE);
+
+	if( ost_support_enabled(OST_SUPPORT_CONTRA) )
+		ost_fade_volume();
 }
 
 WRITE_HANDLER( contra_coin_counter_w )
