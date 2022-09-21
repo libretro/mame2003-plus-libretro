@@ -764,6 +764,7 @@ bool generate_ost_sound_contra(int data)
 
 		// Stage Clear - diddy
 		case 0x4B: // 1st boss
+		case 0x80: // 2nd boss
 			ost_start_samples(18, 19, 0);
 			break;
 
