@@ -759,7 +759,7 @@ bool generate_ost_sound_contra(int data)
 
 		// Game Over
 		case 0x4A:
-			ost_start_samples(16, 17, 1);
+			ost_start_samples(16, 17, 0);
 			break;
 
 		// Stage Clear - diddy
@@ -774,7 +774,7 @@ bool generate_ost_sound_contra(int data)
 
 		// Title
 		case 0x4D:
-			ost_start_samples(22, 23, 1);
+			ost_start_samples(22, 23, 0);
 			break;
 
 		default:
