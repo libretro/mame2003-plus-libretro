@@ -51,15 +51,15 @@ WRITE_HANDLER( contra_bankswitch_w )
 WRITE_HANDLER( contra_sh_irqtrigger_w )
 {
 	cpu_set_irq_line(1,M6809_IRQ_LINE,HOLD_LINE);
-
-	if( ost_support_enabled(OST_SUPPORT_CONTRA) )
-		ost_fade_volume();
 }
 
 WRITE_HANDLER( contra_coin_counter_w )
 {
 	if (data & 0x01) coin_counter_w(0,data & 0x01);
 	if (data & 0x02) coin_counter_w(1,(data & 0x02) >> 1);
+
+	if( ost_support_enabled(OST_SUPPORT_CONTRA) )
+		ost_fade_volume();
 }
 
 static WRITE_HANDLER( cpu_sound_command_w )
