@@ -7,6 +7,7 @@
 enum
 {
   OST_SUPPORT_DISABLED = 0,
+  OST_SUPPORT_CONTRA,
   OST_SUPPORT_DDRAGON,
   OST_SUPPORT_FFIGHT,
   OST_SUPPORT_IKARI,
@@ -27,6 +28,7 @@ extern void install_ost_support (struct InternalMachineDriver *machine, int ost)
 #define MDRV_INSTALL_OST_SUPPORT(ost)		\
 	install_ost_support(machine, ost);		\
 
+extern bool generate_ost_sound_contra     (int data);
 extern bool generate_ost_sound_ddragon    (int data);
 extern bool generate_ost_sound_ffight     (int data);
 extern bool generate_ost_sound_ikari      (int data);
