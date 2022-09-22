@@ -12,6 +12,7 @@
 static int  sa_volume;
 static int  last_left  = 0;
 static int  last_right = 0;
+static bool fadingMusic;
 static bool schedule_default_sound;
 
 
@@ -35,8 +36,6 @@ int      m_nba_last_offset;
 int      m_nba_start_counter;
 
 int      outrun_start_counter;
-
-bool     fadingMusic;
 
 
 /* ost functions */
