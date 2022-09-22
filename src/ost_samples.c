@@ -58,6 +58,8 @@ const char *const contra_sample_set_names[] =
 	"stage6-02",
 	"stage2-01",
 	"stage2-02",
+	"ranking-01",
+	"ranking-02",
 	"stage5-01",
 	"stage5-02",
 	"boss-01",
@@ -741,65 +743,66 @@ bool generate_ost_sound_contra(int data)
 			break;
 
 		// Ranking
-		/*case 0x45:
+		case 0x45:
 			fadingMusic = false;
 			sa_volume = 100;
-			break;*/
+			ost_start_samples(8, 9, 0);
+			break;
 
 		// Stage 5 Snowfield
 		case 0x46:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(8, 9, 1);
+			ost_start_samples(10, 11, 1);
 			break;
 
 		// Boss
 		case 0x47:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(12, 13, 1);
 			break;
 
 		// Stage 8 Alien Base
 		case 0x48:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(12, 13, 1);
+			ost_start_samples(14, 15, 1);
 			break;
 
 		// Credits
 		case 0x49:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(14, 15, 1);
+			ost_start_samples(16, 17, 1);
 			break;
 
 		// Game Over
 		case 0x4A:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(16, 17, 0);
+			ost_start_samples(18, 19, 0);
 			break;
 
 		// Stage Clear - diddy
 		case 0x4B: // 1st boss
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(18, 19, 0);
+			ost_start_samples(20, 21, 0);
 			break;
 
 		// Complete - destroyed the heart
 		case 0x4C:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(20, 21, 0);
+			ost_start_samples(22, 23, 0);
 			break;
 
 		// Title
 		case 0x4D:
 			fadingMusic = false;
 			sa_volume = 100;
-			ost_start_samples(22, 23, 0);
+			ost_start_samples(24, 25, 0);
 			break;
 
 		// Fade music
