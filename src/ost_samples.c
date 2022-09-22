@@ -740,6 +740,12 @@ bool generate_ost_sound_contra(int data)
 			ost_start_samples(6, 7, 1);
 			break;
 
+		// Ranking
+		/*case 0x45:
+			fadingMusic = false;
+			sa_volume = 100;
+			break;*/
+
 		// Stage 5 Snowfield
 		case 0x46:
 			fadingMusic = false;
