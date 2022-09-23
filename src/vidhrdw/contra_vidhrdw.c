@@ -246,9 +246,9 @@ WRITE_HANDLER( contra_K007121_ctrl_1_w )
 	if (offset == 3)
 	{
 		if ((data&0x8)==0)
-			memcpy(private_spriteram_2,spriteram+0x2800,0x800);
+			memcpy(private_spriteram_2,spriteram_2+0x800,0x800);
 		else
-			memcpy(private_spriteram_2,spriteram+0x2000,0x800);
+			memcpy(private_spriteram_2,spriteram_2+0x000,0x800);
 	}
 	if (offset == 6)
 	{
