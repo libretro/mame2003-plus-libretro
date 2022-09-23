@@ -152,7 +152,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x4000, 0x43ff, contra_bg_cram_w, &contra_bg_cram },
 	{ 0x4400, 0x47ff, contra_bg_vram_w, &contra_bg_vram },
 	{ 0x4800, 0x4fff, MWA_RAM },
-	{ 0x5000, 0x5fff, MWA_RAM, &spriteram2 },
+	{ 0x5000, 0x5fff, MWA_RAM, &spriteram_2 },
 	{ 0x6000, 0x6fff, MWA_ROM },
  	{ 0x7000, 0x7000, contra_bankswitch_w },
 	{ 0x7001, 0xffff, MWA_ROM },
