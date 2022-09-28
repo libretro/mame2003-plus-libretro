@@ -1778,7 +1778,7 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	if(data!=2) usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
+	if(data!=2 && data!=170) usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
 
 	ost_mix_samples();
 
