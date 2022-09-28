@@ -637,6 +637,8 @@ static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 {
   ost_stop_samples();
 
+  usrintf_showmessage("play:%i %i  loop %i", sa_left, sa_right, sa_loop);
+
   sample_start(0, sa_left, sa_loop);
   sample_start(1, sa_right, sa_loop);
 
