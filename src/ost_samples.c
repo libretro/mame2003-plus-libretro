@@ -637,8 +637,6 @@ static void ost_start_samples(int sa_left, int sa_right, int sa_loop)
 {
   ost_stop_samples();
 
-  usrintf_showmessage("play:%i %i  loop %i", sa_left, sa_right, sa_loop);
-
   sample_start(0, sa_left, sa_loop);
   sample_start(1, sa_right, sa_loop);
 
@@ -1717,19 +1715,14 @@ bool generate_ost_sound_nba_jam(int data)
 			return 0; /* do nothing */
 			break;
 
+		/* Rev 3 */
 		case 0x0:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
 			break;
 
-		/* Rev 2 calls this on title screen start. Rev 3 does not. Rev 3 does a extra 0 byte call, while Rev 2 does the FF byte instead.*/
+		/* Rev 2 */
 		case 0xFF:
-			if(!ost_last_played(0, 1))
-				ost_start_samples(0, 1, 1);
-			break;
-
-		/* Doesn't seem to do anything? Appears after title screen demo game. Showing high scores. Replay the NBA Jam title music?*/
-		case 0x7E:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
 			break;
@@ -1804,9 +1797,9 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	ost_mix_samples();
+	usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
 
-	m_nba_last_offset = data;
+	ost_mix_samples();
 
 	return schedule_default_sound;
 }
