@@ -1695,10 +1695,6 @@ bool generate_ost_sound_nba_jam(int data)
 	sa_volume = 100;
 
 	switch (data) {
-		case 0x8C:
-			/* do nothing */
-			break;
-
 		/* Title screen.*/
 		case 0xFF:	/* Rev 2 */
 		case 0x00:	/* Rev 3 */
@@ -1715,6 +1711,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* 1st quarter.*/
 		case 0x2:
+			schedule_default_sound = true;
 			ost_start_samples(4, 5, 1);
 			break;
 
@@ -1778,7 +1775,7 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	log_cb(RETRO_LOG_INFO, LOGPRE "data:%i  last:%i %i\n", data, last_left, last_right);
+	usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
 
 	ost_mix_samples();
 
