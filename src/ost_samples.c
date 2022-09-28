@@ -1778,7 +1778,7 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	log_cb(RETRO_LOG_INFO, LOGPRE "data:%i  last:%i %i/n", data, last_left, last_right);
+	log_cb(RETRO_LOG_INFO, LOGPRE "data:%i  last:%i %i\n", data, last_left, last_right);
 
 	ost_mix_samples();
 
