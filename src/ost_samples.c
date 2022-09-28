@@ -1694,84 +1694,9 @@ bool generate_ost_sound_nba_jam(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	switch (data) {
-		case 0x8C:
-			/* do nothing */
-			break;
 
-//
 
-		/* Team select.*/
-		case 0x1:
-			ost_start_samples(2, 3, 1);
-			break;
-
-		/* 1st quarter.*/
-		case 0x2:
-			ost_start_samples(4, 5, 1);
-			break;
-
-		/* 2nd quarter.*/
-		case 0x6:
-			ost_start_samples(6, 7, 1);
-			break;
-
-		/* Half time report.*/
-		case 0x4:
-			ost_start_samples(10, 11, 1);
-			break;
-
-		/* 3rd quarter.*/
-		case 0x7:
-			ost_start_samples(4, 5, 1);
-			break;
-
-		/* 4th quarter.*/
-		case 0x8:
-			ost_start_samples(6, 7, 1);
-			break;
-
-		/* Game over and back to title screen. This plays the team select music.*/
-		case 0x9:
-			/* do nothing */
-			break;
-
-		/* Game stats after playing a full game.*/
-		case 0x3:
-			ost_start_samples(12, 13, 1);
-			break;
-
-		/* Intermission.*/
-		case 0xA:
-			ost_start_samples(8, 9, 1);
-			break;
-
-		/* Overtime.*/
-		case 0xB:
-			ost_start_samples(6, 7, 1);
-			break;
-
-		/* NBA Jam halftime report.*/
-		case 0x71:
-			/* do nothing */
-			break;
-
-		/* Altitude with a attitude.*/
-		case 0xCC:
-			/* do nothing */
-			break;
-
-		/* Welcome to NBA Jam.*/
-		case 0xCB:
-			/* do nothing */
-			break;
-
-		default:
-			schedule_default_sound = true;
-			break;
-	}
-
-	if(data==0x8C) usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
+	usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
 
 	ost_mix_samples();
 
