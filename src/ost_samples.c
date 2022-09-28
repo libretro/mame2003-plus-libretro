@@ -1699,14 +1699,7 @@ bool generate_ost_sound_nba_jam(int data)
 			/* do nothing */
 			break;
 
-		/* Title screen. */
-		case 0xFF:	/* Rev 2 */
-		case 0x00:	/* Rev 3 */
-			schedule_default_sound = true;
-
-			if(!ost_last_played(0, 1))
-				ost_start_samples(0, 1, 1);
-			break;
+//
 
 		/* Team select.*/
 		case 0x1:
