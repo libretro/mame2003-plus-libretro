@@ -1713,8 +1713,8 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* 1st quarter.*/
 		case 0x2:
-			schedule_default_sound = false;
-			ost_start_samples(4, 5, 1);
+			if(!ost_last_played(4, 5))
+				ost_start_samples(4, 5, 1);
 			break;
 
 		/* 2nd quarter.*/
