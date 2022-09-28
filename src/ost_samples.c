@@ -1718,188 +1718,85 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 
 		case 0x0:
-			m_nba_start_counter++;
-
-			/* Need to reset the intermission offset for game over.*/
-			if(m_nba_last_offset == 0x23 || m_nba_last_offset == 0x29)
-				nba_jam_intermission = false;
-
-			if(nba_jam_boot_up == false) {
-				if(m_nba_start_counter > 10)
-					m_nba_start_counter = 4;
-
-				if(m_nba_start_counter > 1 && nba_jam_in_game == false)
-					nba_jam_title_screen = true;
-
-				if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false && nba_jam_intermission == false) {
-					nba_jam_select_screen = false;
-					nba_jam_intermission = false;
-					nba_jam_playing_title_music = true;
-					ost_start_samples(0, 1, 1);
-				}
-				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
-					return 0; /* do nothing */
-				else
-					ost_stop_samples();
-			}
-			else {
-				if(m_nba_start_counter == 2) {
-					nba_jam_boot_up = false;
-					m_nba_start_counter = 0;
-				}
-			}
-
-			/* Time to stop the NBA Jam music samples.*/
-			if(nba_jam_title_screen == false) {
-				ost_stop_samples();
-			}
+			if(!ost_last_played(0, 1))
+				ost_start_samples(0, 1, 1);
 			break;
 
 		/* Rev 2 calls this on title screen start. Rev 3 does not. Rev 3 does a extra 0 byte call, while Rev 2 does the FF byte instead.*/
 		case 0xFF:
-			nba_jam_intermission = false;
-
-			if(m_nba_last_offset == 0) {
-				m_nba_start_counter++;
-
-				if(m_nba_start_counter > 10)
-					m_nba_start_counter = 4;
-
-				if(m_nba_start_counter > 1 && nba_jam_in_game == false && nba_jam_intermission == false)
-					nba_jam_title_screen = true;
-
-				if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false && nba_jam_intermission == false) {
-					nba_jam_select_screen = false;
-					nba_jam_intermission = false;
-					nba_jam_playing_title_music = true;
-					ost_start_samples(0, 1, 1);
-				}
-				else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
-					return 0; /* do nothing */
-				else
-					ost_stop_samples();
-			}
+			if(!ost_last_played(0, 1))
+				ost_start_samples(0, 1, 1);
 			break;
 
 		/* Doesn't seem to do anything? Appears after title screen demo game. Showing high scores. Replay the NBA Jam title music?*/
 		case 0x7E:
-			nba_jam_intermission = false;
-			if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false) {
+			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
-			}
 			break;
 
 		/* Team select.*/
 		case 0x1:
-			nba_jam_title_screen = false;
-			nba_jam_select_screen = true;
-			nba_jam_intermission = false;
-			nba_jam_in_game = true;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(2, 3, 1);
 			break;
 
 		/* 1st quarter.*/
 		case 0x2:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		/* 2nd quarter.*/
 		case 0x6:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		/* Half time report.*/
 		case 0x4:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = true;
-			nba_jam_in_game = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		/* 3rd quarter.*/
 		case 0x7:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		/* 4th quarter.*/
 		case 0x8:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
-		/* Game over and back to title screen. This plays the team select music. We will do nothing and reflag the title screen music to start playback soon after.*/
+		/* Game over and back to title screen. This plays the team select music.*/
 		case 0x9:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_in_game = false;
-			nba_jam_playing_title_music = false;
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Game stats after playing a full game.*/
 		case 0x3:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_in_game = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(12, 13, 1);
 			break;
 
 		/* Intermission.*/
 		case 0xA:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = true;
-			nba_jam_in_game = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		/* Overtime.*/
 		case 0xB:
-			nba_jam_select_screen = false;
-			nba_jam_title_screen = false;
-			nba_jam_intermission = false;
-			nba_jam_playing_title_music = false;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		/* NBA Jam halftime report.*/
 		case 0x71:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Altitude with a attitude.*/
 		case 0xCC:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Welcome to NBA Jam.*/
 		case 0xCB:
-			if(nba_jam_select_screen == true)
-				return 0; /* do nothing */
-			else
-				schedule_default_sound = true;
+			/* do nothing */
 			break;
 
 		default:
