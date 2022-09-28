@@ -1702,6 +1702,8 @@ bool generate_ost_sound_nba_jam(int data)
 		/* Title screen. */
 		case 0xFF:	/* Rev 2 */
 		case 0x00:	/* Rev 3 */
+			schedule_default_sound = true;
+
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
 			break;
@@ -1713,8 +1715,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* 1st quarter.*/
 		case 0x2:
-			if(!ost_last_played(4, 5))
-				ost_start_samples(4, 5, 1);
+			ost_start_samples(4, 5, 1);
 			break;
 
 		/* 2nd quarter.*/
