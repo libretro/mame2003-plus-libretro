@@ -1699,17 +1699,17 @@ bool generate_ost_sound_nba_jam(int data)
 			return 0; /* do nothing */
 			break;
 
-		/* Rev 3 */
+		/* Rev 3
 		case 0x0:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
-			break;
+			break; */
 
-		/* Rev 2
+		/* Rev 2 */
 		case 0xFF:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
-			break; */
+			break;
 
 		/* Team select.*/
 		case 0x1:
@@ -1781,7 +1781,7 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
+	if(data!=170) usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
 
 	ost_mix_samples();
 
