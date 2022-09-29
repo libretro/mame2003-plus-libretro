@@ -1701,14 +1701,19 @@ bool generate_ost_sound_nba_jam(int data)
 		case 0x00:
 			schedule_default_sound = true;
 
+			/* stop music when in game */
+			if (nba_jam_start_counter == 3)
+				ost_stop_samples();
+
 			if(!ost_last_played(0, 1) && nba_jam_start_counter == 2)
 				ost_start_samples(0, 1, 1);
-			else if (nba_jam_start_counter != 2)
+			else if (nba_jam_start_counter < 2)
 				nba_jam_start_counter++;
 			break;
 
 		/* Team select.*/
 		case 0x1:
+			nba_jam_start_counter = 3;
 			ost_start_samples(2, 3, 1);
 			break;
 
@@ -1738,8 +1743,9 @@ bool generate_ost_sound_nba_jam(int data)
 			ost_start_samples(6, 7, 1);
 			break;
 
-		/* Game over and back to title screen. This plays the team select music.*/
+		/* Game over and back to title screen. This plays the team select music. We will do nothing and start the title music soon after.*/
 		case 0x9:
+			nba_jam_start_counter = 2;
 			/* do nothing */
 			break;
 
