@@ -1696,6 +1696,8 @@ bool generate_ost_sound_nba_jam(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
+return 0;
+
 	switch (data) {
 		/* Title screen.*/
 		case 0x00:
