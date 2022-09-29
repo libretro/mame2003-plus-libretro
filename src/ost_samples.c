@@ -1696,6 +1696,8 @@ bool generate_ost_sound_nba_jam(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
+	if (data != 0x8C) return 0;
+
 	switch (data) {
 		/* Title screen.*/
 		case 0x00:
@@ -1745,7 +1747,6 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* Game stats after playing a full game.*/
 		case 0x3:
-			nba_jam_start_counter = 0;	/* reset allowing the music to play a bit longer.*/
 			ost_start_samples(12, 13, 1);
 			break;
 
