@@ -1698,8 +1698,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 	switch (data) {
 		/* Title screen.*/
-		//case 0xFF:	/* Rev 2 */
-		case 0x00:	/* Rev 3 */
+		case 0x00:
 			schedule_default_sound = true;
 
 			if(!ost_last_played(0, 1) && nba_jam_start_counter == 2)
