@@ -1773,7 +1773,7 @@ bool generate_ost_sound_nba_jam(int data)
 			/* do nothing */
 			break;
 
-		/* snare like sound */
+		/* screen changes? */
 		case 0x8C:
 			/* do nothing */
 			break;
