@@ -1711,7 +1711,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* 1st quarter.*/
 		case 0x2:
-			schedule_default_sound = true;
+			/* Bug - announcer repeats opponent's name with this trigger. This default sound needs returned but then it plays over our sample.*/
 			ost_start_samples(4, 5, 1);
 			break;
 
