@@ -1696,8 +1696,6 @@ bool generate_ost_sound_nba_jam(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	if (data != 0x8C) return 0;
-
 	switch (data) {
 		/* Title screen.*/
 		case 0x00:
@@ -1772,6 +1770,11 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* Welcome to NBA Jam.*/
 		case 0xCB:
+			/* do nothing */
+			break;
+
+		/* snare like sound */
+		case 0x8C:
 			/* do nothing */
 			break;
 
