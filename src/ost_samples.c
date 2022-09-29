@@ -26,6 +26,8 @@ bool     ff_alternate_song_2;
 
 bool     moon_diddy;
 
+bool     nba_jam_boot_up;
+
 int      outrun_start_counter;
 
 
@@ -591,7 +593,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_NBA_JAM:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
-      /* no settings */
+      nba_jam_boot_up = true;
       break;
 
     case OST_SUPPORT_OUTRUN:
@@ -1700,8 +1702,10 @@ bool generate_ost_sound_nba_jam(int data)
 		case 0x00:	/* Rev 3 */
 			schedule_default_sound = true;
 
-			if(!ost_last_played(0, 1))
+			if(!ost_last_played(0, 1) && nba_jam_boot_up == false)
 				ost_start_samples(0, 1, 1);
+			else
+				nba_jam_boot_up = false;
 			break;
 
 		/* Team select.*/
@@ -1775,7 +1779,7 @@ bool generate_ost_sound_nba_jam(int data)
 			break;
 	}
 
-	usrintf_showmessage("data:%i  last:%i %i", data, last_left, last_right);
+	usrintf_showmessage("boot:%i  data:%i  last:%i %i", nba_jam_boot_up, data, last_left, last_right);
 
 	ost_mix_samples();
 
