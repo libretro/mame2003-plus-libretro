@@ -1696,8 +1696,6 @@ bool generate_ost_sound_nba_jam(int data)
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-return 0;
-
 	switch (data) {
 		/* Title screen.*/
 		case 0x00:
@@ -1775,7 +1773,7 @@ return 0;
 			/* do nothing */
 			break;
 
-		/* screen changes? */
+		/* screen updates? */
 		case 0x8C:
 			/* do nothing */
 			break;
@@ -1784,8 +1782,6 @@ return 0;
 			schedule_default_sound = true;
 			break;
 	}
-
-	usrintf_showmessage("start:%i  data:%i  last:%i %i", nba_jam_start_counter, data, last_left, last_right);
 
 	ost_mix_samples();
 
