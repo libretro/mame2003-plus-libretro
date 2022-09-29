@@ -1738,13 +1738,14 @@ bool generate_ost_sound_nba_jam(int data)
 			ost_start_samples(6, 7, 1);
 			break;
 
-		/* Game over after playing a full game. This plays the team select music. We will do nothing and reset nba_jam_start_counter allowing the game stats music to play a bit longer.*/
+		/* Game over after playing a full game. This plays the team select music.*/
 		case 0x9:
-			nba_jam_start_counter = 0;
+			/* do nothing */
 			break;
 
 		/* Game stats after playing a full game.*/
 		case 0x3:
+			nba_jam_start_counter = 0;	/* reset allowing the music to play a bit longer.*/
 			ost_start_samples(12, 13, 1);
 			break;
 
