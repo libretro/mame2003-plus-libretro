@@ -1101,7 +1101,7 @@ bool generate_ost_sound_mk(int data)
 	switch (data) {
 		/* Intro title screen diddy*/
 		case 0xFD13:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Intro title screen diddy*/
@@ -1111,7 +1111,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Second player joining diddy*/
 		case 0xFD18:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Second player joining diddy*/
@@ -1121,7 +1121,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Character selection screen.*/
 		case 0xFD01:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Character selection screen.*/
@@ -1131,7 +1131,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map*/
 		case 0xFD12:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Scrolling character map*/
@@ -1141,17 +1141,17 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map end*/
 		case 0xFD1E:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Scrolling character map end*/
 		case 0xFF1E:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Continue music*/
 		case 0xFD06:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Continue music*/
@@ -1161,7 +1161,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Game over music*/
 		case 0xFD02:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Game over music*/
@@ -1171,7 +1171,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Test your might music.*/
 		case 0xFD19:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Test your might music.*/
@@ -1181,7 +1181,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Test your end (fail).*/
 		case 0xFD1A:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Test your end (fail).*/
@@ -1191,7 +1191,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Fatality music*/
 		case 0xFDEE:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Fatality music*/
@@ -1201,17 +1201,17 @@ bool generate_ost_sound_mk(int data)
 
 		/* Fatality music echo loop*/
 		case 0xFDDE:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Fatality music echo loop*/
 		case 0xFFDE:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Courtyard music*/
 		case 0xFD03:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Courtyard music*/
@@ -1221,7 +1221,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Courtyard end music*/
 		case 0xFD05:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Courtyard end music*/
@@ -1231,7 +1231,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Courtyard finish him music*/
 		case 0xFD04:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Courtyard finish him music*/
@@ -1241,7 +1241,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine music*/
 		case 0xFD0A:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Warrior Shrine music*/
@@ -1251,7 +1251,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine end music*/
 		case 0xFD0C:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Warrior Shrine end music*/
@@ -1261,7 +1261,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Warrior Shrine finish him music*/
 		case 0xFD0B:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Warrior Shrine finish him music*/
@@ -1271,7 +1271,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit music*/
 		case 0xFD0D:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* The Pit music*/
@@ -1281,7 +1281,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit end music*/
 		case 0xFD0F:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* The Pit end music*/
@@ -1291,7 +1291,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* The Pit finish him music*/
 		case 0xFD0E:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* The Pit finish him music*/
@@ -1301,7 +1301,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room music*/
 		case 0xFD1B:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Throne Room music*/
@@ -1311,7 +1311,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room end music*/
 		case 0xFD1D:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Throne Room end music*/
@@ -1321,7 +1321,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Throne Room finish him music*/
 		case 0xFD1C:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Throne Room finish him music*/
@@ -1331,7 +1331,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair music*/
 		case 0xFD14:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Goro's Lair music*/
@@ -1341,7 +1341,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair end music*/
 		case 0xFD17:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Goro's Lair end music*/
@@ -1351,7 +1351,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Goro's Lair finish him music*/
 		case 0xFD16:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Goro's Lair finish him music*/
@@ -1361,7 +1361,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Endurance switch characters chime*/
 		case 0xFD10:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Endurance switch characters chime*/
@@ -1371,7 +1371,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Victory music*/
 		case 0xFD1F:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Victory music*/
@@ -1381,7 +1381,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace gates music*/
 		case 0xFD07:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Palace gates music*/
@@ -1391,7 +1391,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace Gates end music*/
 		case 0xFD09:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Palace Gates end music*/
@@ -1401,7 +1401,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Palace Gates finish him music*/
 		case 0xFD08:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Palace Gates finish him music*/
@@ -1454,7 +1454,7 @@ bool generate_ost_sound_mk_tunit(int data)
 
 		/* Scrolling character map end*/
 		case 0x1E:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Continue music*/
@@ -1484,7 +1484,7 @@ bool generate_ost_sound_mk_tunit(int data)
 
 		/* Fatality music echo loop*/
 		case 0xDE:
-			return 0; /* do nothing */
+			/* do nothing */
 			break;
 
 		/* Courtyard music*/
