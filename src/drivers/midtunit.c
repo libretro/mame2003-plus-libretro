@@ -1387,7 +1387,7 @@ ROM_END
  *
  *************************************/
 
-GAME( 1992, mk,       0,       mk, mk,      mk,       ROT0, "Midway",   "Mortal Kombat (rev 5.0 T-Unit 03-19-93)" )
+GAME( 1992, mk,       0,       tunit_dcs, mk,      mk,       ROT0, "Midway",   "Mortal Kombat (rev 5.0 T-Unit 03-19-93)" )
 GAME( 1992, mkr4,     mk,      mk, mk,      mkr4,     ROT0, "Midway",   "Mortal Kombat (rev 4.0 T-Unit 02-11-93)" )
 
 GAMEC( 1993, mk2,      0,       tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.1)", &mk2_ctrl, &mk2_bootstrap )
