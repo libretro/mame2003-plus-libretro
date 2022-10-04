@@ -1094,6 +1094,9 @@ bool generate_ost_sound_ikari(int data)
 
 bool generate_ost_sound_mk(int data)
 {
+	usrintf_showmessage("%i  Last:%i %i", data&0xff, last_left, last_right);
+	return generate_ost_sound_mk_tunit(data&0xff);
+
 	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
@@ -1419,8 +1422,6 @@ bool generate_ost_sound_mk(int data)
 			schedule_default_sound = true;
 			break;
 	}
-
-	usrintf_showmessage("%i  Last:%i %i", data&0xff, last_left, last_right);
 
 	ost_mix_samples();
 
