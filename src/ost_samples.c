@@ -581,11 +581,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
       /* no settings */
       break;
 
-    case OST_SUPPORT_MK_T:
-      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
-      /* no settings */
-      break;
-
     case OST_SUPPORT_MOONWALKER:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
       moon_diddy = false;
@@ -1094,17 +1089,12 @@ bool generate_ost_sound_ikari(int data)
 
 bool generate_ost_sound_mk(int data)
 {
-	/* unmask the data and run through the t-unit OST */
-	return generate_ost_sound_mk_tunit(data&0xff);
-}
-
-bool generate_ost_sound_mk_tunit(int data)
-{
 	/* initialize ost config */
 	schedule_default_sound = false;
 	sa_volume = 100;
 
-	switch (data) {
+	/* unmask data for y-unit compatibility */
+	switch (data&0xff) {
 		/* Intro title screen diddy*/
 		case 0x13:
 			ost_start_samples(0, 1, 0);
