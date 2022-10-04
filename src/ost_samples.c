@@ -1420,6 +1420,8 @@ bool generate_ost_sound_mk(int data)
 			break;
 	}
 
+	usrintf_showmessage("%i  Last:%i %i", data&0xff, last_left, last_right);
+
 	ost_mix_samples();
 
 	return schedule_default_sound;
