@@ -1112,6 +1112,11 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map*/
 		case 0x12:
+			/* Bug - After selecting a character, you'll hear a sound get repeated 3 or more times before the
+			   fight starts. For example, with Scorpion a gingle plays at the start of the character map, then
+			   again when Scorpion's picture reaches the opponent, then finally right before the fight begins.
+			   This sound being repeated seems unique for each character. This default sound trigger needs to be
+			   returned to prevent this issue, but then the default music plays over the OST sample. */
 			ost_start_samples(4, 5, 1);
 			break;
 
