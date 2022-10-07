@@ -1884,13 +1884,13 @@ static void get_line_ram_info(struct tilemap *tilemap,int sx,int sy,int pos,data
 				line_enable=2;
 			else if(pri&0x8000)	/*alpha2*/
 				line_enable=3;
-          /*special case when the blend mode is "normal" but the 6200 area is used.
-		  Might be missing a flag*/
-		  else if((pri&0x3000) && (f3_line_ram[0x6230/4]!= 0)  && (pos == 2) &&
-		  (((f3_line_ram[(0x6200/4) + (y>>1)] >> 4) &0xf) != 0xb) && (f3_game == EACTION2))
-			{
-			  line_enable=0x22;		
-			}
+		  /*special case when the blend mode is "normal" but the 6200 area is used, Might be missing a flag*/
+		  else if ((pri & 0x3000) && (f3_line_ram[0x6230/4] != 0) && (pos == 2) &&
+				(((f3_line_ram[(0x6200/4) + (y>>1)] >> 4) & 0xf) != 0xb) &&
+				(f3_line_ram[(0x6200/4) + (y>>1)] != 0x7777) && (f3_game == EACTION2))
+		    {
+			  line_enable = 0x22;
+		    }
 			else
 				line_enable=1;
 		}
@@ -1961,7 +1961,7 @@ static void get_line_ram_info(struct tilemap *tilemap,int sx,int sy,int pos,data
 			/* check tile status */
 			visible_tile_check(line_t,y,x_index_fx,y_index,f3_pf_data_n);
       
-            if ((pos ==1) && ((((f3_line_ram[(0x6200/4) + (y>>1)]) >> 4) &0xf) > 0xb)  && (f3_game == EACTION2)) line_t->alpha_mode[y] = 0x22;  /*hack*/
+      if ((pos == 1) && (((f3_line_ram[(0x6200/4) + (y>>1)] >> 4) & 0xf) > 0xb) && (f3_game == EACTION2)) line_t->alpha_mode[y] = 0x22;  /* from shmupmame */
 
 			/* set pixmap index */
 			line_t->x_count[y]=x_index_fx & 0xffff;
