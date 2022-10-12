@@ -788,6 +788,7 @@ bool generate_ost_sound_contra(int data)
 		// Fade music
 		case 0x80:
 			fadingMusic = true;
+			schedule_default_sound = true;
 			break;
 
 		default:
@@ -2027,8 +2028,8 @@ bool generate_ost_sound_sf2(int data)
 			ost_start_samples(80, 81, 1);
 			break;
 
-		case 0x52: /* you win or lose */
-		case 0x24: /* adding bonus points */
+		case 0xf9:
+			// fade music
 			fadingMusic = true;
 			schedule_default_sound = true;
 			break;
