@@ -673,7 +673,7 @@ static bool ost_last_played(int sa_left, int sa_right)
 void ost_fade_volume(void)
 {
   static bool allow_fade = true;
-  /*usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);*/
+  usrintf_showmessage("fadingMusic:%i  volume:%i", fadingMusic, sa_volume);
 
   if(fadingMusic == false) return;
 
