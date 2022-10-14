@@ -31,7 +31,7 @@ extern bool generate_ost_sound_contra     (int data);
 extern bool generate_ost_sound_ddragon    (int data);
 extern bool generate_ost_sound_ffight     (int data);
 extern bool generate_ost_sound_ikari      (int data);
-extern bool generate_ost_sound_mk         (int* data);
+extern bool generate_ost_sound_mk         (int data);
 extern bool generate_ost_sound_moonwalker (int data);
 extern bool generate_ost_sound_nba_jam    (int data);
 extern bool generate_ost_sound_outrun     (int data);
