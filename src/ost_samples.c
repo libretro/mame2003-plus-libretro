@@ -1113,12 +1113,7 @@ bool generate_ost_sound_mk(int data)
 
 		/* Scrolling character map*/
 		case 0x12:
-			/* Bug - After selecting a character, you'll hear a sound get repeated 3 or more times before the
-			   fight starts. For example, with Scorpion a gingle plays at the start of the character map, then
-			   again when Scorpion's picture reaches the opponent, then finally right before the fight begins.
-			   This sound being repeated seems unique for each character. This default sound trigger needs to be
-			   returned to prevent this issue, but then the default music plays over the OST sample. */
-			soundlatch_clear_w(0,0);
+			soundlatch_clear_w(0,0); /* required to silence default sound.*/
 			ost_start_samples(4, 5, 1);
 			break;
 
@@ -1129,11 +1124,13 @@ bool generate_ost_sound_mk(int data)
 
 		/* Continue music*/
 		case 0x6:
+			soundlatch_clear_w(0,0); /* required to silence default sound.*/
 			ost_start_samples(6, 7, 1);
 			break;
 
 		/* Game over music*/
 		case 0x2:
+			soundlatch_clear_w(0,0); /* required to silence default sound.*/
 			ost_start_samples(20, 21, 1);
 			break;
 
@@ -1384,7 +1381,7 @@ bool generate_ost_sound_nba_jam(int data)
 
 		/* 1st quarter.*/
 		case 0x2:
-			/* Bug - announcer repeats opponent's name with this trigger. This default sound needs returned but then it plays over our sample.*/
+			soundlatch_clear_w(0,0); /* required to silence default sound.*/
 			ost_start_samples(4, 5, 1);
 			break;
 
