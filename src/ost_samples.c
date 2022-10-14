@@ -1088,7 +1088,7 @@ bool generate_ost_sound_ikari(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_mk(int* data)
+bool generate_ost_sound_mk(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1118,7 +1118,6 @@ bool generate_ost_sound_mk(int* data)
 			   again when Scorpion's picture reaches the opponent, then finally right before the fight begins.
 			   This sound being repeated seems unique for each character. This default sound trigger needs to be
 			   returned to prevent this issue, but then the default music plays over the OST sample. */
-			data = 0;
 			ost_start_samples(4, 5, 1);
 			break;
 
