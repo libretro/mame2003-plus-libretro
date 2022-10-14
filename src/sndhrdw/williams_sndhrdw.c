@@ -601,11 +601,9 @@ void williams_adpcm_data_w(int data)
 {
 	if( ost_support_enabled(OST_SUPPORT_NBA_JAM) ) {
 		if(generate_ost_sound_nba_jam( data )) soundlatch_w(0, data & 0xff);
-		else soundlatch_clear_w(0,0);
 	}
 	else if( ost_support_enabled(OST_SUPPORT_MK) ) {
 		if(generate_ost_sound_mk( data )) soundlatch_w(0, data & 0xff);
-		else soundlatch_clear_w(0,0);
 	}
 	else {
 		soundlatch_w(0, data & 0xff);
