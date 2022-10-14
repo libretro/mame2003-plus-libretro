@@ -1118,6 +1118,7 @@ bool generate_ost_sound_mk(int data)
 			   again when Scorpion's picture reaches the opponent, then finally right before the fight begins.
 			   This sound being repeated seems unique for each character. This default sound trigger needs to be
 			   returned to prevent this issue, but then the default music plays over the OST sample. */
+			soundlatch_clear_w(0,0);
 			ost_start_samples(4, 5, 1);
 			break;
 
