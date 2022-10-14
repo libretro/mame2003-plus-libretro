@@ -604,7 +604,7 @@ void williams_adpcm_data_w(int data)
 	}
 	else if( ost_support_enabled(OST_SUPPORT_MK) ) {
 		if(generate_ost_sound_mk( data )) soundlatch_w(0, data & 0xff);
-		if(data == 0x12) soundlatch_w(0, 0); 
+		else soundlatch_w(0, 0); 
 	}
 	else {
 		soundlatch_w(0, data & 0xff);
