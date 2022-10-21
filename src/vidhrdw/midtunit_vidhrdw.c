@@ -11,7 +11,7 @@
 
 
 /* compile-time options */
-#define FAST_DMA			1		/* DMAs complete immediately; reduces number of CPU switches */
+#define FAST_DMA			0		/* DMAs complete immediately; reduces number of CPU switches */
 #define LOG_DMA				0		/* DMAs are logged if the 'L' key is pressed */
 
 
@@ -687,7 +687,6 @@ READ16_HANDLER( midtunit_dma_r )
  *           | ----------2----- | select top/bottom or left/right for reg 12/13
  */
 
-static bool pulse_dma = false;
 
 WRITE16_HANDLER( midtunit_dma_w )
 {
@@ -828,21 +827,20 @@ skipdma:
 	/* used to initiate the DMA. What they do is start the DMA, *then* set */
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
-	pulse_dma = (pulse_dma) ? 0:1;
-	if (pulse_dma) /* pulse FAST_DMA workaround */
+	if (FAST_DMA)
 	{
 		if (command != 0x8000)
 			dma_callback(1);
 		else
 		{
 			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+			timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
 		}
 	}
 	else
 	{
 		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
 	}
 
 	profiler_mark(PROFILER_END);
