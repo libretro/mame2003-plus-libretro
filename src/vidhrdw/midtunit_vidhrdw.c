@@ -687,6 +687,8 @@ READ16_HANDLER( midtunit_dma_r )
  *           | ----------2----- | select top/bottom or left/right for reg 12/13
  */
 
+static bool pulse_dma = false;
+
 WRITE16_HANDLER( midtunit_dma_w )
 {
 	static const UINT8 register_map[2][16] =
@@ -826,12 +828,16 @@ skipdma:
 	/* used to initiate the DMA. What they do is start the DMA, *then* set */
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
-	if (FAST_DMA)
+	pulse_dma = (pulse_dma) ? 0:1;
+	if (pulse_dma)
 	{
 		if (command != 0x8000)
 			dma_callback(1);
-		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		else
+		{
+			TMS_SET_IRQ_LINE(CLEAR_LINE);
+			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		}
 	}
 	else
 	{
