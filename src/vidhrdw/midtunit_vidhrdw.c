@@ -11,7 +11,7 @@
 
 
 /* compile-time options */
-#define FAST_DMA			1		/* DMAs complete immediately; reduces number of CPU switches */
+#define FAST_DMA			0		/* DMAs complete immediately; reduces number of CPU switches */
 #define LOG_DMA				0		/* DMAs are logged if the 'L' key is pressed */
 
 
@@ -829,7 +829,7 @@ skipdma:
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
 	pulse_dma = (pulse_dma) ? 0:1;
-	if (pulse_dma) /* pulse FAST_DMA workaround */
+	if (FAST_DMA) /* pulse_dma FAST_DMA workaround */
 	{
 		if (command != 0x8000)
 			dma_callback(1);
