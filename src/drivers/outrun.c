@@ -835,7 +835,7 @@ static MACHINE_INIT( outrun ){
 	sys16_textlayer_lo_max=0;
 	sys16_textlayer_hi_min=0;
 	sys16_textlayer_hi_max=0xff;
-	sys16_sprxoffset = -0xc0;
+	sys16_sprxoffset = -0xbd;
 	ctrl1 = 0x20;
 
 // *forced sound cmd (eww)
