@@ -836,13 +836,13 @@ skipdma:
 		else
 		{
 			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+			timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
 		}
 	}
 	else
 	{
 		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
 	}
 
 	profiler_mark(PROFILER_END);
