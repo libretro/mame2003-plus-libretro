@@ -829,7 +829,6 @@ skipdma:
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
 	pulse_dma = (pulse_dma) ? 0:1;
-	usrintf_showmessage("%i", pulse_dma);
 	if (pulse_dma)
 	{
 		if (command != 0x8000)
