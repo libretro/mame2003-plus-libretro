@@ -830,11 +830,8 @@ skipdma:
 	{
 		if (command != 0x8000)
 			dma_callback(1);
-		else
-		{
-			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
-		}
+		TMS_SET_IRQ_LINE(CLEAR_LINE);
+		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
 	}
 	else
 	{
