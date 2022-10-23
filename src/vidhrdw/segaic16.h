@@ -5,31 +5,73 @@
 ***************************************************************************/
 
 /* globals */
-extern data16_t *segaic16_tileram;
-extern data16_t *segaic16_textram;
-extern data16_t *segaic16_spriteram;
-extern data16_t *segaic16_roadram;
-extern struct tilemap *segaic16_tilemaps[];
-extern UINT8 segaic16_tilemap_page;
+extern UINT8 segaic16_display_enable;
+extern data16_t *segaic16_tileram_0;
+extern data16_t *segaic16_textram_0;
+extern data16_t *segaic16_spriteram_0;
+extern data16_t *segaic16_spriteram_1;
+extern data16_t *segaic16_roadram_0;
+
+/* misc functions */
+void segaic16_set_display_enable(int enable);
 
 /* palette handling */
-void segaic16_init_palette(int entries);
+void segaic16_palette_init(int entries);
 WRITE16_HANDLER( segaic16_paletteram_w );
 
-/* tilemap helpers */
-int segaic16_init_virtual_tilemaps(int numpages, int palette_offset, void (*tile_cb)(int));
-void segaic16_draw_virtual_tilemap(struct mame_bitmap *bitmap, const struct rectangle *cliprect, UINT16 pages, UINT16 xscroll, UINT16 yscroll, UINT32 flags, UINT32 priority);
-WRITE16_HANDLER( segaic16_tileram_w );
+/* tilemap systems */
+#define SEGAIC16_MAX_TILEMAPS		1
 
-/* from vidhrdw/segas16b.c */
-VIDEO_START( system16b );
-VIDEO_START( timscanr );
-VIDEO_UPDATE( system16b );
+#define SEGAIC16_TILEMAP_HANGON		0
+#define SEGAIC16_TILEMAP_16A		1
+#define SEGAIC16_TILEMAP_16B		2
+#define SEGAIC16_TILEMAP_16B_ALT	3
 
-void system16b_reset_video(void);
-void system16b_set_draw_enable(int enable);
-void system16b_set_screen_flip(int flip);
-void system16b_configure_sprite_banks(int use_default);
-void system16b_set_tile_bank(int which, int bank);
+#define SEGAIC16_TILEMAP_FOREGROUND	0
+#define SEGAIC16_TILEMAP_BACKGROUND	1
+#define SEGAIC16_TILEMAP_TEXT		2
 
-WRITE16_HANDLER( system16b_textram_w );
+int segaic16_tilemap_init(int which, int type, int colorbase, int xoffs, int numbanks);
+void segaic16_tilemap_reset(int which);
+void segaic16_tilemap_draw(int which, struct mame_bitmap *bitmap, const struct rectangle *cliprect, int map, int priority, int priority_mark);
+void segaic16_tilemap_set_bank(int which, int banknum, int offset);
+void segaic16_tilemap_set_flip(int which, int flip);
+void segaic16_tilemap_set_rowscroll(int which, int enable);
+void segaic16_tilemap_set_colscroll(int which, int enable);
+
+WRITE16_HANDLER( segaic16_tileram_0_w );
+WRITE16_HANDLER( segaic16_textram_0_w );
+
+/* sprite systems */
+#define SEGAIC16_MAX_SPRITES		2
+
+#define SEGAIC16_SPRITES_HANGON		0
+#define SEGAIC16_SPRITES_16A		1
+#define SEGAIC16_SPRITES_16B		2
+#define SEGAIC16_SPRITES_SHARRIER	3
+#define SEGAIC16_SPRITES_OUTRUN		4
+#define SEGAIC16_SPRITES_XBOARD		5
+#define SEGAIC16_SPRITES_YBOARD		6
+
+int segaic16_sprites_init(int which, int type, int colorbase, int xoffs);
+void segaic16_sprites_draw(int which, struct mame_bitmap *bitmap, const struct rectangle *cliprect);
+void segaic16_sprites_set_bank(int which, int banknum, int offset);
+void segaic16_sprites_set_flip(int which, int flip);
+void segaic16_sprites_set_shadow(int which, int shadow);
+WRITE16_HANDLER( segaic16_sprites_draw_0_w );
+WRITE16_HANDLER( segaic16_sprites_draw_1_w );
+
+/* road systems */
+#define SEGAIC16_MAX_ROADS			1
+
+#define SEGAIC16_ROAD_HANGON		0
+#define SEGAIC16_ROAD_SHARRIER		1
+#define SEGAIC16_ROAD_OUTRUN		2
+
+#define SEGAIC16_ROAD_BACKGROUND	0
+#define SEGAIC16_ROAD_FOREGROUND	1
+
+int segaic16_road_init(int which, int type, int colorbase1, int colorbase2, int colorbase3, int xoffs);
+void segaic16_road_draw(int which, struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority);
+READ16_HANDLER( segaic16_road_control_0_r );
+WRITE16_HANDLER( segaic16_road_control_0_w );

@@ -55,6 +55,7 @@ extern struct tile_info
 	UINT32 pen_usage;		/* TBR */
 	UINT32 priority;		/* tile priority */
 	UINT8 *mask_data;		/* for TILEMAP_BITMASK */
+	void *user_data;		/* user-supplied tilemap-wide pointer */
 } tile_info;
 
 #define SET_TILE_INFO(GFX,CODE,COLOR,FLAGS) { \
@@ -121,6 +122,7 @@ void tilemap_set_scrolldy( struct tilemap *tilemap, int dy, int dy_if_flipped );
 void tilemap_set_scrolly( struct tilemap *tilemap, int col, int value );
 
 void tilemap_set_palette_offset( struct tilemap *tilemap, int offset );
+void tilemap_set_user_data( struct tilemap *tilemap, void *user_data );
 
 #define TILEMAP_FLIPX 0x1
 #define TILEMAP_FLIPY 0x2

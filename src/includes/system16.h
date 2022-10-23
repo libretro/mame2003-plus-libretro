@@ -6,6 +6,7 @@
 #define SYS16_SPR_PARTIAL_SHADOW			0x40 /* pen #10 */
 #define SYS16_SPR_DRAW_TO_TOP				0x80
 
+
 struct sys16_sprite_attributes {
 	int priority, flags;
 	int gfx, color;
@@ -230,6 +231,19 @@ extern READ16_HANDLER( sys16_textram_r );
 extern WRITE16_HANDLER( sys16_textram_w );
 extern WRITE16_HANDLER( sys16_paletteram_w );
 
+
+/* from vidhrdw/segas16b.c */
+VIDEO_START( system16b );
+VIDEO_START( timscanr );
+VIDEO_UPDATE( system16b );
+
+/* from vidhrdw/segaorun.c */
+VIDEO_START( outrun );
+VIDEO_START( shangon );
+VIDEO_UPDATE( outrun );
+VIDEO_UPDATE( shangon );
+
+
 /* "normal" video hardware */
 extern VIDEO_START( system16 );
 extern VIDEO_UPDATE( system16 );
@@ -239,8 +253,8 @@ extern VIDEO_START( hangon );
 extern VIDEO_UPDATE( hangon );
 
 /* outrun video hardware */
-extern VIDEO_START( outrun );
-extern VIDEO_UPDATE( outrun );
+extern VIDEO_START( outrun_old );
+extern VIDEO_UPDATE( outrun_old );
 
 /* aburner video hardware */
 extern VIDEO_START( aburner );

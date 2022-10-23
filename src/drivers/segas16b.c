@@ -221,9 +221,10 @@ static WRITE16_HANDLER( standard_io_w )
                 D1 : (Output to coin counter 2?)
                 D0 : Output to coin counter 1
        */
-    system16b_set_screen_flip(data & 0x40);
+    segaic16_tilemap_set_flip(0, data & 0x40);
+	segaic16_sprites_set_flip(0, data & 0x40);
     if (!disable_screen_blanking)
-      system16b_set_draw_enable(data & 0x20);
+      segaic16_set_display_enable(data & 0x20);
     set_led_status(1, data & 0x08);
     set_led_status(0, data & 0x04);
     coin_counter_w(1, data & 0x02);
@@ -233,10 +234,22 @@ static WRITE16_HANDLER( standard_io_w )
   logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", activecpu_get_pc(), offset * 2, data, mem_mask ^ 0xffff);
 }
 
+READ16_HANDLER( segaic16_textram_r ){
+	return segaic16_textram_0[offset];
+}
+
+READ16_HANDLER( segaic16_tileram_r ){
+	return segaic16_tileram_0[offset];
+}
+
+READ16_HANDLER( segaic16_spriteram_r ){
+	return segaic16_spriteram_0[offset];
+}
+
 static WRITE16_HANDLER( rom_5704_bank_w )
 {
   if (ACCESSING_LSB)
-    system16b_set_tile_bank(offset & 1, data & 7);
+    segaic16_tilemap_set_bank(0, offset & 1, data & 7);
 }
 
 INPUT_PORTS_START( bullet )
@@ -351,9 +364,9 @@ INPUT_PORTS_END
 
 static MEMORY_READ16_START( bullet_readmem )
   { 0x000000, 0x02ffff, MRA16_ROM },
-  { 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
-  { 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-  { 0x440000, 0x4407ff, SYS16_MRA16_SPRITERAM },
+  { 0x400000, 0x40ffff, segaic16_tileram_r },
+  { 0x410000, 0x410fff, segaic16_textram_r },
+  { 0x440000, 0x4407ff, segaic16_spriteram_r },
   { 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
   { 0xc40000, 0xc43fff, standard_io_r },
   { 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -361,9 +374,9 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( bullet_writemem )
   { 0x000000, 0x02ffff, MWA16_ROM },
-  { 0x400000, 0x40ffff, segaic16_tileram_w, &sys16_tileram },
-  { 0x410000, 0x410fff, system16b_textram_w, &sys16_textram },
-  { 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+  { 0x400000, 0x40ffff, segaic16_tileram_0_w, &segaic16_tileram_0 },
+  { 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
+  { 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
   { 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
   { 0xc00006, 0xc00007, sound_command_w },
   { 0xc40000, 0xc43fff, standard_io_w },
@@ -374,9 +387,9 @@ static MEMORY_READ16_START( cotton_readmem )
   { 0x000000, 0x0bffff, MRA16_ROM },
   { 0x100000, 0x10FFFF, MRA16_RAM }, //rom_5704_bank
   { 0x200000, 0x203FFF, SYS16_MRA16_WORKINGRAM }, //workingram
-  { 0x300000, 0x3007FF, SYS16_MRA16_SPRITERAM },
-  { 0x400000, 0x40FFFF, SYS16_MRA16_TILERAM },
-  { 0x410000, 0x410FFF, SYS16_MRA16_TEXTRAM },
+  { 0x300000, 0x3007FF, segaic16_spriteram_r },
+  { 0x400000, 0x40FFFF, segaic16_tileram_r },
+  { 0x410000, 0x410FFF, segaic16_textram_r },
   { 0x500000, 0x500FFF, SYS16_MRA16_PALETTERAM },
   { 0x600000, 0x603FFF, standard_io_r },
 MEMORY_END
@@ -385,9 +398,9 @@ static MEMORY_WRITE16_START( cotton_writemem )
     { 0x000000, 0x0bffff, MWA16_ROM },
   { 0x100000, 0x10FFFF, rom_5704_bank_w }, //rom_5704_bank
   { 0x200000, 0x203FFF, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, //workingram
-  { 0x300000, 0x3007FF, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
-  { 0x400000, 0x40FFFF, segaic16_tileram_w, &sys16_tileram },
-  { 0x410000, 0x410FFF, system16b_textram_w, &sys16_textram },
+  { 0x300000, 0x3007FF, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
+  { 0x400000, 0x40FFFF, segaic16_tileram_0_w, &segaic16_tileram_0 },
+  { 0x410000, 0x410FFF, segaic16_textram_0_w, &segaic16_textram_0 },
   { 0x500000, 0x500FFF, segaic16_paletteram_w, &paletteram16 },
   { 0x600000, 0x603FFF, standard_io_w  },
   { 0xFF0006, 0xFF0007, sound_command_w },
@@ -397,9 +410,9 @@ MEMORY_END
 static MEMORY_READ16_START( fantzn2x_readmem )
   { 0x000000, 0x0bffff, MRA16_ROM },
   { 0x200000, 0x23ffff, SYS16_MRA16_WORKINGRAM },
-  { 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
-  { 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-  { 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
+  { 0x400000, 0x40ffff, segaic16_tileram_r },
+  { 0x410000, 0x410fff, segaic16_textram_r },
+  { 0x440000, 0x440fff, segaic16_spriteram_r },
   { 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
   { 0xc40000, 0xc43FFF, standard_io_r }, MEMORY_END
 
@@ -407,9 +420,9 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
   { 0x000000, 0x0bffff, MWA16_ROM },
   { 0x200000, 0x23ffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram},
   { 0x3f0000, 0x3fffff, rom_5704_bank_w }, //rom_5704_bank
-  { 0x400000, 0x40ffff, segaic16_tileram_w, &sys16_tileram },
-  { 0x410000, 0x410fff, system16b_textram_w, &sys16_textram },
-  { 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+  { 0x400000, 0x40ffff, segaic16_tileram_0_w, &segaic16_tileram_0 },
+  { 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
+  { 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
   { 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
   { 0xc40000, 0xc43FFF, standard_io_w },
   { 0xfe0006, 0xfe0007, sound_command_w },
@@ -547,7 +560,7 @@ static MACHINE_DRIVER_START( system16b )
   MDRV_GFXDECODE(sys16_gfxdecodeinfo)
   MDRV_PALETTE_LENGTH(2048*3)
 
-  MDRV_VIDEO_START(system16b)
+  MDRV_VIDEO_START (system16b)
   MDRV_VIDEO_UPDATE(system16b)
 
   /* sound hardware */
@@ -589,20 +602,25 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
+static const UINT8 default_banklist[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+static const UINT8 alternate_banklist[] = { 255,255,255,255, 255,255,255,3, 255,255,255,2, 255,1,0,255 };
+
 static MACHINE_INIT( generic_5704 )
 {
-  machine_init_sys16_onetime();
-  system16b_configure_sprite_banks(1);
-  system16b_reset_video();
+   segaic16_tilemap_reset(0);
+  for (int i = 0; i < 16; i++)
+  segaic16_sprites_set_bank(0, i, default_banklist[i]);
   sys16_soundbanktype=2;
+  disable_screen_blanking = 0;
 }
 
 static MACHINE_INIT( generic_5358 )
 {
-  machine_init_sys16_onetime();
-  system16b_configure_sprite_banks(0);
-  system16b_reset_video();
+  segaic16_tilemap_reset(0);
+  for (int i = 0; i < 16; i++)
+  segaic16_sprites_set_bank(0, i, alternate_banklist[i]);
   sys16_soundbanktype=1;
+  disable_screen_blanking = 0;
 }
 
 static MACHINE_DRIVER_START( bullet )

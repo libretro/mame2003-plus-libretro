@@ -1765,7 +1765,7 @@ static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *clipr
 }
 
 
-VIDEO_START( outrun ){
+VIDEO_START( outrun_old ){
 	int ret;
 	sys16_bg1_trans=1;
 	ret = video_start_system16();
@@ -1782,7 +1782,7 @@ VIDEO_START( outrun ){
 	return 0;
 }
 
-VIDEO_UPDATE( outrun ){
+VIDEO_UPDATE( outrun_old ){
 	if( sys16_refreshenable ){
 		if( sys16_update_proc ) sys16_update_proc();
 		update_page();
