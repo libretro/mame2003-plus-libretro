@@ -879,7 +879,7 @@ static DRIVER_INIT( outrun )
 static DRIVER_INIT( toutrun )
 {
 	sys16_interleave_sprite_data( 0x100000 );
-	generate_gr_screen(512,2048,0,0,0,0x8000); /* fixes road 2 */
+	generate_gr_screen(512,2048,0,0,3,0x8000); /* fixes road 2 */
 
 }
 
