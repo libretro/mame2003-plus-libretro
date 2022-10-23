@@ -39,6 +39,7 @@ struct tilemap
 
 	/* callback to interpret video RAM for the tilemap */
 	void (*tile_get_info)( int memory_offset );
+	void *user_data;
 
 	UINT32 max_memory_offset;
 	UINT32 num_tiles;
@@ -1873,6 +1874,7 @@ profiler_mark(PROFILER_TILEMAP_DRAW);
 		}
 
 		memset( &tile_info, 0x00, sizeof(tile_info) ); /* initialize defaults */
+		tile_info.user_data = tilemap->user_data;
 
 		/* walk over cached rows/cols (better to walk screen coords) */
 		for( row=0; row<tilemap->num_cached_rows; row++ )
@@ -2022,6 +2024,13 @@ void tilemap_set_palette_offset( struct tilemap *tilemap, int offset )
 
 /***********************************************************************************/
 
+void tilemap_set_user_data( struct tilemap *tilemap, void *user_data )
+{
+	tilemap->user_data = user_data;
+}
+
+/***********************************************************************************/
+
 void tilemap_draw( struct mame_bitmap *dest, const struct rectangle *cliprect, struct tilemap *tilemap, UINT32 flags, UINT32 priority )
 {
 	tilemap_draw_func drawfunc = pick_draw_func(dest);
@@ -2081,6 +2090,7 @@ profiler_mark(PROFILER_TILEMAP_DRAW);
 
 		/* initialize defaults */
 		memset( &tile_info, 0x00, sizeof(tile_info) );
+		tile_info.user_data = tilemap->user_data;
 
 		/* if the whole map is dirty, mark it as such */
 		if (tilemap->all_tiles_dirty)
