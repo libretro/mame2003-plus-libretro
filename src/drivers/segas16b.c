@@ -607,18 +607,20 @@ static const UINT8 alternate_banklist[] = { 255,255,255,255, 255,255,255,3, 255,
 
 static MACHINE_INIT( generic_5704 )
 {
-   segaic16_tilemap_reset(0);
-  for (int i = 0; i < 16; i++)
-  segaic16_sprites_set_bank(0, i, default_banklist[i]);
+  int i;
+  segaic16_tilemap_reset(0);
+  for (i = 0; i < 16; i++)
+    segaic16_sprites_set_bank(0, i, default_banklist[i]);
   sys16_soundbanktype=2;
   disable_screen_blanking = 0;
 }
 
 static MACHINE_INIT( generic_5358 )
 {
+  int i;
   segaic16_tilemap_reset(0);
-  for (int i = 0; i < 16; i++)
-  segaic16_sprites_set_bank(0, i, alternate_banklist[i]);
+  for (i = 0; i < 16; i++)
+    segaic16_sprites_set_bank(0, i, alternate_banklist[i]);
   sys16_soundbanktype=1;
   disable_screen_blanking = 0;
 }
