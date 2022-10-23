@@ -6,6 +6,11 @@
 #define SYS16_SPR_PARTIAL_SHADOW			0x40 /* pen #10 */
 #define SYS16_SPR_DRAW_TO_TOP				0x80
 
+/* from vidhrdw/segas16b.c */
+VIDEO_START( system16b );
+VIDEO_START( timscanr );
+VIDEO_UPDATE( system16b );
+
 struct sys16_sprite_attributes {
 	int priority, flags;
 	int gfx, color;
