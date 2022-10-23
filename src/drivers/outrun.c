@@ -741,6 +741,16 @@ static WRITE16_HANDLER( outrun_ctrl1_w )
 #endif
 }
 
+static WRITE16_HANDLER( outrun_ctrl1_w_new )
+{
+   if(ACCESSING_LSB) 
+   {
+      segaic16_set_display_enable((data >> 5) & 1);
+      return;
+	   //cpunum_set_input_line(2, INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+   }
+}
+
 static void outrun_reset(void)
 {
        cpu_set_reset_line(2, PULSE_LINE);
@@ -853,7 +863,7 @@ static MEMORY_WRITE16_START( toutrun_writemem )
 	{ 0x110000, 0x110fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM,  &segaic16_spriteram_0 },
 	{ 0x120000, 0x121fff, segaic16_paletteram_w, &paletteram16 },
-	{ 0x140004, 0x140005, outrun_ctrl1_w },
+	{ 0x140004, 0x140005, outrun_ctrl1_w_new },
 	{ 0x140020, 0x140021, outrun_ctrl2_w },
 	{ 0x140030, 0x140031, outrun_analog_select_w },//segaic16_sprites_draw_0_w
 	{ 0x140070, 0x140071, segaic16_sprites_draw_0_w },//segaic16_sprites_draw_0_w
@@ -937,15 +947,13 @@ static MACHINE_INIT( outrun ){
 
 static MACHINE_INIT( toutrun ){
 	ctrl1 = 0x20;
-segaic16_tilemap_reset(0);
+    segaic16_tilemap_reset(0);
 // *forced sound cmd (eww)
 	if (!strcmp(Machine->gamedrv->name,"outrun")) sys16_patch_code( 0x55ed, 0x00);
 	if (!strcmp(Machine->gamedrv->name,"outruna")) sys16_patch_code( 0x5661, 0x00);
 	if (!strcmp(Machine->gamedrv->name,"outrunb")) sys16_patch_code( 0x5661, 0x00);
 
      cpu_set_m68k_reset(0, outrun_reset);
-
-	
 	cpu_set_halt_line(2, ASSERT_LINE);
 }
 

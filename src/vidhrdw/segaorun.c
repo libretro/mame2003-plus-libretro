@@ -96,11 +96,11 @@ VIDEO_UPDATE( shangon )
 VIDEO_UPDATE( outrun )
 {
 	/* if no drawing is happening, fill with black and get out */
-//	if (!segaic16_display_enable)
-//	{
-//		fillbitmap(bitmap, get_black_pen(), cliprect);
-//		return;
-//	}
+	if (!segaic16_display_enable)
+	{
+		fillbitmap(bitmap, get_black_pen(), cliprect);
+		return;
+	}
 
 	/* reset priorities */
 	fillbitmap(priority_bitmap, 0, cliprect);
