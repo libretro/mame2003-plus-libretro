@@ -228,7 +228,7 @@ static WRITE16_HANDLER( standard_io_w )
     set_led_status(1, data & 0x08);
     set_led_status(0, data & 0x04);
     coin_counter_w(1, data & 0x02);
-    coin_counter_w(0, data & 0x01); 
+    coin_counter_w(0, data & 0x01);
     return;
   }
   logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", activecpu_get_pc(), offset * 2, data, mem_mask ^ 0xffff);
@@ -607,23 +607,18 @@ static const UINT8 alternate_banklist[] = { 255,255,255,255, 255,255,255,3, 255,
 
 static MACHINE_INIT( generic_5704 )
 {
-  //machine_init_sys16_onetime();
    segaic16_tilemap_reset(0);
   for (int i = 0; i < 16; i++)
-  segaic16_sprites_set_bank(0, i, default_banklist[i]);  
-  //system16b_reset_video();
+  segaic16_sprites_set_bank(0, i, default_banklist[i]);
   sys16_soundbanktype=2;
   disable_screen_blanking = 0;
-
 }
 
 static MACHINE_INIT( generic_5358 )
 {
   segaic16_tilemap_reset(0);
-//  machine_init_sys16_onetime();
   for (int i = 0; i < 16; i++)
-  segaic16_sprites_set_bank(0, i, alternate_banklist[i]); 
-  //system16b_reset_video();
+  segaic16_sprites_set_bank(0, i, alternate_banklist[i]);
   sys16_soundbanktype=1;
   disable_screen_blanking = 0;
 }

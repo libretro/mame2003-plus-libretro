@@ -640,8 +640,8 @@ void segaic16_draw_virtual_tilemap(struct tilemap_info *info, struct mame_bitmap
 			leftmax = Machine->drv->screen_width - 1 - temp;
 		}
 		if (rightmin != -1)
-		{	
-			int temp = rightmin; 
+		{
+			int temp = rightmin;
 			rightmin = Machine->drv->screen_width - 1 - rightmax;
 			rightmax = Machine->drv->screen_width - 1 - temp;
 		}
