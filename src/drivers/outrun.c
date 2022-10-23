@@ -1141,8 +1141,8 @@ static MACHINE_DRIVER_START( outrun )
 	/* initilize system16 variables prior to driver_init and video_start */
 	machine_init_sys16_onetime();
 
-	MDRV_VIDEO_START(outrun)
-	MDRV_VIDEO_UPDATE(outrun)
+	MDRV_VIDEO_START(outrun_old)
+	MDRV_VIDEO_UPDATE(outrun_old)
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
@@ -1195,8 +1195,8 @@ static MACHINE_DRIVER_START( toutrun )
 	/* initilize system16 variables prior to driver_init and video_start */
 	machine_init_sys16_onetime();
 
-	MDRV_VIDEO_START(outrun)
-	MDRV_VIDEO_UPDATE(outrun)
+	MDRV_VIDEO_START(outrun_old)
+	MDRV_VIDEO_UPDATE(outrun_old)
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
