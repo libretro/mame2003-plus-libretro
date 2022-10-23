@@ -1184,7 +1184,7 @@ int segaic16_tilemap_init(int which, int type, int colorbase, int xoffs, int num
 			break;
 
 		default:
-			osd_die("Invalid tilemap index specified in segaic16_tilemap_init\n");
+			 mame_done();
 	}
 
 	/* determine the parameters of the tilemaps */
@@ -1223,7 +1223,7 @@ int segaic16_tilemap_init(int which, int type, int colorbase, int xoffs, int num
 			break;
 
 		default:
-			osd_die("Invalid tilemap type specified in segaic16_tilemap_init\n");
+			mame_done();
 	}
 
 	/* create the tilemap for the text layer */
@@ -2280,7 +2280,7 @@ int segaic16_sprites_init(int which, int type, int colorbase, int xoffs)
 			break;
 
 		default:
-			osd_die("Invalid sprite index specified in segaic16_sprites_init\n");
+			mame_done();
 	}
 
 	/* determine the parameters of the sprites */
@@ -2314,7 +2314,7 @@ int segaic16_sprites_init(int which, int type, int colorbase, int xoffs)
 			break;
 
 		default:
-			osd_die("Invalid sprite system specified in segaic16_sprites_init\n");
+			mame_done();
 	}
 
 	/* if the sprites need buffering, allocate memory for the buffer */
@@ -2490,7 +2490,7 @@ static void segaic16_road_hangon_decode(struct road_info *info)
 	/* allocate memory for the unpacked road data */
 	info->gfx = auto_malloc(256 * 512);
 	if (!info->gfx)
-		osd_die("Out of memory for decoded road graphics\n");
+		mame_done();
 
 	/* loop over rows */
 	for (y = 0; y < 256; y++)
@@ -2744,8 +2744,8 @@ static void segaic16_road_outrun_decode(struct road_info *info)
 	/* allocate memory for the unpacked road data */
 	info->gfx = auto_malloc((256 * 2 + 1) * 512);
 	if (!info->gfx)
-		osd_die("Out of memory for decoded road graphics\n");
-
+		mame_done();
+		
 	/* loop over rows */
 	for (y = 0; y < 256 * 2; y++)
 	{
@@ -2983,7 +2983,7 @@ int segaic16_road_init(int which, int type, int colorbase1, int colorbase2, int 
 			break;
 
 		default:
-			osd_die("Invalid road index specified in segaic16_road_init\n");
+			mame_done();
 	}
 
 	/* determine the parameters of the road */
@@ -3001,7 +3001,7 @@ int segaic16_road_init(int which, int type, int colorbase1, int colorbase2, int 
 			break;
 
 		default:
-			osd_die("Invalid road system specified in segaic16_road_init\n");
+			mame_done();
 	}
 	return 0;
 }
