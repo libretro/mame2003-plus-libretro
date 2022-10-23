@@ -580,7 +580,7 @@ ROM_START( toutrun3 )
 	ROM_LOAD( "opr12324.103", 0x10000, 0x10000, CRC(24607a55) SHA1(69033f2281cd42e88233c23d809b73607fe54853) )
 	ROM_LOAD( "opr12325.104", 0x20000, 0x10000, CRC(1405137a) SHA1(367db88d36852e35c5e839f692be5ea8c8e072d2) )
 
-	ROM_REGION( 0x100000, REGION_GFX2, 0 ) /* sprites */	
+	ROM_REGION( 0x100000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD( "opr12307.9",  0x00000, 0x10000, CRC(437dcf09) SHA1(0022ee4d1c3698f77271e570cef98a8a1e5c5d6a) )
 	ROM_LOAD( "opr12308.10", 0x40000, 0x10000, CRC(0de70cc2) SHA1(c03f8f8cda72daf64af2878bf254840ac6dd17eb) )
 	ROM_LOAD( "opr12309.11", 0x80000, 0x10000, CRC(deb8c242) SHA1(c05d8ced4eafae52c4795fb1471cd66f5903d1aa) )
@@ -743,7 +743,7 @@ static WRITE16_HANDLER( outrun_ctrl1_w )
 
 static WRITE16_HANDLER( outrun_ctrl1_w_new )
 {
-   if(ACCESSING_LSB) 
+   if(ACCESSING_LSB)
    {
       segaic16_set_display_enable((data >> 5) & 1);
       return;
@@ -828,7 +828,7 @@ MEMORY_END
 
 extern READ16_HANDLER( segaic16_textram_r );
 extern READ16_HANDLER( segaic16_tileram_r );
-extern READ16_HANDLER( segaic16_spriteram_r); 
+extern READ16_HANDLER( segaic16_spriteram_r);
 READ16_HANDLER( segaic16_roadram_r ){
 	return segaic16_roadram_0[offset];
 }
@@ -880,14 +880,14 @@ static MEMORY_READ16_START( toutrun_readmem2 )
     { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x060000, 0x067fff, shared_ram_r },
 	{ 0x080000, 0x080fff, segaic16_roadram_r },//MWA16_RAM, &segaic16_roadram_0
-	{ 0x090000, 0x09ffff, segaic16_road_control_0_r },		
+	{ 0x090000, 0x09ffff, segaic16_road_control_0_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( toutrun_writemem2 )
     { 0x000000, 0x03ffff, MWA16_ROM },
     { 0x060000, 0x067fff, shared_ram_w },//MWA16_RAM, &segaic16_roadram_0
 	{ 0x080000, 0x080fff, MWA16_RAM, &segaic16_roadram_0 },
-	{ 0x090000, 0x09ffff, segaic16_road_control_0_w },		
+	{ 0x090000, 0x09ffff, segaic16_road_control_0_w },
 MEMORY_END
 
 /***************************************************************************/
@@ -941,7 +941,7 @@ static MACHINE_INIT( outrun ){
 	sys16_gr_colorflip[1][3]=0x00 / 2;
 
 	sys16_gr_second_road = &sys16_extraram[0x8000];
-	
+
 	cpu_set_halt_line(2, ASSERT_LINE);
 }
 
