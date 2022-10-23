@@ -350,7 +350,7 @@ Quick review of the system16 hardware:
 
 struct palette_info
 {
-	int				entries;						/* number of entries (not counting shadows) */
+	INT32			entries;						/* number of entries (not counting shadows) */
 	UINT8			normal[32];						/* RGB translations for normal pixels */
 	UINT8			shadow[32];						/* RGB translations for shadowed pixels */
 	UINT8			hilight[32];					/* RGB translations for hilighted pixels */
@@ -377,7 +377,7 @@ struct tilemap_info
 	UINT16			latched_xscroll[4];				/* latched X scroll values */
 	UINT16			latched_yscroll[4];				/* latched Y scroll values */
 	UINT16			latched_pageselect[4];			/* latched page select values */
-	int				xoffs;							/* X scroll offset */
+	INT32			xoffs;							/* X scroll offset */
 	struct tilemap *tilemaps[16];					/* up to 16 tilemap pages */
 	struct tilemap *textmap;						/* a single text tilemap */
 	struct tilemap_callback_info tilemap_info[16];	/* callback info for 16 tilemap pages */
@@ -397,8 +397,8 @@ struct sprite_info
 	UINT8			shadow;							/* shadow or hilight? */
 	UINT8			bank[16];						/* banking redirection */
 	UINT16			colorbase;						/* base color index */
-	UINT16			ramsize;						/* size of sprite RAM */
-	int				xoffs;							/* X scroll offset */
+	INT32			ramsize;						/* size of sprite RAM */
+	INT32			xoffs;							/* X scroll offset */
 	void			(*draw)(struct sprite_info *info, struct mame_bitmap *bitmap, const struct rectangle *cliprect);
 	data16_t *		spriteram;						/* pointer to spriteram pointer */
 	data16_t *		buffer;							/* buffered spriteram for those that use it */
@@ -413,7 +413,7 @@ struct road_info
 	UINT16			colorbase1;						/* color base for road ROM data */
 	UINT16			colorbase2;						/* color base for road background data */
 	UINT16			colorbase3;						/* color base for sky data */
-	int				xoffs;							/* X scroll offset */
+	INT32			xoffs;							/* X scroll offset */
 	void			(*draw)(struct road_info *info, struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority);
 	data16_t *		roadram;						/* pointer to roadram pointer */
 	UINT8 *			gfx;							/* expanded road graphics */
@@ -2141,7 +2141,7 @@ static void segaic16_sprites_outrun_draw(struct sprite_info *info, struct mame_b
 		int top     = (data[0] & 0x1ff) - 0x100;
 		UINT16 addr = data[1];
 		int pitch   = (INT16)data[2] >> 9;
-		int xpos    = (data[2] & 0x1ff) - 0xbe;
+		int xpos    = (data[2] & 0x1ff) - 0xbd;
 		int shadow  = (data[3] >> 14) & 1;
 		int sprpri  = 1 << ((data[3] >> 12) & 3);
 		int vzoom   = data[3] & 0x3ff;

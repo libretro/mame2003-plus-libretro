@@ -1764,7 +1764,7 @@ static void render_grv2(struct mame_bitmap *bitmap,const struct rectangle *clipr
 	}
 }
 
-
+/*
 VIDEO_START( outrun ){
 	int ret;
 	sys16_bg1_trans=1;
@@ -1807,7 +1807,7 @@ VIDEO_UPDATE( outrun ){
 		tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
 	}
 }
-
+*/
 /***************************************************************************/
 
 static UINT8 *aburner_backdrop;
