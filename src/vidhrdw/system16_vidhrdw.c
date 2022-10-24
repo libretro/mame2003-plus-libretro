@@ -1044,9 +1044,6 @@ VIDEO_START( system16 ){
 	if(!strcmp(Machine->gamedrv->name, "hangon"))
 		num_sprites = 128;
 
-	if(!strcmp(Machine->gamedrv->name, "toutrun"))
-		num_sprites = 128;
-
 	if( background && foreground && text_layer ){
 		/* initialize all entries to black - needed for Golden Axe*/
 		int i;
