@@ -382,7 +382,7 @@ int sys16_sprite_outrun( struct sys16_sprite_attributes *sprite, const UINT16 *s
 		if(zoomx==0) zoomx=1;
 		if(zoomy==0) zoomy=1;
 		sprite->y = source[0]&0xff;
-		sprite->priority = 3;
+		sprite->priority = 0;
 		sprite->color = 0x80 + (source[5]&0x7f);
 		sprite->screen_height = (source[5]>>8);
 		sprite->pitch = (source[2]>>8)&0xfe; /* 32 bit sprites */
