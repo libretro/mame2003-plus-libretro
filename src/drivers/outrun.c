@@ -1199,7 +1199,7 @@ static INTERRUPT_GEN( or_interrupt ){
 static MACHINE_DRIVER_START( outrun )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 12000000)
+	MDRV_CPU_ADD(M68000, 10000000)
 	MDRV_CPU_MEMORY(outrun_readmem,outrun_writemem)
 	MDRV_CPU_VBLANK_INT(or_interrupt,2)
 
@@ -1208,7 +1208,7 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_CPU_MEMORY(outrun_sound_readmem,outrun_sound_writemem)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport)
 
-	MDRV_CPU_ADD(M68000, 12000000)
+	MDRV_CPU_ADD(M68000, 10000000)
 	MDRV_CPU_MEMORY(outrun_readmem2,outrun_writemem2)
 	MDRV_CPU_VBLANK_INT(sys16_interrupt,2)
 
