@@ -3218,6 +3218,21 @@ static struct YM2610interface ym2610_interfaceb =
 	{ YM3012_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) }
 };
 
+static struct YM2610interface ym2610_interface_nightstr =
+{
+	1,	/* 1 chip */
+	16000000/2,	/* 8 MHz ?? */
+	{ 25 },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{ irqhandler },
+	{ REGION_SOUND2 },	/* Delta-T */
+	{ REGION_SOUND1 },	/* ADPCM */
+	{ YM3012_VOL(100,MIXER_PAN_CENTER,100,MIXER_PAN_CENTER) }
+};
+
 
 /**************************************************************
                          SUBWOOFER (SOUND)
@@ -3508,7 +3523,7 @@ static MACHINE_DRIVER_START( nightstr )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(YM2610, ym2610_interface)
+	MDRV_SOUND_ADD(YM2610, ym2610_interface_nightstr)
 MACHINE_DRIVER_END
 
 
