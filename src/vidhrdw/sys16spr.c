@@ -394,8 +394,8 @@ int sys16_sprite_outrun( struct sys16_sprite_attributes *sprite, const UINT16 *s
 		sprite->zoomy = zoomy;
 		sprite->gfx = gfx;
 #ifdef TRANSPARENT_SHADOWS
-		if( (source[5]&0x7f)==0 ) sprite->flags|= SYS16_SPR_SHADOW;
-		else if( source[3]&0x4000 ){
+		//if( (source[5]&0x7f)==0 ) sprite->flags|= SYS16_SPR_SHADOW;
+		/*else*/ if( source[3]&0x4000 ){
 			sprite->flags|= SYS16_SPR_PARTIAL_SHADOW;
 			sprite->shadow_pen=10;
 		}
