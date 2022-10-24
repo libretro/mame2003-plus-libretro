@@ -1045,7 +1045,7 @@ VIDEO_START( system16 ){
 		num_sprites = 128;
 
 	if(!strcmp(Machine->gamedrv->name, "toutrun"))
-		num_sprites = 256;
+		num_sprites = 256*2;
 
 	if( background && foreground && text_layer ){
 		/* initialize all entries to black - needed for Golden Axe*/
