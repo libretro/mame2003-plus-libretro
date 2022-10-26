@@ -1804,11 +1804,11 @@ VIDEO_UPDATE( outrun_old )
 	render_grv2(bitmap,cliprect,0);
 
 	if (!sys16_sprite_draw)
-	{
 		draw_sprites( bitmap,cliprect,1 );
-	}
-	else
+
+	else if (sys16_sprite_draw)
 		draw_sprites_new( bitmap,cliprect);
+
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
 }
 
