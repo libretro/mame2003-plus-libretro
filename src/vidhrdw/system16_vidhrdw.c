@@ -1782,21 +1782,26 @@ VIDEO_START( outrun_old ){
 	return 0;
 }
 
-VIDEO_UPDATE( outrun_old ){
-	if( sys16_refreshenable ){
-		if( sys16_update_proc ) sys16_update_proc();
-		update_page();
+VIDEO_UPDATE( outrun_old )
+{
+	if (!sys16_refreshenable) 
+	{
+		fillbitmap(bitmap, get_black_pen(), cliprect);
+		return;
+	}
+	if( sys16_update_proc ) sys16_update_proc();
+	update_page();
 
-		tilemap_set_scrollx( background, 0, -320-sys16_bg_scrollx+sys16_bgxoffset );
-		tilemap_set_scrollx( foreground, 0, -320-sys16_fg_scrollx+sys16_fgxoffset );
+	tilemap_set_scrollx( background, 0, -320-sys16_bg_scrollx+sys16_bgxoffset );
+	tilemap_set_scrollx( foreground, 0, -320-sys16_fg_scrollx+sys16_fgxoffset );
 
-		tilemap_set_scrolly( background, 0, -256+sys16_bg_scrolly );
-		tilemap_set_scrolly( foreground, 0, -256+sys16_fg_scrolly );
+	tilemap_set_scrolly( background, 0, -256+sys16_bg_scrolly );
+	tilemap_set_scrolly( foreground, 0, -256+sys16_fg_scrolly );
 
-		render_grv2(bitmap,cliprect,1);
-		tilemap_draw( bitmap,cliprect, background, 0, 0 );
-		tilemap_draw( bitmap,cliprect, foreground, 0, 0 );
-		render_grv2(bitmap,cliprect,0);
+	render_grv2(bitmap,cliprect,1);
+	tilemap_draw( bitmap,cliprect, background, 0, 0 );
+	tilemap_draw( bitmap,cliprect, foreground, 0, 0 );
+	render_grv2(bitmap,cliprect,0);
 
 	if (!sys16_sprite_draw)
 	{
@@ -1804,9 +1809,9 @@ VIDEO_UPDATE( outrun_old ){
 	}
 	else
 		draw_sprites_new( bitmap,cliprect);
-		tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
-	}
+	tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
 }
+
 
 /***************************************************************************/
 

@@ -738,6 +738,9 @@ static WRITE16_HANDLER( outrun_ctrl1_w )
 		   gets written to 140030 so is probably input related */
 	}
 #endif
+	if(ACCESSING_LSB) 
+		sys16_refreshenable = (data >> 5) & 1;
+
 }
 
 static WRITE16_HANDLER( outrun_ctrl1_w_new )
@@ -745,6 +748,7 @@ static WRITE16_HANDLER( outrun_ctrl1_w_new )
    if(ACCESSING_LSB)
    {
       segaic16_set_display_enable((data >> 5) & 1);
+      
       return;
 	   //cpunum_set_input_line(2, INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
    }
