@@ -1363,7 +1363,11 @@ VIDEO_UPDATE( system16 ){
 }
 
 VIDEO_UPDATE( system18 ){
-	if (!sys16_refreshenable) return;
+	if (!sys16_refreshenable) 
+	{
+		fillbitmap(bitmap, get_black_pen(), cliprect);
+		return;
+	}
 	if( sys16_update_proc ) sys16_update_proc();
 	update_page();
 	sys18_vh_screenrefresh_helper(); /* set scroll registers */
@@ -1579,7 +1583,11 @@ if( keyboard_pressed( KEYCODE_S ) ){
 }
 
 VIDEO_UPDATE( hangon ){
-	if (!sys16_refreshenable) return;
+	if (!sys16_refreshenable) 
+	{
+		fillbitmap(bitmap, get_black_pen(), cliprect);
+		return;
+	}
 	if( sys16_update_proc ) sys16_update_proc();
 	update_page();
 
