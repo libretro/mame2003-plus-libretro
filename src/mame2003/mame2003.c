@@ -228,7 +228,7 @@ void retro_set_environment(retro_environment_t cb)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
-  
+
   info->timing.fps = Machine->drv->frames_per_second;
   info->timing.sample_rate = options.samplerate ;
 }
@@ -516,7 +516,7 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
- 
+
   Machine->sample_rate = options.samplerate;
 
   delta_samples = 0.0f;
@@ -1246,7 +1246,7 @@ unsigned decode_osd_joycode(unsigned joycode)
 /******************************************************************************
  * osd_analogjoy_read polls analog joystick axes, and sets the value in the
  * analog_axis[] array.
- * 
+ *
  * int player is an array index, starting at 0
 *******************************************************************************/
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
@@ -1385,13 +1385,16 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
  * Therefore we can use a common function to scale input from lightguns and
  * analog controls.
  ******************************************************************************/
+
+float map(float value, float start1, float stop1, float start2, float stop2)
+{
+  float outgoing =   start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+  return outgoing;
+}
+
 int rescale_analog(int libretro_coordinate)
 {
-  static const float scale_factor = (float)MAME_ANALOG_MAX / LIBRETRO_ANALOG_MAX;
-
-  if (libretro_coordinate == 0 || libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
-
-  return round(scale_factor * libretro_coordinate);
+   return (int)map(libretro_coordinate,0,LIBRETRO_ANALOG_MAX ,0,MAME_ANALOG_MAX);
 }
 
 /******************************************************************************
