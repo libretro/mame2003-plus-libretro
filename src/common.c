@@ -1731,7 +1731,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				if (!open_rom_file(romdata, romp))
 				{
 					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
-						{ log_cb(RETRO_LOG_INFO,"default bios %s\n", romp); romp="default"; system_bios=0; continue;} /*fallback to default bios.*/
+						{ log_cb(RETRO_LOG_INFO,"default bios fallback.\n"); system_bios=0; continue;} /*fallback to default bios.*/
 			
 					else
 						handle_missing_file(romdata, romp);
@@ -1765,7 +1765,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					if (baserom)
 					{
 						log_cb(RETRO_LOG_DEBUG, LOGPRE "Verifying length (%X) and checksums\n", explength);
-            verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
+						verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
 						log_cb(RETRO_LOG_DEBUG, LOGPRE "Length and checksum verify finished\n");
 					}
 
