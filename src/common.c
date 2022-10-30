@@ -1730,8 +1730,8 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				log_cb(RETRO_LOG_INFO, LOGPRE "Opening ROM file: %s\n", ROM_GETNAME(romp));
 				if (!open_rom_file(romdata, romp))
 				{
-					if ((ROM_GETBIOSFLAGS(romp) == (system_bios+1))
-						open_rom_file(romdata, 1); /*fallback to default bios*/
+					if (ROM_GETBIOSFLAGS(romp) == system_bios+1)
+						open_rom_file(romdata, 1); /*fallback to default bios.*/
 			
 					else
 						handle_missing_file(romdata, romp);
