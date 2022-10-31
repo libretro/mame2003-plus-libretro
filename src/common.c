@@ -1733,7 +1733,7 @@ const struct RomModule *romp2 = romp;
 				if (!open_rom_file(romdata, romp))
 				{
 					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
-						{ log_cb(RETRO_LOG_WARN, LOGPRE "default bios fallback.\n"); system_bios=0; process_rom_entries(&romdata2, romp2); romp++; continue;}
+						{ log_cb(RETRO_LOG_WARN, LOGPRE "default bios fallback.\n"); system_bios=0; open_rom_file(romdata2, romp2);}
 			
 					else
 						handle_missing_file(romdata, romp);
