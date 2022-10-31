@@ -1736,8 +1736,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
 					{
 						log_cb(RETRO_LOG_WARN, LOGPRE "%s not found! fallback to default bios.\n", ROM_GETNAME(romp));
-						system_bios=1;
-						if (!open_rom_file(fallback_romdata, fallback_romp)) continue;
+						if (!open_rom_file(fallback_romdata, fallback_romp++)) continue;
 					}
 					else
 						handle_missing_file(romdata, romp);
