@@ -1686,6 +1686,7 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 static int process_rom_entries(struct rom_load_data *romdata, const struct RomModule *romp)
 {
 	UINT32 lastflags = 0;
+	const struct RomModule *fallback_romp = romp;
 
 	/* loop until we hit the end of this region */
 	while (!ROMENTRY_ISREGIONEND(romp))
@@ -1729,7 +1730,16 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				/* open the file */
 				log_cb(RETRO_LOG_INFO, LOGPRE "Opening ROM file: %s\n", ROM_GETNAME(romp));
 				if (!open_rom_file(romdata, romp))
-					handle_missing_file(romdata, romp);
+				{
+					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
+					{
+						log_cb(RETRO_LOG_WARN, LOGPRE "%s NOT FOUND! Attempt fallback to default bios.\n", ROM_GETNAME(romp));
+						if (!open_rom_file(romdata, &fallback_romp[0])) /* try default bios instead */
+							handle_missing_file(romdata, romp);
+					}
+					else
+						handle_missing_file(romdata, romp);
+				}
 
 				/* loop until we run out of reloads */
 				do
@@ -1759,7 +1769,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					if (baserom)
 					{
 						log_cb(RETRO_LOG_DEBUG, LOGPRE "Verifying length (%X) and checksums\n", explength);
-            verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
+						verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
 						log_cb(RETRO_LOG_DEBUG, LOGPRE "Length and checksum verify finished\n");
 					}
 
