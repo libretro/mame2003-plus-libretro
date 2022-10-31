@@ -1153,8 +1153,6 @@ const struct RomModule *rom_next_chunk(const struct RomModule *romp)
 
 int determine_bios_rom(const struct SystemBios *bios)
 {
-	const struct SystemBios *firstbios = bios;
-
 	/* set to default */
 	int bios_no = 0;
 
