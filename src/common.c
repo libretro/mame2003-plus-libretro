@@ -1686,8 +1686,8 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 static int process_rom_entries(struct rom_load_data *romdata, const struct RomModule *romp)
 {
 	UINT32 lastflags = 0;
-struct rom_load_data *romdata2 = *romdata;
-const struct RomModule *romp2 = *romp;
+struct rom_load_data *romdata2 = romdata;
+const struct RomModule *romp2 = romp;
 
 	/* loop until we hit the end of this region */
 	while (!ROMENTRY_ISREGIONEND(romp))
