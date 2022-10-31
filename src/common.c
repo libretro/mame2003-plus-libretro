@@ -1686,8 +1686,9 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 static int process_rom_entries(struct rom_load_data *romdata, const struct RomModule *romp)
 {
 	UINT32 lastflags = 0;
-struct rom_load_data *romdata2 = romdata;
-const struct RomModule *romp2 = romp;
+
+	struct rom_load_data *fallback_romdata = romdata;
+	const struct RomModule *fallback_romp = romp;
 
 	/* loop until we hit the end of this region */
 	while (!ROMENTRY_ISREGIONEND(romp))
@@ -1733,8 +1734,11 @@ const struct RomModule *romp2 = romp;
 				if (!open_rom_file(romdata, romp))
 				{
 					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
-						{ log_cb(RETRO_LOG_WARN, LOGPRE "default bios fallback.\n"); system_bios=0; open_rom_file(romdata2, romp2);}
-			
+					{
+						log_cb(RETRO_LOG_ERROR, LOGPRE "%s not found! fallback to default bios.\n", ROM_GETNAME(romp));
+						system_bios=0;
+						open_rom_file(fallback_romdata, fallback_romp);
+					}
 					else
 						handle_missing_file(romdata, romp);
 				}
