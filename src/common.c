@@ -1686,8 +1686,6 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 static int process_rom_entries(struct rom_load_data *romdata, const struct RomModule *romp)
 {
 	UINT32 lastflags = 0;
-
-	struct rom_load_data *fallback_romdata = romdata;
 	const struct RomModule *fallback_romp = romp;
 
 	/* loop until we hit the end of this region */
@@ -1736,7 +1734,8 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					if (ROM_GETBIOSFLAGS(romp) == (system_bios+1))
 					{
 						log_cb(RETRO_LOG_WARN, LOGPRE "%s not found! fallback to default bios.\n", ROM_GETNAME(romp));
-						if (!open_rom_file(romdata, &fallback_romp[0])) { romp++; continue; }
+						if (!open_rom_file(romdata, &fallback_romp[0])) /* try default bios instead */
+							handle_missing_file(romdata, romp);
 					}
 					else
 						handle_missing_file(romdata, romp);
