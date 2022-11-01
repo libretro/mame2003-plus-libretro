@@ -54,7 +54,7 @@ J1100072A
        A67-15-1                      18.432MHz
 
 ***************************************************************************/
-
+#include <math.h>
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
@@ -387,8 +387,76 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xda00, 0xda00, soundstate_r },
 	{ 0xd800, 0xd800, sound_command_r },	/* read from D800 sets bit 0 in status */
+	{ 0xde00, 0xde00, MRA_NOP },
 	{ 0xe000, 0xefff, MRA_NOP },	/* space for diagnostics ROM */
 MEMORY_END
+
+static int vol_ctrl[16];
+
+static MACHINE_INIT( ta7630 )
+{
+	int i;
+
+	double db			= 0.0;
+	double db_step		= 1.50;	/* 1.50 dB step (at least, maybe more) */
+	double db_step_inc	= 0.125;
+	for (i=0; i<16; i++)
+	{
+		double max = 100.0 / pow(10.0, db/20.0 );
+		vol_ctrl[ 15-i ] = max;
+		/*logerror("vol_ctrl[%x] = %i (%f dB)\n",15-i,vol_ctrl[ 15-i ],db);*/
+		db += db_step;
+		db_step += db_step_inc;
+	}
+
+	/* for (i=0; i<8; i++)
+		logerror("SOUND Chan#%i name=%s\n", i, mixer_get_name(i) ); */
+/*
+  channels 0-2 AY#0
+  channels 3,4 MSM5232 group1,group2
+*/
+
+	beg13_ls74[0] = 0;
+	beg13_ls74[1] = 0;
+}
+
+static UINT8 snd_ctrl0=0;
+static UINT8 snd_ctrl1=0;
+static UINT8 snd_ctrl2=0;
+static UINT8 snd_ctrl3=0;
+
+static WRITE_HANDLER( sound_control_0_w )
+{
+	snd_ctrl0 = data & 0xff;
+/*	usrintf_showmessage("SND0 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3); */
+
+	/* this definitely controls main melody voice on 2'-1 and 4'-1 outputs */
+	mixer_set_volume (3, vol_ctrl[ (snd_ctrl0>>4) & 15 ]);	/* group1 from msm5232 */
+
+}
+static WRITE_HANDLER( sound_control_1_w )
+{
+	snd_ctrl1 = data & 0xff;
+/*	usrintf_showmessage("SND1 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3); */
+	mixer_set_volume (4, vol_ctrl[ (snd_ctrl1>>4) & 15 ]);	/* group2 from msm5232 */
+}
+
+static WRITE_HANDLER( sound_control_2_w )
+{
+	int i;
+
+	snd_ctrl2 = data & 0xff;
+/*	usrintf_showmessage("SND2 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3); */
+
+	for (i=0; i<3; i++)
+		mixer_set_volume (i, vol_ctrl[ (snd_ctrl2>>4) & 15 ]);	/* ym2149f all */
+}
+
+static WRITE_HANDLER( sound_control_3_w ) /* unknown */
+{
+	snd_ctrl3 = data & 0xff;
+/*	usrintf_showmessage("SND3 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3); */
+}
 
 static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
@@ -396,12 +464,12 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0xc800, 0xc800, AY8910_control_port_0_w },
 	{ 0xc801, 0xc801, AY8910_write_port_0_w },
 	{ 0xca00, 0xca0d, MSM5232_0_w },
-	{ 0xcc00, 0xcc00, MWA_NOP },
-	{ 0xce00, 0xce00, MWA_NOP },
+	{ 0xcc00, 0xcc00, sound_control_0_w },
+	{ 0xce00, 0xce00, sound_control_1_w },
 	{ 0xd800, 0xd800, beg_fromsound_w },	/* write to D800 sets bit 1 in status */
 	{ 0xda00, 0xda00, nmi_enable_w },
 	{ 0xdc00, 0xdc00, nmi_disable_w },
-	{ 0xde00, 0xde00, MWA_NOP },
+	{ 0xde00, 0xde00, DAC_0_signed_data_w },		/* signed 8-bit DAC */
 MEMORY_END
 
 
@@ -445,12 +513,6 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 }	/* end of array */
 };
 
-MACHINE_INIT( bigevglf )
-{
-	beg13_ls74[0] = 0;
-	beg13_ls74[1] = 0;
-}
-
 
 static struct AY8910interface ay8910_interface =
 {
@@ -459,8 +521,8 @@ static struct AY8910interface ay8910_interface =
 	{ 15 },
 	{ 0 },
 	{ 0 },
-	{ 0 },
-	{ 0 }
+	{ sound_control_2_w },
+	{ sound_control_3_w }
 };
 
 static struct MSM5232interface msm5232_interface =
@@ -469,6 +531,12 @@ static struct MSM5232interface msm5232_interface =
 	8000000/4,	/* 2 MHz ? */
 	{ { 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 } },	/* 0.65 (???) uF capacitors */
 	{ 100 }	/* mixing level ??? */
+};
+
+static struct DACinterface dac_interface =
+{
+	1,
+	{ 50 }
 };
 
 static MACHINE_DRIVER_START( bigevglf )
@@ -497,7 +565,8 @@ static MACHINE_DRIVER_START( bigevglf )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)	/* 10 CPU slices per frame - interleaving is forced on the fly */
 
-	MDRV_MACHINE_INIT(bigevglf)
+	MDRV_MACHINE_INIT(ta7630)
+	
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
@@ -510,6 +579,7 @@ static MACHINE_DRIVER_START( bigevglf )
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8910_interface) /* YM2149 really */
 	MDRV_SOUND_ADD(MSM5232, msm5232_interface)
+	MDRV_SOUND_ADD(DAC, dac_interface)
 MACHINE_DRIVER_END
 
 /***************************************************************************
