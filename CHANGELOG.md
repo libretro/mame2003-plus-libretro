@@ -502,6 +502,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asterix
 * Athena
 * Bandito
+* Big Event Golf
 * Bosconian
 * Cookie & Bibi 2
 * Crazy Balloon
