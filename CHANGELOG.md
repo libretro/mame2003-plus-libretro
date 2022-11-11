@@ -521,6 +521,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Grobda
 * Hit The Ice
 * Horizon
+* Inferno (Williams)
 * Journey (Added sepways.wav sample)
 * Kaiketsu Yanchamaru
 * Kid Niki - Radical Ninja (US)
@@ -888,3 +889,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed some missing graphics in Beast Busters and Mechanized Attack then sorted sprite priorities on level 2 in Beast Busters [bmcphail, dink, arcadez]
 * Added a new hack to fix the lights dont go out when shot in Elevator Action Returns and clones which doesn't break the gfx on the game ending [dink, arcadez]
 * Fixed some serious graphical issues on the final level in Double Dragon 3 and the third level in The Combat Tribes [Pierpaolo Prazzoli, arcadez, Cibomatto2002]
+* Added missing dac sounds speech and crowd cheers etc etc to Taito's Big Event Golf [arcadez]
+* Fixed broken sound for the classic Williams game Inferno by backporting a sound cpu hack from later MAME [Aaron Giles, arcadez]
