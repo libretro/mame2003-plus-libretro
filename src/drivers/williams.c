@@ -2618,6 +2618,10 @@ static DRIVER_INIT( inferno )
 	/* install RAM instead of ROM in the Dxxx slot */
 	install_mem_read_handler (0, 0xd000, 0xdfff, MRA_RAM);
 	install_mem_write_handler(0, 0xd000, 0xdfff, MWA_RAM);
+  
+  /* hack! the sound CPU programs the DDRA register to $80 instead of $00, meaning */
+	/* that the top bit gets chopped off; not sure how to fix this for real */
+	memory_region(REGION_CPU2)[0xe015] = 0;
 }
 
 
@@ -2696,7 +2700,7 @@ GAME(  1985, alienaru,  0,       alienaru, alienar,  alienar,  ROT0,   "Duncan B
 
 GAME(  1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
 GAME(  1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
-GAMECX(1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno (Williams)", GAME_IMPERFECT_SOUND, &inferno_ctrl, NULL  )
+GAMEC( 1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno (Williams)", &inferno_ctrl, NULL  )
 GAMEC( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)", &joust2_ctrl, &joust2_bootstrap )
 
 GAME(  1987, lottofun, 0,        williams, lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun" )
