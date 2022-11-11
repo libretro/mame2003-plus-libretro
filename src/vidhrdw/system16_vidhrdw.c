@@ -1813,8 +1813,7 @@ VIDEO_UPDATE( outrun_old )
 
 	if (!sys16_sprite_draw)
 		draw_sprites( bitmap,cliprect,1 );
-
-	else if (sys16_sprite_draw)
+	else
 		draw_sprites_new( bitmap,cliprect);
 
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
