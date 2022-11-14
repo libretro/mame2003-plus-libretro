@@ -408,6 +408,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
 * Space Position - Romset `spcpostn`
+* Space Seeker - Romset `spaceskr`
 * Speed Spin - Romset `speedspn` - gfx glitches
 * Spy Hunter - Romset `spyhunt`
 * Spy Hunter 2 - Romset `spyhunt2`
@@ -893,3 +894,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed broken sound for the classic Williams game Inferno by backporting a sound cpu hack from later MAME [Aaron Giles, arcadez]
 * Prevented The Electric Yo-Yo from hanging during the attract mode by interleaving the CPU's [MAME Dev, arcadez]
 * Updated some parts of the Taito SJ code to MAME 103 vastly improving the emulation for Elevator Action, Jungle Hunt, Sea Fighter Poseidon and more [MAME Dev, arcadez]
+* Fixed an issue where Space Seeker would not coin up and start due to a previous commit which added an invalid input game now playable again [arcadez]
