@@ -16,6 +16,7 @@
 
 static unsigned char fromz80,toz80;
 static int zaccept,zready;
+static int spacecr_prot_value;
 
 WRITE_HANDLER( taitosj_bankswitch_w );
 
@@ -31,12 +32,15 @@ MACHINE_INIT( taitosj )
 	zready = 0;
  	if (Machine->drv->cpu[2].cpu_type != CPU_DUMMY)
 	cpu_set_irq_line(2,0,CLEAR_LINE);
+	spacecr_prot_value = 0;
 }
 
 
 WRITE_HANDLER( taitosj_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
+
+	coin_lockout_global_w(~data & 1);
 
 	cpu_setbank(1,&RAM[(data & 0x80) ? 0x10000 : 0x6000]);
 }
@@ -267,6 +271,19 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port C read %02x\n",activecpu_get_pc
 }
 
 
+/* Space Cruiser protection (otherwise the game resets on the asteroids level) */
+
+READ_HANDLER( spacecr_prot_r )
+{
+	int pc = activecpu_get_pc();
+
+	if( pc != 0x368A && pc != 0x36A6 )
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read protection from an unknown location: %04X\n",pc);
+
+	spacecr_prot_value ^= 0xff;
+
+	return spacecr_prot_value;
+}
 
 /* Alpine Ski protection crack routines */
 
