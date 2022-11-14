@@ -709,6 +709,14 @@ static MACHINE_DRIVER_START( mcu )
 	MDRV_MACHINE_INIT(qixmcu)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( elecyoyo )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(mcu)
+
+	MDRV_INTERLEAVE(100)	/* fixes hang in attract mode */
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( zookeep )
 
@@ -1182,19 +1190,19 @@ static DRIVER_INIT( slither )
  *
  *************************************/
 
-GAMEC( 1981, qix,      0,        qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 1)", &generic_ctrl, &qix_bootstrap)
-GAMEC( 1981, qixa,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 2)", &generic_ctrl, &qix_bootstrap)
-GAMEC( 1981, qixb,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 3)", &generic_ctrl, &qix_bootstrap)
-GAMEC( 1981, qix2,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix II (Tournament)", &generic_ctrl, &qix_bootstrap)
+GAMEC(1981, qix,      0,        qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 1)", &generic_ctrl, &qix_bootstrap)
+GAMEC(1981, qixa,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 2)", &generic_ctrl, &qix_bootstrap)
+GAMEC(1981, qixb,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix (set 3)", &generic_ctrl, &qix_bootstrap)
+GAMEC(1981, qix2,     qix,      qix,     qix,      0,        ROT270, "Taito America Corporation", "Qix II (Tournament)", &generic_ctrl, &qix_bootstrap)
 GAME( 1981, sdungeon, 0,        mcu,     sdungeon, 0,        ROT270, "Taito America Corporation", "Space Dungeon" )
-GAME( 1982, elecyoyo, 0,        mcu,     elecyoyo, 0,        ROT270, "Taito America Corporation", "The Electric Yo-Yo (set 1)" )
-GAME( 1982, elecyoy2, elecyoyo, mcu,     elecyoyo, 0,        ROT270, "Taito America Corporation", "The Electric Yo-Yo (set 2)" )
+GAME( 1982, elecyoyo, 0,        elecyoyo,elecyoyo, 0,        ROT270, "Taito America Corporation", "The Electric Yo-Yo (set 1)" )
+GAME( 1982, elecyoy2, elecyoyo, elecyoyo,elecyoyo, 0,        ROT270, "Taito America Corporation", "The Electric Yo-Yo (set 2)" )
 GAME( 1982, kram,     0,        mcu,     kram,     kram,     ROT0,   "Taito America Corporation", "Kram (set 1)" )
 GAME( 1982, kram2,    kram,     mcu,     kram,     kram,     ROT0,   "Taito America Corporation", "Kram (set 2)" )
 GAMEX(1982, kram3,    kram,     qix,     kram,     kram,     ROT0,   "Taito America Corporation", "Kram (encrypted)", GAME_UNEMULATED_PROTECTION )
-GAMEC( 1982, zookeep,  0,        zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 1)", &generic_ctrl, &zookeep_bootstrap )
-GAMEC( 1982, zookeep2, zookeep,  zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 2)", &generic_ctrl, &zookeep_bootstrap )
-GAMEC( 1982, zookeep3, zookeep,  zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 3)", &generic_ctrl, &zookeep_bootstrap )
+GAMEC(1982, zookeep,  0,        zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 1)", &generic_ctrl, &zookeep_bootstrap )
+GAMEC(1982, zookeep2, zookeep,  zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 2)", &generic_ctrl, &zookeep_bootstrap )
+GAMEC(1982, zookeep3, zookeep,  zookeep, zookeep,  zookeep,  ROT0,   "Taito America Corporation", "Zoo Keeper (set 3)", &generic_ctrl, &zookeep_bootstrap )
 GAME( 1982, slither,  0,        slither, slither,  slither,  ROT270, "Century II",                "Slither (set 1)" )
 GAME( 1982, slithera, slither,  slither, slither,  slither,  ROT270, "Century II",                "Slither (set 2)" )
 GAME( 1984, complexx, 0,        qix,     complexx, 0,        ROT270, "Taito America Corporation", "Complex X" )
