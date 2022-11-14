@@ -145,6 +145,7 @@ WRITE_HANDLER( taitosj_68705_portB_w );
 WRITE_HANDLER( alpine_protection_w );
 WRITE_HANDLER( alpinea_bankswitch_w );
 READ_HANDLER( alpine_port_2_r );
+READ_HANDLER( spacecr_prot_r );
 
 extern unsigned char *taitosj_videoram2,*taitosj_videoram3;
 extern unsigned char *taitosj_characterram;
@@ -188,8 +189,9 @@ static MEMORY_READ_START( readmem )
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0x8800, 0x8800, taitosj_fake_data_r },
 	{ 0x8801, 0x8801, taitosj_fake_status_r },
-	{ 0xc400, 0xd015, MRA_RAM },
-	{ 0xd100, 0xd17f, MRA_RAM },
+	{ 0xc000, 0xcfff, MRA_RAM },
+	{ 0xd000, 0xd05f, MRA_RAM },
+	{ 0xd100, 0xd1ff, MRA_RAM },
 	{ 0xd400, 0xd403, taitosj_collision_reg_r },
 	{ 0xd404, 0xd404, taitosj_gfxrom_r },
 	{ 0xd408, 0xd408, input_port_0_r },     /* IN0 */
@@ -207,11 +209,13 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0x8800, 0x8800, taitosj_fake_data_w },
 	{ 0x9000, 0xbfff, taitosj_characterram_w, &taitosj_characterram },
+	{ 0xc000, 0xc3ff, MWA_RAM },
 	{ 0xc400, 0xc7ff, videoram_w, &videoram, &videoram_size },
 	{ 0xc800, 0xcbff, taitosj_videoram2_w, &taitosj_videoram2 },
 	{ 0xcc00, 0xcfff, taitosj_videoram3_w, &taitosj_videoram3 },
 	{ 0xd000, 0xd05f, MWA_RAM, &taitosj_colscrolly },
 	{ 0xd100, 0xd17f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0xd180, 0xd1ff, MWA_RAM, &spriteram_2, &spriteram_2_size },
 	{ 0xd200, 0xd27f, taitosj_paletteram_w, &paletteram },
 	{ 0xd300, 0xd300, MWA_RAM, &taitosj_video_priority },
 	{ 0xd40e, 0xd40e, AY8910_control_port_0_w },
@@ -235,8 +239,9 @@ static MEMORY_READ_START( mcu_readmem )
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0x8800, 0x8800, taitosj_mcu_data_r },
 	{ 0x8801, 0x8801, taitosj_mcu_status_r },
-	{ 0xc400, 0xd05f, MRA_RAM },
-	{ 0xd100, 0xd17f, MRA_RAM },
+	{ 0xc000, 0xcfff, MRA_RAM },
+	{ 0xd000, 0xd05f, MRA_RAM },
+	{ 0xd100, 0xd1ff, MRA_RAM },
 	{ 0xd400, 0xd403, taitosj_collision_reg_r },
 	{ 0xd404, 0xd404, taitosj_gfxrom_r },
 	{ 0xd408, 0xd408, input_port_0_r },     /* IN0 */
@@ -256,9 +261,11 @@ static MEMORY_WRITE_START( mcu_writemem )
 	{ 0x9000, 0xbfff, taitosj_characterram_w, &taitosj_characterram },
 	{ 0xc400, 0xc7ff, videoram_w, &videoram, &videoram_size },
 	{ 0xc800, 0xcbff, taitosj_videoram2_w, &taitosj_videoram2 },
+	{ 0xc000, 0xc3ff, MWA_RAM },
 	{ 0xcc00, 0xcfff, taitosj_videoram3_w, &taitosj_videoram3 },
 	{ 0xd000, 0xd05f, MWA_RAM, &taitosj_colscrolly },
 	{ 0xd100, 0xd17f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0xd180, 0xd1ff, MWA_RAM, &spriteram_2, &spriteram_2_size },
 	{ 0xd200, 0xd27f, taitosj_paletteram_w, &paletteram },
 	{ 0xd300, 0xd300, MWA_RAM, &taitosj_video_priority },
 	{ 0xd40e, 0xd40e, AY8910_control_port_0_w },
@@ -275,23 +282,43 @@ static MEMORY_WRITE_START( mcu_writemem )
 MEMORY_END
 
 /* seems the most logical way to do the gears */
-static int kikstart_gear;
+static UINT8 kikstart_gearP1;
+static UINT8 kikstart_gearP2;
 
-static READ_HANDLER ( kikstart_gears_read )
+static READ_HANDLER ( kikstart_gearsP1_read )
 {
 	/* gear MUST be 1, 2 or 3 */
 
 	int portreturn = readinputport(3) & 0xf4;
 
-	if (readinputport(8) & 0x01) kikstart_gear = 1;
-	if (readinputport(8) & 0x02) kikstart_gear = 2;
-	if (readinputport(8) & 0x04) kikstart_gear = 3;
+	if (readinputport(8) & 0x01) kikstart_gearP1 = 1;
+	if (readinputport(8) & 0x02) kikstart_gearP1 = 2;
+	if (readinputport(8) & 0x04) kikstart_gearP1 = 3;
 
-	if (kikstart_gear == 1) portreturn |= (0x02);
-	if (kikstart_gear == 2) portreturn |= (0x03);
-	if (kikstart_gear == 3) portreturn |= (0x01);
+	if (kikstart_gearP1 == 1) portreturn |= (0x02);
+	if (kikstart_gearP1 == 2) portreturn |= (0x03);
+	if (kikstart_gearP1 == 3) portreturn |= (0x01);
 
-/*usrintf_showmessage	("Kikstart gear %02x",  kikstart_gear);*/
+/*usrintf_showmessage	("Kikstart gear %02x",  kikstart_gear); */
+
+	return portreturn;
+}
+
+static READ_HANDLER ( kikstart_gearsP2_read )
+{
+	/* gear MUST be 1, 2 or 3 */
+
+	int portreturn = readinputport(4) & 0xf4; /* correct i think */
+
+	if (readinputport(9) & 0x08) kikstart_gearP2 = 1; /* port 9 for P2 correct.?? */
+	if (readinputport(9) & 0x10) kikstart_gearP2 = 2;
+	if (readinputport(9) & 0x20) kikstart_gearP2 = 3;
+
+	if (kikstart_gearP2 == 1) portreturn |= (0x02);
+	if (kikstart_gearP2 == 2) portreturn |= (0x03);
+	if (kikstart_gearP2 == 3) portreturn |= (0x01);
+
+/* usrintf_showmessage	("Kikstart gear %02x",  kikstart_gear); */
 
 	return portreturn;
 }
@@ -303,16 +330,16 @@ static MEMORY_READ_START( kikstart_readmem )
 	{ 0x8800, 0x8800, taitosj_mcu_data_r },
 	{ 0x8801, 0x8801, taitosj_mcu_status_r },
 	{ 0x8802, 0x8802, MRA_NOP },
-	{ 0xc400, 0xd05f, MRA_RAM },
-	{ 0xd100, 0xd17f, MRA_RAM },
+	{ 0xc000, 0xd05f, MRA_RAM },
+	{ 0xd100, 0xd1ff, MRA_RAM },
 	{ 0xd400, 0xd403, taitosj_collision_reg_r },
 	{ 0xd404, 0xd404, taitosj_gfxrom_r },
 	{ 0xd408, 0xd408, input_port_0_r },     /* IN0 */
 	{ 0xd409, 0xd409, input_port_1_r },     /* IN1 */
 	{ 0xd40a, 0xd40a, input_port_5_r },     /* DSW1 */
 	{ 0xd40b, 0xd40b, input_port_2_r },     /* IN2 */
-	{ 0xd40c, 0xd40c, kikstart_gears_read },     /* Service */
-	{ 0xd40d, 0xd40d, input_port_4_r },
+	{ 0xd40c, 0xd40c, kikstart_gearsP1_read },      /* IN3 */
+    { 0xd40d, 0xd40d, kikstart_gearsP2_read },		/* IN4 */
 	{ 0xd40f, 0xd40f, AY8910_read_port_0_r },       /* DSW2 and DSW3 */
 	{ 0xd800, 0xdfff, MRA_RAM },
 	{ 0xe000, 0xefff, MRA_ROM },
@@ -324,11 +351,13 @@ static MEMORY_WRITE_START( kikstart_writemem )
 	{ 0x8800, 0x8800, taitosj_mcu_data_w },
 	{ 0x8802, 0x8802, MWA_NOP },
 	{ 0x9000, 0xbfff, taitosj_characterram_w, &taitosj_characterram },
+	{ 0xc000, 0xc3ff, MWA_RAM },
 	{ 0xc400, 0xc7ff, videoram_w, &videoram, &videoram_size },
 	{ 0xc800, 0xcbff, taitosj_videoram2_w, &taitosj_videoram2 },
 	{ 0xcc00, 0xcfff, taitosj_videoram3_w, &taitosj_videoram3 },
 	{ 0x8a00, 0x8a5f, MWA_RAM, &taitosj_colscrolly },
 	{ 0xd100, 0xd17f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0xd180, 0xd1ff, MWA_RAM, &spriteram_2, &spriteram_2_size },
 	{ 0xd200, 0xd27f, taitosj_paletteram_w, &paletteram },
 	{ 0xd300, 0xd300, MWA_RAM, &taitosj_video_priority },
 	{ 0xd40e, 0xd40e, AY8910_control_port_0_w },
@@ -458,14 +487,14 @@ INPUT_PORTS_START( spaceskr )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN3 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 
 	PORT_START
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
@@ -527,7 +556,7 @@ INPUT_PORTS_START( spacecr )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) /* continue */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -537,7 +566,7 @@ INPUT_PORTS_START( spacecr )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL ) /* continue */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -1884,13 +1913,11 @@ INPUT_PORTS_START( kikstart )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_2WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
 
 	PORT_START      /* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1902,18 +1929,21 @@ INPUT_PORTS_START( kikstart )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START      /* Service */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear*/
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear*/
+	PORT_START      /* Service / IN3*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear*/
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SPECIAL ) /* gear */
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_START    /* IN4.?? */ /* P2 gears here.?? */
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) /* P2 gear */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SPECIAL ) /* P2 gear */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SPECIAL ) /* P2 gear */
 
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME(0x03, 0x01, "Gate Bonus" )
@@ -1963,6 +1993,9 @@ INPUT_PORTS_START( kikstart )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON3 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON4 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON4 | IPF_COCKTAIL )
 INPUT_PORTS_END
 
 
@@ -2707,7 +2740,11 @@ ROM_START( kikstart )
 	ROM_LOAD( "eb16.22",      0x0000, 0x0100, CRC(b833b5ea) SHA1(d233f1bf8a3e6cd876853ffd721b9b64c61c9047) )
 ROM_END
 
-
+static DRIVER_INIT( spacecr )
+{
+	/* install protection handler */
+	install_mem_read_handler(0, 0xd48b, 0xd48b, spacecr_prot_r);
+}
 
 static DRIVER_INIT( alpine )
 {
@@ -2731,11 +2768,12 @@ static DRIVER_INIT( junglhbr )
 
 static DRIVER_INIT( kikstart )
 {
-	kikstart_gear = 1;
+	kikstart_gearP1 = 1;
+	kikstart_gearP2 = 1;
 }
 
 GAME( 1981, spaceskr, 0,        nomcu,    spaceskr,   0,       ROT180, "Taito Corporation", "Space Seeker" )
-GAME( 1981, spacecr,  0,        nomcu,    spacecr,    0,       ROT90,  "Taito Corporation", "Space Cruiser" )
+GAME( 1981, spacecr,  0,        nomcu,    spacecr,    spacecr, ROT90,  "Taito Corporation", "Space Cruiser" )
 GAME( 1982, junglek,  0,        nomcu,    junglek,    0,       ROT0,   "Taito Corporation", "Jungle King (Japan)" )
 GAME( 1982, junglkj2, junglek,  nomcu,    junglek,    0,       ROT0,   "Taito Corporation", "Jungle King (Japan, earlier)" )
 GAME( 1982, jungleh,  junglek,  nomcu,    junglek,    0,       ROT0,   "Taito America Corporation", "Jungle Hunt (US)" )
