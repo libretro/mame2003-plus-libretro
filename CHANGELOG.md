@@ -218,6 +218,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Wing Shooting Championship
 * Wiz Warz
 * Wonderboy In Monsterland (English Virtual Console Version)
+* Woodpecker
 * World Cup Volley 95
 * Xeno Crisis
 * Zintrick
@@ -895,3 +896,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Prevented The Electric Yo-Yo from hanging during the attract mode by interleaving the CPU's [MAME Dev, arcadez]
 * Updated some parts of the Taito SJ code to MAME 103 vastly improving the emulation for Elevator Action, Jungle Hunt, Sea Fighter Poseidon and more [MAME Dev, arcadez]
 * Fixed an issue where Space Seeker would not coin up and start due to a previous commit which added an invalid input game now playable again [arcadez]
+* Stopped Space Cruiser from crashing on the asteroids level and added the dedicated button for the continue mode [MAMEDev, arcadez]
+* Fixed Jungle Hunt / Jungle King / Pirate Pete from crashing on the last level [MEMEDev, arcadez]
+* Sorted a gfx niggle with Mario Bros where the screen would shake incorrectly left/right rather than up/down when you hit the POW box [MAMEDEv, arcadez]
+* Added support for Woodpecker to the pacman.c driver [MAMEDEv, arcadez]
