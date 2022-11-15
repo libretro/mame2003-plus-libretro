@@ -24,6 +24,7 @@
 		* Driving Force
 		* Eight Ball Action
 		* Porky
+    * Woodpecker
 
 	Known issues:
 		* mystery items in Ali Baba don't work correctly because of protection
@@ -2324,6 +2325,55 @@ INPUT_PORTS_START( nmouse )
 
 INPUT_PORTS_END
 
+INPUT_PORTS_START( woodpek )
+	PORT_START	/* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )
+	PORT_BITX(    0x10, 0x10, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Rack Test", KEYCODE_F1, IP_JOY_NONE )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
+
+	PORT_START	/* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+
+	PORT_START	/* DSW 1 */
+	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x04, "2" )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x0c, "5" )
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x00, "5000" )
+	PORT_DIPSETTING(    0x10, "10000" )
+	PORT_DIPSETTING(    0x20, "15000" )
+	PORT_DIPSETTING(    0x30, "None" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START	/* DSW 2 */
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+INPUT_PORTS_END
+
 
 INPUT_PORTS_START( bigbucks )
 	PORT_START	/* IN0 */
@@ -4165,6 +4215,31 @@ ROM_START( nmouseb )
 	ROM_LOAD( "82s126.3m", 0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )   /*timing - not used */
 ROM_END
 
+ROM_START( woodpek )
+	ROM_REGION( 0x10000, REGION_CPU1,0 )     /* 64k for code */
+	/* roms dumped from epoxy block */
+	ROM_LOAD( "f.bin", 0x0000, 0x1000, CRC(37ea66ca) SHA1(1779e2af8ffc72ec454a401cf6fa93e77e28576a) )
+	ROM_LOAD( "i.bin", 0x8000, 0x1000, CRC(cd115dba) SHA1(51dfa1966fa391654622cd4ffdd09007ec38ea02) )
+	ROM_LOAD( "e.bin", 0x9000, 0x1000, CRC(d40b2321) SHA1(0418cb772e24b67fd1d04e06daed33e766c8bc3d) )
+	ROM_LOAD( "g.bin", 0xa000, 0x1000, CRC(024092f4) SHA1(4b16a3ff101397af64fc89d9f93bbdb939c8e699) )
+	ROM_LOAD( "h.bin", 0xb000, 0x1000, CRC(18ef0fc8) SHA1(4cf3854adbcdd4ca2d855c48acff39fce5be48f7) )
+
+	ROM_REGION( 0x1000, REGION_GFX1 , ROMREGION_DISPOSE)
+	ROM_LOAD( "a.5e",  0x0000, 0x0800, CRC(15a87f62) SHA1(df6a6594ea8c6957e420b95e25ca33a9add13c09) )
+	ROM_LOAD( "c.5h",  0x0800, 0x0800, CRC(ab4abd88) SHA1(04199a127556159878d719599d57a3548eb14a3c) )	
+
+	ROM_REGION( 0x1000, REGION_GFX2 , ROMREGION_DISPOSE )
+	ROM_LOAD( "b.5f",  0x0000, 0x0800, CRC(5b9ba95b) SHA1(6d963da936c26830a614b69c663fc1e20b70f9dc) )
+	ROM_LOAD( "d.5j",  0x0800, 0x0800, CRC(d7b80a45) SHA1(8f4ef319b960ae0e2cb30910b7efe6c0691df2bb) )
+
+	ROM_REGION( 0x0120, REGION_PROMS, 0 )
+	ROM_LOAD( "pr.8h", 0x0000, 0x0020, CRC(2fc650bd) SHA1(8d0268dee78e47c712202b0ec4f1f51109b1f2a5) )
+	ROM_LOAD( "pr.4a", 0x0020, 0x0100, CRC(d8772167) SHA1(782fa53f0de7262924a92d75f12a42bc4e44c812) )
+
+	ROM_REGION( 0x0200, REGION_SOUND1, 0 )	/* sound PROMs */
+	ROM_LOAD( "pr.1k", 0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
+	ROM_LOAD( "pr.3k", 0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )   /*timing - not used */
+ROM_END
 
 ROM_START( bigbucks )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
@@ -4455,6 +4530,22 @@ static DRIVER_INIT( porky )
 
 }
 
+static DRIVER_INIT( woodpek )
+{
+	int i;
+	unsigned char *RAM;
+
+	/* Graphics ROMs */
+
+	/* Data lines D4 and D6 and address lines A0 and A2 are swapped */
+	RAM = memory_region(REGION_GFX1);
+	for (i = 0;i < memory_region_length(REGION_GFX1);i += 8)
+		eyes_decode(&RAM[i]);
+	RAM = memory_region(REGION_GFX2);
+	for (i = 0;i < memory_region_length(REGION_GFX2);i += 8)
+		eyes_decode(&RAM[i]);
+}
+
 /*************************************
  *
  *	Game drivers
@@ -4481,6 +4572,7 @@ GAME( 1981, piranhao,  puckman,  piranha,   mspacman,  eyes,     ROT90,  "GL (US
 GAME( 1981, piranhah,  puckman,  pacman,    mspacman,  0,        ROT90,  "hack", "Piranha (hack)" )
 GAME( 1981, nmouse,    0,        nmouse,    nmouse,    eyes,     ROT90,  "Amenip (Palcom Queen River)", "Naughty Mouse (set 1)" )
 GAME( 1981, nmouseb,   nmouse,   nmouse,    nmouse,    eyes,     ROT90,  "Amenip Nova Games Ltd.", "Naughty Mouse (set 2)" )
+GAME( 1981, woodpek,   0,        pacman,    woodpek,   woodpek,  ROT90,  "Amenip (Palcom Queen River)", "Woodpecker (set 1)" )
 GAME( 1982, pacplus,   0,        pacplus,   pacman,    pacplus,  ROT90,  "[Namco] (Midway license)", "Pac-Man Plus" )
 GAME( 1981, mspacman,  0,        mspacman,  mspacman,  0,        ROT90,  "Midway", "Ms. Pac-Man" )
 GAME( 1981, mspacmnf,  mspacman, mspacman,  mspacman,  0,        ROT90,  "hack", "Ms. Pac-Man (speedup hack)" )
