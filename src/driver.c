@@ -93,7 +93,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( piranhah )	/* hack */
 	DRIVER( nmouse )	/* (c) 1981 Amenip (Palcom Queen River) */
 	DRIVER( nmouseb )	/* (c) 1981 Amenip Nova Games Ltd. */
-  DRIVER( woodpek )	/* (c) 1981 Amenip (Palcom Queen River) */
+	DRIVER( woodpeck )	/* (c) 1981 Amenip (Palcom Queen River) set 1 */
+	DRIVER( woodpeca )	/* (c) 1981 Amenip (Palcom Queen River) set 2 */
 	DRIVER( pacplus )
 	DRIVER( mspacman )	/* (c) 1981 Midway */	/* made by Gencomp */
 	DRIVER( mspacmnf )	/* hack (speedup) */
