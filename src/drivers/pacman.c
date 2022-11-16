@@ -4215,7 +4215,7 @@ ROM_START( nmouseb )
 	ROM_LOAD( "82s126.3m", 0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )   /*timing - not used */
 ROM_END
 
-ROM_START( woodpeck )
+ROM_START( woodpek )
 	ROM_REGION( 0x10000, REGION_CPU1,0 )     /* 64k for code */
 	/* roms dumped from epoxy block */
 	ROM_LOAD( "f.bin", 0x0000, 0x1000, CRC(37ea66ca) SHA1(1779e2af8ffc72ec454a401cf6fa93e77e28576a) )
