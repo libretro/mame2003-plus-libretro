@@ -196,13 +196,11 @@ static WRITE32_HANDLER(silk_6295_1_w)
 
 static WRITE32_HANDLER( silk_6295_bank_w )
 {
-	//if (ACCESSING_BITS_24_31)
-	if (!(mem_mask & 0xff000000)) // should be this for 78
+	if (!(mem_mask & 0xff000000))
 	{
 		int bank = (data & 0x3000000) >> 24;
 		if(bank < 3)
-        //okim6295_set_bank_base(devtag_get_device(device->machine, SOUND, "oki1"), 0x40000 * (bank));
-		OKIM6295_set_bank_base(0, (memory_region_length(REGION_SOUND1), 0x40000 * bank )); // correct.??
+		OKIM6295_set_bank_base(0, (memory_region_length(REGION_SOUND1), 0x40000 * bank ));
 	}
 }
 
@@ -483,9 +481,6 @@ ROM_START( silkroad )
 	ROM_LOAD( "rom07.bin",	0x0600000, 0x0200000, CRC(9fc6ff9d) SHA1(51c3ca9709a01e0ad6bc76c0d674ed03f9822598) ) /* 3*/
 	ROM_LOAD( "rom11.bin",	0x0e00000, 0x0200000, CRC(11abaf1c) SHA1(19e86f3ebfec518a96c0520f36cfc1b525e7e55c) ) /* 3*/
 	ROM_LOAD( "rom15.bin",	0x1600000, 0x0200000, CRC(26a3b168) SHA1(a4b7955cc4d4fbec7c975a9456f2219ef33f1166) ) /* 3*/
-
-//	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
-//	ROM_LOAD( "rom00.bin", 0x000000, 0x080000, CRC(b10ba7ab) SHA1(a6a3ae71b803af9c31d7e97dc86cfcc123ee9a40) )
 
 	ROM_REGION( 0x080000, REGION_USER1, 0 )
 	ROM_LOAD( "rom00.bin", 0x000000, 0x080000, CRC(b10ba7ab) SHA1(a6a3ae71b803af9c31d7e97dc86cfcc123ee9a40) )
