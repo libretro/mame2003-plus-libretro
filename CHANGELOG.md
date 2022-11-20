@@ -564,6 +564,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Spacefortress Macross II
 * Super Xevious
 * Tecmo Bowl
+* The Legend OF Silkroad
 * Thief
 * Tough Turf (Japan)
 * Tower Of Druaga
@@ -900,3 +901,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed Jungle Hunt / Jungle King / Pirate Pete from crashing on the last level [MEMEDev, arcadez]
 * Sorted a gfx niggle with Mario Bros where the screen would shake incorrectly left/right rather than up/down when you hit the POW box [MAMEDEv, arcadez]
 * Added support for Woodpecker to the pacman.c driver [MAMEDEv, arcadez]
+* Added sound banking to the OKIM6295 in silkroad.c fixing missing Sfx and Speech in The Legend Of Silkroad [MAMEDev, arcadez]
