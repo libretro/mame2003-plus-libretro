@@ -4,7 +4,7 @@
 
 /* Preliminary Driver by David Haywood */
 /* Inputs, DIPs by Stephh & R. Belmont */
-/* and preliminary sound hookup by R. Belmont */
+/* and preliminary sound hookup by R. Belmont + fixes by Pierpaolo Prazzoli */
 /* todo:
 
 Clean Up
@@ -175,7 +175,7 @@ static WRITE32_HANDLER(silk_6295_0_w)
 {
 	if (!(mem_mask & 0x00ff0000))
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "OKI0: write %x mem_mask %8x\n", data>>16, mem_mask);
+		/* log_cb(RETRO_LOG_DEBUG, LOGPRE "OKI0: write %x mem_mask %8x\n", data>>16, mem_mask); */
 		OKIM6295_data_0_w(0, (data>>16) & 0xff);
 	}
 }
@@ -189,8 +189,20 @@ static WRITE32_HANDLER(silk_6295_1_w)
 {
 	if (!(mem_mask & 0x00ff0000))
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "OKI1: write %x mem_mask %8x\n", data>>16, mem_mask);
+		/* log_cb(RETRO_LOG_DEBUG, LOGPRE "OKI1: write %x mem_mask %8x\n", data>>16, mem_mask); */
 		OKIM6295_data_1_w(0, (data>>16) & 0xff);
+	}
+}
+
+static WRITE32_HANDLER( silk_6295_bank_w )
+{
+	//if (ACCESSING_BITS_24_31)
+	if (!(mem_mask & 0xff000000)) // should be this for 78
+	{
+		int bank = (data & 0x3000000) >> 24;
+		if(bank < 3)
+        //okim6295_set_bank_base(devtag_get_device(device->machine, SOUND, "oki1"), 0x40000 * (bank));
+		OKIM6295_set_bank_base(0, (memory_region_length(REGION_SOUND1), 0x40000 * bank )); // correct.??
 	}
 }
 
@@ -247,6 +259,7 @@ static MEMORY_WRITE32_START( writemem )
 	{ 0xC00028, 0xC0002b, silk_ym_regport_w },
 	{ 0xC0002C, 0xC0002f, silk_ym_dataport_w },
 	{ 0xC00030, 0xC00033, silk_6295_1_w },
+	{ 0xc00034, 0xc00037, silk_6295_bank_w },
 
 	/* C00038 appears to be the coin counter, bit 0 is pulsed when a coin is inserted*/
 /*
@@ -471,8 +484,21 @@ ROM_START( silkroad )
 	ROM_LOAD( "rom11.bin",	0x0e00000, 0x0200000, CRC(11abaf1c) SHA1(19e86f3ebfec518a96c0520f36cfc1b525e7e55c) ) /* 3*/
 	ROM_LOAD( "rom15.bin",	0x1600000, 0x0200000, CRC(26a3b168) SHA1(a4b7955cc4d4fbec7c975a9456f2219ef33f1166) ) /* 3*/
 
-	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
+//	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
+//	ROM_LOAD( "rom00.bin", 0x000000, 0x080000, CRC(b10ba7ab) SHA1(a6a3ae71b803af9c31d7e97dc86cfcc123ee9a40) )
+
+	ROM_REGION( 0x080000, REGION_USER1, 0 )
 	ROM_LOAD( "rom00.bin", 0x000000, 0x080000, CRC(b10ba7ab) SHA1(a6a3ae71b803af9c31d7e97dc86cfcc123ee9a40) )
+
+	/* $00000-$20000 stays the same in all sound banks, */
+	/* the second half of the bank is what gets switched */
+	ROM_REGION( 0xc0000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_COPY( REGION_USER1, 0x000000, 0x000000, 0x020000)
+	ROM_COPY( REGION_USER1, 0x020000, 0x020000, 0x020000)
+	ROM_COPY( REGION_USER1, 0x000000, 0x040000, 0x020000)
+	ROM_COPY( REGION_USER1, 0x040000, 0x060000, 0x020000)
+	ROM_COPY( REGION_USER1, 0x000000, 0x080000, 0x020000)
+	ROM_COPY( REGION_USER1, 0x060000, 0x0a0000, 0x020000)
 
 	ROM_REGION( 0x080000, REGION_SOUND2, 0 )
 	ROM_LOAD( "rom01.bin", 0x000000, 0x040000, CRC(db8cb455) SHA1(6723b4018208d554bd1bf1e0640b72d2f4f47302) )
