@@ -385,7 +385,7 @@ is selected
 
 #define OSD_READKEY_KLUDGE	1
 
-#define DESC_MAX_LENGTH		256
+#define DESC_MAX_LENGTH		255
 
 /**** Macros *****************************************************************/
 
@@ -8314,7 +8314,7 @@ static void LoadCheatDatabase()
 		int			data;
 		int			extendData;
 		char		name[256];
-		char		description[DESC_MAX_LENGTH];
+		char		description[DESC_MAX_LENGTH+1];
 
 		int			argumentsMatched;
 
