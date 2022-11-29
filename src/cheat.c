@@ -8304,8 +8304,8 @@ static void LoadCheatDatabase()
 	foundCheatDatabase = 1;
 
 	/* make the format strings*/
-	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%DESC_MAX_LENGTH[^\n\r]");
-	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%DESC_MAX_LENGTH[^\n\r]");
+	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%257[^:\n\r]");
+	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%257[^:\n\r]");
 
 	while(intfstream_gets(in_file, buf, 2048))
 	{
