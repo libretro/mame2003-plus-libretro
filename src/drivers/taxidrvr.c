@@ -312,7 +312,7 @@ static struct GfxLayout charlayout =
 	8,8,
 	RGN_FRAC(1,1),
 	4,
-	{ 3, 2, 1, 0 },
+	{ 0, 1, 2, 3  },
 	{ 1*4, 0*4, 3*4, 2*4, 5*4, 4*4, 7*4, 6*4 },
 	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
 	32*8
@@ -323,7 +323,7 @@ static struct GfxLayout charlayout2 =
 	4,4,
 	RGN_FRAC(1,1),
 	4,
-	{ 3, 2, 1, 0 },
+	{ 0, 1, 2, 3  },
 	{ 1*4, 0*4, 3*4, 2*4 },
 	{ 0*16, 1*16, 2*16, 3*16 },
 	16*4
@@ -340,6 +340,30 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static PALETTE_INIT( taxidrvr )
+{
+	int	i;
+
+	/* TODO: resistors, 1k & 470*/
+
+	for (i = 0; i < 0x10; ++i)
+	{
+	    int bit0, bit1, r, g, b;
+
+		bit0 = (color_prom[0] >> 0) & 0x01;
+		bit1 = (color_prom[0] >> 1) & 0x01;
+		r = 0x55 * bit0 + 0xaa * bit1;
+		bit0 = (color_prom[0] >> 2) & 0x01;
+		bit1 = (color_prom[0] >> 3) & 0x01;
+		g = 0x55 * bit0 + 0xaa * bit1;
+		bit0 = (color_prom[0] >> 4) & 0x01;
+		bit1 = (color_prom[0] >> 5) & 0x01;
+		b = 0x55 * bit0 + 0xaa * bit1;
+
+		palette_set_color(i,r,g,b);
+		color_prom++;
+	}
+}
 
 
 static struct AY8910interface ay8910_interface =
@@ -384,6 +408,7 @@ static MACHINE_DRIVER_START( taxidrvr )
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(16)
 
+  MDRV_PALETTE_INIT(taxidrvr)
 	MDRV_VIDEO_UPDATE(taxidrvr)
 
 	/* sound hardware */
@@ -429,8 +454,11 @@ ROM_START( taxidrvr )
 	ROM_REGION( 0x4000, REGION_GFX5, ROMREGION_DISPOSE )	/* not used?? */
 	ROM_LOAD( "12",           0x0000, 0x2000, CRC(684b7bb0) SHA1(d83c45ff3adf94c649340227794020482231399f) )
 	ROM_LOAD( "13",           0x2000, 0x2000, CRC(d1ef110e) SHA1(e34b6b4b70c783a8cf1296a05d3cec6af5820d0c) )
+
+  ROM_REGION( 0x020, REGION_PROMS, 0 )
+	ROM_LOAD( "prom.ic2",     0x0000, 0x020, CRC(c366a9c5) SHA1(d38581e5c425cab4a4f216d99651e86d8034a7d2) ) /* color prom located at edge of pcb */
 ROM_END
 
 
 
-GAMEX( 1984, taxidrvr, 0, taxidrvr, taxidrvr, 0, ROT90, "Graphic Techno", "Taxi Driver", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAMEX( 1984, taxidrvr, 0, taxidrvr, taxidrvr, 0, ROT90, "Graphic Techno", "Taxi Driver", GAME_NO_COCKTAIL )
