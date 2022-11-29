@@ -385,7 +385,7 @@ is selected
 
 #define OSD_READKEY_KLUDGE	1
 
-#define DESC_MAX_LENGTH		255
+#define DESC_MAX_LENGTH		256
 
 /**** Macros *****************************************************************/
 
