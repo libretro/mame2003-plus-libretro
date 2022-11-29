@@ -385,6 +385,8 @@ is selected
 
 #define OSD_READKEY_KLUDGE	1
 
+#define DESC_MAX_LENGTH		256
+
 /**** Macros *****************************************************************/
 
 /*	easy bitfield extraction and setting */
@@ -8302,8 +8304,8 @@ static void LoadCheatDatabase()
 	foundCheatDatabase = 1;
 
 	/* make the format strings*/
-	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
-	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
+	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%DESC_MAX_LENGTH[^:\n\r]");
+	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%DESC_MAX_LENGTH[^:\n\r]");
 
 	while(intfstream_gets(in_file, buf, 2048))
 	{
@@ -8312,7 +8314,7 @@ static void LoadCheatDatabase()
 		int			data;
 		int			extendData;
 		char		name[256];
-		char		description[256];
+		char		description[DESC_MAX_LENGTH];
 
 		int			argumentsMatched;
 
