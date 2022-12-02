@@ -506,6 +506,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bandito
 * Big Event Golf
 * Bosconian
+* Congo Bongo
 * Cookie & Bibi 2
 * Crazy Balloon
 * Destination Earth - (Added lrescue.zip sample support)
@@ -599,6 +600,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games supporting new and improved samples
 
+* Congo Bongo
 * Destination Earth
 * Donkey Kong
 * Donkey Kong JR
@@ -903,3 +905,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Woodpecker to the pacman.c driver [MAMEDEv, arcadez]
 * Added sound banking to the OKIM6295 in silkroad.c fixing missing Sfx and Speech in The Legend Of Silkroad [MAMEDev, arcadez]
 * Added the Prom dump for Taxi Driver and hooked up the palette init fixing colours in the game [MAMEDev, arcadez]
+* Improved the sound for Congo Bongo by adding new samples and reclocking the 2nd SN76496 channel to fix the drums tempo [MAMEDev, arcadez]
