@@ -48,15 +48,12 @@ Quiz de Idol! Hot Debut:       PL1 Start (passes)
 
 5-0-8-2-0 Maintenance Mode
 
-You can switch the game to English temporarily.
-
-Or use these cheats:
-:loderndf:00000000:0600A533:00000001:FFFFFFFF:Language = English
-:loderdfa:00000000:0600A473:00000001:FFFFFFFF:Language = English
-
 --- Quiz de Idol! Hot Debut ---
 
 9-2-3-0-1 Maintenance Mode
+
+NOTE: The version number (A/B) on Lode Runner: The Dig Fight is ONLY displayed when the game is set
+      to Japanese.  The same is true for Space Bomber in psikyosh.c
 
 ----------------------------------------------------------------*/
 
@@ -155,9 +152,10 @@ static READ32_HANDLER( ps4_eeprom_r )
 		return ((EEPROM_read_bit() << 20)); /* EEPROM */
 	}
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Unk EEPROM read mask %x\n", mem_mask);
+	/* log_cb(RETRO_LOG_DEBUG, LOGPRE "Unk EEPROM read mask %x\n", mem_mask); */
 
-	return 0;
+	return readinputport(10)<<16;
+	
 }
 
 static INTERRUPT_GEN(psikyosh_interrupt)
@@ -561,6 +559,9 @@ INPUT_PORTS_START( hotgmck )
 	PORT_BITX(  0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "Select PL2 Screen", KEYCODE_EQUALS, IP_JOY_NONE )
 	PORT_BIT(   0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 #endif
+
+    PORT_START/* jumper pads 'JP4' on the PCB */
+	UNUSED_PORT
 INPUT_PORTS_END
 
 INPUT_PORTS_START( loderndf )
@@ -633,6 +634,13 @@ INPUT_PORTS_START( loderndf )
 	PORT_BITX(  0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "Select PL3+PL4 Screen", KEYCODE_EQUALS, IP_JOY_NONE )
 	PORT_BIT(   0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 #endif
+
+	PORT_START/* jumper pads 'JP4' on the PCB */
+/*  1-ON,2-ON,3-ON,4-ON  --> Japanese
+    1-ON,2-ON,3-ON,4-OFF --> English */
+	PORT_DIPNAME( 0x03, 0x01, "Region" )
+	PORT_DIPSETTING(    0x00, "Japan (Shows Version Number)" )
+	PORT_DIPSETTING(    0x01, "World (Does Not Show Version Number)" )
 INPUT_PORTS_END
 
 /* unused inputs also act as duplicate buttons */
@@ -706,6 +714,9 @@ INPUT_PORTS_START( hotdebut )
 	PORT_BITX(  0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "Select PL3+PL4 Screen", KEYCODE_EQUALS, IP_JOY_NONE )
 	PORT_BIT(   0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 #endif
+
+    PORT_START/* jumper pads 'JP4' on the PCB */
+	UNUSED_PORT
 INPUT_PORTS_END
 
 #if ROMTEST
@@ -919,6 +930,6 @@ static DRIVER_INIT( hotdebut )
 GAMEX( 1997, hotgmck,  0,        ps4big,    hotgmck,  hotgmck,  ROT0,   "Psikyo", "Taisen Hot Gimmick (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX( 1998, hgkairak, 0,        ps4big,    hotgmck,  hotgmck,  ROT0,   "Psikyo", "Taisen Hot Gimmick Kairakuten (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX( 1999, hotgmck3, 0,        ps4big,    hotgmck,  hotgmck,  ROT0,   "Psikyo", "Taisen Hot Gimmick 3 Digital Surfing (Japan)", GAME_IMPERFECT_SOUND )
-GAME ( 2000, loderndf, 0,        ps4small,  loderndf, loderndf, ROT0,   "Psikyo", "Lode Runner - The Dig Fight (ver. B) (Japan)" )
-GAME ( 2000, loderdfa, loderndf, ps4small,  loderndf, loderdfa, ROT0,   "Psikyo", "Lode Runner - The Dig Fight (ver. A) (Japan)" )
+GAME ( 2000, loderndf, 0,        ps4small,  loderndf, loderndf, ROT0,   "Psikyo", "Lode Runner - The Dig Fight (ver. B)" )
+GAME ( 2000, loderdfa, loderndf, ps4small,  loderndf, loderdfa, ROT0,   "Psikyo", "Lode Runner - The Dig Fight (ver. A)" )
 GAME ( 2000, hotdebut, 0,        ps4small,  hotdebut, hotdebut, ROT0,   "Psikyo / Moss", "Quiz de Idol! Hot Debut (Japan)" )
