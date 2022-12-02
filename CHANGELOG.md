@@ -22,6 +22,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Astropal
 * Asura Buster
 * Backfire!
+* Back Fire (Tecmo)
 * Bang Bang Busters
 * Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
@@ -902,7 +903,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Stopped Space Cruiser from crashing on the asteroids level and added the dedicated button for the continue mode [MAMEDev, arcadez]
 * Fixed Jungle Hunt / Jungle King / Pirate Pete from crashing on the last level [MEMEDev, arcadez]
 * Sorted a gfx niggle with Mario Bros where the screen would shake incorrectly left/right rather than up/down when you hit the POW box [MAMEDEv, arcadez]
-* Added support for Woodpecker to the pacman.c driver [MAMEDEv, arcadez]
+* Added support for Woodpecker to the pacman.c driver [MAMEDEv, arcadez, mahoneyt944]
 * Added sound banking to the OKIM6295 in silkroad.c fixing missing Sfx and Speech in The Legend Of Silkroad [MAMEDev, arcadez]
 * Added the Prom dump for Taxi Driver and hooked up the palette init fixing colours in the game [MAMEDev, arcadez]
 * Improved the sound for Congo Bongo by adding new samples and reclocking the 2nd SN76496 channel to fix the drums tempo [MAMEDev, arcadez]
+* Added support for Back Fire to the Tecmo driver [MAMEDev, arcadez]
