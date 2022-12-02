@@ -2268,6 +2268,30 @@ static READ_HANDLER( uccops_cycle_r )
 	return m92_ram[0x3a02 + offset];
 }
 
+
+static READ_HANDLER( uccopsj_cycle_r )
+{
+	int a=m92_ram[0x3f18]+(m92_ram[0x3f19]<<8);
+	int b=m92_ram[0x3a00]+(m92_ram[0x3a01]<<8);
+	int c=m92_ram[0x3a02]+(m92_ram[0x3a03]<<8);
+	int d=activecpu_geticount();
+	int line = 256 - cpu_getiloops();
+
+	/* If possible skip this cpu segment - idle loop */
+	if (d>159 && d<0xf0000000 && line<247) {
+		if ((activecpu_get_pc()==0x900ff || activecpu_get_pc()==0x90103) && b==c && offset==1) {
+			cpu_spinuntil_int();
+			/* Update internal counter based on cycles left to run */
+			a=(a+d/127)&0xffff; /* 127 cycles per loop increment */
+			m92_ram[0x3f18]=a&0xff;
+			m92_ram[0x3f19]=a>>8;
+		}
+	}
+
+	return m92_ram[0x3a02 + offset];
+	
+}
+
 static READ_HANDLER( rtypeleo_cycle_r )
 {
 	if (activecpu_get_pc()==0x30791 && offset==0 && m92_ram[0x32]==2 && m92_ram[0x33]==0)
@@ -2416,6 +2440,12 @@ static DRIVER_INIT( uccops )
 	init_m92(dynablaster_decryption_table);
 }
 
+static DRIVER_INIT( uccopsj )
+{
+	install_mem_read_handler(0, 0xe3a02, 0xe3a03, uccopsj_cycle_r);
+	init_m92(dynablaster_decryption_table);
+}
+
 static DRIVER_INIT( rtypeleo )
 {
 	install_mem_read_handler(0, 0xe0032, 0xe0033, rtypeleo_cycle_r);
@@ -2524,8 +2554,8 @@ GAME( 1991, bmaster,  0,        nonraster, bmaster,  bmaster,  ROT0,   "Irem",  
 GAME( 1991, lethalth, 0,        lethalth,  lethalth, lethalth, ROT270, "Irem",         "Lethal Thunder (World)" )
 GAME( 1991, thndblst, lethalth, lethalth,  lethalth, lethalth, ROT270, "Irem",         "Thunder Blaster (Japan)" )
 GAME( 1992, uccops,   0,        raster,    uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (World)" )
-GAME( 1992, uccopsar, uccops,   raster,    uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)" )
-GAME( 1992, uccopsj,  uccops,   raster,    uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (Japan)" )
+GAME( 1992, uccopsar, uccops,   raster,    uccops,   uccopsj,  ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)" )
+GAME( 1992, uccopsj,  uccops,   raster,    uccops,   uccopsj,  ROT0,   "Irem",         "Undercover Cops (Japan)" )
 GAME( 1992, mysticri, 0,        nonraster, mysticri, mysticri, ROT0,   "Irem",         "Mystic Riders (World)" )
 GAME( 1992, gunhohki, mysticri, nonraster, mysticri, mysticri, ROT0,   "Irem",         "Gun Hohki (Japan)" )
 GAMEX(1992, majtitl2, 0,        raster,    majtitl2, majtitl2, ROT0,   "Irem",         "Major Title 2 (World)", GAME_IMPERFECT_GRAPHICS )
