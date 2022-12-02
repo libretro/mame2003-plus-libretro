@@ -250,7 +250,7 @@ static WRITE_HANDLER( congo_daio_w )
 {
 	if (offset == 1)
 	{
-		if (data & 0x02) sample_start(0, 0, 0);
+		  if (!(data & 0x02) && !sample_playing(0)) sample_start(0, 0, 0); /* gorilla */
 	}
 	else if (offset == 2)
 	{
@@ -1123,10 +1123,10 @@ static const char *congo_sample_names[] =
 {
 	"*congo",
 	"gorilla.wav",
-	"bass.wav",
-	"congaa.wav",
-	"congab.wav",
 	"rim.wav",
+	"congah.wav",
+	"congal.wav",
+	"bass.wav",
 	0
 };
 
@@ -1142,7 +1142,7 @@ static struct Samplesinterface congo_samples_interface =
 static struct SN76496interface congo_sn76496_interface =
 {
 	2,	/* 2 chips */
-	{ 4000000, 4000000 },	/* 4 MHz??? */
+	{ 4000000, 4000000/4 },	/* 4 MHz 1st 1mhz 2nd */
 	{ 100, 100 }
 };
 
