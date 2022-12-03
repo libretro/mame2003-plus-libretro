@@ -4293,6 +4293,56 @@ INPUT_PORTS_START( barek3 )
 	PORT_DIPSETTING(    0x00, "Very_Hard" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( sonic2mb )
+    PORT_START  /* IN0 player 1 controller */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START /* Joypad 2 (3 button + start) Not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START /* 3rd I/O port */
+
+	PORT_START /* DSW via readinputport 3 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x00fc, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_DIPNAME(          0x0300, 0x0200, DEF_STR( Lives ) )
+	PORT_DIPSETTING(       0x0000, "1" )
+	PORT_DIPSETTING(       0x0100, "2" )
+	PORT_DIPSETTING(       0x0200, "3" )
+	PORT_DIPSETTING(       0x0300, "4" )
+	PORT_DIPNAME(  0x3c00, 0x2000, "Timer Speed" ) 
+	PORT_DIPSETTING(       0x3c00, "0 (Slowest)" )
+	PORT_DIPSETTING(       0x3800, "1" )
+	PORT_DIPSETTING(       0x3400, "2" )
+	PORT_DIPSETTING(       0x3000, "3" )
+	PORT_DIPSETTING(       0x2c00, "4" )
+	PORT_DIPSETTING(       0x2800, "5" )
+	PORT_DIPSETTING(       0x2400, "6" )
+	PORT_DIPSETTING(       0x2000, "7" )
+	PORT_DIPSETTING(       0x1c00, "8" )
+	PORT_DIPSETTING(       0x1800, "9" )
+	PORT_DIPSETTING(       0x1400, "10" )
+	PORT_DIPSETTING(       0x1000, "11" )
+	PORT_DIPSETTING(       0x0c00, "12" )
+	PORT_DIPSETTING(       0x0800, "13" )
+	PORT_DIPSETTING(       0x0400, "14" )
+	PORT_DIPSETTING(       0x0000, "15 (Fastest)" )
+    PORT_DIPNAME( 0x4000,  0x4000, "SW1:7" )
+    PORT_DIPSETTING(       0x4000, DEF_STR( Off ) )
+	PORT_DIPSETTING(       0x0000, DEF_STR( On ) )
+    PORT_DIPNAME( 0x8000,  0x8000, "SW1:8" )
+    PORT_DIPSETTING(       0x8000, DEF_STR( Off ) )
+	PORT_DIPSETTING(       0x0000, DEF_STR( On ) )
+INPUT_PORTS_END
+
 /******************************************************************************
 	Sound interfaces
 ******************************************************************************/
@@ -5006,6 +5056,12 @@ ROM_START( barek3mb )
 	ROM_LOAD16_BYTE( "1.u14", 0x100001, 0x080000,  CRC(24d31e12) SHA1(64c1b968e1ee5d0355d902e280f33e4466f27b07) )
 	ROM_LOAD16_BYTE( "5.u17", 0x200000, 0x080000,  CRC(0feb974f) SHA1(ed1a25b6f1669dc6061d519985b6373fa89176c7) )
 	ROM_LOAD16_BYTE( "2.u16", 0x200001, 0x080000,  CRC(bba4a585) SHA1(32c59729943d7b4c1a39f2a2b0dae9ce16991e9c) )
+ROM_END
+
+ROM_START( sonic2mb )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) // 68000 Code
+	ROM_LOAD16_BYTE( "m1", 0x000001, 0x080000,  CRC(7b40aa24) SHA1(247882cd1f412366d61aeb4d85bbeefd5f108e1d) )
+	ROM_LOAD16_BYTE( "m2", 0x000000, 0x080000,  CRC(84b3f758) SHA1(19846b9d951db6f78f3e155d33f1b6349fb87f1a) )
 ROM_END
 
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
@@ -6106,6 +6162,20 @@ DRIVER_INIT( barek3 )
 	init_segac2();
 }
 
+DRIVER_INIT( sonic2mb )
+{
+   /* 100000 = writes to unpopulated MCU? */
+	install_mem_write16_handler(0, 0x100000, 0x100001, aladbl_w);
+    install_mem_read16_handler(0, 0x300000, 0x300001, input_port_3_word_r);
+	
+	genesis_region = 0x00; /* read via io */
+		
+	cpu_setbank(3, memory_region(REGION_CPU1) );
+	cpu_setbank(4, &genesis_68k_ram[0]);
+
+	init_segac2();
+}
+
 /******************************************************************************
 	Game Drivers
 *******************************************************************************
@@ -6160,6 +6230,7 @@ GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>"
 
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
+GAME ( 1993, sonic2mb, 0,        barek2ch, sonic2mb, sonic2mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 2 (bootleg of Mega Drive version)" )
 GAME ( 1994, barek2ch, 0,        barek2ch, barek2ch, barek2ch, ROT0, "bootleg / Sega",         "Bare Knuckle II (Chinese bootleg of Megadrive version)" )
 GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" )
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
