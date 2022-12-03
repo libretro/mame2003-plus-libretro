@@ -175,6 +175,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Snk Vs Capcom : Svc Chaos (MVS)
 * Snapper
 * Sonic Boom
+* Sonic The Hedgehog 2 (Bootleg Of Megadrive Version)
 * Space Fever High Splitter
 * Space Launcher
 * Space Raider
@@ -909,3 +910,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Improved the sound for Congo Bongo by adding new samples and reclocking the 2nd SN76496 channel to fix the drums tempo [MAMEDev, arcadez]
 * Added support for Back Fire to the Tecmo driver [MAMEDev, arcadez]
 * Fix broken attract mode and likely other problems with the japan sets of Undercover Cops due to incorrect speedup addresses [Bryan Mcphail, Scandy]
+* Added support for a bootleg version of Sonic The Hedgehog 2 to the segac2 driver and made Lode Runner The Dig Fight default to the English World Region [MAMEDev, arcadez]
