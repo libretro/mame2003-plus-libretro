@@ -3169,6 +3169,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mmonkey )	/* (c) 1982 Technos Japan + Roller Tron */
 	/* cassette system, parent is decocass */
 	DRIVER( ctsttape )	/* ? */
+  DRIVER( chwy )		  /* 02 (c) 1980 */
+	DRIVER( cmanhat  )  /* 03 (c) 1981 */
 	DRIVER( cterrani )	/* 04 (c) 1981 */
 	DRIVER( castfant )	/* 07 (c) 1981 */
 	DRIVER( csuperas )	/* 09 (c) 1981 */
@@ -3194,18 +3196,20 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( cgraplp2 )	/* 28? (c) 1983 */
 	DRIVER( clapapa )	/* 29 (c) 1983 */
 	DRIVER( clapapa2 )	/* 29 (c) 1983 */ /* this one doesn't display lapapa anyehere */
+  DRIVER( cskater )   /* 30 (c) 1983 */
 	DRIVER( cnightst )	/* 32 (c) 1983 */
 	DRIVER( cnights2 )	/* 32 (c) 1983 */
 	DRIVER( cprosocc )	/* 33 (c) 1983 */
+  DRIVER( csdtenis )  /* 34 (c) 1983 */
 	DRIVER( cprobowl )	/* ?? (c) 1983 */
 	DRIVER( cscrtry )	/* 38 (c) 1984 */
 	DRIVER( cscrtry2 )	/* 38 (c) 1984 */
 	DRIVER( cppicf )	/* 39 (c) 1984 */
 	DRIVER( cppicf2 )	/* 39 (c) 1984 */
 	DRIVER( cfghtice )	/* 40 (c) 1984 */
+  DRIVER( coozumou )  /* 43 (c) 1984 */
 	DRIVER( cbdash )	/* 44 (c) 1985 */
 	/* the following don't work at all */
-	DRIVER( chwy )		/* ?? (c) 198? */
 	DRIVER( cflyball ) /* ?? (c) 198? */
 	DRIVER( czeroize ) /* ?? (c) 198? */
 
