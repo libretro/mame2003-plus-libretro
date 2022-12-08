@@ -17,7 +17,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Attack
 * Air Rescue
 * Aladdin (bootleg of Megadrive version)
-* Angler Dangler
+* Angler Dangler (Deco Cassette)
 * Argus (Gottlieb, prototype)
 * Astropal
 * Asura Buster
@@ -114,7 +114,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Lethal Enforcers
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
-* Magic Purple 
+* Magic Purple
+* Manhattan (Deco Cassette)
 * Marble Madness II (prototype)
 * Master's Fury
 * Match It II * Mature *
@@ -136,6 +137,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)
 * Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)
 * Osman
+* Oozumou - The Grand Sumo (Deco Cassette)
 * Pack'n Bang Bang
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 * Mature *
@@ -169,6 +171,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Tecmo World Cup
 * Sega Sonic Bros (Japan, Prototype)
 * Sengoku 3
+* Skater (Deco Cassette)
 * Skull Fang
 * Slap Shooter
 * Snow Brothers 3 - Magical Adventure
@@ -186,6 +189,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)
+* Super Doubles Tennis (Deco Cassette)
 * Super Rider
 * Super Trio
 * SWAT Police
@@ -364,6 +368,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Hang-On - Romset `hangon`
 * Hard Head 2 - Romset `hardhea2`
+* Highway Chase - Romset `chwy`
 * Hyper Duel - Romsets `hyprduel`, and `hyprdelj`
 * IGMO - Romset `igmo` color fixed
 * Imago - Romsets `imago` and `imagoa`
@@ -911,3 +916,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Back Fire to the Tecmo driver [MAMEDev, arcadez]
 * Fix broken attract mode and likely other problems with the japan sets of Undercover Cops due to incorrect speedup addresses [Bryan Mcphail, Scandy]
 * Added support for a bootleg version of Sonic The Hedgehog 2 to the segac2 driver and made Lode Runner The Dig Fight default to the English World Region [MAMEDev, arcadez]
+* Added Deco Cassette Type A bios fixed Highway Chase sorted colours for all games then updated some parts of the machine and video code to MAME146 [MAMEDev, arcadez]
+* Added support for Angler Dangler, Manhattan, Oozumou - The Grand Sumo, Skater, and Super Doubles Tennis to the Deco Cassette driver [MAMEDev, arcadez]
