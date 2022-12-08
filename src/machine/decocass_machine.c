@@ -69,6 +69,7 @@ enum {
 	TYPE3_SWAP_25,
 	TYPE3_SWAP_34_0,
 	TYPE3_SWAP_34_7,
+	TYPE3_SWAP_45,
 	TYPE3_SWAP_56,
 	TYPE3_SWAP_67
 };
@@ -626,6 +627,90 @@ READ_HANDLER( decocass_type1_r )
 	return data;
 }
 
+
+/***************************************************************************
+ *
+ *  TYPE1 DONGLE (DE-0061) with alternate PROM
+ *  - Highway Chase
+ *
+ ***************************************************************************/
+
+READ_HANDLER( decocass_type1_alt_r )
+{
+	static UINT8 latch1;
+	UINT8 data;
+
+	if (1 == (offset & 1))
+	{
+		if (0 == (offset & E5XX_MASK))
+			data = cpunum_get_reg(2, I8X41_STAT);
+		else
+			data = 0xff;
+
+		data =
+			(BIT0(data) << 0) |
+			(BIT1(data) << 1) |
+			(1			<< 2) |
+			(1			<< 3) |
+			(1			<< 4) |
+			(1			<< 5) |
+			(1			<< 6) |
+			(0			<< 7);
+		LOG(4,("%9.7f 6502-PC: %04x decocass_type1_r(%02x): $%02x <- (%s %s)\n",
+			timer_get_time(), activecpu_get_previouspc(), offset, data,
+			(data & 1) ? "OBF" : "-",
+			(data & 2) ? "IBF" : "-"));
+	}
+	else
+	{
+		offs_t promaddr;
+		UINT8 save;
+		UINT8 *prom = memory_region(REGION_USER1);
+
+		if (firsttime)
+		{
+			LOG(4,("prom data:\n"));
+			for (promaddr = 0; promaddr < 32; promaddr++)
+			{
+				if (promaddr % 8 == 0)
+					LOG(4,("%04x:", promaddr));
+				LOG(4,(" %02x%s", prom[promaddr], (promaddr % 8) == 7 ? "\n" : ""));
+			}
+			firsttime = 0;
+			latch1 = 0; 	 /* reset latch (??) */
+		}
+
+		if (0 == (offset & E5XX_MASK))
+			data = cpunum_get_reg(2, I8X41_DATA);
+		else
+			data = 0xff;
+
+		save = data;	/* save the unmodifed data for the latch */
+
+		promaddr =
+			(((data >> MAP0(type1_inmap)) & 1) << 0) |
+			(((data >> MAP1(type1_inmap)) & 1) << 1) |
+			(((data >> MAP4(type1_inmap)) & 1) << 2) |
+			(((data >> MAP5(type1_inmap)) & 1) << 3) |
+			(((data >> MAP6(type1_inmap)) & 1) << 4);
+
+		data =
+			(((prom[promaddr] >> 0) & 1)			   << MAP0(type1_outmap)) |
+			(((prom[promaddr] >> 1) & 1)			   << MAP1(type1_outmap)) |
+			((1 - ((latch1 >> MAP2(type1_inmap)) & 1)) << MAP2(type1_outmap)) |
+			(((data >> MAP3(type1_inmap)) & 1)		   << MAP3(type1_outmap)) |
+			(((prom[promaddr] >> 2) & 1)			   << MAP4(type1_outmap)) |
+			(((prom[promaddr] >> 3) & 1)			   << MAP5(type1_outmap)) |
+			(((prom[promaddr] >> 4) & 1)			   << MAP6(type1_outmap)) |
+			(((latch1 >> MAP7(type1_inmap)) & 1)	   << MAP7(type1_outmap));
+
+		LOG(3,("%9.7f 6502-PC: %04x decocass_type1_r(%02x): $%02x <- (%s $%02x mangled with PROM[$%02x])\n", timer_get_time(), activecpu_get_previouspc(), offset, data, 0 == (offset & E5XX_MASK) ? "8041-DATA" : "open bus", save, promaddr));
+
+		latch1 = save;		/* latch the data for the next A0 == 0 read */
+	}
+	return data;
+}
+
 /*
  * special handler for the test tape, because we cannot
  * look inside the dongle :-/
@@ -883,6 +968,85 @@ READ_HANDLER( decocass_type1_map3_r )
 
 /***************************************************************************
  *
+ *  TYPE1 DONGLE (DE-0061)
+ *  - Manhattan
+ *
+ * Input bits that are passed uninverted = $54 (3 true bits)
+ * Input bits that are passed inverted   = $00 (0 inverted bits)
+ * Remaining bits for addressing PROM    = $AB (5 bits)
+ *
+ ***************************************************************************/
+
+READ_HANDLER(decocass_type1_latch_xab_pass_x54_r)
+{
+	static data8_t latch1;
+	data8_t data;
+
+	if (1 == (offset & 1))
+	{
+		if (0 == (offset & E5XX_MASK))
+			data = cpunum_get_reg(2, I8X41_STAT);
+		else
+			data = 0xff;
+
+		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
+		LOG(4,("%10s 6502-PC: %04x decocass_type1_latch_27_pass_3_inv_2_r(%02x): $%02x <- (%s %s)\n",
+			timer_get_time(), activecpu_get_previouspc(), offset, data,
+			(data & 1) ? "OBF" : "-",
+			(data & 2) ? "IBF" : "-"));
+	}
+	else
+	{
+		offs_t promaddr;
+		UINT8 save;
+		UINT8 *prom = memory_region(REGION_USER1);
+
+		if (firsttime)
+		{
+			LOG(3,("prom data:\n"));
+			for (promaddr = 0; promaddr < 32; promaddr++)
+			{
+				if (promaddr % 8 == 0)
+					LOG(3,("  %02x:", promaddr));
+				LOG(3,(" %02x%s", prom[promaddr], (promaddr % 8) == 7 ? "\n" : ""));
+			}
+			firsttime = 0;
+			latch1 = 0;	 /* reset latch (??) */
+		}
+
+		if (0 == (offset & E5XX_MASK))
+			data = cpunum_get_reg(2, I8X41_DATA);
+		else
+			data = 0xff;
+
+		save = data;	/* save the unmodifed data for the latch */
+
+		/* AB 10101011 */
+		promaddr =
+			(((data >> MAP0(type1_inmap)) & 1) << 0) |
+			(((data >> MAP1(type1_inmap)) & 1) << 1) |
+			(((data >> MAP3(type1_inmap)) & 1) << 2) |
+			(((data >> MAP5(type1_inmap)) & 1) << 3) |
+			(((data >> MAP7(type1_inmap)) & 1) << 4);
+		/* no latch, pass bit 0x54 */
+		data =
+			(((prom[promaddr] >> 0) & 1)			   << MAP0(type1_outmap)) |
+			(((prom[promaddr] >> 1) & 1)			   << MAP1(type1_outmap)) |
+			(((data >> MAP2(type1_inmap)) & 1)		   << MAP2(type1_outmap)) |
+			(((prom[promaddr] >> 2) & 1)			   << MAP3(type1_outmap)) |
+			(((data >> MAP4(type1_inmap)) & 1)		   << MAP4(type1_outmap))  |
+			(((prom[promaddr] >> 3) & 1)			   << MAP5(type1_outmap)) |
+			(((data >> MAP6(type1_inmap)) & 1)		   << MAP6(type1_outmap)) |
+			(((prom[promaddr] >> 4) & 1)			   << MAP7(type1_outmap));
+
+		LOG(3,("%10s 6502-PC: %04x decocass_type1_latch_27_pass_3_inv_2_r(%02x): $%02x\n", timer_get_time(), activecpu_get_previouspc(), offset, data));
+		latch1 = save;		/* latch the data for the next A0 == 0 read */
+	}
+	return data;
+}
+
+/***************************************************************************
+ *
  *	TYPE2 DONGLE (CS82-007)
  *	- Mission X
  *	- Disco No 1
@@ -1119,6 +1283,20 @@ READ_HANDLER( decocass_type3_r )
 						(BIT5(save) << 5) |
 						(BIT6(save) << 6) |
 						(type3_d0_latch << 7);
+					type3_d0_latch = save & 1;
+				}
+				else
+				if (type3_swap == TYPE3_SWAP_45)
+				{
+					data =
+						type3_d0_latch |
+                        (BIT1(save) << 1) |
+						(BIT2(save) << 2) |
+						(BIT3(save) << 3) |
+						(BIT5(save) << 4) |
+						(BIT4(save) << 5) |
+						(BIT6(save) << 6) |
+						(BIT7(save) << 7);
 					type3_d0_latch = save & 1;
 				}
 				else
@@ -1570,6 +1748,13 @@ MACHINE_INIT( ctsttape )
 	decocass_dongle_r = decocass_type1_map1_r;
 }
 
+MACHINE_INIT( chwy )
+{
+	decocass_init_common();
+	LOG(0,("dongle type #1 (ALT)\n"));
+	decocass_dongle_r = decocass_type1_alt_r;
+}
+
 MACHINE_INIT( clocknch )
 {
 	decocass_init_common();
@@ -1636,6 +1821,13 @@ MACHINE_INIT( cprogolf )
 	decocass_dongle_r = decocass_type1_r;
 	type1_inmap = MAKE_MAP(1,0,2,3,4,5,6,7);
 	type1_outmap = MAKE_MAP(1,0,2,3,4,5,6,7);
+}
+
+MACHINE_INIT(cmanhat)
+{
+	decocass_init_common();
+	LOG(0,("dongle type #1 (DE-0061)\n"));
+	decocass_dongle_r = decocass_type1_latch_xab_pass_x54_r;
 }
 
 MACHINE_INIT( cmissnx )
@@ -1724,6 +1916,15 @@ MACHINE_INIT( cfghtice )
 	type3_swap = TYPE3_SWAP_25;
 }
 
+MACHINE_INIT( cskater )
+{
+	decocass_init_common();
+	LOG(0,("dongle type #3 (PAL)\n"));
+	decocass_dongle_r = decocass_type3_r;
+	decocass_dongle_w = decocass_type3_w;
+	type3_swap = TYPE3_SWAP_45;
+}
+
 MACHINE_INIT( cprobowl )
 {
 	decocass_init_common();
@@ -1795,6 +1996,15 @@ MACHINE_INIT( czeroize )
 	memset(mem,0x00,0x1000);
 	mem[0x08a0] = 0x18;
 	mem[0x08a1] = 0xf7;
+}
+
+MACHINE_INIT( csdtenis )
+{
+	decocass_init_common();
+	LOG(0,("dongle type #3 (PAL)\n"));
+	decocass_dongle_r = decocass_type3_r;
+	decocass_dongle_w = decocass_type3_w;
+	type3_swap = TYPE3_SWAP_23_56;
 }
 
 /***************************************************************************
