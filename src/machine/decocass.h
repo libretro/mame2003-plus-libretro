@@ -29,9 +29,11 @@ extern void *tape_timer;
 
 extern WRITE_HANDLER( decocass_reset_w );
 extern READ_HANDLER( decocass_type1_r );
+extern READ_HANDLER( decocass_type1_alt_r );
 extern READ_HANDLER( decocass_type1_map1_r );
 extern READ_HANDLER( decocass_type1_map2_r );
 extern READ_HANDLER( decocass_type1_map3_r );
+extern READ_HANDLER( decocass_type1_latch_xab_pass_x54_r);
 extern READ_HANDLER( type2_r );
 extern WRITE_HANDLER( type2_w );
 extern READ_HANDLER( type3_r );
@@ -42,6 +44,7 @@ extern WRITE_HANDLER( decocass_e5xx_w );
 
 extern MACHINE_INIT( decocass );
 extern MACHINE_INIT( ctsttape );
+extern MACHINE_INIT( chwy );
 extern MACHINE_INIT( clocknch );
 extern MACHINE_INIT( ctisland );
 extern MACHINE_INIT( csuperas );
@@ -66,7 +69,10 @@ extern MACHINE_INIT( cprosocc );
 extern MACHINE_INIT( cppicf );
 extern MACHINE_INIT( cscrtry );
 extern MACHINE_INIT( cbdash );
+extern MACHINE_INIT( cmanhat );
+extern MACHINE_INIT( cskater );
 extern MACHINE_INIT( czeroize );
+extern MACHINE_INIT( csdtenis );
 
 extern WRITE_HANDLER( i8041_p1_w );
 extern READ_HANDLER( i8041_p1_r );
@@ -104,6 +110,7 @@ extern WRITE_HANDLER( decocass_center_v_shift_w );
 
 extern VIDEO_START( decocass );
 extern VIDEO_UPDATE( decocass );
+extern VIDEO_UPDATE( manhattan );
 
 extern unsigned char *decocass_charram;
 extern unsigned char *decocass_fgvideoram;
