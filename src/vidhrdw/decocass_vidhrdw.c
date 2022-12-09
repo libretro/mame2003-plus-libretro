@@ -153,6 +153,29 @@ static void draw_object(struct mame_bitmap *bitmap, const struct rectangle *clip
 	drawgfx(bitmap, Machine->gfx[3], 1, color, 0, 1, sx, sy - 64, cliprect, TRANSPARENCY_PEN, 0);
 }
 
+static void manhattan_draw_object(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int sx, sy, color;
+
+	if (0 == (mode_set & 0x80))  /* part_h_enable off? */
+		return;
+
+	color = (color_center_bot >> 4) & 15;
+
+	sy = 0; 
+    sy = (sy - sy) + (0x40 - part_v_shift);
+    sy += 1;
+	 
+    if (sy < 0) sy += 0x100;
+    sx = part_h_shift;
+    sx = sx - (0x100/2);
+
+	drawgfx(bitmap, Machine->gfx[3], 0, color, 0, 0, sx + 64, sy, cliprect, TRANSPARENCY_PEN, 0);
+	drawgfx(bitmap, Machine->gfx[3], 1, color, 0, 0, sx, sy, cliprect, TRANSPARENCY_PEN, 0);
+	drawgfx(bitmap, Machine->gfx[3], 0, color, 0, 1, sx + 64, sy - 64, cliprect, TRANSPARENCY_PEN, 0);
+	drawgfx(bitmap, Machine->gfx[3], 1, color, 0, 1, sx, sy - 64, cliprect, TRANSPARENCY_PEN, 0);
+}
+
 static void draw_center(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int sx, sy, x, y, color;
@@ -528,7 +551,7 @@ static void manhattan_draw_edge(struct mame_bitmap *bitmap, const struct rectang
 	struct rectangle clip;
 	const struct mame_bitmap *srcbitmap;
 
-  int scrollx,scrolly,scrolly_l,scrolly_r;
+    int scrollx,scrolly,scrolly_l,scrolly_r;
 	int y,x;
 	UINT16 pix;
 
@@ -878,12 +901,12 @@ VIDEO_UPDATE( manhattan )
 
 	if (mode_set & 0x20)
 	{
-		draw_object(bitmap,cliprect);
+		manhattan_draw_object(bitmap,cliprect);
 		draw_center(bitmap,cliprect);
 	}
 	else
 	{
-		draw_object(bitmap,cliprect);
+		manhattan_draw_object(bitmap,cliprect);
 		draw_center(bitmap,cliprect);
 		if (mode_set & 0x08)	/* bkg_ena on ? */
 		{
