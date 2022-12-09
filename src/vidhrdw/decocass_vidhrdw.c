@@ -528,7 +528,7 @@ static void manhattan_draw_edge(struct mame_bitmap *bitmap, const struct rectang
 	struct rectangle clip;
 	const struct mame_bitmap *srcbitmap;
 
-    int scrollx,scrolly,scrolly_l,scrolly_r;
+  int scrollx,scrolly,scrolly_l,scrolly_r;
 	int y,x;
 	UINT16 pix;
 
@@ -542,7 +542,6 @@ static void manhattan_draw_edge(struct mame_bitmap *bitmap, const struct rectang
 		scrolly_l += 256;
 
 	scrollx = 256 - back_h_shift;
-	scrolly;
 
 	if (which==0)
 	{
