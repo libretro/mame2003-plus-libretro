@@ -5,7 +5,6 @@
   Functions to emulate the video hardware of the machine.
 
 ***************************************************************************/
-
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
@@ -25,6 +24,32 @@ WRITE_HANDLER( dkong_videoram_w )
 	}
 }
 
+static void modify_RGB_vals( int *r, int *g, int *b )
+{
+	const int fbNeoVals[ 8 ] = { 0xe1, 0xa7, 0x8b, 0xc5, 0x66, 0x24, 0xda, 0x8a };
+	if( r )
+	{
+		if( *r == 0xff )	*r = fbNeoVals[ 0 ]; // no bits set
+		if( *r == 0xb8 )	*r = fbNeoVals[ 1 ]; // bit 1 set
+		if( *r == 0x97 )	*r = fbNeoVals[ 2 ]; // bits 0 and 1 set
+		if( *r == 0xde )	*r = fbNeoVals[ 3 ]; // bit 0 set
+	}
+	if( g )
+	{
+		if( *g == 0xff )	*g = fbNeoVals[ 0 ]; // no bits set
+		if( *g == 0xb8 )	*g = fbNeoVals[ 1 ]; // bit 1 set
+		if( *g == 0x97 )	*g = fbNeoVals[ 2 ]; // bits 0 and 1 set
+		if( *g == 0x68 )	*g = fbNeoVals[ 4 ]; // bit 2 set
+		if( *g == 0x21 )	*g = fbNeoVals[ 5 ]; // bits 1 and 2 set
+	}
+	if( b )
+	{
+		if( *b == 0xaa )	*b = fbNeoVals[ 6 ]; // bit 0 set
+		if( *b == 0x55 )	*b = fbNeoVals[ 7 ]; // bit 1 set		
+	}
+}
+
+
 /***************************************************************************
 
   Convert the color PROMs into a more useable format.
@@ -43,36 +68,37 @@ WRITE_HANDLER( dkong_videoram_w )
         -- 1  kohm resistor -- inverter  -- GREEN
         -- 220 ohm resistor -- inverter  -- BLUE
   bit 0 -- 470 ohm resistor -- inverter  -- BLUE
-
 ***************************************************************************/
 PALETTE_INIT( dkong )
 {
 	int i;
 	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
 	#define COLOR(gfxn,offs) (colortable[Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
-
-
+	
 	for (i = 0;i < 256;i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
-
-
+		
 		/* red component */
 		bit0 = (color_prom[256] >> 1) & 1;
 		bit1 = (color_prom[256] >> 2) & 1;
 		bit2 = (color_prom[256] >> 3) & 1;
 		r = 255 - (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+		
 		/* green component */
 		bit0 = (color_prom[0] >> 2) & 1;
 		bit1 = (color_prom[0] >> 3) & 1;
 		bit2 = (color_prom[256] >> 0) & 1;
 		g = 255 - (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+		
 		/* blue component */
 		bit0 = (color_prom[0] >> 0) & 1;
 		bit1 = (color_prom[0] >> 1) & 1;
-		b = 255 - (0x55 * bit0 + 0xaa * bit1);
+		b = 255 - (0x55 * bit0 + 0xaa * bit1);		
+		
+		modify_RGB_vals( &r, &g, &b );
 
-		palette_set_color(i,r,g,b);
+		palette_set_color( i, r, g, b );
 		color_prom++;
 	}
 
