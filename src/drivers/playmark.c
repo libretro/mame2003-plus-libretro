@@ -246,9 +246,9 @@ static WRITE_HANDLER( hrdtimes_snd_control_w )
 	{
 		old_bank = data & 3;
 
-		if(((old_bank - 1) * 0x40000) < memory_region_length(REGION_SOUND1))
+		if(((old_bank) * 0x40000) < memory_region_length(REGION_SOUND1))
 		{
-			OKIM6295_set_bank_base(0, 0x40000 * (old_bank - 1));
+			OKIM6295_set_bank_base(0, 0x40000 * (old_bank));
 		}
 	}
 
@@ -401,7 +401,7 @@ static PORT_READ_START( hrdtimes_sound_readport )
 PORT_END
 
 static PORT_WRITE_START( hrdtimes_sound_writeport )
-	{ 0x00, 0x00, IOWP_NOP },				/* 4 bit port */
+//	{ 0x00, 0x00, playmark_oki_banking_w },				/* 4 bit port */
 	{ 0x01, 0x01, playmark_oki_w },
 	{ 0x02, 0x02, hrdtimes_snd_control_w }, /* OKI banking via this port */
 PORT_END
@@ -792,13 +792,7 @@ static struct OKIM6295interface okim6295_interface =
 static struct OKIM6295interface hrdtimes_okim6295_interface =
 {
 	1,		                /* 1 chip */
-//	{ 1000000/132 },	    /* frequency? */
-/* Usually a divider is required in ole cores for the OKI
-but it's silent unless a straight up 1mhz is used but that
-doesn't seem right at all and no other freq around 7575 - 1mhz
-works.
-*/
-	{ 1000000 },	        /* frequency? */
+	{ 1000000/132 },	    /* frequency */
 	{ REGION_SOUND1 },		/* memory region */
 	{ 100 }
 };
@@ -981,8 +975,8 @@ ROM_START( hrdtimes )
 	ROM_LOAD16_BYTE( "31.u67",       0x00000, 0x80000, CRC(53eb041b) SHA1(7437da1ceb26e9518a3085560b8a42f37e77ace9) )
 	ROM_LOAD16_BYTE( "32.u66",       0x00001, 0x80000, CRC(f2c6b382) SHA1(d73affed091a261c4bfe17f409657e0a46b6c163) )
 
-//	ROM_REGION( 0x1000, REGION_CPU2, 0 )
-//	ROM_LOAD( "pic16c57.bin", 0x0000, 0x1000, CRC(db307198) SHA1(21e98a69e673f6d48eb48239b4c51f6e7aa19a66) )  /* PIC CPU dump */
+//	ROM_REGION( 0x4000, REGION_CPU2,  ROMREGION_ERASE00 )
+//	ROM_LOAD( "pic16c57.bin", PIC16C57_PGM_OFFSET, 0x1000, CRC(db307198) SHA1(21e98a69e673f6d48eb48239b4c51f6e7aa19a66) )  /* PIC CPU dump */
 	
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "33.u36",       0x000000, 0x80000, CRC(d1239ce5) SHA1(8e966a39a47f66c5e904ec4357c751e896ed47cb) )
