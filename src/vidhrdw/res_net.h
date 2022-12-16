@@ -1,59 +1,183 @@
-#ifndef _res_net_h_
-#define _res_net_h_
-
 /*****************************************************************************
 
- Compute weights for resistors networks.
+    resnet.h
 
- Function can evaluate from one to three networks at a time.
+    Compute weights for resistors networks.
 
- The output weights can be either scaled with automatically calculated scaler
- or scaled with 'scaler' provided on entry.
-
- On entry
- --------
-
- 'minval','maxval' specify range of output signals (sum of weights).
- 'scaler'        if negative, function will calculate proper scaler,
-                 otherwise it will use the one provided here.
- 'count_x'       is a number of resistors in this network
- 'resistances_x' is a pointer to a table containing the resistances
- 'weights_x'     is a pointer to a table to be filled with weights
-                 (can contain negative values if 'minval' is below zero).
- 'pulldown_x'    is a resistance of a pulldown resistor (0 means no pulldown resistor)
- 'pullup_x'      is a resistance of a pullup resistor (0 means no pullup resistor)
-
-
- Return value
- ------------
-
- Value of the scaler that was used to fit the output within the expected range.
- Note that if you provide your own scaler on entry, it will be returned here.
-
- All resistances expected in Ohms.
-
-
- Hint
- ----
-
- If there is no need to calculate three networks at a time, just specify '0'
- for the 'count_x' for unused network.
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
 
 *****************************************************************************/
 
-static double compute_resistor_weights(
+#pragma once
+
+#ifndef _RESNET_H_
+#define _RESNET_H_
+
+/**********************************************************************
+ *      Rbias
+ * Vbias >-ZZZ-.    .-----------------------------------------> Out0
+ *             |    |                           Vcc
+ *          R0 |    |                            |
+ *   In0 >-ZZZ-+----+               Vcc          Z
+ *             |    |                |           Z
+ *          R1 |    |               /            Z
+ *   In1 >-ZZZ-+    +----+----ZZZ--|   NPN       +------------> Out1
+ *             :         |          >           <
+ *             :         |           +----+----|  PNP
+ *          R8 |         |           Z    |     \
+ *   In8 >-ZZZ-+         |           Z    |      |
+ *             |         |           Z    |     Gnd
+ *             Z         |           |    '-------------------> Out2
+ *             Z Rgnd    |          Gnd
+ *             Z         |   |-----------------------|
+ *             |         `---| max(vmin,min(sig-vcut)|--------> Out3
+ *            Gnd            |-----------------------|
+ *
+ *********************************************************************/
+
+/* Amplifier stage per channel but may be specified globally as default */
+
+#define RES_NET_AMP_USE_GLOBAL		0x0000
+#define RES_NET_AMP_NONE			0x0001		//Out0
+#define RES_NET_AMP_DARLINGTON		0x0002		//Out1
+#define RES_NET_AMP_EMITTER			0x0003		//Out2
+#define RES_NET_AMP_CUSTOM			0x0004		//Out3
+#define RES_NET_AMP_MASK			0x0007
+
+/* VCC prebuilds - Global */
+
+#define RES_NET_VCC_5V				0x0000
+#define RES_NET_VCC_CUSTOM			0x0008
+#define RES_NET_VCC_MASK			0x0008
+
+/* VBias prebuils - per channel but may be specified globally as default */
+
+#define RES_NET_VBIAS_USE_GLOBAL	0x0000
+#define RES_NET_VBIAS_5V			0x0010
+#define RES_NET_VBIAS_TTL			0x0020
+#define RES_NET_VBIAS_CUSTOM		0x0030
+#define RES_NET_VBIAS_MASK			0x0030
+
+/* Input Voltage levels - Global */
+
+#define RES_NET_VIN_OPEN_COL		0x0000
+#define RES_NET_VIN_VCC				0x0100
+#define RES_NET_VIN_TTL_OUT			0x0200
+#define RES_NET_VIN_CUSTOM			0x0300
+#define RES_NET_VIN_MASK			0x0300
+
+/* Monitor options */
+
+// Just invert the signal
+#define RES_NET_MONITOR_INVERT		0x1000
+// SANYO_EZV20 / Nintendo with inverter circuit
+#define RES_NET_MONITOR_SANYO_EZV20	0x2000
+// Electrohome G07 Series
+// 5.6k input impedance
+#define RES_NET_MONITOR_ELECTROHOME_G07	0x3000
+
+#define RES_NET_MONITOR_MASK		0x3000
+
+/* General defines */
+
+#define RES_NET_CHAN_RED			0x00
+#define RES_NET_CHAN_GREEN			0x01
+#define RES_NET_CHAN_BLUE			0x02
+
+/* Some aliases */
+
+#define RES_NET_VIN_MB7052			RES_NET_VIN_TTL_OUT
+#define RES_NET_VIN_MB7053			RES_NET_VIN_TTL_OUT
+#define RES_NET_VIN_28S42			RES_NET_VIN_TTL_OUT
+
+/* Structures */
+
+typedef struct _res_net_channel_info res_net_channel_info;
+struct _res_net_channel_info {
+	// per channel options
+	UINT32	options;
+	// Pullup resistor value in Ohms
+	double	rBias;
+	// Pulldown resistor value in Ohms
+	double	rGnd;
+	// Number of inputs connected to resistors
+	int		num;
+	// Resistor values
+	// - Least significant bit first
+	double R[8];
+	// Minimum output voltage
+	// - Applicable if output is routed through a complimentary
+	// - darlington circuit
+	// - typical value ~ 0.9V
+	double	minout;
+	// Cutoff output voltage
+	// - Applicable if output is routed through 1:1 transistor amplifier
+	// - Typical value ~ 0.7V
+	double	cut;
+	// Voltage at the pullup resistor
+	// - Typical voltage ~5V
+	double	vBias;
+};
+
+typedef struct _res_net_info res_net_info;
+struct _res_net_info {
+	// global options
+	UINT32	options;
+	// The three color channels
+	res_net_channel_info rgb[3];
+	// Supply Voltage
+	// - Typical value 5V
+	double	vcc;
+	// High Level output voltage
+	// - TTL : 3.40V
+	// - CMOS: 4.95V (@5v vcc)
+	double	vOL;
+	// Low Level output voltage
+	// - TTL : 0.35V
+	// - CMOS: 0.05V (@5v vcc)
+	double	vOH;
+	// Open Collector flag
+	UINT8	OpenCol;
+};
+
+#define RES_NET_MAX_COMP	3
+
+typedef struct _res_net_decode_info res_net_decode_info;
+struct _res_net_decode_info {
+	int	numcomp;
+	int	start;
+	int	end;
+	UINT16	offset[3 * RES_NET_MAX_COMP];
+	INT16	shift[3 * RES_NET_MAX_COMP];
+	UINT16	mask[3 * RES_NET_MAX_COMP];
+};
+
+/* return a single value for one channel */
+
+int compute_res_net(int inputs, int channel, const res_net_info *di);
+
+/* compute all values */
+
+rgb_t *compute_res_net_all(const UINT8 *prom, const res_net_decode_info *rdi, const res_net_info *di);
+
+void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max);
+
+/* legacy interface */
+
+double compute_resistor_weights(
 	int minval, int maxval, double scaler,
 	int count_1, const int * resistances_1, double * weights_1, int pulldown_1, int pullup_1,
 	int count_2, const int * resistances_2, double * weights_2, int pulldown_2, int pullup_2,
 	int count_3, const int * resistances_3, double * weights_3, int pulldown_3, int pullup_3 );
 
-#define combine_8_weights(tab,w0,w1,w2,w3,w4,w5,w6,w7)	((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2 + tab[3]*w3 + tab[4]*w4 + tab[5]*w5 + tab[6]*w6 + tab[7]*w7) + 0.5))
-#define combine_7_weights(tab,w0,w1,w2,w3,w4,w5,w6)		((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2 + tab[3]*w3 + tab[4]*w4 + tab[5]*w5 + tab[6]*w6) + 0.5))
-#define combine_6_weights(tab,w0,w1,w2,w3,w4,w5)	((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2 + tab[3]*w3 + tab[4]*w4 + tab[5]*w5) + 0.5))
-#define combine_5_weights(tab,w0,w1,w2,w3,w4)		((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2 + tab[3]*w3 + tab[4]*w4) + 0.5))
-#define combine_4_weights(tab,w0,w1,w2,w3)			((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2 + tab[3]*w3) + 0.5))
-#define combine_3_weights(tab,w0,w1,w2)				((int)((tab[0]*w0 + tab[1]*w1 + tab[2]*w2) + 0.5))
-#define combine_2_weights(tab,w0,w1)				((int)((tab[0]*w0 + tab[1]*w1) + 0.5))
+#define combine_8_weights(tab,w0,w1,w2,w3,w4,w5,w6,w7)	((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2) + (tab)[3]*(w3) + (tab)[4]*(w4) + (tab)[5]*(w5) + (tab)[6]*(w6) + (tab)[7]*(w7)) + 0.5))
+#define combine_7_weights(tab,w0,w1,w2,w3,w4,w5,w6)		((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2) + (tab)[3]*(w3) + (tab)[4]*(w4) + (tab)[5]*(w5) + (tab)[6]*(w6)) + 0.5))
+#define combine_6_weights(tab,w0,w1,w2,w3,w4,w5)		((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2) + (tab)[3]*(w3) + (tab)[4]*(w4) + (tab)[5]*(w5)) + 0.5))
+#define combine_5_weights(tab,w0,w1,w2,w3,w4)			((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2) + (tab)[3]*(w3) + (tab)[4]*(w4)) + 0.5))
+#define combine_4_weights(tab,w0,w1,w2,w3)				((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2) + (tab)[3]*(w3)) + 0.5))
+#define combine_3_weights(tab,w0,w1,w2)					((int)(((tab)[0]*(w0) + (tab)[1]*(w1) + (tab)[2]*(w2)) + 0.5))
+#define combine_2_weights(tab,w0,w1)					((int)(((tab)[0]*(w0) + (tab)[1]*(w1)) + 0.5))
 
 
 
@@ -61,410 +185,18 @@ static double compute_resistor_weights(
 
 #define MAX_NETS 3
 #define MAX_RES_PER_NET 18
-#define old_MAX_RES_PER_NET 32
+
+
 
 
 /* for the open collector outputs PROMs */
 
-static double compute_resistor_net_outputs(
+double compute_resistor_net_outputs(
 	int minval, int maxval, double scaler,
 	int count_1, const int * resistances_1, double * outputs_1, int pulldown_1, int pullup_1,
 	int count_2, const int * resistances_2, double * outputs_2, int pulldown_2, int pullup_2,
 	int count_3, const int * resistances_3, double * outputs_3, int pulldown_3, int pullup_3 );
 
 
-static double compute_resistor_weights(
-	int minval, int maxval, double scaler,
-	int count_1, const int * resistances_1, double * weights_1, int pulldown_1, int pullup_1,
-	int count_2, const int * resistances_2, double * weights_2, int pulldown_2, int pullup_2,
-	int count_3, const int * resistances_3, double * weights_3, int pulldown_3, int pullup_3 )
-{
 
-	int networks_no;
-
-	int rescount[MAX_NETS];		/* number of resistors in each of the nets */
-	double r[MAX_NETS][old_MAX_RES_PER_NET];		/* resistances */
-	double w[MAX_NETS][old_MAX_RES_PER_NET];		/* calulated weights */
-	double ws[MAX_NETS][old_MAX_RES_PER_NET];	/* calulated, scaled weights */
-	int r_pd[MAX_NETS];			/* pulldown resistances */
-	int r_pu[MAX_NETS];			/* pullup resistances */
-
-	double max_out[MAX_NETS];
-	double * out[MAX_NETS];
-
-	int i,j,n;
-	double scale;
-	double max;
-
-	/* parse input parameters */
-
-	networks_no = 0;
-	for (n = 0; n < MAX_NETS; n++)
-	{
-		int count, pd, pu;
-		const int * resistances;
-		double * weights;
-
-		switch(n){
-		case 0:
-				count		= count_1;
-				resistances	= resistances_1;
-				weights		= weights_1;
-				pd			= pulldown_1;
-				pu			= pullup_1;
-				break;
-		case 1:
-				count		= count_2;
-				resistances	= resistances_2;
-				weights		= weights_2;
-				pd			= pulldown_2;
-				pu			= pullup_2;
-				break;
-		case 2:
-		default:
-				count		= count_3;
-				resistances	= resistances_3;
-				weights		= weights_3;
-				pd			= pulldown_3;
-				pu			= pullup_3;
-				break;
-		}
-
-		/* parameters validity check */
-		if (count > old_MAX_RES_PER_NET)
-		{
-			logerror(" ERROR: res_net.h: compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, old_MAX_RES_PER_NET, count);
-			/* quit */
-			return (0.0);
-		}
-
-
-		if (count > 0)
-		{
-			rescount[networks_no] = count;
-			for (i=0; i < count; i++)
-			{
-				r[networks_no][i] = 1.0 * resistances[i];
-			}
-			out[networks_no] = weights;
-			r_pd[networks_no] = pd;
-			r_pu[networks_no] = pu;
-			networks_no++;
-		}
-	}
-	if (networks_no < 1)
-	{
-		/* error - no networks to anaylse */
-		logerror(" ERROR: res_net.h: compute_resistor_weights(): no input data\n");
-		return (0.0);
-	}
-
-	/* calculate outputs for all given networks */
-	for( i = 0; i < networks_no; i++ )
-	{
-		double R0, R1, Vout, dst;
-
-		/* of n resistors */
-		for(n = 0; n < rescount[i]; n++)
-		{
-			R0 = ( r_pd[i] == 0 ) ? 1.0/1e12 : 1.0/r_pd[i];
-			R1 = ( r_pu[i] == 0 ) ? 1.0/1e12 : 1.0/r_pu[i];
-
-			for( j = 0; j < rescount[i]; j++ )
-			{
-				if( j==n )	/* only one resistance in the network connected to Vcc */
-				{
-					if (r[i][j] != 0.0)
-						R1 += 1.0/r[i][j];
-				}
-				else
-					if (r[i][j] != 0.0)
-						R0 += 1.0/r[i][j];
-			}
-
-			/* now determine the voltage */
-			R0 = 1.0/R0;
-			R1 = 1.0/R1;
-			Vout = (maxval - minval) * R0 / (R1 + R0) + minval;
-
-			/* and convert it to a destination value */
-			dst = (Vout < minval) ? minval : (Vout > maxval) ? maxval : Vout;
-
-			w[i][n] = dst;
-		}
-	}
-
-	/* calculate maximum outputs for all given networks */
-	j = 0;
-	max = 0.0;
-	for( i = 0; i < networks_no; i++ )
-	{
-		double sum = 0.0;
-
-		/* of n resistors */
-		for( n = 0; n < rescount[i]; n++ )
-			sum += w[i][n];	/* maximum output, ie when each resistance is connected to Vcc */
-
-		max_out[i] = sum;
-		if (max < sum)
-		{
-			max = sum;
-			j = i;
-		}
-	}
-
-
-	if (scaler < 0.0)	/* use autoscale ? */
-		/* calculate the output scaler according to the network with the greatest output */
-		scale = ((double)maxval) / max_out[j];
-	else				/* use scaler provided on entry */
-		scale = scaler;
-
-	/* calculate scaled output and fill the output table(s)*/
-	for(i = 0; i < networks_no;i++)
-	{
-		for (n = 0; n < rescount[i]; n++)
-		{
-			ws[i][n] = w[i][n]*scale;	/* scale the result */
-			(out[i])[n] = ws[i][n];		/* fill the output table */
-		}
-	}
-
-/* debug code */
-#ifdef MAME_DEBUG
-	logerror("compute_resistor_weights():  scaler = %15.10f\n",scale);
-	logerror("min val :%i  max val:%i  Total number of networks :%i\n", minval, maxval, networks_no );
-
-	for(i = 0; i < networks_no;i++)
-	{
-		double sum = 0.0;
-
-		logerror(" Network no.%i=>  resistances: %i", i, rescount[i] );
-		if (r_pu[i] != 0)
-			logerror(", pullup resistor: %i Ohms",r_pu[i]);
-		if (r_pd[i] != 0)
-			logerror(", pulldown resistor: %i Ohms",r_pd[i]);
-		logerror("\n  maximum output of this network:%10.5f (scaled to %15.10f)\n", max_out[i], max_out[i]*scale );
-		for (n = 0; n < rescount[i]; n++)
-		{
-			logerror("   res %2i:%9.1f Ohms  weight=%10.5f (scaled = %15.10f)\n", n, r[i][n], w[i][n], ws[i][n] );
-			sum += ws[i][n];
-		}
-		logerror("                              sum of scaled weights = %15.10f\n", sum  );
-	}
-#endif
-/* debug end */
-
-	return (scale);
-
-}
-
-
-static double compute_resistor_net_outputs(
-	int minval, int maxval, double scaler,
-	int count_1, const int * resistances_1, double * outputs_1, int pulldown_1, int pullup_1,
-	int count_2, const int * resistances_2, double * outputs_2, int pulldown_2, int pullup_2,
-	int count_3, const int * resistances_3, double * outputs_3, int pulldown_3, int pullup_3 )
-{
-
-	int networks_no;
-
-	int rescount[MAX_NETS];		/* number of resistors in each of the nets */
-	double r[MAX_NETS][MAX_RES_PER_NET];		/* resistances */
-	double *o;					/* calulated outputs */
-	double *os;					/* calulated, scaled outputss */
-	int r_pd[MAX_NETS];			/* pulldown resistances */
-	int r_pu[MAX_NETS];			/* pullup resistances */
-
-	double max_out[MAX_NETS];
-	double min_out[MAX_NETS];
-	double * out[MAX_NETS];
-
-	int i,j,n;
-	double scale;
-	double min;
-	double max;
-
-	/* parse input parameters */
-
-	o  = (double *) malloc( sizeof(double) * (1<<MAX_RES_PER_NET) *  MAX_NETS);
-	os = (double *) malloc( sizeof(double) * (1<<MAX_RES_PER_NET) *  MAX_NETS);
-
-	networks_no = 0;
-	for (n = 0; n < MAX_NETS; n++)
-	{
-		int count, pd, pu;
-		const int * resistances;
-		double * weights;
-
-		switch(n){
-		case 0:
-				count		= count_1;
-				resistances	= resistances_1;
-				weights		= outputs_1;
-				pd			= pulldown_1;
-				pu			= pullup_1;
-				break;
-		case 1:
-				count		= count_2;
-				resistances	= resistances_2;
-				weights		= outputs_2;
-				pd			= pulldown_2;
-				pu			= pullup_2;
-				break;
-		case 2:
-		default:
-				count		= count_3;
-				resistances	= resistances_3;
-				weights		= outputs_3;
-				pd			= pulldown_3;
-				pu			= pullup_3;
-				break;
-		}
-
-		/* parameters validity check */
-		if (count > MAX_RES_PER_NET)
-		{
-			logerror(" ERROR: res_net.h: compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
-			/* quit */
-			free(o);
-			free(os);
-			return (0.0);
-		}
-
-		if (count > 0)
-		{
-			rescount[networks_no] = count;
-			for (i=0; i < count; i++)
-			{
-				r[networks_no][i] = 1.0 * resistances[i];
-			}
-			out[networks_no] = weights;
-			r_pd[networks_no] = pd;
-			r_pu[networks_no] = pu;
-			networks_no++;
-		}
-	}
-
-	if (networks_no<1)
-	{
-		/* error - no networks to anaylse */
-		logerror(" ERROR: res_net.h: compute_resistor_net_outputs(): no input data\n");
-		free(o);
-		free(os);
-		return (0.0);
-	}
-
-	/* calculate outputs for all given networks */
-	for( i = 0; i < networks_no; i++ )
-	{
-		double R0, R1, Vout, dst;
-
-		/* of n resistors, generating 1<<n possible outputs */
-		for(n = 0; n < (1<<rescount[i]); n++)
-		{
-			R0 = ( r_pd[i] == 0 ) ? 1.0/1e12 : 1.0/r_pd[i];
-			R1 = ( r_pu[i] == 0 ) ? 1.0/1e12 : 1.0/r_pu[i];
-
-			for( j = 0; j < rescount[i]; j++ )
-			{
-				if( (n & (1<<j)) == 0 )/* only when this resistance in the network connected to GND */
-					if (r[i][j] != 0.0)
-						R0 += 1.0/r[i][j];
-			}
-
-			/* now determine the voltage */
-			R0 = 1.0/R0;
-			R1 = 1.0/R1;
-			Vout = (maxval - minval) * R0 / (R1 + R0) + minval;
-
-			/* and convert it to a destination value */
-			dst = (Vout < minval) ? minval : (Vout > maxval) ? maxval : Vout;
-
-			o[i*(1<<MAX_RES_PER_NET)+n] = dst;
-		}
-	}
-
-	/* calculate minimum outputs for all given networks */
-	j = 0;
-	min = maxval;
-	max = minval;
-	for( i = 0; i < networks_no; i++ )
-	{
-		double val = 0.0;
-		double max_tmp = minval;
-		double min_tmp = maxval;
-
-		for (n = 0; n < (1<<rescount[i]); n++)
-		{
-			if (min_tmp > o[i*(1<<MAX_RES_PER_NET)+n])
-				min_tmp = o[i*(1<<MAX_RES_PER_NET)+n];
-			if (max_tmp < o[i*(1<<MAX_RES_PER_NET)+n])
-				max_tmp = o[i*(1<<MAX_RES_PER_NET)+n];
-		}
-
-		max_out[i] = max_tmp;	/* maximum output */
-		min_out[i] = min_tmp;	/* minimum output */
-
-		val = min_out[i];	/* minimum output of this network */
-		if (min > val)
-		{
-			min = val;
-		}
-		val = max_out[i];	/* maximum output of this network */
-		if (max < val)
-		{
-			max = val;
-		}
-	}
-
-
-	if (scaler < 0.0)	/* use autoscale ? */
-		/* calculate the output scaler according to the network with the smallest output */
-		scale = ((double)maxval) / (max-min);
-	else				/* use scaler provided on entry */
-		scale = scaler;
-
-	/* calculate scaled output and fill the output table(s) */
-	for(i = 0; i < networks_no; i++)
-	{
-		for (n = 0; n < (1<<rescount[i]); n++)
-		{
-			os[i*(1<<MAX_RES_PER_NET)+n] = (o[i*(1<<MAX_RES_PER_NET)+n] - min) * scale;	/* scale the result */
-			(out[i])[n] = os[i*(1<<MAX_RES_PER_NET)+n];		/* fill the output table */
-		}
-	}
-
-/* debug code */
-#ifdef MAME_DEBUG
-	logerror("compute_resistor_net_outputs():  scaler = %15.10f\n",scale);
-	logerror("min val :%i  max val:%i  Total number of networks :%i\n", minval, maxval, networks_no );
-
-	for(i = 0; i < networks_no;i++)
-	{
-		logerror(" Network no.%i=>  resistances: %i", i, rescount[i] );
-		if (r_pu[i] != 0)
-			logerror(", pullup resistor: %i Ohms",r_pu[i]);
-		if (r_pd[i] != 0)
-			logerror(", pulldown resistor: %i Ohms",r_pd[i]);
-		logerror("\n  maximum output of this network:%10.5f", max_out[i] );
-		logerror("\n  minimum output of this network:%10.5f\n", min_out[i] );
-		for (n = 0; n < rescount[i]; n++)
-		{
-			logerror("   res %2i:%9.1f Ohms\n", n, r[i][n]);
-		}
-		for (n = 0; n < (1<<rescount[i]); n++)
-		{
-			logerror("   combination %2i  out=%10.5f (scaled = %15.10f)\n", n, o[i*(1<<MAX_RES_PER_NET)+n], os[i*(1<<MAX_RES_PER_NET)+n] );
-		}
-	}
-#endif
-/* debug end */
-
-	free(o);
-	free(os);
-	return (scale);
-
-}
-
-#endif /*_res_net_h_*/
+#endif /*_RESNET_H_*/

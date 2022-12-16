@@ -135,6 +135,7 @@ Changes:
 ***************************************************************************/
 
 #include "driver.h"
+
 #include "vidhrdw/generic.h"
 #include "cpu/i8039/i8039.h"
 #include "cpu/s2650/s2650.h"
@@ -1052,7 +1053,7 @@ INPUT_PORTS_START( dkrdemo )
 	PORT_DIPSETTING(    0x04, "15000" ) // and each additional 150k
 	PORT_DIPSETTING(    0x08, "25000" ) // and each additional 250k
 	PORT_DIPSETTING(    0x0c, "35000" ) // and each additional 350k
-	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Coinage ) ) 
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x30, "Free Play" )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
@@ -2945,7 +2946,7 @@ static DRIVER_INIT( dkong2 )
 	memset (memory_region(REGION_CPU1), 0, 0x10000);
 
 	banks = 0;
-	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000); 
+	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000);
 	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); /* ?*/
 
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);

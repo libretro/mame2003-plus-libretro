@@ -6,6 +6,7 @@
 
 ***************************************************************************/
 #include "driver.h"
+#include "res_net.h"
 #include "vidhrdw/generic.h"
 
 
@@ -23,32 +24,6 @@ WRITE_HANDLER( dkong_videoram_w )
 		tilemap_mark_tile_dirty(bg_tilemap, offset);
 	}
 }
-
-static void modify_RGB_vals( int *r, int *g, int *b )
-{
-	const int fbNeoVals[ 8 ] = { 0xe1, 0xa7, 0x8b, 0xc5, 0x66, 0x24, 0xda, 0x8a };
-	if( r )
-	{
-		if( *r == 0xff )	*r = fbNeoVals[ 0 ]; // no bits set
-		if( *r == 0xb8 )	*r = fbNeoVals[ 1 ]; // bit 1 set
-		if( *r == 0x97 )	*r = fbNeoVals[ 2 ]; // bits 0 and 1 set
-		if( *r == 0xde )	*r = fbNeoVals[ 3 ]; // bit 0 set
-	}
-	if( g )
-	{
-		if( *g == 0xff )	*g = fbNeoVals[ 0 ]; // no bits set
-		if( *g == 0xb8 )	*g = fbNeoVals[ 1 ]; // bit 1 set
-		if( *g == 0x97 )	*g = fbNeoVals[ 2 ]; // bits 0 and 1 set
-		if( *g == 0x68 )	*g = fbNeoVals[ 4 ]; // bit 2 set
-		if( *g == 0x21 )	*g = fbNeoVals[ 5 ]; // bits 1 and 2 set
-	}
-	if( b )
-	{
-		if( *b == 0xaa )	*b = fbNeoVals[ 6 ]; // bit 0 set
-		if( *b == 0x55 )	*b = fbNeoVals[ 7 ]; // bit 1 set		
-	}
-}
-
 
 /***************************************************************************
 
@@ -69,36 +44,98 @@ static void modify_RGB_vals( int *r, int *g, int *b )
         -- 220 ohm resistor -- inverter  -- BLUE
   bit 0 -- 470 ohm resistor -- inverter  -- BLUE
 ***************************************************************************/
-PALETTE_INIT( dkong )
+
+/*
+    dkong color interface:
+
+    All outputs are open-collector and pullup resistors are connected to 5V.
+    Red and Green outputs are routed through a complimentary darlington
+    whereas blue is routed through a 1:1 stage leading to a 0.7V cutoff.
+*/
+
+static const res_net_decode_info dkong_decode_info =
+{
+	2,		/*  there may be two proms needed to construct color */
+	0,		/*  start at 0 */
+	255,	/*  end at 255 */
+	/*  R,   G,   B,   R,   G,   B */
+	{ 256, 256,   0,   0,   0,   0},		/*  offsets */
+	{   1,  -2,   0,   0,   2,   0},		/*  shifts */
+	{0x07,0x04,0x03,0x00,0x03,0x00}		    /*  masks */
+};
+
+static const res_net_info dkong_net_info =
+{
+	RES_NET_VCC_5V | RES_NET_VBIAS_5V | RES_NET_VIN_MB7052 |  RES_NET_MONITOR_SANYO_EZV20,
+	{
+		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
+		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
+		{ RES_NET_AMP_EMITTER,    680, 0, 2, {  470, 220,   0 } }  /*  dkong */
+	}
+};
+
+static const res_net_info dkong_net_bck_info =
+{
+	RES_NET_VCC_5V | RES_NET_VBIAS_5V | RES_NET_VIN_MB7052 |  RES_NET_MONITOR_SANYO_EZV20,
+	{
+		{ RES_NET_AMP_DARLINGTON, 470, 0, 0, { 0 } },
+		{ RES_NET_AMP_DARLINGTON, 470, 0, 0, { 0 } },
+		{ RES_NET_AMP_EMITTER,    680, 0, 0, { 0 } }
+	}
+};
+
+PALETTE_INIT( dkong)
+{
+
+	int i;
+	rgb_t   *rgb;
+	rgb = compute_res_net_all(color_prom, &dkong_decode_info, &dkong_net_info);
+
+	/* Now treat tri-state black background generation */
+
+	for (i=0;i<256;i++)
+		if ( (i & 0x03) == 0x00 )  /*  NOR => CS=1 => Tristate => real black */
+		{
+			int r,g,b;
+			r = compute_res_net( 1, 0, &dkong_net_bck_info );
+			g = compute_res_net( 1, 1, &dkong_net_bck_info );
+			b = compute_res_net( 1, 2, &dkong_net_bck_info );
+			palette_set_color( i, r, g, b );
+		}
+	palette_normalize_range(0, 255, 0, 255);
+	color_prom += 512;
+	/* color_prom now points to the beginning of the character color codes */
+	color_codes = color_prom;	/* we'll need it later */
+}
+
+PALETTE_INIT( dkong_old )
 {
 	int i;
 	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
 	#define COLOR(gfxn,offs) (colortable[Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
-	
+
+
 	for (i = 0;i < 256;i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
-		
+
+
 		/* red component */
 		bit0 = (color_prom[256] >> 1) & 1;
 		bit1 = (color_prom[256] >> 2) & 1;
 		bit2 = (color_prom[256] >> 3) & 1;
 		r = 255 - (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-		
 		/* green component */
 		bit0 = (color_prom[0] >> 2) & 1;
 		bit1 = (color_prom[0] >> 3) & 1;
 		bit2 = (color_prom[256] >> 0) & 1;
 		g = 255 - (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-		
 		/* blue component */
 		bit0 = (color_prom[0] >> 0) & 1;
 		bit1 = (color_prom[0] >> 1) & 1;
-		b = 255 - (0x55 * bit0 + 0xaa * bit1);		
-		
-		modify_RGB_vals( &r, &g, &b );
+		b = 255 - (0x55 * bit0 + 0xaa * bit1);
 
-		palette_set_color( i, r, g, b );
+		palette_set_color(i,r,g,b);
 		color_prom++;
 	}
 
@@ -190,7 +227,7 @@ VIDEO_START( dkong )
 	gfx_bank = 0;
 	palette_bank = 0;
 
-	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows, 
+	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows,
 		TILEMAP_OPAQUE, 8, 8, 32, 32);
 
 	if ( !bg_tilemap )

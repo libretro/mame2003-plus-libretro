@@ -558,6 +558,14 @@ void printromlist(const struct RomModule *romp,const char *name);
          (BIT(val, B1) <<  1) | \
          (BIT(val, B0) <<  0))
 
+/* Standard MIN/MAX macros */
+#ifndef MIN
+#define MIN(x,y)			((x) < (y) ? (x) : (y))
+#endif
+#ifndef MAX
+#define MAX(x,y)			((x) > (y) ? (x) : (y))
+#endif
+
 
 #ifdef __cplusplus
 }
