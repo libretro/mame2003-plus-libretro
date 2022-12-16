@@ -1043,8 +1043,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
-	$(CORE_DIR)/machine/namcoio_machine.c
-
+	$(CORE_DIR)/machine/namcoio_machine.c \
+	$(CORE_DIR)/vidhrdw/resnet.c
 
 
 # List of CPU core (and, for a debug build, disassembler) object files
