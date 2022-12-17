@@ -1024,8 +1024,9 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 	/* find the minimum and maximum brightness of all the colors in the range */
 	for (index = start; index <= end; index++)
 	{
+		UINT32 y;
 		palette_get_color(index, &col[0], &col[1], &col[2]);
-		UINT32 y = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		y = 299 * col[0] + 587 * col[1] + 114 * col[2];
 		ymin = MIN(ymin, y);
 		ymax = MAX(ymax, y);
 	}
@@ -1038,6 +1039,8 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 
 	for (index = start; index <= end; index++)
 	{
+		UINT32 y;
+		UINT32 target;
 		palette_get_color(index, &col[0], &col[1], &col[2]);
 		
 		/* below is the 142u2 fix appears washed out to me but will leave the code for others to test
@@ -1052,8 +1055,8 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 		
 		/*mame 0139 is below look like mame current to me*/
 		/* feel free to change to what ever prefrence of mame you choose*/
-		UINT32 y = 299 * col[0] + 587 * col[1] + 114 * col[2];
-		UINT32 target = tmin + ((y - ymin) * (tmax - tmin + 1)) / (ymax - ymin);
+		y = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		target = tmin + ((y - ymin) * (tmax - tmin + 1)) / (ymax - ymin);
 		col[0] = (y == 0) ? 0 : rgb_clamp(col[0] * 1000 * target / y);
 		col[1] = (y == 0) ? 0 : rgb_clamp(col[1] * 1000 * target / y);
 		col[2] = (y == 0) ? 0 : rgb_clamp(col[2] * 1000 * target / y);
