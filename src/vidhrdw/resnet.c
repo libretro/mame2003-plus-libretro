@@ -727,7 +727,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 	int i,j,k;
 	rgb_t *rgb;
 
-	rgb = malloc(rdi->end - rdi->start + 1 * sizeof(rgb_t));
+	rgb = malloc((rdi->end - rdi->start + 1) * sizeof(rgb_t));
 	for (i=rdi->start; i<=rdi->end; i++)
 	{
 		UINT8 t[3] = {0,0,0};
@@ -746,7 +746,6 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 		g = compute_res_net(t[1], RES_NET_CHAN_GREEN, di);
 		b = compute_res_net(t[2], RES_NET_CHAN_BLUE, di);
 
-		palette_set_color(i,r,g,b);//set the palette here but also pas rgb incase some processing needs done in palete init
 		rgb[i-rdi->start] = MAKE_RGB(r,g,b);
 	}
 	return rgb;

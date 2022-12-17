@@ -143,6 +143,7 @@ void palette_set_colors(pen_t color_base, const UINT8 *colors, int color_count);
 
 int palette_get_total_colors(void);
 void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max);
+void res_palette_set_colors(pen_t color_base, rgb_t *colors, int color_count);
 
 void palette_set_brightness(pen_t pen, double bright);
 void palette_set_shadow_factor(double factor);
