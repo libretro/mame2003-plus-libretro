@@ -90,7 +90,9 @@ PALETTE_INIT( dkong)
 	int i;
 	rgb_t   *rgb;
 	rgb = compute_res_net_all(color_prom, &dkong_decode_info, &dkong_net_info);
-
+	res_palette_set_colors(0, rgb, 256);
+	free(rgb);
+	
 	/* Now treat tri-state black background generation */
 
 	for (i=0;i<256;i++)

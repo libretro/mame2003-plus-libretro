@@ -162,7 +162,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di);
 rgb_t *compute_res_net_all(const UINT8 *prom, const res_net_decode_info *rdi, const res_net_info *di);
 
 void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max);
-
+void res_palette_set_colors(pen_t color_base, rgb_t *colors, int color_count);
 /* legacy interface */
 
 double compute_resistor_weights(

@@ -1018,8 +1018,7 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 	UINT8  col[3];
 
 	/* clamp within range */
-	start = MAX(start, 0);
-	end = MIN(end, palette_get_total_colors());
+	end = MIN(end, palette_get_total_colors() -1);
 
 	/* find the minimum and maximum brightness of all the colors in the range */
 	for (index = start; index <= end; index++)
@@ -1092,6 +1091,16 @@ void palette_set_colors(pen_t color_base, const UINT8 *colors, int color_count)
         }
 }
 
+void res_palette_set_colors(pen_t color_base, rgb_t *colors, int color_count)
+{
+	while(color_count--)
+	{
+		palette_set_color(color_base, RGB_RED(colors[0]), RGB_GREEN(colors[0]),RGB_BLUE(colors[0]));
+		color_base++;
+		colors++;
+    }
+}
+	
 /*-------------------------------------------------
 	palette_get_color - return a single palette
 	entry
