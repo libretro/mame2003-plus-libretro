@@ -84,6 +84,27 @@ static const res_net_info dkong_net_bck_info =
 	}
 };
 
+static const res_net_decode_info dkong3_decode_info =
+{
+	1,		/*  one prom needed to contruct color */
+	0,		/*  start at 0 */
+	255,	/*  end at 255 */
+	/*   R,   G,   B */
+	{   0,   0, 512 },		/*  offsets */
+	{   4,   0,   0 },		/*  shifts */
+	{0x0F,0x0F,0x0F }		    /*  masks */
+};
+
+static const res_net_info dkong3_net_info =
+{
+	RES_NET_VCC_5V | RES_NET_VBIAS_5V | RES_NET_VIN_MB7052 |  RES_NET_MONITOR_SANYO_EZV20,
+	{
+		{ RES_NET_AMP_DARLINGTON, 470,      0, 4, { 2200, 1000, 470, 220 } },
+		{ RES_NET_AMP_DARLINGTON, 470,      0, 4, { 2200, 1000, 470, 220 } },
+		{ RES_NET_AMP_DARLINGTON, 470,      0, 4, { 2200, 1000, 470, 220 } }
+	}
+};
+
 PALETTE_INIT( dkong)
 {
 
@@ -178,40 +199,14 @@ PALETTE_INIT( dkong_old )
 ***************************************************************************/
 PALETTE_INIT( dkong3 )
 {
-	int i;
-	#define TOTAL_COLORS(gfxn) (Machine->gfx[gfxn]->total_colors * Machine->gfx[gfxn]->color_granularity)
-	#define COLOR(gfxn,offs) (colortable[Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
+	rgb_t	*rgb;
 
+	rgb = compute_res_net_all(color_prom, &dkong3_decode_info, &dkong3_net_info);
+	res_palette_set_colors(0, rgb, 256);
+	palette_normalize_range(0, 255, 0, 255);
+	free(rgb);
 
-	for (i = 0;i < 256;i++)
-	{
-		int bit0,bit1,bit2,bit3,r,g,b;
-
-
-		/* red component */
-		bit0 = (color_prom[0] >> 4) & 0x01;
-		bit1 = (color_prom[0] >> 5) & 0x01;
-		bit2 = (color_prom[0] >> 6) & 0x01;
-		bit3 = (color_prom[0] >> 7) & 0x01;
-		r = 255 - (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-		/* green component */
-		bit0 = (color_prom[0] >> 0) & 0x01;
-		bit1 = (color_prom[0] >> 1) & 0x01;
-		bit2 = (color_prom[0] >> 2) & 0x01;
-		bit3 = (color_prom[0] >> 3) & 0x01;
-		g = 255 - (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-		/* blue component */
-		bit0 = (color_prom[256] >> 0) & 0x01;
-		bit1 = (color_prom[256] >> 1) & 0x01;
-		bit2 = (color_prom[256] >> 2) & 0x01;
-		bit3 = (color_prom[256] >> 3) & 0x01;
-		b = 255 - (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-
-		palette_set_color(i,r,g,b);
-		color_prom++;
-	}
-
-	color_prom += 256;
+	color_prom += 1024;
 	/* color_prom now points to the beginning of the character color codes */
 	color_codes = color_prom;	/* we'll need it later */
 }
