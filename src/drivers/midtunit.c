@@ -1403,7 +1403,8 @@ GAME( 1993, jdreddp,  0,       tunit_adpcm, jdreddp, jdreddp,  ROT0, "Midway",  
 
 GAMEC( 1993, nbajam,   0,       nbajam,      nbajam,    nbajam,   ROT0, "Midway", "NBA Jam (rev 3.01 04-07-93)", &nbajam_ctrl, &nbajam_bootstrap )
 GAMEC( 1993, nbajamr2, nbajam,  nbajam,      nbajam,    nbajam20, ROT0, "Midway", "NBA Jam (rev 2.00 02-10-93)", &nbajam_ctrl, &nbajamr2_bootstrap )
-GAMEC( 1994, nbajamte, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 4.0 03-23-94)", &nbajam_ctrl, &nbajamte_bootstrap )
-GAMEC( 1994, nbajamt1, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 1.0 01-17-94)", &nbajam_ctrl, &nbajamt1_bootstrap )
-GAMEC( 1994, nbajamt2, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 2.0 01-28-94)", &nbajam_ctrl, &nbajamt2_bootstrap )
-GAMEC( 1994, nbajamt3, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 3.0 03-04-94)", &nbajam_ctrl, &nbajamt3_bootstrap )
+
+GAMEC( 1994, nbajamte, 0,        tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 4.0 03-23-94)", &nbajam_ctrl, &nbajamte_bootstrap )
+GAMEC( 1994, nbajamt1, nbajamte, tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 1.0 01-17-94)", &nbajam_ctrl, &nbajamt1_bootstrap )
+GAMEC( 1994, nbajamt2, nbajamte, tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 2.0 01-28-94)", &nbajam_ctrl, &nbajamt2_bootstrap )
+GAMEC( 1994, nbajamt3, nbajamte, tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway", "NBA Jam TE (rev 3.0 03-04-94)", &nbajam_ctrl, &nbajamt3_bootstrap )
