@@ -1868,6 +1868,16 @@ static MACHINE_DRIVER_START( dkongjr )
 	MDRV_SOUND_ADD(SAMPLES, dkongjr_samples_interface)
 MACHINE_DRIVER_END
 
+
+static MACHINE_DRIVER_START( dkong3b )
+
+    /* basic machine hardware */
+    MDRV_IMPORT_FROM(dkongjr)
+    MDRV_PALETTE_INIT(dkong3)
+MACHINE_DRIVER_END
+
+
+
 static MACHINE_DRIVER_START( pestplce )
 
 	/* basic machine hardware */
@@ -2534,10 +2544,10 @@ ROM_START( dkong3j )
 	ROM_LOAD( "dk3v.7e",      0x2000, 0x1000, CRC(0c0af3fb) SHA1(03e0c3f51bc3c20f95cb02f76f2d80188d5dbe36) )
 	ROM_LOAD( "dk3v.7f",      0x3000, 0x1000, CRC(55c58662) SHA1(7f3d5a1b386cc37d466e42392ffefc928666a8dc) )
 
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_REGION( 0x0500, REGION_PROMS, 0 )
 	ROM_LOAD( "dkc1-c.1d",    0x0000, 0x0200, CRC(df54befc) SHA1(7912dbf0a0c8ef68f4ae0f95e55ab164da80e4a1) ) /* palette red & green component */
-	ROM_LOAD( "dkc1-c.1c",    0x0100, 0x0200, CRC(66a77f40) SHA1(c408d65990f0edd78c4590c447426f383fcd2d88) ) /* palette blue component */
-	ROM_LOAD( "dkc1-v.2n",    0x0200, 0x0100, CRC(50e33434) SHA1(b63da9bed9dc4c7da78e4c26d4ba14b65f2b7e72) )	/* character color codes on a per-column basis */
+	ROM_LOAD( "dkc1-c.1c",    0x0200, 0x0200, CRC(66a77f40) SHA1(c408d65990f0edd78c4590c447426f383fcd2d88) ) /* palette blue component */
+	ROM_LOAD( "dkc1-v.2n",    0x0400, 0x0100, CRC(50e33434) SHA1(b63da9bed9dc4c7da78e4c26d4ba14b65f2b7e72) )	/* character color codes on a per-column basis */
 ROM_END
 
 ROM_START( dkong3b )
@@ -2568,10 +2578,10 @@ ROM_START( dkong3b )
 	ROM_LOAD( "7e.bin",       0x2000, 0x1000, CRC(0c0af3fb) SHA1(03e0c3f51bc3c20f95cb02f76f2d80188d5dbe36) )
 	ROM_LOAD( "7f.bin",       0x3000, 0x1000, CRC(55c58662) SHA1(7f3d5a1b386cc37d466e42392ffefc928666a8dc) )
 
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "dk3b-c.1d",    0x0000, 0x0200, BAD_DUMP CRC(df54befc) SHA1(7912dbf0a0c8ef68f4ae0f95e55ab164da80e4a1) ) /* palette red & green component */
-	ROM_LOAD( "dk3b-c.1c",    0x0100, 0x0200, BAD_DUMP CRC(66a77f40) SHA1(c408d65990f0edd78c4590c447426f383fcd2d88) ) /* palette blue component */
-	ROM_LOAD( "dk3b-v.2n",    0x0200, 0x0100, BAD_DUMP CRC(50e33434) SHA1(b63da9bed9dc4c7da78e4c26d4ba14b65f2b7e72) )	/* character color codes on a per-column basis */
+	ROM_REGION( 0x0500, REGION_PROMS, 0 )
+	ROM_LOAD( "dk3b-c.1d",    0x0000, 0x0200, CRC(df54befc) SHA1(7912dbf0a0c8ef68f4ae0f95e55ab164da80e4a1) ) /* palette red & green component */
+	ROM_LOAD( "dk3b-c.1c",    0x0200, 0x0200, CRC(66a77f40) SHA1(c408d65990f0edd78c4590c447426f383fcd2d88) ) /* palette blue component */
+	ROM_LOAD( "dk3b-v.2n",    0x0400, 0x0100, CRC(50e33434) SHA1(b63da9bed9dc4c7da78e4c26d4ba14b65f2b7e72) ) /* character color codes on a per-column basis */
 ROM_END
 
 ROM_START( hunchbkd )
@@ -2965,6 +2975,7 @@ GAME (1981, dkongjo1, dkong,    dkong,    dkong,    0,        ROT90, "Nintendo",
 GAME (2013, dkongpe,  dkong,    dkong,    dkong,    0,        ROT90,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
 
 GAME (2008, dkongx,   dkong,    braze,    dkong2,   dkong2,   ROT90, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
+
 GAME (2015, dkrdemo,  dkong,    dkong,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
 
 GAME( 1982, dkongjr,  0,        dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (US)" )
@@ -2975,7 +2986,7 @@ GAME( 1982, dkngjnrb, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo o
 
 GAME( 1983, dkong3,   0,        dkong3,   dkong3,   0,        ROT90, "Nintendo of America", "Donkey Kong 3 (US)" )
 GAME( 1983, dkong3j,  dkong3,   dkong3,   dkong3,   0,        ROT90, "Nintendo", "Donkey Kong 3 (Japan)" )
-GAMEX(1984, dkong3b,  dkong3,	dkongjr,  dkong3b,  0,        ROT90, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)", GAME_WRONG_COLORS )
+GAMEX(1984, dkong3b,  dkong3,	dkong3b,  dkong3b,  0,        ROT90, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)" )
 
 GAME( 1984, herbiedk, huncholy, herbiedk, herbiedk, 0,        ROT90, "CVS", "Herbie at the Olympics (DK conversion)")
 
@@ -2989,12 +3000,12 @@ GAME( 1984, herodku,  hero,     hunchbkd, herodk,   0,        ROT90, "Seatongrov
 GAME( 1984, 8ballact, 0,    	eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DK conversion)" )
 GAME( 1984, 8ballat2, 8ballact,	eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DKJr conversion)" )
 
-GAMEX(1984, shootgal, 0,	shootgal, hunchbkd, 0,		  ROT180, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
+GAMEX(1984, shootgal, 0,	    shootgal, hunchbkd, 0,		  ROT180, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
 
 GAMEX(1983, pestplce, mario,	pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
-GAMEX(1985, spclforc, 0,	spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
-GAMEX(1985, spcfrcii, 0,	spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
+GAMEX(1985, spclforc, 0,	    spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
+GAMEX(1985, spcfrcii, 0,	    spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
 
 GAMEX(198?, drakton,  0,        dkong,    dkong,    0,        ROT90, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat, 0,        strtheat, strtheat, 0,        ROT90, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)

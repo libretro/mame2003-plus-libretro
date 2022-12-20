@@ -86,13 +86,13 @@ static const res_net_info dkong_net_bck_info =
 
 static const res_net_decode_info dkong3_decode_info =
 {
-	1,		/*  one prom needed to contruct color */
-	0,		/*  start at 0 */
-	255,	/*  end at 255 */
+	1,      /*  one prom needed to contruct color */
+	0,      /*  start at 0 */
+	255,    /*  end at 255 */
 	/*   R,   G,   B */
-	{   0,   0, 512 },		/*  offsets */
-	{   4,   0,   0 },		/*  shifts */
-	{0x0F,0x0F,0x0F }		    /*  masks */
+	{   0,   0, 512 },      /*  offsets */
+	{   4,   0,   0 },      /*  shifts */
+	{0x0F,0x0F,0x0F }           /*  masks */
 };
 
 static const res_net_info dkong3_net_info =
@@ -104,7 +104,6 @@ static const res_net_info dkong3_net_info =
 		{ RES_NET_AMP_DARLINGTON, 470,      0, 4, { 2200, 1000, 470, 220 } }
 	}
 };
-
 PALETTE_INIT( dkong)
 {
 
