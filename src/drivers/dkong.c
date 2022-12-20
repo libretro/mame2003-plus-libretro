@@ -2973,10 +2973,9 @@ GAME (1981, dkongjp,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo",
 GAME (1981, dkongjo,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 2)" )
 GAME (1981, dkongjo1, dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 3) (bad dump[Q])" )
 GAME (2013, dkongpe,  dkong,    dkong,    dkong,    0,        ROT90,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
+GAME (2015, dkrdemo,  dkong,    dkong,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
 
 GAME (2008, dkongx,   dkong,    braze,    dkong2,   dkong2,   ROT90, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
-
-GAME (2015, dkrdemo,  dkong,    dkong,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
 
 GAME( 1982, dkongjr,  0,        dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (US)" )
 GAME( 1982, dkongjrj, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo", "Donkey Kong Jr. (Japan)" )
@@ -2986,7 +2985,7 @@ GAME( 1982, dkngjnrb, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo o
 
 GAME( 1983, dkong3,   0,        dkong3,   dkong3,   0,        ROT90, "Nintendo of America", "Donkey Kong 3 (US)" )
 GAME( 1983, dkong3j,  dkong3,   dkong3,   dkong3,   0,        ROT90, "Nintendo", "Donkey Kong 3 (Japan)" )
-GAME(1984, dkong3b,  dkong3,    dkong3b,  dkong3b,  0,        ROT90, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)" )
+GAME(1984,  dkong3b,  dkong3,   dkong3b,  dkong3b,  0,        ROT90, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)" )
 
 GAME( 1984, herbiedk, huncholy, herbiedk, herbiedk, 0,        ROT90, "CVS", "Herbie at the Olympics (DK conversion)")
 
