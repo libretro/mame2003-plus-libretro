@@ -92,7 +92,7 @@ static const res_net_decode_info dkong3_decode_info =
 	/*   R,   G,   B */
 	{   0,   0, 512 },      /*  offsets */
 	{   4,   0,   0 },      /*  shifts */
-	{0x0F,0x0F,0x0F }           /*  masks */
+	{0x0F,0x0F,0x0F }       /*  masks */
 };
 
 static const res_net_info dkong3_net_info =
