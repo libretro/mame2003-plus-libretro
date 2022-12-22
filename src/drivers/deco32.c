@@ -728,82 +728,114 @@ static MEMORY_WRITE32_START( fghthsta_writemem )
 	{ 0x208800, 0x208803, MWA32_NOP }, /* ? */
 MEMORY_END
 
+READ32_HANDLER( dragngun_unk_video_r)
+{
+	return rand();
+}
+
+READ32_HANDLER( dragngun_gfxrom_r ) /* trampoline */
+{
+	data8_t *rom = memory_region(REGION_GFX5);
+
+	return rom[0x00000];
+}
+
 static MEMORY_READ32_START( dragngun_readmem )
-	{ 0x000000, 0x0fffff, MRA32_ROM },
-	{ 0x100000, 0x11ffff, MRA32_RAM },
-	{ 0x120000, 0x120fff, dragngun_prot_r },
-	{ 0x128000, 0x12800f, deco32_irq_controller_r },
-	{ 0x130000, 0x131fff, MRA32_RAM },
-	{ 0x138000, 0x138003, MRA32_NOP }, /* Palette dma complete in bit 0x8? ack?  return 0 else tight loop */
+	{ 0x0000000, 0x00fffff, MRA32_ROM },
+	{ 0x0100000, 0x011ffff, MRA32_RAM },
+	{ 0x0120000, 0x0120fff, dragngun_prot_r },
+	{ 0x0128000, 0x012800f, deco32_irq_controller_r },
+	{ 0x0130000, 0x0131fff, MRA32_RAM },
+	{ 0x0138000, 0x0138003, MRA32_NOP }, /* Palette dma complete in bit 0x8? ack?  return 0 else tight loop */
 
-	{ 0x180000, 0x18001f, MRA32_RAM },
-	{ 0x190000, 0x191fff, MRA32_RAM },
-	{ 0x194000, 0x195fff, MRA32_RAM },
-	{ 0x1a0000, 0x1a0fff, MRA32_RAM },
-	{ 0x1a4000, 0x1a4fff, MRA32_RAM },
+	{ 0x0180000, 0x018001f, MRA32_RAM },
+	{ 0x0190000, 0x0191fff, MRA32_RAM },
+	{ 0x0194000, 0x0195fff, MRA32_RAM },
+	{ 0x01a0000, 0x01a3fff, MRA32_RAM },
+	{ 0x01a4000, 0x01a5fff, MRA32_RAM },
 
-	{ 0x1c0000, 0x1c001f, MRA32_RAM },
-	{ 0x1d0000, 0x1d1fff, MRA32_RAM },
-	{ 0x1d4000, 0x1d5fff, MRA32_RAM },
-	{ 0x1e0000, 0x1e0fff, MRA32_RAM },
-	{ 0x1e4000, 0x1e4fff, MRA32_RAM },
+	{ 0x01c0000, 0x01c001f, MRA32_RAM },
+	{ 0x01d0000, 0x01d1fff, MRA32_RAM },
+	{ 0x01d4000, 0x01d5fff, MRA32_RAM },
+	{ 0x01e0000, 0x01e3fff, MRA32_RAM },
+	{ 0x01e4000, 0x01e5fff, MRA32_RAM },
+	
+	{ 0x0204800, 0x0204fff, MRA32_RAM }, /* ace? 0x10 byte increments only  13f ff stuff */
 
-	{ 0x208000, 0x208fff, MRA32_RAM },
-	{ 0x20c000, 0x20cfff, MRA32_RAM },
-	{ 0x210000, 0x217fff, MRA32_RAM },
-	{ 0x218000, 0x21ffff, MRA32_RAM },
-	{ 0x220000, 0x221fff, MRA32_RAM }, /* Main spriteram */
+	{ 0x0208000, 0x0208fff, MRA32_RAM },
+	{ 0x020c000, 0x020cfff, MRA32_RAM },
+	{ 0x0210000, 0x0217fff, MRA32_RAM },
+	{ 0x0218000, 0x021ffff, MRA32_RAM },
+	{ 0x0220000, 0x0221fff, MRA32_RAM }, /* Main spriteram */
 
-	{ 0x204800, 0x204fff, MRA32_RAM }, /*0x10 byte increments only*/
-	{ 0x228000, 0x2283ff, MRA32_RAM }, /*0x10 byte increments only*/
+	{ 0x0228000, 0x02283ff, MRA32_RAM }, /* 0x10 byte increments only */
 
-	{ 0x300000, 0x3fffff, MRA32_ROM },
+	{ 0x0300000, 0x03fffff, MRA32_ROM },
 
-	{ 0x400000, 0x400003, dragngun_oki_2_r },
-	{ 0x420000, 0x420003, dragngun_eeprom_r },
-	{ 0x438000, 0x438003, dragngun_lightgun_r },
-	{ 0x440000, 0x440003, dragngun_service_r },
+	{ 0x0400000, 0x0400003, dragngun_oki_2_r },
+	{ 0x0420000, 0x0420003, dragngun_eeprom_r },
+	{ 0x0438000, 0x0438003, dragngun_lightgun_r },
+	{ 0x0440000, 0x0440003, dragngun_service_r },
+	
+/* this is clearly the dvi video related area */
+	{ 0x1000000, 0x1000007, dragngun_unk_video_r },
+	{ 0x1000100, 0x1007fff, MRA32_RAM },
+	{ 0x10b0000, 0x10b01ff, MRA32_RAM },
+/* reads from here during boss battles when the videos should be displayed at the offsets where the DVI headers are
+as a result it ends up writing what looks like pointers to the frame data in the ram area above
+*/
+	{ 0x1400000, 0x1ffffff, dragngun_gfxrom_r }, /* correct.?? was AM_ROM AM_REGION("dvi", 0x00000) */
 MEMORY_END
 
 static MEMORY_WRITE32_START( dragngun_writemem )
-	{ 0x000000, 0x0fffff, MWA32_ROM },
-	{ 0x100000, 0x11ffff, MWA32_RAM, &deco32_ram },
-	{ 0x1204c0, 0x1204c3, deco32_sound_w },
-	{ 0x128000, 0x12800f, deco32_irq_controller_w },
+	{ 0x0000000, 0x00fffff, MWA32_ROM },
+	{ 0x0100000, 0x011ffff, MWA32_RAM, &deco32_ram },
+	{ 0x01204c0, 0x01204c3, deco32_sound_w },
+	{ 0x0128000, 0x012800f, deco32_irq_controller_w },
 
-	{ 0x130000, 0x131fff, deco32_buffered_palette_w, &paletteram32 },
-	{ 0x138000, 0x138003, MWA32_NOP }, /* palette mode?  check*/
-	{ 0x138008, 0x13800b, deco32_palette_dma_w },
+	{ 0x0130000, 0x0131fff, deco32_buffered_palette_w, &paletteram32 },
+	{ 0x0138000, 0x0138003, MWA32_NOP }, /* palette mode?  check */
+	{ 0x0138008, 0x013800b, deco32_palette_dma_w },
 
-	{ 0x180000, 0x18001f, MWA32_RAM, &deco32_pf12_control },
-	{ 0x190000, 0x191fff, deco32_pf1_data_w, &deco32_pf1_data },
-	{ 0x194000, 0x195fff, deco32_pf2_data_w, &deco32_pf2_data },
-	{ 0x1a0000, 0x1a0fff, MWA32_RAM, &deco32_pf1_rowscroll },
-	{ 0x1a4000, 0x1a4fff, MWA32_RAM, &deco32_pf2_rowscroll },
+  { 0x0170100, 0x0170103, MWA32_NOP },
+	{ 0x0170038, 0x017003b, MWA32_NOP },
+	{ 0x017002C, 0x017002f, MWA32_NOP },
+	{ 0x0170224, 0x0170227, MWA32_NOP },
 
-	{ 0x1c0000, 0x1c001f, MWA32_RAM, &deco32_pf34_control },
-	{ 0x1d0000, 0x1d1fff, deco32_pf3_data_w, &deco32_pf3_data },
-	{ 0x1d4000, 0x1d5fff, deco32_pf4_data_w, &deco32_pf4_data },
-	{ 0x1e0000, 0x1e0fff, MWA32_RAM, &deco32_pf3_rowscroll },
-	{ 0x1e4000, 0x1e4fff, MWA32_RAM, &deco32_pf4_rowscroll },
+	{ 0x0180000, 0x018001f, MWA32_RAM, &deco32_pf12_control },
+	{ 0x0190000, 0x0191fff, deco32_pf1_data_w, &deco32_pf1_data },
+	{ 0x0194000, 0x0195fff, deco32_pf2_data_w, &deco32_pf2_data },
+	{ 0x01a0000, 0x01a3fff, MWA32_RAM, &deco32_pf1_rowscroll },
+	{ 0x01a4000, 0x01a5fff, MWA32_RAM, &deco32_pf2_rowscroll },
 
-	{ 0x204800, 0x204fff, MWA32_RAM }, /* ace? 0x10 byte increments only  */ /* 13f ff stuff*/
+	{ 0x01c0000, 0x01c001f, MWA32_RAM, &deco32_pf34_control },
+	{ 0x01d0000, 0x01d1fff, deco32_pf3_data_w, &deco32_pf3_data },
+	{ 0x01d4000, 0x01d5fff, deco32_pf4_data_w, &deco32_pf4_data },
+	{ 0x01e0000, 0x01e3fff, MWA32_RAM, &deco32_pf3_rowscroll },
+	{ 0x01e4000, 0x01e5fff, MWA32_RAM, &deco32_pf4_rowscroll },
 
-	{ 0x208000, 0x208fff, MWA32_RAM, &dragngun_sprite_layout_0_ram },
-	{ 0x20c000, 0x20cfff, MWA32_RAM, &dragngun_sprite_layout_1_ram },
-	{ 0x210000, 0x217fff, MWA32_RAM, &dragngun_sprite_lookup_0_ram },
-	{ 0x218000, 0x21ffff, MWA32_RAM, &dragngun_sprite_lookup_1_ram },
-	{ 0x220000, 0x221fff, MWA32_RAM, &spriteram32, &spriteram_size },
-	{ 0x228000, 0x2283ff, MWA32_RAM }, /* ? */
-	{ 0x230000, 0x230003, dragngun_spriteram_dma_w },
+	{ 0x0204800, 0x0204fff, MWA32_RAM }, /* ace? 0x10 byte increments only  13f ff stuff */
 
-	{ 0x300000, 0x3fffff, MWA32_ROM },
+	{ 0x0208000, 0x0208fff, MWA32_RAM, &dragngun_sprite_layout_0_ram },
+	{ 0x020c000, 0x020cfff, MWA32_RAM, &dragngun_sprite_layout_1_ram },
+	{ 0x0210000, 0x0217fff, MWA32_RAM, &dragngun_sprite_lookup_0_ram },
+	{ 0x0218000, 0x021ffff, MWA32_RAM, &dragngun_sprite_lookup_1_ram },
+	{ 0x0220000, 0x0221fff, MWA32_RAM, &spriteram32, &spriteram_size },
+	
+	{ 0x0228000, 0x02283ff, MWA32_RAM }, /* 0x10 byte increments only */
+	{ 0x0230000, 0x0230003, dragngun_spriteram_dma_w },
 
-	{ 0x400000, 0x400003, dragngun_oki_2_w },
-	{ 0x410000, 0x410003, MWA32_NOP }, /* Some kind of serial bit-stream - digital volume control? */
-	{ 0x420000, 0x420003, dragngun_eeprom_w },
-	{ 0x430000, 0x43001f, dragngun_lightgun_w },
-	{ 0x500000, 0x500003, dragngun_sprite_control_w },
+	{ 0x0300000, 0x03fffff, MWA32_ROM },
+
+	{ 0x0400000, 0x0400003, dragngun_oki_2_w },
+	{ 0x0410000, 0x0410003, MWA32_NOP }, /* Some kind of serial bit-stream - digital volume control? */
+	{ 0x0420000, 0x0420003, dragngun_eeprom_w },
+	{ 0x0430000, 0x043001f, dragngun_lightgun_w },
+	{ 0x0500000, 0x0500003, dragngun_sprite_control_w },
+	
+/* this is clearly the dvi video related area */
+	{ 0x1000100, 0x1007fff, MWA32_RAM },
+	{ 0x10b0000, 0x10b01ff, MWA32_RAM },
 MEMORY_END
 
 static MEMORY_READ32_START( lockload_readmem )
@@ -2516,7 +2548,7 @@ ROM_START( dragngun )
 	ROM_LOAD32_BYTE( "mar-15.bin", 0x000003, 0x100000,  CRC(ec976b20) SHA1(c120b3c56d5e02162e41dc7f726c260d0f8d2f1a) )
 	ROM_LOAD32_BYTE( "mar-16.bin", 0x400003, 0x100000,  CRC(8b329bc8) SHA1(6e34eb6e2628a01a699d20a5155afb2febc31255) )
 
-	ROM_REGION( 0x100000, REGION_GFX5, 0 ) /* Video data - unused for now */
+	ROM_REGION32_BE( 0x100000, REGION_GFX5, 0 ) /* Video data - unused for now */
 	ROM_LOAD( "mar-17.bin",  0x00000,  0x100000,  CRC(7799ed23) SHA1(ae28ad4fa6033a3695fa83356701b3774b26e6b0) )
 	ROM_LOAD( "mar-18.bin",  0x00000,  0x100000,  CRC(ded66da9) SHA1(5134cb47043cc190a35ebdbf1912166669f9c055) )
 	ROM_LOAD( "mar-19.bin",  0x00000,  0x100000,  CRC(bdd1ed20) SHA1(2435b23210b8fee4d39c30d4d3c6ea40afaa3b93) )
@@ -2988,11 +3020,11 @@ ROM_END
 
 ROM_START( nslasheru )
 	ROM_REGION(0x100000, REGION_CPU1, 0 ) /* Encrypted ARM 32 bit code */
-    ROM_LOAD32_WORD( "00.f1", 0x000000, 0x80000, CRC(944f3329) SHA1(7e7909e203b9752de3d3d798c6f84ac6ae824a07) )
+  ROM_LOAD32_WORD( "00.f1", 0x000000, 0x80000, CRC(944f3329) SHA1(7e7909e203b9752de3d3d798c6f84ac6ae824a07) )
 	ROM_LOAD32_WORD( "01.f2", 0x000002, 0x80000, CRC(ac12d18a) SHA1(7cd4e843bf575c70c5c39a8afa78b803106f59b0) )
 	
 	ROM_REGION(0x10000, REGION_CPU2, 0 ) /* Sound CPU */
-    ROM_LOAD( "02.l18",     0x00000,   0x10000, CRC(5e63bd91) SHA1(a6ac3c8c50f44cf2e6cf029aef1c974d1fc16ed5) )
+  ROM_LOAD( "02.l18",     0x00000,   0x10000, CRC(5e63bd91) SHA1(a6ac3c8c50f44cf2e6cf029aef1c974d1fc16ed5) )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )
 	ROM_LOAD( "mbh-00.8c",  0x000000,  0x200000,  CRC(a877f8a3) SHA1(79253525f360a73161894f31e211e4d6b38d307a) ) /* Encrypted tiles */
