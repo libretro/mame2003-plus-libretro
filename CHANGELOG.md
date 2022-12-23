@@ -918,4 +918,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for a bootleg version of Sonic The Hedgehog 2 to the segac2 driver and made Lode Runner The Dig Fight default to the English World Region [MAMEDev, arcadez]
 * Added Deco Cassette Type A bios fixed Highway Chase sorted colours for all games then updated some parts of the machine and video code to MAME146 [MAMEDev, arcadez]
 * Added support for Angler Dangler, Manhattan, Oozumou - The Grand Sumo, Skater, and Super Doubles Tennis to the Deco Cassette driver [MAMEDev, arcadez]
-* Added support for resnet dkong and dkong3 machines are hooked up atm.
+* Added support for resnet dkong and dkong3 machines are hooked up atm [MistyDreams]
+* Fixed Dragon Gun from locking up on the final boss and sorted an issue with the energy bar being missing also on the final boss [MAMEDev, arcadez]
+* Added support for the USA version of Night Slashers to the deco32.c driver [arcadez]
