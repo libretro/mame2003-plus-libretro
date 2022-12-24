@@ -1010,55 +1010,45 @@ static void palette_reset(void)
 	recompute_adjusted_palette(0);
 }
 
+
+
+//-------------------------------------------------
+//  normalize_range - normalize a range of palette
+//  entries
+//-------------------------------------------------
+
 void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max)
 {
-	UINT32 ymin = 1000 * 255, ymax = 0;
-	UINT32 tmin, tmax;
-	UINT32 index;
+	INT32 ymin, ymax, tmin,tmax, y, u, v,index, target;
+	UINT32 temp;
 	UINT8  col[3];
-
-	/* clamp within range */
 	end = MIN(end, palette_get_total_colors() -1);
 
-	/* find the minimum and maximum brightness of all the colors in the range */
+	// find the minimum and maximum brightness of all the colors in the range
+	ymin = 1000 * 255, ymax = 0;
 	for (index = start; index <= end; index++)
 	{
-		UINT32 y;
 		palette_get_color(index, &col[0], &col[1], &col[2]);
-		y = 299 * col[0] + 587 * col[1] + 114 * col[2];
-		ymin = MIN(ymin, y);
-		ymax = MAX(ymax, y);
+		temp = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		ymin = MIN(ymin, temp);
+		ymax = MAX(ymax, temp);
 	}
 
-	/* determine target minimum/maximum */
+	// determine target minimum/maximum
 	tmin = (lum_min < 0) ? ((ymin + 500) / 1000) : lum_min;
 	tmax = (lum_max < 0) ? ((ymax + 500) / 1000) : lum_max;
 
-	/* now normalize the palette */
-
+	// now normalize the palette
 	for (index = start; index <= end; index++)
 	{
-		UINT32 y;
-		UINT32 target;
 		palette_get_color(index, &col[0], &col[1], &col[2]);
-		
-		/* below is the 142u2 fix appears washed out to me but will leave the code for others to test
-		INT32 y = 299 * col[0] + 587 * col[1] + 114 * col[2];
-		INT32 u = ((INT32)col[2]-y /1000)*565 / 1000;
-		INT32 v = ((INT32)col[0]-y / 1000)*713 / 1000;
-		INT32 target = tmin + ((y - ymin) * (tmax - tmin + 1)) / (ymax - ymin);
-		col[0] = rgb_clamp(target + 1403 * v / 1000);
-		col[1] = rgb_clamp(target -  344 * u / 1000 - 714 * v / 1000);
-		col[2] = rgb_clamp(target + 1770 * u / 1000);
-		*/
-		
-		/*mame 0139 is below look like mame current to me*/
-		/* feel free to change to what ever prefrence of mame you choose*/
 		y = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		u = ((INT32)col[2]-y /1000)*492 / 1000;
+		v = ((INT32)col[0]-y / 1000)*877 / 1000;
 		target = tmin + ((y - ymin) * (tmax - tmin + 1)) / (ymax - ymin);
-		col[0] = (y == 0) ? 0 : rgb_clamp(col[0] * 1000 * target / y);
-		col[1] = (y == 0) ? 0 : rgb_clamp(col[1] * 1000 * target / y);
-		col[2] = (y == 0) ? 0 : rgb_clamp(col[2] * 1000 * target / y);
+		col[0] = rgb_clamp(target + 1140 * v / 1000);
+		col[1] = rgb_clamp(target -  395 * u / 1000 - 581 * v / 1000);
+		col[2] = rgb_clamp(target + 2032 * u / 1000);
 		palette_set_color(index,col[0],col[1],col[2]);
 	}
 }
