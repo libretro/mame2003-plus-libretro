@@ -1587,15 +1587,14 @@ static struct GfxLayout spritelayout =
 static struct GfxLayout pestplce_spritelayout =
 {
 	16,16,	/* 16*16 sprites */
-	128,	/* 128 sprites */
+	256,	/* 256 sprites */
 	2,	/* 2 bits per pixel */
-	{ 256*16*16, 0 },	/* the two bitplanes are separated */
-	{ 128*16*16+0, 128*16*16+1, 128*16*16+2, 128*16*16+3, 128*16*16+4, 128*16*16+5, 128*16*16+6, 128*16*16+7,  /* the two halves of the sprite are separated */
-		0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0, 256*16*16 },	/* the two bitplanes are separated */
+	{ 0, 1, 2, 3, 4, 5, 6, 7,		/* the two halves of the sprite are separated */
+			256*16*8+0, 256*16*8+1, 256*16*8+2, 256*16*8+3, 256*16*8+4, 256*16*8+5, 256*16*8+6, 256*16*8+7 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
-	16*8	/* every sprite takes 16 consecutive bytes */
-};
+	16*8	/* every sprite takes 16 consecutive bytes */};
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
@@ -1888,8 +1887,8 @@ static MACHINE_DRIVER_START( pestplce )
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(pestplce_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+	MDRV_PALETTE_LENGTH(512)
+	MDRV_COLORTABLE_LENGTH(512)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -2463,23 +2462,20 @@ ROM_START( pestplce )
 	ROM_LOAD( "pest.4",       0x0000, 0x1000, CRC(715da5f8) SHA1(f708c3fd374da65cbd9fe2e191152f5d865414a0) )
 
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-	/* this has FIXED BITS (xxxxxxxxxx1xxxxx)*/
-	ROM_LOAD( "pest.o",       0x0000, 0x1000, BAD_DUMP CRC(22874444) SHA1(23d4744c99d48ae9f5e1ef8a214ff279a1fa0a3e) )
+	ROM_LOAD( "pest.o",       0x0000, 0x1000, CRC(03939ece) SHA1(a776558eba2f8a2bc16933555d41a4532b627bff) )
 	ROM_LOAD( "pest.k",       0x1000, 0x1000, CRC(2acacedf) SHA1(f91863f46aeb8986226b0b0854bac00217d6e7cf) )
-	ROM_RELOAD(				  0x0000, 0x1000 ) /* for now we overwrite the bad rom*/
 
-	/* all have FIRST AND SECOND HALF IDENTICAL*/
 	ROM_REGION( 0x4000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "pest.a",       0x0000, 0x1000, CRC(22d89c23) SHA1(c5dbf97c8d7ef7acff8395ae083ce29c0c203160) )
-	ROM_LOAD( "pest.b",       0x1000, 0x1000, CRC(543b15ae) SHA1(486152fa86aa5b01f1364ff95462f71ce2a93f92) )
-	ROM_LOAD( "pest.c",       0x2000, 0x1000, CRC(ebf68c21) SHA1(9a734f13e2b89c72a71bce77dd0d5ed54f2c6ae5) )
-	ROM_LOAD( "pest.d",       0x3000, 0x1000, CRC(3c6781ac) SHA1(61c53d9d27e0c78a3a152ea45b7e686850e8a5e1) )
+	ROM_LOAD( "pest.a",        0x1000, 0x1000, CRC(1958346e) SHA1(c4053dafc904b5e202e4a1acc48dd3e22db05c74) )
+	ROM_LOAD( "pest.b",        0x0000, 0x1000, CRC(e760073e) SHA1(917e74a4efa62b7404a03f094f3f4047dda8feda) )
+	ROM_LOAD( "pest.c",        0x3000, 0x1000, CRC(bf08f2a3) SHA1(c755f7463ac46054c65248d91b8e8da9cd379bf5) )
+	ROM_LOAD( "pest.d",        0x2000, 0x1000, CRC(3a993c17) SHA1(af7048576aa3185b051518663693802ec9014a74) )
 
-	/* are these the same as dkongjr ?*/
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "pest-2e.bpr",  0x0000, 0x0100, NO_DUMP/*BAD_DUMP CRC(463dc7ad) SHA1(b2c9f22facc8885be2d953b056eb8dcddd4f34cb)*/ )	/* palette low 4 bits (inverted) */
-	ROM_LOAD( "pest-2f.bpr",  0x0100, 0x0100, NO_DUMP/*BAD_DUMP CRC(47ba0042) SHA1(dbec3f4b8013628c5b8f83162e5f8b1f82f6ee5f)*/ )	/* palette high 4 bits (inverted) */
-	ROM_LOAD( "pest-2n.bpr",  0x0200, 0x0100, NO_DUMP/*BAD_DUMP CRC(dbf185bf) SHA1(2697a991a4afdf079dd0b7e732f71c7618f43b70)*/ )	/* character color codes on a per-column basis */
+	/* not standard dkong layout */
+	ROM_REGION( 0x0300, REGION_PROMS, ROMREGION_INVERT )
+	ROM_LOAD( "n82s129a.bin",  0x0000, 0x0100, CRC(0330f35f) SHA1(5bd50cdd738b258dd3cfcd0e1dd8d37c927edc4b) )
+	ROM_LOAD( "n82s129b.bin",  0x0100, 0x0100, CRC(ba88311b) SHA1(b4388ebd3984bdb966d850cfb7d34c3ebce230b7) )
+//	ROM_LOAD( "sn74s288n.bin", 0x0200, 0x0020, CRC(a5a6f2ca) SHA1(5507fb6f5c8845c4421c2996e9f76c818d987623) )
 ROM_END
 
 ROM_START( dkong3 )
