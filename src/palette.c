@@ -1010,7 +1010,50 @@ static void palette_reset(void)
 	recompute_adjusted_palette(0);
 }
 
+
+
+//-------------------------------------------------
+//  normalize_range - normalize a range of palette
+//  entries
+//-------------------------------------------------
+
 void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max)
+{
+	INT32 ymin, ymax, tmin,tmax, y, u, v,index, target;
+	UINT32 temp;
+	UINT8  col[3];
+	end = MIN(end, palette_get_total_colors() -1);
+
+	// find the minimum and maximum brightness of all the colors in the range
+	ymin = 1000 * 255, ymax = 0;
+	for (index = start; index <= end; index++)
+	{
+		palette_get_color(index, &col[0], &col[1], &col[2]);
+		temp = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		ymin = MIN(ymin, temp);
+		ymax = MAX(ymax, temp);
+	}
+
+	// determine target minimum/maximum
+	tmin = (lum_min < 0) ? ((ymin + 500) / 1000) : lum_min;
+	tmax = (lum_max < 0) ? ((ymax + 500) / 1000) : lum_max;
+
+	// now normalize the palette
+	for (index = start; index <= end; index++)
+	{
+		palette_get_color(index, &col[0], &col[1], &col[2]);
+		y = 299 * col[0] + 587 * col[1] + 114 * col[2];
+		u = ((INT32)col[2]-y /1000)*492 / 1000;
+		v = ((INT32)col[0]-y / 1000)*877 / 1000;
+		target = tmin + ((y - ymin) * (tmax - tmin + 1)) / (ymax - ymin);
+		col[0] = rgb_clamp(target + 1140 * v / 1000);
+		col[1] = rgb_clamp(target -  395 * u / 1000 - 581 * v / 1000);
+		col[2] = rgb_clamp(target + 2032 * u / 1000);
+		palette_set_color(index,col[0],col[1],col[2]);
+	}
+}
+
+void palette_normalize_range_( UINT32 start, UINT32 end, int lum_min, int lum_max)
 {
 	UINT32 ymin = 1000 * 255, ymax = 0;
 	UINT32 tmin, tmax;

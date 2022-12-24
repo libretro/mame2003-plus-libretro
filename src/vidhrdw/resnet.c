@@ -585,7 +585,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			cut = 0.0;
 			break;
 		case RES_NET_AMP_DARLINGTON:
-			minout = 0.9;
+			minout = 0.7;
 			cut = 0.0;
 			break;
 		case RES_NET_AMP_EMITTER:
@@ -712,6 +712,8 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			v = vcc - v;
 			v = MAX(0, v-0.7);
 			v = MIN(v, vcc - 2 * 0.7);
+			v = v / (vcc-1.4);
+			v = v * vcc;
 			break;
 		case RES_NET_MONITOR_ELECTROHOME_G07:
 			/* Nothing */
@@ -741,11 +743,9 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 				else
 					t[k] = t[k] | ( (prom[i+rdi->offset[3*j+k]]<<(0-s)) & rdi->mask[3*j+k]);
 			}
-
 		r = compute_res_net(t[0], RES_NET_CHAN_RED, di);
 		g = compute_res_net(t[1], RES_NET_CHAN_GREEN, di);
 		b = compute_res_net(t[2], RES_NET_CHAN_BLUE, di);
-
 		rgb[i-rdi->start] = MAKE_RGB(r,g,b);
 	}
 	return rgb;
