@@ -2,10 +2,6 @@
 
 Mr. Do's Castle memory map (preliminary)
 
-TODO:
-- the function of the third CPU is not clear.
-
-
 FIRST CPU:
 0000-7fff ROM
 8000-97ff RAM
@@ -116,6 +112,19 @@ not currently hooked up
 
 ***************************************************************************/
 
+/*
+
+	TODO:
+
+	- third CPU
+	- unknown ports 0 and 2
+	- bad communication in idsoccer
+	- adpcm status in idsoccer
+	- real values for the adpcm interface in idsoccer
+	- handle flipscreen on/off based on address line A7 (cX0X/cX8X)
+
+*/
+
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
@@ -158,6 +167,61 @@ static MEMORY_WRITE_START( docastle_writemem )
 	{ 0xe000, 0xe000, docastle_nmitrigger_w },
 MEMORY_END
 
+static PORT_READ_START( docastle_readport )
+    { 0x00, 0x00, MRA_NOP }, /* goes to CRT 46505S */
+    { 0x02, 0x02, MRA_NOP }, /* goes to CRT 46505S */
+PORT_END
+
+static PORT_WRITE_START( docastle_writeport )
+    { 0x00, 0x00, MWA_NOP }, /* goes to CRT 46505S */
+    { 0x02, 0x02, MWA_NOP }, /* goes to CRT 46505S */
+PORT_END
+
+static MEMORY_READ_START( docastle_readmem2 )
+	{ 0x0000, 0x3fff, MRA_ROM },
+	{ 0x8000, 0x87ff, MRA_RAM },
+	{ 0xa000, 0xa008, docastle_shared1_r },
+	{ 0xc001, 0xc001, input_port_4_r },
+	{ 0xc081, 0xc081, input_port_4_r },
+	{ 0xc002, 0xc002, input_port_3_r },
+	{ 0xc082, 0xc082, input_port_3_r },
+	{ 0xc003, 0xc003, input_port_0_r },
+	{ 0xc083, 0xc083, input_port_0_r },
+	{ 0xc004, 0xc004, docastle_flipscreen_off_r },
+	{ 0xc005, 0xc005, input_port_1_r },
+	{ 0xc085, 0xc085, input_port_1_r },
+	{ 0xc007, 0xc007, input_port_2_r },
+	{ 0xc087, 0xc087, input_port_2_r },
+	{ 0xc084, 0xc084, docastle_flipscreen_on_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( docastle_writemem2 )
+	{ 0x0000, 0x3fff, MWA_ROM },
+	{ 0x8000, 0x87ff, MWA_RAM },
+	{ 0xa000, 0xa008, docastle_shared0_w },
+	{ 0xc004, 0xc004, docastle_flipscreen_off_w },
+	{ 0xc084, 0xc084, docastle_flipscreen_on_w },
+	{ 0xe000, 0xe000, SN76496_0_w },
+	{ 0xe400, 0xe400, SN76496_1_w },
+	{ 0xe800, 0xe800, SN76496_2_w },
+	{ 0xec00, 0xec00, SN76496_3_w },
+MEMORY_END
+
+static MEMORY_READ_START( docastle_readmem3 )
+	{ 0x0000, 0x00ff, MRA_ROM },
+	{ 0x4000, 0x47ff, MRA_RAM },
+	{ 0x8000, 0x8008, docastle_shared1_r },	/* ??? */
+	{ 0xc003, 0xc003, MRA_NOP }, /* EP according to schematics */
+	{ 0xc432, 0xc435, MRA_NOP }, /* ??? */
+MEMORY_END
+
+static MEMORY_WRITE_START( docastle_writemem3 )
+	{ 0x0000, 0x00ff, MWA_ROM },
+	{ 0x4000, 0x47ff, MWA_RAM },
+	{ 0xc003, 0xc003, MWA_NOP }, /* EP according to schematics */
+	{ 0xc432, 0xc435, MWA_NOP }, /* ??? */
+MEMORY_END
+
 static MEMORY_READ_START( dorunrun_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
 	{ 0x2000, 0x37ff, MRA_RAM },
@@ -171,112 +235,26 @@ static MEMORY_WRITE_START( dorunrun_writemem )
 	{ 0x3800, 0x39ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x4000, 0x9fff, MWA_ROM },
 	{ 0xa000, 0xa008, docastle_shared1_w },
+	{ 0xa800, 0xa800, watchdog_reset_w },
 	{ 0xb000, 0xb3ff, docastle_videoram_w, &videoram },
 	{ 0xb400, 0xb7ff, docastle_colorram_w, &colorram },
 	{ 0xb800, 0xb800, docastle_nmitrigger_w },
-	{ 0xa800, 0xa800, watchdog_reset_w },
-MEMORY_END
-
-/* what is this really, sound related? */
-static READ_HANDLER(idsoccer_c000_r)
-{
-	static int i = 0x00;
-	i ^= 0x80; return i;
-}
-
-static MEMORY_READ_START( idsoccer_readmem )
-	{ 0x0000, 0x3fff, MRA_ROM },
-	{ 0x4000, 0x59ff, MRA_RAM },
-	{ 0x6000, 0x9fff, MRA_ROM },
-	{ 0xa000, 0xa008, docastle_shared0_r },
-	{ 0xb800, 0xbbff, videoram_r },
-	{ 0xbc00, 0xbfff, colorram_r },
-	{ 0xc000, 0xc000, idsoccer_c000_r }, /* ?? */
-MEMORY_END
-
-static MEMORY_WRITE_START( idsoccer_writemem )
-	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x57ff, MWA_RAM },
-	{ 0x5800, 0x59ff, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x6000, 0x9fff, MWA_ROM },
-	{ 0xa000, 0xa008, docastle_shared1_w },
-	{ 0xa800, 0xa800, watchdog_reset_w },
-	{ 0xb000, 0xb3ff, docastle_videoram_w, &videoram },
-	{ 0xb400, 0xb7ff, docastle_colorram_w, &colorram },
-	{ 0xc000, 0xc000, MWA_NOP }, /* ?? */
-	{ 0xe000, 0xe000, docastle_nmitrigger_w },
-MEMORY_END
-
-static MEMORY_READ_START( docastle_readmem2 )
-	{ 0x0000, 0x3fff, MRA_ROM },
-	{ 0x8000, 0x87ff, MRA_RAM },
-	{ 0xa000, 0xa008, docastle_shared1_r },
-	{ 0xc003, 0xc003, input_port_0_r },
-	{ 0xc083, 0xc083, input_port_0_r },
-	{ 0xc005, 0xc005, input_port_1_r },
-	{ 0xc085, 0xc085, input_port_1_r },
-	{ 0xc007, 0xc007, input_port_2_r },
-	{ 0xc087, 0xc087, input_port_2_r },
-	{ 0xc002, 0xc002, input_port_3_r },
-	{ 0xc082, 0xc082, input_port_3_r },
-	{ 0xc001, 0xc001, input_port_4_r },
-	{ 0xc081, 0xc081, input_port_4_r },
-	{ 0xc004, 0xc004, docastle_flipscreen_off_r },
-	{ 0xc084, 0xc084, docastle_flipscreen_on_r },
-MEMORY_END
-
-static MEMORY_WRITE_START( docastle_writemem2 )
-	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x8000, 0x87ff, MWA_RAM },
-	{ 0xa000, 0xa008, docastle_shared0_w },
-	{ 0xe000, 0xe000, SN76496_0_w },
-	{ 0xe400, 0xe400, SN76496_1_w },
-	{ 0xe800, 0xe800, SN76496_2_w },
-	{ 0xec00, 0xec00, SN76496_3_w },
-	{ 0xc004, 0xc004, docastle_flipscreen_off_w },
-	{ 0xc084, 0xc084, docastle_flipscreen_on_w },
-MEMORY_END
-
-static MEMORY_READ_START( idsoccer_readmem2 )
-	{ 0x0000, 0x3fff, MRA_ROM },
-	{ 0x8000, 0x87ff, MRA_RAM },
-	{ 0xa000, 0xa008, docastle_shared1_r },
-	{ 0xc003, 0xc003, input_port_0_r },
-	{ 0xc083, 0xc083, input_port_0_r },
-	{ 0xc005, 0xc005, input_port_1_r },
-	{ 0xc085, 0xc085, input_port_1_r },
-	{ 0xc007, 0xc007, input_port_2_r },
-	{ 0xc087, 0xc087, input_port_2_r },
-	{ 0xc002, 0xc002, input_port_3_r },
-	{ 0xc082, 0xc082, input_port_3_r },
-	{ 0xc001, 0xc001, input_port_4_r },
-	{ 0xc081, 0xc081, input_port_4_r },
-	{ 0xc004, 0xc004, input_port_5_r },
-	{ 0xc084, 0xc084, input_port_5_r },
-MEMORY_END
-
-static MEMORY_READ_START( docastle_readmem3 )
-	{ 0x0000, 0x0100, MRA_ROM },
-MEMORY_END
-
-static MEMORY_WRITE_START( docastle_writemem3 )
-	{ 0x0000, 0x0100, MWA_ROM },
 MEMORY_END
 
 static MEMORY_READ_START( dorunrun_readmem2 )
 	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
+	{ 0xc001, 0xc001, input_port_4_r },
+	{ 0xc081, 0xc081, input_port_4_r },
+	{ 0xc002, 0xc002, input_port_3_r },
+	{ 0xc082, 0xc082, input_port_3_r },
 	{ 0xc003, 0xc003, input_port_0_r },
 	{ 0xc083, 0xc083, input_port_0_r },
+	{ 0xc004, 0xc004, docastle_flipscreen_off_r },
 	{ 0xc005, 0xc005, input_port_1_r },
 	{ 0xc085, 0xc085, input_port_1_r },
 	{ 0xc007, 0xc007, input_port_2_r },
 	{ 0xc087, 0xc087, input_port_2_r },
-	{ 0xc002, 0xc002, input_port_3_r },
-	{ 0xc082, 0xc082, input_port_3_r },
-	{ 0xc001, 0xc001, input_port_4_r },
-	{ 0xc081, 0xc081, input_port_4_r },
-	{ 0xc004, 0xc004, docastle_flipscreen_off_r },
 	{ 0xc084, 0xc084, docastle_flipscreen_on_r },
 	{ 0xe000, 0xe008, docastle_shared1_r },
 MEMORY_END
@@ -294,6 +272,97 @@ static MEMORY_WRITE_START( dorunrun_writemem2 )
 MEMORY_END
 
 
+/* Read/Write Handlers */
+
+static int adpcm_pos, adpcm_idle;
+
+static void idsoccer_adpcm_int(int chip)
+{
+	static int adpcm_data = -1;
+
+	if (adpcm_pos >= memory_region_length(REGION_SOUND1))
+	{
+		adpcm_idle = 1;
+		MSM5205_reset_w(0, 1);
+	}
+	else if (adpcm_data != -1)
+	{
+		MSM5205_data_w(0, adpcm_data & 0x0f);
+		adpcm_data = -1;
+	}
+	else
+	{
+		adpcm_data = memory_region(REGION_SOUND1)[adpcm_pos++];
+		MSM5205_data_w(0, adpcm_data >> 4);
+	}
+}
+
+static READ_HANDLER( idsoccer_adpcm_status_r )
+{
+	/* this is wrong, but the samples work anyway!! */
+	static int i;
+	i ^= 0x80;
+	return i;
+}
+
+static WRITE_HANDLER( idsoccer_adpcm_w )
+{
+	if (data & 0x80)
+	{
+		adpcm_idle = 1;
+		MSM5205_reset_w(0, 1);
+	}
+	else
+	{
+		adpcm_pos = (data & 0x7f) * 0x200;
+		adpcm_idle = 0;
+		MSM5205_reset_w(0, 0);
+	}
+}
+
+static MEMORY_READ_START( idsoccer_readmem )
+	{ 0x0000, 0x3fff, MRA_ROM },
+	{ 0x4000, 0x59ff, MRA_RAM },
+	{ 0x6000, 0x9fff, MRA_ROM },
+	{ 0xa000, 0xa008, docastle_shared0_r },
+	{ 0xb800, 0xbbff, videoram_r },
+	{ 0xbc00, 0xbfff, colorram_r },
+	{ 0xc000, 0xc000, idsoccer_adpcm_status_r }, /* sound */
+MEMORY_END
+
+static MEMORY_WRITE_START( idsoccer_writemem )
+	{ 0x0000, 0x3fff, MWA_ROM },
+	{ 0x4000, 0x57ff, MWA_RAM },
+	{ 0x5800, 0x59ff, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0x6000, 0x9fff, MWA_ROM },
+	{ 0xa000, 0xa008, docastle_shared1_w },
+	{ 0xa800, 0xa800, watchdog_reset_w },
+	{ 0xb000, 0xb3ff, docastle_videoram_w, &videoram },
+	{ 0xb400, 0xb7ff, docastle_colorram_w, &colorram },
+	{ 0xc000, 0xc000, idsoccer_adpcm_w }, /* sound */
+	{ 0xe000, 0xe000, docastle_nmitrigger_w },
+MEMORY_END
+
+
+static MEMORY_READ_START( idsoccer_readmem2 )
+	{ 0x0000, 0x3fff, MRA_ROM },
+	{ 0x8000, 0x87ff, MRA_RAM },
+	{ 0xa000, 0xa008, docastle_shared1_r },
+	{ 0xc001, 0xc001, input_port_4_r },
+	{ 0xc081, 0xc081, input_port_4_r },
+	{ 0xc002, 0xc002, input_port_3_r },
+	{ 0xc082, 0xc082, input_port_3_r },
+	{ 0xc003, 0xc003, input_port_0_r },
+	{ 0xc083, 0xc083, input_port_0_r },
+	{ 0xc004, 0xc004, input_port_5_r },
+	{ 0xc084, 0xc084, input_port_5_r },
+	{ 0xc005, 0xc005, input_port_1_r },
+	{ 0xc085, 0xc085, input_port_1_r },
+	{ 0xc007, 0xc007, input_port_2_r },
+	{ 0xc087, 0xc087, input_port_2_r },
+MEMORY_END
+
+/* Input Ports */
 
 /* Coinage used for all games */
 #define COINAGE_PORT \
@@ -325,55 +394,62 @@ MEMORY_END
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) ) \
 	/* 0x10, 0x20, 0x30, 0x40, 0x50 all give 1 Coin/1 Credit */
 
+#define DOCASTLE_IN0 \
+	PORT_START \
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY ) \
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY ) \
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY ) \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY ) \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL ) \
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
 
-INPUT_PORTS_START( docastle )
-	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY | IPF_COCKTAIL )
-
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+#define DOCASTLE_IN1 \
+	PORT_START \
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) \
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) \
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED ) \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 ) \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL ) \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL ) \
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED ) \
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+#define DOCASTLE_IN2 \
+	PORT_START \
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT ) \
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW ) \
+	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) \
+	PORT_DIPNAME( 0x08, 0x08, "Freeze" ) \
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 ) \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 ) \
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+INPUT_PORTS_START( docastle )
+	DOCASTLE_IN0
+
+	DOCASTLE_IN1
+
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, "Easy" )
-	PORT_DIPSETTING(    0x02, "Medium" )
-	PORT_DIPSETTING(    0x01, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x04, 0x04, "Automatic Screen Renewal" )
-	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Yes ) )
+	PORT_DIPSETTING(    0x03, "1 (Beginner)" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "3" )
+	PORT_DIPSETTING(    0x00, "4 (Advanced)" )
+	PORT_DIPNAME( 0x04, 0x04, "Rack Test" )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, "Advance Level on Getting Diamond" )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Extra" )
+	PORT_DIPNAME( 0x10, 0x10, "Difficulty of EXTRA" )
 	PORT_DIPSETTING(    0x10, "Easy" )
-	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPSETTING(    0x00, "Difficult" )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
@@ -387,53 +463,27 @@ INPUT_PORTS_START( docastle )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( dorunrun )
-	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY | IPF_COCKTAIL )
+	DOCASTLE_IN0
 
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	DOCASTLE_IN1
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, "Easy" )
-	PORT_DIPSETTING(    0x02, "Medium" )
-	PORT_DIPSETTING(    0x01, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPSETTING(    0x03, "1 (Beginner)" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "3" )
+	PORT_DIPSETTING(    0x00, "4 (Advanced)" )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Extra" )
+	PORT_DIPNAME( 0x10, 0x10, "Difficulty of EXTRA" )
 	PORT_DIPSETTING(    0x10, "Easy" )
-	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPSETTING(    0x00, "Difficult" )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
@@ -448,57 +498,30 @@ INPUT_PORTS_START( dorunrun )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( dowild )
-	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY | IPF_COCKTAIL )
+	DOCASTLE_IN0
 
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	DOCASTLE_IN1
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, "Easy" )
-	PORT_DIPSETTING(    0x02, "Medium" )
-	PORT_DIPSETTING(    0x01, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_BITX(    0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Rack Test", KEYCODE_F1, IP_JOY_NONE )
+	PORT_DIPSETTING(    0x03, "1 (Beginner)" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "3" )
+	PORT_DIPSETTING(    0x00, "4 (Advanced)" )
+	PORT_DIPNAME( 0x04, 0x04, "Rack Test" )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Extra" )
+	PORT_DIPNAME( 0x10, 0x10, "Difficulty of EXTRA" )
 	PORT_DIPSETTING(    0x10, "Easy" )
-	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPSETTING(    0x00, "Difficult" )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
-
-PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x40, 0x40, "Special" )
 	PORT_DIPSETTING(    0x40, "Given" )
 	PORT_DIPSETTING(    0x00, "Not Given" )
@@ -510,37 +533,11 @@ PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( jjack )
-	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_4WAY | IPF_COCKTAIL )
+	DOCASTLE_IN0
 
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	DOCASTLE_IN1
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x03, "Difficulty?" )
@@ -548,7 +545,7 @@ INPUT_PORTS_START( jjack )
 	PORT_DIPSETTING(    0x02, "Medium" )
 	PORT_DIPSETTING(    0x01, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_BITX(    0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Rack Test", KEYCODE_F1, IP_JOY_NONE )
+	PORT_DIPNAME( 0x04, 0x04, "Rack Test" )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
@@ -572,35 +569,17 @@ INPUT_PORTS_END
 INPUT_PORTS_START( kickridr )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	DOCASTLE_IN1
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
 	PORT_DIPNAME( 0x03, 0x03, "Difficulty?" )
@@ -608,7 +587,7 @@ INPUT_PORTS_START( kickridr )
 	PORT_DIPSETTING(    0x02, "Medium" )
 	PORT_DIPSETTING(    0x01, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_BITX(    0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Rack Test", KEYCODE_F1, IP_JOY_NONE )
+	PORT_DIPNAME( 0x04, 0x04, "Rack Test" )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
@@ -633,73 +612,53 @@ INPUT_PORTS_END
 INPUT_PORTS_START( idsoccer )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_8WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP | IPF_8WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT | IPF_8WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP    | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 
-	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+	DOCASTLE_IN1
 
-	PORT_START	/* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
-	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, JOYCODE_NONE )
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1, 32 ) /* coin input must be active for 32 frames to be consistently recognized */
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	DOCASTLE_IN2
 
 	PORT_START	/* DSW0 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Medium" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, "One Player vs. Computer" )	/* Additional time extended for winning score */
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, "Player 2 Time Extension" )	/* Player may play same game with additional credit */
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, "Player 1 Time Extension" )	/* Player may play same game with additional credit */
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_DIPNAME( 0xc0, 0xc0, "Real Game Time" )			/* Indicator always shows 3:00 and counts down */
+	PORT_DIPSETTING(    0xc0, "3:00" )
+	PORT_DIPSETTING(    0x80, "2:30" )
+	PORT_DIPSETTING(    0x40, "2:00" )
+	PORT_DIPSETTING(    0x00, "1:00" )
 
 	COINAGE_PORT
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_8WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP | IPF_8WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT | IPF_8WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP    | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 INPUT_PORTS_END
 
 
@@ -745,13 +704,21 @@ static struct SN76496interface sn76496_interface =
 	{ 25, 25, 25, 25 }
 };
 
-
+static struct MSM5205interface msm5205_interface =
+{
+	1,						/* 1 chip */
+	384000,					/* 384 kHz	??? */
+	{ idsoccer_adpcm_int },	/* interrupt function */
+	{ MSM5205_S64_4B },		/* 6 kHz	??? */
+	{ 40 }					/* volume	??? */
+};
 
 static MACHINE_DRIVER_START( docastle )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_ADD(Z80, 3900000)  /* make dip switches work in docastle and dorunrun */
 	MDRV_CPU_MEMORY(docastle_readmem,docastle_writemem)
+	MDRV_CPU_PORTS(docastle_readport,docastle_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
 	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
@@ -783,8 +750,9 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( dorunrun )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
+	MDRV_CPU_ADD(Z80, 3900000)	/* make dip switches work in docastle and dorunrun */
 	MDRV_CPU_MEMORY(dorunrun_readmem,dorunrun_writemem)
+	MDRV_CPU_PORTS(docastle_readport,docastle_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
 	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz */
@@ -844,7 +812,7 @@ static MACHINE_DRIVER_START( idsoccer )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(SN76496, sn76496_interface)
-	/* also an MSM5205 */
+	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 MACHINE_DRIVER_END
 
 
@@ -931,7 +899,7 @@ ROM_START( docastlo )
 
 	ROM_REGION( 0x0200, REGION_PROMS, 0 )
 	/* which prom? this set has the same gfx as douni so i'm using that prom */
-/*	ROM_LOAD( "09c.bin",      0x0000, 0x0200, CRC(066f52bc) SHA1(99f4f2d0181bcaf389c16f127cc3e632d62ee417) )  // color prom /*/
+/*	ROM_LOAD( "09c.bin",      0x0000, 0x0200, CRC(066f52bc) SHA1(99f4f2d0181bcaf389c16f127cc3e632d62ee417) ) /* color prom */
 	ROM_LOAD( "dorevc9.bin",  0x0000, 0x0200, CRC(96624ebe) SHA1(74ff21dc85dcb013c941ec6c06cafdb5bcc16960) ) /* color prom */
 ROM_END
 
@@ -1076,7 +1044,7 @@ ROM_START( dowild )
 	ROM_LOAD( "w10",          0x0000, 0x4000, CRC(d1f37fba) SHA1(827e2e3b140c4df2fd8780d7d05dc45694cf8f02) )
 
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )
-	ROM_LOAD( "01d.bin",      0x0000, 0x0200, NO_DUMP )
+	ROM_LOAD( "8300b-2",      0x0000, 0x0200, CRC(2747ca77) SHA1(abc0ca05925974c4b852827605ee2f1caefb8524) )
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "w5",           0x0000, 0x4000, CRC(b294b151) SHA1(c8c15bf9ab2401052ec80fdfc8fe124c6aa52521) )
@@ -1128,7 +1096,7 @@ ROM_START( kickridr )
 	ROM_LOAD( "k10",          0x0000, 0x4000, CRC(6843dbc0) SHA1(8a83f785e1fc2fa34a9955c19e27a1968a6d3f08) )
 
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )
-	ROM_LOAD( "01d.bin",      0x0000, 0x0200, NO_DUMP )
+	ROM_LOAD( "8300b-2",      0x0000, 0x0200, CRC(2747ca77) SHA1(abc0ca05925974c4b852827605ee2f1caefb8524) )
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "k5",           0x0000, 0x4000, CRC(3f7d7e49) SHA1(ed9697656a46c3e036665659a008396b323c9c2b) )
@@ -1175,15 +1143,15 @@ ROM_START( idsoccer )
 ROM_END
 
 
-GAME( 1983, docastle, 0,        docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 1)" )
-GAME( 1983, docastl2, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 2)" )
-GAME( 1983, docastlo, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (older)" )
-GAME( 1983, douni,    docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do vs. Unicorns" )
-GAMEX(1984, dorunrun, 0,        dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 1)", GAME_NO_COCKTAIL )
-GAMEX(1984, dorunru2, dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 2)", GAME_NO_COCKTAIL )
-GAMEX(1984, dorunruc, dorunrun, docastle, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware)", GAME_NO_COCKTAIL )
-GAMEX(1987, spiero,   dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Super Pierrot (Japan)", GAME_NO_COCKTAIL )
-GAME( 1984, dowild,   0,        dorunrun, dowild,   0, ROT0,   "Universal", "Mr. Do's Wild Ride" )
-GAME( 1984, jjack,    0,        dorunrun, jjack,    0, ROT270, "Universal", "Jumping Jack" )
-GAME( 1984, kickridr, 0,        dorunrun, kickridr, 0, ROT0,   "Universal", "Kick Rider" )
-GAMEX(1985, idsoccer, 0,        idsoccer, idsoccer, 0, ROT0,   "Universal", "Indoor Soccer", GAME_IMPERFECT_SOUND )
+GAME(1983, docastle, 0,        docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 1)" )
+GAME(1983, docastl2, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 2)" )
+GAME(1983, docastlo, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (older)" )
+GAME(1983, douni,    docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do vs. Unicorns" )
+GAME(1984, dorunrun, 0,        dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 1)" )
+GAME(1984, dorunru2, dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 2)" )
+GAME(1984, dorunruc, dorunrun, docastle, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware)" )
+GAME(1987, spiero,   dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Super Pierrot (Japan)" )
+GAME(1984, dowild,   0,        dorunrun, dowild,   0, ROT0,   "Universal", "Mr. Do's Wild Ride" )
+GAME(1984, jjack,    0,        dorunrun, jjack,    0, ROT270, "Universal", "Jumping Jack" )
+GAME(1984, kickridr, 0,        dorunrun, kickridr, 0, ROT0,   "Universal", "Kick Rider" )
+GAME(1985, idsoccer, 0,        idsoccer, idsoccer, 0, ROT0,   "Universal", "Indoor Soccer" )
