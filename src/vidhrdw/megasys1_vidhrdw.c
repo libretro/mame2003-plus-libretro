@@ -212,6 +212,7 @@ int megasys1_8x8_scroll_2_factor, megasys1_16x16_scroll_2_factor;
 
 /* Variables defined in driver: */
 static int hardware_type_z;
+static UINT16 *megasys1_buffer_objectram,*megasys1_buffer2_objectram,*megasys1_buffer_spriteram16,*megasys1_buffer2_spriteram16;
 
 
 #ifdef MAME_DEBUG
@@ -254,6 +255,11 @@ VIDEO_START( megasys1 )
 	int i;
 
 	spriteram16 = &megasys1_ram[0x8000/2];
+	megasys1_buffer_objectram = auto_malloc(0x2000);
+	megasys1_buffer_spriteram16 = auto_malloc(0x2000);
+	megasys1_buffer2_objectram = auto_malloc(0x2000);
+	megasys1_buffer2_spriteram16 = auto_malloc(0x2000);
+	
 	megasys1_tmap[0] = megasys1_tmap[1] = megasys1_tmap[2] = NULL;
 
 	megasys1_active_layers = megasys1_sprite_bank = megasys1_screen_flag = megasys1_sprite_flag = 0;
@@ -600,8 +606,8 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		{
 			for (sprite = 0; sprite < 4 ; sprite ++)
 			{
-				data16_t *objectdata = &megasys1_objectram[offs + (0x800/2) * sprite];
-				data16_t *spritedata = &spriteram16[ (objectdata[ 0 ] & 0x7f) * 0x10/2];
+				data16_t *objectdata = &megasys1_buffer2_objectram[offs + (0x800/2) * sprite];
+				data16_t *spritedata = &megasys1_buffer2_spriteram16[ (objectdata[ 0 ] & 0x7f) * 0x10/2];
 
 				attr = spritedata[ 8/2 ];
 				if (((attr & 0xc0)>>6) != sprite)	continue;	/* flipping*/
@@ -695,11 +701,6 @@ struct priority
 int megasys1_layers_order[16];
 
 
-extern struct GameDriver driver_64street;
-extern struct GameDriver driver_bigstrik;
-extern struct GameDriver driver_chimerab;
-extern struct GameDriver driver_iganinju;
-
 /*
 	Layers order encoded as an int like: 0x01234, where
 
@@ -718,27 +719,6 @@ extern struct GameDriver driver_iganinju;
 	(the default value, 0x04132, will be used in those cases)
 
 */
-
-static struct priority priorities[] =
-{
-	{	&driver_64street,
-		{ 0xfffff,0x03142,0xfffff,0x04132,0xfffff,0x04132,0xfffff,0xfffff,
-		  0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff }
-	},
-	{	&driver_bigstrik,	/* like 64street ? */
-		{ 0xfffff,0x03142,0xfffff,0x04132,0xfffff,0x04132,0xfffff,0xfffff,
-		  0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff }
-	},
-	{	&driver_chimerab,
-		{ 0x14032,0x04132,0x14032,0x04132,0xfffff,0xfffff,0xfffff,0xfffff,
-		  0xfffff,0xfffff,0x01324,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff }
-	},
-	{	&driver_iganinju,
-		{ 0x04132,0xfffff,0xfffff,0x01423,0xfffff,0xfffff,0xfffff,0xfffff,
-		  0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff }
-	},
-	{	0	}	/* end of list: use the prom's data*/
-};
 
 
 /*
@@ -789,26 +769,7 @@ PALETTE_INIT( megasys1 )
 {
 	int pri_code, offset, i, order;
 
-	/* First check if we have an hand-crafted priority scheme
-	   available (this should happen only if no good dump
-	   of the prom is known) */
-
-	i = 0;
-	while (	priorities[i].driver &&
-			priorities[i].driver != Machine->gamedrv &&
-			priorities[i].driver != Machine->gamedrv->clone_of)
-		i++;
-
-	if (priorities[i].driver)
-	{
-		memcpy (megasys1_layers_order, priorities[i].priorities, 16 * sizeof(int));
-
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING: using an hand-crafted priorities scheme\n");
-
-		return;
-	}
-
-	/* Otherwise, perform the conversion from the prom itself */
+	/* convert PROM to something we can use */
 
 	for (pri_code = 0; pri_code < 0x10 ; pri_code++)	/* 16 priority codes*/
 	{
@@ -1046,3 +1007,16 @@ VIDEO_UPDATE( megasys1 )
 	if (active_layers & 0x08)
 		draw_sprites(bitmap,cliprect);
 }
+
+VIDEO_EOF( megasys1 )
+{
+	/* Sprite are TWO frames ahead, like NMK16 HW. */
+/* megasys1_objectram */
+	memcpy(megasys1_buffer2_objectram,megasys1_buffer_objectram, 0x2000);
+	memcpy(megasys1_buffer_objectram, megasys1_objectram, 0x2000);
+/* spriteram16 */
+	memcpy(megasys1_buffer2_spriteram16, megasys1_buffer_spriteram16, 0x2000);
+	memcpy(megasys1_buffer_spriteram16, spriteram16, 0x2000);
+
+}
+
