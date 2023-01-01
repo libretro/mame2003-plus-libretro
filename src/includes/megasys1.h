@@ -186,6 +186,7 @@ extern int megasys1_8x8_scroll_2_factor, megasys1_16x16_scroll_2_factor;
 
 /* Functions */
 VIDEO_START( megasys1 );
+VIDEO_EOF( megasys1 );
 
 WRITE16_HANDLER( megasys1_scrollram_0_w );
 WRITE16_HANDLER( megasys1_scrollram_1_w );
