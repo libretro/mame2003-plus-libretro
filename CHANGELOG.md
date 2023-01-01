@@ -132,6 +132,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ms. Pacman Twin
 * Mrs. Dynamite
 * Multi Champ Deluxe * Mature *
+* Ninja Kazan
 * Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
 * Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)
@@ -245,6 +246,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
+* E.D.F. : Earth Defense Force (North America)
 * Escape Kids (Asia 4 Players)
 * Fishing
 * Flower (bootleg)
@@ -922,3 +924,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed Dragon Gun from locking up on the final boss and sorted an issue with the energy bar being missing also on the final boss [MAMEDev, arcadez]
 * Added support for the USA version of Night Slashers to the deco32.c driver [arcadez]
 * Sorted broken dip switches in Mr Do's Castle, Do! Run Run and Mr Do's Wild Ride plus fixed the sound for Indoor Soccer [MAMEDev, arcadez, SapphireDrew]
+* Fixed broken sound in Hachoo and Kick Goal plus sorted some graphical priority issues for 64th. Street - A Detective Story [MAMEDev, arcadez]
+* Added sprite buffering to the megasys1 driver improving the gfx for 64th. Street - A Detective Story, Avenging Spirit, Chimera Beast, Cybattler
+* E.D.F. : Earth Defense Force, Hachoo, In Your Face, Legend of Makai, P-47 - The Phantom Fighter, Ninja Kazan, Plus Alpha, Rod-Land, Saint Dragon
+* Shingen Samurai-Fighter, The Astyanax + more also added missing prio prom dumps for the games that did not have em already [MAMEDev, arcadez]
+* Added support for Ninja Kazan the English version of Iga Ninjyutsuden and E.D.F. : Earth Defense Force (North America) to megasys1.c [arcadez]
