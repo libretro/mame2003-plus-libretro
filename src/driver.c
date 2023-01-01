@@ -4796,6 +4796,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kickoff )	/* (c) 1988 (Japan) */
 	DRIVER( tshingen )	/* (c) 1988 (Japan) */
 	DRIVER( tshingna )	/* (c) 1988 (Japan) */
+  DRIVER( kazan )	    /* (c) 1988 (World) */
 	DRIVER( iganinju )	/* (c) 1988 (Japan) */
 	DRIVER( astyanax )	/* (c) 1989 */
 	DRIVER( lordofk )	/* (c) 1989 (Japan) */
@@ -4809,7 +4810,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( avspirit )	/* (c) 1991 */
 	DRIVER( inyourfa )  /* (c) 1991 (US, prototype) */
 	DRIVER( phantasm )	/* (c) 1991 (Japan) */
-	DRIVER( edf )		/* (c) 1991 */
+	DRIVER( edf )		    /* (c) 1991 */
+  DRIVER( edfu )		  /* (c) 1991 (North America) */
 	DRIVER( 64street )	/* (c) 1991 */
 	DRIVER( 64streej )	/* (c) 1991 (Japan) */
 	DRIVER( soldamj )	/* (c) 1992 (Japan) */
