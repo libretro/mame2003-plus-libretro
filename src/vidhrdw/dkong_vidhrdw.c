@@ -599,9 +599,9 @@ void radarscp_step(int line_cnt)
 	 * TRS1 board states 3.3u.
 	 */
 
-	double vg3i;
+	double vg3i, vo;
 	double diff;
-	int sig;
+	int sig, j;
 
 	/* vsync is divided by 2 by a LS161
 	 * The resulting 30 Hz signal clocks a LFSR (LS164) operating as a
@@ -647,7 +647,7 @@ void radarscp_step(int line_cnt)
 
 	/* FIXME: use the inverse function
 	 * Solve the amplifier by iteration*/
-	for (int j=1; j<=11; j++)/* 11% = 1/75 / (1/75+1/10)*/
+	for (j=1; j<=11; j++)/* 11% = 1/75 / (1/75+1/10)*/
 	{
 		double f = (double) j / 100.0;
 		vg1 = (cv1 - cv2)*(1-f) + f * vg2;
@@ -655,7 +655,7 @@ void radarscp_step(int line_cnt)
 	}
 	/* FIXME: use the inverse function
 	 * Solve the amplifier by iteration 50% = both resistors equal*/
-	for (int j=10; j<=20; j++)
+	for (j=10; j<=20; j++)
 	{
 		double f = (double) j / 40.0;
 		vg3i = (1.0-f) * vg2 + f * vg3;
@@ -667,7 +667,7 @@ void radarscp_step(int line_cnt)
 	diff = diff - diff*exp(0.0 - (1.0/RC17 * dt) );
 	vc17 += diff;
 
-	double vo = (vg3 - vc17);
+	vo = (vg3 - vc17);
 	vo = vo + 20.0 / (20.0+10.0) * 5;
 
 	// Transistor is marked as OMIT in TRS-02 schems.
