@@ -802,10 +802,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bandido )   /* (c) 1980 Exidy */
 	DRIVER( helifire )  /* (c) 1980 Nintendo */
 	DRIVER( helifira )  /* (c) 1980 Nintendo */
-	DRIVER( radarscp )	/* (c) 1980 Nintendo */
-	DRIVER( dkong )		/* (c) 1981 Nintendo of America */
+	DRIVER( radarscp )  /* (c) 1980 Nintendo */
+	DRIVER( radarscpc ) /* (c) 1980 Nintendo */
+	DRIVER( radarscp1 ) /* (c) 1980 Nintendo */
+	DRIVER( dkong )	    /* (c) 1981 Nintendo of America */
 	DRIVER( dkongpe )
-	DRIVER( dkongo )	/* (c) 1981 Nintendo */
+	DRIVER( dkongo )    /* (c) 1981 Nintendo */
 	DRIVER( dkongjp )	/* (c) 1981 Nintendo */
 	DRIVER( dkongjo )	/* (c) 1981 Nintendo */
 	DRIVER( dkongjo1 )	/* (c) 1981 Nintendo */

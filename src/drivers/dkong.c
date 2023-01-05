@@ -135,7 +135,7 @@ Changes:
 ***************************************************************************/
 
 #include "driver.h"
-
+#include "dkong.h"
 #include "vidhrdw/generic.h"
 #include "cpu/i8039/i8039.h"
 #include "cpu/s2650/s2650.h"
@@ -219,36 +219,6 @@ static int page = 0,mcustatus;
 static int p[8] = { 255,255,255,255,255,255,255,255 };
 static int t[2] = { 1,1 };
 
-
-extern WRITE_HANDLER( radarscp_grid_enable_w );
-extern WRITE_HANDLER( radarscp_grid_color_w );
-extern WRITE_HANDLER( dkong_flipscreen_w );
-extern WRITE_HANDLER( dkongjr_gfxbank_w );
-extern WRITE_HANDLER( dkong3_gfxbank_w );
-extern WRITE_HANDLER( dkong_palettebank_w );
-
-extern WRITE_HANDLER( dkong_videoram_w );
-
-extern PALETTE_INIT( dkong );
-extern PALETTE_INIT( dkong3 );
-extern VIDEO_START( dkong );
-extern VIDEO_UPDATE( radarscp );
-extern VIDEO_UPDATE( dkong );
-extern VIDEO_UPDATE( pestplce );
-extern VIDEO_UPDATE( spclforc );
-
-extern WRITE_HANDLER( dkong_sh_w );
-extern WRITE_HANDLER( dkongjr_sh_death_w );
-extern WRITE_HANDLER( dkongjr_sh_drop_w );
-extern WRITE_HANDLER( dkongjr_sh_roar_w );
-extern WRITE_HANDLER( dkongjr_sh_jump_w );
-extern WRITE_HANDLER( dkongjr_sh_walk_w );
-extern WRITE_HANDLER( dkongjr_sh_climb_w );
-extern WRITE_HANDLER( dkongjr_sh_land_w );
-extern WRITE_HANDLER( dkongjr_sh_snapjaw_w );
-
-extern WRITE_HANDLER( dkong_sh1_w );
-
 #define ACTIVELOW_PORT_BIT(P,A,D)   ((P & (~(1 << A))) | ((D ^ 1) << A))
 
 
@@ -313,6 +283,7 @@ static WRITE_HANDLER( dkong_sh_p2_w )
 	decay = !(data & 0x80);
 	page = (data & 0x47);
 	mcustatus = ((~data & 0x10) >> 4);
+	p02_b5_enable = BIT(data,4);
 }
 
 
@@ -359,15 +330,15 @@ static MEMORY_READ_START( dkong3_readmem )
 	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
 MEMORY_END
 
+
 static MEMORY_WRITE_START( radarscp_writemem )
 	{ 0x0000, 0x5fff, MWA_ROM },
 	{ 0x6000, 0x68ff, MWA_RAM },
 	{ 0x6900, 0x6a7f, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x6a80, 0x6fff, MWA_RAM },
+	{ 0x6a80, 0x6fcf, MWA_RAM },
 	{ 0x7000, 0x73ff, MWA_RAM },    /* ???? */
 	{ 0x7400, 0x77ff, dkong_videoram_w, &videoram },
-	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
-	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
+	{ 0x7800, 0x780f, MWA_NOP },	/* ???? */
 	{ 0x7c00, 0x7c00, dkong_sh_tuneselect_w },
 	{ 0x7c80, 0x7c80, radarscp_grid_color_w },
 	{ 0x7d00, 0x7d02, dkong_sh1_w },	/* walk/jump/boom sample trigger */
@@ -379,7 +350,7 @@ static MEMORY_WRITE_START( radarscp_writemem )
 	{ 0x7d82, 0x7d82, dkong_flipscreen_w },
 	{ 0x7d83, 0x7d83, MWA_RAM },
 	{ 0x7d84, 0x7d84, interrupt_enable_w },
-	{ 0x7d85, 0x7d85, MWA_RAM },
+	{ 0x7d85, 0x7d85, MWA_NOP },
 	{ 0x7d86, 0x7d87, dkong_palettebank_w },
 MEMORY_END
 
@@ -1659,6 +1630,7 @@ static struct Samplesinterface dkongjr_samples_interface =
 	dkongjr_sample_names
 };
 
+
 static MACHINE_DRIVER_START( radarscp )
 
 	/* basic machine hardware */
@@ -1676,14 +1648,14 @@ static MACHINE_DRIVER_START( radarscp )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256+2)
-	MDRV_COLORTABLE_LENGTH(64*4)	/* two extra colors for stars and radar grid */
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
-	MDRV_PALETTE_INIT(dkong)
-	MDRV_VIDEO_START(dkong)
+	MDRV_PALETTE_INIT(radarscp)
+	MDRV_VIDEO_START(radarscp)
 	MDRV_VIDEO_UPDATE(radarscp)
 
 	/* sound hardware */
@@ -1708,11 +1680,12 @@ static MACHINE_DRIVER_START( dkong )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1742,11 +1715,11 @@ static MACHINE_DRIVER_START( braze )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1780,11 +1753,11 @@ static MACHINE_DRIVER_START( hunchbkd )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1852,11 +1825,11 @@ static MACHINE_DRIVER_START( dkongjr )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1894,11 +1867,11 @@ static MACHINE_DRIVER_START( pestplce )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(pestplce_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(512)
-	MDRV_COLORTABLE_LENGTH(512)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1929,11 +1902,11 @@ static MACHINE_DRIVER_START( strtheat )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(64*4)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong)
 	MDRV_VIDEO_START(dkong)
@@ -1975,11 +1948,11 @@ static MACHINE_DRIVER_START( dkong3 )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(512)
-	MDRV_COLORTABLE_LENGTH(512)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
 
 	MDRV_PALETTE_INIT(dkong3)
 	MDRV_VIDEO_START(dkong)
@@ -1995,35 +1968,118 @@ MACHINE_DRIVER_END
   Game driver(s)
 ***************************************************************************/
 
+// A newer revision based on ROM labels, legitimate looking code changes, although in MAME it has some misplaced sprites flicking in the top left part of the screen near the score as the enemies appear
+// Does this glitch happen on the PCB?
 ROM_START( radarscp )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
-	ROM_LOAD( "trs2c5fc",     0x0000, 0x1000, CRC(40949e0d) SHA1(94717b9d027600e25b863e89900df41325875961) )
-	ROM_LOAD( "trs2c5gc",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) )
-	ROM_LOAD( "trs2c5hc",     0x2000, 0x1000, CRC(51b8263d) SHA1(09687f2c40cf09ffc2aeddde4a4fa32800847f01) )
-	ROM_LOAD( "trs2c5kc",     0x3000, 0x1000, CRC(1f0101f7) SHA1(b9f988847fdefa64dfeae06c2244215cb0d64dbe) )
-	/* space for diagnostic ROM */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "trs2c5fd",     0x0000, 0x1000, CRC(80bbcbb3) SHA1(3af0ac3a267cdc819ccf5a279a78cdb16ee0360b) )
+	ROM_LOAD( "trs2c5gd",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) ) // == trs2c5gc
+	ROM_LOAD( "trs2c5hd",     0x2000, 0x1000, CRC(e3ad4239) SHA1(f28469bc3388b4fdc14e2a095d8e117af6643b46) )
+	ROM_LOAD( "trs2c5kd",     0x3000, 0x1000, CRC(260a3ec4) SHA1(d5e7941a56457cd222cb018ab17a8eee2a9134b9) )
+	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
 
-	ROM_REGION( 0x1000, REGION_CPU2, 0 )	/* sound */
+	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
 	ROM_LOAD( "trs2s3i",      0x0000, 0x0800, CRC(78034f14) SHA1(548b44ac69f39df6687da1c0f60968009b1e0767) )
+	ROM_RELOAD(               0x0800, 0x0800 )
+	ROM_FILL(                 0x1000, 0x0800, 0x00 )
 	/* socket 3J is empty */
 
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "trs2v3gc",     0x0000, 0x0800, CRC(f095330e) SHA1(dd3de744f28ff108630d3336bd246d3323fa34af) )
 	ROM_LOAD( "trs2v3hc",     0x0800, 0x0800, CRC(15a316f0) SHA1(8785a996c6433882a0a7150693c329a4247bb77e) )
 
-	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
 	ROM_LOAD( "trs2v3dc",     0x0000, 0x0800, CRC(e0bb0db9) SHA1(b570439ea1b5d34d0ac938ac9157f22f319b786d) )
 	ROM_LOAD( "trs2v3cc",     0x0800, 0x0800, CRC(6c4e7dad) SHA1(54e6a5005c44261dc4ba845dcd5ff62ea1402d26) )
 	ROM_LOAD( "trs2v3bc",     0x1000, 0x0800, CRC(6fdd63f1) SHA1(2eb09ab0759e4c8df9188fb833440d8fc94f6172) )
 	ROM_LOAD( "trs2v3ac",     0x1800, 0x0800, CRC(bbf62755) SHA1(cb4ca8d4fe689ca0011a4b6c0a2dbd4c764ac70a) )
 
-	ROM_REGION( 0x0800, REGION_GFX3, 0 )	/* radar/star timing table */
+	ROM_REGION( 0x0800, REGION_GFX3, 0 ) /* radar/star timing table */
 	ROM_LOAD( "trs2v3ec",     0x0000, 0x0800, CRC(0eca8d6b) SHA1(8358b5131d082b2fb8dd793d2e5382daeef6f75c) )
 
 	ROM_REGION( 0x0300, REGION_PROMS, 0 )
 	ROM_LOAD( "rs2-x.xxx",    0x0000, 0x0100, CRC(54609d61) SHA1(586620ecc61f3e55258fe6360bcacad5f570f29c) ) /* palette low 4 bits (inverted) */
 	ROM_LOAD( "rs2-c.xxx",    0x0100, 0x0100, CRC(79a7d831) SHA1(475ec991929d43b2bcd4b5aee144249f487d0b5b) ) /* palette high 4 bits (inverted) */
 	ROM_LOAD( "rs2-v.1hc",    0x0200, 0x0100, CRC(1b828315) SHA1(00c9f8c5ae86b68d38c66f9071b5f1ef421c1005) ) /* character color codes on a per-column basis */
+ROM_END
+
+// unclear which boardset this comes from, probably a TRS-02 based on ROM labels; there existed a 5 pcb stack with TRS-03 (no voice) sound board on top, and a 4 board as well as a 2 board pcb stack
+ROM_START( radarscpc )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "trs2c5fc",     0x0000, 0x1000, CRC(40949e0d) SHA1(94717b9d027600e25b863e89900df41325875961) )
+	ROM_LOAD( "trs2c5gc",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) )
+	ROM_LOAD( "trs2c5hc",     0x2000, 0x1000, CRC(51b8263d) SHA1(09687f2c40cf09ffc2aeddde4a4fa32800847f01) )
+	ROM_LOAD( "trs2c5kc",     0x3000, 0x1000, CRC(1f0101f7) SHA1(b9f988847fdefa64dfeae06c2244215cb0d64dbe) )
+	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
+	ROM_LOAD( "trs2s3i",      0x0000, 0x0800, CRC(78034f14) SHA1(548b44ac69f39df6687da1c0f60968009b1e0767) )
+	ROM_RELOAD(               0x0800, 0x0800 )
+	ROM_FILL(                 0x1000, 0x0800, 0x00 )
+	/* socket 3J is empty */
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "trs2v3gc",     0x0000, 0x0800, CRC(f095330e) SHA1(dd3de744f28ff108630d3336bd246d3323fa34af) )
+	ROM_LOAD( "trs2v3hc",     0x0800, 0x0800, CRC(15a316f0) SHA1(8785a996c6433882a0a7150693c329a4247bb77e) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "trs2v3dc",     0x0000, 0x0800, CRC(e0bb0db9) SHA1(b570439ea1b5d34d0ac938ac9157f22f319b786d) )
+	ROM_LOAD( "trs2v3cc",     0x0800, 0x0800, CRC(6c4e7dad) SHA1(54e6a5005c44261dc4ba845dcd5ff62ea1402d26) )
+	ROM_LOAD( "trs2v3bc",     0x1000, 0x0800, CRC(6fdd63f1) SHA1(2eb09ab0759e4c8df9188fb833440d8fc94f6172) )
+	ROM_LOAD( "trs2v3ac",     0x1800, 0x0800, CRC(bbf62755) SHA1(cb4ca8d4fe689ca0011a4b6c0a2dbd4c764ac70a) )
+
+	ROM_REGION( 0x0800, REGION_GFX3, 0 ) /* radar/star timing table */
+	ROM_LOAD( "trs2v3ec",     0x0000, 0x0800, CRC(0eca8d6b) SHA1(8358b5131d082b2fb8dd793d2e5382daeef6f75c) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "rs2-x.xxx",    0x0000, 0x0100, CRC(54609d61) SHA1(586620ecc61f3e55258fe6360bcacad5f570f29c) ) /* palette low 4 bits (inverted) */
+	ROM_LOAD( "rs2-c.xxx",    0x0100, 0x0100, CRC(79a7d831) SHA1(475ec991929d43b2bcd4b5aee144249f487d0b5b) ) /* palette high 4 bits (inverted) */
+	ROM_LOAD( "rs2-v.1hc",    0x0200, 0x0100, CRC(1b828315) SHA1(00c9f8c5ae86b68d38c66f9071b5f1ef421c1005) ) /* character color codes on a per-column basis */
+ROM_END
+
+// TRS01 5-pcb stack with TRS01 "Voice" pcb on top containing the sound cpu and the m58817 speech chip and the m58819 speech serial rom emulator chip
+
+ROM_START( radarscp1 )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "trs01_5f",     0x0000, 0x1000, CRC(40949e0d) SHA1(94717b9d027600e25b863e89900df41325875961) )
+	ROM_LOAD( "trs01_5g",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) )
+	ROM_LOAD( "trs01_5h",     0x2000, 0x1000, CRC(51b8263d) SHA1(09687f2c40cf09ffc2aeddde4a4fa32800847f01) )
+	ROM_LOAD( "trs01_5k",     0x3000, 0x1000, CRC(1f0101f7) SHA1(b9f988847fdefa64dfeae06c2244215cb0d64dbe) )
+	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
+	ROM_LOAD( "trs-s__5a.5a", 0x0000, 0x0800, CRC(5166554c) SHA1(00bf501ca448929f6187598da6fdbc1ea488745a) ) // 5A on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 5A [stamped '8' or 'a' in red ink]"
+	ROM_RELOAD(               0x0800, 0x0800 )
+	ROM_FILL(                 0x1000, 0x0800, 0xFF )
+
+	ROM_REGION( 0x0800, REGION_USER2, 0 )  /* speech rom */
+	ROM_LOAD( "trs-s__4h.4h",      0x0000, 0x0800, CRC(d1f1b48c) SHA1(ee5584368d2e9f7bde271f5004585b53f5ff5c3f) ) // 4H on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 4H [stamped '8' or 'a' in red ink]"
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "trs01v3f",     0x0000, 0x0800, CRC(f095330e) SHA1(dd3de744f28ff108630d3336bd246d3323fa34af) )
+	ROM_LOAD( "trs01v3g",     0x0800, 0x0800, CRC(15a316f0) SHA1(8785a996c6433882a0a7150693c329a4247bb77e) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "trs01v3d",     0x0000, 0x0800, CRC(e0bb0db9) SHA1(b570439ea1b5d34d0ac938ac9157f22f319b786d) )
+	ROM_LOAD( "trs01v3c",     0x0800, 0x0800, CRC(6c4e7dad) SHA1(54e6a5005c44261dc4ba845dcd5ff62ea1402d26) )
+	ROM_LOAD( "trs01v3b",     0x1000, 0x0800, CRC(6fdd63f1) SHA1(2eb09ab0759e4c8df9188fb833440d8fc94f6172) )
+	ROM_LOAD( "trs01v3a",     0x1800, 0x0800, CRC(bbf62755) SHA1(cb4ca8d4fe689ca0011a4b6c0a2dbd4c764ac70a) )
+
+	ROM_REGION( 0x0800, REGION_GFX3, 0 ) /* radar/star timing table */
+	ROM_LOAD( "trs011ha.bin",    0x0000, 0x0800, CRC(dbcc50c2) SHA1(1e438057d4d93ba22794ab0a9bf41bb49ac28a35) ) /* star /grid */
+
+	ROM_REGION( 0x0100, "gfx4", 0 ) /* priority based on hor. pos */
+	ROM_LOAD( "trs01e3k.bin",    0x0000, 0x0100, CRC(6c6f989c) SHA1(d4b90e43d93ef141a8002b88ce5e33411b870ced) )
+
+	ROM_REGION( 0x0400, REGION_PROMS, 0 )
+	ROM_LOAD( "trs01c2j.bin",    0x0000, 0x0100, CRC(2a087c87) SHA1(dbf0c6173583dc4fa5d3f34d2f42cbaf2bd4b167) ) /* blue */
+	ROM_LOAD( "trs01c2k.bin",    0x0100, 0x0100, CRC(650c5daf) SHA1(72f91ee2fab9eee58ee42881327e6345aa70b7f9) ) /* green */
+	ROM_LOAD( "trs01c2l.bin",    0x0200, 0x0100, CRC(23087910) SHA1(afc05c322b11fefaf0af857fee06a5afd0d4593e) ) /* red */
+	/* Hack! The prom at pos 1D on video board has not been dumped
+	 * Rom 1D is a MB7051, only 5 address lines
+	 * Rom below from TRS02 dump: rs2-v.1hc
+	 */
+	ROM_LOAD( "trs01v1d.bin",    0x0300, 0x0100, BAD_DUMP CRC(1b828315) SHA1(00c9f8c5ae86b68d38c66f9071b5f1ef421c1005) ) /* character color codes on a per-column basis */
 ROM_END
 
 ROM_START( dkong )
@@ -2877,39 +2933,44 @@ ROM_START( strtheat )
 	ROM_LOAD( "82s129.2n",    0x0200, 0x0100, CRC(a515d59b) SHA1(930616c4bcd819c2a4432a6619a8c6da74f3e8c5) ) /* character color codes on a per-column basis */
 ROM_END
 
+
+
 ROM_START( shootgal )
 	ROM_REGION( 0x8000, REGION_CPU1, 0 )
-	ROM_LOAD( "sg-01-5b",    0x0000, 0x1000, CRC(1066ea33) SHA1(822d45cf4b5ef8f7a527e07063989caf623fab15) )
-	ROM_CONTINUE(			 0x6000, 0x1000 )
+	ROM_LOAD( "cpu.5e",       0x0000, 0x1000, CRC(c6d61b9c) SHA1(de3f4cf559313c4e5c5f7019aa6f68b3334e05c1) )
+	ROM_LOAD( "cpu.5a",       0x6000, 0x1000, CRC(5dabe5e3) SHA1(7a36d97b2604aa61fe468863651cf67b851bbfca) )
 
 	ROM_REGION( 0x1000, REGION_CPU2, 0 )
 	ROM_LOAD( "sg-01-3h",    0x0000, 0x1000, CRC(80be5915) SHA1(a4f7d6a8319065a7a712df0195a3f8695d8f99f9) )
 
-	ROM_REGION( 0x8000, REGION_CPU3, 0 )
+	ROM_REGION( 0x0800, REGION_CPU3, 0 )
 	ROM_LOAD( "sg-01-0",     0x0000, 0x0800, CRC(f055a624) SHA1(5dfe89d7271092e665cdd5cd59d15a2b70f92f43) )
 
-	ROM_REGION( 0x8000, REGION_CPU4, 0 )
-	ROM_LOAD( "sg-01snd",    0x0000, 0x1000, CRC(644a0728) SHA1(e249fd57bc49572a2246aaf7c68a547f319f51bc) ) /*sg-01-snd*/
-	ROM_LOAD( "sg-01spk",    0x1000, 0x0800, CRC(aacaf730) SHA1(cd562093ab8931d165cb0877e332474fce131c67) ) /*sg-01-spk*/
+	ROM_REGION( 0x1800, REGION_CPU4, 0 )
+	ROM_LOAD( "sg-01snd",    0x0000, 0x1000, CRC(644a0728) SHA1(e249fd57bc49572a2246aaf7c68a547f319f51bc) ) /* sg-01-snd */
+	ROM_LOAD( "sg-01spk",    0x1000, 0x0800, CRC(aacaf730) SHA1(cd562093ab8931d165cb0877e332474fce131c67) ) /* sg-01-spk */
 
-	ROM_REGION( 0x2000, REGION_USER1, 0 ) /* gun proms?*/
+	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* gun proms? */
 	ROM_LOAD( "sg-1",        0x0000, 0x0200, CRC(fda82517) SHA1(b36bac69b6f8218b280aae59133ea0d22d7a99f6) )
 	ROM_LOAD( "sg-2",        0x0200, 0x091d, CRC(6e065613) SHA1(26d048af5c302f921de8e2c1bc7c7bf48dc21b5a) )
 
-	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX1, 0 )
 	ROM_LOAD( "sg-01-3n",    0x0000, 0x1000, CRC(72987a57) SHA1(8b972cfccb43023aca905c51182f8d3c06f7d0bb) )
 	ROM_LOAD( "sg-01-3p",    0x1000, 0x1000, CRC(1ae9434e) SHA1(26228bf0aba99f48366544772693b35788084a6b) )
 
-	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
 	ROM_LOAD( "sg-01-7c",    0x0000, 0x0800, CRC(3315658e) SHA1(613387aaa58f5df75d42d38b07237c0dc8aaba36) )
 	ROM_LOAD( "sg-01-7d",    0x0800, 0x0800, CRC(76ad4143) SHA1(4ccc32656de9d5142e539b84d4c73bb14d32f8bf) )
 	ROM_LOAD( "sg-01-7e",    0x1000, 0x0800, CRC(65d11685) SHA1(4e4b0b60ca4c16e26d842e142002887456d98ea4) )
 	ROM_LOAD( "sg-01-7f",    0x1800, 0x0800, CRC(44fe71a2) SHA1(ff4442a5601ac2ed63c57e22977299b5b5499c93) )
 
-	ROM_REGION( 0x0600, REGION_PROMS, 0 ) /*ok?*/
+	ROM_REGION( 0x0600, REGION_PROMS, 0 )
 	ROM_LOAD( "sg-01-2e",    0x0000, 0x0200, CRC(34fb23ea) SHA1(6bd6de791c9e0a5f9c833c287663e9755e01c573) )
 	ROM_LOAD( "sg-01-2f",    0x0100, 0x0200, CRC(c29b880a) SHA1(950017a0298f91e41db9865ed8ce388f4095f6cf) )
 	ROM_LOAD( "sg-01-2n",    0x0200, 0x0200, CRC(e08ed788) SHA1(6982f6bcc70dbf4c75ff538a5df70da11bc89bb4) )
+
+	ROM_REGION( 0x0200, REGION_USER1, 0 )
+	ROM_LOAD( "82s147.prm",  0x0000, 0x0200, BAD_DUMP CRC(46e5bc92) SHA1(f4171f8650818c017d58ad7131a7aff100b1b99c) )    /* no dump - taken from hunchbkd */
 ROM_END
 
 
@@ -2932,7 +2993,6 @@ static DRIVER_INIT( herodk )
 	}
 }
 
-
 static DRIVER_INIT( radarscp )
 {
 	UINT8 *RAM = memory_region(REGION_CPU1);
@@ -2941,8 +3001,11 @@ static DRIVER_INIT( radarscp )
 	/* TODO: Radarscope does a check on bit 6 of 7d00 which prevent it from working. */
 	/* It's a sound status flag, maybe signaling when a tune is finished. */
 	/* For now, we comment it out. */
+
+	/* I uncommented below and it boots fine will leave it on in case it causes issues else where */
 	RAM[0x1e9c] = 0xc3;
 	RAM[0x1e9d] = 0xbd;
+	set_var();
 }
 
 static DRIVER_INIT( dkong2 )
@@ -2960,47 +3023,48 @@ static DRIVER_INIT( dkong2 )
 	install_mem_read_handler(0,  0xc800, 0xc800,  braze_eeprom_r);
 }
 
+GAMEX(1980, radarscp,  0,        radarscp, dkong,    radarscp, ROT270, "Nintendo", "Radar Scope (TRS02, rev. D)", GAME_IMPERFECT_SOUND )
+GAMEX(1980, radarscpc, radarscp, radarscp, dkong,    radarscp, ROT270, "Nintendo", "Radar Scope (TRS02?, rev. C)", GAME_IMPERFECT_SOUND )
+GAMEX(1980, radarscp1, radarscp, radarscp, dkong,    radarscp, ROT270, "Nintendo", "Radar Scope (TRS01)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 
-GAMEX(1980, radarscp, 0,        radarscp, dkong,    radarscp, ROT90, "Nintendo", "Radar Scope", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME (1981, dkong,     0,        dkong,    dkong,    0,        ROT270, "Nintendo of America", "Donkey Kong (US set 1)" )
+GAME (1981, dkongo,    dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (US set 2)" )
+GAME (1981, dkongjp,   dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (Japan set 1)" )
+GAME (1981, dkongjo,   dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (Japan set 2)" )
+GAME (1981, dkongjo1,  dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (Japan set 3) (bad dump[Q])" )
+GAME (2013, dkongpe,   dkong,    dkong,    dkong,    0,        ROT270,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
+GAME (2015, dkrdemo,   dkong,    dkong,    dkrdemo,  0,        ROT270, "bootleg",  "Donkey Kong Remix" )
 
-GAME (1981, dkong,    0,        dkong,    dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong (US set 1)" )
-GAME (1981, dkongo,   dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (US set 2)" )
-GAME (1981, dkongjp,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 1)" )
-GAME (1981, dkongjo,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 2)" )
-GAME (1981, dkongjo1, dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 3) (bad dump[Q])" )
-GAME (2013, dkongpe,  dkong,    dkong,    dkong,    0,        ROT90,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
-GAME (2015, dkrdemo,  dkong,    dkong,    dkrdemo,  0,        ROT90, "bootleg",  "Donkey Kong Remix" )
+GAME (2008, dkongx,    dkong,    braze,    dkong2,   dkong2,   ROT270, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
 
-GAME (2008, dkongx,   dkong,    braze,    dkong2,   dkong2,   ROT90, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
+GAME( 1982, dkongjr,   0,        dkongjr,  dkong,    0,        ROT270, "Nintendo of America", "Donkey Kong Junior (US)" )
+GAME( 1982, dkongjrj,  dkongjr,  dkongjr,  dkong,    0,        ROT270, "Nintendo", "Donkey Kong Jr. (Japan)" )
+GAME( 1982, dkngjnrj,  dkongjr,  dkongjr,  dkong,    0,        ROT270, "Nintendo", "Donkey Kong Junior (Japan[Q])" )
+GAME( 1982, dkongjrb,  dkongjr,  dkongjr,  dkong,    0,        ROT270, "bootleg", "Donkey Kong Jr. (bootleg)" )
+GAME( 1982, dkngjnrb,  dkongjr,  dkongjr,  dkong,    0,        ROT270, "Nintendo of America", "Donkey Kong Junior (bootleg[Q])" )
 
-GAME( 1982, dkongjr,  0,        dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (US)" )
-GAME( 1982, dkongjrj, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo", "Donkey Kong Jr. (Japan)" )
-GAME( 1982, dkngjnrj, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo", "Donkey Kong Junior (Japan[Q])" )
-GAME( 1982, dkongjrb, dkongjr,  dkongjr,  dkong,    0,        ROT90, "bootleg", "Donkey Kong Jr. (bootleg)" )
-GAME( 1982, dkngjnrb, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (bootleg[Q])" )
+GAME( 1983, dkong3,    0,        dkong3,   dkong3,   0,        ROT270, "Nintendo of America", "Donkey Kong 3 (US)" )
+GAME( 1983, dkong3j,   dkong3,   dkong3,   dkong3,   0,        ROT270, "Nintendo", "Donkey Kong 3 (Japan)" )
+GAME(1984,  dkong3b,   dkong3,   dkong3b,  dkong3b,  0,        ROT270, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)" )
 
-GAME( 1983, dkong3,   0,        dkong3,   dkong3,   0,        ROT90, "Nintendo of America", "Donkey Kong 3 (US)" )
-GAME( 1983, dkong3j,  dkong3,   dkong3,   dkong3,   0,        ROT90, "Nintendo", "Donkey Kong 3 (Japan)" )
-GAME(1984,  dkong3b,  dkong3,   dkong3b,  dkong3b,  0,        ROT90, "bootleg", "Donkey Kong 3 (bootleg on Donkey Kong Jr. hardware)" )
+GAME( 1984, herbiedk,  huncholy, herbiedk, herbiedk, 0,        ROT270, "CVS", "Herbie at the Olympics (DK conversion)")
 
-GAME( 1984, herbiedk, huncholy, herbiedk, herbiedk, 0,        ROT90, "CVS", "Herbie at the Olympics (DK conversion)")
+GAMEX(1983, hunchbkd,  hunchbak, hunchbkd, hunchbkd, 0,        ROT270, "Century Electronics", "Hunchback (DK conversion)", GAME_WRONG_COLORS )
 
-GAMEX(1983, hunchbkd, hunchbak, hunchbkd, hunchbkd, 0,        ROT90, "Century Electronics", "Hunchback (DK conversion)", GAME_WRONG_COLORS )
+GAME( 1984, sbdk,      superbik, hunchbkd, sbdk,     0,        ROT270, "Century Electronics", "Super Bike (DK conversion)" )
 
-GAME( 1984, sbdk,     superbik,	hunchbkd, sbdk,	    0,        ROT90, "Century Electronics", "Super Bike (DK conversion)" )
+GAME( 1984, herodk,    hero,     hunchbkd, herodk,   herodk,   ROT270, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion)" )
+GAME( 1984, herodku,   hero,     hunchbkd, herodk,   0,        ROT270, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion not encrypted)" )
 
-GAME( 1984, herodk,   hero,     hunchbkd, herodk,   herodk,   ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion)" )
-GAME( 1984, herodku,  hero,     hunchbkd, herodk,   0,        ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion not encrypted)" )
+GAME( 1984, 8ballact,  0,        eightact, 8ballact, 0,        ROT270, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DK conversion)" )
+GAME( 1984, 8ballat2,  8ballact, eightact, 8ballact, 0,        ROT270, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DKJr conversion)" )
+/*keep this game as not working the gun just needs hooked and the bad dumps been replaced by a good one if anyone wants to fix it*/
+GAMEX(1984, shootgal,  0,        shootgal, hunchbkd, 0,        ROT0, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
 
-GAME( 1984, 8ballact, 0,        eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DK conversion)" )
-GAME( 1984, 8ballat2, 8ballact, eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DKJr conversion)" )
-
-GAMEX(1984, shootgal, 0,        shootgal, hunchbkd, 0,        ROT180, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
-
-GAMEX(1983, pestplce, mario,    pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
+GAMEX(1983, pestplce,  mario,    pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
 GAMEX(1985, spclforc, 0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
 GAMEX(1985, spcfrcii, 0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
 
-GAMEX(198?, drakton,  0,        dkong,    dkong,    0,        ROT90, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
-GAMEX(1985, strtheat, 0,        strtheat, strtheat, 0,        ROT90, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
+GAMEX(198?, drakton,   0,        dkong,    dkong,    0,        ROT270, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
+GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
