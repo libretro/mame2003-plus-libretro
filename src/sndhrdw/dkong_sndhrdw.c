@@ -11,6 +11,7 @@ WRITE_HANDLER( dkong_sh_w )
 		cpu_set_irq_line(1, 0, CLEAR_LINE);
 }
 
+extern UINT8           snd02_enable;
 WRITE_HANDLER( dkong_sh1_w )
 {
 	static int state[8];
@@ -32,8 +33,10 @@ WRITE_HANDLER( dkong_sh1_w )
 				}
 			}
 		state[offset] = data;
+
 	}
-}
+	if (BIT(offset,1)  ) snd02_enable = data;
+ }
 
 WRITE_HANDLER( dkongjr_sh_death_w )
 {
