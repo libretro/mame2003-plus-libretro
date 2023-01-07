@@ -153,6 +153,10 @@ static void get_fg_tile_info(int tile_index)
 	int code = videoram[tile_index];
 	int color = (videoram[tile_index] & 0x70) >> 4; /* ??*/
 
+    /* score panel colors are determined differently: P1=5, TOP=4, P2=7 */
+	if ((tile_index & 0x1f) > 0x1b)
+		color = (((tile_index >> 5) + 12) & 0x1f) >> 3 ^ 7;
+	
 	SET_TILE_INFO(0, code, color, 0)
 }
 
@@ -185,9 +189,10 @@ static void redclash_draw_sprites( struct mame_bitmap *bitmap )
 
 			if (spriteram[offs + i] & 0x80)
 			{
-				int color = spriteram[offs + i + 2] & 0x0f;
 				int sx = spriteram[offs + i + 3];
 				int sy = offs / 4 + (spriteram[offs + i] & 0x07);
+                int color = spriteram[offs + i + 2] & 0x27;
+                color = ((color & 0x20) >> 2) | (color & 0x7);
 
 
 				switch ((spriteram[offs + i] & 0x18) >> 3)
@@ -215,8 +220,8 @@ static void redclash_draw_sprites( struct mame_bitmap *bitmap )
 					case 2:	/* 16x16 */
 						if (spriteram[offs + i] & 0x20)	/* zero hour spaceships */
 						{
-							int code = ((spriteram[offs + i + 1] & 0xf8) >> 3) + ((gfxbank & 1) << 5);
 							int bank = (spriteram[offs + i + 1] & 0x02) >> 1;
+							int code = ((spriteram[offs + i + 1] & 0xf8) >> 3) + ((gfxbank & 1) << 5);
 
 							drawgfx(bitmap,Machine->gfx[4+bank],
 									code,
@@ -258,22 +263,31 @@ usrintf_showmessage("unknown sprite size 0");
 
 static void redclash_draw_bullets( struct mame_bitmap *bitmap )
 {
-	int offs;
+	int offs, x, y, sxx, syy;
 
 	for (offs = 0; offs < 0x20; offs++)
 	{
-/*		sx = videoram[offs];*/
-		int sx = 8 * offs + (videoram[offs] & 0x07);	/* ?? */
+		int sx = 8 * offs;
 		int sy = 0xff - videoram[offs + 0x20];
 
-		if (flip_screen)
-		{
-			sx = 240 - sx;
-		}
+        /* width and color are from the same bitfield */
+		int width = 8 - (videoram[offs] >> 5 & 6);
+		int color = (videoram[offs] >> 3 & 0x10) | 5;
 
-		if (sx >= Machine->visible_area.min_x && sx <= Machine->visible_area.max_x &&
-				sy >= Machine->visible_area.min_y && sy <= Machine->visible_area.max_y)
-			plot_pixel(bitmap, sx, sy, Machine->pens[0x0e]);
+		if (flip_screen)
+
+		sx = 240 - sx;
+        sx -= (videoram[offs] >> 3) & 7;
+
+	    for (y = 0; y < 2; y++)
+			for (x = 0; x < width; x++)
+		{
+        syy = sy - y;
+		sxx = sx + x;
+		if (sxx >= Machine->visible_area.min_x && sxx <= Machine->visible_area.max_x &&
+				syy >= Machine->visible_area.min_y && syy <= Machine->visible_area.max_y)
+			plot_pixel(bitmap, sxx, syy, Machine->pens[color]);
+		}
 	}
 }
 
@@ -415,7 +429,7 @@ VIDEO_UPDATE( redclash )
 {
 	fillbitmap(bitmap, get_black_pen(), &Machine->visible_area);
 	redclash_draw_stars(bitmap, 32, 0, 0x00, 0xff);
-	redclash_draw_sprites(bitmap);
 	redclash_draw_bullets(bitmap);
+	redclash_draw_sprites(bitmap);
 	tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
 }
