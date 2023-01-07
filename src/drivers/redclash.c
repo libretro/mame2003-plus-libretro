@@ -56,6 +56,126 @@ static WRITE_HANDLER( irqack_w )
 	cpu_set_irq_line(0,0,CLEAR_LINE);
 }
 
+/* for samples.. */
+static INT32 asteroid_hit = 0;
+static INT32 address;
+static UINT8 data;
+
+
+static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
+{
+	address &= 7;
+
+	if (bank == 0)
+	{
+		switch (data) {
+			case 0: /* stop */
+				switch (address) { /* can stop */
+					case 6: /* enemy fire */
+						sample_stop(address);
+				}
+				break;
+			case 1: /* play */
+				switch (address) { /* retrig? */
+					case 7: /* background sound loop */
+						if (!sample_playing(address))
+							sample_start(address, address, 0);
+						return;
+					case 1: /* asteroid hit */
+						/* don't play if red asteroid sound is playing!
+						 game triggers 2 (red asteroid) + 1 (this/asteroid) for 2 (red asteroid). */
+						if (!sample_playing(12))
+						{
+							/* every other hit varies between 2 sounds */
+							asteroid_hit ^= 1;
+							sample_start(1 + asteroid_hit, 1 + asteroid_hit, 0);
+						}
+						return;
+					case 2: /* red asteroid hit */
+						sample_start(12, 12, 0);
+						return;
+					default:
+						sample_start(address, address, 0);
+						return;
+				}
+				break;
+
+		}
+	}
+	else
+	{
+		if (address == 0x02 && data == 0xff) data = 1;
+
+		address = 8; /* + address - 1; */ /* fixes thrust sample */
+		switch (data) {
+			case 0:
+				switch (address) { /* can stop */
+					case 9: /* background loop */
+						sample_start(address, address, 0);
+						sample_stop(address);
+						return;
+					case 8: /* thrust */
+						sample_stop(address);
+				}
+				break;
+			case 1:
+				switch (address) { /* can retrig? */
+					case 9: /* background loop */
+						sample_stop(address);
+						sample_start(address, address, 1);
+						sample_start(address, address, 0);
+						return;
+					case 8: /* thrust */
+					case 10:/* bonus score accumulation */
+						if (!sample_playing(address))
+							sample_start(address, address, 0);
+						return;
+					default:
+						sample_start(address, address, 0);
+						return;
+				}
+				break;
+		}
+	}
+}
+
+
+static const char *zerohour_sample_names[] =
+{
+	"*zerohour",
+	"Fire.wav",
+	"Asteroid Hit 1.wav",
+	"Asteroid Hit 2.wav",
+	"Enemy Ship Descends.wav",
+	"Enemy Shield Hit.wav",
+	"Crash and Die.wav",
+	"Enemy Fire.wav",
+	"Bonus Round Time Running Out Loop.wav",
+	"Thrust.wav",
+	"Background Sound Loop.wav",
+	"Bonus Round Score Accumulate Loop.wav",
+    "Credit.wav",
+	"Asteroid Hit Red.wav", /* this is a placeholder synthesized by dink May 27, 2021 */
+	0       /* end of array */
+};
+
+static struct Samplesinterface zerohour_samples_interface =
+{
+	12,	/* 12 channels */
+	50,	/* volume */
+	zerohour_sample_names
+};
+
+
+WRITE_HANDLER( zerohour_sound_output0_w )
+{
+	zerohour_snd_play(0, address&7, data);
+}
+
+WRITE_HANDLER( zerohour_sound_output1_w )
+{
+	zerohour_snd_play(1, address&7, data);
+}
 
 
 static MEMORY_READ_START( zero_readmem )
@@ -73,9 +193,19 @@ static MEMORY_WRITE_START( zero_writemem )
 	{ 0x3000, 0x37ff, MWA_RAM },
 	{ 0x3800, 0x3bff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x4000, 0x43ff, redclash_videoram_w, &videoram },
-	{ 0x5000, 0x5007, MWA_NOP },	/* to sound board */
+	{ 0x5000, 0x5000, zerohour_sound_output0_w },
+	{ 0x5001, 0x5001, zerohour_sound_output0_w },
+	{ 0x5002, 0x5002, zerohour_sound_output0_w },
+	{ 0x5003, 0x5003, zerohour_sound_output0_w },
+	{ 0x5004, 0x5004, zerohour_sound_output0_w },
+	{ 0x5005, 0x5005, zerohour_sound_output0_w },
+	{ 0x5006, 0x5006, zerohour_sound_output0_w },
+	{ 0x5007, 0x5007, zerohour_sound_output0_w },
 	{ 0x5800, 0x5800, redclash_star0_w },
-	{ 0x5801, 0x5804, MWA_NOP },	/* to sound board */
+	{ 0x5801, 0x5801, zerohour_sound_output1_w },
+	{ 0x5802, 0x5802, zerohour_sound_output1_w },
+	{ 0x5803, 0x5803, zerohour_sound_output1_w },
+	{ 0x5804, 0x5804, zerohour_sound_output1_w },
 	{ 0x5805, 0x5805, redclash_star1_w },
 	{ 0x5806, 0x5806, redclash_star2_w },
 	{ 0x5807, 0x5807, redclash_flipscreen_w },
@@ -238,9 +368,9 @@ INPUT_PORTS_START( zerohour )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) ) 
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Cocktail ) )
@@ -250,6 +380,11 @@ INPUT_PORTS_START( zerohour )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Bonus_Life ) ) /* Also determines the default topscore, 0 for "No Bonus" */
+	PORT_DIPSETTING(    0x00, "No Bonus" )
+	PORT_DIPSETTING(    0x30, "5000" )
+	PORT_DIPSETTING(    0x20, "8000" )
+	PORT_DIPSETTING(    0x10, "10000" )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0xc0, "3" )
@@ -382,6 +517,7 @@ static MACHINE_DRIVER_START( zerohour )
 	MDRV_VIDEO_EOF(redclash)
 
 	/* sound hardware */
+	MDRV_SOUND_ADD(SAMPLES, zerohour_samples_interface)
 MACHINE_DRIVER_END
 
 
@@ -507,6 +643,6 @@ static DRIVER_INIT( redclash )
 
 
 
-GAMEX( 1980, zerohour, 0,        zerohour, zerohour, redclash, ROT270, "Universal", "Zero Hour",          GAME_NO_SOUND | GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1981, redclash, 0,        redclash, redclash, redclash, ROT270, "Tehkan",    "Red Clash",          GAME_NO_SOUND | GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1981, redclask, redclash, redclash, redclash, redclash, ROT270, "Kaneko",    "Red Clash (Kaneko)", GAME_NO_SOUND | GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1980, zerohour, 0,        zerohour, zerohour, redclash, ROT270, "Universal", "Zero Hour",          GAME_IMPERFECT_SOUND )
+GAMEX( 1981, redclash, 0,        redclash, redclash, redclash, ROT270, "Tehkan",    "Red Clash",          GAME_NO_SOUND  )
+GAMEX( 1981, redclask, redclash, redclash, redclash, redclash, ROT270, "Kaneko",    "Red Clash (Kaneko)", GAME_NO_SOUND  )
