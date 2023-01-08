@@ -78,7 +78,7 @@ static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
 				break;
 			case 1: /* play */
 				switch (address) { /* retrig? */
-					case 7: /* background sound loop */
+					case 7: /* bonus time running out loop */
 						if (!sample_playing(address))
 							sample_start(address, address, 0);
 						return;
@@ -111,8 +111,8 @@ static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
 		switch (data) {
 			case 0:
 				switch (address) { /* can stop */
-					case 9: /* background loop */
-						sample_start(address, address, 0);
+					case 9: /* background sound loop */
+						sample_start(address, address, 1);
 						sample_stop(address);
 						return;
 					case 8: /* thrust */
@@ -121,10 +121,10 @@ static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
 				break;
 			case 1:
 				switch (address) { /* can retrig? */
-					case 9: /* background loop */
+					case 9: /* background sound loop */
 						sample_stop(address);
 						sample_start(address, address, 1);
-						sample_start(address, address, 0);
+						sample_start(address, address, 1);
 						return;
 					case 8: /* thrust */
 					case 10:/* bonus score accumulation */
