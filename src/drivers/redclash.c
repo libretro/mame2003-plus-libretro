@@ -155,14 +155,14 @@ static const char *zerohour_sample_names[] =
 	"Thrust.wav",
 	"Background Sound Loop.wav",
 	"Bonus Round Score Accumulate Loop.wav",
-    "Credit.wav",
+  "Credit.wav",
 	"Asteroid Hit Red.wav", /* this is a placeholder synthesized by dink May 27, 2021 */
 	0       /* end of array */
 };
 
 static struct Samplesinterface zerohour_samples_interface =
 {
-	12,	/* 12 channels */
+	13,	/* 13 channels */
 	50,	/* volume */
 	zerohour_sample_names
 };
