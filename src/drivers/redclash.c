@@ -70,6 +70,7 @@ static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
 	{
 		switch (data) {
 			case 0: /* stop */
+			
 				switch (address) { /* can stop */
 					case 6: /* enemy fire */
 						sample_stop(address);
@@ -106,7 +107,7 @@ static void zerohour_snd_play(INT32 bank, INT32 address, UINT8 data)
 	{
 		if (address == 0x02 && data == 0xff) data = 1;
 
-		address = 8; /* + address - 1; */ /* fixes thrust sample */
+		address += 8 -1; /* + address - 1; */ /* fixes thrust sample */
 		switch (data) {
 			case 0:
 				switch (address) { /* can stop */
@@ -169,12 +170,17 @@ static struct Samplesinterface zerohour_samples_interface =
 
 WRITE_HANDLER( zerohour_sound_output0_w )
 {
-	zerohour_snd_play(0, address&7, data);
+	UINT16 fix_address = 0x5000 + offset;
+	zerohour_snd_play(0, fix_address &7, data);
+//	printf("zerohour_sound_output0_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data);
 }
 
 WRITE_HANDLER( zerohour_sound_output1_w )
 {
-	zerohour_snd_play(1, address&7, data);
+	UINT16 fix_address = 0x5801 + offset;
+	
+	zerohour_snd_play(1, fix_address &7, data);
+//	printf("zerohour_sound_output1_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data);
 }
 
 
@@ -193,19 +199,9 @@ static MEMORY_WRITE_START( zero_writemem )
 	{ 0x3000, 0x37ff, MWA_RAM },
 	{ 0x3800, 0x3bff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x4000, 0x43ff, redclash_videoram_w, &videoram },
-	{ 0x5000, 0x5000, zerohour_sound_output0_w },
-	{ 0x5001, 0x5001, zerohour_sound_output0_w },
-	{ 0x5002, 0x5002, zerohour_sound_output0_w },
-	{ 0x5003, 0x5003, zerohour_sound_output0_w },
-	{ 0x5004, 0x5004, zerohour_sound_output0_w },
-	{ 0x5005, 0x5005, zerohour_sound_output0_w },
-	{ 0x5006, 0x5006, zerohour_sound_output0_w },
-	{ 0x5007, 0x5007, zerohour_sound_output0_w },
+	{ 0x5000, 0x5007, zerohour_sound_output0_w },
 	{ 0x5800, 0x5800, redclash_star0_w },
-	{ 0x5801, 0x5801, zerohour_sound_output1_w },
-	{ 0x5802, 0x5802, zerohour_sound_output1_w },
-	{ 0x5803, 0x5803, zerohour_sound_output1_w },
-	{ 0x5804, 0x5804, zerohour_sound_output1_w },
+	{ 0x5801, 0x5804, zerohour_sound_output1_w },
 	{ 0x5805, 0x5805, redclash_star1_w },
 	{ 0x5806, 0x5806, redclash_star2_w },
 	{ 0x5807, 0x5807, redclash_flipscreen_w },
