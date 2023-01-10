@@ -4821,6 +4821,7 @@ static MACHINE_DRIVER_START( megab )
 	/* video hardware */
 	MDRV_VIDEO_START(taitof2_megab)
 	MDRV_VIDEO_UPDATE(taitof2_pri)
+  MDRV_VIDEO_EOF(taitof2_partial_buffer_delayed)
 MACHINE_DRIVER_END
 
 
