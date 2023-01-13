@@ -2796,7 +2796,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( aliensyj )	/* (c) 1987 (protected. Japan) */
 	DRIVER( astorm )	/* (c) 1990 (protected) */
 	DRIVER( astorm2p )	/* (c) 1990 (protected 2 Players) */
-	DRIVER( auraila )	/* (c) 1990 Sega / Westone (protected) */
+	DRIVER( aurail1 )	/* (c) 1990 Sega / Westone (protected) */
+	DRIVER( aurailj )	/* (c) 1990 Sega / Westone (protected) */
 	DRIVER( bayrouta )	/* (c) 1989 (protected) */
 	DRIVER( bayrtbl1 )	/* (c) 1989 (protected) (bootleg) */
 	DRIVER( bayrtbl2 )	/* (c) 1989 (protected) (bootleg) */
@@ -2847,6 +2848,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( atomicp )	/* (c) 1990 Philko */
 	DRIVER( snapper )	/* (c) 1990 Philko */
 	DRIVER( aurail )	/* (c) 1990 Sega / Westone */
+	DRIVER( aurail1d )	/* (c) 1990 Sega / Westone */
+	DRIVER( aurailjd )	/* (c) 1990 Sega / Westone */
 	DRIVER( bayroute )	/* (c) 1989 Sunsoft / Sega */
 	DRIVER( cottond )
 	DRIVER( bulletd )

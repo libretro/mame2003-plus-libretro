@@ -68,6 +68,7 @@ SOURCES_C += \
 	$(CORE_DIR)/x86drc.c
 
 SOURCES_C += \
+	$(CORE_DIR)/machine/fd1089.c \
 	$(CORE_DIR)/machine/6522via.c \
 	$(CORE_DIR)/machine/6532riot.c \
 	$(CORE_DIR)/machine/6821pia.c \
