@@ -464,6 +464,30 @@ static MEMORY_WRITE16_START( cotton_writemem )
 	{ 0xFF0006, 0xFF0007, sound_command_w },
 MEMORY_END
 
+static MEMORY_READ16_START( dunkshot_readmem )
+	{ 0x000000, 0x02ffff, MRA16_ROM },
+	{ 0x400000, 0x40ffff, segaic16_tileram_r },
+	{ 0x410000, 0x410fff, segaic16_textram_r },
+	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
+	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
+	{ 0xc40000, 0xc43fff, standard_io_r },//dunkshot_custom_io_r todo
+	{ 0xff0000, 0xff3fff, SYS16_MRA16_WORKINGRAM },
+	{ 0xff4000, 0xffffff, MRA16_RAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( dunkshot_writemem )
+	{ 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x400000, 0x40ffff, segaic16_tileram_0_w, &segaic16_tileram_0 },
+	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
+	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
+	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
+//	{ 0xc00006, 0xc00007, sound_command_w },
+	{ 0xFE0006, 0xFE0007, sound_command_w },
+	{ 0xc40000, 0xc43fff, standard_io_w },
+	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xff4000, 0xffffff, MWA16_RAM },
+MEMORY_END
+
 
 static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
@@ -1229,6 +1253,14 @@ static MACHINE_DRIVER_START( cotton )
 	MDRV_MACHINE_INIT(generic_5704)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( dunkshot )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system16_7759)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(dunkshot_readmem,dunkshot_writemem)
+	MDRV_MACHINE_INIT(generic_5358) //tilemaps need fixed by the looks of things segasic 
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( fantzn2x )
 
 	/* basic machine hardware */
@@ -1239,6 +1271,10 @@ static MACHINE_DRIVER_START( fantzn2x )
 MACHINE_DRIVER_END
 
 /*          rom       parent    machine    inp        init */
+GAME( 1987, dunkshot, 0,        dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)" )
+GAME( 1987, dunkshota,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)" )
+GAME( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)" )
+
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )
 GAME( 1990, aurail1,  aurail,   aurail,    aurail,    FD1089B,  ROT0,   "Sega / Westone",  "Aurail (set 2, World) (FD1089B 317-0168)" )
 GAME( 1990, aurail1d, aurail,   aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 2, World) (unprotected of FD1089B 317-0168 set)" )
@@ -1247,3 +1283,4 @@ GAME( 1990, aurailjd, aurail,   aurail,    aurail,    0,        ROT0,   "Sega / 
 GAME( 1991, cottond,  cotton,   cotton,    cotton,    0,        ROT0,   "Sega / Success",  "Cotton (set 4, World) (unprotected of FD1094 317-0181a set)" )
 GAME( 1987, bulletd,  0,        bullet,    bullet,    0,        ROT0,   "Sega",            "Bullet (unprotected of FD1094 317-0041 set)" )
 GAME( 2008, fantzn2x, 0,        fantzn2x,  fantzn2x,  0,        ROT0,   "Sega / M2",       "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
+

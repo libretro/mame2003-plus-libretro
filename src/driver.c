@@ -2827,6 +2827,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( cottona )	/* (protected) */
 	DRIVER( ddcrew )	/* (protected) */
 	DRIVER( dunkshot )	/* (protected) */
+	DRIVER( dunkshota )	/* (protected) */
+	DRIVER( dunkshoto )	/* (protected) */
 	DRIVER( exctleag )  /* (protected) */
 	DRIVER( lghost )	/* (protected) */
 	DRIVER( loffire )	/* (protected) */

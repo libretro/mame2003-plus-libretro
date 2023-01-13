@@ -6744,41 +6744,6 @@ ROM_START( cottona )
 	ROM_LOAD( "speech0.rom", 0x10000, 0x20000, CRC(4d21153f) SHA1(173ddd9633f255c39ca508c37d0562e374704e7b) )
 ROM_END
 
-
-/*****************************************************************************/
-// Dunk Shot
-
-ROM_START( dunkshot )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "10468.bin", 0x000000, 0x8000, CRC(e2d5f97a) SHA1(bf7b4a029580633fee65be89d5c9c83ff76a8484) )
-	ROM_LOAD16_BYTE( "10467.bin", 0x000001, 0x8000, CRC(29774114) SHA1(3a88739213afd4ef7807ddbd3acdfddeb9636fd3) )
-	ROM_LOAD16_BYTE( "10470.bin", 0x010000, 0x8000, CRC(8c60761f) SHA1(aba009f482df7023b460ab20e50225ab5f6dff6d) )
-	ROM_LOAD16_BYTE( "10469.bin", 0x010001, 0x8000, CRC(aa442b81) SHA1(24f455bc59147ccd948fd89e2048a118b5591d84) )
-	ROM_LOAD16_BYTE( "10472.bin", 0x020000, 0x8000, CRC(206027a6) SHA1(2b7d4754639d7023bc00f5e0fe9de4d2a971e487) )
-	ROM_LOAD16_BYTE( "10471.bin", 0x020001, 0x8000, CRC(22777314) SHA1(fbc35505a94c8d4bdb44ee058e9e2e9e9b377c5c) )
-
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "10485.bin", 0x00000, 0x8000, CRC(f16dda29) SHA1(88f3aa5e6f827e124c5bba0978a6ccfde8cb6fe7) )
-	ROM_LOAD( "10486.bin", 0x08000, 0x8000, CRC(311d973c) SHA1(c4765917ba788ed45a801499f3d873a86c418eb8) )
-	ROM_LOAD( "10487.bin", 0x10000, 0x8000, CRC(a8fb179f) SHA1(8a748d537b3d327c41d6dac17342de9be068e53b) )
-
-	ROM_REGION( 0x40000, REGION_GFX2, 0 ) /* sprites */
-	ROM_LOAD16_BYTE( "10481.bin", 0x00001, 0x8000, CRC(feb04bc9) SHA1(233dc8e3b887a88ac114723d58a909a58f0ae771) )
-	ROM_LOAD16_BYTE( "10477.bin", 0x00000, 0x8000, CRC(f9d3b2cb) SHA1(b530fe16882c718122bfd1de098f39e54993de28) )
-	ROM_LOAD16_BYTE( "10482.bin", 0x10001, 0x8000, CRC(5bc07618) SHA1(f4c88f81b407d467f958181770ea4fd32aab3daf) )
-	ROM_LOAD16_BYTE( "10478.bin", 0x10000, 0x8000, CRC(5b5c5c92) SHA1(1c6f1cafa0788678c80ade11560f4a8d8bb7272a) )
-	ROM_LOAD16_BYTE( "10483.bin", 0x20001, 0x8000, CRC(7cab4f9e) SHA1(2310a9fe604f78d74d84bea301c95e6f0e6a6085) )
-	ROM_LOAD16_BYTE( "10479.bin", 0x20000, 0x8000, CRC(e84190a0) SHA1(23a8799adf81e1884a8c6b4c55397b8bca2f1850) )
-	ROM_LOAD16_BYTE( "10484.bin", 0x30001, 0x8000, CRC(bcb5fcc9) SHA1(eb8d557c908e6265f96a5a7e832e19776a9e576c) )
-	ROM_LOAD16_BYTE( "10480.bin", 0x30000, 0x8000, CRC(5dffd9dd) SHA1(256b24613c952d89dbb9971c9091d5a8a7f363b0) )
-
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "10473.bin",	 0x00000, 0x08000, CRC(7f1f5a27) SHA1(7ff91b95c883b395ab4ff5e440d78e553a09e623) )
-	ROM_LOAD( "10474.bin",   0x10000, 0x08000, CRC(419a656e) SHA1(aa734ae835761badeb069f99acc5fded2a19b3a3) )
-	ROM_LOAD( "10475.bin",   0x18000, 0x08000, CRC(17d55e85) SHA1(0c414bafecbfaa82679cc155f15f5255c186358d) )
-	ROM_LOAD( "10476.bin",   0x20000, 0x08000, CRC(a6be0956) SHA1(fc4d6e25e0b46679f94fddbb1850fb0b02f8d84b) )
-ROM_END
-
 /*****************************************************************************/
 // MVP
 
@@ -6994,7 +6959,6 @@ GAMEX(1989, bayrtbl2,  bayroute, bayroute, bayroute, bayrtbl1, ROT0,   "bootleg"
 /* Charon */
 GAMEX(19??, cotton,    0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton (Japan)", GAME_NOT_WORKING )
 GAMEX(19??, cottona,   cotton,   s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Cotton", GAME_NOT_WORKING )
-GAMEX(19??, dunkshot,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Dunk Shot", GAME_NOT_WORKING )
 GAME( 1989, dduxbl,    0,        dduxbl,   dduxbl,   dduxbl,   ROT0,   "bootleg", "Dynamite Dux (bootleg)" )
 GAMEX(1989, eswat,     0,        eswat,    eswat,    eswat,    ROT0,   "Sega",    "E-Swat - Cyber Police", GAME_NOT_WORKING )
 GAME( 1989, eswatbl,   eswat,    eswat,    eswat,    eswat,    ROT0,   "bootleg", "E-Swat - Cyber Police (bootleg)" )
