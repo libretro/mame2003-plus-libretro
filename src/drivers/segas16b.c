@@ -1261,6 +1261,7 @@ static MACHINE_DRIVER_START( dunkshot )
 	MDRV_IMPORT_FROM(system16_7759)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(dunkshot_readmem,dunkshot_writemem)
+	MDRV_VIDEO_START(timscanr) 
 	MDRV_MACHINE_INIT(generic_5358) //tilemaps need fixed by the looks of things segasic 
 MACHINE_DRIVER_END
 
