@@ -253,13 +253,14 @@ static WRITE16_HANDLER( rom_5704_bank_w )
 		segaic16_tilemap_set_bank(0, offset & 1, data & 7);
 }
 
+
 INPUT_PORTS_START( aurail )
 	SYS16_SERVICE
 	SYS16_JOY1
 	SYS16_UNUSED
 	SYS16_JOY2
 
-		SYS16_COINAGE //DSW1
+	SYS16_COINAGE //DSW1
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
@@ -427,18 +428,21 @@ static MEMORY_READ16_START( bullet_readmem )
 	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc40000, 0xc43fff, standard_io_r },
-	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+	{ 0xff0000, 0xff3fff, SYS16_MRA16_WORKINGRAM },
+	{ 0xff4000, 0xffffff, MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( bullet_writemem )
 	{ 0x000000, 0x02ffff, MWA16_ROM },
+	{ 0x123406, 0x123407, sound_command_w }, //sdib,defense
 	{ 0x400000, 0x40ffff, segaic16_tileram_0_w, &segaic16_tileram_0 },
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
 	{ 0xc00006, 0xc00007, sound_command_w },
-	{ 0xc40000, 0xc43fff, standard_io_w },
-	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xc40000, 0xc43fff, standard_io_w }, //bullet
+	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xff4000, 0xffffff, MWA16_RAM },
 MEMORY_END
 
 static MEMORY_READ16_START( cotton_readmem )
@@ -481,7 +485,6 @@ static MEMORY_WRITE16_START( dunkshot_writemem )
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
-//	{ 0xc00006, 0xc00007, sound_command_w },
 	{ 0xFE0006, 0xFE0007, sound_command_w },
 	{ 0xc40000, 0xc43fff, standard_io_w },
 	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
@@ -1270,10 +1273,14 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_MACHINE_INIT(generic_5704)
 MACHINE_DRIVER_END
 
-/*          rom       parent    machine    inp        init */
-GAME( 1987, dunkshot, 0,        dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)" )
-GAME( 1987, dunkshota,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)" )
-GAME( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)" )
+/*          rom       parent     machine    inp        init */
+GAMEX( 1987, dunkshot, 0,        dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)", GAME_NOT_WORKING  )
+GAMEX( 1987, dunkshota,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)",  GAME_NOT_WORKING  )
+GAMEX( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)",  GAME_NOT_WORKING  )
+GAMEX( 1987, defense,  sdi,      bullet,    aurail,    FD1089A,  ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
+GAMEX( 1987, sdib,     sdi,      bullet,    aurail,    FD1089A,  ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
+GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    FD1089B,  ROT0,   "White Board", "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
+//all above games boot and work fine just need inputs done, dunkshot graphics arent right thinks its the tilemaps
 
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )
 GAME( 1990, aurail1,  aurail,   aurail,    aurail,    FD1089B,  ROT0,   "Sega / Westone",  "Aurail (set 2, World) (FD1089B 317-0168)" )
