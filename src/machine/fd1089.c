@@ -411,7 +411,8 @@ static void sys16_decrypt(const UINT8 *key,int cputype)
 	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
 	int size =  memory_region_length(REGION_CPU1);
 
-    decrypted = (UINT16 *)auto_malloc(size);
+	/* dont use auto_malloc machine init is called once will clear the memory after a reset*/
+    decrypted = (UINT16*)malloc(size);
 
 	memory_set_opcode_base(0,decrypted);
 	for (A = 0;A < size;A+=2)
