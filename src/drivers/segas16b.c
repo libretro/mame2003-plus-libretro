@@ -255,9 +255,12 @@ static WRITE16_HANDLER( misc_io_w )
 
 static READ16_HANDLER( dunkshot_custom_io_r )
 {
+
 	switch (offset & (0x3000/2))
 	{
 		case 0x3000/2:
+
+
 			switch ((offset/2) & 7)
 			{
 /*
@@ -284,17 +287,18 @@ static READ16_HANDLER( dunkshot_custom_io_r )
 
 static READ16_HANDLER( sdi_custom_io_r )
 {
+	printf("sdi_custom_io_r %06x %06x", offset ,(offset/2) & 3);
 	switch (offset & (0x3000/2))
 	{
+
 		case 0x3000/2:
 			switch ((offset/2) & 3)
 			{
-/*
-				case 0:	return readinputportbytag("ANALOGX1");
-				case 1:	return readinputportbytag("ANALOGY1");
-				case 2:	return readinputportbytag("ANALOGX2");
-				case 3:	return readinputportbytag("ANALOGY2");
-*/
+
+				case 0:	return readinputport(5);
+				case 1:	return readinputport(6);
+				case 2:	return readinputport(7);
+				case 3:	return readinputport(8);
 			}
 			break;
 	}
@@ -511,6 +515,70 @@ INPUT_PORTS_START( fantzn2x )
 	PORT_DIPSETTING(    0x40, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 INPUT_PORTS_END
+
+INPUT_PORTS_START( sdi )
+
+PORT_START //SERVICE
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) \
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) \
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE ) \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 ) \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 ) \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 ) \
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) \
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+
+	SYS16_UNUSED//joy1
+
+PORT_START//UNUSED
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_DOWN | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_UP | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT | IPF_8WAY | IPF_PLAYER2 )
+
+	SYS16_UNUSED//joy2
+
+PORT_START//coinage
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Allow_Continue ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x08, "2" )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x04, "4" )
+	PORT_DIPSETTING(    0x00, "Free")
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x80, "Every 50000" )
+	PORT_DIPSETTING(    0xc0, "50000" )
+	PORT_DIPSETTING(    0x40, "100000" )
+	PORT_DIPSETTING(    0x00, DEF_STR( None ) )
+
+	PORT_START				/* fake analog X */
+	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_X, 75, 5, 0, 255 )
+
+	PORT_START				/* fake analog Y */
+	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_Y, 75, 5, 0, 255 )
+
+	PORT_START				/* fake analog X */
+	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_X | IPF_PLAYER2, 75, 5, 0, 255 )
+
+	PORT_START				/* fake analog Y */
+	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_Y | IPF_PLAYER2, 75, 5, 0, 255 )
+
+INPUT_PORTS_END
+
 
 static MEMORY_READ16_START( aurail_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
@@ -1400,7 +1468,7 @@ static MACHINE_DRIVER_START( dunkshot )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(dunkshot_readmem,dunkshot_writemem)
 	MDRV_VIDEO_START(timscanr)
-	MDRV_MACHINE_INIT(generic_5358) //tilemaps need fixed by the looks of things segasic
+	MDRV_MACHINE_INIT(generic_5358)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( fantzn2x )
@@ -1416,9 +1484,9 @@ MACHINE_DRIVER_END
 GAMEX( 1987, dunkshot, 0,        dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)", GAME_NOT_WORKING  )
 GAMEX( 1987, dunkshota,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)",  GAME_NOT_WORKING  )
 GAMEX( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)",  GAME_NOT_WORKING  )
-GAMEX( 1987, defense,  sdi,      bullet,    aurail,    sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
-GAMEX( 1987, sdib,     sdi,      bullet,    aurail,    sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
-GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White Board", "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
+GAMEX( 1987, defense,  sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
+GAMEX( 1987, sdib,     sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
+GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White Board",     "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
 //all above games boot and work fine just need inputs done, dunkshot graphics arent right thinks its the tilemaps
 
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )

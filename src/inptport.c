@@ -146,7 +146,13 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 	"Flip Screen",
 	"Service Mode",
 	"Unused",
-	"Unknown"
+	"Unknown",
+	"Hardest",
+	"Hard",
+	"Normal",
+	"Easy",
+	"Allow_Continue",
+	"None"
 };
 
 
