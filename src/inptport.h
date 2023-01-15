@@ -301,6 +301,12 @@ enum {
 	STR_Service_Mode,
 	STR_Unused,
 	STR_Unknown,
+	STR_Hardest,
+	STR_Hard,
+	STR_Normal,
+	STR_Easy,
+	STR_Allow_Continue,
+	STR_None,
 	STR_TOTAL
 };
 

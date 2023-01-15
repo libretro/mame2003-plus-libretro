@@ -66,6 +66,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Double Wings
 * Dragon Bowl
 * Dream World
+* Dunk shot all sets
 * Dyna Gear
 * Eeekk!
 * ESPGaluda
@@ -932,5 +933,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Ninja Kazan the English version of Iga Ninjyutsuden and E.D.F. : Earth Defense Force (North America) to megasys1.c [arcadez]
 * Fixed some serious graphical problems affecting Zero Hour wrong colours bullet width tilemaps etc etc Red Clash will also benefit from this [Hap, dink, arcadez]
 * Added sound sample support for Zero Hour which was totally silent previously [dink, Otto_Pylotte, MistyDreams, arcadez]
+* Added sega fd089 added all dunkshot sets and aurail sets, also added sdib,destroyer sets [mamedev backports]
+* Improved mario palette we now use resnet mamedev backports]
 * Fixed the official andparent romset for Free Kick and hooked up missing button 2 for Free kick. Gigas and Giga Mark II [MAMEDev, arcadez]
 * Added a previously missing graphical effect for Mega Blast in taito_f2.c now when you get the green pickup the shield orb on your ship can be seen [HAZE, arcadez]
