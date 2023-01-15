@@ -18,8 +18,8 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 
 static UINT8 disable_screen_blanking;
-static read16_handler custom_io_r;
-static write16_handler custom_io_w;
+static read16_handler custom_io_r = NULL;
+static write16_handler custom_io_w = NULL;
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -241,6 +241,7 @@ static READ16_HANDLER( misc_io_r )
 {
 	if (custom_io_r)
 		return (*custom_io_r)(offset, mem_mask);
+
 	else
 		return standard_io_r(offset, mem_mask);
 }
@@ -287,7 +288,6 @@ static READ16_HANDLER( dunkshot_custom_io_r )
 
 static READ16_HANDLER( sdi_custom_io_r )
 {
-	printf("sdi_custom_io_r %06x %06x", offset ,(offset/2) & 3);
 	switch (offset & (0x3000/2))
 	{
 
@@ -517,7 +517,6 @@ INPUT_PORTS_START( fantzn2x )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sdi )
-
 PORT_START //SERVICE
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) \
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) \
@@ -566,7 +565,7 @@ PORT_START//coinage
 	PORT_DIPSETTING(    0x00, DEF_STR( None ) )
 
 	PORT_START				/* fake analog X */
-	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_X, 75, 5, 0, 255 )
+	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_X | IPF_REVERSE, 75, 5, 0, 255 )
 
 	PORT_START				/* fake analog Y */
 	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_Y, 75, 5, 0, 255 )
@@ -576,7 +575,6 @@ PORT_START//coinage
 
 	PORT_START				/* fake analog Y */
 	PORT_ANALOG( 0xff, 0x80, IPT_TRACKBALL_Y | IPF_PLAYER2, 75, 5, 0, 255 )
-
 INPUT_PORTS_END
 
 
@@ -1390,8 +1388,6 @@ static MACHINE_INIT( generic_5704 )
 
 	sys16_soundbanktype=2;
 	disable_screen_blanking = 0;
-	custom_io_r = NULL;
-	custom_io_w = NULL;
 }
 
 static MACHINE_INIT( generic_5358 )
@@ -1404,8 +1400,6 @@ static MACHINE_INIT( generic_5358 )
 
 	sys16_soundbanktype=1;
 	disable_screen_blanking = 0;
-	custom_io_r = NULL;
-	custom_io_w = NULL;
 }
 
 static DRIVER_INIT( FD1089A )
@@ -1480,14 +1474,22 @@ static MACHINE_DRIVER_START( fantzn2x )
 	MDRV_MACHINE_INIT(generic_5704)
 MACHINE_DRIVER_END
 
+/* init notes
+
+   on boot order
+   DRIVER_INIT
+   MACHINE_INIT
+   reset only MACHINE_INIT is called
+*/
+
 /*          rom       parent     machine    inp        init */
 GAMEX( 1987, dunkshot, 0,        dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)", GAME_NOT_WORKING  )
 GAMEX( 1987, dunkshota,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)",  GAME_NOT_WORKING  )
 GAMEX( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)",  GAME_NOT_WORKING  )
-GAMEX( 1987, defense,  sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
-GAMEX( 1987, sdib,     sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
-GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White Board",     "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
-//all above games boot and work fine just need inputs done, dunkshot graphics arent right thinks its the tilemaps
+GAME( 1987, defense,  sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)" )
+GAME( 1987, sdib,     sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)" )
+GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White Board",     "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)" )
+//all above games boot and work fine just need inputs done,
 
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )
 GAME( 1990, aurail1,  aurail,   aurail,    aurail,    FD1089B,  ROT0,   "Sega / Westone",  "Aurail (set 2, World) (FD1089B 317-0168)" )
