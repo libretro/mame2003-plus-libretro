@@ -18,6 +18,8 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 
 static UINT8 disable_screen_blanking;
+static read16_handler custom_io_r;
+static write16_handler custom_io_w;
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -235,6 +237,23 @@ static WRITE16_HANDLER( standard_io_w )
 	logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", activecpu_get_pc(), offset * 2, data, mem_mask ^ 0xffff);
 }
 
+static READ16_HANDLER( misc_io_r )
+{
+	if (custom_io_r)
+		return (*custom_io_r)(offset, mem_mask);
+	else
+		return standard_io_r(offset, mem_mask);
+}
+
+
+static WRITE16_HANDLER( misc_io_w )
+{
+	if (custom_io_w)
+		(*custom_io_w)(offset, data, mem_mask);
+	else
+		standard_io_w(offset, data, mem_mask);
+}
+
 READ16_HANDLER( segaic16_textram_r ){
 	return segaic16_textram_0[offset];
 }
@@ -402,7 +421,7 @@ static MEMORY_READ16_START( aurail_readmem )
 	{ 0x410000, 0x410fff, segaic16_textram_r },
 	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40000, 0xc43FFF, standard_io_r },
+	{ 0xc40000, 0xc43FFF, misc_io_r },
 	{ 0xfc0000, 0xfcffff, MRA16_RAM},
 	{ 0xff0000, 0xff3fff, SYS16_MRA16_WORKINGRAM },
 	{ 0xff4000, 0xffffff, MRA16_RAM },
@@ -414,7 +433,7 @@ static MEMORY_WRITE16_START( aurail_writemem )
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
-	{ 0xc40000, 0xc43FFF, standard_io_w },
+	{ 0xc40000, 0xc43FFF, misc_io_w },
 	{ 0xfc0000, 0xfcffff, rom_5704_bank_w },
 	{ 0xfe0006, 0xfe0007, sound_command_w },
 	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
@@ -427,7 +446,7 @@ static MEMORY_READ16_START( bullet_readmem )
 	{ 0x410000, 0x410fff, segaic16_textram_r },
 	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40000, 0xc43fff, standard_io_r },
+	{ 0xc40000, 0xc43fff, misc_io_r },
 	{ 0xff0000, 0xff3fff, SYS16_MRA16_WORKINGRAM },
 	{ 0xff4000, 0xffffff, MRA16_RAM },
 MEMORY_END
@@ -440,7 +459,7 @@ static MEMORY_WRITE16_START( bullet_writemem )
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
 	{ 0xc00006, 0xc00007, sound_command_w },
-	{ 0xc40000, 0xc43fff, standard_io_w }, //bullet
+	{ 0xc40000, 0xc43fff, misc_io_w }, //bullet
 	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 	{ 0xff4000, 0xffffff, MWA16_RAM },
 MEMORY_END
@@ -453,7 +472,7 @@ static MEMORY_READ16_START( cotton_readmem )
 	{ 0x400000, 0x40FFFF, segaic16_tileram_r },
 	{ 0x410000, 0x410FFF, segaic16_textram_r },
 	{ 0x500000, 0x500FFF, SYS16_MRA16_PALETTERAM },
-	{ 0x600000, 0x603FFF, standard_io_r },
+	{ 0x600000, 0x603FFF, misc_io_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( cotton_writemem )
@@ -464,7 +483,7 @@ static MEMORY_WRITE16_START( cotton_writemem )
 	{ 0x400000, 0x40FFFF, segaic16_tileram_0_w, &segaic16_tileram_0 },
 	{ 0x410000, 0x410FFF, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x500000, 0x500FFF, segaic16_paletteram_w, &paletteram16 },
-	{ 0x600000, 0x603FFF, standard_io_w  },
+	{ 0x600000, 0x603FFF, misc_io_w  },
 	{ 0xFF0006, 0xFF0007, sound_command_w },
 MEMORY_END
 
@@ -474,7 +493,7 @@ static MEMORY_READ16_START( dunkshot_readmem )
 	{ 0x410000, 0x410fff, segaic16_textram_r },
 	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40000, 0xc43fff, standard_io_r },//dunkshot_custom_io_r todo
+	{ 0xc40000, 0xc43fff, misc_io_r },//dunkshot_custom_io_r todo
 	{ 0xff0000, 0xff3fff, SYS16_MRA16_WORKINGRAM },
 	{ 0xff4000, 0xffffff, MRA16_RAM },
 MEMORY_END
@@ -486,7 +505,7 @@ static MEMORY_WRITE16_START( dunkshot_writemem )
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
 	{ 0xFE0006, 0xFE0007, sound_command_w },
-	{ 0xc40000, 0xc43fff, standard_io_w },
+	{ 0xc40000, 0xc43fff, misc_io_w },
 	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 	{ 0xff4000, 0xffffff, MWA16_RAM },
 MEMORY_END
@@ -499,7 +518,7 @@ static MEMORY_READ16_START( fantzn2x_readmem )
 	{ 0x410000, 0x410fff, segaic16_textram_r },
 	{ 0x440000, 0x440fff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40000, 0xc43FFF, standard_io_r }, MEMORY_END
+	{ 0xc40000, 0xc43FFF, misc_io_r }, MEMORY_END
 
 static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
@@ -509,7 +528,7 @@ static MEMORY_WRITE16_START( fantzn2x_writemem )
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
-	{ 0xc40000, 0xc43FFF, standard_io_w },
+	{ 0xc40000, 0xc43FFF, misc_io_w },
 	{ 0xfe0006, 0xfe0007, sound_command_w },
 MEMORY_END
 
@@ -1200,24 +1219,28 @@ static MACHINE_INIT( generic_5704 )
 {
 	int i;
 	segaic16_tilemap_reset(0);
-	
+
 	for (i = 0; i < 16; i++)
 		segaic16_sprites_set_bank(0, i, default_banklist[i]);
-	
+
 	sys16_soundbanktype=2;
 	disable_screen_blanking = 0;
+	custom_io_r = NULL;
+	custom_io_w = NULL;
 }
 
 static MACHINE_INIT( generic_5358 )
 {
 	int i;
 	segaic16_tilemap_reset(0);
-	
+
 	for (i = 0; i < 16; i++)
 		segaic16_sprites_set_bank(0, i, alternate_banklist[i]);
-	
+
 	sys16_soundbanktype=1;
 	disable_screen_blanking = 0;
+	custom_io_r = NULL;
+	custom_io_w = NULL;
 }
 
 static DRIVER_INIT( FD1089A )
@@ -1261,8 +1284,8 @@ static MACHINE_DRIVER_START( dunkshot )
 	MDRV_IMPORT_FROM(system16_7759)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(dunkshot_readmem,dunkshot_writemem)
-	MDRV_VIDEO_START(timscanr) 
-	MDRV_MACHINE_INIT(generic_5358) //tilemaps need fixed by the looks of things segasic 
+	MDRV_VIDEO_START(timscanr)
+	MDRV_MACHINE_INIT(generic_5358) //tilemaps need fixed by the looks of things segasic
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( fantzn2x )
