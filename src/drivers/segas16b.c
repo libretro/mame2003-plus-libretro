@@ -245,7 +245,6 @@ static READ16_HANDLER( misc_io_r )
 		return standard_io_r(offset, mem_mask);
 }
 
-
 static WRITE16_HANDLER( misc_io_w )
 {
 	if (custom_io_w)
@@ -253,6 +252,104 @@ static WRITE16_HANDLER( misc_io_w )
 	else
 		standard_io_w(offset, data, mem_mask);
 }
+
+static READ16_HANDLER( dunkshot_custom_io_r )
+{
+	switch (offset & (0x3000/2))
+	{
+		case 0x3000/2:
+			switch ((offset/2) & 7)
+			{
+/*
+				case 0:	return (readinputportbytag("ANALOGX1") << 4) >> (8 * (offset & 1));
+				case 1:	return (readinputportbytag("ANALOGY1") << 4) >> (8 * (offset & 1));
+				case 2:	return (readinputportbytag("ANALOGX2") << 4) >> (8 * (offset & 1));
+				case 3:	return (readinputportbytag("ANALOGY2") << 4) >> (8 * (offset & 1));
+				case 4:	return (readinputportbytag("ANALOGX3") << 4) >> (8 * (offset & 1));
+				case 5:	return (readinputportbytag("ANALOGY3") << 4) >> (8 * (offset & 1));
+				case 6:	return (readinputportbytag("ANALOGX4") << 4) >> (8 * (offset & 1));
+				case 7:	return (readinputportbytag("ANALOGY4") << 4) >> (8 * (offset & 1));
+*/
+			}
+			break;
+	}
+	return standard_io_r(offset, mem_mask);
+}
+
+/*************************************
+ *
+ *	SDI custom I/O
+ *
+ *************************************/
+
+static READ16_HANDLER( sdi_custom_io_r )
+{
+	switch (offset & (0x3000/2))
+	{
+		case 0x3000/2:
+			switch ((offset/2) & 3)
+			{
+/*
+				case 0:	return readinputportbytag("ANALOGX1");
+				case 1:	return readinputportbytag("ANALOGY1");
+				case 2:	return readinputportbytag("ANALOGX2");
+				case 3:	return readinputportbytag("ANALOGY2");
+*/
+			}
+			break;
+	}
+	return standard_io_r(offset, mem_mask);
+}
+
+
+
+/*************************************
+ *
+ *	Sukeban Jansi Ryuko custom I/O
+ *
+ *************************************/
+
+static READ16_HANDLER( sjryuko_custom_io_r )
+{
+	static const char *portname[] = { "MJ0", "MJ1", "MJ2", "MJ3", "MJ4", "MJ5" };
+
+	switch (offset & (0x3000/2))
+	{
+		case 0x1000/2:
+			switch (offset & 3)
+			{
+	/*
+				case 1:
+					if (readinputportbytag_safe(portname[mj_input_num], 0xff) != 0xff)
+						return 0xff & ~(1 << mj_input_num);
+					return 0xff;
+
+				case 2:
+					return readinputportbytag_safe(portname[mj_input_num], 0xff);
+	*/
+			}
+			break;
+	}
+	return standard_io_r(offset, mem_mask);
+}
+
+
+static WRITE16_HANDLER( sjryuko_custom_io_w )
+{
+	static UINT8 last_val;
+
+	switch (offset & (0x3000/2))
+	{
+	/*
+		case 0x0000/2:
+			if (((last_val ^ data) & 4) && (data & 4))
+				mj_input_num = (mj_input_num + 1) % 6;
+			break;
+	*/
+	}
+	standard_io_w(offset, data, mem_mask);
+}
+
 
 READ16_HANDLER( segaic16_textram_r ){
 	return segaic16_textram_0[offset];
@@ -458,8 +555,8 @@ static MEMORY_WRITE16_START( bullet_writemem )
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
-	{ 0xc00006, 0xc00007, sound_command_w },
-	{ 0xc40000, 0xc43fff, misc_io_w }, //bullet
+	{ 0xc00006, 0xc00007, sound_command_w }, //bullet
+	{ 0xc40000, 0xc43fff, misc_io_w },
 	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 	{ 0xff4000, 0xffffff, MWA16_RAM },
 MEMORY_END
@@ -1253,6 +1350,24 @@ static DRIVER_INIT( FD1089B )
 	fd1089b_decrypt();
 }
 
+static DRIVER_INIT( dunkshot )
+{
+	custom_io_r = dunkshot_custom_io_r;
+	fd1089a_decrypt();
+}
+
+static DRIVER_INIT( sdi )
+{
+	custom_io_r = sdi_custom_io_r;
+	fd1089a_decrypt();
+}
+
+static DRIVER_INIT( sjryuko )
+{
+	custom_io_r = sjryuko_custom_io_r;
+	custom_io_w = sjryuko_custom_io_w;
+	fd1089b_decrypt();
+}
 
 static MACHINE_DRIVER_START( aurail )
 	/* basic machine hardware */
@@ -1298,12 +1413,12 @@ static MACHINE_DRIVER_START( fantzn2x )
 MACHINE_DRIVER_END
 
 /*          rom       parent     machine    inp        init */
-GAMEX( 1987, dunkshot, 0,        dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)", GAME_NOT_WORKING  )
-GAMEX( 1987, dunkshota,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)",  GAME_NOT_WORKING  )
-GAMEX( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    FD1089A,  ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)",  GAME_NOT_WORKING  )
-GAMEX( 1987, defense,  sdi,      bullet,    aurail,    FD1089A,  ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
-GAMEX( 1987, sdib,     sdi,      bullet,    aurail,    FD1089A,  ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
-GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    FD1089B,  ROT0,   "White Board", "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
+GAMEX( 1987, dunkshot, 0,        dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)", GAME_NOT_WORKING  )
+GAMEX( 1987, dunkshota,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)",  GAME_NOT_WORKING  )
+GAMEX( 1987, dunkshoto,dunkshot, dunkshot,  aurail,    dunkshot, ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)",  GAME_NOT_WORKING  )
+GAMEX( 1987, defense,  sdi,      bullet,    aurail,    sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)",  GAME_NOT_WORKING )
+GAMEX( 1987, sdib,     sdi,      bullet,    aurail,    sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)", GAME_NOT_WORKING )
+GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White Board", "Sukeban Jansi Ryuko (set 2, System 16B, FD1089B 317-5021)", GAME_NOT_WORKING )
 //all above games boot and work fine just need inputs done, dunkshot graphics arent right thinks its the tilemaps
 
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )
