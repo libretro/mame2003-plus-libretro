@@ -508,8 +508,8 @@ INPUT_PORTS_START( penky )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1? */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1? */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START	/* port $2023 */
@@ -518,8 +518,8 @@ INPUT_PORTS_START( penky )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1? */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1? */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START	/* port $2024 */
@@ -594,19 +594,19 @@ static struct GfxDecodeInfo paradise_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo torus_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x100, 1  }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, // [1] Background
-	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, // [2] Midground
-	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, // [3] Foreground
+	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x100, 1  }, /* [0] Sprites */
+	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, /* [1] Background */
+	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, /* [2] Midground */
+	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, /* [3] Foreground */
 	{ -1 }
 };
 
 static struct GfxDecodeInfo madball_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x500, 1  }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, // [1] Background
-	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, // [2] Midground
-	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, // [3] Foreground
+	{ REGION_GFX1, 0, &torus_layout_16x16x8, 0x500, 1  }, /* [0] Sprites */
+	{ REGION_GFX2, 0, &layout_8x8x4,	 0x400, 16 }, /* [1] Background */
+	{ REGION_GFX3, 0, &layout_8x8x8,	 0x300, 1  }, /* [2] Midground */
+	{ REGION_GFX4, 0, &layout_8x8x8,	 0x000, 1  }, /* [3] Foreground */
 	{ -1 }
 };
 

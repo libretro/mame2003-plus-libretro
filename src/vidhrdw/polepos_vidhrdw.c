@@ -502,7 +502,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 	for (i = 0; i < 64; i++, posmem += 2, sizmem += 2)
 	{
 		int sx = (posmem[1] & 0x3ff) - 0x40 + 4;
-		int sy = 512 - (posmem[0] & 0x1ff) + 1;	// sprites are buffered and delayed by one scanline
+		int sy = 512 - (posmem[0] & 0x1ff) + 1;	/* sprites are buffered and delayed by one scanline */
 		int sizex = (sizmem[1] & 0x3f00) >> 8;
 		int sizey = (sizmem[0] & 0x3f00) >> 8;
 		int code = sizmem[0] & 0x7f;

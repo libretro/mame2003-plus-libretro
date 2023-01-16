@@ -204,7 +204,7 @@ VIDEO_UPDATE( bankp )
 	switch (priority)
 	{
 	case 0: /* combat hawk uses this */
-		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); // just a guess
+		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); /* just a guess */
 		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
 		break;
 	case 1:
@@ -216,7 +216,7 @@ VIDEO_UPDATE( bankp )
 		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 		break;
 	case 3:
-		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); // just a guess
+		tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, TILEMAP_IGNORE_TRANSPARENCY, 0); /* just a guess */
 		tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 		break;
 	}

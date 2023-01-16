@@ -58,9 +58,9 @@ extern VIDEO_UPDATE( sbrkout );
 /* Colors used in overlay. */
 #define OVERLAY_RED		MAKE_ARGB(0x04,0xff,0x20,0x20)
 #define OVERLAY_GREEN		MAKE_ARGB(0x04,0x20,0xff,0x20)
-// Original blue is too dark so is replaced with crayola blue
-// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
-//#define OVERLAY_BLUE		MAKE_ARGB(0x08,0x20,0x20,0xff)
+/* Original blue is too dark so is replaced with crayola blue */
+/* https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola) */
+/*#define OVERLAY_BLUE		MAKE_ARGB(0x08,0x20,0x20,0xff) */
 #define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
 #define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
 
@@ -70,7 +70,7 @@ extern VIDEO_UPDATE( sbrkout );
 /* real machine, though a little ugly and likely just because of */
 /* limited ability to do overlays back in 1978. */
 /* For the authentic look, uncomment the definition below. */
-//#define USE_AUTHENTIC_OVERLAY 1
+/*#define USE_AUTHENTIC_OVERLAY 1 */
 OVERLAY_START( sbrkout_overlay )
 #ifdef USE_AUTHENTIC_OVERLAY
 	OVERLAY_RECT( 216,   0, 256, 224, OVERLAY_BLUE)

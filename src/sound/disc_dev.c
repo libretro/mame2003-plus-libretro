@@ -17,34 +17,34 @@
 
 struct dsd_555_astbl_context
 {
-	int		flip_flop;	// 555 flip/flop output state
-	double	vCap;		// voltage on cap
-	double	step;		// time for sampling rate
+	int		flip_flop;	/* 555 flip/flop output state */
+	double	vCap;		/* voltage on cap */
+	double	step;		/* time for sampling rate */
 	double	threshold;
 	double	trigger;
 };
 
 struct dsd_555_cc_context
 {
-	unsigned int	type;		// type of 555cc circuit
-	unsigned int	state[2];	// keeps track of excess flip_flop changes during the current step
-	int				flip_flop;	// 555 flip/flop output state
-	double			vCap;		// voltage on cap
-	double			step;		// time for sampling rate
+	unsigned int	type;		/* type of 555cc circuit */
+	unsigned int	state[2];	/* keeps track of excess flip_flop changes during the current step */
+	int				flip_flop;	/* 555 flip/flop output state */
+	double			vCap;		/* voltage on cap */
+	double			step;		/* time for sampling rate */
 };
 
 struct dsd_566_context
 {
-	unsigned int	state[2];	// keeps track of excess flip_flop changes during the current step
-	int			flip_flop;		// 566 flip/flop output state
-	double		vCap;			// voltage on cap
-	double		step;			// time for sampling rate
-	double		vDiff;			// voltage difference between vPlus and vNeg
-	double		vSqrLow;		// voltage for a squarewave at low
-	double		vSqrHigh;		// voltage for a squarewave at high
-	double		thresholdLow;	// falling threshold
-	double		thresholdHigh;	// rising threshold
-	double		triOffset;		// used to shift a triangle to AC
+	unsigned int	state[2];	/* keeps track of excess flip_flop changes during the current step */
+	int			flip_flop;		/* 566 flip/flop output state */
+	double		vCap;			/* voltage on cap */
+	double		step;			/* time for sampling rate */
+	double		vDiff;			/* voltage difference between vPlus and vNeg */
+	double		vSqrLow;		/* voltage for a squarewave at low */
+	double		vSqrHigh;		/* voltage for a squarewave at high */
+	double		thresholdLow;	/* falling threshold */
+	double		thresholdHigh;	/* rising threshold */
+	double		triOffset;		/* used to shift a triangle to AC */
 };
 
 
@@ -75,10 +75,10 @@ void dsd_555_astbl_step(struct node_description *node)
 	const struct discrete_555_astbl_desc *info = node->custom;
 	struct dsd_555_astbl_context *context = node->context;
 
-	double dt;	// change in time
-	double tRC;	// RC time constant
-	double vC;	// Current voltage on capacitor, before dt
-	double vCnext = 0;	// Voltage on capacitor, after dt
+	double dt;	/* change in time */
+	double tRC;	/* RC time constant */
+	double vC;	/* Current voltage on capacitor, before dt */
+	double vCnext = 0;	/* Voltage on capacitor, after dt */
 
 	if(DSD_555_ASTBL_RESET)
 	{
@@ -97,7 +97,7 @@ void dsd_555_astbl_step(struct node_description *node)
 		}
 
 		/* Calculate future capacitor voltage.
-		 * ref@ http://www.physics.rutgers.edu/ugrad/205/capacitance.html
+		 * ref@ http://www.physics.rutgers.edu/ugrad/205/capacitance.html 
 		 * The formulas from the ref pages have been modified to reflect that we are stepping the change.
 		 * dt = time of sample (1/sample frequency)
 		 * VC = Voltage across capacitor
@@ -242,18 +242,18 @@ void dsd_555_cc_step(struct node_description *node)
 	const struct discrete_555_cc_desc *info = node->custom;
 	struct dsd_555_cc_context *context = node->context;
 
-	double i;	// Charging current created by vIn
-	double rC = 0;	// Equivalent charging resistor
-	double rD = 0;	// Equivalent discharging resistor
-	double vi = 0;	// Equivalent voltage from current source
-	double vB = 0;	// Equivalent voltage from bias voltage
-	double v  = 0;	// Equivalent voltage total from current source and bias circuit if used
-	double dt;	// change in time
-	double tRC;	// RC time constant
-	double vC;	// Current voltage on capacitor, before dt
-	double vCnext = 0;	// Voltage on capacitor, after dt
-	double viLimit;	// vIn and the junction voltage limit the max charging voltage from i
-	double rTemp;	// play thing
+	double i;	/* Charging current created by vIn */
+	double rC = 0;	/* Equivalent charging resistor */
+	double rD = 0;	/* Equivalent discharging resistor */
+	double vi = 0;	/* Equivalent voltage from current source */
+	double vB = 0;	/* Equivalent voltage from bias voltage */
+	double v  = 0;	/* Equivalent voltage total from current source and bias circuit if used */
+	double dt;	/* change in time */
+	double tRC;	/* RC time constant */
+	double vC;	/* Current voltage on capacitor, before dt */
+	double vCnext = 0;	/* Voltage on capacitor, after dt */
+	double viLimit;	/* vIn and the junction voltage limit the max charging voltage from i */
+	double rTemp;	/* play thing */
 
 
 	if (DSD_555_CC_RESET)
@@ -267,13 +267,13 @@ void dsd_555_cc_step(struct node_description *node)
 	}
 	else
 	{
-		dt = context->step;	// Change in time
-		vC = context->vCap;	// Set to voltage before change
-		viLimit = DSD_555_CC_VIN + info->vCCjunction;	// the max vC can be and still be charged by i
+		dt = context->step;	/* Change in time */
+		vC = context->vCap;	/* Set to voltage before change */
+		viLimit = DSD_555_CC_VIN + info->vCCjunction;	/* the max vC can be and still be charged by i */
 		/* Calculate charging current */
 		i = (info->vCCsource - viLimit) / DSD_555_CC_R;
 
-		switch (context->type)	// see dsd_555_cc_reset for descriptions
+		switch (context->type)	/* see dsd_555_cc_reset for descriptions */
 		{
 			case 1:
 				rD = DSD_555_CC_RDIS;
@@ -305,7 +305,7 @@ void dsd_555_cc_step(struct node_description *node)
 				rTemp = DSD_555_CC_RBIAS + DSD_555_CC_RDIS;
 				rC = (rTemp * DSD_555_CC_RGND) / (rTemp + DSD_555_CC_RGND);
 				rTemp += DSD_555_CC_RGND;
-				rTemp = DSD_555_CC_RGND / rTemp;	// now has voltage divider ratio, not resistance
+				rTemp = DSD_555_CC_RGND / rTemp;	/* now has voltage divider ratio, not resistance */
 				vi = i * DSD_555_CC_RBIAS * rTemp;
 				vB = info->v555 * rTemp;
 				rD = (DSD_555_CC_RGND * DSD_555_CC_RDIS) / (DSD_555_CC_RGND + DSD_555_CC_RDIS);
@@ -371,7 +371,7 @@ void dsd_555_cc_step(struct node_description *node)
 						context->state[1] = (context->state[1] + 1) & 0x03;
 					}
 				}
-				else	// Immediate discharge. No change in dt. 
+				else	/* Immediate discharge. No change in dt.  */
 				{
 					vC = info->trigger555;
 					context->flip_flop = 1;
@@ -427,7 +427,7 @@ void dsd_555_cc_step(struct node_description *node)
 						context->state[1] = (context->state[1] + 1) & 0x03;
 					}
 				}
-				else	// Immediate discharge. No change in dt. 
+				else	/* Immediate discharge. No change in dt.  */
 				{
 					vC = info->trigger555;
 					context->flip_flop = 1;
@@ -616,15 +616,15 @@ void dsd_566_step(struct node_description *node)
 	const struct discrete_566_desc *info = node->custom;
 	struct dsd_566_context *context = node->context;
 
-	double i;	// Charging current created by vIn
-	double dt;	// change in time
-	double vC;	// Current voltage on capacitor, before dt
-	double vCnext = 0;	// Voltage on capacitor, after dt
+	double i;	/* Charging current created by vIn */
+	double dt;	/* change in time */
+	double vC;	/* Current voltage on capacitor, before dt */
+	double vCnext = 0;	/* Voltage on capacitor, after dt */
 
 	if (DSD_566_ENABLE)
 	{
-		dt = context->step;	// Change in time
-		vC = context->vCap;	// Set to voltage before change
+		dt = context->step;	/* Change in time */
+		vC = context->vCap;	/* Set to voltage before change */
 		/* Calculate charging current */
 		i = (context->vDiff - DSD_566_VMOD) / DSD_566_R;
 

@@ -46,7 +46,7 @@ static data8_t playmark_oki_command;
 
 
 extern data16_t *bigtwin_bgvideoram;
-//extern size_t bigtwin_bgvideoram_size;
+/*extern size_t bigtwin_bgvideoram_size; */
 extern data16_t *wbeachvl_videoram1,*wbeachvl_videoram2,*wbeachvl_videoram3;
 extern data16_t *wbeachvl_rowscroll;
 
@@ -169,7 +169,7 @@ static READ_HANDLER( playmark_snd_command_r )
 
 	if ((playmark_oki_control & 0x38) == 0x30) {
 		data = playmark_snd_command;
-//		log_cb(RETRO_LOG_DEBUG, LOGPRE "PortB reading %02x from the 68K\n",data);
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "PortB reading %02x from the 68K\n",data); */
 	}
 	else if ((playmark_oki_control & 0x38) == 0x28) {
 		data = (OKIM6295_status_0_r(0) & 0x0f);
@@ -238,7 +238,7 @@ static WRITE_HANDLER( playmark_snd_control_w )
 
 static WRITE_HANDLER( hrdtimes_snd_control_w )
 {
-	//  This port controls communications to and from the 68K and the OKI device. See playmark_snd_control_w above. OKI banking is also handled here.
+	/*  This port controls communications to and from the 68K and the OKI device. See playmark_snd_control_w above. OKI banking is also handled here. */
 	
 	static int old_bank = 0;
 
@@ -256,7 +256,7 @@ static WRITE_HANDLER( hrdtimes_snd_control_w )
 
 	if ((data & 0x38) == 0x18)
 	{
-//		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);
+/*		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command); */
 		OKIM6295_data_0_w(0, playmark_oki_command);
 	}
 }
@@ -325,8 +325,8 @@ static MEMORY_WRITE16_START( wbeachvl_writemem )
 	{ 0x510000, 0x51000b, wbeachvl_scroll_w },
 	{ 0x51000c, 0x51000d, MWA16_NOP	}, /* 2 and 3 */
 	{ 0x710016, 0x710017, wbeachvl_coin_eeprom_w },
-// disabled sound calls for now	
-//    { 0x71001e, 0x71001f, playmark_snd_command_w },
+/* disabled sound calls for now	 */
+/*    { 0x71001e, 0x71001f, playmark_snd_command_w }, */
 	{ 0x780000, 0x780fff, paletteram16_RRRRRGGGGGBBBBBx_word_w, &paletteram16 },
 	{ 0xff0000, 0xffffff, MWA16_RAM },
 MEMORY_END
@@ -336,14 +336,14 @@ static data16_t *hrdtimes_rom; /* trampoline */
 static MEMORY_READ16_START( hrdtimes_readmem )
     { 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x080000, 0x0bffff, MRA16_RAM },
-	{ 0x0c0000, 0x0fffff, MRA16_ROM }, //AM_REGION(REGION_CPU1, 0x0c0000)
+	{ 0x0c0000, 0x0fffff, MRA16_ROM }, /*AM_REGION(REGION_CPU1, 0x0c0000) */
 	{ 0x100000, 0x103fff, MRA16_RAM },
 	{ 0x104000, 0x107fff, MRA16_RAM },
 	{ 0x108000, 0x10ffff, MRA16_RAM },
-	{ 0x10c000, 0x10ffff, MRA16_RAM }, // Unused
+	{ 0x10c000, 0x10ffff, MRA16_RAM }, /* Unused */
 	{ 0x200000, 0x200fff, MRA16_RAM },
 	{ 0x280000, 0x2807ff, MRA16_RAM },
-	{ 0x280800, 0x280fff, MRA16_RAM }, // unused
+	{ 0x280800, 0x280fff, MRA16_RAM }, /* unused */
 	{ 0x300010, 0x300011, input_port_0_word_r },
 	{ 0x300012, 0x300013, input_port_1_word_r },
 	{ 0x300014, 0x300015, input_port_2_word_r },
@@ -354,18 +354,18 @@ MEMORY_END
 static MEMORY_WRITE16_START( hrdtimes_writemem )
     { 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x080000, 0x0bffff, MWA16_RAM },
-	{ 0x0c0000, 0x0fffff, MWA16_ROM, &hrdtimes_rom }, // correct.?? //AM_REGION(REGION_CPU1, 0x0c0000)
+	{ 0x0c0000, 0x0fffff, MWA16_ROM, &hrdtimes_rom }, /* correct.?? AM_REGION(REGION_CPU1, 0x0c0000) */
 	{ 0x100000, 0x103fff, hrdtimes_bgvideoram_w, &wbeachvl_videoram3 },
 	{ 0x104000, 0x107fff, hrdtimes_fgvideoram_w, &wbeachvl_videoram2 },
 	{ 0x108000, 0x10ffff, hrdtimes_txvideoram_w, &wbeachvl_videoram1 },
-	{ 0x10c000, 0x10ffff, MWA16_RAM }, // Unused
+	{ 0x10c000, 0x10ffff, MWA16_RAM }, /* Unused */
 	{ 0x110000, 0x11000d, hrdtimes_scroll_w },
 	{ 0x200000, 0x200fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x280000, 0x2807ff, bigtwin_paletteram_w, &paletteram16 },
-	{ 0x280800, 0x280fff, MWA16_RAM },// unused
+	{ 0x280800, 0x280fff, MWA16_RAM },/* unused */
 	{ 0x300016, 0x300017, hrdtimes_coin_w },
-// disable sound command for now	
-//	{ 0x30001e, 0x30001f, playmark_snd_command_w },
+/* disable sound command for now	 */
+/*	{ 0x30001e, 0x30001f, playmark_snd_command_w }, */
 	{ 0x304000, 0x304001, MWA16_NOP	},	/* watchdog? irq ack? */
 MEMORY_END
 
@@ -401,7 +401,7 @@ static PORT_READ_START( hrdtimes_sound_readport )
 PORT_END
 
 static PORT_WRITE_START( hrdtimes_sound_writeport )
-//	{ 0x00, 0x00, playmark_oki_banking_w },				/* 4 bit port */
+/*	{ 0x00, 0x00, playmark_oki_banking_w },*/				/* 4 bit port */
 	{ 0x01, 0x01, playmark_oki_w },
 	{ 0x02, 0x02, hrdtimes_snd_control_w }, /* OKI banking via this port */
 PORT_END
@@ -833,11 +833,11 @@ static MACHINE_DRIVER_START( wbeachvl )
 	MDRV_CPU_MEMORY(wbeachvl_readmem,wbeachvl_writemem)
 	MDRV_CPU_VBLANK_INT(irq2_line_hold,1)
 
-// disabled sound cpu as game fails to boot with it active
-//    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))	/* 3MHz */
+/* disabled sound cpu as game fails to boot with it active */
+/*    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))*/	/* 3MHz */ 
 	/* Program and Data Maps are internal to the MCU */
-// 	MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem)
-//	MDRV_CPU_PORTS(playmark_sound_readport,playmark_sound_writeport)
+/* 	MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem) */
+/*	MDRV_CPU_PORTS(playmark_sound_readport,playmark_sound_writeport) */
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
@@ -865,11 +865,11 @@ static MACHINE_DRIVER_START( hrdtimes )
 	MDRV_CPU_MEMORY(hrdtimes_readmem,hrdtimes_writemem)
 	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
 
-// disable sound cpu for now
-//    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))	/* 3MHz */
+/* disable sound cpu for now */
+/*    MDRV_CPU_ADD(PIC16C57, (12000000/PIC16C5x_CLOCK_DIVIDER))*/	/* 3MHz */
 	/* Program and Data Maps are internal to the MCU */
-//    MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem)
-//	MDRV_CPU_PORTS(hrdtimes_sound_readport,hrdtimes_sound_writeport)
+/*    MDRV_CPU_MEMORY(playmark_sound_readmem,playmark_sound_writemem) */
+/*	MDRV_CPU_PORTS(hrdtimes_sound_readport,hrdtimes_sound_writeport) */
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -929,9 +929,9 @@ ROM_START( wbeachvl )
 	ROM_LOAD16_BYTE( "wbv_02.bin",   0x000000, 0x40000, CRC(c7cca29e) SHA1(03af361081d688c4204a95f7f5babcc598b72c23) )
 	ROM_LOAD16_BYTE( "wbv_03.bin",   0x000001, 0x40000, CRC(db4e69d5) SHA1(119bf35a463d279ddde67ab08f6f1bab9f05cf0c) )
 
-//	ROM_REGION( 0x1009, REGION_CPU2, 0 ) /* sound (PIC16C57) */
-	// 0x1000 rom data (actually 0x800 12-bit words), + 0x9 config bytes
-//	ROM_LOAD( "pic16c57",   0x0000, 0x1009, CRC(35439064) SHA1(ab0c5bafd76a2cb2a2e5ddb9d0578fd7e2241e43) )
+/*	ROM_REGION( 0x1009, REGION_CPU2, 0 )*/ /* sound (PIC16C57) */
+	/* 0x1000 rom data (actually 0x800 12-bit words), + 0x9 config bytes */
+/*	ROM_LOAD( "pic16c57",   0x0000, 0x1009, CRC(35439064) SHA1(ab0c5bafd76a2cb2a2e5ddb9d0578fd7e2241e43) ) */
 
 	ROM_REGION( 0x600000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "wbv_10.bin",   0x000000, 0x80000, CRC(50680f0b) SHA1(ed76ef6ced70ba7e9558162aa94bbe9f19bbabe6) )
@@ -975,8 +975,8 @@ ROM_START( hrdtimes )
 	ROM_LOAD16_BYTE( "31.u67",       0x00000, 0x80000, CRC(53eb041b) SHA1(7437da1ceb26e9518a3085560b8a42f37e77ace9) )
 	ROM_LOAD16_BYTE( "32.u66",       0x00001, 0x80000, CRC(f2c6b382) SHA1(d73affed091a261c4bfe17f409657e0a46b6c163) )
 
-//	ROM_REGION( 0x4000, REGION_CPU2,  ROMREGION_ERASE00 )
-//	ROM_LOAD( "pic16c57.bin", PIC16C57_PGM_OFFSET, 0x1000, CRC(db307198) SHA1(21e98a69e673f6d48eb48239b4c51f6e7aa19a66) )  /* PIC CPU dump */
+/*	ROM_REGION( 0x4000, REGION_CPU2,  ROMREGION_ERASE00 ) */
+/*	ROM_LOAD( "pic16c57.bin", PIC16C57_PGM_OFFSET, 0x1000, CRC(db307198) SHA1(21e98a69e673f6d48eb48239b4c51f6e7aa19a66) )*/  /* PIC CPU dump */
 	
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "33.u36",       0x000000, 0x80000, CRC(d1239ce5) SHA1(8e966a39a47f66c5e904ec4357c751e896ed47cb) )
@@ -1124,7 +1124,7 @@ static MEMORY_READ16_START( powerbal_readmem )
     { 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x088000, 0x0883ff, MRA16_RAM },
 	{ 0x098000, 0x098fff, MRA16_RAM },
-	{ 0x099000, 0x09bfff, MRA16_RAM }, // not used
+	{ 0x099000, 0x09bfff, MRA16_RAM }, /* not used */
 	{ 0x0c2010, 0x0c2011, input_port_0_word_r },
 	{ 0x0c2012, 0x0c2013, input_port_1_word_r },
 	{ 0x0c2014, 0x0c2015, input_port_2_word_r },
@@ -1143,13 +1143,13 @@ static MEMORY_WRITE16_START( powerbal_writemem )
 	{ 0x094002, 0x094003, MWA16_NOP },
 	{ 0x094004, 0x094005, tile_banking_w },
 	{ 0x098000, 0x098fff, magicstk_bgvideoram_w, &magicstk_videoram },
-	{ 0x099000, 0x09bfff, MWA16_RAM }, // not used
+	{ 0x099000, 0x09bfff, MWA16_RAM }, /* not used */
 	{ 0x0c201c, 0x0c201d, oki_banking },
 	{ 0x0c201e, 0x0c201f, OKIM6295_data_0_lsb_w },
 	{ 0x0c4000, 0x0c4001, MWA16_NOP },
 	{ 0x0f0000, 0x0fffff, MWA16_RAM },
 	{ 0x101000, 0x101fff, MWA16_RAM, &spriteram16, &spriteram_size },
-	{ 0x102000, 0x10200d, MWA16_NOP }, // not used scroll regs?
+	{ 0x102000, 0x10200d, MWA16_NOP }, /* not used scroll regs? */
 	{ 0x103000, 0x103fff, MWA16_RAM },
 MEMORY_END
 

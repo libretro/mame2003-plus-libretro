@@ -123,7 +123,7 @@ static MACHINE_INIT( ddragon )
 	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
 	state_save_register_UINT8("ddragon", 0, "m_ddragon_sub_port", &m_ddragon_sub_port, 1);
 	state_save_register_func_postload(ddragon_restore_state);
-//msm5205 soundcore needs savestates added
+/*msm5205 soundcore needs savestates added */
 }
 
 
@@ -225,7 +225,7 @@ static READ_HANDLER( darktowr_bank_r )
 
 	/* MCU is mapped into main cpu memory as a bank */
 	if (darktowr_bank==4) {
-		// log_cb(RETRO_LOG_DEBUG, LOGPRE "BankRead %05x %08x\n",activecpu_get_pc(),offset);
+		/* log_cb(RETRO_LOG_DEBUG, LOGPRE "BankRead %05x %08x\n",activecpu_get_pc(),offset); */
 
 		/* Horrible hack - the alternate TStrike set is mismatched against the MCU,
         so just hack around the protection here.  (The hacks are 'right' as I have
@@ -326,7 +326,7 @@ static READ_HANDLER( ddragon_hd63701_internal_registers_r )
 static WRITE_HANDLER( ddragon_hd63701_internal_registers_w )
 {
 
-// Port 6
+/* Port 6 */
 	if (offset == 0x17)
 	{
 		if ((data & 0x1) == 0)
@@ -736,7 +736,7 @@ INPUT_PORTS_START( tstrike )
 
 	COMMON_INPUT_DIP1
 
-	PORT_START //DSW1
+	PORT_START /*DSW1 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

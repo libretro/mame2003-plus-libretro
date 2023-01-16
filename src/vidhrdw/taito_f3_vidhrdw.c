@@ -253,8 +253,8 @@ static const struct F3config f3_config_table[] =
 	{ PBOBBLE4,  0,      0,          0,         1,          1/**/},
 	{ POPNPOP,   1,      0,        -23,         0,          1/**/},
 	{ LANDMAKR,  1,      0,        -23,         0,          1/**/},
-	{ RECALH,    1,      1,        -23,         0,          1/**/}, // not verified
-	{ COMMANDW,  1,      0,        -23,         0,          1/**/}, // not verified
+	{ RECALH,    1,      1,        -23,         0,          1/**/}, /* not verified */
+	{ COMMANDW,  1,      0,        -23,         0,          1/**/}, /* not verified */
 	{0}
 };
 

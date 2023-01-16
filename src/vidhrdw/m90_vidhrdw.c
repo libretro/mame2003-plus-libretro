@@ -254,7 +254,7 @@ VIDEO_UPDATE( m90 )
 
 		if (pf2_enable)
 		{
-			// use the playfield 2 y-offset table for each scanline
+			/* use the playfield 2 y-offset table for each scanline */
 			if (m90_video_control_data[0xc] & 0x40) {
 
 				int line;
@@ -293,7 +293,7 @@ VIDEO_UPDATE( m90 )
 
 		if (pf1_enable)
 		{
-			// use the playfield 1 y-offset table for each scanline
+			/* use the playfield 1 y-offset table for each scanline */
 			if (m90_video_control_data[0xa] & 0x40) {
 
 				int line;

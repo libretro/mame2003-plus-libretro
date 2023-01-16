@@ -329,7 +329,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		int sprite = spriteram[offs];
 		int color = spriteram[offs+1] & 0x3f;
 		int sx = spriteram_2[offs+1] - 40+1;
-		int sy = 256 - spriteram_2[offs] + 1;	// sprites are buffered and delayed by one scanline
+		int sy = 256 - spriteram_2[offs] + 1;	/* sprites are buffered and delayed by one scanline */
 		int flipx = (spriteram_3[offs] & 0x01);
 		int flipy = (spriteram_3[offs] & 0x02) >> 1;
 		int size  = (sprite & 0x80) >> 7;
@@ -345,7 +345,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		}
 
 		sy -= 16 * size;
-		sy = (sy & 0xff) - 32;	// fix wraparound
+		sy = (sy & 0xff) - 32;	/* fix wraparound */
 
 		for (y = 0;y <= size;y++)
 		{

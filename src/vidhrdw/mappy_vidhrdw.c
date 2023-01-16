@@ -195,7 +195,7 @@ static UINT32 mappy_tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 nu
 		   mapping from logical to hardware coordinates, which is true to the hardware.
 		   Not doing it that way would cause missing tiles in motos and todruaga */
 		if (row & 0x20)
-			offs = 0x7ff;	// outside visible area
+			offs = 0x7ff;	/* outside visible area */
 		else
 			offs = ((row + 2) & 0x0f) + (row & 0x10) + ((col & 3) << 5) + 0x780;
 	}
@@ -384,7 +384,7 @@ void mappy_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cli
 			int sprite = spriteram[offs];
 			int color = spriteram[offs+1];
 			int sx = spriteram_2[offs+1] + 0x100 * (spriteram_3[offs+1] & 1) - 40 + xoffs;
-			int sy = 256 - spriteram_2[offs] + yoffs + 1;	// sprites are buffered and delayed by one scanline
+			int sy = 256 - spriteram_2[offs] + yoffs + 1;	/* sprites are buffered and delayed by one scanline */
 			int flipx = (spriteram_3[offs] & 0x01);
 			int flipy = (spriteram_3[offs] & 0x02) >> 1;
 			int sizex = (spriteram_3[offs] & 0x04) >> 2;
@@ -401,7 +401,7 @@ void mappy_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cli
 			}
 
 			sy -= 16 * sizey;
-			sy = (sy & 0xff) - 32;	// fix wraparound
+			sy = (sy & 0xff) - 32;	/* fix wraparound */
 
 			for (y = 0;y <= sizey;y++)
 			{
@@ -454,7 +454,7 @@ static void phozon_draw_sprites( struct mame_bitmap *bitmap, const struct rectan
 			}
 
 			sy -= 8 * sizey;
-			sy = (sy & 0xff) - 32;	// fix wraparound
+			sy = (sy & 0xff) - 32;	/* fix wraparound */
 
 			for (y = 0;y <= sizey;y++)
 			{

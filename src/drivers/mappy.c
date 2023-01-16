@@ -472,17 +472,17 @@ WRITE_HANDLER( superpac_flipscreen_w );
 ***************************************************************************/
 
 static int mux;
-static READ_HANDLER( in0_l )	{ return readinputport(0); }		// P1 joystick
-static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	// P2 joystick
-static READ_HANDLER( in1_l )	{ return readinputport(1); }		// fire and start buttons
-static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	// coins
-static READ_HANDLER( in2 )		{ return readinputport(2); }		// test, cocktail, optional buttons
-static READ_HANDLER( dipA_l )	{ return readinputport(3); }		// dips A
-static READ_HANDLER( dipA_h )	{ return readinputport(3) >> 4; }	// dips A
-static READ_HANDLER( dipB_mux )	{ return readinputport(4) >> (4*mux); }	// dips B
-static READ_HANDLER( dipB_muxi )	// dips B
+static READ_HANDLER( in0_l )	{ return readinputport(0); }		/* P1 joystick */
+static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	/* P2 joystick */
+static READ_HANDLER( in1_l )	{ return readinputport(1); }		/* fire and start buttons */
+static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	/* coins */
+static READ_HANDLER( in2 )		{ return readinputport(2); }		/* test, cocktail, optional buttons */
+static READ_HANDLER( dipA_l )	{ return readinputport(3); }		/* dips A */
+static READ_HANDLER( dipA_h )	{ return readinputport(3) >> 4; }	/* dips A */
+static READ_HANDLER( dipB_mux )	{ return readinputport(4) >> (4*mux); }	/* dips B */
+static READ_HANDLER( dipB_muxi )	/* dips B */
 {
-	// bits are interleaved in Phozon
+	/* bits are interleaved in Phozon */
 	return BITSWAP8(readinputport(4),6,4,2,0,7,5,3,1) >> (4*mux);
 }
 static WRITE_HANDLER( out_mux )	{ mux = data & 1; }
@@ -729,8 +729,8 @@ static MACHINE_INIT( mappy )
 
 static INTERRUPT_GEN( mappy_interrupt_1 )
 {
-	irq0_line_assert();	// this also checks if irq is enabled - IMPORTANT!
-						// so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE);
+	irq0_line_assert();	/* this also checks if irq is enabled - IMPORTANT! */
+						/* so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE); */
 
 	namcoio_set_irq_line(0,PULSE_LINE);
 	namcoio_set_irq_line(1,PULSE_LINE);
@@ -1066,7 +1066,7 @@ INPUT_PORTS_START( grobda )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode again
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode again */
 
 	PORT_START	/* 56XX #1 pins 22-29 */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
@@ -1159,11 +1159,11 @@ INPUT_PORTS_START( phozon )
 	PORT_DIPSETTING(    0x04, "Rank 5" )
 	PORT_DIPSETTING(    0x02, "Rank 6" )
 	PORT_DIPSETTING(    0x00, "Rank 7" )
-	// when level select is on, press P1 start during the game and move joystick to select level to jump to
+	/* when level select is on, press P1 start during the game and move joystick to select level to jump to */
 	PORT_DIPNAME( 0x10, 0x10, "Level Select" )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	// when stop mode is on, press P1 start to pause the game
+	/* when stop mode is on, press P1 start to pause the game */
 	PORT_DIPNAME( 0x20, 0x20, "Stop Mode" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1185,7 +1185,7 @@ INPUT_PORTS_START( phozon )
 	PORT_DIPSETTING(    0x08, "20k 80k" )
 	PORT_DIPSETTING(    0x18, "30k 60k" )
 	PORT_DIPSETTING(    0x1c, "30k 100k" )
-//	PORT_DIPSETTING(    0x14, "30k 100k" )	// repeated
+/*	PORT_DIPSETTING(    0x14, "30k 100k" )	// repeated */
 	PORT_DIPSETTING(    0x0c, "30k 120k and every 120k" )
 	PORT_DIPSETTING(    0x04, "30k" )
 	PORT_DIPSETTING(    0x00, "None" )
@@ -1330,7 +1330,7 @@ INPUT_PORTS_START( todruaga )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode again
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode again */
 
 	PORT_START	/* 56XX #1 pins 22-29 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
@@ -1408,7 +1408,7 @@ INPUT_PORTS_START( digdug2 )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode again
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode again */
 
 	PORT_START	/* 56XX #1 pins 22-29 */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
@@ -1487,7 +1487,7 @@ INPUT_PORTS_START( motos )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode again
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode again */
 
 	PORT_START	/* 56XX #1 pins 22-29 */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
@@ -1641,7 +1641,7 @@ static MACHINE_DRIVER_START( superpac )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M6809, 18432000/12)	/* 1.536 MHz */
 	MDRV_CPU_MEMORY(readmem_superpac_cpu1,writemem_superpac_cpu1)
-	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	// also update the custom I/O chips
+	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	/* also update the custom I/O chips */
 
 	MDRV_CPU_ADD(M6809, 18432000/12)	/* 1.536 MHz */
 	MDRV_CPU_MEMORY(readmem_superpac_cpu2,writemem_superpac_cpu2)
@@ -1684,7 +1684,7 @@ static MACHINE_DRIVER_START( phozon )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M6809,	1536000)	/* MAIN CPU */
 	MDRV_CPU_MEMORY(readmem_phozon_cpu1,writemem_phozon_cpu1)
-	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	// also update the custom I/O chips
+	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	/* also update the custom I/O chips */
 
 	MDRV_CPU_ADD(M6809,	1536000)	/* SOUND CPU */
 	MDRV_CPU_MEMORY(readmem_phozon_cpu2,writemem_phozon_cpu2)
@@ -1722,7 +1722,7 @@ static MACHINE_DRIVER_START( mappy )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M6809, 18432000/12)	/* 1.536 MHz */
 	MDRV_CPU_MEMORY(readmem_mappy_cpu1,writemem_mappy_cpu1)
-	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	// also update the custom I/O chips
+	MDRV_CPU_VBLANK_INT(mappy_interrupt_1,1)	/* also update the custom I/O chips */
 
 	MDRV_CPU_ADD(M6809, 18432000/12)	/* 1.536 MHz */
 	MDRV_CPU_MEMORY(readmem_mappy_cpu2,writemem_mappy_cpu2)

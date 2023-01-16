@@ -158,7 +158,7 @@ static WRITE_HANDLER( coin_w )
 static MEMORY_READ_START( readmem )
 	{ 0x1200, 0x1200, input_port_4_r }, /* DIP 2 */
 	{ 0x1280, 0x1280, input_port_0_r }, /* IO Coin */
-/*	{ 0x1281, 0x1281, input_port_1_r },  // P1 IO /*/
+/*	{ 0x1281, 0x1281, input_port_1_r },*/  /* P1 IO /*/ 
 	{ 0x1281, 0x1281, konami_IN1_r },	/* P1 IO and handle fake button for cheating */
 	{ 0x1282, 0x1282, input_port_2_r }, /* P2 IO */
 	{ 0x1283, 0x1283, input_port_3_r }, /* DIP 1 */
@@ -191,7 +191,7 @@ static MEMORY_READ_START( mastkin_readmem )
 	{ 0x1200, 0x1200, input_port_4_r }, /* DIP 2 */
 	{ 0x1280, 0x1280, input_port_0_r }, /* IO Coin */
 	{ 0x1281, 0x1281, input_port_1_r }, /* P1 IO */
-/*	{ 0x1282, 0x1282, input_port_2_r },  // unused /*/
+/*	{ 0x1282, 0x1282, input_port_2_r },*/ /* unused */ 
 	{ 0x1283, 0x1283, input_port_3_r }, /* DIP 1 */
 	{ 0x1800, 0x1fff, MRA_RAM },
 	{ 0x2800, 0x3fff, MRA_RAM },
@@ -778,44 +778,44 @@ static DRIVER_INIT( mastkin )
 	UINT8 *prom = memory_region(REGION_PROMS);
 	int i;
 
-	// We don't have the colour PROMs.
-	// So we try and put together a palette that works.
-	// It is not the original, as no one seems to have screenshots
-	// or flyers or video of the original machine in action.
-	// I suspect the sky was originally red, but it looks odd
-	// so I've gone with light blue.
-	prom[0] = 0;	// ??
-	prom[1] = 246;	// Monster horn + part of fire breath + part of bullets + arms of queen
-	prom[2] = 246;	// Your skin + bat head
-	prom[3] = 12;	// Front of your trousers + death explosion
-	prom[4] = 255;	// Sword (half)
-	prom[5] = 110;	// Your hair + enemy face + top of your boots
-	prom[6] = 12;	// Back of your body + bat body
-	prom[7] = 28;	// Back of your trousers
-	prom[8] = 11;	// Front of enemy trousers
-	prom[9] = 246;	// Your hands and forehead
-	prom[10] = 11;	// Your front of body + bat wings + enemy hair + enemy feet
-	prom[11] = 10;	// Your boots + enemy arms + hilt of your sword
-	prom[12] = 4;	// Queen's eye + flame from monsters
-	prom[13] = 2;	// Your eyes + patch on arm + body of enemy + back of enemy trousers
-	prom[14] = 14;	// Your shoulders
-	prom[15] = 254;	// Your sword (middle) + spot on enemy neck
-	prom[16] = 0;	// Title screen background + slight part of sticks + minor dirt lines
-	prom[17] = 10;	// Highlight on columns + top of sticks + title text + score digits + timer lines + lives handle
-	prom[18] = 11;	// Title columns left + highlight on bricks + major dirt lines + high score text
-	prom[19] = 2;	// Title columns main + title dirt + major bricks + major sticks + major dirt lines + house tops in background
-	prom[20] = 1;	// Column shadows + other highlight on bricks + background house colour + more dirt lines
-	prom[21] = 90;	// The Masters Of text + little stones on road + top of mountains + high score digits
-	prom[22] = 16;	// Written By text + hills + road minus stones
-	prom[23] = 25;	// More stones on road + lines on hill + square around Written By text
-	prom[24] = 20;	// Brick grouting + progress meter highlight + score text
-	prom[25] = 11;	// Brick wall edge highlight + sword highlight on lives
-	prom[26] = 2;	// Top of brick wall + highlight on lives
-	prom[27] = 2;	// Credit text + progress highlight
-	prom[28] = 11;	// Bottom of life meter + hilt of lives
-	prom[29] = 240;	// Sky + bottom of life meter
-	prom[30] = 11;	// Surround of timer
-	prom[31] = 4;	// Top of life meter
+	/* We don't have the colour PROMs. */
+	/* So we try and put together a palette that works. */
+	/* It is not the original, as no one seems to have screenshots */
+	/* or flyers or video of the original machine in action. */
+	/* I suspect the sky was originally red, but it looks odd */
+	/* so I've gone with light blue. */
+	prom[0] = 0;	/* ?? */
+	prom[1] = 246;	/* Monster horn + part of fire breath + part of bullets + arms of queen */
+	prom[2] = 246;	/* Your skin + bat head */
+	prom[3] = 12;	/* Front of your trousers + death explosion */
+	prom[4] = 255;	/* Sword (half) */
+	prom[5] = 110;	/* Your hair + enemy face + top of your boots */
+	prom[6] = 12;	/* Back of your body + bat body */
+	prom[7] = 28;	/* Back of your trousers */
+	prom[8] = 11;	/* Front of enemy trousers */
+	prom[9] = 246;	/* Your hands and forehead */
+	prom[10] = 11;	/* Your front of body + bat wings + enemy hair + enemy feet */
+	prom[11] = 10;	/* Your boots + enemy arms + hilt of your sword */
+	prom[12] = 4;	/* Queen's eye + flame from monsters */
+	prom[13] = 2;	/* Your eyes + patch on arm + body of enemy + back of enemy trousers */
+	prom[14] = 14;	/* Your shoulders */
+	prom[15] = 254;	/* Your sword (middle) + spot on enemy neck */
+	prom[16] = 0;	/* Title screen background + slight part of sticks + minor dirt lines */
+	prom[17] = 10;	/* Highlight on columns + top of sticks + title text + score digits + timer lines + lives handle */
+	prom[18] = 11;	/* Title columns left + highlight on bricks + major dirt lines + high score text */
+	prom[19] = 2;	/* Title columns main + title dirt + major bricks + major sticks + major dirt lines + house tops in background */
+	prom[20] = 1;	/* Column shadows + other highlight on bricks + background house colour + more dirt lines */
+	prom[21] = 90;	/* The Masters Of text + little stones on road + top of mountains + high score digits */
+	prom[22] = 16;	/* Written By text + hills + road minus stones */
+	prom[23] = 25;	/* More stones on road + lines on hill + square around Written By text */
+	prom[24] = 20;	/* Brick grouting + progress meter highlight + score text */
+	prom[25] = 11;	/* Brick wall edge highlight + sword highlight on lives */
+	prom[26] = 2;	/* Top of brick wall + highlight on lives */
+	prom[27] = 2;	/* Credit text + progress highlight */
+	prom[28] = 11;	/* Bottom of life meter + hilt of lives */
+	prom[29] = 240;	/* Sky + bottom of life meter */
+	prom[30] = 11;	/* Surround of timer */
+	prom[31] = 4;	/* Top of life meter */
 
 	/* build a fake lookup table since we don't have the color PROMs */
 	for (i = 0; i < 0x0200; i++)

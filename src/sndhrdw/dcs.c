@@ -15,7 +15,7 @@
 #define LOG_BUFFER_FILLING			(0)
 
 
-bool activate_dcs_speedhack = 1; // this is core maintaniers choice to always be active dont change
+bool activate_dcs_speedhack = 1; /* this is core maintaniers choice to always be active dont change */
 
 /***************************************************************************
 	CONSTANTS

@@ -60,7 +60,7 @@ static void get_bg_tile_info(int tile_index)
 
 READ_HANDLER( tryout_vram_r )
 {
-	return tryout_vram[offset]; // debug only
+	return tryout_vram[offset]; /* debug only */
 }
 
 WRITE_HANDLER( tryout_videoram_w )
@@ -159,12 +159,12 @@ static UINT32 get_fg_memory_offset( UINT32 col, UINT32 row, UINT32 num_cols, UIN
 static UINT32 get_bg_memory_offset( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows )
 {
 	int a;
-//	if (col&0x20)
-//		a= (7 - (row & 7)) + ((0x8 - (row & 0x8)) << 4) + ((col & 0xf) << 3) + (( (  0x10 - (col & 0x10) ) ) << 4) + ((( (col & 0x20))) << 4);
-//	else
+/*	if (col&0x20) */
+/*		a= (7 - (row & 7)) + ((0x8 - (row & 0x8)) << 4) + ((col & 0xf) << 3) + (( (  0x10 - (col & 0x10) ) ) << 4) + ((( (col & 0x20))) << 4); */
+/*	else */
 		a= (7 - (row & 7)) + ((0x8 - (row & 0x8)) << 4) + ((col & 0xf) << 3) + (( (  (col & 0x10) ) ) << 4) + ((( (col & 0x20))) << 4);
 
-//	printf("%d %d -> %d\n",col,row, a);
+/*	printf("%d %d -> %d\n",col,row, a); */
 	return a;
 }
 
@@ -264,5 +264,5 @@ VIDEO_UPDATE( tryout )
 		draw_sprites(bitmap,cliprect);
 	}
 
-//  usrintf_showmessage("%02x %02x %02x %02x",tryout_gfx_control[0],tryout_gfx_control[1],tryout_gfx_control[2],scrollx);
+/*  usrintf_showmessage("%02x %02x %02x %02x",tryout_gfx_control[0],tryout_gfx_control[1],tryout_gfx_control[2],scrollx); */
 }

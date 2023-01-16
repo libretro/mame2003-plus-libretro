@@ -39,10 +39,10 @@
 /* Amplifier stage per channel but may be specified globally as default */
 
 #define RES_NET_AMP_USE_GLOBAL		0x0000
-#define RES_NET_AMP_NONE			0x0001		//Out0
-#define RES_NET_AMP_DARLINGTON		0x0002		//Out1
-#define RES_NET_AMP_EMITTER			0x0003		//Out2
-#define RES_NET_AMP_CUSTOM			0x0004		//Out3
+#define RES_NET_AMP_NONE			0x0001		/*Out0 */
+#define RES_NET_AMP_DARLINGTON		0x0002		/*Out1 */
+#define RES_NET_AMP_EMITTER			0x0003		/*Out2 */
+#define RES_NET_AMP_CUSTOM			0x0004		/*Out3 */
 #define RES_NET_AMP_MASK			0x0007
 
 /* VCC prebuilds - Global */
@@ -69,12 +69,12 @@
 
 /* Monitor options */
 
-// Just invert the signal
+/* Just invert the signal */
 #define RES_NET_MONITOR_INVERT		0x1000
-// SANYO_EZV20 / Nintendo with inverter circuit
+/* SANYO_EZV20 / Nintendo with inverter circuit */
 #define RES_NET_MONITOR_SANYO_EZV20	0x2000
-// Electrohome G07 Series
-// 5.6k input impedance
+/* Electrohome G07 Series */
+/* 5.6k input impedance */
 #define RES_NET_MONITOR_ELECTROHOME_G07	0x3000
 
 #define RES_NET_MONITOR_MASK		0x3000
@@ -95,49 +95,49 @@
 
 typedef struct _res_net_channel_info res_net_channel_info;
 struct _res_net_channel_info {
-	// per channel options
+	/* per channel options */
 	UINT32	options;
-	// Pullup resistor value in Ohms
+	/* Pullup resistor value in Ohms */
 	double	rBias;
-	// Pulldown resistor value in Ohms
+	/* Pulldown resistor value in Ohms */
 	double	rGnd;
-	// Number of inputs connected to resistors
+	/* Number of inputs connected to resistors */
 	int		num;
-	// Resistor values
-	// - Least significant bit first
+	/* Resistor values */
+	/* - Least significant bit first */
 	double R[8];
-	// Minimum output voltage
-	// - Applicable if output is routed through a complimentary
-	// - darlington circuit
-	// - typical value ~ 0.9V
+	/* Minimum output voltage */
+	/* - Applicable if output is routed through a complimentary */
+	/* - darlington circuit */
+	/* - typical value ~ 0.9V */
 	double	minout;
-	// Cutoff output voltage
-	// - Applicable if output is routed through 1:1 transistor amplifier
-	// - Typical value ~ 0.7V
+	/* Cutoff output voltage */
+	/* - Applicable if output is routed through 1:1 transistor amplifier */
+	/* - Typical value ~ 0.7V */
 	double	cut;
-	// Voltage at the pullup resistor
-	// - Typical voltage ~5V
+	/* Voltage at the pullup resistor */
+	/* - Typical voltage ~5V */
 	double	vBias;
 };
 
 typedef struct _res_net_info res_net_info;
 struct _res_net_info {
-	// global options
+	/* global options */
 	UINT32	options;
-	// The three color channels
+	/* The three color channels */
 	res_net_channel_info rgb[3];
-	// Supply Voltage
-	// - Typical value 5V
+	/* Supply Voltage */
+	/* - Typical value 5V */
 	double	vcc;
-	// High Level output voltage
-	// - TTL : 3.40V
-	// - CMOS: 4.95V (@5v vcc)
+	/* High Level output voltage */
+	/* - TTL : 3.40V */
+	/* - CMOS: 4.95V (@5v vcc) */
 	double	vOL;
-	// Low Level output voltage
-	// - TTL : 0.35V
-	// - CMOS: 0.05V (@5v vcc)
+	/* Low Level output voltage */
+	/* - TTL : 0.35V */
+	/* - CMOS: 0.05V (@5v vcc) */
 	double	vOH;
-	// Open Collector flag
+	/* Open Collector flag */
 	UINT8	OpenCol;
 };
 

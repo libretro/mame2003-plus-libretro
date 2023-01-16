@@ -380,7 +380,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0xf001, 0xf001, YM2151_data_port_0_w },
 	{ 0xf002, 0xf002, OKIM6295_data_0_w },
 	{ 0xf004, 0xf004, cps1_snd_bankswitch_w },
-/*	{ 0xf006, 0xf006, MWA_NOP },  // ???? Unknown ???? /*/
+/*	{ 0xf006, 0xf006, MWA_NOP },*/  /* ???? Unknown ???? */
 MEMORY_END
 
 MEMORY_READ_START( qsound_readmem )
@@ -1351,19 +1351,19 @@ INPUT_PORTS_START( ffightae )
 
 	PORT_START      /* DSWB */
 	PORT_DIPNAME( 0x07, 0x04, "Difficulty Level 1" )
-	PORT_DIPSETTING(    0x07, "Easiest" )				// "01"
-	PORT_DIPSETTING(    0x06, "Easier" )				// "02"
-	PORT_DIPSETTING(    0x05, "Easy" )				// "03"
-	PORT_DIPSETTING(    0x04, "Normal" )				// "04"
-	PORT_DIPSETTING(    0x03, "Medium" )				// "05"
-	PORT_DIPSETTING(    0x02, "Hard" )				// "06"
-	PORT_DIPSETTING(    0x01, "Harder" )				// "07"
-	PORT_DIPSETTING(    0x00, "Hardest" )				// "08"
+	PORT_DIPSETTING(    0x07, "Easiest" )				/* "01" */
+	PORT_DIPSETTING(    0x06, "Easier" )				/* "02" */
+	PORT_DIPSETTING(    0x05, "Easy" )				/* "03" */
+	PORT_DIPSETTING(    0x04, "Normal" )				/* "04" */
+	PORT_DIPSETTING(    0x03, "Medium" )				/* "05" */
+	PORT_DIPSETTING(    0x02, "Hard" )				/* "06" */
+	PORT_DIPSETTING(    0x01, "Harder" )				/* "07" */
+	PORT_DIPSETTING(    0x00, "Hardest" )				/* "08" */
 	PORT_DIPNAME( 0x18, 0x10, "Difficulty Level 2" )
-	PORT_DIPSETTING(    0x18, "Easy" )				// "01"
-	PORT_DIPSETTING(    0x10, "Normal" )				// "02"
-	PORT_DIPSETTING(    0x08, "Hard" )				// "03"
-	PORT_DIPSETTING(    0x00, "Hardest" )				// "04"
+	PORT_DIPSETTING(    0x18, "Easy" )				/* "01" */
+	PORT_DIPSETTING(    0x10, "Normal" )				/* "02" */
+	PORT_DIPSETTING(    0x08, "Hard" )				/* "03" */
+	PORT_DIPSETTING(    0x00, "Hardest" )				/* "04" */
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x60, "100k" )
 	PORT_DIPSETTING(    0x40, "200k" )
@@ -7725,10 +7725,10 @@ ROM_START( wofch )
 	ROMX_LOAD( "tk2-3m.5a",      0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "tk2-2m.4a",      0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "tk2-4m.6a",      0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2=ch=_05.7a",  0x200000, 0x80000, CRC(e4a44d53) SHA1(b747679f4d63e5e62d9fd81b3120fba0401fadfb) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_05.7a
-	ROMX_LOAD( "tk2=ch=_06.8a",  0x200002, 0x80000, CRC(58066ba8) SHA1(c93af968e21094d020e4b2002e0c6fc0d746af0b) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_06.8a
+	ROMX_LOAD( "tk2=ch=_05.7a",  0x200000, 0x80000, CRC(e4a44d53) SHA1(b747679f4d63e5e62d9fd81b3120fba0401fadfb) , ROM_GROUPWORD | ROM_SKIP(6) )    /* == tk2_05.7a */
+	ROMX_LOAD( "tk2=ch=_06.8a",  0x200002, 0x80000, CRC(58066ba8) SHA1(c93af968e21094d020e4b2002e0c6fc0d746af0b) , ROM_GROUPWORD | ROM_SKIP(6) )    /* == tk2_06.8a */
 	ROMX_LOAD( "tk2=ch=_07.9a",  0x200004, 0x80000, CRC(cc9006c9) SHA1(cfcbec3a67052268a7739538aa28a6391fe5400e) , ROM_GROUPWORD | ROM_SKIP(6) )    /* 1 byte different from wofj, pcb verified */
-	ROMX_LOAD( "tk2=ch=_08.10a", 0x200006, 0x80000, CRC(d4a19a02) SHA1(ff396b1d33d9b4842140f2c6d085fe05748e3244) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_08.10a
+	ROMX_LOAD( "tk2=ch=_08.10a", 0x200006, 0x80000, CRC(d4a19a02) SHA1(ff396b1d33d9b4842140f2c6d085fe05748e3244) , ROM_GROUPWORD | ROM_SKIP(6) )    /* == tk2_08.10a */
 
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */

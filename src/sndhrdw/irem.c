@@ -96,10 +96,10 @@ static WRITE_HANDLER( irem_analog_w )
 
 	if (data > 0)
 	{
-		if (data & 0x01) sample_start(2, 2, 0);  // TR606 - Kick
-		if (data & 0x02) sample_start(1, 1, 0);  // TR606 - Snare
-		if (data & 0x04) sample_start(3, 3, 0);  // TR606 - Open Hat
-		if (data & 0x08) sample_start(0, 0, 0);  // TR606 - Hat
+		if (data & 0x01) sample_start(2, 2, 0);  /* TR606 - Kick */
+		if (data & 0x02) sample_start(1, 1, 0);  /* TR606 - Snare */
+		if (data & 0x04) sample_start(3, 3, 0);  /* TR606 - Open Hat */
+		if (data & 0x08) sample_start(0, 0, 0);  /* TR606 - Hat */
 	}
 }
 

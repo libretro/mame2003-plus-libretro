@@ -214,9 +214,9 @@ static MEMORY_READ_START( wheelrun_readmem )
 	{ 0x30000, 0x3ffff, MRA_ROM },
 	{ 0x70000, 0x7ffff, MRA_ROM },
 	{ 0x52000, 0x521ff, MRA_RAM },
-//	{ 0x53000, 0x53000, input_port_0_r },
+/*	{ 0x53000, 0x53000, input_port_0_r }, */
 	{ 0x53000, 0x53000, wheelrun_dial_0_r },
-//	{ 0x53001, 0x53001, input_port_1_r },
+/*	{ 0x53001, 0x53001, input_port_1_r }, */
 	{ 0x53001, 0x53001, wheelrun_dial_1_r },
 	{ 0x53002, 0x53002, input_port_2_r },
 	{ 0x53003, 0x53003, input_port_3_r },
@@ -371,7 +371,7 @@ static MEMORY_READ_START( wheelrun_sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0xa000, 0xa000, YM3526_status_port_0_r },
-	{ 0xd000, 0xd000, soundlatch_r },	// during NMI
+	{ 0xd000, 0xd000, soundlatch_r },	/* during NMI */
 MEMORY_END
 
 static MEMORY_WRITE_START( wheelrun_sound_writemem )
@@ -379,8 +379,8 @@ static MEMORY_WRITE_START( wheelrun_sound_writemem )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xa000, 0xa000, YM3526_control_port_0_w },
 	{ 0xa001, 0xa001, YM3526_write_port_0_w },
-	{ 0xb000, 0xb000, SN76496_0_w },	// on a car crash / hit
-	{ 0xc000, 0xc000, SN76496_1_w },	// ""
+	{ 0xb000, 0xb000, SN76496_0_w },	/* on a car crash / hit */
+	{ 0xc000, 0xc000, SN76496_1_w },	/* "" */
 MEMORY_END
 
 /***************************************************************************
@@ -713,7 +713,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 0)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*PORT_CUSTOM(wheelrun_wheel_r, 0) */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	PORT_START /* IN1 - 53001 */
@@ -721,7 +721,7 @@ INPUT_PORTS_START( wheelrun )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
-	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) //PORT_CUSTOM(wheelrun_wheel_r, 1 )
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*PORT_CUSTOM(wheelrun_wheel_r, 1 ) */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN	)
 
 	
@@ -978,14 +978,14 @@ static struct SN76496interface wheelrun_sn76496_interface =
 
 static MACHINE_DRIVER_START( wheelrun )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(I86, 9000000 )		// D701080C-8 (V20)
+	MDRV_CPU_ADD(I86, 9000000 )		/* D701080C-8 (V20) */
 	MDRV_CPU_MEMORY(wheelrun_readmem, wheelrun_writemem)
 	MDRV_CPU_VBLANK_INT(fantland_irq,1)
 
 	/* audio CPU */
-	MDRV_CPU_ADD(Z80, 9000000)		// Z8400BB1 (Z80B)
+	MDRV_CPU_ADD(Z80, 9000000)		/* Z8400BB1 (Z80B) */
 	MDRV_CPU_MEMORY(wheelrun_sound_readmem, wheelrun_sound_writemem)
-	// IRQ by YM3526, NMI when soundlatch is written
+	/* IRQ by YM3526, NMI when soundlatch is written */
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -1287,15 +1287,15 @@ Hardware info by f205v
 ***************************************************************************/
 
 ROM_START( wheelrun )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 ) // V20
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* V20 */
 	ROM_LOAD( "4.4", 0x30000, 0x10000, CRC(359303df) SHA1(583b70f65b775e99856ffda61334be3b85046ed1) )
 	ROM_LOAD( "3.3", 0x70000, 0x10000, CRC(c28d0b31) SHA1(add8c4ffe529755c101b72a3b0530e796948876b) )
 	ROM_COPY( REGION_CPU1, 0x70000, 0xf0000, 0x10000 )
 
-	ROM_REGION( 0x100000, REGION_CPU2, 0 ) // Z80
-	ROM_LOAD( "1.1", 0x00000, 0x10000, CRC(67b5f31f) SHA1(5553b132077686221fb7a21a0246fd55cb443332) )	// 1xxxxxxxxxxxxxxx = 0xFF
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* Z80 */
+	ROM_LOAD( "1.1", 0x00000, 0x10000, CRC(67b5f31f) SHA1(5553b132077686221fb7a21a0246fd55cb443332) )	/* 1xxxxxxxxxxxxxxx = 0xFF */
 
-	ROM_REGION( 0xc0000, REGION_GFX1,0 ) // gfx
+	ROM_REGION( 0xc0000, REGION_GFX1,0 ) /* gfx */
 	ROMX_LOAD( "7.7",   0x00000, 0x10000, CRC(e0e5ff64) SHA1(e2ed5ea5b75ed627a9d305864196160267cad438), ROM_SKIP(2) )
 	ROMX_LOAD( "11.11", 0x00001, 0x10000, CRC(ce9718fb) SHA1(ade47deedd5d0c927fdf8626aa1b0fac470f03a0), ROM_SKIP(2) )
 	ROMX_LOAD( "15.15", 0x00002, 0x10000, CRC(f6665f31) SHA1(e308a049697622bcda9d3c630e061d30c2b70687), ROM_SKIP(2) )
@@ -1308,9 +1308,9 @@ ROM_START( wheelrun )
 	ROMX_LOAD( "13.13", 0x60001, 0x10000, CRC(8b0aae8d) SHA1(413821fdbf599004b57f3588360ccf881547e104), ROM_SKIP(2) )
 	ROMX_LOAD( "17.17", 0x60002, 0x10000, CRC(be8ab48d) SHA1(1520d70eb9c65f84deddc2d7c8de7ae2cbb1ec09), ROM_SKIP(2) )
 
-	ROMX_LOAD( "10.10", 0x90000, 0x10000, CRC(c5bdd367) SHA1(c432762d23b8799643fd5f1775a44d31582e7290), ROM_SKIP(2) )	// 1111xxxxxxxxxxxx = 0x00
+	ROMX_LOAD( "10.10", 0x90000, 0x10000, CRC(c5bdd367) SHA1(c432762d23b8799643fd5f1775a44d31582e7290), ROM_SKIP(2) )	/* 1111xxxxxxxxxxxx = 0x00 */
 	ROMX_LOAD( "14.14", 0x90001, 0x10000, CRC(e592302f) SHA1(d4f668d259ec649e3126db27d990a2e5fa9cad8d), ROM_SKIP(2) )
-	ROMX_LOAD( "18.18", 0x90002, 0x10000, CRC(6bd42d8e) SHA1(0745428a54da85707d4435f20cc2094576a95e5b), ROM_SKIP(2) )	// 1111xxxxxxxxxxxx = 0x00
+	ROMX_LOAD( "18.18", 0x90002, 0x10000, CRC(6bd42d8e) SHA1(0745428a54da85707d4435f20cc2094576a95e5b), ROM_SKIP(2) )	/* 1111xxxxxxxxxxxx = 0x00 */
 ROM_END
 
 GAME( 1987, borntofi, 0, borntofi, borntofi, 0, ROT0,  "International Games",       "Born To Fight" )

@@ -142,7 +142,7 @@ VIDEO_UPDATE( xmen6p )
 	int x,y;
  /* update every other frame ...help prevent screens lagging (although it still does..)..
      but maybe the hw has its own buffering hence the extra ram */
-//  if (xmen_current_frame&0x8000) /* actually don't bother */
+/*  if (xmen_current_frame&0x8000)*/ /* actually don't bother */ 
 	{
 
 		for(y=0;y<32*8;y++)
@@ -190,7 +190,7 @@ VIDEO_EOF( xmen6p )
            */
 		for (offset=0;offset<(0xc000/2);offset++)
 		{
-//          K052109_lsb_w
+/*          K052109_lsb_w */
 			if (offset != 0x1c80 && offset != 0x1e80)
 				{
 					if (xmen6p_tilemap_select)
@@ -214,7 +214,7 @@ VIDEO_EOF( xmen6p )
            */
 		for (offset=0;offset<(0xc000/2);offset++)
 		{
-//          K052109_lsb_w
+/*          K052109_lsb_w */
 		    {
 				if (xmen6p_tilemap_select)
 				  {

@@ -1,5 +1,5 @@
 #include <math.h>
-//fix for android
+/*fix for android */
 #ifndef PI
 #define PI 3.14159265358979323846
 #endif
@@ -42,24 +42,24 @@ struct dss_filter2_context
 
 struct dst_op_amp_filt_context
 {
-	int		type;		// What kind of filter
-	int		is_norton;	// 1 = Norton op-amps
-	double	rTotal;		// All input resistance in parallel.
-	double	iFixed;		// Current supplied by rP & rN if used.
+	int		type;		/* What kind of filter */
+	int		is_norton;	/* 1 = Norton op-amps */
+	double	rTotal;		/* All input resistance in parallel. */
+	double	iFixed;		/* Current supplied by rP & rN if used. */
 	double	exponentC1;
 	double	exponentC2;
-	double	rRatio;		// divide ratio of rTotal & rF
-	double	vC1;		// Charge on C1
-	double	vC1b;		// Charge on C1, part of C1 charge if needed
-	double	vC2;		// Charge on C2
-	double	vF_last;	// Last output voltage relative to vRef.
-	double	gain;		// Gain of the filter
+	double	rRatio;		/* divide ratio of rTotal & rF */
+	double	vC1;		/* Charge on C1 */
+	double	vC1b;		/* Charge on C1, part of C1 charge if needed */
+	double	vC2;		/* Charge on C2 */
+	double	vF_last;	/* Last output voltage relative to vRef. */
+	double	gain;		/* Gain of the filter */
 };
 
 struct dst_rcdisc_context
 {
         int state;
-        double t;           // time
+        double t;           /* time */
         double step;
 	double exponent0;
 	double exponent1;
@@ -318,7 +318,7 @@ void dst_op_amp_filt_step(struct node_description *node)
 				 * From here I get lost.
 				 */
 				 
-// Test stuff
+/* Test stuff */
 v=1;
 context->vF_last=-3;
 				/* First we need to work out the passive components. */
@@ -369,10 +369,10 @@ context->vF_last=-3;
 				 *          v >--/\/\/\----||------'
 				 *             >>>>>>I2>>>>>>
 				 */
-				node->output = -((v - context->vC2) / context->rTotal			// I1
-					+ (context->vF_last - context->vC2 - context->vC1b) / info->rF)	// I2
+				node->output = -((v - context->vC2) / context->rTotal			/* I1 */
+					+ (context->vF_last - context->vC2 - context->vC1b) / info->rF)	/* I2 */
 					* info->rF + info->vRef;
-// Test stuff
+/* Test stuff */
 node->output=context->vC2;
 
 				break;
@@ -402,7 +402,7 @@ void dst_op_amp_filt_reset(struct node_description *node)
 	if (context->type == DISC_OP_AMP_FILTER_IS_BAND_PASS_1M) context->type = DISC_OP_AMP_FILTER_IS_BAND_PASS_1;
 
 	/* Work out the input resistance.  It is all input and bias resistors in parallel. */
-	context->rTotal  = 1.0 / info->r1;			// There has to be an R1.  Otherwise the table is wrong.
+	context->rTotal  = 1.0 / info->r1;			/* There has to be an R1.  Otherwise the table is wrong. */
 	if (info->r2 != 0) context->rTotal += 1.0 / info->r2;
 	if (info->rP != 0) context->rTotal += 1.0 / info->rP;
 	if (info->rN != 0) context->rTotal += 1.0 / info->rN;

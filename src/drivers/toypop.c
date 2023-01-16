@@ -34,7 +34,7 @@ TODO:
 #include "machine/namcoio.h"
 
 
-// vidhrdw\toypop.c
+/* vidhrdw\toypop.c */
 extern data16_t *toypop_bg_image;
 extern data8_t *toypop_videoram;
 WRITE_HANDLER( toypop_videoram_w );
@@ -55,17 +55,17 @@ PALETTE_INIT( toypop );
 
 ***************************************************************************/
 
-static READ_HANDLER( in0_l )	{ return readinputport(0); }		// P1 joystick
-static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	// P2 joystick
-static READ_HANDLER( in1_l )	{ return readinputport(1); }		// fire and start buttons
-static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	// coins
-static READ_HANDLER( dipA_l )	{ return readinputport(2); }		// dips A
-static READ_HANDLER( dipA_h )	{ return readinputport(2) >> 4; }	// dips A
-static READ_HANDLER( dipB_l )	{ return readinputport(3); }		// dips B
-static READ_HANDLER( dipB_h )	{ return readinputport(3) >> 4; }	// dips B
-static READ_HANDLER( in2_l )	{ return readinputport(4); }		// P1 joystick left in liblrabl
-static READ_HANDLER( in2_h )	{ return readinputport(4) >> 4; }	// P2 joystick left in liblrabl
-static READ_HANDLER( in3 )		{ return readinputport(5); }		// test, cocktail, optional buttons
+static READ_HANDLER( in0_l )	{ return readinputport(0); }		/* P1 joystick */
+static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	/* P2 joystick */
+static READ_HANDLER( in1_l )	{ return readinputport(1); }		/* fire and start buttons */
+static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	/* coins */
+static READ_HANDLER( dipA_l )	{ return readinputport(2); }		/* dips A */
+static READ_HANDLER( dipA_h )	{ return readinputport(2) >> 4; }	/* dips A */
+static READ_HANDLER( dipB_l )	{ return readinputport(3); }		/* dips B */
+static READ_HANDLER( dipB_h )	{ return readinputport(3) >> 4; }	/* dips B */
+static READ_HANDLER( in2_l )	{ return readinputport(4); }		/* P1 joystick left in liblrabl */
+static READ_HANDLER( in2_h )	{ return readinputport(4) >> 4; }	/* P2 joystick left in liblrabl */
+static READ_HANDLER( in3 )		{ return readinputport(5); }		/* test, cocktail, optional buttons */
 static WRITE_HANDLER( out_coin0 )
 {
 	coin_lockout_global_w(data & 4);
@@ -182,8 +182,8 @@ WRITE_HANDLER( toypop_sound_interrupt_disable_w )
 
 INTERRUPT_GEN( toypop_main_interrupt )
 {
-	irq0_line_assert();	// this also checks if irq is enabled - IMPORTANT!
-						// so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE);
+	irq0_line_assert();	/* this also checks if irq is enabled - IMPORTANT! */
+						/* so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE); */
 
 	namcoio_set_irq_line(0,PULSE_LINE);
 	namcoio_set_irq_line(1,PULSE_LINE);
@@ -335,11 +335,11 @@ MEMORY_END
  *************************************/
 
 static MEMORY_READ16_START( readmem_68k )
-    { 0x000000, 0x007fff, MRA16_ROM },				// ROM code
-	{ 0x080000, 0x0bffff, MRA16_RAM },				// RAM
-	{ 0x100000, 0x100fff, toypop_m68000_sharedram_r },	// shared RAM with the main CPU
-	{ 0x180000, 0x187fff, toypop_merged_background_r },	// RAM merged with the background image
-	{ 0x190000, 0x1dffff, MRA16_RAM },				// RAM containing the background image
+    { 0x000000, 0x007fff, MRA16_ROM },				/* ROM code */
+	{ 0x080000, 0x0bffff, MRA16_RAM },				/* RAM */
+	{ 0x100000, 0x100fff, toypop_m68000_sharedram_r },	/* shared RAM with the main CPU */
+	{ 0x180000, 0x187fff, toypop_merged_background_r },	/* RAM merged with the background image */
+	{ 0x190000, 0x1dffff, MRA16_RAM },				/* RAM containing the background image */
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_68k )
@@ -383,7 +383,7 @@ INPUT_PORTS_START( liblrabl )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x01, "5" )
-	// TODO: bonus scores are different for 5 lives
+	/* TODO: bonus scores are different for 5 lives */
 	PORT_DIPNAME( 0x1c, 0x1c, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x04, "40k 120k and every 120k" )
 	PORT_DIPSETTING(    0x1c, "40k 120k 200k 400k..." )
@@ -501,7 +501,7 @@ INPUT_PORTS_START( toypop )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Entering" )	// ???
+	PORT_DIPNAME( 0x10, 0x10, "Entering" )	/* ??? */
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Difficulty ) )
@@ -519,8 +519,8 @@ INPUT_PORTS_START( toypop )
 	PORT_START	/* 56XX #2 pins 30-33 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )	// would be Cabinet, but this game has no cocktail mode
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode again
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )	/* would be Cabinet, but this game has no cocktail mode */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode again */
 INPUT_PORTS_END
 
 
@@ -642,9 +642,9 @@ ROM_START( liblrabl )
 	ROM_LOAD( "9t.rom",   0x0000, 0x4000, CRC(a88e24ca) SHA1(eada133579f19de09255084dcdc386311606a335) )	/* sprites */
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )	/* color proms */
-	ROM_LOAD( "lr1-3.1r", 0x0000, 0x0100, CRC(f3ec0d07) SHA1(b0aad1fb6df79f202889600f486853995352f9c2) )	// palette: red component
-	ROM_LOAD( "lr1-2.1s", 0x0100, 0x0100, CRC(2ae4f702) SHA1(838fdca9e91fea4f64a59880ac47c48973bb8fbf) )	// palette: green component
-	ROM_LOAD( "lr1-1.1t", 0x0200, 0x0100, CRC(7601f208) SHA1(572d070ca387b780030ed5de38a8970b7cc14349) )	// palette: blue component
+	ROM_LOAD( "lr1-3.1r", 0x0000, 0x0100, CRC(f3ec0d07) SHA1(b0aad1fb6df79f202889600f486853995352f9c2) )	/* palette: red component */
+	ROM_LOAD( "lr1-2.1s", 0x0100, 0x0100, CRC(2ae4f702) SHA1(838fdca9e91fea4f64a59880ac47c48973bb8fbf) )	/* palette: green component */
+	ROM_LOAD( "lr1-1.1t", 0x0200, 0x0100, CRC(7601f208) SHA1(572d070ca387b780030ed5de38a8970b7cc14349) )	/* palette: blue component */
 	ROM_LOAD( "lr1-5.5l", 0x0300, 0x0100, CRC(940f5397) SHA1(825a7bd78a8a08d30bad2e4890ae6e9ad88b36b8) )	/* characters */
 	ROM_LOAD( "lr1-6.2p", 0x0400, 0x0200, CRC(a6b7f850) SHA1(7cfde16dfd5c4d5b876b4fbe4f924f1385932a93) )	/* sprites */
 
@@ -672,9 +672,9 @@ ROM_START( toypop )
 	ROM_LOAD( "tp1-6.9t", 0x0000, 0x4000, CRC(481ffeaf) SHA1(c51735ad3a1dbb46ad414408b54554e9223b2219) )	/* sprites */
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )	/* color proms */
-	ROM_LOAD( "tp1-3.1r", 0x0000, 0x0100, CRC(cfce2fa5) SHA1(b42aa0f34d885389d2650bf7a0531b95703b8a28) )	// palette: red component
-	ROM_LOAD( "tp1-2.1s", 0x0100, 0x0100, CRC(aeaf039d) SHA1(574560526100d38635aecd71eb73499c4f57d586) )	// palette: green component
-	ROM_LOAD( "tp1-1.1t", 0x0200, 0x0100, CRC(08e7cde3) SHA1(5261aca6834d635d17f8afaa8e35848930030ba4) )	// palette: blue component
+	ROM_LOAD( "tp1-3.1r", 0x0000, 0x0100, CRC(cfce2fa5) SHA1(b42aa0f34d885389d2650bf7a0531b95703b8a28) )	/* palette: red component */
+	ROM_LOAD( "tp1-2.1s", 0x0100, 0x0100, CRC(aeaf039d) SHA1(574560526100d38635aecd71eb73499c4f57d586) )	/* palette: green component */
+	ROM_LOAD( "tp1-1.1t", 0x0200, 0x0100, CRC(08e7cde3) SHA1(5261aca6834d635d17f8afaa8e35848930030ba4) )	/* palette: blue component */
 	ROM_LOAD( "tp1-4.5l", 0x0300, 0x0100, CRC(74138973) SHA1(2e21dbb1b19dd089da52e70fcb0ca91336e004e6) )	/* characters */
 	ROM_LOAD( "tp1-5.2p", 0x0400, 0x0200, CRC(4d77fa5a) SHA1(2438910314b23ecafb553230244f3931861ad2da) )	/* sprites */
 

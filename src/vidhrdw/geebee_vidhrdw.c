@@ -108,7 +108,7 @@ VIDEO_START( kaitein )
 	if( video_start_generic() )
 	return 1;
 
-	// No change in overlay, as this is always in cocktail mode
+	/* No change in overlay, as this is always in cocktail mode */
 	artwork_show(COCKTAIL_ONLY, true);
 	artwork_show(UPRIGHT_ONLY, false);
 

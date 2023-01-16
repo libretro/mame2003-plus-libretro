@@ -141,13 +141,13 @@ static UINT32 opJMP(void) /* TRUSTED */
 	modAdd=PC+1;
 	modDim=0;
 
-	// Read the address of the operand
+	/* Read the address of the operand */
 	ReadAMAddress();
 
-	// It cannot be a register!!
+	/* It cannot be a register!! */
 	assert(amFlag==0);
 
-	// Jump there
+	/* Jump there */
 	PC=amOut;
 	ChangePC(PC);
 
@@ -159,17 +159,17 @@ static UINT32 opJSR(void) /* TRUSTED */
 	modAdd=PC + 1;
 	modDim=0;
 
-	// Read the address of the operand
+	/* Read the address of the operand */
 	amLength1=ReadAMAddress();
 
-	// It cannot be a register!!
+	/* It cannot be a register!! */
 	assert(amFlag==0);
 
-	// Save NextPC into the stack
+	/* Save NextPC into the stack */
 	SP -= 4;
 	MemWrite32(SP, PC + amLength1 + 1);
 
-	// Jump there
+	/* Jump there */
 	PC=amOut;
 	ChangePC(PC);
 
@@ -181,17 +181,17 @@ static UINT32 opPREPARE(void)	/* somewhat TRUSTED */
 	modAdd=PC+1;
 	modDim=2;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
-	// step 1: save frame pointer on the stack
+	/* step 1: save frame pointer on the stack */
 	SP -= 4;
 	MemWrite32(SP, FP);
 
-	// step 2: FP = new SP
+	/* step 2: FP = new SP */
 	FP = SP;
 
-	// step 3: SP -= operand
+	/* step 3: SP -= operand */
 	SP -= amOut;
 
 	return amLength1 + 1;
@@ -202,19 +202,19 @@ static UINT32 opRET(void) /* TRUSTED */
 	modAdd=PC + 1;
 	modDim=2;
 
-	// Read the operand
+	/* Read the operand */
 	ReadAM();
 
-	// Read return address from stack
+	/* Read return address from stack */
 	PC=MemRead32(SP);
 	SP+=4;
 	ChangePC(PC);
 
-	// Restore AP from stack
+	/* Restore AP from stack */
 	AP=MemRead32(SP);
 	SP+=4;
 
-	// Skip stack frame
+	/* Skip stack frame */
 	SP += amOut;
 
 	return 0;
@@ -227,10 +227,10 @@ static UINT32 opTRAP(void)
 	modAdd=PC + 1;
 	modDim=0;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
-	// Normalize the flags
+	/* Normalize the flags */
 	NORMALIZEFLAGS();
 
 	switch ((amOut >> 4) & 0xF)
@@ -285,7 +285,7 @@ static UINT32 opTRAP(void)
 
 	oldPSW = v60_update_psw_for_exception(0, 0);
 
-	// Issue the software trap with interrupts
+	/* Issue the software trap with interrupts */
 	SP -= 4;
 	MemWrite32(SP, EXCEPTION_CODE_AND_SIZE(0x3000 + 0x100 * (amOut&0xF), 4));
 
@@ -307,10 +307,10 @@ static UINT32 opRETIU(void) /* TRUSTED */
 	modAdd=PC + 1;
 	modDim=1;
 
-	// Read the operand
+	/* Read the operand */
 	ReadAM();
 
-	// Restore PC and PSW from stack
+	/* Restore PC and PSW from stack */
 	PC = MemRead32(SP);
 	SP += 4;
 	ChangePC(PC);
@@ -318,7 +318,7 @@ static UINT32 opRETIU(void) /* TRUSTED */
 	newPSW = MemRead32(SP);
 	SP += 4;
 
-	// Destroy stack frame
+	/* Destroy stack frame */
 	SP += amOut;
 
 	v60WritePSW(newPSW);
@@ -333,10 +333,10 @@ static UINT32 opRETIS(void)
 	modAdd=PC + 1;
 	modDim=1;
 
-	// Read the operand
+	/* Read the operand */
 	ReadAM();
 
-	// Restore PC and PSW from stack
+	/* Restore PC and PSW from stack */
 	PC = MemRead32(SP);
 	SP += 4;
 	ChangePC(PC);
@@ -344,7 +344,7 @@ static UINT32 opRETIS(void)
 	newPSW = MemRead32(SP);
 	SP += 4;
 
-	// Destroy stack frame
+	/* Destroy stack frame */
 	SP += amOut;
 
 	v60WritePSW(newPSW);
@@ -386,14 +386,14 @@ static UINT32 opSTTASK(void)
 		adr += 4;
 	}
 
-	// 31 registers supported, _not_ 32
+	/* 31 registers supported, _not_ 32 */
 	for(i=0; i<31; i++)
 		if(amOut & (1<<i)) {
 			MemWrite32(adr, v60.reg[i]);
 			adr += 4;
 		}
 
-	// #### Ignore the virtual addressing crap.
+	/* #### Ignore the virtual addressing crap. */
 
 	return amLength1 + 1;
 }
@@ -404,7 +404,7 @@ static UINT32 opGETPSW(void)
 	modDim=2;
 	modWriteValW=v60ReadPSW();
 
-	// Write PSW to the operand
+	/* Write PSW to the operand */
 	amLength1=WriteAM();
 
 	return amLength1 + 1;
@@ -416,19 +416,19 @@ static UINT32 opTASI(void)
 	modAdd=PC + 1;
 	modDim=0;
 
-	// Load the address of the operand
+	/* Load the address of the operand */
 	amLength1=ReadAMAddress();
 
-	// Load UINT8 from the address
+	/* Load UINT8 from the address */
 	if (amFlag)
 		appb=(UINT8)v60.reg[amOut&0x1F];
 	else
 		appb=MemRead8(amOut);
 
-	// Set the flags for SUB appb,FF
+	/* Set the flags for SUB appb,FF */
 	SUBB(appb, 0xff);
 
-	// Write FF in the operand
+	/* Write FF in the operand */
 	if (amFlag)
 		SETREG8(v60.reg[amOut&0x1F], 0xFF);
 	else
@@ -442,10 +442,10 @@ static UINT32 opCLRTLB(void)
 	modAdd=PC+1;
 	modDim=2;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
-	// @@@ TLB not yet emulated
+	/* @@@ TLB not yet emulated */
 
 	return amLength1 + 1;
 }
@@ -457,7 +457,7 @@ static UINT32 opPOPM(void)
 	modAdd=PC+1;
 	modDim=2;
 
-	// Read the bit register list
+	/* Read the bit register list */
 	amLength1=ReadAM();
 
 	for (i=0;i<31;i++)
@@ -483,7 +483,7 @@ static UINT32 opPUSHM(void)
 	modAdd=PC+1;
 	modDim=2;
 
-	// Read the bit register list
+	/* Read the bit register list */
 	amLength1=ReadAM();
 
 	if (amOut & (1<<31))
@@ -508,7 +508,7 @@ static UINT32 opTESTB(void) /* TRUSTED */
 	modAdd=PC+1;
 	modDim=0;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
 	_Z = (amOut == 0);
@@ -524,7 +524,7 @@ static UINT32 opTESTH(void) /* TRUSTED */
 	modAdd=PC+1;
 	modDim=1;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
 	_Z = (amOut == 0);
@@ -540,7 +540,7 @@ static UINT32 opTESTW(void) /* TRUSTED */
 	modAdd=PC+1;
 	modDim=2;
 
-	// Read the operand
+	/* Read the operand */
 	amLength1=ReadAM();
 
 	_Z = (amOut == 0);

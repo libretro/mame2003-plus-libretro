@@ -179,14 +179,14 @@ VIDEO_EOF( gaplus );	/* update starfields */
 
 ***************************************************************************/
 
-static READ_HANDLER( in0_l )	{ return readinputport(0); }		// P1 joystick
-static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	// P2 joystick
-static READ_HANDLER( in1_l )	{ return readinputport(1); }		// fire and start buttons
-static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	// coins
-static READ_HANDLER( dipA_l )	{ return readinputport(2); }		// dips A
-static READ_HANDLER( dipA_h )	{ return readinputport(2) >> 4; }	// dips A
-static READ_HANDLER( dipB_l )	{ return readinputport(3); }		// dips B
-static READ_HANDLER( dipB_h )	{ return readinputport(3) >> 4; }	// dips B
+static READ_HANDLER( in0_l )	{ return readinputport(0); }		/* P1 joystick */
+static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	/* P2 joystick */
+static READ_HANDLER( in1_l )	{ return readinputport(1); }		/* fire and start buttons */
+static READ_HANDLER( in1_h )	{ return readinputport(1) >> 4; }	/* coins */
+static READ_HANDLER( dipA_l )	{ return readinputport(2); }		/* dips A */
+static READ_HANDLER( dipA_h )	{ return readinputport(2) >> 4; }	/* dips A */
+static READ_HANDLER( dipB_l )	{ return readinputport(3); }		/* dips B */
+static READ_HANDLER( dipB_h )	{ return readinputport(3) >> 4; }	/* dips B */
 static WRITE_HANDLER( out_lamps0 )
 {
 	set_led_status(0,data & 1);
@@ -318,8 +318,8 @@ static MACHINE_INIT( gaplus )
 
 static INTERRUPT_GEN( gaplus_interrupt_1 )
 {
-	irq0_line_assert();	// this also checks if irq is enabled - IMPORTANT!
-						// so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE);
+	irq0_line_assert();	/* this also checks if irq is enabled - IMPORTANT! */
+						/* so don't replace with cpu_set_irq_line(0, 0, ASSERT_LINE); */
 
 	namcoio_set_irq_line(0,PULSE_LINE);
 	namcoio_set_irq_line(1,PULSE_LINE);
@@ -535,7 +535,7 @@ INPUT_PORTS_START( gapluso )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )	// doesn't seem to be used
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* doesn't seem to be used */
 INPUT_PORTS_END
 
 /* identical to gaplus, but different bonus life settings */
@@ -821,7 +821,7 @@ ROM_START( gaplus )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */
@@ -859,7 +859,7 @@ ROM_START( gapluso )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */
@@ -897,7 +897,7 @@ ROM_START( gaplusa )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */
@@ -935,7 +935,7 @@ ROM_START( galaga3 )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */
@@ -973,7 +973,7 @@ ROM_START( galaga3a )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */
@@ -1011,7 +1011,7 @@ ROM_START( galaga3m )
 	ROM_LOAD( "gp2-12.11r",   0x4000, 0x2000, CRC(7316a1f1) SHA1(368e4541a5151e906a189712bc05192c2ceec8ae) )	/* objects */
 	ROM_LOAD( "gp2-9.11m",    0x6000, 0x2000, CRC(e6a9ae67) SHA1(99c1e67c3b216aa1b63f199e21c73cdedde80e1b) )	/* objects */
 	/* 0x8000-0x9fff  will be unpacked from 0x6000-0x7fff */
-	ROM_FILL(                 0xa000, 0x2000, 0x00 )	// optional ROM, not used
+	ROM_FILL(                 0xa000, 0x2000, 0x00 )	/* optional ROM, not used */
 
 	ROM_REGION( 0x0800, REGION_PROMS, 0 )
 	ROM_LOAD( "gp2-3.1p",     0x0000, 0x0100, CRC(a5091352) SHA1(dcd6dfbfbd5281ba0c7b7c189d6fde23617ed3e3) )	/* red palette ROM (4 bits) */

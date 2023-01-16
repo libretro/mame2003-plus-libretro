@@ -308,7 +308,7 @@ static void gaplus_draw_sprites( struct mame_bitmap *bitmap, const struct rectan
 			}
 
 			sy -= 16 * sizey;
-			sy = (sy & 0xff) - 32;	// fix wraparound
+			sy = (sy & 0xff) - 32;	/* fix wraparound */
 
 			for (y = 0;y <= sizey;y++)
 			{

@@ -283,7 +283,7 @@ READ16_HANDLER( polepos2_ic25_r )
 		last_result = (INT8)last_signed * (UINT8)last_unsigned;
 	}
 
-//	logerror("%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result);
+/*	logerror("%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result); */
 
 	return result | (result << 8);
 }
@@ -370,19 +370,19 @@ static WRITE16_HANDLER( polepos_z8002_nvi_enable_w )
 }
 
 
-static READ_HANDLER( in0_l )	{ return readinputport(0) & auto_start_mask; }	// fire and start buttons
-static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	// coins
-static READ_HANDLER( dipA_l )	{ return readinputport(1); }		// dips A
-static READ_HANDLER( dipA_h )	{ return readinputport(1) >> 4; }	// dips A
-static READ_HANDLER( dipB_l )	{ return readinputport(2); }		// dips B
-static READ_HANDLER( dipB_h )	{ return readinputport(2) >> 4; }	// dips B
-static READ_HANDLER( in1_l )	{ return readinputport(5); }		// wheel
-static READ_HANDLER( in1_h )	{ return readinputport(5) >> 4; }	// wheel
+static READ_HANDLER( in0_l )	{ return readinputport(0) & auto_start_mask; }	/* fire and start buttons */
+static READ_HANDLER( in0_h )	{ return readinputport(0) >> 4; }	/* coins */
+static READ_HANDLER( dipA_l )	{ return readinputport(1); }		/* dips A */
+static READ_HANDLER( dipA_h )	{ return readinputport(1) >> 4; }	/* dips A */
+static READ_HANDLER( dipB_l )	{ return readinputport(2); }		/* dips B */
+static READ_HANDLER( dipB_h )	{ return readinputport(2) >> 4; }	/* dips B */
+static READ_HANDLER( in1_l )	{ return readinputport(5); }		/* wheel */
+static READ_HANDLER( in1_h )	{ return readinputport(5) >> 4; }	/* wheel */
 static WRITE_HANDLER( out_0 )
 {
-// no start lamps in pole position
-//	set_led_status(1,data & 1);
-//	set_led_status(0,data & 2);
+/* no start lamps in pole position */
+/*	set_led_status(1,data & 1); */
+/*	set_led_status(0,data & 2); */
 	coin_counter_w(1,~data & 4);
 	coin_counter_w(0,~data & 8);
 }
@@ -499,7 +499,7 @@ INPUT_PORTS_START( polepos )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	// start 1, program controlled
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -571,7 +571,7 @@ INPUT_PORTS_START( poleposa )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	// start 1, program controlled
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -643,7 +643,7 @@ INPUT_PORTS_START( polepos2 )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	// start 1, program controlled
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )

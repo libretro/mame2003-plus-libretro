@@ -518,12 +518,12 @@ static INTERRUPT_GEN( xmen6p_interrupt )
 	}
 	else
 	{
-//      if (xmen_irqenabled&0x04)
-//      {
+/*      if (xmen_irqenabled&0x04) */
+/*      { */
 			irq3_line_hold();
-//          xmen_current_frame = 0x0000;
+/*          xmen_current_frame = 0x0000; */
 
-//      }
+/*      } */
 	}
 }
 

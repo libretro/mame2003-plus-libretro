@@ -436,7 +436,7 @@ static WRITE_HANDLER (segae_ridleofp_port_fa_w)
 	}
 	if (data & 2)
 	{
-		int curr = readinputport(5);// & 0x0fff; // fixes player 2 inputs in cocktail mode
+		int curr = readinputport(5);/* & 0x0fff; // fixes player 2 inputs in cocktail mode */
 		diff2 = ((curr - last2) & 0x0fff) | (curr & 0xf000);
 		last2 = curr;
 	}
@@ -861,7 +861,7 @@ INPUT_PORTS_START( megrescu ) /* Used By Megumi Rescue */
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x04, "4" )
     PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "100", IP_KEY_NONE, IP_JOY_NONE )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )  // Unknown
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )  /* Unknown */
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
@@ -876,7 +876,7 @@ INPUT_PORTS_START( megrescu ) /* Used By Megumi Rescue */
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )  // Unknown
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )  /* Unknown */
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 

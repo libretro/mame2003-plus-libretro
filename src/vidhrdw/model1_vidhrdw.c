@@ -18,7 +18,7 @@ UINT16 *model1_color_xlat;
 static UINT16 listctl[2];
 static UINT16 *glist;
 
-// Model 1 geometrizer TGP and rasterizer simulation
+/* Model 1 geometrizer TGP and rasterizer simulation */
 enum { FRAC_SHIFT = 16 };
 
 static int render_done;
@@ -488,21 +488,21 @@ static UINT16 scale_color(UINT16 color, float level)
 	return (r<<10)|(g<<5)|b;
 }
 
-// xe = xc + (x/z * zm + tx)
-// xe < x1 => xc + (x/z * zm + tx) < x1
-//         => x/z < (x1-xc-tx)/zm
-//         => x < z*(x1-xc-tx)/zm
+/* xe = xc + (x/z * zm + tx) */
+/* xe < x1 => xc + (x/z * zm + tx) < x1 */
+/*         => x/z < (x1-xc-tx)/zm */
+/*         => x < z*(x1-xc-tx)/zm */
 
-// ye = yc - (y/z * zm + ty)
-// ye < y1 => yc - (y/z * zm + ty) < y1
-//         => -y/z < (y1-yc+ty)/zm
-//         => y > -z*(y1-yc+ty)/zm
+/* ye = yc - (y/z * zm + ty) */
+/* ye < y1 => yc - (y/z * zm + ty) < y1 */
+/*         => -y/z < (y1-yc+ty)/zm */
+/*         => y > -z*(y1-yc+ty)/zm */
 
-// xf = zf*a
-// xx = x1*t+x2(1-t); zz = z1*t+z2(1-t)
-// => x1*t+x2(1-t) = z1*t*a+z2*(1-t)*a
-// => t*(x1-x2+a*(z2-z1) = -x2+a*z2
-// => t = (z2*a-x2)/((z2-z1)*a-(x2-x1))
+/* xf = zf*a */
+/* xx = x1*t+x2(1-t); zz = z1*t+z2(1-t) */
+/* => x1*t+x2(1-t) = z1*t*a+z2*(1-t)*a */
+/* => t*(x1-x2+a*(z2-z1) = -x2+a*z2 */
+/* => t = (z2*a-x2)/((z2-z1)*a-(x2-x1)) */
 
 static void recompute_frustrum(void)
 {
@@ -623,7 +623,7 @@ static void fclip_push_quad(int level, struct quad *q)
 		logerror(" (%f, %f, %f, %d)", q->p[i]->x, q->p[i]->y, q->p[i]->z, is_out[i]);
 	logerror("\n");
 
-	// No clipping
+	/* No clipping */
 	if(!is_out[0] && !is_out[1] && !is_out[2] && !is_out[3]) {
 		fclip_push_quad(level+1, q);
 		return;
@@ -631,11 +631,11 @@ static void fclip_push_quad(int level, struct quad *q)
 
 	fclip_point = clipfn[level].clip;
 
-	// Full clipping
+	/* Full clipping */
 	if(is_out[0] && is_out[1] && is_out[2] && is_out[3])
 		return;
 
-	// Find n so that point n is clipped and n-1 isn't
+	/* Find n so that point n is clipped and n-1 isn't */
 	for(i=0; i<4; i++)
 		if(is_out[i] && !is_out[(i-1)&3])
 			break;
@@ -645,22 +645,22 @@ static void fclip_push_quad(int level, struct quad *q)
 		is_out2[j] = is_out[(i+j)&3];
 	}
 
-	// At this point, pt[0] is clipped out and pt[3] isn't.  Test for the 4 possible cases
+	/* At this point, pt[0] is clipped out and pt[3] isn't.  Test for the 4 possible cases */
 	if(is_out2[1])
 		if(is_out2[2]) {
-			// pt 0,1,2 clipped out, one triangle left
+			/* pt 0,1,2 clipped out, one triangle left */
 			pi1 = fclip_point(pt[2], pt[3]);
 			pi2 = fclip_point(pt[3], pt[0]);
 			fclip_push_quad_next(level, q, pi1, pt[3], pi2, pi2);
 		} else {
-			// pt 0,1 clipped out, one quad left
+			/* pt 0,1 clipped out, one quad left */
 			pi1 = fclip_point(pt[1], pt[2]);
 			pi2 = fclip_point(pt[3], pt[0]);
 			fclip_push_quad_next(level, q, pi1, pt[2], pt[3], pi2);
 		}
 	else
 		if(is_out2[2]) {
-			// pt 0,2 clipped out, shouldn't happen, two triangles
+			/* pt 0,2 clipped out, shouldn't happen, two triangles */
 			pi1 = fclip_point(pt[0], pt[1]);
 			pi2 = fclip_point(pt[1], pt[2]);
 			fclip_push_quad_next(level, q, pi1, pt[1], pi2, pi2);
@@ -668,7 +668,7 @@ static void fclip_push_quad(int level, struct quad *q)
 			pi2 = fclip_point(pt[3], pt[0]);
 			fclip_push_quad_next(level, q, pi1, pt[3], pi2, pi2);
 		} else {
-			// pt 0 clipped out, one decagon left, split in quad+tri
+			/* pt 0 clipped out, one decagon left, split in quad+tri */
 			pi1 = fclip_point(pt[0], pt[1]);
 			pi2 = fclip_point(pt[3], pt[0]);
 			fclip_push_quad_next(level, q, pi1, pt[1], pt[2], pt[3]);
@@ -709,7 +709,7 @@ static float compute_specular(struct vector *normal, struct vector *light,float 
 	int i;
 	float sv=lightparams[lmode].s;
 
-	//This is how it should be according to model2 geo program, but doesn't work fine
+	/*This is how it should be according to model2 geo program, but doesn't work fine */
 	s=2*(diffuse*normal->z-light->z);
 	for(i=0;i<times[p];++i)
 		s*=s;
@@ -903,7 +903,7 @@ static void push_object(UINT32 tex_adr, UINT32 poly_adr, UINT32 size)
 			int r=(color>>0x0)&0x1f;
 			int g=(color>>0x5)&0x1f;
 			int b=(color>>0xA)&0x1f;
-			lumval>>=2;	//there must be a luma translation table somewhere
+			lumval>>=2;	/*there must be a luma translation table somewhere */
 			if(lumval>0x3f)
 				lumval=0x3f;
 			r=(model1_color_xlat[(r<<8)|lumval|0x0]>>3)&0x1f;
@@ -963,8 +963,8 @@ static UINT16 *push_direct(UINT16 *list)
 			 old_p0->x, old_p0->y, old_p0->z,
 			 old_p1->x, old_p1->y, old_p1->z);
 
-//	transform_point(old_p0);
-//	transform_point(old_p1);
+/*	transform_point(old_p0); */
+/*	transform_point(old_p1); */
 	if(old_p0->z > 0)
 		project_point_direct(old_p0);
 	else
@@ -986,9 +986,9 @@ static UINT16 *push_direct(UINT16 *list)
 		if(flags & 0x00001000)
 			tex_adr ++;
 
-		// list+2 is luminosity
-		// list+4 is 0?
-		// list+12 is z?
+		/* list+2 is luminosity */
+		/* list+4 is 0? */
+		/* list+12 is z? */
 
 		p0 = pointpt++;
 		p1 = pointpt++;
@@ -1023,8 +1023,8 @@ static UINT16 *push_direct(UINT16 *list)
 
 		link = (flags >> 8) & 3;
 
-//		transform_point(p0);
-//		transform_point(p1);
+/*		transform_point(p0); */
+/*		transform_point(p1); */
 		if(p0->z > 0)
 			project_point_direct(p0);
 		if(p1->z > 0)
@@ -1060,7 +1060,7 @@ static UINT16 *push_direct(UINT16 *list)
 			int r=(color>>0x0)&0x1f;
 			int g=(color>>0x5)&0x1f;
 			int b=(color>>0xA)&0x1f;
-			lumval>>=2;	//there must be a luma translation table somewhere
+			lumval>>=2;	/*there must be a luma translation table somewhere */
 			if(lumval>0x3f)
 				lumval=0x3f;
 			r=(model1_color_xlat[(r<<8)|lumval|0x0]>>3)&0x1f;
@@ -1068,7 +1068,7 @@ static UINT16 *push_direct(UINT16 *list)
 			b=(model1_color_xlat[(b<<8)|lumval|0x4000]>>3)&0x1f;
 			cquad.col=(r<<10)|(g<<5)|(b<<0);
 		}
-		//cquad.col  = scale_color(Machine->pens[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)],((float) (lum>>24)) / 128.0);
+		/*cquad.col  = scale_color(Machine->pens[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)],((float) (lum>>24)) / 128.0); */
 		if(flags & 0x00002000)
 			cquad.col |= MOIRE;
 
@@ -1197,12 +1197,12 @@ static void tgp_render(struct mame_bitmap *bitmap, const struct rectangle *clipr
 				list += 2;
 				break;
 			case 1:
-				// 1 = plane 1
-				// 2 = ??  draw object (413d3, 17c4c, e)
-				// 3 = plane 2
-				// 4 = ??  draw object (408a8, a479, 9)
-				// 5 = decor
-				// 6 = ??  draw object (57bd4, 387460, 2ad)
+				/* 1 = plane 1 */
+				/* 2 = ??  draw object (413d3, 17c4c, e) */
+				/* 3 = plane 2 */
+				/* 4 = ??  draw object (408a8, a479, 9) */
+				/* 5 = decor */
+				/* 6 = ??  draw object (57bd4, 387460, 2ad) */
 
 				if(1 || zz >= 666)
 					push_object(readi(list+2), readi(list+4), readi(list+6));
@@ -1345,7 +1345,7 @@ static void tgp_scan(void)
 #endif
 	if(!render_done && (listctl[1] & 0x1f) == 0x1f) {
 		UINT16 *list = get_list();
-		// Skip everything but the data uploads
+		/* Skip everything but the data uploads */
 		logerror("VIDEO: scan list %d\n", get_list_number());
 		for(;;) {
 			int type = (list[1]<<16)|list[0];
@@ -1388,7 +1388,7 @@ static void tgp_scan(void)
 				int adr = readi(list+2);
 				int len = readi(list+4);
 				int i;
-				//logerror("VIDEO:   upload data, adr=%x, len=%x\n", adr, len);
+				/*logerror("VIDEO:   upload data, adr=%x, len=%x\n", adr, len); */
 				for(i=0;i<len;++i)
 				{
 					int v=readi(list+6+i*2);
@@ -1396,7 +1396,7 @@ static void tgp_scan(void)
 					lightparams[i+adr].a=((float) ((v>>8)&0xff))/255.0;
 					lightparams[i+adr].s=((float) ((v>>16)&0xff))/255.0;
 					lightparams[i+adr].p=(v>>24)&0xff;
-					//logerror("         %02X\n",v);
+					/*logerror("         %02X\n",v); */
 				}
 				list += 6+len*2;
 				break;

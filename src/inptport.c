@@ -1215,7 +1215,7 @@ ScanJoysticks( struct InputPort *in )
 			  }
 
 		}
-    else if (options.restrict_4_way) //start use alternative code
+    else if (options.restrict_4_way) /*start use alternative code */
     {
       if(options.content_flags[CONTENT_ROTATE_JOY_45])
       {
@@ -1231,7 +1231,7 @@ ScanJoysticks( struct InputPort *in )
         else if (mJoy4Way[i])
           mJoy4Way[i]=0;
       }
-      else // just a regular 4-way - last press no code needed just ignore diagonals and no movement
+      else /* just a regular 4-way - last press no code needed just ignore diagonals and no movement */
       {
         if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6)
           &&  (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10) )

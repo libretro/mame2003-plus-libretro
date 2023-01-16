@@ -192,8 +192,8 @@ static struct GfxLayout layout_16x16x4 =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4a, 0, 0x10 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4,  0, 0x30 }, // [1] Tiles
+	{ REGION_GFX1, 0, &layout_16x16x4a, 0, 0x10 }, /* [0] Sprites */
+	{ REGION_GFX2, 0, &layout_16x16x4,  0, 0x30 }, /* [1] Tiles */
 	{ -1 }
 };
 
@@ -259,7 +259,7 @@ ROM_START( crospang )
 	ROM_LOAD( "s1.bin", 0x00000, 0x10000, CRC(d61a224c) SHA1(5cd1b2d136ad58ab550c7ba135558d6c8a4cd8f6) )
 
 	ROM_REGION( 0x20000, REGION_SOUND1, 0 ) /* samples */
-	ROM_LOAD( "s2.bin", 0x00000, 0x20000, CRC(9f9ecd22) SHA1(631ffe14018ba39658c435b8ecb23b19a14569ee) ) // sample rom contains oksan?
+	ROM_LOAD( "s2.bin", 0x00000, 0x20000, CRC(9f9ecd22) SHA1(631ffe14018ba39658c435b8ecb23b19a14569ee) ) /* sample rom contains oksan? */
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* sprites */
 	ROM_LOAD( "rom6.bin", 0x000000, 0x80000, CRC(9c633082) SHA1(18b8591b695ee429c9c9855d8cbba6249a4bd809) )

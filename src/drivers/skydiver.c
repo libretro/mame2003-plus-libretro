@@ -129,11 +129,11 @@ static WRITE_HANDLER( skydiver_nmion_w )
 static INTERRUPT_GEN( skydiver_interrupt )
 {
 /* Convert range data to divide value and write to sound */
-	discrete_sound_w(0, (0x01 << (~skydiver_videoram[0x394] & 0x07)) & 0xff);	// Range 0-2
+	discrete_sound_w(0, (0x01 << (~skydiver_videoram[0x394] & 0x07)) & 0xff);	/* Range 0-2 */
 
-	discrete_sound_w(1,  skydiver_videoram[0x394] & 0x08);	// Range 3 - note disable
-	discrete_sound_w(2, ~skydiver_videoram[0x395] & 0xff);	// Note - freq
-	discrete_sound_w(3,  skydiver_videoram[0x396] & 0x0f);	// NAM - Noise Amplitude
+	discrete_sound_w(1,  skydiver_videoram[0x394] & 0x08);	/* Range 3 - note disable */
+	discrete_sound_w(2, ~skydiver_videoram[0x395] & 0xff);	/* Note - freq */
+	discrete_sound_w(3,  skydiver_videoram[0x396] & 0x0f);	/* NAM - Noise Amplitude */
 
 
 	if (skydiver_nmion)
@@ -375,10 +375,10 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 const struct discrete_555_astbl_desc skydiverWhistl555 =
 {
 	DISC_555_OUT_SQW | DISC_555_OUT_AC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2.0 /3.0,	/* normally 2/3 of v555 */
+	5.0 / 3.0	/* normally 1/3 of v555 */
 };
 
 const struct discrete_lfsr_desc skydiver_lfsr={
@@ -466,11 +466,11 @@ static DISCRETE_SOUND_START(skydiver_sound_interface)
 	/* The note generator is disabled by a low on   */
 	/* RANGE3.                                      */
 	/************************************************/
-	// We will disable the divide if SKYDIVER_RANGE_DATA = 0
+	/* We will disable the divide if SKYDIVER_RANGE_DATA = 0 */
 	DISCRETE_DIVIDE(NODE_20, SKYDIVER_RANGE_DATA, 12096000.0 /2.0 / 2.0, SKYDIVER_RANGE_DATA)
 	DISCRETE_ADDER2(NODE_21, 1, SKYDIVER_NOTE_DATA, 1)
-	// We will disable the divide if SKYDIVER_NOTE_DATA = 0
-	DISCRETE_DIVIDE(NODE_22, SKYDIVER_NOTE_DATA, NODE_20, NODE_21)	// freq
+	/* We will disable the divide if SKYDIVER_NOTE_DATA = 0 */
+	DISCRETE_DIVIDE(NODE_22, SKYDIVER_NOTE_DATA, NODE_20, NODE_21)	/* freq */
 	DISCRETE_SQUAREWAVE(SKYDIVER_NOTE_SND, SKYDIVER_RANGE3_EN, NODE_22, 1000.0, 50.0, 0, 0.0)
 
 	/************************************************/

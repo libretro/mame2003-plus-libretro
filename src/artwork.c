@@ -2295,10 +2295,10 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 	/* A negative values will use the default opacity for the overlay. */
 	opacity = options.overlay_opacity;
 	if (opacity != 0 && list) {
-	    if (opacity < 0) { // Default overlay opacity
+	    if (opacity < 0) { /* Default overlay opacity */
 		if (!generate_overlay(list, width, height))
 		    return 0;
-	    } else { // Opacity is > 0
+	    } else { /* Opacity is > 0 */
                 struct overlay_piece *newlist;
 		/* Count elements in list */
 		int count = 0;
@@ -2312,8 +2312,8 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 		/* Modify opacity as set to user defined value */
 		tmp = newlist;
 		while (tmp->type != OVERLAY_TYPE_END) {
-		    tmp->color = tmp->color & ~(0xff << 24); // Clear
-		    tmp->color = tmp->color | (((opacity) & 0xff) << 24); // Set
+		    tmp->color = tmp->color & ~(0xff << 24); /* Clear */
+		    tmp->color = tmp->color | (((opacity) & 0xff) << 24); /* Set */
 		    tmp++;
 		}
 		if (!generate_overlay(newlist, width, height))
@@ -3367,7 +3367,7 @@ static int generate_overlay(const struct overlay_piece *list, int width, int hei
 		piece->layer = LAYER_OVERLAY;
 		piece->priority = priority++;
 		piece->blendflags = list->type & OVERLAY_FLAG_MASK;
-		piece->tag = list->tag; // Handle someone using a different tag, for example, cocktail mode
+		piece->tag = list->tag; /* Handle someone using a different tag, for example, cocktail mode */
 
 		/* switch off the type */
 		switch (list->type & ~OVERLAY_FLAG_MASK)

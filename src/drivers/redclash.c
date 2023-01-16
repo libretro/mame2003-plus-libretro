@@ -172,7 +172,7 @@ WRITE_HANDLER( zerohour_sound_output0_w )
 {
 	UINT16 fix_address = 0x5000 + offset;
 	zerohour_snd_play(0, fix_address &7, data);
-//	printf("zerohour_sound_output0_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data);
+/*	printf("zerohour_sound_output0_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data); */
 }
 
 WRITE_HANDLER( zerohour_sound_output1_w )
@@ -180,7 +180,7 @@ WRITE_HANDLER( zerohour_sound_output1_w )
 	UINT16 fix_address = 0x5801 + offset;
 	
 	zerohour_snd_play(1, fix_address &7, data);
-//	printf("zerohour_sound_output1_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data);
+/*	printf("zerohour_sound_output1_w PC:%04x: fix_Address:%04x offset:%04x data:%02x\n",activecpu_get_pc(),fix_address,offset,data); */
 }
 
 

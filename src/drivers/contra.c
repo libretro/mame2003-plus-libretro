@@ -99,12 +99,12 @@ WRITE_HANDLER(contra_k007452_w)
 
 	if (offset == 1)
 	{
-		// Starts multiplication process
+		/* Starts multiplication process */
 		multiply_result = math_regs[0] * math_regs[1];
 	}
 	else if (offset == 5)
 	{
-		// Starts division process
+		/* Starts division process */
 		UINT16 dividend = (math_regs[4]<<8) + math_regs[5];
 		UINT16 divisor = (math_regs[2]<<8) + math_regs[3];
 		if (!divisor) {

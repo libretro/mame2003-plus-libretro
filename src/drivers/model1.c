@@ -56,13 +56,13 @@ static WRITE16_HANDLER( bank_w )
 {
 	if(ACCESSING_LSB) {
 		switch(data & 0xf) {
-		case 0x1: // 100000-1fffff data roms banking
+		case 0x1: /* 100000-1fffff data roms banking */
 			cpu_setbank(1, memory_region(REGION_CPU1) + 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			logerror("BANK %x\n", 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			break;
-		case 0x2: // 200000-2fffff data roms banking (unused, all known games have only one bank)
+		case 0x2: /* 200000-2fffff data roms banking (unused, all known games have only one bank) */
 			break;
-		case 0xf: // f00000-ffffff program roms banking (unused, all known games have only one bank)
+		case 0xf: /* f00000-ffffff program roms banking (unused, all known games have only one bank) */
 			break;
 		}
 	}
@@ -73,8 +73,8 @@ static int last_irq;
 
 static void irq_raise(int level)
 {
-	//	logerror("irq: raising %d\n", level);
-	//	irq_status |= (1 << level);
+	/*	logerror("irq: raising %d\n", level); */
+	/*	irq_status |= (1 << level); */
 	last_irq = level;
 	cpu_set_irq_line(0, 0, HOLD_LINE);
 }
@@ -83,19 +83,19 @@ static int irq_callback(int irqline)
 {
 	return last_irq;
 }
-// vf
-// 1 = fe3ed4
-// 3 = fe3f5c
-// other = fe3ec8 / fe3ebc
+/* vf */
+/* 1 = fe3ed4 */
+/* 3 = fe3f5c */
+/* other = fe3ec8 / fe3ebc */
 
-// vr
-// 1 = fe02bc
-// other = f302a4 / fe02b0
+/* vr */
+/* 1 = fe02bc */
+/* other = f302a4 / fe02b0 */
 
-// swa
-// 1 = ff504
-// 3 = ff54c
-// other = ff568/ff574
+/* swa */
+/* 1 = ff504 */
+/* 3 = ff54c */
+/* other = ff568/ff574 */
 
 static void irq_init(void)
 {
@@ -115,7 +115,7 @@ static INTERRUPT_GEN(model1_interrupt)
 	{
 		irq_raise(model1_sound_irq);
 
-		// if the FIFO has something in it, signal the 68k too
+		/* if the FIFO has something in it, signal the 68k too */
 		if (fifo_rptr != fifo_wptr)
 		{
 			cpu_set_irq_line(1, 2, HOLD_LINE);
@@ -137,7 +137,7 @@ static MACHINE_INIT(model1)
 		model1_sound_irq = 3;
 	}
 
-	// init the sound FIFO
+	/* init the sound FIFO */
 	fifo_rptr = fifo_wptr = 0;
 	memset(to_68k, 0, sizeof(to_68k));
 }
@@ -206,7 +206,7 @@ static WRITE16_HANDLER(mr2_w)
 		logerror("MW fca[r22], %04x%04x (%x)\n", mr2[0x1eca/2+1], mr2[0x1eca/2], activecpu_get_pc());
 #endif
 
-	// wingwar scene position, pc=e1ce -> d735
+	/* wingwar scene position, pc=e1ce -> d735 */
 	if(offset/2 == 0x1f08/4)
 		logerror("MW  8[r10], %f (%x)\n", *(float *)(mr2+0x1f08/2), activecpu_get_pc());
 	if(offset/2 == 0x1f0c/4)
@@ -222,7 +222,7 @@ static READ16_HANDLER( snd_68k_ready_r )
 	if ((sr & 0x0700) > 0x0100)
 	{
 		cpu_spinuntil_time(TIME_IN_USEC(40));
-		return 0;	// not ready yet, interrupts disabled
+		return 0;	/* not ready yet, interrupts disabled */
 	}
 	
 	return 0xff;
@@ -234,9 +234,9 @@ static WRITE16_HANDLER( snd_latch_to_68k_w )
 	fifo_wptr++;
 	if (fifo_wptr >= FIFO_SIZE) fifo_wptr = 0;
 
-	// signal the 68000 that there's data waiting
+	/* signal the 68000 that there's data waiting */
 	cpu_set_irq_line(1, 2, HOLD_LINE);
-	// give the 68k time to reply
+	/* give the 68k time to reply */
 	cpu_spinuntil_time(TIME_IN_USEC(40));
 }
 
@@ -272,10 +272,10 @@ static MEMORY_WRITE16_START( model1_writemem )
 	{ 0x610000, 0x61ffff, md1_w, &model1_display_list1 },
 	{ 0x680000, 0x680003, model1_listctl_w },
 	{ 0x700000, 0x70ffff, sys24_tile_w },
-	{ 0x720000, 0x720001, MWA16_NOP	   },// Unknown, always 0
-	{ 0x740000, 0x740001, MWA16_NOP	   },// Horizontal synchronization register
-	{ 0x760000, 0x760001, MWA16_NOP	   },// Vertical synchronization register
-	{ 0x770000, 0x770001, MWA16_NOP	   },// Video synchronization switch
+	{ 0x720000, 0x720001, MWA16_NOP	   },/* Unknown, always 0 */
+	{ 0x740000, 0x740001, MWA16_NOP	   },/* Horizontal synchronization register */
+	{ 0x760000, 0x760001, MWA16_NOP	   },/* Vertical synchronization register */
+	{ 0x770000, 0x770001, MWA16_NOP	   },/* Video synchronization switch */
 	{ 0x780000, 0x7fffff, sys24_char_w },
 	{ 0x900000, 0x903fff, p_w, &paletteram16 },
 	{ 0x910000, 0x91bfff, MWA16_RAM, &model1_color_xlat },
@@ -286,7 +286,7 @@ static MEMORY_WRITE16_START( model1_writemem )
 	{ 0xd20000, 0xd20003, model1_tgp_copro_ram_w },
 	{ 0xd80000, 0xd80003, model1_tgp_copro_w },
 	{ 0xd80010, 0xd80013, model1_tgp_copro_w }, /* Mirror */
-	{ 0xe00000, 0xe00001, MWA16_NOP          }, // Watchdog?  IRQ ack? Always 0x20, usually on irq
+	{ 0xe00000, 0xe00001, MWA16_NOP          }, /* Watchdog?  IRQ ack? Always 0x20, usually on irq */
 	{ 0xe00004, 0xe00005, bank_w },
 	{ 0xe0000c, 0xe0000f, MWA16_NOP },
 	{ 0xfc0000, 0xffffff, MWA16_ROM },

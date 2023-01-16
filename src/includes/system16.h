@@ -115,7 +115,7 @@ extern READ16_HANDLER( SYS16_CPU2_RESET_HACK );
 
 extern struct GfxDecodeInfo sys16_gfxdecodeinfo[];
 
-// encryption decoding
+/* encryption decoding */
 void endurob2_decode_data(data16_t *dest,data16_t *source,int size);
 void endurob2_decode_data2(data16_t *dest,data16_t *source,int size);
 void enduror_decode_data(data16_t *dest,data16_t *source,int size);

@@ -218,15 +218,15 @@ MEMORY_END
 
 INPUT_PORTS_START( marblmd2 )
 	PORT_START /* 600000 input_port_0_word_r */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 ) // also acts as START3
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 ) /* also acts as START3 */
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) // also acts as START1
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 ) /* also acts as START1 */
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START /* 600002 input_port_1_word_r */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN ) // acts as a 'freeze' input, probably not connected
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* acts as a 'freeze' input, probably not connected */
 	PORT_BIT( 0x00fe, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) // also acts as START2
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) /* also acts as START2 */
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START /* 600010 input_port_2_word_r */
@@ -253,7 +253,7 @@ INPUT_PORTS_START( marblmd2 )
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, "Number of Players (Test Mode)" ) // this one controls 'number of players' in Control Test
+	PORT_DIPNAME( 0x0020, 0x0020, "Number of Players (Test Mode)" ) /* this one controls 'number of players' in Control Test */
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPSETTING(      0x0020, "3" )
 	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )
@@ -520,7 +520,7 @@ ROM_START( marblmd2 )
 	ROM_LOAD( "mo0h.12p", 0x40000, 0x20000, CRC(e47d92b0) SHA1(7953e8342450c02408e4d90f132144d55de2f491) )
 	ROM_LOAD( "mo1h.14p", 0x60000, 0x20000, CRC(317a03fb) SHA1(23a7cfe7c5601c858e8b346de31441788c7a8e97) )
 
-	// loading based on batman, there are 2 unpopulated positions on the PCB
+	/* loading based on batman, there are 2 unpopulated positions on the PCB */
 	ROM_REGION( 0x200000, REGION_SOUND1, 0 )	/* 1MB for ADPCM */
 	ROM_LOAD( "sound.19e",  0x80000, 0x20000, CRC(e916bef7) SHA1(e07ddc8a3e1656d7307b767e692cf4a575ca47a3) )
 	ROM_LOAD( "sound.12e",  0xe0000, 0x20000, CRC(bab2f8e5) SHA1(bbe2d693d40e5eeba315fe7b6380a2030b66f23e) )

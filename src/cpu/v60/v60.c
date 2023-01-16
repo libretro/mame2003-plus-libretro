@@ -278,17 +278,17 @@ UINT32 v60_update_psw_for_exception(int is_interrupt, int target_level)
 	UINT32 oldPSW = v60ReadPSW();
 	UINT32 newPSW = oldPSW;
 
-	// Change to interrupt context
-	newPSW &= ~(3 << 24);  // PSW.EL = 0
-	newPSW |= target_level << 24; // set target level
-	newPSW &= ~(1 << 18);  // PSW.IE = 0
-	newPSW &= ~(1 << 16);  // PSW.TE = 0
-	newPSW &= ~(1 << 27);  // PSW.TP = 0
-	newPSW &= ~(1 << 17);  // PSW.AE = 0
-	newPSW &= ~(1 << 29);  // PSW.EM = 0
+	/* Change to interrupt context */
+	newPSW &= ~(3 << 24);  /* PSW.EL = 0 */
+	newPSW |= target_level << 24; /* set target level */
+	newPSW &= ~(1 << 18);  /* PSW.IE = 0 */
+	newPSW &= ~(1 << 16);  /* PSW.TE = 0 */
+	newPSW &= ~(1 << 27);  /* PSW.TP = 0 */
+	newPSW &= ~(1 << 17);  /* PSW.AE = 0 */
+	newPSW &= ~(1 << 29);  /* PSW.EM = 0 */
 	if (is_interrupt)
-		newPSW |=  (1 << 28);// PSW.IS = 1
-	newPSW |=  (1 << 31);  // PSW.ASA = 1
+		newPSW |=  (1 << 28);/* PSW.IS = 1 */
+	newPSW |=  (1 << 31);  /* PSW.ASA = 1 */
 	v60WritePSW(newPSW);
 
 	return oldPSW;

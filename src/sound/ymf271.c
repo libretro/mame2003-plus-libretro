@@ -405,10 +405,10 @@ static void ymf271_write_timer(int chipnum, int data)
 				chip->timerA |= data;
 				break;
 
-//			case 0x11:
-//				chip->timerA &= ~0x300;
-//				chip->timerA |= (data & 0x3)<<8;
-//				break;
+/*			case 0x11: */
+/*				chip->timerA &= ~0x300; */
+/*				chip->timerA |= (data & 0x3)<<8; */
+/*				break; */
 
 			case 0x12:
 				chip->timerB = data;

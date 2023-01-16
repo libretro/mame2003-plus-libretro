@@ -277,7 +277,7 @@ static READ_HANDLER( omegrace_vg_status_r )
 UINT8 encode_spinner(UINT8 data)
 {
 	data &= 0x3f;
-	return data ^ (data >> 1) ^ 0x3f; // Inverted 6-bit Gray code
+	return data ^ (data >> 1) ^ 0x3f; /* Inverted 6-bit Gray code */
 }
 
 

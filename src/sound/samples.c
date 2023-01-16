@@ -29,7 +29,7 @@ void sample_start(int channel,int samplenum,int loop)
 	{
 		if (Machine->samples->sample[samplenum]->b_decoded == 0)
 		{
-			// Lets decode this sample before playing it.
+			/* Lets decode this sample before playing it. */
 			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
 		}
 
@@ -77,7 +77,7 @@ void sample_set_freq(int channel,int freq)
 	mixer_set_sample_frequency(channel + firstchannel,freq);
 }
 
-// Set sample volume by speaker.
+/* Set sample volume by speaker. */
 void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
 {
 	if (Machine->sample_rate == 0) return;
@@ -122,14 +122,14 @@ void sample_stop(int channel)
 
 	mixer_stop_sample(channel + firstchannel);
 
-	//respect samples being disabled
+	/*respect samples being disabled */
 	if ( !options.use_samples ) return;
 	if ( (!options.use_alt_sound) || (!options.content_flags[CONTENT_ALT_SOUND]) ) return;
-	if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
+	if ( ( channel != 0) || (channel !=1) ) return; /* return normally if not matching ost channel specs */
 
 	if (Machine->samples->sample[c_sample] != NULL) {
 		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
-			// A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files.
+			/* A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files. */
 			if (Machine->samples->sample[c_sample]->length > GAME_SAMPLE_LARGE)
 				readsample(Machine->samples->sample[c_sample], c_sample, Machine->samples, 0);
 

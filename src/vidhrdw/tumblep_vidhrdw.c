@@ -117,7 +117,7 @@ static void jumpkids_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 		y = 240 - y;
         x = 304 - x;
 
-	//  sprite &= ~multi; /* Todo:  I bet TumblePop bootleg doesn't do this either */
+	/*  sprite &= ~multi;*/ /* Todo:  I bet TumblePop bootleg doesn't do this either */ 
 		if (fy)
 			inc = -1;
 		else
@@ -142,7 +142,7 @@ static void jumpkids_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 					sprite - multi * inc,
 					colour,
 					fx,fy,
-					x-1,y + mult * multi, // x-1 for bcstory .. realign other layers?
+					x-1,y + mult * multi, /* x-1 for bcstory .. realign other layers? */
 					cliprect,TRANSPARENCY_PEN,0);
 
 			multi--;
@@ -179,7 +179,7 @@ static void fncywld_drawsprites(struct mame_bitmap *bitmap,const struct rectangl
 		y = 240 - y;
         x = 304 - x;
 
-	//  sprite &= ~multi; /* Todo:  I bet TumblePop bootleg doesn't do this either */
+	/*  sprite &= ~multi;*/ /* Todo:  I bet TumblePop bootleg doesn't do this either */ 
 		if (fy)
 			inc = -1;
 		else
@@ -233,7 +233,7 @@ WRITE16_HANDLER( chokchok_tilebank_w )
 
 WRITE16_HANDLER( suprtrio_tilebank_w )
 {
-	bcstory_tilebank = data<<14; // shift it here, makes using bcstory_tilebank easier
+	bcstory_tilebank = data<<14; /* shift it here, makes using bcstory_tilebank easier */
 	tilemap_mark_all_tiles_dirty(pf1_tilemap);
 	tilemap_mark_all_tiles_dirty(pf1_alt_tilemap);
 	tilemap_mark_all_tiles_dirty(pf2_tilemap);
@@ -603,12 +603,12 @@ VIDEO_UPDATE( sdfight )
 	flipscreen=tumblep_control_0[0]&0x80;
 	tilemap_set_flip(ALL_TILEMAPS,flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 	offs=-1;
-	offs2=-5; // foreground scroll..
+	offs2=-5; /* foreground scroll.. */
 
 	/* sprites need an offset too */
 
 	tilemap_set_scrollx( pf1_tilemap,0, tumblep_control_0[1]+offs2 );
-	tilemap_set_scrolly( pf1_tilemap,0, tumblep_control_0[2]-16 ); // needed for the ground ...
+	tilemap_set_scrolly( pf1_tilemap,0, tumblep_control_0[2]-16 ); /* needed for the ground ... */
 	tilemap_set_scrollx( pf1_alt_tilemap,0, tumblep_control_0[1]+offs2 );
 	tilemap_set_scrolly( pf1_alt_tilemap,0, tumblep_control_0[2]-16 );
 	tilemap_set_scrollx( pf2_tilemap,0, tumblep_control_0[3]+offs );
@@ -650,7 +650,7 @@ VIDEO_UPDATE( fncywld )
 
 VIDEO_UPDATE( jumppop )
 {
-//  fillbitmap(bitmap, get_black_pen(), cliprect);
+/*  fillbitmap(bitmap, get_black_pen(), cliprect); */
 
 	tilemap_set_scrollx( pf1_tilemap,0, jumppop_control[2]-0x3a0 );
 	tilemap_set_scrolly( pf1_tilemap,0, jumppop_control[3] );
@@ -671,7 +671,7 @@ VIDEO_UPDATE( jumppop )
 	else
 		tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 
-//ui_popup("%04x %04x %04x %04x %04x %04x %04x %04x", jumppop_control[0],jumppop_control[1],jumppop_control[2],jumppop_control[3],jumppop_control[4],jumppop_control[5],jumppop_control[6],jumppop_control[7]);
+/*ui_popup("%04x %04x %04x %04x %04x %04x %04x %04x", jumppop_control[0],jumppop_control[1],jumppop_control[2],jumppop_control[3],jumppop_control[4],jumppop_control[5],jumppop_control[6],jumppop_control[7]); */
 
 	jumpkids_drawsprites(bitmap,cliprect);
 }

@@ -360,7 +360,7 @@ static MACHINE_DRIVER_START( goal92 )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(40*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) // black border at bottom is a game bug...
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) /* black border at bottom is a game bug... */
 	MDRV_GFXDECODE(goal92_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(128*16)
 

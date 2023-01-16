@@ -26,87 +26,87 @@ const struct discrete_lfsr_desc firetrk_lfsr={
 
 const struct discrete_dac_r1_ladder firetrk_motor_v_dac =
 {
-	4,		// size of ladder
-	{2200000, 1000000, 470000, 220000, 0,0,0,0},	// R24, R23, R22, R21
-	4.4,		// 5V - diode junction (0.6V)
-	68000,		// R25
-	0,		// no rGnd
-	1e-5		// C24
+	4,		/* size of ladder */
+	{2200000, 1000000, 470000, 220000, 0,0,0,0},	/* R24, R23, R22, R21 */
+	4.4,		/* 5V - diode junction (0.6V) */
+	68000,		/* R25 */
+	0,		/* no rGnd */
+	1e-5		/* C24 */
 };
 
 const struct discrete_555_cc_desc firetrk_motor_vco =
 {
 	DISC_555_OUT_DC | DISC_555_OUT_SQW,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2 / 3,	// threshold
-	5.0 /3,		// trigger
-	5,		// B+ voltage of the Constant Current source
-	0.7		// Q2 junction voltage
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2 / 3,	/* threshold */
+	5.0 /3,		/* trigger */
+	5,		/* B+ voltage of the Constant Current source */
+	0.7		/* Q2 junction voltage */
 };
 
 const struct discrete_dac_r1_ladder firetrk_motor_out_dac =
 {
-	2,		// size of ladder
-	{10000, 10000, 0,0,0,0,0,0},	// R74, R73
-	3.4,		// TTL high voltage
-	0,		// no rBias
-	0,		// no rGnd
-	1e-7		// C43
+	2,		/* size of ladder */
+	{10000, 10000, 0,0,0,0,0,0},	/* R74, R73 */
+	3.4,		/* TTL high voltage */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	1e-7		/* C43 */
 };
 
 const struct discrete_dac_r1_ladder firetrk_siren_cv_dac =
 {
-	4,		// size of ladder
-	{2200000, 1000000, 470000, 220000, 0,0,0,0},	// R46, R47, R45, R48
-	5,		// 5V
-	100000,		// R49
-	390000,		// R44
-	1e-5		// C30
+	4,		/* size of ladder */
+	{2200000, 1000000, 470000, 220000, 0,0,0,0},	/* R46, R47, R45, R48 */
+	5,		/* 5V */
+	100000,		/* R49 */
+	390000,		/* R44 */
+	1e-5		/* C30 */
 };
 
 const struct discrete_555_astbl_desc firetrk_siren_555 =
 {
 	DISC_555_OUT_SQW | DISC_555_OUT_DC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2.0 /3.0,	/* normally 2/3 of v555 */
+	5.0 / 3.0	/* normally 1/3 of v555 */
 };
 
 const struct discrete_dac_r1_ladder firetrk_bang_dac =
 {
-	4,		// size of ladder
-	{8200, 3900, 2200, 1000, 0,0,0,0},	// R37, R35, R36, R34
-	0,		// no vBias
-	0,		// no rBias
-	0,		// no rGnd
-	0		// no smoothing cap
+	4,		/* size of ladder */
+	{8200, 3900, 2200, 1000, 0,0,0,0},	/* R37, R35, R36, R34 */
+	0,		/* no vBias */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	0		/* no smoothing cap */
 };
 
 const struct discrete_schmitt_osc_desc firetrk_screech_osc =
 {
-	2200,	// R29
-	330,	// R16
-	2.2e-6,	// C8
-	1.6,	// Rise Threshold of 74LS14
-	0.8,	// Fall Threshold of 74LS14
-	3.4,	// Output high voltage of 74LS14
+	2200,	/* R29 */
+	330,	/* R16 */
+	2.2e-6,	/* C8 */
+	1.6,	/* Rise Threshold of 74LS14 */
+	0.8,	/* Fall Threshold of 74LS14 */
+	3.4,	/* Output high voltage of 74LS14 */
 	DISC_SCHMITT_OSC_IN_IS_LOGIC | DISC_SCHMITT_OSC_ENAB_IS_NOR
 };
 
 const struct discrete_mixer_desc firetrk_mixer =
 {
 	DISC_MIXER_IS_OP_AMP,
-	7,					// 7 inputs
-	{4700, 22000, 31333, 33000, 10545.6, 32000, 150000, 0}, // R54, R55, R72||(R70+R71), R53, R56 + R37||R35||R36||R34, R58 + R73||R74, R52
-	{0,0,0,0,0,0,0,0},			// No variable resistor nodes
-	{2.2e-7, 2.2e-7, 1e-8, 2.2e-7, 2.2e-7, 0, 2.2e-7, 0}, // C34, C32, C44, C35, C33, NA, C31
-	0,					// No rI
-	22000,					// R43
-	0,					// No Filter
-	1e-5,					// C12
-	5.0 * 820 / (270 + 820),		// vBias = 5V * R51/(R41+R51)
+	7,					/* 7 inputs */
+	{4700, 22000, 31333, 33000, 10545.6, 32000, 150000, 0}, /* R54, R55, R72||(R70+R71), R53, R56 + R37||R35||R36||R34, R58 + R73||R74, R52 */
+	{0,0,0,0,0,0,0,0},			/* No variable resistor nodes */
+	{2.2e-7, 2.2e-7, 1e-8, 2.2e-7, 2.2e-7, 0, 2.2e-7, 0}, /* C34, C32, C44, C35, C33, NA, C31 */
+	0,					/* No rI */
+	22000,					/* R43 */
+	0,					/* No Filter */
+	1e-5,					/* C12 */
+	5.0 * 820 / (270 + 820),		/* vBias = 5V * R51/(R41+R51) */
 	3400
 };
 
@@ -154,29 +154,29 @@ DISCRETE_SOUND_START(firetrk_sound_interface)
 	/* summed as the output of the circuit.         */
 	/************************************************/
 	DISCRETE_ADJUSTMENT(NODE_20, 1,
-				10000,	// R26 + R27 @ min
-				260000,	// R26 + R27 @ max
+				10000,	/* R26 + R27 @ min */
+				260000,	/* R26 + R27 @ max */
 				DISC_LOGADJ, 8)
-	DISCRETE_DAC_R1(NODE_21, 1,		// base of Q1
-			FIRETRUCK_MOTOR_DATA,	// IC F8, pins 2,5,6,9
-			3.4,			// TTL ON level
+	DISCRETE_DAC_R1(NODE_21, 1,		/* base of Q1 */
+			FIRETRUCK_MOTOR_DATA,	/* IC F8, pins 2,5,6,9 */
+			3.4,			/* TTL ON level */
 			&firetrk_motor_v_dac)
-	DISCRETE_555_CC(NODE_22, 1,	// IC B9 pin 3, always enabled
-			NODE_21,	// vIn
-			NODE_20,	// current adjust
-			1.e-8,		// C25
-			1000000, 0, 0,	// R28, no rGnd, no rDis
+	DISCRETE_555_CC(NODE_22, 1,	/* IC B9 pin 3, always enabled */
+			NODE_21,	/* vIn */
+			NODE_20,	/* current adjust */
+			1.e-8,		/* C25 */
+			1000000, 0, 0,	/* R28, no rGnd, no rDis */
 			&firetrk_motor_vco)
-	DISCRETE_COUNTER(NODE_23, 1, FIRETRUCK_ATTRACT_EN,	// IC A9, QB-QD
-			NODE_22,				// from IC B9, pin 3
-			5, 1, 0, 1)				// /6 counter on rising edge
-	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	// IC A9, pin 8
-	DISCRETE_COUNTER(NODE_25, 1, FIRETRUCK_ATTRACT_EN,	// IC A9, pin 12
-			NODE_24,					// from IC A9, pin 8
-			1, 1, 0, 1)					// /2 counter on rising edge
-	DISCRETE_TRANSFORM3(NODE_26, 1, NODE_24, NODE_25, 2, "12*0+")	// Mix the mess together in binary
+	DISCRETE_COUNTER(NODE_23, 1, FIRETRUCK_ATTRACT_EN,	/* IC A9, QB-QD */
+			NODE_22,				/* from IC B9, pin 3 */
+			5, 1, 0, 1)				/* /6 counter on rising edge */
+	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	/* IC A9, pin 8 */
+	DISCRETE_COUNTER(NODE_25, 1, FIRETRUCK_ATTRACT_EN,	/* IC A9, pin 12 */
+			NODE_24,					/* from IC A9, pin 8 */
+			1, 1, 0, 1)					/* /2 counter on rising edge */
+	DISCRETE_TRANSFORM3(NODE_26, 1, NODE_24, NODE_25, 2, "12*0+")	/* Mix the mess together in binary */
 	DISCRETE_DAC_R1(FIRETRUCK_MOTORSND, 1, NODE_26,
-			3.4,				// TTL ON level
+			3.4,				/* TTL ON level */
 			&firetrk_motor_out_dac)
 
 	/************************************************/
@@ -194,15 +194,15 @@ DISCRETE_SOUND_START(firetrk_sound_interface)
 	/* 0000 = 666Hz with 35% duty cycle             */
 	/* 1111 = 526Hz with 63% duty cycle             */
 	/************************************************/
-	DISCRETE_DAC_R1(NODE_40, 1,		// IC E9, pin 7
-			FIRETRUCK_SIREN_DATA,	// IC F8, pins 15,16,12,19
-			3.4,			// TTL ON level
+	DISCRETE_DAC_R1(NODE_40, 1,		/* IC E9, pin 7 */
+			FIRETRUCK_SIREN_DATA,	/* IC F8, pins 15,16,12,19 */
+			3.4,			/* TTL ON level */
 			&firetrk_siren_cv_dac)
 	DISCRETE_555_ASTABLE(FIRETRUCK_SIRENSND, FIRETRUCK_ATTRACT_INV,
-				2200,	// R60
-				10000,	// R59
-				1e-7,	// C37
-				NODE_40,	// CV is straight from DAC because op-amp E9 is just x1 buffer
+				2200,	/* R60 */
+				10000,	/* R59 */
+				1e-7,	/* C37 */
+				NODE_40,	/* CV is straight from DAC because op-amp E9 is just x1 buffer */
 				&firetrk_siren_555)
 
 	/************************************************/
@@ -216,11 +216,11 @@ DISCRETE_SOUND_START(firetrk_sound_interface)
 	/************************************************/
 	DISCRETE_LFSR_NOISE(FIRETRUCK_NOISE, FIRETRUCK_ATTRACT_INV, FIRETRUCK_ATTRACT_INV, 15750.0/4, 1.0, 0, 0.5, &firetrk_lfsr)
 
-	DISCRETE_SWITCH(NODE_50, 1, FIRETRUCK_NOISE, 0,	// Enable gate K9
-			FIRETRUCK_CRASH_DATA)		// IC K9, pins 3,6,11,8
-	DISCRETE_DAC_R1(FIRETRUCK_BANGSND, 1,	// Bang
-			NODE_50,		// from enable gates K9
-			3.4,			// TTL ON level
+	DISCRETE_SWITCH(NODE_50, 1, FIRETRUCK_NOISE, 0,	/* Enable gate K9 */
+			FIRETRUCK_CRASH_DATA)		/* IC K9, pins 3,6,11,8 */
+	DISCRETE_DAC_R1(FIRETRUCK_BANGSND, 1,	/* Bang */
+			NODE_50,		/* from enable gates K9 */
+			3.4,			/* TTL ON level */
 			&firetrk_bang_dac)
 
 	/************************************************/
@@ -235,17 +235,17 @@ DISCRETE_SOUND_START(firetrk_sound_interface)
 	/* counter.                                     */
 	/************************************************/
 	DISCRETE_RCDISC2(NODE_70, FIRETRUCK_BELL_EN,
-				4.4, 10,	// Q3 instantally charges C42
-				0, 33000,	// discharges thru R66
-				1e-5)		// C42
+				4.4, 10,	/* Q3 instantally charges C42 */
+				0, 33000,	/* discharges thru R66 */
+				1e-5)		/* C42 */
 	DISCRETE_TRANSFORM2(NODE_71, 1, NODE_70,
-				5.0 * 680 / (10000 + 680),	// vRef = 5V * R64 / (R65 + R64)
-				"01<")				// Output is low until vIn drops below vRef
-	DISCRETE_COUNTER_FIX(NODE_72, 1, NODE_71, 15750, 15, 1, 0)	// IC B10
+				5.0 * 680 / (10000 + 680),	/* vRef = 5V * R64 / (R65 + R64) */
+				"01<")				/* Output is low until vIn drops below vRef */
+	DISCRETE_COUNTER_FIX(NODE_72, 1, NODE_71, 15750, 15, 1, 0)	/* IC B10 */
 	DISCRETE_TRANSFORM4(FIRETRUCK_BELLSND, 1, NODE_72,
-				8,	// count 0-7 allow cap voltage to output.  8-15 ground output.
-				NODE_70,	// scale logic to cap voltage
-				47000.0 / (47000 + 47000 + 47000),	// to drop voltage per divider R72 / (R70+R71+R72)
+				8,	/* count 0-7 allow cap voltage to output.  8-15 ground output. */
+				NODE_70,	/* scale logic to cap voltage */
+				47000.0 / (47000 + 47000 + 47000),	/* to drop voltage per divider R72 / (R70+R71+R72) */
 				"01<2*3*")
 
 	/************************************************/
@@ -270,68 +270,68 @@ DISCRETE_SOUND_END
 
 const struct discrete_dac_r1_ladder superbug_motor_v_dac =
 {
-	4,		// size of ladder
-	{2200000, 1000000, 470000, 220000, 0,0,0,0},	// R8, R9, R6, R7
-	4.4,	// 5V - diode junction (0.6V)
-	68000,	// R10
-	0,		// no rGnd
-	1e-5	// C20
+	4,		/* size of ladder */
+	{2200000, 1000000, 470000, 220000, 0,0,0,0},	/* R8, R9, R6, R7 */
+	4.4,	/* 5V - diode junction (0.6V) */
+	68000,	/* R10 */
+	0,		/* no rGnd */
+	1e-5	/* C20 */
 };
 
 const struct discrete_555_cc_desc superbug_motor_vco =
 {
 	DISC_555_OUT_DC | DISC_555_OUT_SQW,
-	5,				// B+ voltage of 555
-	5.0 - 1.7,		// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2 / 3,	// threshold
-	5.0 /3,			// trigger
-	5,				// B+ voltage of the Constant Current source
-	0.7				// Q1 junction voltage
+	5,				/* B+ voltage of 555 */
+	5.0 - 1.7,		/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2 / 3,	/* threshold */
+	5.0 /3,			/* trigger */
+	5,				/* B+ voltage of the Constant Current source */
+	0.7				/* Q1 junction voltage */
 };
 
 const struct discrete_dac_r1_ladder superbug_motor_out_dac =
 {
-	2,		// size of ladder
-	{10000, 10000, 0,0,0,0,0,0},	// R32, R34
-	3.4,	// TTL high voltage
-	0,		// no rBias
-	0,		// no rGnd
-	1e-7	// C26
+	2,		/* size of ladder */
+	{10000, 10000, 0,0,0,0,0,0},	/* R32, R34 */
+	3.4,	/* TTL high voltage */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	1e-7	/* C26 */
 };
 
 const struct discrete_dac_r1_ladder superbug_bang_dac =
 {
-	4,		// size of ladder
-	{8200, 3900, 2200, 1000, 0,0,0,0},	// R28, R28, R27, R26
-	0,		// no vBias
-	0,		// no rBias
-	0,		// no rGnd
-	1e-7	// C25
+	4,		/* size of ladder */
+	{8200, 3900, 2200, 1000, 0,0,0,0},	/* R28, R28, R27, R26 */
+	0,		/* no vBias */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	1e-7	/* C25 */
 };
 
 const struct discrete_schmitt_osc_desc superbug_screech_osc =
 {
-	2200,	// R30
-	330,	// R52
-	2.2e-6,	// C27
-	1.7,	// Rise Threshold of 7414
-	0.9,	// Fall Threshold of 7414
-	3.4,	// Output high voltage of 7414
+	2200,	/* R30 */
+	330,	/* R52 */
+	2.2e-6,	/* C27 */
+	1.7,	/* Rise Threshold of 7414 */
+	0.9,	/* Fall Threshold of 7414 */
+	3.4,	/* Output high voltage of 7414 */
 	DISC_SCHMITT_OSC_IN_IS_LOGIC | DISC_SCHMITT_OSC_ENAB_IS_NOR
 };
 
 const struct discrete_mixer_desc superbug_mixer =
 {
 	DISC_MIXER_IS_RESISTOR,
-	4,							// 4 inputs
-	{15000, 10545.6, 33000, 47000, 0,0,0,0}, // R54, R55, R72||(R70+R71), R53, R56 + R37||R35||R36||R34, R58 + R73||R74, R52
-	{0,0,0,0,0,0,0,0},			// No variable resistor nodes
-	{0, 0, 0, 0, 0,0,0,0},		// No caps
-	0,							// No rI
-	5000,						// R63
-	0,							// No Filter
-	1e-7,						// C35
-	0,							// not used in resistor network
+	4,							/* 4 inputs */
+	{15000, 10545.6, 33000, 47000, 0,0,0,0}, /* R54, R55, R72||(R70+R71), R53, R56 + R37||R35||R36||R34, R58 + R73||R74, R52 */
+	{0,0,0,0,0,0,0,0},			/* No variable resistor nodes */
+	{0, 0, 0, 0, 0,0,0,0},		/* No caps */
+	0,							/* No rI */
+	5000,						/* R63 */
+	0,							/* No Filter */
+	1e-7,						/* C35 */
+	0,							/* not used in resistor network */
 	33000
 };
 
@@ -369,31 +369,31 @@ DISCRETE_SOUND_START(superbug_sound_interface)
 	/* drive a modulo 12 counter.                   */
 	/************************************************/
 	DISCRETE_ADJUSTMENT(NODE_20, 1,
-				10000,	// R12 + R62 @ min
-				260000,	// R12 + R62 @ max
+				10000,	/* R12 + R62 @ min */
+				260000,	/* R12 + R62 @ max */
 				DISC_LOGADJ, 8)
-	DISCRETE_DAC_R1(NODE_21, 1,		// base of Q1
-			SUPERBUG_SPEED_DATA,	// IC B5, pins 3, 14, 6, 11
-			3.4,			// TTL ON level
+	DISCRETE_DAC_R1(NODE_21, 1,		/* base of Q1 */
+			SUPERBUG_SPEED_DATA,	/* IC B5, pins 3, 14, 6, 11 */
+			3.4,			/* TTL ON level */
 			&superbug_motor_v_dac)
-	DISCRETE_555_CC(NODE_22, 1,	// IC A6 pin 3, always enabled
-			NODE_21,	// vIn
-			NODE_20,	// current adjust
-			1.e-8,		// C21
-			3300000, 0, 0,	// R11, no rGnd, no rDis
+	DISCRETE_555_CC(NODE_22, 1,	/* IC A6 pin 3, always enabled */
+			NODE_21,	/* vIn */
+			NODE_20,	/* current adjust */
+			1.e-8,		/* C21 */
+			3300000, 0, 0,	/* R11, no rGnd, no rDis */
 			&superbug_motor_vco)
-	DISCRETE_COUNTER(NODE_23, 1, SUPERBUG_ATTRACT_EN,	// IC A7, QB-QD
-			NODE_22,				// from IC A6, pin 3
-			5, 1, 0, 1)				// /6 counter on rising edge
-	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	// IC A7, pin 8-QD
-	DISCRETE_TRANSFORM3(NODE_25, 1, NODE_23, 1, 4, "01=02=|")	// IC A7, pin 11-QB
-	DISCRETE_LOGIC_XOR(NODE_26, 1, NODE_24, NODE_25)	// Gate A9, pin 8
-	DISCRETE_COUNTER(NODE_27, 1, SUPERBUG_ATTRACT_EN,	// IC A7, pin 12-QA
-			NODE_26,					// from IC A9, pin 8
-			1, 1, 0, 1)					// /2 counter on rising edge
-	DISCRETE_TRANSFORM3(NODE_28, 1, NODE_24, NODE_27, 2, "12*0+")	// Mix the mess together in binary
+	DISCRETE_COUNTER(NODE_23, 1, SUPERBUG_ATTRACT_EN,	/* IC A7, QB-QD */
+			NODE_22,				/* from IC A6, pin 3 */
+			5, 1, 0, 1)				/* /6 counter on rising edge */
+	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	/* IC A7, pin 8-QD */
+	DISCRETE_TRANSFORM3(NODE_25, 1, NODE_23, 1, 4, "01=02=|")	/* IC A7, pin 11-QB */
+	DISCRETE_LOGIC_XOR(NODE_26, 1, NODE_24, NODE_25)	/* Gate A9, pin 8 */
+	DISCRETE_COUNTER(NODE_27, 1, SUPERBUG_ATTRACT_EN,	/* IC A7, pin 12-QA */
+			NODE_26,					/* from IC A9, pin 8 */
+			1, 1, 0, 1)					/* /2 counter on rising edge */
+	DISCRETE_TRANSFORM3(NODE_28, 1, NODE_24, NODE_27, 2, "12*0+")	/* Mix the mess together in binary */
 	DISCRETE_DAC_R1(SUPERBUG_MOTORSND, 1, NODE_28,
-			3.4,				// TTL ON level
+			3.4,				/* TTL ON level */
 			&superbug_motor_out_dac)
 
 	/************************************************/
@@ -405,13 +405,13 @@ DISCRETE_SOUND_START(superbug_sound_interface)
 	/* Output is binary weighted with 4 bits of     */
 	/* crash volume.                                */
 	/************************************************/
-	DISCRETE_LFSR_NOISE(SUPERBUG_NOISE, SUPERBUG_ATTRACT_INV, SUPERBUG_ATTRACT_INV, 15750.0/4, 1.0, 0, 0.5, &firetrk_lfsr)	// Same as firetrk
+	DISCRETE_LFSR_NOISE(SUPERBUG_NOISE, SUPERBUG_ATTRACT_INV, SUPERBUG_ATTRACT_INV, 15750.0/4, 1.0, 0, 0.5, &firetrk_lfsr)	/* Same as firetrk */
 
-	DISCRETE_SWITCH(NODE_40, 1, SUPERBUG_NOISE, 0,	// Enable gate C8
-			SUPERBUG_CRASH_DATA)		// IC D8, pins 3,14,6,11
-	DISCRETE_DAC_R1(SUPERBUG_BANGSND, 1,	// Bang
-			NODE_40,		// from enable gates C8
-			3.4,			// TTL ON level
+	DISCRETE_SWITCH(NODE_40, 1, SUPERBUG_NOISE, 0,	/* Enable gate C8 */
+			SUPERBUG_CRASH_DATA)		/* IC D8, pins 3,14,6,11 */
+	DISCRETE_DAC_R1(SUPERBUG_BANGSND, 1,	/* Bang */
+			NODE_40,		/* from enable gates C8 */
+			3.4,			/* TTL ON level */
 			&superbug_bang_dac)
 
 	/************************************************/
@@ -443,82 +443,82 @@ DISCRETE_SOUND_END
 /* Both cars use same parts for v_dac, vco and out_dac */
 const struct discrete_dac_r1_ladder montecar_motor_v_dac =
 {
-	4,		// size of ladder
-	{2200000, 1000000, 470000, 220000, 0,0,0,0},	// R44, R43, R46, R45
-	4.4,		// 5V - diode junction (0.6V)
-	68000,		// R80
-	0,		// no rGnd
-	4.7e-6		// C77
+	4,		/* size of ladder */
+	{2200000, 1000000, 470000, 220000, 0,0,0,0},	/* R44, R43, R46, R45 */
+	4.4,		/* 5V - diode junction (0.6V) */
+	68000,		/* R80 */
+	0,		/* no rGnd */
+	4.7e-6		/* C77 */
 };
 
 const struct discrete_555_cc_desc montecar_motor_vco =
 {
 	DISC_555_OUT_DC | DISC_555_OUT_SQW,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2 / 3,	// threshold
-	5.0 /3,		// trigger
-	5,		// B+ voltage of the Constant Current source
-	0.7		// Q1 junction voltage
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2 / 3,	/* threshold */
+	5.0 /3,		/* trigger */
+	5,		/* B+ voltage of the Constant Current source */
+	0.7		/* Q1 junction voltage */
 };
 
 const struct discrete_dac_r1_ladder montecar_motor_out_dac =
 {
-	3,		// size of ladder
-	{10000, 10000, 10000, 0,0,0,0,0},	// R31, R30, R29
-	3.4,		// TTL high voltage
-	0,		// no rBias
-	0,		// no rGnd
-	1e-7		// C53
+	3,		/* size of ladder */
+	{10000, 10000, 10000, 0,0,0,0,0},	/* R31, R30, R29 */
+	3.4,		/* TTL high voltage */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	1e-7		/* C53 */
 };
 
 const struct discrete_comp_adder_table montecar_drone_vol_res =
 {
 	DISC_COMP_P_RESISTOR,
-	0,					// no default
-	4,					// # of resistors
-	{100250, 47250, 22250, 10250, 0,0,0,0}	// R105, R104, R103, R102 (250 added to all for 4066 resistance)
+	0,					/* no default */
+	4,					/* # of resistors */
+	{100250, 47250, 22250, 10250, 0,0,0,0}	/* R105, R104, R103, R102 (250 added to all for 4066 resistance) */
 };
 
 const struct discrete_dac_r1_ladder montecar_bang_dac =
 {
-	4,		// size of ladder
-	{8200, 3900, 2200, 1000, 0,0,0,0},	// R39, R42, R41, R40
-	0,		// no vBias
-	0,		// no rBias
-	0,		// no rGnd
-	0		// no cSmoothing
+	4,		/* size of ladder */
+	{8200, 3900, 2200, 1000, 0,0,0,0},	/* R39, R42, R41, R40 */
+	0,		/* no vBias */
+	0,		/* no rBias */
+	0,		/* no rGnd */
+	0		/* no cSmoothing */
 };
 
 const struct discrete_schmitt_osc_desc montecar_screech_osc =
 {
-	2200,	// R54
-	330,	// R53
-	2.2e-6,	// C57
-	1.6,	// Rise Threshold of 74LS14
-	0.8,	// Fall Threshold of 74LS14
-	3.4,	// Output high voltage of 74LS14
+	2200,	/* R54 */
+	330,	/* R53 */
+	2.2e-6,	/* C57 */
+	1.6,	/* Rise Threshold of 74LS14 */
+	0.8,	/* Fall Threshold of 74LS14 */
+	3.4,	/* Output high voltage of 74LS14 */
 	DISC_SCHMITT_OSC_IN_IS_LOGIC | DISC_SCHMITT_OSC_ENAB_IS_NOR
 };
 
 const struct discrete_mixer_desc montecar_mixer =
 {
 	DISC_MIXER_IS_OP_AMP,
-	5,					// 5 inputs
-	{15000, 33000, 10000, 10000, 13333.3, 0,0,0}, // R93, R97, R96, variable , R95 + R31||R30||R29
-	{0,0,0,NODE_30,0,0,0,0},			// Only drone has variable node
-	{2.2e-7, 2.2e-7, 2.2e-7, 1e-6, 1e-6, 0,0,0},	// C83, C84, C85, C88, C47
-	27000,					// R92
-	82000,					// R98
-	0,					// No Filter
-	2.2e-7,					// C6
-	5,					// vRef
+	5,					/* 5 inputs */
+	{15000, 33000, 10000, 10000, 13333.3, 0,0,0}, /* R93, R97, R96, variable , R95 + R31||R30||R29 */
+	{0,0,0,NODE_30,0,0,0,0},			/* Only drone has variable node */
+	{2.2e-7, 2.2e-7, 2.2e-7, 1e-6, 1e-6, 0,0,0},	/* C83, C84, C85, C88, C47 */
+	27000,					/* R92 */
+	82000,					/* R98 */
+	0,					/* No Filter */
+	2.2e-7,					/* C6 */
+	5,					/* vRef */
 	8000
 };
 
 /* Nodes - Inputs */
-#define MONTECAR_MOTOR_DATA		NODE_01	// Motor1 - Motor4
-#define MONTECAR_DRONE_MOTOR_DATA	NODE_02	// Motor5 - Motor8
+#define MONTECAR_MOTOR_DATA		NODE_01	/* Motor1 - Motor4 */
+#define MONTECAR_DRONE_MOTOR_DATA	NODE_02	/* Motor5 - Motor8 */
 #define MONTECAR_CRASH_DATA		NODE_03
 #define MONTECAR_SKID_EN		NODE_04
 #define MONTECAR_DRONE_LOUD_DATA	NODE_05
@@ -527,9 +527,9 @@ const struct discrete_mixer_desc montecar_mixer =
 #define MONTECAR_ATTRACT_INV		NODE_08
 /* Nodes - Sounds */
 #define MONTECAR_NOISE			NODE_15
-#define MONTECAR_MOTORSND		NODE_10	// MotorAud1
+#define MONTECAR_MOTORSND		NODE_10	/* MotorAud1 */
 #define MONTECAR_BEEPSND		NODE_11
-#define MONTECAR_DRONE_MOTORSND		NODE_12	// MotorAud2
+#define MONTECAR_DRONE_MOTORSND		NODE_12	/* MotorAud2 */
 #define MONTECAR_BANGSND		NODE_13
 #define MONTECAR_SCREECHSND		NODE_14
 
@@ -556,31 +556,31 @@ DISCRETE_SOUND_START(montecar_sound_interface)
 	/* summed as the output of the circuit.         */
 	/************************************************/
 	DISCRETE_ADJUSTMENT(NODE_20, 1,
-				10000,	// R87 + R89 @ min
-				260000,	// R87 + R89 @ max
+				10000,	/* R87 + R89 @ min */
+				260000,	/* R87 + R89 @ max */
 				DISC_LOGADJ, 8)
-	DISCRETE_DAC_R1(NODE_21, 1,		// base of Q7
-			MONTECAR_MOTOR_DATA,	// IC H8, pins 5, 2, 9, 6
-			3.4,			// TTL ON level
+	DISCRETE_DAC_R1(NODE_21, 1,		/* base of Q7 */
+			MONTECAR_MOTOR_DATA,	/* IC H8, pins 5, 2, 9, 6 */
+			3.4,			/* TTL ON level */
 			&montecar_motor_v_dac)
-	DISCRETE_555_CC(NODE_22, 1,	// IC C9 pin 9
-			NODE_21,	// vIn
-			NODE_20,	// current adjust
-			1.e-8,		// C81
-			1000000, 0, 0,	// R86, no rGnd, no rDis
+	DISCRETE_555_CC(NODE_22, 1,	/* IC C9 pin 9 */
+			NODE_21,	/* vIn */
+			NODE_20,	/* current adjust */
+			1.e-8,		/* C81 */
+			1000000, 0, 0,	/* R86, no rGnd, no rDis */
 			&montecar_motor_vco)
-	DISCRETE_COUNTER(NODE_23, 1, MONTECAR_ATTRACT_EN,	// IC B/C9, QB-QD
-			NODE_22,				// from IC C9, pin 9
-			5, 1, 0, 1)				// /6 counter on rising edge
-	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	// IC B/C9, pin 8-QD
-	DISCRETE_TRANSFORM3(NODE_25, 1, NODE_23, 1, 4, "01=02=|")	// IC B/C9, pin 11-QB
-	DISCRETE_LOGIC_XOR(NODE_26, 1, NODE_24, NODE_25)	// Gate A9, pin 11
-	DISCRETE_COUNTER(NODE_27, 1, MONTECAR_ATTRACT_EN,	// IC B/C9, pin 12-QA
-			NODE_26,					// from IC A9, pin 11
-			1, 1, 0, 1)					// /2 counter on rising edge
-	DISCRETE_TRANSFORM5(NODE_28, 1, NODE_27, NODE_25, NODE_24, 2, 4, "13*24*+0+")	// Mix the mess together in binary
+	DISCRETE_COUNTER(NODE_23, 1, MONTECAR_ATTRACT_EN,	/* IC B/C9, QB-QD */
+			NODE_22,				/* from IC C9, pin 9 */
+			5, 1, 0, 1)				/* /6 counter on rising edge */
+	DISCRETE_TRANSFORM2(NODE_24, 1, NODE_23, 2, "01>")	/* IC B/C9, pin 8-QD */
+	DISCRETE_TRANSFORM3(NODE_25, 1, NODE_23, 1, 4, "01=02=|")	/* IC B/C9, pin 11-QB */
+	DISCRETE_LOGIC_XOR(NODE_26, 1, NODE_24, NODE_25)	/* Gate A9, pin 11 */
+	DISCRETE_COUNTER(NODE_27, 1, MONTECAR_ATTRACT_EN,	/* IC B/C9, pin 12-QA */
+			NODE_26,					/* from IC A9, pin 11 */
+			1, 1, 0, 1)					/* /2 counter on rising edge */
+	DISCRETE_TRANSFORM5(NODE_28, 1, NODE_27, NODE_25, NODE_24, 2, 4, "13*24*+0+")	/* Mix the mess together in binary */
 	DISCRETE_DAC_R1(MONTECAR_MOTORSND, 1, NODE_28,
-			3.4,				// TTL ON level
+			3.4,				/* TTL ON level */
 			&montecar_motor_out_dac)
 
 	/************************************************/
@@ -589,34 +589,34 @@ DISCRETE_SOUND_START(montecar_sound_interface)
 	/* Also I shifted the frequencies up for it to  */
 	/* sound different from the player's car.       */
 	/************************************************/
-	DISCRETE_COMP_ADDER(NODE_30, 1, MONTECAR_DRONE_LOUD_DATA, &montecar_drone_vol_res)	// make sure to change the node value in the mixer table if you change this node number
+	DISCRETE_COMP_ADDER(NODE_30, 1, MONTECAR_DRONE_LOUD_DATA, &montecar_drone_vol_res)	/* make sure to change the node value in the mixer table if you change this node number */
 
 	DISCRETE_ADJUSTMENT(NODE_40, 1,
-				10000,	// R85 + R88 @ min
-				260000,	// R85 + R88 @ max
+				10000,	/* R85 + R88 @ min */
+				260000,	/* R85 + R88 @ max */
 				DISC_LOGADJ, 9)
-	DISCRETE_DAC_R1(NODE_41, 1,		// base of Q7
-			MONTECAR_DRONE_MOTOR_DATA,	// IC H8, pins 19, 16, 12, 15
-			3.4,			// TTL ON level
+	DISCRETE_DAC_R1(NODE_41, 1,		/* base of Q7 */
+			MONTECAR_DRONE_MOTOR_DATA,	/* IC H8, pins 19, 16, 12, 15 */
+			3.4,			/* TTL ON level */
 			&montecar_motor_v_dac)
-	DISCRETE_555_CC(NODE_42, 1,	// IC C9 pin 5
-			NODE_41,	// vIn
-			NODE_40,	// current adjust
-			1.e-8,		// C80
-			1000000, 0, 0,	// R81, no rGnd, no rDis
+	DISCRETE_555_CC(NODE_42, 1,	/* IC C9 pin 5 */
+			NODE_41,	/* vIn */
+			NODE_40,	/* current adjust */
+			1.e-8,		/* C80 */
+			1000000, 0, 0,	/* R81, no rGnd, no rDis */
 			&montecar_motor_vco)
-	DISCRETE_COUNTER(NODE_43, 1, MONTECAR_ATTRACT_EN,	// IC A/B9, QB-QD
-			NODE_42,				// from IC C9, pin 5
-			5, 1, 0, 1)				// /6 counter on rising edge
-	DISCRETE_TRANSFORM2(NODE_44, 1, NODE_43, 2, "01>")	// IC A/B9, pin 8-QD
-	DISCRETE_TRANSFORM3(NODE_45, 1, NODE_43, 1, 4, "01=02=|")	// IC A/B9, pin 11-QB
-	DISCRETE_LOGIC_XOR(NODE_46, 1, NODE_44, NODE_45)	// Gate A9, pin 6
-	DISCRETE_COUNTER(NODE_47, 1, MONTECAR_ATTRACT_EN,	// IC A/B9, pin 12-QA
-			NODE_46,				// from IC A9, pin 6
-			1, 1, 0, 1)				// /2 counter on rising edge
-	DISCRETE_TRANSFORM5(NODE_48, 1, NODE_47, NODE_45, NODE_44, 2, 4, "13*24*+0+")	// Mix the mess together in binary
+	DISCRETE_COUNTER(NODE_43, 1, MONTECAR_ATTRACT_EN,	/* IC A/B9, QB-QD */
+			NODE_42,				/* from IC C9, pin 5 */
+			5, 1, 0, 1)				/* /6 counter on rising edge */
+	DISCRETE_TRANSFORM2(NODE_44, 1, NODE_43, 2, "01>")	/* IC A/B9, pin 8-QD */
+	DISCRETE_TRANSFORM3(NODE_45, 1, NODE_43, 1, 4, "01=02=|")	/* IC A/B9, pin 11-QB */
+	DISCRETE_LOGIC_XOR(NODE_46, 1, NODE_44, NODE_45)	/* Gate A9, pin 6 */
+	DISCRETE_COUNTER(NODE_47, 1, MONTECAR_ATTRACT_EN,	/* IC A/B9, pin 12-QA */
+			NODE_46,				/* from IC A9, pin 6 */
+			1, 1, 0, 1)				/* /2 counter on rising edge */
+	DISCRETE_TRANSFORM5(NODE_48, 1, NODE_47, NODE_45, NODE_44, 2, 4, "13*24*+0+")	/* Mix the mess together in binary */
 	DISCRETE_DAC_R1(MONTECAR_DRONE_MOTORSND, 1, NODE_48,
-			3.4,				// TTL ON level
+			3.4,				/* TTL ON level */
 			&montecar_motor_out_dac)
 
 	/************************************************/
@@ -630,13 +630,13 @@ DISCRETE_SOUND_START(montecar_sound_interface)
 	/*                                              */
 	/* TO DO: add filtering !!!!!!!!!!!!!!!!!!!!!!! */
 	/************************************************/
-	DISCRETE_LFSR_NOISE(MONTECAR_NOISE, MONTECAR_ATTRACT_INV, MONTECAR_ATTRACT_INV, 15750.0/4, 1.0, 0, 0.5, &firetrk_lfsr)	// Same as firetrk
+	DISCRETE_LFSR_NOISE(MONTECAR_NOISE, MONTECAR_ATTRACT_INV, MONTECAR_ATTRACT_INV, 15750.0/4, 1.0, 0, 0.5, &firetrk_lfsr)	/* Same as firetrk */
 
-	DISCRETE_SWITCH(NODE_50, 1, MONTECAR_NOISE, 0,	// Enable gate A9
-			MONTECAR_CRASH_DATA)		// IC J8, pins 3,6,11,14
-	DISCRETE_DAC_R1(MONTECAR_BANGSND, 1,	// Bang
-			NODE_50,	// from enable gates A9
-			3.4,		// TTL ON level
+	DISCRETE_SWITCH(NODE_50, 1, MONTECAR_NOISE, 0,	/* Enable gate A9 */
+			MONTECAR_CRASH_DATA)		/* IC J8, pins 3,6,11,14 */
+	DISCRETE_DAC_R1(MONTECAR_BANGSND, 1,	/* Bang */
+			NODE_50,	/* from enable gates A9 */
+			3.4,		/* TTL ON level */
 			&montecar_bang_dac)
 
 	/************************************************/

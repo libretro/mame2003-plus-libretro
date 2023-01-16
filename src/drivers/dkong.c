@@ -409,7 +409,7 @@ static MEMORY_READ_START( hunchbkd_readmem )
 	{ 0x1400, 0x1400, input_port_0_r },		/* IN0 */
 	{ 0x1480, 0x1480, input_port_1_r },		/* IN1 */
 	{ 0x1500, 0x1500, input_port_2_r },		/* IN2/DSW2 */
-/*	{ 0x1507, 0x1507, herbiedk_iack_r },  	 // Clear Int /*/
+/*	{ 0x1507, 0x1507, herbiedk_iack_r },  	  Clear Int */
 	{ 0x1580, 0x1580, input_port_3_r },		/* DSW1 */
 	{ 0x1600, 0x1bff, MRA_RAM },			/* video RAM */
 	{ 0x1c00, 0x1fff, MRA_RAM },
@@ -1021,9 +1021,9 @@ INPUT_PORTS_START( dkrdemo )
 	PORT_DIPSETTING(    0x03, "9" )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "10000" )
-	PORT_DIPSETTING(    0x04, "15000" ) // and each additional 150k
-	PORT_DIPSETTING(    0x08, "25000" ) // and each additional 250k
-	PORT_DIPSETTING(    0x0c, "35000" ) // and each additional 350k
+	PORT_DIPSETTING(    0x04, "15000" ) /* and each additional 150k */
+	PORT_DIPSETTING(    0x08, "25000" ) /* and each additional 250k */
+	PORT_DIPSETTING(    0x0c, "35000" ) /* and each additional 350k */
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x30, "Free Play" )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
@@ -1968,15 +1968,15 @@ MACHINE_DRIVER_END
   Game driver(s)
 ***************************************************************************/
 
-// A newer revision based on ROM labels, legitimate looking code changes, although in MAME it has some misplaced sprites flicking in the top left part of the screen near the score as the enemies appear
-// Does this glitch happen on the PCB?
+/* A newer revision based on ROM labels, legitimate looking code changes, although in MAME it has some misplaced sprites flicking in the top left part of the screen near the score as the enemies appear */
+/* Does this glitch happen on the PCB? */
 ROM_START( radarscp )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "trs2c5fd",     0x0000, 0x1000, CRC(80bbcbb3) SHA1(3af0ac3a267cdc819ccf5a279a78cdb16ee0360b) )
-	ROM_LOAD( "trs2c5gd",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) ) // == trs2c5gc
+	ROM_LOAD( "trs2c5gd",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) ) /* == trs2c5gc */
 	ROM_LOAD( "trs2c5hd",     0x2000, 0x1000, CRC(e3ad4239) SHA1(f28469bc3388b4fdc14e2a095d8e117af6643b46) )
 	ROM_LOAD( "trs2c5kd",     0x3000, 0x1000, CRC(260a3ec4) SHA1(d5e7941a56457cd222cb018ab17a8eee2a9134b9) )
-	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
+	/*empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000 */
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
 	ROM_LOAD( "trs2s3i",      0x0000, 0x0800, CRC(78034f14) SHA1(548b44ac69f39df6687da1c0f60968009b1e0767) )
@@ -2003,14 +2003,14 @@ ROM_START( radarscp )
 	ROM_LOAD( "rs2-v.1hc",    0x0200, 0x0100, CRC(1b828315) SHA1(00c9f8c5ae86b68d38c66f9071b5f1ef421c1005) ) /* character color codes on a per-column basis */
 ROM_END
 
-// unclear which boardset this comes from, probably a TRS-02 based on ROM labels; there existed a 5 pcb stack with TRS-03 (no voice) sound board on top, and a 4 board as well as a 2 board pcb stack
+/* unclear which boardset this comes from, probably a TRS-02 based on ROM labels; there existed a 5 pcb stack with TRS-03 (no voice) sound board on top, and a 4 board as well as a 2 board pcb stack */
 ROM_START( radarscpc )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "trs2c5fc",     0x0000, 0x1000, CRC(40949e0d) SHA1(94717b9d027600e25b863e89900df41325875961) )
 	ROM_LOAD( "trs2c5gc",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) )
 	ROM_LOAD( "trs2c5hc",     0x2000, 0x1000, CRC(51b8263d) SHA1(09687f2c40cf09ffc2aeddde4a4fa32800847f01) )
 	ROM_LOAD( "trs2c5kc",     0x3000, 0x1000, CRC(1f0101f7) SHA1(b9f988847fdefa64dfeae06c2244215cb0d64dbe) )
-	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
+	/*empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000 */
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
 	ROM_LOAD( "trs2s3i",      0x0000, 0x0800, CRC(78034f14) SHA1(548b44ac69f39df6687da1c0f60968009b1e0767) )
@@ -2037,7 +2037,7 @@ ROM_START( radarscpc )
 	ROM_LOAD( "rs2-v.1hc",    0x0200, 0x0100, CRC(1b828315) SHA1(00c9f8c5ae86b68d38c66f9071b5f1ef421c1005) ) /* character color codes on a per-column basis */
 ROM_END
 
-// TRS01 5-pcb stack with TRS01 "Voice" pcb on top containing the sound cpu and the m58817 speech chip and the m58819 speech serial rom emulator chip
+/* TRS01 5-pcb stack with TRS01 "Voice" pcb on top containing the sound cpu and the m58817 speech chip and the m58819 speech serial rom emulator chip */
 
 ROM_START( radarscp1 )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
@@ -2045,15 +2045,15 @@ ROM_START( radarscp1 )
 	ROM_LOAD( "trs01_5g",     0x1000, 0x1000, CRC(afa8c49f) SHA1(25880e9dcf2dc8862f7f3c38687f01dfe2424293) )
 	ROM_LOAD( "trs01_5h",     0x2000, 0x1000, CRC(51b8263d) SHA1(09687f2c40cf09ffc2aeddde4a4fa32800847f01) )
 	ROM_LOAD( "trs01_5k",     0x3000, 0x1000, CRC(1f0101f7) SHA1(b9f988847fdefa64dfeae06c2244215cb0d64dbe) )
-	//empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000
+	/*empty socket on position 5L on pcb labeled "Test", 0x4000, 0x1000 */
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 ) /* sound */
-	ROM_LOAD( "trs-s__5a.5a", 0x0000, 0x0800, CRC(5166554c) SHA1(00bf501ca448929f6187598da6fdbc1ea488745a) ) // 5A on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 5A [stamped '8' or 'a' in red ink]"
+	ROM_LOAD( "trs-s__5a.5a", 0x0000, 0x0800, CRC(5166554c) SHA1(00bf501ca448929f6187598da6fdbc1ea488745a) ) /* 5A on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 5A [stamped '8' or 'a' in red ink]" */
 	ROM_RELOAD(               0x0800, 0x0800 )
 	ROM_FILL(                 0x1000, 0x0800, 0xFF )
 
 	ROM_REGION( 0x0800, REGION_USER2, 0 )  /* speech rom */
-	ROM_LOAD( "trs-s__4h.4h",      0x0000, 0x0800, CRC(d1f1b48c) SHA1(ee5584368d2e9f7bde271f5004585b53f5ff5c3f) ) // 4H on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 4H [stamped '8' or 'a' in red ink]"
+	ROM_LOAD( "trs-s__4h.4h",      0x0000, 0x0800, CRC(d1f1b48c) SHA1(ee5584368d2e9f7bde271f5004585b53f5ff5c3f) ) /* 4H on the 'voice' board on top of the 5-pcb stack; eprom label is "TRS-S ['S' overstrikes a '1'] // 4H [stamped '8' or 'a' in red ink]" */
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "trs01v3f",     0x0000, 0x0800, CRC(f095330e) SHA1(dd3de744f28ff108630d3336bd246d3323fa34af) )
@@ -2541,7 +2541,7 @@ ROM_START( pestplce )
 	ROM_REGION( 0x0300, REGION_PROMS, ROMREGION_INVERT )
 	ROM_LOAD( "n82s129a.bin",  0x0000, 0x0100, CRC(0330f35f) SHA1(5bd50cdd738b258dd3cfcd0e1dd8d37c927edc4b) )
 	ROM_LOAD( "n82s129b.bin",  0x0100, 0x0100, CRC(ba88311b) SHA1(b4388ebd3984bdb966d850cfb7d34c3ebce230b7) )
-//	ROM_LOAD( "sn74s288n.bin", 0x0200, 0x0020, CRC(a5a6f2ca) SHA1(5507fb6f5c8845c4421c2996e9f76c818d987623) )
+/*	ROM_LOAD( "sn74s288n.bin", 0x0200, 0x0020, CRC(a5a6f2ca) SHA1(5507fb6f5c8845c4421c2996e9f76c818d987623) ) */
 ROM_END
 
 ROM_START( dkong3 )

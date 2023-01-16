@@ -1231,9 +1231,9 @@ static int init_tables(void)
 		else
 			sin_tab[3*SIN_LEN+i] = sin_tab[i & (SIN_MASK>>2)];
 
-//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
-//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
-//		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] ); */
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] ); */
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] ); */
 	}
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: ENV_QUIET= %08x (dec*8=%i)\n", ENV_QUIET, ENV_QUIET*8 );
 

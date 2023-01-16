@@ -813,7 +813,7 @@ void print_mame_xml()
 		"\t\t<!ATTLIST " XML_TOP " romof CDATA #IMPLIED>\n"
 		"\t\t<!ATTLIST " XML_TOP " sampleof CDATA #IMPLIED>\n"
 		"\t\t<!ELEMENT description (#PCDATA)>\n"
-//		"\t\t<!ELEMENT driver (#PCDATA)>\n"
+/*		"\t\t<!ELEMENT driver (#PCDATA)>\n" */
 		"\t\t<!ELEMENT year (#PCDATA)>\n"
 		"\t\t<!ELEMENT manufacturer (#PCDATA)>\n"
 		/*"\t\t<!ELEMENT history (#PCDATA)>\n"*/

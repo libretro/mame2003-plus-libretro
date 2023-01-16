@@ -102,7 +102,7 @@ PALETTE_INIT( bosco )
 	for (i = 0;i < 4;i++)
 	{
 		COLOR(2,i) = 31-i;
-		COLOR(2,i+4) = 0;	// transparent
+		COLOR(2,i+4) = 0;	/* transparent */
 	}
 
 	/* now the stars */

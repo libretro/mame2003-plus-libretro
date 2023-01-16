@@ -70,7 +70,7 @@ static READ_HANDLER( ripcord_IN2_r )
 /* real machine, though a little ugly and likely just because of */
 /* limited ability to do overlays back in 1977. */
 /* For the authentic look, uncomment the definition below. */
-//#define USE_AUTHENTIC_OVERLAY	1
+/*#define USE_AUTHENTIC_OVERLAY	1 */
 OVERLAY_START( circus_overlay )
 #ifdef USE_AUTHENTIC_OVERLAY
 	OVERLAY_RECT( 0, 20, 248, 36, OVERLAY_BLUE )

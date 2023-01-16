@@ -68,7 +68,7 @@ struct star
 };
 static struct star stars[MAX_STARS];
 static int total_stars;
-static int galaga_gfxbank; // used by catsbee
+static int galaga_gfxbank; /* used by catsbee */
 
 static struct tilemap *tx_tilemap;
 
@@ -309,7 +309,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		int sprite = spriteram[offs] & 0x7f;
 		int color = spriteram[offs+1] & 0x3f;
 		int sx = spriteram_2[offs+1] - 40 + 0x100*(spriteram_3[offs+1] & 3);
-		int sy = 256 - spriteram_2[offs] + 1;	// sprites are buffered and delayed by one scanline
+		int sy = 256 - spriteram_2[offs] + 1;	/* sprites are buffered and delayed by one scanline */
 		int flipx = (spriteram_3[offs] & 0x01);
 		int flipy = (spriteram_3[offs] & 0x02) >> 1;
 		int sizex = (spriteram_3[offs] & 0x04) >> 2;
@@ -323,7 +323,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		}
 
 		sy -= 16 * sizey;
-		sy = (sy & 0xff) - 32;	// fix wraparound
+		sy = (sy & 0xff) - 32;	/* fix wraparound */
 
 		for (y = 0;y <= sizey;y++)
 		{
