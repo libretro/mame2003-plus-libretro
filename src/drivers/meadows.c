@@ -343,13 +343,13 @@ static INTERRUPT_GEN( sound_interrupt )
 /* so that overlays are not so contrasted */
 #define OVERLAY_RED             MAKE_ARGB(0x04,0xff,0x20,0x20)
 #define OVERLAY_GREEN           MAKE_ARGB(0x04,0x20,0xff,0x20)
-// Original blue is too dark so is replaced with crayola blue
-// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
-//#define OVERLAY_BLUE          MAKE_ARGB(0x04,0x20,0x20,0xff)
+/* Original blue is too dark so is replaced with crayola blue */
+/* https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola) */
+/*#define OVERLAY_BLUE          MAKE_ARGB(0x04,0x20,0x20,0xff) */
 #define OVERLAY_BLUE            MAKE_ARGB(0x04,0x1f,0x75,0xfe)
 #define OVERLAY_YELLOW          MAKE_ARGB(0x04,0xff,0xff,0x20)
 #define OVERLAY_CYAN            MAKE_ARGB(0x04,0x20,0xff,0xff)
-// https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue
+/* https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue */
 #define OVERLAY_LT_BLUE         MAKE_ARGB(0x04,0xad,0xd8,0xe6)
 #define OVERLAY_ORANGE          MAKE_ARGB(0x04,0xff,0xa5,0x00)
 #define OVERLAY_PURPLE          MAKE_ARGB(0x04,0xff,0x00,0xff)

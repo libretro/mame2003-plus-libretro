@@ -539,7 +539,7 @@ VIDEO_UPDATE( gaelco2_dual )
 {
 	int i;
 
-	int xoff0 = 0x14; // intro scenes align better with 0x13, but test screen is definitely 0x14
+	int xoff0 = 0x14; /* intro scenes align better with 0x13, but test screen is definitely 0x14 */
 	int xoff1 = xoff0 - 4;
 	int yoff0 = 0x01;
 	int yoff1 = 0x01;
@@ -592,7 +592,7 @@ VIDEO_UPDATE( gaelco2_dual )
 {
 	int i;
 
-	int xoff0 = 0x14; // intro scenes align better with 0x13, but test screen is definitely 0x14
+	int xoff0 = 0x14; /* intro scenes align better with 0x13, but test screen is definitely 0x14 */
 	int xoff1 = xoff0 - 4;
 	int yoff0 = 0x01;
 	int yoff1 = 0x01;

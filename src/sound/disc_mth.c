@@ -35,9 +35,9 @@
 
 struct dst_dac_r1_context
 {
-	double	iBias;		// current of the bias circuit
-	double	exponent;	// smoothing curve
-	double	rTotal;		// all resistors in parallel
+	double	iBias;		/* current of the bias circuit */
+	double	exponent;	/* smoothing curve */
+	double	rTotal;		/* all resistors in parallel */
 };
 
 struct dst_dflipflop_context
@@ -51,14 +51,14 @@ struct dst_mixer_context
 {
 	int	type;
 	double	rTotal;
-	struct	node_description* rNode[DISC_MIXER_MAX_INPS];	// Either pointer to input node OR NULL
-	double	exponent_rc[DISC_MIXER_MAX_INPS];	// For high pass filtering cause by cIn
-	double	vCap[DISC_MIXER_MAX_INPS];		// cap voltage of each input
-	double	exponent_cF;				// Low pass on mixed inputs
-	double	exponent_cAmp;				// Final high pass caused by out cap and amp input impedance
-	double	vCapF;					// cap voltage of cF
-	double	vCapAmp;				// cap voltage of cAmp
-	double	gain;					// used for DISC_MIXER_IS_OP_AMP_WITH_RI
+	struct	node_description* rNode[DISC_MIXER_MAX_INPS];	/* Either pointer to input node OR NULL */
+	double	exponent_rc[DISC_MIXER_MAX_INPS];	/* For high pass filtering cause by cIn */
+	double	vCap[DISC_MIXER_MAX_INPS];		/* cap voltage of each input */
+	double	exponent_cF;				/* Low pass on mixed inputs */
+	double	exponent_cAmp;				/* Final high pass caused by out cap and amp input impedance */
+	double	vCapF;					/* cap voltage of cF */
+	double	vCapAmp;				/* cap voltage of cAmp */
+	double	gain;					/* used for DISC_MIXER_IS_OP_AMP_WITH_RI */
 };
 
 struct dst_oneshot_context
@@ -164,7 +164,7 @@ void dst_comp_adder_step(struct node_description *node)
 /************************************************************************/
 void dst_clamp_step(struct node_description *node)
 {
-//	struct dss_ramp_context *context = node->context;
+/*	struct dss_ramp_context *context = node->context; */
 
 	if(node->input[0])
 	{
@@ -592,7 +592,7 @@ void dst_mixer_step(struct node_description *node)
 	struct dst_mixer_context *context = node->context;
 
 	double	v, vTemp, rTotal, rTemp, rTemp2 = 0;
-	double	i = 0;		// total current of inputs
+	double	i = 0;		/* total current of inputs */
 	int	bit, connected;
 
 	if (DSTMIXER_ENABLE)
@@ -711,7 +711,7 @@ void dst_mixer_reset(struct node_description *node)
 		if (info->rNode[bit])
 		{
 			context->type = context->type | DISC_MIXER_HAS_R_NODE;
-			context->rNode[bit] = discrete_find_node(info->rNode[bit]);	// get node pointers
+			context->rNode[bit] = discrete_find_node(info->rNode[bit]);	/* get node pointers */
 		}
 		else
 			context->rNode[bit] = NULL;
@@ -896,7 +896,7 @@ void dst_ramp_step(struct node_description *node)
 	else
 	{
 		context->last_en = 0;
-		// Disabled so clamp to output
+		/* Disabled so clamp to output */
 		node->output=node->input[5];
 	}
 }
@@ -1013,7 +1013,7 @@ void dst_switch_step(struct node_description *node)
 double dst_transform_pop(double *stack,int *pointer)
 {
 	double value;
-	//decrement THEN read
+	/*decrement THEN read */
 	if(*pointer>0) (*pointer)--;
 	value=stack[*pointer];
 	return value;
@@ -1021,7 +1021,7 @@ double dst_transform_pop(double *stack,int *pointer)
 
 double dst_transform_push(double *stack,int *pointer,double value)
 {
-	//Store THEN increment
+	/*Store THEN increment */
 	if(*pointer<MAX_TRANS_STACK) stack[(*pointer)++]=value;
 	return value;
 }
@@ -1065,47 +1065,47 @@ void dst_transform_step(struct node_description *node)
 					result=number1-number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case 'i':	// * -1
+				case 'i':	/* * -1 */
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=-number1;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '!':	// Logical NOT of Last Value
+				case '!':	/* Logical NOT of Last Value */
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=!number1;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '=':	// Logical =
+				case '=':	/* Logical = */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=(int)number1 == (int)number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '>':	// Logical >
+				case '>':	/* Logical > */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1 > number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '<':	// Logical <
+				case '<':	/* Logical < */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=number1 < number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '&':	// Bitwise AND
+				case '&':	/* Bitwise AND */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=(int)number1 & (int)number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '|':	// Bitwise OR
+				case '|':	/* Bitwise OR */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=(int)number1 | (int)number2;
 					dst_transform_push(trans_stack,&trans_stack_ptr,result);
 					break;
-				case '^':	// Bitwise XOR
+				case '^':	/* Bitwise XOR */
 					number2=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					number1=dst_transform_pop(trans_stack,&trans_stack_ptr);
 					result=(int)number1 ^ (int)number2;

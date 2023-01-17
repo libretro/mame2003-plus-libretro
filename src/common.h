@@ -103,7 +103,7 @@ struct GameSamples
 	struct GameSample *sample[1];	/* extendable */
 };
  
-#define	GAME_SAMPLE_LARGE		10000000 // 10MB
+#define	GAME_SAMPLE_LARGE		10000000 /* 10MB */
 
 /***************************************************************************
 

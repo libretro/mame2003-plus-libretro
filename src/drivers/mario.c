@@ -166,7 +166,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x7f00, 0x7f07, mario_sh3_w }, /* Misc discrete samples */
 	{ 0x7e00, 0x7e00, mario_sh_tuneselect_w },
 	{ 0x7000, 0x73ff, MWA_NOP },	/* ??? */
-/*	{ 0x7e85, 0x7e85, MWA_RAM },	 // Sets alternative 1 and 0 /*/
+/*	{ 0x7e85, 0x7e85, MWA_RAM }, Sets alternative 1 and 0 */
 	{ 0xf000, 0xffff, MWA_ROM },
 MEMORY_END
 

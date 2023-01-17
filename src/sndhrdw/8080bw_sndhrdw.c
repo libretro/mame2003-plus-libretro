@@ -1303,7 +1303,7 @@ static WRITE_HANDLER( lupin3_sh_port5_w )
 	if (rising_bits & 0x02) sample_start(1, 2, 0);		/* Deposit money, start intermission, end game */
 	if (rising_bits & 0x04) sample_start(2, 5, 0);		/* Deposit money, start intermission, Slides down rope */
 	if (rising_bits & 0x08) sample_start(3, 0, 0);		/* Start intermission, end game */
-	//if (rising_bits & 0x10) sample_start(3, 9, 0);	/* Dog barking */
+	/*if (rising_bits & 0x10) sample_start(3, 9, 0);	/* Dog barking */ 
 
 	c8080bw_flip_screen_w(data & 0x20);
 
@@ -1362,7 +1362,7 @@ static WRITE_HANDLER( invrvnge_sh_port3_w )
 
 static WRITE_HANDLER( invrvnge_sh_port5_w )
 {
-    // No operations
+    /* No operations */
 }
 
 
@@ -1425,11 +1425,11 @@ static WRITE_HANDLER( yosakdon_sh_port5_w )
 
 MACHINE_INIT( rollingc )
 {
-	install_port_write_handler(0, 0x00, 0x00, rollingc_sh_port0_w); // Rolling Crash
-	// Note Rolling Crash also uses some of the sounds from Moon Base.
-	// Though we basically use the Invaders sounds for Moon Base.
-	install_port_write_handler(0, 0x03, 0x03, invaders_sh_port3_w); // Moon Base
-	install_port_write_handler(0, 0x05, 0x05, invaders_sh_port5_w); // Moon Base
+	install_port_write_handler(0, 0x00, 0x00, rollingc_sh_port0_w); /* Rolling Crash */
+	/* Note Rolling Crash also uses some of the sounds from Moon Base. */
+	/* Though we basically use the Invaders sounds for Moon Base. */
+	install_port_write_handler(0, 0x03, 0x03, invaders_sh_port3_w); /* Moon Base */
+	install_port_write_handler(0, 0x05, 0x05, invaders_sh_port5_w); /* Moon Base */
 
 	SN76477_envelope_1_w(0, 1);
 	SN76477_envelope_2_w(0, 0);
@@ -1448,7 +1448,7 @@ static WRITE_HANDLER( rollingc_sh_port0_w )
 	if (rising_bits & 0x04) sample_start(0, 1, 0);	/* Collision */
 	if (rising_bits & 0x10) sample_start(1, 8, 0);	/* Computer car is starting to move */
 
-	// Note sound of hitting a dot seem to come from Moon Base port handlers.
+	/* Note sound of hitting a dot seem to come from Moon Base port handlers. */
 
 	last = data;
 }
@@ -1465,7 +1465,7 @@ static WRITE_HANDLER( rollingc_sh_port0_w )
 MACHINE_INIT( astropal )
 {
 	install_port_write_handler(0, 0x03, 0x03, astropal_sh_port3_w);
-	// Can use invaders handler for port 0x05
+	/* Can use invaders handler for port 0x05 */
 	install_port_write_handler(0, 0x05, 0x05, invaders_sh_port5_w);
 
 	SN76477_envelope_1_w(0, 1);
@@ -1479,12 +1479,12 @@ MACHINE_INIT( astropal )
 static WRITE_HANDLER( astropal_sh_port3_w )
 {
 	static unsigned char last = 0;
-	static int exploding = 0; // Work around to stop exploding sound repeating
+	static int exploding = 0; /* Work around to stop exploding sound repeating */
 	UINT8 rising_bits = data & ~last;
 
 	if (rising_bits & 0x02) {
 		sample_start (0, 0, 0);		/* Shot Sound */
-		exploding = 0; // Use this to reset exploding sound
+		exploding = 0; /* Use this to reset exploding sound */
 	}
 
 	if (rising_bits & 0x04 && !exploding)  {
@@ -1538,8 +1538,8 @@ static WRITE_HANDLER( galactic_sh_port3_w )
 	if (rising_bits & 0x04)
 		sample_start (1, 1, 0);		/* Your ship hit */
 
-	//if (data & 0x08)
-		//sample_start (1, 6, 0);	/* Background continual? */
+	/*if (data & 0x08) */
+		/*sample_start (1, 6, 0);	/* Background continual? */
 
 	if (rising_bits & 0x10)
 		sample_start (2, 8, 0);		/* Bonus Man? */
@@ -1554,10 +1554,10 @@ static WRITE_HANDLER( galactic_sh_port5_w )
 	static unsigned char last = 0;
 	UINT8 rising_bits = data & ~last;
 
-	// These are meant to be a deep base background.
-	// Can simulate by changing "rising_bits" to "data"
-	// But the result sounds rough, and your explosion
-	// cuts out.
+	/* These are meant to be a deep base background. */
+	/* Can simulate by changing "rising_bits" to "data" */
+	/* But the result sounds rough, and your explosion */
+	/* cuts out. */
 	if (rising_bits & 0x01)
 		sample_start (1, 3, 0);		/* Background beat */
 

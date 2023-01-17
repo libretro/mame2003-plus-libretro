@@ -418,7 +418,7 @@ ROM_START( jumpkun )
 	ROM_LOAD( "snd2.2732", 0x01000, 0x01000, CRC(ec5e4489) SHA1(fc94fe798a1925e8e3dd15161648e9a960969fc4) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )
-	// not populated
+	/* not populated */
 
 	ROM_REGION( 0x6000, REGION_GFX1, 0 )
 	ROM_LOAD( "obj1.1k.2764", 0x00000, 0x02000, CRC(8929abfd) SHA1(978994af5816c20a8cd520263d04d1cc1e4df576) )
@@ -434,7 +434,7 @@ ROM_START( jumpkun )
 	ROM_LOAD( "bsc1.3p.2764", 0x01000, 0x01000, CRC(39ca2c37) SHA1(b8c71f443a0faf54df03ac5aca46ddd34c42d3a0) )
 
 	ROM_REGION( 0x2000, REGION_USER1, 0 )
-	// not populated
+	/* not populated */
 
 	ROM_REGION( 0x0060, REGION_PROMS, 0 )
 	ROM_LOAD( "8h.82s123.bin", 0x0000, 0x0020, CRC(e54a6fe6) SHA1(c51da2cbf54b7abff7b0cdf0d6846c375b71edcd) )

@@ -189,7 +189,7 @@ static const res_net_info dkong3_net_info =
     darlington. The blue channel has a pulldown resistor (R8, 0M15) as well.
 */
 
-#define TRS_J1  (1)         // (1) = Closed (0) = Open
+#define TRS_J1  (1)         /* (1) = Closed (0) = Open */
 
 static const res_net_info radarscp_net_info =
 {
@@ -305,9 +305,9 @@ PALETTE_INIT( radarscp )
 		color_prom++;
 	}
 
-	// Now treat tri-state black background generation
+	/* Now treat tri-state black background generation */
 	for (i = 0; i < 256; i++)
-		if ((/*m_vidhw != DKONG_RADARSCP_CONVERSION*/ 1) && ((i & 0x03) == 0x00)) // NOR => CS=1 => Tristate => real black
+		if ((/*m_vidhw != DKONG_RADARSCP_CONVERSION*/ 1) && ((i & 0x03) == 0x00)) /* NOR => CS=1 => Tristate => real black */
 		{
 			r = compute_res_net(1, 0, &radarscp_net_bck_info);
 			g = compute_res_net(1, 1, &radarscp_net_bck_info);
@@ -315,13 +315,13 @@ PALETTE_INIT( radarscp )
 			palette_set_color(i,r,g,b);
 		}
 
-	// Star color
+	/* Star color */
 	palette_set_color(RADARSCP_STAR_COL,
 			compute_res_net(1, 0, &radarscp_stars_net_info),
 			compute_res_net(0, 1, &radarscp_stars_net_info),
 			compute_res_net(0, 2, &radarscp_stars_net_info));
 
-	// Oscillating background
+	/* Oscillating background */
 	for (i = 0; i < 256; i++)
 	{
 		r = compute_res_net(0, 0, &radarscp_blue_net_info);
@@ -331,7 +331,7 @@ PALETTE_INIT( radarscp )
 		palette_set_color(RADARSCP_BCK_COL_OFFSET + i, r, g, b);
 	}
 
-	// Grid
+	/* Grid */
 	for (i = 0; i < 8; i++)
 	{
 		r = compute_res_net(BIT(i, 0), 0, &radarscp_grid_net_info);
@@ -344,8 +344,8 @@ PALETTE_INIT( radarscp )
 	palette_normalize_range(0, RADARSCP_GRID_COL_OFFSET+7, 0, 255);
 
 	color_prom += 256;
-	// color_prom now points to the beginning of the character color codes
-	color_codes = color_prom; // we'll need it later
+	/* color_prom now points to the beginning of the character color codes */
+	color_codes = color_prom; /* we'll need it later */
 }
 
 /***************************************************************************
@@ -670,13 +670,13 @@ void radarscp_step(int line_cnt)
 	vo = (vg3 - vc17);
 	vo = vo + 20.0 / (20.0+10.0) * 5;
 
-	// Transistor is marked as OMIT in TRS-02 schems.
-	//vo = vo - 0.7;
+	/* Transistor is marked as OMIT in TRS-02 schems. */
+	/*vo = vo - 0.7; */
 
 
-	//double vo = (vg3o - vg3)/4.7 + 5.0/16.0;
-	//vo = vo / (1.0 / 4.7 + 1.0 / 16.0 + 1.0 / 30.0 );
-	//printf("%f %f\n", vg3, vc17);
+	/*double vo = (vg3o - vg3)/4.7 + 5.0/16.0; */
+	/*vo = vo / (1.0 / 4.7 + 1.0 / 16.0 + 1.0 / 30.0 ); */
+	/*printf("%f %f\n", vg3, vc17); */
 
 	blue_level = (int)(vo/5.0*255);
 	/* printf("%d\n", m_blue_level); */
@@ -818,7 +818,7 @@ VIDEO_UPDATE( radarscp )
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 	draw_sprites(bitmap, 0x40, 1);
 	
-	//for (i=VTOTAL; i > 0; i--)
+	/*for (i=VTOTAL; i > 0; i--) */
 	for (i=0; i < VTOTAL; i++)
 		radarscp_scanline(i);
 

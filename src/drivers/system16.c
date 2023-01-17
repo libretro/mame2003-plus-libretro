@@ -1,6 +1,6 @@
 /*
 	Sega System16 Hardware
-	major cleanup in progress - still a lot to do!
+	major cleanup in progress - still a lot to do!H
 
 	see vidhrdw/system16.c for more information
 
@@ -150,12 +150,12 @@ Notes:
 #include "cpu/z80/z80.h"
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
-
+#include "machine/fd1089.h"
 extern void mc8123_decrypt_0066(void);
 
 /***************************************************************************/
 
-// 7751 emulation
+/* 7751 emulation */
 WRITE_HANDLER( sys16_7751_audio_8255_w );
  READ_HANDLER( sys16_7751_audio_8255_r );
  READ_HANDLER( sys16_7751_sh_rom_r );
@@ -344,7 +344,7 @@ static PORT_WRITE_START( sound_writeport )
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 PORT_END
 
-// 7751 Sound
+/* 7751 Sound */
 static MEMORY_READ_START( sound_readmem_7751 )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xe800, 0xe800, soundlatch_r },
@@ -353,7 +353,7 @@ MEMORY_END
 
 static PORT_READ_START( sound_readport_7751 )
 	{ 0x01, 0x01, YM2151_status_port_0_r },
-	//{ 0x0e, 0x0e, sys16_7751_audio_8255_r },
+	/*{ 0x0e, 0x0e, sys16_7751_audio_8255_r }, */
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
 
@@ -386,7 +386,7 @@ static PORT_WRITE_START( writeport_7751 )
 	{ I8039_p7, I8039_p7, sys16_7751_sh_rom_select_w },
 PORT_END
 
-// 7759
+/* 7759 */
 static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xdfff, MRA_BANK1 },
@@ -422,7 +422,7 @@ static WRITE16_HANDLER( sound_command_nmi_w ){
 	}
 }
 
-//static data16_t coinctrl;
+/*static data16_t coinctrl; */
 
 static READ16_HANDLER( sys16_coinctrl_r ){
 	return coinctrl;
@@ -655,71 +655,75 @@ static void type1_sys16_textram( void )
 }
 
 /***************************************************************************/
-// sys16A
+/* sys16A */
 ROM_START( alexkidd )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "epr10429.42", 0x000000, 0x10000, CRC(bdf49eca) SHA1(899bc2d346544e4a33de51b60e02ebf7ee82cea8) )
-	ROM_LOAD16_BYTE( "epr10427.26", 0x000001, 0x10000, CRC(f6e3dd29) SHA1(bb94ebc062bb7c6c13b68579053b9cbe8b92417c) )
-	ROM_LOAD16_BYTE( "epr10430.43", 0x020000, 0x10000, CRC(89e3439f) SHA1(7c751bb477584842d93fda6686b03e289140bd62) )
-	ROM_LOAD16_BYTE( "epr10428.25", 0x020001, 0x10000, CRC(dbed3210) SHA1(1e2d22935a633641ff88967d67ec673ee25cbf55) )
+	ROM_LOAD16_BYTE( "epr-10447.43", 0x000000, 0x10000, CRC(29e87f71) SHA1(af980e55c02b3de1121c144fee23af74d24042ac) )
+	ROM_LOAD16_BYTE( "epr-10445.26", 0x000001, 0x10000, CRC(25ce5b6f) SHA1(dfec64df7e8d145d30740808bc94bdbbe667c4e8) )
+	ROM_LOAD16_BYTE( "epr-10448.42", 0x020000, 0x10000, CRC(05baedb5) SHA1(fc15989bf3d850170e4e018d74f18553f0268576) )
+	ROM_LOAD16_BYTE( "epr-10446.25", 0x020001, 0x10000, CRC(cd61d23c) SHA1(c235c4fef28556e9f2d07e815ad213c308e85598) )
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "10431.95", 0x00000, 0x08000, CRC(a7962c39) SHA1(c816fc5d9f21b2ba32b9841e64b634bce7ea78c8) )
-	ROM_LOAD( "10432.94", 0x08000, 0x08000, CRC(db8cd24e) SHA1(656d98844ad9ccaa68e3f501137dddd0a27d999d) )
-	ROM_LOAD( "10433.93", 0x10000, 0x08000, CRC(e163c8c2) SHA1(ac54c5ecedca5b1a2c550de32687ca57c4d3a411) )
+	ROM_LOAD( "epr-10431.95", 0x00000, 0x08000, CRC(a7962c39) SHA1(c816fc5d9f21b2ba32b9841e64b634bce7ea78c8) )
+	ROM_LOAD( "epr-10432.94", 0x08000, 0x08000, CRC(db8cd24e) SHA1(656d98844ad9ccaa68e3f501137dddd0a27d999d) )
+	ROM_LOAD( "epr-10433.93", 0x10000, 0x08000, CRC(e163c8c2) SHA1(ac54c5ecedca5b1a2c550de32687ca57c4d3a411) )
 
 	ROM_REGION( 0x040000, REGION_GFX2, 0 ) /* sprites */
-	ROM_LOAD16_BYTE( "10437.10", 0x000001, 0x8000, CRC(522f7618) SHA1(9a6bc857dfef1dd1b7bffa034523c1c4cd8b3f4c) )
-	ROM_LOAD16_BYTE( "10441.11", 0x000000, 0x8000, CRC(74e3a35c) SHA1(26b980a0a3aee94ac38e0e0c7d305bb35a60d1c4) )
-	ROM_LOAD16_BYTE( "10438.17", 0x010001, 0x8000, CRC(738a6362) SHA1(a3c5f10c263cb216d275875f6333484a1cca281b) )
-	ROM_LOAD16_BYTE( "10442.18", 0x010000, 0x8000, CRC(86cb9c14) SHA1(42bd0ed985de61ff183eed0192257966caa01594) )
-	ROM_LOAD16_BYTE( "10439.23", 0x020001, 0x8000, CRC(b391aca7) SHA1(ca9d80b67e5365f709f90a5342b5e3aa7c7126e1) )
-	ROM_LOAD16_BYTE( "10443.24", 0x020000, 0x8000, CRC(95d32635) SHA1(788af2af1ae783128bcdc8cd44d17cd2f1542231) )
-	ROM_LOAD16_BYTE( "10440.29", 0x030001, 0x8000, CRC(23939508) SHA1(68450a18fc7e35f5b0155632aa68cffd251be38c) )
-	ROM_LOAD16_BYTE( "10444.30", 0x030000, 0x8000, CRC(82115823) SHA1(e4103003cda949bebe57815115a5028f4fe8e7d7) )
+	ROM_LOAD16_BYTE( "epr-10437.10", 0x00001, 0x8000, CRC(522f7618) SHA1(9a6bc857dfef1dd1b7bffa034523c1c4cd8b3f4c) )
+	ROM_LOAD16_BYTE( "epr-10441.11", 0x00000, 0x8000, CRC(74e3a35c) SHA1(26b980a0a3aee94ac38e0e0c7d305bb35a60d1c4) )
+	ROM_LOAD16_BYTE( "epr-10438.17", 0x10001, 0x8000, CRC(738a6362) SHA1(a3c5f10c263cb216d275875f6333484a1cca281b) )
+	ROM_LOAD16_BYTE( "epr-10442.18", 0x10000, 0x8000, CRC(86cb9c14) SHA1(42bd0ed985de61ff183eed0192257966caa01594) )
+	ROM_LOAD16_BYTE( "epr-10439.23", 0x20001, 0x8000, CRC(b391aca7) SHA1(ca9d80b67e5365f709f90a5342b5e3aa7c7126e1) )
+	ROM_LOAD16_BYTE( "epr-10443.24", 0x20000, 0x8000, CRC(95d32635) SHA1(788af2af1ae783128bcdc8cd44d17cd2f1542231) )
+	ROM_LOAD16_BYTE( "epr-10440.29", 0x30001, 0x8000, CRC(23939508) SHA1(68450a18fc7e35f5b0155632aa68cffd251be38c) )
+	ROM_LOAD16_BYTE( "epr-10444.30", 0x30000, 0x8000, CRC(82115823) SHA1(e4103003cda949bebe57815115a5028f4fe8e7d7) )
+
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "10434.12", 0x0000, 0x8000, CRC(77141cce) SHA1(6c5e83527f7e11a5ff5cc4fa75d55618a55e1a58) )
+	ROM_LOAD( "epr-10434.12", 0x0000, 0x8000, CRC(77141cce) SHA1(6c5e83527f7e11a5ff5cc4fa75d55618a55e1a58) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 )      /* 4k for 7751 onboard ROM */
 	ROM_LOAD( "7751.bin",     0x0000, 0x0400, CRC(6a9534fc) SHA1(67ad94674db5c2aab75785668f610f6f4eccd158) ) /* 7751 - U34 */
 
 	ROM_REGION( 0x10000, REGION_SOUND1, 0 ) /* 7751 sound data (not used yet) */
-	ROM_LOAD( "10435.1", 0x0000, 0x8000, CRC(ad89f6e3) SHA1(812a132142065b0fe13b5f0ac534b6d8830ba102) )
-	ROM_LOAD( "10436.2", 0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
+	ROM_LOAD( "epr-10435.1",  0x0000, 0x8000, CRC(ad89f6e3) SHA1(812a132142065b0fe13b5f0ac534b6d8830ba102) )
+	ROM_LOAD( "epr-10436.2",  0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
 ROM_END
 
-ROM_START( alexkida )
-	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "10447.43", 0x000000, 0x10000, CRC(29e87f71) SHA1(af980e55c02b3de1121c144fee23af74d24042ac) )
-	ROM_LOAD16_BYTE( "10445.26", 0x000001, 0x10000, CRC(25ce5b6f) SHA1(dfec64df7e8d145d30740808bc94bdbbe667c4e8) )
-	ROM_LOAD16_BYTE( "10448.42", 0x020000, 0x10000, CRC(05baedb5) SHA1(fc15989bf3d850170e4e018d74f18553f0268576) )
-	ROM_LOAD16_BYTE( "10446.25", 0x020001, 0x10000, CRC(cd61d23c) SHA1(c235c4fef28556e9f2d07e815ad213c308e85598) )
+ROM_START( alexkidd1 )
+	ROM_REGION( 0x40000,  REGION_CPU1, 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "epr-10429.43", 0x000000, 0x10000, CRC(bdf49eca) SHA1(899bc2d346544e4a33de51b60e02ebf7ee82cea8) )
+	ROM_LOAD16_BYTE( "epr-10427.26", 0x000001, 0x10000, CRC(f6e3dd29) SHA1(bb94ebc062bb7c6c13b68579053b9cbe8b92417c) )
+	ROM_LOAD16_BYTE( "epr-10430.42", 0x020000, 0x10000, CRC(89e3439f) SHA1(7c751bb477584842d93fda6686b03e289140bd62) )
+	ROM_LOAD16_BYTE( "epr-10428.25", 0x020001, 0x10000, CRC(dbed3210) SHA1(1e2d22935a633641ff88967d67ec673ee25cbf55) )
 
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "10431.95", 0x00000, 0x08000, CRC(a7962c39) SHA1(c816fc5d9f21b2ba32b9841e64b634bce7ea78c8) )
-	ROM_LOAD( "10432.94", 0x08000, 0x08000, CRC(db8cd24e) SHA1(656d98844ad9ccaa68e3f501137dddd0a27d999d) )
-	ROM_LOAD( "10433.93", 0x10000, 0x08000, CRC(e163c8c2) SHA1(ac54c5ecedca5b1a2c550de32687ca57c4d3a411) )
+	ROM_REGION( 0x18000,  REGION_GFX1, 0 ) /* tiles */
+	ROM_LOAD( "epr-10431.95", 0x00000, 0x08000, CRC(a7962c39) SHA1(c816fc5d9f21b2ba32b9841e64b634bce7ea78c8) )
+	ROM_LOAD( "epr-10432.94", 0x08000, 0x08000, CRC(db8cd24e) SHA1(656d98844ad9ccaa68e3f501137dddd0a27d999d) )
+	ROM_LOAD( "epr-10433.93", 0x10000, 0x08000, CRC(e163c8c2) SHA1(ac54c5ecedca5b1a2c550de32687ca57c4d3a411) )
 
-	ROM_REGION( 0x040000, REGION_GFX2, 0 ) /* sprites */
-	ROM_LOAD16_BYTE( "10437.10", 0x000001, 0x8000, CRC(522f7618) SHA1(9a6bc857dfef1dd1b7bffa034523c1c4cd8b3f4c) )
-	ROM_LOAD16_BYTE( "10441.11", 0x000000, 0x8000, CRC(74e3a35c) SHA1(26b980a0a3aee94ac38e0e0c7d305bb35a60d1c4) )
-	ROM_LOAD16_BYTE( "10438.17", 0x010001, 0x8000, CRC(738a6362) SHA1(a3c5f10c263cb216d275875f6333484a1cca281b) )
-	ROM_LOAD16_BYTE( "10442.18", 0x010000, 0x8000, CRC(86cb9c14) SHA1(42bd0ed985de61ff183eed0192257966caa01594) )
-	ROM_LOAD16_BYTE( "10439.23", 0x020001, 0x8000, CRC(b391aca7) SHA1(ca9d80b67e5365f709f90a5342b5e3aa7c7126e1) )
-	ROM_LOAD16_BYTE( "10443.24", 0x020000, 0x8000, CRC(95d32635) SHA1(788af2af1ae783128bcdc8cd44d17cd2f1542231) )
-	ROM_LOAD16_BYTE( "10440.29", 0x030001, 0x8000, CRC(23939508) SHA1(68450a18fc7e35f5b0155632aa68cffd251be38c) )
-	ROM_LOAD16_BYTE( "10444.30", 0x030000, 0x8000, CRC(82115823) SHA1(e4103003cda949bebe57815115a5028f4fe8e7d7) )
+	ROM_REGION( 0x040000,  REGION_GFX2, 0 ) /* sprites */
+	ROM_LOAD16_BYTE( "epr-10437.10", 0x00001, 0x8000, CRC(522f7618) SHA1(9a6bc857dfef1dd1b7bffa034523c1c4cd8b3f4c) )
+	ROM_LOAD16_BYTE( "epr-10441.11", 0x00000, 0x8000, CRC(74e3a35c) SHA1(26b980a0a3aee94ac38e0e0c7d305bb35a60d1c4) )
+	ROM_LOAD16_BYTE( "epr-10438.17", 0x10001, 0x8000, CRC(738a6362) SHA1(a3c5f10c263cb216d275875f6333484a1cca281b) )
+	ROM_LOAD16_BYTE( "epr-10442.18", 0x10000, 0x8000, CRC(86cb9c14) SHA1(42bd0ed985de61ff183eed0192257966caa01594) )
+	ROM_LOAD16_BYTE( "epr-10439.23", 0x20001, 0x8000, CRC(b391aca7) SHA1(ca9d80b67e5365f709f90a5342b5e3aa7c7126e1) )
+	ROM_LOAD16_BYTE( "epr-10443.24", 0x20000, 0x8000, CRC(95d32635) SHA1(788af2af1ae783128bcdc8cd44d17cd2f1542231) )
+	ROM_LOAD16_BYTE( "epr-10440.29", 0x30001, 0x8000, CRC(23939508) SHA1(68450a18fc7e35f5b0155632aa68cffd251be38c) )
+	ROM_LOAD16_BYTE( "epr-10444.30", 0x30000, 0x8000, CRC(82115823) SHA1(e4103003cda949bebe57815115a5028f4fe8e7d7) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "10434.12", 0x0000, 0x8000, CRC(77141cce) SHA1(6c5e83527f7e11a5ff5cc4fa75d55618a55e1a58) )
+	ROM_LOAD( "epr-10434.12", 0x0000, 0x8000, CRC(77141cce) SHA1(6c5e83527f7e11a5ff5cc4fa75d55618a55e1a58) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 )      /* 4k for 7751 onboard ROM */
 	ROM_LOAD( "7751.bin",     0x0000, 0x0400, CRC(6a9534fc) SHA1(67ad94674db5c2aab75785668f610f6f4eccd158) ) /* 7751 - U34 */
 
-	ROM_REGION( 0x10000, REGION_SOUND1, 0 ) /* 7751 sound data */
-	ROM_LOAD( "10435.1", 0x0000, 0x8000, CRC(ad89f6e3) SHA1(812a132142065b0fe13b5f0ac534b6d8830ba102) )
-	ROM_LOAD( "10436.2", 0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
+	ROM_REGION( 0x10000, REGION_SOUND1, 0 ) /* 7751 sound data (not used yet) */
+	ROM_LOAD( "epr-10435.1",  0x0000, 0x8000, CRC(ad89f6e3) SHA1(812a132142065b0fe13b5f0ac534b6d8830ba102) )
+	ROM_LOAD( "epr-10436.2",  0x8000, 0x8000, CRC(96c76613) SHA1(fe3e4e649fd2cb2453eec0c92015bd54b3b9a1b5) )
+
+	ROM_REGION( 0x2000,  REGION_USER2, 0 ) /* decryption key */
+	ROM_LOAD( "317-0021.key", 0x0000, 0x2000, BAD_DUMP CRC(504388a3) SHA1(20625e9e99c08a28b253676cc843ae5228ec9d5b) )
 ROM_END
 
 /*
@@ -728,33 +732,34 @@ ROM_END
 */
 
 ROM_START( afighter )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
-// cpu 317-0018
-	ROM_LOAD16_BYTE( "10348",0x00000,0x08000, CRC(e51e3012) SHA1(bb5522aacb55b5f04aa4cb7a642e202f0ddd7c84) )
-	ROM_LOAD16_BYTE( "10349",0x00001,0x08000, CRC(4b434c37) SHA1(5f3afbdb9cdb0762e56b702a195274f30193b472) )
-	ROM_LOAD16_BYTE( "10350",0x20000,0x08000, CRC(f2cd6b3f) SHA1(380f75b8c1696b388179641866cd1d23f78664e7) )
-	ROM_LOAD16_BYTE( "10351",0x20001,0x08000, CRC(ede21d8d) SHA1(b3e3944d706c606fd01e00d9511f020ce9aec9f0) )
-	ROM_LOAD16_BYTE( "10352",0x40000,0x08000, CRC(f8abb143) SHA1(97e78291c15bdf95fd35adca6b9e002480137b12) )
-	ROM_LOAD16_BYTE( "10353",0x40001,0x08000, CRC(5a757dc9) SHA1(b0540844c8a09195f5d12312f8e27c334641d7b8) )
+	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "epr-10350", 0x00001, 0x08000, CRC(f2cd6b3f) SHA1(380f75b8c1696b388179641866cd1d23f78664e7) )
+	ROM_LOAD16_BYTE( "epr-10353", 0x00000, 0x08000, CRC(5a757dc9) SHA1(b0540844c8a09195f5d12312f8e27c334641d7b8) )
+	ROM_LOAD16_BYTE( "epr-10349", 0x10001, 0x08000, CRC(4b434c37) SHA1(5f3afbdb9cdb0762e56b702a195274f30193b472) )
+	ROM_LOAD16_BYTE( "epr-10352", 0x10000, 0x08000, CRC(f8abb143) SHA1(97e78291c15bdf95fd35adca6b9e002480137b12) )
+	ROM_LOAD16_BYTE( "epr-10348", 0x20001, 0x08000, CRC(e51e3012) SHA1(bb5522aacb55b5f04aa4cb7a642e202f0ddd7c84) )
+	ROM_LOAD16_BYTE( "epr-10351", 0x20000, 0x08000, CRC(ede21d8d) SHA1(b3e3944d706c606fd01e00d9511f020ce9aec9f0) )
 
-	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "10281",0x00000,0x10000, CRC(30e92cda) SHA1(36293a2a8a22dca5350571f19f3d5d04e1b27458) )
-	ROM_LOAD( "10282",0x10000,0x10000, CRC(b67b8910) SHA1(f3f029a3e6547114cec28e5cf8fda65ef434c353) )
-	ROM_LOAD( "10283",0x20000,0x10000, CRC(e7dbfd2d) SHA1(91bae3fbc4a3c612dc507eecfa8de1c2e1e7afee) )
+	ROM_REGION( 0x30000, REGION_GFX1, 0 ) /* tiles */
+	ROM_LOAD( "epr-10281.95", 0x00000, 0x10000, CRC(30e92cda) SHA1(36293a2a8a22dca5350571f19f3d5d04e1b27458) )
+	ROM_LOAD( "epr-10282.94", 0x10000, 0x10000, CRC(b67b8910) SHA1(f3f029a3e6547114cec28e5cf8fda65ef434c353) )
+	ROM_LOAD( "epr-10283.93", 0x20000, 0x10000, CRC(e7dbfd2d) SHA1(91bae3fbc4a3c612dc507eecfa8de1c2e1e7afee) )
 
 	ROM_REGION( 0x40000, REGION_GFX2, 0 ) /* sprites */
-	ROM_LOAD16_BYTE( "10285",0x00001,0x08000, CRC(98aa3d04) SHA1(1d26d17a72e55281e3444fee9c5af69ffb9e3c69) )
-	ROM_LOAD16_BYTE( "10286",0x00000,0x08000, CRC(8da050cf) SHA1(c28e8968dbd9c110672581f4486f70d5f45df7f5) )
-	ROM_LOAD16_BYTE( "10287",0x10001,0x08000, CRC(7989b74a) SHA1(a87acafe82b37a11d8f8b1f2ee4c9b2e1bb8161c) )
-	ROM_LOAD16_BYTE( "10288",0x10000,0x08000, CRC(d3ce551a) SHA1(0ff2170d9ef89058273025dd8d5e1021094adef1) )
-	ROM_LOAD16_BYTE( "10289",0x20001,0x08000, CRC(c59d1b98) SHA1(e232f2519234981c0e4ffecdd25c48083d9f93a8) )
-	ROM_LOAD16_BYTE( "10290",0x20000,0x08000, CRC(39354223) SHA1(d8a73d3f7fc2d83d23bb7434f43bc8804f35cc16) )
-	ROM_LOAD16_BYTE( "10291",0x30001,0x08000, CRC(6e4b245c) SHA1(1f8cecf7ea2d2dfa5ce18d7ee34b0da2cc40221e) )
-	ROM_LOAD16_BYTE( "10292",0x30000,0x08000, CRC(cef289a3) SHA1(7ab817b6348c168f79be325fb3cc2cca14ee0f8e) )
+	ROM_LOAD16_BYTE( "epr-10285", 0x00001, 0x08000, CRC(98aa3d04) SHA1(1d26d17a72e55281e3444fee9c5af69ffb9e3c69) )
+	ROM_LOAD16_BYTE( "epr-10286", 0x10001, 0x08000, CRC(8da050cf) SHA1(c28e8968dbd9c110672581f4486f70d5f45df7f5) )
+	ROM_LOAD16_BYTE( "epr-10287", 0x20001, 0x08000, CRC(7989b74a) SHA1(a87acafe82b37a11d8f8b1f2ee4c9b2e1bb8161c) )
+	ROM_LOAD16_BYTE( "epr-10288", 0x30001, 0x08000, CRC(d3ce551a) SHA1(0ff2170d9ef89058273025dd8d5e1021094adef1) )
+	ROM_LOAD16_BYTE( "epr-10289", 0x00000, 0x08000, CRC(c59d1b98) SHA1(e232f2519234981c0e4ffecdd25c48083d9f93a8) )
+	ROM_LOAD16_BYTE( "epr-10290", 0x10000, 0x08000, CRC(39354223) SHA1(d8a73d3f7fc2d83d23bb7434f43bc8804f35cc16) )
+	ROM_LOAD16_BYTE( "epr-10291", 0x20000, 0x08000, CRC(6e4b245c) SHA1(1f8cecf7ea2d2dfa5ce18d7ee34b0da2cc40221e) )
+	ROM_LOAD16_BYTE( "epr-10292", 0x30000, 0x08000, CRC(cef289a3) SHA1(7ab817b6348c168f79be325fb3cc2cca14ee0f8e) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "10284",0x00000,0x8000, CRC(8ff09116) SHA1(8b99b6d2499897cfbd037a7e7cf5bc53bce8a63a) )
+	ROM_LOAD( "epr-10284.12", 0x00000, 0x8000, CRC(8ff09116) SHA1(8b99b6d2499897cfbd037a7e7cf5bc53bce8a63a) )
 
+	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* decryption key */
+	ROM_LOAD( "317-0018.key", 0x0000, 0x2000, CRC(65b5b1af) SHA1(9a236c0c223064f9a2a56561e10b9ffed0f567a3) )
 ROM_END
 
 /*
@@ -764,10 +769,10 @@ ROM_END
 
 ROM_START( afightera )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "epr10315.bin", 0x00001, 0x08000, CRC(2ea55eae) SHA1(91d582eaa0483d547d1a37dedb8f029a0fccb526) ) // decrypted version of 10350
+	ROM_LOAD16_BYTE( "epr10315.bin", 0x00001, 0x08000, CRC(2ea55eae) SHA1(91d582eaa0483d547d1a37dedb8f029a0fccb526) ) /* decrypted version of 10350 */
 	ROM_LOAD16_BYTE( "epr10318.bin", 0x00000, 0x08000, CRC(d05b240d) SHA1(aa4aa7b18b53ac7b533855a44f9a4a0c14e1da2a) )
-	ROM_LOAD16_BYTE( "epr10316.bin", 0x10001, 0x08000, CRC(07522474) SHA1(1a4bce4c04defab3516a90b9fa62fad1945a1176) ) // == epr10294.bin
-	ROM_LOAD16_BYTE( "epr10319.bin", 0x10000, 0x08000, CRC(e48c4d80) SHA1(9c40972f81e004de84db4199e7dc0ceb6a998e76) ) // == epr10297.bin
+	ROM_LOAD16_BYTE( "epr10316.bin", 0x10001, 0x08000, CRC(07522474) SHA1(1a4bce4c04defab3516a90b9fa62fad1945a1176) ) /* == epr10294.bin */
+	ROM_LOAD16_BYTE( "epr10319.bin", 0x10000, 0x08000, CRC(e48c4d80) SHA1(9c40972f81e004de84db4199e7dc0ceb6a998e76) ) /* == epr10297.bin */
 	ROM_LOAD16_BYTE( "epr10317.bin", 0x20001, 0x08000, CRC(6e00db36) SHA1(5e3d03f7441515ad7dac411f492f2e159330a90a) )
 	ROM_LOAD16_BYTE( "epr10320.bin", 0x20000, 0x08000, CRC(5f97c2fa) SHA1(5fef94bc275d9132dde8b72bfb661f10efdc91b1) )
 	
@@ -803,12 +808,12 @@ static MEMORY_READ16_START( alexkidd_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40002, 0xc40005, MRA16_NOP },		//??
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc40002, 0xc40005, MRA16_NOP },		/*?? */
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xc60000, 0xc60001, MRA16_NOP },
 	{ 0xfff108, 0xfff109, alexkidd_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -821,7 +826,7 @@ static MEMORY_WRITE16_START( alexkidd_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
-	{ 0xc40002, 0xc40005, MWA16_NOP },		//??
+	{ 0xc40002, 0xc40005, MWA16_NOP },		/*?? */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -831,12 +836,12 @@ static MEMORY_READ16_START( afighter_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40002, 0xc40005, MRA16_NOP },		//??
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc40002, 0xc40005, MRA16_NOP },		/*?? */
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xc60000, 0xc60001, MRA16_NOP },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -848,7 +853,7 @@ static MEMORY_WRITE16_START( afighter_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sound_command_nmi_w },
-	{ 0xc40002, 0xc40005, MWA16_NOP },		//??
+	{ 0xc40002, 0xc40005, MWA16_NOP },		/*?? */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -872,7 +877,7 @@ static MACHINE_INIT( afighter ){
 	sys16_bg_priority_mode=1;
 	sys16_fg_priority_mode=4;
 
-	sys16_tilebank_switch=0x2000; // fixes bg tiles
+	sys16_tilebank_switch=0x2000; /* fixes bg tiles */
 
 	sys16_update_proc = type1_sys16_textram;
 }
@@ -976,7 +981,7 @@ static MACHINE_DRIVER_START( afighter )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( aliensyn )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "11083.a4", 0x00000, 0x8000, CRC(cb2ad9b3) SHA1(66284b4e1071b3cb4b36960a2dba8949325f9e86) )
@@ -1008,7 +1013,7 @@ ROM_START( aliensyn )
 	ROM_LOAD( "epr-10726.a10", 0x30000, 0x8000, CRC(d50b7736) SHA1(b1f8e3b0cf2ffee5382098100cfabe21b383cd51) )
   ROM_END
 
-// sys16A - use a different sound chip?
+/* sys16A - use a different sound chip? */
 ROM_START( aliensya )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code. I guessing the order a bit here */
 	ROM_LOAD16_BYTE( "10808", 0x00000, 0x8000, CRC(e669929f) SHA1(b5ab41d6f31f0369f8c5f5eb6fc08e8c23312b96) )
@@ -1042,7 +1047,7 @@ ROM_END
 
 ROM_START( aliensyj )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* Custom 68000 code . I guessing the order a bit here */
-// custom cpu 317-0033
+/* custom cpu 317-0033 */
 	ROM_LOAD16_BYTE( "epr10699.43", 0x00000, 0x8000, CRC(3fd38d17) SHA1(538c1246121051a1af9ba2a4259eb1fe7e4952e1) )
 	ROM_LOAD16_BYTE( "epr10696.26", 0x00001, 0x8000, CRC(d734f19f) SHA1(4a08c35084f7a9364ba0f058b9a9ffc30c8b5a78) )
 	ROM_LOAD16_BYTE( "epr10700.42", 0x10000, 0x8000, CRC(3b04b252) SHA1(0e40e89e8feb7c98ee1da1c3fb3fe1d317c66842) )
@@ -1112,11 +1117,11 @@ static MEMORY_READ16_START( aliensyn_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -1127,7 +1132,7 @@ static MEMORY_WRITE16_START( aliensyn_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc00006, 0xc00007, sound_command_w },
-	{ 0xc00020, 0xc0003f, MWA16_NOP }, // config regs
+	{ 0xc00020, 0xc0003f, MWA16_NOP }, /* config regs */
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
@@ -1156,6 +1161,10 @@ static DRIVER_INIT( aliensyn )
 	sys16_bg1_trans=1;
 }
 
+static DRIVER_INIT( alexkida )
+{
+	fd1089a_decrypt();
+}
 /***************************************************************************/
 
 INPUT_PORTS_START( aliensyn )
@@ -1201,7 +1210,7 @@ static MACHINE_DRIVER_START( aliensyn )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( altbeast )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "11705", 0x000000, 0x20000, CRC(57dc5c7a) SHA1(a5cc9b10a00778f5163fc915b956fa5d0d7a37ce) )
@@ -1230,7 +1239,7 @@ ROM_END
 
 ROM_START( jyuohki )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* Custom 68000 code. */
-// custom cpu 317-0065
+/* custom cpu 317-0065 */
 	ROM_LOAD16_BYTE( "epr11670.a7", 0x000000, 0x20000, CRC(b748eb07) SHA1(f3663831610bcb358340f14c2c96833dd7591bfb) )
 	ROM_LOAD16_BYTE( "epr11669.a5", 0x000001, 0x20000, CRC(005ecd11) SHA1(c392195955cf727752f03db92414701cc2bf1f4a) )
 
@@ -1255,7 +1264,7 @@ ROM_START( jyuohki )
 	ROM_LOAD( "opr11673",    0x30000, 0x20000, CRC(400c4a36) SHA1(de4bdfa91734410e0a7f6a16bf8336db172f458a) )
 ROM_END
 
-// sys16B
+/* sys16B */
 ROM_START( altbeas2 )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr11740", 0x000000, 0x20000, CRC(ce227542) SHA1(54adcc1246943360bb68498e971809a0d4f9fe0c) )
@@ -1277,7 +1286,7 @@ ROM_START( altbeas2 )
 	ROM_LOAD16_BYTE( "epr11684.b8", 0xc0000, 0x20000, CRC(b20c0edb) SHA1(6c8694d05e3adac37c9015037ab800233371db36) )
 
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "opr11686",	 0x00000, 0x08000, CRC(828a45b3) SHA1(df921701b411afac1b6716b6798a1bffc2180133) )	// ???
+	ROM_LOAD( "opr11686",	 0x00000, 0x08000, CRC(828a45b3) SHA1(df921701b411afac1b6716b6798a1bffc2180133) )	/* ??? */
 	ROM_LOAD( "opr11672",    0x10000, 0x20000, CRC(bbd7f460) SHA1(bbc5c2219cb3a827d84062b19affd9780da2a3cf) )
 	ROM_LOAD( "opr11673",    0x30000, 0x20000, CRC(400c4a36) SHA1(de4bdfa91734410e0a7f6a16bf8336db172f458a) )
 ROM_END
@@ -1290,7 +1299,7 @@ static READ16_HANDLER( altbeast_skip_r )
 	return sys16_workingram[0x301c/2];
 }
 
-// ??? What is this, input test shows 4 bits to each player, but what does it do?
+/* ??? What is this, input test shows 4 bits to each player, but what does it do? */
 static READ16_HANDLER( altbeast_io_r )
 {
 	return 0xff;
@@ -1302,13 +1311,13 @@ static MEMORY_READ16_START( altbeast_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc40000, 0xc40001, MRA16_NOP }, // write-only register, game does bclr #6, $C40001
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
+	{ 0xc40000, 0xc40001, MRA16_NOP }, /* write-only register, game does bclr #6, $C40001 */
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
 	{ 0xc41004, 0xc41005, altbeast_io_r },
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xfff01c, 0xfff01d, altbeast_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -1323,7 +1332,7 @@ static MEMORY_WRITE16_START( altbeast_writemem )
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xc43000, 0xc43fff, MWA16_NOP },
 	{ 0xfe0006, 0xfe0007, sound_command_w },
-	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, /* config regs */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -1409,7 +1418,7 @@ static MACHINE_DRIVER_START( altbeas2 )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( atomicp )
 	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "ap-t2.bin", 0x000000, 0x10000, CRC(97421047) SHA1(18d61260470da7a0bef532f81df567a613c0d821) )
@@ -1443,7 +1452,7 @@ static READ16_HANDLER( atomicp_skip_r ){
 	if (activecpu_get_pc()==0x7fc) {cpu_spinuntil_int(); return 0xffff;}
 	return sys16_workingram[0x0902/2];
 }
-//	AM_RANGE(0xffc902, 0xffc903) AM_READ(atomicp_skip_r)
+/*	AM_RANGE(0xffc902, 0xffc903) AM_READ(atomicp_skip_r) */
 #endif
 
 
@@ -1453,24 +1462,24 @@ static MEMORY_READ16_START( atomicp_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41000, 0xc41001, input_port_0_word_r }, // player1
-	{ 0xc41002, 0xc41003, input_port_1_word_r }, // player2
-	{ 0xc41004, 0xc41005, input_port_3_word_r }, // dip1
-	{ 0xc41006, 0xc41007, input_port_4_word_r }, // dip2
+	{ 0xc41000, 0xc41001, input_port_0_word_r }, /* player1 */
+	{ 0xc41002, 0xc41003, input_port_1_word_r }, /* player2 */
+	{ 0xc41004, 0xc41005, input_port_3_word_r }, /* dip1 */
+	{ 0xc41006, 0xc41007, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( atomicp_writemem )
 	{ 0x000000, 0x01ffff, MWA16_ROM },
-	{ 0x080000, 0x080003, MWA16_NOP }, // looks like sound chip, but isn't YM2413 data
+	{ 0x080000, 0x080003, MWA16_NOP }, /* looks like sound chip, but isn't YM2413 data */
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x44ffff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0x123406, 0x123407, MWA16_NOP }, // ?
-	{ 0xc40000, 0xc40001, MWA16_NOP },// ?
-	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0x123406, 0x123407, MWA16_NOP }, /* ? */
+	{ 0xc40000, 0xc40001, MWA16_NOP },/* ? */
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, /* config regs */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -1487,15 +1496,15 @@ static WRITE16_HANDLER( snapper_sound_w )
 
 static MEMORY_WRITE16_START( snapper_writemem )
 	{ 0x000000, 0x01ffff, MWA16_ROM },
-	{ 0x080000, 0x080003, snapper_sound_w }, // looks like sound chip, but isn't YM2413 data // seems correct for Snapper
+	{ 0x080000, 0x080003, snapper_sound_w }, /* looks like sound chip, but isn't YM2413 data seems correct for Snapper */
 	{ 0x3f0000, 0x3fffff, sys16_tilebank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x44ffff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0x123406, 0x123407, MWA16_NOP }, // ?
-	{ 0xc40000, 0xc40001, MWA16_NOP },// ?
-	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0x123406, 0x123407, MWA16_NOP }, /* ? */
+	{ 0xc40000, 0xc40001, MWA16_NOP },/* ? */
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, /* config regs */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -1539,9 +1548,9 @@ INPUT_PORTS_START( atomicp )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
 
-	PORT_START	// dummy
+	PORT_START	/* dummy */
 
-	PORT_START	// dip1
+	PORT_START	/* dip1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 3C_1C ) )
@@ -1568,7 +1577,7 @@ INPUT_PORTS_START( atomicp )
 	PORT_DIPSETTING(    0x40, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-	PORT_START  // dip2
+	PORT_START  /* dip2 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1610,9 +1619,9 @@ INPUT_PORTS_START( snapper )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// dummy
+	PORT_START	/* dummy */
 
-	PORT_START	// dip1
+	PORT_START	/* dip1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 3C_1C ) )
@@ -1637,7 +1646,7 @@ INPUT_PORTS_START( snapper )
 	PORT_DIPSETTING(    0x40, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-	PORT_START	// dip2
+	PORT_START	/* dip2 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1707,7 +1716,7 @@ MACHINE_DRIVER_END
 
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( bayroute )
 	ROM_REGION( 0xc0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "br.4a", 0x000000, 0x10000, CRC(91c6424b) SHA1(79a968ade7690d5944ee815e19586cb82c3aa562) )
@@ -1741,7 +1750,7 @@ ROM_END
 
 ROM_START( bayrouta )
 	ROM_REGION( 0xc0000, REGION_CPU1, 0 ) /* 68000 code */
-// custom cpu 317-0116
+/* custom cpu 317-0116 */
 	ROM_LOAD16_BYTE( "epr12517.a7", 0x000000, 0x20000, CRC(436728a9) SHA1(0f6753493ad2c1776880862b462f10ef936a9ee5) )
 	ROM_LOAD16_BYTE( "epr12516.a5", 0x000001, 0x20000, CRC(4ff0353f) SHA1(f5960f9e80e42d0a3f82d6670b1f2e39b51ffcef) )
 	/* empty 0x40000-0x80000*/
@@ -1833,16 +1842,16 @@ static MEMORY_READ16_START( bayroute_readmem )
 	{ 0x700000, 0x70ffff, SYS16_MRA16_TILERAM },
 	{ 0x710000, 0x710fff, SYS16_MRA16_TEXTRAM },
 	{ 0x800000, 0x800fff, SYS16_MRA16_PALETTERAM },
-	{ 0x901002, 0x901003, input_port_0_word_r }, // player1
-	{ 0x901006, 0x901007, input_port_1_word_r }, // player2
-	{ 0x901000, 0x901001, input_port_2_word_r }, // service
-	{ 0x902002, 0x902003, input_port_3_word_r }, // dip1
-	{ 0x902000, 0x902001, input_port_4_word_r }, // dip2
+	{ 0x901002, 0x901003, input_port_0_word_r }, /* player1 */
+	{ 0x901006, 0x901007, input_port_1_word_r }, /* player2 */
+	{ 0x901000, 0x901001, input_port_2_word_r }, /* service */
+	{ 0x902002, 0x902003, input_port_3_word_r }, /* dip1 */
+	{ 0x902000, 0x902001, input_port_4_word_r }, /* dip2 */
 MEMORY_END
 
 static MEMORY_WRITE16_START( bayroute_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
-	{ 0x100000, 0x100003, MWA16_NOP }, // tilebank control?
+	{ 0x100000, 0x100003, MWA16_NOP }, /* tilebank control? */
 	{ 0x500000, 0x503fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 	{ 0x600000, 0x600fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x700000, 0x70ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
@@ -1850,7 +1859,7 @@ static MEMORY_WRITE16_START( bayroute_writemem )
 	{ 0x800000, 0x800fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0x900000, 0x900001, sys16_coinctrl_w },
 	{ 0xff0006, 0xff0007, sound_command_w },
-	{ 0xff0020, 0xff003f, MWA16_NOP },// config regs
+	{ 0xff0020, 0xff003f, MWA16_NOP },/* config regs */
 MEMORY_END
 
 /***************************************************************************/
@@ -1925,7 +1934,7 @@ MACHINE_DRIVER_END
    Body Slam
 
 ***************************************************************************/
-// pre16
+/* pre16 */
 ROM_START( bodyslam )
 	ROM_REGION( 0x30000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr10066.b9", 0x000000, 0x8000, CRC(6cd53290) SHA1(68ef83ad99a26a507d9bc4cd715462169f4ac41f) )
@@ -2010,11 +2019,11 @@ static MEMORY_READ16_START( bodyslam_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r },// dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r },/* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -2047,8 +2056,8 @@ static MACHINE_INIT( bodyslam ){
 	sys16_update_proc = type1_sys16_textram;
 }
 
-// I have no idea if this is needed, but I cannot find any code for the countdown
-// timer in the code and this seems to work ok.
+/* I have no idea if this is needed, but I cannot find any code for the countdown */
+/* timer in the code and this seems to work ok. */
 static void bodyslam_irq_timer(void)
 {
 	UINT8 flag = sys16_workingram[0x200/2] >> 8;
@@ -2144,7 +2153,7 @@ static MACHINE_DRIVER_START( bodyslam )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( dduxbl )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "dduxb03.bin", 0x000000, 0x20000, CRC(e7526012) SHA1(a1798008bfa1ce9b87dc330f3817b1978052fcfd) )
@@ -2186,11 +2195,11 @@ static MEMORY_READ16_START( dduxbl_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41004, 0xc41005, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41004, 0xc41005, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xfff6e0, 0xfff6e1, dduxbl_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -2205,7 +2214,7 @@ static MEMORY_WRITE16_START( dduxbl_writemem )
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
 	{ 0xc40006, 0xc40007, sound_command_w },
 	{ 0xc46000, 0xc4603f, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
-	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, /* config regs */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -2224,7 +2233,7 @@ static void dduxbl_update_proc( void ){
 		unsigned char rd = sys16_extraram2[0x0026/2] & 0xff;
 
 		if (lu==4 && ld==4 && ru==5 && rd==5)
-		{ // fix a bug in chicago round (un-tested in MAME)
+		{ /* fix a bug in chicago round (un-tested in MAME) */
 			int vs=(*(UINT16 *)(&sys16_workingram[0x36ec]));
 			sys16_bg_scrolly = vs & 0xff;
 			sys16_fg_scrolly = vs & 0xff;
@@ -2329,7 +2338,7 @@ static MACHINE_DRIVER_START( dduxbl )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 
 ROM_START( eswat )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 ) /* 68000 code - custom CPU 317-0192 */
@@ -2393,11 +2402,11 @@ static MEMORY_READ16_START( eswat_readmem )
 	{ 0x410000, 0x418fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r },// player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r },/* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffc454, 0xffc455, eswatbl_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -2504,7 +2513,7 @@ static MACHINE_DRIVER_START( eswat )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16A
+/* sys16A */
 ROM_START( fantzono )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "7385.43", 0x000000, 0x8000, CRC(5cb64450) SHA1(5831405359975dd7d8c6614b20fd9b18a5d6410d) )
@@ -2571,11 +2580,11 @@ static MEMORY_READ16_START( fantzono_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r },// player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r },/* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xc40000, 0xc40003, SYS16_MRA16_EXTRAM2 },
 	{ 0xffc22a, 0xffc22b, fantzone_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -2599,11 +2608,11 @@ static MEMORY_READ16_START( fantzone_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xffc22a, 0xffc22b, fantzone_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -2626,17 +2635,17 @@ static MACHINE_INIT( fantzono ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_fantzone;
 	sys16_sprxoffset = -0xbe;
-//	sys16_fgxoffset = sys16_bgxoffset = 8;
-	sys16_fg_priority_mode=3;				// fixes end of game priority
+/*	sys16_fgxoffset = sys16_bgxoffset = 8; */
+	sys16_fg_priority_mode=3;				/* fixes end of game priority */
 	sys16_fg_priority_value=0xd000;
 
 	sys16_patch_code( 0x20e7, 0x16 );
 	sys16_patch_code( 0x30ef, 0x16 );
 
-	// solving Fantasy Zone scrolling bug
+	/* solving Fantasy Zone scrolling bug */
 	sys16_patch_code(0x308f,0x00);
 
-	// invincible
+	/* invincible */
 /*	sys16_patch_code(0x224e,0x4e);
 	sys16_patch_code(0x224f,0x71);
 	sys16_patch_code(0x2250,0x4e);
@@ -2660,13 +2669,13 @@ static MACHINE_INIT( fantzone ){
 	sys16_textmode=1;
 	sys16_spritesystem = sys16_sprite_fantzone;
 	sys16_sprxoffset = -0xbe;
-	sys16_fg_priority_mode=3;				// fixes end of game priority
+	sys16_fg_priority_mode=3;				/* fixes end of game priority */
 	sys16_fg_priority_value=0xd000;
 
 	sys16_patch_code( 0x2135, 0x16 );
 	sys16_patch_code( 0x3649, 0x16 );
 
-	// hack? solving Fantasy Zone scrolling bug
+	/* hack? solving Fantasy Zone scrolling bug */
 	sys16_patch_code(0x35e9,0x00);
 
 	sys16_update_proc = type1_sys16_textram;
@@ -2729,7 +2738,7 @@ static MACHINE_DRIVER_START( fantzone )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( fpoint )
 	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "12591b.bin", 0x000000, 0x10000, CRC(248b3e1b) SHA1(b473c2a057a61896596ac4761e875d72c4f91529) )
@@ -2763,7 +2772,7 @@ ROM_START( fpointbl )
 	ROM_LOAD16_BYTE( "12597.bin", 0x00000, 0x010000, CRC(6961e676) SHA1(7639d2da086b57a9a8d6100fdacf40d97d7c4772) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "flpoint.001", 0x0000, 0x8000, CRC(c5b8e0fe) SHA1(6cf8c67151d8604326fc6dbf976c0635b452a844) )	// bootleg rom doesn't work, but should be correct!
+	ROM_LOAD( "flpoint.001", 0x0000, 0x8000, CRC(c5b8e0fe) SHA1(6cf8c67151d8604326fc6dbf976c0635b452a844) )	/* bootleg rom doesn't work, but should be correct! */
 ROM_END
 
 
@@ -2783,7 +2792,7 @@ ROM_START( fpointbj )
 	ROM_LOAD16_BYTE( "12597.bin", 0x00000, 0x010000, CRC(6961e676) SHA1(7639d2da086b57a9a8d6100fdacf40d97d7c4772) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "flpoint.001", 0x0000, 0x8000, CRC(c5b8e0fe) SHA1(6cf8c67151d8604326fc6dbf976c0635b452a844) )	// bootleg rom doesn't work, but should be correct!
+	ROM_LOAD( "flpoint.001", 0x0000, 0x8000, CRC(c5b8e0fe) SHA1(6cf8c67151d8604326fc6dbf976c0635b452a844) )	/* bootleg rom doesn't work, but should be correct! */
 
 	/* stuff below isn't used but loaded because it was on the board .. */
 	ROM_REGION( 0x0120, REGION_PROMS, 0 )
@@ -2804,11 +2813,11 @@ static READ16_HANDLER( fp_io_service_dummy_r ){
 static MEMORY_READ16_START( fpoint_readmem )
 	{ 0x000000, 0x01ffff, MRA16_ROM },
 	{ 0x02002e, 0x020049, fp_io_service_dummy_r },
-	{ 0x601002, 0x601003, input_port_0_word_r }, // player1
-	{ 0x601004, 0x601005, input_port_1_word_r }, // player2
-	{ 0x601000, 0x601001, input_port_2_word_r }, // service
-	{ 0x600000, 0x600001, input_port_4_word_r }, // dip2
-	{ 0x600002, 0x600003, input_port_3_word_r }, // dip1
+	{ 0x601002, 0x601003, input_port_0_word_r }, /* player1 */
+	{ 0x601004, 0x601005, input_port_1_word_r }, /* player2 */
+	{ 0x601000, 0x601001, input_port_2_word_r }, /* service */
+	{ 0x600000, 0x600001, input_port_4_word_r }, /* dip2 */
+	{ 0x600002, 0x600003, input_port_3_word_r }, /* dip1 */
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
@@ -3006,7 +3015,7 @@ static MACHINE_DRIVER_START( fpointbl )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( goldnaxe )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr12523.a7", 0x00000, 0x20000, CRC(8e6128d7) SHA1(b8de216f4ca08815ca98d39a773024d191d21b4d) )
@@ -3035,7 +3044,7 @@ ROM_END
 
 ROM_START( goldnaxj )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom cpu 317-0121
+/* Custom cpu 317-0121 */
 	ROM_LOAD16_BYTE( "epr12540.a7", 0x00000, 0x20000, CRC(0c7ccc6d) SHA1(25bc29eee731befc665472c2c1998cac8447cc21) )
 	ROM_LOAD16_BYTE( "epr12539.a5", 0x00001, 0x20000, CRC(1f24f7d0) SHA1(a09cdf394c03069707f7ed400b8fbdc13674fa74) )
 	/* emtpy 0x40000 - 0x80000 */
@@ -3062,7 +3071,7 @@ ROM_END
 
 ROM_START( goldnabl )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
-// protected code
+/* protected code */
 	ROM_LOAD16_BYTE( "ga6.a22", 0x00000, 0x10000, CRC(f95b459f) SHA1(dadf66d63454ed62fefa521d4fed249d28c63778) )
 	ROM_LOAD16_BYTE( "ga4.a20", 0x00001, 0x10000, CRC(83eabdf5) SHA1(1effef966f513fbdec2026d535658e17ef7dea51) )
 	ROM_LOAD16_BYTE( "ga11.a27",0x20000, 0x10000, CRC(f4ef9349) SHA1(3ffa335e74ffbc10f80387268da659643c566897) )
@@ -3121,11 +3130,11 @@ static MEMORY_READ16_START( goldnaxe_readmem )
 	{ 0x140000, 0x140fff, SYS16_MRA16_PALETTERAM },
 	{ 0x1f0000, 0x1f0003, SYS16_MRA16_EXTRAM },
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r },// dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r },/* dip2 */
 	{ 0xffecd0, 0xffecd1, ga_io_players_r },
 	{ 0xffec96, 0xffec97, ga_io_service_r },
 	{ 0xffec1c, 0xffec1d, goldnaxe_skip_r },
@@ -3156,12 +3165,12 @@ static MEMORY_WRITE16_START( goldnaxe_writemem )
 	{ 0x1f0000, 0x1f0003, SYS16_MWA16_EXTRAM, &sys16_extraram },
 	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0xc43000, 0xc43001, MWA16_NOP }, // ?
-//	{ 0xfe0006, 0xfe0007, MWA16_NOP }, I think this is the real sound out
-	{ 0xffec1c, 0xffec1d, goldnaxe_prot_w },// how does this really work?
-	{ 0xffecfc, 0xffecfd, ga_sound_command_w },// probably just a buffer
+	{ 0xc43000, 0xc43001, MWA16_NOP }, /* ? */
+/*	{ 0xfe0006, 0xfe0007, MWA16_NOP }, I think this is the real sound out */
+	{ 0xffec1c, 0xffec1d, goldnaxe_prot_w },/* how does this really work? */
+	{ 0xffecfc, 0xffecfd, ga_sound_command_w },/* probably just a buffer */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, /* fails SCRATCH RAM test because of hacks */
-//	{ 0xfffc00, 0xffffff, MWA16_NOP }, /* 0x400 bytes; battery backed up */
+/*	{ 0xfffc00, 0xffffff, MWA16_NOP },  0x400 bytes; battery backed up */
 MEMORY_END
 
 /***************************************************************************/
@@ -3180,9 +3189,9 @@ static MACHINE_INIT( goldnaxe ){
 	};
 	sys16_obj_bank = bank;
 
-// protection patch; no longer needed
-//	sys16_patch_code( 0x3CB2, 0x60 );
-//	sys16_patch_code( 0x3CB3, 0x1e );
+/* protection patch; no longer needed */
+/*	sys16_patch_code( 0x3CB2, 0x60 ); */
+/*	sys16_patch_code( 0x3CB3, 0x1e ); */
 
 	sys16_update_proc = goldnaxe_update_proc;
 }
@@ -3241,7 +3250,7 @@ static MACHINE_DRIVER_START( goldnaxe )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( goldnaxa )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr12545.a2", 0x00000, 0x40000, CRC(a97c4e4d) SHA1(41cda15ae56185725233db669d9f8c4a8c1eb1c3) )
@@ -3267,7 +3276,7 @@ ROM_END
 
 ROM_START( goldnaxb )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom 68000 ver 317-0110
+/* Custom 68000 ver 317-0110 */
 	ROM_LOAD16_BYTE( "epr12389.a2", 0x00000, 0x40000, CRC(35d5fa77) SHA1(b16b312eb1c91c412fee61002599812e30e321ee) )
 	ROM_LOAD16_BYTE( "epr12388.a1", 0x00001, 0x40000, CRC(72952a93) SHA1(b31888429ad81388a96333dc0b2c7e2223134834) )
 
@@ -3291,7 +3300,7 @@ ROM_END
 
 ROM_START( goldnaxc )
 	ROM_REGION( 0x0c0000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom 68000 ver 317-0122
+/* Custom 68000 ver 317-0122 */
 	ROM_LOAD16_BYTE( "epr12543.a2", 0x00000, 0x40000, CRC(b0df9ca4) SHA1(240f3c2998f969569d992f796e006f5ea4434e55) )
 	ROM_LOAD16_BYTE( "epr12542.a1", 0x00001, 0x40000, CRC(b7994d3c) SHA1(87570f23826922fca465c69df6b892c59f14e103) )
 
@@ -3321,8 +3330,8 @@ static READ16_HANDLER( goldnaxa_skip_r ){
 	return sys16_workingram[0x2c1c/2];
 }
 
-// This version has somekind of hardware comparitor for collision detection,
-// and a hardware multiplier.
+/* This version has somekind of hardware comparitor for collision detection, */
+/* and a hardware multiplier. */
 static data16_t ga_hardware_collision_data[5];
 static WRITE16_HANDLER( ga_hardware_collision_w )
 {
@@ -3370,11 +3379,11 @@ static MEMORY_READ16_START( goldnaxa_readmem )
 	{ 0x1f1008, 0x1f1009, ga_hardware_collision_r },
 	{ 0x1f2000, 0x1f2003, SYS16_MRA16_EXTRAM },
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffecd0, 0xffecd1, ga_io_players_r },
 	{ 0xffec96, 0xffec97, ga_io_service_r },
 	{ 0xffec1c, 0xffec1d, goldnaxa_skip_r },
@@ -3406,7 +3415,7 @@ static MACHINE_INIT( goldnaxa ){
 		10,11,0,0
 	};
 	sys16_obj_bank = bank;
-	//?
+	/*? */
 	sys16_patch_code( 0x3CA2, 0x60 );
 	sys16_patch_code( 0x3CA3, 0x1e );
 
@@ -3426,7 +3435,7 @@ static MACHINE_DRIVER_START( goldnaxa )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( hwchamp )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "rom0-e.bin", 0x000000, 0x20000, CRC(e5abfed7) SHA1(1f875dbaf8665c1dbfe336470580361b18a8ed4e) )
@@ -3493,7 +3502,7 @@ static READ16_HANDLER( hwc_io_handles_r ){
 	static int dodge_toggle=0;
 	int data=0,ret;
 	if(offset==0){
-		// monitor
+		/* monitor */
 		data=input_port_0_r( offset );
 		if(input_port_1_r( offset ) & 4){
 			if(dodge_toggle) data=0x38; else data=0x60;
@@ -3510,11 +3519,11 @@ static READ16_HANDLER( hwc_io_handles_r ){
 		if( hwc_handles_shifts[offset]==0) dodge_toggle^=1;
 	}
 	else if(offset==1){
-		// left handle
+		/* left handle */
 		if(input_port_1_r( offset ) & 1) data=0xff;
 	}
 	else {
-		// right handle
+		/* right handle */
 		if(input_port_1_r( offset ) & 2) data=0xff;
 	}
 
@@ -3535,11 +3544,11 @@ static WRITE16_HANDLER( hwc_ctrl1_w ){
 static WRITE16_HANDLER( hwc_ctrl2_w ){
 	if( ACCESSING_LSB ){
 		/* bit 4 is GONG */
-//		if (data & 0x10) usrintf_showmessage("GONG");
+/*		if (data & 0x10) usrintf_showmessage("GONG"); */
 		/* are the following really lamps? */
-//		set_led_status(1,data & 0x20);
-//		set_led_status(2,data & 0x40);
-//		set_led_status(3,data & 0x80);
+/*		set_led_status(1,data & 0x20); */
+/*		set_led_status(2,data & 0x40); */
+/*		set_led_status(3,data & 0x80); */
 	}
 }
 
@@ -3549,9 +3558,9 @@ static MEMORY_READ16_START( hwchamp_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xc43020, 0xc43025, hwc_io_handles_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -3585,12 +3594,12 @@ PORT_START	/* Monitor */
 	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE  , 70, 4, 0x0, 0xff )
 
 PORT_START	/* Handles (Fake) */
-	PORT_BITX(0x01, 0, IPT_BUTTON1, IP_NAME_DEFAULT, KEYCODE_F, IP_JOY_NONE ) // right hit
-	PORT_BITX(0x02, 0, IPT_BUTTON2, IP_NAME_DEFAULT, KEYCODE_D, IP_JOY_NONE ) // left hit
-	PORT_BITX(0x04, 0, IPT_BUTTON3, IP_NAME_DEFAULT, KEYCODE_B, IP_JOY_NONE ) // right dodge
-	PORT_BITX(0x08, 0, IPT_BUTTON4, IP_NAME_DEFAULT, KEYCODE_Z, IP_JOY_NONE ) // left dodge
-	PORT_BITX(0x10, 0, IPT_BUTTON5, IP_NAME_DEFAULT, KEYCODE_V, IP_JOY_NONE ) // right sway
-	PORT_BITX(0x20, 0, IPT_BUTTON6, IP_NAME_DEFAULT, KEYCODE_X, IP_JOY_NONE ) // left swat
+	PORT_BITX(0x01, 0, IPT_BUTTON1, IP_NAME_DEFAULT, KEYCODE_F, IP_JOY_NONE ) /* right hit */
+	PORT_BITX(0x02, 0, IPT_BUTTON2, IP_NAME_DEFAULT, KEYCODE_D, IP_JOY_NONE ) /* left hit */
+	PORT_BITX(0x04, 0, IPT_BUTTON3, IP_NAME_DEFAULT, KEYCODE_B, IP_JOY_NONE ) /* right dodge */
+	PORT_BITX(0x08, 0, IPT_BUTTON4, IP_NAME_DEFAULT, KEYCODE_Z, IP_JOY_NONE ) /* left dodge */
+	PORT_BITX(0x10, 0, IPT_BUTTON5, IP_NAME_DEFAULT, KEYCODE_V, IP_JOY_NONE ) /* right sway */
+	PORT_BITX(0x20, 0, IPT_BUTTON6, IP_NAME_DEFAULT, KEYCODE_X, IP_JOY_NONE ) /* left swat */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -3598,7 +3607,7 @@ PORT_START	/* Handles (Fake) */
 	SYS16_COINAGE
 
 PORT_START	/* DSW1 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	// Not Used
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	/* Not Used */
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
@@ -3636,7 +3645,7 @@ static MACHINE_DRIVER_START( hwchamp )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// pre16
+/* pre16 */
 ROM_START( mjleague )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr-7404.09b", 0x000000, 0x8000, CRC(ec1655b5) SHA1(5c1df364fa9733daa4478c5f88298089e4963c33) )
@@ -3644,7 +3653,7 @@ ROM_START( mjleague )
 	ROM_LOAD16_BYTE( "epr-7405.10b", 0x010000, 0x8000, CRC(7a4f4e38) SHA1(65a22097dd933e83f326bd64b3863915897780a6) )
 	ROM_LOAD16_BYTE( "epr-7402.07b", 0x010001, 0x8000, CRC(b7bef762) SHA1(214450e0b094f99ef38dec2a3e5cbdb0b30e917d) )
 	ROM_LOAD16_BYTE( "epra7406.11b", 0x020000, 0x8000, CRC(bb743639) SHA1(5d99638a79f02ce14374d3b1f3d9fbfc5c13c6e1) )
-	ROM_LOAD16_BYTE( "epra7403.08b", 0x020001, 0x8000, CRC(d86250cf) SHA1(fb5dabb7b9b9fe0bbe93e28c60311c7b3256107a) )	// Fails memory test. Bad rom?
+	ROM_LOAD16_BYTE( "epra7403.08b", 0x020001, 0x8000, CRC(d86250cf) SHA1(fb5dabb7b9b9fe0bbe93e28c60311c7b3256107a) )	/* Fails memory test. Bad rom? */
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "epr-7051.09a", 0x00000, 0x08000, CRC(10ca255a) SHA1(ccf58ffcac2f7fbdbfbdf32601a1b97f359cbd91) )
@@ -3660,8 +3669,8 @@ ROM_START( mjleague )
 	ROM_LOAD16_BYTE( "epr-7061.04b", 0x020000, 0x8000, CRC(c808dad5) SHA1(9b65acc8dc23b16e56327298188d1a6ab48b2b5d) )
 	ROM_LOAD16_BYTE( "epr-7058.08a", 0x030001, 0x8000, CRC(b543675f) SHA1(35ffc9295a8849a18fabe156fdbc9801ea2179cd) )
 	ROM_LOAD16_BYTE( "epr-7062.05b", 0x030000, 0x8000, CRC(9168eb47) SHA1(daaa7836e627a0679e65373d8f20a9383ba4c905) )
-//	ROM_LOAD16_BYTE( "epr-7055.05a", 0x040001, 0x8000, CRC(1fb860bd) SHA1(4a4155d0352dfae9e402a2b2f1558ef17b1303b4) ) loaded twice??
-//	ROM_LOAD16_BYTE( "epr-7059.02b", 0x040000, 0x8000, CRC(3d14091d) SHA1(36208415b2012b6e948fefa15b0f7041748066be) ) loaded twice??
+/*	ROM_LOAD16_BYTE( "epr-7055.05a", 0x040001, 0x8000, CRC(1fb860bd) SHA1(4a4155d0352dfae9e402a2b2f1558ef17b1303b4) ) loaded twice?? */
+/*	ROM_LOAD16_BYTE( "epr-7059.02b", 0x040000, 0x8000, CRC(3d14091d) SHA1(36208415b2012b6e948fefa15b0f7041748066be) ) loaded twice?? */
 
 	ROM_REGION( 0x20000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "eprc7054.01b", 0x00000, 0x8000, CRC(4443b744) SHA1(73359a6e9d62b382dee47fea31b9e17eb26a0321) )
@@ -3720,7 +3729,7 @@ static READ16_HANDLER( mjl_io_bat_r )
 	int data2=input_port_1_r( offset );
 	int ret=0;
 
-	// Hitting has 8 values, but for easy of playing, I've only added 3
+	/* Hitting has 8 values, but for easy of playing, I've only added 3 */
 
 	if(data1 &1) ret=0x00;
 	else if(data1 &2) ret=0x03;
@@ -3746,8 +3755,8 @@ static MEMORY_READ16_START( mjleague_readmem )
 	{ 0xc41002, 0xc41003, mjl_io_player1_r },
 	{ 0xc41006, 0xc41007, mjl_io_player2_r },
 	{ 0xc41004, 0xc41005, mjl_io_bat_r },
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xc60000, 0xc60001, MRA16_NOP }, /* What is this? Watchdog? */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -3771,7 +3780,7 @@ static MACHINE_INIT( mjleague ){
 	sys16_sprxoffset = -0xbd;
 	sys16_fgxoffset = sys16_bgxoffset = 8;
 
-	// remove memory test because it fails.
+	/* remove memory test because it fails. */
 	sys16_patch_code( 0xBD42, 0x66 );
 
 	sys16_update_proc = type1_sys16_textram;
@@ -3820,7 +3829,7 @@ PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x10, 0x10, "Team Select" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	//??? something to do with cocktail mode?
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/*??? something to do with cocktail mode? */
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
@@ -3857,7 +3866,7 @@ static MACHINE_DRIVER_START( mjleague )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( passsht )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr11871.a4", 0x000000, 0x10000, CRC(0f9ccea5) SHA1(515a2721a35332df0303f4b9616122194b5c7170) )
@@ -3940,11 +3949,11 @@ static MEMORY_READ16_START( passsht_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41004, 0xc41005, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41004, 0xc41005, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -3975,22 +3984,22 @@ static READ16_HANDLER( passht4b_service_r ){
 
 	passht4b_io1_val=0xff;
 
-	// player 1 buttons
+	/* player 1 buttons */
 	if(!(readinputport(0) & 0x10)) passht4b_io1_val &=0xfe;
 	if(!(readinputport(0) & 0x20)) passht4b_io1_val &=0xfd;
 	if(!(readinputport(0) & 0x80)) passht4b_io1_val &=0xfc;
 
-	// player 2 buttons
+	/* player 2 buttons */
 	if(!(readinputport(1) & 0x10)) passht4b_io1_val &=0xfb;
 	if(!(readinputport(1) & 0x20)) passht4b_io1_val &=0xf7;
 	if(!(readinputport(1) & 0x80)) passht4b_io1_val &=0xf3;
 
-	// player 3 buttons
+	/* player 3 buttons */
 	if(!(readinputport(5) & 0x10)) passht4b_io1_val &=0xef;
 	if(!(readinputport(5) & 0x20)) passht4b_io1_val &=0xdf;
 	if(!(readinputport(5) & 0x80)) passht4b_io1_val &=0xcf;
 
-	// player 4 buttons
+	/* player 4 buttons */
 	if(!(readinputport(6) & 0x10)) passht4b_io1_val &=0xbf;
 	if(!(readinputport(6) & 0x20)) passht4b_io1_val &=0x7f;
 	if(!(readinputport(6) & 0x80)) passht4b_io1_val &=0x3f;
@@ -4012,12 +4021,12 @@ static MEMORY_READ16_START( passht4b_readmem )
 	{ 0xc41002, 0xc41003, passht4b_io1_r },
 	{ 0xc41004, 0xc41005, passht4b_io2_r },
 	{ 0xc41006, 0xc41007, passht4b_io3_r },
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
-	{ 0xc43000, 0xc43001, input_port_0_word_r },// player1		// test mode only
-	{ 0xc43002, 0xc43003, input_port_1_word_r }, // player2
-	{ 0xc43004, 0xc43005, input_port_5_word_r }, // player3
-	{ 0xc43006, 0xc43007, input_port_6_word_r }, // player4
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
+	{ 0xc43000, 0xc43001, input_port_0_word_r },/* player1 test mode only */
+	{ 0xc43002, 0xc43003, input_port_1_word_r }, /* player2 */
+	{ 0xc43004, 0xc43005, input_port_5_word_r }, /* player3 */
+	{ 0xc43006, 0xc43007, input_port_6_word_r }, /* player4 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -4053,11 +4062,11 @@ static MEMORY_WRITE_START(passht4b_writemem_sound )
 MEMORY_END
 
 static PORT_READ_START( passht4b_read_sound_port  )
-//	ADDRESS_MAP_GLOBAL_MASK(0xff)
+/*	ADDRESS_MAP_GLOBAL_MASK(0xff) */
 PORT_END
 
 static PORT_WRITE_START( passht4b_write_sound_port )
-//	ADDRESS_MAP_GLOBAL_MASK(0xff)
+/*	ADDRESS_MAP_GLOBAL_MASK(0xff) */
 PORT_END
 
 /***************************************************************************/
@@ -4086,7 +4095,7 @@ static MACHINE_INIT( passsht ){
 	sys16_sprxoffset = -0x48;
 	sys16_spritesystem = sys16_sprite_passshot;
 
-	// fix name entry
+	/* fix name entry */
 	sys16_patch_code( 0x13a8,0xc0);
 
 	sys16_update_proc = passsht_update_proc;
@@ -4095,7 +4104,7 @@ static MACHINE_INIT( passsht ){
 static MACHINE_INIT( passht4b ){
 	sys16_spritesystem = sys16_sprite_passshot;
 
-	// fix name entry
+	/* fix name entry */
 	sys16_patch_code( 0x138a,0xc0);
 
 	sys16_update_proc = passht4b_update_proc;
@@ -4285,7 +4294,7 @@ static MACHINE_DRIVER_START( passht4b )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// pre16
+/* pre16 */
 ROM_START( quartet )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr7458a.9b",  0x000000, 0x8000, CRC(42e7b23e) SHA1(9df3b1b915723f9a927ef03d80ae7983a8c91a21) )
@@ -4377,13 +4386,13 @@ static MEMORY_READ16_START( quartet_readmem )
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc40002, 0xc40003, sys16_coinctrl_r },
-	{ 0xc41000, 0xc41001, input_port_0_word_r },// p1
-	{ 0xc41002, 0xc41003, input_port_1_word_r }, // p2
-	{ 0xc41004, 0xc41005, input_port_2_word_r }, // p3
-	{ 0xc41006, 0xc41007, input_port_3_word_r }, // p4
-	{ 0xc42000, 0xc42001, input_port_3_word_r },// dip1
-	{ 0xc42002, 0xc42003, input_port_5_word_r }, // dip2
-//	{ 0xffc800, 0xffc801, quartet_skip_r },
+	{ 0xc41000, 0xc41001, input_port_0_word_r },/* p1 */
+	{ 0xc41002, 0xc41003, input_port_1_word_r }, /* p2 */
+	{ 0xc41004, 0xc41005, input_port_2_word_r }, /* p3 */
+	{ 0xc41006, 0xc41007, input_port_3_word_r }, /* p4 */
+	{ 0xc42000, 0xc42001, input_port_3_word_r },/* dip1 */
+	{ 0xc42002, 0xc42003, input_port_5_word_r }, /* dip2 */
+/*	{ 0xffc800, 0xffc801, quartet_skip_r }, */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -4409,10 +4418,10 @@ static void quartet_update_proc( void )
 	sys16_fg_scrollx = sys16_workingram[0x0d14/2] & 0x01ff;
 	sys16_bg_scrollx = sys16_workingram[0x0d18/2] & 0x01ff;
 
-//let's fix this properly
-//	if(((*(UINT16 *)(&sys16_extraram[4])) & 0xff) == 1)
-//		sys16_quartet_title_kludge=1;
-//	else
+/*let's fix this properly */
+/*	if(((*(UINT16 *)(&sys16_extraram[4])) & 0xff) == 1) */
+/*		sys16_quartet_title_kludge=1; */
+/*	else */
 		sys16_quartet_title_kludge=0;
 }
 
@@ -4428,7 +4437,7 @@ static MACHINE_INIT( quartet ){
 /***************************************************************************/
 
 INPUT_PORTS_START( quartet )
-	// Player 1
+	/* Player 1 */
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY  )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_8WAY  )
@@ -4439,7 +4448,7 @@ INPUT_PORTS_START( quartet )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* player 1 coin 2 really */
-	// Player 2
+	/* Player 2 */
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY  | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_8WAY  | IPF_PLAYER2 )
@@ -4450,7 +4459,7 @@ INPUT_PORTS_START( quartet )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* player 2 coin 2 really */
-	// Player 3
+	/* Player 3 */
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3  )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_8WAY  | IPF_PLAYER3 )
@@ -4461,7 +4470,7 @@ INPUT_PORTS_START( quartet )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* player 3 coin 2 really */
-	// Player 4
+	/* Player 4 */
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY  | IPF_PLAYER4 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_8WAY  | IPF_PLAYER4 )
@@ -4511,7 +4520,7 @@ static MACHINE_DRIVER_START( quartet )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// pre16
+/* pre16 */
 ROM_START( quartet2 )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "quartet2.b9",  0x000000, 0x8000, CRC(67177cd8) SHA1(c4ea001dfbeeb29a09d597fb50d71f54e4e9572a) )
@@ -4602,12 +4611,12 @@ static MEMORY_READ16_START( quartet2_readmem )
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0xc40002, 0xc40003, sys16_coinctrl_r },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r },// dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
-//	{ 0xffc800, 0xffc801, quartet2_skip_r },
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r },/* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
+/*	{ 0xffc800, 0xffc801, quartet2_skip_r }, */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -4684,7 +4693,7 @@ MACHINE_DRIVER_END
    Riot City
 
 ***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( riotcity )
 	ROM_REGION( 0xc0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr14612.bin", 0x000000, 0x20000, CRC(a1b331ec) SHA1(49136ffed35ecc9e5e9a6ea7acbe534e6ccc9dd8) )
@@ -4725,11 +4734,11 @@ static MEMORY_READ16_START( riotcity_readmem )
 	{ 0x000000, 0x0bffff, MRA16_ROM },
 	{ 0xf40000, 0xf40fff, SYS16_MRA16_SPRITERAM },
 	{ 0xf60000, 0xf60fff, SYS16_MRA16_PALETTERAM },
-	{ 0xf81002, 0xf81003, input_port_0_word_r }, // player1
-	{ 0xf81006, 0xf81007, input_port_1_word_r }, // player2
-	{ 0xf81000, 0xf81001, input_port_2_word_r }, // service
-	{ 0xf82002, 0xf82003, input_port_3_word_r }, // dip1
-	{ 0xf82000, 0xf82001, input_port_4_word_r }, // dip2
+	{ 0xf81002, 0xf81003, input_port_0_word_r }, /* player1 */
+	{ 0xf81006, 0xf81007, input_port_1_word_r }, /* player2 */
+	{ 0xf81000, 0xf81001, input_port_2_word_r }, /* service */
+	{ 0xf82002, 0xf82003, input_port_3_word_r }, /* dip1 */
+	{ 0xf82000, 0xf82001, input_port_4_word_r }, /* dip2 */
 	{ 0xfa0000, 0xfaffff, SYS16_MRA16_TILERAM },
 	{ 0xfb0000, 0xfb0fff, SYS16_MRA16_TEXTRAM },
 	{ 0xffecde, 0xffecdf, riotcity_skip_r },
@@ -4739,7 +4748,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( riotcity_writemem )
 	{ 0x000000, 0x0bffff, MWA16_ROM },
 	{ 0xf00006, 0xf00007, sound_command_w },
-	{ 0xf00020, 0xf0003f, MWA16_NOP }, // config regs
+	{ 0xf00020, 0xf0003f, MWA16_NOP }, /* config regs */
 	{ 0xf20000, 0xf2ffff, sys16_tilebank_w },
 	{ 0xf40000, 0xf40fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0xf60000, 0xf60fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
@@ -4812,7 +4821,7 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
-// sys16B
+/* sys16B */
 ROM_START( sdi )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "a4.rom", 0x000000, 0x8000, CRC(f2c41dd6) SHA1(7fdbf819e42c7af0efe3976ffd919ee142efe1bc) )
@@ -4839,10 +4848,10 @@ ROM_START( sdi )
 	ROM_LOAD( "a7.rom", 0x0000, 0x8000, CRC(793f9f7f) SHA1(9e4fde376db9e99a83eb2fc734c6721c122ba9af) )
 ROM_END
 
-// sys16A
+/* sys16A */
 ROM_START( sdioj )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom cpu 317-0027
+/* Custom cpu 317-0027 */
 	ROM_LOAD16_BYTE( "epr10970.43", 0x000000, 0x8000, CRC(b8fa4a2c) SHA1(06b448bbee0a2b2809d9af7a2a22c5847343c079) )
 	ROM_LOAD16_BYTE( "epr10968.26", 0x000001, 0x8000, CRC(a3f97793) SHA1(0f924fae0d13b3387a0e5171482f6d413432ddb3) )
 	ROM_LOAD16_BYTE( "epr10971.42", 0x010000, 0x8000, CRC(c44a0328) SHA1(3736bb83e728bb0e15ea58bc2a6c2fe66a1a4885) )
@@ -4887,17 +4896,17 @@ static MEMORY_READ16_START( sdi_readmem )
 	{ 0x410000, 0x411fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41004, 0xc41005, input_port_0_word_r },// player1
-	{ 0xc41002, 0xc41003, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42004, 0xc42005, input_port_4_word_r }, // dip2
+	{ 0xc41004, 0xc41005, input_port_0_word_r },/* player1 */
+	{ 0xc41002, 0xc41003, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42004, 0xc42005, input_port_4_word_r }, /* dip2 */
 	{ 0xc43000, 0xc43001, io_p1mousex_r },
 	{ 0xc43004, 0xc43005, io_p1mousey_r },
 	{ 0xc43008, 0xc43009, io_p2mousex_r },
 	{ 0xc4300c, 0xc4300d, io_p2mousey_r },
-//	{ 0xc42000, 0xc42001, MRA16_NOP }, /* What is this? */
+/*	{ 0xc42000, 0xc42001, MRA16_NOP }, /* What is this? */ 
 	{ 0xc60000, 0xc60001, MRA16_NOP }, /* What is this? */
 	{ 0xffc400, 0xffc401, sdi_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -5016,7 +5025,7 @@ MACHINE_DRIVER_END
 
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( shinobi )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "shinobi.a4", 0x00000, 0x10000, CRC(b930399d) SHA1(955ff2948e1990463631b0bc5c7f5275384236cc) )
@@ -5047,7 +5056,7 @@ ROM_END
 
 ROM_START( shinobib )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom cpu 317-0049
+/* Custom cpu 317-0049 */
 	ROM_LOAD16_BYTE( "epr11282", 0x00000, 0x10000, CRC(5f2e5524) SHA1(9e5fcabb95abbe6c8178e82f4971abdbc92bff73) )
 	ROM_LOAD16_BYTE( "epr11280", 0x00001, 0x10000, CRC(bdfe5c38) SHA1(65f537e38b74c66576d57c770d182dc13302cca6) )
 	ROM_LOAD16_BYTE( "epr11283", 0x20000, 0x10000, CRC(9d46e707) SHA1(37ab25b3b37365c9f45837bfb6ec80652691dd4c) )
@@ -5088,11 +5097,11 @@ static MEMORY_READ16_START( shinobi_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r },// dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r },/* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xc43000, 0xc43001, MRA16_NOP },
 	{ 0xfff01c, 0xfff01d, shinobi_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -5170,10 +5179,10 @@ static MACHINE_DRIVER_START( shinobi )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16A
+/* sys16A */
 ROM_START( shinobia )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
-// custom cpu 317-0050
+/* custom cpu 317-0050 */
 	ROM_LOAD16_BYTE( "epr11262.42", 0x000000, 0x10000, CRC(d4b8df12) SHA1(64bfa2dd8a3d99728d9eeb114887272d9590d0b8) )
 	ROM_LOAD16_BYTE( "epr11260.27", 0x000001, 0x10000, CRC(2835c95d) SHA1(b5b42af265d3a16183e02d58b053ec2894072679) )
 	ROM_LOAD16_BYTE( "epr11263.43", 0x020000, 0x10000, CRC(a2a620bd) SHA1(f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6) )
@@ -5207,17 +5216,17 @@ ROM_END
 
 ROM_START( shinobl )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
-// Star Bootleg
+/* Star Bootleg */
 	ROM_LOAD16_BYTE( "b3",          0x000000, 0x10000, CRC(38e59646) SHA1(6a13015a93260ab99811b95950bb122eade01c27) )
 	ROM_LOAD16_BYTE( "b1",          0x000001, 0x10000, CRC(8529d192) SHA1(202b912d20a2d82abe055b4a5e8c509ab7d69ff8) )
 	ROM_LOAD16_BYTE( "epr11263.43", 0x020000, 0x10000, CRC(a2a620bd) SHA1(f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6) )
 	ROM_LOAD16_BYTE( "epr11261.25", 0x020001, 0x10000, CRC(a3ceda52) SHA1(97a1c52a162fb1d43b3f8f16613b70ce582a8d26) )
 
-// Beta Bootleg
-//	ROM_LOAD16_BYTE( "4",           0x000000, 0x10000, CRC(c178a39c) )
-//	ROM_LOAD16_BYTE( "2",           0x000001, 0x10000, CRC(5ad8ebf2) )
-//	ROM_LOAD16_BYTE( "epr11263.43", 0x020000, 0x10000, CRC(a2a620bd) SHA1(f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6) )
-//	ROM_LOAD16_BYTE( "epr11261.25", 0x020001, 0x10000, CRC(a3ceda52) SHA1(97a1c52a162fb1d43b3f8f16613b70ce582a8d26) )
+/* Beta Bootleg */
+/*	ROM_LOAD16_BYTE( "4",           0x000000, 0x10000, CRC(c178a39c) ) */
+/*	ROM_LOAD16_BYTE( "2",           0x000001, 0x10000, CRC(5ad8ebf2) ) */
+/*	ROM_LOAD16_BYTE( "epr11263.43", 0x020000, 0x10000, CRC(a2a620bd) SHA1(f8b135ce14d6c5eac5e40ddfd5ad2f1e6f2bc7a6) ) */
+/*	ROM_LOAD16_BYTE( "epr11261.25", 0x020001, 0x10000, CRC(a3ceda52) SHA1(97a1c52a162fb1d43b3f8f16613b70ce582a8d26) ) */
 
 	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "epr11264.95", 0x00000, 0x10000, CRC(46627e7d) SHA1(66bb5b22a2100e7b9df303007a837bc2d52cf7ba) )
@@ -5232,8 +5241,8 @@ ROM_START( shinobl )
 	ROM_LOAD16_BYTE( "epr11292.23", 0x40001, 0x10000, CRC(c29ac34e) SHA1(b5e9b8c3233a7d6797f91531a0d9123febcf1660) )
 	ROM_LOAD16_BYTE( "epr11296.24", 0x40000, 0x10000, CRC(04a437f8) SHA1(ea5fed64443236e3404fab243761e60e2e48c84c) )
 	ROM_LOAD16_BYTE( "epr11293.29", 0x60001, 0x10000, CRC(41f41063) SHA1(5cc461e9738dddf9eea06831fce3702d94674163) )
-//	ROM_LOAD16_BYTE( "epr11297.30", 0x60000, 0x10000, CRC(b6e1fd72) SHA1(eb86e4bf880bd1a1d9bcab3f2f2e917bcaa06172) )
-	ROM_LOAD16_BYTE( "b17",         0x60000, 0x10000, CRC(0315cf42) SHA1(2d129171aece883cb9c2805f894b3867ec98332b) )	// Beta bootleg uses the rom above.
+/*	ROM_LOAD16_BYTE( "epr11297.30", 0x60000, 0x10000, CRC(b6e1fd72) SHA1(eb86e4bf880bd1a1d9bcab3f2f2e917bcaa06172) ) */
+	ROM_LOAD16_BYTE( "b17",         0x60000, 0x10000, CRC(0315cf42) SHA1(2d129171aece883cb9c2805f894b3867ec98332b) )	/* Beta bootleg uses the rom above. */
 
 	ROM_REGION( 0x20000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "epr11267.12", 0x0000, 0x8000, CRC(dd50b745) SHA1(52e1977569d3713ad864d607170c9a61cd059a65) )
@@ -5253,11 +5262,11 @@ static MEMORY_READ16_START( shinobl_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42000, 0xc42001, input_port_3_word_r }, // dip1
-	{ 0xc42002, 0xc42003, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42000, 0xc42001, input_port_3_word_r }, /* dip1 */
+	{ 0xc42002, 0xc42003, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -5311,11 +5320,11 @@ static MEMORY_READ16_START( sonicbom_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -5325,22 +5334,22 @@ static MEMORY_WRITE16_START( sonicbom_writemem )
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0x123406, 0x123407, sound_command_w }, // sonicbom
-	{ 0xfe0006, 0xfe0007, sound_command_w }, // tetris
+	{ 0x123406, 0x123407, sound_command_w }, /* sonicbom */
+	{ 0xfe0006, 0xfe0007, sound_command_w }, /* tetris */
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
 
 static MACHINE_INIT( sonicbom )
 {
-//	fd1094_machine_init(); using the decrypted version
-//	sys16_sprxoffset = -0x40;
+/*	fd1094_machine_init(); using the decrypted version */
+/*	sys16_sprxoffset = -0x40; */
 	sys16_update_proc = type0_sys16_textram;
 }
 
 static DRIVER_INIT( sonicbom )
 {
-	//fd1094_driver_init(0x0053); using the decrypted version
+	/*fd1094_driver_init(0x0053); using the decrypted version */
 }
 
 
@@ -5400,14 +5409,14 @@ ROM_START( sonicbom )
 	ROM_LOAD( "opr11346.b11", 0x20000, 0x10000, CRC(e5ada66c) SHA1(7e8e34ea909848d0d1b1fcccf628bf9ec169ae9b) )
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_ERASE00 ) /* sprites */
-	ROM_LOAD16_BYTE( "opr11352.b3", 0x60001, 0x010000, CRC(047fa4b0) SHA1(d6c6f920a71db7734000cb64f3001145c4e05c6e) ) // |
-	ROM_LOAD16_BYTE( "opr11356.b7", 0x60000, 0x010000, CRC(aea3c39d) SHA1(2a4f01463b3f29c8d6858c3e99ef70ac548598b4) ) //  \Guns on desert floor (2nd attract level)
-	ROM_LOAD16_BYTE( "opr11351.b2", 0xa0001, 0x010000, CRC(63b1f1ca) SHA1(1f19a3af099d4a6ad196968b0a3c17a11384e474) ) // |
-	ROM_LOAD16_BYTE( "opr11355.b6", 0xa0000, 0x010000, CRC(fe0fa332) SHA1(15ea820f87399e35b798969d3800614701a61161) ) //  \Turrets on buildings (1st attract level)
-	ROM_LOAD16_BYTE( "opr11350.b1", 0xc0001, 0x010000, CRC(525ba1df) SHA1(e35487c8bf4009a767e54258d9a55056d13ba02a) ) // |
-	ROM_LOAD16_BYTE( "opr11354.b5", 0xc0000, 0x010000, CRC(793fa3ac) SHA1(14d5a71667b4745d5b556cc15334dd9bff8de93f) ) //  \Title Logo, Player Ship
-	ROM_LOAD16_BYTE( "opr11353.b4", 0xe0001, 0x010000, CRC(4e0791f8) SHA1(3278bfd478a2fdbcf2d641268c9ca4ccd5a5bd2f) ) // |
-	ROM_LOAD16_BYTE( "opr11357.b8", 0xe0000, 0x010000, CRC(a7c5ea41) SHA1(405e6ebd2cff22179de70fd31fae5ff967fbaf63) ) //  \Player Bullets etc.
+	ROM_LOAD16_BYTE( "opr11352.b3", 0x60001, 0x010000, CRC(047fa4b0) SHA1(d6c6f920a71db7734000cb64f3001145c4e05c6e) ) /* | */
+	ROM_LOAD16_BYTE( "opr11356.b7", 0x60000, 0x010000, CRC(aea3c39d) SHA1(2a4f01463b3f29c8d6858c3e99ef70ac548598b4) ) /*  \Guns on desert floor (2nd attract level) */
+	ROM_LOAD16_BYTE( "opr11351.b2", 0xa0001, 0x010000, CRC(63b1f1ca) SHA1(1f19a3af099d4a6ad196968b0a3c17a11384e474) ) /* | */
+	ROM_LOAD16_BYTE( "opr11355.b6", 0xa0000, 0x010000, CRC(fe0fa332) SHA1(15ea820f87399e35b798969d3800614701a61161) ) /*  \Turrets on buildings (1st attract level) */
+	ROM_LOAD16_BYTE( "opr11350.b1", 0xc0001, 0x010000, CRC(525ba1df) SHA1(e35487c8bf4009a767e54258d9a55056d13ba02a) ) /* | */
+	ROM_LOAD16_BYTE( "opr11354.b5", 0xc0000, 0x010000, CRC(793fa3ac) SHA1(14d5a71667b4745d5b556cc15334dd9bff8de93f) ) /*  \Title Logo, Player Ship */
+	ROM_LOAD16_BYTE( "opr11353.b4", 0xe0001, 0x010000, CRC(4e0791f8) SHA1(3278bfd478a2fdbcf2d641268c9ca4ccd5a5bd2f) ) /* | */
+	ROM_LOAD16_BYTE( "opr11357.b8", 0xe0000, 0x010000, CRC(a7c5ea41) SHA1(405e6ebd2cff22179de70fd31fae5ff967fbaf63) ) /*  \Player Bullets etc. */
 
 	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "epr11347.a7", 0x00000, 0x8000, CRC(b41f0ced) SHA1(946b58c0f5b4541fac93add065916319302fe5e0) )
@@ -5415,7 +5424,7 @@ ROM_START( sonicbom )
 	ROM_LOAD( "epr11349.a9", 0x20000, 0x8000, CRC(8e4b6204) SHA1(ec0a2812b4726b5ff236f2fbb63fd2dd13cf4935) )
 ROM_END
 
-// sys16A custom
+/* sys16A custom */
 ROM_START( tetris )
 	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr12201.rom", 0x000000, 0x8000, CRC(338e9b51) SHA1(f56a1124c963d4ad72a806b26f9aa906aaa37d2b) )
@@ -5434,7 +5443,7 @@ ROM_START( tetris )
 	ROM_LOAD( "epr12205.rom", 0x0000, 0x8000, CRC(6695dc99) SHA1(08123aa24c302bc9243329384bd9c2545a4d50c3) )
 ROM_END
 
-// sys16B
+/* sys16B */
 ROM_START( tetrisbl )
 	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "rom2.bin", 0x000000, 0x10000, CRC(4d165c38) SHA1(04706b1977ae18bd09bafaf8ea65f8e5f32e04b8) )
@@ -5453,10 +5462,10 @@ ROM_START( tetrisbl )
 	ROM_LOAD( "s-prog.rom", 0x0000, 0x8000, CRC(bd9ba01b) SHA1(fafa7dc36cc057a50ae4cdf7a35f3594292336f4) )
 ROM_END
 
-// sys16B
+/* sys16B */
 ROM_START( tetrisa )
 	ROM_REGION( 0x020000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom Cpu 317-0092
+/* Custom Cpu 317-0092 */
 	ROM_LOAD16_BYTE( "tetris.a7", 0x000000, 0x10000, CRC(9ce15ac9) SHA1(0fdbd3ca37e4c0efa7c66415714bfc10637ced6c) )
 	ROM_LOAD16_BYTE( "tetris.a5", 0x000001, 0x10000, CRC(98d590ca) SHA1(4d18409c0b5734d0adcea5646d13f65b687dd05d) )
 
@@ -5482,11 +5491,11 @@ static MEMORY_READ16_START( tetris_readmem )
 	{ 0x418000, 0x41803f, SYS16_MRA16_EXTRAM2 },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xc80000, 0xc80001, MRA16_NOP },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -5540,9 +5549,9 @@ PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Unknown ) )	// from the code it looks like some kind of difficulty
-	PORT_DIPSETTING(    0x0c, "A" )					// level, but all 4 levels points to the same place
-	PORT_DIPSETTING(    0x08, "B" )					// so it doesn't actually change anything!!
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Unknown ) )	/* from the code it looks like some kind of difficulty */
+	PORT_DIPSETTING(    0x0c, "A" )					/* level, but all 4 levels points to the same place */
+	PORT_DIPSETTING(    0x08, "B" )					/* so it doesn't actually change anything!! */
 	PORT_DIPSETTING(    0x04, "C" )
 	PORT_DIPSETTING(    0x00, "D" )
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )
@@ -5571,7 +5580,7 @@ static MACHINE_DRIVER_START( tetris )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( timscanr )
 	ROM_REGION( 0x030000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "ts10853.bin", 0x00000, 0x8000, CRC(24d7c5fb) SHA1(b1796e77cf968f9bdae7a47c5c02b93aaec10ade) )
@@ -5614,12 +5623,12 @@ static MEMORY_READ16_START( timscanr_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r },// player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r },// dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
-	{ 0xc41004, 0xc41005, input_port_5_word_r }, // dip3
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r },/* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r },/* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
+	{ 0xc41004, 0xc41005, input_port_5_word_r }, /* dip3 */
 	{ 0xffc00c, 0xffc00d, timscanr_skip_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -5661,7 +5670,7 @@ INPUT_PORTS_START( timscanr )
 	SYS16_COINAGE
 
 PORT_START	/* DSW2 */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )		//??
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )		/*?? */
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x1e, 0x14, "Bonus" )
@@ -5693,7 +5702,7 @@ PORT_START	/* DSW2 */
 	PORT_DIPSETTING(    0x00, "5" )
 
 PORT_START	/* DSW3 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )		//??
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )		/*?? */
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
@@ -5733,7 +5742,7 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
-// sys16B
+/* sys16B */
 ROM_START( toryumon )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "17689",  0x00000, 0x20000, CRC(4f0dee19) SHA1(efb5bf29e27029e9ea3fdd57ad7af54b4e1e9a97) )
@@ -5768,12 +5777,12 @@ static MEMORY_READ16_START( toryumon_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xe41002, 0xe41003, input_port_0_word_r }, // player1
+	{ 0xe41002, 0xe41003, input_port_0_word_r }, /* player1 */
 	{ 0xe41004, 0xe41005, MRA16_NOP },
-	{ 0xe41006, 0xe41007, input_port_1_word_r }, // player2
-	{ 0xe41000, 0xe41001, input_port_2_word_r }, // service
-	{ 0xe42002, 0xe42003, input_port_3_word_r }, // dip1
-	{ 0xe42000, 0xe42001, input_port_4_word_r }, // dip2
+	{ 0xe41006, 0xe41007, input_port_1_word_r }, /* player2 */
+	{ 0xe41000, 0xe41001, input_port_2_word_r }, /* service */
+	{ 0xe42002, 0xe42003, input_port_3_word_r }, /* dip1 */
+	{ 0xe42000, 0xe42001, input_port_4_word_r }, /* dip2 */
 	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -5787,7 +5796,7 @@ static MEMORY_WRITE16_START( toryumon_writemem )
 	{ 0xe40000, 0xe40001, sys16_coinctrl_w },
 	{ 0xe43000, 0xe43fff, MWA16_NOP },
 	{ 0xfe0006, 0xfe0007, sound_command_w },
-	{ 0xfe0020, 0xfe003f, MWA16_NOP }, // config regs
+	{ 0xfe0020, 0xfe003f, MWA16_NOP }, /* config regs */
 	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -5846,7 +5855,7 @@ MACHINE_DRIVER_END
 
 /***************************************************************************/
 
-// sys16B
+/* sys16B */
 ROM_START( tturf )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "12327.7a",  0x00000, 0x20000, CRC(0376c593) SHA1(3057828b16ee3b7cbb57a76047eecf74d1d8b465) )
@@ -5869,13 +5878,13 @@ ROM_START( tturf )
 
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "epr-12328.a10", 0x00000, 0x08000, CRC(13a346de) SHA1(4e8cb12b7936c4c5d8ebc9ba563099ac2056ee60) )
-	ROM_LOAD( "12329.11a",     0x10000, 0x10000, CRC(ed9a686d) SHA1(da433033d501ee871429ee676b3972b14179df9f) )		// speech
-	// note: it needs this hole otherwise voice samples won't playback
+	ROM_LOAD( "12329.11a",     0x10000, 0x10000, CRC(ed9a686d) SHA1(da433033d501ee871429ee676b3972b14179df9f) )		/* speech */
+	/* note: it needs this hole otherwise voice samples won't playback */
 	ROM_LOAD( "12330.12a",     0x30000, 0x10000, CRC(fb762bca) SHA1(ff9191c5ec38c711ebb7c2ad043f62b6d7e2203c) )
 
 ROM_END
 
-// sys16B
+/* sys16B */
 ROM_START( tturfu )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr12266.bin",  0x00000, 0x10000, CRC(f549def8) SHA1(9e913509d46274bd192455321904ec9884b5f629) )
@@ -5922,8 +5931,8 @@ static MEMORY_READ16_START( tturf_readmem )
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x500000, 0x500fff, SYS16_MRA16_PALETTERAM },
-	{ 0x602002, 0x602003, input_port_3_word_r }, // dip1
-	{ 0x602000, 0x602001, input_port_4_word_r }, // dip2
+	{ 0x602002, 0x602003, input_port_3_word_r }, /* dip1 */
+	{ 0x602000, 0x602001, input_port_4_word_r }, /* dip2 */
 MEMORY_END
 
 static MEMORY_WRITE16_START( tturf_writemem )
@@ -5934,7 +5943,7 @@ static MEMORY_WRITE16_START( tturf_writemem )
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
 	{ 0x500000, 0x500fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0x600000, 0x600001, sys16_coinctrl_w },
-	{ 0xff0020, 0xff003f, MWA16_NOP }, // config regs
+	{ 0xff0020, 0xff003f, MWA16_NOP }, /* config regs */
 MEMORY_END
 
 /***************************************************************************/
@@ -6078,7 +6087,7 @@ static MACHINE_DRIVER_START( tturfu )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( tturfbl )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "tt042197.rom", 0x00000, 0x10000, CRC(deee5af1) SHA1(0caba775021dc7e28ac6b7af8eac4f49d3102c83) )
@@ -6118,13 +6127,13 @@ static MEMORY_READ16_START( tturfbl_readmem )
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x500000, 0x500fff, SYS16_MRA16_PALETTERAM },
-	{ 0x600002, 0x600003, input_port_3_word_r }, // dip1
-	{ 0x600000, 0x600001, input_port_4_word_r }, // dip2
-	{ 0x601002, 0x601003, input_port_0_word_r }, // player1
-	{ 0x601004, 0x601005, input_port_1_word_r }, // player2
-	{ 0x601000, 0x601001, input_port_2_word_r }, // service
-	{ 0x602002, 0x602003, input_port_3_word_r }, // dip1
-	{ 0x602000, 0x602001, input_port_4_word_r }, // dip2
+	{ 0x600002, 0x600003, input_port_3_word_r }, /* dip1 */
+	{ 0x600000, 0x600001, input_port_4_word_r }, /* dip2 */
+	{ 0x601002, 0x601003, input_port_0_word_r }, /* player1 */
+	{ 0x601004, 0x601005, input_port_1_word_r }, /* player2 */
+	{ 0x601000, 0x601001, input_port_2_word_r }, /* service */
+	{ 0x602002, 0x602003, input_port_3_word_r }, /* dip1 */
+	{ 0x602000, 0x602001, input_port_4_word_r }, /* dip2 */
 	{ 0xc46000, 0xc4601f, SYS16_MRA16_EXTRAM3 },
 MEMORY_END
 
@@ -6139,7 +6148,7 @@ static MEMORY_WRITE16_START( tturfbl_writemem )
 	{ 0x600006, 0x600007, sound_command_w },
 	{ 0xc44000, 0xc44001, MWA16_NOP },
 	{ 0xc46000, 0xc4601f, SYS16_MWA16_EXTRAM3, &sys16_extraram3 },
-	{ 0xff0020, 0xff003f, MWA16_NOP }, // config regs
+	{ 0xff0020, 0xff003f, MWA16_NOP }, /* config regs */
 MEMORY_END
 
 /***************************************************************************/
@@ -6197,7 +6206,7 @@ static DRIVER_INIT( tturfbl )
 
 }
 /***************************************************************************/
-// sound ??
+/* sound ?? */
 static MACHINE_DRIVER_START( tturfbl )
 
 	/* basic machine hardware */
@@ -6218,7 +6227,7 @@ MACHINE_DRIVER_END
 
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( wb3 )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr12259.a7", 0x000000, 0x20000, CRC(54927c7e) SHA1(09a4c25b40aba2056c79b5c2e6e8cb7e6c05bc16) )
@@ -6245,7 +6254,7 @@ ROM_END
 
 ROM_START( wb3a )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
-// Custom CPU 317-0089
+/* Custom CPU 317-0089 */
 	ROM_LOAD16_BYTE( "epr12137.a7", 0x000000, 0x20000, CRC(6f81238e) SHA1(b578165c1624f8a112e9eea098fb4551cc38faa1) )
 	ROM_LOAD16_BYTE( "epr12136.a5", 0x000001, 0x20000, CRC(4cf05003) SHA1(bd4c64c327e53143aa94062f91946eda0a7146c2) )
 
@@ -6276,11 +6285,11 @@ static MEMORY_READ16_START( wb3_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -6337,7 +6346,7 @@ PORT_START	/* DSW1 */
 	PORT_DIPSETTING(    0x0c, "3" )
 	PORT_DIPSETTING(    0x08, "4" )
 	PORT_DIPSETTING(    0x04, "5" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Bonus_Life ) )		//??
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Bonus_Life ) )		/*?? */
 	PORT_DIPSETTING(    0x10, "5000/10000/18000/30000" )
 	PORT_DIPSETTING(    0x00, "5000/15000/30000" )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
@@ -6345,7 +6354,7 @@ PORT_START	/* DSW1 */
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Round Select" )
 	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )			// no collision though
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )			/* no collision though */
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -6364,7 +6373,7 @@ static MACHINE_DRIVER_START( wb3 )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( wb3bl )
 	ROM_REGION( 0x040000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "wb3_03", 0x000000, 0x10000, CRC(0019ab3b) SHA1(89d49a437690fa6e0c35bb9f1450042f89504714) )
@@ -6399,11 +6408,11 @@ static MEMORY_READ16_START( wb3bl_readmem )
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41004, 0xc41005, input_port_1_word_r }, // player2
-	{ 0xc41000, 0xc41001, input_port_2_word_r }, // service
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41004, 0xc41005, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xc46000, 0xc4601f, SYS16_MRA16_EXTRAM3 },
 	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -6495,7 +6504,7 @@ static MACHINE_DRIVER_START( wb3bl )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-// sys16B
+/* sys16B */
 ROM_START( wrestwar )
 	ROM_REGION( 0xc0000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "ww.a7", 0x00000, 0x20000, CRC(eeaba126) SHA1(ca1f630ff0cfc301205d2b8226d7614eadc117b7) )
@@ -6541,10 +6550,10 @@ static MEMORY_READ16_START( wrestwar_readmem )
 	{ 0x110000, 0x111fff, SYS16_MRA16_TEXTRAM },
 	{ 0x200000, 0x200fff, SYS16_MRA16_SPRITERAM },
 	{ 0x300000, 0x300fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc41002, 0xc41003, input_port_0_word_r }, // player1
-	{ 0xc41006, 0xc41007, input_port_1_word_r }, // player2
-	{ 0xc42002, 0xc42003, input_port_3_word_r }, // dip1
-	{ 0xc42000, 0xc42001, input_port_4_word_r }, // dip2
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
 	{ 0xffe082, 0xffe083, ww_io_service_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
@@ -6663,11 +6672,11 @@ static MACHINE_DRIVER_START( s16dummy )
 MACHINE_DRIVER_END
 
 /*****************************************************************************/
-// Cotton
+/* Cotton */
 
 ROM_START( cotton )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
-// custom cpu 317-?????
+/* custom cpu 317-????? */
 	ROM_LOAD16_BYTE( "epr13858.a7", 0x000000, 0x20000, CRC(276f42fe) SHA1(47d2f910f6f101628cb0c660e5fd12c0e331bd99) )
 	ROM_LOAD16_BYTE( "epr13856.a5", 0x000001, 0x20000, CRC(14e6b5e7) SHA1(708c69cddd1c60e729a74f539d40e67b2a6d9d6f) )
 	ROM_LOAD16_BYTE( "epr13859.a8", 0x040000, 0x20000, CRC(4703ef9d) SHA1(8b03a71736a599c337ad5d95cbc812ea38b0cc43) )
@@ -6707,7 +6716,7 @@ ROM_END
 
 ROM_START( cottona )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
-// custom cpu 317-0181a
+/* custom cpu 317-0181a */
 	ROM_LOAD16_BYTE( "ep13921a.a7", 0x000000, 0x20000, CRC(f047a037) SHA1(e4a9eeb1f2cf6b5ee3b2fcf74be917ffd3e6ca0e) )
 	ROM_LOAD16_BYTE( "ep13919a.a5", 0x000001, 0x20000, CRC(651108b1) SHA1(1ab32085ca1a8cb3d464059b0abb10253decd423) )
 	ROM_LOAD16_BYTE( "ep13922a.a8", 0x040000, 0x20000, CRC(1ca248c5) SHA1(f7df2ccf54a3f1f09334c3b3df3dcd2ec33f99d1) )
@@ -6745,7 +6754,7 @@ ROM_START( cottona )
 ROM_END
 
 /*****************************************************************************/
-// MVP
+/* MVP */
 
 ROM_START( mvp )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
@@ -6773,7 +6782,7 @@ ROM_START( mvp )
 ROM_END
 
 /*****************************************************************************/
-// Excite League
+/* Excite League */
 
 ROM_START( exctleag )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
@@ -6811,7 +6820,7 @@ ROM_END
 
 
 /*****************************************************************************/
-// Super League
+/* Super League */
 
 ROM_START( suprleag )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
@@ -6849,11 +6858,11 @@ ROM_END
 /*****************************************************************************/
 
 /*****************************************************************************/
-// Ryukyu
+/* Ryukyu */
 
 ROM_START( ryukyu )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
-// cpu 317-5023
+/* cpu 317-5023 */
 	ROM_LOAD16_BYTE( "13347",0x00000,0x10000, CRC(398031fa) SHA1(5c118c85b7af1a83726b95bbeb85cb5020254f57) )
 	ROM_LOAD16_BYTE( "13348",0x00001,0x10000, CRC(5f0e0c86) SHA1(f8f5912a190d0755cc5158e2e43cceb825f95b4f) )
 
@@ -6875,7 +6884,7 @@ ROM_END
 
 /***************************************************************************/
 
-// Ace Attacker
+/* Ace Attacker */
 ROM_START( aceattac )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "11491.4a", 0x000000, 0x10000, CRC(77b820f1) SHA1(c33183c94c5029e2c4d6444f37404da66aacecc4) )
@@ -6921,10 +6930,10 @@ GAME( 1986, quartt2j,  quartet,  quartet2, quartet2, 0,        ROT0,   "Sega",  
 
 /* System16A */
 /*          rom        parent    machine   inp       init */
-GAMEX(1986, afighter,  0,        afighter, afighter, 0,        ROT270, "Sega",    "Action Fighter (FD1089A 317-0018)", GAME_NOT_WORKING )
+GAME( 1986, afighter,  0,        afighter, afighter, alexkida, ROT270, "Sega", "Action Fighter (FD1089A 317-0018)" )
 GAME( 1986, afightera, afighter, afighter, afighter, 0,        ROT270, "Sega",    "Action Fighter (unprotected)" )
-GAMEX(1986, alexkidd,  0,        alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 1)", GAME_NOT_WORKING )
-GAME( 1986, alexkida,  alexkidd, alexkidd, alexkidd, 0,        ROT0,   "Sega",    "Alex Kidd: The Lost Stars (set 2)" )
+GAME( 1986, alexkidd,  0,        alexkidd, alexkidd, 0,        ROT0,   "Sega", "Alex Kidd: The Lost Stars (set 2, unprotected)" )
+GAME( 1986, alexkidd1, alexkidd, alexkidd, alexkidd, alexkida, ROT0,   "Sega", "Alex Kidd: The Lost Stars (set 1, FD1089A 317-0021)" )
 GAME( 1986, fantzone,  0,        fantzone, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Japan New Ver.)" )
 GAME( 1986, fantzono,  fantzone, fantzono, fantzone, 0,        ROT0,   "Sega",    "Fantasy Zone (Old Ver.)" )
 GAMEX(19??, ryukyu  ,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ryukyu", GAME_NOT_WORKING )
@@ -6941,8 +6950,8 @@ GAMEX(1988, tetrisa,   tetris,   tetris,   tetris,   0,        ROT0,   "Sega",  
 /* System16B */
 /*          rom        parent    machine   inp       init */
 GAMEX(19??, aceattac,  0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "Ace Attacker", GAME_NOT_WORKING )
-GAMEX(1990, atomicp,   0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) // korean clone board..
-GAME( 1990, snapper,   0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) // korean clone board..
+GAMEX(1990, atomicp,   0,        atomicp,  atomicp,  0,        ROT0,   "Philko",  "Atomic Point (Korea)", GAME_NO_SOUND ) /* korean clone board.. */
+GAME( 1990, snapper,   0,        snapper,  snapper,  0,        ROT0,   "Philko",  "Snapper (Korea)" ) /* korean clone board.. */
 GAME( 1987, aliensyn,  0,        aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 1)" )
 GAMEX(1987, aliensya,  aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (set 2)", GAME_NOT_WORKING )
 GAMEX(1987, aliensyj,  aliensyn, aliensyn, aliensyn, aliensyn, ROT0,   "Sega",    "Alien Syndrome (Japan)", GAME_NOT_WORKING )

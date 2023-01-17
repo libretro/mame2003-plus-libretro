@@ -139,8 +139,8 @@ WRITE_HANDLER( battles_customio_data3_w )
 
 WRITE_HANDLER( battles_CPU4_coin_w )
 {
-	set_led_status(0,data & 0x02);	// Start 1
-	set_led_status(1,data & 0x01);	// Start 2
+	set_led_status(0,data & 0x02);	/* Start 1 */
+	set_led_status(1,data & 0x01);	/* Start 2 */
 
 	coin_counter_w(0,data & 0x20);
 	coin_counter_w(1,data & 0x10);

@@ -1,5 +1,5 @@
 #include <math.h>
-//fix for android
+/*fix for android */
 #ifndef PI
 #define PI 3.14159265358979323846
 #endif
@@ -35,14 +35,14 @@ struct dss_adsr_context
 
 struct dss_counter_context
 {
-	int last;		// Last clock state
+	int last;		/* Last clock state */
 };
 
 struct dss_counterfix_context
 {
-	double sampleStep;	// time taken up by 1 audio sample
-	double tCycle;		// time period of selected frequency
-	double tLeft;		// time left sampling current frequency cycle
+	double sampleStep;	/* time taken up by 1 audio sample */
+	double tCycle;		/* time period of selected frequency */
+	double tLeft;		/* time left sampling current frequency cycle */
 };
 
 struct dss_lfsr_context
@@ -60,20 +60,20 @@ struct dss_noise_context
 
 struct dss_op_amp_osc_context
 {
-	int		flip_flop;		// flip/flop output state
-	int		flip_flopXOR;	// flip_flop ^ flip_flopXOR, 0 = discharge, 1 = charge
+	int		flip_flop;		/* flip/flop output state */
+	int		flip_flopXOR;	/* flip_flop ^ flip_flopXOR, 0 = discharge, 1 = charge */
 	int		type;
 	int		is_squarewave;
-	double	thresholdLow;	// falling threshold
-	double	thresholdHigh;	// rising threshold
-	double	iCharge[2];		// charge/discharge currents
-	double	vCap;			// current capacitor voltage
-	double	rTotal;			// all input resistors in parallel
-	double	iFixed;			// fixed current athe the input
+	double	thresholdLow;	/* falling threshold */
+	double	thresholdHigh;	/* rising threshold */
+	double	iCharge[2];		/* charge/discharge currents */
+	double	vCap;			/* current capacitor voltage */
+	double	rTotal;			/* all input resistors in parallel */
+	double	iFixed;			/* fixed current athe the input */
 	double	step;
-	double	temp1;			// Multi purpose
-	double	temp2;			// Multi purpose
-	double	temp3;			// Multi purpose
+	double	temp1;			/* Multi purpose */
+	double	temp2;			/* Multi purpose */
+	double	temp3;			/* Multi purpose */
 };
 
 struct dss_sawtoothwave_context
@@ -84,12 +84,12 @@ struct dss_sawtoothwave_context
 
 struct dss_schmitt_osc_context
 {
-	double	ratioIn;		// ratio of total charging voltage that comes from the input
-	double	ratioFeedback;	// ratio of total charging voltage that comes from the feedback
-	double	vCap;			// current capacitor voltage
-	double	rc;				// r*c
+	double	ratioIn;		/* ratio of total charging voltage that comes from the input */
+	double	ratioFeedback;	/* ratio of total charging voltage that comes from the feedback */
+	double	vCap;			/* current capacitor voltage */
+	double	rc;				/* r*c */
 	double	exponent;
-	int		state;			// state of the ouput
+	int		state;			/* state of the ouput */
 };
 
 struct dss_sinewave_context
@@ -149,7 +149,7 @@ void dss_counter_step(struct node_description *node)
 		if (node->input[6] == clock)
 		{
 			/* Proper edge */
-			node->output += node->input[4] ? 1 : -1; // up/down
+			node->output += node->input[4] ? 1 : -1; /* up/down */
 			if (node->output < 0) node->output = node->input[3];
 			if (node->output > node->input[3]) node->output = 0;
 		}
@@ -198,7 +198,7 @@ void dss_counterfix_step(struct node_description *node)
 		 */
 		if (node->input[0])
 		{
-			node->output += node->input[4] ? 1 : -1; // up/down
+			node->output += node->input[4] ? 1 : -1; /* up/down */
 			if (node->output < 0) node->output = node->input[3];
 			if (node->output > node->input[3]) node->output = 0;
 		}
@@ -449,14 +449,14 @@ void dss_op_amp_osc_step(struct node_description *node)
 	struct dss_op_amp_osc_context *context = node->context;
 
 
-	double i;			// Charging current created by vIn
-	double v = 0;		// all input voltages mixed
-	double dt;			// change in time
-	double vC;			// Current voltage on capacitor, before dt
-	double vCnext = 0;	// Voltage on capacitor, after dt
+	double i;			/* Charging current created by vIn */
+	double v = 0;		/* all input voltages mixed */
+	double dt;			/* change in time */
+	double vC;			/* Current voltage on capacitor, before dt */
+	double vCnext = 0;	/* Voltage on capacitor, after dt */
 
-	dt = context->step;	// Change in time
-	vC = context->vCap;	// Set to voltage before change
+	dt = context->step;	/* Change in time */
+	vC = context->vCap;	/* Set to voltage before change */
 
 	/* work out the charge currents for the VCOs. */
 	switch (context->type)
@@ -485,7 +485,7 @@ void dss_op_amp_osc_step(struct node_description *node)
 
 		case DISC_OP_AMP_OSCILLATOR_VCO_1:
 			/* Work out the charge rates. */
-			i = DSS_OP_AMP_OSC_VMOD1 * context->temp1;		// i is not a current.  It is being used as a temp variable.
+			i = DSS_OP_AMP_OSC_VMOD1 * context->temp1;		/* i is not a current.  It is being used as a temp variable. */
 			context->iCharge[0] = (DSS_OP_AMP_OSC_VMOD1 - i) / info->r1;
 			context->iCharge[1] = (i - (DSS_OP_AMP_OSC_VMOD1 * context->temp2)) / context->temp3;
 			break;
@@ -534,7 +534,7 @@ void dss_op_amp_osc_step(struct node_description *node)
 				}
 			}
 		} while(dt);
-//		} while(0);
+/*		} while(0); */
 
 		context->vCap = vCnext;
 
@@ -570,8 +570,8 @@ void dss_op_amp_osc_reset(struct node_description *node)
 	const struct discrete_op_amp_osc_info *info = node->custom;
 	struct dss_op_amp_osc_context *context = node->context;
 
-	double i1 = 0;	// inverting input current
-	double i2 = 0;	// non-inverting input current
+	double i1 = 0;	/* inverting input current */
+	double i2 = 0;	/* non-inverting input current */
 
 	context->is_squarewave = (info->type & DISC_OP_AMP_OSCILLATOR_OUT_SQW) * (info->vP - OP_AMP_NORTON_VBE);
 	context->type = info->type & DISC_OP_AMP_OSCILLATOR_TYPE_MASK;
@@ -630,9 +630,9 @@ void dss_op_amp_osc_reset(struct node_description *node)
 			/* There is no charge on the cap so the schmitt goes high at init. */
 			context->flip_flop = 1;
 			/* Setup some commonly used stuff */
-			context->temp1 = info->r5 / (info->r2 + info->r5);			// voltage ratio across r5
-			context->temp2 = info->r6 / (info->r1 + info->r6);			// voltage ratio across r6
-			context->temp3 = 1.0 / (1.0 / info->r1 + 1.0 / info->r6);	// input resistance when r6 switched in
+			context->temp1 = info->r5 / (info->r2 + info->r5);			/* voltage ratio across r5 */
+			context->temp2 = info->r6 / (info->r1 + info->r6);			/* voltage ratio across r6 */
+			context->temp3 = 1.0 / (1.0 / info->r1 + 1.0 / info->r6);	/* input resistance when r6 switched in */
 			break;
 	}
 
@@ -1129,7 +1129,7 @@ void dss_trianglewave_reset(struct node_description *node)
 /************************************************************************/
 void dss_adsrenv_step(struct node_description *node)
 {
-//	struct dss_adsr_context *context = node->context;
+/*	struct dss_adsr_context *context = node->context; */
 
 	if(node->input[0])
 	{

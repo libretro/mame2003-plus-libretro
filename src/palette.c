@@ -1012,10 +1012,10 @@ static void palette_reset(void)
 
 
 
-//-------------------------------------------------
-//  normalize_range - normalize a range of palette
-//  entries
-//-------------------------------------------------
+/*------------------------------------------------- */
+/*  normalize_range - normalize a range of palette  */
+/*  entries                                         */
+/*------------------------------------------------- */
 
 void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max)
 {
@@ -1024,7 +1024,7 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 	UINT8  col[3];
 	end = MIN(end, palette_get_total_colors() -1);
 
-	// find the minimum and maximum brightness of all the colors in the range
+	/* find the minimum and maximum brightness of all the colors in the range */
 	ymin = 1000 * 255, ymax = 0;
 	for (index = start; index <= end; index++)
 	{
@@ -1034,11 +1034,11 @@ void palette_normalize_range( UINT32 start, UINT32 end, int lum_min, int lum_max
 		ymax = MAX(ymax, temp);
 	}
 
-	// determine target minimum/maximum
+	/* determine target minimum/maximum */
 	tmin = (lum_min < 0) ? ((ymin + 500) / 1000) : lum_min;
 	tmax = (lum_max < 0) ? ((ymax + 500) / 1000) : lum_max;
 
-	// now normalize the palette
+	/* now normalize the palette */
 	for (index = start; index <= end; index++)
 	{
 		palette_get_color(index, &col[0], &col[1], &col[2]);

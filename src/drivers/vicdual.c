@@ -161,11 +161,11 @@ WRITE_HANDLER( frogs_sh_port2_w )
 
 
 	if (data & 0x01)
-		sample_start (3, 3, 0);	// Hop
+		sample_start (3, 3, 0);	/* Hop */
 if (data & 0x02)
-		sample_start (0, 0, 0);	// Boing
+		sample_start (0, 0, 0);	/* Boing */
 	if (new_croak)
-		sample_start (2, 2, 0);	// Croak
+		sample_start (2, 2, 0);	/* Croak */
 	else
 	{
 		if (last_croak)
@@ -188,12 +188,12 @@ if (data & 0x02)
 		 * 12 seconds.
 		 */
 		if (!last_buzzz)
-			sample_start (1, 1, 1);	// Buzzz
+			sample_start (1, 1, 1);	/* Buzzz */
 	}
 	else
 		sample_stop(1);
 	if (data & 0x80)
-		sample_start (4, 4, 0);	// Splash
+		sample_start (4, 4, 0);	/* Splash */
 
 	last_croak = new_croak;
 	last_buzzz = new_buzzz;
@@ -649,7 +649,7 @@ INPUT_PORTS_START( samurai )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_VBLANK ) /* either vblank, or a timer. In the */
                                             /* Carnival schematics, it's a timer. */
-/*	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )  // timer /*/
+/*	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )*/  /* timer */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )

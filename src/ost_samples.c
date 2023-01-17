@@ -694,98 +694,98 @@ bool generate_ost_sound_contra(int data)
 	schedule_default_sound = false;
 
 	switch(data) {
-		// Stage 1 Jungle
+		/* Stage 1 Jungle */
 		case 0x40:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(0, 1, 1);
 			break;
 
-		// Stage 3 Waterfalls
+		/* Stage 3 Waterfalls */
 		case 0x42:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(2, 3, 1);
 			break;
 
-		//  Stage 6 Energy Zone and Hangar
+		/*  Stage 6 Energy Zone and Hangar */
 		case 0x43:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Stage 2 The Base
+		/* Stage 2 The Base */
 		case 0x44:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// Ranking
+		/* Ranking */
 		case 0x45:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(8, 9, 0);
 			break;
 
-		// Stage 5 Snowfield
+		/* Stage 5 Snowfield */
 		case 0x46:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// Boss
+		/* Boss */
 		case 0x47:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(12, 13, 1);
 			break;
 
-		// Stage 8 Alien Base
+		/* Stage 8 Alien Base */
 		case 0x48:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(14, 15, 1);
 			break;
 
-		// Credits
+		/* Credits */
 		case 0x49:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(16, 17, 0);
 			break;
 
-		// Game Over
+		/* Game Over */
 		case 0x4A:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(18, 19, 0);
 			break;
 
-		// Stage Clear - diddy
-		case 0x4B: // 1st boss
+		/* Stage Clear - diddy */
+		case 0x4B: /* 1st boss */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(20, 21, 0);
 			break;
 
-		// Complete - destroyed the heart
+		/* Complete - destroyed the heart */
 		case 0x4C:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(22, 23, 0);
 			break;
 
-		// Title
+		/* Title */
 		case 0x4D:
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(24, 25, 0);
 			break;
 
-		// Fade music
+		/* Fade music */
 		case 0x80:
 			fadingMusic = true;
 			schedule_default_sound = true;
@@ -808,7 +808,7 @@ bool generate_ost_sound_ddragon(int data)
 	sa_volume = 40;
 
 	switch(data) {
-		// Return to title screen, stop music.
+		/* Return to title screen, stop music. */
 		case 0xFF:
 			if(!ost_last_played(0, 1)) {
 				ddragon_stage = 0;
@@ -816,17 +816,17 @@ bool generate_ost_sound_ddragon(int data)
 			}
 			break;
 
-		// Title screen.
+		/* Title screen. */
 		case 0x1:
 			if(!ost_last_played(0, 1) && ddragon_stage != 4) {
 				ddragon_stage = 0;
 				ost_start_samples(0, 1, 1);
 			}
-			else if(ddragon_stage == 4) // Final boss fight.
+			else if(ddragon_stage == 4) /* Final boss fight. */
 				ost_start_samples(22, 23, 1);
 			break;
 
-		// Coin inserted on the title screen, stop music.
+		/* Coin inserted on the title screen, stop music. */
 		case 0x2:
 			schedule_default_sound = true;
 
@@ -834,19 +834,19 @@ bool generate_ost_sound_ddragon(int data)
 				ost_stop_samples();
 			break;
 
-		// Stage 1.
+		/* Stage 1. */
 		case 0x9:
 			ddragon_stage = 1;
 			ost_start_samples(2, 3, 1);
 			break;
 
-		// Stage 2.
+		/* Stage 2. */
 		case 0x7:
 			ddragon_stage = 2;
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Stage 3.
+		/* Stage 3. */
 		case 0xA:
 			if(ddragon_stage != 3) {
 				ddragon_stage = 3;
@@ -856,29 +856,29 @@ bool generate_ost_sound_ddragon(int data)
 				ost_start_samples(8, 9, 1);
 			break;
 
-		// Stage 4.
+		/* Stage 4. */
 		case 0xD:
 			ddragon_stage = 4;
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// Credits.
+		/* Credits. */
 		case 0x6:
 			ddragon_stage = 5;
 			ost_start_samples(12, 13, 0);
 			break;
 
-		// Level finished.
+		/* Level finished. */
 		case 0xE:
 			ost_start_samples(14, 15, 0);
 			break;
 
-		// Short diddy after boss battle.
+		/* Short diddy after boss battle. */
 		case 0xC:
 			ost_start_samples(16, 17, 0);
 			break;
 
-		// Boss battle music.
+		/* Boss battle music. */
 		case 0x3:
 			if(ddragon_stage == 3)
 				ost_start_samples(20, 21, 1);
@@ -1044,35 +1044,35 @@ bool generate_ost_sound_ikari(int data)
 	sa_volume = 100;
 
 	switch (data) {
-		// Title Demo
+		/* Title Demo */
 		case 0x70:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
 				ost_start_samples(0, 1, 0);
 			break;
 
-		// Force landing - it's up to you
+		/* Force landing - it's up to you */
 		case 0xA5:
 			schedule_default_sound = true;
 			ost_start_samples(2, 3, 0);
 			break;
 
-		// Theme of Ikari
+		/* Theme of Ikari */
 		case 0x41:
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Gate
+		/* Gate */
 		case 0x48:
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// Victory
+		/* Victory */
 		case 0x68:
 			if (!ost_last_played(8, 9)) /* prevent restarting Victory - glitch if invincibility is active */
 				ost_start_samples(8, 9, 0);
 			break;
 
-		// Game Over and Glory
+		/* Game Over and Glory */
 		case 0x60:
 			if (!ost_last_played(8, 9)) /* ignore if playing Victory */
 				ost_start_samples(10, 11, 0);
@@ -1276,61 +1276,61 @@ bool generate_ost_sound_moonwalker(int data)
 	sa_volume = 100;
 
 	switch (data) {
-		// Reset music. Title screen.
+		/* Reset music. Title screen. */
 		case 0x0:
 			ost_stop_samples();
 			moon_diddy = false;
 			break;
 
-		// Title screen stuff.
+		/* Title screen stuff. */
 		case 0x85:
 			ost_start_samples(10, 11, 0);
 			break;
 
-		// Title screen magic.
+		/* Title screen magic. */
 		case 0x86:
 		case 0x87:
 			/* do nothing */
 			break;
 
-		// Stage 1 and Stage 5. Bad.
+		/* Stage 1 and Stage 5. Bad. */
 		case 0x81:
 			if(!ost_last_played(0, 1))
 				ost_start_samples(0, 1, 1);
 			break;
 
-		// Stage 2. Smooth Criminal.
+		/* Stage 2. Smooth Criminal. */
 		case 0x82:
 			if(!ost_last_played(2, 3))
 				ost_start_samples(2, 3, 1);
 			break;
 
-		// Stage 3. Beat It.
+		/* Stage 3. Beat It. */
 		case 0x84:
 			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
 			break;
 
-		// Stage 4. Thriller.
+		/* Stage 4. Thriller. */
 		case 0x8A:
 			if(!ost_last_played(6, 7))
 				ost_start_samples(6, 7, 1);
 			break;
 
-		// Ending. Billie Jean.
+		/* Ending. Billie Jean. */
 		case 0x89:
 			if(!ost_last_played(8, 9))
 				ost_start_samples(8, 9, 1);
 			break;
 
-		// Boss music
+		/* Boss music */
 		case 0x8B:  /* First */
 		case 0x83:  /* Second */
 		case 0x8E:  /* Third */
 			/* do nothing */
 			break;
 
-		// Special move music diddy.
+		/* Special move music diddy. */
 		case 0xFA:
 		case 0xFB:
 		case 0xF6:
@@ -1338,7 +1338,7 @@ bool generate_ost_sound_moonwalker(int data)
 			moon_diddy = true;
 			break;
 
-		// Special move "owww" sound effect. This plays after the special move has always finished.
+		/* Special move "owww" sound effect. This plays after the special move has always finished. */
 		case 0xC3:
 			schedule_default_sound = true;
 			moon_diddy = false; /* return volume back to 100%. */
@@ -1465,7 +1465,7 @@ bool generate_ost_sound_outrun(int data)
 		ost_start_samples(0, 1, 1);
 
 	switch (data) {
-		// --> Title screen
+		/* --> Title screen */
 		case 0x0:
 			if(outrun_start_counter == 0)
 				if(!ost_last_played(0, 1))
@@ -1480,34 +1480,34 @@ bool generate_ost_sound_outrun(int data)
 				outrun_start_counter = 0;
 			break;
 
-		// --> Passing breeze
+		/* --> Passing breeze */
 		case 0x81:
 			ost_start_samples(8, 9, 1);
 			break;
 
-		// --> Splash wave
+		/* --> Splash wave */
 		case 0x82:
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// --> Magical sound shower
+		/* --> Magical sound shower */
 		case 0x85:
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// --> Last Wave
+		/* --> Last Wave */
 		case 0x93:
 			if(!ost_last_played(4, 5))
 				ost_start_samples(4, 5, 1);
 			break;
 
-		// --> Are You Ready
+		/* --> Are You Ready */
 		case 0x9F:
 			schedule_default_sound = true;
 			outrun_start_counter = 0;
 			break;
 
-		// --> Enter Highscore
+		/* --> Enter Highscore */
 		case 0xA5:
 			/* do nothing */
 			break;
@@ -1529,62 +1529,62 @@ bool generate_ost_sound_robocop(int data)
 	sa_volume = 100;
 
 	switch (data) {
-		// Visor open and close
+		/* Visor open and close */
 		case 0x30:
 			ost_stop_samples();
 			break;
 
-		// Title
+		/* Title */
 		case 0x31:
 			ost_start_samples(0, 1, 0);
 			break;
 
-		// Opening
+		/* Opening */
 		case 0x32:
 			ost_start_samples(2, 3, 0);
 			break;
 
-		// Main Theme
+		/* Main Theme */
 		case 0x33:
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Crime Field BGM 2
+		/* Crime Field BGM 2 */
 		case 0x35:
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// Last Battle BGM 3
+		/* Last Battle BGM 3 */
 		case 0x37:
 			ost_start_samples(8, 9, 1);
 			break;
 
-		// Stage Boss
+		/* Stage Boss */
 		case 0x38:
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// Final Boss
+		/* Final Boss */
 		case 0x39:
 			ost_start_samples(12, 13, 1);
 			break;
 
-		// Bonus Shoot
+		/* Bonus Shoot */
 		case 0x3A:
 			ost_start_samples(14, 15, 1);
 			break;
 
-		// Stage Clear
+		/* Stage Clear */
 		case 0x3B:
 			ost_start_samples(16, 17, 0);
 			break;
 
-		// Game Over
+		/* Game Over */
 		case 0x3C:
 			ost_start_samples(18, 19, 0);
 			break;
 
-		// Name Entry
+		/* Name Entry */
 		case 0x3D:
 			ost_start_samples(20, 21, 0);
 			break;
@@ -1609,87 +1609,87 @@ bool generate_ost_sound_sf1(int data)
 		ost_start_samples(0, 1, 1);
 
 	switch (data) {
-		// Retsu
+		/* Retsu */
 		case 0x28:
 			ost_start_samples(0, 1, 1);
 			break;
 
-		// Geki
+		/* Geki */
 		case 0x29:
 			ost_start_samples(2, 3, 1);
 			break;
 
-		// Joe
+		/* Joe */
 		case 0x2A:
 			ost_start_samples(4, 5, 1);
 			break;
 
-		// Mike
+		/* Mike */
 		case 0x2B:
 			ost_start_samples(6, 7, 1);
 			break;
 
-		// Birdie
+		/* Birdie */
 		case 0x2C:
 			ost_start_samples(8, 9, 1);
 			break;
 
-		// Eagle
+		/* Eagle */
 		case 0x2D:
 			ost_start_samples(10, 11, 1);
 			break;
 
-		// Lee
+		/* Lee */
 		case 0x2E:
 			ost_start_samples(12, 13, 1);
 			break;
 
-		// Gen
+		/* Gen */
 		case 0x2F:
 			ost_start_samples(14, 15, 1);
 			break;
 
-		// Adon
+		/* Adon */
 		case 0x30:
 			ost_start_samples(16, 17, 1);
 			break;
 
-		// Sagat
+		/* Sagat */
 		case 0x31:
 			ost_start_samples(18, 19, 1);
 			break;
 
-		// Ending
+		/* Ending */
 		case 0x32:
 			ost_start_samples(20, 21, 0);
 			break;
 
-		// VS
+		/* VS */
 		case 0x33:
 			ost_start_samples(22, 23, 1);
 			break;
 
-		// Stage Select
+		/* Stage Select */
 		case 0x34:
 			ost_start_samples(24, 25, 1);
 			break;
 
-		// Bonus 1
+		/* Bonus 1 */
 		case 0x3A:
 			ost_start_samples(26, 27, 1);
 			break;
 
-		// Bonus 2
+		/* Bonus 2 */
 		case 0x3B:
 			ost_start_samples(28, 29, 1);
 			break;
 
-		// Score
+		/* Score */
 		case 0x3C:
 			ost_start_samples(30, 31, 1);
 			break;
 
-		// Won
+		/* Won */
 		case 0x37:
 			ost_start_samples(32, 33, 0);
 			break;
@@ -1712,322 +1712,322 @@ bool generate_ost_sound_sf2(int data)
 	switch (data)
 	{
 		case 0x1:
-			// ryu music slow
+			/* ryu music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(0, 1, 1);
 			break;
 
 		case 0x2:
-			// e honda music slow
+			/* e honda music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(12, 13, 1);
 			break;
 
 		case 0x3:
-			// blanka music slow
+			/* blanka music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(4, 5, 1);
 			break;
 
 		case 0x4:
-			// ken music slow
+			/* ken music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(52, 53, 1);
 			break;
 
 		case 0x5:
-			// guile music slow
+			/* guile music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(16, 17, 1);
 			break;
 
 		case 0x6:
-			// chun li music slow
+			/* chun li music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(8, 9, 1);
 			break;
 
 		case 0x7:
-			// zangief music slow
+			/* zangief music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(56, 57, 1);
 			break;
 
 		case 0x8:
-			// dhalsim music slow
+			/* dhalsim music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(20, 21, 1);
 			break;
 
 		case 0x9:
-			// balrog music slow
+			/* balrog music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(24, 25, 1);
 			break;
 
 		case 0xa:
-			// vega music slow
+			/* vega music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(60, 61, 1);
 			break;
 
 		case 0xb:
-			// sagat music slow
+			/* sagat music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(28, 29, 1);
 			break;
 
 		case 0xc:
-			// m. bison music slow
+			/* m. bison music slow */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(32, 33, 1);
 			break;
 
 		case 0xd:
-			// bonus stage music
+			/* bonus stage music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(64, 65, 1);
 			break;
 
 		case 0xe:
-			// character select stage
+			/* character select stage */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(48, 49, 1);
 			break;
 
 		case 0xf:
-			// versus screen ditty
+			/* versus screen ditty */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(36, 37, 0);
 			break;
 
 		case 0x10:
-			// end of fight dialog/resolution screen
+			/* end of fight dialog/resolution screen */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(38, 39, 0);
 			break;
 
 		case 0x11:
-			// continue music, loop for ending credits
+			/* continue music, loop for ending credits */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(40, 41, 1);
 			break;
 
 		case 0x13:
-			// game over
+			/* game over */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(50, 51, 0);
 			break;
 
 		case 0x14:
-			// high score screen
+			/* high score screen */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(42, 43, 0);
 			break;
 
 		case 0x15:
-			// player joined music
+			/* player joined music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(46, 47, 0);
 			break;
 
 		case 0x16:
-			// intro music
+			/* intro music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(44, 45, 1);
 			break;
 
 		case 0x18:
-			// ryu ending music
+			/* ryu ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(82, 83, 0);
 			break;
 
 		case 0x19:
-			// e.honda ending music
+			/* e.honda ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(72, 73, 1);
 			break;
 
 		case 0x1a:
-			// blanka ending music
+			/* blanka ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(74, 75, 1);
 			break;
 
 		case 0x1b:
-			// guile ending music
+			/* guile ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(76, 77, 1);
 			break;
 
 		case 0x1c:
-			// ken ending music
+			/* ken ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(68, 69, 1);
 			break;
 
 		case 0x1d:
-			// chun li ending music?
+			/* chun li ending music? */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(86, 87, 1);
 			break;
 
 		case 0x1e:
-			// zangief ending music
+			/* zangief ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(78, 79, 1);
 			break;
 
 		case 0x1f:
-			// dhalsim ending music
+			/* dhalsim ending music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(84, 85, 1);
 			break;
 
 		case 0x34:
-			// wedding music -- ken ending
+			/* wedding music -- ken ending */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(70, 71, 1);
 			break;
 
 		case 0x35:
-			// chun li ending #2
+			/* chun li ending #2 */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(88, 89, 1);
 			break;
 
 		case 0x79:
-			// ryu music fast
+			/* ryu music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(2, 3, 1);
 			break;
 
 		case 0x7a:
-			// e. honda music fast
+			/* e. honda music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(14, 15, 1);
 			break;
 
 		case 0x7b:
-			// blanka music fast
+			/* blanka music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(6, 7, 1);
 			break;
 
 		case 0x7c:
-			// guile music fast
+			/* guile music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(18, 19, 1);
 			break;
 
 		case 0x7d:
-			// ken music fast
+			/* ken music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(54, 55, 1);
 			break;
 
 		case 0x7e:
-			// fast chun li music
+			/* fast chun li music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(10, 11, 1);
 			break;
 
 		case 0x7f:
-			// zangief music fast
+			/* zangief music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(58, 59, 1);
 			break;
 
 		case 0x80:
-			// dhalsim music fast
+			/* dhalsim music fast */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(22, 23, 1);
 			break;
 
 		case 0x81:
-			// fast balrog music
+			/* fast balrog music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(26, 27, 1);
 			break;
 
 		case 0x82:
-			// fast vega music
+			/* fast vega music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(62, 63, 1);
 			break;
 
 		case 0x83:
-			// fast sagat music
+			/* fast sagat music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(30, 31, 1);
 			break;
 
 		case 0x84:
-			// fast m. bison music
+			/* fast m. bison music */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(34, 35, 1);
 			break;
 
 		case 0x8c:
-			// m. bison ending
+			/* m. bison ending */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(66, 67, 1);
 			break;
 
 		case 0x8d:
-			// special ending
+			/* special ending */
 			fadingMusic = false;
 			sa_volume = 100;
 			ost_start_samples(80, 81, 1);
 			break;
 
 		case 0xf9:
-			// fade music
+			/* fade music */
 			fadingMusic = true;
 			schedule_default_sound = true;
 			break;

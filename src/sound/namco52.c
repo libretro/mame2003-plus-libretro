@@ -97,7 +97,7 @@ void namcoio_52XX_write(int data)
 {
 	data &= 0x0f;
 
-//logerror("%04x: custom 52XX write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: custom 52XX write %02x\n",activecpu_get_pc(),data); */
 
 	if (Machine->sample_rate == 0)
 		return;

@@ -147,9 +147,9 @@ INPUT_PORTS_START( leprechn )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( piratetr )
-    // All of these ports are read indirectly through a VIA mapped at 0x2800
+    /* All of these ports are read indirectly through a VIA mapped at 0x2800 */
     PORT_START      /* Input Port 0 */
-    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT ) // This is called "Slam" in the game
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT ) /* This is called "Slam" in the game */
     PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
     PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "Advance", KEYCODE_F1, IP_JOY_NONE )
     PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )

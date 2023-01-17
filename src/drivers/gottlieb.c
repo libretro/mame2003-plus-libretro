@@ -737,10 +737,10 @@ INPUT_PORTS_START( tylz )
 
 	PORT_START	/* ? */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
-	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) // cycle through test options, hold to do test
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) /* cycle through test options, hold to do test */
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_DIPNAME( 0x10, 0x10, "1" )  // probably nothing else here
+	PORT_DIPNAME( 0x10, 0x10, "1" )  /* probably nothing else here */
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
@@ -1308,7 +1308,7 @@ INPUT_PORTS_START( wizwarz )
 
 	PORT_START	/* ? */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
-	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) // cycle through test options, hold to do test
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Select in Service Mode", KEYCODE_F1, IP_JOY_NONE ) /* cycle through test options, hold to do test */
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -1387,7 +1387,7 @@ INPUT_PORTS_START( kngtmare )
 	PORT_DIPNAME( 0x11, 0x11, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x11, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) ) */
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
@@ -2259,7 +2259,7 @@ GAMEC(1982, myqbert,  qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb"
 GAMEC(1982, qberttst, qbert,    qbert,    qbert,    0,        ROT270, "Gottlieb",                   "Q*bert (early test version)",  &qbert_ctrl, NULL )
 GAME( 1982, insector, 0,        gottlieb, insector, 0,        ROT0,   "Gottlieb",                   "Insector (prototype)" )
 GAMEX(1982, tylz,     0,     gottlieb, tylz,     0,        ROT0,   "Mylstar",  "Tylz (prototype)", GAME_IMPERFECT_SOUND )
-GAME( 1984, argusg,   0,        krull,    argusg,   0,        ROT0,   "Gottlieb", "Argus (Gottlieb, prototype)" ) // aka Guardian / Protector?
+GAME( 1984, argusg,   0,        krull,    argusg,   0,        ROT0,   "Gottlieb", "Argus (Gottlieb, prototype)" ) /* aka Guardian / Protector? */
 GAME( 1983, mplanets, 0,        gottlieb, mplanets, 0,        ROT270, "Gottlieb",                   "Mad Planets" )
 GAME( 1983, mplanuk,  mplanets, gottlieb, mplanets, 0,        ROT270, "Gottlieb (Taitel license)",  "Mad Planets (UK)" )
 GAME( 1983, krull,    0,        krull,    krull,    0,        ROT270, "Gottlieb",                   "Krull" )

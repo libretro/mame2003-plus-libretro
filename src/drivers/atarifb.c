@@ -576,10 +576,10 @@ static struct GfxDecodeInfo soccer_gfxdecodeinfo[] =
 const struct discrete_555_astbl_desc atarifbWhistl555 =
 {
 	DISC_555_OUT_CAP | DISC_555_OUT_AC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2.0 /3.0,	/* normally 2/3 of v555 */
+	5.0 / 3.0	/* normally 1/3 of v555 */
 };
 
 const struct discrete_lfsr_desc atarifb_lfsr =
@@ -631,7 +631,7 @@ static DISCRETE_SOUND_START(atarifb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
+	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC */
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */
@@ -693,7 +693,7 @@ static DISCRETE_SOUND_START(abaseb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
+	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC */
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */

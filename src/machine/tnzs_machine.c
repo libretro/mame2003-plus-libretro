@@ -368,7 +368,7 @@ static READ_HANDLER( mcu_extrmatn_r )
 					{
 						mcu_initializing = 3;
 						return 0xee;	/* tilt */
-/*						return 0x64;	 // theres a reset input somewhere /*/
+/*						return 0x64;	 /* theres a reset input somewhere */
 					}
 					else return mcu_credits;
 				}
@@ -710,7 +710,7 @@ WRITE_HANDLER( tnzs_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-//	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data);
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch\n", activecpu_get_pc(),data); */
 
 	/* bit 4 resets the second CPU */
 	if (data & 0x10)
@@ -726,7 +726,7 @@ WRITE_HANDLER( tnzs_bankswitch1_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
 
-//	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data);
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: writing %02x to bankswitch 1\n", activecpu_get_pc(),data); */
 
 	switch (mcu_type)
 	{

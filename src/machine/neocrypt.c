@@ -596,14 +596,14 @@ static void neogeo_gfx_decrypt_for_mc50(int extra_xor)
 
 	rom = memory_region(REGION_GFX3);
 
-	// Data xor
+	/* Data xor */
 	for (rpos = 0;rpos < rom_size/4;rpos++)
 	{
 		decrypt(buf+4*rpos+0, buf+4*rpos+3, rom[4*rpos+0], rom[4*rpos+3], type0_t03, type0_t12, type1_t03, rpos, (rpos>>8) & 1);
 		decrypt(buf+4*rpos+1, buf+4*rpos+2, rom[4*rpos+1], rom[4*rpos+2], type0_t12, type0_t03, type1_t12, rpos, ((rpos>>16) ^ address_16_23_xor2[(rpos>>8) & 0xff]) & 1);
 	}
 
-	// Address xor
+	/* Address xor */
 	for (rpos = 0;rpos < rom_size/4;rpos++)
 	{
 		int baser;
@@ -706,7 +706,7 @@ void neogeo_cmc50_m1_decrypt( void )
 
 	UINT16 key=generate_cs16(rom,0x10000);
 
-	//printf("key %04x\n",key);
+	/*printf("key %04x\n",key); */
 
 	for (i=0; i<rom_size; i++)
 	{
@@ -967,7 +967,7 @@ static void cthd2003_neogeo_gfx_address_fix_do(int start, int end, int bit3shift
 	int i,j;
 	int tilesize=128;
 
-	UINT8* rom = (UINT8*)malloc(16*tilesize);	// 16 tiles buffer
+	UINT8* rom = (UINT8*)malloc(16*tilesize);	/* 16 tiles buffer */
 	UINT8* realrom = memory_region(REGION_GFX3) + start*tilesize;
 
 	for (i = 0; i < (end-start)/16; i++) {
@@ -990,7 +990,7 @@ static void cthd2003_neogeo_gfx_address_fix(int start, int end)
 	cthd2003_neogeo_gfx_address_fix_do(start+512*0, end+512*0, 0,3,2,1);
 	cthd2003_neogeo_gfx_address_fix_do(start+512*1, end+512*1, 1,0,3,2);
 	cthd2003_neogeo_gfx_address_fix_do(start+512*2, end+512*2, 2,1,0,3);
-	// skip 3 & 4
+	/* skip 3 & 4 */
 	cthd2003_neogeo_gfx_address_fix_do(start+512*5, end+512*5, 0,1,2,3);
 	cthd2003_neogeo_gfx_address_fix_do(start+512*6, end+512*6, 0,1,2,3);
 	cthd2003_neogeo_gfx_address_fix_do(start+512*7, end+512*7, 0,2,3,1);
@@ -1066,32 +1066,32 @@ void patch_cthd2003( void )
 
 	/* special ROM banking handler */
     install_mem_write16_handler(0, 0x2ffff0, 0x2fffff, cthd2003_bankswitch_w);
-	// theres still a problem on the character select screen but it seems to be related to cpu core timing issues,
-	// overclocking the 68k prevents it.
+	/* theres still a problem on the character select screen but it seems to be related to cpu core timing issues, */
+	/* overclocking the 68k prevents it. */
 
-	// fix garbage on s1 layer over everything
+	/* fix garbage on s1 layer over everything */
 	mem16[0xf415a/2] = 0x4ef9;
 	mem16[0xf415c/2] = 0x000f;
 	mem16[0xf415e/2] = 0x4cf2;
-	// Fix corruption in attract mode before title screen
+	/* Fix corruption in attract mode before title screen */
 	for (i=0x1ae290/2;i < 0x1ae8d0/2; i=i+1)
 	{
 		mem16[i] = 0x0000;
 	}
 
-	// Fix for title page
+	/* Fix for title page */
 	for (i=0x1f8ef0/2;i < 0x1fa1f0/2; i=i+2)
 	{
 		mem16[i] -= 0x7000;
 		mem16[i+1] -= 0x0010;
  	}
 
-	// Fix for green dots on title page
+	/* Fix for green dots on title page */
 	for (i=0xac500/2;i < 0xac520/2; i=i+1)
 	{
 		mem16[i] = 0xFFFF;
 	}
- 	// Fix for blanks as screen change level end clear
+ 	/* Fix for blanks as screen change level end clear */
 	mem16[0x991d0/2] = 0xdd03;
 	mem16[0x99306/2] = 0xdd03;
 	mem16[0x99354/2] = 0xdd03;
@@ -1234,17 +1234,17 @@ READ16_HANDLER( kof10th_RAMB_r )
 
 WRITE16_HANDLER( kof10th_custom_w )
 {
-	if (!kof10thExtraRAMB[0xFFE]) { // Write to RAM bank A
+	if (!kof10thExtraRAMB[0xFFE]) { /* Write to RAM bank A */
 		UINT16 *prom = (UINT16*)memory_region( REGION_CPU1 );
 		COMBINE_DATA(&prom[(0xE0000/2) + (offset & 0xFFFF)]);
 	} else {
-//      S data should be written here... ??  scrambled??
-//      UINT16 *prom = (UINT16*)memory_region( REGION_GFX1 );
-//      UINT8 datalow = BITSWAP8((data&0xff)^0xf3,7,6,0,4,3,2,1,5);
-//      UINT8 datahigh = BITSWAP8(((data>>8)&0xff)^0xf3,7,6,0,4,3,2,1,5);
-//      data = datalow | datahigh<<8;
-//      COMBINE_DATA(&prom[offset & 0xFFFF]);
-//      decodechar(Machine->gfx[0], (offset&0xffff)/16, (UINT8 *)prom, &kof10th_layout);
+/*      S data should be written here... ??  scrambled?? */
+/*      UINT16 *prom = (UINT16*)memory_region( REGION_GFX1 ); */
+/*      UINT8 datalow = BITSWAP8((data&0xff)^0xf3,7,6,0,4,3,2,1,5); */
+/*      UINT8 datahigh = BITSWAP8(((data>>8)&0xff)^0xf3,7,6,0,4,3,2,1,5); */
+/*      data = datalow | datahigh<<8; */
+/*      COMBINE_DATA(&prom[offset & 0xFFFF]); */
+/*      decodechar(Machine->gfx[0], (offset&0xffff)/16, (UINT8 *)prom, &kof10th_layout); */
 
 	}
 }
@@ -1252,7 +1252,7 @@ WRITE16_HANDLER( kof10th_custom_w )
 static WRITE16_HANDLER( kof10th_bankswitch_w )
 {
 	if (offset >= 0x5F000) {
-		if (offset == 0x5FFF8) { // Standard bankswitch
+		if (offset == 0x5FFF8) { /* Standard bankswitch */
 			kof10thBankswitch(data);
 		} else if (offset == 0x5FFFC && kof10thExtraRAMB[0xFFC] != data) {
 			UINT8 *src = memory_region( REGION_CPU1 );
@@ -1260,7 +1260,7 @@ static WRITE16_HANDLER( kof10th_bankswitch_w )
 		}
 		COMBINE_DATA(&kof10thExtraRAMB[offset & 0xFFF]);
 	} else {
-		// Usually writes 0x8EF3 or 0x7DF3, sometimes writes 0x0003 to offset 0x25FFF0
+		/* Usually writes 0x8EF3 or 0x7DF3, sometimes writes 0x0003 to offset 0x25FFF0 */
 	}
 }
 
@@ -1279,7 +1279,7 @@ void decrypt_kof10th( void )
 	UINT8 *srm = memory_region( REGION_GFX1 );
 
 	if (dst) {
-		memcpy(dst + 0x000000, src + 0x600000, 0x100000); // Correct?
+		memcpy(dst + 0x000000, src + 0x600000, 0x100000); /* Correct? */
 		memcpy(dst + 0x100000, src + 0x000000, 0x800000);
 		for (i = 0; i < 0x900000; i++) {
 			j = (i&0xFFF000) + BITSWAP16(i&0xFFF,15,14,13,12,11,2,9,8,7,1,5,4,3,10,6,0);
@@ -1288,15 +1288,15 @@ void decrypt_kof10th( void )
 		free(dst);
 	}
 
-	// Altera protection chip patches these over P ROM
-	((UINT16*)src)[0x0124/2] = 0x000d; // Enables XOR for RAM moves, forces SoftDIPs, and USA region
+	/* Altera protection chip patches these over P ROM */
+	((UINT16*)src)[0x0124/2] = 0x000d; /* Enables XOR for RAM moves, forces SoftDIPs, and USA region */
 	((UINT16*)src)[0x0126/2] = 0xf7a8;
 
-	((UINT16*)src)[0x8bf4/2] = 0x4ef9; // Run code to change "S" data
+	((UINT16*)src)[0x8bf4/2] = 0x4ef9; /* Run code to change "S" data */
 	((UINT16*)src)[0x8bf6/2] = 0x000d;
 	((UINT16*)src)[0x8bf8/2] = 0xf980;
 
- 	for (i = 0; i < 0x10000; i++) { // Get S data, should be done on the fly
+ 	for (i = 0; i < 0x10000; i++) { /* Get S data, should be done on the fly */
 		srm[0x00000+(i^1)]=BITSWAP8(src[0x600000+i]^0xf3,7,6,0,4,3,2,1,5);
  		srm[0x10000+(i^1)]=BITSWAP8(src[0x6d0000+i]^0xf3,7,6,0,4,3,2,1,5);
 	}
@@ -1326,12 +1326,12 @@ void decrypt_kf10thep(void)
 	memcpy(src+0x0a0000,dst+0x140000,0x20000);
 	memcpy(src+0x0c0000,dst+0x0c0000,0x20000);
 	memcpy(src+0x0e0000,dst+0x1a0000,0x20000);
-	memcpy(src+0x0002e0,dst+0x0402e0,0x6a); // copy banked code to a new memory region
-	memcpy(src+0x0f92bc,dst+0x0492bc,0xb9e); // copy banked code to a new memory region
+	memcpy(src+0x0002e0,dst+0x0402e0,0x6a); /* copy banked code to a new memory region */
+	memcpy(src+0x0f92bc,dst+0x0492bc,0xb9e); /* copy banked code to a new memory region */
 	for (i=0xf92bc/2;i < 0xf9e58/2 ;i++)
 	{
-		if (rom[i+0] == 0x4eb9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; // correct JSR in moved code
-		if (rom[i+0] == 0x4ef9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; // correct JMP in moved code
+		if (rom[i+0] == 0x4eb9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; /* correct JSR in moved code */
+		if (rom[i+0] == 0x4ef9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; /* correct JMP in moved code */
 	}
 	rom[0x00342/2] = 0x000f;
 	free(dst);
@@ -1360,7 +1360,7 @@ static void kf2k5uni_px_decrypt( void )
 	}
 	free(dst);
 
-	memcpy(src, src + 0x600000, 0x100000); // Seems to be the same as kof10th
+	memcpy(src, src + 0x600000, 0x100000); /* Seems to be the same as kof10th */
 }
 
 static void kf2k5uni_sx_decrypt( void )
@@ -1455,7 +1455,7 @@ void pvc_prot1( void )
 }
 
 
-void pvc_prot2( void ) // on writes to e8/e9/ea/eb
+void pvc_prot2( void ) /* on writes to e8/e9/ea/eb */
 {
 	unsigned char b1, b2, b3, b4;
 	b1 = pvc_r8(0x1fe9);
@@ -1705,19 +1705,19 @@ static WRITE16_HANDLER( garou_bankswitch_w )
 	int bankaddress;
 	static int bankoffset[64] =
 	{
-		0x000000, 0x100000, 0x200000, 0x300000, // 00
-		0x280000, 0x380000, 0x2d0000, 0x3d0000, // 04
-		0x2f0000, 0x3f0000, 0x400000, 0x500000, // 08
-		0x420000, 0x520000, 0x440000, 0x540000, // 12
-		0x498000, 0x598000, 0x4a0000, 0x5a0000, // 16
-		0x4a8000, 0x5a8000, 0x4b0000, 0x5b0000, // 20
-		0x4b8000, 0x5b8000, 0x4c0000, 0x5c0000, // 24
-		0x4c8000, 0x5c8000, 0x4d0000, 0x5d0000, // 28
-		0x458000, 0x558000, 0x460000, 0x560000, // 32
-		0x468000, 0x568000, 0x470000, 0x570000, // 36
-		0x478000, 0x578000, 0x480000, 0x580000, // 40
-		0x488000, 0x588000, 0x490000, 0x590000, // 44
-		0x5d0000, 0x5d8000, 0x5e0000, 0x5e8000, // 48
+		0x000000, 0x100000, 0x200000, 0x300000, /* 00 */
+		0x280000, 0x380000, 0x2d0000, 0x3d0000, /* 04 */
+		0x2f0000, 0x3f0000, 0x400000, 0x500000, /* 08 */
+		0x420000, 0x520000, 0x440000, 0x540000, /* 12 */
+		0x498000, 0x598000, 0x4a0000, 0x5a0000, /* 16 */
+		0x4a8000, 0x5a8000, 0x4b0000, 0x5b0000, /* 20 */
+		0x4b8000, 0x5b8000, 0x4c0000, 0x5c0000, /* 24 */
+		0x4c8000, 0x5c8000, 0x4d0000, 0x5d0000, /* 28 */
+		0x458000, 0x558000, 0x460000, 0x560000, /* 32 */
+		0x468000, 0x568000, 0x470000, 0x570000, /* 36 */
+		0x478000, 0x578000, 0x480000, 0x580000, /* 40 */
+		0x488000, 0x588000, 0x490000, 0x590000, /* 44 */
+		0x5d0000, 0x5d8000, 0x5e0000, 0x5e8000, /* 48 */
 		0x5f0000, 0x5f8000, 0x600000, /* rest not used? */
 	};
 
@@ -1782,22 +1782,22 @@ static WRITE16_HANDLER( garouo_bankswitch_w )
 	int bankaddress;
 	static int bankoffset[64] =
 	{
-		0x000000, 0x100000, 0x200000, 0x300000, // 00
-		0x280000, 0x380000, 0x2d0000, 0x3d0000, // 04
-		0x2c8000, 0x3c8000, 0x400000, 0x500000, // 08
-		0x420000, 0x520000, 0x440000, 0x540000, // 12
-		0x598000, 0x698000, 0x5a0000, 0x6a0000, // 16
-		0x5a8000, 0x6a8000, 0x5b0000, 0x6b0000, // 20
-		0x5b8000, 0x6b8000, 0x5c0000, 0x6c0000, // 24
-		0x5c8000, 0x6c8000, 0x5d0000, 0x6d0000, // 28
-		0x458000, 0x558000, 0x460000, 0x560000, // 32
-		0x468000, 0x568000, 0x470000, 0x570000, // 36
-		0x478000, 0x578000, 0x480000, 0x580000, // 40
-		0x488000, 0x588000, 0x490000, 0x590000, // 44
-		0x5d8000, 0x6d8000, 0x5e0000, 0x6e0000, // 48
-		0x5e8000, 0x6e8000, 0x6e8000, 0x000000, // 52
-		0x000000, 0x000000, 0x000000, 0x000000, // 56
-		0x000000, 0x000000, 0x000000, 0x000000, // 60
+		0x000000, 0x100000, 0x200000, 0x300000, /* 00 */
+		0x280000, 0x380000, 0x2d0000, 0x3d0000, /* 04 */
+		0x2c8000, 0x3c8000, 0x400000, 0x500000, /* 08 */
+		0x420000, 0x520000, 0x440000, 0x540000, /* 12 */
+		0x598000, 0x698000, 0x5a0000, 0x6a0000, /* 16 */
+		0x5a8000, 0x6a8000, 0x5b0000, 0x6b0000, /* 20 */
+		0x5b8000, 0x6b8000, 0x5c0000, 0x6c0000, /* 24 */
+		0x5c8000, 0x6c8000, 0x5d0000, 0x6d0000, /* 28 */
+		0x458000, 0x558000, 0x460000, 0x560000, /* 32 */
+		0x468000, 0x568000, 0x470000, 0x570000, /* 36 */
+		0x478000, 0x578000, 0x480000, 0x580000, /* 40 */
+		0x488000, 0x588000, 0x490000, 0x590000, /* 44 */
+		0x5d8000, 0x6d8000, 0x5e0000, 0x6e0000, /* 48 */
+		0x5e8000, 0x6e8000, 0x6e8000, 0x000000, /* 52 */
+		0x000000, 0x000000, 0x000000, 0x000000, /* 56 */
+		0x000000, 0x000000, 0x000000, 0x000000, /* 60 */
 	};
 
 	/* unscramble bank number */
@@ -1861,18 +1861,18 @@ static WRITE16_HANDLER( mslug3_bankswitch_w )
 	int bankaddress;
 	static int bankoffset[64] =
 	{
-	  0x000000, 0x020000, 0x040000, 0x060000, // 00
-	  0x070000, 0x090000, 0x0b0000, 0x0d0000, // 04
-	  0x0e0000, 0x0f0000, 0x120000, 0x130000, // 08
-	  0x140000, 0x150000, 0x180000, 0x190000, // 12
-	  0x1a0000, 0x1b0000, 0x1e0000, 0x1f0000, // 16
-	  0x200000, 0x210000, 0x240000, 0x250000, // 20
-	  0x260000, 0x270000, 0x2a0000, 0x2b0000, // 24
-	  0x2c0000, 0x2d0000, 0x300000, 0x310000, // 28
-	  0x320000, 0x330000, 0x360000, 0x370000, // 32
-	  0x380000, 0x390000, 0x3c0000, 0x3d0000, // 36
-	  0x400000, 0x410000, 0x440000, 0x450000, // 40
-	  0x460000, 0x470000, 0x4a0000, 0x4b0000, // 44
+	  0x000000, 0x020000, 0x040000, 0x060000, /* 00 */
+	  0x070000, 0x090000, 0x0b0000, 0x0d0000, /* 04 */
+	  0x0e0000, 0x0f0000, 0x120000, 0x130000, /* 08 */
+	  0x140000, 0x150000, 0x180000, 0x190000, /* 12 */
+	  0x1a0000, 0x1b0000, 0x1e0000, 0x1f0000, /* 16 */
+	  0x200000, 0x210000, 0x240000, 0x250000, /* 20 */
+	  0x260000, 0x270000, 0x2a0000, 0x2b0000, /* 24 */
+	  0x2c0000, 0x2d0000, 0x300000, 0x310000, /* 28 */
+	  0x320000, 0x330000, 0x360000, 0x370000, /* 32 */
+	  0x380000, 0x390000, 0x3c0000, 0x3d0000, /* 36 */
+	  0x400000, 0x410000, 0x440000, 0x450000, /* 40 */
+	  0x460000, 0x470000, 0x4a0000, 0x4b0000, /* 44 */
 	  0x4c0000, /* rest not used? */
 	};
 
@@ -1936,15 +1936,15 @@ static WRITE16_HANDLER( kof2000_bankswitch_w )
 	int bankaddress;
 	static int bankoffset[64] =
 	{
-		0x000000, 0x100000, 0x200000, 0x300000, // 00
-		0x3f7800, 0x4f7800, 0x3ff800, 0x4ff800, // 04
-		0x407800, 0x507800, 0x40f800, 0x50f800, // 08
-		0x416800, 0x516800, 0x41d800, 0x51d800, // 12
-		0x424000, 0x524000, 0x523800, 0x623800, // 16
-		0x526000, 0x626000, 0x528000, 0x628000, // 20
-		0x52a000, 0x62a000, 0x52b800, 0x62b800, // 24
-		0x52d000, 0x62d000, 0x52e800, 0x62e800, // 28
-		0x618000, 0x619000, 0x61a000, 0x61a800, // 32
+		0x000000, 0x100000, 0x200000, 0x300000, /* 00 */
+		0x3f7800, 0x4f7800, 0x3ff800, 0x4ff800, /* 04 */
+		0x407800, 0x507800, 0x40f800, 0x50f800, /* 08 */
+		0x416800, 0x516800, 0x41d800, 0x51d800, /* 12 */
+		0x424000, 0x524000, 0x523800, 0x623800, /* 16 */
+		0x526000, 0x626000, 0x528000, 0x628000, /* 20 */
+		0x52a000, 0x62a000, 0x52b800, 0x62b800, /* 24 */
+		0x52d000, 0x62d000, 0x52e800, 0x62e800, /* 28 */
+		0x618000, 0x619000, 0x61a000, 0x61a800, /* 32 */
 	};
 
 	/* unscramble bank number */
@@ -2032,7 +2032,7 @@ WRITE16_HANDLER ( kof98_prot_w )
 		mem16[0x100/2] = 0x4e45; mem16[0x102/2] = 0x4f2d;
 		break;
 
-		default: // 00aa is written, but not needed?
+		default: /* 00aa is written, but not needed? */
 		logerror ("%06x kof98 - unknown protection write %04x\n",activecpu_get_pc(), data);
 		break;
 	}
@@ -2347,7 +2347,7 @@ void kf2k3pcb_decrypt_s1data( void )
 	int tx_size = memory_region_length( REGION_GFX1 );
 	int srom_size = memory_region_length( REGION_GFX3 );
 
-	src = memory_region( REGION_GFX3 ) + srom_size - 0x1000000 - 0x80000; // Decrypt S
+	src = memory_region( REGION_GFX3 ) + srom_size - 0x1000000 - 0x80000; /* Decrypt S */
 	dst = memory_region( REGION_GFX1 );
 
 	for( i = 0; i < tx_size / 2; i++ )
@@ -2397,11 +2397,11 @@ void kof2003biosdecode(void)
 
 		for (a=0;a<0x80000/2;a++)
 		{
-			//data xor
+			/*data xor */
 			if (src[a] & 0x0004)	src[a] ^= 0x0001;
 			if (src[a] & 0x0010)	src[a] ^= 0x0002;
 			if (src[a] & 0x0020)	src[a] ^= 0x0008;
-			//address xor
+			/*address xor */
 			addr  = a & ~0xff;
 			addr |= address[a & 0x7f];
 			if ( a & 0x00008)	addr ^= 0x0008;
@@ -2538,7 +2538,7 @@ void svcpcb_s1data_decrypt( void )
 	UINT8 *s1 = memory_region( REGION_GFX1 );
 	size_t s1_size = memory_region_length( REGION_GFX1 );
 
-	for( i = 0; i < s1_size; i++ ) // Decrypt S
+	for( i = 0; i < s1_size; i++ ) /* Decrypt S */
 	{
 		s1[ i ] = BITSWAP8( s1[ i ] ^ 0xd2, 4, 0, 7, 2, 5, 1, 6, 3 );
 	}

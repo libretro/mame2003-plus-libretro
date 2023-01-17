@@ -20,8 +20,8 @@ Tilemap flip flags were reversed
 extern data32_t *skns_tilemapA_ram, *skns_tilemapB_ram, *skns_v3slc_ram;
 extern data32_t *skns_palette_ram, *skns_v3t_ram, *skns_main_ram, *skns_cache_ram;
 extern data32_t *skns_pal_regs, *skns_v3_regs, *skns_spc_regs;
-extern data32_t skns_v3t_dirty[0x4000]; // allocate this elsewhere?
-extern data32_t skns_v3t_4bppdirty[0x8000]; // allocate this elsewhere?
+extern data32_t skns_v3t_dirty[0x4000]; /* allocate this elsewhere? */
+extern data32_t skns_v3t_4bppdirty[0x8000]; /* allocate this elsewhere? */
 extern int skns_v3t_somedirty,skns_v3t_4bpp_somedirty;
 
 void skns_palette_update(void);
@@ -286,58 +286,58 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 	int sprite_flip;
 	int sprite_x_scroll;
 	int sprite_y_scroll;
-	int disabled = skns_spc_regs[0x04/4] & 0x08; // RWR1
+	int disabled = skns_spc_regs[0x04/4] & 0x08; /* RWR1 */
 	int xsize,ysize, size, xpos=0,ypos=0, pri=0, romoffset, colour=0, xflip,yflip, joint;
 	int sx,sy;
 	int endromoffs=0;
 	int grow;
-	//UINT16 zoomx, zoomy;
+	/*UINT16 zoomx, zoomy; */
 	UINT16 zoomx_m, zoomx_s, zoomy_m, zoomy_s;
 	
-	buffer_spriteram32_w(0,0,0);  //hack
+	buffer_spriteram32_w(0,0,0);  /*hack */
 
 
 	if (!disabled){
 
-		group_enable    = (skns_spc_regs[0x00/4] & 0x0040) >> 6; // RWR0
+		group_enable    = (skns_spc_regs[0x00/4] & 0x0040) >> 6; /* RWR0 */
 
 		/* Sengekis uses global flip */
-		sprite_flip = (skns_spc_regs[0x04/4] & 0x03); // RWR1
+		sprite_flip = (skns_spc_regs[0x04/4] & 0x03); /* RWR1 */
 
-		sprite_y_scroll = ((skns_spc_regs[0x08/4] & 0x7fc0) >> 6); // RWR2
-		sprite_x_scroll = ((skns_spc_regs[0x10/4] & 0x7fc0) >> 6); // RWR4
-		if (sprite_y_scroll&0x100) sprite_y_scroll -= 0x200; // Signed
-		if (sprite_x_scroll&0x100) sprite_x_scroll -= 0x200; // Signed
+		sprite_y_scroll = ((skns_spc_regs[0x08/4] & 0x7fc0) >> 6); /* RWR2 */
+		sprite_x_scroll = ((skns_spc_regs[0x10/4] & 0x7fc0) >> 6); /* RWR4 */
+		if (sprite_y_scroll&0x100) sprite_y_scroll -= 0x200; /* Signed */
+		if (sprite_x_scroll&0x100) sprite_x_scroll -= 0x200; /* Signed */
 
-		group_x_offset[0] = (skns_spc_regs[0x18/4] & 0xffc0) >> 6; // RWR6
-		group_y_offset[0] = (skns_spc_regs[0x1c/4] & 0xffc0) >> 6; // RWR7
-		if (group_x_offset[0]&0x200) group_x_offset[0] -= 0x400; // Signed
-		if (group_y_offset[0]&0x200) group_y_offset[0] -= 0x400; // Signed
+		group_x_offset[0] = (skns_spc_regs[0x18/4] & 0xffc0) >> 6; /* RWR6 */
+		group_y_offset[0] = (skns_spc_regs[0x1c/4] & 0xffc0) >> 6; /* RWR7 */
+		if (group_x_offset[0]&0x200) group_x_offset[0] -= 0x400; /* Signed */
+		if (group_y_offset[0]&0x200) group_y_offset[0] -= 0x400; /* Signed */
 
-		group_x_offset[1] = (skns_spc_regs[0x20/4] & 0xffc0) >> 6; // RWR8
-		group_y_offset[1] = (skns_spc_regs[0x24/4] & 0xffc0) >> 6; // RWR9
-		if (group_x_offset[1]&0x200) group_x_offset[1] -= 0x400; // Signed
-		if (group_y_offset[1]&0x200) group_y_offset[1] -= 0x400; // Signed
+		group_x_offset[1] = (skns_spc_regs[0x20/4] & 0xffc0) >> 6; /* RWR8 */
+		group_y_offset[1] = (skns_spc_regs[0x24/4] & 0xffc0) >> 6; /* RWR9 */
+		if (group_x_offset[1]&0x200) group_x_offset[1] -= 0x400; /* Signed */
+		if (group_y_offset[1]&0x200) group_y_offset[1] -= 0x400; /* Signed */
 
-		group_x_offset[2] = (skns_spc_regs[0x28/4] & 0xffc0) >> 6; // RWR10
-		group_y_offset[2] = (skns_spc_regs[0x2c/4] & 0xffc0) >> 6; // RWR11
-		if (group_x_offset[2]&0x200) group_x_offset[2] -= 0x400; // Signed
-		if (group_y_offset[2]&0x200) group_y_offset[2] -= 0x400; // Signed
+		group_x_offset[2] = (skns_spc_regs[0x28/4] & 0xffc0) >> 6; /* RWR10 */
+		group_y_offset[2] = (skns_spc_regs[0x2c/4] & 0xffc0) >> 6; /* RWR11 */
+		if (group_x_offset[2]&0x200) group_x_offset[2] -= 0x400; /* Signed */
+		if (group_y_offset[2]&0x200) group_y_offset[2] -= 0x400; /* Signed */
 
-		group_x_offset[3] = (skns_spc_regs[0x30/4] & 0xffc0) >> 6; // RWR12
-		group_y_offset[3] = (skns_spc_regs[0x34/4] & 0xffc0) >> 6; // RWR13
-		if (group_x_offset[3]&0x200) group_x_offset[3] -= 0x400; // Signed
-		if (group_y_offset[3]&0x200) group_y_offset[3] -= 0x400; // Signed
+		group_x_offset[3] = (skns_spc_regs[0x30/4] & 0xffc0) >> 6; /* RWR12 */
+		group_y_offset[3] = (skns_spc_regs[0x34/4] & 0xffc0) >> 6; /* RWR13 */
+		if (group_x_offset[3]&0x200) group_x_offset[3] -= 0x400; /* Signed */
+		if (group_y_offset[3]&0x200) group_y_offset[3] -= 0x400; /* Signed */
 
-	//	usrintf_showmessage	("x %08x y %08x x2 %08x y2 %08x",sprite_x_scroll, sprite_y_scroll,group_x_offset[1], group_y_offset[1]);
-	//	usrintf_showmessage("%d %d %d %d A:%d B:%d", sprite_kludge_x, sprite_kludge_y, sprite_x_scroll, sprite_y_scroll, (skns_pal_regs[0x00/4] & 0x7000) >> 12, (skns_pal_regs[0x10/4] & 0x7000) >> 12);
-	//	if (keyboard_pressed(KEYCODE_Q)) sprite_kludge_x++;
-	//	if (keyboard_pressed(KEYCODE_W)) sprite_kludge_x--;
-	//	if (keyboard_pressed(KEYCODE_E)) sprite_kludge_y++;
-	//	if (keyboard_pressed(KEYCODE_D)) sprite_kludge_y--;
+	/*	usrintf_showmessage	("x %08x y %08x x2 %08x y2 %08x",sprite_x_scroll, sprite_y_scroll,group_x_offset[1], group_y_offset[1]); */
+	/*	usrintf_showmessage("%d %d %d %d A:%d B:%d", sprite_kludge_x, sprite_kludge_y, sprite_x_scroll, sprite_y_scroll, (skns_pal_regs[0x00/4] & 0x7000) >> 12, (skns_pal_regs[0x10/4] & 0x7000) >> 12); */
+	/*	if (keyboard_pressed(KEYCODE_Q)) sprite_kludge_x++; */
+	/*	if (keyboard_pressed(KEYCODE_W)) sprite_kludge_x--; */
+	/*	if (keyboard_pressed(KEYCODE_E)) sprite_kludge_y++; */
+	/*	if (keyboard_pressed(KEYCODE_D)) sprite_kludge_y--; */
 
-		// Tilemap Pri/enables
-	//	usrintf_showmessage("A: %x %x B: %x %x", skns_v3_regs[0x10/4]>>3, skns_v3_regs[0x10/4]&7, skns_v3_regs[0x34/4]>>3, skns_v3_regs[0x34/4]&7);
+		/* Tilemap Pri/enables */
+	/*	usrintf_showmessage("A: %x %x B: %x %x", skns_v3_regs[0x10/4]>>3, skns_v3_regs[0x10/4]&7, skns_v3_regs[0x34/4]>>3, skns_v3_regs[0x34/4]&7); */
 
 		/* Seems that sprites are consistently off by a fixed no. of pixels in different games
 		   (Patterns emerge through Manufacturer/Date/Orientation) */
@@ -367,7 +367,7 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 				xpos =  (source[2] & 0x0000ffc0) >> 6;
 				ypos =  (source[3] & 0x0000ffc0) >> 6;
 
-				xpos += sprite_x_scroll; // Global offset
+				xpos += sprite_x_scroll; /* Global offset */
 				ypos += sprite_y_scroll;
 
 				if (group_enable)
@@ -442,12 +442,12 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 			{
 
 
-				// sengekis uses this on sprites which are shrinking as they head towards the ground
-				// it's also used on the input test of Gals Panic S2
-				//
-				// it appears to offer a higher precision 'shrink' mode (although I'm not entirely
-				//  convinced this implementation is correct because we simply end up ignoring
-				//  part of the data)
+				/* sengekis uses this on sprites which are shrinking as they head towards the ground */
+				/* it's also used on the input test of Gals Panic S2 */
+				/* */
+				/* it appears to offer a higher precision 'shrink' mode (although I'm not entirely */
+				/*  convinced this implementation is correct because we simply end up ignoring */
+				/*  part of the data) */
 				zoomx_m = 0;
 				zoomx_s = (source[2] >> 24)&0x00fc;
 				zoomy_m = 0;
@@ -456,22 +456,22 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 
 			}
 
-			//zoomx = source[2] >> 16;
-			//zoomy = source[3] >> 16;
+			/*zoomx = source[2] >> 16; */
+			/*zoomy = source[3] >> 16; */
 
 			romoffset &= memory_region_length (REGION_GFX1)-1;
 
 			endromoffs = skns_rle_decode ( romoffset, size );
 
-			// PriTest
-//			if(!( (keyboard_pressed(KEYCODE_Q)&&(pri==0)) || (keyboard_pressed(KEYCODE_W)&&(pri==1)) || (keyboard_pressed(KEYCODE_E)&&(pri==2)) || (keyboard_pressed(KEYCODE_D)&&(pri==3)) ))
-//			if( !(keyboard_pressed(KEYCODE_Q) && ((source[0] & 0x00800000)>>24)) )
+			/* PriTest */
+/*			if(!( (keyboard_pressed(KEYCODE_Q)&&(pri==0)) || (keyboard_pressed(KEYCODE_W)&&(pri==1)) || (keyboard_pressed(KEYCODE_E)&&(pri==2)) || (keyboard_pressed(KEYCODE_D)&&(pri==3)) )) */
+/*			if( !(keyboard_pressed(KEYCODE_Q) && ((source[0] & 0x00800000)>>24)) ) */
 			{
 				int NewColour = colour*256;
 
 				if(zoomx_m || zoomx_s || zoomy_m || zoomy_s)
 				{
-					//blit_z[ (xflip<<1) | yflip ](bitmap, cliprect, decodebuffer, sx, sy, xsize, ysize, zoomx, zoomy, NewColour);
+					/*blit_z[ (xflip<<1) | yflip ](bitmap, cliprect, decodebuffer, sx, sy, xsize, ysize, zoomx, zoomy, NewColour); */
 					  blit_z[ (xflip<<1) | yflip ](bitmap, cliprect, decodebuffer, sx, sy, xsize, ysize, zoomx_m, zoomx_s, zoomy_m, zoomy_s, NewColour);
 				}
 				else
@@ -489,7 +489,7 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 									{
 										int pix;
 										pix = decodebuffer[xsize*yy+xx];
-										if (pix) plot_pixel( bitmap, sx+xx, sy+yy, pix+ NewColour ); // change later
+										if (pix) plot_pixel( bitmap, sx+xx, sy+yy, pix+ NewColour ); /* change later */
 									}
 								}
 							}
@@ -508,7 +508,7 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 									{
 										int pix;
 										pix = decodebuffer[xsize*yy+xx];
-										if (pix) plot_pixel( bitmap, sx+xx, sy+(ysize-1-yy), pix+ NewColour ); // change later
+										if (pix) plot_pixel( bitmap, sx+xx, sy+(ysize-1-yy), pix+ NewColour ); /* change later */
 									}
 								}
 							}
@@ -527,7 +527,7 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 									{
 										int pix;
 										pix = decodebuffer[xsize*yy+xx];
-										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+yy, pix+ NewColour ); // change later
+										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+yy, pix+ NewColour ); /* change later */
 									}
 								}
 							}
@@ -547,14 +547,14 @@ void skns_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *clipr
 									{
 										int pix;
 										pix = decodebuffer[xsize*yy+xx];
-										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+(ysize-1-yy), pix+ NewColour ); // change later
+										if (pix) plot_pixel( bitmap, sx+(xsize-1-xx), sy+(ysize-1-yy), pix+ NewColour ); /* change later */
 									}
 								}
 							}
 						}
 					}
 				}
-		}//End PriTest
+		}/*End PriTest */
 
 		source+=4;
 		}
@@ -568,7 +568,7 @@ static void get_tilemap_A_tile_info(int tile_index)
 {
 	int code = ((skns_tilemapA_ram[tile_index] & 0x001fffff) >> 0 );
 	int colr = ((skns_tilemapA_ram[tile_index] & 0x3f000000) >> 24 );
-//	int pri  = ((skns_tilemapA_ram[tile_index] & 0x00e00000) >> 21 );
+/*	int pri  = ((skns_tilemapA_ram[tile_index] & 0x00e00000) >> 21 ); */
 	int depth = (skns_v3_regs[0x0c/4] & 0x0001) << 1;
 	tile_info.flags = 0;
 
@@ -580,7 +580,7 @@ static void get_tilemap_A_tile_info(int tile_index)
 			code,
 			0x40+colr,
 			tile_info.flags)
-//	tile_info.priority = pri;
+/*	tile_info.priority = pri; */
 }
 
 WRITE32_HANDLER ( skns_tilemapA_w )
@@ -593,7 +593,7 @@ static void get_tilemap_B_tile_info(int tile_index)
 {
 	int code = ((skns_tilemapB_ram[tile_index] & 0x001fffff) >> 0 );
 	int colr = ((skns_tilemapB_ram[tile_index] & 0x3f000000) >> 24 );
-//	int pri  = ((skns_tilemapA_ram[tile_index] & 0x00e00000) >> 21 );
+/*	int pri  = ((skns_tilemapA_ram[tile_index] & 0x00e00000) >> 21 ); */
 	int depth = (skns_v3_regs[0x0c/4] & 0x0100) >> 7;
 	tile_info.flags = 0;
 
@@ -605,7 +605,7 @@ static void get_tilemap_B_tile_info(int tile_index)
 			code,
 			0x40+colr,
 			tile_info.flags)
-//	tile_info.priority = pri;
+/*	tile_info.priority = pri; */
 }
 
 WRITE32_HANDLER ( skns_tilemapB_w )
@@ -657,18 +657,18 @@ static void supernova_draw_a( struct mame_bitmap *bitmap, const struct rectangle
 	if (enable_a)
 	{
 		startx = skns_v3_regs[0x1c/4];
-			incyy  = skns_v3_regs[0x30/4]; // was xx, changed for sarukani
+			incyy  = skns_v3_regs[0x30/4]; /* was xx, changed for sarukani */
 		incyx  = skns_v3_regs[0x2c/4];
 		starty = skns_v3_regs[0x20/4];
 		incxy  = skns_v3_regs[0x28/4];
-			incxx  = skns_v3_regs[0x24/4]; // was yy, changed for sarukani
+			incxx  = skns_v3_regs[0x24/4]; /* was yy, changed for sarukani */
 
-		if( (incxx == 1<<8) && !incxy & !incyx && (incyy == 1<<8) ) // No Roz, only scroll.
+		if( (incxx == 1<<8) && !incxy & !incyx && (incyy == 1<<8) ) /* No Roz, only scroll. */
 		{
 			int columnscroll_a = (skns_v3_regs[0x0c/4] >> 1) & 0x0001;
 			int offs;
 
-			startx >>= 8; // Lose Floating point
+			startx >>= 8; /* Lose Floating point */
 			starty >>= 8;
 
 			if(columnscroll_a) {
@@ -715,7 +715,7 @@ static void supernova_draw_b( struct mame_bitmap *bitmap, const struct rectangle
 		incxy  = skns_v3_regs[0x4c/4];
 			incxx  = skns_v3_regs[0x48/4];
 
-		if( (incxx == 1<<8) && !incxy & !incyx && (incyy == 1<<8) ) // No Roz, only scroll.
+		if( (incxx == 1<<8) && !incxy & !incyx && (incyy == 1<<8) ) /* No Roz, only scroll. */
 		{
 			int columnscroll_b = (skns_v3_regs[0x0c/4] >> 9) & 0x0001;
 			int offs;
@@ -763,7 +763,7 @@ VIDEO_UPDATE(skns)
 
 	btiles = memory_region (REGION_GFX3);
 
-//  if (!(skns_v3_regs[0x0c/4] & 0x0100)); // if tilemap b is in 8bpp mode
+/*  if (!(skns_v3_regs[0x0c/4] & 0x0100));*/ /* if tilemap b is in 8bpp mode */
 	{
 		if (skns_v3t_somedirty)
 		{
@@ -789,7 +789,7 @@ VIDEO_UPDATE(skns)
 		}
 	}
 
-//  if (skns_v3_regs[0x0c/4] & 0x0100); // if tilemap b is in 4bpp mode
+/*  if (skns_v3_regs[0x0c/4] & 0x0100); */ /* if tilemap b is in 4bpp mode */
 	{
 		if (skns_v3t_4bpp_somedirty)
 		{

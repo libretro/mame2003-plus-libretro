@@ -49,7 +49,7 @@ static UINT32 f7bBamOffset1, f7bBamOffset2;
 static void F7aDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*DecodeOp2)(void), UINT8 dim2)
 {
 	UINT8 appb;
-	// Decode first operand
+	/* Decode first operand */
 	modDim=dim1;
 	modM=subOp&0x40;
 	modAdd=PC+2;
@@ -57,14 +57,14 @@ static void F7aDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 	f7aFlag1=amFlag;
 	f7aOp1=amOut;
 
-	// Decode length
+	/* Decode length */
 	appb=OpRead8(PC+2+amLength1);
 	if (appb&0x80)
 		f7aLenOp1=v60.reg[appb&0x1F];
 	else
 		f7aLenOp1=appb;
 
-	// Decode second operand
+	/* Decode second operand */
 	modDim=dim2;
 	modM=subOp&0x20;
 	modAdd=PC+3+amLength1;
@@ -72,7 +72,7 @@ static void F7aDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 	f7aFlag2=amFlag;
 	f7aOp2=amOut;
 
-	// Decode length
+	/* Decode length */
 	appb=OpRead8(PC+3+amLength1+amLength2);
 	if (appb&0x80)
 		f7aLenOp2=v60.reg[appb&0x1F];
@@ -83,7 +83,7 @@ static void F7aDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 static void F7bDecodeFirstOperand(UINT32 (*DecodeOp1)(void), UINT8 dim1)
 {
 	UINT8 appb;
-	// Decode first operand
+	/* Decode first operand */
 	modDim=dim1;
 	modM=subOp&0x40;
 	modAdd=PC+2;
@@ -91,7 +91,7 @@ static void F7bDecodeFirstOperand(UINT32 (*DecodeOp1)(void), UINT8 dim1)
 	f7bFlag1=amFlag;
 	f7bOp1=amOut;
 
-	// Decode ext
+	/* Decode ext */
 	appb=OpRead8(PC+2+amLength1);
 	if (appb&0x80)
 		f7bLen=v60.reg[appb&0x1F];
@@ -111,11 +111,11 @@ static void F7bWriteSecondOperand(UINT8 dim2)
 
 static void F7bDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*DecodeOp2)(void), UINT8 dim2)
 {
-	// Decode first operand
+	/* Decode first operand */
 	F7bDecodeFirstOperand(DecodeOp1,dim1);
 	f7bBamOffset1 = bamOffset;
 
-	// Decode second operand
+	/* Decode second operand */
 	modDim=dim2;
 	modM=subOp&0x20;
 	modAdd=PC+3+amLength1;
@@ -128,7 +128,7 @@ static void F7bDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 static void F7cDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*DecodeOp2)(void), UINT8 dim2)
 {
 	UINT8 appb;
-	// Decode first operand
+	/* Decode first operand */
 	modDim=dim1;
 	modM=subOp&0x40;
 	modAdd=PC+2;
@@ -136,7 +136,7 @@ static void F7cDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 	f7cFlag1=amFlag;
 	f7cOp1=amOut;
 
-	// Decode second operand
+	/* Decode second operand */
 	modDim=dim2;
 	modM=subOp&0x20;
 	modAdd=PC+2+amLength1;
@@ -144,7 +144,7 @@ static void F7cDecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*De
 	f7cFlag2=amFlag;
 	f7cOp2=amOut;
 
-	// Decode ext
+	/* Decode ext */
 	appb=OpRead8(PC+2+amLength1+amLength2);
 	if (appb&0x80)
 		f7cLen=v60.reg[appb&0x1F];
@@ -184,7 +184,7 @@ static UINT32 opCMPSTRB(UINT8 bFill, UINT8 bStop)
 
 	F7aDecodeOperands(ReadAMAddress,0,ReadAMAddress,0);
 
-	// Filling
+	/* Filling */
 	if (bFill)
 	{
 		if (f7aLenOp1 < f7aLenOp2)
@@ -250,7 +250,7 @@ static UINT32 opCMPSTRH(UINT8 bFill, UINT8 bStop)
 
 	F7aDecodeOperands(ReadAMAddress,0,ReadAMAddress,0);
 
-	// Filling
+	/* Filling */
 	if (bFill)
 	{
 		if (f7aLenOp1 < f7aLenOp2)
@@ -316,10 +316,10 @@ static UINT32 opMOVSTRUB(UINT8 bFill, UINT8 bStop) /* TRUSTED (0,0) (1,0) */
 	UINT32 i,dest;
 	UINT8 c1;
 
-//  if (bStop)
-//  {
-//      int a=1;
-//  }
+/*  if (bStop) */
+/*  { */
+/*      int a=1; */
+/*  } */
 
 	F7aDecodeOperands(ReadAMAddress,0,ReadAMAddress,0);
 
@@ -386,8 +386,8 @@ static UINT32 opMOVSTRUH(UINT8 bFill, UINT8 bStop) /* TRUSTED (0,0) (1,0) */
 	UINT32 i,dest;
 	UINT16 c1;
 
-//  if (bStop)
-//  {   int a=1; }
+/*  if (bStop) */
+/*  {   int a=1; } */
 
 	F7aDecodeOperands(ReadAMAddress,1,ReadAMAddress,1);
 
@@ -420,13 +420,13 @@ static UINT32 opMOVSTRDH(UINT8 bFill, UINT8 bStop)
 	UINT32 i,dest;
 	UINT16 c1;
 
-//  if (bFill | bStop)
-//  { int a=1; }
+/*  if (bFill | bStop) */
+/*  { int a=1; } */
 
 	F7aDecodeOperands(ReadAMAddress,1,ReadAMAddress,1);
 
-//  if (f7aLenOp1 != f7aLenOp2)
-//  { int a=1; }
+/*  if (f7aLenOp1 != f7aLenOp2) */
+/*  { int a=1; } */
 
 	dest=(f7aLenOp1 < f7aLenOp2 ? f7aLenOp1 : f7aLenOp2);
 
@@ -469,7 +469,7 @@ static UINT32 opSEARCHUB(UINT8 bSearch)
 	R28=f7bOp1+i;
 	R27=i;
 
-	// This is the opposite as stated in V60 manual...
+	/* This is the opposite as stated in V60 manual... */
 	if (i!=f7bLen)
 		_Z=0;
 	else
@@ -520,7 +520,7 @@ static UINT32 opSEARCHDB(UINT8 bSearch)
 	R28=f7bOp1+i;
 	R27=i;
 
-	// This is the opposite as stated in V60 manual...
+	/* This is the opposite as stated in V60 manual... */
 	if ((UINT32)i!=f7bLen)
 		_Z=0;
 	else
@@ -635,37 +635,37 @@ static UINT32 opSCHBS(UINT32 bSearch1)
 
 	F7bDecodeFirstOperand(BitReadAMAddress,10);
 
-	// Read first UINT8
+	/* Read first UINT8 */
 	f7bOp1 += bamOffset/8;
 	data = MemRead8(f7bOp1);
 	offset = bamOffset&7;
 
-	// Scan bitstring
+	/* Scan bitstring */
 	for (i=0;i<f7bLen;i++)
 	{
-		// Update the work register
+		/* Update the work register */
 		R28 = f7bOp1;
 
-		// There is a 0/1 at current offset?
+		/* There is a 0/1 at current offset? */
 		if ((bSearch1 && (data&(1<<offset))) ||
 			(!bSearch1 && !(data&(1<<offset))))
 			break;
 
-		// Next bit please
+		/* Next bit please */
 		offset++;
 		if (offset==8)
 		{
-			// Next UINT8 please
+			/* Next UINT8 please */
 			offset=0;
 			f7bOp1++;
 			data = MemRead8(f7bOp1);
 		}
 	}
 
-	// Set zero if bit not found
+	/* Set zero if bit not found */
 	_Z = (i == f7bLen);
 
-	// Write to destination the final offset
+	/* Write to destination the final offset */
 	modWriteValW = i;
 	F7bWriteSecondOperand(2);
 
@@ -722,8 +722,8 @@ static UINT32 opMOVBSD(void)
 
 	F7bDecodeOperands(BitReadAMAddress,10,BitReadAMAddress,10);
 
-//  if (f7bLen!=1)
-//  { int a=1; }
+/*  if (f7bLen!=1) */
+/*  { int a=1; } */
 
 	f7bBamOffset1 += f7bLen-1;
 	f7bBamOffset2 += f7bLen-1;
@@ -739,7 +739,7 @@ static UINT32 opMOVBSD(void)
 
 	for (i=0;i<f7bLen;i++)
 	{
-		// Update work registers
+		/* Update work registers */
 		R28 = f7bOp1;
 		R27 = f7bOp2;
 
@@ -764,7 +764,7 @@ static UINT32 opMOVBSD(void)
 		f7bBamOffset2--;
 	}
 
-	// Flush of the final data
+	/* Flush of the final data */
 	if (f7bBamOffset2 != 7)
 		MemWrite8(f7bOp2, dstdata);
 
@@ -789,7 +789,7 @@ static UINT32 opMOVBSU(void)
 
 	for (i=0;i<f7bLen;i++)
 	{
-		// Update work registers
+		/* Update work registers */
 		R28 = f7bOp1;
 		R27 = f7bOp2;
 
@@ -813,14 +813,14 @@ static UINT32 opMOVBSU(void)
 		}
 	}
 
-	// Flush of the final data
+	/* Flush of the final data */
 	if (f7bBamOffset2 != 0)
 		MemWrite8(f7bOp2, dstdata);
 
 	F7BEND();
 }
 
-// RADM 0x20f4b8 holds the time left
+/* RADM 0x20f4b8 holds the time left */
 
 static UINT32 opADDDC(void)
 {
@@ -849,9 +849,9 @@ static UINT32 opADDDC(void)
 	else
 		_CY = 0;
 
-	// compute z flag:
-	// cleared if result non-zero or carry generated
-	// unchanged otherwise
+	/* compute z flag: */
+	/* cleared if result non-zero or carry generated */
+	/* unchanged otherwise */
 	if (appb != 0 || _CY)
 		_Z = 0;
 
@@ -878,7 +878,7 @@ static UINT32 opSUBDC(void)
 	src = (UINT32)(f7cOp1 >> 4) * 10 + (UINT32)(f7cOp1 & 0xF);
 	dst = ((appb & 0xF0) >> 4) * 10 + (appb & 0xF);
 
-	// Note that this APPB must be SIGNED!
+	/* Note that this APPB must be SIGNED! */
 	appb = (INT32)dst - (INT32)src - (_CY?1:0);
 
 	if (appb < 0)
@@ -889,9 +889,9 @@ static UINT32 opSUBDC(void)
 	else
 		_CY = 0;
 
-	// compute z flag:
-	// cleared if result non-zero or carry generated
-	// unchanged otherwise
+	/* compute z flag: */
+	/* cleared if result non-zero or carry generated */
+	/* unchanged otherwise */
 	if (appb != 0 || _CY)
 		_Z = 0;
 
@@ -918,7 +918,7 @@ static UINT32 opSUBRDC(void)
 	src = (UINT32)(f7cOp1 >> 4) * 10 + (UINT32)(f7cOp1 & 0xF);
 	dst = ((appb & 0xF0) >> 4) * 10 + (appb & 0xF);
 
-	// Note that this APPB must be SIGNED!
+	/* Note that this APPB must be SIGNED! */
 	appb = (INT32)src - (INT32)dst - (_CY?1:0);
 
 	if (appb < 0)
@@ -929,9 +929,9 @@ static UINT32 opSUBRDC(void)
 	else
 		_CY = 0;
 
-	// compute z flag:
-	// cleared if result non-zero or carry generated
-	// unchanged otherwise
+	/* compute z flag: */
+	/* cleared if result non-zero or carry generated */
+	/* unchanged otherwise */
 	if (appb != 0 || _CY)
 		_Z = 0;
 
@@ -951,7 +951,7 @@ static UINT32 opCVTDPZ(void)
 	apph |= (f7cLen);
 	apph |= (f7cLen<<8);
 
-	// Z flag is unchanged if src is zero, cleared otherwise
+	/* Z flag is unchanged if src is zero, cleared otherwise */
 	if (f7cOp1 != 0) _Z = 0;
 
 	F7CSTOREOP2HALF();
@@ -965,13 +965,13 @@ static UINT32 opCVTDZP(void)
 
 	if ((f7cOp1 & 0xF0) != (f7cLen & 0xF0) || ((f7cOp1 >> 8) & 0xF0) != (f7cLen & 0xF0))
 	{
-		// Decimal exception
+		/* Decimal exception */
 		logerror("CVTD.ZP Decimal exception #1!\n");
 	}
 
 	if ((f7cOp1 & 0xF) > 9 || ((f7cOp1 >> 8) & 0xF) > 9)
 	{
-		// Decimal exception
+		/* Decimal exception */
 		logerror("CVTD.ZP Decimal exception #2!\n");
 	}
 

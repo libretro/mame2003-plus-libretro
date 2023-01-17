@@ -34,19 +34,19 @@ PALETTE_INIT( toypop )
 	{
 		int bit0,bit1,bit2,bit3,r,g,b;
 
-		// red component
+		/* red component */
 		bit0 = (color_prom[i] >> 0) & 0x01;
 		bit1 = (color_prom[i] >> 1) & 0x01;
 		bit2 = (color_prom[i] >> 2) & 0x01;
 		bit3 = (color_prom[i] >> 3) & 0x01;
 		r = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-		// green component
+		/* green component */
 		bit0 = (color_prom[i+0x100] >> 0) & 0x01;
 		bit1 = (color_prom[i+0x100] >> 1) & 0x01;
 		bit2 = (color_prom[i+0x100] >> 2) & 0x01;
 		bit3 = (color_prom[i+0x100] >> 3) & 0x01;
 		g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-		// blue component
+		/* blue component */
 		bit0 = (color_prom[i+0x200] >> 0) & 0x01;
 		bit1 = (color_prom[i+0x200] >> 1) & 0x01;
 		bit2 = (color_prom[i+0x200] >> 2) & 0x01;
@@ -57,10 +57,10 @@ PALETTE_INIT( toypop )
 
 	for (i = 0;i < 256;i++)
 	{
-		// characters
+		/* characters */
 		colortable[i]     = (color_prom[i + 0x300] & 0x0f) | 0x70;
 		colortable[i+256] = (color_prom[i + 0x300] & 0x0f) | 0xf0;
-		// sprites
+		/* sprites */
 		colortable[i+512] = color_prom[i + 0x500];
 	}
 }
@@ -153,7 +153,7 @@ READ16_HANDLER( toypop_merged_background_r )
 {
 	int data1, data2;
 
-	// 0x0a0b0c0d is read as 0xabcd
+	/* 0x0a0b0c0d is read as 0xabcd */
 	data1 = toypop_bg_image[2*offset];
 	data2 = toypop_bg_image[2*offset + 1];
 	return ((data1 & 0xf00) << 4) | ((data1 & 0xf) << 8) | ((data2 & 0xf00) >> 4) | (data2 & 0xf);
@@ -161,7 +161,7 @@ READ16_HANDLER( toypop_merged_background_r )
 
 WRITE16_HANDLER( toypop_merged_background_w )
 {
-	// 0xabcd is written as 0x0a0b0c0d in the background image
+	/* 0xabcd is written as 0x0a0b0c0d in the background image */
 	if (ACCESSING_MSB)
 		toypop_bg_image[2*offset] = ((data & 0xf00) >> 8) | ((data & 0xf000) >> 4);
 
@@ -174,7 +174,7 @@ static void draw_background(struct mame_bitmap *bitmap)
 	register int offs, x, y;
 	UINT8 scanline[288];
 
-	// copy the background image from RAM (0x190200-0x19FDFF) to bitmap
+	/* copy the background image from RAM (0x190200-0x19FDFF) to bitmap */
 	if (bitmapflip)
 	{
 		offs = 0xFDFE/2;

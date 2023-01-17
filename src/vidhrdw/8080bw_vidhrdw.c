@@ -78,15 +78,15 @@ static void plot_pixel_8080(int x, int y, int col);
 /* so that overlays are not so contrasted */
 #define OVERLAY_RED		MAKE_ARGB(0x04,0xff,0x20,0x20)
 #define OVERLAY_GREEN		MAKE_ARGB(0x04,0x20,0xff,0x20)
-// Original blue is too dark so is replaced with crayola blue
-// https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola)
-//#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x20,0x20,0xff)
+/* Original blue is too dark so is replaced with crayola blue */
+/* https://en.wikipedia.org/wiki/Shades_of_blue#Blue_(Crayola) */
+/*#define OVERLAY_BLUE		MAKE_ARGB(0x04,0x20,0x20,0xff) */
 #define OVERLAY_BLUE		MAKE_ARGB(0x04,0x1f,0x75,0xfe)
 #define OVERLAY_YELLOW		MAKE_ARGB(0x04,0xff,0xff,0x20)
 #define OVERLAY_CYAN		MAKE_ARGB(0x04,0x20,0xff,0xff)
-// Light blue originally used is more purple, so is replaced
-// https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue
-//#define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xa0,0xa0,0xff)
+/* Light blue originally used is more purple, so is replaced */
+/* https://en.wikipedia.org/wiki/Shades_of_blue#Light_blue */
+/*#define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xa0,0xa0,0xff) */
 #define OVERLAY_LT_BLUE		MAKE_ARGB(0x04,0xad,0xd8,0xe6)
 #define OVERLAY_ORANGE		MAKE_ARGB(0x04,0xff,0xa5,0x00)
 #define OVERLAY_PURPLE		MAKE_ARGB(0x04,0xff,0x00,0xff)
@@ -106,16 +106,16 @@ static void plot_pixel_8080(int x, int y, int col);
 /* So I've made a variant to handle this so both players */
 /* get the same look from either angle. */
 OVERLAY_START( cosmicmo_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT(  0, 0,  40, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT( 40, 0,  56, 224, OVERLAY_GREEN )
 	OVERLAY_RECT( 56, 0, 184, 224, OVERLAY_PURPLE )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 216, 0, 240, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 184, 0, 216, 224, OVERLAY_CYAN )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 200, 0, 240, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 184, 0, 200, 224, OVERLAY_GREEN )
 OVERLAY_END
@@ -153,12 +153,12 @@ OVERLAY_END
 /* which ensures the same look no matter which side of the */
 /* machine the player is on. */
 OVERLAY_START( invaders_overlay )
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  10,  0,  56, 224, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 18,   8, 134, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 200,  0, 216, 224, OVERLAY_RED )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 0,   0,  32, 224, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 32,  0,  56, 224, OVERLAY_ORANGE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 56,  0,  96, 224, OVERLAY_BLUE )
@@ -222,7 +222,7 @@ OVERLAY_END
 /* cocktail varient; just blue and yellow. This is used in cocktail */
 /* mode, though cocktail mode implementation is broken currently. */
 OVERLAY_START( sstrangr_overlay )
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  0,   0,  16, 224, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 16,   0,  40, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 40,   0,  56, 224, OVERLAY_ORANGE )
@@ -232,7 +232,7 @@ OVERLAY_START( sstrangr_overlay )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,216,  68, 240, 148, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,216, 148, 240, 224, OVERLAY_BLUE )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  0,   0,  40, 224, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 40,   0, 200, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,200,   0, 240, 224, OVERLAY_BLUE )
@@ -246,7 +246,7 @@ OVERLAY_END
 /* upside down mode. */
 /* Also works for ozmawar2, solfight and spaceph. */
 OVERLAY_START( ozmawars_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT( 200, 0, 224, 224, OVERLAY_PURPLE )
 	OVERLAY_RECT( 175, 0, 200, 224, OVERLAY_BLUE )
 	OVERLAY_RECT( 148, 0, 175, 224, OVERLAY_YELLOW )
@@ -256,7 +256,7 @@ OVERLAY_START( ozmawars_overlay )
 	OVERLAY_RECT(  32, 0,  56, 224, OVERLAY_ORANGE )
 	OVERLAY_RECT(  16, 0,  32, 224, OVERLAY_CYAN )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,  74, 240, 148, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224, 148, 240, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,   0, 240,  74, OVERLAY_CYAN )
@@ -264,7 +264,7 @@ OVERLAY_START( ozmawars_overlay )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 192,  16, 224, OVERLAY_CYAN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0, 144,  16, 192, OVERLAY_PURPLE )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 224, 0, 240, 224, OVERLAY_CYAN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   0, 0,  16, 224, OVERLAY_PURPLE )
 OVERLAY_END
@@ -362,21 +362,21 @@ OVERLAY_END
 /* A slight variant is used in cocktail mode (less colourful */
 /* scores. */
 OVERLAY_START( galxwars_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT( 184, 0, 224, 224, OVERLAY_CYAN )
 	OVERLAY_RECT( 144, 0, 184, 224, OVERLAY_PURPLE )
 	OVERLAY_RECT(  96, 0, 144, 224, OVERLAY_RED )
 	OVERLAY_RECT(  56, 0,  96, 224, OVERLAY_GREEN )
 	OVERLAY_RECT(  13, 0,  56, 224, OVERLAY_CYAN )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,   0, 240,  80, OVERLAY_CYAN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224,  80, 240, 144, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 224, 144, 240, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  10,   0,  13, 224, OVERLAY_RED )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0,   0,  10, 224, OVERLAY_CYAN )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 224, 0, 240, 224, OVERLAY_CYAN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   0, 0,  13, 224, OVERLAY_CYAN )
 OVERLAY_END
@@ -398,16 +398,16 @@ OVERLAY_END
 /* Can't find any sources for an overlay for cocktail */
 /* mode, so a simple one has been added. */
 OVERLAY_START( galactic_overlay )
-    // Common
+    /* Common */
 	OVERLAY_RECT(240,   0, 256, 224, OVERLAY_BLUE )
 
-    // Upright
+    /* Upright */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 200,   0, 240, 224, OVERLAY_RED )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 136,   0, 200, 224, OVERLAY_ORANGE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  48,   0, 136, 224, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   0,   0,  48, 224, OVERLAY_GREEN )
 
-    // Cocktail
+    /* Cocktail */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 208,   0, 240, 224, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  48,  0, 208, 224, OVERLAY_ORANGE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  16,  0, 48, 224, OVERLAY_GREEN )
@@ -1130,12 +1130,12 @@ PALETTE_INIT( sflush )
 		palette_set_color(i,r,g,b);
 	}
 
-	// Original colour used was way too purple. The colour should be a
-	// medium blue, as confirmed from screen shots here:
-	// https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1088&image=1
-	// Other colours seem to be more accurate.
-	//palette_set_color(0,0x80,0x80,0xff); // Too purple
-	palette_set_color(0,0x1f,0x75,0xfe); // Blue matching OVERLAY_BLUE
+	/* Original colour used was way too purple. The colour should be a */
+	/* medium blue, as confirmed from screen shots here: */
+	/* https://flyers.arcade-museum.com/?page=flyer&db=videodb&id=1088&image=1 */
+	/* Other colours seem to be more accurate. */
+	/*palette_set_color(0,0x80,0x80,0xff); // Too purple */
+	palette_set_color(0,0x1f,0x75,0xfe); /* Blue matching OVERLAY_BLUE */
 }
 
 

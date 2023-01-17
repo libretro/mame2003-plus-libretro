@@ -16,13 +16,13 @@ static struct tilemap *bg_tilemap;
 
 static const res_net_decode_info mario_decode_info =
 {
-	1,		// there may be two proms needed to construct color
-	0,		// start at 0
-	255,	// end at 255
-	//  R,   G,   B
-	{   0,   0,   0},		// offsets
-	{   5,   2,   0},		// shifts
-	{0x07,0x07,0x03}	    // masks
+	1,		/* there may be two proms needed to construct color */
+	0,		/* start at 0 */
+	255,	/* end at 255 */
+	/*  R,   G,   B */
+	{   0,   0,   0},		/* offsets */
+	{   5,   2,   0},		/* shifts */
+	{0x07,0x07,0x03}	    /* masks */
 };
 
 static const res_net_info mario_net_info =
@@ -31,7 +31,7 @@ static const res_net_info mario_net_info =
 	{
 		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
 		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
-		{ RES_NET_AMP_EMITTER,    680, 0, 2, {  470, 220,   0 } }  // dkong
+		{ RES_NET_AMP_EMITTER,    680, 0, 2, {  470, 220,   0 } }  /* dkong */
 	}
 };
 
@@ -41,7 +41,7 @@ static const res_net_info mario_net_info_std =
 	{
 		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
 		{ RES_NET_AMP_DARLINGTON, 470, 0, 3, { 1000, 470, 220 } },
-		{ RES_NET_AMP_EMITTER,    680, 0, 2, {  470, 220,   0 } }  // dkong
+		{ RES_NET_AMP_EMITTER,    680, 0, 2, {  470, 220,   0 } }  /* dkong */
 	}
 };
 
@@ -118,7 +118,7 @@ static void get_bg_tile_info(int tile_index)
 	int color =  ((videoram[tile_index] >> 2) & 0x38) | 0x40 | (palette_bank<<7) | (monitor<<8);
 	color = color >> 2;
 
-//	int color = (videoram[tile_index] >> 5) + 8 * palette_bank;
+/*	int color = (videoram[tile_index] >> 5) + 8 * palette_bank; */
 
 	SET_TILE_INFO(0, code, color, 0)
 }
@@ -155,7 +155,7 @@ static void mario_draw_sprites( struct mame_bitmap *bitmap )
 
 VIDEO_UPDATE( mario )
 {
-	//tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
+	/*tilemap_mark_all_tiles_dirty(ALL_TILEMAPS); */
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 
 	mario_draw_sprites(bitmap);

@@ -40,8 +40,8 @@ OVERLAY_END
 static DRIVER_INIT( firetrk )
 {
 	firetrk_game = 1;
-	// Note that fire truck does not have an overlay
-	// on the real machine. It was purely B&W.
+	/* Note that fire truck does not have an overlay */
+	/* on the real machine. It was purely B&W. */
 }
 
 static DRIVER_INIT( superbug )

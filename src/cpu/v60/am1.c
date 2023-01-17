@@ -1,6 +1,6 @@
 
-// AM1 Functions (for ReadAM)
-// **************************
+/* AM1 Functions (for ReadAM) */
+/* ************************** */
 
 static UINT32 am1Register(void)
 {
@@ -1071,7 +1071,7 @@ static UINT32 am1Immediate(void)
 		break;
 	}
 
-	// It should not be here!  Written to avoid warning
+	/* It should not be here!  Written to avoid warning */
 	assert(0);
 	return 1;
 }
@@ -1085,8 +1085,8 @@ static UINT32 am1ImmediateQuick(void)
 
 
 
-// AM1 Tables (for ReadAM)
-// ***********************
+/* AM1 Tables (for ReadAM) */
+/* *********************** */
 
 static UINT32 am1Error1(void)
 {

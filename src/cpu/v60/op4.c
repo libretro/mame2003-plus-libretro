@@ -343,11 +343,11 @@ static UINT32 opBR16(void) /* TRUSTED */
 
 static UINT32 opBSR(void) /* TRUSTED */
 {
-	// Save Next PC onto the stack
+	/* Save Next PC onto the stack */
 	SP -= 4;
 	MemWrite32(SP, PC+3);
 
-	// Jump to subroutine
+	/* Jump to subroutine */
 	PC += (INT16)OpRead16(PC + 1);
 	return 0;
 }

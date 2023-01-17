@@ -1479,7 +1479,7 @@ static MEMORY_WRITE16_START( kbash_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
 	{ 0x200000, 0x200003, kbash_sub_cpu_w },		/* sound number to play */
-/*	{ 0x200002, 0x200003, kbash_sub_cpu_w2 },		 // ??? /*/
+/*	{ 0x200002, 0x200003, kbash_sub_cpu_w2 },*/		 /* ??? */ 
 	{ 0x20801c, 0x20801d, toaplan2_coin_word_w },
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
@@ -1616,7 +1616,7 @@ static MEMORY_WRITE16_START( pipibibi_writemem )
 	{ 0x083800, 0x087fff, MWA16_RAM },				/* SpriteRAM (unused) */
 	{ 0x0c0000, 0x0c0fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x120000, 0x120fff, MWA16_RAM },				/* Copy of SpriteRAM ? */
-/*	{ 0x13f000, 0x13f001, MWA16_NOP },				 // ??? /*/
+/*	{ 0x13f000, 0x13f001, MWA16_NOP },*/				 /* ??? */
 	{ 0x180000, 0x182fff, pipibibi_videoram16_w },	/* TileRAM */
 	{ 0x188000, 0x18800f, pipibibi_scroll_w },
 	{ 0x190010, 0x190011, pipibibi_z80_task_w },	/* Z80 task to perform */
@@ -1637,11 +1637,11 @@ static MEMORY_READ16_START( fixeight_readmem )
 #else
 	{ 0x28e000, 0x28efff, shared_ram_r },
 	{ 0x28f000, 0x28f001, Zx80_status_port_r },		/* Zx80 status port */
-/*	{ 0x28f002, 0x28f003, MRA16_RAM },				 // part of shared ram /*/
-/*	{ 0x28f004, 0x28f005, input_port_5_word_r },	 // Dip Switch A - Wrong !!! /*/
-/*	{ 0x28f006, 0x28f007, input_port_6_word_r },	 // Dip Switch B - Wrong !!! /*/
-/*	{ 0x28f008, 0x28f009, input_port_7_word_r },	 // Territory Jumper block - Wrong !!! /*/
-/*	{ 0x28f002, 0x28fbff, MRA16_RAM },				 // part of shared ram /*/
+/*	{ 0x28f002, 0x28f003, MRA16_RAM },*/				 /* part of shared ram */
+/*	{ 0x28f004, 0x28f005, input_port_5_word_r },*/	 /* Dip Switch A - Wrong !!! */
+/*	{ 0x28f006, 0x28f007, input_port_6_word_r },*/	 /* Dip Switch B - Wrong !!! */
+/*	{ 0x28f008, 0x28f009, input_port_7_word_r },*/	 /* Territory Jumper block - Wrong !!! */
+/*	{ 0x28f002, 0x28fbff, MRA16_RAM },*/				 /* part of shared ram */
 	{ 0x28fc00, 0x28ffff, Zx80_sharedram_r },		/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #endif
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_r },
@@ -1665,9 +1665,9 @@ static MEMORY_WRITE16_START( fixeight_writemem )
 #else
 	{ 0x28e000, 0x28efff, shared_ram_w, &toaplan2_shared_ram16 },
 	{ 0x28f000, 0x28f001, Zx80_command_port_w },	/* Zx80 command port */
-/*	{ 0x28f002, 0x28f003, MWA16_RAM },				 // part of shared ram /*/
-/*	{ 0x28f004, 0x28f009, MWA16_NOP },				 // part of shared ram /*/
-/*	{ 0x28f002, 0x28fbff, MWA16_RAM },				 // part of shared ram /*/
+/*	{ 0x28f002, 0x28f003, MWA16_RAM },*/				 /* part of shared ram */
+/*	{ 0x28f004, 0x28f009, MWA16_NOP },*/				 /* part of shared ram */
+/*	{ 0x28f002, 0x28fbff, MWA16_RAM },*/				 /* part of shared ram */
 	{ 0x28fc00, 0x28ffff, Zx80_sharedram_w, &Zx80_shared_ram },	/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #endif
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },		/* VideoRAM selector/offset */
@@ -1719,7 +1719,7 @@ MEMORY_END
 static MEMORY_READ16_START( vfive_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x103fff, MRA16_RAM },
-/*	{ 0x200000, 0x20ffff, MRA16_ROM },				 // Sound ROM is here ??? /*/
+/*	{ 0x200000, 0x20ffff, MRA16_ROM },*/				 /* Sound ROM is here ??? */
 	{ 0x200010, 0x200011, input_port_1_word_r },	/* Player 1 controls */
 	{ 0x200014, 0x200015, input_port_2_word_r },	/* Player 2 controls */
 	{ 0x200018, 0x200019, input_port_3_word_r },	/* Coin/System inputs */
@@ -1743,7 +1743,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( vfive_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
-/*	{ 0x200000, 0x20ffff, MWA16_ROM },				 // Sound ROM is here ??? /*/
+/*	{ 0x200000, 0x20ffff, MWA16_ROM },*/				 /* Sound ROM is here ??? */
 	{ 0x20001c, 0x20001d, toaplan2_coin_word_w },	/* Coin count/lock */
 #if Zx80
 	{ 0x21e000, 0x21fbff, shared_ram_w, &toaplan2_shared_ram16 },	/* $21F000 */
@@ -1913,7 +1913,7 @@ static MEMORY_WRITE16_START( shippumd_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, MWA16_RAM },
 	{ 0x218000, 0x21bfff, raizing_shared_ram_w },
-/*	{ 0x21c008, 0x21c009, MWA16_NOP },				 // ??? /*/
+/*	{ 0x21c008, 0x21c009, MWA16_NOP },*/				 /* ??? */
 	{ 0x21c01c, 0x21c01d, toaplan2_coin_word_w },
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
@@ -2175,7 +2175,7 @@ static MEMORY_READ_START( ghox_hd647180_readmem )
 	{ 0x40000, 0x4f7ff, shared_ram8_r },
 	{ 0x80002, 0x80002, input_port_4_r },
 	{ 0x80004, 0x80004, input_port_5_r },
-	{ 0x80006, 0x80006, MRA_NOP }, // nothing?
+	{ 0x80006, 0x80006, MRA_NOP }, /* nothing? */
 	{ 0x80008, 0x80008, ghox_p1_v_analog_r },
 	{ 0x8000a, 0x8000a, ghox_p2_v_analog_r },
 	{ 0x8000c, 0x8000e, input_port_3_r },
@@ -2218,7 +2218,7 @@ PORT_END
 #if Zx80
 static MEMORY_READ_START( Zx80_readmem )
 	{ 0x00000, 0x03fff, MRA_ROM },
-/*	{ 0x00000, 0x007ff, MRA_RAM },			 // External shared RAM (Banked) /*/
+/*	{ 0x00000, 0x007ff, MRA_RAM },*/			 /* External shared RAM (Banked)  */
 	{ 0x04000, 0x04000, YM2151_status_port_0_r },
 	{ 0x04002, 0x04002, OKIM6295_status_0_r },
 	{ 0x04008, 0x04008, input_port_1_r },
@@ -2230,7 +2230,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( Zx80_writemem )
 	{ 0x00000, 0x03fff, MWA_ROM, },
-/*	{ 0x00000, 0x007ff, MWA_RAM, },			 // External shared RAM (Banked) /*/
+/*	{ 0x00000, 0x007ff, MWA_RAM, },*/			 /* External shared RAM (Banked) */
 	{ 0x04000, 0x04000, YM2151_register_port_0_w },
 	{ 0x04001, 0x04001, YM2151_data_port_0_w },
 	{ 0x04002, 0x04002, OKIM6295_data_0_w },
@@ -2831,8 +2831,8 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( pipibibi )
 	PORT_START		/* (0) VBlank */
-/*	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )		 // This video HW /*/
-/*	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN )		 // doesnt wait for VBlank /*/
+/*	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK ) */		 /* This video HW */ 
+/*	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN ) */		 /* doesnt wait for VBlank */
 
 	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER1, IPT_UNKNOWN, IPT_UNKNOWN )
 
@@ -4090,8 +4090,8 @@ static struct GfxDecodeInfo truxton2_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0,       &tilelayout            , 0, 128 },
 	{ REGION_GFX1, 0,       &spritelayout          , 0,  64 },
-/*	{ REGION_CPU1, 0x40000, &truxton2_tx_tilelayout, 0, 128 },	 // Truxton 2 /*/
-/*	{ REGION_CPU1, 0x68000, &truxton2_tx_tilelayout, 0, 128 },	 // Fix Eight /*/
+/*	{ REGION_CPU1, 0x40000, &truxton2_tx_tilelayout, 0, 128 },*/	 /* Truxton 2  */
+/*	{ REGION_CPU1, 0x68000, &truxton2_tx_tilelayout, 0, 128 },*/	 /* Fix Eight  */
 	{ 0, 0, &truxton2_tx_tilelayout,  0, 128 },
 	{ -1 } /* end of array */
 };
@@ -4500,7 +4500,7 @@ static MACHINE_DRIVER_START( fixeight )
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(toaplan2)
-/*/	MDRV_NVRAM_HANDLER(fixeight)		 // See 37B6 code /*/
+/*	MDRV_NVRAM_HANDLER(fixeight)*/		 /* See 37B6 code */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)

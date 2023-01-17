@@ -81,8 +81,8 @@ data8_t suna8_unknown;
 
 /* Functions defined in vidhrdw: */
 
-WRITE_HANDLER( suna8_spriteram_w );			// for debug
-WRITE_HANDLER( suna8_banked_spriteram_w );	// for debug
+WRITE_HANDLER( suna8_spriteram_w );			/* for debug */
+WRITE_HANDLER( suna8_banked_spriteram_w );	/* for debug */
 
 VIDEO_START( suna8 );
 VIDEO_UPDATE( suna8 );
@@ -218,7 +218,7 @@ VIDEO_START( suna8_textdim12 )	{ return suna8_vh_start_common(12); }
 void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int i;
-	int mx = 0;	// multisprite x counter
+	int mx = 0;	/* multisprite x counter */
 
 	int max_x	=	Machine->drv->screen_width	- 8;
 	int max_y	=	Machine->drv->screen_height - 8;
@@ -276,7 +276,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				gfxbank = bank & 0x1f;
 				srcpg = (code >> 4) & 3;
 				break;
-// hardhea2: fire code=52/54 bank=a4; player code=02/04/06 bank=08; arrow:code=16 bank=27
+/* hardhea2: fire code=52/54 bank=a4; player code=02/04/06 bank=08; arrow:code=16 bank=27 */
 			case 0x40:
 				dimx = 4;					dimy = 4;
 				srcx  = (code & 0xe) * 2;
@@ -284,7 +284,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				flipy = bank & 0x10;
 				srcy  = (((bank & 0x80)>>4) + (bank & 0x04) + ((~bank >> 4)&2)) * 2;
 				srcpg = (code >> 4) & 7;
-				gfxbank = (bank & 0x3) + (srcpg & 4);	// brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0
+				gfxbank = (bank & 0x3) + (srcpg & 4);	/* brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0 */
 				colorbank = (bank & 8) >> 3;
 				break;
 			case 0x00:
@@ -336,7 +336,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 
 				drawgfx(	bitmap,Machine->gfx[0],
 							tile + (attr & 0x3)*0x100 + gfxbank,
-							((attr >> 2) & 0xf) | colorbank,	// hardhea2 player2
+							((attr >> 2) & 0xf) | colorbank,	/* hardhea2 player2 */
 							tile_flipx, tile_flipy,
 							sx, sy,
 							cliprect,TRANSPARENCY_PEN,15);

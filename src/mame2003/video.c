@@ -392,9 +392,9 @@ int osd_skip_this_frame(void)
 
 	bool skip_frame = 0;
 
-	if (pause_action)  return 0;  // dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key)
+	if (pause_action)  return 0;  /* dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key) */
 
-//auto frame skip options
+/*auto frame skip options */
 	if(options.frameskip >0 && options.frameskip >= 12)
 	{
 		if ( retro_audio_buff_active)
@@ -422,13 +422,13 @@ int osd_skip_this_frame(void)
 				}
 				else
 				{
-					auto_frameskip_counter = 0;// control will return 0 at the end
+					auto_frameskip_counter = 0;/* control will return 0 at the end */
 					skip_frame=0;
 				}
 			}
 		}
 	}
-	else //manual frameskip includes disabled check
+	else /*manual frameskip includes disabled check */
 	{
 		skip_frame = frameskip_table[options.frameskip][frameskip_counter];
 	}

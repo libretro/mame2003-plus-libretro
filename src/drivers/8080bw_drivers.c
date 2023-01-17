@@ -1886,8 +1886,8 @@ PORT_END
 static PORT_WRITE_START( indianbt_writeport )
         { 0x02, 0x02, c8080bw_shift_amount_w },
         { 0x04, 0x04, c8080bw_shift_data_w },
-        { 0x06, 0x06, IOWP_NOP }, // For sound
-        //{ 0x07, 0x07, indianbt_sh_port7_w }, // For music (not implemented)
+        { 0x06, 0x06, IOWP_NOP }, /* For sound */
+        /*{ 0x07, 0x07, indianbt_sh_port7_w }, // For music (not implemented) */
 PORT_END
 
 static MACHINE_DRIVER_START( indianbt )
@@ -3382,7 +3382,7 @@ static PORT_WRITE_START( astropal_writeport )
 PORT_END
 	
 INPUT_PORTS_START( astropal )
-        PORT_START // IN0
+        PORT_START /* IN0 */
         PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
         PORT_DIPSETTING(    0x00, "2" )
         PORT_DIPSETTING(    0x01, "3" )
@@ -3390,7 +3390,7 @@ INPUT_PORTS_START( astropal )
         PORT_DIPSETTING(    0x03, "5" )
         PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 
-        PORT_START // IN1
+        PORT_START /* IN1 */
         PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 )
         PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
         PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
@@ -3400,9 +3400,9 @@ INPUT_PORTS_START( astropal )
         PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
         PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-        PORT_START // IN2 - Never read
+        PORT_START /* IN2 - Never read */
 
-        PORT_START // IN3
+        PORT_START /* IN3 */
         PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )
         PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNUSED )
         PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -4311,7 +4311,7 @@ ROM_END
 
 ROM_START( galactic )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "galactic_1.bin",       0x0000, 0x0800, CRC(b5098f1e) SHA1(9d1d045d8abeafd4716d3052fe93e52c6b347049) ) // sldh
+        ROM_LOAD( "galactic_1.bin",       0x0000, 0x0800, CRC(b5098f1e) SHA1(9d1d045d8abeafd4716d3052fe93e52c6b347049) ) /* sldh */
         ROM_LOAD( "galactic_2.bin",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
         ROM_LOAD( "galactic_3.bin",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
         ROM_LOAD( "galactic_4.bin",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
@@ -4322,7 +4322,7 @@ ROM_END
 
 ROM_START( spacmiss )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-        ROM_LOAD( "spacmiss_1.bin",       0x0000, 0x0800, CRC(e212dc88) SHA1(bc56052bf43d18081f777b936b2be792e91ba842) ) // sldh
+        ROM_LOAD( "spacmiss_1.bin",       0x0000, 0x0800, CRC(e212dc88) SHA1(bc56052bf43d18081f777b936b2be792e91ba842) ) /* sldh */
         ROM_LOAD( "galactic_2.bin",       0x0800, 0x0800, CRC(f97410ee) SHA1(47f1f296c905fa13f6c521edc12c10f1f0e42400) )
         ROM_LOAD( "galactic_3.bin",       0x1000, 0x0800, CRC(c1175feb) SHA1(83bf955ed3a52e1ce8c688d89725d8dee1bcc866) )
         ROM_LOAD( "galactic_4.bin",       0x1800, 0x0800, CRC(b4451d7c) SHA1(62a18e8e927ef00a7f6cb933cdc5aeae9f074dc0) )
@@ -4331,7 +4331,7 @@ ROM_START( spacmiss )
         ROM_LOAD( "galactic_7.bin",       0x5000, 0x0800, CRC(02619e18) SHA1(4c59f17fbc96ca08090f08c41ca9fc72c074e9c0) )
 
         ROM_REGION( 0x0800, REGION_USER1, 0 )
-        ROM_LOAD( "spacmiss_8.bin",       0x0000, 0x0800, CRC(942e5261) SHA1(e8af51d644eab4e7b31c14dc66bb036ad8940c42) ) // ?
+        ROM_LOAD( "spacmiss_8.bin",       0x0000, 0x0800, CRC(942e5261) SHA1(e8af51d644eab4e7b31c14dc66bb036ad8940c42) ) /* ? */
 ROM_END
 
 

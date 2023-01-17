@@ -198,7 +198,7 @@ void tailg_sound_w(UINT8 sound_val, UINT8 bits_changed)
 	outDiff = outReg ^ OldOutReg;		/* get bits that have changed state */
 	outLow = outDiff & ~outReg;			/* get bits that have just gone low */
 
-	//logerror ("xrDiff %d XRreg %d \n",xrDiff,XRreg);
+	/*logerror ("xrDiff %d XRreg %d \n",xrDiff,XRreg); */
 
 	if (outLow & 0x10)
 	{

@@ -112,7 +112,7 @@ double compute_resistor_weights(
 		/* parameters validity check */
 		if (count > MAX_RES_PER_NET)
 		{
-			//zerror("compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
+			/*zerror("compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count); */
 			log_cb(RETRO_LOG_ERROR,"compute_resistor_weights(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
 			exit(0);
 		}
@@ -132,7 +132,7 @@ double compute_resistor_weights(
 	}
 	if (networks_no < 1)
 	{
-		//fatalerror("compute_resistor_weights(): no input data\n");
+		/*fatalerror("compute_resistor_weights(): no input data\n"); */
 		log_cb(RETRO_LOG_ERROR, "compute_resistor_weights(): no input data\n");
 		exit(0);
 	}
@@ -303,7 +303,7 @@ double compute_resistor_net_outputs(
 		/* parameters validity check */
 		if (count > MAX_RES_PER_NET)
 		{
-			//fatalerror("compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
+			/*fatalerror("compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count); */
 			log_cb(RETRO_LOG_ERROR,"compute_resistor_net_outputs(): too many resistors in net #%i. The maximum allowed is %i, the number requested was: %i\n",n, MAX_RES_PER_NET, count);
 			exit(0);
 		}
@@ -323,7 +323,7 @@ double compute_resistor_net_outputs(
 
 	if (networks_no<1)
 	{
-		//fatalerror("compute_resistor_net_outputs(): no input data\n");
+		/*fatalerror("compute_resistor_net_outputs(): no input data\n"); */
 		log_cb(RETRO_LOG_ERROR,"compute_resistor_net_outputs(): no input data\n");
 		exit(0);
 	}
@@ -503,7 +503,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown amplifier type");
+			/*fatalerror("compute_res_net: Unknown amplifier type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown amplifier type");
 			exit(0);
 	}
@@ -517,7 +517,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown vcc type");
+			/*fatalerror("compute_res_net: Unknown vcc type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown vcc type");
 			exit(0);
 
@@ -538,7 +538,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown vcc type");
+			/*fatalerror("compute_res_net: Unknown vcc type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown vcc type");
 			exit(0);
 	}
@@ -567,7 +567,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown vin type");
+			/*fatalerror("compute_res_net: Unknown vin type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown vin type");
 			exit(0);
 
@@ -596,7 +596,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown amplifier type");
+			/*fatalerror("compute_res_net: Unknown amplifier type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown amplifier type");
 			exit(0);
 
@@ -617,7 +617,7 @@ int compute_res_net(int inputs, int channel, const res_net_info *di)
 			/* Fall through */
 			break;
 		default:
-			//fatalerror("compute_res_net: Unknown vcc type");
+			/*fatalerror("compute_res_net: Unknown vcc type"); */
 			log_cb(RETRO_LOG_ERROR,"compute_res_net: Unknown vcc type");
 			exit(0);
 

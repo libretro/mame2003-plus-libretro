@@ -148,7 +148,7 @@ struct artwork_callbacks
 
 struct overlay_piece
 {
-	char *tag; // Usually set to OVERLAY_TAG
+	char *tag; /* Usually set to OVERLAY_TAG */
 	UINT8 type;
 	rgb_t color;
 	float left, top, right, bottom;

@@ -46,8 +46,8 @@ extern data8_t suna8_unknown;
 
 /* Functions defined in vidhrdw: */
 
-WRITE_HANDLER( suna8_spriteram_w );			// for debug
-WRITE_HANDLER( suna8_banked_spriteram_w );	// for debug
+WRITE_HANDLER( suna8_spriteram_w );			/* for debug */
+WRITE_HANDLER( suna8_banked_spriteram_w );	/* for debug */
 
 READ_HANDLER( suna8_banked_paletteram_r );
 READ_HANDLER( suna8_banked_spriteram_r );
@@ -155,16 +155,16 @@ DRIVER_INIT( brickzn3 )
 	{
 		switch ( i & 0xf )
 		{
-//825b  ->  see 715a!
-//8280  ->  see 7192!
-//8280:	e=2 m=90
-//8281:	e=2 m=90
-//8283:	e=2 m=90
-//8250:	e=0
-//8262:	e=0
-//9a42:	e=0
-//9a43:	e=0
-//8253:	e=0
+/*825b  ->  see 715a! */
+/*8280  ->  see 7192! */
+/*8280:	e=2 m=90 */
+/*8281:	e=2 m=90 */
+/*8283:	e=2 m=90 */
+/*8250:	e=0 */
+/*8262:	e=0 */
+/*9a42:	e=0 */
+/*9a43:	e=0 */
+/*8253:	e=0 */
 			case 0x0:
 			case 0x1:
 			case 0x2:
@@ -172,26 +172,26 @@ DRIVER_INIT( brickzn3 )
 				if (i & 0x40)	encry = 0;
 				else			encry = 2;
 				break;
-//828c:	e=0
-//9a3d:	e=0
-//825e:	e=0
-//826e:	e=0
-//9a3f:	e=0
+/*828c:	e=0 */
+/*9a3d:	e=0 */
+/*825e:	e=0 */
+/*826e:	e=0 */
+/*9a3f:	e=0 */
 			case 0xc:
 			case 0xd:
 			case 0xe:
 			case 0xf:
 				encry = 0;
 				break;
-//8264:	e=2 m=90
-//9a44:	e=2 m=90
-//8255:	e=2 m=90
-//8255:	e=2 m=90
-//8285:	e=2 m=90
-//9a37:	e=2 m=90
-//8268:	e=2 m=90
-//9a3a:	e=2 m=90
-//825b:	e=2 m=90
+/*8264:	e=2 m=90 */
+/*9a44:	e=2 m=90 */
+/*8255:	e=2 m=90 */
+/*8255:	e=2 m=90 */
+/*8285:	e=2 m=90 */
+/*9a37:	e=2 m=90 */
+/*8268:	e=2 m=90 */
+/*9a3a:	e=2 m=90 */
+/*825b:	e=2 m=90 */
 			case 0x4:
 			case 0x5:
 			case 0x6:
@@ -222,25 +222,25 @@ DRIVER_INIT( brickzn3 )
 
 		switch ( i & 0xf )
 		{
-//0000: e=1 m=90
-//0001: e=1 m=90
-//0012: e=1 m=90
+/*0000: e=1 m=90 */
+/*0001: e=1 m=90 */
+/*0012: e=1 m=90 */
 
-//00c0: e=1 m=10
-//0041: e=1 m=10
-//0042: e=1 m=10
-//0342: e=1 m=10
+/*00c0: e=1 m=10 */
+/*0041: e=1 m=10 */
+/*0042: e=1 m=10 */
+/*0342: e=1 m=10 */
 
-//05a0: e=1 m=90
-//04a1: e=2 m=90
-//04b1: e=2 m=90
-//05a1: e=2 m=90
-//05a2: e=1 m=90
+/*05a0: e=1 m=90 */
+/*04a1: e=2 m=90 */
+/*04b1: e=2 m=90 */
+/*05a1: e=2 m=90 */
+/*05a2: e=1 m=90 */
 
-//0560: e=1 m=10
-//0441: e=0
-//0571: e=0
-//0562: e=1 m=10
+/*0560: e=1 m=10 */
+/*0441: e=0 */
+/*0571: e=0 */
+/*0562: e=1 m=10 */
 			case 0x1:
 				switch( i & 0x440 )
 				{
@@ -265,11 +265,11 @@ DRIVER_INIT( brickzn3 )
 				break;
 
 			case 0x3:
-//003: e=2 m=90
-//043: e=0
-//6a3: e=2 m=90
-//643: e=1 m=10
-//5d3: e=1 m=10
+/*003: e=2 m=90 */
+/*043: e=0 */
+/*6a3: e=2 m=90 */
+/*643: e=1 m=10 */
+/*5d3: e=1 m=10 */
 				switch( i & 0x440 )
 				{
 					case 0x000:	encry = 2;	mask = 0x90;	break;
@@ -281,10 +281,10 @@ DRIVER_INIT( brickzn3 )
 				break;
 
 			case 0x5:
-//015: e=1 m=90
-//045: e=1 m=90
-//5b5: e=2 m=90
-//5d5: e=2 m=90
+/*015: e=1 m=90 */
+/*045: e=1 m=90 */
+/*5b5: e=2 m=90 */
+/*5d5: e=2 m=90 */
 				if (i & 0x400)	encry = 2;
 				else			encry = 1;
 				break;
@@ -328,7 +328,7 @@ DRIVER_INIT( brickzn3 )
 
 			case 2:
 				x	^=	mask;
-				x	=	(((x & (1<<0))?1:0)<<0) |	// swap
+				x	=	(((x & (1<<0))?1:0)<<0) |	/* swap */
 						(((x & (1<<1))?1:0)<<1) |
 						(((x & (1<<6))?1:0)<<2) |
 						(((x & (1<<5))?1:0)<<3) |
@@ -368,14 +368,14 @@ DRIVER_INIT( brickzn3 )
 
 /* !!!!!! PATCHES !!!!!! */
 
-RAM[0x3337+size] = 0xc9;	// RET Z -> RET (to avoid: jp $C800)
-//RAM[0x3338+size] = 0x00;	// jp $C800 -> NOP
-//RAM[0x3339+size] = 0x00;	// jp $C800 -> NOP
-//RAM[0x333a+size] = 0x00;	// jp $C800 -> NOP
+RAM[0x3337+size] = 0xc9;	/* RET Z -> RET (to avoid: jp $C800) */
+/*RAM[0x3338+size] = 0x00;*/	/* jp $C800 -> NOP */
+/*RAM[0x3339+size] = 0x00;*/	/* jp $C800 -> NOP */
+/*RAM[0x333a+size] = 0x00;*/	/* jp $C800 -> NOP */
 
-RAM[0x1406+size] = 0x00;	// HALT -> NOP (NMI source??)
-RAM[0x2487+size] = 0x00;	// HALT -> NOP
-RAM[0x256c+size] = 0x00;	// HALT -> NOP
+RAM[0x1406+size] = 0x00;	/* HALT -> NOP (NMI source??) */
+RAM[0x2487+size] = 0x00;	/* HALT -> NOP */
+RAM[0x256c+size] = 0x00;	/* HALT -> NOP */
 }
 
 
@@ -403,7 +403,7 @@ INLINE data8_t hardhea2_decrypt(data8_t x, int encry, int mask)
 			return	(((x & (1<<0))?1:0)<<0) |
 					(((x & (1<<1))?1:0)<<1) |
 					(((x & (1<<2))?1:0)<<2) |
-					(((x & (1<<3))?1:0)<<3) |	// swap
+					(((x & (1<<3))?1:0)<<3) |	/* swap */
 					(((x & (1<<4))?1:0)<<4) |
 					(((x & (1<<7))?1:0)<<5) |
 					(((x & (1<<6))?1:0)<<6) |
@@ -437,7 +437,7 @@ DRIVER_INIT( hardhea2 )
 
 	for (i = 0; i < 0x8000; i++)
 	{
-// Address lines scrambling
+/* Address lines scrambling */
 		switch (i & 0x7000)
 		{
 		case 0x4000:
@@ -536,7 +536,7 @@ DRIVER_INIT( hardhea2 )
 
 	for (i = 0x00000; i < 0x40000; i++)
 	{
-// Address lines scrambling
+/* Address lines scrambling */
 		switch (i & 0x3f000)
 		{
 /*
@@ -600,7 +600,7 @@ INLINE data8_t starfigh_decrypt(data8_t x, int encry, int mask)
 			return	(((x & (1<<0))?1:0)<<0) |
 					(((x & (1<<1))?1:0)<<1) |
 					(((x & (1<<2))?1:0)<<2) |
-					(((x & (1<<3))?1:0)<<3) |	// swap
+					(((x & (1<<3))?1:0)<<3) |	/* swap */
 					(((x & (1<<4))?1:0)<<4) |
 					(((x & (1<<7))?1:0)<<5) |
 					(((x & (1<<6))?1:0)<<6) |
@@ -634,7 +634,7 @@ DRIVER_INIT( starfigh )
 
 	for (i = 0; i < 0x8000; i++)
 	{
-// Address lines scrambling
+/* Address lines scrambling */
 		switch (i & 0x7000)
 		{
 		case 0x0000:
@@ -911,34 +911,34 @@ static WRITE_HANDLER( hardhead_flipscreen_w )
 }
 
 static MEMORY_READ_START( hardhead_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1				},	// Banked ROM
-	{ 0xc000, 0xd7ff, MRA_RAM				},	// RAM
-	{ 0xd800, 0xd9ff, MRA_RAM				},	// Palette
-	{ 0xda00, 0xda00, hardhead_ip_r			},	// Input Ports
-	{ 0xda80, 0xda80, soundlatch2_r			},	// From Sound CPU
-	{ 0xdd80, 0xddff, hardhead_protection_r	},	// Protection
-	{ 0xe000, 0xffff, MRA_RAM				},	// Sprites
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1				},	/* Banked ROM */
+	{ 0xc000, 0xd7ff, MRA_RAM				},	/* RAM */
+	{ 0xd800, 0xd9ff, MRA_RAM				},	/* Palette */
+	{ 0xda00, 0xda00, hardhead_ip_r			},	/* Input Ports */
+	{ 0xda80, 0xda80, soundlatch2_r			},	/* From Sound CPU */
+	{ 0xdd80, 0xddff, hardhead_protection_r	},	/* Protection */
+	{ 0xe000, 0xffff, MRA_RAM				},	/* Sprites */
 MEMORY_END
 
 static MEMORY_WRITE_START( hardhead_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM				},	// Banked ROM
-	{ 0xc000, 0xd7ff, MWA_RAM				},	// RAM
-	{ 0xd800, 0xd9ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	// Palette
-	{ 0xda00, 0xda00, MWA_RAM, &hardhead_ip	},	// Input Port Select
-	{ 0xda80, 0xda80, hardhead_bankswitch_w	},	// ROM Banking
-	{ 0xdb00, 0xdb00, soundlatch_w			},	// To Sound CPU
-	{ 0xdb80, 0xdb80, hardhead_flipscreen_w	},	// Flip Screen + Coin Lockout
-	{ 0xdc00, 0xdc00, MWA_NOP				},	// <- R	(after bank select)
-	{ 0xdc80, 0xdc80, MWA_NOP				},	// <- R (after bank select)
-	{ 0xdd00, 0xdd00, MWA_NOP				},	// <- R (after ip select)
-	{ 0xdd80, 0xddff, hardhead_protection_w	},	// Protection
-	{ 0xe000, 0xffff, suna8_spriteram_w, &spriteram	},	// Sprites
+	{ 0x0000, 0x7fff, MWA_ROM				},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM				},	/* Banked ROM */
+	{ 0xc000, 0xd7ff, MWA_RAM				},	/* RAM */
+	{ 0xd800, 0xd9ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	/* Palette */
+	{ 0xda00, 0xda00, MWA_RAM, &hardhead_ip	},	/* Input Port Select */
+	{ 0xda80, 0xda80, hardhead_bankswitch_w	},	/* ROM Banking */
+	{ 0xdb00, 0xdb00, soundlatch_w			},	/* To Sound CPU */
+	{ 0xdb80, 0xdb80, hardhead_flipscreen_w	},	/* Flip Screen + Coin Lockout */
+	{ 0xdc00, 0xdc00, MWA_NOP				},	/* <- R	(after bank select) */
+	{ 0xdc80, 0xdc80, MWA_NOP				},	/* <- R (after bank select) */
+	{ 0xdd00, 0xdd00, MWA_NOP				},	/* <- R (after ip select) */
+	{ 0xdd80, 0xddff, hardhead_protection_w	},	/* Protection */
+	{ 0xe000, 0xffff, suna8_spriteram_w, &spriteram	},	/* Sprites */
 MEMORY_END
 
 static PORT_READ_START( hardhead_readport )
-	{ 0x00, 0x00, IORP_NOP	},	// ? IRQ Ack
+	{ 0x00, 0x00, IORP_NOP	},	/* ? IRQ Ack */
 PORT_END
 
 static PORT_WRITE_START( hardhead_writeport )
@@ -987,34 +987,34 @@ static READ_HANDLER( rranger_soundstatus_r )
 }
 
 static MEMORY_READ_START( rranger_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1				},	// Banked ROM
-	{ 0xc000, 0xc000, watchdog_reset_r		},	// Watchdog (Tested!)
-	{ 0xc002, 0xc002, input_port_0_r		},	// P1 (Inputs)
-	{ 0xc003, 0xc003, input_port_1_r		},	// P2
-	{ 0xc004, 0xc004, rranger_soundstatus_r	},	// Latch Status?
-	{ 0xc200, 0xc200, MRA_NOP				},	// Protection?
-	{ 0xc280, 0xc280, input_port_2_r		},	// DSW 1
-	{ 0xc2c0, 0xc2c0, input_port_3_r		},	// DSW 2
-	{ 0xc600, 0xc7ff, MRA_RAM				},	// Palette
-	{ 0xc800, 0xdfff, MRA_RAM				},	// RAM
-	{ 0xe000, 0xffff, MRA_RAM				},	// Sprites
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1				},	/* Banked ROM */
+	{ 0xc000, 0xc000, watchdog_reset_r		},	/* Watchdog (Tested!) */
+	{ 0xc002, 0xc002, input_port_0_r		},	/* P1 (Inputs) */
+	{ 0xc003, 0xc003, input_port_1_r		},	/* P2 */
+	{ 0xc004, 0xc004, rranger_soundstatus_r	},	/* Latch Status? */
+	{ 0xc200, 0xc200, MRA_NOP				},	/* Protection? */
+	{ 0xc280, 0xc280, input_port_2_r		},	/* DSW 1 */
+	{ 0xc2c0, 0xc2c0, input_port_3_r		},	/* DSW 2 */
+	{ 0xc600, 0xc7ff, MRA_RAM				},	/* Palette */
+	{ 0xc800, 0xdfff, MRA_RAM				},	/* RAM */
+	{ 0xe000, 0xffff, MRA_RAM				},	/* Sprites */
 MEMORY_END
 
 static MEMORY_WRITE_START( rranger_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM				},	// Banked ROM
-	{ 0xc000, 0xc000, soundlatch_w			},	// To Sound CPU
-	{ 0xc002, 0xc002, rranger_bankswitch_w	},	// ROM Banking
-	{ 0xc200, 0xc200, MWA_NOP				},	// Protection?
-	{ 0xc280, 0xc280, MWA_NOP				},	// ? NMI Ack
-	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	// Palette
-	{ 0xc800, 0xdfff, MWA_RAM				},	// RAM
-	{ 0xe000, 0xffff, suna8_spriteram_w, &spriteram	},	// Sprites
+	{ 0x0000, 0x7fff, MWA_ROM				},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM				},	/* Banked ROM */
+	{ 0xc000, 0xc000, soundlatch_w			},	/* To Sound CPU */
+	{ 0xc002, 0xc002, rranger_bankswitch_w	},	/* ROM Banking */
+	{ 0xc200, 0xc200, MWA_NOP				},	/* Protection? */
+	{ 0xc280, 0xc280, MWA_NOP				},	/* ? NMI Ack */
+	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	/* Palette */
+	{ 0xc800, 0xdfff, MWA_RAM				},	/* RAM */
+	{ 0xe000, 0xffff, suna8_spriteram_w, &spriteram	},	/* Sprites */
 MEMORY_END
 
 static PORT_READ_START( rranger_readport )
-	{ 0x00, 0x00, IORP_NOP	},	// ? IRQ Ack
+	{ 0x00, 0x00, IORP_NOP	},	/* ? IRQ Ack */
 PORT_END
 
 static PORT_WRITE_START( rranger_writeport )
@@ -1079,30 +1079,30 @@ static WRITE_HANDLER( brickzn_rombank_w )
 }
 
 static MEMORY_READ_START( brickzn_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1					},	// Banked ROM
-	{ 0xc100, 0xc100, input_port_0_r			},	// P1 (Buttons)
-	{ 0xc101, 0xc101, input_port_1_r			},	// P2
-	{ 0xc102, 0xc102, input_port_2_r			},	// DSW 1
-	{ 0xc103, 0xc103, input_port_3_r			},	// DSW 2
-	{ 0xc108, 0xc108, input_port_4_r			},	// P1 (Analog)
-	{ 0xc10c, 0xc10c, input_port_5_r			},	// P2
-	{ 0xc140, 0xc140, brickzn_c140_r			},	// ???
-	{ 0xc600, 0xc7ff, suna8_banked_paletteram_r	},	// Palette (Banked)
-	{ 0xc800, 0xdfff, MRA_RAM					},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1					},	/* Banked ROM */
+	{ 0xc100, 0xc100, input_port_0_r			},	/* P1 (Buttons) */
+	{ 0xc101, 0xc101, input_port_1_r			},	/* P2 */
+	{ 0xc102, 0xc102, input_port_2_r			},	/* DSW 1 */
+	{ 0xc103, 0xc103, input_port_3_r			},	/* DSW 2 */
+	{ 0xc108, 0xc108, input_port_4_r			},	/* P1 (Analog) */
+	{ 0xc10c, 0xc10c, input_port_5_r			},	/* P2 */
+	{ 0xc140, 0xc140, brickzn_c140_r			},	/* ??? */
+	{ 0xc600, 0xc7ff, suna8_banked_paletteram_r	},	/* Palette (Banked) */
+	{ 0xc800, 0xdfff, MRA_RAM					},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	/* Sprites (Banked) */
 MEMORY_END
 
 static MEMORY_WRITE_START( brickzn_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM						},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM						},	// Banked ROM
-	{ 0xc040, 0xc040, brickzn_rombank_w				},	// ROM Bank
-	{ 0xc060, 0xc060, brickzn_spritebank_w			},	// Sprite  RAM Bank + Flip Screen
-	{ 0xc0a0, 0xc0a0, brickzn_palettebank_w			},	// Palette RAM Bank + ?
-	{ 0xc0c0, 0xc0c0, brickzn_unknown_w				},	// ???
-	{ 0xc600, 0xc7ff, brickzn_banked_paletteram_w	},	// Palette (Banked)
-	{ 0xc800, 0xdfff, MWA_RAM						},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_w		},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MWA_ROM						},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM						},	/* Banked ROM */
+	{ 0xc040, 0xc040, brickzn_rombank_w				},	/* ROM Bank */
+	{ 0xc060, 0xc060, brickzn_spritebank_w			},	/* Sprite  RAM Bank + Flip Screen */
+	{ 0xc0a0, 0xc0a0, brickzn_palettebank_w			},	/* Palette RAM Bank + ? */
+	{ 0xc0c0, 0xc0c0, brickzn_unknown_w				},	/* ??? */
+	{ 0xc600, 0xc7ff, brickzn_banked_paletteram_w	},	/* Palette (Banked) */
+	{ 0xc800, 0xdfff, MWA_RAM						},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_w		},	/* Sprites (Banked) */
 MEMORY_END
 
 static PORT_READ_START( brickzn_readport )
@@ -1122,7 +1122,7 @@ static data8_t suna8_nmi_enable;
 static WRITE_HANDLER( hardhea2_nmi_w )
 {
 	suna8_nmi_enable = data & 0x01;
-//	if (data & ~0x01) 	logerror("CPU #0 - PC %04X: unknown nmi bits: %02X\n",activecpu_get_pc(),data);
+/*	if (data & ~0x01) 	logerror("CPU #0 - PC %04X: unknown nmi bits: %02X\n",activecpu_get_pc(),data); */
 }
 
 /*
@@ -1191,35 +1191,35 @@ static WRITE_HANDLER( hardhea2_rambank_1_w )
 
 
 static MEMORY_READ_START( hardhea2_readmem )
-    { 0x0000, 0x7fff, MRA_ROM						},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1						},	// Banked ROM
-	{ 0xc000, 0xc000, input_port_0_r				},	// P1 (Inputs)
-	{ 0xc001, 0xc001, input_port_1_r				},	// P2
-	{ 0xc002, 0xc002, input_port_2_r				},	// DSW 1
-	{ 0xc003, 0xc003, input_port_3_r				},	// DSW 2
-	{ 0xc080, 0xc080, input_port_4_r				},	// vblank?
-	{ 0xc600, 0xc7ff, paletteram_r					},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, MRA_BANK2						},	// RAM (Banked?)
-	{ 0xe000, 0xffff, suna8_banked_spriteram_r		},	// Sprites (Banked)
+    { 0x0000, 0x7fff, MRA_ROM						},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1						},	/* Banked ROM */
+	{ 0xc000, 0xc000, input_port_0_r				},	/* P1 (Inputs) */
+	{ 0xc001, 0xc001, input_port_1_r				},	/* P2 */
+	{ 0xc002, 0xc002, input_port_2_r				},	/* DSW 1 */
+	{ 0xc003, 0xc003, input_port_3_r				},	/* DSW 2 */
+	{ 0xc080, 0xc080, input_port_4_r				},	/* vblank? */
+	{ 0xc600, 0xc7ff, paletteram_r					},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, MRA_BANK2						},	/* RAM (Banked?) */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_r		},	/* Sprites (Banked) */
 MEMORY_END
 
 static MEMORY_WRITE_START( hardhea2_writemem )
-    { 0x0000, 0x7fff, MWA_ROM					},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM					},	// Banked ROM
-	{ 0xc200, 0xc200, hardhea2_spritebank_w		},	// Sprite RAM Bank
-	{ 0xc280, 0xc280, hardhea2_rombank_w		},	// ROM Bank (?mirrored up to c2ff?)
+    { 0x0000, 0x7fff, MWA_ROM					},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM					},	/* Banked ROM */
+	{ 0xc200, 0xc200, hardhea2_spritebank_w		},	/* Sprite RAM Bank */
+	{ 0xc280, 0xc280, hardhea2_rombank_w		},	/* ROM Bank (?mirrored up to c2ff?) */
 
-	// *** Protection
+	/* *** Protection */
 	{ 0xc28c, 0xc28c, hardhea2_rombank_w		},
-	// Protection ***
+	/* Protection *** */
 
-	{ 0xc300, 0xc300, hardhea2_flipscreen_w		},	// Flip Screen
-	{ 0xc380, 0xc380, hardhea2_nmi_w			},	// ? NMI related ?
-	{ 0xc400, 0xc400, hardhea2_leds_w			},	// Leds + Coin Counter
-	{ 0xc480, 0xc480, MWA_NOP					},	// ~ROM Bank
-	{ 0xc500, 0xc500, soundlatch_w				},	// To Sound CPU
+	{ 0xc300, 0xc300, hardhea2_flipscreen_w		},	/* Flip Screen */
+	{ 0xc380, 0xc380, hardhea2_nmi_w			},	/* ? NMI related ? */
+	{ 0xc400, 0xc400, hardhea2_leds_w			},	/* Leds + Coin Counter */
+	{ 0xc480, 0xc480, MWA_NOP					},	/* ~ROM Bank */
+	{ 0xc500, 0xc500, soundlatch_w				},	/* To Sound CPU */
 
-	// *** Protection
+	/* *** Protection */
 	{ 0xc50f, 0xc50f, hardhea2_spritebank_1_w },
 	{ 0xc508, 0xc508, hardhea2_spritebank_0_w },
 
@@ -1231,11 +1231,11 @@ static MEMORY_WRITE_START( hardhea2_writemem )
 
 	{ 0xc560, 0xc560, hardhea2_rambank_1_w },
 	{ 0xc533, 0xc533, hardhea2_rambank_0_w },
-	// Protection ***
+	/* Protection *** */
 
-	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, MWA_BANK2					},	// RAM (Banked?)
-	{ 0xe000, 0xffff, suna8_banked_spriteram_w	},	// Sprites (Banked)
+	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, MWA_BANK2					},	/* RAM (Banked?) */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_w	},	/* Sprites (Banked) */
 MEMORY_END
 
 
@@ -1256,29 +1256,29 @@ static WRITE_HANDLER( starfigh_spritebank_w )
 }
 
 static MEMORY_READ_START( starfigh_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1					},	// Banked ROM
-	{ 0xc000, 0xc000, input_port_0_r			},	// P1 (Inputs)
-	{ 0xc001, 0xc001, input_port_1_r			},	// P2
-	{ 0xc002, 0xc002, input_port_2_r			},	// DSW 1
-	{ 0xc003, 0xc003, input_port_3_r			},	// DSW 2
-	{ 0xc600, 0xc7ff, suna8_banked_paletteram_r	},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, MRA_RAM					},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1					},	/* Banked ROM */
+	{ 0xc000, 0xc000, input_port_0_r			},	/* P1 (Inputs) */
+	{ 0xc001, 0xc001, input_port_1_r			},	/* P2 */
+	{ 0xc002, 0xc002, input_port_2_r			},	/* DSW 1 */
+	{ 0xc003, 0xc003, input_port_3_r			},	/* DSW 2 */
+	{ 0xc600, 0xc7ff, suna8_banked_paletteram_r	},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, MRA_RAM					},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	/* Sprites (Banked) */
 MEMORY_END
 
 static MEMORY_WRITE_START( starfigh_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM						},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM						},	// Banked ROM
-	{ 0xc200, 0xc200, starfigh_spritebank_w			},	// Sprite RAM Bank
-	{ 0xc380, 0xc3ff, starfigh_spritebank_latch_w	},	// Sprite RAM Bank
-	{ 0xc280, 0xc280, hardhea2_rombank_w			},	// ROM Bank (?mirrored up to c2ff?)
-	{ 0xc300, 0xc300, hardhea2_flipscreen_w			},	// Flip Screen
-	{ 0xc400, 0xc400, hardhea2_leds_w				},	// Leds + Coin Counter
-	{ 0xc500, 0xc500, soundlatch_w					},	// To Sound CPU
-	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, MWA_RAM						},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_w		},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MWA_ROM						},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM						},	/* Banked ROM */
+	{ 0xc200, 0xc200, starfigh_spritebank_w			},	/* Sprite RAM Bank */
+	{ 0xc380, 0xc3ff, starfigh_spritebank_latch_w	},	/* Sprite RAM Bank */
+	{ 0xc280, 0xc280, hardhea2_rombank_w			},	/* ROM Bank (?mirrored up to c2ff?) */
+	{ 0xc300, 0xc300, hardhea2_flipscreen_w			},	/* Flip Screen */
+	{ 0xc400, 0xc400, hardhea2_leds_w				},	/* Leds + Coin Counter */
+	{ 0xc500, 0xc500, soundlatch_w					},	/* To Sound CPU */
+	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, MWA_RAM						},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_w		},	/* Sprites (Banked) */
 MEMORY_END
 
 static PORT_READ_START( starfigh_readport )
@@ -1384,31 +1384,31 @@ static READ_HANDLER( sparkman_c0a3_r )
 }
 
 static MEMORY_READ_START( sparkman_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1					},	// Banked ROM
-	{ 0xc000, 0xc000, input_port_0_r			},	// P1 (Inputs)
-	{ 0xc001, 0xc001, input_port_1_r			},	// P2
-	{ 0xc002, 0xc002, input_port_2_r			},	// DSW 1
-	{ 0xc003, 0xc003, input_port_3_r			},	// DSW 2
-	{ 0xc080, 0xc080, input_port_4_r			},	// Buttons
-	{ 0xc0a3, 0xc0a3, sparkman_c0a3_r			},	// ???
-	{ 0xc600, 0xc7ff, paletteram_r				},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, MRA_RAM					},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1					},	/* Banked ROM */
+	{ 0xc000, 0xc000, input_port_0_r			},	/* P1 (Inputs) */
+	{ 0xc001, 0xc001, input_port_1_r			},	/* P2 */
+	{ 0xc002, 0xc002, input_port_2_r			},	/* DSW 1 */
+	{ 0xc003, 0xc003, input_port_3_r			},	/* DSW 2 */
+	{ 0xc080, 0xc080, input_port_4_r			},	/* Buttons */
+	{ 0xc0a3, 0xc0a3, sparkman_c0a3_r			},	/* ??? */
+	{ 0xc600, 0xc7ff, paletteram_r				},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, MRA_RAM					},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_r	},	/* Sprites (Banked) */
 MEMORY_END
 
 static MEMORY_WRITE_START( sparkman_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM					},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM					},	// Banked ROM
-	{ 0xc200, 0xc200, sparkman_spritebank_w		},	// Sprite RAM Bank
-	{ 0xc280, 0xc280, sparkman_rombank_w		},	// ROM Bank (?mirrored up to c2ff?)
-	{ 0xc300, 0xc300, sparkman_flipscreen_w		},	// Flip Screen
-	{ 0xc380, 0xc3ff, sparkman_cmd_prot_w			},	// Protection
-	{ 0xc400, 0xc400, sparkman_leds_w			},	// Leds + Coin Counter
-	{ 0xc500, 0xc500, soundlatch_w				},	// To Sound CPU
-	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	// Palette (Banked??)
-	{ 0xc800, 0xdfff, suna8_wram_w, &suna8_wram					},	// RAM
-	{ 0xe000, 0xffff, suna8_banked_spriteram_w	},	// Sprites (Banked)
+	{ 0x0000, 0x7fff, MWA_ROM					},	/* ROM */
+	{ 0x8000, 0xbfff, MWA_ROM					},	/* Banked ROM */
+	{ 0xc200, 0xc200, sparkman_spritebank_w		},	/* Sprite RAM Bank */
+	{ 0xc280, 0xc280, sparkman_rombank_w		},	/* ROM Bank (?mirrored up to c2ff?) */
+	{ 0xc300, 0xc300, sparkman_flipscreen_w		},	/* Flip Screen */
+	{ 0xc380, 0xc3ff, sparkman_cmd_prot_w			},	/* Protection */
+	{ 0xc400, 0xc400, sparkman_leds_w			},	/* Leds + Coin Counter */
+	{ 0xc500, 0xc500, soundlatch_w				},	/* To Sound CPU */
+	{ 0xc600, 0xc7ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram	},	/* Palette (Banked??) */
+	{ 0xc800, 0xdfff, suna8_wram_w, &suna8_wram					},	/* RAM */
+	{ 0xe000, 0xffff, suna8_banked_spriteram_w	},	/* Sprites (Banked) */
 MEMORY_END
 
 
@@ -1425,24 +1425,24 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ_START( hardhead_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0xc000, 0xc7ff, MRA_RAM					},	// RAM
-	{ 0xc800, 0xc800, YM3812_status_port_0_r 	},	// ? unsure
-	{ 0xd800, 0xd800, soundlatch_r				},	// From Main CPU
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM */
+	{ 0xc000, 0xc7ff, MRA_RAM					},	/* RAM */
+	{ 0xc800, 0xc800, YM3812_status_port_0_r 	},	/* ? unsure */
+	{ 0xd800, 0xd800, soundlatch_r				},	/* From Main CPU */
 MEMORY_END
 
 static MEMORY_WRITE_START( hardhead_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM					},	// ROM
-	{ 0xc000, 0xc7ff, MWA_RAM					},	// RAM
-	{ 0xd000, 0xd000, soundlatch2_w				},	//
-	{ 0xa000, 0xa000, YM3812_control_port_0_w	},	// YM3812
+	{ 0x0000, 0x7fff, MWA_ROM					},	/* ROM */
+	{ 0xc000, 0xc7ff, MWA_RAM					},	/* RAM */
+	{ 0xd000, 0xd000, soundlatch2_w				},	/* */
+	{ 0xa000, 0xa000, YM3812_control_port_0_w	},	/* YM3812 */
 	{ 0xa001, 0xa001, YM3812_write_port_0_w		},
-	{ 0xa002, 0xa002, AY8910_control_port_0_w	},	// AY8910
+	{ 0xa002, 0xa002, AY8910_control_port_0_w	},	/* AY8910 */
 	{ 0xa003, 0xa003, AY8910_write_port_0_w		},
 MEMORY_END
 
 static PORT_READ_START( hardhead_sound_readport )
-	{ 0x01, 0x01, IORP_NOP	},	// ? IRQ Ack
+	{ 0x01, 0x01, IORP_NOP	},	/* ? IRQ Ack */
 PORT_END
 
 static PORT_WRITE_START( hardhead_sound_writeport )
@@ -1455,18 +1455,18 @@ PORT_END
 ***************************************************************************/
 
 static MEMORY_READ_START( rranger_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0xc000, 0xc7ff, MRA_RAM					},	// RAM
-	{ 0xd800, 0xd800, soundlatch_r				},	// From Main CPU
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM */
+	{ 0xc000, 0xc7ff, MRA_RAM					},	/* RAM */
+	{ 0xd800, 0xd800, soundlatch_r				},	/* From Main CPU */
 MEMORY_END
 
 static MEMORY_WRITE_START( rranger_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM					},	// ROM
-	{ 0xc000, 0xc7ff, MWA_RAM					},	// RAM
-	{ 0xd000, 0xd000, soundlatch2_w				},	//
-	{ 0xa000, 0xa000, YM2203_control_port_0_w	},	// YM2203
+	{ 0x0000, 0x7fff, MWA_ROM					},	/* ROM */
+	{ 0xc000, 0xc7ff, MWA_RAM					},	/* RAM */
+	{ 0xd000, 0xd000, soundlatch2_w				},	/* */
+	{ 0xa000, 0xa000, YM2203_control_port_0_w	},	/* YM2203 */
 	{ 0xa001, 0xa001, YM2203_write_port_0_w		},
-	{ 0xa002, 0xa002, YM2203_control_port_1_w	},	// AY8910
+	{ 0xa002, 0xa002, YM2203_control_port_1_w	},	/* AY8910 */
 	{ 0xa003, 0xa003, YM2203_write_port_1_w		},
 MEMORY_END
 
@@ -1482,19 +1482,19 @@ PORT_END
 ***************************************************************************/
 
 static MEMORY_READ_START( brickzn_sound_readmem )
-	{ 0x0000, 0xbfff, MRA_ROM					},	// ROM
-	{ 0xe000, 0xe7ff, MRA_RAM					},	// RAM
-	{ 0xf800, 0xf800, soundlatch_r				},	// From Main CPU
+	{ 0x0000, 0xbfff, MRA_ROM					},	/* ROM */
+	{ 0xe000, 0xe7ff, MRA_RAM					},	/* RAM */
+	{ 0xf800, 0xf800, soundlatch_r				},	/* From Main CPU */
 MEMORY_END
 
 static MEMORY_WRITE_START( brickzn_sound_writemem )
-	{ 0x0000, 0xbfff, MWA_ROM					},	// ROM
-	{ 0xc000, 0xc000, YM3812_control_port_0_w	},	// YM3812
+	{ 0x0000, 0xbfff, MWA_ROM					},	/* ROM */
+	{ 0xc000, 0xc000, YM3812_control_port_0_w	},	/* YM3812 */
 	{ 0xc001, 0xc001, YM3812_write_port_0_w		},
-	{ 0xc002, 0xc002, AY8910_control_port_0_w	},	// AY8910
+	{ 0xc002, 0xc002, AY8910_control_port_0_w	},	/* AY8910 */
 	{ 0xc003, 0xc003, AY8910_write_port_0_w		},
-	{ 0xe000, 0xe7ff, MWA_RAM					},	// RAM
-	{ 0xf000, 0xf000, soundlatch2_w				},	// To PCM CPU
+	{ 0xe000, 0xe7ff, MWA_RAM					},	/* RAM */
+	{ 0xf000, 0xf000, soundlatch2_w				},	/* To PCM CPU */
 MEMORY_END
 
 static PORT_READ_START( brickzn_sound_readport )
@@ -1507,10 +1507,10 @@ PORT_END
 /* PCM Z80 , 4 DACs (4 bits per sample), NO RAM !! */
 
 static MEMORY_READ_START( brickzn_pcm_readmem )
-	{ 0x0000, 0xffff, MRA_ROM	},	// ROM
+	{ 0x0000, 0xffff, MRA_ROM	},	/* ROM */
 MEMORY_END
 static MEMORY_WRITE_START( brickzn_pcm_writemem )
-	{ 0x0000, 0xffff, MWA_ROM	},	// ROM
+	{ 0x0000, 0xffff, MWA_ROM	},	/* ROM */
 MEMORY_END
 
 
@@ -1520,10 +1520,10 @@ static WRITE_HANDLER( brickzn_pcm_w )
 }
 
 static PORT_READ_START( brickzn_pcm_readport )
-	{ 0x00, 0x00, soundlatch2_r		},	// From Sound CPU
+	{ 0x00, 0x00, soundlatch2_r		},	/* From Sound CPU */
 PORT_END
 static PORT_WRITE_START( brickzn_pcm_writeport )
-	{ 0x00, 0x03, brickzn_pcm_w			},	// 4 x DAC
+	{ 0x00, 0x03, brickzn_pcm_w			},	/* 4 x DAC */
 PORT_END
 
 
@@ -1552,13 +1552,13 @@ PORT_END
 
 INPUT_PORTS_START( hardhead )
 
-	PORT_START	// IN0 - Player 1 - $da00 (ip = 0)
+	PORT_START	/* IN0 - Player 1 - $da00 (ip = 0) */
 	JOY(1)
 
-	PORT_START	// IN1 - Player 2 - $da00 (ip = 1)
+	PORT_START	/* IN1 - Player 2 - $da00 (ip = 1) */
 	JOY(2)
 
-	PORT_START	// IN2 - DSW 1 - $da00 (ip = 2)
+	PORT_START	/* IN2 - DSW 1 - $da00 (ip = 2) */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1584,7 +1584,7 @@ INPUT_PORTS_START( hardhead )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2 - $da00 (ip = 3)
+	PORT_START	/* IN3 - DSW 2 - $da00 (ip = 3) */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1616,13 +1616,13 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( rranger )
 
-	PORT_START	// IN0 - Player 1 - $c002
+	PORT_START	/* IN0 - Player 1 - $c002 */
 	JOY(1)
 
-	PORT_START	// IN1 - Player 2 - $c003
+	PORT_START	/* IN1 - Player 2 - $c003 */
 	JOY(2)
 
-	PORT_START	// IN2 - DSW 1 - $c280
+	PORT_START	/* IN2 - DSW 1 - $c280 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
@@ -1647,7 +1647,7 @@ INPUT_PORTS_START( rranger )
 	PORT_DIPSETTING(    0x40, "Harder" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 
-	PORT_START	// IN3 - DSW 2 - $c2c0
+	PORT_START	/* IN3 - DSW 2 - $c2c0 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1681,14 +1681,14 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( brickzn )
 
-	PORT_START	// IN0 - Player 1 - $c100
+	PORT_START	/* IN0 - Player 1 - $c100 */
 	JOY(1)
 
-	PORT_START	// IN1 - Player 2 - $c101
+	PORT_START	/* IN1 - Player 2 - $c101 */
 	JOY(2)
 
-	PORT_START	// IN2 - DSW 1 - $c102
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )	// rom 38:b840
+	PORT_START	/* IN2 - DSW 1 - $c102 */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )	/* rom 38:b840 */
 	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
@@ -1706,15 +1706,15 @@ INPUT_PORTS_START( brickzn )
 	PORT_DIPSETTING(    0x10, "Harder" )
 	PORT_DIPSETTING(    0x08, "Very Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-//	PORT_BITX(    0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE(       0x40, IP_ACTIVE_LOW )	// + Invulnerability
+/*	PORT_BITX(    0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE ) */
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Off ) ) */
+/*	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) */
+	PORT_SERVICE(       0x40, IP_ACTIVE_LOW )	/* + Invulnerability */
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2 - $c103
+	PORT_START	/* IN3 - DSW 2 - $c103 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1739,10 +1739,10 @@ INPUT_PORTS_START( brickzn )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-	PORT_START	// IN4 - Player 1 - $c108
+	PORT_START	/* IN4 - Player 1 - $c108 */
 	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_REVERSE, 50, 0, 0, 0)
 
-	PORT_START	// IN5 - Player 2 - $c10c
+	PORT_START	/* IN5 - Player 2 - $c10c */
 	PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_REVERSE, 50, 0, 0, 0)
 
 INPUT_PORTS_END
@@ -1754,13 +1754,13 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( hardhea2 )
 
-	PORT_START	// IN0 - Player 1 - $c000
+	PORT_START	/* IN0 - Player 1 - $c000 */
 	JOY(1)
 
-	PORT_START	// IN1 - Player 2 - $c001
+	PORT_START	/* IN1 - Player 2 - $c001 */
 	JOY(2)
 
-	PORT_START	// IN2 - DSW 1 - $c002
+	PORT_START	/* IN2 - DSW 1 - $c002 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
@@ -1784,7 +1784,7 @@ INPUT_PORTS_START( hardhea2 )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2 - $c003
+	PORT_START	/* IN3 - DSW 2 - $c003 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1809,7 +1809,7 @@ INPUT_PORTS_START( hardhea2 )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-	PORT_START	// IN4 - Buttons - $c080
+	PORT_START	/* IN4 - Buttons - $c080 */
 	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -1828,13 +1828,13 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( sparkman )
 
-	PORT_START	// IN0 - Player 1 - $c000
+	PORT_START	/* IN0 - Player 1 - $c000 */
 	JOY(1)
 
-	PORT_START	// IN1 - Player 2 - $c001
+	PORT_START	/* IN1 - Player 2 - $c001 */
 	JOY(2)
 
-	PORT_START	// IN2 - DSW 1 - $c002
+	PORT_START	/* IN2 - DSW 1 - $c002 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
@@ -1858,7 +1858,7 @@ INPUT_PORTS_START( sparkman )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2 - $c003
+	PORT_START	/* IN3 - DSW 2 - $c003 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1883,7 +1883,7 @@ INPUT_PORTS_START( sparkman )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x00, "5" )
 
-	PORT_START	// IN4 - Buttons - $c080
+	PORT_START	/* IN4 - Buttons - $c080 */
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1918,7 +1918,7 @@ static struct GfxLayout layout_8x8x4 =
 
 static struct GfxDecodeInfo suna8_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4, 0, 16 }, // [0] Sprites
+	{ REGION_GFX1, 0, &layout_8x8x4, 0, 16 }, /* [0] Sprites */
 	{ -1 }
 };
 
@@ -2097,8 +2097,8 @@ static MACHINE_DRIVER_START( brickzn )
 	MDRV_CPU_ADD_TAG("main", Z80, 24000000 / 4)		/* SUNA PROTECTION BLOCK */
 	MDRV_CPU_MEMORY(brickzn_readmem,brickzn_writemem)
 	MDRV_CPU_PORTS(brickzn_readport,brickzn_writeport)
-//	MDRV_CPU_VBLANK_INT(brickzn_interrupt, 2)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)	// nmi breaks ramtest but is needed!
+/*	MDRV_CPU_VBLANK_INT(brickzn_interrupt, 2) */
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)	/* nmi breaks ramtest but is needed! */
 
 	MDRV_CPU_ADD_TAG("sound", Z80, 24000000 / 4)	/* Z0840006PSC */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -2111,7 +2111,7 @@ static MACHINE_DRIVER_START( brickzn )
 	MDRV_CPU_PORTS(brickzn_pcm_readport,brickzn_pcm_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -2312,7 +2312,7 @@ Sound processor -  Z80
 
 ROM_START( hardhead )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 ) /* Main Z80 Code */
-	ROM_LOAD( "p1",  0x00000, 0x8000, CRC(c6147926) SHA1(8d1609aaeac344c6aec102e92d34caab22a8ec64) )	// 1988,9,14
+	ROM_LOAD( "p1",  0x00000, 0x8000, CRC(c6147926) SHA1(8d1609aaeac344c6aec102e92d34caab22a8ec64) )	/* 1988,9,14 */
 	ROM_LOAD( "p2",  0x10000, 0x8000, CRC(faa2cf9a) SHA1(5987f146b58fcbc3aaa9c010d86022b5172bcfb4) )
 	ROM_LOAD( "p3",  0x18000, 0x8000, CRC(3d24755e) SHA1(519a179594956f7c3ddfaca362c42b453c928e25) )
 	ROM_LOAD( "p4",  0x20000, 0x8000, CRC(0241ac79) SHA1(b3c3b98fb29836cbc9fd35ac49e02bfefd3b0c79) )
@@ -2340,7 +2340,7 @@ ROM_END
 
 ROM_START( hardhedb )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 ) /* Main Z80 Code */
-	ROM_LOAD( "9_1_6l.rom", 0x00000, 0x8000, CRC(750e6aee) SHA1(ec8f61a1a3d95ef0e3748968f6da73e972763493) )	// 1988,9,14 (already decrypted)
+	ROM_LOAD( "9_1_6l.rom", 0x00000, 0x8000, CRC(750e6aee) SHA1(ec8f61a1a3d95ef0e3748968f6da73e972763493) )	/* 1988,9,14 (already decrypted) */
 	ROM_LOAD( "p2",  0x10000, 0x8000, CRC(faa2cf9a) SHA1(5987f146b58fcbc3aaa9c010d86022b5172bcfb4) )
 	ROM_LOAD( "p3",  0x18000, 0x8000, CRC(3d24755e) SHA1(519a179594956f7c3ddfaca362c42b453c928e25) )
 	ROM_LOAD( "p4",  0x20000, 0x8000, CRC(0241ac79) SHA1(b3c3b98fb29836cbc9fd35ac49e02bfefd3b0c79) )
@@ -2351,7 +2351,7 @@ ROM_START( hardhedb )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Sound Z80 Code */
 	ROM_LOAD( "p13", 0x0000, 0x8000, CRC(493c0b41) SHA1(994a334253e905c39ec912765e8b0f4b1be900bc) )
-//	ROM_LOAD( "2_13_9h.rom", 0x00000, 0x8000, CRC(1b20e5ec) )
+/*	ROM_LOAD( "2_13_9h.rom", 0x00000, 0x8000, CRC(1b20e5ec) ) */
 
 	ROM_REGION( 0x40000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )	/* Sprites */
 	ROM_LOAD( "p5",  0x00000, 0x8000, CRC(e9aa6fba) SHA1(f286727541f08b136a7d45e13975652bdc8fd663) )
@@ -2427,7 +2427,7 @@ Sound processor - Z80
 
 ROM_START( rranger )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "1",  0x00000, 0x8000, CRC(4fb4f096) SHA1(c5ac3e04080cdcf570769918587e8cf8d455fc30) )	// V 2.0 1988,4,15
+	ROM_LOAD( "1",  0x00000, 0x8000, CRC(4fb4f096) SHA1(c5ac3e04080cdcf570769918587e8cf8d455fc30) )	/* V 2.0 1988,4,15 */
 	ROM_LOAD( "2",  0x10000, 0x8000, CRC(ff65af29) SHA1(90f9a0c862e2a9da0343446a325961ab29d26b4b) )
 	ROM_LOAD( "3",  0x18000, 0x8000, CRC(64e09436) SHA1(077f0d38d489562532d5f7678434a85ca04d373c) )
 	ROM_LOAD( "r4", 0x30000, 0x8000, CRC(4346fae6) SHA1(a9f000e4427a1e9902627402dce14dc8ee04dbf8) )
@@ -2454,7 +2454,7 @@ ROM_END
 
 ROM_START( sranger )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "r1", 0x00000, 0x8000, CRC(4eef1ede) )	// V 2.0 1988,4,15
+	ROM_LOAD( "r1", 0x00000, 0x8000, CRC(4eef1ede) )	/* V 2.0 1988,4,15 */
 	ROM_LOAD( "2",  0x10000, 0x8000, CRC(ff65af29) SHA1(90f9a0c862e2a9da0343446a325961ab29d26b4b) )
 	ROM_LOAD( "3",  0x18000, 0x8000, CRC(64e09436) SHA1(077f0d38d489562532d5f7678434a85ca04d373c) )
 	ROM_LOAD( "r4", 0x30000, 0x8000, CRC(4346fae6) SHA1(a9f000e4427a1e9902627402dce14dc8ee04dbf8) )
@@ -2481,14 +2481,14 @@ ROM_END
 
 ROM_START( srangerb )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "r1bt", 0x00000, 0x8000, CRC(40635e7c) )	// NYWACORPORATION LTD 88-1-07
+	ROM_LOAD( "r1bt", 0x00000, 0x8000, CRC(40635e7c) )	/* NYWACORPORATION LTD 88-1-07 */
 	ROM_LOAD( "2",    0x10000, 0x8000, CRC(ff65af29) SHA1(90f9a0c862e2a9da0343446a325961ab29d26b4b) )
 	ROM_LOAD( "3",    0x18000, 0x8000, CRC(64e09436) SHA1(077f0d38d489562532d5f7678434a85ca04d373c) )
 	ROM_LOAD( "r4",   0x30000, 0x8000, CRC(4346fae6) SHA1(a9f000e4427a1e9902627402dce14dc8ee04dbf8) )
 	ROM_CONTINUE(     0x20000, 0x8000             )
 	ROM_LOAD( "r5",   0x38000, 0x8000, CRC(6a7ca1c3) SHA1(0f0b508e9b20909e9efa07b42d67732082b6940b) )
 	ROM_CONTINUE(     0x28000, 0x8000             )
-	ROM_LOAD( "r5bt", 0x28000, 0x8000, BAD_DUMP CRC(f7f391b5)  )	// wrong length
+	ROM_LOAD( "r5bt", 0x28000, 0x8000, BAD_DUMP CRC(f7f391b5)  )	/* wrong length */
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Sound Z80 Code */
 	ROM_LOAD( "14", 0x0000, 0x8000, CRC(11c83aa1) SHA1(d1f75096528b220a3f858eac62e3b4111fa013de) )
@@ -2509,7 +2509,7 @@ ROM_END
 
 ROM_START( srangerw )
 	ROM_REGION( 0x48000, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "w1", 0x00000, 0x8000, CRC(2287d3fc) )	// 88,2,28
+	ROM_LOAD( "w1", 0x00000, 0x8000, CRC(2287d3fc) )	/* 88,2,28 */
 	ROM_LOAD( "2",  0x10000, 0x8000, CRC(ff65af29) SHA1(90f9a0c862e2a9da0343446a325961ab29d26b4b) )
 	ROM_LOAD( "3",  0x18000, 0x8000, CRC(64e09436) SHA1(077f0d38d489562532d5f7678434a85ca04d373c) )
 	ROM_LOAD( "r4", 0x30000, 0x8000, CRC(4346fae6) SHA1(a9f000e4427a1e9902627402dce14dc8ee04dbf8) )
@@ -2566,7 +2566,7 @@ Large epoxy(?) module near the cpu's.
 
 ROM_START( brickzn )
 	ROM_REGION( 0x50000 * 2, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "brickzon.009", 0x00000, 0x08000, CRC(1ea68dea) )	// V5.0 1992,3,3
+	ROM_LOAD( "brickzon.009", 0x00000, 0x08000, CRC(1ea68dea) )	/* V5.0 1992,3,3 */
 	ROM_RELOAD(               0x50000, 0x08000             )
 	ROM_LOAD( "brickzon.008", 0x10000, 0x20000, CRC(c61540ba) )
 	ROM_RELOAD(               0x60000, 0x20000             )
@@ -2593,7 +2593,7 @@ ROM_END
 
 ROM_START( brickzn3 )
 	ROM_REGION( 0x50000 * 2, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "39",           0x00000, 0x08000, CRC(043380bd) )	// V3.0 1992,1,23
+	ROM_LOAD( "39",           0x00000, 0x08000, CRC(043380bd) )	/* V3.0 1992,1,23 */
 	ROM_RELOAD(               0x50000, 0x08000             )
 	ROM_LOAD( "38",           0x10000, 0x20000, CRC(e16216e8) )
 	ROM_RELOAD(               0x60000, 0x20000             )
@@ -2658,7 +2658,7 @@ Sound is a Yamaha YM3812 and a  AY-3-8910A
 
 ROM_START( hardhea2 )
 	ROM_REGION( 0x50000 * 2, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "hrd-hd9",  0x00000, 0x08000, CRC(69c4c307) )	// V 2.0 1991,2,12
+	ROM_LOAD( "hrd-hd9",  0x00000, 0x08000, CRC(69c4c307) )	/* V 2.0 1991,2,12 */
 	ROM_RELOAD(           0x50000, 0x08000             )
 	ROM_LOAD( "hrd-hd10", 0x10000, 0x10000, CRC(77ec5b0a) )
 	ROM_RELOAD(           0x60000, 0x10000             )
@@ -2699,15 +2699,15 @@ ROM_END
 
 ROM_START( starfigh )
 	ROM_REGION( 0x50000 * 2, REGION_CPU1, 0 )		/* Main Z80 Code */
-	ROM_LOAD( "starfgtr.l1", 0x00000, 0x08000, CRC(f93802c6) )	// V.1
+	ROM_LOAD( "starfgtr.l1", 0x00000, 0x08000, CRC(f93802c6) )	/* V.1 */
 	ROM_RELOAD(              0x50000, 0x08000             )
 	ROM_LOAD( "starfgtr.j1", 0x10000, 0x10000, CRC(fcfcf08a) )
 	ROM_RELOAD(              0x60000, 0x10000             )
 	ROM_LOAD( "starfgtr.i1", 0x20000, 0x10000, CRC(6935fcdb) )
 	ROM_RELOAD(              0x70000, 0x10000             )
-	ROM_LOAD( "starfgtr.l3", 0x30000, 0x10000, CRC(50c072a4) )	// 0xxxxxxxxxxxxxxx = 0xFF (ROM Test: OK)
+	ROM_LOAD( "starfgtr.l3", 0x30000, 0x10000, CRC(50c072a4) )	/* 0xxxxxxxxxxxxxxx = 0xFF (ROM Test: OK) */
 	ROM_RELOAD(              0x80000, 0x10000             )
-	ROM_LOAD( "starfgtr.j3", 0x40000, 0x10000, CRC(3fe3c714) )	// clear text here
+	ROM_LOAD( "starfgtr.j3", 0x40000, 0x10000, CRC(3fe3c714) )	/* clear text here */
 	ROM_RELOAD(              0x90000, 0x10000             )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Music Z80 Code */

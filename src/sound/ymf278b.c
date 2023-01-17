@@ -277,7 +277,7 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 				if(slot->stepptr >= slot->endaddr)
 				{
 					slot->stepptr = slot->stepptr - slot->endaddr + slot->loopaddr;
-					// If the step is bigger than the loop, finish the sample forcibly
+					/* If the step is bigger than the loop, finish the sample forcibly */
 					if(slot->stepptr >= slot->endaddr)
 					{
 						slot->env_vol = 256U<<23;

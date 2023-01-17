@@ -1827,14 +1827,14 @@
 #define DISC_MIXER_IS_RESISTOR			0
 #define DISC_MIXER_IS_OP_AMP			1
 
-#define DISC_MIXER_IS_OP_AMP_WITH_RI 	2	// Used only internally.  Use DISC_MIXER_IS_OP_AMP
-#define DISC_MIXER_TYPE_MASK			3	// Used only internally.
-#define DISC_MIXER_HAS_R_NODE			4	// Used only internally.
+#define DISC_MIXER_IS_OP_AMP_WITH_RI 	2	/* Used only internally.  Use DISC_MIXER_IS_OP_AMP */
+#define DISC_MIXER_TYPE_MASK			3	/* Used only internally. */
+#define DISC_MIXER_HAS_R_NODE			4	/* Used only internally. */
 
 /* Common Op Amp Flags and values */
 #define DISC_OP_AMP_IS_NORTON	0x01
-#define OP_AMP_NORTON_VBE		0.5		// This is the norton junction voltage. Used only internally.
-#define OP_AMP_VP_RAIL_OFFSET	1.5		// This is how close an op-amp can get to the vP rail. Used only internally.
+#define OP_AMP_NORTON_VBE		0.5		/* This is the norton junction voltage. Used only internally. */
+#define OP_AMP_VP_RAIL_OFFSET	1.5		/* This is how close an op-amp can get to the vP rail. Used only internally. */
 
 /* Op Amp Filter Options */
 #define DISC_OP_AMP_FILTER_IS_LOW_PASS_1	0x00
@@ -1842,7 +1842,7 @@
 #define DISC_OP_AMP_FILTER_IS_BAND_PASS_1	0x20
 #define DISC_OP_AMP_FILTER_IS_BAND_PASS_1M	0x30
 
-#define DISC_OP_AMP_FILTER_TYPE_MASK		0xf0	// Used only internally.
+#define DISC_OP_AMP_FILTER_TYPE_MASK		0xf0	/* Used only internally. */
 
 /* Op Amp Oscillator Flags */
 #define DISC_OP_AMP_OSCILLATOR_1			0x00
@@ -1850,8 +1850,8 @@
 #define DISC_OP_AMP_OSCILLATOR_OUT_CAP		0x00
 #define DISC_OP_AMP_OSCILLATOR_OUT_SQW		0x02
 
-#define DISC_OP_AMP_OSCILLATOR_TYPE_MASK	(0xf0 | DISC_OP_AMP_IS_NORTON)	// Used only internally.
-#define DISC_OP_AMP_OSCILLATOR_VCO_MASK		0x80	// Used only internally.
+#define DISC_OP_AMP_OSCILLATOR_TYPE_MASK	(0xf0 | DISC_OP_AMP_IS_NORTON)	/* Used only internally. */
+#define DISC_OP_AMP_OSCILLATOR_VCO_MASK		0x80	/* Used only internally. */
 
 /* Schmitt Oscillator Options */
 #define DISC_SCHMITT_OSC_IN_IS_LOGIC	0x00
@@ -2001,7 +2001,7 @@ struct discrete_op_amp_osc_info
 	double	r7;
 	double	r8;
 	double	c;
-	double	vP;		// Op amp B+
+	double	vP;		/* Op amp B+ */
 };
 
 struct discrete_schmitt_osc_desc
@@ -2009,30 +2009,30 @@ struct discrete_schmitt_osc_desc
 	double	rIn;
 	double	rFeedback;
 	double	c;
-	double	trshRise;	// voltage that triggers the gate input to go high (vGate) on rise
-	double	trshFall;	// voltage that triggers the gate input to go low (0V) on fall
-	double	vGate;		// the ouput high voltage of the gate that gets fedback through rFeedback
-	int		options;	// bitmaped options
+	double	trshRise;	/* voltage that triggers the gate input to go high (vGate) on rise */
+	double	trshFall;	/* voltage that triggers the gate input to go low (0V) on fall */
+	double	vGate;		/* the ouput high voltage of the gate that gets fedback through rFeedback */
+	int		options;	/* bitmaped options */
 };
 
 
 struct discrete_comp_adder_table
 {
 	int		type;
-	double	cDefault;				// Default componet.  0 if not used.
+	double	cDefault;				/* Default componet.  0 if not used. */
 	int		length;
-	double	c[DISC_LADDER_MAXRES];	// Componet table
+	double	c[DISC_LADDER_MAXRES];	/* Componet table */
 };
 
 
 struct discrete_dac_r1_ladder
 {
-	int	ladderLength;		// 2 to DISC_LADDER_MAXRES.  1 would be useless.
-	double	r[DISC_LADDER_MAXRES];	// Don't use 0 for valid resistors.  That is a short.
-	double	vBias;			// Voltage Bias resistor is tied to (0 = not used)
-	double	rBias;			// Additional resistor tied to vBias (0 = not used)
-	double	rGnd;			// Resistor tied to ground (0 = not used)
-	double	cFilter;		// Filtering cap (0 = not used)
+	int	ladderLength;		/* 2 to DISC_LADDER_MAXRES.  1 would be useless. */
+	double	r[DISC_LADDER_MAXRES];	/* Don't use 0 for valid resistors.  That is a short. */
+	double	vBias;			/* Voltage Bias resistor is tied to (0 = not used) */
+	double	rBias;			/* Additional resistor tied to vBias (0 = not used) */
+	double	rGnd;			/* Resistor tied to ground (0 = not used) */
+	double	cFilter;		/* Filtering cap (0 = not used) */
 };
 
 
@@ -2041,15 +2041,15 @@ struct discrete_mixer_desc
 {
 	int	type;
 	int	mixerLength;
-	double	r[DISC_MAX_MIXER_INPUTS];	// static input resistance values.  These are in series with rNode, if used.
-	int	rNode[DISC_MAX_MIXER_INPUTS];	// variable resistance nodes, if needed.  0 if not used.
+	double	r[DISC_MAX_MIXER_INPUTS];	/* static input resistance values.  These are in series with rNode, if used. */
+	int	rNode[DISC_MAX_MIXER_INPUTS];	/* variable resistance nodes, if needed.  0 if not used. */
 	double	c[DISC_MAX_MIXER_INPUTS];
 	double	rI;
 	double	rF;
 	double	cF;
 	double	cAmp;
 	double	vRef;
-	double	gain;				// Scale value to get output close to +/- 32767
+	double	gain;				/* Scale value to get output close to +/- 32767 */
 };
 
 
@@ -2070,31 +2070,31 @@ struct discrete_op_amp_filt_info
 
 struct discrete_555_astbl_desc
 {
-	int		options;		// bit mapped options
-	double	v555;			// B+ voltage of 555
-	double	v555high;		// High output voltage of 555 (Usually v555 - 1.7)
-	double	threshold555;	// normally 2/3 of v555
-	double	trigger555;		// normally 1/3 of v555
+	int		options;		/* bit mapped options */
+	double	v555;			/* B+ voltage of 555 */
+	double	v555high;		/* High output voltage of 555 (Usually v555 - 1.7) */
+	double	threshold555;	/* normally 2/3 of v555 */
+	double	trigger555;		/* normally 1/3 of v555 */
 };
 
 
 struct discrete_555_cc_desc
 {
-	int		options;		// bit mapped options
-	double	v555;			// B+ voltage of 555
-	double	v555high;		// High output voltage of 555 (Usually v555 - 1.7)
-	double	threshold555;	// normally 2/3 of v555
-	double	trigger555;		// normally 1/3 of v555
-	double	vCCsource;		// B+ voltage of the Constant Current source
-	double	vCCjunction;	// The voltage drop of the Constant Current source transitor (0 if Op Amp)
+	int		options;		/* bit mapped options */
+	double	v555;			/* B+ voltage of 555 */
+	double	v555high;		/* High output voltage of 555 (Usually v555 - 1.7) */
+	double	threshold555;	/* normally 2/3 of v555 */
+	double	trigger555;		/* normally 1/3 of v555 */
+	double	vCCsource;		/* B+ voltage of the Constant Current source */
+	double	vCCjunction;	/* The voltage drop of the Constant Current source transitor (0 if Op Amp) */
 };
 
 
 struct discrete_566_desc
 {
-	int		options;	// bit mapped options
-	double	vPlus;		// B+ voltage of 566
-	double	vNeg;		// B- voltage of 566
+	int		options;	/* bit mapped options */
+	double	vPlus;		/* B+ voltage of 566 */
+	double	vNeg;		/* B- voltage of 566 */
 };
 
 
@@ -2224,7 +2224,7 @@ enum
 	DST_MIXER,			/* Final Mixing Stage */
 	DST_VCA,			/* IC Voltage controlled  amplifiers */
 	DST_VCA_OP_AMP,		/* Op Amp Voltage controlled  amplifier circuits */
-//	DST_DELAY,			/* Phase shift/Delay line */
+/*	DST_DELAY,			 Phase shift/Delay line */
 
 	/* from disc_flt.c */
 	/* generic modules */
@@ -2249,7 +2249,7 @@ enum
 	DSD_566,			/* NE566 Emulation */
 
 	/* Custom */
-//	DST_CUSTOM,			/* whatever you want someday */
+/*	DST_CUSTOM,			 whatever you want someday  */
 
 	/* Output Node -- this must be the last entry in this enum! */
 	DSO_OUTPUT			/* The final output node */

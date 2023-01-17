@@ -191,64 +191,64 @@ static READ16_HANDLER( analog_r )
   * Live Center - rev 5 - by mahoneyt944 & grant2258 *
   ****************************************************/
 
-  static UINT8 currentx  = 0x80; // upright
+  static UINT8 currentx  = 0x80; /* upright */
   static UINT8 currenty  = 0x7F;
-  static UINT8 currentx2 = 0x80; // cocktail
+  static UINT8 currentx2 = 0x80; /* cocktail */
   static UINT8 currenty2 = 0x7F;
-  static UINT8 delay     = 0;    // debounce counter
-  static UINT8 t         = 0;    // debounce count to reach
-  UINT8  center          = 0;    // reset center checks
+  static UINT8 delay     = 0;    /* debounce counter */
+  static UINT8 t         = 0;    /* debounce count to reach */
+  UINT8  center          = 0;    /* reset center checks */
   UINT8  center2         = 0;
 
 
-  // live center dip switch set -> On
+  /* live center dip switch set -> On */
   if (readinputport(6) == 0x01)
   {
-    // user set debounce delay from dip menu
+    /* user set debounce delay from dip menu */
     if (readinputport(7) == 0xFF) t = 0;
     else t = readinputport(7);
     if (delay > t) delay = 0;
 
-    // check for centers
+    /* check for centers */
     if (readinputport(0) == 0x7F && readinputport(2) == 0x7F) center = 1;
     if (readinputport(1) == 0x7F && readinputport(3) == 0x7F) center2 = 1;
 
-    if (delay == t) // debounce protection
+    if (delay == t) /* debounce protection */
     {
       delay = 0;
 
       if (center == 0)
-      { // update upright stopping positions
+      { /* update upright stopping positions */
         currentx = position_update(readinputport(0));
         currenty = position_update(readinputport(2));
       }
 
       if (center2 == 0)
-      { // update cocktail stopping positions
+      { /* update cocktail stopping positions */
         currentx2 = position_update(readinputport(1));
         currenty2 = position_update(readinputport(3));
       }
     }
     else delay++;
 
-    // return upright x stopping position
+    /* return upright x stopping position */
     if (whichport == 0)
     { if (center) return currentx; }
 
-    // return upright y stopping position
+    /* return upright y stopping position */
     else if (whichport == 2)
     { if (center) return currenty; }
 
-    // return cocktail x stopping position
+    /* return cocktail x stopping position */
     else if (whichport == 1)
     { if (center2) return currentx2; }
 
-    // return cocktail y stopping position
+    /* return cocktail y stopping position */
     else if (whichport == 3)
     { if (center2) return currenty2; }
   }
 
-  // return actual input 
+  /* return actual input  */
   return readinputport(whichport);
 }
 

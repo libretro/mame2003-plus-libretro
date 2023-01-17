@@ -54,7 +54,7 @@ void namcoio_54XX_write(int data)
 	static UINT8 config1[4],config2[4],config3[5];
 
 
-//logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data); */
 
 	if (fetch)
 	{
@@ -78,33 +78,33 @@ void namcoio_54XX_write(int data)
 	{
 		switch (data & 0xf0)
 		{
-			case 0x00:	// nop
+			case 0x00:	/* nop */
 				break;
 
-			case 0x10:	// output sound on pins 4-7 only
+			case 0x10:	/* output sound on pins 4-7 only */
 				if (memcmp(config1,"\x40\x00\x02\xdf",4) == 0)
-					// bosco
-					// galaga
-					// xevious
+					/* bosco */
+					/* galaga */
+					/* xevious */
 					sample_start(0, 0, 0);
 				else if (memcmp(config1,"\x10\x00\x80\xff",4) == 0)
-					// xevious
+					/* xevious */
 					sample_start(0, 1, 0);
 				else if (memcmp(config1,"\x80\x80\x01\xff",4) == 0)
-					// xevious
+					/* xevious */
 					sample_start(0, 2, 0);
 				break;
 
-			case 0x20:	// output sound on pins 8-11 only
+			case 0x20:	/* output sound on pins 8-11 only */
 				if (memcmp(config2,"\x40\x40\x01\xff",4) == 0)
-					// xevious
+					/* xevious */
 					sample_start(1, 3, 0);
 				else if (memcmp(config2,"\x30\x30\x03\xdf",4) == 0)
-					// bosco
-					// galaga
+					/* bosco */
+					/* galaga */
 					sample_start(1, 1, 0);
 				else if (memcmp(config2,"\x60\x30\x03\x66",4) == 0)
-					// polepos
+					/* polepos */
 					sample_start( 0, 0, 0 );
 				break;
 
@@ -118,9 +118,9 @@ void namcoio_54XX_write(int data)
 				fetchmode = 2;
 				break;
 
-			case 0x50:	// output sound on pins 17-20 only
+			case 0x50:	/* output sound on pins 17-20 only */
 				if (memcmp(config3,"\x08\x04\x21\x00\xf1",5) == 0)
-					// bosco
+					/* bosco */
 					sample_start(2, 2, 0);
 				break;
 
@@ -130,7 +130,7 @@ void namcoio_54XX_write(int data)
 				break;
 
 			case 0x70:
-				// polepos
+				/* polepos */
 				/* 0x7n = Screech sound. n = pitch (if 0 then no sound) */
 				/* followed by 0x60 command? */
 				if (( data & 0x0f ) == 0)

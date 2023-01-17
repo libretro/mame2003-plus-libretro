@@ -286,10 +286,10 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 const struct discrete_555_astbl_desc canyonWhistl555 =
 {
 	DISC_555_OUT_CAP | DISC_555_OUT_AC,
-	5,		// B+ voltage of 555
-	5.0 - 1.7,	// High output voltage of 555 (Usually v555 - 1.7)
-	5.0 * 2.0 /3.0,	// normally 2/3 of v555
-	5.0 / 3.0	// normally 1/3 of v555
+	5,		/* B+ voltage of 555 */
+	5.0 - 1.7,	/* High output voltage of 555 (Usually v555 - 1.7) */
+	5.0 * 2.0 /3.0,	/* normally 2/3 of v555 */
+	5.0 / 3.0	/* normally 1/3 of v555 */
 };
 
 const struct discrete_lfsr_desc canyon_lfsr={

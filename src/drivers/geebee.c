@@ -125,14 +125,14 @@ extern void geebee_sh_update(void);
 /* centre, but is white at the bottom. */
 /* We handle both overlays, depending on dip switch (restart required). */
 OVERLAY_START( geebee_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT( 4*8,  4*8, 5*8, 24*8, OVERLAY_ORANGE )
 	OVERLAY_TRI(  4*8, 25*8, 5*8, 24*8, OVERLAY_GREEN )
 	OVERLAY_TRI(  5*8, 24*8, 4*8, 25*8, OVERLAY_ORANGE )
 	OVERLAY_TRI(  5*8,  4*8, 4*8,  3*8, OVERLAY_GREEN )
 	OVERLAY_TRI(  4*8,  3*8, 5*8,  4*8, OVERLAY_ORANGE )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 1*8, 3*8, 2*8, 25*8, OVERLAY_PURPLE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 2*8, 3*8, 4*8, 25*8, OVERLAY_RED )
 
@@ -203,7 +203,7 @@ OVERLAY_START( geebee_overlay )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,  7*8+4,   18*8,    9*8,   19*8, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   10*8,   18*8, 11*8+4,   19*8, OVERLAY_YELLOW )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 1*8, 0*8, 2*8, 28*8, OVERLAY_PURPLE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 2*8, 0*8, 4*8, 28*8, OVERLAY_RED )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 30*8, 0*8, 32*8, 28*8, OVERLAY_RED )
@@ -231,7 +231,7 @@ OVERLAY_END
 /* limiting what an overlay can do on such setups. */
 /* We handle both overlays, depending on dip switch (restart required). */
 OVERLAY_START( navalone_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT(  0*8,    0*8,  1*8,   28*8, OVERLAY_CYAN )
 	OVERLAY_RECT(  3*8,  3*8-1,  4*8,    3*8, OVERLAY_GREEN )
 	OVERLAY_RECT(  3*8,   25*8,  4*8, 25*8+1, OVERLAY_GREEN )
@@ -244,7 +244,7 @@ OVERLAY_START( navalone_overlay )
 	OVERLAY_RECT(  3*8, 25*8+1,  6*8,   28*8, OVERLAY_BLUE )
 	OVERLAY_RECT( 33*8,    0*8, 36*8,   28*8, OVERLAY_CYAN )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 1*8, 0*8, 3*8, 28*8, OVERLAY_CYAN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 3*8, 3*8, 4*8, 25*8, OVERLAY_YELLOW )
 
@@ -315,7 +315,7 @@ OVERLAY_START( navalone_overlay )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 29*8+1,    0*8,   33*8,   28*8, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,   12*8,   12*8,   16*8,   16*8, OVERLAY_YELLOW )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  1*8,    0*8,  3*8,   28*8, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  3*8,    3*8,  4*8,   25*8, OVERLAY_BLUE )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  5*8,  4*8-1, 12*8, 24*8+1, OVERLAY_GREEN )
@@ -323,8 +323,8 @@ OVERLAY_START( navalone_overlay )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 12*8,  4*8-1, 22*8,    5*8, OVERLAY_GREEN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 12*8,   23*8, 22*8, 24*8+1, OVERLAY_GREEN )
 
-        // A larger area of yellow is used to cover both upside down and upright
-        // and also the name and logo on game start
+        /* A larger area of yellow is used to cover both upside down and upright */
+        /* and also the name and logo on game start */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 12*8,    5*8, 22*8,   23*8, OVERLAY_YELLOW )
 
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY, 31*8,    0*8, 33*8,   28*8, OVERLAY_BLUE )
@@ -350,7 +350,7 @@ OVERLAY_END
 /* limiting what an overlay can do on such setups. */
 /* We handle both overlays, depending on dip switch (restart required). */
 OVERLAY_START( kaitei_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT(  0*8,  0*8,    1*8, 28*8, OVERLAY_GREEN )
 	OVERLAY_RECT( 33*8,  0*8,   34*8, 28*8, OVERLAY_GREEN )
 	OVERLAY_RECT( 30*8,  0*8, 31*8-5,  5*8, OVERLAY_BROWN )
@@ -360,7 +360,7 @@ OVERLAY_START( kaitei_overlay )
 	OVERLAY_RECT( 30*8, 19*8, 31*8-5, 21*8, OVERLAY_BROWN )
 	OVERLAY_RECT( 30*8, 23*8, 31*8-5, 28*8, OVERLAY_BROWN )
 
-    // Cocktail overlay
+    /* Cocktail overlay */
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  4*8-3,   0*8,    4*8,  5*8, OVERLAY_BROWN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  4*8-3,   7*8,    4*8,  9*8, OVERLAY_BROWN )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,  4*8-3,  11*8,    4*8, 12*8, OVERLAY_BROWN )
@@ -381,7 +381,7 @@ OVERLAY_START( kaitei_overlay )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   30*8,  17*8, 30*8+3, 19*8, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( COCKTAIL_ONLY,   30*8,  21*8, 30*8+3, 23*8, OVERLAY_YELLOW )
 
-    // Upright overlay
+    /* Upright overlay */
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,    2*8,   0*8,    3*8, 28*8, OVERLAY_YELLOW )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY,    9*8,   0*8, 10*8-2, 28*8, OVERLAY_BROWN )
 	OVERLAY_RECT_TAG( UPRIGHT_ONLY, 10*8-2,   0*8,   30*8, 28*8, OVERLAY_BLUE )
@@ -396,7 +396,7 @@ OVERLAY_END
 /* I have created a simple one for it here. It works in both upright */
 /* and cocktail mode. */
 OVERLAY_START( sos_overlay )
-    // Common to both upright and cocktail
+    /* Common to both upright and cocktail */
 	OVERLAY_RECT(  0*8, 0*8,  1*8, 28*8, OVERLAY_GREEN )
 	OVERLAY_RECT( 33*8, 0*8, 34*8, 28*8, OVERLAY_GREEN )
 	OVERLAY_RECT(  1*8, 0*8, 33*8, 28*8, OVERLAY_LT_BLUE )

@@ -220,15 +220,15 @@ static WRITE16_HANDLER( terraf_io_w )
 			terraf_text_videoram[i]=0x20;
 		}
 		tilemap_mark_all_tiles_dirty( armedf_tx_tilemap );
-		//logerror("vreg WIPE TX\n");
+		/*logerror("vreg WIPE TX\n"); */
 	}
-	//logerror("VReg = %04x\n", armedf_vreg);
+	/*logerror("VReg = %04x\n", armedf_vreg); */
 }
 
 static WRITE16_HANDLER( legion_command_c )
 {
 	COMBINE_DATA(&legion_cmd[offset]);
-	//logerror("Legion CMD %04x=%04x", offset, data);
+	/*logerror("Legion CMD %04x=%04x", offset, data); */
 }
 
 static WRITE16_HANDLER( sound_command_w )

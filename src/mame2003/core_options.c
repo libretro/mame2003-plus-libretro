@@ -1169,7 +1169,7 @@ void update_variables(bool first_time)
             int width = 0;
             int height = 0;
             sscanf(var.value, "%dx%d", &width, &height);
-            // if they are still 0, mame will set from driver resolution set
+            /* if they are still 0, mame will set from driver resolution set */
             options.vector_width = width;
             options.vector_height = height;
           }

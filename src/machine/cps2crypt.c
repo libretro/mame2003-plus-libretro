@@ -1,5 +1,5 @@
-// license:BSD-3-Clause
-// copyright-holders:Paul Leaman, Andreas Naive, Nicola Salmoria,Charles MacDonald
+/* license:BSD-3-Clause */
+/* copyright-holders:Paul Leaman, Andreas Naive, Nicola Salmoria,Charles MacDonald */
 /******************************************************************************
 
 CPS-2 Encryption
@@ -114,7 +114,7 @@ the decryption keys.
 
 #include "driver.h"
 #include "cpu/m68000/m68000.h"
-//#include "ui/uimain.h"
+/*#include "ui/uimain.h" */
 #include "includes/cps1.h"
 
 
@@ -131,20 +131,20 @@ static const int fn2_groupB[8] = { 3, 5, 9, 10, 8, 15, 12, 11 };
 
 /******************************************************************************/
 
-// The order of the input and output bits in the s-boxes is arbitrary.
-// Each s-box can be XORed with an arbitrary vale in range 0-3 (but the same value
-// must be used for the corresponding output bits in f1 and f3 or in f2 and f4)
+/* The order of the input and output bits in the s-boxes is arbitrary. */
+/* Each s-box can be XORed with an arbitrary vale in range 0-3 (but the same value */
+/* must be used for the corresponding output bits in f1 and f3 or in f2 and f4) */
 
 struct sbox
 {
 	const uint8_t table[64];
-	const int inputs[6];        // positions of the inputs bits, -1 means no input except from key
-	const int outputs[2];       // positions of the output bits
+	const int inputs[6];        /* positions of the inputs bits, -1 means no input except from key */
+	const int outputs[2];       /* positions of the output bits */
 };
 
-// the above struct better defines how the hardware works, however
-// to speed up the decryption at run time we convert it to the
-// following one
+/* the above struct better defines how the hardware works, however */
+/* to speed up the decryption at run time we convert it to the */
+/* following one */
 struct optimised_sbox
 {
 	uint8_t input_lookup[256];
@@ -154,7 +154,7 @@ struct optimised_sbox
 
 static const struct sbox fn1_r1_boxes[4] =
 {
-	{   // subkey bits  0- 5
+	{   /* subkey bits  0- 5 */
 		{
 			0,2,2,0,1,0,1,1,3,2,0,3,0,3,1,2,1,1,1,2,1,3,2,2,2,3,3,2,1,1,1,2,
 			2,2,0,0,3,1,3,1,1,1,3,0,0,1,0,0,1,2,2,1,2,3,2,2,2,3,1,3,2,0,1,3,
@@ -162,7 +162,7 @@ static const struct sbox fn1_r1_boxes[4] =
 		{ 3, 4, 5, 6, -1, -1 },
 		{ 3, 6 }
 	},
-	{   // subkey bits  6-11
+	{   /* subkey bits  6-11 */
 		{
 			3,0,2,2,2,1,1,1,1,2,1,0,0,0,2,3,2,3,1,3,0,0,0,2,1,2,2,3,0,3,3,3,
 			0,1,3,2,3,3,3,1,1,1,1,2,0,1,2,1,3,2,3,1,1,3,2,2,2,3,1,3,2,3,0,0,
@@ -170,7 +170,7 @@ static const struct sbox fn1_r1_boxes[4] =
 		{ 0, 1, 2, 4, 7, -1 },
 		{ 2, 7 }
 	},
-	{   // subkey bits 12-17
+	{   /* subkey bits 12-17 */
 		{
 			3,0,3,1,1,0,2,2,3,1,2,0,3,3,2,3,0,1,0,1,2,3,0,2,0,2,0,1,0,0,1,0,
 			2,3,1,2,1,0,2,0,2,1,0,1,0,2,1,0,3,1,2,3,1,3,1,1,1,2,0,2,2,0,0,0,
@@ -178,7 +178,7 @@ static const struct sbox fn1_r1_boxes[4] =
 		{ 0, 1, 2, 3, 6, 7 },
 		{ 0, 1 }
 	},
-	{   // subkey bits 18-23
+	{   /* subkey bits 18-23 */
 		{
 			3,2,0,3,0,2,2,1,1,2,3,2,1,3,2,1,2,2,1,3,3,2,1,0,1,0,1,3,0,0,0,2,
 			2,1,0,1,0,1,0,1,3,1,1,2,2,3,2,0,3,3,2,0,2,1,3,3,0,0,3,0,1,1,3,3,
@@ -190,7 +190,7 @@ static const struct sbox fn1_r1_boxes[4] =
 
 static const struct sbox fn1_r2_boxes[4] =
 {
-	{   // subkey bits 24-29
+	{   /* subkey bits 24-29 */
 		{
 			3,3,2,0,3,0,3,1,0,3,0,1,0,2,1,3,1,3,0,3,3,1,3,3,3,2,3,2,2,3,1,2,
 			0,2,2,1,0,1,2,0,3,3,0,1,3,2,1,2,3,0,1,3,0,1,2,2,1,2,1,2,0,1,3,0,
@@ -198,7 +198,7 @@ static const struct sbox fn1_r2_boxes[4] =
 		{ 0, 1, 2, 3, 6, -1 },
 		{ 1, 6 }
 	},
-	{   // subkey bits 30-35
+	{   /* subkey bits 30-35 */
 		{
 			1,2,3,2,1,3,0,1,1,0,2,0,0,2,3,2,3,3,0,1,2,2,1,0,1,0,1,2,3,2,1,3,
 			2,2,2,0,1,0,2,3,2,1,2,1,2,1,0,3,0,1,2,3,1,2,1,3,2,0,3,2,3,0,2,0,
@@ -206,7 +206,7 @@ static const struct sbox fn1_r2_boxes[4] =
 		{ 2, 4, 5, 6, 7, -1 },
 		{ 5, 7 }
 	},
-	{   // subkey bits 36-41
+	{   /* subkey bits 36-41 */
 		{
 			0,1,0,2,1,1,0,1,0,2,2,2,1,3,0,0,1,1,3,1,2,2,2,3,1,0,3,3,3,2,2,2,
 			1,1,3,0,3,1,3,0,1,3,3,2,1,1,0,0,1,2,2,2,1,1,1,2,2,0,0,3,2,3,1,3,
@@ -214,7 +214,7 @@ static const struct sbox fn1_r2_boxes[4] =
 		{ 1, 2, 3, 4, 5, 7 },
 		{ 0, 3 }
 	},
-	{   // subkey bits 42-47
+	{   /* subkey bits 42-47 */
 		{
 			2,1,0,3,3,3,2,0,1,2,1,1,1,0,3,1,1,3,3,0,1,2,1,0,0,0,3,0,3,0,3,0,
 			1,3,3,3,0,3,2,0,2,1,2,2,2,1,1,3,0,1,0,1,0,1,1,1,1,3,1,0,1,2,3,3,
@@ -226,7 +226,7 @@ static const struct sbox fn1_r2_boxes[4] =
 
 static const struct sbox fn1_r3_boxes[4] =
 {
-	{   // subkey bits 48-53
+	{   /* subkey bits 48-53 */
 		{
 			0,0,0,3,3,1,1,0,2,0,2,0,0,0,3,2,0,1,2,3,2,2,1,0,3,0,0,0,0,0,2,3,
 			3,0,0,1,1,2,3,3,0,1,3,2,0,1,3,3,2,0,0,1,0,2,0,0,0,3,1,3,3,3,3,3,
@@ -234,7 +234,7 @@ static const struct sbox fn1_r3_boxes[4] =
 		{ 0, 1, 5, 6, 7, -1 },
 		{ 0, 5 }
 	},
-	{   // subkey bits 54-59
+	{   /* subkey bits 54-59 */
 		{
 			2,3,2,3,0,2,3,0,2,2,3,0,3,2,0,2,1,0,2,3,1,1,1,0,0,1,0,2,1,2,2,1,
 			3,0,2,1,2,3,3,0,3,2,3,1,0,2,1,0,1,2,2,3,0,2,1,3,1,3,0,2,1,1,1,3,
@@ -242,7 +242,7 @@ static const struct sbox fn1_r3_boxes[4] =
 		{ 2, 3, 4, 6, 7, -1 },
 		{ 6, 7 }
 	},
-	{   // subkey bits 60-65
+	{   /* subkey bits 60-65 */
 		{
 			3,0,2,1,1,3,1,2,2,1,2,2,2,0,0,1,2,3,1,0,2,0,0,2,3,1,2,0,0,0,3,0,
 			2,1,1,2,0,0,1,2,3,1,1,2,0,1,3,0,3,1,1,0,0,2,3,0,0,0,0,3,2,0,0,0,
@@ -250,7 +250,7 @@ static const struct sbox fn1_r3_boxes[4] =
 		{ 0, 2, 3, 4, 5, 6 },
 		{ 1, 4 }
 	},
-	{   // subkey bits 66-71
+	{   /* subkey bits 66-71 */
 		{
 			0,1,0,0,2,1,3,2,3,3,2,1,0,1,1,1,1,1,0,3,3,1,1,0,0,2,2,1,0,3,3,2,
 			1,3,3,0,3,0,2,1,1,2,3,2,2,2,1,0,0,3,3,3,2,2,3,1,0,2,3,0,3,1,1,0,
@@ -262,7 +262,7 @@ static const struct sbox fn1_r3_boxes[4] =
 
 static const struct sbox fn1_r4_boxes[4] =
 {
-	{   // subkey bits 72-77
+	{   /* subkey bits 72-77 */
 		{
 			1,1,1,1,1,0,1,3,3,2,3,0,1,2,0,2,3,3,0,1,2,1,2,3,0,3,2,3,2,0,1,2,
 			0,1,0,3,2,1,3,2,3,1,2,3,2,0,1,2,2,0,0,0,2,1,3,0,3,1,3,0,1,3,3,0,
@@ -270,7 +270,7 @@ static const struct sbox fn1_r4_boxes[4] =
 		{ 1, 2, 3, 4, 5, 7 },
 		{ 0, 4 }
 	},
-	{   // subkey bits 78-83
+	{   /* subkey bits 78-83 */
 		{
 			3,0,0,0,0,1,0,2,3,3,1,3,0,3,1,2,2,2,3,1,0,0,2,0,1,0,2,2,3,3,0,0,
 			1,1,3,0,2,3,0,3,0,3,0,2,0,2,0,1,0,3,0,1,3,1,1,0,0,1,3,3,2,2,1,0,
@@ -278,7 +278,7 @@ static const struct sbox fn1_r4_boxes[4] =
 		{ 0, 1, 2, 3, 5, 6 },
 		{ 1, 3 }
 	},
-	{   // subkey bits 84-89
+	{   /* subkey bits 84-89 */
 		{
 			0,1,1,2,0,1,3,1,2,0,3,2,0,0,3,0,3,0,1,2,2,3,3,2,3,2,0,1,0,0,1,0,
 			3,0,2,3,0,2,2,2,1,1,0,2,2,0,0,1,2,1,1,1,2,3,0,3,1,2,3,3,1,1,3,0,
@@ -286,7 +286,7 @@ static const struct sbox fn1_r4_boxes[4] =
 		{ 0, 2, 4, 5, 6, 7 },
 		{ 2, 6 }
 	},
-	{   // subkey bits 90-95
+	{   /* subkey bits 90-95 */
 		{
 			0,1,2,2,0,1,0,3,2,2,1,1,3,2,0,2,0,1,3,3,0,2,2,3,3,2,0,0,2,1,3,3,
 			1,1,1,3,1,2,1,1,0,3,3,2,3,2,3,0,3,1,0,0,3,0,0,0,2,2,2,1,2,3,0,0,
@@ -300,7 +300,7 @@ static const struct sbox fn1_r4_boxes[4] =
 
 static const struct sbox fn2_r1_boxes[4] =
 {
-	{   // subkey bits  0- 5
+	{   /* subkey bits  0- 5 */
 		{
 			2,0,2,0,3,0,0,3,1,1,0,1,3,2,0,1,2,0,1,2,0,2,0,2,2,2,3,0,2,1,3,0,
 			0,1,0,1,2,2,3,3,0,3,0,2,3,0,1,2,1,1,0,2,0,3,1,1,2,2,1,3,1,1,3,1,
@@ -308,7 +308,7 @@ static const struct sbox fn2_r1_boxes[4] =
 		{ 0, 3, 4, 5, 7, -1 },
 		{ 6, 7 }
 	},
-	{   // subkey bits  6-11
+	{   /* subkey bits  6-11 */
 		{
 			1,1,0,3,0,2,0,1,3,0,2,0,1,1,0,0,1,3,2,2,0,2,2,2,2,0,1,3,3,3,1,1,
 			1,3,1,3,2,2,2,2,2,2,0,1,0,1,1,2,3,1,1,2,0,3,3,3,2,2,3,1,1,1,3,0,
@@ -316,7 +316,7 @@ static const struct sbox fn2_r1_boxes[4] =
 		{ 1, 2, 3, 4, 6, -1 },
 		{ 3, 5 }
 	},
-	{   // subkey bits 12-17
+	{   /* subkey bits 12-17 */
 		{
 			1,0,2,2,3,3,3,3,1,2,2,1,0,1,2,1,1,2,3,1,2,0,0,1,2,3,1,2,0,0,0,2,
 			2,0,1,1,0,0,2,0,0,0,2,3,2,3,0,1,3,0,0,0,2,3,2,0,1,3,2,1,3,1,1,3,
@@ -324,7 +324,7 @@ static const struct sbox fn2_r1_boxes[4] =
 		{ 1, 2, 4, 5, 6, 7 },
 		{ 1, 4 }
 	},
-	{   // subkey bits 18-23
+	{   /* subkey bits 18-23 */
 		{
 			1,3,3,0,3,2,3,1,3,2,1,1,3,3,2,1,2,3,0,3,1,0,0,2,3,0,0,0,3,3,0,1,
 			2,3,0,0,0,1,2,1,3,0,0,1,0,2,2,2,3,3,1,2,1,3,0,0,0,3,0,1,3,2,2,0,
@@ -336,7 +336,7 @@ static const struct sbox fn2_r1_boxes[4] =
 
 static const struct sbox fn2_r2_boxes[4] =
 {
-	{   // subkey bits 24-29
+	{   /* subkey bits 24-29 */
 		{
 			3,1,3,0,3,0,3,1,3,0,0,1,1,3,0,3,1,1,0,1,2,3,2,3,3,1,2,2,2,0,2,3,
 			2,2,2,1,1,3,3,0,3,1,2,1,1,1,0,2,0,3,3,0,0,2,0,0,1,1,2,1,2,1,1,0,
@@ -344,7 +344,7 @@ static const struct sbox fn2_r2_boxes[4] =
 		{ 0, 2, 4, 6, -1, -1 },
 		{ 4, 6 }
 	},
-	{   // subkey bits 30-35
+	{   /* subkey bits 30-35 */
 		{
 			0,3,0,3,3,2,1,2,3,1,1,1,2,0,2,3,0,3,1,2,2,1,3,3,3,2,1,2,2,0,1,0,
 			2,3,0,1,2,0,1,1,2,0,2,1,2,0,2,3,3,1,0,2,3,3,0,3,1,1,3,0,0,1,2,0,
@@ -352,7 +352,7 @@ static const struct sbox fn2_r2_boxes[4] =
 		{ 1, 3, 4, 5, 6, 7 },
 		{ 0, 3 }
 	},
-	{   // subkey bits 36-41
+	{   /* subkey bits 36-41 */
 		{
 			0,0,2,1,3,2,1,0,1,2,2,2,1,1,0,3,1,2,2,3,2,1,1,0,3,0,0,1,1,2,3,1,
 			3,3,2,2,1,0,1,1,1,2,0,1,2,3,0,3,3,0,3,2,2,0,2,2,1,2,3,2,1,0,2,1,
@@ -360,7 +360,7 @@ static const struct sbox fn2_r2_boxes[4] =
 		{ 0, 1, 3, 4, 5, 7 },
 		{ 1, 7 }
 	},
-	{   // subkey bits 42-47
+	{   /* subkey bits 42-47 */
 		{
 			0,2,1,2,0,2,2,0,1,3,2,0,3,2,3,0,3,3,2,3,1,2,3,1,2,2,0,0,2,2,1,2,
 			2,3,3,3,1,1,0,0,0,3,2,0,3,2,3,1,1,1,1,0,1,0,1,3,0,0,1,2,2,3,2,0,
@@ -372,7 +372,7 @@ static const struct sbox fn2_r2_boxes[4] =
 
 static const struct sbox fn2_r3_boxes[4] =
 {
-	{   // subkey bits 48-53
+	{   /* subkey bits 48-53 */
 		{
 			2,1,2,1,2,3,1,3,2,2,1,3,3,0,0,1,0,2,0,3,3,1,0,0,1,1,0,2,3,2,1,2,
 			1,1,2,1,1,3,2,2,0,2,2,3,3,3,2,0,0,0,0,0,3,3,3,0,1,2,1,0,2,3,3,1,
@@ -380,7 +380,7 @@ static const struct sbox fn2_r3_boxes[4] =
 		{ 2, 3, 4, 6, -1, -1 },
 		{ 3, 5 }
 	},
-	{   // subkey bits 54-59
+	{   /* subkey bits 54-59 */
 		{
 			3,2,3,3,1,0,3,0,2,0,1,1,1,0,3,0,3,1,3,1,0,1,2,3,2,2,3,2,0,1,1,2,
 			3,0,0,2,1,0,0,2,2,0,1,0,0,2,0,0,1,3,1,3,2,0,3,3,1,0,2,2,2,3,0,0,
@@ -388,7 +388,7 @@ static const struct sbox fn2_r3_boxes[4] =
 		{ 0, 1, 3, 5, 7, -1 },
 		{ 0, 2 }
 	},
-	{   // subkey bits 60-65
+	{   /* subkey bits 60-65 */
 		{
 			2,2,1,0,2,3,3,0,0,0,1,3,1,2,3,2,2,3,1,3,0,3,0,3,3,2,2,1,0,0,0,2,
 			1,2,2,2,0,0,1,2,0,1,3,0,2,3,2,1,3,2,2,2,3,1,3,0,2,0,2,1,0,3,3,1,
@@ -396,7 +396,7 @@ static const struct sbox fn2_r3_boxes[4] =
 		{ 0, 1, 2, 3, 5, 7 },
 		{ 1, 6 }
 	},
-	{   // subkey bits 66-71
+	{   /* subkey bits 66-71 */
 		{
 			1,2,3,2,0,2,1,3,3,1,0,1,1,2,2,0,0,1,1,1,2,1,1,2,0,1,3,3,1,1,1,2,
 			3,3,1,0,2,1,1,1,2,1,0,0,2,2,3,2,3,2,2,0,2,2,3,3,0,2,3,0,2,2,1,1,
@@ -408,7 +408,7 @@ static const struct sbox fn2_r3_boxes[4] =
 
 static const struct sbox fn2_r4_boxes[4] =
 {
-	{   // subkey bits 72-77
+	{   /* subkey bits 72-77 */
 		{
 			2,0,1,1,2,1,3,3,1,1,1,2,0,1,0,2,0,1,2,0,2,3,0,2,3,3,2,2,3,2,0,1,
 			3,0,2,0,2,3,1,3,2,0,0,1,1,2,3,1,1,1,0,1,2,0,3,3,1,1,1,3,3,1,1,0,
@@ -416,7 +416,7 @@ static const struct sbox fn2_r4_boxes[4] =
 		{ 0, 1, 3, 6, 7, -1 },
 		{ 0, 3 }
 	},
-	{   // subkey bits 78-83
+	{   /* subkey bits 78-83 */
 		{
 			1,2,2,1,0,3,3,1,0,2,2,2,1,0,1,0,1,1,0,1,0,2,1,0,2,1,0,2,3,2,3,3,
 			2,2,1,2,2,3,1,3,3,3,0,1,0,1,3,0,0,0,1,2,0,3,3,2,3,2,1,3,2,1,0,2,
@@ -424,7 +424,7 @@ static const struct sbox fn2_r4_boxes[4] =
 		{ 0, 1, 2, 4, 5, 6 },
 		{ 4, 7 }
 	},
-	{   // subkey bits 84-89
+	{   /* subkey bits 84-89 */
 		{
 			2,3,2,1,3,2,3,0,0,2,1,1,0,0,3,2,3,1,0,1,2,2,2,1,3,2,2,1,0,2,1,2,
 			0,3,1,0,0,3,1,1,3,3,2,0,1,0,1,3,0,0,1,2,1,2,3,2,1,0,0,3,2,1,1,3,
@@ -432,7 +432,7 @@ static const struct sbox fn2_r4_boxes[4] =
 		{ 0, 2, 3, 4, 5, 7 },
 		{ 1, 2 }
 	},
-	{   // subkey bits 90-95
+	{   /* subkey bits 90-95 */
 		{
 			2,0,0,3,2,2,2,1,3,3,1,1,2,0,0,3,1,0,3,2,1,0,2,0,3,2,2,3,2,0,3,0,
 			1,3,0,2,2,1,3,3,0,1,0,3,1,1,3,2,0,3,0,2,3,2,1,3,2,3,0,0,1,3,2,1,
@@ -461,8 +461,8 @@ static uint8_t fn(uint8_t in, const struct optimised_sbox *sboxes, uint32_t key)
 
 
 
-// srckey is the 64-bit master key (2x32 bits)
-// dstkey will contain the 96-bit key for the 1st FN (4x24 bits)
+/* srckey is the 64-bit master key (2x32 bits) */
+/* dstkey will contain the 96-bit key for the 1st FN (4x24 bits) */
 static void expand_1st_key(uint32_t *dstkey, const uint32_t *srckey)
 {
 	static const int bits[96] =
@@ -496,8 +496,8 @@ static void expand_1st_key(uint32_t *dstkey, const uint32_t *srckey)
 }
 
 
-// srckey is the 64-bit master key (2x32 bits) XORed with the subkey
-// dstkey will contain the 96-bit key for the 2nd FN (4x24 bits)
+/* srckey is the 64-bit master key (2x32 bits) XORed with the subkey */
+/* dstkey will contain the 96-bit key for the 2nd FN (4x24 bits) */
 static void expand_2nd_key(uint32_t *dstkey, const uint32_t *srckey)
 {
 	static const int bits[96] =
@@ -532,12 +532,12 @@ static void expand_2nd_key(uint32_t *dstkey, const uint32_t *srckey)
 
 
 
-// seed is the 16-bit seed generated by the first FN
-// subkey will contain the 64-bit key to be XORed with the master key
-// for the 2nd FN (2x32 bits)
+/* seed is the 16-bit seed generated by the first FN */
+/* subkey will contain the 64-bit key to be XORed with the master key */
+/* for the 2nd FN (2x32 bits) */
 static void expand_subkey(uint32_t* subkey, uint16_t seed)
 {
-	// Note that each row of the table is a permutation of the seed bits.
+	/* Note that each row of the table is a permutation of the seed bits. */
 	static const int bits[64] =
 	{
 			5, 10, 14,  9,  4,  0, 15,  6,  1,  8,  3,  2, 12,  7, 13, 11,
@@ -613,13 +613,13 @@ static void optimise_sboxes(struct optimised_sbox* out, const struct sbox* in)
 	{
 		int i;
 
-		// precalculate the input lookup
+		/* precalculate the input lookup */
 		for (i = 0; i < 256; ++i)
 		{
 			out[box].input_lookup[i] = extract_inputs(i, in[box].inputs);
 		}
 
-		// precalculate the output masks
+		/* precalculate the output masks */
 		for (i = 0; i < 64; ++i)
 		{
 			int o = in[box].table[i];
@@ -652,10 +652,10 @@ static void cps2_decrypt(uint16_t *rom, uint16_t *dec, int length, const uint32_
 	optimise_sboxes(&sboxes2[3*4], fn2_r4_boxes);
 
 
-	// expand master key to 1st FN 96-bit key
+	/* expand master key to 1st FN 96-bit key */
 	expand_1st_key(key1, master_key);
 
-	// add extra bits for s-boxes with less than 6 inputs
+	/* add extra bits for s-boxes with less than 6 inputs */
 	key1[0] ^= BIT(key1[0], 1) <<  4;
 	key1[0] ^= BIT(key1[0], 2) <<  5;
 	key1[0] ^= BIT(key1[0], 8) << 11;
@@ -673,29 +673,29 @@ static void cps2_decrypt(uint16_t *rom, uint16_t *dec, int length, const uint32_
 
 		if ((i & 0xff) == 0)
 		{
-			char loadingMessage[256]; // for displaying with UI
+			char loadingMessage[256]; /* for displaying with UI */
 			sprintf(loadingMessage, "Decrypting %d%%", i*100/0x10000);
-			//machine.ui().set_startup_text(loadingMessage,false);
+			/*machine.ui().set_startup_text(loadingMessage,false); */
 		}
 
 
-		// pass the address through FN1
+		/* pass the address through FN1 */
 		seed = feistel(i, fn1_groupA, fn1_groupB,
 				&sboxes1[0*4], &sboxes1[1*4], &sboxes1[2*4], &sboxes1[3*4],
 				key1[0], key1[1], key1[2], key1[3]);
 
 
-		// expand the result to 64-bit
+		/* expand the result to 64-bit */
 		expand_subkey(subkey, seed);
 
-		// XOR with the master key
+		/* XOR with the master key */
 		subkey[0] ^= master_key[0];
 		subkey[1] ^= master_key[1];
 
-		// expand key to 2nd FN 96-bit key
+		/* expand key to 2nd FN 96-bit key */
 		expand_2nd_key(key2, subkey);
 
-		// add extra bits for s-boxes with less than 6 inputs
+		/* add extra bits for s-boxes with less than 6 inputs */
 		key2[0] ^= BIT(key2[0], 0) <<  5;
 		key2[0] ^= BIT(key2[0], 6) << 11;
 		key2[1] ^= BIT(key2[1], 0) <<  5;
@@ -706,7 +706,7 @@ static void cps2_decrypt(uint16_t *rom, uint16_t *dec, int length, const uint32_
 		key2[3] ^= BIT(key2[3], 1) <<  5;
 
 
-		// decrypt the opcodes
+		/* decrypt the opcodes */
 		for (a = i; a < length/2; a += 0x10000)
 		{
 			if (a >= lower_limit && a <= upper_limit)
@@ -745,7 +745,7 @@ DRIVER_INIT( my_cps2 )
 {
 	data8_t *m_region_key = (data8_t *)memory_region(REGION_USER5);
 	data16_t *rom = (data16_t *)memory_region(REGION_CPU1);
-//	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1);
+/*	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1); */
 	data16_t *decrypted_opcodes = (data16_t *)auto_malloc(0x0400000);
 
 	if (m_region_key)
@@ -762,7 +762,7 @@ DRIVER_INIT( my_cps2 )
 		for (b = 0; b < 10 * 16; b++)
 		{
 			int bit = (317 - b) % 160;
-			//if ((m_region_key->base()[bit / 8] >> ((bit ^ 7) % 8)) & 1)
+			/*if ((m_region_key->base()[bit / 8] >> ((bit ^ 7) % 8)) & 1) */
 			if ((m_region_key[bit / 8] >> ((bit ^ 7) % 8)) & 1)
 			{
 				decoded[b / 16] |= (0x8000 >> (b % 16));
@@ -771,16 +771,16 @@ DRIVER_INIT( my_cps2 )
 
 		key[0] = (decoded[0] << 16) | decoded[1];
 		key[1] = (decoded[2] << 16) | decoded[3];
-		// decoded[4] == watchdog instruction third word
-		// decoded[5] == watchdog instruction second word
-		// decoded[6] == watchdog instruction first word
-		// decoded[7] == 0x4000 (bits 8 to 23 of CPS2 object output address)
-		// decoded[8] == 0x0900
+		/* decoded[4] == watchdog instruction third word */
+		/* decoded[5] == watchdog instruction second word */
+		/* decoded[6] == watchdog instruction first word */
+		/* decoded[7] == 0x4000 (bits 8 to 23 of CPS2 object output address) */
+		/* decoded[8] == 0x0900 */
 
 		if (decoded[9] == 0xffff)
 		{
-			// On a dead board, the only encrypted range is actually FF0000-FFFFFF.
-			// It doesn't start from 0, and it's the upper half of a 128kB bank.
+			/* On a dead board, the only encrypted range is actually FF0000-FFFFFF. */
+			/* It doesn't start from 0, and it's the upper half of a 128kB bank. */
 			upper = 0xffffff;
 			lower = 0xff0000;
 		}
@@ -792,7 +792,7 @@ DRIVER_INIT( my_cps2 )
 
 		logerror("cps2 decrypt 0x%08x,0x%08x,0x%08x,0x%08x\n", key[0], key[1], lower, upper);
 
-		// we have a proper key so use it to decrypt
+		/* we have a proper key so use it to decrypt */
 		cps2_decrypt((uint16_t *)rom, decrypted_opcodes, 0x0400000, key, lower , upper );
 		memory_set_opcode_base(0,decrypted_opcodes);
 		memory_set_encrypted_opcode_range(0,0,memory_region_length(REGION_CPU1));

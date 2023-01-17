@@ -720,7 +720,7 @@ static WRITE32_HANDLER( mirror_hack_w )
 		return;
 	}
 
-	//printf ("%8.8x, write\n", offset*4);
+	/*printf ("%8.8x, write\n", offset*4); */
 }
 
 static DRIVER_INIT( avengrgs )

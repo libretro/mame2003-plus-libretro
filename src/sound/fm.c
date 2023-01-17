@@ -307,7 +307,7 @@ O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
 
 /* rates 00-11 */
 O( 18),O( 18),O( 0),O( 0),
-O( 0),O( 0),O( 2),O( 2),  // Nemesis's tests
+O( 0),O( 0),O( 2),O( 2),  /* Nemesis's tests */
 
 O( 0),O( 1),O( 2),O( 3),
 O( 0),O( 1),O( 2),O( 3),
@@ -1342,7 +1342,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 		out = SLOT->tl + ((UINT32)SLOT->volume);
 
 		if ((SLOT->ssg&0x08) && (SLOT->ssgn&2) && (SLOT->state != EG_OFF))	/* negate output (changes come from alternate bit, init comes from attack bit) */
-			out ^= 511; // was ((1<<ENV_BITS)-1); /* 1023 */
+			out ^= 511; /* was ((1<<ENV_BITS)-1);*/ /* 1023 */ 
 
 		/* we need to store the result here because we are going to change ssgn
             in next instruction */
