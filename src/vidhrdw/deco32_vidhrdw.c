@@ -1492,6 +1492,13 @@ VIDEO_UPDATE( dragngun )
 		tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 	else
 		tilemap_draw(bitmap,cliprect,pf1a_tilemap,0,0);
+
+	if (true)
+	{
+		usrintf_showmessage("working");
+		//draw_crosshair(1, bitmap,readinputport(6),readinputport(5),cliprect);
+		//draw_crosshair(2, bitmap,readinputport(8),readinputport(7),cliprect);
+	}
 }
 
 VIDEO_UPDATE( tattass )
