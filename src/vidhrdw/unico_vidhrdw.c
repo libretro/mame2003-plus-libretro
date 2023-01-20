@@ -381,8 +381,9 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 	/* Sprites are drawn last, using pdrawgfx */
 	if (layers_ctrl & 8)	unico_draw_sprites(bitmap,cliprect);
 
-	/* Draw the gunsight for ligth gun games */
+	/* Draw the gunsight for light gun games */
 	if (unico_has_lightgun) {
+		usrintf_showmessage("crosshair");
 		draw_crosshair(1, bitmap,
 			readinputport(6)*384/256,
 			readinputport(5)*224/256,
