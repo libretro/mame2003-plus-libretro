@@ -118,6 +118,7 @@ static data32_t *deco32_ram;
 static int raster_enable,raster_offset;
 static void *raster_irq_timer;
 static UINT8 nslasher_sound_irq;
+bool lockload_crosshairs = false;
 
 extern data32_t *deco32_ace_ram;
 extern VIDEO_START( nslasher );
@@ -3161,6 +3162,8 @@ static DRIVER_INIT( lockload )
 /*	ROM[0x3fe3c0/4]=0xe1a00000;*/ /*  NOP test switch lock*/
 /*	ROM[0x3fe3cc/4]=0xe1a00000;*/ /*  NOP test switch lock*/
 /*	ROM[0x3fe40c/4]=0xe1a00000;*/ /*  NOP test switch lock*/
+
+	lockload_crosshairs = true;
 }
 
 static DRIVER_INIT( tattass )
