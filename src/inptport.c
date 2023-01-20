@@ -1366,7 +1366,7 @@ profiler_mark(PROFILER_INPUT);
 								impulsecount[ib] = IP_GET_IMPULSE(in);
 								/* the input bit will be toggled later */
 						}
-						else if (in->type & IPF_TOGGLE)
+						else if (in->type & IPF_TOGGLE && 0)
 						{
 							if (waspressed[ib] == 0)
 							{
