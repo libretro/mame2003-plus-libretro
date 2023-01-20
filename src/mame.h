@@ -254,6 +254,7 @@ struct GameOptions
   int      debug_depth;	         /* requested depth of debugger bitmap */
   bool     cheat_input_ports;     /*cheat input ports enable/disable */
   int      override_ad_stick;
+  bool     input_toggle;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
   double   cpu_clock_scale;
   int      autosave_hiscore;      /* default saves on exit / recursively saves every number of frames defined in hiscore.c / disabled bypasses hiscore implementation entirely */
