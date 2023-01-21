@@ -3,7 +3,7 @@
 #include "tatsumi.h"
 #include <math.h>
 
-//static struct tilemap *bg_layer,*tx_layer;
+/*static struct tilemap *bg_layer,*tx_layer; */
 static struct tilemap *tx_layer;
 static struct tilemap *layer0, *layer1, *layer2, *layer3;
 static struct mame_bitmap *temp_bitmap;
@@ -29,8 +29,8 @@ WRITE16_HANDLER(tatsumi_sprite_control_w)
 	COMBINE_DATA(&tatsumi_sprite_control_ram[offset]);
 
 	/* 0xe0 is bank switch, others unknown */
-//	if ((offset==0xe0 && data&0xefff) || offset!=0xe0)
-//		logerror("%08x:  Tatsumi TZB215 sprite control %04x %08x\n", activecpu_get_pc(), offset, data);
+/*	if ((offset==0xe0 && data&0xefff) || offset!=0xe0) */
+/*		logerror("%08x:  Tatsumi TZB215 sprite control %04x %08x\n", activecpu_get_pc(), offset, data); */
 }
 
 /******************************************************************************/
@@ -45,8 +45,8 @@ WRITE_HANDLER(roundup5_vram_w)
 {
 	offset+=((tatsumi_control_word&0x0c00)>>10) * 0x18000;
 
-//	if (offset>=0x30000)
-//		logerror("effective write to vram %06x %02x (control %04x)\n",offset,data,tatsumi_control_word);
+/*	if (offset>=0x30000) */
+/*		logerror("effective write to vram %06x %02x (control %04x)\n",offset,data,tatsumi_control_word); */
 
 	roundup5_vram[offset]=data;
 
@@ -59,16 +59,16 @@ WRITE_HANDLER(roundup5_vram_w)
 
 WRITE_HANDLER(roundup5_palette_w)
 {
-//	static int hack=0;
+/*	static int hack=0; */
 	int r,g,b,word;
 
 	paletteram[offset]=data;
 
-//	if (offset==0xbfe)
-//		hack++;
+/*	if (offset==0xbfe) */
+/*		hack++; */
 
-//	if (hack>1)
-//		return;
+/*	if (hack>1) */
+/*		return; */
 
 /*
 apache 3 schematics state
@@ -81,7 +81,7 @@ bit 0:  3.9kOhm resistor
 
 */
 
-//	logerror("PAL: %04x %02x\n",offset,data);
+/*	logerror("PAL: %04x %02x\n",offset,data); */
 
 	offset&=~3;
 	word=(paletteram[offset]<<8)|(paletteram[offset+2]);
@@ -93,16 +93,16 @@ bit 0:  3.9kOhm resistor
 }
 WRITE_HANDLER(apache3_palette_w)
 {
-//	static int hack=0;
+/*	static int hack=0; */
 	int r,g,b,word;
 
 	paletteram[offset]=data;
 
-//	if (offset==0xbfe)
-//		hack++;
+/*	if (offset==0xbfe) */
+/*		hack++; */
 
-//	if (hack>1)
-//		return;
+/*	if (hack>1) */
+/*		return; */
 
 /*
 apache 3 schematics state
@@ -115,7 +115,7 @@ bit 0:  3.9kOhm resistor
 
 */
 
-//	logerror("PAL: %04x %02x\n",offset,data);
+/*	logerror("PAL: %04x %02x\n",offset,data); */
 
 	offset&=~1;
 	word=(paletteram[offset+1]<<8)|(paletteram[offset]);
@@ -169,8 +169,8 @@ WRITE_HANDLER( roundup5_crt_w )
 		roundupt_crt_selected_reg=data&0x3f;
 	if (offset==2) {
 		roundupt_crt_reg[roundupt_crt_selected_reg]=data;
-//		if (roundupt_crt_selected_reg!=0xa && roundupt_crt_selected_reg!=0xb && roundupt_crt_selected_reg!=29)
-//		logerror("%08x:  Crt write %02x %02x\n",activecpu_get_pc(),roundupt_crt_selected_reg,data);
+/*		if (roundupt_crt_selected_reg!=0xa && roundupt_crt_selected_reg!=0xb && roundupt_crt_selected_reg!=29) */
+/*		logerror("%08x:  Crt write %02x %02x\n",activecpu_get_pc(),roundupt_crt_selected_reg,data); */
 	}
 }
 
@@ -235,7 +235,7 @@ VIDEO_START( roundup5 )
 VIDEO_START( cyclwarr )
 {
     layer0 = tilemap_create(get_tile_info_bigfight_0,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,512);
-	//layer1 = tilemap_create(get_tile_info_bigfight_0,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,512);
+	/*layer1 = tilemap_create(get_tile_info_bigfight_0,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,512); */
 	layer1 = tilemap_create(get_tile_info_bigfight_0,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,128,256);
 	layer2 = tilemap_create(get_tile_info_bigfight_1,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,512);
 	layer3 = tilemap_create(get_tile_info_bigfight_1,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,512);
@@ -313,21 +313,21 @@ INLINE void roundupt_drawgfxzoomrotate( struct mame_bitmap *dest_bmp,const struc
 				int dx = (gfx->width<<16)/sprite_screen_width;
 				int dy = (gfx->height<<16)/sprite_screen_height;
 
-				int sx;//=ssx>>16;
-				int sy;//=ssy>>16;
+				int sx;/*=ssx>>16; */
+				int sy;/*=ssy>>16; */
 
 
-//				int ex = sx+sprite_screen_width;
-//				int ey = sy+sprite_screen_height;
+/*				int ex = sx+sprite_screen_width; */
+/*				int ey = sy+sprite_screen_height; */
 
 				int x_index_base;
 				int y_index;
 				int ex,ey;
 
-							int incxx=0x10000;//(int)((float)dx * cos(theta));
-//							int incxy=0x0;//(int)((float)dy * -sin(theta));
-							int incyx=0x0;//(int)((float)dx * sin(theta));
-//							int incyy=0x10000;//(int)((float)dy * cos(theta));
+							int incxx=0x10000;/*(int)((float)dx * cos(theta)); */
+/*							int incxy=0x0;*/ /*(int)((float)dy * -sin(theta)); */
+							int incyx=0x0;/*(int)((float)dx * sin(theta)); */
+/*							int incyy=0x10000;*/ /*(int)((float)dy * cos(theta)); */ 
 
 							if (flipx)
 							{
@@ -399,21 +399,21 @@ INLINE void roundupt_drawgfxzoomrotate( struct mame_bitmap *dest_bmp,const struc
 							int startx=0;
 							int starty=0;
 
-//							int incxx=0x10000;
-//							int incxy=0;
-//							int incyx=0;
-//							int incyy=0x10000;
+/*							int incxx=0x10000; */
+/*							int incxy=0; */
+/*							int incyx=0; */
+/*							int incyy=0x10000; */
 							double theta=rotate * ((2.0 * PI)/512.0);
 							double c=cos(theta);
 							double s=sin(theta);
 
 
-						//	if (ey-sy > 0)
-						//		dy=dy / (ey-sy);
+						/*	if (ey-sy > 0) */
+						/*		dy=dy / (ey-sy); */
 							{
 							float angleAsRadians=(float)rotate * (7.28f / 512.0f);
-							//float ccx = cosf(angleAsRadians);
-							//float ccy = sinf(angleAsRadians);
+							/*float ccx = cosf(angleAsRadians); */
+							/*float ccy = sinf(angleAsRadians); */
 							float a=0;
 
 							}
@@ -445,8 +445,8 @@ INLINE void roundupt_drawgfxzoomrotate( struct mame_bitmap *dest_bmp,const struc
 						}
 					}
 #endif
-#if 1 // old
-					//if (transparency == TRANSPARENCY_PEN)
+#if 1 /* old */
+					/*if (transparency == TRANSPARENCY_PEN) */
 					{
 						{
 							for( y=sy; y<ey; y++ )
@@ -461,7 +461,7 @@ INLINE void roundupt_drawgfxzoomrotate( struct mame_bitmap *dest_bmp,const struc
 									int c = source[x_index>>16];
 									if( c )
 									{
-										// Only draw shadow pens if writing priority buffer
+										/* Only draw shadow pens if writing priority buffer */
 										if (write_priority_only)
 											priority_dest[x]=shadow_pens[c];
 										else if (!shadow_pens[c])
@@ -492,8 +492,8 @@ void mycopyrozbitmap_core(struct mame_bitmap *bitmap,struct mame_bitmap *srcbitm
 	int sy;
 	int ex;
 	int ey;
-//	const int xmask = srcbitmap->width-1;
-//	const int ymask = srcbitmap->height-1;
+/*	const int xmask = srcbitmap->width-1; */
+/*	const int ymask = srcbitmap->height-1; */
 	const int widthshifted = srcwidth << 16;
 	const int heightshifted = srcheight << 16;
 	UINT32 *dest;
@@ -554,7 +554,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 	int render_x, render_y;
 	int extent_x, extent_y;
 
-	// Sprite data is double buffered
+	/* Sprite data is double buffered */
 	for (offs = rambank;offs < rambank + 0x800;offs += 6)
 	{
 		/*
@@ -591,15 +591,15 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		scale = spriteram16[offs+4]&0x1ff;
 		color = (spriteram16[offs+1]>>3)&0x1ff;
 		fx = spriteram16[offs+1]&0x8000;
-		rotate = 0;//spriteram16[offs+5]&0x1ff; // Todo:  Turned off for now
+		rotate = 0;/*spriteram16[offs+5]&0x1ff;*/ /* Todo:  Turned off for now */
 
 		index = spriteram16[offs];
 
-//		if (spriteram16[offs+1]&0x7)
-//			color=rand()%0xff;
+/*		if (spriteram16[offs+1]&0x7) */
+/*			color=rand()%0xff; */
 
 		/* End of sprite list marker */
-		if (index==0xffff || spriteram16[offs+4]==0xffff) //todo
+		if (index==0xffff || spriteram16[offs+4]==0xffff) /*todo */
 			return;
 
 		if (index>=0x4000)
@@ -691,7 +691,7 @@ extent_x=extent_y=0;
 				h++;
 				lines-=8;
 			} else {
-				h=32; //hack
+				h=32; /*hack */
 			}
 		}
 
@@ -715,7 +715,7 @@ extent_x=extent_y=0;
 
 static void draw_sky(struct mame_bitmap *bitmap,const struct rectangle *cliprect, int palette_base, int start_offset)
 {
-	// all todo
+	/* all todo */
 	int x,y;
 
 	if (start_offset&0x8000)
@@ -796,15 +796,15 @@ pos is 11.5 fixed point
 	int visible_line=0;
 	const data16_t* data=roundup_r_ram;
 
-	// Road layer enable (?)
+	/* Road layer enable (?) */
 	if ((roundup5_unknown0[0x2]&0x1)==0)
 		return;
 
-	// Road data bank select (double buffered)
+	/* Road data bank select (double buffered) */
 	if (roundup5_e0000_ram[0]&0x10)
 		data+=0x400;
 
-	// ??  Todo: This is wrong - don't know how to clip the road properly
+	/* ??  Todo: This is wrong - don't know how to clip the road properly */
 	y=256 - roundup5_unknown0[0xb];
 	data+=y*4;
 
@@ -814,13 +814,13 @@ pos is 11.5 fixed point
 
 		int shift=data[0];
 		int shift2=data[2];
-		int pal=4; //(data[3]>>8)&0xf;
+		int pal=4; /*(data[3]>>8)&0xf; */
 		int step=((data[1]&0xff)<<8)|((data[1]&0xff00)>>8);
 		int samplePos=0;
-		const data16_t* linedata=roundup_p_ram;// + (0x100 * pal);
+		const data16_t* linedata=roundup_p_ram;/* + (0x100 * pal); */
 		int startPos=0, endPos=0;
 
-		int palette_byte;//=roundup_l_ram[visible_line/8];
+		int palette_byte;/*=roundup_l_ram[visible_line/8]; */
 
 		/*
 			Each road line consists of up to two sets of 128 pixel data that can be positioned
@@ -841,9 +841,8 @@ pos is 11.5 fixed point
 
 2nd road uses upper palette - confirmed by water stage.
 offset is from last pixel of first road segment?
-//last pixel of first road is really colour from 2nd road line?
+last pixel of first road is really colour from 2nd road line? */
 
-		*/
 
 		palette_byte=roundup_l_ram[visible_line/8];
 		pal=4 + ((palette_byte>>(visible_line%8))&1);
@@ -877,13 +876,13 @@ offset is from last pixel of first road segment?
 
 		/* Fill in main part of road, then right-hand side edge */
 		for (x=startPos; x<320 && (samplePos>>11)<0x80; x++) {
-			// look up colour
+			/* look up colour */
 			int col = linedata[(samplePos>>11)&0x7f]&0xf;
 			data8_t shadow=((data8_t*)shadow_bitmap->line[y])[x];
 
 			/* Clamp if we have reached the end of the pixel data */
-			//if ((samplePos>>11) > 0x7f)
-			//	col=linedata[0x7f]&0xf;
+			/*if ((samplePos>>11) > 0x7f) */
+			/*	col=linedata[0x7f]&0xf; */
 
 			if (shadow)
 				plot_pixel(bitmap,x,y,Machine->pens[768 + pal*16 + col]);
@@ -913,8 +912,8 @@ offset is from last pixel of first road segment?
 			data8_t shadow=((data8_t*)shadow_bitmap->line[y])[x];
 
 			/* Clamp if we have reached the end of the pixel data */
-			//if ((samplePos>>11) > 0x7f)
-			//	col=linedata[0x7f]&0xf;
+			/*if ((samplePos>>11) > 0x7f) */
+			/*	col=linedata[0x7f]&0xf; */
 
 			if (shadow)
 				plot_pixel(bitmap,x,y,Machine->pens[768 + pal*16 + col + 32]);
@@ -928,11 +927,11 @@ offset is from last pixel of first road segment?
 		else if (endPos<x) {
 			samplePos=step*(x-endPos);
 		} else {
-			samplePos=0; // todo
+			samplePos=0; /* todo */
 		}
 
 		for (/*x=endPos*/; x<320; x++) {
-			// look up colour
+			/* look up colour */
 			int col = linedata[((samplePos>>11)&0x7f) + 0x200]&0xf;
 			data8_t shadow=((data8_t*)shadow_bitmap->line[y])[x];
 
@@ -976,15 +975,15 @@ static void draw_bg(struct mame_bitmap *dst, const struct tilemap *src, const UI
 			int bank = (tile_bank >> (((tilemap_ram[(tile_index+0x400)&0x7fff]&0xc00)>>10)*4))&0xf;
 			int tile = (tilemap_ram[(tile_index+0x400)&0x7fff]&0x3ff) | (bank<<10);
 
-			//p=*BITMAP_ADDR16(src_bitmap, src_y&src_y_mask, src_x&src_x_mask);
-			p = ((UINT16 *)src_bitmap->line[src_y&src_y_mask])[src_x&src_x_mask]; // correct i think
+			/*p=*BITMAP_ADDR16(src_bitmap, src_y&src_y_mask, src_x&src_x_mask); */
+			p = ((UINT16 *)src_bitmap->line[src_y&src_y_mask])[src_x&src_x_mask]; /* correct i think */
 			pp=tile_cluts[tile*8 + (p&0x7)];
 			ppp=pp + ((p&0x78)<<5);
 
-			if ((p&0x7)!=0 || ((p&0x7)==0 && (pp&0x7)!=0)) // Not quite correct - some opaque pixels show as transparent
-			//	*BITMAP_ADDR32(dst, y, x) = Machine->pens[ppp];
-			//plot_pixel(dst,y,x,Machine->pens[ppp]); // correct.??
-            ((UINT32 *)dst->line[y])[x] = Machine->pens[ppp]; // this seems correct
+			if ((p&0x7)!=0 || ((p&0x7)==0 && (pp&0x7)!=0)) /* Not quite correct - some opaque pixels show as transparent */
+			/*	*BITMAP_ADDR32(dst, y, x) = Machine->pens[ppp]; */
+			/*plot_pixel(dst,y,x,Machine->pens[ppp]);*/ /* correct.?? */
+            ((UINT32 *)dst->line[y])[x] = Machine->pens[ppp]; /* this seems correct */
 
 		}
 	}
@@ -1047,20 +1046,20 @@ VIDEO_UPDATE( apache3 )
 
 VIDEO_UPDATE( roundup5 )
 {
-//	data16_t bg_x_scroll=roundup5_unknown1[0] | (roundup5_unknown1[1]<<8);
-//	data16_t bg_y_scroll=roundup5_unknown2[0] | (roundup5_unknown2[1]<<8);
+/*	data16_t bg_x_scroll=roundup5_unknown1[0] | (roundup5_unknown1[1]<<8); */
+/*	data16_t bg_y_scroll=roundup5_unknown2[0] | (roundup5_unknown2[1]<<8); */
 
 	update_cluts(1024, 512, 4096);
 
 	tilemap_set_scrollx(tx_layer,0,24);
-	tilemap_set_scrolly(tx_layer,0,0); //(((roundupt_crt_reg[0xe]<<8)|roundupt_crt_reg[0xf])>>5) + 96);
+	tilemap_set_scrolly(tx_layer,0,0); /*(((roundupt_crt_reg[0xe]<<8)|roundupt_crt_reg[0xf])>>5) + 96); */
 
-	fillbitmap(bitmap,Machine->pens[384],cliprect); // todo
+	fillbitmap(bitmap,Machine->pens[384],cliprect); /* todo */
 	fillbitmap(priority_bitmap,0,cliprect);
 
-	draw_sprites(priority_bitmap,cliprect,1,(tatsumi_sprite_control_ram[0xe0]&0x1000) ? 0x1000 : 0); // Alpha pass only
+	draw_sprites(priority_bitmap,cliprect,1,(tatsumi_sprite_control_ram[0xe0]&0x1000) ? 0x1000 : 0); /* Alpha pass only */
 	draw_road(bitmap,cliprect,priority_bitmap);
-	draw_sprites(bitmap,cliprect,0,(tatsumi_sprite_control_ram[0xe0]&0x1000) ? 0x1000 : 0); // Full pass
+	draw_sprites(bitmap,cliprect,0,(tatsumi_sprite_control_ram[0xe0]&0x1000) ? 0x1000 : 0); /* Full pass */
 	tilemap_draw(bitmap,cliprect,tx_layer,0,0);
 }
 
