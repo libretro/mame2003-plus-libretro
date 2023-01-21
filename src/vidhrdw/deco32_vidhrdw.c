@@ -1497,7 +1497,7 @@ VIDEO_UPDATE( dragngun )
 	if (lockload_crosshairs)
 	{
 		draw_crosshair(1, bitmap,readinputport(6)*1.25,readinputport(7),cliprect);
-		draw_crosshair(2, bitmap,readinputport(8),readinputport(9),cliprect);
+		draw_crosshair(2, bitmap,readinputport(8)*320/256,readinputport(9),cliprect);
 	}
 }
 
