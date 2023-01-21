@@ -22,7 +22,9 @@ extern data16_t debugA,debugB,debugC,debugD;
 
 static data8_t* shadow_pen_array;
 
-#define PI 3.14
+#ifndef PI
+#define PI 3.1415927
+#endif
 
 /******************************************************************************/
 
