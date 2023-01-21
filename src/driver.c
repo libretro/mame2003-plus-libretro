@@ -5933,12 +5933,15 @@ Other Sun games
 	DRIVER( vf )
 
   /* Oriental Soft */
-	DRIVER( 1945kiii )	/* (c) 2000 Oriental */
+	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
 
   /* Current Tech */
-	DRIVER( mirax )	  /* (c) Current Technologies */
+	DRIVER( mirax )   /* (c) Current Technologies */
 	DRIVER( miraxa )  /* (c) Current Technologies */
 
+	DRIVER( roundup5 )
+	DRIVER( bigfight )
+	DRIVER( cyclwarr )
 
 #endif	/* DRIVER_RECURSIVE */
