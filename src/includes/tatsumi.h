@@ -1,4 +1,4 @@
-/* drivers/tatsumi.c */
+// drivers/tatsumi.c
 extern data8_t* tatsumi_rom_sprite_lookup1;
 extern data8_t* tatsumi_rom_sprite_lookup2;
 extern data8_t* tatsumi_rom_clut0;
@@ -8,7 +8,7 @@ extern data16_t *roundup5_d0000_ram, *roundup5_e0000_ram;
 extern data16_t *cyclwarr_videoram0, *cyclwarr_videoram1;
 extern data8_t *roundup5_unknown0, *roundup5_unknown1, *roundup5_unknown2;
 
-/* machine/tatsumi.c */
+// machine/tatsumi.c
 READ_HANDLER( apache3_bank_r );
 WRITE_HANDLER( apache3_bank_w );
 WRITE16_HANDLER( apache3_irq_ack_w );
@@ -40,7 +40,7 @@ extern data16_t apache3_a0000[16];
 
 void tatsumi_reset(void);
 
-/* vidhrdw/tatsumi.c */
+// vidhrdw/tatsumi.c
 WRITE_HANDLER(roundup5_palette_w);
 WRITE16_HANDLER(tatsumi_sprite_control_w);
 WRITE_HANDLER( roundup5_text_w );

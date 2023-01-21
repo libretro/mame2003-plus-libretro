@@ -49,8 +49,8 @@ WRITE_HANDLER( apache3_bank_w )
 
 	if (tatsumi_control_word&0x7f00)
 	{
-		logerror("Unknown control Word: %04x\n",tatsumi_control_word);
-		cpu_set_halt_line(3, CLEAR_LINE); /* ? */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown control Word: %04x\n",tatsumi_control_word);
+		cpu_set_halt_line(3, CLEAR_LINE); // ?
 	}
 	if ((tatsumi_control_word&0x8)==0 && !(tatsumi_last_control&0x8))
 		cpu_set_irq_line(1, 4, ASSERT_LINE);
@@ -96,9 +96,9 @@ READ_HANDLER( apache3_v30_v20_r )
 	else if ((tatsumi_control_word&0xe0)==0xc0) 
 		rom+=0xf0000;
 	else if ((tatsumi_control_word&0xe0)==0x80) 
-		rom+=0x00000; /* main ram */
+		rom+=0x00000; // main ram
 	else
-		logerror("%08x: unmapped read z80 rom %08x\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: unmapped read z80 rom %08x\n",activecpu_get_pc(),offset);
 
 	return rom[offset/2];
 }
@@ -108,7 +108,7 @@ WRITE_HANDLER( apache3_v30_v20_w )
 	data8_t* ram=(data8_t*)memory_region(REGION_CPU3);
 	
 	if ((tatsumi_control_word&0xe0)!=0x80)
-		logerror("%08x: write unmapped v30 rom %08x\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: write unmapped v30 rom %08x\n",activecpu_get_pc(),offset);
 
 	/* Only 8 bits of the V30 data bus are connected - ignore writes to the other half */
 	if (offset&1)
@@ -139,12 +139,12 @@ WRITE_HANDLER( apache3_adc_w )
 	apache3_adc=offset;
 }
 
-data16_t apache3_a0000[16]; /* TODO */
-int a3counter=0; /* TODO */
+data16_t apache3_a0000[16]; // TODO
+int a3counter=0; // TODO
 
 WRITE16_HANDLER( apache3_a0000_w )
 {
-	if (a3counter>15) /* TODO */
+	if (a3counter>15) // TODO
 		return;
 	apache3_a0000[a3counter++]=data;
 }
@@ -192,10 +192,10 @@ WRITE_HANDLER( roundup5_control_w )
 	else
 		cpu_set_halt_line(2, CLEAR_LINE);
 
-/*	if (offset==1 && (tatsumi_control_w&0xfeff)!=(last_bank&0xfeff)) */
-/*		logerror("%08x:  Changed bank to %04x (%d)\n",activecpu_get_pc(),tatsumi_control_w,offset); */
+//	if (offset==1 && (tatsumi_control_w&0xfeff)!=(last_bank&0xfeff))
+//		logerror("%08x:  Changed bank to %04x (%d)\n",activecpu_get_pc(),tatsumi_control_w,offset);
 
-/*todo - watchdog */
+//todo - watchdog
 
 	/* Bank:
 
@@ -217,19 +217,19 @@ WRITE_HANDLER( roundup5_control_w )
 
 	if ((tatsumi_control_word&0x8)==0 && !(tatsumi_last_control&0x8))
 		cpu_set_irq_line(1, 4, ASSERT_LINE);
-/*	if (tatsumi_control_w&0x200) */
-/*		cpu_set_reset_line(1, CLEAR_LINE); */
-/*	else */
-/*		cpu_set_reset_line(1, ASSERT_LINE); */
+//	if (tatsumi_control_w&0x200)
+//		cpu_set_reset_line(1, CLEAR_LINE);
+//	else
+//		cpu_set_reset_line(1, ASSERT_LINE);
 
-/*	if ((tatsumi_control_w&0x200) && (last_bank&0x200)==0) */
-/*		logerror("68k irq\n"); */
-/*	if ((tatsumi_control_w&0x200)==0 && (last_bank&0x200)==0x200) */
-/*		logerror("68k reset\n"); */
+//	if ((tatsumi_control_w&0x200) && (last_bank&0x200)==0)
+//		logerror("68k irq\n");
+//	if ((tatsumi_control_w&0x200)==0 && (last_bank&0x200)==0x200)
+//		logerror("68k reset\n");
 
 	if (tatsumi_control_word==0x3a00) {
-/*		cpu_set_reset_line(1, CLEAR_LINE); */
-	/*	logerror("68k on\n"); */
+//		cpu_set_reset_line(1, CLEAR_LINE);
+	//	logerror("68k on\n");
 
 	}
 
@@ -239,7 +239,7 @@ WRITE_HANDLER( roundup5_control_w )
 WRITE16_HANDLER( roundup5_d0000_w )
 {
 	COMBINE_DATA(&roundup5_d0000_ram[offset]);
-/*	logerror("d_68k_d0000_w %06x %04x\n",activecpu_get_pc(),data); */
+//	logerror("d_68k_d0000_w %06x %04x\n",activecpu_get_pc(),data);
 }
 
 WRITE16_HANDLER( roundup5_e0000_w )
@@ -249,16 +249,16 @@ WRITE16_HANDLER( roundup5_e0000_w )
 	*/
 
 	COMBINE_DATA(&roundup5_e0000_ram[offset]);
-	cpu_set_irq_line(1, 4, CLEAR_LINE); /* guess, probably wrong */
+	cpu_set_irq_line(1, 4, CLEAR_LINE); // guess, probably wrong
 
-/*	logerror("d_68k_e0000_w %06x %04x\n",activecpu_get_pc(),data); */
+//	logerror("d_68k_e0000_w %06x %04x\n",activecpu_get_pc(),data);
 }
 
 /******************************************************************************/
 
 READ16_HANDLER(cyclwarr_control_r)
 {
-/*	logerror("%08x:  control_r\n",activecpu_get_pc()); */
+//	logerror("%08x:  control_r\n",activecpu_get_pc());
 	return tatsumi_control_word;
 }
 
@@ -266,8 +266,8 @@ WRITE16_HANDLER(cyclwarr_control_w)
 {
 	COMBINE_DATA(&tatsumi_control_word);
 
-/*	if ((tatsumi_control_word&0xfe)!=(tatsumi_last_control&0xfe)) */
-/*		logerror("%08x:  control_w %04x\n",activecpu_get_pc(),data); */
+//	if ((tatsumi_control_word&0xfe)!=(tatsumi_last_control&0xfe))
+//		logerror("%08x:  control_w %04x\n",activecpu_get_pc(),data);
 
 /*
 
@@ -279,20 +279,20 @@ WRITE16_HANDLER(cyclwarr_control_w)
 */
 
 	if ((tatsumi_control_word&4)==4 && (tatsumi_last_control&4)==0) {
-/*		logerror("68k 2 halt\n"); */
+//		logerror("68k 2 halt\n");
 		cpu_set_halt_line(1, ASSERT_LINE);
 	} 
 
 	if ((tatsumi_control_word&4)==0 && (tatsumi_last_control&4)==4) {
-/*		logerror("68k 2 irq go\n"); */
+//		logerror("68k 2 irq go\n");
 		cpu_set_halt_line(1, CLEAR_LINE);
 	}
 
 
-	/* hack */
+	// hack
 	if (activecpu_get_pc()==0x2c3c34) {
-/*		cpu_set_reset_line(1, CLEAR_LINE); */
-	/*	logerror("hack 68k2 on\n"); */
+//		cpu_set_reset_line(1, CLEAR_LINE);
+	//	logerror("hack 68k2 on\n");
 	}
 
 	tatsumi_last_control=tatsumi_control_word;
@@ -307,13 +307,13 @@ READ_HANDLER( tatsumi_v30_68000_r )
 	/* Read from 68k RAM */
 	if ((tatsumi_control_word&0x1f)==0x18) {
 
-		/* hack to make roundup 5 boot */
+		// hack to make roundup 5 boot
 		if (activecpu_get_pc()==0xec575) {
 			UINT8 *dst = memory_region(REGION_CPU1);
 			dst[0xec57a]=0x46;
 			dst[0xec57b]=0x46;
 
-			dst[0xfc520]=0x46; /*code that stops cpu after coin counter goes mad.. */
+			dst[0xfc520]=0x46; //code that stops cpu after coin counter goes mad..
 			dst[0xfc521]=0x46;
 			dst[0xfc522]=0x46;
 			dst[0xfc523]=0x46;
@@ -339,40 +339,48 @@ WRITE_HANDLER( tatsumi_v30_68000_w )
 	else d=(d&0xff)|(data<<8);
 	
 	if ((tatsumi_control_word&0x1f)!=0x18)
-		logerror("68k write in bank %05x\n",tatsumi_control_word);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "68k write in bank %05x\n",tatsumi_control_word);
 
 	tatsumi_68k_ram[offset/2]=d;
 }
 
 /***********************************************************************************/
 
-/* Todo:  Current YM2151 doesn't seem to raise the busy flag quickly enough for the */
-/* self-test in Tatsumi games.  Needs fixed, but hack it here for now. */
+// Todo:  Current YM2151 doesn't seem to raise the busy flag quickly enough for the
+// self-test in Tatsumi games.  Needs fixed, but hack it here for now.
 READ_HANDLER(tatsumi_hack_ym2151_r)
 {
 	int r=YM2151_status_port_0_r(0);
 
 	if (activecpu_get_pc()==0x2aca || activecpu_get_pc()==0x29fe
 		|| activecpu_get_pc()==0xf9721
-		|| activecpu_get_pc()==0x1b96 || activecpu_get_pc()==0x1c65) /* BigFight */
+		|| activecpu_get_pc()==0x1b96 || activecpu_get_pc()==0x1c65) // BigFight
 		return 0x80;
 	return r;
 }
 
-/* Todo:  Tatsumi self-test fails if OKI doesn't respond (when sound off). */
-/* Mame really should emulate the OKI status reads even with Mame sound off. */
+// Todo:  Tatsumi self-test fails if OKI doesn't respond (when sound off).
+// Mame really should emulate the OKI status reads even with Mame sound off.
 READ_HANDLER(tatsumi_hack_oki_r)
 {
 	int r=OKIM6295_status_0_r(0);
 
-	if (activecpu_get_pc()==0x2b70 || activecpu_get_pc()==0x2bb5 
-		|| activecpu_get_pc()==0x2acc
-	    || activecpu_get_pc()==0x1c79 /* BigFight */
-		|| activecpu_get_pc()==0x1cbe /* BigFight */
-		|| activecpu_get_pc()==0xf9881)
-		return 0xf;
-	if (activecpu_get_pc()==0x2ba3 || activecpu_get_pc()==0x2a9b || activecpu_get_pc()==0x2adc
-		|| activecpu_get_pc()==0x1cac) /* BigFight */
-		return 0;
-	return r;
+    // Cycle Warriors and Big Fight access this with reversed activeness.
+	// this is particularly noticeable with the "We got em" sample played in CW at stage clear:
+    // gets cut too early with the old hack below.
+	// fwiw returning normal oki status doesn't work at all, both games don't make any sound.
+	// TODO: verify with HW
+	return (r ^ 0xff);
+
+
+	//if (activecpu_get_pc()==0x2b70 || activecpu_get_pc()==0x2bb5 
+	//	|| activecpu_get_pc()==0x2acc
+	//    || activecpu_get_pc()==0x1c79 // BigFight
+	//	|| activecpu_get_pc()==0x1cbe // BigFight
+	//	|| activecpu_get_pc()==0xf9881)
+	//	return 0xf;
+	//if (activecpu_get_pc()==0x2ba3 || activecpu_get_pc()==0x2a9b || activecpu_get_pc()==0x2adc
+	//	|| activecpu_get_pc()==0x1cac) // BigFight
+	//	return 0;
+	//return r;
 }

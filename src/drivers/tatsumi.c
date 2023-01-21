@@ -1,11 +1,3 @@
-#pragma code_seg("C766")
-#pragma data_seg("D766")
-#pragma bss_seg("B766")
-#pragma const_seg("K766")
-#pragma comment(linker, "/merge:D766=766")
-#pragma comment(linker, "/merge:C766=766")
-#pragma comment(linker, "/merge:B766=766")
-#pragma comment(linker, "/merge:K766=766")
 /***************************************************************************
 
     Apache 3                                            ATF-011
@@ -92,8 +84,8 @@ data8_t *apache3_bg_ram;
 
 /***************************************************************************/
 
-/*static READ16_HANDLER(cyclwarr_cpu_b_r) { return cyclwarr_cpub_ram[offset+0x800]; } */
-/*static WRITE16_HANDLER(cyclwarr_cpu_b_w){ COMBINE_DATA(&cyclwarr_cpub_ram[offset+0x800]); } */
+//static READ16_HANDLER(cyclwarr_cpu_b_r) { return cyclwarr_cpub_ram[offset+0x800]; }
+//static WRITE16_HANDLER(cyclwarr_cpu_b_w){ COMBINE_DATA(&cyclwarr_cpub_ram[offset+0x800]); }
 static READ16_HANDLER(cyclwarr_cpu_bb_r){ return cyclwarr_cpub_ram[offset]; }
 static WRITE16_HANDLER(cyclwarr_cpu_bb_w) { COMBINE_DATA(&cyclwarr_cpub_ram[offset]); }
 static READ16_HANDLER(cyclwarr_palette_r) { return paletteram16[offset]; }
@@ -227,9 +219,9 @@ MEMORY_END
 
 static MEMORY_READ_START( readmem_bigfight_c )
     { 0x0000, 0xdfff, MRA_ROM },
-	{ 0xe000, 0xffef, MRA_RAM }, /* maybe less than this... */
-	{ 0xfff1, 0xfff1, tatsumi_hack_ym2151_r },/*YM2151_status_port_0_r) */
-	{ 0xfff4, 0xfff4, tatsumi_hack_oki_r },/* OKIM6295_status_0_r) */
+	{ 0xe000, 0xffef, MRA_RAM }, // maybe less than this...
+	{ 0xfff1, 0xfff1, tatsumi_hack_ym2151_r },//YM2151_status_port_0_r)
+	{ 0xfff4, 0xfff4, tatsumi_hack_oki_r },// OKIM6295_status_0_r)
     { 0xfffc, 0xfffc, soundlatch_r },
 MEMORY_END
 
@@ -259,8 +251,8 @@ static MEMORY_WRITE_START( writemem_roundup5 )
 	{ 0x08000, 0x0bfff, roundup5_text_w, &videoram },
 	{ 0x0c000, 0x0c003, roundup5_crt_w },
 	{ 0x0d400, 0x0d40f, MWA_RAM, &roundup5_unknown0 },
-	{ 0x0d800, 0x0d801, MWA_RAM, &roundup5_unknown1 }, /* VRAM2 X scroll (todo) */
-	{ 0x0dc00, 0x0dc01, MWA_RAM, &roundup5_unknown2 }, /* VRAM2 Y scroll (todo) */
+	{ 0x0d800, 0x0d801, MWA_RAM, &roundup5_unknown1 }, // VRAM2 X scroll (todo)
+	{ 0x0dc00, 0x0dc01, MWA_RAM, &roundup5_unknown2 }, // VRAM2 Y scroll (todo)
 	{ 0x0e000, 0x0e001, roundup5_control_w },
 	{ 0x0f000, 0x0ffff, roundup5_palette_w, &paletteram },
 	{ 0x10000, 0x1ffff, roundup_v30_z80_w },
@@ -283,18 +275,18 @@ static MEMORY_WRITE16_START( writemem_roundup5_sub )
 	{ 0x80000, 0x83fff, MWA16_RAM, &tatsumi_68k_ram },
 	{ 0x90000, 0x93fff, MWA16_RAM, &spriteram16 },
 	{ 0x9a000, 0x9a1ff, tatsumi_sprite_control_w, &tatsumi_sprite_control_ram },
-	{ 0xa0000, 0xa0fff, MWA16_RAM, &roundup_r_ram }, /* Road control data */
-	{ 0xb0000, 0xb0fff, MWA16_RAM, &roundup_p_ram }, /* Road pixel data */
-	{ 0xc0000, 0xc0fff, MWA16_RAM, &roundup_l_ram }, /* Road colour data */
+	{ 0xa0000, 0xa0fff, MWA16_RAM, &roundup_r_ram }, // Road control data
+	{ 0xb0000, 0xb0fff, MWA16_RAM, &roundup_p_ram }, // Road pixel data
+	{ 0xc0000, 0xc0fff, MWA16_RAM, &roundup_l_ram }, // Road colour data
 	{ 0xd0002, 0xd0003, roundup5_d0000_w, &roundup5_d0000_ram },
 	{ 0xe0000, 0xe0001, roundup5_e0000_w, &roundup5_e0000_ram },
 MEMORY_END
 
 static MEMORY_READ_START( readmem_roundup5_sound )
     { 0x0000, 0xdfff, MRA_ROM },
-	{ 0xe000, 0xffef, MRA_RAM }, /* maybe less than this... */
-	{ 0xfff1, 0xfff1, tatsumi_hack_ym2151_r }, /*YM2151_status_port_0_r) */
-	{ 0xfff4, 0xfff4, tatsumi_hack_oki_r }, /*OKIM6295_status_0_r) */
+	{ 0xe000, 0xffef, MRA_RAM }, // maybe less than this...
+	{ 0xfff1, 0xfff1, tatsumi_hack_ym2151_r }, //YM2151_status_port_0_r)
+	{ 0xfff4, 0xfff4, OKIM6295_status_0_r }, //OKIM6295_status_0_r)
 	{ 0xfff8, 0xfff8, input_port_0_r },
 	{ 0xfff9, 0xfff9, input_port_1_r },
 	{ 0xfffc, 0xfffc, input_port_2_r },
@@ -306,8 +298,8 @@ static MEMORY_WRITE_START( writemem_roundup5_sound )
 	{ 0xfff0, 0xfff0, YM2151_register_port_0_w },
 	{ 0xfff1, 0xfff1, YM2151_data_port_0_w },
 	{ 0xfff4, 0xfff4, OKIM6295_data_0_w },
-	{ 0xfff9, 0xfff9, MWA_NOP },/*irq ack? */
-	{ 0xfffa, 0xfffa, MWA_NOP }, /*irq ack? */
+	{ 0xfff9, 0xfff9, MWA_NOP },//irq ack?
+	{ 0xfffa, 0xfffa, MWA_NOP }, //irq ack?
 MEMORY_END
 
 /******************************************************************************/
@@ -528,8 +520,8 @@ INPUT_PORTS_START( cyclwarr )
 	PORT_DIPNAME( 0x0004, 0x0004, "Ticket Dispenser" ) 
 	PORT_DIPSETTING(      0x0004, "10000" )
 	PORT_DIPSETTING(      0x0000, "15000" )
-	PORT_DIPNAME( 0x0018, 0x0000, "Machine Type" )
-	PORT_DIPSETTING(      0x0000, "2 Players" )
+	PORT_DIPNAME( 0x0018, 0x0008, "Machine Type" )
+//	PORT_DIPSETTING(      0x0000, "2 Players" )
 	PORT_DIPSETTING(      0x0008, "2 Players" )
 	PORT_DIPSETTING(      0x0010, "3 Players" )
 	PORT_DIPSETTING(      0x0018, "4 Players" )
@@ -580,13 +572,14 @@ INPUT_PORTS_START( roundup5 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2) /*PORT_NAME(DEF_STR(Free_Play)) PORT_TOGGLE */
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2) /*PORT_NAME("Extra 2") PORT_TOGGLE */
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2) /*PORT_NAME("Extra 3") PORT_TOGGLE */
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2) /*PORT_NAME("Extra 4") PORT_TOGGLE */
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2) //PORT_NAME(DEF_STR(Free_Play)) PORT_TOGGLE
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2) //PORT_NAME("Extra 2") PORT_TOGGLE
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2) //PORT_NAME("Extra 3") PORT_TOGGLE
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2) //PORT_NAME("Extra 4") PORT_TOGGLE
 
 	PORT_START
-	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1, 25, 15, 0, 0xff)
+   // PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1, 1, 0x
+    PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_PLAYER1, 25, 15, 0, 0xff)
 
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) )
@@ -595,6 +588,16 @@ INPUT_PORTS_START( roundup5 )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPNAME( 0x03, 0x00, "Game_Time" )
+	PORT_DIPSETTING(    0x03, "Shortest" )
+	PORT_DIPSETTING(    0x02, "Short" )
+	PORT_DIPSETTING(    0x00, "Medium" )
+	PORT_DIPSETTING(    0x01, "Long" )
+	PORT_DIPNAME( 0x0c, 0x00, "Difficulty" )
+	PORT_DIPSETTING(    0x04, "Easy" )
+	PORT_DIPSETTING(    0x00, "Medium" )
+	PORT_DIPSETTING(    0x08, "Hard" )
+	PORT_DIPSETTING(    0x0c, "Hardest" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
@@ -624,6 +627,24 @@ INPUT_PORTS_START( roundup5 )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
+	PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x38, 0x00, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_7C ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( Free_Play ) )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
@@ -701,7 +722,7 @@ static void sound_irq(int state)
 static struct YM2151interface ym2151_interface =
 {
 	1,
-	16000000/4, /* ? */
+	16000000/4, // ?
 	{ YM3012_VOL(45,MIXER_PAN_LEFT,45,MIXER_PAN_RIGHT) },
 	{ sound_irq }
 };
@@ -709,7 +730,23 @@ static struct YM2151interface ym2151_interface =
 static struct OKIM6295interface okim6295_interface =
 {
 	1,
-	{ 16000000/8/2/132 }, /* Frequency ? */
+	{ 16000000/4/2/132 }, /* Frequency */ // ?
+	{ REGION_SOUND1 },
+	{ 75 }
+};
+
+static struct OKIM6295interface cyclwarr_okim6295_interface =
+{
+	1,
+	{ 16000000/8/132 }, /* Frequency */ // ?
+	{ REGION_SOUND1 },
+	{ 75 }
+};
+
+static struct OKIM6295interface bigfight_okim6295_interface =
+{
+	1,
+	{ 16000000/8/2/132 }, /* Frequency */ // ?
 	{ REGION_SOUND1 },
 	{ 75 }
 };
@@ -717,11 +754,11 @@ static struct OKIM6295interface okim6295_interface =
 static MACHINE_DRIVER_START( bigfight )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 50000000 / 4) /* Confirmed */
+	MDRV_CPU_ADD(M68000, 20000000 / 2) /* Confirmed */
 	MDRV_CPU_MEMORY(bigfight_68000a_readmem,bigfight_68000a_writemem)
 	MDRV_CPU_VBLANK_INT(irq5_line_hold,1)
 
-	MDRV_CPU_ADD(M68000, 50000000 / 4) /* Confirmed */
+	MDRV_CPU_ADD(M68000, 20000000 / 2) /* Confirmed */
 	MDRV_CPU_MEMORY(bigfight_68000b_readmem,bigfight_68000b_writemem)
 	MDRV_CPU_VBLANK_INT(irq5_line_hold,1)
 
@@ -745,17 +782,17 @@ static MACHINE_DRIVER_START( bigfight )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, bigfight_okim6295_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( cyclwarr )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 50000000 / 4) /* Confirmed */
+	MDRV_CPU_ADD(M68000, 20000000 / 2) /* Confirmed */
 	MDRV_CPU_MEMORY(cyclwarr_68000a_readmem,cyclwarr_68000a_writemem)
 	MDRV_CPU_VBLANK_INT(irq5_line_hold,1)
 
-	MDRV_CPU_ADD(M68000, 50000000 / 4) /* Confirmed */
+	MDRV_CPU_ADD(M68000, 20000000 / 2) /* Confirmed */
 	MDRV_CPU_MEMORY(cyclwarr_68000b_readmem,cyclwarr_68000b_writemem)
 	MDRV_CPU_VBLANK_INT(irq5_line_hold,1)
 
@@ -779,7 +816,7 @@ static MACHINE_DRIVER_START( cyclwarr )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, cyclwarr_okim6295_interface)
 MACHINE_DRIVER_END
 
 
@@ -798,7 +835,7 @@ static MACHINE_DRIVER_START( roundup5 )
 	MDRV_CPU_ADD(M68000,20000000 / 2) /* 68000 CPU, 20MHz / 2 */
 	MDRV_CPU_MEMORY(readmem_roundup5_sub,writemem_roundup5_sub)
 
-	MDRV_CPU_ADD(Z80, 4000000) /*??? */
+	MDRV_CPU_ADD(Z80, 4000000) //???
 	MDRV_CPU_MEMORY(readmem_roundup5_sound,writemem_roundup5_sound)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -934,7 +971,7 @@ ROM_START( roundup5 )
 	ROM_REGION( 0x180000, REGION_GFX1, ROMREGION_DISPOSE )
 	/* Filled in by both regions below */
 
-	ROM_REGION( 0x0c0000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_REGION( 0x0c0000, REGION_GFX2, 0 )
 	ROM_LOAD32_BYTE( "ru-00b",   0x000000, 0x20000, CRC(388a0647) SHA1(e4ab43832872f44c0fe1aaede4372cc00ca7d32b) )
 	ROM_LOAD32_BYTE( "ru-02b",   0x000001, 0x20000, CRC(eff33945) SHA1(3f4c3aaa11ccf945c2f898dfdf815705d8539e21) )
 	ROM_LOAD32_BYTE( "ru-04b",   0x000002, 0x20000, CRC(40fda247) SHA1(f5fbc07fda024baedf35ac209210e94df9f15065) )
@@ -944,7 +981,7 @@ ROM_START( roundup5 )
 	ROM_LOAD32_BYTE( "ru-05b",   0x080002, 0x10000, CRC(23dd10e1) SHA1(f30ff1a8c7ed9bc567b901cbdd202028fffb9f80) )
 	ROM_LOAD32_BYTE( "ru-07b",   0x080003, 0x10000, CRC(bb40f46e) SHA1(da694e16d19f60a0dee47551f00f3e50b2d5dcaf) )
 
-	ROM_REGION( 0x0c0000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_REGION( 0x0c0000, REGION_GFX3, 0 )
 	ROM_LOAD32_BYTE( "ru-08b",   0x000000, 0x20000, CRC(01729e3c) SHA1(1445287fde0b993d053aab73efafc902a6b7e2cc) )
 	ROM_LOAD32_BYTE( "ru-10b",   0x000001, 0x20000, CRC(cd2357a7) SHA1(313460a74244325ce2c659816f2b738f3dc5358a) )
 	ROM_LOAD32_BYTE( "ru-12b",   0x000002, 0x20000, CRC(ca63b1f8) SHA1(a50ef8259745dc166eb0a1b2c812ff620818a755) )
@@ -985,7 +1022,7 @@ static DRIVER_INIT( cyclwarr )
 	memcpy(cyclwarr_cpub_ram,dst+0x100000,8);
 	cpu_setbank(2, memory_region(REGION_CPU2) + 0x100000);
 
-	/* Copy sprite & palette data out of GFX rom area */
+	// Copy sprite & palette data out of GFX rom area
     tatsumi_rom_sprite_lookup1 = memory_region(REGION_GFX2);
 	tatsumi_rom_sprite_lookup2 = memory_region(REGION_GFX3);
 	tatsumi_rom_clut0 = memory_region(REGION_GFX2)+0x100000 - 0x1000;
@@ -1019,7 +1056,7 @@ static DRIVER_INIT( bigfight )
 	memcpy(cyclwarr_cpub_ram,dst+0x100000,8);
 	cpu_setbank(2, memory_region(REGION_CPU2) + 0x100000);
 
-	/* Copy sprite & palette data out of GFX rom area */
+	// Copy sprite & palette data out of GFX rom area
     tatsumi_rom_sprite_lookup1 = memory_region(REGION_GFX2);
 	tatsumi_rom_sprite_lookup2 = memory_region(REGION_GFX3);
 	tatsumi_rom_clut0 = memory_region(REGION_GFX2)+0x200000 - 0x1000;
@@ -1044,15 +1081,11 @@ static DRIVER_INIT( roundup5 )
 		src2+=32;
 	}
 
-	/* Copy sprite & palette data out of GFX rom area */
-	tatsumi_rom_sprite_lookup1=auto_malloc(0x4000);
-	tatsumi_rom_sprite_lookup2=auto_malloc(0x4000);
-	tatsumi_rom_clut0=auto_malloc(0x800);
-	tatsumi_rom_clut1=auto_malloc(0x800);
-	memcpy(tatsumi_rom_sprite_lookup1, memory_region(REGION_GFX2),0x4000);
-	memcpy(tatsumi_rom_sprite_lookup2, memory_region(REGION_GFX3),0x4000);
-	memcpy(tatsumi_rom_clut0, memory_region(REGION_GFX2)+0xc0000-0x800,0x800);
-	memcpy(tatsumi_rom_clut1, memory_region(REGION_GFX3)+0xc0000-0x800,0x800);
+	// Copy sprite & palette data out of GFX rom area
+	tatsumi_rom_sprite_lookup1 = memory_region(REGION_GFX2);
+	tatsumi_rom_sprite_lookup2 = memory_region(REGION_GFX3);
+	tatsumi_rom_clut0 = memory_region(REGION_GFX2)+0xc0000-0x800;
+	tatsumi_rom_clut1 = memory_region(REGION_GFX3)+0xc0000-0x800;
 
 	tatsumi_reset();
 }
@@ -1064,9 +1097,3 @@ static DRIVER_INIT( roundup5 )
 GAMEX( 1989, roundup5, 0, roundup5, roundup5, roundup5, ROT0, "Tatsumi", "Round Up 5 - Super Delta Force", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1992, bigfight, 0, bigfight, bigfight, bigfight, ROT0, "Tatsumi", "Big Fight - Big Trouble In The Atlantic Ocean", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1991, cyclwarr, 0, cyclwarr, cyclwarr, cyclwarr, ROT0, "Tatsumi", "Cycle Warriors", GAME_IMPERFECT_GRAPHICS )
-
-
-#pragma code_seg()
-#pragma data_seg()
-#pragma bss_seg()
-#pragma const_seg()
