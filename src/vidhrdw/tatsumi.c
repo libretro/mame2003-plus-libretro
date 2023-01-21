@@ -22,6 +22,8 @@ extern data16_t debugA,debugB,debugC,debugD;
 
 static data8_t* shadow_pen_array;
 
+#define PI 3.14
+
 /******************************************************************************/
 
 WRITE16_HANDLER(tatsumi_sprite_control_w)
@@ -403,7 +405,7 @@ INLINE void roundupt_drawgfxzoomrotate( struct mame_bitmap *dest_bmp,const struc
 /*							int incxy=0; */
 /*							int incyx=0; */
 /*							int incyy=0x10000; */
-							double theta=rotate * ((2.0 * 3.14)/512.0);
+							double theta=rotate * ((2.0 * PI)/512.0);
 							double c=cos(theta);
 							double s=sin(theta);
 
