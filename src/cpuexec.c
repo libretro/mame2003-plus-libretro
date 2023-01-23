@@ -458,6 +458,11 @@ WRITE_HANDLER( watchdog_reset_w )
 	watchdog_reset();
 }
 
+WRITE_HANDLER( watchdog_400_reset_w )
+{
+		watchdog_counter = 400;
+}
+
 
 READ_HANDLER( watchdog_reset_r )
 {
