@@ -3515,6 +3515,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( riot )	        /* (c) 1992 NMK */
 	DRIVER( deroon )
 	DRIVER( tkdensho )
+  DRIVER( tkdensha )
   DRIVER( drgnbowl )  /* (c) 1992 Nics */
 
 	/* Konami bitmap games */
