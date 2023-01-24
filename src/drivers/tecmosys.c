@@ -283,7 +283,7 @@ static WRITE16_HANDLER( fg_tilemap_w )
 }
 
 
-// It looks like this needs a synch between z80 and 68k ??? See z80:006A-0091
+/* It looks like this needs a synch between z80 and 68k ??? See z80:006A-0091 */
 static READ16_HANDLER( sound_r )
 {
 	if (ACCESSING_LSB)
@@ -377,25 +377,25 @@ UINT8 device_status;
 struct prot_data* device_data;
 static UINT8 device_value = 0xff;
 
-// deroon prot data
+/* deroon prot data */
 static UINT8 deroon_passwd[] = {'L','U','N','A',0};
-static UINT8 deroon_upload[] = {0x02, 0x4e, 0x75, 0x00 }; // code length, code, 0x00 trailer
+static UINT8 deroon_upload[] = {0x02, 0x4e, 0x75, 0x00 }; /* code length, code, 0x00 trailer */
 struct prot_data deroon_data =
 {
 	5,
 	deroon_passwd,
 	deroon_upload,
 	{
-		0x10,0x11,0x12,0x13,	// range 1 using static ranges from the ROM to avoid calculating sums.
-		0x24,0x25,0x26,0x27,	// range 2
-		0x38,0x39,0x3a,0x3b,	// range 3
-		0x4c,0x4d,0x4e,0x4f,	// range 4
-		0x00,					// trailer
+		0x10,0x11,0x12,0x13,	/* range 1 using static ranges from the ROM to avoid calculating sums. */
+		0x24,0x25,0x26,0x27,	/* range 2 */
+		0x38,0x39,0x3a,0x3b,	/* range 3 */
+		0x4c,0x4d,0x4e,0x4f,	/* range 4 */
+		0x00,					/* trailer */
 	},
 	{ 0xa6, 0x29, 0x4b, 0x3f }
 };
 
-// tkdensho prot data
+/* tkdensho prot data */
 static UINT8 tkdensho_passwd[] = {'A','G','E','P','R','O','T','E','C','T',' ','S','T','A','R','T',0};
 static UINT8 tkdensho_upload[] = {0x06, 0x4e, 0xf9, 0x00, 0x00, 0x22, 0xc4,0x00};
 struct prot_data tkdensho_data =
@@ -404,11 +404,11 @@ struct prot_data tkdensho_data =
 	tkdensho_passwd,
 	tkdensho_upload,
 	{
-		0x10,0x11,0x12,0x13,	// range 1
-		0x24,0x25,0x26,0x27,	// range 2
-		0x38,0x39,0x3a,0x3b,	// range 3
-		0x4c,0x4d,0x4e,0x4f,	// range 4
-		0x00,					// trailer
+		0x10,0x11,0x12,0x13,	/* range 1 */
+		0x24,0x25,0x26,0x27,	/* range 2 */
+		0x38,0x39,0x3a,0x3b,	/* range 3 */
+		0x4c,0x4d,0x4e,0x4f,	/* range 4 */
+		0x00,			/* trailer */
 	},
 	{ 0xbf, 0xfa, 0xda, 0xda }
 };
@@ -419,11 +419,11 @@ struct prot_data tkdensha_data =
 	tkdensho_passwd,
 	tkdensho_upload,
 	{
-		0x10,0x11,0x12,0x13,	// range 1
-		0x24,0x25,0x26,0x27,	// range 2
-		0x38,0x39,0x3a,0x3b,	// range 3
-		0x4c,0x4d,0x4e,0x4f,	// range 4
-		0x00,					// trailer
+		0x10,0x11,0x12,0x13,	/* range 1 */
+		0x24,0x25,0x26,0x27,	/* range 2 */
+		0x38,0x39,0x3a,0x3b,	/* range 3 */
+		0x4c,0x4d,0x4e,0x4f,	/* range 4 */
+		0x00,			/* trailer */
 	},
 	{ 0xbf, 0xfa, 0x21, 0x5d }
 };
@@ -433,37 +433,34 @@ READ16_HANDLER(prot_status_r)
 {
 	if (ACCESSING_MSB)
 	{
-		// Bit 7: 0 = ready to write
-		// Bit 6: 0 = ready to read
+		/* Bit 7: 0 = ready to write */
+		/* Bit 6: 0 = ready to read */
 		return 0;
 	}
 
-	return 0xc0; // simulation is always ready
+	return 0xc0; /* simulation is always ready */
 }
 
 WRITE16_HANDLER(prot_status_w)
 {
-	// deroon clears the status in one place.
+	/* deroon clears the status in one place. */
 }
 
 
 READ16_HANDLER(prot_data_r)
 {
-	// prot appears to be read-ready for two consecutive reads
-	// but returns 0xff for subsequent reads.
+	/* prot appears to be read-ready for two consecutive reads 
+	 * but returns 0xff for subsequent reads. */
 	UINT8 ret = device_value;
 	device_value = 0xff;
-	//logerror("- prot_r = 0x%02x\n", ret );
 	return ret << 8;
 }
 
 
 WRITE16_HANDLER(prot_data_w)
 {
-	// Only LSB
+	/* Only LSB */
 	data >>= 8;
-
-	//logerror("+ prot_w( 0x%02x )\n", data );
 
 	switch( device_status )
 	{
@@ -489,7 +486,7 @@ WRITE16_HANDLER(prot_data_w)
 			break;
 
 		case DS_SEND_CODE:
-			if( device_read_ptr >= device_data->code[0]+2 ) // + code_len + trailer
+			if( device_read_ptr >= device_data->code[0]+2 ) /* + code_len + trailer */
 			{
 				device_status = DS_SEND_ADRS;
 				device_value = device_data->checksum_ranges[0];
@@ -500,7 +497,7 @@ WRITE16_HANDLER(prot_data_w)
 			break;
 
 		case DS_SEND_ADRS:
-			if( device_read_ptr >= 16+1 ) //+ trailer
+			if( device_read_ptr >= 16+1 ) /* + trailer */
 			{
 				device_status = DS_SEND_CHKSUMS;
 				device_value = 0;
@@ -525,10 +522,10 @@ WRITE16_HANDLER(prot_data_w)
 		case DS_DONE:
 			switch( data )
 			{
-				case 0xff: // trigger
-				case 0x00: // checksum1[val] tkdensho
-				case 0x20: // checksum1[val] deroon \ This is active RAM, so there may be more cases
-				case 0x01: // checksum1[val] deroon / that can be ignored
+				case 0xff: /* trigger */
+				case 0x00: /* checksum1[val] tkdensho */
+				case 0x20: /* checksum1[val] deroon \ This is active RAM, so there may be more cases */
+				case 0x01: /* checksum1[val] deroon / that can be ignored */
 					break;
 
 				default:
@@ -556,15 +553,14 @@ static WRITE16_HANDLER( unk880000_w )
 	switch( offset )
 	{
 		case 0x02/2:
-			break; // global y scroll for sprites?
+			break; /* global y scroll for sprites? */
 
 		case 0x08/2:
-			tecmosys_spritelist = data & 0x3; // which of the 4 spritelists to use (buffering)
+			tecmosys_spritelist = data & 0x3; /* which of the 4 spritelists to use (buffering) */
 			break;
 
 		case 0x22/2:
-			watchdog_400_reset_w(0,0); // hmm not sure
-			//logerror( "watchdog_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, activecpu_get_pc() );
+			watchdog_400_reset_w(0,0); /* hmm not sure */
 			break;
 
 		default:
@@ -575,7 +571,7 @@ static WRITE16_HANDLER( unk880000_w )
 
 static READ16_HANDLER( unk880000_r )
 {
-	// see note above, this seems to have something to do with our missing scroll values..
+	/* see note above, this seems to have something to do with our missing scroll values.. */
 	UINT16 ret = tecmosys_880000regs[offset];
 
 	logerror( "unk880000_r( %06x ) @ %06x = %04x\n", (offset * 2 ) +0x880000, activecpu_get_pc(), tecmosys_880000regs[offset] );
@@ -602,17 +598,17 @@ static READ16_HANDLER( eeprom_r )
 
 static MEMORY_READ16_START( readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x200000, 0x20ffff, MRA16_RAM }, // work ram
-	{ 0x210000, 0x210001, MRA16_NOP }, // single byte overflow on stack defined as 0x210000
-	{ 0x300000, 0x3013ff, MRA16_RAM }, // bg0 ram
-	{ 0x400000, 0x4013ff, MRA16_RAM }, // bg1 ram
-	{ 0x500000, 0x5013ff, MRA16_RAM }, // bg2 ram
-	{ 0x700000, 0x703fff, MRA16_RAM }, // fix ram   (all these names from test screen)
-	{ 0x800000, 0x80ffff, MRA16_RAM }, // obj ram
+	{ 0x200000, 0x20ffff, MRA16_RAM }, /* work ram */
+	{ 0x210000, 0x210001, MRA16_NOP }, /* single byte overflow on stack defined as 0x210000 */
+	{ 0x300000, 0x3013ff, MRA16_RAM }, /* bg0 ram */
+	{ 0x400000, 0x4013ff, MRA16_RAM }, /* bg1 ram */
+	{ 0x500000, 0x5013ff, MRA16_RAM }, /* bg2 ram */
+	{ 0x700000, 0x703fff, MRA16_RAM }, /* fix ram   (all these names from test screen) */
+	{ 0x800000, 0x80ffff, MRA16_RAM }, /* obj ram */
 	{ 0x880000, 0x88000b, unk880000_r },
-	{ 0x900000, 0x907fff, MRA16_RAM }, // obj pal
-	{ 0x980000, 0x9807ff, MRA16_RAM }, // bg pal
-	{ 0x980800, 0x980fff, MRA16_RAM }, // fix pal
+	{ 0x900000, 0x907fff, MRA16_RAM }, /* obj pal */
+	{ 0x980000, 0x9807ff, MRA16_RAM }, /* bg pal  */
+	{ 0x980800, 0x980fff, MRA16_RAM }, /* fix pal */
 	{ 0xb80000, 0xb80001, prot_status_r },
 	{ 0xd00000, 0xd00001, input_port_0_word_r },
 	{ 0xd00002, 0xd00003, input_port_1_word_r },
@@ -634,11 +630,7 @@ static WRITE16_HANDLER( eeprom_w )
 
 static INLINE void set_color_555(pen_t color, int rshift, int gshift, int bshift, UINT16 data)
 {
-//#define pal5bit(n)	((((n) & 0x1f) << 3) | (((n) & 0x1f) >> 2))
-
 	palette_set_color(color, pal5bit(data >> rshift), pal5bit(data >> gshift), pal5bit(data >> bshift));
-	
-//#undef pal5bit
 }
 
 
@@ -669,28 +661,30 @@ static WRITE16_HANDLER( bg2_tilemap_lineram_w )
 
 static MEMORY_WRITE16_START( writemem )
     { 0x000000, 0x0fffff, MWA16_ROM },
-	{ 0x200000, 0x20ffff, MWA16_RAM }, // work ram
-	{ 0x300000, 0x300fff, bg0_tilemap_w, &bg0tilemap_ram }, // bg0 ram
-	{ 0x301000, 0x3013ff, bg0_tilemap_lineram_w, &bg0tilemap_lineram }, // bg0 linescroll? (guess)
-	{ 0x400000, 0x400fff, bg1_tilemap_w, &bg1tilemap_ram }, // bg1 ram
-	{ 0x401000, 0x4013ff, bg1_tilemap_lineram_w, &bg1tilemap_lineram }, // bg1 linescroll? (guess)
-	{ 0x500000, 0x500fff, bg2_tilemap_w, &bg2tilemap_ram }, // bg2 ram
-	{ 0x501000, 0x5013ff, bg2_tilemap_lineram_w, &bg2tilemap_lineram }, // bg2 linescroll? (guess)
-	{ 0x700000, 0x703fff, fg_tilemap_w, &fgtilemap_ram },// fix ram
-	{ 0x800000, 0x80ffff, MWA16_RAM, &tecmosys_spriteram }, // obj ram
-	{ 0x900000, 0x907fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, // AM_WRITE(MWA16_RAM) // obj pal
+	{ 0x200000, 0x20ffff, MWA16_RAM }, /* work ram */
+	{ 0x300000, 0x300fff, bg0_tilemap_w, &bg0tilemap_ram }, /* bg0 ram */
+	{ 0x301000, 0x3013ff, bg0_tilemap_lineram_w, &bg0tilemap_lineram }, /* bg0 linescroll? (guess) */
+	{ 0x400000, 0x400fff, bg1_tilemap_w, &bg1tilemap_ram }, /* bg1 ram */
+	{ 0x401000, 0x4013ff, bg1_tilemap_lineram_w, &bg1tilemap_lineram }, /* bg1 linescroll? (guess) */
+	{ 0x500000, 0x500fff, bg2_tilemap_w, &bg2tilemap_ram }, /* bg2 ram */
+	{ 0x501000, 0x5013ff, bg2_tilemap_lineram_w, &bg2tilemap_lineram }, /* bg2 linescroll? (guess) */
+	{ 0x700000, 0x703fff, fg_tilemap_w, &fgtilemap_ram },/* fix ram */
+	{ 0x800000, 0x80ffff, MWA16_RAM, &tecmosys_spriteram }, /* obj ram */
+	{ 0x900000, 0x907fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, /* AM_WRITE(MWA16_RAM) // obj pal */
 
-	//{ 0x980000, 0x9807ff, MWA16_RAM }, // bg pal
-	//{ 0x980800, 0x980fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, // fix pal
-	// the two above are as tested by the game code, I've only rolled them into one below to get colours to show right.
+#if 0
+	{ 0x980000, 0x9807ff, MWA16_RAM }, /* bg pal */
+	{ 0x980800, 0x980fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, /* fix pal */
+#endif
+	/* the two above are as tested by the game code, I've only rolled them into one below to get colours to show right. */
 	{ 0x980000, 0x980fff, tilemap_paletteram16_xGGGGGRRRRRBBBBB_word_w, &tilemap_paletteram16 },
-	{ 0x880000, 0x88002f, unk880000_w, &tecmosys_880000regs },	// 10 byte dta@88000c, 880022=watchdog?
+	{ 0x880000, 0x88002f, unk880000_w, &tecmosys_880000regs },	/* 10 byte dta@88000c, 880022=watchdog? */
 	{ 0xa00000, 0xa00001, eeprom_w },
-	{ 0xa80000, 0xa80005, MWA16_RAM, &tecmosys_a80000regs },	// a80000-3 scroll? a80004 inverted ? 3 : 0
-	{ 0xb00000, 0xb00005, MWA16_RAM, &tecmosys_b00000regs },	// b00000-3 scrool?, b00004 inverted ? 3 : 0
+	{ 0xa80000, 0xa80005, MWA16_RAM, &tecmosys_a80000regs },	/* a80000-3 scroll? a80004 inverted ? 3 : 0 */
+	{ 0xb00000, 0xb00005, MWA16_RAM, &tecmosys_b00000regs },	/* b00000-3 scrool?, b00004 inverted ? 3 : 0 */
 	{ 0xb80000, 0xb80001, prot_status_w },
-	{ 0xc00000, 0xc00005, MWA16_RAM, &tecmosys_c00000regs },	// c00000-3 scroll? c00004 inverted ? 13 : 10
-	{ 0xc80000, 0xc80005, MWA16_RAM, &tecmosys_c80000regs },	// c80000-3 scrool? c80004 inverted ? 3 : 0
+	{ 0xc00000, 0xc00005, MWA16_RAM, &tecmosys_c00000regs },	/* c00000-3 scroll? c00004 inverted ? 13 : 10 */
+	{ 0xc80000, 0xc80005, MWA16_RAM, &tecmosys_c80000regs },	/* c80000-3 scrool? c80004 inverted ? 3 : 0 */
 	{ 0xe00000, 0xe00001, sound_w },
 	{ 0xe80000, 0xe80001, prot_data_w },
 MEMORY_END
@@ -818,8 +812,7 @@ PORT_END
 
 static VIDEO_START(deroon)
 {
-	//sprite_bitmap = video_screen_auto_bitmap_alloc(machine->primary_screen);
-    sprite_bitmap = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+	sprite_bitmap = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
 	fillbitmap(sprite_bitmap, 0x0000, NULL);
 
 
@@ -879,12 +872,12 @@ static void tecmosys_render_sprites_to_bitmap(struct mame_bitmap *bitmap, UINT16
 		address<<=8;
 
 		flipx = (tecmosys_spriteram[i+4]&0x0040)>>6;
-		flipy = (tecmosys_spriteram[i+4]&0x0080)>>7; // used by some move effects in tkdensho
+		flipy = (tecmosys_spriteram[i+4]&0x0080)>>7; /* used by some move effects in tkdensho */
 
  		x -= 96;
 
-		zoomx = (tecmosys_spriteram[i+2] & 0x0fff)>>0; // zoom?
-		zoomy = (tecmosys_spriteram[i+3] & 0x0fff)>>0; // zoom?
+		zoomx = (tecmosys_spriteram[i+2] & 0x0fff)>>0; /* zoom? */
+		zoomy = (tecmosys_spriteram[i+3] & 0x0fff)>>0; /* zoom? */
 
 		if ((!zoomx) || (!zoomy)) continue;
 
@@ -919,12 +912,8 @@ static void tecmosys_render_sprites_to_bitmap(struct mame_bitmap *bitmap, UINT16
 				{
 					UINT8 data;
 
-					//dstptr = BITMAP_ADDR16(sprite_bitmap, drawy, drawx);
-                    // dstptr = ((UINT16 *)sprite_bitmap->line[drawy])[drawx];
-                  // UINT16 *dstptr = ((UINT16 *)sprite_bitmap->line[drawy])[drawx];
-		           dstptr = &((UINT16 *)sprite_bitmap->line[drawy])[drawx]; // correct seems like the only way which will compile.??
-
-					data =  (gfxsrc[address]);
+					dstptr = &((UINT16 *)sprite_bitmap->line[drawy])[drawx]; /* correct seems like the only way which will compile.?? */
+					data   =  (gfxsrc[address]);
 
 
 					if(data) dstptr[0] = (data + (colour*0x100)) | (priority << 14);
@@ -976,12 +965,12 @@ static VIDEO_UPDATE(deroon)
 	tecmosys_copy_spritebitmap_priority(bitmap, 0x0000);
 	tilemap_draw(bitmap,cliprect,bg1tilemap,0,0);
 	tecmosys_copy_spritebitmap_priority(bitmap, 0x4000);
-	tilemap_draw(bitmap,cliprect,bg2tilemap,0,0); // should be drawn with blending / alpha in deroon?
+	tilemap_draw(bitmap,cliprect,bg2tilemap,0,0); /* should be drawn with blending / alpha in deroon? */
 	tecmosys_copy_spritebitmap_priority(bitmap, 0x8000);
 	tilemap_draw(bitmap,cliprect,txt_tilemap,0,0);
 	tecmosys_copy_spritebitmap_priority(bitmap, 0xc000);
 
-/*
+#if 0
 	popmessage("%04x %04x %04x %04x | %04x %04x %04x %04x | %04x %04x %04x %04x  | %04x %04x %04x %04x  | %04x %04x %04x %04x  | %04x %04x %04x %04x",
 		tecmosys_880000regs[0x0],  tecmosys_880000regs[0x1],  tecmosys_880000regs[0x2],  tecmosys_880000regs[0x3],
 		tecmosys_880000regs[0x4],  tecmosys_880000regs[0x5],  tecmosys_880000regs[0x6],  tecmosys_880000regs[0x7],
@@ -989,20 +978,17 @@ static VIDEO_UPDATE(deroon)
 		tecmosys_880000regs[0xc],  tecmosys_880000regs[0xd],  tecmosys_880000regs[0xe],  tecmosys_880000regs[0xf],
 		tecmosys_880000regs[0x10], tecmosys_880000regs[0x11], tecmosys_880000regs[0x12], tecmosys_880000regs[0x13],
 		tecmosys_880000regs[0x14], tecmosys_880000regs[0x15], tecmosys_880000regs[0x16], tecmosys_880000regs[0x17]);
-*/
+	popmessage("%04x %04x %04x | %04x %04x %04x",
+	  tecmosys_c00000regs[0], 	  tecmosys_c00000regs[1],  	  tecmosys_c00000regs[2],
+	  tecmosys_c80000regs[0], 	  tecmosys_c80000regs[1],  	  tecmosys_c80000regs[2]);
 
-//	popmessage("%04x %04x %04x | %04x %04x %04x",
-//	  tecmosys_c00000regs[0], 	  tecmosys_c00000regs[1],  	  tecmosys_c00000regs[2],
-//	  tecmosys_c80000regs[0], 	  tecmosys_c80000regs[1],  	  tecmosys_c80000regs[2]);
+	popmessage("%04x %04x %04x | %04x %04x %04x",
+	  tecmosys_b00000regs[0], 	  tecmosys_b00000regs[1],  	  tecmosys_b00000regs[2],
+	  tecmosys_a80000regs[0], 	  tecmosys_a80000regs[1],  	  tecmosys_a80000regs[2]);
+#endif
 
-//	popmessage("%04x %04x %04x | %04x %04x %04x",
-//	  tecmosys_b00000regs[0], 	  tecmosys_b00000regs[1],  	  tecmosys_b00000regs[2],
-//	  tecmosys_a80000regs[0], 	  tecmosys_a80000regs[1],  	  tecmosys_a80000regs[2]);
-
-	// prepare sprites for NEXT frame - causes 1 frame palette errors, but prevents sprite lag in tkdensho, which is correct?
+	/* prepare sprites for NEXT frame - causes 1 frame palette errors, but prevents sprite lag in tkdensho, which is correct? */
 	tecmosys_render_sprites_to_bitmap(bitmap, 0, tecmosys_880000regs[0x1]);
-
-
 }
 
 /*
@@ -1078,7 +1064,9 @@ static MACHINE_DRIVER_START( deroon )
 	MDRV_CPU_ADD(M68000, 16000000)
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
-//	MDRV_WATCHDOG_VBLANK_INIT(400) // guess
+#if 0
+	MDRV_WATCHDOG_VBLANK_INIT(400) /* guess */
+#endif
 
 	/* audio CPU */
 	MDRV_CPU_ADD(Z80, 16000000/2 )	/* 8 MHz ??? */
@@ -1109,19 +1097,19 @@ MACHINE_DRIVER_END
 
 
 ROM_START( deroon )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 ) // Main Program
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* Main Program */
 	ROM_LOAD16_BYTE( "t001.upau1", 0x00000, 0x80000, CRC(14b92c18) SHA1(b47b8c828222a3f7c0fe9271899bd38171d972fb) )
 	ROM_LOAD16_BYTE( "t002.upal1", 0x00001, 0x80000, CRC(0fb05c68) SHA1(5140592e15414770fb46d5ac9ba8f76e3d4ab323) )
 
-	ROM_REGION( 0x048000, REGION_CPU2, 0 ) // Sound Porgram
+	ROM_REGION( 0x048000, REGION_CPU2, 0 ) /* Sound Porgram */
 	ROM_LOAD( "t003.uz1", 0x000000, 0x008000, CRC(8bdfafa0) SHA1(c0cf3eb7a65d967958fe2aace171859b0faf7753) )
 	ROM_CONTINUE(         0x010000, 0x038000 ) /* banked part */
 
-	ROM_REGION( 0x2200, REGION_CPU3, 0 ) // MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM
+	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
 	ROM_LOAD( "deroon_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "deroon_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
 
-	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_ERASE00 ) // Sprites (non-tile based)
+	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Sprites (non-tile based) */
 	/* all these roms need verifying, they could be half size */
 
 	ROM_LOAD16_BYTE( "t101.uah1", 0x0000000, 0x200000, CRC(74baf845) SHA1(935d2954ba227a894542be492654a2750198e1bc) )
@@ -1131,22 +1119,22 @@ ROM_START( deroon )
 	/*                            0x1000000, 0x400000 - no rom loaded here, these gfx are 4bpp */
 	ROM_LOAD16_BYTE( "t104.ucl1", 0x1000001, 0x200000, CRC(66eb611a) SHA1(64435d35677fea3c06fdb03c670f3f63ee481c02) )
 
-	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE ) // 8x8 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE ) /* 8x8 4bpp tiles */
 	ROM_LOAD( "t301.ubd1", 0x000000, 0x100000, CRC(8b026177) SHA1(3887856bdaec4d9d3669fe3bc958ef186fbe9adb) )
 
-	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_ERASE00) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_ERASE00) /* 16x16 4bpp tiles */
 	/* not used? */
 
-	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_ERASE00 ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_ERASE00 ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "t201.ubb1", 0x000000, 0x100000, CRC(d5a087ac) SHA1(5098160ce7719d93e3edae05f6edd317d4c61f0d) )
 
-	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_ERASE00 ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_ERASE00 ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "t202.ubc1", 0x000000, 0x100000, CRC(f051dae1) SHA1(f5677c07fe644b3838657370f0309fb09244c619) )
 
-	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) // YMZ280B Samples
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* YMZ280B Samples */
 	ROM_LOAD( "t401.uya1", 0x000000, 0x200000, CRC(92111992) SHA1(ae27e11ae76dec0b9892ad32e1a8bf6ab11f2e6c) )
 
-	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) // M6295 Samples
+	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) /* M6295 Samples */
 	ROM_LOAD( "t501.uad1", 0x080000, 0x080000, CRC(2fbcfe27) SHA1(f25c830322423f0959a36955edb563a6150f2142) )
 ROM_END
 
@@ -1155,15 +1143,15 @@ ROM_START( tkdensho )
 	ROM_LOAD16_BYTE( "aeprge-2.pal", 0x00000, 0x80000, CRC(25e453d6) SHA1(9c84e2af42eff5cc9b14c1759d5bab42fa7bb663) )
 	ROM_LOAD16_BYTE( "aeprgo-2.pau", 0x00001, 0x80000, CRC(22d59510) SHA1(5ade482d6ab9a22df2ee8337458c22cfa9045c73) )
 
-	ROM_REGION( 0x038000, REGION_CPU2, 0 ) // Sound Porgram
+	ROM_REGION( 0x038000, REGION_CPU2, 0 ) /* Sound Porgram */
 	ROM_LOAD( "aesprg-2.z1", 0x000000, 0x008000, CRC(43550ab6) SHA1(2580129ef8ebd9295249175de4ba985c752e06fe) )
 	ROM_CONTINUE(            0x010000, 0x018000 ) /* banked part */
 
-	ROM_REGION( 0x2200, REGION_CPU3, 0 ) // MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM
+	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
 	ROM_LOAD( "tkdensho_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "tkdensho_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
 
-	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) // Graphics - mostly (maybe all?) not tile based
+	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Graphics - mostly (maybe all?) not tile based */
 	ROM_LOAD16_BYTE( "ae100h.ah1",    0x0000000, 0x0400000, CRC(06be252b) SHA1(08d1bb569fd2e66e2c2f47da7780b31945232e62) )
 	ROM_LOAD16_BYTE( "ae100.al1",     0x0000001, 0x0400000, CRC(009cdff4) SHA1(fd88f07313d14fd4429b09a1e8d6b595df3b98e5) )
 	ROM_LOAD16_BYTE( "ae101h.bh1",    0x0800000, 0x0400000, CRC(f2469eff) SHA1(ba49d15cc7949437ba9f56d9b425a5f0e62137df) )
@@ -1174,23 +1162,23 @@ ROM_START( tkdensho )
 	ROM_LOAD16_BYTE( "ae105.fl1",     0x2800001, 0x0400000, CRC(b7f9ebc1) SHA1(987f664072b43a578b39fa6132aaaccc5fe5bfc2) )
 	ROM_LOAD16_BYTE( "ae106.gl1",     0x3000001, 0x0200000, CRC(7c50374b) SHA1(40865913125230122072bb13f46fb5fb60c088ea) )
 
-	ROM_REGION( 0x080000, REGION_GFX2, ROMREGION_DISPOSE ) // 8x8 4bpp tiles
+	ROM_REGION( 0x080000, REGION_GFX2, ROMREGION_DISPOSE ) /* 8x8 4bpp tiles */
 	ROM_LOAD( "ae300w36.bd1",  0x000000, 0x0080000, CRC(e829f29e) SHA1(e56bfe2669ed1d1ae394c644def426db129d97e3) )
 
-	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae200w74.ba1",  0x000000, 0x0100000, CRC(c1645041) SHA1(323670a6aa2a4524eb968cc0b4d688098ffeeb12) )
 
-	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae201w75.bb1",  0x000000, 0x0100000, CRC(3f63bdff) SHA1(0d3d57fdc0ec4bceef27c11403b3631d23abadbf) )
 
-	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae202w76.bc1",  0x000000, 0x0100000, CRC(5cc857ca) SHA1(2553fb5220433acc15dfb726dc064fe333e51d88) )
 
-	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) // YMZ280B Samples
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* YMZ280B Samples */
 	ROM_LOAD( "ae400t23.ya1", 0x000000, 0x200000, CRC(c6ffb043) SHA1(e0c6c5f6b840f63c9a685a2c3be66efa4935cbeb) )
 	ROM_LOAD( "ae401t24.yb1", 0x200000, 0x200000, CRC(d83f1a73) SHA1(412b7ac9ff09a984c28b7d195330d78c4aac3dc5) )
 
-	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) // M6295 Samples
+	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) /* M6295 Samples */
 	ROM_LOAD( "ae500w07.ad1", 0x080000, 0x080000, CRC(3734f92c) SHA1(048555b5aa89eaf983305c439ba08d32b4a1bb80) )
 ROM_END
 
@@ -1199,15 +1187,15 @@ ROM_START( tkdensha )
 	ROM_LOAD16_BYTE( "aeprge.pal", 0x00000, 0x80000, CRC(17a209ff) SHA1(b5dbea9868cbb89d4e27bf19fdb616ac256985b4) )
 	ROM_LOAD16_BYTE( "aeprgo.pau", 0x00001, 0x80000, CRC(d265e6a1) SHA1(f39d8ce115f197a660f5210b2483108854eb12a9) )
 
-	ROM_REGION( 0x038000, REGION_CPU2, 0 ) // Sound Porgram
+	ROM_REGION( 0x038000, REGION_CPU2, 0 ) /* Sound Program */
 	ROM_LOAD( "aesprg-2.z1", 0x000000, 0x008000, CRC(43550ab6) SHA1(2580129ef8ebd9295249175de4ba985c752e06fe) )
 	ROM_CONTINUE(            0x010000, 0x018000 ) /* banked part */
 
-	ROM_REGION( 0x2200, REGION_CPU3, 0 ) // MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM
+	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
 	ROM_LOAD( "tkdensho_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "tkdensho_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
 
-	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) // Graphics - mostly (maybe all?) not tile based
+	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Graphics - mostly (maybe all?) not tile based */
 	ROM_LOAD16_BYTE( "ae100h.ah1",    0x0000000, 0x0400000, CRC(06be252b) SHA1(08d1bb569fd2e66e2c2f47da7780b31945232e62) )
 	ROM_LOAD16_BYTE( "ae100.al1",     0x0000001, 0x0400000, CRC(009cdff4) SHA1(fd88f07313d14fd4429b09a1e8d6b595df3b98e5) )
 	ROM_LOAD16_BYTE( "ae101h.bh1",    0x0800000, 0x0400000, CRC(f2469eff) SHA1(ba49d15cc7949437ba9f56d9b425a5f0e62137df) )
@@ -1218,23 +1206,23 @@ ROM_START( tkdensha )
 	ROM_LOAD16_BYTE( "ae105.fl1",     0x2800001, 0x0400000, CRC(b7f9ebc1) SHA1(987f664072b43a578b39fa6132aaaccc5fe5bfc2) )
 	ROM_LOAD16_BYTE( "ae106.gl1",     0x3000001, 0x0200000, CRC(7c50374b) SHA1(40865913125230122072bb13f46fb5fb60c088ea) )
 
-	ROM_REGION( 0x080000, REGION_GFX2, ROMREGION_DISPOSE ) // 8x8 4bpp tiles
+	ROM_REGION( 0x080000, REGION_GFX2, ROMREGION_DISPOSE ) /* 8x8 4bpp tiles */
 	ROM_LOAD( "ae300w36.bd1",  0x000000, 0x0080000, CRC(e829f29e) SHA1(e56bfe2669ed1d1ae394c644def426db129d97e3) )
 
-	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae200w74.ba1",  0x000000, 0x0100000, CRC(c1645041) SHA1(323670a6aa2a4524eb968cc0b4d688098ffeeb12) )
 
-	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae201w75.bb1",  0x000000, 0x0100000, CRC(3f63bdff) SHA1(0d3d57fdc0ec4bceef27c11403b3631d23abadbf) )
 
-	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_DISPOSE ) // 16x16 4bpp tiles
+	ROM_REGION( 0x100000, REGION_GFX5, ROMREGION_DISPOSE ) /* 16x16 4bpp tiles */
 	ROM_LOAD( "ae202w76.bc1",  0x000000, 0x0100000, CRC(5cc857ca) SHA1(2553fb5220433acc15dfb726dc064fe333e51d88) )
 
-	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) // YMZ280B Samples
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* YMZ280B Samples */
 	ROM_LOAD( "ae400t23.ya1", 0x000000, 0x200000, CRC(c6ffb043) SHA1(e0c6c5f6b840f63c9a685a2c3be66efa4935cbeb) )
 	ROM_LOAD( "ae401t24.yb1", 0x200000, 0x200000, CRC(d83f1a73) SHA1(412b7ac9ff09a984c28b7d195330d78c4aac3dc5) )
 
-	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) // M6295 Samples
+	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) /* M6295 Samples */
 	ROM_LOAD( "ae500w07.ad1", 0x080000, 0x080000, CRC(3734f92c) SHA1(048555b5aa89eaf983305c439ba08d32b4a1bb80) )
 ROM_END
 
@@ -1255,10 +1243,10 @@ void tecmosys_decramble(void)
 	{
 		UINT8 tmp[4];
 
-		tmp[2] = ((gfxsrc[i+0]&0xf0)>>0) | ((gfxsrc[i+1]&0xf0)>>4); //  0,1,2,3  8,9,10, 11
-		tmp[3] = ((gfxsrc[i+0]&0x0f)<<4) | ((gfxsrc[i+1]&0x0f)<<0); // 4,5,6,7, 12,13,14,15
-		tmp[0] = ((gfxsrc[i+2]&0xf0)>>0) | ((gfxsrc[i+3]&0xf0)>>4);// 16,17,18,19,24,25,26,27
-		tmp[1] = ((gfxsrc[i+2]&0x0f)<<4) | ((gfxsrc[i+3]&0x0f)>>0);// 20,21,22,23, 28,29,30,31
+		tmp[2] = ((gfxsrc[i+0]&0xf0)>>0) | ((gfxsrc[i+1]&0xf0)>>4); /*  0,1,2,3  8,9,10, 11 */
+		tmp[3] = ((gfxsrc[i+0]&0x0f)<<4) | ((gfxsrc[i+1]&0x0f)<<0); /* 4,5,6,7, 12,13,14,15 */
+		tmp[0] = ((gfxsrc[i+2]&0xf0)>>0) | ((gfxsrc[i+3]&0xf0)>>4); /* 16,17,18,19,24,25,26,27 */
+		tmp[1] = ((gfxsrc[i+2]&0x0f)<<4) | ((gfxsrc[i+3]&0x0f)>>0); /* 20,21,22,23, 28,29,30,31 */
 
 		gfxsrc[i+0] = tmp[0];
 		gfxsrc[i+1] = tmp[1];
