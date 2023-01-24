@@ -1048,7 +1048,7 @@ static struct YMF262interface ymf262_interface =
 static struct OKIM6295interface okim6295_interface =
 {
 	1,					/* 1 chip */
-	{ 7575 },	/* = 6991 Hz ? */
+  { 16000000/8/165 },
 	{ REGION_SOUND2 },
 	{ 50 }
 };
@@ -1066,9 +1066,6 @@ static MACHINE_DRIVER_START( deroon )
 	MDRV_CPU_ADD(M68000, 16000000)
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
-#if 0
-	MDRV_WATCHDOG_VBLANK_INIT(400) /* guess */
-#endif
 
 	/* audio CPU */
 	MDRV_CPU_ADD(Z80, 16000000/2 )	/* 8 MHz ??? */
@@ -1076,7 +1073,7 @@ static MACHINE_DRIVER_START( deroon )
 	MDRV_CPU_PORTS(readport,writeport)
 
 	MDRV_FRAMES_PER_SECOND(57.4458)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_VBLANK_DURATION(TIME_IN_USEC(3000))
 	MDRV_GFXDECODE(tecmosys_gfxdecodeinfo)
 
 	MDRV_NVRAM_HANDLER(93C46)
