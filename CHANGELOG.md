@@ -27,6 +27,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
+* Big Fight - Big Trouble In The Atlantic Ocean
 * Bomb Kick
 * Boogie Wings
 * Born To Fight
@@ -51,11 +52,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Counter Run (Bootleg, Set 1)
 * Crossed Swords 2
 * Cute Fighter
+* Cycle Warriors
 * Daikaiju no Gyakushu
 * Danger Express (prototype)
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
+* Deroon DeroDero 
 * Dice - The Dice Game
 * Diet Go Go
 * Digger (CVS)
@@ -161,6 +164,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Recalhorn (prototype)
 * Riot
 * Rolling Crush
+* Round Up 5 - Super Delta Force
 * Rumba Lumber
 * Samurai Shodown V
 * Samurai Shodown V Special
@@ -211,6 +215,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Thunder Heroes
 * Thunder Hoop
 * Title Fight
+* Touki Denshou -Angel Eyes
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
 * Twin Action
@@ -937,3 +942,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Improved mario palette we now use resnet mamedev backports]
 * Fixed the official andparent romset for Free Kick and hooked up missing button 2 for Free kick. Gigas and Giga Mark II [MAMEDev, arcadez]
 * Added a previously missing graphical effect for Mega Blast in taito_f2.c now when you get the green pickup the shield orb on your ship can be seen [HAZE, arcadez]
+* Added support for the Tatsumi driver supporting Big Fight - Big Trouble In The Atlantic Ocean, Cycle Warriors and Round Up 5 - Super Delta Force [Mame2003 Dev Team]
+* Updated the Tecmo Sys driver to MAME126 both Deroon DeroDero and Touki Denshou - Angel Eyes are now playable [Haze, Arcadez, dink]
