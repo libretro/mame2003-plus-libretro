@@ -18,6 +18,7 @@ static int deco32_pf1_flip,deco32_pf2_flip,deco32_pf3_flip,deco32_pf4_flip;
 static int deco32_pf2_colourbank,deco32_pf4_colourbank,deco32_pri;
 
 static int dragngun_sprite_ctrl;
+extern bool lockload_crosshairs;
 
 int deco32_raster_display_position;
 data16_t *deco32_raster_display_list;
@@ -1492,6 +1493,12 @@ VIDEO_UPDATE( dragngun )
 		tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 	else
 		tilemap_draw(bitmap,cliprect,pf1a_tilemap,0,0);
+
+	if (lockload_crosshairs)
+	{
+		draw_crosshair(1, bitmap,readinputport(6)*320/256,readinputport(7)*248/256,cliprect);
+		draw_crosshair(2, bitmap,readinputport(8)*320/256,readinputport(9)*248/256,cliprect);
+	}
 }
 
 VIDEO_UPDATE( tattass )
