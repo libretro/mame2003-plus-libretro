@@ -1391,7 +1391,7 @@ int rescale_analog(int libretro_coordinate)
 
   if (libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
 
-  return (int)rescale;
+  return (int)round(rescale);
 }
 
 /******************************************************************************
