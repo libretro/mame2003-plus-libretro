@@ -1387,11 +1387,11 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
  ******************************************************************************/
 int rescale_analog(int libretro_coordinate)
 {
-  static const float scale_factor = (float)MAME_ANALOG_MAX / LIBRETRO_ANALOG_MAX;
+  float rescale = (float)MAME_ANALOG_MAX * ( (float)libretro_coordinate / (float)LIBRETRO_ANALOG_MAX );
 
-  if (libretro_coordinate == 0 || libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
+  if (libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
 
-  return round(scale_factor * libretro_coordinate);
+  return (int)rescale;
 }
 
 /******************************************************************************
