@@ -1387,7 +1387,7 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
  ******************************************************************************/
 int rescale_analog(int libretro_coordinate)
 {
-  float rescale = (float)MAME_ANALOG_MAX * ( (float)libretro_coordinate / (float)LIBRETRO_ANALOG_MAX );
+  double rescale = (double)MAME_ANALOG_MAX * ( (double)libretro_coordinate / (double)LIBRETRO_ANALOG_MAX );
 
   if (libretro_coordinate == LIBRETRO_ANALOG_MIN) return 0;
 
