@@ -4,9 +4,7 @@
 
  ToDo:
   Is tilemap scroll / sprite scroll 100% correct - seems to be protection releated
-  Fix Angel Eyes resets (due to code to allow tilemap scroll regs to be written)
   Dump / Decap MCUs to allow for proper protection emulation.
-  Alpha Blending? (should the backround of the 'pit' in Deroon be blended?)
   Fix Sound (are the sound roms good?)
 
 
@@ -138,7 +136,7 @@ t501.uad1       23c4001 dip32 maskrom
 
 /*
 
-Touki Denshou -Angel Eyes-
+Toukidenshou - Angel Eyes
 (c)1996 Tecmo
 Tecmo System Board
 
@@ -207,6 +205,8 @@ static UINT16* tecmosys_880000regs;
 static int tecmosys_spritelist;
 
 static struct mame_bitmap *sprite_bitmap;
+static struct mame_bitmap *tmp_tilemap_composebitmap;
+static struct mame_bitmap *tmp_tilemap_renderbitmap;
 
 static MACHINE_INIT( deroon );
 
@@ -288,6 +288,7 @@ static READ16_HANDLER( sound_r )
 {
 	if (ACCESSING_LSB)
 	{
+		timer_set(TIME_NOW, 0, NULL);
 		return soundlatch2_r(0);
 	}
 
@@ -298,6 +299,7 @@ static WRITE16_HANDLER( sound_w )
 {
 	if (ACCESSING_LSB)
 	{
+		timer_set(TIME_NOW, 0, NULL);
 		soundlatch_w(0x00,data & 0xff);
 		cpu_set_nmi_line(1, PULSE_LINE);
 	}
@@ -529,7 +531,7 @@ WRITE16_HANDLER(prot_data_w)
 					break;
 
 				default:
-					logerror( "Protection still in use??? w=%02x\n", data );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Protection still in use??? w=%02x\n", data );
 					break;
 			}
 			break;
@@ -552,6 +554,9 @@ static WRITE16_HANDLER( unk880000_w )
 
 	switch( offset )
 	{
+		case 0x00/2:
+			break; /* global x scroll for sprites? */
+			
 		case 0x02/2:
 			break; /* global y scroll for sprites? */
 
@@ -564,7 +569,7 @@ static WRITE16_HANDLER( unk880000_w )
 			break;
 
 		default:
-			logerror( "unk880000_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, activecpu_get_pc() );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "unk880000_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, activecpu_get_pc() );
 			break;
 	}
 }
@@ -573,7 +578,7 @@ static READ16_HANDLER( unk880000_r )
 {
 	tecmosys_880000regs[offset];
 
-	logerror( "unk880000_r( %06x ) @ %06x = %04x\n", (offset * 2 ) +0x880000, activecpu_get_pc(), tecmosys_880000regs[offset] );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "unk880000_r( %06x ) @ %06x = %04x\n", (offset * 2 ) +0x880000, activecpu_get_pc(), tecmosys_880000regs[offset] );
 
 
 	/* this code allows scroll regs to be updated, but tkdensho at least resets perodically */
@@ -582,7 +587,7 @@ static READ16_HANDLER( unk880000_r )
 	{
 		case 0:
 			tecmosys_880000regs[offset];
-			
+/* hack to prevent random resets in Toukidenshou - Angel Eyes game seems to work fine now */			
             if ( cpu_getscanline() >= 240) return tecmosys_880000regs[offset] == 0;
 
 		default:
@@ -599,7 +604,7 @@ static READ16_HANDLER( eeprom_r )
 
 
 static MEMORY_READ16_START( readmem )
-    { 0x000000, 0x0fffff, MRA16_ROM },
+  { 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x200000, 0x20ffff, MRA16_RAM }, /* work ram */
 	{ 0x210000, 0x210001, MRA16_NOP }, /* single byte overflow on stack defined as 0x210000 */
 	{ 0x300000, 0x3013ff, MRA16_RAM }, /* bg0 ram */
@@ -662,7 +667,7 @@ static WRITE16_HANDLER( bg2_tilemap_lineram_w )
 
 
 static MEMORY_WRITE16_START( writemem )
-    { 0x000000, 0x0fffff, MWA16_ROM },
+  { 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0x200000, 0x20ffff, MWA16_RAM }, /* work ram */
 	{ 0x300000, 0x300fff, bg0_tilemap_w, &bg0tilemap_ram }, /* bg0 ram */
 	{ 0x301000, 0x3013ff, bg0_tilemap_lineram_w, &bg0tilemap_lineram }, /* bg0 linescroll? (guess) */
@@ -674,10 +679,11 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x800000, 0x80ffff, MWA16_RAM, &tecmosys_spriteram }, /* obj ram */
 	{ 0x900000, 0x907fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, /* AM_WRITE(MWA16_RAM) // obj pal */
 
-#if 0
-	{ 0x980000, 0x9807ff, MWA16_RAM }, /* bg pal */
+/*
+	{ 0x980000, 0x9807ff, MWA16_RAM }, /* bg pal */ 
+/*	
 	{ 0x980800, 0x980fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 }, /* fix pal */
-#endif
+
 	/* the two above are as tested by the game code, I've only rolled them into one below to get colours to show right. */
 	{ 0x980000, 0x980fff, tilemap_paletteram16_xGGGGGRRRRRBBBBB_word_w, &tilemap_paletteram16 },
 	{ 0x880000, 0x88002f, unk880000_w, &tecmosys_880000regs },	/* 10 byte dta@88000c, 880022=watchdog? */
@@ -761,29 +767,30 @@ static struct GfxDecodeInfo tecmosys_gfxdecodeinfo[] =
 {
 	{ REGION_GFX2, 0, &gfxlayout,    0x4400, 0x40},
 	{ REGION_GFX3, 0, &gfxlayout2,   0x4000, 0x40},
-    { REGION_GFX4, 0, &gfxlayout2,   0x4000, 0x40},
-    { REGION_GFX5, 0, &gfxlayout2,   0x4000, 0x40},
+  { REGION_GFX4, 0, &gfxlayout2,   0x4000, 0x40},
+  { REGION_GFX5, 0, &gfxlayout2,   0x4000, 0x40},
 	{ -1 } /* end of array */
 };
 
 static WRITE_HANDLER( deroon_bankswitch_w )
 {
-	cpu_setbank( 1, memory_region(REGION_CPU2) + ((data-2) & 0x0f) * 0x4000 + 0x10000 );
+	 cpu_setbank( 1, memory_region(REGION_CPU2) + ((data-2) & 0x0f) * 0x4000 + 0x10000 );
 }
 
 static MEMORY_READ_START( sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+  { 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
 	{ 0xe000, 0xf7ff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
-    { 0x0000, 0xbfff, MWA_ROM },
+  { 0x0000, 0xbfff, MWA_ROM },
 	{ 0xe000, 0xf7ff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( readport )
 	{ 0x00, 0x00, YMF262_status_0_r },
+	{ 0x10, 0x10, OKIM6295_status_0_r },
 	{ 0x40, 0x40, soundlatch_r },
 	{ 0x60, 0x60, YMZ280B_status_0_r },
 PORT_END
@@ -814,9 +821,14 @@ PORT_END
 
 static VIDEO_START(deroon)
 {
-	sprite_bitmap = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
-	fillbitmap(sprite_bitmap, 0x0000, NULL);
+  sprite_bitmap = auto_bitmap_alloc_depth(320,240,16);
+	fillbitmap(sprite_bitmap, 0x4000, NULL);
 
+	tmp_tilemap_composebitmap = auto_bitmap_alloc_depth(320,240,16);
+	tmp_tilemap_renderbitmap = auto_bitmap_alloc_depth(320,240,16);
+
+	fillbitmap(tmp_tilemap_composebitmap, 0x0000, NULL);
+	fillbitmap(tmp_tilemap_renderbitmap, 0x0000, NULL);
 
 	txt_tilemap = tilemap_create(get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32*2,32*2);
 	tilemap_set_transparent_pen(txt_tilemap,0);
@@ -857,7 +869,7 @@ static void tecmosys_render_sprites_to_bitmap(struct mame_bitmap *bitmap, UINT16
 		int priority;
 		int zoomx, zoomy;
 
-		x = tecmosys_spriteram[i+0];
+		x = tecmosys_spriteram[i+0]+386;
 		y = (tecmosys_spriteram[i+1]+1);
 
 		x-= extrax;
@@ -876,7 +888,7 @@ static void tecmosys_render_sprites_to_bitmap(struct mame_bitmap *bitmap, UINT16
 		flipx = (tecmosys_spriteram[i+4]&0x0040)>>6;
 		flipy = (tecmosys_spriteram[i+4]&0x0080)>>7; /* used by some move effects in tkdensho */
 
- 		x -= 96;
+
 
 		zoomx = (tecmosys_spriteram[i+2] & 0x0fff)>>0; /* zoom? */
 		zoomy = (tecmosys_spriteram[i+3] & 0x0fff)>>0; /* zoom? */
@@ -931,19 +943,89 @@ static void tecmosys_render_sprites_to_bitmap(struct mame_bitmap *bitmap, UINT16
 	}
 }
 
-static void tecmosys_copy_spritebitmap_priority(struct mame_bitmap *bitmap, UINT16 primask)
+void tecmosys_tilemap_copy_to_compose(UINT16 pri)
 {
 	int y,x;
-	UINT16 *srcptr, *dstptr;
+	UINT16 *srcptr;
+	UINT16 *dstptr;
 	for (y=0;y<240;y++)
 	{
-        srcptr = (UINT16 *)sprite_bitmap->line[y];
-        dstptr = (UINT16 *)bitmap->line[y];
+		srcptr = ((UINT16 *)tmp_tilemap_renderbitmap->line[y]);
+		dstptr = ((UINT16 *)tmp_tilemap_composebitmap->line[y]);
 		for (x=0;x<320;x++)
 		{
-			if (srcptr[x])
-				if ((srcptr[x] & 0xc000) == primask)
-					dstptr[x] = srcptr[x]&0x3fff;
+			if ((srcptr[x]&0xf)!=0x0)
+			    dstptr[x] =  (srcptr[x]&0x7ff) | pri;
+		}
+	}
+}
+
+void tecmosys_do_final_mix(struct mame_bitmap *bitmap)
+{
+	const pen_t *paldata = Machine->pens;
+	int y,x;
+	UINT16 *srcptr;
+	UINT16 *srcptr2;
+	UINT32 *dstptr;
+
+
+	for (y=0;y<240;y++)
+	{
+		srcptr = ((UINT16 *)tmp_tilemap_composebitmap->line[y]);
+		srcptr2 = ((UINT16 *)sprite_bitmap->line[y]);
+
+		dstptr = ((UINT32 *)bitmap->line[y]);
+		for (x=0;x<320;x++)
+		{
+			UINT16 pri, pri2;
+			UINT16 penvalue;
+			UINT16 penvalue2;
+			UINT32 colour;
+			UINT32 colour2;
+
+			pri = srcptr[x] & 0xc000;
+			pri2 = srcptr2[x] & 0xc000;
+
+			penvalue = tilemap_paletteram16[srcptr[x]&0x7ff];
+			colour =   paldata[(srcptr[x]&0x7ff) | 0x4000];
+
+			if (srcptr2[x]&0x3fff)
+			{
+				penvalue2 = paletteram16[srcptr2[x]&0x3fff];
+				colour2 = paldata[srcptr2[x]&0x3fff];
+			}
+			else
+			{
+				penvalue2 = tilemap_paletteram16[srcptr[x]&0x7ff];
+				colour2 =   paldata[(srcptr[x]&0x7ff) | 0x4000];
+			}
+
+			if ((penvalue & 0x8000) && (penvalue2 & 0x8000)) /* blend */
+			{
+				int r,g,b;
+				int r2,g2,b2;
+				b = (colour & 0x000000ff) >> 0;
+				g = (colour & 0x0000ff00) >> 8;
+				r = (colour & 0x00ff0000) >> 16;
+
+				b2 = (colour2 & 0x000000ff) >> 0;
+				g2 = (colour2 & 0x0000ff00) >> 8;
+				r2 = (colour2 & 0x00ff0000) >> 16;
+
+				r = (r + r2) >> 1;
+				g = (g + g2) >> 1;
+				b = (b + b2) >> 1;
+
+				dstptr[x] = b | (g<<8) | (r<<16);
+			}
+			else if (pri2 >= pri)
+			{
+				dstptr[x] = colour2;
+			}
+			else
+			{
+				dstptr[x] = colour;
+			}
 		}
 	}
 }
@@ -951,8 +1033,7 @@ static void tecmosys_copy_spritebitmap_priority(struct mame_bitmap *bitmap, UINT
 static VIDEO_UPDATE(deroon)
 {
 
-	fillbitmap(bitmap,0x4000,cliprect);
-
+	fillbitmap(bitmap,Machine->pens[0x4000],cliprect);
 
 	tilemap_set_scrolly( bg0tilemap, 0, tecmosys_c80000regs[1]+16);
 	tilemap_set_scrollx( bg0tilemap, 0, tecmosys_c80000regs[0]+104);
@@ -963,34 +1044,29 @@ static VIDEO_UPDATE(deroon)
 	tilemap_set_scrolly( bg2tilemap, 0, tecmosys_b00000regs[1]+17);
 	tilemap_set_scrollx( bg2tilemap, 0, tecmosys_b00000regs[0]+106);
 
-	tilemap_draw(bitmap,cliprect,bg0tilemap,0,0);
-	tecmosys_copy_spritebitmap_priority(bitmap, 0x0000);
-	tilemap_draw(bitmap,cliprect,bg1tilemap,0,0);
-	tecmosys_copy_spritebitmap_priority(bitmap, 0x4000);
-	tilemap_draw(bitmap,cliprect,bg2tilemap,0,0); /* should be drawn with blending / alpha in deroon? */
-	tecmosys_copy_spritebitmap_priority(bitmap, 0x8000);
-	tilemap_draw(bitmap,cliprect,txt_tilemap,0,0);
-	tecmosys_copy_spritebitmap_priority(bitmap, 0xc000);
+	fillbitmap(tmp_tilemap_composebitmap,0,cliprect);
 
-#if 0
-	popmessage("%04x %04x %04x %04x | %04x %04x %04x %04x | %04x %04x %04x %04x  | %04x %04x %04x %04x  | %04x %04x %04x %04x  | %04x %04x %04x %04x",
-		tecmosys_880000regs[0x0],  tecmosys_880000regs[0x1],  tecmosys_880000regs[0x2],  tecmosys_880000regs[0x3],
-		tecmosys_880000regs[0x4],  tecmosys_880000regs[0x5],  tecmosys_880000regs[0x6],  tecmosys_880000regs[0x7],
-		tecmosys_880000regs[0x8],  tecmosys_880000regs[0x9],  tecmosys_880000regs[0xa],  tecmosys_880000regs[0xb],
-		tecmosys_880000regs[0xc],  tecmosys_880000regs[0xd],  tecmosys_880000regs[0xe],  tecmosys_880000regs[0xf],
-		tecmosys_880000regs[0x10], tecmosys_880000regs[0x11], tecmosys_880000regs[0x12], tecmosys_880000regs[0x13],
-		tecmosys_880000regs[0x14], tecmosys_880000regs[0x15], tecmosys_880000regs[0x16], tecmosys_880000regs[0x17]);
-	popmessage("%04x %04x %04x | %04x %04x %04x",
-	  tecmosys_c00000regs[0], 	  tecmosys_c00000regs[1],  	  tecmosys_c00000regs[2],
-	  tecmosys_c80000regs[0], 	  tecmosys_c80000regs[1],  	  tecmosys_c80000regs[2]);
+	fillbitmap(tmp_tilemap_renderbitmap,0,cliprect);
+	tilemap_draw(tmp_tilemap_renderbitmap,cliprect,bg0tilemap,0,0);
+	tecmosys_tilemap_copy_to_compose(0x0000);
 
-	popmessage("%04x %04x %04x | %04x %04x %04x",
-	  tecmosys_b00000regs[0], 	  tecmosys_b00000regs[1],  	  tecmosys_b00000regs[2],
-	  tecmosys_a80000regs[0], 	  tecmosys_a80000regs[1],  	  tecmosys_a80000regs[2]);
-#endif
+	fillbitmap(tmp_tilemap_renderbitmap,0,cliprect);
+	tilemap_draw(tmp_tilemap_renderbitmap,cliprect,bg1tilemap,0,0);
+	tecmosys_tilemap_copy_to_compose(0x4000);
+
+	fillbitmap(tmp_tilemap_renderbitmap,0,cliprect);
+	tilemap_draw(tmp_tilemap_renderbitmap,cliprect,bg2tilemap,0,0);
+	tecmosys_tilemap_copy_to_compose(0x8000);
+
+	fillbitmap(tmp_tilemap_renderbitmap,0,cliprect);
+	tilemap_draw(tmp_tilemap_renderbitmap,cliprect,txt_tilemap,0,0);
+	tecmosys_tilemap_copy_to_compose(0xc000);
+
+	tecmosys_do_final_mix(bitmap);
 
 	/* prepare sprites for NEXT frame - causes 1 frame palette errors, but prevents sprite lag in tkdensho, which is correct? */
-	tecmosys_render_sprites_to_bitmap(bitmap, 0, tecmosys_880000regs[0x1]);
+	tecmosys_render_sprites_to_bitmap(bitmap, tecmosys_880000regs[0x0], tecmosys_880000regs[0x1]);
+	
 }
 
 /*
@@ -1038,7 +1114,7 @@ static void sound_irq(int irq)
 static struct YMF262interface ymf262_interface =
 {
 	1,					/* 1 chip */
-	14318180,			/* X1 ? */
+	14318180,			
 	{ YAC512_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) },	/* channels A and B */
 	{ YAC512_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) },	/* channels C and D */
 	{ sound_irq },		/* irq */
@@ -1056,7 +1132,7 @@ static struct OKIM6295interface okim6295_interface =
 static struct YMZ280Binterface ymz280b_interface =
 {
 	1,					/* 1 chip */
-	{ 16900000 },		/* X4 ? */
+  { 16934400 },
 	{ REGION_SOUND1 },
 	{ YM3012_VOL(30,MIXER_PAN_LEFT,30,MIXER_PAN_RIGHT) },
 	{ 0 }	/* irq */
@@ -1078,7 +1154,8 @@ static MACHINE_DRIVER_START( deroon )
 
 	MDRV_NVRAM_HANDLER(93C46)
 
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_AFTER_VBLANK)
+	/* MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32) */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN |  VIDEO_RGB_DIRECT | VIDEO_UPDATE_AFTER_VBLANK) /* correct i think */
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
 	MDRV_PALETTE_LENGTH(0x4000+0x800)
@@ -1105,9 +1182,10 @@ ROM_START( deroon )
 	ROM_CONTINUE(         0x010000, 0x038000 ) /* banked part */
 
 	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
+	/*
 	ROM_LOAD( "deroon_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "deroon_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
-
+  */
 	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Sprites (non-tile based) */
 	/* all these roms need verifying, they could be half size */
 
@@ -1155,9 +1233,10 @@ ROM_START( deroon2 )
 	ROM_CONTINUE(         0x010000, 0x038000 ) /* banked part */
 
 	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
+	/*
 	ROM_LOAD( "deroon_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "deroon_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
-
+  */
 	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Sprites (non-tile based) */
 	/* all these roms need verifying, they could be half size */
 
@@ -1197,9 +1276,10 @@ ROM_START( tkdensho )
 	ROM_CONTINUE(            0x010000, 0x018000 ) /* banked part */
 
 	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
+	/*
 	ROM_LOAD( "tkdensho_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "tkdensho_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
-
+  */
 	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Graphics - mostly (maybe all?) not tile based */
 	ROM_LOAD16_BYTE( "ae100h.ah1",    0x0000000, 0x0400000, CRC(06be252b) SHA1(08d1bb569fd2e66e2c2f47da7780b31945232e62) )
 	ROM_LOAD16_BYTE( "ae100.al1",     0x0000001, 0x0400000, CRC(009cdff4) SHA1(fd88f07313d14fd4429b09a1e8d6b595df3b98e5) )
@@ -1241,9 +1321,10 @@ ROM_START( tkdensha )
 	ROM_CONTINUE(            0x010000, 0x018000 ) /* banked part */
 
 	ROM_REGION( 0x2200, REGION_CPU3, 0 ) /* MCU is a 68HC11A8 with 8k ROM, 512 bytes EEPROM */
+	/*
 	ROM_LOAD( "tkdensho_68hc11a8.rom",    0x0000, 0x2000, NO_DUMP )
 	ROM_LOAD( "tkdensho_68hc11a8.eeprom", 0x2000, 0x0200, NO_DUMP )
-
+  */
 	ROM_REGION( 0x4000000, REGION_GFX1, ROMREGION_ERASE00 ) /* Graphics - mostly (maybe all?) not tile based */
 	ROM_LOAD16_BYTE( "ae100h.ah1",    0x0000000, 0x0400000, CRC(06be252b) SHA1(08d1bb569fd2e66e2c2f47da7780b31945232e62) )
 	ROM_LOAD16_BYTE( "ae100.al1",     0x0000001, 0x0400000, CRC(009cdff4) SHA1(fd88f07313d14fd4429b09a1e8d6b595df3b98e5) )
@@ -1333,6 +1414,6 @@ static DRIVER_INIT( tkdensha )
 
 GAME( 1995, deroon,      0,        deroon, deroon, deroon,     ROT0, "Tecmo", "Deroon DeroDero" )
 GAME( 1995, deroon2,     deroon,   deroon, deroon, deroon,     ROT0, "Tecmo", "Deroon DeroDero / Tecmo Stackers" )
-GAME( 1996, tkdensho,    0,        deroon, deroon, tkdensho,   ROT0, "Tecmo", "Touki Denshou -Angel Eyes- (VER. 960614)" )
-GAME( 1996, tkdensha,    tkdensho, deroon, deroon, tkdensha,   ROT0, "Tecmo", "Touki Denshou -Angel Eyes- (VER. 960427)" )
+GAME( 1996, tkdensho,    0,        deroon, deroon, tkdensho,   ROT0, "Tecmo", "Toukidenshou - Angel Eyes (VER. 960614)" )
+GAME( 1996, tkdensha,    tkdensho, deroon, deroon, tkdensha,   ROT0, "Tecmo", "Toukidenshou - Angel Eyes (VER. 960427)" )
 
