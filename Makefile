@@ -98,7 +98,7 @@ endif
 ifeq ($(platform), unix)
 	TARGET = $(TARGET_NAME)_libretro.so
 	fpic = -fPIC
-	CFLAGS += $(fpic) -std=c89
+	CFLAGS += $(fpic)
 	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 
 # Linux Portable
