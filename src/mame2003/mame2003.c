@@ -1258,6 +1258,7 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
   {
     int osd_code;
     value = 0;
+
     if(analogjoy_input[axis] != CODE_NONE)
     {
       osd_code = decode_osd_joycode(analogjoy_input[axis]);
