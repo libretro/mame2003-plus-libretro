@@ -198,7 +198,6 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_CORE_SAVE_SUBFOLDER,
   OPT_XY_DEVICE,
   OPT_INPUT_INTERFACE,
-  OPT_DEADZONE,
   OPT_4WAY,
   OPT_CROSSHAIR_ENABLED,
   OPT_CROSSHAIR_APPEARANCE,
