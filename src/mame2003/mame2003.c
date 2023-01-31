@@ -1257,8 +1257,8 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
   for(axis = 0; axis < MAX_ANALOG_AXES; axis++)
   {
     int osd_code;
-    int deadzone = round(((float)options.deadzone / 100) * 128);
     value = 0;
+
     if(analogjoy_input[axis] != CODE_NONE)
     {
       osd_code = decode_osd_joycode(analogjoy_input[axis]);
@@ -1274,9 +1274,6 @@ void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode 
 
       else if(osd_code == OSD_ANALOG_RIGHT_NEGATIVE_Y || osd_code == OSD_ANALOG_RIGHT_POSITIVE_Y)
         value = rescale_analog(input_cb(player, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y));
-
-      /* check against deadzone */
-      if(abs(value) <= deadzone) value = 0; /* falls within the deadzone, report as zero */
 
       /* opposite when reversing axis mapping */
       if((osd_code % 2) == 0) /* if osd_code is an even number */
