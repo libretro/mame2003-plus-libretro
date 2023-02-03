@@ -789,6 +789,7 @@ static MEMORY_WRITE_START( sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( readport )
+  MEMORY_ADDRESS_BITS(8)
 	{ 0x00, 0x00, YMF262_status_0_r },
 	{ 0x10, 0x10, OKIM6295_status_0_r },
 	{ 0x40, 0x40, soundlatch_r },
@@ -807,6 +808,7 @@ static WRITE_HANDLER( tecmosys_oki_bank_w )
 }
 
 static PORT_WRITE_START( writeport )
+  MEMORY_ADDRESS_BITS(8)
 	{ 0x00, 0x00, YMF262_register_A_0_w },
 	{ 0x01, 0x01, YMF262_data_A_0_w },
 	{ 0x02, 0x02, YMF262_register_B_0_w },
