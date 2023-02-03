@@ -3409,13 +3409,12 @@ READ16_HANDLER( gtmr_wheel_r )
 		return	readinputport(5);				/* 270РWheel*/
 }
 
-static int bank0;
+
 WRITE16_HANDLER( gtmr_oki_0_bank_w )
 {
 	if (ACCESSING_LSB)
 	{
-		OKIM6295_set_bank_base(0, 0x10000 * (data & 0xF) );
-		bank0 = (data & 0xF);
+		OKIM6295_set_bank_base(0, 0x40000 * (data & 0xF) );
 /*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0 bank %08X\n",activecpu_get_pc(),data);*/
 	}
 }
@@ -3429,41 +3428,12 @@ WRITE16_HANDLER( gtmr_oki_1_bank_w )
 	}
 }
 
-/*
-	If you look at the samples ROM for the OKI chip #0, you'll see
-	it's divided into 16 chunks, each chunk starting with the header
-	holding the samples	addresses. But, except for chunk 0, the first
-	$100 bytes ($20 samples) of each chunk are empty, and despite that,
-	samples in the range $0-1f are played. So, whenever a samples in
-	this range is requested, we use the address and sample from chunk 0,
-	otherwise we use those from the selected bank. By using this scheme
-	the sound improves, but I wouldn't bet it's correct..
-*/
 
 WRITE16_HANDLER( gtmr_oki_0_data_w )
 {
-	static int pend = 0;
 
 	if (ACCESSING_LSB)
 	{
-
-		if (pend)	pend = 0;
-		else
-		{
-			if (data & 0x80)
-			{
-				int samp = data &0x7f;
-
-				pend = 1;
-				if (samp < 0x20)
-				{
-					OKIM6295_set_bank_base(0, 0);
-/*					log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting OKI0 bank to zero\n");*/
-				}
-				else
-					OKIM6295_set_bank_base(0, 0x10000 * bank0 );
-			}
-		}
 
 		OKIM6295_data_0_w(0,data);
 /*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : OKI0 <- %08X\n",activecpu_get_pc(),data);*/
@@ -5361,6 +5331,14 @@ static struct OKIM6295interface okim6295_intf_2x12kHz =
 	2,
 	{ 12000, 12000 },
 	{ REGION_SOUND1, REGION_SOUND2 },
+	{ 50, 50 }
+};
+
+static struct OKIM6295interface brapboys_okim6295_intf_2x12kHz =
+{
+	2,
+    { 11999, 11999 },
+	{ REGION_SOUND1, REGION_SOUND2 },
 	{ 100, 100 }
 };
 
@@ -5873,7 +5851,7 @@ static MACHINE_DRIVER_START( brapboys )
 	MDRV_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_2x12kHz)
+	MDRV_SOUND_ADD(OKIM6295, brapboys_okim6295_intf_2x12kHz)
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -6412,7 +6390,7 @@ ROM_START( gtmre )
 	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* Tiles (scrambled) */
 	ROM_LOAD( "gmmu52.bin",  0x000000, 0x200000, CRC(b15f6b7f) SHA1(5e84919d788add53fc87f4d85f437df413b1dbc5) )
 
-	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "gmmu23.bin",  0x000000, 0x100000, CRC(b9cbfbee) SHA1(051d48a68477ef9c29bd5cc0bb7955d513a0ab94) )	/* 16 x $10000*/
 
 	ROM_REGION( 0x100000, REGION_SOUND2, 0 )	/* Samples */
@@ -6449,7 +6427,7 @@ ROM_START( gtmrusa )
 	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* Tiles (scrambled) */
 	ROM_LOAD( "gmmu52.bin",  0x000000, 0x200000, CRC(b15f6b7f) SHA1(5e84919d788add53fc87f4d85f437df413b1dbc5) )
 
-	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "gmmu23.bin",  0x000000, 0x100000, CRC(b9cbfbee) SHA1(051d48a68477ef9c29bd5cc0bb7955d513a0ab94) )	/* 16 x $10000*/
 
 	ROM_REGION( 0x100000, REGION_SOUND2, 0 )	/* Samples */
@@ -7248,7 +7226,12 @@ static DRIVER_INIT( bloodwar )
 	decrypt_toybox_rom();
 }
 
-
+static DRIVER_INIT( gtmr )
+{
+	kaneko16_unscramble_tiles(REGION_GFX2);
+	kaneko16_unscramble_tiles(REGION_GFX3);
+	kaneko16_expand_sample_banks(REGION_SOUND1);
+}
 
 static void expand_shogwarr_samples(void)
 {
@@ -7343,10 +7326,10 @@ GAME( 1991, mgcrystl, 0,        mgcrystl, mgcrystl, kaneko16,   ROT0,  "Kaneko",
 GAME( 1991, mgcrystj, mgcrystl, mgcrystl, mgcrystl, kaneko16,   ROT0,  "Kaneko", "Magical Crystals (Japan)" )
 GAME( 1992, blazeon,  0,        blazeon,  blazeon,  kaneko16,   ROT0,  "Atlus",  "Blaze On (Japan)" )
 GAMEX(1992, sandscrp, 0,        sandscrp, sandscrp, 0,          ROT90, "Face",   "Sand Scorpion",  GAME_IMPERFECT_SOUND )
-GAME( 1994, gtmr,     0,        gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally" )
-GAME( 1994, gtmre,    gtmr,     gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally (Evolution Model)" )
-GAME( 1994, gtmrusa,  gtmr,     gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally (USA)" )
-GAME( 1995, gtmr2,    0,        gtmr2,    gtmr2,    kaneko16,   ROT0,  "Kaneko", "Mille Miglia 2 - Great 1000 Miles Rally" )
+GAME( 1994, gtmr,     0,        gtmr,     gtmr,     gtmr,       ROT0,  "Kaneko", "Great 1000 Miles Rally" )
+GAME( 1994, gtmre,    gtmr,     gtmr,     gtmr,     gtmr,       ROT0,  "Kaneko", "Great 1000 Miles Rally (Evolution Model)" )
+GAME( 1994, gtmrusa,  gtmr,     gtmr,     gtmr,     gtmr,       ROT0,  "Kaneko", "Great 1000 Miles Rally (USA)" )
+GAME( 1995, gtmr2,    0,        gtmr2,    gtmr2,    gtmr,       ROT0,  "Kaneko", "Mille Miglia 2 - Great 1000 Miles Rally" )
 
 /* New-working games */
 
