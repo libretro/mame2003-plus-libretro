@@ -927,7 +927,7 @@ static void set_variables(void)
          break;
       case OPT_SHARE_DIAL:
       case OPT_DIAL_SWAP_XY:
-         if(!options.content_flags[CONTENT_DIAL])
+         if(!options.content_flags[CONTENT_DIAL] || !options.content_flags[CONTENT_PADDLE])
            continue;
          break;
       case OPT_VECTOR_RESOLUTION:
