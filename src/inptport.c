@@ -898,12 +898,10 @@ void update_analog_port(int port)
 	player = IP_GET_PLAYER(in);
 
 	/* if second player on a dial or paddle, and dial sharing turned on, use Y axis from player 1 */
-	if ( (type == IPT_DIAL || type == IPT_PADDLE) && player == 1) {
-		if (options.dial_share_xy)
-		{
-			axis = Y_AXIS;
-			player = 0;
-		}
+	if (options.dial_share_xy && (type == IPT_DIAL || type == IPT_PADDLE) && player == 1)
+	{
+		axis = Y_AXIS;
+		player = 0;
 	}
 
 	delta = mouse_delta_axis[player][axis];
