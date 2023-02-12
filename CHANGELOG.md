@@ -498,6 +498,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sky Alert
 * Sky Diver
 * Space Chaser (CV version)
+* Special Forces
+* Special Forces II
 * Super Slam
 * Super Spacefortress Macross
 * Teki Paki
@@ -944,3 +946,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added a previously missing graphical effect for Mega Blast in taito_f2.c now when you get the green pickup the shield orb on your ship can be seen [HAZE, arcadez]
 * Added support for the Tatsumi driver supporting Big Fight - Big Trouble In The Atlantic Ocean, Cycle Warriors and Round Up 5 - Super Delta Force [Mame2003 Dev Team]
 * Updated the Tecmo Sys driver to MAME126 both Deroon DeroDero and Touki Denshou - Angel Eyes are now playable [Haze, Arcadez, dink]
+* Hooked up the missing SN76496 sound for Special Forces and Special Forces II in the dkong.c driver both games now have Sfx and music [arcadez]
