@@ -550,6 +550,10 @@ static PORT_WRITE_START( hunchbkd_writeport )
 	{ S2650_DATA_PORT, S2650_DATA_PORT, hunchbkd_data_w },
 PORT_END
 
+static PORT_WRITE_START( spclforc_writeport )
+  { S2650_DATA_PORT, S2650_DATA_PORT, SN76496_0_w },
+PORT_END
+
 static PORT_READ_START( hunchbkd_readport )
 	{ 0x00, 0x00, hunchbkd_port0_r },
 	{ 0x01, 0x01, hunchbkd_port1_r },
@@ -1777,19 +1781,27 @@ static MACHINE_DRIVER_START( herbiedk )
 	MDRV_VBLANK_DURATION(1000)
 MACHINE_DRIVER_END
 
+static struct SN76496interface sn76496_interface =
+{
+	1,	/* 1 chip */
+	{ 3072000 },	/* ? MHz */
+	{ 50 }
+};
+
 static MACHINE_DRIVER_START( spclforc )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(hunchbkd)
 	MDRV_CPU_MODIFY("main")
-	MDRV_CPU_PORTS(spclforc_readport,hunchbkd_writeport)
+	MDRV_CPU_PORTS(spclforc_readport,spclforc_writeport)
 
 	MDRV_CPU_REMOVE("sound")
 
 	/* video hardware */
 	MDRV_VIDEO_UPDATE(spclforc)
 
-	/* analog sound */
+	/* sound hardware */
+	MDRV_SOUND_ADD(SN76496, sn76496_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( eightact )
@@ -3063,8 +3075,8 @@ GAMEX(1984, shootgal,  0,        shootgal, hunchbkd, 0,        ROT0, "Seatongrov
 
 GAMEX(1983, pestplce,  mario,    pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
-GAMEX(1985, spclforc, 0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
-GAMEX(1985, spcfrcii, 0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
+GAME( 1985, spclforc,  0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces" )
+GAME( 1985, spcfrcii,  0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II" )
 
 GAMEX(198?, drakton,   0,        dkong,    dkong,    0,        ROT270, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
