@@ -3075,8 +3075,8 @@ GAMEX(1984, shootgal,  0,        shootgal, hunchbkd, 0,        ROT0, "Seatongrov
 
 GAMEX(1983, pestplce,  mario,    pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
-GAME( 1985, spclforc,  0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces" )
-GAME( 1985, spcfrcii,  0,        spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II" )
+GAME( 1985, spclforc,  0,        spclforc, spclforc, 0,        ROT270, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces" )
+GAME( 1985, spcfrcii,  0,        spclforc, spclforc, 0,        ROT270, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II" )
 
 GAMEX(198?, drakton,   0,        dkong,    dkong,    0,        ROT270, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
