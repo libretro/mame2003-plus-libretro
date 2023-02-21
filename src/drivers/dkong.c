@@ -1535,6 +1535,51 @@ INPUT_PORTS_START( strtheat )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( shootgal )
+	PORT_START      /* IN0 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_REVERSE, 50, 4, 0, 255)
+
+	PORT_START      /* IN1 */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_REVERSE, 50, 4, 0, 255)
+
+	PORT_START      /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
+
+	PORT_START      /* DSW0 */
+	PORT_DIPNAME( 0x01, 0x00, "1" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, "Time" )
+	PORT_DIPSETTING(    0x00, "60" )
+	PORT_DIPSETTING(    0x04, "100" )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
+
+	PORT_START /* Sense */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
+INPUT_PORTS_END
+
 static struct GfxLayout charlayout =
 {
 	8,8,	/* 8*8 characters */
@@ -2945,8 +2990,6 @@ ROM_START( strtheat )
 	ROM_LOAD( "82s129.2n",    0x0200, 0x0100, CRC(a515d59b) SHA1(930616c4bcd819c2a4432a6619a8c6da74f3e8c5) ) /* character color codes on a per-column basis */
 ROM_END
 
-
-
 ROM_START( shootgal )
 	ROM_REGION( 0x8000, REGION_CPU1, 0 )
 	ROM_LOAD( "cpu.5e",       0x0000, 0x1000, CRC(c6d61b9c) SHA1(de3f4cf559313c4e5c5f7019aa6f68b3334e05c1) )
@@ -2958,19 +3001,19 @@ ROM_START( shootgal )
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )
 	ROM_LOAD( "sg-01-0",     0x0000, 0x0800, CRC(f055a624) SHA1(5dfe89d7271092e665cdd5cd59d15a2b70f92f43) )
 
-	ROM_REGION( 0x1800, REGION_CPU4, 0 )
+	ROM_REGION( 0x1800, REGION_SOUND1, 0 )
 	ROM_LOAD( "sg-01snd",    0x0000, 0x1000, CRC(644a0728) SHA1(e249fd57bc49572a2246aaf7c68a547f319f51bc) ) /* sg-01-snd */
 	ROM_LOAD( "sg-01spk",    0x1000, 0x0800, CRC(aacaf730) SHA1(cd562093ab8931d165cb0877e332474fce131c67) ) /* sg-01-spk */
 
-	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* gun proms? */
+	ROM_REGION( 0x2000, REGION_USER1, 0 ) // gun proms?
 	ROM_LOAD( "sg-1",        0x0000, 0x0200, CRC(fda82517) SHA1(b36bac69b6f8218b280aae59133ea0d22d7a99f6) )
 	ROM_LOAD( "sg-2",        0x0200, 0x091d, CRC(6e065613) SHA1(26d048af5c302f921de8e2c1bc7c7bf48dc21b5a) )
 
-	ROM_REGION( 0x2000, REGION_GFX1, 0 )
+	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "sg-01-3n",    0x0000, 0x1000, CRC(72987a57) SHA1(8b972cfccb43023aca905c51182f8d3c06f7d0bb) )
 	ROM_LOAD( "sg-01-3p",    0x1000, 0x1000, CRC(1ae9434e) SHA1(26228bf0aba99f48366544772693b35788084a6b) )
 
-	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "sg-01-7c",    0x0000, 0x0800, CRC(3315658e) SHA1(613387aaa58f5df75d42d38b07237c0dc8aaba36) )
 	ROM_LOAD( "sg-01-7d",    0x0800, 0x0800, CRC(76ad4143) SHA1(4ccc32656de9d5142e539b84d4c73bb14d32f8bf) )
 	ROM_LOAD( "sg-01-7e",    0x1000, 0x0800, CRC(65d11685) SHA1(4e4b0b60ca4c16e26d842e142002887456d98ea4) )
@@ -2980,9 +3023,6 @@ ROM_START( shootgal )
 	ROM_LOAD( "sg-01-2e",    0x0000, 0x0200, CRC(34fb23ea) SHA1(6bd6de791c9e0a5f9c833c287663e9755e01c573) )
 	ROM_LOAD( "sg-01-2f",    0x0100, 0x0200, CRC(c29b880a) SHA1(950017a0298f91e41db9865ed8ce388f4095f6cf) )
 	ROM_LOAD( "sg-01-2n",    0x0200, 0x0200, CRC(e08ed788) SHA1(6982f6bcc70dbf4c75ff538a5df70da11bc89bb4) )
-
-	ROM_REGION( 0x0200, REGION_USER1, 0 )
-	ROM_LOAD( "82s147.prm",  0x0000, 0x0200, BAD_DUMP CRC(46e5bc92) SHA1(f4171f8650818c017d58ad7131a7aff100b1b99c) )    /* no dump - taken from hunchbkd */
 ROM_END
 
 
@@ -3070,8 +3110,8 @@ GAME( 1984, herodku,   hero,     hunchbkd, herodk,   0,        ROT270, "Seatongr
 
 GAME( 1984, 8ballact,  0,        eightact, 8ballact, 0,        ROT270, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DK conversion)" )
 GAME( 1984, 8ballat2,  8ballact, eightact, 8ballact, 0,        ROT270, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DKJr conversion)" )
-/*keep this game as not working the gun just needs hooked and the bad dumps been replaced by a good one if anyone wants to fix it*/
-GAMEX(1984, shootgal,  0,        shootgal, hunchbkd, 0,        ROT0, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
+
+GAMEX(1984, shootgal,  0,        shootgal, shootgal, 0,        ROT0,   "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_IMPERFECT_SOUND )
 
 GAMEX(1983, pestplce,  mario,    pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
