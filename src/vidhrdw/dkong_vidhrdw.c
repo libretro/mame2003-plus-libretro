@@ -832,7 +832,7 @@ VIDEO_UPDATE( dkong )
   
   if (!strcmp(Machine->gamedrv->name, "shootgal"))
 	{
-		draw_crosshair( bitmap, readinputport(0) + 8, readinputport(1) + 3, cliprect );
+		draw_crosshair(1, bitmap, readinputport(0) + 8, readinputport(1) + 3, cliprect );
 	}
   
 }
