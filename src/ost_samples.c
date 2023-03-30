@@ -9,24 +9,21 @@
 
 
 /* ost configuration */
-static int  sa_volume  = 100;
-static int  last_left  = 0;
-static int  last_right = 0;
-static bool fadingMusic;
+static int  ost_support = OST_SUPPORT_DISABLED;
+static int  sa_volume   = 100;
+static int  last_left   = 0;
+static int  last_right  = 0;
+static bool fadingMusic = false;
 static bool schedule_default_sound;
 
 
 /* game specific variables */
-int      ost_support = OST_SUPPORT_DISABLED;
-
 int      ddragon_stage;
 
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-int      nba_jam_start_counter;
-
-int      outrun_start_counter;
+int      start_counter;
 
 
 /* ost functions */
@@ -555,7 +552,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
   {
     case OST_SUPPORT_CONTRA:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_contra)
-      fadingMusic = false;
+      /* no settings */
       break;
 
     case OST_SUPPORT_DDRAGON:
@@ -586,12 +583,12 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_NBA_JAM:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
-      nba_jam_start_counter = 0;
+      start_counter = 0;
       break;
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-      outrun_start_counter = 0;
+      start_counter = 0;
       break;
 
     case OST_SUPPORT_ROBOCOP:
@@ -606,7 +603,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_SF2:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
-      fadingMusic = false;
+      /* no settings */
       break;
   }
 }
@@ -1357,10 +1354,10 @@ bool generate_ost_sound_nba_jam(int data)
 		case 0x00:
 			schedule_default_sound = true;
 
-			if(!ost_last_played(0, 1) && nba_jam_start_counter == 2)
+			if(!ost_last_played(0, 1) && start_counter == 2)
 				ost_start_samples(0, 1, 1);
-			else if (nba_jam_start_counter < 2)
-				nba_jam_start_counter++;
+			else if (start_counter < 2)
+				start_counter++;
 			break;
 
 		/* Team select.*/
@@ -1455,17 +1452,17 @@ bool generate_ost_sound_outrun(int data)
 	switch (data) {
 		/* --> Title screen */
 		case 0x0:
-			if(outrun_start_counter == 0)
+			if(start_counter == 0)
 				if(!ost_last_played(0, 1))
 					ost_start_samples(0, 1, 1);
 
-			outrun_start_counter++;
+			start_counter++;
 
-			if(outrun_start_counter == 2)
+			if(start_counter == 2)
 				ost_start_samples(2, 3, 0);
 
-			if(outrun_start_counter == 6)
-				outrun_start_counter = 0;
+			if(start_counter == 6)
+				start_counter = 0;
 			break;
 
 		/* --> Passing breeze */
@@ -1492,7 +1489,7 @@ bool generate_ost_sound_outrun(int data)
 		/* --> Are You Ready */
 		case 0x9F:
 			schedule_default_sound = true;
-			outrun_start_counter = 0;
+			start_counter = 0;
 			break;
 
 		/* --> Enter Highscore */
