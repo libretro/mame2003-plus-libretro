@@ -9,7 +9,7 @@
 
 
 /* ost configuration */
-static int  sa_volume;
+static int  sa_volume  = 100;
 static int  last_left  = 0;
 static int  last_right = 0;
 static bool fadingMusic;
@@ -23,8 +23,6 @@ int      ddragon_stage;
 
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
-
-bool     moon_diddy;
 
 int      nba_jam_start_counter;
 
@@ -583,7 +581,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 
     case OST_SUPPORT_MOONWALKER:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
-      moon_diddy = false;
+      /* no settings */
       break;
 
     case OST_SUPPORT_NBA_JAM:
@@ -903,7 +901,6 @@ bool generate_ost_sound_ffight(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -1041,7 +1038,6 @@ bool generate_ost_sound_ikari(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Title Demo */
@@ -1092,7 +1088,6 @@ bool generate_ost_sound_mk(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	/* unmask data for y-unit compatibility */
 	switch (data&0xff) {
@@ -1273,13 +1268,11 @@ bool generate_ost_sound_moonwalker(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Reset music. Title screen. */
 		case 0x0:
 			ost_stop_samples();
-			moon_diddy = false;
 			break;
 
 		/* Title screen stuff. */
@@ -1335,22 +1328,19 @@ bool generate_ost_sound_moonwalker(int data)
 		case 0xFB:
 		case 0xF6:
 			schedule_default_sound = true;
-			moon_diddy = true;
+			sa_volume = 30; /* While the special move is playing, lower volume to 30%. */
 			break;
 
 		/* Special move "owww" sound effect. This plays after the special move has always finished. */
 		case 0xC3:
 			schedule_default_sound = true;
-			moon_diddy = false; /* return volume back to 100%. */
+			sa_volume = 100; /* return volume back to 100%. */
 			break;
 
 		default:
 			schedule_default_sound = true;
 			break;
 	}
-
-	/* While the special move is playing, lower volume to 30%. */
-	if(moon_diddy) sa_volume = 30;
 
 	ost_mix_samples();
 
@@ -1361,7 +1351,6 @@ bool generate_ost_sound_nba_jam(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Title screen.*/
@@ -1459,7 +1448,6 @@ bool generate_ost_sound_outrun(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
@@ -1526,7 +1514,6 @@ bool generate_ost_sound_robocop(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Visor open and close */
@@ -1603,7 +1590,6 @@ bool generate_ost_sound_sf1(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
