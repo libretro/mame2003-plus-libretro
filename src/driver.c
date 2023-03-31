@@ -5474,6 +5474,7 @@ Other Sun games
 	DRIVER( speedspn )	/* (c) 1994 */
 	DRIVER( kickgoal )	/* (c) 1995 */
 	DRIVER( actionhw )	/* (c) 1995 */
+  DRIVER( topdrive )  /* (c) 1995 */
 
 	/* U.S. Games games */
 	DRIVER( usg32 )
