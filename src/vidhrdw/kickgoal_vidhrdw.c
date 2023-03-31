@@ -6,6 +6,10 @@
 extern data16_t *kickgoal_fgram, *kickgoal_bgram, *kickgoal_bg2ram, *kickgoal_scrram;
 struct tilemap *kickgoal_fgtm, *kickgoal_bgtm, *kickgoal_bg2tm;
 
+extern data16_t *topdrive_fgram, *topdrive_bgram, *topdrive_bg2ram, *topdrive_scrram;
+struct tilemap *topdrive_fgtm, *topdrive_bgtm, *topdrive_bg2tm;
+
+
 /* FG */
 static void get_kickgoal_fg_tile_info(int tile_index)
 {
@@ -13,6 +17,14 @@ static void get_kickgoal_fg_tile_info(int tile_index)
 	int color = kickgoal_fgram[tile_index*2+1] & 0x000f;
 
 	SET_TILE_INFO(0,tileno + 0x7000,color + 0x00,0)
+}
+
+static void get_topdrive_fg_tile_info(int tile_index)
+{
+	int tileno = topdrive_fgram[tile_index] & 0x1fff;
+	int color = (topdrive_fgram[tile_index] & 0xe000) >> 13;
+	
+	SET_TILE_INFO(0,tileno + 0x4000,color + 0x00,0)
 }
 
 /* BG */
@@ -24,6 +36,14 @@ static void get_kickgoal_bg_tile_info(int tile_index)
 	SET_TILE_INFO(1,tileno + 0x1000,color + 0x10,0)
 }
 
+static void get_topdrive_bg_tile_info(int tile_index)
+{
+	int tileno = topdrive_bgram[tile_index] & 0x1fff;
+	int color = (topdrive_bgram[tile_index] & 0xe000) >> 13;
+
+	SET_TILE_INFO(0,tileno + 0x6000,color + 0x10,0)
+}
+
 /* BG 2 */
 static void get_kickgoal_bg2_tile_info(int tile_index)
 {
@@ -32,6 +52,14 @@ static void get_kickgoal_bg2_tile_info(int tile_index)
 	int flipx = kickgoal_bg2ram[tile_index*2+1] & 0x0020;
 
 	SET_TILE_INFO(2,tileno + 0x800,color + 0x20,flipx ? TILE_FLIPX : 0);
+}
+
+static void get_topdrive_bg2_tile_info(int tile_index)
+{
+	int tileno = topdrive_bg2ram[tile_index] & 0x1fff;
+	int color = (topdrive_bg2ram[tile_index] & 0xe000) >> 13;
+
+	SET_TILE_INFO(0,tileno + 0x3000,color + 0x20, 0);
 }
 
 
@@ -64,6 +92,17 @@ VIDEO_START( kickgoal )
 	return 0;
 }
 
+VIDEO_START( topdrive )
+{
+    topdrive_bg2tm = tilemap_create(get_topdrive_bg2_tile_info,tilemap_scan_kicksbg,TILEMAP_OPAQUE, 16, 16,32,16);
+    topdrive_bgtm = tilemap_create(get_topdrive_bg_tile_info,tilemap_scan_kicksbg,TILEMAP_TRANSPARENT, 16, 16,32,16);
+	topdrive_fgtm = tilemap_create(get_topdrive_fg_tile_info,tilemap_scan_kicksbg,TILEMAP_TRANSPARENT, 16, 16,32,16);
+
+    tilemap_set_transparent_pen(topdrive_bgtm,0xf);
+    tilemap_set_transparent_pen(topdrive_fgtm,0xf);
+	return 0;
+}
+
 
 
 WRITE16_HANDLER( kickgoal_fgram_w )
@@ -93,7 +132,32 @@ WRITE16_HANDLER( kickgoal_bg2ram_w )
 	}
 }
 
+WRITE16_HANDLER( topdrive_fgram_w )
+{
+	if (topdrive_fgram[offset] != data)
+	{
+		topdrive_fgram[offset] = data;
+		tilemap_mark_tile_dirty(topdrive_fgtm,offset);
+	}
+}
 
+WRITE16_HANDLER( topdrive_bgram_w )
+{
+	if (topdrive_bgram[offset] != data)
+	{
+		topdrive_bgram[offset] = data;
+		tilemap_mark_tile_dirty(topdrive_bgtm,offset);
+	}
+}
+
+WRITE16_HANDLER( topdrive_bg2ram_w )
+{
+	if (topdrive_bg2ram[offset] != data)
+	{
+		topdrive_bg2ram[offset] = data;
+		tilemap_mark_tile_dirty(topdrive_bg2tm,offset);
+	}
+}
 
 static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
@@ -123,6 +187,34 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 	}
 }
 
+static void topdrive_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect, int drawpri)
+{
+	const struct GfxElement *gfx = Machine->gfx[0];
+	int offs;
+
+	for (offs = 0;offs < spriteram_size;offs += 4)
+	{
+		int xpos = spriteram16[offs+3];
+		int ypos = spriteram16[offs+0] & 0x00ff;
+		int tileno = spriteram16[offs+2] & 0x3fff;
+		int pri   = (spriteram16[offs + 1] & 0x0010)>>4; /* 0x0020 is NOT flip like kickgoal.cpp, probably another priority bit */
+		int color = spriteram16[offs+1] & 0x000f;
+
+		if (spriteram16[offs+0] & 0x0100) break;
+		
+		if (pri != drawpri)
+			continue;
+
+		ypos = 0x110-ypos;
+
+		drawgfx(bitmap,gfx,
+				tileno,
+				color + 0x30,
+				0,0,
+				xpos-64+2,ypos-31,
+				cliprect,TRANSPARENCY_PEN,15);
+	}
+}
 
 VIDEO_UPDATE( kickgoal )
 {
@@ -153,6 +245,27 @@ VIDEO_UPDATE( kickgoal )
     kickgoal_scrram[6],
     kickgoal_scrram[7]);
     */
+}
+
+VIDEO_UPDATE( topdrive )
+{
+	/* set scroll */
+	tilemap_set_scrollx( topdrive_fgtm, 0, topdrive_scrram[0]+50);
+	tilemap_set_scrolly( topdrive_fgtm, 0, topdrive_scrram[1]);
+	tilemap_set_scrollx( topdrive_bgtm, 0, topdrive_scrram[2]+50);
+	tilemap_set_scrolly( topdrive_bgtm, 0, topdrive_scrram[3]);
+	tilemap_set_scrollx( topdrive_bg2tm, 0, topdrive_scrram[4]+50);
+	tilemap_set_scrolly( topdrive_bg2tm, 0, topdrive_scrram[5]);
+
+	/* draw */
+	tilemap_draw(bitmap,cliprect,topdrive_bg2tm,0,0);
+	tilemap_draw(bitmap,cliprect,topdrive_bgtm,0,0);
+
+	topdrive_draw_sprites(bitmap,cliprect,0);
+
+	tilemap_draw(bitmap,cliprect,topdrive_fgtm,0,0);
+	
+	topdrive_draw_sprites(bitmap,cliprect,1);
 }
 
 /* Holywood Action */
