@@ -35,6 +35,7 @@ static bool ost_last_played(int sa_left, int sa_right);
 
 
 /* ost routines */
+bool (*generate_ost_sound) (int);
 static bool routine_contra     (int data);
 static bool routine_ddragon    (int data);
 static bool routine_ffight     (int data);
