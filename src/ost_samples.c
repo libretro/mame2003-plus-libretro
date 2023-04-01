@@ -34,6 +34,21 @@ static void ost_set_last_played(int sa_left, int sa_right);
 static bool ost_last_played(int sa_left, int sa_right);
 
 
+/* ost routines */
+bool (*generate_ost_sound) (int);
+static bool routine_contra     (int data);
+static bool routine_ddragon    (int data);
+static bool routine_ffight     (int data);
+static bool routine_ikari      (int data);
+static bool routine_mk         (int data);
+static bool routine_moonwalker (int data);
+static bool routine_nba_jam    (int data);
+static bool routine_outrun     (int data);
+static bool routine_robocop    (int data);
+static bool routine_sf1        (int data);
+static bool routine_sf2        (int data);
+
+
 const char *const contra_sample_set_names[] =
 {
 	"*contra",
@@ -552,58 +567,62 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
   {
     case OST_SUPPORT_CONTRA:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_contra)
-      /* no settings */
+      generate_ost_sound = routine_contra;
       break;
 
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
+      generate_ost_sound = routine_ddragon;
       ddragon_stage = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
+      generate_ost_sound = routine_ffight;
       ff_alternate_song_1 = false;
       ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
-      /* no settings */
+      generate_ost_sound = routine_ikari;
       break;
 
     case OST_SUPPORT_MK:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
-      /* no settings */
+      generate_ost_sound = routine_mk;
       break;
 
     case OST_SUPPORT_MOONWALKER:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
-      /* no settings */
+      generate_ost_sound = routine_moonwalker;
       break;
 
     case OST_SUPPORT_NBA_JAM:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
+      generate_ost_sound = routine_nba_jam;
       start_counter = 0;
       break;
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
+      generate_ost_sound = routine_outrun;
       start_counter = 0;
       break;
 
     case OST_SUPPORT_ROBOCOP:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_robocop)
-      /* no settings */
+      generate_ost_sound = routine_robocop;
       break;
 
     case OST_SUPPORT_SF1:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
-      /* no settings */
+      generate_ost_sound = routine_sf1;
       break;
 
     case OST_SUPPORT_SF2:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
-      /* no settings */
+      generate_ost_sound = routine_sf2;
       break;
   }
 }
@@ -683,7 +702,7 @@ void ost_fade_volume(void)
 }
 
 
-bool generate_ost_sound_contra(int data)
+static bool routine_contra(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -796,7 +815,7 @@ bool generate_ost_sound_contra(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ddragon(int data)
+static bool routine_ddragon(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -894,7 +913,7 @@ bool generate_ost_sound_ddragon(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ffight(int data)
+static bool routine_ffight(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1031,7 +1050,7 @@ bool generate_ost_sound_ffight(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ikari(int data)
+static bool routine_ikari(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1081,7 +1100,7 @@ bool generate_ost_sound_ikari(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_mk(int data)
+static bool routine_mk(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1261,7 +1280,7 @@ bool generate_ost_sound_mk(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_moonwalker(int data)
+static bool routine_moonwalker(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1344,7 +1363,7 @@ bool generate_ost_sound_moonwalker(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_nba_jam(int data)
+static bool routine_nba_jam(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1441,7 +1460,7 @@ bool generate_ost_sound_nba_jam(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_outrun(int data)
+static bool routine_outrun(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1507,7 +1526,7 @@ bool generate_ost_sound_outrun(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_robocop(int data)
+static bool routine_robocop(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1583,7 +1602,7 @@ bool generate_ost_sound_robocop(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_sf1(int data)
+static bool routine_sf1(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1687,7 +1706,7 @@ bool generate_ost_sound_sf1(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_sf2(int data)
+static bool routine_sf2(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;

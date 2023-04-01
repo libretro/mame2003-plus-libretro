@@ -65,7 +65,7 @@ WRITE_HANDLER( contra_coin_counter_w )
 static WRITE_HANDLER( cpu_sound_command_w )
 {
 	if( ost_support_enabled(OST_SUPPORT_CONTRA) ) {
-		if(generate_ost_sound_contra( data ))
+		if(generate_ost_sound( data ))
 			soundlatch_w(offset,data);
 	}
 	else

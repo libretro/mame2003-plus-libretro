@@ -300,7 +300,7 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		break;
 	case 3: /* 380e - SND irq */
 		if( ost_support_enabled(OST_SUPPORT_DDRAGON) ) {
-			if(generate_ost_sound_ddragon( data )) {
+			if(generate_ost_sound( data )) {
 				soundlatch_w( 0, data );
 				cpu_set_irq_line( snd_cpu, m_sound_irq, (m_sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 			}

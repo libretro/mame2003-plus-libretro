@@ -63,7 +63,7 @@ static WRITE16_HANDLER( dec0_control_w )
 			if (ACCESSING_LSB)
 			{
 				if( ost_support_enabled(OST_SUPPORT_ROBOCOP) ) {
-					if(generate_ost_sound_robocop( data )) {
+					if(generate_ost_sound( data )) {
 						soundlatch_w(0,data & 0xff);
 						cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
 					}

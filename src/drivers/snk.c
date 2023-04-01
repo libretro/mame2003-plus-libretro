@@ -494,7 +494,7 @@ static WRITE_HANDLER( snk_soundlatch_w ){
 	snk_sound_register |= 0x08 | 0x04;
 
 	if( ost_support_enabled(OST_SUPPORT_IKARI) ) {
-		if(generate_ost_sound_ikari( data )) soundlatch_w( offset, data );
+		if(generate_ost_sound( data )) soundlatch_w( offset, data );
 	}
 	else
 		soundlatch_w( offset, data );
