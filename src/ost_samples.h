@@ -22,7 +22,7 @@ enum
 
 
 extern bool ost_support_enabled (int ost);
-extern bool (*generate_ost_sound) (int);
+extern *generate_ost_sound;
 
 extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
