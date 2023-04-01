@@ -701,7 +701,7 @@ void ost_fade_volume(void)
 }
 
 
-bool routine_contra(int data)
+static bool routine_contra(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -814,7 +814,7 @@ bool routine_contra(int data)
 	return schedule_default_sound;
 }
 
-bool routine_ddragon(int data)
+static bool routine_ddragon(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -912,7 +912,7 @@ bool routine_ddragon(int data)
 	return schedule_default_sound;
 }
 
-bool routine_ffight(int data)
+static bool routine_ffight(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1049,7 +1049,7 @@ bool routine_ffight(int data)
 	return schedule_default_sound;
 }
 
-bool routine_ikari(int data)
+static bool routine_ikari(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1099,7 +1099,7 @@ bool routine_ikari(int data)
 	return schedule_default_sound;
 }
 
-bool routine_mk(int data)
+static bool routine_mk(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1279,7 +1279,7 @@ bool routine_mk(int data)
 	return schedule_default_sound;
 }
 
-bool routine_moonwalker(int data)
+static bool routine_moonwalker(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1362,7 +1362,7 @@ bool routine_moonwalker(int data)
 	return schedule_default_sound;
 }
 
-bool routine_nba_jam(int data)
+static bool routine_nba_jam(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1459,7 +1459,7 @@ bool routine_nba_jam(int data)
 	return schedule_default_sound;
 }
 
-bool routine_outrun(int data)
+static bool routine_outrun(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1525,7 +1525,7 @@ bool routine_outrun(int data)
 	return schedule_default_sound;
 }
 
-bool routine_robocop(int data)
+static bool routine_robocop(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1601,7 +1601,7 @@ bool routine_robocop(int data)
 	return schedule_default_sound;
 }
 
-bool routine_sf1(int data)
+static bool routine_sf1(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -1705,7 +1705,7 @@ bool routine_sf1(int data)
 	return schedule_default_sound;
 }
 
-bool routine_sf2(int data)
+static bool routine_sf2(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
