@@ -54,7 +54,7 @@ static WRITE16_HANDLER( soundcmd_w )
 	if (ACCESSING_LSB)
 	{
 		if( ost_support_enabled(OST_SUPPORT_SF1) ) {
-			if(generate_ost_sound_sf1( data )) {
+			if(generate_ost_sound( data )) {
 				soundlatch_w(offset,data & 0xff);
 				cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
 			}
