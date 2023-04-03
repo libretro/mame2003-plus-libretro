@@ -549,7 +549,7 @@ static MEMORY_READ16_START( vsreadmem )
 	{ 0x27c000, 0x27c001, MRA16_NOP },		/* watchdog lives here*/
 	{ 0x300000, 0x301fff, K056832_ram_word_r },
 	{ 0x302000, 0x303fff, K056832_ram_word_r }, /* tilemap RAM mirror read(essential)*/
-	{ 0x304000, 0x3041ff, MRA16_RAM },
+	{ 0x304000, 0x305fff, K056832_ram_word_r }, /* tilemap RAM mirror read(essential)*/
 	{ 0x310000, 0x311fff, K056832_rom_word_r },
 	{ 0x330000, 0x331fff, MRA16_RAM },
 #if MW_DEBUG
@@ -584,7 +584,7 @@ static MEMORY_WRITE16_START( vswritemem )
 	{ 0x27C000, 0x27C001, mmeeprom_w },
 	{ 0x300000, 0x301fff, K056832_ram_word_w },
 	{ 0x302000, 0x303fff, K056832_ram_word_w }, /* tilemap RAM mirror write(essential)*/
-	{ 0x304000, 0x3041ff, MWA16_RAM },
+	{ 0x304000, 0x305fff, K056832_ram_word_w }, /* tilemap RAM mirror write(essential)*/
 	{ 0x330000, 0x331fff, paletteram16_xrgb_word_w, &paletteram16 },
 MEMORY_END
 
