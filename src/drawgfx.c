@@ -3594,18 +3594,13 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 		}
 
 		/* 45 degrees */
-		plotclip(bitmap,x-4,y+6,color,clip);
-		plotclip(bitmap,x-5,y+5,color,clip);
-		plotclip(bitmap,x-6,y+4,color,clip);
-		plotclip(bitmap,x-4,y-6,color,clip);
-		plotclip(bitmap,x-5,y-5,color,clip);
-		plotclip(bitmap,x-6,y-4,color,clip);
-		plotclip(bitmap,x+4,y-6,color,clip);
-		plotclip(bitmap,x+5,y-5,color,clip);
-		plotclip(bitmap,x+6,y-4,color,clip);
-		plotclip(bitmap,x+4,y+6,color,clip);
-		plotclip(bitmap,x+5,y+5,color,clip);
-		plotclip(bitmap,x+6,y+4,color,clip);
+		for (i = 0;i < 3;i++)
+		{
+			plotclip(bitmap,x-6+i,y+4+i,color,clip);
+			plotclip(bitmap,x-6+i,y-4-i,color,clip);
+			plotclip(bitmap,x+6-i,y+4+i,color,clip);
+			plotclip(bitmap,x+6-i,y-4-i,color,clip);
+		}
 	}
 }
 
