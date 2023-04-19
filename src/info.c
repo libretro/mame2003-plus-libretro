@@ -870,7 +870,7 @@ void print_mame_xml()
 		"\t\t\t\t<!ATTLIST dipvalue name CDATA #REQUIRED>\n"
 		"\t\t\t\t<!ATTLIST dipvalue default (yes|no) \"no\">\n"
 		"\t\t<!ELEMENT driver EMPTY>\n"
-		"\t\t\t<!ATTLIST driver status (good|preliminary|test) #REQUIRED>\n"
+		"\t\t\t<!ATTLIST driver status (good|preliminary|protection) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver color (good|imperfect|preliminary) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver sound (good|imperfect|preliminary) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver graphic (good|imperfect) #REQUIRED>\n"
