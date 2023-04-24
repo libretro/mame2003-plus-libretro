@@ -11,6 +11,7 @@
 
 
 /* compile-time options */
+#define FAST_DMA			0		/* DMAs complete immediately; reduces number of CPU switches */
 #define LOG_DMA				0		/* DMAs are logged if the 'L' key is pressed */
 
 
@@ -258,7 +259,7 @@ WRITE16_HANDLER( midtunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	logerror("T-unit control = %04X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "T-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
@@ -279,7 +280,7 @@ WRITE16_HANDLER( midwunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	logerror("Wolf-unit control = %04X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wolf-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
@@ -632,9 +633,13 @@ static void dma_callback(int is_in_34010_context)
 
 READ16_HANDLER( midtunit_dma_r )
 {
+	/* rmpgwt sometimes reads register 0, expecting it to return the */
+	/* current DMA status; thus we map register 0 to register 1 */
+	/* openice does it as well */
+	if (offset == 0)
+		offset = 1;
 	return dma_register[offset];
 }
-
 
 
 /*************************************
@@ -681,6 +686,7 @@ READ16_HANDLER( midtunit_dma_r )
  *           | ---------4------ | destination size
  *           | ----------2----- | select top/bottom or left/right for reg 12/13
  */
+
 
 WRITE16_HANDLER( midtunit_dma_w )
 {
@@ -734,8 +740,8 @@ WRITE16_HANDLER( midtunit_dma_w )
 	/* clip the clippers */
 	dma_state.topclip = dma_register[DMA_TOPCLIP] & 0x1ff;
 	dma_state.botclip = dma_register[DMA_BOTCLIP] & 0x1ff;
-	dma_state.leftclip = dma_register[DMA_LEFTCLIP] & 0x1ff;
-	dma_state.rightclip = dma_register[DMA_RIGHTCLIP] & 0x1ff;
+	dma_state.leftclip = dma_register[DMA_LEFTCLIP] & 0x3ff;
+	dma_state.rightclip = dma_register[DMA_RIGHTCLIP] & 0x3ff;
 
 	/* determine the offset */
 	gfxoffset = dma_register[DMA_OFFSETLO] | (dma_register[DMA_OFFSETHI] << 16);
@@ -754,7 +760,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 				dma_register[DMA_LRSKIP] >> 8, dma_register[DMA_LRSKIP] & 0xff,
 				dma_register[DMA_SCALE_X], dma_register[DMA_SCALE_Y], dma_register[DMA_UNKNOWN_E],
 				dma_register[DMA_CONFIG]);
-		logerror("----\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "----\n");
 	}
 #endif
 
@@ -771,7 +777,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 		dma_state.offset = gfxoffset;
 	else
 	{
-		logerror("DMA source out of range: %08X\n", gfxoffset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "DMA source out of range: %08X\n", gfxoffset);
 		goto skipdma;
 	}
 
@@ -821,21 +827,21 @@ skipdma:
 	/* used to initiate the DMA. What they do is start the DMA, *then* set */
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
- if (0)
- {
-      if (command != 0x8000)
-      dma_callback(1);
-   else
-   {
-      TMS_SET_IRQ_LINE(CLEAR_LINE);
-      timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
-   }
- }
- else
- {
-   TMS_SET_IRQ_LINE(CLEAR_LINE);
-   timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
- }
+	if (FAST_DMA)
+	{
+		if (command != 0x8000)
+			dma_callback(1);
+		else
+		{
+			TMS_SET_IRQ_LINE(CLEAR_LINE);
+			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		}
+	}
+	else
+	{
+		TMS_SET_IRQ_LINE(CLEAR_LINE);
+		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+	}
 
 	profiler_mark(PROFILER_END);
 }
@@ -855,7 +861,7 @@ VIDEO_UPDATE( midtunit )
 
 #if LOG_DMA
 	if (keyboard_pressed(KEYCODE_L))
-		logerror("---\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "---\n");
 #endif
 
 	/* get the current scroll offset */
