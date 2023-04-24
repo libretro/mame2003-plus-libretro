@@ -11,7 +11,6 @@
 
 
 /* compile-time options */
-#define FAST_DMA			0		/* DMAs complete immediately; reduces number of CPU switches */
 #define LOG_DMA				0		/* DMAs are logged if the 'L' key is pressed */
 
 
@@ -259,7 +258,7 @@ WRITE16_HANDLER( midtunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "T-unit control = %04X\n", data);
+	logerror("T-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
@@ -280,7 +279,7 @@ WRITE16_HANDLER( midwunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wolf-unit control = %04X\n", data);
+	logerror("Wolf-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
@@ -633,13 +632,9 @@ static void dma_callback(int is_in_34010_context)
 
 READ16_HANDLER( midtunit_dma_r )
 {
-	/* rmpgwt sometimes reads register 0, expecting it to return the */
-	/* current DMA status; thus we map register 0 to register 1 */
-	/* openice does it as well */
-	if (offset == 0)
-		offset = 1;
 	return dma_register[offset];
 }
+
 
 
 /*************************************
@@ -686,7 +681,6 @@ READ16_HANDLER( midtunit_dma_r )
  *           | ---------4------ | destination size
  *           | ----------2----- | select top/bottom or left/right for reg 12/13
  */
-
 
 WRITE16_HANDLER( midtunit_dma_w )
 {
@@ -760,7 +754,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 				dma_register[DMA_LRSKIP] >> 8, dma_register[DMA_LRSKIP] & 0xff,
 				dma_register[DMA_SCALE_X], dma_register[DMA_SCALE_Y], dma_register[DMA_UNKNOWN_E],
 				dma_register[DMA_CONFIG]);
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "----\n");
+		logerror("----\n");
 	}
 #endif
 
@@ -777,7 +771,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 		dma_state.offset = gfxoffset;
 	else
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "DMA source out of range: %08X\n", gfxoffset);
+		logerror("DMA source out of range: %08X\n", gfxoffset);
 		goto skipdma;
 	}
 
@@ -827,21 +821,21 @@ skipdma:
 	/* used to initiate the DMA. What they do is start the DMA, *then* set */
 	/* up the memory for it, which means that there must be some non-zero  */
 	/* delay that gives them enough time to build up the DMA command list  */
-	if (FAST_DMA)
-	{
-		if (command != 0x8000)
-			dma_callback(1);
-		else
-		{
-			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
-		}
-	}
-	else
-	{
-		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC(42 * pixels), 0, dma_callback);
-	}
+ if (0)
+ {
+      if (command != 0x8000)
+      dma_callback(1);
+   else
+   {
+      TMS_SET_IRQ_LINE(CLEAR_LINE);
+      timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+   }
+ }
+ else
+ {
+   TMS_SET_IRQ_LINE(CLEAR_LINE);
+   timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+ }
 
 	profiler_mark(PROFILER_END);
 }
@@ -861,7 +855,7 @@ VIDEO_UPDATE( midtunit )
 
 #if LOG_DMA
 	if (keyboard_pressed(KEYCODE_L))
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "---\n");
+		logerror("---\n");
 #endif
 
 	/* get the current scroll offset */
