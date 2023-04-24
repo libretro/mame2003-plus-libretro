@@ -117,8 +117,8 @@ static MACHINE_INIT( ddragon )
 	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
 	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
 	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
-	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
-	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
+	state_save_register_int("ddragon", 0, "adpcm_data[0]", &adpcm_data[0]);
+	state_save_register_int("ddragon", 0, "adpcm_data[1]", &adpcm_data[1]);
 	state_save_register_int("ddragon", 0, "ddragon_scrollx_hi", &ddragon_scrollx_hi);
 	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
 	state_save_register_UINT8("ddragon", 0, "m_ddragon_sub_port", &m_ddragon_sub_port, 1);
