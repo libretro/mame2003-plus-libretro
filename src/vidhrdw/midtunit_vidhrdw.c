@@ -688,7 +688,7 @@ READ16_HANDLER( midtunit_dma_r )
  */
 
 /* workaround so comic book offer in mk is correct, without breaking text in mk2 */
-static int mk_delay = (!strcmp(Machine->gamedrv->name,"mk")) ? 1:0;
+static int mk_delay = 0;
 
 WRITE16_HANDLER( midtunit_dma_w )
 {
@@ -701,7 +701,10 @@ WRITE16_HANDLER( midtunit_dma_w )
 	int command, bpp, regnum;
 	UINT32 gfxoffset;
 	int pixels = 0;
-usrintf_showmessage("%i", mk_delay);
+
+	if (!strcmp(Machine->gamedrv->name,"mk"))
+		mk_delay = 1;
+
 	/* blend with the current register contents */
 	regnum = register_map[regbank][offset];
 	COMBINE_DATA(&dma_register[regnum]);
