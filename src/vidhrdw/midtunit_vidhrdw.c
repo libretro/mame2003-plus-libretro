@@ -687,6 +687,8 @@ READ16_HANDLER( midtunit_dma_r )
  *           | ----------2----- | select top/bottom or left/right for reg 12/13
  */
 
+/* workaround so comic book offer in mk is correct, without breaking text in mk2 */
+static int mk_delay = (!strcmp(Machine->gamedrv->name,"mk")) ? 1:0;
 
 WRITE16_HANDLER( midtunit_dma_w )
 {
@@ -699,7 +701,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 	int command, bpp, regnum;
 	UINT32 gfxoffset;
 	int pixels = 0;
-
+usrintf_showmessage("%i", mk_delay);
 	/* blend with the current register contents */
 	regnum = register_map[regbank][offset];
 	COMBINE_DATA(&dma_register[regnum]);
@@ -834,13 +836,13 @@ skipdma:
 		else
 		{
 			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+			timer_set(TIME_IN_NSEC((41+mk_delay) * pixels), 0, dma_callback);
 		}
 	}
 	else
 	{
 		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC(41 * pixels), 0, dma_callback);
+		timer_set(TIME_IN_NSEC((41+mk_delay) * pixels), 0, dma_callback);
 	}
 
 	profiler_mark(PROFILER_END);
