@@ -110,6 +110,7 @@ static MACHINE_INIT( ddragon )
 	adpcm_end[0] = adpcm_end[1] = 0;
 	adpcm_idle[0] = adpcm_idle[1] = 1;
 	adpcm_data[0] = adpcm_data[1] = -1;
+
 	state_save_register_int("ddragon", 0, "dd_sub_cpu_busy", &dd_sub_cpu_busy);
 	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
 	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
