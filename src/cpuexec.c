@@ -319,7 +319,7 @@ static void cpu_pre_run(void)
 	/* reset the globals */
 	cpu_vblankreset();
 	current_frame = 0;
-	//state_save_dump_registry();
+	state_save_dump_registry();
 }
 
 
