@@ -740,8 +740,8 @@ WRITE16_HANDLER( midtunit_dma_w )
 	/* clip the clippers */
 	dma_state.topclip = dma_register[DMA_TOPCLIP] & 0x1ff;
 	dma_state.botclip = dma_register[DMA_BOTCLIP] & 0x1ff;
-	dma_state.leftclip = dma_register[DMA_LEFTCLIP] & 0x3ff;
-	dma_state.rightclip = dma_register[DMA_RIGHTCLIP] & 0x3ff;
+	dma_state.leftclip = dma_register[DMA_LEFTCLIP] & 0x1ff;
+	dma_state.rightclip = dma_register[DMA_RIGHTCLIP] & 0x1ff;
 
 	/* determine the offset */
 	gfxoffset = dma_register[DMA_OFFSETLO] | (dma_register[DMA_OFFSETHI] << 16);
