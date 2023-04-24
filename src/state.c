@@ -300,7 +300,7 @@ static void ss_register_func(ss_func **root, void (*func)(void))
 		if (next->func == func && next->tag == ss_current_tag)
 		{
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "Duplicate save state function (%d, 0x%x)\n", ss_current_tag, (int)func);
-			exit(1);
+			return;
 		}
 		next = next->next;
 	}
