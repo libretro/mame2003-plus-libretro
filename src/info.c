@@ -882,7 +882,7 @@ void print_mame_xml()
 	/* print games */
 	for(driver_index = 0;drivers[driver_index];++driver_index)
 		print_game_info(xml_dat, drivers[driver_index]);
-
+#if 0
 	/* print the resources (only if linked) */
 	PRINT_RESOURCE(neogeo);
 	PRINT_RESOURCE(cvs);
@@ -900,7 +900,7 @@ void print_mame_xml()
 	PRINT_RESOURCE(tps);
 	PRINT_RESOURCE(taitofx1);
 	PRINT_RESOURCE(acpsx);
-
+#endif
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
 }
