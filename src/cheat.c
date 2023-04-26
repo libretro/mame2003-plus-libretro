@@ -7713,7 +7713,7 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 			if(	(handler == MWA_RAM) &&
 				(!region->writeHandler->base))
 				return 1;
-
+#if 0
 			{
 				extern struct GameDriver	driver_neogeo;
 
@@ -7724,7 +7724,7 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 					(handler == MWA_BANK1))
 					return 1;
 			}
-
+#endif
 
 #if HAS_TMS34010
 
