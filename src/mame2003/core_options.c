@@ -1306,8 +1306,8 @@ void set_content_flags(void)
 {
   int i = 0;
 
-  extern struct GameDriver driver_neogeo;
-  extern struct GameDriver driver_stvbios;
+  //extern struct GameDriver driver_neogeo;
+  //extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
 
@@ -1322,7 +1322,7 @@ void set_content_flags(void)
   }
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
-  if (game_driver->clone_of == &driver_neogeo
+  /*if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
   {
     options.content_flags[CONTENT_NEOGEO] = true;
@@ -1331,7 +1331,7 @@ void set_content_flags(void)
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_stvbios))
   {
     options.content_flags[CONTENT_STV] = true;
-  }
+  }*/
 
   /************ DIE HARD: ARCADE ************/
   if(strcasecmp(game_driver->name, "diehard") == 0)
