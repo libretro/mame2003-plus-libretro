@@ -37,7 +37,7 @@ static bool generate_DAT;           /* allows us to display a UI message before 
 extern unsigned int dispensed_tickets;
 extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
-
+#if 0
 /* MARTINEZ.F 990207 Memory Card */
 int 		memcard_menu(struct mame_bitmap *bitmap, int);
 extern int	mcd_action;
@@ -45,7 +45,7 @@ extern int	mcd_number;
 extern int	memcard_status;
 extern int	memcard_number;
 extern int	memcard_manager;
-
+#endif
 extern int neogeo_memcard_load(int);
 extern void neogeo_memcard_save(void);
 extern void neogeo_memcard_eject(void);
@@ -2907,7 +2907,7 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 	return sel + 1;
 
 }
-
+#if 0
 int memcard_menu(struct mame_bitmap *bitmap, int selection)
 {
 	int sel;
@@ -3021,7 +3021,7 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 
 	return sel + 1;
 }
-
+#endif
 
 enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_FLUSH_CURRENT_CFG, UI_FLUSH_ALL_CFG, UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
@@ -3102,11 +3102,12 @@ void setup_menu_init(void)
 	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
 
 	menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
-
+#if 0
 	if (options.content_flags[CONTENT_NEOGEO])
 	{
 		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
 	}
+#endif
 
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
@@ -3125,13 +3126,13 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
-
+#if 0
   if(generate_DAT)
   {
     print_mame_xml();
     generate_DAT = false;
   }
-
+#endif
 	if (selected == -1)
 		sel = menu_lastselected;
 	else sel = selected - 1;
@@ -3167,10 +3168,11 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 			case UI_CHEAT:
 				res = cheat_menu(bitmap, sel >> SEL_BITS);
 				break;
+#if 0
 			case UI_MEMCARD:
 				res = memcard_menu(bitmap, sel >> SEL_BITS);
 				break;
-
+#endif
 		}
 
 		if (res == -1)
