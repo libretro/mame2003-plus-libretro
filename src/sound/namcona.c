@@ -612,7 +612,7 @@ NAMCONA_sh_start( const struct MachineSound *msound )
 	mSampleRate = intf->frequency;
 	mStream = stream_init_multi(2, name, vol, mSampleRate, 0, UpdateSound);
 	mpROM = (data16_t *)memory_region(REGION_CPU1);
-	if( namcona1_gametype==NAMCO_KNCKHEAD )
+	if( /*namcona1_gametype==NAMCO_KNCKHEAD*/ 0 )
 	{ /* game-specific hack; the music metadata is in an unusual place */
 		mpMetaData = mpROM+0x10000/2;
 	}
