@@ -261,10 +261,12 @@ SOUNDS+=YMF271@
 SOUNDS+=PSXSPU@
 SOUNDS+=ICS2115@
 
+ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
 	$(CORE_DIR)/sndhrdw/cclimber_sndhrdw.c \
 	$(CORE_DIR)/drivers/cclimber.c
+endif
 
 # List of CPU core (and, for a debug build, disassembler) object files
 #
