@@ -2,6 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 ROOT_DIR := $(LOCAL_PATH)/..
 CORE_DIR := $(ROOT_DIR)/src
+INCLUDE_DRV := all
 
 include $(ROOT_DIR)/Makefile.common
 
