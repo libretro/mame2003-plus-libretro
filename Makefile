@@ -387,7 +387,7 @@ else ifeq ($(platform), wii)
 	PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
 	STATIC_LINKING = 1
 	ZLIB_UNCOMPRESS = 1
-	INCLUDE_DRV = core_f
+	INCLUDE_DRV = core_g
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
