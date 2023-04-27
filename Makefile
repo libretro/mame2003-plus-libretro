@@ -1,6 +1,6 @@
 TARGET_NAME := mame2003_plus
 CORE_DIR    := src
-INCLUDE_DRV := all
+INCLUDE_DRV  = all
 
 DEBUG         ?= 0
 DEBUGGER      ?= 0
