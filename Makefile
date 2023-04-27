@@ -379,8 +379,7 @@ else ifeq ($(platform), ngc)
 
 # Nintendo Wii
 else ifeq ($(platform), wii)
-	INCLUDE_DRV = core_d
-	TARGET = $(TARGET_NAME)_libretro_$(platform)_$(INCLUDE_DRV).a
+	TARGET = $(TARGET_NAME)_libretro_$(platform).a
 	BIGENDIAN = 1
 	CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
 	AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
@@ -388,6 +387,7 @@ else ifeq ($(platform), wii)
 	PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
 	STATIC_LINKING = 1
 	ZLIB_UNCOMPRESS = 1
+	INCLUDE_DRV = core_e
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
