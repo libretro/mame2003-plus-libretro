@@ -33,6 +33,7 @@
 
 #include <math.h>
 #include "driver.h"
+#include "namcona1.h"
 
 #define kTwelfthRootTwo 1.059463094
 #define FIXED_POINT_SHIFT (10) /* for mixing */
