@@ -918,6 +918,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gundealr_vidhrdw.c $(CORE_DIR)/drivers/gundealr.c \
 	$(CORE_DIR)/vidhrdw/dooyong_vidhrdw.c $(CORE_DIR)/drivers/dooyong.c
 endif
+
 ifneq (,$(filter $(INCLUDE_DRV),all core_h))
 SOURCES_C += \
 	$(CORE_DIR)/machine/leprechn_machine.c $(CORE_DIR)/vidhrdw/leprechn_vidhrdw.c $(CORE_DIR)/drivers/leprechn.c \
