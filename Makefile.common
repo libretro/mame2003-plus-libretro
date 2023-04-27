@@ -1931,7 +1931,7 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/zutil.c
 endif
 
-ifneq ($(ZLIB_UNCOMPRESS), 1)
+ifeq ($(ZLIB_UNCOMPRESS), 1)
 SOURCES_C += \
 	     $(CORE_DIR)/lib/zlib/uncompr.c
 endif
