@@ -1931,6 +1931,11 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/zutil.c
 endif
 
+ifneq ($(ZLIB_UNCOMPRESS), 1)
+SOURCES_C += \
+	     $(CORE_DIR)/lib/zlib/uncompr.c
+endif
+
 ifeq ($(USE_CYCLONE), 1)
 	CPUDEFS += -DHAS_CYCLONE=1
 	SOURCES_ASM += $(CORE_DIR)/cpu/m68000_cyclone/cyclone.s
