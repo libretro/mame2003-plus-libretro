@@ -462,4 +462,27 @@ const struct GameDriver *test_drivers[] =
 
 	DRIVER( niyanpai )	/* (c) 1996 */
 
+	/* "Phoenix hardware" (and variations) games */
+	DRIVER( safarir )	/* Shin Nihon Kikaku (SNK) */
+	DRIVER( safarirj )	/* Shin Nihon Kikaku (SNK) Taito License */
+	DRIVER( phoenix )	/* (c) 1980 Amstar */
+	DRIVER( phoenixa )	/* (c) 1980 Amstar + Centuri license */
+	DRIVER( phoenixt )	/* (c) 1980 Taito */
+	DRIVER( phoenix3 )	/* bootleg */
+	DRIVER( phoenixc )	/* bootleg */
+	DRIVER( condor )	/* bootleg */
+	DRIVER( falcon )	/* bootleg */
+	DRIVER( vautour )	/* bootleg (Jeutel) */
+	DRIVER( pleiads )	/* (c) 1981 Tehkan */
+	DRIVER( pleiadbl )	/* bootleg */
+	DRIVER( pleiadce )	/* (c) 1981 Centuri + Tehkan */
+	DRIVER( capitol )	/* bootleg? */
+	DRIVER( survival )	/* (c) 1982 Rock-ola */
+	DRIVER( naughtyb )	/* (c) 1982 Jaleco */
+	DRIVER( naughtya )	/* bootleg */
+	DRIVER( naughtyc )	/* (c) 1982 Jaleco + Cinematronics */
+	DRIVER( popflame )	/* (c) 1982 Jaleco */
+	DRIVER( popflama )	/* (c) 1982 Jaleco */
+	DRIVER( popflamb )	/* (c) 1982 Jaleco */
+
 #endif	/* DRIVER_RECURSIVE */
