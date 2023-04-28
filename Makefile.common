@@ -268,7 +268,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/scramble_machine.c \
 	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c \
 	$(CORE_DIR)/machine/bagman_machine.c \
-	$(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c
+	$(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
+	$(CORE_DIR)/machine/namcoio_machine.c
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
@@ -1082,7 +1083,6 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
-	$(CORE_DIR)/machine/namcoio_machine.c \
 	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
 endif
 
