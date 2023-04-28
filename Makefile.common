@@ -401,7 +401,8 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/scramble.c \
 	$(CORE_DIR)/drivers/scobra.c \
 	$(CORE_DIR)/drivers/frogger.c \
-	$(CORE_DIR)/drivers/amidar.c
+	$(CORE_DIR)/drivers/amidar.c \
+	$(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c
 endif
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_b))
@@ -591,7 +592,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/spbactn_vidhrdw.c $(CORE_DIR)/drivers/spbactn.c \
 	$(CORE_DIR)/vidhrdw/tecmo16_vidhrdw.c $(CORE_DIR)/drivers/tecmo16.c \
 	$(CORE_DIR)/drivers/tecmosys.c \
-	$(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c \
 	$(CORE_DIR)/vidhrdw/tutankhm_vidhrdw.c $(CORE_DIR)/drivers/tutankhm.c \
 	$(CORE_DIR)/drivers/junofrst.c \
 	$(CORE_DIR)/vidhrdw/pooyan_vidhrdw.c $(CORE_DIR)/drivers/pooyan.c \
