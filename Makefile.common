@@ -269,7 +269,8 @@ SOURCES_C += \
 	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c \
 	$(CORE_DIR)/machine/bagman_machine.c \
 	$(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
-	$(CORE_DIR)/machine/namcoio_machine.c
+	$(CORE_DIR)/machine/namcoio_machine.c \
+	$(CORE_DIR)/machine/atari_vg.c
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
@@ -678,7 +679,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/starfire_vidhrdw.c $(CORE_DIR)/drivers/starfire.c \
 	$(CORE_DIR)/vidhrdw/victory_vidhrdw.c $(CORE_DIR)/drivers/victory.c \
 	$(CORE_DIR)/sndhrdw/exidy440_sndhrdw.c $(CORE_DIR)/vidhrdw/exidy440_vidhrdw.c $(CORE_DIR)/drivers/exidy440.c \
-	$(CORE_DIR)/machine/atari_vg.c \
 	$(CORE_DIR)/vidhrdw/tia.c $(CORE_DIR)/drivers/tourtabl.c \
 	$(CORE_DIR)/machine/asteroid_machine.c $(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c $(CORE_DIR)/drivers/asteroid.c \
 	$(CORE_DIR)/sndhrdw/llander.c \
