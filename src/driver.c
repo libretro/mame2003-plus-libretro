@@ -156,4 +156,74 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( igmo )		/* (c) 1984 */
 	DRIVER( dealer )	/* (c) 198? */
 
+	/* "Galaxian hardware" games */
+	DRIVER( galaxian )	/* (c) Namco */
+	DRIVER( galaxiaj )	/* (c) Namco */
+	DRIVER( galmidw )	/* (c) Midway */
+	DRIVER( galmidwo )	/* (c) Midway */
+	DRIVER( superg )	/* hack */
+	DRIVER( galapx )	/* hack */
+	DRIVER( moonaln )	/* [Nichibutsu] (Karateco license) or hack */
+	DRIVER( galap1 )	/* hack */
+	DRIVER( galap4 )	/* hack */
+	DRIVER( galturbo )	/* hack */
+	DRIVER( swarm )		/* hack */
+	DRIVER( zerotime )	/* hack */
+	DRIVER( tst_galx )
+	DRIVER( gmgalax )	/* bootleg */
+	DRIVER( pisces )	/* Subelectro */
+	DRIVER( piscesb )	/* bootleg */
+	DRIVER( uniwars )	/* (c) Irem */
+	DRIVER( gteikoku )	/* (c) Irem */
+	DRIVER( gteikokb )	/* bootleg */
+	DRIVER( gteikob2 )	/* bootleg */
+	DRIVER( spacbatt )	/* bootleg */
+	DRIVER( skyraidr )	/* bootleg */
+	DRIVER( batman2 )	/* bootleg */
+	DRIVER( warofbug )	/* (c) 1981 Armenia */
+	DRIVER( redufo )	/* bootleg - original should be (c) Artic */
+	DRIVER( exodus )	/* Subelectro - bootleg? */
+	DRIVER( streakng )	/* [1980] Shoei */
+	DRIVER( pacmanbl )	/* bootleg */
+	DRIVER( devilfsg )	/* (c) 1984 Vision / Artic (bootleg?) */
+	DRIVER( zigzag )	/* (c) 1982 LAX */
+	DRIVER( zigzag2 )	/* (c) 1982 LAX */
+	DRIVER( jumpbug )	/* (c) 1981 Rock-ola */
+	DRIVER( jumpbugb )	/* (c) 1981 Sega */
+	DRIVER( levers )	/* (c) 1983 Rock-ola */
+	DRIVER( azurian )	/* (c) 1982 Rait Electronics Ltd */
+	DRIVER( orbitron )	/* Signatron USA */
+	DRIVER( mooncrgx )	/* bootleg */
+	DRIVER( mooncrst )	/* (c) 1980 Nichibutsu */
+	DRIVER( mooncrsu )	/* (c) 1980 Nichibutsu USA */
+	DRIVER( mooncrsa )	/* (c) 1980 Nichibutsu */
+	DRIVER( mooncrsg )	/* (c) 1980 Gremlin */
+	DRIVER( smooncrs )	/* Gremlin */
+	DRIVER( mooncrsb )	/* bootleg */
+	DRIVER( mooncrs2 )	/* bootleg */
+	DRIVER( fantazia )	/* bootleg */
+	DRIVER( moonqsr )	/* (c) 1980 Nichibutsu */
+	DRIVER( mshuttle )	/* (c) 1980 Nichibutsu */
+	DRIVER( mshuttlj )	/* (c) 1980 Nichibutsu */
+	DRIVER( moonal2 )	/* Nichibutsu */
+	DRIVER( moonal2b )	/* Nichibutsu */
+	DRIVER( eagle )		/* (c) Centuri */
+	DRIVER( eagle2 )	/* (c) Centuri */
+	DRIVER( skybase )	/* (c) 1982 Omori Electric Co., Ltd. */
+	DRIVER( checkman )	/* (c) 1982 Zilec-Zenitone */
+	DRIVER( checkmaj )	/* (c) 1982 Jaleco (Zenitone/Zilec in ROM CM4, and the programmer names) */
+	DRIVER( dingo )		/* (c) 1983 Ashby Computers and Graphics LTD. + Jaleco license */
+	DRIVER( blkhole )	/* TDS (Tokyo Denshi Sekkei) */
+	DRIVER( kingball )	/* (c) 1980 Namco */
+	DRIVER( kingbalj )	/* (c) 1980 Namco */
+	DRIVER( scorpnmc )	/* bootleg */
+	DRIVER( frogg )		/* bootleg */
+	DRIVER( 4in1 )		/* (c) 1981 Armenia / Food and Fun */
+	DRIVER( bagmanmc )	/* bootleg */
+	DRIVER( dkongjrm )	/* bootleg */
+	DRIVER( ozon1 )		/* (c) 1983 Proma */
+	DRIVER( ladybugg )	/* bootleg */
+	DRIVER( vpool )		/* bootleg */
+	DRIVER( drivfrcg )	/* Shinkai */
+
 #endif	/* DRIVER_RECURSIVE */
