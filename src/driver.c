@@ -364,4 +364,102 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( armedf )	/* (c) 1988 */
 	DRIVER( cclimbr2 )	/* (c) 1988 (Japan) */
 
+	/* Nichibutsu Mahjong games */
+	DRIVER( hyhoo )		/* (c) 1987 */
+	DRIVER( hyhoo2 )	/* (c) 1987 */
+
+	DRIVER( pastelgl )	/* (c) 1985 */
+
+	DRIVER( crystalg )	/* (c) 1986 */
+	DRIVER( crystal2 )	/* (c) 1986 */
+	DRIVER( citylove )	/* (c) 1986 */
+	DRIVER( apparel )	/* (c) 1986 Central Denshi */
+	DRIVER( secolove )	/* (c) 1986 */
+	DRIVER( housemnq )	/* (c) 1987 */
+	DRIVER( housemn2 )	/* (c) 1987 */
+	DRIVER( seiha )		/* (c) 1987 */
+	DRIVER( seiham )	/* (c) 1987 */
+	DRIVER( bijokkoy )	/* (c) 1987 */
+	DRIVER( iemoto )	/* (c) 1987 */
+	DRIVER( ojousan )	/* (c) 1987 */
+	DRIVER( bijokkog )	/* (c) 1988 */
+	DRIVER( orangec )	/* (c) 1988 Daiichi Denshi */
+	DRIVER( vipclub )	/* (c) 1988 Daiichi Denshi */
+	DRIVER( korinai )	/* (c) 1988 */
+	DRIVER( kaguya )	/* (c) 1988 MIKI SYOUJI */
+	DRIVER( otonano )	/* (c) 1988 Apple */
+	DRIVER( kanatuen )	/* (c) 1988 Panac */
+	DRIVER( mjsikaku )	/* (c) 1988 */
+	DRIVER( mjsikakb )	/* (c) 1988 */
+	DRIVER( mjcamera )	/* (c) 1988 MIKI SYOUJI */
+	DRIVER( mmcamera )	/* (c) 1988 MIKI SYOUJI */
+	DRIVER( idhimitu )	/* (c) 1989 Digital Soft */
+
+	DRIVER( msjiken )	/* (c) 1988 */
+	DRIVER( hanamomo )	/* (c) 1988 */
+	DRIVER( telmahjn )	/* (c) 1988 */
+	DRIVER( gionbana )	/* (c) 1989 */
+	DRIVER( mjfocus )	/* (c) 1989 */
+	DRIVER( mjfocusm )	/* (c) 1989 */
+	DRIVER( peepshow )	/* (c) 1989 AC */
+	DRIVER( scandal )	/* (c) 1989 */
+	DRIVER( scandalm )	/* (c) 1989 */
+	DRIVER( mgmen89 )	/* (c) 1989 */
+	DRIVER( mjnanpas )	/* (c) 1989 BROOKS */
+	DRIVER( mjnanpaa )	/* (c) 1989 BROOKS */
+	DRIVER( mjnanpau )	/* (c) 1989 BROOKS */
+	DRIVER( pairsten )	/* (c) 1989 System Ten */
+	DRIVER( bananadr )	/* (c) 1989 DIGITAL SOFT */
+	DRIVER( mladyhtr )	/* (c) 1990 */
+	DRIVER( chinmoku )	/* (c) 1990 */
+	DRIVER( maiko )		/* (c) 1990 */
+	DRIVER( club90s )	/* (c) 1990 */
+	DRIVER( club90sa )	/* (c) 1990 */
+	DRIVER( hanaoji )	/* (c) 1991 */
+
+	DRIVER( pstadium )	/* (c) 1990 */
+	DRIVER( triplew1 )	/* (c) 1989 */
+	DRIVER( triplew2 )	/* (c) 1990 */
+	DRIVER( ntopstar )	/* (c) 1990 */
+	DRIVER( mjlstory )	/* (c) 1991 */
+	DRIVER( vanilla )	/* (c) 1991 */
+	DRIVER( finalbny )	/* (c) 1991 */
+	DRIVER( qmhayaku )	/* (c) 1991 */
+	DRIVER( galkoku )	/* (c) 1989 Nichibutsu/T.R.TEC */
+	DRIVER( hyouban )	/* (c) 1989 Nichibutsu/T.R.TEC */
+	DRIVER( galkaika )	/* (c) 1989 Nichibutsu/T.R.TEC */
+	DRIVER( tokyogal )	/* (c) 1989 */
+	DRIVER( tokimbsj )	/* (c) 1989 */
+	DRIVER( mcontest )	/* (c) 1989 */
+	DRIVER( uchuuai )	/* (c) 1989 */
+	DRIVER( av2mj1bb )	/* (c) 1991 MIKI SYOUJI/AV JAPAN */
+	DRIVER( av2mj2rg )	/* (c) 1991 MIKI SYOUJI/AV JAPAN */
+
+	DRIVER( mjuraden )	/* (c) 1992 Nichibutsu/Yubis */
+	DRIVER( koinomp )	/* (c) 1992 */
+	DRIVER( patimono )	/* (c) 1992 */
+	DRIVER( mjanbari )	/* (c) 1992 Nichibutsu/Yubis/AV JAPAN */
+	DRIVER( ultramhm )	/* (c) 1993 Apple */
+	DRIVER( gal10ren )	/* (c) 1993 FUJIC */
+	DRIVER( renaiclb )	/* (c) 1993 FUJIC */
+	DRIVER( mjlaman )	/* (c) 1993 Nichibutsu/AV JAPAN */
+	DRIVER( mkeibaou )	/* (c) 1993 */
+	DRIVER( pachiten )	/* (c) 1993 Nichibutsu/MIKI SYOUJI/AV JAPAN */
+	DRIVER( sailorws )	/* (c) 1993 */
+	DRIVER( sailorwr )	/* (c) 1993 */
+	DRIVER( psailor1 )	/* (c) 1994 SPHINX */
+	DRIVER( psailor2 )	/* (c) 1994 SPHINX */
+	DRIVER( otatidai )	/* (c) 1995 SPHINX */
+	DRIVER( ngpgal )	/* (c) 1991 */
+	DRIVER( mjgottsu )	/* (c) 1991 */
+	DRIVER( bakuhatu )	/* (c) 1991 */
+	DRIVER( cmehyou )	/* (c) 1992 Nichibutsu/Kawakusu */
+	DRIVER( mmehyou )	/* (c) 1992 Nichibutsu/Kawakusu */
+	DRIVER( mjkoiura )	/* (c) 1992 */
+	DRIVER( imekura )	/* (c) 1994 SPHINX/AV JAPAN */
+	DRIVER( mscoutm )	/* (c) 1994 SPHINX/AV JAPAN */
+	DRIVER( mjegolf )	/* (c) 1994 FUJIC/AV JAPAN */
+
+	DRIVER( niyanpai )	/* (c) 1996 */
+
 #endif	/* DRIVER_RECURSIVE */
