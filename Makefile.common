@@ -262,6 +262,10 @@ SOUNDS+=YMF271@
 SOUNDS+=PSXSPU@
 SOUNDS+=ICS2115@
 
+# shared sources
+SOURCES_C += \
+	$(CORE_DIR)/machine/segacrpt.c
+
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
 	$(CORE_DIR)/drivers/pacman.c \
@@ -500,7 +504,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/blockade_vidhrdw.c $(CORE_DIR)/drivers/blockade.c \
 	$(CORE_DIR)/vidhrdw/vicdual_vidhrdw.c $(CORE_DIR)/drivers/vicdual.c \
 	$(CORE_DIR)/sndhrdw/carnival.c $(CORE_DIR)/sndhrdw/depthch.c $(CORE_DIR)/sndhrdw/invinco.c $(CORE_DIR)/sndhrdw/pulsar.c \
-	$(CORE_DIR)/machine/segacrpt.c $(CORE_DIR)/sndhrdw/segasnd.c \
+	$(CORE_DIR)/sndhrdw/segasnd.c \
 	$(CORE_DIR)/vidhrdw/sega_vidhrdw.c $(CORE_DIR)/sndhrdw/sega_sndhrdw.c $(CORE_DIR)/machine/sega_machine.c $(CORE_DIR)/drivers/sega.c \
 	$(CORE_DIR)/vidhrdw/segar_vidhrdw.c $(CORE_DIR)/sndhrdw/segar_sndhrdw.c $(CORE_DIR)/machine/segar_machine.c $(CORE_DIR)/drivers/segar.c \
 	$(CORE_DIR)/vidhrdw/tms9928a.c $(CORE_DIR)/drivers/sg1000a.c \
