@@ -485,4 +485,102 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( popflama )	/* (c) 1982 Jaleco */
 	DRIVER( popflamb )	/* (c) 1982 Jaleco */
 
+	/* Namco games (plus some intruders on similar hardware) */
+	DRIVER( geebee )	/* [1978] Namco */
+	DRIVER( geebeeg )	/* [1978] Gremlin */
+	DRIVER( bombbee )	/* [1979] Namco */
+	DRIVER( cutieq )	/* (c) 1979 Namco */
+	DRIVER( navalone )	/* (c) 1980 Namco */
+	DRIVER( kaitei )	/* [1980] K.K. Tokki */
+	DRIVER( kaitein )	/* [1980] Namco */
+	DRIVER( sos )		/* [1980] Namco */
+	DRIVER( tankbatt )	/* (c) 1980 Namco */
+	DRIVER( warpwarp )	/* (c) 1981 Namco */
+	DRIVER( warpwarr )	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
+	DRIVER( warpwar2 )	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
+	DRIVER( rallyx )	/* (c) 1980 Namco */
+	DRIVER( rallyxm )	/* (c) 1980 Midway */
+	DRIVER( nrallyx )	/* (c) 1981 Namco */
+	DRIVER( jungler )	/* GX327 (c) 1981 Konami */
+	DRIVER( junglers )	/* GX327 (c) 1981 Stern */
+	DRIVER( tactcian )	/* GX335 (c) 1982 Sega */
+	DRIVER( tactcan2 )	/* GX335 (c) 1981 Sega */
+	DRIVER( locomotn )	/* GX359 (c) 1982 Konami + Centuri license */
+	DRIVER( gutangtn )	/* GX359 (c) 1982 Konami + Sega license */
+	DRIVER( cottong )	/* bootleg */
+	DRIVER( commsega )	/* (c) 1983 Sega */
+	/* the following ones all have a custom I/O chip */
+	DRIVER( bosco )		/* (c) 1981 */
+	DRIVER( boscoo )	/* (c) 1981 */
+	DRIVER( boscoo2 )	/* (c) 1981 */
+	DRIVER( boscomd )	/* (c) 1981 Midway */
+	DRIVER( boscomdo )	/* (c) 1981 Midway */
+	DRIVER( galaga )	/* (c) 1981 */
+	DRIVER( galagamw )	/* (c) 1981 Midway */
+	DRIVER( galagamk )
+	DRIVER( galagamf )
+	DRIVER( galagao )
+	DRIVER( gallag )	/* bootleg */
+	DRIVER( nebulbee )	/* bootleg */
+	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
+	DRIVER( digdug )	/* (c) 1982 */
+	DRIVER( digdugb )	/* (c) 1982 */
+	DRIVER( digdugat )	/* (c) 1982 Atari */
+	DRIVER( digduga1 )	/* (c) 1982 Atari */
+	DRIVER( dzigzag )	/* bootleg */
+	DRIVER( xevious )	/* (c) 1982 */
+	DRIVER( xeviousa )	/* (c) 1982 + Atari license */
+	DRIVER( xeviousb )	/* (c) 1982 + Atari license */
+	DRIVER( xeviousc )
+	DRIVER( xevios )	/* bootleg */
+	DRIVER( battles )	/* bootleg */
+	DRIVER( sxevious )	/* (c) 1984 */
+	DRIVER( superpac )	/* (c) 1982 */
+	DRIVER( superpcm )	/* (c) 1982 Midway */
+	DRIVER( pacnpal )	/* (c) 1983 */
+	DRIVER( pacnpal2 )	/* (c) 1983 */
+	DRIVER( pacnchmp )	/* (c) 1983 */
+	DRIVER( phozon )	/* (c) 1983 */
+	DRIVER( mappy )		/* (c) 1983 */
+	DRIVER( mappyj )	/* (c) 1983 */
+	DRIVER( digdug2 )	/* (c) 1985 */
+	DRIVER( digdug2o )	/* (c) 1985 */
+	DRIVER( todruaga )	/* (c) 1984 */
+	DRIVER( todruago )	/* (c) 1984 */
+	DRIVER( motos )		/* (c) 1985 */
+	DRIVER( grobda )	/* (c) 1984 */
+	DRIVER( grobda2 )	/* (c) 1984 */
+	DRIVER( grobda3 )	/* (c) 1984 */
+	DRIVER( gaplus )	/* (c) 1984 */
+	DRIVER( gaplusa )	/* (c) 1984 */
+	DRIVER( gapluso )	/* (c) 1984 */
+	DRIVER( galaga3 )	/* (c) 1984 */
+	DRIVER( galaga3m )	/* (c) 1984 */
+	DRIVER( galaga3a )	/* (c) 1984 */
+	/* Libble Rabble board (first Japanese game using a 68000) */
+	DRIVER( liblrabl )	/* (c) 1983 */
+	DRIVER( toypop )	/* (c) 1986 */
+	/* Z8000 games */
+	DRIVER( polepos )	/* (c) 1982  */
+	DRIVER( poleposa )	/* (c) 1982 + Atari license */
+	DRIVER( polepos1 )	/* (c) 1982 Atari */
+	DRIVER( topracer )	/* bootleg */
+	DRIVER( polepos2 )	/* (c) 1983 */
+	DRIVER( poleps2a )	/* (c) 1983 + Atari license */
+	DRIVER( poleps2b )	/* bootleg */
+/*	DRIVER( poleps2c )	 bootleg */ 
+	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
+	DRIVER( pacland )	/* (c) 1984 */
+	DRIVER( pacland2 )	/* (c) 1984 */
+	DRIVER( pacland3 )	/* (c) 1984 */
+	DRIVER( paclandm )	/* (c) 1984 Midway */
+	DRIVER( drgnbstr )	/* (c) 1984 */
+	DRIVER( skykid )	/* (c) 1985 */
+	DRIVER( skykido )	/* (c) 1985 */
+	DRIVER( skykidd )	/* (c) 1985 */
+	DRIVER( baraduke )	/* (c) 1985 */
+	DRIVER( baraduka )	/* (c) 1985 */
+	DRIVER( metrocrs )	/* (c) 1985 */
+	DRIVER( metrocra )	/* (c) 1985 */
+
 #endif	/* DRIVER_RECURSIVE */
