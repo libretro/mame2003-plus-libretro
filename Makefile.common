@@ -378,12 +378,12 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
 	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
-	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
-	$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
-	$(CORE_DIR)/drivers/midxunit.c \
-	$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
-	$(CORE_DIR)/vidhrdw/midvunit_vidhrdw.c $(CORE_DIR)/drivers/midvunit.c \
-	$(CORE_DIR)/machine/midtunit_machine.c $(CORE_DIR)/vidhrdw/midtunit_vidhrdw.c $(CORE_DIR)/drivers/midtunit.c \
+	#$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
+	#$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
+	#$(CORE_DIR)/drivers/midxunit.c \
+	#$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
+	#$(CORE_DIR)/vidhrdw/midvunit_vidhrdw.c $(CORE_DIR)/drivers/midvunit.c \
+	#$(CORE_DIR)/machine/midtunit_machine.c $(CORE_DIR)/vidhrdw/midtunit_vidhrdw.c $(CORE_DIR)/drivers/midtunit.c \
 	$(CORE_DIR)/vidhrdw/skychut_vidhrdw.c $(CORE_DIR)/drivers/skychut.c \
 	$(CORE_DIR)/drivers/olibochu.c \
 	$(CORE_DIR)/sndhrdw/irem.c \
