@@ -226,4 +226,82 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vpool )		/* bootleg */
 	DRIVER( drivfrcg )	/* Shinkai */
 
+	/* Has some similarities with Moon Cresta but Board is very different */
+	DRIVER( rockclim )	/* (c)1981 Taito */
+
+	/* "Scramble hardware" (and variations) games */
+	DRIVER( scramble )	/* GX387 (c) 1981 Konami */
+	DRIVER( scrambls )	/* GX387 (c) 1981 Stern */
+	DRIVER( scramblb )	/* bootleg */
+	DRIVER( explorer )	/* bootleg */
+	DRIVER( atlantis )	/* (c) 1981 Comsoft */
+	DRIVER( atlants2 )	/* (c) 1981 Comsoft */
+	DRIVER( theend )	/* (c) 1980 Konami */
+	DRIVER( theends )	/* (c) 1980 Stern */
+	DRIVER( omega )		/* bootleg */
+	DRIVER( ckongs )	/* bootleg */
+	DRIVER( froggers )	/* bootleg */
+	DRIVER( amidars )	/* GX337 (c) 1982 Konami */
+	DRIVER( triplep )	/* (c) 1982 KKI */	/* made by Sanritsu? */
+	DRIVER( knockout )	/* (c) 1982 KKK */
+	DRIVER( mariner )	/* (c) 1981 Amenip */
+	DRIVER( 800fath )	/* (c) 1981 Amenip + U.S. Billiards license */
+	DRIVER( mars )		/* (c) 1981 Artic */
+	DRIVER( devilfsh )	/* (c) 1982 Artic */
+	DRIVER( newsin7 )	/* (c) 1983 ATW USA, Inc. */
+	DRIVER( mrkougar )	/* (c) 1984 ATW */
+	DRIVER( mrkougr2 )
+	DRIVER( mrkougb )	/* bootleg */
+	DRIVER( hotshock )	/* (c) 1982 E.G. Felaco */
+	DRIVER( hunchbks )	/* (c) 1983 Century */
+	DRIVER( cavelon )	/* (c) 1983 Jetsoft */
+	DRIVER( sfx )
+	DRIVER( mimonscr )
+	DRIVER( mimonkey )
+	DRIVER( mimonsco )
+	DRIVER( scobra )	/* GX316 (c) 1981 Konami */
+	DRIVER( scobras )	/* GX316 (c) 1981 Stern */
+	DRIVER( scobrase )	/* GX316 (c) 1981 Stern */
+	DRIVER( scobrab )	/* GX316 (c) 1981 Karateco (bootleg?) */
+	DRIVER( stratgyx )	/* GX306 (c) 1981 Konami */
+	DRIVER( stratgys )	/* GX306 (c) 1981 Stern */
+	DRIVER( armorcar )	/* (c) 1981 Stern */
+	DRIVER( armorca2 )	/* (c) 1981 Stern */
+	DRIVER( moonwar )	/* (c) 1981 Stern */
+	DRIVER( moonwara )	/* (c) 1981 Stern */
+	DRIVER( spdcoin )	/* (c) 1984 Stern */
+	DRIVER( darkplnt )	/* (c) 1982 Stern */
+	DRIVER( tazmania )	/* (c) 1982 Stern */
+	DRIVER( tazmani2 )	/* (c) 1982 Stern */
+	DRIVER( calipso )	/* (c) 1982 Tago */
+	DRIVER( anteater )	/* (c) 1982 Tago */
+	DRIVER( rescue )	/* (c) 1982 Stern */
+	DRIVER( aponow )	/* bootleg */
+	DRIVER( minefld )	/* (c) 1983 Stern */
+	DRIVER( losttomb )	/* (c) 1982 Stern */
+	DRIVER( losttmbh )	/* (c) 1982 Stern */
+	DRIVER( superbon )	/* bootleg */
+	DRIVER( hustler )	/* GX343 (c) 1981 Konami */
+	DRIVER( billiard )	/* bootleg */
+	DRIVER( hustlerb )	/* bootleg */
+	DRIVER( frogger )	/* GX392 (c) 1981 Konami */
+	DRIVER( frogseg1 )	/* (c) 1981 Sega */
+	DRIVER( frogseg2 )	/* 834-0068 (c) 1981 Sega */
+	DRIVER( froggrmc )	/* 800-3110 (c) 1981 Sega */
+	DRIVER( amidar )	/* GX337 (c) 1981 Konami */
+	DRIVER( amidaru )	/* GX337 (c) 1982 Konami + Stern license */
+	DRIVER( amidaro )	/* GX337 (c) 1982 Konami + Olympia license */
+	DRIVER( amigo )		/* bootleg */
+	DRIVER( turtles )	/* (c) 1981 Stern */
+	DRIVER( turpin )	/* (c) 1981 Sega */
+	DRIVER( 600 )		/* GX353 (c) 1981 Konami */
+	DRIVER( flyboy )	/* (c) 1982 Kaneko */
+	DRIVER( flyboyb )	/* bootleg */
+	DRIVER( fastfred )	/* (c) 1982 Atari */
+	DRIVER( jumpcoas )	/* (c) 1983 Kaneko */
+	DRIVER( boggy84 )	/* bootleg, original is (c)1983 Taito/Kaneko */
+	DRIVER( redrobin )	/* (c) 1986 Elettronolo */
+	DRIVER( imago ) 	/* cocktail set */
+	DRIVER( imagoa )	/* no cocktail set */
+
 #endif	/* DRIVER_RECURSIVE */
