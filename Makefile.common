@@ -262,17 +262,6 @@ SOUNDS+=YMF271@
 SOUNDS+=PSXSPU@
 SOUNDS+=ICS2115@
 
-# shared sources
-SOURCES_C += \
-	$(CORE_DIR)/machine/segacrpt.c \
-	$(CORE_DIR)/machine/scramble_machine.c \
-	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c \
-	$(CORE_DIR)/machine/bagman_machine.c \
-	$(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
-	$(CORE_DIR)/machine/namcoio_machine.c \
-	$(CORE_DIR)/machine/atari_vg.c
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
 	$(CORE_DIR)/drivers/pacman.c \
 	$(CORE_DIR)/machine/mspacman.c \
@@ -377,6 +366,13 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/balsente_vidhrdw.c $(CORE_DIR)/machine/balsente_machine.c $(CORE_DIR)/drivers/balsente.c \
 	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
 	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
+	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
+	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
+	$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
+	$(CORE_DIR)/drivers/midxunit.c \
+	$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
+	$(CORE_DIR)/vidhrdw/midvunit_vidhrdw.c $(CORE_DIR)/drivers/midvunit.c \
+	$(CORE_DIR)/machine/midtunit_machine.c $(CORE_DIR)/vidhrdw/midtunit_vidhrdw.c $(CORE_DIR)/drivers/midtunit.c \
 	$(CORE_DIR)/vidhrdw/skychut_vidhrdw.c $(CORE_DIR)/drivers/skychut.c \
 	$(CORE_DIR)/drivers/olibochu.c \
 	$(CORE_DIR)/sndhrdw/irem.c \
@@ -393,16 +389,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/m90_vidhrdw.c $(CORE_DIR)/drivers/m90.c \
 	$(CORE_DIR)/vidhrdw/m92_vidhrdw.c $(CORE_DIR)/drivers/m92.c \
 	$(CORE_DIR)/vidhrdw/m107_vidhrdw.c $(CORE_DIR)/drivers/m107.c \
-	$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c \
-	$(CORE_DIR)/drivers/scramble.c \
-	$(CORE_DIR)/drivers/scobra.c \
-	$(CORE_DIR)/drivers/frogger.c \
-	$(CORE_DIR)/drivers/amidar.c \
-	$(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_b))
-SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gottlieb_vidhrdw.c $(CORE_DIR)/sndhrdw/gottlieb_sndhrdw.c $(CORE_DIR)/drivers/gottlieb.c \
 	$(CORE_DIR)/drivers/sbowling.c \
 	$(CORE_DIR)/machine/chaknpop_machine.c $(CORE_DIR)/vidhrdw/chaknpop_vidhrdw.c $(CORE_DIR)/drivers/chaknpop.c \
@@ -472,11 +458,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/snowbros_vidhrdw.c $(CORE_DIR)/drivers/snowbros.c \
 	$(CORE_DIR)/vidhrdw/toaplan2_vidhrdw.c $(CORE_DIR)/drivers/toaplan2.c \
 	$(CORE_DIR)/vidhrdw/cave_vidhrdw.c \
-	$(CORE_DIR)/drivers/cave.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_c))
-SOURCES_C += \
+	$(CORE_DIR)/drivers/cave.c \
 	$(CORE_DIR)/vidhrdw/kyugo_vidhrdw.c $(CORE_DIR)/machine/kyugo_machine.c $(CORE_DIR)/drivers/kyugo.c \
 	$(CORE_DIR)/machine/williams_machine.c $(CORE_DIR)/vidhrdw/williams_vidhrdw.c $(CORE_DIR)/sndhrdw/williams_sndhrdw.c $(CORE_DIR)/drivers/williams.c \
 	$(CORE_DIR)/vidhrdw/vulgus_vidhrdw.c $(CORE_DIR)/drivers/vulgus.c \
@@ -509,7 +491,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/blockade_vidhrdw.c $(CORE_DIR)/drivers/blockade.c \
 	$(CORE_DIR)/vidhrdw/vicdual_vidhrdw.c $(CORE_DIR)/drivers/vicdual.c \
 	$(CORE_DIR)/sndhrdw/carnival.c $(CORE_DIR)/sndhrdw/depthch.c $(CORE_DIR)/sndhrdw/invinco.c $(CORE_DIR)/sndhrdw/pulsar.c \
-	$(CORE_DIR)/sndhrdw/segasnd.c \
+	$(CORE_DIR)/machine/segacrpt.c $(CORE_DIR)/sndhrdw/segasnd.c \
 	$(CORE_DIR)/vidhrdw/sega_vidhrdw.c $(CORE_DIR)/sndhrdw/sega_sndhrdw.c $(CORE_DIR)/machine/sega_machine.c $(CORE_DIR)/drivers/sega.c \
 	$(CORE_DIR)/vidhrdw/segar_vidhrdw.c $(CORE_DIR)/sndhrdw/segar_sndhrdw.c $(CORE_DIR)/machine/segar_machine.c $(CORE_DIR)/drivers/segar.c \
 	$(CORE_DIR)/vidhrdw/tms9928a.c $(CORE_DIR)/drivers/sg1000a.c \
@@ -529,11 +511,7 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/segaic24.c \
 	$(CORE_DIR)/drivers/system32.c $(CORE_DIR)/drivers/multi32.c $(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
-	$(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_d))
-SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c \
 	$(CORE_DIR)/drivers/stv.c $(CORE_DIR)/drivers/stvhacks.c $(CORE_DIR)/machine/stvcd.c \
 	$(CORE_DIR)/machine/scudsp.c \
 	$(CORE_DIR)/vidhrdw/stvvdp1_vidhrdw.c $(CORE_DIR)/vidhrdw/stvvdp2_vidhrdw.c \
@@ -588,10 +566,15 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/spbactn_vidhrdw.c $(CORE_DIR)/drivers/spbactn.c \
 	$(CORE_DIR)/vidhrdw/tecmo16_vidhrdw.c $(CORE_DIR)/drivers/tecmo16.c \
 	$(CORE_DIR)/drivers/tecmosys.c \
+	$(CORE_DIR)/machine/scramble_machine.c $(CORE_DIR)/sndhrdw/scramble_sndhrdw.c $(CORE_DIR)/drivers/scramble.c \
+	$(CORE_DIR)/drivers/frogger.c \
+	$(CORE_DIR)/drivers/scobra.c \
+	$(CORE_DIR)/drivers/amidar.c \
+	$(CORE_DIR)/vidhrdw/fastfred_vidhrdw.c $(CORE_DIR)/drivers/fastfred.c \
 	$(CORE_DIR)/vidhrdw/tutankhm_vidhrdw.c $(CORE_DIR)/drivers/tutankhm.c \
 	$(CORE_DIR)/drivers/junofrst.c \
 	$(CORE_DIR)/vidhrdw/pooyan_vidhrdw.c $(CORE_DIR)/drivers/pooyan.c \
-	$(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c \
+	$(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c $(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
 	$(CORE_DIR)/vidhrdw/megazone_vidhrdw.c $(CORE_DIR)/drivers/megazone.c \
 	$(CORE_DIR)/vidhrdw/pandoras_vidhrdw.c $(CORE_DIR)/drivers/pandoras.c \
 	$(CORE_DIR)/sndhrdw/gyruss_sndhrdw.c $(CORE_DIR)/vidhrdw/gyruss_vidhrdw.c $(CORE_DIR)/drivers/gyruss.c \
@@ -611,11 +594,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/finalizr_vidhrdw.c $(CORE_DIR)/drivers/finalizr.c \
 	$(CORE_DIR)/vidhrdw/ironhors_vidhrdw.c $(CORE_DIR)/drivers/ironhors.c \
 	$(CORE_DIR)/machine/jackal_machine.c $(CORE_DIR)/vidhrdw/jackal_vidhrdw.c $(CORE_DIR)/drivers/jackal.c \
-	$(CORE_DIR)/vidhrdw/ddrible_vidhrdw.c $(CORE_DIR)/drivers/ddrible.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_e))
-SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/ddrible_vidhrdw.c $(CORE_DIR)/drivers/ddrible.c \
 	$(CORE_DIR)/vidhrdw/contra_vidhrdw.c $(CORE_DIR)/drivers/contra.c \
 	$(CORE_DIR)/vidhrdw/combatsc_vidhrdw.c $(CORE_DIR)/drivers/combatsc.c \
 	$(CORE_DIR)/vidhrdw/hcastle_vidhrdw.c $(CORE_DIR)/drivers/hcastle.c \
@@ -672,6 +651,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/starfire_vidhrdw.c $(CORE_DIR)/drivers/starfire.c \
 	$(CORE_DIR)/vidhrdw/victory_vidhrdw.c $(CORE_DIR)/drivers/victory.c \
 	$(CORE_DIR)/sndhrdw/exidy440_sndhrdw.c $(CORE_DIR)/vidhrdw/exidy440_vidhrdw.c $(CORE_DIR)/drivers/exidy440.c \
+	$(CORE_DIR)/machine/atari_vg.c \
 	$(CORE_DIR)/vidhrdw/tia.c $(CORE_DIR)/drivers/tourtabl.c \
 	$(CORE_DIR)/machine/asteroid_machine.c $(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c $(CORE_DIR)/drivers/asteroid.c \
 	$(CORE_DIR)/sndhrdw/llander.c \
@@ -725,11 +705,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/atarisy2_vidhrdw.c $(CORE_DIR)/drivers/atarisy2.c \
 	$(CORE_DIR)/machine/irobot_machine.c $(CORE_DIR)/vidhrdw/irobot_vidhrdw.c $(CORE_DIR)/drivers/irobot.c \
 	$(CORE_DIR)/machine/harddriv_machine.c $(CORE_DIR)/vidhrdw/harddriv_vidhrdw.c $(CORE_DIR)/sndhrdw/harddriv_sndhrdw.c $(CORE_DIR)/drivers/harddriv.c \
-	$(CORE_DIR)/vidhrdw/gauntlet_vidhrdw.c $(CORE_DIR)/drivers/gauntlet.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_f))
-SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/gauntlet_vidhrdw.c $(CORE_DIR)/drivers/gauntlet.c \
 	$(CORE_DIR)/vidhrdw/atetris_vidhrdw.c $(CORE_DIR)/drivers/atetris.c \
 	$(CORE_DIR)/vidhrdw/toobin_vidhrdw.c $(CORE_DIR)/drivers/toobin.c \
 	$(CORE_DIR)/vidhrdw/vindictr_vidhrdw.c $(CORE_DIR)/drivers/vindictr.c \
@@ -817,11 +793,8 @@ SOURCES_C += \
 	$(CORE_DIR)/sndhrdw/cinemat_sndhrdw.c $(CORE_DIR)/drivers/cinemat.c \
 	$(CORE_DIR)/machine/cchasm_machine.c $(CORE_DIR)/vidhrdw/cchasm_vidhrdw.c $(CORE_DIR)/sndhrdw/cchasm_sndhrdw.c $(CORE_DIR)/drivers/cchasm.c \
 	$(CORE_DIR)/vidhrdw/thepit_vidhrdw.c $(CORE_DIR)/drivers/thepit.c \
-	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_g))
-SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c \
+	$(CORE_DIR)/machine/bagman_machine.c $(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c \
 	$(CORE_DIR)/vidhrdw/tankbust_vidhrdw.c $(CORE_DIR)/drivers/tankbust.c \
 	$(CORE_DIR)/vidhrdw/wiz_vidhrdw.c $(CORE_DIR)/drivers/wiz.c \
 	$(CORE_DIR)/vidhrdw/kncljoe_vidhrdw.c $(CORE_DIR)/drivers/kncljoe.c \
@@ -918,11 +891,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/suna8_vidhrdw.c $(CORE_DIR)/drivers/suna8.c \
 	$(CORE_DIR)/vidhrdw/suna16_vidhrdw.c $(CORE_DIR)/drivers/suna16.c \
 	$(CORE_DIR)/vidhrdw/gundealr_vidhrdw.c $(CORE_DIR)/drivers/gundealr.c \
-	$(CORE_DIR)/vidhrdw/dooyong_vidhrdw.c $(CORE_DIR)/drivers/dooyong.c
-endif
-
-ifneq (,$(filter $(INCLUDE_DRV),all core_h))
-SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/dooyong_vidhrdw.c $(CORE_DIR)/drivers/dooyong.c \
 	$(CORE_DIR)/machine/leprechn_machine.c $(CORE_DIR)/vidhrdw/leprechn_vidhrdw.c $(CORE_DIR)/drivers/leprechn.c \
 	$(CORE_DIR)/machine/beezer_machine.c $(CORE_DIR)/vidhrdw/beezer_vidhrdw.c $(CORE_DIR)/drivers/beezer.c \
 	$(CORE_DIR)/vidhrdw/pushman_vidhrdw.c $(CORE_DIR)/drivers/pushman.c \
@@ -1076,8 +1045,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
+	$(CORE_DIR)/machine/namcoio_machine.c \
 	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
-endif
 
 # List of CPU core (and, for a debug build, disassembler) object files
 #
