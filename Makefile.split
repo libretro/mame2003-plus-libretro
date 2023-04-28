@@ -262,6 +262,7 @@ SOUNDS+=YMF271@
 SOUNDS+=PSXSPU@
 SOUNDS+=ICS2115@
 
+ifneq (,$(filter $(INCLUDE_DRV),all))
 SOURCES_C += \
 	$(CORE_DIR)/drivers/pacman.c \
 	$(CORE_DIR)/machine/mspacman.c \
@@ -1047,6 +1048,7 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
 	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
+endif
 
 
 
