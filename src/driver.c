@@ -583,4 +583,52 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( metrocrs )	/* (c) 1985 */
 	DRIVER( metrocra )	/* (c) 1985 */
 
+	/* Namco System 86 games */
+	DRIVER( hopmappy )	/* (c) 1986 */
+	DRIVER( skykiddx )	/* (c) 1986 */
+	DRIVER( skykiddo )	/* (c) 1986 */
+	DRIVER( roishtar )	/* (c) 1986 */
+	DRIVER( genpeitd )	/* (c) 1986 */
+	DRIVER( rthunder )	/* (c) 1986 new version */
+	DRIVER( rthundro )	/* (c) 1986 old version */
+	DRIVER( wndrmomo )	/* (c) 1987 */
+
+	/* Thunder Ceptor HW */
+	DRIVER( tceptor )
+	DRIVER( tceptor2 )
+
+	/* Namco System 1 games */
+	DRIVER( shadowld )	/* (c) 1987 */
+	DRIVER( youkaidk )	/* (c) 1987 (Japan new version) */
+	DRIVER( yokaidko )	/* (c) 1987 (Japan old version) */
+	DRIVER( dspirit )	/* (c) 1987 new version */
+	DRIVER( dspirito )	/* (c) 1987 old version */
+	DRIVER( blazer )	/* (c) 1987 (Japan) */
+	DRIVER( quester )	/* (c) 1987 (Japan) */
+	DRIVER( pacmania )	/* (c) 1987 */
+	DRIVER( pacmanij )	/* (c) 1987 (Japan) */
+	DRIVER( galaga88 )	/* (c) 1987 */
+	DRIVER( galag88b )	/* (c) 1987 */
+	DRIVER( galag88j )	/* (c) 1987 (Japan) */
+	DRIVER( ws )		/* (c) 1988 (Japan) */
+	DRIVER( berabohm )	/* (c) 1988 (Japan) */
+	DRIVER( beraboho )	/* (c) 1988 (Japan) */
+	DRIVER( mmaze )		/* (c) 1988 (Japan) */
+	DRIVER( bakutotu )	/* (c) 1988 (Japan) */
+	DRIVER( wldcourt )	/* (c) 1988 (Japan) */
+	DRIVER( splatter )	/* (c) 1988 (Japan) */
+	DRIVER( faceoff )	/* (c) 1988 (Japan) */
+	DRIVER( rompers )	/* (c) 1989 (Japan) */
+	DRIVER( romperso )	/* (c) 1989 (Japan) */
+	DRIVER( blastoff )	/* (c) 1989 (Japan) */
+	DRIVER( ws89 )		/* (c) 1989 (Japan) */
+	DRIVER( dangseed )	/* (c) 1989 (Japan) */
+	DRIVER( ws90 )		/* (c) 1990 (Japan) */
+	DRIVER( pistoldm )	/* (c) 1990 (Japan) */
+	DRIVER( boxyboy )	/* (c) 1990 (US) */
+	DRIVER( soukobdx )	/* (c) 1990 (Japan) */
+	DRIVER( puzlclub )	/* (c) 1990 (Japan) */
+	DRIVER( tankfrce )	/* (c) 1991 (US) */
+	DRIVER( tankfrcj )	/* (c) 1991 (Japan) */
+
 #endif	/* DRIVER_RECURSIVE */
