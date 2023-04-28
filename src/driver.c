@@ -325,4 +325,43 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( guzzler )	/* (c) 1983 Tehkan */
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 
+	/* Nichibutsu games */
+	DRIVER( gomoku )	/* (c) 1981 */
+	DRIVER( wiping )	/* (c) 1982 */
+	DRIVER( rugrats )	/* (c) 1983 */
+	DRIVER( friskyt )	/* (c) 1981 */
+	DRIVER( friskyta )	/* (c) 1981 */
+	DRIVER( radrad )	/* (c) 1982 Nichibutsu USA */
+	DRIVER( seicross )	/* (c) 1984 + Alice */
+	DRIVER( sectrzon )	/* (c) 1984 + Alice */
+	DRIVER( firebatl )	/* (c) 1984 Taito */
+	DRIVER( clshroad )	/* (c) 1986 Woodplace Inc. */
+	DRIVER( tubep )		/* (c) 1984 + Fujitek */
+	DRIVER( rjammer )	/* (c) 1984 + Alice */
+	DRIVER( magmax )	/* (c) 1985 */
+	DRIVER( cop01 )		/* (c) 1985 */
+	DRIVER( cop01a )	/* (c) 1985 */
+	DRIVER( mightguy )	/* (c) 1986 */
+	DRIVER( terracre )	/* (c) 1985 */
+	DRIVER( terracrb )	/* (c) 1985 */
+	DRIVER( terracra )	/* (c) 1985 */
+	DRIVER( amazon )	/* (c) 1986 */
+	DRIVER( amatelas )	/* (c) 1986 */
+	DRIVER( horekid )	/* (c) 1987 */
+	DRIVER( horekidb )	/* bootleg */
+	DRIVER( galivan )	/* (c) 1985 */
+	DRIVER( galivan2 )	/* (c) 1985 */
+	DRIVER( dangar )	/* (c) 1986 */
+	DRIVER( dangar2 )	/* (c) 1986 */
+	DRIVER( dangarb )	/* bootleg */
+	DRIVER( ninjemak )	/* (c) 1986 (US?) */
+	DRIVER( youma )		/* (c) 1986 (Japan) */
+	DRIVER( legion )	/* (c) 1986 */
+	DRIVER( legiono )	/* (c) 1986 */
+	DRIVER( terraf )	/* (c) 1987 */
+	DRIVER( terrafu )	/* (c) 1987 Nichibutsu USA */
+	DRIVER( kodure )	/* (c) 1987 (Japan) */
+	DRIVER( armedf )	/* (c) 1988 */
+	DRIVER( cclimbr2 )	/* (c) 1988 (Japan) */
+
 #endif	/* DRIVER_RECURSIVE */
