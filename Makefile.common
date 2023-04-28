@@ -267,7 +267,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/segacrpt.c \
 	$(CORE_DIR)/machine/scramble_machine.c \
 	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c \
-	$(CORE_DIR)/machine/bagman_machine.c
+	$(CORE_DIR)/machine/bagman_machine.c \
+	$(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
@@ -595,7 +596,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/tutankhm_vidhrdw.c $(CORE_DIR)/drivers/tutankhm.c \
 	$(CORE_DIR)/drivers/junofrst.c \
 	$(CORE_DIR)/vidhrdw/pooyan_vidhrdw.c $(CORE_DIR)/drivers/pooyan.c \
-	$(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c $(CORE_DIR)/sndhrdw/timeplt_sndhrdw.c \
+	$(CORE_DIR)/vidhrdw/timeplt_vidhrdw.c $(CORE_DIR)/drivers/timeplt.c \
 	$(CORE_DIR)/vidhrdw/megazone_vidhrdw.c $(CORE_DIR)/drivers/megazone.c \
 	$(CORE_DIR)/vidhrdw/pandoras_vidhrdw.c $(CORE_DIR)/drivers/pandoras.c \
 	$(CORE_DIR)/sndhrdw/gyruss_sndhrdw.c $(CORE_DIR)/vidhrdw/gyruss_vidhrdw.c $(CORE_DIR)/drivers/gyruss.c \
