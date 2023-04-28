@@ -396,7 +396,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/irem_cpu.c \
 	$(CORE_DIR)/vidhrdw/m90_vidhrdw.c $(CORE_DIR)/drivers/m90.c \
 	$(CORE_DIR)/vidhrdw/m92_vidhrdw.c $(CORE_DIR)/drivers/m92.c \
-	$(CORE_DIR)/vidhrdw/m107_vidhrdw.c $(CORE_DIR)/drivers/m107.c
+	$(CORE_DIR)/vidhrdw/m107_vidhrdw.c $(CORE_DIR)/drivers/m107.c \
+	$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c
 endif
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_b))
@@ -821,8 +822,7 @@ SOURCES_C += \
 	$(CORE_DIR)/sndhrdw/cinemat_sndhrdw.c $(CORE_DIR)/drivers/cinemat.c \
 	$(CORE_DIR)/machine/cchasm_machine.c $(CORE_DIR)/vidhrdw/cchasm_vidhrdw.c $(CORE_DIR)/sndhrdw/cchasm_sndhrdw.c $(CORE_DIR)/drivers/cchasm.c \
 	$(CORE_DIR)/vidhrdw/thepit_vidhrdw.c $(CORE_DIR)/drivers/thepit.c \
-	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c \
-	$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c
+	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c
 endif
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_g))
