@@ -266,7 +266,8 @@ SOUNDS+=ICS2115@
 SOURCES_C += \
 	$(CORE_DIR)/machine/segacrpt.c \
 	$(CORE_DIR)/machine/scramble_machine.c \
-	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c
+	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c \
+	$(CORE_DIR)/machine/bagman_machine.c
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
@@ -821,7 +822,7 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/cchasm_machine.c $(CORE_DIR)/vidhrdw/cchasm_vidhrdw.c $(CORE_DIR)/sndhrdw/cchasm_sndhrdw.c $(CORE_DIR)/drivers/cchasm.c \
 	$(CORE_DIR)/vidhrdw/thepit_vidhrdw.c $(CORE_DIR)/drivers/thepit.c \
 	$(CORE_DIR)/vidhrdw/timelimt_vidhrdw.c $(CORE_DIR)/drivers/timelimt.c \
-	$(CORE_DIR)/machine/bagman_machine.c $(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c
+	$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c $(CORE_DIR)/drivers/bagman.c
 endif
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_g))
