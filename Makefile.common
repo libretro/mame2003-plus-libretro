@@ -377,7 +377,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/balsente_vidhrdw.c $(CORE_DIR)/machine/balsente_machine.c $(CORE_DIR)/drivers/balsente.c \
 	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
 	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
-	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
 	$(CORE_DIR)/vidhrdw/skychut_vidhrdw.c $(CORE_DIR)/drivers/skychut.c \
 	$(CORE_DIR)/drivers/olibochu.c \
 	$(CORE_DIR)/sndhrdw/irem.c \
