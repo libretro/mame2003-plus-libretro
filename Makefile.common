@@ -264,7 +264,8 @@ SOUNDS+=ICS2115@
 
 # shared sources
 SOURCES_C += \
-	$(CORE_DIR)/machine/segacrpt.c
+	$(CORE_DIR)/machine/segacrpt.c \
+	$(CORE_DIR)/machine/scramble_machine.c
 
 ifneq (,$(filter $(INCLUDE_DRV),all core_a))
 SOURCES_C += \
@@ -583,7 +584,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/spbactn_vidhrdw.c $(CORE_DIR)/drivers/spbactn.c \
 	$(CORE_DIR)/vidhrdw/tecmo16_vidhrdw.c $(CORE_DIR)/drivers/tecmo16.c \
 	$(CORE_DIR)/drivers/tecmosys.c \
-	$(CORE_DIR)/machine/scramble_machine.c $(CORE_DIR)/sndhrdw/scramble_sndhrdw.c $(CORE_DIR)/drivers/scramble.c \
+	$(CORE_DIR)/sndhrdw/scramble_sndhrdw.c $(CORE_DIR)/drivers/scramble.c \
 	$(CORE_DIR)/drivers/frogger.c \
 	$(CORE_DIR)/drivers/scobra.c \
 	$(CORE_DIR)/drivers/amidar.c \
