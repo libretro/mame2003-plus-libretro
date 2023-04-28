@@ -139,5 +139,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( jumpshot )	/* (c) 1985 Bally Midway */
 	DRIVER( shootbul )	/* (c) 1985 Bally Midway */
 	DRIVER( bigbucks )	/* (c) 1986 Dynasoft Inc. */
+  
+  	/* S2650 Pacman Kits */
+	DRIVER( drivfrcp )	/* (c) 1984 Shinkai Inc. (Magic Eletronics Inc. licence) */
+	DRIVER( 8bpm )		/* (c) 1985 Seatongrove Ltd (Magic Eletronics USA licence) */
+	DRIVER( porky )		/* (c) 1985 Shinkai Inc. (Magic Eletronics Inc. licence) */
 
 #endif	/* DRIVER_RECURSIVE */
