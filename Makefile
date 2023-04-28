@@ -838,7 +838,10 @@ endif
 endif
 
 # include the various .mak files
+ifneq (,$(filter $(INCLUDE_DRV),all))
 include Makefile.common
+else
+include Makefile.split
 
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
