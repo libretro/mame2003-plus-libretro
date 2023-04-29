@@ -73,6 +73,6 @@ const struct GameDriver *test_drivers[] =
 #else	/* DRIVER_RECURSIVE */
 
 	/* "Crazy Climber hardware" games */
-	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
+	DRIVER( 0 )	/* (c) 1980 Nichibutsu */
 
 #endif	/* DRIVER_RECURSIVE */
