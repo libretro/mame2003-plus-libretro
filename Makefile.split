@@ -112,13 +112,13 @@ CPUS+=M6502@
 CPUS+=M65C02@
 CPUS+=M6809@
 
-# shared cpus not yet sorted
-CPUS+=M6510@
-CPUS+=PSXCPU@
-CPUS+=JAGUAR@
+# cpus not yet sorted
+#CPUS+=M6510@
+#CPUS+=PSXCPU@
+#CPUS+=JAGUAR@
 #CPUS+=R5000@
-CPUS+=G65816@
-CPUS+=SPC700@
+#CPUS+=G65816@
+#CPUS+=SPC700@
 
 ifneq (,$(filter $(INCLUDE_DRV),core_a))
 CPUS+=M68EC020@
