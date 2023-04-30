@@ -132,6 +132,7 @@ ifneq (,$(filter $(INCLUDE_DRV),4enraya core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/4enraya_vidhrdw.c \
 		$(CORE_DIR)/drivers/4enraya.c
 endif
 
