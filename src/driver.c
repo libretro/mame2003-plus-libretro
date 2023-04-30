@@ -91,4 +91,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( guzzler )	/* (c) 1983 Tehkan */
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 
+  /* yamato.c */
+	DRIVER( yamato )	/* (c) 1983 Sega */
+	DRIVER( yamato2 )	/* (c) 1983 Sega */
+
 #endif	/* DRIVER_RECURSIVE */
