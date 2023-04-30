@@ -142,6 +142,7 @@ ifneq (,$(filter $(INCLUDE_DRV),40love core_a))
 	SOUNDS+=AY8910@
 	SOUNDS+=MSM5232@
 	SOURCES_C += \
+		$(CORE_DIR)/machine/buggychl_machine.c \
 		$(CORE_DIR)/vidhrdw/40love_vidhrdw.c \
 		$(CORE_DIR)/drivers/40love.c
 endif
