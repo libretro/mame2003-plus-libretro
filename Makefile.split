@@ -104,8 +104,8 @@ SOUNDS+=SAMPLES@
 SOUNDS+=DAC@
 SOUNDS+=DISCRETE@
 
-#drivers
-ifneq (,$(filter $(INCLUDE_DRV),cclimber))
+# drivers
+ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 SOURCES_C += \
@@ -114,6 +114,13 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/cclimber.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),yamato core_a))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+SOURCES_C += \
+	$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
+	$(CORE_DIR)/drivers/yamato.c
+endif
 
 
 # List of CPU core (and, for a debug build, disassembler) object files
