@@ -121,6 +121,13 @@ ifneq (,$(filter $(INCLUDE_DRV),1943 core_a))
 		$(CORE_DIR)/drivers/1943.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),1945kiii core_a))
+	CPUS+=M68000@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/drivers/1945kiii.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
