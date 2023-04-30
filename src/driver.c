@@ -79,11 +79,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
 #endif
 
+#if 0
 	/* 1943.c */
 	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
 	DRIVER( 1943j )		/*  6/1987 (c) 1987 (Japan) */
 	DRIVER( 1943mii )       /*  6/1987 (c) 1987 (US) */
 	DRIVER( 1943kai )	/*  6/1988 (c) 1987 (Japan) */
+#endif
+
+	/* 1945kiii */
+	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
+	DRIVER( flagrall )  /* (c) 1996 Promat? */
 
 #if 0
 	/* cclimber.c */
