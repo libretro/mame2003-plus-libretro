@@ -87,7 +87,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 1943kai )	/*  6/1988 (c) 1987 (Japan) */
 #endif
 
-	/* 1945kiii */
+	/* 1945kiii.c */
 	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
 
