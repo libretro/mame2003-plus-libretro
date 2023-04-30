@@ -93,8 +93,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
 #endif
 
+#if 0
 	/* 4enraya.c */
 	DRIVER( 4enraya )	/* (c) 1990 IDSA */
+#endif
+
+	/* 40love.c */
+	DRIVER( fieldday )	/* A23 (c) 1984 Taito */
+	DRIVER( undoukai )	/* A17 (c) 1984 Taito */
+	DRIVER( 40love )	/* A30 (c) 1984 Taito */
 
 #if 0
 	/* cclimber.c */
