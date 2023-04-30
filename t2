@@ -98,11 +98,15 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/vector.c \
 	$(CORE_DIR)/vidhrdw/resnet.c
 
+# include base sound
+SOUNDS+=CUSTOM@
+SOUNDS+=SAMPLES@
+SOUNDS+=DAC@
+SOUNDS+=DISCRETE@
 
-
+#drivers
 ifneq (,$(filter $(INCLUDE_DRV),cclimber))
 	CPUS+=Z80@
-	SOUNDS+=CUSTOM@
 	SOUNDS+=AY8910@
 SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
