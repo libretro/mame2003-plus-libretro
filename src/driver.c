@@ -72,10 +72,18 @@ const struct GameDriver *test_drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-/* 1942.c */
+#if 0
+	/* 1942.c */
 	DRIVER( 1942 )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942a )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
+#endif
+
+	/* 1943.c */
+	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
+	DRIVER( 1943j )		/*  6/1987 (c) 1987 (Japan) */
+	DRIVER( 1943mii )       /*  6/1987 (c) 1987 (US) */
+	DRIVER( 1943kai )	/*  6/1988 (c) 1987 (Japan) */
 
 #if 0
 	/* cclimber.c */
@@ -99,7 +107,7 @@ const struct GameDriver *test_drivers[] =
 #endif
 
 #if 0
-  /* yamato.c */
+	/* yamato.c */
 	DRIVER( yamato )	/* (c) 1983 Sega */
 	DRIVER( yamato2 )	/* (c) 1983 Sega */
 #endif
