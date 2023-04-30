@@ -105,6 +105,14 @@ SOUNDS+=DAC@
 SOUNDS+=DISCRETE@
 
 # drivers
+ifneq (,$(filter $(INCLUDE_DRV),1942 core_a))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/1942_vidhrdw.c \
+		$(CORE_DIR)/drivers/1942.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
