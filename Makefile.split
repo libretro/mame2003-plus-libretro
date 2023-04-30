@@ -123,7 +123,7 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),1945kiii core_a))
 	CPUS+=M68000@
-	SOUNDS+=OKIM6295@
+	#SOUNDS+=OKIM6295@
 	SOURCES_C += \
 		$(CORE_DIR)/drivers/1945kiii.c
 endif
