@@ -838,7 +838,7 @@ endif
 endif
 
 # include the various .mak files
-ifneq (,$(filter $(INCLUDE_DRV),all))
+ifneq (,$(filter $(INCLUDE_DRV),omit))
 	include Makefile.common
 else
 	include Makefile.split
