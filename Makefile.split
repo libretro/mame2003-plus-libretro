@@ -118,6 +118,7 @@ ifneq (,$(filter $(INCLUDE_DRV),yamato core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 SOURCES_C += \
+	$(CORE_DIR)/machine/segacrpt.c
 	$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
 	$(CORE_DIR)/drivers/yamato.c
 endif
