@@ -2,9 +2,8 @@ LOCAL_PATH := $(call my-dir)
 
 ROOT_DIR := $(LOCAL_PATH)/..
 CORE_DIR := $(ROOT_DIR)/src
-INCLUDE_DRV := cclimber
 
-include $(ROOT_DIR)/Makefile.split
+include $(ROOT_DIR)/Makefile.common
 
 COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID -DHAVE_ZLIB $(INCFLAGS)
 
