@@ -72,7 +72,23 @@ const struct GameDriver *test_drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-	/* "Crazy Climber hardware" games */
+	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
+	DRIVER( cclimbrj )	/* (c) 1980 Nichibutsu */
+	DRIVER( ccboot )	/* bootleg */
+	DRIVER( ccboot2 )	/* bootleg */
+	DRIVER( ckong )		/* (c) 1981 Falcon */
+	DRIVER( ckonga )	/* (c) 1981 Falcon */
+	DRIVER( ckongjeu )	/* bootleg */
+	DRIVER( ckongo )	/* bootleg */
+	DRIVER( ckongalc )	/* bootleg */
+	DRIVER( monkeyd )	/* bootleg */
+	DRIVER( rpatrolb )	/* bootleg */
+	DRIVER( silvland )	/* Falcon */
+	DRIVER( swimmer )	/* (c) 1982 Tehkan */
+	DRIVER( swimmera )	/* (c) 1982 Tehkan */
+	DRIVER( swimmerb )	/* (c) 1982 Tehkan */
+	DRIVER( guzzler )	/* (c) 1983 Tehkan */
+	DRIVER( cannonb )	/* (c) 1985 Soft */
 
 #endif	/* DRIVER_RECURSIVE */
