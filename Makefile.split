@@ -155,6 +155,7 @@ ifneq (,$(filter $(INCLUDE_DRV),88games core_a))
 	SOUNDS+=UPD7759@
 	SOURCES_C += \
 		$(CORE_DIR)/vidhrdw/88games_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/drivers/88games.c
 endif
 
