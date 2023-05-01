@@ -105,6 +105,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 4enraya )	/* (c) 1990 IDSA */
 #endif
 
+#if 0
 	/* 8080bw_drivers.c */
 	/* Midway 8080 b/w games */
 	DRIVER( seawolf )	/* 596 [1976] */
@@ -192,6 +193,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( astropal )
 	DRIVER( galactic )
 	DRIVER( spacmiss )
+#endif
 
 #if 0
 	/* 88games.c */
@@ -199,6 +201,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( konami88 )	/* GX861 (c) 1988 */
 	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
 #endif
+
+	/* aburner.c */
+	DRIVER( aburner )	/* (c) 1987 */
+	DRIVER( aburner2 )  /* (c) 1987 */
+	DRIVER( loffire )	/* (protected) */
+	DRIVER( thndrbld )	/* (protected) */
+	DRIVER( thndrbdj )  /* (protected?) */
 
 #if 0
 	/* cclimber.c */
