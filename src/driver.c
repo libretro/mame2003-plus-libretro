@@ -202,12 +202,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
 #endif
 
+#if 0
 	/* aburner.c */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
 	DRIVER( loffire )	/* (protected) */
 	DRIVER( thndrbld )	/* (protected) */
 	DRIVER( thndrbdj )  /* (protected?) */
+#endif
+
+	/* ace.c */
+	DRIVER( ace )		/* [1976 Allied Leisure] */
 
 #if 0
 	/* cclimber.c */
