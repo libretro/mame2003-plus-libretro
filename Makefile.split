@@ -187,6 +187,7 @@ ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 		$(CORE_DIR)/machine/system16_machine.c \
 		$(CORE_DIR)/vidhrdw/system16_vidhrdw.c \
 		$(CORE_DIR)/vidhrdw/sys16spr.c \
+		$(CORE_DIR)/drivers/system16.c \
 		$(CORE_DIR)/drivers/aburner.c
 endif
 
