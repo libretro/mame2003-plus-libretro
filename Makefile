@@ -388,6 +388,7 @@ else ifeq ($(platform), wii)
 	STATIC_LINKING = 1
 	ZLIB_UNCOMPRESS = 1
 	INCLUDE_DRV = ace
+	PLATCFLAGS += -D$(INCLUDE_DRV)
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
