@@ -171,6 +171,16 @@ ifneq (,$(filter $(INCLUDE_DRV),88games core_a))
 		$(CORE_DIR)/drivers/88games.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=SEGAPCM@
+	SOURCES_C += \
+		$(CORE_DIR)/drivers/aburner.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
