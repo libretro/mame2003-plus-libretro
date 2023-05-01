@@ -174,6 +174,7 @@ endif
 ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 	CPUS+=M68000@
 	CPUS+=Z80@
+	CPUS+=N7751@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=SEGAPCM@
@@ -183,6 +184,7 @@ ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 	SOUNDS+=RF5C68@
 	SOUNDS+=YM2612@
 	SOUNDS+=YM3438@
+	SOUNDS+=MSM5205@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/system16_machine.c \
 		$(CORE_DIR)/vidhrdw/system16_vidhrdw.c \
