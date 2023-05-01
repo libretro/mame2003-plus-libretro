@@ -94,14 +94,21 @@ const struct GameDriver *test_drivers[] =
 #endif
 
 #if 0
-	/* 4enraya.c */
-	DRIVER( 4enraya )	/* (c) 1990 IDSA */
-#endif
-
 	/* 40love.c */
 	DRIVER( fieldday )	/* A23 (c) 1984 Taito */
 	DRIVER( undoukai )	/* A17 (c) 1984 Taito */
 	DRIVER( 40love )	/* A30 (c) 1984 Taito */
+#endif
+
+#if 0
+	/* 4enraya.c */
+	DRIVER( 4enraya )	/* (c) 1990 IDSA */
+#endif
+
+	/* 88games */
+	DRIVER( 88games )	/* GX861 (c) 1988 */
+	DRIVER( konami88 )	/* GX861 (c) 1988 */
+	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
 
 #if 0
 	/* cclimber.c */
