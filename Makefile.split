@@ -147,6 +147,17 @@ ifneq (,$(filter $(INCLUDE_DRV),4enraya core_a))
 		$(CORE_DIR)/drivers/4enraya.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),8080bw_drivers core_a))
+	CPUS+=8080@
+	CPUS+=M6800@
+	SOUNDS+=SN76477@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/8080bw.c \
+		$(CORE_DIR)/vidhrdw/8080bw_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/8080bw_sndhrdw.c \
+		$(CORE_DIR)/drivers/8080bw_drivers.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),88games core_a))
 	CPUS+=KONAMI@
 	CPUS+=Z80@
