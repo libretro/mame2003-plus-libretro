@@ -211,12 +211,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( thndrbdj )  /* (protected?) */
 #endif
 
-#ifdef ace
+#if defined(ace) || defined(core_a)
 	/* ace.c */
 	DRIVER( ace )		/* [1976 Allied Leisure] */
 #endif
 
-#ifdef cclimber
+#if defined(cclimber) || defined(core_a)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
 	DRIVER( cclimbrj )	/* (c) 1980 Nichibutsu */
