@@ -105,10 +105,100 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 4enraya )	/* (c) 1990 IDSA */
 #endif
 
-	/* 88games */
+	/* 8080bw_drivers.c */
+	/* Midway 8080 b/w games */
+	DRIVER( seawolf )	/* 596 [1976] */
+	DRIVER( gunfight )	/* 597 [1975] */
+	/* 603 - Top Gun [1976] */
+	DRIVER( tornbase )	/* 605 [1976] */
+	DRIVER( 280zzzap )	/* 610 [1976] */
+	DRIVER( maze )		/* 611 [1976] */
+	DRIVER( boothill )	/* 612 [1977] */
+	DRIVER( checkmat )	/* 615 [1977] */
+	DRIVER( desertgu )	/* 618 [1977] */
+	DRIVER( dplay )		/* 619 [1977] */
+	DRIVER( lagunar )	/* 622 [1977] */
+	DRIVER( gmissile )	/* 623 [1977] */
+	DRIVER( m4 )		/* 626 [1977] */
+	DRIVER( clowns )	/* 630 [1978] */
+	DRIVER( clowns1 )	/* 630 [1978] */
+	/* 640 - Space Walk [1978] */
+	DRIVER( einnings )	/* 642 [1978] Midway */
+	DRIVER( shuffle )	/* 643 [1978] */
+	DRIVER( dogpatch )	/* 644 [1977] */
+	DRIVER( spcenctr )	/* 645 (c) 1980 Midway */
+	DRIVER( phantom2 )	/* 652 [1979] */
+	DRIVER( bowler )	/* 730 [1978] Midway */
+	DRIVER( invaders )	/* 739 [1979] */
+	DRIVER( blueshrk )	/* 742 [1978] */
+	DRIVER( invad2ct )	/* 851 (c) 1980 Midway */
+	DRIVER( invaddlx )	/* 852 [1980] Midway */
+	DRIVER( sitv )
+	DRIVER( sicv )
+	DRIVER( sisv )
+	DRIVER( sisv2 )
+	DRIVER( galxwars )
+	DRIVER( galxwar2 )
+	DRIVER( galxwart )
+	DRIVER( starw )
+	DRIVER( lrescue )	/* LR  (c) 1979 Taito */
+	DRIVER( grescue )	/* bootleg? */
+	DRIVER( desterth )	/* bootleg */
+	DRIVER( invadpt2 )	/* 852 [1980] Taito */
+	DRIVER( cosmo )		/* TDS+Mints */
+	DRIVER( schaser )	/* RT  Taito */
+	DRIVER( schasrcv )	/* RT  Taito */
+	DRIVER( sflush ) /* (c)1979 Taito */
+	DRIVER( lupin3 )	/* LP  (c) 1980 Taito */
+	DRIVER( polaris )	/* PS  (c) 1980 Taito */
+	DRIVER( polarisa )	/* PS  (c) 1980 Taito */
+	DRIVER( ballbomb )	/* TN  (c) 1980 Taito */
+	DRIVER( indianbt )	/* Taito - 1980 */
+	DRIVER( steelwkr )	/* (c) 1980 Taito */
+	DRIVER( earthinv )
+	DRIVER( spaceatt )
+	DRIVER( spaceat2 )
+	DRIVER( sinvzen )
+	DRIVER( sinvemag )
+	DRIVER( tst_invd )
+	DRIVER( alieninv )
+	DRIVER( spceking )
+	DRIVER( spcewars )
+	DRIVER( spacewr3 )
+	DRIVER( invaderl )
+	DRIVER( jspecter )
+	DRIVER( jspectr2 )
+	DRIVER( cosmicmo )	/* Universal */
+	DRIVER( cosmicm2 )	/* Universal */
+	DRIVER( superinv )
+	DRIVER( sstrangr )
+	DRIVER( sstrngr2 )
+	DRIVER( moonbase )	/* Zeta - Nichibutsu */
+	DRIVER( invrvnge )
+	DRIVER( invrvnga )
+	DRIVER( spclaser )
+	DRIVER( laser )
+	DRIVER( spcewarl )
+	DRIVER( rollingc )	/* Nichibutsu */
+	DRIVER( ozmawars )	/* Shin Nihon Kikaku (SNK) */
+	DRIVER( ozmawar2 )	/* Shin Nihon Kikaku (SNK) */
+	DRIVER( solfight )	/* bootleg */
+	DRIVER( spaceph )	/* Zilec Games */
+	DRIVER( yosakdon )
+	DRIVER( yosakdoa )
+	DRIVER( invasion )
+	DRIVER( invasioa )
+	DRIVER( invasiob )
+	DRIVER( astropal )
+	DRIVER( galactic )
+	DRIVER( spacmiss )
+
+#if 0
+	/* 88games.c */
 	DRIVER( 88games )	/* GX861 (c) 1988 */
 	DRIVER( konami88 )	/* GX861 (c) 1988 */
 	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
+#endif
 
 #if 0
 	/* cclimber.c */
