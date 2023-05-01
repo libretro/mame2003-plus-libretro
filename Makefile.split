@@ -177,6 +177,7 @@ ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=SEGAPCM@
+	SOUNDS+=YM2203@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/system16_machine.c \
 		$(CORE_DIR)/vidhrdw/system16_vidhrdw.c \
