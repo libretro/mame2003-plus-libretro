@@ -154,6 +154,7 @@ ifneq (,$(filter $(INCLUDE_DRV),8080bw_drivers core_a))
 	SOURCES_C += \
 		$(CORE_DIR)/machine/8080bw.c \
 		$(CORE_DIR)/vidhrdw/8080bw_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/circus_vidhrdw.c \
 		$(CORE_DIR)/sndhrdw/8080bw_sndhrdw.c \
 		$(CORE_DIR)/drivers/8080bw_drivers.c
 endif
