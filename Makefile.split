@@ -194,6 +194,12 @@ ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 		$(CORE_DIR)/drivers/aburner.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),ace core_a))
+	CPUS+=8080@
+	SOURCES_C += \
+		$(CORE_DIR)/drivers/ace.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
