@@ -72,14 +72,14 @@ const struct GameDriver *test_drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-#if 0
+#if defined(1942) || defined(core_0)
 	/* 1942.c */
 	DRIVER( 1942 )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942a )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
 #endif
 
-#if 0
+#if defined(1943) || defined(core_0)
 	/* 1943.c */
 	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
 	DRIVER( 1943j )		/*  6/1987 (c) 1987 (Japan) */
@@ -87,25 +87,25 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 1943kai )	/*  6/1988 (c) 1987 (Japan) */
 #endif
 
-#if 0
+#if defined(1945kiii) || defined(core_0)
 	/* 1945kiii.c */
 	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
 #endif
 
-#if 0
+#if defined(40love) || defined(core_0)
 	/* 40love.c */
 	DRIVER( fieldday )	/* A23 (c) 1984 Taito */
 	DRIVER( undoukai )	/* A17 (c) 1984 Taito */
 	DRIVER( 40love )	/* A30 (c) 1984 Taito */
 #endif
 
-#if 0
+#if defined(4enraya) || defined(core_0)
 	/* 4enraya.c */
 	DRIVER( 4enraya )	/* (c) 1990 IDSA */
 #endif
 
-#if 0
+#if defined(8080bw_drivers) || defined(core_0)
 	/* 8080bw_drivers.c */
 	/* Midway 8080 b/w games */
 	DRIVER( seawolf )	/* 596 [1976] */
@@ -195,14 +195,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spacmiss )
 #endif
 
-#if 0
+#if defined(88games) || defined(core_0)
 	/* 88games.c */
 	DRIVER( 88games )	/* GX861 (c) 1988 */
 	DRIVER( konami88 )	/* GX861 (c) 1988 */
 	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
 #endif
 
-#if 0
+#if defined(aburner) || defined(core_0)
 	/* aburner.c */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
@@ -237,7 +237,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
-#if 0
+#if defined(yamato) || defined(core_0)
 	/* yamato.c */
 	DRIVER( yamato )	/* (c) 1983 Sega */
 	DRIVER( yamato2 )	/* (c) 1983 Sega */
