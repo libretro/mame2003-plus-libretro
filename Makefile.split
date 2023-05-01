@@ -175,6 +175,7 @@ ifneq (,$(filter $(INCLUDE_DRV),aburner core_a))
 	CPUS+=M68000@
 	CPUS+=Z80@
 	CPUS+=N7751@
+	CPUS+=I8039@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=SEGAPCM@
