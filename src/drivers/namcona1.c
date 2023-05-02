@@ -84,7 +84,6 @@ static data8_t mCoinCount[4];
 static data8_t mCoinState;
 static data16_t *mcu_ram;
 static int mEnableInterrupts;
-int namcona1_gametype;
 
 /*************************************************************************/
 

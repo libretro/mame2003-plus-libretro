@@ -1,5 +1,6 @@
 TARGET_NAME := mame2003_plus
 CORE_DIR    := src
+INCLUDE_DRV ?= all
 
 DEBUG         ?= 0
 DEBUGGER      ?= 0
@@ -384,7 +385,9 @@ else ifeq ($(platform), wii)
 	AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
 	PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
+	PLATCFLAGS += -D$(INCLUDE_DRV) -DSPLIT_CORE
 	STATIC_LINKING = 1
+	ZLIB_UNCOMPRESS = 1
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
@@ -835,7 +838,11 @@ endif
 endif
 
 # include the various .mak files
-include Makefile.common
+ifneq (,$(filter $(INCLUDE_DRV),all))
+	include Makefile.common
+else
+	include Makefile.split
+endif
 
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.

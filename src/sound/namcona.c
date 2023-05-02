@@ -33,7 +33,7 @@
 
 #include <math.h>
 #include "driver.h"
-#include "namcona1.h" /* for namcona1_gametype; used for game-specific hacks */
+#include "namcona1.h"
 
 #define kTwelfthRootTwo 1.059463094
 #define FIXED_POINT_SHIFT (10) /* for mixing */
@@ -47,6 +47,7 @@ static INT16 *mpMixerBuffer;
 static INT32 *mpPitchTable;
 static data16_t *mpROM;
 static data16_t *mpMetaData;
+int namcona1_gametype;
 
 struct voice
 {

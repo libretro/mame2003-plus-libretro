@@ -79,6 +79,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/ctr-legacy-static.yml'
 
+  # Nintendo Wii
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/wii-static.yml'
+
   # Nintendo WiiU
   - project: 'libretro-infrastructure/ci-templates'
     file: '/wiiu-static.yml'
@@ -280,6 +284,20 @@ libretro-build-ctr:
     - .core-defs
   only:
     - master
+
+# Nintendo Wii
+.core-defs-wii:
+  extends:
+    - .libretro-wii-static-retroarch-master
+    - .core-defs
+  only:
+    - master
+
+#libretro-build-wii-core_drv:
+#  extends:
+#    - .core-defs-wii
+#  variables:
+#    INCLUDE_DRV: drv_
 
 # Nintendo WiiU
 libretro-build-wiiu:
