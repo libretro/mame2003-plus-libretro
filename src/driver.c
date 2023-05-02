@@ -216,6 +216,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ace )		/* [1976 Allied Leisure] */
 #endif
 
+#if defined(drv_actfancr) || defined(core_none)
+	/* actfancr.c */
+	DRIVER( actfancr )	/* (c) 1989 Data East Corporation (World) */
+	DRIVER( actfanc1 )	/* (c) 1989 Data East Corporation (World) */
+	DRIVER( actfancj )	/* (c) 1989 Data East Corporation (Japan) */
+	DRIVER( triothep )	/* (c) 1989 Data East Corporation (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
