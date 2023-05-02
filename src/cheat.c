@@ -7713,7 +7713,7 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 			if(	(handler == MWA_RAM) &&
 				(!region->writeHandler->base))
 				return 1;
-#ifdef SPLIT_CORE
+#ifndef SPLIT_CORE
 			{
 				extern struct GameDriver	driver_neogeo;
 
