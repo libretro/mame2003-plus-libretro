@@ -3126,13 +3126,13 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 {
 	int sel,res=-1;
 	static int menu_lastselected = 0;
-#if 0
+
   if(generate_DAT)
   {
     print_mame_xml();
     generate_DAT = false;
   }
-#endif
+
 	if (selected == -1)
 		sel = menu_lastselected;
 	else sel = selected - 1;
