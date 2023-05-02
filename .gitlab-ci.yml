@@ -286,13 +286,26 @@ libretro-build-ctr:
     - master
 
 # Nintendo Wii
-libretro-build-wii:
+.core-defs-wii:
   extends:
     - .libretro-wii-static-retroarch-master
     - .core-defs
   only:
     - master
     - Wii
+
+libretro-build-wii-core_a:
+  extends:
+    - .core-defs-wii
+  variables:
+    INCLUDE_DRV: core_a
+
+libretro-build-wii-core_b:
+  extends:
+    - .core-defs-wii
+  variables:
+    INCLUDE_DRV: core_b
+
 
 # Nintendo WiiU
 libretro-build-wiiu:
