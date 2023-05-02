@@ -7713,18 +7713,13 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 			if(	(handler == MWA_RAM) &&
 				(!region->writeHandler->base))
 				return 1;
-#ifndef SPLIT_CORE
-			{
-				extern struct GameDriver	driver_neogeo;
 
 				/* for neogeo, search bank one*/
-				if(	(Machine->gamedrv->clone_of == &driver_neogeo) &&
+				if(	(options.content_flags[CONTENT_NEOGEO]) &&
 					(info->targetType == kRegionType_CPU) &&
 					(info->targetIdx == 0) &&
 					(handler == MWA_BANK1))
 					return 1;
-			}
-#endif
 
 #if HAS_TMS34010
 
