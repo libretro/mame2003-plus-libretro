@@ -174,8 +174,8 @@ int PSX_sh_start( const struct MachineSound *msound )
 	state_save_register_UINT32( "psx", 0, "m_p_n_effect", m_p_n_effect, 16 );
 	state_save_register_UINT32( "psx", 0, "m_p_n_spuram", m_p_n_spuram, 0x80000 / 4 );
 
-	//psx_dma_install_read_handler( 4, spu_read );
-	//psx_dma_install_write_handler( 4, spu_write );
+	psx_dma_install_read_handler( 4, spu_read );
+	psx_dma_install_write_handler( 4, spu_write );
 
 	return 0;
 }
