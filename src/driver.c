@@ -72,14 +72,14 @@ const struct GameDriver *test_drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-#ifdef 1942
+#ifdef drv_1942
 	/* 1942.c */
 	DRIVER( 1942 )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942a )		/* 12/1984 (c) 1984 */
 	DRIVER( 1942b )		/* 12/1984 (c) 1984 */
 #endif
 
-#ifdef 1943
+#ifdef drv_1943
 	/* 1943.c */
 	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
 	DRIVER( 1943j )		/*  6/1987 (c) 1987 (Japan) */
@@ -87,25 +87,25 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 1943kai )	/*  6/1988 (c) 1987 (Japan) */
 #endif
 
-#ifdef 1945kiii
+#ifdef drv_1945kii
 	/* 1945kiii.c */
 	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
 	DRIVER( flagrall )  /* (c) 1996 Promat? */
 #endif
 
-#ifdef 40love
+#ifdef drv_40love
 	/* 40love.c */
 	DRIVER( fieldday )	/* A23 (c) 1984 Taito */
 	DRIVER( undoukai )	/* A17 (c) 1984 Taito */
 	DRIVER( 40love )	/* A30 (c) 1984 Taito */
 #endif
 
-#ifdef 4enraya
+#ifdef drv_4enraya
 	/* 4enraya.c */
 	DRIVER( 4enraya )	/* (c) 1990 IDSA */
 #endif
 
-#ifdef 8080bw_drivers
+#ifdef drv_8080bw_drivers
 	/* 8080bw_drivers.c */
 	/* Midway 8080 b/w games */
 	DRIVER( seawolf )	/* 596 [1976] */
@@ -195,14 +195,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spacmiss )
 #endif
 
-#ifdef 88games
+#ifdef drv_88games
 	/* 88games.c */
 	DRIVER( 88games )	/* GX861 (c) 1988 */
 	DRIVER( konami88 )	/* GX861 (c) 1988 */
 	DRIVER( hypsptsp )	/* GX861 (c) 1988 (Japan) */
 #endif
 
-#ifdef aburner
+#ifdef drv_aburner
 	/* aburner.c */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
@@ -211,12 +211,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( thndrbdj )  /* (protected?) */
 #endif
 
-#ifdef ace
+#ifdef drv_ace
 	/* ace.c */
 	DRIVER( ace )		/* [1976 Allied Leisure] */
 #endif
 
-#ifdef cclimber
+#ifdef drv_climber
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
 	DRIVER( cclimbrj )	/* (c) 1980 Nichibutsu */
@@ -237,7 +237,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
-#ifdef yamato
+#ifdef drv_yamato
 	/* yamato.c */
 	DRIVER( yamato )	/* (c) 1983 Sega */
 	DRIVER( yamato2 )	/* (c) 1983 Sega */
