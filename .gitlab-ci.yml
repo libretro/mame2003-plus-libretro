@@ -298,7 +298,7 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_
+    INCLUDE_DRV: drv_none
 
 # Nintendo WiiU
 libretro-build-wiiu:
