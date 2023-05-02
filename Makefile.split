@@ -104,6 +104,7 @@ SOUNDS+=CUSTOM@
 SOUNDS+=SAMPLES@
 SOUNDS+=DAC@
 SOUNDS+=DISCRETE@
+SOUNDS+=YM2610@
 
 # drivers
 ifneq (,$(filter $(INCLUDE_DRV),drv_1942 core_none))
