@@ -37,7 +37,7 @@ static bool generate_DAT;           /* allows us to display a UI message before 
 extern unsigned int dispensed_tickets;
 extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
-#if 0
+
 /* MARTINEZ.F 990207 Memory Card */
 int 		memcard_menu(struct mame_bitmap *bitmap, int);
 extern int	mcd_action;
@@ -45,7 +45,7 @@ extern int	mcd_number;
 extern int	memcard_status;
 extern int	memcard_number;
 extern int	memcard_manager;
-#endif
+
 extern int neogeo_memcard_load(int);
 extern void neogeo_memcard_save(void);
 extern void neogeo_memcard_eject(void);
