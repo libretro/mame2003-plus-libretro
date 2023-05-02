@@ -882,7 +882,7 @@ void print_mame_xml()
 	/* print games */
 	for(driver_index = 0;drivers[driver_index];++driver_index)
 		print_game_info(xml_dat, drivers[driver_index]);
-#ifdef SPLIT_CORE
+#ifndef SPLIT_CORE
 	/* print the resources (only if linked) */
 	PRINT_RESOURCE(neogeo);
 	PRINT_RESOURCE(cvs);
