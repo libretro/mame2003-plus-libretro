@@ -385,10 +385,9 @@ else ifeq ($(platform), wii)
 	AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
 	PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
+	PLATCFLAGS += -D$(INCLUDE_DRV)
 	STATIC_LINKING = 1
 	ZLIB_UNCOMPRESS = 1
-	INCLUDE_DRV = core_a
-	PLATCFLAGS += -D$(INCLUDE_DRV)
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
