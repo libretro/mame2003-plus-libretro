@@ -85,6 +85,7 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/ticket.c \
 	$(CORE_DIR)/machine/tmp68301.c \
 	$(CORE_DIR)/machine/z80fmly.c \
+	$(CORE_DIR)/machine/neogeo_machine.c \
 	$(CORE_DIR)/sound/filter.c \
 	$(CORE_DIR)/sound/mixer.c \
 	$(CORE_DIR)/sound/streams.c \
