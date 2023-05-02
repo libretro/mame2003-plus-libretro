@@ -105,7 +105,7 @@ SOUNDS+=DAC@
 SOUNDS+=DISCRETE@
 
 # drivers
-ifneq (,$(filter $(INCLUDE_DRV),1942 core_?))
+ifneq (,$(filter $(INCLUDE_DRV),1942 core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 	SOURCES_C += \
@@ -113,7 +113,7 @@ ifneq (,$(filter $(INCLUDE_DRV),1942 core_?))
 		$(CORE_DIR)/drivers/1942.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),1943 core_?))
+ifneq (,$(filter $(INCLUDE_DRV),1943 core_none))
 	CPUS+=Z80@
 	SOUNDS+=YM2203@
 	SOURCES_C += \
@@ -121,14 +121,14 @@ ifneq (,$(filter $(INCLUDE_DRV),1943 core_?))
 		$(CORE_DIR)/drivers/1943.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),1945kiii core_?))
+ifneq (,$(filter $(INCLUDE_DRV),1945kiii core_none))
 	CPUS+=M68000@
 	SOUNDS+=OKIM6295@
 	SOURCES_C += \
 		$(CORE_DIR)/drivers/1945kiii.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),40love core_?))
+ifneq (,$(filter $(INCLUDE_DRV),40love core_none))
 	CPUS+=Z80@
 	CPUS+=M68705@
 	SOUNDS+=AY8910@
@@ -139,7 +139,7 @@ ifneq (,$(filter $(INCLUDE_DRV),40love core_?))
 		$(CORE_DIR)/drivers/40love.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),4enraya core_?))
+ifneq (,$(filter $(INCLUDE_DRV),4enraya core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 	SOURCES_C += \
@@ -147,7 +147,7 @@ ifneq (,$(filter $(INCLUDE_DRV),4enraya core_?))
 		$(CORE_DIR)/drivers/4enraya.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),8080bw_drivers core_?))
+ifneq (,$(filter $(INCLUDE_DRV),8080bw_drivers core_none))
 	CPUS+=8080@
 	CPUS+=M6800@
 	SOUNDS+=SN76477@
@@ -159,7 +159,7 @@ ifneq (,$(filter $(INCLUDE_DRV),8080bw_drivers core_?))
 		$(CORE_DIR)/drivers/8080bw_drivers.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),88games core_?))
+ifneq (,$(filter $(INCLUDE_DRV),88games core_none))
 	CPUS+=KONAMI@
 	CPUS+=Z80@
 	#SOUNDS+=YM2151@
@@ -171,7 +171,7 @@ ifneq (,$(filter $(INCLUDE_DRV),88games core_?))
 		$(CORE_DIR)/drivers/88games.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),aburner core_?))
+ifneq (,$(filter $(INCLUDE_DRV),aburner core_none))
 	CPUS+=M68000@
 	CPUS+=Z80@
 	CPUS+=N7751@
@@ -209,7 +209,7 @@ ifneq (,$(filter $(INCLUDE_DRV),cclimber core_a))
 		$(CORE_DIR)/drivers/cclimber.c
 endif
 
-ifneq (,$(filter $(INCLUDE_DRV),yamato core_?))
+ifneq (,$(filter $(INCLUDE_DRV),yamato core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 	SOURCES_C += \
