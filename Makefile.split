@@ -42,7 +42,7 @@ SOURCES_C += \
 	$(CORE_DIR)/cpuintrf.c \
 	$(CORE_DIR)/datafile.c \
 	$(CORE_DIR)/drawgfx.c \
-	$(CORE_DIR)/driver.c \
+	$(CORE_DIR)/driver_split.c \
 	$(CORE_DIR)/fileio.c \
 	$(CORE_DIR)/harddisk.c \
 	$(CORE_DIR)/hash.c \
