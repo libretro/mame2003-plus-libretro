@@ -224,6 +224,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( triothep )	/* (c) 1989 Data East Corporation (Japan) */
 #endif
 
+#if defined(drv_aeroboto) || defined(core_none)
+	/* aeroboto.c */
+	DRIVER( formatz )	/* (c) 1984 Jaleco */
+	DRIVER( aeroboto )	/* (c) 1984 Williams */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
