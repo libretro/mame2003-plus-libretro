@@ -267,6 +267,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_system32 core_none))
 	SOUNDS+=YM3438@
 	SOUNDS+=RF5C68@
 	SOUNDS+=YM2612@
+	SOUNDS+=MULTIPCM@
 	SOURCES_C += \
 		$(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
 		$(CORE_DIR)/drivers/multi32.c \
