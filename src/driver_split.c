@@ -257,6 +257,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( firehawk )  /* (c) 2001 ESD */
 #endif
 
+#if defined(drv_airbustr) || defined(core_none)
+	/* airbustr.c */
+	DRIVER( airbustr )	/* (c) 1990 Kaneko + Namco */
+	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
