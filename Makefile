@@ -379,7 +379,7 @@ else ifeq ($(platform), ngc)
 
 # Nintendo Wii
 else ifeq ($(platform), wii)
-	TARGET = $(TARGET_NAME)_libretro_$(platform).a
+	TARGET = $(TARGET_NAME)_libretro_$(platform)_$(INCLUDE_DRV).a
 	BIGENDIAN = 1
 	CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
 	AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
