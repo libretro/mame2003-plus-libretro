@@ -305,6 +305,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ambusht )	/* (c) 1983 Tecfri */
 #endif
 
+#if defined(drv_amidar) || defined(core_none)
+	/* amidar.c */
+	DRIVER( amidar )	/* GX337 (c) 1981 Konami */
+	DRIVER( amidaru )	/* GX337 (c) 1982 Konami + Stern license */
+	DRIVER( amidaro )	/* GX337 (c) 1982 Konami + Olympia license */
+	DRIVER( amigo )		/* bootleg */
+	DRIVER( turtles )	/* (c) 1981 Stern */
+	DRIVER( turpin )	/* (c) 1981 Sega */
+	DRIVER( 600 )		/* GX353 (c) 1981 Konami */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
