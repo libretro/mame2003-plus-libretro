@@ -298,8 +298,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_ajax
-    CORENAME: mame2003_plus_drv_ajax
+    INCLUDE_DRV: drv_aliens
+    CORENAME: mame2003_plus_drv_aliens
 
 # Nintendo WiiU
 libretro-build-wiiu:
