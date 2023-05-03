@@ -289,6 +289,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_alpha68k core_none))
 		$(CORE_DIR)/drivers/alpha68k.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_ambush core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/ambush_vidhrdw.c \
+		$(CORE_DIR)/drivers/ambush.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
