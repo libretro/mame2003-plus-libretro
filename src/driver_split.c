@@ -284,6 +284,33 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
+#if defined(drv_system32) || defined(core_none)
+	/* system32.c */
+	DRIVER( holo )		/* (c) 1992 (US) */
+	DRIVER( arescue )	/* (c) 1992 */
+	DRIVER( radm )
+	DRIVER( radr )		/* (c) 1991 */
+	DRIVER( spidey )	/* (c) 1991 */
+	DRIVER( spideyj )	/* (c) 1991 (Japan) */
+	DRIVER( f1en )
+	DRIVER( arabfgt )	/* (c) 1991 */
+	DRIVER( ga2 )		/* (c) 1992 */
+	DRIVER( ga2j )		/* (c) 1992 */
+	DRIVER( brival )	/* (c) 1992 (Japan) */
+	DRIVER( sonic )		/* (c) 1992 (Japan) */
+	DRIVER( sonicp )	/* (c) 1992 (Japan) */
+	DRIVER( alien3 )	/* (c) 1993 */
+	DRIVER( jpark )		/* (c) 1994 */
+	DRIVER( svf )		/* (c) 1994 */
+	DRIVER( svs )		/* (c) 1994 */
+	DRIVER( jleague )	/* (c) 1994 (Japan) */
+	DRIVER( f1lap )     /* (c) 1993 (World) */
+	DRIVER( f1lapj )    /* (c) 1993 (Japan) */
+	DRIVER( darkedge )
+	DRIVER( dbzvrvs )
+	DRIVER( slipstrm )	/* Capcom */
+#endif
+
 #if defined(drv_yamato) || defined(core_none)
 	/* yamato.c */
 	DRIVER( yamato )	/* (c) 1983 Sega */
