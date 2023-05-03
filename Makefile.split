@@ -215,6 +215,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_actfancr core_none))
 		$(CORE_DIR)/drivers/actfancr.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_aeroboto core_none))
+	CPUS+=M6809@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/aeroboto_vidhrdw.c \
+		$(CORE_DIR)/drivers/aeroboto.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
