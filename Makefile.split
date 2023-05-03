@@ -273,6 +273,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_aliens core_none))
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=K007232@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/aliens_vidhrdw.c \
 		$(CORE_DIR)/drivers/aliens.c
 endif
