@@ -261,6 +261,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 		$(CORE_DIR)/drivers/cclimber.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_system32 core_none))
+	CPUS+=V60@
+	CPUS+=Z80@
+	SOUNDS+=YM3438@
+	SOUNDS+=RF5C68@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
+		$(CORE_DIR)/drivers/system32.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_yamato core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
