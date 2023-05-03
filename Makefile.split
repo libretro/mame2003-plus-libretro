@@ -252,6 +252,19 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_airbustr core_none))
 		$(CORE_DIR)/drivers/airbustr.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_ajax core_none))
+	CPUS+=KONAMI@
+	CPUS+=M6809@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K007232@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/ajax_machine.c \
+		$(CORE_DIR)/vidhrdw/ajax_vidhrdw.c \
+		$(CORE_DIR)/drivers/ajax.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
