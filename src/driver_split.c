@@ -278,6 +278,27 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( aliensj )	/* GX875 (c) 1990 (Japan) */
 #endif
 
+#if defined(drv_alpha68k) || defined(core_none)
+	/* alpha68k.c */
+	DRIVER( sstingry )	/* (c) 1986 Alpha Denshi Co. */
+	DRIVER( kyros )		/* (c) 1987 World Games */
+	DRIVER( kyrosj )	/* (c) 1986 Alpha Denshi Co. */
+	DRIVER( paddlema )	/* Alpha-68K96I  'PM' (c) 1988 SNK */
+	DRIVER( timesold )	/* Alpha-68K96II 'BT' (c) 1987 SNK / Romstar */
+	DRIVER( timesol1 )  /* Alpha-68K96II 'BT' (c) 1987 */
+	DRIVER( btlfield )  /* Alpha-68K96II 'BT' (c) 1987 */
+	DRIVER( skysoldr )	/* Alpha-68K96II 'SS' (c) 1988 SNK (Romstar with dip switch) */
+	DRIVER( goldmedl )	/* Alpha-68K96II 'GM' (c) 1988 SNK */
+	DRIVER( goldmedb )	/* Alpha-68K96II bootleg */
+	DRIVER( skyadvnt )	/* Alpha-68K96V  'SA' (c) 1989 Alpha Denshi Co. */
+	DRIVER( skyadvnu )	/* Alpha-68K96V  'SA' (c) 1989 SNK of America licensed from Alpha */
+	DRIVER( skyadvnj )	/* Alpha-68K96V  'SA' (c) 1989 Alpha Denshi Co. */
+	DRIVER( gangwars )	/* Alpha-68K96V       (c) 1989 Alpha Denshi Co. */
+	DRIVER( gangwarb )	/* Alpha-68K96V bootleg */
+	DRIVER( sbasebal )	/* Alpha-68K96V       (c) 1989 SNK of America licensed from Alpha */
+	DRIVER( tnexspce )	/* A8003 'NS' (c) 1989 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
