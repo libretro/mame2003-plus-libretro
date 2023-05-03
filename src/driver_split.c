@@ -299,6 +299,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( tnexspce )	/* A8003 'NS' (c) 1989 */
 #endif
 
+#if defined(drv_ambush) || defined(core_none)
+	/* ambush.c */
+	DRIVER( ambush )	/* (c) 1983 Nippon Amuse Co-Ltd */
+	DRIVER( ambusht )	/* (c) 1983 Tecfri */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
