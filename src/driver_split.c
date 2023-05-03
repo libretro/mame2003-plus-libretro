@@ -263,6 +263,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
 #endif
 
+#if defined(drv_ajax) || defined(core_none)
+	DRIVER( ajax )		/* GX770 (c) 1987 */
+	DRIVER( typhoon )	/* GX770 (c) 1987 */
+	DRIVER( ajaxj )		/* GX770 (c) 1987 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
