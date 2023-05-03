@@ -247,6 +247,16 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sonicwi )	/* (c) 1992 Video System Co. (Japan) */
 #endif
 
+#if defined(drv_afega) || defined(core_none)
+	/* afega.c */
+	DRIVER( stagger1 )	/* (c) 1998 */
+	DRIVER( redhawk )	  /* (c) 1997 */
+	DRIVER( grdnstrm )	/* (c) 1998 */
+	DRIVER( bubl2000 )	/* (c) 1998 Tuning */
+	DRIVER( spec2k )    /* (c) 2000 Yonatech */
+	DRIVER( firehawk )  /* (c) 2001 ESD */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
