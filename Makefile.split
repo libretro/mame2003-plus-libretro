@@ -243,6 +243,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_afega core_none))
 		$(CORE_DIR)/drivers/afega.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_airbustr core_none))
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/airbustr_vidhrdw.c \
+		$(CORE_DIR)/drivers/airbustr.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
