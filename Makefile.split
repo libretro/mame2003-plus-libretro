@@ -266,6 +266,17 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_ajax core_none))
 		$(CORE_DIR)/drivers/ajax.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_aliens core_none))
+	CPUS+=KONAMI@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K007232@
+	SOURCES_C += \
+		$(CORE_DIR)/sndhrdw/aliens_sndhrdw.c \
+		$(CORE_DIR)/drivers/aliens.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
