@@ -301,6 +301,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_amidar core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
 	SOURCES_C += \
+		$(CORE_DIR)/drivers/galaxian.c \
 		$(CORE_DIR)/drivers/amidar.c
 endif
 
