@@ -299,6 +299,7 @@ libretro-build-wii-core_drv:
     - .core-defs-wii
   variables:
     INCLUDE_DRV: drv_system32
+    CORENAME: mame2003_plus_system32
 
 # Nintendo WiiU
 libretro-build-wiiu:
