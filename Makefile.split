@@ -106,6 +106,7 @@ SOUNDS+=SAMPLES@
 SOUNDS+=DAC@
 SOUNDS+=DISCRETE@
 SOUNDS+=YM2610@
+SOUNDS+=AY8910@
 
 # drivers
 ifneq (,$(filter $(INCLUDE_DRV),drv_1942 core_none))
@@ -214,6 +215,69 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_actfancr core_none))
 		$(CORE_DIR)/drivers/actfancr.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_aeroboto core_none))
+	CPUS+=M6809@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/aeroboto_vidhrdw.c \
+		$(CORE_DIR)/drivers/aeroboto.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_aerofgt core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM2610@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/aerofgt_vidhrdw.c \
+		$(CORE_DIR)/drivers/aerofgt.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_afega core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/afega_vidhrdw.c \
+		$(CORE_DIR)/drivers/afega.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_airbustr core_none))
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/airbustr_vidhrdw.c \
+		$(CORE_DIR)/drivers/airbustr.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_ajax core_none))
+	CPUS+=KONAMI@
+	CPUS+=M6809@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K007232@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/ajax_machine.c \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/ajax_vidhrdw.c \
+		$(CORE_DIR)/drivers/ajax.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_aliens core_none))
+	CPUS+=KONAMI@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K007232@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/aliens_vidhrdw.c \
+		$(CORE_DIR)/drivers/aliens.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
@@ -221,6 +285,19 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 		$(CORE_DIR)/vidhrdw/cclimber_vidhrdw.c \
 		$(CORE_DIR)/sndhrdw/cclimber_sndhrdw.c \
 		$(CORE_DIR)/drivers/cclimber.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_system32 core_none))
+	CPUS+=V60@
+	CPUS+=Z80@
+	SOUNDS+=YM3438@
+	SOUNDS+=RF5C68@
+	SOUNDS+=YM2612@
+	SOUNDS+=MULTIPCM@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
+		$(CORE_DIR)/drivers/multi32.c \
+		$(CORE_DIR)/drivers/system32.c
 endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_yamato core_none))

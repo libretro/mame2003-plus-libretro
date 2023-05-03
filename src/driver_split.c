@@ -224,6 +224,60 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( triothep )	/* (c) 1989 Data East Corporation (Japan) */
 #endif
 
+#if defined(drv_aeroboto) || defined(core_none)
+	/* aeroboto.c */
+	DRIVER( formatz )	/* (c) 1984 Jaleco */
+	DRIVER( aeroboto )	/* (c) 1984 Williams */
+#endif
+
+#if defined(drv_aerofgt) || defined(core_none)
+	/* aerofgt.c */
+	DRIVER( spinlbrk )	/* (c) 1990 V-System Co. (World) */
+	DRIVER( spinlbru )	/* (c) 1990 V-System Co. (US) */
+	DRIVER( spinlbrj )	/* (c) 1990 V-System Co. (Japan) */
+	DRIVER( pspikes )	/* (c) 1991 Video System Co. (World) */
+	DRIVER( pspikesk )	/* (c) 1991 Video System Co. (Korea) */
+	DRIVER( svolly91 )	/* (c) 1991 Video System Co. (Japan) */
+	DRIVER( karatblz )	/* (c) 1991 Video System Co. */
+	DRIVER( karatblu )	/* (c) 1991 Video System Co. (US) */
+	DRIVER( turbofrc )	/* (c) 1991 Video System Co. */
+	DRIVER( aerofgt )	/* (c) 1992 Video System Co. */
+	DRIVER( aerofgtb )	/* (c) 1992 Video System Co. */
+	DRIVER( aerofgtc )	/* (c) 1992 Video System Co. */
+	DRIVER( sonicwi )	/* (c) 1992 Video System Co. (Japan) */
+#endif
+
+#if defined(drv_afega) || defined(core_none)
+	/* afega.c */
+	DRIVER( stagger1 )	/* (c) 1998 */
+	DRIVER( redhawk )	  /* (c) 1997 */
+	DRIVER( grdnstrm )	/* (c) 1998 */
+	DRIVER( bubl2000 )	/* (c) 1998 Tuning */
+	DRIVER( spec2k )    /* (c) 2000 Yonatech */
+	DRIVER( firehawk )  /* (c) 2001 ESD */
+#endif
+
+#if defined(drv_airbustr) || defined(core_none)
+	/* airbustr.c */
+	DRIVER( airbustr )	/* (c) 1990 Kaneko + Namco */
+	DRIVER( airbustj )	/* (c) 1990 Kaneko + Namco (Japan) */
+#endif
+
+#if defined(drv_ajax) || defined(core_none)
+	/* ajax.c */
+	DRIVER( ajax )		/* GX770 (c) 1987 */
+	DRIVER( typhoon )	/* GX770 (c) 1987 */
+	DRIVER( ajaxj )		/* GX770 (c) 1987 (Japan) */
+#endif
+
+#if defined(drv_aliens) || defined(core_none)
+	/* aliens.c */
+	DRIVER( aliens )	/* GX875 (c) 1990 (World) */
+	DRIVER( aliens2 )	/* GX875 (c) 1990 (World) */
+	DRIVER( aliensu )	/* GX875 (c) 1990 (US) */
+	DRIVER( aliensj )	/* GX875 (c) 1990 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
@@ -243,6 +297,33 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( swimmerb )	/* (c) 1982 Tehkan */
 	DRIVER( guzzler )	/* (c) 1983 Tehkan */
 	DRIVER( cannonb )	/* (c) 1985 Soft */
+#endif
+
+#if defined(drv_system32) || defined(core_none)
+	/* system32.c */
+	DRIVER( holo )		/* (c) 1992 (US) */
+	DRIVER( arescue )	/* (c) 1992 */
+	DRIVER( radm )
+	DRIVER( radr )		/* (c) 1991 */
+	DRIVER( spidey )	/* (c) 1991 */
+	DRIVER( spideyj )	/* (c) 1991 (Japan) */
+	DRIVER( f1en )
+	DRIVER( arabfgt )	/* (c) 1991 */
+	DRIVER( ga2 )		/* (c) 1992 */
+	DRIVER( ga2j )		/* (c) 1992 */
+	DRIVER( brival )	/* (c) 1992 (Japan) */
+	DRIVER( sonic )		/* (c) 1992 (Japan) */
+	DRIVER( sonicp )	/* (c) 1992 (Japan) */
+	DRIVER( alien3 )	/* (c) 1993 */
+	DRIVER( jpark )		/* (c) 1994 */
+	DRIVER( svf )		/* (c) 1994 */
+	DRIVER( svs )		/* (c) 1994 */
+	DRIVER( jleague )	/* (c) 1994 (Japan) */
+	DRIVER( f1lap )     /* (c) 1993 (World) */
+	DRIVER( f1lapj )    /* (c) 1993 (Japan) */
+	DRIVER( darkedge )
+	DRIVER( dbzvrvs )
+	DRIVER( slipstrm )	/* Capcom */
 #endif
 
 #if defined(drv_yamato) || defined(core_none)

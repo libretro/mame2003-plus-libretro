@@ -297,7 +297,8 @@ libretro-build-ctr:
 #  extends:
 #    - .core-defs-wii
 #  variables:
-#    INCLUDE_DRV: drv_
+#    INCLUDE_DRV: drv_?
+#    CORENAME: mame2003_plus_drv_?
 
 # Nintendo WiiU
 libretro-build-wiiu:
