@@ -264,9 +264,18 @@ const struct GameDriver *test_drivers[] =
 #endif
 
 #if defined(drv_ajax) || defined(core_none)
+	/* ajax.c */
 	DRIVER( ajax )		/* GX770 (c) 1987 */
 	DRIVER( typhoon )	/* GX770 (c) 1987 */
 	DRIVER( ajaxj )		/* GX770 (c) 1987 (Japan) */
+#endif
+
+#if defined(drv_aliens) || defined(core_none)
+	/* aliens.c */
+	DRIVER( aliens )	/* GX875 (c) 1990 (World) */
+	DRIVER( aliens2 )	/* GX875 (c) 1990 (World) */
+	DRIVER( aliensu )	/* GX875 (c) 1990 (US) */
+	DRIVER( aliensj )	/* GX875 (c) 1990 (Japan) */
 #endif
 
 #if defined(drv_climber) || defined(core_none)
