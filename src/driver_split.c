@@ -230,6 +230,23 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( aeroboto )	/* (c) 1984 Williams */
 #endif
 
+#if defined(drv_aerofgt) || defined(core_none)
+	/* aerofgt.c */
+	DRIVER( spinlbrk )	/* (c) 1990 V-System Co. (World) */
+	DRIVER( spinlbru )	/* (c) 1990 V-System Co. (US) */
+	DRIVER( spinlbrj )	/* (c) 1990 V-System Co. (Japan) */
+	DRIVER( pspikes )	/* (c) 1991 Video System Co. (World) */
+	DRIVER( pspikesk )	/* (c) 1991 Video System Co. (Korea) */
+	DRIVER( svolly91 )	/* (c) 1991 Video System Co. (Japan) */
+	DRIVER( karatblz )	/* (c) 1991 Video System Co. */
+	DRIVER( karatblu )	/* (c) 1991 Video System Co. (US) */
+	DRIVER( turbofrc )	/* (c) 1991 Video System Co. */
+	DRIVER( aerofgt )	/* (c) 1992 Video System Co. */
+	DRIVER( aerofgtb )	/* (c) 1992 Video System Co. */
+	DRIVER( aerofgtc )	/* (c) 1992 Video System Co. */
+	DRIVER( sonicwi )	/* (c) 1992 Video System Co. (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
