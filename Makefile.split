@@ -303,7 +303,10 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_amidar core_none))
 	SOUNDS+=AY8910@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/scramble_machine.c \
+		$(CORE_DIR)/sndhrdw/galaxian_sndhrdw.c \
+		$(CORE_DIR)/vidhrdw/galaxian_vidhrdw.c \
 		$(CORE_DIR)/drivers/galaxian.c \
+		$(CORE_DIR)/drivers/scobra.c \
 		$(CORE_DIR)/drivers/amidar.c
 endif
 
