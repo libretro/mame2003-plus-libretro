@@ -316,6 +316,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( 600 )		/* GX353 (c) 1981 Konami */
 #endif
 
+#if defined(drv_amspdwy) || defined(core_none)
+	/* amspdwy.c */
+	DRIVER( amspdwy )	/* no copyright notice, but (c) 1987 Enerdyne Technologies, Inc. */
+	DRIVER( amspdwya )	/* no copyright notice, but (c) 1987 Enerdyne Technologies, Inc. */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
