@@ -440,14 +440,12 @@ static int dvg_generate_vector_list(void)
 
 void avg_set_flip_x(int flip)
 {
-	if (flip)
-		flip_x = 1;
+	flip_x = flip;
 }
 
 void avg_set_flip_y(int flip)
 {
-	if (flip)
-		flip_y = 1;
+	flip_y = flip;
 }
 
 void avg_apply_flipping_and_swapping(int *x, int *y)
