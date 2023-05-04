@@ -322,6 +322,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( amspdwya )	/* no copyright notice, but (c) 1987 Enerdyne Technologies, Inc. */
 #endif
 
+#if defined(drv_angelkds) || defined(core_none)
+	/* angelkds.c */
+	DRIVER( angelkds )	/* 833-6599 (c) 1988 Sega / Nasco? */
+	DRIVER( spcpostn )	/* (c) 1986 Sega / Nasco" */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
