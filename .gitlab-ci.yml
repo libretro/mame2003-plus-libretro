@@ -219,7 +219,7 @@ android-arm64-v8a:
     - .core-defs
   only:
     - master
-    - wii
+    - Wii
   variables:
     INCLUDE_DRV: drv_system32
 
