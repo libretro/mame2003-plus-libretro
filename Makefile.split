@@ -311,6 +311,24 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_amidar core_none))
 		$(CORE_DIR)/drivers/amidar.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_amspdwy core_none))
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/amspdwy_vidhrdw.c \
+		$(CORE_DIR)/drivers/amspdwy.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_angelkds core_none))
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/segacrpt.c \
+		$(CORE_DIR)/vidhrdw/angelkds_vidhrdw.c \
+		$(CORE_DIR)/drivers/angelkds.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
