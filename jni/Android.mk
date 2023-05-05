@@ -2,12 +2,11 @@ LOCAL_PATH := $(call my-dir)
 
 ROOT_DIR := $(LOCAL_PATH)/..
 CORE_DIR := $(ROOT_DIR)/src
+INCLUDE_DRV = core_none
 
-
-
-COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID	-D$(INCLUDE_DRV) -DSPLIT_CORE -DHAVE_ZLIB $(INCFLAGS)
 include $(ROOT_DIR)/Makefile.split
 
+COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID -DHAVE_ZLIB $(INCFLAGS)
 
 GIT_VERSION := " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
