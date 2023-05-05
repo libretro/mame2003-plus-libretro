@@ -3,9 +3,11 @@ LOCAL_PATH := $(call my-dir)
 ROOT_DIR := $(LOCAL_PATH)/..
 CORE_DIR := $(ROOT_DIR)/src
 
-include $(ROOT_DIR)/Makefile.split
+
 
 COREFLAGS := $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID	-D$(INCLUDE_DRV) -DSPLIT_CORE -DHAVE_ZLIB $(INCFLAGS)
+include $(ROOT_DIR)/Makefile.split
+
 
 GIT_VERSION := " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
