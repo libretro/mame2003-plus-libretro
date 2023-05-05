@@ -292,14 +292,13 @@ libretro-build-ctr:
     - .core-defs
   only:
     - master
-    - Wii
 
-libretro-build-wii-core_drv:
-  extends:
-    - .core-defs-wii
-  variables:
-    INCLUDE_DRV: drv_angelkds
-    CORENAME: mame2003_plus_drv_angelkds
+#libretro-build-wii-core_drv:
+#  extends:
+#    - .core-defs-wii
+#  variables:
+#    INCLUDE_DRV: drv_?
+#    CORENAME: mame2003_plus_drv_?
 
 # Nintendo WiiU
 libretro-build-wiiu:
