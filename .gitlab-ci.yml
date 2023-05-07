@@ -298,8 +298,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_aquarium
-    CORENAME: mame2003_plus_drv_aquarium
+    INCLUDE_DRV: drv_arabian
+    CORENAME: mame2003_plus_drv_arabian
 
 # Nintendo WiiU
 libretro-build-wiiu:
