@@ -404,6 +404,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_artmagic core_none))
 		$(CORE_DIR)/drivers/artmagic.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_ashnojoe core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOUNDS+=MSM5205@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/ashnojoe_vidhrdw.c \
+		$(CORE_DIR)/drivers/ashnojoe.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
