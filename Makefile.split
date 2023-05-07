@@ -426,6 +426,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_asterix core_none))
 		$(CORE_DIR)/drivers/asterix.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_asteroid core_none))
+	CPUS+=M6502@
+	SOUNDS+=POKEY@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/asteroid_machine.c \
+		$(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c \
+		$(CORE_DIR)/drivers/asteroid.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
