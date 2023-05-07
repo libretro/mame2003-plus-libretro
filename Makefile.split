@@ -376,6 +376,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_argus core_none))
 		$(CORE_DIR)/drivers/argus.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_arkanoid core_none))
+	CPUS+=Z80@
+	CPUS+=M68705@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/arkanoid_machine.c \
+		$(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c \
+		$(CORE_DIR)/drivers/arkanoid.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
