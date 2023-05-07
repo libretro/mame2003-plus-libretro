@@ -437,6 +437,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_asteroid core_none))
 		$(CORE_DIR)/drivers/asteroid.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_astinvad core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/astinvad_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/astinvad_sndhrdw.c \
+		$(CORE_DIR)/drivers/astinvad.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
