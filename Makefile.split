@@ -361,6 +361,9 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_arcadecl core_none))
 	CPUS+=M68000@
 	SOUNDS+=OKIM6295@
 	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/vidhrdw/rampart_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
 		$(CORE_DIR)/vidhrdw/arcadecl_vidhrdw.c \
 		$(CORE_DIR)/drivers/arcadecl.c
 endif
