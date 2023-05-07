@@ -328,6 +328,28 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spcpostn )	/* (c) 1986 Sega / Nasco" */
 #endif
 
+#if defined(drv_appoooh) || defined(core_none)
+	/* appoooh.c */
+	DRIVER( appoooh )	/* (c) 1984 Sega */	/* made by Sanritsu */
+#endif
+
+#if defined(drv_aquarium) || defined(core_none)
+	/* aquarium.c */
+	DRIVER( aquarium )	/* (c) 1996 Excellent System */
+#endif
+
+#if defined(drv_arabian) || defined(core_none)
+	/* arabian.c */
+	DRIVER( arabian )	/* TVG13 (c) 1983 Sun Electronics */
+	DRIVER( arabiana )	/* 136019			(c) 1983 Atari */
+#endif
+
+#if defined(drv_arcadecl) || defined(core_none)
+	/* arcadecl.c */
+	DRIVER( arcadecl )	/* (proto)			(c) 1992 */
+	DRIVER( sparkz )	/* (proto)			(c) 1992 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */

@@ -329,6 +329,45 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_angelkds core_none))
 		$(CORE_DIR)/drivers/angelkds.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_appoooh core_none))
+	CPUS+=Z80@
+	SOUNDS+=SN76496@
+	SOUNDS+=MSM5205@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/appoooh_vidhrdw.c \
+		$(CORE_DIR)/drivers/appoooh.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_aquarium core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/aquarium_vidhrdw.c \
+		$(CORE_DIR)/drivers/aquarium.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_arabian core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/arabian_vidhrdw.c \
+		$(CORE_DIR)/drivers/arabian.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_arcadecl core_none))
+	CPUS+=M68000@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/vidhrdw/rampart_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/arcadecl_vidhrdw.c \
+		$(CORE_DIR)/drivers/arcadecl.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
