@@ -414,6 +414,17 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_ashnojoe core_none))
 		$(CORE_DIR)/drivers/ashnojoe.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_asterix core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K053260@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/asterix_vidhrdw.c \
+		$(CORE_DIR)/drivers/asterix.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
