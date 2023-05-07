@@ -421,6 +421,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_asterix core_none))
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=K053260@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/asterix_vidhrdw.c \
 		$(CORE_DIR)/drivers/asterix.c
 endif
