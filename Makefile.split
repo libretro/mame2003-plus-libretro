@@ -431,6 +431,8 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_asteroid core_none))
 	SOUNDS+=POKEY@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/asteroid_machine.c \
+		$(CORE_DIR)/machine/atari_vg.c \
+		$(CORE_DIR)/sndhrdw/llander.c \
 		$(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c \
 		$(CORE_DIR)/drivers/asteroid.c
 endif
