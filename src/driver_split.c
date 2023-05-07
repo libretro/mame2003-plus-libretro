@@ -357,6 +357,22 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( butasan )	/* (c) 1987 Jaleco */
 #endif
 
+#if defined(drv_arkanoid) || defined(core_none)
+	/* arkanoid.c */
+	DRIVER( arkanoid )	/* A75 (c) 1986 Taito Corporation Japan (World) */
+	DRIVER( arknoidu )	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
+	DRIVER( arknoiuo )	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
+	DRIVER( arknoidj )	/* A75 (c) 1986 Taito Corporation (Japan) */
+	DRIVER( arkbl2 )	/* bootleg */
+	DRIVER( arkbl3 )	/* bootleg */
+	DRIVER( paddle2 )	/* bootleg */
+	DRIVER( arkatayt )	/* bootleg */
+	DRIVER( arkblock )	/* bootleg */
+	DRIVER( arkbloc2 )	/* bootleg */
+	DRIVER( arkangc )	/* bootleg */
+	DRIVER( arkatour )	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
