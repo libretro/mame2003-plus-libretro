@@ -368,6 +368,83 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_arcadecl core_none))
 		$(CORE_DIR)/drivers/arcadecl.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_argus core_none))
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/argus_vidhrdw.c \
+		$(CORE_DIR)/drivers/argus.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_arkanoid core_none))
+	CPUS+=Z80@
+	CPUS+=M68705@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/arkanoid_machine.c \
+		$(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c \
+		$(CORE_DIR)/drivers/arkanoid.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_armedf core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM3812@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/armedf_vidhrdw.c \
+		$(CORE_DIR)/drivers/armedf.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_artmagic core_none))
+	CPUS+=M68000@
+	CPUS+=TMS34010@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/artmagic_vidhrdw.c \
+		$(CORE_DIR)/drivers/artmagic.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_ashnojoe core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOUNDS+=MSM5205@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/ashnojoe_vidhrdw.c \
+		$(CORE_DIR)/drivers/ashnojoe.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_asterix core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=K053260@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/asterix_vidhrdw.c \
+		$(CORE_DIR)/drivers/asterix.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_asteroid core_none))
+	CPUS+=M6502@
+	SOUNDS+=POKEY@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/asteroid_machine.c \
+		$(CORE_DIR)/machine/atari_vg.c \
+		$(CORE_DIR)/sndhrdw/llander.c \
+		$(CORE_DIR)/sndhrdw/asteroid_sndhrdw.c \
+		$(CORE_DIR)/drivers/asteroid.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_astinvad core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/astinvad_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/astinvad_sndhrdw.c \
+		$(CORE_DIR)/drivers/astinvad.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
