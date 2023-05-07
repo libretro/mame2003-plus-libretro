@@ -373,6 +373,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( arkatour )	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
 #endif
 
+#if defined(drv_armedf) || defined(core_none)
+	/* armedf.c */
+	DRIVER( legion )	/* (c) 1986 */
+	DRIVER( legiono )	/* (c) 1986 */
+	DRIVER( terraf )	/* (c) 1987 */
+	DRIVER( terrafu )	/* (c) 1987 Nichibutsu USA */
+	DRIVER( kodure )	/* (c) 1987 (Japan) */
+	DRIVER( cclimbr2 )	/* (c) 1988 (Japan) */
+	DRIVER( armedf )	/* (c) 1988 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
