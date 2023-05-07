@@ -393,16 +393,28 @@ const struct GameDriver *test_drivers[] =
 #endif
 
 #if defined(drv_ashnojoe) || defined(core_none)
-	/* ashnojoe.c */ 
+	/* ashnojoe.c */
 	DRIVER( scessjoe )	/* ??? (c) 1990 Wave / Taito */
 	DRIVER( ashnojoe )	/* ??? (c) 1990 Wave / Taito */
 #endif
 
 #if defined(drv_asterix) || defined(core_none)
-	/* asterix.c */ 
+	/* asterix.c */
 	DRIVER( asterix )	/* GX068 (c) 1992 (World) */
 	DRIVER( astrxeac )	/* GX068 (c) 1992 (World) */
 	DRIVER( astrxeaa )	/* GX068 (c) 1992 (World) */
+#endif
+
+#if defined(drv_asteroid) || defined(core_none)
+	/* asteroid.c */
+	DRIVER( asteroid )	/* 035127-035145	(c) 1979 */
+	DRIVER( asteroi1 )	/* 035127-035145	no copyright notice */
+	DRIVER( asteroib )	/* (bootleg) */
+	DRIVER( asterock )	/* Sidam bootleg	(c) 1979 */
+	DRIVER( astdelux )	/* 0351xx			(c) 1980 */
+	DRIVER( astdelu1 )	/* 0351xx			(c) 1980 */
+	DRIVER( llander )	/* 0345xx			no copyright notice */
+	DRIVER( llander1 )	/* 0345xx			no copyright notice */
 #endif
 
 #if defined(drv_climber) || defined(core_none)
