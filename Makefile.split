@@ -349,6 +349,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_aquarium core_none))
 		$(CORE_DIR)/drivers/aquarium.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_arabian core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/arabian_vidhrdw.c \
+		$(CORE_DIR)/drivers/arabian.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
