@@ -329,6 +329,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_angelkds core_none))
 		$(CORE_DIR)/drivers/angelkds.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_appoooh core_none))
+	CPUS+=Z80@
+	SOUNDS+=SN76496@
+	SOUNDS+=MSM5205@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/appoooh_vidhrdw.c \
+		$(CORE_DIR)/drivers/appoooh.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
