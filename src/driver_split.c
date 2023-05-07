@@ -384,6 +384,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( armedf )	/* (c) 1988 */
 #endif
 
+#if defined(drv_artmagic) || defined(core_none)
+	/* artmagic.c */
+	DRIVER( ultennis )	/* (c) 1993 */
+	DRIVER( cheesech )	/* (c) 1994 */
+	DRIVER( stonebal )	/* (c) 1994 */
+	DRIVER( stoneba2 )	/* (c) 1994 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
