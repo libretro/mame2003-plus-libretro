@@ -398,6 +398,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ashnojoe )	/* ??? (c) 1990 Wave / Taito */
 #endif
 
+#if defined(drv_asterix) || defined(core_none)
+	/* asterix.c */ 
+	DRIVER( asterix )	/* GX068 (c) 1992 (World) */
+	DRIVER( astrxeac )	/* GX068 (c) 1992 (World) */
+	DRIVER( astrxeaa )	/* GX068 (c) 1992 (World) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
