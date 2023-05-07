@@ -344,6 +344,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( arabiana )	/* 136019			(c) 1983 Atari */
 #endif
 
+#if defined(drv_arcadecl) || defined(core_none)
+	/* arcadecl.c */
+	DRIVER( arcadecl )	/* (proto)			(c) 1992 */
+	DRIVER( sparkz )	/* (proto)			(c) 1992 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
