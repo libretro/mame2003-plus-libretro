@@ -333,6 +333,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( appoooh )	/* (c) 1984 Sega */	/* made by Sanritsu */
 #endif
 
+#if defined(drv_aquarium) || defined(core_none)
+	/* aquarium.c */
+	DRIVER( aquarium )	/* (c) 1996 Excellent System */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
