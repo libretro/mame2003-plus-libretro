@@ -350,6 +350,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sparkz )	/* (proto)			(c) 1992 */
 #endif
 
+#if defined(drv_argus) || defined(core_none)
+	/* argus.c */
+	DRIVER( argus )		/* (c) 1986 Jaleco */
+	DRIVER( valtric )	/* (c) 1986 Jaleco */
+	DRIVER( butasan )	/* (c) 1987 Jaleco */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
