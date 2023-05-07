@@ -392,6 +392,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( stoneba2 )	/* (c) 1994 */
 #endif
 
+#if defined(drv_ashnojoe) || defined(core_none)
+	/* ashnojoe.c */ 
+	DRIVER( scessjoe )	/* ??? (c) 1990 Wave / Taito */
+	DRIVER( ashnojoe )	/* ??? (c) 1990 Wave / Taito */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
