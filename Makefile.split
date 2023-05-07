@@ -386,6 +386,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_arkanoid core_none))
 		$(CORE_DIR)/drivers/arkanoid.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_armedf core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM3812@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/armedf_vidhrdw.c \
+		$(CORE_DIR)/drivers/armedf.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
