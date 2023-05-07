@@ -328,6 +328,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spcpostn )	/* (c) 1986 Sega / Nasco" */
 #endif
 
+#if defined(drv_appoooh) || defined(core_none)
+	/* appoooh.c */
+	DRIVER( appoooh )	/* (c) 1984 Sega */	/* made by Sanritsu */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
