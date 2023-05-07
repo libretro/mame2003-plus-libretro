@@ -417,6 +417,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( llander1 )	/* 0345xx			no copyright notice */
 #endif
 
+#if defined(drv_astinvad) || defined(core_none)
+	/* astinvad.c */
+	DRIVER( astinvad )	/* (c) 1980 Stern */
+	DRIVER( kamikaze )	/* Leijac Corporation */
+	DRIVER( spcking2 )
+	DRIVER( spaceint )	/* [1980] Shoei */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
