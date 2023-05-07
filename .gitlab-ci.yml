@@ -298,8 +298,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_armedf
-    CORENAME: mame2003_plus_drv_armedf
+    INCLUDE_DRV: drv_artmagic
+    CORENAME: mame2003_plus_drv_artmagic
 
 # Nintendo WiiU
 libretro-build-wiiu:
