@@ -525,6 +525,7 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_atarigt core_none))
 	CPUS+=M68EC020@
+	CPUS+=TMS32031@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/vidhrdw/atarigt_vidhrdw.c \
