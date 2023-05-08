@@ -456,6 +456,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_astrocde core_none))
 		$(CORE_DIR)/drivers/astrocde.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_astrof core_none))
+	CPUS+=M6502@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/astrof_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/astrof_sndhrdw.c \
+		$(CORE_DIR)/drivers/astrof.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
