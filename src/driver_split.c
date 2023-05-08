@@ -446,6 +446,23 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( tomahaw5 )	/* (c) [1980?] */
 #endif
 
+#if defined(drv_asuka) || defined(core_none)
+	/* asuka.c */
+	DRIVER( bonzeadv )	/* B41 (c) 1988 Taito Corporation Japan (World) */
+	DRIVER( bonzeadu )	/* B41 (c) 1988 Taito America Corporation (US) */
+	DRIVER( jigkmgri )	/* B41 (c) 1988 Taito Corporation (Japan)*/
+	DRIVER( asuka )		/* ??? (c) 1988 Taito Corporation (Japan) */
+	DRIVER( mofflott )	/* C17 (c) 1989 Taito Corporation (Japan) */
+	DRIVER( cadash )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( cadashj )	/* C21 (c) 1989 Taito Corporation */
+	DRIVER( cadashu )	/* C21 (c) 1989 Taito America Corporation */
+	DRIVER( cadashi )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( cadashf )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( galmedes )	/* (c) 1992 Visco (Japan) */
+	DRIVER( earthjkr )	/* (c) 1993 Visco (Japan) */
+	DRIVER( eto )		/* (c) 1994 Visco (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
