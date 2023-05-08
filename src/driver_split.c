@@ -425,6 +425,18 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spaceint )	/* [1980] Shoei */
 #endif
 
+#if defined(drv_astrocde) || defined(core_none)
+	/* astrocde.c */
+	DRIVER( seawolf2 )
+	DRIVER( spacezap )	/* (c) 1980 */
+	DRIVER( ebases )
+	DRIVER( wow )		/* (c) 1980 */
+	DRIVER( gorf )		/* (c) 1981 */
+	DRIVER( gorfpgm1 )	/* (c) 1981 */
+	DRIVER( robby )		/* (c) 1981 Bally Midway */
+	DRIVER( profpac )	/* (c) 1983 Bally Midway */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
