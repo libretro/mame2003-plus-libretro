@@ -473,7 +473,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( soccer )	/* 035222-035260	1980/04 [6502] */
 #endif
 
-atarig1
 #if defined(drv_atarig1) || defined(core_none)
 	/* atarig1.c */
 	DRIVER( hydra )		/* 136079			(c) 1990 */
