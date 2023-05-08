@@ -499,6 +499,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_atarig1 core_none))
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/vidhrdw/atarig1_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
 		$(CORE_DIR)/sndhrdw/atarijsa.c \
 		$(CORE_DIR)/drivers/atarig1.c
 endif
