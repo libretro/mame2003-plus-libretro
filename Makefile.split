@@ -452,6 +452,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_astrocde core_none))
 		$(CORE_DIR)/machine/astrocde_machine.c \
 		$(CORE_DIR)/vidhrdw/astrocde_vidhrdw.c \
 		$(CORE_DIR)/sndhrdw/astrocde_sndhrdw.c \
+		$(CORE_DIR)/sndhrdw/gorf.c \
 		$(CORE_DIR)/drivers/astrocde.c
 endif
 
