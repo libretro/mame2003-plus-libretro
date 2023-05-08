@@ -464,6 +464,19 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_astrof core_none))
 		$(CORE_DIR)/drivers/astrof.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_asuka core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM2610@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=ADPCM@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/bonzeadv.c \
+		$(CORE_DIR)/vidhrdw/asuka_vidhrdw.c \
+		$(CORE_DIR)/drivers/asuka.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
