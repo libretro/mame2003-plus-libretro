@@ -437,6 +437,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( profpac )	/* (c) 1983 Bally Midway */
 #endif
 
+#if defined(drv_astrof) || defined(core_none)
+	/* astrof.c */
+	DRIVER( astrof )	/* (c) [1980?] */
+	DRIVER( astrof2 )	/* (c) [1980?] */
+	DRIVER( astrof3 )	/* (c) [1980?] */
+	DRIVER( tomahawk )	/* (c) [1980?] */
+	DRIVER( tomahaw5 )	/* (c) [1980?] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
