@@ -491,6 +491,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( dangerex )	/* (proto)			(c) 1992 */
 #endif
 
+#if defined(drv_atarigt) || defined(core_none)
+	/* atarigt.c */
+	DRIVER( tmek )		/* 136100			(c) 1994 */
+	DRIVER( tmekprot )	/* 136100			(c) 1994 */
+	DRIVER( primrage )	/* 136102			(c) 1994 */
+	DRIVER( primraga )	/* 136102			(c) 1994 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
