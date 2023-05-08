@@ -484,6 +484,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( pitfighb )	/* bootleg */
 #endif
 
+#if defined(drv_atarig42) || defined(core_none)
+	/* atarig42.c */
+	DRIVER( roadriot )	/* 136089			(c) 1991 */
+	DRIVER( guardian )	/* 136092			(c) 1992 */
+	DRIVER( dangerex )	/* (proto)			(c) 1992 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
