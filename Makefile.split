@@ -473,6 +473,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_asuka core_none))
 	SOUNDS+=ADPCM@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/bonzeadv.c \
+		$(CORE_DIR)/vidhrdw/taitoic.c \
 		$(CORE_DIR)/vidhrdw/asuka_vidhrdw.c \
 		$(CORE_DIR)/drivers/asuka.c
 endif
