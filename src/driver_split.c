@@ -463,6 +463,16 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( eto )		/* (c) 1994 Visco (Japan) */
 #endif
 
+#if defined(drv_atarifb) || defined(core_none)
+	/* atarifb.c */
+	DRIVER( atarifb )	/* 033xxx			1978/10 [6502] */
+	DRIVER( atarifb1 )	/* 033xxx			1978/10 [6502] */
+	DRIVER( atarifb4 )	/* 034754			1979/04 [6502] */
+	DRIVER( abaseb )	/* 034711-034738	1979/06 [6502] */
+	DRIVER( abaseb2 )	/* 034711-034738	1979/06 [6502] */
+	DRIVER( soccer )	/* 035222-035260	1980/04 [6502] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
