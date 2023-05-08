@@ -473,6 +473,18 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( soccer )	/* 035222-035260	1980/04 [6502] */
 #endif
 
+atarig1
+#if defined(drv_atarig1) || defined(core_none)
+	/* atarig1.c */
+	DRIVER( hydra )		/* 136079			(c) 1990 */
+	DRIVER( hydrap )	/* (proto)			(c) 1990 */
+	DRIVER( hydrap2 )	/* (proto)			(c) 1990 */
+	DRIVER( pitfight )	/* 136081			(c) 1990 */
+	DRIVER( pitfigh3 )	/* 136081			(c) 1990 */
+	DRIVER( pitfighj )	/* Japan */
+	DRIVER( pitfighb )	/* bootleg */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
