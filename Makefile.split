@@ -577,6 +577,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_atarisy2 core_none))
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/machine/slapstic.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
 		$(CORE_DIR)/vidhrdw/atarisy2_vidhrdw.c \
 		$(CORE_DIR)/drivers/atarisy2.c
 endif
