@@ -499,6 +499,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( primraga )	/* 136102			(c) 1994 */
 #endif
 
+#if defined(drv_atarigx2) || defined(core_none)
+	/* atarigx2.c */
+	DRIVER( spclords )	/* 136095			(c) 1992 */
+	DRIVER( spclorda )	/* 136095			(c) 1992 */
+	DRIVER( motofren )	/* 136094			(c) 1992 */
+	DRIVER( rrreveng )	/*     ??			(c) 1993 */
+	DRIVER( rrrevenp )	/*     ??		    (c) 1993 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
