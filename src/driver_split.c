@@ -508,6 +508,32 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rrrevenp )	/*     ??		    (c) 1993 */
 #endif
 
+#if defined(drv_atarisy1) || defined(core_none)
+	/* atarisy1.c */
+	DRIVER( marble )	/* 136033			(c) 1984 */
+	DRIVER( marble2 )	/* 136033			(c) 1984 */
+	DRIVER( marble3 )	/* 136033			(c) 1984 */
+	DRIVER( marble4 )	/* 136033			(c) 1984 */
+	DRIVER( indytemp )	/* 136036			(c) 1985 */
+	DRIVER( indytem2 )	/* 136036			(c) 1985 */
+	DRIVER( indytem3 )	/* 136036			(c) 1985 */
+	DRIVER( indytem4 )	/* 136036			(c) 1985 */
+	DRIVER( indytemd )	/* 136036			(c) 1985 */
+	DRIVER( roadrunn )	/* 136040			(c) 1985 */
+	DRIVER( roadrun2 )	/* 136040			(c) 1985 */
+	DRIVER( roadrun1 )	/* 136040			(c) 1985 */
+	DRIVER( roadblst )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblsg )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls3 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblg2 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls2 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblg1 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls1 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblsc )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblcg )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblc1 )	/* 136048			(c) 1986, 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
