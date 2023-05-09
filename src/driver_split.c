@@ -582,6 +582,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( asylum )	/* (c) 1991 Leland */
 #endif
 
+#if defined(drv_atetris) || defined(core_none)
+	/* atetris.c */
+	DRIVER( atetris )	/* 136066			(c) 1988 */
+	DRIVER( atetrisa )	/* 136066			(c) 1988 */
+	DRIVER( atetrisb )	/* (bootleg) */
+	DRIVER( atetcktl )	/* 136066			(c) 1989 */
+	DRIVER( atetckt2 )	/* 136066			(c) 1989 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
