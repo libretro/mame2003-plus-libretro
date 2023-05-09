@@ -612,6 +612,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_avalnche core_none))
 		$(CORE_DIR)/drivers/avalnche.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_aztarac core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/aztarac_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/aztarac_sndhrdw.c \
+		$(CORE_DIR)/drivers/aztarac.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
