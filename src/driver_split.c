@@ -425,6 +425,152 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spaceint )	/* [1980] Shoei */
 #endif
 
+#if defined(drv_astrocde) || defined(core_none)
+	/* astrocde.c */
+	DRIVER( seawolf2 )
+	DRIVER( spacezap )	/* (c) 1980 */
+	DRIVER( ebases )
+	DRIVER( wow )		/* (c) 1980 */
+	DRIVER( gorf )		/* (c) 1981 */
+	DRIVER( gorfpgm1 )	/* (c) 1981 */
+	DRIVER( robby )		/* (c) 1981 Bally Midway */
+	DRIVER( profpac )	/* (c) 1983 Bally Midway */
+#endif
+
+#if defined(drv_astrof) || defined(core_none)
+	/* astrof.c */
+	DRIVER( astrof )	/* (c) [1980?] */
+	DRIVER( astrof2 )	/* (c) [1980?] */
+	DRIVER( astrof3 )	/* (c) [1980?] */
+	DRIVER( tomahawk )	/* (c) [1980?] */
+	DRIVER( tomahaw5 )	/* (c) [1980?] */
+#endif
+
+#if defined(drv_asuka) || defined(core_none)
+	/* asuka.c */
+	DRIVER( bonzeadv )	/* B41 (c) 1988 Taito Corporation Japan (World) */
+	DRIVER( bonzeadu )	/* B41 (c) 1988 Taito America Corporation (US) */
+	DRIVER( jigkmgri )	/* B41 (c) 1988 Taito Corporation (Japan)*/
+	DRIVER( asuka )		/* ??? (c) 1988 Taito Corporation (Japan) */
+	DRIVER( mofflott )	/* C17 (c) 1989 Taito Corporation (Japan) */
+	DRIVER( cadash )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( cadashj )	/* C21 (c) 1989 Taito Corporation */
+	DRIVER( cadashu )	/* C21 (c) 1989 Taito America Corporation */
+	DRIVER( cadashi )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( cadashf )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( galmedes )	/* (c) 1992 Visco (Japan) */
+	DRIVER( earthjkr )	/* (c) 1993 Visco (Japan) */
+	DRIVER( eto )		/* (c) 1994 Visco (Japan) */
+#endif
+
+#if defined(drv_atarifb) || defined(core_none)
+	/* atarifb.c */
+	DRIVER( atarifb )	/* 033xxx			1978/10 [6502] */
+	DRIVER( atarifb1 )	/* 033xxx			1978/10 [6502] */
+	DRIVER( atarifb4 )	/* 034754			1979/04 [6502] */
+	DRIVER( abaseb )	/* 034711-034738	1979/06 [6502] */
+	DRIVER( abaseb2 )	/* 034711-034738	1979/06 [6502] */
+	DRIVER( soccer )	/* 035222-035260	1980/04 [6502] */
+#endif
+
+#if defined(drv_atarig1) || defined(core_none)
+	/* atarig1.c */
+	DRIVER( hydra )		/* 136079			(c) 1990 */
+	DRIVER( hydrap )	/* (proto)			(c) 1990 */
+	DRIVER( hydrap2 )	/* (proto)			(c) 1990 */
+	DRIVER( pitfight )	/* 136081			(c) 1990 */
+	DRIVER( pitfigh3 )	/* 136081			(c) 1990 */
+	DRIVER( pitfighj )	/* Japan */
+	DRIVER( pitfighb )	/* bootleg */
+#endif
+
+#if defined(drv_atarig42) || defined(core_none)
+	/* atarig42.c */
+	DRIVER( roadriot )	/* 136089			(c) 1991 */
+	DRIVER( guardian )	/* 136092			(c) 1992 */
+	DRIVER( dangerex )	/* (proto)			(c) 1992 */
+#endif
+
+#if defined(drv_atarigt) || defined(core_none)
+	/* atarigt.c */
+	DRIVER( tmek )		/* 136100			(c) 1994 */
+	DRIVER( tmekprot )	/* 136100			(c) 1994 */
+	DRIVER( primrage )	/* 136102			(c) 1994 */
+	DRIVER( primraga )	/* 136102			(c) 1994 */
+#endif
+
+#if defined(drv_atarigx2) || defined(core_none)
+	/* atarigx2.c */
+	DRIVER( spclords )	/* 136095			(c) 1992 */
+	DRIVER( spclorda )	/* 136095			(c) 1992 */
+	DRIVER( motofren )	/* 136094			(c) 1992 */
+	DRIVER( rrreveng )	/*     ??			(c) 1993 */
+	DRIVER( rrrevenp )	/*     ??		    (c) 1993 */
+#endif
+
+#if defined(drv_atarisy1) || defined(core_none)
+	/* atarisy1.c */
+	DRIVER( marble )	/* 136033			(c) 1984 */
+	DRIVER( marble2 )	/* 136033			(c) 1984 */
+	DRIVER( marble3 )	/* 136033			(c) 1984 */
+	DRIVER( marble4 )	/* 136033			(c) 1984 */
+	DRIVER( indytemp )	/* 136036			(c) 1985 */
+	DRIVER( indytem2 )	/* 136036			(c) 1985 */
+	DRIVER( indytem3 )	/* 136036			(c) 1985 */
+	DRIVER( indytem4 )	/* 136036			(c) 1985 */
+	DRIVER( indytemd )	/* 136036			(c) 1985 */
+	DRIVER( roadrunn )	/* 136040			(c) 1985 */
+	DRIVER( roadrun2 )	/* 136040			(c) 1985 */
+	DRIVER( roadrun1 )	/* 136040			(c) 1985 */
+	DRIVER( roadblst )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblsg )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls3 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblg2 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls2 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblg1 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadbls1 )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblsc )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblcg )	/* 136048			(c) 1986, 1987 */
+	DRIVER( roadblc1 )	/* 136048			(c) 1986, 1987 */
+#endif
+
+#if defined(drv_atarisy2) || defined(core_none)
+	/* atarisy2.c */
+	DRIVER( paperboy )	/* 136034			(c) 1984 */
+	DRIVER( paperbr2 )	/* 136034			(c) 1984 */
+	DRIVER( paperbr1 )	/* 136034			(c) 1984 */
+	DRIVER( 720 )		/* 136047			(c) 1986 */
+	DRIVER( 720r3 )		/* 136047			(c) 1986 */
+	DRIVER( 720r2 )		/* 136047			(c) 1986 */
+	DRIVER( 720r1 )		/* 136047			(c) 1986 */
+	DRIVER( 720g )		/* 136047			(c) 1986 */
+	DRIVER( 720gr1 )		/* 136047			(c) 1986 */
+	DRIVER( ssprint )	/* 136042			(c) 1986 */
+	DRIVER( ssprint3 )	/* 136042			(c) 1986 */
+	DRIVER( ssprint1 )	/* 136042			(c) 1986 */
+	DRIVER( ssprintg )	/* 136042			(c) 1986 */
+	DRIVER( sspring1 )	/* 136042			(c) 1986 */
+	DRIVER( ssprintf )	/* 136042			(c) 1986 */
+	DRIVER( ssprints )	/* 136042			(c) 1986 */
+	DRIVER( csprint )	/* 136045			(c) 1986 */
+	DRIVER( csprint2 )	/* 136045			(c) 1986 */
+	DRIVER( csprint1 )	/* 136045			(c) 1986 */
+	DRIVER( csprintg )	/* 136045			(c) 1986 */
+	DRIVER( cspring1 )	/* 136045			(c) 1986 */
+	DRIVER( csprintf )	/* 136045			(c) 1986 */
+	DRIVER( csprints )	/* 136045			(c) 1986 */
+	DRIVER( csprins1 )	/* 136045			(c) 1986 */
+	DRIVER( apb )		/* 136051			(c) 1987 */
+	DRIVER( apb6 )		/* 136051			(c) 1987 */
+	DRIVER( apb5 )		/* 136051			(c) 1987 */
+	DRIVER( apb4 )		/* 136051			(c) 1987 */
+	DRIVER( apb3 )		/* 136051			(c) 1987 */
+	DRIVER( apb2 )		/* 136051			(c) 1987 */
+	DRIVER( apb1 )		/* 136051			(c) 1987 */
+	DRIVER( apbg )		/* 136051			(c) 1987 */
+	DRIVER( apbf )		/* 136051			(c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
