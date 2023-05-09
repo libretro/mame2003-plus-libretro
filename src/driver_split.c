@@ -534,6 +534,43 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( roadblc1 )	/* 136048			(c) 1986, 1987 */
 #endif
 
+#if defined(drv_atarisy2) || defined(core_none)
+	/* atarisy2.c */
+	DRIVER( paperboy )	/* 136034			(c) 1984 */
+	DRIVER( paperbr2 )	/* 136034			(c) 1984 */
+	DRIVER( paperbr1 )	/* 136034			(c) 1984 */
+	DRIVER( 720 )		/* 136047			(c) 1986 */
+	DRIVER( 720r3 )		/* 136047			(c) 1986 */
+	DRIVER( 720r2 )		/* 136047			(c) 1986 */
+	DRIVER( 720r1 )		/* 136047			(c) 1986 */
+	DRIVER( 720g )		/* 136047			(c) 1986 */
+	DRIVER( 720gr1 )		/* 136047			(c) 1986 */
+	DRIVER( ssprint )	/* 136042			(c) 1986 */
+	DRIVER( ssprint3 )	/* 136042			(c) 1986 */
+	DRIVER( ssprint1 )	/* 136042			(c) 1986 */
+	DRIVER( ssprintg )	/* 136042			(c) 1986 */
+	DRIVER( sspring1 )	/* 136042			(c) 1986 */
+	DRIVER( ssprintf )	/* 136042			(c) 1986 */
+	DRIVER( ssprints )	/* 136042			(c) 1986 */
+	DRIVER( csprint )	/* 136045			(c) 1986 */
+	DRIVER( csprint2 )	/* 136045			(c) 1986 */
+	DRIVER( csprint1 )	/* 136045			(c) 1986 */
+	DRIVER( csprintg )	/* 136045			(c) 1986 */
+	DRIVER( cspring1 )	/* 136045			(c) 1986 */
+	DRIVER( csprintf )	/* 136045			(c) 1986 */
+	DRIVER( csprints )	/* 136045			(c) 1986 */
+	DRIVER( csprins1 )	/* 136045			(c) 1986 */
+	DRIVER( apb )		/* 136051			(c) 1987 */
+	DRIVER( apb6 )		/* 136051			(c) 1987 */
+	DRIVER( apb5 )		/* 136051			(c) 1987 */
+	DRIVER( apb4 )		/* 136051			(c) 1987 */
+	DRIVER( apb3 )		/* 136051			(c) 1987 */
+	DRIVER( apb2 )		/* 136051			(c) 1987 */
+	DRIVER( apb1 )		/* 136051			(c) 1987 */
+	DRIVER( apbg )		/* 136051			(c) 1987 */
+	DRIVER( apbf )		/* 136051			(c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
