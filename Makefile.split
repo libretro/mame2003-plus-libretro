@@ -534,6 +534,13 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_atarigt core_none))
 		$(CORE_DIR)/drivers/atarigt.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_atarigx2 core_none))
+	CPUS+=M68EC020@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/atarigx2_vidhrdw.c \
+		$(CORE_DIR)/drivers/atarigx2.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
