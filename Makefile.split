@@ -569,6 +569,7 @@ endif
 ifneq (,$(filter $(INCLUDE_DRV),drv_atarisy2 core_none))
 	CPUS+=T11@
 	CPUS+=M6502@
+	CPUS+=M6809@
 	SOUNDS+=TMS5220@
 	SOUNDS+=POKEY@
 	#SOUNDS+=YM2151@
