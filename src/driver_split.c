@@ -596,6 +596,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( avalnche )	/* 030574			1978/04 [6502] */
 #endif
 
+#if defined(drv_aztarac) || defined(core_none)
+	/* aztarac.c */
+	DRIVER( aztarac )	/* (c) 1983 Centuri (vector game) */
+#endif
+
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
