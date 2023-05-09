@@ -571,6 +571,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( apbf )		/* 136051			(c) 1987 */
 #endif
 
+#if defined(drv_ataxx) || defined(core_none)
+	/* ataxx.c */
+	DRIVER( ataxx )		/* (c) 1990 Leland */
+	DRIVER( ataxxa )	/* (c) 1990 Leland */
+	DRIVER( ataxxj )	/* (c) 1990 Leland */
+	DRIVER( wsf )		/* (c) 1990 Leland */
+	DRIVER( indyheat )	/* (c) 1991 Leland */
+	DRIVER( brutforc )	/* (c) 1991 Leland */
+	DRIVER( asylum )	/* (c) 1991 Leland */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
