@@ -585,6 +585,8 @@ endif
 ifneq (,$(filter $(INCLUDE_DRV),drv_ataxx core_none))
 	CPUS+=Z80@
 	CPUS+=I186@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
 		$(CORE_DIR)/drivers/ataxx.c
 endif
