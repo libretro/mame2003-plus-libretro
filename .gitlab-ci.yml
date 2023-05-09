@@ -272,7 +272,6 @@ libretro-build-psl1ght:
     - .core-defs
   only:
     - master
-    - Test
 
 # PlayStation Portable
 libretro-build-psp:
