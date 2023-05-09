@@ -536,6 +536,12 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_atarigx2 core_none))
 	CPUS+=M68EC020@
+	CPUS+=M6502@
+	SOUNDS+=TMS5220@
+	SOUNDS+=OKIM6295@
+	SOUNDS+=POKEY@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/vidhrdw/atarirle_vidhrdw.c \
