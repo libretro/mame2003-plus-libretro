@@ -298,8 +298,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_atarisy1
-    CORENAME: mame2003_plus_drv_atarisy1
+    INCLUDE_DRV: drv_atarisy2
+    CORENAME: mame2003_plus_drv_atarisy2
 
 # Nintendo WiiU
 libretro-build-wiiu:
