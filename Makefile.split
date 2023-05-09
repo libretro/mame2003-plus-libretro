@@ -594,6 +594,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_ataxx core_none))
 		$(CORE_DIR)/drivers/ataxx.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_atetris core_none))
+	CPUS+=M6502@
+	SOUNDS+=POKEY@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/atetris_vidhrdw.c \
+		$(CORE_DIR)/drivers/atetris.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
