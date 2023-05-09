@@ -591,6 +591,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( atetckt2 )	/* 136066			(c) 1989 */
 #endif
 
+#if defined(drv_avalnche) || defined(core_none)
+	/* avalnche.c */
+	DRIVER( avalnche )	/* 030574			1978/04 [6502] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
