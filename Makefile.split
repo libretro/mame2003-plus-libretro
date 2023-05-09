@@ -590,6 +590,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_ataxx core_none))
 	SOURCES_C += \
 		$(CORE_DIR)/machine/leland_machine.c \
 		$(CORE_DIR)/vidhrdw/leland_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/leland_sndhrdw.c \
 		$(CORE_DIR)/drivers/ataxx.c
 endif
 
