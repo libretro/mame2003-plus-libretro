@@ -10508,11 +10508,12 @@ const char *mk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "High Punch";
-    case IPT_BUTTON2: return BTN2 "Block";
-    case IPT_BUTTON3: return BTN3 "High Kick";
-    case IPT_BUTTON4: return BTN4 "Low Punch";
-    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON1: return BTN1 "Low Punch";
+    case IPT_BUTTON2: return BTN2 "Low Kick";
+    case IPT_BUTTON3: return BTN3 "High Punch";
+    case IPT_BUTTON4: return BTN4 "High Kick";
+    case IPT_BUTTON5: return BTN5 "Block";
+    case IPT_BUTTON6: return BTN6 "Block 2";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -10535,11 +10536,11 @@ const char *mk3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "High Punch";
-    case IPT_BUTTON2: return BTN2 "Block";
-    case IPT_BUTTON3: return BTN3 "High Kick";
-    case IPT_BUTTON4: return BTN4 "Low Punch";
-    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON1: return BTN1 "Low Punch";
+    case IPT_BUTTON2: return BTN2 "Low Kick";
+    case IPT_BUTTON3: return BTN3 "High Punch";
+    case IPT_BUTTON4: return BTN4 "High Kick";
+    case IPT_BUTTON5: return BTN5 "Block";
     case IPT_BUTTON6: return BTN6 "Run";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
@@ -10563,11 +10564,11 @@ const char *mk4_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "High Punch";
-    case IPT_BUTTON2: return BTN2 "Block";
-    case IPT_BUTTON3: return BTN3 "High Kick";
-    case IPT_BUTTON4: return BTN4 "Low Punch";
-    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON1: return BTN1 "Low Punch";
+    case IPT_BUTTON2: return BTN2 "Low Kick";
+    case IPT_BUTTON3: return BTN3 "High Punch";
+    case IPT_BUTTON4: return BTN4 "High Kick";
+    case IPT_BUTTON5: return BTN5 "Block";
     case IPT_BUTTON6: return BTN6 "Run";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
@@ -10591,11 +10592,12 @@ const char *mk2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return BTN1 "High Punch";
-    case IPT_BUTTON2: return BTN2 "Block";
-    case IPT_BUTTON3: return BTN3 "High Kick";
-    case IPT_BUTTON4: return BTN4 "Low Punch";
-    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON1: return BTN1 "Low Punch";
+    case IPT_BUTTON2: return BTN2 "Low Kick";
+    case IPT_BUTTON3: return BTN3 "High Punch";
+    case IPT_BUTTON4: return BTN4 "High Kick";
+    case IPT_BUTTON5: return BTN5 "Block";
+    case IPT_BUTTON6: return BTN6 "Block 2";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
