@@ -582,6 +582,13 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_atarisy2 core_none))
 		$(CORE_DIR)/drivers/atarisy2.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_ataxx core_none))
+	CPUS+=Z80@
+	CPUS+=I186@
+	SOURCES_C += \
+		$(CORE_DIR)/drivers/ataxx.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
