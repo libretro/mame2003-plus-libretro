@@ -310,8 +310,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_avalnche
-    CORENAME: mame2003_plus_drv_avalnche
+    INCLUDE_DRV: drv_aztarac
+    CORENAME: mame2003_plus_drv_aztarac
 
 # Nintendo WiiU
 libretro-build-wiiu:
