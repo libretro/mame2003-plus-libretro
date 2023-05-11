@@ -637,6 +637,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_badlands core_none))
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/vidhrdw/badlands_vidhrdw.c \
 		$(CORE_DIR)/drivers/badlands.c
 endif
