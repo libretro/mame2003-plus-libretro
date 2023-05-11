@@ -702,6 +702,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rackemup )	/* GX765 (c) 1987 */
 #endif
 
+#if defined(drv_bbusters) || defined(core_none)
+	/* bbusters.c */
+	DRIVER( bbusters )	/* A9003 'BB' (c) 1989 */
+	DRIVER( mechatt )	/* A8002 'MA' (c) 1989 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
