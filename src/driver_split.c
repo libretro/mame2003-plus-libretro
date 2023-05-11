@@ -681,6 +681,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( battlan3 )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
 #endif
 
+#if defined(drv_battlera) || defined(core_none)
+	/* battlera.c */
+	DRIVER( battlera )	/* (c) 1988 Data East Corporation (World) */
+	DRIVER( bldwolf )	/* (c) 1988 Data East USA (US) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
