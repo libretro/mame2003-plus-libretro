@@ -310,8 +310,8 @@ libretro-build-wii-core_drv:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_badlands
-    CORENAME: mame2003_plus_drv_badlands
+    INCLUDE_DRV: drv_bagman
+    CORENAME: mame2003_plus_drv_bagman
 
 # Nintendo WiiU
 libretro-build-wiiu:
