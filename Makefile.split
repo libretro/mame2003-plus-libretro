@@ -672,6 +672,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bankp core_none))
 		$(CORE_DIR)/drivers/bankp.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_baraduke core_none))
+	CPUS+=M6809@
+	CPUS+=HD63701@
+	SOUNDS+=NAMCO_15XX@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c \
+		$(CORE_DIR)/drivers/baraduke.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
