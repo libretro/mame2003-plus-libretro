@@ -681,6 +681,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_baraduke core_none))
 		$(CORE_DIR)/drivers/baraduke.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_batman core_none))
+	CPUS+=M68000@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/vidhrdw/batman_vidhrdw.c \
+		$(CORE_DIR)/drivers/batman.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
