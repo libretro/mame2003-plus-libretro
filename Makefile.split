@@ -743,6 +743,13 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bbusters core_none))
 		$(CORE_DIR)/drivers/bbusters.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_beaminv core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/beaminv_vidhrdw.c \
+		$(CORE_DIR)/drivers/beaminv.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
