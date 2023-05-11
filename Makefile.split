@@ -706,6 +706,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_battlane core_none))
 		$(CORE_DIR)/drivers/battlane.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_battlera core_none))
+	CPUS+=H6280@
+	SOUNDS+=YM2203@
+	SOUNDS+=MSM5205@
+	SOUNDS+=C6280@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/battlera_vidhrdw.c \
+		$(CORE_DIR)/drivers/battlera.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
