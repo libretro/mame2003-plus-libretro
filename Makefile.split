@@ -622,6 +622,13 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_aztarac core_none))
 		$(CORE_DIR)/drivers/aztarac.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_backfire core_none))
+	CPUS+=ARM@
+	SOUNDS+=YMZ280B@
+	SOURCES_C += \
+		$(CORE_DIR)/drivers/backfire.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
