@@ -643,6 +643,16 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_badlands core_none))
 		$(CORE_DIR)/drivers/badlands.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_bagman core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOUNDS+=TMS5110@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/bagman_machine.c \
+		$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c \
+		$(CORE_DIR)/drivers/bagman.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
