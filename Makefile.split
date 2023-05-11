@@ -686,6 +686,8 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_batman core_none))
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
 		$(CORE_DIR)/vidhrdw/batman_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
 		$(CORE_DIR)/drivers/batman.c
 endif
 
