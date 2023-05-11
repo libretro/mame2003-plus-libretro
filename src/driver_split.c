@@ -606,6 +606,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( backfire )      /* MBZ (c) 1995 Data East Corporation */
 #endif
 
+#if defined(drv_badlands) || defined(core_none)
+	/* badlands.c */
+	DRIVER( badlands )	/* 136074			(c) 1989 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
