@@ -713,6 +713,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( beaminv )	/* Tekunon Kougyou */
 #endif
 
+#if defined(drv_beathead) || defined(core_none)
+	/* beathead.c */
+	DRIVER( beathead )	/* (proto)			(c) 1993 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
