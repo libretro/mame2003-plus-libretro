@@ -729,6 +729,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_battlnts core_none))
 	CPUS+=Z80@
 	SOUNDS+=YM3812@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/battlnts_vidhrdw.c \
 		$(CORE_DIR)/drivers/battlnts.c
 endif
