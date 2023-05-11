@@ -660,6 +660,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( combh )		/* (c) 1987 Sega */	/* made by Sanritsu */
 #endif
 
+#if defined(drv_baraduke) || defined(core_none)
+	/* baraduke.c */
+	DRIVER( baraduke )	/* (c) 1985 */
+	DRIVER( baraduka )	/* (c) 1985 */
+	DRIVER( metrocrs )	/* (c) 1985 */
+	DRIVER( metrocra )	/* (c) 1985 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
