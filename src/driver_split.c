@@ -708,6 +708,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( mechatt )	/* A8002 'MA' (c) 1989 */
 #endif
 
+#if defined(drv_beaminv) || defined(core_none)
+	/* beaminv.c */
+	DRIVER( beaminv )	/* Tekunon Kougyou */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
