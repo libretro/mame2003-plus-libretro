@@ -674,6 +674,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( marblmd2 )
 #endif
 
+#if defined(drv_battlane) || defined(core_none)
+	/* battlane.c */
+	DRIVER( battlane )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+	DRIVER( battlan2 )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+	DRIVER( battlan3 )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
