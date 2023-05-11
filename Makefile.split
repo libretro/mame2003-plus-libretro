@@ -754,6 +754,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_beathead core_none))
 	CPUS+=ASAP@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
 		$(CORE_DIR)/vidhrdw/beathead_vidhrdw.c \
 		$(CORE_DIR)/drivers/beathead.c
 endif
