@@ -611,6 +611,19 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( badlands )	/* 136074			(c) 1989 */
 #endif
 
+#if defined(drv_bagman) || defined(core_none)
+	/* bagman.c */
+	DRIVER( bagman )	/* (c) 1982 */
+	DRIVER( bagnard )	/* (c) 1982 */
+	DRIVER( bagmans )	/* (c) 1982 + Stern license */
+	DRIVER( bagmans2 )	/* (c) 1982 + Stern license */
+	DRIVER( sbagman )	/* (c) 1984 */
+	DRIVER( sbagmans )	/* (c) 1984 + Stern license */
+	DRIVER( pickin )	/* (c) 1983 */
+	DRIVER( botanic )	/* (c) 1983 */
+	DRIVER( botanicf )	/* (c) 1984 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
