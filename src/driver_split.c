@@ -654,6 +654,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( shrike )	/* (c) 1987 */
 #endif
 
+#if defined(drv_bankp) || defined(core_none)
+	/* bankp.c */
+	DRIVER( bankp )		/* (c) 1984 Sega */	/* made by Sanritsu */
+	DRIVER( combh )		/* (c) 1987 Sega */	/* made by Sanritsu */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
