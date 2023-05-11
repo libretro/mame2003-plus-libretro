@@ -624,6 +624,36 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( botanicf )	/* (c) 1984 */
 #endif
 
+#if defined(drv_balsente) || defined(core_none)
+	/* balsente.c */
+	DRIVER( sentetst )
+	DRIVER( cshift )	/* (c) 1984 */
+	DRIVER( gghost )	/* (c) 1984 */
+	DRIVER( hattrick )	/* (c) 1984 */
+	DRIVER( otwalls )	/* (c) 1984 */
+	DRIVER( snakepit )	/* (c) 1984 */
+	DRIVER( snakjack )	/* (c) 1984 */
+	DRIVER( stocker )	/* (c) 1984 */
+	DRIVER( triviag1 )	/* (c) 1984 */
+	DRIVER( triviag2 )	/* (c) 1984 */
+	DRIVER( triviasp )	/* (c) 1984 */
+	DRIVER( triviayp )	/* (c) 1984 */
+	DRIVER( triviabb )	/* (c) 1984 */
+	DRIVER( gimeabrk )	/* (c) 1985 */
+	DRIVER( minigolf )	/* (c) 1985 */
+	DRIVER( minigol2 )	/* (c) 1985 */
+	DRIVER( toggle )	/* (c) 1985 */
+	DRIVER( nametune )	/* (c) 1986 */
+	DRIVER( nstocker )	/* (c) 1986 */
+	DRIVER( sfootbal )	/* (c) 1986 */
+	DRIVER( spiker )	/* (c) 1986 */
+	DRIVER( stompin )	/* (c) 1986 */
+	DRIVER( rescraid )	/* (c) 1987 */
+	DRIVER( rescrdsa )	/* (c) 1987 */
+	DRIVER( grudge )
+	DRIVER( shrike )	/* (c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
