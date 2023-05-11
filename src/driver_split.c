@@ -601,6 +601,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( aztarac )	/* (c) 1983 Centuri (vector game) */
 #endif
 
+#if defined(drv_backfire) || defined(core_none)
+	/* backfire.c */
+	DRIVER( backfire )      /* MBZ (c) 1995 Data East Corporation */
+#endif
 
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
