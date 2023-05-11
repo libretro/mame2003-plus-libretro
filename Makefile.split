@@ -622,6 +622,118 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_aztarac core_none))
 		$(CORE_DIR)/drivers/aztarac.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_backfire core_none))
+	CPUS+=ARM@
+	SOUNDS+=YMZ280B@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/decocrpt.c \
+		$(CORE_DIR)/vidhrdw/deco16ic.c \
+		$(CORE_DIR)/drivers/backfire.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_badlands core_none))
+	CPUS+=M68000@
+	CPUS+=M6502@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/badlands_vidhrdw.c \
+		$(CORE_DIR)/drivers/badlands.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bagman core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOUNDS+=TMS5110@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/bagman_machine.c \
+		$(CORE_DIR)/vidhrdw/bagman_vidhrdw.c \
+		$(CORE_DIR)/drivers/bagman.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_balsente core_none))
+	CPUS+=M6809@
+	CPUS+=Z80@
+	CPUS+=M68000@
+	SOUNDS+=CEM3394@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/balsente_machine.c \
+		$(CORE_DIR)/vidhrdw/balsente_vidhrdw.c \
+		$(CORE_DIR)/drivers/balsente.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bankp core_none))
+	CPUS+=Z80@
+	SOUNDS+=SN76496@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bankp_vidhrdw.c \
+		$(CORE_DIR)/drivers/bankp.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_baraduke core_none))
+	CPUS+=M6809@
+	CPUS+=HD63701@
+	SOUNDS+=NAMCO_15XX@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/baraduke_vidhrdw.c \
+		$(CORE_DIR)/drivers/baraduke.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_batman core_none))
+	CPUS+=M68000@
+	CPUS+=M6502@
+	SOUNDS+=TMS5220@
+	SOUNDS+=OKIM6295@
+	SOUNDS+=POKEY@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/vidhrdw/batman_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/thunderj_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
+		$(CORE_DIR)/drivers/batman.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_battlane core_none))
+	CPUS+=M6809@
+	SOUNDS+=YM3526@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/battlane_vidhrdw.c \
+		$(CORE_DIR)/drivers/battlane.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_battlera core_none))
+	CPUS+=H6280@
+	SOUNDS+=YM2203@
+	SOUNDS+=MSM5205@
+	SOUNDS+=C6280@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/battlera_vidhrdw.c \
+		$(CORE_DIR)/drivers/battlera.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_battlex core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/battlex_vidhrdw.c \
+		$(CORE_DIR)/drivers/battlex.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_battlnts core_none))
+	CPUS+=HD6309@
+	CPUS+=Z80@
+	SOUNDS+=YM3812@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/battlnts_vidhrdw.c \
+		$(CORE_DIR)/drivers/battlnts.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@

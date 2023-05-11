@@ -601,6 +601,106 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( aztarac )	/* (c) 1983 Centuri (vector game) */
 #endif
 
+#if defined(drv_backfire) || defined(core_none)
+	/* backfire.c */
+	DRIVER( backfire )      /* MBZ (c) 1995 Data East Corporation */
+#endif
+
+#if defined(drv_badlands) || defined(core_none)
+	/* badlands.c */
+	DRIVER( badlands )	/* 136074			(c) 1989 */
+#endif
+
+#if defined(drv_bagman) || defined(core_none)
+	/* bagman.c */
+	DRIVER( bagman )	/* (c) 1982 */
+	DRIVER( bagnard )	/* (c) 1982 */
+	DRIVER( bagmans )	/* (c) 1982 + Stern license */
+	DRIVER( bagmans2 )	/* (c) 1982 + Stern license */
+	DRIVER( sbagman )	/* (c) 1984 */
+	DRIVER( sbagmans )	/* (c) 1984 + Stern license */
+	DRIVER( pickin )	/* (c) 1983 */
+	DRIVER( botanic )	/* (c) 1983 */
+	DRIVER( botanicf )	/* (c) 1984 */
+#endif
+
+#if defined(drv_balsente) || defined(core_none)
+	/* balsente.c */
+	DRIVER( sentetst )
+	DRIVER( cshift )	/* (c) 1984 */
+	DRIVER( gghost )	/* (c) 1984 */
+	DRIVER( hattrick )	/* (c) 1984 */
+	DRIVER( otwalls )	/* (c) 1984 */
+	DRIVER( snakepit )	/* (c) 1984 */
+	DRIVER( snakjack )	/* (c) 1984 */
+	DRIVER( stocker )	/* (c) 1984 */
+	DRIVER( triviag1 )	/* (c) 1984 */
+	DRIVER( triviag2 )	/* (c) 1984 */
+	DRIVER( triviasp )	/* (c) 1984 */
+	DRIVER( triviayp )	/* (c) 1984 */
+	DRIVER( triviabb )	/* (c) 1984 */
+	DRIVER( gimeabrk )	/* (c) 1985 */
+	DRIVER( minigolf )	/* (c) 1985 */
+	DRIVER( minigol2 )	/* (c) 1985 */
+	DRIVER( toggle )	/* (c) 1985 */
+	DRIVER( nametune )	/* (c) 1986 */
+	DRIVER( nstocker )	/* (c) 1986 */
+	DRIVER( sfootbal )	/* (c) 1986 */
+	DRIVER( spiker )	/* (c) 1986 */
+	DRIVER( stompin )	/* (c) 1986 */
+	DRIVER( rescraid )	/* (c) 1987 */
+	DRIVER( rescrdsa )	/* (c) 1987 */
+	DRIVER( grudge )
+	DRIVER( shrike )	/* (c) 1987 */
+#endif
+
+#if defined(drv_bankp) || defined(core_none)
+	/* bankp.c */
+	DRIVER( bankp )		/* (c) 1984 Sega */	/* made by Sanritsu */
+	DRIVER( combh )		/* (c) 1987 Sega */	/* made by Sanritsu */
+#endif
+
+#if defined(drv_baraduke) || defined(core_none)
+	/* baraduke.c */
+	DRIVER( baraduke )	/* (c) 1985 */
+	DRIVER( baraduka )	/* (c) 1985 */
+	DRIVER( metrocrs )	/* (c) 1985 */
+	DRIVER( metrocra )	/* (c) 1985 */
+#endif
+
+#if defined(drv_batman) || defined(core_none)
+	/* batman.c */
+	DRIVER( batman )	/* 136085			(c) 1991 */
+	DRIVER( marblmd2 )
+#endif
+
+#if defined(drv_battlane) || defined(core_none)
+	/* battlane.c */
+	DRIVER( battlane )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+	DRIVER( battlan2 )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+	DRIVER( battlan3 )	/* -0215, -0216 (Data East part number) (c) 1986 + Taito license */
+#endif
+
+#if defined(drv_battlera) || defined(core_none)
+	/* battlera.c */
+	DRIVER( battlera )	/* (c) 1988 Data East Corporation (World) */
+	DRIVER( bldwolf )	/* (c) 1988 Data East USA (US) */
+#endif
+
+#if defined(drv_battlex) || defined(core_none)
+	/* battlex.c */
+	DRIVER( battlex )	/* (c) 1982 Omori Electric Co., Ltd. */
+	DRIVER( dodgeman )	/* (c) 1983 Omori Electric Co., Ltd. */
+#endif
+
+#if defined(drv_battlnts) || defined(core_none)
+	/* battlnts.c */
+	DRIVER( battlnts )	/* GX777 (c) 1987 */
+	DRIVER( battlntj )	/* GX777 (c) 1987 (Japan) */
+	DRIVER( thehustl )	/* GX765 (c) 1987 (Japan) */
+	DRIVER( thehustj )	/* GX765 (c) 1987 (Japan) */
+	DRIVER( rackemup )	/* GX765 (c) 1987 */
+#endif
 
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */

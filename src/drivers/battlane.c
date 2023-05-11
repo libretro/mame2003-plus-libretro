@@ -16,8 +16,6 @@
 extern UINT8 *battlane_spriteram;
 extern UINT8 *battlane_tileram;
 
-extern struct tilemap *bg_tilemap;
-
 extern WRITE_HANDLER( battlane_palette_w );
 extern WRITE_HANDLER( battlane_scrollx_w );
 extern WRITE_HANDLER( battlane_scrolly_w );
@@ -50,7 +48,6 @@ WRITE_HANDLER( battlane_cpu_command_w )
 
 	if (flip_screen != (data & 0x80)) {
 		flip_screen_set(data & 0x80);
-		tilemap_mark_all_tiles_dirty(bg_tilemap);
 	}
 
 	/*
