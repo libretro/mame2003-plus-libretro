@@ -687,6 +687,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bldwolf )	/* (c) 1988 Data East USA (US) */
 #endif
 
+#if defined(drv_battlex) || defined(core_none)
+	/* battlex.c */
+	DRIVER( battlex )	/* (c) 1982 Omori Electric Co., Ltd. */
+	DRIVER( dodgeman )	/* (c) 1983 Omori Electric Co., Ltd. */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
