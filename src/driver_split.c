@@ -693,6 +693,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( dodgeman )	/* (c) 1983 Omori Electric Co., Ltd. */
 #endif
 
+#if defined(drv_battlnts) || defined(core_none)
+	/* battlnts.c */
+	DRIVER( battlnts )	/* GX777 (c) 1987 */
+	DRIVER( battlntj )	/* GX777 (c) 1987 (Japan) */
+	DRIVER( thehustl )	/* GX765 (c) 1987 (Japan) */
+	DRIVER( thehustj )	/* GX765 (c) 1987 (Japan) */
+	DRIVER( rackemup )	/* GX765 (c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
