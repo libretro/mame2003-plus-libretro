@@ -736,6 +736,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bigevglf )	/* A67 (c) 1986 Taito America Corporation (US) */
 #endif
 
+#if defined(drv_bigstrkb) || defined(core_none)
+	/* bigstrkb.c */
+	DRIVER( bigstrkb )	/* bootleg on different hardware */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
