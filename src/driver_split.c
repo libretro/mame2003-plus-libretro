@@ -718,6 +718,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( beathead )	/* (proto)			(c) 1993 */
 #endif
 
+#if defined(drv_beezer) || defined(core_none)
+	/* beezer.c */
+	DRIVER( beezer )	/* (c) 1982 */
+	DRIVER( beezer1 )	/* (c) 1982 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
