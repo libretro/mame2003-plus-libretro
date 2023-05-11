@@ -731,6 +731,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( frenzy )	/* (c) 1982 */
 #endif
 
+#if defined(drv_bigevglf) || defined(core_none)
+	/* bigevglf.c */
+	DRIVER( bigevglf )	/* A67 (c) 1986 Taito America Corporation (US) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
