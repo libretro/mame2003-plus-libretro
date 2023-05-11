@@ -683,6 +683,7 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_batman core_none))
 	CPUS+=M68000@
+	CPUS+=M6502@
 	SOUNDS+=TMS5220@
 	SOUNDS+=OKIM6295@
 	SOUNDS+=POKEY@
