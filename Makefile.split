@@ -626,6 +626,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_backfire core_none))
 	CPUS+=ARM@
 	SOUNDS+=YMZ280B@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/deco16ic.c \
 		$(CORE_DIR)/drivers/backfire.c
 endif
 
