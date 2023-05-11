@@ -668,6 +668,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( metrocra )	/* (c) 1985 */
 #endif
 
+#if defined(drv_batman) || defined(core_none)
+	/* batman.c */
+	DRIVER( batman )	/* 136085			(c) 1991 */
+	DRIVER( marblmd2 )
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
