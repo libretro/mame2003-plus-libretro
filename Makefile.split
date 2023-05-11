@@ -773,6 +773,15 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_beezer core_none))
 		$(CORE_DIR)/drivers/beezer.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_berzerk core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/berzerk_machine.c \
+		$(CORE_DIR)/vidhrdw/berzerk_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/berzerk_sndhrdw.c \
+		$(CORE_DIR)/drivers/berzerk.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
