@@ -795,6 +795,7 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_bigstrkb core_none))
 	CPUS+=M68000@
+	CPUS+=Z80@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=OKIM6295@
