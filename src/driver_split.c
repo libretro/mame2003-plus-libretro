@@ -702,6 +702,45 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rackemup )	/* GX765 (c) 1987 */
 #endif
 
+#if defined(drv_bbusters) || defined(core_none)
+	/* bbusters.c */
+	DRIVER( bbusters )	/* A9003 'BB' (c) 1989 */
+	DRIVER( mechatt )	/* A8002 'MA' (c) 1989 */
+#endif
+
+#if defined(drv_beaminv) || defined(core_none)
+	/* beaminv.c */
+	DRIVER( beaminv )	/* Tekunon Kougyou */
+#endif
+
+#if defined(drv_beathead) || defined(core_none)
+	/* beathead.c */
+	DRIVER( beathead )	/* (proto)			(c) 1993 */
+#endif
+
+#if defined(drv_beezer) || defined(core_none)
+	/* beezer.c */
+	DRIVER( beezer )	/* (c) 1982 */
+	DRIVER( beezer1 )	/* (c) 1982 */
+#endif
+
+#if defined(drv_berzerk) || defined(core_none)
+	/* berzerk.c */
+	DRIVER( berzerk )	/* (c) 1980 */
+	DRIVER( berzerk1 )	/* (c) 1980 */
+	DRIVER( frenzy )	/* (c) 1982 */
+#endif
+
+#if defined(drv_bigevglf) || defined(core_none)
+	/* bigevglf.c */
+	DRIVER( bigevglf )	/* A67 (c) 1986 Taito America Corporation (US) */
+#endif
+
+#if defined(drv_bigstrkb) || defined(core_none)
+	/* bigstrkb.c */
+	DRIVER( bigstrkb )	/* bootleg on different hardware */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */

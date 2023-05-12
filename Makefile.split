@@ -734,6 +734,79 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_battlnts core_none))
 		$(CORE_DIR)/drivers/battlnts.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_bbusters core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM2608@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bbusters_vidhrdw.c \
+		$(CORE_DIR)/drivers/bbusters.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_beaminv core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/beaminv_vidhrdw.c \
+		$(CORE_DIR)/drivers/beaminv.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_beathead core_none))
+	CPUS+=ASAP@
+	CPUS+=M6502@
+	SOUNDS+=TMS5220@
+	SOUNDS+=OKIM6295@
+	SOUNDS+=POKEY@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
+		$(CORE_DIR)/vidhrdw/beathead_vidhrdw.c \
+		$(CORE_DIR)/drivers/beathead.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_beezer core_none))
+	CPUS+=M6809@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/beezer_machine.c \
+		$(CORE_DIR)/vidhrdw/beezer_vidhrdw.c \
+		$(CORE_DIR)/drivers/beezer.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_berzerk core_none))
+	CPUS+=Z80@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/berzerk_machine.c \
+		$(CORE_DIR)/vidhrdw/berzerk_vidhrdw.c \
+		$(CORE_DIR)/sndhrdw/berzerk_sndhrdw.c \
+		$(CORE_DIR)/drivers/berzerk.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bigevglf core_none))
+	CPUS+=Z80@
+	CPUS+=M68705@
+	SOUNDS+=AY8910@
+	SOUNDS+=MSM5232@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/bigevglf_machine.c \
+		$(CORE_DIR)/vidhrdw/bigevglf_vidhrdw.c \
+		$(CORE_DIR)/drivers/bigevglf.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bigstrkb core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=OKIM6295@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bigstrkb_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/megasys1_vidhrdw.c \
+		$(CORE_DIR)/drivers/megasys1.c \
+		$(CORE_DIR)/drivers/bigstrkb.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
