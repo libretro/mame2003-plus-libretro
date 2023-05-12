@@ -802,6 +802,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bigstrkb core_none))
 	SOUNDS+=YM2203@
 	SOURCES_C += \
 		$(CORE_DIR)/vidhrdw/bigstrkb_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/megasys1_vidhrdw.c \
 		$(CORE_DIR)/drivers/megasys1.c \
 		$(CORE_DIR)/drivers/bigstrkb.c
 endif
