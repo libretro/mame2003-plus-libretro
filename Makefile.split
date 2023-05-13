@@ -821,6 +821,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bishi core_none))
 	CPUS+=M68000@
 	SOUNDS+=YMZ280B@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/bishi_vidhrdw.c \
 		$(CORE_DIR)/drivers/bishi.c
 endif
