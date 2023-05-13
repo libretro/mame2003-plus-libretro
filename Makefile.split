@@ -840,6 +840,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bladestl core_none))
 	SOUNDS+=UPD7759@
 	SOUNDS+=YM2203@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/bladestl_vidhrdw.c \
 		$(CORE_DIR)/drivers/bladestl.c
 endif
