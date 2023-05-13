@@ -762,6 +762,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bking3 )	/* A24 (c) 1984 Taito Corporation */
 #endif
 
+#if defined(drv_bladestl) || defined(core_none)
+	/* bladestl.c */
+	DRIVER( bladestl )	/* GX797 (c) 1987 */
+	DRIVER( bladstle )	/* GX797 (c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
