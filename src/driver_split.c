@@ -741,6 +741,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bigstrkb )	/* bootleg on different hardware */
 #endif
 
+#if defined(drv_bionicc) || defined(core_none)
+	/* bionicc.c */
+	DRIVER( bionicc )	/*  3/1987 (c) 1987 (US) */
+	DRIVER( bionicc2 )	/*  3/1987 (c) 1987 (US) */
+	DRIVER( topsecrt )	/*  3/1987 (c) 1987 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
