@@ -755,6 +755,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sbishik )   /* GX575 (c) 1998 (Japan) */
 #endif
 
+#if defined(drv_bking2) || defined(core_none)
+	/* bking2.c */
+	DRIVER( bking )		/* DM  (c) 1982 Taito Corporation */
+	DRIVER( bking2 )	/* AD6 (c) 1983 Taito Corporation */
+	DRIVER( bking3 )	/* A24 (c) 1984 Taito Corporation */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
