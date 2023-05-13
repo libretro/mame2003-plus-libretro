@@ -748,6 +748,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( topsecrt )	/*  3/1987 (c) 1987 (Japan) */
 #endif
 
+#if defined(drv_bishi) || defined(core_none)
+	/* bishi.c */
+	DRIVER( bishi )     /* GX575 (c) 1996 (Japan) */
+	DRIVER( sbishi )    /* GX575 (c) 1998 (Japan) */
+	DRIVER( sbishik )   /* GX575 (c) 1998 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
