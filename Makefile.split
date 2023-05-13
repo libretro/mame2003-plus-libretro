@@ -807,6 +807,44 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bigstrkb core_none))
 		$(CORE_DIR)/drivers/bigstrkb.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_bionicc core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bionicc_vidhrdw.c \
+		$(CORE_DIR)/drivers/bionicc.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bishi core_none))
+	CPUS+=M68000@
+	SOUNDS+=YMZ280B@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/bishi_vidhrdw.c \
+		$(CORE_DIR)/drivers/bishi.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bking2 core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bking2_vidhrdw.c \
+		$(CORE_DIR)/drivers/bking2.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bladestl core_none))
+	CPUS+=HD6309@
+	CPUS+=M6809@
+	SOUNDS+=UPD7759@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/bladestl_vidhrdw.c \
+		$(CORE_DIR)/drivers/bladestl.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@

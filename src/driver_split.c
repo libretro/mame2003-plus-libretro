@@ -741,6 +741,33 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bigstrkb )	/* bootleg on different hardware */
 #endif
 
+#if defined(drv_bionicc) || defined(core_none)
+	/* bionicc.c */
+	DRIVER( bionicc )	/*  3/1987 (c) 1987 (US) */
+	DRIVER( bionicc2 )	/*  3/1987 (c) 1987 (US) */
+	DRIVER( topsecrt )	/*  3/1987 (c) 1987 (Japan) */
+#endif
+
+#if defined(drv_bishi) || defined(core_none)
+	/* bishi.c */
+	DRIVER( bishi )     /* GX575 (c) 1996 (Japan) */
+	DRIVER( sbishi )    /* GX575 (c) 1998 (Japan) */
+	DRIVER( sbishik )   /* GX575 (c) 1998 (Japan) */
+#endif
+
+#if defined(drv_bking2) || defined(core_none)
+	/* bking2.c */
+	DRIVER( bking )		/* DM  (c) 1982 Taito Corporation */
+	DRIVER( bking2 )	/* AD6 (c) 1983 Taito Corporation */
+	DRIVER( bking3 )	/* A24 (c) 1984 Taito Corporation */
+#endif
+
+#if defined(drv_bladestl) || defined(core_none)
+	/* bladestl.c */
+	DRIVER( bladestl )	/* GX797 (c) 1987 */
+	DRIVER( bladstle )	/* GX797 (c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
