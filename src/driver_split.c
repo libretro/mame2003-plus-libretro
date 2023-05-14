@@ -782,6 +782,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( blmbycau )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
 #endif
 
+#if defined(drv_blockade) || defined(core_none)
+	/* blockade.c */
+	DRIVER( blockade )	/* 1-4 [1977 Gremlin] */
+	DRIVER( comotion )	/* 5-7 [1977 Gremlin] */
+	DRIVER( hustle )	/* 16-21 [1977 Gremlin] */
+	DRIVER( blasto )	/* [1978 Gremlin] */
+	DRIVER( mineswpr )	/* [1977 Amutech] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
