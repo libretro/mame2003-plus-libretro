@@ -791,6 +791,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( mineswpr )	/* [1977 Amutech] */
 #endif
 
+#if defined(drv_blockhl) || defined(core_none)
+	/* blockhl.c */
+	DRIVER( blockhl )	/* GX973 (c) 1989 */
+	DRIVER( quarth )	/* GX973 (c) 1989 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
