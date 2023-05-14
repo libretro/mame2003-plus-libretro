@@ -768,6 +768,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bladstle )	/* GX797 (c) 1987 */
 #endif
 
+#if defined(drv_blktiger) || defined(core_none)
+	/* blktiger.c */
+	DRIVER( blktiger )	/*  8/1987 (c) 1987 (US) */
+	DRIVER( bktigerb )	/* bootleg */
+	DRIVER( blkdrgon )	/*  8/1987 (c) 1987 (Japan) */
+	DRIVER( blkdrgonb )	/* bootleg, hacked to say Black Tiger */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
