@@ -861,6 +861,13 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_blmbycar core_none))
 		$(CORE_DIR)/drivers/blmbycar.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_blockade core_none))
+	CPUS+=8080@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blockade_vidhrdw.c \
+		$(CORE_DIR)/drivers/blockade.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
