@@ -776,6 +776,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( blkdrgonb )	/* bootleg, hacked to say Black Tiger */
 #endif
 
+#if defined(drv_blmbycar) || defined(core_none)
+	/* blmbycar.c */
+	DRIVER( blmbycar )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
+	DRIVER( blmbycau )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
