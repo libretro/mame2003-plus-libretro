@@ -797,6 +797,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( quarth )	/* GX973 (c) 1989 (Japan) */
 #endif
 
+#if defined(drv_blockout) || defined(core_none)
+	/* blockout.c */
+	DRIVER( blockout )	/* TA-0029 (c) 1989 + California Dreams */
+	DRIVER( blckout2 )	/* TA-0029 (c) 1989 + California Dreams */
+	DRIVER( blckoutj )	/* TA-0029 (c) 1989 + California Dreams (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
