@@ -853,6 +853,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_blktiger core_none))
 		$(CORE_DIR)/drivers/blktiger.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_blmbycar core_none))
+	CPUS+=M68000@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blmbycar_vidhrdw.c \
+		$(CORE_DIR)/drivers/blmbycar.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
