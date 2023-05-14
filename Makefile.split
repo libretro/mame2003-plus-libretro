@@ -892,7 +892,9 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_bloodbro core_none))
 	CPUS+=M68000@
+	CPUS+=Z80@
 	SOUNDS+=YM3812@
+	SOUNDS+=OKIM6295@
 	SOURCES_C += \
 		$(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c \
 		$(CORE_DIR)/drivers/bloodbro.c
