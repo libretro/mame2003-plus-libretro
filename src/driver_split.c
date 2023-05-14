@@ -804,6 +804,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( blckoutj )	/* TA-0029 (c) 1989 + California Dreams (Japan) */
 #endif
 
+#if defined(drv_bloodbro) || defined(core_none)
+	/* bloodbro.c */
+	DRIVER( bloodbro )	/* (c) 1990 Tad */
+	DRIVER( weststry )	/* bootleg */
+	DRIVER( skysmash )	/* (c) 1990 Nihon System Inc. */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
