@@ -896,6 +896,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bloodbro core_none))
 	SOUNDS+=YM3812@
 	SOUNDS+=OKIM6295@
 	SOURCES_C += \
+		$(CORE_DIR)/sndhrdw/seibu.c \
 		$(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c \
 		$(CORE_DIR)/drivers/bloodbro.c
 endif
