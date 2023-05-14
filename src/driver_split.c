@@ -768,6 +768,49 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bladstle )	/* GX797 (c) 1987 */
 #endif
 
+#if defined(drv_blktiger) || defined(core_none)
+	/* blktiger.c */
+	DRIVER( blktiger )	/*  8/1987 (c) 1987 (US) */
+	DRIVER( bktigerb )	/* bootleg */
+	DRIVER( blkdrgon )	/*  8/1987 (c) 1987 (Japan) */
+	DRIVER( blkdrgonb )	/* bootleg, hacked to say Black Tiger */
+#endif
+
+#if defined(drv_blmbycar) || defined(core_none)
+	/* blmbycar.c */
+	DRIVER( blmbycar )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
+	DRIVER( blmbycau )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
+#endif
+
+#if defined(drv_blockade) || defined(core_none)
+	/* blockade.c */
+	DRIVER( blockade )	/* 1-4 [1977 Gremlin] */
+	DRIVER( comotion )	/* 5-7 [1977 Gremlin] */
+	DRIVER( hustle )	/* 16-21 [1977 Gremlin] */
+	DRIVER( blasto )	/* [1978 Gremlin] */
+	DRIVER( mineswpr )	/* [1977 Amutech] */
+#endif
+
+#if defined(drv_blockhl) || defined(core_none)
+	/* blockhl.c */
+	DRIVER( blockhl )	/* GX973 (c) 1989 */
+	DRIVER( quarth )	/* GX973 (c) 1989 (Japan) */
+#endif
+
+#if defined(drv_blockout) || defined(core_none)
+	/* blockout.c */
+	DRIVER( blockout )	/* TA-0029 (c) 1989 + California Dreams */
+	DRIVER( blckout2 )	/* TA-0029 (c) 1989 + California Dreams */
+	DRIVER( blckoutj )	/* TA-0029 (c) 1989 + California Dreams (Japan) */
+#endif
+
+#if defined(drv_bloodbro) || defined(core_none)
+	/* bloodbro.c */
+	DRIVER( bloodbro )	/* (c) 1990 Tad */
+	DRIVER( weststry )	/* bootleg */
+	DRIVER( skysmash )	/* (c) 1990 Nihon System Inc. */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */

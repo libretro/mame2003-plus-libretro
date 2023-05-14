@@ -845,6 +845,65 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bladestl core_none))
 		$(CORE_DIR)/drivers/bladestl.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_blktiger core_none))
+	CPUS+=Z80@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blktiger_vidhrdw.c \
+		$(CORE_DIR)/drivers/blktiger.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_blmbycar core_none))
+	CPUS+=M68000@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blmbycar_vidhrdw.c \
+		$(CORE_DIR)/drivers/blmbycar.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_blockade core_none))
+	CPUS+=8080@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blockade_vidhrdw.c \
+		$(CORE_DIR)/drivers/blockade.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_blockhl core_none))
+	CPUS+=KONAMI@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/blockhl_vidhrdw.c \
+		$(CORE_DIR)/drivers/blockhl.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_blockout core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blockout_vidhrdw.c \
+		$(CORE_DIR)/drivers/blockout.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bloodbro core_none))
+	CPUS+=M68000@
+	CPUS+=Z80@
+	SOUNDS+=YM3812@
+	SOUNDS+=OKIM6295@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=YM2203@
+	SOURCES_C += \
+		$(CORE_DIR)/sndhrdw/seibu.c \
+		$(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c \
+		$(CORE_DIR)/drivers/bloodbro.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
