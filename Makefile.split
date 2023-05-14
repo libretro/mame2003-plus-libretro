@@ -874,6 +874,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_blockhl core_none))
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/blockhl_vidhrdw.c \
 		$(CORE_DIR)/drivers/blockhl.c
 endif
