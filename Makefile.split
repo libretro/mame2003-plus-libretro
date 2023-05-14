@@ -890,6 +890,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_blockout core_none))
 		$(CORE_DIR)/drivers/blockout.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_bloodbro core_none))
+	CPUS+=M68000@
+	SOUNDS+=YM3812@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c \
+		$(CORE_DIR)/drivers/bloodbro.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
