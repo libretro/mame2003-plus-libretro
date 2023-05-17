@@ -1559,7 +1559,7 @@ VIDEO_UPDATE( system32 ) {
 			}
 			if (priloop == priority2 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
 				if (!(sys32_tmap_disabled & 0x4)) {
-          if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
+          if (!strcmp(Machine->gamedrv->name,"jpark")) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
           system32_draw_bg_layer (bitmap,cliprect,2);
         }
 			}
