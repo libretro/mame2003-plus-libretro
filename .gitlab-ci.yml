@@ -305,7 +305,7 @@ libretro-build-ctr:
   only:
     - master
 
-#libretro-build-wii-core_drv:
+#libretro-build-wii-core:
 #  extends:
 #    - .core-defs-wii
 #  variables:
