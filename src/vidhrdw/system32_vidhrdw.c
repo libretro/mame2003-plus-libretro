@@ -1555,16 +1555,13 @@ VIDEO_UPDATE( system32 ) {
 				if (!(sys32_tmap_disabled & 0x1)) system32_draw_bg_layer (bitmap,cliprect,0);
 			}
 			if (priloop == priority1 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-				if (!(sys32_tmap_disabled & 0x2)) system32_draw_bg_layer (bitmap,cliprect,1);
+				if (!(sys32_tmap_disabled & 0x2)) { system32_draw_bg_layer (bitmap,cliprect,0); system32_draw_bg_layer (bitmap,cliprect,1); }
 			}
 			if (priloop == priority2 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
-				if (!(sys32_tmap_disabled & 0x4)) {
-          if (priloop==0xe) system32_draw_bg_layer (bitmap,cliprect,1);
-          system32_draw_bg_layer (bitmap,cliprect,2);
-        }
+				if (!(sys32_tmap_disabled & 0x4)) { system32_draw_bg_layer (bitmap,cliprect,0); system32_draw_bg_layer (bitmap,cliprect,1); system32_draw_bg_layer (bitmap,cliprect,2); }
 			}
 			if (priloop == priority3 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
+				if (!(sys32_tmap_disabled & 0x8)) { system32_draw_bg_layer (bitmap,cliprect,0); system32_draw_bg_layer (bitmap,cliprect,1); system32_draw_bg_layer (bitmap,cliprect,2); system32_draw_bg_layer (bitmap,cliprect,3); }
 			}
 			system32_process_spritelist (bitmap, cliprect);
 		}
