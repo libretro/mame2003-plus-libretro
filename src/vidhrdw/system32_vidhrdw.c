@@ -913,7 +913,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 			/*				logerror ("SPRITELIST: set clip regs at %06x extra data 0 %04x 1 %04x 2 %04x 3 %04x 4 %04x 5 %04x 6 %04x 7 %04x\n", spritenum*16, spritedata_source[0], spritedata_source[1],spritedata_source[2],spritedata_source[3],spritedata_source[4],spritedata_source[5],spritedata_source[6],spritedata_source[7]  );*/
 			{
 
-				if (spritedata_source[0] & 0x2000) /* alien 3 needs something like this ... */
+				if (spritedata_source[0] & 0x3000) /* alien 3 needs something like this ... */
 				{
 					clip.min_y = spritedata_source[0]& 0x0fff;
 					clip.max_y = spritedata_source[1]& 0x0fff;
