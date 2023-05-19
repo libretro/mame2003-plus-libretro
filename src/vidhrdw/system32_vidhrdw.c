@@ -822,7 +822,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
   /* alien3 has issues with sprite priorities, therefore we draw on every priloop which seemingly corrects this.
   may be a more efficient solution but haven't found one */
   if ((!strcmp(Machine->gamedrv->name,"alien3")) && priloop>sys32sprite_priority) {
-    if (!multi32 || (multi32 && sys32sprite_priority
+    if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
       system32_draw_sprite ( bitmap, cliprect );
     //return;
   }
