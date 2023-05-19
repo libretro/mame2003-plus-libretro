@@ -821,9 +821,9 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 
   /* alien3 has issues with sprite priorities, this allows for some mixing..
     which seemingly fixes the issue */
-  if ((!strcmp(Machine->gamedrv->name,"alien3")) && priloop<sys32sprite_priority) {
+  if ((!strcmp(Machine->gamedrv->name,"alien3")) && priloop>sys32sprite_priority) {
     if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
-      system32_draw_sprite ( bitmap, cliprect );
+      system32_draw_sprite ( bitmap, cliprect ); usrintf_showmessage("priloop:%i. priority:%i", priloop, sys32sprite_priority);
   }
 
 	/* Inefficient sprite priority hack to get things working for now.  Will change to arrays later.
