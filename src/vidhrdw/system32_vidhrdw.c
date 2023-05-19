@@ -821,25 +821,17 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 
   /* alien3 has issues with sprite priorities, therefore we draw on every priloop which seemingly corrects this.
   may be a more efficient solution but haven't found one */
-  /*if (!strcmp(Machine->gamedrv->name,"alien3")) {
-    if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
+  if (!strcmp(Machine->gamedrv->name,"alien3") && priloop>sys32sprite_priority) {
+    if (!multi32 || (multi32 && sys32sprite_priority
       system32_draw_sprite ( bitmap, cliprect );
-    return;
-  }*/
+    //return;
+  }
 
 	/* Inefficient sprite priority hack to get things working for now.  Will change to arrays later.
 		Currently, draw_sprite is a lot more processor intensive and has a greater need for optimisation. */
 	if (priloop==sys32sprite_priority)
 		if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
 			system32_draw_sprite ( bitmap, cliprect );
-
-  /* alien3 has issues with sprite priorities, therefore we draw on the last priloop which seemingly corrects this.
-  may be a more efficient solution but haven't found one */
-  if (!strcmp(Machine->gamedrv->name,"alien3") && priloop == 0x9) {
-    if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
-      system32_draw_sprite ( bitmap, cliprect );
-    return;
-  }
 }
 
 /* Sprite RAM
