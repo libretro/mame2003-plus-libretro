@@ -1578,7 +1578,7 @@ VIDEO_UPDATE( system32 ) {
 				data2 = sys32_videoram[256*ycnt+xcnt];
 
 
-				destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; // 1d00
+				destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
 				destline[xcnt*2] = paldata[(data2 &0xff)+(0x100*0x1d)];
 			}
 
@@ -1622,7 +1622,7 @@ VIDEO_UPDATE( system32 ) {
 
 		int x;
 
-	/*	x = rand(); */
+	  /*	x = rand(); */
 
 		fprintf(sys32_logfile,"Video Regs 0x31ff00 - 0x31ffff\n");
 		for (x = 0x1ff00; x< 0x20000; x+=2)
