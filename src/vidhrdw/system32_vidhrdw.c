@@ -1566,6 +1566,8 @@ VIDEO_UPDATE( system32 ) {
 
 		}
 */
+		usrintf_showmessage("paldata: %i", paldata[0]);
+    
 		for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
 		{
 			destline = (UINT32 *)(bitmap->line[ycnt]);
