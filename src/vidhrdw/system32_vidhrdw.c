@@ -1559,7 +1559,7 @@ VIDEO_UPDATE( system32 ) {
 		struct GfxElement *gfx=Machine->gfx[0];
 
 		const pen_t *paldata = &gfx->colortable[0];
-    static pen_t palcopy = paldata;
+    static pen_t palcopy[MAX_COLOURS];
 
     if (paldata[0] == 16316664 && palcopy[0] != 16316664) {
       int i;
