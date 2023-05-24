@@ -1564,12 +1564,11 @@ VIDEO_UPDATE( system32 ) {
 
     if (paldata[0] == 16316664 && palcopy[0] != 16316664) {
       int i;
-      for(i = 0; i < MAX_COLOURS; i++) {
+      for(i = 0; i < MAX_COLOURS; i++)
         palcopy[i] = paldata[i];
-      }
-      for(i = 0; i < 98817; i++) {
+
+      for(i = 0; i < 98817; i++)
         copy_videoram[i] = sys32_videoram[i];
-      }
     }
 
     if ( (paldata[0] == 16316664 || paldata[0] == 8421488) && palcopy[0] == 16316664)
@@ -1587,8 +1586,8 @@ VIDEO_UPDATE( system32 ) {
 				  data2 = copy_videoram[256*ycnt+xcnt];
 
 
-				  destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-				  destline[xcnt*2] = paldata[(data2 &0xff)+(0x100*0x1d)];
+				  destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
+				  destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 		  	}
 
 		  }
