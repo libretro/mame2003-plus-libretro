@@ -203,6 +203,7 @@ struct GameOptions
   unsigned dial_share_xy;
   bool     dial_swap_xy;
   unsigned xy_device;
+  float    analog_sensitivity;   /* if nonzero, override sensitivity value from the OSD menu */
   bool     use_lightgun_with_pad;
   unsigned input_interface;                         /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned active_control_type[MAX_PLAYER_COUNT];   /* register to indicate the default control layout for each player as currently set in the frontend */

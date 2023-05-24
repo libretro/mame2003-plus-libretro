@@ -801,6 +801,63 @@ static struct retro_core_option_v2_definition option_def_input_toggle = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_analog_sensitivity = {
+   APPNAME"_analog_sensitivity",
+   "Analog Sensitivity",
+   NULL,
+   "Used to adjust analog input sensitivity.",
+   NULL,
+   "cat_key_input",
+   {
+      { "default", NULL },
+      { "5",       "5%" },
+      { "10",     "10%" },
+      { "15",     "15%" },
+      { "20",     "20%" },
+      { "25",     "25%" },
+      { "30",     "30%" },
+      { "35",     "35%" },
+      { "40",     "40%" },
+      { "45",     "45%" },
+      { "50",     "50%" },
+      { "55",     "55%" },
+      { "60",     "60%" },
+      { "65",     "65%" },
+      { "70",     "70%" },
+      { "75",     "75%" },
+      { "80",     "80%" },
+      { "85",     "85%" },
+      { "90",     "90%" },
+      { "95",     "95%" },
+      { "100",   "100%" },
+      { "105",   "105%" },
+      { "110",   "110%" },
+      { "115",   "115%" },
+      { "120",   "120%" },
+      { "125",   "125%" },
+      { "150",   "150%" },
+      { "200",   "200%" },
+      { "250",   "250%" },
+      { "300",   "300%" },
+      { "350",   "350%" },
+      { "400",   "400%" },
+      { "450",   "450%" },
+      { "500",   "500%" },
+      { "550",   "550%" },
+      { "600",   "600%" },
+      { "650",   "650%" },
+      { "700",   "700%" },
+      { "750",   "750%" },
+      { "800",   "800%" },
+      { "850",   "850%" },
+      { "900",   "900%" },
+      { "950",   "950%" },
+      { "1000", "1000%" },
+      { NULL, NULL },
+   },
+   "default"
+};
+
 static struct retro_core_option_v2_definition option_def_null = {
    NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL
 };
@@ -887,6 +944,7 @@ void init_core_options(void)
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
+  default_options[OPT_ANALOG_SENSITIVITY]        = option_def_analog_sensitivity;
 #if (HAS_CYCLONE || HAS_DRZ80)
   default_options[OPT_CYCLONE_MODE]              = option_def_cyclone_mode;
 #endif
@@ -1266,6 +1324,13 @@ void update_variables(bool first_time)
             options.input_toggle = true;
           else
             options.input_toggle = false;
+          break;
+
+        case OPT_ANALOG_SENSITIVITY:
+          if(strcmp(var.value, "default") == 0)
+            options.analog_sensitivity = 0;
+          else
+            options.analog_sensitivity = (float)atoi(var.value) / 100;
           break;
 
 #if (HAS_CYCLONE || HAS_DRZ80)

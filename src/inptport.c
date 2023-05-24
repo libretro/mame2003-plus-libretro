@@ -873,7 +873,7 @@ void update_analog_port(int port)
 	}
 
 
-	sensitivity = IP_GET_SENSITIVITY(in);
+	sensitivity = options.analog_sensitivity ? (int)(options.analog_sensitivity * 100) : IP_GET_SENSITIVITY(in);
 	min = IP_GET_MIN(in);
 	max = IP_GET_MAX(in);
 	default_value = in->default_value * 100 / sensitivity;
@@ -1074,7 +1074,7 @@ static void scale_analog_port(int port)
 
 profiler_mark(PROFILER_INPUT);
 	in = input_analog[port];
-	sensitivity = IP_GET_SENSITIVITY(in);
+	sensitivity = options.analog_sensitivity ? (int)(options.analog_sensitivity * 100) : IP_GET_SENSITIVITY(in);
 
 	/* apply scaling fairly in both positive and negative directions */
 	delta = input_analog_current_value[port] - input_analog_previous_value[port];
@@ -1329,7 +1329,7 @@ profiler_mark(PROFILER_INPUT);
 						input_analog_init[port] = 0;
 						input_analog_scale[port] = 1;
 						input_analog_current_value[port] = input_analog_previous_value[port]
-							= in->default_value * 100 / IP_GET_SENSITIVITY(in);
+							= in->default_value * 100 / (options.analog_sensitivity ? (int)(options.analog_sensitivity * 100) : IP_GET_SENSITIVITY(in));
 					}
 				}
 				else
