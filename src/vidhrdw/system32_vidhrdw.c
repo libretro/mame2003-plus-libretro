@@ -1567,8 +1567,8 @@ VIDEO_UPDATE( system32 ) {
         palcopy[i] = paldata[i];
       }
     }
-
-    if (palcopy[0] == 16316664)
+usrintf_showmessage("%i", paldata[0]);
+    if (paldata[0] == 16316664)
     {
     
 		  for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
