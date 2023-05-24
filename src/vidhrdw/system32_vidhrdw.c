@@ -1560,11 +1560,15 @@ VIDEO_UPDATE( system32 ) {
 
 		const pen_t *paldata = &gfx->colortable[0];
     static pen_t palcopy[MAX_COLOURS];
+    static int copy_videoram[98817];
 
     if (paldata[0] == 16316664 && palcopy[0] != 16316664) {
       int i;
       for(i = 0; i < MAX_COLOURS; i++) {
         palcopy[i] = paldata[i];
+      }
+      for(i = 0; i < 98817; i++) {
+        copy_videoram[i] = sys32_videoram[i];
       }
     }
 
@@ -1580,7 +1584,7 @@ VIDEO_UPDATE( system32 ) {
 			  {
 			  	int data2;
 
-				  data2 = sys32_videoram[256*ycnt+xcnt];
+				  data2 = copy_videoram[256*ycnt+xcnt];
 
 
 				  destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
