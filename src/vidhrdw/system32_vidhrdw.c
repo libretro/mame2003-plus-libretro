@@ -1559,7 +1559,7 @@ VIDEO_UPDATE( system32 ) {
 		struct GfxElement *gfx=Machine->gfx[0];
 
 		const pen_t *paldata = &gfx->colortable[0];
-    static pen_t palcopy[MAX_COLOURS];
+    static pen_t palcopy = paldata;
 
     if (paldata[0] == 16316664 && palcopy[0] != 16316664) {
       int i;
@@ -1567,8 +1567,8 @@ VIDEO_UPDATE( system32 ) {
         palcopy[i] = paldata[i];
       }
     }
-usrintf_showmessage("%i", paldata[0]);
-    if (paldata[0] == 16316664)
+
+    if ( (paldata[0] == 16316664 || paldata[0] == 8421488) && palcopy[0] == 16316664)
     {
     
 		  for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
