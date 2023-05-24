@@ -1587,8 +1587,8 @@ VIDEO_UPDATE( system32 ) {
 				  data2 = copy_videoram[256*ycnt+xcnt];
 
 
-				  destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-				  destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
+				  destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
+				  destline[xcnt*2] = paldata[(data2 &0xff)+(0x100*0x1d)];
 		  	}
 
 		  }
