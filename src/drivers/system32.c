@@ -694,6 +694,7 @@ static READ16_HANDLER( system32_io_r )
 	case 0x04:
 		return readinputport(0x03);
 	case 0x05:
+		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 	case 0x06:
 		return 0xffff;
@@ -1801,9 +1802,9 @@ INPUT_PORTS_START( radr )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Transmission" )
+	PORT_DIPSETTING(    0x08, "Manual" )
+	PORT_DIPSETTING(    0x00, "Automatic" )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
