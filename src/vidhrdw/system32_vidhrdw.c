@@ -334,6 +334,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
        log_cb(RETRO_LOG_INFO, LOGPRE "draw 334\n");
 			do {
 				do {
+          log_cb(RETRO_LOG_INFO, LOGPRE "draw 337\n");
 					eax = src_ptr[edx];
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
@@ -345,6 +346,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
+        log_cb(RETRO_LOG_INFO, LOGPRE "draw 349\n");
 
 				ecx = src_fby;      src_fby += src_fdy;
 				ecx >>= FP;         dst_ptr += dst_pitch;
@@ -353,7 +355,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 				src_ptr = src_base; edx >>= FP+1;
 				src_ptr += ecx;     ecx = dst_w;
 			} while (--dst_h);
-      log_cb(RETRO_LOG_INFO, LOGPRE "draw 356\n");
+      log_cb(RETRO_LOG_INFO, LOGPRE "draw 358\n");
 		}
 		else
 		{
