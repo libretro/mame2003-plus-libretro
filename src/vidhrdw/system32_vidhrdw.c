@@ -331,7 +331,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 		}
 		else if (!sys32sprite_is_shadow)
 		{
-       log_cb(RETRO_LOG_INFO, LOGPRE "draw 9\n");
+       log_cb(RETRO_LOG_INFO, LOGPRE "draw 334\n");
 			do {
 				do {
 					eax = src_ptr[edx];
@@ -352,11 +352,12 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 				edx = src_fbx;
 				src_ptr = src_base; edx >>= FP+1;
 				src_ptr += ecx;     ecx = dst_w;
-
 			} while (--dst_h);
+      log_cb(RETRO_LOG_INFO, LOGPRE "draw 356\n");
 		}
 		else
 		{
+      log_cb(RETRO_LOG_INFO, LOGPRE "draw 360\n");
 			do {
 				do {
 					eax = src_ptr[edx];
@@ -381,10 +382,12 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 				src_ptr += ecx;     ecx = dst_w;
 
 			} while (--dst_h);
+      log_cb(RETRO_LOG_INFO, LOGPRE "draw 385\n");
 		}
 	}
 	else
 	{
+    log_cb(RETRO_LOG_INFO, LOGPRE "draw 390\n");
 		/* 8bpp*/
 		edx >>= FP;
 		src_fx += src_fdx;
