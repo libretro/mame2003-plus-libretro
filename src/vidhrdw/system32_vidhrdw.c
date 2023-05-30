@@ -697,7 +697,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	/* get attributes */
 	int mixerinput, sprite_palette_mask, sprite_priority_levels, sys32sprite_priority_lookup;
 
-	sys32sprite_indirect_palette		= (spritedata_source[0]&0x2000) >> 13;
+	sys32sprite_indirect_palette		= 0;
 	sys32sprite_indirect_interleave		= (spritedata_source[0]&0x1000) >> 12;
 	sys32sprite_is_shadow				= (spritedata_source[0]&0x0800) >> 11;
 	sys32sprite_rambasedgfx				= (spritedata_source[0]&0x0400) >> 10;
