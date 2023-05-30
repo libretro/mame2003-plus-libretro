@@ -329,9 +329,9 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 
 			} while (--dst_h);
 		}
-    log_cb(RETRO_LOG_INFO, LOGPRE "draw 9\n");
 		else if (!sys32sprite_is_shadow)
 		{
+       log_cb(RETRO_LOG_INFO, LOGPRE "draw 9\n");
 			do {
 				do {
 					eax = src_ptr[edx];
