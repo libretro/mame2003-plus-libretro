@@ -884,10 +884,11 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 	spritenum = 0;
 
 	while (spritenum < 0x20000/16) {
+    log_cb(RETRO_LOG_INFO, LOGPRE "%i\n", spritenum);
 		spritedata_source = sys32_spriteram16 + 8 * spritenum;
 
 		command = (spritedata_source[0] & 0xc000) >> 14;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "command %i\n\n", command);
 		switch (command) {
 		case 0x3: /* end of sprite list */
 			/*				logerror ("SPRITELIST: terminated at sprite %06x\n", spritenum*16);*/
@@ -936,7 +937,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 		processed++;
 		if (processed > 0x20000/16) /* its dead ;-) */
 		{
-			/*			logerror ("SPRITELIST: terminated due to infinite loop\n");*/
+						log_cb(RETRO_LOG_INFO, LOGPRE "SPRITELIST: terminated due to infinite loop\n");
 			spritenum = 16384;
 		};
 	}
@@ -1629,8 +1630,8 @@ VIDEO_UPDATE( system32 ) {
 
 				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
 
-			}/*
-			system32_process_spritelist (bitmap, cliprect);*/
+			}
+			system32_process_spritelist (bitmap, cliprect);
 		}
 	}
 	system32_draw_text_layer (bitmap, cliprect);
