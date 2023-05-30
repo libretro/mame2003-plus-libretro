@@ -888,7 +888,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 		spritedata_source = sys32_spriteram16 + 8 * spritenum;
 
 		command = (spritedata_source[0] & 0xc000) >> 14;
-log_cb(RETRO_LOG_INFO, LOGPRE "command %i\n\n", command);
+log_cb(RETRO_LOG_INFO, LOGPRE "command %i spritedata_source%i\n\n", command, spritedata_source);
 		switch (command) {
 		case 0x3: /* end of sprite list */
 			/*				logerror ("SPRITELIST: terminated at sprite %06x\n", spritenum*16);*/
