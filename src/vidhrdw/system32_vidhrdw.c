@@ -717,7 +717,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	sys32sprite_unknown_1				= (spritedata_source[2]&0x0800) >> 11;
 	sys32sprite_unknown_2				= (spritedata_source[2]&0x0400) >> 10;
 	sys32sprite_screen_height			= (spritedata_source[2]&0x03ff) >> 0;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "info 1\n");
 	if (multi32) {
 		sys32sprite_rom_bank_high			= (spritedata_source[3]&0x8000) >> 15;
 		sys32sprite_unknown_3				= (spritedata_source[3]&0x4000) >> 14;
@@ -746,7 +746,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	mixerinput = (spritedata_source[7] >> (system32_mixerShift + 8)) & 0xf;
 	sys32sprite_palette = (spritedata_source[7] >> 4) & sprite_palette_mask;
 	sys32sprite_palette += (system32_mixerregs[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "info 2\n");
 	/* process attributes */
 
 	sys32sprite_rom_width = sys32sprite_rom_width << 2;
@@ -758,6 +758,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	   in the sprites palette in the case of indirect sprites.  For direct sprites, the lookup value is found by
 	   reading the sprite priority data.
 	*/
+  log_cb(RETRO_LOG_INFO, LOGPRE "info 3\n");
 	if (sys32sprite_indirect_palette) {
 		if (sys32sprite_indirect_interleave) /* indirect mode where the table is included in the display list */
 		{
@@ -784,7 +785,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 
 	if (sys32sprite_use_yoffset) sys32sprite_ypos += jump_y;
 	if (sys32sprite_use_xoffset) sys32sprite_xpos += jump_x;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "info 4\n");
 	/* adjust positions according to offsets if used (radm, radr, alien3, darkedge etc.) */
 
 	/* adjust sprite positions based on alignment, pretty much straight from modeler */
@@ -811,19 +812,20 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	case 2: /* topY*/
 		break;
 	}
-
+log_cb(RETRO_LOG_INFO, LOGPRE "info 5\n");
 	sys32sprite_xpos &= 0x0fff;
 	sys32sprite_ypos &= 0x0fff;
 
 	/* sprite positions are signed */
 	if (sys32sprite_ypos & 0x0800) sys32sprite_ypos -= 0x1000;
 	if (sys32sprite_xpos & 0x0800) sys32sprite_xpos -= 0x1000;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "info 6\n");
 	/* Inefficient sprite priority hack to get things working for now.  Will change to arrays later.
 		Currently, draw_sprite is a lot more processor intensive and has a greater need for optimisation. */
 	if (priloop==sys32sprite_priority)
 		if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
 			system32_draw_sprite ( bitmap, cliprect );
+  log_cb(RETRO_LOG_INFO, LOGPRE "info done\n");
 }
 
 /* Sprite RAM
