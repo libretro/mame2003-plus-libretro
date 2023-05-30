@@ -169,7 +169,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	flipx     = sys32sprite_xflip;
 	flipy     = sys32sprite_yflip;
 	transparent_pen   = 0;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 1\n");
 	/* cull zero dimension and off-screen objects*/
 	if (!src_fw || !src_fh || !dst_w || !dst_h) return;
 	if (dst_x > dst_maxx || dst_y > dst_maxy) return;
@@ -177,13 +177,13 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	if (dst_lastx < dst_minx) return;
 	dst_lasty = dst_y + dst_h - 1;
 	if (dst_lasty < dst_miny) return;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 2\n");
 	/* calculate zoom factors*/
 	src_fw <<= FP;
 	src_fh <<= FP;
 	src_fdx = src_fw / dst_w;
 	src_fdy = src_fh / dst_h;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 3\n");
 	/* clip destination*/
 	dst_skipx = 0;
 	eax = dst_minx;  if ((eax -= dst_x) > 0) { dst_skipx = eax;  dst_w -= eax;  dst_x = dst_minx; }
@@ -191,7 +191,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	dst_skipy = 0;
 	eax = dst_miny;  if ((eax -= dst_y) > 0) { dst_skipy = eax;  dst_h -= eax;  dst_y = dst_miny; }
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 4\n");
 	/* clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)*/
 	if (flipx)
 	{
@@ -207,7 +207,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	}
 	else src_fby = FPENT;
 	src_fby += dst_skipy * src_fdy;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 5\n");
 
 	/* modify oddities*/
 	/* if the gfx data is coming from RAM instead of ROM change the pointer*/
@@ -230,7 +230,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	}
 	else
 		if (!sys32sprite_draw_colour_f) transparent_pen = 0xff;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 6\n");
 	if (!sys32sprite_is_shadow)
 	{
 		if (sys32sprite_indirect_palette)
@@ -269,12 +269,13 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 				}
 			}
 		}
+
 		else
 			pal_base += sys32sprite_palette<<4;
 	}
 	else
 		sys32sprite_indirect_palette = 0; /* make sure full-shadows and IDP's are mutually exclusive*/
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 7\n");
 
 	/* adjust insertion points and pre-entry constants*/
 	src_base += sys32sprite_rom_offset;
@@ -290,7 +291,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	edx    = src_fbx;
 	src_ptr += ecx;
 	ecx = dst_w;
-
+log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 	if (!sys32sprite_8bpp)
 	{
 		/* 4bpp*/
@@ -328,6 +329,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 			} while (--dst_h);
 		}
+    log_cb(RETRO_LOG_INFO, LOGPRE "draw 9\n");
 		else if (!sys32sprite_is_shadow)
 		{
 			do {
@@ -470,6 +472,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 #undef FPONE
 #undef FPHALF
 #undef FPENT
+  log_cb(RETRO_LOG_INFO, LOGPRE "draw 10\n");
 }
 
 #else
@@ -697,7 +700,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	/* get attributes */
 	int mixerinput, sprite_palette_mask, sprite_priority_levels, sys32sprite_priority_lookup;
 
-	sys32sprite_indirect_palette		= 0;
+	sys32sprite_indirect_palette		= (spritedata_source[0]&0x2000) >> 13;
 	sys32sprite_indirect_interleave		= (spritedata_source[0]&0x1000) >> 12;
 	sys32sprite_is_shadow				= (spritedata_source[0]&0x0800) >> 11;
 	sys32sprite_rambasedgfx				= (spritedata_source[0]&0x0400) >> 10;
@@ -717,7 +720,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	sys32sprite_unknown_1				= (spritedata_source[2]&0x0800) >> 11;
 	sys32sprite_unknown_2				= (spritedata_source[2]&0x0400) >> 10;
 	sys32sprite_screen_height			= (spritedata_source[2]&0x03ff) >> 0;
-log_cb(RETRO_LOG_INFO, LOGPRE "info 1\n");
+
 	if (multi32) {
 		sys32sprite_rom_bank_high			= (spritedata_source[3]&0x8000) >> 15;
 		sys32sprite_unknown_3				= (spritedata_source[3]&0x4000) >> 14;
@@ -746,7 +749,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "info 1\n");
 	mixerinput = (spritedata_source[7] >> (system32_mixerShift + 8)) & 0xf;
 	sys32sprite_palette = (spritedata_source[7] >> 4) & sprite_palette_mask;
 	sys32sprite_palette += (system32_mixerregs[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
-log_cb(RETRO_LOG_INFO, LOGPRE "info 2\n");
+
 	/* process attributes */
 
 	sys32sprite_rom_width = sys32sprite_rom_width << 2;
@@ -758,7 +761,6 @@ log_cb(RETRO_LOG_INFO, LOGPRE "info 2\n");
 	   in the sprites palette in the case of indirect sprites.  For direct sprites, the lookup value is found by
 	   reading the sprite priority data.
 	*/
-  log_cb(RETRO_LOG_INFO, LOGPRE "info 3\n");
 	if (sys32sprite_indirect_palette) {
 		if (sys32sprite_indirect_interleave) /* indirect mode where the table is included in the display list */
 		{
@@ -785,7 +787,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "info 2\n");
 
 	if (sys32sprite_use_yoffset) sys32sprite_ypos += jump_y;
 	if (sys32sprite_use_xoffset) sys32sprite_xpos += jump_x;
-log_cb(RETRO_LOG_INFO, LOGPRE "info 4\n");
+
 	/* adjust positions according to offsets if used (radm, radr, alien3, darkedge etc.) */
 
 	/* adjust sprite positions based on alignment, pretty much straight from modeler */
@@ -812,20 +814,19 @@ log_cb(RETRO_LOG_INFO, LOGPRE "info 4\n");
 	case 2: /* topY*/
 		break;
 	}
-log_cb(RETRO_LOG_INFO, LOGPRE "info 5\n");
+
 	sys32sprite_xpos &= 0x0fff;
 	sys32sprite_ypos &= 0x0fff;
 
 	/* sprite positions are signed */
 	if (sys32sprite_ypos & 0x0800) sys32sprite_ypos -= 0x1000;
 	if (sys32sprite_xpos & 0x0800) sys32sprite_xpos -= 0x1000;
-log_cb(RETRO_LOG_INFO, LOGPRE "info 6\n");
+
 	/* Inefficient sprite priority hack to get things working for now.  Will change to arrays later.
 		Currently, draw_sprite is a lot more processor intensive and has a greater need for optimisation. */
 	if (priloop==sys32sprite_priority)
 		if (!multi32 || (multi32 && (readinputport(0xf)&(sys32sprite_monitor_select+1))>>sys32sprite_monitor_select))
 			system32_draw_sprite ( bitmap, cliprect );
-  log_cb(RETRO_LOG_INFO, LOGPRE "info done\n");
 }
 
 /* Sprite RAM
@@ -886,11 +887,10 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 	spritenum = 0;
 
 	while (spritenum < 0x20000/16) {
-    log_cb(RETRO_LOG_INFO, LOGPRE "%i\n", spritenum);
 		spritedata_source = sys32_spriteram16 + 8 * spritenum;
 
 		command = (spritedata_source[0] & 0xc000) >> 14;
-log_cb(RETRO_LOG_INFO, LOGPRE "command %i spritedata_source%i\n\n", command, spritedata_source);
+
 		switch (command) {
 		case 0x3: /* end of sprite list */
 			/*				logerror ("SPRITELIST: terminated at sprite %06x\n", spritenum*16);*/
@@ -939,7 +939,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "command %i spritedata_source%i\n\n", command, spr
 		processed++;
 		if (processed > 0x20000/16) /* its dead ;-) */
 		{
-						log_cb(RETRO_LOG_INFO, LOGPRE "SPRITELIST: terminated due to infinite loop\n");
+			/*			logerror ("SPRITELIST: terminated due to infinite loop\n");*/
 			spritenum = 16384;
 		};
 	}
@@ -1606,32 +1606,20 @@ VIDEO_UPDATE( system32 ) {
 	/* Priority loop.  Draw layers 1 and 3 on Multi32's Monitor B */
 	if (sys32_displayenable & 0x0002) {
 		for (priloop=0; priloop < 0x10; priloop++) {
-			if (priloop == priority0 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {				if (!(sys32_tmap_disabled & 0x1)) system32_draw_bg_layer (bitmap,cliprect,0);
-
+			if (priloop == priority0 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
+				if (!(sys32_tmap_disabled & 0x1)) system32_draw_bg_layer (bitmap,cliprect,0);
 			}
-
 			if (priloop == priority1 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-
 				if (!(sys32_tmap_disabled & 0x2)) system32_draw_bg_layer (bitmap,cliprect,1);
-
 			}
-
 			if (priloop == priority2 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
-
 				if (!(sys32_tmap_disabled & 0x4)) {
-
           if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe ) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
-
           system32_draw_bg_layer (bitmap,cliprect,2);
-
         }
-
 			}
-
 			if (priloop == priority3 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-
 				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
-
 			}
 			system32_process_spritelist (bitmap, cliprect);
 		}
