@@ -328,7 +328,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 			} while (--dst_h);
 		}
-		else if (!sys32sprite_is_shadow)
+		else if (0/*!sys32sprite_is_shadow*/)
 		{
 			do {
 				do {
@@ -340,7 +340,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= (FP+1);
 
 					if (!eax || eax == transparent_pen) continue;
-					dst_ptr[ecx+1] = pal_base[eax];
+					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
 
