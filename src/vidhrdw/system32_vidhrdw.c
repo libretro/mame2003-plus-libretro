@@ -339,7 +339,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					src_fx += src_fdx;
 					edx >>= (FP+1);
 
-					if (!eax || eax == transparent_pen || eax==2) continue;
+					if (!eax || eax == transparent_pen) goto bail;
 					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
@@ -352,6 +352,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 				src_ptr += ecx;     ecx = dst_w;
 
 			} while (--dst_h);
+      bail:;
 		}
 		else
 		{
