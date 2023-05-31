@@ -169,7 +169,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	flipx     = sys32sprite_xflip;
 	flipy     = sys32sprite_yflip;
 	transparent_pen   = 0;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 1\n");
+
 	/* cull zero dimension and off-screen objects*/
 	if (!src_fw || !src_fh || !dst_w || !dst_h) return;
 	if (dst_x > dst_maxx || dst_y > dst_maxy) return;
@@ -177,13 +177,13 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 1\n");
 	if (dst_lastx < dst_minx) return;
 	dst_lasty = dst_y + dst_h - 1;
 	if (dst_lasty < dst_miny) return;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 2\n");
+
 	/* calculate zoom factors*/
 	src_fw <<= FP;
 	src_fh <<= FP;
 	src_fdx = src_fw / dst_w;
 	src_fdy = src_fh / dst_h;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 3\n");
+
 	/* clip destination*/
 	dst_skipx = 0;
 	eax = dst_minx;  if ((eax -= dst_x) > 0) { dst_skipx = eax;  dst_w -= eax;  dst_x = dst_minx; }
@@ -191,7 +191,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 3\n");
 	dst_skipy = 0;
 	eax = dst_miny;  if ((eax -= dst_y) > 0) { dst_skipy = eax;  dst_h -= eax;  dst_y = dst_miny; }
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 4\n");
+
 	/* clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)*/
 	if (flipx)
 	{
@@ -207,7 +207,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 4\n");
 	}
 	else src_fby = FPENT;
 	src_fby += dst_skipy * src_fdy;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 5\n");
+
 
 	/* modify oddities*/
 	/* if the gfx data is coming from RAM instead of ROM change the pointer*/
@@ -230,7 +230,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 5\n");
 	}
 	else
 		if (!sys32sprite_draw_colour_f) transparent_pen = 0xff;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 6\n");
+
 	if (!sys32sprite_is_shadow)
 	{
 		if (sys32sprite_indirect_palette)
@@ -269,13 +269,12 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 6\n");
 				}
 			}
 		}
-
 		else
 			pal_base += sys32sprite_palette<<4;
 	}
 	else
 		sys32sprite_indirect_palette = 0; /* make sure full-shadows and IDP's are mutually exclusive*/
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 7\n");
+
 
 	/* adjust insertion points and pre-entry constants*/
 	src_base += sys32sprite_rom_offset;
@@ -291,7 +290,7 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 7\n");
 	edx    = src_fbx;
 	src_ptr += ecx;
 	ecx = dst_w;
-log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
+
 	if (!sys32sprite_8bpp)
 	{
 		/* 4bpp*/
@@ -331,22 +330,19 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 		}
 		else if (!sys32sprite_is_shadow)
 		{
-       log_cb(RETRO_LOG_INFO, LOGPRE "draw 334\n");
 			do {
 				do {
-          log_cb(RETRO_LOG_INFO, LOGPRE "draw 337\n");
-					eax = src_ptr[edx]; log_cb(RETRO_LOG_INFO, LOGPRE "draw 338\n");
-					edx = src_fx; log_cb(RETRO_LOG_INFO, LOGPRE "draw 339\n");
-					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4; log_cb(RETRO_LOG_INFO, LOGPRE "draw 340\n");
-					edx += src_fdx; log_cb(RETRO_LOG_INFO, LOGPRE "draw 341\n");
-					src_fx += src_fdx; log_cb(RETRO_LOG_INFO, LOGPRE "draw 342\n");
-					edx >>= (FP+1); log_cb(RETRO_LOG_INFO, LOGPRE "draw 343\n");
+					eax = src_ptr[edx];
+					edx = src_fx;
+					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
+					edx += src_fdx;
+					src_fx += src_fdx;
+					edx >>= (FP+1);
 
-					if (!eax || eax == transparent_pen) {continue; log_cb(RETRO_LOG_INFO, LOGPRE "draw 345\n");}
-					dst_ptr[ecx] = pal_base[eax]; log_cb(RETRO_LOG_INFO, LOGPRE "draw 346\n");
+					if (eax==NULL || eax == transparent_pen) continue;
+					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
-        log_cb(RETRO_LOG_INFO, LOGPRE "draw 349\n");
 
 				ecx = src_fby;      src_fby += src_fdy;
 				ecx >>= FP;         dst_ptr += dst_pitch;
@@ -354,12 +350,11 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 				edx = src_fbx;
 				src_ptr = src_base; edx >>= FP+1;
 				src_ptr += ecx;     ecx = dst_w;
+
 			} while (--dst_h);
-      log_cb(RETRO_LOG_INFO, LOGPRE "draw 358\n");
 		}
 		else
 		{
-      log_cb(RETRO_LOG_INFO, LOGPRE "draw 360\n");
 			do {
 				do {
 					eax = src_ptr[edx];
@@ -384,12 +379,10 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 				src_ptr += ecx;     ecx = dst_w;
 
 			} while (--dst_h);
-      log_cb(RETRO_LOG_INFO, LOGPRE "draw 385\n");
 		}
 	}
 	else
 	{
-    log_cb(RETRO_LOG_INFO, LOGPRE "draw 390\n");
 		/* 8bpp*/
 		edx >>= FP;
 		src_fx += src_fdx;
@@ -477,7 +470,6 @@ log_cb(RETRO_LOG_INFO, LOGPRE "draw 8\n");
 #undef FPONE
 #undef FPHALF
 #undef FPENT
-  log_cb(RETRO_LOG_INFO, LOGPRE "draw 10\n");
 }
 
 #else
