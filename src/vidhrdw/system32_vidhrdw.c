@@ -340,6 +340,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= (FP+1);
 log_cb(RETRO_LOG_INFO, LOGPRE "eax %i  trans%i\n", eax, transparent_pen);
 					if (!eax || eax == transparent_pen) continue;
+          log_cb(RETRO_LOG_INFO, LOGPRE "dst_ptr[ecx] %i  pal_base[eax]%i\n", dst_ptr[ecx], pal_base[eax]);
 					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
