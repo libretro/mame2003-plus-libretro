@@ -353,7 +353,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 				src_ptr = src_base; edx >>= FP+1;
 				src_ptr += ecx;     ecx = dst_w;
 
-			} while (--(--dst_h));
+			} while (--dst_h && dat_h);
 		}
 		else
 		{
