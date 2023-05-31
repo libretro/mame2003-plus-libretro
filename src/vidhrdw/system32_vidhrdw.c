@@ -341,8 +341,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 					if (!eax || eax == transparent_pen) continue;
 
-//src_ptr[edx]==NULL && dst_ptr[ecx]==NULL && eax!=0 && eax!=transparent_pen
-          if (src_ptr[edx]==NULL && ecx<0) {log_cb(RETRO_LOG_INFO, LOGPRE "src_base%i  eax%i  pal_base[eax]%i  src_fx%i\n", src_base, eax, pal_base[eax], src_fx); return; }
+          if (src_ptr[edx]==NULL && dst_ptr[ecx]==NULL) {log_cb(RETRO_LOG_INFO, LOGPRE "src_base%i  eax%i  pal_base[eax]%i  src_fx%i\n", src_base, eax, pal_base[eax], src_fx); return; }
 
 					dst_ptr[ecx] = pal_base[eax];
 
@@ -361,7 +360,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
-					eax = src_ptr[edx]
+					eax = src_ptr[edx];
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
 					edx += src_fdx;
