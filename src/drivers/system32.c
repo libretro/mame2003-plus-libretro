@@ -2982,18 +2982,19 @@ ROM_START( dbzvrvs )
 	ROM_LOAD( "16538", 0x380000, 0x100000, CRC(4d402c31) SHA1(2df160fd7e70f3d7b52fef2a2082e68966fd1535) )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD16_BYTE( "16544", 0x000000, 0x100000, CRC(f6c93dfc) SHA1(a006cedb7d0151ccc8d22e6588b1c39e099da182) )
-	ROM_LOAD16_BYTE( "16545", 0x000001, 0x100000, CRC(51748bac) SHA1(b1cae16b62a8d29117c0adb140eb09c1092f6c37) )
+	ROM_LOAD16_BYTE( "16545", 0x000000, 0x100000, CRC(51748bac) SHA1(b1cae16b62a8d29117c0adb140eb09c1092f6c37) )
+	ROM_LOAD16_BYTE( "16544", 0x000001, 0x100000, CRC(f6c93dfc) SHA1(a006cedb7d0151ccc8d22e6588b1c39e099da182) )
+
 
 	ROM_REGION( 0x1000000, REGION_GFX2, 0 ) /* sprites */
 	ROMX_LOAD( "16546", 0x000000, 0x200000, CRC(96f4be31) SHA1(ce3281630180d91de7850e9b1062382817fe0b1d) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16548", 0x000002, 0x200000, CRC(00377f59) SHA1(cf0f808d7730f334c5ac80d3171fa457be9ac88e) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16550", 0x000004, 0x200000, CRC(168e8966) SHA1(a18ec30f1358b09bcde6d8d2dbe0a82bea3bdae9) , ROM_SKIP(6)|ROM_GROUPWORD )
-	ROMX_LOAD( "16553", 0x000006, 0x200000, CRC(c0a43009) SHA1(e4f73768de512046b3e25c4238da811dcc2dde0b) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "16552", 0x000006, 0x200000, CRC(a31dae31) SHA1(2da2c391f29b5fdb87e3f95d9dabd50370fafa5a) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16547", 0x800000, 0x200000, CRC(50d328ed) SHA1(c4795299f5d7c9f3a847d684d8cde7012d4486f0) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16549", 0x800002, 0x200000, CRC(a5802e9f) SHA1(4cec3ed85a21aaf99b73013795721f212019e619) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16551", 0x800004, 0x200000, CRC(dede05fc) SHA1(51e092579e2b81fb68a9cc54165f80026fe71796) , ROM_SKIP(6)|ROM_GROUPWORD )
-	ROMX_LOAD( "16552", 0x800006, 0x200000, CRC(a31dae31) SHA1(2da2c391f29b5fdb87e3f95d9dabd50370fafa5a) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "16553", 0x800006, 0x200000, CRC(c0a43009) SHA1(e4f73768de512046b3e25c4238da811dcc2dde0b) , ROM_SKIP(6)|ROM_GROUPWORD )
 
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 	/* populated at runtime */
@@ -3383,6 +3384,80 @@ static DRIVER_INIT( arescue )
 
 }
 
+/******************************************************************************
+ ******************************************************************************
+  Dark Edge
+ ******************************************************************************
+ ******************************************************************************/
+/* V60 24lew for 8-16bit mem calls i think */
+void darkedge_fd1149_vblank(void)
+{
+	/* program_write_word*/cpu_writemem24lew_word(0x20f072, 0);
+	/* program_write_word*/cpu_writemem24lew_word(0x20f082, 0);
+
+	if( /* program_read_byte*/cpu_readmem24lew(0x20a12c) != 0 )
+	{
+		/* program_write_byte*/cpu_writemem24lew(0x20a12c, /* program_read_byte*/cpu_readmem24lew(0x20a12c)-1 );
+
+		if( /*program_read_byte*/cpu_readmem24lew(0x20a12c) == 0 )
+			/*program_read_byte*/cpu_writemem24lew(0x20a12e, 1);
+	}
+}
+
+
+WRITE16_HANDLER( darkedge_protection_w )
+{
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x:darkedge_prot_w(%06X) = %04X & %04X\n",
+		activecpu_get_pc(), 0xa00000 + 2*offset, data, mem_mask ^ 0xffff);
+}
+
+
+READ16_HANDLER( darkedge_protection_r )
+{
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x:darkedge_prot_r(%06X) & %04X\n",
+		activecpu_get_pc(), 0xa00000 + 2*offset, mem_mask ^ 0xffff);
+	return 0xffff;
+}
+
+static DRIVER_INIT( darkedge )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 5;
+	
+	/* install protection handlers */
+	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
+	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
+	system32_prot_vblank = darkedge_fd1149_vblank;
+}
+
+WRITE16_HANDLER( dbzvrvs_protection_w )
+{
+	/* program_write_word*/cpu_writemem24lew_word( 0x2080c8, /* program_read_word*/cpu_readmem24lew_word( 0x200044 ) );
+
+}
+
+
+READ16_HANDLER( dbzvrvs_protection_r )
+{
+	return 0xffff;
+}
+
+
+
+static DRIVER_INIT( dbzvrvs )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 4;
+
+	/* install protection handlers */
+	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
+	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_w);
+}
+
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
 GAME( 1992, holo,     0,        system32, holo,     holo,     ROT0, "Sega", "Holosseum" )
 
@@ -3408,7 +3483,7 @@ GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 S
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 
 /* not really working */
-GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
-GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND) 
+GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
+GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* does nothing useful, known to be heavily protected */
+GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
 /* Loony Toons (maybe) */
