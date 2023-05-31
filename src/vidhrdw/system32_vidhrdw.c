@@ -339,7 +339,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					src_fx += src_fdx;
 					edx >>= (FP+1);
 
-					if (!eax || eax == transparent_pen) return;
+					if (!eax || eax == transparent_pen || eax==2) continue;
 					dst_ptr[ecx] = pal_base[eax];
 
 				} while (++ecx);
@@ -353,10 +353,119 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 			} while (--dst_h);
 		}
+		else
+		{
+			do {
+				do {
+					eax = src_ptr[edx];
+					edx = src_fx;
+					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
+					edx += src_fdx;
+					src_fx += src_fdx;
+					edx >>= (FP+1);
 
+					if (!eax || eax == transparent_pen) continue;
+					eax = dst_ptr[ecx];
+					eax = (eax>>9&0x7c00) | (eax>>6&0x03e0) | (eax>>3&0x001f);
+					dst_ptr[ecx] = ((UINT32*)palette_shadow_table)[eax];
+
+				} while (++ecx);
+
+				ecx = src_fby;      src_fby += src_fdy;
+				ecx >>= FP;         dst_ptr += dst_pitch;
+				ecx *= src_pitch;   src_fx = src_fbx;
+				edx = src_fbx;
+				src_ptr = src_base; edx >>= FP+1;
+				src_ptr += ecx;     ecx = dst_w;
+
+			} while (--dst_h);
+		}
 	}
-	
+	else
+	{
+		/* 8bpp*/
+		edx >>= FP;
+		src_fx += src_fdx;
 
+		if (sys32sprite_indirect_palette)
+		{
+			do {
+				do {
+					eax = src_ptr[edx];
+					edx = src_fx;
+					src_fx += src_fdx;
+					edx >>= FP;
+
+					if (!eax || eax == 0xe0 || eax == transparent_pen) continue;
+					if (eax != 0xf0)
+						dst_ptr[ecx] = idp_cache8[eax];
+					else
+					{
+						eax = dst_ptr[ecx];
+						eax = (eax>>9&0x7c00) | (eax>>6&0x03e0) | (eax>>3&0x001f);
+						dst_ptr[ecx] = ((UINT32*)palette_shadow_table)[eax];
+					}
+
+				} while (++ecx);
+
+				ecx = src_fby;      src_fby += src_fdy;
+				ecx >>= FP;         dst_ptr += dst_pitch;
+				ecx *= src_pitch;   src_fx = src_fbx;
+				edx = src_fbx;      src_fx += src_fdx;
+				src_ptr = src_base; edx >>= FP;
+				src_ptr += ecx;     ecx = dst_w;
+
+			} while (--dst_h);
+		}
+		else if (!sys32sprite_is_shadow)
+		{
+			do {
+				do {
+					eax = src_ptr[edx];
+					edx = src_fx;
+					src_fx += src_fdx;
+					edx >>= FP;
+
+					if (!eax || eax == transparent_pen) continue;
+					dst_ptr[ecx] = pal_base[eax];
+
+				} while (++ecx);
+
+				ecx = src_fby;      src_fby += src_fdy;
+				ecx >>= FP;         dst_ptr += dst_pitch;
+				ecx *= src_pitch;   src_fx = src_fbx;
+				edx = src_fbx;      src_fx += src_fdx;
+				src_ptr = src_base; edx >>= FP;
+				src_ptr += ecx;     ecx = dst_w;
+
+			} while (--dst_h);
+		}
+		else
+		{
+			do {
+				do {
+					eax = src_ptr[edx];
+					edx = src_fx;
+					src_fx += src_fdx;
+					edx >>= FP;
+
+					if (!eax || eax == transparent_pen) continue;
+					eax = dst_ptr[ecx];
+					eax = (eax>>9&0x7c00) | (eax>>6&0x03e0) | (eax>>3&0x001f);
+					dst_ptr[ecx] = ((UINT32*)palette_shadow_table)[eax];
+
+				} while (++ecx);
+
+				ecx = src_fby;      src_fby += src_fdy;
+				ecx >>= FP;         dst_ptr += dst_pitch;
+				ecx *= src_pitch;   src_fx = src_fbx;
+				edx = src_fbx;      src_fx += src_fdx;
+				src_ptr = src_base; edx >>= FP;
+				src_ptr += ecx;     ecx = dst_w;
+
+			} while (--dst_h);
+		}
+	}
 #undef FP
 #undef FPONE
 #undef FPHALF
