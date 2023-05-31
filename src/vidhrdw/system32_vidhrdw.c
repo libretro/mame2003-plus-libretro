@@ -339,7 +339,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					src_fx += src_fdx;
 					edx >>= (FP+1);
 //src_ptr[edx]==NULL && dst_ptr[ecx]==NULL && eax!=0 && eax!=transparent_pen
-          if (edx<0 && ecx<0) {log_cb(RETRO_LOG_INFO, LOGPRE "src_base%i  eax%i  pal_base[eax]%i  src_fx%i\n", src_base, eax, pal_base[eax], src_fx); return; }
+          if (src_ptr[edx]==NULL && ecx<0) {log_cb(RETRO_LOG_INFO, LOGPRE "src_base%i  eax%i  pal_base[eax]%i  src_fx%i\n", src_base, eax, pal_base[eax], src_fx); return; }
 
 					if (!eax || eax == transparent_pen) continue;
 					dst_ptr[ecx] = pal_base[eax];
