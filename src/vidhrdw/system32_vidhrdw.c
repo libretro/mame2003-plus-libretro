@@ -135,8 +135,8 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	UINT8 *src_ptr;
 	register int edx, eax, ecx;
 	int src_fx, src_fdx, transparent_pen;
-	UINT32 *pal_base;
-	UINT32 *dst_ptr;
+	UINT64 *pal_base;
+	UINT64 *dst_ptr;
 
 	/* outter loop*/
 	int src_fby, src_fdy;
