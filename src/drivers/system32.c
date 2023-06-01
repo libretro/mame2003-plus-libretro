@@ -525,6 +525,44 @@ static READ16_HANDLER(ga2_wakeup_protection_r)
 	return prot[offset];
 }
 
+/******************************************************************************
+ ******************************************************************************
+  Sonic Arcade protection
+ ******************************************************************************
+ ******************************************************************************/
+
+
+// This code duplicates the actions of the protection device used in SegaSonic
+// arcade revision C, allowing the game to run correctly.
+#define CLEARED_LEVELS			0xE5C4
+#define CURRENT_LEVEL			0xF06E
+#define CURRENT_LEVEL_STATUS		0xF0BC
+#define LEVEL_ORDER_ARRAY		0x263A
+
+static WRITE16_HANDLER(sonic_level_load_protection)
+{
+	UINT16 level;
+/*Perform write*/
+	system32_workram[CLEARED_LEVELS / 2] = (data & mem_mask) | (system32_workram[CLEARED_LEVELS / 2] & ~mem_mask);
+
+/*Refresh current level*/
+		if (system32_workram[CLEARED_LEVELS / 2] == 0)
+		{
+			level = 0x0007;
+		}
+		else
+		{
+			const UINT8 *ROM = memory_region(REGION_CPU1);
+			level =  *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 1);
+			level |= *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 2) << 8;
+		}
+		system32_workram[CURRENT_LEVEL / 2] = level;
+
+/*Reset level status*/
+		system32_workram[CURRENT_LEVEL_STATUS / 2] = 0x0000;
+		system32_workram[(CURRENT_LEVEL_STATUS + 2) / 2] = 0x0000;
+}
+
 /* the protection board on many system32 games has full dma/bus access*/
 /* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
@@ -3248,6 +3286,18 @@ static DRIVER_INIT ( sonic )
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
+  
+  install_mem_write16_handler(0, 0x20E5C4, 0x20E5C5, sonic_level_load_protection);
+}
+
+static DRIVER_INIT ( sonicp )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_mixerShift = 5;
+
+	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
+	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
 }
 
 static DRIVER_INIT ( radm )
@@ -3472,8 +3522,8 @@ GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Ara
 GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, brival,   0,        sys32_hi, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonicp,    ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
