@@ -541,9 +541,9 @@ static READ16_HANDLER(ga2_wakeup_protection_r)
 
 static WRITE16_HANDLER(sonic_level_load_protection)
 {
-	UINT16 level;
+	unsigned short level;
 /*Perform write*/
-	system32_workram[CLEARED_LEVELS / 2] = (data & mem_mask) | (system32_workram[CLEARED_LEVELS / 2] & ~mem_mask);
+	system32_workram[CLEARED_LEVELS / 2] = (data & ~mem_mask) | (system32_workram[CLEARED_LEVELS / 2] & mem_mask);
 
 /*Refresh current level*/
 		if (system32_workram[CLEARED_LEVELS / 2] == 0)
@@ -552,9 +552,8 @@ static WRITE16_HANDLER(sonic_level_load_protection)
 		}
 		else
 		{
-			const UINT8 *ROM = memory_region(REGION_CPU1);
-			level =  *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 1);
-			level |= *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 2) << 8;
+			level =  *((memory_region(REGION_CPU1) + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 1);
+			level |= *((memory_region(REGION_CPU1) + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 2) << 8;
 		}
 		system32_workram[CURRENT_LEVEL / 2] = level;
 
