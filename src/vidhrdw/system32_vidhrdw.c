@@ -339,7 +339,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					src_fx += src_fdx;
 					edx >>= (FP+1);
 
-					if (src_ptr[edx]==NULL && dst_ptr[ecx]==NULL && eax != transparent_pen) return;
+					if (src_ptr[edx]==NULL && dst_ptr[ecx]==NULL && eax==0) return;
 
 					if (!eax || eax == transparent_pen) continue;
 
