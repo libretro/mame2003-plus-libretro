@@ -332,7 +332,8 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
-					eax = src_ptr[edx];
+					if (src_ptr[edx]) eax = src_ptr[edx];
+					else continue;
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
 					edx += src_fdx;
