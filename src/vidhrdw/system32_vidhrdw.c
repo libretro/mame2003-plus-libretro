@@ -340,8 +340,14 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= (FP+1);
 
 					if (!eax || eax == transparent_pen) continue;
-					dst_ptr[ecx] = pal_base[eax];
 
+					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
+					 * but BITMAP_SAFETY is defined in src/common.c,
+					 * so inaccessible here...
+					 * > BITMAP_SAFETY == 16 */
+					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+
+					dst_ptr[ecx] = pal_base[eax];
 				} while (++ecx);
 
 				ecx = src_fby;      src_fby += src_fdy;
