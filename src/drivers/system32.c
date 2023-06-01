@@ -913,6 +913,15 @@ static WRITE16_HANDLER( jp_v60_write_cab )
 	cpu_set_irq_line(1, 0, HOLD_LINE);
 }
 
+static WRITE16_HANDLER( random_number_16_w )
+{
+/* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
+}
+
+static READ16_HANDLER( random_number_16_r )
+{
+       return rand();
+}
 
 static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
@@ -934,8 +943,7 @@ static MEMORY_READ16_START( system32_readmem )
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
 
-	{ 0xd80000, 0xd80001, sys32_read_random },
-	{ 0xd80002, 0xd80003, MRA16_RAM }, /* Unknown harddunk*/
+	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -967,7 +975,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
 	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
-	{ 0xd80000, 0xd80003, MWA16_RAM }, /* Unknown titlef / harddunk*/
+	{ 0xd80000, 0xdfffff, random_number_16_w }, /* Unknown titlef / harddunk*/
 	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
