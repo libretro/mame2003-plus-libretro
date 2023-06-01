@@ -3290,7 +3290,15 @@ static DRIVER_INIT ( sonic )
   install_mem_write16_handler(0, 0x20E5C4, 0x20E5C5, sonic_level_load_protection);
 }
 
+static DRIVER_INIT ( sonicp )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_mixerShift = 5;
 
+	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
+	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
+}
 
 static DRIVER_INIT ( radm )
 {
