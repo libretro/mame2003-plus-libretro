@@ -222,7 +222,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	if (sys32sprite_rambasedgfx)
 	{
 		src_base = sys32_spriteram8;
-		src_end  = src_base + 0x20000;
+		src_end  = src_base + 0x20000; /* size of sys32_spriteram8 buffer */
 		sys32sprite_rom_offset &= 0x1ffff; /* right mask?*/
 	}
 
