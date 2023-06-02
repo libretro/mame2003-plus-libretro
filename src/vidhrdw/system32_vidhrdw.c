@@ -137,17 +137,20 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	int src_fx, src_fdx, transparent_pen;
 	UINT32 *pal_base;
 	UINT32 *dst_ptr;
+	UINT32 *dst_end;
 
 	/* outter loop*/
 	int src_fby, src_fdy;
 	int dst_pitch;
 	int src_pitch, src_fbx;
 	UINT8 *src_base;
+	UINT8 *src_end;
 	int dst_w, dst_h;
 
 
 	/* fill internal data structure with default values*/
 	src_base  = memory_region(REGION_GFX2);
+	src_end   = src_base + memory_region_length(REGION_GFX2);
 	src_pitch = sys32sprite_rom_width;
 	src_fw    = sys32sprite_rom_width;
 	src_fh    = sys32sprite_rom_height;
@@ -156,6 +159,11 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	pal_base  = Machine->gfx[0]->colortable;
 
 	dst_ptr   = bitmap->base;
+	/* Should be (bitmap->height + (2 * BITMAP_SAFETY))
+	 * but BITMAP_SAFETY is defined in src/common.c,
+	 * so inaccessible here...
+	 * > BITMAP_SAFETY == 16 */
+	dst_end   = dst_ptr + (bitmap->width * (bitmap->height + 32));
 	dst_pitch = bitmap->rowpixels;
 	dst_minx  = cliprect->min_x;
 	dst_maxx  = cliprect->max_x;
@@ -214,6 +222,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	if (sys32sprite_rambasedgfx)
 	{
 		src_base = sys32_spriteram8;
+		src_end  = src_base + 0x20000;
 		sys32sprite_rom_offset &= 0x1ffff; /* right mask?*/
 	}
 
@@ -300,6 +309,8 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
@@ -308,12 +319,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= FP+1;
 
 					if (!eax || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					if (eax != 0x0e)
 						dst_ptr[ecx] = idp_cache4[eax];
@@ -339,6 +345,8 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
@@ -347,12 +355,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= (FP+1);
 
 					if (!eax || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					dst_ptr[ecx] = pal_base[eax];
 				} while (++ecx);
@@ -370,6 +373,8 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					if (src_fx & FPONE) eax &= 0xf; else eax >>= 4;
@@ -378,12 +383,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					edx >>= (FP+1);
 
 					if (!eax || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					eax = dst_ptr[ecx];
 					eax = (eax>>9&0x7c00) | (eax>>6&0x03e0) | (eax>>3&0x001f);
@@ -412,18 +412,15 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					src_fx += src_fdx;
 					edx >>= FP;
 
 					if (!eax || eax == 0xe0 || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					if (eax != 0xf0)
 						dst_ptr[ecx] = idp_cache8[eax];
@@ -449,18 +446,15 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					src_fx += src_fdx;
 					edx >>= FP;
 
 					if (!eax || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					dst_ptr[ecx] = pal_base[eax];
 
@@ -479,18 +473,15 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 		{
 			do {
 				do {
+					if ((src_ptr + edx) >= src_end) return;
+
 					eax = src_ptr[edx];
 					edx = src_fx;
 					src_fx += src_fdx;
 					edx >>= FP;
 
 					if (!eax || eax == transparent_pen) continue;
-
-					 /* Should be (bitmap->height + (2 * BITMAP_SAFETY))
-					 * but BITMAP_SAFETY is defined in src/common.c,
-					 * so inaccessible here...
-					 * > BITMAP_SAFETY == 16 */
-					if ((dst_ptr + ecx) >= ((UINT32*)bitmap->base + (bitmap->width * (bitmap->height + 32)))) return;
+					if ((dst_ptr + ecx) >= dst_end) return;
 
 					eax = dst_ptr[ecx];
 					eax = (eax>>9&0x7c00) | (eax>>6&0x03e0) | (eax>>3&0x001f);
