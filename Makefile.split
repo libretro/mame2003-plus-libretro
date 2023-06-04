@@ -936,6 +936,14 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bogeyman core_none))
 		$(CORE_DIR)/drivers/bogeyman.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_bombjack core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bombjack_vidhrdw.c \
+		$(CORE_DIR)/drivers/bombjack.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
