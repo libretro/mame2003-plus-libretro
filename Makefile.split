@@ -951,6 +951,8 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_boogwing core_none))
 	SOUNDS+=YM2151_ALT@
 	SOUNDS+=OKIM6295@
 	SOURCES_C += \
+		$(CORE_DIR)/machine/decocrpt.c \
+		$(CORE_DIR)/machine/decoprot.c \
 		$(CORE_DIR)/vidhrdw/deco16ic.c \
 		$(CORE_DIR)/drivers/boogwing.c
 endif
