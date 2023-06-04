@@ -962,6 +962,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bottom9 core_none))
 	CPUS+=Z80@
 	SOUNDS+=K007232@
 	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
 		$(CORE_DIR)/vidhrdw/bottom9_vidhrdw.c \
 		$(CORE_DIR)/drivers/bottom9.c
 endif
