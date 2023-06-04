@@ -310,8 +310,8 @@ libretro-build-wii-core:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_blueprnt
-    CORENAME: mame2003_plus_drv_blueprnt
+    INCLUDE_DRV: drv_bogeyman
+    CORENAME: mame2003_plus_drv_bogeyman
 
 # Nintendo WiiU
 libretro-build-wiiu:
