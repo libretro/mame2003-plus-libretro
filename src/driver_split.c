@@ -853,6 +853,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( mstadium )	/* GX891 (c) 1989 (Japan) */
 #endif
 
+#if defined(drv_boxer) || defined(core_none)
+	/* boxer.c */
+	DRIVER( boxer )		/* ?????? prototype 1978    [6502] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
