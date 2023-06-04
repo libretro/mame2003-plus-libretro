@@ -827,6 +827,11 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( saturn )	/* (c) 1983 Jaleco (Zilec in ROM R6, and the programmer names) */
 #endif
 
+#if defined(drv_bogeyman) || defined(core_none)
+	/* bogeyman.c */
+	DRIVER( bogeyman )	/* -0204-0 (Data East part number) (c) [1985?] */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
