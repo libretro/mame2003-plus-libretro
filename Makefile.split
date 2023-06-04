@@ -907,6 +907,8 @@ endif
 ifneq (,$(filter $(INCLUDE_DRV),drv_blstroid core_none))
 	CPUS+=M68000@
 	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
 		$(CORE_DIR)/vidhrdw/blstroid_vidhrdw.c \
 		$(CORE_DIR)/drivers/blstroid.c
 endif
