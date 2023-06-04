@@ -832,6 +832,12 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bogeyman )	/* -0204-0 (Data East part number) (c) [1985?] */
 #endif
 
+#if defined(drv_bombjack) || defined(core_none)
+	/* bombjack.c */
+	DRIVER( bombjack )	/* (c) 1984 Tehkan */
+	DRIVER( bombjac2 )	/* (c) 1984 Tehkan */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
