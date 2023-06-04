@@ -838,6 +838,14 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bombjac2 )	/* (c) 1984 Tehkan */
 #endif
 
+#if defined(drv_boogwing) || defined(core_none)
+	/* boogwing.c */
+	DRIVER( boogwing )	/* MBD (c) 1993 Data East Corporation (Euro) */
+	DRIVER( boogwinga )	/* MBD (c) 1993 Data East Corporation (Asia) */
+	DRIVER( ragtime )	/* MBD (c) 1993 Data East Corporation (Japan)*/
+	DRIVER( ragtimea )	/* MBD (c) 1993 Data East Corporation (Japan)*/
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
