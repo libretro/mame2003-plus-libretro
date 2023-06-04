@@ -846,6 +846,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ragtimea )	/* MBD (c) 1993 Data East Corporation (Japan)*/
 #endif
 
+#if defined(drv_bottom9) || defined(core_none)
+	/* bottom9.c */
+	DRIVER( bottom9 )	/* GX891 (c) 1989 */
+	DRIVER( bottom9n )	/* GX891 (c) 1989 */
+	DRIVER( mstadium )	/* GX891 (c) 1989 (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
