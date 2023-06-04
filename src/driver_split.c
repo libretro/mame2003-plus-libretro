@@ -811,6 +811,15 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( skysmash )	/* (c) 1990 Nihon System Inc. */
 #endif
 
+#if defined(drv_blstroid) || defined(core_none)
+	/* blstroid.c */
+	DRIVER( blstroid )	/* 136057			(c) 1987 */
+	DRIVER( blstroi3 )	/* 136057			(c) 1987 */
+	DRIVER( blstroi2 )	/* 136057			(c) 1987 */
+	DRIVER( blstroig )	/* 136057			(c) 1987 */
+	DRIVER( blsthead )	/* (proto)			(c) 1987 */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
