@@ -820,6 +820,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( blsthead )	/* (proto)			(c) 1987 */
 #endif
 
+#if defined(drv_blueprnt) || defined(core_none)
+	/* blueprnt.c */
+	DRIVER( blueprnt )	/* (c) 1982 Bally Midway (Zilec in ROM 3U, and the programmer names) */
+	DRIVER( blueprnj )	/* (c) 1982 Jaleco (Zilec in ROM 3U, and the programmer names) */
+	DRIVER( saturn )	/* (c) 1983 Jaleco (Zilec in ROM R6, and the programmer names) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
