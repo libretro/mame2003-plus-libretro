@@ -858,6 +858,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( boxer )		/* ?????? prototype 1978    [6502] */
 #endif
 
+#if defined(drv_brkthru) || defined(core_none)
+	/* brkthru.c */
+	DRIVER( brkthru )	/* (c) 1986 Data East USA (US) */
+	DRIVER( brkthruj )	/* (c) 1986 Data East Corporation (Japan) */
+	DRIVER( darwin )	/* (c) 1986 Data East Corporation (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
