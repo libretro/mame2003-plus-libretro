@@ -543,8 +543,8 @@ static WRITE16_HANDLER(sonic_level_load_protection)
 {
 	unsigned short level;
 /*Perform write*/
-	system32_workram[CLEARED_LEVELS / 2] = (data & ~mem_mask) | (system32_workram[CLEARED_LEVELS / 2] & mem_mask);
-
+  COMBINE_DATA(&system32_workram[CLEARED_LEVELS / 2]);
+  
 /*Refresh current level*/
 		if (system32_workram[CLEARED_LEVELS / 2] == 0)
 		{
