@@ -310,8 +310,8 @@ libretro-build-wii-core:
   extends:
     - .core-defs-wii
   variables:
-    INCLUDE_DRV: drv_boxer
-    CORENAME: mame2003_plus_drv_boxer
+    INCLUDE_DRV: drv_brkthru
+    CORENAME: mame2003_plus_drv_brkthru
 
 # Nintendo WiiU
 libretro-build-wiiu:
