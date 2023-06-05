@@ -811,6 +811,60 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( skysmash )	/* (c) 1990 Nihon System Inc. */
 #endif
 
+#if defined(drv_blstroid) || defined(core_none)
+	/* blstroid.c */
+	DRIVER( blstroid )	/* 136057			(c) 1987 */
+	DRIVER( blstroi3 )	/* 136057			(c) 1987 */
+	DRIVER( blstroi2 )	/* 136057			(c) 1987 */
+	DRIVER( blstroig )	/* 136057			(c) 1987 */
+	DRIVER( blsthead )	/* (proto)			(c) 1987 */
+#endif
+
+#if defined(drv_blueprnt) || defined(core_none)
+	/* blueprnt.c */
+	DRIVER( blueprnt )	/* (c) 1982 Bally Midway (Zilec in ROM 3U, and the programmer names) */
+	DRIVER( blueprnj )	/* (c) 1982 Jaleco (Zilec in ROM 3U, and the programmer names) */
+	DRIVER( saturn )	/* (c) 1983 Jaleco (Zilec in ROM R6, and the programmer names) */
+#endif
+
+#if defined(drv_bogeyman) || defined(core_none)
+	/* bogeyman.c */
+	DRIVER( bogeyman )	/* -0204-0 (Data East part number) (c) [1985?] */
+#endif
+
+#if defined(drv_bombjack) || defined(core_none)
+	/* bombjack.c */
+	DRIVER( bombjack )	/* (c) 1984 Tehkan */
+	DRIVER( bombjac2 )	/* (c) 1984 Tehkan */
+#endif
+
+#if defined(drv_boogwing) || defined(core_none)
+	/* boogwing.c */
+	DRIVER( boogwing )	/* MBD (c) 1993 Data East Corporation (Euro) */
+	DRIVER( boogwinga )	/* MBD (c) 1993 Data East Corporation (Asia) */
+	DRIVER( ragtime )	/* MBD (c) 1993 Data East Corporation (Japan)*/
+	DRIVER( ragtimea )	/* MBD (c) 1993 Data East Corporation (Japan)*/
+#endif
+
+#if defined(drv_bottom9) || defined(core_none)
+	/* bottom9.c */
+	DRIVER( bottom9 )	/* GX891 (c) 1989 */
+	DRIVER( bottom9n )	/* GX891 (c) 1989 */
+	DRIVER( mstadium )	/* GX891 (c) 1989 (Japan) */
+#endif
+
+#if defined(drv_boxer) || defined(core_none)
+	/* boxer.c */
+	DRIVER( boxer )		/* ?????? prototype 1978    [6502] */
+#endif
+
+#if defined(drv_brkthru) || defined(core_none)
+	/* brkthru.c */
+	DRIVER( brkthru )	/* (c) 1986 Data East USA (US) */
+	DRIVER( brkthruj )	/* (c) 1986 Data East Corporation (Japan) */
+	DRIVER( darwin )	/* (c) 1986 Data East Corporation (Japan) */
+#endif
+
 #if defined(drv_climber) || defined(core_none)
 	/* cclimber.c */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */

@@ -904,6 +904,85 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_bloodbro core_none))
 		$(CORE_DIR)/drivers/bloodbro.c
 endif
 
+ifneq (,$(filter $(INCLUDE_DRV),drv_blstroid core_none))
+	CPUS+=M68000@
+	CPUS+=M6502@
+	SOUNDS+=TMS5220@
+	SOUNDS+=OKIM6295@
+	SOUNDS+=POKEY@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/atarigen.c \
+		$(CORE_DIR)/sndhrdw/atarijsa.c \
+		$(CORE_DIR)/vidhrdw/atarimo_vidhrdw.c \
+		$(CORE_DIR)/vidhrdw/blstroid_vidhrdw.c \
+		$(CORE_DIR)/drivers/blstroid.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_blueprnt core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/blueprnt_vidhrdw.c \
+		$(CORE_DIR)/drivers/blueprnt.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bogeyman core_none))
+	CPUS+=M6502@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bogeyman_vidhrdw.c \
+		$(CORE_DIR)/drivers/bogeyman.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bombjack core_none))
+	CPUS+=Z80@
+	SOUNDS+=AY8910@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/bombjack_vidhrdw.c \
+		$(CORE_DIR)/drivers/bombjack.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_boogwing core_none))
+	CPUS+=M68000@
+	CPUS+=H6280@
+	#SOUNDS+=YM2151@
+	SOUNDS+=YM2151_ALT@
+	SOUNDS+=OKIM6295@
+	SOURCES_C += \
+		$(CORE_DIR)/machine/decocrpt.c \
+		$(CORE_DIR)/machine/decoprot.c \
+		$(CORE_DIR)/vidhrdw/deco16ic.c \
+		$(CORE_DIR)/drivers/boogwing.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_bottom9 core_none))
+	CPUS+=M6809@
+	CPUS+=Z80@
+	SOUNDS+=K007232@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/konamiic.c \
+		$(CORE_DIR)/vidhrdw/bottom9_vidhrdw.c \
+		$(CORE_DIR)/drivers/bottom9.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_boxer core_none))
+	CPUS+=M6502@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/boxer_vidhrdw.c \
+		$(CORE_DIR)/drivers/boxer.c
+endif
+
+ifneq (,$(filter $(INCLUDE_DRV),drv_brkthru core_none))
+	CPUS+=M6809@
+	SOUNDS+=YM2203@
+	SOUNDS+=YM3526@
+	SOURCES_C += \
+		$(CORE_DIR)/vidhrdw/brkthru_vidhrdw.c \
+		$(CORE_DIR)/drivers/brkthru.c
+endif
+
 ifneq (,$(filter $(INCLUDE_DRV),drv_cclimber core_none))
 	CPUS+=Z80@
 	SOUNDS+=AY8910@
