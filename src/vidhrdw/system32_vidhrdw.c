@@ -201,14 +201,14 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
 
 	/* clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)*/
-	if (flipx)
+	if (0/*flipx*/)
 	{
 		src_fbx = src_fw - FPENT - 1;
 		src_fdx = -src_fdx;
 	}
 	else src_fbx = FPENT;
 	src_fbx += dst_skipx * src_fdx;
-	if (flipy)
+	if (0/*flipy*/)
 	{
 		src_fby = src_fh - FPENT - 1;
 		src_fdy = -src_fdy;
