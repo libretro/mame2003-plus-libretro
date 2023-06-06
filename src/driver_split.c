@@ -886,9 +886,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
-#if defined(drv_namcos2) || defined(core_none)
+#if defined(drv_namcos2) || defined(core_none) /* split or reduce needed */
 	/* namcos2.c */
-#if 0
 	DRIVER( finallap )	/* 87.12 Final Lap */
 	DRIVER( finalapd )	/* 87.12 Final Lap */
 	DRIVER( finalapc )	/* 87.12 Final Lap */
@@ -918,7 +917,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rthun2 )	/* (c) 1990 */
 	DRIVER( rthun2j )	/* (c) 1990 (Japan) */
 	DRIVER( sgunner )	/* (c) 1990 */
-#endif
 	/* 91.9  Super World Stadium */
 	DRIVER( sgunner2 )	/* (c) 1991 (US) */
 	DRIVER( sgunnr2j )	/* (c) 1991 (Japan) */
