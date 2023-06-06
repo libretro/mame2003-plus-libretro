@@ -917,6 +917,17 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( rthun2 )	/* (c) 1990 */
 	DRIVER( rthun2j )	/* (c) 1990 (Japan) */
 	DRIVER( sgunner )	/* (c) 1990 */
+	/* 91.9  Super World Stadium */
+	DRIVER( sgunner2 )	/* (c) 1991 (US) */
+	DRIVER( sgunnr2j )	/* (c) 1991 (Japan) */
+	DRIVER( cosmogng )	/* (c) 1991 (US) */
+	DRIVER( cosmognj )	/* (c) 1991 (Japan) */
+	DRIVER( finalap3 )	/* 92.9  Final Lap 3 */
+	DRIVER( finalp3a )	/* 92.9  Final Lap 3 */
+	DRIVER( luckywld )	/* (c) 1992 */
+	DRIVER( suzuka8h )
+	DRIVER( suzuk8hj )
+
 #endif
 
 #if defined(drv_system32) || defined(core_none)
