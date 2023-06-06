@@ -201,14 +201,14 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
 
 	/* clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)*/
-	if (0/*flipx*/)
+	if (flipx)
 	{
 		src_fbx = src_fw - FPENT - 1;
 		src_fdx = -src_fdx;
 	}
 	else src_fbx = FPENT;
 	src_fbx += dst_skipx * src_fdx;
-	if (0/*flipy*/)
+	if (flipy)
 	{
 		src_fby = src_fh - FPENT - 1;
 		src_fdy = -src_fdy;
@@ -1647,10 +1647,10 @@ VIDEO_UPDATE( system32 ) {
           if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe ) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
           system32_draw_bg_layer (bitmap,cliprect,2);
         }
-			}
+			}/*
 			if (priloop == priority3 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
 				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
-			}
+			}*/
 			system32_process_spritelist (bitmap, cliprect);
 		}
 	}
