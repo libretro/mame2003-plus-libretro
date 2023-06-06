@@ -886,6 +886,54 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
+#if defined(drv_namcos2) || defined(core_none)
+	/* namcos2.c */
+	DRIVER( finallap )	/* 87.12 Final Lap */
+	DRIVER( finalapd )	/* 87.12 Final Lap */
+	DRIVER( finalapc )	/* 87.12 Final Lap */
+	DRIVER( finlapjc )	/* 87.12 Final Lap */
+	DRIVER( finlapjb )	/* 87.12 Final Lap */
+	DRIVER( assault )	/* (c) 1988 */
+	DRIVER( assaultj )	/* (c) 1988 (Japan) */
+	DRIVER( assaultp )	/* (c) 1988 (Japan) */
+	DRIVER( metlhawk )	/* (c) 1988 */
+	DRIVER( ordyne )	/* (c) 1988 */
+	DRIVER( mirninja )	/* (c) 1988 (Japan) */
+	DRIVER( phelios )	/* (c) 1988 (Japan) */
+	DRIVER( dirtfoxj )	/* (c) 1989 (Japan) */
+	DRIVER( fourtrax )	/* 89.11 */
+	DRIVER( valkyrie )	/* (c) 1989 (Japan) */
+	DRIVER( finehour )	/* (c) 1989 (Japan) */
+	DRIVER( burnforc )	/* (c) 1989 (Japan) */
+	DRIVER( marvland )	/* (c) 1989 (US) */
+	DRIVER( marvlanj )	/* (c) 1989 (Japan) */
+	DRIVER( kyukaidk )	/* (c) 1990 (Japan) */
+	DRIVER( kyukaido )	/* (c) 1990 (Japan) */
+	DRIVER( dsaber )	/* (c) 1990 */
+	DRIVER( dsaberj )	/* (c) 1990 (Japan) */
+	DRIVER( finalap2 )	/* 90.8  Final Lap 2 */
+	DRIVER( finalp2j )	/* 90.8  Final Lap 2 (Japan) */
+	DRIVER( gollygho )	/* 91.7  Golly Ghost */
+	DRIVER( rthun2 )	/* (c) 1990 */
+	DRIVER( rthun2j )	/* (c) 1990 (Japan) */
+	DRIVER( sgunner )	/* (c) 1990 */
+	/* 91.9  Super World Stadium */
+	DRIVER( sgunner2 )	/* (c) 1991 (US) */
+	DRIVER( sgunnr2j )	/* (c) 1991 (Japan) */
+	DRIVER( cosmogng )	/* (c) 1991 (US) */
+	DRIVER( cosmognj )	/* (c) 1991 (Japan) */
+	DRIVER( finalap3 )	/* 92.9  Final Lap 3 */
+	DRIVER( finalp3a )	/* 92.9  Final Lap 3 */
+	DRIVER( luckywld )	/* (c) 1992 */
+	DRIVER( suzuka8h )
+	DRIVER( suzuk8hj )
+	/* 92.8  Bubble Trouble */
+	DRIVER( sws92 )		/* (c) 1992 (Japan) */
+	DRIVER( sws92g )	/* (c) 1992 (Japan) */
+	DRIVER( suzuk8h2 )
+	DRIVER( sws93 )		/* (c) 1993 (Japan) */
+#endif
+
 #if defined(drv_system32) || defined(core_none)
 	/* system32.c */
 	DRIVER( holo )		/* (c) 1992 (US) */
