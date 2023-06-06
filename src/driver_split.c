@@ -886,7 +886,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cannonb )	/* (c) 1985 Soft */
 #endif
 
-#if defined(drv_namcos2) || defined(core_none) /* split or reduce needed */
+#if defined(drv_namcos2) || defined(core_none) /* reduction needed */
 	/* namcos2.c */
 	DRIVER( finallap )	/* 87.12 Final Lap */
 	DRIVER( finalapd )	/* 87.12 Final Lap */
