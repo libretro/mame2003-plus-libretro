@@ -1001,6 +1001,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_namcos2 core_none))
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/namcos2_machine.c \
+		$(CORE_DIR)/drivers/namcoic.c \
 		$(CORE_DIR)/vidhrdw/namcos2_vidhrdw.c \
 		$(CORE_DIR)/drivers/namcos2.c
 endif
