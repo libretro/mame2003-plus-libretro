@@ -1641,13 +1641,13 @@ VIDEO_UPDATE( system32 ) {
 			}
 			if (priloop == priority1 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
 				if (!(sys32_tmap_disabled & 0x2)) system32_draw_bg_layer (bitmap,cliprect,1);
-			}/*
+			} #if 0
 			if (priloop == priority2 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
 				if (!(sys32_tmap_disabled & 0x4)) {
           if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe ) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
           system32_draw_bg_layer (bitmap,cliprect,2);
         }
-			}*/
+			} #endif
 			if (priloop == priority3 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
 				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
 			}
