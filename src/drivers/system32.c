@@ -938,7 +938,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
-	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
+	//{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
