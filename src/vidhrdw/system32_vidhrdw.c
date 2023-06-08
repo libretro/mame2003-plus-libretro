@@ -1374,7 +1374,7 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 
 		tableaddress = (tableaddress * 0x200);
 
-		if (strcmp(Machine->gamedrv->name,"sonic")) && strcmp(Machine->gamedrv->name,"alien3")))
+		if ( strcmp(Machine->gamedrv->name,"sonic") && strcmp(Machine->gamedrv->name,"alien3") )
 		{
 			if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
 				/* sonic  - trips this during attract mode on the ice level demo, messes up layer 2 bg. mixer register maybe wrong? */
