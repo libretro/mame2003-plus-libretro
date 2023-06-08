@@ -563,6 +563,33 @@ static WRITE16_HANDLER(sonic_level_load_protection)
 		system32_workram[(CURRENT_LEVEL_STATUS + 2) / 2] = 0x0000;
 }
 
+/******************************************************************************
+ ******************************************************************************
+  The J.League 1994 (Japan)
+ ******************************************************************************
+ ******************************************************************************/
+static WRITE16_HANDLER( jleague_protection_w )
+{
+	COMBINE_DATA( &system32_workram[0xf700/2 + offset ] );
+
+	switch( offset )
+	{
+		/* Map team browser selection to opponent browser selection*/
+		/* using same lookup table that V60 uses for sound sample mapping.*/
+		case 0:
+			cpu_writemem24lew( 0x20f708, cpu_readmem24lew_word( 0x7bbc0 + data*2 ) );
+			break;
+
+		/* move on to team browser*/
+		case 4/2:
+			cpu_writemem24lew( 0x200016, data & 0xff );
+			break;
+
+		default:
+			break;
+	}
+}
+
 /* the protection board on many system32 games has full dma/bus access*/
 /* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
@@ -3502,7 +3529,14 @@ READ16_HANDLER( dbzvrvs_protection_r )
 	return 0xffff;
 }
 
-
+static DRIVER_INIT( jleague )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 4;
+	install_mem_write16_handler(0, 0x20F700, 0x20F705, jleague_protection_w);
+}
 
 static DRIVER_INIT( dbzvrvs )
 {
@@ -3536,7 +3570,7 @@ GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Ali
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, jleague,  svf,      system32, svf,      s32,      ROT0, "Sega", "The J.League 1994 (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAMEX(1994, jleague,  svf,      system32, svf,      jleague,  ROT0, "Sega", "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 
