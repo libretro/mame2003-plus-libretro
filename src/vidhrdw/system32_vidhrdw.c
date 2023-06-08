@@ -1374,11 +1374,12 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 
 		tableaddress = (tableaddress * 0x200);
 
+		/* workaround for issue with system32_mixerregs. */
+		/* sonic  - trips this during attract mode on the ice level demo, messes up layer 2 bg. */
+		/* alien3 - trips this during the enter initials high score screen, flips the letters. */
 		if ( strcmp(Machine->gamedrv->name,"sonic") && strcmp(Machine->gamedrv->name,"alien3") )
 		{
 			if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
-				/* sonic  - trips this during attract mode on the ice level demo, messes up layer 2 bg. mixer register maybe wrong? */
-				/* alien3 - trips this during the enter initials high score screen, flips the letters. */
 				if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
 			}
 		}
