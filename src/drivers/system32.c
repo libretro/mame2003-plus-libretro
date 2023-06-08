@@ -568,7 +568,7 @@ static WRITE16_HANDLER(sonic_level_load_protection)
   The J.League 1994 (Japan)
  ******************************************************************************
  ******************************************************************************/
-WRITE16_HANDLER( jleague_protection_w )
+static WRITE16_HANDLER( jleague_protection_w )
 {
 	COMBINE_DATA( &system32_workram[0xf700/2 + offset ] );
 
