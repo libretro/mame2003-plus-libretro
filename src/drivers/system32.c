@@ -965,7 +965,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
-	//{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
+	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
@@ -3043,7 +3043,7 @@ ROM_START( f1en )
 ROM_END
 
 ROM_START( dbzvrvs )
-	ROM_REGION( 0x200000, REGION_CPU1, 0 ) /* v60 code + data*/
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* v60 code */
 	ROM_LOAD16_WORD( "16543",   0x000000, 0x80000, CRC(7b9bc6f5) SHA1(556fd8471bf471e41fc6a50471c2be1bd6b98697) )
 	ROM_LOAD16_WORD( "16542.a", 0x080000, 0x80000, CRC(6449ab22) SHA1(03e6cdacf77f2ff80dd6798094deac5486f2c840) )
 
