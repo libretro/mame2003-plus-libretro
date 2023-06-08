@@ -1376,7 +1376,7 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 
 		if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
 			/* sonic trips this during attract mode on the ice level demo, messes up layer 2 bg. mixer register maybe wrong? */
-			if (layer==2 && strcmp(Machine->gamedrv->name,"sonic")) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
+			//if (layer==2 && strcmp(Machine->gamedrv->name,"sonic")) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
 		}
 
 		for (line = 0; line < 224;line++) {
