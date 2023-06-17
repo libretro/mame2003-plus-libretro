@@ -94,6 +94,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gulun.Pa! 
 * Gunbarich
 * GunMaster
+* Gut's N' Glory (Atari Prototype)
 * Hang Zo
 * Hard Times
 * Head On Channel (Japan, Prototype)
@@ -950,3 +951,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Hooked up the missing SN76496 sound for Special Forces and Special Forces II in the dkong.c driver both games now have Sfx and music [arcadez]
 * Fixed sound popping on B-Rap Boys and some sound banking niggles with The Great Thousand Mile Rally games [Mistydreams, arcadez]
 * Added support for Top Driving to the kickgoal.c driver [HAZE, arcadez]
+* Added a rare Atari Prototype Gut's N' Glory to the eprom.c driver [arcadez]
