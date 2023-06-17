@@ -4213,6 +4213,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Escape from the Planet of Robot Monsters */
 	DRIVER( eprom )		/* 136069			(c) 1989 */
 	DRIVER( eprom2 )	/* 136069			(c) 1989 */
+  DRIVER( guts )	  /* prototype */
 	/* Skull and Crossbones */
 	DRIVER( skullxbo )	/* 136072			(c) 1989 */
 	DRIVER( skullxb4 )	/* 136072			(c) 1989 */
