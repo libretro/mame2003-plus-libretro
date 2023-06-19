@@ -734,6 +734,7 @@ static DRIVER_INIT( guts )
 {
 	atarigen_eeprom_default = NULL;
 	atarijsa_init(1, 6, 1, 0x0002);
+	atarigen_init_6502_speedup(1, 0x4159, 0x4171);
 }
 
 
