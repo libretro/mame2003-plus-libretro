@@ -733,7 +733,7 @@ static DRIVER_INIT( klaxp )
 static DRIVER_INIT( guts )
 {
 	atarigen_eeprom_default = NULL;
-	atarijsa_init(1, 2, 1, 0x0002);
+	atarijsa_init(1, 6, 1, 0x0002);
 }
 
 
