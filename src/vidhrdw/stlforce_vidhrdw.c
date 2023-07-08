@@ -15,7 +15,7 @@ extern data16_t *stlforce_spriteram;
 WRITE16_HANDLER(sprites_commands_w)
 {
 	int i;
-	// TODO: I'm not convinced by this, from mwarr.cpp driver
+	/* TODO: I'm not convinced by this, from mwarr.cpp driver */
 	if (which)
 	{
 		switch (data & 0xf)
@@ -30,8 +30,8 @@ WRITE16_HANDLER(sprites_commands_w)
 			break;
 
 		default:
-			// allow everything else to fall through, other games are writing other values
-		case 0xf: // mwarr
+			/* allow everything else to fall through, other games are writing other values */
+		case 0xf: /* mwarr */
 			/* refresh sprites on screen */
 			for (i = 0; i < 0x400; i++)
 			{
@@ -107,11 +107,10 @@ static void get_stlforce_tx_tile_info(int tile_index)
 
 int get_priority(const data16_t *source)
 {
-	return ((source[1] & 0x3c00) >> 10); // Priority (1 = Low)
+	return ((source[1] & 0x3c00) >> 10); /* Priority (1 = Low) */
 }
 
-// the Steel Force type hardware uses an entirely different bit for priority and only appears to have 2 levels
-// Mortal Race uses additional priorities
+/* the Steel Force type hardware uses an entirely different bit for priority and only appears to have 2 levels Mortal Race uses additional priorities */
 int sforce_get_priority(const data16_t *source)
 {
 	switch (source[1] & 0x0030)
@@ -151,7 +150,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 			dy = (source[0] & 0xf000) >> 12;
 
 			pri = sforce_get_priority(source); 
-			pri_mask = ~((1 << (pri + 1)) - 1);     // Above the first "pri" levels
+			pri_mask = ~((1 << (pri + 1)) - 1);     /* Above the first "pri" levels */
 
 			for (i = 0; i <= dy; i++)
 			{
@@ -163,7 +162,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 					cliprect,TRANSPARENCY_PEN,0,
 					pri_mask);
 
-				// wrap around x 
+				/* wrap around x */
 				pdrawgfx(bitmap,gfx,
 					source[2] + i,
 					color,
@@ -171,7 +170,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 					x - 1024, y + i * 16,
 					cliprect,TRANSPARENCY_PEN,0,
 					pri_mask);
-				// wrap around y 
+				/* wrap around y */
 				pdrawgfx(bitmap,gfx,
 					source[2] + i,
 					color,
@@ -180,7 +179,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 					cliprect,TRANSPARENCY_PEN,0,
 					pri_mask);
 
-					// wrap around x & y 
+					/* wrap around x & y */
 				pdrawgfx(bitmap,gfx,
 					source[2] + i,
 					color,
