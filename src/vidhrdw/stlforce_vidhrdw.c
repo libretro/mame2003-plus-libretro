@@ -228,7 +228,6 @@ VIDEO_UPDATE( stlforce )
 {
 	int i;
 	fillbitmap(priority_bitmap, 0, cliprect);
-	fillbitmap(bitmap, get_black_pen(), cliprect);
 	/* xscrolls - Steel Force clearly shows that each layer needs -1 scroll compared to the previous, do enable flags change this?  */
 
 	if (BIT(stlforce_vidattrram[6], 0))
