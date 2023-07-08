@@ -5592,6 +5592,7 @@ Other Sun games
 	DRIVER( sprcros2 )	/* (c) 1986 GM Shoji */
 	DRIVER( mugsmash )	/* (c) Electronic Devices (Italy) / 3D Games (England) */
 	DRIVER( stlforce )	/* (c) 1994 Electronic Devices (Italy) / Ecogames S.L. (Spain) */
+	DRIVER( mortalr )	
 	DRIVER( fantland )	/* (c) 1987 Electronic Devices Italy */
 	DRIVER( galaxygn )	/* (c) 1989 Electronic Devices Italy */
 	DRIVER( borntofi )	/* (c) 1987 International Games */
