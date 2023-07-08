@@ -133,6 +133,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
 * More More
+* Mortal Race
 * Mouse Shooter GoGo
 * Ms. Pacman Twin
 * Mrs. Dynamite
@@ -952,3 +953,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed sound popping on B-Rap Boys and some sound banking niggles with The Great Thousand Mile Rally games [Mistydreams, arcadez]
 * Added support for Top Driving to the kickgoal.c driver [HAZE, arcadez]
 * Added a rare Atari Prototype Gut's N' Glory to the eprom.c driver [arcadez, mahoneyt944]
+* Updated the stlforce driver adding support for Mortal Race then backported some video fixes for it and Steel Force from later MAME [Mistydreams]
