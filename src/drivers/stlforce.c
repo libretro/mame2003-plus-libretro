@@ -92,11 +92,11 @@ static WRITE16_HANDLER( oki_bank_w )
 static MEMORY_READ16_START( stlforce_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM }, /* rom */
 	{ 0x102800, 0x103fff, MRA16_RAM }, /* unknown / ram */
-	{ 0x103000, 0x1033ff, MRA16_RAM }, //bg_scrollram shared?
-	{ 0x103400, 0x1037ff, MRA16_RAM }, // stlforce_mlow_scrollram shared?
-	{ 0x103800, 0x103bff, MRA16_RAM },// stlforce_mhigh_scrollram shared? 
-	{ 0x103c00, 0x103fff, MRA16_RAM },// stlforce_vidattrram ?
-	{ 0x104000, 0x104fff, MRA16_RAM }, // paletteram16 shared ?
+	{ 0x103000, 0x1033ff, MRA16_RAM }, /* bg_scrollram shared? */
+	{ 0x103400, 0x1037ff, MRA16_RAM }, /* stlforce_mlow_scrollram shared? */
+	{ 0x103800, 0x103bff, MRA16_RAM }, /* stlforce_mhigh_scrollram shared? */
+	{ 0x103c00, 0x103fff, MRA16_RAM }, /* stlforce_vidattrram ? */
+	{ 0x104000, 0x104fff, MRA16_RAM }, /* paletteram16 shared ? */
 	{ 0x105000, 0x107fff, MRA16_RAM }, /* unknown / ram */
 	{ 0x108000, 0x1087ff, MRA16_RAM }, /* sprite ram shared? */
 	{ 0x108800, 0x108fff, MRA16_RAM },
@@ -197,11 +197,11 @@ static struct GfxLayout stlforce_splayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX2, 0x000000, &stlforce_splayout, 1024, 16 }, //sprites
-	{ REGION_GFX6, 0x000000, &stlforce_txlayout,  384, 8  }, //txtile
-	{ REGION_GFX5, 0x000000, &stlforce_bglayout,  256, 8  }, //midhightile
-	{ REGION_GFX4, 0x000000, &stlforce_bglayout,  128, 8  }, //midlowtile
-	{ REGION_GFX3, 0x000000, &stlforce_bglayout,    0, 8  }, //bgtile
+	{ REGION_GFX2, 0x000000, &stlforce_splayout, 1024, 16 }, /* sprites */
+	{ REGION_GFX6, 0x000000, &stlforce_txlayout,  384, 8  }, /* txtile */
+	{ REGION_GFX5, 0x000000, &stlforce_bglayout,  256, 8  }, /* midhightile */
+	{ REGION_GFX4, 0x000000, &stlforce_bglayout,  128, 8  }, /* midlowtile */
+	{ REGION_GFX3, 0x000000, &stlforce_bglayout,    0, 8  }, /* bgtile */
 	{ -1 }
 };
 
@@ -237,40 +237,37 @@ static MACHINE_DRIVER_START( stlforce )
 MACHINE_DRIVER_END
 
 ROM_START( stlforce )
-	ROM_REGION( 0x100000, REGION_CPU1, ROMREGION_ERASEFF ) // 68000 code
+	ROM_REGION( 0x100000, REGION_CPU1, ROMREGION_ERASEFF ) /* 68000 code */
 	ROM_LOAD16_BYTE( "stlforce.105", 0x00000, 0x20000, CRC(3ec804ca) SHA1(4efcf3321b7111644ac3ee0a83ad95d0571a4021) )
 	ROM_LOAD16_BYTE( "stlforce.104", 0x00001, 0x20000, CRC(69b5f429) SHA1(5bd20fad91a22f4d62f85a5190d72dd824ee26a5) )
 
-	ROM_REGION( 0x200000, REGION_GFX1, 0 ) // 16x16 bg tiles & 8x8 tx tiles merged
+	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* 16x16 bg tiles & 8x8 tx tiles merged */
 	ROM_LOAD16_BYTE( "stlforce.u27", 0x000001, 0x080000, CRC(c42ef365) SHA1(40e9ee29ea14b3bc2fbfa4e6acb7d680cf72f01a) )
 	ROM_LOAD16_BYTE( "stlforce.u28", 0x000000, 0x080000, CRC(6a4b7c98) SHA1(004d7f3c703c6abc79286fa58a4c6793d66fca39) )
 	ROM_LOAD16_BYTE( "stlforce.u29", 0x100001, 0x080000, CRC(30488f44) SHA1(af0d92d8952ce3cd893ab9569afdda12e17795e7) )
 	ROM_LOAD16_BYTE( "stlforce.u30", 0x100000, 0x080000, CRC(cf19d43a) SHA1(dc04930548ac5b7e2b74c6041325eac06e773ed5) )
 
 	ROM_REGION( 0x080000, REGION_GFX3, 0 )
-	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x080000) //bgtile
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x080000) /* bgtile */
 
 	ROM_REGION( 0x080000, REGION_GFX4, 0 )
-	ROM_COPY( REGION_GFX1, 0x080000, 0x000000, 0x080000) //midlowtile
+	ROM_COPY( REGION_GFX1, 0x080000, 0x000000, 0x080000) /* midlowtile */
 
 	ROM_REGION( 0x080000, REGION_GFX5, 0 )
-	ROM_COPY( REGION_GFX1, 0x100000, 0x000000, 0x080000) //midhightile
+	ROM_COPY( REGION_GFX1, 0x100000, 0x000000, 0x080000) /* midhightile */
 
 	ROM_REGION( 0x080000, REGION_GFX6, 0 )
-	ROM_COPY( REGION_GFX1, 0x180000, 0x000000, 0x080000) //txtile
+	ROM_COPY( REGION_GFX1, 0x180000, 0x000000, 0x080000) /* txtile */
 
-	ROM_REGION( 0x100000, REGION_GFX2, 0 ) // 16x16
+	ROM_REGION( 0x100000, REGION_GFX2, 0 ) /* 16x16 */
 	ROM_LOAD( "stlforce.u36", 0x00000, 0x40000, CRC(037dfa9f) SHA1(224f5cd1a95d55b065aef5c0bd03b50cabcb619b) )
 	ROM_LOAD( "stlforce.u31", 0x40000, 0x40000, CRC(305a8eb5) SHA1(3a8d26f8bc4ec2e8246d1c59115e21cad876630d) )
 	ROM_LOAD( "stlforce.u32", 0x80000, 0x40000, CRC(760e8601) SHA1(a61f1d8566e09ce811382c6e23f3881e6c438f15) )
 	ROM_LOAD( "stlforce.u33", 0xc0000, 0x40000, CRC(19415cf3) SHA1(31490a1f3321558f82667b63f3963b2ec3fa0c59) )
 
-	// only one bank
-	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) // samples, second half 0xff filled
+	/* only one bank */
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* samples, second half 0xff filled */
 	ROM_LOAD( "stlforce.u1", 0x00000, 0x80000, CRC(0a55edf1) SHA1(091f12e8110c62df22b370a2e710c930ba06e8ca) )
-
-//	ROM_REGION16_BE( 0x80, "eeprom", 0 )
-//	ROM_LOAD( "eeprom-stlforce.bin", 0x0000, 0x0080, CRC(3fb83951) SHA1(0cbf09751e46f100db847cf0594a4440126a7b6e) )
 ROM_END
 
 ROM_START( mortalr )
@@ -297,7 +294,7 @@ ROM_START( mortalr )
 	ROM_COPY( REGION_GFX1, 0x200000, 0x000000, 0x100000)
 
 	ROM_REGION( 0x100000, REGION_GFX6, ROMREGION_ERASE00 )
-	// no 8x8 tiles present, but layer gets enabled if you turn on the debug mode
+	/* no 8x8 tiles present, but layer gets enabled if you turn on the debug mode */
 
 	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* 16x16 */
 	ROM_LOAD( "4.u36", 0x000000, 0x80000, CRC(6d1e6367) SHA1(4e6d315206b4ebc75abe9cbec1a53a9ca0b29128) )
@@ -309,6 +306,6 @@ ROM_START( mortalr )
 	ROM_LOAD( "1.u1", 0x00000, 0x80000, CRC(e5c730c2) SHA1(a153a204c1452a0c95fe207d750b2df07c5e63f3) )
 ROM_END
 
-GAME(1994, stlforce, 0, stlforce, stlforce, 0, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force" )
+GAME(1994, stlforce, 0, stlforce,  stlforce, 0, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force" )
 GAME(1995, mortalr,  0, stlforce,  stlforce, 0, ROT0, "New Dream Games", "Mortal Race" ) /* based on the same rough codebase as Top Driving tch/topdrive.cpp but not the same game, so not a clone */
 
