@@ -14,6 +14,7 @@ extern data16_t *stlforce_spriteram;
 
 WRITE16_HANDLER(sprites_commands_w)
 {
+	int i;
 	// TODO: I'm not convinced by this, from mwarr.cpp driver
 	if (which)
 	{
@@ -21,7 +22,7 @@ WRITE16_HANDLER(sprites_commands_w)
 		{
 		case 0:
 			/* clear sprites on screen */
-			for (int i = 0; i < 0x400; i++)
+			for (i = 0; i < 0x400; i++)
 			{
 				sprites_buffer[i] = 0;
 			}
@@ -32,7 +33,7 @@ WRITE16_HANDLER(sprites_commands_w)
 			// allow everything else to fall through, other games are writing other values
 		case 0xf: // mwarr
 			/* refresh sprites on screen */
-			for (int i = 0; i < 0x400; i++)
+			for (i = 0; i < 0x400; i++)
 			{
 				sprites_buffer[i] = stlforce_spriteram[i];
 			}
