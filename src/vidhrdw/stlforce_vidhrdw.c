@@ -262,6 +262,8 @@ VIDEO_UPDATE( stlforce )
 		for (i = 0; i < 256; i++)
 			tilemap_set_scrollx( stlforce_mhigh_tilemap, i, stlforce_mhigh_scrollram[0] + 16);
 	}
+	
+	tilemap_set_scrollx( stlforce_bg_tilemap, 0, stlforce_vidattrram[0] + 15);
 
 	tilemap_set_scrolly( stlforce_bg_tilemap, 0, stlforce_vidattrram[1]+1 );
 	tilemap_set_scrolly( stlforce_mlow_tilemap, 0, stlforce_vidattrram[2] +1 );
