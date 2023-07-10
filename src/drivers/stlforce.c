@@ -91,6 +91,10 @@ static WRITE16_HANDLER( oki_bank_w )
 
 static MEMORY_READ16_START( stlforce_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM }, /* rom */
+	{ 0x100000, 0x1007ff, MRA16_RAM }, /* stlforce_bg_videoram } */
+	{ 0x100800, 0x100fff, MRA16_RAM }, /* stlforce_mlow_videoram */
+	{ 0x101000, 0x1017ff, MRA16_RAM }, /* stlforce_mhigh_videoram shared ?*/
+	{ 0x101800, 0x1027ff, MRA16_RAM }, /* stlforce_tx_videoram shared?? */
 	{ 0x102800, 0x103fff, MRA16_RAM }, /* unknown / ram */
 	{ 0x103000, 0x1033ff, MRA16_RAM }, /* bg_scrollram shared? */
 	{ 0x103400, 0x1037ff, MRA16_RAM }, /* stlforce_mlow_scrollram shared? */
@@ -120,14 +124,16 @@ static MEMORY_WRITE16_START( stlforce_writemem )
 	{ 0x103800, 0x103bff, MWA16_RAM, &stlforce_mhigh_scrollram },
 	{ 0x103c00, 0x103fff, MWA16_RAM, &stlforce_vidattrram },
 	{ 0x104000, 0x104fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
-	{ 0x105000, 0x1077ff, MWA16_RAM }, /* unknown / ram */
+	{ 0x105000, 0x107fff, MWA16_RAM }, /* unknown / ram */
 	{ 0x108000, 0x1087ff, MWA16_RAM, &stlforce_spriteram }, /* or is this not sprite ram .. */
 	{ 0x108800, 0x108fff, MWA16_RAM },
 	{ 0x109000, 0x11ffff, MWA16_RAM },
 	{ 0x120000, 0x12ffff, MWA16_RAM }, /*  mortal race has piggybacked RAM chips to double RAM capacity */
-	{ 0x40001E, 0x40001F, sprites_commands_w },
+	{ 0x400010, 0x400011, MWA16_NOP }, /* eprom not added to driver yet */
 	{ 0x400012, 0x400013, oki_bank_w },
+	{ 0x40001E, 0x40001F, sprites_commands_w },
 	{ 0x410000, 0x410001, OKIM6295_data_0_lsb_w },
+	{ 0xff0010, 0xff0011, MWA16_RAM }, /* not sure what this is mortalr and stlforce use it and its not mapped in mame*/  
 MEMORY_END
 
 INPUT_PORTS_START( stlforce )
