@@ -133,7 +133,7 @@ static MEMORY_WRITE16_START( stlforce_writemem )
 	{ 0x400012, 0x400013, oki_bank_w },
 	{ 0x40001E, 0x40001F, sprites_commands_w },
 	{ 0x410000, 0x410001, OKIM6295_data_0_lsb_w },
-	{ 0xff0010, 0xff0011, MWA_RAM }, /* not sure what this is mortalr and stlforce use it*/  
+	{ 0xff0010, 0xff0011, MWA_RAM }, /* not sure what this is mortalr and stlforce use it and its not mapped in mame*/  
 MEMORY_END
 
 INPUT_PORTS_START( stlforce )
