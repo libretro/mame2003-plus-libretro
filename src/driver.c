@@ -5511,6 +5511,7 @@ Other Sun games
 	DRIVER( countrun )
 	DRIVER( countrnb )
 	DRIVER( countrb2 )
+  DRIVER( countrunb3 )
 
 	/* Alba games */
 	DRIVER( rmhaihai )	/* (c) 1985 Alba */
