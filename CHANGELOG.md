@@ -50,6 +50,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cosmic Monsters II
 * Cotton (set 4, World) (unprotected of FD1094 317-0181a set)
 * Counter Run (Bootleg, Set 1)
+* Counter Run (Bootleg, Set 3)
 * Crossed Swords 2
 * Cute Fighter
 * Cycle Warriors
@@ -757,7 +758,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for 1943 - The Battle Of Midway Mark II to 1943.c [arcadez]
 * Updated the legionnaire driver and video code to MAME142 added seicop protection Denjin Makai now playable [arcadez]
 * Added a small hack to the seibu soundcore to fix music and sfx in Denjin Makai [arcadez]
-* Added a working bootleg of Counter Run to freekick.c [BritneysPAIRS]
+* Added two working bootlegs of Counter Run to freekick.c [BritneysPAIRS, arcadez]
 * Updated the rohga.c driver to support the rare prototype Hang-Zo [arcadez]
 * Added support for Hyper Crash to nemesis.c [arcadez]
 * Added support for In Your Face a rare basketball prototype to the megasys1.c driver [arcadez]
