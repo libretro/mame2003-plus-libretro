@@ -172,7 +172,7 @@ static INTERRUPT_GEN( cps2_interrupt )
 /*			usrintf_showmessage("IRQ4 scancounter = %04i",scancount);*/
 	}
 
-	if(scancount == 240)  /* VBlank */
+	if(scancount == 256)  /* VBlank */
 	{
 		cps1_output[0x50/2] = scanline1;
 		cps1_output[0x52/2] = scanline2;
@@ -180,7 +180,7 @@ static INTERRUPT_GEN( cps2_interrupt )
 		if(scancalls)
 		{
 			cps2_set_sprite_priorities();
-			force_partial_update(240);
+			force_partial_update(256);
 		}
 		cps2_objram_latch();
 	}
