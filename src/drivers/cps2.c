@@ -11926,10 +11926,10 @@ GAME( 1998, sfz3jr2,    sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Ca
 GAME( 1998, sfz3a,      sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980904)")
 GAME( 1998, sfz3ar1,    sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980701)")
 GAME( 1999, jyangoku,   0,        cps2,     cps2_1p2b,  my_cps2,     ROT0,   "Capcom", "Jyangokushi: Haoh no Saihai (Japan 990527)")
-GAME( 2004, hsf2,       0,        cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (USA 040202)")
-GAME( 2004, hsf2a,      hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202)")
-GAME( 2004, hsf2j,      hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 040202)")
-GAME( 2004, hsf2j1,     hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 031222)")
+GAMEC( 2004, hsf2,       0,        cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (USA 040202)", &sf2_ctrl, NULL )
+GAMEC( 2004, hsf2a,      hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202)", &sf2_ctrl, NULL )
+GAMEC( 2004, hsf2j,      hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 040202)", &sf2_ctrl, NULL )
+GAMEC( 2004, hsf2j1,     hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 031222)", &sf2_ctrl, NULL )
 
  /* Games released on CPS-2 hardware by Takumi */
 
