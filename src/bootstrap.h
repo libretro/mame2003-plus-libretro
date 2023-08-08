@@ -24,7 +24,6 @@ extern const struct bin2cFILE ddsom_bootstrap;
 extern const struct bin2cFILE ddsoma_bootstrap;
 extern const struct bin2cFILE ddsomj_bootstrap;
 extern const struct bin2cFILE ddsomu_bootstrap;
-extern const struct bin2cFILE defcmnd_bootstrap;
 extern const struct bin2cFILE defence_bootstrap;
 extern const struct bin2cFILE defender_bootstrap;
 extern const struct bin2cFILE defendg_bootstrap;
