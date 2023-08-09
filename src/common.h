@@ -102,7 +102,7 @@ struct GameSamples
 	int total;	/* total number of samples */
 	struct GameSample *sample[1];	/* extendable */
 };
- 
+
 #define	GAME_SAMPLE_LARGE		10000000 /* 10MB */
 
 /***************************************************************************
@@ -172,6 +172,7 @@ enum
 #define ROMENTRYTYPE_FILL			5					/* this entry fills an area with a constant value */
 #define ROMENTRYTYPE_COPY			6					/* this entry copies data from another region/offset */
 #define ROMENTRYTYPE_COUNT			7
+#define ROMENTRYTYPE_IGNORE			8
 
 #define ROMENTRY_REGION				((const char *)ROMENTRYTYPE_REGION)
 #define ROMENTRY_END				((const char *)ROMENTRYTYPE_END)
@@ -179,6 +180,7 @@ enum
 #define ROMENTRY_CONTINUE			((const char *)ROMENTRYTYPE_CONTINUE)
 #define ROMENTRY_FILL				((const char *)ROMENTRYTYPE_FILL)
 #define ROMENTRY_COPY				((const char *)ROMENTRYTYPE_COPY)
+#define ROMENTRY_IGNORE				((const char *)ROMENTRYTYPE_IGNORE)
 
 /* ----- per-entry macros ----- */
 #define ROMENTRY_GETTYPE(r)			((FPTR)(r)->_name)
@@ -190,6 +192,7 @@ enum
 #define ROMENTRY_ISCONTINUE(r)		((r)->_name == ROMENTRY_CONTINUE)
 #define ROMENTRY_ISFILL(r)			((r)->_name == ROMENTRY_FILL)
 #define ROMENTRY_ISCOPY(r)			((r)->_name == ROMENTRY_COPY)
+#define ROMENTRY_ISIGNORE(r)		((r)->_name == ROMENTRY_IGNORE)
 #define ROMENTRY_ISREGIONEND(r)		(ROMENTRY_ISREGION(r) || ROMENTRY_ISEND(r))
 
 
@@ -342,6 +345,7 @@ enum
 #define ROM_RELOAD(offset,length)					ROMX_LOAD(ROMENTRY_RELOAD, offset, length, 0, ROM_INHERITFLAGS)
 #define ROM_FILL(offset,length,value)                ROM_LOAD(ROMENTRY_FILL, offset, length, (const char*)value)
 #define ROM_COPY(rgn,srcoffset,offset,length)        ROMX_LOAD(ROMENTRY_COPY, offset, length, (const char*)srcoffset, (rgn) << 24)
+#define ROM_IGNORE(length)							ROMX_LOAD(ROMENTRY_IGNORE, 0, length, 0, ROM_INHERITFLAGS)
 
 /* ----- nibble loading macros ----- */
 #define ROM_LOAD_NIB_HIGH(name,offset,length,hash)   ROMX_LOAD(name, offset, length, hash, ROM_NIBBLE | ROM_SHIFT_NIBBLE_HI)
@@ -529,7 +533,7 @@ void printromlist(const struct RomModule *romp,const char *name);
 		 (BIT(val, B2) <<  2) | \
 		 (BIT(val, B1) <<  1) | \
 		 (BIT(val, B0) <<  0))
-	
+
 #define BITSWAP32(val,B31,B30,B29,B28,B27,B26,B25,B24,B23,B22,B21,B20,B19,B18,B17,B16,B15,B14,B13,B12,B11,B10,B9,B8,B7,B6,B5,B4,B3,B2,B1,B0) \
         ((BIT(val,B31) << 31) | \
          (BIT(val,B30) << 30) | \

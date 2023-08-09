@@ -1757,11 +1757,14 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 						explength += ROM_GETLENGTH(&modified_romp);
 
 						/* attempt to read using the modified entry */
-						readresult = read_rom_data(romdata, &modified_romp);
-						if (readresult == -1)
+						if (!ROMENTRY_ISIGNORE(&modified_romp))
+						{
+							readresult = read_rom_data(romdata, &modified_romp);
+							if (readresult == -1)
 							goto fatalerror;
+						}
 					}
-					while (ROMENTRY_ISCONTINUE(romp));
+					while (ROMENTRY_ISCONTINUE(romp) || ROMENTRY_ISIGNORE(romp));
 
 					/* if this was the first use of this file, verify the length and CRC */
 					if (baserom)
@@ -1792,6 +1795,10 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				romp++; /* skip over file */
 			}
 		}
+		else
+		{
+			romp++;	/* something else; skip */
+		}
 	}
 	return 1;
 
@@ -1800,9 +1807,8 @@ fatalerror:
 	if (romdata->file)
 		mame_fclose(romdata->file);
 	romdata->file = NULL;
-	return 0;
+	exit(1);
 }
-
 
 
 /*-------------------------------------------------
