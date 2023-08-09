@@ -2484,6 +2484,7 @@ V-V                           TP-027
 	DRIVER( progear )    /* Cave (Capcom license), Progear (USA 010117) */
 	DRIVER( progearj )   /* Cave (Capcom license), Progear no Arashi (Japan 010117) */
 	DRIVER( progeara )   /* Cave (Capcom license), Progear (Asia 010117) */
+	#if defined(CPS2_BOOTLEG)
 	DRIVER( ddtodd )     /* bootleg, Dungeons & Dragons: Tower of Doom (Euro 940412 Phoenix Edition) (bootleg) */
 	DRIVER( ecofghtrd )  /* bootleg, Eco Fighters (World 931203 Phoenix Edition) (bootleg) */
 	DRIVER( ssf2ud )     /* bootleg, Super Street Fighter II: The New Challengers (USA 930911 Phoenix Edition) (bootleg) */
@@ -2530,7 +2531,7 @@ V-V                           TP-027
 	DRIVER( progearjbl ) /* bootleg, Progear no Arashi (Japan 010117) (decrypted bootleg) */
 	DRIVER( pzloop2jd )  /* bootleg, Puzz Loop 2 (Japan 010226 Phoenix Edition) (bootleg) */
 	DRIVER( hsf2d )      /* bootleg, Hyper Street Fighter II: The Anniversary Edition (Asia 040202 Phoenix Edition) (bootleg)  */
-
+	#endif
 	/* Capcom CPS3 games */
 	/* 10/1996 Warzard */
 	/*  2/1997 Street Fighter III - New Generation */
