@@ -2125,7 +2125,7 @@ ROM_START( radarscp1 )
 	ROM_REGION( 0x0800, REGION_GFX3, 0 ) /* radar/star timing table */
 	ROM_LOAD( "trs011ha.bin",    0x0000, 0x0800, CRC(dbcc50c2) SHA1(1e438057d4d93ba22794ab0a9bf41bb49ac28a35) ) /* star /grid */
 
-	ROM_REGION( 0x0100, "gfx4", 0 ) /* priority based on hor. pos */
+	ROM_REGION( 0x0100, REGION_GFX4, 0 ) /* priority based on hor. pos */
 	ROM_LOAD( "trs01e3k.bin",    0x0000, 0x0100, CRC(6c6f989c) SHA1(d4b90e43d93ef141a8002b88ce5e33411b870ced) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
