@@ -1849,6 +1849,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ghox )		/* TP-021 (c) 1991 Toaplan */
 	DRIVER( ghoxj )		/* TP-021 (c) 1991 Toaplan */
 	DRIVER( dogyuun )	/* TP-022 (c) 1992 Toaplan */
+	DRIVER( dogyuunto )	/* TP-022 (c) 1992 Toaplan */
 	DRIVER( kbash )		/* TP-023 (c) 1993 Toaplan */
 	DRIVER( kbash2 )	/* TP-023 */
 	DRIVER( truxton2 )	/* TP-024 (c) 1992 Toaplan */
