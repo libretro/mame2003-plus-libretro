@@ -256,6 +256,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
+* Dogyuun (8/25/1992 location test)
 * E.D.F. : Earth Defense Force (North America)
 * Escape Kids (Asia 4 Players)
 * Fishing
@@ -474,6 +475,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cross Pang
 * Daitoride
 * Dharma Doujou
+* Dogyuun (8/25/1992 location test)
 * Fire Shark
 * Ghox
 * GunNail
@@ -955,3 +957,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Top Driving to the kickgoal.c driver [HAZE, arcadez]
 * Added a rare Atari Prototype Gut's N' Glory to the eprom.c driver [arcadez, mahoneyt944]
 * Updated the stlforce driver adding support for Mortal Race then backported some video fixes for it and Steel Force from later MAME [Mistydreams]
+* Added support for Dogyuun (8/25/1992 location test) to toaplan2 this version has full sound and music [arcadez, grant2258]
