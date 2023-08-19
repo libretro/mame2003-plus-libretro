@@ -4275,6 +4275,14 @@ static struct OKIM6295interface kbash2_okim6295_interface =
 	{ 100, 100 }
 };
 
+static struct OKIM6295interface dogyuunto_okim6295_interface =
+{
+	1,						/* 1 chip */
+	{ 1056000/132 },	    /* frequency (Hz). 1.56MHz to 6295 (using B mode) */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 40 }
+};
+
 static struct YMZ280Binterface ymz280b_interface =
 {
 	1,
@@ -4416,7 +4424,7 @@ static MACHINE_DRIVER_START( dogyuunto )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(OKIM6295, dogyuunto_okim6295_interface)
 MACHINE_DRIVER_END
 
 
