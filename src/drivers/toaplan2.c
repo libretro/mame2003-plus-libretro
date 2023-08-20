@@ -516,46 +516,34 @@ static DRIVER_INIT( bbakrada )
   Toaplan games
 ***************************************************************************/
 
-#define T2_VIDEO_CONTROL 0		/* Need to adjust the sprite lag.. */
-
 READ16_HANDLER( toaplan2_inputport_0_word_r )
 {
-#if T2_VIDEO_CONTROL
-	return cpu_getvblank();
-#else
+/*	int retval = (current_scanline>255) ? 1 : 0; */
 	int retval = vblank_irq;
 	return retval;
-#endif
 }
 
 static void toaplan2_irq(int irq_line)
 {
-#if T2_VIDEO_CONTROL
-	int vpos = cpu_getscanline();
-	if (vpos == 240) cpu_set_irq_line(0, irq_line, HOLD_LINE);
-	vblank_irq = 0; /*Remove*/
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());*/
-#else
 	if (cpu_getiloops() == 0) current_scanline = 255;
 
-	if (current_scanline == 245)
+	if(current_scanline == 245)
 	{
 		cpu_set_irq_line(0, irq_line, HOLD_LINE);
 		vblank_irq = 1;
 	}
 
 	current_scanline++;
-	if (current_scanline > 261)
+	if(current_scanline > 261)
 	{
 		current_scanline = 0;
 		vblank_irq = 0;
 	}
-#endif
 }
 
-static INTERRUPT_GEN( toaplan2_vblank_irq2 ) { toaplan2_irq(2); }
-static INTERRUPT_GEN( toaplan2_vblank_irq3 ) { toaplan2_irq(3); }
-static INTERRUPT_GEN( toaplan2_vblank_irq4 ) { toaplan2_irq(4); }
+static INTERRUPT_GEN( toaplan2_vblank_irq2 ) {toaplan2_irq(2);}
+static INTERRUPT_GEN( toaplan2_vblank_irq3 ) {toaplan2_irq(3);}
+static INTERRUPT_GEN( toaplan2_vblank_irq4 ) {toaplan2_irq(4);}
 
 static READ16_HANDLER( video_count_r )
 {
@@ -565,47 +553,28 @@ static READ16_HANDLER( video_count_r )
 	/* +---------+---------+--------+---------------------------+ */
 	/*************** Control Signals are active low ***************/
 
-#if T2_VIDEO_CONTROL
-	int hpos = cpu_gethorzbeampos();
-	int vpos = cpu_getscanline();
-	video_status = 0xff00;						/* Set signals inactive */
+/*	static int current_beampos = 0; */
 
-	if ((hpos > 325) && (hpos < 380))
-		video_status &= ~0x8000;
-	if ((vpos >= 242) && (vpos <= 245))
-		video_status &= ~0x4000;
-	if (cpu_getvblank())
-		video_status &= ~0x0100;
-	if (vpos < 256)
-		video_status |= (vpos & 0xff);
-	else
-		video_status |= 0xff;
-
-	current_scanline = prev_scanline = vpos; /*Remove*/
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
-#else
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );*/
+/*	logerror("Was VC=%04x  Vbl=%02x  VS=%04x  HS=%04x - ",video_status,vblank_irq,prev_scanline,prev_beampos ); */
 
 	video_status = 0xff00;						/* Set signals inactive */
-	if ((current_scanline & 0x100) == 0) {
-		video_status |= (current_scanline & 0xff);	/* Scanline */
-	}
-	else {
-		video_status |= 0xff;
-	}
+	video_status |= (current_scanline & 0xff);	/* Scanline */
+
 	if (vblank_irq) {
 		video_status &= ~0x0100;
 	}
 	if (prev_scanline != current_scanline) {
-		video_status &= ~0x8000;				/* Activate H-Sync Clk */
+		video_status &= ~0x8000;				/* Activate V-Sync Clk */
 	}
-	if ((current_scanline >= 247) && (current_scanline <= 250)) {
-		video_status &= ~0x4000;				/* Activate V-Sync Clk */
+/*	
+	if (current_beampos) {
+		video_status &= ~0x4000;
 	}
+	current_beampos = ~current_beampos;
+*/
 	prev_scanline = current_scanline;
 
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );*/
-#endif
+/*	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() ); */
 
 	return video_status;
 }
