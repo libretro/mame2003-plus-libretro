@@ -4366,11 +4366,11 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( dogyuunto )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
+	MDRV_CPU_ADD(M68000, 24000000/2)			/* 12MHz Oscillator */
 	MDRV_CPU_MEMORY(dogyuun_z80_readmem,dogyuun_z80_writemem)
 	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
 
-	MDRV_CPU_ADD(Z80,27000000/8)			/* ??? 3.37MHz , 27MHz Oscillator */
+	MDRV_CPU_ADD(Z80, 27000000/8)			/* ??? 3.37MHz , 27MHz Oscillator */
 	MDRV_CPU_MEMORY(dogyuun_z80_sound_readmem,dogyuun_z80_sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND( (27000000.0 / 4) / (432 * 263) )
