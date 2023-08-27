@@ -79,7 +79,7 @@ static WRITE_HANDLER( cps1_snd_bankswitch_w )
 	bankaddr = (data * 0x4000) & (length-1);
 	cpu_setbank(1,&RAM[0x10000 + bankaddr]);
 
-	if (data & 0xfe) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: write %02x to f004\n",activecpu_get_pc(),data);
+	if (data & 0xfe) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: write %02x to f004\n",activecpu_get_pc(),data); 
 }
 
 static WRITE16_HANDLER( cps1_sound_fade_w )
