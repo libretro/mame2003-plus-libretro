@@ -5600,6 +5600,7 @@ Other Sun games
 	DRIVER( puzlstar )  /* (c) 1999 */
   DRIVER( puzzli2 )   /* (c) 1999 */
   DRIVER( puzzli2s )  /* (c) 2001 */
+  DRIVER( py2k2 )     /* (c) 2001 */
 
 	/* RamTek games */
 	DRIVER( hitme )		/* [1976 Ramtek] */
