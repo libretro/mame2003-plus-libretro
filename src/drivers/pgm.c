@@ -1409,35 +1409,6 @@ static MACHINE_DRIVER_START( olds )
 	MDRV_VIDEO_UPDATE(pgm)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( pz2 )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
-	MDRV_CPU_MEMORY(pgm_readmem, pgm_writemem)
-	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
-
-	MDRV_CPU_ADD(Z80, 33868800/4)
-	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
-	MDRV_CPU_PORTS(z80_readport, z80_writeport)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU | CPU_16BIT_PORT)
-
-	MDRV_SOUND_ADD(ICS2115, pgm_ics2115_interface)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER )
-	MDRV_SCREEN_SIZE(64*8, 64*8)
-	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
-
-	MDRV_VIDEO_START(pgm)
-	MDRV_VIDEO_EOF(pgm)
-	MDRV_VIDEO_UPDATE(pgm)
-MACHINE_DRIVER_END
-
 /*** Init Stuff **************************************************************/
 
 /* This function expands the 32x32 5-bit data into a format which is easier to
@@ -2597,6 +2568,10 @@ UINT8 puzzli2_level_decode[256] = {
 
 static int puzzli2_take_leveldata_value(UINT8 datvalue)
 {
+  int num_mask_bits;
+  int desired_mask;
+  int realrow;
+  
 	if (stage==-1)
 	{
 		tableoffs = 0;
@@ -2829,7 +2804,9 @@ static int puzzli2_take_leveldata_value(UINT8 datvalue)
 
 static WRITE16_HANDLER( puzzli2_asic_w )
 {
-
+	int columns = 0;
+	int rows = 0;
+  
 	if (offset == 0)
 	{
 		value0 = data;
