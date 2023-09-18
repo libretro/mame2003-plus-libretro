@@ -14,6 +14,7 @@
 
 extern retro_log_printf_t log_cb;
 
+static char log_buffer[2048];
 
 /* logerror is a holdover from the MAME log system. MAME 0.78 was evidently
    trying to standardize on logerror but the standardization was not complete,
@@ -34,10 +35,10 @@ static INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((form
 
 static INLINE void CLIB_DECL logerror(const char *text,...)
 {
-    va_list args;
-    va_start (args, text);
-    log_cb(RETRO_LOG_DEBUG, text, args);
-    va_end (args);
+	va_list arg;
+	va_start(arg,text);
+	vsprintf(log_buffer,text,arg);
+	va_end(arg);
+   log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
 }
-
 #endif /* LOG_H */

@@ -50,6 +50,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cosmic Monsters II
 * Cotton (set 4, World) (unprotected of FD1094 317-0181a set)
 * Counter Run (Bootleg, Set 1)
+* Counter Run (Bootleg, Set 3)
 * Crossed Swords 2
 * Cute Fighter
 * Cycle Warriors
@@ -133,6 +134,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mobile Suit Gundam Final Shooting
 * Monster Maulers
 * More More
+* Mortal Race
 * Mouse Shooter GoGo
 * Ms. Pacman Twin
 * Mrs. Dynamite
@@ -148,6 +150,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 * Mature *
 * Penky
+* Photo Y2K 2
 * Pirate Treasure
 * Planet Probe
 * Pochi & Nyaa
@@ -160,6 +163,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzz Loop 2 (All Sets)
 * Puzzle Break
 * Puzzle Star
+* Puzzli 2
+* Puzzli 2 Super
 * Racing Beat
 * Rage Of The Dragons
 * Recalhorn (prototype)
@@ -254,6 +259,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
 * Dunk Dream '95
+* Dogyuun (8/25/1992 location test)
 * E.D.F. : Earth Defense Force (North America)
 * Escape Kids (Asia 4 Players)
 * Fishing
@@ -472,6 +478,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cross Pang
 * Daitoride
 * Dharma Doujou
+* Dogyuun (8/25/1992 location test)
 * Fire Shark
 * Ghox
 * GunNail
@@ -756,7 +763,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for 1943 - The Battle Of Midway Mark II to 1943.c [arcadez]
 * Updated the legionnaire driver and video code to MAME142 added seicop protection Denjin Makai now playable [arcadez]
 * Added a small hack to the seibu soundcore to fix music and sfx in Denjin Makai [arcadez]
-* Added a working bootleg of Counter Run to freekick.c [BritneysPAIRS]
+* Added two working bootlegs of Counter Run to freekick.c [BritneysPAIRS, arcadez]
 * Updated the rohga.c driver to support the rare prototype Hang-Zo [arcadez]
 * Added support for Hyper Crash to nemesis.c [arcadez]
 * Added support for In Your Face a rare basketball prototype to the megasys1.c driver [arcadez]
@@ -952,3 +959,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed sound popping on B-Rap Boys and some sound banking niggles with The Great Thousand Mile Rally games [Mistydreams, arcadez]
 * Added support for Top Driving to the kickgoal.c driver [HAZE, arcadez]
 * Added a rare Atari Prototype Gut's N' Glory to the eprom.c driver [arcadez, mahoneyt944]
+* Updated the stlforce driver adding support for Mortal Race then backported some video fixes for it and Steel Force from later MAME [Mistydreams]
+* Added support for Dogyuun (8/25/1992 location test) to toaplan2 this version has full sound and music [arcadez, grant2258]
+* Added Photo Y2K 2 Puzzli 2 and Puzzli 2 Super to the pgm driver [arcadez, IQ_132, Haze]

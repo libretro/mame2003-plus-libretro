@@ -243,6 +243,7 @@ void pgm_pstar_decrypt(void);
 void pgm_ket_decrypt(void);
 void pgm_espgal_decrypt(void);
 void pgm_py2k2_decrypt(void);
+void pgm_puzzli2_decrypt(void);
 
 READ16_HANDLER( pgm_calendar_r );
 READ16_HANDLER( pgm_asic3_r );
@@ -1129,6 +1130,97 @@ INPUT_PORTS_START( olds )
 	PORT_DIPSETTING(      0x0006, "World" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( puzzli2 )
+	PORT_START	/* DSW */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1                       )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2                       )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
+
+	PORT_START	/* DSW */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START3                       )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER3 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER3 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER3 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER3 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER3 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER3 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START4                       )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER4 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER4 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER4 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER4 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER4 )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER4 )
+
+	PORT_START	/* DSW */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
+/*	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON5 ) */ /* test 1p+2p*/
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*  what should i use?*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 ) /* service 1p+2p*/
+/*	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON6 ) */ /* test 3p+4p*/
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* what should i use?*/
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE2 ) /* service 3p+4p*/
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER3 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER4 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused?*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused?*/
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused?*/
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused?*/
+
+	PORT_START	/* DSW */
+	PORT_SERVICE( 0x0001, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x0002, 0x0002, "Music" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, "Voice" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0008, 0x0008, "Free" )
+	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0010, 0x0010, "Stop" )
+	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Unused ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+
+	PORT_START	/* Region */
+	PORT_DIPNAME( 0x000f, 0x0005, "Region" )
+	PORT_DIPSETTING(      0x0000, "Taiwan" )
+	PORT_DIPSETTING(      0x0001, "China" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, "World" )
+INPUT_PORTS_END
+
 
 /*** GFX Decodes *************************************************************/
 
@@ -1562,7 +1654,7 @@ static WRITE16_HANDLER( killbld_prot_w )
 
 					if (mode == 0)
 					{
-						printf("unhandled copy mode %04x!\n", mode);
+						logerror("unhandled copy mode %04x!\n", mode);
 						/* not used by killing blade */
 						/* plain byteswapped copy */
 					}
@@ -1630,7 +1722,7 @@ static WRITE16_HANDLER( killbld_prot_w )
 							if (mode==1) dat2 -= extraxor;
 							
 							/*if (dat!=dat2)
-								printf("Mode %04x Param %04x Mismatch %04x %04x\n", mode, param, dat, dat2);
+								logerror("Mode %04x Param %04x Mismatch %04x %04x\n", mode, param, dat, dat2);
 							*/
 
 							killbld_sharedprotram[dst + x] = dat2;
@@ -1644,7 +1736,7 @@ static WRITE16_HANDLER( killbld_prot_w )
 					}
 					if (mode == 4)
 					{
-						printf("unhandled copy mode %04x!\n", mode);
+						logerror("unhandled copy mode %04x!\n", mode);
 						/* not used by killing blade */
 						/* looks almost like a fixed value xor, but isn't */
 					}
@@ -1680,13 +1772,13 @@ static WRITE16_HANDLER( killbld_prot_w )
 					}
 					else if (mode == 7)
 					{
-						printf("unhandled copy mode %04x!\n", mode);
+						logerror("unhandled copy mode %04x!\n", mode);
 						/* not used by killing blade */
 						/* weird mode, the params get left in memory? - maybe it's a NOP? */
 					}
 					else
 					{
-						printf("unhandled copy mode %04x!\n", mode);
+						logerror("unhandled copy mode %04x!\n", mode);
 						/* not used by killing blade */
 						/* invalid? */
 
@@ -2389,6 +2481,827 @@ static DRIVER_INIT( espgal )
 	install_asic27a_espgal();
 }
 
+/* Puzzli 2 / Puzzli 2 Super */
+INT32 puzzli_54_trigger;
+static int stage;
+static int tableoffs;
+static int tableoffs2;
+static int entries_left;
+static int currentcolumn;
+static int currentrow;
+static int num_entries;
+static int full_entry;
+static int prev_tablloc;
+static int numbercolumns;
+static int depth;
+UINT16 row_bitmask;
+static int hackcount;
+static int hackcount2;
+static int hack_47_value;
+static int hack_31_table_offset;
+static int hack_31_table_offset2;
+static int p2_31_retcounter;
+static int simregion;
+static int num_mask_bits;
+static int columns;
+static int desired_mask;
+static int leveldata;
+static int rows;
+static int realrow;
+static int pc;
+UINT8 coverage[256];
+static int command_31_write_type;
+UINT16 level_structure[8][10];
+static int puzzli2_take_leveldata_value(UINT8 datvalue);
+
+static int count_bits(UINT16 value)
+{
+	int count = 0;
+	int i = 0;
+	for (i=0;i<16;i++)
+	{
+		int bit = (value >> i) & 1;
+
+		if (bit) count++;
+	}
+
+	return count;
+}
+
+static int get_position_of_bit(UINT16 value, int bit_wanted)
+{
+	int count = 0;
+	int i=0;
+	for (i=0;i<16;i++)
+	{
+		int bit = (value >> i) & 1;
+
+		if (bit) count++;
+
+		if (count==(bit_wanted+1))
+			return i;
+	}
+
+	return -1;
+}
+
+/* should be correct, note each value only appears once */
+UINT8 puzzli2_level_decode[256] = {
+	0x32, 0x3e, 0xb2, 0x37, 0x31, 0x22, 0xd6, 0x0d, 0x35, 0x5c, 0x8d, 0x3c, 0x7a, 0x5f, 0xd7, 0xac,
+    0x53, 0xff, 0xeb, 0x44, 0xe8, 0x11, 0x69, 0x77, 0xd9, 0x34, 0x36, 0x45, 0xa6, 0xe9, 0x1c, 0xc6,
+	0x3b, 0xbd, 0xad, 0x2e, 0x18, 0xdf, 0xa1, 0xab, 0xdd, 0x52, 0x57, 0xc2, 0xe5, 0x0a, 0x00, 0x6d,
+	0x67, 0x64, 0x15, 0x70, 0xb6, 0x39, 0x27, 0x78, 0x82, 0xd2, 0x71, 0xb9, 0x13, 0xf5, 0x93, 0x92, 
+	0xfa, 0xe7, 0x5e, 0xb0, 0xf6, 0xaf, 0x95, 0x8a, 0x7c, 0x73, 0xf9, 0x63, 0x86, 0xcb, 0x1a, 0x56,
+    0xf1, 0x3a, 0xae, 0x61, 0x01, 0x29, 0x97, 0x23, 0x8e, 0x5d, 0x9a, 0x65, 0x74, 0x21, 0x20, 0x40,
+    0xd3, 0x05, 0xa2, 0xe1, 0xbc, 0x9e, 0x1e, 0x10, 0x14, 0x0c, 0x88, 0x9c, 0xec, 0x38, 0xb5, 0x9d,
+    0x2d, 0xf7, 0x17, 0x0e, 0x84, 0xc7, 0x7d, 0xce, 0x94, 0x16, 0x48, 0xa8, 0x81, 0x6e, 0x7b, 0xd8, 
+    0xa7, 0x7f, 0x42, 0xe6, 0xa0, 0x2a, 0xef, 0xee, 0x24, 0xba, 0xb8, 0x7e, 0xc9, 0x2b, 0x90, 0xcc,
+    0x5b, 0xd1, 0xf3, 0xe2, 0x6f, 0xed, 0x9f, 0xf0, 0x4b, 0x54, 0x8c, 0x08, 0xf8, 0x51, 0x68, 0xc8,
+    0x03, 0x0b, 0xbb, 0xc1, 0xe3, 0x4d, 0x04, 0xc5, 0x8f, 0x09, 0x0f, 0xbf, 0x62, 0x49, 0x76, 0x59, 
+    0x1d, 0x80, 0xde, 0x60, 0x07, 0xe0, 0x1b, 0x66, 0xa5, 0xbe, 0xcd, 0x87, 0xdc, 0xc3, 0x6b, 0x4e,
+    0xd0, 0xfd, 0xd4, 0x3f, 0x98, 0x96, 0x2f, 0x4c, 0xb3, 0xea, 0x2c, 0x75, 0xe4, 0xc0, 0x6c, 0x6a,
+    0x9b, 0xb7, 0x43, 0x8b, 0x41, 0x47, 0x02, 0xdb, 0x99, 0x3d, 0xa3, 0x79, 0x50, 0x4f, 0xb4, 0x55,
+    0x5a, 0x25, 0xf4, 0xca, 0x58, 0x30, 0xc4, 0x12, 0xa9, 0x46, 0xda, 0x91, 0xa4, 0xaa, 0xfc, 0x85,
+    0xfb, 0x89, 0x06, 0xcf, 0xfe, 0x33, 0xd5, 0x28, 0x1f, 0x19, 0x4a, 0xb1, 0x83, 0xf2, 0x72, 0x26,
+};
+
+
+static int puzzli2_take_leveldata_value(UINT8 datvalue)
+{
+  int num_mask_bits;
+  int desired_mask;
+  int realrow;
+  
+	if (stage==-1)
+	{
+		tableoffs = 0;
+		tableoffs2 = 0;
+		entries_left = 0;
+		currentcolumn = 0;
+		currentrow = 0;
+		num_entries = 0;
+		full_entry = 0;
+		prev_tablloc = 0;
+		numbercolumns = 0;
+		depth = 0;
+		row_bitmask = 0;
+
+		logerror("%02x <- table offset\n", datvalue);
+		tableoffs = datvalue;
+		tableoffs2 = 0;
+		stage = 0;
+	}
+	else
+	{
+	
+		UINT8 rawvalue = datvalue;
+		UINT8 tableloc = (tableoffs+tableoffs2)&0xff;
+		rawvalue ^= puzzli2_level_decode[tableloc];
+
+		tableoffs2++;
+		tableoffs2&=0xf;
+
+		if (stage==0)
+		{
+			stage = 1;
+
+			depth = (rawvalue & 0xf0);
+			numbercolumns = (rawvalue & 0x0f);
+			numbercolumns++;
+
+			logerror("%02x <- Sizes (level depth %01x) (number of columns %01x)", rawvalue, depth>>4, numbercolumns);
+
+
+			if ((depth != 0x80) && (depth != 0x70) && (depth != 0x50))
+				/* fatalerror calls not supported in 78 disable for now */
+			
+				/*fatalerror("depth isn't 0x5, 0x7 or 0x8"); */
+
+			if ((numbercolumns != 0x6) && (numbercolumns != 0x7) && (numbercolumns != 0x8))
+				/*fatalerror("number of columns specified isn't 6,7, or 8"); */
+
+			logerror("\n");
+
+		}
+		else if (stage==1)
+		{
+			logerror("%02x <- Number of Entries for this Column (and upper mask) (column is %d) (xor table location is %02x) ", rawvalue, currentcolumn, tableloc);
+			stage = 2;
+			entries_left = (rawvalue >> 4);
+			row_bitmask = (rawvalue & 0x0f)<<8;
+			
+			full_entry = rawvalue;
+			prev_tablloc = tableloc;
+
+			num_entries = entries_left;
+
+			if (num_entries == 0x00)
+			{
+				logerror("0 entries for this column?");
+			}
+
+			logerror("\n");
+
+					
+		}
+		else if (stage==2)
+		{	
+			logerror("%02x <- Mask value equal to number of entries (xor table location is %02x)", rawvalue, tableloc);
+			stage = 3;
+
+			row_bitmask |= rawvalue;
+
+			num_mask_bits = count_bits(row_bitmask);
+
+			if (num_mask_bits != num_entries)
+				logerror(" error - number of mask bits != number of entries - ");
+
+			
+			if (entries_left == 0)
+			{
+				stage = 1;
+				currentcolumn++;
+				currentrow = 0;
+				row_bitmask = 0;
+
+				coverage[tableloc] = 1;
+				if (rawvalue!=0)
+				{
+					logerror(" invalid mask after 00 length?");
+
+				}
+				coverage[prev_tablloc] = 1;
+				if (full_entry!=0)
+				{
+					logerror(" previous value wasn't 0x00");
+				}
+
+				if (currentcolumn==numbercolumns)
+				{
+					return 1;
+				}
+	
+			}
+			else
+			{
+				if (num_entries> 0xa)
+				{
+					logerror(" more than 10 entries?");
+				}
+				else
+				{
+
+					coverage[tableloc] = 1;
+
+					desired_mask = 0;
+
+					if (num_entries==0x00) desired_mask = 0x00;
+					if (num_entries==0x01) desired_mask = 0x01;
+					if (num_entries==0x02) desired_mask = 0x03;
+					if (num_entries==0x03) desired_mask = 0x07;
+					if (num_entries==0x04) desired_mask = 0x0f;
+					if (num_entries==0x05) desired_mask = 0x1f;
+					if (num_entries==0x06) desired_mask = 0x3f;
+					if (num_entries==0x07) desired_mask = 0x7f;
+					if (num_entries==0x08) desired_mask = 0xff;
+					if (num_entries==0x09) desired_mask = 0xff;
+					if (num_entries==0x0a) desired_mask = 0xff;
+
+					if (rawvalue!=desired_mask)
+					{
+						logerror(" possible wrong mask?");
+					}
+
+
+				}
+
+			}
+
+			logerror("\n");
+
+		}
+		else if (stage==3)
+		{
+			UINT16 object_value;
+
+			if (rawvalue<=0x10) 
+			{
+				int fishtype = rawvalue;
+				logerror("%02x <- fish type %d", rawvalue, fishtype);
+				object_value = 0x0100 + fishtype; 
+				
+			}
+			else if (rawvalue<=0x21)
+			{
+				int fishtype = rawvalue - 0x11;
+				logerror("%02x <- fish in bubble %d", rawvalue, fishtype);
+				object_value = 0x0120 + fishtype; 
+				
+			}
+			else if (rawvalue<=0x32) 
+			{
+				int fishtype = rawvalue - 0x22;
+				logerror("%02x <- fish in egg %d", rawvalue, fishtype);
+				object_value = 0x0140 + fishtype; 
+				
+
+			}
+			else if (rawvalue<=0x43) 
+			{
+				int fishtype = rawvalue - 0x33;
+				logerror("%02x <- fish on hook %d", rawvalue, fishtype);
+				object_value = 0x0180 + fishtype; 
+
+			}
+			
+			else if (rawvalue==0xd0) {object_value = 0x0200; logerror("%02x <- generic bubbles", rawvalue);}
+
+			else if (rawvalue==0xe0) {object_value = 0x8000; logerror("%02x <- solid middle", rawvalue);}
+			else if (rawvalue==0xe1) {object_value = 0x8020; logerror("%02x <- solid top slant down", rawvalue);}
+			else if (rawvalue==0xe2) {object_value = 0x8040; logerror("%02x <- solid top slant up", rawvalue);} 
+			else if (rawvalue==0xe3) {object_value = 0x8060; logerror("%02x <- solid bottom slant up", rawvalue);}
+			else if (rawvalue==0xe4) {object_value = 0x8080; logerror("%02x <- solid bottom slant down", rawvalue);} 
+
+
+			else                     {object_value = 0xffff; logerror("%02x <- unknown object", rawvalue);}
+
+			logerror("  (xor table location is %02x)\n",tableloc);
+
+			if (object_value==0xffff)
+			{
+				object_value = 0x110;
+				usrintf_showmessage("unknown object type %02x\n", rawvalue); 
+			}
+
+			realrow = get_position_of_bit(row_bitmask, currentrow);
+
+			if (realrow != -1)
+				level_structure[currentcolumn][realrow] = object_value;
+
+			currentrow++;
+
+			entries_left--;
+			if (entries_left == 0)
+			{
+				stage = 1;
+				currentcolumn++;
+				currentrow = 0;
+				row_bitmask = 0;
+
+				if (currentcolumn==numbercolumns)
+				{
+					return 1;
+				}
+
+			}
+		}
+				
+	}
+
+	return 0;
+}
+
+
+static WRITE16_HANDLER( puzzli2_asic_w )
+{
+	int columns = 0;
+	int rows = 0;
+  
+	if (offset == 0)
+	{
+		value0 = data;
+		return;
+	}
+	else if (offset == 1)
+	{
+		UINT16 realkey;
+		if ((data >> 8) == 0xff)
+			valuekey = 0xff00;
+		realkey = valuekey >> 8;
+		realkey |= valuekey;
+		{
+			valuekey += 0x0100;
+			valuekey &= 0xff00;
+			if (valuekey == 0xff00)
+				valuekey =  0x0100;
+		}
+		data ^= realkey;
+		value1 = data;
+		value0 ^= realkey;
+
+		ddp3lastcommand = value1 & 0xff;
+
+	switch (ddp3lastcommand)
+	{
+
+		case 0x31:
+		{
+
+			if (command_31_write_type==2)
+			{
+				logerror("%08x: %02x %04x | ",pc, ddp3lastcommand, value0);
+
+
+				if (hackcount2==0)
+				{
+					puzzli2_take_leveldata_value(value0&0xff);
+
+					hack_31_table_offset = value0 & 0xff;
+					hack_31_table_offset2 = 0;
+					hackcount2++;
+					valueresponse = 0x00d20000;
+
+				}
+				else 
+				{
+					int end = puzzli2_take_leveldata_value(value0&0xff);
+
+					if (!end)
+					{
+
+						valueresponse = 0x00d20000;
+
+						hackcount2++;
+						hack_31_table_offset2++;
+					}
+					else
+					{
+						hackcount2=0;
+	
+						valueresponse = 0x00630000 | numbercolumns;
+				
+					}
+				}
+
+
+			}
+			else
+			{
+				logerror("%08x: %02x %04x (for z80 address?)\n ",pc, ddp3lastcommand, value0);
+
+				valueresponse = 0x00d20000 | p2_31_retcounter;
+				p2_31_retcounter++;
+			}
+
+		}
+		break;
+	
+
+		case 0x13:
+		{
+			/* logerror below causes compile errors so disable for now */
+			/*logerror("%08x: %02x %04x (READ LEVEL DATA) | ",pc, ddp3lastcommand, value0); */
+
+			UINT16* leveldata = &level_structure[0][0];
+			if (hackcount==0)
+			{
+				valueresponse = 0x002d0000 | ((depth>>4)+1); 
+				logerror("level depth returning %08x\n", valueresponse );
+			}
+			else if (hackcount<((10*numbercolumns)+1))
+			{
+				valueresponse = 0x002d0000 | leveldata[hackcount-1];
+				logerror("level data returning %08x\n", valueresponse );
+			}
+			else
+			{
+				hackcount=0;
+				valueresponse = 0x00740054;
+				logerror("END returning %08x\n", valueresponse );
+
+			}
+
+			hackcount++;
+
+		}
+		break;
+
+
+		case 0x38: 
+			logerror("%08x: %02x %04x (RESET)\n",pc, ddp3lastcommand, value0);
+			simregion = readinputport(4);
+			valueresponse = 0x780000 | simregion<<8;
+			valuekey = 0x100;
+			puzzli_54_trigger = 0;
+			
+		break;
+
+		case 0x47:
+			logerror("%08x: %02x %04x (GFX OFF PART 1)\n",pc, ddp3lastcommand, value0);
+
+			hack_47_value = value0;
+
+			if (value0 & 0xf0f0) logerror("unhandled 0x47 bits %04x\n", value0);
+
+			valueresponse = 0x00740047;
+
+		break;
+
+		case 0x52:
+			logerror("%08x: %02x %04x (GFX OFF PART 2)\n",pc, ddp3lastcommand, value0);
+
+			if (value0 & 0xfff0) logerror("unhandled 0x52 bits %04x\n", value0);
+
+			if (value0==0x0000)
+			{
+				int val = ((hack_47_value & 0x0f00)>>8) * 0x19;
+				valueresponse = 0x00740000 | (val & 0xffff);
+			}
+			else
+			{
+
+				int val = ((hack_47_value & 0x0f00)>>8) * 0x19;
+				val +=((hack_47_value & 0x000f)>>0) * 0x05;
+				val += value0 & 0x000f;
+				valueresponse = 0x00740000 | (val & 0xffff);
+
+			}
+
+
+		break;
+
+
+
+		case 0x61:
+			logerror("%08x: %02x %04x\n",pc, ddp3lastcommand, value0);
+			
+			command_31_write_type = 1;
+
+			valueresponse = 0x36<<16;
+			p2_31_retcounter = 0xc;
+		break;
+
+		case 0x41:
+			logerror("%08x: %02x %04x (UNK)\n",pc, ddp3lastcommand, value0);
+
+			command_31_write_type = 0;
+
+			valueresponse = 0x740061;
+		break;
+
+		case 0x54:
+			logerror("%08x: %02x %04x\n",pc, ddp3lastcommand, value0);
+			
+			command_31_write_type = 2;
+			stage = -1;
+			puzzli_54_trigger = 1;
+			hackcount2 = 0;
+			hackcount = 0;
+			valueresponse = 0x36<<16;
+			
+			/*
+			int columns;
+			int rows;
+			*/
+			for (columns=0;columns<8;columns++)
+				for (rows=0;rows<10;rows++)
+					level_structure[columns][rows] = 0x0000;
+		break;
+
+		case 0x63:
+			logerror("%08x: %02x %04x (Z80 ADDR PART 1)\n",pc, ddp3lastcommand, value0);
+
+			if (!strcmp(Machine->gamedrv->name,"puzzli2"))
+			{
+				if (value0==0x0000)
+				{
+					valueresponse = 0x001694a8;
+				}
+				else if (value0==0x0001)
+				{
+					valueresponse = 0x0016cfae;
+				}
+				else if (value0==0x0002)
+				{
+					valueresponse = 0x0016ebf2;
+				}
+				else if (value0==0x0003)
+				{
+					valueresponse = 0x0016faa8;
+				}
+				else if (value0==0x0004)
+				{
+					valueresponse = 0x00174416;
+				}
+				else
+				{
+					logerror("unk case x63\n");
+					valueresponse = 0x00600000;
+
+				}
+			}
+			else
+			{
+				if (value0==0x0000)
+				{
+					valueresponse = 0x19027a;
+				}
+				else if (value0==0x0001)
+				{
+					valueresponse = 0x193D80;
+				}
+				else if (value0==0x0002)
+				{
+					valueresponse = 0x1959c4;
+				}
+				else if (value0==0x0003)
+				{
+					valueresponse = 0x19687a;
+				}
+				else if (value0==0x0004)
+				{
+					valueresponse = 0x19b1e8;
+				}
+				else
+				{
+					logerror("unk case x63\n");
+					valueresponse = 0x00600000;
+				}
+			}
+		break;
+
+		case 0x67:
+			logerror("%08x: %02x %04x (Z80 ADDR PART 2)\n",pc, ddp3lastcommand, value0);
+
+			if (!strcmp(Machine->gamedrv->name,"puzzli2"))
+			{
+				if ( (value0==0x0000) || (value0==0x0001) || (value0==0x0002) || (value0==0x0003) )
+				{
+					valueresponse = 0x00166178;
+				}
+				else if ( value0==0x0004 )
+				{
+					valueresponse = 0x00166e72;
+				}
+				else
+				{
+					logerror("unk case x67\n");
+					valueresponse = 0x00400000;
+				}
+			}
+			else
+			{
+				if ((value0==0x0000) || (value0==0x0001) || (value0==0x0002) ||  (value0==0x0003))
+				{
+					valueresponse = 0x18cf4a;
+				}
+				else if ( value0==0x0004 )
+				{
+					valueresponse = 0x0018dc44;
+				}
+				else
+				{
+					logerror("unk case x67\n");
+					valueresponse = 0x00600000;
+				}
+			}
+		break;
+
+		default:
+			logerror("%08x: %02x %04x\n",pc, ddp3lastcommand, value0);
+
+			valueresponse = 0x74<<16;
+		break;
+	}
+ }
+	else if (offset==2)
+	{
+
+	}
+}
+
+static READ16_HANDLER( puzzli2_ram_mirror_r )
+{
+	if (offset == 4)
+		return simregion;
+
+	return 0x0000;
+}
+
+void install_asic27a_puzzli2(void)
+{
+	install_mem_read16_handler(0, 0x500000, 0x500005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x500000, 0x500005, puzzli2_asic_w);
+	install_mem_read16_handler(0, 0x4f0000, 0x4f003f, puzzli2_ram_mirror_r);
+}
+
+DRIVER_INIT(puzzli2)
+{
+	data16_t *mem16 = (data16_t *)memory_region(REGION_CPU1);
+	pgm_basic_init();
+	pgm_puzzli2_decrypt();
+    install_asic27a_puzzli2();
+	
+	hackcount = 0;
+	hackcount2 = 0;
+	hack_47_value = 0;
+	hack_31_table_offset = 0;
+	hack_31_table_offset = 0;
+	
+    /* use old IRQ4 disable patch as Puzzli 2 will lock into service mode if enabled */
+    mem16[0x100070/2]=0x0012;
+	mem16[0x100072/2]=0x5D78;
+
+}
+
+/* photo y2k 2 */
+
+UINT16 py2k2_sprite_pos;
+UINT16 py2k2_sprite_base;
+UINT16 py2k2_prev_base;
+UINT16 extra_ram[0x100];
+	
+static UINT32 py2k2_sprite_offset(UINT16 base, UINT16 pos)
+{
+	UINT16 ret = 0;
+	UINT16 offset = (base * 16) + (pos & 0xf);
+
+	switch (base & ~0x3f)
+	{
+		case 0x000: ret = BITSWAP16(offset ^ 0x0030, 15, 14, 13, 12, 11, 10, 0, 2, 3, 9, 5, 4, 8, 7, 6, 1); break;
+		case 0x040: ret = BITSWAP16(offset ^ 0x03c0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 1, 2, 0, 5, 3, 4); break;
+		case 0x080: ret = BITSWAP16(offset ^ 0x0000, 15, 14, 13, 12, 11, 10, 0, 3, 4, 6, 8, 7, 5, 9, 2, 1); break;
+		case 0x0c0: ret = BITSWAP16(offset ^ 0x0001, 15, 14, 13, 12, 11, 10, 6, 5, 4, 3, 2, 1, 9, 8, 7, 0); break;
+		case 0x100: ret = BITSWAP16(offset ^ 0x0030, 15, 14, 13, 12, 11, 10, 0, 2, 3, 9, 5, 4, 8, 7, 6, 1); break;
+		case 0x140: ret = BITSWAP16(offset ^ 0x01c0, 15, 14, 13, 12, 11, 10, 2, 8, 7, 6, 4, 3, 5, 9, 0, 1); break;
+		case 0x180: ret = BITSWAP16(offset ^ 0x0141, 15, 14, 13, 12, 11, 10, 4, 8, 2, 6, 1, 7, 9, 5, 3, 0); break;
+		case 0x1c0: ret = BITSWAP16(offset ^ 0x0090, 15, 14, 13, 12, 11, 10, 5, 3, 7, 2, 1, 4, 0, 9, 8, 6); break;
+		case 0x200: ret = BITSWAP16(offset ^ 0x02a1, 15, 14, 13, 12, 11, 10, 9, 1, 7, 8, 5, 6, 2, 4, 3, 0); break;
+		case 0x240: ret = BITSWAP16(offset ^ 0x0000, 15, 14, 13, 12, 11, 10, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4); break;
+		case 0x280: ret = BITSWAP16(offset ^ 0x02a1, 15, 14, 13, 12, 11, 10, 9, 1, 7, 8, 5, 6, 2, 4, 3, 0); break;
+		case 0x2c0: ret = BITSWAP16(offset ^ 0x0000, 15, 14, 13, 12, 11, 10, 0, 3, 4, 6, 8, 7, 5, 9, 2, 1); break;
+		case 0x300: ret = BITSWAP16(offset ^ 0x03c0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 1, 2, 0, 5, 3, 4); break;
+		case 0x340: ret = BITSWAP16(offset ^ 0x0030, 15, 14, 13, 12, 11, 10, 0, 2, 3, 9, 5, 4, 8, 7, 6, 1); break;
+		case 0x380: ret = BITSWAP16(offset ^ 0x0001, 15, 14, 13, 12, 11, 10, 6, 5, 4, 3, 2, 1, 9, 8, 7, 0); break;
+		case 0x3c0: ret = BITSWAP16(offset ^ 0x0090, 15, 14, 13, 12, 11, 10, 5, 3, 7, 2, 1, 4, 0, 9, 8, 6); break;
+		case 0x400: ret = BITSWAP16(offset ^ 0x02a1, 15, 14, 13, 12, 11, 10, 9, 1, 7, 8, 5, 6, 2, 4, 3, 0); break;
+		case 0x440: ret = BITSWAP16(offset ^ 0x03c0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 1, 2, 0, 5, 3, 4); break;
+		case 0x480: ret = BITSWAP16(offset ^ 0x0141, 15, 14, 13, 12, 11, 10, 4, 8, 2, 6, 1, 7, 9, 5, 3, 0); break;
+		case 0x4c0: ret = BITSWAP16(offset ^ 0x01c0, 15, 14, 13, 12, 11, 10, 2, 8, 7, 6, 4, 3, 5, 9, 0, 1); break;
+		case 0x500: ret = BITSWAP16(offset ^ 0x0141, 15, 14, 13, 12, 11, 10, 4, 8, 2, 6, 1, 7, 9, 5, 3, 0); break;
+		case 0x540: ret = BITSWAP16(offset ^ 0x0030, 15, 14, 13, 12, 11, 10, 0, 2, 3, 9, 5, 4, 8, 7, 6, 1); break;
+		case 0x580: ret = BITSWAP16(offset ^ 0x03c0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 1, 2, 0, 5, 3, 4); break;
+		case 0x5c0: ret = BITSWAP16(offset ^ 0x0090, 15, 14, 13, 12, 11, 10, 5, 3, 7, 2, 1, 4, 0, 9, 8, 6); break;
+		case 0x600: ret = BITSWAP16(offset ^ 0x0000, 15, 14, 13, 12, 11, 10, 0, 3, 4, 6, 8, 7, 5, 9, 2, 1); break;
+		case 0x640: ret = BITSWAP16(offset ^ 0x0000, 15, 14, 13, 12, 11, 10, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5); break;
+	}
+
+	if (offset >= 0xce80/2 && offset <= 0xceff/2) ret -= 0x0100;
+	if (offset >= 0xcf00/2 && offset <= 0xcf7f/2) ret += 0x0100;
+
+	return ret;
+}
+
+static WRITE16_HANDLER( py2k2_asic_w )
+{
+	if (offset == 0)
+	{
+		value0 = data;
+		return;
+	}
+	else if (offset == 1)
+	{
+		UINT16 realkey;
+		if ((data >> 8) == 0xff)
+			valuekey = 0xff00;
+		realkey = valuekey >> 8;
+		realkey |= valuekey;
+		{
+			valuekey += 0x0100;
+			valuekey &= 0xff00;
+			if (valuekey == 0xff00)
+				valuekey =  0x0100;
+		}
+		data ^= realkey;
+		value1 = data;
+		value0 ^= realkey;
+
+		ddp3lastcommand = value1 & 0xff;
+		
+	switch (ddp3lastcommand)
+	{
+		case 0x30:
+			valueresponse = py2k2_sprite_offset(py2k2_sprite_base, py2k2_sprite_pos++);
+		break;
+		case 0x32:
+			py2k2_sprite_base = value0;
+			py2k2_sprite_pos = 0;
+			valueresponse = py2k2_sprite_offset(py2k2_sprite_base, py2k2_sprite_pos++);
+		break;
+		case 0xba:
+			valueresponse = py2k2_prev_base;
+			py2k2_prev_base = value0;
+		break;
+		case 0x99:
+			py2k2_prev_base = value0;
+			simregion = readinputport(4);
+			valuekey = 0x100;
+			valueresponse = 0x00880000 | simregion<<8;
+		break;
+		case 0xc0:
+			printf("%06x command %02x | %04x\n", pc, ddp3lastcommand, value0);
+			valueresponse = 0x880000;
+			break;
+		case 0xc3:
+			valueresponse = 0x904000 + ((extra_ram[0xc0] + (value0 * 0x40)) * 4);
+		break;
+		case 0xd0:
+			valueresponse = 0xa01000 + (value0 * 0x20);
+		break;
+		case 0xdc:
+			valueresponse = 0xa00800 + (value0 * 0x40);
+		break;
+		case 0xe0:
+			valueresponse = 0xa00000 + ((value0 & 0x1f) * 0x40);
+		break;
+		case 0xcb: /* Background layer 'x' select (pgm3in1, same as kov) */
+			valueresponse = 0x880000;
+		break;
+		case 0xcc: /* Background layer offset (pgm3in1, same as kov) */
+		{
+			int y = value0;
+			if (y & 0x400) y = -(0x400 - (y & 0x3ff));
+			valueresponse = 0x900000 + ((extra_ram[0xcb] + (y * 0x40)) * 4);
+		}
+		break;
+		case 0x33:
+		case 0x34:
+		case 0x35:
+		case 0x37:
+		case 0x38:
+		default:
+			printf("%06x command %02x | %04x\n", pc, ddp3lastcommand, value0);
+			valueresponse = 0x880000;
+			break;
+	}
+
+  }
+	else if (offset==2)
+	{
+
+	}
+}
+
+
+void install_asic27a_py2k2(void)
+{
+	install_mem_read16_handler(0, 0x500000, 0x500005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x500000, 0x500005, py2k2_asic_w);
+	install_mem_read16_handler(0, 0x4f0000, 0x4f003f, puzzli2_ram_mirror_r);
+}
+
+DRIVER_INIT(py2k2)
+{
+	pgm_basic_init();
+	pgm_py2k2_decrypt();
+    install_asic27a_py2k2();
+	
+    py2k2_sprite_pos = 0;
+	py2k2_sprite_base = 0;
+	py2k2_prev_base = 0;
+
+}
+
 /*** Rom Loading *************************************************************/
 
 /* take note of REGION_GFX2 needed for expanding the 32x32x5bpp data and
@@ -2904,6 +3817,57 @@ ROM_START( puzlstar )
 	ROM_LOAD( "m0800.u2",    0x400000, 0x400000,  CRC(e1a46541) SHA1(6fe9de5700d8638374734d80551dcedb62975140) )
 ROM_END
 
+ROM_START( puzzli2 )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS) */
+    ROM_LOAD( "v100.u5",     0x100000, 0x200000, CRC(1abb4595) SHA1(860bb49efc3cb55b6b9846f5ab787d6fd586432d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
+	ROM_LOAD( "t0900.u9",    0x400000, 0x200000, CRC(70615611) SHA1(a46d4aa71396947b427f9ba4ba0e636876c09d6b) )
+
+	ROM_REGION( 0x600000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x400000, REGION_GFX3, 0 ) /* Sprite Colour Data */
+	ROM_LOAD( "a0900.u3",    0x0000000, 0x0400000, CRC(14911251) SHA1(e0d10ef50c408dbcf0907f81d4f0e49aeb651a6c) ) /* FIXED BITS (xxxxxxxx1xxxxxxx) */
+
+	ROM_REGION( 0x0200000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b0900.u4",    0x0000000, 0x0200000,  CRC(6f0638b6) SHA1(14b315fe9e80b3314bb63487e6ea9ce04c9703bd) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* (BIOS) */
+	ROM_LOAD( "m0900.u2",     0x400000, 0x400000, CRC(9ea7af2e) SHA1(d2593d391a93c5cf5a554750c32886dea6599b3d) )
+ROM_END
+
+ROM_START( puzzli2s )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS) */
+	ROM_LOAD16_BYTE( "2sp_v200.u3",     0x100001, 0x080000, CRC(2a5ba8a6) SHA1(4c87b849fd6f39152e3e2ef699b78ce24b3fb6d0) )
+	ROM_LOAD16_BYTE( "2sp_v200.u4",     0x100000, 0x080000, CRC(fa5c86c1) SHA1(11c219722b891b775c0f7f9bc8276cdd8f74d657) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
+	ROM_LOAD( "t0900.u9",    0x400000, 0x200000, CRC(70615611) SHA1(a46d4aa71396947b427f9ba4ba0e636876c09d6b) )
+
+	ROM_REGION( 0x600000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x400000, REGION_GFX3, 0 ) /* Sprite Colour Data */
+	ROM_LOAD( "a0900.u3",    0x0000000, 0x0400000, CRC(14911251) SHA1(e0d10ef50c408dbcf0907f81d4f0e49aeb651a6c) ) /* FIXED BITS (xxxxxxxx1xxxxxxx) */
+
+	ROM_REGION( 0x0200000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b0900.u4",    0x0000000, 0x0200000,  CRC(6f0638b6) SHA1(14b315fe9e80b3314bb63487e6ea9ce04c9703bd) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* (BIOS) */
+	ROM_LOAD( "m0900.u2",     0x400000, 0x400000, CRC(9ea7af2e) SHA1(d2593d391a93c5cf5a554750c32886dea6599b3d) )
+ROM_END
+
 ROM_START( ket )
 	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
 	/* doesn't use a separate BIOS rom */
@@ -3137,6 +4101,35 @@ ROM_START( ddp3blk )
 	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
 ROM_END
 
+ROM_START( py2k2 )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom",  0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS) */
+	ROM_LOAD16_WORD_SWAP( "y2k2_m-101xx.u1", 0x100000, 0x200000, CRC(c47795f1) SHA1(5be4af4275571932d7740c3ea0857a1f58a3f6d9) ) /* 68k (encrypted) 2nd half empty... */
+
+    ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION( 0x480000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
+	/* no extra tilemap rom */
+
+	ROM_REGION( 0x480000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x2000000, REGION_GFX3, 0 ) /* Sprite Colour Data */
+	ROM_LOAD( "y2k2_a1100.u6",    0x0000000, 0x0800000, CRC(e32ce499) SHA1(f84c7daa55c25a05da467b5654ebf432b7ce1754) )
+	ROM_LOAD( "y2k2_a1101.u7",    0x0800000, 0x0800000, CRC(4e7568bc) SHA1(bf9cc453191bd5ec9fbcce62891809f253a44267) )
+	ROM_LOAD( "y2k2_a1102.u8",    0x1000000, 0x0800000, CRC(6da7c143) SHA1(9408ba7722bfc8013f851aadea5e2819f5263129) )
+	ROM_LOAD( "y2k2_a1103.u9",    0x1800000, 0x0800000, CRC(0ebebfdc) SHA1(4faad7f97c7e734f179ec934a37e75d8d6adccf4) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "y2k2_b1100.u4",    0x0000000, 0x0800000,  CRC(fa53d6f6) SHA1(c2da55f4b7e721fa1c63bd7f9528f261643164e8) )
+	ROM_LOAD( "y2k2_b1101.u5",    0x0800000, 0x0800000, CRC(001e4c81) SHA1(21119055f8fd7f831529e73ff9c97bca3987a1dc))
+
+	ROM_REGION( 0x880000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* (BIOS) */
+	ROM_LOAD( "y2k2_m1100.u3", 0x400000, 0x200000, CRC(fb1515f8) SHA1(90e5e5bfdac9a460445bf224952e4a536888dc1b) )
+ROM_END
+
 /*** GAME ********************************************************************/
 
 GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,         ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
@@ -3145,10 +4138,12 @@ GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,  ROT0, "IGS", "O
 GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_SOUND )
 GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND )
 
+GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,  ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
+
 GAMEX( 1998, olds,     pgm,        olds,    olds,     olds,      ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
 GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds103t,  ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_SOUND )
 
-GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,  ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
+GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,   ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_SOUND )
 
 GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
 GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
@@ -3156,8 +4151,9 @@ GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "K
 
 GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,     ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_SOUND )
 GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,     ROT0, "IGS", "Puzzle Star", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
-
-GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,   ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_SOUND )
+GAMEX( 1999, puzzli2,  pgm,        pgm,     puzzli2,  puzzli2,   ROT0, "IGS", "Puzzli 2 (ver. 100)", GAME_IMPERFECT_SOUND ) /* ROM label is V100 ( V0001, 11/22/99 09:27:58 in program ROM ) */
+GAMEX( 2001, puzzli2s, puzzli2,    pgm,     puzzli2,  puzzli2,   ROT0, "IGS", "Puzzli 2 Super (ver. 200)", GAME_IMPERFECT_SOUND )  /* ( V200, 12/28/01 12:53:34 in program ROM ) */
+GAMEX( 2001, py2k2,    pgm,        pgm,     photoy2k, py2k2,     ROT0, "IGS", "Photo Y2K 2", GAME_IMPERFECT_SOUND )  /* need internal rom of IGS027A */
 
 /* not working */
 GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,     ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
@@ -3175,3 +4171,4 @@ GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave",
 GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi", GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
 GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (older)", GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
 GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (first revision)", GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
+
