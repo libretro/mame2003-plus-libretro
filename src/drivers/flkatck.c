@@ -18,10 +18,11 @@ TO DO:
 /* from vidhrdw/flkatck.c */
 VIDEO_START( flkatck );
 VIDEO_UPDATE( flkatck );
-WRITE_HANDLER( flkatck_k007121_w );
+WRITE_HANDLER( flkatck_vram_w );
 WRITE_HANDLER( flkatck_k007121_regs_w );
 
-extern unsigned char *k007121_ram;
+extern unsigned char *vram;
+extern unsigned char *spriteram;
 extern int flkatck_irq_enabled;
 
 /***************************************************************************/
@@ -92,9 +93,10 @@ static WRITE_HANDLER( flkatck_ls138_w )
 
 static MEMORY_READ_START( flkatck_readmem )
 	{ 0x0400, 0x041f, flkatck_ls138_r },			/* inputs + DIPS */
-	{ 0x0800, 0x0bff, MRA_RAM },		/* palette */
-	{ 0x1000, 0x1fff, MRA_RAM },					/* RAM */
-	{ 0x2000, 0x3fff, MRA_RAM },		/* Video RAM (007121) */
+	{ 0x0800, 0x0bff, MRA_RAM },		            /* palette */
+	{ 0x1000, 0x1fff, MRA_RAM },					/* Sprite RAM */
+	{ 0x2000, 0x2fff, MRA_RAM },		            /* Video RAM (007121) */
+	{ 0x3000, 0x3fff, MRA_RAM },					/* RAM */
 	{ 0x4000, 0x5fff, MRA_BANK1 },					/* banked ROM */
 	{ 0x6000, 0xffff, MRA_ROM },					/* ROM */
 MEMORY_END
@@ -103,8 +105,9 @@ static MEMORY_WRITE_START( flkatck_writemem )
 	{ 0x0000, 0x0007, flkatck_k007121_regs_w }, 	/* 007121 registers */
 	{ 0x0400, 0x041f, flkatck_ls138_w },			/* bankswitch + counters + sound command */
 	{ 0x0800, 0x0bff, paletteram_xBBBBBGGGGGRRRRR_w, &paletteram },/* palette */
-	{ 0x1000, 0x1fff, MWA_RAM },					/* RAM */
-	{ 0x2000, 0x3fff, flkatck_k007121_w, &k007121_ram },			/* Video RAM (007121) */
+	{ 0x1000, 0x1fff, MWA_RAM, &spriteram },		/* Sprite RAM */
+	{ 0x2000, 0x2fff, flkatck_vram_w, &vram },		/* Video RAM (007121) */
+	{ 0x3000, 0x3fff, MWA_RAM },					/* RAM */
 	{ 0x4000, 0x5fff, MWA_BANK1 },					/* banked ROM */
 	{ 0x6000, 0xffff, MWA_ROM },					/* ROM */
 MEMORY_END
