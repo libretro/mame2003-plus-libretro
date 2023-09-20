@@ -15,7 +15,9 @@ Credits:
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "vidhrdw/konamiic.h"
 #include "cpu/m6809/m6809.h"
+#include "cpu/hd6309/hd6309.h"
 #include "ost_samples.h"
 
 extern unsigned char *contra_fg_vram,*contra_fg_cram;
@@ -36,6 +38,11 @@ WRITE_HANDLER( contra_K007121_ctrl_1_w );
 VIDEO_UPDATE( contra );
 VIDEO_START( contra );
 
+static INTERRUPT_GEN( contra_interrupt )
+{
+	if (K007121_ctrlram[0][0x07] & 0x02)
+		cpu_set_irq_line(0, HD6309_IRQ_LINE, HOLD_LINE);
+}
 
 WRITE_HANDLER( contra_bankswitch_w )
 {
@@ -46,6 +53,9 @@ WRITE_HANDLER( contra_bankswitch_w )
 	bankaddress = 0x10000 + (data & 0x0f) * 0x2000;
 	if (bankaddress < 0x28000)	/* for safety */
 		cpu_setbank(1,&RAM[bankaddress]);
+    else
+		usrintf_showmessage("bankswitch %X", data & 0xf);
+
 }
 
 WRITE_HANDLER( contra_sh_irqtrigger_w )
@@ -312,18 +322,18 @@ static struct YM2151interface ym2151_interface =
 
 static MACHINE_DRIVER_START( contra )
 
-	/* basic machine hardware */
- 	MDRV_CPU_ADD(M6809, 1500000)
+	/* basic machine hardware */ 
+ 	MDRV_CPU_ADD(HD6309, 3000000) /* 24MHz/8 */
 	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT(contra_interrupt,1)
 
- 	MDRV_CPU_ADD(M6809, 2000000)
+ 	MDRV_CPU_ADD(M6809, 3579545)	/* 3.579545 MHz */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(10)	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+	MDRV_INTERLEAVE(100)	/* 100 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
