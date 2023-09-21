@@ -12,7 +12,6 @@ static struct tilemap *k007121_tilemap[2];
 static struct rectangle k007121_clip[2];
 
 unsigned char *vram;
-unsigned char *spriteram;
 
 int flkatck_irq_enabled;
 
