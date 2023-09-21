@@ -133,13 +133,14 @@ static MEMORY_READ_START( readmem )
 	{ 0x0010, 0x0010, input_port_0_r },		/* IN0 */
 	{ 0x0011, 0x0011, input_port_1_r },		/* IN1 */
 	{ 0x0012, 0x0012, input_port_2_r },		/* IN2 */
-
 	{ 0x0014, 0x0014, input_port_3_r },		/* DIPSW1 */
 	{ 0x0015, 0x0015, input_port_4_r },		/* DIPSW2 */
 	{ 0x0016, 0x0016, input_port_5_r },		/* DIPSW3 */
-
 	{ 0x0c00, 0x0cff, MRA_RAM },
 	{ 0x1000, 0x5fff, MRA_RAM },
+	{ 0x3000, 0x3fff, MRA_RAM },
+	{ 0x4800, 0x4fff, MRA_RAM },
+	{ 0x5000, 0x5fff, MRA_RAM },
 	{ 0x6000, 0x7fff, MRA_BANK1 },
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END
