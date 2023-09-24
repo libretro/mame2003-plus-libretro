@@ -349,7 +349,13 @@ static READ_HANDLER( special_port0_r )
 	return result;
 }
 
-
+/* used by Rim Rockin' Basketball */
+static READ_HANDLER( special_port1_r )
+{
+	data8_t result = readinputport(1);
+	result = (result & 0x7f) | ((pia_portb_data & 0x01) << 7);
+	return result;
+}
 
 /*************************************
  *
@@ -1316,8 +1322,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( rimrockn )
 	PORT_START	/* 40 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* input from sound board */
-	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
+    PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* 60 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1327,7 +1332,7 @@ INPUT_PORTS_START( rimrockn )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN4 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* input from sound board */
 
 	PORT_START	/* 80 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1353,9 +1358,9 @@ INPUT_PORTS_START( rimrockn )
 	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START	/* special 163 */
-	PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT_NAME( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER3, "P3 Shoot" )
 	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER3, "P3 Pass" )
-	PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER3, "P3 Shoot" )
+	PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 )
 	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER3 )
 	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER3 )
@@ -1363,9 +1368,9 @@ INPUT_PORTS_START( rimrockn )
 	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 
 	PORT_START	/* special 164 */
-	PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT_NAME( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER4, "P4 Shoot" )
 	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER4, "P4 Pass" )
-	PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER4, "P4 Shoot" )
+	PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4 )
 	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER4 )
 	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER4 )
@@ -1373,7 +1378,21 @@ INPUT_PORTS_START( rimrockn )
 	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 
 	PORT_START	/* special 165 */
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE4 )
+	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Cabinet ))
+	PORT_DIPSETTING(    0x18, "1 player" )
+	PORT_DIPSETTING(    0x10, "2 players" )
+	PORT_DIPSETTING(    0x08, "3 players" )
+	PORT_DIPSETTING(    0x00, "4 players" )
+	PORT_DIPNAME( 0x20, 0x00, "Coin Slots" )
+	PORT_DIPSETTING(    0x04, "Common" )
+	PORT_DIPSETTING(    0x00, "Individual" )
+	PORT_DIPNAME( 0x40, 0x00, "Video Sync" )
+	PORT_DIPSETTING(    0x02, "Positive" )
+	PORT_DIPSETTING(    0x00, "Negative" )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 
@@ -2230,6 +2249,7 @@ static DRIVER_INIT( sstrike )
 static DRIVER_INIT( rimrockn )
 {
 	/* additional input ports */
+	install_mem_read_handler (0, 0x0160, 0x0160, special_port1_r);
 	install_mem_read_handler (0, 0x0161, 0x0161, input_port_3_r);
 	install_mem_read_handler (0, 0x0162, 0x0162, input_port_4_r);
 	install_mem_read_handler (0, 0x0163, 0x0163, input_port_5_r);
