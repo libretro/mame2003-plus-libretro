@@ -577,6 +577,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pole Position II
 * Rampage World Tour
 * Revolution X
+* Rim Rockin Basketball (commentary voices)
 * Rohga Armor Force
 * R-Type Leo
 * Shark Attack
@@ -962,3 +963,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the stlforce driver adding support for Mortal Race then backported some video fixes for it and Steel Force from later MAME [Mistydreams]
 * Added support for Dogyuun (8/25/1992 location test) to toaplan2 this version has full sound and music [arcadez, grant2258]
 * Added Photo Y2K 2 Puzzli 2 and Puzzli 2 Super to the pgm driver [arcadez, IQ_132, Haze]
+* Switched Contra to use the HD6309 for the main CPU to get rid of slowdowns and fix a crash after 2nd enemy base [arcadez]
+* Backported a fix from later MAME which gets rid of sprites sticking on the screen in Contra [Kale, mahoneyt944]
+* Fixed sprite prios and some bullets being hidden behind the bosses in Flak Attack / MX5000 [dink, KALE, arcadez]
+* Fixed missing commentary voices and correctly hooked up player 3 and 4 inputs for Rim Rockin Basketball [arcadez]
