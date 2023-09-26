@@ -471,6 +471,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Acrobat Mission
 * Altered Beast (version 2)
 * Asura Blade
+* Atomic Boy / Wily Tower
 * Balloon Bomber
 * Batsugun (Partial)
 * Bio-ship Paladin
@@ -967,3 +968,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Backported a fix from later MAME which gets rid of sprites sticking on the screen in Contra [Kale, mahoneyt944]
 * Fixed sprite prios and some bullets being hidden behind the bosses in Flak Attack / MX5000 [dink, KALE, arcadez]
 * Fixed missing commentary voices and correctly hooked up player 3 and 4 inputs for Rim Rockin Basketball [arcadez]
+* Fixed some graphical niggles and hooked up full sound and music for IREM's Atomic Boy / Wily Tower [MAMEDev, arcadez]
