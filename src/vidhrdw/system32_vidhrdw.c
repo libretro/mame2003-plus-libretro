@@ -1358,12 +1358,15 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 		/* workaround for issue with system32_mixerregs. */
 		/* sonic  - trips this during attract mode on the ice level demo, messes up layer 2 bg. */
 		/* alien3 - trips this during the enter initials high score screen, flips the letters. */
-		if ( strcmp(Machine->gamedrv->name,"sonic") && strcmp(Machine->gamedrv->name,"alien3") )
-		{
-			if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
-				if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
-			}
-		}
+		//if ( strcmp(Machine->gamedrv->name,"sonic") && strcmp(Machine->gamedrv->name,"alien3") )
+		//{
+		//	if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
+		//		if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
+    //	}
+		//}
+		/* determine if we're flipped */
+		if ( ((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> layer)) & 1 )
+			tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
 
 		for (line = 0; line < 224;line++) {
 			int xscroll = (sys32_videoram[(0x01FF12+8*layer)/2]);
