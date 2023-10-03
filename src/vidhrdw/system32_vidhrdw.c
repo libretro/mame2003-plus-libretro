@@ -1324,30 +1324,11 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 		alpha_set_level(alphaamount);
 	}
 
-	/* rowselect / rowscroll
-
-	outrunners road - works ok
-	svf pitch - works ok with tilemap flip / clipping hack
-	brival floor - seems ok
-	arabfgt floor - seems ok, bit shakey
-	rad rally mirror - reasonable but doesn't scroll smoothly
-	rad mobile backgrounds - wrong?
-	sonic title screen background - ok
-
-	what effect does alien3 use? zooming instead?
-	jurassic park enables rowscroll on one of the levels in the attract but its hard to see what for
-
-	*/
-
-	if (layer == 2) {
-		rowscroll = (sys32_videoram[0x01FF04/2] & 0x0001);
-		rowselect = (sys32_videoram[0x01FF04/2] & 0x0004)>>2;
-	}
-
-	if (layer == 3) {
-		rowscroll = (sys32_videoram[0x01FF04/2] & 0x0002)>>1;
-		rowselect = (sys32_videoram[0x01FF04/2] & 0x0008)>>3;
-	}
+	/* determine if row scroll and/or row select is enabled */
+	rowscroll = (sys32_videoram[0x1ff04/2] >> (layer - 2)) & 1;
+	rowselect = (sys32_videoram[0x1ff04/2] >> layer) & 1;
+	if ((sys32_videoram[0x1ff04/2] >> (layer + 2)) & 1)
+		rowscroll = rowselect = 0;
 
 	/* Switch to Machine->visible_area.max_x later*/
 	monitor_res=system32_screen_mode?52*8:40*8;
@@ -1374,15 +1355,9 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 
 		tableaddress = (tableaddress * 0x200);
 
-		/* workaround for issue with system32_mixerregs. */
-		/* sonic  - trips this during attract mode on the ice level demo, messes up layer 2 bg. */
-		/* alien3 - trips this during the enter initials high score screen, flips the letters. */
-		if ( strcmp(Machine->gamedrv->name,"sonic") && strcmp(Machine->gamedrv->name,"alien3") )
-		{
-			if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
-				if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
-			}
-		}
+		/* determine if we're flipped */
+		if (((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> layer)) & 1)
+			if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
 
 		for (line = 0; line < 224;line++) {
 			int xscroll = (sys32_videoram[(0x01FF12+8*layer)/2]);
