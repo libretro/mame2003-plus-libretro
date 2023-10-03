@@ -1350,13 +1350,13 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 
 	if (rowscroll || rowselect) {
 		int line;
-		int flip = ((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> layer)) & 1;
+
 		int tableaddress = sys32_videoram[0x01FF04/2]>>8;
 
 		tableaddress = (tableaddress * 0x200);
 
 		/* determine if we're flipped */
-		if (flip)
+		if (((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> layer)) & 1)
 			if (layer==2) tilemap_set_flip(system32_layer_tilemap[layer], TILEMAP_FLIPX);
 
 		for (line = 0; line < 224;line++) {
