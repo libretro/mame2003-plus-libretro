@@ -1310,7 +1310,7 @@ static void system32_recalc_palette( int monitor ) {
 	}
 }
 
-void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int layer ) {
+void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int layer ) {
 	int trans = 0;
 	int alphaamount = 0;
 	int rowscroll=0, rowselect=0;
@@ -1424,6 +1424,45 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 		tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
 		tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 	}
+}
+
+void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int layer ) {
+	int trans = 0;
+	int alphaamount = 0;
+	int monitor = multi32?layer%2:0;
+	int monitor_res = 0;
+	struct rectangle clip;
+
+	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
+		trans = TILEMAP_ALPHA;
+		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
+		alpha_set_level(alphaamount);
+	}
+
+	/* Switch to Machine->visible_area.max_x later*/
+	monitor_res=system32_screen_mode?52*8:40*8;
+
+	if (multi32) {
+		/*			clip.min_x = Machine->visible_area.min_x;*/
+		/*			clip.max_x = Machine->visible_area.max_x;*/
+		clip.min_x = (layer%2)*monitor_res;
+		clip.max_x = (layer%2+1)*monitor_res;
+		clip.min_y = 0;
+		clip.max_y = 28*8;
+	}
+	else {
+		clip.min_x = Machine->visible_area.min_x;
+		clip.max_x = Machine->visible_area.max_x;
+		clip.min_y = Machine->visible_area.min_y;
+		clip.max_y = Machine->visible_area.max_y;
+	}
+
+	/* Draw */
+	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
+	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
+	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
+	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
+	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 }
 
 VIDEO_UPDATE( system32 ) {
@@ -1643,19 +1682,19 @@ VIDEO_UPDATE( system32 ) {
 	if (sys32_displayenable & 0x0002) {
 		for (priloop=0; priloop < 0x10; priloop++) {
 			if (priloop == priority0 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
-				if (!(sys32_tmap_disabled & 0x1)) system32_draw_bg_layer (bitmap,cliprect,0);
+				if (!(sys32_tmap_disabled & 0x1)) system32_draw_bg_layer_zoom (bitmap,cliprect,0);
 			}
 			if (priloop == priority1 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-				if (!(sys32_tmap_disabled & 0x2)) system32_draw_bg_layer (bitmap,cliprect,1);
+				if (!(sys32_tmap_disabled & 0x2)) system32_draw_bg_layer_zoom (bitmap,cliprect,1);
 			}
 			if (priloop == priority2 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {
 				if (!(sys32_tmap_disabled & 0x4)) {
-          if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe ) system32_draw_bg_layer (bitmap,cliprect,1); /* mix jeep to both layers */
-          system32_draw_bg_layer (bitmap,cliprect,2);
+          if ((!strcmp(Machine->gamedrv->name,"jpark")) && priloop==0xe ) system32_draw_bg_layer_zoom (bitmap,cliprect,1); /* mix jeep to both layers */
+          system32_draw_bg_layer_rowscroll (bitmap,cliprect,2);
         }
 			}
 			if (priloop == priority3 && (!multi32 || (multi32 && (readinputport(0xf)&2)>>1))) {
-				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer (bitmap,cliprect,3);
+				if (!(sys32_tmap_disabled & 0x8)) system32_draw_bg_layer_rowscroll (bitmap,cliprect,3);
 			}
 			system32_process_spritelist (bitmap, cliprect);
 		}
