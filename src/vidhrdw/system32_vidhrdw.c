@@ -1317,7 +1317,6 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
 	struct rectangle clip;
-  if (layer==3) return;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
@@ -1375,7 +1374,7 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 				   this is a bit messy because mame has no core functionality for this without resorting
 				   to tilemap_draw_roz which I can't do because of RGB_DIRECT, it might be wrong anyway,
 				   maybe its using the system32 clipping windows somehow */
-				if (layer == 3) {
+				if (layer == 3 && 0) {
 					int x2;
 					x2 =xscroll&0x7ff;
 					x2 = 0x7ff-x2;
