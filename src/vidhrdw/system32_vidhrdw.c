@@ -1368,21 +1368,6 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 			if (rowscroll) xscroll+=(sys32_videoram[((tableaddress+(layer-2)*0x200)/2)+line]);
 			if (rowselect) yscroll+=(sys32_videoram[((tableaddress+0x400+(layer-2)*0x200)/2)+line])-line;
 
-
-			if ((system32_mixerregs[monitor][(0x32+layer*2)/2]&8)>>3) {
-				/* disable wrap on this tilemap, should be done on the other too but its less important
-				   this is a bit messy because mame has no core functionality for this without resorting
-				   to tilemap_draw_roz which I can't do because of RGB_DIRECT, it might be wrong anyway,
-				   maybe its using the system32 clipping windows somehow */
-				if (layer == 3) {
-					int x2;
-					x2 =xscroll&0x7ff;
-					x2 = 0x7ff-x2;
-					if (x2 > 0x3ff) clip.min_x = 0;
-					else clip.min_x = x2;
-					clip.max_x = 320-1;
-				}
-			}
 			/* Multi32: Shift layer 3's rowscroll left one screen so that it lines up*/
 			tilemap_set_scrollx(system32_layer_tilemap[layer],0, (xscroll & 0x3ff));
 			tilemap_set_scrolly(system32_layer_tilemap[layer],0, (yscroll & 0x1ff));
