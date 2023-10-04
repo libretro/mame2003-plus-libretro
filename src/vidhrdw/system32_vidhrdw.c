@@ -1317,7 +1317,7 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
 	struct rectangle clip;
-  if (layer==2) return;
+  if (layer==3) return;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
