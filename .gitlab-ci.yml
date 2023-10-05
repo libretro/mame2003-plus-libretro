@@ -223,7 +223,6 @@ android-arm64-v8a:
     - .core-defs
   only:
     - master
-    - Test
 
 # Android 64-bit x86
 android-x86_64:
