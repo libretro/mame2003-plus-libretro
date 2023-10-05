@@ -1393,6 +1393,7 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int monitor_res = 0;
   int dstxstep, dstystep;
   int destline, xcnt, ycnt;
+  const pen_t *data = &gfx->colortable[0];
 	struct rectangle clip;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
@@ -1438,8 +1439,8 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 
 			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
 			{
-				destline[xcnt*2+1] = &gfx->colortable[0];
-				destline[xcnt*2] = &gfx->colortable[1];
+				destline[xcnt*2+1] = data[0];
+				destline[xcnt*2] = data[1];
 			}
 
 		}
