@@ -1394,12 +1394,6 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
   int dstxstep, dstystep;
 	struct rectangle clip;
 
-UINT32 *destline;
-unsigned y, ystart, yend;
-unsigned x, xstart, xend;
-UINT32 *bmp;
-unsigned bmp_width, bmp_height;
-
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
 		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
@@ -1437,56 +1431,12 @@ unsigned bmp_width, bmp_height;
 	if (dstystep < 0x80)
 		dstystep = 0x80;
 
-  if (cpu_getcurrentframe() < 100) return;
-
-/* whatever... */
-ystart = 10;
-yend = 30;
-xstart = 25;
-xend = 40;
-
-bmp_width = (1 + xend - xstart);
-bmp_height = (1 + yend - ystart);
-bmp = (UINT32 *)calloc(bmp_width * bmp_height, sizeof(UINT32));
-
-for ( y = ystart ; y <= yend ; y++ )
-{
-    destline = (UINT32 *)(bitmap->line[y]);
-    for ( x = xstart ; x <= xend ; x++ )
-    {
-        bmp[((y - ystart) * bmp_width) + (x - xstart)] = destline[x];
-    }
-}
-
-{
-int scaled_bmp_width = bmp_width * 2;
-int scaled_bmp_height = bmp_height * 3;
-
-UINT32 *scaled_bmp = (UINT32 *)calloc(scaled_bmp_width * scaled_bmp_height, sizeof(UINT32));
-
-unsigned x_dst, y_dst;
-/* Perform nearest neighbour resampling
- * > Fastest method, minimal performance impact */
-uint32_t x_ratio = ((bmp_width  << 16) / scaled_bmp_width);
-uint32_t y_ratio = ((bmp_height << 16) / scaled_bmp_height);
-
-for (y_dst = 0; y_dst < scaled_bmp_height; y_dst++)
-{
-    unsigned y_src = (y_dst * y_ratio) >> 16;
-    for (x_dst = 0; x_dst < scaled_bmp_width; x_dst++)
-    {
-        unsigned x_src = (x_dst * x_ratio) >> 16;
-        scaled_bmp[(y_dst * scaled_bmp_width) + x_dst] = bmp[(y_src * bmp_width) + x_src];
-    }
-}
-
 	/* Draw */
 	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
 	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
 	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
 	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
-	tilemap_draw(scaled_bmp,&clip,system32_layer_tilemap[layer],trans,0);
-}
+	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 
 	/* enable this code below to display zoom information */
 #if 1
