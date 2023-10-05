@@ -1391,6 +1391,7 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int alphaamount = 0;
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
+  int dstxstep, dstystep;
 	struct rectangle clip;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
@@ -1417,12 +1418,33 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 		clip.max_y = Machine->visible_area.max_y;
 	}
 
+	/* extract the X/Y step values (these are in destination space!) */
+	dstxstep = sys32_videoram[0x1ff50/2 + 2 * layer] & 0xfff;
+	if (sys32_videoram[0x1ff00/2] & 0x4000)
+		dstystep = sys32_videoram[0x1ff52/2 + 2 * layer] & 0xfff;
+	else
+		dstystep = dstxstep;
+
+	/* clamp the zoom factors */
+	if (dstxstep < 0x80)
+		dstxstep = 0x80;
+	if (dstystep < 0x80)
+		dstystep = 0x80;
+
 	/* Draw */
 	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
 	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
 	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
 	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
 	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
+
+	/* enable this code below to display zoom information */
+#if 0
+	if (dstxstep != 0x200 || dstystep != 0x200)
+		usrintf_showmessage("Zoom=%03X,%03X  Cent=%03X,%03X", dstxstep, dstystep,
+			sys32_videoram[0x1ff30/2 + 2 * layer],
+			sys32_videoram[0x1ff32/2 + 2 * layer]);
+#endif
 }
 
 VIDEO_UPDATE( system32 ) {
