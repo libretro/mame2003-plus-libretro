@@ -1445,7 +1445,7 @@ xend = 40;
 
 bmp_width = (1 + xend - xstart);
 bmp_height = (1 + yend - ystart);
-bmp = (UINT32 *)calloc(bmp_width * bmp_height, sizeof(UINT32);
+bmp = (UINT32 *)calloc(bmp_width * bmp_height, sizeof(UINT32));
 
 for ( y = ystart ; y <= yend ; y++ )
 {
@@ -1460,7 +1460,7 @@ for ( y = ystart ; y <= yend ; y++ )
 int scaled_bmp_width = bmp_width * 2;
 int scaled_bmp_height = bmp_height * 3;
 
-UINT32 *scaled_bmp = (UINT32 *)calloc(scaled_bmp_width * scaled_bmp_height, sizeof(UINT32);
+UINT32 *scaled_bmp = (UINT32 *)calloc(scaled_bmp_width * scaled_bmp_height, sizeof(UINT32));
 
 unsigned x_dst, y_dst;
 /* Perform nearest neighbour resampling
