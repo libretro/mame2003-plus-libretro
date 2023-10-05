@@ -1392,8 +1392,6 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
   int dstxstep, dstystep;
-  int destline, xcnt, ycnt;
-  const pen_t *data = &gfx->colortable[0];
 	struct rectangle clip;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
@@ -1433,15 +1431,12 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	if (dstystep < 0x80)
 		dstystep = 0x80;
 
-		for ( ycnt = 0 ; ycnt < 224 ; ycnt+=2 )
-    {
-			for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ )
-			{
-			  bitmap->line[ycnt][xcnt] = Machine->pens[0];
-			}
-
-		}
-
+	/* Draw */
+	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
+	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
+	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
+	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
+	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 
 	/* enable this code below to display zoom information */
 #if 1
@@ -1450,13 +1445,6 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 			sys32_videoram[0x1ff30/2 + 2 * layer],
 			sys32_videoram[0x1ff32/2 + 2 * layer]);
 #endif
-
-	/* Draw */
-	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
-	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
-	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
-	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
-	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 }
 
 VIDEO_UPDATE( system32 ) {
