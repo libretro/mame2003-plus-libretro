@@ -1477,6 +1477,7 @@ for (y_dst = 0; y_dst < scaled_bmp_height; y_dst++)
         scaled_bmp[(y_dst * scaled_bmp_width) + x_dst] = bmp[(y_src * bmp_width) + x_src];
     }
 }
+  bitmap=scaled_bmp;
 }
 
 	/* Draw */
