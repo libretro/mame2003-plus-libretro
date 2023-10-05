@@ -1391,7 +1391,6 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int alphaamount = 0;
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
-  UINT32 srcxstep, srcystep;
   int dstxstep, dstystep;
 	struct rectangle clip;
 
@@ -1431,10 +1430,6 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 		dstxstep = 0x80;
 	if (dstystep < 0x80)
 		dstystep = 0x80;
-
-	/* compute high-precision reciprocals (in 12.20 format) */
-	srcxstep = (0x200 << 20) / dstxstep;
-	srcystep = (0x200 << 20) / dstystep;
 
 	/* enable this code below to display zoom information */
 #if 1
