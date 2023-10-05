@@ -1433,14 +1433,11 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	if (dstystep < 0x80)
 		dstystep = 0x80;
 
-		for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
-		{
-			destline = (UINT32 *)(bitmap->line[ycnt]);
-
-			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
+		for ( ycnt = 0 ; ycnt < 224 ; ycnt+=2 )
+    {
+			for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ )
 			{
-				destline[xcnt*2+1] = data[0];
-				destline[xcnt*2] = data[1];
+			  bitmap->line[ycnt][xcnt] = Machine->pens[0];
 			}
 
 		}
