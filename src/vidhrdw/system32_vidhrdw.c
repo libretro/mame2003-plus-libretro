@@ -1436,7 +1436,13 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	srcxstep = (0x200 << 20) / dstxstep;
 	srcystep = (0x200 << 20) / dstystep;
 
-	usrintf_showmessage("x:%i  y:%i",	dstxstep, dstystep);
+	/* enable this code below to display zoom information */
+#if 1
+	if (dstxstep != 0x200 || dstystep != 0x200)
+		usrintf_showmessage("Zoom=%03X,%03X  Cent=%03X,%03X", dstxstep, dstystep,
+			sys32_videoram[0x1ff30/2 + 2 * layer],
+			sys32_videoram[0x1ff32/2 + 2 * layer]);
+#endif
 
 	/* Draw */
 	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
