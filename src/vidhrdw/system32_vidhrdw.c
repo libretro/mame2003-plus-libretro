@@ -1437,6 +1437,8 @@ unsigned bmp_width, bmp_height;
 	if (dstystep < 0x80)
 		dstystep = 0x80;
 
+  if (cpu_getcurrentframe() < 100) return;
+
 /* whatever... */
 ystart = 10;
 yend = 30;
