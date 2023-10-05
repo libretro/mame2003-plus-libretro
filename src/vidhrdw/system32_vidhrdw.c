@@ -1477,15 +1477,14 @@ for (y_dst = 0; y_dst < scaled_bmp_height; y_dst++)
         scaled_bmp[(y_dst * scaled_bmp_width) + x_dst] = bmp[(y_src * bmp_width) + x_src];
     }
 }
-  bitmap=scaled_bmp;
-}
 
 	/* Draw */
 	tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
 	tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
 	tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)-monitor*monitor_res);
 	tilemap_set_scrolldy(system32_layer_tilemap[layer], sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff, -sys32_videoram[(0x01FF32+layer*4)/2]&0x1ff);
-	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
+	tilemap_draw(scaled_bmp,&clip,system32_layer_tilemap[layer],trans,0);
+}
 
 	/* enable this code below to display zoom information */
 #if 1
