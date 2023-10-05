@@ -1392,6 +1392,7 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
   int dstxstep, dstystep;
+  int destline, xcnt, ycnt;
 	struct rectangle clip;
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
@@ -1430,6 +1431,19 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 		dstxstep = 0x80;
 	if (dstystep < 0x80)
 		dstystep = 0x80;
+
+		for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
+		{
+			destline = (UINT32 *)(bitmap->line[ycnt]);
+
+			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
+			{
+				destline[xcnt*2+1] = 0;
+				//destline[xcnt*2] = 0;
+			}
+
+		}
+
 
 	/* enable this code below to display zoom information */
 #if 1
