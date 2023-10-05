@@ -1438,8 +1438,8 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 
 			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
 			{
-				destline[xcnt*2+1] = Machine->uifont->colortable[0];
-				destline[xcnt*2] = Machine->uifont->colortable[1];
+				destline[xcnt*2+1] = &gfx->colortable[0];
+				destline[xcnt*2] = &gfx->colortable[1];
 			}
 
 		}
