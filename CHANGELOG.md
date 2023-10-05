@@ -2,7 +2,7 @@
 
 * Current repository maintainers: arcadez, mahoneyt944, markwkidd, twinaphex
 * Past repository maintiners: arnoldsecret, grant2258
-* Significant code contributors to this project: AMadvanceMAME, BritneysPAIRS, dink, FBN Dev, grant2258, iq_132, MAME Dev, ShmupMAME
+* Significant code contributors to this project: AMadvanceMAME, BritneysPAIRS, dink, FBN Dev, grant2258, iq_132, MAME Dev, Mistydreams, ShmupMAME
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
 
@@ -125,6 +125,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Marble Madness II (prototype)
 * Master's Fury
 * Match It II * Mature *
+* Maze Invaders 
 * Megumi Rescue
 * Metal Slug 4
 * Metal Slug 5
@@ -969,3 +970,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed sprite prios and some bullets being hidden behind the bosses in Flak Attack / MX5000 [dink, KALE, arcadez]
 * Fixed missing commentary voices and correctly hooked up player 3 and 4 inputs for Rim Rockin Basketball [arcadez]
 * Fixed some graphical niggles and hooked up full sound and music for IREM's Atomic Boy / Wily Tower [MAMEDev, arcadez]
+* Fixed WWF Superstars bad sprites with some of Randy Macho Man Savage moves eg back suplex etc etc [MAMEDev, arcadez]
+* Hacked around some game breaking protection calls in Solomon's Key which could make levels unplayable [MAMEDEv, arcadez]
+* Added Maze Invaders Atari prototype to the centipede driver [MAMEDEv, arcadez]
+
