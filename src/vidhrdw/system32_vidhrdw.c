@@ -1439,7 +1439,7 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	tilemap_draw(bitmap,&clip,system32_layer_tilemap[layer],trans,0);
 
 	/* enable this code below to display zoom information */
-#if 1
+#if 0
 	if (dstxstep != 0x200 || dstystep != 0x200)
 		usrintf_showmessage("Zoom=%03X,%03X  Cent=%03X,%03X", dstxstep, dstystep,
 			sys32_videoram[0x1ff30/2 + 2 * layer],
