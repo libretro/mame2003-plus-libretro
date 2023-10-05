@@ -1391,6 +1391,7 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	int alphaamount = 0;
 	int monitor = multi32?layer%2:0;
 	int monitor_res = 0;
+  UINT32 srcxstep, srcystep;
   int dstxstep, dstystep;
 	struct rectangle clip;
 
