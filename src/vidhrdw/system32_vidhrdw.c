@@ -1441,9 +1441,9 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
 	/* enable this code below to display zoom information */
 #if 0
 	if (dstxstep != 0x200 || dstystep != 0x200)
-		usrintf_showmessage("Zoom=%03X,%03X  Cent=%03X,%03X", dstxstep, dstystep,
+		usrintf_showmessage("Zoom=%03X,%03X  Cent=%03X,%03X  scrolldx:%i", dstxstep, dstystep,
 			sys32_videoram[0x1ff30/2 + 2 * layer],
-			sys32_videoram[0x1ff32/2 + 2 * layer]);
+			sys32_videoram[0x1ff32/2 + 2 * layer]), (sys32_videoram[(0x01FF30+layer*4)/2]&0x1ff)+monitor*monitor_res;
 #endif
 }
 
