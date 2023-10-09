@@ -7340,5 +7340,5 @@ GAMEX(1992, brapboys, 0,        brapboys, brapboys, brapboys,   ROT0,  "Kaneko",
 GAMEX(1992, brapboysj,brapboys, brapboys, brapboys, brapboys,   ROT0,  "Kaneko", "B.Rap Boys Special (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, bloodwar, 0,        bloodwar, bloodwar, bloodwar,   ROT0,  "Kaneko", "Blood Warrior", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, bonkadv,  0,        bonkadv , bonkadv,  bloodwar,   ROT0,  "Kaneko", "Bonk's Adventure", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, packbang, 0,        packbang, packbang, berlwall,   ROT90, "Kaneko", "Pack'n Bang Bang (prototype)", GAME_IMPERFECT_GRAPHICS ) /* priorities between stages?*/
+GAMEX(1994, packbang, 0,        packbang, packbang, berlwall,   ROT90, "Kaneko", "Pack'n Bang Bang", GAME_IMPERFECT_GRAPHICS ) /* priorities between stages?*/
 GAME( 1993, wingforc, 0,        wingforc, wingforc, kaneko16,   ROT270,"Atlus",  "Wing Force (Japan, prototype)" )
