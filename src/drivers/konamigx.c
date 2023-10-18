@@ -139,6 +139,9 @@ static data16_t *gx_sndram;
 static int gx_rdport1_3, gx_syncen;
 
 static void *dmadelay_timer;
+void fantjour_dma_install();
+WRITE32_HANDLER(fantjour_dma_w);
+
 
 /**********************************************************************************/
 /*
@@ -3262,6 +3265,44 @@ MACHINE_INIT(konamigx)
 	cpu_set_halt_line(1, ASSERT_LINE);
 }
 
+static UINT32 fantjour_dma[8];
+
+void fantjour_dma_install()
+{
+	install_mem_write32_handler(0, 0xdb0000, 0xdb001f, fantjour_dma_w);
+	memset(fantjour_dma, 0, sizeof(fantjour_dma));
+}
+
+WRITE32_HANDLER(fantjour_dma_w)
+{
+	COMBINE_DATA(fantjour_dma + offset);
+	if(!offset && ACCESSING_MSB32) {
+		UINT32 sa = fantjour_dma[1];
+		UINT32 da = ((fantjour_dma[3] & 0xffff) << 16) | ((fantjour_dma[4] & 0xffff0000) >> 16);
+		UINT32 db = fantjour_dma[5];
+
+		UINT8 sz2 = fantjour_dma[0] >> 16;
+		UINT8 mode = fantjour_dma[0] >> 24;
+		UINT32 x   = fantjour_dma[6];
+		UINT32 i1, i2;
+
+		if(mode == 0x93)
+			for(i1=0; i1 <= sz2; i1++)
+				for(i2=0; i2 < db; i2+=4) {
+					/* program_read_dword program_write_dword */
+					cpu_writemem32bedw_dword(da, cpu_readmem32bedw_dword(sa) ^ x); /* correct.?? */
+					da += 4;
+					sa += 4;
+				}
+		else if(mode == 0x8f)
+			for(i1=0; i1 <= sz2; i1++)
+				for(i2=0; i2 < db; i2+=4) {
+					cpu_writemem32bedw_dword(da, x); /* correct.?? */
+					da += 4;
+				}
+	}
+}
+
 static DRIVER_INIT(konamigx)
 {
 #define BPP5  1
@@ -3308,7 +3349,7 @@ static DRIVER_INIT(konamigx)
 		konamigx_cfgport = 13;
 	}
 
-	else if (!strcmp(Machine->gamedrv->name, "gokuparo") || !strcmp(Machine->gamedrv->name, "fantjour"))
+	else if (!strcmp(Machine->gamedrv->name, "gokuparo"))
 	{
 		#if GX_SKIPIDLE
 			ADD_SKIPPER32(0x2a0a66, 0xc00000, 0xd400, 0xd400, 0, 0xffff0000)
@@ -3316,6 +3357,17 @@ static DRIVER_INIT(konamigx)
 
 		readback = BPP5;
 		konamigx_cfgport = 7;
+	}
+	
+	else if (!strcmp(Machine->gamedrv->name, "fantjour"))
+	{
+		#if GX_SKIPIDLE
+			ADD_SKIPPER32(0x2a0a66, 0xc00000, 0xd400, 0xd400, 0, 0xffff0000)
+		#endif
+
+		readback = BPP5;
+		konamigx_cfgport = 7;
+		fantjour_dma_install(); /* protection */
 	}
 
 	else if (!strcmp(Machine->gamedrv->name, "puzldama"))
@@ -3496,6 +3548,7 @@ GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", 
 GAMEX( 1994, le2,      konamigx, le2,      le2,      konamigx, ROT0, "Konami", "Lethal Enforcers II - Gun Fighters (ver EAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, le2u,     le2,      le2,      le2_flip, konamigx, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers II - Gun Fighters (ver UAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, gokuparo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Gokujyou Parodius (ver JAD)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1994, fantjour, gokuparo, konamigx, gokuparo, konamigx, ROT0, "Konami", "Fantastic Journey", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, puzldama, konamigx, konamigx, puzldama, konamigx, ROT0, "Konami", "Taisen Puzzle-dama (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tbyahhoo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Twin Bee Yahhoo! (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tkmmpzdm, konamigx, konamigx_6bpp, puzldama, konamigx, ROT0, "Konami", "Tokimeki Memorial Taisen Puzzle-dama (ver JAB)", GAME_IMPERFECT_GRAPHICS )
@@ -3507,7 +3560,6 @@ GAMEX( 1996, tokkae,   konamigx, konamigx_6bpp, puzldama, konamigx, ROT0, "Konam
 GAMEX( 1996, salmndr2, konamigx, konamigx_6bpp_2, gokuparo, konamigx, ROT0, "Konami", "Salamander 2 (ver JAA)", GAME_IMPERFECT_GRAPHICS|GAME_UNEMULATED_PROTECTION )
 
 /* these games are unplayable due to protection (winspike has the same FPGA protection as the type 4 games) */
-GAMEX( 1994, fantjour, gokuparo, konamigx, gokuparo, konamigx, ROT0, "Konami", "Fantastic Journey", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION )
 GAMEX( 1997, winspike, konamigx, winspike, konamigx, konamigx, ROT0, "Konami", "Winning Spike (ver JAA)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 
 
@@ -3520,3 +3572,4 @@ GAMEX( 1996, vsnetscr, konamigx, gxtype4, type3, konamigx, ROT0, "Konami", "Vers
 GAMEX( 1996, rungun2,  konamigx, gxtype4, type3, konamigx, ROT0, "Konami", "Run and Gun 2 (ver UAA)", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION )
 GAMEX( 1996, slamdnk2, rungun2,  gxtype4, type3, konamigx, ROT0, "Konami", "Slam Dunk 2 (ver JAA)", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION )
 GAMEX( 1996, rushhero, konamigx, gxtype4, type3, konamigx, ROT0, "Konami", "Rushing Heroes (ver UAB)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING  )
+
