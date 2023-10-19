@@ -386,18 +386,43 @@ static int snk_rot12( int which ){
 	int value = readinputport(which+1);
 	int joydir = value>>4;
 	static int old_joydir[2];
+	static int old_dial_select[2];
 	static int dial_select[2];
 
-	int delta = (joydir - old_joydir[which])&0xf;
-	old_joydir[which] = joydir;
-
-	if( delta<=7 && delta>=1 ){
-		if( dial_select[which]==12 ) dial_select[which] = 0;
-		else dial_select[which]++;
+	/* added to compensate for Guerilla War bug fix noted above.
+	** When dial_select is used to point to invalid 0xf0 (when set to 6),
+	** in the frame after dial select was set to 6,
+	** move to the next valid setting in the rotation
+	** the character was supposed to rotate to, 5 or 7
+	** which is used to point to 0x50 or 0x60 in dial_12.
+	*/
+	if ( dial_select[which] == 6 ){
+		if ( old_dial_select[which] < dial_select[which] ){
+			old_dial_select[which] = dial_select[which];
+			dial_select[which]++;
+		}
+		else {
+			old_dial_select[which] = dial_select[which];
+			dial_select[which]--;
+		}
 	}
-	else if( delta > 8 ){
-		if( dial_select[which]==0 ) dial_select[which] = 12;
-		else dial_select[which]--;
+	else {
+		int delta = (joydir - old_joydir[which])&0xf;
+		old_joydir[which] = joydir;
+		if( delta<=7 && delta>=1 ){
+			if( dial_select[which]==12 ) dial_select[which] = 0;
+			else {
+				old_dial_select[which] = dial_select[which];
+				dial_select[which]++;
+			}
+		}
+		else if( delta > 8 ){
+			if( dial_select[which]==0 ) dial_select[which] = 12;
+			else {
+				old_dial_select[which] = dial_select[which];
+				dial_select[which]--;
+			}
+		}
 	}
 
 	return (value&0xf) | dial_12[dial_select[which]];
