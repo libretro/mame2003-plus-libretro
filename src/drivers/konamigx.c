@@ -3273,6 +3273,43 @@ void fantjour_dma_install()
 	memset(fantjour_dma, 0, sizeof(fantjour_dma));
 }
 
+
+/* potentially misaligned 32-bit reads with a 32-bit data bus (and 24-bit address bus) */
+static data32_t readlong_a24_d32(offs_t address)
+{
+	data32_t result;
+
+	if (!(address & 3))
+		return cpu_readmem24bedw_dword(address);
+	else if (!(address & 1))
+	{
+		result = cpu_readmem24bedw_word(address) << 16;
+		return result | cpu_readmem24bedw_word(address + 2);
+	}
+	result = cpu_readmem24bedw(address) << 24;
+	result |= cpu_readmem24bedw_word(address + 1) << 8;
+	return result | cpu_readmem24bedw(address + 3);
+}
+
+/* potentially misaligned 32-bit writes with a 32-bit data bus (and 24-bit address bus) */
+static void writelong_a24_d32(offs_t address, data32_t data)
+{
+	if (!(address & 3))
+	{
+		cpu_writemem24bedw_dword(address, data);
+		return;
+	}
+	else if (!(address & 1))
+	{
+		cpu_writemem24bedw_word(address, data >> 16);
+		cpu_writemem24bedw_word(address + 2, data);
+		return;
+	}
+	cpu_writemem24bedw(address, data >> 24);
+	cpu_writemem24bedw_word(address + 1, data >> 8);
+	cpu_writemem24bedw(address + 3, data);
+}
+
 WRITE32_HANDLER(fantjour_dma_w)
 {
 	COMBINE_DATA(fantjour_dma + offset);
@@ -3290,14 +3327,14 @@ WRITE32_HANDLER(fantjour_dma_w)
 			for(i1=0; i1 <= sz2; i1++)
 				for(i2=0; i2 < db; i2+=4) {
 					/* program_read_dword program_write_dword */
-					cpu_writemem32bedw_dword(da, cpu_readmem32bedw_dword(sa) ^ x); /* correct.?? */
+					 writelong_a24_d32(da, readlong_a24_d32(sa) ^ x); /* correct.?? */
 					da += 4;
 					sa += 4;
 				}
 		else if(mode == 0x8f)
 			for(i1=0; i1 <= sz2; i1++)
 				for(i2=0; i2 < db; i2+=4) {
-					cpu_writemem32bedw_dword(da, x); /* correct.?? */
+					 writelong_a24_d32(da, x); /* correct.?? */
 					da += 4;
 				}
 	}
