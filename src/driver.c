@@ -3949,6 +3949,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( puzldama )	/* GX315 (c) 1994 (Japan) */
 	DRIVER( gokuparo )	/* GX321 (c) 1994 (Japan) */
 	DRIVER( fantjour )	/* GX321 */
+	DRIVER( dragoona )
 	DRIVER( dragoonj )	/* GX417 (c) 1995 (Japan) */
 	DRIVER( tbyahhoo )	/* GX424 (c) 1995 (Japan) */
 	DRIVER( tkmmpzdm )	/* GX515 (c) 1995 (Japan) */
