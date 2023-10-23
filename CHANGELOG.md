@@ -365,6 +365,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
 * DJ Boy - Romset `djboy`
+* Dragon Ball Z V.R.V.S. - Romset `dbzvrvs`
 * Driving Force (galaxian hardware) - Romset `drivfrcg` - colors fixed
 * Domino Man - Romset `domino`
 * Dragon World - Romset `drgnwrld`
@@ -373,6 +374,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Eight Ball Action (Pacman conversion) - Romset `8bpm` - colors fixed
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
 * F1 Super Lap (Japan) - Romset `f1lapj`
+* Fantastic Journey - Romset `fanjour`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Find Out - Romset `findout` - colors fixed
 * Fire Barrel - Romset `firebarr`
@@ -973,4 +975,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed WWF Superstars bad sprites with some of Randy Macho Man Savage moves eg back suplex etc etc [MAMEDev, arcadez]
 * Hacked around some game breaking protection calls in Solomon's Key which could make levels unplayable [MAMEDEv, arcadez]
 * Added Maze Invaders Atari prototype to the centipede driver [MAMEDEv, arcadez]
+* Fixed Dragonball Z VRVS in the system32.c driver and Fantastic Journey in the konamigx.c driver [grant2258, arcadez]
+* Updated the romset for Pack N' Bang Bang to use the final released version rather than the unfinished prototype [arcadez]
+* Added the English language version of Dragon Might to the konamigx.c driver [arcadez, grant2258]
 
