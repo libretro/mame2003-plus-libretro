@@ -77,8 +77,7 @@
 data16_t *seta2_vregs;
 
 static int yoffset;
-int xpos;
-xpos = 0;
+int xpos = 0;
 
 /***************************************************************************
 
