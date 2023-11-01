@@ -98,8 +98,7 @@ static struct
 	/* C220-C2DF */	struct psg_control psg_control[PSG_CHANNELS];
 	/* C1A0-C21F */	struct effects_control effects_control[EFFECTS_CHANNELS];
 } NMK004_state;
-				int res;
-				res = 0;
+				int res = 0;
 
 #define SAMPLE_TABLE_0		0xefe0
 #define SAMPLE_TABLE_1		0xefe2
