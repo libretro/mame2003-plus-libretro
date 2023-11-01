@@ -133,6 +133,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mighty Warriors
 * Mirax
 * Mobile Suit Gundam Final Shooting
+* Monsters World (Bootleg Of Super Pang)
 * Monster Maulers
 * More More
 * Mortal Race
@@ -978,4 +979,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed Dragonball Z VRVS in the system32.c driver and Fantastic Journey in the konamigx.c driver [grant2258, arcadez]
 * Updated the romset for Pack N' Bang Bang to use the final released version rather than the unfinished prototype [arcadez]
 * Added the English language version of Dragon Might to the konamigx.c driver [arcadez, grant2258]
+* Added support for Monsters World (Bootleg Of Super Pang) to the mitchell.c driver [arcadez]
+* Fixed some graphical niggles in Cannon Dancer / Osman such as some objects didn't move previously eg trucks on final level [FBN Dev, MAMEDev, arcadez]
 
