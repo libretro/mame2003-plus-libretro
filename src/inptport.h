@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "input.h"
+#include <time.h>
 
 /* input ports handling */
 
@@ -33,6 +34,7 @@ struct InputPort
 	UINT32 type;			/* see defines below */
 	const char *name;		/* name to display */
 	InputSeq seq;                  	/* input sequence affecting the input bits */
+	struct timespec time_last_used_press;   /* use with IPT_DIAL and IPT_DIAL_V to avoid one press looking like two */
 };
 
 #define IP_ACTIVE_HIGH 0x0000
