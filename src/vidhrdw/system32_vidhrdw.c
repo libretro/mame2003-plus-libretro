@@ -1621,41 +1621,40 @@ VIDEO_UPDATE( system32 ) {
 		const pen_t *paldata = &gfx->colortable[0];
 		static pen_t palcopy[MAX_COLOURS];
 		static int copy_videoram[57505];
+		static bool enable_copy = true;
+		bool ready_state = true;
+		int i;
 
-		if (paldata[0] == 16316664 && palcopy[0] != 16316664) /* copy palette and videoram for radr in ready state */
+		if (enable_copy)
 		{
-			int i;
-			for(i = 0; i < MAX_COLOURS; i++)
-				 palcopy[i] = paldata[i];
+			for(i = 0; i < MAX_COLOURS; i++) {
+				if (palcopy[i] != paldata[i])
+					ready_state = false;
+				palcopy[i] = paldata[i];
+			}
 
-			for(i = 0; i < 57505; i++)
+			for(i = 0; i < 57505; i++) {
+				if (copy_videoram[i] != sys32_videoram[i])
+					ready_state = false;
 				copy_videoram[i] = sys32_videoram[i];
+			}
 		}
+
+		if (ready_state && enable_copy)
+			enable_copy = false;
     
-		for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
-		{
-			destline = (UINT32 *)(bitmap->line[ycnt]);
+		if (ready_state) {
+			for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
+				destline = (UINT32 *)(bitmap->line[ycnt]);
 
-
-			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
-			{
-				int data2;
-
-				if (!strcmp(Machine->gamedrv->name,"radr")) /* replace with copies */
-				{
-					data2 = copy_videoram[256*ycnt+xcnt];
+				for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ ) {
+					int data2 = copy_videoram[256*ycnt+xcnt];
 					destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
 					destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 				}
-				else if (!strcmp(Machine->gamedrv->name,"radm"))
-				{
-					data2 = sys32_videoram[256*ycnt+xcnt];
-					destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-					destline[xcnt*2] = paldata[(data2 &0xff)+(0x100*0x1d)];
-				}
 			}
+    }
 
-		}
 	}
 
 
