@@ -1609,8 +1609,8 @@ VIDEO_UPDATE( system32 ) {
 	fillbitmap(bitmap, 0, 0);
 
 	/* Rad Rally (title screen) and Rad Mobile (Winners don't use drugs) use a bitmap ... */
-	/* i think this is wrong tho, rad rally enables it on the 2nd title screen when the
-	   data isn't complete */
+	/* experimental, we copy the data once the datastream stabilizes, then continue to    */
+  /* use this copy to correctly draw the bitmap on each sequential call */
 
 	if (sys32_videoram[0x01FF00/2] & 0x0800)  /* wrong? */
 	{
