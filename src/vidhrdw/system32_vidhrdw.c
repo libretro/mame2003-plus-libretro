@@ -1612,10 +1612,10 @@ VIDEO_UPDATE( system32 ) {
 	/* experimental, we copy the data once the datastream stabilizes, then continue to    */
   /* use this copy to correctly draw the bitmap on each sequential call */
 
-	if (sys32_videoram[0x01FF00/2] & 0x0800)  /* wrong? */
 	{
 		int xcnt, ycnt;
 		static UINT32 *destline;
+    UINT32 bitmap_data [224][320];
 		struct GfxElement *gfx=Machine->gfx[0];
 
 		const pen_t *paldata = &gfx->colortable[0];
@@ -1649,10 +1649,20 @@ VIDEO_UPDATE( system32 ) {
 
 				for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ ) {
 					int data2 = copy_videoram[256*ycnt+xcnt];
-					destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-					destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
+					destline[xcnt*2+1] = bitmap_data[ycnt][xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
+					destline[xcnt*2] = bitmap_data[ycnt][xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 				}
 			}
+for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
+  printf ("{ ");
+   for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ ){
+     if ( xcnt == 319)
+       printf ("%i",bitmap_data[ycnt][xcnt]);
+     else
+      printf ("%i,",bitmap_data[ycnt][xcnt]);
+   }
+      printf (" },\n");
+}
     }
 
 	}
