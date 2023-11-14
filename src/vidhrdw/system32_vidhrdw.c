@@ -1649,19 +1649,21 @@ VIDEO_UPDATE( system32 ) {
 
 				for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ ) {
 					int data2 = copy_videoram[256*ycnt+xcnt];
-					destline[xcnt*2+1] = bitmap_data[ycnt][xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-					destline[xcnt*2] = bitmap_data[ycnt][xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
+          bitmap_data[ycnt][xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
+          bitmap_data[ycnt][xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
+					destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
+					destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 				}
 			}
 for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
-  printf ("{ ");
+  logerror ("{ ");
    for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ ){
      if ( xcnt == 319)
-       printf ("%i",bitmap_data[ycnt][xcnt]);
+       logerror ("%i",bitmap_data[ycnt][xcnt]);
      else
-      printf ("%i,",bitmap_data[ycnt][xcnt]);
+      logerror ("%i,",bitmap_data[ycnt][xcnt]);
    }
-      printf (" },\n");
+      logerror (" },\n");
 }
     }
 
