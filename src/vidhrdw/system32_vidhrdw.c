@@ -1657,14 +1657,14 @@ VIDEO_UPDATE( system32 ) {
 				}
 			}
 for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
-  logerror ("{ ");
+  log_cb(RETRO_LOG_INFO,"{ ");
    for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ ){
      if ( xcnt == 319)
-       logerror ("%i",bitmap_data[ycnt][xcnt]);
+       log_cb(RETRO_LOG_INFO,"%i",bitmap_data[ycnt][xcnt]);
      else
-      logerror ("%i,",bitmap_data[ycnt][xcnt]);
+      log_cb(RETRO_LOG_INFO,"%i,",bitmap_data[ycnt][xcnt]);
    }
-      logerror (" },\n");
+      log_cb(RETRO_LOG_INFO," },\n");
 }
     }
 
