@@ -1612,6 +1612,7 @@ VIDEO_UPDATE( system32 ) {
 	/* experimental, we copy the data once the datastream stabilizes, then continue to    */
   /* use this copy to correctly draw the bitmap on each sequential call */
 
+	if (sys32_videoram[0x01FF00/2] & 0x0800)  /* wrong? */
 	{
 		int xcnt, ycnt;
 		static UINT32 *destline;
