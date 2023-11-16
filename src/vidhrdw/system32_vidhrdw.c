@@ -1628,6 +1628,8 @@ VIDEO_UPDATE( system32 ) {
 		if (strcmp(Machine->gamedrv->name,"radr") && strcmp(Machine->gamedrv->name,"radm"))
 			{ enable_copy = false; ready_state = false; }
 
+		if (!getcurrentframe() && !enable_copy) enable_copy = true;
+
 		if (enable_copy)
 		{
 			for(i = 0; i < MAX_COLOURS; i++) {
