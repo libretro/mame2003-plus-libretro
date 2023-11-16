@@ -1616,12 +1616,11 @@ VIDEO_UPDATE( system32 ) {
 	{
 		int xcnt, ycnt;
 		static UINT32 *destline;
-    UINT32 bitmap_data [224][320];
 		struct GfxElement *gfx=Machine->gfx[0];
 
 		const pen_t *paldata = &gfx->colortable[0];
-		static pen_t palcopy[MAX_COLOURS];
-		static int copy_videoram[57505];
+		static pen_t palcopy[MAX_COLOURS] = { 0 };
+		static int copy_videoram[57505] = { 0 };
 		static bool enable_copy = true;
 		bool ready_state = true;
 		int i;
@@ -1650,23 +1649,11 @@ VIDEO_UPDATE( system32 ) {
 
 				for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ ) {
 					int data2 = copy_videoram[256*ycnt+xcnt];
-          bitmap_data[ycnt][xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-          bitmap_data[ycnt][xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 					destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
 					destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 				}
 			}
-for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
-  log_cb(RETRO_LOG_INFO,"{ ");
-   for ( xcnt = 0 ; xcnt < 320 ; xcnt ++ ){
-     if ( xcnt == 319)
-       log_cb(RETRO_LOG_INFO,"%i",bitmap_data[ycnt][xcnt]);
-     else
-      log_cb(RETRO_LOG_INFO,"%i,",bitmap_data[ycnt][xcnt]);
-   }
-      log_cb(RETRO_LOG_INFO," },\n");
-}
-    }
+		}
 
 	}
 
