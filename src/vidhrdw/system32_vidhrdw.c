@@ -1625,10 +1625,9 @@ VIDEO_UPDATE( system32 ) {
 		bool ready_state = true;
 		int i;
 
+		/* filter out games without a known bitmap */
 		if (strcmp(Machine->gamedrv->name,"radr") && strcmp(Machine->gamedrv->name,"radm"))
 			{ enable_copy = false; ready_state = false; }
-
-		if (!cpu_getcurrentframe() && !enable_copy) enable_copy = true;
 
 		if (enable_copy)
 		{
