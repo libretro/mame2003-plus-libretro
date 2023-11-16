@@ -1625,6 +1625,9 @@ VIDEO_UPDATE( system32 ) {
 		bool ready_state = true;
 		int i;
 
+		if (strcmp(Machine->gamedrv->name,"radr") && strcmp(Machine->gamedrv->name,"radm"))
+			{ enable_copy = false; ready_state = false; }
+
 		if (enable_copy)
 		{
 			for(i = 0; i < MAX_COLOURS; i++) {
@@ -1642,9 +1645,6 @@ VIDEO_UPDATE( system32 ) {
 
 		if (ready_state && enable_copy)
 			enable_copy = false;
-
-		if (ready_state && palcopy[0]==0)
-			ready_state = false;
 
 		if (ready_state) {
 			for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
