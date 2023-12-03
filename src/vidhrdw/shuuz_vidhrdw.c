@@ -109,6 +109,7 @@ VIDEO_UPDATE( shuuz )
 			UINT16 *mo = (UINT16 *)mobitmap->base + mobitmap->rowpixels * y;
 			UINT16 *pf = (UINT16 *)bitmap->base + bitmap->rowpixels * y;
 			for (x = rectlist.rect->min_x; x <= rectlist.rect->max_x; x++)
+			{	
 				if (mo[x])
 				{
 					/* verified from the GALs on the real PCB; equations follow
@@ -125,20 +126,28 @@ VIDEO_UPDATE( shuuz )
 					 *		   +PFS7*(LBD7&LBD6)*!M3*!O13
 					 *
 					 */
-					int o13 = ((pf[x] & 0xf0) == 0xf0);
-					int mopf = 0;
 
-					/* compute the MO/PF signal */
-					if ((!(pf[x] & 0x80) && ((mo[x] & 0xc0) != 0xc0) && ((mo[x] & 0x0e) != 0x00) && !o13) ||
-						((pf[x] & 0x80) && ((mo[x] & 0xc0) == 0xc0) && ((mo[x] & 0x0e) != 0x00) && !o13))
-						mopf = 1;
+				    /* This is based on observations, and not verified against schematics and GAL equations.
+					 * TODO:
+					 * Locate schematics for (or trace out) video mixing section.
+					 * Obtain equations for video mixing GALs.
+					 */
+					int o13 = (pf[x] & 0xf0) == 0xf0;
+					int mopf = ((pf[x] & 0x80) ? ((mo[x] & 0xc0) == 0xc0) : ((mo[x] & 0xc0) != 0xc0)) && !o13;
 
-					/* if MO/PF is 1, we draw the MO */
+					/* if MO/PF is asserted, we draw the MO */
 					if (mopf)
-						pf[x] = mo[x];
+                    {
+						if (mo[x] & 0x0e)       /* solid colors */
+							pf[x] = mo[x];
+						else if (mo[x] & 0x01)  /* shadows */
+						    pf[x] |= 0x200;
+				    }
 
 					/* erase behind ourselves */
 					mo[x] = 0;
 				}
+				
+		    }	
 		}
 }
