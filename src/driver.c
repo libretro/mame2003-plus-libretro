@@ -6083,7 +6083,8 @@ Other Sun games
 	DRIVER( espgal )
 
 	/* Sega Model 1 Hardware */
-	DRIVER( vf )
+	DRIVER( vr ) /* (c) 1992 Sega */
+	DRIVER( vf ) /* (c) 1993 Sega */
 
   /* Oriental Soft */
 	DRIVER( 1945kiii )  /* (c) 2000 Oriental */
