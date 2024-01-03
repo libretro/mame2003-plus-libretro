@@ -348,22 +348,6 @@ static void f14(void)
 	float b = fifoin_pop_f();
 	float c = fifoin_pop_f();
 	float d = fifoin_pop_f();
-	int r = 0;
-	logerror("TGP f14 %f, %f, %f, %f (%x)\n", a, b, c, d, activecpu_get_pc());
-	/*	fprintf(stderr, "TGP f14 %f, %f, %f, %f (%x)\n", a, b, c, d, activecpu_get_pc()); */
-
-	switch(activecpu_get_pc()) {
-	case 0xc7eea: r=1; break; /* stars */
-	case 0xc7f19: r=2; break; /* stars too, ties? */
-	case 0xcac91: r=3; break; /* visee??? */
-	case 0xc2ad0: r=4; break;
-	}
-
-	if(r == 4) {
-		cmat[9] += mame_rand();
-		cmat[10] += mame_rand();
-		cmat[11] += mame_rand();
-	}
 
 	next_fn();
 }
@@ -425,16 +409,6 @@ static void matrix_trans(void)
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
 	float c = fifoin_pop_f();
-
-	logerror("TGP matrix_trans (%f, %f, %f) (%x)\n", a, b, c, activecpu_get_pc());
-	if(0 && activecpu_get_pc() == 0xfeeaa5)
-		/*		fprintf(stderr, "TGP matrix_trans (%f, %f, %f) (%x)\n", a, b, c, activecpu_get_pc()); */
-		a = 0;
-
-	if(activecpu_get_pc() == 0x22f59) {
-		next_fn();
-		return;
-	}
 
 	cmat[ 9] += cmat[0]*a+cmat[3]*b+cmat[6]*c;
 	cmat[10] += cmat[1]*a+cmat[4]*b+cmat[7]*c;
