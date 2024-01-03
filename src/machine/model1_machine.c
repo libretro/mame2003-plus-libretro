@@ -197,7 +197,7 @@ static void fdiv(void)
 {
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
-    float r = !b ? 0 : a * (1/b);
+	float r = !b ? 1e39 : a/b;
 	logerror("TGP fdiv %f/%f=%f (%x)\n", a, b, r, activecpu_get_pc());
 	fifoout_push_f(r);
 	next_fn();
@@ -317,7 +317,7 @@ static void normalize(void)
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
 	float c = fifoin_pop_f();
-    float n = (a*a+b*b+c*c) / sqrt(a*a+b*b+c*c);
+	float n = sqrt(a*a+b*b+c*c);
 	logerror("TGP normalize %f, %f, %f (%x)\n", a, b, c, activecpu_get_pc());
 	fifoout_push_f(a/n);
 	fifoout_push_f(b/n);
@@ -348,6 +348,22 @@ static void f14(void)
 	float b = fifoin_pop_f();
 	float c = fifoin_pop_f();
 	float d = fifoin_pop_f();
+	int r = 0;
+	logerror("TGP f14 %f, %f, %f, %f (%x)\n", a, b, c, d, activecpu_get_pc());
+	/*	fprintf(stderr, "TGP f14 %f, %f, %f, %f (%x)\n", a, b, c, d, activecpu_get_pc()); */
+
+	switch(activecpu_get_pc()) {
+	case 0xc7eea: r=1; break; /* stars */
+	case 0xc7f19: r=2; break; /* stars too, ties? */
+	case 0xcac91: r=3; break; /* visee??? */
+	case 0xc2ad0: r=4; break;
+	}
+
+	if(r == 4) {
+		cmat[9] += mame_rand();
+		cmat[10] += mame_rand();
+		cmat[11] += mame_rand();
+	}
 
 	next_fn();
 }
@@ -410,6 +426,16 @@ static void matrix_trans(void)
 	float b = fifoin_pop_f();
 	float c = fifoin_pop_f();
 
+	logerror("TGP matrix_trans (%f, %f, %f) (%x)\n", a, b, c, activecpu_get_pc());
+	if(0 && activecpu_get_pc() == 0xfeeaa5)
+		/*		fprintf(stderr, "TGP matrix_trans (%f, %f, %f) (%x)\n", a, b, c, activecpu_get_pc()); */
+		a = 0;
+
+	if(activecpu_get_pc() == 0x22f59) {
+		next_fn();
+		return;
+	}
+
 	cmat[ 9] += cmat[0]*a+cmat[3]*b+cmat[6]*c;
 	cmat[10] += cmat[1]*a+cmat[4]*b+cmat[7]*c;
 	cmat[11] += cmat[2]*a+cmat[5]*b+cmat[8]*c;
@@ -437,9 +463,9 @@ static void matrix_scale(void)
 static void matrix_rotx(void)
 {
 	INT16 a = fifoin_pop();
-	float s = tsin(a);
-	float c = tcos(a);
-	float t1, t2;
+	double s = tsin(a);
+	double c = tcos(a);
+	double t1, t2;
 	logerror("TGP matrix_rotx %d (%x)\n", a, activecpu_get_pc());
 	t1 = cmat[3];
 	t2 = cmat[6];
@@ -459,9 +485,9 @@ static void matrix_rotx(void)
 static void matrix_roty(void)
 {
 	INT16 a = fifoin_pop();
-	float s = tsin(a);
-	float c = tcos(a);
-	float t1, t2;
+	double s = tsin(a);
+	double c = tcos(a);
+	double t1, t2;
 
 	logerror("TGP matrix_roty %d (%x)\n", a, activecpu_get_pc());
 	t1 = cmat[6];
@@ -482,9 +508,9 @@ static void matrix_roty(void)
 static void matrix_rotz(void)
 {
 	INT16 a = fifoin_pop();
-	float s = tsin(a);
-	float c = tcos(a);
-	float t1, t2;
+	double s = tsin(a);
+	double c = tcos(a);
+	double t1, t2;
 
 	logerror("TGP matrix_rotz %d (%x)\n", a, activecpu_get_pc());
 	t1 = cmat[0];
@@ -599,7 +625,7 @@ static void distance3(void)
 	a -= d;
 	b -= e;
 	c -= f;
-    fifoout_push_f((a*a+b*b+c*c)/sqrt(a*a+b*b+c*c));
+	fifoout_push_f(sqrt(a*a+b*b+c*c));
 	next_fn();
 }
 
@@ -692,7 +718,7 @@ static void xyz2rqf(void)
 	float c = fifoin_pop_f();
 	float norm;
 	logerror("TGP xyz2rqf %f, %f, %f (%x)\n", a, b, c, activecpu_get_pc());
-    fifoout_push_f((a*a+b*b+c*c)/sqrt(a*a+b*b+c*c));
+	fifoout_push_f(sqrt(a*a+b*b+c*c));
 	norm = sqrt(a*a+c*c);
 	if(!c) {
 		if(a>=0)
@@ -818,16 +844,11 @@ static void f45(void)
 
 static void vlength(void)
 {
-	float a = fifoin_pop_f() - fifoin_pop_f();
-	float b = fifoin_pop_f() - fifoin_pop_f();
-	float c = fifoin_pop_f() - fifoin_pop_f();
+	float a = fifoin_pop_f();
+	float b = fifoin_pop_f();
+	float c = fifoin_pop_f();
 	logerror("TGP vlength %f, %f, %f (%x)\n", a, b, c, activecpu_get_pc());
-
-    a = (a*a+b*b+c*c);
-	b = 1/sqrt(a);
-	c = a * b;
-	c -= fifoin_pop_f();
-	fifoout_push_f(c);
+	fifoout_push_f(sqrt(a*a+b*b+c*c));
 	next_fn();
 }
 
@@ -851,7 +872,7 @@ static void track_read_info(void)
 	logerror("TGP track_read_info %d (%x)\n", a, activecpu_get_pc());
 
 	offd = tgp_data[0x20+tgp_vr_select] + 16*a;
-	fifoout_push(tgp_data[offd+15]);
+	fifoout_push(tgp_data[a+15]);
 	next_fn();
 }
 
@@ -1102,7 +1123,7 @@ static void col_testpt(void)
 	logerror("TGP col_testpt %f, %f (%x)\n", a, b, activecpu_get_pc());
 	x = a - tgp_vr_circx;
 	y = b - tgp_vr_circy;
-    fifoout_push_f(((x*x+y*y)/sqrt(x*x+y*y)) - tgp_vr_circrad);
+	fifoout_push_f(sqrt(x*x+y*y) - tgp_vr_circrad);
 	next_fn();
 }
 
@@ -1167,7 +1188,7 @@ static void distance(void)
 	logerror("TGP distance (%f, %f), (%f, %f) (%x)\n", a, b, c, d, activecpu_get_pc());
 	c -= a;
 	d -= b;
-    fifoout_push_f((c*c+d*d)/sqrt(c*c+d*d));
+	fifoout_push_f(sqrt(c*c+d*d));
 	next_fn();
 }
 
