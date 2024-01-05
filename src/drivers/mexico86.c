@@ -656,6 +656,15 @@ static MACHINE_DRIVER_START( kicknrun )
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( kikikai )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(kicknrun)
+
+	/* video hardware */
+	MDRV_VIDEO_UPDATE(kikikai)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( mexico86 )
 
 	/* basic machine hardware */
@@ -684,41 +693,6 @@ static MACHINE_DRIVER_START( mexico86 )
 
 	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MDRV_VIDEO_UPDATE(mexico86)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-MACHINE_DRIVER_END
-
-
-static MACHINE_DRIVER_START( kikikai )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)      /* 6 MHz??? */
-	MDRV_CPU_MEMORY(kicknrun_readmem,kicknrun_writemem)
-	MDRV_CPU_VBLANK_INT(kicknrun_interrupt, 1) /* IRQs triggered by the MCU */
-
-	MDRV_CPU_ADD(Z80, 6000000)      /* 6 MHz??? */
-	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-
-	MDRV_CPU_ADD(M6801,4000000/2)	/* xtal is 4MHz, I think it's divided by 2 internally */
-	MDRV_CPU_MEMORY(m6801_readmem,m6801_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)  /* frames per second, vblank duration */
-	MDRV_INTERLEAVE(100)    /* 100 CPU slices per frame - an high value to ensure proper */
-							/* synchronization of the CPUs */
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-
-	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MDRV_VIDEO_UPDATE(kikikai)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
