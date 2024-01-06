@@ -32,10 +32,6 @@ if (Machine->drv->cpu[2].cpu_type != CPU_DUMMY)
 /* mexico 86 */
 cpu_set_reset_line(2,(data & 2) ? CLEAR_LINE : ASSERT_LINE);
 }
-else
-{
-  
-}
   
 }
 
