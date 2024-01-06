@@ -25,6 +25,7 @@ Notes:
 extern unsigned char *mexico86_protection_ram;
 extern unsigned char *kicknrun_sharedram;
 WRITE_HANDLER( kicknrun_f008_w );
+WRITE_HANDLER( mexico86_f008_w );
 INTERRUPT_GEN( kicknrun_interrupt );
 INTERRUPT_GEN( mexico86_m68705_interrupt );
 READ_HANDLER( mexico86_68705_portA_r );
@@ -209,7 +210,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xe800, 0xe8ff, MWA_RAM, &mexico86_protection_ram },  /* shared with mcu */
 	{ 0xe900, 0xefff, MWA_RAM },
 	{ 0xf000, 0xf000, mexico86_bankswitch_w },  /* program and gfx ROM banks */
-	{ 0xf008, 0xf008, kicknrun_f008_w },    /* cpu reset lines + other unknown stuff */
+	{ 0xf008, 0xf008, mexico86_f008_w },    /* cpu reset lines + other unknown stuff */
 	{ 0xf018, 0xf018, MWA_NOP },    /* watchdog_reset_w }, */
 	{ 0xf800, 0xffff, MWA_RAM },    /* communication ram */
 MEMORY_END
