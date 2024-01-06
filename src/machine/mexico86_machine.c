@@ -24,6 +24,21 @@ WRITE_HANDLER( kicknrun_f008_w )
 	cpu_set_reset_line(2,(data & 2) ? CLEAR_LINE : ASSERT_LINE);
 }
 
+WRITE_HANDLER( mexico86_f008_w )
+{
+cpu_set_reset_line(1,(data & 4) ? CLEAR_LINE : ASSERT_LINE);
+if (Machine->drv->cpu[2].cpu_type != CPU_DUMMY)
+{
+/* mexico 86 */
+cpu_set_reset_line(2,(data & 2) ? CLEAR_LINE : ASSERT_LINE);
+}
+else
+{
+  
+}
+  
+}
+
 
 READ_HANDLER( kicknrun_sharedram_r )
 {
