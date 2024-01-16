@@ -404,10 +404,12 @@ INPUT_PORTS_START( tempest )
 	PORT_START /*TEMPEST_KNOB_P1_PORT*/
 	/* This is the Tempest spinner input. It only uses 4 bits. */
 	PORT_ANALOG( 0x0f, 0x00, IPT_DIAL | IPF_PLAYER1, 25, 20, 0, 0)
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START /*TEMPEST_KNOB_P2_PORT*/
 	/* This is the Tempest spinner input. It only uses 4 bits. */
 	PORT_ANALOG( 0x0f, 0x00, IPT_DIAL | IPF_PLAYER2, 25, 20, 0, 0)
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START /*TEMPEST_BUTTONS_P1_PORT*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
