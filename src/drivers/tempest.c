@@ -180,13 +180,29 @@
 #include "vidhrdw/vector.h"
 #include "machine/atari_vg.h"
 
-
+static UINT8 tempest_player_select;
+#define TEMPEST_KNOB_P1_PORT	  5
+#define TEMPEST_KNOB_P2_PORT	  6
+#define TEMPEST_BUTTONS_P1_PORT	  7
+#define TEMPEST_BUTTONS_P2_PORT	  8
 
 /*************************************
  *
  *	Input ports
  *
  *************************************/
+
+static int tempest_knob_r()
+{
+	return readinputport( (tempest_player_select == 0) ?
+										TEMPEST_KNOB_P1_PORT : TEMPEST_KNOB_P2_PORT);
+}
+
+static int tempest_buttons_r()
+{
+	return readinputport( (tempest_player_select == 0) ?
+										TEMPEST_BUTTONS_P1_PORT : TEMPEST_BUTTONS_P2_PORT);
+}
 
 static READ_HANDLER( tempest_IN0_r )
 {
@@ -205,13 +221,13 @@ static READ_HANDLER( tempest_IN0_r )
 
 static READ_HANDLER( input_port_1_bit_r )
 {
-	return (readinputport(1) & (1 << offset)) ? 0 : 228;
+	return ((readinputport(1)+tempest_knob_r()) & (1 << offset)) ? 0 : 228;
 }
 
 
 static READ_HANDLER( input_port_2_bit_r )
 {
-	return (readinputport(2) & (1 << offset)) ? 0 : 228;
+	return ((readinputport(2)+tempest_buttons_r()) & (1 << offset)) ? 0 : 228;
 }
 
 
@@ -227,6 +243,7 @@ static WRITE_HANDLER( tempest_led_w )
 	set_led_status(0, ~data & 0x02);
 	set_led_status(1, ~data & 0x01);
 	/* FLIP is bit 0x04 */
+	tempest_player_select = data & 0x04;
 }
 
 
@@ -309,7 +326,7 @@ INPUT_PORTS_START( tempest )
 
 	PORT_START	/* IN1/DSW0 */
 	/* This is the Tempest spinner input. It only uses 4 bits. */
-	PORT_ANALOG( 0x0f, 0x00, IPT_DIAL, 25, 20, 0, 0)
+	PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_SPECIAL )
 	/* The next one is reponsible for cocktail mode.
 	 * According to the documentation, this is not a switch, although
 	 * it may have been planned to put it on the Math Box PCB, D/E2 )
@@ -330,8 +347,8 @@ INPUT_PORTS_START( tempest )
 	PORT_DIPNAME(  0x04, 0x04, "Rating" )
 	PORT_DIPSETTING(     0x04, "1, 3, 5, 7, 9" )
 	PORT_DIPSETTING(     0x00, "tied to high score" )
-	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_SPECIAL )
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_SPECIAL )
 	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -383,6 +400,26 @@ INPUT_PORTS_START( tempest )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x80, "5" )
+
+	PORT_START /*TEMPEST_KNOB_P1_PORT*/
+	/* This is the Tempest spinner input. It only uses 4 bits. */
+	PORT_ANALOG( 0x0f, 0x00, IPT_DIAL | IPF_PLAYER1, 25, 20, 0, 0)
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /*TEMPEST_KNOB_P2_PORT*/
+	/* This is the Tempest spinner input. It only uses 4 bits. */
+	PORT_ANALOG( 0x0f, 0x00, IPT_DIAL | IPF_PLAYER2, 25, 20, 0, 0)
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /*TEMPEST_BUTTONS_P1_PORT*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /*TEMPEST_BUTTONS_P2_PORT*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 
