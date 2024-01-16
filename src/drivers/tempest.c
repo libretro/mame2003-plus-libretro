@@ -192,13 +192,13 @@ static UINT8 tempest_player_select;
  *
  *************************************/
 
-static READ_HANDLER( tempest_knob_r )
+static int tempest_knob_r()
 {
 	return readinputport( (tempest_player_select == 0) ?
 										TEMPEST_KNOB_P1_PORT : TEMPEST_KNOB_P2_PORT);
 }
 
-static READ_HANDLER( tempest_buttons_r )
+static int tempest_buttons_r()
 {
 	return readinputport( (tempest_player_select == 0) ?
 										TEMPEST_BUTTONS_P1_PORT : TEMPEST_BUTTONS_P2_PORT);
@@ -221,13 +221,13 @@ static READ_HANDLER( tempest_IN0_r )
 
 static READ_HANDLER( input_port_1_bit_r )
 {
-	return (readinputport(1) & (1 << offset)) ? 0 : 228;
+	return ((readinputport(1)+tempest_knob_r()) & (1 << offset)) ? 0 : 228;
 }
 
 
 static READ_HANDLER( input_port_2_bit_r )
 {
-	return (readinputport(2) & (1 << offset)) ? 0 : 228;
+	return ((readinputport(2)+tempest_buttons_r()) & (1 << offset)) ? 0 : 228;
 }
 
 
@@ -326,7 +326,7 @@ INPUT_PORTS_START( tempest )
 
 	PORT_START	/* IN1/DSW0 */
 	/* This is the Tempest spinner input. It only uses 4 bits. */
-	PORT_BIT(0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_SPECIAL )
 	/* The next one is reponsible for cocktail mode.
 	 * According to the documentation, this is not a switch, although
 	 * it may have been planned to put it on the Math Box PCB, D/E2 )
@@ -347,7 +347,7 @@ INPUT_PORTS_START( tempest )
 	PORT_DIPNAME(  0x04, 0x04, "Rating" )
 	PORT_DIPSETTING(     0x04, "1, 3, 5, 7, 9" )
 	PORT_DIPSETTING(     0x00, "tied to high score" )
-	PORT_BIT(0x18, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT(0x18, IP_ACTIVE_LOW, IPT_SPECIAL )
 	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
