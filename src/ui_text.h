@@ -79,11 +79,11 @@ enum
 	UI_bookkeeping,
 	UI_inputspecific,
   UI_flush_current_cfg,
-  UI_flush_all_cfg,  
+  UI_flush_all_cfg,
 	UI_gameinfo,
 	UI_history,
   UI_resetgame,
-  UI_generate_xml_dat,  
+  UI_generate_xml_dat,
 	UI_returntogame,
 	UI_cheat,
 	UI_memorycard,
@@ -92,6 +92,10 @@ enum
 	UI_keyjoyspeed,
 	UI_reverse,
 	UI_sensitivity,
+#ifndef NO_FILTERED_POLL
+  UI_xwayjoy,
+  UI_lockout,
+#endif
 
 	/* stats */
 	UI_tickets,

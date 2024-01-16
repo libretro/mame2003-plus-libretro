@@ -146,7 +146,6 @@ enum { IPT_END=1,IPT_PORT,
 									/* useful e.g. for sone Test Mode dip switches. */
 #define IPF_REVERSE    0x00400000	/* By default, analog inputs like IPT_TRACKBALL increase */
 									/* when going right/up. This flag inverts them. */
-
 #define IPF_CENTER     0x00800000	/* always preload in->default, autocentering the STICK/TRACKBALL */
 
 #define IPF_CUSTOM_UPDATE 0x01000000 /* normally, analog ports are updated when they are accessed. */
@@ -156,10 +155,17 @@ enum { IPT_END=1,IPT_PORT,
 
 #define IPF_RESETCPU   0x02000000	/* when the key is pressed, reset the first CPU */
 
+#ifndef NO_FILTERED_POLL
+#define IPF_XWAYJOY    0x04000000 /* block detected analog key/joy just pressed for time UI_lockout */
+#define IPF_LOCKOUT_TIME  24 /* milliseconds button or simulated button's depressed state is ignored */
+#endif
 
 /* The "arg" field contains 4 bytes fields */
 #define IPF_SENSITIVITY(percent)	((percent & 0xff) << 8)
 #define IPF_DELTA(val)				((val & 0xff) << 16)
+#ifndef NO_FILTERED_POLL
+#define IPF_LOCKOUT(milliseconds)	((milliseconds & 0xff) << 8)
+#endif
 
 #define IP_GET_PLAYER(port) (((port)->type >> 16) & 7)
 #define IP_GET_IMPULSE(port) (((port)->type >> 8) & 0xff)
@@ -167,6 +173,10 @@ enum { IPT_END=1,IPT_PORT,
 #define IP_SET_SENSITIVITY(port,val) ((port)+1)->type = ((port+1)->type & 0xffff00ff)|((val&0xff)<<8)
 #define IP_GET_DELTA(port) ((((port)+1)->type >> 16) & 0xff)
 #define IP_SET_DELTA(port,val) ((port)+1)->type = ((port+1)->type & 0xff00ffff)|((val&0xff)<<16)
+#ifndef NO_FILTERED_POLL
+#define IP_GET_LOCKOUT(port) ((((port)+2)->type >> 8) & 0xff)
+#define IP_SET_LOCKOUT(port,val) ((port)+2)->type = ((port+2)->type & 0xffff00ff)|((val&0xff)<<8)
+#endif
 #define IP_GET_MIN(port) (((port)+1)->mask)
 #define IP_GET_MAX(port) (((port)+1)->default_value)
 #define IP_GET_CODE_OR1(port) ((port)->mask)
@@ -216,15 +226,47 @@ enum { IPT_END=1,IPT_PORT,
 	PORT_CODE(key,joy)
 
 /* analog input */
+#ifdef NO_FILTERED_POLL
 #define PORT_ANALOG(mask,default,type,sensitivity,delta,min,max) \
 	PORT_BIT(mask, default, type) \
 	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT },
+/* #else
+#define PORT_ANALOG(mask,default,type,sensitivity,delta,min,max) \
+	PORT_BIT(mask, default, type) \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IPT_EXTENSION | IPF_LOCKOUT(IPF_LOCKOUT_TIME), IP_NAME_DEFAULT },
+#endif */
+#else
+#define PORT_ANALOG(mask,default,type,sensitivity,delta,min,max) \
+	PORT_BIT(mask, default, type) \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
+	{ 0, 0, IPF_LOCKOUT(IPF_LOCKOUT_TIME), IP_NAME_DEFAULT },
+/* Both zeros above are not used */
+#endif
 
+
+#ifdef NO_FILTERED_POLL
 #define PORT_ANALOGX(mask,default,type,sensitivity,delta,min,max,keydec,keyinc,joydec,joyinc) \
 	PORT_BIT(mask, default, type) \
 	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
 	PORT_CODE(keydec,joydec) \
 	PORT_CODE(keyinc,joyinc)
+#else
+#define PORT_ANALOGX(mask,default,type,sensitivity,delta,min,max,keydec,keyinc,joydec,joyinc) \
+	PORT_BIT(mask, default, type) \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
+	{ 0, 0, IPF_LOCKOUT(IPF_LOCKOUT_TIME), IP_NAME_DEFAULT }, \
+	PORT_CODE(keydec,joydec) \
+	PORT_CODE(keyinc,joyinc)
+/* Both zeros above are not used */
+#endif
+
+/* #ifndef NO_FILTERED_POLL
+#define PORT_ANALOGXWAY(mask,default,type,sensitivity,delta,xwayjoy,lockout,min,max,keydec,keyinc,joydec,joyinc) \
+	PORT_BIT(mask, default, type) \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IPT_EXTENSION | IPF_LOCKOUT(IPF_LOCKOUT_TIME), IP_NAME_DEFAULT }, \
+	PORT_CODE(keydec,joydec) \
+	PORT_CODE(keyinc,joyinc)
+#endif */
 
 /* dip switch definition */
 #define PORT_DIPNAME(mask,default,name) \
@@ -244,7 +286,7 @@ enum { IPT_END=1,IPT_PORT,
 
 #define MAX_DEFSTR_LEN 20
 extern const char ipdn_defaultstrings[][MAX_DEFSTR_LEN];
-#define PORT_ADJUSTER(default,name) 
+#define PORT_ADJUSTER(default,name)
 
 /* this must match the ipdn_defaultstrings list in inptport.c */
 enum {
@@ -412,15 +454,15 @@ struct ik
 
 const char *generic_ctrl_label(int input);
 
-/* 
+/*
  * void reset_default_inputs(void)
- * repopulate mappings from the defaults specified in the inptport source 
+ * repopulate mappings from the defaults specified in the inptport source
  */
 void reset_default_inputs(void);
 
-/* 
+/*
  * void reset_default_keys(void)
- * repopulate mappings from the defaults specified in the driver source 
+ * repopulate mappings from the defaults specified in the driver source
  */
 void reset_driver_inputs(void);
 

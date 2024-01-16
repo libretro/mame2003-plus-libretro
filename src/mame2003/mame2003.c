@@ -12,6 +12,13 @@
 #include <file/file_path.h>
 #include <streams/file_stream.h>
 #include <math.h>
+#include <filtered_poll.h>
+
+#ifndef NO_FILTERED_POLL
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+#include <libloaderapi.h>
+#endif
+#endif
 
 #if (HAS_DRZ80 || HAS_CYCLONE)
 #include "frontend_list.h"
@@ -128,6 +135,12 @@ bool retro_audio_buff_active        = false;
 unsigned retro_audio_buff_occupancy = 0;
 bool retro_audio_buff_underrun      = false;
 
+#ifndef NO_FILTERED_POLL
+static struct fp_codes_for_filter  fp_codes_filter[MAX_INPUT_PORTS];
+static struct fp_filter_state      fp_filter_states[MAX_INPUT_PORTS];  /* used while in RetroArch */
+static struct fp_retro_code fp_codes[MAX_INPUT_PORTS][SEQ_MAX];
+#endif
+
 static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool underrun_likely)
 {
    retro_audio_buff_active    = active;
@@ -228,7 +241,7 @@ void retro_set_environment(retro_environment_t cb)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
-  
+
   info->timing.fps = Machine->drv->frames_per_second;
   info->timing.sample_rate = options.samplerate ;
 }
@@ -364,9 +377,202 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
+#ifndef NO_FILTERED_POLL
+/* determine what codes from polling need to be filtered / changed */
+void codes_to_filter_and_filter_operation()
+{
+	struct InputPort *in;
+  int port;
+  int xwayjoy;
+  // int index;
+  int player;
+  int run_filter;
+  int last_active_position;
+  // int last_active_position, next_active_position;
+
+  /* filter not run by default unless turned on below */
+  retro_set_filtered_poll_run_filter(0);
+
+  /* Set player to 0 to "reset" */
+  for (int i = 0; i < MAX_INPUT_PORTS; i++)
+    fp_codes_filter[i].player = 0;
+
+	in = Machine->input_ports;
+	if (in->type == IPT_END)
+  {
+    retro_set_filtered_poll_run_filter(0);
+    return; 	/* nothing to do */
+  }
+
+	/* make sure the InputPort definition is correct */
+	if (in->type != IPT_PORT)
+	{
+    retro_set_filtered_poll_run_filter(0);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in InputPort definition: expecting PORT_START\n");
+		return;
+	}
+	else
+	{
+		in++;
+	}
+
+  port = 0;
+  player = 0;
+  run_filter = 0;
+  last_active_position = 0;
+  // next_active_position = 0;
+	while (in->type != IPT_END && port < MAX_INPUT_PORTS)
+  {
+    if ((in->type & ~IPF_MASK) == IPT_DIAL || (in->type & ~IPF_MASK) == IPT_DIAL_V)
+    {
+			xwayjoy= (in+2)->type & IPF_XWAYJOY;
+			if (xwayjoy == IPF_XWAYJOY)
+      {
+        run_filter = 1;
+        switch (in->type & IPF_PLAYERMASK)
+        {
+          case IPF_PLAYER1:
+            player = 1;
+            break;
+          case IPF_PLAYER2:
+            player = 2;
+            break;
+          case IPF_PLAYER3:
+            player = 3;
+            break;
+          case IPF_PLAYER4:
+            player = 4;
+            break;
+          case IPF_PLAYER5:
+            player = 5;
+            break;
+          case IPF_PLAYER6:
+            player = 6;
+            break;
+          case IPF_PLAYER7:
+            player = 7;
+            break;
+          case IPF_PLAYER8:
+            player = 8;
+            break;
+        }
+
+        fp_codes_filter[last_active_position].next_active_position = port;
+
+        fp_codes_filter[port].player          = player;
+        fp_codes_filter[port+1].player        = player;
+        fp_codes_filter[port].type            = FP_ANALOG_DEC;
+        fp_codes_filter[port+1].type          = FP_ANALOG_INC;
+        fp_codes_filter[port].operations      = FP_TIMELOCKOUT;
+        fp_codes_filter[port+1].operations    = FP_TIMELOCKOUT;
+        fp_codes_filter[port].modifier[0]     = IP_GET_LOCKOUT(in);
+        fp_codes_filter[port+1].modifier[0]   = IP_GET_LOCKOUT(in);
+
+        struct OsdCodeAndType osdcodeandtype;
+        for (int i=0; i < SEQ_MAX; i++)
+        {
+          if (in->seq[i] == CODE_NONE)
+            fp_codes_filter[port].codes[i].id = NO_CODE;
+          else
+          {
+            internal_key_code_to_oscode(in->seq[i], &osdcodeandtype);
+            switch (osdcodeandtype.type)
+            {
+              case CODE_TYPE_KEYBOARD :
+                fp_codes_filter[port].codes[i].port = 0;
+                fp_codes_filter[port].codes[i].device = RETRO_DEVICE_KEYBOARD;
+                fp_codes_filter[port].codes[i].idx = 0;
+                fp_codes_filter[port].codes[i].id = osdcodeandtype.code;
+                break;
+              case CODE_TYPE_JOYSTICK :
+                unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
+                unsigned retro_code = get_retro_code("retropad", osd_code);
+
+                fp_codes_filter[port].codes[i].port
+                                        = calc_player_number(osdcodeandtype.code) - 1;
+                fp_codes_filter[port].codes[i].device = RETRO_DEVICE_JOYPAD;
+                fp_codes_filter[port].codes[i].idx = 0;
+                fp_codes_filter[port].codes[i].id = retro_code;
+                break;
+            }
+          }
+
+          if ((in+1)->seq[i] == CODE_NONE)
+            fp_codes_filter[port+1].codes[i].id = NO_CODE;
+          else
+          {
+            internal_key_code_to_oscode((in+1)->seq[i], &osdcodeandtype);
+            switch (osdcodeandtype.type)
+            {
+              case CODE_TYPE_KEYBOARD :
+                fp_codes_filter[port+1].codes[i].port = 0;
+                fp_codes_filter[port+1].codes[i].device = RETRO_DEVICE_KEYBOARD;
+                fp_codes_filter[port+1].codes[i].idx = 0;
+                fp_codes_filter[port+1].codes[i].id = osdcodeandtype.code;
+                break;
+              case CODE_TYPE_JOYSTICK :
+                unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
+                unsigned retro_code = get_retro_code("retropad", osd_code);
+
+                fp_codes_filter[port+1].codes[i].port
+                                        = calc_player_number(osdcodeandtype.code) - 1;
+                fp_codes_filter[port+1].codes[i].device = RETRO_DEVICE_JOYPAD;
+                fp_codes_filter[port+1].codes[i].idx = 0;
+                fp_codes_filter[port+1].codes[i].id = retro_code;
+                break;
+            }
+          }
+        }
+        /* fp_codes_filter[port].codes_array_length and
+        fp_codes_filter[port+1].codes_array_length
+        set in retro_set_filtered_poll_variables function
+        defined in RetroArch */
+
+        fp_codes_filter[port].next_active_position = port + 1;
+        last_active_position = port + 1;
+        fp_codes_filter[port+1].next_active_position = 0;
+        port += 3;
+      }
+      in += 3;
+    }
+    else
+    {
+      in++;
+      port++;
+    }
+  }
+  if (run_filter)
+    retro_set_filtered_poll_run_filter(1);
+
+  printf("At end of codes_to_filter_and_filter_operation.\n");
+  for (int i=0; i < MAX_INPUT_PORTS; i++)
+  {
+    printf("fp_codes_filter[%i].player: %i\n", i, fp_codes_filter[i].player);
+    printf("fp_codes_filters[%i].type: %i\n", i, fp_codes_filter[i].type);
+    printf("fp_codes_filters[%i].operations: %X\n", i, fp_codes_filter[i].operations);
+    printf("fp_codes_filters[%i].modifier[0]: %i\n", i, fp_codes_filter[i].modifier[0]);
+    for (int j=0; j < fp_codes_filter[i].codes_array_length; j++)
+    {
+      printf("fp_codes_filters[%i].codes[%i].port: %u\n", i, j, fp_codes_filter[i].codes[j].port);
+      printf("fp_codes_filters[%i].codes[%i].device: %u\n", i, j, fp_codes_filter[i].codes[j].device);
+      printf("fp_codes_filters[%i].codes[%i].idx: %u\n", i, j, fp_codes_filter[i].codes[j].idx);
+      printf("fp_codes_filters[%i].codes[%i].id: %u\n", i, j, fp_codes_filter[i].codes[j].id);
+    }
+    printf("fp_codes_filters[%i].codes_array_length: %i\n", i, fp_codes_filter[i].codes_array_length);
+    printf("fp_codes_filters[%i].next_active_position: %i\n", i, fp_codes_filter[i].next_active_position);
+  }
+}
+#endif
+
 void retro_run (void)
 {
   bool updated = false;
+
+  /* determine what codes from polling need to be filtered / changed */
+  codes_to_filter_and_filter_operation();
+
+  printf("max players is %i\n", MAX_INPUT_PORTS);
+  printf("About to call poll_cb()\n");
   poll_cb(); /* execute input callback */
 
   if (retro_running == 0) /* first time through the loop */
@@ -516,7 +722,7 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
- 
+
   Machine->sample_rate = options.samplerate;
 
   delta_samples = 0.0f;
@@ -602,7 +808,40 @@ void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
+#ifdef NO_FILTERED_POLL
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
+#else
+void retro_set_input_state(retro_input_state_t cb)
+{
+  static int initialized = 0;
+
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+  /* Dynamically find function definitions in main executable (RetroArch) */
+  HMODULE module = GetModuleHandleW(NULL);
+  retro_core_input_state_filtered_poll_return_cb_FUNC retro_core_input_state_filtered_poll_return_cb =
+          (retro_core_input_state_filtered_poll_return_cb_FUNC)GetProcAddress(module,
+          "retro_core_input_state_filtered_poll_return_cb");
+  retro_set_filtered_poll_run_filter_FUNC retro_set_filtered_poll_run_filter =
+          (retro_set_filtered_poll_run_filter_FUNC)GetProcAddress(module,
+          "retro_set_filtered_poll_run_filter");
+  retro_set_filtered_poll_original_cb_FUNC retro_set_filtered_poll_original_cb =
+          (retro_set_filtered_poll_original_cb_FUNC)GetProcAddress(module,
+          "retro_set_filtered_poll_original_cb");
+  retro_set_filtered_poll_variables_FUNC retro_set_filtered_poll_variables =
+          (retro_set_filtered_poll_variables_FUNC)GetProcAddress(module,
+          "retro_set_filtered_poll_variables");
+#endif
+
+  if (!initialized)
+  {
+    retro_set_filtered_poll_variables(MAX_INPUT_PORTS, fp_codes_filter, fp_filter_states, (void *) fp_codes, SEQ_MAX);
+    initialized = 1;
+  }
+
+  retro_set_filtered_poll_original_cb(cb);
+  input_cb = retro_get_core_input_state_filtered_poll_return_cb();
+}
+#endif
 
 
 /******************************************************************************
@@ -1246,7 +1485,7 @@ unsigned decode_osd_joycode(unsigned joycode)
 /******************************************************************************
  * osd_analogjoy_read polls analog joystick axes, and sets the value in the
  * analog_axis[] array.
- * 
+ *
  * int player is an array index, starting at 0
 *******************************************************************************/
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])

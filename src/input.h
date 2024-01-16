@@ -22,6 +22,14 @@ struct JoystickInfo
   InputCode standardcode;	/* CODE_xxx equivalent from list below, or CODE_OTHER if n/a */
 };
 
+#ifndef NO_FILTERED_POLL
+struct OsdCodeAndType
+{
+  unsigned code;
+  unsigned type;
+};
+#endif
+
 #define EMIT_GUN_CODES(PLAYER_NUM) \
   JOYCODE_GUN_##PLAYER_NUM##_BUTTON1,   JOYCODE_GUN_##PLAYER_NUM##_BUTTON2,    \
   JOYCODE_GUN_##PLAYER_NUM##_BUTTON3,   JOYCODE_GUN_##PLAYER_NUM##_BUTTON4,   \
@@ -191,6 +199,9 @@ InputCode savecode_to_code(unsigned savecode);
 int oscode_find(unsigned oscode, unsigned type);       /* does not insert if missing */
 unsigned code_to_savecode(InputCode code);
 
+#ifndef NO_FILTERED_POLL
+void internal_key_code_to_oscode(InputCode code, struct OsdCodeAndType * osdcodeandtype);
+#endif
 void internal_code_update(void);
 
 const char *code_name(InputCode code);
