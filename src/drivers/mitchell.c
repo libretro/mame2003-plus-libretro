@@ -355,7 +355,53 @@ static PORT_WRITE_START( writeport )
 	{ 0x18, 0x18, eeprom_serial_w },
 PORT_END
 
+/**** Monsters World ****/
 
+static WRITE_HANDLER( oki_banking_w )
+{
+	OKIM6295_set_bank_base(0, 0x40000 * (data & 3));
+}
+
+static MEMORY_READ_START( mstworld_sound_readmem )
+    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0x87ff, MRA_RAM },
+	{ 0x9800, 0x9800, OKIM6295_status_0_r },
+	{ 0xa000, 0xa000, soundlatch_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( mstworld_sound_writemem )
+    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x8000, 0x87ff, MWA_RAM },
+	{ 0x9000, 0x9000, oki_banking_w },
+	{ 0x9800, 0x9800, OKIM6295_data_0_w },
+MEMORY_END
+
+static WRITE_HANDLER(mstworld_sound_w)
+{
+	soundlatch_w(0,data);
+	cpu_set_irq_line(1,0,HOLD_LINE);
+}
+
+extern WRITE_HANDLER( mstworld_gfxctrl_w );
+extern WRITE_HANDLER( mstworld_video_bank_w );
+
+static PORT_READ_START( mstworld_readport )
+    { 0x00, 0x00, input_port_1_r },	/* coins */
+	{ 0x01, 0x01, input_port_2_r },	/* p1 */
+	{ 0x02, 0x02, input_port_3_r },	/* p2 */
+	{ 0x03, 0x03, input_port_4_r },	/* dips? */
+	{ 0x04, 0x04, input_port_5_r },	/* dips? */
+	{ 0x05, 0x05, input_port_0_r },   /* special? */
+	{ 0x06, 0x06, input_port_6_r },   /* dips? */
+PORT_END
+
+static PORT_WRITE_START( mstworld_writeport )
+    { 0x00, 0x00, mstworld_gfxctrl_w },    /* Palette bank, layer enable, coin counters, more */
+	{ 0x02, 0x02, pang_bankswitch_w },      /* Code bank register */
+	{ 0x03, 0x03, mstworld_sound_w },      /* write to sound cpu */
+	{ 0x06, 0x06, MWA_NOP },	/* watchdog? irq ack? */
+	{ 0x07, 0x07, mstworld_video_bank_w },     /* Video RAM bank register */
+PORT_END
 
 INPUT_PORTS_START( mgakuen )
 	PORT_START      /* DSW */
@@ -929,6 +975,122 @@ INPUT_PORTS_START( blockj )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( mstworld )
+	/* this port may not have the same role */
+	PORT_START      /* DSW */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* USED - handled in port5_r */
+	PORT_BITX(0x02, 0x02, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE ) /* useless, all text removed! */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* USED - handled in port5_r */
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused? */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* data from EEPROM (spang) */
+
+	PORT_START      /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )    /* probably unused */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )    /* probably unused */
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
+
+	PORT_START      /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED ) /* don't think this one matters.. */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
+
+	PORT_START      /* IN2 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN ) /* if not active high gfx aren't copied for game screen?! .. is this instead of a bit in port 5? */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+
+	PORT_START	/* IN3 */  /* coinage seems to be in here.. */
+    PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x03, "A 1Coin 4Credits / B 1Coin 4Credits" )
+	PORT_DIPSETTING(    0x02, "A 1Coin 3Credits / B 1Coin 3Credits" )
+	PORT_DIPSETTING(    0x01, "A 1Coin 2Credits / B 1Coin 2Credits" )
+	PORT_DIPSETTING(    0x00, "A 1Coin 1Credit / B 1Coin 4Credists" )
+	PORT_DIPSETTING(    0x04, "A 2Coins 1Credit / B 1Coin 2Credits" )
+	PORT_DIPSETTING(    0x05, "A 2Coins 1Credit / B 1Coin 3Credits" )
+	PORT_DIPSETTING(    0x06, "A 3Coins 1Credit / B 1Coin 2Credits" )
+	PORT_DIPSETTING(    0x07, "A 4Coins 1Credit / B 1Coin 1Credit" )
+	PORT_DIPNAME( 0x18, 0x10, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x08, "2" )
+	PORT_DIPSETTING(    0x10, "3" )
+	PORT_DIPSETTING(    0x18, "4" )
+	PORT_DIPNAME( 0x60, 0x20, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x00, "Easy" )
+	PORT_DIPSETTING(    0x20, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x60, "Hardest" )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+
+	PORT_START	/* IN3 */
+	PORT_DIPNAME( 0x01, 0x00, "ds2" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* IN3 */
+	PORT_DIPNAME( 0x01, 0x00, "ds3" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
 
 
 static struct GfxLayout charlayout =
@@ -940,6 +1102,17 @@ static struct GfxLayout charlayout =
 	{ 0, 1, 2, 3, 8+0, 8+1, 8+2, 8+3 },
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
 	16*8    /* every char takes 16 consecutive bytes */
+};
+
+static struct GfxLayout mstworld_charlayout =
+{
+	8,8,
+	RGN_FRAC(1,4),
+	4,
+	{ RGN_FRAC(2,4), RGN_FRAC(3,4), RGN_FRAC(0,4), RGN_FRAC(1,4) },
+	{ 7, 6, 5, 4, 3, 2, 1, 0 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
 };
 
 static struct GfxLayout marukin_charlayout =
@@ -966,6 +1139,20 @@ static struct GfxLayout spritelayout =
 	64*8    /* every sprite takes 64 consecutive bytes */
 };
 
+static struct GfxLayout mstworld_spritelayout =
+{
+	16,16,
+	RGN_FRAC(1,2),
+	4,
+	{ 4, 0, RGN_FRAC(1,2)+4, RGN_FRAC(1,2)+0 },
+	{ 0,1,2,3,8,9,10,11,
+	 16*16+0,16*16+1,16*16+2,16*16+3,16*16+8,16*16+9,16*16+10,16*16+11 },
+
+	{ 0*16,1*16,2*16,3*16,4*16,5*16,6*16,7*16,
+	8*16+0*16,8*16+1*16,8*16+2*16,8*16+3*16,8*16+4*16,8*16+5*16,8*16+6*16,8*16+7*16},
+	32*16
+};
+
 static struct GfxDecodeInfo mgakuen_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &marukin_charlayout, 0,  64 }, /* colors 0-1023 */
@@ -987,7 +1174,12 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-
+static struct GfxDecodeInfo mstworld_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &mstworld_charlayout,   0x000, 0x40 },
+	{ REGION_GFX2, 0, &mstworld_spritelayout, 0x000, 0x40 },
+	{ -1 } /* end of array */
+};
 
 static struct YM2413interface ym2413_interface =
 {
@@ -1000,6 +1192,14 @@ static struct OKIM6295interface okim6295_interface =
 {
 	1,			/* 1 chip */
 	{ 8000 },	/* 8000Hz ??? */
+	{ REGION_SOUND1 },		/* memory region 2 */
+	{ 50 }
+};
+
+static struct OKIM6295interface mstworld_okim6295_interface =
+{
+	1,			/* 1 chip */
+	{ 7575 },	/* 7575Hz  */
 	{ REGION_SOUND1 },		/* memory region 2 */
 	{ 50 }
 };
@@ -1090,7 +1290,37 @@ static MACHINE_DRIVER_START( marukin )
 	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( mstworld )
 
+	/* basic machine hardware */
+	/* it doesn't glitch with the clock speed set to 4x normal, however this is incorrect..
+      the interrupt handling (and probably various irq flags / vbl flags handling etc.) is
+      more likely wrong.. the game appears to run too fast anyway .. */
+	MDRV_CPU_ADD(Z80, 6000000*4)
+	MDRV_CPU_MEMORY(readmem,writemem)
+	MDRV_CPU_PORTS(mstworld_readport,mstworld_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80,6000000)		 /* 6 MHz? */
+	/* audio CPU */
+	MDRV_CPU_MEMORY(mstworld_sound_readmem,mstworld_sound_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
+	MDRV_GFXDECODE(mstworld_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_START(pang)
+	MDRV_VIDEO_UPDATE(pang)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, mstworld_okim6295_interface)
+MACHINE_DRIVER_END
 
 ROM_START( mgakuen )
 	ROM_REGION( 0x30000, REGION_CPU1, 0 )	/* 192k for code */
@@ -1557,6 +1787,42 @@ ROM_START( blockbl )
 	ROM_LOAD( "bl_01.rom",    0x00000, 0x20000, CRC(c2ec2abb) SHA1(89981f2a887ace4c4580e2828cbdc962f89c215e) )
 ROM_END
 
+/* seems to be the same basic hardware, but the memory map and io map are different at least.. */
+ROM_START( mstworld )
+	ROM_REGION( 0x80000*2, REGION_CPU1, 0 )	/* CPU1 code */
+	/* we descramble code to here */
+
+	ROM_REGION( 0x80000, REGION_USER1, 0 )	/* CPU1 code - scrambled */
+	ROM_LOAD( "mw-1.rom", 0x00000, 0x080000, CRC(c4e51fb4) SHA1(60ad4ff2cec3a4d13b4aa0319dfcdab941404b1a) ) /* fixed code */
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* CPU2 code */
+	ROM_LOAD( "mw-2.rom", 0x00000, 0x08000, CRC(12c4fea9) SHA1(4616f2d70022abcf89f244f3f365b39b96973368) )
+
+	ROM_REGION( 0x080000, REGION_USER2, 0 )	/* Samples */
+	ROM_LOAD( "mw-3.rom", 0x00000, 0x080000, CRC(110c6a68) SHA1(915758cd467fbcdfa18ca99df036dca40dfc4649) )
+
+	/* $00000-$20000 stays the same in all sound banks, */
+	/* the second half of the bank is what gets switched */
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_COPY( REGION_USER2, 0x000000, 0x000000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x020000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x040000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x020000, 0x060000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x080000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x040000, 0x0a0000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x000000, 0x0c0000, 0x020000)
+	ROM_COPY( REGION_USER2, 0x060000, 0x0e0000, 0x020000)
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )	/* GFX */
+	ROM_LOAD( "mw-4.rom", 0x00000, 0x020000, CRC(28a3af15) SHA1(99547966b2b5e06e097c55bbbb86a1c2809fa98c) )
+	ROM_LOAD( "mw-5.rom", 0x20000, 0x020000, CRC(ffdf7e9f) SHA1(b7732837cc5606d4a868eeaaff438b1a86bd72d7) )
+	ROM_LOAD( "mw-6.rom", 0x40000, 0x020000, CRC(1ed773a3) SHA1(0e8517a5c9bed57ecf3bb850152b8c1e1bd3faaa) )
+	ROM_LOAD( "mw-7.rom", 0x60000, 0x020000, CRC(8eb7525c) SHA1(9c3fa9373803e9534c1ad7063d660abe130f7b49) )
+
+	ROM_REGION( 0x40000, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_INVERT )	/* GFX */
+	ROM_LOAD( "mw-8.rom", 0x00000, 0x020000, CRC(b9b92a3c) SHA1(97191958a539c6f2eacb3956e8371acbaaa43795) )
+	ROM_LOAD( "mw-9.rom", 0x20000, 0x020000, CRC(75fc3375) SHA1(b2e7551bdbe2b0f1c28f6e912a8efaa5645b2ff5))
+ROM_END
 
 static void bootleg_decode(void)
 {
@@ -1655,7 +1921,49 @@ static DRIVER_INIT( blockbl )
 	bootleg_decode();
 }
 
+static DRIVER_INIT( mstworld )
+{
+	/* descramble the program rom .. */
+	UINT8* source = memory_region(REGION_USER1) ;
+	UINT8* dst    = memory_region(REGION_CPU1) ;
+	int x;
 
+	int tablebank[]=
+	{
+		/* fixed code */ 0,  0,
+		/* fixed code */ 1,  1,
+		/* ram area   */-1, -1,
+		/* ram area   */-1, -1,
+		/* bank 0     */10,  4,
+		/* bank 1     */ 5, 13,
+		/* bank 2     */ 7, 17,
+		/* bank 3     */21,  2,
+		/* bank 4     */18,  9,
+		/* bank 5     */15,  3,
+		/* bank 6     */ 6, 11,
+		/* bank 7     */19,  8, /* bank a on spang! */
+		/* bank 8     */-1, -1,
+		/* bank 9     */-1, -1,
+		/* bank a     */-1, -1,
+		/* bank b     */-1, -1,
+		/* bank c     */20, 20,
+		/* bank d     */14, 14,
+		/* bank e     */16, 16,
+		/* bank f     */12, 12,
+	};
+
+	for (x=0;x<40;x+=2)
+	{
+		if (tablebank[x]!=-1)
+		{
+			memcpy(&dst[(x/2)*0x4000],&source[tablebank[x]*0x4000],0x4000);
+			memcpy(&dst[((x/2)*0x4000)+0x80000],&source[tablebank[x+1]*0x4000],0x4000);
+		}
+	}
+
+	memory_set_opcode_base(0,memory_region(REGION_CPU1)+0x80000);
+
+}
 
 GAME( 1988, mgakuen,  0,        mgakuen, mgakuen,  mgakuen,  ROT0,   "Yuga", "Mahjong Gakuen" )
 GAME( 1988, 7toitsu,  mgakuen,  mgakuen, mgakuen,  mgakuen,  ROT0,   "Yuga", "Chi-Toitsu" )
@@ -1671,6 +1979,7 @@ GAME( 1989, cworld,   0,        pang,    qtono1,   cworld,   ROT0,   "Capcom", "
 GAME( 1990, hatena,   0,        pang,    qtono1,   hatena,   ROT0,   "Capcom", "Adventure Quiz 2 Hatena Hatena no Dai-Bouken (Japan)" )
 GAME( 1990, spang,    0,        pang,    pang,     spang,    ROT0,   "Mitchell", "Super Pang (World)" )
 GAME( 1990, sbbros,   spang,    pang,    pang,     sbbros,   ROT0,   "Mitchell + Capcom", "Super Buster Bros. (US)" )
+GAMEX(1994, mstworld, 0,        mstworld,mstworld, mstworld, ROT0,   "TCH", "Monsters World (bootleg of Super Pang)",GAME_IMPERFECT_GRAPHICS ) /* bootleg of Spang */
 GAME( 1990, marukin,  0,        marukin, marukin,  marukin,  ROT0,   "Yuga", "Super Marukin-Ban" )
 GAME( 1991, qtono1,   0,        pang,    qtono1,   qtono1,   ROT0,   "Capcom", "Quiz Tonosama no Yabou (Japan)" )
 GAME( 1991, qsangoku, 0,        pang,    qtono1,   qsangoku, ROT0,   "Capcom", "Quiz Sangokushi (Japan)" )

@@ -3469,6 +3469,38 @@ static DRIVER_INIT( arescue )
 
 }
 
+
+static UINT16 MemRead16_16(offs_t address)
+{
+	if (!(address & 1))
+		return cpu_readmem24lew_word(address);
+	else
+	{
+		UINT16 result = cpu_readmem24lew(address);
+		return result | cpu_readmem24lew(address + 1) << 8;
+	}
+}
+
+static void MemWrite16_16(offs_t address, UINT16 data)
+{
+	if (!(address & 1))
+		cpu_writemem24lew_word(address, data);
+	else
+	{
+		cpu_writemem24lew(address, data);
+		cpu_writemem24lew(address + 1, data >> 8);
+	}
+}
+
+
+#define program_read_byte  cpu_readmem24lew
+#define program_write_byte cpu_writemem24lew
+#define program_read_word   MemRead16_16
+#define program_write_word MemWrite16_16
+
+
+
+
 /******************************************************************************
  ******************************************************************************
   Dark Edge
@@ -3477,15 +3509,15 @@ static DRIVER_INIT( arescue )
 /* V60 24lew for 8-16bit mem calls i think */
 void darkedge_fd1149_vblank(void)
 {
-	/* program_write_word*/cpu_writemem24lew_word(0x20f072, 0);
-	/* program_write_word*/cpu_writemem24lew_word(0x20f082, 0);
+	 program_write_word(0x20f072, 0);
+	 program_write_word(0x20f082, 0);
 
-	if( /* program_read_byte*/cpu_readmem24lew(0x20a12c) != 0 )
+	if(  program_read_byte(0x20a12c) != 0 )
 	{
-		/* program_write_byte*/cpu_writemem24lew(0x20a12c, /* program_read_byte*/cpu_readmem24lew(0x20a12c)-1 );
+		 program_write_byte(0x20a12c, program_read_byte(0x20a12c)-1 );
 
-		if( /*program_read_byte*/cpu_readmem24lew(0x20a12c) == 0 )
-			/*program_read_byte*/cpu_writemem24lew(0x20a12e, 1);
+		if( program_read_byte(0x20a12c) == 0 )
+			program_write_byte(0x20a12e, 1);
 	}
 }
 
@@ -3519,7 +3551,7 @@ static DRIVER_INIT( darkedge )
 
 WRITE16_HANDLER( dbzvrvs_protection_w )
 {
-	/* program_write_word*/cpu_writemem24lew_word( 0x2080c8, /* program_read_word*/cpu_readmem24lew_word( 0x200044 ) );
+	program_write_word( 0x2080c8, program_read_word( 0x200044 ) );
 
 }
 
@@ -3576,6 +3608,6 @@ GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 S
 
 /* not really working */
 GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* does nothing useful, known to be heavily protected */
+GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
 /* Loony Toons (maybe) */

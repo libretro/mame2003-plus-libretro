@@ -53,7 +53,7 @@ static WRITE_HANDLER( torus_coin_counter_w )
 	coin_counter_w(0, data ^ 0xff);
 }
 
-static irq_count = 0;
+static int irq_count = 0;
 
 static INTERRUPT_GEN(paradise_irq)
 {

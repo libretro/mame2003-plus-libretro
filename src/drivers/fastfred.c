@@ -692,7 +692,7 @@ static struct GfxDecodeInfo jumpcoas_gfxdecodeinfo[] =
 static struct GfxDecodeInfo imago_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,           0,     32 },
-	{ NULL,   0xb800, &imago_spritelayout,   0,     32 },
+	{ 0,   0xb800, &imago_spritelayout,   0,     32 },
 	{ REGION_GFX3, 0, &charlayout,           0,     32 },
 	{ REGION_GFX4, 0, &imago_char_1bpp,      0x140,  1 },
 	{ -1 } /* end of array */

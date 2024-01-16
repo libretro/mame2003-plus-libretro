@@ -133,6 +133,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mighty Warriors
 * Mirax
 * Mobile Suit Gundam Final Shooting
+* Monsters World (Bootleg Of Super Pang)
 * Monster Maulers
 * More More
 * Mortal Race
@@ -365,6 +366,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
 * DJ Boy - Romset `djboy`
+* Dragon Ball Z V.R.V.S. - Romset `dbzvrvs`
 * Driving Force (galaxian hardware) - Romset `drivfrcg` - colors fixed
 * Domino Man - Romset `domino`
 * Dragon World - Romset `drgnwrld`
@@ -373,6 +375,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Eight Ball Action (Pacman conversion) - Romset `8bpm` - colors fixed
 * F-1 Grand Prix Star II - Romset `f1gpstr2`
 * F1 Super Lap (Japan) - Romset `f1lapj`
+* Fantastic Journey - Romset `fanjour`
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Find Out - Romset `findout` - colors fixed
 * Fire Barrel - Romset `firebarr`
@@ -973,4 +976,13 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed WWF Superstars bad sprites with some of Randy Macho Man Savage moves eg back suplex etc etc [MAMEDev, arcadez]
 * Hacked around some game breaking protection calls in Solomon's Key which could make levels unplayable [MAMEDEv, arcadez]
 * Added Maze Invaders Atari prototype to the centipede driver [MAMEDEv, arcadez]
+* Fixed Dragonball Z VRVS in the system32.c driver and Fantastic Journey in the konamigx.c driver [grant2258, arcadez]
+* Updated the romset for Pack N' Bang Bang to use the final released version rather than the unfinished prototype [arcadez]
+* Added the English language version of Dragon Might to the konamigx.c driver [arcadez, grant2258]
+* Added support for Monsters World (Bootleg Of Super Pang) to the mitchell.c driver [arcadez]
+* Fixed some graphical niggles in Cannon Dancer / Osman such as some objects didn't move previously eg trucks on final level [FBN Dev, MAMEDev, arcadez]
+* Added shadow support to the SSV video greatly improving the graphical effects in Storm Blade [MAMEDev, arcadez]
+* Fixed graphical corruption on left side of screen stage 3 onwards in Storm Blade and all stages in Ultra X Weapons [MAMEDev, arcadez]
+* Added some alt sprite drawing to the ssv video to prevent performance drops in some SSV games after the above updates [BritneysPAIRS]
+* Hooked up the M6801 Protection MCU for Kiki Kai Kai fixing many gameplay issues this game can now be considered 100% in the emulation dept [arcadez]
 

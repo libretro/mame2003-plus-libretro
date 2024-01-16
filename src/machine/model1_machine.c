@@ -528,22 +528,27 @@ static void matrix_rotz(void)
 	next_fn();
 }
 
-static void f24(void)
+static void track_read_quad(void)
 {
+	const UINT32 *tgp_data = (const UINT32 *)memory_region(REGION_USER2);
 	UINT32 a = fifoin_pop();
-	logerror("TGP f24 %d (%x)\n", a, activecpu_get_pc());
-	fifoout_push_f(1);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
-	fifoout_push_f(1);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
-	fifoout_push_f(1);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
-	fifoout_push_f(0);
+	int offd;
+
+	logerror("TGP track_read_quad %d (%x)\n", a, activecpu_get_pc());
+
+	offd = tgp_data[0x20+tgp_vr_select] + 16*a;
+	fifoout_push(tgp_data[offd]);
+	fifoout_push(tgp_data[offd+1]);
+	fifoout_push(tgp_data[offd+2]);
+	fifoout_push(tgp_data[offd+3]);
+	fifoout_push(tgp_data[offd+4]);
+	fifoout_push(tgp_data[offd+5]);
+	fifoout_push(tgp_data[offd+6]);
+	fifoout_push(tgp_data[offd+7]);
+	fifoout_push(tgp_data[offd+8]);
+	fifoout_push(tgp_data[offd+9]);
+	fifoout_push(tgp_data[offd+10]);
+	fifoout_push(tgp_data[offd+11]);
 	next_fn();
 }
 
@@ -858,11 +863,16 @@ static void f47(void)
 	next_fn();
 }
 
-static void f48(void)
+static void track_read_info(void)
 {
-    INT16 a = fifoin_pop();
-	logerror("TGP f48 %d (%x)\n", a, activecpu_get_pc());
-	fifoout_push(1000+a);
+	const UINT32 *tgp_data = (const UINT32 *)memory_region(REGION_USER2);
+    UINT16 a = fifoin_pop();
+	int offd;
+
+	logerror("TGP track_read_info %d (%x)\n", a, activecpu_get_pc());
+
+	offd = tgp_data[0x20+tgp_vr_select] + 16*a;
+	fifoout_push(tgp_data[a+15]);
 	next_fn();
 }
 
@@ -971,6 +981,21 @@ static void matrix_rdir(void)
 	next_fn();
 }
 
+/* A+(B-A)*t1 + (C-A)*t2 = P */
+static void tri_calc_pq(float ax, float ay, float bx, float by, float cx, float cy, float px, float py, float *t1, float *t2)
+{
+	float d;
+	bx -= ax;
+	cx -= ax;
+	px -= ax;
+	by -= ay;
+	cy -= ay;
+	py -= ay;
+	d = bx*cy-by*cx;
+	*t1 = (px*cy-py*cx)/d;
+	*t2 = (bx*py-by*px)/d;
+}
+
 static void track_lookup(void)
 {
 	const UINT32 *tgp_data = (const UINT32 *)memory_region(REGION_USER2);
@@ -980,8 +1005,8 @@ static void track_lookup(void)
 	float d = fifoin_pop_f();
 	int offi, offd, len;
 	float dist;
-	int offe=0, pt=0, i;
-	unsigned int behaviour;
+	int i;
+	unsigned int behaviour, entry;
 	float height;
 
 	logerror("TGP track_lookup %f, 0x%x, %f, %f (%x)\n", a, b, c, d, activecpu_get_pc());
@@ -992,38 +1017,39 @@ static void track_lookup(void)
 	len = tgp_data[offi++];
 
 	dist = -1;
-	if(len>20)
-		len = 0;
+
+	behaviour = 0;
+	height = 0.0;
+	entry = 0;
 
 	for(i=0; i<len; i++) {
 		int j;
-		int posd = offd + tgp_data[offi++]*0x10;
+		int bpos = tgp_data[offi++];
+		int posd = offd + bpos*0x10;
 		const float *pts = (const float *)(tgp_data+posd);
-		for(j=0; j<5; j++) {
-			float dx = c-pts[3*j+0];
-			float dy = a-pts[3*j+1];
-			float dz = d-pts[3*j+2];
-			float dd = dx*dx+dy*dy+dz*dz;
-			if(dist == -1 || dd<dist) {
-				dist = dd;
-				offe = posd;
-				pt = j;
+		float ax = pts[12];
+		float ay = pts[14];
+		float az = pts[13];
+		for(j=0; j<4; j++) {
+			float t1, t2;
+			int k = (j+1) & 3;
+			tri_calc_pq(ax, ay, pts[3*j], pts[3*j+2], pts[3*k], pts[3*k+2], c, d, &t1, &t2);
+			if(t1 >= 0 && t2 >= 0 && t1+t2 <= 1) {
+				float z = az+t1*(pts[3*j+1]-az)+t2*(pts[3*k+1]-az);
+				float d = (a-z)*(a-z);
+				if(dist == -1 || d<dist) {
+					dist = d;
+					behaviour = tgp_data[posd+15];
+					height = z;
+					entry = bpos+i;
+				}
 			}
 		}
 	}
 
-	if(dist == -1) {
-		behaviour = 0;
-		height = 0.0;
-	} else {
-		/* Maybe it's doing some kind of interpolation, go figure */
-		behaviour = tgp_data[offe+15];
-		height = u2f(tgp_data[offe+pt*3+1]);
-	}
-
 	ram_data[0x0000] = 0; /* non zero = still computing */
 	ram_data[0x8001] = f2u(height);
-	ram_data[0x8002] = behaviour;
+	ram_data[0x8002] = entry;
 
 	next_fn();
 }
@@ -1589,7 +1615,7 @@ static struct function ftab_vf[] = {
 	{  20, matrix_rotx,     1 },
 	{  21, matrix_roty,     1 },
 	{  22, matrix_rotz,     1 },
-	{  24, f24, 1 },
+	{  24, track_read_quad, 1 },
 	{  26, transform_point, 3 },
 	{  27, fsin,            1 },
 	{  28, fcos,            1 },
@@ -1607,7 +1633,7 @@ static struct function ftab_vf[] = {
 	{  44, f44,   1 },
 	{  45, f45,   1 },
 	{  46, vlength,         3 },
-	{  48, f48,   1 },
+	{  48, track_read_info, 1 },
 	{  49, colbox_set,     12 },
 	{  50, colbox_test,     3 },
 	{  54, track_lookup,    4 },

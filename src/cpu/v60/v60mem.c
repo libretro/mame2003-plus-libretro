@@ -375,7 +375,7 @@ static struct cpu_info v70_i =
 #define PortRead32  v60.info.pr32
 #define PortWrite32 v60.info.pw32
 
-#if !defined(MSB_FIRST) && !defined(ALIGN_INTS)
+#if defined(LSB_FIRST) && !defined(ALIGN_INTS)
 #define OpRead8(a)	(OP_ROM[a])
 #define OpRead16(a)	(*(UINT16 *)&OP_ROM[a])
 #define OpRead32(a)	(*(UINT32 *)&OP_ROM[a])

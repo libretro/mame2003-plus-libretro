@@ -2903,10 +2903,47 @@ ROM_END
 /* Dragoon Might */
 ROM_START( dragoonj )
 	/* main program */
-	ROM_REGION( 0x600000, REGION_CPU1, 0 )
+	ROM_REGION( 0x800000,REGION_CPU1, 0 )
 	GX_BIOS
 	ROM_LOAD32_WORD_SWAP( "417jaa02.31b", 0x200002, 512*1024, CRC(533cbbd5) SHA1(4b7a0345ce0e503c647c7cde6f284ad0ee10f0ff) )
 	ROM_LOAD32_WORD_SWAP( "417jaa03.27b", 0x200000, 512*1024, CRC(8e1f883f) SHA1(e9f25c0fae7491c55812fda336436a2884c4d417) )
+
+	/* data roms */
+	ROM_LOAD32_WORD_SWAP( "417a04.26c", 0x400002, 1024*1024, CRC(dc574747) SHA1(43cbb6a08c27bb96bb25568c3b636c44fff3e08e) )
+	ROM_LOAD32_WORD_SWAP( "417a05.23c", 0x400000, 1024*1024, CRC(2ee2c587) SHA1(a1b2b288c375a3406d4b12e66c973484c03fe26e) )
+
+	/* sound program */
+	ROM_REGION( 0x40000, REGION_CPU2, 0 )
+	ROM_LOAD16_BYTE("417a06.9c", 0x000000, 128*1024, CRC(8addbbee) SHA1(fdb38fab1fd65b7362578b108bf6128e926b5f13) )
+	ROM_LOAD16_BYTE("417a07.7c", 0x000001, 128*1024, CRC(c1fd7584) SHA1(1b204165ef07b6b53f47adc16eed69d11dab53b2) )
+
+	/* tiles */
+	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_ERASE00 )
+	TILE_WORD_ROM_LOAD( "417a16.17h", 0x000000, 2*1024*1024, CRC(88b2213b) SHA1(ac4ac57618cf98d7486b147f5494e6943bff1a4d) )
+
+	/* sprites */
+	ROM_REGION( 0x1000000, REGION_GFX2, ROMREGION_ERASE00 )
+	ROM_LOAD32_WORD( "417a15.25g", 0x000000, 2*1024*1024, CRC(83bccd01) SHA1(c0e65c43115164c3f64ac14a449c65c4e3e3c4cf) )
+	ROM_LOAD32_WORD( "417a11.28g", 0x000002, 2*1024*1024, CRC(624a7c4c) SHA1(5fda37cd02b4dcb328b80b29041214c685c77a78) )
+	ROM_LOAD32_WORD( "417a14.18h", 0x400000, 2*1024*1024, CRC(fbf551f1) SHA1(871c5804aba9845aa04596db51def3ba3b8bae30) )
+	ROM_LOAD32_WORD( "417a10.27g", 0x400002, 2*1024*1024, CRC(18fde49f) SHA1(f85b2981172be2cddc5d691bb803f0133a36cb1a) )
+	ROM_LOAD32_WORD( "417a13.20h", 0x800000, 2*1024*1024, CRC(d2e3959d) SHA1(efe516e6b84c67c0a154726a0f7f7054ee866738) )
+	ROM_LOAD32_WORD( "417a09.30g", 0x800002, 2*1024*1024, CRC(b5653e24) SHA1(ffa44d6b65feef298fa4dcc064ebd173c7cc22aa) )
+	ROM_LOAD32_WORD( "417a12.23h", 0xc00000, 2*1024*1024, CRC(25496115) SHA1(e53164f8ad95187011059c465a67fff1d18ba888) )
+	ROM_LOAD32_WORD( "417a08.33g", 0xc00002, 2*1024*1024, CRC(801e9d93) SHA1(9364d802b4ca03e652b25304c8298be8de8936b4) )
+
+	/* sound data */
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
+	ROM_LOAD( "417a17.9g", 0x000000, 2*1024*1024, CRC(88d47dfd) SHA1(b5d6dd7ee9ac0c427dc3e714a97945c954260913) )
+ROM_END
+
+/* Dragoon Might (Asia) */
+ROM_START( dragoona )
+	/* main program */
+	ROM_REGION( 0x800000,REGION_CPU1, 0 )
+	GX_BIOS
+	ROM_LOAD32_WORD_SWAP( "417aab02.31b", 0x200002, 512*1024, CRC(0421c19c) SHA1(7b79685047df996f6eda6d9bd6327d7a1cf40dd6) )
+	ROM_LOAD32_WORD_SWAP( "417aab03.27b", 0x200000, 512*1024, CRC(813dd8d5) SHA1(fb07e4836662d179902b751fefcf19f004a4f009) )
 
 	/* data roms */
 	ROM_LOAD32_WORD_SWAP( "417a04.26c", 0x400002, 1024*1024, CRC(dc574747) SHA1(43cbb6a08c27bb96bb25568c3b636c44fff3e08e) )
@@ -3273,6 +3310,43 @@ void fantjour_dma_install()
 	memset(fantjour_dma, 0, sizeof(fantjour_dma));
 }
 
+
+/* potentially misaligned 32-bit reads with a 32-bit data bus (and 24-bit address bus) */
+static data32_t readlong_a24_d32(offs_t address)
+{
+	data32_t result;
+
+	if (!(address & 3))
+		return cpu_readmem24bedw_dword(address);
+	else if (!(address & 1))
+	{
+		result = cpu_readmem24bedw_word(address) << 16;
+		return result | cpu_readmem24bedw_word(address + 2);
+	}
+	result = cpu_readmem24bedw(address) << 24;
+	result |= cpu_readmem24bedw_word(address + 1) << 8;
+	return result | cpu_readmem24bedw(address + 3);
+}
+
+/* potentially misaligned 32-bit writes with a 32-bit data bus (and 24-bit address bus) */
+static void writelong_a24_d32(offs_t address, data32_t data)
+{
+	if (!(address & 3))
+	{
+		cpu_writemem24bedw_dword(address, data);
+		return;
+	}
+	else if (!(address & 1))
+	{
+		cpu_writemem24bedw_word(address, data >> 16);
+		cpu_writemem24bedw_word(address + 2, data);
+		return;
+	}
+	cpu_writemem24bedw(address, data >> 24);
+	cpu_writemem24bedw_word(address + 1, data >> 8);
+	cpu_writemem24bedw(address + 3, data);
+}
+
 WRITE32_HANDLER(fantjour_dma_w)
 {
 	COMBINE_DATA(fantjour_dma + offset);
@@ -3290,14 +3364,14 @@ WRITE32_HANDLER(fantjour_dma_w)
 			for(i1=0; i1 <= sz2; i1++)
 				for(i2=0; i2 < db; i2+=4) {
 					/* program_read_dword program_write_dword */
-					cpu_writemem32bedw_dword(da, cpu_readmem32bedw_dword(sa) ^ x); /* correct.?? */
+					 writelong_a24_d32(da, readlong_a24_d32(sa) ^ x); /* correct.?? */
 					da += 4;
 					sa += 4;
 				}
 		else if(mode == 0x8f)
 			for(i1=0; i1 <= sz2; i1++)
 				for(i2=0; i2 < db; i2+=4) {
-					cpu_writemem32bedw_dword(da, x); /* correct.?? */
+					 writelong_a24_d32(da, x); /* correct.?? */
 					da += 4;
 				}
 	}
@@ -3358,7 +3432,7 @@ static DRIVER_INIT(konamigx)
 		readback = BPP5;
 		konamigx_cfgport = 7;
 	}
-	
+
 	else if (!strcmp(Machine->gamedrv->name, "fantjour"))
 	{
 		#if GX_SKIPIDLE
@@ -3416,7 +3490,7 @@ static DRIVER_INIT(konamigx)
 		for (i=3; i<=7; i++) K054539_set_gain(1, i, 2.0);
 	}
 
-	else if (!strcmp(Machine->gamedrv->name, "dragoonj"))
+	else if (!strcmp(Machine->gamedrv->name, "dragoonj") || !strcmp(Machine->gamedrv->name, "dragoona") )
 	{
 		int i;
 		esc_cb = dragoonj_esc;
@@ -3552,7 +3626,8 @@ GAMEX( 1994, fantjour, gokuparo, konamigx, gokuparo, konamigx, ROT0, "Konami", "
 GAMEX( 1994, puzldama, konamigx, konamigx, puzldama, konamigx, ROT0, "Konami", "Taisen Puzzle-dama (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tbyahhoo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Twin Bee Yahhoo! (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tkmmpzdm, konamigx, konamigx_6bpp, puzldama, konamigx, ROT0, "Konami", "Tokimeki Memorial Taisen Puzzle-dama (ver JAB)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1995, dragoonj, konamigx, dragoonj, dragoonj, konamigx, ROT0, "Konami", "Dragoon Might (ver JAA)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1995, dragoona, konamigx, dragoonj, dragoonj, konamigx, ROT0, "Konami", "Dragoon Might (ver AAB)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1995, dragoonj, dragoona, dragoonj, dragoonj, konamigx, ROT0, "Konami", "Dragoon Might (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, sexyparo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Sexy Parodius (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, sexyparoa,sexyparo, konamigx, gokuparo, konamigx, ROT0, "Konami", "Sexy Parodius (ver AAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, daiskiss, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Daisu-Kiss (ver JAA)", GAME_IMPERFECT_GRAPHICS )

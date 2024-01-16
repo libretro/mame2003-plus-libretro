@@ -1609,8 +1609,8 @@ VIDEO_UPDATE( system32 ) {
 	fillbitmap(bitmap, 0, 0);
 
 	/* Rad Rally (title screen) and Rad Mobile (Winners don't use drugs) use a bitmap ... */
-	/* i think this is wrong tho, rad rally enables it on the 2nd title screen when the
-	   data isn't complete */
+	/* experimental, we copy the data once the datastream stabilizes, then continue to    */
+  /* use this copy to correctly draw the bitmap on each sequential call */
 
 	if (sys32_videoram[0x01FF00/2] & 0x0800)  /* wrong? */
 	{
@@ -1619,43 +1619,46 @@ VIDEO_UPDATE( system32 ) {
 		struct GfxElement *gfx=Machine->gfx[0];
 
 		const pen_t *paldata = &gfx->colortable[0];
-		static pen_t palcopy[MAX_COLOURS];
-		static int copy_videoram[57505];
+		static pen_t palcopy[MAX_COLOURS] = { 0 };
+		static int copy_videoram[57505] = { 0 };
+		static bool enable_copy = true;
+		bool ready_state = true;
+		int i;
 
-		if (paldata[0] == 16316664 && palcopy[0] != 16316664) /* copy palette and videoram for radr in ready state */
+		/* filter out games without a known bitmap */
+		if (strcmp(Machine->gamedrv->name,"radr") && strcmp(Machine->gamedrv->name,"radm"))
+			{ enable_copy = false; ready_state = false; }
+
+		if (enable_copy)
 		{
-			int i;
-			for(i = 0; i < MAX_COLOURS; i++)
-				 palcopy[i] = paldata[i];
+			for(i = 0; i < MAX_COLOURS; i++) {
+				if (palcopy[i] != paldata[i])
+					ready_state = false;
+				palcopy[i] = paldata[i];
+			}
 
-			for(i = 0; i < 57505; i++)
+			for(i = 0; i < 57505; i++) {
+				if (copy_videoram[i] != sys32_videoram[i])
+					ready_state = false;
 				copy_videoram[i] = sys32_videoram[i];
+			}
 		}
-    
-		for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ )
-		{
-			destline = (UINT32 *)(bitmap->line[ycnt]);
 
+		if (ready_state && enable_copy)
+			enable_copy = false;
 
-			for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ )
-			{
-				int data2;
+		if (ready_state) {
+			for ( ycnt = 0 ; ycnt < 224 ; ycnt ++ ) {
+				destline = (UINT32 *)(bitmap->line[ycnt]);
 
-				if (!strcmp(Machine->gamedrv->name,"radr")) /* replace with copies */
-				{
-					data2 = copy_videoram[256*ycnt+xcnt];
+				for ( xcnt = 0 ; xcnt < 160 ; xcnt ++ ) {
+					int data2 = copy_videoram[256*ycnt+xcnt];
 					destline[xcnt*2+1] = palcopy[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
 					destline[xcnt*2] = palcopy[(data2 &0xff)+(0x100*0x1d)];
 				}
-				else if (!strcmp(Machine->gamedrv->name,"radm"))
-				{
-					data2 = sys32_videoram[256*ycnt+xcnt];
-					destline[xcnt*2+1] = paldata[(data2 >> 8)+(0x100*0x1d)]; /* 1d00 */
-					destline[xcnt*2] = paldata[(data2 &0xff)+(0x100*0x1d)];
-				}
 			}
-
 		}
+
 	}
 
 
