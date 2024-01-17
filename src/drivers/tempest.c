@@ -326,7 +326,7 @@ INPUT_PORTS_START( tempest )
 
 	PORT_START	/* IN1/DSW0 */
 	/* This is the Tempest spinner input. It only uses 4 bits. */
-	PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_SPECIAL )
+	PORT_BIT(0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	/* The next one is reponsible for cocktail mode.
 	 * According to the documentation, this is not a switch, although
 	 * it may have been planned to put it on the Math Box PCB, D/E2 )
