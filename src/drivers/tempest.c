@@ -230,8 +230,8 @@ static READ_HANDLER( input_port_1_bit_r )
 
 static READ_HANDLER( input_port_2_bit_r )
 {
-  usrintf_showmessage("%i", tempest_player_select);
-	if (offset == 3 + tempest_player_select)
+  usrintf_showmessage("%i", tempest_player_select&0x04);
+	if (offset == 3 || offset == 4))
 		return (tempest_buttons_r() & (1 << offset)) ? 0 : 228;
 
 	return (readinputport(2) & (1 << offset)) ? 0 : 228;
