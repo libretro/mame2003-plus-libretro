@@ -67,6 +67,13 @@ Other notes:
 #include "system16.h"
 #include "ost_samples.h"
 
+/* vidhrdw/segac2.c */
+extern void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect );
+extern void start_system18_vdp(void);
+extern READ16_HANDLER( segac2_vdp_r );
+extern WRITE16_HANDLER( segac2_vdp_w );
+extern WRITE16_HANDLER( sys18_extrombank_w );
+
 /***************************************************************************/
 
 static WRITE16_HANDLER( sys18_refreshenable_w )
@@ -1261,6 +1268,51 @@ static DRIVER_INIT( astorm ){
 	memcpy(RAM,&RAM[0x10000],0xa000);
 }
 
+
+
+static MEMORY_READ16_START( aquario_readmem )
+    { 0x000000, 0x0fffff, MRA16_ROM },
+   	{ 0X200000, 0X2fffff, MRA16_RAM }, /*rom/bank */
+	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
+	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
+	{ 0x600000, 0x600fff, SYS16_MRA16_SPRITERAM }, //should be 7ff but needs fff for video code
+	{ 0x800000, 0x801fff, SYS16_MRA16_PALETTERAM },
+	{ 0xa00000, 0xa03fff, sys18_io_r },
+	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+
+MEMORY_END
+
+
+static MEMORY_WRITE16_START( aquario_writemem )
+    { 0x000000, 0x0fffff, MWA16_ROM },
+	{ 0x3e0000, 0x3e001f, sys18_extrombank_w },
+	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x800000, 0x801fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x600000, 0x600fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0xe4001c, 0xe4001d, sys18_refreshenable_w },
+    { 0xc00000, 0xc0ffff, segac2_vdp_w },
+//	{ 0xc46600, 0xc46601, sys18_refreshenable_w }, //	{ 0xa00000, 0xa03fff is the io range this should be fixed }, 
+    { 0xfe0006, 0xfe0007, sound_command_nmi_w },
+	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+MEMORY_END
+
+static MACHINE_INIT( aquario )
+{
+	//fd1094_machine_init();
+
+//	sys16_fgxoffset = sys16_bgxoffset = -9;
+	sys16_update_proc = shdancer_update_proc;
+}
+
+static DRIVER_INIT( aquario )
+{
+	machine_init_sys16_onetime();
+
+//	fd1094_driver_init(0x0186);
+}
+
 /*****************************************************************************/
 
 static MACHINE_DRIVER_START( system18 )
@@ -1282,7 +1334,9 @@ static MACHINE_DRIVER_START( system18 )
 	MDRV_SCREEN_SIZE(40*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+//	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
+	MDRV_PALETTE_LENGTH((2048+64)*ShadowColorsMultiplier) // 64 extra colours for vdp
+
 
 	/* initilize system16 variables prior to driver_init and video_start */
 	machine_init_sys16_onetime();
@@ -1365,6 +1419,14 @@ static MACHINE_DRIVER_START( shdancrb )
 	MDRV_MACHINE_INIT(shdancrb)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( aquario )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system18)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(aquario_readmem,aquario_writemem)
+	MDRV_MACHINE_INIT(aquario)
+MACHINE_DRIVER_END
 
 /***************************************************************************/
 
@@ -1541,6 +1603,59 @@ INPUT_PORTS_START( shdancer )
 	PORT_DIPSETTING(    0x40, "2.40" )
 	PORT_DIPSETTING(    0xc0, "3.00" )
 	PORT_DIPSETTING(    0x80, "3.30" )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( aquario )
+	PORT_START /* player 1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_START /* player 2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	SYS16_SERVICE
+	SYS16_COINAGE
+	PORT_START	/* DSW1 */
+	PORT_DIPNAME( 0x01, 0x01, "Credits to Start" ) 
+	PORT_DIPSETTING(    0x01, "1")
+	PORT_DIPSETTING(    0x00, "2")
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x00, "Number of Players" )
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x04, "2" )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x00, "Hard" )
+	PORT_DIPSETTING(    0x10, "Normal" )
+	PORT_DIPNAME( 0x20, 0x20, "Switch to Start" ) 
+	PORT_DIPSETTING(    0x20, "Start" )
+	PORT_DIPSETTING(    0x00, "Attack" )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
 /*****************************************************************************/
@@ -1744,6 +1859,15 @@ ROM_START( moonwalk )
 	ROM_LOAD( "mpr13218.b3", 0x80000, 0x40000, CRC(56d3393c) SHA1(50a2d065060692c9ecaa56046a781cb21d93e554) )
 
 	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* sprites */
+	ROM_LOAD16_BYTE( "mpr13224.b11", 0x000001, 0x40000, CRC(c59f107b) SHA1(10fa60fca6e34eda277c483bb1c0e81bb88c8a47) )
+	ROM_LOAD16_BYTE( "mpr13231.a11", 0x000000, 0x40000, CRC(a5e96346) SHA1(a854f4dd5dc16975373255110fdb8ab3d121b1af) )
+	ROM_LOAD16_BYTE( "mpr13223.b10", 0x080001, 0x40000, CRC(364f60ff) SHA1(9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a) )
+	ROM_LOAD16_BYTE( "mpr13230.a10", 0x080000, 0x40000, CRC(9550091f) SHA1(bb6e898f7b540e130fd338c10f74609a7604cef4) )
+	ROM_LOAD16_BYTE( "mpr13222.b9",  0x100001, 0x40000, CRC(523df3ed) SHA1(2e496125e75decd674c3a08404fbdb53791a965d) )
+	ROM_LOAD16_BYTE( "mpr13229.a9",  0x100000, 0x40000, CRC(f40dc45d) SHA1(e9468cef428f52ecdf6837c6d9a9fea934e7676c) )
+	ROM_LOAD16_BYTE( "epr13221.b8",  0x180001, 0x40000, CRC(9ae7546a) SHA1(5413b0131881b0b32bac8de51da9a299835014bb) )
+	ROM_LOAD16_BYTE( "epr13228.a8",  0x180000, 0x40000, CRC(de3786be) SHA1(2279bb390aa3efab9aeee0a643e5cb6a4f5933b6) )
+
 	ROM_LOAD16_BYTE( "mpr13224.b11", 0x000001, 0x40000, CRC(c59f107b) SHA1(10fa60fca6e34eda277c483bb1c0e81bb88c8a47) )
 	ROM_LOAD16_BYTE( "mpr13231.a11", 0x000000, 0x40000, CRC(a5e96346) SHA1(a854f4dd5dc16975373255110fdb8ab3d121b1af) )
 	ROM_LOAD16_BYTE( "mpr13223.b10", 0x080001, 0x40000, CRC(364f60ff) SHA1(9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a) )
@@ -1970,6 +2094,43 @@ ROM_START( shdancrb )
 	ROM_LOAD( "sd12715.bin", 0x30000, 0x40000, CRC(07051a52) SHA1(d48658497f4a34665d3e051f893ff057c38925ae) )
 ROM_END
 
+ROM_START( aquario )
+	ROM_REGION( 0x300000, REGION_CPU1, 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "a4.bin",  0x000000, 0x080000, CRC(c58ff95f) SHA1(27301df8f72ccc8a27e9520e11035aa63b8e03b6) )
+	ROM_LOAD16_BYTE( "a6.bin",  0x000001, 0x080000, CRC(b4a94cd9) SHA1(2059942a26d9e1de63b329d1c8b643535761d2d8) )
+	ROM_LOAD16_BYTE( "a5.bin",  0x200000, 0x80000, CRC(1cef8145) SHA1(78a1be8ea0cc0d4e56b2cf9a7c1bd3e08352e175) )
+	ROM_LOAD16_BYTE( "a7.bin",  0x200001, 0x80000, CRC(504e4665) SHA1(9b052b48b7cb2da880d6589fdcd1041eca555f7c) )
+
+    ROM_REGION( 0x30000, REGION_GFX1, 0 ) /* tiles */
+	/* filled by other sys18_extrombank_w function .. */
+
+	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* sprites */
+	/* filled by other sys18_extrombank_w function .. */
+	
+// these are same as Clutch Hitter boot values
+	ROM_REGION( 0x180000,  REGION_GFX3, 0 ) /* tiles */
+	ROM_LOAD( "c1.bin",       0x000000, 0x080000, CRC(93ad1357) SHA1(09b35481798035b5f7d7d533e27418a298c6e2c7) )
+	ROM_LOAD( "c2.bin",       0x080000, 0x080000, CRC(4010d14b) SHA1(f9d2e726a032f49fac69a223107966f2884821b5) )
+	ROM_LOAD( "c3.bin",       0x100000, 0x080000, CRC(3a3d0285) SHA1(21899b3b2bcb979d53e78b0d48c493a9a15955c7) )
+	
+// these are the same as Laser Ghost boot values
+	ROM_REGION( 0x800000, REGION_GFX4, 0 ) /* sprites */
+	ROM_LOAD16_BYTE( "a10.bin",      0x000000, 0x080000, CRC(b863e533) SHA1(e80fa6a74c43c040fd4b857247aecf03a3de3d87) )
+	ROM_LOAD16_BYTE( "c10.bin",      0x000001, 0x080000, CRC(c9ce76f9) SHA1(a096583f5e81f02d6a34802688d201d8d986a84a) )
+	ROM_LOAD16_BYTE( "a11.bin",      0x200000, 0x080000, CRC(8b568940) SHA1(19cd028cd43fa07904deb0250564251ba0128c4b) )
+	ROM_LOAD16_BYTE( "c11.bin",      0x200001, 0x080000, CRC(06edb7bc) SHA1(e24ec7b52638edaa8debee0aca40ddf902c63334) )
+	ROM_LOAD16_BYTE( "a12.bin",      0x400000, 0x080000, CRC(0219923f) SHA1(1e52df5ef155f5a4d74eabea22bb431a569e344f) )
+	ROM_LOAD16_BYTE( "c12.bin",      0x400001, 0x080000, CRC(0bb79c56) SHA1(fdaa6cc9efb3104b78392530547bd82c21cff825) )
+	ROM_LOAD16_BYTE( "a13.bin",      0x600000, 0x080000, CRC(9ea5c73d) SHA1(e42002cc13548a8aba6ffb0c60470b345b88eaa8) )
+	ROM_LOAD16_BYTE( "c13.bin",      0x600001, 0x080000, CRC(0beef46e) SHA1(eccba6d4e015e93f5ca25ef6df31a491193d08a4) )
+
+// Use generic MAME95 segas18 sound loading with 4 and 8 same as Desert Breaker
+	ROM_REGION( 0x210000, REGION_CPU2, ROMREGION_ERASEFF ) /* sound CPU */
+	ROM_LOAD( "c7.bin",	 0x010000, 0x40000, CRC(f1183938) SHA1(9409f0dc02773892803bc6d37f1bdbd894cf1805) )
+	ROM_LOAD( "c6.bin",  0x090000, 0x80000, CRC(39f11291) SHA1(3b4680bd2e20bd297644dda0a26f958c74826d47) )
+	ROM_LOAD( "c5.bin",  0x110000, 0x80000, CRC(6a380dca) SHA1(4589efc9e994ef9d07d4033e20c21afca4875005) )
+	ROM_LOAD( "c4.bin",  0x190000, 0x80000, CRC(1bd081f8) SHA1(e5b0b5d8334486f813d7c430bb7fce3f69605a21) )
+ROM_END
 
 
 /*****************************************************************************/
@@ -1984,6 +2145,8 @@ GAME( 1989, shdancer, 0,        shdancer, shdancer, shdancer, ROT0, "Sega",    "
 GAMEX( 1989, shdancbl, shdancer, shdancbl, shdancer, shdancbl, ROT0, "bootleg", "Shadow Dancer (bootleg)", GAME_IMPERFECT_GRAPHICS)
 GAME( 1989, shdancrj, shdancer, shdancrj, shdancer, shdancrj, ROT0, "Sega",    "Shadow Dancer (Japan)" )
 GAME( 1989, shdancrb, shdancer, shdancrb, shdancer, shdancrb, ROT0, "Sega",    "Shadow Dancer (Rev.B)" )
+GAME( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)" )
+
 
 GAMEX(1990, bloxeed,  0,        shdancer, shdancer, shdancer, ROT0, "Sega", "Bloxeed", GAME_NOT_WORKING )
 GAMEX(19??, cltchitr, 0,        shdancer, shdancer, shdancer, ROT0, "Sega", "Clutch Hitter", GAME_NOT_WORKING )
