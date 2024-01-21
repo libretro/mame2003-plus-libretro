@@ -1294,7 +1294,7 @@ static MEMORY_WRITE16_START( aquario_writemem )
 	{ 0xe4001c, 0xe4001d, sys18_refreshenable_w },
     { 0xc00000, 0xc0ffff, segac2_vdp_w },
 //	{ 0xc46600, 0xc46601, sys18_refreshenable_w }, //	{ 0xa00000, 0xa03fff is the io range this should be fixed }, 
-    { 0xfe0006, 0xfe0007, sound_command_nmi_w },
+    { 0xf00006, 0xf00007, sound_command_nmi_w },
 	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
@@ -1334,9 +1334,7 @@ static MACHINE_DRIVER_START( system18 )
 	MDRV_SCREEN_SIZE(40*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
-//	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
-	MDRV_PALETTE_LENGTH((2048+64)*ShadowColorsMultiplier) // 64 extra colours for vdp
-
+	MDRV_PALETTE_LENGTH(2048*ShadowColorsMultiplier)
 
 	/* initilize system16 variables prior to driver_init and video_start */
 	machine_init_sys16_onetime();
@@ -2124,12 +2122,11 @@ ROM_START( aquario )
 	ROM_LOAD16_BYTE( "a13.bin",      0x600000, 0x080000, CRC(9ea5c73d) SHA1(e42002cc13548a8aba6ffb0c60470b345b88eaa8) )
 	ROM_LOAD16_BYTE( "c13.bin",      0x600001, 0x080000, CRC(0beef46e) SHA1(eccba6d4e015e93f5ca25ef6df31a491193d08a4) )
 
-// Use generic MAME95 segas18 sound loading with 4 and 8 same as Desert Breaker
-	ROM_REGION( 0x210000, REGION_CPU2, ROMREGION_ERASEFF ) /* sound CPU */
-	ROM_LOAD( "c7.bin",	 0x010000, 0x40000, CRC(f1183938) SHA1(9409f0dc02773892803bc6d37f1bdbd894cf1805) )
-	ROM_LOAD( "c6.bin",  0x090000, 0x80000, CRC(39f11291) SHA1(3b4680bd2e20bd297644dda0a26f958c74826d47) )
-	ROM_LOAD( "c5.bin",  0x110000, 0x80000, CRC(6a380dca) SHA1(4589efc9e994ef9d07d4033e20c21afca4875005) )
-	ROM_LOAD( "c4.bin",  0x190000, 0x80000, CRC(1bd081f8) SHA1(e5b0b5d8334486f813d7c430bb7fce3f69605a21) )
+	ROM_REGION( 0x200000, REGION_CPU2, ROMREGION_ERASEFF ) /* sound CPU */
+	ROM_LOAD( "c7.bin",   0x000000, 0x040000, CRC(f1183938) SHA1(9409f0dc02773892803bc6d37f1bdbd894cf1805) )
+	ROM_LOAD( "c6.bin",   0x080000, 0x080000, CRC(39f11291) SHA1(3b4680bd2e20bd297644dda0a26f958c74826d47) )
+	ROM_LOAD( "c5.bin",   0x100000, 0x080000, CRC(6a380dca) SHA1(4589efc9e994ef9d07d4033e20c21afca4875005) )
+	ROM_LOAD( "c4.bin",   0x180000, 0x080000, CRC(1bd081f8) SHA1(e5b0b5d8334486f813d7c430bb7fce3f69605a21) )
 ROM_END
 
 
