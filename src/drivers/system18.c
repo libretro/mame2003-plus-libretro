@@ -2142,7 +2142,7 @@ GAME( 1989, shdancer, 0,        shdancer, shdancer, shdancer, ROT0, "Sega",    "
 GAMEX( 1989, shdancbl, shdancer, shdancbl, shdancer, shdancbl, ROT0, "bootleg", "Shadow Dancer (bootleg)", GAME_IMPERFECT_GRAPHICS)
 GAME( 1989, shdancrj, shdancer, shdancrj, shdancer, shdancrj, ROT0, "Sega",    "Shadow Dancer (Japan)" )
 GAME( 1989, shdancrb, shdancer, shdancrb, shdancer, shdancrb, ROT0, "Sega",    "Shadow Dancer (Rev.B)" )
-GAME( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)" )
+GAMEX( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)", GAME_IMPERFECT_GRAPHICS)
 
 
 GAMEX(1990, bloxeed,  0,        shdancer, shdancer, shdancer, ROT0, "Sega", "Bloxeed", GAME_NOT_WORKING )
