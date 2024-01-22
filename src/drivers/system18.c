@@ -1309,7 +1309,7 @@ static MACHINE_INIT( aquario )
 static DRIVER_INIT( aquario )
 {
 	machine_init_sys16_onetime();
-
+	sys16_sprite_draw=1; 
 //	fd1094_driver_init(0x0186);
 }
 
@@ -2112,7 +2112,7 @@ ROM_START( aquario )
 	ROM_LOAD( "c3.bin",       0x100000, 0x080000, CRC(3a3d0285) SHA1(21899b3b2bcb979d53e78b0d48c493a9a15955c7) )
 	
 // these are the same as Laser Ghost boot values
-	ROM_REGION( 0x800000, REGION_GFX4, 0 ) /* sprites */
+	ROM_REGION16_BE( 0x800000, REGION_GFX4, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "a10.bin",      0x000000, 0x080000, CRC(b863e533) SHA1(e80fa6a74c43c040fd4b857247aecf03a3de3d87) )
 	ROM_LOAD16_BYTE( "c10.bin",      0x000001, 0x080000, CRC(c9ce76f9) SHA1(a096583f5e81f02d6a34802688d201d8d986a84a) )
 	ROM_LOAD16_BYTE( "a11.bin",      0x200000, 0x080000, CRC(8b568940) SHA1(19cd028cd43fa07904deb0250564251ba0128c4b) )
@@ -2142,7 +2142,7 @@ GAME( 1989, shdancer, 0,        shdancer, shdancer, shdancer, ROT0, "Sega",    "
 GAMEX( 1989, shdancbl, shdancer, shdancbl, shdancer, shdancbl, ROT0, "bootleg", "Shadow Dancer (bootleg)", GAME_IMPERFECT_GRAPHICS)
 GAME( 1989, shdancrj, shdancer, shdancrj, shdancer, shdancrj, ROT0, "Sega",    "Shadow Dancer (Japan)" )
 GAME( 1989, shdancrb, shdancer, shdancrb, shdancer, shdancrb, ROT0, "Sega",    "Shadow Dancer (Rev.B)" )
-GAMEX( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)", GAME_IMPERFECT_GRAPHICS)
+GAME( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)")
 
 
 GAMEX(1990, bloxeed,  0,        shdancer, shdancer, shdancer, ROT0, "Sega", "Bloxeed", GAME_NOT_WORKING )
