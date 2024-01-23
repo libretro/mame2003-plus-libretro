@@ -2952,7 +2952,7 @@ ROM_START( dkremix )
 	/* space for diagnostic ROM */
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
-	ROM_LOAD( "dkremix.bin",  0x00000, 0x10000, CRC(f47c13aa) SHA1(c8516e27028d371a1f7b198f6d91f6a10bf99d3f) )
+	ROM_LOAD( "dkremix.bin",  0x0000, 0x10000, CRC(f47c13aa) SHA1(c8516e27028d371a1f7b198f6d91f6a10bf99d3f) )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
 	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
