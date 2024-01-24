@@ -2912,14 +2912,14 @@ ROM_END
 
 /* Braze Technologies bootleg hardware */
 ROM_START( dkongx )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
-	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_REGION( 0x10000, REGION_USER1, 0 )
 	ROM_LOAD( "d2k12.bin",  0x0000, 0x10000,  CRC(6e95ca0d) SHA1(c058add0f146d577e3df0ba60828fe1734e78d01) ) /* Version 1.2 */
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
@@ -2944,14 +2944,14 @@ ROM_START( dkongx )
 ROM_END
 
 ROM_START( dkremix )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
-	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_REGION( 0x10000, REGION_USER1, 0 )
 	ROM_LOAD( "dkremix.bin",  0x0000, 0x10000, CRC(f47c13aa) SHA1(c8516e27028d371a1f7b198f6d91f6a10bf99d3f) )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
