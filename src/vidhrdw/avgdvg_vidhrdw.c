@@ -350,8 +350,8 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
-				avg_apply_flipping_and_swapping(&x, &y);
-				vector_add_point(currentx, currenty, colorram[1], z);
+				//vector_add_point(currentx, currenty, colorram[1], z);
+				avg_add_point(currentx, currenty, colorram[1], z);
 				break;
 
 			/* DSVEC: draw a short vector */
@@ -388,8 +388,8 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
-				avg_apply_flipping_and_swapping(&x, &y);
-				vector_add_point(currentx, currenty, colorram[1], z);
+				//vector_add_point(currentx, currenty, colorram[1], z);
+				avg_add_point(currentx, currenty, colorram[1], z);
 				break;
 
 			/* DLABS: move to an absolute location */
