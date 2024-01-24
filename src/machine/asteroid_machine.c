@@ -154,8 +154,8 @@ WRITE_HANDLER( asteroid_bank_switch_w )
 	set_led_status (1, ~data & 0x01);
 
 	/* player selection is bit 0x04 */
-	avg_set_flip_y(data & 0x04);
 	avg_set_flip_x(data & 0x04);
+	avg_set_flip_y(data & 0x04);
 }
 
 
