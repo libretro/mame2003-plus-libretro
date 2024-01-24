@@ -858,7 +858,7 @@ ROM_END
 
 static DRIVER_INIT( asteroid )
 {
-	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
+	install_mem_write_handler(0, 0x3204, 0x3204, cocktail_inv_w);
 }
 
 
