@@ -12,6 +12,8 @@
 #include "vidhrdw/avgdvg.h"
 #include "asteroid.h"
 
+bool optional_io_enable = false;
+int optional_io_port = -1;
 
 INTERRUPT_GEN( asteroid_interrupt )
 {
@@ -150,6 +152,9 @@ WRITE_HANDLER( asteroid_bank_switch_w )
 	}
 	set_led_status (0, ~data & 0x02);
 	set_led_status (1, ~data & 0x01);
+
+	avg_set_flipx(data & 0x4);
+	avg_set_flipx(data & 0x4);
 }
 
 
