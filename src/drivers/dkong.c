@@ -180,21 +180,19 @@ static READ_HANDLER( braze_eeprom_r )
 
 static WRITE_HANDLER( braze_a15_w )
 {
-
-
       
 		banks = data & 1;
-  printf("banks:%d\n",banks);
+		//printf("banks:%d\n",banks);
 
-		if(!banks)
+		if(banks)
 		{
-			cpu_setbank(1, memory_region(REGION_CPU1));
-			cpu_setbank(2, memory_region(REGION_CPU1)+0x8000);
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x18000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
 		}
 		else
 		{
 			cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
-			cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
 		}
 	
 }
@@ -2936,8 +2934,7 @@ ROM_START( dkongx )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
 	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
@@ -2968,8 +2965,7 @@ ROM_START( dkremix )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
 	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "dkremix.5h",   0x0000, 0x0800, CRC(fc82b069) SHA1(ae78e6de0b50149a55f10f480c522f7a147ea106) )
@@ -3027,7 +3023,7 @@ static DRIVER_INIT( dkongx )
 	braze_decrypt_rom(memory_region(REGION_USER1) + 0x10000);
 
 	cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
-	cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
+	cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
 
 	
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
