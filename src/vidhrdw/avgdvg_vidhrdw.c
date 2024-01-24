@@ -266,7 +266,7 @@ static int dvg_generate_vector_list(void)
 	int pc = 0;
 	int sp = 0;
 	int scale = 0;
-	int currentx = 0, currenty = 0;
+	int currentx = 512, currenty = 512;
 	int total_length = 1;
 	int done = 0;
 
