@@ -146,6 +146,17 @@
 #include "asteroid.h"
 
 
+/*************************************
+ *
+ *	Cocktail flip
+ *
+ *************************************/
+static READ_HANDLER( cocktail_inv_r )
+{
+	avg_set_flip_x(data & 0x04);
+	avg_set_flip_y(data & 0x04);
+}
+
 
 /*************************************
  *
@@ -844,6 +855,12 @@ ROM_END
  *	Driver initialization
  *
  *************************************/
+
+static DRIVER_INIT( asteroid )
+{
+	install_mem_read_handler(0, 0x3200, 0x3200, cocktail_inv_r);
+}
+
 
 static DRIVER_INIT( asteroib )
 {
