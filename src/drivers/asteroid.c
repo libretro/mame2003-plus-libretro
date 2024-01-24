@@ -145,6 +145,8 @@
 #include "machine/atari_vg.h"
 #include "asteroid.h"
 
+static bool optional_io_enable = false;
+static int  optional_io_port = -1;
 
 /*************************************
  *
@@ -154,8 +156,11 @@
 static WRITE_HANDLER( cocktail_inv_w )
 {
 	/* player selection is bit 0x04 */
-	avg_set_flip_x(data & 0x04);
-	avg_set_flip_y(data & 0x04);
+	if (optional_io_enable)
+	{
+		avg_set_flip_x( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+		avg_set_flip_y( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+	}
 }
 
 
@@ -359,6 +364,11 @@ INPUT_PORTS_START( asteroid )
 	PORT_DIPSETTING (	0x80, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING (	0x40, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING (	0x00, DEF_STR( Free_Play ) )
+
+	PORT_START /* fake IN3 - inverter circuit */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
 
@@ -859,6 +869,8 @@ ROM_END
 
 static DRIVER_INIT( asteroid )
 {
+	optional_io_enable = true;
+	optional_io_port = 3;
 	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
 }
 
