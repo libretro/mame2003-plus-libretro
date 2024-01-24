@@ -202,6 +202,48 @@ static INLINE int effective_z(int z, int statz)
 	return z;
 }
 
+void avg_set_flip_x(int flip)
+{
+	if (flip)
+		flip_x = 1;
+	else
+		flip_x = 0;
+}
+
+void avg_set_flip_y(int flip)
+{
+	if (flip)
+		flip_y = 1;
+	else
+		flip_y = 0;
+}
+
+void avg_apply_flipping_and_swapping(int *x, int *y)
+{
+	if (flip_x)
+		*x += (xcenter-*x)<<1;
+	if (flip_y)
+		*y += (ycenter-*y)<<1;
+
+	if (swap_xy)
+	{
+		int temp = *x;
+		*x = *y - ycenter + xcenter;
+		*y = temp - xcenter + ycenter;
+	}
+}
+
+void avg_add_point(int x, int y, rgb_t color, int intensity)
+{
+	avg_apply_flipping_and_swapping(&x, &y);
+	vector_add_point(x, y, color, intensity);
+}
+
+void avg_add_point_callback(int x, int y, rgb_t (*color_callback)(void), int intensity)
+{
+	avg_apply_flipping_and_swapping(&x, &y);
+	vector_add_point_callback(x, y, color_callback, intensity);
+}
 
 
 /*************************************
@@ -232,6 +274,8 @@ static int dvg_generate_vector_list(void)
 	int opcode;
 	int x, y, z, temp, a;
 	int deltax, deltay;
+
+	avg_apply_flipping_and_swapping(&x, &y);
 
 	/* reset the vector list */
 	vector_clear_list();
@@ -438,48 +482,6 @@ static int dvg_generate_vector_list(void)
 	return total_length;
 }
 
-void avg_set_flip_x(int flip)
-{
-	if (flip)
-		flip_x = 1;
-	else
-		flip_x = 0;
-}
-
-void avg_set_flip_y(int flip)
-{
-	if (flip)
-		flip_y = 1;
-	else
-		flip_y = 0;
-}
-
-void avg_apply_flipping_and_swapping(int *x, int *y)
-{
-	if (flip_x)
-		*x += (xcenter-*x)<<1;
-	if (flip_y)
-		*y += (ycenter-*y)<<1;
-
-	if (swap_xy)
-	{
-		int temp = *x;
-		*x = *y - ycenter + xcenter;
-		*y = temp - xcenter + ycenter;
-	}
-}
-
-void avg_add_point(int x, int y, rgb_t color, int intensity)
-{
-	avg_apply_flipping_and_swapping(&x, &y);
-	vector_add_point(x, y, color, intensity);
-}
-
-void avg_add_point_callback(int x, int y, rgb_t (*color_callback)(void), int intensity)
-{
-	avg_apply_flipping_and_swapping(&x, &y);
-	vector_add_point_callback(x, y, color_callback, intensity);
-}
 
 /*************************************
  *
