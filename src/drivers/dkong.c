@@ -148,7 +148,7 @@ Changes:
  *
  *************************************/
 
-static int banks = 0;
+static int banks = 99;
 
 static struct EEPROM_interface braze_eeprom_intf =
 {
@@ -181,11 +181,22 @@ static READ_HANDLER( braze_eeprom_r )
 static WRITE_HANDLER( braze_a15_w )
 {
 
-	if (banks != (data & 1)) {
+
+      
 		banks = data & 1;
-		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); /* ?*/
-		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); /* ?*/
-	}
+  printf("banks:%d\n",banks);
+
+		if(!banks)
+		{
+			cpu_setbank(1, memory_region(REGION_CPU1));
+			cpu_setbank(2, memory_region(REGION_CPU1)+0x8000);
+		}
+		else
+		{
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
+		}
+	
 }
 
 static WRITE_HANDLER( braze_eeprom_w )
@@ -307,16 +318,17 @@ static MEMORY_READ_START( readmem )
 MEMORY_END
 
 static MEMORY_READ_START( dkong2_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x0000, 0x5fff, MRA_BANK1 },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
 	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
 	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
 	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
 	{ 0x7d00, 0x7d00, dkong_in2_r },	/* IN2/DSW2 */
 	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0xffff, MRA_BANK2 },	/* DK3 and bootleg DKjr only */
 	{ 0xc800, 0xc800, braze_eeprom_r },
-	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
-	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
+
+
 MEMORY_END
 
 static MEMORY_READ_START( dkong3_readmem )
@@ -2919,7 +2931,7 @@ ROM_START( dkongx )
 	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
-	ROM_REGION( 0x10000, REGION_USER1, 0 )
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
 	ROM_LOAD( "d2k12.bin",  0x0000, 0x10000,  CRC(6e95ca0d) SHA1(c058add0f146d577e3df0ba60828fe1734e78d01) ) /* Version 1.2 */
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
@@ -2951,7 +2963,7 @@ ROM_START( dkremix )
 	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
-	ROM_REGION( 0x10000, REGION_USER1, 0 )
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
 	ROM_LOAD( "dkremix.bin",  0x0000, 0x10000, CRC(f47c13aa) SHA1(c8516e27028d371a1f7b198f6d91f6a10bf99d3f) )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
@@ -3014,12 +3026,10 @@ static DRIVER_INIT( dkongx )
 {
 	braze_decrypt_rom(memory_region(REGION_USER1) + 0x10000);
 
-	memset (memory_region(REGION_CPU1), 0, 0x10000);
+	cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+	cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
 
-	banks = 0;
-	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000);
-	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); /* ?*/
-
+	
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
 	install_mem_write_handler(0, 0xc800, 0xc800,  braze_eeprom_w);
 	install_mem_read_handler(0,  0xc800, 0xc800,  braze_eeprom_r);
