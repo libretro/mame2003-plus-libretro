@@ -813,6 +813,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( dkongjo1 )	/* (c) 1981 Nintendo */
 	DRIVER( dkongx )	/* (c) 2008 Bootleg  */
 	DRIVER( dkremix )	/* 2015 Bootleg  */
+	DRIVER( dkchrmx )
 	DRIVER( dkongjr )	/* (c) 1982 Nintendo of America */
 	DRIVER( dkongjrj )	/* (c) 1982 Nintendo */
 	DRIVER( dkngjnrj )	/* (c) 1982 Nintendo */
