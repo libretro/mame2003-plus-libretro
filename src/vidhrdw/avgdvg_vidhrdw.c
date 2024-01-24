@@ -275,8 +275,6 @@ static int dvg_generate_vector_list(void)
 	int x, y, z, temp, a;
 	int deltax, deltay;
 
-	avg_apply_flipping_and_swapping(&x, &y);
-
 	/* reset the vector list */
 	vector_clear_list();
 
@@ -352,6 +350,7 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
+				avg_apply_flipping_and_swapping(&currentx, &currenty);
 				vector_add_point(currentx, currenty, colorram[1], z);
 				break;
 
@@ -389,6 +388,7 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
+				avg_apply_flipping_and_swapping(&currentx, &currenty);
 				vector_add_point(currentx, currenty, colorram[1], z);
 				break;
 
