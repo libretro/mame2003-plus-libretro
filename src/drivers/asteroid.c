@@ -153,6 +153,7 @@
  *************************************/
 static WRITE_HANDLER( cocktail_inv_w )
 {
+	/* player selection is bit 0x04 */
 	avg_set_flip_x(data & 0x04);
 	avg_set_flip_y(data & 0x04);
 }
@@ -858,7 +859,7 @@ ROM_END
 
 static DRIVER_INIT( asteroid )
 {
-	install_mem_write_handler(0, 0x3204, 0x3204, cocktail_inv_w);
+	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
 }
 
 
