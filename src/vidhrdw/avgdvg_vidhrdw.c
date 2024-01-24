@@ -350,7 +350,7 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
-				avg_apply_flipping_and_swapping(&currentx, &currenty);
+				avg_apply_flipping_and_swapping(&x, &y);
 				vector_add_point(currentx, currenty, colorram[1], z);
 				break;
 
@@ -388,7 +388,7 @@ static int dvg_generate_vector_list(void)
 				total_length += dvg_vector_timer(temp);
 
 				/* add the new point */
-				avg_apply_flipping_and_swapping(&currentx, &currenty);
+				avg_apply_flipping_and_swapping(&x, &y);
 				vector_add_point(currentx, currenty, colorram[1], z);
 				break;
 
