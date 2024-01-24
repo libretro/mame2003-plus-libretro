@@ -153,8 +153,8 @@
  *************************************/
 static READ_HANDLER( cocktail_inv_r )
 {
-	avg_set_flip_x(data & 0x04);
-	avg_set_flip_y(data & 0x04);
+	avg_set_flip_x(offset & 0x04);
+	avg_set_flip_y(offset & 0x04);
 }
 
 
