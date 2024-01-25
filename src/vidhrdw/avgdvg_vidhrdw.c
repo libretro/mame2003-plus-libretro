@@ -997,8 +997,8 @@ int avgdvg_init(int vector_type)
 	height = ymax - ymin;
 
 	/* determine the center points */
-	xcenter = ((xmax + xmin) / 2) << 16;
-	ycenter = ((ymax + ymin) / 2) << 16;
+	xcenter = ((xmax - xmin) / 2) << 16;
+	ycenter = ((ymax - ymin) / 2) << 16;
 
 	/* initialize to no avg flipping */
 	flip_x = flip_y = 0;
