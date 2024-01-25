@@ -236,6 +236,7 @@ void avg_apply_flipping_and_swapping(int *x, int *y)
 void avg_add_point(int x, int y, rgb_t color, int intensity)
 {
 	avg_apply_flipping_and_swapping(&x, &y);
+  usrintf_showmessage("x%i  y%i", x, y);
 	vector_add_point(x, y, color, intensity);
 }
 
