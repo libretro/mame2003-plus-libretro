@@ -179,7 +179,7 @@ WRITE_HANDLER( astdelux_bank_switch_w )
 WRITE_HANDLER( astdelux_led_w )
 {
 	set_led_status(offset,(data&0x80)?0:1);
-  usrintf_showmessage("d1:%i  d2:%i  d4:%i  d8:%i  d10:%i  d20:%i  d40:%i  d80:%i", data&1,data&2,data&4,data&8,data&0x10,data&0x20,data&0x40,data&0x80);
+  usrintf_showmessage("d3:%i  d5:%i  d6:%i  d7:%i", data&3,data&5,data&6,data&7);
 }
 
 
