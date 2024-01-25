@@ -988,10 +988,11 @@ int avgdvg_init(int vector_type)
 	busy = 0;
 
 	/* compute the min/max values */
-	xmin = abs(Machine->visible_area.min_x);
-	ymin = abs(Machine->visible_area.min_y);
-	xmax = abs(Machine->visible_area.max_x);
-	ymax = abs(Machine->visible_area.max_y);
+	xmin = Machine->visible_area.min_x;
+	ymin = Machine->visible_area.min_y;
+	xmax = Machine->visible_area.max_x;
+	ymax = Machine->visible_area.max_y;
+  usrintf_showmessage("x%i-%i  y%i-%i",xmin, xmax, ymin, ymax);
 	width = xmax - xmin;
 	height = ymax - ymin;
 
