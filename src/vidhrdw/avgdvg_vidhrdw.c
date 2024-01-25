@@ -992,13 +992,12 @@ int avgdvg_init(int vector_type)
 	ymin = Machine->visible_area.min_y;
 	xmax = Machine->visible_area.max_x;
 	ymax = Machine->visible_area.max_y;
-  usrintf_showmessage("x%i-%i  y%i-%i",xmin, xmax, ymin, ymax);
 	width = xmax - xmin;
 	height = ymax - ymin;
 
 	/* determine the center points */
 	xcenter = ((xmax + xmin) / 2) << 16;
-	ycenter = ((ymax + ymin) / 2) << 16;
+	ycenter = ((/*ymax + ymin*/580) / 2) << 16;
 
 	/* initialize to no avg flipping */
 	flip_x = flip_y = 0;
