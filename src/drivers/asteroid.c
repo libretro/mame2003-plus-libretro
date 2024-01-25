@@ -893,7 +893,7 @@ static DRIVER_INIT( asterock )
 static DRIVER_INIT( astdelux )
 {
 	optional_io_port = 4;
-	install_mem_write_handler(0, 0x3c04, 0x3c04, cocktail_inv_w);
+	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
 
 	OVERLAY_START( astdelux_overlay )
 		OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, MAKE_ARGB(0x04,0x88,0xff,0xff) )
