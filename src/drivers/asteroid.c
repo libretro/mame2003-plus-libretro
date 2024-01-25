@@ -156,7 +156,7 @@ static int  optional_io_port = -1;
 static WRITE_HANDLER( cocktail_inv_w )
 {
 	/* player selection is bit 0x04 */
-	//avg_set_flip_x( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+	avg_set_flip_x( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
 	avg_set_flip_y( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
 }
 
