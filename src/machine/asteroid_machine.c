@@ -118,7 +118,16 @@ READ_HANDLER( asteroid_IN1_r )
 	int res;
 	int bitmask;
 
-	res=readinputport(1);
+	if (optional_io_port == -1)
+		res=readinputport(1);
+	else
+	{
+		if (offset==6 || offset==7 || offset==8)
+			res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
+		else
+			res = readinputport(1);
+	}
+
 	bitmask = (1 << offset);
 
 	if (res & bitmask)
