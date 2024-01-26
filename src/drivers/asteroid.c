@@ -146,7 +146,6 @@
 #include "asteroid.h"
 
 
-static int  optional_io_port = -1;
 
 /*************************************
  *
