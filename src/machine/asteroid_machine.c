@@ -46,15 +46,11 @@ READ_HANDLER( asteroid_IN0_r )
 	int res;
 	int bitmask;
 
-	if (optional_io_port == -1)
-		res=readinputport(0);
+	/* 3-4 = button3-button1*/
+	if (offset==3 || offset==4)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
 	else
-	{ /* 3-4 = button3-button1*/
-		if (offset==3 || offset==4)
-			res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
-		else
-			res = readinputport(0);
-	}
+		res = readinputport(0);
 
 	bitmask = (1 << offset);
 
@@ -118,15 +114,11 @@ READ_HANDLER( asteroid_IN1_r )
 	int res;
 	int bitmask;
 
-	if (optional_io_port == -1)
-		res=readinputport(1);
+	/* 5-6-7 = button2-right-left */
+	if (offset==5 || offset==6 || offset==7)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
 	else
-	{ /* 5-6-7 = button2-right-left */
-		if (offset==5 || offset==6 || offset==7)
-			res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
-		else
-			res = readinputport(1);
-	}
+		res = readinputport(1);
 
 	bitmask = (1 << offset);
 
