@@ -50,7 +50,7 @@ READ_HANDLER( asteroid_IN0_r )
 		res=readinputport(0);
 	else
 	{
-		if (offset==4 || offset==5)
+		if (offset==5 || offset==6)
 			res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
 		else
 			res = readinputport(0);
@@ -122,7 +122,7 @@ READ_HANDLER( asteroid_IN1_r )
 		res=readinputport(1);
 	else
 	{
-		if (offset==6 || offset==7 || offset==8)
+		if (offset==5 || offset==7 || offset==8)
 			res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
 		else
 			res = readinputport(1);
