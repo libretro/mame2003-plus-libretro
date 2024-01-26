@@ -24,6 +24,7 @@ MACHINE_INIT( asteroid );
 
 READ_HANDLER( llander_IN0_r );
 
+extern int optional_io_active;
 extern int optional_io_port;
 
 
