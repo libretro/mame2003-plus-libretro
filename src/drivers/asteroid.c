@@ -146,6 +146,20 @@
 #include "asteroid.h"
 
 
+static int  optional_io_port = -1;
+
+/*************************************
+ *
+ *	Cocktail flip
+ *
+ *************************************/
+static WRITE_HANDLER( cocktail_inv_w )
+{
+	/* player selection is bit 0x04 */
+	avg_set_flip_x( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+	avg_set_flip_y( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+}
+
 
 /*************************************
  *
@@ -347,6 +361,11 @@ INPUT_PORTS_START( asteroid )
 	PORT_DIPSETTING (	0x80, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING (	0x40, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING (	0x00, DEF_STR( Free_Play ) )
+
+	PORT_START /* fake IN3 - inverter circuit */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
 
@@ -845,6 +864,13 @@ ROM_END
  *
  *************************************/
 
+static DRIVER_INIT( asteroid )
+{
+	optional_io_port = 3;
+	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
+}
+
+
 static DRIVER_INIT( asteroib )
 {
 	install_mem_read_handler(0, 0x2000, 0x2000, asteroib_IN0_r);
@@ -876,8 +902,8 @@ static DRIVER_INIT( astdelux )
  *
  *************************************/
 
-GAME( 1979, asteroid, 0,        asteroid, asteroid, 0,        ROT0, "Atari", "Asteroids (rev 2)" )
-GAME( 1979, asteroi1, asteroid, asteroid, asteroid, 0,        ROT0, "Atari", "Asteroids (rev 1)" )
+GAME( 1979, asteroid, 0,        asteroid, asteroid, asteroid, ROT0, "Atari", "Asteroids (rev 2)" )
+GAME( 1979, asteroi1, asteroid, asteroid, asteroid, asteroid, ROT0, "Atari", "Asteroids (rev 1)" )
 GAME( 1979, asteroib, asteroid, asteroid, asteroib, asteroib, ROT0, "bootleg", "Asteroids (bootleg on Lunar Lander hardware)" )
 GAME( 1979, asterock, asteroid, asterock, asterock, asterock, ROT0, "Sidam", "Asterock" )
 GAME( 1980, astdelux, 0,        astdelux, astdelux, astdelux, ROT0, "Atari", "Asteroids Deluxe (rev 2)" )
