@@ -14,7 +14,6 @@
 
 
 int optional_io_active = 0;
-int optional_io_port = -1;
 #define asteroid_cocktail_port0   5
 #define asteroid_cocktail_port1   6
 
