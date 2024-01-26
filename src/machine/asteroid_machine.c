@@ -13,6 +13,10 @@
 #include "asteroid.h"
 
 
+int optional_io_active = 0;
+#define asteroid_cocktail_port0   5
+#define asteroid_cocktail_port1   6
+
 INTERRUPT_GEN( asteroid_interrupt )
 {
 	/* Turn off interrupts if self-test is enabled */
@@ -41,7 +45,11 @@ READ_HANDLER( asteroid_IN0_r )
 	int res;
 	int bitmask;
 
-	res=readinputport(0);
+	/* 3-4 = button3-button1*/
+	if (offset==3 || offset==4)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
+	else
+		res = readinputport(0);
 
 	bitmask = (1 << offset);
 
@@ -105,7 +113,12 @@ READ_HANDLER( asteroid_IN1_r )
 	int res;
 	int bitmask;
 
-	res=readinputport(1);
+	/* 5-6-7 = button2-right-left */
+	if (offset==5 || offset==6 || offset==7)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
+	else
+		res = readinputport(1);
+
 	bitmask = (1 << offset);
 
 	if (res & bitmask)

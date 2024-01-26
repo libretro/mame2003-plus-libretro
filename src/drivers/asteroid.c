@@ -146,18 +146,21 @@
 #include "asteroid.h"
 
 
-static int  optional_io_port = -1;
 
 /*************************************
  *
  *	Cocktail flip
  *
  *************************************/
+
+#define asteroid_cocktail_switch   4
+
 static WRITE_HANDLER( cocktail_inv_w )
 {
 	/* player selection is bit 0x04 */
-	avg_set_flip_x( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
-	avg_set_flip_y( (readinputport(optional_io_port) && (data & 0x04))?1:0 );
+	optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x04))?1:0;
+	avg_set_flip_x( optional_io_active );
+	avg_set_flip_y( optional_io_active );
 }
 
 
@@ -362,10 +365,23 @@ INPUT_PORTS_START( asteroid )
 	PORT_DIPSETTING (	0x40, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING (	0x00, DEF_STR( Free_Play ) )
 
-	PORT_START /* fake IN3 - inverter circuit */
+	PORT_START /* dummy IN3 */
+
+	PORT_START /* fake IN4 - inverter circuit */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+
+	PORT_START /* IN5 - asteroid_cocktail_port0 */
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER2)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0xe7, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START /* IN6 - asteroid_cocktail_port1 */
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER2)
 INPUT_PORTS_END
 
 
@@ -866,7 +882,6 @@ ROM_END
 
 static DRIVER_INIT( asteroid )
 {
-	optional_io_port = 3;
 	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
 }
 
