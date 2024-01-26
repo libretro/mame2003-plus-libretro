@@ -49,8 +49,8 @@ READ_HANDLER( asteroid_IN0_r )
 	if (optional_io_port == -1)
 		res=readinputport(0);
 	else
-	{
-		if (offset==5 || offset==6)
+	{ /* 4-1 = button1-button3*/
+		if (offset==4 || offset==1)
 			res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
 		else
 			res = readinputport(0);
@@ -121,8 +121,8 @@ READ_HANDLER( asteroid_IN1_r )
 	if (optional_io_port == -1)
 		res=readinputport(1);
 	else
-	{
-		if (offset==5 || offset==7 || offset==8)
+	{ /* 5-6-7 = button2-right-left */
+		if (offset==5 || offset==6 || offset==7)
 			res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
 		else
 			res = readinputport(1);
