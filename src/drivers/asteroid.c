@@ -541,11 +541,6 @@ INPUT_PORTS_START( astdelux )
 	PORT_DIPSETTING (	0xa0, "1 each 4" )
 	PORT_DIPSETTING (	0xc0, "1 each 2" )
 	PORT_DIPSETTING (	0xe0, "None" )
-
-	PORT_START /* fake IN4 - inverter circuit */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
 
@@ -892,9 +887,6 @@ static DRIVER_INIT( asterock )
 
 static DRIVER_INIT( astdelux )
 {
-	optional_io_port = 4;
-	install_mem_write_handler(0, 0x3a00, 0x3a00, cocktail_inv_w);
-
 	OVERLAY_START( astdelux_overlay )
 		OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, MAKE_ARGB(0x04,0x88,0xff,0xff) )
 	OVERLAY_END
