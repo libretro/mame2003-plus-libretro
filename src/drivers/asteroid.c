@@ -146,24 +146,6 @@
 #include "asteroid.h"
 
 
-
-/*************************************
- *
- *	Cocktail flip
- *
- *************************************/
-
-#define asteroid_cocktail_switch   4
-
-static WRITE_HANDLER( cocktail_inv_w )
-{
-	/* player selection is bit 0x04 */
-	optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x04))?1:0;
-	avg_set_flip_x( optional_io_active );
-	avg_set_flip_y( optional_io_active );
-}
-
-
 /*************************************
  *
  *	Coin counters
@@ -882,7 +864,7 @@ ROM_END
 
 static DRIVER_INIT( asteroid )
 {
-	install_mem_write_handler(0, 0x3200, 0x3200, cocktail_inv_w);
+	asteroid_install_inv = true;
 }
 
 

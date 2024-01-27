@@ -24,7 +24,7 @@ MACHINE_INIT( asteroid );
 
 READ_HANDLER( llander_IN0_r );
 
-extern int optional_io_active;
+extern bool asteroid_install_inv;
 
 
 /*----------- defined in sndhrdw/asteroid.c -----------*/

@@ -14,6 +14,8 @@
 
 
 int optional_io_active = 0;
+bool asteroid_install_inv = false;
+#define asteroid_cocktail_switch  4
 #define asteroid_cocktail_port0   5
 #define asteroid_cocktail_port1   6
 
@@ -163,6 +165,14 @@ WRITE_HANDLER( asteroid_bank_switch_w )
 	}
 	set_led_status (0, ~data & 0x02);
 	set_led_status (1, ~data & 0x01);
+
+	if (asteroid_install_inv)
+	{
+		/* player selection is bit 0x04 */
+		optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x04))?1:0;
+		avg_set_flip_x( optional_io_active );
+		avg_set_flip_y( optional_io_active );
+	}
 }
 
 
