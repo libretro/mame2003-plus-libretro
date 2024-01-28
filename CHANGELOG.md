@@ -42,6 +42,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Chase Bombers
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
+* Clockwork Aquario
 * Combat Hawk
 * Come Back Toto
 * Cookie & Bibi
@@ -985,4 +986,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed graphical corruption on left side of screen stage 3 onwards in Storm Blade and all stages in Ultra X Weapons [MAMEDev, arcadez]
 * Added some alt sprite drawing to the ssv video to prevent performance drops in some SSV games after the above updates [BritneysPAIRS]
 * Hooked up the M6801 Protection MCU for Kiki Kai Kai fixing many gameplay issues this game can now be considered 100% in the emulation dept [arcadez]
+* Updated Sega system 16/c2 gfx to support the system18 VDP gfx then added Clockwork Aquario to the system18 driver[grant2258, arcadez, mistydreams]
+* Added screen flipping and fixed the cocktail mode for Asteroids, Asteroids Deluxe and Tempest [mahoneyt944]
+* Backported a graphical fix from latest MAME to fix missing shadows in Atari's Shuuz [MAMEdev, arcadez]
 
