@@ -900,13 +900,12 @@ static DRIVER_INIT( asterock )
 
 static DRIVER_INIT( astdelux )
 {
-	asteroid_install_inv = true;
-
 	OVERLAY_START( astdelux_overlay )
 		OVERLAY_RECT( 0.0, 0.0, 1.0, 1.0, MAKE_ARGB(0x04,0x88,0xff,0xff) )
 	OVERLAY_END
 
 	artwork_set_overlay(astdelux_overlay);
+	asteroid_install_inv = true;
 }
 
 
