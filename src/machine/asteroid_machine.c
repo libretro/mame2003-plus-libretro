@@ -199,8 +199,8 @@ WRITE_HANDLER( astdelux_bank_switch_w )
 
 	if (asteroid_install_inv)
 	{
-		/* player selection is bit 0xff */
-		optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0xff))?1:0;
+		/* player selection is bit 0x80 */
+		optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x80))?1:0;
 		avg_set_flip_x( optional_io_active );
 		avg_set_flip_y( optional_io_active );
 	}
