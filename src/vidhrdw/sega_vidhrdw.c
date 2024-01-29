@@ -44,9 +44,9 @@ void sega_set_flip_y(int flip)
 void sega_apply_flipping(int *x, int *y)
 {
 	if (flip_x)
-		*x += (cent_x-*x);
+		*x += (cent_x-*x)<<3;
 	if (flip_y)
-		*y += (cent_y-*y);
+		*y += (cent_y-*y)<<3;
 }
 
 void sega_add_point(int x, int y, rgb_t color, int intensity)
