@@ -68,6 +68,10 @@ INTERRUPT_GEN( sega_interrupt )
 WRITE_HANDLER( sega_mult1_w )
 {
 	mult1 = data;
+
+	/* test flip */
+	sega_set_flip_x(1);
+	sega_set_flip_y(1);
 }
 
 WRITE_HANDLER( sega_mult2_w )
