@@ -44,9 +44,9 @@ void sega_set_flip_y(int flip)
 void sega_apply_flipping(int *x, int *y)
 {
 	if (flip_x)
-		*x += (cent_x-*x)<<3;
+		*x += (cent_x-*x)<<1;
 	if (flip_y)
-		*y += (cent_y-*y)<<3;
+		*y += (cent_y-*y)<<1;
 }
 
 void sega_add_point(int x, int y, rgb_t color, int intensity)
@@ -167,8 +167,8 @@ VIDEO_START( sega )
 	max_y =Machine->visible_area.max_y;
 	width =max_x-min_x;
 	height=max_y-min_y;
-	cent_x=(max_x-min_x)/2;
-	cent_y=(max_y-min_y)/2;
+	cent_x=((max_x-min_x)/2) << 16;
+	cent_y=((max_y-min_y)/2) << 16;
 
 	/* initialize to no sega flipping */
 	flip_x = flip_y = 0;
