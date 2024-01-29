@@ -68,10 +68,6 @@ INTERRUPT_GEN( sega_interrupt )
 WRITE_HANDLER( sega_mult1_w )
 {
 	mult1 = data;
-
-	/* test flip */
-	sega_set_flip_x(readinputport(6)&0x80);
-	sega_set_flip_y(readinputport(6)&0x80);
 }
 
 WRITE_HANDLER( sega_mult2_w )
@@ -89,6 +85,10 @@ WRITE_HANDLER( sega_switch_w )
 WRITE_HANDLER( sega_coin_counter_w )
 {
 	coin_counter_w(offset,data);
+
+	/* test flip */
+	sega_set_flip_x( (readinputport(6)&0x80)?0:1 );
+	sega_set_flip_y( (readinputport(6)&0x80)?0:1 );
 }
 
 READ_HANDLER( sega_mult_r )
