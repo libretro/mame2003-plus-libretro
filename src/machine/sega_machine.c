@@ -63,10 +63,6 @@ INTERRUPT_GEN( sega_interrupt )
 		cpu_set_irq_line(0, IRQ_LINE_NMI, PULSE_LINE);
 	else
 		cpu_set_irq_line(0, 0, HOLD_LINE);
-
-	/* test flip */
-	sega_set_flip_x( (readinputport(6)&0x80)?0:1 );
-	sega_set_flip_y( (readinputport(6)&0x80)?0:1 );
 }
 
 WRITE_HANDLER( sega_mult1_w )
