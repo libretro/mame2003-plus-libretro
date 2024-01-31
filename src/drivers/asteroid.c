@@ -146,7 +146,6 @@
 #include "asteroid.h"
 
 
-
 /*************************************
  *
  *	Coin counters
@@ -347,6 +346,24 @@ INPUT_PORTS_START( asteroid )
 	PORT_DIPSETTING (	0x80, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING (	0x40, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING (	0x00, DEF_STR( Free_Play ) )
+
+	PORT_START /* dummy IN3 */
+
+	PORT_START /* fake IN4 - inverter circuit */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+
+	PORT_START /* IN5 - asteroid_cocktail_port0 */
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER2)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0xe7, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START /* IN6 - asteroid_cocktail_port1 */
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER2)
 INPUT_PORTS_END
 
 
@@ -522,6 +539,22 @@ INPUT_PORTS_START( astdelux )
 	PORT_DIPSETTING (	0xa0, "1 each 4" )
 	PORT_DIPSETTING (	0xc0, "1 each 2" )
 	PORT_DIPSETTING (	0xe0, "None" )
+
+	PORT_START /* fake IN4 - inverter circuit */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
+
+	PORT_START /* IN5 - asteroid_cocktail_port0 */
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER2)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0xe7, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+	PORT_START /* IN6 - asteroid_cocktail_port1 */
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER2)
 INPUT_PORTS_END
 
 
@@ -845,6 +878,12 @@ ROM_END
  *
  *************************************/
 
+static DRIVER_INIT( asteroid )
+{
+	asteroid_install_inv = true;
+}
+
+
 static DRIVER_INIT( asteroib )
 {
 	install_mem_read_handler(0, 0x2000, 0x2000, asteroib_IN0_r);
@@ -866,6 +905,7 @@ static DRIVER_INIT( astdelux )
 	OVERLAY_END
 
 	artwork_set_overlay(astdelux_overlay);
+	asteroid_install_inv = true;
 }
 
 
@@ -876,8 +916,8 @@ static DRIVER_INIT( astdelux )
  *
  *************************************/
 
-GAME( 1979, asteroid, 0,        asteroid, asteroid, 0,        ROT0, "Atari", "Asteroids (rev 2)" )
-GAME( 1979, asteroi1, asteroid, asteroid, asteroid, 0,        ROT0, "Atari", "Asteroids (rev 1)" )
+GAME( 1979, asteroid, 0,        asteroid, asteroid, asteroid, ROT0, "Atari", "Asteroids (rev 2)" )
+GAME( 1979, asteroi1, asteroid, asteroid, asteroid, asteroid, ROT0, "Atari", "Asteroids (rev 1)" )
 GAME( 1979, asteroib, asteroid, asteroid, asteroib, asteroib, ROT0, "bootleg", "Asteroids (bootleg on Lunar Lander hardware)" )
 GAME( 1979, asterock, asteroid, asterock, asterock, asterock, ROT0, "Sidam", "Asterock" )
 GAME( 1980, astdelux, 0,        astdelux, astdelux, astdelux, ROT0, "Atari", "Asteroids Deluxe (rev 2)" )

@@ -11,23 +11,10 @@ Notes:
   know if it's related or if its just a replacement for the 68705.
   
 
-  
 - Kiki Kaikai suffers from random lock-up's. It happens when the sound
   CPU misses CTS from YM2203. The processor will loop infinitely and the main
   CPU will in turn wait forever. It's difficult to meet the required level
   of synchronization. THis is kludged by filtering the 2203's busy signal.
-  
-- KiKi KaiKai uses a custom 68701 MCU which isn't dumped. The bootleg Knight Boy
-  replaces it with a 68705. The bootleg is NOT 100% equivalent to the original
-  (a situation similar to Bubble Bobble): collision detection is imperfect, the
-  player can't be killed by some enemies.
-  I think the bootleggers put the custom mcu in a test rig, examined its bus
-  activity and replicated the behaviour inaccurately because they coudln't
-  figure it all out. Indeed, the 68705 code reads all the memory locations
-  related to the missing collision detection, but does nothing with them.
-  
-- In the KiKi KaiKai MCU simulation, I don't bother supporting the coinage dip
-  switch settings. Therefore, it's hardwired to be 1 coin / 1 credit.
   
 ***************************************************************************/
 
@@ -37,9 +24,8 @@ Notes:
 /* in machine/mexico86.c */
 extern unsigned char *mexico86_protection_ram;
 extern unsigned char *kicknrun_sharedram;
-WRITE_HANDLER( mexico86_f008_w );
 WRITE_HANDLER( kicknrun_f008_w );
-INTERRUPT_GEN( kikikai_interrupt );
+WRITE_HANDLER( mexico86_f008_w );
 INTERRUPT_GEN( kicknrun_interrupt );
 INTERRUPT_GEN( mexico86_m68705_interrupt );
 READ_HANDLER( mexico86_68705_portA_r );
@@ -56,10 +42,7 @@ WRITE_HANDLER( mexico86_bankswitch_w );
 VIDEO_UPDATE( mexico86 );
 VIDEO_UPDATE( kikikai );
 
-/* kicknrun mcu hookup similar to Bubble Bobble
-   will be fine for Kiki Kai Kai also if/when the mcu
-   is dumped
-*/
+/* kicknrun / Kiki Kai Kai mcu hookup similar to Bubble Bobble */
 static int ddr1, ddr2, ddr3, ddr4;
 static int port1_in, port2_in, port3_in, port4_in;
 static int port1_out, port2_out, port3_out, port4_out;
@@ -506,14 +489,14 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( kikikai )
 	PORT_START      /* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
@@ -674,6 +657,15 @@ static MACHINE_DRIVER_START( kicknrun )
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( kikikai )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(kicknrun)
+
+	/* video hardware */
+	MDRV_VIDEO_UPDATE(kikikai)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( mexico86 )
 
 	/* basic machine hardware */
@@ -708,37 +700,6 @@ static MACHINE_DRIVER_START( mexico86 )
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( kikikai )
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000)      /* 6 MHz??? */
-	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_VBLANK_INT(kikikai_interrupt, 1) /* IRQs should be triggered by the MCU, but we don't have it */
-
-	MDRV_CPU_ADD(Z80, 6000000)      /* 6 MHz??? */
-	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)  /* frames per second, vblank duration */
-	MDRV_INTERLEAVE(100)    /* 100 CPU slices per frame - an high value to ensure proper */
-							/* synchronization of the CPUs */
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(256)
-
-	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MDRV_VIDEO_UPDATE(kikikai)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-MACHINE_DRIVER_END
-
-
 /***************************************************************************
 
   Game driver(s)
@@ -755,8 +716,8 @@ ROM_START( kikikai )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for the audio cpu */
 	ROM_LOAD( "a85-11.rom", 0x0000, 0x8000, CRC(cc3539db) SHA1(4239a40fdee65cba613e4b4ec54cf7899480e366) )
 
-	ROM_REGION( 0x0800, REGION_CPU3, 0 )    /* 2k for the microcontroller */
-	/* ROM_LOAD( "68701.bin",    0x0000, 0x0800, NO_DUMP ) */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )    /* 2k for the microcontroller */
+  ROM_LOAD( "a85-01_jph1020p.h8", 0xf000, 0x1000, CRC(01771197) SHA1(84430a56c66ff2781fe1ff35d4f15b332cd0af37) )
 
 	ROM_REGION( 0x40000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a85-15.rom", 0x00000, 0x10000, CRC(aebc8c32) SHA1(77347cf5780f084a77123eb636cd0bad672a39e8) )

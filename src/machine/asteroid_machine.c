@@ -13,6 +13,12 @@
 #include "asteroid.h"
 
 
+int optional_io_active = 0;
+bool asteroid_install_inv = false;
+#define asteroid_cocktail_switch  4
+#define asteroid_cocktail_port0   5
+#define asteroid_cocktail_port1   6
+
 INTERRUPT_GEN( asteroid_interrupt )
 {
 	/* Turn off interrupts if self-test is enabled */
@@ -41,7 +47,11 @@ READ_HANDLER( asteroid_IN0_r )
 	int res;
 	int bitmask;
 
-	res=readinputport(0);
+	/* 3-4 = button3-button1*/
+	if (offset==3 || offset==4)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port0) : readinputport(0);
+	else
+		res = readinputport(0);
 
 	bitmask = (1 << offset);
 
@@ -105,7 +115,12 @@ READ_HANDLER( asteroid_IN1_r )
 	int res;
 	int bitmask;
 
-	res=readinputport(1);
+	/* 5-6-7 = button2-right-left */
+	if (offset==5 || offset==6 || offset==7)
+		res = (optional_io_active) ? readinputport(asteroid_cocktail_port1) : readinputport(1);
+	else
+		res = readinputport(1);
+
 	bitmask = (1 << offset);
 
 	if (res & bitmask)
@@ -150,6 +165,14 @@ WRITE_HANDLER( asteroid_bank_switch_w )
 	}
 	set_led_status (0, ~data & 0x02);
 	set_led_status (1, ~data & 0x01);
+
+	if (asteroid_install_inv)
+	{
+		/* player selection is bit 0x04 */
+		optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x04))?1:0;
+		avg_set_flip_x( optional_io_active );
+		avg_set_flip_y( optional_io_active );
+	}
 }
 
 
@@ -172,6 +195,14 @@ WRITE_HANDLER( astdelux_bank_switch_w )
 			RAM[0x200 + i] = RAM[0x300 + i];
 			RAM[0x300 + i] = temp;
 		}
+	}
+
+	if (asteroid_install_inv)
+	{
+		/* player selection is bit 0x80 */
+		optional_io_active = (readinputport(asteroid_cocktail_switch) && (data & 0x80))?1:0;
+		avg_set_flip_x( optional_io_active );
+		avg_set_flip_y( optional_io_active );
 	}
 }
 

@@ -35,10 +35,12 @@ static INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((form
 
 static INLINE void CLIB_DECL logerror(const char *text,...)
 {
+	#if MAMELOGERROR_ENABLE
 	va_list arg;
 	va_start(arg,text);
 	vsprintf(log_buffer,text,arg);
 	va_end(arg);
-   log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
+    log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
+    #endif
 }
 #endif /* LOG_H */
