@@ -326,6 +326,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken / Victory Road (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* Donkey Kong Remix
+* Donkey Kong Christmas Remix
 * Dottori-Man Jr. (Hack by Chris Covell)
 * DownTown (joystick hack)
 * Final Fight 30th Anniversary Edition (Grego And Rotwang)
@@ -989,4 +991,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated Sega system 16/c2 gfx to support the system18 VDP gfx then added Clockwork Aquario to the system18 driver[grant2258, arcadez, mistydreams]
 * Added screen flipping and fixed the cocktail mode for Asteroids, Asteroids Deluxe and Tempest [mahoneyt944]
 * Backported a graphical fix from latest MAME to fix missing shadows in Atari's Shuuz [MAMEdev, arcadez]
+* Added Donkey Kong Remix and Donkey Kong Christmas Remix hacks to dkong.c [grant2258, arcadez]
 
