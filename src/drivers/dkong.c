@@ -148,7 +148,7 @@ Changes:
  *
  *************************************/
 
-static int banks = 0;
+static int banks = 99;
 
 static struct EEPROM_interface braze_eeprom_intf =
 {
@@ -180,12 +180,21 @@ static READ_HANDLER( braze_eeprom_r )
 
 static WRITE_HANDLER( braze_a15_w )
 {
-
-	if (banks != (data & 1)) {
+      
 		banks = data & 1;
-		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); /* ?*/
-		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); /* ?*/
-	}
+		//printf("banks:%d\n",banks);
+
+		if(banks)
+		{
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x18000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
+		}
+		else
+		{
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
+		}
+	
 }
 
 static WRITE_HANDLER( braze_eeprom_w )
@@ -319,29 +328,27 @@ static MEMORY_READ_START( readmem )
 MEMORY_END
 
 static MEMORY_READ_START( dkong2_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x0000, 0x5fff, MRA_BANK1 },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
 	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
 	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
 	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
 	{ 0x7d00, 0x7d00, dkong_in2_r },	/* IN2/DSW2 */
 	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0xffff, MRA_BANK2 },	/* DK3 and bootleg DKjr only */
 	{ 0xc800, 0xc800, braze_eeprom_r },
-	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
-	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
 MEMORY_END
 
 static MEMORY_READ_START( dkremix_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x0000, 0x5fff, MRA_BANK1 },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
 	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
 	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
 	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
 	{ 0x7d00, 0x7d00, dkremix_in2_r },	/* IN2/DSW2 */
 	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0xffff, MRA_BANK2 },	/* DK3 and bootleg DKjr only */
 	{ 0xc800, 0xc800, braze_eeprom_r },
-	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
-	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
 MEMORY_END
 
 static MEMORY_READ_START( dkong3_readmem )
@@ -2971,11 +2978,11 @@ ROM_END
 
 /* Braze Technologies bootleg hardware */
 ROM_START( dkongx )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
@@ -2983,8 +2990,7 @@ ROM_START( dkongx )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
 	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
@@ -3003,11 +3009,11 @@ ROM_START( dkongx )
 ROM_END
 
 ROM_START( dkremix )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 	/* space for diagnostic ROM */
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
@@ -3015,8 +3021,7 @@ ROM_START( dkremix )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
 	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "dkremix.5h",   0x0000, 0x0800, CRC(fc82b069) SHA1(ae78e6de0b50149a55f10f480c522f7a147ea106) )
@@ -3035,20 +3040,19 @@ ROM_START( dkremix )
 ROM_END
 
 ROM_START( dkchrmx )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
-	/* space for diagnostic ROM */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",    0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",    0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",    0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",    0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
 	ROM_LOAD( "dkchrmx.bin",    0x0000, 0x10000, CRC(e5273cee) SHA1(c440d47e7e3ca356ae1d748cc673393efb2b6c4a) )
 
 	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
-	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+	ROM_LOAD( "s_3i_b.bin",     0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
+//	ROM_RELOAD(                 0x0800, 0x0800 )
+	ROM_LOAD( "s_3j_b.bin",     0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, 0 )
 	ROM_LOAD( "v_5h_b.ch",      0x0000, 0x0800, CRC(0b92cc7a) SHA1(cd217c2b45a86744c2fc7df8a3b624489e07f01f) )
@@ -3065,7 +3069,6 @@ ROM_START( dkchrmx )
 	ROM_LOAD( "c-2j.ch",        0x0100, 0x0100, CRC(1f64ac3d) SHA1(0591495a75a301772856c121f34299da4f9df341) )
 	ROM_LOAD( "v-5e.ch",        0x0200, 0x0100, CRC(5a8ca805) SHA1(8e711af73ddb20ed62a9a8b53f1150feab1dc051) )
 ROM_END
-
 
 static DRIVER_INIT( herodk )
 {
@@ -3105,12 +3108,10 @@ static DRIVER_INIT( dkongx )
 {
 	braze_decrypt_rom(memory_region(REGION_USER1) + 0x10000);
 
-	memset (memory_region(REGION_CPU1), 0, 0x10000);
+	cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+	cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
 
-	banks = 0;
-	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000);
-	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); /* ?*/
-
+	
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
 	install_mem_write_handler(0, 0xc800, 0xc800,  braze_eeprom_w);
 	install_mem_read_handler(0,  0xc800, 0xc800,  braze_eeprom_r);
@@ -3162,4 +3163,4 @@ GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Cor
 /* Braze Technologies bootleg hardware */
 GAME (2008, dkongx,    dkong,    braze,    dkongx,   dkongx,   ROT270, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack V1.2)" )
 GAME (2015, dkremix,   dkong,    dkremix,  dkongx,   dkongx,   ROT270, "bootleg",  "Donkey Kong Remix" )
-GAME (2017, dkchrmx,   dkong,    dkremix,  dkongx,   dkongx,   ROT270, "John Kowalski", "Donkey Kong Christmas Remix" )
+GAME( 2017, dkchrmx,   dkong,    braze,    dkongx,   dkongx,   ROT270, "John Kowalski", "Donkey Kong Christmas Remix" )
