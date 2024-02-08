@@ -301,16 +301,14 @@ static READ_HANDLER( dkong_in2_r )
 	return input_port_2_r(offset) | (mcustatus << 6);
 }
 
-static int bitty=0;
 
 static READ_HANDLER( dkremix_in2_r )
 {
-	if (bitty ==3 ) 
+	if (offset==0 && cpu_getcurrentframe()==4)
 	{
-		bitty++;
 		return 0x80;
 	}
-	bitty++;
+
 	return input_port_2_r(offset) | (mcustatus << 6);
 }
 
