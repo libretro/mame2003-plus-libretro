@@ -1467,7 +1467,7 @@ VIDEO_UPDATE( system18 ){
 	if(sys18_fg2_active) tilemap_draw( bitmap,cliprect, foreground2, 1, 0x7 );
 	tilemap_draw( bitmap,cliprect, foreground, 1, 0x7 );
 // here like ddcrew or below as per clutch hitter.??
-//    if (!strcmp(Machine->gamedrv->name,"aquario"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for DD CREW
+  if (!strcmp(Machine->gamedrv->name,"ddcrew"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for DD CREW
 
 	tilemap_draw( bitmap,cliprect, text_layer, 1, 0x7 );
 /*	sprite_draw(sprite_list,0); */
