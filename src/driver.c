@@ -2962,6 +2962,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( tetrisa )	/* (c) 1988 (protected) */
 	DRIVER( wb3a )		/* (c) 1988 Sega / Westone (protected) */
 
+	DRIVER( aquario )
+	DRIVER( hamaway )
 	DRIVER( aceattac )	/* (protected) */
 	DRIVER( afighter )	/* (protected) */
 	DRIVER( bloxeed )	/* (protected) */
@@ -6098,5 +6100,5 @@ Other Sun games
 	DRIVER( roundup5 )
 	DRIVER( bigfight )
 	DRIVER( cyclwarr )
-DRIVER( aquario )
+
 #endif	/* DRIVER_RECURSIVE */
