@@ -82,7 +82,7 @@ extern READ16_HANDLER( segaic16_spriteram_r );
 
 /* this code should be elsewhere hookup segasic, basic  vdp support with no priorities. misc_io*/
 static UINT8 misc_io_data[0x10];
-static int vpd_enable=1;
+static int vpd_enable=0;
 VIDEO_START( system18_new )
 {
 	/* compute palette info */
