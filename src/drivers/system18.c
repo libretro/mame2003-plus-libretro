@@ -1599,7 +1599,7 @@ static MEMORY_READ16_START( ddcrew_readmem )
     { 0x000000, 0x2fffff, MRA16_ROM },
 	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
+	{ 0x840000, 0x841fff, SYS16_MRA16_PALETTERAM },
 	{ 0x440000, 0x440fff, SYS16_MRA16_SPRITERAM },
 	{ 0xe40000, 0xe4ffff, sys18_io_r },
     { 0xc00000, 0xc0ffff, segac2_vdp_r },
@@ -1611,11 +1611,11 @@ static MEMORY_WRITE16_START( ddcrew_writemem )
 	{ 0x3e0000, 0x3e001f, sys18_extrombank_w },
 	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
 	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x840000, 0x841fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
-	{ 0xe40006, 0xe40007, sound_command_nmi_w }, /* correct.?? */
 	{ 0xe4001c, 0xe4001d, sys18_refreshenable_w },
     { 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xfe0006, 0xfe0007, sound_command_nmi_w }, /* correct.?? */
 	{ 0xfe0020, 0xfe003f, MWA16_NOP },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
@@ -2265,7 +2265,7 @@ ROM_START( ddcrew )
 	ROM_LOAD( "14128.2c", 0x40000, 0x40000, CRC(edba8e10) SHA1(25a2833ead4ca363802ddc2eb97c40976502921a) )
 	ROM_LOAD( "14129.3c", 0x80000, 0x40000, CRC(e8ecc305) SHA1(a26d0c5c7826cd315f8b2c27e5a503a2a7b535c4) )
 
-	ROM_REGION( 0x800000, REGION_GFX4, 0 ) /* sprites */
+	ROM_REGION16_BE( 0x800000, REGION_GFX4, 0 ) /* sprites */
 	ROM_LOAD16_BYTE( "14134.10c", 0x000001, 0x80000, CRC(4fda6a4b) SHA1(a9e582e494ab967e8f3ccf4d5844bb8ef889928c) )
 	ROM_LOAD16_BYTE( "14142.10a", 0x000000, 0x80000, CRC(3cbf1f2a) SHA1(80b6b006936740087786acd538e28aca85fa6894) )
 	ROM_LOAD16_BYTE( "14135.11c", 0x200001, 0x80000, CRC(e9c74876) SHA1(aff9d071e77f01c6937188bf67be38fa898343e6) )
