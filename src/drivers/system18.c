@@ -267,7 +267,7 @@ static READ16_HANDLER( misc_io_r )
 //	if (custom_io_r)
 //		return custom_io_r(offset, mem_mask);
 	logerror("%06X:misc_io_r - unknown read access to address %04X\n", activecpu_get_pc(), offset * 2);
-	return segaic16_open_bus_r(0,0);
+	return 0xff;
 }
 
 static WRITE16_HANDLER( misc_io_w )
