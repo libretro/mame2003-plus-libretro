@@ -12,7 +12,6 @@
 **	Shadow Dancer
 **	Search Wally
 */
-
 /*
 
 Changes:
@@ -66,6 +65,7 @@ Other notes:
 #include "cpu/z80/z80.h"
 #include "system16.h"
 #include "ost_samples.h"
+#include "vidhrdw/segaic16.h"
 
 /* vidhrdw/segac2.c */
 extern void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect );
@@ -73,6 +73,244 @@ extern void start_system18_vdp(void);
 extern READ16_HANDLER( segac2_vdp_r );
 extern WRITE16_HANDLER( segac2_vdp_w );
 extern WRITE16_HANDLER( sys18_extrombank_w );
+
+
+extern READ16_HANDLER( segaic16_textram_r );
+extern READ16_HANDLER( segaic16_tileram_r );
+extern READ16_HANDLER( segaic16_spriteram_r );
+
+
+/* this code should be elsewhere hookup segasic, basic  vdp support with no priorities. misc_io*/
+static UINT8 misc_io_data[0x10];
+static int vpd_enable=0;
+VIDEO_START( system18_new )
+{
+	/* compute palette info */
+	segaic16_palette_init(0x800);
+
+	/* initialize the tile/text layers */
+	if (segaic16_tilemap_init(0, SEGAIC16_TILEMAP_16B, 0x000, 0, 8))
+		return 1;
+
+	/* initialize the sprites */
+	if (segaic16_sprites_init(0, SEGAIC16_SPRITES_16B, 0x400, 0))
+		return 1;
+
+	/* create the VDP */
+//	if (start_system18_vdp())
+//		return 1;
+	start_system18_vdp(); 
+	/* create a temp bitmap to draw the VDP data into */
+//	tempbitmap = auto_bitmap_alloc_depth(Machine->drv->screen_width, Machine->drv->screen_height, 16);
+//	if (!tempbitmap)
+//		return 1;
+	return 0;
+}
+
+VIDEO_UPDATE( system18_new )
+{
+	int vdppri, vdplayer;
+
+	if (!segaic16_display_enable)
+	{
+		fillbitmap(bitmap, get_black_pen(), cliprect);
+		return;
+	}
+
+	/* if the VDP is enabled, update our tempbitmap */
+//	if (vdp_enable)
+//		update_system18_vdp(tempbitmap, cliprect);
+
+	/* reset priorities */
+	fillbitmap(priority_bitmap, 0, cliprect);
+
+	/* draw background opaquely first, not setting any priorities */
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_BACKGROUND, 0 | TILEMAP_IGNORE_TRANSPARENCY, 0x00);
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_BACKGROUND, 1 | TILEMAP_IGNORE_TRANSPARENCY, 0x00);
+//	if (vdp_enable && vdplayer == 0) draw_vdp(bitmap, cliprect, vdppri);
+
+	/* draw background again to draw non-transparent pixels over the VDP and set the priority */
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_BACKGROUND, 0, 0x01);
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_BACKGROUND, 1, 0x02);
+//	if (vdp_enable && vdplayer == 1) draw_vdp(bitmap, cliprect, vdppri);
+
+	/* draw foreground */
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_FOREGROUND, 0, 0x02);
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_FOREGROUND, 1, 0x04);
+//	if (vdp_enable && vdplayer == 2) draw_vdp(bitmap, cliprect, vdppri);
+
+	/* text layer */
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_TEXT, 0, 0x04);
+	segaic16_tilemap_draw(0, bitmap, cliprect, SEGAIC16_TILEMAP_TEXT, 1, 0x08);
+//	if (vdp_enable && vdplayer == 3) draw_vdp(bitmap, cliprect, vdppri);
+    if (vpd_enable)  update_system18_vdp(bitmap,cliprect); // priorites will need implemenetd
+	/* draw the sprites */ 
+	segaic16_sprites_draw(0, bitmap, cliprect);
+
+}
+static READ16_HANDLER( io_chip_r )
+{
+	offset &= 0x1f/2;
+
+	switch (offset)
+	{
+		/* I/O ports */
+		case 0x00/2:
+		case 0x02/2:
+		case 0x04/2:
+		case 0x06/2:
+		case 0x08/2:
+		case 0x0a/2:
+		case 0x0c/2:
+		case 0x0e/2:
+			/* if the port is configured as an output, return the last thing written */
+			if (misc_io_data[0x1e/2] & (1 << offset))
+				return misc_io_data[offset];
+			/* otherwise, return an input port */
+			return readinputport(offset);
+
+		/* 'SEGA' protection */
+		case 0x10/2:
+			return 'S';
+		case 0x12/2:
+			return 'E';
+		case 0x14/2:
+			return 'G';
+		case 0x16/2:
+			return 'A';
+
+		/* CNT register & mirror */
+		case 0x18/2:
+		case 0x1c/2:
+			return misc_io_data[0x1c/2];
+
+		/* port direction register & mirror */
+		case 0x1a/2:
+		case 0x1e/2:
+			return misc_io_data[0x1e/2];
+	}
+	return 0xffff;
+}
+
+
+static WRITE16_HANDLER( io_chip_w )
+{
+	UINT8 old;
+
+	/* generic implementation */
+	offset &= 0x1f/2;
+	old = misc_io_data[offset];
+	misc_io_data[offset] = data;
+
+	switch (offset)
+	{
+		/* I/O ports */
+		case 0x00/2:
+		case 0x02/2:
+		case 0x04/2:
+		case 0x08/2:
+		case 0x0a/2:
+		case 0x0c/2:
+			break;
+
+		/* miscellaneous output */
+		case 0x06/2:
+	//		system18_set_grayscale(~data & 0x40); // this need added
+			segaic16_tilemap_set_flip(0, data & 0x20);
+			segaic16_sprites_set_flip(0, data & 0x20);
+/* These are correct according to cgfm's docs, but mwalker and ddcrew both
+   enable the lockout and never turn it off
+			coin_lockout_w(1, data & 0x08);
+			coin_lockout_w(0, data & 0x04); */
+			//coin_counter_w(1, data & 0x02); 
+			//coin_counter_w(0, data & 0x01);
+			break;
+
+		/* tile banking */
+		case 0x0e/2:
+			if (0 /*rom_board == ROM_BOARD_171_5874 || rom_board == ROM_BOARD_171_SHADOW*/ )
+			{
+				int i;
+				for (i = 0; i < 4; i++)
+				{
+					segaic16_tilemap_set_bank(0, 0 + i, (data & 0xf) * 4 + i);
+					segaic16_tilemap_set_bank(0, 4 + i, ((data >> 4) & 0xf) * 4 + i);
+				}
+			}
+			break;
+
+		/* CNT register */
+		case 0x1c/2:
+			segaic16_set_display_enable(data & 2);
+			//if ((old ^ data) & 4) this needs implemted
+			//	system18_set_vdp_enable(data & 4);
+			break;
+	}
+}
+
+
+
+static READ16_HANDLER( misc_io_r )
+{
+	offset &= 0x1fff;
+	switch (offset & (0x3000/2))
+	{
+		/* I/O chip */
+		case 0x0000/2:
+		case 0x1000/2:
+			return io_chip_r(offset, mem_mask);
+
+		/* video control latch */
+		case 0x2000/2:
+			return readinputport(4 + (offset & 1));
+	}
+//	if (custom_io_r)
+//		return custom_io_r(offset, mem_mask);
+	logerror("%06X:misc_io_r - unknown read access to address %04X\n", activecpu_get_pc(), offset * 2);
+	return segaic16_open_bus_r(0,0);
+}
+
+static WRITE16_HANDLER( misc_io_w )
+{
+	offset &= 0x1fff;
+	switch (offset & (0x3000/2))
+	{
+		/* I/O chip */
+		case 0x0000/2:
+		case 0x1000/2:
+			if (ACCESSING_LSB)
+			{
+				io_chip_w(offset, data, mem_mask);
+				return;
+			}
+			break;
+
+		/* video control latch */
+		case 0x2000/2:
+			if (ACCESSING_LSB)
+			{
+				//system18_set_vdp_mixing(data & 0xff);
+				//return;
+			}
+			break;
+	}
+}
+static void hamaway_interrupt(int state)
+{
+
+//cpu_set_nmi_line(1, PULSE_LINE);
+
+	cpu_set_irq_line(1,0,state ? ASSERT_LINE : CLEAR_LINE);
+}
+
+struct YM2612interface hamaway =
+{
+	2,	/* 2 chips */
+	8000000,
+	{ YM3012_VOL(40,MIXER_PAN_CENTER,40,MIXER_PAN_CENTER),
+			YM3012_VOL(40,MIXER_PAN_CENTER,40,MIXER_PAN_CENTER) },	/* Volume */
+	{ 0 },	{ 0 },	{ 0 },	{ 0 }, {hamaway_interrupt}
+};
 
 /***************************************************************************/
 
@@ -121,6 +359,33 @@ static void set_bg2_page( int data ){
 	sys16_bg2_page[1] = (data>>8)&0xf;
 	sys16_bg2_page[2] = (data>>4)&0xf;
 	sys16_bg2_page[3] = data&0xf;
+}
+
+static WRITE16_HANDLER( rom_837_7525_bank_w )
+{
+	if (!ACCESSING_LSB)
+		return;
+	offset &= 0xf;
+	data &= 0xff;
+
+	/* tile banking */
+	if (offset < 8)
+	{
+	//	int maxbanks = m_gfxdecode->gfx(0)->elements() / 1024;
+		data &= 0x9f;
+
+		if (data & 0x80) data += 0x20;
+		data &= 0x3f;
+
+	    segaic16_tilemap_set_bank(0, offset, data);
+	}
+
+	// sprite banking
+	else
+	{
+		//printf("%02x %02x\n", offset, data);
+		// not needed?
+	}
 }
 
 /***************************************************************************/
@@ -277,7 +542,7 @@ static READ_HANDLER( system18_bank_r )
 		return sys18_SoundMemBank[offset];
 	return 0xFF;
 }
-
+ 
 static MEMORY_READ_START( sound_readmem_18 )
     { 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system18_bank_r },
@@ -310,7 +575,7 @@ static WRITE_HANDLER( sys18_soundbank_w )
 static PORT_READ_START( sound_readport_18 )
     { 0x80, 0x80, YM2612_status_port_0_A_r },
 /*	{ 0x82, 0x82, YM2612_status_port_0_B_r }, */
-/*	{ 0x90, 0x90, YM2612_status_port_1_A_r }, */
+	{ 0x90, 0x90, YM2612_status_port_1_A_r }, 
 /*	{ 0x92, 0x92, YM2612_status_port_1_B_r }, */
 	{ 0xc0, 0xc0, soundlatch_r },
 PORT_END
@@ -1269,7 +1534,6 @@ static DRIVER_INIT( astorm ){
 }
 
 
-
 static MEMORY_READ16_START( aquario_readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },
    	{ 0X200000, 0X2fffff, MRA16_RAM }, /*rom/bank */
@@ -1292,11 +1556,43 @@ static MEMORY_WRITE16_START( aquario_writemem )
 	{ 0x600000, 0x600fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0xe4001c, 0xe4001d, sys18_refreshenable_w },
     { 0xc00000, 0xc0ffff, segac2_vdp_w },
-//	{ 0xc46600, 0xc46601, sys18_refreshenable_w }, //	{ 0xa00000, 0xa03fff is the io range this should be fixed }, 
     { 0xf00006, 0xf00007, sound_command_nmi_w },
-	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xff0000, 0xff3fff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
+static MEMORY_READ16_START( hamaway_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+   	{ 0X200000, 0X27ffff, MRA16_RAM }, /*rom/bank */
+//	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
+	{ 0x400000, 0x40ffff, segaic16_tileram_r },
+//	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
+	{ 0x410000, 0x410fff, segaic16_textram_r },
+//	{ 0x500000, 0x500fff, SYS16_MRA16_SPRITERAM }, //should be 7ff but needs fff for video code
+	{ 0x500000, 0x5007ff, segaic16_spriteram_r }, 
+	{ 0x840000, 0x841fff, SYS16_MRA16_PALETTERAM },
+	{ 0xa00000, 0xa03fff, misc_io_r },
+	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( hamaway_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x3e0000, 0x3e001f, rom_837_7525_bank_w },
+//	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x400000, 0x40ffff, segaic16_tileram_0_w, &segaic16_tileram_0},
+//	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0  },
+//	{ 0x500000, 0x500fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x500000, 0x500fff,  SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
+//	{ 0x840000, 0x841fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x840000, 0x841fff, segaic16_paletteram_w, &paletteram16  },
+	{ 0xa00000, 0xa03fff, misc_io_w },
+   	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xfe0006, 0xfe0007, sound_command_nmi_w },
+	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+
+MEMORY_END
+ 
 /* ddcrew */
 
 static MEMORY_READ16_START( ddcrew_readmem )
@@ -1337,6 +1633,8 @@ static DRIVER_INIT( aquario )
 	machine_init_sys16_onetime();
 	sys16_sprite_draw=1; 
 //	fd1094_driver_init(0x0186);
+	vpd_enable=1;
+	
 }
 
 /*****************************************************************************/
@@ -1450,6 +1748,30 @@ static MACHINE_DRIVER_START( aquario )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(aquario_readmem,aquario_writemem)
 	MDRV_MACHINE_INIT(aquario)
+MACHINE_DRIVER_END
+
+
+static MACHINE_INIT( hamaway )
+{
+	segaic16_tilemap_reset(0);
+
+};
+
+
+static MACHINE_DRIVER_START( hamaway )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(system18)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(hamaway_readmem,hamaway_writemem)
+	MDRV_PALETTE_LENGTH(2048*3+2048)
+	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
+	MDRV_VIDEO_START(system18_new)
+	MDRV_VIDEO_UPDATE(system18_new)
+	MDRV_MACHINE_INIT( hamaway )
+	MDRV_SOUND_REMOVE("3438")
+	MDRV_SOUND_ADD_TAG("3438", YM3438, hamaway)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ddcrew )
@@ -1691,6 +2013,108 @@ INPUT_PORTS_START( aquario )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( hamaway )
+	PORT_START  /*P1*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY ) 
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY ) 
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY ) 
+
+	PORT_START /*P2*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) 
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 ) 
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 ) 
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+
+	PORT_START  /*PORTC*/
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /*PORTD*/
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /*SERVICE*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /*COINAGE */
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x05, "2 Coins/1 Credit 5/3 6/4" )
+	PORT_DIPSETTING(    0x04, "2 Coins/1 Credit 4/3" )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x01, "1 Coin/1 Credit 2/3" )
+	PORT_DIPSETTING(    0x02, "1 Coin/1 Credit 4/5" )
+	PORT_DIPSETTING(    0x03, "1 Coin/1 Credit 5/6" )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x00, "Free Play (if Coin B too) or 1/1" )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x50, "2 Coins/1 Credit 5/3 6/4" )
+	PORT_DIPSETTING(    0x40, "2 Coins/1 Credit 4/3" )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x10, "1 Coin/1 Credit 2/3" )
+	PORT_DIPSETTING(    0x20, "1 Coin/1 Credit 4/5" )
+	PORT_DIPSETTING(    0x30, "1 Coin/1 Credit 5/6" )
+	PORT_DIPSETTING(    0x60, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x00, "Free Play (if Coin A too) or 1/1" )
+
+	PORT_START /*DSW*/
+PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	
+	PORT_START /*PORTH*/
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
 /*****************************************************************************/
 
 /* Alien Storm */
@@ -2183,6 +2607,40 @@ ROM_START( aquario )
 	ROM_LOAD( "c4.bin",   0x180000, 0x080000, CRC(1bd081f8) SHA1(e5b0b5d8334486f813d7c430bb7fce3f69605a21) )
 ROM_END
 
+/**************************************************************************************************************************
+    Hammer Away, Sega System 18
+    CPU: M68000
+    ROM Board: 837-7525
+*/
+
+ROM_START( hamaway )
+	ROM_REGION( 0x280000, REGION_CPU1, 0 ) // 68000 code
+	ROM_LOAD16_BYTE( "4.bin",  0x000000, 0x40000, CRC(cc0981e1) SHA1(63528bd36f27e62fdf40715101e6d05b73e48f16) ) // 1xxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "6.bin",  0x000001, 0x40000, CRC(e8599ee6) SHA1(3e32b025403aecbaecfcdd0325e4acd676e99c4e) ) // 1xxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "5.bin",  0x200000, 0x40000, CRC(fdb247fd) SHA1(ee9db799fb5de27f81904f8ef792203415b6d4a6) )
+	ROM_LOAD16_BYTE( "7.bin",  0x200001, 0x40000, CRC(63711470) SHA1(6c4be3a0cf0f897c34ef0b3bf549f52b185bb915) )
+
+	ROM_REGION( 0x180000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
+	ROM_LOAD( "c10.bin",  0x000000, 0x40000, CRC(c55cb5cf) SHA1(396179632b29ac5f8b7f8f3c91d7cf834e548bdf) )
+	ROM_LOAD( "1.bin",    0x040000, 0x40000, CRC(33be003f) SHA1(134fa6b3347c306d9e30882dfcf24632b49f85ea) )
+	ROM_LOAD( "c11.bin",  0x080000, 0x40000, CRC(37787915) SHA1(c8d251be6c41de3aed2da6da70aa87071b70b1f6) )
+	ROM_LOAD( "2.bin",    0x0c0000, 0x40000, CRC(60ca5c9f) SHA1(6358ea00125a5e3f55acf73aeb9c36b1db6e711e) )
+	ROM_LOAD( "c12.bin",  0x100000, 0x40000, CRC(f12f1cf3) SHA1(45e883029c58e617a2a20ac1ab5c5f598c95f4bd) )
+	ROM_LOAD( "3.bin",    0x140000, 0x40000, CRC(520aa7ae) SHA1(9584206aedd8be5ce9dca0ed370f8fe77aabaf76) )
+
+	ROM_REGION16_BE( 0x200000, REGION_GFX2, ROMREGION_ERASEFF ) // sprites
+	ROM_LOAD16_BYTE( "c17.bin", 0x000001, 0x40000, CRC(aa28d7aa) SHA1(3dd5d95b05e408c023f9bd77753c37080714239d) )
+	ROM_LOAD16_BYTE( "10.bin",  0x000000, 0x40000, CRC(c4c95161) SHA1(2e313a4ca9506f53a2062b4a8e5ba7b381ba93ae) )
+	ROM_LOAD16_BYTE( "c18.bin", 0x080001, 0x40000, CRC(0f8fe8bb) SHA1(e6f68442b8d4def29b106458496a47344f70d511) )
+	ROM_LOAD16_BYTE( "11.bin",  0x080000, 0x40000, CRC(2b5eacbc) SHA1(ba3690501588b9c88a31022b44bc3c82b44ae26b) )
+	ROM_LOAD16_BYTE( "c19.bin", 0x100001, 0x40000, CRC(3c616caa) SHA1(d48a6239b7a52ac13971f7513a65a17af492bfdf) ) // 11xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "12.bin",  0x100000, 0x40000, CRC(c7bbd579) SHA1(ab87bfdad66ea241cb23c9bbfea05f5a1574d6c9) ) // 1ST AND 2ND HALF IDENTICAL (but ok, because pairing ROM has no data in the 2nd half anyway)
+
+	ROM_REGION( 0x210000, REGION_CPU2, ROMREGION_ERASEFF ) // sound CPU
+	ROM_LOAD( "c16.bin", 0x000000, 0x40000, CRC(913cc18c) SHA1(4bf4ec14937586c3ae77fcad57dcb21f6433ef81) )
+	ROM_LOAD( "c15.bin", 0x080000, 0x40000, CRC(b53694fc) SHA1(0e42be2730abce1b52ea94a9fe61cbd1c9a0ccae) )
+ROM_END
+
 
 /*****************************************************************************/
 
@@ -2198,6 +2656,7 @@ GAME( 1989, shdancrj, shdancer, shdancrj, shdancer, shdancrj, ROT0, "Sega",    "
 GAME( 1989, shdancrb, shdancer, shdancrb, shdancer, shdancrb, ROT0, "Sega",    "Shadow Dancer (Rev.B)" )
 GAMEX(1991, ddcrew,   0,        ddcrew,   shdancer, aquario,  ROT0, "Sega",    "D. D. Crew (US, 4 Player, 317-0186)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* decrypted */
 GAME( 2021, aquario,  0,        aquario,  aquario,  aquario,  ROT0, "Sega / Westone", "Clockwork Aquario (prototype)")
+GAME( 1991, hamaway,  0,        hamaway,  hamaway,  aquario,  ROT90, "Sega / Santos", "Hammer Away (Japan, prototype)" )
 
 
 GAMEX(1990, bloxeed,  0,        shdancer, shdancer, shdancer, ROT0, "Sega", "Bloxeed", GAME_NOT_WORKING )
