@@ -225,11 +225,11 @@ void aurail_decode_opcode2(data16_t *dest,data16_t *source,int size);
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 /* video hardware */
-extern READ16_HANDLER( sys16_tileram_r );
-extern WRITE16_HANDLER( sys16_tileram_w );
-extern READ16_HANDLER( sys16_textram_r );
-extern WRITE16_HANDLER( sys16_textram_w );
-extern WRITE16_HANDLER( sys16_paletteram_w );
+READ16_HANDLER( sys16_tileram_r );
+WRITE16_HANDLER( sys16_tileram_w );
+READ16_HANDLER( sys16_textram_r );
+WRITE16_HANDLER( sys16_textram_w );
+WRITE16_HANDLER( sys16_paletteram_w );
 
 
 /* from vidhrdw/segas16b.c */
@@ -243,26 +243,39 @@ VIDEO_START( shangon );
 VIDEO_UPDATE( outrun );
 VIDEO_UPDATE( shangon );
 
+/* from vidhrdw/segas18.c */
+VIDEO_UPDATE( system18_new );
+VIDEO_START( system18_new );
 
 /* "normal" video hardware */
-extern VIDEO_START( system16 );
-extern VIDEO_UPDATE( system16 );
+VIDEO_START( system16 );
+VIDEO_UPDATE( system16 );
 
 /* hang-on video hardware */
-extern VIDEO_START( hangon );
-extern VIDEO_UPDATE( hangon );
+VIDEO_START( hangon );
+VIDEO_UPDATE( hangon );
 
 /* outrun video hardware */
-extern VIDEO_START( outrun_old );
-extern VIDEO_UPDATE( outrun_old );
+VIDEO_START( outrun_old );
+VIDEO_UPDATE( outrun_old );
 
 /* aburner video hardware */
-extern VIDEO_START( aburner );
-extern VIDEO_UPDATE( aburner );
+VIDEO_START( aburner );
+VIDEO_UPDATE( aburner );
 
 /* system18 video hardware */
-extern VIDEO_START( system18 );
-extern VIDEO_UPDATE( system18 );
+VIDEO_START( system18 );
+VIDEO_UPDATE( system18 );
+void system18_set_grayscale(int enable);
+void system18_set_vdp_enable(int enable);
+void system18_set_vdp_mixing(int mixing);
+
+/* vidhrdw/segac2.c */
+void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect );
+void start_system18_vdp(void);
+READ16_HANDLER( segac2_vdp_r );
+WRITE16_HANDLER( segac2_vdp_w );
+
 
 /* video driver constants (vary with game) */
 extern int sys16_gr_bitmap_width;

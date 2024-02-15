@@ -509,7 +509,7 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c \
 	$(CORE_DIR)/drivers/sharrier.c $(CORE_DIR)/drivers/system18.c \
 	$(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
-	$(CORE_DIR)/vidhrdw/segaic24.c \
+	$(CORE_DIR)/vidhrdw/segaic24.c $(CORE_DIR)/vidhrdw/segas18.c \
 	$(CORE_DIR)/drivers/system32.c $(CORE_DIR)/drivers/multi32.c $(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c \
 	$(CORE_DIR)/drivers/stv.c $(CORE_DIR)/drivers/stvhacks.c $(CORE_DIR)/machine/stvcd.c \

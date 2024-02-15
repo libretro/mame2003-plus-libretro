@@ -55,7 +55,7 @@ static void vdp_dma_68k(void);
 static void vdp_dma_fill(int);
 static void vdp_dma_copy(void);
 
-static void drawline(UINT16 *bitmap, int line, int solid);
+static void drawline(UINT16 *bitmap, int line, int bgfill);
 static void get_scroll_tiles(int line, int scrollnum, UINT32 scrollbase, UINT32 *tiles, int *offset);
 static void get_window_tiles(int line, UINT32 scrollbase, UINT32 *tiles);
 static void drawline_tiles(UINT32 *tiles, UINT16 *bmap, int pri, int offset, int lclip, int rclip);
@@ -173,7 +173,9 @@ VIDEO_START( segac2 )
 	/* reset VDP */
 	internal_vblank = 1;
     for (i = 0; i < 24; i++)
-        vdp_register_w(0x8000 | (i << 8) | vdp_init[i]);
+    {
+	   vdp_register_w(0x8000 | (i << 8) | vdp_init[i]);
+    }
 	vdp_cmdpart = 0;
 	vdp_code    = 0;
 	vdp_address = 0;
@@ -236,7 +238,6 @@ VIDEO_START( megatech )
 
 	segac2_sp_palbase = 0x000;	/* same palettes for sprites and bg*/
 	display_enable = 1;
-
 
 	if (start_megatech_video_normal())
 		return 1;
@@ -352,10 +353,9 @@ if (keyboard_pressed(KEYCODE_D)) segac2_sp_palbase ^= 0x100;
 #endif
 
 
-
 	/* generate the final screen */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		drawline((UINT16 *)bitmap->line[y], y,1);
+		drawline((UINT16 *)bitmap->line[y], y, 0);
 
 	segac2_bg_palbase = old_bg;
 	segac2_sp_palbase = old_sp;
@@ -380,12 +380,9 @@ if (keyboard_pressed(KEYCODE_D)) segac2_sp_palbase ^= 0x100;
 #endif
 
 
-
-
-
 	/* generate the final screen */
 	for (y = cliprect->min_y+192; y <= cliprect->max_y; y++)
-		drawline((UINT16 *)bitmap->line[y], y-192,1);
+		drawline((UINT16 *)bitmap->line[y], y-192, 0);
 
 	segac2_bg_palbase = old_bg;
 	segac2_sp_palbase = old_sp;
@@ -417,11 +414,10 @@ if (keyboard_pressed(KEYCODE_D)) segac2_sp_palbase ^= 0x100;
 #endif
 
 
-
 	/* generate the final screen - control which screen is 
 	   shown by a keystroke for now */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		drawline((UINT16 *)bitmap->line[y], y,1);
+		drawline((UINT16 *)bitmap->line[y], y, 0);
 
 	update_megaplay_video_normal(bitmap, cliprect);
 
@@ -432,15 +428,17 @@ if (keyboard_pressed(KEYCODE_D)) segac2_sp_palbase ^= 0x100;
 
 void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
-	int old_bg = segac2_bg_palbase, old_sp = segac2_sp_palbase;
+	int old_bg = segac2_bg_palbase, old_sp = segac2_sp_palbase, old_bgcol = bgcol;
 	int y;
 
 	/* generate the final screen */
+	bgcol = 0xffff - segac2_palbank;
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		drawline((UINT16 *)bitmap->line[y], y,0);
+		drawline((UINT16 *)bitmap->line[y], y, 0xffff);
 
 	segac2_bg_palbase = old_bg;
 	segac2_sp_palbase = old_sp;
+	bgcol = old_bgcol;
 }
 
 /******************************************************************************
@@ -678,7 +676,7 @@ static void vdp_data_w(int data)
 static int vdp_control_r(void)
 {
 	int beampos = cpu_gethorzbeampos();
-	int status = 0x3400;
+	int status = 0x3600; // wwally needs fifo empty set
 
 	/* kill 2nd write pending flag */
 	vdp_cmdpart = 0;
@@ -726,6 +724,7 @@ static void vdp_control_w(int data)
 
 static void vdp_register_w(int data)
 {
+	int scrwidth = 0;
 	static const UINT8 is_important[32] = { 0,0,1,1,1,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 	UINT8 regnum = (data & 0x1f00) >> 8; /* ---R RRRR ---- ---- */
@@ -778,10 +777,29 @@ static void vdp_register_w(int data)
 		}
 
 		case 0x0c: /* video modes */
-			/*if (!(regdat & 1))
-				usrintf_showmessage("Video width = 256!");*/
-			/*This will change the visible area too...*/
-			window_width = regdat & 1;/*maybe bit 7?*/
+			/* HDG: taken from mess/machine/genesis.c */
+			switch (regdat&0x81)
+			{
+				case 0x00: // 32 cell
+					scrwidth=32;
+					window_width=32;
+				break;
+				case 0x01: // 40 cell corrupted
+					scrwidth=40;
+					window_width=64;
+				break;
+				case 0x80: // illegal!
+					scrwidth=40;
+					window_width=64;
+				break;
+				case 0x81: // 40 cell
+					scrwidth=40;
+					window_width=64;
+				break;
+			}
+			set_visible_area(0, scrwidth*8-1,
+				Machine->visible_area.min_y,
+				Machine->visible_area.max_y);
 			break;
 
 		case 0x0d: /* HScroll Base */
@@ -959,19 +977,18 @@ static int vdp_getvscroll(int plane, int column)
 
 ******************************************************************************/
 
-static void drawline(UINT16 *bitmap, int line, int solid)
+static void drawline(UINT16 *bitmap, int line, int bgfill)
 {
 	int lowsprites, highsprites, link;
 	UINT32 scrolla_tiles[41], scrollb_tiles[41], window_tiles[41];
 	int scrolla_offset, scrollb_offset;
 	UINT8 *lowlist[81], *highlist[81];
-	int bgcolor = bgcol + segac2_palbank;
+	int bgcolor = bgfill ? bgfill : (bgcol + segac2_palbank);
 	int window_lclip, window_rclip;
 	int scrolla_lclip, scrolla_rclip;
 	int column, sprite;
 
 	/* clear to the background color */
-	if (solid) /* we don't want to do this on system18! */
 		for (column = 0; column < BITMAP_WIDTH; column++)
 			bitmap[column] = bgcolor;
 
@@ -1102,7 +1119,7 @@ static void get_window_tiles(int line, UINT32 scrollbase, UINT32 *tiles)
 	for (column = 0; column < 40; column++)
 	{
 		/* determine the base of the tilemap row */
-		int temp = (line / 8) * ((window_width) ? 64 : 32) + column;
+		int temp = (line / 8) * window_width + column;
 		int tilebase = scrollbase + 2 * temp;
 
 		/* get the tile info */

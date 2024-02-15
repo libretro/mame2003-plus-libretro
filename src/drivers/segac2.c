@@ -4468,7 +4468,7 @@ static MACHINE_DRIVER_START( puckpkmn )
 
 	/* video hardware */
 	MDRV_VIDEO_START(puckpkmn)
-	MDRV_VISIBLE_AREA(8, 319, 0, 223)
+	MDRV_VISIBLE_AREA(0, 319, 0, 223)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(OKIM6295, puckpkmn_m6295_intf)
@@ -4483,7 +4483,7 @@ static MACHINE_DRIVER_START( jzth )
 
 	/* video hardware */
 	MDRV_VIDEO_START(puckpkmn)
-	MDRV_VISIBLE_AREA(8, 319, 0, 223)
+	MDRV_VISIBLE_AREA(0, 319, 0, 223)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(OKIM6295, puckpkmn_m6295_intf)
@@ -6245,8 +6245,8 @@ GAMEX( 1996, pclubjv5, pclubj,   segac2, pclub,    pclub,    ROT0, "Atlus",     
 /* nn */ /* nn is part of the instruction rom name, should there be a game for each number? */
 /* -- */ GAMEX( 1989, megatech, 0,        megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Bios", NOT_A_DRIVER )
 /* 01 */ GAMEX( 1989, mt_beast, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Altered Beast", GAME_IMPERFECT_GRAPHICS )
-/* 02 */ GAMEX( 1989, mt_shar2, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Space Harrier 2.", GAME_NOT_WORKING )
-/* 03 */ GAMEX( 1989, mt_stbld, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Super Thunder Blade", GAME_NOT_WORKING )
+/* 02 */ GAME( 1989, mt_shar2, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Space Harrier 2." )
+/* 03 */ GAME( 1989, mt_stbld, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Super Thunder Blade" )
 /* 04 */ GAMEX( 1989, mt_ggolf, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Great Golf", GAME_NOT_WORKING ) /* sms! also bad */
 /* 05 */ GAMEX( 1989, mt_gsocr, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Great Soccer", GAME_NOT_WORKING ) /* sms! also bad */
 /* 06 */ /* unknown*/
@@ -6259,7 +6259,7 @@ GAMEX( 1996, pclubjv5, pclubj,   segac2, pclub,    pclub,    ROT0, "Atlus",     
 /* 13 */ GAMEX( 1989, mt_astro, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech - Astro Warrior", GAME_NOT_WORKING ) /* sms! */
 /* 14 */ /* unknown*/
 /* 15 */ /* unknown*/
-/* 16 */ /* unknown*/
+/* 16 */ /* unknown*/ 
 /* 17 */ /* unknown*/
 /* 18 */ /* unknown*/
 /* 19 */ /* unknown*/
