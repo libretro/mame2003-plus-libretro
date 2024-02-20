@@ -408,7 +408,10 @@ simulate_mcu( void )
 			if( i==1 )
 			{
 				if( readinputport(1)&0x80 ) data |= 0x80; /* P1 start */
-				if( readinputport(2)&0x80 ) data |= 0x40; /* P2 start */
+			}
+			if( i==2 )
+			{
+				if( readinputport(2)&0x80 ) data |= 0x80; /* P2 start */
 			}
 			break;
 
