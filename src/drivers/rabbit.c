@@ -69,7 +69,7 @@ data32_t *rabbit_spriteram;
 static struct tilemap *rabbit_tilemap[4];
 
 /* call with tilesize = 0 for 8x8 or 1 for 16x16 */
-INLINE void get_rabbit_tilemap_info(int whichtilemap, int tilesize, int tile_index)
+static INLINE void get_rabbit_tilemap_info(int whichtilemap, int tilesize, int tile_index)
 {
 	int tileno,colour,flipxy, cmask, depth;
 	int bank;
