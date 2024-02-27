@@ -226,7 +226,7 @@ static void rabbit_drawsprites( struct mame_bitmap *bitmap, const struct rectang
 /* the sprite bitmap can probably be handled better than this ... */
 static void rabbit_clearspritebitmap( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
-	UINT32 startx, starty;
+	int startx, starty;
 	int y;
 	int amountx,amounty;
 	UINT16 *dstline;
@@ -239,6 +239,8 @@ static void rabbit_clearspritebitmap( struct mame_bitmap *bitmap, const struct r
 	starty-=200;
 	amountx =650;
 	amounty =600;
+
+	if (startx < 0) { amountx += startx; startx = 0; }
 
 	if ((startx+amountx)>=0x1000) amountx-=(0x1000-(startx+amountx));
 
