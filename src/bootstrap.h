@@ -59,6 +59,7 @@ extern const struct bin2cFILE nslashers_bootstrap;
 extern const struct bin2cFILE offroadc_bootstrap;
 extern const struct bin2cFILE openice_bootstrap;
 extern const struct bin2cFILE qix_bootstrap;
+extern const struct bin2cFILE rabbit_bootstrap;
 extern const struct bin2cFILE revx_bootstrap;
 extern const struct bin2cFILE rmpgwt11_bootstrap;
 extern const struct bin2cFILE rmpgwt_bootstrap;
