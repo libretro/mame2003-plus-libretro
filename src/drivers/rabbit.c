@@ -46,6 +46,9 @@ Custom:	Imagetek 15000 (2ch video & 2ch sound)
 #include "machine/random.h"
 #include "machine/eeprom.h"
 
+#include "bootstrap.h"
+#include "inptport.h"
+
 #define VERBOSE_AUDIO_LOG (0)	/* enable to show audio writes (very noisy when music is playing) */
 
 /* debug */
@@ -1186,9 +1189,6 @@ ROM_START( rabbit )
 
 	ROM_REGION( 0x400000, REGION_USER3, 0 ) /* sound rom */
 	ROM_LOAD( "jsn0.11", 0x0000000, 0x400000, CRC(e1f726e8) SHA1(598d75f3ff9e43ec8ce6131ed37f4345bf2f2d8e) )
-
-  ROM_REGION16_BE( 0x80, REGION_USER4, 0 )
-	ROM_LOAD( "rabbit.nv", 0x0000, 0x0080, CRC(73d471ed) SHA1(45e045f5ea9036342b88013e021d402741d98537) )
 ROM_END
 
 ROM_START( tmmjprd )
@@ -1223,5 +1223,5 @@ ROM_START( tmmjprd )
 ROM_END
 
 
-GAMEX( 1997, rabbit,  0, rabbit,  rabbit,  rabbit,  ROT0, "Electronic Arts / Aorn", "Rabbit", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) /* somewhat playable */
+GAMECX(1997, rabbit,  0, rabbit,  rabbit,  rabbit,  ROT0, "Electronic Arts / Aorn", "Rabbit", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND, &generic_ctrl, &rabbit_bootstrap)
 GAMEX( 1997, tmmjprd, 0, tmmjprd, tmmjprd, tmmjprd, ROT0, "Media / Sonnet", "Tokimeki Mahjong Paradise - Dear My Love", GAME_NOT_WORKING | GAME_NO_SOUND )
