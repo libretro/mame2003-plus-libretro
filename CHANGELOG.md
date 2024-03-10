@@ -424,6 +424,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Drive - Romset `powerdrv`
 * Pro Baseball Skill Tryout - `tryout`
 * Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
+* Rabbit - Romset `rabbit` - no sound
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -997,4 +998,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added Donkey Kong Remix and Donkey Kong Christmas Remix hacks to dkong.c [grant2258, arcadez]
 * Emulated a missing graphical effect for Wild Fang / Tecmo Knight the screen now shakes when enemies break through walls and you land after a big jump [arcadez]
 * Fixed Player 2 Start Button for Namco's Tinkle Pit [MAMEDev, arcadez]
+* Updated the rabbit driver to MAME88 and bootstrapped the rom loading to prevent the game from hanging, Rabbit is now playable but without sound
+* as we dont have the I5000 soundcore this game would require [arcadez, mahoneyt944]
 
