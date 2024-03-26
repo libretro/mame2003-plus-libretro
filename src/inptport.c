@@ -825,6 +825,8 @@ void update_analog_port(int port)
 	InputSeq* decseq;
 	int keydelta;
 	int player;
+	struct timespec ts;
+	long int sec, nsec;
 
 	/* get input definition */
 	in = input_analog[port];
@@ -906,11 +908,80 @@ void update_analog_port(int port)
 
 	delta = mouse_delta_axis[player][axis];
 
-	if (seq_pressed(decseq)) delta -= keydelta;
+	if (seq_pressed(decseq))
+	{
+		/* disregard "press" to screen out false "double press" */
+		/* with one rotary joystick twist step */
+		if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+		{
+			if (in->time_last_used_press.tv_sec != 0)
+			{
+				clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+				sec = (long int) (ts.tv_sec - in->time_last_used_press.tv_sec);
+				nsec = (long int) (ts.tv_nsec - in->time_last_used_press.tv_nsec);
+				if (nsec < 0) {
+					sec--;
+					nsec += 1000000000;
+				}
+
+				/* reset timer to allow new "presses" / rotary joystick twist detections */
+				/* if more than 0.024 seconds (1.44 frames @ 60fps, 1.2 frames @ 50fps) */
+				/* has passed */
+				if ((float) sec + (float) nsec / 1000000000.0f > 0.024f)
+				{
+					in->time_last_used_press.tv_sec = 0;
+					in->time_last_used_press.tv_nsec = 0;
+				}
+			}
+
+			if (in->time_last_used_press.tv_sec != 0)
+				clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+			else
+			{
+				delta -= keydelta;
+				clock_gettime(CLOCK_MONOTONIC_RAW, &(in->time_last_used_press));
+			}
+		}
+		else delta -= keydelta;
+	}
+
 
 	if (type != IPT_PEDAL && type != IPT_PEDAL2)
 	{
-		if (seq_pressed(incseq)) delta += keydelta;
+		if (seq_pressed(incseq))
+		{
+			/* disregard "press" to screen out false "double press" */
+			/* with one rotary joystick twist step */
+			if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+			{
+				if ((in+1)->time_last_used_press.tv_sec != 0)
+				{
+					clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+					sec = (long int) ( ts.tv_sec
+							- (in+1)->time_last_used_press.tv_sec );
+					nsec = (long int) ( ts.tv_nsec
+							- (in+1)->time_last_used_press.tv_nsec );
+					if (nsec < 0) {
+						sec--;
+						nsec += 1000000000;
+					}
+					if ((float) sec + (float) nsec / 1000000000.0f > 0.024f)
+					{
+						(in+1)->time_last_used_press.tv_sec = 0;
+						(in+1)->time_last_used_press.tv_nsec = 0;
+					}
+				}
+
+				if ((in+1)->time_last_used_press.tv_sec != 0)
+					clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+				else
+				{
+					delta += keydelta;
+					clock_gettime(CLOCK_MONOTONIC_RAW, &((in+1)->time_last_used_press));
+				}
+			}
+			else delta += keydelta;
+		}
 	}
 	else
 	{
