@@ -4,7 +4,7 @@ INCLUDE_DRV ?= all
 
 # uncomment to removed filtered polling
 # be sure to set in core(s) that also have this feature
-NO_FILTERED_POLL=1
+# NO_FILTERED_POLL=1
 
 DEBUG         ?= 0
 DEBUGGER      ?= 0
