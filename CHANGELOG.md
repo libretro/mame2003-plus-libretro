@@ -42,6 +42,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Chase Bombers
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
+* Clockwork Aquario
 * Combat Hawk
 * Come Back Toto
 * Cookie & Bibi
@@ -96,6 +97,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gunbarich
 * GunMaster
 * Gut's N' Glory (Atari Prototype)
+* Hammer Away
 * Hang Zo
 * Hard Times
 * Head On Channel (Japan, Prototype)
@@ -325,6 +327,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken / Victory Road (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* Donkey Kong Remix
+* Donkey Kong Christmas Remix
 * Dottori-Man Jr. (Hack by Chris Covell)
 * DownTown (joystick hack)
 * Final Fight 30th Anniversary Edition (Grego And Rotwang)
@@ -362,6 +366,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Competition Golf Final Round (revision 3) - `compgolf`
 * Crater Raider - Romset `crater`
 * Crazy Climber 2 - Romset `cclimbr2`
+* DD Crew - Romset `ddcrew`
 * Demolition Derby - Romset `demoderb`
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
@@ -419,6 +424,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Drive - Romset `powerdrv`
 * Pro Baseball Skill Tryout - `tryout`
 * Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
+* Rabbit - Romset `rabbit` - no sound
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -985,4 +991,14 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed graphical corruption on left side of screen stage 3 onwards in Storm Blade and all stages in Ultra X Weapons [MAMEDev, arcadez]
 * Added some alt sprite drawing to the ssv video to prevent performance drops in some SSV games after the above updates [BritneysPAIRS]
 * Hooked up the M6801 Protection MCU for Kiki Kai Kai fixing many gameplay issues this game can now be considered 100% in the emulation dept [arcadez]
+* Updated Sega system 16/c2 gfx to support the system18 VDP gfx then added Clockwork Aquario to the system18 driver[grant2258, arcadez, mistydreams]
+* Fixed DD Crew so it is now playable in this core added support for Hammer Away and fixed the sound banking for games in system18.c [grant2258, arcadez, mistydreams]
+* Added screen flipping and fixed the cocktail mode for Asteroids, Asteroids Deluxe and Tempest [mahoneyt944]
+* Backported a graphical fix from latest MAME to fix missing shadows in Atari's Shuuz [MAMEdev, arcadez]
+* Added Donkey Kong Remix and Donkey Kong Christmas Remix hacks to dkong.c [grant2258, arcadez]
+* Emulated a missing graphical effect for Wild Fang / Tecmo Knight the screen now shakes when enemies break through walls and you land after a big jump [arcadez]
+* Fixed Player 2 Start Button for Namco's Tinkle Pit [MAMEDev, arcadez]
+* Updated the rabbit driver to MAME88 and bootstrapped the rom loading to prevent the game from hanging, Rabbit is now playable but without sound
+* as we dont have the I5000 soundcore this game would require [arcadez, mahoneyt944]
+* Added missing button 3 inputs for Strike Gunner S.T.G used to combine both ships into one during a two player game [MAMEDEv, arcadez]
 

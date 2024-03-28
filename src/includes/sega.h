@@ -44,3 +44,6 @@ WRITE_HANDLER( startrek_sh_w );
 
 VIDEO_START( sega );
 VIDEO_UPDATE( sega );
+
+void sega_set_flip_x(int flip);
+void sega_set_flip_y(int flip);

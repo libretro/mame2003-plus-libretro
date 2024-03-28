@@ -8,6 +8,7 @@
 #include "vidhrdw/generic.h"
 
 data16_t *gaiden_videoram,*gaiden_videoram2,*gaiden_videoram3;
+INT8 tx_offset_y, bg_offset_y, fg_offset_y, spr_offset_y;
 int gaiden_sprite_sizey;
 int raiga_alpha;
 
@@ -88,6 +89,14 @@ VIDEO_START( gaiden )
 	tilemap_set_transparent_pen(background, 0);
 	tilemap_set_transparent_pen(foreground, 0);
 	tilemap_set_transparent_pen(text_layer, 0);
+	
+	tilemap_set_scrolldy(background, 0, 33);
+	tilemap_set_scrolldy(foreground, 0, 33);
+	tilemap_set_scrolldy(text_layer, 0, 31);
+
+	tilemap_set_scrolldx(background, 0, -1);
+	tilemap_set_scrolldx(foreground, 0, -1);
+	tilemap_set_scrolldx(text_layer, 0, -1);
 
 	return 0;
 }
@@ -148,6 +157,12 @@ VIDEO_START( drgnbowl )
 
 ***************************************************************************/
 
+WRITE16_HANDLER( gaiden_flip_w )
+{
+	if (ACCESSING_LSB)
+		flip_screen_set(data & 1);
+}
+
 WRITE16_HANDLER( gaiden_txscrollx_w )
 {
 	static data16_t scroll;
@@ -159,7 +174,7 @@ WRITE16_HANDLER( gaiden_txscrolly_w )
 {
 	static data16_t scroll;
 	COMBINE_DATA(&scroll);
-	tilemap_set_scrolly(text_layer, 0, scroll);
+	tilemap_set_scrolly(text_layer, 0, (scroll - tx_offset_y) & 0xffff);
 }
 
 WRITE16_HANDLER( gaiden_fgscrollx_w )
@@ -173,7 +188,7 @@ WRITE16_HANDLER( gaiden_fgscrolly_w )
 {
 	static data16_t scroll;
 	COMBINE_DATA(&scroll);
-	tilemap_set_scrolly(foreground, 0, scroll);
+	tilemap_set_scrolly(foreground, 0, (scroll - fg_offset_y) & 0xffff);
 }
 
 WRITE16_HANDLER( gaiden_bgscrollx_w )
@@ -187,7 +202,42 @@ WRITE16_HANDLER( gaiden_bgscrolly_w )
 {
 	static data16_t scroll;
 	COMBINE_DATA(&scroll);
-	tilemap_set_scrolly(background, 0, scroll);
+	tilemap_set_scrolly(background, 0, (scroll - bg_offset_y) & 0xffff);
+}
+
+WRITE16_HANDLER( gaiden_txoffsety_w )
+{
+    static data16_t scroll;
+	if (ACCESSING_LSB) {
+		tx_offset_y = data;
+		tilemap_set_scrolly(text_layer, 0, (scroll - tx_offset_y) & 0xffff);
+	}
+}
+
+WRITE16_HANDLER( gaiden_fgoffsety_w )
+{
+    static data16_t scroll;
+	if (ACCESSING_LSB) {
+		fg_offset_y = data;
+		tilemap_set_scrolly(foreground, 0, (scroll - fg_offset_y) & 0xffff);
+	}
+}
+
+WRITE16_HANDLER( gaiden_bgoffsety_w )
+{
+    static data16_t scroll;
+	if (ACCESSING_LSB) {
+		bg_offset_y = data;
+		tilemap_set_scrolly(background, 0, (scroll - bg_offset_y) & 0xffff);
+	}
+}
+
+WRITE16_HANDLER( gaiden_sproffsety_w )
+{
+	if (ACCESSING_LSB) {
+		spr_offset_y = data;
+		/* handled in draw_sprites */
+	}
 }
 
 WRITE16_HANDLER( gaiden_videoram3_w )
@@ -196,12 +246,6 @@ WRITE16_HANDLER( gaiden_videoram3_w )
 	COMBINE_DATA(&gaiden_videoram3[offset]);
 	if (oldword != gaiden_videoram3[offset])
 		tilemap_mark_tile_dirty(background,offset & 0x07ff);
-}
-
-WRITE16_HANDLER( gaiden_flip_w )
-{
-	if (ACCESSING_LSB)
-		flip_screen_set(data & 1);
 }
 
 
@@ -408,7 +452,7 @@ static void draw_sprites(struct mame_bitmap *bitmap_bg, struct mame_bitmap *bitm
 			/* raiga needs something like this */
 			UINT32 number = (source[1] & (sizex > 2 ? 0x7ff8 : 0x7ffc));
 
-			int ypos = source[3] & 0x01ff;
+			int ypos = (source[3] + spr_offset_y) & 0x01ff;
 			int xpos = source[4] & 0x01ff;
 
 			if (!blend_support && (attributes & 0x20) && (cpu_getcurrentframe() & 1))

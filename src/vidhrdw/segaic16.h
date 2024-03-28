@@ -12,6 +12,11 @@ extern data16_t *segaic16_spriteram_0;
 extern data16_t *segaic16_spriteram_1;
 extern data16_t *segaic16_roadram_0;
 
+extern READ16_HANDLER( segaic16_textram_r );
+extern READ16_HANDLER( segaic16_tileram_r );
+extern READ16_HANDLER( segaic16_spriteram_r );
+
+
 /* misc functions */
 void segaic16_set_display_enable(int enable);
 
