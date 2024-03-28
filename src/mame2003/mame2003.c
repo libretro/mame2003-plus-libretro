@@ -12,9 +12,10 @@
 #include <file/file_path.h>
 #include <streams/file_stream.h>
 #include <math.h>
-#include <filtered_poll.h>
 
 #ifndef NO_FILTERED_POLL
+#include <filtered_poll.h>
+
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #include <libloaderapi.h>
 #endif
@@ -137,8 +138,8 @@ bool retro_audio_buff_underrun      = false;
 
 #ifndef NO_FILTERED_POLL
 static struct fp_codes_for_filter  fp_codes_filter[MAX_INPUT_PORTS];
-static struct fp_filter_state      fp_filter_states[MAX_INPUT_PORTS];  /* used while in RetroArch */
-static struct fp_retro_code fp_codes[MAX_INPUT_PORTS][SEQ_MAX];
+static struct fp_filter_state      fp_filter_states[MAX_INPUT_PORTS];
+static struct fp_retro_code        fp_codes[MAX_INPUT_PORTS][SEQ_MAX];
 #endif
 
 static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool underrun_likely)
@@ -384,13 +385,19 @@ void codes_to_filter_and_filter_operation()
 	struct InputPort *in;
   int port;
   int xwayjoy;
-  // int index;
   int player;
   int run_filter;
   int last_active_position;
-  // int last_active_position, next_active_position;
 
-  /* filter not run by default unless turned on below */
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+  /* Dynamically find function definitions in main executable (RetroArch) */
+  HMODULE module = GetModuleHandleW(NULL);
+  retro_set_filtered_poll_run_filter_FUNC retro_set_filtered_poll_run_filter =
+          (retro_set_filtered_poll_run_filter_FUNC)GetProcAddress(module,
+          "retro_set_filtered_poll_run_filter");
+#endif
+
+  /* filter not run by default unless turned on further below */
   retro_set_filtered_poll_run_filter(0);
 
   /* Set player to 0 to "reset" */
@@ -420,15 +427,19 @@ void codes_to_filter_and_filter_operation()
   player = 0;
   run_filter = 0;
   last_active_position = 0;
-  // next_active_position = 0;
+  /* Scan all ports and save info and key and joy codes from DIAL and DIAL_V ports
+   * to operations definition table */
 	while (in->type != IPT_END && port < MAX_INPUT_PORTS)
   {
     if ((in->type & ~IPF_MASK) == IPT_DIAL || (in->type & ~IPF_MASK) == IPT_DIAL_V)
     {
+      /* Only added to operations definitions table if this setting is true in analog
+       * controls user settings */
 			xwayjoy= (in+2)->type & IPF_XWAYJOY;
 			if (xwayjoy == IPF_XWAYJOY)
       {
         run_filter = 1;
+        /* Find player */
         switch (in->type & IPF_PLAYERMASK)
         {
           case IPF_PLAYER1:
@@ -457,6 +468,7 @@ void codes_to_filter_and_filter_operation()
             break;
         }
 
+        /* Point last active row to this first next active row */
         fp_codes_filter[last_active_position].next_active_position = port;
 
         fp_codes_filter[port].player          = player;
@@ -469,8 +481,11 @@ void codes_to_filter_and_filter_operation()
         fp_codes_filter[port+1].modifier[0]   = IP_GET_LOCKOUT(in);
 
         struct OsdCodeAndType osdcodeandtype;
+        /* Convert all key and joy codes for port from Mame 2003 Plus to RetroArch encoding
+         * and save in operations definition table row */
         for (int i=0; i < SEQ_MAX; i++)
         {
+          /* for analog deincrement port */
           if (in->seq[i] == CODE_NONE)
             fp_codes_filter[port].codes[i].id = NO_CODE;
           else
@@ -484,7 +499,7 @@ void codes_to_filter_and_filter_operation()
                 fp_codes_filter[port].codes[i].idx = 0;
                 fp_codes_filter[port].codes[i].id = osdcodeandtype.code;
                 break;
-              case CODE_TYPE_JOYSTICK :
+              case CODE_TYPE_JOYSTICK : ; /*This is an empty statement so the next line compiles*/
                 unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
                 unsigned retro_code = get_retro_code("retropad", osd_code);
 
@@ -497,6 +512,7 @@ void codes_to_filter_and_filter_operation()
             }
           }
 
+          /* for analog increment port */
           if ((in+1)->seq[i] == CODE_NONE)
             fp_codes_filter[port+1].codes[i].id = NO_CODE;
           else
@@ -510,7 +526,7 @@ void codes_to_filter_and_filter_operation()
                 fp_codes_filter[port+1].codes[i].idx = 0;
                 fp_codes_filter[port+1].codes[i].id = osdcodeandtype.code;
                 break;
-              case CODE_TYPE_JOYSTICK :
+              case CODE_TYPE_JOYSTICK : ; /*This is an empty statement so the next line compiles*/
                 unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
                 unsigned retro_code = get_retro_code("retropad", osd_code);
 
@@ -528,8 +544,10 @@ void codes_to_filter_and_filter_operation()
         set in retro_set_filtered_poll_variables function
         defined in RetroArch */
 
+        /* analog increment port is next active port after analog deincrement port */
         fp_codes_filter[port].next_active_position = port + 1;
         last_active_position = port + 1;
+        /* analog increment port next active port points no where (0) for now */
         fp_codes_filter[port+1].next_active_position = 0;
         port += 3;
       }
@@ -541,26 +559,9 @@ void codes_to_filter_and_filter_operation()
       port++;
     }
   }
+
   if (run_filter)
     retro_set_filtered_poll_run_filter(1);
-
-  printf("At end of codes_to_filter_and_filter_operation.\n");
-  for (int i=0; i < MAX_INPUT_PORTS; i++)
-  {
-    printf("fp_codes_filter[%i].player: %i\n", i, fp_codes_filter[i].player);
-    printf("fp_codes_filters[%i].type: %i\n", i, fp_codes_filter[i].type);
-    printf("fp_codes_filters[%i].operations: %X\n", i, fp_codes_filter[i].operations);
-    printf("fp_codes_filters[%i].modifier[0]: %i\n", i, fp_codes_filter[i].modifier[0]);
-    for (int j=0; j < fp_codes_filter[i].codes_array_length; j++)
-    {
-      printf("fp_codes_filters[%i].codes[%i].port: %u\n", i, j, fp_codes_filter[i].codes[j].port);
-      printf("fp_codes_filters[%i].codes[%i].device: %u\n", i, j, fp_codes_filter[i].codes[j].device);
-      printf("fp_codes_filters[%i].codes[%i].idx: %u\n", i, j, fp_codes_filter[i].codes[j].idx);
-      printf("fp_codes_filters[%i].codes[%i].id: %u\n", i, j, fp_codes_filter[i].codes[j].id);
-    }
-    printf("fp_codes_filters[%i].codes_array_length: %i\n", i, fp_codes_filter[i].codes_array_length);
-    printf("fp_codes_filters[%i].next_active_position: %i\n", i, fp_codes_filter[i].next_active_position);
-  }
 }
 #endif
 
@@ -568,11 +569,11 @@ void retro_run (void)
 {
   bool updated = false;
 
+#ifndef NO_FILTERED_POLL
   /* determine what codes from polling need to be filtered / changed */
   codes_to_filter_and_filter_operation();
+#endif
 
-  printf("max players is %i\n", MAX_INPUT_PORTS);
-  printf("About to call poll_cb()\n");
   poll_cb(); /* execute input callback */
 
   if (retro_running == 0) /* first time through the loop */
@@ -818,9 +819,9 @@ void retro_set_input_state(retro_input_state_t cb)
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
   /* Dynamically find function definitions in main executable (RetroArch) */
   HMODULE module = GetModuleHandleW(NULL);
-  retro_core_input_state_filtered_poll_return_cb_FUNC retro_core_input_state_filtered_poll_return_cb =
-          (retro_core_input_state_filtered_poll_return_cb_FUNC)GetProcAddress(module,
-          "retro_core_input_state_filtered_poll_return_cb");
+  retro_get_core_input_state_filtered_poll_return_cb_FUNC retro_get_core_input_state_filtered_poll_return_cb =
+          (retro_get_core_input_state_filtered_poll_return_cb_FUNC)GetProcAddress(module,
+          "retro_get_core_input_state_filtered_poll_return_cb");
   retro_set_filtered_poll_run_filter_FUNC retro_set_filtered_poll_run_filter =
           (retro_set_filtered_poll_run_filter_FUNC)GetProcAddress(module,
           "retro_set_filtered_poll_run_filter");

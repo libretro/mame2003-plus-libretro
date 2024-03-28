@@ -157,7 +157,7 @@ enum { IPT_END=1,IPT_PORT,
 
 #ifndef NO_FILTERED_POLL
 #define IPF_XWAYJOY    0x04000000 /* block detected analog key/joy just pressed for time UI_lockout */
-#define IPF_LOCKOUT_TIME  24 /* milliseconds button or simulated button's depressed state is ignored */
+#define IPF_LOCKOUT_TIME  21 /* milliseconds button or simulated button's depressed state is ignored */
 #endif
 
 /* The "arg" field contains 4 bytes fields */
@@ -259,14 +259,6 @@ enum { IPT_END=1,IPT_PORT,
 	PORT_CODE(keyinc,joyinc)
 /* Both zeros above are not used */
 #endif
-
-/* #ifndef NO_FILTERED_POLL
-#define PORT_ANALOGXWAY(mask,default,type,sensitivity,delta,xwayjoy,lockout,min,max,keydec,keyinc,joydec,joyinc) \
-	PORT_BIT(mask, default, type) \
-	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IPT_EXTENSION | IPF_LOCKOUT(IPF_LOCKOUT_TIME), IP_NAME_DEFAULT }, \
-	PORT_CODE(keydec,joydec) \
-	PORT_CODE(keyinc,joyinc)
-#endif */
 
 /* dip switch definition */
 #define PORT_DIPNAME(mask,default,name) \

@@ -36,8 +36,8 @@ enum    /* type */
 
         /* operation */
 #define FP_TIMELOCKOUT  0x0001
-/* Additional operations that could be defined are below. Up to 3 more could be defined */
-/* along with code being added in filtered_poll.c to define these added operations */
+/* Additional operations that could be defined are below. Up to 3 more could be defined
+ * along with code being added in filtered_poll.c to define these added operations */
 /* #define FP_NAME_OF_OPERATION2  0x0010 */
 /* #define FP_NAME_OF_OPERATION3  0x0100 */
 /* #define FP_NAME_OF_OPERATION4  0x1000 */
@@ -49,9 +49,10 @@ struct fp_retro_code
   unsigned port;
   unsigned device;
   unsigned idx;
-  unsigned id;
+  unsigned id;    /* code */
 };
 
+/* Row of operations definition table */
 struct fp_codes_for_filter
 {
   int player;
@@ -63,6 +64,7 @@ struct fp_codes_for_filter
   int next_active_position;
 };
 
+/* Row of operations data table */
 struct fp_filter_state
 {
   int player;
@@ -73,14 +75,13 @@ struct fp_filter_state
 int16_t core_input_state_filtered_poll_return_cb_override(unsigned port,
       unsigned device, unsigned idx, unsigned id);
 
-/* typedefs and #if statements with matching #else and #end if statment are commented out
+/* typedefs and #if statements with matching #else and #end if statment are commented out with //
  * when in the RetroArch project, but are uncommented when used in a core module. */
 
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 /* Setup typedef as function pointer template to get access to function in main executables
  * in Windows environments. */
-// typedef retro_input_state_t (*retro_core_input_state_filtered_poll_return_cb_FUNC)(void);
-typedef retro_input_state_t (*retro_get_core_input_state_filtered_poll_return_cb_FUNC)(void)
+typedef retro_input_state_t (*retro_get_core_input_state_filtered_poll_return_cb_FUNC)(void);
 typedef void (*retro_set_filtered_poll_run_filter_FUNC)(int runFilter);
 typedef void (*retro_set_filtered_poll_original_cb_FUNC)(retro_input_state_t defaultStateCb);
 typedef void (*retro_set_filtered_poll_variables_FUNC)( int fpActionsArraySize,
@@ -93,7 +94,6 @@ RETRO_END_DECLS
 #else
 RETRO_END_DECLS
 /* Just set up header which is supported on other OSs */
-// RETRO_API retro_input_state_t retro_core_input_state_filtered_poll_return_cb(void);
 RETRO_API retro_input_state_t retro_get_core_input_state_filtered_poll_return_cb(void);
 RETRO_API void retro_set_filtered_poll_run_filter(int runFilter);
 RETRO_API void retro_set_filtered_poll_original_cb(retro_input_state_t defaultStateCb);

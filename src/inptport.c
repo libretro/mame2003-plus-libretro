@@ -1649,6 +1649,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 #else
     {
       if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+        /* if filtered poll, third port stores additional data */
 			  src_end = src + 3;
       else
 			  src_end = src + 2;
@@ -1656,23 +1657,6 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 #endif
 		else
 			src_end = src + 1;
-
-/* #ifdef NO_FILTERED_POLL
-		if (type > IPT_ANALOG_START && type < IPT_ANALOG_END)
-			src_end = src + 2;
-		else
-			src_end = src + 1;
-#else
-		if (type > IPT_ANALOG_START && type < IPT_ANALOG_END)
-    {
-      if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
-			  src_end = src + 3;
-      else
-			  src_end = src + 2;
-    }
-		else
-			src_end = src + 1;
-#endif */
 
 		switch (type)
 		{

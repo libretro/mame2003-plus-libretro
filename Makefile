@@ -2,6 +2,10 @@ TARGET_NAME := mame2003_plus
 CORE_DIR    := src
 INCLUDE_DRV ?= all
 
+# uncomment to removed filtered polling
+# be sure to set in core(s) that also have this feature
+NO_FILTERED_POLL=1
+
 DEBUG         ?= 0
 DEBUGGER      ?= 0
 SPLIT_UP_LINK ?= 0
@@ -21,6 +25,11 @@ endif
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
 	CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
+
+ifeq ($(NO_FILTERED_POLL), 1)
+	CFLAGS   += -DNO_FILTERED_POLL=1
+	CXXFLAGS += -DNO_FILTERED_POLL=1
 endif
 
 SPACE       :=

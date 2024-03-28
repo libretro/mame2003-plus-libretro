@@ -1989,7 +1989,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	if (total == 0) return 0;
 
 	/* Each analog control has 3 entries - key & joy delta, reverse, sensitivity */
-  /* Or 5 entries with filtered poll adding x-way joy and time lockout */
+  /* Or 5 entries with filtered poll enabled (default) adding x-way joy and time lockout */
 
 #ifdef NO_FILTERED_POLL
 #define ENTRIES 3
@@ -2011,8 +2011,8 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 			int sensitivity,delta;
 			int reverse;
 #ifndef NO_FILTERED_POLL
-      int xwayjoy;
-      int lockout;
+      int xwayjoy;  /* Toggle lock out analog (de)increment for certain amount of time */
+      int lockout;  /* Time in milliseconds to lockout analog (de)increment */
 #endif
 
 			strcpy (label[i], input_port_name(entry[i/ENTRIES]));

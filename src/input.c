@@ -260,6 +260,7 @@ static const char* internal_code_name(InputCode code)
 }
 
 #ifndef NO_FILTERED_POLL
+/* Only for keyboard or joystick buttons */
 void internal_key_code_to_oscode(InputCode code, struct OsdCodeAndType * osdcodeandtype)
 {
 	const struct KeyboardInfo *keyinfo;
