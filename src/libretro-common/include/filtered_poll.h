@@ -75,7 +75,7 @@ struct fp_filter_state
 int16_t core_input_state_filtered_poll_return_cb_override(unsigned port,
       unsigned device, unsigned idx, unsigned id);
 
-/* typedefs and #if statements with matching #else and #end if statment are commented out with //
+/* typedefs and #if statements with matching #else and #end if statment are commented out staring with /***
  * when in the RetroArch project, but are uncommented when used in a core module. */
 
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)

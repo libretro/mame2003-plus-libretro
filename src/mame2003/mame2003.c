@@ -389,6 +389,13 @@ void codes_to_filter_and_filter_operation()
   int run_filter;
   int last_active_position;
 
+  int i;
+
+  struct OsdCodeAndType osdcodeandtype;
+
+  unsigned osd_code;
+  unsigned retro_code;
+
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
   /* Dynamically find function definitions in main executable (RetroArch) */
   HMODULE module = GetModuleHandleW(NULL);
@@ -401,7 +408,7 @@ void codes_to_filter_and_filter_operation()
   retro_set_filtered_poll_run_filter(0);
 
   /* Set player to 0 to "reset" */
-  for (int i = 0; i < MAX_INPUT_PORTS; i++)
+  for (i = 0; i < MAX_INPUT_PORTS; i++)
     fp_codes_filter[i].player = 0;
 
 	in = Machine->input_ports;
@@ -480,10 +487,9 @@ void codes_to_filter_and_filter_operation()
         fp_codes_filter[port].modifier[0]     = IP_GET_LOCKOUT(in);
         fp_codes_filter[port+1].modifier[0]   = IP_GET_LOCKOUT(in);
 
-        struct OsdCodeAndType osdcodeandtype;
         /* Convert all key and joy codes for port from Mame 2003 Plus to RetroArch encoding
          * and save in operations definition table row */
-        for (int i=0; i < SEQ_MAX; i++)
+        for (i=0; i < SEQ_MAX; i++)
         {
           /* for analog deincrement port */
           if (in->seq[i] == CODE_NONE)
@@ -499,9 +505,9 @@ void codes_to_filter_and_filter_operation()
                 fp_codes_filter[port].codes[i].idx = 0;
                 fp_codes_filter[port].codes[i].id = osdcodeandtype.code;
                 break;
-              case CODE_TYPE_JOYSTICK : ; /*This is an empty statement so the next line compiles*/
-                unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
-                unsigned retro_code = get_retro_code("retropad", osd_code);
+              case CODE_TYPE_JOYSTICK :
+                osd_code = decode_osd_joycode(osdcodeandtype.code);
+                retro_code = get_retro_code("retropad", osd_code);
 
                 fp_codes_filter[port].codes[i].port
                                         = calc_player_number(osdcodeandtype.code) - 1;
@@ -526,9 +532,9 @@ void codes_to_filter_and_filter_operation()
                 fp_codes_filter[port+1].codes[i].idx = 0;
                 fp_codes_filter[port+1].codes[i].id = osdcodeandtype.code;
                 break;
-              case CODE_TYPE_JOYSTICK : ; /*This is an empty statement so the next line compiles*/
-                unsigned osd_code = decode_osd_joycode(osdcodeandtype.code);
-                unsigned retro_code = get_retro_code("retropad", osd_code);
+              case CODE_TYPE_JOYSTICK :
+                osd_code = decode_osd_joycode(osdcodeandtype.code);
+                retro_code = get_retro_code("retropad", osd_code);
 
                 fp_codes_filter[port+1].codes[i].port
                                         = calc_player_number(osdcodeandtype.code) - 1;
