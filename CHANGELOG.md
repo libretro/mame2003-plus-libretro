@@ -1001,4 +1001,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Updated the rabbit driver to MAME88 and bootstrapped the rom loading to prevent the game from hanging, Rabbit is now playable but without sound
 * as we dont have the I5000 soundcore this game would require [arcadez, mahoneyt944]
 * Added missing button 3 inputs for Strike Gunner S.T.G used to combine both ships into one during a two player game [MAMEDEv, arcadez]
+* Updated the protection code for Exerion to prevent the game from ending should you die at anytime after the first bonus round [MAMEDev, arcadez]
 
