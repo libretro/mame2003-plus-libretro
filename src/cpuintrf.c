@@ -334,7 +334,7 @@ const struct cpu_interface cpuintrf[] =
 	CPU1(Z80,	   z80, 	 1,255,1.00, 8, 16,	  0,16,LE,1, 4	),
 #endif
 #if (HAS_DRZ80)
-	CPU1(DRZ80,	   drz80, 	 1,255,1.00, 8, 16,   0,16,LE,1, 4	),
+	CPU4(DRZ80,	   drz80, 	 1,255,1.00, 8, 16,   0,16,LE,1, 4	),
 #endif
 #if (HAS_Z180)
 	CPU1(Z180,	   z180, 	 1,255,1.00, 8, 20,	  0,20,LE,1, 4	),
