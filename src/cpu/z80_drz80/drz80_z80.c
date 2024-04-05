@@ -27,7 +27,7 @@ void Interrupt(void)
 	{
 		DRZ80.previouspc=0xffffffff;
 	}
-	else if ((DRZ80.irq_state!=CLEAR_LINE) && (DRZ80.regs.Z80IF&1))
+	else if (DRZ80.irq_state!=CLEAR_LINE)
 	{
 		DRZ80.previouspc=0xffffffff;
 		DRZ80.regs.Z80_IRQ=DRZ80.regs.Z80_IRQ|INT_IRQ;
