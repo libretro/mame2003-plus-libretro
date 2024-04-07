@@ -311,7 +311,9 @@ void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 {
 	INT32 irq_event = (state & 0xff) | ((irqline & 0xff) << 8) | (vector << 16);
 	int event_index = irq_event_index[cpunum]++;
-
+	printf("cpu_set_irq_line_and_vector  cpunum:%d irqline:%d state:%d vector:%d \n", cpunum, irqline, state, vector);
+	log_cb(RETRO_LOG_INFO, "cpu_set_irq_line_and_vector  cpunum:%d irqline:%d state:%d vector:%d \n", cpunum, irqline, state, vector);
+  
 	/*LOG(("cpu_set_irq_line(%d,%d,%d,%02x)\n", cpunum, irqline, state, vector));*/
 
 	/* enqueue the event */
