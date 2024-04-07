@@ -279,7 +279,7 @@ void drz80_set_reg (int regnum, unsigned val)
 void drz80_set_irq_line(int irqline, int state)
 {
 	printf("drz80_set_irq_line(irqline:%d, state:%d\n",rqline, state);
-	log_cb(RETRO_LOG_INFO, "drz80_set_irq_line(irqline:%d, state:%d\n",rqline, state);
+	log_cb(RETRO_LOG_INFO, "drz80_set_irq_line(irqline:%d, state:%d\n",irqline, state);
 	if(irqline == IRQ_LINE_NMI){
 		DRZ80.nmi_state=state;
 		if (state!=CLEAR_LINE)
