@@ -320,6 +320,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( silvland )	/* Falcon */
 	DRIVER( yamato )	/* (c) 1983 Sega */
 	DRIVER( yamato2 )	/* (c) 1983 Sega */
+	DRIVER( toprollr )	/* (c) 1983 Jaleco */
 	DRIVER( swimmer )	/* (c) 1982 Tehkan */
 	DRIVER( swimmera )	/* (c) 1982 Tehkan */
 	DRIVER( swimmerb )	/* (c) 1982 Tehkan */
@@ -2962,8 +2963,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( tetrisa )	/* (c) 1988 (protected) */
 	DRIVER( wb3a )		/* (c) 1988 Sega / Westone (protected) */
 
-	DRIVER( aquario )
-	DRIVER( hamaway )
 	DRIVER( aceattac )	/* (protected) */
 	DRIVER( afighter )	/* (protected) */
 	DRIVER( bloxeed )	/* (protected) */
@@ -6100,5 +6099,5 @@ Other Sun games
 	DRIVER( roundup5 )
 	DRIVER( bigfight )
 	DRIVER( cyclwarr )
-
+DRIVER( aquario )
 #endif	/* DRIVER_RECURSIVE */
