@@ -3,6 +3,7 @@ void pengo_decode(void);
 void szaxxon_decode(void);
 void suprloco_decode(void);
 void yamato_decode(void);
+void toprollr_decode(void);
 void sindbadm_decode(void);
 void regulus_decode(void);
 void mrviking_decode(void);
