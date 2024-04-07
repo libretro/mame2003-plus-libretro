@@ -77,16 +77,12 @@ WRITE_HANDLER( funkybee_scroll_w )
 
 WRITE_HANDLER( funkybee_flipscreen_w )
 {
-	if (flip_screen != (data & 0x01))
-	{
-		flip_screen_set(data & 0x01);
-		tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
-	}
+	flip_screen_set(data & 0x01);
 }
 
 static void get_bg_tile_info(int tile_index)
 {
-	int code = videoram[tile_index];
+	int code = videoram[tile_index] + ((colorram[tile_index] & 0x80) << 1);
 	int color = colorram[tile_index] & 0x03;
 
 	SET_TILE_INFO(gfx_bank, code, color, 0)
@@ -109,7 +105,7 @@ VIDEO_START( funkybee )
 	return 0;
 }
 
-static void funkybee_draw_sprites( struct mame_bitmap *bitmap )
+static void funkybee_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	int offs;
 
@@ -134,56 +130,50 @@ static void funkybee_draw_sprites( struct mame_bitmap *bitmap )
 			code, color,
 			flipx, flipy,
 			sx, sy,
-			&Machine->visible_area,
-			TRANSPARENCY_PEN, 0);
+			cliprect, TRANSPARENCY_PEN, 0);
 	}
 }
 
-static void funkybee_draw_columns( struct mame_bitmap *bitmap )
+static void funkybee_draw_columns( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	int offs;
 
 	for (offs = 0x1f;offs >= 0;offs--)
 	{
+		int const flip = flip_screen;
 		int code = videoram[0x1c00 + offs];
 		int color = colorram[0x1f10] & 0x03;
-		int sx = videoram[0x1f10];
+		int sx = flip ? videoram[0x1f1f] : videoram[0x1f10];
 		int sy = offs * 8;
 
-		if (flip_screen)
-		{
-			sx = 248 - sx;
+		if (flip)
 			sy = 248 - sy;
-		}
 
 		drawgfx(bitmap,Machine->gfx[gfx_bank],
 				code, color,
-				flip_screen, flip_screen,
+				flip, flip,
 				sx, sy,
 				0,TRANSPARENCY_PEN,0);
 
 		code = videoram[0x1d00 + offs];
 		color = colorram[0x1f11] & 0x03;
-		sx = videoram[0x1f11];
+		sx = flip ? videoram[0x1f1e] : videoram[0x1f11];
 		sy = offs * 8;
 
-		if (flip_screen)
-		{
-			sx = 248 - sx;
+		if (flip)
 			sy = 248 - sy;
-		}
 
 		drawgfx(bitmap,Machine->gfx[gfx_bank],
 				code, color,
-				flip_screen, flip_screen,
+				flip, flip,
 				sx, sy,
-				0,TRANSPARENCY_PEN,0);
+				cliprect,TRANSPARENCY_PEN,0);
 	}
 }
 
 VIDEO_UPDATE( funkybee )
 {
-	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
-	funkybee_draw_sprites(bitmap);
-	funkybee_draw_columns(bitmap);
+	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
+	funkybee_draw_sprites(bitmap, cliprect);
+	funkybee_draw_columns(bitmap, cliprect);
 }
