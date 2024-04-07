@@ -205,27 +205,27 @@ INPUT_PORTS_END
 
 static struct GfxLayout charlayout =
 {
-	8,8,	/* 8*8 characters */
-	256,	/* 256 characters */
-	2,		/* 2 bits per pixel */
-	{ 0, 4 },	/* the two bitplanes for 4 pixels are packed into one byte */
+	8,8,
+	RGN_FRAC(1,1),
+	2,
+	{ 0, 4 },
 	{ 0, 1, 2, 3, 8*8+0, 8*8+1, 8*8+2, 8*8+3 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-	16*8	/* every char takes 16 bytes */
+	16*8
 };
 
 static struct GfxLayout spritelayout =
 {
-	8,32,	/* 8*32 sprites */
-	128,		/* 128 sprites */
-	2,		/* 2 bits per pixel */
-	{ 0, 4 },	/* the two bitplanes for 4 pixels are packed into one byte */
+	8,32,
+	RGN_FRAC(1,1),
+	2,
+	{ 0, 4 },
 	{ 0, 1, 2, 3, 8*8+0, 8*8+1, 8*8+2, 8*8+3 },
 	{  0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 	  16*8, 17*8, 18*8, 19*8, 20*8, 21*8, 22*8, 23*8,
 	  32*8, 33*8, 34*8, 35*8, 36*8, 37*8, 38*8, 39*8,
 	  48*8, 49*8, 50*8, 51*8, 52*8, 53*8, 54*8, 55*8 },
-	4*16*8	/* every sprite takes 64 bytes */
+	4*16*8
 };
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
@@ -264,7 +264,7 @@ static MACHINE_DRIVER_START( funkybee )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(12, 32*8-1-12, 0*8, 28*8-1)
+	MDRV_VISIBLE_AREA(12, 32*8-8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(32)
 	MDRV_COLORTABLE_LENGTH(32)
