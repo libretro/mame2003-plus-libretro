@@ -220,6 +220,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2003
 * The Lost Castle In Darkmist
 * Top Driving
+* Top Roller
 * Toppy & Rappy
 * Torus * Mature *
 * Touch & Go (Korea, unprotected)
@@ -324,6 +325,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Cyborg Force
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken / Victory Road (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
@@ -544,6 +546,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bandito
 * Big Event Golf
 * Bosconian
+* Burgler X
 * Congo Bongo
 * Cookie & Bibi 2
 * Crazy Balloon
@@ -559,6 +562,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Galaga 3
 * Galaxy Rescue - (Added lrescue.zip sample support)
 * Gaplus
+* Go Go! Mile Smile / Susume! Mile Smile
 * Grobda
 * Hit The Ice
 * Horizon
@@ -584,6 +588,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pacman & Chomp Chomp
 * Pac & Pal
 * Passing Shot (4 Player Bootleg)
+* Performan
 * Pole Position
 * Pole Position II
 * Rampage World Tour
@@ -615,6 +620,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Two Tigers - `twotigra` romset
 * WWF Wrestlemania
 * Xevious
+* Zero Point
 
 
 ## Games now with sound sample support
@@ -1002,4 +1008,11 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * as we dont have the I5000 soundcore this game would require [arcadez, mahoneyt944]
 * Added missing button 3 inputs for Strike Gunner S.T.G used to combine both ships into one during a two player game [MAMEDEv, arcadez]
 * Updated the protection code for Exerion to prevent the game from ending should you die at anytime after the first bonus round [MAMEDev, arcadez]
+* Added a new game Top Roller to the yamato.c driver and reworked the cpu encryption making it compatable with the MAME78 codebase [grant2258, arcadez]
+* Fixed some graphical niggles with Chinese Hero on level 7 [MAMEDev, arcadez]
+* Improved the sound for Go Go! Mile Smile / Susume! Mile Smile by adding sound banking and reclocking the sound and CPU speeds [MAMEDev, arcadez]
+* Fixed some grahical niggles throughout the game and with the cocktail mode for Orca's Sky Lancer [MAMEDev, arcadez]
+* Added support for Cyborg Force to the NeoGeo driver [arcadez]
+* Fixed broken sound and incorrect background graphics in Performan [MAMEDev, arcadez]
+* Improved the sound for Burgler X and Zero Point by reclocking the YM3812 sound call [MAMEDev, arcadez]
 
