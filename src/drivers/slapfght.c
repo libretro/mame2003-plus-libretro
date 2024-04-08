@@ -201,6 +201,7 @@ WRITE_HANDLER( slapfight_fixram_w );
 WRITE_HANDLER( slapfight_fixcol_w );
 WRITE_HANDLER( slapfight_videoram_w );
 WRITE_HANDLER( slapfight_colorram_w );
+WRITE_HANDLER( slapfight_palette_bank_w );
 
 /* MACHINE */
 MACHINE_INIT( slapfight );
@@ -376,6 +377,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x07, 0x07, slapfight_port_07_w },
 	{ 0x08, 0x08, slapfight_port_08_w },	/* select bank 0 */
 	{ 0x09, 0x09, slapfight_port_09_w },	/* select bank 1 */
+	{ 0x0c, 0x0d, slapfight_palette_bank_w },
 PORT_END
 
 static PORT_READ_START( slapfight_readport )
@@ -996,7 +998,7 @@ static MACHINE_DRIVER_START( perfrman )
 
 	MDRV_CPU_ADD(Z80,16000000/8)			/* 2MHz ???, 16MHz Oscillator */
 	MDRV_CPU_MEMORY(perfrman_sound_readmem,perfrman_sound_writemem)
-	MDRV_CPU_VBLANK_INT(getstar_interrupt,6)
+	MDRV_CPU_VBLANK_INT(getstar_interrupt,4)	/* music speed, verified */
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
