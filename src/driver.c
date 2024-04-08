@@ -570,7 +570,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( polepos2 )	/* (c) 1983 */
 	DRIVER( poleps2a )	/* (c) 1983 + Atari license */
 	DRIVER( poleps2b )	/* bootleg */
-/*	DRIVER( poleps2c )	 bootleg */ 
+/*	DRIVER( poleps2c )	 bootleg */
 	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
 	DRIVER( pacland )	/* (c) 1984 */
 	DRIVER( pacland2 )	/* (c) 1984 */
@@ -2495,7 +2495,7 @@ V-V                           TP-027
 	DRIVER( armwar1d )   /* bootleg, Armored Warriors (Euro 941011 Phoenix Edition) (bootleg) */
 	DRIVER( avspd )      /* bootleg, Alien vs. Predator (Euro 940520 Phoenix Edition) (bootleg) */
 	DRIVER( dstlku1d )   /* bootleg, Darkstalkers: The Night Warriors (USA 940705 Phoenix Edition) (bootleg) */
-	DRIVER( ringdstd )   /* bootleg, Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition) (bootleg) */	
+	DRIVER( ringdstd )   /* bootleg, Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition) (bootleg) */
 	DRIVER( ssf2tad )    /* bootleg, Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg) */
 	DRIVER( ssf2xjr1d )  /* bootleg, Super Street Fighter II X: Grand Master Challenge (Japan 940223 Phoenix Edition) (bootleg) */
 	DRIVER( xmcotar1d )  /* bootleg, X-Men: Children of the Atom (Euro 950105 Phoenix Edition) (bootleg) */
@@ -2963,6 +2963,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( tetrisa )	/* (c) 1988 (protected) */
 	DRIVER( wb3a )		/* (c) 1988 Sega / Westone (protected) */
 
+	DRIVER( aquario )
+	DRIVER( hamaway )
 	DRIVER( aceattac )	/* (protected) */
 	DRIVER( afighter )	/* (protected) */
 	DRIVER( bloxeed )	/* (protected) */
@@ -5414,7 +5416,7 @@ Other Sun games
 	/* Playmark games */
 	DRIVER( sslam )		/* (c) 1993 */
 	DRIVER( sslama )	/* (c) 1993 */
-  DRIVER( powerbal ) /* (c) 1994 */  
+  DRIVER( powerbal ) /* (c) 1994 */
   DRIVER( hrdtimes ) /* (c) 1994 */
 	DRIVER( bigtwin )	/* (c) 1995 */
 	DRIVER( wbeachvl )	/* (c) 1995 */
@@ -5742,7 +5744,7 @@ Other Sun games
 	DRIVER( sprcros2 )	/* (c) 1986 GM Shoji */
 	DRIVER( mugsmash )	/* (c) Electronic Devices (Italy) / 3D Games (England) */
 	DRIVER( stlforce )	/* (c) 1994 Electronic Devices (Italy) / Ecogames S.L. (Spain) */
-	DRIVER( mortalr )	
+	DRIVER( mortalr )
 	DRIVER( fantland )	/* (c) 1987 Electronic Devices Italy */
 	DRIVER( galaxygn )	/* (c) 1989 Electronic Devices Italy */
 	DRIVER( borntofi )	/* (c) 1987 International Games */
@@ -6099,5 +6101,4 @@ Other Sun games
 	DRIVER( roundup5 )
 	DRIVER( bigfight )
 	DRIVER( cyclwarr )
-DRIVER( aquario )
 #endif	/* DRIVER_RECURSIVE */
