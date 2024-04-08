@@ -6054,8 +6054,9 @@ Other Sun games
 	DRIVER( kf10thep)       /* bootleg of kof2002 */
 	DRIVER( kf2k5uni)       /* bootleg of kof2002 */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
-	DRIVER(  xeno )      /* (c) 2019 Bitmap Bureau */
-	DRIVER( hypernoid )  /* 2021 M.Priewe */
+	DRIVER(  xeno )         /* (c) 2019 Bitmap Bureau */
+	DRIVER( hypernoid )     /* 2021 M.Priewe */
+	DRIVER( cyborgforce )   /* (c) 2023 Neo Byte Force Ltd */
 
 	/* SemiCom 68020 based hardware */
 	DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
