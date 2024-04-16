@@ -34,6 +34,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Botanic (English / Spanish set 1)
 * Bronx (Cycle Shooting bootleg)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
+* Buccaneers
 * Bullet (unprotected of FD1094 317-0041 set)" )
 * Cabal (World, Joystick version)
 * Calorie Kun vs Moguranian
@@ -219,6 +220,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * The King of Fighters 2002
 * The King of Fighters 2003
 * The Lost Castle In Darkmist
+* ThunderForce AC (Japan, prototype, bootleg)
 * Top Driving
 * Top Roller
 * Toppy & Rappy
@@ -1015,4 +1017,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Cyborg Force to the NeoGeo driver [arcadez]
 * Fixed broken sound and incorrect background graphics in Performan [MAMEDev, arcadez]
 * Improved the sound for Burgler X and Zero Point by reclocking the YM3812 sound call [MAMEDev, arcadez]
+* Added support for Buccaneers to vigilant.c and ThunderForce AC (Japan, prototype, bootleg) to the segac2.c drivers [MAMEDev, arcadez]
+* Fixed sound clipping in Karate Champ [MAMEDev, arcadez]
+* Fixed sound samples not playing in two versions of Bomber Man namely Bomber Man World (World) and New Atomic Punk - Global Quest (US) [MAMEDev, arcadez]
 
