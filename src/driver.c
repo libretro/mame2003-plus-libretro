@@ -1226,6 +1226,9 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vigilntu )	/* (c) 1988 (US) */
 	DRIVER( vigilntj )	/* (c) 1988 (Japan) */
 	DRIVER( kikcubic )	/* (c) 1988 (Japan) */
+  DRIVER( buccanrs )  /* (c) 1989 Duintronic */
+  DRIVER( buccanra )  /* (c) 1989 Duintronic */
+
 	/* M72 (and derivatives) */
 	DRIVER( rtype )		/* (c) 1987 (Japan) */
 	DRIVER( rtypepj )	/* (c) 1987 (Japan) */
