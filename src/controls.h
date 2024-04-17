@@ -2002,6 +2002,9 @@ const char *polepos_get_ctrl_name(int type);
 extern const struct ControlInfo polepos2_ctrl;
 const char *polepos2_get_ctrl_name(int type);
 
+extern const struct ControlInfo poleposa_ctrl;
+const char *poleposa_get_ctrl_name(int type);
+
 extern const struct ControlInfo policetr_ctrl;
 const char *policetr_get_ctrl_name(int type);
 
