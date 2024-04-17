@@ -1448,11 +1448,17 @@ void set_content_flags(void)
 				case IPT_LIGHTGUN_Y:
 					options.content_flags[CONTENT_LIGHTGUN] = true;
 					break;
-				case IPT_SERVICE :
+				case IPT_SERVICE:
 					options.content_flags[CONTENT_HAS_SERVICE] = true;
 					break;
-				case IPT_TILT :
+				case IPT_TILT:
 					options.content_flags[CONTENT_HAS_TILT] = true;
+					break;
+				case IPT_PEDAL:
+					options.content_flags[CONTENT_HAS_PEDAL] = true;
+					break;
+				case IPT_PEDAL2:
+					options.content_flags[CONTENT_HAS_PEDAL2] = true;
 					break;
 			}
 		}
@@ -1510,6 +1516,8 @@ void set_content_flags(void)
   if(options.content_flags[CONTENT_AD_STICK])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an analog joystick.\n");
   if(options.content_flags[CONTENT_HAS_SERVICE])        log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a service button.\n");
   if(options.content_flags[CONTENT_HAS_TILT])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a tilt function.\n");
+  if(options.content_flags[CONTENT_HAS_PEDAL])          log_cb(RETRO_LOG_INFO, LOGPRE "* Uses Pedal.\n");
+  if(options.content_flags[CONTENT_HAS_PEDAL2])         log_cb(RETRO_LOG_INFO, LOGPRE "* Uses Pedal2.\n");
 
   if(options.content_flags[CONTENT_ALTERNATING_CTRLS])  log_cb(RETRO_LOG_INFO, LOGPRE "* Uses alternating controls.\n");
   if(options.content_flags[CONTENT_MIRRORED_CTRLS])     log_cb(RETRO_LOG_INFO, LOGPRE "* Uses multiplayer control labels.\n");
