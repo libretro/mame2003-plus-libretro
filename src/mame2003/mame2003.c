@@ -748,7 +748,7 @@ void retro_describe_controls(void)
 
       if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
-          continue; /* button has a higher index than supported by the driver */
+          ;/*continue;*/ /* button has a higher index than supported by the driver */
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
