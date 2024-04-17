@@ -765,6 +765,10 @@ void retro_describe_controls(void)
         /* First try to get specific name */
         control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
 
+        /* override control name for pedals */
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL] ) control_name = "Pedal";
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL2]) control_name = "Pedal2";
+
         if(string_is_empty(control_name))
         {
           switch(retro_code) /* universal default mappings */
