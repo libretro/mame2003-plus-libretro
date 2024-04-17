@@ -747,8 +747,15 @@ void retro_describe_controls(void)
       if(ctrl_ipt_code == CODE_NONE) continue;
 
       if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
+      {
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL] ) goto skip;
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL2]) goto skip;
+
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
-          ;/*continue;*/ /* button has a higher index than supported by the driver */
+          continue; /* button has a higher index than supported by the driver */
+
+        skip:; //bypass button count check
+      }
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
