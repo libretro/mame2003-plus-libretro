@@ -543,8 +543,8 @@ VIDEO_UPDATE( polepos )
 {
 	int x,y,i;
 
-	char gear_high[] = "HHHHHHHHHHHHHHH";
-	char gear_low[] = "LLLLLLLLLLLLLLL";
+	char gear_high[] = " HI ";
+	char gear_low[]  = " LO ";
 
 
 	/* draw on the original game. */
@@ -552,7 +552,7 @@ VIDEO_UPDATE( polepos )
 	x = 28 * 8;
 	y = 28 * 8;
 
-	for (i = 0; i < 33; i++)
+	for (i = 0; i < 28; i++)
 	{
 		int col;
 
