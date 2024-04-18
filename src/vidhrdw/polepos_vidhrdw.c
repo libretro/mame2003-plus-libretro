@@ -542,7 +542,7 @@ VIDEO_UPDATE( polepos )
 	/* draw on the original game. */
 
 	x = 235;
-	y = 214;
+	y = 215;
 
 	for (i = 0; i < 2; i++)
 	{
