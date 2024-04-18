@@ -552,7 +552,7 @@ VIDEO_UPDATE( polepos )
 	x = 28 * 8;
 	y = 28 * 8;
 
-	for (i = 0; i < 28; i++)
+	for (i = 0; i < 4; i++)
 	{
 		int col;
 
