@@ -531,15 +531,6 @@ VIDEO_UPDATE( polepos )
 	draw_sprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,tx_tilemap,0,0);
 
-	if(0){
-		int in = readinputport( 0 );
-		static int lastin;
-
-		if ((in ^ lastin) & 2)
-			usrintf_showmessage((in & 2) ? "LO" : "HI");
-		lastin = in;
-	}
-
 {
 	int x,y,i;
 
@@ -555,13 +546,10 @@ VIDEO_UPDATE( polepos )
 
 	for (i = 0; i < 2; i++)
 	{
-		int col;
-
-		col = UI_COLOR_NORMAL;
-
 		drawgfx(bitmap,Machine->uifont,
-				(in & 2) ? gear_low[i] : gear_high[i],col,
-				0,1,
+				(in & 2) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
 				x,y,
 				cliprect,TRANSPARENCY_NONE,0);
 
