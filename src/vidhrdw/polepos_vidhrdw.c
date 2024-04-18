@@ -531,7 +531,7 @@ VIDEO_UPDATE( polepos )
 	draw_sprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,tx_tilemap,0,0);
 
-	{
+	if(0){
 		int in = readinputport( 0 );
 		static int lastin;
 
@@ -539,4 +539,47 @@ VIDEO_UPDATE( polepos )
 			usrintf_showmessage((in & 2) ? "LO" : "HI");
 		lastin = in;
 	}
+
+{
+	int x,y,i;
+
+	char score_line_1[] = "Bonus 200 400 500 700 500 400 200";
+	char score_line_2[] = "      110 220 330 550 330 220 110";
+
+
+	/* draw the current bonus value - on the original game this
+	   was done using lamps that lit score displays on the bezel. */
+
+	x = 33 * 8;
+	y = 31 * 8;
+
+	for (i = 0; i < 33; i++)
+	{
+		int col;
+
+
+		col = UI_COLOR_NORMAL;
+
+		if ((i >= 6) && ((i % 4) != 1))
+		{
+			int bit = (i - 6) / 4;
+		}
+
+
+		drawgfx(bitmap,Machine->uifont,
+				score_line_1[i],col,
+				0,1,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		drawgfx(bitmap,Machine->uifont,
+				score_line_2[i],col,
+				0,1,
+				x+8,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		y -= Machine->uifontwidth;
+	}
+}
+
 }
