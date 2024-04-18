@@ -570,7 +570,7 @@ VIDEO_UPDATE( polepos )
 				x+8,y,
 				cliprect,TRANSPARENCY_NONE,0);
 
-		y -= Machine->uifontwidth;
+		y -= Machine->uifontwidth + 1;
 	}
 }
 
