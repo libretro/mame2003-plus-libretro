@@ -546,11 +546,12 @@ VIDEO_UPDATE( polepos )
 	char gear_high[] = "HI";
 	char gear_low[]  = "LO";
 
+	int in = readinputport( 0 );
 
 	/* draw on the original game. */
 
-	x = 30 * 8;
-	y = 27 * 8;
+	x = 240;
+	y = 214;
 
 	for (i = 0; i < 2; i++)
 	{
@@ -559,7 +560,7 @@ VIDEO_UPDATE( polepos )
 		col = UI_COLOR_NORMAL;
 
 		drawgfx(bitmap,Machine->uifont,
-				gear_high[i],col,
+				(in & 2) ? gear_low[i] : gear_high[i],col,
 				0,1,
 				x,y,
 				cliprect,TRANSPARENCY_NONE,0);
