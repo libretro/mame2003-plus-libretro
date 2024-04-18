@@ -543,37 +543,29 @@ VIDEO_UPDATE( polepos )
 {
 	int x,y,i;
 
-	char score_line_1[] = "Bonus 200 400 500 700 500 400 200";
-	char score_line_2[] = "      110 220 330 550 330 220 110";
+	char gear_high[] = "HHHHHHHHHHHHHHH";
+	char gear_low[] = "LLLLLLLLLLLLLLL";
 
 
-	/* draw the current bonus value - on the original game this
-	   was done using lamps that lit score displays on the bezel. */
+	/* draw on the original game. */
 
-	x = 33 * 8;
-	y = 31 * 8;
+	x = 28 * 8;
+	y = 28 * 8;
 
 	for (i = 0; i < 33; i++)
 	{
 		int col;
 
-
 		col = UI_COLOR_NORMAL;
 
-		if ((i >= 6) && ((i % 4) != 1))
-		{
-			int bit = (i - 6) / 4;
-		}
-
-
 		drawgfx(bitmap,Machine->uifont,
-				score_line_1[i],col,
+				gear_high[i],col,
 				0,1,
 				x,y,
 				cliprect,TRANSPARENCY_NONE,0);
 
 		drawgfx(bitmap,Machine->uifont,
-				score_line_2[i],col,
+				gear_low[i],col,
 				0,1,
 				x+8,y,
 				cliprect,TRANSPARENCY_NONE,0);
