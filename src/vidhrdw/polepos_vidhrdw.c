@@ -549,7 +549,7 @@ VIDEO_UPDATE( polepos )
 
 	/* draw on the original game. */
 
-	x = 28 * 8;
+	x = 30 * 8;
 	y = 28 * 8;
 
 	for (i = 0; i < 4; i++)
@@ -564,13 +564,7 @@ VIDEO_UPDATE( polepos )
 				x,y,
 				cliprect,TRANSPARENCY_NONE,0);
 
-		drawgfx(bitmap,Machine->uifont,
-				gear_low[i],col,
-				0,1,
-				x+8,y,
-				cliprect,TRANSPARENCY_NONE,0);
-
-		y -= Machine->uifontwidth + 1;
+		x += Machine->uifontwidth + 1;
 	}
 }
 
