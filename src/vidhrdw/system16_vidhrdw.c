@@ -1910,7 +1910,7 @@ VIDEO_UPDATE( outrun_old )
 
 	/* draw on the original game. */
 
-	x = 9;
+	x = 1;
 	y = 215;
 
 	for (i = 0; i < 2; i++)
