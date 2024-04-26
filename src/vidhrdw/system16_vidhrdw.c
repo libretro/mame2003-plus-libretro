@@ -1903,6 +1903,10 @@ VIDEO_UPDATE( outrun_old )
 	char gear_low[]  = "LO";
 
 	int in = readinputport( 1 );
+	static int gear = 0;
+
+	if (in & 4) gear = 0;
+	else if (in & 8) gear = 1;
 
 	/* draw on the original game. */
 
@@ -1911,17 +1915,8 @@ VIDEO_UPDATE( outrun_old )
 
 	for (i = 0; i < 2; i++)
 	{
-		if (in & 3)
 		drawgfx(bitmap,Machine->uifont,
-				gear_low[i],
-				UI_COLOR_NORMAL,
-				0,0,
-				x,y,
-				cliprect,TRANSPARENCY_NONE,0);
-
-		else if (in & 4)
-		drawgfx(bitmap,Machine->uifont,
-				gear_high[i],
+				(gear) ? gear_high[i] : gear_low[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
