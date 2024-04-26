@@ -1895,6 +1895,36 @@ VIDEO_UPDATE( outrun_old )
 		draw_sprites_new( bitmap,cliprect);
 
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 1 );
+	static int gear = 0;
+
+	if (in & 4) gear = 0;
+	else if (in & 8) gear = 1;
+
+	/* draw on the original game. */
+
+	x = 2;
+	y = 215;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(gear) ? gear_high[i] : gear_low[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
 }
 
 
