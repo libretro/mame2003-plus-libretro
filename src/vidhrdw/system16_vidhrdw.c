@@ -1916,7 +1916,7 @@ VIDEO_UPDATE( outrun_old )
 	for (i = 0; i < 2; i++)
 	{
 		drawgfx(bitmap,Machine->uifont,
-				(gear) ? gear_high[i] : gear_low[i],
+				(!gear) ? gear_low[i] : gear_high[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
