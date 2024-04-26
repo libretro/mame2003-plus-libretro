@@ -1909,7 +1909,7 @@ VIDEO_UPDATE( outrun_old )
 	else if (in & 8) gear = 1;
 
 	/* draw on the original game. */
-
+usrintf_showmessage("x%i  y%i",Machine->visible_area.min_x + 2, Machine->visible_area.max_y - 9);
 	x = 2;
 	y = 215;
 
