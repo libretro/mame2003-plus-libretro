@@ -542,7 +542,7 @@ VIDEO_UPDATE( polepos )
 	/* draw on the original game. */
 
 	x = Machine->visible_area.min_x + 2;
-	y = Machine->visible_area.max_y - 9;
+	y = Machine->visible_area.max_y - 8;
 
 	for (i = 0; i < 2; i++)
 	{
@@ -551,7 +551,7 @@ VIDEO_UPDATE( polepos )
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
-				cliprect,TRANSPARENCY_PEN,15);
+				cliprect,TRANSPARENCY_PEN,0);
 
 		x += Machine->uifontwidth;
 	}
