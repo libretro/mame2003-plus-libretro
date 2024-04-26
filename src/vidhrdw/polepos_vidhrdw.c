@@ -551,7 +551,7 @@ VIDEO_UPDATE( polepos )
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
-				cliprect,TRANSPARENCY_PEN,0);
+				cliprect,TRANSPARENCY_NONE,0);
 
 		x += Machine->uifontwidth;
 	}
