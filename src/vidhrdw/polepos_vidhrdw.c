@@ -541,8 +541,8 @@ VIDEO_UPDATE( polepos )
 
 	/* draw on the original game. */
 
-	x = 235;
-	y = 215;
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
 
 	for (i = 0; i < 2; i++)
 	{

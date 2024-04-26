@@ -1910,13 +1910,13 @@ VIDEO_UPDATE( outrun_old )
 
 	/* draw on the original game. */
 
-	x = 2;
-	y = 215;
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
 
 	for (i = 0; i < 2; i++)
 	{
 		drawgfx(bitmap,Machine->uifont,
-				(gear) ? gear_high[i] : gear_low[i],
+				(!gear) ? gear_low[i] : gear_high[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
