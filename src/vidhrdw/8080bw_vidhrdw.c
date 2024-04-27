@@ -979,13 +979,18 @@ static void draw_sight(struct mame_bitmap *bitmap,const struct rectangle *clipre
 		y = 255-y;
 	}
 
-
-	//draw_crosshair(1, bitmap,x,y,cliprect);
-  		drawgfx(bitmap,Machine->uifont,
+	/* these games have issues drawing the crosshairs, temporary workaround */
+	if (!strcmp(Machine->gamedrv->name, "blueshrk") || !strcmp(Machine->gamedrv->name, "seawolf"))
+	{
+		drawgfx(bitmap,Machine->uifont,
 				' ',UI_COLOR_INVERSE,
 				0,0,
 				x-(Machine->uifontwidth/2),y,
 				cliprect,TRANSPARENCY_NONE,0);
+		return;
+	}
+
+	draw_crosshair(1, bitmap,x,y,cliprect);
 }
 
 
