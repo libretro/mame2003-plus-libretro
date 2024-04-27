@@ -810,7 +810,7 @@ VIDEO_UPDATE( seawolf2 )
 	{
 		/* Player 1 */
 
-		centre = 317 - ((input_port_0_r(0) & 0x3f)-18) * 10;
+		centre = 320 - ((input_port_0_r(0) & 0x3f) * (320/63)) ;
 
 		if (centre<2)   centre=2;
 		if (centre>317) centre=317;
@@ -827,8 +827,8 @@ VIDEO_UPDATE( seawolf2 )
 		{
 			centre = 316 - ((input_port_1_r(0) & 0x3f)-18) * 10;
 
-			if (centre<1)   centre=1;
-			if (centre>316) centre=316;
+			if (centre<2)   centre=2;
+			if (centre>317) centre=317;
 
 			drawgfx(bitmap,Machine->uifont,
 				' ',UI_COLOR_NORMAL,
