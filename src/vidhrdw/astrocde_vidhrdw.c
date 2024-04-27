@@ -818,7 +818,7 @@ VIDEO_UPDATE( seawolf2 )
 		drawgfx(bitmap,Machine->uifont,
 				' ',UI_COLOR_INVERSE,
 				0,0,
-				centre-(Machine->uifontwidth/2),20-(Machine->uifontheight/2),
+				centre-(Machine->uifontwidth/2),10-(Machine->uifontheight/2),
 				&Machine->visible_area,TRANSPARENCY_NONE,0);
 
 		/* Player 2 */
@@ -833,7 +833,7 @@ VIDEO_UPDATE( seawolf2 )
 			drawgfx(bitmap,Machine->uifont,
 				' ',UI_COLOR_NORMAL,
 				0,0,
-				centre-(Machine->uifontwidth/2),20-(Machine->uifontheight/2),
+				centre-(Machine->uifontwidth/2),10-(Machine->uifontheight/2),
 				&Machine->visible_area,TRANSPARENCY_NONE,0);
 		}
 	}
