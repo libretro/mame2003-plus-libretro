@@ -980,7 +980,12 @@ static void draw_sight(struct mame_bitmap *bitmap,const struct rectangle *clipre
 	}
 
 
-	draw_crosshair(1, bitmap,x,y,cliprect);
+	//draw_crosshair(1, bitmap,x,y,cliprect);
+  		drawgfx(bitmap,Machine->uifont,
+				" ",UI_COLOR_INVERSE,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
 }
 
 
