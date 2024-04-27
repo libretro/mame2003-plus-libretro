@@ -810,7 +810,7 @@ VIDEO_UPDATE( seawolf2 )
 	{
 		/* Player 1 */
 
-		centre = 320 - ((input_port_0_r(0) & 0x3f) * (320/63)) ;
+		centre = 316 - ((input_port_0_r(0) & 0x3f)-18) * 10;
 
 		if (centre<2)   centre=2;
 		if (centre>317) centre=317;
