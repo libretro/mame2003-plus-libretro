@@ -825,7 +825,7 @@ VIDEO_UPDATE( seawolf2 )
 
 		if(RAM[0xc1fb] == 2)
 		{
-			centre = 316 - ((input_port_1_r(0) & 0x3f)-18) * 10;
+			centre = 1 + ((input_port_1_r(0) & 0x3f)-18) * 10;
 
 			if (centre<1)   centre=1;
 			if (centre>316) centre=316;
