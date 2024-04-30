@@ -1115,6 +1115,33 @@ VIDEO_UPDATE ( wecleman )
 
 	/* Draw the text layer */
 	if (video_on) tilemap_draw(bitmap,cliprect, txt_tilemap, 0, 0);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 0 ) & 0x20;
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(in & 2) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }
 
 /***************************************************************************
@@ -1144,4 +1171,31 @@ VIDEO_UPDATE( hotchase )
 
 	/* Draw the foreground (text) */
 	if (video_on) K051316_zoom_draw_1(bitmap,cliprect, 0, 0);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 0 ) & 0x20;
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(in & 2) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }
