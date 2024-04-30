@@ -146,7 +146,7 @@ static void get_sprite_info(void)
 
 		gfx <<= 3;
 		sprite->tile_width <<= 3;
-		sprite->tile_height = (sprite->total_height * 0x80) / (0x80 - (zoom >> 8));	// needs work
+		sprite->tile_height = (sprite->total_height * 0x80) / (0x80 - (zoom >> 8));	/* needs work*/
 
 		if ((gfx + sprite->tile_width * sprite->tile_height - 1) >= gfx_max) continue;
 
@@ -168,7 +168,7 @@ static void get_sprite_info(void)
 	}
 }
 
-// priority sorting, silly but good for smaller arrays
+/* priority sorting, silly but good for smaller arrays*/
 static void sortsprite(int *idx_array, int *key_array, int size)
 {
 	int i, j, tgt_val, low_val, low_pos, src_idx, tgt_idx, hi_idx;
@@ -196,7 +196,7 @@ static void sortsprite(int *idx_array, int *key_array, int size)
 	}
 }
 
-// draws a 8bpp palette sprites on a 16bpp direct RGB target (sub-par implementation)
+/* draws a 8bpp palette sprites on a 16bpp direct RGB target (sub-par implementation)*/
 static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *cliprect, struct sprite *sprite)
 {
 #define PRECISION_X 20
@@ -264,14 +264,14 @@ static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *c
 		if (y1 >= y2) return;
 	}
 
-	// calculate entry point decimals
+	/* calculate entry point decimals*/
 	src_fdy = (sprite->tile_height<<PRECISION_Y) / sprite->total_height;
 	src_f0y = src_fdy * ycount0 + FPY_HALF;
 
 	src_fdx = (sprite->tile_width<<PRECISION_X) / sprite->total_width;
 	src_f0x = src_fdx * xcount0;
 
-	// pre-loop assignments and adjustments
+	/* pre-loop assignments and adjustments*/
 	pal_base = sprite->pal_data;
 
 	x1 -= dx;
@@ -294,7 +294,7 @@ static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *c
 				src_fpx += src_fdx;
 			}
 		}
-		else if (gameid == 0)	// Wec Le Mans
+		else if (gameid == 0)	/* Wec Le Mans*/
 		{
 			for (sx = x1; sx != x2; sx += dx)
 			{
@@ -310,7 +310,7 @@ static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *c
 				src_fpx += src_fdx;
 			}
 		}
-		else	// Hot Chase
+		else	/* Hot Chase*/
 		{
 			for (sx = x1; sx != x2; sx += dx)
 			{
@@ -335,13 +335,13 @@ static void sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *clip
 {
 	int i;
 
-	if (gameid == 0)	// Wec Le Mans
+	if (gameid == 0)	/* Wec Le Mans*/
 	{
 		sortsprite(spr_idx_list, spr_pri_list, spr_count);
 
 		for (i=0; i<spr_count; i++) do_blit_zoom16(bitmap, cliprect, spr_ptr_list[spr_idx_list[i]]);
 	}
-	else	// Hot Chase
+	else	/* Hot Chase*/
 	{
 		for (i=0; i<spr_count; i++) do_blit_zoom16(bitmap, cliprect, spr_ptr_list[i]);
 	}
@@ -538,7 +538,7 @@ WRITE16_HANDLER( wecleman_pageram_w )
 
 static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority)
 {
-// must be powers of 2
+/* must be powers of 2*/
 #define XSIZE 512
 #define YSIZE 256
 
@@ -552,12 +552,12 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
 
 	static const pen_t road_color[48] =
 	{
-		0x3f1,0x3f3,0x3f5,0x3fd,0x3fd,0x3fb,0x3fd,0x7ff,	// road color 0
-		0x3f0,0x3f2,0x3f4,0x3fc,0x3fc,0x3fb,0x3fc,0x7fe,	// road color 1
-		    0,    0,    0,0x3f9,0x3f9,    0,    0,    0,	// midcurb color 0
-		    0,    0,    0,0x3f8,0x3f8,    0,    0,    0,	// midcurb color 1
-		    0,    0,    0,0x3f7,    0,    0,    0,    0,	// topcurb color 0
-		    0,    0,    0,0x3f6,    0,    0,    0,    0		// topcutb color 1
+		0x3f1,0x3f3,0x3f5,0x3fd,0x3fd,0x3fb,0x3fd,0x7ff,	/* road color 0*/
+		0x3f0,0x3f2,0x3f4,0x3fc,0x3fc,0x3fb,0x3fc,0x7fe,	/* road color 1*/
+		    0,    0,    0,0x3f9,0x3f9,    0,    0,    0,	/* midcurb color 0*/
+		    0,    0,    0,0x3f8,0x3f8,    0,    0,    0,	/* midcurb color 1*/
+		    0,    0,    0,0x3f7,    0,    0,    0,    0,	/* topcurb color 0*/
+		    0,    0,    0,0x3f6,    0,    0,    0,    0		/* topcutb color 1*/
 	};
 
 
@@ -571,7 +571,7 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
 
 	if (priority == 0x02)
 	{
-		// draw sky; each scanline is assumed to be dword aligned
+		/* draw sky; each scanline is assumed to be dword aligned*/
 		for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
 		{
 			UINT16 *dst = (UINT16 *)bitmap->line[sy+BMP_PAD] + BMP_PAD;
@@ -588,7 +588,7 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
 	}
 	else if (priority == 0x04)
 	{
-		// draw road
+		/* draw road*/
 		UINT8 *src_base = Machine->gfx[1]->gfxdata;
 		pen_t road_rgb[48];
 
@@ -644,15 +644,15 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
                                 Sky Drawing
 ------------------------------------------------------------------------*/
 
-// blends two 8x8x16bpp direct RGB tilemaps
+/* blends two 8x8x16bpp direct RGB tilemaps*/
 static void wecleman_draw_cloud( struct mame_bitmap *bitmap,
 				 struct GfxElement *gfx,
 				 data16_t *tm_base,
-				 int x0, int y0,				// target coordinate
-				 int xcount, int ycount,		// number of tiles to draw in x and y
-				 int scrollx, int scrolly,		// tilemap scroll position
-				 int tmw_l2, int tmh_l2,		// tilemap width and height in log(2)
-				 int alpha, int pal_offset )	// alpha(0-3f), # of color codes to shift
+				 int x0, int y0,				/* target coordinate*/
+				 int xcount, int ycount,		/* number of tiles to draw in x and y*/
+				 int scrollx, int scrolly,		/* tilemap scroll position*/
+				 int tmw_l2, int tmh_l2,		/* tilemap width and height in log(2)*/
+				 int alpha, int pal_offset )	/* alpha(0-3f), # of color codes to shift*/
 {
 	UINT8 *src_base, *src_ptr;
 	UINT16 *tmap_ptr, *dst_base, *dst_ptr;
@@ -698,10 +698,10 @@ static void wecleman_draw_cloud( struct mame_bitmap *bitmap,
 		{
 			UINT16 tiledata = tmap_ptr[tmscanx++ & tmmaskx];
 
-			// Wec Le Mans specific: decodes tile index in EBX
+			/* Wec Le Mans specific: decodes tile index in EBX*/
 			UINT16 tile_index = tiledata & 0xfff;
 
-			// Wec Le Mans specific: decodes tile color in EAX
+			/* Wec Le Mans specific: decodes tile color in EAX*/
 			UINT16 tile_color = ((tiledata >> 5) & 0x78) + (tiledata >> 12);
 
 			src_ptr = src_base + tile_index * gfx->char_modulo;
@@ -821,13 +821,13 @@ void hotchase_draw_road(struct mame_bitmap *bitmap, const struct rectangle *clip
                             Palette Routines
 ***************************************************************************/
 
-// new video and palette code
+/* new video and palette code*/
 WRITE16_HANDLER( wecleman_videostatus_w )
 {
 	COMBINE_DATA(wecleman_videostatus);
 
-	// bit0-6: background transition, 0=off, 1=on
-	// bit7: palette being changed, 0=no, 1=yes
+	/* bit0-6: background transition, 0=off, 1=on*/
+	/* bit7: palette being changed, 0=no, 1=yes*/
 	if (ACCESSING_LSB)
 	{
 		if ((data & 0x7f) == 0 && !cloud_ds)
@@ -863,8 +863,8 @@ WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w )
 
 	newword = COMBINE_DATA(&paletteram16[offset]);
 
-	// the highest nibble has some unknown functions
-//  if (newword & 0xf000) logerror("MSN set on color %03x: %1x\n", offset, newword>>12);
+	/* the highest nibble has some unknown functions*/
+/*  if (newword & 0xf000) logerror("MSN set on color %03x: %1x\n", offset, newword>>12);*/
 
 	r0 = newword; g0 = newword; b0 = newword;
 	g0 >>=4;      b0 >>=8;
@@ -899,7 +899,7 @@ VIDEO_START( wecleman )
 	int i, j;
 
 	if (Machine->color_depth > 16) return(1);
-	if (!(buffer = auto_malloc(0x12c00))) return(1);	// working buffer for sprite operations
+	if (!(buffer = auto_malloc(0x12c00))) return(1);	/* working buffer for sprite operations*/
 
 	gameid = 0;
 	wecleman_gfx_bank = bank;
@@ -966,13 +966,13 @@ VIDEO_START( wecleman )
 	tilemap_set_scrollx(txt_tilemap, 0, 512-320-16 -BMP_PAD);
 	tilemap_set_scrolly(txt_tilemap, 0, -BMP_PAD );
 
-	// patches out a mysterious pixel floating in the sky (tile decoding bug?)
+	/* patches out a mysterious pixel floating in the sky (tile decoding bug?)*/
 	*(Machine->gfx[0]->gfxdata + (Machine->gfx[0]->char_modulo*0xaca+7)) = 0;
 
 	return 0;
 }
 
-//  Callbacks for the K051316
+/*  Callbacks for the K051316*/
 #define ZOOMROM0_MEM_REGION REGION_GFX2
 #define ZOOMROM1_MEM_REGION REGION_GFX3
 
@@ -1004,7 +1004,7 @@ VIDEO_START( hotchase )
 
 	UINT8 *buffer;
 
-	if (!(buffer = auto_malloc(0x400))) return(1);	// reserve 1k for sprite list
+	if (!(buffer = auto_malloc(0x400))) return(1);	/* reserve 1k for sprite list*/
 
 	gameid = 1;
 	wecleman_gfx_bank = bank;
@@ -1020,7 +1020,7 @@ VIDEO_START( hotchase )
 	if (K051316_vh_start_1(ZOOMROM1_MEM_REGION,4,TILEMAP_TRANSPARENT,0,zoom_callback_1)) return 1;
 
 	K051316_wraparound_enable(0,1);
-//  K051316_wraparound_enable(1,1);
+/*  K051316_wraparound_enable(1,1);*/
 	K051316_set_offset(0, -0xB0/2, -16);
 	K051316_set_offset(1, -0xB0/2, -16);
 
@@ -1044,7 +1044,7 @@ VIDEO_UPDATE ( wecleman )
 
 	video_on = wecleman_irqctrl & 0x40;
 
-	set_led_status(0, wecleman_selected_ip & 0x04);	// Start lamp
+	set_led_status(0, wecleman_selected_ip & 0x04);	/* Start lamp*/
 
 	fg_y = (wecleman_txtram[0x0f24>>1] & (TILEMAP_DIMY - 1));
 	bg_y = (wecleman_txtram[0x0f26>>1] & (TILEMAP_DIMY - 1));
@@ -1068,7 +1068,7 @@ VIDEO_UPDATE ( wecleman )
 		}
 	}
 
-	// temporary fix for ranking screen tile masking
+	/* temporary fix for ranking screen tile masking*/
 	mrct[0x27] = mrct[0x24];
 
 	get_sprite_info();
@@ -1081,7 +1081,7 @@ VIDEO_UPDATE ( wecleman )
 	/* Draw the background */
 	if (video_on) tilemap_draw(bitmap,cliprect, bg_tilemap, 0, 0);
 
-	// draws the cloud layer; needs work
+	/* draws the cloud layer; needs work*/
 	if (cloud_visible)
 	{
 		mrct[0] = mrct[0x40] = mrct[0x200] = mrct[0x205];
