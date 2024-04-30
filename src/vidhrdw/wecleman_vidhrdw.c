@@ -848,32 +848,22 @@ WRITE16_HANDLER( hotchase_paletteram16_SBGRBBBBGGGGRRRR_word_w )
 
 	newword = COMBINE_DATA(&paletteram16[offset]);
 
-	r = ( (((newword << 1) & 0x1E ) | ((newword >> 12) & 0x01)) * 0xff ) / 0x1f;
-	g = ( (((newword >> 3) & 0x1E ) | ((newword >> 13) & 0x01)) * 0xff ) / 0x1f;
-	b = ( (((newword >> 7) & 0x1E ) | ((newword >> 14) & 0x01)) * 0xff ) / 0x1f;
+	r = ((newword << 1) & 0x1E ) | ((newword >> 12) & 0x01);
+	g = ((newword >> 3) & 0x1E ) | ((newword >> 13) & 0x01);
+	b = ((newword >> 7) & 0x1E ) | ((newword >> 14) & 0x01);
 
-	palette_set_color(offset, r, g, b);
+	palette_set_color(offset, pal5bit(r), pal5bit(g), pal5bit(b));
 	r>>=1; g>>=1; b>>=1;
-	palette_set_color(offset+0x800, r, g, b);
+	palette_set_color(offset+0x800, pal5bit(r)/2, pal5bit(g)/2, pal5bit(b)/2);
 }
 
 WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w )
 {
-	int newword, r, g, b, r0, g0, b0;
-
-	newword = COMBINE_DATA(&paletteram16[offset]);
+	int newword = COMBINE_DATA(&paletteram16[offset]);
 
 	/* the highest nibble has some unknown functions*/
 /*  if (newword & 0xf000) logerror("MSN set on color %03x: %1x\n", offset, newword>>12);*/
-
-	r0 = newword; g0 = newword; b0 = newword;
-	g0 >>=4;      b0 >>=8;
-	r0 &= 0xf;    g0 &= 0xf;    b0 &= 0xf;
-	r = r0;       g = g0;       b = b0;
-	r0 <<=4;      g0 <<= 4;     b0 <<= 4;
-	r |= r0;      g |= g0;      b |= b0;
-
-	palette_set_color(offset, r, g, b);
+	palette_set_color(offset, pal4bit(newword >> 0), pal4bit(newword >> 4), pal4bit(newword >> 8));
 }
 
 
@@ -1115,6 +1105,33 @@ VIDEO_UPDATE ( wecleman )
 
 	/* Draw the text layer */
 	if (video_on) tilemap_draw(bitmap,cliprect, txt_tilemap, 0, 0);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 0 );
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(!(in & 0x20)) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }
 
 /***************************************************************************
@@ -1144,4 +1161,31 @@ VIDEO_UPDATE( hotchase )
 
 	/* Draw the foreground (text) */
 	if (video_on) K051316_zoom_draw_1(bitmap,cliprect, 0, 0);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 0 );
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(in & 0x20) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }
