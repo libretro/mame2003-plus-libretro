@@ -1122,7 +1122,7 @@ VIDEO_UPDATE ( wecleman )
 	char gear_high[] = "HI";
 	char gear_low[]  = "LO";
 
-	int in = readinputport( 0 ) & 0x20;
+	int in = readinputport( 0 );
 
 	/* draw on the original game. */
 
@@ -1132,7 +1132,7 @@ VIDEO_UPDATE ( wecleman )
 	for (i = 0; i < 2; i++)
 	{
 		drawgfx(bitmap,Machine->uifont,
-				(in & 2) ? gear_low[i] : gear_high[i],
+				(in & 0x20) ? gear_low[i] : gear_high[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
@@ -1178,7 +1178,7 @@ VIDEO_UPDATE( hotchase )
 	char gear_high[] = "HI";
 	char gear_low[]  = "LO";
 
-	int in = readinputport( 0 ) & 0x20;
+	int in = readinputport( 0 );
 
 	/* draw on the original game. */
 
@@ -1188,7 +1188,7 @@ VIDEO_UPDATE( hotchase )
 	for (i = 0; i < 2; i++)
 	{
 		drawgfx(bitmap,Machine->uifont,
-				(in & 2) ? gear_low[i] : gear_high[i],
+				(in & 0x20) ? gear_low[i] : gear_high[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
