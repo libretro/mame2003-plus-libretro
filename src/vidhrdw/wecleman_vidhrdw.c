@@ -1132,7 +1132,7 @@ VIDEO_UPDATE ( wecleman )
 	for (i = 0; i < 2; i++)
 	{
 		drawgfx(bitmap,Machine->uifont,
-				(in & 0x20) ? gear_low[i] : gear_high[i],
+				(!(in & 0x20)) ? gear_low[i] : gear_high[i],
 				UI_COLOR_NORMAL,
 				0,0,
 				x,y,
