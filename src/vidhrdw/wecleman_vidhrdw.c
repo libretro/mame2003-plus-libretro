@@ -1,9 +1,9 @@
 /***************************************************************************
-						WEC Le Mans 24  &   Hot Chase
+                        WEC Le Mans 24  &   Hot Chase
 
-						  (C)   1986 & 1988 Konami
+                          (C)   1986 & 1988 Konami
 
-					driver by       Luca Elia (l.elia@tin.it)
+                    driver by       Luca Elia (l.elia@tin.it)
 
 ***************************************************************************/
 
@@ -48,10 +48,6 @@ int wecleman_bgpage[4], wecleman_fgpage[4], *wecleman_gfx_bank;
 /* Variables only used here: */
 static struct tilemap *bg_tilemap, *fg_tilemap, *txt_tilemap;
 
-static UINT8 *screen_baseaddr;
-static int screen_line_offset;
-static int screen_clip_left, screen_clip_top, screen_clip_right, screen_clip_bottom;
-
 static struct sprite *sprite_list;
 static struct sprite **spr_ptr_list;
 static int *spr_idx_list, *spr_pri_list, *t32x32pm;
@@ -63,52 +59,38 @@ static int cloud_blend, cloud_ds, cloud_visible;
 
 /***************************************************************************
 
-						Sprite Description and Routines
-						-------------------------------
+                        Sprite Description and Routines
+                        -------------------------------
 
-	Sprites: 256 entries, 16 bytes each, first ten bytes used (and tested)
+    Sprites: 256 entries, 16 bytes each, first ten bytes used (and tested)
 
-	Offset  Bits               		Meaning
+    Offset  Bits                    Meaning
 
-	00.w    fedc ba98 ---- ----		Screen Y stop
-			---- ---- 7654 3210		Screen Y start
+    00.w    fedc ba98 ---- ----     Screen Y stop
+            ---- ---- 7654 3210     Screen Y start
 
-	02.w    fedc ba-- ---- ----		High bits of sprite "address"
-			---- --9- ---- ----		Flip Y ?
-			---- ---8 7654 3210		Screen X start
+    02.w    fedc ba-- ---- ----     High bits of sprite "address"
+            ---- --9- ---- ----     Flip Y ?
+            ---- ---8 7654 3210     Screen X start
 
-	04.w    fedc ba98 ---- ----		Color
-			---- ---- 7654 3210		Source Width / 8
+    04.w    fedc ba98 ---- ----     Color
+            ---- ---- 7654 3210     Source Width / 8
 
-	06.w    f--- ---- ---- ----		Flip X
-			-edc ba98 7654 3210		Low bits of sprite "address"
+    06.w    f--- ---- ---- ----     Flip X
+            -edc ba98 7654 3210     Low bits of sprite "address"
 
-	08.w    --dc ba98 ---- ----		Y? Shrink Factor
-			---- ---- --54 3210		X? Shrink Factor
+    08.w    --dc ba98 ---- ----     Y? Shrink Factor
+            ---- ---- --54 3210     X? Shrink Factor
 
-	Sprite "address" is the index of the pixel the hardware has to start
-	fetching data from, divided by 8. Only the on-screen height and source data
-	width are provided, along with two shrinking factors. So on screen width
-	and source height are calculated by the hardware using the shrink factors.
-	The factors are in the range 0 (no shrinking) - 3F (half size).
+    Sprite "address" is the index of the pixel the hardware has to start
+    fetching data from, divided by 8. Only the on-screen height and source data
+    width are provided, along with two shrinking factors. So on screen width
+    and source height are calculated by the hardware using the shrink factors.
+    The factors are in the range 0 (no shrinking) - 3F (half size).
 
-	Hot Chase: shadow of trees is pen 0x0a
+    Hot Chase: shadow of trees is pen 0x0a
 
 ***************************************************************************/
-
-static void sprite_init(void)
-{
-	struct rectangle *clip = &Machine->visible_area;
-	struct mame_bitmap *bitmap = Machine->scrbitmap;
-
-	screen_clip_left   = clip->min_x;
-	screen_clip_top    = clip->min_y;
-	screen_clip_right  = clip->max_x+1;
-	screen_clip_bottom = clip->max_y+1;
-
-	screen_baseaddr = bitmap->base;
-	screen_line_offset = bitmap->rowbytes;
-}
 
 static struct sprite *sprite_list_create(int num_sprites)
 {
@@ -164,7 +146,7 @@ static void get_sprite_info(void)
 
 		gfx <<= 3;
 		sprite->tile_width <<= 3;
-		sprite->tile_height = (sprite->total_height * 0x80) / (0x80 - (zoom >> 8));	/* needs work*/
+		sprite->tile_height = (sprite->total_height * 0x80) / (0x80 - (zoom >> 8));	// needs work
 
 		if ((gfx + sprite->tile_width * sprite->tile_height - 1) >= gfx_max) continue;
 
@@ -186,7 +168,7 @@ static void get_sprite_info(void)
 	}
 }
 
-/* priority sorting, silly but good for smaller arrays*/
+// priority sorting, silly but good for smaller arrays
 static void sortsprite(int *idx_array, int *key_array, int size)
 {
 	int i, j, tgt_val, low_val, low_pos, src_idx, tgt_idx, hi_idx;
@@ -214,19 +196,16 @@ static void sortsprite(int *idx_array, int *key_array, int size)
 	}
 }
 
-/* draws a 8bpp palette sprites on a 16bpp direct RGB target (sub-par implementation)*/
-static void do_blit_zoom16(struct sprite *sprite)
+// draws a 8bpp palette sprites on a 16bpp direct RGB target (sub-par implementation)
+static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *cliprect, struct sprite *sprite)
 {
 #define PRECISION_X 20
 #define PRECISION_Y 20
 #define FPY_HALF (1<<(PRECISION_Y-1))
 
-	unsigned char *src_base;
 	pen_t *pal_base;
-	UINT16 *rgb_base, *dst_ptr, *dst_end;
-	int src_pitch, dst_pitch, src_f0y, src_fdy, src_f0x, src_fdx, src_fpx;
-	int eax, ebx, ecx;
-	int x1, x2, y1, y2, dx, dy;
+	int src_f0y, src_fdy, src_f0x, src_fdx, src_fpx;
+	int x1, x2, y1, y2, dx, dy, sx, sy;
 	int xcount0=0, ycount0=0;
 
 	if (sprite->flags & SPRITE_FLIPX)
@@ -234,11 +213,11 @@ static void do_blit_zoom16(struct sprite *sprite)
 		x2 = sprite->x;
 		x1 = x2 + sprite->total_width;
 		dx = -1;
-		if (x2 < screen_clip_left) x2 = screen_clip_left;
-		if (x1 > screen_clip_right )
+		if (x2 < cliprect->min_x) x2 = cliprect->min_x;
+		if (x1 > cliprect->max_x )
 		{
-			xcount0 = x1 - screen_clip_right;
-			x1 = screen_clip_right;
+			xcount0 = x1 - cliprect->max_x;
+			x1 = cliprect->max_x;
 		}
 		if (x2 >= x1) return;
 		x1--; x2--;
@@ -248,12 +227,12 @@ static void do_blit_zoom16(struct sprite *sprite)
 		x1 = sprite->x;
 		x2 = x1 + sprite->total_width;
 		dx = 1;
-		if (x1 < screen_clip_left )
+		if (x1 < cliprect->min_x )
 		{
-			xcount0 = screen_clip_left - x1;
-			x1 = screen_clip_left;
+			xcount0 = cliprect->min_x - x1;
+			x1 = cliprect->min_x;
 		}
-		if (x2 > screen_clip_right ) x2 = screen_clip_right;
+		if (x2 > cliprect->max_x ) x2 = cliprect->max_x;
 		if (x1 >= x2) return;
 	}
 
@@ -262,11 +241,11 @@ static void do_blit_zoom16(struct sprite *sprite)
 		y2 = sprite->y;
 		y1 = y2 + sprite->total_height;
 		dy = -1;
-		if (y2 < screen_clip_top ) y2 = screen_clip_top;
-		if (y1 > screen_clip_bottom )
+		if (y2 < cliprect->min_y ) y2 = cliprect->min_y;
+		if (y1 > cliprect->max_y )
 		{
-			ycount0 = screen_clip_bottom;
-			y1 = screen_clip_bottom;
+			ycount0 = cliprect->max_y;
+			y1 = cliprect->max_y;
 		}
 		if (y2 >= y1) return;
 		y1--; y2--;
@@ -276,226 +255,157 @@ static void do_blit_zoom16(struct sprite *sprite)
 		y1 = sprite->y;
 		y2 = y1 + sprite->total_height;
 		dy = 1;
-		if (y1 < screen_clip_top )
+		if (y1 < cliprect->min_y )
 		{
-			ycount0 = screen_clip_top - y1;
-			y1 = screen_clip_top;
+			ycount0 = cliprect->min_y - y1;
+			y1 = cliprect->min_y;
 		}
-		if (y2 > screen_clip_bottom) y2 = screen_clip_bottom;
+		if (y2 > cliprect->max_y) y2 = cliprect->max_y;
 		if (y1 >= y2) return;
 	}
 
-	src_pitch = sprite->line_offset;
-	dst_pitch = (screen_line_offset * dy) >> 1;
-	dst_end = (UINT16 *)(screen_baseaddr + screen_line_offset * y2);
+	// calculate entry point decimals
+	src_fdy = (sprite->tile_height<<PRECISION_Y) / sprite->total_height;
+	src_f0y = src_fdy * ycount0 + FPY_HALF;
 
-	/* calculate entry point decimals*/
-	ebx = sprite->tile_height;
-	ecx = sprite->total_height;
-	eax = (ebx<<PRECISION_Y) / ecx;
-	src_fdy = eax;
-	src_f0y = eax * ycount0 + FPY_HALF;
+	src_fdx = (sprite->tile_width<<PRECISION_X) / sprite->total_width;
+	src_f0x = src_fdx * xcount0;
 
-	ebx = sprite->tile_width;
-	ecx = sprite->total_width;
-	eax = (ebx<<PRECISION_X) / ecx;
-	src_fdx = eax;
-	src_f0x = eax * xcount0;
-
-	/* pre-loop assignments and adjustments*/
-	dst_ptr = (UINT16 *)(screen_baseaddr + screen_line_offset * y1);
+	// pre-loop assignments and adjustments
 	pal_base = sprite->pal_data;
-	src_base = sprite->pen_data;
-	rgb_base = rgb_half;
 
-	ebx = (src_f0y>>PRECISION_Y) * src_pitch;
-	src_f0y += src_fdy;
 	x1 -= dx;
 	x2 -= dx;
-	ecx = x1;
 
-	if (!sprite->shadow_mode)
+	for (sy = y1; sy != y2; sy += dy)
 	{
-		do
+		UINT8 *row_base = sprite->pen_data + (src_f0y>>PRECISION_Y) * sprite->line_offset;
+		UINT16 *dst_ptr = (UINT16 *)bitmap->line[sy];
+		src_fpx = src_f0x;
+
+		if (!sprite->shadow_mode)
 		{
-			ebx += (int)src_base;
-			eax = src_f0x;
-			src_fpx = src_f0x;
-			do
+			for (sx = x1; sx != x2; sx += dx)
 			{
-				eax >>= PRECISION_X;
+				int pix = row_base[src_fpx >> PRECISION_X];
+				if (pix & 0x80) break;
+				if (pix)
+					dst_ptr[sx] = pal_base[pix];
 				src_fpx += src_fdx;
-				eax = *((char *)ebx + eax);
-				ecx += dx;
-				if (eax < 0) break;
-				if (eax)
-				{
-					eax = pal_base[eax];
-					dst_ptr[ecx] = eax;
-				}
-				eax = src_fpx;
 			}
-			while(ecx != x2);
-			ebx = src_f0y;
-			src_f0y += src_fdy;
-			ebx >>= PRECISION_Y;
-			ecx = x1;
-			ebx *= src_pitch;
-			dst_ptr += dst_pitch;
 		}
-		while(dst_ptr != dst_end);
-	}
-	else if (gameid == 0)	/* Wec Le Mans*/
-	{
-		do
+		else if (gameid == 0)	// Wec Le Mans
 		{
-			ebx += (int)src_base;
-			eax = src_f0x;
-			src_fpx = src_f0x;
-			do
+			for (sx = x1; sx != x2; sx += dx)
 			{
-				eax >>= PRECISION_X;
-				src_fpx += src_fdx;
-				eax = *((char *)ebx + eax);
-				ecx += dx;
-				if (eax < 0) break;
-				if (eax)
+				int pix = row_base[src_fpx >> PRECISION_X];
+				if (pix & 0x80) break;
+				if (pix)
 				{
-					if (eax != 0xa)
-						eax = pal_base[eax];
+					if (pix != 0xa)
+						dst_ptr[sx] = pal_base[pix];
 					else
-					{
-						eax = dst_ptr[ecx];
-						eax = rgb_base[eax];
-					}
-					dst_ptr[ecx] = eax;
+						dst_ptr[sx] = rgb_half[dst_ptr[sx]];
 				}
-				eax = src_fpx;
-			}
-			while(ecx != x2);
-			ebx = src_f0y;
-			src_f0y += src_fdy;
-			ebx >>= PRECISION_Y;
-			ecx = x1;
-			ebx *= src_pitch;
-			dst_ptr += dst_pitch;
-		}
-		while(dst_ptr != dst_end);
-	}
-	else	/* Hot Chase*/
-	{
-		do
-		{
-			ebx += (int)src_base;
-			eax = src_f0x;
-			src_fpx = src_f0x;
-			do
-			{
-				eax >>= PRECISION_X;
 				src_fpx += src_fdx;
-				eax = *((char *)ebx + eax);
-				ecx += dx;
-				if (eax < 0) break;
-				if (eax)
-				{
-					if (eax != 0xa)
-						eax = pal_base[eax];
-					else
-					{
-						eax = dst_ptr[ecx];
-						eax |= 0x800;
-					}
-					dst_ptr[ecx] = eax;
-				}
-				eax = src_fpx;
 			}
-			while(ecx != x2);
-			ebx = src_f0y;
-			src_f0y += src_fdy;
-			ebx >>= PRECISION_Y;
-			ecx = x1;
-			ebx *= src_pitch;
-			dst_ptr += dst_pitch;
 		}
-		while(dst_ptr != dst_end);
+		else	// Hot Chase
+		{
+			for (sx = x1; sx != x2; sx += dx)
+			{
+				int pix = row_base[src_fpx >> PRECISION_X];
+				if (pix & 0x80) break;
+				if (pix)
+				{
+					if (pix != 0xa)
+						dst_ptr[sx] = pal_base[pix];
+					else
+						dst_ptr[sx] |= 0x800;
+				}
+				src_fpx += src_fdx;
+			}
+		}
+
+		src_f0y += src_fdy;
 	}
 }
 
-static void sprite_draw(void)
+static void sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int i;
 
-	if (gameid == 0)	/* Wec Le Mans*/
+	if (gameid == 0)	// Wec Le Mans
 	{
 		sortsprite(spr_idx_list, spr_pri_list, spr_count);
 
-		for (i=0; i<spr_count; i++) do_blit_zoom16(spr_ptr_list[spr_idx_list[i]]);
+		for (i=0; i<spr_count; i++) do_blit_zoom16(bitmap, cliprect, spr_ptr_list[spr_idx_list[i]]);
 	}
-	else	/* Hot Chase*/
+	else	// Hot Chase
 	{
-		for (i=0; i<spr_count; i++) do_blit_zoom16(spr_ptr_list[i]);
+		for (i=0; i<spr_count; i++) do_blit_zoom16(bitmap, cliprect, spr_ptr_list[i]);
 	}
 }
 
 
 /***************************************************************************
 
-					Background Description and Routines
-					-----------------------------------
+                    Background Description and Routines
+                    -----------------------------------
 
-							[WEC Le Mans 24]
+                            [WEC Le Mans 24]
 
 [ 2 Scrolling Layers ]
-	[Background]
-	[Foreground]
-		Tile Size:				8x8
+    [Background]
+    [Foreground]
+        Tile Size:              8x8
 
-		Tile Format:			see wecleman_get_bg_tile_info()
+        Tile Format:            see wecleman_get_bg_tile_info()
 
-		Layer Size:				4 Pages - Page0 Page1 Page2 Page3
-								each page is 512 x 256 (64 x 32 tiles)
+        Layer Size:             4 Pages - Page0 Page1 Page2 Page3
+                                each page is 512 x 256 (64 x 32 tiles)
 
-		Page Selection Reg.:	108efe  [Bg]
-								108efc  [Fg]
-								4 pages to choose from
+        Page Selection Reg.:    108efe  [Bg]
+                                108efc  [Fg]
+                                4 pages to choose from
 
-		Scrolling Columns:		1
-		Scrolling Columns Reg.:	108f26  [Bg]
-								108f24  [Fg]
+        Scrolling Columns:      1
+        Scrolling Columns Reg.: 108f26  [Bg]
+                                108f24  [Fg]
 
-		Scrolling Rows:			224 / 8 (Screen-wise scrolling)
-		Scrolling Rows Reg.:	108f82/4/6..    [Bg]
-								108f80/2/4..    [Fg]
+        Scrolling Rows:         224 / 8 (Screen-wise scrolling)
+        Scrolling Rows Reg.:    108f82/4/6..    [Bg]
+                                108f80/2/4..    [Fg]
 
 [ 1 Text Layer ]
-		Tile Size:				8x8
+        Tile Size:              8x8
 
-		Tile Format:			see wecleman_get_txt_tile_info()
+        Tile Format:            see wecleman_get_txt_tile_info()
 
-		Layer Size:				1 Page: 512 x 256 (64 x 32 tiles)
+        Layer Size:             1 Page: 512 x 256 (64 x 32 tiles)
 
-		Scrolling:				-
+        Scrolling:              -
 
 [ 1 Road Layer ]
 
 [ 256 Sprites ]
-	Zooming Sprites, see below
+    Zooming Sprites, see below
 
 
-								[Hot Chase]
+                                [Hot Chase]
 
 [ 3 Zooming Layers ]
-	[Background]
-	[Foreground (text)]
-	[Road]
+    [Background]
+    [Foreground (text)]
+    [Road]
 
 [ 256 Sprites ]
-	Zooming Sprites, see below
+    Zooming Sprites, see below
 
 ***************************************************************************/
 
 /***************************************************************************
-								WEC Le Mans 24
+                                WEC Le Mans 24
 ***************************************************************************/
 
 #define PAGE_GFX		(0)
@@ -504,7 +414,7 @@ static void sprite_draw(void)
 #define TILEMAP_DIMY	(PAGE_NY * 2 * 8)
 
 /*------------------------------------------------------------------------
-				[ Frontmost (text) layer + video registers ]
+                [ Frontmost (text) layer + video registers ]
 ------------------------------------------------------------------------*/
 
 void wecleman_get_txt_tile_info( int tile_index )
@@ -550,7 +460,7 @@ WRITE16_HANDLER( wecleman_txtram_w )
 }
 
 /*------------------------------------------------------------------------
-							[ Background ]
+                            [ Background ]
 ------------------------------------------------------------------------*/
 
 void wecleman_get_bg_tile_info( int tile_index )
@@ -562,7 +472,7 @@ void wecleman_get_bg_tile_info( int tile_index )
 }
 
 /*------------------------------------------------------------------------
-							[ Foreground ]
+                            [ Foreground ]
 ------------------------------------------------------------------------*/
 
 void wecleman_get_fg_tile_info( int tile_index )
@@ -575,7 +485,7 @@ void wecleman_get_fg_tile_info( int tile_index )
 }
 
 /*------------------------------------------------------------------------
-					[ Pages (Background & Foreground) ]
+                    [ Pages (Background & Foreground) ]
 ------------------------------------------------------------------------*/
 
 /* Pages that compose both the background and the foreground */
@@ -607,28 +517,28 @@ WRITE16_HANDLER( wecleman_pageram_w )
 }
 
 /*------------------------------------------------------------------------
-								Road Drawing
+                                Road Drawing
 
-	This layer is composed of horizontal lines gfx elements
-	There are 256 lines in ROM, each is 512 pixels wide
+    This layer is composed of horizontal lines gfx elements
+    There are 256 lines in ROM, each is 512 pixels wide
 
-	Offset:			Elements:		Data:
-	0000-01ff		100 Words		Code
+    Offset:         Elements:       Data:
+    0000-01ff       100 Words       Code
 
-		fedcba98--------	Priority?
-		--------76543210	Line Number
+        fedcba98--------    Priority?
+        --------76543210    Line Number
 
-	0200-03ff		100 Words		Horizontal Scroll
-	0400-05ff		100 Words		Color
-	0600-07ff		100 Words		??
+    0200-03ff       100 Words       Horizontal Scroll
+    0400-05ff       100 Words       Color
+    0600-07ff       100 Words       ??
 
-	We draw each line using a bunch of 64x1 tiles
+    We draw each line using a bunch of 64x1 tiles
 
 ------------------------------------------------------------------------*/
 
 static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority)
 {
-/* must be powers of 2*/
+// must be powers of 2
 #define XSIZE 512
 #define YSIZE 256
 
@@ -640,147 +550,90 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
 #define MIDCURB_DY 5
 #define TOPCURB_DY 7
 
-	static pen_t road_color[48] =
+	static const pen_t road_color[48] =
 	{
-		0x3f1,0x3f3,0x3f5,0x3fd,0x3fd,0x3fb,0x3fd,0x7ff,	/* road color 0*/
-		0x3f0,0x3f2,0x3f4,0x3fc,0x3fc,0x3fb,0x3fc,0x7fe,	/* road color 1*/
-		    0,    0,    0,0x3f9,0x3f9,    0,    0,    0,	/* midcurb color 0*/
-		    0,    0,    0,0x3f8,0x3f8,    0,    0,    0,	/* midcurb color 1*/
-		    0,    0,    0,0x3f7,    0,    0,    0,    0,	/* topcurb color 0*/
-		    0,    0,    0,0x3f6,    0,    0,    0,    0		/* topcutb color 1*/
+		0x3f1,0x3f3,0x3f5,0x3fd,0x3fd,0x3fb,0x3fd,0x7ff,	// road color 0
+		0x3f0,0x3f2,0x3f4,0x3fc,0x3fc,0x3fb,0x3fc,0x7fe,	// road color 1
+		    0,    0,    0,0x3f9,0x3f9,    0,    0,    0,	// midcurb color 0
+		    0,    0,    0,0x3f8,0x3f8,    0,    0,    0,	// midcurb color 1
+		    0,    0,    0,0x3f7,    0,    0,    0,    0,	// topcurb color 0
+		    0,    0,    0,0x3f6,    0,    0,    0,    0		// topcutb color 1
 	};
 
-	pen_t road_rgb[48];
 
-	UINT8 *src_base, *src_ptr;
-	UINT16 *dst_base, *dst_ptr, *dst_end, **dst_line;
-	UINT32 *dw_ptr, *dw_end;
+	UINT8 *src_ptr;
 	pen_t *pal_ptr, *rgb_ptr;
 
-	int dst_pitch, scrollx, sy;
-	int mdy, tdy, edx, ebx, eax;
+	int scrollx, sy, sx;
+	int mdy, tdy, i;
 
-	dst_line = (UINT16**)bitmap->line;
 	rgb_ptr = Machine->remapped_colortable;
 
 	if (priority == 0x02)
 	{
-
-	/* draw sky; each scanline is assumed to be dword aligned*/
-	for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
-	{
-		eax = wecleman_roadram[sy];
-		if ((eax>>8) != 0x02) continue;
-
-		eax = (wecleman_roadram[sy+(YSIZE<<1)] & 0xf) + 0x7f0;
-		dw_ptr = (UINT32*)dst_line[sy+BMP_PAD];
-		eax = rgb_ptr[eax];
-		dw_ptr += BMP_PAD>>1;
-		ebx = eax;
-		dw_end = dw_ptr;
-		ebx <<= 16;
-		dw_end += (DST_WIDTH>>1);
-		eax |= ebx;
-
-		for (; dw_ptr<dw_end; dw_ptr+=8)
+		// draw sky; each scanline is assumed to be dword aligned
+		for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
 		{
-			*(dw_ptr    ) = eax; *(dw_ptr + 1) = eax;
-			*(dw_ptr + 2) = eax; *(dw_ptr + 3) = eax;
-			*(dw_ptr + 4) = eax; *(dw_ptr + 5) = eax;
-			*(dw_ptr + 6) = eax; *(dw_ptr + 7) = eax;
-		}
-	}
+			UINT16 *dst = (UINT16 *)bitmap->line[sy+BMP_PAD] + BMP_PAD;
+			UINT16 pix, road;
 
+			road = wecleman_roadram[sy];
+			if ((road>>8) != 0x02) continue;
+
+			pix = rgb_ptr[(wecleman_roadram[sy+(YSIZE*2)] & 0xf) + 0x7f0];
+
+			for (sx = 0; sx < DST_WIDTH; sx++)
+				dst[sx] = pix;
+		}
 	}
 	else if (priority == 0x04)
 	{
+		// draw road
+		UINT8 *src_base = Machine->gfx[1]->gfxdata;
+		pen_t road_rgb[48];
 
-	/* draw road*/
-	for (eax=0; eax<48; eax++)
-	{
-		ebx = road_color[eax];
-		road_rgb[eax] = (ebx) ? rgb_ptr[ebx] : -1;
-	}
-	src_base = Machine->gfx[1]->gfxdata;
-	dst_pitch = bitmap->rowpixels;
-
-	for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
-	{
-		eax = wecleman_roadram[sy];
-		if ((eax>>8) != 0x04) continue;
-
-		eax &= YMASK;
-		dst_base = bitmap->line[sy+BMP_PAD];
-		ebx = eax;
-		dst_base += BMP_PAD;
-		ebx <<= 9;
-		src_ptr = src_base;
-		scrollx = wecleman_roadram[sy+YSIZE] + (0x18 - 0xe00);
-		src_ptr += ebx;
-		ebx = wecleman_roadram[sy+(YSIZE<<1)];
-		mdy = ((eax * MIDCURB_DY) >> 8) * dst_pitch;
-		ebx = (ebx<<3 & 8);
-		tdy = ((eax * TOPCURB_DY) >> 8) * dst_pitch;
-		pal_ptr = road_rgb + ebx;
-
-		if (scrollx < 0)
+		for (i=0; i<48; i++)
 		{
-			/* draw left field*/
-			eax = pal_ptr[7];
-			ebx = scrollx >> 1;
-			edx = eax;
-			eax <<= 16;
-			dw_end = (UINT32*)dst_base;
-			dw_ptr = (UINT32*)dst_base;
-			dw_end -= ebx;
-			eax |= edx;
-
-			for(; dw_ptr<dw_end; dw_ptr++) *dw_ptr = eax;
-
-			dst_ptr = dst_base - scrollx;
-			dst_end = dst_base + DST_WIDTH;
-		}
-		else if (scrollx > XSIZE-DST_WIDTH)
-		{
-			/* draw right field*/
-			ebx = XSIZE - scrollx;
-			eax = pal_ptr[7];
-			dst_end = dst_base + ebx;
-			ebx >>= 1;
-			edx = eax;
-			eax <<= 16;
-			dw_ptr = (UINT32*)dst_base;
-			dw_end = (UINT32*)dst_base;
-			dw_ptr += ebx;
-			dw_end += DST_WIDTH>>1;
-			eax |= edx;
-
-			for(; dw_ptr<dw_end; dw_ptr++) *dw_ptr = eax;
-
-			dst_ptr = dst_base;
-			src_ptr += scrollx;
-		}
-		else
-		{
-			dst_ptr = dst_base;
-			dst_end = dst_base + DST_WIDTH;
-			src_ptr += scrollx;
+			int color = road_color[i];
+			road_rgb[i] = color ? rgb_ptr[color] : 0xffffffff;
 		}
 
-		/* draw center field*/
-		for (; dst_ptr<dst_end; dst_ptr++)
+		for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
 		{
-			ebx = *src_ptr;
-			src_ptr++;
-			eax = *(pal_ptr + ebx);
-			edx = *(pal_ptr + ebx + 16);
-			*dst_ptr = eax;
-			eax = *(pal_ptr + ebx + 32);
-			if (edx>=0) *(dst_ptr - mdy) = edx;
-			if (eax>=0) *(dst_ptr - tdy) = eax;
-		}
-	}
+			UINT16 *dst = (UINT16 *)bitmap->line[sy+BMP_PAD] + BMP_PAD;
+			UINT16 pix, road;
 
+			road = wecleman_roadram[sy];
+			if ((road>>8) != 0x04) continue;
+			road &= YMASK;
+
+			src_ptr = src_base + (road << 9);
+			mdy = ((road * MIDCURB_DY) >> 8) * bitmap->rowpixels;
+			tdy = ((road * TOPCURB_DY) >> 8) * bitmap->rowpixels;
+
+			scrollx = wecleman_roadram[sy+YSIZE] + (0x18 - 0xe00);
+
+			pal_ptr = road_rgb + ((wecleman_roadram[sy+(YSIZE*2)]<<3) & 8);
+
+			for (sx = 0; sx < DST_WIDTH; sx++, scrollx++)
+			{
+				if (scrollx >= 0 && scrollx < XSIZE)
+				{
+					pen_t temp;
+
+					pix = src_ptr[scrollx];
+					dst[sx] = pal_ptr[pix];
+
+					temp = pal_ptr[pix + 16];
+					if (temp != 0xffffffff) dst[sx - mdy] = temp;
+
+					temp = pal_ptr[pix + 32];
+					if (temp != 0xffffffff) dst[sx - tdy] = temp;
+				}
+				else
+					dst[sx] = pal_ptr[7];
+			}
+		}
 	}
 
 #undef YSIZE
@@ -788,36 +641,35 @@ static void wecleman_draw_road(struct mame_bitmap *bitmap, const struct rectangl
 }
 
 /*------------------------------------------------------------------------
-								Sky Drawing
+                                Sky Drawing
 ------------------------------------------------------------------------*/
 
-/* blends two 8x8x16bpp direct RGB tilemaps*/
+// blends two 8x8x16bpp direct RGB tilemaps
 static void wecleman_draw_cloud( struct mame_bitmap *bitmap,
 				 struct GfxElement *gfx,
 				 data16_t *tm_base,
-				 int x0, int y0,				/* target coordinate*/
-				 int xcount, int ycount,		/* number of tiles to draw in x and y*/
-				 int scrollx, int scrolly,		/* tilemap scroll position*/
-				 int tmw_l2, int tmh_l2,		/* tilemap width and height in log(2)*/
-				 int alpha, int pal_offset )	/* alpha(0-3f), # of color codes to shift*/
+				 int x0, int y0,				// target coordinate
+				 int xcount, int ycount,		// number of tiles to draw in x and y
+				 int scrollx, int scrolly,		// tilemap scroll position
+				 int tmw_l2, int tmh_l2,		// tilemap width and height in log(2)
+				 int alpha, int pal_offset )	// alpha(0-3f), # of color codes to shift
 {
 	UINT8 *src_base, *src_ptr;
-	UINT16 *tmap_ptr, *dst_base, *dst_charbase, *dst_ptr;
+	UINT16 *tmap_ptr, *dst_base, *dst_ptr;
 	pen_t *pal_base, *pal_ptr;
 
 	int tilew, tileh;
 	int tmskipx, tmskipy, tmscanx, tmmaskx, tmmasky;
-	int src_advance, src_advance_l2, pal_advance, pal_advance_l2;
-	int dx, dy, dst_pitch, dst_advance;
-	int i, j, eax, ebx, ecx, edx, r0, g0, b0, r1, g1, b1;
+	int dx, dy, dst_pitch;
+	int i, j, tx, ty;
 
 	if (alpha > 0x1f) return;
 
-	tmmaskx = (1<<tmw_l2) - 1;
-	tmmasky = (1<<tmh_l2) - 1;
-
 	tilew = gfx->width;
 	tileh = gfx->height;
+
+	tmmaskx = (1<<tmw_l2) - 1;
+	tmmasky = (1<<tmh_l2) - 1;
 
 	scrollx &= ((tilew<<tmw_l2) - 1);
 	scrolly &= ((tileh<<tmh_l2) - 1);
@@ -828,200 +680,104 @@ static void wecleman_draw_cloud( struct mame_bitmap *bitmap,
 	dy = -(scrolly & (tileh-1));
 
 	src_base = gfx->gfxdata;
-	src_advance = gfx->char_modulo;
-	/*src_advance_l2 = log2(src_advance);*/
-	src_advance_l2 = 6;	/* hack to speed up multiplication*/
-	pal_advance = gfx->color_granularity;
-	/*pal_advance_l2 = log2(pal_advance);*/
-	pal_advance_l2 = 3;	/* hack to speed up multiplication*/
 
 	dst_pitch = bitmap->rowpixels;
 	dst_base = (UINT16 *)bitmap->base + (y0+dy)*dst_pitch + (x0+dx);
-	dst_advance = dst_pitch * tileh;
 
-	pal_base = Machine->remapped_colortable;
+	pal_base = Machine->remapped_colortable + pal_offset * gfx->color_granularity;
+
 	alpha <<= 6;
-	pal_base += pal_offset << pal_advance_l2;
-
-	if (alpha <= 0) goto DRAW_SOLID;
 
 	dst_base += 8;
-	for (i=ycount; i; i--)
+	for (i = 0; i < ycount; i++)
 	{
-		tmap_ptr = tm_base + (tmskipy<<tmw_l2);
-		tmskipy++;
+		tmap_ptr = tm_base + ((tmskipy++ & tmmasky)<<tmw_l2);
 		tmscanx = tmskipx;
-		tmskipy &= tmmasky;
-		dst_charbase = dst_base;
-		dst_base += dst_advance;
 
-		for (j=xcount; j; j--)
+		for (j = 0; j < xcount; j++)
 		{
-			eax = *(tmap_ptr + tmscanx);
-			tmscanx++;
-			tmscanx &= tmmaskx;
+			UINT16 tiledata = tmap_ptr[tmscanx++ & tmmaskx];
 
-			/* Wec Le Mans specific: decodes tile index in EBX*/
+			// Wec Le Mans specific: decodes tile index in EBX
+			UINT16 tile_index = tiledata & 0xfff;
+
+			// Wec Le Mans specific: decodes tile color in EAX
+			UINT16 tile_color = ((tiledata >> 5) & 0x78) + (tiledata >> 12);
+
+			src_ptr = src_base + tile_index * gfx->char_modulo;
+			pal_ptr = pal_base + tile_color * gfx->color_granularity;
+			dst_ptr = dst_base + j * tilew;
+
+			/* alpha case */
+			if (alpha > 0)
 			{
-				ebx = eax;
-				ebx &= 0xfff;
-			}
-
-			/* Wec Le Mans specific: decodes tile color in EAX*/
-			{
-				edx = eax;
-				eax >>= 5;
-				edx >>= 12;
-				eax &= 0x78;
-				eax += edx;
-			}
-
-			ebx <<= src_advance_l2;
-			eax <<= pal_advance_l2;
-			src_ptr = src_base;
-			pal_ptr = pal_base;
-			src_ptr += ebx;
-			pal_ptr += eax;
-			dst_ptr = dst_charbase;
-			dst_charbase += tilew;
-			ecx = -8;
-
-			do
-			{
-				do
+				for (ty = 0; ty < tileh; ty++)
 				{
-					eax = *src_ptr;
-					src_ptr++;
-					eax = pal_ptr[eax];
-					edx = dst_ptr[ecx];
-					r0 = eax;         g0 = eax;         b0 = eax;
-					r0 &= 0x1f;       g0 &= 0x3e0;      b0 &= 0x7c00;
-					g0 >>= 5;         b0 >>= 10;
-					r1 = edx;         g1 = edx;         b1 = edx;
-					r1 &= 0x1f;       g1 &= 0x3e0;      b1 &= 0x7c00;
-					g1 >>= 5;         b1 >>= 10;
-					r1 -= r0;         g1 -= g0;         b1 -= b0;
-					r1 += alpha;      g1 += alpha;      b1 += alpha;
-					r1 =t32x32pm[r1]; g1 =t32x32pm[g1]; b1 =t32x32pm[b1];
-					r1 >>= 5;         g1 >>= 5;         b1 >>= 5;
-					r0 += r1;         g0 += g1;         b0 += b1;
-					g0 <<= 5;         b0 <<= 10;
-					r0 |= g0;
-					r0 |= b0;
-					dst_ptr[ecx] = r0;
+					for (tx = 0; tx < tilew; tx++)
+					{
+						UINT8 srcpix = *src_ptr++;
+						pen_t srcrgb = pal_ptr[srcpix];
+						UINT16 dstrgb = dst_ptr[tx];
+						int sr, sg, sb, dr, dg, db;
+
+						sr = (srcrgb >> 0) & 0x1f;
+						sg = (srcrgb >> 5) & 0x1f;
+						sb = (srcrgb >> 10) & 0x1f;
+
+						dr = (dstrgb >> 0) & 0x1f;
+						dg = (dstrgb >> 5) & 0x1f;
+						db = (dstrgb >> 10) & 0x1f;
+
+						dr = (t32x32pm[dr - sr + alpha] >> 5) + dr;
+						dg = (t32x32pm[dg - sg + alpha] >> 5) + dg;
+						db = (t32x32pm[db - sb + alpha] >> 5) + db;
+
+						dst_ptr[tx] = dr | (dg << 5) | (db << 10);
+					}
+					dst_ptr += dst_pitch;
 				}
-				while(++ecx);
-				ecx = -8;
 			}
-			while((dst_ptr+=dst_pitch) < dst_base);
+
+			/* non-alpha case */
+			else
+			{
+				for (ty = 0; ty < tileh; ty++)
+				{
+					for (tx = 0; tx < tilew; tx++)
+						dst_ptr[tx] = pal_ptr[*src_ptr++];
+					dst_ptr += dst_pitch;
+				}
+			}
 		}
-	}
-	return;
 
-	DRAW_SOLID:
-
-	for (i=-ycount; i; i++)
-	{
-		tmap_ptr = tm_base + (tmskipy<<tmw_l2);
-		tmskipy++;
-		tmscanx = tmskipx;
-		tmskipy &= tmmasky;
-		dst_charbase = dst_base;
-		dst_base += dst_advance;
-
-		for (j=-xcount; j; j++)
-		{
-			eax = *(tmap_ptr + tmscanx);
-			tmscanx++;
-			tmscanx &= tmmaskx;
-
-			/* Wec Le Mans specific: decodes tile index in EBX*/
-			{
-				ebx = eax;
-				ebx &= 0xfff;
-			}
-
-			/* Wec Le Mans specific: decodes tile color in EAX*/
-			{
-				edx = eax;
-				eax >>= 5;
-				edx >>= 12;
-				eax &= 0x78;
-				eax += edx;
-			}
-
-			ebx <<= src_advance_l2;
-			eax <<= pal_advance_l2;
-			src_ptr = src_base;
-			pal_ptr = pal_base;
-			src_ptr += ebx;
-			pal_ptr += eax;
-			dst_ptr = dst_charbase;
-			dst_charbase += tilew;
-
-			do	/* draw 8 pixels at a time*/
-			{
-				eax = *(src_ptr);
-				ebx = *(src_ptr+1);
-				ecx = *(src_ptr+2);
-				edx = *(src_ptr+3);
-
-				eax = pal_ptr[eax];
-				ebx = pal_ptr[ebx];
-				ecx = pal_ptr[ecx];
-				edx = pal_ptr[edx];
-
-				*(dst_ptr)   = eax;
-				*(dst_ptr+1) = ebx;
-				*(dst_ptr+2) = ecx;
-				*(dst_ptr+3) = edx;
-
-				eax = *(src_ptr+4);
-				ebx = *(src_ptr+5);
-				ecx = *(src_ptr+6);
-				edx = *(src_ptr+7);
-
-				eax = pal_ptr[eax];
-				ebx = pal_ptr[ebx];
-				ecx = pal_ptr[ecx];
-				edx = pal_ptr[edx];
-
-				*(dst_ptr+4) = eax;
-				*(dst_ptr+5) = ebx;
-				*(dst_ptr+6) = ecx;
-				*(dst_ptr+7) = edx;
-
-				src_ptr += 8;
-			}
-			while((dst_ptr+=dst_pitch) < dst_base);
-		}
+		dst_base += dst_pitch * tileh;
 	}
 }
 
 /***************************************************************************
-								Hot Chase
+                                Hot Chase
 ***************************************************************************/
 
 /*------------------------------------------------------------------------
-								Road Drawing
+                                Road Drawing
 
-	This layer is composed of horizontal lines gfx elements
-	There are 512 lines in ROM, each is 512 pixels wide
+    This layer is composed of horizontal lines gfx elements
+    There are 512 lines in ROM, each is 512 pixels wide
 
-	Offset:			Elements:		Data:
-	0000-03ff		00-FF			Code (4 bytes)
+    Offset:         Elements:       Data:
+    0000-03ff       00-FF           Code (4 bytes)
 
-	Code:
-		00.w
-			fedc ba98 ---- ----		Unused?
-			---- ---- 7654 ----		color
-			---- ---- ---- 3210		scroll x
-		02.w
-			fedc ba-- ---- ----		scroll x
-			---- --9- ---- ----		?
-			---- ---8 7654 3210		code
+    Code:
+        00.w
+            fedc ba98 ---- ----     Unused?
+            ---- ---- 7654 ----     color
+            ---- ---- ---- 3210     scroll x
+        02.w
+            fedc ba-- ---- ----     scroll x
+            ---- --9- ---- ----     ?
+            ---- ---8 7654 3210     code
 
-	We draw each line using a bunch of 64x1 tiles
+    We draw each line using a bunch of 64x1 tiles
 
 ------------------------------------------------------------------------*/
 
@@ -1062,16 +818,16 @@ void hotchase_draw_road(struct mame_bitmap *bitmap, const struct rectangle *clip
 
 
 /***************************************************************************
-							Palette Routines
+                            Palette Routines
 ***************************************************************************/
 
-/* new video and palette code*/
+// new video and palette code
 WRITE16_HANDLER( wecleman_videostatus_w )
 {
 	COMBINE_DATA(wecleman_videostatus);
 
-	/* bit0-6: background transition, 0=off, 1=on*/
-	/* bit7: palette being changed, 0=no, 1=yes*/
+	// bit0-6: background transition, 0=off, 1=on
+	// bit7: palette being changed, 0=no, 1=yes
 	if (ACCESSING_LSB)
 	{
 		if ((data & 0x7f) == 0 && !cloud_ds)
@@ -1107,8 +863,8 @@ WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w )
 
 	newword = COMBINE_DATA(&paletteram16[offset]);
 
-	/* the highest nibble has some unknown functions*/
-/*	if (newword & 0xf000) log_cb(RETRO_LOG_DEBUG, LOGPRE "MSN set on color %03x: %1x\n", offset, newword>>12);*/
+	// the highest nibble has some unknown functions
+//  if (newword & 0xf000) logerror("MSN set on color %03x: %1x\n", offset, newword>>12);
 
 	r0 = newword; g0 = newword; b0 = newword;
 	g0 >>=4;      b0 >>=8;
@@ -1122,15 +878,15 @@ WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w )
 
 
 /***************************************************************************
-							Initializations
+                            Initializations
 ***************************************************************************/
 
 VIDEO_START( wecleman )
 {
 	/*
-		Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
-		This game has ROMs for 16 banks
-	*/
+        Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
+        This game has ROMs for 16 banks
+    */
 	static int bank[0x40] =
 	{
 		0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,
@@ -1143,7 +899,7 @@ VIDEO_START( wecleman )
 	int i, j;
 
 	if (Machine->color_depth > 16) return(1);
-	if (!(buffer = auto_malloc(0x12c00))) return(1);	/* working buffer for sprite operations*/
+	if (!(buffer = auto_malloc(0x12c00))) return(1);	// working buffer for sprite operations
 
 	gameid = 0;
 	wecleman_gfx_bank = bank;
@@ -1174,8 +930,6 @@ VIDEO_START( wecleman )
 	}
 
 	if (!(sprite_list = sprite_list_create(NUM_SPRITES))) return 1;
-
-	sprite_init();
 
 	bg_tilemap = tilemap_create(wecleman_get_bg_tile_info,
 								tilemap_scan_rows,
@@ -1212,13 +966,13 @@ VIDEO_START( wecleman )
 	tilemap_set_scrollx(txt_tilemap, 0, 512-320-16 -BMP_PAD);
 	tilemap_set_scrolly(txt_tilemap, 0, -BMP_PAD );
 
-	/* patches out a mysterious pixel floating in the sky (tile decoding bug?)*/
+	// patches out a mysterious pixel floating in the sky (tile decoding bug?)
 	*(Machine->gfx[0]->gfxdata + (Machine->gfx[0]->char_modulo*0xaca+7)) = 0;
 
 	return 0;
 }
 
-/*  Callbacks for the K051316*/
+//  Callbacks for the K051316
 #define ZOOMROM0_MEM_REGION REGION_GFX2
 #define ZOOMROM1_MEM_REGION REGION_GFX3
 
@@ -1237,9 +991,9 @@ static void zoom_callback_1(int *code,int *color)
 VIDEO_START( hotchase )
 {
 	/*
-		Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
-		This game has ROMs for 0x30 banks
-	*/
+        Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
+        This game has ROMs for 0x30 banks
+    */
 	static int bank[0x40] =
 	{
 		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
@@ -1250,7 +1004,7 @@ VIDEO_START( hotchase )
 
 	UINT8 *buffer;
 
-	if (!(buffer = auto_malloc(0x400))) return(1);	/* reserve 1k for sprite list*/
+	if (!(buffer = auto_malloc(0x400))) return(1);	// reserve 1k for sprite list
 
 	gameid = 1;
 	wecleman_gfx_bank = bank;
@@ -1261,14 +1015,12 @@ VIDEO_START( hotchase )
 
 	if (!(sprite_list = sprite_list_create(NUM_SPRITES))) return 1;
 
-	sprite_init();
-
 	if (K051316_vh_start_0(ZOOMROM0_MEM_REGION,4,TILEMAP_TRANSPARENT,0,zoom_callback_0)) return 1;
 
 	if (K051316_vh_start_1(ZOOMROM1_MEM_REGION,4,TILEMAP_TRANSPARENT,0,zoom_callback_1)) return 1;
 
 	K051316_wraparound_enable(0,1);
-/*	K051316_wraparound_enable(1,1);*/
+//  K051316_wraparound_enable(1,1);
 	K051316_set_offset(0, -0xB0/2, -16);
 	K051316_set_offset(1, -0xB0/2, -16);
 
@@ -1277,7 +1029,7 @@ VIDEO_START( hotchase )
 
 
 /***************************************************************************
-							Video Updates
+                            Video Updates
 ***************************************************************************/
 
 VIDEO_UPDATE ( wecleman )
@@ -1292,7 +1044,7 @@ VIDEO_UPDATE ( wecleman )
 
 	video_on = wecleman_irqctrl & 0x40;
 
-	set_led_status(0, wecleman_selected_ip & 0x04);	/* Start lamp*/
+	set_led_status(0, wecleman_selected_ip & 0x04);	// Start lamp
 
 	fg_y = (wecleman_txtram[0x0f24>>1] & (TILEMAP_DIMY - 1));
 	bg_y = (wecleman_txtram[0x0f26>>1] & (TILEMAP_DIMY - 1));
@@ -1316,7 +1068,7 @@ VIDEO_UPDATE ( wecleman )
 		}
 	}
 
-	/* temporary fix for ranking screen tile masking*/
+	// temporary fix for ranking screen tile masking
 	mrct[0x27] = mrct[0x24];
 
 	get_sprite_info();
@@ -1329,7 +1081,7 @@ VIDEO_UPDATE ( wecleman )
 	/* Draw the background */
 	if (video_on) tilemap_draw(bitmap,cliprect, bg_tilemap, 0, 0);
 
-	/* draws the cloud layer; needs work*/
+	// draws the cloud layer; needs work
 	if (cloud_visible)
 	{
 		mrct[0] = mrct[0x40] = mrct[0x200] = mrct[0x205];
@@ -1359,14 +1111,14 @@ VIDEO_UPDATE ( wecleman )
 	if (video_on) wecleman_draw_road(bitmap,cliprect, 0x04);
 
 	/* Draw the sprites */
-	if (video_on) sprite_draw();
+	if (video_on) sprite_draw(bitmap,cliprect);
 
 	/* Draw the text layer */
 	if (video_on) tilemap_draw(bitmap,cliprect, txt_tilemap, 0, 0);
 }
 
 /***************************************************************************
-								Hot Chase
+                                Hot Chase
 ***************************************************************************/
 
 VIDEO_UPDATE( hotchase )
@@ -1375,7 +1127,7 @@ VIDEO_UPDATE( hotchase )
 
 	video_on = wecleman_irqctrl & 0x40;
 
-	set_led_status(0, wecleman_selected_ip & 0x04);	/* Start lamp*/
+	set_led_status(0, wecleman_selected_ip & 0x04);	// Start lamp
 
 	get_sprite_info();
 
@@ -1388,7 +1140,7 @@ VIDEO_UPDATE( hotchase )
 	if (video_on) hotchase_draw_road(bitmap, cliprect);
 
 	/* Draw the sprites */
-	if (video_on) sprite_draw();
+	if (video_on) sprite_draw(bitmap,cliprect);
 
 	/* Draw the foreground (text) */
 	if (video_on) K051316_zoom_draw_1(bitmap,cliprect, 0, 0);
