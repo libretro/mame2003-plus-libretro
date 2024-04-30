@@ -1127,7 +1127,7 @@ VIDEO_UPDATE( hotchase )
 
 	video_on = wecleman_irqctrl & 0x40;
 
-	set_led_status(0, wecleman_selected_ip & 0x04);	// Start lamp
+	set_led_status(0, wecleman_selected_ip & 0x04);	/* Start lamp*/
 
 	get_sprite_info();
 
