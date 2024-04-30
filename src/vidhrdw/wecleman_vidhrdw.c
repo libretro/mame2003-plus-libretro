@@ -274,8 +274,11 @@ static void do_blit_zoom16(struct mame_bitmap *bitmap, const struct rectangle *c
 	/* pre-loop assignments and adjustments*/
 	pal_base = sprite->pal_data;
 
-	x1 -= dx;
-	x2 -= dx;
+	if (x1 > cliprect->min_x)
+	{
+		x1 -= dx;
+		x2 -= dx;
+	}
 
 	for (sy = y1; sy != y2; sy += dy)
 	{
