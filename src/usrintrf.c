@@ -60,7 +60,7 @@ extern int neogeo_memcard_create(int);
 
 ***************************************************************************/
 
-static struct GfxElement *uirotfont;
+struct GfxElement *uirotfont;
 
 /* raw coordinates, relative to the real scrbitmap */
 static struct rectangle uirawbounds;
