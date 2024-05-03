@@ -1067,13 +1067,13 @@ static VIDEO_UPDATE( bowler )
 		}
 
 
-		drawgfx(bitmap,Machine->uifont,
+		drawgfx(bitmap,uirotfont,
 				score_line_1[i],col,
 				0,1,
 				x,y,
 				cliprect,TRANSPARENCY_NONE,0);
 
-		drawgfx(bitmap,Machine->uifont,
+		drawgfx(bitmap,uirotfont,
 				score_line_2[i],col,
 				0,1,
 				x+8,y,
