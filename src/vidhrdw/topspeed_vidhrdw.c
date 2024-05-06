@@ -50,7 +50,7 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 
 	/* Most of spriteram is not used by the 68000: rest is scratch space for the h/w perhaps ? */
 
-	for (offs = 0;offs <(0x2c0/2);offs += 4)
+	for (offs = 0; offs < spriteram_size / 2; offs += 4)
 	{
 		data = spriteram16[offs+2];
 
@@ -65,7 +65,8 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 		priority = (data & 0x8000) >> 15;
 /*		unknown = (data & 0x2000) >> 13;*/
 
-		if (y == 0x180) continue;	/* dead sprite */
+		/* End of sprite list */
+		if (y == 0x180) break;
 
 		map_offset = tilenum << 7;
 
@@ -197,4 +198,31 @@ VIDEO_UPDATE( topspeed )
 #endif
 
 	topspeed_draw_sprites(bitmap,cliprect);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 3 );
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(in & 0x10) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }

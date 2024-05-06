@@ -445,7 +445,7 @@ static INTERRUPT_GEN( sound_int ) {
 static struct DACinterface dac_interface =
 {
 	1,
-	{ 50 }
+	{ 15 }
 };
 
 

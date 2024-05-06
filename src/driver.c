@@ -320,6 +320,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( silvland )	/* Falcon */
 	DRIVER( yamato )	/* (c) 1983 Sega */
 	DRIVER( yamato2 )	/* (c) 1983 Sega */
+	DRIVER( toprollr )	/* (c) 1983 Jaleco */
 	DRIVER( swimmer )	/* (c) 1982 Tehkan */
 	DRIVER( swimmera )	/* (c) 1982 Tehkan */
 	DRIVER( swimmerb )	/* (c) 1982 Tehkan */
@@ -569,7 +570,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( polepos2 )	/* (c) 1983 */
 	DRIVER( poleps2a )	/* (c) 1983 + Atari license */
 	DRIVER( poleps2b )	/* bootleg */
-/*	DRIVER( poleps2c )	 bootleg */ 
+/*	DRIVER( poleps2c )	 bootleg */
 	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
 	DRIVER( pacland )	/* (c) 1984 */
 	DRIVER( pacland2 )	/* (c) 1984 */
@@ -1225,6 +1226,9 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( vigilntu )	/* (c) 1988 (US) */
 	DRIVER( vigilntj )	/* (c) 1988 (Japan) */
 	DRIVER( kikcubic )	/* (c) 1988 (Japan) */
+  DRIVER( buccanrs )  /* (c) 1989 Duintronic */
+  DRIVER( buccanra )  /* (c) 1989 Duintronic */
+
 	/* M72 (and derivatives) */
 	DRIVER( rtype )		/* (c) 1987 (Japan) */
 	DRIVER( rtypepj )	/* (c) 1987 (Japan) */
@@ -2494,7 +2498,7 @@ V-V                           TP-027
 	DRIVER( armwar1d )   /* bootleg, Armored Warriors (Euro 941011 Phoenix Edition) (bootleg) */
 	DRIVER( avspd )      /* bootleg, Alien vs. Predator (Euro 940520 Phoenix Edition) (bootleg) */
 	DRIVER( dstlku1d )   /* bootleg, Darkstalkers: The Night Warriors (USA 940705 Phoenix Edition) (bootleg) */
-	DRIVER( ringdstd )   /* bootleg, Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition) (bootleg) */	
+	DRIVER( ringdstd )   /* bootleg, Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition) (bootleg) */
 	DRIVER( ssf2tad )    /* bootleg, Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg) */
 	DRIVER( ssf2xjr1d )  /* bootleg, Super Street Fighter II X: Grand Master Challenge (Japan 940223 Phoenix Edition) (bootleg) */
 	DRIVER( xmcotar1d )  /* bootleg, X-Men: Children of the Atom (Euro 950105 Phoenix Edition) (bootleg) */
@@ -3203,6 +3207,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tfrceac )	/* (c) 1990 Sega / Technosoft */
 	DRIVER( tfrceacj )	/* (c) 1990 Sega / Technosoft */
 	DRIVER( tfrceacb )	/* bootleg */
+	DRIVER( tfrceacjpb ) /* Prototype Bootleg */
 	DRIVER( ribbit )	/* (c) 1991 Sega */
 	DRIVER( tantr )		/* (c) 1992 Sega */
 	DRIVER( tantrkor )	/* (c) 1993 Sega */
@@ -5415,7 +5420,7 @@ Other Sun games
 	/* Playmark games */
 	DRIVER( sslam )		/* (c) 1993 */
 	DRIVER( sslama )	/* (c) 1993 */
-  DRIVER( powerbal ) /* (c) 1994 */  
+  DRIVER( powerbal ) /* (c) 1994 */
   DRIVER( hrdtimes ) /* (c) 1994 */
 	DRIVER( bigtwin )	/* (c) 1995 */
 	DRIVER( wbeachvl )	/* (c) 1995 */
@@ -5743,7 +5748,7 @@ Other Sun games
 	DRIVER( sprcros2 )	/* (c) 1986 GM Shoji */
 	DRIVER( mugsmash )	/* (c) Electronic Devices (Italy) / 3D Games (England) */
 	DRIVER( stlforce )	/* (c) 1994 Electronic Devices (Italy) / Ecogames S.L. (Spain) */
-	DRIVER( mortalr )	
+	DRIVER( mortalr )
 	DRIVER( fantland )	/* (c) 1987 Electronic Devices Italy */
 	DRIVER( galaxygn )	/* (c) 1989 Electronic Devices Italy */
 	DRIVER( borntofi )	/* (c) 1987 International Games */
@@ -6053,8 +6058,9 @@ Other Sun games
 	DRIVER( kf10thep)       /* bootleg of kof2002 */
 	DRIVER( kf2k5uni)       /* bootleg of kof2002 */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
-	DRIVER(  xeno )      /* (c) 2019 Bitmap Bureau */
-	DRIVER( hypernoid )  /* 2021 M.Priewe */
+	DRIVER(  xeno )         /* (c) 2019 Bitmap Bureau */
+	DRIVER( hypernoid )     /* 2021 M.Priewe */
+	DRIVER( cyborgforce )   /* (c) 2023 Neo Byte Force Ltd */
 
 	/* SemiCom 68020 based hardware */
 	DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
@@ -6100,5 +6106,4 @@ Other Sun games
 	DRIVER( roundup5 )
 	DRIVER( bigfight )
 	DRIVER( cyclwarr )
-
 #endif	/* DRIVER_RECURSIVE */

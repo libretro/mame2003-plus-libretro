@@ -4801,6 +4801,22 @@ ROM_START( tfrceacb ) /* ThunderForce AC (Bootleg)  (c)1990 Technosoft / Sega */
 	ROM_LOAD( "ic4.bin", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
 ROM_END
 
+/* This set has significantly different code addresses to both the Genesis Thunder Force III and the arcade Thunder Force AC, and seems to sit somewhere between them
+   Some sources indicate it's a hack, but it might be a hack of an otherwise unsupported set, with the protection removed, for bootleggers to sell at a profit.
+   This specific dump was sourced from a PCB sold in Canada 
+*/
+ROM_START( tfrceacjpb ) /* protection chip simply marked T-FORCE (not used outside of startup init?) */
+	ROM_REGION( 0x200000, REGION_CPU1, ROMREGION_ERASEFF )
+	ROM_LOAD16_BYTE( "ic32_t.f.ac_075f.ic32", 0x000000, 0x040000, CRC(2167dd93) SHA1(0e5b8eb87e07e6e5cecf096e6b62e15ff7406bba) )
+	ROM_LOAD16_BYTE( "ic31_t.f.ac_0d26.id31", 0x000001, 0x040000, CRC(ebf02bba) SHA1(effdc60837063ba04b7b4517e57a240b29a199e1) )
+	/* 0x080000 - 0x100000 Empty */
+	ROM_LOAD16_BYTE( "ic34_t.f.ac_549d.ic34", 0x100000, 0x040000, CRC(902ad2ec) SHA1(58db20ca5888110e97f80e7df9dac1b8e9817562) )
+	ROM_LOAD16_BYTE( "ic33_t.f.ac_d131.ic33", 0x100001, 0x040000, CRC(b162219d) SHA1(ad022307019b4a70cb532e1101cb5ed8d31f10e2) )
+
+	ROM_REGION( 0x040000, REGION_SOUND1, ROMREGION_ERASE00 )
+	/* empty socket (not used) */
+ROM_END
+
 
 ROM_START( ribbit ) /* Ribbit  (c)1991 Sega */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
@@ -6204,6 +6220,7 @@ GAME ( 1990, borench,  0,        segac2,   borench,  borench,  ROT0, "Sega",    
 GAME ( 1990, tfrceac,  0,        segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC" )
 GAME ( 1990, tfrceacj, tfrceac,  segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC (Japan)" )
 GAME ( 1990, tfrceacb, tfrceac,  segac2,   tfrceac,  tfrceacb, ROT0, "bootleg",                "ThunderForce AC (bootleg)" )
+GAME ( 1990, tfrceacjpb,tfrceac, segac2,   tfrceac,  tfrceac,  ROT0, "Sega / Technosoft",      "ThunderForce AC (Japan, prototype, bootleg)" )
 GAME ( 1991, ribbit,   0,        segac2,   ribbit,   ribbit,   ROT0, "Sega",                   "Ribbit!" )
 GAME ( 1992, ooparts,  0,        ooparts,  ooparts,  segac2,   ROT270, "Sega / Success",       "OOPArts (Japan, Prototype)" )
 GAME ( 1992, ssonicbr, 0,        segac2,   ssonicbr, bloxeedc, ROT0, "Sega",                   "SegaSonic Bros (Japan, prototype)" )

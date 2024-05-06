@@ -11783,7 +11783,7 @@ const struct ControlInfo polepos2_ctrl =
   false, /* 45_degree_rotation for joystick(s) */
   false, /* alternating_controls */
   false, /* mirrored_controls */
-  "Button1 is actually spacbar by default in this game to avoid conflicts with the pedals. The high / low shifter is emulated in mame by a single button toggle. The upright cab only uses the gas pedal while the cockpit uses both. This is a dipswitch setting that you can alter if you wish to better suit your layout.", /* control_details */
+  "Button 1 is actually the spacebar by default to avoid conflicts with the pedals. The high / low shifter is emulated in mame by a single button toggle. The upright cab only uses the gas pedal while the cockpit uses both. This is a dipswitch setting that you can alter if you wish to better suit your layout.", /* control_details */
   &polepos2_get_ctrl_name
 };
 

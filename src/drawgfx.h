@@ -281,6 +281,7 @@ static INLINE void sect_rect(struct rectangle *dst, const struct rectangle *src)
 	if (src->max_y < dst->max_y) dst->max_y = src->max_y;
 }
 
+extern struct GfxElement *uirotfont;
 
 #ifdef __cplusplus
 }
