@@ -197,4 +197,31 @@ VIDEO_UPDATE( topspeed )
 #endif
 
 	topspeed_draw_sprites(bitmap,cliprect);
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 3 );
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(in & 0x10) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
+
 }
