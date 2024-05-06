@@ -50,7 +50,7 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 
 	/* Most of spriteram is not used by the 68000: rest is scratch space for the h/w perhaps ? */
 
-	for (offs = 0;offs <(0x2c0/2);offs += 4)
+	for (offs = 0; offs < spriteram_size / 2; offs += 4)
 	{
 		data = spriteram16[offs+2];
 
@@ -65,7 +65,8 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 		priority = (data & 0x8000) >> 15;
 /*		unknown = (data & 0x2000) >> 13;*/
 
-		if (y == 0x180) continue;	/* dead sprite */
+		/* End of sprite list */
+		if (y == 0x180) break;
 
 		map_offset = tilenum << 7;
 
