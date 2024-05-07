@@ -1458,7 +1458,7 @@ ROM_END
 
 DRIVER_INIT(earthjkr)
 {
-	data16_t *rom = memory_region(REGION_CPU1);
+	data16_t *rom = (data16_t *)memory_region(REGION_CPU1);
 	/* 357c -> 317c, I think this is bitrot, see ROM loading for which ROM needs redumping, causes rowscroll to be broken on final stage (writes to ROM area instead)
 	   code is correct in the 'prototype?' set */
 	rom[0x7aaa/2] = 0x317c; 
