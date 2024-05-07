@@ -23,7 +23,7 @@ PAL16R6A 11H
 
 static int flip_screen;
 static data16_t *spriteram16;
-static unsigned int spriteram_size;
+static size_t spriteram_size;
 
 
 static void dietgogo_drawsprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
