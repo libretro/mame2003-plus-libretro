@@ -1818,4 +1818,4 @@ GAME( 1999, moremorp, 0,        semiprot, moremore, moremorp, ROT0, "SemiCom / E
 
 /* These are very similar to the SemiCom titles */
 GAME( 1993, finalttr, 0,        finalttr, finalttr, 0,        ROT0, "Jeil",              "Final Tetris" )
-GAME( 1999, 4in1boot, 0,        _4in1,    snowbros, 4in1boot, ROT0, "K1 Soft",           "Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros" )
+GAME( 1999, 4in1boot, 0,        _4in1,    snowbros, 4in1boot, ROT0, "K1 Soft",           "Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros)" )
