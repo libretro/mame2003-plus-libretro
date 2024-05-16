@@ -54,7 +54,6 @@ extern int neogeo_memcard_create(int);
 
 
 
-
 /***************************************************************************
 
 	Local variables
