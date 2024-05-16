@@ -1051,6 +1051,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
 	int tilemap_xpos = 0;
 	int tilemap_ypos = 0;
+	static bool enable_run = true;
 
 	mode = 0;
 	bank = 0;
@@ -1061,6 +1062,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 	do
 	{
 		static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
+		enable_run = false;
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -1440,8 +1442,9 @@ static void showcharset(struct mame_bitmap *bitmap)
 			}
 		}
 	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-			!input_ui_pressed(IPT_UI_CANCEL));
+			!input_ui_pressed(IPT_UI_CANCEL) && enable_run);
 
+ 	enable_run = true;
 	schedule_full_refresh();
 }
 
