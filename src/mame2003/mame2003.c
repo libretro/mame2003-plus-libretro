@@ -49,7 +49,7 @@ static struct retro_message                frontend_message;
 struct retro_perf_callback                 perf_cb;
 retro_environment_t                        environ_cb         = NULL;
 retro_video_refresh_t                      video_cb           = NULL;
-static retro_input_poll_t                  poll_cb            = NULL;
+retro_input_poll_t                         poll_cb            = NULL;
 static retro_input_state_t                 input_cb           = NULL;
 static retro_audio_sample_batch_t          audio_batch_cb     = NULL;
 retro_set_led_state_t                      led_state_cb       = NULL;
