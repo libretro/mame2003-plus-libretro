@@ -52,7 +52,6 @@ extern void neogeo_memcard_eject(void);
 extern int neogeo_memcard_create(int);
 /* MARTINEZ.F 990207 Memory Card End */
 
-extern retro_input_poll_t  poll_cb;
 
 
 
