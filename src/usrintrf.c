@@ -1043,7 +1043,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 {
 	int i;
 	char buf[80];
-	int mode,bank,color,firstdrawn;
+	static int mode,bank,color,firstdrawn;
 	int palpage;
 /*	int changed = 1;*/
 	int total_colors = 0;
