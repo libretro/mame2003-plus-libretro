@@ -76,6 +76,13 @@ static int setup_via_menu = 0;
 
 UINT8 ui_dirty;
 
+/* show gfx */
+static int mode,bank,color,firstdrawn;
+static int palpage;
+static int cpx,cpy,skip_chars,skip_tmap;
+static int tilemap_xpos;
+static int tilemap_ypos;
+
 
 
 /***************************************************************************
@@ -1043,21 +1050,11 @@ static void showcharset(struct mame_bitmap *bitmap)
 {
 	int i;
 	char buf[80];
-	int mode,bank,color,firstdrawn;
-	int palpage;
 /*	int changed = 1;*/
 	int total_colors = 0;
 	pen_t *colortable = NULL;
-	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
-	int tilemap_xpos = 0;
-	int tilemap_ypos = 0;
 	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
-  
-	mode = 0;
-	bank = 0;
-	color = 0;
-	firstdrawn = 0;
-	palpage = 0;
+ 
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -3343,6 +3340,20 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
 		toggle_gfx = !toggle_gfx;
+
+		if (toggle_gfx) /* just changed - init variables */
+		{
+			mode = 0;
+			bank = 0;
+			color = 0;
+			firstdrawn = 0;
+			palpage = 0;
+			cpx = 0;
+			skip_chars = 0;
+			skip_tmap = 0;
+			tilemap_xpos = 0;
+			tilemap_ypos = 0;
+		}
 	}
 
 	if(toggle_gfx) showcharset(bitmap);
