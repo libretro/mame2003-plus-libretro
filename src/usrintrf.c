@@ -1043,7 +1043,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 {
 	int i;
 	char buf[80];
-	static int mode,bank,color,firstdrawn;
 	int palpage;
 /*	int changed = 1;*/
 	int total_colors = 0;
@@ -1053,11 +1052,11 @@ static void showcharset(struct mame_bitmap *bitmap)
 	int tilemap_ypos = 0;
 	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
   
-	mode = 0;
-	bank = 0;
-	color = 0;
-	firstdrawn = 0;
-	palpage = 0;
+	static int mode = 0;
+	static int bank = 0;
+	static int color = 0;
+	static int firstdrawn = 0;
+	static int palpage = 0;
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
