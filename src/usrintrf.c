@@ -1216,11 +1216,13 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
 		{
+			usrintf_showmessage("L-R-CONTROL");
 			skip_chars = cpx;
 			skip_tmap = 8;
 		}
 		if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
 		{
+			usrintf_showmessage("L-R-SHIFT");
 			skip_chars = 1;
 			skip_tmap = 1;
 		}
@@ -1230,6 +1232,8 @@ static void showcharset(struct mame_bitmap *bitmap)
 		{
 			int next_bank, next_mode;
 			int jumped;
+
+			usrintf_showmessage("UI_RIGHT");
 
 			next_mode = mode;
 			next_bank = bank+1;
@@ -1272,6 +1276,8 @@ static void showcharset(struct mame_bitmap *bitmap)
 		{
 			int next_bank, next_mode;
 
+			usrintf_showmessage("UI_LEFT");
+
 			next_mode = mode;
 			next_bank = bank-1;
 			while(next_bank < 0 && next_mode >= 0)
@@ -1306,6 +1312,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (code_pressed_memory_repeat(KEYCODE_PGDN,4))
 		{
+			usrintf_showmessage("KEYCODE_PGDN");
 			switch (mode)
 			{
 				case 0:
@@ -1340,6 +1347,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (code_pressed_memory_repeat(KEYCODE_PGUP,4))
 		{
+			usrintf_showmessage("KEYCODE_PGUP");
 			switch (mode)
 			{
 				case 0:
@@ -1372,6 +1380,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (code_pressed_memory_repeat(KEYCODE_D,4))
 		{
+			usrintf_showmessage("KEYCODE_D");
 			switch (mode)
 			{
 				case 2:
@@ -1388,6 +1397,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (code_pressed_memory_repeat(KEYCODE_G,4))
 		{
+			usrintf_showmessage("KEYCODE_G");
 			switch (mode)
 			{
 				case 2:
@@ -1404,6 +1414,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (input_ui_pressed_repeat(IPT_UI_UP,6))
 		{
+			usrintf_showmessage("UI_UP");
 			switch (mode)
 			{
 				case 1:
@@ -1420,6 +1431,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 		if (input_ui_pressed_repeat(IPT_UI_DOWN,6))
 		{
+			usrintf_showmessage("UI_DOWN");
 			switch (mode)
 			{
 				case 0:
