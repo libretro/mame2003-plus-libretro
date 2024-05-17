@@ -855,7 +855,7 @@ DEFS = $(COREDEFINES) -Dasm=__asm__
 CFLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 
 # combine the various definitions to one
-CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
+CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o) $(SOURCES_ASM:.s=.o)
 
