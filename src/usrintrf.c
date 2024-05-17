@@ -1051,16 +1051,13 @@ static void showcharset(struct mame_bitmap *bitmap)
 	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
 	int tilemap_xpos = 0;
 	int tilemap_ypos = 0;
-
+	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
+  
 	mode = 0;
 	bank = 0;
 	color = 0;
 	firstdrawn = 0;
 	palpage = 0;
-
-	do
-	{
-		static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -1439,8 +1436,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				}
 			}
 		}
-	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-			!input_ui_pressed(IPT_UI_CANCEL));
 
 	schedule_full_refresh();
 }
@@ -3294,7 +3289,7 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
-
+	static bool toggle_gfx = false;
 	DoCheat(bitmap);	/* This must be called once a frame */
 
 	if (setup_selected == 0)
@@ -3347,8 +3342,10 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed IPT_UI_SHOW_GFX, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
-		showcharset(bitmap);
+		toggle_gfx = !toggle_gfx;
 	}
+
+	if(toggle_gfx) showcharset(bitmap);
 
 	return 0;
 }
