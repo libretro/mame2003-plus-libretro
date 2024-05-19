@@ -329,7 +329,7 @@ void osd_update_video_and_audio(struct mame_display *display);
 
 /*
   pause or resume all active cpus, true->pause, false->resume. cpu_pause() should
-  be called each frame to prevent cpu reset while paused. Cpu may reset on resume.
+  be called each frame to prevent cpu reset while paused. cpu may reset on resume.
 */
 extern void cpu_pause(bool pause);
 
