@@ -366,8 +366,6 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void cpu_pause(bool pause)
 {
-  //extern void cpunum_suspend(int cpunum, int reason, int eatcycles);
-  //extern void cpunum_resume(int cpunum, int reason);
   int cpunum;
 
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
