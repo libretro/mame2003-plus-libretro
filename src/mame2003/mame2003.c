@@ -376,8 +376,8 @@ void cpu_pause(bool pause)
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
 
-  /* maintain watchdog if required */
-  if (pause) watchdog_400_reset_w(0, 0);
+  /* disarm watchdog to prevent reset */
+  if (pause) watchdog_disarm_w(0, 0);
 }
 
 void retro_run (void)
