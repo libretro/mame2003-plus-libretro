@@ -367,6 +367,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 void cpu_pause(bool pause)
 {
   int cpunum, i;
+  static struct Samplesinterface *intf = msound->sound_interface;
 
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
