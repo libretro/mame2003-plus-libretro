@@ -377,7 +377,7 @@ void cpu_pause(bool pause)
   }
 
   /* maintain watchdog if required */
-  if (pause) watchdog_reset_w(0, 0);
+  if (pause) watchdog_400_reset_w(0, 0);
 }
 
 void retro_run (void)
