@@ -373,7 +373,7 @@ void cpu_pause(bool pause)
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
     if (pause)
-      cpunum_suspend(cpunum, SUSPEND_ANY_REASON, 1);
+      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, cpunum_gettotalcycles64(cpunum));
     else
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
