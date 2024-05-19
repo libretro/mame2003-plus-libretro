@@ -1056,8 +1056,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
 
-		//cpu_pause(true);
-
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
 
