@@ -3353,7 +3353,11 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 			skip_tmap = 0;
 			tilemap_xpos = 0;
 			tilemap_ypos = 0;
+
+			cpu_pause(true);
 		}
+		else
+			cpu_pause(false);
 	}
 
 	if(toggle_gfx) showcharset(bitmap);
