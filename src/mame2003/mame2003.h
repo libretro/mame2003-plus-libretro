@@ -327,7 +327,10 @@ int osd_skip_this_frame(void);
 void osd_update_video_and_audio(struct mame_display *display);
 
 
-/* pause or resume all active cpus, true->pause, false->resume */
+/*
+  Pause or resume all active cpus, true->pause, false->resume. Pause should be
+  called each frame to avoid a watchdog reset.
+*/
 extern void cpu_pause(bool pause);
 
 
