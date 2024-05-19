@@ -376,6 +376,7 @@ void cpu_pause(bool pause)
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
 
+  /* maintain watchdog if required */
   watchdog_reset_w(0, 0);
 }
 
