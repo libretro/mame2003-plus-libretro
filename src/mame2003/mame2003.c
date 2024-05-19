@@ -366,7 +366,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void cpu_pause(bool pause)
 {
-  int cpunum;
+  int cpunum, i;
 
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
@@ -379,12 +379,12 @@ void cpu_pause(bool pause)
   /* maintain watchdog if required */
   if (pause) watchdog_400_reset_w(0, 0);
 
-  if (pause)
+  for(i=0; i < intf->channels; i++)
   {
-    soundlatch_clear_w(0,0);
-    soundlatch2_clear_w(0,0);
-    soundlatch3_clear_w(0,0);
-    soundlatch4_clear_w(0,0);
+    if (pause)
+      sample_set_pause(i, 1);
+    else
+      sample_set_pause(i, 0);
   }
 }
 
