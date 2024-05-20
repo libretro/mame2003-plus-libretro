@@ -1054,7 +1054,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 	int total_colors = 0;
 	pen_t *colortable = NULL;
 	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
- 
+
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -3353,7 +3353,11 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 			skip_tmap = 0;
 			tilemap_xpos = 0;
 			tilemap_ypos = 0;
+
+			cpu_pause(true);
 		}
+		else
+			cpu_pause(false);
 	}
 
 	if(toggle_gfx) showcharset(bitmap);
