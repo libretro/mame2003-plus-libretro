@@ -561,7 +561,7 @@ int osd_start_audio_stream(int stereo)
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	if ( Machine->sample_rate !=0 && buffer && audio_stream_active)
+	if ( Machine->sample_rate !=0 && buffer && audio_stream_active )
 	{
 		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
 		if (usestereo)
