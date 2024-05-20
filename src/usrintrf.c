@@ -1211,8 +1211,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 			}
 		}
 
-		update_video_and_audio();
-
 		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
 		{
 			skip_chars = cpx;
