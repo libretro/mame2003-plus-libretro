@@ -38,6 +38,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
+static bool    audio_stream_active = true;
 
 
 /* MAME data structures to store and translate keyboard state */
@@ -378,6 +379,12 @@ void cpu_pause(bool pause)
 
   /* disarm watchdog to prevent reset */
   if (pause) watchdog_disarm_w(0, 0);
+
+  /* cut audio stream */
+  if (pause)
+    audio_stream_active = false;
+  else
+    audio_stream_active = true;
 }
 
 void retro_run (void)
@@ -554,7 +561,7 @@ int osd_start_audio_stream(int stereo)
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	if ( Machine->sample_rate !=0 && buffer && 0)
+	if ( Machine->sample_rate !=0 && buffer && audio_stream_active)
 	{
 		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
 		if (usestereo)
