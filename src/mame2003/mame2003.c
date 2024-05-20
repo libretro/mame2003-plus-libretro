@@ -230,7 +230,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
   
-  info->timing.fps = Machine->drv->frames_per_second;
+  info->timing.fps = 30;
   info->timing.sample_rate = options.samplerate ;
 }
 
@@ -374,7 +374,7 @@ void cpu_pause(bool pause)
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
     if (pause)
-      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, cpu_gettotalcycles64(cpunum));
+      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
     else
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
