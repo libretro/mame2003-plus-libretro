@@ -465,6 +465,7 @@ void osd_update_video_and_audio(struct mame_display *display)
       {
          if (!osd_skip_this_frame())
          {
+            gotFrame = 1;
             if (video_do_bypass)
             {
                unsigned min_y = display->game_visible_area.min_y;
@@ -480,7 +481,10 @@ void osd_update_video_and_audio(struct mame_display *display)
             }
          }
          else
-            video_cb(NULL, vis_width, vis_height, vis_width * video_stride_out);
+         {
+               /* video_cb(NULL, vis_width, vis_height, vis_width * video_stride_out);*/
+               gotFrame = 0;
+         }
       }
    }
 
@@ -501,8 +505,6 @@ void osd_update_video_and_audio(struct mame_display *display)
       }
       prev_led_state = display->led_state;
    }
-
-   gotFrame = 1;
 
    frameskip_counter = (frameskip_counter + 1) % 12;
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);
