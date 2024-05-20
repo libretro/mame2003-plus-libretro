@@ -482,8 +482,8 @@ void osd_update_video_and_audio(struct mame_display *display)
          }
          else
          {
-               /* video_cb(NULL, vis_width, vis_height, vis_width * video_stride_out);*/
-               gotFrame = 0;
+            /* video_cb(NULL, vis_width, vis_height, vis_width * video_stride_out);*/
+            gotFrame = 0;
          }
       }
    }
