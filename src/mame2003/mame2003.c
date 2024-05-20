@@ -230,7 +230,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
   
-  info->timing.fps = 30;
+  info->timing.fps = Machine->drv->frames_per_second;
   info->timing.sample_rate = options.samplerate ;
 }
 
