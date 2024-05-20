@@ -365,6 +365,8 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
+bool cpu_pause_state = false;
+
 void cpu_pause(bool pause)
 {
   int cpunum;
@@ -385,6 +387,12 @@ void cpu_pause(bool pause)
     audio_stream_active = false;
   else
     audio_stream_active = true;
+
+  /* update state */
+  if (pause)
+    cpu_pause_state = true;
+  else
+    cpu_pause_state = false;
 }
 
 void retro_run (void)
