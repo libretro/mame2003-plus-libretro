@@ -92,10 +92,7 @@ enum
 	UI_keyjoyspeed,
 	UI_reverse,
 	UI_sensitivity,
-#ifndef NO_FILTERED_POLL
   UI_xwayjoy,
-  UI_lockout,
-#endif
 
 	/* stats */
 	UI_tickets,

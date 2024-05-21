@@ -259,56 +259,6 @@ static const char* internal_code_name(InputCode code)
 	return "n/a";
 }
 
-#ifndef NO_FILTERED_POLL
-/* Only for keyboard or joystick buttons */
-void internal_key_code_to_oscode(InputCode code, struct OsdCodeAndType * osdcodeandtype)
-{
-	const struct KeyboardInfo *keyinfo;
-	const struct JoystickInfo *joyinfo;
-
-  if (code < __code_max)
-	{
-		switch (code_map[code].type)
-		{
-			case CODE_TYPE_KEYBOARD :
-				keyinfo = internal_code_find_keyboard(code);
-				if (keyinfo)
-        {
-          osdcodeandtype->code = keyinfo->code;
-          osdcodeandtype->type = CODE_TYPE_KEYBOARD;
-					return;
-        }
-				break;
-			case CODE_TYPE_JOYSTICK :
-				joyinfo = internal_code_find_joystick(code);
-				if (joyinfo)
-        {
-          osdcodeandtype->code = joyinfo->code;
-          osdcodeandtype->type = CODE_TYPE_JOYSTICK;
-					return;
-        }
-				break;
-      default :
-          osdcodeandtype->code = 0;
-          osdcodeandtype->type = 0;
-					return;
-		}
-	} else {
-		switch (code_map[code].type)
-		{
-			case CODE_TYPE_KEYBOARD :
-        osdcodeandtype->code = code_map[code].oscode;
-        osdcodeandtype->type = CODE_TYPE_KEYBOARD;
-			  return;
-			case CODE_TYPE_JOYSTICK :
-        osdcodeandtype->code = code_map[code].oscode;
-        osdcodeandtype->type = CODE_TYPE_JOYSTICK;
-			  return;
-		}
-	}
-}
-#endif
-
 /* Update the code table */
 void internal_code_update(void)
 {

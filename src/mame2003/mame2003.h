@@ -489,19 +489,5 @@ cycles_t osd_profiling_ticks(void);
 #ifdef __cplusplus
 }
 #endif
-#ifndef NO_FILTERED_POLL
-
-
-/******************************************************************************
-
-	Filtered Polling
-
-  Help determine what, if any, polled input values need to be filtered / changed.
-
-******************************************************************************/
-
-/* determine what codes from polling need to be filtered / changed */
-void codes_to_filter_and_filter_operation(void);
-#endif
 
 #endif /* MAME2003_H */

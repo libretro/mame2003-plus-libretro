@@ -1991,11 +1991,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	/* Each analog control has 3 entries - key & joy delta, reverse, sensitivity */
   /* Or 5 entries with filtered poll enabled (default) adding x-way joy and time lockout */
 
-#ifdef NO_FILTERED_POLL
-#define ENTRIES 3
-#else
-#define ENTRIES 5
-#endif
+#define ENTRIES 4
 
 	total2 = total * ENTRIES;
 
@@ -2010,19 +2006,13 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 		{
 			int sensitivity,delta;
 			int reverse;
-#ifndef NO_FILTERED_POLL
-      int xwayjoy;  /* Toggle lock out analog (de)increment for certain amount of time */
-      int lockout;  /* Time in milliseconds to lockout analog (de)increment */
-#endif
+      int xwayjoy;  /* Toggle lock out analog (de)increment for one frame if dial(-v) button just pressed */
 
 			strcpy (label[i], input_port_name(entry[i/ENTRIES]));
 			sensitivity = IP_GET_SENSITIVITY(entry[i/ENTRIES]);
 			delta = IP_GET_DELTA(entry[i/ENTRIES]);
 			reverse = (entry[i/ENTRIES]->type & IPF_REVERSE);
-#ifndef NO_FILTERED_POLL
       xwayjoy = ((entry[i/ENTRIES]+2)->type & IPF_XWAYJOY);
-			lockout = IP_GET_LOCKOUT(entry[i/ENTRIES]);
-#endif
 
 			strcat (label[i], " ");
 			switch (i%ENTRIES)
@@ -2045,7 +2035,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 					sprintf(setting[i],"%3d%%",sensitivity);
 					if (i == sel) arrowize = 3;
 					break;
-#ifndef NO_FILTERED_POLL
 				case 3:
 					strcat (label[i], ui_getstring (UI_xwayjoy));
 					if (xwayjoy)
@@ -2054,12 +2043,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 						strcpy(setting[i],ui_getstring (UI_off));
 					if (i == sel) arrowize = 3;
 					break;
-				case 4:
-					strcat (label[i], ui_getstring (UI_lockout));
-					sprintf(setting[i],"%d",lockout);
-					if (i == sel) arrowize = 3;
-					break;
-#endif
 			}
 
 			menu_item[i] = label[i];
@@ -2111,7 +2094,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				if (val < 1) val = 1;
 				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
 			}
-#ifndef NO_FILTERED_POLL
 			else if ((sel % ENTRIES) == 3)
 			/* xwayjoy */
 			{
@@ -2123,16 +2105,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
 				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
 			}
-			else if ((sel % ENTRIES) == 4)
-			/* lockout */
-			{
-				int val = IP_GET_LOCKOUT(entry[sel/ENTRIES]);
-
-				val --;
-				if (val < 0) val = 0;
-				IP_SET_LOCKOUT(entry[sel/ENTRIES],val);
-			}
-#endif
 		}
 	}
 
@@ -2169,7 +2141,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				if (val > 255) val = 255;
 				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
 			}
-#ifndef NO_FILTERED_POLL
 			else if ((sel % ENTRIES) == 3)
 			/* xwayjoy */
 			{
@@ -2181,16 +2152,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
 				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
 			}
-			else if ((sel % ENTRIES) == 4)
-			/* lockout */
-			{
-				int val = IP_GET_LOCKOUT(entry[sel/ENTRIES]);
-
-				val ++;
-				if (val > 255) val = 255;
-				IP_SET_LOCKOUT(entry[sel/ENTRIES],val);
-			}
-#endif
 		}
 	}
 
