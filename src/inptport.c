@@ -913,8 +913,6 @@ void update_analog_port(int port)
 	xwayjoy = (in+2)->type & IPF_XWAYJOY;
   last_frame = cpu_getcurrentframe() - 1;
 
-  printf("xwayjoy: %i\nlast_frame: %i\nlast_frame_dec: %i\n", xwayjoy, last_frame, last_frame_dec);
-
 	if (seq_pressed(decseq))
     /* Don't register button press if xwayjoy is on, is DIAL(_V) type, and button was pressed last frame */
 	  if (  !(    (xwayjoy == IPF_XWAYJOY)
@@ -927,7 +925,6 @@ void update_analog_port(int port)
 
 	if (type != IPT_PEDAL && type != IPT_PEDAL2)
 	{
-    printf("xwayjoy: %i\nlast_frame: %i\nlast_frame_inc: %i\n", xwayjoy, last_frame, last_frame_inc);
 		if (seq_pressed(incseq))
       /* Don't register button press if xwayjoy is on, is DIAL(_V) type, and button was pressed last frame */
 	    if (  !(    (xwayjoy == IPF_XWAYJOY)
