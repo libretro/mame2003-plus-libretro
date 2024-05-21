@@ -382,7 +382,10 @@ void cpu_pause(bool pause)
   if (pause) watchdog_disarm_w(0, 0);
 
   /* disable audio mixer */
-  mixer_sound_enable_global_w(pause);
+  if (pause)
+    mixer_sound_enable_global_w(0);
+  else
+    mixer_sound_enable_global_w(1);
 
   /* update state */
   if (pause)
