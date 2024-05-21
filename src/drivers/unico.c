@@ -649,7 +649,7 @@ MACHINE_INIT( unico )
 static struct YM3812interface unico_ym3812_intf =
 {
 	1,
-	4000000,		/* ? */ /*Would guess it as identical to zeropt2, any samples for confirmation?*/
+	3579545,		/* ? */ /*Would guess it as identical to zeropt2, any samples for confirmation?*/
 	{ 40 },
 	{ 0 },	/* IRQ Line */
 };

@@ -364,6 +364,30 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
+bool cpu_pause_state = false;
+
+void cpu_pause(bool pause)
+{
+  int cpunum;
+
+  for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+  {
+    if (pause)
+      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
+    else
+      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
+  }
+
+  /* disarm watchdog to prevent reset */
+  if (pause) watchdog_disarm_w(0, 0);
+
+  /* update state */
+  if (pause)
+    cpu_pause_state = true;
+  else
+    cpu_pause_state = false;
+}
+
 void retro_run (void)
 {
   bool updated = false;
@@ -538,9 +562,12 @@ int osd_start_audio_stream(int stereo)
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	if ( Machine->sample_rate !=0 && buffer )
+	if ( Machine->sample_rate !=0 && buffer)
 	{
-		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		if (cpu_pause_state)
+			memset(samples_buffer, 0,      samples_per_frame * (usestereo ? 4 : 2));
+		else
+			memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
@@ -552,7 +579,8 @@ int osd_update_audio_stream(INT16 *buffer)
 			}
 			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
-
+		if (cpu_pause_state)
+			return samples_per_frame;
 
 		/*process next frame */
 
@@ -747,8 +775,15 @@ void retro_describe_controls(void)
       if(ctrl_ipt_code == CODE_NONE) continue;
 
       if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
+      {
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL] ) goto skip;
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL2]) goto skip;
+
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
           continue; /* button has a higher index than supported by the driver */
+
+        skip:; //bypass button count check
+      }
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
@@ -757,6 +792,10 @@ void retro_describe_controls(void)
       {
         /* First try to get specific name */
         control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
+
+        /* override control name for pedals */
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL] ) control_name = "Pedal";
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL2]) control_name = "Pedal2";
 
         if(string_is_empty(control_name))
         {

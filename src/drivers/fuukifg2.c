@@ -28,7 +28,6 @@ To Do:
   parallactic scrolling on later levels. *partly done, could do with
   some tweaking
 
-- ADPCM samples banking in gogomile.
 
 - The scroll values are generally wrong when flip screen is on and rasters are often incorrect
 
@@ -113,8 +112,6 @@ MEMORY_END
 							Memory Maps - Sound CPU
 
 
-To do: ADPCM samples banking in gogomile.
-
 ***************************************************************************/
 
 static WRITE_HANDLER( fuuki16_sound_rombank_w )
@@ -123,6 +120,16 @@ static WRITE_HANDLER( fuuki16_sound_rombank_w )
 		cpu_setbank(1, memory_region(REGION_CPU2) + 0x8000 * data + 0x10000);
 	else
 	 	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
+}
+
+static WRITE_HANDLER( fuuki16_oki_banking_w )
+{
+	/*
+        data & 0x06 is always equals to data & 0x60
+        data & 0x10 is always set
+    */
+
+	OKIM6295_set_bank_base(0, ((data & 6) >> 1) * 0x40000);
 }
 
 static MEMORY_READ_START( fuuki16_sound_readmem )
@@ -146,7 +153,7 @@ PORT_END
 static PORT_WRITE_START( fuuki16_sound_writeport )
 	{ 0x00, 0x00, fuuki16_sound_rombank_w 	},	/* ROM Bank*/
 	{ 0x11, 0x11, IOWP_NOP					},	/* ? To Main CPU*/
-	{ 0x20, 0x20, IOWP_NOP					},	/* ? 0x10, 0x32, 0x54: 2 volumes ?*/
+	{ 0x20, 0x20, fuuki16_oki_banking_w		},	/* Oki Banking */
 	{ 0x30, 0x30, IOWP_NOP					},	/* ? In the NMI routine*/
 	{ 0x40, 0x40, YM2203_control_port_0_w	},	/* YM2203*/
 	{ 0x41, 0x41, YM2203_write_port_0_w		},
@@ -489,7 +496,7 @@ static void soundirq(int state)
 static struct YM2203interface fuuki16_ym2203_intf =
 {
 	1,
-	4000000,		/* ? */
+	28640000/8,		 /* 3.58 MHz */
 	{ YM2203_VOL(15,15) },
 	{ 0 },			/* Port A Read  */
 	{ 0 },			/* Port B Read  */
@@ -501,7 +508,7 @@ static struct YM2203interface fuuki16_ym2203_intf =
 static struct YM3812interface fuuki16_ym3812_intf =
 {
 	1,
-	4000000,		/* ? */
+	28640000/8,		 /* 3.58 MHz */
 	{ 30 },
 	{ soundirq },	/* IRQ Line */
 };
@@ -509,7 +516,7 @@ static struct YM3812interface fuuki16_ym3812_intf =
 static struct OKIM6295interface fuuki16_m6295_intf =
 {
 	1,
-	{ 8000 },		/* ? */
+	{ 32000000/32/132, },	/* 1 Mhz */
 	{ REGION_SOUND1 },
 	{ 85 }
 };
@@ -555,12 +562,12 @@ INTERRUPT_GEN( fuuki16_interrupt )
 static MACHINE_DRIVER_START( fuuki16 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 16000000)
+	MDRV_CPU_ADD(M68000, 32000000/2) /* 16 MHz */
 	MDRV_CPU_MEMORY(fuuki16_readmem,fuuki16_writemem)
 	MDRV_CPU_VBLANK_INT(fuuki16_interrupt,INTERRUPTS_NUM)
 
-	MDRV_CPU_ADD(Z80, 3000000)
-	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ? */
+	MDRV_CPU_ADD(Z80, 12000000/2) /* 6 MHz */
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(fuuki16_sound_readmem,fuuki16_sound_writemem)
 	MDRV_CPU_PORTS(fuuki16_sound_readport,fuuki16_sound_writeport)
 
@@ -657,8 +664,7 @@ ROM_START( gogomile )
 
 	/* 0x40000 * 4: sounds+speech (japanese),sounds+speech (english) */
 	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "lh538n1d.25", 0x000000, 0x080000, CRC(01622a95) SHA1(8d414bfc6dcfab1cf9cfe5738eb5c2ff31b77df6) )
-	ROM_CONTINUE(            0x000000, 0x080000             )	/* english half first*/
+    ROM_LOAD( "lh538n1d.25", 0x000000, 0x100000, CRC(01622a95) SHA1(8d414bfc6dcfab1cf9cfe5738eb5c2ff31b77df6) )	/* 0x40000 * 4 */
 ROM_END
 
 ROM_START( gogomilj )
@@ -725,7 +731,6 @@ Mitsubishi M60067-0901FP 452100 (208pin PQFP, GA1)
 ***************************************************************************/
 
 ROM_START( pbancho )
-
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* 68000 Code */
 	ROM_LOAD16_BYTE( "rom2.no1", 0x000000, 0x080000, CRC(1b4fd178) SHA1(02cf3d2554b29cd253470d68ea959738f3b98dbe) )	/* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
 	ROM_LOAD16_BYTE( "rom1.no2", 0x000001, 0x080000, CRC(9cf510a5) SHA1(08e79b5bbd1c011c32f82dd15fba42d7898861be) )	/* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
@@ -749,7 +754,6 @@ ROM_START( pbancho )
 
 	ROM_REGION( 0x040000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
 	ROM_LOAD( "rom25.no3", 0x000000, 0x040000, CRC(a7bfb5ea) SHA1(61937eae4f8855bc09c494aff52d76d41dc3b76a) )
-
 ROM_END
 
 
@@ -761,6 +765,6 @@ ROM_END
 
 ***************************************************************************/
 
-GAMEX(1995, gogomile, 0,        fuuki16, gogomile, 0, ROT0, "Fuuki", "Go Go! Mile Smile",          GAME_IMPERFECT_SOUND )
-GAMEX(1995, gogomilj, gogomile, fuuki16, gogomilj, 0, ROT0, "Fuuki", "Susume! Mile Smile (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1996, pbancho,  0,        fuuki16, pbancho,  0, ROT0, "Fuuki", "Gyakuten!! Puzzle Bancho (Japan)")
+GAME(1995, gogomile, 0,        fuuki16, gogomile, 0, ROT0, "Fuuki", "Go Go! Mile Smile" )
+GAME(1995, gogomilj, gogomile, fuuki16, gogomilj, 0, ROT0, "Fuuki", "Susume! Mile Smile (Japan)" )
+GAME(1996, pbancho,  0,        fuuki16, pbancho,  0, ROT0, "Fuuki", "Gyakuten!! Puzzle Bancho (Japan)")

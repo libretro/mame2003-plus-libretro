@@ -112,6 +112,11 @@ static void draw_sprite( const UINT8 *source, struct mame_bitmap *bitmap, const 
 	{
 		/* Chinese Hero */
 		color >>= 1;
+		
+		/* It's needed in level 7 to hide "bogus" sprites. Is it a sprite disable flag or an end sprite list flag? */
+		if(color == 0)
+			return;
+		
 		switch( bank>>2 )
 		{
 		case 0x0: bank_index = 0; break;
@@ -149,6 +154,18 @@ static void draw_sprite( const UINT8 *source, struct mame_bitmap *bitmap, const 
 				color,
 				xflip,yflip,
 				sx,sy,
+				cliprect,
+				TRANSPARENCY_PEN,transparent_pen,
+				(width<<16)/16, (height<<16)/16 );
+				
+				/* wrap around y */
+				drawgfxzoom(
+				bitmap,
+				gfx,
+				tile+c*8+r,
+				color,
+				xflip,yflip,
+				sx,sy+256,
 				cliprect,
 				TRANSPARENCY_PEN,transparent_pen,
 				(width<<16)/16, (height<<16)/16 );

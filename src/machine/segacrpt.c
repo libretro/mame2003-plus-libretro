@@ -426,7 +426,6 @@ void suprloco_decode(void)
 	sega_decode(convtable);
 }
 
-
 void yamato_decode(void)
 {
 	static const unsigned char convtable[32][4] =
@@ -454,6 +453,74 @@ void yamato_decode(void)
 
 	sega_decode(convtable);
 }
+
+UINT8 *top_decrypted_opcodes;
+
+void toprollr_decode(void)
+{
+	/* same tables as in Yamato, but encrypted ROM is banked */
+
+	static const unsigned char convtable[32][4] =
+	{
+		/*       opcode                   data                     address      */
+		/*  A    B    C    D         A    B    C    D                           */
+		{ 0x88,0xa8,0x08,0x28 }, { 0x88,0xa8,0x80,0xa0 },	/* ...0...0...0...0 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x88,0xa8,0x80,0xa0 },	/* ...0...0...0...1 */
+		{ 0x88,0xa8,0x80,0xa0 }, { 0x88,0xa8,0x80,0xa0 },	/* ...0...0...1...0 */
+		{ 0x88,0xa8,0x80,0xa0 }, { 0x20,0xa0,0x28,0xa8 },	/* ...0...0...1...1 */
+		{ 0x88,0xa8,0x08,0x28 }, { 0x88,0xa8,0x08,0x28 },	/* ...0...1...0...0 */
+		{ 0x88,0xa8,0x80,0xa0 }, { 0x88,0xa8,0x80,0xa0 },	/* ...0...1...0...1 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x20,0xa0,0x28,0xa8 },	/* ...0...1...1...0 */
+		{ 0x88,0xa8,0x80,0xa0 }, { 0x88,0xa8,0x80,0xa0 },	/* ...0...1...1...1 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x88,0xa8,0x08,0x28 },	/* ...1...0...0...0 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x28,0x20,0xa8,0xa0 },	/* ...1...0...0...1 */
+		{ 0xa0,0x20,0x80,0x00 }, { 0x20,0xa0,0x28,0xa8 },	/* ...1...0...1...0 */
+		{ 0x28,0x20,0xa8,0xa0 }, { 0x20,0xa0,0x28,0xa8 },	/* ...1...0...1...1 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x88,0xa8,0x08,0x28 },	/* ...1...1...0...0 */
+		{ 0x88,0xa8,0x08,0x28 }, { 0x88,0xa8,0x08,0x28 },	/* ...1...1...0...1 */
+		{ 0xa0,0x20,0x80,0x00 }, { 0x88,0x08,0x80,0x00 },	/* ...1...1...1...0 */
+		{ 0x20,0xa0,0x28,0xa8 }, { 0x00,0x08,0x20,0x28 }	/* ...1...1...1...1 */
+	};
+
+	int A;
+	UINT8 *bank_rom = memory_region(REGION_USER1);
+	int bankstart;
+	
+	top_decrypted_opcodes = auto_malloc(0x10001);
+	for(bankstart=0;bankstart<0x6000*3;bankstart+=0x6000)
+	for (A = 0x0000;A < 0x6000;A++)
+	{
+		int xor = 0;
+
+		UINT8 src = bank_rom[A+bankstart];
+
+		/* pick the translation table from bits 0, 4, 8 and 12 of the address */
+		int row = (A & 1) + (((A >> 4) & 1) << 1) + (((A >> 8) & 1) << 2) + (((A >> 12) & 1) << 3);
+
+		/* pick the offset in the table from bits 3 and 5 of the source data */
+		int col = ((src >> 3) & 1) + (((src >> 5) & 1) << 1);
+		/* the bottom half of the translation table is the mirror image of the top */
+		if (src & 0x80)
+		{
+			col = 3 - col;
+			xor = 0xa8;
+		}
+
+		/* decode the opcodes */
+		bank_rom[0x12000+A+bankstart] = (src & ~0xa8) | (convtable[2*row][col] ^ xor);
+
+		/* decode the data */
+		bank_rom[A+bankstart] = (src & ~0xa8) | (convtable[2*row+1][col] ^ xor);
+	}
+	//copy data bank0 
+	memcpy(memory_region(REGION_CPU1),&bank_rom[0], 0x6000);
+	//copy opcodes bank0 
+	memcpy(&top_decrypted_opcodes[0x0], &bank_rom[0x12000], 0x6000);
+	//copy rom opcode ffor new opcode base
+	memcpy(&top_decrypted_opcodes[0xc000],memory_region(REGION_CPU1) + 0xc000 , 0x4000);
+	
+	memory_set_opcode_base(0,top_decrypted_opcodes);
+	}
 
 
 void sindbadm_decode(void)

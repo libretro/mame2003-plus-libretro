@@ -292,15 +292,15 @@ static INTERRUPT_GEN( masterw_interrupt )
 	cpu_set_irq_line(0, 5, HOLD_LINE);
 }
 
-void silentd_interrupt6(int x)
+void silentd_interrupt4(int x)
 {
-	cpu_set_irq_line(0,6,HOLD_LINE);
+	cpu_set_irq_line(0,4,HOLD_LINE);
 }
 
 static INTERRUPT_GEN( silentd_interrupt )
 {
-	timer_set(TIME_IN_CYCLES(5000,0),0,silentd_interrupt6);
-	cpu_set_irq_line(0, 4, HOLD_LINE);
+	timer_set(TIME_IN_CYCLES(5000,0),0,silentd_interrupt4);
+	cpu_set_irq_line(0, 6, HOLD_LINE);
 }
 
 void selfeena_interrupt4(int x)

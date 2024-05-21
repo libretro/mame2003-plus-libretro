@@ -60,7 +60,7 @@ extern int neogeo_memcard_create(int);
 
 ***************************************************************************/
 
-static struct GfxElement *uirotfont;
+struct GfxElement *uirotfont;
 
 /* raw coordinates, relative to the real scrbitmap */
 static struct rectangle uirawbounds;
@@ -75,6 +75,13 @@ static int setup_selected;
 static int setup_via_menu = 0;
 
 UINT8 ui_dirty;
+
+/* show gfx */
+static int mode,bank,color,firstdrawn;
+static int palpage;
+static int cpx,cpy,skip_chars,skip_tmap;
+static int tilemap_xpos;
+static int tilemap_ypos;
 
 
 
@@ -1043,24 +1050,11 @@ static void showcharset(struct mame_bitmap *bitmap)
 {
 	int i;
 	char buf[80];
-	int mode,bank,color,firstdrawn;
-	int palpage;
 /*	int changed = 1;*/
 	int total_colors = 0;
 	pen_t *colortable = NULL;
-	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
-	int tilemap_xpos = 0;
-	int tilemap_ypos = 0;
+	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
-	mode = 0;
-	bank = 0;
-	color = 0;
-	firstdrawn = 0;
-	palpage = 0;
-
-	do
-	{
-		static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -1216,8 +1210,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				break;
 			}
 		}
-
-		update_video_and_audio();
 
 		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
 		{
@@ -1439,8 +1431,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				}
 			}
 		}
-	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-			!input_ui_pressed(IPT_UI_CANCEL));
 
 	schedule_full_refresh();
 }
@@ -3327,7 +3317,7 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
-
+	static bool toggle_gfx = false;
 	DoCheat(bitmap);	/* This must be called once a frame */
 
 	if (setup_selected == 0)
@@ -3342,6 +3332,8 @@ int handle_user_interface(struct mame_bitmap *bitmap)
       setup_via_menu = 1;
 	    setup_menu_init();
     }
+
+    if (setup_active()) cpu_pause(true);
   }
 
 	if (setup_selected && setup_via_menu && !options.display_setup)
@@ -3380,8 +3372,29 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed IPT_UI_SHOW_GFX, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
-		showcharset(bitmap);
+		toggle_gfx = !toggle_gfx;
+
+		if (toggle_gfx) /* just changed - init variables */
+		{
+			mode = 0;
+			bank = 0;
+			color = 0;
+			firstdrawn = 0;
+			palpage = 0;
+			cpx = 0;
+			skip_chars = 0;
+			skip_tmap = 0;
+			tilemap_xpos = 0;
+			tilemap_ypos = 0;
+
+			cpu_pause(true);
+		}
 	}
+
+	if(toggle_gfx) showcharset(bitmap);
+
+	if (!setup_active() && !toggle_gfx && cpu_pause_state)
+		cpu_pause(false);
 
 	return 0;
 }
