@@ -137,6 +137,7 @@ static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool und
 
 void retro_set_audio_buff_status_cb(void)
 {
+  log_cb(RETRO_LOG_INFO, "options.frameskip:%d\n",options.frameskip);
   if (options.frameskip > 0 && options.frameskip >= 12)
   {
       buf_status_cb.callback = &retro_audio_buff_status_cb;
@@ -144,8 +145,7 @@ void retro_set_audio_buff_status_cb(void)
       if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
             &buf_status_cb))
       {
-         if (log_cb)
-            log_cb(RETRO_LOG_WARN, "Frameskip disabled - frontend does not support audio buffer status monitoring.\n");
+         log_cb(RETRO_LOG_WARN, "Frameskip disabled - frontend does not support audio buffer status monitoring.\n");
 
          retro_audio_buff_active    = false;
          retro_audio_buff_occupancy = 0;
@@ -153,7 +153,7 @@ void retro_set_audio_buff_status_cb(void)
       }
       else
       log_cb(RETRO_LOG_INFO, "Frameskip Enabled\n");
-  }
+   }
    else
       environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,NULL);
 

@@ -402,18 +402,23 @@ int osd_skip_this_frame(void)
 			switch ( options.frameskip)
 			{
 				case 12: /* auto */
-					skip_frame = retro_audio_buff_underrun;
+					skip_frame = retro_audio_buff_underrun ? 1 : 0;
 				break;
 				case 13: /* aggressive */
-					skip_frame = (retro_audio_buff_occupancy < 33);
+					skip_frame = (retro_audio_buff_occupancy < 33)  ? 1 : 0;
 				break;
 				case 14: /* max */
-					skip_frame = (retro_audio_buff_occupancy < 50);
+					skip_frame = (retro_audio_buff_occupancy < 50)  ? 1 : 0;
 				break;
 				default:
-					skip_frame = false;
+					skip_frame = options.frameskip;
 				break;
-}
+			}
+
+		}
+	}
+	else /*manual frameskip includes disabled check */
+	{
 			if (skip_frame)
 			{
 				if(auto_frameskip_counter <= 40)
@@ -422,14 +427,10 @@ int osd_skip_this_frame(void)
 				}
 				else
 				{
-					auto_frameskip_counter = 0;/* control will return 0 at the end */
+					auto_frameskip_counter = 0;
 					skip_frame=0;
 				}
 			}
-		}
-	}
-	else /*manual frameskip includes disabled check */
-	{
 		skip_frame = frameskip_table[options.frameskip][frameskip_counter];
 	}
 	return skip_frame;
