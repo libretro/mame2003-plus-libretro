@@ -228,7 +228,7 @@ void retro_set_environment(retro_environment_t cb)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
-  
+
   info->timing.fps = Machine->drv->frames_per_second;
   info->timing.sample_rate = options.samplerate ;
 }
@@ -540,7 +540,7 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
- 
+
   Machine->sample_rate = options.samplerate;
 
   delta_samples = 0.0f;
@@ -1285,7 +1285,7 @@ unsigned decode_osd_joycode(unsigned joycode)
 /******************************************************************************
  * osd_analogjoy_read polls analog joystick axes, and sets the value in the
  * analog_axis[] array.
- * 
+ *
  * int player is an array index, starting at 0
 *******************************************************************************/
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])

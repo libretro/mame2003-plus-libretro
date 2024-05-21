@@ -1770,7 +1770,7 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION
 		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) )
 		{
 			entry[total] = in;
@@ -1979,8 +1979,9 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	if (total == 0) return 0;
 
 	/* Each analog control has 3 entries - key & joy delta, reverse, sensitivity */
+  /* Or 5 entries with filtered poll enabled (default) adding x-way joy and time lockout */
 
-#define ENTRIES 3
+#define ENTRIES 4
 
 	total2 = total * ENTRIES;
 
@@ -1995,11 +1996,13 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 		{
 			int sensitivity,delta;
 			int reverse;
+      int xwayjoy;  /* Toggle lock out analog (de)increment for one frame if dial(-v) button just pressed */
 
 			strcpy (label[i], input_port_name(entry[i/ENTRIES]));
 			sensitivity = IP_GET_SENSITIVITY(entry[i/ENTRIES]);
 			delta = IP_GET_DELTA(entry[i/ENTRIES]);
 			reverse = (entry[i/ENTRIES]->type & IPF_REVERSE);
+      xwayjoy = ((entry[i/ENTRIES]+2)->type & IPF_XWAYJOY);
 
 			strcat (label[i], " ");
 			switch (i%ENTRIES)
@@ -2020,6 +2023,14 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				case 2:
 					strcat (label[i], ui_getstring (UI_sensitivity));
 					sprintf(setting[i],"%3d%%",sensitivity);
+					if (i == sel) arrowize = 3;
+					break;
+				case 3:
+					strcat (label[i], ui_getstring (UI_xwayjoy));
+					if (xwayjoy)
+						strcpy(setting[i],ui_getstring (UI_on));
+					else
+						strcpy(setting[i],ui_getstring (UI_off));
 					if (i == sel) arrowize = 3;
 					break;
 			}
@@ -2073,6 +2084,17 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				if (val < 1) val = 1;
 				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
 			}
+			else if ((sel % ENTRIES) == 3)
+			/* xwayjoy */
+			{
+				int xwayjoy= (entry[sel/ENTRIES]+2)->type & IPF_XWAYJOY;
+				if (xwayjoy)
+					xwayjoy=0;
+				else
+					xwayjoy=IPF_XWAYJOY;
+				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
+				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
+			}
 		}
 	}
 
@@ -2108,6 +2130,17 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				val ++;
 				if (val > 255) val = 255;
 				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
+			}
+			else if ((sel % ENTRIES) == 3)
+			/* xwayjoy */
+			{
+				int xwayjoy= (entry[sel/ENTRIES]+2)->type & IPF_XWAYJOY;
+				if (xwayjoy)
+					xwayjoy=0;
+				else
+					xwayjoy=IPF_XWAYJOY;
+				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
+				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
 			}
 		}
 	}

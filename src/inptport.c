@@ -42,6 +42,7 @@ be specified by a CODE_NOT (for example, ALT-TAB on a windows machine).
 #include <math.h>
 #include "driver.h"
 #include "config.h"
+#include "cpuexec.h"
 
 
 /***************************************************************************
@@ -825,6 +826,9 @@ void update_analog_port(int port)
 	InputSeq* decseq;
 	int keydelta;
 	int player;
+  int xwayjoy;
+  int last_frame;
+  static int last_frame_inc = 0, last_frame_dec = 0;
 
 	/* get input definition */
 	in = input_analog[port];
@@ -906,11 +910,30 @@ void update_analog_port(int port)
 
 	delta = mouse_delta_axis[player][axis];
 
-	if (seq_pressed(decseq)) delta -= keydelta;
+	xwayjoy = (in+2)->type & IPF_XWAYJOY;
+  last_frame = cpu_getcurrentframe() - 1;
+
+	if (seq_pressed(decseq))
+    /* Don't register button press if xwayjoy is on, is DIAL(_V) type, and button was pressed last frame */
+	  if (  !(    (xwayjoy == IPF_XWAYJOY)
+             && ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+             && (last_frame == last_frame_dec)   )  )
+    {
+      delta -= keydelta;
+      last_frame_dec = last_frame + 1;
+    }
 
 	if (type != IPT_PEDAL && type != IPT_PEDAL2)
 	{
-		if (seq_pressed(incseq)) delta += keydelta;
+		if (seq_pressed(incseq))
+      /* Don't register button press if xwayjoy is on, is DIAL(_V) type, and button was pressed last frame */
+	    if (  !(    (xwayjoy == IPF_XWAYJOY)
+               && ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+               && (last_frame == last_frame_inc)   )  )
+      {
+        delta += keydelta;
+        last_frame_inc = last_frame + 1;
+      }
 	}
 	else
 	{
@@ -1644,7 +1667,13 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 		InputCode seq_default;
 
 		if (type > IPT_ANALOG_START && type < IPT_ANALOG_END)
-			src_end = src + 2;
+    {
+      if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
+        /* third port stores additional data */
+			  src_end = src + 3;
+      else
+			  src_end = src + 2;
+    }
 		else
 			src_end = src + 1;
 

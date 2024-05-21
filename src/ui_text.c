@@ -93,6 +93,7 @@ static const char *mame_default_text[] =
 	"Key/Joy Speed",
 	"Reverse",
 	"Sensitivity",
+  "X-Way Joystick",
 
 	/* stats */
 	"Tickets dispensed",
