@@ -260,6 +260,7 @@ static WRITE_HANDLER( sound_cmd_w )
 
 static WRITE_HANDLER( sound_irq_w )
 {
+  usrintf_showmessage("active");
 	/*if (!cpu_pause_state)*/ cpu_set_irq_line(1, 0, HOLD_LINE);
 }
 
@@ -270,6 +271,7 @@ static READ_HANDLER( sound_status_r )
 
 static void sound_nmi(void)
 {
+  usrintf_showmessage("active");
 	/*if (!cpu_pause_state)*/ cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);
 }
 
