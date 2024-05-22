@@ -368,7 +368,6 @@ bool cpu_pause_state = false;
 
 void cpu_pause(bool pause)
 {
-  extern void cpu_clearintcallback(int cpunum);
   int cpunum;
 
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
