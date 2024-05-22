@@ -385,11 +385,10 @@ const int frameskip_table[12][12] =
      { 0,1,1,1,1,1,0,1,1,1,1,1 },
      { 0,1,1,1,1,1,1,1,1,1,1,1 } };
 
- unsigned frameskip_counter = 0;
+UINT8 frameskip_counter = 0;
+
 int osd_skip_this_frame(void)
 {
-	static unsigned auto_frameskip_counter = 0;
-
 	bool skip_frame = 0;
 
 	if (pause_action)  return 0;  /* dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key) */
@@ -414,25 +413,11 @@ int osd_skip_this_frame(void)
 					skip_frame = options.frameskip;
 				break;
 			}
-
 		}
 	}
-	else /*manual frameskip includes disabled check */
-	{
-			if (skip_frame)
-			{
-				if(auto_frameskip_counter <= 40)
-				{
-					auto_frameskip_counter++;;
-				}
-				else
-				{
-					auto_frameskip_counter = 0;
-					skip_frame=0;
-				}
-			}
-		skip_frame = frameskip_table[options.frameskip][frameskip_counter];
-	}
+	else /*manual frameskip */
+	 skip_frame = frameskip_table[options.frameskip][frameskip_counter];
+
 	return skip_frame;
 }
 
@@ -505,7 +490,7 @@ void osd_update_video_and_audio(struct mame_display *display)
 
    gotFrame = 1;
 
-   frameskip_counter = (frameskip_counter + 1) % 12;
+  
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);
 }
 
