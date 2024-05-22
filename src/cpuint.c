@@ -312,7 +312,7 @@ void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 	INT32 irq_event = (state & 0xff) | ((irqline & 0xff) << 8) | (vector << 16);
 	int event_index = irq_event_index[cpunum]++;
 
-  if (cpu_pause_state) {cpu_empty_event_queue(1); return;}
+  if (cpu_pause_state) {irq_event_queue[1][--irq_event_index[1]] = 0; return;}
 
 	/*LOG(("cpu_set_irq_line(%d,%d,%d,%02x)\n", cpunum, irqline, state, vector));*/
 
