@@ -448,7 +448,7 @@ INTERRUPT_GEN( irq7_line_assert )	{ irqn_line_assert(7); }
  *
  *************************************/
 
-void cpu_clearintcallback(int cpunum)
+static void cpu_clearintcallback(int cpunum)
 {
 	int irqcount = cputype_get_interface(Machine->drv->cpu[cpunum].cpu_type)->num_irqs;
 	int irqline;
