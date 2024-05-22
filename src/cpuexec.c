@@ -548,7 +548,7 @@ void cpunum_set_reset_line(int cpunum, int state)
  *
  *************************************/
 
-static void halt_callback(int param)
+halt_callback(int param)
 {
 	int cpunum = param & 0xff;
 	int state = param >> 8;

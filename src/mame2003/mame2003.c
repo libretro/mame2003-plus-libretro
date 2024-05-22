@@ -366,6 +366,9 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 bool cpu_pause_state = false;
 
+
+void cpunum_set_halt_line(int cpunum, int state);
+
 void cpu_pause(bool pause)
 {
   int cpunum;
@@ -373,9 +376,9 @@ void cpu_pause(bool pause)
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
     if (pause)
-      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
+     cpunum_set_halt_line(cpunum, ASSERT_LINE);
     else
-      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
+      cpunum_set_halt_line(cpunum, CLEAR_LINE);
   }
 
   /* disarm watchdog to prevent reset */
