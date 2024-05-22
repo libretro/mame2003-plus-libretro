@@ -1387,8 +1387,6 @@ static void cpu_vblankcallback(int param)
 {
 	int cpunum;
 
-  if (cpu_pause_state) return;
-
    if (vblank_countdown == 1)
       vblank = 1;
 
