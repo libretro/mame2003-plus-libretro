@@ -314,7 +314,7 @@ void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 
 	if (cpu_pause_state) 
 	{
-		usrintf_showmessage("%i", irq_event_queue[1][irq_event_index[1]]);
+		if(irq_event_queue[1][irq_event_index[1]] == 256) irq_event_queue[1][irq_event_index[1]] == 0;
 		return;
 	}
 
