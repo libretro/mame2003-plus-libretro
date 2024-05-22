@@ -388,6 +388,8 @@ void cpu_pause(bool pause)
     cpu_pause_state = false;
 }
 
+extern UINT8 frameskip_counter;
+
 void retro_run (void)
 {
   bool updated = false;
@@ -410,8 +412,17 @@ void retro_run (void)
       cpunum_set_clockscale(0, options.cpu_clock_scale);
     }
   }
-
   mame_frame();
+  if(frameskip_counter <= 11)
+    frameskip_counter++;
+
+  else
+    frameskip_counter = 0;
+
+ frameskip_counter = (frameskip_counter ) % 12;
+  
+ /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
+ 
 }
 
 void retro_unload_game(void)
@@ -1182,6 +1193,7 @@ int osd_is_joy_pressed(int joycode)
   unsigned retro_code    = INT_MAX;
 
   if (!retro_running)                                   return 0; /* input callback has not yet been polled */
+
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
