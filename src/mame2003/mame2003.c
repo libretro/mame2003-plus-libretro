@@ -377,10 +377,6 @@ void cpu_pause(bool pause)
       cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
     else
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
-
-    /* reset the interrupt state */
-    cpu_clearintcallback(cpunum);
-    cpuint_reset_cpu(cpunum);
   }
 
   /* disarm watchdog to prevent reset */
