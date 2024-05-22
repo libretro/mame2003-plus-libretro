@@ -368,6 +368,7 @@ bool cpu_pause_state = false;
 
 void cpu_pause(bool pause)
 {
+  extern void cpu_clearintcallback(int cpunum);
   int cpunum;
 
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
@@ -378,6 +379,7 @@ void cpu_pause(bool pause)
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
 
     /* reset the interrupt state */
+    cpu_clearintcallback(cpunum);
     cpuint_reset_cpu(cpunum);
   }
 
