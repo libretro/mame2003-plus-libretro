@@ -373,9 +373,9 @@ void cpu_pause(bool pause)
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
     if (pause)
-      cpunum_set_halt_line(cpunum, ASSERT_LINE);
+      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
     else
-      cpunum_set_halt_line(cpunum, CLEAR_LINE);
+      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
 
   /* disarm watchdog to prevent reset */
