@@ -1465,6 +1465,7 @@ static void cpu_updatecallback(int param)
 	reset_partial_updates();
 
 	/* check the watchdog */
+  usrintf_showmessage("%i", watchdog_counter);
 	if (watchdog_counter > 0)
 		if (--watchdog_counter == 0)
 		{
