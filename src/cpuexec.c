@@ -1406,7 +1406,7 @@ static void cpu_vblankcallback(int param)
 					if (Machine->drv->cpu[cpunum].vblank_interrupt && cpu_getstatus(cpunum))
 					{
 						cpuintrf_push_context(cpunum);
-						//(*Machine->drv->cpu[cpunum].vblank_interrupt)();
+						if (!cpu_pause_state)(*Machine->drv->cpu[cpunum].vblank_interrupt)();
 						cpuintrf_pop_context();
 					}
 
