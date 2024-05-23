@@ -1947,6 +1947,8 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	const char *menu_item[40];
 	const char *menu_subitem[40];
 	struct InputPort *entry[40];
+  int entries_per_port[40];
+  int current_port, total_entries_to_current_port;
 	int i,sel;
 	struct InputPort *in;
 	int total,total2;
@@ -1963,14 +1965,27 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 
 	in = Machine->input_ports;
 
+	/* Each analog control has 3 or 4 entries - key & joy delta, reverse, sensitivity, */
+  /* and xwayjoy for IPT_DIAL and IPT_DIAL_V devices */
+
+#define ENTRIES 4
+
 	/* Count the total number of analog controls */
 	total = 0;
+  total2 = 0;
 	while (in->type != IPT_END)
 	{
 		if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
 				&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
+      if (((in->type & 0xff) == IPT_DIAL) || ((in->type & 0xff) == IPT_DIAL_V))
+        entries_per_port[total] = ENTRIES;
+      else
+        entries_per_port[total] = ENTRIES - 1;
+
+      /* Add on entries from this port to get total entries */
+      total2 += entries_per_port[total];
 			total++;
 		}
 		in++;
@@ -1978,34 +1993,39 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 
 	if (total == 0) return 0;
 
-	/* Each analog control has 3 entries - key & joy delta, reverse, sensitivity */
-  /* Or 5 entries with filtered poll enabled (default) adding x-way joy and time lockout */
-
-#define ENTRIES 4
-
-	total2 = total * ENTRIES;
+	// total2 = total * ENTRIES;
 
 	menu_item[total2] = ui_getstring (UI_returntomain);
 	menu_item[total2 + 1] = 0;	/* terminate array */
 	total2++;
 
 	arrowize = 0;
+  current_port = 0;
+  total_entries_to_current_port = 0;  /* Sum of all entries upto, but not including the current port */
 	for (i = 0;i < total2;i++)
 	{
 		if (i < total2 - 1)
 		{
 			int sensitivity,delta;
 			int reverse;
-      int xwayjoy;  /* Toggle lock out analog (de)increment for one frame if dial(-v) button just pressed */
+      int xwayjoy;  /* Toggle lock out analog (de)increment for one frame if dial(_v) button just pressed */
 
-			strcpy (label[i], input_port_name(entry[i/ENTRIES]));
-			sensitivity = IP_GET_SENSITIVITY(entry[i/ENTRIES]);
-			delta = IP_GET_DELTA(entry[i/ENTRIES]);
-			reverse = (entry[i/ENTRIES]->type & IPF_REVERSE);
-      xwayjoy = ((entry[i/ENTRIES]+2)->type & IPF_XWAYJOY);
+      /* Determine the current port and total entries upto, but not including the current port are */
+      /* for the current value of i */
+      if (i >= total_entries_to_current_port + entries_per_port[current_port])
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			strcpy (label[i], input_port_name(entry[current_port]));
+			sensitivity = IP_GET_SENSITIVITY(entry[current_port]);
+			delta = IP_GET_DELTA(entry[current_port]);
+			reverse = (entry[current_port]->type & IPF_REVERSE);
+      xwayjoy = ((entry[current_port]+2)->type & IPF_XWAYJOY);
 
 			strcat (label[i], " ");
-			switch (i%ENTRIES)
+			switch (i - total_entries_to_current_port)
 			{
 				case 0:
 					strcat (label[i], ui_getstring (UI_keyjoyspeed));
@@ -2025,6 +2045,8 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 					sprintf(setting[i],"%3d%%",sensitivity);
 					if (i == sel) arrowize = 3;
 					break;
+        /* This case is not reached for analog devices that are not IPT_DIAL or IPT_DIAL_V */
+        /* Omitting cases for certain analog devices only works for cases at the end per the current code */
 				case 3:
 					strcat (label[i], ui_getstring (UI_xwayjoy));
 					if (xwayjoy)
@@ -2055,45 +2077,59 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	{
 		if(sel != total2 - 1)
 		{
-			if ((sel % ENTRIES) == 0)
+      /* Determine which entry sel is pointing toward */
+      current_port = 0;
+      total_entries_to_current_port = 0;  /* Sum of all entries upto, but not including the current port */
+
+      /* Determine the current port and total entries upto, but not including the current port are */
+      /* for the current value of sel */
+      while (sel - entries_per_port[current_port] >= total_entries_to_current_port)
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			if ((sel - total_entries_to_current_port) == 0)
 			/* keyboard/joystick delta */
 			{
-				int val = IP_GET_DELTA(entry[sel/ENTRIES]);
+				int val = IP_GET_DELTA(entry[current_port]);
 
 				val --;
 				if (val < 1) val = 1;
-				IP_SET_DELTA(entry[sel/ENTRIES],val);
+				IP_SET_DELTA(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 1)
+			else if ((sel - total_entries_to_current_port) == 1)
 			/* reverse */
 			{
-				int reverse = entry[sel/ENTRIES]->type & IPF_REVERSE;
+				int reverse = entry[current_port]->type & IPF_REVERSE;
 				if (reverse)
 					reverse=0;
 				else
 					reverse=IPF_REVERSE;
-				entry[sel/ENTRIES]->type &= ~IPF_REVERSE;
-				entry[sel/ENTRIES]->type |= reverse;
+				entry[current_port]->type &= ~IPF_REVERSE;
+				entry[current_port]->type |= reverse;
 			}
-			else if ((sel % ENTRIES) == 2)
+			else if ((sel - total_entries_to_current_port) == 2)
 			/* sensitivity */
 			{
-				int val = IP_GET_SENSITIVITY(entry[sel/ENTRIES]);
+				int val = IP_GET_SENSITIVITY(entry[current_port]);
 
 				val --;
 				if (val < 1) val = 1;
-				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
+				IP_SET_SENSITIVITY(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 3)
+      /* This case is not reached for analog devices that are not IPT_DIAL or IPT_DIAL_V */
+      /* Omitting cases for certain analog devices only works for cases at the end per the current code */
+			else if ((sel - total_entries_to_current_port) == 3)
 			/* xwayjoy */
 			{
-				int xwayjoy= (entry[sel/ENTRIES]+2)->type & IPF_XWAYJOY;
+				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
 				if (xwayjoy)
 					xwayjoy=0;
 				else
 					xwayjoy=IPF_XWAYJOY;
-				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
-				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
+				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+2)->type |= xwayjoy;
 			}
 		}
 	}
@@ -2102,45 +2138,54 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	{
 		if(sel != total2 - 1)
 		{
-			if ((sel % ENTRIES) == 0)
+      /* Determine which entry sel is pointing toward */
+      current_port = 0;
+      total_entries_to_current_port = 0;
+      while (sel - entries_per_port[current_port] >= total_entries_to_current_port)
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			if ((sel - total_entries_to_current_port) == 0)
 			/* keyboard/joystick delta */
 			{
-				int val = IP_GET_DELTA(entry[sel/ENTRIES]);
+				int val = IP_GET_DELTA(entry[current_port]);
 
 				val ++;
 				if (val > 255) val = 255;
-				IP_SET_DELTA(entry[sel/ENTRIES],val);
+				IP_SET_DELTA(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 1)
+			else if ((sel - total_entries_to_current_port) == 1)
 			/* reverse */
 			{
-				int reverse = entry[sel/ENTRIES]->type & IPF_REVERSE;
+				int reverse = entry[current_port]->type & IPF_REVERSE;
 				if (reverse)
 					reverse=0;
 				else
 					reverse=IPF_REVERSE;
-				entry[sel/ENTRIES]->type &= ~IPF_REVERSE;
-				entry[sel/ENTRIES]->type |= reverse;
+				entry[current_port]->type &= ~IPF_REVERSE;
+				entry[current_port]->type |= reverse;
 			}
-			else if ((sel % ENTRIES) == 2)
+			else if ((sel - total_entries_to_current_port) == 2)
 			/* sensitivity */
 			{
-				int val = IP_GET_SENSITIVITY(entry[sel/ENTRIES]);
+				int val = IP_GET_SENSITIVITY(entry[current_port]);
 
 				val ++;
 				if (val > 255) val = 255;
-				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
+				IP_SET_SENSITIVITY(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 3)
+			else if ((sel - total_entries_to_current_port) == 3)
 			/* xwayjoy */
 			{
-				int xwayjoy= (entry[sel/ENTRIES]+2)->type & IPF_XWAYJOY;
+				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
 				if (xwayjoy)
 					xwayjoy=0;
 				else
 					xwayjoy=IPF_XWAYJOY;
-				(entry[sel/ENTRIES]+2)->type &= ~IPF_XWAYJOY;
-				(entry[sel/ENTRIES]+2)->type |= xwayjoy;
+				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+2)->type |= xwayjoy;
 			}
 		}
 	}
