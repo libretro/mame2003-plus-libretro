@@ -1993,8 +1993,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 
 	if (total == 0) return 0;
 
-	// total2 = total * ENTRIES;
-
 	menu_item[total2] = ui_getstring (UI_returntomain);
 	menu_item[total2 + 1] = 0;	/* terminate array */
 	total2++;
