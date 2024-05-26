@@ -382,10 +382,7 @@ void cpu_pause(bool pause)
   if (pause) watchdog_disarm_w(0, 0);
 
   /* update state */
-  if (pause)
-    cpu_pause_state = true;
-  else
-    cpu_pause_state = false;
+  cpu_pause_state = pause;
 }
 
 extern UINT8 frameskip_counter;
