@@ -364,7 +364,8 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
-bool cpu_pause_state = false;
+/* initialized in cpu_pre_run() */
+bool cpu_pause_state;
 
 void cpu_pause(bool pause)
 {
@@ -382,10 +383,7 @@ void cpu_pause(bool pause)
   if (pause) watchdog_disarm_w(0, 0);
 
   /* update state */
-  if (pause)
-    cpu_pause_state = true;
-  else
-    cpu_pause_state = false;
+  cpu_pause_state = pause;
 }
 
 extern UINT8 frameskip_counter;
