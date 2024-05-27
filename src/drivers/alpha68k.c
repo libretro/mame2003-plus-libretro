@@ -243,9 +243,7 @@ static READ16_HANDLER( kyros_dip_r )
 static READ16_HANDLER( control_1_r )
 {
 	if (invert_controls)
-  {
 		return ~(readinputport(0) + (readinputport(1) << 8));
-  }
 
 	return (readinputport(0) + (readinputport(1) << 8));
 }
