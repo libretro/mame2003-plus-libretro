@@ -243,18 +243,33 @@ static READ16_HANDLER( kyros_dip_r )
 static READ16_HANDLER( control_1_r )
 {
 	if (invert_controls)
+  {
 		return ~(readinputport(0) + (readinputport(1) << 8));
+  }
 
 	return (readinputport(0) + (readinputport(1) << 8));
 }
 
 static READ16_HANDLER( control_2_r )
 {
+  int portout5;
 	if (invert_controls)
-		return ~(readinputport(3) + ((~(1 << (readinputport(5) * 12 / 256))) << 8));
+  {
+    /* With initial port value of 0, this -10 keeps the 1st player correctly pointing */
+    /* straight up initially, and puts the value in the middle of one rotary step range */
+    /* to minimize slightly off key / joy step sizes mismatch from adding up too much */
+    /* too soon to cause a missed or no step event. */
+    portout5 = readinputport(5) - 10;
+    if (portout5 < 0)
+      portout5 = portout5 + 255;
+		return ~(readinputport(3) + ((~(1 << (portout5 * 12 / 256))) << 8));
+  }
 
+  portout5 = readinputport(5) - 10;
+  if (portout5 < 0)
+    portout5 = portout5 + 255;
 	return readinputport(3) + /* Low byte of CN1 */
-		((~(1 << (readinputport(5) * 12 / 256))) << 8);
+		((~(1 << (portout5 * 12 / 256))) << 8);
 }
 
 static READ16_HANDLER( control_2_V_r )
@@ -264,21 +279,57 @@ static READ16_HANDLER( control_2_V_r )
 
 static READ16_HANDLER( control_3_r )
 {
+  int portout6;
 	if (invert_controls)
-		return ~((( ~(1 << (readinputport(6) * 12 / 256)) )<<8)&0xff00);
+  {
+    /* With initial port value of 0, this -10 keeps the 2nd player correctly pointing */
+    /* straight up initially, and puts the value in the middle of one rotary step range */
+    /* to minimize slightly off key / joy step sizes mismatch from adding up too much */
+    /* too soon to cause a missed or no step event. */
+    portout6 = readinputport(6) - 10;
+    if (portout6 < 0)
+      portout6 = portout6 + 255;
+		return ~((( ~(1 << (portout6 * 12 / 256)) )<<8)&0xff00);
+  }
 
-	return (( ~(1 << (readinputport(6) * 12 / 256)) )<<8)&0xff00;
+  portout6 = readinputport(6) - 10;
+  if (portout6 < 0)
+    portout6 = portout6 + 255;
+	return (( ~(1 << (portout6 * 12 / 256)) )<<8)&0xff00;
 }
 
 /* High 4 bits of CN1 & CN2 */
 static READ16_HANDLER( control_4_r )
 {
+  int portout6, portout5;
 	if (invert_controls)
-		return ~(((( ~(1 << (readinputport(6) * 12 / 256))  ) <<4)&0xf000)
-		 + ((( ~(1 << (readinputport(5) * 12 / 256))  )    )&0x0f00));
+  {
+    /* With initial port value of 0, this -10 keeps the 2nd player correctly pointing */
+    /* straight up initially, and puts the value in the middle of one rotary step range */
+    /* to minimize slightly off key / joy step sizes mismatch from adding up too much */
+    /* too soon to cause a missed or no step event. */
+    portout6 = readinputport(6) - 10;
+    if (portout6 < 0)
+      portout6 = portout6 + 255;
+    /* With initial port value of 0, this -10 keeps the 1st player correctly pointing */
+    /* straight up initially, and puts the value in the middle of one rotary step range */
+    /* to minimize slightly off key / joy step sizes mismatch from adding up too much */
+    /* too soon to cause a missed or no step event. */
+    portout5 = readinputport(5) - 10;
+    if (portout5 < 0)
+      portout5 = portout5 + 255;
+		return ~(((( ~(1 << (portout6 * 12 / 256))  ) <<4)&0xf000)
+		 + ((( ~(1 << (portout5 * 12 / 256))  )    )&0x0f00));
+  }
 
-	return ((( ~(1 << (readinputport(6) * 12 / 256))  ) <<4)&0xf000)
-		 + ((( ~(1 << (readinputport(5) * 12 / 256))  )    )&0x0f00);
+  portout6 = readinputport(6) - 10;
+  if (portout6 < 0)
+    portout6 = portout6 + 255;
+  portout5 = readinputport(5) - 10;
+  if (portout5 < 0)
+    portout5 = portout5 + 255;
+	return ((( ~(1 << (portout6 * 12 / 256))  ) <<4)&0xf000)
+		 + ((( ~(1 << (portout5 * 12 / 256))  )    )&0x0f00);
 }
 
 /******************************************************************************/
