@@ -77,6 +77,7 @@ static int setup_via_menu = 0;
 UINT8 ui_dirty;
 
 /* show gfx */
+bool toggle_showgfx;
 static int mode,bank,color,firstdrawn;
 static int palpage;
 static int cpx,cpy,skip_chars,skip_tmap;
@@ -3360,7 +3361,6 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
-	static bool toggle_gfx = false;
 	DoCheat(bitmap);	/* This must be called once a frame */
 
 	if (setup_selected == 0)
@@ -3415,9 +3415,9 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed IPT_UI_SHOW_GFX, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
-		toggle_gfx = !toggle_gfx;
+		toggle_showgfx = !toggle_showgfx;
 
-		if (toggle_gfx) /* just changed - init variables */
+		if (toggle_showgfx) /* just changed - init variables */
 		{
 			mode = 0;
 			bank = 0;
@@ -3434,9 +3434,9 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 		}
 	}
 
-	if(toggle_gfx) showcharset(bitmap);
+	if(toggle_showgfx) showcharset(bitmap);
 
-	if (!setup_active() && !toggle_gfx && cpu_pause_state)
+	if (!setup_active() && !toggle_showgfx && cpu_pause_state)
 		cpu_pause(false);
 
 	return 0;

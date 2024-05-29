@@ -320,6 +320,7 @@ static void cpu_pre_run(void)
 	cpu_vblankreset();
 	current_frame = 0;
 	cpu_pause_state = false;
+	toggle_showgfx = false;
 	state_save_dump_registry();
 }
 
