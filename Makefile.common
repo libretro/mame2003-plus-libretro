@@ -95,7 +95,8 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/matrix3d.c \
 	$(CORE_DIR)/vidhrdw/poly.c \
 	$(CORE_DIR)/vidhrdw/tlc34076.c \
-	$(CORE_DIR)/vidhrdw/vector.c
+	$(CORE_DIR)/vidhrdw/vector.c \
+	$(CORE_DIR)/vidhrdw/resnet.c
 
 # the core object files (without target specific objects;
 # those are added in the target.mak files)
@@ -508,7 +509,7 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c \
 	$(CORE_DIR)/drivers/sharrier.c $(CORE_DIR)/drivers/system18.c \
 	$(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
-	$(CORE_DIR)/vidhrdw/segaic24.c \
+	$(CORE_DIR)/vidhrdw/segaic24.c $(CORE_DIR)/vidhrdw/segas18.c \
 	$(CORE_DIR)/drivers/system32.c $(CORE_DIR)/drivers/multi32.c $(CORE_DIR)/vidhrdw/system32_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/segac2_vidhrdw.c $(CORE_DIR)/drivers/segac2.c \
 	$(CORE_DIR)/drivers/stv.c $(CORE_DIR)/drivers/stvhacks.c $(CORE_DIR)/machine/stvcd.c \
@@ -1045,9 +1046,8 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
-	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c \
-	$(CORE_DIR)/vidhrdw/resnet.c
-	
+	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
+
 
 
 # List of CPU core (and, for a debug build, disassembler) object files
@@ -2713,6 +2713,11 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/uncompr.c \
 	$(CORE_DIR)/lib/zlib/unzip.c \
 	$(CORE_DIR)/lib/zlib/zutil.c
+endif
+
+ifeq ($(ZLIB_UNCOMPRESS), 1)
+SOURCES_C += \
+	     $(CORE_DIR)/lib/zlib/uncompr.c
 endif
 
 ifeq ($(USE_CYCLONE), 1)

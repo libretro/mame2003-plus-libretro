@@ -131,6 +131,7 @@ Notes:
 
 extern data16_t *gaiden_videoram,*gaiden_videoram2,*gaiden_videoram3;
 extern int gaiden_sprite_sizey;
+extern INT8	tx_offset_y, bg_offset_y, fg_offset_y, spr_offset_y;
 
 extern int raiga_alpha;
 
@@ -148,13 +149,17 @@ READ16_HANDLER( gaiden_videoram2_r );
 WRITE16_HANDLER( gaiden_videoram3_w );
 READ16_HANDLER( gaiden_videoram3_r );
 
+WRITE16_HANDLER( gaiden_flip_w );
 WRITE16_HANDLER( gaiden_txscrollx_w );
 WRITE16_HANDLER( gaiden_txscrolly_w );
 WRITE16_HANDLER( gaiden_fgscrollx_w );
 WRITE16_HANDLER( gaiden_fgscrolly_w );
 WRITE16_HANDLER( gaiden_bgscrollx_w );
 WRITE16_HANDLER( gaiden_bgscrolly_w );
-WRITE16_HANDLER( gaiden_flip_w );
+WRITE16_HANDLER( gaiden_txoffsety_w );
+WRITE16_HANDLER( gaiden_fgoffsety_w );
+WRITE16_HANDLER( gaiden_bgoffsety_w );
+WRITE16_HANDLER( gaiden_sproffsety_w );
 
 
 
@@ -395,11 +400,15 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x074000, 0x075fff, gaiden_videoram3_w, &gaiden_videoram3 },
 	{ 0x076000, 0x077fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x078000, 0x079fff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
+	{ 0x07a002, 0x07a003, gaiden_sproffsety_w },
 	{ 0x07a104, 0x07a105, gaiden_txscrolly_w },
+	{ 0x07a108, 0x07a109, gaiden_txoffsety_w },
 	{ 0x07a10c, 0x07a10d, gaiden_txscrollx_w },
 	{ 0x07a204, 0x07a205, gaiden_fgscrolly_w },
+	{ 0x07a208, 0x07a209, gaiden_fgoffsety_w },
 	{ 0x07a20c, 0x07a20d, gaiden_fgscrollx_w },
 	{ 0x07a304, 0x07a305, gaiden_bgscrolly_w },
+	{ 0x07a308, 0x07a309, gaiden_bgoffsety_w },
 	{ 0x07a30c, 0x07a30d, gaiden_bgscrollx_w },
 	{ 0x07a800, 0x07a801, watchdog_reset16_w },
 	{ 0x07a802, 0x07a803, gaiden_sound_command_w },
@@ -1027,7 +1036,7 @@ static MACHINE_DRIVER_START( shadoww )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 4*8, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(4096)
 

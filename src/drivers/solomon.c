@@ -27,6 +27,26 @@ static WRITE_HANDLER( solomon_sh_command_w )
 	cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
 }
 
+/* this is checked on the title screen and when you reach certain scores in the game
+   it could be a form of protection.  the real board needs to be analysed to find out
+   what really lives here */
+
+static READ_HANDLER( solomon_0xe603_r )
+{
+	if (activecpu_get_pc()==0x161) /* all the time .. return 0 to act as before  for coin / startup etc. */
+	{
+		return 0;
+	}
+	else if (activecpu_get_pc()==0x4cf0) /* stop it clearing the screen at certain scores */
+	{
+		return (activecpu_get_reg(Z80_BC) & 0x08);
+	}
+	else
+	{
+		printf("unhandled solomon_0xe603_r %04x\n",activecpu_get_pc());
+		return 0;
+	}
+}
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0xbfff, MRA_ROM },
@@ -37,6 +57,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xe600, 0xe600, input_port_0_r },
 	{ 0xe601, 0xe601, input_port_1_r },
 	{ 0xe602, 0xe602, input_port_2_r },
+	{ 0xe603, 0xe603, solomon_0xe603_r },
 	{ 0xe604, 0xe604, input_port_3_r },	/* DSW1 */
 	{ 0xe605, 0xe605, input_port_4_r },	/* DSW2 */
 	{ 0xf000, 0xffff, MRA_ROM },

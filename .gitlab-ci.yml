@@ -50,8 +50,8 @@ include:
     file: '/osx-arm64.yml'
 
   # MacOS PowerPC 32-bit
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/osx-ppc.yml'
+#  - project: 'libretro-infrastructure/ci-templates'
+#    file: '/osx-ppc.yml'
 
   ################################## CELLULAR ################################
   # Android
@@ -67,6 +67,10 @@ include:
     file: '/ios9.yml'
 
   ################################## CONSOLES ################################
+  # PlayStation3
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/psl1ght-static.yml'
+ 
   # PlayStation Portable
   - project: 'libretro-infrastructure/ci-templates'
     file: '/psp-static.yml'
@@ -78,6 +82,10 @@ include:
   # Nintendo 3DS
   - project: 'libretro-infrastructure/ci-templates'
     file: '/ctr-legacy-static.yml'
+
+  # Nintendo Wii
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/wii-static.yml'
 
   # Nintendo WiiU
   - project: 'libretro-infrastructure/ci-templates'
@@ -192,12 +200,12 @@ libretro-build-osx-arm64:
     - master
 
 # MacOS PowerPC 32-bit
-libretro-build-osx-ppc:
-  extends:
-    - .libretro-osx-ppc-make-default
-    - .core-defs
-  only:
-    - master
+#libretro-build-osx-ppc:
+#  extends:
+#    - .libretro-osx-ppc-make-default
+#    - .core-defs
+#  only:
+#    - master
 
 ################################### CELLULAR #################################
 # Android ARMv7a
@@ -257,6 +265,14 @@ libretro-build-tvos-arm64:
     - master
 
 ################################### CONSOLES #################################
+# PlayStation3
+libretro-build-psl1ght:
+  extends:
+    - .libretro-psl1ght-static-retroarch-master
+    - .core-defs
+  only:
+    - master
+
 # PlayStation Portable
 libretro-build-psp:
   extends:
@@ -280,6 +296,21 @@ libretro-build-ctr:
     - .core-defs
   only:
     - master
+
+# Nintendo Wii
+.core-defs-wii:
+  extends:
+    - .libretro-wii-static-retroarch-master
+    - .core-defs
+  only:
+    - master
+
+#libretro-build-wii-core:
+#  extends:
+#    - .core-defs-wii
+#  variables:
+#    INCLUDE_DRV: drv_?
+#    CORENAME: mame2003_plus_drv_?
 
 # Nintendo WiiU
 libretro-build-wiiu:

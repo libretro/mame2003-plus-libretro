@@ -7,6 +7,7 @@
 	Games supported:
 		* Escape From The Planet Of The Robot Monsters (1989) [2 sets]
 		* Klax prototypes [2 sets]
+    * Guts N' Glory (Prototype) [1 set]
 
 	Known bugs:
 		* none at this time
@@ -184,7 +185,37 @@ static MEMORY_WRITE16_START( main_writemem )
 	{ 0x3f8000, 0x3f9fff, atarigen_playfield_upper_w, &atarigen_playfield_upper },
 MEMORY_END
 
+static MEMORY_READ16_START( guts_main_readmem )
+	{ 0x000000, 0x09ffff, MRA16_ROM },
+	{ 0x0e0000, 0x0e0fff, atarigen_eeprom_r },
+	{ 0x160000, 0x16ffff, MRA16_BANK1 },	/* shared  */
+	{ 0x260000, 0x26000f, input_port_0_word_r },
+	{ 0x260010, 0x26001f, special_port1_r },
+	{ 0x260020, 0x26002f, adc_r },
+	{ 0x260030, 0x260031, atarigen_sound_r },
+	{ 0x3e0000, 0x3e0fff, MRA16_RAM },
+	{ 0xff0000, 0xff1fff, MRA16_RAM },
+	{ 0xff8000, 0xffffff, MRA16_RAM },
+MEMORY_END
 
+
+static MEMORY_WRITE16_START( guts_main_writemem )
+	{ 0x000000, 0x09ffff, MWA16_ROM },
+	{ 0x0e0000, 0x0e0fff, atarigen_eeprom_w, &atarigen_eeprom, &atarigen_eeprom_size },
+	{ 0x160000, 0x16ffff, MWA16_BANK1 },	/* shared */
+	{ 0x1f0000, 0x1fffff, atarigen_eeprom_enable_w },
+	{ 0x2e0000, 0x2e0001, watchdog_reset16_w },
+	{ 0x360000, 0x360001, atarigen_video_int_ack_w },
+	{ 0x360020, 0x360021, atarigen_sound_reset_w },
+	{ 0x360030, 0x360031, atarigen_sound_w },
+	{ 0x3e0000, 0x3e0fff, paletteram16_IIIIRRRRGGGGBBBB_word_w, &paletteram16 },
+	{ 0xff0000, 0xff1fff, atarigen_playfield_upper_w, &atarigen_playfield_upper },
+	{ 0xff8000, 0xff9fff, atarigen_playfield_w, &atarigen_playfield },
+	{ 0xffa000, 0xffbfff, atarimo_0_spriteram_w, &atarimo_0_spriteram },
+	{ 0xffc000, 0xffcf7f, atarigen_alpha_w, &atarigen_alpha },
+	{ 0xffcf80, 0xffcfff, atarimo_0_slipram_w, &atarimo_0_slipram },
+	{ 0xffd000, 0xffffff, MWA16_RAM }, /* slipram +1 on first address +3 on second */
+MEMORY_END
 
 /*************************************
  *
@@ -298,7 +329,48 @@ INPUT_PORTS_START( klaxp )
 	JSA_II_PORT	/* audio board port */
 INPUT_PORTS_END
 
+INPUT_PORTS_START( guts )
+	PORT_START		/* 26000 */
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNUSED )
 
+	PORT_START		/* 26010 */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_SERVICE( 0x0002, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )	/* Input buffer full (@260030) */
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED ) /* Output buffer full (@360030) */
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_UNUSED ) /* ADEOC, end of conversion */
+	PORT_BIT( 0x00e0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ADC0 @ 0x260020 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0x10, 0xf0)
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ADC1 @ 0x260022 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 100, 10, 0x10, 0xf0)
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ADC0 @ 0x260024 */
+	PORT_ANALOG( 0x00ff, 0x0080, IPT_AD_STICK_Y | IPF_PLAYER2, 100, 10, 0x10, 0xf0)
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* ADC1 @ 0x260026 */
+    PORT_ANALOG( 0x00ff, 0x0080, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER2, 100, 10, 0x10, 0xf0)
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	JSA_II_PORT	/* audio board port */
+INPUT_PORTS_END
 
 /*************************************
  *
@@ -337,7 +409,13 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 }
 };
 
-
+static struct GfxDecodeInfo guts_gfxdecodeinfo[] =
+{
+	{REGION_GFX1, 0, &pfmolayout,  256, 32 },	/* sprites */
+	{REGION_GFX2, 0, &anlayout,      0, 64 },	/* characters 8x8 */
+	{REGION_GFX3, 0, &pfmolayout,  256, 32 },	/* playfield */
+	{ -1 }
+};
 
 /*************************************
  *
@@ -405,7 +483,33 @@ static MACHINE_DRIVER_START( klaxp )
 	MDRV_IMPORT_FROM(jsa_ii_mono)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( guts )
 
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, ATARI_CLOCK_14MHz/2)
+	MDRV_CPU_MEMORY(guts_main_readmem,guts_main_writemem)
+	MDRV_CPU_VBLANK_INT(atarigen_video_int_gen,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
+
+	MDRV_MACHINE_INIT(eprom)
+	MDRV_NVRAM_HANDLER(atarigen)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(42*8, 30*8)
+	MDRV_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
+	MDRV_GFXDECODE(guts_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+	
+	MDRV_VIDEO_START(guts)
+	MDRV_VIDEO_UPDATE(guts)
+
+	/* sound hardware */
+	MDRV_IMPORT_FROM(jsa_ii_mono)
+MACHINE_DRIVER_END
 
 /*************************************
  *
@@ -548,7 +652,56 @@ ROM_START( klaxp2 )
 	ROM_LOAD( "klaxadp1.1e", 0x10000, 0x10000, CRC(dec9a5ac) SHA1(8039d946ac3613fa6193b557cc8775c81871831d) )
 ROM_END
 
+ROM_START( guts )
+	ROM_REGION( 0xa0000, REGION_CPU1, 0 )	/* 10*64k for 68000 code */
+	ROM_LOAD16_BYTE( "guts-hi0.50a", 0x00000, 0x10000, CRC(3afca24a) SHA1(4910c958ac2124de13d4069420fb2cfd18b12cec) )
+	ROM_LOAD16_BYTE( "guts-lo0.40a", 0x00001, 0x10000, CRC(ce86cf23) SHA1(28504e2e8dcf1eaa96364eed1faf00fec9e98788) )
+	ROM_LOAD16_BYTE( "guts-hi1.50b", 0x20000, 0x10000, CRC(a231f65d) SHA1(9c8ccd265ed0e9f6d7181d216ed41a0c5cc0cd5f) )
+	ROM_LOAD16_BYTE( "guts-lo1.40b", 0x20001, 0x10000, CRC(dbdd4910) SHA1(9ca22321398b6397902aa99a3ef46f1a78ccc438) )
 
+	ROM_REGION( 0x14000, REGION_CPU2, 0 )	/* 64k + 16k for 6502 code */
+	ROM_LOAD( "guts-snd.10c", 0x10000, 0x4000, CRC(9fe065d7) SHA1(0d202af3d6c62fdcfc3bb2ea95bbf4e37c0d43cf) )
+	ROM_CONTINUE(             0x04000, 0xc000 )
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
+	ROM_LOAD( "guts-mo0.bin", 0x00000, 0x10000, CRC(b8d8d8da) SHA1(6426607402aa9f1c872290910eefc57a8dd60e17) )
+	ROM_LOAD( "guts-mo1.bin", 0x10000, 0x10000, CRC(d01b5a7f) SHA1(19aead56ddb92e0b1fc78d9065b1f139fe2a5668) )
+	ROM_LOAD( "guts-mo2.bin", 0x20000, 0x10000, CRC(4577b807) SHA1(df0ead177342ab360cfab9b6defb7d0129d921e4) )
+	ROM_LOAD( "guts-mo3.bin", 0x30000, 0x10000, CRC(4ab03c84) SHA1(b37d4abaaa42b9b847cc928a2b40b4e58ba9887f) )
+	ROM_LOAD( "guts-mo4.bin", 0x40000, 0x10000, CRC(04cae4fb) SHA1(1b2cde0a97f687f67836f9eb09a45875a81c994a) )
+	ROM_LOAD( "guts-mo5.bin", 0x50000, 0x10000, CRC(c65322ec) SHA1(0e77fb3db5760e12ee7b321906c2211e60a63ea4) )
+	ROM_LOAD( "guts-mo6.bin", 0x60000, 0x10000, CRC(92602a5f) SHA1(a52376d326368e989cb7c3aa3913b918b4639307) )
+	ROM_LOAD( "guts-mo7.bin", 0x70000, 0x10000, CRC(71a1911d) SHA1(6fd7c8b7a340466672e9db7a44e472e8e078e469) )
+	ROM_LOAD( "guts-mo8.bin", 0x80000, 0x10000, CRC(aa273234) SHA1(41c310d53b4a847323cfd1f2080653cbc19216bf) )
+	ROM_LOAD( "guts-mo9.bin", 0x90000, 0x10000, CRC(e85a12ef) SHA1(cbdb19e2e075c56288b9ed6aec07f03a2f265951) )
+	ROM_LOAD( "guts-moa.bin", 0xa0000, 0x10000, CRC(da1cc76f) SHA1(ba91026464fec3cd94d1625c8780d5b18ecbb6ae) )
+	ROM_LOAD( "guts-mob.bin", 0xb0000, 0x10000, CRC(246e7955) SHA1(cf146be2855d0a9c28c8da926c7fa381d06d5dd4) )
+	ROM_LOAD( "guts-moc.bin", 0xc0000, 0x10000, CRC(1764c272) SHA1(0682fdc20cc1cd9355a50804a3f13c913c33f52b) )
+	ROM_LOAD( "guts-mod.bin", 0xd0000, 0x10000, CRC(8220f2f6) SHA1(8a2900e223c203507c11e0185c2172ddddb0f4ee) )
+	ROM_LOAD( "guts-moe.bin", 0xe0000, 0x10000, CRC(ee372eac) SHA1(bb1248bb3415853e16819a7b6b64ec67f87a2c58) )
+	ROM_LOAD( "guts-mof.bin", 0xf0000, 0x10000, CRC(028ec56e) SHA1(8a95cffe5c00296e4df725335046a810efab533a) )
+
+	ROM_REGION( 0x04000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "guts-alpha.bin", 0x00000, 0x04000, CRC(ee965058) SHA1(ccd3f6550bd5b531e8dd70ca88c30cdabf30e1e9) )
+
+	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_INVERT )
+	ROM_LOAD( "guts-pf0.bin", 0x00000, 0x10000, CRC(1669fdb3) SHA1(d8d27b0f5877e215bf3d5343893c979860b1b45f) )
+	ROM_LOAD( "guts-pf1.bin", 0x10000, 0x10000, CRC(135c41bd) SHA1(945ad9edbfcc5fe807cb15aa72b1be9e05974cb2) )
+	ROM_LOAD( "guts-pf2.bin", 0x20000, 0x10000, CRC(c0408d39) SHA1(187ecea51f607c7f2565a9853c728e80118fefb1) )
+	ROM_LOAD( "guts-pf4.bin", 0x40000, 0x10000, CRC(577f25a6) SHA1(3eaa3de6aa7e5b3938d34823f2cccc60e9b211e7) )
+	ROM_LOAD( "guts-pf5.bin", 0x50000, 0x10000, CRC(43cbc0e3) SHA1(51e5f90391ebb402f715f389168baf401e3c03e9) )
+	ROM_LOAD( "guts-pf6.bin", 0x60000, 0x10000, CRC(03c096f4) SHA1(fc0ffd5b61ab8bda37db508ec6dc5c70e1007187) )
+	ROM_LOAD( "guts-pf8.bin", 0x80000, 0x10000, CRC(2f078b09) SHA1(e9b1aba767339d4677c3366d3f2df5a8deb5105e) )
+	ROM_LOAD( "guts-pf9.bin", 0x90000, 0x10000, CRC(7cb7302d) SHA1(9d6ae58f1f64d1e28634dd42daedebb39570cd95) )
+	ROM_LOAD( "guts-pfa.bin", 0xa0000, 0x10000, CRC(a3919dae) SHA1(0eba64afcc35e37322f9eb3a0e254026443ce092) )
+	ROM_LOAD( "guts-pfc.bin", 0xc0000, 0x10000, CRC(7c571ee8) SHA1(044744ca95b2bd7486b0b057f1d7bdbd391958ab) )
+	ROM_LOAD( "guts-pfd.bin", 0xd0000, 0x10000, CRC(979af5b2) SHA1(574a41552eb641668841cf01aeed442ccd3bc8e5) )
+	ROM_LOAD( "guts-pfe.bin", 0xe0000, 0x10000, CRC(bf384e4d) SHA1(c4810b5a3ee754b169efa01f06941a02b50c53a0) )
+
+	ROM_REGION( 0x20000, REGION_SOUND1, 0 )	/* ADPCM data */
+	ROM_LOAD( "guts-adpcm0.1f", 0x00000, 0x10000, CRC(92e9c35d) SHA1(dcc724f915e113bc34f499af9fd7c8ebb6d8ba98) )
+	ROM_LOAD( "guts-adpcm1.1e", 0x10000, 0x10000, CRC(0afddd3a) SHA1(e1a43825ad02325a64869ec8048c8176da01b286) )
+ROM_END
 
 /*************************************
  *
@@ -577,6 +730,12 @@ static DRIVER_INIT( klaxp )
 	atarigen_init_6502_speedup(1, 0x4159, 0x4171);
 }
 
+static DRIVER_INIT( guts )
+{
+	atarigen_eeprom_default = NULL;
+	atarijsa_init(1, 6, 1, 0x0002);
+	atarigen_init_6502_speedup(1, 0x4159, 0x4171);
+}
 
 
 /*************************************
@@ -589,3 +748,5 @@ GAME( 1989, eprom,  0,     eprom, eprom, eprom, ROT0, "Atari Games", "Escape fro
 GAME( 1989, eprom2, eprom, eprom, eprom, eprom, ROT0, "Atari Games", "Escape from the Planet of the Robot Monsters (set 2)" )
 GAME( 1989, klaxp1, klax,  klaxp, klaxp, klaxp, ROT0, "Atari Games", "Klax (prototype set 1)" )
 GAME( 1989, klaxp2, klax,  klaxp, klaxp, klaxp, ROT0, "Atari Games", "Klax (prototype set 2)" )
+GAME( 1989, guts,   0,     guts,  guts,  guts,  ROT0, "Atari Games", "Guts n' Glory (prototype)")
+

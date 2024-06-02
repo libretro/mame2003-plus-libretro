@@ -108,8 +108,9 @@ static MACHINE_INIT( ddragon )
 	snd_cpu = 2;
 	adpcm_pos[0] = adpcm_pos[1] = 0;
 	adpcm_end[0] = adpcm_end[1] = 0;
-	adpcm_idle[0] = adpcm_idle[1] = -1;
+	adpcm_idle[0] = adpcm_idle[1] = 1;
 	adpcm_data[0] = adpcm_data[1] = -1;
+
 	state_save_register_int("ddragon", 0, "dd_sub_cpu_busy", &dd_sub_cpu_busy);
 	state_save_register_int("ddragon", 0, "adpcm_idle[0]", &adpcm_idle[0]);
 	state_save_register_int("ddragon", 0, "adpcm_idle[1]", &adpcm_idle[1]);
@@ -117,8 +118,8 @@ static MACHINE_INIT( ddragon )
 	state_save_register_int("ddragon", 0, "adpcm_pos[1]", &adpcm_pos[1]);
 	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_end[0]);
 	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_end[1]);
-	state_save_register_int("ddragon", 0, "adpcm_end[0]", &adpcm_data[0]);
-	state_save_register_int("ddragon", 0, "adpcm_end[1]", &adpcm_data[1]);
+	state_save_register_int("ddragon", 0, "adpcm_data[0]", &adpcm_data[0]);
+	state_save_register_int("ddragon", 0, "adpcm_data[1]", &adpcm_data[1]);
 	state_save_register_int("ddragon", 0, "ddragon_scrollx_hi", &ddragon_scrollx_hi);
 	state_save_register_int("ddragon", 0, "ddragon_scrolly_hi", &ddragon_scrolly_hi);
 	state_save_register_UINT8("ddragon", 0, "m_ddragon_sub_port", &m_ddragon_sub_port, 1);
@@ -300,7 +301,7 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 		break;
 	case 3: /* 380e - SND irq */
 		if( ost_support_enabled(OST_SUPPORT_DDRAGON) ) {
-			if(generate_ost_sound_ddragon( data )) {
+			if(generate_ost_sound( data )) {
 				soundlatch_w( 0, data );
 				cpu_set_irq_line( snd_cpu, m_sound_irq, (m_sound_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 			}

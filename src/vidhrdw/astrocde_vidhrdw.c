@@ -815,7 +815,11 @@ VIDEO_UPDATE( seawolf2 )
 		if (centre<2)   centre=2;
 		if (centre>317) centre=317;
 
-		draw_crosshair(1, bitmap,centre,35,&Machine->visible_area);
+		drawgfx(bitmap,Machine->uifont,
+				' ',UI_COLOR_INVERSE,
+				0,0,
+				centre-(Machine->uifontwidth/2),12-(Machine->uifontheight/2),
+				&Machine->visible_area,TRANSPARENCY_NONE,0);
 
 		/* Player 2 */
 
@@ -823,10 +827,14 @@ VIDEO_UPDATE( seawolf2 )
 		{
 			centre = 316 - ((input_port_1_r(0) & 0x3f)-18) * 10;
 
-			if (centre<1)   centre=1;
-			if (centre>316) centre=316;
+			if (centre<2)   centre=2;
+			if (centre>317) centre=317;
 
-			draw_crosshair(2, bitmap,centre,33,&Machine->visible_area);
+			drawgfx(bitmap,Machine->uifont,
+				' ',UI_COLOR_NORMAL,
+				0,0,
+				centre-(Machine->uifontwidth/2),12-(Machine->uifontheight/2),
+				&Machine->visible_area,TRANSPARENCY_NONE,0);
 		}
 	}
 }

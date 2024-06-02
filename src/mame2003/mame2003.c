@@ -137,6 +137,7 @@ static void retro_audio_buff_status_cb(bool active, unsigned occupancy, bool und
 
 void retro_set_audio_buff_status_cb(void)
 {
+  log_cb(RETRO_LOG_INFO, "options.frameskip:%d\n",options.frameskip);
   if (options.frameskip > 0 && options.frameskip >= 12)
   {
       buf_status_cb.callback = &retro_audio_buff_status_cb;
@@ -144,8 +145,7 @@ void retro_set_audio_buff_status_cb(void)
       if (!environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,
             &buf_status_cb))
       {
-         if (log_cb)
-            log_cb(RETRO_LOG_WARN, "Frameskip disabled - frontend does not support audio buffer status monitoring.\n");
+         log_cb(RETRO_LOG_WARN, "Frameskip disabled - frontend does not support audio buffer status monitoring.\n");
 
          retro_audio_buff_active    = false;
          retro_audio_buff_occupancy = 0;
@@ -153,7 +153,7 @@ void retro_set_audio_buff_status_cb(void)
       }
       else
       log_cb(RETRO_LOG_INFO, "Frameskip Enabled\n");
-  }
+   }
    else
       environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK,NULL);
 
@@ -228,7 +228,7 @@ void retro_set_environment(retro_environment_t cb)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
   mame2003_video_get_geometry(&info->geometry);
-  
+
   info->timing.fps = Machine->drv->frames_per_second;
   info->timing.sample_rate = options.samplerate ;
 }
@@ -364,6 +364,30 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
+/* initialized in cpu_pre_run() */
+bool cpu_pause_state;
+
+void cpu_pause(bool pause)
+{
+  int cpunum;
+
+  for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+  {
+    if (pause)
+      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
+    else
+      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
+  }
+
+  /* disarm watchdog to prevent reset */
+  if (pause) watchdog_disarm_w(0, 0);
+
+  /* update state */
+  cpu_pause_state = pause;
+}
+
+extern UINT8 frameskip_counter;
+
 void retro_run (void)
 {
   bool updated = false;
@@ -386,8 +410,17 @@ void retro_run (void)
       cpunum_set_clockscale(0, options.cpu_clock_scale);
     }
   }
-
   mame_frame();
+  if(frameskip_counter <= 11)
+    frameskip_counter++;
+
+  else
+    frameskip_counter = 0;
+
+ frameskip_counter = (frameskip_counter ) % 12;
+  
+ /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
+ 
 }
 
 void retro_unload_game(void)
@@ -516,7 +549,7 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
- 
+
   Machine->sample_rate = options.samplerate;
 
   delta_samples = 0.0f;
@@ -538,9 +571,12 @@ int osd_start_audio_stream(int stereo)
 int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
-	if ( Machine->sample_rate !=0 && buffer )
+	if ( Machine->sample_rate !=0 && buffer)
 	{
-		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		if (cpu_pause_state)
+			memset(samples_buffer, 0,      samples_per_frame * (usestereo ? 4 : 2));
+		else
+			memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
@@ -552,7 +588,8 @@ int osd_update_audio_stream(INT16 *buffer)
 			}
 			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
-
+		if (cpu_pause_state)
+			return samples_per_frame;
 
 		/*process next frame */
 
@@ -747,8 +784,15 @@ void retro_describe_controls(void)
       if(ctrl_ipt_code == CODE_NONE) continue;
 
       if(ctrl_ipt_code >= IPT_BUTTON1 && ctrl_ipt_code <= IPT_BUTTON10)
+      {
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL] ) goto skip;
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL2]) goto skip;
+
         if((ctrl_ipt_code - IPT_BUTTON1 + 1) > options.content_flags[CONTENT_BUTTON_COUNT])
           continue; /* button has a higher index than supported by the driver */
+
+        skip:; //bypass button count check
+      }
 
       /* try to get the corresponding ID for this control in libretro.h  */
       /* from the retropad section, or INT_MAX if not valid */
@@ -757,6 +801,10 @@ void retro_describe_controls(void)
       {
         /* First try to get specific name */
         control_name = game_driver->ctrl_dat->get_name(ctrl_ipt_code);
+
+        /* override control name for pedals */
+        if( ctrl_ipt_code==IPT_BUTTON6 && options.content_flags[CONTENT_HAS_PEDAL] ) control_name = "Pedal";
+        if( ctrl_ipt_code==IPT_BUTTON5 && options.content_flags[CONTENT_HAS_PEDAL2]) control_name = "Pedal2";
 
         if(string_is_empty(control_name))
         {
@@ -1143,6 +1191,7 @@ int osd_is_joy_pressed(int joycode)
   unsigned retro_code    = INT_MAX;
 
   if (!retro_running)                                   return 0; /* input callback has not yet been polled */
+
   if (options.input_interface == RETRO_DEVICE_KEYBOARD) return 0; /* disregard joystick input */
 
   /*log_cb(RETRO_LOG_DEBUG, "MAME is polling joysticks -- joycode: %i      player_number: %i      osd_code: %i\n", joycode, player_number, osd_code);*/
@@ -1246,7 +1295,7 @@ unsigned decode_osd_joycode(unsigned joycode)
 /******************************************************************************
  * osd_analogjoy_read polls analog joystick axes, and sets the value in the
  * analog_axis[] array.
- * 
+ *
  * int player is an array index, starting at 0
 *******************************************************************************/
 void osd_analogjoy_read(int player, int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])

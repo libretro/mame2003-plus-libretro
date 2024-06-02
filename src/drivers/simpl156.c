@@ -482,6 +482,7 @@ static MEMORY_READ32_START( mitchell156_readmem )
 	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_r },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
 	{ 0x201000, 0x201fff, MRA32_RAM }, /* work ram (32-bit)*/
+  { 0x202000, 0x202fff, MRA32_RAM }, /* work ram (32-bit) mirror needed for Osman */
 MEMORY_END
 
 static MEMORY_WRITE32_START( mitchell156_writemem )
@@ -500,6 +501,7 @@ static MEMORY_WRITE32_START( mitchell156_writemem )
 	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_w },
 	{ 0x1f0000, 0x1f0003, MWA32_NOP }, /* ?*/
 	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit)*/
+  { 0x202000, 0x202fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit) mirror needed for Osman */
 MEMORY_END
 
 

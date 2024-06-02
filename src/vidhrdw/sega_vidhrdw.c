@@ -23,6 +23,44 @@
 static int width, height, cent_x, cent_y, min_x, min_y, max_x, max_y;
 static long *sinTable, *cosTable;
 static int intensity;
+static int flip_x, flip_y;
+
+void sega_set_flip_x(int flip)
+{
+	if (flip)
+		flip_x = 1;
+	else
+		flip_x = 0;
+}
+
+void sega_set_flip_y(int flip)
+{
+	if (flip)
+		flip_y = 1;
+	else
+		flip_y = 0;
+}
+
+void sega_apply_flipping(int *x, int *y)
+{
+	if (flip_x)
+		*x += (cent_x-*x)<<1;
+	if (flip_y)
+		*y += (cent_y-*y)<<1;
+}
+
+void sega_add_point(int x, int y, rgb_t color, int intensity)
+{
+	sega_apply_flipping(&x, &y);
+	vector_add_point(x, y, color, intensity);
+}
+
+void sega_add_point_callback(int x, int y, rgb_t (*color_callback)(void), int intensity)
+{
+	sega_apply_flipping(&x, &y);
+	vector_add_point_callback(x, y, color_callback, intensity);
+}
+
 
 void sega_generate_vector_list (void)
 {
@@ -65,7 +103,7 @@ void sega_generate_vector_list (void)
 
 			currentX = ((currentX & 0x7ff) - min_x) << 16;
 			currentY = (max_y - (currentY & 0x7ff)) << 16;
-			vector_add_point ( currentX, currentY, 0, 0);
+			sega_add_point ( currentX, currentY, 0, 0);
 			vectorIndex &= 0xfff;
 
 			/* walk the vector list until 'last vector' bit */
@@ -98,7 +136,7 @@ void sega_generate_vector_list (void)
 				}
 				else
 					intensity = 0;
-				vector_add_point ( currentX, currentY, color, intensity );
+				sega_add_point ( currentX, currentY, color, intensity );
 
 			} while (!(attrib & 0x80));
 		}
@@ -129,8 +167,11 @@ VIDEO_START( sega )
 	max_y =Machine->visible_area.max_y;
 	width =max_x-min_x;
 	height=max_y-min_y;
-	cent_x=(max_x+min_x)/2;
-	cent_y=(max_y+min_y)/2;
+	cent_x=((max_x-min_x)/2) << 16;
+	cent_y=((max_y-min_y)/2) << 16;
+
+	/* initialize to no sega flipping */
+	flip_x = flip_y = 0;
 
 	/* allocate memory for the sine and cosine lookup tables ASG 080697 */
 	sinTable = auto_malloc (0x400 * sizeof (long));

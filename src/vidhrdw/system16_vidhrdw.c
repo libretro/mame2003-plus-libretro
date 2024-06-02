@@ -93,6 +93,13 @@ type1		type0			function
 #include "system16.h"
 #include "vidhrdw/res_net.h"
 
+/* vidhrdw/segac2.c */
+extern void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect );
+extern void start_system18_vdp(void);
+extern READ16_HANDLER( segac2_vdp_r );
+extern WRITE16_HANDLER( segac2_vdp_w );
+data16_t sys18_ddcrew_bankregs[0x20];
+
 /*
 static void debug_draw( struct mame_bitmap *bitmap, int x, int y, unsigned int data ){
 	int digit;
@@ -1128,7 +1135,16 @@ VIDEO_START( hangon ){
 }
 
 VIDEO_START( system18 ){
+	int i;
 	sys16_bg1_trans=1;
+	
+	start_system18_vdp();
+	
+	/* clear these registers to -1 so that writes of 0 get picked up */
+	for (i=0;i<0x20;i++)
+	{
+		sys18_ddcrew_bankregs[i]=-1;
+	}
 
 	background2 = tilemap_create(
 		get_bg2_tile_info,
@@ -1362,6 +1378,64 @@ VIDEO_UPDATE( system16 ){
 		draw_sprites_new( bitmap,cliprect);
 }
 
+static struct GfxLayout decodecharlayout =
+{
+	8,8,
+	0x2000, // can't use rgn_frac with dynamic decode
+	3,
+	{ 0x20000*8, 0x10000*8, 0x00000*8 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
+};
+
+/* extra rom banking, decode on the fly instead of messing around in the sprite draw functions.. used by cltchitr and ddcrew.*/
+WRITE16_HANDLER( sys18_extrombank_w )
+{
+	data16_t old=sys18_ddcrew_bankregs[offset];
+	COMBINE_DATA(&sys18_ddcrew_bankregs[offset]);
+
+	if (sys18_ddcrew_bankregs[offset]!=old)
+	{
+		if (offset>7) // sprite banking
+		{
+			data8_t* sprite_region = memory_region(REGION_GFX2);
+			data8_t* sprite_dataregion = memory_region(REGION_GFX4);
+
+			offset&=7;
+
+			memcpy(&sprite_region[offset*0x40000],&sprite_dataregion[(data&0x1f)*0x40000],0x40000);
+
+		}
+		else // tile banking
+		{
+			data8_t* tile_region = memory_region(REGION_GFX1);
+			data8_t* tile_dataregion = memory_region(REGION_GFX3);
+			size_t tile_dataregionsize = memory_region_length(REGION_GFX3)/3;
+			int numchar;
+
+			offset&=7;
+
+			memcpy(&tile_region[0x00000+0x2000*offset],&tile_dataregion[tile_dataregionsize*0+(0x2000*(data&0x1f))],0x2000);
+			memcpy(&tile_region[0x10000+0x2000*offset],&tile_dataregion[tile_dataregionsize*1+(0x2000*(data&0x1f))],0x2000);
+			memcpy(&tile_region[0x20000+0x2000*offset],&tile_dataregion[tile_dataregionsize*2+(0x2000*(data&0x1f))],0x2000);
+
+
+			for (numchar = 0x400*offset; numchar < 0x400*offset+0x400;numchar++)
+				decodechar(Machine->gfx[0],numchar,
+					(UINT8 *)tile_region,&decodecharlayout);
+
+
+			tilemap_mark_all_tiles_dirty (background);
+			tilemap_mark_all_tiles_dirty (foreground);
+			tilemap_mark_all_tiles_dirty (text_layer);
+
+		}
+
+
+	}
+}
+
 VIDEO_UPDATE( system18 ){
 	if (!sys16_refreshenable) 
 	{
@@ -1392,10 +1466,14 @@ VIDEO_UPDATE( system18 ){
 /*	sprite_draw(sprite_list,1); */
 	if(sys18_fg2_active) tilemap_draw( bitmap,cliprect, foreground2, 1, 0x7 );
 	tilemap_draw( bitmap,cliprect, foreground, 1, 0x7 );
+// here like ddcrew or below as per clutch hitter.??
+  if (!strcmp(Machine->gamedrv->name,"ddcrew"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for DD CREW
 
 	tilemap_draw( bitmap,cliprect, text_layer, 1, 0x7 );
 /*	sprite_draw(sprite_list,0); */
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
+	
+	if (!strcmp(Machine->gamedrv->name,"aquario"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for clthitr, draws the ball in game!
 
 	if (!sys16_sprite_draw)
 	{
@@ -1817,6 +1895,36 @@ VIDEO_UPDATE( outrun_old )
 		draw_sprites_new( bitmap,cliprect);
 
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0 );
+
+{
+	int x,y,i;
+
+	char gear_high[] = "HI";
+	char gear_low[]  = "LO";
+
+	int in = readinputport( 1 );
+	static int gear = 0;
+
+	if (in & 4) gear = 0;
+	else if (in & 8) gear = 1;
+
+	/* draw on the original game. */
+
+	x = Machine->visible_area.min_x + 2;
+	y = Machine->visible_area.max_y - 8;
+
+	for (i = 0; i < 2; i++)
+	{
+		drawgfx(bitmap,Machine->uifont,
+				(!gear) ? gear_low[i] : gear_high[i],
+				UI_COLOR_NORMAL,
+				0,0,
+				x,y,
+				cliprect,TRANSPARENCY_NONE,0);
+
+		x += Machine->uifontwidth;
+	}
+}
 }
 
 

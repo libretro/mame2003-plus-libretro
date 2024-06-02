@@ -22,22 +22,12 @@ enum
 
 
 extern bool ost_support_enabled (int ost);
+extern bool (*generate_ost_sound) (int);
+
 extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
 #define MDRV_INSTALL_OST_SUPPORT(ost)		\
 	install_ost_support(machine, ost);		\
-
-extern bool generate_ost_sound_contra     (int data);
-extern bool generate_ost_sound_ddragon    (int data);
-extern bool generate_ost_sound_ffight     (int data);
-extern bool generate_ost_sound_ikari      (int data);
-extern bool generate_ost_sound_mk         (int data);
-extern bool generate_ost_sound_moonwalker (int data);
-extern bool generate_ost_sound_nba_jam    (int data);
-extern bool generate_ost_sound_outrun     (int data);
-extern bool generate_ost_sound_robocop    (int data);
-extern bool generate_ost_sound_sf1        (int data);
-extern bool generate_ost_sound_sf2        (int data);
 
 
 extern void ost_fade_volume (void);

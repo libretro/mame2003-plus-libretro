@@ -1288,7 +1288,7 @@ void K007121_sprites_draw(int chip,struct mame_bitmap *bitmap,const struct recta
 {
 	const struct GfxElement *gfx = Machine->gfx[chip];
 	int flipscreen = K007121_flipscreen[chip];
-	int i,num,inc,offs[5],trans;
+	int i,num,inc,trans;
 	int is_flakatck = K007121_ctrlram[chip][0x06] & 0x04;	/* WRONG!!!! */
 
 #if 0
@@ -1308,51 +1308,35 @@ if (keyboard_pressed(KEYCODE_D))
 	}
 }
 #endif
+/* TODO: sprite limit is supposed to be per-line! (check MT #00185) */
+	num = 0x40;
+	/* num = (k007121->ctrlram[0x03] & 0x40) ? 0x80 : 0x40; */ /* WRONG!!! (needed by combatsc)  */
 
-	if (is_flakatck)
-	{
-		num = 0x40;
-		inc = -0x20;
-		source += 0x3f*0x20;
-		offs[0] = 0x0e;
-		offs[1] = 0x0f;
-		offs[2] = 0x06;
-		offs[3] = 0x04;
-		offs[4] = 0x08;
-		/* Flak Attack doesn't use a lookup PROM, it maps the color code directly */
-		/* to a palette entry */
-		trans = TRANSPARENCY_PEN;
-	}
-	else	/* all others */
-	{
-		/*num = (K007121_ctrlram[chip][0x03] & 0x40) ? 0x80 : 0x40; WRONG!!! (needed by combasc)  */
-		num = 0x40; /* Combasc writes 70 sprites to VRAM at peak but the chip only processes the first 64.*/
+	inc = 5;
 
-		inc = 5;
-		offs[0] = 0x00;
-		offs[1] = 0x01;
-		offs[2] = 0x02;
-		offs[3] = 0x03;
-		offs[4] = 0x04;
-		trans = TRANSPARENCY_COLOR;
-		/* when using priority buffer, draw front to back */
-		if (pri_mask != -1)
-		{
-			source += (num-1)*inc;
-			inc = -inc;
-		}
+/* Needed by Flak Attack this hookup should work for 78 */
+    if (is_flakatck)
+			trans = TRANSPARENCY_PEN;
+		else
+			trans = TRANSPARENCY_COLOR;
+
+	/* when using priority buffer, draw front to back */
+	if (pri_mask != -1)
+	{
+		source += (num-1)*inc;
+		inc = -inc;
 	}
 
 	for (i = 0;i < num;i++)
 	{
-		int number = source[offs[0]];				/* sprite number */
-		int sprite_bank = source[offs[1]] & 0x0f;	/* sprite bank */
-		int sx = source[offs[3]];					/* vertical position */
-		int sy = source[offs[2]];					/* horizontal position */
-		int attr = source[offs[4]];				/* attributes */
-		int xflip = source[offs[4]] & 0x10;		/* flip x */
-		int yflip = source[offs[4]] & 0x20;		/* flip y */
-		int color = base_color + ((source[offs[1]] & 0xf0) >> 4);
+		int number = source[0];				/* sprite number */
+		int sprite_bank = source[1] & 0x0f;	/* sprite bank */
+		int sx = source[3];					/* vertical position */
+		int sy = source[2];					/* horizontal position */
+		int attr = source[4];				/* attributes */
+		int xflip = source[4] & 0x10;		/* flip x */
+		int yflip = source[4] & 0x20;		/* flip y */
+		int color = base_color + ((source[1] & 0xf0) >> 4);
 		int width,height;
 		static int x_offset[4] = {0x0,0x1,0x4,0x5};
 		static int y_offset[4] = {0x0,0x2,0x8,0xa};
@@ -1364,69 +1348,66 @@ if (keyboard_pressed(KEYCODE_D))
 		number += ((sprite_bank & 0x3) << 8) + ((attr & 0xc0) << 4);
 		number = number << 2;
 		number += (sprite_bank >> 2) & 3;
+		number += bank_base;
 
-		if (!is_flakatck || source[0x00])	/* Flak Attack needs this */
+
+		switch( attr&0xe )
 		{
-			number += bank_base;
+			case 0x06: width = height = 1; break;
+			case 0x04: width = 1; height = 2; number &= (~2); break;
+			case 0x02: width = 2; height = 1; number &= (~1); break;
+			case 0x00: width = height = 2; number &= (~3); break;
+			case 0x08: width = height = 4; number &= (~3); break;
+			default: width = 1; height = 1;
+/*                 logerror("Unknown sprite size %02x\n",attr&0xe); */
+/*                 usrintf_showmessage("Unknown sprite size %02x\n",attr&0xe); */
+		}
 
-			switch( attr&0xe )
+		for (y = 0;y < height;y++)
+		{
+			for (x = 0;x < width;x++)
 			{
-				case 0x06: width = height = 1; break;
-				case 0x04: width = 1; height = 2; number &= (~2); break;
-				case 0x02: width = 2; height = 1; number &= (~1); break;
-				case 0x00: width = height = 2; number &= (~3); break;
-				case 0x08: width = height = 4; number &= (~3); break;
-				default: width = 1; height = 1;
-/*					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown sprite size %02x\n",attr&0xe);*/
-/*					usrintf_showmessage("Unknown sprite size %02x\n",attr&0xe);*/
-			}
+				ex = xflip ? (width-1-x) : x;
+				ey = yflip ? (height-1-y) : y;
 
-			for (y = 0;y < height;y++)
-			{
-				for (x = 0;x < width;x++)
+				if (flipscreen)
 				{
-					ex = xflip ? (width-1-x) : x;
-					ey = yflip ? (height-1-y) : y;
-
-					if (flipscreen)
-					{
-						if (pri_mask != -1)
-							pdrawgfx(bitmap,gfx,
-								number + x_offset[ex] + y_offset[ey],
-								color,
-								!xflip,!yflip,
-								248-(sx+x*8),248-(sy+y*8),
-								cliprect,trans,0,
-								pri_mask);
-						else
-							drawgfx(bitmap,gfx,
-								number + x_offset[ex] + y_offset[ey],
-								color,
-								!xflip,!yflip,
-								248-(sx+x*8),248-(sy+y*8),
-								cliprect,trans,0);
+					if (pri_mask != -1)
+						pdrawgfx(bitmap,gfx,
+							number + x_offset[ex] + y_offset[ey],
+							color,
+							!xflip,!yflip,
+							248-(sx+x*8),248-(sy+y*8),
+							cliprect,trans,0,
+							pri_mask);
+					else
+						drawgfx(bitmap,gfx,
+							number + x_offset[ex] + y_offset[ey],
+							color,
+							!xflip,!yflip,
+							248-(sx+x*8),248-(sy+y*8),
+							cliprect,trans,0);
 					}
 					else
 					{
-						if (pri_mask != -1)
-							pdrawgfx(bitmap,gfx,
-								number + x_offset[ex] + y_offset[ey],
-								color,
-								xflip,yflip,
-								global_x_offset+sx+x*8,sy+y*8,
-								cliprect,trans,0,
-								pri_mask);
-						else
-							drawgfx(bitmap,gfx,
-								number + x_offset[ex] + y_offset[ey],
-								color,
-								xflip,yflip,
-								global_x_offset+sx+x*8,sy+y*8,
-								cliprect,trans,0);
+					if (pri_mask != -1)
+						pdrawgfx(bitmap,gfx,
+							number + x_offset[ex] + y_offset[ey],
+							color,
+							xflip,yflip,
+							global_x_offset+sx+x*8,sy+y*8,
+							cliprect,trans,0,
+							pri_mask);
+					else
+						drawgfx(bitmap,gfx,
+							number + x_offset[ex] + y_offset[ey],
+							color,
+							xflip,yflip,
+							global_x_offset+sx+x*8,sy+y*8,
+							cliprect,trans,0);
 					}
 				}
 			}
-		}
 
 		source += inc;
 	}

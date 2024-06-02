@@ -10,10 +10,16 @@ Notes:
   rely on vblank for timing. It all seems to be controlled by the CPU clock.
   The NMI handler just handles the "Stop Mode" dip switch.
 
+TS 2008.06.14:
+- Addedd sound emulation - atomboy reqs different interrupt (T1)
+  timing than wilytowr, otherwise music/fx tempo is too fast.
+  Music tempo and pitch verified on real pcb.
+- Extra space in atomboy 2764 eproms is filled with garbage z80 code
+  (taken from one of code roms, but from different offset)
+- I'm not sure about sound_status write - maybe it's something else or
+  different data (p1?) is used as status
+
 TODO:
-- Sound: it's difficult to guess how the I8039 is connected... there's also a
-  OKI MSM80C39RS chip.
-- One unknown ROM. Samples?
 - Sprite positioning is wacky. The electric 'bands' that go along the pipes
   are drawn 2 pixels off in x/y directions. If you fix that, then the player
   sprite doesn't slide in the middle of the pipes when climbing...
@@ -30,6 +36,9 @@ UINT8 *wilytowr_videoram2, *wilytowr_scrollram;
 static int pal_bank;
 
 static struct tilemap *bg_tilemap, *fg_tilemap;
+static UINT8 sound_irq;
+static int sound_status;
+static int p1,p2;
 
 
 PALETTE_INIT( wilytowr )
@@ -196,6 +205,17 @@ static void wilytowr_draw_sprites( struct mame_bitmap *bitmap )
 			sx, sy,
 			&Machine->visible_area,
 			TRANSPARENCY_PEN, 0);
+
+        /* sprite wrapping - verified on real hardware*/
+		if(sx>0xf0)
+		{
+			drawgfx(bitmap, Machine->gfx[2],
+			code, color,
+			flipx, flipy,
+			sx-0x100, sy,
+			&Machine->visible_area,
+			TRANSPARENCY_PEN, 0);
+		}
 	}
 }
 
@@ -220,11 +240,10 @@ static WRITE_HANDLER( coin_w )
 
 static WRITE_HANDLER( snd_irq_w )
 {
-	cpu_set_irq_line(1, 0, PULSE_LINE);
+	cpu_set_irq_line(1, 0, ASSERT_LINE);
+	timer_set(TIME_NOW, 0, NULL); /* correct i think */
 }
 
-
-static int p1,p2;
 
 static WRITE_HANDLER( snddata_w )
 {
@@ -236,9 +255,8 @@ static WRITE_HANDLER( snddata_w )
 		AY8910_control_port_1_w(0,offset);
 	else if ((p1 & 0xe0) == 0x40)
 		AY8910_write_port_1_w(0,offset);
-	else /* if ((p2 & 0xf0) != 0x70)*/
-		/* the port address is the data, while the data seems to be control bits */
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: snddata_w ctrl = %02x, p1 = %02x, p2 = %02x, data = %02x\n",activecpu_get_pc(),data,p1,p2,offset);
+    else if ((p2 & 0xf0) == 0x70 )
+		sound_status=offset;
 }
 
 static WRITE_HANDLER( p1_w )
@@ -249,8 +267,36 @@ static WRITE_HANDLER( p1_w )
 static WRITE_HANDLER( p2_w )
 {
 	p2 = data;
+	if((p2&0xf0)==0x50)
+	{
+		cpu_set_irq_line(1, 0, CLEAR_LINE);
+	}
 }
 
+static READ_HANDLER( snd_status_r )
+{
+	return sound_status;
+}
+
+static READ_HANDLER( irq_r )
+{
+	if (sound_irq)
+	{
+		sound_irq = 0;
+		return 1;
+	}
+	return 0;
+}
+
+static READ_HANDLER( snddata_r )
+{
+	switch(p2&0xf0)
+	{
+		case 0x60:	return soundlatch_r(0); ;
+		case 0x70:	return memory_region(REGION_USER1)[((p1&0x1f)<<8)|offset];
+	}
+	return 0xff;
+}
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0xbfff, MRA_ROM },
@@ -276,7 +322,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xf003, 0xf003, wilytwr_palbank_w },
 	{ 0xf006, 0xf007, coin_w },
 	{ 0xf800, 0xf800, soundlatch_w },
-	{ 0xf801, 0xf801, watchdog_reset_w },	/* unknown (cleared by NMI handler) */
+	{ 0xf801, 0xf801, MWA_NOP },	/*  continues game when in stop mode (cleared by NMI handler) */
 	{ 0xf803, 0xf803, snd_irq_w },
 MEMORY_END
 
@@ -289,8 +335,8 @@ static MEMORY_WRITE_START( i8039_writemem )
 MEMORY_END
 
 static PORT_READ_START( i8039_readport )
-/*	{ 0x00, 0xff, },*/
-/*	{ I8039_t1, I8039_t1,  },*/
+    { 0x00, 0xff, snddata_r },
+	{ I8039_t1, I8039_t1, irq_r },
 PORT_END
 
 static PORT_WRITE_START( i8039_writeport )
@@ -334,6 +380,11 @@ INPUT_PORTS_START( wilytowr )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x00, "Bonus Points Rate" ) 
+	PORT_DIPSETTING(    0x00, "Normal" )
+	PORT_DIPSETTING(    0x04, "x1.2" )
+	PORT_DIPSETTING(    0x08, "x1.4" )
+	PORT_DIPSETTING(    0x0c, "x1.6" )
 	/* TODO: support the different settings which happen in Coin Mode 2 */
 	PORT_DIPNAME( 0xf0, 0x00, DEF_STR( Coinage ) ) /* mapped on coin mode 1 */
 	PORT_DIPSETTING(    0x60, DEF_STR( 7C_1C ) )
@@ -430,27 +481,32 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct AY8910interface ay8910_interface =
 {
 	2,	/* 2 chips */
-	3579545/4,	/* ??? using the same as other Irem games */
-	{ 20, 20 },
+	12000000/8,	/* 3mhz */
+	{ 10, 100 }, /* Music needs to be louder on 2nd channel */
 	{ 0, 0 },
 	{ 0, 0 },
 	{ 0, 0 },
 	{ 0, 0 }
 };
 
-
+/* we'll use standard interrupt handling seems fine with it */
+static INTERRUPT_GEN( snd_irq )
+{
+	sound_irq = 1;
+}
 
 static MACHINE_DRIVER_START( wilytowr )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80,4000000)	/* 4 MHz ???? */
+	MDRV_CPU_ADD(Z80,12000000/4)	/* 3 MHz */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
 
-	MDRV_CPU_ADD(I8039,8000000/15)	/* ????? */
+	MDRV_CPU_ADD(I8039,12000000/4)	/* ????? */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(i8039_readmem,i8039_writemem)
 	MDRV_CPU_PORTS(i8039_readport,i8039_writeport)
+    MDRV_CPU_PERIODIC_INT(snd_irq, 60)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -470,6 +526,37 @@ static MACHINE_DRIVER_START( wilytowr )
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
 MACHINE_DRIVER_END
 
+/* different sound irq value */
+static MACHINE_DRIVER_START( atomboy )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80,12000000/4)	/* 3 MHz */
+	MDRV_CPU_MEMORY(readmem,writemem)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+
+	MDRV_CPU_ADD(I8039,12000000/4)	/* ????? */
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(i8039_readmem,i8039_writemem)
+	MDRV_CPU_PORTS(i8039_readport,i8039_writeport)
+	MDRV_CPU_PERIODIC_INT(snd_irq, 60/2)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(256+4)
+
+	MDRV_PALETTE_INIT(wilytowr)
+	MDRV_VIDEO_START(wilytowr)
+	MDRV_VIDEO_UPDATE(wilytowr)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(AY8910, ay8910_interface)
+MACHINE_DRIVER_END
 
 
 /***************************************************************************
@@ -509,7 +596,7 @@ ROM_START( wilytowr )
 	ROM_LOAD( "wt_a-3p.bin",  0x4000, 0x1000, CRC(7299f362) SHA1(5ba309d789df8432c08d67e4f9e8bf6c447fc425) )
 	ROM_LOAD( "wt_a-3s.bin",  0x5000, 0x1000, CRC(9b37d50d) SHA1(a08d4a7654b815cb652be66dbaa097011327f5d5) )
 
-	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* unknown; sound? */
+	ROM_REGION( 0x2000, REGION_USER1, 0 )
 	ROM_LOAD( "wt_a-6d.bin",  0x0000, 0x1000, CRC(a5dde29b) SHA1(8f7545d2022da7c98d47112179dce717f6c3c5e2) )
 
 	ROM_REGION( 0x0320, REGION_PROMS, 0 )
@@ -550,7 +637,7 @@ ROM_START( atomboy )
 	ROM_LOAD( "wt_a-3p.bin",  0x4000, 0x1000, CRC(7299f362) SHA1(5ba309d789df8432c08d67e4f9e8bf6c447fc425) )
 	ROM_LOAD( "wt_a-3s.bin",  0x5000, 0x1000, CRC(9b37d50d) SHA1(a08d4a7654b815cb652be66dbaa097011327f5d5) )
 
-	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* unknown; sound? */
+	ROM_REGION( 0x1000, REGION_USER1, 0 )
 	ROM_LOAD( "wt_a-6d.bin",  0x0000, 0x1000, CRC(a5dde29b) SHA1(8f7545d2022da7c98d47112179dce717f6c3c5e2) )
 
 	ROM_REGION( 0x0320, REGION_PROMS, 0 )
@@ -561,5 +648,6 @@ ROM_START( atomboy )
 ROM_END
 
 
-GAMEX( 1984, wilytowr, 0,        wilytowr, wilytowr, 0, ROT180, "Irem",                    "Wily Tower", GAME_NO_SOUND )
-GAMEX( 1985, atomboy,  wilytowr, wilytowr, wilytowr, 0, ROT180, "Irem (Memetron license)", "Atomic Boy", GAME_NO_SOUND )
+GAME( 1984, wilytowr, 0,        wilytowr, wilytowr, 0, ROT180, "Irem",                    "Wily Tower" )
+GAME( 1985, atomboy,  wilytowr, atomboy,  wilytowr, 0, ROT180, "Irem (Memetron license)", "Atomic Boy" )
+

@@ -525,6 +525,71 @@ static READ16_HANDLER(ga2_wakeup_protection_r)
 	return prot[offset];
 }
 
+/******************************************************************************
+ ******************************************************************************
+  Sonic Arcade protection
+ ******************************************************************************
+ ******************************************************************************/
+
+
+// This code duplicates the actions of the protection device used in SegaSonic
+// arcade revision C, allowing the game to run correctly.
+#define CLEARED_LEVELS			0xE5C4
+#define CURRENT_LEVEL			0xF06E
+#define CURRENT_LEVEL_STATUS		0xF0BC
+#define LEVEL_ORDER_ARRAY		0x263A
+
+static WRITE16_HANDLER(sonic_level_load_protection)
+{
+	UINT16 level;
+/*Perform write*/
+	COMBINE_DATA(&system32_workram[CLEARED_LEVELS / 2]);
+
+/*Refresh current level*/
+		if (system32_workram[CLEARED_LEVELS / 2] == 0)
+		{
+			level = 0x0007;
+		}
+		else
+		{
+			const UINT8 *ROM = memory_region(REGION_CPU1);
+			level =  *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 1);
+			level |= *((ROM + LEVEL_ORDER_ARRAY) + (system32_workram[CLEARED_LEVELS / 2] * 2) - 2) << 8;
+		}
+		system32_workram[CURRENT_LEVEL / 2] = level;
+
+/*Reset level status*/
+		system32_workram[CURRENT_LEVEL_STATUS / 2] = 0x0000;
+		system32_workram[(CURRENT_LEVEL_STATUS + 2) / 2] = 0x0000;
+}
+
+/******************************************************************************
+ ******************************************************************************
+  The J.League 1994 (Japan)
+ ******************************************************************************
+ ******************************************************************************/
+static WRITE16_HANDLER( jleague_protection_w )
+{
+	COMBINE_DATA( &system32_workram[0xf700/2 + offset ] );
+
+	switch( offset )
+	{
+		/* Map team browser selection to opponent browser selection*/
+		/* using same lookup table that V60 uses for sound sample mapping.*/
+		case 0:
+			cpu_writemem24lew( 0x20f708, cpu_readmem24lew_word( 0x7bbc0 + data*2 ) );
+			break;
+
+		/* move on to team browser*/
+		case 4/2:
+			cpu_writemem24lew( 0x200016, data & 0xff );
+			break;
+
+		default:
+			break;
+	}
+}
+
 /* the protection board on many system32 games has full dma/bus access*/
 /* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
@@ -694,6 +759,7 @@ static READ16_HANDLER( system32_io_r )
 	case 0x04:
 		return readinputport(0x03);
 	case 0x05:
+		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 	case 0x06:
 		return 0xffff;
@@ -875,6 +941,15 @@ static WRITE16_HANDLER( jp_v60_write_cab )
 	cpu_set_irq_line(1, 0, HOLD_LINE);
 }
 
+static WRITE16_HANDLER( random_number_16_w )
+{
+/* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
+}
+
+static READ16_HANDLER( random_number_16_r )
+{
+       return rand();
+}
 
 static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
@@ -896,8 +971,7 @@ static MEMORY_READ16_START( system32_readmem )
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
 
-	{ 0xd80000, 0xd80001, sys32_read_random },
-	{ 0xd80002, 0xd80003, MRA16_RAM }, /* Unknown harddunk*/
+	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -929,7 +1003,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
 	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
-	{ 0xd80000, 0xd80003, MWA16_RAM }, /* Unknown titlef / harddunk*/
+	{ 0xd80000, 0xdfffff, random_number_16_w }, /* Unknown titlef / harddunk*/
 	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
@@ -1801,9 +1875,9 @@ INPUT_PORTS_START( radr )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Transmission" )
+	PORT_DIPSETTING(    0x08, "Manual" )
+	PORT_DIPSETTING(    0x00, "Automatic" )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1932,22 +2006,22 @@ INPUT_PORTS_START( sonic )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START /* 0xc00040 - port 7  - player 1 trackball X axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 100, 25, 0, 0 )
 
 	PORT_START /* 0xc00044 - port 8  - player 1 trackball Y axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER1, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER1, 100, 25, 0, 0 )
 
 	PORT_START /* 0xc00048 - port 9  - player 2 trackball X axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_REVERSE, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_REVERSE, 100, 25, 0, 0 )
 
 	PORT_START /* 0xc0004c - port 10 - player 2 trackball Y axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER2, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER2, 100, 25, 0, 0 )
 
 	PORT_START /* 0xc00050 - port 11 - player 3 trackball X axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER3 | IPF_REVERSE, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER3 | IPF_REVERSE, 100, 25, 0, 0 )
 
 	PORT_START /* 0xc00054 - port 12 - player 3 trackball Y axis*/
-	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER3, 100, 15, 0, 0 )
+	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER3, 100, 25, 0, 0 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( jpark )
@@ -2037,6 +2111,66 @@ INPUT_PORTS_START( darkedge )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( slipstrm )
+	PORT_START	/* 0xc0000a - port 0*/
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
+
+	PORT_START	/* 0xc00000 - port 1*/
+	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_TOGGLE, "Gear Change", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* 0xc00002 - port 2*/
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* 0xc00008 - port 3*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* port 4*/
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 5*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port 6*/
+	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 7*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port 8*/
+	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
+
+	PORT_START	/* port 9*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port A*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* port B*/
+	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+
 static void irq_handler(int irq)
 {
 	cpu_set_irq_line( 1, 0 , irq ? ASSERT_LINE : CLEAR_LINE );
@@ -2094,7 +2228,11 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( system32 )
 
 	/* basic machine hardware */
+#if defined(GEKKO)
+	MDRV_CPU_ADD(V60, MASTER_CLOCK/2/16) /* hack speed */
+#else
 	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
+#endif
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
@@ -2917,18 +3055,19 @@ ROM_START( dbzvrvs )
 	ROM_LOAD( "16538", 0x380000, 0x100000, CRC(4d402c31) SHA1(2df160fd7e70f3d7b52fef2a2082e68966fd1535) )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD16_BYTE( "16544", 0x000000, 0x100000, CRC(f6c93dfc) SHA1(a006cedb7d0151ccc8d22e6588b1c39e099da182) )
-	ROM_LOAD16_BYTE( "16545", 0x000001, 0x100000, CRC(51748bac) SHA1(b1cae16b62a8d29117c0adb140eb09c1092f6c37) )
+	ROM_LOAD16_BYTE( "16545", 0x000000, 0x100000, CRC(51748bac) SHA1(b1cae16b62a8d29117c0adb140eb09c1092f6c37) )
+	ROM_LOAD16_BYTE( "16544", 0x000001, 0x100000, CRC(f6c93dfc) SHA1(a006cedb7d0151ccc8d22e6588b1c39e099da182) )
+
 
 	ROM_REGION( 0x1000000, REGION_GFX2, 0 ) /* sprites */
 	ROMX_LOAD( "16546", 0x000000, 0x200000, CRC(96f4be31) SHA1(ce3281630180d91de7850e9b1062382817fe0b1d) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16548", 0x000002, 0x200000, CRC(00377f59) SHA1(cf0f808d7730f334c5ac80d3171fa457be9ac88e) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16550", 0x000004, 0x200000, CRC(168e8966) SHA1(a18ec30f1358b09bcde6d8d2dbe0a82bea3bdae9) , ROM_SKIP(6)|ROM_GROUPWORD )
-	ROMX_LOAD( "16553", 0x000006, 0x200000, CRC(c0a43009) SHA1(e4f73768de512046b3e25c4238da811dcc2dde0b) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "16552", 0x000006, 0x200000, CRC(a31dae31) SHA1(2da2c391f29b5fdb87e3f95d9dabd50370fafa5a) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16547", 0x800000, 0x200000, CRC(50d328ed) SHA1(c4795299f5d7c9f3a847d684d8cde7012d4486f0) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16549", 0x800002, 0x200000, CRC(a5802e9f) SHA1(4cec3ed85a21aaf99b73013795721f212019e619) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "16551", 0x800004, 0x200000, CRC(dede05fc) SHA1(51e092579e2b81fb68a9cc54165f80026fe71796) , ROM_SKIP(6)|ROM_GROUPWORD )
-	ROMX_LOAD( "16552", 0x800006, 0x200000, CRC(a31dae31) SHA1(2da2c391f29b5fdb87e3f95d9dabd50370fafa5a) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "16553", 0x800006, 0x200000, CRC(c0a43009) SHA1(e4f73768de512046b3e25c4238da811dcc2dde0b) , ROM_SKIP(6)|ROM_GROUPWORD )
 
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 	/* populated at runtime */
@@ -3008,7 +3147,7 @@ ROM_START( slipstrm )
 
 	ROM_REGION( 0x480000, REGION_CPU2, 0 ) /* sound CPU */
 	ROM_LOAD( "slipstrm.u35", 0x00000, 0x20000, CRC(0fee2278) SHA1(7533a03c3fc46d65dfdd07bddf1e6e0bbc368752) )
-	ROM_RELOAD(              0x100000, 0x20000             )
+	ROM_RELOAD(               0x100000, 0x20000             )
 	ROM_LOAD( "slipstrm.u31", 0x180000, 0x080000, CRC(ae7be5f2) SHA1(ba089355e64864435bcc3b0c208e4bce1ea66295) )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
@@ -3017,16 +3156,16 @@ ROM_START( slipstrm )
 	ROM_LOAD32_BYTE( "slipstrm.u29", 0x000001, 0x080000, CRC(52c4bb85) SHA1(4fbee1072a19c75c25b5fd269acc75640923d69c) )
 	ROM_LOAD32_BYTE( "slipstrm.u25", 0x000003, 0x080000, CRC(4948604a) SHA1(d5a1b9781fef7976a59a0af9b755a04fcacf9381) )
 
-	ROM_REGION( 0x1000000, REGION_GFX2, 0 ) /* sprites */
-	ROMX_LOAD( "slipstrm.u36", 0x800000, 0x80000, CRC(cffe9e0d) SHA1(5272d54ff142de927a9abd61f3646e963c7d22c4) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u32", 0x800001, 0x80000, CRC(4ebd1383) SHA1(ce35f4d15e7904bfde55e58cdde925cba8002763) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u27", 0x800002, 0x80000, CRC(b3cf4fe2) SHA1(e13199522e1e3e8b9cfe72cc29b33f25dad542ef) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u23", 0x800003, 0x80000, CRC(c6345391) SHA1(155758097911ffca0c5c0b2a24a8033339dcfcbb) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u37", 0x800004, 0x80000, CRC(2de4288e) SHA1(8e794f79f506293edb7609187a7908516ce76849) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u33", 0x800005, 0x80000, CRC(6cfb74fb) SHA1(b74c886959910cd069427418525b23300a9b7b18) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u28", 0x800006, 0x80000, CRC(53234bf4) SHA1(1eca538dcb86e44c31310ab1ab42a2b66b69c8fe) , ROM_SKIP(7) )
-	ROMX_LOAD( "slipstrm.u24", 0x800007, 0x80000, CRC(22c129cf) SHA1(0f64680511a357038f6a556253c13fbb5417dd1a) , ROM_SKIP(7) )
-
+	ROM_REGION( 0x0400000, REGION_GFX2, 0 ) /* sprites */
+	ROMX_LOAD( "slipstrm.u36", 0x000000, 0x80000, CRC(cffe9e0d) SHA1(5272d54ff142de927a9abd61f3646e963c7d22c4) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u32", 0x000001, 0x80000, CRC(4ebd1383) SHA1(ce35f4d15e7904bfde55e58cdde925cba8002763) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u27", 0x000002, 0x80000, CRC(b3cf4fe2) SHA1(e13199522e1e3e8b9cfe72cc29b33f25dad542ef) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u23", 0x000003, 0x80000, CRC(c6345391) SHA1(155758097911ffca0c5c0b2a24a8033339dcfcbb) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u37", 0x000004, 0x80000, CRC(2de4288e) SHA1(8e794f79f506293edb7609187a7908516ce76849) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u33", 0x000005, 0x80000, CRC(6cfb74fb) SHA1(b74c886959910cd069427418525b23300a9b7b18) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u28", 0x000006, 0x80000, CRC(53234bf4) SHA1(1eca538dcb86e44c31310ab1ab42a2b66b69c8fe) , ROM_SKIP(7) )
+	ROMX_LOAD( "slipstrm.u24", 0x000007, 0x80000, CRC(22c129cf) SHA1(0f64680511a357038f6a556253c13fbb5417dd1a) , ROM_SKIP(7) )
+	
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 	/* populated at runtime */
 ROM_END
@@ -3182,6 +3321,18 @@ static DRIVER_INIT ( sonic )
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
+  
+  install_mem_write16_handler(0, 0x20E5C4, 0x20E5C5, sonic_level_load_protection);
+}
+
+static DRIVER_INIT ( sonicp )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_mixerShift = 5;
+
+	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
+	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
 }
 
 static DRIVER_INIT ( radm )
@@ -3318,6 +3469,119 @@ static DRIVER_INIT( arescue )
 
 }
 
+
+static UINT16 MemRead16_16(offs_t address)
+{
+	if (!(address & 1))
+		return cpu_readmem24lew_word(address);
+	else
+	{
+		UINT16 result = cpu_readmem24lew(address);
+		return result | cpu_readmem24lew(address + 1) << 8;
+	}
+}
+
+static void MemWrite16_16(offs_t address, UINT16 data)
+{
+	if (!(address & 1))
+		cpu_writemem24lew_word(address, data);
+	else
+	{
+		cpu_writemem24lew(address, data);
+		cpu_writemem24lew(address + 1, data >> 8);
+	}
+}
+
+
+#define program_read_byte  cpu_readmem24lew
+#define program_write_byte cpu_writemem24lew
+#define program_read_word   MemRead16_16
+#define program_write_word MemWrite16_16
+
+
+
+
+/******************************************************************************
+ ******************************************************************************
+  Dark Edge
+ ******************************************************************************
+ ******************************************************************************/
+/* V60 24lew for 8-16bit mem calls i think */
+void darkedge_fd1149_vblank(void)
+{
+	 program_write_word(0x20f072, 0);
+	 program_write_word(0x20f082, 0);
+
+	if(  program_read_byte(0x20a12c) != 0 )
+	{
+		 program_write_byte(0x20a12c, program_read_byte(0x20a12c)-1 );
+
+		if( program_read_byte(0x20a12c) == 0 )
+			program_write_byte(0x20a12e, 1);
+	}
+}
+
+
+WRITE16_HANDLER( darkedge_protection_w )
+{
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x:darkedge_prot_w(%06X) = %04X & %04X\n",
+		activecpu_get_pc(), 0xa00000 + 2*offset, data, mem_mask ^ 0xffff);
+}
+
+
+READ16_HANDLER( darkedge_protection_r )
+{
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x:darkedge_prot_r(%06X) & %04X\n",
+		activecpu_get_pc(), 0xa00000 + 2*offset, mem_mask ^ 0xffff);
+	return 0xffff;
+}
+
+static DRIVER_INIT( darkedge )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 5;
+	
+	/* install protection handlers */
+	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
+	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
+	system32_prot_vblank = darkedge_fd1149_vblank;
+}
+
+WRITE16_HANDLER( dbzvrvs_protection_w )
+{
+	program_write_word( 0x2080c8, program_read_word( 0x200044 ) );
+
+}
+
+
+READ16_HANDLER( dbzvrvs_protection_r )
+{
+	return 0xffff;
+}
+
+static DRIVER_INIT( jleague )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 4;
+	install_mem_write16_handler(0, 0x20F700, 0x20F705, jleague_protection_w);
+}
+
+static DRIVER_INIT( dbzvrvs )
+{
+	system32_use_default_eeprom = EEPROM_SYS32_0;
+	multi32 = 0;
+	system32_temp_kludge = 0;
+	system32_mixerShift = 4;
+
+	/* install protection handlers */
+	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
+	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_w);
+}
+
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
 GAME( 1992, holo,     0,        system32, holo,     holo,     ROT0, "Sega", "Holosseum" )
 
@@ -3332,18 +3596,18 @@ GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Ara
 GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, brival,   0,        sys32_hi, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonicp,   ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, jleague,  svf,      system32, svf,      s32,      ROT0, "Sega", "The J.League 1994 (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAMEX(1994, jleague,  svf,      system32, svf,      jleague,  ROT0, "Sega", "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 
 /* not really working */
-GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
-GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
-GAMEX(1995, slipstrm, 0,        sys32_hi, system32,	f1en,     ROT0, "Capcom", "Slipstream", GAME_NOT_WORKING ) /* unhandled v60 opcodes .... */
+GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
+GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
 /* Loony Toons (maybe) */

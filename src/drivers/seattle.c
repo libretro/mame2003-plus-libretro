@@ -78,6 +78,8 @@ static data32_t *generic_speedup2;
 
 static void timer_callback(int param);
 
+static data32_t cmos_write_enabled;
+
 
 
 /*************************************
@@ -219,7 +221,9 @@ static INTERRUPT_GEN( assert_vblank )
 static WRITE32_HANDLER( cmos_w )
 {
 	data32_t *cmos_base = (data32_t *)generic_nvram;
-	COMBINE_DATA(&cmos_base[offset]);
+	if (cmos_write_enabled)
+		COMBINE_DATA(&cmos_base[offset]);
+	cmos_write_enabled = 0;
 }
 
 
@@ -228,6 +232,19 @@ static READ32_HANDLER( cmos_r )
 	data32_t *cmos_base = (data32_t *)generic_nvram;
 	return cmos_base[offset];
 }
+
+
+static WRITE32_HANDLER( cmos_protect_w )
+{
+	cmos_write_enabled = 1;
+}
+
+
+static READ32_HANDLER( cmos_protect_r )
+{
+	return cmos_write_enabled;
+}
+
 
 
 
@@ -1001,6 +1018,7 @@ static MEMORY_READ32_START( seattle_readmem )
 	{ 0xac000000, 0xac000fff, galileo_r },
 	{ 0xb6000000, 0xb600003f, midway_ioasic_r },
 	{ 0xb6100000, 0xb611ffff, cmos_r },
+	{ 0xb7000000, 0xb7000003, cmos_protect_r },
 	{ 0xb7300000, 0xb7300003, MRA32_RAM },
 	{ 0xb7400000, 0xb7400003, MRA32_RAM },
 	{ 0xb7500000, 0xb7500003, vblank_signalled_r },
@@ -1028,6 +1046,7 @@ static MEMORY_WRITE32_START( seattle_writemem )
 	{ 0xb3000000, 0xb3000003, asic_fifo_w },
 	{ 0xb6000000, 0xb600003f, midway_ioasic_w },
 	{ 0xb6100000, 0xb611ffff, cmos_w, (data32_t **)&generic_nvram, &generic_nvram_size },
+	{ 0xb7000000, 0xb7000003, cmos_protect_w },
 	{ 0xb7100000, 0xb7100003, seattle_watchdog_w },
 	{ 0xb7300000, 0xb7300003, vblank_enable_w, &vblank_enable },
 	{ 0xb7400000, 0xb7400003, vblank_config_w, &vblank_config },

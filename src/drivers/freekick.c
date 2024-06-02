@@ -1153,6 +1153,38 @@ ROM_START( countrb2 )
 	ROM_LOAD( "prom3.bpr",    0x0500, 0x0100, CRC(c77d0077) SHA1(4cbbf625ad5e45d00ca6aebe9566538ff0a3348d) )
 ROM_END
 
+ROM_START( countrunb3 ) /* mostly similar to countrunb2, last routine at 0xb2a2 is slightly changed, GFX ROMs are double sized with the first half 0xff filled */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* Z80 Code */
+	ROM_LOAD( "electric_16.t2", 0x00000, 0x10000, CRC(14061503) SHA1(90780ff51a93284e5b92e7777a0ba0a18276071e) )
+
+	ROM_REGION( 0x8000,  REGION_USER1, 0 ) /* sound data */
+	ROM_LOAD( "electric_9.o2", 0x0000, 0x8000, CRC(2c3b6f8f) SHA1(ee7d71e6d8bb7138d5d029a10a95471d387b5f29) )
+
+	ROM_REGION( 0xc000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
+	ROM_LOAD( "electric_10.m2", 0x0000, 0x4000, CRC(41cd6adb) SHA1(0ccbab05a3165902f10298188810734bb9560f7e) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x0000, 0x4000 )
+	ROM_LOAD( "electric_11.l2", 0x4000, 0x4000, CRC(2a94c9e3) SHA1(20869cbf656e87d9381efc9fd13914685317e672) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x4000, 0x4000 )
+	ROM_LOAD( "electric_12.g2", 0x8000, 0x4000, CRC(40492c87) SHA1(314f43465f6b11cd843ae12d7338a27160b06998) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x8000, 0x4000 )
+
+	ROM_REGION( 0xc000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
+	ROM_LOAD( "electric_13.f2", 0x0000, 0x4000, CRC(6cb26eda) SHA1(b5fd8379b01cd68865c0a6962ce075564847dc93) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x0000, 0x4000 )
+	ROM_LOAD( "electric_14.d2", 0x4000, 0x4000, CRC(a2f7502c) SHA1(6c548c44e4e03855e3258e1cbba73174c783b7ce) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x4000, 0x4000 )
+	ROM_LOAD( "electric_15.c2", 0x8000, 0x4000, CRC(39fc7e8d) SHA1(6ea88c8d9cf857802cc48c62e4c87cd913194c07) ) /* 0xxxxxxxxxxxxxx = 0xFF */
+	ROM_CONTINUE(               0x8000, 0x4000 )
+
+	ROM_REGION( 0x0600, REGION_PROMS, 0 ) /* Not dumped using proms from main set */
+	ROM_LOAD( "prom5.bpr",    0x0000, 0x0100, CRC(63c114ad) SHA1(db881c4ff92cb04a94988587503346a44eb89b69) )
+	ROM_LOAD( "prom2.bpr",    0x0100, 0x0100, CRC(d16f95cc) SHA1(041bb84576bd8492c1ad3e492d8cb3e04d316527) )
+	ROM_LOAD( "prom4.bpr",    0x0200, 0x0100, CRC(217db2c1) SHA1(f2af1a74b0ce56290b1c119e1a9707287132194a) )
+	ROM_LOAD( "prom1.bpr",    0x0300, 0x0100, CRC(8d983949) SHA1(d7331900d18a53ceb133f8a8848d3c108e03323a) )
+	ROM_LOAD( "prom6.bpr",    0x0400, 0x0100, CRC(33e87550) SHA1(951ce0dc975b799c1056ce8eb005256cbb43a112) )
+	ROM_LOAD( "prom3.bpr",    0x0500, 0x0100, CRC(c77d0077) SHA1(4cbbf625ad5e45d00ca6aebe9566538ff0a3348d) )
+ROM_END
+
 ROM_START( gigasm2b )
 	ROM_REGION( 0x10000*2, REGION_CPU1, 0 )
 	ROM_LOAD( "8.rom", 0x10000, 0x4000, CRC(c00a4a6c) SHA1(0d1bb849c9bfe4e92ad70e4ef19da494c0bd7ba8) )
@@ -1242,13 +1274,14 @@ static DRIVER_INIT(gigas)
 	memory_set_opcode_base(0,rom+diff);
 }
 
-GAMEX(1986, gigasb,   0,        gigas,    gigas,    gigas, ROT270, "bootleg", "Gigas (bootleg)", GAME_NO_COCKTAIL )
-GAMEX(1986, oigas,    gigasb,   oigas,    gigas,    gigas, ROT270, "bootleg", "Oigas (bootleg)", GAME_NO_COCKTAIL )
-GAMEX(1986, gigasm2b, 0,        gigas,    gigasm2,  gigas, ROT270, "bootleg", "Gigas Mark II (bootleg)", GAME_NO_COCKTAIL )
-GAME( 1987, pbillrd,  0,        pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard" )
-GAMEX(1987, pbillrds, pbillrd,  pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard (Sega)", GAME_UNEMULATED_PROTECTION )	/* encrypted*/
-GAME( 1987, freekick, 0,        freekckb, freekckb, 0,     ROT270, "Nihon System (Sega license)", "Free Kick" )
-GAME( 1987, freekckb, freekick, freekckb, freekckb, 0,     ROT270, "bootleg", "Free Kick (bootleg)" )
-GAMEX(1988, countrun, 0,        freekckb, countrun, 0,     ROT0,   "Nihon System (Sega license)", "Counter Run", GAME_NOT_WORKING )
-GAME( 1988, countrnb, countrun, freekckb, countrun, 0,     ROT0,   "bootleg", "Counter Run (bootleg set 1)" )
-GAMEX(1988, countrb2, countrun, freekckb, countrun, 0,     ROT0,   "bootleg", "Counter Run (bootleg set 2)", GAME_NOT_WORKING )
+GAMEX(1986, gigasb,     0,        gigas,    gigas,    gigas, ROT270, "bootleg", "Gigas (bootleg)", GAME_NO_COCKTAIL )
+GAMEX(1986, oigas,      gigasb,   oigas,    gigas,    gigas, ROT270, "bootleg", "Oigas (bootleg)", GAME_NO_COCKTAIL )
+GAMEX(1986, gigasm2b,   0,        gigas,    gigasm2,  gigas, ROT270, "bootleg", "Gigas Mark II (bootleg)", GAME_NO_COCKTAIL )
+GAME( 1987, pbillrd,    0,        pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard" )
+GAMEX(1987, pbillrds,   pbillrd,  pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard (Sega)", GAME_UNEMULATED_PROTECTION )	/* encrypted*/
+GAME( 1987, freekick,   0,        freekckb, freekckb, 0,     ROT270, "Nihon System (Sega license)", "Free Kick" )
+GAME( 1987, freekckb,   freekick, freekckb, freekckb, 0,     ROT270, "bootleg", "Free Kick (bootleg)" )
+GAMEX(1988, countrun,   0,        freekckb, countrun, 0,     ROT0,   "Nihon System (Sega license)", "Counter Run", GAME_NOT_WORKING )
+GAME( 1988, countrnb,   countrun, freekckb, countrun, 0,     ROT0,   "bootleg", "Counter Run (bootleg set 1)" )
+GAMEX(1988, countrb2,   countrun, freekckb, countrun, 0,     ROT0,   "bootleg", "Counter Run (bootleg set 2)", GAME_NOT_WORKING )
+GAME( 1988, countrunb3, countrun, freekckb, countrun, 0,     ROT0,   "bootleg", "Counter Run (bootleg set 3)" )

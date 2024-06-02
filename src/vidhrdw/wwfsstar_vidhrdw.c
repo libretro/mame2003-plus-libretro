@@ -157,6 +157,8 @@ static void wwfsstar_drawsprites( struct mame_bitmap *bitmap, const struct recta
 			number = (source [3] & 0x00ff) | ((source [2] & 0x003f) << 8);
 			colourbank = (source [1] & 0x00f0) >> 4;
 
+      number &= ~(chain - 1);
+
 			if (flip_screen)
 			{
 				flipy = !flipy;

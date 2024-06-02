@@ -60,7 +60,7 @@ extern int neogeo_memcard_create(int);
 
 ***************************************************************************/
 
-static struct GfxElement *uirotfont;
+struct GfxElement *uirotfont;
 
 /* raw coordinates, relative to the real scrbitmap */
 static struct rectangle uirawbounds;
@@ -75,6 +75,14 @@ static int setup_selected;
 static int setup_via_menu = 0;
 
 UINT8 ui_dirty;
+
+/* show gfx */
+bool toggle_showgfx;
+static int mode,bank,color,firstdrawn;
+static int palpage;
+static int cpx,cpy,skip_chars,skip_tmap;
+static int tilemap_xpos;
+static int tilemap_ypos;
 
 
 
@@ -1043,24 +1051,11 @@ static void showcharset(struct mame_bitmap *bitmap)
 {
 	int i;
 	char buf[80];
-	int mode,bank,color,firstdrawn;
-	int palpage;
 /*	int changed = 1;*/
 	int total_colors = 0;
 	pen_t *colortable = NULL;
-	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
-	int tilemap_xpos = 0;
-	int tilemap_ypos = 0;
+	static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
-	mode = 0;
-	bank = 0;
-	color = 0;
-	firstdrawn = 0;
-	palpage = 0;
-
-	do
-	{
-		static const struct rectangle fullrect = { 0, 10000, 0, 10000 };
 
 		/* mark the whole thing dirty */
 		ui_markdirty(&fullrect);
@@ -1216,8 +1211,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				break;
 			}
 		}
-
-		update_video_and_audio();
 
 		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
 		{
@@ -1439,8 +1432,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				}
 			}
 		}
-	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-			!input_ui_pressed(IPT_UI_CANCEL));
 
 	schedule_full_refresh();
 }
@@ -1780,7 +1771,7 @@ static int setcodesettings(struct mame_bitmap *bitmap,int selected)
 	total = 0;
 	while (in->type != IPT_END)
 	{
-		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION 
+		if (input_port_name(in) != 0 && seq_get_1(&in->seq) != CODE_NONE && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_DESCRIPTION
 		 && !( !options.cheat_input_ports && (in->type & IPF_CHEAT) ) )
 		{
 			entry[total] = in;
@@ -1957,6 +1948,8 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	const char *menu_item[40];
 	const char *menu_subitem[40];
 	struct InputPort *entry[40];
+  int entries_per_port[40];
+  int current_port, total_entries_to_current_port;
 	int i,sel;
 	struct InputPort *in;
 	int total,total2;
@@ -1973,14 +1966,27 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 
 	in = Machine->input_ports;
 
+	/* Each analog control has 3 or 4 entries - key & joy delta, reverse, sensitivity, */
+  /* and xwayjoy for IPT_DIAL and IPT_DIAL_V devices */
+
+#define ENTRIES 4
+
 	/* Count the total number of analog controls */
 	total = 0;
+  total2 = 0;
 	while (in->type != IPT_END)
 	{
 		if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
 				&& !(!options.cheat_input_ports && (in->type & IPF_CHEAT)))
 		{
 			entry[total] = in;
+      if (((in->type & 0xff) == IPT_DIAL) || ((in->type & 0xff) == IPT_DIAL_V))
+        entries_per_port[total] = ENTRIES;
+      else
+        entries_per_port[total] = ENTRIES - 1;
+
+      /* Add on entries from this port to get total entries */
+      total2 += entries_per_port[total];
 			total++;
 		}
 		in++;
@@ -1988,31 +1994,37 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 
 	if (total == 0) return 0;
 
-	/* Each analog control has 3 entries - key & joy delta, reverse, sensitivity */
-
-#define ENTRIES 3
-
-	total2 = total * ENTRIES;
-
 	menu_item[total2] = ui_getstring (UI_returntomain);
 	menu_item[total2 + 1] = 0;	/* terminate array */
 	total2++;
 
 	arrowize = 0;
+  current_port = 0;
+  total_entries_to_current_port = 0;  /* Sum of all entries upto, but not including the current port */
 	for (i = 0;i < total2;i++)
 	{
 		if (i < total2 - 1)
 		{
 			int sensitivity,delta;
 			int reverse;
+      int xwayjoy;  /* Toggle lock out analog (de)increment for one frame if dial(_v) button just pressed */
 
-			strcpy (label[i], input_port_name(entry[i/ENTRIES]));
-			sensitivity = IP_GET_SENSITIVITY(entry[i/ENTRIES]);
-			delta = IP_GET_DELTA(entry[i/ENTRIES]);
-			reverse = (entry[i/ENTRIES]->type & IPF_REVERSE);
+      /* Determine the current port and total entries upto, but not including the current port are */
+      /* for the current value of i */
+      if (i >= total_entries_to_current_port + entries_per_port[current_port])
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			strcpy (label[i], input_port_name(entry[current_port]));
+			sensitivity = IP_GET_SENSITIVITY(entry[current_port]);
+			delta = IP_GET_DELTA(entry[current_port]);
+			reverse = (entry[current_port]->type & IPF_REVERSE);
+      xwayjoy = ((entry[current_port]+2)->type & IPF_XWAYJOY);
 
 			strcat (label[i], " ");
-			switch (i%ENTRIES)
+			switch (i - total_entries_to_current_port)
 			{
 				case 0:
 					strcat (label[i], ui_getstring (UI_keyjoyspeed));
@@ -2030,6 +2042,16 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 				case 2:
 					strcat (label[i], ui_getstring (UI_sensitivity));
 					sprintf(setting[i],"%3d%%",sensitivity);
+					if (i == sel) arrowize = 3;
+					break;
+        /* This case is not reached for analog devices that are not IPT_DIAL or IPT_DIAL_V */
+        /* Omitting cases for certain analog devices only works for cases at the end per the current code */
+				case 3:
+					strcat (label[i], ui_getstring (UI_xwayjoy));
+					if (xwayjoy)
+						strcpy(setting[i],ui_getstring (UI_on));
+					else
+						strcpy(setting[i],ui_getstring (UI_off));
 					if (i == sel) arrowize = 3;
 					break;
 			}
@@ -2054,34 +2076,59 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	{
 		if(sel != total2 - 1)
 		{
-			if ((sel % ENTRIES) == 0)
+      /* Determine which entry sel is pointing toward */
+      current_port = 0;
+      total_entries_to_current_port = 0;  /* Sum of all entries upto, but not including the current port */
+
+      /* Determine the current port and total entries upto, but not including the current port are */
+      /* for the current value of sel */
+      while (sel - entries_per_port[current_port] >= total_entries_to_current_port)
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			if ((sel - total_entries_to_current_port) == 0)
 			/* keyboard/joystick delta */
 			{
-				int val = IP_GET_DELTA(entry[sel/ENTRIES]);
+				int val = IP_GET_DELTA(entry[current_port]);
 
 				val --;
 				if (val < 1) val = 1;
-				IP_SET_DELTA(entry[sel/ENTRIES],val);
+				IP_SET_DELTA(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 1)
+			else if ((sel - total_entries_to_current_port) == 1)
 			/* reverse */
 			{
-				int reverse = entry[sel/ENTRIES]->type & IPF_REVERSE;
+				int reverse = entry[current_port]->type & IPF_REVERSE;
 				if (reverse)
 					reverse=0;
 				else
 					reverse=IPF_REVERSE;
-				entry[sel/ENTRIES]->type &= ~IPF_REVERSE;
-				entry[sel/ENTRIES]->type |= reverse;
+				entry[current_port]->type &= ~IPF_REVERSE;
+				entry[current_port]->type |= reverse;
 			}
-			else if ((sel % ENTRIES) == 2)
+			else if ((sel - total_entries_to_current_port) == 2)
 			/* sensitivity */
 			{
-				int val = IP_GET_SENSITIVITY(entry[sel/ENTRIES]);
+				int val = IP_GET_SENSITIVITY(entry[current_port]);
 
 				val --;
 				if (val < 1) val = 1;
-				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
+				IP_SET_SENSITIVITY(entry[current_port],val);
+			}
+      /* This case is not reached for analog devices that are not IPT_DIAL or IPT_DIAL_V */
+      /* Omitting cases for certain analog devices only works for cases at the end per the current code */
+			else if ((sel - total_entries_to_current_port) == 3)
+			/* xwayjoy */
+			{
+				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
+				if (xwayjoy)
+					xwayjoy=0;
+				else
+					xwayjoy=IPF_XWAYJOY;
+				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+2)->type |= xwayjoy;
 			}
 		}
 	}
@@ -2090,34 +2137,54 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	{
 		if(sel != total2 - 1)
 		{
-			if ((sel % ENTRIES) == 0)
+      /* Determine which entry sel is pointing toward */
+      current_port = 0;
+      total_entries_to_current_port = 0;
+      while (sel - entries_per_port[current_port] >= total_entries_to_current_port)
+      {
+        total_entries_to_current_port += entries_per_port[current_port];
+        current_port++;
+      }
+
+			if ((sel - total_entries_to_current_port) == 0)
 			/* keyboard/joystick delta */
 			{
-				int val = IP_GET_DELTA(entry[sel/ENTRIES]);
+				int val = IP_GET_DELTA(entry[current_port]);
 
 				val ++;
 				if (val > 255) val = 255;
-				IP_SET_DELTA(entry[sel/ENTRIES],val);
+				IP_SET_DELTA(entry[current_port],val);
 			}
-			else if ((sel % ENTRIES) == 1)
+			else if ((sel - total_entries_to_current_port) == 1)
 			/* reverse */
 			{
-				int reverse = entry[sel/ENTRIES]->type & IPF_REVERSE;
+				int reverse = entry[current_port]->type & IPF_REVERSE;
 				if (reverse)
 					reverse=0;
 				else
 					reverse=IPF_REVERSE;
-				entry[sel/ENTRIES]->type &= ~IPF_REVERSE;
-				entry[sel/ENTRIES]->type |= reverse;
+				entry[current_port]->type &= ~IPF_REVERSE;
+				entry[current_port]->type |= reverse;
 			}
-			else if ((sel % ENTRIES) == 2)
+			else if ((sel - total_entries_to_current_port) == 2)
 			/* sensitivity */
 			{
-				int val = IP_GET_SENSITIVITY(entry[sel/ENTRIES]);
+				int val = IP_GET_SENSITIVITY(entry[current_port]);
 
 				val ++;
 				if (val > 255) val = 255;
-				IP_SET_SENSITIVITY(entry[sel/ENTRIES],val);
+				IP_SET_SENSITIVITY(entry[current_port],val);
+			}
+			else if ((sel - total_entries_to_current_port) == 3)
+			/* xwayjoy */
+			{
+				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
+				if (xwayjoy)
+					xwayjoy=0;
+				else
+					xwayjoy=IPF_XWAYJOY;
+				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+2)->type |= xwayjoy;
 			}
 		}
 	}
@@ -3108,7 +3175,7 @@ void setup_menu_init(void)
 		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
 	}
 
-#if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
+#if !defined(SPLIT_CORE) && !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
     menu_item[menu_total] = ui_getstring (UI_generate_xml_dat);   menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 
@@ -3294,7 +3361,6 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
-
 	DoCheat(bitmap);	/* This must be called once a frame */
 
 	if (setup_selected == 0)
@@ -3309,6 +3375,8 @@ int handle_user_interface(struct mame_bitmap *bitmap)
       setup_via_menu = 1;
 	    setup_menu_init();
     }
+
+    if (setup_active()) cpu_pause(true);
   }
 
 	if (setup_selected && setup_via_menu && !options.display_setup)
@@ -3347,8 +3415,29 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed IPT_UI_SHOW_GFX, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
-		showcharset(bitmap);
+		toggle_showgfx = !toggle_showgfx;
+
+		if (toggle_showgfx) /* just changed - init variables */
+		{
+			mode = 0;
+			bank = 0;
+			color = 0;
+			firstdrawn = 0;
+			palpage = 0;
+			cpx = 0;
+			skip_chars = 0;
+			skip_tmap = 0;
+			tilemap_xpos = 0;
+			tilemap_ypos = 0;
+
+			cpu_pause(true);
+		}
 	}
+
+	if(toggle_showgfx) showcharset(bitmap);
+
+	if (!setup_active() && !toggle_showgfx && cpu_pause_state)
+		cpu_pause(false);
 
 	return 0;
 }

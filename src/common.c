@@ -436,7 +436,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		flac_file.write_position = 0;
 
 		if (b_data == 1) {
-			flac_file.write_data = result->data;
+			flac_file.write_data = (INT16 *)result->data;
 
 			if (FLAC__stream_decoder_process_until_end_of_stream (decoder) != FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM) {
 				free(flac_file.rawdata);

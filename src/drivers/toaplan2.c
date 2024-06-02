@@ -17,6 +17,7 @@ Supported games:
 	tekipaki	TP-020		Toaplan		Teki Paki
 	ghox		TP-021		Toaplan		Ghox
 	dogyuun		TP-022		Toaplan		Dogyuun
+	dogyuunto	TP-022		Toaplan		Dogyuun (8/25/1992 location test)
 	kbash		TP-023		Toaplan		Knuckle Bash
 	truxton2	TP-024		Toaplan		Truxton 2 / Tatsujin 2
 	pipibibs	TP-025		Toaplan		Pipi & Bibis
@@ -182,6 +183,7 @@ Game status:
 Teki Paki                      Working.
 Ghox                           Working.
 Dogyuun                        Working, but no sound. MCU type unknown - its a Z?80 of some sort.
+Dogyuun (8/25/1992 LT)         Working, Z80 for sound.
 Knuckle Bash                   Working, partial sound. MCU dump exists, its a Z?80 of some sort.
 Truxton 2                      Working.
 Pipi & Bibis                   Working.
@@ -366,6 +368,12 @@ static MACHINE_INIT( batrider )
 	machine_init_toaplan2();
 }
 
+static MACHINE_INIT( dogyuun )
+{
+	toaplan2_shared_ram16 = auto_malloc(0xFFF);
+	mcu_data = 0xffaa;
+}
+
 static DRIVER_INIT( T2_Z80 )		/* init_t2_Z80(); */
 {
 	toaplan2_sub_cpu = CPU_2_Z80;
@@ -508,46 +516,34 @@ static DRIVER_INIT( bbakrada )
   Toaplan games
 ***************************************************************************/
 
-#define T2_VIDEO_CONTROL 0		/* Need to adjust the sprite lag.. */
-
 READ16_HANDLER( toaplan2_inputport_0_word_r )
 {
-#if T2_VIDEO_CONTROL
-	return cpu_getvblank();
-#else
+/*	int retval = (current_scanline>255) ? 1 : 0; */
 	int retval = vblank_irq;
 	return retval;
-#endif
 }
 
 static void toaplan2_irq(int irq_line)
 {
-#if T2_VIDEO_CONTROL
-	int vpos = cpu_getscanline();
-	if (vpos == 240) cpu_set_irq_line(0, irq_line, HOLD_LINE);
-	vblank_irq = 0; /*Remove*/
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());*/
-#else
 	if (cpu_getiloops() == 0) current_scanline = 255;
 
-	if (current_scanline == 245)
+	if(current_scanline == 245)
 	{
 		cpu_set_irq_line(0, irq_line, HOLD_LINE);
 		vblank_irq = 1;
 	}
 
 	current_scanline++;
-	if (current_scanline > 261)
+	if(current_scanline > 261)
 	{
 		current_scanline = 0;
 		vblank_irq = 0;
 	}
-#endif
 }
 
-static INTERRUPT_GEN( toaplan2_vblank_irq2 ) { toaplan2_irq(2); }
-static INTERRUPT_GEN( toaplan2_vblank_irq3 ) { toaplan2_irq(3); }
-static INTERRUPT_GEN( toaplan2_vblank_irq4 ) { toaplan2_irq(4); }
+static INTERRUPT_GEN( toaplan2_vblank_irq2 ) {toaplan2_irq(2);}
+static INTERRUPT_GEN( toaplan2_vblank_irq3 ) {toaplan2_irq(3);}
+static INTERRUPT_GEN( toaplan2_vblank_irq4 ) {toaplan2_irq(4);}
 
 static READ16_HANDLER( video_count_r )
 {
@@ -557,47 +553,28 @@ static READ16_HANDLER( video_count_r )
 	/* +---------+---------+--------+---------------------------+ */
 	/*************** Control Signals are active low ***************/
 
-#if T2_VIDEO_CONTROL
-	int hpos = cpu_gethorzbeampos();
-	int vpos = cpu_getscanline();
-	video_status = 0xff00;						/* Set signals inactive */
+/*	static int current_beampos = 0; */
 
-	if ((hpos > 325) && (hpos < 380))
-		video_status &= ~0x8000;
-	if ((vpos >= 242) && (vpos <= 245))
-		video_status &= ~0x4000;
-	if (cpu_getvblank())
-		video_status &= ~0x0100;
-	if (vpos < 256)
-		video_status |= (vpos & 0xff);
-	else
-		video_status |= 0xff;
-
-	current_scanline = prev_scanline = vpos; /*Remove*/
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
-#else
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );*/
+/*	logerror("Was VC=%04x  Vbl=%02x  VS=%04x  HS=%04x - ",video_status,vblank_irq,prev_scanline,prev_beampos ); */
 
 	video_status = 0xff00;						/* Set signals inactive */
-	if ((current_scanline & 0x100) == 0) {
-		video_status |= (current_scanline & 0xff);	/* Scanline */
-	}
-	else {
-		video_status |= 0xff;
-	}
+	video_status |= (current_scanline & 0xff);	/* Scanline */
+
 	if (vblank_irq) {
 		video_status &= ~0x0100;
 	}
 	if (prev_scanline != current_scanline) {
-		video_status &= ~0x8000;				/* Activate H-Sync Clk */
+		video_status &= ~0x8000;				/* Activate V-Sync Clk */
 	}
-	if ((current_scanline >= 247) && (current_scanline <= 250)) {
-		video_status &= ~0x4000;				/* Activate V-Sync Clk */
+/*	
+	if (current_beampos) {
+		video_status &= ~0x4000;
 	}
+	current_beampos = ~current_beampos;
+*/
 	prev_scanline = current_scanline;
 
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );*/
-#endif
+/*	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() ); */
 
 	return video_status;
 }
@@ -1459,6 +1436,43 @@ static MEMORY_WRITE16_START( dogyuun_writemem )
 	{ 0x50000c, 0x50000d, toaplan2_1_scroll_reg_data_w },
 MEMORY_END
 
+static MEMORY_READ16_START( dogyuun_z80_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x100000, 0x103fff, MRA16_RAM },
+	{ 0x218000, 0x218fff, shared_ram_r },
+	{ 0x21c020, 0x21c021, input_port_1_word_r },	/* Player 1 controls */
+	{ 0x21c024, 0x21c025, input_port_2_word_r },	/* Player 2 controls */
+	{ 0x21c028, 0x21c029, input_port_3_word_r },	/* Coin/System inputs */
+	{ 0x21c02c, 0x21c02d, input_port_4_word_r },	/* Dip Switch A */
+	{ 0x21c030, 0x21c031, input_port_5_word_r },	/* Dip Switch B */
+	{ 0x21f008, 0x21f009, input_port_6_word_r },	/* Territory Jumper block */ /* no change over the V25 set assumed to be the same */
+	/***** The following in 0x30000x are for video controller 1 ******/
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_r },/* tile layers */
+	{ 0x30000c, 0x30000d, toaplan2_inputport_0_word_r },	/* VBlank */
+	{ 0x400000, 0x400fff, paletteram16_word_r },
+	/***** The following in 0x50000x are for video controller 2 ******/
+	{ 0x500004, 0x500007, toaplan2_1_videoram16_r },/* tile layers 2 */
+	{ 0x700000, 0x700001, video_count_r },			/* test bit 8 */
+MEMORY_END
+
+static MEMORY_WRITE16_START( dogyuun_z80_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x100000, 0x103fff, MWA16_RAM },
+	{ 0x21c01d, 0x21c01d, toaplan2_coin_word_w },
+	{ 0x218000, 0x218fff, shared_ram_w },
+	/***** The following in 0x30000x are for video controller 1 ******/
+	{ 0x300000, 0x300001, toaplan2_0_voffs_w },	/* VideoRAM selector/offset */
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },/* Tile/Sprite VideoRAM */
+	{ 0x300008, 0x300009, toaplan2_0_scroll_reg_select_w },
+	{ 0x30000c, 0x30000d, toaplan2_0_scroll_reg_data_w },
+	{ 0x400000, 0x400fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+	/***** The following in 0x50000x are for video controller 2 ******/
+	{ 0x500000, 0x500001, toaplan2_1_voffs_w },	/* VideoRAM selector/offset */
+	{ 0x500004, 0x500007, toaplan2_1_videoram16_w },/* Tile/Sprite VideoRAM */
+	{ 0x500008, 0x500009, toaplan2_1_scroll_reg_select_w },
+	{ 0x50000c, 0x50000d, toaplan2_1_scroll_reg_data_w },
+MEMORY_END
+
 static MEMORY_READ16_START( kbash_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x103fff, MRA16_RAM },
@@ -2246,6 +2260,21 @@ static PORT_READ_START( Zx80_readport )
 	{ 0x0062, 0x0062, input_port_6_r },		/* Directly mapped I/O ports */
 PORT_END
 #endif
+
+static MEMORY_READ_START( dogyuun_z80_sound_readmem )
+    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0xc000, 0xc7ff, shared_ram8_r },
+	{ 0xe001, 0xe001, YM2151_status_port_0_r },
+	{ 0xe004, 0xe004, OKIM6295_status_0_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( dogyuun_z80_sound_writemem )
+    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0xc000, 0xc7ff, shared_ram8_w },
+	{ 0xe000, 0xe000, YM2151_register_port_0_w },
+	{ 0xe001, 0xe001, YM2151_data_port_0_w },
+	{ 0xe004, 0xe004, OKIM6295_data_0_w },
+MEMORY_END
 
 
 
@@ -4215,6 +4244,14 @@ static struct OKIM6295interface kbash2_okim6295_interface =
 	{ 100, 100 }
 };
 
+static struct OKIM6295interface dogyuunto_okim6295_interface =
+{
+	1,						/* 1 chip */
+	{ 1056000/132 },	    /* frequency (Hz). 1.56MHz to 6295 (using B mode) */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 40 }
+};
+
 static struct YMZ280Binterface ymz280b_interface =
 {
 	1,
@@ -4324,6 +4361,39 @@ static MACHINE_DRIVER_START( dogyuun )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( dogyuunto )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 24000000/2)			/* 12MHz Oscillator */
+	MDRV_CPU_MEMORY(dogyuun_z80_readmem,dogyuun_z80_writemem)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+
+	MDRV_CPU_ADD(Z80, 27000000/8)			/* ??? 3.37MHz , 27MHz Oscillator */
+	MDRV_CPU_MEMORY(dogyuun_z80_sound_readmem,dogyuun_z80_sound_writemem)
+
+	MDRV_FRAMES_PER_SECOND( (27000000.0 / 4) / (432 * 263) )
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
+
+	MDRV_MACHINE_INIT(dogyuun)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_VISIBLE_AREA(0, 319, 0, 239)
+	MDRV_GFXDECODE(gfxdecodeinfo_2)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_START(toaplan2_1)
+	MDRV_VIDEO_EOF(toaplan2_1)
+	MDRV_VIDEO_UPDATE(dogyuun_1)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+	MDRV_SOUND_ADD(OKIM6295, dogyuunto_okim6295_interface)
 MACHINE_DRIVER_END
 
 
@@ -4887,6 +4957,25 @@ ROM_START( dogyuun )
 	ROM_LOAD( "tp022_2.w30", 0x00000, 0x40000, CRC(043271b3) SHA1(c7eaa929e55dd956579b824ea9d20a1d0129a925) )
 ROM_END
 
+ROM_START( dogyuunto )
+	ROM_REGION( 0x080000, REGION_CPU1, 0 )			/* Main 68K code */
+	ROM_LOAD16_WORD_SWAP( "8-25.u11", 0x000000, 0x080000, CRC(4d3c952f) SHA1(194f3065c513238921047ead8b425c3d0538b9a7) ) /* real hand-written label is '8/25' */
+
+	ROM_REGION( 0x08000,  REGION_CPU2, 0 )     /* Z80 Sound CPU */
+	ROM_LOAD( "u25", 0x00000, 0x08000, CRC(41a34a7e) SHA1(c4f7833249436fd064c7088c9776d12dee4a7d39) ) /* only had a white label */
+
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_WORD_SWAP( "tp022_3.w92", 0x000000, 0x100000, CRC(191b595f) SHA1(89344946daa18087cc83f92027cf5da659b1c7a5) )
+	ROM_LOAD16_WORD_SWAP( "tp022_4.w93", 0x100000, 0x100000, CRC(d58d29ca) SHA1(90d142fef37764ef817347a2bed77892a288a077) )
+
+	ROM_REGION( 0x400000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD16_WORD_SWAP( "tp022_5.w16", 0x000000, 0x200000, CRC(d4c1db45) SHA1(f5655467149ba737128c2f54c9c6cdaca6e4c35c) )
+	ROM_LOAD16_WORD_SWAP( "tp022_6.w17", 0x200000, 0x200000, CRC(d48dc74f) SHA1(081b5a00a2ff2bd82b98b30aab3cb5b6ae1014d5) )
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )		/* ADPCM Samples */
+	ROM_LOAD( "2m.u29", 0x00000, 0x40000, CRC(5e7a77d8) SHA1(da6beb5e8e015965ff42fd52f5aa0c0ae5bcee4f) ) /* '2M' hand-written */
+ROM_END
+
 ROM_START( kbash )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 )			/* Main 68K code */
 	ROM_LOAD16_WORD_SWAP( "kbash01.bin", 0x000000, 0x080000, CRC(2965f81d) SHA1(46f2df30fa92c80ba5a37f75e756424e15534784) )
@@ -5414,6 +5503,7 @@ GAME ( 1991, tekipaki, 0,        tekipaki, tekipaki, T2_Z180,  ROT0,   "Toaplan"
 GAME ( 1991, ghox,     0,        ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox (spinner)" )
 GAME ( 1991, ghoxj,    ghox,     ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox (joystick)" )
 GAMEX( 1992, dogyuun,  0,        dogyuun,  dogyuun,  T2_Zx80,  ROT270, "Toaplan", "Dogyuun", GAME_NO_SOUND )
+GAME(  1992, dogyuunto,dogyuun,  dogyuunto,dogyuun,  T2_Z80,   ROT270, "Toaplan", "Dogyuun (8/25/1992 location test)" )
 GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan", "Knuckle Bash", GAME_IMPERFECT_SOUND )
 GAME(  1999, kbash2,   0,        kbash2,   kbash2,   T2_noZ80, ROT0,   "Toaplan", "Knuckle Bash 2" )
 GAME ( 1992, truxton2, 0,        truxton2, truxton2, T2_noZ80, ROT270, "Toaplan", "Truxton II - Tatsujin II - Tatsujin Oh (Japan)" )

@@ -1,5 +1,6 @@
 TARGET_NAME := mame2003_plus
 CORE_DIR    := src
+INCLUDE_DRV ?= all
 
 DEBUG         ?= 0
 DEBUGGER      ?= 0
@@ -378,13 +379,15 @@ else ifeq ($(platform), ngc)
 
 # Nintendo Wii
 else ifeq ($(platform), wii)
-	TARGET = $(TARGET_NAME)_libretro_$(platform).a
+	TARGET = $(TARGET_NAME)_$(INCLUDE_DRV)_libretro_$(platform).a
 	BIGENDIAN = 1
 	CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
 	AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
 	PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
+	PLATCFLAGS += -D$(INCLUDE_DRV) -DSPLIT_CORE
 	STATIC_LINKING = 1
+	ZLIB_UNCOMPRESS = 1
 
 # Nintendo WiiU
 else ifeq ($(platform), wiiu)
@@ -752,7 +755,11 @@ else ifneq (,$(findstring windows_msvc2017,$(platform)))
 else
 	TARGET := $(TARGET_NAME)_libretro.dll
 	CC ?= gcc
-	LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
+	LDFLAGS += -shared -static-libgcc -static-libstdc++
+   	ifneq ($(DEBUG), 1)
+   	LDFLAGS += -s
+   	endif  
+   	LDFLAGS += -Wl,--version-script=link.T
 	CFLAGS += -D__WIN32__
 endif
 
@@ -835,7 +842,11 @@ endif
 endif
 
 # include the various .mak files
-include Makefile.common
+ifneq (,$(filter $(INCLUDE_DRV),all))
+	include Makefile.common
+else
+	include Makefile.split
+endif
 
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
@@ -844,7 +855,7 @@ DEFS = $(COREDEFINES) -Dasm=__asm__
 CFLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 
 # combine the various definitions to one
-CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
+CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o) $(SOURCES_ASM:.s=.o)
 

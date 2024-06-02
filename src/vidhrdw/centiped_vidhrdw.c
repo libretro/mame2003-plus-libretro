@@ -11,6 +11,7 @@
 
 static struct tilemap *tilemap;
 UINT8 centiped_flipscreen;
+static UINT8 penmask[64];
 
 
 
@@ -69,6 +70,7 @@ VIDEO_START( warlords )
 
 	/* we overload centiped_flipscreen here to track the cocktail/upright state */
 	centiped_flipscreen = readinputport(0) & 0x80;
+	tilemap_set_flip(tilemap, centiped_flipscreen ? TILEMAP_FLIPX : 0);
 	return 0;
 }
 
@@ -118,6 +120,22 @@ WRITE_HANDLER( centiped_flip_screen_w )
  *
  *************************************/
 
+static void init_penmask(void)
+{
+	int i;
+
+	for (i = 0; i < 64; i++)
+	{
+		UINT8 mask = 1;
+		if (((i >> 0) & 3) == 0) mask |= 2;
+		if (((i >> 2) & 3) == 0) mask |= 4;
+		if (((i >> 4) & 3) == 0) mask |= 8;
+		penmask[i] = mask;
+	}
+}
+
+
+
 /***************************************************************************
 
 	Centipede doesn't have a color PROM. Eight RAM locations control
@@ -153,11 +171,14 @@ PALETTE_INIT( centiped )
 	/* pen 00 is transparent */
 	for (i = 0; i < TOTAL_COLORS(1); i += 4)
 	{
-		COLOR(1,i+0) = 4;
+		COLOR(1,i+0) = 0;
 		COLOR(1,i+1) = 4 + ((i >> 2) & 3);
 		COLOR(1,i+2) = 4 + ((i >> 4) & 3);
 		COLOR(1,i+3) = 4 + ((i >> 6) & 3);
 	}
+
+	/* create a pen mask for sprite drawing */
+	init_penmask();
 }
 
 
@@ -179,10 +200,11 @@ WRITE_HANDLER( centiped_paletteram_w )
 		else if (g) g = 0xc0;
 	}
 
-	if (offset >= 4 && offset < 8)
-		palette_set_color(offset - 4, r, g, b);
-	else if (offset >= 12 && offset < 16)
-		palette_set_color(4 + (offset - 12), r, g, b);
+	/* bit 2 of the output palette RAM is always pulled high, so we ignore */
+	/* any palette changes unless the write is to a palette RAM address */
+	/* that is actually used */
+	if (offset & 4)
+		palette_set_color(((offset >> 1) & 4) | (offset & 3), r, g, b);
 }
 
 
@@ -264,11 +286,15 @@ PALETTE_INIT( milliped )
 	/* pen 00 is transparent */
 	for (i = 0; i < TOTAL_COLORS(1); i += 4)
 	{
-		COLOR(1,i+0) = 16 + 4*((i >> 8) & 3);
-		COLOR(1,i+1) = 16 + 4*((i >> 8) & 3) + ((i >> 2) & 3);
-		COLOR(1,i+2) = 16 + 4*((i >> 8) & 3) + ((i >> 4) & 3);
-		COLOR(1,i+3) = 16 + 4*((i >> 8) & 3) + ((i >> 6) & 3);
+		int base = 16 + 4 * ((i >> 8) & 3);
+		COLOR(1,i+0) = 0;
+		COLOR(1,i+1) = base + ((i >> 2) & 3);
+		COLOR(1,i+2) = base + ((i >> 4) & 3);
+		COLOR(1,i+3) = base + ((i >> 6) & 3);
 	}
+
+	/* create a pen mask for sprite drawing */
+	init_penmask();
 }
 
 
@@ -300,6 +326,34 @@ WRITE_HANDLER( milliped_paletteram_w )
 	palette_set_color(offset, r, g, b);
 }
 
+WRITE_HANDLER( mazeinv_paletteram_w )
+{
+	int bit0,bit1,bit2;
+	int r,g,b;
+
+	paletteram[offset] = data;
+	data = memory_region(REGION_PROMS)[~data & 0x0f];
+
+	/* red component */
+	bit0 = (data >> 5) & 0x01;
+	bit1 = (data >> 6) & 0x01;
+	bit2 = (data >> 7) & 0x01;
+	r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+
+	/* green component */
+	bit0 = 0;
+	bit1 = (data >> 3) & 0x01;
+	bit2 = (data >> 4) & 0x01;
+	g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+
+	/* blue component */
+	bit0 = (data >> 0) & 0x01;
+	bit1 = (data >> 1) & 0x01;
+	bit2 = (data >> 2) & 0x01;
+	b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+
+	palette_set_color(offset, r,g,b);
+}
 
 
 /*************************************
@@ -327,12 +381,13 @@ VIDEO_UPDATE( centiped )
 	{
 		int code = ((spriteram[offs] & 0x3e) >> 1) | ((spriteram[offs] & 0x01) << 6);
 		int color = spriteram[offs + 0x30];
-		int flipy = spriteram[offs] & 0x80;
+		int flipx = (spriteram[offs] >> 6) & 1;
+		int flipy = (spriteram[offs] >> 7) & 1;
 		int x = spriteram[offs + 0x20];
 		int y = 240 - spriteram[offs + 0x10];
 
-		drawgfx(bitmap, Machine->gfx[1], code, color & 0x3f, centiped_flipscreen, flipy, x, y,
-				&spriteclip, TRANSPARENCY_PEN, 0);
+		drawgfx(bitmap, Machine->gfx[1], code, color, centiped_flipscreen ^ flipx, flipy, x, y,
+				&spriteclip, TRANSPARENCY_PENS, penmask[color & 0x3f]);
 	}
 }
 
@@ -357,8 +412,8 @@ VIDEO_UPDATE( warlords )
 	for (offs = 0; offs < 0x10; offs++)
 	{
 		int code = spriteram[offs] & 0x3f;
-		int flipx = spriteram[offs] & 0x40;
-		int flipy = spriteram[offs] & 0x80;
+		int flipx = (spriteram[offs] >> 6) & 1;
+		int flipy = (spriteram[offs] >> 7) & 1;
 		int x = spriteram[offs + 0x20];
 		int y = 248 - spriteram[offs + 0x10];
 

@@ -148,6 +148,34 @@ static PORT_WRITE_START( sound_writeport )
 	{ 0x83, 0x83, m72_sound_irq_ack_w },	/* IRQ clear */
 PORT_END
 
+static MEMORY_READ_START( buccanrs_sound_readmem )
+    { 0x0000, 0xbfff, MRA_ROM },
+	{ 0xf000, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( buccanrs_sound_writemem )
+    { 0x0000, 0xbfff, MWA_ROM },
+	{ 0xf000, 0xffff, MWA_RAM },
+MEMORY_END
+
+static PORT_READ_START( buccanrs_sound_readport )
+    { 0x00, 0x00, YM2203_status_port_0_r },
+	{ 0x01, 0x01, YM2203_read_port_0_r },
+	{ 0x02, 0x02, YM2203_status_port_1_r },
+	{ 0x03, 0x03, YM2203_read_port_1_r },
+	{ 0x80, 0x80, soundlatch_r },	/* SDRE */
+	{ 0x84, 0x84, m72_sample_r },	/* S ROM C */
+PORT_END
+
+static PORT_WRITE_START( buccanrs_sound_writeport )
+    { 0x00, 0x00, YM2203_control_port_0_w },
+	{ 0x01, 0x01, YM2203_write_port_0_w },
+	{ 0x02, 0x02, YM2203_control_port_1_w },
+	{ 0x03, 0x03, YM2203_write_port_1_w },
+	{ 0x80, 0x81, vigilant_sample_addr_w },	/* STL / STH */
+	{ 0x82, 0x82, m72_sample_w },			/* COUNT UP */
+	{ 0x83, 0x83, m72_sound_irq_ack_w },	/* IRQ clear */
+PORT_END
 
 INPUT_PORTS_START( vigilant )
 	PORT_START
@@ -324,14 +352,173 @@ INPUT_PORTS_START( kikcubic )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( buccanrs )
+	PORT_START
+	PORT_SERVICE( 0x2f, IP_ACTIVE_LOW ) // any of these bits while booting will enable service mode
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
+
+	PORT_START
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_COCKTAIL )
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_COCKTAIL )
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_COCKTAIL )
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+
+	PORT_START
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(	0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x07, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x00, "5 Coins/2 Credits" )
+	PORT_DIPSETTING(	0x0a, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x06, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(	0x03, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(	0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x05, "3 Coins/5 Credits" )
+	PORT_DIPSETTING(	0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(	0x40, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x70, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x00, "5 Coins/2 Credits" )
+	PORT_DIPSETTING(	0xa0, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x60, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(	0x30, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(	0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x50, "3 Coins/5 Credits" )
+	PORT_DIPSETTING(	0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0xb0, DEF_STR( 1C_5C ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x06, "2" )
+	PORT_DIPSETTING(    0x04, "3" )
+	PORT_DIPSETTING(    0x02, "4" )
+	PORT_DIPSETTING(    0x00, "5" )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x10, "Hard" )
+	PORT_DIPSETTING(    0x08, "Medium" )
+	PORT_DIPSETTING(    0x18, "Normal" )
+	PORT_DIPSETTING(    0x00, "Invicibility (time still decrease)" )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x00, "Allow_Continue" )
+	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( buccanra )
+	PORT_START
+    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 )
+    PORT_SERVICE( 0xf4, IP_ACTIVE_LOW ) // any of these bits while booting will enable service mode
+
+	PORT_START
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
+
+	PORT_START
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_COCKTAIL )
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_COCKTAIL )
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_COCKTAIL )
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
+
+	PORT_START
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(	0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x07, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x00, "5 Coins/2 Credits" )
+	PORT_DIPSETTING(	0x0a, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x06, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(	0x03, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(	0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x05, "3 Coins/5 Credits" )
+	PORT_DIPSETTING(	0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(	0x40, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(	0x70, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(	0x00, "5 Coins/2 Credits" )
+	PORT_DIPSETTING(	0xa0, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(	0x60, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(	0x30, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(	0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(	0x50, "3 Coins/5 Credits" )
+	PORT_DIPSETTING(	0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(	0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(	0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(	0xb0, DEF_STR( 1C_5C ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x06, "2" )
+	PORT_DIPSETTING(    0x04, "3" )
+	PORT_DIPSETTING(    0x02, "4" )
+	PORT_DIPSETTING(    0x00, "5" )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x10, "Hard" )
+	PORT_DIPSETTING(    0x08, "Medium" )
+	PORT_DIPSETTING(    0x18, "Normal" )
+	PORT_DIPSETTING(    0x00, "Invicibility (time still decrease)" )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x00, "Allow_Continue" )
+	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+INPUT_PORTS_END
 
 
 static struct GfxLayout text_layout =
 {
 	8,8, /* tile size */
-	4096, /* number of tiles */
+	RGN_FRAC(1,2), /* number of tiles */
 	4, /* bits per pixel */
-	{64*1024*8,64*1024*8+4,0,4}, /* plane offsets */
+	{RGN_FRAC(1,2),RGN_FRAC(1,2)+4,0,4}, /* plane offsets */
 	{ 0,1,2,3, 64+0,64+1,64+2,64+3 }, /* x offsets */
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 }, /* y offsets */
 	128
@@ -340,9 +527,9 @@ static struct GfxLayout text_layout =
 static struct GfxLayout sprite_layout =
 {
 	16,16,	/* tile size */
-	4096,	/* number of sprites ($1000) */
+	RGN_FRAC(1,2),	/* number of sprites ($1000) */
 	4,		/* bits per pixel */
-	{0x40000*8,0x40000*8+4,0,4}, /* plane offsets */
+	{RGN_FRAC(1,2),RGN_FRAC(1,2)+4,0,4}, /* plane offsets */
 	{ /* x offsets */
 		0x00*8+0,0x00*8+1,0x00*8+2,0x00*8+3,
 		0x10*8+0,0x10*8+1,0x10*8+2,0x10*8+3,
@@ -358,12 +545,47 @@ static struct GfxLayout sprite_layout =
 	0x40*8
 };
 
+static struct GfxLayout sprite_layout_buccanrs =
+{
+	16,16,	/* tile size */
+	RGN_FRAC(1,2),	/* number of sprites ($1000) */
+	4,		/* bits per pixel */
+	{RGN_FRAC(1,2),RGN_FRAC(1,2)+4,0,4}, /* plane offsets */
+	{ /* x offsets */
+		0x00*8+3,0x00*8+2,0x00*8+1,0x00*8+0,
+		0x10*8+3,0x10*8+2,0x10*8+1,0x10*8+0,
+		0x20*8+3,0x20*8+2,0x20*8+1,0x20*8+0,
+		0x30*8+3,0x30*8+2,0x30*8+1,0x30*8+0
+	},
+	{ /* y offsets */
+		0x00*8, 0x01*8, 0x02*8, 0x03*8,
+		0x04*8, 0x05*8, 0x06*8, 0x07*8,
+		0x08*8, 0x09*8, 0x0A*8, 0x0B*8,
+		0x0C*8, 0x0D*8, 0x0E*8, 0x0F*8
+	},
+	0x40*8
+};
+
+
 static struct GfxLayout back_layout =
 {
 	32,1, /* tile size */
-	3*512*8, /* number of tiles */
+	RGN_FRAC(1,1), /* number of tiles */
 	4, /* bits per pixel */
 	{0,2,4,6}, /* plane offsets */
+	{ 0*8+1, 0*8,  1*8+1, 1*8, 2*8+1, 2*8, 3*8+1, 3*8, 4*8+1, 4*8, 5*8+1, 5*8,
+	6*8+1, 6*8, 7*8+1, 7*8, 8*8+1, 8*8, 9*8+1, 9*8, 10*8+1, 10*8, 11*8+1, 11*8,
+	12*8+1, 12*8, 13*8+1, 13*8, 14*8+1, 14*8, 15*8+1, 15*8 }, /* x offsets */
+	{ 0 }, /* y offsets */
+	16*8
+};
+
+static struct GfxLayout buccaneer_back_layout =
+{
+	32,1, /* tile size */
+	RGN_FRAC(1,1), /* number of tiles */
+	4, /* bits per pixel */
+	{6,4,2,0}, /* plane offsets */
 	{ 0*8+1, 0*8,  1*8+1, 1*8, 2*8+1, 2*8, 3*8+1, 3*8, 4*8+1, 4*8, 5*8+1, 5*8,
 	6*8+1, 6*8, 7*8+1, 7*8, 8*8+1, 8*8, 9*8+1, 9*8, 10*8+1, 10*8, 11*8+1, 11*8,
 	12*8+1, 12*8, 13*8+1, 13*8, 14*8+1, 14*8, 15*8+1, 15*8 }, /* x offsets */
@@ -376,6 +598,16 @@ static struct GfxDecodeInfo vigilant_gfxdecodeinfo[] =
 	{ REGION_GFX1, 0, &text_layout,   256, 16 },	/* colors 256-511 */
 	{ REGION_GFX2, 0, &sprite_layout,   0, 16 },	/* colors   0-255 */
 	{ REGION_GFX3, 0, &back_layout,   512,  2 },	/* actually the background uses colors */
+													/* 256-511, but giving it exclusive */
+													/* pens we can handle it more easily. */
+	{ -1 } /* end of array */
+};
+
+static struct GfxDecodeInfo buccanrs_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &text_layout,   256, 16 },	/* colors 256-511 */
+	{ REGION_GFX2, 0, &sprite_layout_buccanrs,   0, 16 },	/* colors   0-255 */
+	{ REGION_GFX3, 0, &buccaneer_back_layout,   512,  2 },	/* actually the background uses colors */
 													/* 256-511, but giving it exclusive */
 													/* pens we can handle it more easily. */
 	{ -1 } /* end of array */
@@ -399,10 +631,28 @@ static struct YM2151interface ym2151_interface =
 	{ 0 }
 };
 
+static struct YM2203interface ym2203_interface =
+{
+	2,			/* 2 chips */
+	18432000/6,
+	{ YM2203_VOL(50,35), YM2203_VOL(50,35) },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{ 0 },
+	{m72_ym2151_irq_handler }
+};
+
 static struct DACinterface dac_interface =
 {
 	1,
 	{ 100 }
+};
+
+static struct DACinterface buccanrs_dac_interface =
+{
+	1,
+	{ 35 }
 };
 
 
@@ -476,7 +726,39 @@ static MACHINE_DRIVER_START( kikcubic )
 	MDRV_SOUND_ADD(DAC, dac_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( buccanrs )
 
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 5688800)		   /* 5.688800 MHz */
+	MDRV_CPU_MEMORY(vigilant_readmem,vigilant_writemem)
+	MDRV_CPU_PORTS(vigilant_readport,vigilant_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+    MDRV_CPU_ADD(Z80, 18432000/6)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)		   /* 3.072000 MHz */
+	MDRV_CPU_MEMORY(buccanrs_sound_readmem,buccanrs_sound_writemem)
+	MDRV_CPU_PORTS(buccanrs_sound_readport,buccanrs_sound_writeport)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,128)	/* clocked by V1 */
+								/* IRQs are generated by main Z80 and YM2151 */
+	MDRV_FRAMES_PER_SECOND(55)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_MACHINE_INIT(m72_sound)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(16*8, (64-16)*8-1, 0*8, 32*8-1 )
+	MDRV_GFXDECODE(buccanrs_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(512+32)	/* 512 real palette, 32 virtual palette */
+
+	MDRV_VIDEO_START(vigilant)
+	MDRV_VIDEO_UPDATE(vigilant)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2203, ym2203_interface)
+	MDRV_SOUND_ADD(DAC, buccanrs_dac_interface)
+MACHINE_DRIVER_END
 
 /***************************************************************************
 
@@ -507,7 +789,7 @@ ROM_START( vigilant )
 	ROM_LOAD( "v07_c17.bin",  0x60000, 0x10000, CRC(959ba3c7) SHA1(dcd2a885ae7b61210cbd55a38ccbe91c73d071b0) )
 	ROM_LOAD( "s07_c15.bin",  0x70000, 0x10000, CRC(7f2e91c5) SHA1(27dcc9b696834897c36c0b7a1c6202d93f41ad8d) )
 
-	ROM_REGION( 0x30000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
 	ROM_LOAD( "d01_c05.bin",  0x00000, 0x10000, CRC(81b1ee5c) SHA1(2014165ec71f089fecb5a3e60b939cc0f565d7f1) )
 	ROM_LOAD( "e01_c06.bin",  0x10000, 0x10000, CRC(d0d33673) SHA1(39761d97a71deaf7f17233d5bd5a55dbb1e6b30e) )
 	ROM_LOAD( "f01_c07.bin",  0x20000, 0x10000, CRC(aae81695) SHA1(ca8e136eca3543b27f3a61b105d4a280711cd6ea) )
@@ -539,7 +821,7 @@ ROM_START( vigilntu )
 	ROM_LOAD( "v07_c17.bin",  0x60000, 0x10000, CRC(959ba3c7) SHA1(dcd2a885ae7b61210cbd55a38ccbe91c73d071b0) )
 	ROM_LOAD( "s07_c15.bin",  0x70000, 0x10000, CRC(7f2e91c5) SHA1(27dcc9b696834897c36c0b7a1c6202d93f41ad8d) )
 
-	ROM_REGION( 0x30000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
 	ROM_LOAD( "d01_c05.bin",  0x00000, 0x10000, CRC(81b1ee5c) SHA1(2014165ec71f089fecb5a3e60b939cc0f565d7f1) )
 	ROM_LOAD( "e01_c06.bin",  0x10000, 0x10000, CRC(d0d33673) SHA1(39761d97a71deaf7f17233d5bd5a55dbb1e6b30e) )
 	ROM_LOAD( "f01_c07.bin",  0x20000, 0x10000, CRC(aae81695) SHA1(ca8e136eca3543b27f3a61b105d4a280711cd6ea) )
@@ -571,7 +853,7 @@ ROM_START( vigilntj )
 	ROM_LOAD( "v07_c17.bin",  0x60000, 0x10000, CRC(959ba3c7) SHA1(dcd2a885ae7b61210cbd55a38ccbe91c73d071b0) )
 	ROM_LOAD( "s07_c15.bin",  0x70000, 0x10000, CRC(7f2e91c5) SHA1(27dcc9b696834897c36c0b7a1c6202d93f41ad8d) )
 
-	ROM_REGION( 0x30000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
 	ROM_LOAD( "d01_c05.bin",  0x00000, 0x10000, CRC(81b1ee5c) SHA1(2014165ec71f089fecb5a3e60b939cc0f565d7f1) )
 	ROM_LOAD( "e01_c06.bin",  0x10000, 0x10000, CRC(d0d33673) SHA1(39761d97a71deaf7f17233d5bd5a55dbb1e6b30e) )
 	ROM_LOAD( "f01_c07.bin",  0x20000, 0x10000, CRC(aae81695) SHA1(ca8e136eca3543b27f3a61b105d4a280711cd6ea) )
@@ -606,9 +888,77 @@ ROM_START( kikcubic )
 	ROM_LOAD( "7s",           0x0120, 0x0020, CRC(face0cbb) SHA1(c56aea3b7aaabbd4ff1b4546fcad94f51b473cde) )	/* unknown (bad read?) */
 ROM_END
 
+ROM_START( buccanrs )
+	ROM_REGION( 0x30000, REGION_CPU1, 0 ) /* 64k for code + 128k for bankswitching */
+	ROM_LOAD( "11.u58",  0x00000, 0x10000, CRC(bf1d7e6f) SHA1(55dcf993515b57c3eb1fab98097a2171df3e38ed) ) // both halves are identical (correct for rom type on this board tho)
+	ROM_LOAD( "12.u25",  0x10000, 0x10000, CRC(87303ba8) SHA1(49a25393e853b9adf7df00a6f9c38a526a02ea4e) )
 
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound */
+	ROM_LOAD( "1.u128",  0x00000, 0x10000, CRC(eb65f8c3) SHA1(82566becb630ce92303905dc0c5bef9e80e9caad) )
+
+	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "7.u212",  0x00000, 0x10000, CRC(95e3c517) SHA1(9954830ebc3a6414a3236f4e41981db082e5ea19) )
+	ROM_LOAD( "8.u189",  0x10000, 0x10000, CRC(fe2377ab) SHA1(8578c5466d98f140fdfc41e91cd841e725786e32) )
+
+	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "3.u100",  0x00000, 0x10000, CRC(16dc435f) SHA1(0c13e9786b356770c84f94684697e43d0ea9e7cc) )
+	ROM_CONTINUE(        0x20000, 0x10000 )
+	ROM_LOAD( "4.u80",   0x10000, 0x10000, CRC(4fe3bf97) SHA1(7910ace1eed80bfafa1f9f057ed67e23aa446a22) )
+	ROM_LOAD( "6.u52",   0x40000, 0x10000, CRC(078aef7f) SHA1(72e60d39d8af8bd31e9ae019b12620797eb0af7f) )
+	ROM_CONTINUE(        0x60000, 0x10000 )
+	ROM_LOAD( "5.u70",   0x50000, 0x10000, CRC(f650fa90) SHA1(c87081b4d6b09f865d08c5120da3d0fb3196a2c3) )
+
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "9.u49",   0x20000, 0x20000, CRC(0c6188fb) SHA1(d49034384c6d0e94db2890223b32a2a49e79a639) )
+	ROM_LOAD( "10.u27",  0x00000, 0x20000, CRC(2d383ff8) SHA1(3062baac27feba69c6ed94935c5ced72d89ed4fb) )
+
+	ROM_REGION( 0x10000, REGION_SOUND1, 0 ) /* samples */
+	ROM_LOAD( "2.u74",  0x00000, 0x10000, CRC(36ee1dac) SHA1(6dfd2a885c0b1c9347abc4b204ade66551c4b404) )
+
+	ROM_REGION( 0x400, REGION_PROMS, 0 )
+	ROM_LOAD( "prom1.u54",  0x0000, 0x0100, CRC(c324835e) SHA1(cf6ffe38523badfda211d341410e93e647de87a9) )
+	ROM_LOAD( "prom4.u79",  0x0100, 0x0100, CRC(e6506ef4) SHA1(079841da7640b14d94aaaeb572bf018932b58293) )
+	ROM_LOAD( "prom3.u88",  0x0200, 0x0100, CRC(b43d094f) SHA1(2bed4892d8a91d7faac5a07bf858d9294eb30606) )
+	ROM_LOAD( "prom2.u99",  0x0300, 0x0100, CRC(e0aa8869) SHA1(ac8bdfeba69420ba56ec561bf3d0f1229d02cea2) )
+ROM_END
+
+ROM_START( buccanra )
+	ROM_REGION( 0x30000, REGION_CPU1, 0 ) /* 64k for code + 128k for bankswitching */
+	ROM_LOAD( "bc-011",  0x00000, 0x08000, CRC(6b657ef1) SHA1(a3356654d4b04177af23b39e924cc5ad64930bb6) )
+	ROM_LOAD( "12.u25",  0x10000, 0x10000, CRC(87303ba8) SHA1(49a25393e853b9adf7df00a6f9c38a526a02ea4e) ) // not from this set, hopefully its only a data rom
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound */
+	ROM_LOAD( "1.u128",  0x00000, 0x10000, CRC(eb65f8c3) SHA1(82566becb630ce92303905dc0c5bef9e80e9caad) )
+
+	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "7.u212",  0x00000, 0x10000, CRC(95e3c517) SHA1(9954830ebc3a6414a3236f4e41981db082e5ea19) )
+	ROM_LOAD( "8.u189",  0x10000, 0x10000, CRC(fe2377ab) SHA1(8578c5466d98f140fdfc41e91cd841e725786e32) )
+
+	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "3.u100",  0x00000, 0x10000, CRC(16dc435f) SHA1(0c13e9786b356770c84f94684697e43d0ea9e7cc) )
+	ROM_CONTINUE(        0x20000, 0x10000 )
+	ROM_LOAD( "4.u80",   0x10000, 0x10000, CRC(4fe3bf97) SHA1(7910ace1eed80bfafa1f9f057ed67e23aa446a22) ) // was double size (2nd half blank) in this set)
+	ROM_LOAD( "6.u52",   0x40000, 0x10000, CRC(078aef7f) SHA1(72e60d39d8af8bd31e9ae019b12620797eb0af7f) )
+	ROM_CONTINUE(        0x60000, 0x10000 )
+	ROM_LOAD( "5.u70",   0x50000, 0x10000, CRC(f650fa90) SHA1(c87081b4d6b09f865d08c5120da3d0fb3196a2c3) ) // was double size (2nd half blank) in this set)
+
+	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "9.u49",   0x20000, 0x20000, CRC(0c6188fb) SHA1(d49034384c6d0e94db2890223b32a2a49e79a639) )
+	ROM_LOAD( "10.u27",  0x00000, 0x20000, CRC(2d383ff8) SHA1(3062baac27feba69c6ed94935c5ced72d89ed4fb) )
+
+	ROM_REGION( 0x10000, REGION_SOUND1, 0 ) /* samples */
+	ROM_LOAD( "2.u74",  0x00000, 0x10000, CRC(36ee1dac) SHA1(6dfd2a885c0b1c9347abc4b204ade66551c4b404) )
+
+	ROM_REGION( 0x400, REGION_PROMS, 0 )
+	ROM_LOAD( "prom1.u54",  0x0000, 0x0100, CRC(c324835e) SHA1(cf6ffe38523badfda211d341410e93e647de87a9) )
+	ROM_LOAD( "prom4.u79",  0x0100, 0x0100, CRC(e6506ef4) SHA1(079841da7640b14d94aaaeb572bf018932b58293) )
+	ROM_LOAD( "prom3.u88",  0x0200, 0x0100, CRC(b43d094f) SHA1(2bed4892d8a91d7faac5a07bf858d9294eb30606) )
+	ROM_LOAD( "prom2.u99",  0x0300, 0x0100, CRC(e0aa8869) SHA1(ac8bdfeba69420ba56ec561bf3d0f1229d02cea2) )
+ROM_END
 
 GAMEX( 1988, vigilant, 0,        vigilant, vigilant, 0, ROT0, "Irem", "Vigilante (World)", GAME_NO_COCKTAIL )
 GAMEX( 1988, vigilntu, vigilant, vigilant, vigilant, 0, ROT0, "Irem (Data East USA license)", "Vigilante (US)", GAME_NO_COCKTAIL )
 GAMEX( 1988, vigilntj, vigilant, vigilant, vigilant, 0, ROT0, "Irem", "Vigilante (Japan)", GAME_NO_COCKTAIL )
 GAMEX( 1988, kikcubic, 0,        kikcubic, kikcubic, 0, ROT0, "Irem", "Meikyu Jima (Japan)", GAME_NO_COCKTAIL )	/* English title is Kickle Cubicle */
+GAMEX( 1989, buccanrs, 0,        buccanrs, buccanrs, 0, ROT0, "Duintronic", "Buccaneers (set 1)", GAME_NO_COCKTAIL )
+GAMEX( 1989, buccanra, buccanrs, buccanrs, buccanra, 0, ROT0, "Duintronic", "Buccaneers (set 2)", GAME_NO_COCKTAIL )

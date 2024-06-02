@@ -84,7 +84,6 @@ static data8_t mCoinCount[4];
 static data8_t mCoinState;
 static data16_t *mcu_ram;
 static int mEnableInterrupts;
-int namcona1_gametype;
 
 /*************************************************************************/
 
@@ -409,7 +408,10 @@ simulate_mcu( void )
 			if( i==1 )
 			{
 				if( readinputport(1)&0x80 ) data |= 0x80; /* P1 start */
-				if( readinputport(2)&0x80 ) data |= 0x40; /* P2 start */
+			}
+			if( i==2 )
+			{
+				if( readinputport(2)&0x80 ) data |= 0x80; /* P2 start */
 			}
 			break;
 

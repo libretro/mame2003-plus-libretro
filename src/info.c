@@ -870,7 +870,7 @@ void print_mame_xml()
 		"\t\t\t\t<!ATTLIST dipvalue name CDATA #REQUIRED>\n"
 		"\t\t\t\t<!ATTLIST dipvalue default (yes|no) \"no\">\n"
 		"\t\t<!ELEMENT driver EMPTY>\n"
-		"\t\t\t<!ATTLIST driver status (good|preliminary|test) #REQUIRED>\n"
+		"\t\t\t<!ATTLIST driver status (good|preliminary|protection) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver color (good|imperfect|preliminary) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver sound (good|imperfect|preliminary) #REQUIRED>\n"
 		"\t\t\t<!ATTLIST driver graphic (good|imperfect) #REQUIRED>\n"
@@ -882,7 +882,7 @@ void print_mame_xml()
 	/* print games */
 	for(driver_index = 0;drivers[driver_index];++driver_index)
 		print_game_info(xml_dat, drivers[driver_index]);
-
+#ifndef SPLIT_CORE
 	/* print the resources (only if linked) */
 	PRINT_RESOURCE(neogeo);
 	PRINT_RESOURCE(cvs);
@@ -900,7 +900,7 @@ void print_mame_xml()
 	PRINT_RESOURCE(tps);
 	PRINT_RESOURCE(taitofx1);
 	PRINT_RESOURCE(acpsx);
-
+#endif
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
 }

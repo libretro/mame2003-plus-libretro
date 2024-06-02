@@ -385,11 +385,10 @@ const int frameskip_table[12][12] =
      { 0,1,1,1,1,1,0,1,1,1,1,1 },
      { 0,1,1,1,1,1,1,1,1,1,1,1 } };
 
- unsigned frameskip_counter = 0;
+UINT8 frameskip_counter = 0;
+
 int osd_skip_this_frame(void)
 {
-	static unsigned auto_frameskip_counter = 0;
-
 	bool skip_frame = 0;
 
 	if (pause_action)  return 0;  /* dont skip pause action hack (rendering mame info screens or you wont see them and not know to press a key) */
@@ -402,36 +401,23 @@ int osd_skip_this_frame(void)
 			switch ( options.frameskip)
 			{
 				case 12: /* auto */
-					skip_frame = retro_audio_buff_underrun;
+					skip_frame = retro_audio_buff_underrun ? 1 : 0;
 				break;
 				case 13: /* aggressive */
-					skip_frame = (retro_audio_buff_occupancy < 33);
+					skip_frame = (retro_audio_buff_occupancy < 33)  ? 1 : 0;
 				break;
 				case 14: /* max */
-					skip_frame = (retro_audio_buff_occupancy < 50);
+					skip_frame = (retro_audio_buff_occupancy < 50)  ? 1 : 0;
 				break;
 				default:
-					skip_frame = false;
+					skip_frame = options.frameskip;
 				break;
-}
-			if (skip_frame)
-			{
-				if(auto_frameskip_counter <= 40)
-				{
-					auto_frameskip_counter++;;
-				}
-				else
-				{
-					auto_frameskip_counter = 0;/* control will return 0 at the end */
-					skip_frame=0;
-				}
 			}
 		}
 	}
-	else /*manual frameskip includes disabled check */
-	{
-		skip_frame = frameskip_table[options.frameskip][frameskip_counter];
-	}
+	else /*manual frameskip */
+	 skip_frame = frameskip_table[options.frameskip][frameskip_counter];
+
 	return skip_frame;
 }
 
@@ -504,7 +490,7 @@ void osd_update_video_and_audio(struct mame_display *display)
 
    gotFrame = 1;
 
-   frameskip_counter = (frameskip_counter + 1) % 12;
+  
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);
 }
 

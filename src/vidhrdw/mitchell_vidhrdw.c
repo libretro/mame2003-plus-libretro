@@ -98,6 +98,12 @@ WRITE_HANDLER( pang_video_bank_w )
 	video_bank = data;
 }
 
+WRITE_HANDLER( mstworld_video_bank_w )
+{
+	/* Monsters World seems to freak out if more bits are used.. */
+	video_bank = data&1;
+}
+
 WRITE_HANDLER( mgakuen_videoram_w )
 {
 	if (pang_videoram[offset] != data)
@@ -183,6 +189,42 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: pang_gfxctrl_w %02x\n",activecpu_get_pc
 
 	/* bit 4 selects OKI M6295 bank */
 	OKIM6295_set_bank_base(0, (data & 0x10) ? 0x40000 : 0x00000);
+
+	/* bit 5 is palette RAM bank selector (doesn't apply to mgakuen) */
+	paletteram_bank = data & 0x20;
+
+	/* bits 6 and 7 are unknown, used in several places. At first I thought */
+	/* they were bg and sprites enable, but this screws up spang (screen flickers */
+	/* every time you pop a bubble). However, not using them as enable bits screws */
+	/* up marukin - you can see partially built up screens during attract mode. */
+}
+
+WRITE_HANDLER( mstworld_gfxctrl_w )
+{
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: pang_gfxctrl_w %02x\n",activecpu_get_pc(),data);
+{
+	char baf[40];
+	sprintf(baf,"%02x",data);
+    /*	usrintf_showmessage(baf);*/
+}
+
+	/* bit 0 is unknown (used, maybe back color enable?) */
+
+	/* bit 1 is coin counter */
+	coin_counter_w(0,data & 2);
+
+	/* bit 2 is flip screen */
+	if (flipscreen != (data & 0x04))
+	{
+		flipscreen = data & 0x04;
+		tilemap_set_flip(ALL_TILEMAPS,flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+	}
+
+	/* bit 3 is unknown (used, e.g. marukin pulses it on the title screen) */
+
+	/* bit 4 selects OKI M6295 bank */
+/*  OKIM6295_set_bank_base(0, (data & 0x10) ? 0x40000 : 0x00000); */
+	/* not here.. it has its own z80 + sound banking */
 
 	/* bit 5 is palette RAM bank selector (doesn't apply to mgakuen) */
 	paletteram_bank = data & 0x20;

@@ -148,7 +148,7 @@ Changes:
  *
  *************************************/
 
-static int banks = 0;
+static int banks = 99;
 
 static struct EEPROM_interface braze_eeprom_intf =
 {
@@ -180,12 +180,21 @@ static READ_HANDLER( braze_eeprom_r )
 
 static WRITE_HANDLER( braze_a15_w )
 {
-
-	if (banks != (data & 1)) {
+      
 		banks = data & 1;
-		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); /* ?*/
-		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); /* ?*/
-	}
+		//printf("banks:%d\n",banks);
+
+		if(banks)
+		{
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x18000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x18000);
+		}
+		else
+		{
+			cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+			cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
+		}
+	
 }
 
 static WRITE_HANDLER( braze_eeprom_w )
@@ -293,6 +302,16 @@ static READ_HANDLER( dkong_in2_r )
 }
 
 
+static READ_HANDLER( dkremix_in2_r )
+{
+	if (offset==0 && cpu_getcurrentframe()==4)
+	{
+		return 0x80;
+	}
+
+	return input_port_2_r(offset) | (mcustatus << 6);
+}
+
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
@@ -307,16 +326,27 @@ static MEMORY_READ_START( readmem )
 MEMORY_END
 
 static MEMORY_READ_START( dkong2_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x0000, 0x5fff, MRA_BANK1 },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
 	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
 	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
 	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
 	{ 0x7d00, 0x7d00, dkong_in2_r },	/* IN2/DSW2 */
 	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0xffff, MRA_BANK2 },	/* DK3 and bootleg DKjr only */
 	{ 0xc800, 0xc800, braze_eeprom_r },
-	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
-	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
+MEMORY_END
+
+static MEMORY_READ_START( dkremix_readmem )
+	{ 0x0000, 0x5fff, MRA_BANK1 },	/* DK: 0000-3fff */
+	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
+	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
+	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
+	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
+	{ 0x7d00, 0x7d00, dkremix_in2_r },	/* IN2/DSW2 */
+	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0xffff, MRA_BANK2 },	/* DK3 and bootleg DKjr only */
+	{ 0xc800, 0xc800, braze_eeprom_r },
 MEMORY_END
 
 static MEMORY_READ_START( dkong3_readmem )
@@ -793,7 +823,7 @@ INPUT_PORTS_START( dkong )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( dkong2 )
+INPUT_PORTS_START( dkongx )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY )
@@ -984,61 +1014,6 @@ INPUT_PORTS_START( dkong3b )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-INPUT_PORTS_END
-
-INPUT_PORTS_START( dkrdemo )
-	PORT_START      /* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-
-	PORT_START      /* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-
-	PORT_START      /* IN2 */
-	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* status from sound cpu */
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
-
-	PORT_START      /* DSW0 */
-	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x00, "3" )
-	PORT_DIPSETTING(    0x01, "5" )
-	PORT_DIPSETTING(    0x02, "7" )
-	PORT_DIPSETTING(    0x03, "9" )
-	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(    0x00, "10000" )
-	PORT_DIPSETTING(    0x04, "15000" ) /* and each additional 150k */
-	PORT_DIPSETTING(    0x08, "25000" ) /* and each additional 250k */
-	PORT_DIPSETTING(    0x0c, "35000" ) /* and each additional 350k */
-	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Coinage ) )
-	PORT_DIPSETTING(    0x30, "Free Play" )
-	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x00, "Normal" )
-	PORT_DIPSETTING(    0x40, "Hard" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( hunchbkd )
@@ -1779,6 +1754,40 @@ static MACHINE_DRIVER_START( braze )
 	MDRV_SOUND_ADD(SAMPLES, dkong_samples_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( dkremix )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 3072000)	/* 3.072 MHz (?) */
+	MDRV_CPU_MEMORY(dkremix_readmem,dkong2_writemem)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+
+	MDRV_CPU_ADD(I8035,6000000/15)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 6MHz crystal */
+	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
+	MDRV_CPU_PORTS(readport_sound,writeport_sound)
+
+	MDRV_NVRAM_HANDLER(braze)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
+
+	MDRV_PALETTE_INIT(dkong)
+	MDRV_VIDEO_START(dkong)
+	MDRV_VIDEO_UPDATE(dkong)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(DAC, dkong_dac_interface)
+	MDRV_SOUND_ADD(SAMPLES, dkong_samples_interface)
+MACHINE_DRIVER_END
+
 static INTERRUPT_GEN( hunchbkd_interrupt )
 {
 	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0x03);
@@ -2125,7 +2134,7 @@ ROM_START( radarscp1 )
 	ROM_REGION( 0x0800, REGION_GFX3, 0 ) /* radar/star timing table */
 	ROM_LOAD( "trs011ha.bin",    0x0000, 0x0800, CRC(dbcc50c2) SHA1(1e438057d4d93ba22794ab0a9bf41bb49ac28a35) ) /* star /grid */
 
-	ROM_REGION( 0x0100, "gfx4", 0 ) /* priority based on hor. pos */
+	ROM_REGION( 0x0100, REGION_GFX4, 0 ) /* priority based on hor. pos */
 	ROM_LOAD( "trs01e3k.bin",    0x0000, 0x0100, CRC(6c6f989c) SHA1(d4b90e43d93ef141a8002b88ce5e33411b870ced) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
@@ -2345,66 +2354,6 @@ I use more appropreate filenames for color PROMs.
 *********************************************************/
 ROM_END
 
-ROM_START( dkongx )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 )
-	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
-	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
-	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
-	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
-	/* space for diagnostic ROM */
-
-	ROM_REGION( 0x20000, REGION_USER1, 0 )
-	ROM_LOAD( "d2k12.bin",  0x0000, 0x10000,  CRC(6e95ca0d) SHA1(c058add0f146d577e3df0ba60828fe1734e78d01) ) /* Version 1.2 */
-
-	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
-	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_RELOAD(               0x0800, 0x0800 )
-	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
-
-	ROM_REGION( 0x1000, REGION_GFX1, 0 )
-	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
-	ROM_LOAD( "v_3pt.bin",    0x0800, 0x0800, CRC(15e9c5e9) SHA1(976eb1e18c74018193a35aa86cff482ebfc5cc4e) )
-
-	ROM_REGION( 0x2000, REGION_GFX2, 0 )
-	ROM_LOAD( "l_4m_b.bin",   0x0000, 0x0800, CRC(59f8054d) SHA1(793dba9bf5a5fe76328acdfb90815c243d2a65f1) )
-	ROM_LOAD( "l_4n_b.bin",   0x0800, 0x0800, CRC(672e4714) SHA1(92e5d379f4838ac1fa44d448ce7d142dae42102f) )
-	ROM_LOAD( "l_4r_b.bin",   0x1000, 0x0800, CRC(feaa59ee) SHA1(ecf95db5a20098804fc8bd59232c66e2e0ed3db4) )
-	ROM_LOAD( "l_4s_b.bin",   0x1800, 0x0800, CRC(20f2ef7e) SHA1(3bc482a38bf579033f50082748ee95205b0f673d) )
-
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "c-2k.bpr",     0x0000, 0x0100, CRC(e273ede5) SHA1(b50ec9e1837c00c20fb2a4369ec7dd0358321127) ) /* palette low 4 bits (inverted) */
-	ROM_LOAD( "c-2j.bpr",     0x0100, 0x0100, CRC(d6412358) SHA1(f9c872da2fe8e800574ae3bf483fb3ccacc92eb3) ) /* palette high 4 bits (inverted) */
-	ROM_LOAD( "v-5e.bpr",     0x0200, 0x0100, CRC(b869b8f5) SHA1(c2bdccbf2654b64ea55cd589fd21323a9178a660) ) /* character color codes on a per-column basis */
-ROM_END
-
-ROM_START( dkrdemo )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
-	ROM_LOAD( "dkrdemo.5et",  0x0000, 0x1000, CRC(f9fdff29) SHA1(c2eb8f0ede8384369e17d8616f4ce063ae12b6c2) )
-	ROM_LOAD( "dkrdemo.5ct",  0x1000, 0x1000, CRC(f48cb898) SHA1(470b8bee7f55e1d828abc0b1ec4b423392c83a78) )
-	ROM_LOAD( "dkrdemo.5bt",  0x2000, 0x1000, CRC(660d43ec) SHA1(8bba334cec022ea851c4a82f6ecbc91c0708daea) )
-	ROM_LOAD( "dkrdemo.5at",  0x3000, 0x1000, CRC(e59d406c) SHA1(7698e319ae191bb8bf7deeea5c4f18da04d73f73) )
-
-	/* space for diagnostic ROM */
-
-	ROM_REGION( 0x1000, REGION_CPU2, 0 )	/* sound */
-	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
-	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
-
-	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
-	ROM_LOAD( "v_3pt.bin",    0x0800, 0x0800, CRC(15e9c5e9) SHA1(976eb1e18c74018193a35aa86cff482ebfc5cc4e) )
-
-	ROM_REGION( 0x2000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "l_4m_b.bin",   0x0000, 0x0800, CRC(59f8054d) SHA1(793dba9bf5a5fe76328acdfb90815c243d2a65f1) )
-	ROM_LOAD( "l_4n_b.bin",   0x0800, 0x0800, CRC(672e4714) SHA1(92e5d379f4838ac1fa44d448ce7d142dae42102f) )
-	ROM_LOAD( "l_4r_b.bin",   0x1000, 0x0800, CRC(feaa59ee) SHA1(ecf95db5a20098804fc8bd59232c66e2e0ed3db4) )
-	ROM_LOAD( "l_4s_b.bin",   0x1800, 0x0800, CRC(20f2ef7e) SHA1(3bc482a38bf579033f50082748ee95205b0f673d) )
-
-	ROM_REGION( 0x0300, REGION_PROMS, 0 )
-	ROM_LOAD( "c-2k.bpr",     0x0000, 0x0100, CRC(e273ede5) SHA1(b50ec9e1837c00c20fb2a4369ec7dd0358321127) ) /* palette low 4 bits (inverted) */
-	ROM_LOAD( "c-2j.bpr",     0x0100, 0x0100, CRC(d6412358) SHA1(f9c872da2fe8e800574ae3bf483fb3ccacc92eb3) ) /* palette high 4 bits (inverted) */
-	ROM_LOAD( "v-5e.bpr",     0x0200, 0x0100, CRC(b869b8f5) SHA1(c2bdccbf2654b64ea55cd589fd21323a9178a660) ) /* character color codes on a per-column basis */
-ROM_END
 
 ROM_START( dkongjr )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
@@ -3025,6 +2974,99 @@ ROM_START( shootgal )
 	ROM_LOAD( "sg-01-2n",    0x0200, 0x0200, CRC(e08ed788) SHA1(6982f6bcc70dbf4c75ff538a5df70da11bc89bb4) )
 ROM_END
 
+/* Braze Technologies bootleg hardware */
+ROM_START( dkongx )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	/* space for diagnostic ROM */
+
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_LOAD( "d2k12.bin",  0x0000, 0x10000,  CRC(6e95ca0d) SHA1(c058add0f146d577e3df0ba60828fe1734e78d01) ) /* Version 1.2 */
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
+	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
+	ROM_LOAD( "v_3pt.bin",    0x0800, 0x0800, CRC(15e9c5e9) SHA1(976eb1e18c74018193a35aa86cff482ebfc5cc4e) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "l_4m_b.bin",   0x0000, 0x0800, CRC(59f8054d) SHA1(793dba9bf5a5fe76328acdfb90815c243d2a65f1) )
+	ROM_LOAD( "l_4n_b.bin",   0x0800, 0x0800, CRC(672e4714) SHA1(92e5d379f4838ac1fa44d448ce7d142dae42102f) )
+	ROM_LOAD( "l_4r_b.bin",   0x1000, 0x0800, CRC(feaa59ee) SHA1(ecf95db5a20098804fc8bd59232c66e2e0ed3db4) )
+	ROM_LOAD( "l_4s_b.bin",   0x1800, 0x0800, CRC(20f2ef7e) SHA1(3bc482a38bf579033f50082748ee95205b0f673d) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "c-2k.bpr",     0x0000, 0x0100, CRC(e273ede5) SHA1(b50ec9e1837c00c20fb2a4369ec7dd0358321127) ) /* palette low 4 bits (inverted) */
+	ROM_LOAD( "c-2j.bpr",     0x0100, 0x0100, CRC(d6412358) SHA1(f9c872da2fe8e800574ae3bf483fb3ccacc92eb3) ) /* palette high 4 bits (inverted) */
+	ROM_LOAD( "v-5e.bpr",     0x0200, 0x0100, CRC(b869b8f5) SHA1(c2bdccbf2654b64ea55cd589fd21323a9178a660) ) /* character color codes on a per-column basis */
+ROM_END
+
+ROM_START( dkremix )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	/* space for diagnostic ROM */
+
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_LOAD( "dkremix.bin",  0x0000, 0x10000, CRC(f47c13aa) SHA1(c8516e27028d371a1f7b198f6d91f6a10bf99d3f) )
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
+	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
+	ROM_LOAD( "s_3j_b.bin",   0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "dkremix.5h",   0x0000, 0x0800, CRC(fc82b069) SHA1(ae78e6de0b50149a55f10f480c522f7a147ea106) )
+	ROM_LOAD( "dkremix.3pt",  0x0800, 0x0800, CRC(fe32ee33) SHA1(6723190916e1eab713ad945fc942f47e2c6a6892) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "dkremix.4m",   0x0000, 0x0800, CRC(3d9784d7) SHA1(98958b27d7be8c2df1e0dc882930aada457fb788) )
+	ROM_LOAD( "dkremix.4n",   0x0800, 0x0800, CRC(084c960a) SHA1(f5f5f0c4da2bd3a0c07dafadf4649d505b24c98e) )
+	ROM_LOAD( "dkremix.4r",   0x1000, 0x0800, CRC(9ac5d874) SHA1(3064434d8ee154feba89006c7ac28a3816524509) )
+	ROM_LOAD( "dkremix.4s",   0x1800, 0x0800, CRC(74a5d517) SHA1(0d9830e49488f85be43a9c8f8c60bcb7f9f46baf) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "c-2k.bpr",     0x0000, 0x0100, CRC(e273ede5) SHA1(b50ec9e1837c00c20fb2a4369ec7dd0358321127) ) /* palette low 4 bits (inverted) */
+	ROM_LOAD( "c-2j.bpr",     0x0100, 0x0100, CRC(d6412358) SHA1(f9c872da2fe8e800574ae3bf483fb3ccacc92eb3) ) /* palette high 4 bits (inverted) */
+	ROM_LOAD( "v-5e.bpr",     0x0200, 0x0100, CRC(b869b8f5) SHA1(c2bdccbf2654b64ea55cd589fd21323a9178a660) ) /* character color codes on a per-column basis */
+ROM_END
+
+ROM_START( dkchrmx )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",    0x0000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",    0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",    0x2000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",    0x3000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_LOAD( "dkchrmx.bin",    0x0000, 0x10000, CRC(e5273cee) SHA1(c440d47e7e3ca356ae1d748cc673393efb2b6c4a) )
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
+	ROM_LOAD( "s_3i_b.bin",     0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
+//	ROM_RELOAD(                 0x0800, 0x0800 )
+	ROM_LOAD( "s_3j_b.bin",     0x0800, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "v_5h_b.ch",      0x0000, 0x0800, CRC(0b92cc7a) SHA1(cd217c2b45a86744c2fc7df8a3b624489e07f01f) )
+	ROM_LOAD( "v_3pt.ch",       0x0800, 0x0800, CRC(6a04f93f) SHA1(b78342f89186c3d2b83fff6fd208afaba4584a5c) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "l_4m_b.ch",      0x0000, 0x0800, CRC(c6ddc85f) SHA1(4f19be0904460ec8494bad13b3b55292889e7400) )
+	ROM_LOAD( "l_4n_b.ch",      0x0800, 0x0800, CRC(2cd9cfdf) SHA1(fd9b0b75084661441680188ef3faf233579ceeb7) )
+	ROM_LOAD( "l_4r_b.ch",      0x1000, 0x0800, CRC(c1ea6688) SHA1(3509bb96d2da1f364d0cb4c60636933cdd42f6e3) )
+	ROM_LOAD( "l_4s_b.ch",      0x1800, 0x0800, CRC(9473d658) SHA1(2c5acf47c0ab8bd2e863e9bdea018d17ac4c96c8) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "c-2k.ch",        0x0000, 0x0100, CRC(c6cee97e) SHA1(6590b6815a0cb19b800bce0f504494217977ae44) )
+	ROM_LOAD( "c-2j.ch",        0x0100, 0x0100, CRC(1f64ac3d) SHA1(0591495a75a301772856c121f34299da4f9df341) )
+	ROM_LOAD( "v-5e.ch",        0x0200, 0x0100, CRC(5a8ca805) SHA1(8e711af73ddb20ed62a9a8b53f1150feab1dc051) )
+ROM_END
 
 static DRIVER_INIT( herodk )
 {
@@ -3060,16 +3102,14 @@ static DRIVER_INIT( radarscp )
 	set_var();
 }
 
-static DRIVER_INIT( dkong2 )
+static DRIVER_INIT( dkongx )
 {
 	braze_decrypt_rom(memory_region(REGION_USER1) + 0x10000);
 
-	memset (memory_region(REGION_CPU1), 0, 0x10000);
+	cpu_setbank(1, memory_region(REGION_USER1) + 0x10000);
+	cpu_setbank(2, memory_region(REGION_USER1) + 0x10000);
 
-	banks = 0;
-	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000);
-	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); /* ?*/
-
+	
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
 	install_mem_write_handler(0, 0xc800, 0xc800,  braze_eeprom_w);
 	install_mem_read_handler(0,  0xc800, 0xc800,  braze_eeprom_r);
@@ -3085,9 +3125,6 @@ GAME (1981, dkongjp,   dkong,    dkong,    dkong,    0,        ROT270, "Nintendo
 GAME (1981, dkongjo,   dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (Japan set 2)" )
 GAME (1981, dkongjo1,  dkong,    dkong,    dkong,    0,        ROT270, "Nintendo", "Donkey Kong (Japan set 3) (bad dump[Q])" )
 GAME (2013, dkongpe,   dkong,    dkong,    dkong,    0,        ROT270,  "hack", "Donkey Kong - Pauline Edition" ) /* from Clay Cowgill's Romhack */
-GAME (2015, dkrdemo,   dkong,    dkong,    dkrdemo,  0,        ROT270, "bootleg",  "Donkey Kong Remix" )
-
-GAME (2008, dkongx,    dkong,    braze,    dkong2,   dkong2,   ROT270, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack)" )
 
 GAME( 1982, dkongjr,   0,        dkongjr,  dkong,    0,        ROT270, "Nintendo of America", "Donkey Kong Junior (US)" )
 GAME( 1982, dkongjrj,  dkongjr,  dkongjr,  dkong,    0,        ROT270, "Nintendo", "Donkey Kong Jr. (Japan)" )
@@ -3120,3 +3157,8 @@ GAME( 1985, spcfrcii,  0,        spclforc, spclforc, 0,        ROT270, "Senko In
 
 GAMEX(198?, drakton,   0,        dkong,    dkong,    0,        ROT270, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
+
+/* Braze Technologies bootleg hardware */
+GAME (2008, dkongx,    dkong,    braze,    dkongx,   dkongx,   ROT270, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack V1.2)" )
+GAME (2015, dkremix,   dkong,    dkremix,  dkongx,   dkongx,   ROT270, "bootleg",  "Donkey Kong Remix" )
+GAME( 2017, dkchrmx,   dkong,    braze,    dkongx,   dkongx,   ROT270, "John Kowalski", "Donkey Kong Christmas Remix" )

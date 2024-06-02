@@ -1305,9 +1305,6 @@ void update_variables(bool first_time)
 void set_content_flags(void)
 {
   int i = 0;
-
-  extern struct GameDriver driver_neogeo;
-  extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
 
@@ -1322,6 +1319,11 @@ void set_content_flags(void)
   }
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
+#ifndef SPLIT_CORE
+ {
+  extern struct GameDriver driver_neogeo;
+  extern struct GameDriver driver_stvbios;
+
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
   {
@@ -1332,6 +1334,8 @@ void set_content_flags(void)
   {
     options.content_flags[CONTENT_STV] = true;
   }
+}
+#endif
 
   /************ DIE HARD: ARCADE ************/
   if(strcasecmp(game_driver->name, "diehard") == 0)
@@ -1444,11 +1448,17 @@ void set_content_flags(void)
 				case IPT_LIGHTGUN_Y:
 					options.content_flags[CONTENT_LIGHTGUN] = true;
 					break;
-				case IPT_SERVICE :
+				case IPT_SERVICE:
 					options.content_flags[CONTENT_HAS_SERVICE] = true;
 					break;
-				case IPT_TILT :
+				case IPT_TILT:
 					options.content_flags[CONTENT_HAS_TILT] = true;
+					break;
+				case IPT_PEDAL:
+					options.content_flags[CONTENT_HAS_PEDAL] = true;
+					break;
+				case IPT_PEDAL2:
+					options.content_flags[CONTENT_HAS_PEDAL2] = true;
 					break;
 			}
 		}
@@ -1506,6 +1516,8 @@ void set_content_flags(void)
   if(options.content_flags[CONTENT_AD_STICK])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses an analog joystick.\n");
   if(options.content_flags[CONTENT_HAS_SERVICE])        log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a service button.\n");
   if(options.content_flags[CONTENT_HAS_TILT])           log_cb(RETRO_LOG_INFO, LOGPRE "* Uses a tilt function.\n");
+  if(options.content_flags[CONTENT_HAS_PEDAL])          log_cb(RETRO_LOG_INFO, LOGPRE "* Uses Pedal.\n");
+  if(options.content_flags[CONTENT_HAS_PEDAL2])         log_cb(RETRO_LOG_INFO, LOGPRE "* Uses Pedal2.\n");
 
   if(options.content_flags[CONTENT_ALTERNATING_CTRLS])  log_cb(RETRO_LOG_INFO, LOGPRE "* Uses alternating controls.\n");
   if(options.content_flags[CONTENT_MIRRORED_CTRLS])     log_cb(RETRO_LOG_INFO, LOGPRE "* Uses multiplayer control labels.\n");

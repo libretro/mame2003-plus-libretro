@@ -9,26 +9,21 @@
 
 
 /* ost configuration */
-static int  sa_volume;
-static int  last_left  = 0;
-static int  last_right = 0;
-static bool fadingMusic;
+static int  ost_support = OST_SUPPORT_DISABLED;
+static int  sa_volume   = 100;
+static int  last_left   = 0;
+static int  last_right  = 0;
+static bool fadingMusic = false;
 static bool schedule_default_sound;
 
 
 /* game specific variables */
-int      ost_support = OST_SUPPORT_DISABLED;
-
 int      ddragon_stage;
 
 bool     ff_alternate_song_1;
 bool     ff_alternate_song_2;
 
-bool     moon_diddy;
-
-int      nba_jam_start_counter;
-
-int      outrun_start_counter;
+int      start_counter;
 
 
 /* ost functions */
@@ -37,6 +32,21 @@ static void ost_stop_samples(void);
 static void ost_mix_samples(void);
 static void ost_set_last_played(int sa_left, int sa_right);
 static bool ost_last_played(int sa_left, int sa_right);
+
+
+/* ost routines */
+bool (*generate_ost_sound) (int);
+static bool routine_contra     (int data);
+static bool routine_ddragon    (int data);
+static bool routine_ffight     (int data);
+static bool routine_ikari      (int data);
+static bool routine_mk         (int data);
+static bool routine_moonwalker (int data);
+static bool routine_nba_jam    (int data);
+static bool routine_outrun     (int data);
+static bool routine_robocop    (int data);
+static bool routine_sf1        (int data);
+static bool routine_sf2        (int data);
 
 
 const char *const contra_sample_set_names[] =
@@ -557,58 +567,62 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
   {
     case OST_SUPPORT_CONTRA:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_contra)
-      fadingMusic = false;
+      generate_ost_sound = routine_contra;
       break;
 
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
+      generate_ost_sound = routine_ddragon;
       ddragon_stage = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
+      generate_ost_sound = routine_ffight;
       ff_alternate_song_1 = false;
       ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_IKARI:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ikari)
-      /* no settings */
+      generate_ost_sound = routine_ikari;
       break;
 
     case OST_SUPPORT_MK:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_mk)
-      /* no settings */
+      generate_ost_sound = routine_mk;
       break;
 
     case OST_SUPPORT_MOONWALKER:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_moonwalker)
-      moon_diddy = false;
+      generate_ost_sound = routine_moonwalker;
       break;
 
     case OST_SUPPORT_NBA_JAM:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
-      nba_jam_start_counter = 0;
+      generate_ost_sound = routine_nba_jam;
+      start_counter = 0;
       break;
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
-      outrun_start_counter = 0;
+      generate_ost_sound = routine_outrun;
+      start_counter = 0;
       break;
 
     case OST_SUPPORT_ROBOCOP:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_robocop)
-      /* no settings */
+      generate_ost_sound = routine_robocop;
       break;
 
     case OST_SUPPORT_SF1:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf1)
-      /* no settings */
+      generate_ost_sound = routine_sf1;
       break;
 
     case OST_SUPPORT_SF2:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
-      fadingMusic = false;
+      generate_ost_sound = routine_sf2;
       break;
   }
 }
@@ -688,7 +702,7 @@ void ost_fade_volume(void)
 }
 
 
-bool generate_ost_sound_contra(int data)
+static bool routine_contra(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -801,7 +815,7 @@ bool generate_ost_sound_contra(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ddragon(int data)
+static bool routine_ddragon(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
@@ -899,11 +913,10 @@ bool generate_ost_sound_ddragon(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ffight(int data)
+static bool routine_ffight(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* stage 1 upper level music*/
@@ -1037,11 +1050,10 @@ bool generate_ost_sound_ffight(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_ikari(int data)
+static bool routine_ikari(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Title Demo */
@@ -1088,11 +1100,10 @@ bool generate_ost_sound_ikari(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_mk(int data)
+static bool routine_mk(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	/* unmask data for y-unit compatibility */
 	switch (data&0xff) {
@@ -1269,17 +1280,15 @@ bool generate_ost_sound_mk(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_moonwalker(int data)
+static bool routine_moonwalker(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Reset music. Title screen. */
 		case 0x0:
 			ost_stop_samples();
-			moon_diddy = false;
 			break;
 
 		/* Title screen stuff. */
@@ -1335,13 +1344,13 @@ bool generate_ost_sound_moonwalker(int data)
 		case 0xFB:
 		case 0xF6:
 			schedule_default_sound = true;
-			moon_diddy = true;
+			sa_volume = 30; /* While the special move is playing, lower volume to 30%. */
 			break;
 
 		/* Special move "owww" sound effect. This plays after the special move has always finished. */
 		case 0xC3:
 			schedule_default_sound = true;
-			moon_diddy = false; /* return volume back to 100%. */
+			sa_volume = 100; /* return volume back to 100%. */
 			break;
 
 		default:
@@ -1349,29 +1358,25 @@ bool generate_ost_sound_moonwalker(int data)
 			break;
 	}
 
-	/* While the special move is playing, lower volume to 30%. */
-	if(moon_diddy) sa_volume = 30;
-
 	ost_mix_samples();
 
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_nba_jam(int data)
+static bool routine_nba_jam(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Title screen.*/
 		case 0x00:
 			schedule_default_sound = true;
 
-			if(!ost_last_played(0, 1) && nba_jam_start_counter == 2)
+			if(!ost_last_played(0, 1) && start_counter == 2)
 				ost_start_samples(0, 1, 1);
-			else if (nba_jam_start_counter < 2)
-				nba_jam_start_counter++;
+			else if (start_counter < 2)
+				start_counter++;
 			break;
 
 		/* Team select.*/
@@ -1455,11 +1460,10 @@ bool generate_ost_sound_nba_jam(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_outrun(int data)
+static bool routine_outrun(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
@@ -1467,17 +1471,17 @@ bool generate_ost_sound_outrun(int data)
 	switch (data) {
 		/* --> Title screen */
 		case 0x0:
-			if(outrun_start_counter == 0)
+			if(start_counter == 0)
 				if(!ost_last_played(0, 1))
 					ost_start_samples(0, 1, 1);
 
-			outrun_start_counter++;
+			start_counter++;
 
-			if(outrun_start_counter == 2)
+			if(start_counter == 2)
 				ost_start_samples(2, 3, 0);
 
-			if(outrun_start_counter == 6)
-				outrun_start_counter = 0;
+			if(start_counter == 6)
+				start_counter = 0;
 			break;
 
 		/* --> Passing breeze */
@@ -1504,7 +1508,7 @@ bool generate_ost_sound_outrun(int data)
 		/* --> Are You Ready */
 		case 0x9F:
 			schedule_default_sound = true;
-			outrun_start_counter = 0;
+			start_counter = 0;
 			break;
 
 		/* --> Enter Highscore */
@@ -1522,11 +1526,10 @@ bool generate_ost_sound_outrun(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_robocop(int data)
+static bool routine_robocop(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	switch (data) {
 		/* Visor open and close */
@@ -1599,11 +1602,10 @@ bool generate_ost_sound_robocop(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_sf1(int data)
+static bool routine_sf1(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;
-	sa_volume = 100;
 
 	if(ost_last_played(0, 0)) /* first run */
 		ost_start_samples(0, 1, 1);
@@ -1704,7 +1706,7 @@ bool generate_ost_sound_sf1(int data)
 	return schedule_default_sound;
 }
 
-bool generate_ost_sound_sf2(int data)
+static bool routine_sf2(int data)
 {
 	/* initialize ost config */
 	schedule_default_sound = false;

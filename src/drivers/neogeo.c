@@ -7177,6 +7177,29 @@ ROM_START( hypernoid )
 	ROM_LOAD16_BYTE( "447.c2", 0x000001, 0x200000, CRC(36f35df2) SHA1(22715561d5383263e41563fcb060f83a0c544531) )
 ROM_END
 
+/* Cyborg Force
+  Neo Byte Force Ltd, 20230409
+*/
+ROM_START( cyborgforce )
+    ROM_REGION( 0x900000, REGION_CPU1, 0 )
+    ROM_LOAD16_WORD_SWAP( "cyborg-p1.bin", 0x000000, 0x100000, CRC(89e1c728) SHA1(4b996f42373d77969c490534858aa0906d110685) )
+    ROM_LOAD16_WORD_SWAP( "cyborg-p2.bin", 0x100000, 0x300000, CRC(e4a8b27a) SHA1(cbdf21414a5be59664dfd363b4d62ba0c8b05847) )
+
+    NEO_SFIX_128K( "cyborg-s1.bin", CRC(5bd29810) SHA1(cfa054dfa027e3617ba1a1f25a043f03a25676fd) )
+
+    NEO_BIOS_SOUND_64K( "cyborg-m1.bin", CRC(06da3cec) SHA1(034c250229920891edc70fecb5844e12a7c1c1bd) )
+
+    ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+    ROM_LOAD( "cyborg-v1.bin", 0x000000, 0x800000, CRC(dc50718c) SHA1(e4150bc3625a60be197d629444906a8663a4aebe) )
+    ROM_LOAD( "cyborg-v2.bin", 0x800000, 0x800000, CRC(8135d5a8) SHA1(186a516ed0fbc1d39f96385513de2ad662511559) )
+
+    NO_DELTAT_REGION
+
+    ROM_REGION( 0x2000000, REGION_GFX3, 0 ) 
+    ROM_LOAD16_BYTE( "cyborg-c1.bin", 0x000000, 0x1000000, CRC(77078687) SHA1(9485bcc2af6f59ebce57a6b19f215db712f93278) )
+    ROM_LOAD16_BYTE( "cyborg-c2.bin", 0x000001, 0x1000000, CRC(a5abdb83) SHA1(cfc54c46ae6a593a9d2f4fdd1ee0d27877f55c20) )
+ROM_END
+
 
 /******************************************************************************/
 
@@ -8071,10 +8094,14 @@ GAMEB( 1994, b2b,      neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 2005, lasthope, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NG:DEV.TEAM", "Last Hope", &neogeo_ctrl, NULL )
 
 /* Bitmap Bureau */
-GAMEB( 2019, xeno,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Bitmap Bureau", "Xeno Crisis (Neo Geo MVS)", &neogeo_ctrl, NULL )
+GAMEB( 2019, xeno,  neogeo,      neogeo, neogeo, neogeo,  neogeo,   ROT0, "Bitmap Bureau", "Xeno Crisis (Neo Geo MVS)", &neogeo_ctrl, NULL )
 
 /* M.Priewe */
-GAMEB( 2021, hypernoid, neogeo, neogeo, neogeo, neogeo, neogeo, ROT0, "M.Priewe", "Hypernoid (2021-11-28)", &neogeo_ctrl, NULL )
+GAMEB( 2021, hypernoid,  neogeo, neogeo, neogeo, neogeo, neogeo,    ROT0, "M.Priewe", "Hypernoid (2021-11-28)", &neogeo_ctrl, NULL )
+
+/* NEO.BYTE.FORCE */
+GAMEB( 2023, cyborgforce, neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "Neo Byte Force Ltd", "Cyborg Force", &neogeo_ctrl, NULL )
+
 
 #if 0
 GAMEB( 2000, bangbedp, bangbead, neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", &neogeo_ctrl, NULL )
