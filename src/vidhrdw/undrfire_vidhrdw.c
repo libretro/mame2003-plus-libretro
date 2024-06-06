@@ -605,8 +605,8 @@ VIDEO_UPDATE( cbombers )
 	tc0480scp_pri[layer[3]] = (TC0360PRI_regs[4] >> 4) & 0x0f;
 	tc0480scp_pri[layer[4]] = (TC0360PRI_regs[6] >> 4) & 0x0f;
 
-	tc0620scc_pri[scclayer[0]] = (TC0360PRI_regs[7] >> 4) & 0x0f;
-	tc0620scc_pri[scclayer[1]] = TC0360PRI_regs[7] & 0x0f;
+	tc0620scc_pri[pivlayer[0]] = (TC0360PRI_regs[7] >> 4) & 0x0f;
+	tc0620scc_pri[pivlayer[1]] = TC0360PRI_regs[7] & 0x0f;
 
 	sprite_pri[0] = TC0360PRI_regs[8] & 0x0f;
 	sprite_pri[1] = (TC0360PRI_regs[8] >> 4) & 0x0f;
@@ -629,8 +629,8 @@ VIDEO_UPDATE( cbombers )
 
 		for (scc = 0; scc < 2; scc++)
 		{
-			if (tc0620scc_pri[scclayer[scc]] == p)
-				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, scclayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
+			if (tc0620scc_pri[pivlayer[scc]] == p)
+				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
 		}
 
 		for (int scp = 0; scp < 4; scp++)
@@ -654,7 +654,7 @@ VIDEO_UPDATE( cbombers )
 #endif
 	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-208);
 
-	TC0100SCN_tilemap_draw(bitmap, cliprect, 0, scclayer[2], 0, 0); /* TODO: correct? */
+	TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[2], 0, 0); /* TODO: correct? */
 
 /* Enable this to see rotation (?) control words */
 #if 0
