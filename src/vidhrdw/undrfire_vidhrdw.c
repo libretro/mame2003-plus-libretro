@@ -18,6 +18,7 @@ struct tempsprite
 };
 static struct tempsprite *spritelist;
 
+extern UINT8 TC0360PRI_regs[16];
 
 /******************************************************************/
 
@@ -230,7 +231,7 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "Sprite number %04x had %02x invalid chunks\n",ti
 	}
 }
 
-static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct rectangle *cliprect,const int *primasks,int x_offs,int y_offs)
+static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct rectangle *cliprect,const int *pritable,int x_offs,int y_offs)
 {
 	UINT16 *spritemap = (UINT16 *)memory_region(REGION_USER1);
 	UINT8 *spritemapHibit = (UINT8 *)memory_region(REGION_USER2);
@@ -330,9 +331,9 @@ static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct 
 			sprite_ptr->zoomx = zx << 12;
 			sprite_ptr->zoomy = zy << 12;
 
-			if (primasks)
+			if (pritable)
 			{
-				sprite_ptr->primask = primasks[priority];
+				sprite_ptr->primask = (~1) << pritable[priority];
 				sprite_ptr++;
 			}
 			else
@@ -507,22 +508,45 @@ VIDEO_UPDATE( undrfire )
 #endif
 }
 
+/*
+	TC0360PRI Priority format for chase bombers
+	Offset Bits      Description
+	       7654 3210
+	00     0001 1100 Unknown
+	01     0000 1111 Unknown
+	04     xxxx ---- TC0480SCP Layer 3 Priority
+	       ---- xxxx TC0480SCP Layer 2 Priority
+	05     xxxx ---- TC0480SCP Layer 1 Priority
+	       ---- xxxx TC0480SCP Layer 0 Priority
+	06     xxxx ---- TC0480SCP Text Layer Priority
+	       ---- 0000 Unknown
+	07     xxxx ---- TC0620SCC Layer 0 Priority
+	       ---- xxxx TC0620SCC Layer 1 Priority
+	08     xxxx ---- Sprite Priority Bank 1
+	       ---- xxxx Sprite Priority Bank 0
+	09     xxxx ---- Sprite Priority Bank 3
+	       ---- xxxx Sprite Priority Bank 2
+	Values are 0 (Bottommost) ... f (Topmost)
+	Other registers are unknown/unused
+*/
+
 VIDEO_UPDATE( cbombers )
 {
 	UINT8 layer[5];
 	UINT8 pivlayer[3];
 	UINT16 priority;
 
+	UINT8 tc0480scp_pri[5];
+	UINT8 tc0620scc_pri[2];
+	UINT8 sprite_pri[4];
+
+	int p, scc;
+
 #ifdef MAME_DEBUG
 	static UINT8 dislayer[6];	/* Layer toggles to help get layers correct */
 #endif
 
 #ifdef MAME_DEBUG
-	if (keyboard_pressed_memory (KEYCODE_X))
-	{
-		dislayer[5] ^= 1;
-		usrintf_showmessage("piv text: %01x",dislayer[5]);
-	}
 	if (keyboard_pressed_memory (KEYCODE_C))
 	{
 		dislayer[0] ^= 1;
@@ -547,10 +571,15 @@ VIDEO_UPDATE( cbombers )
 		usrintf_showmessage("bg3: %01x",dislayer[3]);
 	}
 
-	if (keyboard_pressed_memory (KEYCODE_M))
+	if (keyboard_pressed_memory (KEYCODE_X))
 	{
 		dislayer[4] ^= 1;
-		usrintf_showmessage("sprites: %01x",dislayer[4]);
+		usrintf_showmessage("text: %01x",dislayer[4]);
+	}
+	if (keyboard_pressed_memory (KEYCODE_M))
+	{
+		dislayer[5] ^= 1;
+		usrintf_showmessage("sprites: %01x",dislayer[5]);
 	}
 #endif
 
@@ -569,9 +598,23 @@ VIDEO_UPDATE( cbombers )
 	pivlayer[1] = pivlayer[0]^1;
 	pivlayer[2] = 2;
 
+	/* parse priority values */
+	tc0480scp_pri[layer[0]] = TC0360PRI_regs[5] & 0x0f;
+	tc0480scp_pri[layer[1]] = (TC0360PRI_regs[5] >> 4) & 0x0f;
+	tc0480scp_pri[layer[2]] = TC0360PRI_regs[4] & 0x0f;
+	tc0480scp_pri[layer[3]] = (TC0360PRI_regs[4] >> 4) & 0x0f;
+	tc0480scp_pri[layer[4]] = (TC0360PRI_regs[6] >> 4) & 0x0f;
+
+	tc0620scc_pri[scclayer[0]] = (TC0360PRI_regs[7] >> 4) & 0x0f;
+	tc0620scc_pri[scclayer[1]] = TC0360PRI_regs[7] & 0x0f;
+
+	sprite_pri[0] = TC0360PRI_regs[8] & 0x0f;
+	sprite_pri[1] = (TC0360PRI_regs[8] >> 4) & 0x0f;
+	sprite_pri[2] = TC0360PRI_regs[9] & 0x0f;
+	sprite_pri[3] = (TC0360PRI_regs[9] >> 4) & 0x0f;
+
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
-
 
 /* The "PIV" chip seems to be a renamed TC0100SCN. It has a
    bottom layer usually full of bright garish colors that
@@ -579,52 +622,39 @@ VIDEO_UPDATE( cbombers )
    pointless - it's always hidden by other layers. Does it
    serve some blending pupose ? */
 
-	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[0],TILEMAP_IGNORE_TRANSPARENCY,0);
-	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[1],0,0);
-
-#ifdef MAME_DEBUG
-	if (dislayer[layer[0]]==0)
-#endif
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[0],0,1);
-
-#ifdef MAME_DEBUG
-	if (dislayer[layer[1]]==0)
-#endif
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[1],0,2);
-
-#ifdef MAME_DEBUG
-	if (dislayer[layer[2]]==0)
-#endif
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[2],0,4);
-
-#ifdef MAME_DEBUG
-	if (dislayer[layer[3]]==0)
-#endif
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[3],0,8);
-
-#ifdef MAME_DEBUG
-	if (dislayer[4]==0)
-#endif
-	/* Sprites have variable priority (we kludge this on road levels) */
+	for (p = 0; p < 16; p++)
 	{
-		if ((TC0480SCP_pri_reg &0x3) == 3)	/* on road levels kludge sprites up 1 priority */
-		{
-			static const int primasks[4] = {0xfff0, 0xff00, 0x0, 0x0};
-			draw_sprites_cbombers_16x16(bitmap,cliprect,primasks,80,-208);
-		}
-		else
-		{
-			static const int primasks[4] = {0xfffc, 0xfff0, 0xff00, 0x0};
-			draw_sprites_cbombers_16x16(bitmap,cliprect,primasks,80,-208);
-		}
-	}
+		/* TODO: verify layer order when multiple tilemap layers has same priority value */
+		const UINT8 prival = p + 1; /* +1 for pdrawgfx */
 
+		for (scc = 0; scc < 2; scc++)
+		{
+			if (tc0620scc_pri[scclayer[scc]] == p)
+				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, scclayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
+		}
+
+		for (int scp = 0; scp < 4; scp++)
+		{
+#ifdef MAME_DEBUG
+			if (dislayer[layer[scp]]==0)
+#endif
+			if (tc0480scp_pri[layer[scp]] == p)
+				TC0480SCP_tilemap_draw(bitmap, cliprect, layer[scp], 0, prival);
+		}
+#ifdef MAME_DEBUG
+		if (dislayer[layer[4]]==0)
+#endif
+		if (tc0480scp_pri[layer[4]] == p)
+			TC0480SCP_tilemap_draw(bitmap, cliprect, layer[4], 0, prival);
+  }
+
+	/* Sprites have variable priority (we kludge this on road levels) */
 #ifdef MAME_DEBUG
 	if (dislayer[5]==0)
 #endif
-	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[2],0,0);	/* piv text layer */
+	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-208);
 
-	TC0480SCP_tilemap_draw(bitmap,cliprect,layer[4],0,0);	/* TC0480SCP text layer */
+	TC0100SCN_tilemap_draw(bitmap, cliprect, 0, scclayer[2], 0, 0); /* TODO: correct? */
 
 /* Enable this to see rotation (?) control words */
 #if 0
