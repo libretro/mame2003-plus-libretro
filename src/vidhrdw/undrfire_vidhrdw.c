@@ -231,7 +231,7 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "Sprite number %04x had %02x invalid chunks\n",ti
 	}
 }
 
-static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct rectangle *cliprect,const int *pritable,int x_offs,int y_offs)
+static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct rectangle *cliprect,const UINT8 *pritable,int x_offs,int y_offs)
 {
 	UINT16 *spritemap = (UINT16 *)memory_region(REGION_USER1);
 	UINT8 *spritemapHibit = (UINT8 *)memory_region(REGION_USER2);
@@ -333,7 +333,7 @@ static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct 
 
 			if (pritable)
 			{
-				sprite_ptr->primask = (~1) << pritable[priority];
+				sprite_ptr->primask = UINT32(~1) << pritable[priority];
 				sprite_ptr++;
 			}
 			else
