@@ -333,7 +333,7 @@ static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct 
 
 			if (pritable)
 			{
-				sprite_ptr->primask = (UINT32 *)(~1) << pritable[priority];
+				sprite_ptr->primask = ~((UINT32)1) << pritable[priority];
 				sprite_ptr++;
 			}
 			else
