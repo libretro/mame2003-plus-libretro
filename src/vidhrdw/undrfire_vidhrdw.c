@@ -540,7 +540,7 @@ VIDEO_UPDATE( cbombers )
 	UINT8 tc0620scc_pri[2];
 	UINT8 sprite_pri[4];
 
-	int p, scc;
+	int p, scc, scp;
 
 #ifdef MAME_DEBUG
 	static UINT8 dislayer[6];	/* Layer toggles to help get layers correct */
