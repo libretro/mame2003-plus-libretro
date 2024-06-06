@@ -333,7 +333,7 @@ static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct 
 
 			if (pritable)
 			{
-				sprite_ptr->primask = ((UINT32 *)(~1)) << pritable[priority];
+				sprite_ptr->primask = (UINT32 *)(~1) << pritable[priority];
 				sprite_ptr++;
 			}
 			else
@@ -633,7 +633,7 @@ VIDEO_UPDATE( cbombers )
 				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
 		}
 
-		for (int scp = 0; scp < 4; scp++)
+		for (scp = 0; scp < 4; scp++)
 		{
 #ifdef MAME_DEBUG
 			if (dislayer[layer[scp]]==0)
