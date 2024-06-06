@@ -612,6 +612,7 @@ VIDEO_UPDATE( cbombers )
 	sprite_pri[1] = (TC0360PRI_regs[8] >> 4) & 0x0f;
 	sprite_pri[2] = TC0360PRI_regs[9] & 0x0f;
 	sprite_pri[3] = (TC0360PRI_regs[9] >> 4) & 0x0f;
+	log_cb(RETRO_LOG_INFO, LOGPRE "sprite_pri[0]:%6i sprite_pri[1]:%6i sprite_pri[2]:%6i sprite_pri[3]:%6i\n", sprite_pri[0],sprite_pri[1],sprite_pri[2],sprite_pri[3]);
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
