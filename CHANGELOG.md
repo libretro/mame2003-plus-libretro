@@ -1023,23 +1023,12 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 
 ## New and/or Recommended Input Options and Settings
 
-* Added 'X-Way Joystick' Option to Analog Controls Menu only for IPT_DIAL
-and IPT_DIAL_V devices.  This option is for use with x-way rotary joysticks
-(where the joystick can rotate X discrete steps, 8 or 12 appears to be most
-common).  The joystick can still move up, down, left, right and diagonally.
-The most famous game to use this control scheme is Ikari Warriors.
+* Added 'X-Way Joystick' Option to Analog Controls Menu only for IPT_DIAL and IPT_DIAL_V devices.  This option is for use with x-way rotary joysticks (where the joystick can rotate X discrete steps, 8 or 12 appears to be most common).  The joystick can still move up, down, left, right and diagonally. The most famous game to use this control scheme is Ikari Warriors.
 Notes on this option:
-  - When on, prevents the character from rotating two discrete steps
-  sometimes when the rotary joystick is just rotated one step.
-  - When on, the character will only rotate up to half the frame rate
-  instead of the frame rate, so up to 30 times per second instead of 60
-  times a second if the game is running at 60Hz.
+  - When on, prevents the character from rotating two discrete steps sometimes when the rotary joystick is just rotated one step.
+  - When on, the character will only rotate up to half the frame rate instead of the frame rate, so up to 30 times per second instead of 60 times a second if the game is running at 60Hz.
 
-* Recommended analog control settings for known games that use an x-way rotary
-joystick to give the intended rotary control of the character. (Note: Settings
-will work best if the game is running at its native 60Hz, and the time
-the rotary joystick "holds" down the virtual IPT_DIAL or IPT_DIAL_V button
-is longer than 1/60th of a second, but less than 2/60ths of a second.):
+* Recommended analog control settings for known games that use an x-way rotary joystick to give the intended rotary control of the character. (Note: Settings will work best if the game is running at its native 60Hz, and the time the rotary joystick "holds" down the virtual IPT_DIAL or IPT_DIAL_V button is longer than 1/60th of a second, but less than 2/60ths of a second.):
   - Bermuda Triangle
       Key/Joy Speed: 16
       Sensitivity: 100%
