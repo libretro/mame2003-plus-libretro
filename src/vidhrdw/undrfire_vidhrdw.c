@@ -608,10 +608,10 @@ VIDEO_UPDATE( cbombers )
 	tc0620scc_pri[pivlayer[0]] = (TC0360PRI_regs[7] >> 4) & 0x0f;
 	tc0620scc_pri[pivlayer[1]] = TC0360PRI_regs[7] & 0x0f;
 
-	sprite_pri[0] = TC0360PRI_regs[8] & 0x0f;
-	sprite_pri[1] = (TC0360PRI_regs[8] >> 4) & 0x0f;
-	sprite_pri[2] = TC0360PRI_regs[9] & 0x0f;
-	sprite_pri[3] = (TC0360PRI_regs[9] >> 4) & 0x0f;
+	sprite_pri[0] = TC0360PRI_regs[/*8*/1] & 0x0f;
+	sprite_pri[1] = (TC0360PRI_regs[/*8*/1] >> 4) & 0x0f;
+	sprite_pri[2] = TC0360PRI_regs[/*9*/1] & 0x0f;
+	sprite_pri[3] = (TC0360PRI_regs[/*9*/1] >> 4) & 0x0f;
 
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
