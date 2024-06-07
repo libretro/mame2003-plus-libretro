@@ -616,12 +616,6 @@ VIDEO_UPDATE( cbombers )
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
 
-/* The "PIV" chip seems to be a renamed TC0100SCN. It has a
-   bottom layer usually full of bright garish colors that
-   vaguely mimic the structure of the layers on top. Seems
-   pointless - it's always hidden by other layers. Does it
-   serve some blending pupose ? */
-
 	for (p = 0; p < 16; p++)
 	{
 		/* TODO: verify layer order when multiple tilemap layers has same priority value */
