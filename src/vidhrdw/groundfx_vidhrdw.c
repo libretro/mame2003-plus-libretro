@@ -250,7 +250,7 @@ VIDEO_UPDATE( groundfx )
 	fillbitmap(priority_bitmap,0,cliprect);
 	fillbitmap(bitmap,Machine->pens[0],cliprect);	/* wrong color? */
 
-	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[0],0,0);
+	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[0],TILEMAP_IGNORE_TRANSPARENCY,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[1],0,0);
 
 	/*	BIG HACK!
