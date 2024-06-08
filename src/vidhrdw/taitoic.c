@@ -3276,7 +3276,7 @@ int TC0360PRI_vh_start(void)
 WRITE_HANDLER( TC0360PRI_w )
 {
 	TC0360PRI_regs[offset] = data;
-	log_cb(RETRO_LOG_DEBUG, LOGPRE " offset:%3i data:%3i\n", offset, data);
+	log_cb(RETRO_LOG_INFO, LOGPRE " offset:%3i data:%3i\n", offset, data);
 if (offset >= 0x0a)
 	usrintf_showmessage("write %02x to unused TC0360PRI reg %x",data,offset);
 #if 1
