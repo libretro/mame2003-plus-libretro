@@ -579,7 +579,7 @@ static MEMORY_READ32_START( cbombers_readmem )
 	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },
 	{ 0x900000, 0x90ffff, TC0100SCN_long_r },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
-	{ 0xb00000, 0xb0000f, TC0360PRI_r }, /* priority */
+	{ 0xb00000, 0xb0000f, MRA32_RAM }, /* priority */
 	{ 0xc00000, 0xc00007, MRA32_RAM }, /* LAN controller? */
 	{ 0xe00000, 0xe0ffff, MRA32_RAM },
 MEMORY_END
