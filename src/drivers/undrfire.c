@@ -491,7 +491,41 @@ static WRITE32_HANDLER( cbombers_adc_w )
 	timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
 }
 
-static WRITE32_HANDLER( test_w ) { log_cb(RETRO_LOG_INFO, LOGPRE " offset:%02x data:%x\n", offset, data); }
+static WRITE32_HANDLER( trampoline_32_8_w)
+{
+	static int index = 0;
+	int shift;
+
+	switch (index)
+	{
+		case 0:
+		case 4:
+		case 8:
+			shift= 24;
+			break;
+
+		case 1:
+		case 5:
+		case 9:
+			shift= 16;
+			break;
+
+		case 2:
+		case 6:
+			shift= 8;
+			break;
+
+		case 3:
+		case 7:
+			shift= 0;
+			break;
+	}
+
+	TC0360PRI_w(index, data >> shift);
+
+	index++;
+  if(index == 10) index = 0;
+}
 
 /***********************************************************
 			 MEMORY STRUCTURES
@@ -563,7 +597,7 @@ static MEMORY_WRITE32_START( cbombers_writemem )
 	{ 0x900000, 0x90ffff, TC0100SCN_long_w },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
     { 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
-	{ 0xb00000, 0xb0000f, test_w }, /* priority */
+	{ 0xb00000, 0xb0000f, trampoline_32_8_w }, /* priority */
 	{ 0xc00000, 0xc00007, MWA32_RAM },/* LAN controller? */
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
 	{ 0xe00000, 0xe0ffff, MWA32_RAM, &shared_ram },
