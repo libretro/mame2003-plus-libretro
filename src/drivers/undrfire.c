@@ -524,7 +524,7 @@ static WRITE32_HANDLER( trampoline_32_8_w)
 	TC0360PRI_w(index, (data >> shift) & 0xff);
 
 	index++;
-  if(index == 10) index = 0;
+	if(index == 10) index = 0;
 }
 
 /***********************************************************
