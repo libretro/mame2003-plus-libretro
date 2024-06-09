@@ -624,7 +624,7 @@ VIDEO_UPDATE( cbombers )
 		for (scc = 0; scc < 2; scc++)
 		{
 			if (tc0620scc_pri[pivlayer[scc]] == p)
-				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? /*TILEMAP_IGNORE_TRANSPARENCY*/0 : 0, prival);
+				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
 		}
 
 		for (scp = 0; scp < 4; scp++)
