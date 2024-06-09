@@ -491,7 +491,7 @@ static WRITE32_HANDLER( cbombers_adc_w )
 	timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
 }
 
-ststic WRITE32_HANDLER( test_w ) { log_cb(RETRO_LOG_INFO, LOGPRE " offset:%02x data:%x\n", offset, data); }
+static WRITE32_HANDLER( test_w ) { log_cb(RETRO_LOG_INFO, LOGPRE " offset:%02x data:%x\n", offset, data); }
 
 /***********************************************************
 			 MEMORY STRUCTURES
