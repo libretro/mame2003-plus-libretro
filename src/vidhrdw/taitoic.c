@@ -3279,7 +3279,7 @@ WRITE_HANDLER( TC0360PRI_w )
 
 if (offset >= 0x0a)
 	usrintf_showmessage("write %02x to unused TC0360PRI reg %x",data,offset);
-#if 1
+#if 0
 #define regs TC0360PRI_regs
 	usrintf_showmessage("%02x %02x  %02x %02x  %02x %02x %02x %02x %02x %02x",
 		regs[0x00],regs[0x01],regs[0x02],regs[0x03],
