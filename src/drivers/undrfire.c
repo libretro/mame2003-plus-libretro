@@ -901,7 +901,7 @@ static MACHINE_DRIVER_START( cbombers )
 	MDRV_GFXDECODE(cbombers_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(16384)
 
-	MDRV_VIDEO_START(undrfire)
+	MDRV_VIDEO_START(cbombers)
 	MDRV_VIDEO_UPDATE(cbombers)
 
 	/* sound hardware */
