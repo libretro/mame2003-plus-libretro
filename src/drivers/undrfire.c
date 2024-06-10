@@ -195,6 +195,7 @@ Board contains only 29 ROMs and not much else.
 
 VIDEO_START( undrfire );
 VIDEO_UPDATE( undrfire );
+VIDEO_START( cbombers );
 VIDEO_UPDATE( cbombers );
 
 /* F3 sound */
@@ -491,6 +492,18 @@ static WRITE32_HANDLER( cbombers_adc_w )
 	timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
 }
 
+static WRITE32_HANDLER( trampoline_32_8_w)
+{
+	int index, shift;
+
+	if      (mem_mask == 0x00ffffff) { index = 0; shift = 24; }
+	else if (mem_mask == 0xff00ffff) { index = 1; shift = 16; }
+	else if (mem_mask == 0xffff00ff) { index = 2; shift =  8; }
+	else if (mem_mask == 0xffffff00) { index = 3; shift =  0; }
+
+	TC0360PRI_w(index+4*offset, (data >> shift) & 0xff);
+}
+
 /***********************************************************
 			 MEMORY STRUCTURES
 ***********************************************************/
@@ -543,7 +556,7 @@ static MEMORY_READ32_START( cbombers_readmem )
 	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },
 	{ 0x900000, 0x90ffff, TC0100SCN_long_r },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
-	{ 0xb00000, 0xb0000f, MRA32_RAM }, /* ? */
+	{ 0xb00000, 0xb0000f, MRA32_RAM }, /* priority read - unused */
 	{ 0xc00000, 0xc00007, MRA32_RAM }, /* LAN controller? */
 	{ 0xe00000, 0xe0ffff, MRA32_RAM },
 MEMORY_END
@@ -561,7 +574,7 @@ static MEMORY_WRITE32_START( cbombers_writemem )
 	{ 0x900000, 0x90ffff, TC0100SCN_long_w },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
     { 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
-	{ 0xb00000, 0xb0000f, MWA32_RAM }, /* ? */
+	{ 0xb00000, 0xb0000f, trampoline_32_8_w }, /* priority */
 	{ 0xc00000, 0xc00007, MWA32_RAM },/* LAN controller? */
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
 	{ 0xe00000, 0xe0ffff, MWA32_RAM, &shared_ram },
@@ -733,7 +746,7 @@ static struct GfxLayout tile16x16_layout =
 	16,16,	/* 16*16 sprites */
 	RGN_FRAC(1,2),
 	5,	/* 5 bits per pixel */
-	{ RGN_FRAC(1,2), 0, 8, 16, 24,},
+	{ RGN_FRAC(1,2), 0, 8, 16, 24 },
 	{ 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*64, 1*64,  2*64,  3*64,  4*64,  5*64,  6*64,  7*64,
 	  8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
@@ -876,7 +889,7 @@ static MACHINE_DRIVER_START( cbombers )
 	MDRV_GFXDECODE(cbombers_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(16384)
 
-	MDRV_VIDEO_START(undrfire)
+	MDRV_VIDEO_START(cbombers)
 	MDRV_VIDEO_UPDATE(cbombers)
 
 	/* sound hardware */
