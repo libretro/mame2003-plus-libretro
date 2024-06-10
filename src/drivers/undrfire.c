@@ -887,9 +887,9 @@ static MACHINE_DRIVER_START( cbombers )
 	MDRV_CPU_MEMORY(cbombers_sub_readmem, cbombers_sub_writemem)
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
 
-	MDRV_INTERLEAVE(5)	/* CPU slices - Need to interleave Cpu's 1 & 3 */
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(8)	/* CPU slices - Need to interleave Cpu's 1 & 3 */
 
 	MDRV_MACHINE_INIT(undrfire)
 	MDRV_NVRAM_HANDLER(undrfire)
