@@ -3288,11 +3288,6 @@ if (offset >= 0x0a)
 #endif
 }
 
-READ_HANDLER( TC0360PRI_r )
-{
-	return TC0360PRI_regs[offset];
-}
-
 WRITE16_HANDLER( TC0360PRI_halfword_w )
 {
 	if (ACCESSING_LSB)
