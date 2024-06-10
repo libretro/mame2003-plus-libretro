@@ -494,38 +494,14 @@ static WRITE32_HANDLER( cbombers_adc_w )
 
 static WRITE32_HANDLER( trampoline_32_8_w)
 {
-	static int index = 0;
-	int shift;
+	int index, shift;
 
-	switch (index)
-	{
-		case 0:
-		case 4:
-		case 8:
-			shift= 24;
-			break;
+	if      (mem_mask == 0x00ffffff) { index = 0; shift = 24; }
+	else if (mem_mask == 0xff00ffff) { index = 1; shift = 16; }
+	else if (mem_mask == 0xffff00ff) { index = 2; shift =  8; }
+	else if (mem_mask == 0xffffff00) { index = 3; shift =  0; }
 
-		case 1:
-		case 5:
-		case 9:
-			shift= 16;
-			break;
-
-		case 2:
-		case 6:
-			shift= 8;
-			break;
-
-		case 3:
-		case 7:
-			shift= 0;
-			break;
-	}
-
-	TC0360PRI_w(index, (data >> shift) & 0xff);
-
-	index++;
-	if(index == 10) index = 0;
+	TC0360PRI_w(index+4*offset, (data >> shift) & 0xff);
 }
 
 static READ32_HANDLER( TC0360PRI_32_r )
