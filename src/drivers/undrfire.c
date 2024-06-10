@@ -195,6 +195,7 @@ Board contains only 29 ROMs and not much else.
 
 VIDEO_START( undrfire );
 VIDEO_UPDATE( undrfire );
+VIDEO_START( cbombers );
 VIDEO_UPDATE( cbombers );
 
 /* F3 sound */
