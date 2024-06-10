@@ -530,12 +530,12 @@ static WRITE32_HANDLER( trampoline_32_8_w)
 
 static READ32_HANDLER( TC0360PRI_32_r )
 {
-	uint32_t reg = (uint32_t(TC0360PRI[0+4*offset]) << 24) |
-	               (uint32_t(TC0360PRI[1+4*offset]) << 16) |
-	               (uint32_t(TC0360PRI[2+4*offset]) << 8 ) |
-	                uint32_t(TC0360PRI[3+4*offset]);
+	UINT32 regi = (TC0360PRI[0+4*offset] << 24) |
+	              (TC0360PRI[1+4*offset] << 16) |
+	              (TC0360PRI[2+4*offset] <<  8) |
+	              (TC0360PRI[3+4*offset]);
 
-	return reg;
+	return regi;
 }
 
 
