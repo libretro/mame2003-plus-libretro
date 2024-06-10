@@ -56,7 +56,7 @@ VIDEO_START( cbombers )
 		return 1;
 
 	for (i=0; i<16384; i++) /* Fix later - some weird colours in places */
-		palette_set_color(i,255,255,255);
+		palette_set_color(i,0,0,0);
 	return 0;
 }
 
