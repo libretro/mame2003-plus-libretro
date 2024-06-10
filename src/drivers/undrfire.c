@@ -504,7 +504,6 @@ static WRITE32_HANDLER( trampoline_32_8_w)
 	TC0360PRI_w(index+4*offset, (data >> shift) & 0xff);
 }
 
-
 /***********************************************************
 			 MEMORY STRUCTURES
 ***********************************************************/
