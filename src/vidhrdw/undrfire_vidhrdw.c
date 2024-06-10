@@ -643,7 +643,7 @@ VIDEO_UPDATE( cbombers )
 			TC0480SCP_tilemap_draw(bitmap, cliprect, layer[4], 0, prival);
   }
 
-	/* Sprites have variable priority (we kludge this on road levels) */
+	/* Sprites have variable priority */
 #ifdef MAME_DEBUG
 	if (dislayer[5]==0)
 #endif
