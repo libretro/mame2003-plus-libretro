@@ -209,7 +209,6 @@ WRITE16_HANDLER(f3_volume_w);
 WRITE16_HANDLER(f3_es5505_bank_w);
 void f3_68681_reset(void);
 extern data32_t *f3_shared_ram;
-extern UINT8 TC0360PRI_regs[16];
 
 static UINT16 coin_word;
 static UINT16 port_sel = 0;
@@ -505,16 +504,6 @@ static WRITE32_HANDLER( trampoline_32_8_w)
 	TC0360PRI_w(index+4*offset, (data >> shift) & 0xff);
 }
 
-static READ32_HANDLER( TC0360PRI_32_r )
-{
-	UINT32 regi = (TC0360PRI_regs[0+4*offset] << 24) |
-	              (TC0360PRI_regs[1+4*offset] << 16) |
-	              (TC0360PRI_regs[2+4*offset] <<  8) |
-	              (TC0360PRI_regs[3+4*offset]);
-
-	return regi;
-}
-
 
 /***********************************************************
 			 MEMORY STRUCTURES
@@ -568,7 +557,7 @@ static MEMORY_READ32_START( cbombers_readmem )
 	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },
 	{ 0x900000, 0x90ffff, TC0100SCN_long_r },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
-	{ 0xb00000, 0xb0000f, TC0360PRI_32_r }, /* priority */
+	{ 0xb00000, 0xb0000f, MRA32_RAM }, /* priority read - unused */
 	{ 0xc00000, 0xc00007, MRA32_RAM }, /* LAN controller? */
 	{ 0xe00000, 0xe0ffff, MRA32_RAM },
 MEMORY_END
