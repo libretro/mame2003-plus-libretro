@@ -49,10 +49,10 @@ VIDEO_START( cbombers )
 	if (!spritelist)
 		return 1;
 
-	if (TC0100SCN_vh_start(1,TC0100SCN_GFX_NUM,50,8,0,0,0,0,0))
+	if (TC0100SCN_vh_start(1,TC0100SCN_GFX_NUM-1,50,8,0,0,0,0,0))
 		return 1;
 
-	if (TC0480SCP_vh_start(TC0480SCP_GFX_NUM,0,0x24,0,-1,0,0,0,4096))
+	if (TC0480SCP_vh_start(TC0480SCP_GFX_NUM+1,0,0x24,0,-1,0,0,0,4096))
 		return 1;
 
 	for (i=0; i<16384; i++) /* Fix later - some weird colours in places */
