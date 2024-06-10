@@ -85,6 +85,7 @@ Heavy use is made of sprite zooming.
 
     [*  00=over BG0, 01=BG1, 10=BG2, 11=BG3 ]
     [or 00=over BG1, 01=BG2, 10=BG3, 11=BG3 ]
+    [or controlled by TC0360PRI             ]
 
 ***************************************************************/
 
