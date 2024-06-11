@@ -154,6 +154,7 @@ libretro-build-windows-msvc10-i686:
     - .core-defs
   only:
     - master
+    - Pri
 
 # Windows msvc05 32-bit
 libretro-build-windows-msvc05-i686:
