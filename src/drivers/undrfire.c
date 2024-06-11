@@ -230,9 +230,9 @@ Extract a standard version of this
 
 static void calc_brightness_lut(INT32 brightness)
 {
-	INT32 col;
+	int col;
 	for (col = 0; col < 0x100; col++) {
-		INT32 mcol = col * brightness / 100;
+		int mcol = col * brightness / 100;
 
 		if (mcol < 0) mcol = 0;
 		if (mcol > 255) mcol = 255;
@@ -243,7 +243,7 @@ static void calc_brightness_lut(INT32 brightness)
 
 static void calc_contrast_lut(double contrast)
 {
-	INT32 col;
+	int col;
 	double c = (100.0 + contrast) / 100.0;
 	c *= c;
 
