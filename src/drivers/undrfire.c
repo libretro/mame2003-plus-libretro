@@ -847,8 +847,29 @@ static MACHINE_INIT( undrfire )
 	RAM[3]=RAM[0x80003];
 
 	f3_68681_reset();
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x1a);
+	calc_brightness_lut(0x57);
 }
 
+static MACHINE_INIT( cbombers )
+{
+	/* Sound cpu program loads to 0xc00000 so we use a bank */
+	data16_t *RAM = (data16_t *)memory_region(REGION_CPU2);
+	cpu_setbank(1,&RAM[0x80000]);
+
+	RAM[0]=RAM[0x80000]; /* Stack and Reset vectors */
+	RAM[1]=RAM[0x80001];
+	RAM[2]=RAM[0x80002];
+	RAM[3]=RAM[0x80003];
+
+	f3_68681_reset();
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x26);
+	calc_brightness_lut(0x45);
+}
 
 static struct ES5505interface es5505_interface =
 {
@@ -917,7 +938,7 @@ static MACHINE_DRIVER_START( cbombers )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
-	MDRV_MACHINE_INIT(undrfire)
+	MDRV_MACHINE_INIT(cbombers)
 	MDRV_NVRAM_HANDLER(undrfire)
 
 	/* video hardware */
@@ -1142,10 +1163,6 @@ DRIVER_INIT( undrfire )
 		gfx[offset] = (d3<<2) | (d4<<6);
 		offset++;
 	}
-
-	/* color wash-out fix */
-	calc_contrast_lut(0x1a);
-	calc_brightness_lut(0x57);
 }
 
 
@@ -1176,10 +1193,6 @@ DRIVER_INIT( cbombers )
 		gfx[offset] = (d3<<2) | (d4<<6);
 		offset++;
 	}
-
-	/* color wash-out fix */
-	calc_contrast_lut(0x26);
-	calc_brightness_lut(0x45);
 }
 
 GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)" )
