@@ -215,6 +215,9 @@ static UINT16 port_sel = 0;
 extern UINT16 undrfire_rotate_ctrl[8];
 static int frame_counter=0;
 
+static UINT8 *Contrast_LUT;
+static UINT8 *Brightness_LUT;
+
 data32_t *undrfire_ram;	/* will be read in vidhrdw for gun target calcs */
 UINT32 *shared_ram;
 
@@ -224,6 +227,36 @@ UINT32 *shared_ram;
 Extract a standard version of this
 ("taito_8bpg_palette_word_w"?) to Taitoic.c ?
 ***********************************************************/
+
+static void calc_brightness_lut(INT32 brightness)
+{
+	INT32 col;
+	for (col = 0; col < 0x100; col++) {
+		INT32 mcol = col * brightness / 100;
+
+		if (mcol < 0) mcol = 0;
+		if (mcol > 255) mcol = 255;
+
+		Brightness_LUT[col] = mcol;
+	}
+}
+
+static void calc_contrast_lut(double contrast)
+{
+	INT32 col;
+	double c = (100.0 + contrast) / 100.0;
+	c *= c;
+
+	for (col = 0; col < 0x100; col++) {
+		double color = ((double)col / 255.0) - 0.5;
+		color = ((color * c) + 0.5) * 255.0;
+
+		if (color < 0) color = 0;
+		if (color > 255) color = 255;
+
+		Contrast_LUT[col] = color;
+	}
+}
 
 static WRITE32_HANDLER( color_ram_w )
 {
@@ -235,6 +268,11 @@ static WRITE32_HANDLER( color_ram_w )
 		r = (a &0xff0000) >> 16;
 		g = (a &0xff00) >> 8;
 		b = (a &0xff);
+
+		/* color wash-out fix */
+		r = Contrast_LUT[Brightness_LUT[r]];
+		g = Contrast_LUT[Brightness_LUT[g]];
+		b = Contrast_LUT[Brightness_LUT[b]];
 
 		palette_set_color(offset,r,g,b);
 	}
@@ -1104,6 +1142,10 @@ DRIVER_INIT( undrfire )
 		gfx[offset] = (d3<<2) | (d4<<6);
 		offset++;
 	}
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x1a);
+	calc_brightness_lut(0x57);
 }
 
 
@@ -1134,6 +1176,10 @@ DRIVER_INIT( cbombers )
 		gfx[offset] = (d3<<2) | (d4<<6);
 		offset++;
 	}
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x26);
+	calc_brightness_lut(0x45);
 }
 
 GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)" )
