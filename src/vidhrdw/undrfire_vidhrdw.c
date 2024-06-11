@@ -667,7 +667,7 @@ VIDEO_UPDATE( cbombers )
 #ifdef MAME_DEBUG
 	if (dislayer[5]==0)
 #endif
-	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-209);
+	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-210);
 
 	TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[2], 0, 0); /* TODO: correct? */
 
