@@ -607,6 +607,7 @@ VIDEO_UPDATE( cbombers )
 	TC0480SCP_tilemap_update();
 
 	priority = TC0480SCP_get_bg_priority();
+	if (priority == 0x3210) priority = 0x2310; /* fix bg over fg after selecting race -dink */
 
 	layer[0] = (priority &0xf000) >> 12;	/* tells us which bg layer is bottom */
 	layer[1] = (priority &0x0f00) >>  8;
@@ -644,7 +645,7 @@ VIDEO_UPDATE( cbombers )
 		for (scc = 0; scc < 2; scc++)
 		{
 			if (tc0620scc_pri[pivlayer[scc]] == p)
-				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
+				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, /*prival*/ p);
 		}
 
 		for (scp = 0; scp < 4; scp++)
@@ -666,7 +667,7 @@ VIDEO_UPDATE( cbombers )
 #ifdef MAME_DEBUG
 	if (dislayer[5]==0)
 #endif
-	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-208);
+	draw_sprites_cbombers_16x16(bitmap,cliprect,sprite_pri,80,-210);
 
 	TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[2], 0, 0); /* TODO: correct? */
 

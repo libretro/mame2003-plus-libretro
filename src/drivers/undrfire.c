@@ -215,6 +215,9 @@ static UINT16 port_sel = 0;
 extern UINT16 undrfire_rotate_ctrl[8];
 static int frame_counter=0;
 
+static UINT8 Contrast_LUT[0x100];
+static UINT8 Brightness_LUT[0x100];
+
 data32_t *undrfire_ram;	/* will be read in vidhrdw for gun target calcs */
 UINT32 *shared_ram;
 
@@ -224,6 +227,36 @@ UINT32 *shared_ram;
 Extract a standard version of this
 ("taito_8bpg_palette_word_w"?) to Taitoic.c ?
 ***********************************************************/
+
+static void calc_brightness_lut(int brightness)
+{
+	int col;
+	for (col = 0; col < 0x100; col++) {
+		int mcol = col * brightness / 100;
+
+		if (mcol < 0) mcol = 0;
+		if (mcol > 255) mcol = 255;
+
+		Brightness_LUT[col] = mcol;
+	}
+}
+
+static void calc_contrast_lut(double contrast)
+{
+	int col;
+	double c = (100.0 + contrast) / 100.0;
+	c *= c;
+
+	for (col = 0; col < 0x100; col++) {
+		double color = ((double)col / 255.0) - 0.5;
+		color = ((color * c) + 0.5) * 255.0;
+
+		if (color < 0) color = 0;
+		if (color > 255) color = 255;
+
+		Contrast_LUT[col] = color;
+	}
+}
 
 static WRITE32_HANDLER( color_ram_w )
 {
@@ -235,6 +268,11 @@ static WRITE32_HANDLER( color_ram_w )
 		r = (a &0xff0000) >> 16;
 		g = (a &0xff00) >> 8;
 		b = (a &0xff);
+
+		/* color wash-out fix */
+		r = Contrast_LUT[Brightness_LUT[r]];
+		g = Contrast_LUT[Brightness_LUT[g]];
+		b = Contrast_LUT[Brightness_LUT[b]];
 
 		palette_set_color(offset,r,g,b);
 	}
@@ -546,7 +584,7 @@ static MEMORY_WRITE32_START( undrfire_writemem )
 MEMORY_END
 
 static MEMORY_READ32_START( cbombers_readmem )
-    { 0x000000, 0x1fffff, MRA32_ROM },
+	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x200000, 0x21ffff, MRA32_RAM },
 	{ 0x300000, 0x303fff, MRA32_RAM },
 	{ 0x500000, 0x500007, undrfire_input_r },
@@ -563,7 +601,7 @@ static MEMORY_READ32_START( cbombers_readmem )
 MEMORY_END
 
 static MEMORY_WRITE32_START( cbombers_writemem )
-    { 0x000000, 0x1fffff, MWA32_ROM },
+	{ 0x000000, 0x1fffff, MWA32_ROM },
 	{ 0x200000, 0x21ffff, MWA32_RAM },
 	{ 0x300000, 0x303fff, MWA32_RAM, &spriteram32, &spriteram_size },
 	{ 0x400000, 0x400003, cbombers_cpua_ctrl_w },
@@ -574,7 +612,7 @@ static MEMORY_WRITE32_START( cbombers_writemem )
 	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_w },
 	{ 0x900000, 0x90ffff, TC0100SCN_long_w },		/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
-    { 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
+	{ 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
 	{ 0xb00000, 0xb0000f, trampoline_32_8_w }, /* priority */
 	{ 0xc00000, 0xc00007, MWA32_RAM },/* LAN controller? */
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
@@ -810,8 +848,29 @@ static MACHINE_INIT( undrfire )
 	RAM[3]=RAM[0x80003];
 
 	f3_68681_reset();
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x1a);
+	calc_brightness_lut(0x57);
 }
 
+static MACHINE_INIT( cbombers )
+{
+	/* Sound cpu program loads to 0xc00000 so we use a bank */
+	data16_t *RAM = (data16_t *)memory_region(REGION_CPU2);
+	cpu_setbank(1,&RAM[0x80000]);
+
+	RAM[0]=RAM[0x80000]; /* Stack and Reset vectors */
+	RAM[1]=RAM[0x80001];
+	RAM[2]=RAM[0x80002];
+	RAM[3]=RAM[0x80003];
+
+	f3_68681_reset();
+
+	/* color wash-out fix */
+	calc_contrast_lut(0x26);
+	calc_brightness_lut(0x45);
+}
 
 static struct ES5505interface es5505_interface =
 {
@@ -880,7 +939,7 @@ static MACHINE_DRIVER_START( cbombers )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
-	MDRV_MACHINE_INIT(undrfire)
+	MDRV_MACHINE_INIT(cbombers)
 	MDRV_NVRAM_HANDLER(undrfire)
 
 	/* video hardware */
