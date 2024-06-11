@@ -228,7 +228,7 @@ Extract a standard version of this
 ("taito_8bpg_palette_word_w"?) to Taitoic.c ?
 ***********************************************************/
 
-static void calc_brightness_lut(INT32 brightness)
+static void calc_brightness_lut(int brightness)
 {
 	int col;
 	for (col = 0; col < 0x100; col++) {
