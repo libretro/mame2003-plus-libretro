@@ -215,8 +215,8 @@ static UINT16 port_sel = 0;
 extern UINT16 undrfire_rotate_ctrl[8];
 static int frame_counter=0;
 
-static UINT8 *Contrast_LUT;
-static UINT8 *Brightness_LUT;
+static UINT8 Contrast_LUT[0x100];
+static UINT8 Brightness_LUT[0x100];
 
 data32_t *undrfire_ram;	/* will be read in vidhrdw for gun target calcs */
 UINT32 *shared_ram;
