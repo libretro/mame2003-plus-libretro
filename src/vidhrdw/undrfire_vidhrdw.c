@@ -644,7 +644,7 @@ VIDEO_UPDATE( cbombers )
 		for (scc = 0; scc < 2; scc++)
 		{
 			if (tc0620scc_pri[pivlayer[scc]] == p)
-				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival);
+				TC0100SCN_tilemap_draw(bitmap, cliprect, 0, pivlayer[scc], (scc == 0) ? TILEMAP_IGNORE_TRANSPARENCY : 0, prival-1);
 		}
 
 		for (scp = 0; scp < 4; scp++)
@@ -659,7 +659,7 @@ VIDEO_UPDATE( cbombers )
 		if (dislayer[layer[4]]==0)
 #endif
 		if (tc0480scp_pri[layer[4]] == p)
-			TC0480SCP_tilemap_draw(bitmap, cliprect, layer[4], 0, prival);
+			TC0480SCP_tilemap_draw(bitmap, cliprect, layer[4], 0, prival+1);
   }
 
 	/* Sprites have variable priority */
