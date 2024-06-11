@@ -285,7 +285,7 @@ static void draw_sprites_cbombers_16x16(struct mame_bitmap *bitmap,const struct 
 		zoomy =    (data & 0x0001fc00) >> 10;
 		y =        (data & 0x000003ff);
 
-		color |= (0x100 + (priority << 6));		/* priority bits select color bank */
+		color |= (/*0x100 +*/ (priority << 6));		/* priority bits select color bank */
 
 		color /= 2;		/* as sprites are 5bpp */
 		flipy = !flipy;
