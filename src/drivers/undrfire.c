@@ -632,7 +632,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( cbombers_sub_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x400000, 0x40ffff, MWA16_RAM	}, /* local ram */
-	{ 0x600000, 0x60ffff, tc0480scp_word_w	}, /* Only written upon errors - cbombersp data on screen error */
+	{ 0x600000, 0x60ffff, TC0480SCP_word_w	}, /* Only written upon errors - cbombersp data on screen error */
 	{ 0x800000, 0x80ffff, shared_ram_w },
 MEMORY_END
 
