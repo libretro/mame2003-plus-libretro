@@ -3361,7 +3361,7 @@ static INLINE void common_get_tc0480tx_tile_info(data16_t *ram,int gfxnum,int ti
 	int shift = 0;
 	int attr = ram[tile_index];
 
-	if(!strcmp(Machine->gamedrv->name, "cbombers")
+	if(!strcmp(Machine->gamedrv->name, "cbombers"))
 			shift = 4;
 
 	SET_TILE_INFO(
