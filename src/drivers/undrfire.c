@@ -1345,7 +1345,9 @@ DRIVER_INIT( cbombers )
 	}
 }
 
-GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)" )
-GAME( 1993, undrfiru, undrfire, undrfire, undrfire, undrfire, ROT0, "Taito America Corporation", "Under Fire (US)" )
-GAME( 1993, undrfirj, undrfire, undrfire, undrfire, undrfire, ROT0, "Taito Corporation", "Under Fire (Japan)" )
-GAME( 1994, cbombers, 0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation Japan", "Chase Bombers (World)" )
+GAME( 1993, undrfire,  0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)" )
+GAME( 1993, undrfiru,  undrfire, undrfire, undrfire, undrfire, ROT0, "Taito America Corporation", "Under Fire (US)" )
+GAME( 1993, undrfirj,  undrfire, undrfire, undrfire, undrfire, ROT0, "Taito Corporation", "Under Fire (Japan)" )
+GAME( 1994, cbombers,  0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation Japan", "Chase Bombers (World)" )
+GAME( 1994, cbombersj, 0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation", "Chase Bombers (Japan)" )
+GAME( 1994, cbombersp, 0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation", "Chase Bombers (Japan Prototype)" )
