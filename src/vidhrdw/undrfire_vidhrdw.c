@@ -55,6 +55,8 @@ VIDEO_START( cbombers )
 	if (TC0480SCP_vh_start(TC0480SCP_GFX_NUM,0,0x24,0,-1,0,0,0,4096))
 		return 1;
 
+	TC0360PRI_vh_start();	/* Purely for save-state purposes */
+
 	for (i=0; i<16384; i++) /* Fix later - some weird colours in places */
 		palette_set_color(i,0,0,0);
 	return 0;

@@ -3358,11 +3358,16 @@ static INLINE void common_get_tc0480bg_tile_info(data16_t *ram,int gfxnum,int ti
 
 static INLINE void common_get_tc0480tx_tile_info(data16_t *ram,int gfxnum,int tile_index)
 {
+	int shift = 0;
 	int attr = ram[tile_index];
+
+	if(TC0480SCP_tile_colbase == 0x1000) /* currently only used for cbombers */
+			shift = 4;
+
 	SET_TILE_INFO(
 			gfxnum,
 			attr & 0xff,
-			((attr & 0x3f00) >> 8) + TC0480SCP_tile_colbase,
+			((attr & 0x3f00) >> 8) + (TC0480SCP_tile_colbase >> shift),
 			TILE_FLIPYX((attr & 0xc000) >> 14))
 }
 
