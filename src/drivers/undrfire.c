@@ -527,7 +527,10 @@ static WRITE32_HANDLER( cbombers_adc_w )
 {
 	/* One interrupt per input port (4 per frame, though only 2 used).
         1000 cycle delay is arbitrary */
-	timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
+	/* TODO: hook it up to offset 0 only otherwise cbomber proto keeps sending irqs.
+	         Could or could not be right. */
+	if(offset == 0)
+		timer_set(TIME_IN_CYCLES(10000,0),0, undrfire_interrupt5);
 }
 
 static WRITE32_HANDLER( trampoline_32_8_w)
