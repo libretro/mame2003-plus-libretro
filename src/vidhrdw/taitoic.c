@@ -3361,7 +3361,7 @@ static INLINE void common_get_tc0480tx_tile_info(data16_t *ram,int gfxnum,int ti
 	int shift = 0;
 	int attr = ram[tile_index];
 
-	if(!strcmp(Machine->gamedrv->name, "cbombers"))
+	if(TC0480SCP_tile_colbase == 0x1000) /* currently only used for cbombers */
 			shift = 4;
 
 	SET_TILE_INFO(
