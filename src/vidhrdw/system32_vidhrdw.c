@@ -102,6 +102,151 @@ static UINT32 sys32sprite_y_zoom;
 static int sys32mon_old4, sys32mon_old8;
 #endif
 
+
+
+/*************************************
+ *
+ *  Common palette handling
+ *
+ *************************************/
+
+static INLINE UINT16 xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(UINT16 value)
+{
+	int r = (value >> 0) & 0x1f;
+	int g = (value >> 5) & 0x1f;
+	int b = (value >> 10) & 0x1f;
+	value = (value & 0x8000) | ((b & 0x01) << 14) | ((g & 0x01) << 13) | ((r & 0x01) << 12);
+	value |= ((b & 0x1e) << 7) | ((g & 0x1e) << 3) | ((r & 0x1e) >> 1);
+	return value;
+}
+
+
+static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
+{
+	int r = ((value >> 12) & 0x01) | ((value << 1) & 0x1e);
+	int g = ((value >> 13) & 0x01) | ((value >> 3) & 0x1e);
+	int b = ((value >> 14) & 0x01) | ((value >> 7) & 0x1e);
+	return (value & 0x8000) | (b << 10) | (g << 5) | (r << 0);
+}
+
+
+static INLINE void update_color(int offset, UINT16 data)
+{
+	/* note that since we use this RAM directly, we don't technically need */
+	/* to call palette_set_color() at all; however, it does give us that */
+	/* nice display when you hit F4, which is useful for debugging */
+
+	/* set the color */
+	palette_set_color(offset, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+}
+
+
+static INLINE UINT16 common_paletteram_r(int which, offs_t offset)
+{
+	int convert;
+
+	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
+	/* the upper half of palette RAM is formatted xBGRBBBBGGGGRRRR */
+	/* we store everything if the first format, and convert accesses to the other format */
+	/* on the fly */
+	convert = (offset & 0x4000);
+	offset &= 0x3fff;
+
+	if (!convert)
+		return scrambled_paletteram16[which][offset];
+	else
+		return xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(scrambled_paletteram16[which][offset]);
+}
+
+
+static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 mem_mask)
+{
+	UINT16 value;
+	int convert;
+
+	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
+	/* the upper half of palette RAM is formatted xBGRBBBBGGGGRRRR */
+	/* we store everything if the first format, and convert accesses to the other format */
+	/* on the fly */
+	convert = (offset & 0x4000);
+	offset &= 0x3fff;
+
+	/* read, modify, and write the new value, updating the palette */
+	value = scrambled_paletteram16[which][offset];
+	if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
+	COMBINE_DATA(&value);
+	if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
+	scrambled_paletteram16[which][offset] = value;
+	update_color(0x4000*which + offset, value);
+
+	/* if blending is enabled, writes go to both halves of palette RAM */
+	if (system32_mixerregs[which][0x4e/2] & 0x0880)
+	{
+		offset ^= 0x2000;
+
+		/* read, modify, and write the new value, updating the palette */
+		value = scrambled_paletteram16[which][offset];
+		if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
+		COMBINE_DATA(&value);
+		if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
+		scrambled_paletteram16[which][offset] = value;
+		update_color(0x4000*which + offset, value);
+	}
+}
+
+
+
+/*************************************
+ *
+ *  Palette RAM access
+ *
+ *************************************/
+
+READ16_HANDLER( system32_paletteram_r )
+{
+	return common_paletteram_r(0, offset);
+}
+
+
+WRITE16_HANDLER( system32_paletteram_w )
+{
+	common_paletteram_w(0, offset, data, mem_mask);
+}
+
+
+READ32_HANDLER( multi32_paletteram_0_r )
+{
+	return common_paletteram_r(0, offset*2+0) |
+	      (common_paletteram_r(0, offset*2+1) << 16);
+}
+
+
+WRITE32_HANDLER( multi32_paletteram_0_w )
+{
+	if (ACCESSING_LSW32)
+		common_paletteram_w(0, offset*2+0, data, mem_mask);
+	if (ACCESSING_MSW32)
+		common_paletteram_w(0, offset*2+1, data >> 16, mem_mask >> 16);
+}
+
+
+READ32_HANDLER( multi32_paletteram_1_r )
+{
+	return common_paletteram_r(1, offset*2+0) |
+	      (common_paletteram_r(1, offset*2+1) << 16);
+}
+
+
+WRITE32_HANDLER( multi32_paletteram_1_w )
+{
+	if (ACCESSING_LSW32)
+		common_paletteram_w(1, offset*2+0, data, mem_mask);
+	if (ACCESSING_MSW32)
+		common_paletteram_w(1, offset*2+1, data >> 16, mem_mask >> 16);
+}
+
+
+
 /*
 
 this actually draws the sprite, and could probably be optimized quite a bit ;-)
