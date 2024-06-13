@@ -353,6 +353,7 @@ Stephh's notes (based on some tests) :
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
+#include "segas32.h"
 
 #define MASTER_CLOCK  32215900
 
@@ -375,7 +376,6 @@ int system32_temp_kludge;
 data16_t *sys32_spriteram16;
 data16_t *sys32_txtilemap_ram;
 data16_t *sys32_ramtile_ram;
-data16_t *scrambled_paletteram16[2];
 
 int system32_mixerShift;
 extern int system32_screen_mode;
@@ -900,7 +900,7 @@ static WRITE16_HANDLER( system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w 
 	int r,g,b;
 	int r2,g2,b2;
 
-	COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
+	COMBINE_DATA(&system32_paletteram[0][offset]); /* it expects to read back the same values?*/
 
 	/* rearrange the data to normal format ... */
 
@@ -984,7 +984,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &system32_paletteram[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
 	{ 0x608000, 0x60ffff, system32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
 	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
 
