@@ -19,6 +19,7 @@
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
+#include "segas32.h"
 
 #define MASTER_CLOCK		32215900
 #define MULTI32_CLOCK		40000000
@@ -41,7 +42,6 @@ extern int system32_temp_kludge;
 extern data16_t *sys32_spriteram16;
 extern data16_t *sys32_txtilemap_ram;
 extern data16_t *sys32_ramtile_ram;
-extern data16_t *scrambled_paletteram16[2];
 static data16_t *paletteram16_b;
 
 extern int system32_mixerShift;
@@ -185,7 +185,7 @@ static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w )
 	int r2,g2,b2;
 
 	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
+		COMBINE_DATA(&system32_paletteram[0][offset]); /* it expects to read back the same values?*/
 
 		/* rearrange the data to normal format ... */
 
@@ -225,7 +225,7 @@ static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w
 	int r2,g2,b2;
 
 	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[1][offset]); /* it expects to read back the same values?*/
+		COMBINE_DATA(&system32_paletteram[1][offset]); /* it expects to read back the same values?*/
 
 		/* rearrange the data to normal format ... */
 
@@ -530,11 +530,11 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &system32_paletteram[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
 	{ 0x608000, 0x60ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
 	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
 
-	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &scrambled_paletteram16[1] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &system32_paletteram[1] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
 	{ 0x688000, 0x68ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w, &paletteram16_b }, /* Monitor B palette*/
 	{ 0x690000, 0x69004f, MWA16_RAM, &system32_mixerregs[1] }, /* monitor B mixer registers*/
 
