@@ -102,7 +102,7 @@ static UINT32 sys32sprite_y_zoom;
 static int sys32mon_old4, sys32mon_old8;
 #endif
 
-
+UINT16 *system32_paletteram[2];
 
 /*************************************
  *
@@ -153,9 +153,9 @@ static INLINE UINT16 common_paletteram_r(int which, offs_t offset)
 	offset &= 0x3fff;
 
 	if (!convert)
-		return scrambled_paletteram16[which][offset];
+		return system32_paletteram[which][offset];
 	else
-		return xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(scrambled_paletteram16[which][offset]);
+		return xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(system32_paletteram[which][offset]);
 }
 
 
@@ -172,11 +172,11 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 	offset &= 0x3fff;
 
 	/* read, modify, and write the new value, updating the palette */
-	value = scrambled_paletteram16[which][offset];
+	value = system32_paletteram[which][offset];
 	if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
 	COMBINE_DATA(&value);
 	if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
-	scrambled_paletteram16[which][offset] = value;
+	system32_paletteram[which][offset] = value;
 	update_color(0x4000*which + offset, value);
 
 	/* if blending is enabled, writes go to both halves of palette RAM */
@@ -185,11 +185,11 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 		offset ^= 0x2000;
 
 		/* read, modify, and write the new value, updating the palette */
-		value = scrambled_paletteram16[which][offset];
+		value = system32_paletteram[which][offset];
 		if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
 		COMBINE_DATA(&value);
 		if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
-		scrambled_paletteram16[which][offset] = value;
+		system32_paletteram[which][offset] = value;
 		update_color(0x4000*which + offset, value);
 	}
 }
