@@ -499,10 +499,10 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 
-	{ 0x600000, 0x60ffff, MRA16_RAM }, /* Palette*/
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
 	{ 0x610000, 0x6100ff, multi32_mixer_0_r }, /* mixer chip registers*/
 
-	{ 0x680000, 0x68ffff, MRA16_RAM }, /* Palette (Monitor B)*/
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
 	{ 0x690000, 0x69004f, multi32_mixer_1_r }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
@@ -529,12 +529,10 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &system32_paletteram[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
-	{ 0x608000, 0x60ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
 
-	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &system32_paletteram[1] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
-	{ 0x688000, 0x68ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w, &paletteram16_b }, /* Monitor B palette*/
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
