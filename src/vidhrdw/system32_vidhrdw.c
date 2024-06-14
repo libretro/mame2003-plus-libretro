@@ -1476,15 +1476,6 @@ VIDEO_START( system32 ) {
 	sys32_spriteram8 = auto_malloc ( 0x20000 ); /* for ram sprites*/
 	sys32_videoram = auto_malloc ( 0x20000 );
 
-	for (i=0; i <= multi32; i++) {
-		sys32_old_brightness[i][0] = 0;
-		sys32_old_brightness[i][1] = 0;
-		sys32_old_brightness[i][2] = 0;
-		sys32_brightness[i][0] = 0xff;
-		sys32_brightness[i][1] = 0xff;
-		sys32_brightness[i][2] = 0xff;
-	}
-
 	for (i = 0; i < 0x100; i++)
 		system32_dirty_window[i] = 1;
 
@@ -1744,30 +1735,6 @@ VIDEO_UPDATE( system32 ) {
 	}
 	/*---------------------------------------- end wip code -----------------------------------------------*/
 
-	/* palette dirty check */
-
-	for (i=0; i <= multi32; i++) {
-		sys32_brightness[i][0] = (mixer_control[i][0x40/2]);
-		sys32_brightness[i][1] = (mixer_control[i][0x42/2]);
-		sys32_brightness[i][2] = (mixer_control[i][0x44/2]);
-
-		if (sys32_brightness[i][0] != sys32_old_brightness[i][0]) {
-			sys32_old_brightness[i][0] = sys32_brightness[i][0]; sys32_palette_dirty[i] = 1;
-		}
-		if (sys32_brightness[i][1] != sys32_old_brightness[i][1]) {
-			sys32_old_brightness[i][1] = sys32_brightness[i][1]; sys32_palette_dirty[i] = 1;
-		}
-		if (sys32_brightness[i][2] != sys32_old_brightness[i][2]) {
-			sys32_old_brightness[i][2] = sys32_brightness[i][2]; sys32_palette_dirty[i] = 1;
-		}
-
-		if (sys32_palette_dirty[i]) {
-			sys32_palette_dirty[i] = 0;
-			//system32_recalc_palette(i);
-		}
-	}
-
-	/* end palette dirty*/
 
 	system32_screen_mode = sys32_videoram[0x01FF00/2] & 0xc000;  /* this should be 0x8000 according to modeler but then brival is broken?  this way alien3 and arabfgt try to change when they shouldn't .. wrong register?*/
 
