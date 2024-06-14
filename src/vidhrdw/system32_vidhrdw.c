@@ -106,6 +106,20 @@ static int sys32mon_old4, sys32mon_old8;
 UINT16 *system32_paletteram[2];
 static UINT16 mixer_control[2][0x40];
 
+
+/*************************************
+ *
+ *  Helper macros
+ *
+ *************************************/
+
+#ifdef LSB_FIRST
+#define SWAP_HALVES(x)			(x)
+#else
+#define SWAP_HALVES(x)			(((x) >> 16) | ((x) << 16))
+#endif
+
+
 /*************************************
  *
  *  Common palette handling
@@ -195,7 +209,6 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 		update_color(0x4000*which + offset, value);
 	}
 }
-
 
 
 /*************************************
