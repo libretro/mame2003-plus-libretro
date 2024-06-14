@@ -374,7 +374,6 @@ data16_t sys32_displayenable;
 int system32_temp_kludge;
 data16_t *sys32_spriteram16;
 data16_t *sys32_txtilemap_ram;
-data16_t *sys32_ramtile_ram;
 
 int system32_mixerShift;
 extern int system32_screen_mode;
