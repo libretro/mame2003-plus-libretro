@@ -18,6 +18,8 @@ any remaining glitches
 */
 
 #include "driver.h"
+#include "includes/segas32.h"
+
 #define MAX_COLOURS (16384)
 
 /* Debugging flags and kludges*/
