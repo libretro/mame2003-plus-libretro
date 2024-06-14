@@ -1717,13 +1717,13 @@ VIDEO_UPDATE( system32 ) {
 	/* if the palette shift /bank registers changed the tilemap is dirty, not sure these are regs 100% correct some odd colours in sonic / jpark*/
 	for (tm = 0; tm < 4; tm++) {
 		int monitor=multi32?tm%2:0;
-		sys32_paletteshift[tm] = (system32_mixerregs[monitor][(0x22+tm*2)/2] & 0x0f00)>>8;
+		sys32_paletteshift[tm] = (mixer_control[monitor][(0x22+tm*2)/2] & 0x0f00)>>8;
 		if (sys32_paletteshift[tm] != sys32_old_paletteshift[tm]) {
 			tilemap_mark_all_tiles_dirty(system32_layer_tilemap[tm]);
 			sys32_old_paletteshift[tm] = sys32_paletteshift[tm];
 		}
 
-		sys32_palettebank[tm] = ((system32_mixerregs[monitor][(0x22+tm*2)/2] & 0x00f0)>>4)*0x40;
+		sys32_palettebank[tm] = ((mixer_control[monitor][(0x22+tm*2)/2] & 0x00f0)>>4)*0x40;
 		if (sys32_palettebank[tm] != sys32_old_palettebank[tm]) {
 			tilemap_mark_all_tiles_dirty(system32_layer_tilemap[tm]);
 			sys32_old_palettebank[tm] = sys32_palettebank[tm];
@@ -1734,9 +1734,9 @@ VIDEO_UPDATE( system32 ) {
 	/* palette dirty check */
 
 	for (i=0; i <= multi32; i++) {
-		sys32_brightness[i][0] = (system32_mixerregs[i][0x40/2]);
-		sys32_brightness[i][1] = (system32_mixerregs[i][0x42/2]);
-		sys32_brightness[i][2] = (system32_mixerregs[i][0x44/2]);
+		sys32_brightness[i][0] = (mixer_control[i][0x40/2]);
+		sys32_brightness[i][1] = (mixer_control[i][0x42/2]);
+		sys32_brightness[i][2] = (mixer_control[i][0x44/2]);
 
 		if (sys32_brightness[i][0] != sys32_old_brightness[i][0]) {
 			sys32_old_brightness[i][0] = sys32_brightness[i][0]; sys32_palette_dirty[i] = 1;
@@ -1888,7 +1888,7 @@ VIDEO_UPDATE( system32 ) {
 		fprintf(sys32_logfile,"Mixer Regs 0x610000 - 0x6100ff\n");
 		for (x = 0x00; x< 0x100; x+=2)
 		{
-			fprintf(sys32_logfile, "%04x\n", system32_mixerregs[0][x/2] ) ;
+			fprintf(sys32_logfile, "%04x\n", mixer_control[0][x/2] ) ;
 
 		}
 
