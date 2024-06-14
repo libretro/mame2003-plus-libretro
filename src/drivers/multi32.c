@@ -19,7 +19,7 @@
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
-#include "segas32.h"
+#include "includes/segas32.h"
 
 #define MASTER_CLOCK		32215900
 #define MULTI32_CLOCK		40000000
