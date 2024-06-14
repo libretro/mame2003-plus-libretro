@@ -30,7 +30,6 @@ extern int multi32;
 
 extern data16_t *sys32_spriteram16;
 data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
-extern data16_t *system32_mixerregs[2];		/* mixer registers*/
 data16_t *sys32_videoram;
 data32_t *multi32_videoram;
 data8_t sys32_ramtile_dirty[0x1000];
@@ -105,6 +104,7 @@ static int sys32mon_old4, sys32mon_old8;
 #endif
 
 UINT16 *system32_paletteram[2];
+UINT16 *system32_mixerregs[2];		/* mixer registers*/
 
 /*************************************
  *
