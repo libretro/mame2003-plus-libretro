@@ -991,7 +991,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 		sys32sprite_priority_lookup = (spritedata_source[7]>>(system32_mixerShift+8))&0xf;
 	}
 
-	sys32sprite_priority = system32_mixerregs[sys32sprite_monitor_select][sys32sprite_priority_lookup&sprite_priority_levels]&0xf;
+	sys32sprite_priority = mixer_control[sys32sprite_monitor_select][sys32sprite_priority_lookup&sprite_priority_levels]&0xf;
 	if (sys32sprite_is_shadow && ((!strcmp(Machine->gamedrv->name,"f1en")) || (!strcmp(Machine->gamedrv->name,"f1lap")))) sys32sprite_is_shadow=0;  /* f1en turns this flag on the car sprites?*/
 
 	if (sys32sprite_use_yoffset) sys32sprite_ypos += jump_y;
@@ -1306,7 +1306,7 @@ void system32_draw_text_layer ( struct mame_bitmap *bitmap, const struct rectang
 			int pal = (data>>9) & 0x7f;
 			int drawypos, flip;
 
-			pal += (((system32_mixerregs[0][0x10] & 0xf0) >> 4) * 0x40);
+			pal += (((mixer_control[0][0x10] & 0xf0) >> 4) * 0x40);
 
 			code += textbank * 0x200;
 
