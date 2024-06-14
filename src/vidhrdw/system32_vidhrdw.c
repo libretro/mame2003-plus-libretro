@@ -272,9 +272,22 @@ READ16_HANDLER( system32_mixer_r )
 	return mixer_control[0][offset];
 }
 
+
 WRITE16_HANDLER( system32_mixer_w )
 {
 	COMBINE_DATA(&mixer_control[0][offset]);
+}
+
+
+READ32_HANDLER( multi32_mixer_0_r )
+{
+	return (UINT32 *)mixer_control[0][offset*2];
+}
+
+
+READ32_HANDLER( multi32_mixer_1_r )
+{
+	return (UINT32 *)mixer_control[1][offset*2];
 }
 
 
