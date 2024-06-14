@@ -1778,7 +1778,7 @@ VIDEO_UPDATE( system32 ) {
 
 		if (sys32_palette_dirty[i]) {
 			sys32_palette_dirty[i] = 0;
-			system32_recalc_palette(i);
+			//system32_recalc_palette(i);
 		}
 	}
 
