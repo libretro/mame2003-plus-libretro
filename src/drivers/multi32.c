@@ -133,7 +133,6 @@ static READ16_HANDLER(sys32_read_random)
 	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
 }
 
-extern int sys32_brightness[2][3];
 
 void multi32_set_colour (int offset, int monitor)
 {
