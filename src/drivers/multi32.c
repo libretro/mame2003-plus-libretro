@@ -500,10 +500,10 @@ static MEMORY_READ16_START( multi32_readmem )
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 
 	{ 0x600000, 0x60ffff, MRA16_RAM }, /* Palette*/
-	{ 0x610000, 0x6100ff, MRA16_RAM }, /* mixer chip registers*/
+	{ 0x610000, 0x6100ff, system32_mixer_r }, /* mixer chip registers*/
 
 	{ 0x680000, 0x68ffff, MRA16_RAM }, /* Palette (Monitor B)*/
-	{ 0x690000, 0x69004f, MRA16_RAM }, /* monitor B mixer registers*/
+	{ 0x690000, 0x69004f, system32_mixer_r }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
