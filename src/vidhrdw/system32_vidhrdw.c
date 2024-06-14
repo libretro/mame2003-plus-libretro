@@ -436,6 +436,9 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 						eax &= 0x0fff;         edx &= 0x0fff; /* no apparent side-effect observed*/
 						eax = pal_base[eax];   edx = pal_base[edx];
 						idp_cache4[ecx] = eax; idp_cache4[ecx+1] = edx;
+            log_cb(RETRO_LOG_INFO,"\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n\n",
+              idp_cache4[0],idp_cache4[1],idp_cache4[2],idp_cache4[3],idp_cache4[4],idp_cache4[5],idp_cache4[6],idp_cache4[7],
+              idp_cache4[8],idp_cache4[9],idp_cache4[10],idp_cache4[11],idp_cache4[12],idp_cache4[13],idp_cache4[14],idp_cache4[15]);
 					}
 				}
 			}
