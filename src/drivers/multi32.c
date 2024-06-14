@@ -19,6 +19,7 @@
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
+#include "includes/segas32.h"
 
 #define MASTER_CLOCK		32215900
 #define MULTI32_CLOCK		40000000
@@ -29,7 +30,6 @@ int multi32;
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-extern data16_t *system32_mixerregs[2];  /* mixer registers*/
 
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
@@ -39,17 +39,12 @@ extern data16_t sys32_displayenable;
 /* Video Hardware */
 extern int system32_temp_kludge;
 extern data16_t *sys32_spriteram16;
-extern data16_t *sys32_txtilemap_ram;
-extern data16_t *sys32_ramtile_ram;
-extern data16_t *scrambled_paletteram16[2];
-static data16_t *paletteram16_b;
 
 extern int system32_mixerShift;
 extern int system32_screen_mode;
 extern int system32_screen_old_mode;
 extern int system32_allow_high_resolution;
 
-extern int sys32_brightness[2][3];
 
 WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER( sys32_ramtile_w );
@@ -134,129 +129,6 @@ static READ16_HANDLER(sys32_read_random)
 	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
 }
 
-extern int sys32_brightness[2][3];
-
-void multi32_set_colour (int offset, int monitor)
-{
-	int data;
-	int r,g,b;
-	int r2,g2,b2;
-	UINT16 r_bright, g_bright, b_bright;
-
-	/* Although the hardware writes to all 65536 colours on both monitors, the
-	   games do not use more than 16384 colours per monitor.  We discard any
-	   colours that are written above MAX_COLOURS(16384).
-	*/
-
-	if (offset<MAX_COLOURS) {
-		if (monitor) {
-			data = paletteram16_b[offset];
-		}
-		else data = paletteram16[offset];
-
-		r = (data >> 0) & 0x0f;
-		g = (data >> 4) & 0x0f;
-		b = (data >> 8) & 0x0f;
-
-		r2 = (data >> 13) & 0x1;
-		g2 = (data >> 13) & 0x1;
-		b2 = (data >> 13) & 0x1;
-
-		r = (r << 4) | (r2 << 3);
-		g = (g << 4) | (g2 << 3);
-		b = (b << 4) | (b2 << 3);
-
-		/* there might be better ways of doing this ... but for now its functional ;-)*/
-		r_bright = sys32_brightness[monitor][0]; r_bright &= 0x3f;
-		g_bright = sys32_brightness[monitor][1]; g_bright &= 0x3f;
-		b_bright = sys32_brightness[monitor][2]; b_bright &= 0x3f;
-
-		if ((r_bright & 0x20)) { r = (r * (r_bright&0x1f))>>5; } else { r = r+(((0xf8-r) * (r_bright&0x1f))>>5); }
-		if ((g_bright & 0x20)) { g = (g * (g_bright&0x1f))>>5; } else { g = g+(((0xf8-g) * (g_bright&0x1f))>>5); }
-		if ((b_bright & 0x20)) { b = (b * (b_bright&0x1f))>>5; } else { b = b+(((0xf8-b) * (b_bright&0x1f))>>5); }
-
-		palette_set_color((monitor*MAX_COLOURS)+offset,r,g,b);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w )
-{
-	int r,g,b;
-	int r2,g2,b2;
-
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
-
-		/* rearrange the data to normal format ... */
-
-		r = (data >>1) & 0xf;
-		g = (data >>6) & 0xf;
-		b = (data >>11) & 0xf;
-
-		r2 = (data >>0) & 0x1;
-		g2 = (data >>5) & 0x1;
-		b2 = (data >> 10) & 0x1;
-
-		data = (data & 0x8000) | r | g<<4 | b << 8 | r2 << 12 | g2 << 13 | b2 << 14;
-
-		COMBINE_DATA(&paletteram16[offset]);
-
-		multi32_set_colour(offset, 0);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w )
-{
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&paletteram16[offset]);
-
-	/* some games use 8-bit writes to some palette regions*/
-	/* (especially for the text layer palettes)*/
-
-		multi32_set_colour(offset, 0);
-	}
-}
-
-/* --------------------------------------- Monitor B ---------------------------------*/
-
-static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w )
-{
-	int r,g,b;
-	int r2,g2,b2;
-
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[1][offset]); /* it expects to read back the same values?*/
-
-		/* rearrange the data to normal format ... */
-
-		r = (data >>1) & 0xf;
-		g = (data >>6) & 0xf;
-		b = (data >>11) & 0xf;
-
-		r2 = (data >>0) & 0x1;
-		g2 = (data >>5) & 0x1;
-		b2 = (data >> 10) & 0x1;
-
-		data = (data & 0x8000) | r | g<<4 | b << 8 | r2 << 12 | g2 << 13 | b2 << 14;
-
-
-		COMBINE_DATA(&paletteram16_b[offset]);
-
-		multi32_set_colour(offset, 1);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w )
-{
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&paletteram16_b[offset]);
-
-		/* some games use 8-bit writes to some palette regions*/
-		/* (especially for the text layer palettes)*/
-
-		multi32_set_colour(offset, 1);
-	}
-}
 
 extern int analogRead[8];
 extern int analogSwitch;
@@ -503,8 +375,11 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 
-	{ 0x600000, 0x6100ff, MRA16_RAM }, /* Palette + mixer registers (Monitor A)*/
-	{ 0x680000, 0x69004f, MRA16_RAM }, /* Palette + mixer registers (Monitor B)*/
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
+	{ 0x610000, 0x6100ff, multi32_mixer_0_r }, /* mixer chip registers*/
+
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
+	{ 0x690000, 0x69004f, multi32_mixer_1_r }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
@@ -530,13 +405,11 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
-	{ 0x608000, 0x60ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
-	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, &system32_paletteram[0] },
+	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
 
-	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &scrambled_paletteram16[1] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
-	{ 0x688000, 0x68ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w, &paletteram16_b }, /* Monitor B palette*/
-	{ 0x690000, 0x69004f, MWA16_RAM, &system32_mixerregs[1] }, /* monitor B mixer registers*/
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
+	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/

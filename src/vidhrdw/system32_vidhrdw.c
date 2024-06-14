@@ -18,6 +18,8 @@ any remaining glitches
 */
 
 #include "driver.h"
+#include "includes/segas32.h"
+
 #define MAX_COLOURS (16384)
 
 /* Debugging flags and kludges*/
@@ -28,7 +30,6 @@ extern int multi32;
 
 extern data16_t *sys32_spriteram16;
 data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
-extern data16_t *system32_mixerregs[2];		/* mixer registers*/
 data16_t *sys32_videoram;
 data32_t *multi32_videoram;
 data8_t sys32_ramtile_dirty[0x1000];
@@ -48,8 +49,6 @@ extern int system32_mixerShift;
 int system32_screen_mode;
 int system32_screen_old_mode;
 int system32_allow_high_resolution;
-static int sys32_old_brightness[2][3];
-int sys32_brightness[2][3];
 
 data8_t system32_dirty_window[0x100];
 data8_t system32_windows[4][4];
@@ -101,6 +100,185 @@ static UINT32 sys32sprite_y_zoom;
 #else
 static int sys32mon_old4, sys32mon_old8;
 #endif
+
+UINT16 *system32_paletteram[2];
+static UINT16 mixer_control[2][0x40];
+
+
+/*************************************
+ *
+ *  Common palette handling
+ *
+ *************************************/
+
+static INLINE UINT16 xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(UINT16 value)
+{
+	int r = (value >> 0) & 0x1f;
+	int g = (value >> 5) & 0x1f;
+	int b = (value >> 10) & 0x1f;
+	value = (value & 0x8000) | ((b & 0x01) << 14) | ((g & 0x01) << 13) | ((r & 0x01) << 12);
+	value |= ((b & 0x1e) << 7) | ((g & 0x1e) << 3) | ((r & 0x1e) >> 1);
+	return value;
+}
+
+
+static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
+{
+	int r = ((value >> 12) & 0x01) | ((value << 1) & 0x1e);
+	int g = ((value >> 13) & 0x01) | ((value >> 3) & 0x1e);
+	int b = ((value >> 14) & 0x01) | ((value >> 7) & 0x1e);
+	return (value & 0x8000) | (b << 10) | (g << 5) | (r << 0);
+}
+
+
+static INLINE void update_color(int offset, UINT16 data)
+{
+	/* note that since we use this RAM directly, we don't technically need */
+	/* to call palette_set_color() at all; however, it does give us that */
+	/* nice display when you hit F4, which is useful for debugging */
+
+	/* set the color */
+	palette_set_color(offset, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+}
+
+
+static INLINE UINT16 common_paletteram_r(int which, offs_t offset)
+{
+	int convert;
+
+	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
+	/* the upper half of palette RAM is formatted xBGRBBBBGGGGRRRR */
+	/* we store everything if the first format, and convert accesses to the other format */
+	/* on the fly */
+	convert = (offset & 0x4000);
+	offset &= 0x3fff;
+
+	if (!convert)
+		return system32_paletteram[which][offset];
+	else
+		return xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(system32_paletteram[which][offset]);
+}
+
+
+static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 mem_mask)
+{
+	UINT16 value;
+	int convert;
+
+	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
+	/* the upper half of palette RAM is formatted xBGRBBBBGGGGRRRR */
+	/* we store everything if the first format, and convert accesses to the other format */
+	/* on the fly */
+	convert = (offset & 0x4000);
+	offset &= 0x3fff;
+
+	/* read, modify, and write the new value, updating the palette */
+	value = system32_paletteram[which][offset];
+	if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
+	COMBINE_DATA(&value);
+	if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
+	system32_paletteram[which][offset] = value;
+	update_color(0x4000*which + offset, value);
+
+	/* if blending is enabled, writes go to both halves of palette RAM */
+	if (mixer_control[which][0x4e/2] & 0x0880)
+	{
+		offset ^= 0x2000;
+
+		/* read, modify, and write the new value, updating the palette */
+		value = system32_paletteram[which][offset];
+		if (convert) value = xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(value);
+		COMBINE_DATA(&value);
+		if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
+		system32_paletteram[which][offset] = value;
+		update_color(0x4000*which + offset, value);
+	}
+}
+
+
+/*************************************
+ *
+ *  Palette RAM access
+ *
+ *************************************/
+
+READ16_HANDLER( system32_paletteram_r )
+{
+	return common_paletteram_r(0, offset);
+}
+
+
+WRITE16_HANDLER( system32_paletteram_w )
+{
+	common_paletteram_w(0, offset, data, mem_mask);
+}
+
+
+READ16_HANDLER( multi32_paletteram_0_r )
+{
+	return common_paletteram_r(0, offset);
+}
+
+
+WRITE16_HANDLER( multi32_paletteram_0_w )
+{
+	common_paletteram_w(0, offset, data, mem_mask);
+}
+
+
+READ16_HANDLER( multi32_paletteram_1_r )
+{
+	return common_paletteram_r(1, offset);
+}
+
+
+WRITE16_HANDLER( multi32_paletteram_1_w )
+{
+	common_paletteram_w(1, offset, data, mem_mask);
+}
+
+
+/*************************************
+ *
+ *  Mixer control registers
+ *
+ *************************************/
+
+READ16_HANDLER( system32_mixer_r )
+{
+	return mixer_control[0][offset];
+}
+
+
+WRITE16_HANDLER( system32_mixer_w )
+{
+	COMBINE_DATA(&mixer_control[0][offset]);
+}
+
+
+READ16_HANDLER( multi32_mixer_0_r )
+{
+	return mixer_control[0][offset];
+}
+
+
+READ16_HANDLER( multi32_mixer_1_r )
+{
+	return mixer_control[1][offset];
+}
+
+
+WRITE16_HANDLER( multi32_mixer_0_w )
+{
+	COMBINE_DATA(&mixer_control[0][offset]);
+}
+
+
+WRITE16_HANDLER( multi32_mixer_1_w )
+{
+	COMBINE_DATA(&mixer_control[1][offset]);
+}
+
 
 /*
 
@@ -775,10 +953,10 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	sys32sprite_rom_offset				= (spritedata_source[6]&0xffff) >> 0;
 
 	sprite_palette_mask=(1<<(system32_mixerShift+4))-1;
-	sprite_priority_levels=system32_mixerregs[sys32sprite_monitor_select][0x4d/2]&2?15:3;
+	sprite_priority_levels=mixer_control[sys32sprite_monitor_select][0x4d/2]&2?15:3;
 	mixerinput = (spritedata_source[7] >> (system32_mixerShift + 8)) & 0xf;
 	sys32sprite_palette = (spritedata_source[7] >> 4) & sprite_palette_mask;
-	sys32sprite_palette += (system32_mixerregs[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
+	sys32sprite_palette += (mixer_control[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
 
 	/* process attributes */
 
@@ -812,7 +990,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 		sys32sprite_priority_lookup = (spritedata_source[7]>>(system32_mixerShift+8))&0xf;
 	}
 
-	sys32sprite_priority = system32_mixerregs[sys32sprite_monitor_select][sys32sprite_priority_lookup&sprite_priority_levels]&0xf;
+	sys32sprite_priority = mixer_control[sys32sprite_monitor_select][sys32sprite_priority_lookup&sprite_priority_levels]&0xf;
 	if (sys32sprite_is_shadow && ((!strcmp(Machine->gamedrv->name,"f1en")) || (!strcmp(Machine->gamedrv->name,"f1lap")))) sys32sprite_is_shadow=0;  /* f1en turns this flag on the car sprites?*/
 
 	if (sys32sprite_use_yoffset) sys32sprite_ypos += jump_y;
@@ -1127,7 +1305,7 @@ void system32_draw_text_layer ( struct mame_bitmap *bitmap, const struct rectang
 			int pal = (data>>9) & 0x7f;
 			int drawypos, flip;
 
-			pal += (((system32_mixerregs[0][0x10] & 0xf0) >> 4) * 0x40);
+			pal += (((mixer_control[0][0x10] & 0xf0) >> 4) * 0x40);
 
 			code += textbank * 0x200;
 
@@ -1284,15 +1462,6 @@ VIDEO_START( system32 ) {
 	sys32_spriteram8 = auto_malloc ( 0x20000 ); /* for ram sprites*/
 	sys32_videoram = auto_malloc ( 0x20000 );
 
-	for (i=0; i <= multi32; i++) {
-		sys32_old_brightness[i][0] = 0;
-		sys32_old_brightness[i][1] = 0;
-		sys32_old_brightness[i][2] = 0;
-		sys32_brightness[i][0] = 0xff;
-		sys32_brightness[i][1] = 0xff;
-		sys32_brightness[i][2] = 0xff;
-	}
-
 	for (i = 0; i < 0x100; i++)
 		system32_dirty_window[i] = 1;
 
@@ -1318,9 +1487,9 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 	int monitor_res = 0;
 	struct rectangle clip;
 
-	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
+	if ((mixer_control[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
-		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
+		alphaamount = 255-((((mixer_control[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
 		alpha_set_level(alphaamount);
 	}
 
@@ -1394,9 +1563,9 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
   int dstxstep, dstystep;
 	struct rectangle clip;
 
-	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
+	if ((mixer_control[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
-		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
+		alphaamount = 255-((((mixer_control[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
 		alpha_set_level(alphaamount);
 	}
 
@@ -1457,10 +1626,10 @@ VIDEO_UPDATE( system32 ) {
 
 	int sys32_tmap_disabled = sys32_videoram[0x1FF02/2] & 0x000f;
 
-	int priority0 = (system32_mixerregs[0][0x22/2] & 0x000f);
-	int priority1 = (system32_mixerregs[multi32][0x24/2] & 0x000f);
-	int priority2 = (system32_mixerregs[0][0x26/2] & 0x000f);
-	int priority3 = (system32_mixerregs[multi32][0x28/2] & 0x000f);
+	int priority0 = (mixer_control[0][0x22/2] & 0x000f);
+	int priority1 = (mixer_control[multi32][0x24/2] & 0x000f);
+	int priority2 = (mixer_control[0][0x26/2] & 0x000f);
+	int priority3 = (mixer_control[multi32][0x28/2] & 0x000f);
 	int sys32_palette_dirty[2] = {0, 0};
 
 	/* -------------------------------------- experimental wip code --------------------------------*/
@@ -1538,13 +1707,13 @@ VIDEO_UPDATE( system32 ) {
 	/* if the palette shift /bank registers changed the tilemap is dirty, not sure these are regs 100% correct some odd colours in sonic / jpark*/
 	for (tm = 0; tm < 4; tm++) {
 		int monitor=multi32?tm%2:0;
-		sys32_paletteshift[tm] = (system32_mixerregs[monitor][(0x22+tm*2)/2] & 0x0f00)>>8;
+		sys32_paletteshift[tm] = (mixer_control[monitor][(0x22+tm*2)/2] & 0x0f00)>>8;
 		if (sys32_paletteshift[tm] != sys32_old_paletteshift[tm]) {
 			tilemap_mark_all_tiles_dirty(system32_layer_tilemap[tm]);
 			sys32_old_paletteshift[tm] = sys32_paletteshift[tm];
 		}
 
-		sys32_palettebank[tm] = ((system32_mixerregs[monitor][(0x22+tm*2)/2] & 0x00f0)>>4)*0x40;
+		sys32_palettebank[tm] = ((mixer_control[monitor][(0x22+tm*2)/2] & 0x00f0)>>4)*0x40;
 		if (sys32_palettebank[tm] != sys32_old_palettebank[tm]) {
 			tilemap_mark_all_tiles_dirty(system32_layer_tilemap[tm]);
 			sys32_old_palettebank[tm] = sys32_palettebank[tm];
@@ -1552,30 +1721,6 @@ VIDEO_UPDATE( system32 ) {
 	}
 	/*---------------------------------------- end wip code -----------------------------------------------*/
 
-	/* palette dirty check */
-
-	for (i=0; i <= multi32; i++) {
-		sys32_brightness[i][0] = (system32_mixerregs[i][0x40/2]);
-		sys32_brightness[i][1] = (system32_mixerregs[i][0x42/2]);
-		sys32_brightness[i][2] = (system32_mixerregs[i][0x44/2]);
-
-		if (sys32_brightness[i][0] != sys32_old_brightness[i][0]) {
-			sys32_old_brightness[i][0] = sys32_brightness[i][0]; sys32_palette_dirty[i] = 1;
-		}
-		if (sys32_brightness[i][1] != sys32_old_brightness[i][1]) {
-			sys32_old_brightness[i][1] = sys32_brightness[i][1]; sys32_palette_dirty[i] = 1;
-		}
-		if (sys32_brightness[i][2] != sys32_old_brightness[i][2]) {
-			sys32_old_brightness[i][2] = sys32_brightness[i][2]; sys32_palette_dirty[i] = 1;
-		}
-
-		if (sys32_palette_dirty[i]) {
-			sys32_palette_dirty[i] = 0;
-			system32_recalc_palette(i);
-		}
-	}
-
-	/* end palette dirty*/
 
 	system32_screen_mode = sys32_videoram[0x01FF00/2] & 0xc000;  /* this should be 0x8000 according to modeler but then brival is broken?  this way alien3 and arabfgt try to change when they shouldn't .. wrong register?*/
 
@@ -1709,7 +1854,7 @@ VIDEO_UPDATE( system32 ) {
 		fprintf(sys32_logfile,"Mixer Regs 0x610000 - 0x6100ff\n");
 		for (x = 0x00; x< 0x100; x+=2)
 		{
-			fprintf(sys32_logfile, "%04x\n", system32_mixerregs[0][x/2] ) ;
+			fprintf(sys32_logfile, "%04x\n", mixer_control[0][x/2] ) ;
 
 		}
 

@@ -353,6 +353,7 @@ Stephh's notes (based on some tests) :
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
+#include "includes/segas32.h"
 
 #define MASTER_CLOCK  32215900
 
@@ -361,7 +362,6 @@ enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-data16_t *system32_mixerregs[2];		/* mixer registers*/
 static int s32_blo, s32_bhi;		/* bank high and low values*/
 static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
 static data16_t *sys32_protram;
@@ -373,9 +373,6 @@ data16_t sys32_displayenable;
 /* Video Hardware */
 int system32_temp_kludge;
 data16_t *sys32_spriteram16;
-data16_t *sys32_txtilemap_ram;
-data16_t *sys32_ramtile_ram;
-data16_t *scrambled_paletteram16[2];
 
 int system32_mixerShift;
 extern int system32_screen_mode;
@@ -383,7 +380,6 @@ extern int system32_screen_old_mode;
 extern int system32_allow_high_resolution;
 extern int multi32;
 
-extern int sys32_brightness[2][3];
 
 WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER ( sys32_ramtile_w );
@@ -862,73 +858,6 @@ static WRITE16_HANDLER( system32_io_2_w )
 	}
 }
 
-void system32_set_colour (int offset)
-{
-	int data;
-	int r,g,b;
-	int r2,g2,b2;
-	UINT16 r_bright, g_bright, b_bright;
-
-	data = paletteram16[offset];
-
-	r = (data >> 0) & 0x0f;
-	g = (data >> 4) & 0x0f;
-	b = (data >> 8) & 0x0f;
-
-	r2 = (data >> 13) & 0x1;
-	g2 = (data >> 13) & 0x1;
-	b2 = (data >> 13) & 0x1;
-
-	r = (r << 4) | (r2 << 3);
-	g = (g << 4) | (g2 << 3);
-	b = (b << 4) | (b2 << 3);
-
-	/* there might be better ways of doing this ... but for now its functional ;-)*/
-	r_bright = sys32_brightness[0][0]; r_bright &= 0x3f;
-	g_bright = sys32_brightness[0][1]; g_bright &= 0x3f;
-	b_bright = sys32_brightness[0][2]; b_bright &= 0x3f;
-
-	if ((r_bright & 0x20)) { r = (r * (r_bright&0x1f))>>5; } else { r = r+(((0xf8-r) * (r_bright&0x1f))>>5); }
-	if ((g_bright & 0x20)) { g = (g * (g_bright&0x1f))>>5; } else { g = g+(((0xf8-g) * (g_bright&0x1f))>>5); }
-	if ((b_bright & 0x20)) { b = (b * (b_bright&0x1f))>>5; } else { b = b+(((0xf8-b) * (b_bright&0x1f))>>5); }
-
-	palette_set_color(offset,r,g,b);
-}
-
-static WRITE16_HANDLER( system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w )
-{
-	int r,g,b;
-	int r2,g2,b2;
-
-	COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
-
-	/* rearrange the data to normal format ... */
-
-	r = (data >>1) & 0xf;
-	g = (data >>6) & 0xf;
-	b = (data >>11) & 0xf;
-
-	r2 = (data >>0) & 0x1;
-	g2 = (data >>5) & 0x1;
-	b2 = (data >> 10) & 0x1;
-
-	data = (data & 0x8000) | r | g<<4 | b << 8 | r2 << 12 | g2 << 13 | b2 << 14;
-
-
-	COMBINE_DATA(&paletteram16[offset]);
-
-	system32_set_colour(offset);
-}
-
-static WRITE16_HANDLER( system32_paletteram16_xBGRBBBBGGGGRRRR_word_w )
-{
-	COMBINE_DATA(&paletteram16[offset]);
-
-	/* some games use 8-bit writes to some palette regions*/
-	/* (especially for the text layer palettes)*/
-
-	system32_set_colour(offset);
-}
 
 static READ16_HANDLER( jp_v60_read_cab )
 {
@@ -959,7 +888,8 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x500002, 0x500003, jp_v60_read_cab },
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x6100ff, MRA16_RAM }, /* Palette + mixer registers (Monitor A)*/
+	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
+	{ 0x610000, 0x6100ff, system32_mixer_r }, /* mixer chip registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
@@ -984,9 +914,8 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
-	{ 0x608000, 0x60ffff, system32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
-	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
+	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
+	{ 0x610000, 0x6100ff, system32_mixer_w }, /* mixer chip registers*/
 
 	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
