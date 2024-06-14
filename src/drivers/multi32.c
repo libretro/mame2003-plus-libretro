@@ -46,7 +46,6 @@ extern int system32_screen_mode;
 extern int system32_screen_old_mode;
 extern int system32_allow_high_resolution;
 
-extern int sys32_brightness[2][3];
 
 WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER( sys32_ramtile_w );
@@ -131,128 +130,6 @@ static READ16_HANDLER(sys32_read_random)
 	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
 }
 
-
-void multi32_set_colour (int offset, int monitor)
-{
-	int data;
-	int r,g,b;
-	int r2,g2,b2;
-	UINT16 r_bright, g_bright, b_bright;
-
-	/* Although the hardware writes to all 65536 colours on both monitors, the
-	   games do not use more than 16384 colours per monitor.  We discard any
-	   colours that are written above MAX_COLOURS(16384).
-	*/
-
-	if (offset<MAX_COLOURS) {
-		if (monitor) {
-			data = paletteram16_b[offset];
-		}
-		else data = paletteram16[offset];
-
-		r = (data >> 0) & 0x0f;
-		g = (data >> 4) & 0x0f;
-		b = (data >> 8) & 0x0f;
-
-		r2 = (data >> 13) & 0x1;
-		g2 = (data >> 13) & 0x1;
-		b2 = (data >> 13) & 0x1;
-
-		r = (r << 4) | (r2 << 3);
-		g = (g << 4) | (g2 << 3);
-		b = (b << 4) | (b2 << 3);
-
-		/* there might be better ways of doing this ... but for now its functional ;-)*/
-		r_bright = sys32_brightness[monitor][0]; r_bright &= 0x3f;
-		g_bright = sys32_brightness[monitor][1]; g_bright &= 0x3f;
-		b_bright = sys32_brightness[monitor][2]; b_bright &= 0x3f;
-
-		if ((r_bright & 0x20)) { r = (r * (r_bright&0x1f))>>5; } else { r = r+(((0xf8-r) * (r_bright&0x1f))>>5); }
-		if ((g_bright & 0x20)) { g = (g * (g_bright&0x1f))>>5; } else { g = g+(((0xf8-g) * (g_bright&0x1f))>>5); }
-		if ((b_bright & 0x20)) { b = (b * (b_bright&0x1f))>>5; } else { b = b+(((0xf8-b) * (b_bright&0x1f))>>5); }
-
-		palette_set_color((monitor*MAX_COLOURS)+offset,r,g,b);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w )
-{
-	int r,g,b;
-	int r2,g2,b2;
-
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&system32_paletteram[0][offset]); /* it expects to read back the same values?*/
-
-		/* rearrange the data to normal format ... */
-
-		r = (data >>1) & 0xf;
-		g = (data >>6) & 0xf;
-		b = (data >>11) & 0xf;
-
-		r2 = (data >>0) & 0x1;
-		g2 = (data >>5) & 0x1;
-		b2 = (data >> 10) & 0x1;
-
-		data = (data & 0x8000) | r | g<<4 | b << 8 | r2 << 12 | g2 << 13 | b2 << 14;
-
-		COMBINE_DATA(&paletteram16[offset]);
-
-		multi32_set_colour(offset, 0);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w )
-{
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&paletteram16[offset]);
-
-	/* some games use 8-bit writes to some palette regions*/
-	/* (especially for the text layer palettes)*/
-
-		multi32_set_colour(offset, 0);
-	}
-}
-
-/* --------------------------------------- Monitor B ---------------------------------*/
-
-static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w )
-{
-	int r,g,b;
-	int r2,g2,b2;
-
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&system32_paletteram[1][offset]); /* it expects to read back the same values?*/
-
-		/* rearrange the data to normal format ... */
-
-		r = (data >>1) & 0xf;
-		g = (data >>6) & 0xf;
-		b = (data >>11) & 0xf;
-
-		r2 = (data >>0) & 0x1;
-		g2 = (data >>5) & 0x1;
-		b2 = (data >> 10) & 0x1;
-
-		data = (data & 0x8000) | r | g<<4 | b << 8 | r2 << 12 | g2 << 13 | b2 << 14;
-
-
-		COMBINE_DATA(&paletteram16_b[offset]);
-
-		multi32_set_colour(offset, 1);
-	}
-}
-
-static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w )
-{
-	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&paletteram16_b[offset]);
-
-		/* some games use 8-bit writes to some palette regions*/
-		/* (especially for the text layer palettes)*/
-
-		multi32_set_colour(offset, 1);
-	}
-}
 
 extern int analogRead[8];
 extern int analogSwitch;
