@@ -958,7 +958,8 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x500002, 0x500003, jp_v60_read_cab },
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x6100ff, MRA16_RAM }, /* Palette + mixer registers (Monitor A)*/
+	{ 0x600000, 0x60ffff, MRA16_RAM }, /* Palette */
+	{ 0x610000, 0x6100ff, mixer_control_r }, /* mixer chip registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
@@ -985,7 +986,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 
 	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &system32_paletteram[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
 	{ 0x608000, 0x60ffff, system32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
-	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
+	{ 0x610000, 0x6100ff, mixer_control_w }, /* mixer chip registers*/
 
 	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
