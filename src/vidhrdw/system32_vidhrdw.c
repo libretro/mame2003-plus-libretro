@@ -105,6 +105,7 @@ static int sys32mon_old4, sys32mon_old8;
 
 UINT16 *system32_paletteram[2];
 UINT16 *system32_mixerregs[2];		/* mixer registers*/
+static UINT16 mixer_control[2][0x40];
 
 /*************************************
  *
@@ -247,6 +248,38 @@ WRITE32_HANDLER( multi32_paletteram_1_w )
 		common_paletteram_w(1, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
+
+/*************************************
+ *
+ *  Mixer control registers
+ *
+ *************************************/
+
+READ16_HANDLER( system32_mixer_r )
+{
+	return mixer_control[0][offset];
+}
+
+WRITE16_HANDLER( system32_mixer_w )
+{
+	COMBINE_DATA(&mixer_control[0][offset]);
+}
+
+
+WRITE32_HANDLER( multi32_mixer_0_w )
+{
+	data = SWAP_HALVES(data);
+	mem_mask = SWAP_HALVES(mem_mask);
+	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);
+}
+
+
+WRITE32_HANDLER( multi32_mixer_1_w )
+{
+	data = SWAP_HALVES(data);
+	mem_mask = SWAP_HALVES(mem_mask);
+	COMBINE_DATA((UINT32 *)&mixer_control[1][offset*2]);
+}
 
 
 /*
