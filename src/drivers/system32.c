@@ -353,7 +353,7 @@ Stephh's notes (based on some tests) :
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "machine/random.h"
-#include "segas32.h"
+#include "includes/segas32.h"
 
 #define MASTER_CLOCK  32215900
 
