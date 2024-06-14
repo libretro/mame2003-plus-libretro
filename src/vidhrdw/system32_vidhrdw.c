@@ -954,10 +954,10 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	sys32sprite_rom_offset				= (spritedata_source[6]&0xffff) >> 0;
 
 	sprite_palette_mask=(1<<(system32_mixerShift+4))-1;
-	sprite_priority_levels=system32_mixerregs[sys32sprite_monitor_select][0x4d/2]&2?15:3;
+	sprite_priority_levels=mixer_control[sys32sprite_monitor_select][0x4d/2]&2?15:3;
 	mixerinput = (spritedata_source[7] >> (system32_mixerShift + 8)) & 0xf;
 	sys32sprite_palette = (spritedata_source[7] >> 4) & sprite_palette_mask;
-	sys32sprite_palette += (system32_mixerregs[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
+	sys32sprite_palette += (mixer_control[sys32sprite_monitor_select][mixerinput] & 0x30)<<2;
 
 	/* process attributes */
 
