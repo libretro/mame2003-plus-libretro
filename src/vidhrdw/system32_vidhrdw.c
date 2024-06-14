@@ -1573,9 +1573,9 @@ void system32_draw_bg_layer_zoom ( struct mame_bitmap *bitmap, const struct rect
   int dstxstep, dstystep;
 	struct rectangle clip;
 
-	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
+	if ((mixer_control[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
-		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
+		alphaamount = 255-((((mixer_control[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
 		alpha_set_level(alphaamount);
 	}
 
@@ -1636,10 +1636,10 @@ VIDEO_UPDATE( system32 ) {
 
 	int sys32_tmap_disabled = sys32_videoram[0x1FF02/2] & 0x000f;
 
-	int priority0 = (system32_mixerregs[0][0x22/2] & 0x000f);
-	int priority1 = (system32_mixerregs[multi32][0x24/2] & 0x000f);
-	int priority2 = (system32_mixerregs[0][0x26/2] & 0x000f);
-	int priority3 = (system32_mixerregs[multi32][0x28/2] & 0x000f);
+	int priority0 = (mixer_control[0][0x22/2] & 0x000f);
+	int priority1 = (mixer_control[multi32][0x24/2] & 0x000f);
+	int priority2 = (mixer_control[0][0x26/2] & 0x000f);
+	int priority3 = (mixer_control[multi32][0x28/2] & 0x000f);
 	int sys32_palette_dirty[2] = {0, 0};
 
 	/* -------------------------------------- experimental wip code --------------------------------*/
