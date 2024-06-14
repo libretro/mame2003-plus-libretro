@@ -30,7 +30,6 @@ int multi32;
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-extern data16_t *system32_mixerregs[2];  /* mixer registers*/
 
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
