@@ -50,7 +50,6 @@ int system32_screen_mode;
 int system32_screen_old_mode;
 int system32_allow_high_resolution;
 static int sys32_old_brightness[2][3];
-int sys32_brightness[2][3];
 
 data8_t system32_dirty_window[0x100];
 data8_t system32_windows[4][4];
