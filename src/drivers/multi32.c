@@ -39,7 +39,6 @@ extern data16_t sys32_displayenable;
 /* Video Hardware */
 extern int system32_temp_kludge;
 extern data16_t *sys32_spriteram16;
-extern data16_t *sys32_txtilemap_ram;
 static data16_t *paletteram16_b;
 
 extern int system32_mixerShift;
