@@ -104,7 +104,6 @@ static int sys32mon_old4, sys32mon_old8;
 #endif
 
 UINT16 *system32_paletteram[2];
-UINT16 *system32_mixerregs[2];		/* mixer registers*/
 static UINT16 mixer_control[2][0x40];
 
 /*************************************
@@ -183,7 +182,7 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 	update_color(0x4000*which + offset, value);
 
 	/* if blending is enabled, writes go to both halves of palette RAM */
-	if (system32_mixerregs[which][0x4e/2] & 0x0880)
+	if (mixer_control[which][0x4e/2] & 0x0880)
 	{
 		offset ^= 0x2000;
 
