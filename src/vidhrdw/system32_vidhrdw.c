@@ -107,19 +107,6 @@ static UINT16 mixer_control[2][0x40];
 
 /*************************************
  *
- *  Helper macros
- *
- *************************************/
-
-#ifdef LSB_FIRST
-#define SWAP_HALVES(x)			(x)
-#else
-#define SWAP_HALVES(x)			(((x) >> 16) | ((x) << 16))
-#endif
-
-
-/*************************************
- *
  *  Common palette handling
  *
  *************************************/
