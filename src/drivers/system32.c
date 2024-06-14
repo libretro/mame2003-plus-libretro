@@ -362,7 +362,6 @@ enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-data16_t *system32_mixerregs[2];		/* mixer registers*/
 static int s32_blo, s32_bhi;		/* bank high and low values*/
 static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
 static data16_t *sys32_protram;
