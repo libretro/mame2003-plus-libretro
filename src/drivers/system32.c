@@ -982,7 +982,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, system32_mixer_w }, /* mixer chip registers*/
 
 	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
