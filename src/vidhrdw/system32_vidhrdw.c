@@ -279,31 +279,33 @@ WRITE16_HANDLER( system32_mixer_w )
 }
 
 
-READ32_HANDLER( multi32_mixer_0_r )
+READ16_HANDLER( multi32_mixer_0_r )
 {
-	return (UINT32 *)mixer_control[0][offset*2];
+	return mixer_control[0][offset];
 }
 
 
-READ32_HANDLER( multi32_mixer_1_r )
+READ16_HANDLER( multi32_mixer_1_r )
 {
-	return (UINT32 *)mixer_control[1][offset*2];
+	return mixer_control[1][offset];
 }
 
 
-WRITE32_HANDLER( multi32_mixer_0_w )
+WRITE16_HANDLER( multi32_mixer_0_w )
 {
-	data = SWAP_HALVES(data);
+/*	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);
+	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);*/
+	COMBINE_DATA(&mixer_control[0][offset]);
 }
 
 
-WRITE32_HANDLER( multi32_mixer_1_w )
+WRITE16_HANDLER( multi32_mixer_1_w )
 {
-	data = SWAP_HALVES(data);
+/*	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&mixer_control[1][offset*2]);
+	COMBINE_DATA((UINT32 *)&mixer_control[1][offset*2]);*/
+	COMBINE_DATA(&mixer_control[1][offset]);
 }
 
 
