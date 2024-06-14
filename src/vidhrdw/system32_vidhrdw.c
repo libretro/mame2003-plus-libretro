@@ -1497,9 +1497,9 @@ void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct
 	int monitor_res = 0;
 	struct rectangle clip;
 
-	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
+	if ((mixer_control[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
-		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
+		alphaamount = 255-((((mixer_control[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
 		alpha_set_level(alphaamount);
 	}
 
