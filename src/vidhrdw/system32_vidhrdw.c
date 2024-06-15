@@ -18,7 +18,7 @@ any remaining glitches
 
 #include "driver.h"
 #include "includes/segas32.h"
-
+int adj=0, shift=0;
 #define MAX_COLOURS (16384)
 
 /* Debugging flags and kludges*/
@@ -419,7 +419,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					{
 						eax = idp_base[ecx];   edx = idp_base[ecx+1];
 						eax &= 0x0fff;         edx &= 0x0fff; /* no apparent side-effect observed*/
-						eax = pal_base[eax];   edx = pal_base[edx];
+						eax = pal_base[eax+adj]>>shift;   edx = pal_base[edx+adj]>>shift;
 						idp_cache4[ecx] = eax; idp_cache4[ecx+1] = edx;
 					}
 					log_cb(RETRO_LOG_INFO,"\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n\n",
@@ -1647,9 +1647,12 @@ VIDEO_UPDATE( system32 ) {
 	}
 	system32_draw_text_layer (bitmap, cliprect);
 
-if (input_ui_pressed(IPT_UI_LEFT)) system32_mixerShift--;
-if (input_ui_pressed(IPT_UI_RIGHT)) system32_mixerShift++;
-usrintf_showmessage("%i", system32_mixerShift);
+if (input_ui_pressed(IPT_UI_LEFT)) adj--;
+if (input_ui_pressed(IPT_UI_RIGHT)) adj++;
+if (input_ui_pressed(IPT_UI_UP)) shift++;
+if (input_ui_pressed(IPT_UI_DOWN)) shift--;
+
+usrintf_showmessage("adj:%i  shift:%i", adj, shift);
 
 #if 0
 	{
