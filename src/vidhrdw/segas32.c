@@ -191,8 +191,8 @@ data16_t *sys32_videoram;
 data16_t *system32_spriteram;
 data16_t *system32_paletteram[2];
 
-data16_t sys32_displayenable;
-data16_t sys32_tilebank_external;
+extern data16_t sys32_displayenable;
+extern data16_t sys32_tilebank_external;
 
 static struct tilemap *tilemap[0x80];
 static struct layer_info layer_data[8];
