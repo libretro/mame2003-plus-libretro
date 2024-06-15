@@ -226,7 +226,7 @@ static void get_tile_info(int tile_index)
 
 VIDEO_START( system32 )
 {
-	int tmap;
+	int tmap;log_cb(RETRO_LOG_INFO, "video start 1\n");
 
 	/* allocate the tilemaps */
 	for (tmap = 0; tmap < 0x80; tmap++)
@@ -234,7 +234,7 @@ VIDEO_START( system32 )
 		tilemap[tmap] = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16,16, 32,16);
 		tilemap_set_transparent_pen(tilemap[tmap], 0);
 		tilemap_set_user_data(tilemap[tmap], &sys32_videoram[0x200 * tmap]);
-	}
+	}log_cb(RETRO_LOG_INFO, "video start 2\n");
 
 	/* allocate the bitmaps */
 	for (tmap = 0; tmap < 7; tmap++)
@@ -242,11 +242,10 @@ VIDEO_START( system32 )
 		layer_data[tmap].bitmap = auto_bitmap_alloc_depth(416, 224, 16);
 		layer_data[tmap].checksums = auto_malloc(sizeof(layer_data[tmap].checksums[0]) * 256);
 		memset(layer_data[tmap].checksums, 0, sizeof(layer_data[tmap].checksums[0]) * 256);
-	}
+	}log_cb(RETRO_LOG_INFO, "video start 1log_cb(RETRO_LOG_INFO, "video start 3\n");\n");
 
 	/* initialize videoram */
-	sys32_videoram[0x1ff00/2] = 0x8000;
-
+	sys32_videoram[0x1ff00/2] = 0x8000;log_cb(RETRO_LOG_INFO, "video start 4\n");
 	return 0;
 }
 
