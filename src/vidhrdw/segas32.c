@@ -245,7 +245,9 @@ VIDEO_START( system32 )
 	}log_cb(RETRO_LOG_INFO, "video start 3\n");
 
 	/* initialize videoram */
-/*	sys32_videoram[0x1ff00/2] = 0x8000;*/log_cb(RETRO_LOG_INFO, "video start 4\n");
+/*	sys32_videoram[0x1ff00/2] = 0x8000;*/
+	memset(sys32_videoram[0x1ff00/2], 0, 0x8000);
+	log_cb(RETRO_LOG_INFO, "video start 4\n");
 	return 0;
 }
 
