@@ -124,6 +124,7 @@
 #include "driver.h"
 #include "includes/segas32.h"
 
+#define MONITOR 0
 
 int system32_mixerShift;
 
@@ -1122,14 +1123,14 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 	int x, y;
 
 	/* determine the base palette entry and the shift value */
-	basecol = (mixer_control[0x2c/2] & 0x00f0) << 6;
-	shift = (mixer_control[0x2c/2] & 0x0300) >> 8;
+	basecol = (mixer_control[MONITOR][0x2c/2] & 0x00f0) << 6;
+	shift = (mixer_control[MONITOR][0x2c/2] & 0x0300) >> 8;
 
 	/* check the color select bit, and get pointers to the lookup tables */
-	colselect = (mixer_control[0x3e/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x40/2 + colselect * 3] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x42/2 + colselect * 3] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x44/2 + colselect * 3] << 2) >> 2)];
+	colselect = (mixer_control[MONITOR][0x3e/2] >> 14) & 1;
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1145,7 +1146,7 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 			color = (sys32_videoram[0x1ff5e/2]) & 0x1f00;
 
 		/* get the 5-5-5 color and convert to 8-8-8 */
-		color = paletteram16[(basecol + (color & 0x0f) + ((color >> shift) & 0x1ff0)) & 0x3fff];
+		color = system32_paletteram[(basecol + (color & 0x0f) + ((color >> shift) & 0x1ff0)) & 0x3fff];
 		r = rlookup[color & 0x1f];
 		g = glookup[(color >> 5) & 0x1f];
 		b = blookup[(color >> 10) & 0x1f];
@@ -1169,14 +1170,14 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 	int x, y;
 
 	/* determine the base palette entry and the shift value */
-	basecol = (mixer_control[0x20/2 + layernum] & 0x00f0) << 6;
-	shift = (mixer_control[0x20/2 + layernum] & 0x0300) >> 8;
+	basecol = (mixer_control[MONITOR][0x20/2 + layernum] & 0x00f0) << 6;
+	shift = (mixer_control[MONITOR][0x20/2 + layernum] & 0x0300) >> 8;
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[0x30/2 + layernum] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x40/2 + colselect * 3] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x42/2 + colselect * 3] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x44/2 + colselect * 3] << 2) >> 2)];
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1193,7 +1194,7 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 				/* only draw non-transparent pixels */
 				if (pix & trans_mask)
 				{
-					UINT16 color = paletteram16[(basecol + (pix & 0x0f) + ((pix >> shift) & 0x1ff0)) & 0x3fff];
+					UINT16 color = system32_paletteram[(basecol + (pix & 0x0f) + ((pix >> shift) & 0x1ff0)) & 0x3fff];
 					int r = rlookup[color & 0x1f];
 					int g = glookup[(color >> 5) & 0x1f];
 					int b = blookup[(color >> 10) & 0x1f];
@@ -1240,14 +1241,14 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 
 	/* determine the base palette entry and the shift value */
 	for (x = 0; x < 16; x++)
-		basecol[x] = (mixer_control[x] & 0x00f0) << 6;
-	shift = (mixer_control[0x00/2] & 0x0300) >> 8;
+		basecol[x] = (mixer_control[MONITOR][x] & 0x00f0) << 6;
+	shift = (mixer_control[MONITOR][0x00/2] & 0x0300) >> 8;
 
 	/* check the color select bit, and get pointers to the lookup tables */
-	colselect = (mixer_control[0x4c/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x40/2 + colselect * 3] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x42/2 + colselect * 3] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[0x44/2 + colselect * 3] << 2) >> 2)];
+	colselect = (mixer_control[MONITOR][0x4c/2] >> 14) & 1;
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++, cury += dy)
@@ -1277,7 +1278,7 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 						/* only draw non-transparent pixels */
 						else
 						{
-							UINT16 color = paletteram16[(basecol[layer] + (pix & 0x07ff)) & 0x3fff];
+							UINT16 color = system32_paletteram[(basecol[layer] + (pix & 0x07ff)) & 0x3fff];
 							int r = rlookup[color & 0x1f];
 							int g = glookup[(color >> 5) & 0x1f];
 							int b = blookup[(color >> 10) & 0x1f];
@@ -1689,10 +1690,10 @@ VIDEO_UPDATE( system32 )
 		int splayer;
 
 		for (splayer = 0; splayer < 16; splayer++)
-			if (priority == (mixer_control[splayer] & 0x000f))
+			if (priority == (mixer_control[MONITOR][splayer] & 0x000f))
 				sprite_layers |= 1 << splayer;
 
-		if ((enablemask & 0x01) && priority == (mixer_control[0x20/2] & 0x000f))
+		if ((enablemask & 0x01) && priority == (mixer_control[MONITOR][0x20/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1700,7 +1701,7 @@ VIDEO_UPDATE( system32 )
 			draw_layer(bitmap, cliprect, MIXER_LAYER_TEXT);
 		}
 
-		if ((enablemask & 0x02) && priority == (mixer_control[0x22/2] & 0x000f))
+		if ((enablemask & 0x02) && priority == (mixer_control[MONITOR][0x22/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1708,7 +1709,7 @@ VIDEO_UPDATE( system32 )
 			draw_layer(bitmap, cliprect, MIXER_LAYER_NBG0);
 		}
 
-		if ((enablemask & 0x04) && priority == (mixer_control[0x24/2] & 0x000f))
+		if ((enablemask & 0x04) && priority == (mixer_control[MONITOR][0x24/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1716,7 +1717,7 @@ VIDEO_UPDATE( system32 )
 			draw_layer(bitmap, cliprect, MIXER_LAYER_NBG1);
 		}
 
-		if ((enablemask & 0x08) && priority == (mixer_control[0x26/2] & 0x000f))
+		if ((enablemask & 0x08) && priority == (mixer_control[MONITOR][0x26/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1724,7 +1725,7 @@ VIDEO_UPDATE( system32 )
 			draw_layer(bitmap, cliprect, MIXER_LAYER_NBG2);
 		}
 
-		if ((enablemask & 0x10) && priority == (mixer_control[0x28/2] & 0x000f))
+		if ((enablemask & 0x10) && priority == (mixer_control[MONITOR][0x28/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1732,7 +1733,7 @@ VIDEO_UPDATE( system32 )
 			draw_layer(bitmap, cliprect, MIXER_LAYER_NBG3);
 		}
 
-		if ((enablemask & 0x20) && priority == (mixer_control[0x2a/2] & 0x000f))
+		if ((enablemask & 0x20) && priority == (mixer_control[MONITOR][0x2a/2] & 0x000f))
 		{
 			if (sprite_layers)
 				draw_sprite_layers(bitmap, cliprect, sprite_layers);
@@ -1744,7 +1745,7 @@ VIDEO_UPDATE( system32 )
 	if (sprite_layers)
 		draw_sprite_layers(bitmap, cliprect, sprite_layers);
 
-{
+/*{
 	static int count = 0;
 	if (++count > 60 * 5)
 	{
@@ -1811,7 +1812,7 @@ VIDEO_UPDATE( system32 )
 			mixer_control[0x2f]);
 		count = 0;
 	}
-}
+}*/
 }
 
 /*
