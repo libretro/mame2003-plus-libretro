@@ -482,7 +482,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					if ((dst_ptr + ecx) >= dst_end) return;
 
 					if (eax != 0x0e)
-						dst_ptr[ecx] = idp_cache4[eax+adj]>>shift;
+						dst_ptr[ecx] = idp_cache4[eax];
 					else
 					{
 						eax = dst_ptr[ecx];
@@ -583,7 +583,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					if ((dst_ptr + ecx) >= dst_end) return;
 
 					if (eax != 0xf0)
-						dst_ptr[ecx] = idp_cache8[eax];
+						dst_ptr[ecx] = idp_cache8[eax+adj]>>shift;
 					else
 					{
 						eax = dst_ptr[ecx];
