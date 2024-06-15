@@ -134,7 +134,6 @@ int sys32_tilebank_internal;
 int sys32_old_tilebank_internal;
 data16_t sys32_old_tilebank_external;
 
-data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
 data32_t *multi32_videoram;
 data8_t sys32_ramtile_dirty[0x1000];
 
@@ -189,8 +188,9 @@ struct extents_list
  *************************************/
 
 data16_t *sys32_videoram;
-data16_t *system32_spriteram;
-data16_t *system32_paletteram[2];
+UINT16 *system32_spriteram;
+UINT16 *system32_paletteram[2];
+static UINT16 mixer_control[2][0x40];
 
 extern data16_t sys32_displayenable;
 extern data16_t sys32_tilebank_external;
@@ -198,7 +198,6 @@ extern data16_t sys32_tilebank_external;
 static struct tilemap *tilemap[0x80];
 static struct layer_info layer_data[8];
 static data16_t sprite_control[8];
-static data16_t mixer_control[2][0x40];
 
 
 
@@ -398,16 +397,10 @@ READ16_HANDLER( system32_spriteram_r )
 }
 
 
-WRITE16_HANDLER ( system32_spriteram_w ) {
+WRITE16_HANDLER ( system32_spriteram_w )
+{
 
 	COMBINE_DATA(&system32_spriteram[offset]);
-
-	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
-	if (ACCESSING_MSB)
-		sys32_spriteram8[offset*2+1] = (data & 0xff00) >> 8;
-
-	if (ACCESSING_LSB)
-		sys32_spriteram8[offset*2] = (data & 0x00ff );
 }
 
 
