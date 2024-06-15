@@ -1287,17 +1287,6 @@ VIDEO_START( system32 ) {
 	return 0;
 }
 
-void system32_set_colour (int offset);
-void multi32_set_colour (int offset, int monitor);
-
-static void system32_recalc_palette( int monitor ) {
-	int i;
-	for (i = 0; i < MAX_COLOURS; i++) {
-		if (multi32) multi32_set_colour (i,monitor);
-		else system32_set_colour(i);
-	}
-}
-
 void system32_draw_bg_layer_rowscroll ( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int layer ) {
 	int trans = 0;
 	int alphaamount = 0;
