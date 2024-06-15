@@ -242,7 +242,7 @@ VIDEO_START( system32 )
 		layer_data[tmap].bitmap = auto_bitmap_alloc_depth(416, 224, 16);
 		layer_data[tmap].checksums = auto_malloc(sizeof(layer_data[tmap].checksums[0]) * 256);
 		memset(layer_data[tmap].checksums, 0, sizeof(layer_data[tmap].checksums[0]) * 256);
-	}log_cb(RETRO_LOG_INFO, "video start 1log_cb(RETRO_LOG_INFO, "video start 3\n");\n");
+	}log_cb(RETRO_LOG_INFO, "video start 3\n");
 
 	/* initialize videoram */
 	sys32_videoram[0x1ff00/2] = 0x8000;log_cb(RETRO_LOG_INFO, "video start 4\n");
