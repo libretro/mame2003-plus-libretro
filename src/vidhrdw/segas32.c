@@ -1174,7 +1174,7 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 	shift = (mixer_control[MONITOR][0x20/2 + layernum] & 0x0300) >> 8;
 
 	/* check the color select bit, and get pointers to the lookup tables */
-	colselect = (mixer_control[0x30/2 + layernum] >> 14) & 1;
+	colselect = (mixer_control[MONITOR][0x30/2 + layernum] >> 14) & 1;
 	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
 	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
 	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
