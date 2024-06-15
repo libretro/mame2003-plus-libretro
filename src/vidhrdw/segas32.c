@@ -1685,20 +1685,20 @@ VIDEO_UPDATE( system32 )
 {
 	UINT16 sprite_layers;
 	UINT8 enablemask;
-	int priority;
+	int priority;log_cb(RETRO_LOG_INFO, "video update 1\n");
 
 	/* if the display is off, punt */
 	if (!sys32_displayenable)
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
-	}
+	}log_cb(RETRO_LOG_INFO, "video update 2\n");
 
 	/* update the tilemaps */
-	enablemask = update_tilemaps(cliprect);
+	enablemask = update_tilemaps(cliprect);log_cb(RETRO_LOG_INFO, "video update 3\n");
 
 	/* update the sprites */
-	update_sprites(cliprect);
+	update_sprites(cliprect);log_cb(RETRO_LOG_INFO, "video update 4\n");
 
 	/* debugging */
 /*
@@ -1721,7 +1721,7 @@ VIDEO_UPDATE( system32 )
 #endif
 
 	/* fill the background */
-	draw_bg_layer(bitmap, cliprect);
+	draw_bg_layer(bitmap, cliprect);log_cb(RETRO_LOG_INFO, "video update 5\n");
 
 	/* crude mixing */
 	sprite_layers = 0;
@@ -1780,10 +1780,10 @@ VIDEO_UPDATE( system32 )
 			sprite_layers = 0;
 			draw_layer(bitmap, cliprect, MIXER_LAYER_BITMAP);
 		}
-	}
+	}log_cb(RETRO_LOG_INFO, "video update 6\n");
 
 	if (sprite_layers)
-		draw_sprite_layers(bitmap, cliprect, sprite_layers);
+		draw_sprite_layers(bitmap, cliprect, sprite_layers);log_cb(RETRO_LOG_INFO, "video update 7\n");
 
 /*{
 	static int count = 0;
@@ -1853,7 +1853,7 @@ VIDEO_UPDATE( system32 )
 		count = 0;
 	}
 }*/
-}
+}log_cb(RETRO_LOG_INFO, "video update 8\n");
 
 /*
 arescue:
