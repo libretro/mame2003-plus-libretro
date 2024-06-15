@@ -884,7 +884,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
 	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
 	{ 0x500002, 0x500003, jp_v60_read_cab },
-	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
+	{ 0x500000, 0x50000f, MRA16_RAM },	/* Unknown*/
 
 	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
 	{ 0x610000, 0x6100ff, system32_mixer_r }, /* mixer chip registers*/
@@ -910,7 +910,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, sys32_videoram_w },
 	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
-	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
+	{ 0x500000, 0x50000f, system32_sprite_control_w },	/* Sprite control*/
 
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, system32_mixer_w }, /* mixer chip registers*/
