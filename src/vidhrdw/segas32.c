@@ -1096,7 +1096,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enable2 = !(sys32_videoram[0x1ff02/2] & 0x0004) && !(sys32_videoram[0x1ff8e/2] & 0x0008) && !(sys32_videoram[0x1ff00/2] & 0x1000);
 	int enable3 = !(sys32_videoram[0x1ff02/2] & 0x0008) && !(sys32_videoram[0x1ff8e/2] & 0x0010) && !(sys32_videoram[0x1ff00/2] & 0x2000);
 	int enablet = !(sys32_videoram[0x1ff02/2] & 0x0010) && !(sys32_videoram[0x1ff8e/2] & 0x0001);
-	int enableb = !(sys32_videoram[0x1ff02/2] & 0x0020) && !(sys32_videoram[0x1ff8e/2] & 0x0020);
+	int enableb = !(sys32_videoram[0x1ff02/2] & 0x0020) && !(sys32_videoram[0x1ff8e/2] & 0x0020);log_cb(RETRO_LOG_INFO, "update_tilemaps 1\n");
 
 	/* update any tilemaps */
 	if (enable0)
@@ -1110,7 +1110,8 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	if (enablet)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
-		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
+		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);log_cb(RETRO_LOG_INFO, "update_tilemaps 2\n");
+
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
