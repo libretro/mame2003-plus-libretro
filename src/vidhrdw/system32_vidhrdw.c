@@ -291,8 +291,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 	static UINT32 idp_cache8[256];
 	static UINT32 idp_cache4[16];
-	static data16_t *idp_base, *idb_old=0;
-	static int idi_old=-1;
+	static data16_t *idp_base;
 
 	/* one-time*/
 	int src_fw, src_fh;
