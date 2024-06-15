@@ -821,7 +821,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 		}
 		else /* indirect mode where the display list contains an offset to the table */
 		{
-			sys32sprite_table = sys32_spriteram16 + ((spritedata_source[7] & ((1<<(8+system32_mixerShift))-1))*8);
+			sys32sprite_table = system32_spriteram + ((spritedata_source[7] & ((1<<(8+system32_mixerShift))-1))*8);
 		}
 		if (sys32sprite_table[0]==0xffff) sys32sprite_priority_lookup=1;
 		else sys32sprite_priority_lookup = (sys32sprite_table[0]>>(8+system32_mixerShift))&0xf;
