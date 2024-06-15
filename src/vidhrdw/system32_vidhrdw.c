@@ -114,7 +114,7 @@ static INLINE UINT16 xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(UINT16 value)
 }
 
 
-static INLINE UINT16 xBGRBBBBGGGGRRRR_toxBBBBBGGGGGRRRRR(UINT16 value)
+static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
 {
 	int r = ((value >> 12) & 0x01) | ((value << 1) & 0x1e);
 	int g = ((value >> 13) & 0x01) | ((value >> 3) & 0x1e);
@@ -773,9 +773,6 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	sys32sprite_xpos					= (spritedata_source[5]&0xffff) >> 0;
 
 	sys32sprite_rom_offset				= (spritedata_source[6]&0xffff) >> 0;
-
-	system32_mixerShift = (mixer_control[0][0x2c/2] & 0x0300) >> 8;
-	usrintf_showmessage("%i",system32_mixerShift);
 
 	sprite_palette_mask=(1<<(system32_mixerShift+4))-1;
 	sprite_priority_levels=mixer_control[sys32sprite_monitor_select][0x4d/2]&2?15:3;
