@@ -1409,7 +1409,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 		/* pick the indirection palette */
 		if (data[0] & 0x2000)
 		{
-			ind = (data[0] & 0x1000) ? &data[8] : &sys32_spriteram16[8 * (data[7] & 0x1fff)];
+			ind = (data[0] & 0x1000) ? &data[8] : &system32_spriteram[8 * (data[7] & 0x1fff)];
 			color = 0;
 		}
 		else
