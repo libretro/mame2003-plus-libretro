@@ -1574,7 +1574,7 @@ static void update_sprites(const struct rectangle *cliprect)
 	logerror("----\n");
 
 	/* now draw */
-	sprite = &sys32_spriteram16[0];
+	sprite = &system32_spriteram[0];
 	while (numentries++ < 0x20000/16)
 	{
 		/* top two bits are a command */
@@ -1619,7 +1619,7 @@ static void update_sprites(const struct rectangle *cliprect)
 					yoffs = sprite[1];
 					xoffs = sprite[2];
 				}
-				sprite = &sys32_spriteram16[8 * (sprite[0] & 0x1fff)];
+				sprite = &system32_spriteram[8 * (sprite[0] & 0x1fff)];
 				break;
 
 			/* command 3 = done */
