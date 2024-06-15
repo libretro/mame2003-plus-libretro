@@ -419,7 +419,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					{
 						eax = idp_base[ecx];   edx = idp_base[ecx+1];
 						eax &= 0x0fff;         edx &= 0x0fff; /* no apparent side-effect observed*/
-						eax = pal_base[eax+adj]>>shift;   edx = pal_base[edx+adj]>>shift;
+						eax = pal_base[eax];   edx = pal_base[edx];
 						idp_cache4[ecx] = eax; idp_cache4[ecx+1] = edx;
 					}
 					log_cb(RETRO_LOG_INFO,"\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n%8x %8x %8x %8x\n\n",
@@ -482,7 +482,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					if ((dst_ptr + ecx) >= dst_end) return;
 
 					if (eax != 0x0e)
-						dst_ptr[ecx] = idp_cache4[eax];
+						dst_ptr[ecx] = idp_cache4[eax+adj]>>shift;
 					else
 					{
 						eax = dst_ptr[ecx];
