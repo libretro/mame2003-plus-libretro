@@ -372,7 +372,6 @@ data16_t sys32_displayenable;
 
 /* Video Hardware */
 int system32_temp_kludge;
-data16_t *sys32_spriteram16;
 
 int system32_mixerShift;
 extern int system32_screen_mode;
@@ -383,7 +382,6 @@ extern int multi32;
 
 WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER ( sys32_ramtile_w );
-WRITE16_HANDLER ( sys32_spriteram_w );
 READ16_HANDLER ( sys32_videoram_r );
 VIDEO_START( system32 );
 VIDEO_UPDATE( system32 );
@@ -884,7 +882,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
 	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
 	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
-	{ 0x400000, 0x41ffff, MRA16_RAM }, /* sprite RAM*/
+	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
 	{ 0x500002, 0x500003, jp_v60_read_cab },
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 
@@ -911,7 +909,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, sys32_videoram_w },
-	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
+	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
