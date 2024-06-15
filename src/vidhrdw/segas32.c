@@ -122,6 +122,7 @@
 */
 
 #include "driver.h"
+#include "includes/segas32.h"
 
 
 int system32_mixerShift;
@@ -187,6 +188,7 @@ struct extents_list
 
 data16_t *sys32_videoram;
 data16_t *system32_spriteram;
+data16_t *system32_paletteram[2];
 
 data16_t sys32_displayenable;
 data16_t sys32_tilebank_external;
