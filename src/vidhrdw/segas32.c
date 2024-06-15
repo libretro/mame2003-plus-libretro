@@ -125,6 +125,9 @@
 #include "includes/segas32.h"
 
 #define MONITOR 0
+int system32_screen_mode;
+int system32_screen_old_mode;
+int system32_allow_high_resolution;
 
 
 int sys32_tilebank_internal;
