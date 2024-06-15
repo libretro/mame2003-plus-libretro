@@ -1,4 +1,3 @@
-#define NEW_DRAWSPRITE 1
 /* System 32 Video Hardware */
 
 /* todo:
@@ -94,12 +93,7 @@ static int spritenum; /* used to go through the sprite list */
 static int jump_x, jump_y; /* these are set during a jump command and sometimes used by the sprites afterwards */
 static data16_t *spritedata_source; /* a pointer into spriteram */
 
-#if !NEW_DRAWSPRITE
-static UINT32 sys32sprite_x_zoom;
-static UINT32 sys32sprite_y_zoom;
-#else
 static int sys32mon_old4, sys32mon_old8;
-#endif
 
 UINT16 *system32_paletteram[2];
 static UINT16 mixer_control[2][0x40];
@@ -286,7 +280,6 @@ this actually draws the sprite, and could probably be optimized quite a bit ;-)
 currently zooming isn't supported etc.
 
 */
-#if NEW_DRAWSPRITE
 
 /** AT050703 new drawsprite (unproven, general testing required)*/
 static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
@@ -686,166 +679,6 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 #undef FPENT
 }
 
-#else
-
-/* old drawsprite (working and proven)*/
-void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) {
-	data8_t *sprite_gfxdata = memory_region ( REGION_GFX2 );
-	UINT32 xsrc,ysrc;
-	UINT32 xdst,ydst;
-	/* um .. probably a better way to do this */
-	struct GfxElement *gfx=Machine->gfx[0];
-	const pen_t *paldata = &gfx->colortable[0];
-
-	/* if the gfx data is coming from RAM instead of ROM change the pointer */
-	if ( sys32sprite_rambasedgfx ) {
-		sprite_gfxdata = sys32_spriteram8;
-		sys32sprite_rom_offset &= 0x1ffff; /* right mask? */
-	}
-
-	ysrc = 0;
-	ydst = 0;
-
-	while ( ysrc < (sys32sprite_rom_height<<16) ) {
-		int drawypos;
-		xsrc = 0;
-		xdst = 0;
-
-		if (!sys32sprite_yflip) {
-			drawypos = sys32sprite_ypos+ydst; /* no flip*/
-			if (drawypos > cliprect->max_y) ysrc = sys32sprite_rom_height<<16; /* quit drawing if we've gone off the right*/
-		}
-		else {
-			drawypos = sys32sprite_ypos+((sys32sprite_screen_height-1)-ydst); /* y flip*/
-			if (drawypos < cliprect->min_y) ysrc = sys32sprite_rom_height<<16; /* quit drawing if we've gone off the left on a flipped sprite*/
-		}
-
-		if ((drawypos >= cliprect->min_y) && (drawypos <= cliprect->max_y)) {
-			UINT32 *destline = (bitmap->line[drawypos]);
-
-			while ( xsrc < (sys32sprite_rom_width<<16) ) {
-
-				int drawxpos;
-
-				if (!sys32sprite_xflip) {
-					drawxpos = sys32sprite_xpos+xdst; /* no flip*/
-					if (drawxpos > cliprect->max_x) xsrc = sys32sprite_rom_width<<16; /* quit drawing if we've gone off the right*/
-				}
-				else {
-					drawxpos = sys32sprite_xpos+((sys32sprite_screen_width-1)-xdst); /* x flip*/
-					if (drawxpos < cliprect->min_x) xsrc = sys32sprite_rom_width<<16; /* quit drawing if we've gone off the left on a flipped sprite*/
-				}
-
-				if ((drawxpos >= cliprect->min_x) && (drawxpos <= cliprect->max_x)) {
-					int gfxdata;
-					int data;
-					int r,g,b;
-
-					if (sys32sprite_monitor_select) drawxpos+=system32_screen_mode?52*8:40*8;
-					if (!sys32sprite_8bpp) { /* 4bpp*/
-						gfxdata = (sprite_gfxdata[sys32sprite_rom_offset+((xsrc>>16)/2)+(ysrc>>16)*(sys32sprite_rom_width/2)]);
-
-						if (xsrc & 0x10000) gfxdata = gfxdata & 0x0f;
-						else gfxdata = (gfxdata & 0xf0) >> 4;
-
-						if ( (!sys32sprite_draw_colour_f && gfxdata == 0x0f) ) gfxdata = 0;
-						if (sys32sprite_indirect_palette) {
-							switch (gfxdata) {
-							case 0x00:
-								break;
-
-							case 0x0f: /* Transparent*/
-								break;
-
-							case 0x0e: /* Shadow*/
-								data=destline[drawxpos];
-
-								r = ((data >> 16) & 0xff)*0.5;
-								g = ((data >> 8) & 0xff)*0.5;
-								b = ((data >> 0) & 0xff)*0.5;
-
-								destline[drawxpos] =  MAKE_RGB(r,g,b);
-								break;
-
-							default:
-								destline[drawxpos] =  paldata[(sys32sprite_table[gfxdata] & 0xfff)+(sys32sprite_monitor_select*MAX_COLOURS)];
-								break;
-							}
-						}
-						else {
-							if (sys32sprite_is_shadow) {
-								data=destline[drawxpos];
-
-								r = ((data >> 16) & 0xff)*0.5;
-								g = ((data >> 8) & 0xff)*0.5;
-								b = ((data >> 0) & 0xff)*0.5;
-
-								if (gfxdata) destline[drawxpos] =  MAKE_RGB(r,g,b);
-							}
-							else {
-
-								switch (gfxdata) {
-								case 0x00:
-									break;
-								default:
-									destline[drawxpos] =  paldata[gfxdata + (sys32sprite_palette * 16)+(sys32sprite_monitor_select*MAX_COLOURS)];
-									break;
-								}
-
-							}
-						}
-					}
-					else { /* 8bpp*/
-						gfxdata = (sprite_gfxdata[sys32sprite_rom_offset+(xsrc>>16)+(ysrc>>16)*(sys32sprite_rom_width)]);
-
-						if ( (!sys32sprite_draw_colour_f) && (gfxdata == 0xff) ) gfxdata = 0;
-
-						if (sys32sprite_indirect_palette) {
-							switch (gfxdata) {
-							case 0x00:
-								break;
-							case 0xe0: /* Transparent*/
-								break;
-							case 0xf0: /* Shadow*/
-								data=destline[drawxpos];
-
-								r = ((data >> 16) & 0xff)*0.5;
-								g = ((data >> 8) & 0xff)*0.5;
-								b = ((data >> 0) & 0xff)*0.5;
-
-								destline[drawxpos] =  MAKE_RGB(r,g,b);
-								break;
-							default:
-								destline[drawxpos] =  paldata[gfxdata+(sys32sprite_table[0] & 0xfff)+sys32sprite_monitor_select*MAX_COLOURS];
-								break;
-							}
-						}
-						else {
-							if (sys32sprite_is_shadow) {
-								data=destline[drawxpos];
-
-								r = ((data >> 16) & 0xff)*0.5;
-								g = ((data >> 8) & 0xff)*0.5;
-								b = ((data >> 0) & 0xff)*0.5;
-
-								if (gfxdata) destline[drawxpos] =  MAKE_RGB(r,g,b);
-							}
-							else {
-								if (gfxdata) destline[drawxpos] =  paldata[gfxdata + (sys32sprite_palette * 16)+sys32sprite_monitor_select*MAX_COLOURS];
-							}
-						}
-					} /* bpp */
-				} /* xclipping */
-				xsrc+=sys32sprite_x_zoom;
-				xdst++;
-			}
-		}
-		ysrc+=sys32sprite_y_zoom;
-		ydst++;
-	}
-}
-
-#endif
 
 /* system32_get_sprite_info
 
@@ -1633,15 +1466,12 @@ VIDEO_UPDATE( system32 ) {
 	int priority1 = (mixer_control[multi32][0x24/2] & 0x000f);
 	int priority2 = (mixer_control[0][0x26/2] & 0x000f);
 	int priority3 = (mixer_control[multi32][0x28/2] & 0x000f);
-	int sys32_palette_dirty[2] = {0, 0};
 
 	/* -------------------------------------- experimental wip code --------------------------------*/
 	int tm,ii;
 
-	#if NEW_DRAWSPRITE
 		/** force IDP recache*/
 		sys32mon_old8 = sys32mon_old4 = -1;
-	#endif
 
 	/* if the windows number used by a tilemap use change then that window of the tilemap needs to be considered dirty*/
 	for (tm = 0; tm < 4; tm++) {
