@@ -412,7 +412,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	{
 		if (sys32sprite_indirect_palette)
 		{
-			/* update indirect palette cache if necessary*/
+			/* update indirect palette cache */
 			if (!sys32sprite_8bpp)
 			{
 					for (ecx=0; ecx<0x10; ecx+=2)
