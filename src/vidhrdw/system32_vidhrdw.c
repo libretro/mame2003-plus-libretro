@@ -286,7 +286,7 @@ READ16_HANDLER( system32_spriteram_r )
 
 WRITE16_HANDLER ( system32_spriteram_w ) {
 
-	COMBINE_DATA(&sys32_spriteram16[offset]);
+	COMBINE_DATA(&system32_spriteram[offset]);
 
 	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
 	if (ACCESSING_MSB)
@@ -939,7 +939,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 	spritenum = 0;
 
 	while (spritenum < 0x20000/16) {
-		spritedata_source = sys32_spriteram16 + 8 * spritenum;
+		spritedata_source = system32_spriteram + 8 * spritenum;
 
 		command = (spritedata_source[0] & 0xc000) >> 14;
 
