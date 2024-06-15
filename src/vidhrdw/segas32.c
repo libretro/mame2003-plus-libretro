@@ -126,7 +126,6 @@
 
 #define MONITOR 0
 
-int system32_mixerShift;
 
 int sys32_tilebank_internal;
 int sys32_old_tilebank_internal;
