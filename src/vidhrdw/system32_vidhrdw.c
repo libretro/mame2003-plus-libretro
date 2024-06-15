@@ -27,7 +27,6 @@ int priloop;
 
 extern int multi32;
 
-extern data16_t *sys32_spriteram16;
 data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
 data16_t *sys32_videoram;
 data32_t *multi32_videoram;
@@ -93,6 +92,7 @@ static int spritenum; /* used to go through the sprite list */
 static int jump_x, jump_y; /* these are set during a jump command and sometimes used by the sprites afterwards */
 static data16_t *spritedata_source; /* a pointer into spriteram */
 
+UINT16 *system32_spriteram;
 UINT16 *system32_paletteram[2];
 static UINT16 mixer_control[2][0x40];
 
@@ -269,6 +269,31 @@ WRITE16_HANDLER( multi32_mixer_0_w )
 WRITE16_HANDLER( multi32_mixer_1_w )
 {
 	COMBINE_DATA(&mixer_control[1][offset]);
+}
+
+
+/*************************************
+ *
+ *  Sprite RAM access
+ *
+ *************************************/
+
+READ16_HANDLER( system32_spriteram_r )
+{
+	return system32_spriteram[offset];
+}
+
+
+WRITE16_HANDLER ( system32_spriteram_w ) {
+
+	COMBINE_DATA(&system32_spriteram[offset]);
+
+	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
+	if (ACCESSING_MSB)
+		sys32_spriteram8[offset*2+1] = (data & 0xff00) >> 8;
+
+	if (ACCESSING_LSB)
+		sys32_spriteram8[offset*2] = (data & 0x00ff );
 }
 
 
@@ -796,7 +821,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 		}
 		else /* indirect mode where the display list contains an offset to the table */
 		{
-			sys32sprite_table = sys32_spriteram16 + ((spritedata_source[7] & ((1<<(8+system32_mixerShift))-1))*8);
+			sys32sprite_table = system32_spriteram + ((spritedata_source[7] & ((1<<(8+system32_mixerShift))-1))*8);
 		}
 		if (sys32sprite_table[0]==0xffff) sys32sprite_priority_lookup=1;
 		else sys32sprite_priority_lookup = (sys32sprite_table[0]>>(8+system32_mixerShift))&0xf;
@@ -914,7 +939,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 	spritenum = 0;
 
 	while (spritenum < 0x20000/16) {
-		spritedata_source = sys32_spriteram16 + 8 * spritenum;
+		spritedata_source = system32_spriteram + 8 * spritenum;
 
 		command = (spritedata_source[0] & 0xc000) >> 14;
 
@@ -1175,18 +1200,6 @@ WRITE16_HANDLER ( sys32_videoram_w ) {
 
 	system32_dirty_window[offset>>9]=1;
 
-}
-
-WRITE16_HANDLER ( sys32_spriteram_w ) {
-
-	COMBINE_DATA(&sys32_spriteram16[offset]);
-
-	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
-	if (ACCESSING_MSB)
-		sys32_spriteram8[offset*2+1] = (data & 0xff00) >> 8;
-
-	if (ACCESSING_LSB)
-		sys32_spriteram8[offset*2] = (data & 0x00ff );
 }
 
 /*
