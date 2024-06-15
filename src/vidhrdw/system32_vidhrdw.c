@@ -1647,6 +1647,10 @@ VIDEO_UPDATE( system32 ) {
 	}
 	system32_draw_text_layer (bitmap, cliprect);
 
+if (input_ui_pressed(IPT_UI_LEFT)) system32_mixerShift--;
+if (input_ui_pressed(IPT_UI_RIGHT)) system32_mixerShift++;
+usrintf_showmessage("%i", system32_mixerShift);
+
 #if 0
 	{
 
