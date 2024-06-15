@@ -136,7 +136,6 @@ data32_t *multi32_videoram;
 data8_t sys32_ramtile_dirty[0x1000];
 
 extern data16_t *sys32_videoram;
-READ16_HANDLER( sys32_videoram_r ) { return sys32_videoram[offset]; }
 
 
 
@@ -342,6 +341,47 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 }
 
 
+/*************************************
+ *
+ *  Palette RAM access
+ *
+ *************************************/
+
+READ16_HANDLER( system32_paletteram_r )
+{
+	return common_paletteram_r(0, offset);
+}
+
+
+WRITE16_HANDLER( system32_paletteram_w )
+{
+	common_paletteram_w(0, offset, data, mem_mask);
+}
+
+
+READ16_HANDLER( multi32_paletteram_0_r )
+{
+	return common_paletteram_r(0, offset);
+}
+
+
+WRITE16_HANDLER( multi32_paletteram_0_w )
+{
+	common_paletteram_w(0, offset, data, mem_mask);
+}
+
+
+READ16_HANDLER( multi32_paletteram_1_r )
+{
+	return common_paletteram_r(1, offset);
+}
+
+
+WRITE16_HANDLER( multi32_paletteram_1_w )
+{
+	common_paletteram_w(1, offset, data, mem_mask);
+}
+
 
 /*************************************
  *
@@ -368,12 +408,17 @@ WRITE16_HANDLER ( system32_spriteram_w ) {
 }
 
 
-
 /*************************************
  *
  *  Video RAM access
  *
  *************************************/
+
+READ16_HANDLER ( sys32_videoram_r )
+{
+	return sys32_videoram[offset];
+}
+
 
 WRITE16_HANDLER( sys32_videoram_w )
 {
