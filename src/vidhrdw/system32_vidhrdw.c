@@ -27,7 +27,6 @@ int priloop;
 
 extern int multi32;
 
-extern data16_t *sys32_spriteram16;
 data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
 data16_t *sys32_videoram;
 data32_t *multi32_videoram;
@@ -93,6 +92,7 @@ static int spritenum; /* used to go through the sprite list */
 static int jump_x, jump_y; /* these are set during a jump command and sometimes used by the sprites afterwards */
 static data16_t *spritedata_source; /* a pointer into spriteram */
 
+UINT16 *system32_spriteram;
 UINT16 *system32_paletteram[2];
 static UINT16 mixer_control[2][0x40];
 
@@ -269,6 +269,18 @@ WRITE16_HANDLER( multi32_mixer_0_w )
 WRITE16_HANDLER( multi32_mixer_1_w )
 {
 	COMBINE_DATA(&mixer_control[1][offset]);
+}
+
+
+/*************************************
+ *
+ *  Sprite RAM access
+ *
+ *************************************/
+
+READ16_HANDLER( system32_spriteram_r )
+{
+	return system32_spriteram[offset];
 }
 
 
