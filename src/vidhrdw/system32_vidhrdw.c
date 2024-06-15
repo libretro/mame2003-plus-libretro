@@ -93,8 +93,6 @@ static int spritenum; /* used to go through the sprite list */
 static int jump_x, jump_y; /* these are set during a jump command and sometimes used by the sprites afterwards */
 static data16_t *spritedata_source; /* a pointer into spriteram */
 
-static int sys32mon_old4, sys32mon_old8;
-
 UINT16 *system32_paletteram[2];
 static UINT16 mixer_control[2][0x40];
 
@@ -116,7 +114,7 @@ static INLINE UINT16 xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(UINT16 value)
 }
 
 
-static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
+static INLINE UINT16 xBGRBBBBGGGGRRRR_toxBBBBBGGGGGRRRRR(UINT16 value)
 {
 	int r = ((value >> 12) & 0x01) | ((value << 1) & 0x1e);
 	int g = ((value >> 13) & 0x01) | ((value >> 3) & 0x1e);
@@ -418,11 +416,6 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 			/* update indirect palette cache if necessary*/
 			if (!sys32sprite_8bpp)
 			{
-				if (idb_old != idp_base || sys32mon_old4 != sys32sprite_monitor_select)
-				{
-					idb_old = idp_base;
-					sys32mon_old4 = sys32sprite_monitor_select;
-
 					for (ecx=0; ecx<0x10; ecx+=2)
 					{
 						eax = idp_base[ecx];   edx = idp_base[ecx+1];
@@ -433,15 +426,10 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
               idp_cache4[0],idp_cache4[1],idp_cache4[2],idp_cache4[3],idp_cache4[4],idp_cache4[5],idp_cache4[6],idp_cache4[7],
               idp_cache4[8],idp_cache4[9],idp_cache4[10],idp_cache4[11],idp_cache4[12],idp_cache4[13],idp_cache4[14],idp_cache4[15]);
 					}
-				}
 			}
 			else
 			{
-				edx = *idp_base & 0xfff;
-				if (idi_old != edx || sys32mon_old8 != sys32sprite_monitor_select)
-				{
-					idi_old = edx;
-					sys32mon_old8 = sys32sprite_monitor_select;
+					edx = *idp_base & 0xfff;
 					pal_base += edx;
 
 					for (ecx=0; ecx<0x100; ecx+=2)
@@ -449,7 +437,6 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 						eax = pal_base[ecx];   edx = pal_base[ecx+1];
 						idp_cache8[ecx] = eax; idp_cache8[ecx+1] = edx;
 					}
-				}
 			}
 		}
 		else
@@ -1472,9 +1459,6 @@ VIDEO_UPDATE( system32 ) {
 
 	/* -------------------------------------- experimental wip code --------------------------------*/
 	int tm,ii;
-
-		/** force IDP recache*/
-		sys32mon_old8 = sys32mon_old4 = -1;
 
 	/* if the windows number used by a tilemap use change then that window of the tilemap needs to be considered dirty*/
 	for (tm = 0; tm < 4; tm++) {
