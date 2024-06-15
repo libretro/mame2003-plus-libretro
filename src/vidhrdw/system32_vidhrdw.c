@@ -284,6 +284,19 @@ READ16_HANDLER( system32_spriteram_r )
 }
 
 
+WRITE16_HANDLER ( system32_spriteram_w ) {
+
+	COMBINE_DATA(&sys32_spriteram16[offset]);
+
+	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
+	if (ACCESSING_MSB)
+		sys32_spriteram8[offset*2+1] = (data & 0xff00) >> 8;
+
+	if (ACCESSING_LSB)
+		sys32_spriteram8[offset*2] = (data & 0x00ff );
+}
+
+
 /*
 
 this actually draws the sprite, and could probably be optimized quite a bit ;-)
@@ -1187,18 +1200,6 @@ WRITE16_HANDLER ( sys32_videoram_w ) {
 
 	system32_dirty_window[offset>>9]=1;
 
-}
-
-WRITE16_HANDLER ( sys32_spriteram_w ) {
-
-	COMBINE_DATA(&sys32_spriteram16[offset]);
-
-	/* also write it to another region so its easier to work with when drawing sprites with RAM based gfx */
-	if (ACCESSING_MSB)
-		sys32_spriteram8[offset*2+1] = (data & 0xff00) >> 8;
-
-	if (ACCESSING_LSB)
-		sys32_spriteram8[offset*2] = (data & 0x00ff );
 }
 
 /*
