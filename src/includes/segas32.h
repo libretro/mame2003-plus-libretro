@@ -7,7 +7,7 @@
 
 /*----------- defined in video/segas32.c -----------*/
 
-extrrn UINT16 *system32_spriteram;
+extern UINT16 *system32_spriteram;
 extern UINT16 *system32_paletteram[2];
 
 READ16_HANDLER( system32_spriteram_r );
