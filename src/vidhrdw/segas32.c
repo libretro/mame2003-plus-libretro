@@ -1852,8 +1852,8 @@ VIDEO_UPDATE( system32 )
 			mixer_control[0x2f]);
 		count = 0;
 	}
-}*/
-}log_cb(RETRO_LOG_INFO, "video update 8\n");
+}*/log_cb(RETRO_LOG_INFO, "video update 8\n");
+}
 
 /*
 arescue:
