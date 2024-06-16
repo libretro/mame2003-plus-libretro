@@ -634,26 +634,26 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	int dstxstep, dstystep;
 	int flip;
 	int x, y;
-
+{log_cb(RETRO_LOG_INFO, "zoom 2\n");}
 	/* configure the layer */
 	layer->trans_mask = layer->checksum_mask = 0x0f;
-
+{log_cb(RETRO_LOG_INFO, "zoom 3\n");}
 	/* determine if we're flipped */
 	flip = ((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> bgnum)) & 1;
-
+{log_cb(RETRO_LOG_INFO, "zoom 4\n");}
 	/* determine the clipping */
 	clipenable = (sys32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
 	clipout = (sys32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (sys32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(flip, clipenable, clipout, clips, cliprect, &clip_extents);
-
+{log_cb(RETRO_LOG_INFO, "zoom 5\n");}
 	/* extract the X/Y step values (these are in destination space!) */
 	dstxstep = sys32_videoram[0x1ff50/2 + 2 * bgnum] & 0xfff;
 	if (sys32_videoram[0x1ff00/2] & 0x4000)
 		dstystep = sys32_videoram[0x1ff52/2 + 2 * bgnum] & 0xfff;
 	else
 		dstystep = dstxstep;
-
+{log_cb(RETRO_LOG_INFO, "zoom 6\n");}
 	/* clamp the zoom factors */
 	if (dstxstep < 0x80)
 		dstxstep = 0x80;
@@ -663,7 +663,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* compute high-precision reciprocals (in 12.20 format) */
 	srcxstep = (0x200 << 20) / dstxstep;
 	srcystep = (0x200 << 20) / dstystep;
-
+{log_cb(RETRO_LOG_INFO, "zoom 7\n");}
 	/* start with the fractional scroll offsets, in source coordinates */
 	srcx_start = (sys32_videoram[0x1ff12/2 + 4 * bgnum] & 0x3ff) << 20;
 	srcx_start += (sys32_videoram[0x1ff10/2 + 4 * bgnum] & 0xff00) << 4;
@@ -673,7 +673,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* then account for the destination center coordinates */
 	srcx_start -= (sys32_videoram[0x1ff30/2 + 2 * bgnum] & 0x1ff) * srcxstep;
 	srcy -= (sys32_videoram[0x1ff32/2 + 2 * bgnum] & 0x1ff) * srcystep;
-
+{log_cb(RETRO_LOG_INFO, "zoom 8\n");}
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
 	srcy += cliprect->min_y * srcystep;
@@ -743,7 +743,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 		srcy += srcystep;
 		checksums[y] = checksum;
 	}
-
+{log_cb(RETRO_LOG_INFO, "zoom 9\n");}
 	/* enable this code below to display zoom information */
 #if 0
 	if (dstxstep != 0x200 || dstystep != 0x200)
