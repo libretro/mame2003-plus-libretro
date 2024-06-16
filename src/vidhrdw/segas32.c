@@ -624,7 +624,7 @@ static int compute_clipping_extents(int flip, int enable, int clipout, int clipm
 
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
-log_cb(RETRO_LOG_INFO, "zoom 1\n");
+{log_cb(RETRO_LOG_INFO, "zoom 1\n");}
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -763,7 +763,7 @@ log_cb(RETRO_LOG_INFO, "zoom 1\n");
 
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
-log_cb(RETRO_LOG_INFO, "rowscroll 1\n");
+{log_cb(RETRO_LOG_INFO, "rowscroll 1\n");}
 	int clipenable, , clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -891,7 +891,7 @@ log_cb(RETRO_LOG_INFO, "rowscroll 1\n");
 
 static void update_tilemap_text(struct layer_info *layer, const struct rectangle *cliprect)
 {
-log_cb(RETRO_LOG_INFO, "tilemap_text 1\n");
+{log_cb(RETRO_LOG_INFO, "tilemap_text 1\n");}
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
 	UINT16 *tilebase;
@@ -997,7 +997,7 @@ log_cb(RETRO_LOG_INFO, "tilemap_text 1\n");
 
 static void update_bitmap(struct layer_info *layer, const struct rectangle *cliprect)
 {
-log_cb(RETRO_LOG_INFO, "update_bitmap 1\n");
+{log_cb(RETRO_LOG_INFO, "update_bitmap 1\n");}
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
