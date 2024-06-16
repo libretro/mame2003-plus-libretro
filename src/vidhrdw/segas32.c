@@ -226,6 +226,9 @@ VIDEO_START( system32 )
 {
 	int tmap;
 
+	/* initialize videoram */
+	sys32_videoram = auto_malloc ( 0x20000 );
+
 	/* allocate the tilemaps */
 	for (tmap = 0; tmap < 0x80; tmap++)
 	{
@@ -243,7 +246,7 @@ VIDEO_START( system32 )
 	}
 
 	/* initialize videoram */
-	sys32_videoram = auto_malloc ( 0x20000 );
+	//sys32_videoram = auto_malloc ( 0x20000 );
 
 	return 0;
 }
@@ -697,15 +700,12 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 *dst = (UINT16 *)bitmap->line[y];
 			UINT16 *src[2];
 			UINT16 pages;
-			struct mame_bitmap *map0, *map1;
 
 			/* look up the pages and get their source pixmaps */
-			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "pages:%i\npage0:%i\npage8:%i\nsrcy:%i\n", pages, (pages >> 0) & 0x7f,(pages >> 8) & 0x7f, srcy);}
-map0 = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f]);
-map1 = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f]);{log_cb(RETRO_LOG_INFO, "zoom 8.3\n");}
-			src[0] = (UINT16 *)map0->line[(srcy >> 20) & 0xff];
-			src[1] = (UINT16 *)map1->line[(srcy >> 20) & 0xff];
-{log_cb(RETRO_LOG_INFO, "zoom 8.4\n");}
+			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "zoom set pointers\n");}
+			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
+			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];{log_cb(RETRO_LOG_INFO, "zoom pointers finished\n");}
+
 			/* loop over extents */
 			srcx = srcx_start;
 			while (1)
