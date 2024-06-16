@@ -1189,9 +1189,9 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 		/*r = rlookup[color & 0x1f];
 		g = glookup[(color >> 5) & 0x1f];
 		b = blookup[(color >> 10) & 0x1f];*/
-		int r = color & 0x1f;
-		int g = (color >> 5) & 0x1f;
-		int b = (color >> 10) & 0x1f;
+		r = color & 0x1f;
+		g = (color >> 5) & 0x1f;
+		b = (color >> 10) & 0x1f;
 		color = (r << 16) | (g << 8) | b;
 
 		/* loop over columns */
