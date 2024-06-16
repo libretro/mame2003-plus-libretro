@@ -677,7 +677,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
 	srcy += cliprect->min_y * srcystep;
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.1\n");}
 	/* if we're flipped, simply adjust the start/step parameters */
 	if (flip)
 	{
@@ -686,7 +686,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 		srcxstep = -srcxstep;
 		srcystep = -srcystep;
 	}
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.2\n");}
 	/* loop over the target rows */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
@@ -700,12 +700,12 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 *dst = (UINT16 *)bitmap->line[y];
 			UINT16 *src[2];
 			UINT16 pages;
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.3\n");}
 			/* look up the pages and get their source pixmaps */
 			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];
 			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
 			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.4\n");}
 			/* loop over extents */
 			srcx = srcx_start;
 			while (1)
@@ -721,7 +721,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 						checksum |= pix;
 					}
 				}
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.5\n");}
 				/* otherwise, clear to zero */
 				else
 				{
@@ -732,7 +732,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 				/* stop at the end */
 				if (extents[1] > cliprect->max_x)
 					break;
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.6\n");}
 				/* swap states and advance to the next extent */
 				clipdraw = !clipdraw;
 				extents++;
