@@ -697,14 +697,14 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 *dst = (UINT16 *)bitmap->line[y];
 			UINT16 *src[2];
 			UINT16 pages;
-      UINT16 pixmap[2];
+			struct mame_bitmap *pm0, *pm1;
 
 			/* look up the pages and get their source pixmaps */
 			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "pages:%i\npage0:%i\npage8:%i\nsrcy:%i\n", pages, (pages >> 0) & 0x7f,(pages >> 8) & 0x7f, srcy);}
-pixmap[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
-pixmap[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];
-			src[0] = &pixmap[0];
-			src[1] = &pixmap[1];
+pm0 = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f]);
+pm1 = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f]);
+			src[0] = (UINT16 *)pm0->line[(srcy >> 20) & 0xff];
+			src[1] = (UINT16 *)pm1->line[(srcy >> 20) & 0xff];
 {log_cb(RETRO_LOG_INFO, "zoom 8.4\n");}
 			/* loop over extents */
 			srcx = srcx_start;
