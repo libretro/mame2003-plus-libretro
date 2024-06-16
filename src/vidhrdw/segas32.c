@@ -245,9 +245,6 @@ VIDEO_START( system32 )
 		memset(layer_data[tmap].checksums, 0, sizeof(layer_data[tmap].checksums[0]) * 256);
 	}
 
-	/* initialize videoram */
-	//sys32_videoram = auto_malloc ( 0x20000 );
-
 	return 0;
 }
 
@@ -702,9 +699,9 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 pages;
 
 			/* look up the pages and get their source pixmaps */
-			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "zoom set pointers\n");}
+			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];
 			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
-			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];{log_cb(RETRO_LOG_INFO, "zoom pointers finished\n");}
+			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];
 
 			/* loop over extents */
 			srcx = srcx_start;
@@ -728,11 +725,11 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 					memset(&dst[extents[0]], 0, (extents[1] - extents[0]) * sizeof(dst[0]));
 					srcx += srcxstep * (extents[1] - extents[0]);
 				}
-{log_cb(RETRO_LOG_INFO, "zoom 8.5\n");}
+
 				/* stop at the end */
 				if (extents[1] > cliprect->max_x)
 					break;
-{log_cb(RETRO_LOG_INFO, "zoom 8.6\n");}
+
 				/* swap states and advance to the next extent */
 				clipdraw = !clipdraw;
 				extents++;
@@ -743,7 +740,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 		srcy += srcystep;
 		checksums[y] = checksum;
 	}
-{log_cb(RETRO_LOG_INFO, "zoom 9\n");}
+
 	/* enable this code below to display zoom information */
 #if 0
 	if (dstxstep != 0x200 || dstystep != 0x200)
@@ -763,7 +760,6 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
-{log_cb(RETRO_LOG_INFO, "rowscroll 1\n");}
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -891,7 +887,6 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 
 static void update_tilemap_text(struct layer_info *layer, const struct rectangle *cliprect)
 {
-{log_cb(RETRO_LOG_INFO, "tilemap_text 1\n");}
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
 	UINT16 *tilebase;
@@ -997,7 +992,6 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 static void update_bitmap(struct layer_info *layer, const struct rectangle *cliprect)
 {
-{log_cb(RETRO_LOG_INFO, "update_bitmap 1\n");}
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -1115,7 +1109,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	if (enablet)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
-		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);log_cb(RETRO_LOG_INFO, "update_tilemaps 2\n");
+		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
 
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
@@ -1700,10 +1694,10 @@ VIDEO_UPDATE( system32 )
   }
 
 	/* update the tilemaps */
-	enablemask = update_tilemaps(cliprect);log_cb(RETRO_LOG_INFO, "video update 3\n");
+	enablemask = update_tilemaps(cliprect);
 
 	/* update the sprites */
-	update_sprites(cliprect);log_cb(RETRO_LOG_INFO, "video update 4\n");
+	update_sprites(cliprect);
 
 	/* debugging */
 /*
@@ -1726,7 +1720,7 @@ VIDEO_UPDATE( system32 )
 #endif
 
 	/* fill the background */
-	draw_bg_layer(bitmap, cliprect);log_cb(RETRO_LOG_INFO, "video update 5\n");
+	draw_bg_layer(bitmap, cliprect);
 
 	/* crude mixing */
 	sprite_layers = 0;
@@ -1788,76 +1782,7 @@ VIDEO_UPDATE( system32 )
 	}log_cb(RETRO_LOG_INFO, "video update 6\n");
 
 	if (sprite_layers)
-		draw_sprite_layers(bitmap, cliprect, sprite_layers);log_cb(RETRO_LOG_INFO, "video update 7\n");
-
-/*{
-	static int count = 0;
-	if (++count > 60 * 5)
-	{
-		printf("\n");
-		printf("SC: %04X %04X %04X %04X - %04X %04X %04X %04X\n",
-			sprite_control[0x00],
-			sprite_control[0x01],
-			sprite_control[0x02],
-			sprite_control[0x03],
-			sprite_control[0x04],
-			sprite_control[0x05],
-			sprite_control[0x06],
-			sprite_control[0x07]);
-		printf("00: %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X\n",
-			mixer_control[0x00],
-			mixer_control[0x01],
-			mixer_control[0x02],
-			mixer_control[0x03],
-			mixer_control[0x04],
-			mixer_control[0x05],
-			mixer_control[0x06],
-			mixer_control[0x07],
-			mixer_control[0x08],
-			mixer_control[0x09],
-			mixer_control[0x0a],
-			mixer_control[0x0b],
-			mixer_control[0x0c],
-			mixer_control[0x0d],
-			mixer_control[0x0e],
-			mixer_control[0x0f]);
-		printf("20: %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X\n",
-			mixer_control[0x10],
-			mixer_control[0x11],
-			mixer_control[0x12],
-			mixer_control[0x13],
-			mixer_control[0x14],
-			mixer_control[0x15],
-			mixer_control[0x16],
-			mixer_control[0x17],
-			mixer_control[0x18],
-			mixer_control[0x19],
-			mixer_control[0x1a],
-			mixer_control[0x1b],
-			mixer_control[0x1c],
-			mixer_control[0x1d],
-			mixer_control[0x1e],
-			mixer_control[0x1f]);
-		printf("40: %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X\n",
-			mixer_control[0x20],
-			mixer_control[0x21],
-			mixer_control[0x22],
-			mixer_control[0x23],
-			mixer_control[0x24],
-			mixer_control[0x25],
-			mixer_control[0x26],
-			mixer_control[0x27],
-			mixer_control[0x28],
-			mixer_control[0x29],
-			mixer_control[0x2a],
-			mixer_control[0x2b],
-			mixer_control[0x2c],
-			mixer_control[0x2d],
-			mixer_control[0x2e],
-			mixer_control[0x2f]);
-		count = 0;
-	}
-}*/log_cb(RETRO_LOG_INFO, "video update 8\n");
+		draw_sprite_layers(bitmap, cliprect, sprite_layers);
 }
 
 /*
