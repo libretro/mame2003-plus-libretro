@@ -1779,7 +1779,7 @@ VIDEO_UPDATE( system32 )
 			sprite_layers = 0;
 			draw_layer(bitmap, cliprect, MIXER_LAYER_BITMAP);
 		}
-	}log_cb(RETRO_LOG_INFO, "video update 6\n");
+	}
 
 	if (sprite_layers)
 		draw_sprite_layers(bitmap, cliprect, sprite_layers);
