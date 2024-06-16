@@ -721,14 +721,14 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 						checksum |= pix;
 					}
 				}
-{log_cb(RETRO_LOG_INFO, "zoom 8.5\n");}
+
 				/* otherwise, clear to zero */
 				else
 				{
 					memset(&dst[extents[0]], 0, (extents[1] - extents[0]) * sizeof(dst[0]));
 					srcx += srcxstep * (extents[1] - extents[0]);
 				}
-
+{log_cb(RETRO_LOG_INFO, "zoom 8.5\n");}
 				/* stop at the end */
 				if (extents[1] > cliprect->max_x)
 					break;
