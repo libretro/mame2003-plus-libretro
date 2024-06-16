@@ -702,8 +702,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 
 			/* look up the pages and get their source pixmaps */
 			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "pages:%i\npage0:%i\npage8:%i\nsrcy:%i\n", pages, (pages >> 0) & 0x7f,(pages >> 8) & 0x7f, srcy);}
-			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
-			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];
+			src[0] = &(tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff]);
+			src[1] = &(tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff]);
 {log_cb(RETRO_LOG_INFO, "zoom 8.4\n");}
 			/* loop over extents */
 			srcx = srcx_start;
