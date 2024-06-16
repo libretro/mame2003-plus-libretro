@@ -1192,6 +1192,10 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 		r = color & 0x1f;
 		g = (color >> 5) & 0x1f;
 		b = (color >> 10) & 0x1f;
+	/* up to 8 bits */
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
 		color = (r << 16) | (g << 8) | b;
 
 		/* loop over columns */
@@ -1243,6 +1247,10 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 					int r = color & 0x1f;
 					int g = (color >> 5) & 0x1f;
 					int b = (color >> 10) & 0x1f;
+	/* up to 8 bits */
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
 					dst[x] = (r << 16) | (g << 8) | b;
 				}
 			}
@@ -1327,6 +1335,10 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 							int r = color & 0x1f;
 							int g = (color >> 5) & 0x1f;
 							int b = (color >> 10) & 0x1f;
+	/* up to 8 bits */
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
 							dst[x] = (r << 16) | (g << 8) | b;
 						}
 					}
