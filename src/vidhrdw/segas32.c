@@ -624,7 +624,6 @@ static int compute_clipping_extents(int flip, int enable, int clipout, int clipm
 
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
-{log_cb(RETRO_LOG_INFO, "zoom 1\n");}
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -634,26 +633,26 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	int dstxstep, dstystep;
 	int flip;
 	int x, y;
-{log_cb(RETRO_LOG_INFO, "zoom 2\n");}
+
 	/* configure the layer */
 	layer->trans_mask = layer->checksum_mask = 0x0f;
-{log_cb(RETRO_LOG_INFO, "zoom 3\n");}
+
 	/* determine if we're flipped */
 	flip = ((sys32_videoram[0x1ff00/2] >> 9) ^ (sys32_videoram[0x1ff00/2] >> bgnum)) & 1;
-{log_cb(RETRO_LOG_INFO, "zoom 4\n");}
+
 	/* determine the clipping */
 	clipenable = (sys32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
 	clipout = (sys32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (sys32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(flip, clipenable, clipout, clips, cliprect, &clip_extents);
-{log_cb(RETRO_LOG_INFO, "zoom 5\n");}
+
 	/* extract the X/Y step values (these are in destination space!) */
 	dstxstep = sys32_videoram[0x1ff50/2 + 2 * bgnum] & 0xfff;
 	if (sys32_videoram[0x1ff00/2] & 0x4000)
 		dstystep = sys32_videoram[0x1ff52/2 + 2 * bgnum] & 0xfff;
 	else
 		dstystep = dstxstep;
-{log_cb(RETRO_LOG_INFO, "zoom 6\n");}
+
 	/* clamp the zoom factors */
 	if (dstxstep < 0x80)
 		dstxstep = 0x80;
@@ -663,7 +662,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* compute high-precision reciprocals (in 12.20 format) */
 	srcxstep = (0x200 << 20) / dstxstep;
 	srcystep = (0x200 << 20) / dstystep;
-{log_cb(RETRO_LOG_INFO, "zoom 7\n");}
+
 	/* start with the fractional scroll offsets, in source coordinates */
 	srcx_start = (sys32_videoram[0x1ff12/2 + 4 * bgnum] & 0x3ff) << 20;
 	srcx_start += (sys32_videoram[0x1ff10/2 + 4 * bgnum] & 0xff00) << 4;
@@ -673,11 +672,11 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* then account for the destination center coordinates */
 	srcx_start -= (sys32_videoram[0x1ff30/2 + 2 * bgnum] & 0x1ff) * srcxstep;
 	srcy -= (sys32_videoram[0x1ff32/2 + 2 * bgnum] & 0x1ff) * srcystep;
-{log_cb(RETRO_LOG_INFO, "zoom 8\n");}
+
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
 	srcy += cliprect->min_y * srcystep;
-{log_cb(RETRO_LOG_INFO, "zoom 8.1\n");}
+
 	/* if we're flipped, simply adjust the start/step parameters */
 	if (flip)
 	{
@@ -686,7 +685,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 		srcxstep = -srcxstep;
 		srcystep = -srcystep;
 	}
-{log_cb(RETRO_LOG_INFO, "zoom 8.2\n");}
+
 	/* loop over the target rows */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
@@ -700,11 +699,11 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 *dst = (UINT16 *)bitmap->line[y];
 			UINT16 *src[2];
 			UINT16 pages;
-{log_cb(RETRO_LOG_INFO, "zoom 8.3\n");}
+
 			/* look up the pages and get their source pixmaps */
-			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "zoom 8.33\n");}
-			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];{log_cb(RETRO_LOG_INFO, "zoom 8.34\n");}
-			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];{log_cb(RETRO_LOG_INFO, "zoom 8.35\n");}
+			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "pages:%i\npage0:%i\npage8:%i\n", pages, (pages >> 0) & 0x7f,(pages >> 8) & 0x7f);}
+			src[0] = tilemap_get_pixmap(tilemap[(pages >> 0) & 0x7f])->line[(srcy >> 20) & 0xff];
+			src[1] = tilemap_get_pixmap(tilemap[(pages >> 8) & 0x7f])->line[(srcy >> 20) & 0xff];
 {log_cb(RETRO_LOG_INFO, "zoom 8.4\n");}
 			/* loop over extents */
 			srcx = srcx_start;
