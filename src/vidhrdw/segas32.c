@@ -226,7 +226,7 @@ static void get_tile_info(int tile_index)
 
 VIDEO_START( system32 )
 {
-	static data16_t temp[0x8000];
+	static data16_t temp[0xffff];
 	int tmap;log_cb(RETRO_LOG_INFO, "video start 1\n");
 
 	/* allocate the tilemaps */
@@ -247,7 +247,7 @@ VIDEO_START( system32 )
 
 	/* initialize videoram */
 /*	sys32_videoram[0x1ff00/2] = 0x8000;*/
-	sys32_videoram[0x1ff00/2] = temp;
+	sys32_videoram = &temp;
 	log_cb(RETRO_LOG_INFO, "video start 4\n");
 	return 0;
 }
