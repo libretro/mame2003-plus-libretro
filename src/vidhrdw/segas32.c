@@ -764,7 +764,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 {log_cb(RETRO_LOG_INFO, "rowscroll 1\n");}
-	int clipenable, , clips, clipdraw_start;
+	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
 	struct extents_list clip_extents;
