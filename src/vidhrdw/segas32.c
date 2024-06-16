@@ -697,7 +697,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			UINT16 *dst = (UINT16 *)bitmap->line[y];
 			UINT16 *src[2];
 			UINT16 pages;
-			struct mame_bitmap *pm0, *pm1;
+			struct mame_bitmap pm0, pm1;
 
 			/* look up the pages and get their source pixmaps */
 			pages = sys32_videoram[0x1ff40/2 + 2 * bgnum + ((srcy >> 28) & 1)];{log_cb(RETRO_LOG_INFO, "pages:%i\npage0:%i\npage8:%i\nsrcy:%i\n", pages, (pages >> 0) & 0x7f,(pages >> 8) & 0x7f, srcy);}
