@@ -226,7 +226,7 @@ static void get_tile_info(int tile_index)
 
 VIDEO_START( system32 )
 {
-	int tmap;log_cb(RETRO_LOG_INFO, "video start 1\n");
+	int tmap;
 
 	/* allocate the tilemaps */
 	for (tmap = 0; tmap < 0x80; tmap++)
@@ -234,7 +234,7 @@ VIDEO_START( system32 )
 		tilemap[tmap] = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16,16, 32,16);
 		tilemap_set_transparent_pen(tilemap[tmap], 0);
 		tilemap_set_user_data(tilemap[tmap], &sys32_videoram[0x200 * tmap]);
-	}log_cb(RETRO_LOG_INFO, "video start 2\n");
+	}
 
 	/* allocate the bitmaps */
 	for (tmap = 0; tmap < 7; tmap++)
@@ -242,11 +242,11 @@ VIDEO_START( system32 )
 		layer_data[tmap].bitmap = auto_bitmap_alloc_depth(416, 224, 16);
 		layer_data[tmap].checksums = auto_malloc(sizeof(layer_data[tmap].checksums[0]) * 256);
 		memset(layer_data[tmap].checksums, 0, sizeof(layer_data[tmap].checksums[0]) * 256);
-	}log_cb(RETRO_LOG_INFO, "video start 3\n");
+	}
 
 	/* initialize videoram */
 	sys32_videoram = auto_malloc ( 0x20000 );
-	log_cb(RETRO_LOG_INFO, "video start 4\n");
+
 	return 0;
 }
 
@@ -624,6 +624,7 @@ static int compute_clipping_extents(int flip, int enable, int clipout, int clipm
 
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
+log_cb(RETRO_LOG_INFO, "zoom 1\n");
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -762,7 +763,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
-	int clipenable, clipout, clips, clipdraw_start;
+log_cb(RETRO_LOG_INFO, "rowscroll 1\n");
+	int clipenable, , clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
 	struct extents_list clip_extents;
@@ -889,6 +891,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 
 static void update_tilemap_text(struct layer_info *layer, const struct rectangle *cliprect)
 {
+log_cb(RETRO_LOG_INFO, "tilemap_text 1\n");
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
 	UINT16 *tilebase;
@@ -994,6 +997,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 static void update_bitmap(struct layer_info *layer, const struct rectangle *cliprect)
 {
+log_cb(RETRO_LOG_INFO, "update_bitmap 1\n");
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
 	UINT16 *checksums = layer->checksums;
@@ -1097,7 +1101,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enable2 = !(sys32_videoram[0x1ff02/2] & 0x0004) && !(sys32_videoram[0x1ff8e/2] & 0x0008) && !(sys32_videoram[0x1ff00/2] & 0x1000);
 	int enable3 = !(sys32_videoram[0x1ff02/2] & 0x0008) && !(sys32_videoram[0x1ff8e/2] & 0x0010) && !(sys32_videoram[0x1ff00/2] & 0x2000);
 	int enablet = !(sys32_videoram[0x1ff02/2] & 0x0010) && !(sys32_videoram[0x1ff8e/2] & 0x0001);
-	int enableb = !(sys32_videoram[0x1ff02/2] & 0x0020) && !(sys32_videoram[0x1ff8e/2] & 0x0020);log_cb(RETRO_LOG_INFO, "update_tilemaps 1\n");
+	int enableb = !(sys32_videoram[0x1ff02/2] & 0x0020) && !(sys32_videoram[0x1ff8e/2] & 0x0020);
 
 	/* update any tilemaps */
 	if (enable0)
@@ -1686,14 +1690,14 @@ VIDEO_UPDATE( system32 )
 {
 	UINT16 sprite_layers;
 	UINT8 enablemask;
-	int priority;log_cb(RETRO_LOG_INFO, "video update 1\n");
+	int priority;
 
 	/* if the display is off, punt */
 	if (!sys32_displayenable)
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
-	}log_cb(RETRO_LOG_INFO, "video update 2\n");
+  }
 
 	/* update the tilemaps */
 	enablemask = update_tilemaps(cliprect);log_cb(RETRO_LOG_INFO, "video update 3\n");
