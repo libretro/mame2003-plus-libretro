@@ -1234,9 +1234,12 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 				if (pix & trans_mask)
 				{
 					UINT16 color = system32_paletteram[(basecol + (pix & 0x0f) + ((pix >> shift) & 0x1ff0)) & 0x3fff];
-					int r = rlookup[color & 0x1f];
+					/*int r = rlookup[color & 0x1f];
 					int g = glookup[(color >> 5) & 0x1f];
-					int b = blookup[(color >> 10) & 0x1f];
+					int b = blookup[(color >> 10) & 0x1f];*/
+					int r = color & 0x1f;
+					int g = (color >> 5) & 0x1f;
+					int b = (color >> 10) & 0x1f;
 					dst[x] = (r << 16) | (g << 8) | b;
 				}
 			}
