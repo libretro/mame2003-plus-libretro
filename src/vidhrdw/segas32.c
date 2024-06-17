@@ -1167,9 +1167,9 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x3e/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1186,10 +1186,10 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 
 		/* get the 5-5-5 color and convert to 8-8-8 */
 		color = system32_paletteram[(basecol + (color & 0x0f) + ((color >> shift) & 0x1ff0)) & 0x3fff];
-		r = rlookup[color & 0x1f];
+		/*r = rlookup[color & 0x1f];
 		g = glookup[(color >> 5) & 0x1f];
 		b = blookup[(color >> 10) & 0x1f];
-		color = (r << 16) | (g << 8) | b;
+		color = (r << 16) | (g << 8) | b;*/
 
 		/* loop over columns */
 		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
@@ -1214,9 +1214,9 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x30/2 + layernum] >> 14) & 1;
-	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1234,10 +1234,11 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 				if (pix & trans_mask)
 				{
 					UINT16 color = system32_paletteram[(basecol + (pix & 0x0f) + ((pix >> shift) & 0x1ff0)) & 0x3fff];
-					int r = rlookup[color & 0x1f];
+					/*int r = rlookup[color & 0x1f];
 					int g = glookup[(color >> 5) & 0x1f];
 					int b = blookup[(color >> 10) & 0x1f];
-					dst[x] = (r << 16) | (g << 8) | b;
+					dst[x] = (r << 16) | (g << 8) | b;*/
+					dst[x] = color;
 				}
 			}
 		}
@@ -1285,9 +1286,9 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x4c/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2 + colselect * 3] << 2) >> 2)];
+	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2 + colselect * 3] << 2) >> 2)];
+	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2 + colselect * 3] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++, cury += dy)
@@ -1318,10 +1319,11 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 						else
 						{
 							UINT16 color = system32_paletteram[(basecol[layer] + (pix & 0x07ff)) & 0x3fff];
-							int r = rlookup[color & 0x1f];
+							/*int r = rlookup[color & 0x1f];
 							int g = glookup[(color >> 5) & 0x1f];
 							int b = blookup[(color >> 10) & 0x1f];
-							dst[x] = (r << 16) | (g << 8) | b;
+							dst[x] = (r << 16) | (g << 8) | b;*/
+							dst[x] = color;
 						}
 					}
 				}
