@@ -1167,9 +1167,9 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x3e/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
+	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
+	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1214,9 +1214,9 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x30/2 + layernum] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
+	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
+	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -1285,9 +1285,9 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 
 	/* check the color select bit, and get pointers to the lookup tables */
 	colselect = (mixer_control[MONITOR][0x4c/2] >> 14) & 1;
-	rlookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
-	glookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
-	blookup = &clamp_and_expand[32 + ((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
+	rlookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x40/2] << 2) >> 2)];
+	glookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x42/2] << 2) >> 2)];
+	blookup = &clamp_and_expand[((INT8)(mixer_control[MONITOR][0x44/2] << 2) >> 2)];
 
 	/* loop over rows with non-zero checksums */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++, cury += dy)
