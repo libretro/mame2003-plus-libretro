@@ -1460,7 +1460,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 		{
 //          printf("RAM-sprite\n");
 			goto bail;
-//          spritedata = sys32_spriteram32;
+//          spritedata = system32_spriteram;
 			addrmask = (0x20000 / 8) - 1;
 		}
 		else
