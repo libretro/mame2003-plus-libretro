@@ -367,8 +367,6 @@ static int s32_f1_prot;			/* port f1 is used to protect the sound program on som
 static data16_t *sys32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
-data16_t sys32_tilebank_external;
-data16_t sys32_displayenable;
 
 /* Video Hardware */
 int system32_temp_kludge;
@@ -776,8 +774,8 @@ static WRITE16_HANDLER( system32_io_w )
 	{ 0xc00006, 0xc00007, system32_eeprom_w },
 	{ 0xc0000c, 0xc0000d, jp_v60_write_cab },
 	{ 0xc00008, 0xc0000d, MWA16_RAM }, // Unknown c00008=f1lap , c0000c=titlef
-	{ 0xc0000e, 0xc0000f, MWA16_RAM, &sys32_tilebank_external }, // tilebank per layer on multi32
-	{ 0xc0001c, 0xc0001d, MWA16_RAM, &sys32_displayenable },
+	{ 0xc0000e, 0xc0000f, MWA16_RAM, &system32_tilebank_external }, // tilebank per layer on multi32
+	{ 0xc0001c, 0xc0001d, MWA16_RAM, &system32_displayenable[0] },
 	{ 0xc0001e, 0xc0001f, MWA16_RAM }, // Unknown
 */
 	switch(offset) {
@@ -798,10 +796,10 @@ static WRITE16_HANDLER( system32_io_w )
 		break;
 	case 0x07:
 		/* multi32 tilebank per layer*/
-		COMBINE_DATA(&sys32_tilebank_external);
+		COMBINE_DATA(&system32_tilebank_external);
 		break;
 	case 0x0e:
-		COMBINE_DATA(&sys32_displayenable);
+		COMBINE_DATA(&system32_displayenable[0]);
 		break;
 	case 0x0f:
 		/* orunners unknown*/
