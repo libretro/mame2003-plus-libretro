@@ -883,7 +883,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
 	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
 	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
-	{ 0x500002, 0x500003, jp_v60_read_cab },
+/*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 	{ 0x500000, 0x50000f, system32_sprite_control_r },	/* Sprite control*/
 
 	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
