@@ -873,7 +873,7 @@ static READ16_HANDLER( random_number_16_r )
 static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
 	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
-	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
+	{ 0x300000, 0x31ffff, system32_videoram_r }, /* Tile Ram*/
 	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 	{ 0x500000, 0x50000f, system32_sprite_control_r },	/* Sprite control*/
@@ -900,7 +900,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
-	{ 0x300000, 0x31ffff, sys32_videoram_w },
+	{ 0x300000, 0x31ffff, system32_videoram_w },
 	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000f, system32_sprite_control_w },	/* Sprite control*/
 
