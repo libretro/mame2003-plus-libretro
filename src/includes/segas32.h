@@ -7,8 +7,10 @@
 
 /*----------- defined in video/segas32.c -----------*/
 
-extern UINT16 *system32_spriteram;
-extern UINT16 *system32_paletteram[2];
+extern data16_t *system32_spriteram;
+extern data16_t *system32_paletteram[2];
+extern data16_t system32_displayenable[2];
+extern data16_t system32_tilebank_external;
 
 READ16_HANDLER( system32_spriteram_r );
 WRITE16_HANDLER( system32_spriteram_w );
