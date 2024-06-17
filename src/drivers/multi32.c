@@ -26,15 +26,11 @@
 
 #define MAX_COLOURS (16384)
 
-int multi32;
-
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
 
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
-extern data16_t sys32_tilebank_external;
-extern data16_t sys32_displayenable;
 
 /* Video Hardware */
 extern int system32_temp_kludge;
@@ -44,12 +40,7 @@ extern int system32_screen_mode;
 extern int system32_screen_old_mode;
 extern int system32_allow_high_resolution;
 
-
-WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER( sys32_ramtile_w );
-READ16_HANDLER ( sys32_videoram_r );
-VIDEO_START( system32 );
-VIDEO_UPDATE( system32 );
 
 extern int system32_use_default_eeprom;
 
@@ -209,8 +200,8 @@ static WRITE16_HANDLER( multi32_io_w )
 	{ 0xc00006, 0xc00007, system32_eeprom_w },
 	{ 0xc0000c, 0xc0000d, jp_v60_write_cab },
 	{ 0xc00008, 0xc0000d, MWA16_RAM }, // Unknown c00008=f1lap , c0000c=titlef
-	{ 0xc0000e, 0xc0000f, MWA16_RAM, &sys32_tilebank_external }, // tilebank per layer on multi32
-	{ 0xc0001c, 0xc0001d, MWA16_RAM, &sys32_displayenable },
+	{ 0xc0000e, 0xc0000f, MWA16_RAM, &system32_tilebank_external }, // tilebank per layer on multi32
+	{ 0xc0001c, 0xc0001d, MWA16_RAM, &system32_displayenable[0] },
 	{ 0xc0001e, 0xc0001f, MWA16_RAM }, // Unknown
 */
 
@@ -232,10 +223,10 @@ static WRITE16_HANDLER( multi32_io_w )
 		break;
 	case 0x07:
 		/* Multi32: tilebank per layer*/
-		COMBINE_DATA(&sys32_tilebank_external);
+		COMBINE_DATA(&system32_tilebank_external);
 		break;
 	case 0x0e:
-		COMBINE_DATA(&sys32_displayenable);
+		COMBINE_DATA(&system32_displayenable[0]);
 		break;
 	case 0x0f:
 		/* orunners unknown*/
@@ -370,6 +361,7 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
 	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
+	{ 0x500000, 0x50000f, system32_sprite_control_r },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
 	{ 0x610000, 0x6100ff, multi32_mixer_0_r }, /* mixer chip registers*/
@@ -399,7 +391,7 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, sys32_videoram_w },
 	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
-	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
+	{ 0x500000, 0x50000f, system32_sprite_control_w },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
@@ -597,7 +589,7 @@ static MACHINE_DRIVER_START( base )
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(32768)
 
-	MDRV_VIDEO_START(system32)
+	MDRV_VIDEO_START(multi32)
 	MDRV_VIDEO_UPDATE(system32)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
@@ -616,21 +608,18 @@ MACHINE_DRIVER_END
 
 static DRIVER_INIT(orunners)
 {
-	multi32=1;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 }
 
 static DRIVER_INIT(titlef)
 {
-	multi32=1;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 }
 
 static DRIVER_INIT(harddunk)
 {
-	multi32=1;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 5;
 }
