@@ -183,7 +183,7 @@ static READ16_HANDLER( multi32_io_r )
 		return 0xffff;
 	case 0x07:
 		/* scross*/
-		return sys32_tilebank_external;
+		return system32_tilebank_external;
 	case 0x0e:
 		/* f1lap*/
 		return 0xffff;
