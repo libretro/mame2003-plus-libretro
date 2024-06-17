@@ -3102,7 +3102,6 @@ static WRITE16_HANDLER( trap_w )
 static DRIVER_INIT ( s32 )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 
@@ -3111,8 +3110,6 @@ static DRIVER_INIT ( s32 )
 
 static DRIVER_INIT ( driving )
 {
-	multi32 = 0;
-
 	install_mem_read16_handler (0, 0xc00050, 0xc00057, system32_io_analog_r);
 	install_mem_write16_handler(0, 0xc00050, 0xc00057, system32_io_analog_w);
 }
@@ -3120,7 +3117,6 @@ static DRIVER_INIT ( driving )
 static DRIVER_INIT ( alien3 )
 {
 	system32_use_default_eeprom = EEPROM_ALIEN3;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 
@@ -3138,7 +3134,6 @@ static DRIVER_INIT ( alien3 )
 static DRIVER_INIT ( brival )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 5;
 
@@ -3149,7 +3144,6 @@ static DRIVER_INIT ( brival )
 static DRIVER_INIT ( ga2 )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 3;
 
@@ -3162,7 +3156,6 @@ static DRIVER_INIT ( ga2 )
 static DRIVER_INIT ( spidey )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 3;
 }
 
@@ -3206,7 +3199,6 @@ void f1lap_fd1149_vblank(void)
 static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 6;
 	init_driving();
 	
@@ -3220,7 +3212,6 @@ static DRIVER_INIT ( f1sl )
 static DRIVER_INIT ( arf )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 
@@ -3232,7 +3223,6 @@ static DRIVER_INIT ( arf )
 static DRIVER_INIT ( holo )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 4;
 	system32_temp_kludge = 1;	/* holoseum requires the tx tilemap to be flipped*/
 }
@@ -3240,7 +3230,6 @@ static DRIVER_INIT ( holo )
 static DRIVER_INIT ( sonic )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 5;
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
@@ -3252,7 +3241,6 @@ static DRIVER_INIT ( sonic )
 static DRIVER_INIT ( sonicp )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 5;
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
@@ -3262,7 +3250,6 @@ static DRIVER_INIT ( sonicp )
 static DRIVER_INIT ( radm )
 {
 	system32_use_default_eeprom = EEPROM_RADM;
-	multi32 = 0;
 	system32_mixerShift = 5;
 
 	init_driving();
@@ -3271,7 +3258,6 @@ static DRIVER_INIT ( radm )
 static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
-	multi32 = 0;
 	system32_mixerShift = 5;
 
 	init_driving();
@@ -3280,7 +3266,6 @@ static DRIVER_INIT ( radr )
 static DRIVER_INIT ( f1en )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_mixerShift = 5;
 
 	init_driving();
@@ -3294,7 +3279,6 @@ static DRIVER_INIT ( jpark )
 	pROM[0xC15AA/2] = 0xD8CD;
 
 	system32_mixerShift = 6;
-	multi32 = 0;
 
 	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
 	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
@@ -3372,7 +3356,6 @@ static READ16_HANDLER( arescue_comms_r )
 static DRIVER_INIT( arescue )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 	arescue_comms = auto_malloc(0x2000);
@@ -3463,7 +3446,6 @@ READ16_HANDLER( darkedge_protection_r )
 static DRIVER_INIT( darkedge )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 5;
 	
@@ -3488,7 +3470,6 @@ READ16_HANDLER( dbzvrvs_protection_r )
 static DRIVER_INIT( jleague )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 	install_mem_write16_handler(0, 0x20F700, 0x20F705, jleague_protection_w);
@@ -3497,7 +3478,6 @@ static DRIVER_INIT( jleague )
 static DRIVER_INIT( dbzvrvs )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	multi32 = 0;
 	system32_temp_kludge = 0;
 	system32_mixerShift = 4;
 
