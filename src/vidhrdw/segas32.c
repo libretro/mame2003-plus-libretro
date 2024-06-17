@@ -1186,9 +1186,9 @@ static void draw_bg_layer(struct mame_bitmap *bitmap, const struct rectangle *cl
 
 		/* get the 5-5-5 color and convert to 8-8-8 */
 		color = system32_paletteram[(basecol + (color & 0x0f) + ((color >> shift) & 0x1ff0)) & 0x3fff];
-		r = rlookup[color & 0x1f];
-		g = glookup[(color >> 5) & 0x1f];
-		b = blookup[(color >> 10) & 0x1f];
+		r = pal5bit(color & 0x1f);
+		g = pal5bit((color >> 5) & 0x1f);
+		b = pal5bit((color >> 10) & 0x1f);
 		color = (r << 16) | (g << 8) | b;
 
 		/* loop over columns */
@@ -1234,9 +1234,9 @@ static void draw_layer(struct mame_bitmap *bitmap, const struct rectangle *clipr
 				if (pix & trans_mask)
 				{
 					UINT16 color = system32_paletteram[(basecol + (pix & 0x0f) + ((pix >> shift) & 0x1ff0)) & 0x3fff];
-					int r = rlookup[color & 0x1f];
-					int g = glookup[(color >> 5) & 0x1f];
-					int b = blookup[(color >> 10) & 0x1f];
+					int r = pal5bit(color & 0x1f);
+					int g = pal5bit((color >> 5) & 0x1f);
+					int b = pal5bit((color >> 10) & 0x1f);
 					dst[x] = (r << 16) | (g << 8) | b;
 				}
 			}
@@ -1318,9 +1318,9 @@ static void draw_sprite_layers(struct mame_bitmap *bitmap, const struct rectangl
 						else
 						{
 							UINT16 color = system32_paletteram[(basecol[layer] + (pix & 0x07ff)) & 0x3fff];
-							int r = rlookup[color & 0x1f];
-							int g = glookup[(color >> 5) & 0x1f];
-							int b = blookup[(color >> 10) & 0x1f];
+							int r = pal5bit(color & 0x1f);
+							int g = pal5bit((color >> 5) & 0x1f);
+							int b = pal5bit((color >> 10) & 0x1f);
 							dst[x] = (r << 16) | (g << 8) | b;
 						}
 					}
