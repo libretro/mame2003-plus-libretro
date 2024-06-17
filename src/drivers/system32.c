@@ -372,10 +372,9 @@ static data16_t *system32_workram;
 int system32_temp_kludge;
 
 int system32_mixerShift;
-extern int system32_screen_mode;
-extern int system32_screen_old_mode;
-extern int system32_allow_high_resolution;
-extern int multi32;
+int system32_screen_mode;
+int system32_screen_old_mode;
+int system32_allow_high_resolution;
 
 
 WRITE16_HANDLER( sys32_videoram_w );
