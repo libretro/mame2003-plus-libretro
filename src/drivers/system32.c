@@ -376,12 +376,7 @@ int system32_screen_mode;
 int system32_screen_old_mode;
 int system32_allow_high_resolution;
 
-
-WRITE16_HANDLER( sys32_videoram_w );
 WRITE16_HANDLER ( sys32_ramtile_w );
-READ16_HANDLER ( sys32_videoram_r );
-VIDEO_START( system32 );
-VIDEO_UPDATE( system32 );
 
 int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
