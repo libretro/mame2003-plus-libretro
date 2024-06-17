@@ -1699,7 +1699,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	/* clamp to within the memory region size */
 	if (fromram)
 	{
-		spritedata = spriteram_32bit;
+		spritedata = system32_spriteram;
 		addrmask = (0x20000 / 4) - 1;
 	}
 	else
