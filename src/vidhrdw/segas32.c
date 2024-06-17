@@ -148,10 +148,6 @@
 #include "driver.h"
 #include "includes/segas32.h"
 
-int system32_screen_mode;
-int system32_screen_old_mode;
-int system32_allow_high_resolution;
-
 
 
 /*************************************
