@@ -28,4 +28,5 @@ READ16_HANDLER( multi32_mixer_1_r );
 WRITE16_HANDLER( multi32_mixer_0_w );
 WRITE16_HANDLER( multi32_mixer_1_w );
 
+READ16_HANDLER( system32_sprite_control_r );
 WRITE16_HANDLER( system32_sprite_control_w );
