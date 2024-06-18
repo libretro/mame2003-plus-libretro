@@ -540,6 +540,9 @@ static INTERRUPT_GEN( segas32_interrupt )
 		int_control_data[7] |= 1 << 1;
 	else
 		int_control_data[7] |= 1 << 0;
+
+	system32_set_vblank(int_control_data[7]?1:0);
+
 	update_irq_state();
 
 	if (system32_prot_vblank)
