@@ -400,7 +400,7 @@ INLINE data16_t xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(data16_t value)
 	int g = (value >> 5) & 0x1f;
 	int b = (value >> 10) & 0x1f;
 	value = (value & 0x8000) | ((b & 0x01) << 14) | ((g & 0x01) << 13) | ((r & 0x01) << 12);
-	value |= ((b & 0x1e) << 7) | ((g & 0x1e) << 3) | ((b & 0x1e) >> 1);
+	value |= ((b & 0x1e) << 7) | ((g & 0x1e) << 3) | ((r & 0x1e) >> 1);
 	return value;
 }
 
