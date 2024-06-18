@@ -1638,7 +1638,7 @@ static void sprite_swap_buffers(void)
 static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rectangle *clipin, const struct rectangle *clipout)
 {
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
-	UINT8 numbanks = memory_region_length(REGION_GFX2) / 0x40000;
+	UINT8 numbanks = memory_region_length(REGION_GFX2) / 0x400000;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
 
 	int indirect = data[0] & 0x2000;
@@ -1655,7 +1655,9 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	int adjustx  = (data[0] >> 0) & 3;
 	int srch     = (data[1] >> 8);
 	int srcw     = bpp8 ? (data[1] & 0x3f) : ((data[1] >> 1) & 0x3f);
-	int bank     = (data[2] >> 12) | ((data[3] & 0x0800) >> 7) | ((data[3] & 0x4000) >> 9);
+	int bank     = is_multi32 ?
+					((data[3] & 0x2000) >> 13) | ((data[3] & 0x8000) >> 14) :
+					((data[3] & 0x0800) >> 11) | ((data[3] & 0x4000) >> 13);
 	int dsth     = data[2] & 0x3ff;
 	int dstw     = data[3] & 0x3ff;
 	int ypos     = (INT16)(data[4] << 4) >> 4;
@@ -1697,14 +1699,14 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	if (fromram)
 	{
 		spritedata = spriteram_32bit;
-		addrmask = (0x20000 / 8) - 1;
+		addrmask = (0x20000 / 4) - 1;
 	}
 	else
 	{
 		if (numbanks)
 			bank %= numbanks;
-		spritedata = spritebase + 0x10000 * bank;
-		addrmask = 0xffff;
+		spritedata = spritebase + 0x100000 * bank;
+		addrmask = 0xfffff;
 	}
 
 	/* compute X/Y deltas */
