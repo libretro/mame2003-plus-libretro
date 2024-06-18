@@ -384,7 +384,7 @@ void system32_set_vblank(int state)
 {
 	/* at the end of VBLANK is when automatic sprite rendering happens */
 	if (!state)
-		timer_set(TIME_IN_USEC(50+adj), 1, update_sprites);
+		timer_set(TIME_IN_USEC(50+adj), 1+adj2, update_sprites);
 }
 
 
@@ -2524,7 +2524,7 @@ if (input_ui_pressed(IPT_UI_LEFT)) adj--;
 if (input_ui_pressed(IPT_UI_RIGHT)) adj++;
 if (input_ui_pressed(IPT_UI_UP)) adj2++;
 if (input_ui_pressed(IPT_UI_DOWN)) adj2--;
-usrintf_showmessage("adj%i adj2%i", adj, adj2);
+usrintf_showmessage("sec:%i param:%i", adj, adj2);
 	print_mixer_data(0);
 }
 
