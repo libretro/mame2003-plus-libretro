@@ -264,7 +264,7 @@ static UINT16 *solid_ffff;
 /* sprite data */
 static UINT8 sprite_render_count;
 static UINT8 sprite_control_latched[8];
-static UINT16 sprite_control[8];
+static UINT8 sprite_control[8];
 static data32_t *spriteram_32bit;
 
 
@@ -558,12 +558,8 @@ WRITE16_HANDLER( system32_videoram_w )
  *  Sprite control registers
  *
  *************************************/
-READ16_HANDLER( system32_sprite_control_r )
-{
-  return sprite_control[offset];
-}
 
-READ16_HANDLER( system32_sprite_control_r_temp )
+READ16_HANDLER( system32_sprite_control_r )
 {
 	switch (offset)
 	{
@@ -622,14 +618,9 @@ READ16_HANDLER( system32_sprite_control_r_temp )
 
 WRITE16_HANDLER( system32_sprite_control_w )
 {
-	COMBINE_DATA(&sprite_control[offset]);
-}
-
-/*WRITE16_HANDLER( system32_sprite_control_w )
-{
 	if (ACCESSING_LSB)
 		sprite_control[offset & 7] = data;
-}*/
+}
 
 
 READ32_HANDLER( multi32_sprite_control_r )
