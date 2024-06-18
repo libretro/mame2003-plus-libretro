@@ -1655,9 +1655,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	int adjustx  = (data[0] >> 0) & 3;
 	int srch     = (data[1] >> 8);
 	int srcw     = bpp8 ? (data[1] & 0x3f) : ((data[1] >> 1) & 0x3f);
-	int bank     = is_multi32 ?
-					((data[3] & 0x2000) >> 13) | ((data[3] & 0x8000) >> 14) :
-					((data[3] & 0x0800) >> 11) | ((data[3] & 0x4000) >> 13);
+	int bank     = (data[2] >> 12) | ((data[3] & 0x0800) >> 7) | ((data[3] & 0x4000) >> 9);
 	int dsth     = data[2] & 0x3ff;
 	int dstw     = data[3] & 0x3ff;
 	int ypos     = (INT16)(data[4] << 4) >> 4;
