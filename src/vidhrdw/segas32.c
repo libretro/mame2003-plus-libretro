@@ -2520,7 +2520,9 @@ for (showclip = 0; showclip < 4; showclip++)
 	}
 }
 #endif
-
+if (input_ui_pressed(IPT_UI_LEFT)) adj--;
+if (input_ui_pressed(IPT_UI_LEFT)) adj++;
+usrintf_showmessage("%i", adj);
 	print_mixer_data(0);
 }
 
@@ -2604,9 +2606,7 @@ VIDEO_UPDATE( multi32 )
 	}
 }
 #endif
-if (input_ui_pressed(IPT_UI_LEFT)) adj--;
-if (input_ui_pressed(IPT_UI_LEFT)) adj++;
-usrintf_showmessage("%i", adj);
+
 }
 
 
