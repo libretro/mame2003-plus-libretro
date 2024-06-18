@@ -1699,14 +1699,14 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	if (fromram)
 	{
 		spritedata = spriteram_32bit;
-		addrmask = (0x20000 / 4) - 1;
+		addrmask = (0x20000 / 8) - 1;
 	}
 	else
 	{
 		if (numbanks)
 			bank %= numbanks;
-		spritedata = spritebase + 0x100000 * bank;
-		addrmask = 0xfffff;
+		spritedata = spritebase + 0x10000 * bank;
+		addrmask = 0xffff;
 	}
 
 	/* compute X/Y deltas */
