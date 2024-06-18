@@ -1061,10 +1061,14 @@ static MACHINE_INIT( s32hi )
 
 static INTERRUPT_GEN( system32_interrupt )
 {
-	if(cpu_getiloops())
+	if(cpu_getiloops()) {
 		irq_raise(1);
-	else
+		system32_set_vblank(1);
+	}
+	else {
 		irq_raise(0);
+		system32_set_vblank(0);
+	}
 
 	if (system32_prot_vblank)
 		(*system32_prot_vblank)();
