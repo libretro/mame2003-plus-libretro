@@ -356,7 +356,7 @@ VIDEO_START( multi32 )
 
 static void update_sprites(int param)
 {
-#if0	/* if automatic mode is selected, do it every frame (0) or every other frame (1) */
+#if 0	/* if automatic mode is selected, do it every frame (0) or every other frame (1) */
 	if (!(sprite_control[3] & 2))
 	{
 		/* if we count down to the start, process the automatic swapping, but only after a short delay */
