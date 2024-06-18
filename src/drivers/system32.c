@@ -382,6 +382,12 @@ int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
 static void f1lap_fd1149_vblank(void);
 
+
+static void irq_timer_cb(int which);
+static UINT8 int_control_data[0x10];
+static mame_timer *int_timer[2];
+
+
 /* alien 3 with the gun calibrated, it doesn't prompt you if its not */
 unsigned char alien3_default_eeprom[128] = {
 	0x33, 0x53, 0x41, 0x32, 0x00, 0x35, 0x00, 0x00, 0x8B, 0xE8, 0x00, 0x02, 0x00, 0x00, 0x01, 0x00,
@@ -418,36 +424,126 @@ unsigned char radr_default_eeprom[128] = {
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00
 };
 
-static void irq_raise(int level)
-{
-	irq_status |= (1 << level);
-	cpu_set_irq_line(0, 0, ASSERT_LINE);
-}
+/*************************************
+ *
+ *  Interrupt controller
+ *
+ *************************************/
 
-static int irq_callback(int irqline)
+
+static void update_irq_state(void)
 {
-	int i;
-	for(i=7; i>=0; i--)
-		if(irq_status & (1 << i)) {
-			return i;
+	UINT8 effirq = int_control_data[7] & ~int_control_data[6] & 0x1f;
+	int vector;
+
+	/* loop over interrupt vectors, finding the highest priority one with */
+	/* an unmasked interrupt pending */
+	for (vector = 0; vector < 5; vector++)
+		if (effirq & (1 << int_control_data[vector]))
+		{
+			cpunum_set_input_line_and_vector(0, 0, ASSERT_LINE, vector);
+			break;
 		}
-	return 0;
+
+	/* if we didn't find any, clear the interrupt line */
+	if (vector == 5)
+		cpunum_set_input_line(0, 0, CLEAR_LINE);
 }
 
-static WRITE16_HANDLER(irq_ack_w)
+
+static void int_control_w(int offset, UINT8 data)
 {
-	if(ACCESSING_MSB) {
-		irq_status &= data >> 8;
-		if(!irq_status)
-			cpu_set_irq_line(0, 0, CLEAR_LINE);
+	int duration;
+
+	logerror("%06X:int_control_w(%X) = %02X\n", activecpu_get_pc(), offset, data);
+	switch (offset)
+	{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:			/* vectors */
+			int_control_data[offset] = data;
+			break;
+
+		case 5:			/* unknown */
+			int_control_data[offset] = data;
+			break;
+
+		case 6:			/* mask? */
+			int_control_data[offset] = data;
+			update_irq_state();
+			break;
+
+		case 7:			/* acknowledge */
+			int_control_data[offset] &= data;
+			update_irq_state();
+			break;
+
+		case 8:
+		case 9:			/* timer 0 count */
+			int_control_data[offset] = data;
+			duration = int_control_data[8] + ((int_control_data[9] << 8) & 0xf00);
+			if (duration)
+				timer_adjust(int_timer[0], TIME_IN_HZ(12184) * duration, 0, TIME_NEVER);
+			break;
+
+		case 10:
+		case 11:		/* timer 1 count */
+			int_control_data[offset] = data;
+			duration = int_control_data[10] + ((int_control_data[11] << 8) & 0xf00);
+			if (duration)
+				timer_adjust(int_timer[1], TIME_IN_HZ(12184) * duration, 1, TIME_NEVER);
+			break;
 	}
 }
 
-static void irq_init(void)
+
+static READ16_HANDLER( interrupt_control_r )
 {
-	irq_status = 0;
-	cpu_set_irq_line(0, 0, CLEAR_LINE);
-	cpu_set_irq_callback(0, irq_callback);
+	switch (offset)
+	{
+		case 8/2:
+			/* fix me - should return timer count down value */
+			break;
+
+		case 10/2:
+			/* fix me - should return timer count down value */
+			break;
+	}
+
+	/* return all F's for everything except timer values */
+	return 0xffff;
+}
+
+
+static WRITE16_HANDLER( interrupt_control_w )
+{
+	if (ACCESSING_LSB)
+		int_control_w(offset*2+0, data);
+	if (ACCESSING_MSB)
+		int_control_w(offset*2+1, data >> 8);
+}
+
+
+static void irq_timer_cb(int which)
+{
+	int_control_data[7] |= 1 << (3 + which);
+	update_irq_state();
+}
+
+
+static INTERRUPT_GEN( segas32_interrupt )
+{
+	/* fix me this is hacky and wrong */
+	if (cpu_getiloops())
+		int_control_data[7] |= 1 << 1;
+	else
+		int_control_data[7] |= 1 << 0;
+	update_irq_state();
+
+	if (system32_prot_vblank)
+		(*system32_prot_vblank)();
 }
 
 static NVRAM_HANDLER( system32 )
@@ -891,6 +987,7 @@ static MEMORY_READ16_START( system32_readmem )
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
 
+	{ 0xd00000, 0xd0000f, interrupt_control_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
@@ -919,9 +1016,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
 
-	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
-	{ 0xd00006, 0xd00007, irq_ack_w },
-	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
+	{ 0xd00000, 0xd0000f, interrupt_control_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w }, /* Unknown titlef / harddunk*/
 	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
@@ -1039,12 +1134,16 @@ PORT_END
 static MACHINE_INIT( system32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
-	irq_init();
 
-	/* force it to select lo-resolution on reset */
-	system32_allow_high_resolution = 0;
-	system32_screen_mode = 0;
-	system32_screen_old_mode = 1;
+	/* initialize the interrupt controller */
+	memset(int_control_data, 0xff, sizeof(int_control_data));
+
+	/* allocate timers */
+	int_timer[0] = timer_alloc(irq_timer_cb);
+	int_timer[1] = timer_alloc(irq_timer_cb);
+
+	/* clear IRQ lines */
+	cpunum_set_input_line(0, 0, CLEAR_LINE);
 }
 
 static MACHINE_INIT( s32hi )
@@ -1058,21 +1157,6 @@ static MACHINE_INIT( s32hi )
 	system32_screen_old_mode = 1;
 }
 
-
-static INTERRUPT_GEN( system32_interrupt )
-{
-	if(cpu_getiloops()) {
-		irq_raise(1);
-		system32_set_vblank(1);
-	}
-	else {
-		irq_raise(0);
-		system32_set_vblank(0);
-	}
-
-	if (system32_prot_vblank)
-		(*system32_prot_vblank)();
-}
 
 /* jurassic park moving cab - not working yet */
 
@@ -2157,7 +2241,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
 #endif
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
-	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
+	MDRV_CPU_VBLANK_INT(segas32_interrupt,2)
 
 	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
