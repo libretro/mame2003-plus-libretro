@@ -563,7 +563,7 @@ READ16_HANDLER( system32_sprite_control_r )
   return sprite_control[offset];
 }
 
-/*READ16_HANDLER( system32_sprite_control_r )
+READ16_HANDLER( system32_sprite_control_r_temp )
 {
 	switch (offset)
 	{
@@ -618,7 +618,7 @@ READ16_HANDLER( system32_sprite_control_r )
 			return 0xfffc;
 	}
 	return 0xffff;
-}*/
+}
 
 WRITE16_HANDLER( system32_sprite_control_w )
 {
