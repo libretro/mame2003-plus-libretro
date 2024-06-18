@@ -441,13 +441,13 @@ static void update_irq_state(void)
 	for (vector = 0; vector < 5; vector++)
 		if (effirq & (1 << int_control_data[vector]))
 		{
-			cpunum_set_input_line_and_vector(0, 0, ASSERT_LINE, vector);
+			cpu_set_irq_line_and_vector(0, 0, ASSERT_LINE, vector);
 			break;
 		}
 
 	/* if we didn't find any, clear the interrupt line */
 	if (vector == 5)
-		cpunum_set_input_line(0, 0, CLEAR_LINE);
+		cpu_set_irq_line(0, 0, CLEAR_LINE);
 }
 
 
