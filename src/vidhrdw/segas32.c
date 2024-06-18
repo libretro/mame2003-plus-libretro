@@ -356,7 +356,7 @@ VIDEO_START( multi32 )
 
 static void update_sprites(int param)
 {
-#if 0	/* if automatic mode is selected, do it every frame (0) or every other frame (1) */
+	/* if automatic mode is selected, do it every frame (0) or every other frame (1) */
 	if (!(sprite_control[3] & 2))
 	{
 		/* if we count down to the start, process the automatic swapping, but only after a short delay */
@@ -366,13 +366,13 @@ static void update_sprites(int param)
 			sprite_render_count = sprite_control[3] & 1;
 		}
 	}
-#endif
+
 	/* look for pending commands */
 	if (sprite_control[0] & 2)
 		sprite_erase_buffer();
 	if (/*sprite_control[0] & 1*/ 1)
 	{
-		sprite_swap_buffers();
+		//sprite_swap_buffers();
 		sprite_render_list();
 	}
 	sprite_control[0] = 0;
