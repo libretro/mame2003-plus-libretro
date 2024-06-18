@@ -1143,7 +1143,7 @@ static MACHINE_INIT( system32 )
 	int_timer[1] = timer_alloc(irq_timer_cb);
 
 	/* clear IRQ lines */
-	cpunum_set_input_line(0, 0, CLEAR_LINE);
+	cpu_set_irq_line(0, 0, CLEAR_LINE);
 }
 
 static MACHINE_INIT( s32hi )
