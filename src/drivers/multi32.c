@@ -332,7 +332,7 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		}
 		break;
 	case 0x0e:
-		/* orunners value=86 (displayenable?)*/
+		COMBINE_DATA(&system32_displayenable[1]);
 		break;
 	case 0x0f:
 		/* orunners value=c8*/
