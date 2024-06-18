@@ -147,6 +147,7 @@
 
 #include "driver.h"
 #include "includes/segas32.h"
+static int adj = 0;
 
 
 
@@ -383,7 +384,7 @@ void system32_set_vblank(int state)
 {
 	/* at the end of VBLANK is when automatic sprite rendering happens */
 	if (!state)
-		timer_set(TIME_IN_USEC(25), 1, update_sprites);
+		timer_set(TIME_IN_USEC(50+adj), 1, update_sprites);
 }
 
 
@@ -2603,7 +2604,9 @@ VIDEO_UPDATE( multi32 )
 	}
 }
 #endif
-
+if (input_ui_pressed(IPT_UI_LEFT)) adj--;
+if (input_ui_pressed(IPT_UI_LEFT)) adj++;
+usrintf_showmessage("%i", adj);
 }
 
 
