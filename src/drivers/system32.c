@@ -1050,14 +1050,12 @@ static MACHINE_INIT( segas32 )
 
 static INTERRUPT_GEN( system32_interrupt )
 {
-	if(cpu_getiloops()) {
+	if(cpu_getiloops())
 		irq_raise(1);
-		system32_set_vblank(1);
-	}
-	else {
+	else
 		irq_raise(0);
-		system32_set_vblank(0);
-	}
+
+	system32_set_vblank(cpu_getiloops()%2?0:1);
 
 	if (system32_prot_vblank)
 		(*system32_prot_vblank)();
