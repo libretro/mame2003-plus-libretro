@@ -2232,7 +2232,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
 #endif
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
-	MDRV_CPU_VBLANK_INT(segas32_interrupt,2)
+	MDRV_CPU_VBLANK_INT(segas32_interrupt,1)
 
 	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
