@@ -370,7 +370,7 @@ static void update_sprites(int param)
 	/* look for pending commands */
 	if (sprite_control[0] & 2)
 		sprite_erase_buffer();
-	if (sprite_control[0] & 1)
+	if (/*sprite_control[0] & 1*/ 1)
 	{
 		sprite_swap_buffers();
 		sprite_render_list();
