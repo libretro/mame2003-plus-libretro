@@ -12,6 +12,8 @@ extern data16_t *system32_paletteram[2];
 extern data16_t system32_displayenable[2];
 extern data16_t system32_tilebank_external;
 
+extern void system32_set_vblank(int state);
+
 READ16_HANDLER( system32_spriteram_r );
 WRITE16_HANDLER( system32_spriteram_w );
 
