@@ -1131,7 +1131,7 @@ static PORT_WRITE_START( sound_writeport_32 )
 	{ 0xf1, 0xf1, sys32_sound_prot_w },
 PORT_END
 
-static MACHINE_INIT( system32 )
+static MACHINE_INIT( segas32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
 
@@ -1145,18 +1145,6 @@ static MACHINE_INIT( system32 )
 	/* clear IRQ lines */
 	cpu_set_irq_line(0, 0, CLEAR_LINE);
 }
-
-static MACHINE_INIT( s32hi )
-{
-	cpu_setbank(1, memory_region(REGION_CPU1));
-	irq_init();
-
-	/* force it to select lo-resolution on reset */
-	system32_allow_high_resolution = 1;
-	system32_screen_mode = 0;
-	system32_screen_old_mode = 1;
-}
-
 
 /* jurassic park moving cab - not working yet */
 
@@ -2251,7 +2239,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(100 /*DEFAULT_60HZ_VBLANK_DURATION*/)
 
-	MDRV_MACHINE_INIT(system32)
+	MDRV_MACHINE_INIT(segas32)
 	MDRV_NVRAM_HANDLER(system32)
 
 	/* video hardware */
@@ -2273,7 +2261,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( sys32_hi )
 	MDRV_IMPORT_FROM( system32 )
 
-	MDRV_MACHINE_INIT(s32hi)
+	MDRV_MACHINE_INIT(segas32)
 
 	MDRV_SCREEN_SIZE(52*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
