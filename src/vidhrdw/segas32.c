@@ -383,7 +383,7 @@ void system32_set_vblank(int state)
 {
 	/* at the end of VBLANK is when automatic sprite rendering happens */
 	if (!state)
-		timer_set(TIME_IN_USEC(60), 1, update_sprites);
+		timer_set(TIME_IN_USEC(50), 1, update_sprites);
 }
 
 
