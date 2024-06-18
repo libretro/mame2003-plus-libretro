@@ -541,7 +541,7 @@ static INTERRUPT_GEN( segas32_interrupt )
 	else
 		int_control_data[7] |= 1 << 0;
 
-	system32_set_vblank(int_control_data[7]?1:0);
+	system32_set_vblank(cpu_getiloops()?1:0);
 
 	update_irq_state();
 
