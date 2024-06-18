@@ -2194,6 +2194,73 @@ static MACHINE_DRIVER_START( jpark )
 
 MACHINE_DRIVER_END
 
+
+/*************************************
+ *
+ *  ROM definition(s)
+ *
+ *************************************/
+
+#define ROM_LOAD_x2(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length )
+
+#define ROM_LOAD_x4(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length )
+
+#define ROM_LOAD_x8(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 5 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length ) \
+	ROM_RELOAD(     base + 7 * length, length )
+
+#define ROM_LOAD_x16(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 5 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length ) \
+	ROM_RELOAD(     base + 7 * length, length ) \
+	ROM_RELOAD(     base + 8 * length, length ) \
+	ROM_RELOAD(     base + 9 * length, length ) \
+	ROM_RELOAD(     base + 10 * length, length ) \
+	ROM_RELOAD(     base + 11 * length, length ) \
+	ROM_RELOAD(     base + 12 * length, length ) \
+	ROM_RELOAD(     base + 13 * length, length ) \
+	ROM_RELOAD(     base + 14 * length, length ) \
+	ROM_RELOAD(     base + 15 * length, length )
+
+#define ROM_LOAD16_BYTE_x2(name, base, length, crc) \
+	ROM_LOAD16_BYTE( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length )
+
+#define ROM_LOAD16_BYTE_x4(name, base, length, crc) \
+	ROM_LOAD16_BYTE( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length )
+
+#define ROM_LOAD32_WORD_x2(name, base, length, crc) \
+	ROM_LOAD32_WORD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length )
+
+#define ROM_LOAD32_WORD_x4(name, base, length, crc) \
+	ROM_LOAD32_WORD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length )
+
+
+
 ROM_START( arescue )
 	ROM_REGION( 0x200000, REGION_CPU1, 0 ) /* v60 code */
 	ROM_LOAD16_WORD( "epr14540.13", 0x000000, 0x20000, CRC(c2b4e5d0) SHA1(69f8ddded5095df9012663d0ded61b78f1692a8d) )
