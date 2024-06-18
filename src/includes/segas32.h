@@ -41,3 +41,4 @@ WRITE16_HANDLER( system32_sprite_control_w );
 VIDEO_START( system32 );
 VIDEO_START( multi32 );
 VIDEO_UPDATE( system32 );
+VIDEO_UPDATE( multi32 );
