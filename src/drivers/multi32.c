@@ -32,8 +32,6 @@ static data16_t *system32_shared_ram;
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
 
-WRITE16_HANDLER( sys32_ramtile_w );
-
 extern int system32_use_default_eeprom;
 
 static data16_t controlB[256];
