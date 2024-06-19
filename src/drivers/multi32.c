@@ -335,8 +335,8 @@ static READ32_HANDLER( random_number_32_r )
 
 
 static MEMORY_READ32_START( multi32_readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM },
-	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
+	{ 0x000000, 0x1fffff, MRA32_ROM },
+	{ 0x200000, 0x23ffff, MRA32_RAM }, /* work RAM*/
 	{ 0x300000, 0x31ffff, multi32_videoram_r }, /* Tile Ram*/
 	{ 0x400000, 0x41ffff, multi32_spriteram_r }, /* sprite RAM*/
 	{ 0x500000, 0x50000f, multi32_sprite_control_r },
@@ -347,11 +347,11 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
 	{ 0x690000, 0x69004f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
 
-	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
-	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
-	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
-	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
-	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
+	{ 0x700000, 0x701fff, MRA32_RAM },	/* shared RAM*/
+	{ 0x800000, 0x80000f, MRA32_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MRA32_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MRA32_RAM },	/* Unknown*/
+	{ 0xa00000, 0xa00001, MRA32_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, multi32_io_r },
 	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
@@ -359,14 +359,14 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 
 	{ 0xd80000, 0xdfffff, random_number_32_r },
-	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
-	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
-	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
+	{ 0xe00000, 0xe0000f, MRA32_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MRA32_RAM }, /* Unknown*/
+	{ 0xf00000, 0xffffff, MRA32_BANK1 }, /* High rom mirror*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( multi32_writemem )
-	{ 0x000000, 0x1fffff, MWA16_ROM },
-	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
+	{ 0x000000, 0x1fffff, MWA32_ROM },
+	{ 0x200000, 0x23ffff, MWA32_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
 	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000f, multi32_sprite_control_w },
@@ -377,26 +377,26 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
 	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
-	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
-	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
-	{ 0x80007e, 0x80007f, MWA16_RAM },	/* Unknown f1lap*/
-	{ 0x801000, 0x801003, MWA16_RAM },	/* Unknown*/
-	{ 0x81002a, 0x81002b, MWA16_RAM },	/* Unknown dbzvrvs*/
-	{ 0x810100, 0x810101, MWA16_RAM },	/* Unknown dbzvrvs*/
-	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	/* protection RAM*/
+	{ 0x700000, 0x701fff, MWA32_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
+	{ 0x800000, 0x80000f, MWA32_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MWA32_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MWA32_RAM },	/* Unknown*/
+	{ 0x81002a, 0x81002b, MWA32_RAM },	/* Unknown dbzvrvs*/
+	{ 0x810100, 0x810101, MWA32_RAM },	/* Unknown dbzvrvs*/
+	{ 0xa00000, 0xa00fff, MWA32_RAM, &sys32_protram },	/* protection RAM*/
 
 	{ 0xc00000, 0xc0003f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
 	{ 0xc00060, 0xc0007f, multi32_io_2_w },
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 
-	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
+	{ 0xd00000, 0xd00005, MWA32_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
-	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
+	{ 0xd00008, 0xd0000b, MWA32_RAM }, /* Unknown*/
 	{ 0xd80000, 0xdfffff, random_number_32_w },
-	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
-	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
-	{ 0xf00000, 0xffffff, MWA16_ROM },
+	{ 0xe00000, 0xe0000f, MWA32_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MWA32_RAM }, /* Unknown*/
+	{ 0xf00000, 0xffffff, MWA32_ROM },
 MEMORY_END
 
 
