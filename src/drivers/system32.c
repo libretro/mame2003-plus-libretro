@@ -368,8 +368,6 @@ static data16_t *sys32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
 
-WRITE16_HANDLER ( sys32_ramtile_w );
-
 int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
 static void f1lap_fd1149_vblank(void);
@@ -3067,16 +3065,6 @@ ROM_START( slipstrm )
 	ROMX_LOAD( "slipstrm.u24", 0x000007, 0x80000, CRC(22c129cf) SHA1(0f64680511a357038f6a556253c13fbb5417dd1a) , ROM_SKIP(7) )
 ROM_END
 
-static WRITE16_HANDLER( trap_w )
-{
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
-}
-
-static DRIVER_INIT ( s32 )
-{
-	system32_use_default_eeprom = EEPROM_SYS32_0;
-	install_mem_write16_handler(0, 0x20f4e0, 0x20f4e1, trap_w);
-}
 
 static DRIVER_INIT ( driving )
 {
@@ -3180,7 +3168,7 @@ static DRIVER_INIT ( arf )
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, arabfgt_protboard_w);
 }
 
-static DRIVER_INIT ( holo )
+static DRIVER_INIT ( s32 )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 }
@@ -3426,7 +3414,7 @@ static DRIVER_INIT( dbzvrvs )
 }
 
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
-GAME( 1992, holo,     0,        system32, holo,     holo,     ROT0, "Sega", "Holosseum" )
+GAME( 1992, holo,     0,        system32, holo,     s32,      ROT0, "Sega", "Holosseum" )
 
 /* these have a range of issues, mainly with the backgrounds */
 GAMEX(1992, arescue,  0,        system32, arescue,  arescue,  ROT0, "Sega", "Air Rescue", GAME_IMPERFECT_GRAPHICS )
@@ -3450,7 +3438,7 @@ GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 S
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 
 /* not really working */
-GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) /* locks up on some levels, sprites are submerged, protected */
+GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
 /* Loony Toons (maybe) */
