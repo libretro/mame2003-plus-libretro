@@ -334,15 +334,16 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	}
 }
 
-static WRITE16_HANDLER( random_number_16_w )
+static WRITE32_HANDLER( random_number_32_w )
 {
-/* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
+	printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);
 }
 
-static READ16_HANDLER( random_number_16_r )
+static READ32_HANDLER( random_number_32_r )
 {
-       return rand();
+	return rand() | (rand() << 16);
 }
+
 
 static MEMORY_READ32_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
@@ -368,7 +369,7 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0xc00060, 0xc0007f, multi32_io_2_r },
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 
-	{ 0xd80000, 0xdfffff, random_number_16_r },
+	{ 0xd80000, 0xdfffff, random_number_32_r },
 	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -403,7 +404,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
 	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
-	{ 0xd80000, 0xdfffff, random_number_16_w },
+	{ 0xd80000, 0xdfffff, random_number_32_w },
 	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
 	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
