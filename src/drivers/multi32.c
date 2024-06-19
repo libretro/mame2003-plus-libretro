@@ -32,14 +32,6 @@ static data16_t *system32_shared_ram;
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
 
-/* Video Hardware */
-extern int system32_temp_kludge;
-
-extern int system32_mixerShift;
-extern int system32_screen_mode;
-extern int system32_screen_old_mode;
-extern int system32_allow_high_resolution;
-
 WRITE16_HANDLER( sys32_ramtile_w );
 
 extern int system32_use_default_eeprom;
@@ -422,15 +414,10 @@ static MEMORY_WRITE16_START( multi32_writemem )
 MEMORY_END
 
 
-static MACHINE_INIT( system32 )
+static MACHINE_INIT( segas32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
 	irq_init();
-
-	/* force it to select lo-resolution on reset */
-	system32_allow_high_resolution = 0;
-	system32_screen_mode = 0;
-	system32_screen_old_mode = 1;
 }
 
 static INTERRUPT_GEN( system32_interrupt )
@@ -578,7 +565,7 @@ static MACHINE_DRIVER_START( base )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(100 /*DEFAULT_60HZ_VBLANK_DURATION*/)
 
-	MDRV_MACHINE_INIT(system32)
+	MDRV_MACHINE_INIT(segas32)
 	MDRV_NVRAM_HANDLER(system32)
 
 	/* video hardware */
@@ -605,24 +592,6 @@ static MACHINE_DRIVER_START( scross )
 	MDRV_IMPORT_FROM(base)
 	MDRV_SOUND_ADD(MULTIPCM, scross_multipcm_interface)
 MACHINE_DRIVER_END
-
-static DRIVER_INIT(orunners)
-{
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
-}
-
-static DRIVER_INIT(titlef)
-{
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
-}
-
-static DRIVER_INIT(harddunk)
-{
-	system32_temp_kludge = 0;
-	system32_mixerShift = 5;
-}
 
 #define SYSTEM32_PLAYER_INPUTS(_n_, _b1_, _b2_, _b3_, _b4_) \
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_##_b1_         | IPF_PLAYER##_n_ ) \
@@ -991,8 +960,6 @@ ROM_START( orunners )
 	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
 	ROM_LOAD("mpr15551.bin", 0x000000, 0x200000, CRC(4894bc73) SHA1(351f5c03fb430fd87df915dfe3a377b5ada622c4) )
 	ROM_LOAD("mpr15552.bin", 0x200000, 0x200000, CRC(1c4b5e73) SHA1(50a8e9a200575a3522a51bf094aa0e87b90bb0a3) )
-
-	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
 ROM_START( harddunk )
@@ -1024,8 +991,6 @@ ROM_START( harddunk )
 	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
 	ROM_LOAD("mp16506.1", 0x000000, 0x200000, CRC(e779f5ed) SHA1(462d1bbe8bb12a0c5a6d6c613c720b26ec21cb25) )
 	ROM_LOAD("mp16507.2", 0x200000, 0x200000, CRC(31e068d3) SHA1(9ac88b15af441fb3b31ce759c565b60a09039571) )
-
-	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
 ROM_START( harddunj )
@@ -1056,8 +1021,6 @@ ROM_START( harddunj )
 	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
 	ROM_LOAD("mp16506.1", 0x000000, 0x200000, CRC(e779f5ed) SHA1(462d1bbe8bb12a0c5a6d6c613c720b26ec21cb25) )
 	ROM_LOAD("mp16507.2", 0x200000, 0x200000, CRC(31e068d3) SHA1(9ac88b15af441fb3b31ce759c565b60a09039571) )
-
-	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
 ROM_START( scross )
@@ -1095,8 +1058,6 @@ ROM_START( scross )
 	/* 1ST AND 2ND HALF IDENTICAL (all roms, are these OK?) */
 	ROM_LOAD("epr15031.bin", 0x000000, 0x200000, CRC(663a7fd2) SHA1(b4393a687225b075db21960d19a6ddd7a9d7d086) )
 	ROM_LOAD("epr15032.bin", 0x200000, 0x200000, CRC(cb709f3d) SHA1(3962c8b5907d1f8f611f58ddac693cc47364a79c) )
-
-	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
 ROM_START( titlef )
@@ -1126,13 +1087,11 @@ ROM_START( titlef )
 
 	ROM_REGION( 0x300000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
 	ROM_LOAD("mpr15385.1", 0x000000, 0x200000, CRC(5a9b0aa0) SHA1(d208aa165f9eea05e3b8c3f406ff44374e4f6887) )
-
-	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
 /* boot, and are playable, some gfx problems*/
-GAMEX( 1992, orunners,     0,        multi32, orunners, orunners, ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1994, harddunk,     0,        multi32, harddunk, harddunk, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1994, harddunj,     harddunk, multi32, harddunk, harddunk, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1992, scross,       0,        scross,  scross,   orunners, ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1992, titlef,       0,        multi32, titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1992, orunners,     0,        multi32, orunners, 0, ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1994, harddunk,     0,        multi32, harddunk, 0, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1994, harddunj,     harddunk, multi32, harddunk, 0, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1992, scross,       0,        scross,  scross,   0, ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1992, titlef,       0,        multi32, titlef,   0, ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
