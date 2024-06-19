@@ -96,17 +96,6 @@ static WRITE16_HANDLER(system32_eeprom_w)
 }
 
 
-static READ16_HANDLER(sys32_read_ff)
-{
-	return 0xffff;
-}
-
-static READ16_HANDLER(sys32_read_random)
-{
-	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
-}
-
-
 extern int analogRead[8];
 extern int analogSwitch;
 
