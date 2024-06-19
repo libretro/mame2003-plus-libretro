@@ -344,19 +344,18 @@ static READ16_HANDLER( random_number_16_r )
        return rand();
 }
 
-static MEMORY_READ16_START( multi32_readmem )
+static MEMORY_READ32_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
 	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
-	{ 0x300000, 0x31ffff, system32_videoram_r }, /* Tile Ram*/
-	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
-/*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
-	{ 0x500000, 0x50000f, system32_sprite_control_r },
+	{ 0x300000, 0x31ffff, multi32_videoram_r }, /* Tile Ram*/
+	{ 0x400000, 0x41ffff, multi32_spriteram_r }, /* sprite RAM*/
+	{ 0x500000, 0x50000f, multi32_sprite_control_r },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
-	{ 0x610000, 0x6100ff, multi32_mixer_0_r }, /* mixer chip registers*/
+	{ 0x610000, 0x6100ff, /*multi32_mixer_0_r*/MRA32_RAM }, /* mixer chip registers*/
 
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
-	{ 0x690000, 0x69004f, multi32_mixer_1_r }, /* monitor B mixer registers*/
+	{ 0x690000, 0x69004f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
@@ -375,12 +374,12 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
 
-static MEMORY_WRITE16_START( multi32_writemem )
+static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
-	{ 0x300000, 0x31ffff, system32_videoram_w },
-	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
-	{ 0x500000, 0x50000f, system32_sprite_control_w },
+	{ 0x300000, 0x31ffff, multi32_videoram_w },
+	{ 0x400000, 0x41ffff, multi32_spriteram_w, &system32_spriteram }, /* Sprites*/
+	{ 0x500000, 0x50000f, mulit32_sprite_control_w },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
