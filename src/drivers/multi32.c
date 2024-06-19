@@ -360,7 +360,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
 	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
-/* fix me */	{ 0x700000, 0x701fff, MWA32_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
+/* fix me */	{ 0x700000, 0x701fff, MWA32_RAM }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA32_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MWA32_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MWA32_RAM },	/* Unknown*/
