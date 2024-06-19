@@ -479,6 +479,7 @@ static void common_paletteram_w(int which, offs_t offset, data16_t data, data16_
 }
 
 
+
 /*************************************
  *
  *  Palette RAM access
@@ -497,27 +498,35 @@ WRITE16_HANDLER( system32_paletteram_w )
 }
 
 
-READ16_HANDLER( multi32_paletteram_0_r )
+READ32_HANDLER( multi32_paletteram_0_r )
 {
-	return common_paletteram_r(0, offset);
+	return common_paletteram_r(0, offset*2+0) |
+	      (common_paletteram_r(0, offset*2+1) << 16);
 }
 
 
-WRITE16_HANDLER( multi32_paletteram_0_w )
+WRITE32_HANDLER( multi32_paletteram_0_w )
 {
-	common_paletteram_w(0, offset, data, mem_mask);
+	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
+		common_paletteram_w(0, offset*2+0, data, mem_mask);
+	if ((mem_mask & 0xffff0000) != 0xffff0000)
+		common_paletteram_w(0, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
-READ16_HANDLER( multi32_paletteram_1_r )
+READ32_HANDLER( multi32_paletteram_1_r )
 {
-	return common_paletteram_r(1, offset);
+	return common_paletteram_r(1, offset*2+0) |
+	      (common_paletteram_r(1, offset*2+1) << 16);
 }
 
 
-WRITE16_HANDLER( multi32_paletteram_1_w )
+WRITE32_HANDLER( multi32_paletteram_1_w )
 {
-	common_paletteram_w(1, offset, data, mem_mask);
+	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
+		common_paletteram_w(1, offset*2+0, data, mem_mask);
+	if ((mem_mask & 0xffff0000) != 0xffff0000)
+		common_paletteram_w(1, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -551,6 +560,23 @@ WRITE16_HANDLER( system32_videoram_w )
 				tilemap_mark_tile_dirty(entry->tilemap, offset);
 	}
 }
+
+
+READ32_HANDLER( multi32_videoram_r )
+{
+	return system32_videoram[offset*2+0] |
+	      (system32_videoram[offset*2+1] << 16);
+}
+
+
+WRITE32_HANDLER( multi32_videoram_w )
+{
+	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
+		system32_videoram_w(offset*2+0, data, mem_mask);
+	if ((mem_mask & 0xffff0000) != 0xffff0000)
+		system32_videoram_w(offset*2+1, data >> 16, mem_mask >> 16);
+}
+
 
 
 /*************************************
@@ -615,6 +641,7 @@ READ16_HANDLER( system32_sprite_control_r )
 	}
 	return 0xffff;
 }
+
 
 WRITE16_HANDLER( system32_sprite_control_w )
 {
@@ -690,41 +717,27 @@ WRITE32_HANDLER( multi32_spriteram_w )
  *
  *************************************/
 
-
-READ16_HANDLER( system32_mixer_r )
-{
-	return mixer_control[0][offset];
-}
-
-
 WRITE16_HANDLER( system32_mixer_w )
 {
 	COMBINE_DATA(&mixer_control[0][offset]);
 }
 
 
-READ16_HANDLER( multi32_mixer_0_r )
+WRITE32_HANDLER( multi32_mixer_0_w )
 {
-	return mixer_control[0][offset];
+	data = SWAP_HALVES(data);
+	mem_mask = SWAP_HALVES(mem_mask);
+	COMBINE_DATA((data32_t *)&mixer_control[0][offset*2]);
 }
 
 
-READ16_HANDLER( multi32_mixer_1_r )
+WRITE32_HANDLER( multi32_mixer_1_w )
 {
-	return mixer_control[1][offset];
+	data = SWAP_HALVES(data);
+	mem_mask = SWAP_HALVES(mem_mask);
+	COMBINE_DATA((data32_t *)&mixer_control[1][offset*2]);
 }
 
-
-WRITE16_HANDLER( multi32_mixer_0_w )
-{
-	COMBINE_DATA(&mixer_control[0][offset]);
-}
-
-
-WRITE16_HANDLER( multi32_mixer_1_w )
-{
-	COMBINE_DATA(&mixer_control[1][offset]);
-}
 
 
 /*************************************
