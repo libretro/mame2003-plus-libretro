@@ -80,12 +80,12 @@ static NVRAM_HANDLER( system32 )
 	}
 }
 
-static READ16_HANDLER(system32_eeprom_r)
+static READ32_HANDLER(system32_eeprom_32_r)
 {
 	return (EEPROM_read_bit() << 7) | input_port_0_r(0);
 }
 
-static WRITE16_HANDLER(system32_eeprom_w)
+static WRITE32_HANDLER(system32_eeprom_32_w)
 {
 	if(ACCESSING_LSB) {
 		EEPROM_write_bit(data & 0x80);
