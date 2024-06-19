@@ -98,7 +98,7 @@ static WRITE16_HANDLER(system32_eeprom_w)
 extern int analogRead[8];
 extern int analogSwitch;
 
-static READ16_HANDLER( multi32_io_analog_r )
+static READ32_HANDLER( multi32_io_analog_r )
 {
 /*
 	{ 0xc00050, 0xc00057, system32_io_analog_r },
@@ -122,7 +122,7 @@ static READ16_HANDLER( multi32_io_analog_r )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_analog_w )
+static WRITE32_HANDLER( multi32_io_analog_w )
 {
 	COMBINE_DATA(&control[offset]);
 
@@ -132,7 +132,7 @@ static WRITE16_HANDLER( multi32_io_analog_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_r )
+static READ32_HANDLER( multi32_io_r )
 {
 /* I/O Control port at 0xc00000
 
@@ -171,7 +171,7 @@ static READ16_HANDLER( multi32_io_r )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_w )
+static WRITE32_HANDLER( multi32_io_w )
 {
 /* I/O Control port at 0xc00000
 
@@ -215,7 +215,7 @@ static WRITE16_HANDLER( multi32_io_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_2_r )
+static READ32_HANDLER( multi32_io_2_r )
 {
 /* I/O Control port at 0xc00060
 
@@ -237,7 +237,7 @@ static READ16_HANDLER( multi32_io_2_r )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_2_w )
+static WRITE32_HANDLER( multi32_io_2_w )
 {
 /* I/O Control port at 0xc00060
 
@@ -259,7 +259,7 @@ static WRITE16_HANDLER( multi32_io_2_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_B_r )
+static READ32_HANDLER( multi32_io_B_r )
 {
 	switch(offset) {
 	case 0:
@@ -291,7 +291,7 @@ static READ16_HANDLER( multi32_io_B_r )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_B_w )
+static WRITE32_HANDLER( multi32_io_B_w )
 {
 	COMBINE_DATA(&controlB[offset]);
 	switch(offset) {
