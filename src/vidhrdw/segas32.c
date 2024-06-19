@@ -2574,7 +2574,7 @@ for (showclip = 0; showclip < 4; showclip++)
 				if (clips & (1 << i))
 				{
 					struct rectangle rect;
-					pen_t white = get_white_pen();
+					pen_t white = Machine->uifont->colortable[1];
 					if (!flip)
 					{
 						rect.min_x = system32_videoram[0x1ff60/2 + i * 4] & 0x1ff;
