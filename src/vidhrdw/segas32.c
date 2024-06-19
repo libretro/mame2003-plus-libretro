@@ -292,7 +292,7 @@ static int common_start(int multi32)
 	/* remember whether or not we are multi32 */
 	is_multi32 = multi32;
 
-	/* initialize videoram */
+	/* allocate videoram */
 	system32_videoram = auto_malloc(0x20000);
 
 	/* allocate a copy of spriteram in 32-bit format */
@@ -327,6 +327,8 @@ static int common_start(int multi32)
 	solid_ffff = auto_malloc(sizeof(solid_ffff[0]) * 512);
 	memset(solid_ffff, 0xff, sizeof(solid_ffff[0]) * 512);
 
+	/* initialize videoram */
+	system32_videoram[0x1ff00/2] = 0x8000;
 	return 0;
 }
 
