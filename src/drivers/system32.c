@@ -368,14 +368,6 @@ static data16_t *sys32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
 
-/* Video Hardware */
-int system32_temp_kludge;
-
-int system32_mixerShift;
-int system32_screen_mode;
-int system32_screen_old_mode;
-int system32_allow_high_resolution;
-
 WRITE16_HANDLER ( sys32_ramtile_w );
 
 int system32_use_default_eeprom;
@@ -1040,11 +1032,6 @@ static MACHINE_INIT( segas32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
 	irq_init();
-
-	/* force it to select lo-resolution on reset */
-	system32_allow_high_resolution = 0;
-	system32_screen_mode = 0;
-	system32_screen_old_mode = 1;
 }
 
 
@@ -3088,9 +3075,6 @@ static WRITE16_HANDLER( trap_w )
 static DRIVER_INIT ( s32 )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
-
 	install_mem_write16_handler(0, 0x20f4e0, 0x20f4e1, trap_w);
 }
 
@@ -3103,8 +3087,6 @@ static DRIVER_INIT ( driving )
 static DRIVER_INIT ( alien3 )
 {
 	system32_use_default_eeprom = EEPROM_ALIEN3;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
 
 	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
 	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
@@ -3120,8 +3102,6 @@ static DRIVER_INIT ( alien3 )
 static DRIVER_INIT ( brival )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 5;
 
 	install_mem_read16_handler (0, 0x20ba00, 0x20ba07, brival_protection_r);
 	install_mem_write16_handler(0, 0xa000000, 0xa00fff, brival_protboard_w);
@@ -3130,8 +3110,6 @@ static DRIVER_INIT ( brival )
 static DRIVER_INIT ( ga2 )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 3;
 
 	/* Protection - the game expects a string from a RAM area shared with the protection device */
 	/* still problems with enemies in level2, protection related? */
@@ -3142,7 +3120,6 @@ static DRIVER_INIT ( ga2 )
 static DRIVER_INIT ( spidey )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 3;
 }
 
 
@@ -3185,7 +3162,6 @@ void f1lap_fd1149_vblank(void)
 static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 6;
 	init_driving();
 	
 	dual_pcb_comms = auto_malloc(0x1000);
@@ -3198,8 +3174,6 @@ static DRIVER_INIT ( f1sl )
 static DRIVER_INIT ( arf )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
 
 	install_mem_read16_handler (0, 0xa00000, 0xa000ff, arabfgt_protboard_r);
 	install_mem_read16_handler (0, 0xa00100, 0xa0011f, arf_wakeup_protection_r);
@@ -3209,14 +3183,11 @@ static DRIVER_INIT ( arf )
 static DRIVER_INIT ( holo )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 4;
-	system32_temp_kludge = 1;	/* holoseum requires the tx tilemap to be flipped*/
 }
 
 static DRIVER_INIT ( sonic )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 5;
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
@@ -3227,7 +3198,6 @@ static DRIVER_INIT ( sonic )
 static DRIVER_INIT ( sonicp )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 5;
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
@@ -3236,24 +3206,18 @@ static DRIVER_INIT ( sonicp )
 static DRIVER_INIT ( radm )
 {
 	system32_use_default_eeprom = EEPROM_RADM;
-	system32_mixerShift = 5;
-
 	init_driving();
 }
 
 static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
-	system32_mixerShift = 5;
-
 	init_driving();
 }
 
 static DRIVER_INIT ( f1en )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_mixerShift = 5;
-
 	init_driving();
 }
 
@@ -3263,8 +3227,6 @@ static DRIVER_INIT ( jpark )
 	data16_t *pROM = (data16_t *)memory_region(REGION_CPU1);
 	pROM[0xC15A8/2] = 0xCD70;
 	pROM[0xC15AA/2] = 0xD8CD;
-
-	system32_mixerShift = 6;
 
 	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
 	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
@@ -3342,8 +3304,7 @@ static READ16_HANDLER( arescue_comms_r )
 static DRIVER_INIT( arescue )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
+
 	arescue_comms = auto_malloc(0x2000);
 	
 	install_mem_read16_handler(0, 0xc00050, 0xc00057, system32_io_analog_r);
@@ -3359,7 +3320,6 @@ static DRIVER_INIT( arescue )
 
 	install_mem_read16_handler(0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
 	install_mem_read16_handler(0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
-
 }
 
 
@@ -3432,9 +3392,7 @@ READ16_HANDLER( darkedge_protection_r )
 static DRIVER_INIT( darkedge )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 5;
-	
+
 	/* install protection handlers */
 	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
@@ -3444,7 +3402,6 @@ static DRIVER_INIT( darkedge )
 WRITE16_HANDLER( dbzvrvs_protection_w )
 {
 	program_write_word( 0x2080c8, program_read_word( 0x200044 ) );
-
 }
 
 
@@ -3456,16 +3413,12 @@ READ16_HANDLER( dbzvrvs_protection_r )
 static DRIVER_INIT( jleague )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
 	install_mem_write16_handler(0, 0x20F700, 0x20F705, jleague_protection_w);
 }
 
 static DRIVER_INIT( dbzvrvs )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	system32_temp_kludge = 0;
-	system32_mixerShift = 4;
 
 	/* install protection handlers */
 	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
