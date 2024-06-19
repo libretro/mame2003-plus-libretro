@@ -52,7 +52,7 @@ static int irq_callback(int irqline)
 	return 0;
 }
 
-static WRITE16_HANDLER(irq_ack_w)
+static WRITE32_HANDLER(irq_ack_w)
 {
 	if(ACCESSING_MSB) {
 		irq_status &= data >> 8;
