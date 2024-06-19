@@ -379,7 +379,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
 	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram }, /* Sprites*/
-	{ 0x500000, 0x50000f, mulit32_sprite_control_w },
+	{ 0x500000, 0x50000f, multi32_sprite_control_w },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, (data32_t **)&system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
