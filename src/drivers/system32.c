@@ -3414,7 +3414,7 @@ static DRIVER_INIT( dbzvrvs )
 }
 
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
-GAME( 1992, holo,     0,        system32, holo,     s32,      ROT0, "Sega", "Holosseum" )
+GAME( 1992, holo,     0,        system32, holo,     s32,      ORIENTATION_FLIP_Y, "Sega", "Holosseum" )
 
 /* these have a range of issues, mainly with the backgrounds */
 GAMEX(1992, arescue,  0,        system32, arescue,  arescue,  ROT0, "Sega", "Air Rescue", GAME_IMPERFECT_GRAPHICS )
