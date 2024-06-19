@@ -420,10 +420,14 @@ static MACHINE_INIT( segas32 )
 
 static INTERRUPT_GEN( system32_interrupt )
 {
-	if(cpu_getiloops())
+	if(cpu_getiloops()) {
 		irq_raise(1);
-	else
+		system32_set_vblank(1);
+	}
+	else {
 		irq_raise(0);
+		system32_set_vblank(0);
+  }
 }
 
 static void irq_handler(int irq)
