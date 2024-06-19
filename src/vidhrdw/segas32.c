@@ -12,10 +12,6 @@
           contradicts the theory that bit 9 is a sign bit. For now, the code
           assumes that the X center has 10 bits of resolution.
 
-        - In radr, on the title screen, they draw the main title with an
-          indirect palette entry of $0000 and expect it to be displayed. Problem
-          is, in the framebuffer $0000 is treated as transparent.
-
         - In svf (the field) and radr (on the field), they use tilemap-specific
           flip in conjunction with rowscroll AND rowselect. According to Charles,
           in this case, the rowselect lookups should be done in reverse order,
@@ -223,7 +219,7 @@ struct extents_list
 struct cache_entry
 {
 	struct cache_entry *	next;
-	struct tilemap *		tilemap;
+	struct tilemap *				tmap;
 	UINT8					page;
 	UINT8					bank;
 };
@@ -236,11 +232,11 @@ struct cache_entry
  *
  *************************************/
 
-data16_t *system32_videoram;
-data16_t *system32_spriteram;
-data16_t *system32_paletteram[2];
-data16_t system32_displayenable[2];
-data16_t system32_tilebank_external;
+UINT16 *system32_videoram;
+UINT16 *system32_spriteram;
+UINT16 *system32_paletteram[2];
+UINT16 system32_displayenable[2];
+UINT16 system32_tilebank_external;
 
 
 
@@ -257,7 +253,7 @@ static struct cache_entry *cache_head;
 
 /* mixer data */
 static struct layer_info layer_data[11];
-static data16_t mixer_control[2][0x40];
+static UINT16 mixer_control[2][0x40];
 static UINT16 *solid_0000;
 static UINT16 *solid_ffff;
 
@@ -265,7 +261,7 @@ static UINT16 *solid_ffff;
 static UINT8 sprite_render_count;
 static UINT8 sprite_control_latched[8];
 static UINT8 sprite_control[8];
-static data32_t *spriteram_32bit;
+static UINT32 *spriteram_32bit;
 
 
 
@@ -308,11 +304,11 @@ static int common_start(int multi32)
 	{
 		struct cache_entry *entry = auto_malloc(sizeof(struct cache_entry));
 
-		entry->tilemap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16,16, 32,16);
+		entry->tmap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16,16, 32,16);
 		entry->page = 0xff;
 		entry->bank = 0;
 		entry->next = cache_head;
-		tilemap_set_user_data(entry->tilemap, entry);
+		tilemap_set_user_data(entry->tmap, entry);
 
 		cache_head = entry;
 	}
@@ -394,7 +390,7 @@ void system32_set_vblank(int state)
  *
  *************************************/
 
-INLINE data16_t xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(data16_t value)
+static INLINE UINT16 xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(UINT16 value)
 {
 	int r = (value >> 0) & 0x1f;
 	int g = (value >> 5) & 0x1f;
@@ -405,7 +401,7 @@ INLINE data16_t xBBBBBGGGGGRRRRR_to_xBGRBBBBGGGGRRRR(data16_t value)
 }
 
 
-INLINE data16_t xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(data16_t value)
+static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
 {
 	int r = ((value >> 12) & 0x01) | ((value << 1) & 0x1e);
 	int g = ((value >> 13) & 0x01) | ((value >> 3) & 0x1e);
@@ -414,7 +410,7 @@ INLINE data16_t xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(data16_t value)
 }
 
 
-INLINE void update_color(int offset, data16_t data)
+static INLINE void update_color(int offset, UINT16 data)
 {
 	/* note that since we use this RAM directly, we don't technically need */
 	/* to call palette_set_color() at all; however, it does give us that */
@@ -425,7 +421,7 @@ INLINE void update_color(int offset, data16_t data)
 }
 
 
-INLINE data16_t common_paletteram_r(int which, offs_t offset)
+static INLINE UINT16 common_paletteram_r(int which, offs_t offset)
 {
 	int convert;
 
@@ -443,9 +439,9 @@ INLINE data16_t common_paletteram_r(int which, offs_t offset)
 }
 
 
-static void common_paletteram_w(int which, offs_t offset, data16_t data, data16_t mem_mask)
+static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 mem_mask)
 {
-	data16_t value;
+	UINT16 value;
 	int convert;
 
 	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
@@ -557,7 +553,7 @@ WRITE16_HANDLER( system32_videoram_w )
 		/* scan the cache for a matching pages */
 		for (entry = cache_head; entry != NULL; entry = entry->next)
 			if (entry->page == page)
-				tilemap_mark_tile_dirty(entry->tilemap, offset);
+				tilemap_mark_tile_dirty(entry->tmap, offset);
 	}
 }
 
@@ -701,7 +697,7 @@ WRITE32_HANDLER( multi32_spriteram_w )
 {
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((data32_t *)&system32_spriteram[offset*2]);
+	COMBINE_DATA((UINT32 *)&system32_spriteram[offset*2]);
 	spriteram_32bit[offset/2] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
@@ -732,7 +728,7 @@ WRITE32_HANDLER( multi32_mixer_0_w )
 {
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((data32_t *)&mixer_control[0][offset*2]);
+	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);
 }
 
 
@@ -740,7 +736,7 @@ WRITE32_HANDLER( multi32_mixer_1_w )
 {
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((data32_t *)&mixer_control[1][offset*2]);
+	COMBINE_DATA((UINT32 *)&mixer_control[1][offset*2]);
 }
 
 
@@ -769,7 +765,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 				entry->next = cache_head;
 				cache_head = entry;
 			}
-			return entry->tilemap;
+			return entry->tmap;
 		}
 
 		/* stop on the last entry */
@@ -782,14 +778,14 @@ static struct tilemap *find_cache_entry(int page, int bank)
 	/* okay, we didn't find one; take over this last entry */
 	entry->page = page;
 	entry->bank = bank;
-	tilemap_mark_all_tiles_dirty(entry->tilemap);
+	tilemap_mark_all_tiles_dirty(entry->tmap);
 
 	/* move it to the head */
 	prev->next = entry->next;
 	entry->next = cache_head;
 	cache_head = entry;
 
-	return entry->tilemap;
+	return entry->tmap;
 }
 
 
@@ -803,7 +799,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
-	data16_t data = system32_videoram[(entry->page & 0x7f) * 0x200 + tile_index];
+	UINT16 data = system32_videoram[(entry->page & 0x7f) * 0x200 + tile_index];
 	SET_TILE_INFO(0, (entry->bank << 13) + (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
 }
 
@@ -922,7 +918,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
  *
  *************************************/
 
-INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
+static INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
 {
 	int tilebank, page;
 
@@ -1561,11 +1557,11 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 static void sprite_erase_buffer(void)
 {
 	/* erase the visible sprite buffer and clear the checksums */
-	fillbitmap(layer_data[MIXER_LAYER_SPRITES].bitmap, 0, NULL);
+	fillbitmap(layer_data[MIXER_LAYER_SPRITES].bitmap, 0xffff, NULL);
 
 	/* for multi32, erase the other buffer as well */
 	if (is_multi32)
-		fillbitmap(layer_data[MIXER_LAYER_MULTISPR].bitmap, 0, NULL);
+		fillbitmap(layer_data[MIXER_LAYER_MULTISPR].bitmap, 0xffff, NULL);
 }
 
 
@@ -1633,28 +1629,70 @@ static void sprite_swap_buffers(void)
 	/* only draw if onscreen, not 0 or 15 */								\
 	if (x >= clipin->min_x && x <= clipin->max_x && 						\
 		(!do_clipout || x < clipout->min_x || x > clipout->max_x) &&		\
-		pix != 0 && pix != trans) 											\
+		pix != trans) 														\
 	{																		\
-		if (!shadow)														\
-			dest[x] = indtable[pix];										\
+		if (!indirect)														\
+		{																	\
+			if (pix != 0)													\
+			{																\
+				if (!shadow)												\
+					dest[x] = color | pix;									\
+				else														\
+					dest[x] &= 0x7fff;										\
+			}																\
+		}																	\
 		else																\
-			dest[x] |= 0x8000;												\
+		{																	\
+			int indpix = indtable[pix];										\
+			if ((indpix & transmask) != transmask)							\
+			{																\
+				if (!shadow)												\
+					dest[x] = indpix;										\
+				else														\
+					dest[x] &= 0x7fff;										\
+			}																\
+		}																	\
 	}
 
 #define sprite_draw_pixel_256(trans)										\
 	/* only draw if onscreen, not 0 or 15 */								\
 	if (x >= clipin->min_x && x <= clipin->max_x && 						\
 		(!do_clipout || x < clipout->min_x || x > clipout->max_x) &&		\
-		pix != 0 && pix != trans) 											\
+		pix != trans) 														\
 	{																		\
-		if (!shadow)														\
-			dest[x] = indtable[pix >> 4] | (pix & 0x0f);					\
+		if (!indirect)														\
+		{																	\
+			if (pix != 0)													\
+			{																\
+				if (!shadow)												\
+					dest[x] = color | pix;									\
+				else														\
+					dest[x] &= 0x7fff;										\
+			}																\
+		}																	\
 		else																\
-			dest[x] |= 0x8000;												\
+		{																	\
+			int indpix = (indtable[pix >> 4]) | (pix & 0x0f);				\
+			if ((indpix & transmask) != transmask)							\
+			{																\
+				if (!shadow)												\
+					dest[x] = indpix;										\
+				else														\
+					dest[x] &= 0x7fff;										\
+			}																\
+		}																	\
 	}
 
 static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rectangle *clipin, const struct rectangle *clipout)
 {
+	static const int transparency_masks[4][4] =
+	{
+		{ 0x7fff, 0x3fff, 0x1fff, 0x0fff },
+		{ 0x3fff, 0x1fff, 0x0fff, 0x07ff },
+		{ 0x3fff, 0x1fff, 0x0fff, 0x07ff },
+		{ 0x1fff, 0x0fff, 0x07ff, 0x03ff }
+	};
+
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
 	UINT8 numbanks = memory_region_length(REGION_GFX2) / 0x400000;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
@@ -1681,9 +1719,10 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	int ypos     = (INT16)(data[4] << 4) >> 4;
 	int xpos     = (INT16)(data[5] << 4) >> 4;
 	UINT32 addr  = data[6] | ((data[2] & 0xf000) << 4);
+	int color    = 0x8000 | (data[7] & (bpp8 ? 0x7f00 : 0x7ff0));
 	int hzoom, vzoom;
 	int xdelta = 1, ydelta = 1;
-	int x, y, xtarget, ytarget, yacc = 0, pix;
+	int x, y, xtarget, ytarget, yacc = 0, pix, transmask;
 	const UINT32 *spritedata;
 	UINT32 addrmask, curaddr;
 	UINT16 indtable[16];
@@ -1692,25 +1731,17 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	if (srcw == 0 || srch == 0 || dstw == 0 || dsth == 0)
 		goto bail;
 
-	/* create the local palette for the indirect case */
-	if (shadow)
-	{
-		for (x = 0; x < 16; x++)
-			indtable[x] = 0x7ffe;
-	}
+	/* determine the transparency mask for pixels */
+	transmask = transparency_masks[sprite_control_latched[0x08/2] & 3][sprite_control_latched[0x0a/2] & 3];
+	if (bpp8)
+		transmask &= 0xfff0;
 
-	else if (indirect)
+	/* create the local palette for the indirect case */
+	if (indirect)
 	{
 		UINT16 *src = indlocal ? &data[8] : &system32_spriteram[8 * (data[7] & 0x1fff)];
 		for (x = 0; x < 16; x++)
-			indtable[x] = src[x] & (bpp8 ? 0x7ff0 : 0x7fff);
-	}
-
-	/* create the local palette for the direct case */
-	else
-	{
-		for (x = 0; x < 16; x++)
-			indtable[x] = bpp8 ? ((data[7] & 0x7f00) | (x << 4)) : ((data[7] & 0x7ff0) | x);
+			indtable[x] = (src[x] & (bpp8 ? 0xfff0 : 0xffff)) | ((sprite_control_latched[0x0a/2] & 1) ? 0x8000 : 0x0000);
 	}
 
 	/* clamp to within the memory region size */
@@ -2005,7 +2036,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		UINT8		mixshift;			/* shift from control reg */
 		UINT8		coloroffs;			/* color offset index */
 	} layerorder[16][8], layersort[8];
-	struct layer_info temp_sprite_save;
+	struct layer_info temp_sprite_save = { 0 };
 	UINT8 sprgroup_shift, sprgroup_mask, sprgroup_or;
 	int numlayers, laynum, groupnum;
 	int rgboffs[3][3];
@@ -2211,11 +2242,11 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 				else
 				{
 					firstpix = sprpix;
-					shadow = firstpix & sprshadowmask;
-					if ((firstpix & 0x7fff) != 0)
+					shadow = ~firstpix & sprshadowmask;
+					if ((firstpix & 0x7fff) != 0x7fff)
 					{
 						firstpix &= sprpixmask;
-						if ((firstpix & 0xfffe) != sprshadow)
+						if ((firstpix & 0x7ffe) != sprshadow)
 							break;
 						shadow = 1;
 					}
@@ -2254,11 +2285,11 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					else
 					{
 						secondpix = sprpix;
-						shadow = secondpix & sprshadowmask;
-						if ((secondpix & 0x7fff) != 0)
+						shadow = ~secondpix & sprshadowmask;
+						if ((secondpix & 0x7fff) != 0x7fff)
 						{
 							secondpix &= sprpixmask;
-							if ((secondpix & 0xfffe) != sprshadow)
+							if ((secondpix & 0x7ffe) != sprshadow)
 								break;
 							shadow = 1;
 						}
@@ -2457,6 +2488,46 @@ VIDEO_UPDATE( system32 )
 			fprintf(f, "\n");
 		}
 		fclose(f);
+
+		f = fopen("nbg0.txt", "w");
+		for (y = Machine->visible_area.min_y; y <= Machine->visible_area.max_y; y++)
+		{
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG0, y);
+			for (x = Machine->visible_area.min_x; x <= Machine->visible_area.max_x; x++)
+				fprintf(f, "%04X ", *src++);
+			fprintf(f, "\n");
+		}
+		fclose(f);
+
+		f = fopen("nbg1.txt", "w");
+		for (y = Machine->visible_area.min_y; y <= Machine->visible_area.max_y; y++)
+		{
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG1, y);
+			for (x = Machine->visible_area.min_x; x <= Machine->visible_area.max_x; x++)
+				fprintf(f, "%04X ", *src++);
+			fprintf(f, "\n");
+		}
+		fclose(f);
+
+		f = fopen("nbg2.txt", "w");
+		for (y = Machine->visible_area.min_y; y <= Machine->visible_area.max_y; y++)
+		{
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG2, y);
+			for (x = Machine->visible_area.min_x; x <= Machine->visible_area.max_x; x++)
+				fprintf(f, "%04X ", *src++);
+			fprintf(f, "\n");
+		}
+		fclose(f);
+
+		f = fopen("nbg3.txt", "w");
+		for (y = Machine->visible_area.min_y; y <= Machine->visible_area.max_y; y++)
+		{
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG3, y);
+			for (x = Machine->visible_area.min_x; x <= Machine->visible_area.max_x; x++)
+				fprintf(f, "%04X ", *src++);
+			fprintf(f, "\n");
+		}
+		fclose(f);
 	}
 }
 #endif
@@ -2503,6 +2574,7 @@ for (showclip = 0; showclip < 4; showclip++)
 				if (clips & (1 << i))
 				{
 					struct rectangle rect;
+					pen_t white = get_white_pen();
 					if (!flip)
 					{
 						rect.min_x = system32_videoram[0x1ff60/2 + i * 4] & 0x1ff;
@@ -2523,13 +2595,13 @@ for (showclip = 0; showclip < 4; showclip++)
 					{
 						for (y = rect.min_y; y <= rect.max_y; y++)
 						{
-							bitmap->plot(bitmap, rect.min_x, y, Machine->uifont->colortable[1]);
-							bitmap->plot(bitmap, rect.max_x, y, Machine->uifont->colortable[1]);
+							bitmap->plot(bitmap, rect.min_x, y, white);
+							bitmap->plot(bitmap, rect.max_x, y, white);
 						}
 						for (x = rect.min_x; x <= rect.max_x; x++)
 						{
-							bitmap->plot(bitmap, x, rect.min_y, Machine->uifont->colortable[1]);
-							bitmap->plot(bitmap, x, rect.max_y, Machine->uifont->colortable[1]);
+							bitmap->plot(bitmap, x, rect.min_y, white);
+							bitmap->plot(bitmap, x, rect.max_y, white);
 						}
 					}
 				}
