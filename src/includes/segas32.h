@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 
-/*----------- defined in video/segas32.c -----------*/
+/*----------- defined in vidhrdw/segas32.c -----------*/
 
 extern data16_t *system32_spriteram;
 extern data16_t *system32_paletteram[2];
@@ -16,6 +16,9 @@ extern void system32_set_vblank(int state);
 
 READ16_HANDLER( system32_spriteram_r );
 WRITE16_HANDLER( system32_spriteram_w );
+READ32_HANDLER( multi32_spriteram_r );
+WRITE32_HANDLER( multi32_spriteram_w );
+
 
 READ16_HANDLER( system32_videoram_r );
 WRITE16_HANDLER( system32_videoram_w );
@@ -29,10 +32,7 @@ WRITE32_HANDLER( multi32_paletteram_0_w );
 READ32_HANDLER( multi32_paletteram_1_r );
 WRITE32_HANDLER( multi32_paletteram_1_w );
 
-READ16_HANDLER( system32_mixer_r );
 WRITE16_HANDLER( system32_mixer_w );
-READ16_HANDLER( multi32_mixer_0_r );
-READ16_HANDLER( multi32_mixer_1_r );
 WRITE16_HANDLER( multi32_mixer_0_w );
 WRITE16_HANDLER( multi32_mixer_1_w );
 
