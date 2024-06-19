@@ -7,6 +7,7 @@
 
 /*----------- defined in vidhrdw/segas32.c -----------*/
 
+extern data16_t *system32_videoram;
 extern data16_t *system32_spriteram;
 extern data16_t *system32_paletteram[2];
 extern data16_t system32_displayenable[2];
