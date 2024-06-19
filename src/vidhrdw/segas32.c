@@ -717,6 +717,11 @@ WRITE32_HANDLER( multi32_spriteram_w )
  *
  *************************************/
 
+READ16_HANDLER( system32_mixer_r )
+{
+	return mixer_control[0][offset];
+}
+
 WRITE16_HANDLER( system32_mixer_w )
 {
 	COMBINE_DATA(&mixer_control[0][offset]);
