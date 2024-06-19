@@ -27,7 +27,7 @@
 #define MAX_COLOURS (16384)
 
 static unsigned char irq_status;
-static data16_t *system32_shared_ram;
+static data8_t *z80_shared_ram;
 
 extern int system32_use_default_eeprom;
 
@@ -317,6 +317,25 @@ static READ32_HANDLER( random_number_32_r )
 }
 
 
+static READ32_HANDLER( shared_ram_32_r )
+{
+	return z80_shared_ram[offset*4+0] | (z80_shared_ram[offset*4+1] << 8) |
+	      (z80_shared_ram[offset*4+2] << 16) | (z80_shared_ram[offset*4+3] << 24);
+}
+
+static WRITE32_HANDLER( shared_ram_32_w )
+{
+	if (!(mem_mask & 0x000000ff))
+		z80_shared_ram[offset*4+0] = data;
+	if (!(mem_mask & 0x0000ff00))
+		z80_shared_ram[offset*4+1] = data >> 8;
+	if (!(mem_mask & 0x00ff0000))
+		z80_shared_ram[offset*4+2] = data >> 16;
+	if (!(mem_mask & 0xff000000))
+		z80_shared_ram[offset*4+3] = data >> 24;
+}
+
+
 static MEMORY_READ32_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x200000, 0x23ffff, MRA32_RAM }, /* work RAM*/
@@ -330,7 +349,7 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
 /* fix me */	{ 0x690000, 0x69004f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
 
-	{ 0x700000, 0x701fff, MRA32_RAM },	/* shared RAM*/
+	{ 0x700000, 0x701fff, shared_ram_32_r },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA32_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MRA32_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MRA32_RAM },	/* Unknown*/
@@ -360,7 +379,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
 	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
-/* fix me */	{ 0x700000, 0x701fff, MWA32_RAM }, /* Shared ram with the z80*/
+	{ 0x700000, 0x701fff, shared_ram_32_w }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA32_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MWA32_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MWA32_RAM },	/* Unknown*/
@@ -444,31 +463,17 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
-static READ_HANDLER( sys32_shared_snd_r )
-{
-	data8_t *RAM = (data8_t *)system32_shared_ram;
-
-	return RAM[offset];
-}
-
-static WRITE_HANDLER( sys32_shared_snd_w )
-{
-	data8_t *RAM = (data8_t *)system32_shared_ram;
-
-	RAM[offset] = data;
-}
-
 static MEMORY_READ_START( multi32_sound_readmem )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xc000, 0xdfff, MultiPCM_reg_0_r },
-	{ 0xe000, 0xffff, sys32_shared_snd_r },
+	{ 0xe000, 0xffff, MRA_RAM, &z80_shared_ram },
 MEMORY_END
 
 static MEMORY_WRITE_START( multi32_sound_writemem )
 	{ 0x0000, 0x9fff, MWA_ROM },
 	{ 0xc000, 0xdfff, MultiPCM_reg_0_w },
-	{ 0xe000, 0xffff, sys32_shared_snd_w },
+	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
 
 static WRITE_HANDLER( sys32_soundbank_w )
