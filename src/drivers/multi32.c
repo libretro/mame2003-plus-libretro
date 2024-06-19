@@ -52,7 +52,7 @@ static int irq_callback(int irqline)
 	return 0;
 }
 
-static WRITE32_HANDLER(irq_ack_w)
+static WRITE32_HANDLER(irq_ack_32_w)
 {
 	if(ACCESSING_MSB) {
 		irq_status &= data >> 8;
@@ -390,7 +390,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 
 	{ 0xd00000, 0xd00005, MWA32_RAM }, /* Unknown*/
-	{ 0xd00006, 0xd00007, irq_ack_w },
+	{ 0xd00006, 0xd00007, irq_ack_32_w },
 	{ 0xd00008, 0xd0000b, MWA32_RAM }, /* Unknown*/
 	{ 0xd80000, 0xdfffff, random_number_32_w },
 	{ 0xe00000, 0xe0000f, MWA32_RAM },   /* Unknown*/
