@@ -366,6 +366,7 @@ static int s32_blo, s32_bhi;		/* bank high and low values*/
 static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
 static data16_t *sys32_protram;
 static int tocab, fromcab;
+static data16_t *system32_workram;
 
 int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
@@ -878,7 +879,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
-	{ 0x200000, 0x23ffff, MWA16_RAM }, /* work RAM */
+	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram }, /* work RAM */
 	{ 0x300000, 0x31ffff, system32_videoram_w, &system32_videoram },
 	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000f, system32_sprite_control_w },	/* Sprite control*/
