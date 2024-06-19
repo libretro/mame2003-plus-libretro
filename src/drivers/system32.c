@@ -361,7 +361,7 @@ Stephh's notes (based on some tests) :
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
-static data16_t *system32_shared_ram;
+static data8_t *z80_shared_ram;
 static int s32_blo, s32_bhi;		/* bank high and low values*/
 static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
 static data16_t *sys32_protram;
@@ -836,6 +836,20 @@ static READ16_HANDLER( random_number_16_r )
        return rand();
 }
 
+static READ16_HANDLER( shared_ram_16_r )
+{
+	return z80_shared_ram[offset*2+0] | (z80_shared_ram[offset*2+1] << 8);
+}
+
+
+static WRITE16_HANDLER( shared_ram_16_w )
+{
+	if (ACCESSING_LSB)
+		z80_shared_ram[offset*2+0] = data;
+	if (ACCESSING_MSB)
+		z80_shared_ram[offset*2+1] = data >> 8;
+}
+
 static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
 	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
@@ -847,7 +861,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
 	{ 0x610000, 0x6100ff, system32_mixer_r }, /* mixer chip registers*/
 
-	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
+	{ 0x700000, 0x701fff, shared_ram_16_r },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
@@ -873,7 +887,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x6100ff, system32_mixer_w }, /* mixer chip registers*/
 
-	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
+	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
 	{ 0x80007e, 0x80007f, MWA16_RAM },	/* Unknown f1lap*/
 	{ 0x801000, 0x801003, MWA16_RAM },	/* Unknown*/
@@ -901,21 +915,6 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
-/* the Z80's work RAM is fully shared with the V60 or V70 and battery backed up.*/
-static READ_HANDLER( sys32_shared_snd_r )
-{
-	data8_t *RAM = (data8_t *)system32_shared_ram;
-
-	return RAM[offset];
-}
-
-static WRITE_HANDLER( sys32_shared_snd_w )
-{
-	data8_t *RAM = (data8_t *)system32_shared_ram;
-
-	RAM[offset] = data;
-}
-
 /* some games require that port f1 be a magic echo-back latch.*/
 /* thankfully, it's not required to do any math or anything on the values.*/
 static READ_HANDLER( sys32_sound_prot_r )
@@ -932,14 +931,14 @@ static MEMORY_READ_START( sound_readmem_32 )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xd000, 0xdfff, RF5C68_r },
-	{ 0xe000, 0xffff, sys32_shared_snd_r },
+	{ 0xe000, 0xffff, MRA_RAM, &z80_shared_ram },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem_32 )
 	{ 0x0000, 0x9fff, MWA_ROM },
 	{ 0xc000, 0xc008, RF5C68_reg_w },
 	{ 0xd000, 0xdfff, RF5C68_w },
-	{ 0xe000, 0xffff, sys32_shared_snd_w },
+	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
 
 static void s32_recomp_bank(void)
