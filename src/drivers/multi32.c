@@ -29,8 +29,6 @@
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
 
-static data16_t *sys32_protram;
-
 extern int system32_use_default_eeprom;
 
 static data16_t controlB[256];
@@ -382,7 +380,7 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x801000, 0x801003, MWA32_RAM },	/* Unknown*/
 	{ 0x81002a, 0x81002b, MWA32_RAM },	/* Unknown dbzvrvs*/
 	{ 0x810100, 0x810101, MWA32_RAM },	/* Unknown dbzvrvs*/
-	{ 0xa00000, 0xa00fff, MWA32_RAM, &sys32_protram },	/* protection RAM*/
+	{ 0xa00000, 0xa00fff, MWA32_RAM },	/* protection RAM*/
 
 	{ 0xc00000, 0xc0003f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
