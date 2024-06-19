@@ -7,11 +7,11 @@
 
 /*----------- defined in vidhrdw/segas32.c -----------*/
 
-extern data16_t *system32_videoram;
-extern data16_t *system32_spriteram;
-extern data16_t *system32_paletteram[2];
-extern data16_t system32_displayenable[2];
-extern data16_t system32_tilebank_external;
+extern UINT16 *system32_videoram;
+extern UINT16 *system32_spriteram;
+extern UINT16 *system32_paletteram[2];
+extern UINT16 system32_displayenable[2];
+extern UINT16 system32_tilebank_external;
 
 extern void system32_set_vblank(int state);
 
