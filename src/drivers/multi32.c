@@ -355,10 +355,10 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0x801000, 0x801003, MRA32_RAM },	/* Unknown*/
 	{ 0xa00000, 0xa00001, MRA32_RAM }, /* Unknown dbzvrvs*/
 
-/* fix me */	{ 0xc00000, 0xc0003f, multi32_io_r },
-/* fix me */	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
-/* fix me */	{ 0xc00060, 0xc0007f, multi32_io_2_r },
-/* fix me */	{ 0xc80000, 0xc8007f, multi32_io_B_r },
+/* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_r*/MRA32_RAM },
+/* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_r*/MRA32_RAM },
+/* fix me */	{ 0xc00060, 0xc0007f, /*multi32_io_2_r*/MRA32_RAM },
+/* fix me */	{ 0xc80000, 0xc8007f, /*multi32_io_B_r*/MRA32_RAM },
 
 	{ 0xd80000, 0xdfffff, random_number_32_r },
 	{ 0xe00000, 0xe0000f, MRA32_RAM },   /* Unknown*/
@@ -387,10 +387,10 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x810100, 0x810101, MWA32_RAM },	/* Unknown dbzvrvs*/
 	{ 0xa00000, 0xa00fff, MWA32_RAM },	/* protection RAM*/
 
-/* fix me */	{ 0xc00000, 0xc0003f, multi32_io_w },
-/* fix me */	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
-/* fix me */	{ 0xc00060, 0xc0007f, multi32_io_2_w },
-/* fix me */	{ 0xc80000, 0xc8007f, multi32_io_B_w },
+/* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_w*/MWA32_RAM },
+/* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_w*/MWA32_RAM },
+/* fix me */	{ 0xc00060, 0xc0007f, /*multi32_io_2_w*/MWA32_RAM },
+/* fix me */	{ 0xc80000, 0xc8007f, /*multi32_io_B_w*/MWA32_RAM },
 
 	{ 0xd00000, 0xd00005, MWA32_RAM }, /* Unknown*/
 /* fix me */	{ 0xd00006, 0xd00007, irq_ack_32_w },
