@@ -363,7 +363,8 @@ enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static int s32_blo, s32_bhi;		/* bank high and low values*/
-static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
+static UINT8 sound_dummy_value;
+
 static data16_t *segas32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
@@ -891,16 +892,21 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
-/* some games require that port f1 be a magic echo-back latch.*/
-/* thankfully, it's not required to do any math or anything on the values.*/
-static READ_HANDLER( sys32_sound_prot_r )
+/*************************************
+ *
+ *  Sound hack (not protection)
+ *
+ *************************************/
+
+static READ_HANDLER( sound_dummy_r )
 {
-	return s32_f1_prot;
+	return sound_dummy_value;
 }
 
-static WRITE_HANDLER( sys32_sound_prot_w )
+
+static WRITE_HANDLER( sound_dummy_w )
 {
-	s32_f1_prot = data;
+	sound_dummy_value = data;
 }
 
 static MEMORY_READ_START( sound_readmem_32 )
@@ -959,7 +965,7 @@ static WRITE_HANDLER( sys32_soundbank_hi_w )
 static PORT_READ_START( sound_readport_32 )
 	{ 0x80, 0x80, YM2612_status_port_0_A_r },
 	{ 0x90, 0x90, YM2612_status_port_1_A_r },
-	{ 0xf1, 0xf1, sys32_sound_prot_r },
+	{ 0xf1, 0xf1, sound_dummy_r },
 PORT_END
 
 static PORT_WRITE_START( sound_writeport_32 )
@@ -974,7 +980,7 @@ static PORT_WRITE_START( sound_writeport_32 )
 	{ 0xa0, 0xa0, sys32_soundbank_lo_w },
 	{ 0xb0, 0xb0, sys32_soundbank_hi_w },
 	{ 0xc1, 0xc1, IOWP_NOP },
-	{ 0xf1, 0xf1, sys32_sound_prot_w },
+	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
 
 static MACHINE_INIT( segas32 )
