@@ -35,8 +35,9 @@ WRITE32_HANDLER( multi32_paletteram_1_w );
 
 READ16_HANDLER( system32_mixer_r );
 WRITE16_HANDLER( system32_mixer_w );
-/* should have multi32 mixer reads too */
+READ32_HANDLER( multi32_mixer_0_r );
 WRITE32_HANDLER( multi32_mixer_0_w );
+READ32_HANDLER( multi32_mixer_1_r );
 WRITE32_HANDLER( multi32_mixer_1_w );
 
 READ16_HANDLER( system32_sprite_control_r );
