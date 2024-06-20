@@ -339,14 +339,14 @@ static WRITE32_HANDLER( shared_ram_32_w )
 static MEMORY_READ32_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x200000, 0x21ffff, MRA32_RAM }, /* work RAM*/
-	{ 0x300000, 0x31ffff, multi32_videoram_r }, /* Tile Ram*/
-	{ 0x400000, 0x41ffff, multi32_spriteram_r }, /* sprite RAM*/
+	{ 0x300000, 0x31ffff, multi32_videoram_r },
+	{ 0x400000, 0x41ffff, multi32_spriteram_r },
 	{ 0x500000, 0x50000f, multi32_sprite_control_r },
-	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
-/* fix me */	{ 0x610000, 0x61007f, /*multi32_mixer_0_r*/MRA32_RAM }, /* mixer chip registers*/
-	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
-/* fix me */	{ 0x690000, 0x69007f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
-	{ 0x700000, 0x701fff, shared_ram_32_r },	/* shared RAM*/
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_r },
+/* fix me */	{ 0x610000, 0x61007f, /*multi32_mixer_0_r*/MRA32_RAM },
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
+/* fix me */	{ 0x690000, 0x69007f, /*multi32_mixer_1_r*/MRA32_RAM },
+	{ 0x700000, 0x701fff, shared_ram_32_r },	/* Shared ram with the z80*/
 /* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_r*/MRA32_RAM },
 /* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_r*/MRA32_RAM },
 /* fix me */	{ 0xc00060, 0xc0007f, /*multi32_io_2_r*/MRA32_RAM },
@@ -359,12 +359,12 @@ static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
 	{ 0x200000, 0x21ffff, MWA32_RAM }, /* work RAM */
 	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
-	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram }, /* Sprites*/
+	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram },
 	{ 0x500000, 0x50000f, multi32_sprite_control_w },
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, (data32_t **)&system32_paletteram[0] },
-	{ 0x610000, 0x61007f, multi32_mixer_0_w }, /* mixer chip registers*/
+	{ 0x610000, 0x61007f, multi32_mixer_0_w },
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
-	{ 0x690000, 0x69007f, multi32_mixer_1_w }, /* monitor B mixer registers*/
+	{ 0x690000, 0x69007f, multi32_mixer_1_w },
 	{ 0x700000, 0x701fff, shared_ram_32_w }, /* Shared ram with the z80*/
 /* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_w*/MWA32_RAM },
 /* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_w*/MWA32_RAM },
