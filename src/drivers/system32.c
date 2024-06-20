@@ -357,7 +357,7 @@ Stephh's notes (based on some tests) :
 
 #define MASTER_CLOCK  32215900
 
-#define MAX_COLOURS (16384)
+
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
