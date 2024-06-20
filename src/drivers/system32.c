@@ -860,11 +860,9 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
 	{ 0x610000, 0x61007f, system32_mixer_r }, /* mixer chip registers*/
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* shared RAM*/
-
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
-
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
@@ -875,15 +873,12 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x300000, 0x31ffff, system32_videoram_w, &system32_videoram },
 	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000f, system32_sprite_control_w },	/* Sprite control*/
-
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w }, /* mixer chip registers*/
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-
 	{ 0xc00000, 0xc0003f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
-
 	{ 0xd00006, 0xd00007, irq_ack_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w }, /* Unknown titlef / harddunk*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
