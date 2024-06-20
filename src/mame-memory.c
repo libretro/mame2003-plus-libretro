@@ -1181,7 +1181,7 @@ static int init_memport(int cpunum, struct memport_data *data, int abits, int db
 
 static int verify_memory(void)
 {
-	double cpunum;
+	int cpunum;
 
 	/* zap the bank data */
 	memset(&bankdata, 0, sizeof(bankdata));
