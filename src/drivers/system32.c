@@ -364,7 +364,7 @@ static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static int s32_blo, s32_bhi;		/* bank high and low values*/
 static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
-static data16_t *sys32_protram;
+static data16_t *segas32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
 
@@ -617,7 +617,7 @@ static WRITE16_HANDLER(brival_protboard_w)
 	memcpy(ret, &ROM[protAddress[curProtType][0]], 16);
 	ret[16] = '\0';
 
-	memcpy(&sys32_protram[protAddress[curProtType][1]], ret, 16);
+	memcpy(&segas32_protram[protAddress[curProtType][1]], ret, 16);
 }
 
 /* protection ram is 8-bits wide and only occupies every other address*/
@@ -857,15 +857,9 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x400000, 0x41ffff, system32_spriteram_r }, /* sprite RAM*/
 /*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 	{ 0x500000, 0x50000f, system32_sprite_control_r },	/* Sprite control*/
-
 	{ 0x600000, 0x60ffff, system32_paletteram_r }, /* Palette */
 	{ 0x610000, 0x61007f, system32_mixer_r }, /* mixer chip registers*/
-
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* shared RAM*/
-	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
-	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
-	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
-	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
@@ -884,14 +878,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w }, /* mixer chip registers*/
-
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
-	{ 0x80007e, 0x80007f, MWA16_RAM },	/* Unknown f1lap*/
-	{ 0x801000, 0x801003, MWA16_RAM },	/* Unknown*/
-	{ 0x81002a, 0x81002b, MWA16_RAM },	/* Unknown dbzvrvs*/
-	{ 0x810100, 0x810101, MWA16_RAM },	/* Unknown dbzvrvs*/
-	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	/* protection RAM*/
 
 	{ 0xc00000, 0xc0003f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
@@ -3050,6 +3037,7 @@ static DRIVER_INIT ( brival )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
+	segas32_protram = auto_malloc (0x1000);
 	install_mem_read16_handler (0, 0x20ba00, 0x20ba07, brival_protection_r);
 	install_mem_write16_handler(0, 0xa000000, 0xa00fff, brival_protboard_w);
 }
