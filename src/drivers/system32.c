@@ -371,7 +371,6 @@ static data16_t *system32_workram;
 
 int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
-static void f1lap_fd1149_vblank(void);
 
 /* alien 3 with the gun calibrated, it doesn't prompt you if its not */
 unsigned char alien3_default_eeprom[128] = {
@@ -3079,7 +3078,6 @@ static READ16_HANDLER( dual_pcb_masterslave )
 }
 
 
-int val;
 void f1lap_fd1149_vblank(void)
 {
 	/* needed to start a game */
