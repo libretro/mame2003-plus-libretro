@@ -24,7 +24,6 @@
 #define MASTER_CLOCK		32215900
 #define MULTI32_CLOCK		40000000
 
-#define MAX_COLOURS (16384)
 
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
