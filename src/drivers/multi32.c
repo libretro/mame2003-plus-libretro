@@ -27,6 +27,7 @@
 
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
+static UINT8 sound_dummy_value;
 
 static data16_t controlB[256];
 static data16_t control[256];
@@ -434,6 +435,23 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
+/*************************************
+ *
+ *  Sound hack (not protection)
+ *
+ *************************************/
+
+static READ_HANDLER( sound_dummy_r )
+{
+	return sound_dummy_value;
+}
+
+
+static WRITE_HANDLER( sound_dummy_w )
+{
+	sound_dummy_value = data;
+}
+
 static MEMORY_READ_START( multi32_sound_readmem )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
@@ -459,6 +477,7 @@ static WRITE_HANDLER( sys32_soundbank_w )
 
 static PORT_READ_START( multi32_sound_readport )
 	{ 0x80, 0x80, YM2612_status_port_0_A_r },
+	{ 0xf1, 0xf1, sound_dummy_r },
 PORT_END
 
 static PORT_WRITE_START( multi32_sound_writeport )
@@ -469,6 +488,7 @@ static PORT_WRITE_START( multi32_sound_writeport )
 	{ 0xa0, 0xa0, sys32_soundbank_w },
 	{ 0xb0, 0xb0, MultiPCM_bank_0_w },
 	{ 0xc1, 0xc1, IOWP_NOP },
+	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
 
 struct YM2612interface mul32_ym3438_interface =
