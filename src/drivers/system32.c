@@ -908,14 +908,14 @@ static WRITE_HANDLER( sound_dummy_w )
 	sound_dummy_value = data;
 }
 
-static MEMORY_READ_START( sound_readmem_32 )
+static MEMORY_READ_START( system32_sound_map_r )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xd000, 0xdfff, RF5C68_r },
 	{ 0xe000, 0xffff, MRA_RAM, &z80_shared_ram },
 MEMORY_END
 
-static MEMORY_WRITE_START( sound_writemem_32 )
+static MEMORY_WRITE_START( system32_sound_map_w )
 	{ 0x0000, 0x9fff, MWA_ROM },
 	{ 0xc000, 0xc008, RF5C68_reg_w },
 	{ 0xd000, 0xdfff, RF5C68_w },
@@ -961,13 +961,13 @@ static WRITE_HANDLER( sys32_soundbank_hi_w )
 	s32_recomp_bank();
 }
 
-static PORT_READ_START( sound_readport_32 )
+static PORT_READ_START( system32_sound_portmap_r )
 	{ 0x80, 0x80, YM2612_status_port_0_A_r },
 	{ 0x90, 0x90, YM2612_status_port_1_A_r },
 	{ 0xf1, 0xf1, sound_dummy_r },
 PORT_END
 
-static PORT_WRITE_START( sound_writeport_32 )
+static PORT_WRITE_START( system32_sound_portmap_w )
 	{ 0x80, 0x80, YM2612_control_port_0_A_w },
 	{ 0x81, 0x81, YM2612_data_port_0_A_w },
 	{ 0x82, 0x82, YM2612_control_port_0_B_w },
@@ -2091,8 +2091,8 @@ static MACHINE_DRIVER_START( system32 )
 
 	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
-	MDRV_CPU_MEMORY(sound_readmem_32, sound_writemem_32)
-	MDRV_CPU_PORTS(sound_readport_32, sound_writeport_32)
+	MDRV_CPU_MEMORY(system32_sound_map_r, system32_sound_map_w)
+	MDRV_CPU_PORTS(system32_sound_portmap_r, system32_sound_portmap_w)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(100 /*DEFAULT_60HZ_VBLANK_DURATION*/)
