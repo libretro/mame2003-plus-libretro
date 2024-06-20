@@ -731,12 +731,6 @@ READ32_HANDLER( multi32_mixer_0_r )
 	      (mixer_control[0][offset*2+1] << 16);
 }
 
-READ32_HANDLER( multi32_mixer_1_r )
-{
-	return mixer_control[1][offset*2+0] |
-	      (mixer_control[1][offset*2+1] << 16);
-}
-
 WRITE32_HANDLER( multi32_mixer_0_w )
 {
 	data = SWAP_HALVES(data);
@@ -744,6 +738,11 @@ WRITE32_HANDLER( multi32_mixer_0_w )
 	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);
 }
 
+READ32_HANDLER( multi32_mixer_1_r )
+{
+	return mixer_control[1][offset*2+0] |
+	      (mixer_control[1][offset*2+1] << 16);
+}
 
 WRITE32_HANDLER( multi32_mixer_1_w )
 {
