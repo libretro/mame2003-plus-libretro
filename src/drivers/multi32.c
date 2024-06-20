@@ -343,9 +343,9 @@ static MEMORY_READ32_START( multi32_readmem )
 	{ 0x400000, 0x41ffff, multi32_spriteram_r },
 	{ 0x500000, 0x50000f, multi32_sprite_control_r },
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_r },
-/* fix me */	{ 0x610000, 0x61007f, /*multi32_mixer_0_r*/MRA32_RAM },
+	{ 0x610000, 0x61007f, multi32_mixer_0_r },
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
-/* fix me */	{ 0x690000, 0x69007f, /*multi32_mixer_1_r*/MRA32_RAM },
+	{ 0x690000, 0x69007f, multi32_mixer_1_r },
 	{ 0x700000, 0x701fff, shared_ram_32_r },	/* Shared ram with the z80*/
 /* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_r*/MRA32_RAM },
 /* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_r*/MRA32_RAM },
