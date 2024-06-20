@@ -338,16 +338,16 @@ static WRITE32_HANDLER( shared_ram_32_w )
 
 static MEMORY_READ32_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
-	{ 0x200000, 0x23ffff, MRA32_RAM }, /* work RAM*/
+	{ 0x200000, 0x21ffff, MRA32_RAM }, /* work RAM*/
 	{ 0x300000, 0x31ffff, multi32_videoram_r }, /* Tile Ram*/
 	{ 0x400000, 0x41ffff, multi32_spriteram_r }, /* sprite RAM*/
 	{ 0x500000, 0x50000f, multi32_sprite_control_r },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_r }, /* Palette*/
-/* fix me */	{ 0x610000, 0x6100ff, /*multi32_mixer_0_r*/MRA32_RAM }, /* mixer chip registers*/
+/* fix me */	{ 0x610000, 0x61007f, /*multi32_mixer_0_r*/MRA32_RAM }, /* mixer chip registers*/
 
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r }, /* Palette (Monitor B)*/
-/* fix me */	{ 0x690000, 0x69004f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
+/* fix me */	{ 0x690000, 0x69007f, /*multi32_mixer_1_r*/MRA32_RAM }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, shared_ram_32_r },	/* shared RAM*/
 	{ 0x800000, 0x80000f, MRA32_RAM },	/* Unknown*/
@@ -368,16 +368,16 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( multi32_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
-	{ 0x200000, 0x23ffff, MWA32_RAM }, /* work RAM */
+	{ 0x200000, 0x21ffff, MWA32_RAM }, /* work RAM */
 	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
 	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram }, /* Sprites*/
 	{ 0x500000, 0x50000f, multi32_sprite_control_w },
 
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, (data32_t **)&system32_paletteram[0] },
-	{ 0x610000, 0x6100ff, multi32_mixer_0_w }, /* mixer chip registers*/
+	{ 0x610000, 0x61007f, multi32_mixer_0_w }, /* mixer chip registers*/
 
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
-	{ 0x690000, 0x69004f, multi32_mixer_1_w }, /* monitor B mixer registers*/
+	{ 0x690000, 0x69007f, multi32_mixer_1_w }, /* monitor B mixer registers*/
 
 	{ 0x700000, 0x701fff, shared_ram_32_w }, /* Shared ram with the z80*/
 	{ 0x800000, 0x80000f, MWA32_RAM },	/* Unknown*/
