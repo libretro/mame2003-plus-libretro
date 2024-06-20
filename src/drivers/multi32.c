@@ -29,8 +29,6 @@
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 
-extern int system32_use_default_eeprom;
-
 static data16_t controlB[256];
 static data16_t control[256];
 
