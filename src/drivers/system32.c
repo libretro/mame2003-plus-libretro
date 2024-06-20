@@ -936,13 +936,16 @@ static void s32_recomp_bank(void)
 		case 0x00:	/* normal case*/
 			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo)) << 13);
 			break;
+  
 		case 0x40:
 		case 0xc0:
-			/* SegaSonic (prototype) needs this alternate interpretation.*/
-/*			Bank = (((remapbhi[s32_bhi]<<5) + (s32_blo&0x3f)) << 13);*/
 			/* all other s32 games work with this, notably Super Visual Football*/
 			/* and Alien3: The Gun*/
 			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo&0x3f)) << 13);
+			break;
+  
+		default:
+			usrintf_showmessage("%x", s32_blo & 0xc0);
 			break;
 	}
 
