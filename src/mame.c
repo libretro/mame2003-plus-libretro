@@ -1669,21 +1669,21 @@ static int validitychecks(void)
 							case 8:
 								if ((mra->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_8)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory read handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
 									error = 1;
 								}
 								break;
 							case 16:
 								if ((mra->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_16)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory read handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
 									error = 1;
 								}
 								break;
 							case 32:
 								if ((mra->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_32)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory read handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mra->end);
 									error = 1;
 								}
 								break;
@@ -1723,21 +1723,21 @@ static int validitychecks(void)
 							case 8:
 								if ((mwa->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_8)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory write handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
 									error = 1;
 								}
 								break;
 							case 16:
 								if ((mwa->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_16)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory write handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
 									error = 1;
 								}
 								break;
 							case 32:
 								if ((mwa->end & MEMPORT_WIDTH_MASK) != MEMPORT_WIDTH_32)
 								{
-									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
+									log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu #%d uses wrong data width memory write handlers! (width = %d, memory = %08x)\n",drivers[i]->source_file,drivers[i]->name,cpu,databus_width,mwa->end);
 									error = 1;
 								}
 								break;
