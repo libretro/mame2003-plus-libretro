@@ -2121,8 +2121,8 @@ static MACHINE_DRIVER_START( system32 )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_RGB_DIRECT | VIDEO_HAS_SHADOWS ) /* RGB_DIRECT will be needed for alpha*/
-	MDRV_SCREEN_SIZE(40*8, 28*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
+	MDRV_SCREEN_SIZE(52*8, 28*8)
+	MDRV_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(16384)
 
@@ -2132,16 +2132,6 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM3438, sys32_ym3438_interface)
 	MDRV_SOUND_ADD(RF5C68, sys32_rf5c68_interface)
-MACHINE_DRIVER_END
-
-/* system 32 hi-res mode is 416x224.  Yes that's TRUSTED.*/
-static MACHINE_DRIVER_START( sys32_hi )
-	MDRV_IMPORT_FROM( system32 )
-
-	MDRV_MACHINE_INIT(segas32)
-
-	MDRV_SCREEN_SIZE(52*8, 28*8)
-	MDRV_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( jpark )
@@ -3394,16 +3384,16 @@ GAME( 1992, holo,     0,        system32, holo,     s32,      ORIENTATION_FLIP_Y
 /* these have a range of issues, mainly with the backgrounds */
 GAMEX(1992, arescue,  0,        system32, arescue,  arescue,  ROT0, "Sega", "Air Rescue", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, radm,     0,        system32, radm,     radm,     ROT0, "Sega", "Rad Mobile", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1991, radr,     0,        sys32_hi, radr,     radr,     ROT0, "Sega", "Rad Rally", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1991, radr,     0,        system32, radr,     radr,     ROT0, "Sega", "Rad Rally", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, spidey,   0,        system32, spidey,   spidey,   ROT0, "Sega", "Spider-Man: The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, spideyj,  spidey,   system32, spideyj,  spidey,   ROT0, "Sega", "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, f1en,     0,        system32, f1en,     f1en,     ROT0, "Sega", "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, brival,   0,        sys32_hi, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, sonic,    0,        sys32_hi, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, sonicp,   sonic,    sys32_hi, sonic,    sonicp,   ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, brival,   0,        system32, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonic,    0,        system32, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, sonicp,   sonic,    system32, sonic,    sonicp,   ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
@@ -3413,7 +3403,7 @@ GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 S
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 
 /* not really working */
-GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1995, slipstrm, 0,        sys32_hi, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
+GAMEX(1993, darkedge, 0,        system32, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, dbzvrvs,  0,        system32, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1995, slipstrm, 0,        system32, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
 /* Loony Toons (maybe) */
