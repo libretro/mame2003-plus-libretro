@@ -3080,12 +3080,13 @@ static READ16_HANDLER( dual_pcb_masterslave )
 
 void f1lap_fd1149_vblank(void)
 {
-	/* needed to start a game */
-	data8_t val = 	cpu_readmem24lew(0x20EE81);
-	if (val == 0xff)  cpu_writemem24lew(0x20EE81,0);
+	data8_t val;
 
 	cpu_writemem24lew(0x20F7C6, 0);
 
+	/* needed to start a game */
+	val = cpu_readmem24lew(0x20EE81);
+	if (val == 0xff) cpu_writemem24lew(0x20EE81,0);
 }
 
 static DRIVER_INIT ( f1sl )
