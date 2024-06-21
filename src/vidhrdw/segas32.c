@@ -140,6 +140,42 @@
                    ---- ---- ---- -1-- : 1= NBG1 layer disable
                    ---- ---- ---- --0- : 1= NBG0 layer disable
                    ---- ---- ---- ---t : 1= Text layer disable
+
+    reference
+    - arabfgt : https://www.youtube.com/watch?v=98QivDAGz3I
+    - darkedge : https://www.youtube.com/watch?v=riO1yb95z7s
+	
+====
+back layer setups (register $31ff5e):
+alien3:   $0200
+arabfgt:  $8000-$81ff -- depending on the scene
+arescue:  $0200
+as1:      (untested)
+brival:   $8000
+darkedge: $0200
+dbzvrvs:  $0200
+f1en:     $0000
+f1lap:    $0000
+ga2:      $0200
+harddunk: $8200
+holo:     $0200
+jpark:    $0200
+kokoroj:  (untested)
+kokoroj2: $8000 --
+          $8000-$81fc (in steps of 4) -- on introduction/initials scenes
+orunners: $0200
+radm:     $0200
+radr:     $8200 -- gameplay
+          $0200 -- title screen
+scross:   $0200
+slipstrm: $0000
+sonic:    $0000 -- on sega logo/title screen
+          $0200 -- everything else
+spidman:  $0200
+svf:      $0201 -- on attract
+          $0200 -- on gameplay
+titlef:   $8200
+
 */
 
 #include "driver.h"
@@ -1535,7 +1571,11 @@ static void update_background(struct layer_info *layer, const struct rectangle *
 
 		/* determine the color */
 		if (system32_videoram[0x1ff5e/2] & 0x8000)
-			color = (system32_videoram[0x1ff5e/2] & 0x1fff) + y;
+		{
+			/* line color select (bank wraps at 511, confirmed by arabfgt and kokoroj2) */
+			int yoffset = (system32_videoram[0x1ff5e/2] + y) & 0x1ff;
+			color = (system32_videoram[0x1ff5e/2] & 0x1e00) + yoffset;
+		}
 		else
 			color = system32_videoram[0x1ff5e/2] & 0x1e00;
 
