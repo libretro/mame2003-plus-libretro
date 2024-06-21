@@ -945,8 +945,6 @@ static void s32_recomp_bank(void)
 			break;
 	}
 
-	usrintf_showmessage("s32_blo:%x  %x", s32_blo, s32_blo & 0xc0);
-
 	sys32_SoundMemBank = &RAM[Bank+0x100000];
 }
 
