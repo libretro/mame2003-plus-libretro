@@ -335,6 +335,7 @@ static WRITE32_HANDLER( shared_ram_32_w )
 
 
 static MEMORY_READ32_START( multi32_readmem )
+	MEMORY_ADDRESS_BITS(24)
 	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x200000, 0x21ffff, MRA32_RAM }, /* work RAM*/
 	{ 0x300000, 0x31ffff, multi32_videoram_r },
@@ -354,6 +355,7 @@ static MEMORY_READ32_START( multi32_readmem )
 MEMORY_END
 
 static MEMORY_WRITE32_START( multi32_writemem )
+	MEMORY_ADDRESS_BITS(24)
 	{ 0x000000, 0x1fffff, MWA32_ROM },
 	{ 0x200000, 0x21ffff, MWA32_RAM }, /* work RAM */
 	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
