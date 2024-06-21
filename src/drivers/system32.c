@@ -363,11 +363,11 @@ Stephh's notes (based on some tests) :
  *
  *************************************/
 
-#define MASTER_CLOCK	32215900
-#define RFC_CLOCK		50000000
+#define MASTER_CLOCK		32215900
+#define RFC_CLOCK			50000000
 
-#define TIMER_0_CLOCK	((MASTER_CLOCK/2)/4096)	/* a guess */
-#define TIMER_1_CLOCK	((RFC_CLOCK/16)/256)	/* should be correct */
+#define TIMER_0_CLOCK		((MASTER_CLOCK/2)/2048)	/* confirmed */
+#define TIMER_1_CLOCK		((RFC_CLOCK/16)/256)	/* confirmed */
 
 #define MAIN_IRQ_VBSTART	0
 #define MAIN_IRQ_VBSTOP		1
@@ -378,10 +378,9 @@ Stephh's notes (based on some tests) :
 #define SOUND_IRQ_YM3438	0
 #define SOUND_IRQ_V60		1
 
+/* V60 interrupt controller */
 static UINT8 v60_irq_control[0x10];
 static mame_timer *v60_irq_timer[2];
-static void signal_v60_irq(int which);
-/*static void signal_sound_irq(int which);*/
 
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
@@ -431,6 +430,17 @@ unsigned char radr_default_eeprom[128] = {
  0x75, 0x07, 0x07, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00
 };
+
+
+/*************************************
+ *
+ *  Prototypes
+ *
+ *************************************/
+
+static void signal_v60_irq(int which);
+/*static void signal_sound_irq(int which);*/
+
 
 /*************************************
  *
@@ -547,7 +557,7 @@ static void int_control_w(int offset, UINT8 data)
 }
 
 
-static READ16_HANDLER( interrupt_control_r )
+static READ16_HANDLER( interrupt_control_16_r )
 {
 	switch (offset)
 	{
@@ -565,7 +575,7 @@ static READ16_HANDLER( interrupt_control_r )
 }
 
 
-static WRITE16_HANDLER( interrupt_control_w )
+static WRITE16_HANDLER( interrupt_control_16_w )
 {
 	if (ACCESSING_LSB)
 		int_control_w(offset*2+0, data);
@@ -1014,7 +1024,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
-	{ 0xd00000, 0xd0000f, interrupt_control_r },
+	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
@@ -1031,7 +1041,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0xc00000, 0xc0003f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
-	{ 0xd00000, 0xd0000f, interrupt_control_w },
+	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
