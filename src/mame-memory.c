@@ -741,7 +741,7 @@ static INLINE int CLIB_DECL fatalerror(const char *string, ...)
 	va_start(arg,string);
 	vsprintf(log_buffer,string,arg);
 	va_end(arg);
-    log_cb(RETRO_LOG_INFO, "(LOGERROR) %s",log_buffer);
+	log_cb(RETRO_LOG_INFO, "(LOGERROR) %s",log_buffer);
 	exit(1);
 }
 
