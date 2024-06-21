@@ -294,6 +294,9 @@ static struct layer_info layer_data[11];
 static UINT16 mixer_control[2][0x40];
 static UINT16 *solid_0000;
 static UINT16 *solid_ffff;
+static int *prev_bgstartx;
+static int *prev_bgendx;
+static int *bgcolor_line;
 
 /* sprite data */
 static UINT8 sprite_render_count;
@@ -365,7 +368,16 @@ static int common_start(int multi32)
 	solid_ffff = auto_malloc(sizeof(solid_ffff[0]) * 512);
 	memset(solid_ffff, 0xff, sizeof(solid_ffff[0]) * 512);
 
+	/* allocate background color per line*/
+	prev_bgstartx = auto_malloc(sizeof(prev_bgstartx[0]) * 512);
+	prev_bgendx = auto_malloc(sizeof(prev_bgendx[0]) * 512);
+	bgcolor_line = auto_malloc(sizeof(bgcolor_line[0]) * 512);
+	memset(prev_bgstartx, -1, sizeof(prev_bgstartx[0]) * 512);
+	memset(prev_bgendx, -1, sizeof(prev_bgendx[0]) * 512);
+	memset(bgcolor_line, -1, sizeof(bgcolor_line[0]) * 512);
+
 	/* initialize videoram */
+	memset(system32_videoram, 0x00, 0x20000);
 	system32_videoram[0x1ff00/2] = 0x8000;
 	return 0;
 }
@@ -1581,9 +1593,16 @@ static void update_background(struct layer_info *layer, const struct rectangle *
 			color = system32_videoram[0x1ff5e/2] & 0x1e00;
 
 		/* if the color doesn't match, fill */
-		if (dst[cliprect->min_x] != color)
+		if ((bgcolor_line[y & 0x1ff] != color) || (prev_bgstartx[y & 0x1ff] != cliprect->min_x) || (prev_bgendx[y & 0x1ff] != cliprect->max_x))
+		{
+			int x;
 			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
 				dst[x] = color;
+
+			prev_bgstartx[y & 0x1ff] = cliprect->min_x;
+			prev_bgendx[y & 0x1ff] = cliprect->max_x;
+			bgcolor_line[y & 0x1ff] = color;
+		}
 	}
 }
 
