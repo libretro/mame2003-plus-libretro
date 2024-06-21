@@ -523,7 +523,7 @@ static struct MultiPCM_interface scross_multipcm_interface =
 static MACHINE_DRIVER_START( base )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, MULTI32_CLOCK/2)
+	MDRV_CPU_ADD(V70, MULTI32_CLOCK/2)
 	MDRV_CPU_MEMORY(multi32_readmem,multi32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
