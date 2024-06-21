@@ -355,35 +355,12 @@ Stephh's notes (based on some tests) :
 #include "machine/random.h"
 #include "includes/segas32.h"
 
+#define MASTER_CLOCK  32215900
 
-
-/*************************************
- *
- *  Constants
- *
- *************************************/
-
-#define MASTER_CLOCK		32215900
-#define RFC_CLOCK			50000000
-
-#define TIMER_0_CLOCK		((MASTER_CLOCK/2)/2048)	/* confirmed */
-#define TIMER_1_CLOCK		((RFC_CLOCK/16)/256)	/* confirmed */
-
-#define MAIN_IRQ_VBSTART	0
-#define MAIN_IRQ_VBSTOP		1
-#define MAIN_IRQ_SOUND		2
-#define MAIN_IRQ_TIMER0		3
-#define MAIN_IRQ_TIMER1		4
-
-#define SOUND_IRQ_YM3438	0
-#define SOUND_IRQ_V60		1
-
-/* V60 interrupt controller */
-static UINT8 v60_irq_control[0x10];
-static mame_timer *v60_irq_timer[2];
 
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
+static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static int s32_blo, s32_bhi;		/* bank high and low values*/
 static UINT8 sound_dummy_value;
@@ -431,174 +408,36 @@ unsigned char radr_default_eeprom[128] = {
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00
 };
 
-
-/*************************************
- *
- *  Prototypes
- *
- *************************************/
-
-static void signal_v60_irq(int which);
-/*static void signal_sound_irq(int which);*/
-
-
-/*************************************
- *
- *  Machine init
- *
- *************************************/
-
-static MACHINE_INIT( segas32 )
+static void irq_raise(int level)
 {
-	cpu_setbank(1, memory_region(REGION_CPU1));
-
-	/* initialize the interrupt controller */
-	memset(v60_irq_control, 0xff, sizeof(v60_irq_control));
-
-	/* allocate timers */
-	v60_irq_timer[0] = timer_alloc(signal_v60_irq);
-	v60_irq_timer[1] = timer_alloc(signal_v60_irq);
-
-	/* clear IRQ lines */
-	cpu_set_irq_line(0, 0, CLEAR_LINE);
+	irq_status |= (1 << level);
+	cpu_set_irq_line(0, 0, ASSERT_LINE);
 }
 
-
-/*************************************
- *
- *  Interrupt controller
- *
- *************************************/
-
-static void update_irq_state(void)
-{
-	UINT8 effirq = v60_irq_control[7] & ~v60_irq_control[6] & 0x1f;
-	int vector;
-
-	/* loop over interrupt vectors, finding the highest priority one with */
-	/* an unmasked interrupt pending */
-	for (vector = 0; vector < 5; vector++)
-		if (effirq & (1 << vector))
-		{
-			cpu_set_irq_line_and_vector(0, 0, ASSERT_LINE, vector);
-			break;
-		}
-
-	/* if we didn't find any, clear the interrupt line */
-	if (vector == 5)
-		cpu_set_irq_line(0, 0, CLEAR_LINE);
-}
-
-
-static void signal_v60_irq(int which)
+static int irq_callback(int irqline)
 {
 	int i;
-
-	/* see if this interrupt input is mapped to any vectors; if so, mark them */
-	for (i = 0; i < 5; i++)
-		if (v60_irq_control[i] == which)
-			v60_irq_control[7] |= 1 << i;
-	update_irq_state();
+	for(i=7; i>=0; i--)
+		if(irq_status & (1 << i)) {
+			return i;
+		}
+	return 0;
 }
 
-
-static void int_control_w(int offset, UINT8 data)
+static WRITE16_HANDLER(irq_ack_w)
 {
-	int duration;
-
-//  logerror("%06X:int_control_w(%X) = %02X\n", activecpu_get_pc(), offset, data);
-	switch (offset)
-	{
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:			/* vectors */
-			v60_irq_control[offset] = data;
-			break;
-
-		case 5:			/* unknown */
-			v60_irq_control[offset] = data;
-			break;
-
-		case 6:			/* mask */
-			v60_irq_control[offset] = data;
-			update_irq_state();
-			break;
-
-		case 7:			/* acknowledge */
-			v60_irq_control[offset] &= data;
-			update_irq_state();
-			break;
-
-		case 8:
-		case 9:			/* timer 0 count */
-			v60_irq_control[offset] = data;
-			duration = v60_irq_control[8] + ((v60_irq_control[9] << 8) & 0xf00);
-			if (duration)
-				timer_adjust(v60_irq_timer[0], TIME_IN_HZ(TIMER_0_CLOCK) * duration, MAIN_IRQ_TIMER0, TIME_NEVER);
-			break;
-
-		case 10:
-		case 11:		/* timer 1 count */
-			v60_irq_control[offset] = data;
-			duration = v60_irq_control[10] + ((v60_irq_control[11] << 8) & 0xf00);
-			if (duration)
-				timer_adjust(v60_irq_timer[1], TIME_IN_HZ(TIMER_1_CLOCK) * duration, MAIN_IRQ_TIMER1, TIME_NEVER);
-			break;
-
-		case 12:
-		case 13:
-		case 14:
-		case 15:		/* signal IRQ to sound CPU */
-			/*signal_sound_irq(SOUND_IRQ_V60); disabled*/
-			break;
+	if(ACCESSING_MSB) {
+		irq_status &= data >> 8;
+		if(!irq_status)
+			cpu_set_irq_line(0, 0, CLEAR_LINE);
 	}
 }
 
-
-static READ16_HANDLER( interrupt_control_16_r )
+static void irq_init(void)
 {
-	switch (offset)
-	{
-		case 8/2:
-			/* fix me - should return timer count down value */
-			break;
-
-		case 10/2:
-			/* fix me - should return timer count down value */
-			break;
-	}
-
-	/* return all F's for everything except timer values */
-	return 0xffff;
-}
-
-
-static WRITE16_HANDLER( interrupt_control_16_w )
-{
-	if (ACCESSING_LSB)
-		int_control_w(offset*2+0, data);
-	if (ACCESSING_MSB)
-		int_control_w(offset*2+1, data >> 8);
-}
-
-
-static void end_of_vblank_int(int param)
-{
-	signal_v60_irq(MAIN_IRQ_VBSTOP);
-	system32_set_vblank(0);
-}
-
-
-static INTERRUPT_GEN( start_of_vblank_int )
-{
-	signal_v60_irq(MAIN_IRQ_VBSTART);
-	system32_set_vblank(1);
-	timer_set(cpu_getscanlinetime(0), 0, end_of_vblank_int);
-
-	if (system32_prot_vblank)
-		(*system32_prot_vblank)();
+	irq_status = 0;
+	cpu_set_irq_line(0, 0, CLEAR_LINE);
+	cpu_set_irq_callback(0, irq_callback);
 }
 
 static NVRAM_HANDLER( system32 )
@@ -1024,7 +863,6 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0xc00000, 0xc0003f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
-	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
@@ -1041,7 +879,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0xc00000, 0xc0003f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
-	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
+	{ 0xd00006, 0xd00007, irq_ack_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
@@ -1143,6 +981,27 @@ static PORT_WRITE_START( system32_sound_portmap_w )
 	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
 
+static MACHINE_INIT( segas32 )
+{
+	cpu_setbank(1, memory_region(REGION_CPU1));
+	irq_init();
+}
+
+
+static INTERRUPT_GEN( system32_interrupt )
+{
+	if(cpu_getiloops()) {
+		irq_raise(1);
+		system32_set_vblank(1);
+	}
+	else {
+		irq_raise(0);
+		system32_set_vblank(0);
+	}
+
+	if (system32_prot_vblank)
+		(*system32_prot_vblank)();
+}
 
 /* jurassic park moving cab - not working yet */
 
@@ -2227,7 +2086,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
 #endif
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
-	MDRV_CPU_VBLANK_INT(start_of_vblank_int,1)
+	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
 	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -2235,6 +2094,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_PORTS(system32_sound_portmap_r, system32_sound_portmap_w)
 
 	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(100 /*DEFAULT_60HZ_VBLANK_DURATION*/)
 
 	MDRV_MACHINE_INIT(segas32)
 	MDRV_NVRAM_HANDLER(system32)
