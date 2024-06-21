@@ -39,7 +39,8 @@
          $31FF00 : w--- ---- ---- ---- : Screen width (0= 320, 1= 412)
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
-                   ---- --f- ---- ---- : 1= All layers X+Y flip
+                   ---- --f- ---- ---- : 1= Global X/Y flip? (most games?)
+                   ---- ---f ---- ---- : 1= All layers Y flip (or one layer?) (Air Rescue 2nd screen)
                    ---- ---- ---- 4--- : 1= X+Y flip for NBG3
                    ---- ---- ---- -2-- : 1= X+Y flip for NBG2
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
@@ -961,7 +962,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	UINT32 srcx, srcx_start, srcy;
 	UINT32 srcxstep, srcystep;
 	int dstxstep, dstystep;
-	int flip, opaque;
+	int global_flip, flipx, flipy, flip_layer;
+	int opaque;
 	int x, y;
 
 	/* get the tilemaps */
@@ -974,7 +976,15 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 //if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
 
 	/* determine if we're flipped */
-	flip = ((system32_videoram[0x1ff00/2] >> 9) ^ (system32_videoram[0x1ff00/2] >> bgnum)) & 1;
+	global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
+
+	flipx = global_flip;
+	flipy = global_flip ^ ((system32_videoram[0x1ff00 / 2] >> 8)&1);
+
+	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
+
+	flipy ^= layer_flip;
+	flipx ^= layer_flip;
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1014,12 +1024,16 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += cliprect->min_y * srcystep;
 
 	/* if we're flipped, simply adjust the start/step parameters */
-	if (flip)
+	if (flipy)
+	{
+		srcy += (Machine->visible_area.max_y - 2 * cliprect->min_y) * srcystep;
+		srcystep = -srcystep;
+	}
+
+	if (flipx)
 	{
 		srcx_start += (Machine->visible_area.max_x - 2 * cliprect->min_x) * srcxstep;
-		srcy += (Machine->visible_area.max_y - 2 * cliprect->min_y) * srcystep;
 		srcxstep = -srcxstep;
-		srcystep = -srcystep;
 	}
 
 	/* loop over the target rows */
