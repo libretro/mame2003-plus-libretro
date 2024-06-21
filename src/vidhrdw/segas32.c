@@ -1035,7 +1035,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	flipy ^= layer_flip;
 	flipx ^= layer_flip;
 
-	if ((m_system32_videoram[0x1ff00 / 2] >> 8) & 1) flipy = 0;
+	if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) flipy = 0;
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
