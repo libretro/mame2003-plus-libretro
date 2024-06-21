@@ -912,7 +912,7 @@ static MEMORY_READ_START( system32_sound_map_r )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xd000, 0xdfff, RF5C68_r },
-	{ 0xe000, 0xffff, MRA_RAM, &z80_shared_ram },
+	{ 0xe000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( system32_sound_map_w )
