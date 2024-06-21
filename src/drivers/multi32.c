@@ -456,7 +456,7 @@ static MEMORY_READ_START( multi32_sound_map_r )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xc000, 0xdfff, MultiPCM_reg_0_r },
-	{ 0xe000, 0xffff, MRA_RAM, &z80_shared_ram },
+	{ 0xe000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( multi32_sound_map_w )
