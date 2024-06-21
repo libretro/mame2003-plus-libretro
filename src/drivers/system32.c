@@ -893,16 +893,7 @@ static READ_HANDLER( system32_bank_r )
 
 static READ_HANDLER( z80_shared_ram_r )
 {
-	data8_t *RAM = (data8_t *)z80_shared_ram;
-
-	return RAM[offset];
-}
-
-static WRITE_HANDLER( z80_shared_ram_w )
-{
-	data8_t *RAM = (data8_t *)z80_shared_ram;
-
-	RAM[offset] = data;
+	return z80_shared_ram[offset];
 }
 
 
@@ -934,7 +925,7 @@ static MEMORY_WRITE_START( system32_sound_map_w )
 	{ 0x0000, 0x9fff, MWA_ROM },
 	{ 0xc000, 0xc008, RF5C68_reg_w },
 	{ 0xd000, 0xdfff, RF5C68_w },
-	{ 0xe000, 0xffff, z80_shared_ram_w },
+	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
 
 static void s32_recomp_bank(void)
