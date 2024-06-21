@@ -1214,7 +1214,7 @@ static int verify_memory(void)
 				if ((mra->end & MEMPORT_DIRECTION_MASK) != MEMPORT_DIRECTION_READ)
 					return fatalerror("cpu #%d has memory write handlers in place of memory read handlers!\n", cpunum);
 				if ((mra->end & MEMPORT_WIDTH_MASK) != width)
-					return fatalerror("cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n", cpunum,cpunum_databus_width(cpunum),mra->end);
+					return fatalerror("cpu #%d uses wrong data width memory read handlers! (width = %d, memory = %08x)\n", cpunum,cpunum_databus_width(cpunum),mra->end);
 				mra++;
 			}
 
@@ -1239,7 +1239,7 @@ static int verify_memory(void)
 				if ((mwa->end & MEMPORT_DIRECTION_MASK) != MEMPORT_DIRECTION_WRITE)
 					return fatalerror("cpu #%d has memory read handlers in place of memory write handlers!\n", cpunum);
 				if ((mwa->end & MEMPORT_WIDTH_MASK) != width)
-					return fatalerror("cpu #%d uses wrong data width memory handlers! (width = %d, memory = %08x)\n", cpunum,cpunum_databus_width(cpunum),mwa->end);
+					return fatalerror("cpu #%d uses wrong data width memory write handlers! (width = %d, memory = %08x)\n", cpunum,cpunum_databus_width(cpunum),mwa->end);
 				mwa++;
 			}
 
