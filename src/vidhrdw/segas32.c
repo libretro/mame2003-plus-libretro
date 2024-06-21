@@ -40,7 +40,7 @@
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
                    ---- --f- ---- ---- : 1= Global X/Y flip? (most games?)
-                   ---- ---f ---- ---- : 1= All layers Y flip (or one layer?) (Air Rescue 2nd screen)
+                   ---- ---f ---- ---- : 1= prohbit Y flip? (Air Rescue 2nd screen title, also gets set on one of the intro sequence screens)
                    ---- ---- ---- 4--- : 1= X+Y flip for NBG3
                    ---- ---- ---- -2-- : 1= X+Y flip for NBG2
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
@@ -979,12 +979,14 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
 
 	flipx = global_flip;
-	flipy = global_flip ^ ((system32_videoram[0x1ff00 / 2] >> 8)&1);
+	flipy = global_flip;
 
 	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
 
 	flipy ^= layer_flip;
 	flipx ^= layer_flip;
+
+	if ((m_system32_videoram[0x1ff00 / 2] >> 8) & 1) flipy = 0;
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
