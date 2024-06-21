@@ -450,7 +450,7 @@ static MACHINE_INIT( segas32 )
 	v60_irq_timer[1] = timer_alloc(signal_v60_irq);
 
 	/* clear IRQ lines */
-	cpunum_set_input_line(0, 0, CLEAR_LINE);
+	cpu_set_irq_line(0, 0, CLEAR_LINE);
 }
 
 
