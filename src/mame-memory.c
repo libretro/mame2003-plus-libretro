@@ -190,8 +190,13 @@ offs_t encrypted_opcode_start[MAX_CPU],encrypted_opcode_end[MAX_CPU];
 /*-------------------------------------------------
 	PROTOTYPES
 -------------------------------------------------*/
+#ifdef __GNUC__
+static INLINE int CLIB_DECL fatalerror(const char *string,...) __attribute__ ((format (printf, 1, 2)));
+#else 
+static INLINE int CLIB_DECL fatalerror(const char *string, ...);
+#endif
 
-static int CLIB_DECL fatalerror(const char *string, ...);
+
 static UINT8 get_handler_index(struct handler_data *table, void *handler, offs_t start);
 static UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *tabledata, UINT8 previous_value);
 static void populate_table(struct memport_data *memport, int iswrite, offs_t start, offs_t stop, UINT8 handler);
@@ -729,14 +734,15 @@ void install_port_write32_handler(int cpunum, offs_t start, offs_t end, port_wri
 	exit immediately
 -------------------------------------------------*/
 
-int CLIB_DECL fatalerror(const char *string, ...)
+static INLINE int CLIB_DECL fatalerror(const char *string, ...)
 {
+	static char log_buffer[2048];
 	va_list arg;
-	va_start(arg, string);
-	log_cb(RETRO_LOG_ERROR, string, arg);
+	va_start(arg,string);
+	vsprintf(log_buffer,string,arg);
 	va_end(arg);
+	log_cb(RETRO_LOG_INFO, "(LOGERROR) %s",log_buffer);
 	exit(1);
-	return 0;
 }
 
 
