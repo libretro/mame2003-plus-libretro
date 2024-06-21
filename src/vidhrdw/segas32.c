@@ -1011,7 +1011,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	UINT32 srcx, srcx_start, srcy;
 	UINT32 srcxstep, srcystep;
 	int dstxstep, dstystep;
-	int global_flip, flipx, flipy, flip_layer;
+	int global_flip, flipx, flipy, layer_flip;
 	int opaque;
 	int x, y;
 
