@@ -891,6 +891,12 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
+static READ_HANDLER( z80_shared_ram_r )
+{
+	return z80_shared_ram[offset];
+}
+
+
 /*************************************
  *
  *  Sound hack (not protection)
@@ -912,7 +918,7 @@ static MEMORY_READ_START( system32_sound_map_r )
 	{ 0x0000, 0x9fff, MRA_ROM },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xd000, 0xdfff, RF5C68_r },
-	{ 0xe000, 0xffff, MRA_RAM },
+	{ 0xe000, 0xffff, z80_shared_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( system32_sound_map_w )
