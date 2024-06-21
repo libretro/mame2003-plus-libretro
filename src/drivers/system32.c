@@ -943,11 +943,9 @@ static void s32_recomp_bank(void)
 			/* and Alien3: The Gun*/
 			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo&0x3f)) << 13);
 			break;
-  
-		default:
-			usrintf_showmessage("%x", s32_blo & 0xc0);
-			break;
 	}
+
+	usrintf_showmessage("s32_blo:%x  %x", s32_blo, s32_blo & 0xc0);
 
 	sys32_SoundMemBank = &RAM[Bank+0x100000];
 }
