@@ -294,9 +294,9 @@ static struct layer_info layer_data[11];
 static UINT16 mixer_control[2][0x40];
 static UINT16 *solid_0000;
 static UINT16 *solid_ffff;
-static int *prev_bgstartx;
-static int *prev_bgendx;
-static int *bgcolor_line;
+static int32_t *prev_bgstartx;
+static int32_t *prev_bgendx;
+static int32_t *bgcolor_line;
 
 /* sprite data */
 static UINT8 sprite_render_count;
