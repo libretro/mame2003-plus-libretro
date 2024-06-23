@@ -2721,6 +2721,8 @@ VIDEO_UPDATE( multi32 )
 		monitor_vertical_offset=2;
 		monitor_display_width=2;
   }
+  else
+		monitor_display_width=1+monitor_display_start;
 
 	/* update the visible area */
 	if (system32_videoram[0x1ff00/2] & 0x8000)
