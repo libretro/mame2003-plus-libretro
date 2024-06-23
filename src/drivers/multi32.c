@@ -50,8 +50,8 @@ static int irq_callback(int irqline)
 
 static WRITE32_HANDLER(irq_ack_32_w)
 {
-	if(ACCESSING_MSB) {
-		irq_status &= data >> 8;
+	if(ACCESSING_MSB32) {
+		irq_status &= data >> 24;
 		if(!irq_status)
 			cpu_set_irq_line(0, 0, CLEAR_LINE);
 	}
