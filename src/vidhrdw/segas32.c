@@ -2712,7 +2712,12 @@ VIDEO_UPDATE( multi32 )
 	int monitor_display_width;
 	int monitor_vertical_offset;
 
-	/* mame2003-plus uses a single screen to draw to instead of a left and right screen in current mame */
+/*
+   MAME2003-PLUS uses a single screen to draw to where as current mame
+   uses dedicated left and right screens. The machine driver doubles the
+   y max to allow for this so we must manually set our y clip max to the
+   actual maximum for drawing purposes.
+*/
 	monitor_setting=readinputport(0xf);
 	monitor_vertical_offset=1;
 	monitor_display_start=0;
