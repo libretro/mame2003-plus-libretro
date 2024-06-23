@@ -2706,11 +2706,33 @@ VIDEO_UPDATE( multi32 )
 {
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
+  
+	int monitor_setting;
+	int monitor_display_start;
+	int monitor_display_width;
+	int monitor_vertical_offset;
+
+/*
+   MAME2003-PLUS uses a single screen to draw to where as current mame
+   uses dedicated left and right screens. The machine driver doubles the
+   y max to allow for this so we must manually set our y clip max to the
+   actual maximum for drawing purposes.
+*/
+	monitor_setting=readinputport(0xf);
+	monitor_vertical_offset=1;
+	monitor_display_start=0;
+	if (monitor_setting==2) monitor_display_start=1;
+	if (monitor_setting==3) {
+		monitor_vertical_offset=2;
+		monitor_display_width=2;
+  }
+  else
+		monitor_display_width=1+monitor_display_start;
 
 	/* update the visible area */
 	if (system32_videoram[0x1ff00/2] & 0x8000)
 	{
-		set_visible_area(0, 52*2*8-1, 0, 28*8-1);
+		set_visible_area(52*monitor_display_start*8, 52*8*monitor_display_width-1, 0, 28*8*monitor_vertical_offset-1);
 		clipleft.min_x = 0;
 		clipleft.max_x = 52*8-1;
 		clipright.min_x = 52*8;
@@ -2718,14 +2740,14 @@ VIDEO_UPDATE( multi32 )
 	}
 	else
 	{
-		set_visible_area(0, 40*2*8-1, 0, 28*8-1);
+		set_visible_area(40*monitor_display_start*8, 40*8*monitor_display_width-1, 0, 28*8*monitor_vertical_offset-1);
 		clipleft.min_x = 0;
 		clipleft.max_x = 40*8-1;
 		clipright.min_x = 40*8;
 		clipright.max_x = 40*2*8-1;
 	}
 	clipleft.min_y = clipright.min_y = cliprect->min_y;
-	clipleft.max_y = clipright.max_y = cliprect->max_y;
+	clipleft.max_y = clipright.max_y = 28*8-1;
 
 	/* if the display is off, punt */
 	if (!system32_displayenable[0] && !system32_displayenable[1])
