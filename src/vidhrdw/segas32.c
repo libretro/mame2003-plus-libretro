@@ -2740,7 +2740,7 @@ VIDEO_UPDATE( multi32 )
 		clipright.max_x = 40*2*8-1;
 	}
 	clipleft.min_y = clipright.min_y = cliprect->min_y;
-	clipleft.max_y = clipright.max_y = 262-1;
+	clipleft.max_y = clipright.max_y = 28*8-1;
 system32_displayenable[0]=1;
 system32_displayenable[1]=1;
 	/* if the display is off, punt */
