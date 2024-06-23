@@ -50,11 +50,18 @@ static int irq_callback(int irqline)
 
 static WRITE32_HANDLER(irq_ack_32_w)
 {
-	if(ACCESSING_MSB32) {
+log_cb(RETRO_LOG_INFO, "%8x %8x\n", mem_mask, data);
+	if (!(mem_mask & 0x000000ff))
+		irq_status &= data;
+	if (!(mem_mask & 0x0000ff00))
+		irq_status &= data >> 8;
+	if (!(mem_mask & 0x00ff0000))
+		irq_status &= data >> 16;
+	if (!(mem_mask & 0xff000000))
 		irq_status &= data >> 24;
-		if(!irq_status)
-			cpu_set_irq_line(0, 0, CLEAR_LINE);
-	}
+
+	if(!irq_status)
+		cpu_set_irq_line(0, 0, CLEAR_LINE);
 }
 
 static void irq_init(void)
