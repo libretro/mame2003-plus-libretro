@@ -2049,14 +2049,13 @@ struct YM2612interface sys32_ym3438_interface =
 	{ irq_handler }
 };
 
-static struct GfxLayout s32_bgcharlayout =
+static struct GfxLayout bgcharlayout =
 {
 	16,16,
 	RGN_FRAC(1,1),
 	4,
 	{ 0,1,2,3 },
-	{ 0, 4, 16, 20, 8, 12, 24, 28,
-	   32, 36, 48, 52, 40, 44, 56, 60  },
+	{ 0, 4, 16, 20, 8, 12, 24, 28, 32, 36, 48, 52, 40, 44, 56, 60  },
 	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64,
 	  8*64, 9*64,10*64,11*64,12*64,13*64,14*64,15*64 },
 	16*64
@@ -2078,8 +2077,7 @@ static struct GfxLayout s32_fgcharlayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &s32_bgcharlayout,   0x00, 0x3ff  },
-	{ REGION_GFX3, 0, &s32_fgcharlayout,   0x00, 0x3ff  },
+	{ REGION_GFX1, 0, &bgcharlayout,   0x00, 0x3ff  },
 	{ -1 } /* end of array */
 };
 
