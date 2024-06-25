@@ -2893,8 +2893,8 @@ PORT_END
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START##_n_					)
 
 
-#define JOY_ROTATION(_n_, _left_, _right_ ) \
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_PLAYER##_n_, 15, 15, 0, 0, KEYCODE_##_left_, KEYCODE_##_right_, IP_JOY_NONE, IP_JOY_NONE )
+#define JOY_ROTATION(_n_, _left_, _right_, _default_ ) \
+	PORT_ANALOGX( 0xff, _default_, IPT_DIAL | IPF_PLAYER##_n_, 15, 15, 0, 0, KEYCODE_##_left_, KEYCODE_##_right_, IP_JOY_NONE, IP_JOY_NONE )
 
 
 
@@ -3256,10 +3256,10 @@ INPUT_PORTS_START( calibr50 )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
 	PORT_START	/* IN4 - Rotation Player 1*/
-	JOY_ROTATION(1, Z, X)
+	JOY_ROTATION(1, Z, X, 0x00)
 
 	PORT_START	/* IN5 - Rotation Player 2*/
-	JOY_ROTATION(2, N, M)
+	JOY_ROTATION(2, N, M, 0x00)
 INPUT_PORTS_END
 
 /***************************************************************************
@@ -3503,10 +3503,10 @@ INPUT_PORTS_START( downtown )
 	PORT_DIPSETTING(      0x0000, "2" )
 
 	PORT_START	/* IN4 - Rotation Player 1*/
-	JOY_ROTATION(1, Z, X)
+	JOY_ROTATION(1, Z, X, 0x0a)
 
 	PORT_START	/* IN5 - Rotation Player 2*/
-	JOY_ROTATION(1, N, M)
+	JOY_ROTATION(1, N, M, 0x0a)
 INPUT_PORTS_END
 
 
