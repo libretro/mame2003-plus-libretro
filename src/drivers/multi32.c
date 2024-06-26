@@ -29,9 +29,6 @@ static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static UINT8 sound_dummy_value;
 
-static data16_t controlB[256];
-static data16_t control[256];
-
 static void irq_raise(int level)
 {
 	irq_status |= (1 << level);
@@ -106,8 +103,6 @@ static READ16_HANDLER( multi32_io_analog_r )
 
 static WRITE16_HANDLER( multi32_io_analog_w )
 {
-	COMBINE_DATA(&control[offset]);
-
 	if (offset<=3) {
 		if (analogSwitch) analogRead[offset*2+1]=readinputport(offset*2+5);
 		else analogRead[offset*2]=readinputport(offset*2+4);
@@ -164,8 +159,6 @@ static WRITE16_HANDLER( multi32_io_w )
 	{ 0xc0001c, 0xc0001d, MWA16_RAM, &system32_displayenable[0] },
 	{ 0xc0001e, 0xc0001f, MWA16_RAM }, // Unknown
 */
-
-	COMBINE_DATA(&control[offset]);
 
 	switch(offset) {
 	case 0x03:
@@ -275,7 +268,6 @@ static READ16_HANDLER( multi32_io_B_r )
 
 static WRITE16_HANDLER( multi32_io_B_w )
 {
-	COMBINE_DATA(&controlB[offset]);
 	switch(offset) {
 
 	case 0x03:
