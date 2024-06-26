@@ -961,6 +961,25 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 }
 
 
+static void compute_tilemap_flips(int bgnum, int &flipx, int &flipy)
+{
+	int layer_flip;
+
+	/* determine if we're flipped */
+	int global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
+
+	flipx = global_flip;
+	flipy = global_flip;
+
+	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
+
+	flipy ^= layer_flip;
+	flipx ^= layer_flip;
+
+	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
+	// it seems to prohibit (at least) the per-tilemap y flipping (maybe global y can override it)
+	if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) flipy = 0;
+}
 
 /*************************************
  *
@@ -999,7 +1018,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	UINT32 srcx, srcx_start, srcy;
 	UINT32 srcxstep, srcystep;
 	int dstxstep, dstystep;
-	int global_flip, flipx, flipy, layer_flip;
+	int flipx, flipy;
 	int opaque;
 	int x, y;
 
@@ -1012,18 +1031,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 //if (code_pressed(KEYCODE_Z) && bgnum == 0) opaque = 1;
 //if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
 
-	/* determine if we're flipped */
-	global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
-
-	flipx = global_flip;
-	flipy = global_flip;
-
-	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
-
-	flipy ^= layer_flip;
-	flipx ^= layer_flip;
-
-	if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) flipy = 0;
+	/* todo determine flipping */
+	compute_tilemap_flips(bgnum, flipx, flipy);
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1153,6 +1162,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
  *
  *************************************/
 
+
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 	int clipenable, clipout, clips, clipdraw_start;
@@ -1163,7 +1173,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	int xscroll, yscroll;
 	UINT16 *table;
 	int srcx, srcy;
-	int flip, opaque;
+	int flipx, flipy;
+	int opaque;
 	int x, y;
 
 	/* get the tilemaps */
@@ -1175,8 +1186,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 //if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
 //if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
 
-	/* determine if we're flipped */
-	flip = ((system32_videoram[0x1ff00/2] >> 9) ^ (system32_videoram[0x1ff00/2] >> bgnum)) & 1;
+	/* todo determine flipping */
+	compute_tilemap_flips(bgnum, flipx, flipy);
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1212,34 +1223,32 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			int srcxstep;
 
 			/* if we're not flipped, things are straightforward */
-			if (!flip)
+			if (!flipx)
 			{
-				/* get starting scroll values */
 				srcx = cliprect->min_x + xscroll;
-				srcxstep = 1;
-				srcy = yscroll + y;
-
-				/* apply row scroll/select */
-				if (rowscroll)
-					srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
-				if (rowselect)
-					srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
+				srcxstep = 1;				
 			}
-
-			/* otherwise, we have to do some contortions */
 			else
-			{
-				/* get starting scroll values */
+			{	
 				srcx = cliprect->max_x + xscroll;
 				srcxstep = -1;
-				srcy = yscroll + Machine->visible_area.max_y - y;
-
-				/* apply row scroll/select */
-				if (rowscroll)
-					srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
-				if (rowselect)
-					srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
 			}
+
+			if (!flipy)
+			{
+				srcy = yscroll + y;
+			}
+			else
+			{
+				srcy = yscroll + Machine->visible_area.max_y - y;
+			}
+
+			/* apply row scroll/select */
+			if (rowscroll)
+				srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
+			if (rowselect)
+				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
+
 
 			/* look up the pages and get their source pixmaps */
 			src[0] = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 0])->line[srcy & 0xff];
