@@ -48,7 +48,7 @@ static int irq_callback(int irqline)
 	return 0;
 }
 
-static WRITE32_HANDLER(irq_ack_32_w)
+static WRITE16_HANDLER(irq_ack_w)
 {
 	if(ACCESSING_MSB) {
 		irq_status &= data >> 8;
@@ -80,7 +80,7 @@ static NVRAM_HANDLER( system32 )
 extern int analogRead[8];
 extern int analogSwitch;
 
-static READ32_HANDLER( multi32_io_analog_r )
+static READ16_HANDLER( multi32_io_analog_r )
 {
 /*
 	{ 0xc00050, 0xc00057, system32_io_analog_r },
@@ -104,7 +104,7 @@ static READ32_HANDLER( multi32_io_analog_r )
 	}
 }
 
-static WRITE32_HANDLER( multi32_io_analog_w )
+static WRITE16_HANDLER( multi32_io_analog_w )
 {
 	COMBINE_DATA(&control[offset]);
 
@@ -114,7 +114,7 @@ static WRITE32_HANDLER( multi32_io_analog_w )
 	}
 }
 
-static READ32_HANDLER( multi32_io_r )
+static READ16_HANDLER( multi32_io_r )
 {
 /* I/O Control port at 0xc00000
 
@@ -153,7 +153,7 @@ static READ32_HANDLER( multi32_io_r )
 	}
 }
 
-static WRITE32_HANDLER( multi32_io_w )
+static WRITE16_HANDLER( multi32_io_w )
 {
 /* I/O Control port at 0xc00000
 
@@ -197,7 +197,7 @@ static WRITE32_HANDLER( multi32_io_w )
 	}
 }
 
-static READ32_HANDLER( multi32_io_2_r )
+static READ16_HANDLER( multi32_io_2_r )
 {
 /* I/O Control port at 0xc00060
 
@@ -219,7 +219,7 @@ static READ32_HANDLER( multi32_io_2_r )
 	}
 }
 
-static WRITE32_HANDLER( multi32_io_2_w )
+static WRITE16_HANDLER( multi32_io_2_w )
 {
 /* I/O Control port at 0xc00060
 
@@ -241,7 +241,7 @@ static WRITE32_HANDLER( multi32_io_2_w )
 	}
 }
 
-static READ32_HANDLER( multi32_io_B_r )
+static READ16_HANDLER( multi32_io_B_r )
 {
 	switch(offset) {
 	case 0:
@@ -273,7 +273,7 @@ static READ32_HANDLER( multi32_io_B_r )
 	}
 }
 
-static WRITE32_HANDLER( multi32_io_B_w )
+static WRITE16_HANDLER( multi32_io_B_w )
 {
 	COMBINE_DATA(&controlB[offset]);
 	switch(offset) {
@@ -304,73 +304,68 @@ static WRITE32_HANDLER( multi32_io_B_w )
 	}
 }
 
-static WRITE32_HANDLER( random_number_32_w )
+static WRITE16_HANDLER( random_number_16_w )
 {
-	/* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
+/* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
 }
 
-static READ32_HANDLER( random_number_32_r )
+static READ16_HANDLER( random_number_16_r )
 {
-	return rand() | (rand() << 16);
+       return rand();
 }
 
-
-static READ32_HANDLER( shared_ram_32_r )
+static READ16_HANDLER( shared_ram_16_r )
 {
-	return z80_shared_ram[offset*4+0] | (z80_shared_ram[offset*4+1] << 8) |
-	      (z80_shared_ram[offset*4+2] << 16) | (z80_shared_ram[offset*4+3] << 24);
-}
-
-static WRITE32_HANDLER( shared_ram_32_w )
-{
-	if (!(mem_mask & 0x000000ff))
-		z80_shared_ram[offset*4+0] = data;
-	if (!(mem_mask & 0x0000ff00))
-		z80_shared_ram[offset*4+1] = data >> 8;
-	if (!(mem_mask & 0x00ff0000))
-		z80_shared_ram[offset*4+2] = data >> 16;
-	if (!(mem_mask & 0xff000000))
-		z80_shared_ram[offset*4+3] = data >> 24;
+	return z80_shared_ram[offset*2+0] | (z80_shared_ram[offset*2+1] << 8);
 }
 
 
-static MEMORY_READ32_START( multi32_readmem )
-	{ 0x000000, 0x1fffff, MRA32_ROM },
-	{ 0x200000, 0x21ffff, MRA32_RAM }, /* work RAM*/
-	{ 0x300000, 0x31ffff, multi32_videoram_r },
-	{ 0x400000, 0x41ffff, multi32_spriteram_r },
-	{ 0x500000, 0x50000f, multi32_sprite_control_r },
+static WRITE16_HANDLER( shared_ram_16_w )
+{
+	if (ACCESSING_LSB)
+		z80_shared_ram[offset*2+0] = data;
+	if (ACCESSING_MSB)
+		z80_shared_ram[offset*2+1] = data >> 8;
+}
+
+
+static MEMORY_READ16_START( multi32_readmem )
+	{ 0x000000, 0x1fffff, MRA16_ROM },
+	{ 0x200000, 0x21ffff, MRA16_RAM }, /* work RAM*/
+	{ 0x300000, 0x31ffff, system32_videoram_r },
+	{ 0x400000, 0x41ffff, system32_spriteram_r },
+	{ 0x500000, 0x50000f, system32_sprite_control_r },
 	{ 0x600000, 0x60ffff, multi32_paletteram_0_r },
 	{ 0x610000, 0x61007f, multi32_mixer_0_r },
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
 	{ 0x690000, 0x69007f, multi32_mixer_1_r },
-	{ 0x700000, 0x701fff, shared_ram_32_r },	/* Shared ram with the z80*/
-/* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_r*/MRA32_RAM },
-/* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_r*/MRA32_RAM },
-/* fix me */	{ 0xc00060, 0xc0007f, /*multi32_io_2_r*/MRA32_RAM },
-/* fix me */	{ 0xc80000, 0xc8007f, /*multi32_io_B_r*/MRA32_RAM },
-	{ 0xd80000, 0xdfffff, random_number_32_r },
-	{ 0xf00000, 0xffffff, MRA32_BANK1 }, /* High rom mirror*/
+	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
+	{ 0xc00000, 0xc0003f, multi32_io_r },
+	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
+	{ 0xc00060, 0xc0007f, multi32_io_2_r },
+	{ 0xc80000, 0xc8007f, multi32_io_B_r },
+	{ 0xd80000, 0xdfffff, random_number_16_r },
+	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
 
-static MEMORY_WRITE32_START( multi32_writemem )
-	{ 0x000000, 0x1fffff, MWA32_ROM },
-	{ 0x200000, 0x21ffff, MWA32_RAM }, /* work RAM */
-	{ 0x300000, 0x31ffff, multi32_videoram_w, (data32_t **)&system32_videoram },
-	{ 0x400000, 0x41ffff, multi32_spriteram_w, (data32_t **)&system32_spriteram },
-	{ 0x500000, 0x50000f, multi32_sprite_control_w },
-	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, (data32_t **)&system32_paletteram[0] },
+static MEMORY_WRITE16_START( multi32_writemem )
+	{ 0x000000, 0x1fffff, MWA16_ROM },
+	{ 0x200000, 0x21ffff, MWA16_RAM }, /* work RAM */
+	{ 0x300000, 0x31ffff, system32_videoram_w, &system32_videoram },
+	{ 0x400000, 0x41ffff, system32_spriteram_w, &system32_spriteram },
+	{ 0x500000, 0x50000f, system32_sprite_control_w },
+	{ 0x600000, 0x60ffff, multi32_paletteram_0_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, multi32_mixer_0_w },
-	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, (data32_t **)&system32_paletteram[1] },
+	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69007f, multi32_mixer_1_w },
-	{ 0x700000, 0x701fff, shared_ram_32_w }, /* Shared ram with the z80*/
-/* fix me */	{ 0xc00000, 0xc0003f, /*multi32_io_w*/MWA32_RAM },
-/* fix me */	{ 0xc00050, 0xc0005f, /*multi32_io_analog_w*/MWA32_RAM },
-/* fix me */	{ 0xc00060, 0xc0007f, /*multi32_io_2_w*/MWA32_RAM },
-/* fix me */	{ 0xc80000, 0xc8007f, /*multi32_io_B_w*/MWA32_RAM },
-/* fix me */	{ 0xd00006, 0xd00007, irq_ack_32_w },
-	{ 0xd80000, 0xdfffff, random_number_32_w },
-	{ 0xf00000, 0xffffff, MWA32_ROM },
+	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
+	{ 0xc00000, 0xc0003f, multi32_io_w },
+	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
+	{ 0xc00060, 0xc0007f, multi32_io_2_w },
+	{ 0xc80000, 0xc8007f, multi32_io_B_w },
+	{ 0xd00006, 0xd00007, irq_ack_w },
+	{ 0xd80000, 0xdfffff, random_number_16_w },
+	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
 
 
@@ -516,7 +511,7 @@ static struct MultiPCM_interface scross_multipcm_interface =
 static MACHINE_DRIVER_START( base )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V70, MULTI32_CLOCK/2)
+	MDRV_CPU_ADD(V60, MULTI32_CLOCK/2)
 	MDRV_CPU_MEMORY(multi32_readmem,multi32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
