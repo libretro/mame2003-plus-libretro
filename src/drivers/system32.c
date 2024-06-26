@@ -3132,6 +3132,8 @@ static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
 	init_driving();
+
+	opaquey_hack = true;
 }
 
 static DRIVER_INIT ( f1en )
@@ -3316,6 +3318,8 @@ static DRIVER_INIT( darkedge )
 	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
 	system32_prot_vblank = darkedge_fd1149_vblank;
+
+	opaquey_hack = true;
 }
 
 WRITE16_HANDLER( dbzvrvs_protection_w )
