@@ -968,13 +968,13 @@ static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 	/* determine if we're flipped */
 	int global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
 
-	flipx = global_flip;
-	flipy = global_flip;
+	*flipx = global_flip;
+	*flipy = global_flip;
 
 	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
 
-	flipy ^= layer_flip;
-	flipx ^= layer_flip;
+	*flipy ^= layer_flip;
+	*flipx ^= layer_flip;
 
 	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
 	// it seems to prohibit (at least) the per-tilemap y flipping (maybe global y can override it)
