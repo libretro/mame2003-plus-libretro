@@ -546,35 +546,27 @@ WRITE16_HANDLER( system32_paletteram_w )
 }
 
 
-READ32_HANDLER( multi32_paletteram_0_r )
+READ16_HANDLER( multi32_paletteram_0_r )
 {
-	return common_paletteram_r(0, offset*2+0) |
-	      (common_paletteram_r(0, offset*2+1) << 16);
+	return common_paletteram_r(0, offset);
 }
 
 
-WRITE32_HANDLER( multi32_paletteram_0_w )
+WRITE16_HANDLER( multi32_paletteram_0_w )
 {
-	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		common_paletteram_w(0, offset*2+0, data, mem_mask);
-	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		common_paletteram_w(0, offset*2+1, data >> 16, mem_mask >> 16);
+	common_paletteram_w(0, offset, data, mem_mask);
 }
 
 
-READ32_HANDLER( multi32_paletteram_1_r )
+READ16_HANDLER( multi32_paletteram_1_r )
 {
-	return common_paletteram_r(1, offset*2+0) |
-	      (common_paletteram_r(1, offset*2+1) << 16);
+	return common_paletteram_r(1, offset);
 }
 
 
-WRITE32_HANDLER( multi32_paletteram_1_w )
+WRITE16_HANDLER( multi32_paletteram_1_w )
 {
-	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		common_paletteram_w(1, offset*2+0, data, mem_mask);
-	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		common_paletteram_w(1, offset*2+1, data >> 16, mem_mask >> 16);
+	common_paletteram_w(1, offset, data, mem_mask);
 }
 
 
@@ -775,30 +767,24 @@ WRITE16_HANDLER( system32_mixer_w )
 	COMBINE_DATA(&mixer_control[0][offset]);
 }
 
-READ32_HANDLER( multi32_mixer_0_r )
+READ16_HANDLER( multi32_mixer_0_r )
 {
-	return mixer_control[0][offset*2+0] |
-	      (mixer_control[0][offset*2+1] << 16);
+	return mixer_control[0][offset];
 }
 
-WRITE32_HANDLER( multi32_mixer_0_w )
+WRITE16_HANDLER( multi32_mixer_0_w )
 {
-	data = SWAP_HALVES(data);
-	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&mixer_control[0][offset*2]);
+	COMBINE_DATA(&mixer_control[0][offset]);
 }
 
-READ32_HANDLER( multi32_mixer_1_r )
+READ16_HANDLER( multi32_mixer_1_r )
 {
-	return mixer_control[1][offset*2+0] |
-	      (mixer_control[1][offset*2+1] << 16);
+	return mixer_control[1][offset];
 }
 
-WRITE32_HANDLER( multi32_mixer_1_w )
+WRITE16_HANDLER( multi32_mixer_1_w )
 {
-	data = SWAP_HALVES(data);
-	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&mixer_control[1][offset*2]);
+	COMBINE_DATA(&mixer_control[1][offset]);
 }
 
 
