@@ -276,6 +276,8 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
+bool opaquey_hack = false; /* dink */
+
 
 
 /*************************************
@@ -1168,7 +1170,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = 0;
+	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
 //opaque = (system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1;
 //if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
 //if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
