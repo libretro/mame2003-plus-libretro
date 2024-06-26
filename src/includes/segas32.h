@@ -13,6 +13,8 @@ extern UINT16 *system32_paletteram[2];
 extern UINT16 system32_displayenable[2];
 extern UINT16 system32_tilebank_external;
 
+extern bool opaquey_hack;
+
 extern void system32_set_vblank(int state);
 
 READ16_HANDLER( system32_spriteram_r );
