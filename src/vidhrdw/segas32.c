@@ -961,7 +961,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 }
 
 
-static void compute_tilemap_flips(int bgnum, int &flipx, int &flipy)
+static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 {
 	int layer_flip;
 
