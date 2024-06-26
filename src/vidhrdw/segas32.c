@@ -1032,7 +1032,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 //if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
 
 	/* todo determine flipping */
-	compute_tilemap_flips(bgnum, flipx, flipy);
+	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1187,7 +1187,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 //if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
 
 	/* todo determine flipping */
-	compute_tilemap_flips(bgnum, flipx, flipy);
+	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
