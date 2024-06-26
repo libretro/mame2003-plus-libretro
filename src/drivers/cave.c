@@ -1,4 +1,4 @@
-/***************************************************************************
+/****************************************************************************
 
 							  -= Cave Hardware =-
 
@@ -261,6 +261,7 @@ static READ16_HANDLER( cave_sound_r )
 ***************************************************************************/
 
 static data8_t cave_default_eeprom_type1[16] =	{0x00,0x0C,0x11,0x0D,0xFF,0xFF,0xFF,0xFF,0x00,0x00,0x11,0x11,0xFF,0xFF,0xFF,0xFF};  /* DFeveron, Guwange */
+static data8_t cave_default_eeprom_type1feversos[18] =	{0x00,0x0C,0x16,0x27,0xFF,0xFF,0xFF,0xFF,0x00,0x00,0x11,0x11,0xFF,0xFF,0xFF,0xFF,0x05,0x19};  /* Fever SOS (code checks for the 0x0519 or it won't boot) */
 static data8_t cave_default_eeprom_type2[16] =	{0x00,0x0C,0xFF,0xFB,0xFF,0xFF,0xFF,0xFF,0x00,0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};  /* Esprade, DonPachi, DDonPachi */
 static data8_t cave_default_eeprom_type3[16] =	{0x00,0x03,0x08,0x00,0xFF,0xFF,0xFF,0xFF,0x08,0x00,0x00,0x00,0xFF,0xFF,0xFF,0xFF};  /* UoPoko */
 static data8_t cave_default_eeprom_type4[16] =	{0xF3,0xFE,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};  /* Hotdog Storm */
@@ -2811,6 +2812,33 @@ ROM_START( dfeveron )
 	ROM_LOAD( "cv01-u19.bin", 0x000000, 0x400000, CRC(5f5514da) SHA1(53f27364aee544572a82649c9ff29bacc642b732) )
 ROM_END
 
+/***************************************************************************
+
+								Fever SOS
+
+Board:	CV01
+OSC:	28.0, 16.0, 16.9 MHz
+
+***************************************************************************/
+
+ROM_START( feversos )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "rom1.bin", 0x000000, 0x080000, CRC(24ef3ce6) SHA1(42799eebbb2686a837b8972aec684143deadca59) )
+	ROM_LOAD16_BYTE( "rom2.bin", 0x000001, 0x080000, CRC(64ff73fd) SHA1(7fc3a8469cec2361d373a4dac4a547c13ca5f709) )
+
+	ROM_REGION( 0x800000 * 2, REGION_GFX1, 0 )		/* Sprites: * 2 , do not dispose */
+	ROM_LOAD( "cv01-u25.bin", 0x000000, 0x400000, CRC(a6f6a95d) SHA1(e1eb45cb5d0e6163edfd9d830633b913fb53c6ca) )
+	ROM_LOAD( "cv01-u26.bin", 0x400000, 0x400000, CRC(32edb62a) SHA1(3def74e1316b80cc25a8c3ac162cd7bcb8cc807c) )
+
+	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 0 */
+	ROM_LOAD( "cv01-u50.bin", 0x000000, 0x200000, CRC(7a344417) SHA1(828bd8f95d2fcc34407e17629ccafc904a4ea12d) )
+
+	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* Layer 1 */
+	ROM_LOAD( "cv01-u49.bin", 0x000000, 0x200000, CRC(d21cdda7) SHA1(cace4650de580c3c4a037f1f5c32bfc1846b383c) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD( "cv01-u19.bin", 0x000000, 0x400000, CRC(5f5514da) SHA1(53f27364aee544572a82649c9ff29bacc642b732) )
+ROM_END
 
 /***************************************************************************
 
@@ -3875,6 +3903,18 @@ DRIVER_INIT( dfeveron )
 	time_vblank_irq = 100;
 }
 
+DRIVER_INIT( feversos )
+{
+	cave_default_eeprom = cave_default_eeprom_type1feversos;
+	cave_default_eeprom_length = sizeof(cave_default_eeprom_type1feversos);
+	cave_region_byte = -1;
+
+	unpack_sprites();
+	cave_spritetype = 0;	/* "normal" sprites */
+	cave_kludge = 2;
+	time_vblank_irq = 100;
+}
+
 DRIVER_INIT( ddonpach )
 {
 	cave_default_eeprom = cave_default_eeprom_type2;
@@ -4122,6 +4162,7 @@ GAME( 1997, ddonpach, 0,        ddonpach, cave,     ddonpach, ROT270, "Atlus/Cav
 GAME( 1997, ddonpchj, ddonpach, ddonpach, cave,     ddonpach, ROT270, "Atlus/Cave",                           "DoDonPachi (Japan)"         )
 GAME( 2012, ddonpacha,ddonpach, ddonpach, cave,     ddonpach, ROT270, "Other",                                "DoDonPachi (Arrange Ver. 1.1) (trap15, hack)" )
 GAME( 1998, dfeveron, 0,        dfeveron, cave,     dfeveron, ROT270, "Cave (Nihon System license)",          "Dangun Feveron (Japan)"     )
+GAME( 1998, feversos, dfeveron, dfeveron, cave,     feversos, ROT270, "Cave (Nihon System license)",          "Fever SOS (International)"  )
 GAME( 1998, esprade,  0,        esprade,  cave,     esprade,  ROT270, "Atlus/Cave",                           "ESP Ra.De. (International Ver 1998 4-22)" )
 GAME( 1998, espradej, esprade,  esprade,  cave,     esprade,  ROT270, "Atlus/Cave",                           "ESP Ra.De. (Japan Ver 1998 4-21)" )
 GAME( 1998, espradeo, esprade,  esprade,  cave,     esprade,  ROT270, "Atlus/Cave",                           "ESP Ra.De. (Japan Ver 1998 4-14)" )
@@ -4130,3 +4171,4 @@ GAME( 1999, guwange,  0,        guwange,  guwange,  guwange,  ROT270, "Atlus/Cav
 GAME( 2000, guwanges, guwange,  guwange,  guwange,  guwange,  ROT270, "Atlus/Cave",                           "Guwange (Japan Special Ver 2000 7-7)" )
 GAMEX(1999, gaia,     0,        gaia,     gaia,     gaia,     ROT0,   "Noise Factory",                        "Gaia Crusaders", GAME_IMPERFECT_SOUND ) /* cuts out occasionally */
 GAMEX(2001, theroes,  0,        gaia,     theroes,  gaia,     ROT0,   "Primetek Investments",                 "Thunder Heroes", GAME_IMPERFECT_SOUND ) /* cuts out occasionally */
+		
