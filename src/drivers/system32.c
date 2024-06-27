@@ -2702,7 +2702,7 @@ ROM_START( brival )
 	ROM_LOAD( "mp15627.35",    0x200000, 0x100000, CRC(8a8388c5) SHA1(7ee03feb975cc576a3d8651fd41976ca87d60894) )
 	ROM_LOAD( "mp15626.34",    0x300000, 0x100000, CRC(83306d1e) SHA1(feb08902b51c0013d9417832cdf198e36cdfc28c) )
 	ROM_LOAD( "mp15625.24",    0x400000, 0x100000, CRC(3ce82932) SHA1(f2107bc2591f46a51c9f0d706933b1ae69db91f9) )
-  
+
 	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD16_BYTE( "mp14599f.14", 0x000000, 0x200000, CRC(1de17e83) SHA1(04ee14b863f93b42a5bd1b6da71cff54ef11d4b7) )
 	ROM_LOAD16_BYTE( "mp14598f.5",  0x000001, 0x200000, CRC(cafb0de9) SHA1(94c6bfc7a4081dee373e9466a7b6f80889696087) )
@@ -3049,7 +3049,7 @@ static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 	init_driving();
-	
+
 	dual_pcb_comms = auto_malloc(0x1000);
 	install_mem_read16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
@@ -3077,7 +3077,7 @@ static DRIVER_INIT ( sonic )
 
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
-  
+
   install_mem_write16_handler(0, 0x20E5C4, 0x20E5C5, sonic_level_load_protection);
 }
 
@@ -3194,7 +3194,7 @@ static DRIVER_INIT( arescue )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	arescue_comms = auto_malloc(0x2000);
-	
+
 	install_mem_read16_handler(0, 0xc00050, 0xc00057, system32_io_analog_r);
 	install_mem_write16_handler(0, 0xc00050, 0xc00057, system32_io_analog_w);
 
@@ -3341,5 +3341,5 @@ GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 S
 
 GAMEX(1993, darkedge, 0,        system32, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, dbzvrvs,  0,        system32, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1995, slipstrm, 0,        system32, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND ) 
+GAMEX(1995, slipstrm, 0,        system32, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 /* Loony Toons (maybe) */
