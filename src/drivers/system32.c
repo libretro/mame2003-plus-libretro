@@ -362,8 +362,8 @@ enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
-static int s32_blo, s32_bhi;		/* bank high and low values*/
 static UINT8 sound_dummy_value;
+static UINT16 sound_bank;
 
 static data16_t *segas32_protram;
 static int tocab, fromcab;
@@ -928,42 +928,29 @@ static MEMORY_WRITE_START( system32_sound_map_w )
 	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
 
-static void s32_recomp_bank(void)
+
+
+/*************************************
+ *
+ *  Sound banking
+ *
+ *************************************/
+
+static WRITE_HANDLER( sound_bank_lo_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
-	int Bank=0;
-	static char remapbhi[8] =
-	{
-		0, 1, 5, 3, 4, 2, 6, 4
-	};
 
-	switch (s32_blo & 0xc0)
-	{
-		case 0x00:	/* normal case*/
-			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo)) << 13);
-			break;
-  
-		case 0x40:
-		case 0xc0:
-			/* all other s32 games work with this, notably Super Visual Football*/
-			/* and Alien3: The Gun*/
-			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo&0x3f)) << 13);
-			break;
-	}
-
-	sys32_SoundMemBank = &RAM[Bank+0x100000];
+	sound_bank = (sound_bank & ~0x3f) | (data & 0x3f);
+	sys32_SoundMemBank = &RAM[0x100000+0x2000*sound_bank];
 }
 
-static WRITE_HANDLER( sys32_soundbank_lo_w )
-{
-	s32_blo = data;
-	s32_recomp_bank();
-}
 
-static WRITE_HANDLER( sys32_soundbank_hi_w )
+static WRITE_HANDLER( sound_bank_hi_w )
 {
-	s32_bhi = data;
-	s32_recomp_bank();
+	unsigned char *RAM = memory_region(REGION_CPU2);
+
+	sound_bank = (sound_bank & 0x3f) | ((data & 0x04) << 4) | ((data & 0x03) << 7);
+	sys32_SoundMemBank = &RAM[0x100000+0x2000*sound_bank];
 }
 
 static PORT_READ_START( system32_sound_portmap_r )
@@ -981,8 +968,8 @@ static PORT_WRITE_START( system32_sound_portmap_w )
 	{ 0x91, 0x91, YM2612_data_port_1_A_w },
 	{ 0x92, 0x92, YM2612_control_port_1_B_w },
 	{ 0x93, 0x93, YM2612_data_port_1_B_w },
-	{ 0xa0, 0xa0, sys32_soundbank_lo_w },
-	{ 0xb0, 0xb0, sys32_soundbank_hi_w },
+	{ 0xa0, 0xaf, sound_bank_lo_w },
+	{ 0xb0, 0xbf, sound_bank_hi_w },
 	{ 0xc1, 0xc1, IOWP_NOP },
 	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
