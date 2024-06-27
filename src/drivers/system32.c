@@ -363,6 +363,7 @@ enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static UINT8 sound_dummy_value;
+static UINT8 *sound_bankptr;
 static UINT16 sound_bank;
 
 static data16_t *segas32_protram;
@@ -884,11 +885,10 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
 
-static UINT8 *sys32_SoundMemBank;
 
 static READ_HANDLER( system32_bank_r )
 {
-	return sys32_SoundMemBank[offset];
+	return sound_bankptr[offset];
 }
 
 static READ_HANDLER( z80_shared_ram_r )
@@ -907,7 +907,6 @@ static READ_HANDLER( sound_dummy_r )
 {
 	return sound_dummy_value;
 }
-
 
 static WRITE_HANDLER( sound_dummy_w )
 {
@@ -941,17 +940,17 @@ static WRITE_HANDLER( sound_bank_lo_w )
 	unsigned char *RAM = memory_region(REGION_CPU2);
 
 	sound_bank = (sound_bank & ~0x3f) | (data & 0x3f);
-	sys32_SoundMemBank = &RAM[0x100000+0x2000*sound_bank];
+	sound_bankptr = &RAM[0x100000+0x2000*sound_bank];
 }
-
 
 static WRITE_HANDLER( sound_bank_hi_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
 
 	sound_bank = (sound_bank & 0x3f) | ((data & 0x04) << 4) | ((data & 0x03) << 7);
-	sys32_SoundMemBank = &RAM[0x100000+0x2000*sound_bank];
+	sound_bankptr = &RAM[0x100000+0x2000*sound_bank];
 }
+
 
 static PORT_READ_START( system32_sound_portmap_r )
 	{ 0x80, 0x80, YM2612_status_port_0_A_r },
@@ -2905,12 +2904,11 @@ ROM_START( darkedge )
 	ROM_LOAD16_WORD( "epr15244.8", 0x000000, 0x80000, CRC(0db138cb) SHA1(79ccb754e0d816b395b536a6d9c5a6e93168a913) )
 	ROM_RELOAD     (               0x080000, 0x80000 )
 
-	ROM_REGION( 0x480000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "epr15243.36", 0x00000, 0x20000, CRC(08ca5f11) SHA1(c2c48d2f02770941a93794f82cb407d6264904d2) )
-	ROM_RELOAD(              0x100000, 0x20000             )
-	ROM_LOAD( "mpr15242.35", 0x180000, 0x100000, CRC(ffb7d917) SHA1(bfeae1a2bd7250edb695b7034f6b1f851f6fd48a) )
-	ROM_LOAD( "mpr15240.24", 0x280000, 0x100000, CRC(867d59e8) SHA1(fb1c0d26dbb1bde9d8bc86419cd911b8e37bf923) )
-	ROM_LOAD( "mpr15241.34", 0x380000, 0x100000, CRC(8eccc4fe) SHA1(119724b9b6d2b51ad4f065ebf74d200960090e68) )
+	ROM_REGION( 0x500000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_LOAD_x8( "epr15243.36", 0x100000, 0x020000, CRC(08ca5f11) SHA1(c2c48d2f02770941a93794f82cb407d6264904d2) )
+	ROM_LOAD( "mpr15242.35",    0x200000, 0x100000, CRC(ffb7d917) SHA1(bfeae1a2bd7250edb695b7034f6b1f851f6fd48a) )
+	ROM_LOAD( "mpr15241.34",    0x300000, 0x100000, CRC(8eccc4fe) SHA1(119724b9b6d2b51ad4f065ebf74d200960090e68) )
+	ROM_LOAD( "mpr15240.24",    0x400000, 0x100000, CRC(867d59e8) SHA1(fb1c0d26dbb1bde9d8bc86419cd911b8e37bf923) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD16_BYTE( "mpr15248", 0x000000, 0x080000, CRC(185b308b) SHA1(a49c1b752b3c4355560e0cd712fb9a096140e37b) )
