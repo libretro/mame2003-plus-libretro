@@ -915,7 +915,7 @@ static WRITE_HANDLER( sound_dummy_w )
 }
 
 static MEMORY_READ_START( system32_sound_map_r )
-	{ 0x0000, 0x9fff, MRA_ROM },
+	{ 0x0000, 0x9fff, MRA_BANK2 },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xd000, 0xdfff, RF5C68_r },
 	{ 0xe000, 0xffff, z80_shared_ram_r },
@@ -977,6 +977,7 @@ PORT_END
 static MACHINE_INIT( segas32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
+	cpu_setbank(2, memory_region(REGION_CPU2)+0x100000);
 	irq_init();
 }
 
