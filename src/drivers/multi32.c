@@ -28,6 +28,8 @@
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
 static UINT8 sound_dummy_value;
+static UINT8 *sound_bankptr;
+static UINT16 sound_bank;
 
 static void irq_raise(int level)
 {
@@ -364,6 +366,7 @@ MEMORY_END
 static MACHINE_INIT( segas32 )
 {
 	cpu_setbank(1, memory_region(REGION_CPU1));
+	cpu_setbank(2, memory_region(REGION_CPU2)+0x100000);
 	irq_init();
 }
 
@@ -402,11 +405,9 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-static UINT8 *sys32_SoundMemBank;
-
 static READ_HANDLER( system32_bank_r )
 {
-	return sys32_SoundMemBank[offset];
+	return sound_bankptr[offset];
 }
 
 static READ_HANDLER( z80_shared_ram_r )
@@ -433,7 +434,7 @@ static WRITE_HANDLER( sound_dummy_w )
 }
 
 static MEMORY_READ_START( multi32_sound_map_r )
-	{ 0x0000, 0x9fff, MRA_ROM },
+	{ 0x0000, 0x9fff, MRA_BANK2 },
 	{ 0xa000, 0xbfff, system32_bank_r },
 	{ 0xc000, 0xdfff, MultiPCM_reg_0_r },
 	{ 0xe000, 0xffff, z80_shared_ram_r },
@@ -445,14 +446,12 @@ static MEMORY_WRITE_START( multi32_sound_map_w )
 	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
 
-static WRITE_HANDLER( sys32_soundbank_w )
+static WRITE_HANDLER( sound_bank_lo_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
-	int Bank;
 
-	Bank = data * 0x2000;
-
-	sys32_SoundMemBank = &RAM[Bank+0x10000];
+	sound_bank = (sound_bank & ~0x3f) | (data & 0x3f);
+	sound_bankptr = &RAM[0x100000+0x2000*sound_bank];
 }
 
 static PORT_READ_START( multi32_sound_portmap_r )
@@ -465,8 +464,8 @@ static PORT_WRITE_START( multi32_sound_portmap_w )
 	{ 0x81, 0x81, YM2612_data_port_0_A_w },
 	{ 0x82, 0x82, YM2612_control_port_0_B_w },
 	{ 0x83, 0x83, YM2612_data_port_0_B_w },
-	{ 0xa0, 0xa0, sys32_soundbank_w },
-	{ 0xb0, 0xb0, MultiPCM_bank_0_w },
+	{ 0xa0, 0xaf, sound_bank_lo_w },
+	{ 0xb0, 0xbf, MultiPCM_bank_0_w },
 	{ 0xc1, 0xc1, IOWP_NOP },
 	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
