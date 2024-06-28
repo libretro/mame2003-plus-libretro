@@ -456,10 +456,10 @@ INPUT_PORTS_START( hbarrel )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* player 1 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
 
 	PORT_START	/* player 2 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, IP_JOY_NONE, IP_JOY_NONE )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, IP_JOY_NONE, IP_JOY_NONE )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( baddudes )
@@ -732,10 +732,10 @@ INPUT_PORTS_START( midres )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* player 1 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, 0, 0 )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, 0, 0 )
 
 	PORT_START	/* player 2 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, 0, 0 )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, 0, 0 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( midresbj )
@@ -784,10 +784,10 @@ INPUT_PORTS_START( midresbj )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* player 1 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE, 25, 10, 0, 0, KEYCODE_Z, KEYCODE_X, IP_JOY_NONE, IP_JOY_NONE )
 
 	PORT_START	/* player 2 12-way rotary control - converted in controls_r() */
-	PORT_ANALOGX( 0xff, 0x00, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, IP_JOY_NONE, IP_JOY_NONE )
+	PORT_ANALOGX( 0xff, 0x0a, IPT_DIAL | IPF_REVERSE | IPF_PLAYER2, 25, 10, 0, 0, KEYCODE_N, KEYCODE_M, IP_JOY_NONE, IP_JOY_NONE )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( bouldash )
@@ -2120,7 +2120,7 @@ ROM_START( midresbj )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 6502 sound */
 	ROM_LOAD( "15",         0x0000, 0x10000, CRC(99d47166) SHA1(a9a1adfe47be8dd3e4d6f8c783447e09be1747b2) )
 
-	
+
 	ROM_REGION( 0x20000,  REGION_GFX1, ROMREGION_DISPOSE ) /* chars */
 	ROM_LOAD( "23",             0x08000, 0x08000, CRC(d75aba06) SHA1(cb3b969db3dd8e0c5c3729482f7461cde3a961f3) )
 	ROM_CONTINUE(                   0x00000, 0x08000 )  /* the two halves are swapped */
