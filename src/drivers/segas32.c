@@ -356,13 +356,9 @@ Stephh's notes (based on some tests) :
 #include "includes/segas32.h"
 
 
-
 #define MASTER_CLOCK		32215900
 #define MULTI32_CLOCK		40000000
 
-
-
-enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
 static data8_t *z80_shared_ram;
@@ -377,6 +373,7 @@ static data16_t *system32_workram;
 int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
 
+enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 /* alien 3 with the gun calibrated, it doesn't prompt you if its not */
 unsigned char alien3_default_eeprom[128] = {
@@ -1070,18 +1067,6 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	}
 }
 
-
-static READ16_HANDLER( jp_v60_read_cab )
-{
-	return fromcab;
-}
-
-static WRITE16_HANDLER( jp_v60_write_cab )
-{
-	tocab = data;
-	cpu_set_irq_line(1, 0, HOLD_LINE);
-}
-
 static WRITE16_HANDLER( random_number_16_w )
 {
 /* printf("%06X:random_seed_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask  ^ 0xffff);*/
@@ -1096,7 +1081,6 @@ static READ16_HANDLER( shared_ram_16_r )
 {
 	return z80_shared_ram[offset*2+0] | (z80_shared_ram[offset*2+1] << 8);
 }
-
 
 static WRITE16_HANDLER( shared_ram_16_w )
 {
@@ -1118,7 +1102,6 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x200000, 0x20ffff, MRA16_RAM }, /* work RAM */
 	{ 0x300000, 0x31ffff, system32_videoram_r },
 	{ 0x400000, 0x41ffff, system32_spriteram_r },
-/*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 	{ 0x500000, 0x50000f, system32_sprite_control_r },
 	{ 0x600000, 0x60ffff, system32_paletteram_r },
 	{ 0x610000, 0x61007f, system32_mixer_r },
@@ -1324,45 +1307,6 @@ static MACHINE_INIT( segas32 )
 	cpu_setbank(2, memory_region(REGION_CPU2));
 	irq_init();
 }
-
-/* jurassic park moving cab - not working yet */
-
-static READ_HANDLER( jpcab_z80_read )
-{
-	return tocab;
-}
-
-static MEMORY_READ_START( jpcab_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0x8000, 0x8fff, MRA_RAM },
-	{ 0xc000, 0xc008, jpcab_z80_read },
-	{ 0xd000, 0xffff, MRA_RAM },
-MEMORY_END
-
-static MEMORY_WRITE_START( jpcab_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0x8fff, MWA_RAM },
-	{ 0xc000, 0xc008, MWA_RAM },
-	{ 0xd000, 0xffff, MWA_RAM },
-MEMORY_END
-
-static PORT_READ_START( jpcab_readport )
-	{ 0x04, 0x04, IORP_NOP },		/* interrupt control*/
-	{ 0x80, 0x83, IORP_NOP },
-	{ 0x90, 0x93, IORP_NOP },
-	{ 0xc0, 0xc1, IORP_NOP },
-	{ 0xd0, 0xd3, IORP_NOP },
-	{ 0xd8, 0xd8, IORP_NOP },
-PORT_END
-
-static PORT_WRITE_START( jpcab_writeport )
-	{ 0x04, 0x04, IOWP_NOP },
-	{ 0x80, 0x83, IOWP_NOP },
-	{ 0x90, 0x93, IOWP_NOP },
-	{ 0xc0, 0xc1, IOWP_NOP },
-	{ 0xd0, 0xd3, IOWP_NOP },
-	{ 0xd8, 0xd8, IOWP_NOP },
-PORT_END
 
 /* Analog Input Handlers */
 /* analog controls for sonic */
@@ -2788,16 +2732,6 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_SOUND_ADD(RF5C68, sys32_rf5c68_interface)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( jpark )
-	MDRV_IMPORT_FROM( system32 )
-
-	MDRV_CPU_ADD_TAG("cabinet", Z80, MASTER_CLOCK/4)
-	MDRV_CPU_MEMORY( jpcab_readmem, jpcab_writemem )
-	MDRV_CPU_PORTS( jpcab_readport, jpcab_writeport )
-/*	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)		*/ /* CPU has an IRQ handler, it appears to be periodic*/
-
-MACHINE_DRIVER_END
-
 
 static MACHINE_DRIVER_START( multi32_base )
 
@@ -4155,7 +4089,7 @@ GAMEX(1992, brival,   0,        system32, brival,   brival,   ROT0, "Sega", "Bur
 GAMEX(1992, sonic,    0,        system32, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonicp,   sonic,    system32, sonic,    sonicp,   ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, alien3,   0,        system32, alien3,   alien3,   ROT0, "Sega", "Alien3: The Gun", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, jpark,    0,        jpark,    jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, jpark,    0,        system32, jpark,    jpark,    ROT0, "Sega", "Jurassic Park", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svf,      0,        system32, svf,      s32,      ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jleague,  svf,      system32, svf,      jleague,  ROT0, "Sega", "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
