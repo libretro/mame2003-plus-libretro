@@ -367,7 +367,6 @@ static UINT8 *sound_bankptr;
 static UINT16 sound_bank;
 
 static data16_t *segas32_protram;
-static int tocab, fromcab;
 static data16_t *system32_workram;
 
 int system32_use_default_eeprom;
@@ -784,8 +783,7 @@ static WRITE16_HANDLER( system32_io_w )
 		break;
 	case 0x06:
 		/* jp_v60_write_cab*/
-		tocab = data;
-		cpu_set_irq_line(1, 0, HOLD_LINE);
+		//cpu_set_irq_line(1, 0, HOLD_LINE);
 		break;
 	case 0x07:
 		/* multi32 tilebank per layer*/
