@@ -550,12 +550,12 @@ WRITE_HANDLER( MultiPCM_bank_0_w )
 {
 	if (mpcm[0].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
 	{
-		mpcm[0].bankL = mpcm[0].bankR = (data&0x7);
+		mpcm[0].bankL = mpcm[0].bankR = (data & 7);
 	}
 	else if (mpcm[0].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
 	{
-		mpcm[0].bankL = (data>>3)&0x7;
-		mpcm[0].bankR = data & 0x7;
+		mpcm[0].bankL = (data >> 3) & 7;
+		mpcm[0].bankR = (data & 7);
 	}
 	else
 	{
@@ -567,12 +567,12 @@ WRITE_HANDLER( MultiPCM_bank_1_w )
 {
 	if (mpcm[1].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
 	{
-		mpcm[1].bankL = mpcm[1].bankR = (data&0x7);
+		mpcm[1].bankL = mpcm[1].bankR = (data & 7);
 	}
 	else if (mpcm[1].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
 	{
-		mpcm[1].bankL = (data>>3)&0x7;
-		mpcm[1].bankR = data & 0x7;
+		mpcm[1].bankL = (data >> 3) & 7;
+		mpcm[1].bankR = (data & 7);
 	}
 	else
 	{
