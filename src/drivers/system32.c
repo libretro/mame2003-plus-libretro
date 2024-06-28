@@ -751,9 +751,8 @@ static WRITE16_HANDLER( system32_io_w )
 		/* f1lap*/
 		break;
 	case 0x06:
-		/* jp_v60_write_cab / titlef*/
+		/* jp_v60_write_cab*/
 		tocab = data;
-		cpu_set_irq_line(1, 0, HOLD_LINE);
 		break;
 	case 0x07:
 		/* multi32 tilebank per layer*/
@@ -804,7 +803,7 @@ static WRITE16_HANDLER( system32_io_2_w )
 
 	switch(offset) {
 	case 0x00:
-		/* orunners: Used by the hardware to switch the analog input ports to set B*/
+		/* Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
 	case 0x0a:
