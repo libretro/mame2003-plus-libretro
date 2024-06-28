@@ -182,7 +182,6 @@ static WRITE16_HANDLER( multi32_io_w )
 		break;
 	case 0x0e:
 		COMBINE_DATA(&system32_displayenable[0]);
-		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
 	case 0x0f:
 		/* orunners unknown*/
