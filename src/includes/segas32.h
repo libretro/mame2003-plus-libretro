@@ -52,3 +52,68 @@ VIDEO_START( multi32 );
 
 VIDEO_UPDATE( system32 );
 VIDEO_UPDATE( multi32 );
+
+
+/*************************************
+ *
+ *  ROM definition(s)
+ *
+ *************************************/
+
+#define ROM_LOAD_x2(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length )
+
+#define ROM_LOAD_x4(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length )
+
+#define ROM_LOAD_x8(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 5 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length ) \
+	ROM_RELOAD(     base + 7 * length, length )
+
+#define ROM_LOAD_x16(name, base, length, crc) \
+	ROM_LOAD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 1 * length, length ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 3 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 5 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length ) \
+	ROM_RELOAD(     base + 7 * length, length ) \
+	ROM_RELOAD(     base + 8 * length, length ) \
+	ROM_RELOAD(     base + 9 * length, length ) \
+	ROM_RELOAD(     base + 10 * length, length ) \
+	ROM_RELOAD(     base + 11 * length, length ) \
+	ROM_RELOAD(     base + 12 * length, length ) \
+	ROM_RELOAD(     base + 13 * length, length ) \
+	ROM_RELOAD(     base + 14 * length, length ) \
+	ROM_RELOAD(     base + 15 * length, length )
+
+#define ROM_LOAD16_BYTE_x2(name, base, length, crc) \
+	ROM_LOAD16_BYTE( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length )
+
+#define ROM_LOAD16_BYTE_x4(name, base, length, crc) \
+	ROM_LOAD16_BYTE( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length )
+
+#define ROM_LOAD32_WORD_x2(name, base, length, crc) \
+	ROM_LOAD32_WORD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length )
+
+#define ROM_LOAD32_WORD_x4(name, base, length, crc) \
+	ROM_LOAD32_WORD( name, base + 0 * length, length, crc ) \
+	ROM_RELOAD(     base + 2 * length, length ) \
+	ROM_RELOAD(     base + 4 * length, length ) \
+	ROM_RELOAD(     base + 6 * length, length )
