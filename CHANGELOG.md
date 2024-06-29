@@ -1041,6 +1041,14 @@ Notes on this option:
       Key/Joy Speed: 21
       Sensitivity: 100%
       X-Way Joystick: On
+  - Forgotten Worlds (arcade version used "roll" button, not rotary joystick)
+      Key/Joy Speed: 65
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Gondomania
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
   - Guerrilla War
       Key/Joy Speed: 16
       Sensitivity: 100%
@@ -1067,6 +1075,10 @@ Notes on this option:
       X-Way Joystick: On
   - SAR - Search and Rescue
       Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - T.A.N.K
+      Key/Joy Speed: 16
       Sensitivity: 100%
       X-Way Joystick: On
   - Time Soldiers
