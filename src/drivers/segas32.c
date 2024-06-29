@@ -1428,7 +1428,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( system32_sound_map_w )
 	{ 0x0000, 0x9fff, MWA_ROM },
-	{ 0xc000, 0xc008, RF5C68_reg_w },
+	{ 0xc000, 0xc00f, RF5C68_reg_w },
 	{ 0xd000, 0xdfff, RF5C68_w },
 	{ 0xe000, 0xffff, MWA_RAM, &z80_shared_ram },
 MEMORY_END
