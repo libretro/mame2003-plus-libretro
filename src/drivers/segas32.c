@@ -1471,8 +1471,8 @@ static PORT_WRITE_START( system32_sound_portmap_w )
 	{ 0x93, 0x93, YM2612_data_port_1_B_w },
 	{ 0xa0, 0xaf, sound_bank_lo_w },
 	{ 0xb0, 0xbf, sound_bank_hi_w },
-	{ 0xc0, 0xcf, sound_int_control_lo_w },
-	{ 0xd0, 0xd3, sound_int_control_hi_w },
+	//{ 0xc0, 0xcf, sound_int_control_lo_w },
+	//{ 0xd0, 0xd3, sound_int_control_hi_w },
 	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
 
@@ -2910,7 +2910,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_PORTS(system32_sound_portmap_r, system32_sound_portmap_w)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(100/*0000 * (262 - 224) / (262 * 60)*/)
+	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
 
 	MDRV_MACHINE_INIT(segas32)
 	MDRV_NVRAM_HANDLER(system32)
