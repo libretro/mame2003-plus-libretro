@@ -2826,7 +2826,7 @@ struct RF5C68interface sys32_rf5c68_interface =
 struct YM2612interface sys32_ym3438_interface =
 {
 	2,		/* 2 chips */
-	/*MASTER_CLOCK/4*/8000000,	/* verified on real PCB */
+	MASTER_CLOCK/4,	/* verified on real PCB */
 	{ 40,40 },
 	{ 0 },	{ 0 },	{ 0 },	{ 0 },
 	{ ym3438_irq_handler }
@@ -2910,7 +2910,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_CPU_PORTS(system32_sound_portmap_r, system32_sound_portmap_w)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
+	MDRV_VBLANK_DURATION(100/*0000 * (262 - 224) / (262 * 60)*/)
 
 	MDRV_MACHINE_INIT(segas32)
 	MDRV_NVRAM_HANDLER(system32)
