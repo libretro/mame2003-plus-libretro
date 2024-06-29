@@ -902,7 +902,7 @@ static WRITE16_HANDLER( system32_io_w )
 		break;
 	case 0x0e:
 		COMBINE_DATA(&system32_displayenable[0]);
-		//cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
 	case 0x0f:
 		/* orunners unknown*/
@@ -2826,7 +2826,7 @@ struct RF5C68interface sys32_rf5c68_interface =
 struct YM2612interface sys32_ym3438_interface =
 {
 	2,		/* 2 chips */
-	MASTER_CLOCK/4,	/* verified on real PCB */
+	/*MASTER_CLOCK/4*/8000000,	/* verified on real PCB */
 	{ 40,40 },
 	{ 0 },	{ 0 },	{ 0 },	{ 0 },
 	{ ym3438_irq_handler }
