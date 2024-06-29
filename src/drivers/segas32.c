@@ -1471,8 +1471,8 @@ static PORT_WRITE_START( system32_sound_portmap_w )
 	{ 0x93, 0x93, YM2612_data_port_1_B_w },
 	{ 0xa0, 0xaf, sound_bank_lo_w },
 	{ 0xb0, 0xbf, sound_bank_hi_w },
-	//{ 0xc0, 0xcf, sound_int_control_lo_w },
-	//{ 0xd0, 0xd3, sound_int_control_hi_w },
+	{ 0xc0, 0xcf, sound_int_control_lo_w },
+	{ 0xd0, 0xd3, sound_int_control_hi_w },
 	{ 0xf1, 0xf1, sound_dummy_w },
 PORT_END
 
