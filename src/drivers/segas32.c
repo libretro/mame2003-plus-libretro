@@ -1330,7 +1330,7 @@ static void clear_sound_irq(int which)
 }
 
 
-static WRITE8_HANDLER( sound_int_control_lo_w )
+static WRITE_HANDLER( sound_int_control_lo_w )
 {
 	/* odd offsets are interrupt acks */
 	if (offset & 1)
@@ -1345,7 +1345,7 @@ static WRITE8_HANDLER( sound_int_control_lo_w )
 }
 
 
-static WRITE8_HANDLER( sound_int_control_hi_w )
+static WRITE_HANDLER( sound_int_control_hi_w )
 {
 	sound_irq_control[offset] = data;
 	update_sound_irq_state();
