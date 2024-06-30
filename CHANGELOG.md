@@ -78,6 +78,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * ESPGaluda
 * F1 Super Lap (World)
 * Fantasy Zone II - The Tears of Opa-Opa (System 16C version)
+* Fever SOS
 * Final Tetris
 * Fire Hawk
 * FixEight (bootleg)
@@ -232,6 +233,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Touki Denshou -Angel Eyes
 * Trophy Hunting Bear & Moose
 * Turkey Hunting
+* Twin Cobra 2
 * Twin Action
 * Twinkle
 * Tylz
@@ -370,6 +372,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Competition Golf Final Round (revision 3) - `compgolf`
 * Crater Raider - Romset `crater`
 * Crazy Climber 2 - Romset `cclimbr2`
+* Dark Edge - Romset `darkedge`
 * DD Crew - Romset `ddcrew`
 * Demolition Derby - Romset `demoderb`
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
@@ -444,6 +447,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shrike Avenger - Romset `shrike`
 * Sky Army - Romset `skyarmy`
 * Slap Fight (Official Version) - Romset `slapfigh`
+* Slipstream - Romset `slipstrm`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
 * Space Position - Romset `spcpostn`
@@ -1020,6 +1024,8 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Buccaneers to vigilant.c and ThunderForce AC (Japan, prototype, bootleg) to the segac2.c drivers [MAMEDev, arcadez]
 * Fixed sound clipping in Karate Champ [MAMEDev, arcadez]
 * Fixed sound samples not playing in two versions of Bomber Man namely Bomber Man World (World) and New Atomic Punk - Global Quest (US) [MAMEDev, arcadez]
+* Added two sets of Twin Cobra 2 to the taito_f3.c driver and the international version of Dangun Feveron namely Fever SOS to cave.c [arcadez]
+* Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944]
 
 ## New and/or Recommended Input Options and Settings
 
