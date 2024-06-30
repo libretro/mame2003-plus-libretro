@@ -861,6 +861,17 @@ static READ16_HANDLER( system32_io_r )
 	case 0x07:
 		/* scross*/
 		return system32_tilebank_external;
+
+	/* 'SEGA' protection */
+	case 0x08:
+		return 'S';
+	case 0x09:
+		return 'E';
+	case 0x0a:
+		return 'G';
+	case 0x0b:
+		return 'A';
+
 	case 0x0e:
 		/* f1lap*/
 		return 0xffff;
@@ -1020,6 +1031,17 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x07:
 		/* scross*/
 		return system32_tilebank_external;
+
+	/* 'SEGA' protection */
+	case 0x08:
+		return 'S';
+	case 0x09:
+		return 'E';
+	case 0x0a:
+		return 'G';
+	case 0x0b:
+		return 'A';
+
 	case 0x0e:
 		/* f1lap*/
 		return 0xffff;
@@ -1119,27 +1141,38 @@ static WRITE16_HANDLER( multi32_io_2_w )
 static READ16_HANDLER( multi32_io_B_r )
 {
 	switch(offset) {
-	case 0:
+	case 0x00:
 		/* orunners (mask ff00)*/
 		return readinputport(0X0c); /* orunners Monitor B Shift Up, Shift Down buttons*/
-	case 1:
+	case 0x01:
 		/* orunners (mask ff00)*/
 		return readinputport(0X0d); /* orunners Monitor B DJ Music, Music Up, Music Down buttons*/
-	case 2:
+	case 0x02:
 		return 0x00;
-	case 3:
+	case 0x03:
 		/* orunners (mask ff00)*/
 		return 0x00;
-	case 4:
+	case 0x04:
 		/* harddunk (mask ff00) will not exit test mode if not 0xff*/
 		return readinputport(0X0e); /* orunners Monitor B Service, Test, Coin and Start buttons*/
-	case 5:
+	case 0x05:
 		/* orunners (mask ff00) locks up*/
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 7:
+	case 0x07:
 		/* orunners (mask ff00)*/
 		return 0xffff;
-	case 14:
+
+	/* 'SEGA' protection */
+	case 0x08:
+		return 'S';
+	case 0x09:
+		return 'E';
+	case 0x0a:
+		return 'G';
+	case 0x0b:
+		return 'A';
+
+	case 0x0e:
 		/* harddunk (mask ff00)*/
 		return 0xffff;
 	default:
