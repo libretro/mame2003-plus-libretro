@@ -381,6 +381,9 @@ static int common_start(int multi32)
 	/* initialize videoram */
 	memset(system32_videoram, 0x00, 0x20000);
 	system32_videoram[0x1ff00/2] = 0x8000;
+
+	memset(mixer_control, 0xff, sizeof(mixer_control[0][0]) * 0x80 );
+
 	return 0;
 }
 
