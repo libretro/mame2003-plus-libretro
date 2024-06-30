@@ -503,7 +503,7 @@ static void int_control_w(int offset, UINT8 data)
 {
 	int duration;
 
-//  logerror("%06X:int_control_w(%X) = %02X\n", activecpu_get_pc(), offset, data);
+/*  logerror("%06X:int_control_w(%X) = %02X\n", activecpu_get_pc(), offset, data);*/
 	switch (offset)
 	{
 		case 0:
