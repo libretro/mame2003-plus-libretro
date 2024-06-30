@@ -662,7 +662,81 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Vanguard
 
 
-## Changes
+## New and/or Recommended Input Options and Settings
+
+* Added 'X-Way Joystick' Option to Analog Controls Menu only for IPT_DIAL and IPT_DIAL_V devices.  This option is for use with x-way rotary joysticks (where the joystick can rotate X discrete steps, 8 or 12 appears to be most common).  The joystick can still move up, down, left, right and diagonally. The most famous game to use this control scheme is Ikari Warriors.
+Notes on this option:
+  - When on, prevents the character from rotating two discrete steps sometimes when the rotary joystick is just rotated one step.
+  - When on, the character will only rotate up to half the frame rate instead of the frame rate, so up to 30 times per second instead of 60 times a second if the game is running at 60Hz.
+
+* Recommended analog control settings for known games that use an x-way rotary joystick to give the intended rotary control of the character. (Note: Settings will work best if the game is running at its native 60Hz, and the time the rotary joystick "holds" down the virtual IPT_DIAL or IPT_DIAL_V button is longer than 1/60th of a second, but less than 2/60ths of a second.):
+  - Bermuda Triangle
+      Key/Joy Speed: 16
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Caliber 50
+      Key/Joy Speed: 4
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - DownTown
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Forgotten Worlds (arcade version used "roll" button, not rotary joystick)
+      Key/Joy Speed: 65
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Gondomania
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Guerrilla War
+      Key/Joy Speed: 16
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Heavy Barrel
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Ikari Warriors
+      Key/Joy Speed: 16
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Victory Road (kind of Ikari Warriors II)
+      Key/Joy Speed: 16
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Ikari III - The Rescue
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Midnight Resistance
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - SAR - Search and Rescue
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - T.A.N.K
+      Key/Joy Speed: 16
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Time Soldiers
+      Key/Joy Speed: 21
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Touchdown Fever
+      Key/Joy Speed: 2
+      Sensitivity: 100%
+      X-Way Joystick: On
+  - Touchdown Fever 2
+      Key/Joy Speed: 2
+      Sensitivity: 100%
+      X-Way Joystick: On
+
+
+## Misc Changes
 * Added HD647180 MCU sound support for Fire Shark and Vimana [arcadez]
 * Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
 * Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]
@@ -1025,77 +1099,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed sound clipping in Karate Champ [MAMEDev, arcadez]
 * Fixed sound samples not playing in two versions of Bomber Man namely Bomber Man World (World) and New Atomic Punk - Global Quest (US) [MAMEDev, arcadez]
 * Added two sets of Twin Cobra 2 to the taito_f3.c driver and the international version of Dangun Feveron namely Fever SOS to cave.c [arcadez]
-* Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944]
-
-## New and/or Recommended Input Options and Settings
-
-* Added 'X-Way Joystick' Option to Analog Controls Menu only for IPT_DIAL and IPT_DIAL_V devices.  This option is for use with x-way rotary joysticks (where the joystick can rotate X discrete steps, 8 or 12 appears to be most common).  The joystick can still move up, down, left, right and diagonally. The most famous game to use this control scheme is Ikari Warriors.
-Notes on this option:
-  - When on, prevents the character from rotating two discrete steps sometimes when the rotary joystick is just rotated one step.
-  - When on, the character will only rotate up to half the frame rate instead of the frame rate, so up to 30 times per second instead of 60 times a second if the game is running at 60Hz.
-
-* Recommended analog control settings for known games that use an x-way rotary joystick to give the intended rotary control of the character. (Note: Settings will work best if the game is running at its native 60Hz, and the time the rotary joystick "holds" down the virtual IPT_DIAL or IPT_DIAL_V button is longer than 1/60th of a second, but less than 2/60ths of a second.):
-  - Bermuda Triangle
-      Key/Joy Speed: 16
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Caliber 50
-      Key/Joy Speed: 4
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - DownTown
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Forgotten Worlds (arcade version used "roll" button, not rotary joystick)
-      Key/Joy Speed: 65
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Gondomania
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Guerrilla War
-      Key/Joy Speed: 16
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Heavy Barrel
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Ikari Warriors
-      Key/Joy Speed: 16
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Victory Road (kind of Ikari Warriors II)
-      Key/Joy Speed: 16
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Ikari III - The Rescue
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Midnight Resistance
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - SAR - Search and Rescue
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - T.A.N.K
-      Key/Joy Speed: 16
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Time Soldiers
-      Key/Joy Speed: 21
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Touchdown Fever
-      Key/Joy Speed: 2
-      Sensitivity: 100%
-      X-Way Joystick: On
-  - Touchdown Fever 2
-      Key/Joy Speed: 2
-      Sensitivity: 100%
-      X-Way Joystick: On
+* Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944, grant2258, arcadez]
+* Backported segas32 video driver, interrupt controllers for v60 and sound, general cleanup and merger of multi32 and system32 drivers. [mahoneyt944]
