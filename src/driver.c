@@ -3101,30 +3101,31 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( svs )		/* (c) 1994 */
 	DRIVER( jleague )	/* (c) 1994 (Japan) */
 	DRIVER( brival )	/* (c) 1992 (Japan) */
-	DRIVER( radm )
+	DRIVER( radm )    /* (c) 1991 */
 	DRIVER( radr )		/* (c) 1991 */
-	DRIVER( f1en )
+	DRIVER( f1en )    /* (c) 1991 */
 	DRIVER( alien3 )	/* (c) 1993 */
 	DRIVER( sonic )		/* (c) 1992 (Japan) */
 	DRIVER( sonicp )	/* (c) 1992 (Japan) */
 	DRIVER( jpark )		/* (c) 1994 */
-	DRIVER( ga2 )		/* (c) 1992 */
+	DRIVER( ga2 )		  /* (c) 1992 */
 	DRIVER( ga2j )		/* (c) 1992 */
 	DRIVER( spidey )	/* (c) 1991 */
 	DRIVER( spideyj )	/* (c) 1991 (Japan) */
 	DRIVER( arabfgt )	/* (c) 1991 */
 	DRIVER( arescue )	/* (c) 1992 */
-	DRIVER( f1lap )     /* (c) 1993 (World) */
-	DRIVER( f1lapj )    /* (c) 1993 (Japan) */
-	DRIVER( dbzvrvs )
-	DRIVER( darkedge )
-	DRIVER( slipstrm )	/* Capcom */
+	DRIVER( f1lap )   /* (c) 1993 (World) */
+	DRIVER( f1lapj )  /* (c) 1993 (Japan) */
+	DRIVER( dbzvrvs ) /* (c) 1994 */
+	DRIVER( darkedge ) /* (c) 1992 */
+	DRIVER( slipstrm ) /* (c) 1995 (Brazil) Capcom */
+  DRIVER( slipstrh ) /* (c) 1995 (Hispanic) Capcom */
 
 	/* Sega Multi System 32 games */
 	DRIVER( orunners )	/* (c) 1992 (US) */
 	DRIVER( harddunk )	/* (c) 1994 (World) */
 	DRIVER( harddunj )	/* (c) 1994 (Japan) */
-	DRIVER( titlef )
+	DRIVER( titlef )    /* (c) 1992 */
 	DRIVER( scross )	/* (c) 1992 (World) */
 
 	/* Sega ST-V games */
