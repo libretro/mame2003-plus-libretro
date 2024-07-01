@@ -4326,14 +4326,13 @@ GAMEX(1994, svs,      svf,      system32, svf,      s32,      ROT0, "Sega", "Sup
 GAMEX(1994, jleague,  svf,      system32, svf,      jleague,  ROT0, "Sega", "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lap,    0,        system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, f1lapj,   f1lap,    system32, f1lap,	  f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
-
 GAMEX(1993, darkedge, 0,        system32, darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, dbzvrvs,  0,        system32, system32,	dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1995, slipstrm, 0,        system32, slipstrm,	f1en,     ROT0, "Capcom", "Slipstream", GAME_IMPERFECT_GRAPHICS )
 
 /* Multi32 games */
-GAMEX( 1992, orunners,     0,        multi32, orunners, 0, ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1994, harddunk,     0,        multi32, harddunk, 0, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1994, harddunj,     harddunk, multi32, harddunk, 0, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1992, scross,       0,        scross,  scross,   0, ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1992, titlef,       0,        multi32, titlef,   0, ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, orunners, 0,        multi32,  orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunk, 0,        multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunj, harddunk, multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, scross,   0,        scross,   scross,   0,        ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, titlef,   0,        multi32,  titlef,   0,        ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
