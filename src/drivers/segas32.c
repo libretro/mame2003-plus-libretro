@@ -692,7 +692,7 @@ static WRITE16_HANDLER( jleague_protection_w )
 /* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
 {
-	if (!mem_mask)	/* only trap on word-wide reads*/
+	if (mem_mask == 0xffff) // only trap on word-wide reads
 	{
 		switch (offset)
 		{
@@ -700,7 +700,6 @@ static READ16_HANDLER(brival_protection_r)
 			case 2:
 			case 3:
 				return 0;
-				break;
 		}
 	}
 
@@ -711,16 +710,16 @@ static WRITE16_HANDLER(brival_protboard_w)
 {
 	static const int protAddress[6][2] =
 	{
-		{ 0x9517, 0x00/2 },
-		{ 0x9597, 0x10/2 },
-		{ 0x9597, 0x20/2 },
-		{ 0x9597, 0x30/2 },
-		{ 0x9597, 0x40/2 },
-		{ 0x9617, 0x50/2 },
+		{ 0x109517, 0x00/2 },
+		{ 0x109597, 0x10/2 },
+		{ 0x109597, 0x20/2 },
+		{ 0x109597, 0x30/2 },
+		{ 0x109597, 0x40/2 },
+		{ 0x109617, 0x50/2 },
 	};
 	char ret[32];
 	int curProtType;
-	unsigned char *ROM = memory_region(REGION_CPU1) + 0x100000;
+	UINT8 *ROM = memory_region(REGION_CPU1);
 
 	switch (offset)
 	{
@@ -747,7 +746,6 @@ static WRITE16_HANDLER(brival_protboard_w)
 				return;
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "brival_protboard_w: UNKNOWN WRITE: offset %x value %x\n", offset, data);
 			return;
-			break;
 	}
 
 	memcpy(ret, &ROM[protAddress[curProtType][0]], 16);
