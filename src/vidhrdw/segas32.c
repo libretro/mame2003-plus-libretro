@@ -596,8 +596,8 @@ WRITE16_HANDLER( system32_videoram_w )
 	if (offset < 0x1ff00/2)
 	{
 		struct cache_entry *entry;
-		int page = offset / 0x200;
-		offset %= 0x200;
+		int page = offset >> 9;
+		offset &= 0x1ff;
 
 		/* scan the cache for a matching pages */
 		for (entry = cache_head; entry != NULL; entry = entry->next)
@@ -852,7 +852,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
-	UINT16 data = system32_videoram[(entry->page & 0x7f) * 0x200 + tile_index];
+	UINT16 data = system32_videoram[(entry->page & 0x7f) << 9 | tile_index];
 	SET_TILE_INFO(0, (entry->bank << 13) + (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
 }
 
@@ -1356,44 +1356,44 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[0] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[1] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[2] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[3] = pix;
 
 					pixels = *src++;
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[4] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[5] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[6] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[7] = pix;
 
 					dst += bitmap->rowpixels;
@@ -1415,44 +1415,44 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[0] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-1] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-2] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-3] = pix;
 
 					pix = *src++;
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-4] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-5] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-6] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix += color;
+						pix |= color;
 					dst[-7] = pix;
 
 					dst -= bitmap->rowpixels;
@@ -1782,7 +1782,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	};
 
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
-	UINT8 numbanks = memory_region_length(REGION_GFX2) / 0x400000;
+	UINT8 numbanks = memory_region_length(REGION_GFX2) >> 20;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
 
 	int indirect = data[0] & 0x2000;
@@ -1842,7 +1842,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	{
 		if (numbanks)
 			bank %= numbanks;
-		spritedata = spritebase + 0x100000 * bank;
+		spritedata = &spritebase[bank << 20];
 		addrmask = 0xfffff;
 	}
 
