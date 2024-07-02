@@ -692,7 +692,7 @@ static WRITE16_HANDLER( jleague_protection_w )
 /* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
 {
-	if (mem_mask == 0xffff) // only trap on word-wide reads
+	if (mem_mask == 0xffff) /* only trap on word-wide reads*/
 	{
 		switch (offset)
 		{
