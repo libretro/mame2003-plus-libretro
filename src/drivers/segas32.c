@@ -1080,7 +1080,10 @@ static WRITE16_HANDLER( multi32_io_w )
 		COMBINE_DATA(&system32_tilebank_external);
 		break;
 	case 0x0e:
-		COMBINE_DATA(&system32_displayenable[0]);
+		/* speed up: don't draw monitor A if in B only mode */
+		if (readinputport(0xf) == 2) system32_displayenable[0] = 0;
+		else COMBINE_DATA(&system32_displayenable[0]);
+
 		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
 	case 0x0f:
@@ -1197,7 +1200,9 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		}
 		break;
 	case 0x0e:
-		COMBINE_DATA(&system32_displayenable[1]);
+		/* speed up: don't draw monitor B if in A only mode */
+		if (readinputport(0xf) == 1) system32_displayenable[1] = 0;
+		else COMBINE_DATA(&system32_displayenable[1]);
 		break;
 	case 0x0f:
 		/* orunners value=c8*/
