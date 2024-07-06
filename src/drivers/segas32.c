@@ -2855,7 +2855,7 @@ INPUT_PORTS_END
 
 struct RF5C68interface sys32_rf5c68_interface =
 {
-  9000000,	/* pitch matches real PCB, but this is a weird frequency */
+  12500000,	/* pitch matches real PCB, but this is a weird frequency */
   55
 };
 
