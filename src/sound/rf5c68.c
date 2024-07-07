@@ -91,13 +91,13 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 				if (sample & 0x80)
 				{
 					sample &= 0x7f;
-					left[j] += (sample * lv) >> 5;
-					right[j] += (sample * rv) >> 5;
+					left[j] += (sample * lv) >> 6;
+					right[j] += (sample * rv) >> 6;
 				}
 				else
 				{
-					left[j] -= (sample * lv) >> 5;
-					right[j] -= (sample * rv) >> 5;
+					left[j] -= (sample * lv) >> 6;
+					right[j] -= (sample * rv) >> 6;
 				}
 			}
 		}
