@@ -13,10 +13,7 @@ enum
 	RF_L_PAN = 0, RF_R_PAN = 1, RF_LR_PAN = 2
 };
 
-
-
 #define  NUM_CHANNELS    (8)
-static int stream;
 
 struct pcm_channel
 {
@@ -46,10 +43,9 @@ struct rf5c68pcm *chip;
 /*    RF5C68 stream update                      */
 /************************************************/
 
-//static void rf5c68_update(void *param, INT16 **inputs, INT16 **buffer, int length)
+
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
-	//struct rf5c68pcm *chip = param;
 	INT16 *left = buffer[0];
 	INT16 *right = buffer[1];
 	int i, j;
@@ -138,8 +134,6 @@ void RF5C68_sh_stop( void )
 
 int RF5C68_sh_start( const struct MachineSound *msound )
 {
-	int i;
-	int rate = Machine->sample_rate;
 	struct RF5C68interface *inintf = msound->sound_interface;
 	chip = auto_malloc(sizeof(*chip));
 	
@@ -161,8 +155,8 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 	vol[0] = (MIXER_PAN_LEFT<<8)  | (intf->volume&0xff);
 	vol[1] = (MIXER_PAN_RIGHT<<8) | (intf->volume&0xff);
 
-	stream = stream_init_multi( RF_LR_PAN, name, vol,  intf->clock / 384 , 0, rf5c68_update );
-	if(stream == -1) return 1;
+	chip->stream = stream_init_multi( RF_LR_PAN, name, vol,  intf->clock / 384 , 0, rf5c68_update );
+	if(chip->stream == -1) return 1;
 	
 	return 0;
 }
@@ -175,7 +169,6 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 
 WRITE_HANDLER( RF5C68_reg_w )
 {
-	//struct rf5c68pcm *chip = sndti_token(SOUND_RF5C68, 0);
 	struct pcm_channel *chan = &chip->chan[chip->cbank];
 	int i;
 
@@ -241,7 +234,6 @@ WRITE_HANDLER( RF5C68_reg_w )
 
 READ_HANDLER( RF5C68_r )
 {
-	//struct rf5c68pcm *chip = sndti_token(SOUND_RF5C68, 0);
 	return chip->data[chip->wbank * 0x1000 + offset];
 }
 
@@ -252,7 +244,6 @@ READ_HANDLER( RF5C68_r )
 
 WRITE_HANDLER( RF5C68_w )
 {
-//	struct rf5c68pcm *chip = sndti_token(SOUND_RF5C68, 0);
 	chip->data[chip->wbank * 0x1000 + offset] = data;
 }
 
