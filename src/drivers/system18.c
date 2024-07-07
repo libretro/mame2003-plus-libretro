@@ -515,7 +515,7 @@ static MEMORY_WRITE_START( sound_writemem_18 )
     { 0x0000, 0x9fff, MWA_ROM },
 	{ 0xa000, 0xbfff, MWA_BANK1 },
 	/**** D/A register ****/
-	{ 0xc000, 0xc008, RF5C68_reg_w },
+	{ 0xc000, 0xc00f, RF5C68_reg_w },
 	{ 0xd000, 0xdfff, RF5C68_w },
 	{ 0xe000, 0xffff, MWA_RAM },	/*?? */
 MEMORY_END
