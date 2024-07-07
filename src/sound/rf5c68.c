@@ -44,10 +44,10 @@ struct rf5c68pcm *chip;
 /************************************************/
 
 
-static void rf5c68_update( int num, INT32 **buffer, int length )
+static void rf5c68_update( int num, UINT16 **buffer, int length )
 {
-	INT32 *left = buffer[0];
-	INT32 *right = buffer[1];
+	UINT16 *left = buffer[0];
+	UINT16 *right = buffer[1];
 	int i, j;
 
 	/* start with clean buffers */
@@ -106,7 +106,7 @@ static void rf5c68_update( int num, INT32 **buffer, int length )
 	/* now clamp and shift the result (output is only 10 bits) */
 	for (j = 0; j < length; j++)
 	{
-		INT32 temp;
+		UINT16 temp;
 
 		temp = left[j];
 		if (temp > 32767) temp = 32767;
