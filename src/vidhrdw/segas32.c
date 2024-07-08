@@ -2062,7 +2062,7 @@ static void sprite_render_list(void)
  *
  *************************************/
 
-INLINE UINT8 compute_color_offsets(int which, int layerbit, int layerflag)
+static INLINE UINT8 compute_color_offsets(int which, int layerbit, int layerflag)
 {
 	int mode = ((mixer_control[which][0x3e/2] & 0x8000) >> 14) | (layerbit & 1);
 
@@ -2082,7 +2082,7 @@ INLINE UINT8 compute_color_offsets(int which, int layerbit, int layerflag)
 	}
 }
 
-INLINE UINT16 compute_sprite_blend(UINT8 encoding)
+static INLINE UINT16 compute_sprite_blend(UINT8 encoding)
 {
 	int value = encoding & 0xf;
 
@@ -2103,7 +2103,7 @@ INLINE UINT16 compute_sprite_blend(UINT8 encoding)
 	}
 }
 
-INLINE UINT16 *get_layer_scanline(int layer, int scanline)
+static INLINE UINT16 *get_layer_scanline(int layer, int scanline)
 {
 	if (layer_data[layer].transparent[scanline])
 		return (layer == MIXER_LAYER_SPRITES) ? solid_ffff : solid_0000;
