@@ -156,7 +156,7 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 	vol[0] = (MIXER_PAN_LEFT<<8)  | (intf->volume&0xff);
 	vol[1] = (MIXER_PAN_RIGHT<<8) | (intf->volume&0xff);
 
-	/* needs to be initialized to 0xff, otherwise f1en has bad sound (MT04531)
+	/* needs to be initialized to 0xff, otherwise f1en has bad sound (MT04531)*/
 	for (i = 0; i < 0x10000; i++)
 		chip->data[i] = 0xff;
 
