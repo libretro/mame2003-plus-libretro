@@ -126,8 +126,6 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 /************************************************/
 void RF5C68_sh_stop( void )
 {
-//	if(pcmbuf!=NULL) free(pcmbuf);
-//	pcmbuf=NULL;
 }
 
 
@@ -135,19 +133,22 @@ void RF5C68_sh_stop( void )
 int RF5C68_sh_start( const struct MachineSound *msound )
 {
 	struct RF5C68interface *inintf = msound->sound_interface;
-	chip = auto_malloc(sizeof(*chip));
-	
-	memset(chip, 0, sizeof(*chip));
-	
-	if (Machine->sample_rate == 0) return 0;
-
-	intf = inintf;
-	
-	
-	
 	char buf[2][40];
 	const char *name[2];
 	int  vol[2];
+	int i;
+
+	if (Machine->sample_rate == 0) return 0;
+	
+	chip = auto_malloc(sizeof(*chip));
+	
+	memset(chip, 0, sizeof(*chip));	
+    /* f1en fix bad sound if set initialized to 0xff fixed in mame0215*/
+	for (i = 0; i < 0x10000; i++)
+		chip->data[i]=0xff;
+
+	intf = inintf;	
+	
 	name[0] = buf[0];
 	name[1] = buf[1];
 	sprintf( buf[0], "%s Left", sound_name(msound) );
