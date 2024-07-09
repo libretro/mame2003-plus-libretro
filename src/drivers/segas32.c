@@ -2884,7 +2884,7 @@ static struct MultiPCM_interface mul32_multipcm_interface =
 	{ MULTIPCM_MODE_MULTI32 },	/* banking mode*/
 	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
-	{ YM3012_VOL(100, MIXER_PAN_CENTER, 100, MIXER_PAN_CENTER) }
+	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
 };
 
 static struct MultiPCM_interface scross_multipcm_interface =
@@ -2894,7 +2894,7 @@ static struct MultiPCM_interface scross_multipcm_interface =
 	{ MULTIPCM_MODE_STADCROSS },	/* banking mode*/
 	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
-	{ YM3012_VOL(100, MIXER_PAN_CENTER, 100, MIXER_PAN_CENTER) }
+	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
 };
 
 
