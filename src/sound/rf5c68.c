@@ -43,6 +43,7 @@ struct rf5c68pcm *chip;
 /*    RF5C68 stream update                      */
 /************************************************/
 
+static INLINE int ILimit(int v, int max, int min) { return v > max ? max : (v < min ? min : v); }
 
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
@@ -91,33 +92,19 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 				if (sample & 0x80)
 				{
 					sample &= 0x7f;
-					left[j] += (sample * lv) >> 6;
-					right[j] += (sample * rv) >> 6;
+					left[j] +=  ILimit( ((sample * lv) >> 5) /2, 16383,-16384);
+					right[j] += ILimit( ((sample * rv) >> 5) /2, 16383,-16384);
 				}
 				else
 				{
-					left[j] -= (sample * lv) >> 6;
-					right[j] -= (sample * rv) >> 6;
+					left[j] -=  ILimit( ((sample * lv) >> 5) /2, 16383,-16384);
+					right[j] -= ILimit( ((sample * rv) >> 5) /2, 16383,-16384);
 				}
 			}
 		}
 	}
 
-	/* now clamp and shift the result (output is only 10 bits) */
-	for (j = 0; j < length; j++)
-	{
-		INT16 temp;
 
-		temp = left[j];
-		if (temp > 32767) temp = 32767;
-		else if (temp < -32768) temp = -32768;
-		left[j] = temp & ~0x3f;
-
-		temp = right[j];
-		if (temp > 32767) temp = 32767;
-		else if (temp < -32768) temp = -32768;
-		right[j] = temp & ~0x3f;
-	}
 }
 
 
