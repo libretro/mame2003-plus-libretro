@@ -830,32 +830,16 @@ static WRITE16_HANDLER( system32_io_analog_w )
 
 static READ16_HANDLER( system32_io_r )
 {
-/* I/O Control port at 0xc00000
-
-	{ 0xc00000, 0xc00001, input_port_1_word_r },
-	{ 0xc00002, 0xc00003, input_port_2_word_r },
-	{ 0xc00004, 0xc00007, sys32_read_ff },
-	{ 0xc00008, 0xc00009, input_port_3_word_r },
-	{ 0xc0000a, 0xc0000b, system32_eeprom_r },
-	{ 0xc0000c, 0xc0004f, sys32_read_ff },
-*/
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
 	case 0x01:
 		return readinputport(0x02);
-	case 0x02:
-		return 0xffff;
-	case 0x03:
-		/* f1lap*/
-		return 0xffff;
 	case 0x04:
 		return readinputport(0x03);
 	case 0x05:
 		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x06:
-		return 0xffff;
 	case 0x07:
 		/* scross*/
 		return system32_tilebank_external;
@@ -870,9 +854,6 @@ static READ16_HANDLER( system32_io_r )
 	case 0x0b:
 		return 'A';
 
-	case 0x0e:
-		/* f1lap*/
-		return 0xffff;
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -881,29 +862,15 @@ static READ16_HANDLER( system32_io_r )
 
 static WRITE16_HANDLER( system32_io_w )
 {
-/* I/O Control port at 0xc00000
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 
-	{ 0xc00006, 0xc00007, system32_eeprom_w },
-	{ 0xc0000c, 0xc0000d, jp_v60_write_cab },
-	{ 0xc00008, 0xc0000d, MWA16_RAM }, // Unknown c00008=f1lap , c0000c=titlef
-	{ 0xc0000e, 0xc0000f, MWA16_RAM, &system32_tilebank_external }, // tilebank per layer on multi32
-	{ 0xc0001c, 0xc0001d, MWA16_RAM, &system32_displayenable[0] },
-	{ 0xc0001e, 0xc0001f, MWA16_RAM }, // Unknown
-*/
 	switch(offset) {
 	case 0x03:
-		if(ACCESSING_LSB) {
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		}
-		break;
-	case 0x04:
-		/* f1lap*/
-		break;
-	case 0x06:
-		/* jp_v60_write_cab*/
-		/*cpu_set_irq_line(1, 0, HOLD_LINE);*/
 		break;
 	case 0x07:
 		/* multi32 tilebank per layer*/
@@ -913,9 +880,7 @@ static WRITE16_HANDLER( system32_io_w )
 		system32_displayenable[0] = (data & 0x02);
 		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
-	case 0x0f:
-		/* orunners unknown*/
-		break;
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
@@ -924,13 +889,6 @@ static WRITE16_HANDLER( system32_io_w )
 
 static READ16_HANDLER( system32_io_2_r )
 {
-/* I/O Control port at 0xc00060
-
-	{ 0xc00060, 0xc00061, input_port_4_word_r },
-	{ 0xc00062, 0xc00063, input_port_5_word_r },
-	{ 0xc00064, 0xc00065, input_port_6_word_r },
-	{ 0xc00066, 0xc000ff, sys32_read_ff },
-*/
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x04);
@@ -957,9 +915,7 @@ static WRITE16_HANDLER( system32_io_2_w )
 		/* Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
-	case 0x0a:
-		/* orunners unknown*/
-		break;
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
@@ -1001,31 +957,15 @@ static WRITE16_HANDLER( multi32_io_analog_w )
 
 static READ16_HANDLER( multi32_io_r )
 {
-/* I/O Control port at 0xc00000
-
-	{ 0xc00000, 0xc00001, input_port_1_word_r },
-	{ 0xc00002, 0xc00003, input_port_2_word_r },
-	{ 0xc00004, 0xc00007, sys32_read_ff },
-	{ 0xc00008, 0xc00009, input_port_3_word_r },
-	{ 0xc0000a, 0xc0000b, system32_eeprom_r },
-	{ 0xc0000c, 0xc0004f, sys32_read_ff },
-*/
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
 	case 0x01:
 		return readinputport(0x02);
-	case 0x02:
-		return 0xffff;
-	case 0x03:
-		/* f1lap*/
-		return 0xffff;
 	case 0x04:
 		return readinputport(0x03);
 	case 0x05:
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x06:
-		return 0xffff;
 	case 0x07:
 		/* scross*/
 		return system32_tilebank_external;
@@ -1040,9 +980,6 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x0b:
 		return 'A';
 
-	case 0x0e:
-		/* f1lap*/
-		return 0xffff;
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -1051,29 +988,15 @@ static READ16_HANDLER( multi32_io_r )
 
 static WRITE16_HANDLER( multi32_io_w )
 {
-/* I/O Control port at 0xc00000
-
-	{ 0xc00006, 0xc00007, system32_eeprom_w },
-	{ 0xc0000c, 0xc0000d, jp_v60_write_cab },
-	{ 0xc00008, 0xc0000d, MWA16_RAM }, // Unknown c00008=f1lap , c0000c=titlef
-	{ 0xc0000e, 0xc0000f, MWA16_RAM, &system32_tilebank_external }, // tilebank per layer on multi32
-	{ 0xc0001c, 0xc0001d, MWA16_RAM, &system32_displayenable[0] },
-	{ 0xc0001e, 0xc0001f, MWA16_RAM }, // Unknown
-*/
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 
 	switch(offset) {
 	case 0x03:
-		if(ACCESSING_LSB) {
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		}
-		break;
-	case 0x04:
-		/* f1lap*/
-		break;
-	case 0x06:
-		/* jp_v60_write_cab / titlef*/
 		break;
 	case 0x07:
 		/* Multi32: tilebank per layer*/
@@ -1086,9 +1009,7 @@ static WRITE16_HANDLER( multi32_io_w )
 
 		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
-	case 0x0f:
-		/* orunners unknown*/
-		break;
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
@@ -1097,13 +1018,6 @@ static WRITE16_HANDLER( multi32_io_w )
 
 static READ16_HANDLER( multi32_io_2_r )
 {
-/* I/O Control port at 0xc00060
-
-	{ 0xc00060, 0xc00061, input_port_4_word_r },
-	{ 0xc00062, 0xc00063, input_port_5_word_r },
-	{ 0xc00064, 0xc00065, input_port_6_word_r },
-	{ 0xc00066, 0xc000ff, sys32_read_ff },
-*/
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x04);
@@ -1119,20 +1033,12 @@ static READ16_HANDLER( multi32_io_2_r )
 
 static WRITE16_HANDLER( multi32_io_2_w )
 {
-/* I/O Control port at 0xc00060
-
-	{ 0xc00060, 0xc00061, MWA16_RAM }, // Analog switch
-	{ 0xc00074, 0xc00075, MWA16_RAM }, // Unknown
-*/
-
 	switch(offset) {
 	case 0x00:
 		/* Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
-	case 0x0a:
-		/* orunners unknown*/
-		break;
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
@@ -1159,9 +1065,6 @@ static READ16_HANDLER( multi32_io_B_r )
 	case 0x05:
 		/* orunners (mask ff00) locks up*/
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x07:
-		/* orunners (mask ff00)*/
-		return 0xffff;
 
 	/* 'SEGA' protection */
 	case 0x08:
@@ -1173,9 +1076,6 @@ static READ16_HANDLER( multi32_io_B_r )
 	case 0x0b:
 		return 'A';
 
-	case 0x0e:
-		/* harddunk (mask ff00)*/
-		return 0xffff;
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -1184,28 +1084,20 @@ static READ16_HANDLER( multi32_io_B_r )
 
 static WRITE16_HANDLER( multi32_io_B_w )
 {
-	switch(offset) {
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 
-	case 0x03:
-		/* titlef value=00*/
-		break;
-	case 0x06:
-		/* orunners value=00, 08, 34*/
-		break;
+	switch(offset) {
 	case 0x07:
-		if(ACCESSING_LSB) {
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		}
 		break;
 	case 0x0e:
 		/* speed up: don't draw monitor B if in A only mode */
 		if (readinputport(0xf) == 1) system32_displayenable[1] = 0;
 		else system32_displayenable[1] = (data & 0x02);
-		break;
-	case 0x0f:
-		/* orunners value=c8*/
 		break;
 
 	default:
