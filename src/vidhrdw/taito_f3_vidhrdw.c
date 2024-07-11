@@ -2691,7 +2691,7 @@ static INLINE void f3_drawgfx( struct mame_bitmap *dest_bmp,const struct GfxElem
 /*				if (dest_bmp->depth == 32)*/
 				{
 					int y=ey-sy;
-					int x=(ex-sx-1)|(tile_opaque_sp[code]<<4);
+					int x=(ex-sx-1)|(tile_opaque_sp[code % gfx->total_elements]<<4);
 					UINT8 *source0 = gfx->gfxdata + (source_base+y_index) * 16 + x_index_base;
 					UINT32 *dest0 = (UINT32 *)dest_bmp->line[sy]+sx;
 					UINT8 *pri0 = (UINT8 *)pri_alp_bitmap->line[sy]+sx;
