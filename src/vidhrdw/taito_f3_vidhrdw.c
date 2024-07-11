@@ -3124,16 +3124,10 @@ static void get_sprite_info(const data32_t *spriteram32_ptr)
 		if (flipscreen)
 		{
 			int tx,ty;
-			if (f3_game == GSEEKER )
-			{
-				tx = 512-x_addition-x-44;
-				ty = 256-y_addition-y+17;
-			}
-			else
-			{
-				tx = 512-x_addition-x;
-				ty = 256-y_addition-y;
-			}
+
+			tx = 512-x_addition-x;
+			ty = 256-y_addition-y;
+
 			if (tx+x_addition<=min_x || tx>max_x || ty+y_addition<=min_y || ty>max_y) continue;
 			sprite_ptr->x = tx;
 			sprite_ptr->y = ty;
