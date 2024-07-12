@@ -3700,16 +3700,14 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT ( install_io_analog )
+static void install_io_analog(void)
 {
 	install_mem_read16_handler (0, 0xc00050, 0xc00057, io_analog_r);
 	install_mem_write16_handler(0, 0xc00050, 0xc00057, io_analog_w);
 }
 
-static DRIVER_INIT ( alien3 )
+static void install_io_gun(void)
 {
-	system32_use_default_eeprom = EEPROM_ALIEN3;
-
 	install_mem_read16_handler (0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
 	install_mem_read16_handler (0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
 	install_mem_read16_handler (0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
@@ -3719,6 +3717,12 @@ static DRIVER_INIT ( alien3 )
 	install_mem_write16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_w);
 	install_mem_write16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_w);
 	install_mem_write16_handler(0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_w);
+}
+
+static DRIVER_INIT ( alien3 )
+{
+	system32_use_default_eeprom = EEPROM_ALIEN3;
+	install_io_gun();
 }
 
 static DRIVER_INIT ( brival )
@@ -3841,15 +3845,7 @@ static DRIVER_INIT ( jpark )
 	pROM[0xC15A8/2] = 0xCD70;
 	pROM[0xC15AA/2] = 0xD8CD;
 
-	install_mem_read16_handler (0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
-	install_mem_read16_handler (0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
-	install_mem_read16_handler (0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
-	install_mem_read16_handler (0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_r);
-
-	install_mem_write16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_w);
-	install_mem_write16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_w);
-	install_mem_write16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_w);
-	install_mem_write16_handler(0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_w);
+	install_io_gun();
 }
 
 static READ16_HANDLER( arescue_handshake_r )
