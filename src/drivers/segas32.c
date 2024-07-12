@@ -3735,7 +3735,6 @@ static DRIVER_INIT ( ga2 )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* Protection - the game expects a string from a RAM area shared with the protection device */
-	/* still problems with enemies in level2, protection related? */
 	install_mem_read16_handler (0, 0xa00000, 0xa0001f, ga2_sprite_protection_r); /* main sprite colours */
 	install_mem_read16_handler (0, 0xa00100, 0xa0015f, ga2_wakeup_protection_r);
 }
