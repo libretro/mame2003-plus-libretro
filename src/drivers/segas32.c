@@ -3901,7 +3901,6 @@ static WRITE16_HANDLER( arescue_dsp_w )
 static DRIVER_INIT( arescue )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-
 	install_io_analog();
 
 	install_mem_read16_handler (0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
