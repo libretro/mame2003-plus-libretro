@@ -896,6 +896,10 @@ static READ16_HANDLER( io_expansion_r )
 
 static WRITE16_HANDLER( io_expansion_w )
 {
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
+
 	switch(offset) {
 	case 0x00:
 		/* Used by the hardware to switch the analog input ports to set B*/
