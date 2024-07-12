@@ -818,6 +818,8 @@ static WRITE16_HANDLER( system32_io_analog_w )
 
 static READ16_HANDLER( system32_io_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
@@ -894,12 +896,6 @@ static READ16_HANDLER( system32_io_2_r )
 
 static WRITE16_HANDLER( system32_io_2_w )
 {
-/* I/O Control port at 0xc00060
-
-	{ 0xc00060, 0xc00061, MWA16_RAM }, // Analog switch
-	{ 0xc00074, 0xc00075, MWA16_RAM }, // Unknown
-*/
-
 	switch(offset) {
 	case 0x00:
 		/* Used by the hardware to switch the analog input ports to set B*/
@@ -915,6 +911,8 @@ static WRITE16_HANDLER( system32_io_2_w )
 
 static READ16_HANDLER( multi32_io_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
@@ -976,37 +974,10 @@ static WRITE16_HANDLER( multi32_io_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_2_r )
-{
-	switch(offset) {
-	case 0x00:
-		return readinputport(0x04);
-	case 0x01:
-		return readinputport(0x05);
-	case 0x02:
-		return readinputport(0x06);
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
-	}
-}
-
-static WRITE16_HANDLER( multi32_io_2_w )
-{
-	switch(offset) {
-	case 0x00:
-		/* Used by the hardware to switch the analog input ports to set B*/
-		analogSwitch=data;
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
-}
-
 static READ16_HANDLER( multi32_io_B_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		/* orunners (mask ff00)*/
@@ -1146,7 +1117,7 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, multi32_io_r },
 	{ 0xc00050, 0xc0005f, system32_io_analog_r },
-	{ 0xc00060, 0xc0007f, multi32_io_2_r },
+	{ 0xc00060, 0xc0007f, system32_io_2_r },
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
@@ -1166,7 +1137,7 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, system32_io_analog_w },
-	{ 0xc00060, 0xc0007f, multi32_io_2_w },
+	{ 0xc00060, 0xc0007f, system32_io_2_w },
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
