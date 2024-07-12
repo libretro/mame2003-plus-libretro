@@ -394,6 +394,8 @@ static UINT8 sound_dummy_value;
 static UINT8 *sound_bankptr;
 static UINT16 sound_bank;
 
+static UINT8 misc_io_data[2][0x10];
+
 static data16_t *segas32_protram;
 static data16_t *system32_workram;
 
@@ -844,6 +846,16 @@ static READ16_HANDLER( system32_io_r )
 	case 0x0b:
 		return 'A';
 
+	/* CNT register & mirror */
+	case 0x18/2:
+	case 0x1c/2:
+		return misc_io_data[0][0x1c/2];
+
+	/* port direction register & mirror */
+	case 0x1a/2:
+	case 0x1e/2:
+		return misc_io_data[0][0x1e/2];
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -857,6 +869,7 @@ static WRITE16_HANDLER( system32_io_w )
 		return;
 
 	offset &= 0x1f/2;
+	misc_io_data[0][offset] = data;
 
 	switch(offset) {
 	case 0x03:
@@ -940,6 +953,16 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x0b:
 		return 'A';
 
+	/* CNT register & mirror */
+	case 0x18/2:
+	case 0x1c/2:
+		return misc_io_data[0][0x1c/2];
+
+	/* port direction register & mirror */
+	case 0x1a/2:
+	case 0x1e/2:
+		return misc_io_data[0][0x1e/2];
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -953,6 +976,7 @@ static WRITE16_HANDLER( multi32_io_w )
 		return;
 
 	offset &= 0x1f/2;
+	misc_io_data[0][offset] = data;
 
 	switch(offset) {
 	case 0x03:
@@ -1011,6 +1035,16 @@ static READ16_HANDLER( multi32_io_B_r )
 	case 0x0b:
 		return 'A';
 
+	/* CNT register & mirror */
+	case 0x18/2:
+	case 0x1c/2:
+		return misc_io_data[1][0x1c/2];
+
+	/* port direction register & mirror */
+	case 0x1a/2:
+	case 0x1e/2:
+		return misc_io_data[1][0x1e/2];
+
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
@@ -1024,6 +1058,7 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		return;
 
 	offset &= 0x1f/2;
+	misc_io_data[1][offset] = data;
 
 	switch(offset) {
 	case 0x07:
