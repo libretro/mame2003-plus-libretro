@@ -796,14 +796,8 @@ static READ16_HANDLER(arf_wakeup_protection_r)
 int analogRead[8];
 int analogSwitch=0;
 
-static READ16_HANDLER( system32_io_analog_r )
+static READ16_HANDLER( io_analog_r )
 {
-/*
-	{ 0xc00050, 0xc00057, system32_io_analog_r },
-
-	 Read the value of each analog control port, one bit at a time, 8 times.
-	 Analog Input Set B is requested by the hardware using "analogSwitch"
-*/
 	int retdata;
 	if (offset<=3) {
 		retdata = analogRead[offset*2+analogSwitch] & 0x80;
@@ -811,16 +805,10 @@ static READ16_HANDLER( system32_io_analog_r )
 		return retdata;
 	}
 
-	switch(offset)
-	{
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
-		return 0xffff;
-		break;
-	}
+	return 0xffff;
 }
 
-static WRITE16_HANDLER( system32_io_analog_w )
+static WRITE16_HANDLER( io_analog_w )
 {
 	if (offset<=3) {
 		if (analogSwitch) analogRead[offset*2+1]=readinputport(offset*2+5);
@@ -830,6 +818,8 @@ static WRITE16_HANDLER( system32_io_analog_w )
 
 static READ16_HANDLER( system32_io_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
@@ -866,6 +856,8 @@ static WRITE16_HANDLER( system32_io_w )
 	if (!ACCESSING_LSB)
 		return;
 
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x03:
 			EEPROM_write_bit(data & 0x80);
@@ -887,7 +879,7 @@ static WRITE16_HANDLER( system32_io_w )
 	}
 }
 
-static READ16_HANDLER( system32_io_2_r )
+static READ16_HANDLER( io_expansion_r )
 {
 	switch(offset) {
 	case 0x00:
@@ -902,13 +894,11 @@ static READ16_HANDLER( system32_io_2_r )
 	}
 }
 
-static WRITE16_HANDLER( system32_io_2_w )
+static WRITE16_HANDLER( io_expansion_w )
 {
-/* I/O Control port at 0xc00060
-
-	{ 0xc00060, 0xc00061, MWA16_RAM }, // Analog switch
-	{ 0xc00074, 0xc00075, MWA16_RAM }, // Unknown
-*/
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 
 	switch(offset) {
 	case 0x00:
@@ -923,40 +913,10 @@ static WRITE16_HANDLER( system32_io_2_w )
 }
 
 
-static READ16_HANDLER( multi32_io_analog_r )
-{
-/*
-	{ 0xc00050, 0xc00057, system32_io_analog_r },
-
-	 Read the value of each analog control port, one bit at a time, 8 times.
-	 Analog Input Set B is requested by the hardware using "analogSwitch"
-*/
-	int retdata;
-	if (offset<=3) {
-		retdata = analogRead[offset*2+analogSwitch] & 0x80;
-		analogRead[offset*2+analogSwitch] <<= 1;
-		return retdata;
-	}
-
-	switch(offset)
-	{
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
-		return 0xffff;
-		break;
-	}
-}
-
-static WRITE16_HANDLER( multi32_io_analog_w )
-{
-	if (offset<=3) {
-		if (analogSwitch) analogRead[offset*2+1]=readinputport(offset*2+5);
-		else analogRead[offset*2]=readinputport(offset*2+4);
-	}
-}
-
 static READ16_HANDLER( multi32_io_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		return readinputport(0x01);
@@ -992,6 +952,8 @@ static WRITE16_HANDLER( multi32_io_w )
 	if (!ACCESSING_LSB)
 		return;
 
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x03:
 			EEPROM_write_bit(data & 0x80);
@@ -1016,37 +978,10 @@ static WRITE16_HANDLER( multi32_io_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_2_r )
-{
-	switch(offset) {
-	case 0x00:
-		return readinputport(0x04);
-	case 0x01:
-		return readinputport(0x05);
-	case 0x02:
-		return readinputport(0x06);
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
-	}
-}
-
-static WRITE16_HANDLER( multi32_io_2_w )
-{
-	switch(offset) {
-	case 0x00:
-		/* Used by the hardware to switch the analog input ports to set B*/
-		analogSwitch=data;
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
-}
-
 static READ16_HANDLER( multi32_io_B_r )
 {
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x00:
 		/* orunners (mask ff00)*/
@@ -1087,6 +1022,8 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
 		return;
+
+	offset &= 0x1f/2;
 
 	switch(offset) {
 	case 0x07:
@@ -1145,9 +1082,9 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x600000, 0x60ffff, system32_paletteram_r },
 	{ 0x610000, 0x61007f, system32_mixer_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, system32_io_r },
+	{ 0xc00000, 0xc0001f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, system32_io_2_r },
+	{ 0xc00060, 0xc0007f, io_expansion_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -1162,9 +1099,9 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, system32_io_w },
+	{ 0xc00000, 0xc0001f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, system32_io_2_w },
+	{ 0xc00060, 0xc0007f, io_expansion_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
@@ -1182,9 +1119,9 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
 	{ 0x690000, 0x69007f, multi32_mixer_1_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, multi32_io_r },
-	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
-	{ 0xc00060, 0xc0007f, multi32_io_2_r },
+	{ 0xc00000, 0xc0001f, multi32_io_r },
+	{ 0xc00050, 0xc0005f, io_analog_r },
+	{ 0xc00060, 0xc0007f, io_expansion_r },
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
@@ -1202,9 +1139,9 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69007f, multi32_mixer_1_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, multi32_io_w },
-	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
-	{ 0xc00060, 0xc0007f, multi32_io_2_w },
+	{ 0xc00000, 0xc0001f, multi32_io_w },
+	{ 0xc00050, 0xc0005f, io_analog_w },
+	{ 0xc00060, 0xc0007f, io_expansion_w },
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
@@ -2747,8 +2684,8 @@ INPUT_PORTS_END
 
 struct RF5C68interface sys32_rf5c68_interface =
 {
-  12500000,	/* pitch matches real PCB, but this is a weird frequency */
-  100
+  RFC_CLOCK/4,
+  55
 };
 
 struct YM2612interface sys32_ym3438_interface =
@@ -3763,25 +3700,29 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT ( driving )
+static void install_io_analog(void)
 {
-	install_mem_read16_handler (0, 0xc00050, 0xc00057, system32_io_analog_r);
-	install_mem_write16_handler(0, 0xc00050, 0xc00057, system32_io_analog_w);
+	install_mem_read16_handler (0, 0xc00050, 0xc00057, io_analog_r);
+	install_mem_write16_handler(0, 0xc00050, 0xc00057, io_analog_w);
 }
 
-static DRIVER_INIT ( alien3 )
+static void install_io_gun(void)
 {
-	system32_use_default_eeprom = EEPROM_ALIEN3;
-
-	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
-	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
-	install_mem_read16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
+	install_mem_read16_handler (0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
+	install_mem_read16_handler (0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
+	install_mem_read16_handler (0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
 	install_mem_read16_handler (0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_r);
 
 	install_mem_write16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_w);
 	install_mem_write16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_w);
 	install_mem_write16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_w);
 	install_mem_write16_handler(0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_w);
+}
+
+static DRIVER_INIT ( alien3 )
+{
+	system32_use_default_eeprom = EEPROM_ALIEN3;
+	install_io_gun();
 }
 
 static DRIVER_INIT ( brival )
@@ -3798,14 +3739,12 @@ static DRIVER_INIT ( ga2 )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* Protection - the game expects a string from a RAM area shared with the protection device */
-	/* still problems with enemies in level2, protection related? */
 	install_mem_read16_handler (0, 0xa00000, 0xa0001f, ga2_sprite_protection_r); /* main sprite colours */
 	install_mem_read16_handler (0, 0xa00100, 0xa0015f, ga2_wakeup_protection_r);
 }
 
 
-/* F1 Superlap fake comms and protection workaround */
-
+/* comms board workaround */
 static UINT16* dual_pcb_comms;
 
 static WRITE16_HANDLER( dual_pcb_comms_w )
@@ -3818,11 +3757,6 @@ static READ16_HANDLER( dual_pcb_comms_r )
 	return dual_pcb_comms[offset];
 }
 
-
-/* There must be something on the comms board for this?
-   Probably not a dip/solder link/trace cut, but maybe
-   just whichever way the cables are plugged in?
-   Both f1en and arescue master units try to set bit 1... */
 static READ16_HANDLER( dual_pcb_masterslave )
 {
 	return 0; /* 0/1 master/slave */
@@ -3843,12 +3777,12 @@ void f1lap_fd1149_vblank(void)
 static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	init_driving();
+	install_io_analog();
 
 	dual_pcb_comms = auto_malloc(0x1000);
-	install_mem_read16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_r);
+	install_mem_read16_handler (0, 0x800000, 0x800fff,  dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
-	install_mem_read16_handler(0, 0x801000, 0x801003,  dual_pcb_masterslave);
+	install_mem_read16_handler (0, 0x801000, 0x801003,  dual_pcb_masterslave);
 	system32_prot_vblank = f1lap_fd1149_vblank;
 }
 
@@ -3887,13 +3821,13 @@ static DRIVER_INIT ( sonicp )
 static DRIVER_INIT ( radm )
 {
 	system32_use_default_eeprom = EEPROM_RADM;
-	init_driving();
+	install_io_analog();
 }
 
 static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
-	init_driving();
+	install_io_analog();
 
 	opaquey_hack = true;
 }
@@ -3901,7 +3835,7 @@ static DRIVER_INIT ( radr )
 static DRIVER_INIT ( f1en )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	init_driving();
+	install_io_analog();
 }
 
 static DRIVER_INIT ( jpark )
@@ -3911,25 +3845,12 @@ static DRIVER_INIT ( jpark )
 	pROM[0xC15A8/2] = 0xCD70;
 	pROM[0xC15AA/2] = 0xD8CD;
 
-	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
-	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
-	install_mem_read16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
-	install_mem_read16_handler (0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_r);
-
-	install_mem_write16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_w);
-	install_mem_write16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_w);
-	install_mem_write16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_w);
-	install_mem_write16_handler(0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_w);
+	install_io_gun();
 }
 
 static READ16_HANDLER( arescue_handshake_r )
 {
 	return 0;
-}
-
-static READ16_HANDLER( arescue_818000_r )
-{
-	return 0; /* 0/1 master/slave*/
 }
 
 static READ16_HANDLER( arescue_81000f_r )
@@ -3973,36 +3894,21 @@ static WRITE16_HANDLER( arescue_dsp_w )
 	COMBINE_DATA(&arescue_dsp_io[offset]);
 }
 
-static UINT16* arescue_comms;
-static WRITE16_HANDLER( arescue_comms_w )
-{
-	COMBINE_DATA(&arescue_comms[offset]);
-}
-
-static READ16_HANDLER( arescue_comms_r )
-{
-	return arescue_comms[offset];
-}
-
 static DRIVER_INIT( arescue )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
+	install_io_analog();
 
-	arescue_comms = auto_malloc(0x2000);
-
-	install_mem_read16_handler(0, 0xc00050, 0xc00057, system32_io_analog_r);
-	install_mem_write16_handler(0, 0xc00050, 0xc00057, system32_io_analog_w);
-
-	install_mem_read16_handler(0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
+	install_mem_read16_handler (0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
 	install_mem_write16_handler(0, 0xa00000, 0xa00006, arescue_dsp_w);
 
-	install_mem_read16_handler(0, 0x818000, 0x818003, arescue_818000_r);	/* master/slave*/
+	dual_pcb_comms = auto_malloc(0x2000);
+	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
+	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
+	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
 
-	install_mem_read16_handler(0, 0x810000, 0x810fff, arescue_comms_r);		/* comms space*/
-	install_mem_write16_handler(0, 0x810000, 0x810fff, arescue_comms_w);
-
-	install_mem_read16_handler(0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
-	install_mem_read16_handler(0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
+	install_mem_read16_handler (0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
+	install_mem_read16_handler (0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
 }
 
 
@@ -4077,7 +3983,7 @@ static DRIVER_INIT( darkedge )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* install protection handlers */
-	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
+	install_mem_read16_handler (0, 0xa00000, 0xa7ffff, darkedge_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
 	system32_prot_vblank = darkedge_fd1149_vblank;
 
@@ -4106,7 +4012,7 @@ static DRIVER_INIT( dbzvrvs )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* install protection handlers */
-	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
+	install_mem_read16_handler (0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_w);
 }
 
