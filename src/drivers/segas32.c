@@ -3700,7 +3700,7 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT ( driving )
+static DRIVER_INIT ( install_io_analog )
 {
 	install_mem_read16_handler (0, 0xc00050, 0xc00057, io_analog_r);
 	install_mem_write16_handler(0, 0xc00050, 0xc00057, io_analog_w);
@@ -3780,7 +3780,7 @@ void f1lap_fd1149_vblank(void)
 static DRIVER_INIT ( f1sl )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	init_driving();
+	install_io_analog();
 
 	dual_pcb_comms = auto_malloc(0x1000);
 	install_mem_read16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_r);
@@ -3824,13 +3824,13 @@ static DRIVER_INIT ( sonicp )
 static DRIVER_INIT ( radm )
 {
 	system32_use_default_eeprom = EEPROM_RADM;
-	init_driving();
+	install_io_analog();
 }
 
 static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
-	init_driving();
+	install_io_analog();
 
 	opaquey_hack = true;
 }
@@ -3838,7 +3838,7 @@ static DRIVER_INIT ( radr )
 static DRIVER_INIT ( f1en )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
-	init_driving();
+	install_io_analog();
 }
 
 static DRIVER_INIT ( jpark )
@@ -3927,8 +3927,7 @@ static DRIVER_INIT( arescue )
 
 	arescue_comms = auto_malloc(0x2000);
 
-	install_mem_read16_handler(0, 0xc00050, 0xc00057, io_analog_r);
-	install_mem_write16_handler(0, 0xc00050, 0xc00057, io_analog_w);
+	install_io_analog();
 
 	install_mem_read16_handler(0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
 	install_mem_write16_handler(0, 0xa00000, 0xa00006, arescue_dsp_w);
