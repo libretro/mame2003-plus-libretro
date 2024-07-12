@@ -798,12 +798,6 @@ int analogSwitch=0;
 
 static READ16_HANDLER( system32_io_analog_r )
 {
-/*
-	{ 0xc00050, 0xc00057, system32_io_analog_r },
-
-	 Read the value of each analog control port, one bit at a time, 8 times.
-	 Analog Input Set B is requested by the hardware using "analogSwitch"
-*/
 	int retdata;
 	if (offset<=3) {
 		retdata = analogRead[offset*2+analogSwitch] & 0x80;
@@ -811,13 +805,7 @@ static READ16_HANDLER( system32_io_analog_r )
 		return retdata;
 	}
 
-	switch(offset)
-	{
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
-		return 0xffff;
-		break;
-	}
+	return 0xffff;
 }
 
 static WRITE16_HANDLER( system32_io_analog_w )
@@ -865,6 +853,8 @@ static WRITE16_HANDLER( system32_io_w )
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
 		return;
+
+	offset &= 0x1f/2;
 
 	switch(offset) {
 	case 0x03:
@@ -923,38 +913,6 @@ static WRITE16_HANDLER( system32_io_2_w )
 }
 
 
-static READ16_HANDLER( multi32_io_analog_r )
-{
-/*
-	{ 0xc00050, 0xc00057, system32_io_analog_r },
-
-	 Read the value of each analog control port, one bit at a time, 8 times.
-	 Analog Input Set B is requested by the hardware using "analogSwitch"
-*/
-	int retdata;
-	if (offset<=3) {
-		retdata = analogRead[offset*2+analogSwitch] & 0x80;
-		analogRead[offset*2+analogSwitch] <<= 1;
-		return retdata;
-	}
-
-	switch(offset)
-	{
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
-		return 0xffff;
-		break;
-	}
-}
-
-static WRITE16_HANDLER( multi32_io_analog_w )
-{
-	if (offset<=3) {
-		if (analogSwitch) analogRead[offset*2+1]=readinputport(offset*2+5);
-		else analogRead[offset*2]=readinputport(offset*2+4);
-	}
-}
-
 static READ16_HANDLER( multi32_io_r )
 {
 	switch(offset) {
@@ -991,6 +949,8 @@ static WRITE16_HANDLER( multi32_io_w )
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
 		return;
+
+	offset &= 0x1f/2;
 
 	switch(offset) {
 	case 0x03:
@@ -1088,6 +1048,8 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	if (!ACCESSING_LSB)
 		return;
 
+	offset &= 0x1f/2;
+
 	switch(offset) {
 	case 0x07:
 			EEPROM_write_bit(data & 0x80);
@@ -1145,7 +1107,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x600000, 0x60ffff, system32_paletteram_r },
 	{ 0x610000, 0x61007f, system32_mixer_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, system32_io_r },
+	{ 0xc00000, 0xc0001f, system32_io_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
@@ -1162,7 +1124,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, system32_io_w },
+	{ 0xc00000, 0xc0001f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
@@ -1182,8 +1144,8 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
 	{ 0x690000, 0x69007f, multi32_mixer_1_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, multi32_io_r },
-	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
+	{ 0xc00000, 0xc0001f, multi32_io_r },
+	{ 0xc00050, 0xc0005f, system32_io_analog_r },
 	{ 0xc00060, 0xc0007f, multi32_io_2_r },
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
@@ -1202,8 +1164,8 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69007f, multi32_mixer_1_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0003f, multi32_io_w },
-	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
+	{ 0xc00000, 0xc0001f, multi32_io_w },
+	{ 0xc00050, 0xc0005f, system32_io_analog_w },
 	{ 0xc00060, 0xc0007f, multi32_io_2_w },
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
