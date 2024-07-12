@@ -3710,9 +3710,9 @@ static DRIVER_INIT ( alien3 )
 {
 	system32_use_default_eeprom = EEPROM_ALIEN3;
 
-	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
-	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
-	install_mem_read16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
+	install_mem_read16_handler (0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
+	install_mem_read16_handler (0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
+	install_mem_read16_handler (0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
 	install_mem_read16_handler (0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_r);
 
 	install_mem_write16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_w);
@@ -3740,8 +3740,7 @@ static DRIVER_INIT ( ga2 )
 }
 
 
-/* F1 Superlap fake comms and protection workaround */
-
+/* comms board workaround */
 static UINT16* dual_pcb_comms;
 
 static WRITE16_HANDLER( dual_pcb_comms_w )
@@ -3754,11 +3753,6 @@ static READ16_HANDLER( dual_pcb_comms_r )
 	return dual_pcb_comms[offset];
 }
 
-
-/* There must be something on the comms board for this?
-   Probably not a dip/solder link/trace cut, but maybe
-   just whichever way the cables are plugged in?
-   Both f1en and arescue master units try to set bit 1... */
 static READ16_HANDLER( dual_pcb_masterslave )
 {
 	return 0; /* 0/1 master/slave */
@@ -3782,9 +3776,9 @@ static DRIVER_INIT ( f1sl )
 	install_io_analog();
 
 	dual_pcb_comms = auto_malloc(0x1000);
-	install_mem_read16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_r);
+	install_mem_read16_handler (0, 0x800000, 0x800fff,  dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
-	install_mem_read16_handler(0, 0x801000, 0x801003,  dual_pcb_masterslave);
+	install_mem_read16_handler (0, 0x801000, 0x801003,  dual_pcb_masterslave);
 	system32_prot_vblank = f1lap_fd1149_vblank;
 }
 
@@ -3847,9 +3841,9 @@ static DRIVER_INIT ( jpark )
 	pROM[0xC15A8/2] = 0xCD70;
 	pROM[0xC15AA/2] = 0xD8CD;
 
-	install_mem_read16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
-	install_mem_read16_handler(0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
-	install_mem_read16_handler(0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
+	install_mem_read16_handler (0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_r);
+	install_mem_read16_handler (0, 0xc00052, 0xc00053, sys32_gun_p1_y_c00052_r);
+	install_mem_read16_handler (0, 0xc00054, 0xc00055, sys32_gun_p2_x_c00054_r);
 	install_mem_read16_handler (0, 0xc00056, 0xc00057, sys32_gun_p2_y_c00056_r);
 
 	install_mem_write16_handler(0, 0xc00050, 0xc00051, sys32_gun_p1_x_c00050_w);
@@ -3861,11 +3855,6 @@ static DRIVER_INIT ( jpark )
 static READ16_HANDLER( arescue_handshake_r )
 {
 	return 0;
-}
-
-static READ16_HANDLER( arescue_818000_r )
-{
-	return 0; /* 0/1 master/slave*/
 }
 
 static READ16_HANDLER( arescue_81000f_r )
@@ -3909,35 +3898,22 @@ static WRITE16_HANDLER( arescue_dsp_w )
 	COMBINE_DATA(&arescue_dsp_io[offset]);
 }
 
-static UINT16* arescue_comms;
-static WRITE16_HANDLER( arescue_comms_w )
-{
-	COMBINE_DATA(&arescue_comms[offset]);
-}
-
-static READ16_HANDLER( arescue_comms_r )
-{
-	return arescue_comms[offset];
-}
-
 static DRIVER_INIT( arescue )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
-	arescue_comms = auto_malloc(0x2000);
-
 	install_io_analog();
 
-	install_mem_read16_handler(0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
+	install_mem_read16_handler (0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
 	install_mem_write16_handler(0, 0xa00000, 0xa00006, arescue_dsp_w);
 
-	install_mem_read16_handler(0, 0x818000, 0x818003, arescue_818000_r);	/* master/slave*/
+	dual_pcb_comms = auto_malloc(0x2000);
+	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
+	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
+	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
 
-	install_mem_read16_handler(0, 0x810000, 0x810fff, arescue_comms_r);		/* comms space*/
-	install_mem_write16_handler(0, 0x810000, 0x810fff, arescue_comms_w);
-
-	install_mem_read16_handler(0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
-	install_mem_read16_handler(0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
+	install_mem_read16_handler (0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
+	install_mem_read16_handler (0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
 }
 
 
@@ -4012,7 +3988,7 @@ static DRIVER_INIT( darkedge )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* install protection handlers */
-	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_r);
+	install_mem_read16_handler (0, 0xa00000, 0xa7ffff, darkedge_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
 	system32_prot_vblank = darkedge_fd1149_vblank;
 
@@ -4041,7 +4017,7 @@ static DRIVER_INIT( dbzvrvs )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
 	/* install protection handlers */
-	install_mem_read16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
+	install_mem_read16_handler (0, 0xa00000, 0xa7ffff, dbzvrvs_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_w);
 }
 
