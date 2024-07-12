@@ -3908,9 +3908,9 @@ static DRIVER_INIT( arescue )
 	install_mem_write16_handler(0, 0xa00000, 0xa00006, arescue_dsp_w);
 
 	dual_pcb_comms = auto_malloc(0x2000);
-	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
 	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
+	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
 
 	install_mem_read16_handler (0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
 	install_mem_read16_handler (0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
