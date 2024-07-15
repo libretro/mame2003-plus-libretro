@@ -820,43 +820,49 @@ static WRITE16_HANDLER( io_analog_w )
 
 static READ16_HANDLER( system32_io_r )
 {
+	int port = -1;
 	offset &= 0x1f/2;
 
 	switch(offset) {
-	case 0x00/2:
-		return readinputport(0x01);
-	case 0x02/2:
-		return readinputport(0x02);
-	case 0x08/2:
-		return readinputport(0x03);
-	case 0x0a/2:
-		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x0e/2:
-		return system32_tilebank_external;
+		/* I/O ports */
+		case 0x00/2:	if (port==-1) port = 1;
+		case 0x02/2:	if (port==-1) port = 2;
+		case 0x04/2:
+		case 0x06/2:
+		case 0x08/2:	if (port==-1) port = 3;
+		case 0x0a/2:	if (port==-1) port = 0;
+		case 0x0c/2:
+		case 0x0e/2:
+			/* if the port is configured as an output, return the last thing written */
+			if (misc_io_data[0][0x1e/2] & (1 << offset))
+				return misc_io_data[0][offset];
 
-	/* 'SEGA' protection */
-	case 0x10/2:
-		return 'S';
-	case 0x12/2:
-		return 'E';
-	case 0x14/2:
-		return 'G';
-	case 0x16/2:
-		return 'A';
+			/* otherwise, return an input port */
+			return (port==-1) ? 0xffff : readinputport(port);
 
-	/* CNT register & mirror */
-	case 0x18/2:
-	case 0x1c/2:
-		return misc_io_data[0][0x1c/2];
+		/* 'SEGA' protection */
+		case 0x10/2:
+			return 'S';
+		case 0x12/2:
+			return 'E';
+		case 0x14/2:
+			return 'G';
+		case 0x16/2:
+			return 'A';
 
-	/* port direction register & mirror */
-	case 0x1a/2:
-	case 0x1e/2:
-		return misc_io_data[0][0x1e/2];
+		/* CNT register & mirror */
+		case 0x18/2:
+		case 0x1c/2:
+			return misc_io_data[0][0x1c/2];
 
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
+		/* port direction register & mirror */
+		case 0x1a/2:
+		case 0x1e/2:
+			return misc_io_data[0][0x1e/2];
+
+		default:
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+			return 0xffff;
 	}
 }
 
