@@ -965,7 +965,7 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	}
 }
 
-static READ16_HANDLER( io_expansion_r )
+static READ16_HANDLER( io_expansion_0_r )
 {
 	switch(offset) {
 	case 0x00:
@@ -980,7 +980,7 @@ static READ16_HANDLER( io_expansion_r )
 	}
 }
 
-static WRITE16_HANDLER( io_expansion_w )
+static WRITE16_HANDLER( io_expansion_0_w )
 {
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
@@ -995,6 +995,18 @@ static WRITE16_HANDLER( io_expansion_w )
 	default:
 		break;
 	}
+}
+
+static READ16_HANDLER( io_expansion_1_r )
+{
+	return 0xffff;
+}
+
+static WRITE16_HANDLER( io_expansion_1_w )
+{
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 }
 
 static WRITE16_HANDLER( random_number_16_w )
@@ -1075,8 +1087,9 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, io_chip_0_r },
 	{ 0xc00050, 0xc0005f, io_analog_r },
-	{ 0xc00060, 0xc0007f, io_expansion_r },
-	{ 0xc80000, 0xc8007f, io_chip_1_r },
+	{ 0xc00060, 0xc0007f, io_expansion_0_r },
+	{ 0xc80000, 0xc8001f, io_chip_1_r },
+	{ 0xc80040, 0xc8007f, io_expansion_1_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -1095,8 +1108,9 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, io_analog_w },
-	{ 0xc00060, 0xc0007f, io_expansion_w },
-	{ 0xc80000, 0xc8007f, multi32_io_B_w },
+	{ 0xc00060, 0xc0007f, io_expansion_0_w },
+	{ 0xc80000, 0xc8001f, multi32_io_B_w },
+	{ 0xc80040, 0xc8007f, io_expansion_1_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
