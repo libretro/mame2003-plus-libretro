@@ -37,9 +37,11 @@ void sys16_patch_z80code( int offset, int data ){
 
 
 READ16_HANDLER( SYS16_MRA16_WORKINGRAM2_SHARE ){ return sys16_workingram2[offset]; }
-WRITE16_HANDLER( SYS16_MWA16_WORKINGRAM2_SHARE ){ COMBINE_DATA( &sys16_workingram2[offset] ); }
+WRITE16_HANDLER(SYS16_MWA16_WORKINGRAM2_SHARE ){ COMBINE_DATA( &sys16_workingram2[offset] ); }
+
 READ16_HANDLER( SYS16_MRA16_ROADRAM_SHARE ){ return sys16_roadram[offset]; }
-WRITE16_HANDLER( SYS16_MWA16_ROADRAM_SHARE ){ COMBINE_DATA( &sys16_roadram[offset] ); }
+WRITE16_HANDLER(SYS16_MWA16_ROADRAM_SHARE ){ COMBINE_DATA( &sys16_roadram[offset] ); }
+
 READ16_HANDLER( SYS16_CPU3ROM16_r ){
 	const data16_t *pMem = (data16_t *)memory_region(REGION_CPU3);
 	return pMem[offset];

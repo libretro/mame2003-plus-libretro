@@ -505,8 +505,8 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/segasyse_vidhrdw.c $(CORE_DIR)/drivers/segasyse.c \
 	$(CORE_DIR)/machine/system16_machine.c $(CORE_DIR)/vidhrdw/system16_vidhrdw.c $(CORE_DIR)/vidhrdw/sys16spr.c \
 	$(CORE_DIR)/vidhrdw/segaic16.c $(CORE_DIR)/vidhrdw/segas16b.c $(CORE_DIR)/vidhrdw/segaorun.c $(CORE_DIR)/drivers/segas16b.c \
-	$(CORE_DIR)/sndhrdw/system16_sndhrdw.c \
-	$(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c \
+	$(CORE_DIR)/sndhrdw/system16_sndhrdw.c $(CORE_DIR)/machine/segaic16.c $(CORE_DIR)/vidhrdw/segaxbd.c\
+	$(CORE_DIR)/drivers/system16.c $(CORE_DIR)/drivers/aburner.c $(CORE_DIR)/drivers/outrun.c $(CORE_DIR)/drivers/segaxbd.c \
 	$(CORE_DIR)/drivers/sharrier.c $(CORE_DIR)/drivers/system18.c \
 	$(CORE_DIR)/drivers/system24.c $(CORE_DIR)/machine/system24_machine.c $(CORE_DIR)/vidhrdw/system24_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/segaic24.c $(CORE_DIR)/vidhrdw/segas18.c \
