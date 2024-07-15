@@ -867,6 +867,16 @@ static UINT16 common_io_chip_r(int which, offs_t offset, UINT16 mem_mask)
 	}
 }
 
+static READ16_HANDLER( io_chip_0_r )
+{
+	return common_io_chip_r(0, offset, mem_mask);
+}
+
+static READ16_HANDLER( io_chip_1_r )
+{
+	return common_io_chip_r(1, offset, mem_mask);
+}
+
 static WRITE16_HANDLER( system32_io_w )
 {
 	/* only LSB matters */
@@ -892,49 +902,6 @@ static WRITE16_HANDLER( system32_io_w )
 
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
-}
-
-static READ16_HANDLER( io_chip_0_r )
-{
-	return common_io_chip_r(0, offset, mem_mask);
-}
-
-static READ16_HANDLER( io_chip_1_r )
-{
-	return common_io_chip_r(1, offset, mem_mask);
-}
-
-static READ16_HANDLER( io_expansion_r )
-{
-	switch(offset) {
-	case 0x00/2:
-		return readinputport(0x04);
-	case 0x02/2:
-		return readinputport(0x05);
-	case 0x04/2:
-		return readinputport(0x06);
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
-	}
-}
-
-static WRITE16_HANDLER( io_expansion_w )
-{
-	/* only LSB matters */
-	if (!ACCESSING_LSB)
-		return;
-
-	switch(offset) {
-	case 0x00/2:
-		/* Used by the hardware to switch the analog input ports to set B*/
-		analogSwitch=data;
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -994,6 +961,38 @@ static WRITE16_HANDLER( multi32_io_B_w )
 
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		break;
+	}
+}
+
+static READ16_HANDLER( io_expansion_r )
+{
+	switch(offset) {
+	case 0x00:
+		return readinputport(0x04);
+	case 0x01:
+		return readinputport(0x05);
+	case 0x02:
+		return readinputport(0x06);
+
+	default:
+		return 0xffff;
+	}
+}
+
+static WRITE16_HANDLER( io_expansion_w )
+{
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
+
+	switch(offset) {
+	case 0x00:
+		/* Used by the hardware to switch the analog input ports to set B*/
+		analogSwitch=data;
+		break;
+
+	default:
 		break;
 	}
 }
