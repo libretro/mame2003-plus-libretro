@@ -853,7 +853,7 @@ static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
 	UINT16 data = system32_videoram[(entry->page & 0x7f) << 9 | tile_index];
-	SET_TILE_INFO(0, (entry->bank << 13) + (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
+	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
 }
 
 
@@ -905,7 +905,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 			clips[i].min_x = (Machine->visible_area.max_x + 1) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 			clips[i].min_y = (Machine->visible_area.max_y + 1) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
-		sect_rect(&clips[i], &tempclip);
+		clips[i] &= tempclip;
 		sorted[i] = i;
 	}
 
@@ -2016,7 +2016,7 @@ static void sprite_render_list(void)
 					clipin.max_y = (INT16)(sprite[1] << 4) >> 4;
 					clipin.min_x = (INT16)(sprite[2] << 4) >> 4;
 					clipin.max_x = (INT16)(sprite[3] << 4) >> 4;
-					sect_rect(&clipin, &outerclip);
+					clipin &= outerclip;
 				}
 
 				/* set the exclusive cliprect */
