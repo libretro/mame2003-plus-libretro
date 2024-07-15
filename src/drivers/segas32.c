@@ -1050,7 +1050,7 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, io_chip_0_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, io_expansion_r },
+	{ 0xc00060, 0xc0007f, io_expansion_0_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -1067,7 +1067,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, io_expansion_w },
+	{ 0xc00060, 0xc0007f, io_expansion_0_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
