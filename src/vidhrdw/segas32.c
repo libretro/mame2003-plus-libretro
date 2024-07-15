@@ -905,7 +905,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 			clips[i].min_x = (Machine->visible_area.max_x + 1) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 			clips[i].min_y = (Machine->visible_area.max_y + 1) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
-		clips[i] &= tempclip;
+		sect_rect(&clips[i], &tempclip);
 		sorted[i] = i;
 	}
 
