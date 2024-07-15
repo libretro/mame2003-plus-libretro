@@ -823,16 +823,15 @@ static READ16_HANDLER( system32_io_r )
 	offset &= 0x1f/2;
 
 	switch(offset) {
-	case 0x00:
+	case 0x00/2:
 		return readinputport(0x01);
-	case 0x01:
+	case 0x02/2:
 		return readinputport(0x02);
-	case 0x04:
+	case 0x08/2:
 		return readinputport(0x03);
-	case 0x05:
-		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
+	case 0x0a/2:
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x07:
+	case 0x0e/2:
 		return system32_tilebank_external;
 
 	/* 'SEGA' protection */
@@ -871,15 +870,15 @@ static WRITE16_HANDLER( system32_io_w )
 	misc_io_data[0][offset] = data;
 
 	switch(offset) {
-	case 0x03:
+	case 0x06/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x07:
+	case 0x0e/2:
 		system32_tilebank_external = data;
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		system32_displayenable[0] = (data & 0x02);
 		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
@@ -893,11 +892,11 @@ static WRITE16_HANDLER( system32_io_w )
 static READ16_HANDLER( io_expansion_r )
 {
 	switch(offset) {
-	case 0x00:
+	case 0x00/2:
 		return readinputport(0x04);
-	case 0x01:
+	case 0x02/2:
 		return readinputport(0x05);
-	case 0x02:
+	case 0x04/2:
 		return readinputport(0x06);
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
@@ -912,7 +911,7 @@ static WRITE16_HANDLER( io_expansion_w )
 		return;
 
 	switch(offset) {
-	case 0x00:
+	case 0x00/2:
 		/* Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
@@ -929,15 +928,15 @@ static READ16_HANDLER( multi32_io_r )
 	offset &= 0x1f/2;
 
 	switch(offset) {
-	case 0x00:
+	case 0x00/2:
 		return readinputport(0x01);
-	case 0x01:
+	case 0x02/2:
 		return readinputport(0x02);
-	case 0x04:
+	case 0x08/2:
 		return readinputport(0x03);
-	case 0x05:
+	case 0x0a/2:
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x07:
+	case 0x0e/2:
 		return system32_tilebank_external;
 
 	/* 'SEGA' protection */
@@ -976,15 +975,15 @@ static WRITE16_HANDLER( multi32_io_w )
 	misc_io_data[0][offset] = data;
 
 	switch(offset) {
-	case 0x03:
+	case 0x06/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x07:
+	case 0x0e/2:
 		system32_tilebank_external = data;
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		/* speed up: don't draw monitor A if in B only mode */
 		if (readinputport(0xf) == 2) system32_displayenable[0] = 0;
 		else system32_displayenable[0] = (data & 0x02);
@@ -1003,22 +1002,13 @@ static READ16_HANDLER( multi32_io_B_r )
 	offset &= 0x1f/2;
 
 	switch(offset) {
-	case 0x00:
-		/* orunners (mask ff00)*/
+	case 0x00/2:
 		return readinputport(0X0c); /* orunners Monitor B Shift Up, Shift Down buttons*/
-	case 0x01:
-		/* orunners (mask ff00)*/
+	case 0x02/2:
 		return readinputport(0X0d); /* orunners Monitor B DJ Music, Music Up, Music Down buttons*/
-	case 0x02:
-		return 0x00;
-	case 0x03:
-		/* orunners (mask ff00)*/
-		return 0x00;
-	case 0x04:
-		/* harddunk (mask ff00) will not exit test mode if not 0xff*/
+	case 0x08/2:
 		return readinputport(0X0e); /* orunners Monitor B Service, Test, Coin and Start buttons*/
-	case 0x05:
-		/* orunners (mask ff00) locks up*/
+	case 0x0a/2:
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 
 	/* 'SEGA' protection */
@@ -1057,12 +1047,12 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	misc_io_data[1][offset] = data;
 
 	switch(offset) {
-	case 0x07:
+	case 0x0e/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		/* speed up: don't draw monitor B if in A only mode */
 		if (readinputport(0xf) == 1) system32_displayenable[1] = 0;
 		else system32_displayenable[1] = (data & 0x02);
