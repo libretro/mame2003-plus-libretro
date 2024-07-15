@@ -818,48 +818,63 @@ static WRITE16_HANDLER( io_analog_w )
 	}
 }
 
-static READ16_HANDLER( system32_io_r )
+static UINT16 common_io_chip_r(int which, offs_t offset, UINT16 mem_mask)
 {
+	int port = -1;
 	offset &= 0x1f/2;
 
 	switch(offset) {
-	case 0x00:
-		return readinputport(0x01);
-	case 0x01:
-		return readinputport(0x02);
-	case 0x04:
-		return readinputport(0x03);
-	case 0x05:
-		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
-		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x07:
-		/* scross*/
-		return system32_tilebank_external;
+		/* I/O ports */
+		case 0x00/2:	if (port==-1) port = 1+(which*11);
+		case 0x02/2:	if (port==-1) port = 2+(which*11);
+		case 0x04/2:
+		case 0x06/2:
+		case 0x08/2:	if (port==-1) port = 3+(which*11);
+		case 0x0a/2:	if (port==-1) port = 0;
+		case 0x0c/2:
+		case 0x0e/2:
+			/* if the port is configured as an output, return the last thing written */
+			if (misc_io_data[which][0x1e/2] & (1 << offset))
+				return misc_io_data[which][offset];
 
-	/* 'SEGA' protection */
-	case 0x08:
-		return 'S';
-	case 0x09:
-		return 'E';
-	case 0x0a:
-		return 'G';
-	case 0x0b:
-		return 'A';
+			/* otherwise, return an input port */
+			if (port==-1) return 0xffff;
+			if (offset==0x0a/2) return (EEPROM_read_bit() << 7) | readinputport(port);
+			else return readinputport(port);
 
-	/* CNT register & mirror */
-	case 0x18/2:
-	case 0x1c/2:
-		return misc_io_data[0][0x1c/2];
+		/* 'SEGA' protection */
+		case 0x10/2:
+			return 'S';
+		case 0x12/2:
+			return 'E';
+		case 0x14/2:
+			return 'G';
+		case 0x16/2:
+			return 'A';
 
-	/* port direction register & mirror */
-	case 0x1a/2:
-	case 0x1e/2:
-		return misc_io_data[0][0x1e/2];
+		/* CNT register & mirror */
+		case 0x18/2:
+		case 0x1c/2:
+			return misc_io_data[which][0x1c/2];
 
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
+		/* port direction register & mirror */
+		case 0x1a/2:
+		case 0x1e/2:
+			return misc_io_data[which][0x1e/2];
+
+    default:
+			return 0xffff;
 	}
+}
+
+static READ16_HANDLER( io_chip_0_r )
+{
+	return common_io_chip_r(0, offset, mem_mask);
+}
+
+static READ16_HANDLER( io_chip_1_r )
+{
+	return common_io_chip_r(1, offset, mem_mask);
 }
 
 static WRITE16_HANDLER( system32_io_w )
@@ -872,16 +887,15 @@ static WRITE16_HANDLER( system32_io_w )
 	misc_io_data[0][offset] = data;
 
 	switch(offset) {
-	case 0x03:
+	case 0x06/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x07:
-		/* multi32 tilebank per layer*/
-		COMBINE_DATA(&system32_tilebank_external);
+	case 0x0e/2:
+		system32_tilebank_external = data;
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		system32_displayenable[0] = (data & 0x02);
 		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 		break;
@@ -889,83 +903,6 @@ static WRITE16_HANDLER( system32_io_w )
 	default:
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
-	}
-}
-
-static READ16_HANDLER( io_expansion_r )
-{
-	switch(offset) {
-	case 0x00:
-		return readinputport(0x04);
-	case 0x01:
-		return readinputport(0x05);
-	case 0x02:
-		return readinputport(0x06);
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
-	}
-}
-
-static WRITE16_HANDLER( io_expansion_w )
-{
-	/* only LSB matters */
-	if (!ACCESSING_LSB)
-		return;
-
-	switch(offset) {
-	case 0x00:
-		/* Used by the hardware to switch the analog input ports to set B*/
-		analogSwitch=data;
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
-}
-
-
-static READ16_HANDLER( multi32_io_r )
-{
-	offset &= 0x1f/2;
-
-	switch(offset) {
-	case 0x00:
-		return readinputport(0x01);
-	case 0x01:
-		return readinputport(0x02);
-	case 0x04:
-		return readinputport(0x03);
-	case 0x05:
-		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-	case 0x07:
-		/* scross*/
-		return system32_tilebank_external;
-
-	/* 'SEGA' protection */
-	case 0x08:
-		return 'S';
-	case 0x09:
-		return 'E';
-	case 0x0a:
-		return 'G';
-	case 0x0b:
-		return 'A';
-
-	/* CNT register & mirror */
-	case 0x18/2:
-	case 0x1c/2:
-		return misc_io_data[0][0x1c/2];
-
-	/* port direction register & mirror */
-	case 0x1a/2:
-	case 0x1e/2:
-		return misc_io_data[0][0x1e/2];
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
 	}
 }
 
@@ -979,16 +916,15 @@ static WRITE16_HANDLER( multi32_io_w )
 	misc_io_data[0][offset] = data;
 
 	switch(offset) {
-	case 0x03:
+	case 0x06/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x07:
-		/* Multi32: tilebank per layer*/
-		COMBINE_DATA(&system32_tilebank_external);
+	case 0x0e/2:
+		system32_tilebank_external = data;
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		/* speed up: don't draw monitor A if in B only mode */
 		if (readinputport(0xf) == 2) system32_displayenable[0] = 0;
 		else system32_displayenable[0] = (data & 0x02);
@@ -1002,55 +938,6 @@ static WRITE16_HANDLER( multi32_io_w )
 	}
 }
 
-static READ16_HANDLER( multi32_io_B_r )
-{
-	offset &= 0x1f/2;
-
-	switch(offset) {
-	case 0x00:
-		/* orunners (mask ff00)*/
-		return readinputport(0X0c); /* orunners Monitor B Shift Up, Shift Down buttons*/
-	case 0x01:
-		/* orunners (mask ff00)*/
-		return readinputport(0X0d); /* orunners Monitor B DJ Music, Music Up, Music Down buttons*/
-	case 0x02:
-		return 0x00;
-	case 0x03:
-		/* orunners (mask ff00)*/
-		return 0x00;
-	case 0x04:
-		/* harddunk (mask ff00) will not exit test mode if not 0xff*/
-		return readinputport(0X0e); /* orunners Monitor B Service, Test, Coin and Start buttons*/
-	case 0x05:
-		/* orunners (mask ff00) locks up*/
-		return (EEPROM_read_bit() << 7) | readinputport(0x00);
-
-	/* 'SEGA' protection */
-	case 0x08:
-		return 'S';
-	case 0x09:
-		return 'E';
-	case 0x0a:
-		return 'G';
-	case 0x0b:
-		return 'A';
-
-	/* CNT register & mirror */
-	case 0x18/2:
-	case 0x1c/2:
-		return misc_io_data[1][0x1c/2];
-
-	/* port direction register & mirror */
-	case 0x1a/2:
-	case 0x1e/2:
-		return misc_io_data[1][0x1e/2];
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
-		return 0xffff;
-	}
-}
-
 static WRITE16_HANDLER( multi32_io_B_w )
 {
 	/* only LSB matters */
@@ -1061,12 +948,12 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	misc_io_data[1][offset] = data;
 
 	switch(offset) {
-	case 0x07:
+	case 0x0e/2:
 			EEPROM_write_bit(data & 0x80);
 			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
-	case 0x0e:
+	case 0x1c/2:
 		/* speed up: don't draw monitor B if in A only mode */
 		if (readinputport(0xf) == 1) system32_displayenable[1] = 0;
 		else system32_displayenable[1] = (data & 0x02);
@@ -1076,6 +963,50 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
+}
+
+static READ16_HANDLER( io_expansion_0_r )
+{
+	switch(offset) {
+	case 0x00:
+		return readinputport(0x04);
+	case 0x01:
+		return readinputport(0x05);
+	case 0x02:
+		return readinputport(0x06);
+
+	default:
+		return 0xffff;
+	}
+}
+
+static WRITE16_HANDLER( io_expansion_0_w )
+{
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
+
+	switch(offset) {
+	case 0x00:
+		/* Used by the hardware to switch the analog input ports to set B*/
+		analogSwitch=data;
+		break;
+
+	default:
+		break;
+	}
+}
+
+static READ16_HANDLER( io_expansion_1_r )
+{
+	return 0xffff;
+}
+
+static WRITE16_HANDLER( io_expansion_1_w )
+{
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
 }
 
 static WRITE16_HANDLER( random_number_16_w )
@@ -1117,9 +1048,9 @@ static MEMORY_READ16_START( system32_readmem )
 	{ 0x600000, 0x60ffff, system32_paletteram_r },
 	{ 0x610000, 0x61007f, system32_mixer_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, system32_io_r },
+	{ 0xc00000, 0xc0001f, io_chip_0_r },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, io_expansion_r },
+	{ 0xc00060, 0xc0007f, io_expansion_0_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -1136,7 +1067,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, system32_io_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
-	{ 0xc00060, 0xc0007f, io_expansion_w },
+	{ 0xc00060, 0xc0007f, io_expansion_0_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
@@ -1154,10 +1085,11 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_r },
 	{ 0x690000, 0x69007f, multi32_mixer_1_r },
 	{ 0x700000, 0x701fff, shared_ram_16_r },	/* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, multi32_io_r },
+	{ 0xc00000, 0xc0001f, io_chip_0_r },
 	{ 0xc00050, 0xc0005f, io_analog_r },
-	{ 0xc00060, 0xc0007f, io_expansion_r },
-	{ 0xc80000, 0xc8007f, multi32_io_B_r },
+	{ 0xc00060, 0xc0007f, io_expansion_0_r },
+	{ 0xc80000, 0xc8001f, io_chip_1_r },
+	{ 0xc80040, 0xc8007f, io_expansion_1_r },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_r },
 	{ 0xd80000, 0xdfffff, random_number_16_r },
 	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
@@ -1176,8 +1108,9 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
 	{ 0xc00000, 0xc0001f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, io_analog_w },
-	{ 0xc00060, 0xc0007f, io_expansion_w },
-	{ 0xc80000, 0xc8007f, multi32_io_B_w },
+	{ 0xc00060, 0xc0007f, io_expansion_0_w },
+	{ 0xc80000, 0xc8001f, multi32_io_B_w },
+	{ 0xc80040, 0xc8007f, io_expansion_1_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
