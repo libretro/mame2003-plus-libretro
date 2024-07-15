@@ -838,7 +838,9 @@ static READ16_HANDLER( system32_io_r )
 				return misc_io_data[0][offset];
 
 			/* otherwise, return an input port */
-			return (port==-1) ? 0xffff : readinputport(port);
+			if (port==-1) return 0xffff;
+			if (offset==0x0a/2) return (EEPROM_read_bit() << 7) | readinputport(port);
+			else return readinputport(port);
 
 		/* 'SEGA' protection */
 		case 0x10/2:
