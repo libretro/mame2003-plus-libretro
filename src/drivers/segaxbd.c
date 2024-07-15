@@ -551,8 +551,8 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	{ 0x0ed000, 0x0edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	//AM_RANGE(0x0ee000, 0x0effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x0ee000, 0x0effff, segaic16_road_control_0_r },
-	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r   },
-	{ 0x29c000, 0x29ffff, SYS16IC_MRA16_BACKUPRAM1 },
+	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r }, //suprised at this its not in the memmap perhaps its banked will look into it morew when time allows.
+	{ 0x29c000, 0x29ffff, SYS16IC_MRA16_BACKUPRAM1 }, // not sure this is right need to dif in more.
 MEMORY_END
 /*
 static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 16 )
