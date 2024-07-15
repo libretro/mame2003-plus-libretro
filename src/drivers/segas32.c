@@ -833,17 +833,16 @@ static READ16_HANDLER( system32_io_r )
 		if ( (!strcmp(Machine->gamedrv->name,"radr")) && cpu_getcurrentframe()==10) return 95; /* bypass network check automatically */
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 	case 0x07:
-		/* scross*/
 		return system32_tilebank_external;
 
 	/* 'SEGA' protection */
-	case 0x08:
+	case 0x10/2:
 		return 'S';
-	case 0x09:
+	case 0x12/2:
 		return 'E';
-	case 0x0a:
+	case 0x14/2:
 		return 'G';
-	case 0x0b:
+	case 0x16/2:
 		return 'A';
 
 	/* CNT register & mirror */
@@ -878,8 +877,7 @@ static WRITE16_HANDLER( system32_io_w )
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
 	case 0x07:
-		/* multi32 tilebank per layer*/
-		COMBINE_DATA(&system32_tilebank_external);
+		system32_tilebank_external = data;
 		break;
 	case 0x0e:
 		system32_displayenable[0] = (data & 0x02);
@@ -940,17 +938,16 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x05:
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 	case 0x07:
-		/* scross*/
 		return system32_tilebank_external;
 
 	/* 'SEGA' protection */
-	case 0x08:
+	case 0x10/2:
 		return 'S';
-	case 0x09:
+	case 0x12/2:
 		return 'E';
-	case 0x0a:
+	case 0x14/2:
 		return 'G';
-	case 0x0b:
+	case 0x16/2:
 		return 'A';
 
 	/* CNT register & mirror */
@@ -985,8 +982,7 @@ static WRITE16_HANDLER( multi32_io_w )
 			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 		break;
 	case 0x07:
-		/* Multi32: tilebank per layer*/
-		COMBINE_DATA(&system32_tilebank_external);
+		system32_tilebank_external = data;
 		break;
 	case 0x0e:
 		/* speed up: don't draw monitor A if in B only mode */
@@ -1026,13 +1022,13 @@ static READ16_HANDLER( multi32_io_B_r )
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 
 	/* 'SEGA' protection */
-	case 0x08:
+	case 0x10/2:
 		return 'S';
-	case 0x09:
+	case 0x12/2:
 		return 'E';
-	case 0x0a:
+	case 0x14/2:
 		return 'G';
-	case 0x0b:
+	case 0x16/2:
 		return 'A';
 
 	/* CNT register & mirror */
