@@ -2016,7 +2016,7 @@ static void sprite_render_list(void)
 					clipin.max_y = (INT16)(sprite[1] << 4) >> 4;
 					clipin.min_x = (INT16)(sprite[2] << 4) >> 4;
 					clipin.max_x = (INT16)(sprite[3] << 4) >> 4;
-					clipin &= outerclip;
+					sect_rect(&clipin, &outerclip);
 				}
 
 				/* set the exclusive cliprect */
