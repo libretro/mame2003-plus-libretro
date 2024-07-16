@@ -6,16 +6,9 @@
 	  rendering.
 
 	- In radr, NBG1 should be opaque on select screen, and NBG3 should be
-	  opaque while driving. 
-	  This is controlled by register $31ff8e (respectively $200 and $800), 
-	  likewise darkedge sets $800 on the first attract fight 
-	  (which has ugly black pens which should be white according to the ref). 
-	  harddunk sets $0f00 which completely breaks text display if current 
-	  hookup is enabled. 
-	  The theory is that opaque pens should go above background layer and 
-	  behind everything else like System 24.
+          opaque while driving. How is this controlled?
 
-	- radr uses $1A0 as the X center for zooming; however, this
+        - In radr, they use $1A0 as the X center for zooming; however, this
 	  contradicts the theory that bit 9 is a sign bit. For now, the code
 	  assumes that the X center has 10 bits of resolution. 
 
@@ -25,24 +18,6 @@
 	  but this results in an incorrect display. For now, we assume there is
 	  a bug in the procedure and implement it so that it looks correct.
 
-	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
-	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
-	  Game actually uses the "rowscroll/rowselect" tables for a line window 
-	  effect to draw the boxing ring over NBG0. 
-	  Same deal for ga2 when in stage 2 cave a wall torch is lit.
-	  
-	- harddunk draws solid white in attract mode when the players are presented.
-	  NBG0 is set with $200 on center X/Y, same as above or perhaps missing
-	  tilemap wraparound?
-
-	- Wrong priority cases (parenthesis for the level setup):
-	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f). 
-	  dbzvrvs: Sheng-Long speech balloon during Piccoro ending (fixme: check levels). 
-	  f1lap: attract mode ranking sprite-based text ($a) vs. road ($d)
-	  f1lap: attract mode map display (after aforementioned), sprite-based turn names 
-	  ($a) are hidden by map ($d) again;
-	  (Note: Theory about these being CPU core bug(s) is debunked by the fact that latter 
-	   sets up via immediate opcodes)
 	
     Information extracted from below, and from Modeler:
 
@@ -64,22 +39,14 @@
          $31FF00 : w--- ---- ---- ---- : Screen width (0= 320, 1= 412)
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
-                   ---- --f- ---- ---- : 1= Global X/Y flip? (most games?)
-                   ---- ---f ---- ---- : 1= prohbit Y flip? (Air Rescue 2nd screen title, also gets set on one of the intro sequence screens)
+                   ---- --f- ---- ---- : 1= All layers X+Y flip
                    ---- ---- ---- 4--- : 1= X+Y flip for NBG3
                    ---- ---- ---- -2-- : 1= X+Y flip for NBG2
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
                    ---- ---- ---- ---0 : 1= X+Y flip for NBG0
          $31FF02 : x--- ---- --x- ---- : Bitmap layer enable (?)
-				   -x-- ---- ---- ---- : 1= NBG3 page wrapping disable (clipping enable according to code?)
-				   --x- ---- ---- ---- : 1= NBG2 page wrapping disable
                    ---1 ---- ---- ---- : 1= NBG1 page wrapping disable
                    ---- 0--- ---- ---- : 1= NBG0 page wrapping disable
-				   ---- -x-- ---- ---- : 1= bitmap layer clipping mode (1=outside)
-				   ---- --x- ---- ---- : 1= NBG3 clipping mode (1=outside)
-				   ---- ---x ---- ---- : 1= NBG2 clipping mode (1=outside)
-				   ---- ---- x--- ---- : 1= NBG1 clipping mode (1=outside)
-				   ---- ---- -x-- ---- : 1= NBG0 clipping mode (1=outside)
                    ---- ---- --b- ---- : 1= Bitmap layer disable
                    ---- ---- ---t ---- : 1= Text layer disable
                    ---- ---- ---- 3--- : 1= NBG3 layer disable
@@ -172,11 +139,6 @@
                    ---- ---- ---- -1-- : 1= NBG1 layer disable
                    ---- ---- ---- --0- : 1= NBG0 layer disable
                    ---- ---- ---- ---t : 1= Text layer disable
-
-    reference
-    - arabfgt : https://www.youtube.com/watch?v=98QivDAGz3I
-    - darkedge : https://www.youtube.com/watch?v=riO1yb95z7s
-
 */
 
 #include "driver.h"
@@ -257,7 +219,7 @@ struct extents_list
 struct cache_entry
 {
 	struct cache_entry *	next;
-	struct tilemap *				tmap;
+	struct tilemap *		tilemap;
 	UINT8					page;
 	UINT8					bank;
 };
@@ -347,11 +309,11 @@ static int common_start(int multi32)
 	{
 		struct cache_entry *entry = auto_malloc(sizeof(struct cache_entry));
 
-		entry->tmap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16,16, 32,16);
+		entry->tilemap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16,16, 32,16);
 		entry->page = 0xff;
 		entry->bank = 0;
 		entry->next = cache_head;
-		tilemap_set_user_data(entry->tmap, entry);
+		tilemap_set_user_data(entry->tilemap, entry);
 
 		cache_head = entry;
 	}
@@ -469,12 +431,24 @@ static INLINE UINT16 xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(UINT16 value)
 
 static INLINE void update_color(int offset, UINT16 data)
 {
+	int r, g, b;
+
 	/* note that since we use this RAM directly, we don't technically need */
 	/* to call palette_set_color() at all; however, it does give us that */
 	/* nice display when you hit F4, which is useful for debugging */
 
+	/* extract RGB */
+	r = (data >> 0) & 0x1f;
+	g = (data >> 5) & 0x1f;
+	b = (data >> 10) & 0x1f;
+
+	/* up to 8 bits */
+	r = (r << 3) | (r >> 2);
+	g = (g << 3) | (g >> 2);
+	b = (b << 3) | (b >> 2);
+
 	/* set the color */
-	palette_set_color(offset, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+	palette_set_color(offset, r, g, b);
 }
 
 
@@ -596,13 +570,13 @@ WRITE16_HANDLER( system32_videoram_w )
 	if (offset < 0x1ff00/2)
 	{
 		struct cache_entry *entry;
-		int page = offset >> 9;
-		offset &= 0x1ff;
+		int page = offset / 0x200;
+		offset %= 0x200;
 
 		/* scan the cache for a matching pages */
 		for (entry = cache_head; entry != NULL; entry = entry->next)
 			if (entry->page == page)
-				tilemap_mark_tile_dirty(entry->tmap, offset);
+				tilemap_mark_tile_dirty(entry->tilemap, offset);
 	}
 }
 
@@ -638,7 +612,7 @@ READ16_HANDLER( system32_sprite_control_r )
 			/*  D1 : Seems to be '1' only during an erase in progress, this
                      occurs very briefly though.
                 D0 : Selected frame buffer (0= A, 1= B) */
-			return 0xfffc | (int)(layer_data[MIXER_LAYER_SPRITES].bitmap < layer_data[MIXER_LAYER_SPRITES_2].bitmap);
+			return 0xfffc | (layer_data[MIXER_LAYER_SPRITES].bitmap < layer_data[MIXER_LAYER_SPRITES_2].bitmap);
 
 		case 1:
 			/*  D1 : ?
@@ -818,7 +792,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 				entry->next = cache_head;
 				cache_head = entry;
 			}
-			return entry->tmap;
+			return entry->tilemap;
 		}
 
 		/* stop on the last entry */
@@ -831,14 +805,14 @@ static struct tilemap *find_cache_entry(int page, int bank)
 	/* okay, we didn't find one; take over this last entry */
 	entry->page = page;
 	entry->bank = bank;
-	tilemap_mark_all_tiles_dirty(entry->tmap);
+	tilemap_mark_all_tiles_dirty(entry->tilemap);
 
 	/* move it to the head */
 	prev->next = entry->next;
 	entry->next = cache_head;
 	cache_head = entry;
 
-	return entry->tmap;
+	return entry->tilemap;
 }
 
 
@@ -964,25 +938,6 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 }
 
 
-static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
-{
-	int layer_flip;
-
-	/* determine if we're flipped */
-	int global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
-
-	*flipx = global_flip;
-	*flipy = global_flip;
-
-	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
-
-	*flipy ^= layer_flip;
-	*flipx ^= layer_flip;
-
-	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
-	// it seems to prohibit (at least) the per-tilemap y flipping (maybe global y can override it)
-	if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) *flipy = 0;
-}
 
 /*************************************
  *
@@ -1021,8 +976,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	UINT32 srcx, srcx_start, srcy;
 	UINT32 srcxstep, srcystep;
 	int dstxstep, dstystep;
-	int flipx, flipy;
-	int opaque;
+	int flip, opaque;
 	int x, y;
 
 	/* get the tilemaps */
@@ -1034,8 +988,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 //if (code_pressed(KEYCODE_Z) && bgnum == 0) opaque = 1;
 //if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
 
-	/* todo determine flipping */
-	compute_tilemap_flips(bgnum, &flipx, &flipy);
+	/* determine if we're flipped */
+	flip = ((system32_videoram[0x1ff00/2] >> 9) ^ (system32_videoram[0x1ff00/2] >> bgnum)) & 1;
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1075,16 +1029,12 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += cliprect->min_y * srcystep;
 
 	/* if we're flipped, simply adjust the start/step parameters */
-	if (flipy)
-	{
-		srcy += (Machine->visible_area.max_y - 2 * cliprect->min_y) * srcystep;
-		srcystep = -srcystep;
-	}
-
-	if (flipx)
+	if (flip)
 	{
 		srcx_start += (Machine->visible_area.max_x - 2 * cliprect->min_x) * srcxstep;
+		srcy += (Machine->visible_area.max_y - 2 * cliprect->min_y) * srcystep;
 		srcxstep = -srcxstep;
+		srcystep = -srcystep;
 	}
 
 	/* loop over the target rows */
@@ -1165,7 +1115,6 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
  *
  *************************************/
 
-
 static void update_tilemap_rowscroll(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 	int clipenable, clipout, clips, clipdraw_start;
@@ -1176,8 +1125,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	int xscroll, yscroll;
 	UINT16 *table;
 	int srcx, srcy;
-	int flipx, flipy;
-	int opaque;
+	int flip, opaque;
 	int x, y;
 
 	/* get the tilemaps */
@@ -1189,8 +1137,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 //if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
 //if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
 
-	/* todo determine flipping */
-	compute_tilemap_flips(bgnum, &flipx, &flipy);
+	/* determine if we're flipped */
+	flip = ((system32_videoram[0x1ff00/2] >> 9) ^ (system32_videoram[0x1ff00/2] >> bgnum)) & 1;
 
 	/* determine the clipping */
 	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
@@ -1226,32 +1174,34 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			int srcxstep;
 
 			/* if we're not flipped, things are straightforward */
-			if (!flipx)
+			if (!flip)
 			{
+				/* get starting scroll values */
 				srcx = cliprect->min_x + xscroll;
 				srcxstep = 1;				
+				srcy = yscroll + y;
+
+				/* apply row scroll/select */
+				if (rowscroll)
+					srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
+				if (rowselect)
+					srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
 			}
+
+			/* otherwise, we have to do some contortions */
 			else
 			{	
+				/* get starting scroll values */
 				srcx = cliprect->max_x + xscroll;
 				srcxstep = -1;
-			}
-
-			if (!flipy)
-			{
-				srcy = yscroll + y;
-			}
-			else
-			{
 				srcy = yscroll + Machine->visible_area.max_y - y;
+
+				/* apply row scroll/select */
+				if (rowscroll)
+					srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
+				if (rowselect)
+					srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
 			}
-
-			/* apply row scroll/select */
-			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
-			if (rowselect)
-				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
-
 
 			/* look up the pages and get their source pixmaps */
 			src[0] = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 0])->line[srcy & 0xff];
@@ -1356,44 +1306,44 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[0] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[1] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[2] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[3] = pix;
 
 					pixels = *src++;
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[4] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[5] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[6] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[7] = pix;
 
 					dst += bitmap->rowpixels;
@@ -1415,44 +1365,44 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[0] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-1] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-2] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-3] = pix;
 
 					pix = *src++;
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-4] = pix;
 
 					pix = (pixels >> 0) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-5] = pix;
 
 					pix = (pixels >> 12) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-6] = pix;
 
 					pix = (pixels >> 8) & 0x0f;
 					if (pix)
-						pix |= color;
+						pix += color;
 					dst[-7] = pix;
 
 					dst -= bitmap->rowpixels;
@@ -1584,25 +1534,19 @@ static void update_background(struct layer_info *layer, const struct rectangle *
 
 		/* determine the color */
 		if (system32_videoram[0x1ff5e/2] & 0x8000)
-		{
-			/* line color select (bank wraps at 511, confirmed by arabfgt and kokoroj2) */
-			int yoffset = (system32_videoram[0x1ff5e/2] + y) & 0x1ff;
-			color = (system32_videoram[0x1ff5e/2] & 0x1e00) + yoffset;
-		}
+			color = (system32_videoram[0x1ff5e/2] & 0x1fff) + y;
 		else
 			color = system32_videoram[0x1ff5e/2] & 0x1e00;
 
 		/* if the color doesn't match, fill */
-		if ((bgcolor_line[y & 0x1ff] != color) || (prev_bgstartx[y & 0x1ff] != cliprect->min_x) || (prev_bgendx[y & 0x1ff] != cliprect->max_x))
-		{
-			int x;
+		if (dst[cliprect->min_x] != color)
 			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
 				dst[x] = color;
 
 			prev_bgstartx[y & 0x1ff] = cliprect->min_x;
 			prev_bgendx[y & 0x1ff] = cliprect->max_x;
 			bgcolor_line[y & 0x1ff] = color;
-		}
+	
 	}
 }
 
@@ -1782,7 +1726,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	};
 
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
-	UINT8 numbanks = memory_region_length(REGION_GFX2) >> 20;
+	UINT8 numbanks = memory_region_length(REGION_GFX2) / 0x400000;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
 
 	int indirect = data[0] & 0x2000;
@@ -1842,7 +1786,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	{
 		if (numbanks)
 			bank %= numbanks;
-		spritedata = &spritebase[bank << 20];
+		spritedata = spritebase + 0x100000 * bank;
 		addrmask = 0xfffff;
 	}
 
@@ -2662,7 +2606,6 @@ for (showclip = 0; showclip < 4; showclip++)
 				if (clips & (1 << i))
 				{
 					struct rectangle rect;
-					pen_t white = Machine->uifont->colortable[1];
 					if (!flip)
 					{
 						rect.min_x = system32_videoram[0x1ff60/2 + i * 4] & 0x1ff;
@@ -2683,13 +2626,13 @@ for (showclip = 0; showclip < 4; showclip++)
 					{
 						for (y = rect.min_y; y <= rect.max_y; y++)
 						{
-							bitmap->plot(bitmap, rect.min_x, y, white);
-							bitmap->plot(bitmap, rect.max_x, y, white);
+							bitmap->plot(bitmap, rect.min_x, y, Machine->uifont->colortable[1]);
+							bitmap->plot(bitmap, rect.max_x, y, Machine->uifont->colortable[1]);
 						}
 						for (x = rect.min_x; x <= rect.max_x; x++)
 						{
-							bitmap->plot(bitmap, x, rect.min_y, white);
-							bitmap->plot(bitmap, x, rect.max_y, white);
+							bitmap->plot(bitmap, x, rect.min_y, Machine->uifont->colortable[1]);
+							bitmap->plot(bitmap, x, rect.max_y, Machine->uifont->colortable[1]);
 						}
 					}
 				}
@@ -2968,36 +2911,5 @@ SC: 0003 0000 0000 0000 - 0001 0001 0000 0000
 00: 000E 0002 0005 000F - 0000 0000 0000 0000 - 0000 0000 0000 0000 - 0000 0000 0000 0000
 20: 007F 0366 0000 0364 - 0000 0070 0071 0070 - 0000 4000 4000 4000 - 4000 0000 0000 4000
 40: 0000 0000 0000 0000 - 0000 0000 9E05 0000 - 0000 0000 0000 0000 - 0000 0000 0000 0000
-
-====
-back layer setups (register $31ff5e):
-alien3:   $0200
-arabfgt:  $8000-$81ff -- depending on the scene
-arescue:  $0200
-as1:      (untested)
-brival:   $8000
-darkedge: $0200
-dbzvrvs:  $0200
-f1en:     $0000
-f1lap:    $0000
-ga2:      $0200
-harddunk: $8200
-holo:     $0200
-jpark:    $0200
-kokoroj:  (untested)
-kokoroj2: $8000 --
-          $8000-$81fc (in steps of 4) -- on introduction/initials scenes
-orunners: $0200
-radm:     $0200
-radr:     $8200 -- gameplay
-          $0200 -- title screen
-scross:   $0200
-slipstrm: $0000
-sonic:    $0000 -- on sega logo/title screen
-          $0200 -- everything else
-spidman:  $0200
-svf:      $0201 -- on attract
-          $0200 -- on gameplay
-titlef:   $8200
 
 */
