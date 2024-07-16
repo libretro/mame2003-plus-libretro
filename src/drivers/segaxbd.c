@@ -400,6 +400,12 @@ static MEMORY_READ16_START( xboard_readmem )
 	{ 0x10c000, 0x10cfff, SYS16IC_MRA16_SPRITERAM },
 	{ 0x10d000, 0x10dfff, SYS16IC_MRA16_SPRITERAM },
 	{ 0x10e000, 0x10efff, SYS16IC_MRA16_SPRITERAM },
+	/* ic 38/39 failed in spriteram without the mirror could be worth look down the line.
+	 * mame documentaion claims
+	 * https://github.com/mamedev/mame/blob/3aa9c6a1f8fb749bbfaf431c04afa92cd0b09d2b/src/mame/sega/segaxbd.cpp#L141C2-L142C43
+	 *  IC38 : 6264    (8k x8 SRAM) - Road RAM
+	 *  IC39 : 6264    (8k x8 SRAM) - Road RAM
+	 */
 	//AM_RANGE(0x120000, 0x123fff) AM_MIRROR(0x00c000) AM_READWRITE(MRA16_RAM, segaic16_paletteram_w) AM_BASE(&paletteram16)
 	{ 0x120000, 0x123fff, MRA16_RAM },
 	//AM_RANGE(0x130000, 0x13ffff) AM_READWRITE(adc_r, adc_w)
