@@ -980,6 +980,6 @@ static MACHINE_DRIVER_START( xboard )
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k_512)
 MACHINE_DRIVER_END
 
-GAMEX(19??, loffire,  0,         xboard,   thndrbld, 0, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
-GAMEX(19?? ,thndrbld, 0,         xboard,   thndrbld, 0, ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(19??, thndrbld1, thndrbld, xboard,   thndrbld, 0, ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, loffire,   0,        xboard, thndrbld, 0, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
+GAMEX(1987, thndrbld,  0,        xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1987, thndrbld1, thndrbld, xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
