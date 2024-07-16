@@ -42,6 +42,8 @@ READ16_HANDLER( SYS16IC_MRA16_SHAREDRAM1  ){ return segaic16_shared_ram1[offset]
 READ16_HANDLER( SYS16IC_MRA16_WORKINGRAM1_SHARE ){ return segaic16_workingram1[offset]; }
 WRITE16_HANDLER(SYS16IC_MWA16_WORKINGRAM1_SHARE ){ COMBINE_DATA( &segaic16_workingram1[offset] ); }
 
+READ16_HANDLER( SYS16IC_MRA16_SPRITERAM ){ return segaic16_spriteram_0[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_SPRITERAM ){ COMBINE_DATA( &segaic16_spriteram_0[offset] ); }
 
 static void update_main_irqs(void)
 {
@@ -364,8 +366,6 @@ static MEMORY_READ16_START( xboard_readmem )
 	{ 0x098000, 0x09bfff, SYS16IC_MRA16_BACKUPRAM1 },
 	{ 0x09c000, 0x09ffff, SYS16IC_MRA16_BACKUPRAM1 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(2) AM_BASE(&backupram2)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_BACKUPRAM2 }, //MRA16_BackupRam2
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_BACKUPRAM2 },
 	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_BACKUPRAM2 },
 	{ 0x0a4000, 0x0a7fff, SYS16IC_MRA16_BACKUPRAM2 },
 	{ 0x0a8000, 0x0abfff, SYS16IC_MRA16_BACKUPRAM2},
@@ -385,7 +385,21 @@ static MEMORY_READ16_START( xboard_readmem )
 	//AM_RANGE(0x0e8000, 0x0e801f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_compare_timer_0_r, segaic16_compare_timer_0_w)
 	{ 0x0e8000, 0x0e801f, segaic16_compare_timer_0_r  },
 	//AM_RANGE(0x100000, 0x100fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE(&segaic16_spriteram_0)
-	{ 0x100000, 0x100fff, segaic16_spriteram_r },
+	{ 0x100000, 0x100fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x101000, 0x101fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x102000, 0x102fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x103000, 0x103fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x104000, 0x104fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x105000, 0x105fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x106000, 0x106fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x107000, 0x107fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x108000, 0x108fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x109000, 0x109fff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x10a000, 0x10afff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x10b000, 0x10bfff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x10c000, 0x10cfff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x10d000, 0x10dfff, SYS16IC_MRA16_SPRITERAM },
+	{ 0x10e000, 0x10efff, SYS16IC_MRA16_SPRITERAM },
 	//AM_RANGE(0x120000, 0x123fff) AM_MIRROR(0x00c000) AM_READWRITE(MRA16_RAM, segaic16_paletteram_w) AM_BASE(&paletteram16)
 	{ 0x120000, 0x123fff, MRA16_RAM },
 	//AM_RANGE(0x130000, 0x13ffff) AM_READWRITE(adc_r, adc_w)
@@ -425,19 +439,15 @@ static MEMORY_READ16_START( xboard_readmem )
 	{ 0x2ed000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	//AM_RANGE(0x2ee000, 0x2effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_r },
-	{ 0x3f8000, 0x3fbfff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x3fc000, 0x3fffff, SYS16IC_MRA16_BACKUPRAM2 },
-	{ 0xff8000, 0xffffff, SYS16IC_MRA16_WORKINGRAM1_SHARE },
+	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1) 
+	{ 0xff8000, 0xffbfff, SYS16IC_MRA16_BACKUPRAM1 },
+	{ 0xffc000, 0xffffff, SYS16IC_MRA16_BACKUPRAM2 }, 
 MEMORY_END
-/*
-	AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1)
-	AM_RANGE(0x3fc000, 0x3fffff) AM_RAM AM_SHARE(2)
-*/
+
 static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	{ 0x000000, 0x07ffff, MWA16_ROM },
+//	{ 0x000000, 0x07ffff, MWA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(1) AM_BASE(&backupram1)
-	{ 0x080000, 0x083fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	{ 0x080000, 0x083fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	{ 0x084000, 0x087fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	{ 0x088000, 0x08bfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
@@ -447,7 +457,6 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	{ 0x098000, 0x09bfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	{ 0x09c000, 0x09ffff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(2) AM_BASE(&backupram2)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
 	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
 	{ 0x0a4000, 0x0a7fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
 	{ 0x0a8000, 0x0abfff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
@@ -467,7 +476,21 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x0e8000, 0x0e801f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_compare_timer_0_r, segaic16_compare_timer_0_w)
 	{ 0x0e8000, 0x0e801f, segaic16_compare_timer_0_w },
 	//AM_RANGE(0x100000, 0x100fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE(&segaic16_spriteram_0)
-	{ 0x100000, 0x100fff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x100000, 0x100fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x101000, 0x101fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x102000, 0x102fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x103000, 0x103fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x104000, 0x104fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x105000, 0x105fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x106000, 0x106fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x107000, 0x107fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x108000, 0x108fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x109000, 0x109fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x10a000, 0x10afff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x10b000, 0x10bfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x10c000, 0x10cfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x10d000, 0x10dfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x10e000, 0x10efff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
 	//AM_RANGE(0x110000, 0x11ffff) AM_WRITE(segaic16_sprites_draw_0_w)
 	{ 0x110000, 0x11ffff, segaic16_sprites_draw_0_w},
 	//AM_RANGE(0x120000, 0x123fff) AM_MIRROR(0x00c000) AM_READWRITE(MRA16_RAM, segaic16_paletteram_w) AM_BASE(&paletteram16)
@@ -492,14 +515,14 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	{ 0x298000, 0x29bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	{ 0x29c000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	//AM_RANGE(0x2a0000, 0x2a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{0x2a0000, 0x2a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2a4000, 0x2a7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2a8000, 0x2abfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2ac000, 0x2affff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2b0000, 0x2b3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2b4000, 0x2b7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2b8000, 0x2bbfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{0x2bc000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2a0000, 0x2a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2a4000, 0x2a7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2a8000, 0x2abfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2ac000, 0x2affff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2b0000, 0x2b3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2b4000, 0x2b7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2b8000, 0x2bbfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2bc000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
 	//AM_RANGE(0x2e0000, 0x2e0007) AM_MIRROR(0x003ff8) AM_READWRITE(segaic16_multiply_1_r, segaic16_multiply_1_w)
 	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_w },
 	//AM_RANGE(0x2e4000, 0x2e401f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_divide_1_r, segaic16_divide_1_w)
@@ -507,21 +530,20 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x2e8000, 0x2e800f) AM_MIRROR(0x003ff0) AM_READWRITE(segaic16_compare_timer_1_r, segaic16_compare_timer_1_w)
 	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_w  },		/* includes sound latch! */
 	//AM_RANGE(0x2ec000, 0x2ecfff) AM_MIRROR(0x001000) AM_RAM AM_SHARE(5) AM_BASE(&segaic16_roadram_0)
-	{0x2ec000, 0x2ecfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
-	{0x2ed000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
+	{ 0x2ec000, 0x2ecfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
+	{ 0x2ed000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	//AM_RANGE(0x2ee000, 0x2effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_w },
-	{ 0xff8000, 0xffffff, SYS16IC_MWA16_WORKINGRAM1_SHARE, &segaic16_workingram1 }, /*need to inspect the memory map not sure where this is comming from*/
-	{ 0x3f8000, 0x3fbfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x3fc000, 0x3fffff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
-	
+	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1) 
+	{ 0xff8000, 0xffbfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },// AMEF_ABITS(22)
+	//AM_RANGE(0x3fc000, 0x3fffff) AM_RAM AM_SHARE(2)
+	{ 0xffc000, 0xffffff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },// AMEF_ABITS(22)
 MEMORY_END
 
 static MEMORY_READ16_START( xboard_readmem2 )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x080000, 0x083fff, SYS16IC_MRA16_SHAREDRAM0 },
 	{ 0x080000, 0x083fff, SYS16IC_MRA16_SHAREDRAM0 },
 	{ 0x084000, 0x087fff, SYS16IC_MRA16_SHAREDRAM0 },
 	{ 0x088000, 0x08bfff, SYS16IC_MRA16_SHAREDRAM0 },
@@ -531,7 +553,6 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	{ 0x098000, 0x09bfff, SYS16IC_MRA16_SHAREDRAM0 },
 	{ 0x09c000, 0x09ffff, SYS16IC_MRA16_SHAREDRAM0 },
 //	AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_SHAREDRAM1 },
 	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_SHAREDRAM1 },
 	{ 0x0a4000, 0x0a7fff, SYS16IC_MRA16_SHAREDRAM1 },
 	{ 0x0a8000, 0x0abfff, SYS16IC_MRA16_SHAREDRAM1 },
@@ -551,20 +572,15 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	{ 0x0ed000, 0x0edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	//AM_RANGE(0x0ee000, 0x0effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x0ee000, 0x0effff, segaic16_road_control_0_r },
-	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r }, //suprised at this its not in the memmap perhaps its banked will look into it morew when time allows.
-	{ 0x29c000, 0x29cfff, MRA16_RAM }, // roadram ?
+	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r }, // confirmed
+	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
+	{ 0x29c000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 }, //AMEF_ABITS(20) == 9c000
 MEMORY_END
-/*
-static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 16 )
-	ADDRESS_MAP_FLAGS( AMEF_UNMAP(1) | AMEF_ABITS(20) )
-//	AM_RANGE(0x0f0000, 0x0f3fff) AM_READWRITE(excs_r, excs_w)
-ADDRESS_MAP_END
-*/
+
 static MEMORY_WRITE16_START( xboard_writemem2 )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	{ 0x000000, 0x07ffff, MWA16_ROM },
+	//{ 0x000000, 0x07ffff, MWA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x080000, 0x083fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	{ 0x080000, 0x083fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	{ 0x084000, 0x087fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	{ 0x088000, 0x08bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
@@ -574,7 +590,6 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 	{ 0x098000, 0x09bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	{ 0x09c000, 0x09ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
 	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
 	{ 0x0a4000, 0x0a7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
 	{ 0x0a8000, 0x0abfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
@@ -594,7 +609,8 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 	{ 0x0ed000, 0x0edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	//AM_RANGE(0x0ee000, 0x0effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x0ee000, 0x0effff, segaic16_road_control_0_w  },
-	{ 0x29c000, 0x29cfff, MWA16_RAM }, // roadram ?
+	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
+	{ 0x29c000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },  ///AMEF_ABITS(20)
 MEMORY_END
 
 static MEMORY_READ_START( aburner_sound_readmem )
