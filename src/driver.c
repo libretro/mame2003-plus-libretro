@@ -2993,7 +2993,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( ryukyu )	/* (protected) */
 	DRIVER( suprleag )  /* (protected) */
 	DRIVER( thndrbld )	/* (protected) */
-	DRIVER( thndrbdj )  /* (protected?) */
+	DRIVER( thndrbld1 ) /* (protected?) */
 
 	/* Working */
 	DRIVER( aburner )	/* (c) 1987 */
