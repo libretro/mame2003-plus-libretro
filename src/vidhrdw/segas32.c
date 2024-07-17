@@ -852,7 +852,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
-	UINT16 data = system32_videoram[(entry->page & 0x7f) << 9 | tile_index];
+	UINT16 data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
 	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
 }
 
