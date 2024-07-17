@@ -1782,7 +1782,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	};
 
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
-	UINT8 numbanks = /*memory_region_length(REGION_GFX2) >> 20;*/ memory_region_length(REGION_GFX2) / 0x400000;
+	UINT8 numbanks = (memory_region_length(REGION_GFX2) >> 20)/4;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
 
 	int indirect = data[0] & 0x2000;
