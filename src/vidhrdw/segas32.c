@@ -339,7 +339,7 @@ static int common_start(int multi32)
 	system32_videoram = auto_malloc(0x20000);
 
 	/* allocate a copy of spriteram in 32-bit format */
-	spriteram_32bit = auto_malloc(0x20000);
+	spriteram_32bit = auto_malloc(sizeof(UINT32)*(0x20000/4));
 
 	/* allocate the tilemap cache */
 	cache_head = NULL;
