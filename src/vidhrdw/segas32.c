@@ -727,7 +727,7 @@ READ16_HANDLER( system32_spriteram_r )
 WRITE16_HANDLER( system32_spriteram_w )
 {
 	COMBINE_DATA(&system32_spriteram[offset]);
-	spriteram_32bit[offset/2] =
+	spriteram_32bit[offset>>1] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
 		((system32_spriteram[offset & ~1] << 8 ) & 0x00ff0000) |
