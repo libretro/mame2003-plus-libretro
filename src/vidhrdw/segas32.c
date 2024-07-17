@@ -1842,7 +1842,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	{
 		if (numbanks)
 			bank %= numbanks;
-		spritedata = &spritebase[bank << 20];
+		spritedata = /*&spritebase[bank << 20];*/spritebase + 0x100000 * bank;
 		addrmask = 0xfffff;
 	}
 
