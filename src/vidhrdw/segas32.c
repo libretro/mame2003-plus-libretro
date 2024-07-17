@@ -609,17 +609,17 @@ WRITE16_HANDLER( system32_videoram_w )
 
 READ32_HANDLER( multi32_videoram_r )
 {
-	return system32_videoram[offset*2+0] |
-	      (system32_videoram[offset*2+1] << 16);
+	return system32_videoram[(offset<<1)|0] |
+	      (system32_videoram[(offset<<1)|1] << 16);
 }
 
 
 WRITE32_HANDLER( multi32_videoram_w )
 {
 	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		system32_videoram_w(offset*2+0, data, mem_mask);
+		system32_videoram_w((offset<<1)|0, data, mem_mask);
 	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		system32_videoram_w(offset*2+1, data >> 16, mem_mask >> 16);
+		system32_videoram_w((offset<<1)|1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -697,17 +697,17 @@ WRITE16_HANDLER( system32_sprite_control_w )
 
 READ32_HANDLER( multi32_sprite_control_r )
 {
-	return system32_sprite_control_r(offset*2+0, mem_mask) |
-	      (system32_sprite_control_r(offset*2+1, mem_mask >> 16) << 16);
+	return system32_sprite_control_r((offset<<1)|0, mem_mask) |
+	      (system32_sprite_control_r((offset<<1)|1, mem_mask >> 16) << 16);
 }
 
 
 WRITE32_HANDLER( multi32_sprite_control_w )
 {
 	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		system32_sprite_control_w(offset*2+0, data, mem_mask);
+		system32_sprite_control_w((offset<<1)|0, data, mem_mask);
 	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		system32_sprite_control_w(offset*2+1, data >> 16, mem_mask >> 16);
+		system32_sprite_control_w((offset<<1)|1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -727,7 +727,7 @@ READ16_HANDLER( system32_spriteram_r )
 WRITE16_HANDLER( system32_spriteram_w )
 {
 	COMBINE_DATA(&system32_spriteram[offset]);
-	spriteram_32bit[offset/2] =
+	spriteram_32bit[offset>>1] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
 		((system32_spriteram[offset & ~1] << 8 ) & 0x00ff0000) |
@@ -737,8 +737,8 @@ WRITE16_HANDLER( system32_spriteram_w )
 
 READ32_HANDLER( multi32_spriteram_r )
 {
-	return system32_spriteram[offset*2+0] |
-	      (system32_spriteram[offset*2+1] << 16);
+	return system32_spriteram[(offset<<1)|0] |
+	      (system32_spriteram[(offset<<1)|1] << 16);
 }
 
 
@@ -746,8 +746,8 @@ WRITE32_HANDLER( multi32_spriteram_w )
 {
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&system32_spriteram[offset*2]);
-	spriteram_32bit[offset/2] =
+	COMBINE_DATA((UINT32 *)&system32_spriteram[offset<<1]);
+	spriteram_32bit[offset>>1] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
 		((system32_spriteram[offset & ~1] << 8 ) & 0x00ff0000) |
@@ -852,7 +852,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
-	UINT16 data = system32_videoram[(entry->page & 0x7f) << 9 | tile_index];
+	UINT16 data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
 	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
 }
 
@@ -1782,7 +1782,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	};
 
 	struct mame_bitmap *bitmap = layer_data[(!is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
-	UINT8 numbanks = memory_region_length(REGION_GFX2) >> 20;
+	UINT8 numbanks = (memory_region_length(REGION_GFX2) >> 20)/4;
 	const UINT32 *spritebase = (const UINT32 *)memory_region(REGION_GFX2);
 
 	int indirect = data[0] & 0x2000;
