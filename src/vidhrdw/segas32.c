@@ -746,7 +746,7 @@ WRITE32_HANDLER( multi32_spriteram_w )
 {
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
-	COMBINE_DATA((UINT32 *)&system32_spriteram[offset*2]);
+	COMBINE_DATA((UINT32 *)&system32_spriteram[offset<<1]);
 	spriteram_32bit[offset>>1] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
