@@ -609,17 +609,17 @@ WRITE16_HANDLER( system32_videoram_w )
 
 READ32_HANDLER( multi32_videoram_r )
 {
-	return system32_videoram[offset*2+0] |
-	      (system32_videoram[offset*2+1] << 16);
+	return system32_videoram[(offset<<1)|0] |
+	      (system32_videoram[(offset<<1)|1] << 16);
 }
 
 
 WRITE32_HANDLER( multi32_videoram_w )
 {
 	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		system32_videoram_w(offset*2+0, data, mem_mask);
+		system32_videoram_w((offset<<1)|0, data, mem_mask);
 	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		system32_videoram_w(offset*2+1, data >> 16, mem_mask >> 16);
+		system32_videoram_w((offset<<1)|1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -697,17 +697,17 @@ WRITE16_HANDLER( system32_sprite_control_w )
 
 READ32_HANDLER( multi32_sprite_control_r )
 {
-	return system32_sprite_control_r(offset*2+0, mem_mask) |
-	      (system32_sprite_control_r(offset*2+1, mem_mask >> 16) << 16);
+	return system32_sprite_control_r((offset<<1)|0, mem_mask) |
+	      (system32_sprite_control_r((offset<<1)|1, mem_mask >> 16) << 16);
 }
 
 
 WRITE32_HANDLER( multi32_sprite_control_w )
 {
 	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
-		system32_sprite_control_w(offset*2+0, data, mem_mask);
+		system32_sprite_control_w((offset<<1)|0, data, mem_mask);
 	if ((mem_mask & 0xffff0000) != 0xffff0000)
-		system32_sprite_control_w(offset*2+1, data >> 16, mem_mask >> 16);
+		system32_sprite_control_w((offset<<1)|1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -737,8 +737,8 @@ WRITE16_HANDLER( system32_spriteram_w )
 
 READ32_HANDLER( multi32_spriteram_r )
 {
-	return system32_spriteram[offset*2+0] |
-	      (system32_spriteram[offset*2+1] << 16);
+	return system32_spriteram[(offset<<1)|0] |
+	      (system32_spriteram[(offset<<1)|1] << 16);
 }
 
 
@@ -747,7 +747,7 @@ WRITE32_HANDLER( multi32_spriteram_w )
 	data = SWAP_HALVES(data);
 	mem_mask = SWAP_HALVES(mem_mask);
 	COMBINE_DATA((UINT32 *)&system32_spriteram[offset*2]);
-	spriteram_32bit[offset/2] =
+	spriteram_32bit[offset>>1] =
 		((system32_spriteram[offset |  1] >> 8 ) & 0x000000ff) |
 		((system32_spriteram[offset |  1] << 8 ) & 0x0000ff00) |
 		((system32_spriteram[offset & ~1] << 8 ) & 0x00ff0000) |
