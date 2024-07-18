@@ -462,6 +462,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
+* Thunder Blade - Romsets `thndrbld` and `thndrbld1`
 * Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
 * Thunder Strike - Romset `tstrike`
 * Timber - Romset `timber`
@@ -1101,3 +1102,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added two sets of Twin Cobra 2 to the taito_f3.c driver and the international version of Dangun Feveron namely Fever SOS to cave.c [arcadez]
 * Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944, grant2258, arcadez]
 * Backported segas32 video driver, interrupt controllers for v60 and sound, general cleanup and merger of multi32 and system32 drivers. [mahoneyt944]
+* Backported the segaxbd driver and video code from later MAME Thunder Blade is now fully playable [grant2258]
