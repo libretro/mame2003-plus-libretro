@@ -5,6 +5,10 @@
 ***************************************************************************/
 
 
+/*----------- defined in driver/segas32.c -----------*/
+extern data16_t *system32_workram;
+
+
 /*----------- defined in vidhrdw/segas32.c -----------*/
 
 extern UINT16 *system32_videoram;
