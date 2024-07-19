@@ -60,7 +60,7 @@ VIDEO_UPDATE( multi32 );
 
 /*************************************
  *
- *  Protection
+ *  Protection - machine/segas32.c
  *
  *************************************/
 
