@@ -5,6 +5,11 @@
 ***************************************************************************/
 
 
+/*----------- defined in driver/segas32.c -----------*/
+extern data16_t *system32_protram;
+extern data16_t *system32_workram;
+
+
 /*----------- defined in vidhrdw/segas32.c -----------*/
 
 extern UINT16 *system32_videoram;
@@ -21,7 +26,6 @@ READ16_HANDLER( system32_spriteram_r );
 WRITE16_HANDLER( system32_spriteram_w );
 READ32_HANDLER( multi32_spriteram_r );
 WRITE32_HANDLER( multi32_spriteram_w );
-
 
 READ16_HANDLER( system32_videoram_r );
 WRITE16_HANDLER( system32_videoram_w );
@@ -52,6 +56,39 @@ VIDEO_START( multi32 );
 
 VIDEO_UPDATE( system32 );
 VIDEO_UPDATE( multi32 );
+
+
+/*************************************
+ *
+ *  Protection - machine/segas32.c
+ *
+ *************************************/
+
+READ16_HANDLER(ga2_sprite_protection_r);
+READ16_HANDLER(ga2_wakeup_protection_r);
+
+WRITE16_HANDLER(sonic_level_load_protection);
+
+WRITE16_HANDLER( jleague_protection_w );
+
+READ16_HANDLER(brival_protection_r);
+WRITE16_HANDLER(brival_protboard_w);
+
+READ16_HANDLER(arabfgt_protboard_r);
+WRITE16_HANDLER(arabfgt_protboard_w);
+READ16_HANDLER(arf_wakeup_protection_r);
+
+void f1lap_fd1149_vblank(void);
+
+READ16_HANDLER( arescue_dsp_r );
+WRITE16_HANDLER( arescue_dsp_w );
+
+void darkedge_fd1149_vblank(void);
+WRITE16_HANDLER( darkedge_protection_w );
+READ16_HANDLER( darkedge_protection_r );
+
+WRITE16_HANDLER( dbzvrvs_protection_w );
+READ16_HANDLER( dbzvrvs_protection_r );
 
 
 /*************************************
