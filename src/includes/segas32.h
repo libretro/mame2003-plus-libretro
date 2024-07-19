@@ -6,6 +6,7 @@
 
 
 /*----------- defined in driver/segas32.c -----------*/
+extern data16_t *system32_protram;
 extern data16_t *system32_workram;
 
 
