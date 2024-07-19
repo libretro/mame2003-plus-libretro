@@ -397,11 +397,11 @@ static UINT16 sound_bank;
 static UINT8 misc_io_data[2][0x10];
 
 static data16_t *segas32_protram;
-static data16_t *system32_workram;
+data16_t *system32_workram;
 
-int system32_use_default_eeprom;
 static void (*system32_prot_vblank)(void);
 
+int system32_use_default_eeprom;
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 /* alien 3 with the gun calibrated, it doesn't prompt you if its not */
