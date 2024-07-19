@@ -286,7 +286,7 @@ bool opaquey_hack = false; /* dink */
  *
  *************************************/
 
-static UINT8 is_multi32;
+UINT8 is_multi32;
 
 /* tilemap cache */
 static struct cache_entry *cache_head;

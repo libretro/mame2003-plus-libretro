@@ -632,7 +632,7 @@ static WRITE16_HANDLER( io_analog_w )
 
 static UINT16 common_io_chip_r(int which, offs_t offset, UINT16 mem_mask)
 {
-	int port = -1;
+	int port = -1; /* read port safe */
 	offset &= 0x1f/2;
 
 	switch(offset) {
@@ -674,8 +674,74 @@ static UINT16 common_io_chip_r(int which, offs_t offset, UINT16 mem_mask)
 		case 0x1e/2:
 			return misc_io_data[which][0x1e/2];
 
-    default:
+		default:
 			return 0xffff;
+	}
+}
+
+static void common_io_chip_w(int which, offs_t offset, UINT16 data, UINT16 mem_mask)
+{
+	/* only LSB matters */
+	if (!ACCESSING_LSB)
+		return;
+
+	/* generic implementation */
+	offset &= 0x1f/2;
+	misc_io_data[which][offset] = data;
+
+	switch (offset)
+	{
+		/* I/O ports */
+		case 0x00/2:
+		case 0x02/2:
+		case 0x04/2:
+		case 0x08/2:
+		case 0x0a/2:
+		case 0x0c/2:
+			/* segas32_sw2_output */
+			break;
+
+		/* miscellaneous output */
+		case 0x06/2:
+			/* segas32_sw1_output */
+
+			if (which == 0)
+			{
+				EEPROM_write_bit(data & 0x80);
+				EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
+				EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+			}
+
+			coin_counter_w(1 + 2*which, data & 0x02);
+			coin_counter_w(0 + 2*which, data & 0x01);
+			break;
+
+		/* tile banking */
+		case 0x0e/2:
+			if (which == 0)
+				system32_tilebank_external = data;
+			else
+			{
+				/* multi-32 EEPROM access */
+				EEPROM_write_bit(data & 0x80);
+				EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
+				EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+			}
+			break;
+
+		/* CNT register */
+		case 0x1c/2:
+			if (is_multi32) /* speed up: disable off screen monitors */
+			{
+				if (readinputport(0xf) == 2-which) system32_displayenable[which] = 0;
+				else system32_displayenable[which] = (data & 0x02);
+			}
+			else
+				system32_displayenable[which] = (data & 0x02);
+
+			if (which == 0)
+				cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			break;
 	}
 }
 
@@ -689,92 +755,14 @@ static READ16_HANDLER( io_chip_1_r )
 	return common_io_chip_r(1, offset, mem_mask);
 }
 
-static WRITE16_HANDLER( io_system32_w )
+static WRITE16_HANDLER( io_chip_0_w )
 {
-	/* only LSB matters */
-	if (!ACCESSING_LSB)
-		return;
-
-	offset &= 0x1f/2;
-	misc_io_data[0][offset] = data;
-
-	switch(offset) {
-	case 0x06/2:
-			EEPROM_write_bit(data & 0x80);
-			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
-			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		break;
-	case 0x0e/2:
-		system32_tilebank_external = data;
-		break;
-	case 0x1c/2:
-		system32_displayenable[0] = (data & 0x02);
-		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
+	common_io_chip_w(0, offset, data, mem_mask);
 }
 
-static WRITE16_HANDLER( io_multi32_A_w )
+static WRITE16_HANDLER( io_chip_1_w )
 {
-	/* only LSB matters */
-	if (!ACCESSING_LSB)
-		return;
-
-	offset &= 0x1f/2;
-	misc_io_data[0][offset] = data;
-
-	switch(offset) {
-	case 0x06/2:
-			EEPROM_write_bit(data & 0x80);
-			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
-			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		break;
-	case 0x0e/2:
-		system32_tilebank_external = data;
-		break;
-	case 0x1c/2:
-		/* speed up: don't draw monitor A if in B only mode */
-		if (readinputport(0xf) == 2) system32_displayenable[0] = 0;
-		else system32_displayenable[0] = (data & 0x02);
-
-		cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
-}
-
-static WRITE16_HANDLER( io_multi32_B_w )
-{
-	/* only LSB matters */
-	if (!ACCESSING_LSB)
-		return;
-
-	offset &= 0x1f/2;
-	misc_io_data[1][offset] = data;
-
-	switch(offset) {
-	case 0x0e/2:
-			EEPROM_write_bit(data & 0x80);
-			EEPROM_set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
-			EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-		break;
-	case 0x1c/2:
-		/* speed up: don't draw monitor B if in A only mode */
-		if (readinputport(0xf) == 1) system32_displayenable[1] = 0;
-		else system32_displayenable[1] = (data & 0x02);
-		break;
-
-	default:
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
-		break;
-	}
+	common_io_chip_w(1, offset, data, mem_mask);
 }
 
 static READ16_HANDLER( io_expansion_0_r )
@@ -877,7 +865,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, io_system32_w },
+	{ 0xc00000, 0xc0001f, io_chip_0_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, io_expansion_0_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
@@ -918,10 +906,10 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69007f, multi32_mixer_1_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, io_multi32_A_w },
+	{ 0xc00000, 0xc0001f, io_chip_0_w },
 	{ 0xc00050, 0xc0005f, io_analog_w },
 	{ 0xc00060, 0xc0007f, io_expansion_0_w },
-	{ 0xc80000, 0xc8001f, io_multi32_B_w },
+	{ 0xc80000, 0xc8001f, io_chip_1_w },
 	{ 0xc80040, 0xc8007f, io_expansion_1_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },

@@ -12,6 +12,8 @@ extern data16_t *system32_workram;
 
 /*----------- defined in vidhrdw/segas32.c -----------*/
 
+extern UINT8 is_multi32;
+
 extern UINT16 *system32_videoram;
 extern UINT16 *system32_spriteram;
 extern UINT16 *system32_paletteram[2];
