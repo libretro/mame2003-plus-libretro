@@ -32,7 +32,6 @@ static void MemWrite16_16(offs_t address, UINT16 data)
 	}
 }
 
-
 #define program_read_byte  cpu_readmem24lew
 #define program_write_byte cpu_writemem24lew
 #define program_read_word   MemRead16_16
@@ -76,8 +75,8 @@ READ16_HANDLER(ga2_wakeup_protection_r)
  ******************************************************************************
  ******************************************************************************/
 
-// This code duplicates the actions of the protection device used in SegaSonic
-// arcade revision C, allowing the game to run correctly.
+/* This code duplicates the actions of the protection device used in SegaSonic */
+/* arcade revision C, allowing the game to run correctly. */
 #define CLEARED_LEVELS			0xE5C4
 #define CURRENT_LEVEL			0xF06E
 #define CURRENT_LEVEL_STATUS		0xF0BC
