@@ -689,7 +689,7 @@ static READ16_HANDLER( io_chip_1_r )
 	return common_io_chip_r(1, offset, mem_mask);
 }
 
-static WRITE16_HANDLER( system32_io_w )
+static WRITE16_HANDLER( io_system32_w )
 {
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
@@ -718,7 +718,7 @@ static WRITE16_HANDLER( system32_io_w )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_w )
+static WRITE16_HANDLER( io_multi32_A_w )
 {
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
@@ -750,7 +750,7 @@ static WRITE16_HANDLER( multi32_io_w )
 	}
 }
 
-static WRITE16_HANDLER( multi32_io_B_w )
+static WRITE16_HANDLER( io_multi32_B_w )
 {
 	/* only LSB matters */
 	if (!ACCESSING_LSB)
@@ -877,7 +877,7 @@ static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x600000, 0x60ffff, system32_paletteram_w, &system32_paletteram[0] },
 	{ 0x610000, 0x61007f, system32_mixer_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, system32_io_w },
+	{ 0xc00000, 0xc0001f, io_system32_w },
 /* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, io_expansion_0_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
@@ -918,10 +918,10 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x680000, 0x68ffff, multi32_paletteram_1_w, &system32_paletteram[1] },
 	{ 0x690000, 0x69007f, multi32_mixer_1_w },
 	{ 0x700000, 0x701fff, shared_ram_16_w }, /* Shared ram with the z80*/
-	{ 0xc00000, 0xc0001f, multi32_io_w },
+	{ 0xc00000, 0xc0001f, io_multi32_A_w },
 	{ 0xc00050, 0xc0005f, io_analog_w },
 	{ 0xc00060, 0xc0007f, io_expansion_0_w },
-	{ 0xc80000, 0xc8001f, multi32_io_B_w },
+	{ 0xc80000, 0xc8001f, io_multi32_B_w },
 	{ 0xc80040, 0xc8007f, io_expansion_1_w },
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
