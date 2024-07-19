@@ -204,7 +204,7 @@ WRITE16_HANDLER(brival_protboard_w)
 	memcpy(ret, &ROM[protAddress[curProtType][0]], 16);
 	ret[16] = '\0';
 
-	memcpy(&segas32_protram[protAddress[curProtType][1]], ret, 16);
+	memcpy(&system32_protram[protAddress[curProtType][1]], ret, 16);
 }
 
 
