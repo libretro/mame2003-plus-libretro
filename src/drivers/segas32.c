@@ -396,7 +396,7 @@ static UINT16 sound_bank;
 
 static UINT8 misc_io_data[2][0x10];
 
-static data16_t *segas32_protram;
+data16_t *system32_protram;
 data16_t *system32_workram;
 
 static void (*system32_prot_vblank)(void);
@@ -3500,7 +3500,7 @@ static DRIVER_INIT ( brival )
 {
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 
-	segas32_protram = auto_malloc (0x1000);
+	system32_protram = auto_malloc (0x1000);
 	install_mem_read16_handler (0, 0x20ba00, 0x20ba07, brival_protection_r);
 	install_mem_write16_handler(0, 0xa000000, 0xa00fff, brival_protboard_w);
 }
