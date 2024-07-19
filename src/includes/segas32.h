@@ -22,7 +22,6 @@ WRITE16_HANDLER( system32_spriteram_w );
 READ32_HANDLER( multi32_spriteram_r );
 WRITE32_HANDLER( multi32_spriteram_w );
 
-
 READ16_HANDLER( system32_videoram_r );
 WRITE16_HANDLER( system32_videoram_w );
 READ32_HANDLER( multi32_videoram_r );
