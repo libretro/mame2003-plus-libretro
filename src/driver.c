@@ -2996,6 +2996,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( thndrbld1 ) /* (protected?) */
 
 	/* Working */
+	DRIVER( abcop )  /* 1990 (decrypted) */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
 	DRIVER( afightera )	/* (c) 1986 (Unprotected) */
