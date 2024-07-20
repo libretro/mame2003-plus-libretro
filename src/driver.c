@@ -3050,6 +3050,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( shdancrb )	/* (c) 1989 */
 	DRIVER( shinobi )	/* (c) 1987 */
 	DRIVER( shinobl )	/* (c) 1987 (but bootleg) */
+  DRIVER( smgp )  /* 1989 (decrypted) */
 	DRIVER( sonicbom )	/* (c) 1987 */
 	DRIVER( tetrisbl )	/* (c) 1988 (but bootleg) */
 	DRIVER( timscanr )	/* (c) 1987 */
