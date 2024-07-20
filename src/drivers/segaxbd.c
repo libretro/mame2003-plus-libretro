@@ -341,7 +341,8 @@ static WRITE16_HANDLER( iocontrol_w )
 	if (ACCESSING_LSB)
 	{
 		logerror("I/O chip force input = %d\n", data & 1);
-		iochip_force_input = data & 1;
+		/* Racing Hero and ABCop set this and fouls up their output ports */
+		/*iochip_force_input = data & 1;*/
 	}
 }
 
