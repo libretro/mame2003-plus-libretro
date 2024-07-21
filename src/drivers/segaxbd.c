@@ -181,7 +181,7 @@ static WRITE16_HANDLER( adc_w )
 }
 
 
-INLINE data16_t iochip_r(int which, int port, int inputval)
+static INLINE data16_t iochip_r(int which, int port, int inputval)
 {
 	data16_t result = iochip_regs[which][port];
 
