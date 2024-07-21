@@ -378,8 +378,8 @@ static VIDEO_UPDATE( loffire )
 	int x2 = readinputport(8);
 	int y2 = readinputport(9);
 	video_update_xboard(bitmap, cliprect);
-	draw_crosshair(bitmap, x1 * (Machine->drv->screen_width - 1) / 255, y1 * (Machine->drv->screen_height - 1) / 255, cliprect);
-	draw_crosshair(bitmap, x2 * (Machine->drv->screen_width - 1) / 255, y2 * (Machine->drv->screen_height - 1) / 255, cliprect);
+	draw_crosshair(1, bitmap, x1 * (Machine->drv->screen_width - 1) / 255, y1 * (Machine->drv->screen_height - 1) / 255, cliprect);
+	draw_crosshair(2, bitmap, x2 * (Machine->drv->screen_width - 1) / 255, y2 * (Machine->drv->screen_height - 1) / 255, cliprect);
 
 }
 
@@ -1113,7 +1113,7 @@ INPUT_PORTS_START( loffire )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Coin Chute" )
-	PORT_DIPSETTING(    0x80, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x80, "Single" )
 	PORT_DIPSETTING(    0x00, "Twin" )
 	
 	PORT_START//_TAG("ADC0")
