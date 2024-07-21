@@ -1592,7 +1592,10 @@ static void init_timetables( FM_ST *ST , const UINT8 *dttable )
 	int i,d;
 	double rate;
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: samplerate=%8i chip clock=%8i  freqbase=%f  \n", ST->rate, ST->clock, ST->freqbase );
+#if 0
+	logerror("FM.C: samplerate=%8i chip clock=%8i  freqbase=%f  \n",
+			 ST->rate, ST->clock, ST->freqbase );
+#endif
 
 	/* DeTune table */
 	for (d = 0;d <= 3;d++){
@@ -1600,7 +1603,9 @@ static void init_timetables( FM_ST *ST , const UINT8 *dttable )
 			rate = ((double)dttable[d*32 + i]) * SIN_LEN  * ST->freqbase  * (1<<FREQ_SH) / ((double)(1<<20));
 			ST->dt_tab[d][i]   = (INT32) rate;
 			ST->dt_tab[d+4][i] = -ST->dt_tab[d][i];
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: DT [%2i %2i] = %8x  \n", d, i, ST->dt_tab[d][i] );
+#if 0
+			logerror("FM.C: DT [%2i %2i] = %8x  \n", d, i, ST->dt_tab[d][i] );
+#endif
 		}
 	}
 
@@ -1662,12 +1667,15 @@ static int init_tables(void)
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
-    log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x);
+	#if 0
+			logerror("tl %04i", x);
     for (i=0; i<13; i++)
-      log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %4x", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
-    log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
+				logerror(", [%02i] %4x", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
+			logerror("\n");
 	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));
+	#endif
+	}
+	/*logerror("FM.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
 
 
 	for (i=0; i<SIN_LEN; i++)
@@ -1725,11 +1733,12 @@ static int init_tables(void)
 				lfo_pm_table[(fnum*32*8) + (i*32) + step   +16] = -value;
 				lfo_pm_table[(fnum*32*8) + (i*32) +(step^7)+24] = -value;
 			}
-
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "LFO depth=%1x FNUM=%04x (<<4=%4x): ", i, fnum, fnum<<4);
+#if 0
+			logerror("LFO depth=%1x FNUM=%04x (<<4=%4x): ", i, fnum, fnum<<4);
 			for (step=0; step<16; step++) /* dump only positive part of waveforms */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", lfo_pm_table[(fnum*32*8) + (i*32) + step] );
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
+				logerror("%02x ", lfo_pm_table[(fnum*32*8) + (i*32) + step] );
+			logerror("\n");
+#endif
 
 		}
 	}

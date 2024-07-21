@@ -17,33 +17,31 @@ static UINT8 vblank_irq_state;
 static UINT8 timer_irq_state;
 static UINT8 iochip_regs[2][8];
 static UINT8 iochip_force_input;
+static UINT8 gprider_hack;
 static data8_t (*iochip_custom_io_r[2])(offs_t offset, data8_t portdata);
 static void (*iochip_custom_io_w[2])(offs_t offset, data8_t data);
 static UINT8 adc_reverse[8];
-static data16_t *backupram1, *backupram2, *segaic16_shared_ram0, *segaic16_shared_ram1, *segaic16_workingram1;
+static data16_t *backupram1, *backupram2, *segaic16_shared_ram0, *segaic16_shared_ram1; 
 
 
 
-WRITE16_HANDLER(SYS16IC_MWA16_ROADRAM_SHARE ){ COMBINE_DATA( &segaic16_roadram_0[offset] ); }
-READ16_HANDLER( SYS16IC_MRA16_ROADRAM_SHARE ){ return segaic16_roadram_0[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_ROADRAM_SHARE ) { offset &=0xfff; COMBINE_DATA( &segaic16_roadram_0[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_ROADRAM_SHARE ) { offset &=0xfff; return segaic16_roadram_0[offset]; }
 
-WRITE16_HANDLER(SYS16IC_MWA16_BACKUPRAM1 ){ COMBINE_DATA( &backupram1[offset] ); }
-READ16_HANDLER( SYS16IC_MRA16_BACKUPRAM1  ){ return backupram1[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_BACKUPRAM1 ) { offset &=0x3fff; COMBINE_DATA( &backupram1[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_BACKUPRAM1 ) { offset &=0x3fff;  return backupram1[offset]; }
 
-WRITE16_HANDLER(SYS16IC_MWA16_BACKUPRAM2 ){ COMBINE_DATA( &backupram2[offset] ); }
-READ16_HANDLER( SYS16IC_MRA16_BACKUPRAM2  ){ return backupram2[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_BACKUPRAM2 ) { offset &=0x3fff; COMBINE_DATA( &backupram2[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_BACKUPRAM2 ) { offset &=0x3fff; return backupram2[offset]; }
 
-WRITE16_HANDLER(SYS16IC_MWA16_SHAREDRAM0 ){ COMBINE_DATA( &segaic16_shared_ram0[offset] ); }
-READ16_HANDLER( SYS16IC_MRA16_SHAREDRAM0  ){ return segaic16_shared_ram0[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_SHAREDRAM0 ) { offset &= 0x3fff; COMBINE_DATA( &segaic16_shared_ram0[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_SHAREDRAM0 ) { offset &= 0x3fff; return segaic16_shared_ram0[offset]; }
 
-WRITE16_HANDLER(SYS16IC_MWA16_SHAREDRAM1 ){ COMBINE_DATA( &segaic16_shared_ram1[offset] ); }
-READ16_HANDLER( SYS16IC_MRA16_SHAREDRAM1  ){ return segaic16_shared_ram1[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_SHAREDRAM1 ) { offset &= 0x3fff; COMBINE_DATA( &segaic16_shared_ram1[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_SHAREDRAM1 ) { offset &= 0x3fff; return segaic16_shared_ram1[offset]; }
 
-READ16_HANDLER( SYS16IC_MRA16_WORKINGRAM1_SHARE ){ return segaic16_workingram1[offset]; }
-WRITE16_HANDLER(SYS16IC_MWA16_WORKINGRAM1_SHARE ){ COMBINE_DATA( &segaic16_workingram1[offset] ); }
-
-READ16_HANDLER( SYS16IC_MRA16_SPRITERAM ){ return segaic16_spriteram_0[offset]; }
-WRITE16_HANDLER(SYS16IC_MWA16_SPRITERAM ){ COMBINE_DATA( &segaic16_spriteram_0[offset] ); }
+READ16_HANDLER( SYS16IC_MRA16_SPRITERAM ){ offset &=0xfff; return segaic16_spriteram_0[offset]; }
+WRITE16_HANDLER(SYS16IC_MWA16_SPRITERAM ){ offset &=0xfff;COMBINE_DATA( &segaic16_spriteram_0[offset] ); }
 
 static void update_main_irqs(void)
 {
@@ -55,84 +53,79 @@ static void update_main_irqs(void)
 	if (timer_irq_state)
 		irq |= 2;
 
+	if (gprider_hack && irq > 4)
+		irq = 4;
+
 	/* assert the lines that are live, or clear everything if nothing is live */
 	if (irq != 0)
 	{
 	cpu_set_irq_line(0, irq, ASSERT_LINE);
-	//	cpunum_set_input_line(0, irq, ASSERT_LINE);
-	cpu_boost_interleave(0, TIME_IN_USEC(50));
+	//cpunum_set_input_line(0, irq, ASSERT_LINE);
+		cpu_boost_interleave(0, TIME_IN_USEC(100));
 	}
 	else
 		cpu_set_irq_line(0, 7, CLEAR_LINE);
-		//cpu_set_irq_line(0, 7, CLEAR_LINE);
+		//cpunum_set_input_line(0, 7, CLEAR_LINE);
 }
 
 
 static void scanline_callback(int scanline)
 {
-	/* clock the timer and set the IRQ if something happened */
-	if (segaic16_compare_timer_clock(0))
-		timer_irq_state = 1;
+	int next_scanline = (scanline + 2) % 262;
+	int update = 0;
 
-	/* on scanline 223 generate VBLANK for both CPUs */
+	/* clock the timer and set the IRQ if something happened */
+	if ((scanline % 2) != 0 && segaic16_compare_timer_clock(0))
+		timer_irq_state = update = 1;
+
+	/* set VBLANK on scanline 223 */
 	if (scanline == 223)
 	{
-		vblank_irq_state = 1;
-		cpu_set_irq_line(2, 4, HOLD_LINE);
-		//cpunum_set_input_line(1, 4, HOLD_LINE);
-		cpu_boost_interleave(0, TIME_IN_USEC(50));
+		vblank_irq_state = update = 1;
+		cpu_set_irq_line(1, 4, ASSERT_LINE);
+		//cpunum_set_input_line(1, 4, ASSERT_LINE);
+		next_scanline = scanline + 1;
+	}
+
+	/* clear VBLANK on scanline 224 */
+	else if (scanline == 224)
+	{
+		vblank_irq_state = 0;
+		update = 1;
+		cpu_set_irq_line(1, 4,  CLEAR_LINE);
+		//cpunum_set_input_line(1, 4, CLEAR_LINE);
+		next_scanline = scanline + 1;
 	}
 
 	/* update IRQs on the main CPU */
-	update_main_irqs();
+	if (update)
+		update_main_irqs();
 
 	/* come back in 2 scanlines */
-	scanline = (scanline + 2) % 262;
-	timer_set(cpu_getscanlinetime(scanline), scanline, scanline_callback);
+	timer_set(cpu_getscanlinetime(next_scanline), next_scanline, scanline_callback);
 }
 
 
 static void timer_ack_callback(void)
 {
+	/* clear the timer IRQ */
 	timer_irq_state = 0;
 	update_main_irqs();
 }
 
 
+/*************************************
+ *
+ *	Sound communication
+ *
+ *************************************/
+
 static void sound_data_w(data8_t data)
 {
 	soundlatch_w(0, data);
-	cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);
+	cpu_set_irq_line(2, IRQ_LINE_NMI, PULSE_LINE);
+	//cpunum_set_input_line(2, INPUT_LINE_NMI, PULSE_LINE);
 }
-
-
-static void xboard_reset(void)
-{
- 	cpu_set_reset_line(2, PULSE_LINE );
-	//cpunum_set_input_line(1, INPUT_LINE_RESET, PULSE_LINE);
-}
-
-
-static int main_irq_callback(int irq)
-{
-	extern int fd1094_int_callback(int irq);
-
-	if (irq & 4)
-	{
-		vblank_irq_state = 0;
-		update_main_irqs();
-	}
-
-		return MC68000_INT_ACK_AUTOVECTOR;
-}
-
-
-VIDEO_START( xboard );
-VIDEO_UPDATE( xboard );
-void xboard_set_road_priority(int priority);
-
-
-
 
 /*************************************
  *
@@ -142,8 +135,21 @@ void xboard_set_road_priority(int priority);
 
 static void sound_cpu_irq(int state)
 {
-	cpu_set_irq_line(1, 0, state);
+	cpu_set_irq_line(2, 0, state);
 }
+
+
+static void xboard_reset(void)
+{
+ 	cpu_set_reset_line(1, PULSE_LINE );
+	cpu_boost_interleave(0, TIME_IN_USEC(100));
+}
+
+
+VIDEO_START( xboard );
+VIDEO_UPDATE( xboard );
+void xboard_set_road_priority(int priority);
+
 
 
 /*************************************
@@ -175,7 +181,7 @@ static WRITE16_HANDLER( adc_w )
 }
 
 
-static INLINE data16_t iochip_r(int which, int port, int inputval)
+INLINE data16_t iochip_r(int which, int port, int inputval)
 {
 	data16_t result = iochip_regs[which][port];
 
@@ -279,7 +285,8 @@ static WRITE16_HANDLER( iochip_0_w )
 				D7: Amplifier mute control (1= sounding, 0= muted)
 				D6-D0: CN D pin A17-A23 (output level 1= high, 0= low)
 			*/
-			break;
+			//sound_global_enable(data & 0x80);
+			return;
 	}
 
 	if (offset <= 4)
@@ -346,6 +353,40 @@ static WRITE16_HANDLER( iocontrol_w )
 	}
 }
 
+
+
+/*************************************
+ *
+ *	Line of Fire Custom I/O
+ *
+ *************************************/
+
+static data16_t *loffire_sync;
+
+static WRITE16_HANDLER( loffire_sync0_w )
+{
+	COMBINE_DATA(&loffire_sync[offset]);
+	cpu_boost_interleave(0, TIME_IN_USEC(10));
+}
+
+
+static VIDEO_UPDATE( loffire )
+{
+/*	int x1 = readinputportbytag("ADC0");
+	int y1 = readinputportbytag("ADC1");
+	int x2 = readinputportbytag("ADC2");
+	int y2 = readinputportbytag("ADC3");
+	video_update_xboard(bitmap, cliprect);
+	draw_crosshair(bitmap, x1 * (Machine->drv->screen_width - 1) / 255, y1 * (Machine->drv->screen_height - 1) / 255, cliprect);
+	draw_crosshair(bitmap, x2 * (Machine->drv->screen_width - 1) / 255, y2 * (Machine->drv->screen_height - 1) / 255, cliprect);
+*/
+}
+
+
+READ16_HANDLER( SYS16IC_CPU2ROM16_r ){
+	const data16_t *pMem = (data16_t *)memory_region(REGION_CPU2);
+	return pMem[offset];
+}
 static struct YM2151interface ym2151_interface =
 {
 	1,
@@ -358,23 +399,9 @@ static MEMORY_READ16_START( xboard_readmem )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(1) AM_BASE(&backupram1)
-	{ 0x080000, 0x083fff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x084000, 0x087fff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x088000, 0x08bfff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x08c000, 0x08ffff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x090000, 0x093fff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x094000, 0x097fff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x098000, 0x09bfff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0x09c000, 0x09ffff, SYS16IC_MRA16_BACKUPRAM1 },
+	{ 0x080000, 0x09ffff, SYS16IC_MRA16_BACKUPRAM1 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(2) AM_BASE(&backupram2)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_BACKUPRAM2 },
-	{ 0x0a4000, 0x0a7fff, SYS16IC_MRA16_BACKUPRAM2 },
-	{ 0x0a8000, 0x0abfff, SYS16IC_MRA16_BACKUPRAM2},
-	{ 0x0ac000, 0x0affff, SYS16IC_MRA16_BACKUPRAM2},
-	{ 0x0b0000, 0x0b3fff, SYS16IC_MRA16_BACKUPRAM2},
-	{ 0x0b4000, 0x0b7fff, SYS16IC_MRA16_BACKUPRAM2},
-	{ 0x0b8000, 0x0bbfff, SYS16IC_MRA16_BACKUPRAM2},
-	{ 0x0bc000, 0x0bffff, SYS16IC_MRA16_BACKUPRAM2},
+	{ 0x0a0000, 0x0bffff, SYS16IC_MRA16_BACKUPRAM2 },
 	//AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE(MRA16_RAM, segaic16_tileram_0_w) AM_BASE(&segaic16_tileram_0)
 	{ 0x0c0000, 0x0cffff, segaic16_tileram_r  },			/* 16 tilemaps */
 	//AM_RANGE(0x0d0000, 0x0d0fff) AM_MIRROR(0x00f000) AM_READWRITE(MRA16_RAM, segaic16_textram_0_w) AM_BASE(&segaic16_textram_0)
@@ -386,27 +413,8 @@ static MEMORY_READ16_START( xboard_readmem )
 	//AM_RANGE(0x0e8000, 0x0e801f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_compare_timer_0_r, segaic16_compare_timer_0_w)
 	{ 0x0e8000, 0x0e801f, segaic16_compare_timer_0_r  },
 	//AM_RANGE(0x100000, 0x100fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE(&segaic16_spriteram_0)
-	{ 0x100000, 0x100fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x101000, 0x101fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x102000, 0x102fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x103000, 0x103fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x104000, 0x104fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x105000, 0x105fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x106000, 0x106fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x107000, 0x107fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x108000, 0x108fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x109000, 0x109fff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x10a000, 0x10afff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x10b000, 0x10bfff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x10c000, 0x10cfff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x10d000, 0x10dfff, SYS16IC_MRA16_SPRITERAM },
-	{ 0x10e000, 0x10efff, SYS16IC_MRA16_SPRITERAM },
-	/* ic 38/39 failed in spriteram without the mirror could be worth look down the line.
-	 * mame documentaion claims
-	 * https://github.com/mamedev/mame/blob/3aa9c6a1f8fb749bbfaf431c04afa92cd0b09d2b/src/mame/sega/segaxbd.cpp#L141C2-L142C43
-	 *  IC38 : 6264    (8k x8 SRAM) - Road RAM
-	 *  IC39 : 6264    (8k x8 SRAM) - Road RAM
-	 */
+	{ 0x100000, 0x10efff, SYS16IC_MRA16_SPRITERAM },
+
 	//AM_RANGE(0x120000, 0x123fff) AM_MIRROR(0x00c000) AM_READWRITE(MRA16_RAM, segaic16_paletteram_w) AM_BASE(&paletteram16)
 	{ 0x120000, 0x123fff, MRA16_RAM },
 	//AM_RANGE(0x130000, 0x13ffff) AM_READWRITE(adc_r, adc_w)
@@ -416,25 +424,11 @@ static MEMORY_READ16_START( xboard_readmem )
 	//AM_RANGE(0x150000, 0x15ffff) AM_READWRITE(iochip_1_r, iochip_1_w)
 	{ 0x150000, 0x15ffff, iochip_1_r },
 	//AM_RANGE(0x200000, 0x27ffff) AM_ROM AM_REGION(REGION_CPU2, 0x00000)
-	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r   },		/* CPU2 ROM == CPU3 in this core  */
+	{ 0x200000, 0x27ffff, SYS16IC_CPU2ROM16_r   },		/* CPU2 ROM == CPU3 in this core  */
 	//AM_RANGE(0x280000, 0x283fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x280000, 0x283fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x284000, 0x287fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x288000, 0x28bfff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x28c000, 0x28ffff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x290000, 0x293fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x294000, 0x297fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x298000, 0x29bfff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x29c000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 },
+	{ 0x280000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 },
 	//AM_RANGE(0x2a0000, 0x2a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{0x2a0000, 0x2a3fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2a4000, 0x2a7fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2a8000, 0x2abfff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2ac000, 0x2affff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2b0000, 0x2b3fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2b4000, 0x2b7fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2b8000, 0x2bbfff, SYS16IC_MRA16_SHAREDRAM1 },
-	{0x2bc000, 0x2bffff, SYS16IC_MRA16_SHAREDRAM1 },
+	{0x2a0000, 0x2bffff, SYS16IC_MRA16_SHAREDRAM1 },
 	//AM_RANGE(0x2e0000, 0x2e0007) AM_MIRROR(0x003ff8) AM_READWRITE(segaic16_multiply_1_r, segaic16_multiply_1_w)
 	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_r  },
 	//AM_RANGE(0x2e4000, 0x2e401f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_divide_1_r, segaic16_divide_1_w)
@@ -442,36 +436,21 @@ static MEMORY_READ16_START( xboard_readmem )
 	//	AM_RANGE(0x2e8000, 0x2e800f) AM_MIRROR(0x003ff0) AM_READWRITE(segaic16_compare_timer_1_r, segaic16_compare_timer_1_w)
 	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_r },
 	//AM_RANGE(0x2ec000, 0x2ecfff) AM_MIRROR(0x001000) AM_RAM AM_SHARE(5) AM_BASE(&segaic16_roadram_0)
-	{ 0x2ec000, 0x2ecfff, SYS16IC_MRA16_ROADRAM_SHARE },
-	{ 0x2ed000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
+	{ 0x2ec000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	//AM_RANGE(0x2ee000, 0x2effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_r },
-	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1) 
+	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1)
 	{ 0xff8000, 0xffbfff, SYS16IC_MRA16_BACKUPRAM1 },
-	{ 0xffc000, 0xffffff, SYS16IC_MRA16_BACKUPRAM2 }, 
+	{ 0xffc000, 0xffffff, SYS16IC_MRA16_BACKUPRAM2 },
 MEMORY_END
 
 static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
 //	{ 0x000000, 0x07ffff, MWA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(1) AM_BASE(&backupram1)
-	{ 0x080000, 0x083fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x084000, 0x087fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x088000, 0x08bfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x08c000, 0x08ffff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x090000, 0x093fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x094000, 0x097fff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x098000, 0x09bfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
-	{ 0x09c000, 0x09ffff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
+	{ 0x080000, 0x09ffff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(2) AM_BASE(&backupram2)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
-	{ 0x0a4000, 0x0a7fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
-	{ 0x0a8000, 0x0abfff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
-	{ 0x0ac000, 0x0affff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
-	{ 0x0b0000, 0x0b3fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
-	{ 0x0b4000, 0x0b7fff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
-	{ 0x0b8000, 0x0bbfff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
-	{ 0x0bc000, 0x0bffff, SYS16IC_MWA16_BACKUPRAM2,&backupram2},
+	{ 0x0a0000, 0x0bffff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },
 	//AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE(MRA16_RAM, segaic16_tileram_0_w) AM_BASE(&segaic16_tileram_0)
 	{ 0x0c0000, 0x0cffff, segaic16_tileram_0_w, &segaic16_tileram_0 },
 	//AM_RANGE(0x0d0000, 0x0d0fff) AM_MIRROR(0x00f000) AM_READWRITE(MRA16_RAM, segaic16_textram_0_w) AM_BASE(&segaic16_textram_0)
@@ -483,21 +462,7 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x0e8000, 0x0e801f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_compare_timer_0_r, segaic16_compare_timer_0_w)
 	{ 0x0e8000, 0x0e801f, segaic16_compare_timer_0_w },
 	//AM_RANGE(0x100000, 0x100fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE(&segaic16_spriteram_0)
-	{ 0x100000, 0x100fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x101000, 0x101fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x102000, 0x102fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x103000, 0x103fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x104000, 0x104fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x105000, 0x105fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x106000, 0x106fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x107000, 0x107fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x108000, 0x108fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x109000, 0x109fff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x10a000, 0x10afff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x10b000, 0x10bfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x10c000, 0x10cfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x10d000, 0x10dfff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
-	{ 0x10e000, 0x10efff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
+	{ 0x100000, 0x10efff, SYS16IC_MWA16_SPRITERAM, &segaic16_spriteram_0  },
 	//AM_RANGE(0x110000, 0x11ffff) AM_WRITE(segaic16_sprites_draw_0_w)
 	{ 0x110000, 0x11ffff, segaic16_sprites_draw_0_w},
 	//AM_RANGE(0x120000, 0x123fff) AM_MIRROR(0x00c000) AM_READWRITE(MRA16_RAM, segaic16_paletteram_w) AM_BASE(&paletteram16)
@@ -513,23 +478,9 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x200000, 0x27ffff) AM_ROM AM_REGION(REGION_CPU2, 0x00000)
 
 	//AM_RANGE(0x280000, 0x283fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x280000, 0x283fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x284000, 0x287fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x288000, 0x28bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x28c000, 0x28ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x290000, 0x293fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x294000, 0x297fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x298000, 0x29bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x29c000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
+	{ 0x280000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	//AM_RANGE(0x2a0000, 0x2a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{ 0x2a0000, 0x2a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2a4000, 0x2a7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2a8000, 0x2abfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2ac000, 0x2affff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2b0000, 0x2b3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2b4000, 0x2b7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2b8000, 0x2bbfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
-	{ 0x2bc000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
+	{ 0x2a0000, 0x2bbfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1 },
 	//AM_RANGE(0x2e0000, 0x2e0007) AM_MIRROR(0x003ff8) AM_READWRITE(segaic16_multiply_1_r, segaic16_multiply_1_w)
 	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_w },
 	//AM_RANGE(0x2e4000, 0x2e401f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_divide_1_r, segaic16_divide_1_w)
@@ -537,11 +488,10 @@ static MEMORY_WRITE16_START( xboard_writemem )
 	//AM_RANGE(0x2e8000, 0x2e800f) AM_MIRROR(0x003ff0) AM_READWRITE(segaic16_compare_timer_1_r, segaic16_compare_timer_1_w)
 	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_w  },		/* includes sound latch! */
 	//AM_RANGE(0x2ec000, 0x2ecfff) AM_MIRROR(0x001000) AM_RAM AM_SHARE(5) AM_BASE(&segaic16_roadram_0)
-	{ 0x2ec000, 0x2ecfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
-	{ 0x2ed000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
+	{ 0x2ec000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	//AM_RANGE(0x2ee000, 0x2effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_w },
-	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1) 
+	//AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE(1)
 	{ 0xff8000, 0xffbfff, SYS16IC_MWA16_BACKUPRAM1,&backupram1 },// AMEF_ABITS(22)
 	//AM_RANGE(0x3fc000, 0x3fffff) AM_RAM AM_SHARE(2)
 	{ 0xffc000, 0xffffff, SYS16IC_MWA16_BACKUPRAM2,&backupram2 },// AMEF_ABITS(22)
@@ -551,23 +501,9 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x080000, 0x083fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x084000, 0x087fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x088000, 0x08bfff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x08c000, 0x08ffff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x090000, 0x093fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x094000, 0x097fff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x098000, 0x09bfff, SYS16IC_MRA16_SHAREDRAM0 },
-	{ 0x09c000, 0x09ffff, SYS16IC_MRA16_SHAREDRAM0 },
+	{ 0x080000, 0x09ffff, SYS16IC_MRA16_SHAREDRAM0 },
 //	AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0a4000, 0x0a7fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0a8000, 0x0abfff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0ac000, 0x0affff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0b0000, 0x0b3fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0b4000, 0x0b7fff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0b8000, 0x0bbfff, SYS16IC_MRA16_SHAREDRAM1 },
-	{ 0x0bc000, 0x0bffff, SYS16IC_MRA16_SHAREDRAM1 },
+	{ 0x0a0000, 0x0bffff, SYS16IC_MRA16_SHAREDRAM1 },
 	//AM_RANGE(0x0e0000, 0x0e0007) AM_MIRROR(0x003ff8) AM_READWRITE(segaic16_multiply_1_r, segaic16_multiply_1_w)
 	{ 0x0e0000, 0x0e0007, segaic16_multiply_1_r },
 	//AM_RANGE(0x0e4000, 0x0e401f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_divide_1_r, segaic16_divide_1_w)
@@ -575,36 +511,24 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	//AM_RANGE(0x0e8000, 0x0e800f) AM_MIRROR(0x003ff0) AM_READWRITE(segaic16_compare_timer_1_r, segaic16_compare_timer_1_w)
 	{ 0x0e8000, 0x0e800f, segaic16_compare_timer_1_r },
 	//AM_RANGE(0x0ec000, 0x0ecfff) AM_MIRROR(0x001000) AM_RAM AM_SHARE(5)
-	{ 0x0ec000, 0x0ecfff, SYS16IC_MRA16_ROADRAM_SHARE },
-	{ 0x0ed000, 0x0edfff, SYS16IC_MRA16_ROADRAM_SHARE },
+	{ 0x0ec000, 0x0edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	//AM_RANGE(0x0ee000, 0x0effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x0ee000, 0x0effff, segaic16_road_control_0_r },
-	{ 0x200000, 0x27ffff, SYS16_CPU3ROM16_r }, // confirmed
+	{ 0x200000, 0x27ffff, SYS16IC_CPU2ROM16_r },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x29c000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 }, //AMEF_ABITS(20) == 9c000
+	{ 0x280000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 },
+	{ 0x2a0000, 0x2bffff, SYS16IC_MRA16_SHAREDRAM1 },
+	{ 0x2ec000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
+	{ 0x2ee000, 0x2effff, segaic16_road_control_0_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( xboard_writemem2 )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	//{ 0x000000, 0x07ffff, MWA16_ROM },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x080000, 0x083fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x084000, 0x087fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x088000, 0x08bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x08c000, 0x08ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x090000, 0x093fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x094000, 0x097fff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x098000, 0x09bfff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
-	{ 0x09c000, 0x09ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
+	{ 0x080000, 0x09ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },
 	//AM_RANGE(0x0a0000, 0x0a3fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(4)
-	{ 0x0a0000, 0x0a3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0a4000, 0x0a7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0a8000, 0x0abfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0ac000, 0x0affff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0b0000, 0x0b3fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0b4000, 0x0b7fff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0b8000, 0x0bbfff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
-	{ 0x0bc000, 0x0bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
+	{ 0x0a0000, 0x0bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
 	//AM_RANGE(0x0e0000, 0x0e0007) AM_MIRROR(0x003ff8) AM_READWRITE(segaic16_multiply_1_r, segaic16_multiply_1_w)
 	{ 0x0e0000, 0x0e0007, segaic16_multiply_1_w  },
 	//AM_RANGE(0x0e4000, 0x0e401f) AM_MIRROR(0x003fe0) AM_READWRITE(segaic16_divide_1_r, segaic16_divide_1_w)
@@ -612,12 +536,14 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 	//AM_RANGE(0x0e8000, 0x0e800f) AM_MIRROR(0x003ff0) AM_READWRITE(segaic16_compare_timer_1_r, segaic16_compare_timer_1_w)
 	{ 0x0e8000, 0x0e800f, segaic16_compare_timer_1_w  },
 	//AM_RANGE(0x0ec000, 0x0ecfff) AM_MIRROR(0x001000) AM_RAM AM_SHARE(5)
-	{ 0x0ec000, 0x0ecfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
-	{ 0x0ed000, 0x0edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
+	{ 0x0ec000, 0x0edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	//AM_RANGE(0x0ee000, 0x0effff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
 	{ 0x0ee000, 0x0effff, segaic16_road_control_0_w  },
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
-	{ 0x29c000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },  ///AMEF_ABITS(20)
+	{ 0x280000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },  ///AMEF_ABITS(20)
+	{ 0x2a0000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
+	{ 0x2ec000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
+	{ 0x2ee000, 0x2effff, segaic16_road_control_0_w  },
 MEMORY_END
 
 static MEMORY_READ_START( aburner_sound_readmem )
@@ -642,7 +568,15 @@ static PORT_WRITE_START( aburner_sound_writeport )
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 PORT_END
 
+static MEMORY_READ_START(  smgp_comm_readmem )
+	{ 0x0000, 0x1fff, MRA_ROM },
+	{ 0x2000, 0x3fff, MRA_RAM },
+MEMORY_END
 
+static MEMORY_WRITE_START( smgp_comm_writemem )
+	{ 0x0000, 0x1fff, MWA_ROM },
+	{ 0x2000, 0x3fff, MWA_RAM },
+MEMORY_END
 
 /*************************************
  *
@@ -775,7 +709,7 @@ INPUT_PORTS_START( rachero )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_BITX( 0x10, IP_ACTIVE_LOW, IPT_BUTTON8, "Move to Center", IP_KEY_DEFAULT, IP_JOY_DEFAULT )  
+	PORT_BITX( 0x10, IP_ACTIVE_LOW, IPT_BUTTON8, "Move to Center", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_BUTTON9, "Suicide", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -852,7 +786,7 @@ INPUT_PORTS_START( rachero )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	
+
 	PORT_START//_TAG("ADC0")	/* steering */
 	PORT_ANALOG( 0xff, 0x7f, IPT_PADDLE | IPF_REVERSE, 100, 4, 0x00,0xff)
 
@@ -861,7 +795,7 @@ INPUT_PORTS_START( rachero )
 
 	PORT_START//_TAG("ADC2")	/* brake */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 10, 25, 0x00,0xff)
-INPUT_PORTS_END  
+INPUT_PORTS_END
 
 INPUT_PORTS_START( smgp )
 	PORT_START//_TAG("IO0PORTA")
@@ -972,11 +906,11 @@ INPUT_PORTS_START( smgp )
 	PORT_ANALOG( 0xff, 0x7f, IPT_PADDLE, 50, 4, 0x00,0xff)
 
 	PORT_START//_TAG("ADC1")	/* gas pedal */
-	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 10, 15, 0x00,0xff) 
+	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL, 10, 15, 0x00,0xff)
 
 	PORT_START//_TAG("ADC2")	/* brake */
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2, 10, 25, 0x00,0xff)
-INPUT_PORTS_END    
+INPUT_PORTS_END
 
 INPUT_PORTS_START( thndrbld )
 	PORT_START//_TAG("IO0PORTA")
@@ -1128,10 +1062,10 @@ ROM_START( loffire )
 	ROM_LOAD( "epr-12800.12", 0x20000, 0x20000, CRC(1158c1a3) SHA1(e1d664a203eed5a0130b39ced7bea8328f06f107) )
 	ROM_LOAD( "epr-12801.13", 0x40000, 0x20000, CRC(2d6567c4) SHA1(542be9d8e91cf2df18d95f4e259cfda0560697cb) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound CPU */
 	ROM_LOAD( "epr-12798.17", 0x00000, 0x10000, CRC(0587738d) SHA1(24c79b0c73616d5532a49a2c9121dfabe3a80c7d) )
 
-	ROM_REGION( 0x100000, REGION_CPU3, 0 ) /* 2nd 68000 code */
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 2nd 68000 code */
 	ROM_LOAD16_BYTE( "epr-12804.20", 0x000000, 0x20000, CRC(b853480e) SHA1(de0889e99251da7ea50316282ebf6f434cc2db11) )
 	ROM_LOAD16_BYTE( "epr-12805.29", 0x000001, 0x20000, CRC(4a7200c3) SHA1(3e6febed36a55438e0d24441b68f2b7952791584) )
 	ROM_LOAD16_BYTE( "epr-12802.21", 0x040000, 0x20000, CRC(d746bb39) SHA1(08dc8cf565997c7e52329961bf7a229a15900cff) )
@@ -1173,7 +1107,7 @@ ROM_START( thndrbld )
 
 
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound CPU */
 	ROM_LOAD( "epr-11396.ic17", 0x00000, 0x10000, CRC(d37b54a4) SHA1(c230fe7241a1f13ca13506d1492f348f506c40a7) )
 
 	ROM_REGION( 0x60000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
@@ -1181,7 +1115,7 @@ ROM_START( thndrbld )
 	ROM_LOAD( "epr-11318.ic12", 0x20000, 0x20000, CRC(70d3f02c) SHA1(391aac2bc5673e06150de27e19c7c6359da8ca82) )
 	ROM_LOAD( "epr-11319.ic13", 0x40000, 0x20000, CRC(50d9242e) SHA1(a106371bf680c3088ec61f07fc5c4ce467973c15) )
 
-	ROM_REGION( 0x100000, REGION_CPU3, 0 ) /* 2nd 68000 code */
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 2nd 68000 code */
 	ROM_LOAD16_BYTE( "epr-11390.ic20", 0x000000, 0x20000, CRC(ed988fdb) SHA1(b809b0b7dabd5cb29f5387522c6dfb993d1d0271) )
 	ROM_LOAD16_BYTE( "epr-11391.ic29", 0x000001, 0x20000, CRC(12523bc1) SHA1(54635d6c4cc97cf4148dcac3bb2056fc414252f7) )
 	ROM_LOAD16_BYTE( "epr-11310.ic21", 0x040000, 0x20000, CRC(5d9fa02c) SHA1(0ca71e35cf9740e38a52960f7d1ef96e7e1dda94) )
@@ -1198,7 +1132,7 @@ ROM_START( thndrbld1 )
 	ROM_LOAD16_BYTE( "epr-11306.ic57", 0x040000, 0x20000, CRC(4b95f2b4) SHA1(9e0ff898a2af05c35db3551e52c7485748698c28) )
 	ROM_LOAD16_BYTE( "epr-11307.ic62", 0x040001, 0x20000, CRC(2d6833e4) SHA1(b39a744370014237121f0010d18897e63f7058cf) )
 
-	ROM_REGION( 0x80000, REGION_CPU3, 0 ) // 2nd 68000 code
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) // 2nd 68000 code
 	ROM_LOAD16_BYTE( "epr-11308.ic20", 0x00000, 0x20000, CRC(7956c238) SHA1(4608225cfd6ea3d38317cbe970f26a5fc2f8e320) )
 	ROM_LOAD16_BYTE( "epr-11309.ic29", 0x00001, 0x20000, CRC(c887f620) SHA1(644c47cc2cf75cbe489ea084c13c59d94631e83f) )
 	ROM_LOAD16_BYTE( "epr-11310.ic21", 0x040000, 0x20000, CRC(5d9fa02c) SHA1(0ca71e35cf9740e38a52960f7d1ef96e7e1dda94) )
@@ -1230,7 +1164,7 @@ ROM_START( thndrbld1 )
 	ROM_REGION( 0x10000, REGION_GFX3, ROMREGION_ERASE00 ) // Road Data
 	ROM_LOAD( "epr-11313.ic29", 0x00000, 0x10000, CRC(6a56c4c3) SHA1(c1b8023cb2ba4e96be052031c24b6ae424225c71) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) // sound CPU
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) // sound CPU
 	ROM_LOAD( "epr-11312.ic17",   0x00000, 0x10000, CRC(3b974ed2) SHA1(cf18a2d0f01643c747a884bf00e5b7037ba2e64a) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, ROMREGION_ERASEFF ) // Sega PCM sound data
@@ -1252,7 +1186,7 @@ ROM_START( abcop )
 	ROM_LOAD16_BYTE( "epr13559.57",  0x40000, 0x20000, CRC(4588bf19) SHA1(6a8b3d4450ac0bc41b46e6a4e1b44d82112fcd64) )
 	ROM_LOAD16_BYTE( "epr13558.62",  0x40001, 0x20000, CRC(11259ed4) SHA1(e7de174a0bdb1d1111e5e419f1d501ab5be1d32d) )
 
-	ROM_REGION( 0x80000, REGION_CPU3, 0 ) /* 2nd 68000 code */
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) /* 2nd 68000 code */
 	ROM_LOAD16_BYTE( "epr13566.20", 0x00000, 0x20000, CRC(22e52f32) SHA1(c67a4ccb88becc58dddcbfea0a1ac2017f7b2929) )
 	ROM_LOAD16_BYTE( "epr13565.29", 0x00001, 0x20000, CRC(a21784bd) SHA1(b40ba0ef65bbfe514625253f6aeec14bf4bcf08c) )
 
@@ -1282,7 +1216,7 @@ ROM_START( abcop )
 	ROM_REGION( 0x10000, REGION_GFX3, 0 ) /* ground data */
 	ROM_LOAD( "opr13564.40",	 0x00000, 0x10000, CRC(e70ba138) SHA1(85eb6618f408642227056d278f10dec8dcc5a80d) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound CPU */
 	ROM_LOAD( "epr13560.17",    0x00000, 0x10000, CRC(83050925) SHA1(118710e5789c7999bb7326df4d7bd207cbffdfd4) )
 
 	ROM_REGION( 0x60000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
@@ -1304,7 +1238,7 @@ ROM_START( rachero )
 	ROM_LOAD16_BYTE( "epr12855.57", 0x40000, 0x20000,CRC(cecf1e73) SHA1(3f8631379f32dbfda7720ef345276f9be23ada06) )
 	ROM_LOAD16_BYTE( "epr12856.62", 0x40001, 0x20000,CRC(da900ebb) SHA1(595ed65248185ddf8666b3f30ad6329162116448) )
 
-	ROM_REGION( 0x80000, REGION_CPU3, 0 ) /* 2nd 68000 code */
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) /* 2nd 68000 code */
 	ROM_LOAD16_BYTE( "epr12857.20", 0x00000, 0x20000, CRC(8a2328cc) SHA1(c34498428ddfb3eeb986f4153a6165a685d8fc8a) )
 	ROM_LOAD16_BYTE( "epr12858.29", 0x00001, 0x20000, CRC(38a248b7) SHA1(a17672123665403c1c56fedab6c8abf44b1131f9) )
 
@@ -1334,7 +1268,7 @@ ROM_START( rachero )
 	ROM_REGION( 0x10000, REGION_GFX3, 0 ) /* ground data */
 	/* none */
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound CPU */
 	ROM_LOAD( "epr12859.17",    0x00000, 0x10000, CRC(d57881da) SHA1(75b7f331ea8c2e33d6236e0c8fc8dabe5eef8160) )
 
 	ROM_REGION( 0x60000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
@@ -1354,7 +1288,7 @@ ROM_START( smgp )
 	ROM_LOAD16_BYTE( "bootleg_epr-12563b.58", 0x00000, 0x20000, CRC(af30e3cd) SHA1(b05a4f8be701fada6d55a042079f4b2067b52cb2) )
 	ROM_LOAD16_BYTE( "bootleg_epr-12564b.63", 0x00001, 0x20000, CRC(eb7cadfe) SHA1(58c2d05cd21795c1d5d603179decc3b861ef438f) )
 
-	ROM_REGION( 0x80000, REGION_CPU3, 0 ) /* 2nd 68000 code */
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) /* 2nd 68000 code */
 	ROM_LOAD16_BYTE( "epr12576a.20", 0x00000, 0x20000, CRC(2c9599c1) SHA1(79206f38c2976bd9299ed37bf62ac26dd3fba801) )
 	ROM_LOAD16_BYTE( "epr12577a.29", 0x00001, 0x20000, CRC(abf9a50b) SHA1(e367b305cd45900aae4849af4904543f05456dc6) )
 
@@ -1384,7 +1318,7 @@ ROM_START( smgp )
 	ROM_REGION( 0x10000, REGION_GFX3, 0 ) /* road gfx */
 	/* none?? */
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* sound CPU */
+	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound CPU */
 	ROM_LOAD( "epr12436.17",    0x00000, 0x10000, CRC(16ec5f0a) SHA1(307b7388b5c36fd4bc2a61f7941db44858e03c5c) )
 
 	ROM_REGION( 0x60000, REGION_SOUND1, 0 ) /* Sega PCM sound data */
@@ -1394,11 +1328,11 @@ ROM_START( smgp )
 
 	ROM_REGION( 0x10000, REGION_CPU4, 0 ) /* comms */
 	ROM_LOAD( "epr12587.14",    0x00000, 0x8000, CRC(2afe648b) SHA1(b5bf86f3acbcc23c136185110acecf2c971294fa) )
-ROM_END   
+ROM_END
 
 static MACHINE_INIT( xboard ){
 
-	cpu_set_irq_callback(0, main_irq_callback);
+	//cpu_set_irq_callback(0, main_irq_callback);
 	segaic16_compare_timer_init(0, sound_data_w, timer_ack_callback);
 	segaic16_compare_timer_init(1, NULL, NULL);
 	timer_set(cpu_getscanlinetime(1), 1, scanline_callback);
@@ -1415,8 +1349,26 @@ static MACHINE_INIT( xboard ){
 static DRIVER_INIT( thndrbld ){
 //segaic16_set_display_enable(1); // this shouldnt be here move to io
 
-
 }
+
+static READ16_HANDLER( smgp_excs_r )
+{
+	logerror("%06X:smgp_excs_r(%04X)\n", activecpu_get_pc(), offset*2);
+	return 0xffff;
+}
+
+
+static WRITE16_HANDLER( smgp_excs_w )
+{
+	logerror("%06X:smgp_excs_w(%04X) = %04X & %04X\n", activecpu_get_pc(), offset*2, data, mem_mask ^ 0xffff);
+}
+
+static DRIVER_INIT ( smgp )
+{
+	install_mem_read16_handler (0, 0x2f0000, 0x2f3fff, smgp_excs_r);
+	install_mem_write16_handler(0, 0x2f0000, 0x2f3fff, smgp_excs_w);
+}
+
 
 
 static struct GfxLayout charlayout =
@@ -1444,14 +1396,14 @@ static MACHINE_DRIVER_START( xboard )
 	MDRV_CPU_MEMORY(xboard_readmem, xboard_writemem)
 	//MDRV_CPU_VBLANK_INT(aburner_interrupt,7)
 
+	MDRV_CPU_ADD(M68000, 12500000)
+	MDRV_CPU_MEMORY(xboard_readmem2,xboard_writemem2)
+	//MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(aburner_sound_readmem, aburner_sound_writemem)
 	MDRV_CPU_PORTS(aburner_sound_readport, aburner_sound_writeport)
-
-	MDRV_CPU_ADD(M68000, 12500000)
-	MDRV_CPU_MEMORY(xboard_readmem2,xboard_writemem2)
-	//MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
@@ -1477,9 +1429,16 @@ static MACHINE_DRIVER_START( xboard )
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k_512)
 MACHINE_DRIVER_END
 
+MACHINE_DRIVER_START( smgp )
+	MDRV_IMPORT_FROM(xboard)
+//	MDRV_CPU_ADD_TAG("comm", Z80, 4000000)
+//	MDRV_CPU_MEMORY(smgp_comm_readmem, smgp_comm_writemem)
+	//MDRV_CPU_PORTS(smgp_comm_readport, smgp_comm_writeport)
+MACHINE_DRIVER_END
+
 GAMEX(1990, abcop,     0,        xboard, abcop,    0, ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, rachero,   0,        xboard, rachero,  0, ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, smgp,      0,        xboard, smgp,     0, ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, smgp,      0,        smgp, smgp,     smgp, ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, loffire,   0,        xboard, thndrbld, 0, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
 GAMEX(1987, thndrbld,  0,        xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1987, thndrbld1, thndrbld, xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )

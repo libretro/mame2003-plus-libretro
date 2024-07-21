@@ -39,7 +39,28 @@ static INLINE void CLIB_DECL logerror(const char *text,...)
 	va_start(arg,text);
 	vsprintf(log_buffer,text,arg);
 	va_end(arg);
-    log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
-    #endif
+	log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
+	#endif
 }
+
+#ifdef __GNUC__
+static INLINE int CLIB_DECL fatalerror(const char *string,...) __attribute__ ((format (printf, 1, 2)));
+#endif
+
+/*-------------------------------------------------
+	fatalerror - display an error message and
+	exit immediately
+-------------------------------------------------*/
+
+static INLINE int CLIB_DECL fatalerror(const char *string, ...)
+{
+	static char log_buffer[2048];
+	va_list arg;
+	va_start(arg,string);
+	vsprintf(log_buffer,string,arg);
+	va_end(arg);
+	log_cb(RETRO_LOG_DEBUG, "(LOGERROR) %s",log_buffer);
+	exit(1);
+}
+#define osd_die fatalerror
 #endif /* LOG_H */

@@ -140,7 +140,9 @@ void EEPROM_init(struct EEPROM_interface *interface)
 
 static void EEPROM_write(int bit)
 {
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM write bit %d\n",bit);
+#if VERBOSE
+logerror("EEPROM write bit %d\n",bit);
+#endif
 
 	if (serial_count >= SERIAL_BUFFER_LENGTH-1)
 	{
@@ -257,7 +259,9 @@ static void EEPROM_reset(void)
 
 void EEPROM_write_bit(int bit)
 {
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "write bit %d\n",bit);
+#if VERBOSE
+logerror("write bit %d\n",bit);
+#endif
 	latch = bit;
 }
 
@@ -278,14 +282,19 @@ int EEPROM_read_bit(void)
 		else
 			res = 1;
 	}
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "read bit %d\n",res);
+
+#if VERBOSE
+logerror("read bit %d\n",res);
+#endif
 
 	return res;
 }
 
 void EEPROM_set_cs_line(int state)
 {
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "set reset line %d\n",state);
+#if VERBOSE
+logerror("set reset line %d\n",state);
+#endif
 	reset_line = state;
 
 	if (reset_line != CLEAR_LINE)
@@ -294,7 +303,9 @@ void EEPROM_set_cs_line(int state)
 
 void EEPROM_set_clock_line(int state)
 {
-  log_cb(RETRO_LOG_DEBUG, LOGPRE "set clock line %d\n",state);
+#if VERBOSE
+logerror("set clock line %d\n",state);
+#endif
 	if (state == PULSE_LINE || (clock_line == CLEAR_LINE && state != CLEAR_LINE))
 	{
 		if (reset_line == CLEAR_LINE)
