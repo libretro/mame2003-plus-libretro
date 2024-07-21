@@ -372,14 +372,15 @@ static WRITE16_HANDLER( loffire_sync0_w )
 
 static VIDEO_UPDATE( loffire )
 {
-/*	int x1 = readinputportbytag("ADC0");
-	int y1 = readinputportbytag("ADC1");
-	int x2 = readinputportbytag("ADC2");
-	int y2 = readinputportbytag("ADC3");
+  /* these are correct i think */
+  int x1 = readinputport(6);
+	int y1 = readinputport(7);
+	int x2 = readinputport(8);
+	int y2 = readinputport(9);
 	video_update_xboard(bitmap, cliprect);
 	draw_crosshair(bitmap, x1 * (Machine->drv->screen_width - 1) / 255, y1 * (Machine->drv->screen_height - 1) / 255, cliprect);
 	draw_crosshair(bitmap, x2 * (Machine->drv->screen_width - 1) / 255, y2 * (Machine->drv->screen_height - 1) / 255, cliprect);
-*/
+
 }
 
 
@@ -1022,6 +1023,112 @@ INPUT_PORTS_START( thndrbld )
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_Y, 100, 4, 0x00, 0xff )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( loffire )
+	PORT_START//_TAG("IO0PORTA")
+	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )	/* /INTR of ADC0804 */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START//_TAG("IO0PORTB")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START//_TAG("IO1PORTA")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+//	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+//	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START//_TAG("IO1PORTB")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+
+	PORT_START//_TAG("IO1PORTC")
+	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x09, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x05, "6 Coins/4 Credits" )
+	PORT_DIPSETTING(    0x04, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x03, "5 Coins/6 Credits" )
+	PORT_DIPSETTING(    0x02, DEF_STR( 4C_5C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x00, "Free Play (if Coin B too) or 1/1" )
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x50, "6 Coins/4 Credits" )
+	PORT_DIPSETTING(    0x40, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x30, "5 Coins/6 Credits" )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_5C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
+	PORT_DIPSETTING(    0x00, "Free Play (if Coin A too) or 1/1" )
+
+	PORT_START//_TAG("IO1PORTD")
+	PORT_DIPNAME( 0x01, 0x00, "Language" )
+	PORT_DIPSETTING(    0x01, "Japanese" )
+	PORT_DIPSETTING(    0x00, "English" )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x02, "Cockpit" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPNAME( 0x04, 0x04, "2 Credits to Start" )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x10, "Easy" )
+	PORT_DIPSETTING(    0x18, "Normal" )
+	PORT_DIPSETTING(    0x08, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x20, 0x00, "Allow_Continue" )
+	PORT_DIPSETTING(    0x20, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Coin Chute" )
+	PORT_DIPSETTING(    0x80, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Twin" )
+	
+	PORT_START//_TAG("ADC0")
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X, 50, 5, 0, 255)
+
+	PORT_START//_TAG("ADC1")
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y, 50, 5, 0, 255)
+
+	PORT_START//_TAG("ADC2")
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 50, 5, 0, 255)
+
+	PORT_START//_TAG("ADC3")
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 50, 5, 0, 255)
+INPUT_PORTS_END    
+
 
 /*****************************************************************************/
 /* Line of Fire */
@@ -1369,7 +1476,11 @@ static DRIVER_INIT ( smgp )
 	install_mem_write16_handler(0, 0x2f0000, 0x2f3fff, smgp_excs_w);
 }
 
-
+static DRIVER_INIT( loffire )
+{
+	/* install extra synchronization on core shared memory */
+	loffire_sync = install_mem_write16_handler(0, 0x29c000, 0x29c011, loffire_sync0_w);
+}
 
 static struct GfxLayout charlayout =
 {
@@ -1436,9 +1547,14 @@ MACHINE_DRIVER_START( smgp )
 	//MDRV_CPU_PORTS(smgp_comm_readport, smgp_comm_writeport)
 MACHINE_DRIVER_END
 
-GAMEX(1990, abcop,     0,        xboard, abcop,    0, ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, rachero,   0,        xboard, rachero,  0, ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, smgp,      0,        smgp, smgp,     smgp, ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, loffire,   0,        xboard, thndrbld, 0, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
-GAMEX(1987, thndrbld,  0,        xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1987, thndrbld1, thndrbld, xboard, thndrbld, 0, ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
+MACHINE_DRIVER_START( loffire )
+	MDRV_IMPORT_FROM(xboard)
+	MDRV_VIDEO_UPDATE(loffire)
+MACHINE_DRIVER_END
+
+GAMEX(1990, abcop,     0,        xboard,  abcop,    0,       ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, smgp,      0,        smgp,    smgp,     smgp,    ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, loffire,   0,        loffire, loffire,  loffire, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
+GAMEX(1987, thndrbld,  0,        xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1987, thndrbld1, thndrbld, xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
