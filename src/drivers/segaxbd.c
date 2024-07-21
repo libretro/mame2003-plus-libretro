@@ -17,7 +17,7 @@ static UINT8 vblank_irq_state;
 static UINT8 timer_irq_state;
 static UINT8 iochip_regs[2][8];
 static UINT8 iochip_force_input;
-static UINT8 gprider_hack;
+static UINT8 gprider_hack=0;
 static data8_t (*iochip_custom_io_r[2])(offs_t offset, data8_t portdata);
 static void (*iochip_custom_io_w[2])(offs_t offset, data8_t data);
 static UINT8 adc_reverse[8];
@@ -395,6 +395,27 @@ static struct YM2151interface ym2151_interface =
 	{ YM3012_VOL(43,MIXER_PAN_LEFT,43,MIXER_PAN_RIGHT) },
 	{ sound_cpu_irq }
 };
+
+
+/*************************************
+ *
+ *	Capacitor-backed RAM
+ *
+ *************************************/
+
+static NVRAM_HANDLER( xboard )
+{
+	if (read_or_write)
+	{
+		mame_fwrite(file, backupram1, 0x4000);
+		mame_fwrite(file, backupram2, 0x4000);
+	}
+	else if (file)
+	{
+		mame_fread(file, backupram1, 0x4000);
+		mame_fread(file, backupram2, 0x4000);
+	}
+}
 
 static MEMORY_READ16_START( xboard_readmem )
 	//AM_RANGE(0x000000, 0x07ffff) AM_ROM
@@ -1522,7 +1543,7 @@ static MACHINE_DRIVER_START( xboard )
 	//MDRV_INTERLEAVE(1750)
 	MDRV_INTERLEAVE(100)
 	MDRV_MACHINE_INIT(xboard)
-
+	MDRV_NVRAM_HANDLER(xboard)
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(40*8, 28*8)
