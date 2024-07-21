@@ -1458,7 +1458,16 @@ ROM_START( smgp )
 	ROM_LOAD( "epr12587.14",    0x00000, 0x8000, CRC(2afe648b) SHA1(b5bf86f3acbcc23c136185110acecf2c971294fa) )
 ROM_END
 
+static void xboard_reset(void)
+{
+	 cpu_set_reset_line(1, PULSE_LINE);
+}
+
 static MACHINE_INIT( xboard ){
+
+  	/* hook the RESET line, which resets CPU #1 */
+	//cpunum_set_info_fct(0, CPUINFO_PTR_M68K_RESET_CALLBACK, (genf *)xboard_reset);
+  cpu_set_m68k_reset(0, xboard_reset);
 
 	//cpu_set_irq_callback(0, main_irq_callback);
 	segaic16_compare_timer_init(0, sound_data_w, timer_ack_callback);
