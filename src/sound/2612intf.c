@@ -43,7 +43,7 @@ static void timer_callback_2612(int param)
 	int n=param&0x7f;
 	int c=param>>7;
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "2612 TimerOver %d\n",c);
+	//log_cb(RETRO_LOG_DEBUG, LOGPRE "2612 TimerOver %d\n",c);
 	lastfired[n][c] = timer_get_time();
 	YM2612TimerOver(n,c);
 }

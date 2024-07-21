@@ -85,6 +85,14 @@
 #include "z80.h"
 #include "log.h"
 
+#define VERBOSE 0
+
+#if VERBOSE
+#define LOG(x)	logerror x
+#else
+#define LOG(x)
+#endif
+
 /* execute main opcodes inside a big switch statement */
 #ifndef BIG_SWITCH
 #define BIG_SWITCH			1
@@ -811,7 +819,7 @@ static INLINE UINT32 ARG16(void)
  * RETN
  ***************************************************************/
 #define RETN	{												\
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d RETN IFF1:%d IFF2:%d\n", cpu_getactivecpu(), _IFF1, _IFF2); \
+	LOG(("Z80 #%d RETN IFF1:%d IFF2:%d\n", cpu_getactivecpu(), _IFF1, _IFF2)); \
 	POP(PC);													\
 	change_pc16(_PCD);											\
 	if( _IFF1 == 0 && _IFF2 == 1 )								\
@@ -820,8 +828,8 @@ static INLINE UINT32 ARG16(void)
 		if( Z80.irq_state != CLEAR_LINE ||						\
 			Z80.request_irq >= 0 )								\
 		{														\
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d RETN takes IRQ\n",					\
-				cpu_getactivecpu());							\
+			LOG(("Z80 #%d RETN takes IRQ\n",					\
+				cpu_getactivecpu()));							\
 			take_interrupt();									\
 		}														\
 	}															\
@@ -839,8 +847,8 @@ static INLINE UINT32 ARG16(void)
 /*	_IFF1 = _IFF2;	*/											\
 	if( device >= 0 )											\
 	{															\
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d RETI device %d: $%02x\n",					\
-			cpu_getactivecpu(), device, Z80.irq[device].irq_param); \
+		LOG(("Z80 #%d RETI device %d: $%02x\n",					\
+			cpu_getactivecpu(), device, Z80.irq[device].irq_param)); \
 		Z80.irq[device].interrupt_reti(Z80.irq[device].irq_param); \
 	}															\
 }
@@ -1977,8 +1985,8 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 		_R++;													\
 		while( cpu_readop(_PCD) == 0xfb ) /* more EIs? */		\
 		{														\
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d multiple EI opcodes at %04X\n",		\
-				cpu_getactivecpu(), _PC);						\
+			LOG(("Z80 #%d multiple EI opcodes at %04X\n",		\
+				cpu_getactivecpu(), _PC));						\
 			CC(op,0xfb);										\
 			_PPC =_PCD;											\
 			CALL_MAME_DEBUG;									\
@@ -1991,7 +1999,7 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 			after_EI = 1;	/* avoid cycle skip hacks */		\
 			EXEC(op,ROP());										\
 			after_EI = 0;										\
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d EI takes irq\n", cpu_getactivecpu()); \
+			LOG(("Z80 #%d EI takes irq\n", cpu_getactivecpu())); \
 			take_interrupt();									\
 		} else EXEC(op,ROP());									\
 	} else _IFF2 = 1;											\
@@ -2583,7 +2591,7 @@ OP(xycb,fe) { WM( EA, SET(7,RM(EA)) );								} /* SET  7,(XY+o)	  */
 OP(xycb,ff) { _A = SET(7, RM(EA) ); WM( EA,_A );					} /* SET  7,A=(XY+o)  */
 
 OP(illegal,1) {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d ill. opcode $%02x $%02x\n", 
+	logerror("Z80 #%d ill. opcode $%02x $%02x\n",
 			cpu_getactivecpu(), cpu_readop((_PCD-1)&0xffff), cpu_readop(_PCD));
 }
 
@@ -3171,7 +3179,7 @@ OP(fd,ff) { illegal_1(); op_ff();									} /* DB   FD		  */
 
 OP(illegal,2)
 {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d ill. opcode $ed $%02x\n",
+	logerror("Z80 #%d ill. opcode $ed $%02x\n",
 			cpu_getactivecpu(), cpu_readop((_PCD-1)&0xffff));
 }
 
@@ -3917,7 +3925,7 @@ static void take_interrupt(void)
 				/* Clear both interrupt flip flops */
 				_IFF1 = _IFF2 = 0;
 				irq_vector = Z80.irq[Z80.request_irq].interrupt_entry(Z80.irq[Z80.request_irq].irq_param);
-				log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
+				LOG(("Z80 #%d daisy chain irq_vector $%02x\n", cpu_getactivecpu(), irq_vector));
 				Z80.request_irq = -1;
 			} else return;
 		}
@@ -3927,7 +3935,7 @@ static void take_interrupt(void)
 			_IFF1 = _IFF2 = 0;
 			/* call back the cpu interface to retrieve the vector */
 			irq_vector = (*Z80.irq_callback)(0);
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d single int. irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
+			LOG(("Z80 #%d single int. irq_vector $%02x\n", cpu_getactivecpu(), irq_vector));
 		}
 
 		/* Interrupt mode 2. Call [Z80.I:databyte] */
@@ -3936,7 +3944,7 @@ static void take_interrupt(void)
 			irq_vector = (irq_vector & 0xff) | (_I << 8);
 			PUSH( PC );
 			RM16( irq_vector, &Z80.PC );
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM2 [$%04x] = $%04x\n",cpu_getactivecpu() , irq_vector, _PCD);
+			LOG(("Z80 #%d IM2 [$%04x] = $%04x\n",cpu_getactivecpu() , irq_vector, _PCD));
 			/* CALL opcode timing */
 			Z80.extra_cycles += cc[Z80_TABLE_op][0xcd];
 		}
@@ -3944,7 +3952,7 @@ static void take_interrupt(void)
 		/* Interrupt mode 1. RST 38h */
 		if( _IM == 1 )
 		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM1 $0038\n",cpu_getactivecpu());
+			LOG(("Z80 #%d IM1 $0038\n",cpu_getactivecpu() ));
 			PUSH( PC );
 			_PCD = 0x0038;
 			/* RST $38 + 'interrupt latency' cycles */
@@ -3955,7 +3963,7 @@ static void take_interrupt(void)
 			/* Interrupt mode 0. We check for CALL and JP instructions, */
 			/* if neither of these were found we assume a 1 byte opcode */
 			/* was placed on the databus								*/
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM0 $%04x\n",cpu_getactivecpu() , irq_vector);
+			LOG(("Z80 #%d IM0 $%04x\n",cpu_getactivecpu() , irq_vector));
 			switch (irq_vector & 0xff0000)
 			{
 				case 0xcd0000:	/* call */
@@ -3999,11 +4007,7 @@ void z80_init(void)
 		SZHVC_sub = (UINT8 *)malloc(2*256*256);
 		if( !SZHVC_add || !SZHVC_sub )
 		{          
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80: failed to allocate 2 * 128K flags arrays!!!\n");
-
-      /* TODO: Don't abort, switch back to main thread and exit cleanly: 
-      * This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority */
-      abort();       
+			osd_die("Z80: failed to allocate 2 * 128K flags arrays!!!\n");
 		}
 		padd = &SZHVC_add[	0*256];
 		padc = &SZHVC_add[256*256];
@@ -4332,11 +4336,11 @@ void z80_set_irq_line(int irqline, int state)
 	{
 		if( Z80.nmi_state == state ) return;
 
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_line (NMI) %d\n", cpu_getactivecpu(), state);
+		LOG(("Z80 #%d set_irq_line (NMI) %d\n", cpu_getactivecpu(), state));
 		Z80.nmi_state = state;
 		if( state == CLEAR_LINE ) return;
 
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d take NMI\n", cpu_getactivecpu());
+		LOG(("Z80 #%d take NMI\n", cpu_getactivecpu()));
 		_PPC = -1;			/* there isn't a valid previous program counter */
 		LEAVE_HALT;			/* Check if processor was halted */
 
@@ -4347,7 +4351,7 @@ void z80_set_irq_line(int irqline, int state)
 	}
 	else
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_line %d\n",cpu_getactivecpu() , state);
+		LOG(("Z80 #%d set_irq_line %d\n",cpu_getactivecpu() , state));
 		Z80.irq_state = state;
 		if( state == CLEAR_LINE ) return;
 
@@ -4357,11 +4361,11 @@ void z80_set_irq_line(int irqline, int state)
 			daisychain = (*Z80.irq_callback)(irqline);
 			device = daisychain >> 8;
 			int_state = daisychain & 0xff;
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain $%04x -> device %d, state $%02x",cpu_getactivecpu(), daisychain, device, int_state);
+			LOG(("Z80 #%d daisy chain $%04x -> device %d, state $%02x",cpu_getactivecpu(), daisychain, device, int_state));
 
 			if( Z80.int_state[device] != int_state )
 			{
-				log_cb(RETRO_LOG_DEBUG, LOGPRE " change\n");
+				LOG((" change\n"));
 				/* set new interrupt status */
 				Z80.int_state[device] = int_state;
 				/* check interrupt status */
@@ -4380,12 +4384,12 @@ void z80_set_irq_line(int irqline, int state)
 					if( Z80.int_state[device] & Z80_INT_REQ )
 						Z80.request_irq = device;
 				}
-				log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain service_irq $%02x, request_irq $%02x\n", cpu_getactivecpu(), Z80.service_irq, Z80.request_irq);
+				LOG(("Z80 #%d daisy chain service_irq $%02x, request_irq $%02x\n", cpu_getactivecpu(), Z80.service_irq, Z80.request_irq));
 				if( Z80.request_irq < 0 ) return;
 			}
 			else
 			{
-				log_cb(RETRO_LOG_DEBUG, LOGPRE " no change\n");
+				LOG((" no change\n"));
 				return;
 			}
 		}
@@ -4398,7 +4402,7 @@ void z80_set_irq_line(int irqline, int state)
  ****************************************************************************/
 void z80_set_irq_callback(int (*callback)(int))
 {
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_callback $%08x\n",cpu_getactivecpu() , (int)callback);
+	LOG(("Z80 #%d set_irq_callback $%08x\n",cpu_getactivecpu() , (int)callback));
 	Z80.irq_callback = callback;
 }
 
