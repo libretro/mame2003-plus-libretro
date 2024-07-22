@@ -1458,10 +1458,6 @@ ROM_START( smgp )
 	ROM_LOAD( "epr12587.14",    0x00000, 0x8000, CRC(2afe648b) SHA1(b5bf86f3acbcc23c136185110acecf2c971294fa) )
 ROM_END
 
-static void xboard_reset(void)
-{
-	 cpu_set_reset_line(1, PULSE_LINE);
-}
 
 static MACHINE_INIT( xboard ){
 
