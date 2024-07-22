@@ -1464,6 +1464,7 @@ ROM_START( smgp )
 	ROM_LOAD( "epr12587.14",    0x00000, 0x8000, CRC(2afe648b) SHA1(b5bf86f3acbcc23c136185110acecf2c971294fa) )
 ROM_END
 
+
 void m68k_set_reset_instr_callback(void  (*callback)(void));
 static MACHINE_INIT( xboard ){
 
