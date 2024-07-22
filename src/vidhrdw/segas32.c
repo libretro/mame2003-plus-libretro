@@ -1067,8 +1067,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += (system32_videoram[0x1ff14/2 + 4 * bgnum] & 0xfe00) << 4;
 
 	/* then account for the destination center coordinates */
-	srcx_start -= ((INT16)(system32_videoram[0x1ff30/2 + 2 * bgnum] << 6) >> 6) * srcxstep;
-	srcy -= ((INT16)(system32_videoram[0x1ff32/2 + 2 * bgnum] << 7) >> 7) * srcystep;
+	srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 10) * srcxstep;
+	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], 9) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
@@ -1804,8 +1804,8 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 					((data[3] & 0x0800) >> 11) | ((data[3] & 0x4000) >> 13);
 	int dsth     = data[2] & 0x3ff;
 	int dstw     = data[3] & 0x3ff;
-	int ypos     = (INT16)(data[4] << 4) >> 4;
-	int xpos     = (INT16)(data[5] << 4) >> 4;
+	int ypos     = SEXT(data[4], 12);
+	int xpos     = SEXT(data[5], 12);
 	UINT32 addr  = data[6] | ((data[2] & 0xf000) << 4);
 	int color    = 0x8000 | (data[7] & (bpp8 ? 0x7f00 : 0x7ff0));
 	int hzoom, vzoom;
@@ -2012,20 +2012,20 @@ static void sprite_render_list(void)
 				/* set the inclusive cliprect */
 				if (sprite[0] & 0x1000)
 				{
-					clipin.min_y = (INT16)(sprite[0] << 4) >> 4;
-					clipin.max_y = (INT16)(sprite[1] << 4) >> 4;
-					clipin.min_x = (INT16)(sprite[2] << 4) >> 4;
-					clipin.max_x = (INT16)(sprite[3] << 4) >> 4;
+					clipin.min_y = SEXT(sprite[0], 12);
+					clipin.max_y = SEXT(sprite[1], 12);
+					clipin.min_x = SEXT(sprite[2], 12);
+					clipin.max_x = SEXT(sprite[3], 12);
 					sect_rect(&clipin, &outerclip);
 				}
 
 				/* set the exclusive cliprect */
 				if (sprite[0] & 0x2000)
 				{
-					clipout.min_y = (INT16)(sprite[4] << 4) >> 4;
-					clipout.max_y = (INT16)(sprite[5] << 4) >> 4;
-					clipout.min_x = (INT16)(sprite[6] << 4) >> 4;
-					clipout.max_x = (INT16)(sprite[7] << 4) >> 4;
+					clipout.min_y = SEXT(sprite[4], 12);
+					clipout.max_y = SEXT(sprite[5], 12);
+					clipout.min_x = SEXT(sprite[6], 12);
+					clipout.max_x = SEXT(sprite[7], 12);
 				}
 
 				/* advance to the next entry */
@@ -2038,8 +2038,8 @@ static void sprite_render_list(void)
 				/* set the global offset */
 				if (sprite[0] & 0x2000)
 				{
-					yoffs = (INT16)(sprite[1] << 4) >> 4;
-					xoffs = (INT16)(sprite[2] << 4) >> 4;
+					yoffs = SEXT(sprite[1], 12);
+					xoffs = SEXT(sprite[2], 12);
 				}
 				spritenum = sprite[0] & 0x1fff;
 				break;
@@ -2142,12 +2142,12 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	}
 
 	/* extract the RGB offsets */
-	rgboffs[0][0] = (INT8)(mixer_control[which][0x40/2] << 2) >> 2;
-	rgboffs[0][1] = (INT8)(mixer_control[which][0x42/2] << 2) >> 2;
-	rgboffs[0][2] = (INT8)(mixer_control[which][0x44/2] << 2) >> 2;
-	rgboffs[1][0] = (INT8)(mixer_control[which][0x46/2] << 2) >> 2;
-	rgboffs[1][1] = (INT8)(mixer_control[which][0x48/2] << 2) >> 2;
-	rgboffs[1][2] = (INT8)(mixer_control[which][0x4a/2] << 2) >> 2;
+	rgboffs[0][0] = SEXT(mixer_control[which][0x40/2], 6);
+	rgboffs[0][1] = SEXT(mixer_control[which][0x42/2], 6);
+	rgboffs[0][2] = SEXT(mixer_control[which][0x44/2], 6);
+	rgboffs[1][0] = SEXT(mixer_control[which][0x46/2], 6);
+	rgboffs[1][1] = SEXT(mixer_control[which][0x48/2], 6);
+	rgboffs[1][2] = SEXT(mixer_control[which][0x4a/2], 6);
 	rgboffs[2][0] = 0;
 	rgboffs[2][1] = 0;
 	rgboffs[2][2] = 0;

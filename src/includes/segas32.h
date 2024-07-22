@@ -156,3 +156,12 @@ READ16_HANDLER( dbzvrvs_protection_r );
 	ROM_RELOAD(     base + 2 * length, length ) \
 	ROM_RELOAD(     base + 4 * length, length ) \
 	ROM_RELOAD(     base + 6 * length, length )
+
+
+/*************************************
+ *
+ *  Utility Macro
+ *
+ *************************************/
+
+#define SEXT(value, width) (((int64_t)(value & ((1ULL << width) - 1)) ^ (int64_t)(1ULL << (width - 1))) - (1ULL << (width - 1)))
