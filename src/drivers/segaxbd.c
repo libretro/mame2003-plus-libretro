@@ -277,7 +277,8 @@ static WRITE16_HANDLER( iochip_0_w )
 			*/
 			segaic16_set_display_enable((data >> 5) & 1);
 //			if ((oldval ^ data) & 2) printf("CONT = %d\n", (data >> 1) & 1);
-//			if ((oldval ^ data) & 1) cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
+			if ((oldval ^ data) & 1)cpu_set_reset_line(2, INPUT_LINE_RESET, PULSE_LINE ); 
+			//cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
 			break;
 
 		case 3:
