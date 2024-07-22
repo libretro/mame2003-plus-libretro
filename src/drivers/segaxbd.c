@@ -1463,11 +1463,6 @@ ROM_START( smgp )
 ROM_END
 
 void m68k_set_reset_instr_callback(void  (*callback)(void));
-static void xboard_reset(void)
-{
-	 cpu_set_reset_line(1, PULSE_LINE);
-}
-
 static MACHINE_INIT( xboard ){
 
   	/* hook the RESET line, which resets CPU #1 */
