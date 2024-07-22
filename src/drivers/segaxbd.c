@@ -542,6 +542,7 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	{ 0x2a0000, 0x2bffff, SYS16IC_MRA16_SHAREDRAM1 },
 	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_r },
 	{ 0x2e4000, 0x2e401f, segaic16_divide_1_r },
+	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_r },
 	{ 0x2ec000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_r },
 MEMORY_END
@@ -568,6 +569,7 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 	{ 0x2a0000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
 	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_w  },
 	{ 0x2e4000, 0x2e401f, segaic16_divide_1_w },
+	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_w },
 	{ 0x2ec000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_w  },
 MEMORY_END
