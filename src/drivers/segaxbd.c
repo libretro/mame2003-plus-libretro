@@ -277,7 +277,7 @@ static WRITE16_HANDLER( iochip_0_w )
 			*/
 			segaic16_set_display_enable((data >> 5) & 1);
 //			if ((oldval ^ data) & 2) printf("CONT = %d\n", (data >> 1) & 1);
-			if ((oldval ^ data) & 1)cpu_set_reset_line(2, INPUT_LINE_RESET, PULSE_LINE ); 
+			if ((oldval ^ data) & 1)cpu_set_reset_line(2, PULSE_LINE ); 
 			//cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
 			break;
 
@@ -576,19 +576,33 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 MEMORY_END
 
 static MEMORY_READ_START( aburner_sound_readmem )
-    { 0x0000, 0xefff, MRA_ROM },
-  	{ 0xf000, 0xf0ff, SegaPCM_r },
-	{ 0xf000, 0xffff, MRA_RAM },
+	{ 0x0000, 0xefff, MRA_ROM },
+	{ 0xf000, 0xf0ff, SegaPCM_r}, 
+	{ 0xf100, 0xf1ff, SegaPCM_r}, 
+	{ 0xf200, 0xf2ff, SegaPCM_r},
+	{ 0xf300, 0xf3ff, SegaPCM_r},
+	{ 0xf400, 0xf4ff, SegaPCM_r},
+	{ 0xf500, 0xf5ff, SegaPCM_r},
+	{ 0xf600, 0xf6ff, SegaPCM_r},
+	{ 0xf700, 0xf7ff, SegaPCM_r},
+	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( aburner_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
-	{ 0xf000, 0xf0ff, SegaPCM_w },
-	{ 0xf000, 0xffff, MWA_RAM },
+    { 0x0000, 0xefff, MWA_ROM },
+	{ 0xf000, 0xf0ff, SegaPCM_w},
+	{ 0xf100, 0xf1ff, SegaPCM_w},
+	{ 0xf200, 0xf2ff, SegaPCM_w},
+	{ 0xf300, 0xf3ff, SegaPCM_w},
+	{ 0xf400, 0xf4ff, SegaPCM_w},
+	{ 0xf500, 0xf5ff, SegaPCM_w},
+	{ 0xf600, 0xf6ff, SegaPCM_w},
+	{ 0xf700, 0xf7ff, SegaPCM_w},
+	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( aburner_sound_readport )
-    { 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
