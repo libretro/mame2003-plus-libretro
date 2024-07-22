@@ -277,7 +277,8 @@ static WRITE16_HANDLER( iochip_0_w )
 			*/
 			segaic16_set_display_enable((data >> 5) & 1);
 //			if ((oldval ^ data) & 2) printf("CONT = %d\n", (data >> 1) & 1);
-//			if ((oldval ^ data) & 1) cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
+			if ((oldval ^ data) & 1)cpu_set_reset_line(2, PULSE_LINE ); 
+			//cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
 			break;
 
 		case 3:
@@ -540,6 +541,9 @@ static MEMORY_READ16_START( xboard_readmem2 )
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
 	{ 0x280000, 0x29ffff, SYS16IC_MRA16_SHAREDRAM0 },
 	{ 0x2a0000, 0x2bffff, SYS16IC_MRA16_SHAREDRAM1 },
+	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_r },
+	{ 0x2e4000, 0x2e401f, segaic16_divide_1_r },
+	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_r },
 	{ 0x2ec000, 0x2edfff, SYS16IC_MRA16_ROADRAM_SHARE },
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_r },
 MEMORY_END
@@ -564,24 +568,41 @@ static MEMORY_WRITE16_START( xboard_writemem2 )
 	//AM_RANGE(0x080000, 0x083fff) AM_MIRROR(0x01c000) AM_RAM AM_SHARE(3)
 	{ 0x280000, 0x29ffff, SYS16IC_MWA16_SHAREDRAM0, &segaic16_shared_ram0 },  ///AMEF_ABITS(20)
 	{ 0x2a0000, 0x2bffff, SYS16IC_MWA16_SHAREDRAM1, &segaic16_shared_ram1  },
+	{ 0x2e0000, 0x2e0007, segaic16_multiply_1_w  },
+	{ 0x2e4000, 0x2e401f, segaic16_divide_1_w },
+	{ 0x2e8000, 0x2e800f, segaic16_compare_timer_1_w },
 	{ 0x2ec000, 0x2edfff, SYS16IC_MWA16_ROADRAM_SHARE, &segaic16_roadram_0 },
 	{ 0x2ee000, 0x2effff, segaic16_road_control_0_w  },
 MEMORY_END
 
 static MEMORY_READ_START( aburner_sound_readmem )
-    { 0x0000, 0xefff, MRA_ROM },
-  	{ 0xf000, 0xf0ff, SegaPCM_r },
-	{ 0xf000, 0xffff, MRA_RAM },
+	{ 0x0000, 0xefff, MRA_ROM },
+	{ 0xf000, 0xf0ff, SegaPCM_r}, 
+	{ 0xf100, 0xf1ff, SegaPCM_r}, 
+	{ 0xf200, 0xf2ff, SegaPCM_r},
+	{ 0xf300, 0xf3ff, SegaPCM_r},
+	{ 0xf400, 0xf4ff, SegaPCM_r},
+	{ 0xf500, 0xf5ff, SegaPCM_r},
+	{ 0xf600, 0xf6ff, SegaPCM_r},
+	{ 0xf700, 0xf7ff, SegaPCM_r},
+	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( aburner_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
-	{ 0xf000, 0xf0ff, SegaPCM_w },
-	{ 0xf000, 0xffff, MWA_RAM },
+    { 0x0000, 0xefff, MWA_ROM },
+	{ 0xf000, 0xf0ff, SegaPCM_w},
+	{ 0xf100, 0xf1ff, SegaPCM_w},
+	{ 0xf200, 0xf2ff, SegaPCM_w},
+	{ 0xf300, 0xf3ff, SegaPCM_w},
+	{ 0xf400, 0xf4ff, SegaPCM_w},
+	{ 0xf500, 0xf5ff, SegaPCM_w},
+	{ 0xf600, 0xf6ff, SegaPCM_w},
+	{ 0xf700, 0xf7ff, SegaPCM_w},
+	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( aburner_sound_readport )
-    { 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
@@ -1459,6 +1480,7 @@ ROM_START( smgp )
 ROM_END
 
 
+void m68k_set_reset_instr_callback(void  (*callback)(void));
 static MACHINE_INIT( xboard ){
 
   	/* hook the RESET line, which resets CPU #1 */
@@ -1469,6 +1491,8 @@ static MACHINE_INIT( xboard ){
 	segaic16_compare_timer_init(0, sound_data_w, timer_ack_callback);
 	segaic16_compare_timer_init(1, NULL, NULL);
 	timer_set(cpu_getscanlinetime(1), 1, scanline_callback);
+	m68k_set_reset_instr_callback(xboard_reset);
+
 
 	memset(iochip_custom_io_r, 0, sizeof(iochip_custom_io_r));
 	memset(iochip_custom_io_w, 0, sizeof(iochip_custom_io_w));
@@ -1581,6 +1605,6 @@ MACHINE_DRIVER_END
 GAMEX(1990, abcop,     0,        xboard,  abcop,    0,       ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, smgp,      0,        smgp,    smgp,     smgp,    ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, loffire,   0,        loffire, loffire,  loffire, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
+GAMEX(1989, loffire,   0,        loffire, loffire,  0, ROT0, "Sega", "Line of Fire", GAME_NOT_WORKING )
 GAMEX(1987, thndrbld,  0,        xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1987, thndrbld1, thndrbld, xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
