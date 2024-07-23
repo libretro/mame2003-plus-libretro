@@ -508,19 +508,26 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-	/* intercept the data*/
-	ss_size = size;
-	if (ss_data)
-		free(ss_data);
-	ss_data = malloc(size);
-	memcpy(ss_data, data, size);
+    ss_size = 0;
+    if (ss_data)
+    {
+        free(ss_data);
+        ss_data = NULL;
+    }
+    auto_state_pending = false;
 
-	if (cpu_getcurrentframe() > Machine->drv->frames_per_second)
-		return retro_unserialize_restore(data, size);
-	else
-		auto_state_pending = true;
+    if (cpu_getcurrentframe() > Machine->drv->frames_per_second)
+        return retro_unserialize_restore(data, size);
+    else
+    {
+        /* intercept the data*/
+        ss_size = size;
+        ss_data = malloc(size);
+        memcpy(ss_data, data, size);
+        auto_state_pending = true;
+    }
 
-	return true;
+    return true;
 }
 
 static bool retro_unserialize_restore(const void * data, size_t size)
