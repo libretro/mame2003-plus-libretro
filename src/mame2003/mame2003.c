@@ -427,7 +427,7 @@ void retro_run (void)
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
 
   /* restore state */
-  if (cpu_getcurrentframe() == 1) retro_unserialize_restore(ss_data, ss_size);
+  if (cpu_getcurrentframe() == Machine->drv->frames_per_second) retro_unserialize_restore(ss_data, ss_size);
 }
 
 void retro_unload_game(void)
