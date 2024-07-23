@@ -56,6 +56,7 @@ retro_set_led_state_t                      led_state_cb       = NULL;
 struct retro_audio_buffer_status_callback  buf_status_cb;
 
 /* intercept state*/
+static bool retro_unserialize_restore(const void * data, size_t size);
 static void * ss_data;
 static size_t ss_size;
 
@@ -421,10 +422,12 @@ void retro_run (void)
   else
     frameskip_counter = 0;
 
- frameskip_counter = (frameskip_counter ) % 12;
+  frameskip_counter = (frameskip_counter ) % 12;
   
- /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
- 
+  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
+
+  /* restore state */
+  if (cpu_getcurrentframe() > 0) retro_unserialize_restore(ss_data, ss_size);
 }
 
 void retro_unload_game(void)
@@ -498,7 +501,7 @@ bool retro_unserialize(const void * data, size_t size)
     return true;
 }
 
-bool retro_unserialize_restore(const void * data, size_t size)
+static bool retro_unserialize_restore(const void * data, size_t size)
 {
 	int cpunum;
 
