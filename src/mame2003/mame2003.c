@@ -431,6 +431,8 @@ void retro_run (void)
   if (auto_state_pending && cpu_getcurrentframe() == Machine->drv->frames_per_second)
   {
     retro_unserialize_restore(ss_data, ss_size);
+    free(ss_data);
+    ss_data = NULL;
     auto_state_pending = false;
   }
 }
@@ -438,7 +440,14 @@ void retro_run (void)
 void retro_unload_game(void)
 {
     mame_done();
+
     /* do we need to be freeing things here? */
+
+    if (ss_data)
+    {
+        free(ss_data);
+        ss_data = NULL;
+    }
 
     free(options.romset_filename_noext);
 }
@@ -501,6 +510,8 @@ bool retro_unserialize(const void * data, size_t size)
 {
 	/* intercept the data*/
 	ss_size = size;
+	if (ss_data)
+		free(ss_data);
 	ss_data = malloc(size);
 	memcpy(ss_data, data, size);
 
