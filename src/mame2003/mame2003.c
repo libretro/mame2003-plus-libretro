@@ -491,14 +491,16 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-    int cpunum;
-
     /* intercept the data*/
     ss_size = size;
     ss_data = malloc(size);
     memcpy(ss_data, data, size);
     return true;
+}
 
+bool retro_unserialize_restore(const void * data, size_t size)
+{
+	int cpunum;
 
 	/* if successful, load it */
 	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
