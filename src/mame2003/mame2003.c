@@ -57,6 +57,7 @@ struct retro_audio_buffer_status_callback  buf_status_cb;
 
 /* intercept state*/
 static bool retro_unserialize_restore(const void * data, size_t size);
+static bool auto_state_pending = false;
 static void * ss_data;
 static size_t ss_size;
 
@@ -426,8 +427,12 @@ void retro_run (void)
   
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
 
-  /* restore state */
-  if (cpu_getcurrentframe() == Machine->drv->frames_per_second) retro_unserialize_restore(ss_data, ss_size);
+  /* restore auto state */
+  if (auto_state_pending && cpu_getcurrentframe() == Machine->drv->frames_per_second)
+  {
+    retro_unserialize_restore(ss_data, ss_size);
+    auto_state_pending = false;
+  }
 }
 
 void retro_unload_game(void)
@@ -494,11 +499,17 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-    /* intercept the data*/
-    ss_size = size;
-    ss_data = malloc(size);
-    memcpy(ss_data, data, size);
-    return true;
+	/* intercept the data*/
+	ss_size = size;
+	ss_data = malloc(size);
+	memcpy(ss_data, data, size);
+
+	if (cpu_getcurrentframe() > Machine->drv->frames_per_second)
+		retro_unserialize_restore(data, size);
+	else
+		auto_state_pending = true;
+
+	return true;
 }
 
 static bool retro_unserialize_restore(const void * data, size_t size)
