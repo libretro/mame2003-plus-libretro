@@ -447,6 +447,7 @@ void retro_unload_game(void)
     {
         free(ss_data);
         ss_data = NULL;
+        auto_state_pending = false;
     }
 
     free(options.romset_filename_noext);
