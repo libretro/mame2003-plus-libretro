@@ -55,6 +55,10 @@ static retro_audio_sample_batch_t          audio_batch_cb     = NULL;
 retro_set_led_state_t                      led_state_cb       = NULL;
 struct retro_audio_buffer_status_callback  buf_status_cb;
 
+/* intercept state*/
+static void * ss_data;
+static size_t ss_size;
+
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
 double round(double number)
@@ -488,6 +492,14 @@ bool retro_serialize(void *data, size_t size)
 bool retro_unserialize(const void * data, size_t size)
 {
     int cpunum;
+
+    /* intercept the data*/
+    ss_size = size;
+    ss_data = malloc(size);
+    memcpy(ss_data, data, size);
+    return true;
+
+
 	/* if successful, load it */
 	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
 	{
