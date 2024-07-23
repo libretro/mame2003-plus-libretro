@@ -505,7 +505,7 @@ bool retro_unserialize(const void * data, size_t size)
 	memcpy(ss_data, data, size);
 
 	if (cpu_getcurrentframe() > Machine->drv->frames_per_second)
-		retro_unserialize_restore(data, size);
+		return retro_unserialize_restore(data, size);
 	else
 		auto_state_pending = true;
 
