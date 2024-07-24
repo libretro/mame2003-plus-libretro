@@ -60,7 +60,7 @@ static bool retro_unserialize_restore(const void * data, size_t size);
 static bool auto_state_pending = false;
 static void * ss_data;
 static size_t ss_size;
-#define SS_DELAY (Machine->drv->frames_per_second * 5)
+#define SS_DELAY (Machine->drv->frames_per_second * 10)
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
