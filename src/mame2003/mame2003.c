@@ -428,7 +428,7 @@ void retro_run (void)
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
 
   /* restore auto state */
-  if (auto_state_pending && cpu_getcurrentframe() == Machine->drv->frames_per_second)
+  if (auto_state_pending && cpu_getcurrentframe() == 10)
   {
     retro_unserialize_restore(ss_data, ss_size);
     free(ss_data);
@@ -517,7 +517,7 @@ bool retro_unserialize(const void * data, size_t size)
     }
     auto_state_pending = false;
 
-    if (cpu_getcurrentframe() > Machine->drv->frames_per_second)
+    if (cpu_getcurrentframe() > 10)
         return retro_unserialize_restore(data, size);
     else
     {
