@@ -432,7 +432,7 @@ void retro_run (void)
   if (auto_state_pending)
   {
     fillbitmap(artwork_get_ui_bitmap(), get_black_pen(), NULL);
-    schedule_full_refresh();
+    //schedule_full_refresh();
   }
 
   /* restore auto state */
