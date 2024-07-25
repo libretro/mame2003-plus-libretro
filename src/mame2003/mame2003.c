@@ -431,8 +431,8 @@ void retro_run (void)
   /* clear screen and inform user */
   if (auto_state_pending)
   {
-    fillbitmap(artwork_get_ui_bitmap(), get_black_pen(), NULL);
-    //schedule_full_refresh();
+    fillbitmap(artwork_get_ui_bitmap(), 0, NULL);
+    schedule_full_refresh();
   }
 
   /* restore auto state */
