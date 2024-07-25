@@ -431,7 +431,7 @@ void retro_run (void)
   /* clear screen and inform user */
   if (auto_state_pending)
   {
-    video_cb = (NULL, 0, 0, 0);
+    /**/
   }
 
   /* restore auto state */
