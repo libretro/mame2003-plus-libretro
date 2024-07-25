@@ -431,7 +431,7 @@ void retro_run (void)
   /* clear screen and inform user */
   if (auto_state_pending)
   {
-    video_cb = NULL;//(NULL, vis_width, vis_height, vis_width * video_stride_out);
+    video_cb = (NULL, visible_area.max_x - visible_area.min_x + 1, visible_area.max_y - visible_area.min_y + 1, (visible_area.max_x - visible_area.min_x + 1) * 4);
   }
 
   /* restore auto state */
