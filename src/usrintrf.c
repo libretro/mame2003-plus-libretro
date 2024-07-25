@@ -377,7 +377,7 @@ void set_ui_visarea(int xmin, int ymin, int xmax, int ymax)
 	erase_screen - erase the screen
 -------------------------------------------------*/
 
-void erase_screen(struct mame_bitmap *bitmap)
+static void erase_screen(struct mame_bitmap *bitmap)
 {
 	fillbitmap(bitmap, get_black_pen(), NULL);
 	schedule_full_refresh();
