@@ -12,6 +12,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * 1943 - The Battle Of Midway Mark II
 * 19XX: The War Against Destiny (All Sets)
 * 1945k III
+* A.B. COP
 * Action Fighter (Unprotected)
 * Action Hollywood
 * Air Attack
@@ -122,6 +123,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Last Hope
 * Led Storm Rally 2011
 * Lethal Enforcers
+* Line Of Fire
 * Mad Alien
 * Mad Ball V2.0 * Mature * - Romset `madballn`
 * Magic Purple
@@ -208,6 +210,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)
 * Super Doubles Tennis (Deco Cassette)
+* Super Monaco GP
 * Super Rider
 * Super Trio
 * SWAT Police
@@ -1102,4 +1105,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added two sets of Twin Cobra 2 to the taito_f3.c driver and the international version of Dangun Feveron namely Fever SOS to cave.c [arcadez]
 * Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944, grant2258, arcadez]
 * Backported segas32 video driver, interrupt controllers for v60 and sound, general cleanup and merger of multi32 and system32 drivers. [mahoneyt944]
-* Backported the segaxbd driver and video code from later MAME Thunder Blade is now fully playable [grant2258]
+* Backported the segaxbd driver and video code from later MAME A.B. COP, Line Of Fire, Super Monaco GP and Thunder Blade
+* are now fully playable [grant2258]
