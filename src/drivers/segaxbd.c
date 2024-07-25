@@ -281,14 +281,6 @@ static WRITE16_HANDLER( iochip_0_w )
 			//cpunum_set_input_line(2, INPUT_LINE_RESET, PULSE_LINE);
 			break;
 
-    /*
-    This should be the fix for Line Of Fire replaces the above leave disabled for now
-    if (((oldval ^ data) & 0x40) && !(data & 0x40)) watchdog_reset_w(0,0);
-			segaic16_set_display_enable(data & 0x20);
-			cpu_set_reset_line(2, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
-			return;
-    */
-
 		case 3:
 			/* Output port:
 				D7: Amplifier mute control (1= sounding, 0= muted)
@@ -1611,8 +1603,8 @@ MACHINE_DRIVER_START( loffire )
 MACHINE_DRIVER_END
 
 GAMEX(1990, abcop,     0,        xboard,  abcop,    0,       ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_NOT_WORKING )
 GAMEX(1989, smgp,      0,        smgp,    smgp,     smgp,    ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, loffire,   0,        loffire, loffire,  0,       ROT0, "Sega", "Line of Fire / Bakudan Yarou (World) (bootleg of FD1094 317-0136 set)", GAME_NOT_WORKING )
+GAMEX(1989, loffire,   0,        loffire, loffire,  0,       ROT0, "Sega", "Line of Fire / Bakudan Yarou (World) (bootleg of FD1094 317-0136 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1987, thndrbld,  0,        xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1987, thndrbld1, thndrbld, xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (deluxe/standing) (unprotected)", GAME_IMPERFECT_GRAPHICS )
