@@ -60,7 +60,7 @@ static bool retro_unserialize_restore(const void * data, size_t size);
 static bool auto_state_pending = false;
 static void * ss_data;
 static size_t ss_size;
-#define SS_DELAY (Machine->drv->frames_per_second * 10)
+#define SS_DELAY (Machine->drv->frames_per_second * 1)
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
@@ -429,12 +429,15 @@ void retro_run (void)
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
 
   /* restore auto state */
-  if (auto_state_pending && cpu_getcurrentframe() == SS_DELAY)
+  if (auto_state_pending && cpu_getcurrentframe() > SS_DELAY)
   {
-    retro_unserialize_restore(ss_data, ss_size);
-    free(ss_data);
-    ss_data = NULL;
-    auto_state_pending = false;
+    /* brute force until it loads then free*/
+    auto_state_pending = !retro_unserialize_restore(ss_data, ss_size);
+    if (!auto_state_pending)
+    {
+      free(ss_data);
+      ss_data = NULL;
+    }
   }
 }
 
