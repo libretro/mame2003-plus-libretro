@@ -431,8 +431,7 @@ void retro_run (void)
   /* clear screen and inform user */
   if (auto_state_pending)
   {
-    fillbitmap(artwork_get_ui_bitmap(), 0, NULL);
-    schedule_full_refresh();
+    video_cb = NULL;//(NULL, vis_width, vis_height, vis_width * video_stride_out);
   }
 
   /* restore auto state */
