@@ -61,6 +61,7 @@ static bool auto_state_pending = false;
 static void * ss_data;
 static size_t ss_size;
 #define SS_DELAY (Machine->drv->frames_per_second * 5)
+#define SS_QUIT  (Machine->drv->frames_per_second * 10)
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
@@ -438,8 +439,8 @@ void retro_run (void)
   /* restore auto state */
   if (auto_state_pending && cpu_getcurrentframe() > SS_DELAY)
   {
-    /* brute force until it loads then free*/
-    auto_state_pending = !retro_unserialize_restore(ss_data, ss_size);
+    /* brute force until it loads or reaches quit time then free*/
+    auto_state_pending = (cpu_getcurrentframe() > SS_QUIT) ? false : !retro_unserialize_restore(ss_data, ss_size);
     if (!auto_state_pending)
     {
       free(ss_data);
