@@ -448,10 +448,7 @@ void retro_run (void)
     }
   }
   else if (auto_state_pending && cpu_getcurrentframe() <= SS_DELAY)
-  {
-      /* loading */
-      usrintf_showmessage("Loading savestate %3d%%", (int)((((float)cpu_getcurrentframe() / (float)SS_DELAY) * 100.0f) + 0.5f) );
-  }
+    usrintf_showmessage("Loading savestate %3d%%", (int)((((float)cpu_getcurrentframe() / (float)SS_DELAY) * 100.0f) + 0.5f) );
 }
 
 void retro_unload_game(void)
