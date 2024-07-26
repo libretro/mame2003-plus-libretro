@@ -1603,7 +1603,7 @@ MACHINE_DRIVER_START( loffire )
 MACHINE_DRIVER_END
 
 GAMEX(1990, abcop,     0,        xboard,  abcop,    0,       ROT0, "Sega", "A.B. Cop (World) (bootleg of FD1094 317-0169b set)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_NOT_WORKING )
+GAMEX(1989, rachero,   0,        xboard,  rachero,  0,       ROT0, "Sega", "Racing Hero (bootleg of FD1094 317-0144 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, smgp,      0,        smgp,    smgp,     smgp,    ROT0, "Sega", "Super Monaco GP (World, Rev B) (bootleg of FD1094 317-0126a set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1989, loffire,   0,        loffire, loffire,  0,       ROT0, "Sega", "Line of Fire / Bakudan Yarou (World) (bootleg of FD1094 317-0136 set)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1987, thndrbld,  0,        xboard,  thndrbld, 0,       ROT0, "Sega", "Thunder Blade (upright) (bootleg of FD1094 317-0056 set)", GAME_IMPERFECT_GRAPHICS )
