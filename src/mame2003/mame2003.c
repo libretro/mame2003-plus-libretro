@@ -435,12 +435,6 @@ void retro_run (void)
   
   /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
 
-  /* clear screen and inform user */
-  if (auto_state_pending)
-  {
-    /**/
-  }
-
   /* restore auto state */
   if (auto_state_pending && cpu_getcurrentframe() > SS_DELAY)
   {
