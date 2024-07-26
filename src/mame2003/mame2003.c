@@ -349,6 +349,13 @@ bool retro_load_game(const struct retro_game_info *game)
 void retro_reset (void)
 {
     machine_reset(); /* use internal core function */
+
+    if (ss_data) /* stop brute force loop if user resets the core */
+    {
+        free(ss_data);
+        ss_data = NULL;
+        auto_state_pending = false;
+    }
 }
 
 /* get pointer axis vector from coord */
