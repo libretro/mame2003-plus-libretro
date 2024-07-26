@@ -55,14 +55,6 @@ static retro_audio_sample_batch_t          audio_batch_cb     = NULL;
 retro_set_led_state_t                      led_state_cb       = NULL;
 struct retro_audio_buffer_status_callback  buf_status_cb;
 
-/* intercept state*/
-static bool retro_unserialize_restore(const void * data, size_t size);
-static bool auto_state_pending = false;
-static void * ss_data;
-static size_t ss_size;
-#define SS_DELAY (Machine->drv->frames_per_second * 5)
-#define SS_QUIT  (Machine->drv->frames_per_second * 10)
-
 #ifdef _MSC_VER
 #if _MSC_VER < 1800
 double round(double number)
@@ -350,13 +342,6 @@ bool retro_load_game(const struct retro_game_info *game)
 void retro_reset (void)
 {
     machine_reset(); /* use internal core function */
-
-    if (ss_data) /* stop brute force loop if user resets the core */
-    {
-        free(ss_data);
-        ss_data = NULL;
-        auto_state_pending = false;
-    }
 }
 
 /* get pointer axis vector from coord */
@@ -432,37 +417,16 @@ void retro_run (void)
   else
     frameskip_counter = 0;
 
-  frameskip_counter = (frameskip_counter ) % 12;
+ frameskip_counter = (frameskip_counter ) % 12;
   
-  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
-
-  /* restore auto state */
-  if (auto_state_pending && cpu_getcurrentframe() > SS_DELAY)
-  {
-    /* brute force until it loads or reaches quit time then free*/
-    auto_state_pending = (cpu_getcurrentframe() > SS_QUIT) ? false : !retro_unserialize_restore(ss_data, ss_size);
-    if (!auto_state_pending)
-    {
-      free(ss_data);
-      ss_data = NULL;
-    }
-  }
-  else if (auto_state_pending && cpu_getcurrentframe() <= SS_DELAY)
-    usrintf_showmessage("Loading savestate %3d%%", (int)((((float)cpu_getcurrentframe() / (float)SS_DELAY) * 100.0f) + 0.5f) );
+ /*log_cb(RETRO_LOG_DEBUG, LOGPRE "frameskip_counter %d\n",frameskip_counter);*/
+ 
 }
 
 void retro_unload_game(void)
 {
     mame_done();
-
     /* do we need to be freeing things here? */
-
-    if (ss_data)
-    {
-        free(ss_data);
-        ss_data = NULL;
-        auto_state_pending = false;
-    }
 
     free(options.romset_filename_noext);
 }
@@ -523,32 +487,7 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-    ss_size = 0;
-    if (ss_data)
-    {
-        free(ss_data);
-        ss_data = NULL;
-    }
-    auto_state_pending = false;
-
-    if (cpu_getcurrentframe() > SS_DELAY)
-        return retro_unserialize_restore(data, size);
-    else
-    {
-        /* intercept the data*/
-        ss_size = size;
-        ss_data = malloc(size);
-        memcpy(ss_data, data, size);
-        auto_state_pending = true;
-    }
-
-    return true;
-}
-
-static bool retro_unserialize_restore(const void * data, size_t size)
-{
-	int cpunum;
-
+    int cpunum;
 	/* if successful, load it */
 	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
 	{
