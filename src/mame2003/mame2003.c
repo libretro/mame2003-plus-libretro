@@ -446,6 +446,11 @@ void retro_run (void)
       ss_data = NULL;
     }
   }
+  else if (auto_state_pending && cpu_getcurrentframe() <= SS_DELAY)
+  {
+      /* loading */
+      usrintf_showmessage("Loading...");
+  }
 }
 
 void retro_unload_game(void)
