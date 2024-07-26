@@ -174,6 +174,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzzli 2
 * Puzzli 2 Super
 * Racing Beat
+* Racing Hero
 * Rage Of The Dragons
 * Recalhorn (prototype)
 * Riot
@@ -1105,5 +1106,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added two sets of Twin Cobra 2 to the taito_f3.c driver and the international version of Dangun Feveron namely Fever SOS to cave.c [arcadez]
 * Fixed up Dark Edge and Slipstream by hooking up the inputs adding the protection then fixing the graphics and sound both games now playable [mahoneyt944, grant2258, arcadez]
 * Backported segas32 video driver, interrupt controllers for v60 and sound, general cleanup and merger of multi32 and system32 drivers. [mahoneyt944]
-* Backported the segaxbd driver and video code from later MAME A.B. COP, Line Of Fire, Super Monaco GP and Thunder Blade
-* are now fully playable [grant2258]
+* Backported the segaxbd driver and video code from later MAME A.B. COP, Line Of Fire, Racing Hero, Super Monaco GP
+* and Thunder Blade are now fully playable [grant2258]
