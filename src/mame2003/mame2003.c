@@ -490,7 +490,7 @@ bool retro_unserialize(const void * data, size_t size)
 	int cpunum;
 
 	/* disable automatic savestate loading */
-	if (cpu_getcurrentframe() == 0 ) 
+	if (cpu_getcurrentframe() == 0) 
 	{
         log_cb(RETRO_LOG_WARN, LOGPRE "Core is incompatible with automatic savestate loading.\n");
         return false;
