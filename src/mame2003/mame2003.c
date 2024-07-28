@@ -487,7 +487,15 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-    int cpunum;
+	int cpunum;
+
+	/* disable automatic savestate loading */
+	if (cpu_getcurrentframe() == 0) 
+	{
+        log_cb(RETRO_LOG_WARN, LOGPRE "Core is incompatible with automatic savestate loading.\n");
+        return false;
+	}
+
 	/* if successful, load it */
 	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
 	{
