@@ -4,8 +4,6 @@
 #include "cpuintrf.h"
 #include "osd_cpu.h"
 
-extern int drz80_ICount;
-
 #define DRZ80_IGNORE_INT  -1    /* Ignore interrupt */
 #define DRZ80_NMI_INT 	-2	/* Execute NMI */
 #define DRZ80_IRQ_INT 	-1000	/* Execute IRQ */

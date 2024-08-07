@@ -1725,17 +1725,11 @@ static void configure_cyclone_mode (int driverIndex)
     {
       unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
 
-#ifdef NEOMAME
-      if (*type==CPU_M68000)
-#else
       if (*type==CPU_M68000 || *type==CPU_M68010 )
-#endif
       {
         *type=CPU_CYCLONE;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced CPU_CYCLONE\n");
       }
-
-      if (!(*type)) break;
     }
   }
 #endif
@@ -1747,7 +1741,7 @@ static void configure_cyclone_mode (int driverIndex)
     for (i=0;i<MAX_CPU;i++)
     {
       unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-      if (type==CPU_Z80)
+      if (*type==CPU_Z80)
       {
         *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
@@ -1760,8 +1754,8 @@ static void configure_cyclone_mode (int driverIndex)
   {
     for (i=0;i<MAX_CPU;i++)
     {
-      int *type=(int*)&(Machine->drv->cpu[i].cpu_type);
-      if (type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+     unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+     if (*type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
       {
         *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
