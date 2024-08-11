@@ -1640,77 +1640,71 @@ static void remove_slash (char* temp)
     log_cb(RETRO_LOG_DEBUG, LOGPRE "Trailing slash removal was not necessary path: %s.\n", temp);
 }
 
+#if (HAS_CYCLONE || HAS_DRZ80)
+int check_list(char *name)
+{
+   int found=0;
+   int counter=0;
+   while (fe_drivers[counter].name[0])
+   {
+      if  (strcmp(name,fe_drivers[counter].name)==0)
+      {
+         log_cb(RETRO_LOG_INFO, "frontend_list match {\"%s\", %d },\n",fe_drivers[counter].name,fe_drivers[counter].cores, fe_drivers[counter].cores);
+         return fe_drivers[counter].cores;
+      }
+      counter++;
+   }
+   /* todo do a z80 and 68k check to inform its not on the list if matched*/
+ 
+   for (counter=0;counter<MAX_CPU;counter++)
+   {
+      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[counter].cpu_type);
+
+      if (*type==CPU_Z80)  log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a z80  %s\n",name);
+      if (*type==CPU_M68000) log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a M68000  %s\n",name);
+   }
+   return 0;
+}
+#endif
+
 static void configure_cyclone_mode (int driverIndex)
 {
   /* Determine how to use cyclone if available to the platform */
 
 #if (HAS_CYCLONE || HAS_DRZ80)
   int i;
-  int use_cyclone = 1;
-  int use_drz80 = 1;
-  int use_drz80_snd = 1;
+  int use_cyclone = 0;
+  int use_drz80 = 0;
+  int use_drz80_snd = 0;
 
-  /* cyclone mode core option: 0=disabled, 1=default, 2=Cyclone, 3=DrZ80, 4=Cyclone+DrZ80, 5=DrZ80(snd), 6=Cyclone+DrZ80(snd) */
-  switch (options.cyclone_mode)
+  if (options.cyclone_mode == 6) 
+    i=check_list(drivers[driverIndex]->name);
+  else 
+    i=options.cyclone_mode;
+  /* ASM cores: 0=None,1=Cyclone,2=DrZ80,3=Cyclone+DrZ80,4=DrZ80(snd),5=Cyclone+DrZ80(snd) */
+  switch (i)
   {
-    case 0:
-      use_cyclone = 0;
-      use_drz80_snd = 0;
-      use_drz80 = 0;
+    /* nothing needs done for case 0 */
+    case 1:
+      use_cyclone = 1;
       break;
 
-    case 1:
-      for (i=0;i<NUMGAMES;i++)
-      {
-        /* ASM cores: 0=disabled, 1=Cyclone, 2=DrZ80, 3=Cyclone+DrZ80, 4=DrZ80(snd), 5=Cyclone+DrZ80(snd) */
-        if (strcmp(drivers[driverIndex]->name,fe_drivers[i].name)==0)
-        {
-          switch (fe_drivers[i].cores)
-          {
-            case 0:
-              use_cyclone = 0;
-              use_drz80_snd = 0;
-              use_drz80 = 0;
-              break;
-            case 1:
-              use_drz80_snd = 0;
-              use_drz80 = 0;
-              break;
-            case 2:
-              use_cyclone = 0;
-              break;
-            case 4:
-              use_cyclone = 0;
-              use_drz80 = 0;
-              break;
-            case 5:
-              use_drz80 = 0;
-              break;
-            default:
-              break;
-          }
-
-          break; /* end for loop */
-        }
-      }
-      break; /* end case 1 */
-
     case 2:
-      use_drz80_snd = 0;
-      use_drz80 = 0;
+      use_drz80 = 1;
       break;
 
     case 3:
-      use_cyclone = 0;
+      use_cyclone = 1;
+      use_drz80=1;
+      break;
+
+    case 4:
+      use_drz80_snd = 1;
       break;
 
     case 5:
-      use_cyclone = 0;
-      use_drz80 = 0;
-      break;
-
-    case 6:
-      use_drz80 = 0;
+      use_cyclone = 1;
+      use_drz80_snd = 1;
       break;
 
     default:
@@ -1725,6 +1719,7 @@ static void configure_cyclone_mode (int driverIndex)
     {
       unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
 
+
       if (*type==CPU_M68000 || *type==CPU_M68010 )
       {
         *type=CPU_CYCLONE;
@@ -1736,7 +1731,7 @@ static void configure_cyclone_mode (int driverIndex)
 
 #if (HAS_DRZ80)
   /* Replace Z80 by DRZ80 */
-  if (use_drz80)
+  if (use_drz80 || use_drz80_snd)
   {
     for (i=0;i<MAX_CPU;i++)
     {
@@ -1745,20 +1740,6 @@ static void configure_cyclone_mode (int driverIndex)
       {
         *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
-      }
-    }
-  }
-
-  /* Replace Z80 with DRZ80 only for sound CPUs */
-  if (use_drz80_snd)
-  {
-    for (i=0;i<MAX_CPU;i++)
-    {
-     unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-     if (*type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
-      {
-        *type=CPU_DRZ80;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
       }
     }
   }

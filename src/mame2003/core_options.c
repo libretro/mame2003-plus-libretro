@@ -1271,17 +1271,17 @@ void update_variables(bool first_time)
 #if (HAS_CYCLONE || HAS_DRZ80)
         case OPT_CYCLONE_MODE:
           if(strcmp(var.value, "default") == 0)
-            options.cyclone_mode = 1;
-          else if(strcmp(var.value, "Cyclone") == 0)
-            options.cyclone_mode = 2;
-          else if(strcmp(var.value, "DrZ80") == 0)
-            options.cyclone_mode = 3;
-          else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
-            options.cyclone_mode = 4;
-          else if(strcmp(var.value, "DrZ80(snd)") == 0)
-            options.cyclone_mode = 5;
-          else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
             options.cyclone_mode = 6;
+          else if(strcmp(var.value, "Cyclone") == 0)
+            options.cyclone_mode = 1;
+          else if(strcmp(var.value, "DrZ80") == 0)
+            options.cyclone_mode = 2;
+          else if(strcmp(var.value, "Cyclone+DrZ80") == 0)
+            options.cyclone_mode = 3;
+          else if(strcmp(var.value, "DrZ80(snd)") == 0)
+            options.cyclone_mode = 4;
+          else if(strcmp(var.value, "Cyclone+DrZ80(snd)") == 0)
+            options.cyclone_mode = 5;
           else /* disabled */
             options.cyclone_mode = 0;
           break;
