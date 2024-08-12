@@ -1731,7 +1731,7 @@ static void configure_cyclone_mode (int driverIndex)
 
 #if (HAS_DRZ80)
   /* Replace Z80 by DRZ80 */
-  if (use_drz80 || use_drz80_snd)
+  if (use_drz80)
   {
     for (i=0;i<MAX_CPU;i++)
     {
@@ -1740,6 +1740,20 @@ static void configure_cyclone_mode (int driverIndex)
       {
         *type=CPU_DRZ80;
         log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80\n");
+      }
+    }
+  }
+
+  /* Replace Z80 with DRZ80 only for sound CPUs */
+  if (use_drz80_snd)
+  {
+    for (i=0;i<MAX_CPU;i++)
+    {
+     unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
+     if (*type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+      {
+        *type=CPU_DRZ80;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
       }
     }
   }
