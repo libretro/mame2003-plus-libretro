@@ -88,6 +88,7 @@ typedef struct
 
 	const UINT8 *rom;
 	float clock_ratio;
+	static int ymf278b_chip_in_reset = 0;
 } YMF278BChip;
 
 static YMF278BChip YMF278B[MAX_YMF278B];
@@ -312,7 +313,7 @@ static void ymf278b_irq_check(int num)
 	YMF278BChip *chip = &YMF278B[num];
 	int prev_line = chip->irq_line;
 	chip->irq_line = chip->current_irq ? ASSERT_LINE : CLEAR_LINE;
-	if(chip->irq_line != prev_line && chip->irq_callback)
+	if(chip->irq_line != prev_line && chip->irq_callback && !ymf278b_chip_in_reset)
 		chip->irq_callback(chip->irq_line);
 }
 
@@ -369,12 +370,21 @@ static void ymf278b_A_w(int num, UINT8 reg, UINT8 data)
 	switch(reg)
 	{
 		case 0x02:
-			chip->timer_a_count = data;
-			ymf278b_timer_a_reset(num);
+			if (data != chip->timer_a_count)
+			{
+				chip->timer_a_count = data;
+				if (!ymf278b_chip_in_reset)
+					ymf278b_timer_a_reset(num);
+
+			}
 			break;
 		case 0x03:
-			chip->timer_b_count = data;
-			ymf278b_timer_b_reset(num);
+			if (data != chip->timer_b_count)
+			{
+				chip->timer_b_count = data;
+				if (!ymf278b_chip_in_reset)
+					ymf278b_timer_b_reset(num);
+			}
 			break;
 		case 0x04:
 			if(data & 0x80)
@@ -384,9 +394,9 @@ static void ymf278b_A_w(int num, UINT8 reg, UINT8 data)
 				UINT8 old_enable = chip->enable;
 				chip->enable = data;
 				chip->current_irq &= ~data;
-				if((old_enable ^ data) & 1)
+				if((old_enable ^ data) & 1 && !ymf278b_chip_in_reset)
 					ymf278b_timer_a_reset(num);
-				if((old_enable ^ data) & 2)
+				if((old_enable ^ data) & 2 && !ymf278b_chip_in_reset)
 					ymf278b_timer_b_reset(num);
 			}
 			ymf278b_irq_check(num);
@@ -629,6 +639,8 @@ static void ymf278b_data_port_C_w(int num, UINT8 data)
 
 static void ymf278b_init(INT8 num, UINT8 *rom, void (*cb)(int), int clock)
 {
+	ymf278b_chip_in_reset = 1;
+	
 	memset(&YMF278B[num], 0, sizeof(YMF278BChip));
 	YMF278B[num].rom = rom;
 	YMF278B[num].irq_callback = cb;
@@ -636,6 +648,8 @@ static void ymf278b_init(INT8 num, UINT8 *rom, void (*cb)(int), int clock)
 	YMF278B[num].timer_b = timer_alloc(ymf278b_timer_b_tick);
 	YMF278B[num].irq_line = CLEAR_LINE;
 	YMF278B[num].clock_ratio = (float)clock / (float)YMF278B_STD_CLOCK;
+	
+	ymf278b_chip_in_reset = 0;
 }
 
 int YMF278B_sh_start( const struct MachineSound *msound )
@@ -677,6 +691,8 @@ int YMF278B_sh_start( const struct MachineSound *msound )
 	for(i=0; i<7; i++)
 		mix_level[i] = volume[8*i+8];
 	mix_level[7] = 0;
+	
+	ymf278b_chip_in_reset = 0;
 
 	return 0;
 }
