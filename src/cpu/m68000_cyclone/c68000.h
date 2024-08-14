@@ -1,7 +1,17 @@
 #ifndef C68000_H
 #define C68000_H
+#include "cyclone.h"
 
-extern int cyclone_ICount;
+typedef struct
+{
+        struct Cyclone regs;
+        int pending_interrupts;
+        int (*MAMEIrqCallback)(int int_level);
+} Cyclone_Regs;
+
+extern Cyclone_Regs cyclone;
+
+#define cyclone_ICount  cyclone.regs.cycles
 
 #define cyclone_INT_NONE 0							  
 #define cyclone_IRQ_1    1
