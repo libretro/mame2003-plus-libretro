@@ -286,7 +286,7 @@ bool opaquey_hack = false; /* dink */
  *
  *************************************/
 
-UINT8 is_multi32;
+static UINT8 is_multi32;
 
 /* tilemap cache */
 static struct cache_entry *cache_head;
@@ -2773,11 +2773,11 @@ VIDEO_UPDATE( multi32 )
 
 	/* do the mixing */
 	profiler_mark(PROFILER_USER3);
-	if (system32_displayenable[0])
+	if (system32_displayenable[0] && monitor_setting != 2) /* speed up - disable offscreen monitor */
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
-	if (system32_displayenable[1])
+	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
