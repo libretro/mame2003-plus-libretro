@@ -88,7 +88,7 @@ typedef struct
 
 	const UINT8 *rom;
 	float clock_ratio;
-	static int ymf278b_chip_in_reset = 0;
+	int ymf278b_chip_in_reset;
 } YMF278BChip;
 
 static YMF278BChip YMF278B[MAX_YMF278B];
