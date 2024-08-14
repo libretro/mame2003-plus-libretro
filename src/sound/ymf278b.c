@@ -370,7 +370,7 @@ static void ymf278b_A_w(int num, UINT8 reg, UINT8 data)
 	switch(reg)
 	{
 		case 0x02:
-			if (data != chip->timer_a_count)
+//			if (data != chip->timer_a_count)
 			{
 				chip->timer_a_count = data;
 				if (!ymf278b_chip_in_reset)
@@ -379,7 +379,7 @@ static void ymf278b_A_w(int num, UINT8 reg, UINT8 data)
 			}
 			break;
 		case 0x03:
-			if (data != chip->timer_b_count)
+//			if (data != chip->timer_b_count)
 			{
 				chip->timer_b_count = data;
 				if (!ymf278b_chip_in_reset)
