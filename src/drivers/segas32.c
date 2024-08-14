@@ -731,13 +731,7 @@ static void common_io_chip_w(int which, offs_t offset, UINT16 data, UINT16 mem_m
 
 		/* CNT register */
 		case 0x1c/2:
-			if (is_multi32) /* speed up: disable off screen monitors */
-			{
-				if (readinputport(0xf) == 2-which) system32_displayenable[which] = 0;
-				else system32_displayenable[which] = (data & 0x02);
-			}
-			else
-				system32_displayenable[which] = (data & 0x02);
+			system32_displayenable[which] = (data & 0x02);
 
 			if (which == 0)
 				cpu_set_reset_line(1, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
