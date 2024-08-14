@@ -1,19 +1,10 @@
 #include "c68000.h"
 #include "driver.h"
 #include "cpuintrf.h"
-#include "cyclone.h"
 #include "memory.h"
 
 
-typedef struct
-{
-	struct Cyclone regs;
-	int pending_interrupts;
-	int (*MAMEIrqCallback)(int int_level);
-} Cyclone_Regs;
-
-static Cyclone_Regs cyclone;
-int cyclone_ICount;
+Cyclone_Regs cyclone;
 
 static unsigned int MyCheckPc(unsigned int pc)
 {
@@ -129,9 +120,7 @@ unsigned cyclone_get_context(void *dst)
 int cyclone_execute(int cycles)
 {
 	cyclone.regs.cycles = cycles;
-	cyclone_ICount = cyclone.regs.cycles;
 	CycloneRun(&cyclone.regs);
-	cyclone_ICount = cyclone.regs.cycles;
    	return (cycles - cyclone.regs.cycles);
 }
 
@@ -263,7 +252,7 @@ const char *cyclone_info(void *context, int regnum)
 	{
 		case CPU_INFO_NAME: return "Cyclone 68000";
 		case CPU_INFO_FAMILY: return "Motorola 68K";
-		case CPU_INFO_VERSION: return "v0.0088";
+		case CPU_INFO_VERSION: return "v0.0099";
 		case CPU_INFO_FILE: return __FILE__;
 		case CPU_INFO_CREDITS: return "Copyright Copyright 2004-2007 Dave, Reesy and Notaz. All rights reserved";
 	}

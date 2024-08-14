@@ -4,16 +4,7 @@
 #include "drz80_z80.h"
 #include "drz80.h"
 
-typedef struct {
-	struct DrZ80 regs;
-	unsigned int nmi_state;
-	unsigned int irq_state;
-	int previouspc;
-	int (*MAMEIrqCallback)(int int_level);
-} drz80_regs;
-
-static drz80_regs DRZ80;
-int *drz80_ICount=&DRZ80.regs.cycles;
+drz80_regs DRZ80;
 
 #define INT_IRQ 0x01
 #define NMI_IRQ 0x02
