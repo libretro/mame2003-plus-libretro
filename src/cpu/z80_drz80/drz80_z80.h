@@ -3,8 +3,19 @@
 
 #include "cpuintrf.h"
 #include "osd_cpu.h"
+#include "drz80.h"
 
-extern int *drz80_ICount;
+typedef struct {
+	struct DrZ80 regs;
+	unsigned int nmi_state;
+	unsigned int irq_state;
+	int previouspc;
+	int (*MAMEIrqCallback)(int int_level);
+} drz80_regs;
+
+extern  drz80_regs DRZ80;
+
+#define drz80_ICount DRZ80.regs.cycles
 
 extern void drz80_init(void);
 extern void drz80_reset (void *param);
