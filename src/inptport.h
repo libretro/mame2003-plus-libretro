@@ -79,7 +79,8 @@ enum { IPT_END=1,IPT_PORT,
 					/* It is used to store additional parameters for analog inputs */
 
 	IPT_EXTENSION_II,	/* this is an extension onto the previous InputPort extension for analog ports, */
-                    /* not a real inputport. It is used to store additional parameters for analog inputs */
+                    /* not a real inputport. It is used to store additional parameters currently */
+                    /* only used by IPT_DIAL and IPT_DIAL_V analog inputs */
 
 	/* the following are special codes for user interface handling - not to be used by drivers! */
 	IPT_UI_CONFIGURE,
