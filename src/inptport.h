@@ -78,6 +78,9 @@ enum { IPT_END=1,IPT_PORT,
 	IPT_EXTENSION,	/* this is an extension on the previous InputPort, not a real inputport. */
 					/* It is used to store additional parameters for analog inputs */
 
+	IPT_EXTENSION_II,	/* this is an extension onto the previous InputPort extension for analog ports, */
+                    /* not a real inputport. It is used to store additional parameters for analog inputs */
+
 	/* the following are special codes for user interface handling - not to be used by drivers! */
 	IPT_UI_CONFIGURE,
 	IPT_UI_ON_SCREEN_DISPLAY,
@@ -221,14 +224,14 @@ enum { IPT_END=1,IPT_PORT,
 #define PORT_ANALOG(mask,default,type,sensitivity,delta,min,max) \
 	PORT_BIT(mask, default, type) \
 	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
-	{ 0, 0, IPF_XWAYJOY_OFF, IP_NAME_DEFAULT },
+	{ 0, 0, IPT_EXTENSION_II | IPF_XWAYJOY_OFF, IP_NAME_DEFAULT },
 /* Both zeros above are not used */
 
 
 #define PORT_ANALOGX(mask,default,type,sensitivity,delta,min,max,keydec,keyinc,joydec,joyinc) \
 	PORT_BIT(mask, default, type) \
 	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
-	{ 0, 0, IPF_XWAYJOY_OFF, IP_NAME_DEFAULT }, \
+	{ 0, 0, IPT_EXTENSION_II | IPF_XWAYJOY_OFF, IP_NAME_DEFAULT }, \
 	PORT_CODE(keydec,joydec) \
 	PORT_CODE(keyinc,joyinc)
 /* Both zeros above are not used */
