@@ -220,13 +220,15 @@ enum { IPT_END=1,IPT_PORT,
 /* analog input */
 #define PORT_ANALOG(mask,default,type,sensitivity,delta,min,max) \
 	PORT_BIT(mask, default, type) \
-	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta) | IPF_XWAYJOY_OFF, IP_NAME_DEFAULT }, \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
+	{ 0, 0, IPF_XWAYJOY_OFF, IP_NAME_DEFAULT },
 /* Both zeros above are not used */
 
 
 #define PORT_ANALOGX(mask,default,type,sensitivity,delta,min,max,keydec,keyinc,joydec,joyinc) \
 	PORT_BIT(mask, default, type) \
-	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta) | IPF_XWAYJOY_OFF, IP_NAME_DEFAULT }, \
+	{ min, max, IPT_EXTENSION | IPF_SENSITIVITY(sensitivity) | IPF_DELTA(delta), IP_NAME_DEFAULT }, \
+	{ 0, 0, IPF_XWAYJOY_OFF, IP_NAME_DEFAULT }, \
 	PORT_CODE(keydec,joydec) \
 	PORT_CODE(keyinc,joyinc)
 /* Both zeros above are not used */
