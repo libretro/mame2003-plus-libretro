@@ -1637,12 +1637,7 @@ static unsigned input_port_count(const struct InputPortTiny *src)
 	{
 		int type = src->type & ~IPF_MASK;
 		if (type > IPT_ANALOG_START && type < IPT_ANALOG_END)
-    {
-      if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
-			  total += 3;
-      else
-			  total += 2;
-    }
+			total += 3;
 		else if (type != IPT_EXTENSION)
 			++total;
 		++src;
@@ -1672,13 +1667,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 		InputCode seq_default;
 
 		if (type > IPT_ANALOG_START && type < IPT_ANALOG_END)
-    {
-      if ((type == IPT_DIAL) || (type == IPT_DIAL_V))
-        /* third port stores additional data */
-			  src_end = src + 3;
-      else
-			  src_end = src + 2;
-    }
+			src_end = src + 3;
 		else
 			src_end = src + 1;
 
