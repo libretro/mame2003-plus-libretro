@@ -563,14 +563,18 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( liblrabl )	/* (c) 1983 */
 	DRIVER( toypop )	/* (c) 1986 */
 	/* Z8000 games */
-	DRIVER( polepos )	/* (c) 1982  */
-	DRIVER( poleposa )	/* (c) 1982 + Atari license */
-	DRIVER( polepos1 )	/* (c) 1982 Atari */
-	DRIVER( topracer )	/* bootleg */
-	DRIVER( polepos2 )	/* (c) 1983 */
-	DRIVER( poleps2a )	/* (c) 1983 + Atari license */
-	DRIVER( poleps2b )	/* bootleg */
-/*	DRIVER( poleps2c )	 bootleg */
+	DRIVER( polepos )
+	DRIVER( poleposj )
+	DRIVER( poleposa1 )
+	DRIVER( poleposa1n )
+	DRIVER( poleposa2 )
+	DRIVER( topracer )
+	DRIVER( topracera )
+	DRIVER( ppspeed )
+	DRIVER( polepos2 )
+	DRIVER( polepos2a) 
+	DRIVER( polepos2b )
+
 	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
 	DRIVER( pacland )	/* (c) 1984 */
 	DRIVER( pacland2 )	/* (c) 1984 */
