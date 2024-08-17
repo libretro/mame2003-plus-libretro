@@ -774,22 +774,54 @@ static struct namco_interface namco_interface =
 {
 	24576000/512, 	/* sample rate */
 	8,				/* number of voices */
-	100, 			/* playback volume */
+	80, 			/* playback volume */
 	REGION_SOUND1,	/* memory region */
 	1				/* stereo */
 };
 
+/* The 52xx output is 4Vpp.  After filtering it is 2Vpp.
+ * The output of the 54xx is 4Vpp.  After filtering it is clamped to +1.5/-2.
+ * So we need to make the 52xx volume 50% of the 54xx volume.
+ * 52xx and 54xx ouputs are mixed together to create an output called GAINx.
+ * This has a total resistance to the final op-amp of 13605 when the unemulated 4066
+ * panning circuit is at full volume.  The engine sound has a resistance of 17492.
+ * These values include 250 ohms of the 4066 when needed.
+ * This all means that the engine sound is 77% of the 54xx.
+ *
+ * Jan 13/05 D.R. - not sure about the following info.
+ * The Sound Buffers and Multiplexer circuit on sheet 7B is not emulated.
+ * Basically it is a quadraphonic 16 level mixer with a 4-bit DAC (R81-85).
+ * It mixes/pans the combined 52xx & 54xx output.
+ * The 4 speaker sit down game uses the full quad output.
+ * The 2 speaker stand up game combine RF-RR and LF-LR through the speakers.
+ *
+ * I set the base 54xx level at 80 and the other sounds realtive to that,
+ * to allow headroom when more the one effect is played.
+ */
+
 static struct namco_52xx_interface namco_52xx_interface =
 {
 	24576000/16,	/* 1.536 MHz */
-	25,				/* volume */
-	REGION_SOUND3	/* memory region */
+    80,				/* volume */
+	REGION_SOUND3,	/* memory region */
+	0,				/* Use internal Playback frequency */
+	100,			/* High pass filter fc */
+	0.3,			/* High pass filter Q */
+	1200,			/* Low pass filter fc */
+	0.8,			/* Low pass filter Q */
+	.5				/* Combined gain of both filters */
 };
 
 static struct namco_54xx_interface namco_54xx_interface =
 {
 	24576000/16,		/* 1.536 MHz */
-	{ 100, 100, 100 }	/* volume of the three outputs */
+    80,					/* volume */
+	{ RES_K(22),	RES_K(15),		RES_K(22) },	/* R121, R133, R139 */
+	{ RES_K(12),	RES_K(15),		RES_K(22) },	/* R125, R137, R143 */
+	{ RES_K(120),	RES_K(120),		RES_K(180) },	/* R122, R134, R140 */
+	{ 470,			470,			470 },			/* R123, R135, R141 */
+	{ CAP_U(.0022),	CAP_U(.022),	CAP_U(.047) },	/* C27,  C29,  C33  */
+	{ CAP_U(.0022),	CAP_U(.022),	CAP_U(.047) },	/* C28,  C30,  C34  */
 };
 
 static struct CustomSound_interface custom_interface =
