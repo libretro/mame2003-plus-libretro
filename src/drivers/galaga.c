@@ -1859,50 +1859,15 @@ static struct namco_54xx_interface namco_54xx_interface =
 static const char *bosco_sample_names[] =
 {
 	"*bosco",
-	"bigbang.wav",
-	"midbang.wav",
 	"shot.wav",
 	0	/* end of array */
 };
 
 static struct Samplesinterface samples_interface_bosco =
 {
-	3,	/* 3 channels */
+	1,	/* 1 channel */
 	100,	/* volume */
 	bosco_sample_names
-};
-
-static const char *galaga_sample_names[] =
-{
-	"*galaga",
-	"bang.wav",
-	"bang.wav",
-/*	"init.wav", */
-	0       /* end of array */
-};
-
-static struct Samplesinterface samples_interface_galaga =
-{
-	3,	/* 3 channels */
-	80,	/* volume */
-	galaga_sample_names
-};
-
-static const char *xevious_sample_names[] =
-{
-	"*xevious",
-	"explo2.wav",	/* Solvalou explosion */
-	"explo3.wav",	/* credit */
-	"explo4.wav",	/* Garu Zakato explosion */
-	"explo1.wav",	/* ground target explosion */
-	0	/* end of array */
-};
-
-struct Samplesinterface samples_interface_xevious =
-{
-	3,	/* 3 channels */
-	80,	/* volume */
-	xevious_sample_names
 };
 
 static const char *battles_sample_names[] =
@@ -2000,7 +1965,6 @@ static MACHINE_DRIVER_START( galaga )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
-	MDRV_SOUND_ADD(SAMPLES, samples_interface_galaga)
 	MDRV_SOUND_ADD(NAMCO_54XX, namco_54xx_interface)
 MACHINE_DRIVER_END
 
@@ -2049,8 +2013,7 @@ static MACHINE_DRIVER_START( xevious )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
-	MDRV_SOUND_ADD_TAG("samples", SAMPLES, samples_interface_xevious)
-	MDRV_SOUND_ADD(NAMCO_54XX, namco_54xx_interface)
+    MDRV_SOUND_ADD_TAG("54xx",NAMCO_54XX, namco_54xx_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( battles )
@@ -2068,7 +2031,8 @@ static MACHINE_DRIVER_START( battles )
 	MDRV_PALETTE_INIT(battles)
 
 	/* sound hardware */
-	MDRV_SOUND_REPLACE("samples", SAMPLES, samples_interface_battles)
+    MDRV_SOUND_REMOVE("54xx")
+	MDRV_SOUND_ADD(SAMPLES, samples_interface_battles)
 MACHINE_DRIVER_END
 
 
