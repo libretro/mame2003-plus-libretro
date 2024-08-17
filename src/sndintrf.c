@@ -725,7 +725,7 @@ struct snd_interface sndintf[] =
 		namco_52xx_sh_start,
 		namco_52xx_sh_stop,
 		0,
-		namco_52xx_sh_reset
+		0
 	},
 #endif
 #if (HAS_NAMCO_54XX)
@@ -737,7 +737,7 @@ struct snd_interface sndintf[] =
 		namco_54xx_sh_start,
 		namco_54xx_sh_stop,
 		0,
-		namco_54xx_sh_reset
+		0
 	},
 #endif
 #if (HAS_NAMCONA)
