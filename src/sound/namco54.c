@@ -71,6 +71,7 @@ TODO:
 ***************************************************************************/
 
 #include "driver.h"
+#include "filter.h"
 
 
 static int fetch;
@@ -233,10 +234,14 @@ static UINT8 release_table[16][8]=
 {15,11,8,6,4,3,2,1}
 };
 
+static struct filter2_context filter54[3];
 
 
 void namco_54xx_sh_reset(void)
 {
+	int loop;
+	for (loop = 0; loop < 3; loop++) filter2_reset(&filter54[loop]);
+
 	fetch = 0;
 	fetchmode = 0;
 
@@ -521,7 +526,7 @@ int i,v;
 
 void NAMCO54xxUpdateOne(int num, INT16 **buffers, int length)
 {
-	int i;
+	int i, loop;
 	INT16 out1, out2, out3;
 	INT16 *buf1, *buf2, *buf3;
 
@@ -537,9 +542,23 @@ void NAMCO54xxUpdateOne(int num, INT16 **buffers, int length)
 		out2 = calc_B();	/* pins 8-11 */
 		out3 = calc_C();	/* pins 17-20 */
 
-		(buf1)[i] = out1 * 1024; /* with gain: 0 to 15K */
-		(buf2)[i] = out2 * 1024; /* with gain: 0 to 15K */
-		(buf3)[i] = out3 * 1024; /* with gain: 0 to 15K */
+		/* Convert the binary value to a voltage and filter it. */
+		/* I am assuming a 4V output when a bit is high. */
+		filter54[0].x0 = 4.0/15 * out1 - 2;
+		filter54[1].x0 = 4.0/15 * out2 - 2;
+		filter54[2].x0 = 4.0/15 * out3 - 2;
+		for (loop = 0; loop < 3; loop++)
+		{
+			filter2_step(&filter54[loop]);
+			/* The op-amp powered @ 5V will clip to 0V & 3.5V.
+			 * Adjusted to vRef of 2V, we will clip as follows: */
+			if (filter54[loop].y0 > 1.5) filter54[loop].y0 = 1.5;
+			if (filter54[loop].y0 < -2) filter54[loop].y0 = -2;
+		}
+
+		(buf1)[i] = filter54[0].y0 * (32768/2);
+		(buf2)[i] = filter54[1].y0 * (32768/2);
+		(buf3)[i] = filter54[2].y0 * (32768/2);
 
 		advance();
 	}
@@ -641,10 +660,29 @@ int namco_54xx_sh_start(const struct MachineSound *msound)
 	const char *name[NAMCO54xx_NUMBUF];
 	int vol[NAMCO54xx_NUMBUF];
 
-	double scaler, c_value;
+	double scaler, c_value, r_in, r_min;
 	int i;
 
 	intf = msound->sound_interface;
+
+	/* setup the filters */
+	r_min = intf->r4[0];
+	for (i = 0; i < 3; i++)
+	{
+		r_in = intf->r1[i] + ( 1.0 / ( 1.0/4700 + 1.0/10000 + 1.0/22000 + 1.0/47000));
+		filter_opamp_m_bandpass_setup(r_in, intf->r2[i], intf->r3[i], intf->c1[i], intf->c2[i],
+										&filter54[i]);
+		if (intf->r4[i] < r_min) r_min = intf->r4[i];
+	}
+
+	/* setup relative gains */
+	for (i = 0; i < 3; i++)
+	{
+		scaler = r_min / intf->r4[i];
+		filter54[i].b0 *= scaler;
+	    filter54[i].b1 *= scaler;
+	    filter54[i].b2 *= scaler;
+	}
 
 	chip_clock    = intf->baseclock;
 	chip_sampfreq = Machine->sample_rate;
@@ -653,7 +691,7 @@ int namco_54xx_sh_start(const struct MachineSound *msound)
 
 	for (i = 0; i < NAMCO54xx_NUMBUF; i++)
 	{
-		vol[i] = intf->mixing_level[i];
+		vol[i] = intf->mixing_level;
 		name[i] = buf[i];
 		sprintf(buf[i],"%s Ch %d",sound_name(msound),i);
 	}
