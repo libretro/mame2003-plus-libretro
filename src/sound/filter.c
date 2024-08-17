@@ -1,5 +1,6 @@
 #include "filter.h"
 
+#include "driver.h"
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
