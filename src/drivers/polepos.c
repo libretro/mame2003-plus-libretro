@@ -498,7 +498,7 @@ MEMORY_END
 INPUT_PORTS_START( polepos )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", IP_KEY_DEFAULT, IP_JOY_DEFAULT ) /* Gear */
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -557,10 +557,10 @@ INPUT_PORTS_START( polepos )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 
 	PORT_START /* IN1 - Brake */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, KEYCODE_LALT, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN2 - Accel */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, KEYCODE_LCONTROL, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN3 - Steering */
 	PORT_ANALOG ( 0xff, 0x00, IPT_DIAL, 30, 4, 0, 0 )
@@ -570,7 +570,7 @@ INPUT_PORTS_END
 INPUT_PORTS_START( poleposa )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", IP_KEY_DEFAULT, IP_JOY_DEFAULT ) /* Gear */
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -629,10 +629,10 @@ INPUT_PORTS_START( poleposa )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 
 	PORT_START /* IN1 - Brake */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, KEYCODE_LALT, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN2 - Accel */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, KEYCODE_LCONTROL, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN3 - Steering */
 	PORT_ANALOG ( 0xff, 0x00, IPT_DIAL, 30, 4, 0, 0 )
@@ -642,7 +642,7 @@ INPUT_PORTS_END
 INPUT_PORTS_START( polepos2 )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", IP_KEY_DEFAULT, IP_JOY_DEFAULT ) /* Gear */
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | POLEPOS_TOGGLE, "Gear Change", KEYCODE_SPACE, IP_JOY_DEFAULT ) /* Gear */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* start 1, program controlled */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -699,10 +699,10 @@ INPUT_PORTS_START( polepos2 )
 	PORT_DIPSETTING(	0x00, "High" )
 
 	PORT_START /* IN1 - Brake */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL2, 100, 16, 0, 0x90, KEYCODE_LALT, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN2 - Accel */
-	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, IP_KEY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0, 0x90, KEYCODE_LCONTROL, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
 	PORT_START /* IN3 - Steering */
 	PORT_ANALOG ( 0xff, 0x00, IPT_DIAL, 30, 4, 0, 0 )
@@ -802,14 +802,13 @@ static struct CustomSound_interface custom_interface =
 static const char *polepos_sample_names[] =
 {
 	"*polepos",
-	"pp2_17.wav",
 	"pp2_18.wav",
 	0	/* end of array */
 };
 
 static struct Samplesinterface samples_interface =
 {
-	2,	/* 2 channels */
+	1,	/* 1 channel */
 	40, /* volume */
 	polepos_sample_names
 };
@@ -1428,10 +1427,10 @@ static DRIVER_INIT( polepos2 )
  * Game drivers
  *********************************************************************/
 
-GAME( 1982, polepos,  0,		polepos, polepos,  0,		 ROT0, "Namco", "Pole Position" )
-GAME( 1982, poleposa, polepos,	polepos, poleposa, 0,		 ROT0, "Namco (Atari license)", "Pole Position (Atari version 2)" )
-GAME( 1982, polepos1, polepos,	polepos, poleposa, 0,		 ROT0, "[Namco] (Atari license)", "Pole Position (Atari version 1)" )
-GAME( 1982, topracer, polepos,	polepos, polepos,  0,		 ROT0, "bootleg", "Top Racer" )
-GAME( 1983, polepos2, 0,		polepos, polepos2, polepos2, ROT0, "Namco", "Pole Position II" )
+GAME( 1982, polepos,  0,		    polepos, polepos,  0,		     ROT0, "Namco", "Pole Position" )
+GAME( 1982, poleposa, polepos,	polepos, poleposa, 0,		     ROT0, "Namco (Atari license)", "Pole Position (Atari version 2)" )
+GAME( 1982, polepos1, polepos,	polepos, poleposa, 0,		     ROT0, "[Namco] (Atari license)", "Pole Position (Atari version 1)" )
+GAME( 1982, topracer, polepos,	polepos, polepos,  0,		     ROT0, "bootleg", "Top Racer" )
+GAME( 1983, polepos2, 0,		    polepos, polepos2, polepos2, ROT0, "Namco", "Pole Position II" )
 GAME( 1983, poleps2a, polepos2, polepos, polepos2, polepos2, ROT0, "Namco (Atari license)", "Pole Position II (Atari)" )
-GAME( 1983, poleps2b, polepos2, polepos, polepos2, 0,		 ROT0, "bootleg", "Pole Position II (bootleg)" )
+GAME( 1983, poleps2b, polepos2, polepos, polepos2, 0,		     ROT0, "bootleg", "Pole Position II (bootleg)" )
