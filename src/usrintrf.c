@@ -2021,7 +2021,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 			sensitivity = IP_GET_SENSITIVITY(entry[current_port]);
 			delta = IP_GET_DELTA(entry[current_port]);
 			reverse = (entry[current_port]->type & IPF_REVERSE);
-      xwayjoy = ((entry[current_port]+2)->type & IPF_XWAYJOY);
+      xwayjoy = ((entry[current_port]+1)->type & IPF_XWAYJOY);
 
 			strcat (label[i], " ");
 			switch (i - total_entries_to_current_port)
@@ -2122,13 +2122,13 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 			else if ((sel - total_entries_to_current_port) == 3)
 			/* xwayjoy */
 			{
-				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
+				int xwayjoy= (entry[current_port]+1)->type & IPF_XWAYJOY;
 				if (xwayjoy)
 					xwayjoy=0;
 				else
 					xwayjoy=IPF_XWAYJOY;
-				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
-				(entry[current_port]+2)->type |= xwayjoy;
+				(entry[current_port]+1)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+1)->type |= xwayjoy;
 			}
 		}
 	}
@@ -2178,13 +2178,13 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 			else if ((sel - total_entries_to_current_port) == 3)
 			/* xwayjoy */
 			{
-				int xwayjoy= (entry[current_port]+2)->type & IPF_XWAYJOY;
+				int xwayjoy= (entry[current_port]+1)->type & IPF_XWAYJOY;
 				if (xwayjoy)
 					xwayjoy=0;
 				else
 					xwayjoy=IPF_XWAYJOY;
-				(entry[current_port]+2)->type &= ~IPF_XWAYJOY;
-				(entry[current_port]+2)->type |= xwayjoy;
+				(entry[current_port]+1)->type &= ~IPF_XWAYJOY;
+				(entry[current_port]+1)->type |= xwayjoy;
 			}
 		}
 	}
