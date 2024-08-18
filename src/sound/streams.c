@@ -39,10 +39,10 @@ signal >--R1--+--R2--+
 /* set C = 0 to disable the filter */
 void set_RC_filter(int channel,int R1,int R2,int R3,int C)
 {
-	stream_update(channel, 0);
-
 	float f_R1,f_R2,f_R3,f_C;
 	float Req;
+	
+	stream_update(channel, 0);
 
 	if (C == 0)
 	{
