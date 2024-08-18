@@ -910,7 +910,7 @@ void update_analog_port(int port)
 
 	delta = mouse_delta_axis[player][axis];
 
-	xwayjoy = (in)->type & IPF_XWAYJOY;
+	xwayjoy = (in+1)->type & IPF_XWAYJOY;
   last_frame = cpu_getcurrentframe() - 1;
 
 	if (seq_pressed(decseq))
