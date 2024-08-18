@@ -71,6 +71,7 @@ TODO:
 ***************************************************************************/
 
 #include "driver.h"
+#include "filter.h"
 
 
 static int fetch;
@@ -233,10 +234,14 @@ static UINT8 release_table[16][8]=
 {15,11,8,6,4,3,2,1}
 };
 
+static struct filter2_context filter54[3];
 
 
 void namco_54xx_sh_reset(void)
 {
+	int loop;
+	for (loop = 0; loop < 3; loop++) filter2_reset(&filter54[loop]);
+
 	fetch = 0;
 	fetchmode = 0;
 
@@ -258,7 +263,7 @@ void namco_54xx_sh_reset(void)
 	noise_B_will_change = 0;
 	out_prev = 0;
 
-/* wonder what are the default params after the reset ? */
+//wonder what are the default params after the reset ?
 
 }
 
@@ -348,9 +353,8 @@ int i;
 
 static INT16 calc_A(void)
 {
-/*if (type_A_active)
-	log_cb( RETRO_LOG_DEBUG,"calc a: env_state=%2i vol=%2i noise=%2i\n", type_A_state, type_A_curr_vol, noise_out_A);
-*/
+//if (type_A_active)
+//	logerror("calc a: env_state=%2i vol=%2i noise=%2i\n", type_A_state, type_A_curr_vol, noise_out_A);
 
 	switch (type_A_state)
 	{
@@ -408,16 +412,16 @@ static void advance(void)
 {
 int i,v;
 
-/* type A */
+//type A
 	type_A_pos += type_A_add;
 	i = (type_A_pos >> PRECISION_SH);
 	type_A_pos &= PRECISION_MASK;
 
 	if (i)
-	{	/*switch to the next envelope state
+	{	//switch to the next envelope state
 
-		  log_cb( RETRO_LOG_DEBUG,"type A switch, from mode=%2i\n",type_A_state);
-        */
+		//logerror("type A switch, from mode=%2i\n",type_A_state);
+
 		switch(type_A_state)
 		{
 		case ENV_OFF:
@@ -458,16 +462,16 @@ int i,v;
 	}
 
 
-/* type B */
+//type B
 	type_B_pos += type_B_add;
 	i = (type_B_pos >> PRECISION_SH);
 	type_B_pos &= PRECISION_MASK;
 
 	if (i)
-	{	/* switch to the next envelope state
+	{	//switch to the next envelope state
 
-		  log_cb( RETRO_LOG_DEBUG,"type B switch, from mode=%2i\n",type_B_state);
-        */
+		//logerror("type B switch, from mode=%2i\n",type_B_state);
+
 		switch(type_B_state)
 		{
 		case ENV_OFF:
@@ -510,7 +514,7 @@ int i,v;
 
 
 
-/* TODO type C */
+//TODO type C
 
 
 	noise_step();
@@ -521,7 +525,7 @@ int i,v;
 
 void NAMCO54xxUpdateOne(int num, INT16 **buffers, int length)
 {
-	int i;
+	int i, loop;
 	INT16 out1, out2, out3;
 	INT16 *buf1, *buf2, *buf3;
 
@@ -531,25 +535,38 @@ void NAMCO54xxUpdateOne(int num, INT16 **buffers, int length)
 
 	for (i = 0; i < length; i++)
 	{
-		/* if (fetch) /* no sound is produced while waiting for the parameters */
+		//if (fetch) /* no sound is produced while waiting for the parameters */
 
 		out1 = calc_A();	/* pins 4-7 */
 		out2 = calc_B();	/* pins 8-11 */
 		out3 = calc_C();	/* pins 17-20 */
 
-		(buf1)[i] = out1 * 1024; /* with gain: 0 to 15K */
-		(buf2)[i] = out2 * 1024; /* with gain: 0 to 15K */
-		(buf3)[i] = out3 * 1024; /* with gain: 0 to 15K */
+		/* Convert the binary value to a voltage and filter it. */
+		/* I am assuming a 4V output when a bit is high. */
+		filter54[0].x0 = 4.0/15 * out1 - 2;
+		filter54[1].x0 = 4.0/15 * out2 - 2;
+		filter54[2].x0 = 4.0/15 * out3 - 2;
+		for (loop = 0; loop < 3; loop++)
+		{
+			filter2_step(&filter54[loop]);
+			/* The op-amp powered @ 5V will clip to 0V & 3.5V.
+			 * Adjusted to vRef of 2V, we will clip as follows: */
+			if (filter54[loop].y0 > 1.5) filter54[loop].y0 = 1.5;
+			if (filter54[loop].y0 < -2) filter54[loop].y0 = -2;
+		}
+
+		(buf1)[i] = filter54[0].y0 * (32768/2);
+		(buf2)[i] = filter54[1].y0 * (32768/2);
+		(buf3)[i] = filter54[2].y0 * (32768/2);
 
 		advance();
 	}
 }
 
 
-
 void namcoio_54XX_write(int data)
 {
-    log_cb( RETRO_LOG_DEBUG,"%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
+logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
 
 	stream_update(stream, 0);
 
@@ -599,7 +616,7 @@ void namcoio_54XX_write(int data)
 
 		case 0x50:	/* type C, mode A, output sound on pins 17-20 only */
 			if (memcmp(type_C_par,"\x08\x04\x21\x00\xf1",5) == 0)
-				/* bosco */
+				// bosco
 				sample_start(0, 0, 0);
 			break;
 
@@ -609,7 +626,7 @@ void namcoio_54XX_write(int data)
 			break;
 
 		case 0x70:	/* type C, mode B, output sound on pins 17-20 only */
-				/* polepos */
+				// polepos
 				/* 0x7n = Screech sound. n = volume (if 0 then no sound) */
 				/* followed by 0x60 command */
 #if 1
@@ -641,10 +658,29 @@ int namco_54xx_sh_start(const struct MachineSound *msound)
 	const char *name[NAMCO54xx_NUMBUF];
 	int vol[NAMCO54xx_NUMBUF];
 
-	double scaler, c_value;
+	double scaler, c_value, r_in, r_min;
 	int i;
 
 	intf = msound->sound_interface;
+
+	/* setup the filters */
+	r_min = intf->r4[0];
+	for (i = 0; i < 3; i++)
+	{
+		r_in = intf->r1[i] + ( 1.0 / ( 1.0/4700 + 1.0/10000 + 1.0/22000 + 1.0/47000));
+		filter_opamp_m_bandpass_setup(r_in, intf->r2[i], intf->r3[i], intf->c1[i], intf->c2[i],
+										&filter54[i]);
+		if (intf->r4[i] < r_min) r_min = intf->r4[i];
+	}
+
+	/* setup relative gains */
+	for (i = 0; i < 3; i++)
+	{
+		scaler = r_min / intf->r4[i];
+		filter54[i].b0 *= scaler;
+	    filter54[i].b1 *= scaler;
+	    filter54[i].b2 *= scaler;
+	}
 
 	chip_clock    = intf->baseclock;
 	chip_sampfreq = Machine->sample_rate;
@@ -653,14 +689,14 @@ int namco_54xx_sh_start(const struct MachineSound *msound)
 
 	for (i = 0; i < NAMCO54xx_NUMBUF; i++)
 	{
-		vol[i] = intf->mixing_level[i];
+		vol[i] = intf->mixing_level;
 		name[i] = buf[i];
 		sprintf(buf[i],"%s Ch %d",sound_name(msound),i);
 	}
 
 	stream = stream_init_multi(NAMCO54xx_NUMBUF, name, vol, chip_sampfreq, 0, NAMCO54xxUpdateOne);
 
-	log_cb( RETRO_LOG_DEBUG,"Namco 54xx clock=%f sample rate=%f\n", chip_clock, chip_sampfreq);
+	logerror("Namco 54xx clock=%f sample rate=%f\n", chip_clock, chip_sampfreq);
 
 	/* calculate emulation tables */
 	scaler = chip_clock / chip_sampfreq;
@@ -678,14 +714,14 @@ altogether which corresponds to 1254 chip clock cycles. 13 samples = 543 cycles,
 	c_value = ((double)(1<<PRECISION_SH)) / 209.0;
 	RNG_delay = c_value * scaler;	/* scaled to our sample rate */
 
-	log_cb( RETRO_LOG_DEBUG,"rng_f_0  =%08x\n", RNG_f_0);
-	log_cb( RETRO_LOG_DEBUG,"rng_f_1  =%08x\n", RNG_f_1);
-	log_cb( RETRO_LOG_DEBUG,"rng_delay=%08x\n", RNG_delay);
+	logerror("rng_f_0  =%08x\n", RNG_f_0);
+	logerror("rng_f_1  =%08x\n", RNG_f_1);
+	logerror("rng_delay=%08x\n", RNG_delay);
 
 	/* 0 means no particular part so we allow 1 cycle */
 	c_value = ((double)(1<<PRECISION_SH)) / 1.0;
 	speeds[0] = c_value * scaler;	/* scaled to our sample rate */
-	log_cb( RETRO_LOG_DEBUG,"speed[%2i]=%08x\n", 0, speeds[0]);
+	logerror("speed[%2i]=%08x\n", 0, speeds[0]);
 
 	for (i = 1; i < 256; i++)
 	{
@@ -699,13 +735,13 @@ altogether which corresponds to 1254 chip clock cycles. 13 samples = 543 cycles,
 		}
 		c_value = ((double)(1<<PRECISION_SH)) / ((double)cycles_num);
 		speeds[i] = c_value * scaler;	/* scaled to our sample rate */
-		log_cb( RETRO_LOG_DEBUG,"speed[%2i]=%08x\n", i, speeds[i]);
+		logerror("speed[%2i]=%08x\n", i, speeds[i]);
 	}
 
 	/* special case for sustain param =0, which takes 1003 cycles */
 	c_value = ((double)(1<<PRECISION_SH)) / 1003.0;
 	speeds[256] = c_value * scaler;	/* scaled to our sample rate */
-	log_cb( RETRO_LOG_DEBUG,"speed[%2i]=%08x\n", 256, speeds[256]);
+	logerror("speed[%2i]=%08x\n", 256, speeds[256]);
 
 
 	namco_54xx_sh_reset();
