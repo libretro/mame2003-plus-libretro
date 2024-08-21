@@ -95,6 +95,8 @@ void machine_reset(void);
 
 void mame_frame(void);
 
+extern void (*pause_action)(void);
+
 /*************************************
  *
  *	Optional watchdog
