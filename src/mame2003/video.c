@@ -369,7 +369,6 @@ static void frame_convert(struct mame_display *display)
 extern bool retro_audio_buff_underrun;
 extern bool retro_audio_buff_active;
 extern unsigned retro_audio_buff_occupancy;
-extern void (*pause_action)(void);
 
 const int frameskip_table[12][12] =
    { { 0,0,0,0,0,0,0,0,0,0,0,0 },
