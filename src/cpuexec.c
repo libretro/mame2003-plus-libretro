@@ -469,11 +469,6 @@ static void watchdog_reset(void)
 	watchdog_counter = 3 * Machine->drv->frames_per_second;
 }
 
-WRITE_HANDLER( watchdog_disarm_w )
-{
-	watchdog_counter = -1;
-}
-
 WRITE_HANDLER( watchdog_reset_w )
 {
 	watchdog_reset();
