@@ -368,6 +368,7 @@ extern void (*pause_action)(void);
 
 void pause_action_generic(void)
 {
+  schedule_full_refresh();
   updatescreen();
 }
 
