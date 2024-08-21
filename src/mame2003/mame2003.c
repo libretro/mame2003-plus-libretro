@@ -369,6 +369,7 @@ extern void (*pause_action)(void);
 void pause_action_generic(void)
 {
   updatescreen();
+  schedule_full_refresh();
 }
 
 /* initialized in cpu_pre_run() */
@@ -376,21 +377,10 @@ bool cpu_pause_state;
 
 void cpu_pause(bool pause)
 {
-  int cpunum;
-
-  if (pause) pause_action = pause_action_generic;
-  else pause_action = 0;
-/*
-  for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
-  {
-    if (pause)
-      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
-    else
-      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
-  }
-*/
-  /* disarm watchdog to prevent reset */
-//  if (pause) watchdog_disarm_w(0, 0);
+  if (pause)
+    pause_action = pause_action_generic;
+  else
+    pause_action = 0;
 
   /* update state */
   cpu_pause_state = pause;
