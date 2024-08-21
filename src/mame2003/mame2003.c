@@ -364,6 +364,12 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
+extern void (*pause_action)(void);
+
+void pause_action_generic(void)
+{
+}
+
 /* initialized in cpu_pre_run() */
 bool cpu_pause_state;
 
@@ -371,6 +377,9 @@ void cpu_pause(bool pause)
 {
   int cpunum;
 
+  if (pause) pause_action = pause_action_generic;
+  else pause_action = 0;
+/*
   for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
   {
     if (pause)
@@ -378,9 +387,9 @@ void cpu_pause(bool pause)
     else
       cpunum_resume(cpunum, SUSPEND_ANY_REASON);
   }
-
+*/
   /* disarm watchdog to prevent reset */
-  if (pause) watchdog_disarm_w(0, 0);
+//  if (pause) watchdog_disarm_w(0, 0);
 
   /* update state */
   cpu_pause_state = pause;
