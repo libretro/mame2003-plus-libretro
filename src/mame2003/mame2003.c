@@ -369,7 +369,6 @@ extern void (*pause_action)(void);
 void pause_action_generic(void)
 {
   updatescreen();
-  schedule_full_refresh();
 }
 
 /* initialized by cpu_pause() in cpu_pre_run() */
