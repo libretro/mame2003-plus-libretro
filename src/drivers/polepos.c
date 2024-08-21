@@ -782,26 +782,14 @@ static struct namco_interface namco_interface =
 static struct namco_52xx_interface namco_52xx_interface =
 {
 	24576000/16,	/* 1.536 MHz */
-	80,				/* volume */
-	REGION_SOUND3,	/* memory region */
-	0,				/* Use internal Playback frequency */
-	100,			/* High pass filter fc */
-	0.3,			/* High pass filter Q */
-	1200,			/* Low pass filter fc */
-	0.8,			/* Low pass filter Q */
-	.5				/* Combined gain of both filters */
+	25,				/* volume */
+	REGION_SOUND3	/* memory region */
 };
 
 static struct namco_54xx_interface namco_54xx_interface =
 {
 	24576000/16,		/* 1.536 MHz */
-	80,					/* volume */
-	{ RES_K(22),	RES_K(15),		RES_K(22) },	/* R121, R133, R139 */
-	{ RES_K(12),	RES_K(15),		RES_K(22) },	/* R125, R137, R143 */
-	{ RES_K(120),	RES_K(120),		RES_K(180) },	/* R122, R134, R140 */
-	{ 470,			470,			470 },			/* R123, R135, R141 */
-	{ CAP_U(.0022),	CAP_U(.022),	CAP_U(.047) },	/* C27,  C29,  C33  */
-	{ CAP_U(.0022),	CAP_U(.022),	CAP_U(.047) },	/* C28,  C30,  C34  */
+	{ 100, 100, 100 }	/* volume of the three outputs */
 };
 
 static struct CustomSound_interface custom_interface =
@@ -814,13 +802,14 @@ static struct CustomSound_interface custom_interface =
 static const char *polepos_sample_names[] =
 {
 	"*polepos",
+	"pp2_17.wav",
 	"pp2_18.wav",
 	0	/* end of array */
 };
 
 static struct Samplesinterface samples_interface =
 {
-	1,	/* 1 channel */
+	2,	/* 2 channels */
 	40, /* volume */
 	polepos_sample_names
 };
@@ -874,6 +863,7 @@ static MACHINE_DRIVER_START( polepos )
 	MDRV_SOUND_ADD(CUSTOM, custom_interface)
 	MDRV_SOUND_ADD(SAMPLES, samples_interface)
 MACHINE_DRIVER_END
+
 
 /*********************************************************************
  * ROM definitions
@@ -2348,4 +2338,4 @@ GAME( 1983, polepos2a,  polepos2, polepos,    polepos2,  polepos2, ROT0, "Namco 
 GAME( 1983, polepos2b,  polepos2, polepos,    polepos2,  0,        ROT0, "bootleg",                 "Pole Position II (bootleg)")
 //GAME( 1984, polepos2bi, polepos2, polepos2bi, polepos2bi,polepos_state, empty_init,    ROT0, "bootleg",                 "Gran Premio F1 (Italian bootleg of Pole Position II)", MACHINE_SUPPORTS_SAVE | MACHINE_IMPERFECT_COLORS | MACHINE_IMPERFECT_SOUND )
 //GAME( 1984, polepos2bs, polepos2, polepos2bi, polepos2bi,polepos_state, empty_init,    ROT0, "bootleg (BCN Internacional S.A.)", "Gran Premio F1 (Spanish bootleg of Pole Position II)", MACHINE_SUPPORTS_SAVE | MACHINE_IMPERFECT_COLORS | MACHINE_IMPERFECT_SOUND )
-//GAME( 1984, grally,     polepos2, polepos2bi, polepos2bi,polepos_state, empty_init,    ROT0, "bootleg (Niemer)",        "Gran Rally (Spanish bootleg of Pole Position II)", MACHINE_SUPPORTS_SAVE | MACHINE_IMPERFECT_COLORS | MACHINE_IMPERFECT_SOUND )
+//GAME( 1984, grally,     polepos2, polepos2bi, polepos2bi,polepos_state, empty_init,    ROT0, "bootleg (Niemer)",   
