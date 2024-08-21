@@ -131,7 +131,6 @@ int mame_debug; /* !0 when -debug option is specified */
 int bailing;	/* set to 1 if the startup is aborted to prevent multiple error messages */
 
 extern int16_t XsoundBuffer[2048];
-extern void (*pause_action)(void);
 
 /* the active machine */
 static struct RunningMachine active_machine;
