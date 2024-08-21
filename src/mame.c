@@ -511,9 +511,6 @@ void pause_action_start_emulator(void)
 
   /* run the emulation! */
   cpu_run();
-
-  /* Unpause */
-  pause_action = 0;
 }
 
 void run_machine_core_done(void)
