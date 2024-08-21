@@ -1061,7 +1061,7 @@ void force_partial_update(int scanline)
 		return;
 
 	/* if there's a dirty bitmap and we didn't do any partial updates yet, handle it now */
-	if (full_refresh_pending && last_partial_scanline == 0)
+	if (full_refresh_pending && last_partial_scanline == 0 || pause_action)
 	{
 		fillbitmap(Machine->scrbitmap, get_black_pen(), NULL);
 		full_refresh_pending = 0;
