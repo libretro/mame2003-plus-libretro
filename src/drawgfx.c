@@ -3522,7 +3522,7 @@ void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,co
 	int i;
 	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
-	if (!options.crosshair_enable || cpu_pause_state)
+	if (!options.crosshair_enable)
 	{
 		/* Update frame count */
 		inactive_xy[player_number-1][2] = cpu_getcurrentframe();
