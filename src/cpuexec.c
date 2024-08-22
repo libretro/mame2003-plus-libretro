@@ -380,17 +380,17 @@ void mame_frame(void)
         }
 
         gotFrame = 0;
+
+        if(time_to_reset)
+        {
+            cpu_post_run();
+            cpu_pre_run();
+            time_to_reset = 0;
+        }
     }
     else
     {
         pause_action();
-    }
-
-    if(time_to_reset)
-    {
-        cpu_post_run();
-        cpu_pre_run();
-        time_to_reset = 0;
     }
 }
 
