@@ -120,6 +120,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Kabuki-Z (World)
 * Ketsui: Kizuna Jigoku Tachi
 * Knightmare
+* Knights Chance (NeoGeo)
 * Last Hope
 * Led Storm Rally 2011
 * Lethal Enforcers
@@ -1108,3 +1109,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Backported segas32 video driver, interrupt controllers for v60 and sound, general cleanup and merger of multi32 and system32 drivers. [mahoneyt944]
 * Backported the segaxbd driver and video code from later MAME A.B. COP, Line Of Fire, Racing Hero, Super Monaco GP
 * and Thunder Blade are now fully playable [grant2258]
+* Added support for Knights Chance to the NeoGeo driver [arcadez]
+* Fixed dip switches for Super Pac-man added new sound roms for Pac & Pal and new graphical roms which fix bad colours in Pac-man & Chomp Chomp [MAMEDev, arcadez]
