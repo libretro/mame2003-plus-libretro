@@ -369,9 +369,7 @@ void pause_action_generic(void)
   updatescreen();
 }
 
-/* initialized by cpu_pause() in cpu_pre_run() */
-bool cpu_pause_state;
-
+/* initialized in cpu_pre_run() */
 void cpu_pause(bool pause)
 {
   if (pause)
@@ -381,9 +379,6 @@ void cpu_pause(bool pause)
     toggle_showgfx = false;
     pause_action = 0;
   }
-
-  /* update state */
-  cpu_pause_state = pause;
 }
 
 extern UINT8 frameskip_counter;
