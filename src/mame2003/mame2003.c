@@ -619,19 +619,21 @@ int osd_update_audio_stream(INT16 *buffer)
 void osd_update_silent_stream(void)
 {
 	int i,j;
-
-	memset(samples_buffer, 0, samples_per_frame * (usestereo ? 4 : 2));
-
-	if (usestereo)
-		audio_batch_cb(samples_buffer, samples_per_frame);
-	else
+	if (Machine->sample_rate !=0)
 	{
-		for (i = 0, j = 0; i < samples_per_frame; i++)
+		memset(samples_buffer, 0, samples_per_frame * (usestereo ? 4 : 2));
+
+		if (usestereo)
+			audio_batch_cb(samples_buffer, samples_per_frame);
+		else
 		{
-			conversion_buffer[j++] = samples_buffer[i];
-			conversion_buffer[j++] = samples_buffer[i];
+			for (i = 0, j = 0; i < samples_per_frame; i++)
+			{
+				conversion_buffer[j++] = samples_buffer[i];
+				conversion_buffer[j++] = samples_buffer[i];
+			}
+			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
-		audio_batch_cb(conversion_buffer,samples_per_frame);
 	}
 }
 
