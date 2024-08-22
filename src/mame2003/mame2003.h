@@ -361,6 +361,7 @@ extern void cpu_pause(bool pause);
 */
 int osd_start_audio_stream(int stereo);
 int osd_update_audio_stream(INT16 *buffer);
+void osd_update_silent_stream(void);
 void osd_stop_audio_stream(void);
 
 /******************************************************************************
