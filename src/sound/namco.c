@@ -596,11 +596,6 @@ WRITE_HANDLER( polepos_sound_w )
 */
 
 
-WRITE_HANDLER( mappy_sound_enable_w ) /*remove this when drivers are updated this is so our old drivers work */
-{
-	sound_enable = offset;
-}
-
 void mappy_sound_enable(int enable)
 {
 	sound_enable = enable;

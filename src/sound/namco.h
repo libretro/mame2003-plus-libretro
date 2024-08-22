@@ -19,7 +19,6 @@ WRITE_HANDLER( pengo_sound_w );
 void polepos_sound_enable(int enable);
 WRITE_HANDLER( polepos_sound_w );
 
-WRITE_HANDLER( mappy_sound_enable_w ); 
 void mappy_sound_enable(int enable);
 WRITE_HANDLER( namco_15xx_w );
 
