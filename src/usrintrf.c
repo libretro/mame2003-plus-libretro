@@ -3388,6 +3388,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   }
   else if(setup_selected)
   {
+    erase_screen(bitmap);
     setup_selected = setup_menu(bitmap, setup_selected);
   }
 
