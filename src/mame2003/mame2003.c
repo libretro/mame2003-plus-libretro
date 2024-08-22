@@ -364,11 +364,8 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
-extern void (*pause_action)(void);
-
 void pause_action_generic(void)
 {
-  schedule_full_refresh();
   updatescreen();
 }
 
