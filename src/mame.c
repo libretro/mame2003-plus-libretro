@@ -1185,10 +1185,7 @@ void update_video_and_audio(void)
 int updatescreen(void)
 {
 	/* update sound */
-	if (pause_action)
-		osd_update_silent_stream();
-	else
-		sound_update();
+	sound_update();
 
 	/* if we're not skipping this frame, draw the screen */
 	if (osd_skip_this_frame() == 0)
