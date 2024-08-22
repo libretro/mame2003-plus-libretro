@@ -1056,9 +1056,6 @@ void force_partial_update(int scanline)
 	if (osd_skip_this_frame())
 		return;
 
-	if (pause_action)
-		fillbitmap(Machine->scrbitmap, get_black_pen(), NULL);
-
 	/* skip if less than the lowest so far */
 	if (scanline < last_partial_scanline)
 		return;
