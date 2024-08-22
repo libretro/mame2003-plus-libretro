@@ -743,7 +743,7 @@ static struct namco_interface namco_interface =
 
 static const char *gaplus_sample_names[] =
 {
-	"*galaga",
+	"*gaplus",
 	"bang.wav",
 	0       /* end of array */
 };

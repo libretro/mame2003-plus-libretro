@@ -1834,75 +1834,58 @@ static struct GfxDecodeInfo gfxdecodeinfo_digdug[] =
 };
 
 
-
+/* The resistance path of the namco sound is 16k compared to
+ * the 10k of the highest gain 54xx filter. Giving a 10/16 gain.
+ */
 static struct namco_interface namco_interface =
 {
 	18432000/6/32,	/* 96 kHz sample rate */
 	3,				/* number of voices */
-	100,			/* playback volume */
+	90*10/16,		/* playback volume */
 	REGION_SOUND1	/* memory region */
 };
 
+/* Only used by bosco.  After filtering the 4V 52xx output,
+ * the signal is 1V, or 25%.  The relative volume between
+ * 52xx & 54xx is the same.
+ */
 static struct namco_52xx_interface namco_52xx_interface =
 {
 	18432000/12,	/* 1.536 MHz */
-	50,				/* volume */
-	REGION_SOUND2	/* memory region */
+	90,				/* volume */
+	REGION_SOUND2,	/* memory region */
+	4000,			/* Playback frequency - from 555 timer 6M */
+	80,				/* High pass filter fc */
+	0.3,			/* High pass filter Q */
+	2400,			/* Low pass filter fc */
+	0.9,			/* Low pass filter Q */
+	.25				/* Combined gain of both filters */
 };
 
 static struct namco_54xx_interface namco_54xx_interface =
 {
 	18432000/12,		/* 1.536 MHz */
-	{ 100, 100, 100 }	/* volume of the three outputs */
+	90,				/* volume */
+	{ RES_K(100),	RES_K(47),		RES_K(150) },	/* R24, R33, R42 */
+	{ RES_K(22),	RES_K(10),		RES_K(22) },	/* R23, R34, R41 */
+	{ RES_K(220),	RES_K(150),		RES_K(470) },	/* R22, R35, R40 */
+	{ RES_K(33),	RES_K(33),		RES_K(10)},		/* R21, R36, R37 */
+	{ CAP_U(.001),	CAP_U(.01),		CAP_U(.01) },	/* C31, C29, C27 */
+	{ CAP_U(.001),	CAP_U(.01),		CAP_U(.01) },	/* C30, C28, C26 */
 };
 
 static const char *bosco_sample_names[] =
 {
 	"*bosco",
-	"bigbang.wav",
-	"midbang.wav",
 	"shot.wav",
 	0	/* end of array */
 };
 
 static struct Samplesinterface samples_interface_bosco =
 {
-	3,	/* 3 channels */
-	100,	/* volume */
+	1,	/* 3 channel1 */
+	95,	/* volume */
 	bosco_sample_names
-};
-
-static const char *galaga_sample_names[] =
-{
-	"*galaga",
-	"bang.wav",
-	"bang.wav",
-/*	"init.wav", */
-	0       /* end of array */
-};
-
-static struct Samplesinterface samples_interface_galaga =
-{
-	3,	/* 3 channels */
-	80,	/* volume */
-	galaga_sample_names
-};
-
-static const char *xevious_sample_names[] =
-{
-	"*xevious",
-	"explo2.wav",	/* Solvalou explosion */
-	"explo3.wav",	/* credit */
-	"explo4.wav",	/* Garu Zakato explosion */
-	"explo1.wav",	/* ground target explosion */
-	0	/* end of array */
-};
-
-struct Samplesinterface samples_interface_xevious =
-{
-	3,	/* 3 channels */
-	80,	/* volume */
-	xevious_sample_names
 };
 
 static const char *battles_sample_names[] =
@@ -2000,7 +1983,6 @@ static MACHINE_DRIVER_START( galaga )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
-	MDRV_SOUND_ADD(SAMPLES, samples_interface_galaga)
 	MDRV_SOUND_ADD(NAMCO_54XX, namco_54xx_interface)
 MACHINE_DRIVER_END
 
@@ -2049,8 +2031,7 @@ static MACHINE_DRIVER_START( xevious )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(NAMCO_15XX, namco_interface)
-	MDRV_SOUND_ADD_TAG("samples", SAMPLES, samples_interface_xevious)
-	MDRV_SOUND_ADD(NAMCO_54XX, namco_54xx_interface)
+    MDRV_SOUND_ADD_TAG("54xx",NAMCO_54XX, namco_54xx_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( battles )
@@ -2068,7 +2049,8 @@ static MACHINE_DRIVER_START( battles )
 	MDRV_PALETTE_INIT(battles)
 
 	/* sound hardware */
-	MDRV_SOUND_REPLACE("samples", SAMPLES, samples_interface_battles)
+    MDRV_SOUND_REMOVE("54xx")
+	MDRV_SOUND_ADD(SAMPLES, samples_interface_battles)
 MACHINE_DRIVER_END
 
 
