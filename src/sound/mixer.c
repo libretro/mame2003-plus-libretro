@@ -715,7 +715,7 @@ void mixer_update_channel(struct mixer_channel_data *channel, int total_sample_c
 	if (samples_to_generate <= 0)
 		return;
 
-  if ( channel->is_paused || cpu_pause_state ) return;
+  if ( channel->is_paused ) return;
 
         /* if we're playing, mix in the data */
 	if (channel->is_playing)

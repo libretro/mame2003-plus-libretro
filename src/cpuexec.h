@@ -95,14 +95,13 @@ void machine_reset(void);
 
 void mame_frame(void);
 
+extern void (*pause_action)(void);
+
 /*************************************
  *
  *	Optional watchdog
  *
  *************************************/
-
-/* Used to disarm the watchdog while cpu is paused */
-WRITE_HANDLER( watchdog_disarm_w );
 
 /* 8-bit watchdog read/write handlers */
 WRITE_HANDLER( watchdog_reset_w );

@@ -330,7 +330,6 @@ void osd_update_video_and_audio(struct mame_display *display);
 /*
   Pause or resume all active cpus, true->pause, false->resume.
 */
-extern bool cpu_pause_state;
 extern void cpu_pause(bool pause);
 
 
@@ -362,6 +361,7 @@ extern void cpu_pause(bool pause);
 */
 int osd_start_audio_stream(int stereo);
 int osd_update_audio_stream(INT16 *buffer);
+void osd_update_silent_stream(void);
 void osd_stop_audio_stream(void);
 
 /******************************************************************************

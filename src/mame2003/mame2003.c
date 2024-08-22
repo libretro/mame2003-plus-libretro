@@ -364,26 +364,21 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
    return delta;
 }
 
-/* initialized in cpu_pre_run() */
-bool cpu_pause_state;
+void pause_action_generic(void)
+{
+  updatescreen();
+}
 
+/* initialized in cpu_pre_run() */
 void cpu_pause(bool pause)
 {
-  int cpunum;
-
-  for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+  if (pause)
+    pause_action = pause_action_generic;
+  else /* resume and reset behavior */
   {
-    if (pause)
-      cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
-    else
-      cpunum_resume(cpunum, SUSPEND_ANY_REASON);
+    toggle_showgfx = false;
+    pause_action = 0;
   }
-
-  /* disarm watchdog to prevent reset */
-  if (pause) watchdog_disarm_w(0, 0);
-
-  /* update state */
-  cpu_pause_state = pause;
 }
 
 extern UINT8 frameskip_counter;
@@ -581,10 +576,8 @@ int osd_update_audio_stream(INT16 *buffer)
 	int i,j;
 	if ( Machine->sample_rate !=0 && buffer)
 	{
-		if (cpu_pause_state)
-			memset(samples_buffer, 0,      samples_per_frame * (usestereo ? 4 : 2));
-		else
-			memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
@@ -596,8 +589,6 @@ int osd_update_audio_stream(INT16 *buffer)
 			}
 			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
-		if (cpu_pause_state)
-			return samples_per_frame;
 
 		/*process next frame */
 
@@ -622,6 +613,26 @@ int osd_update_audio_stream(INT16 *buffer)
 		}
 	}
 	return samples_per_frame;
+}
+
+
+void osd_update_silent_stream(void)
+{
+	int length = samples_per_frame * (usestereo ? 4 : 2);
+
+	if (Machine->sample_rate !=0)
+	{
+		if (usestereo)
+		{
+			memset(samples_buffer, 0, length);
+			audio_batch_cb(samples_buffer, samples_per_frame);
+		}
+		else
+		{
+			memset(conversion_buffer, 0, length * 2);
+			audio_batch_cb(conversion_buffer,samples_per_frame);
+		}
+	}
 }
 
 

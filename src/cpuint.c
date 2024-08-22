@@ -310,11 +310,7 @@ void cpu_set_irq_line(int cpunum, int irqline, int state)
 void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 {
 	INT32 irq_event = (state & 0xff) | ((irqline & 0xff) << 8) | (vector << 16);
-	int event_index;
-
-	if (cpu_pause_state && state == PULSE_LINE) return;
-
-	event_index = irq_event_index[cpunum]++;
+	int event_index = irq_event_index[cpunum]++;
 
 	/*LOG(("cpu_set_irq_line(%d,%d,%d,%02x)\n", cpunum, irqline, state, vector));*/
 

@@ -334,8 +334,7 @@ static void cpu_pre_run(void)
 	/* reset the globals */
 	cpu_vblankreset();
 	current_frame = 0;
-	cpu_pause_state = false;
-	toggle_showgfx = false;
+	cpu_pause(false);
 	state_save_dump_registry();
 }
 
@@ -467,11 +466,6 @@ static void watchdog_reset(void)
 	if (watchdog_counter == -1)
 		log_cb(RETRO_LOG_INFO, "watchdog armed\n");
 	watchdog_counter = 3 * Machine->drv->frames_per_second;
-}
-
-WRITE_HANDLER( watchdog_disarm_w )
-{
-	watchdog_counter = -1;
 }
 
 WRITE_HANDLER( watchdog_reset_w )
