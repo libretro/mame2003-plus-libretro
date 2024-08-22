@@ -1056,12 +1056,15 @@ void force_partial_update(int scanline)
 	if (osd_skip_this_frame())
 		return;
 
+	if (pause_action)
+		fillbitmap(Machine->scrbitmap, get_black_pen(), NULL);
+
 	/* skip if less than the lowest so far */
 	if (scanline < last_partial_scanline)
 		return;
 
 	/* if there's a dirty bitmap and we didn't do any partial updates yet, handle it now */
-	if (full_refresh_pending && last_partial_scanline == 0 || pause_action)
+	if (full_refresh_pending && last_partial_scanline == 0)
 	{
 		fillbitmap(Machine->scrbitmap, get_black_pen(), NULL);
 		full_refresh_pending = 0;
