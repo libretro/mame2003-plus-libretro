@@ -576,10 +576,8 @@ int osd_update_audio_stream(INT16 *buffer)
 	int i,j;
 	if ( Machine->sample_rate !=0 && buffer)
 	{
-		if (pause_action)
-			memset(samples_buffer, 0,      samples_per_frame * (usestereo ? 4 : 2));
-		else
-			memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
@@ -591,8 +589,6 @@ int osd_update_audio_stream(INT16 *buffer)
 			}
 			audio_batch_cb(conversion_buffer,samples_per_frame);
 		}
-		if (pause_action)
-			return samples_per_frame;
 
 		/*process next frame */
 
@@ -617,6 +613,28 @@ int osd_update_audio_stream(INT16 *buffer)
 		}
 	}
 	return samples_per_frame;
+}
+
+
+void osd_update_silent_stream(void)
+{
+	int i,j;
+	if (Machine->sample_rate !=0)
+	{
+		memset(samples_buffer, 0, samples_per_frame * (usestereo ? 4 : 2));
+
+		if (usestereo)
+			audio_batch_cb(samples_buffer, samples_per_frame);
+		else
+		{
+			for (i = 0, j = 0; i < samples_per_frame; i++)
+			{
+				conversion_buffer[j++] = samples_buffer[i];
+				conversion_buffer[j++] = samples_buffer[i];
+			}
+			audio_batch_cb(conversion_buffer,samples_per_frame);
+		}
+	}
 }
 
 
