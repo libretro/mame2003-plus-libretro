@@ -366,17 +366,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void pause_action_generic(void)
 {
-	/* silence sound */
-	osd_update_silent_stream();
-
-	profiler_mark(PROFILER_VIDEO);
-	draw_screen();
-	profiler_mark(PROFILER_END);
-
-	handle_user_interface(artwork_get_ui_bitmap());
-
-	/* blit to the screen */
-	update_video_and_audio();
+  updatescreen();
 }
 
 /* initialized in cpu_pre_run() */
