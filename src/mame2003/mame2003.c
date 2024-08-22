@@ -369,7 +369,9 @@ void pause_action_generic(void)
 	/* silence sound */
 	osd_update_silent_stream();
 
+	profiler_mark(PROFILER_VIDEO);
 	draw_screen();
+	profiler_mark(PROFILER_END);
 
 	handle_user_interface(artwork_get_ui_bitmap());
 
