@@ -1852,7 +1852,7 @@ static struct namco_interface namco_interface =
 static struct namco_52xx_interface namco_52xx_interface =
 {
 	18432000/12,	/* 1.536 MHz */
-	90,				/* volume */
+	80,				/* volume */
 	REGION_SOUND2,	/* memory region */
 	4000,			/* Playback frequency - from 555 timer 6M */
 	80,				/* High pass filter fc */
@@ -1865,13 +1865,13 @@ static struct namco_52xx_interface namco_52xx_interface =
 static struct namco_54xx_interface namco_54xx_interface =
 {
 	18432000/12,		/* 1.536 MHz */
-	90,				/* volume */
-	{ RES_K(100),	RES_K(47),		RES_K(150) },	/* R24, R33, R42 */
-	{ RES_K(22),	RES_K(10),		RES_K(22) },	/* R23, R34, R41 */
-	{ RES_K(220),	RES_K(150),		RES_K(470) },	/* R22, R35, R40 */
-	{ RES_K(33),	RES_K(33),		RES_K(10)},		/* R21, R36, R37 */
-	{ CAP_U(.001),	CAP_U(.01),		CAP_U(.01) },	/* C31, C29, C27 */
-	{ CAP_U(.001),	CAP_U(.01),		CAP_U(.01) },	/* C30, C28, C26 */
+	80,				/* volume */
+	{ RES_K(150),	RES_K(47),		RES_K(100) },	/* R42, R33, R24 */
+	{ RES_K(22),	RES_K(10),		RES_K(22) },	/* R41, R34, R23 */
+	{ RES_K(470),	RES_K(150),		RES_K(220) },	/* R40, R35, R22 */
+	{ RES_K(10),	RES_K(33),		RES_K(33)},		/* R37, R36, R21 */
+	{ CAP_U(.01),	CAP_U(.01),		CAP_U(.001) },	/* C27, C29, C31 */
+	{ CAP_U(.01),	CAP_U(.01),		CAP_U(.001) },	/* C26, C28, C30 */
 };
 
 static const char *bosco_sample_names[] =

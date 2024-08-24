@@ -555,9 +555,9 @@ void NAMCO54xxUpdateOne(int num, INT16 **buffers, int length)
 			if (filter54[loop].y0 < -2) filter54[loop].y0 = -2;
 		}
 
-		(buf1)[i] = filter54[0].y0 * (32768/2);
-		(buf2)[i] = filter54[1].y0 * (32768/2);
-		(buf3)[i] = filter54[2].y0 * (32768/2);
+		(buf1)[i] = filter54[0].y0 * (16384/2);
+		(buf2)[i] = filter54[1].y0 * (16384/2);
+		(buf3)[i] = filter54[2].y0 * (16384/2);
 
 		advance();
 	}
@@ -630,15 +630,16 @@ logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
 				/* 0x7n = Screech sound. n = volume (if 0 then no sound) */
 				/* followed by 0x60 command */
 #if 1
-			if (( data & 0x0f ) == 0)
+			if ( data == 112 ) 
 			{
 				if (sample_playing(0))
 					sample_stop(0);
 			}
 			else
 			{
-				int freq = (int)( ( 44100.0f / 10.0f ) * (float)(data & 0x0f) ); /* this is wrong, it's a volume and not a freq */
-
+				//int freq = (int)( ( 22050.0f / 10.0f ) * (float)(data & 0x0f) ); /* this is wrong, it's a volume and not a freq */
+				int freq = (int)  22050 + (data - 112)* 750;
+				
 				if (!sample_playing(0))
 					sample_start(0, 0, 1);
 				sample_set_freq(0, freq);
