@@ -637,7 +637,7 @@ logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
 			}
 			else
 			{
-				//int freq = (int)( ( 22050.0f / 10.0f ) * (float)(data & 0x0f) ); /* this is wrong, it's a volume and not a freq */
+				if ( data ==120) data =126;
 				int freq = (int)  22050 + (data - 112)* 750;
 				
 				if (!sample_playing(0))
