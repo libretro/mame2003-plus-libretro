@@ -637,9 +637,11 @@ logerror("%04x: custom 54XX write %02x\n",activecpu_get_pc(),data);
 			}
 			else
 			{
+				int freq;
+
 				if ( data ==120) data =126;
-				int freq = (int)  22050 + (data - 112)* 750;
-				
+				freq = (int)  22050 + (data - 112)* 750;
+
 				if (!sample_playing(0))
 					sample_start(0, 0, 1);
 				sample_set_freq(0, freq);
