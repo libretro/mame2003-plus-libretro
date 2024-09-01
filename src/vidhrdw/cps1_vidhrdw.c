@@ -1724,10 +1724,10 @@ void cps2_render_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 
 
-
 void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int offs;
+	int cnd;
 	UINT8 *stars_rom = memory_region(REGION_GFX2);
 
 	if (!stars_rom && (cps1_stars_enabled[0] || cps1_stars_enabled[1]))
@@ -1755,7 +1755,7 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 					sy = 255 - sy;
 				}
 
-                int cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
+        cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
 				col = ((col & 0xe0) >> 1) + cnt;
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
@@ -1782,7 +1782,7 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 					sy = 255 - sy;
 				}
 
-				int cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
+				cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
 				col = ((col & 0xe0) >> 1) + cnt;
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
