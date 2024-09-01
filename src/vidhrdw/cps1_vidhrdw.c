@@ -1743,7 +1743,7 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 		for (offs = 0;offs < stars_rom_size/2;offs++)
 		{
 			int col = stars_rom[8*offs+4];
-			if (col != 0x0f)
+			if ((col & 0x1f) != 0x0f)
 			{
 				int sx = (offs / 256) * 32;
 				int sy = (offs % 256);
@@ -1755,7 +1755,8 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (cpu_getcurrentframe()/16 & 0x0f);
+                int cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
+				col = ((col & 0xe0) >> 1) + cnt;
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
 					sy >= cliprect->min_y && sy <= cliprect->max_y)
@@ -1769,7 +1770,7 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 		for (offs = 0;offs < stars_rom_size/2;offs++)
 		{
 			int col = stars_rom[8*offs];
-			if (col != 0x0f)
+	        if ((col & 0x1f) != 0x0f)
 			{
 				int sx = (offs / 256) * 32;
 				int sy = (offs % 256);
@@ -1781,7 +1782,8 @@ void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *clipre
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (cpu_getcurrentframe()/16 & 0x0f);
+				int cnt = (cpu_getcurrentframe() / 16 ) % ((col & 0x80) ? 15 : 16);
+				col = ((col & 0xe0) >> 1) + cnt;
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
 					sy >= cliprect->min_y && sy <= cliprect->max_y)
