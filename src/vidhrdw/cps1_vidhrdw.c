@@ -1727,7 +1727,7 @@ void cps2_render_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 void cps1_render_stars(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int offs;
-	int cnd;
+	int cnt;
 	UINT8 *stars_rom = memory_region(REGION_GFX2);
 
 	if (!stars_rom && (cps1_stars_enabled[0] || cps1_stars_enabled[1]))
