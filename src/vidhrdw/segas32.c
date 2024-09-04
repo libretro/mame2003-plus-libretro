@@ -290,6 +290,7 @@ static UINT8 is_multi32;
 
 /* tilemap cache */
 static struct cache_entry *cache_head;
+static struct cache_entry tmap_cache[TILEMAP_CACHE_SIZE];
 
 /* mixer data */
 static struct layer_info layer_data[11];
@@ -342,10 +343,11 @@ static int common_start(int multi32)
 	spriteram_32bit = auto_malloc(sizeof(UINT32)*(0x20000/4));
 
 	/* allocate the tilemap cache */
+	tmap_cache = auto_malloc(sizeof(struct cache_entry)*TILEMAP_CACHE_SIZE);
 	cache_head = NULL;
 	for (tmap = 0; tmap < TILEMAP_CACHE_SIZE; tmap++)
 	{
-		struct cache_entry *entry = auto_malloc(sizeof(struct cache_entry));
+		struct cache_entry *entry = &tmap_cache[tmap];
 
 		entry->tmap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16,16, 32,16);
 		entry->page = 0xff;
@@ -852,15 +854,7 @@ static struct tilemap *find_cache_entry(int page, int bank)
 static void get_tile_info(int tile_index)
 {
 	struct cache_entry *entry = tile_info.user_data;
-	UINT16 data;
-
-	if (!entry)
-	{
-		SET_TILE_INFO(0, 0, 0, 0)
-		return;
-	}
-
-	data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
+	UINT16 data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
 	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3)
 }
 
