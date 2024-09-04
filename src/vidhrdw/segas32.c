@@ -290,7 +290,7 @@ static UINT8 is_multi32;
 
 /* tilemap cache */
 static struct cache_entry *cache_head;
-static struct cache_entry tmap_cache[TILEMAP_CACHE_SIZE];
+static struct cache_entry *tmap_cache;
 
 /* mixer data */
 static struct layer_info layer_data[11];
