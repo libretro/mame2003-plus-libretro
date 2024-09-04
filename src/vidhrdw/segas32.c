@@ -856,12 +856,12 @@ static void get_tile_info(int tile_index)
 
 	if (!entry)
 	{
-		SET_TILE_INFO(0, 0, 0, 0);
+		SET_TILE_INFO(0, 0, 0, 0)
 		return;
 	}
 
 	data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
-	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3);
+	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3)
 }
 
 
