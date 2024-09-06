@@ -927,6 +927,7 @@ namco_road_set_transparent_color(pen_t pen)
 void
 namco_road_draw( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int pri )
 {
+	const data8_t *clut = (void *)memory_region(REGION_USER3);
 	struct mame_bitmap *pSourceBitmap;
 	unsigned yscroll;
 	int i;
@@ -983,7 +984,12 @@ namco_road_draw( struct mame_bitmap *bitmap, const struct rectangle *cliprect, i
 						int pen = pSourceGfx[sourcex>>16];
 						/* TBA: work out palette mapping for Final Lap, Suzuka */
 						if (pen != mRoadTransparentColor)
+								if( clut )
+								{
+									pen = (pen&~0xff)|clut[pen&0xff];
+								}
 							pDest[screenx] = pen;
+						
 						screenx++;
 						sourcex += dsourcex;
 					}
@@ -994,6 +1000,10 @@ namco_road_draw( struct mame_bitmap *bitmap, const struct rectangle *cliprect, i
 					{
 						int pen = pSourceGfx[sourcex>>16];
 						/* TBA: work out palette mapping for Final Lap, Suzuka */
+						if( clut )
+							{
+								pen = (pen&~0xff)|clut[pen&0xff];
+							}
 						pDest[screenx++] = pen;
 						sourcex += dsourcex;
 					}
