@@ -445,7 +445,7 @@ DrawSpritesDefault( struct mame_bitmap *bitmap, const struct rectangle *cliprect
 			spr_region=(offset2&0x2000)?1:0;
 
 			ypos=(0x1ff-(offset0&0x01ff))-0x50+0x02;
-			xpos=(offset4&0x03ff)-0x50+0x07;
+			xpos=(offset4&0x07ff)-0x50+0x07;
 
 			flipy=offset2&0x8000;
 			flipx=offset2&0x4000;
