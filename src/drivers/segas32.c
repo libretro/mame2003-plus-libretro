@@ -637,12 +637,12 @@ static UINT16 common_io_chip_r(int which, offs_t offset, UINT16 mem_mask)
 
 	switch(offset) {
 		/* I/O ports */
-		case 0x00/2:	if (port==-1) port = 1+(which*11);
-		case 0x02/2:	if (port==-1) port = 2+(which*11);
+		case 0x00/2:	if (offset==0x00/2) port = 1+(which*11);
+		case 0x02/2:	if (offset==0x02/2) port = 2+(which*11);
 		case 0x04/2:
 		case 0x06/2:
-		case 0x08/2:	if (port==-1) port = 3+(which*11);
-		case 0x0a/2:	if (port==-1) port = 0;
+		case 0x08/2:	if (offset==0x08/2) port = 3+(which*11);
+		case 0x0a/2:	if (offset==0x0a/2) port = 0;
 		case 0x0c/2:
 		case 0x0e/2:
 			/* if the port is configured as an output, return the last thing written */
