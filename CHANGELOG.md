@@ -396,6 +396,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Fighters History - Romsets `fghthist`, `fghthsta`, and `fghthstw` - Playable with minor remaining unemulated protection
 * Find Out - Romset `findout` - colors fixed
 * Fire Barrel - Romset `firebarr`
+* Final Lap 2 - Romsets `finalap2` and `finalp2j`
+* Final Lap 3 - Romsets `finalap3` and `finalp3a`
 * Flower - Romset `flower`
 * Free Kick - Romset `freekick`
 * Funky Jet - Romset `funkyjet`
@@ -1111,3 +1113,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * and Thunder Blade are now fully playable [grant2258]
 * Added support for Knights Chance to the NeoGeo driver [arcadez]
 * Fixed dip switches for Super Pac-man added new sound roms for Pac & Pal and new graphical roms which fix bad colours in Pac-man & Chomp Chomp [MAMEDev, arcadez]
+* Added the proper sprite roms for Final Lap 2 game now playable and hooked up the road colour clut proms for the Final Lap games and Suzuka 8 Hours [arcadez]
