@@ -3,12 +3,11 @@
 /*
 Notes:
 Tilemap drawing is a killer on the first level of Nost due to the whole tilemap being dirty every frame.
-Sprite drawing is quite fast (See USER1 in the profiler), but requires blit-time rotation support
+Sprite drawing is quite fast (See USER1 in the profiler)
 
 Nost final boss, the priority of the arms is under the tilemaps, everything else is above. Should it be blended? i.e. Shadow.
-There is an area of vid ram for linescroll, nost tests it but doesn't appear to use it.
 
-ToDo: Fix Sprites for Cocktail
+ToDo: Fix Sprites & Rowscroll/Select for Cocktail
 */
 
 #include "driver.h"
@@ -163,9 +162,55 @@ static void mcatadv_drawsprites ( struct mame_bitmap *bitmap, const struct recta
 	}
 }
 
+static void mcatadv_draw_tilemap_part(UINT16* current_scroll, UINT16* current_videoram1, int i, struct tilemap* current_tilemap, struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int flip;
+	unsigned int drawline;
+	struct rectangle clip;
+
+	clip.min_x = cliprect->min_x;
+	clip.max_x = cliprect->max_x;
+
+	for(drawline = cliprect->min_y; drawline <= cliprect->max_y;drawline++)
+	{
+		int scrollx, scrolly;
+
+		clip.min_y = drawline;
+		clip.max_y = drawline;
+
+		scrollx = (current_scroll[0]&0x1ff)-0x194;
+		scrolly = (current_scroll[1]&0x1ff)-0x1df;
+
+		if ((current_scroll[1]&0x4000)==0x4000)
+		{
+			int rowselect;
+			rowselect = current_videoram1[0x1000/2 + (((drawline+scrolly)&0x1ff) * 2) + 1];
+			scrolly = rowselect - drawline;
+		}
+
+		if ((current_scroll[0]&0x4000)==0x4000)
+		{
+			int rowscroll;
+			rowscroll = current_videoram1[0x1000/2 + (((drawline+scrolly)&0x1ff) * 2) + 0];
+			scrollx += rowscroll;
+		}
+
+		/* Global Flip */
+		if(!(current_scroll[0]&0x8000)) scrollx -= 0x19;
+		if(!(current_scroll[1]&0x8000)) scrolly -= 0x141;
+		flip = ((current_scroll[0]&0x8000)?0:TILEMAP_FLIPX) | ((current_scroll[1]&0x8000)?0:TILEMAP_FLIPY);
+
+		tilemap_set_scrollx(current_tilemap, 0, scrollx);
+		tilemap_set_scrolly(current_tilemap, 0, scrolly);
+		tilemap_set_flip(current_tilemap, flip);
+
+		tilemap_draw(bitmap, &clip, current_tilemap, i, i);
+	}
+}
+
 VIDEO_UPDATE( mcatadv )
 {
-	int i, scrollx, scrolly, flip;
+	int i;
 
 	fillbitmap(bitmap, get_black_pen(), cliprect);
 	fillbitmap(priority_bitmap, 0, cliprect);
@@ -180,40 +225,17 @@ VIDEO_UPDATE( mcatadv )
 		tilemap_mark_all_tiles_dirty(mcatadv_tilemap2);
 	}
 
-	scrollx = (mcatadv_scroll[0]&0x1ff)-0x194;
-	scrolly = (mcatadv_scroll[1]&0x1ff)-0x1df;
-
-	/* Global Flip */
-	if(!(mcatadv_scroll[0]&0x8000)) scrollx -= 0x19;
-	if(!(mcatadv_scroll[1]&0x8000)) scrolly -= 0x141;
-	flip = ((mcatadv_scroll[0]&0x8000)?0:TILEMAP_FLIPX) | ((mcatadv_scroll[1]&0x8000)?0:TILEMAP_FLIPY);
-
-	tilemap_set_scrollx(mcatadv_tilemap1, 0, scrollx);
-	tilemap_set_scrolly(mcatadv_tilemap1, 0, scrolly);
-	tilemap_set_flip(mcatadv_tilemap1, flip);
-
-	scrollx = (mcatadv_scroll2[0]&0x1ff)-0x194;
-	scrolly = (mcatadv_scroll2[1]&0x1ff)-0x1df;
-
-	/* Global Flip */
-	if(!(mcatadv_scroll2[0]&0x8000)) scrollx -= 0x19;
-	if(!(mcatadv_scroll2[1]&0x8000)) scrolly -= 0x141;
-	flip = ((mcatadv_scroll2[0]&0x8000)?0:TILEMAP_FLIPX) | ((mcatadv_scroll2[1]&0x8000)?0:TILEMAP_FLIPY);
-
-	tilemap_set_scrollx(mcatadv_tilemap2, 0, scrollx);
-	tilemap_set_scrolly(mcatadv_tilemap2, 0, scrolly);
-	tilemap_set_flip(mcatadv_tilemap2, flip);
-
 	for (i=0; i<=3; i++)
 	{
-#ifdef MAME_DEBUG
-		if (!keyboard_pressed(KEYCODE_Q))
-#endif
-			tilemap_draw(bitmap, cliprect, mcatadv_tilemap1, i, i);
-#ifdef MAME_DEBUG
-		if (!keyboard_pressed(KEYCODE_W))
-#endif
-			tilemap_draw(bitmap, cliprect, mcatadv_tilemap2, i, i);
+	#ifdef MAME_DEBUG
+			if (!keyboard_pressed(KEYCODE_Q))
+	#endif
+			mcatadv_draw_tilemap_part(mcatadv_scroll,  mcatadv_videoram1, i, mcatadv_tilemap1, bitmap, cliprect);
+
+	#ifdef MAME_DEBUG
+			if (!keyboard_pressed(KEYCODE_W))
+	#endif
+				mcatadv_draw_tilemap_part(mcatadv_scroll2, mcatadv_videoram2, i, mcatadv_tilemap2, bitmap, cliprect);
 	}
 
 	profiler_mark(PROFILER_USER1);
