@@ -1633,11 +1633,11 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG2], cliprect, 2);
 	if (enable3)
 		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG3], cliprect, 3);
-*/	if (enablet)
+	if (enablet)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
-	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
+*/	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
