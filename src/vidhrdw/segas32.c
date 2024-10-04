@@ -2715,10 +2715,10 @@ VIDEO_UPDATE( multi32 )
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
   
-	int monitor_setting;
-	int monitor_display_start;
-	int monitor_display_width;
-	int monitor_vertical_offset;
+	int monitor_setting = readinputport(0xf);
+	int monitor_display_start = 0;
+	int monitor_display_width = 2;
+	int monitor_vertical_offset = 2;
 
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
@@ -2726,16 +2726,12 @@ VIDEO_UPDATE( multi32 )
    y max to allow for this so we must manually set our y clip max to the
    actual maximum for drawing purposes.
 */
-	monitor_setting=readinputport(0xf);
-	monitor_vertical_offset=1;
-	monitor_display_start=0;
-	if (monitor_setting==2) monitor_display_start=1;
-	if (monitor_setting==3) {
-		monitor_vertical_offset=2;
-		monitor_display_width=2;
-  }
-  else
-		monitor_display_width=1+monitor_display_start;
+	if (monitor_setting != 3)
+	{
+		monitor_display_start = monitor_setting - 1;
+		monitor_display_width = monitor_setting;
+		monitor_vertical_offset = 1;
+	}
 
 	/* update the visible area */
 	if (system32_videoram[0x1ff00/2] & 0x8000)
