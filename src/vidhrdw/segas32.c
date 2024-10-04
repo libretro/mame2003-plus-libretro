@@ -2762,7 +2762,7 @@ VIDEO_UPDATE( multi32 )
 
 	/* update the tilemaps */
 	profiler_mark(PROFILER_USER1);
-	enablemask = update_tilemaps(&cliprect);
+	enablemask = update_tilemaps(&clipright);
 	profiler_mark(PROFILER_END);
 
 	/* debugging */
