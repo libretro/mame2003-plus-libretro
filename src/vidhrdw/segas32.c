@@ -1624,6 +1624,12 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enablet = !(system32_videoram[0x1ff02/2] & 0x0010) && !(system32_videoram[0x1ff8e/2] & 0x0001);
 	int enableb = !(system32_videoram[0x1ff02/2] & 0x0020) && !(system32_videoram[0x1ff8e/2] & 0x0020);
 
+	struct rectangle clip_hack;
+	clip_hack.min_y = 0;
+	clip_hack.max_y = 28*8-1;
+	clip_hack.min_x = 0;
+	clip_hack.max_x = 1;
+
 	/* update any tilemaps */
 	if (enable0)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
@@ -1637,7 +1643,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
-	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
+	update_background(&layer_data[MIXER_LAYER_BACKGROUND], &clip_hack);
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
@@ -2762,7 +2768,7 @@ VIDEO_UPDATE( multi32 )
 
 	/* update the tilemaps */
 	profiler_mark(PROFILER_USER1);
-	enablemask = update_tilemaps(&clipright);
+	enablemask = update_tilemaps(&clipleft);
 	profiler_mark(PROFILER_END);
 
 	/* debugging */
