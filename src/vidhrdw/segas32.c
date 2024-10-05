@@ -1639,7 +1639,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
 	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
 
-	return (enablet << 0) | (enable0*2 << 1) | (enable1*2 << 2) | (enable2*2 << 3) | (enable3*2 << 4) | (enableb << 5);
+	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
 
 
@@ -2782,7 +2782,7 @@ VIDEO_UPDATE( multi32 )
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
 	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
-		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
+		mix_all_layers(1, clipright.min_x, bitmap, &clipright, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
 	profiler_mark(PROFILER_END);
