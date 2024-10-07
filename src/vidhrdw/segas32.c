@@ -1413,6 +1413,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 			{
 				int effdstx = Machine->visible_area.max_x - x * 8;
 				int effdsty = Machine->visible_area.max_y - y * 8;
+				{if (readinputport(0xf) == 3) effdsty >>= 1;}
 				UINT16 *dst = ((UINT16 *)bitmap->line[effdsty]) + effdstx;
 
 				/* loop over rows */
@@ -2718,7 +2719,7 @@ VIDEO_UPDATE( multi32 )
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = 0;
 	int monitor_display_width = 2;
-	int monitor_vertical_offset = 1;
+	int monitor_vertical_offset = 2;
 
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
