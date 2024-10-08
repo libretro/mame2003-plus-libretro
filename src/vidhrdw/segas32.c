@@ -2731,14 +2731,6 @@ VIDEO_UPDATE( multi32 )
 		monitor_display_start = monitor_setting - 1;
 		monitor_display_width = monitor_setting;
 		monitor_vertical_offset = 1;
-
-		machine->aspect_x = (4);
-		machine->aspect_y = (3);
-	}
-	else
-	{
-		machine->aspect_x = (8);
-		machine->aspect_y = (3);
 	}
 
 	/* update the visible area */
