@@ -2712,6 +2712,7 @@ for (showclip = 0; showclip < 4; showclip++)
 
 VIDEO_UPDATE( multi32 )
 {
+	extern struct osd_create_params video_config;
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
   
@@ -2731,6 +2732,13 @@ VIDEO_UPDATE( multi32 )
 		monitor_display_start = monitor_setting - 1;
 		monitor_display_width = monitor_setting;
 		monitor_vertical_offset = 1;
+		video_config.aspect_x = 4;
+		video_config.aspect_y = 3;
+	}
+	else
+	{
+		video_config.aspect_x = 8;
+		video_config.aspect_y = 3;
 	}
 
 	/* update the visible area */
