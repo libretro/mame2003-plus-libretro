@@ -1134,7 +1134,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 				/* otherwise, clear to zero */
 				else
 				{
-					int pixels = extents[1] - extents[0]; if (pixels > 319) usrintf_showmessage("hit");
+					int pixels = extents[1] - extents[0]; if (pixels > 319) usrintf_showmessage("%i  %i", extents[0], extents[1]);
 					memset(&dst[extents[0]], 0, pixels * sizeof(dst[0]));
 					srcx += srcxstep * pixels;
 					transparent += pixels;
