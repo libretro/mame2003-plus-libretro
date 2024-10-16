@@ -1119,7 +1119,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
-					for (x = extents[0]; x < extents[1]; x++)
+					for (x = extents[0]; x < extents[1] && (x>=cliprect->min_x && x<=cliprect->max_x); x++)
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
 						srcx += srcxstep;
