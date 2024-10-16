@@ -232,6 +232,10 @@
 #define SWAP_HALVES(x)			(((x) >> 16) | ((x) << 16))
 #endif
 
+#define VALIDATE_EXTENTS \
+  if (extents[0] < cliprect->min_x || extents[0] > cliprect->max_x || \
+      extents[1] < cliprect->min_x || extents[1] > cliprect->max_x )  \
+          break
 
 
 /*************************************
@@ -1116,10 +1120,12 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			srcx = srcx_start;
 			while (1)
 			{
+				VALIDATE_EXTENTS;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
-					for (x = extents[0]; x < extents[1] && (x>=cliprect->min_x && x<=cliprect->max_x); x++)
+					for (x = extents[0]; x < extents[1]; x++)
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
 						srcx += srcxstep;
@@ -1268,6 +1274,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			/* loop over extents */
 			while (1)
 			{
+				VALIDATE_EXTENTS;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
@@ -1516,6 +1524,8 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 			/* loop over extents */
 			while (1)
 			{
+				VALIDATE_EXTENTS;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
