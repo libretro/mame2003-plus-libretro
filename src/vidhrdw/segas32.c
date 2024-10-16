@@ -2786,10 +2786,10 @@ VIDEO_UPDATE( multi32 )
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
-//	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
-//		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
-//	else
-//		fillbitmap(bitmap, get_black_pen(), &clipright);
+	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
+		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
+	else
+		fillbitmap(bitmap, get_black_pen(), &clipright);
 	profiler_mark(PROFILER_END);
 
 	if (!code_pressed(KEYCODE_M)) print_mixer_data(0);
