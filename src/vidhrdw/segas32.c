@@ -232,10 +232,8 @@
 #define SWAP_HALVES(x)			(((x) >> 16) | ((x) << 16))
 #endif
 
-#define VALIDATE_EXTENTS \
-  if (extents[0] < cliprect->min_x || extents[0] > cliprect->max_x || \
-      extents[1] < cliprect->min_x || extents[1] > cliprect->max_x )  \
-          break
+#define WITHIN_CLIPRECT  \
+  (x >= cliprect->min_x && x <= cliprect->max_x )
 
 
 /*************************************
@@ -1123,9 +1121,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
-					VALIDATE_EXTENTS;
-
-					for (x = extents[0]; x < extents[1]; x++)
+					for (x = extents[0]; x < extents[1] && WITHIN_CLIPRECT; x++)
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
 						srcx += srcxstep;
@@ -1277,9 +1273,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
-					VALIDATE_EXTENTS;
-
-					for (x = extents[0]; x < extents[1]; x++, srcx += srcxstep)
+					for (x = extents[0]; x < extents[1] && WITHIN_CLIPRECT; x++, srcx += srcxstep)
 					{
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
 						if ((pix & 0x0f) == 0 && !opaque)
@@ -1527,13 +1521,11 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
-					VALIDATE_EXTENTS;
-
 					/* 8bpp mode case */
 					if (bpp == 8)
 					{
 						UINT8 *src = (UINT8 *)&system32_videoram[512/2 * ((y + yscroll) & 0xff)];
-						for (x = extents[0]; x < extents[1]; x++)
+						for (x = extents[0]; x < extents[1] && WITHIN_CLIPRECT; x++)
 						{
 							int effx = (x + xscroll) & 0x1ff;
 							int pix = src[BYTE_XOR_LE(effx)] + color;
@@ -1547,7 +1539,7 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 					else
 					{
 						UINT16 *src = &system32_videoram[512/4 * ((y + yscroll) & 0x1ff)];
-						for (x = extents[0]; x < extents[1]; x++)
+						for (x = extents[0]; x < extents[1] && WITHIN_CLIPRECT; x++)
 						{
 							int effx = (x + xscroll) & 0x1ff;
 							int pix = ((src[effx / 4] >> (4 * (effx & 3))) & 0x0f) + color;
