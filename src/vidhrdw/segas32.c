@@ -233,7 +233,7 @@
 #endif
 
 #define WITHIN_CLIPRECT  \
-  (x >= cliprect->min_x && x <= cliprect->max_x )
+  /*(x >= cliprect->min_x && x <= cliprect->max_x )*/1
 
 
 /*************************************
@@ -1026,7 +1026,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 {
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
-	struct extents_list clip_extents;
+	struct extents_list clip_extents = {0,0};
 	struct tilemap *tilemaps[4];
 	UINT32 srcx, srcx_start, srcy;
 	UINT32 srcxstep, srcystep;
@@ -1134,7 +1134,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 				/* otherwise, clear to zero */
 				else
 				{
-					int pixels = extents[1] - extents[0]; if (pixels > 319) usrintf_showmessage("%i  %i", extents[0], extents[1]);
+					int pixels = extents[1] - extents[0];
 					memset(&dst[extents[0]], 0, pixels * sizeof(dst[0]));
 					srcx += srcxstep * pixels;
 					transparent += pixels;
@@ -1180,7 +1180,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 {
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
-	struct extents_list clip_extents;
+	struct extents_list clip_extents = {0,0};
 	struct tilemap *tilemaps[4];
 	int rowscroll, rowselect;
 	int xscroll, yscroll;
@@ -1483,7 +1483,7 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 {
 	int clipenable, clipout, clips, clipdraw_start;
 	struct mame_bitmap *bitmap = layer->bitmap;
-	struct extents_list clip_extents;
+	struct extents_list clip_extents = {0,0};
 	int xscroll, yscroll;
 	int color;
 	int x, y;
