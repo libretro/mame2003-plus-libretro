@@ -1120,11 +1120,11 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			srcx = srcx_start;
 			while (1)
 			{
-				VALIDATE_EXTENTS;
-
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
+					VALIDATE_EXTENTS;
+
 					for (x = extents[0]; x < extents[1]; x++)
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
@@ -1274,11 +1274,11 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			/* loop over extents */
 			while (1)
 			{
-				VALIDATE_EXTENTS;
-
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
+					VALIDATE_EXTENTS;
+
 					for (x = extents[0]; x < extents[1]; x++, srcx += srcxstep)
 					{
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
@@ -1524,11 +1524,11 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 			/* loop over extents */
 			while (1)
 			{
-				VALIDATE_EXTENTS;
-
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
+					VALIDATE_EXTENTS;
+
 					/* 8bpp mode case */
 					if (bpp == 8)
 					{
