@@ -233,7 +233,8 @@
 #endif
 
 #define WITHIN_CLIPRECT  \
-  (x >= cliprect->min_x && x <= cliprect->max_x )
+  (x >= cliprect->min_x && x <= cliprect->max_x && \
+   extents[1] >= cliprect->min_x && extents[1] <= cliprect->max_x+1)
 
 
 /*************************************
