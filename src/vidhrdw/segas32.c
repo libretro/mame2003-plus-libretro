@@ -249,8 +249,8 @@ struct layer_info
 
 struct extents_list
 {
-	UINT8					scan_extent[256];
-	UINT16					extent[32][16];
+	UINT8					scan_extent[256*2];
+	UINT16					extent[32*2][16*2];
 };
 
 
