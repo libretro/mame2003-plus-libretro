@@ -941,7 +941,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 					if (extent != &list->extent[i][1] && cur->min_x <= extent[-1])
 					{
 						if (cur->max_x > extent[-1])
-							extent[-1] = (cur->max_x) & (tempclip.max_x - 1);
+							extent[-1] = cur->max_x;
 					}
 
 					/* otherwise, just append to the list */
@@ -1096,7 +1096,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	}
 
 	/* loop over the target rows */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = /*cliprect->min_y*/0; y <= cliprect->max_y; y++)
 	{
 		UINT16 *extents = &clip_extents.extent[clip_extents.scan_extent[y]][0];
 		UINT16 *dst = (UINT16 *)bitmap->line[y];
@@ -1116,6 +1116,10 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			srcx = srcx_start;
 			while (1)
 			{
+				/* stop at the end */
+				if (extents[1] > cliprect->max_x)
+					break;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
@@ -1137,10 +1141,6 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 					srcx += srcxstep * pixels;
 					transparent += pixels;
 				}
-
-				/* stop at the end */
-				if (extents[1] > cliprect->max_x)
-					break;
 
 				/* swap states and advance to the next extent */
 				clipdraw = !clipdraw;
