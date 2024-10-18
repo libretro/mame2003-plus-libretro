@@ -1117,7 +1117,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			while (1)
 			{
 				/* stop at the end */
-				if (extents[1] > cliprect->max_x)
+				if (extents[1] > cliprect->max_x+1)
 					break;
 
 				/* if we're drawing on this extent, draw it */
