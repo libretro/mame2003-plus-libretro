@@ -1116,7 +1116,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			srcx = srcx_start;
 			while (1)
 			{
-				/* stop at the end */
+				/* error out of bounds */
 				if (extents[1] > cliprect->max_x+1)
 					break;
 
@@ -1141,6 +1141,10 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 					srcx += srcxstep * pixels;
 					transparent += pixels;
 				}
+
+				/* stop at the end */
+				if (extents[1] > cliprect->max_x)
+					break;
 
 				/* swap states and advance to the next extent */
 				clipdraw = !clipdraw;
