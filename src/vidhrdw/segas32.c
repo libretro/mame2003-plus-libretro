@@ -941,7 +941,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 					if (extent != &list->extent[i][1] && cur->min_x <= extent[-1])
 					{
 						if (cur->max_x > extent[-1])
-							extent[-1] = cur->max_x;
+							extent[-1] = (cur->max_x) & (tempclip.max_x - 1);
 					}
 
 					/* otherwise, just append to the list */
