@@ -1096,7 +1096,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	}
 
 	/* loop over the target rows */
-	for (y = /*cliprect->min_y*/0; y <= cliprect->max_y; y++)
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
 		UINT16 *extents = &clip_extents.extent[clip_extents.scan_extent[y]][0];
 		UINT16 *dst = (UINT16 *)bitmap->line[y];
@@ -1272,6 +1272,10 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			/* loop over extents */
 			while (1)
 			{
+				/* error out of bounds */
+				if (extents[1] > cliprect->max_x+1)
+					break;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
@@ -1520,6 +1524,10 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 			/* loop over extents */
 			while (1)
 			{
+				/* error out of bounds */
+				if (extents[1] > cliprect->max_x+1)
+					break;
+
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
 				{
