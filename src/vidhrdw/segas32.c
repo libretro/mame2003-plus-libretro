@@ -2731,6 +2731,8 @@ VIDEO_UPDATE( multi32 )
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = 0;
 	int monitor_display_width = 2;
+
+	system32_videoram[0x1ff02/2] = 0x1000;
 	system32_videoram[0x1ff8e/2] = 0x8000;
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
