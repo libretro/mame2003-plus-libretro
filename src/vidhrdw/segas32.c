@@ -276,7 +276,8 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack = false; /* dink */
+bool opaquey_hack  = false; /* dink */
+bool titlef_kludge = false;
 
 
 
@@ -1649,7 +1650,8 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
-	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
+	if (!titlef_kludge)
+		update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
@@ -2732,7 +2734,10 @@ VIDEO_UPDATE( multi32 )
 	int monitor_display_start = 0;
 	int monitor_display_width = 2;
 
-	if (system32_videoram[0x1ff02/2] == 0x7be0 || system32_videoram[0x1ff02/2] == 0x2960) system32_videoram[0x1ff02/2] = 0x1000;
+	if (titlef_kludge) /* force background to render */
+		if (system32_videoram[0x1ff02/2] == 0x7be0 || system32_videoram[0x1ff02/2] == 0x2960)
+			system32_videoram[0x1ff02/2] = 0x1000;
+
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
    uses dedicated left and right screens. We force an aspect ratio change
@@ -2825,7 +2830,6 @@ VIDEO_UPDATE( multi32 )
 	}
 }
 #endif
-usrintf_showmessage("OP: %04X\n", system32_videoram[0x1ff02/2]);
 }
 
 
