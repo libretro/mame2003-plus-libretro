@@ -3645,6 +3645,11 @@ static DRIVER_INIT( dbzvrvs )
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, dbzvrvs_protection_w);
 }
 
+static DRIVER_INIT( titlef )
+{
+	titlef_kludge = true;
+}
+
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
 GAME( 1992, holo,     0,        system32, holo,     s32,      ORIENTATION_FLIP_Y, "Sega", "Holosseum" )
 
@@ -3678,4 +3683,4 @@ GAMEX(1992, orunners, 0,        multi32,  orunners, 0,        ROT0, "Sega", "Out
 GAMEX(1994, harddunk, 0,        multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, harddunj, harddunk, multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, scross,   0,        scross,   scross,   0,        ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, titlef,   0,        multi32,  titlef,   0,        ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, titlef,   0,        multi32,  titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
