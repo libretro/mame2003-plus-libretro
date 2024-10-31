@@ -2824,7 +2824,7 @@ VIDEO_UPDATE( multi32 )
 	}
 }
 #endif
-
+usrintf_showmessage("OP: %04X\n", system32_videoram[0x1ff8e/2]);
 }
 
 
