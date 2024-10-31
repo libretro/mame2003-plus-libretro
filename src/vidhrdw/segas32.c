@@ -2736,7 +2736,7 @@ VIDEO_UPDATE( multi32 )
 
 	if (titlef_kludge) /* force background to render */
 		if (system32_videoram[0x1ff02/2] == 0x7be0 || system32_videoram[0x1ff02/2] == 0x2960)
-			system32_videoram[0x1ff02/2] = 0x1000;
+			system32_videoram[0x1ff02/2] = 0x0000;
 
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
