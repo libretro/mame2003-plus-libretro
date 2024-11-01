@@ -6250,7 +6250,7 @@ DRIVER_INIT( sonic2mb )
 
 int prot_cmd;
 
-WRITE8_HANDLER(sonic3mb_prot_w)
+WRITE_HANDLER( sonic3mb_prot_w )
 {
     UINT8 data;
 	  prot_cmd = data;
