@@ -6292,7 +6292,7 @@ READ16_HANDLER( sonic3mb_prot_r )
 DRIVER_INIT( sonic3mb )
 {
    /* 100000 = writes to unpopulated MCU? */
-	install_mem_write8_handler(0, 0x200000, 0x200000, sonic3mb_prot_w);
+	install_mem_write_handler (0, 0x200000, 0x200000, sonic3mb_prot_w);
   install_mem_read16_handler(0, 0x300000, 0x300001, sonic3mb_prot_r);
 	
 	genesis_region = 0x00; /* read via io */
