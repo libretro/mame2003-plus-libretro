@@ -6249,13 +6249,18 @@ DRIVER_INIT( sonic2mb )
 }
 
 int prot_cmd;
-
+/*
 WRITE_HANDLER( sonic3mb_prot_w )
 {
     UINT8 data;
 	  prot_cmd = data;
 }
+*/
 
+static void sonic3mb_prot_w( UINT8 data )
+{
+	prot_cmd = data;
+}
 
 READ16_HANDLER( sonic3mb_prot_r )
 {
