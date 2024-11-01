@@ -6252,7 +6252,8 @@ int prot_cmd;
 
 WRITE_HANDLER( sonic3mb_prot_w )
 {
-	  prot_cmd = data;
+	 /* prot_cmd = data; */
+    prot_cmd = (UINT8)data;
 }
 
 READ16_HANDLER( sonic3mb_prot_r )
