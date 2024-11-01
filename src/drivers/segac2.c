@@ -4343,6 +4343,51 @@ INPUT_PORTS_START( sonic2mb )
 	PORT_DIPSETTING(       0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( sonic3mb )
+	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Throw" )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Sword" )
+	PORT_BIT_NAME( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Jump" )
+
+
+	PORT_START /* Joypad 2 (3 button + start) Not used */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /* 3rd I/O port */
+
+	/* As I don't know how it is on real hardware, this is more a guess than anything */
+	PORT_START /* MCU hooked up via readinputport (3) */
+	/* TODO: actual diplocations */
+	/* lower 4 bits is for coinage? Not read by 68k */
+	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x30, "1" )
+	PORT_DIPSETTING(    0x20, "2" )
+	PORT_DIPSETTING(    0x10, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0xc0, 0x00, "Time Limit" )
+	PORT_DIPSETTING(    0xc0, "1:00" )
+	PORT_DIPSETTING(    0x80, "2:00" )
+	PORT_DIPSETTING(    0x40, "3:00" )
+	PORT_DIPSETTING(    0x00, "4:00" )
+	
+	PORT_START /* coins hooked up via readinputport (4) */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNUSED )
+INPUT_PORTS_END
+
 /******************************************************************************
 	Sound interfaces
 ******************************************************************************/
@@ -5078,6 +5123,17 @@ ROM_START( sonic2mb )
 	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
 	ROM_LOAD16_BYTE( "m1", 0x000001, 0x080000,  CRC(7b40aa24) SHA1(247882cd1f412366d61aeb4d85bbeefd5f108e1d) )
 	ROM_LOAD16_BYTE( "m2", 0x000000, 0x080000,  CRC(84b3f758) SHA1(19846b9d951db6f78f3e155d33f1b6349fb87f1a) )
+ROM_END
+
+ROM_START( sonic3mb )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) // 68000 Code
+	ROM_LOAD16_BYTE( "sonic3-4.bin", 0x000000, 0x080000, CRC(b7318bb8) SHA1(1707b563794c3ab4a1f04cb449efdd6f817317fb) )
+	ROM_LOAD16_BYTE( "sonic3-3.bin", 0x000001, 0x080000, CRC(1898479f) SHA1(5f1c581157959e11979882d2180ae4b98c6a89d5) )
+	ROM_LOAD16_BYTE( "sonic3-2.bin", 0x100000, 0x080000, CRC(02232f45) SHA1(8cdcb156603108ac9d3ef888f75adb5327abce1a) )
+	ROM_LOAD16_BYTE( "sonic3-1.bin", 0x100001, 0x080000, CRC(cee2f679) SHA1(4cc7a8a228f7fc4f7a38c69a65585765751a49e5) )
+
+	ROM_REGION( 0x1000, REGION_CPU2, ROMREGION_ERASE00 )
+/* ROM_LOAD( "pic16c57xtp", 0x0000, 0x1000, NO_DUMP ) */
 ROM_END
 
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
@@ -6192,6 +6248,63 @@ DRIVER_INIT( sonic2mb )
 	init_segac2();
 }
 
+int prot_cmd;
+
+WRITE8_HANDLER(sonic3mb_prot_w)
+{
+    UINT8 data;
+	  prot_cmd = data;
+}
+
+
+READ16_HANDLER( sonic3mb_prot_r )
+{
+	UINT16 res = 0;
+	switch (prot_cmd)
+	{
+		/*
+    POST, upper 8-bits part is fixed and needed for booting game,
+		lower is DSW, cfr. PC=0x16c0/0x16c6 subroutines, lower 4 bits not actually handled by 68k side
+    */
+		case 0x33: res = 0x0300 | (readinputport(3) & 0xff); break; 
+		case 0x00:
+			/*
+      TODO: coinage
+			lower 8-bits is adder for coins (i.e. with 0x202 will add 2 credits to the counter),
+			bit 9 is coin state, active high
+      */
+			res = readinputport(4) & 0x88 ? 0x201 : 0;
+			break;
+		case 0x66:
+			/* 
+      handshake or coin status after reading from commands 0x33 or 0x00,
+			if bit 0 is high will tight loop until it's low
+			we currently go the coin status route to not bother handling coin off manually.
+      */
+			res = readinputport(4) ? 1 : 0;
+			break;
+		default:
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled %04x prot command\n", prot_cmd);
+			break;
+	}
+
+	return res;
+}
+
+DRIVER_INIT( sonic3mb )
+{
+   /* 100000 = writes to unpopulated MCU? */
+	install_mem_write8_handler(0, 0x200000, 0x200000, sonic3mb_prot_w);
+  install_mem_read16_handler(0, 0x300000, 0x300001, sonic3mb_prot_r);
+	
+	genesis_region = 0x00; /* read via io */
+		
+	cpu_setbank(3, memory_region(REGION_CPU1) );
+	cpu_setbank(4, &genesis_68k_ram[0]);
+
+	init_segac2();
+}
+
 /******************************************************************************
 	Game Drivers
 *******************************************************************************
@@ -6248,6 +6361,7 @@ GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>"
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
 GAME ( 1993, sonic2mb, 0,        barek2ch, sonic2mb, sonic2mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 2 (bootleg of Megadrive version)" )
+GAME ( 1993, sonic3mb, 0,        barek2ch, sonic3mb, sonic3mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 3 (bootleg of Megadrive version)" )
 GAME ( 1994, barek2ch, 0,        barek2ch, barek2ch, barek2ch, ROT0, "bootleg / Sega",         "Bare Knuckle II (Chinese bootleg of Megadrive version)" )
 GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" )
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
