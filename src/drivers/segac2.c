@@ -5203,6 +5203,15 @@ ROM_START( jparkmb ) /* same PCB as twinktmb, JPA-028 label */
 //	ROM_LOAD( "pic16c57xtp", 0x0000, 0x2000, NO_DUMP )
 ROM_END
 
+ROM_START( twinktmb ) /* same PCB as sonic2mb, but in this one the PIC is populated */
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "m2.bin", 0x000000, 0x080000,  CRC(44424f8f) SHA1(e16318bfdf869765c821c264cf9a7e6c728f7073) )
+	ROM_LOAD16_BYTE( "m1.bin", 0x000001, 0x080000,  CRC(69aa916e) SHA1(7ea6b571fd0b6494051d5846ee9b4564b7692766) )
+
+	ROM_REGION( 0x2000, REGION_CPU2, ROMREGION_ERASE00 )
+/*	ROM_LOAD( "pic16c57xtp", 0x0000, 0x2000, NO_DUMP ) */
+ROM_END  
+
 ROM_START( pclubj ) /* Print Club (c)1995 Atlus */
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "epr18171.32", 0x000000, 0x080000, CRC(6c8eb8e2) SHA1(bbd885a83269524215c1d8470544086e3e82c05c) )
@@ -6392,6 +6401,40 @@ DRIVER_INIT( jparkmb )
 	init_segac2();
 }
 
+READ16_HANDLER( twinktmb_r )
+{
+	if (activecpu_get_pc()==0x02f81e)
+		return readinputport(4); /* TODO: coins don't respond well */
+
+	if (activecpu_get_pc()==0x02f84e) return 0x0000; /* what's this? dips? */
+
+	/* logerror("twinktmb_r : %06x\n",m_maincpu->pc()); */
+
+	return 0x0000;
+}
+
+DRIVER_INIT( twinktmb )
+{
+	/* boot vectors don't seem to be valid, so they are patched... */
+	data8_t *rom = memory_region(REGION_CPU1);
+	rom[0x01] = 0x00;
+
+	rom[0x04] = 0x00;
+	rom[0x07] = 0x46;
+	rom[0x06] = 0xcc;
+	
+    /* 100000 = writes to unpopulated MCU? */
+	install_mem_write16_handler(0, 0x100000, 0x100001, aladbl_w);
+    install_mem_read16_handler(0, 0x300000, 0x300001, twinktmb_r);
+	
+	genesis_region = 0x00; /* read via io */
+		
+	cpu_setbank(3, memory_region(REGION_CPU1) );
+	cpu_setbank(4, &genesis_68k_ram[0]);
+
+	init_segac2();
+}
+
 /******************************************************************************
 	Game Drivers
 *******************************************************************************
@@ -6450,6 +6493,7 @@ GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / 
 GAME ( 1993, sonic2mb, 0,        barek2ch, sonic2mb, sonic2mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 2 (bootleg of Megadrive version)" )
 GAME ( 1993, sonic3mb, 0,        barek2ch, sonic3mb, sonic3mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 3 (bootleg of Megadrive version)" )
 GAME ( 1993, jparkmb,  0,        barek2ch, jparkmb,  jparkmb,  ROT0, "bootleg / Sega",         "Jurassic Park (bootleg of Megadrive version)" )
+GAME ( 1993, twinktmb, 0,        barek2ch, jparkmb,  twinktmb, ROT0, "bootleg / Sega",         "Twinkle Tale (bootleg of Megadrive version)" )
 GAME ( 1994, barek2ch, 0,        barek2ch, barek2ch, barek2ch, ROT0, "bootleg / Sega",         "Bare Knuckle II (Chinese bootleg of Megadrive version)" )
 GAME ( 1994, barek3mb, 0,        barek3,   barek3,   barek3,   ROT0, "bootleg / Sega",         "Bare Knuckle III (bootleg of Megadrive version)" )
 GAME ( 1996, sbubsm,   0,        sbubsm,   sbubsm,   sbubsm,   ROT0, "Sun Mixing",             "Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)" )
