@@ -6296,6 +6296,39 @@ ROM_START( sf2cej )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
+ROM_START( sf2mix ) // 1.3
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "sf2mix.p1",  0x000000, 0x80000, CRC(478d09c6) SHA1(accd9c96077381471a07afecf1d44f55930ce8cc) )
+	ROM_LOAD16_WORD_SWAP( "sf2mix.p2",  0x080000, 0x80000, CRC(23212fb2) SHA1(f34660ef8cbe4ad5b09f8290ef70b351228bd1c6) )
+	ROM_LOAD16_WORD_SWAP( "sf2mix.p3",  0x100000, 0x80000, CRC(d3d77d12) SHA1(d9f99607325a8df9126f0e165dea037b7fefc996) )
+
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROMX_LOAD( "sf2mix99.c01",  0x000000, 0x80000, CRC(a8f70643) SHA1(0d3ab7fe1d0d15397a79c9bd304f22593a9b8d87) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix99.c02",  0x000002, 0x80000, CRC(f73f1913) SHA1(b36db11822f5601726892726f8505b7e8b676ab6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix99.c03",  0x000004, 0x80000, CRC(a80234b4) SHA1(e8c3e8030fa2ce69465d97ccb02de622e9214b01) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix99.c04",  0x000006, 0x80000, CRC(4d910b53) SHA1(1f28fe150ddf77c91c8ae998ee52e068327335d5) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c05",  0x200000, 0x80000, CRC(01ae6240) SHA1(59391e9681497ac6ec8a2736e15864f83dffdb0e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c06",  0x200002, 0x80000, CRC(88dea20a) SHA1(d8e71ff94e796d7720fa0d73c261dca783262b5a) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c07",  0x200004, 0x80000, CRC(7ea140b2) SHA1(2660ece5a443c6e32344627af9f81dc7c8cd3ea4) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c08", 0x200006, 0x80000, CRC(fbc81a7e) SHA1(b950566052114da540a0893e733ca8c7e8847003) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c09",  0x400000, 0x80000, CRC(78e86cf4) SHA1(02de07c66d8a899f0d99c5f91b0795a7a22834ae) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c10",  0x400002, 0x80000, CRC(2f8e6dc9) SHA1(b9ee9fd782cb23d6652f100f5c25944dfdd22a3e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c11",  0x400004, 0x80000, CRC(70095fdc) SHA1(8fb4b22841847858c0ac30eca49109e99709c670) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2mix100.c12",  0x400006, 0x80000, CRC(d14d18e5) SHA1(72aebfb2e589a3fa248e3ffa2723f77f1139b787) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, REGION_CPU2, 0 )
+	ROM_LOAD( "sf2mix96.m1",  0x00000, 0x08000, CRC(a379fdc5) SHA1(e9de38c13bd665698528bc102b1b16e9bdcae65b) )
+	ROM_CONTINUE(              0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000,  REGION_SOUND1, 0 )
+	ROM_LOAD( "sf2mix96.v1",  0x00000, 0x20000, CRC(6aa5d7fa) SHA1(87cfea3a9f62653fa236f49b5b25b927cff30a02) )
+	ROM_LOAD( "sf2mix96.v2",  0x20000, 0x20000, CRC(f92f5a4f) SHA1(3f1d477ab0299d2783231c3bd9983513a85b2fe6) )
+
+	//ROM_REGION( 0x80, "control", 0 )
+	//ROM_LOAD( "sf2ce.key", 0x00, 0x80, CRC(35b37429) SHA1(b372cce106c0900554735c207fb333ac93554ec2) )
+	//ROM_LOAD( "sf2ce.key", 0x00, 0x80, CRC(35b37429) SHA1(b372cce106c0900554735c207fb333ac93554ec2) )
+ROM_END
+
 ROM_START( sf2rb )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD( "sf2d__23.rom", 0x000000, 0x80000, CRC(450532b0) SHA1(14d5ff44ce97247ef4c42147157856d16c5fb4b8) )
@@ -7906,6 +7939,7 @@ GAMEC(1992, sf2m6,    sf2ce,    sf2_12mhz,         sf2,      cps1,     ROT0,   "
 GAMEC(1992, sf2m7,    sf2ce,    sf2_12mhz,         sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)", &sf2_ctrl, NULL )
 GAMEC(1992, sf2yyc,   sf2ce,    sf2_12mhz,         sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)", &sf2_ctrl, NULL )
 GAMEC(1992, sf2koryu, sf2ce,    sf2_12mhz,         sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Kouryu)", &sf2_ctrl, NULL )
+GAMEC(2023, sf2mix,   sf2ce,    sf2_12mhz,         sf2,      cps1,     ROT0,   "Zero800", "Street Fighter II: Champion Edition (Mix 1.3)", &sf2_ctrl, NULL )
 GAME( 1992, varth,    0,        cps1_12mhz,        varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" )		/* ETC */
 GAME( 1992, varthu,   varth,    cps1_12mhz,        varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)" )
 GAME( 1992, varthj,   varth,    cps1_12mhz,        varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)" )
