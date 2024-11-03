@@ -1671,8 +1671,8 @@ int check_list(char *name)
    {
       unsigned int *type=(unsigned int *)&(Machine->drv->cpu[counter].cpu_type);
 
-      if (*type==CPU_Z80)  log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a z80  %s\n",name);
-      if (*type==CPU_M68000) log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a M68000  %s\n",name);
+      if (*type==CPU_Z80)  log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a z80\n",name);
+      if (*type==CPU_M68000) log_cb(RETRO_LOG_INFO, "game:%s has no frontend_list.h match and has a M68000\n",name);
    }
    return 0;
 }
