@@ -909,9 +909,9 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 		}
 		else
 		{
-			clips[i].max_x = (Machine->visible_area.max_x + 1) - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
+			clips[i].max_x = (tempclip.max_x) - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
 			clips[i].max_y = (Machine->visible_area.max_y + 1) - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
-			clips[i].min_x = (Machine->visible_area.max_x + 1) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
+			clips[i].min_x = (tempclip.max_x) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 			clips[i].min_y = (Machine->visible_area.max_y + 1) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
 		sect_rect(&clips[i], &tempclip);
@@ -1092,7 +1092,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 
 	if (flipx)
 	{
-		srcx_start += (Machine->visible_area.max_x - 2 * cliprect->min_x) * srcxstep;
+		srcx_start += (cliprect->max_x - 2 * cliprect->min_x) * srcxstep;
 		srcxstep = -srcxstep;
 	}
 
@@ -1420,7 +1420,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 			/* flipped case */
 			else
 			{
-				int effdstx = Machine->visible_area.max_x - x * 8;
+				int effdstx = cliprect->max_x - x * 8;
 				int effdsty = Machine->visible_area.max_y - y * 8;
 				UINT16 *dst = ((UINT16 *)bitmap->line[effdsty]) + effdstx;
 
