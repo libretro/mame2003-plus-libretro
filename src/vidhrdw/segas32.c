@@ -2723,6 +2723,13 @@ for (showclip = 0; showclip < 4; showclip++)
 	print_mixer_data(0);
 }
 
+	static const int titlef_mixer[][] =
+	{
+		{ 0x7be0, 0x0000, 0x0000 },
+		{ 0x52a0, 0x0000, 0x0000 },
+		{ 0x3be0, 0x0000, 0x3be0 },
+		{ 0x2960, 0x0000, 0x0000 }
+	};
 
 VIDEO_UPDATE( multi32 )
 {
@@ -2737,14 +2744,12 @@ VIDEO_UPDATE( multi32 )
 
 	if (titlef_kludge) /* force background to render */
 	{
-		if (system32_videoram[0x1ff02/2] == 0x3be0)
-			orgin = system32_videoram[0x1ff02/2];
+		int i;
+		for (i=0; i<4; i++)
+			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
+				{ system32_videoram[0x1ff02/2] = titlef_mixer[i][1]; orgin = titlef_mixer[i][2]; }
 
-		if (system32_videoram[0x1ff02/2] == 0x7be0 ||
-				system32_videoram[0x1ff02/2] == 0x52a0 ||
-				system32_videoram[0x1ff02/2] == 0x3be0 ||
-				system32_videoram[0x1ff02/2] == 0x2960)
-				 system32_videoram[0x1ff02/2] = 0x0000;
+		usrintf_showmessage("%04x", system32_videoram[0x1ff02/2]);
 	}
 
 /*
