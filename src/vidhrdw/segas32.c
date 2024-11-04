@@ -2823,7 +2823,7 @@ VIDEO_UPDATE( multi32 )
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
 
-	if (remix != -1) /* remix */
+	if (remix != -1)
 	{
 		system32_videoram[0x1ff02/2] = remix;
 		enablemask = update_tilemaps(&clipleft); usrintf_showmessage("%i", enablemask);
