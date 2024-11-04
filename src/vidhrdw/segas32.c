@@ -2723,13 +2723,14 @@ for (showclip = 0; showclip < 4; showclip++)
 	print_mixer_data(0);
 }
 
-	static const int titlef_mixer[5][3] =
+	static const int titlef_mixer[6][3] =
 	{
 		{ 0x7be0, 0x0000, 0x0000 },
 		{ 0x5be0, 0x5be0, 0x0000 },
 		{ 0x52a0, 0x0000, 0x0000 },
 		{ 0x3be0, 0x0000, 0x3be0 },
-		{ 0x2960, 0x0000, 0x0000 }
+		{ 0x2960, 0x0000, 0x0000 },
+		{ 0x0000, 0x0000, 0x0000 }
 	};
 
 VIDEO_UPDATE( multi32 )
@@ -2746,7 +2747,7 @@ VIDEO_UPDATE( multi32 )
 	if (titlef_kludge) /* force background to render */
 	{
 		int i;
-		for (i=0; i<4; i++)
+		for (i=0; titlef_mixer[i][0]!=0; i++)
 			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
 				{ system32_videoram[0x1ff02/2] = titlef_mixer[i][1]; remix = titlef_mixer[i][2]; }
 
