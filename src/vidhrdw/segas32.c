@@ -2699,7 +2699,7 @@ for (showclip = 0; showclip < 4; showclip++)
 						rect.min_x = (cliprect->max_x + 1) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 						rect.min_y = (cliprect->max_y + 1) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 					}
-					sect_rect(&rect, &Machine->visible_area);
+					sect_rect(&rect, cliprect);
 
 					if (rect.min_y <= rect.max_y && rect.min_x <= rect.max_x)
 					{
