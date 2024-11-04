@@ -2729,6 +2729,7 @@ VIDEO_UPDATE( multi32 )
 	extern struct osd_create_params video_config;
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
+	int orgin = -1;
   
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = 0;
@@ -2736,8 +2737,12 @@ VIDEO_UPDATE( multi32 )
 
 	if (titlef_kludge) /* force background to render */
 	{
+		if (system32_videoram[0x1ff02/2] == 0x3be0)
+			orgin = system32_videoram[0x1ff02/2];
+
 		if (system32_videoram[0x1ff02/2] == 0x7be0 ||
 				system32_videoram[0x1ff02/2] == 0x52a0 ||
+				system32_videoram[0x1ff02/2] == 0x3be0 ||
 				system32_videoram[0x1ff02/2] == 0x2960)
 				 system32_videoram[0x1ff02/2] = 0x0000;
 	}
@@ -2808,6 +2813,13 @@ VIDEO_UPDATE( multi32 )
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
+
+	if (orgin != -1) /* remix */
+	{
+		system32_videoram[0x1ff02/2] = orgin;
+		enablemask = update_tilemaps(&clipleft);
+	}
+
 	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 	else
