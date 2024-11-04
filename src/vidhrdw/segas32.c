@@ -2744,16 +2744,6 @@ VIDEO_UPDATE( multi32 )
 	int monitor_display_start = 0;
 	int monitor_display_width = 2;
 
-	if (titlef_kludge) /* force background to render */
-	{
-		int i;
-		for (i=0; titlef_mixer[i][0]!=0; i++)
-			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
-				{ system32_videoram[0x1ff02/2] = titlef_mixer[i][1]; remix = titlef_mixer[i][2]; }
-
-		usrintf_showmessage("%04x", system32_videoram[0x1ff02/2]);
-	}
-
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
    uses dedicated left and right screens. We force an aspect ratio change
@@ -2797,6 +2787,18 @@ VIDEO_UPDATE( multi32 )
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
+	}
+
+	if (titlef_kludge) /* force background to render */
+	{
+		int i;
+		for (i=0; titlef_mixer[i][0]!=0; i++)
+			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
+			{ 
+				system32_videoram[0x1ff02/2] = titlef_mixer[i][1];
+        if (titlef_mixer[i][1] != titlef_mixer[i][2])
+        	remix = titlef_mixer[i][2];
+			}
 	}
 
 	/* update the tilemaps */
