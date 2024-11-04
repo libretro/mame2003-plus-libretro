@@ -2723,9 +2723,10 @@ for (showclip = 0; showclip < 4; showclip++)
 	print_mixer_data(0);
 }
 
-	static const int titlef_mixer[4][3] =
+	static const int titlef_mixer[5][3] =
 	{
 		{ 0x7be0, 0x0000, 0x0000 },
+		{ 0x5be0, 0x5be0, 0x0000 },
 		{ 0x52a0, 0x0000, 0x0000 },
 		{ 0x3be0, 0x0000, 0x3be0 },
 		{ 0x2960, 0x0000, 0x0000 }
