@@ -2723,7 +2723,7 @@ for (showclip = 0; showclip < 4; showclip++)
 	print_mixer_data(0);
 }
 
-	static const int titlef_mixer[][] =
+	static const int titlef_mixer[4][3] =
 	{
 		{ 0x7be0, 0x0000, 0x0000 },
 		{ 0x52a0, 0x0000, 0x0000 },
@@ -2736,7 +2736,7 @@ VIDEO_UPDATE( multi32 )
 	extern struct osd_create_params video_config;
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
-	int orgin = -1;
+	int remix = -1;
   
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = 0;
@@ -2747,7 +2747,7 @@ VIDEO_UPDATE( multi32 )
 		int i;
 		for (i=0; i<4; i++)
 			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
-				{ system32_videoram[0x1ff02/2] = titlef_mixer[i][1]; orgin = titlef_mixer[i][2]; }
+				{ system32_videoram[0x1ff02/2] = titlef_mixer[i][1]; remix = titlef_mixer[i][2]; }
 
 		usrintf_showmessage("%04x", system32_videoram[0x1ff02/2]);
 	}
@@ -2819,9 +2819,9 @@ VIDEO_UPDATE( multi32 )
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
 
-	if (orgin != -1) /* remix */
+	if (remix != -1) /* remix */
 	{
-		system32_videoram[0x1ff02/2] = orgin;
+		system32_videoram[0x1ff02/2] = remix;
 		enablemask = update_tilemaps(&clipleft);
 	}
 
