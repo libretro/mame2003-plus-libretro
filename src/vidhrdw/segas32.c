@@ -2826,7 +2826,7 @@ VIDEO_UPDATE( multi32 )
 	if (remix != -1)
 	{
 		system32_videoram[0x1ff02/2] = remix;
-		enablemask = update_tilemaps(&clipleft); usrintf_showmessage("%i", enablemask);
+		enablemask = update_tilemaps(&clipleft);
 	}
 
 	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
