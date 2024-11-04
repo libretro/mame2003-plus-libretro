@@ -910,9 +910,9 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 		else
 		{
 			clips[i].max_x = (tempclip.max_x) - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
-			clips[i].max_y = (Machine->visible_area.max_y + 1) - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
+			clips[i].max_y = (tempclip.max_y) - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
 			clips[i].min_x = (tempclip.max_x) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
-			clips[i].min_y = (Machine->visible_area.max_y + 1) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
+			clips[i].min_y = (tempclip.max_y) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
 		sect_rect(&clips[i], &tempclip);
 		sorted[i] = i;
@@ -1086,7 +1086,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	/* if we're flipped, simply adjust the start/step parameters */
 	if (flipy)
 	{
-		srcy += (Machine->visible_area.max_y - 2 * cliprect->min_y) * srcystep;
+		srcy += (cliprect->max_y - 2 * cliprect->min_y) * srcystep;
 		srcystep = -srcystep;
 	}
 
@@ -1256,7 +1256,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			}
 			else
 			{
-				srcy = yscroll + Machine->visible_area.max_y - y;
+				srcy = yscroll + cliprect->max_y - y;
 			}
 
 			/* apply row scroll/select */
@@ -1421,7 +1421,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 			else
 			{
 				int effdstx = cliprect->max_x - x * 8;
-				int effdsty = Machine->visible_area.max_y - y * 8;
+				int effdsty = cliprect->max_y - y * 8;
 				UINT16 *dst = ((UINT16 *)bitmap->line[effdsty]) + effdstx;
 
 				/* loop over rows */
