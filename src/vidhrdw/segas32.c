@@ -1638,8 +1638,8 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enableb = !(system32_videoram[0x1ff02/2] & 0x0020) && !(system32_videoram[0x1ff8e/2] & 0x0020);
 
 	/* update any tilemaps */
-	if (enable0)
-		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
+	/*if (enable0)
+		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);*/
 	if (enable1)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG1], cliprect, 1);
 	if (enable2)
