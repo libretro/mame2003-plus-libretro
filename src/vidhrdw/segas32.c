@@ -2798,6 +2798,7 @@ VIDEO_UPDATE( multi32 )
 				system32_videoram[0x1ff02/2] = titlef_mixer[i][1];
 				if (titlef_mixer[i][1] != titlef_mixer[i][2])
 					remix = titlef_mixer[i][2];
+				break;
 			}
 	}
 
