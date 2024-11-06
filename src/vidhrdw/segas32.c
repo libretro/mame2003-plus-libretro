@@ -1642,8 +1642,8 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
 	if (enable1)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG1], cliprect, 1);
-	/*if (enable2)
-		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG2], cliprect, 2);*/
+	if (enable2)
+		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG2], cliprect, 2);
 	if (enable3)
 		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG3], cliprect, 3);
 	if (enablet)
@@ -2788,7 +2788,7 @@ VIDEO_UPDATE( multi32 )
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
 	}
-
+system32_videoram[0x1ff02/2] = 0;
 	if (titlef_kludge) /* force background to render */
 	{
 		int i;
