@@ -2803,7 +2803,7 @@ VIDEO_UPDATE( multi32 )
 
 		{
 			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG0, 0);
-			usrintf_showmessgae("%04X %04X %04X %04X %04X %04X %04X %04X %04X %04X", src[0], src[1], src[2], src[3], src[4], src[5], src[6], src[7], src[8], src[9], src[10]);
+			usrintf_showmessage("%04X %04X %04X %04X %04X %04X %04X %04X %04X %04X", src[0], src[1], src[2], src[3], src[4], src[5], src[6], src[7], src[8], src[9], src[10]);
 		}
 	}
 
