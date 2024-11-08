@@ -2803,7 +2803,7 @@ VIDEO_UPDATE( multi32 )
 
 		{
 			int x;
-			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG2, 0);
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG0, 0);
 			for (x = clipleft.min_x; x <= clipleft.min_x+10; x++)
 				usrintf_showmessgae("%04X %04X %04X %04X %04X %04X %04X %04X %04X %04X", src[0], src[1], src[2], src[3], src[4], src[5], src[6], src[7], src[8], src[9], src[10]);
 		}
