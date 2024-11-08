@@ -2788,7 +2788,7 @@ VIDEO_UPDATE( multi32 )
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
 	}
-system32_videoram[0x1ff02/2] = 0;
+
 	if (titlef_kludge) /* force background to render */
 	{
 		int i;
@@ -2800,6 +2800,13 @@ system32_videoram[0x1ff02/2] = 0;
 					remix = titlef_mixer[i][2];
 				break;
 			}
+
+		{
+			int x;
+			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG2, 0);
+			for (x = clipleft.min_x; x <= clipleft.min_x+10; x++)
+				usrintf_showmessgae("%04X %04X %04X %04X %04X %04X %04X %04X %04X %04X", src[0], src[1], src[2], src[3], src[4], src[5], src[6], src[7], src[8], src[9], src[10]);
+		}
 	}
 
 	/* update the tilemaps */
