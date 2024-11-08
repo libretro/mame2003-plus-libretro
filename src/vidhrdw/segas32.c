@@ -2804,9 +2804,9 @@ VIDEO_UPDATE( multi32 )
 		{
 			int x;
 			UINT16 *src = get_layer_scanline(MIXER_LAYER_NBG0, 0);
-			if (src[0]==1902 && src[8]==1901 && src[16]==1902 && src[24]==1901)
+			if (src[0]==0x1902 && src[8]==0x1901 && src[16]==0x1902 && src[24]==0x1901)
 				for(x=clipleft.min_x; x<=clipleft.max_x; x++)
-					src[x] = 100, usrintf_showmessage("credits");
+					src[x] = 0x1902, usrintf_showmessage("credits");
 		}
 	}
 
