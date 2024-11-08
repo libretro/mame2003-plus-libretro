@@ -2739,28 +2739,17 @@ VIDEO_UPDATE( multi32 )
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
 	int remix = -1;
-  
-	int monitor_setting = readinputport(0xf);
-	int monitor_display_start = 0;
-	int monitor_display_width = 2;
 
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
    uses dedicated left and right screens. We force an aspect ratio change
    to maintain the correct 4:3 ratio across single or dual monitors.
 */
-	if (monitor_setting != 3)
-	{
-		monitor_display_start = monitor_setting - 1;
-		monitor_display_width = monitor_setting;
-		video_config.aspect_x = 4;
-		video_config.aspect_y = 3;
-	}
-	else
-	{
-		video_config.aspect_x = 8;
-		video_config.aspect_y = 3;
-	}
+	int monitor_setting = readinputport(0xf);
+	int monitor_display_start = (monitor_setting == 3) ? 0 : monitor_setting - 1;
+	int monitor_display_width = (monitor_setting == 3) ? 2 : monitor_setting;
+	    video_config.aspect_x = (monitor_setting == 3) ? 8 : 4;
+	    video_config.aspect_y = 3;
 
 	/* update the visible area */
 	if (system32_videoram[0x1ff00/2] & 0x8000)
