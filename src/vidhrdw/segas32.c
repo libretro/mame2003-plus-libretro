@@ -2806,9 +2806,9 @@ VIDEO_UPDATE( multi32 )
 			if (src[0]==0x1902 && src[8]==0x1901 && src[16]==0x1902 && src[24]==0x1901)
 				system32_videoram[0x1ff8e/2] = 0x8;
 
-			/**src = get_layer_scanline(MIXER_LAYER_NBG1, 0);
+			*src = get_layer_scanline(MIXER_LAYER_NBG1, 0);
 			if (src[0]==0x1902 && src[8]==0x1901 && src[16]==0x1902 && src[24]==0x1901)
-				system32_videoram[0x1ff8e/2] = 0x10;*/
+				system32_videoram[0x1ff8e/2] = (system32_videoram[0x1ff8e/2]==0x8) ? 0x18 : 0x10;
 		}
 	}
 
