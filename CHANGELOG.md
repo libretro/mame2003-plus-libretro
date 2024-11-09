@@ -115,6 +115,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Invasion
 * Joe & Mac Returns
 * Jolly Jogger
+* Jurassic Park (Bootleg Of Megadrive Version)
 * Juezhan Tianhuang
 * Jump Kun
 * Kabuki-Z (World)
@@ -201,6 +202,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Snapper
 * Sonic Boom
 * Sonic The Hedgehog 2 (Bootleg Of Megadrive Version)
+* Sonic The Hedgehog 3 (Bootleg Of Megadrive Version)
 * Space Fever High Splitter
 * Space Launcher
 * Space Raider
@@ -241,6 +243,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Twin Cobra 2
 * Twin Action
 * Twinkle
+* Twinkle Tale (Bootleg Of Megadrive Version)
 * Tylz
 * Ufo Senshi Yohko Chan
 * Varia Metal
@@ -1115,3 +1118,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed dip switches for Super Pac-man added new sound roms for Pac & Pal and new graphical roms which fix bad colours in Pac-man & Chomp Chomp [MAMEDev, arcadez]
 * Added the proper sprite roms for Final Lap 2 game now playable and hooked up the road colour clut proms for the Final Lap games and Suzuka 8 Hours [arcadez]
 * Fixed some missing line scrolling graphical effects in Magical Cat Adventure and Nostradamus [MAMEDev, arcadez]
+* Added three more Megadrive arcade bootlegs to segac2 namely Jurassic Park, Sonic 3 and Twinkle Tale [MAMEDev, arcadez]
