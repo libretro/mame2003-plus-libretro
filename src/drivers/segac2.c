@@ -1979,6 +1979,30 @@ static MEMORY_WRITE16_START( barek3_writemem )
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
 MEMORY_END
 
+ static MEMORY_READ16_START( sonic3mb_readmem )
+  { 0x000000, 0x1fffff, MRA16_ROM },					/* Cartridge Program Rom */
+	{ 0x202000, 0x2023ff, MRA16_RAM },
+	{ 0xa10000, 0xa1001f, genesis_68000_io_r },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_r },
+	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
+	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
+MEMORY_END
+
+static MEMORY_WRITE16_START( sonic3mb_writemem )
+  { 0x000000, 0x1fffff, MWA16_ROM },					/* Cartridge Program Rom */
+/*  { 0x200000, 0x20007f, MWA16_RAM }, */
+  { 0x200000, 0x2023ff, MWA16_RAM }, /* tested */
+	{ 0xa10000, 0xa1001f, genesis_68000_io_w, &genesis_io_ram },				/* Genesis Input */
+	{ 0xa11000, 0xa11203, genesis_ctrl_w },
+	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
+	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
+	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
+MEMORY_END   
+
 /* Z80 Sound Hardware - based on MESS code, to be improved, it can do some strange things */
 
 #ifdef MSB_FIRST
@@ -4652,6 +4676,13 @@ static MACHINE_DRIVER_START( barek3 )
 	MDRV_CPU_MEMORY(barek3_readmem,barek3_writemem)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( sonic3mb )
+
+	MDRV_IMPORT_FROM( genesis )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(sonic3mb_readmem,sonic3mb_writemem)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( megatech )
 
 	/* basic machine hardware */
@@ -6371,9 +6402,10 @@ DRIVER_INIT( sonic3mb )
   install_mem_read16_handler (0, 0x300000, 0x300001, sonic3mb_prot_r);
 	
 	genesis_region = 0x00; /* read via io */
-		
+	/*	
 	cpu_setbank(3, memory_region(REGION_CPU1) );
 	cpu_setbank(4, &genesis_68k_ram[0]);
+  */
 
 	init_segac2();
 }
@@ -6491,7 +6523,7 @@ GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>"
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
 GAME ( 1993, sonic2mb, 0,        barek2ch, sonic2mb, sonic2mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 2 (bootleg of Megadrive version)" )
-GAMEX( 1993, sonic3mb, 0,        barek2ch, sonic3mb, sonic3mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 3 (bootleg of Megadrive version)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1993, sonic3mb, 0,        sonic3mb, sonic3mb, sonic3mb, ROT0, "bootleg / Sega",         "Sonic The Hedgehog 3 (bootleg of Megadrive version)", GAME_IMPERFECT_GRAPHICS )
 GAME ( 1993, jparkmb,  0,        barek2ch, jparkmb,  jparkmb,  ROT0, "bootleg / Sega",         "Jurassic Park (bootleg of Megadrive version)" )
 GAME ( 1993, twinktmb, 0,        barek2ch, jparkmb,  twinktmb, ROT0, "bootleg / Sega",         "Twinkle Tale (bootleg of Megadrive version)" )
 GAME ( 1994, barek2ch, 0,        barek2ch, barek2ch, barek2ch, ROT0, "bootleg / Sega",         "Bare Knuckle II (Chinese bootleg of Megadrive version)" )
