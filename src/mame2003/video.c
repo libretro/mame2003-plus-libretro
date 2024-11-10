@@ -48,8 +48,8 @@ enum
 void mame2003_video_get_geometry(struct retro_game_geometry *geom)
 {
    /* Shorter variable names, for readability */
-   unsigned max_w = video_config.width;
-   unsigned max_h = video_config.height;
+   unsigned max_w = machine->screen_width;
+   unsigned max_h = machine->screen_height;
    unsigned vis_w = vis_width > 0 ? vis_width : max_w;
    unsigned vis_h = vis_height > 0 ? vis_height : max_h;
 
