@@ -397,31 +397,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					break;
 
 				case 1:	/* sample*/
-					break;
-
-				case 2:	/* pitch LSB*/
-				/* MUST fall through to update pitch also!*/
-				case 3: /* pitch MSB*/
-					/* compute frequency divisor*/
-					pitch = (cptr->registers[vnum][3]<<8) + cptr->registers[vnum][2];
-					pt_abs = (double)abs(pitch);
-					pt_oct = pt_abs>>12;
-					if(pitch < 0)
-					{
-						vptr->ptdelta = cptr->dlttbl[0x1000 - (pt_abs&0xfff)];
-						vptr->ptdelta >>= (pt_oct+1);
-					}
-					else
-					{
-						vptr->ptdelta = cptr->dlttbl[pt_abs&0xfff];
-						vptr->ptdelta <<= pt_oct;
-					}
-					break;
-
-				case 4:	/* key on/off*/
-					if (data & 0x80)
-					{
-						inum = cptr->registers[vnum][1];
+					inum = cptr->registers[vnum][1];
 
 						/* calc decay amount*/
 						vptr->relamt = decaytbl[(0x0f - cptr->samples[inum].env[2])];
@@ -463,6 +439,31 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 						vptr->ptsum = 0;
 						vptr->active = 1;
 						vptr->relstage = 0;
+					break;
+
+				case 2:	/* pitch LSB*/
+				/* MUST fall through to update pitch also!*/
+				case 3: /* pitch MSB*/
+					/* compute frequency divisor*/
+					pitch = (cptr->registers[vnum][3]<<8) + cptr->registers[vnum][2];
+					pt_abs = (double)abs(pitch);
+					pt_oct = pt_abs>>12;
+					if(pitch < 0)
+					{
+						vptr->ptdelta = cptr->dlttbl[0x1000 - (pt_abs&0xfff)];
+						vptr->ptdelta >>= (pt_oct+1);
+					}
+					else
+					{
+						vptr->ptdelta = cptr->dlttbl[pt_abs&0xfff];
+						vptr->ptdelta <<= pt_oct;
+					}
+					break;
+
+				case 4:	/* key on/off*/
+					if (data & 0x80)
+					{
+							vptr->active = 1;
 					}
 					else
 					{
