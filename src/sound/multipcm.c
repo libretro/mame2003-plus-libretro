@@ -437,7 +437,6 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 
 						vptr->ptoffset = 0;
 						vptr->ptsum = 0;
-						vptr->active = 1;
 						vptr->relstage = 0;
 					break;
 
