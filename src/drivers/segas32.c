@@ -1029,6 +1029,16 @@ static WRITE_HANDLER( sound_bank_hi_w )
 	sound_bankptr = &RAM[0x2000*sound_bank];
 }
 
+static WRITE_HANDLER( multipcm_bank_w )
+{
+	multipcm_set_bank(0, 0x80000 * ((data >> 3) & 7), 0x80000 * (data & 7));
+}
+
+static WRITE_HANDLER( scross_bank_w )
+{
+	multipcm_set_bank(0, 0x80000 * (data & 7), 0x80000 * (data & 7));
+}
+
 static READ_HANDLER( sound_bank_r )
 {
 	return sound_bankptr[offset];
@@ -1115,7 +1125,7 @@ static PORT_WRITE_START( multi32_sound_portmap_w )
 	{ 0x82, 0x82, YM2612_control_port_0_B_w },
 	{ 0x83, 0x83, YM2612_data_port_0_B_w },
 	{ 0xa0, 0xaf, sound_bank_lo_w },
-	{ 0xb0, 0xbf, MultiPCM_bank_0_w },
+	{ 0xb0, 0xbf, multipcm_bank_w },
 	{ 0xc0, 0xcf, sound_int_control_lo_w },
 	{ 0xd0, 0xd3, sound_int_control_hi_w },
 	{ 0xf1, 0xf1, sound_dummy_w },
