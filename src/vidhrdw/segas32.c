@@ -2738,7 +2738,7 @@ VIDEO_UPDATE( multi32 )
 	extern struct osd_create_params video_config;
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
-	int remix = -1;
+	int restore = system32_videoram[0x1ff02/2], remix = -1;
 
 /*
    MAME2003-PLUS uses a single screen to draw to where as current mame
@@ -2783,7 +2783,7 @@ VIDEO_UPDATE( multi32 )
 		int i;
 		for (i=0; titlef_mixer[i][0]!=0; i++)
 			if (system32_videoram[0x1ff02/2] == titlef_mixer[i][0])
-			{ 
+			{
 				system32_videoram[0x1ff02/2] = titlef_mixer[i][1];
 				if (titlef_mixer[i][1] != titlef_mixer[i][2])
 					remix = titlef_mixer[i][2];
@@ -2828,6 +2828,8 @@ VIDEO_UPDATE( multi32 )
 		system32_videoram[0x1ff02/2] = remix;
 		enablemask = update_tilemaps(&clipleft);
 	}
+	if (system32_videoram[0x1ff02/2] != restore)
+		system32_videoram[0x1ff02/2] = restore;
 
 	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
