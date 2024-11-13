@@ -404,20 +404,20 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 						/* perform banking*/
 						if (st >= 0x100000)
 						{
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
-									cptr->registers[vnum][1],cptr->registers[vnum][2],cptr->registers[vnum][3],
-									cptr->registers[vnum][4],cptr->registers[vnum][5],
-									cptr->registers[vnum][6],cptr->registers[vnum][7]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
+								cptr->registers[vnum][1],cptr->registers[vnum][2],cptr->registers[vnum][3],
+								cptr->registers[vnum][4],cptr->registers[vnum][5],
+								cptr->registers[vnum][6],cptr->registers[vnum][7]);
 
-								if (vptr->pan < 8)
-								{
-									st = (st & 0xfffff) + cptr->bankL;
-								}
-								else
-								{
-									st = (st & 0xfffff) + cptr->bankR;
-								}
+							if (vptr->pan < 8)
+							{
+								st = (st & 0xfffff) + cptr->bankL;
+							}
+							else
+							{
+								st = (st & 0xfffff) + cptr->bankR;
+							}
 						}
 
 						vptr->pSamp = &cptr->romptr[st];
