@@ -538,5 +538,5 @@ WRITE_HANDLER( MultiPCM_reg_1_w )
 void multipcm_set_bank(int which, UINT32 leftoffs, UINT32 rightoffs)
 {
 	mpcm[which].bankL = leftoffs;
-	mpcm[which].bankL = rightoffs;
+	mpcm[which].bankR = rightoffs;
 }
