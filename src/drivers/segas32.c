@@ -2469,7 +2469,7 @@ struct YM2612interface sys32_ym3438_interface =
 	{ ym3438_irq_handler }
 };
 
-struct YM2612interface mul32_ym3438_interface =
+struct YM2612interface multi32_ym3438_interface =
 {
 	1,
 	MASTER_CLOCK/4,
@@ -2478,7 +2478,7 @@ struct YM2612interface mul32_ym3438_interface =
 	{ ym3438_irq_handler }
 };
 
-static struct MultiPCM_interface mul32_multipcm_interface =
+static struct MultiPCM_interface multi32_multipcm_interface =
 {
 	1,		/* 1 chip*/
 	{ MASTER_CLOCK/4 },	/* clock*/
@@ -2559,7 +2559,7 @@ static MACHINE_DRIVER_START( vblank32 )
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( multi32_base )
+static MACHINE_DRIVER_START( multi32 )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(V60, MULTI32_CLOCK/2)
@@ -2587,12 +2587,8 @@ static MACHINE_DRIVER_START( multi32_base )
 	MDRV_VIDEO_UPDATE(multi32)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(YM3438, mul32_ym3438_interface)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( multi32 )
-	MDRV_IMPORT_FROM(multi32_base)
-	MDRV_SOUND_ADD(MULTIPCM, mul32_multipcm_interface)
+	MDRV_SOUND_ADD(YM3438, multi32_ym3438_interface)
+	MDRV_SOUND_ADD(MULTIPCM, multi32_multipcm_interface)
 MACHINE_DRIVER_END
 
 
