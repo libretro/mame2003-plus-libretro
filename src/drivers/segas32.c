@@ -2482,18 +2482,6 @@ static struct MultiPCM_interface mul32_multipcm_interface =
 {
 	1,		/* 1 chip*/
 	{ MASTER_CLOCK/4 },	/* clock*/
-	{ MULTIPCM_MODE_MULTI32 },	/* banking mode*/
-	{ (512*1024) },	/* bank size*/
-	{ REGION_SOUND1 },	/* sample region*/
-	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
-};
-
-static struct MultiPCM_interface scross_multipcm_interface =
-{
-	1,		/* 1 chip*/
-	{ MASTER_CLOCK/4 },	/* clock*/
-	{ MULTIPCM_MODE_STADCROSS },	/* banking mode*/
-	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
 	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
 };
@@ -2605,11 +2593,6 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( multi32 )
 	MDRV_IMPORT_FROM(multi32_base)
 	MDRV_SOUND_ADD(MULTIPCM, mul32_multipcm_interface)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( scross )
-	MDRV_IMPORT_FROM(multi32_base)
-	MDRV_SOUND_ADD(MULTIPCM, scross_multipcm_interface)
 MACHINE_DRIVER_END
 
 
@@ -3657,7 +3640,13 @@ static DRIVER_INIT( dbzvrvs )
 
 static DRIVER_INIT( titlef )
 {
+	install_mem_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 	titlef_kludge = true;
+}
+
+static DRIVER_INIT( scross )
+{
+	install_mem_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 }
 
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
@@ -3692,5 +3681,5 @@ GAMEX(1995, slipstrh, slipstrm, system32, slipstrm,	f1en,     ROT0, "Capcom", "S
 GAMEX(1992, orunners, 0,        multi32,  orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, harddunk, 0,        multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, harddunj, harddunk, multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, scross,   0,        scross,   scross,   0,        ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, titlef,   0,        scross,   titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, scross,   0,        multi32,   scross,   scross,   ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, titlef,   0,        multi32,   titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
