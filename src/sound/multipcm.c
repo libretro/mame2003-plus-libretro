@@ -312,8 +312,8 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 
 		sprintf(mname, "MultiPCM %d", i);
 
-		state_save_register_UINT32(mname, i, "bankL", &mpcm[i].bankL);
-		state_save_register_UINT32(mname, i, "bankR", &mpcm[i].bankR);
+		state_save_register_UINT32(mname, i, "bankL", &mpcm[i].bankL, 1);
+		state_save_register_UINT32(mname, i, "bankR", &mpcm[i].bankR, 1);
 
 		for (v = 0; v < 28; v++)
 		{
