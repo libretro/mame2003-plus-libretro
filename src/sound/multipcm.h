@@ -23,8 +23,6 @@ WRITE_HANDLER( MultiPCM_reg_0_w );
 READ_HANDLER( MultiPCM_reg_0_r);
 WRITE_HANDLER( MultiPCM_reg_1_w );
 READ_HANDLER( MultiPCM_reg_1_r);
-WRITE_HANDLER( MultiPCM_bank_0_w );
-WRITE_HANDLER( MultiPCM_bank_1_w );
 
 void multipcm_set_bank(int which, UINT32 leftoffs, UINT32 rightoffs);
 
