@@ -400,7 +400,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					vptr->relamt = 0;
 					vptr->pSamp = 0; /* init */
 					vptr->end = 0;
-					vptr->loopst = 0;
+					vptr->loop = 0;
 
 					if (vptr->active = 1) /* retrigger when key on */
 					{
