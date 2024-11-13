@@ -7,10 +7,10 @@ struct MultiPCM_interface
 };
 
 
-WRITE8_HANDLER( MultiPCM_reg_0_w );
-READ8_HANDLER( MultiPCM_reg_0_r);
-WRITE8_HANDLER( MultiPCM_reg_1_w );
-READ8_HANDLER( MultiPCM_reg_1_r);
+WRITE_HANDLER( MultiPCM_reg_0_w );
+READ_HANDLER( MultiPCM_reg_0_r);
+WRITE_HANDLER( MultiPCM_reg_1_w );
+READ_HANDLER( MultiPCM_reg_1_r);
 
 void multipcm_set_bank(int which, UINT32 leftoffs, UINT32 rightoffs);
 
