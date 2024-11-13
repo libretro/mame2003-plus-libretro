@@ -227,6 +227,8 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 	int vol[2];
 	struct MultiPCM_interface *intf = msound->sound_interface;
 
+  memset(intf[0], 0, sizeof(MultiPCM_interface);
+
 	/* make volume table*/
 	double	max=255.0;
 	double	db=(48.0/128);
