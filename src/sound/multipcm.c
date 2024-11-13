@@ -89,7 +89,7 @@ typedef struct Voice_t
 typedef struct MultiPCM_t
 {
 	unsigned char registers[28][8];	/* 8 registers per voice?*/
-	UINT32 bankL, bankR;
+	int bankL, bankR;
 
 	VoiceT Voices[28];
 	int curreg, curvoice;
@@ -312,8 +312,8 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 
 		sprintf(mname, "MultiPCM %d", i);
 
-		state_save_register_UINT32(mname, i, "bankL", &mpcm[i].bankL, 1);
-		state_save_register_UINT32(mname, i, "bankR", &mpcm[i].bankR, 1);
+		state_save_register_int(mname, i, "bankL", &mpcm[i].bankL);
+		state_save_register_int(mname, i, "bankR", &mpcm[i].bankR);
 
 		for (v = 0; v < 28; v++)
 		{
@@ -535,7 +535,7 @@ WRITE_HANDLER( MultiPCM_reg_1_w )
 	MultiPCM_reg_w(1, offset, data);
 }
 
-void multipcm_set_bank(int which, UINT32 leftoffs, UINT32 rightoffs)
+void multipcm_set_bank(int which, int leftoffs, int rightoffs)
 {
 	mpcm[which].bankL = leftoffs;
 	mpcm[which].bankR = rightoffs;
