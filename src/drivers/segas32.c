@@ -3636,12 +3636,13 @@ static DRIVER_INIT( dbzvrvs )
 
 static DRIVER_INIT( titlef )
 {
+	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 	titlef_kludge = true;
 }
 
 static DRIVER_INIT( scross )
 {
-	install_mem_write_handler(1,  0xb0, 0xbf, scross_bank_w);
+	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 }
 
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
