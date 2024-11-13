@@ -2483,7 +2483,7 @@ static struct MultiPCM_interface multi32_multipcm_interface =
 	1,		/* 1 chip*/
 	{ MASTER_CLOCK/4 },	/* clock*/
 	{ REGION_SOUND1 },	/* sample region*/
-	{ YM3012_VOL(60, MIXER_PAN_LEFT, 60, MIXER_PAN_RIGHT) }
+	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
 };
 
 
@@ -3636,7 +3636,7 @@ static DRIVER_INIT( dbzvrvs )
 
 static DRIVER_INIT( titlef )
 {
-	//install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
+	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 	titlef_kludge = true;
 }
 
