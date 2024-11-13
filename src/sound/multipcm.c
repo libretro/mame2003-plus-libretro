@@ -89,9 +89,7 @@ typedef struct Voice_t
 typedef struct MultiPCM_t
 {
 	unsigned char registers[28][8];	/* 8 registers per voice?*/
-	int type;			/* chip type: 0=model1, 1=multi32*/
-	int bankL, bankR;
-	long banksize;
+	UINT32 bankL, bankR;
 
 	VoiceT Voices[28];
 	int curreg, curvoice;
@@ -246,8 +244,6 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 
 	for (chip = 0; chip < intf->chips; chip++)
 	{
-		mpcm[chip].type = intf->type[chip];
-		mpcm[chip].banksize = intf->banksize[chip];
 
 		mpcm[chip].curreg = mpcm[chip].curvoice = 0;
 
@@ -316,8 +312,8 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 
 		sprintf(mname, "MultiPCM %d", i);
 
-		state_save_register_int(mname, i, "bankL", &mpcm[i].bankL);
-		state_save_register_int(mname, i, "bankR", &mpcm[i].bankR);
+		state_save_register_UINT32(mname, i, "bankL", &mpcm[i].bankL, 1);
+		state_save_register_UINT32(mname, i, "bankR", &mpcm[i].bankR, 1);
 
 		for (v = 0; v < 28; v++)
 		{
@@ -408,26 +404,19 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 						/* perform banking*/
 						if (st >= 0x100000)
 						{
-							if (cptr->type == 1)	/* multiPCM*/
-							{
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
-									cptr->registers[vnum][1],cptr->registers[vnum][2],cptr->registers[vnum][3],
-									cptr->registers[vnum][4],cptr->registers[vnum][5],
-									cptr->registers[vnum][6],cptr->registers[vnum][7]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
+								cptr->registers[vnum][1],cptr->registers[vnum][2],cptr->registers[vnum][3],
+								cptr->registers[vnum][4],cptr->registers[vnum][5],
+								cptr->registers[vnum][6],cptr->registers[vnum][7]);
 
-								if (vptr->pan < 8)
-								{
-									st = (st & 0xfffff) + cptr->banksize * cptr->bankL;
-								}
-								else
-								{
-									st = (st & 0xfffff) + cptr->banksize * cptr->bankR;
-								}
-							}
-							else	/* model 1*/
+							if (vptr->pan < 8)
 							{
-								st = (st & 0xfffff) + cptr->banksize * cptr->bankL;
+								st = (st & 0xfffff) + cptr->bankL;
+							}
+							else
+							{
+								st = (st & 0xfffff) + cptr->bankR;
 							}
 						}
 
@@ -546,36 +535,8 @@ WRITE_HANDLER( MultiPCM_reg_1_w )
 	MultiPCM_reg_w(1, offset, data);
 }
 
-WRITE_HANDLER( MultiPCM_bank_0_w )
+void multipcm_set_bank(int which, UINT32 leftoffs, UINT32 rightoffs)
 {
-	if (mpcm[0].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
-	{
-		mpcm[0].bankL = mpcm[0].bankR = (data & 7);
-	}
-	else if (mpcm[0].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
-	{
-		mpcm[0].bankL = (data >> 3) & 7;
-		mpcm[0].bankR = (data & 7);
-	}
-	else
-	{
-		mpcm[0].bankL = data&0x1f;
-	}
-}
-
-WRITE_HANDLER( MultiPCM_bank_1_w )
-{
-	if (mpcm[1].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
-	{
-		mpcm[1].bankL = mpcm[1].bankR = (data & 7);
-	}
-	else if (mpcm[1].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
-	{
-		mpcm[1].bankL = (data >> 3) & 7;
-		mpcm[1].bankR = (data & 7);
-	}
-	else
-	{
-		mpcm[1].bankL = data&0x1f;
-	}
+	mpcm[which].bankL = leftoffs;
+	mpcm[which].bankR = rightoffs;
 }

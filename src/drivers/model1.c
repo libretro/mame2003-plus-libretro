@@ -326,7 +326,7 @@ static WRITE16_HANDLER( m1_snd_mpcm0_w )
 
 static WRITE16_HANDLER( m1_snd_mpcm0_bnk_w )
 {
-	MultiPCM_bank_0_w(0, data);
+	multipcm_set_bank(0, 0x100000 * (data & 3), 0x100000 * (data & 3));
 }
 
 static READ16_HANDLER( m1_snd_mpcm1_r )
@@ -341,7 +341,7 @@ static WRITE16_HANDLER( m1_snd_mpcm1_w )
 
 static WRITE16_HANDLER( m1_snd_mpcm1_bnk_w )
 {
-	MultiPCM_bank_1_w(0, data);
+	multipcm_set_bank(1, 0x100000 * (data & 3), 0x100000 * (data & 3));
 }
 
 static READ16_HANDLER( m1_snd_ym_r )
@@ -406,8 +406,6 @@ static struct MultiPCM_interface m1_multipcm_interface =
 {
 	2,
 	{ 8000000, 8000000 },
-	{ MULTIPCM_MODE_MODEL1, MULTIPCM_MODE_MODEL1 },
-	{ (1024*1024), (1024*1024) },
 	{ REGION_SOUND1, REGION_SOUND2 },
 	{ YM3012_VOL(100, MIXER_PAN_LEFT, 100, MIXER_PAN_RIGHT), YM3012_VOL(100, MIXER_PAN_LEFT, 100, MIXER_PAN_RIGHT) }
 };

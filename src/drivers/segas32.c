@@ -1029,6 +1029,16 @@ static WRITE_HANDLER( sound_bank_hi_w )
 	sound_bankptr = &RAM[0x2000*sound_bank];
 }
 
+static WRITE_HANDLER( multipcm_bank_w )
+{
+	multipcm_set_bank(0, 0x80000 * ((data >> 3) & 7), 0x80000 * (data & 7));
+}
+
+static WRITE_HANDLER( scross_bank_w )
+{
+	multipcm_set_bank(0, 0x80000 * (data & 7), 0x80000 * (data & 7));
+}
+
 static READ_HANDLER( sound_bank_r )
 {
 	return sound_bankptr[offset];
@@ -1115,7 +1125,7 @@ static PORT_WRITE_START( multi32_sound_portmap_w )
 	{ 0x82, 0x82, YM2612_control_port_0_B_w },
 	{ 0x83, 0x83, YM2612_data_port_0_B_w },
 	{ 0xa0, 0xaf, sound_bank_lo_w },
-	{ 0xb0, 0xbf, MultiPCM_bank_0_w },
+	{ 0xb0, 0xbf, multipcm_bank_w },
 	{ 0xc0, 0xcf, sound_int_control_lo_w },
 	{ 0xd0, 0xd3, sound_int_control_hi_w },
 	{ 0xf1, 0xf1, sound_dummy_w },
@@ -2459,7 +2469,7 @@ struct YM2612interface sys32_ym3438_interface =
 	{ ym3438_irq_handler }
 };
 
-struct YM2612interface mul32_ym3438_interface =
+struct YM2612interface multi32_ym3438_interface =
 {
 	1,
 	MASTER_CLOCK/4,
@@ -2468,22 +2478,10 @@ struct YM2612interface mul32_ym3438_interface =
 	{ ym3438_irq_handler }
 };
 
-static struct MultiPCM_interface mul32_multipcm_interface =
+static struct MultiPCM_interface multi32_multipcm_interface =
 {
 	1,		/* 1 chip*/
 	{ MASTER_CLOCK/4 },	/* clock*/
-	{ MULTIPCM_MODE_MULTI32 },	/* banking mode*/
-	{ (512*1024) },	/* bank size*/
-	{ REGION_SOUND1 },	/* sample region*/
-	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
-};
-
-static struct MultiPCM_interface scross_multipcm_interface =
-{
-	1,		/* 1 chip*/
-	{ MASTER_CLOCK/4 },	/* clock*/
-	{ MULTIPCM_MODE_STADCROSS },	/* banking mode*/
-	{ (512*1024) },	/* bank size*/
 	{ REGION_SOUND1 },	/* sample region*/
 	{ YM3012_VOL(60, MIXER_PAN_CENTER, 60, MIXER_PAN_CENTER) }
 };
@@ -2561,7 +2559,7 @@ static MACHINE_DRIVER_START( vblank32 )
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( multi32_base )
+static MACHINE_DRIVER_START( multi32 )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(V60, MULTI32_CLOCK/2)
@@ -2589,17 +2587,8 @@ static MACHINE_DRIVER_START( multi32_base )
 	MDRV_VIDEO_UPDATE(multi32)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(YM3438, mul32_ym3438_interface)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( multi32 )
-	MDRV_IMPORT_FROM(multi32_base)
-	MDRV_SOUND_ADD(MULTIPCM, mul32_multipcm_interface)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( scross )
-	MDRV_IMPORT_FROM(multi32_base)
-	MDRV_SOUND_ADD(MULTIPCM, scross_multipcm_interface)
+	MDRV_SOUND_ADD(YM3438, multi32_ym3438_interface)
+	MDRV_SOUND_ADD(MULTIPCM, multi32_multipcm_interface)
 MACHINE_DRIVER_END
 
 
@@ -3647,7 +3636,13 @@ static DRIVER_INIT( dbzvrvs )
 
 static DRIVER_INIT( titlef )
 {
+	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 	titlef_kludge = true;
+}
+
+static DRIVER_INIT( scross )
+{
+	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 }
 
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
@@ -3682,5 +3677,5 @@ GAMEX(1995, slipstrh, slipstrm, system32, slipstrm,	f1en,     ROT0, "Capcom", "S
 GAMEX(1992, orunners, 0,        multi32,  orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, harddunk, 0,        multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, harddunj, harddunk, multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, scross,   0,        scross,   scross,   0,        ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, titlef,   0,        scross,   titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, scross,   0,        multi32,   scross,   scross,   ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, titlef,   0,        multi32,   titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
