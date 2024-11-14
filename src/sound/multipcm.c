@@ -351,6 +351,10 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 	return 0;
 }
 
+void MultiPCM_sh_stop(void)
+{
+}
+
 void MultiPCM_sh_reset(void)
 {
 	int i, chip;
@@ -373,10 +377,6 @@ void MultiPCM_sh_reset(void)
 			mpcm[chip].Voices[i].active = 0;
 		}
 	}
-}
-
-void MultiPCM_sh_stop(void)
-{
 }
 
 /* write register */
