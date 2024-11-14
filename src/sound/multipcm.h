@@ -18,6 +18,7 @@ struct MultiPCM_interface
 
 int MultiPCM_sh_start(const struct MachineSound *msound);
 void MultiPCM_sh_stop(void);
+void MultiPCM_sh_reset(void);
 
 WRITE_HANDLER( MultiPCM_reg_0_w );
 READ_HANDLER( MultiPCM_reg_0_r);

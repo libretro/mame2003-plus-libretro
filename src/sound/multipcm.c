@@ -355,6 +355,30 @@ void MultiPCM_sh_stop(void)
 {
 }
 
+void MultiPCM_sh_reset(void)
+{
+	int i, chip;
+
+	for (chip = 0; chip < MAX_MULTIPCM; chip++)
+	{
+		for (i = 0; i < 28; i++)
+		{
+			mpcm[chip].Voices[i].active = 0;
+			mpcm[chip].Voices[i].ptsum = 0;
+			mpcm[chip].Voices[i].ptoffset = 0;
+			mpcm[chip].Voices[i].loop = 0;
+			mpcm[chip].Voices[i].loopst = 0;
+			mpcm[chip].Voices[i].end = 0;
+			mpcm[chip].Voices[i].pan = 0;
+			mpcm[chip].Voices[i].vol = 0;
+			mpcm[chip].Voices[i].relamt = 0;
+			mpcm[chip].Voices[i].relcount = 0;
+			mpcm[chip].Voices[i].relstage = 0;
+			mpcm[chip].Voices[i].active = 0;
+		}
+	}
+}
+
 /* write register */
 static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 {
