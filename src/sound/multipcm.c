@@ -374,7 +374,6 @@ void MultiPCM_sh_reset(void)
 			mpcm[chip].Voices[i].relamt = 0;
 			mpcm[chip].Voices[i].relcount = 0;
 			mpcm[chip].Voices[i].relstage = 0;
-			mpcm[chip].Voices[i].active = 0;
 		}
 	}
 }
