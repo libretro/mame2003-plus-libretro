@@ -1121,7 +1121,7 @@ struct snd_interface sndintf[] =
 		MultiPCM_sh_start,
 		MultiPCM_sh_stop,
 		0,
-		0
+		MultiPCM_sh_reset
 	},
 #endif
 #if (HAS_C6280)
