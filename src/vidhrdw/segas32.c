@@ -2741,11 +2741,7 @@ VIDEO_UPDATE( multi32 )
 	int res;
 	int restore = system32_videoram[0x1ff02/2], remix = -1;
 
-/*
-   MAME2003-PLUS uses a single screen to draw to where as current mame
-   uses dedicated left and right screens. We force an aspect ratio change
-   to maintain the correct 4:3 ratio across single or dual monitors.
-*/
+	/* configure monitors */
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = (monitor_setting == 3) ? 0 : monitor_setting - 1;
 	int monitor_display_width = (monitor_setting == 3) ? 2 : monitor_setting;
@@ -2760,7 +2756,7 @@ VIDEO_UPDATE( multi32 )
 	    clipleft.min_y = cliprect->min_y;   clipright.min_y = cliprect->min_y;
 	    clipleft.max_y = cliprect->max_y;   clipright.max_y = cliprect->max_y;
 
-	/* if the display is off, punt */
+	/* if the displays are off, punt */
 	if (!system32_displayenable[0] && !system32_displayenable[1])
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
