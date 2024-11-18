@@ -628,6 +628,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tecmo Bowl
 * The Legend OF Silkroad
 * Thief
+* Title Fight
 * Tough Turf (Japan)
 * Tower Of Druaga
 * Toypop
@@ -1119,3 +1120,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added the proper sprite roms for Final Lap 2 game now playable and hooked up the road colour clut proms for the Final Lap games and Suzuka 8 Hours [arcadez]
 * Fixed some missing line scrolling graphical effects in Magical Cat Adventure and Nostradamus [MAMEDev, arcadez]
 * Added three more Megadrive arcade bootlegs to segac2 namely Jurassic Park, Sonic 3 and Twinkle Tale [MAMEDev, arcadez, mahoneyt944]
+* Improved the gfx significantly for Sega's Title Fight [mahoneyt944]
+* Fixed missing and or incorrect sounds with a two player game in Title Fight [arcadez]
