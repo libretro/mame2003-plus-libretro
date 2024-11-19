@@ -6,18 +6,18 @@
 	  rendering.
 
 	- In radr, NBG1 should be opaque on select screen, and NBG3 should be
-	  opaque while driving. 
-	  This is controlled by register $31ff8e (respectively $200 and $800), 
-	  likewise darkedge sets $800 on the first attract fight 
-	  (which has ugly black pens which should be white according to the ref). 
-	  harddunk sets $0f00 which completely breaks text display if current 
-	  hookup is enabled. 
-	  The theory is that opaque pens should go above background layer and 
+	  opaque while driving.
+	  This is controlled by register $31ff8e (respectively $200 and $800),
+	  likewise darkedge sets $800 on the first attract fight
+	  (which has ugly black pens which should be white according to the ref).
+	  harddunk sets $0f00 which completely breaks text display if current
+	  hookup is enabled.
+	  The theory is that opaque pens should go above background layer and
 	  behind everything else like System 24.
 
 	- radr uses $1A0 as the X center for zooming; however, this
 	  contradicts the theory that bit 9 is a sign bit. For now, the code
-	  assumes that the X center has 10 bits of resolution. 
+	  assumes that the X center has 10 bits of resolution.
 
 	- In svf (the field) and radr (on the field), they use tilemap-specific
 	  flip in conjunction with rowscroll AND rowselect. According to Charles,
@@ -27,23 +27,23 @@
 
 	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
 	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
-	  Game actually uses the "rowscroll/rowselect" tables for a line window 
-	  effect to draw the boxing ring over NBG0. 
+	  Game actually uses the "rowscroll/rowselect" tables for a line window
+	  effect to draw the boxing ring over NBG0.
 	  Same deal for ga2 when in stage 2 cave a wall torch is lit.
-	  
+
 	- harddunk draws solid white in attract mode when the players are presented.
 	  NBG0 is set with $200 on center X/Y, same as above or perhaps missing
 	  tilemap wraparound?
 
 	- Wrong priority cases (parenthesis for the level setup):
-	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f). 
-	  dbzvrvs: Sheng-Long speech balloon during Piccoro ending (fixme: check levels). 
+	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
+	  dbzvrvs: Sheng-Long speech balloon during Piccoro ending (fixme: check levels).
 	  f1lap: attract mode ranking sprite-based text ($a) vs. road ($d)
-	  f1lap: attract mode map display (after aforementioned), sprite-based turn names 
+	  f1lap: attract mode map display (after aforementioned), sprite-based turn names
 	  ($a) are hidden by map ($d) again;
-	  (Note: Theory about these being CPU core bug(s) is debunked by the fact that latter 
+	  (Note: Theory about these being CPU core bug(s) is debunked by the fact that latter
 	   sets up via immediate opcodes)
-	
+
     Information extracted from below, and from Modeler:
 
     Tile format:
@@ -1242,10 +1242,10 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			if (!flipx)
 			{
 				srcx = cliprect->min_x + xscroll;
-				srcxstep = 1;				
+				srcxstep = 1;
 			}
 			else
-			{	
+			{
 				srcx = cliprect->max_x + xscroll;
 				srcxstep = -1;
 			}
@@ -2002,10 +2002,6 @@ static void sprite_render_list(void)
 	int spritenum = 0;
 	UINT16 *sprite;
 
-	profiler_mark(PROFILER_USER2);
-
-	logerror("----\n");
-
 	/* compute the outer clip */
 	outerclip.min_x = outerclip.min_y = 0;
 	outerclip.max_x = (sprite_control_latched[0x0c/2] & 1) ? 415 : 319;
@@ -2072,8 +2068,6 @@ static void sprite_render_list(void)
 				break;
 		}
 	}
-
-	profiler_mark(PROFILER_END);
 }
 
 
@@ -2564,9 +2558,7 @@ VIDEO_UPDATE( system32 )
 	}
 
 	/* update the tilemaps */
-	profiler_mark(PROFILER_USER1);
 	enablemask = update_tilemaps(cliprect);
-	profiler_mark(PROFILER_END);
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
@@ -2579,9 +2571,7 @@ VIDEO_UPDATE( system32 )
 #endif
 
 	/* do the mixing */
-	profiler_mark(PROFILER_USER3);
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
-	profiler_mark(PROFILER_END);
 
 #if LOG_SPRITES
 {
@@ -2787,9 +2777,7 @@ VIDEO_UPDATE( multi32 )
 	}
 
 	/* update the tilemaps */
-	profiler_mark(PROFILER_USER1);
 	enablemask = update_tilemaps(&clipleft);
-	profiler_mark(PROFILER_END);
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
@@ -2802,7 +2790,6 @@ VIDEO_UPDATE( multi32 )
 #endif
 
 	/* do the mixing */
-	profiler_mark(PROFILER_USER3);
 	if (system32_displayenable[0] && monitor_setting != 2) /* speed up - disable offscreen monitor */
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
@@ -2820,7 +2807,6 @@ VIDEO_UPDATE( multi32 )
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
-	profiler_mark(PROFILER_END);
 
 	if (!code_pressed(KEYCODE_M)) print_mixer_data(0);
 	else print_mixer_data(1);
