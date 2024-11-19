@@ -2002,10 +2002,6 @@ static void sprite_render_list(void)
 	int spritenum = 0;
 	UINT16 *sprite;
 
-	profiler_mark(PROFILER_USER2);
-
-	logerror("----\n");
-
 	/* compute the outer clip */
 	outerclip.min_x = outerclip.min_y = 0;
 	outerclip.max_x = (sprite_control_latched[0x0c/2] & 1) ? 415 : 319;
@@ -2072,8 +2068,6 @@ static void sprite_render_list(void)
 				break;
 		}
 	}
-
-	profiler_mark(PROFILER_END);
 }
 
 
@@ -2564,9 +2558,7 @@ VIDEO_UPDATE( system32 )
 	}
 
 	/* update the tilemaps */
-	profiler_mark(PROFILER_USER1);
 	enablemask = update_tilemaps(cliprect);
-	profiler_mark(PROFILER_END);
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
@@ -2579,9 +2571,7 @@ VIDEO_UPDATE( system32 )
 #endif
 
 	/* do the mixing */
-	profiler_mark(PROFILER_USER3);
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
-	profiler_mark(PROFILER_END);
 
 #if LOG_SPRITES
 {
@@ -2787,9 +2777,7 @@ VIDEO_UPDATE( multi32 )
 	}
 
 	/* update the tilemaps */
-	profiler_mark(PROFILER_USER1);
 	enablemask = update_tilemaps(&clipleft);
-	profiler_mark(PROFILER_END);
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
@@ -2802,7 +2790,6 @@ VIDEO_UPDATE( multi32 )
 #endif
 
 	/* do the mixing */
-	profiler_mark(PROFILER_USER3);
 	if (system32_displayenable[0] && monitor_setting != 2) /* speed up - disable offscreen monitor */
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
@@ -2820,7 +2807,6 @@ VIDEO_UPDATE( multi32 )
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
-	profiler_mark(PROFILER_END);
 
 	if (!code_pressed(KEYCODE_M)) print_mixer_data(0);
 	else print_mixer_data(1);
