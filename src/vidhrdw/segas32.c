@@ -1221,7 +1221,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
 
 	/* start with screen-wide X and Y scrolls */
-	xscroll = (system32_videoram[0x1ff12/2 + 4 * bgnum] & 0x3ff) - (system32_videoram[0x1ff30/2 + 2 * bgnum] & 0x1ff);
+	xscroll = (system32_videoram[0x1ff12/2 + 4 * bgnum] & 0x3ff) - (system32_videoram[0x1ff30/2 + 2 * bgnum]);
 	yscroll = (system32_videoram[0x1ff16/2 + 4 * bgnum] & 0x1ff);
 
 	/* render the tilemap into its bitmap */
