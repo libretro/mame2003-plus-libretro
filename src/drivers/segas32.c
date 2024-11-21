@@ -3645,6 +3645,11 @@ static DRIVER_INIT( scross )
 	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 }
 
+static DRIVER_INIT( harddunk )
+{
+	harddunk_kludge = true;
+}
+
 /* this one is pretty much ok since it doesn't use backgrounds tilemaps */
 GAME( 1992, holo,     0,        system32, holo,     s32,      ORIENTATION_FLIP_Y, "Sega", "Holosseum" )
 
@@ -3675,7 +3680,7 @@ GAMEX(1995, slipstrh, slipstrm, system32, slipstrm, f1en,     ROT0, "Capcom", "S
 
 /* Multi32 games */
 GAMEX(1992, orunners, 0,        multi32,  orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, harddunk, 0,        multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, harddunj, harddunk, multi32,  harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunk, 0,        multi32,  harddunk, harddunk, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunj, harddunk, multi32,  harddunk, harddunk, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, scross,   0,        multi32,  scross,   scross,   ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, titlef,   0,        multi32,  titlef,   titlef,   ROT0, "Sega", "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
