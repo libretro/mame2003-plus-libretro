@@ -82,7 +82,6 @@ READ16_HANDLER(arf_wakeup_protection_r);
 
 void f1lap_fd1149_vblank(void);
 
-extern UINT16 arescue_dsp_io[6];
 READ16_HANDLER( arescue_dsp_r );
 WRITE16_HANDLER( arescue_dsp_w );
 
