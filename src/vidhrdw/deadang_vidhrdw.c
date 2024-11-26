@@ -139,7 +139,7 @@ VIDEO_UPDATE( deadang )
 		0x01: Background playfield disable
 		0x02: Middle playfield disable
 		0x04: Top playfield disable
-		0x08: ?  Toggles at start of game
+		0x08: Text layer disable
 		0x10: Sprite disable
 		0x20: Unused?
 		0x40: Flipscreen
@@ -148,6 +148,7 @@ VIDEO_UPDATE( deadang )
 	tilemap_set_enable(pf3_layer,!(deadang_scroll_ram[0x68]&1));
 	tilemap_set_enable(pf1_layer,!(deadang_scroll_ram[0x68]&2));
 	tilemap_set_enable(pf2_layer,!(deadang_scroll_ram[0x68]&4));
+  tilemap_set_enable(text_layer,!(deadang_scroll_ram[0x68]&8));
 	flip_screen_set( deadang_scroll_ram[0x68]&0x40 );
 
 	fillbitmap(bitmap,get_black_pen(),cliprect);
