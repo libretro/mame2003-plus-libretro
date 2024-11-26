@@ -164,4 +164,4 @@ READ16_HANDLER( dbzvrvs_protection_r );
  *
  *************************************/
 
-#define SEXT(value, width) (((int64_t)(value & ((1ULL << width) - 1)) ^ (int64_t)(1ULL << (width - 1))) - (1ULL << (width - 1)))
+#define SEXT(value, width) (((int64_t)((value) & ((1ULL << (width)) - 1)) ^ (int64_t)(1ULL << ((width) - 1))) - (1ULL << ((width) - 1)))
