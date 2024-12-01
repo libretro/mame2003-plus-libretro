@@ -1813,4 +1813,4 @@ GAME( 1987, bulletd,  0,        bullet,    bullet,    0,        ROT0,   "Sega", 
 
 GAME( 2008, fantzn2x, 0,        fantzn2x,  fantzn2x,  0,        ROT0,   "Sega / M2",       "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
 
-GAME( 1991, dfjail,   0,        dfjail,    dfjail,  0,        ROT0,   "Philko",           "The Destroyer From Jail (Korea)" )
+GAMEX( 1991, dfjail,   0,        dfjail,    dfjail,  0,        ROT0,   "Philko",           "The Destroyer From Jail (Korea)", GAME_IMPERFECT_SOUND )
