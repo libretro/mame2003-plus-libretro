@@ -559,6 +559,28 @@ WRITE16_HANDLER( segaic16_paletteram_w )
 }
 
 
+WRITE16_HANDLER( philko_paletteram_w) 
+{
+	data16_t newval;
+	int r, g, b;
+
+	/* get the new value */
+	newval = paletteram16[offset];
+	COMBINE_DATA(&newval);
+	paletteram16[offset] = newval;
+
+	//     byte 0    byte 1
+	//  sRRR RRGG GGGB BBBB
+	//  x432 1043 2104 3210
+	b = (newval >> 0) & 0x1f;
+	g = (newval >> 5) & 0x1f;
+	r = (newval >> 10) & 0x1f;
+
+	// shadow / hilight toggle bit in palette RAM
+	palette_set_color(offset + 0 * palette.entries, palette.normal[r],  palette.normal[g],  palette.normal[b]);
+	palette_set_color(offset + 1 * palette.entries, palette.shadow[r],  palette.shadow[g],  palette.shadow[b]);
+	palette_set_color(offset + 2 * palette.entries, palette.hilight[r], palette.hilight[g], palette.hilight[b]);
+}
 
 /*************************************
  *

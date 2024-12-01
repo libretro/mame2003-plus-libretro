@@ -23,6 +23,7 @@ void segaic16_set_display_enable(int enable);
 /* palette handling */
 void segaic16_palette_init(int entries);
 WRITE16_HANDLER( segaic16_paletteram_w );
+WRITE16_HANDLER( philko_paletteram_w); 
 
 /* tilemap systems */
 #define SEGAIC16_MAX_TILEMAPS		1
