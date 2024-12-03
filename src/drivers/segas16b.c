@@ -18,6 +18,7 @@ WRITE_HANDLER( sys16_7751_sh_rom_select_w );
 
 
 static UINT8 disable_screen_blanking;
+static UINT8 nmi_enable;
 static read16_handler custom_io_r = NULL;
 static write16_handler custom_io_w = NULL;
 
@@ -182,6 +183,48 @@ static WRITE16_HANDLER( sound_command_w )
 {
 	soundlatch_w( 0,data&0xff );
 	cpu_set_irq_line( 1, 0, HOLD_LINE );
+}
+
+WRITE_HANDLER( dac_data_w )
+{
+	/*
+	    Z80 code in the NMI handler at 0x6e:
+	    Sample in A
+	    Copy A to E
+	    Shift A left 2 and AND by 3C
+	    write A to port 0x80
+	    Copy E to A
+	    Shift right 4 times
+	    write A to ports 0x81, 0x82, and 0x83
+
+	    This means port 0x80 gets the bottom 4 bits of the 8-bit sample, offset by 2 bits,
+	    and ports 81/82/83 get the top 4 bits of the sample, shifted right 4 bits.
+	*/
+	int dac_data;
+	if (offset == 0)
+	{
+		dac_data = (data>>2) & 0xf;
+	}
+	else if (offset == 1)
+	{
+		dac_data |= (data << 4);
+		DAC_data_w(0, dac_data);
+	}
+}
+
+WRITE_HANDLER( dfjail_sound_control_w)
+{
+	int bankoffs = 0;
+	int size = memory_region_length(REGION_CPU2) - 0x10000;
+	// NMI enable in bit 6
+	nmi_enable = ((data & 0xc0) == 0);
+
+
+	bankoffs = ((data & 0x08) >> 3) * 0x20000;
+	bankoffs += (data & 0x07) * 0x4000;
+
+	// set the final bank
+	cpu_setbank(1, memory_region(REGION_CPU2) + 0x10000 + (bankoffs % size));
 }
 
 struct upd7759_interface sys16b_upd7759_interface =
