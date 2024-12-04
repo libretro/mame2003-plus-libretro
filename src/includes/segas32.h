@@ -20,7 +20,6 @@ extern UINT16 system32_tilebank_external;
 
 extern bool opaquey_hack;
 extern bool titlef_kludge;
-extern bool harddunk_kludge;
 
 extern void system32_set_vblank(int state);
 
