@@ -1077,11 +1077,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += (system32_videoram[0x1ff14/2 + 4 * bgnum] & 0xfe00) << 4;
 
 	/* then account for the destination center coordinates */
-	if (dstxstep != 0x200 || dstystep != 0x200) /* zooming */
-		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 10) * srcxstep;
-	else
-		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 9) * srcxstep;
-	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], 9) * srcystep;
+	srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 9+(dstxstep != 0x200)?1:0) * srcxstep;
+	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], 9+(dstystep != 0x200)?1:0) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
