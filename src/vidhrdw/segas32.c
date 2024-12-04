@@ -1077,10 +1077,10 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += (system32_videoram[0x1ff14/2 + 4 * bgnum] & 0xfe00) << 4;
 
 	/* then account for the destination center coordinates */
-	if (harddunk_kludge) /* attract mode when the players are presented */
-		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum] & 0x1ff, 10) * srcxstep;
-	else
+	if (dstxstep != 0x200 || dstystep != 0x200) /* zooming */
 		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 10) * srcxstep;
+	else
+		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 9) * srcxstep;
 	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], 9) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
