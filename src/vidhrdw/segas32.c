@@ -15,9 +15,8 @@
 	  The theory is that opaque pens should go above background layer and
 	  behind everything else like System 24.
 
-	- radr uses $1A0 as the X center for zooming; however, this
-	  contradicts the theory that bit 9 is a sign bit. For now, the code
-	  assumes that the X center has 10 bits of resolution.
+	- Verify that X/Y center has 10 bits of resolution when zooming and
+	  9 when not.
 
 	- In svf (the field) and radr (on the field), they use tilemap-specific
 	  flip in conjunction with rowscroll AND rowselect. According to Charles,
@@ -30,10 +29,6 @@
 	  Game actually uses the "rowscroll/rowselect" tables for a line window
 	  effect to draw the boxing ring over NBG0.
 	  Same deal for ga2 when in stage 2 cave a wall torch is lit.
-
-	- harddunk draws solid white in attract mode when the players are presented.
-	  NBG0 is set with $200 on center X/Y, same as above or perhaps missing
-	  tilemap wraparound?
 
 	- Wrong priority cases (parenthesis for the level setup):
 	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
@@ -278,7 +273,6 @@ UINT16 system32_tilebank_external;
 
 bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
-bool harddunk_kludge = false;
 
 
 
@@ -1077,11 +1071,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy += (system32_videoram[0x1ff14/2 + 4 * bgnum] & 0xfe00) << 4;
 
 	/* then account for the destination center coordinates */
-	if (harddunk_kludge) /* attract mode when the players are presented */
-		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum] & 0x1ff, 10) * srcxstep;
-	else
-		srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], 10) * srcxstep;
-	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], 9) * srcystep;
+	srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], (dstxstep != 0x200)?10:9) * srcxstep;
+	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], (dstystep != 0x200)?10:9) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
