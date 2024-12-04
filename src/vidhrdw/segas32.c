@@ -273,7 +273,6 @@ UINT16 system32_tilebank_external;
 
 bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
-bool harddunk_kludge = false;
 
 
 
