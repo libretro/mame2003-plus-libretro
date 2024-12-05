@@ -3,6 +3,9 @@
 #include "cpu/i8039/i8039.h"
 #include "vidhrdw/segaic16.h"
 #include "machine/fd1089.h"
+#include "sound/dac.h"
+WRITE_HANDLER( dac_data_w );
+WRITE_HANDLER( dfjail_sound_control_w);
 
 WRITE_HANDLER( sys16_7751_audio_8255_w );
  READ_HANDLER( sys16_7751_audio_8255_r );
@@ -21,6 +24,13 @@ static UINT8 disable_screen_blanking;
 static UINT8 nmi_enable;
 static read16_handler custom_io_r = NULL;
 static write16_handler custom_io_w = NULL;
+
+struct DACinterface dfjail_dac_interface =
+{
+	1,
+	30
+};
+
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -93,9 +103,10 @@ static MEMORY_READ_START( sound_readmem_7759 )
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
+
 static MEMORY_WRITE_START( sound_writemem_7759 )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0xdfff, MWA_BANK1 },
+	//{ 0x8000, 0xdfff, MWA_BANK1 },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
@@ -104,6 +115,13 @@ static PORT_WRITE_START( sound_writeport_7759 )
 	{ 0x01, 0x01, YM2151_data_port_0_w },
 	{ 0x40, 0x40, UPD7759_bank_w },
 	{ 0x80, 0x80, upd7759_0_port_w },
+PORT_END
+
+static PORT_WRITE_START( sound_writeport_dfjail )
+	{ 0x00, 0x00, YM2151_register_port_0_w },
+	{ 0x01, 0x01, YM2151_data_port_0_w },
+	{ 0x40, 0x40, dfjail_sound_control_w },
+	{ 0x80, 0x83, dac_data_w },
 PORT_END
 
 WRITE_HANDLER( UPD7759_bank_w )
@@ -179,11 +197,19 @@ static void sound_cause_a_nmi( int state )
 		cpu_set_nmi_line(1, PULSE_LINE);
 }
 
+INTERRUPT_GEN( dfjail_nmi )
+{
+	if (nmi_enable == true)
+		cpu_set_nmi_line(1, PULSE_LINE);
+}
+
 static WRITE16_HANDLER( sound_command_w )
 {
 	soundlatch_w( 0,data&0xff );
 	cpu_set_irq_line( 1, 0, HOLD_LINE );
 }
+
+UINT8 dac_data=0;
 
 WRITE_HANDLER( dac_data_w )
 {
@@ -200,7 +226,7 @@ WRITE_HANDLER( dac_data_w )
 	    This means port 0x80 gets the bottom 4 bits of the 8-bit sample, offset by 2 bits,
 	    and ports 81/82/83 get the top 4 bits of the sample, shifted right 4 bits.
 	*/
-	int dac_data;
+
 	if (offset == 0)
 	{
 		dac_data = (data>>2) & 0xf;
@@ -790,16 +816,16 @@ INPUT_PORTS_START( dfjail )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Demo_Sounds ) )  // it's actually BGM in attract mode
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0007, 0x0004, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(      0x0000, "0" ) // very slow bullets
-	PORT_DIPSETTING(      0x0001, "1" ) // ^
-	PORT_DIPSETTING(      0x0002, "2" ) // very slow bullets but less?
-	PORT_DIPSETTING(      0x0003, "3" ) // ^
-	PORT_DIPSETTING(      0x0004, "4" ) // faster bullets
-	PORT_DIPSETTING(      0x0005, "5" ) // ^
-	PORT_DIPSETTING(      0x0006, "6" ) // very fast, but less of them?
-	PORT_DIPSETTING(      0x0007, "7" ) // almost no bullets?
-
+/*	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x00, "0" ) // very slow bullets
+	PORT_DIPSETTING(      0x01, "1" ) // ^
+	PORT_DIPSETTING(      0x02, "2" ) // very slow bullets but less?
+	PORT_DIPSETTING(      0x03, "3" ) // ^
+	PORT_DIPSETTING(      0x04, "4" ) // faster bullets
+	PORT_DIPSETTING(      0x05, "5" ) // ^
+	PORT_DIPSETTING(      0x06, "6" ) // very fast, but less of them?
+	PORT_DIPSETTING(      0x07, "7" ) // almost no bullets?
+*/
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -958,14 +984,8 @@ static MEMORY_READ16_START( dfjail_readmem )
 	{ 0x440000, 0x441fff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0x440000, 0x440fff, segaic16_spriteram_r },
-
-	{ 0xc41000, 0xc42003, dfjail_custom_io_r  }, //P1
-//	{ 0xc41002, 0xc41003, input_port_1_r }, //P2
-//	{ 0xc41004, 0xc41005, input_port_2_r }, //SERVICE
-//	{ 0xc42000, 0xc42001, input_port_3_r }, //DSW1
-//	{ 0xc42002, 0xc42003, input_port_4_r }, //DSW2
-
-	{ 0xffc000, 0xffffff,  SYS16_MRA16_WORKINGRAM },
+	{ 0xc41000, 0xc42003, dfjail_custom_io_r  },
+	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( dfjail_writemem )
@@ -979,8 +999,7 @@ static MEMORY_WRITE16_START( dfjail_writemem )
 	{ 0xc40000, 0xc40001, MWA16_NOP },
 	{ 0xc43000, 0xc43001, MWA16_NOP },
 	{ 0x123406, 0x123407, sound_command_w },
-
-	{ 0xffc000, 0xffffff,  SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
 
 
@@ -1818,12 +1837,37 @@ static MACHINE_DRIVER_START( fantzn2x )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( dfjail )
-
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759)
-	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_ADD_TAG("main", M68000, 8000000)
 	MDRV_CPU_MEMORY(dfjail_readmem,dfjail_writemem)
+	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
 	MDRV_MACHINE_INIT(dfjail)
+
+	MDRV_CPU_ADD_TAG("sound", Z80, 8000000)
+	MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
+	MDRV_CPU_PORTS(sound_readport,sound_writeport_dfjail)
+	MDRV_CPU_PERIODIC_INT(dfjail_nmi,8000)
+	/* sound hardware /*/
+	MDRV_SOUND_ADD(DAC, dfjail_dac_interface)
+
+	MDRV_FRAMES_PER_SECOND(60.054389)
+	//MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
+	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048*3)
+
+	MDRV_VIDEO_START (system16b)
+	MDRV_VIDEO_UPDATE(system16b)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
+
+
 MACHINE_DRIVER_END
 /* init notes
 
@@ -1837,23 +1881,18 @@ GAMEX( 1988, sjryuko,  sdi,      bullet,    aurail,    sjryuko,  ROT0,   "White 
 /*all  games boot and work fine just need inputs done will consider doing it if someone that is japanese requests it */
 
 /*          rom       parent     machine    inp        init */
+GAME( 1987, bulletd,  0,        bullet,    bullet,    0,        ROT0,   "Sega",            "Bullet (unprotected of FD1094 317-0041 set)" )
 GAME( 1987, dunkshot, 0,        dunkshot,  dunkshot,  dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev C, FD1089A 317-0022)" )
 GAME( 1987, dunkshota,dunkshot, dunkshot,  dunkshot,  dunkshot, ROT0,   "Sega",            "Dunk Shot (Rev A, FD1089A 317-0022)" )
 GAME( 1987, dunkshoto,dunkshot, dunkshot,  dunkshot,  dunkshot, ROT0,   "Sega",            "Dunk Shot (FD1089A 317-0022)" )
-
 GAME( 1987, defense,  sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "Defense (System 16B, FD1089A 317-0028)" )
 GAME( 1987, sdib,     sdi,      bullet,    sdi,       sdi,      ROT0,   "Sega",            "SDI - Strategic Defense Initiative (System 16B, FD1089A 317-0028)" )
-
 GAME( 1990, aurail,   0,        aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 3, US) (unprotected)" )
 GAME( 1990, aurail1,  aurail,   aurail,    aurail,    FD1089B,  ROT0,   "Sega / Westone",  "Aurail (set 2, World) (FD1089B 317-0168)" )
 GAME( 1990, aurail1d, aurail,   aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 2, World) (unprotected of FD1089B 317-0168 set)" )
 GAME( 1990, aurailj,  aurail,   aurail,    aurail,    FD1089A,  ROT0,   "Sega / Westone",  "Aurail (set 1, Japan) (FD1089A 317-0167)" )
 GAME( 1990, aurailjd, aurail,   aurail,    aurail,    0,        ROT0,   "Sega / Westone",  "Aurail (set 1, Japan) (unprotected of FD1089A 317-0167 set)" )
-
 GAME( 1991, cottond,  cotton,   cotton,    cotton,    0,        ROT0,   "Sega / Success",  "Cotton (set 4, World) (unprotected of FD1094 317-0181a set)" )
-
-GAME( 1987, bulletd,  0,        bullet,    bullet,    0,        ROT0,   "Sega",            "Bullet (unprotected of FD1094 317-0041 set)" )
-
+GAME( 1991, dfjail,   0,        dfjail,    dfjail,  0,        ROT0,   "Philko",           "The Destroyer From Jail (Korea)" )
 GAME( 2008, fantzn2x, 0,        fantzn2x,  fantzn2x,  0,        ROT0,   "Sega / M2",       "Fantasy Zone II - The Tears of Opa-Opa (System 16C version)" )
 
-GAMEX( 1991, dfjail,   0,        dfjail,    dfjail,  0,        ROT0,   "Philko",           "The Destroyer From Jail (Korea)", GAME_IMPERFECT_SOUND )
