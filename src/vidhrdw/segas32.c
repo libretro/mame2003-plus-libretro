@@ -2199,7 +2199,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		if ((enablemask & (1 << laynum)) && priority != 0)
 		{
 			layersort[numlayers].index = laynum;
-			layersort[numlayers].effpri = (laynum == MIXER_LAYER_TEXT)?16:((priority << 3) | (6 - laynum));
+			layersort[numlayers].effpri = (priority << 3) | (6 - laynum);
 			layersort[numlayers].palbase = (mixer_control[which][0x20/2 + laynum] & 0x00f0) << 6;
 			layersort[numlayers].mixshift = (mixer_control[which][0x20/2 + laynum] >> 8) & 3;
 			layersort[numlayers].blendmask = blendenable ? ((mixer_control[which][0x30/2 + laynum] >> 6) & 0xff) : 0;
@@ -2222,7 +2222,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	/* now bubble sort the list by effective priority */
 	for (laynum = 0; laynum < numlayers; laynum++)
 		for (i = laynum + 1; i < numlayers; i++)
-			if (layersort[i].effpri > layersort[laynum].effpri)
+			if (layersort[i].effpri >= layersort[laynum].effpri)
 			{
 				struct mixer_layer_info temp = layersort[i];
 				layersort[i] = layersort[laynum];
