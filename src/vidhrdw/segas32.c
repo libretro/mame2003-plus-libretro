@@ -271,7 +271,7 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack  = false; /* dink */
+bool opaquey_hack  = true; /* dink */
 bool titlef_kludge = false;
 
 
