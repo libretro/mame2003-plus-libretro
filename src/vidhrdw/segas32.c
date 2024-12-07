@@ -271,7 +271,7 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack  = true; /* dink */
+bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
 
 
@@ -2222,7 +2222,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	/* now bubble sort the list by effective priority */
 	for (laynum = 0; laynum < numlayers; laynum++)
 		for (i = laynum + 1; i < numlayers; i++)
-			if (layersort[i].effpri >= layersort[laynum].effpri)
+			if (layersort[i].effpri > layersort[laynum].effpri)
 			{
 				struct mixer_layer_info temp = layersort[i];
 				layersort[i] = layersort[laynum];
