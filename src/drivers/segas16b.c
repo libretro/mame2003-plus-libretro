@@ -28,7 +28,7 @@ static write16_handler custom_io_w = NULL;
 struct DACinterface dfjail_dac_interface =
 {
 	1,
-	30
+	{30}
 };
 
 
@@ -1668,15 +1668,15 @@ static MACHINE_DRIVER_START( system16b )
 
 	MDRV_CPU_ADD_TAG("sound", Z80, 5000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
-		MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
+	MDRV_VBLANK_DURATION( TIME_IN_USEC( (262 - 224) / (262 * 60) ))
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_SCREEN_SIZE(40*8, 262)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*3)
@@ -1837,9 +1837,7 @@ static MACHINE_DRIVER_START( fantzn2x )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( dfjail )
-	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", M68000, 8000000)
-	MDRV_CPU_MEMORY(dfjail_readmem,dfjail_writemem)
+	MDRV_CPU_ADD_TAG("main", M68000, 8000000)	MDRV_CPU_MEMORY(dfjail_readmem,dfjail_writemem)
 	MDRV_CPU_VBLANK_INT(sys16_interrupt,1)
 	MDRV_MACHINE_INIT(dfjail)
 
@@ -1847,28 +1845,26 @@ static MACHINE_DRIVER_START( dfjail )
 	MDRV_CPU_MEMORY(sound_readmem_7759,sound_writemem_7759)
 	MDRV_CPU_PORTS(sound_readport,sound_writeport_dfjail)
 	MDRV_CPU_PERIODIC_INT(dfjail_nmi,8000)
+
 	/* sound hardware /*/
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
 	MDRV_SOUND_ADD(DAC, dfjail_dac_interface)
 
-	MDRV_FRAMES_PER_SECOND(60.054389)
-	//MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION( TIME_IN_USEC( (262 - 224) / (262 * 60) ))
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(40*8, 28*8)
+	MDRV_SCREEN_SIZE(40*8, 262)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(sys16_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048*3)
 
 	MDRV_VIDEO_START (system16b)
 	MDRV_VIDEO_UPDATE(system16b)
-
-	/* sound hardware */
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD_TAG("2151", YM2151, sys16_ym2151_interface)
-
-
 MACHINE_DRIVER_END
+
 /* init notes
 
    on boot order
