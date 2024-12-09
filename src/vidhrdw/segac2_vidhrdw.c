@@ -269,9 +269,9 @@ int start_system18_vdp(void)
 	if (video_start_segac2())
 		return 1;
 
-	segac2_sp_palbase = 0x800;
-	segac2_bg_palbase = 0x800;
-	segac2_pal_offs = 0x800;
+	segac2_sp_palbase = 0x1800;
+	segac2_bg_palbase = 0x1800;
+	segac2_pal_offs = 0x1800;
 
 	display_enable = 1;
 
