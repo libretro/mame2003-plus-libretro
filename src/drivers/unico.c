@@ -28,7 +28,7 @@ Year + Game			PCB				Notes
 #include "unico.h"
 
 /* Variables needed by vidhrdw: */
-
+static int gun_entropy;
 int unico_has_lightgun;
 
 /***************************************************************************
@@ -128,44 +128,54 @@ static WRITE16_HANDLER( zeropnt_sound_bank_w )
 }
 
 /* Light Gun - need to wiggle the input slightly otherwise fire doesn't work */
+static int gun_reload(int gun)
+{
+	int x = readinputport(4 + (2 * gun));
+	int y = readinputport(3 + (2 * gun));
+	return (x == 0 || x == 255 || y == 0 || y == 255);
+}
+
+static UINT8 GetGunX(int gun)
+{
+	int x = readinputport(4 + (2 * gun));
+
+	x = x * 384 / 256;
+	if (x < 0x160) {
+		x = 0x30 + (x * 0xd0 / 0x15f);
+	} else {
+		x = ((x - 0x160) * 0x20) / 0x1f;
+	}
+
+	return (gun_reload(gun)) ? 0 : ((x & 0xff) ^ (++gun_entropy & 7));
+}
+
+static UINT8 GetGunY(int gun)
+{
+	int y = readinputport(3 + (2 * gun));
+
+	y = 0x18 + ((y * 0xe0) / 0xff);
+
+	return (gun_reload(gun)) ? 0 : ((y & 0xff) ^ (++gun_entropy & 7));
+}
+
 static READ16_HANDLER( unico_gunx_0_msb_r )
 {
-	int x=readinputport(4);
-
-	x=x*384/256; /* On screen pixel X */
-	if (x<0x160) x=0x30 + (x*0xd0/0x15f);
-	else x=((x-0x160) * 0x20)/0x1f;
-
-	return ((x&0xff) ^ (cpu_getcurrentframe()&1))<<8;
+	return GetGunX(0);
 }
 
 static READ16_HANDLER( unico_guny_0_msb_r )
 {
-	int y=readinputport(3);
-
-	y=0x18+((y*0xe0)/0xff);
-
-	return ((y&0xff) ^ (cpu_getcurrentframe()&1))<<8;
+	return GetGunY(0);
 }
 
 static READ16_HANDLER( unico_gunx_1_msb_r )
 {
-	int x=readinputport(6);
-
-	x=x*384/256; /* On screen pixel X */
-	if (x<0x160) x=0x30 + (x*0xd0/0x15f);
-	else x=((x-0x160) * 0x20)/0x1f;
-
-	return ((x&0xff) ^ (cpu_getcurrentframe()&1))<<8;
+	return GetGunX(1);
 }
 
 static READ16_HANDLER( unico_guny_1_msb_r )
 {
-	int y=readinputport(5);
-
-	y=0x18+((y*0xe0)/0xff);
-
-	return ((y&0xff) ^ (cpu_getcurrentframe()&1))<<8;
+	return GetGunY(1);
 }
 
 static MEMORY_READ16_START( readmem_zeropnt )
@@ -221,10 +231,10 @@ static READ32_HANDLER( zeropnt2_dsw1_r )			{ return (readinputport(1) << 16) | 0
 static READ32_HANDLER( zeropnt2_dsw2_r )			{ return (readinputport(2) << 16) | 0xffff; }
 static READ32_HANDLER( zeropnt2_buttons_r )			{ return ((readinputport(7) | ((EEPROM_read_bit() & 0x01) << 7)) << 16) | 0xffff; }
 
-static READ32_HANDLER( zeropnt2_gunx_0_msb_r )		{ return (unico_gunx_0_msb_r(0,0)-0x0800) << 16; }
-static READ32_HANDLER( zeropnt2_guny_0_msb_r )		{ return (unico_guny_0_msb_r(0,0)+0x0800) << 16; }
-static READ32_HANDLER( zeropnt2_gunx_1_msb_r )		{ return (unico_gunx_1_msb_r(0,0)-0x0800) << 16; }
-static READ32_HANDLER( zeropnt2_guny_1_msb_r )		{ return (unico_guny_1_msb_r(0,0)+0x0800) << 16; }
+static READ32_HANDLER( zeropnt2_gunx_0_msb_r )		{ return (unico_gunx_0_msb_r(0,0)-0x08); }
+static READ32_HANDLER( zeropnt2_guny_0_msb_r )		{ return (unico_guny_0_msb_r(0,0)+0x08); }
+static READ32_HANDLER( zeropnt2_gunx_1_msb_r )		{ return (unico_gunx_1_msb_r(0,0)-0x08); }
+static READ32_HANDLER( zeropnt2_guny_1_msb_r )		{ return (unico_guny_1_msb_r(0,0)+0x08); }
 
 static READ32_HANDLER ( zeropnt2_oki0_r )			{ return OKIM6295_status_0_r(0) << 16; }
 static READ32_HANDLER ( zeropnt2_oki1_r )			{ return OKIM6295_status_1_r(0) << 16; }
@@ -746,6 +756,7 @@ MACHINE_INIT( zeropt )
 {
 	machine_init_unico();
 	unico_has_lightgun = 1;
+	gun_entropy = 0;
 }
 
 static MACHINE_DRIVER_START( zeropnt )
