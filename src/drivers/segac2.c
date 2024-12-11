@@ -6381,7 +6381,7 @@ DRIVER_INIT( sonic3mb )
 READ16_HANDLER( jparkmb_r )
 {
 	if (activecpu_get_pc()==0x1e327a)
-		return readinputport(4); /* TODO: coins don't respond well */
+		return (readinputport(4)) ? 0x88 : 0; /* coin hack - should be using PIC instead */
 	if (activecpu_get_pc()==0x1e3254) return 0x0000; /* what's this? dips? */
 	/* logerror("jparkmb_r : %06x\n",m_maincpu->pc()); */
 	return 0x0000;
@@ -6404,7 +6404,7 @@ DRIVER_INIT( jparkmb )
 READ16_HANDLER( twinktmb_r )
 {
 	if (activecpu_get_pc()==0x02f81e)
-		return readinputport(4); /* TODO: coins don't respond well */
+		return (readinputport(4)) ? 0x88 : 0; /* coin hack - should be using PIC instead */
 
 	if (activecpu_get_pc()==0x02f84e) return 0x0000; /* what's this? dips? */
 
