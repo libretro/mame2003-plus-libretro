@@ -146,7 +146,7 @@ static UINT8 GetGunX(int gun)
 		x = ((x - 0x160) * 0x20) / 0x1f;
 	}
 
-	return (gun_reload(gun)) ? 0 : (((x & 0xff) ^ (++gun_entropy & 7))<<8);
+	return (gun_reload(gun)) ? 0 : ((x & 0xff) ^ (++gun_entropy & 7));
 }
 
 static UINT8 GetGunY(int gun)
@@ -155,27 +155,27 @@ static UINT8 GetGunY(int gun)
 
 	y = 0x18 + ((y * 0xe0) / 0xff);
 
-	return (gun_reload(gun)) ? 0 : (((y & 0xff) ^ (++gun_entropy & 7))<<8);
+	return (gun_reload(gun)) ? 0 : ((y & 0xff) ^ (++gun_entropy & 7));
 }
 
 static READ16_HANDLER( unico_gunx_0_msb_r )
 {
-	return GetGunX(0);
+	return GetGunX(0) << 8;
 }
 
 static READ16_HANDLER( unico_guny_0_msb_r )
 {
-	return GetGunY(0);
+	return GetGunY(0) << 8;
 }
 
 static READ16_HANDLER( unico_gunx_1_msb_r )
 {
-	return GetGunX(1);
+	return GetGunX(1) << 8;
 }
 
 static READ16_HANDLER( unico_guny_1_msb_r )
 {
-	return GetGunY(1);
+	return GetGunY(1) << 8;
 }
 
 static MEMORY_READ16_START( readmem_zeropnt )
@@ -231,10 +231,10 @@ static READ32_HANDLER( zeropnt2_dsw1_r )			{ return (readinputport(1) << 16) | 0
 static READ32_HANDLER( zeropnt2_dsw2_r )			{ return (readinputport(2) << 16) | 0xffff; }
 static READ32_HANDLER( zeropnt2_buttons_r )			{ return ((readinputport(7) | ((EEPROM_read_bit() & 0x01) << 7)) << 16) | 0xffff; }
 
-static READ32_HANDLER( zeropnt2_gunx_0_msb_r )		{ return (unico_gunx_0_msb_r(0,0)-0x08); }
-static READ32_HANDLER( zeropnt2_guny_0_msb_r )		{ return (unico_guny_0_msb_r(0,0)+0x08); }
-static READ32_HANDLER( zeropnt2_gunx_1_msb_r )		{ return (unico_gunx_1_msb_r(0,0)-0x08); }
-static READ32_HANDLER( zeropnt2_guny_1_msb_r )		{ return (unico_guny_1_msb_r(0,0)+0x08); }
+static READ32_HANDLER( zeropnt2_gunx_0_msb_r )		{ return (unico_gunx_0_msb_r(0,0)-0x0800) << 16; }
+static READ32_HANDLER( zeropnt2_guny_0_msb_r )		{ return (unico_guny_0_msb_r(0,0)+0x0800) << 16; }
+static READ32_HANDLER( zeropnt2_gunx_1_msb_r )		{ return (unico_gunx_1_msb_r(0,0)-0x0800) << 16; }
+static READ32_HANDLER( zeropnt2_guny_1_msb_r )		{ return (unico_guny_1_msb_r(0,0)+0x0800) << 16; }
 
 static READ32_HANDLER ( zeropnt2_oki0_r )			{ return OKIM6295_status_0_r(0) << 16; }
 static READ32_HANDLER ( zeropnt2_oki1_r )			{ return OKIM6295_status_1_r(0) << 16; }
