@@ -146,7 +146,7 @@ static UINT8 GetGunX(int gun)
 		x = ((x - 0x160) * 0x20) / 0x1f;
 	}
 
-	return (gun_reload(gun)) ? 0 : ((x & 0xff) ^ (++gun_entropy & 7));
+	return (gun_reload(gun)) ? 0 : (((x & 0xff) ^ (++gun_entropy & 7))<<8);
 }
 
 static UINT8 GetGunY(int gun)
@@ -155,7 +155,7 @@ static UINT8 GetGunY(int gun)
 
 	y = 0x18 + ((y * 0xe0) / 0xff);
 
-	return (gun_reload(gun)) ? 0 : ((y & 0xff) ^ (++gun_entropy & 7));
+	return (gun_reload(gun)) ? 0 : (((y & 0xff) ^ (++gun_entropy & 7))<<8);
 }
 
 static READ16_HANDLER( unico_gunx_0_msb_r )
