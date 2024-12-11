@@ -135,7 +135,7 @@ static int gun_reload(int gun)
 	return (x == 0 || x == 255 || y == 0 || y == 255);
 }
 
-static UINT8 GetGunX(int gun)
+static UINT16 GetGunX(int gun)
 {
 	int x = readinputport(4 + (2 * gun));
 
@@ -146,36 +146,36 @@ static UINT8 GetGunX(int gun)
 		x = ((x - 0x160) * 0x20) / 0x1f;
 	}
 
-	return (gun_reload(gun)) ? 0 : ((x & 0xff) ^ (++gun_entropy & 7));
+	return (gun_reload(gun)) ? 0 : (((x & 0xff) ^ (++gun_entropy & 7))<<8);
 }
 
-static UINT8 GetGunY(int gun)
+static UINT16 GetGunY(int gun)
 {
 	int y = readinputport(3 + (2 * gun));
 
 	y = 0x18 + ((y * 0xe0) / 0xff);
 
-	return (gun_reload(gun)) ? 0 : ((y & 0xff) ^ (++gun_entropy & 7));
+	return (gun_reload(gun)) ? 0 : (((y & 0xff) ^ (++gun_entropy & 7))<<8);
 }
 
 static READ16_HANDLER( unico_gunx_0_msb_r )
 {
-	return GetGunX(0) << 8;
+	return GetGunX(0);
 }
 
 static READ16_HANDLER( unico_guny_0_msb_r )
 {
-	return GetGunY(0) << 8;
+	return GetGunY(0);
 }
 
 static READ16_HANDLER( unico_gunx_1_msb_r )
 {
-	return GetGunX(1) << 8;
+	return GetGunX(1);
 }
 
 static READ16_HANDLER( unico_guny_1_msb_r )
 {
-	return GetGunY(1) << 8;
+	return GetGunY(1);
 }
 
 static MEMORY_READ16_START( readmem_zeropnt )
