@@ -2617,7 +2617,6 @@ static MACHINE_DRIVER_START( multi32 )
 MACHINE_DRIVER_END
 
 
-
 /*************************************
  *
  *  Rom Loading
