@@ -67,7 +67,7 @@ const unsigned char ga2_v25_opcode_table[256] = {
 
 #undef xxxx
 
-void nec_v25_cpu_decrypt(unsigned char *opcode_table[256])
+void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 {
 	int i;
 	unsigned char *rom = memory_region(REGION_CPU3);
