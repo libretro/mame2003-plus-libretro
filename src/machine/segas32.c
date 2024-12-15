@@ -343,7 +343,7 @@ READ16_HANDLER(arf_wakeup_protection_r)
 		"wake up! ARF!                                   ";
 	return prot[offset];
 }
-endif
+#endif
 
 
 /******************************************************************************
