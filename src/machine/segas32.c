@@ -102,9 +102,6 @@ void decrypt_ga2_protrom(void)
 	nec_v25_cpu_decrypt();
 }
 
-extern data8_t *ga2_dpram;
-
-
 WRITE16_HANDLER( ga2_dpram_w )
 {
 	/* does it ever actually write.. */
