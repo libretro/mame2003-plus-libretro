@@ -6,6 +6,7 @@
 
 
 /*----------- defined in driver/segas32.c -----------*/
+extern data8_t  *ga2_dpram;
 extern data16_t *system32_protram;
 extern data16_t *system32_workram;
 
