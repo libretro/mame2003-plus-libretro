@@ -66,14 +66,14 @@ VIDEO_UPDATE( multi32 );
  *
  *************************************/
 
+READ16_HANDLER( system32_dpram_r );
+WRITE16_HANDLER( system32_dpram_w );
+
 #if 0
 READ16_HANDLER( ga2_sprite_protection_r );
 READ16_HANDLER( ga2_wakeup_protection_r );
 #endif
-
-void decrypt_system32_protrom(void);
-READ16_HANDLER( system32_dpram_r );
-WRITE16_HANDLER( system32_dpram_w );
+void decrypt_ga2_protrom(void);
 
 WRITE16_HANDLER(sonic_level_load_protection);
 
@@ -87,6 +87,7 @@ READ16_HANDLER(arabfgt_protboard_r);
 WRITE16_HANDLER(arabfgt_protboard_w);
 READ16_HANDLER(arf_wakeup_protection_r);
 #endif
+void decrypt_arabfgt_protrom(void);
 
 void f1lap_fd1149_vblank(void);
 
