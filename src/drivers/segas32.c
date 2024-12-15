@@ -3506,7 +3506,7 @@ static DRIVER_INIT ( ga2 )
 	install_mem_read16_handler (0, 0xa00000, 0xa0001f, ga2_sprite_protection_r);
 	install_mem_read16_handler (0, 0xa00100, 0xa0015f, ga2_wakeup_protection_r);
 */
-	decrypt_system32_protrom();
+	decrypt_ga2_protrom();
 	install_mem_read16_handler (0, 0xa00000, 0xa00fff, system32_dpram_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, system32_dpram_w);
 }
@@ -3547,7 +3547,7 @@ static DRIVER_INIT ( arf )
 	install_mem_read16_handler (0, 0xa00100, 0xa0011f, arf_wakeup_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, arabfgt_protboard_w);
 */
-	decrypt_system32_protrom();
+	decrypt_arabfgt_protrom();
 	install_mem_read16_handler (0, 0xa00000, 0xa00fff, system32_dpram_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, system32_dpram_w);
 }
