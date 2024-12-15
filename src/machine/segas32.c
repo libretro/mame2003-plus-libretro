@@ -99,7 +99,7 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 
 void decrypt_ga2_protrom(void)
 {
-	nec_v25_cpu_decrypt(ga2_v25_opcode_table);
+	nec_v25_cpu_decrypt(&ga2_v25_opcode_table);
 }
 
 WRITE16_HANDLER( system32_dpram_w )
@@ -308,7 +308,7 @@ const unsigned char arabfgt_v25_opcode_table[256] = {
 
 void decrypt_arabfgt_protrom(void)
 {
-	nec_v25_cpu_decrypt(arabfgt_v25_opcode_table);
+	nec_v25_cpu_decrypt(&arabfgt_v25_opcode_table);
 }
 
 #if 0 /* simulation */
