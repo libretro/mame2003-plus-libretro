@@ -396,6 +396,7 @@ static UINT16 sound_bank;
 
 static UINT8 misc_io_data[2][0x10];
 
+data8_t  *ga2_dpram;
 data16_t *system32_protram;
 data16_t *system32_workram;
 
@@ -914,8 +915,6 @@ MEMORY_END
 /****************************************************
  GA2 protection board
 ****************************************************/
-
-data8_t *ga2_dpram;
 
 static MEMORY_READ_START( ga2_v25_readmem )
 	{ 0x00000, 0x0ffff, MRA_ROM },
@@ -3504,10 +3503,10 @@ static DRIVER_INIT ( brival )
 
 static DRIVER_INIT ( ga2 )
 {
-/*	
+/* simulation
 	install_mem_read16_handler (0, 0xa00000, 0xa0001f, ga2_sprite_protection_r);
 	install_mem_read16_handler (0, 0xa00100, 0xa0015f, ga2_wakeup_protection_r);
-*/	
+*/
 	//decrypt_ga2_protrom();
 	//install_mem_write16_handler (0, 0xa00000, 0xa00fff, ga2_dpram_w);
 	//install_mem_read16_handler  (0, 0xa00000, 0xa00fff, ga2_dpram_r);
@@ -3660,7 +3659,7 @@ GAMEX(1991, spidey,   0,        system32, spidey,   0,        ROT0, "Sega", "Spi
 GAMEX(1991, spideyj,  spidey,   system32, spideyj,  0,        ROT0, "Sega", "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, f1en,     0,        system32, f1en,     f1en,     ROT0, "Sega", "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, ga2,      0,        ga2,      ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2j,     ga2,      ga2,      ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, brival,   0,        system32, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonic,    0,        system32, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
