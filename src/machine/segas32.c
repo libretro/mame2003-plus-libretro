@@ -67,7 +67,7 @@ const unsigned char ga2_v25_opcode_table[256] = {
 
 #undef xxxx
 
-void nec_v25_cpu_decrypt(unsigned char *opcode_table)
+void nec_v25_cpu_decrypt(unsigned char *opcode_table[256])
 {
 	int i;
 	unsigned char *rom = memory_region(REGION_CPU3);
@@ -88,7 +88,7 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 		rom[i] = temp[j];
 
 		/* decryped opcodes with address swap undone */
-		decrypted[i] = *opcode_table[ temp[j] ];
+		decrypted[i] = opcode_table[ temp[j] ];
 	}
 
 	memcpy(rom+0xf0000, rom, 0x10000);
