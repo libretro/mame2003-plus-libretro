@@ -6,6 +6,7 @@
 
 
 /*----------- defined in driver/segas32.c -----------*/
+extern data8_t  *ga2_dpram;
 extern data16_t *system32_protram;
 extern data16_t *system32_workram;
 
@@ -65,8 +66,14 @@ VIDEO_UPDATE( multi32 );
  *
  *************************************/
 
-READ16_HANDLER(ga2_sprite_protection_r);
-READ16_HANDLER(ga2_wakeup_protection_r);
+#if 0
+READ16_HANDLER( ga2_sprite_protection_r );
+READ16_HANDLER( ga2_wakeup_protection_r );
+#endif
+
+void decrypt_ga2_protrom(void);
+READ16_HANDLER( ga2_dpram_r );
+WRITE16_HANDLER( ga2_dpram_w );
 
 WRITE16_HANDLER(sonic_level_load_protection);
 

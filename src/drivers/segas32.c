@@ -396,6 +396,7 @@ static UINT16 sound_bank;
 
 static UINT8 misc_io_data[2][0x10];
 
+data8_t  *ga2_dpram;
 data16_t *system32_protram;
 data16_t *system32_workram;
 
@@ -908,6 +909,23 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0xd00000, 0xd0000f, interrupt_control_16_w },
 	{ 0xd80000, 0xdfffff, random_number_16_w },
 	{ 0xf00000, 0xffffff, MWA16_ROM },
+MEMORY_END
+
+
+/****************************************************
+ GA2 protection board
+****************************************************/
+
+static MEMORY_READ_START( ga2_v25_readmem )
+	{ 0x00000, 0x0ffff, MRA_ROM },
+	{ 0x10000, 0x1ffff, MRA_RAM },
+	{ 0xf0000, 0xfffff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( ga2_v25_writemem )
+	{ 0x00000, 0x0ffff, MWA_ROM },
+	{ 0x10000, 0x1ffff, MWA_RAM, &ga2_dpram },
+	{ 0xf0000, 0xfffff, MWA_ROM },
 MEMORY_END
 
 
@@ -2558,6 +2576,12 @@ static MACHINE_DRIVER_START( vblank32 )
 	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
 MACHINE_DRIVER_END
 
+/* ga2 has a v25 on a protection board */
+static MACHINE_DRIVER_START( ga2 )
+	MDRV_IMPORT_FROM(system32)
+	MDRV_CPU_ADD(V20, 10000000) /* 10.000 MHz OSC */
+	MDRV_CPU_MEMORY(ga2_v25_readmem,ga2_v25_writemem)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( multi32 )
 
@@ -2644,7 +2668,7 @@ ROM_START( ga2 )
 	ROM_LOAD( "mpr14943",     0x200000, 0x100000, CRC(24d40333) SHA1(38faf8f3eac317a163e93bd2247fe98189b13d2d) )
 	ROM_LOAD( "mpr14942",     0x300000, 0x100000, CRC(a89b0e90) SHA1(e14c62418eb7f9a2deb2a6dcf635bedc1c73c253) )
 
-	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* Protection CPU */
+	ROM_REGION( 0x100000, REGION_CPU3, 0 ) /* Protection CPU */
 	ROM_LOAD( "epr14468", 0x00000, 0x10000, CRC(77634daa) SHA1(339169d164b9ed7dc3787b084d33effdc8e9efc1) )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 ) /* tiles */
@@ -2675,7 +2699,7 @@ ROM_START( ga2j )
 	ROM_LOAD( "mpr14943",     0x200000, 0x100000, CRC(24d40333) SHA1(38faf8f3eac317a163e93bd2247fe98189b13d2d) )
 	ROM_LOAD( "mpr14942",     0x300000, 0x100000, CRC(a89b0e90) SHA1(e14c62418eb7f9a2deb2a6dcf635bedc1c73c253) )
 
-	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* Protection CPU */
+	ROM_REGION( 0x100000, REGION_CPU3, 0 ) /* Protection CPU */
 	ROM_LOAD( "epr14468", 0x00000, 0x10000, CRC(77634daa) SHA1(339169d164b9ed7dc3787b084d33effdc8e9efc1) )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 ) /* tiles */
@@ -3479,8 +3503,13 @@ static DRIVER_INIT ( brival )
 
 static DRIVER_INIT ( ga2 )
 {
+/* simulation
 	install_mem_read16_handler (0, 0xa00000, 0xa0001f, ga2_sprite_protection_r);
 	install_mem_read16_handler (0, 0xa00100, 0xa0015f, ga2_wakeup_protection_r);
+*/
+	decrypt_ga2_protrom();
+	install_mem_read16_handler (0, 0xa00000, 0xa00fff, ga2_dpram_r);
+	install_mem_write16_handler(0, 0xa00000, 0xa00fff, ga2_dpram_w);
 }
 
 /* comms board workaround */
@@ -3630,8 +3659,8 @@ GAMEX(1991, spidey,   0,        system32, spidey,   0,        ROT0, "Sega", "Spi
 GAMEX(1991, spideyj,  spidey,   system32, spideyj,  0,        ROT0, "Sega", "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, f1en,     0,        system32, f1en,     f1en,     ROT0, "Sega", "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, arabfgt,  0,        system32, spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, ga2,      0,        system32, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, ga2j,     ga2,      system32, ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, ga2,      0,        ga2,      ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, ga2j,     ga2,      ga2,      ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, brival,   0,        system32, brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonic,    0,        system32, sonic,    sonic,    ROT0, "Sega", "Segasonic the Hedgehog (Japan rev. C)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, sonicp,   sonic,    system32, sonic,    sonicp,   ROT0, "Sega", "Segasonic the Hedgehog (Japan prototype)", GAME_IMPERFECT_GRAPHICS )
