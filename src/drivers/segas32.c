@@ -910,6 +910,7 @@ static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
 
+
 /****************************************************
  GA2 protection board
 ****************************************************/
@@ -917,13 +918,13 @@ MEMORY_END
 data8_t *ga2_dpram;
 
 static MEMORY_READ_START( ga2_v25_readmem )
-    { 0x00000, 0x0ffff, MRA_ROM },
+	{ 0x00000, 0x0ffff, MRA_ROM },
 	{ 0x10000, 0x1ffff, MRA_RAM },
 	{ 0xf0000, 0xfffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( ga2_v25_writemem )
-    { 0x00000, 0x0ffff, MWA_ROM },
+	{ 0x00000, 0x0ffff, MWA_ROM },
 	{ 0x10000, 0x1ffff, MWA_RAM, &ga2_dpram },
 	{ 0xf0000, 0xfffff, MWA_ROM },
 MEMORY_END
