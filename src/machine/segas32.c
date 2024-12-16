@@ -46,7 +46,7 @@ static void MemWrite16_16(offs_t address, UINT16 data)
 
 #define xxxx 0x00
 
-const unsigned char ga2_v25_opcode_table[256] = {
+const unsigned char ga2_opcode_table[256] = {
 		xxxx,xxxx,0xEA,xxxx,xxxx,0x8B,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,
 		xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0xFA,
 		xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0x3B,xxxx,0x49,xxxx,xxxx,xxxx,
@@ -91,15 +91,15 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 		decrypted[i] = opcode_table[ temp[j] ];
 	}
 
-	//memcpy(rom+0xf0000, rom, 0x10000);
-	//memcpy(decrypted+0xf0000, decrypted, 0x10000);
+	memcpy(rom+0xf0000, rom, 0x10000);
+	memcpy(decrypted+0xf0000, decrypted, 0x10000);
 
 	free(temp);
 }
 
 void decrypt_ga2_protrom(void)
 {
-	nec_v25_cpu_decrypt(&ga2_v25_opcode_table);
+	nec_v25_cpu_decrypt(ga2_opcode_table);
 }
 
 WRITE16_HANDLER( system32_dpram_w )
@@ -285,7 +285,7 @@ WRITE16_HANDLER(brival_protboard_w)
 
 #define xxxx 0x00
 
-const unsigned char arabfgt_v25_opcode_table[256] = {
+const unsigned char arf_opcode_table[256] = {
 		xxxx,xxxx,0x43,xxxx,xxxx,xxxx,0x83,xxxx,xxxx,xxxx,0xEA,xxxx,xxxx,0xBC,0x73,xxxx,
 		xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,
 		0x3A,xxxx,xxxx,0xBE,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0x80,xxxx,
@@ -308,7 +308,7 @@ const unsigned char arabfgt_v25_opcode_table[256] = {
 
 void decrypt_arabfgt_protrom(void)
 {
-	nec_v25_cpu_decrypt(&arabfgt_v25_opcode_table);
+	nec_v25_cpu_decrypt(arf_opcode_table);
 }
 
 #if 0 /* simulation */
