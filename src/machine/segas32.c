@@ -112,7 +112,7 @@ READ16_HANDLER( system32_dpram_r )
 	return (system32_dpram[offset])|(system32_dpram[offset+1]<<8);
 }
 
-#if 0 /* simulation */
+#if 1 /* simulation */
 READ16_HANDLER(ga2_sprite_protection_r)
 {
 	static unsigned int prot[16] =
