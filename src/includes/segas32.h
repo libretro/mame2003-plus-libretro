@@ -82,7 +82,7 @@ WRITE16_HANDLER( jleague_protection_w );
 READ16_HANDLER(brival_protection_r);
 WRITE16_HANDLER(brival_protboard_w);
 
-#if 0
+#if 1
 READ16_HANDLER(arabfgt_protboard_r);
 WRITE16_HANDLER(arabfgt_protboard_w);
 READ16_HANDLER(arf_wakeup_protection_r);
