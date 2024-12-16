@@ -3024,7 +3024,7 @@ ROM_START( arabfgt )
 
 	ROM_REGION( 0x100000, REGION_CPU3, 0 ) /* Protection CPU */
 	ROM_LOAD( "144680-1.3", 0x00000, 0x10000, CRC(c3c591e4) SHA1(53e48066e85b61d0c456618d14334a509b354cb3) )
-	//ROM_RELOAD(             0xf0000, 0x10000             )
+	ROM_RELOAD(             0xf0000, 0x10000             )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 ) /* tiles */
 	ROM_LOAD16_BYTE( "mp14599f.14", 0x000000, 0x200000, CRC(94f1cf10) SHA1(34ec86487bcb6726c025149c319f00a854eb7a1d) )
@@ -3543,14 +3543,14 @@ static DRIVER_INIT ( f1sl )
 
 static DRIVER_INIT ( arf )
 {
-/* simulation
 	install_mem_read16_handler (0, 0xa00000, 0xa000ff, arabfgt_protboard_r);
 	install_mem_read16_handler (0, 0xa00100, 0xa0011f, arf_wakeup_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, arabfgt_protboard_w);
-*/
+/* Not working with V20 in place of V25.
 	decrypt_arabfgt_protrom();
 	install_mem_read16_handler (0, 0xa00000, 0xa00fff, system32_dpram_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, system32_dpram_w);
+*/
 }
 
 static DRIVER_INIT ( sonic )
@@ -3663,7 +3663,7 @@ GAMEX(1991, radr,     0,        system32,     radr,     radr,     ROT0, "Sega", 
 GAMEX(1991, spidey,   0,        system32,     spidey,   0,        ROT0, "Sega", "Spider-Man: The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, spideyj,  spidey,   system32,     spideyj,  0,        ROT0, "Sega", "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, f1en,     0,        system32,     f1en,     f1en,     ROT0, "Sega", "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1992, arabfgt,  0,        system32_v25, spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1992, arabfgt,  0,        system32,     spidey,   arf,      ROT0, "Sega", "Arabian Fight", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2,      0,        system32_v25, ga2,      ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, ga2j,     ga2,      system32_v25, ga2j,     ga2,      ROT0, "Sega", "Golden Axe - The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, brival,   0,        system32,     brival,   brival,   ROT0, "Sega", "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
