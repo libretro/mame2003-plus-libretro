@@ -311,7 +311,7 @@ void decrypt_arabfgt_protrom(void)
 	nec_v25_cpu_decrypt(arf_opcode_table);
 }
 
-#if 0 /* simulation */
+#if 1 /* simulation */
 /* protection ram is 8-bits wide and only occupies every other address*/
 READ16_HANDLER(arabfgt_protboard_r)
 {
