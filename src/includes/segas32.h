@@ -69,7 +69,7 @@ VIDEO_UPDATE( multi32 );
 READ16_HANDLER( system32_dpram_r );
 WRITE16_HANDLER( system32_dpram_w );
 
-#if 0
+#if 1
 READ16_HANDLER( ga2_sprite_protection_r );
 READ16_HANDLER( ga2_wakeup_protection_r );
 #endif
