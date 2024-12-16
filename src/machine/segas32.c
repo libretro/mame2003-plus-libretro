@@ -71,8 +71,8 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 {
 	int i;
 	unsigned char *rom = memory_region(REGION_CPU3);
-	UINT8* decrypted = auto_malloc(0x100000);
-	UINT8* temp = malloc(0x100000);
+	UINT8* decrypted = auto_malloc(0x10000);
+	UINT8* temp = malloc(0x10000);
 
 	/* set CPU3 opcode base */
 	memory_set_opcode_base(2,decrypted);
@@ -91,8 +91,8 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 		decrypted[i] = opcode_table[ temp[j] ];
 	}
 
-	memcpy(rom+0xf0000, rom, 0x10000);
-	memcpy(decrypted+0xf0000, decrypted, 0x10000);
+	//memcpy(rom+0xf0000, rom, 0x10000);
+	//memcpy(decrypted+0xf0000, decrypted, 0x10000);
 
 	free(temp);
 }
