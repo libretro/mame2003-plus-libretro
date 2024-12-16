@@ -91,7 +91,7 @@ void nec_v25_cpu_decrypt(unsigned char *opcode_table)
 		decrypted[i] = opcode_table[ temp[j] ];
 	}
 
-	memcpy(rom+0xf0000, rom, 0x10000);
+	//memcpy(rom+0xf0000, rom, 0x10000);
 	memcpy(decrypted+0xf0000, decrypted, 0x10000);
 
 	free(temp);
