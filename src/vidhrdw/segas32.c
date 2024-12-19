@@ -2614,7 +2614,7 @@ VIDEO_UPDATE( multi32 )
 	{
 		system32_videoram[0x1ff02/2] = get_mixer(1, restore);
 
-		{ /* patch ending credits */
+		{	/* patch ending credits */
 			UINT16 *src1 = get_layer_scanline(MIXER_LAYER_NBG0, 0);
 			UINT16 *src2 = get_layer_scanline(MIXER_LAYER_NBG1, 0);
 			if (src1[0]==0x1902 && src1[8]==0x1901 && src1[16]==0x1902 && src1[24]==0x1901)
@@ -2641,7 +2641,6 @@ VIDEO_UPDATE( multi32 )
 			system32_videoram[0x1ff02/2] = get_mixer(2, restore);
 			enablemask = update_tilemaps(&clipleft);
 		}
-
 		system32_videoram[0x1ff02/2] = restore;
 	}
 
