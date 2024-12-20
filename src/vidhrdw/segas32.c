@@ -2560,24 +2560,23 @@ VIDEO_UPDATE( system32 )
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
 }
 
-static const int titlef_mixer[6][3] =
-{
-	{ 0x7be0, 0x0000, 0x0000 },
-	{ 0x5be0, 0x5be0, 0x0000 },
-	{ 0x52a0, 0x0000, 0x0000 },
-	{ 0x3be0, 0x0000, 0x3be0 },
-	{ 0x2960, 0x0000, 0x0000 },
-	{ 0x0000, 0x0000, 0x0000 }
-};
-
 static int get_mixer(int screen, int in)
 {
-	int i;
-	for (i=0; titlef_mixer[i][0]!=0; i++)
-		if (in == titlef_mixer[i][0])
-			return titlef_mixer[i][screen];
-  
-	return in;
+	switch (in)
+	{
+		case 0x7be0:
+		case 0x52a0:
+		case 0x2960:
+			return 0;
+
+		case 0x5be0:
+			return (screen == 1) ? in : 0;
+
+		case 0x3be0:
+			return (screen == 2) ? in : 0;
+
+		default: return in;
+	}
 }
 
 VIDEO_UPDATE( multi32 )
