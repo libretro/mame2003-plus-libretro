@@ -887,10 +887,9 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 	list->extent[0][1] = tempclip.max_x;
 
 	/* simple case if not enabled */
-	if (!enable)
+	if (1)
 	{
-		memset(&list->scan_extent[tempclip.min_y], 0, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
-		return 1;
+		memset(&list->scan_extent[tempclip.min_y], 0x8000, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
 	}
 
 	/* extract the from videoram into locals, and apply the cliprect */
