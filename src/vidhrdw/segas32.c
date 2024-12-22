@@ -1655,6 +1655,16 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enablet = !(system32_videoram[0x1ff02/2] & 0x0010) && !(system32_videoram[0x1ff8e/2] & 0x0001);
 	int enableb = !(system32_videoram[0x1ff02/2] & 0x0020) && !(system32_videoram[0x1ff8e/2] & 0x0020);
 
+	if (titlef_kludge) /* patch ending credits */
+	{
+		UINT16 *src1 = get_layer_scanline(MIXER_LAYER_NBG0, 0);
+		UINT16 *src2 = get_layer_scanline(MIXER_LAYER_NBG1, 0);
+		if (src1[0]==0x1902 && src1[8]==0x1901 && src1[16]==0x1902 && src1[24]==0x1901)
+			enable2 = 0;
+		if (src2[0]==0x1902 && src2[8]==0x1901 && src2[16]==0x1902 && src2[24]==0x1901)
+			enable3 = 0;
+	}
+
 	/* update any tilemaps */
 	if (enable0)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
@@ -2609,19 +2619,6 @@ VIDEO_UPDATE( multi32 )
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
-	}
-
-	if (titlef_kludge) /* force background to render */
-	{
-		{	/* patch ending credits */
-			UINT16 *src1 = get_layer_scanline(MIXER_LAYER_NBG0, 0);
-			UINT16 *src2 = get_layer_scanline(MIXER_LAYER_NBG1, 0);
-			if (src1[0]==0x1902 && src1[8]==0x1901 && src1[16]==0x1902 && src1[24]==0x1901)
-				system32_videoram[0x1ff8e/2] = 0x8;
-
-			if (src2[0]==0x1902 && src2[8]==0x1901 && src2[16]==0x1902 && src2[24]==0x1901)
-				system32_videoram[0x1ff8e/2] = (system32_videoram[0x1ff8e/2]==0x8) ? 0x18 : 0x10;
-		}
 	}
 
 	/* update the tilemaps */
