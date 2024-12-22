@@ -889,7 +889,8 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 	/* simple case if not enabled */
 	if (1)
 	{
-		memset(&list->scan_extent[tempclip.min_y], 0x8000, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
+		memset(&list->scan_extent[tempclip.min_y], 0, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
+		//return 1;
 	}
 
 	/* extract the from videoram into locals, and apply the cliprect */
@@ -2585,7 +2586,7 @@ VIDEO_UPDATE( multi32 )
 	UINT8 enablemask;
 	int res;
 	int restore = system32_videoram[0x1ff02/2];
-
+titlef_kludge = false;
 	/* configure monitors */
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = (monitor_setting == 3) ? 0 : monitor_setting - 1;
