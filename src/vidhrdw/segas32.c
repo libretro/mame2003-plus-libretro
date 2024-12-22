@@ -868,7 +868,7 @@ static void get_tile_info(int tile_index)
  *  Clipping extents computation
  *
  *************************************/
-static int get_mixer(int screen, int in);
+
 static int compute_clipping_extents(int enable, int clipout, int clipmask, const struct rectangle *cliprect, struct extents_list *list)
 {
 	int flip = (system32_videoram[0x1ff00/2] >> 9) & 1;
@@ -887,7 +887,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 	list->extent[0][1] = tempclip.max_x;
 
 	/* simple case if not enabled */
-	if (!enable || !get_mixer(1, system32_videoram[0x1ff02/2]))
+	if (!enable)
 	{
 		memset(&list->scan_extent[tempclip.min_y], 0, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
 		return 1;
@@ -1017,6 +1017,28 @@ static INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
 }
 
 
+static int get_mixer(int in, int bgnum)
+{
+	if (!titlef_kludge) return in;
+
+	switch (in)
+	{
+		case 0x7be0:
+		case 0x52a0:
+		case 0x2960:
+			return 0;
+
+		case 0x5be0:
+			return (bgnum%2 == 0) ? in : 0;
+
+		case 0x3be0:
+			return (bgnum%2 == 1) ? in : 0;
+
+		default: return in;
+	}
+}
+
+
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 	int clipenable, clipout, clips, clipdraw_start;
@@ -1043,7 +1065,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
+	clipenable = get_mixer((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
 	clipout = (system32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
@@ -1202,7 +1224,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = (system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1;
+	clipenable = get_mixer((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
 	clipout = (system32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
@@ -2560,33 +2582,13 @@ VIDEO_UPDATE( system32 )
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
 }
 
-static int get_mixer(int screen, int in)
-{
-	switch (in)
-	{
-		case 0x7be0:
-		case 0x52a0:
-		case 0x2960:
-			return 0;
-
-		case 0x5be0:
-			return (screen == 1) ? in : 0;
-
-		case 0x3be0:
-			return (screen == 2) ? in : 0;
-
-		default: return in;
-	}
-}
-
 VIDEO_UPDATE( multi32 )
 {
 	extern struct osd_create_params video_config;
 	struct rectangle clipleft, clipright;
 	UINT8 enablemask;
 	int res;
-	int restore = system32_videoram[0x1ff02/2];
-titlef_kludge = false;
+
 	/* configure monitors */
 	int monitor_setting = readinputport(0xf);
 	int monitor_display_start = (monitor_setting == 3) ? 0 : monitor_setting - 1;
@@ -2611,8 +2613,6 @@ titlef_kludge = false;
 
 	if (titlef_kludge) /* force background to render */
 	{
-		system32_videoram[0x1ff02/2] = get_mixer(1, restore);
-
 		{	/* patch ending credits */
 			UINT16 *src1 = get_layer_scanline(MIXER_LAYER_NBG0, 0);
 			UINT16 *src2 = get_layer_scanline(MIXER_LAYER_NBG1, 0);
@@ -2632,16 +2632,6 @@ titlef_kludge = false;
 		mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipleft);
-
-	if (titlef_kludge)
-	{
-		if (system32_videoram[0x1ff02/2] != get_mixer(2, restore))
-		{
-			system32_videoram[0x1ff02/2] = get_mixer(2, restore);
-			enablemask = update_tilemaps(&clipleft);
-		}
-		system32_videoram[0x1ff02/2] = restore;
-	}
 
 	if (system32_displayenable[1] && monitor_setting != 1) /* speed up - disable offscreen monitor */
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
