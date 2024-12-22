@@ -1017,7 +1017,7 @@ static INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
 }
 
 
-static int get_mixer(int in, int bgnum)
+static int patch_enable(int in, int bgnum)
 {
 	if (!titlef_kludge) return in;
 
@@ -1065,7 +1065,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = get_mixer((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
+	clipenable = patch_enable((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
 	clipout = (system32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
@@ -1224,7 +1224,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = get_mixer((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
+	clipenable = patch_enable((system32_videoram[0x1ff02/2] >> (11 + bgnum)) & 1, bgnum);
 	clipout = (system32_videoram[0x1ff02/2] >> (6 + bgnum)) & 1;
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
