@@ -868,7 +868,7 @@ static void get_tile_info(int tile_index)
  *  Clipping extents computation
  *
  *************************************/
-
+static int get_mixer(int screen, int in);
 static int compute_clipping_extents(int enable, int clipout, int clipmask, const struct rectangle *cliprect, struct extents_list *list)
 {
 	int flip = (system32_videoram[0x1ff00/2] >> 9) & 1;
@@ -887,10 +887,10 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 	list->extent[0][1] = tempclip.max_x;
 
 	/* simple case if not enabled */
-	if (1)
+	if (!enable || !get_mixer(1, system32_videoram[0x1ff02/2]))
 	{
 		memset(&list->scan_extent[tempclip.min_y], 0, sizeof(list->scan_extent[0]) * (tempclip.max_y - tempclip.min_y));
-		return clipout;
+		return 1;
 	}
 
 	/* extract the from videoram into locals, and apply the cliprect */
