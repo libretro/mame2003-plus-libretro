@@ -1021,7 +1021,7 @@ static int get_mixer(int in, int bgnum)
 {
 	if (!titlef_kludge) return in;
 
-	switch (in)
+	switch (system32_videoram[0x1ff02/2])
 	{
 		case 0x7be0:
 		case 0x52a0:
