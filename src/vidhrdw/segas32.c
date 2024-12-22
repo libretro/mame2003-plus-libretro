@@ -2592,6 +2592,7 @@ VIDEO_UPDATE( system32 )
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
 }
 
+
 VIDEO_UPDATE( multi32 )
 {
 	extern struct osd_create_params video_config;
