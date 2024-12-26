@@ -7121,7 +7121,7 @@ GAMEX(19??, mvp,       0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",  
 GAMEX(1988, passsht,   0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
 GAME( 1988, passshtb,  passsht,  passsht,  passsht,  0,        ROT270, "bootleg", "Passing Shot (2 Players) (bootleg)" )
 GAMEX(1988, passht4b,  passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1988, cencourt,  passsht,  cencourt, cencourt, passht4b, ROT270, "Sega",    "Center Court (prototype)" )
+GAME( 1988, cencourt,  passsht,  cencourt, cencourt, 0,        ROT270, "Sega",    "Center Court (prototype)" )
 GAME( 1991, riotcity,  0,        riotcity, riotcity, 0,        ROT0,   "Sega / Westone", "Riot City" )
 /* Ryukyu */
 /* Shinobi */
