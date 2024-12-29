@@ -3070,8 +3070,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( wb3bl )		/* (c) 1988 Sega / Westone (but bootleg) */
 	DRIVER( wrestwar )	/* (c) 1989 */
 	DRIVER( fantzn2x )	/* (c) 2008 */
-  DRIVER( cencourt )  /* (c) 1988 */
-
+	DRIVER( cencourt )  /* (c) 1988 */
+	DRIVER( passshtjd )  /* (c) 1988 */
 /*
 Sega System 24 game list
 Apr.1988 Hot Rod

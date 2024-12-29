@@ -3942,40 +3942,6 @@ ROM_START( passshtb )
 	ROM_LOAD( "epr11861.a11", 0x28000, 0x08000, CRC(38b54a71) SHA1(68ec4ef5b115844214ff2213be1ce6678904fbd2) )
 ROM_END
 
-/* 
-  Main cpu doesn't have the FD1094 but the sound cpu is encrypted
-  using a MC8123 we workaround this by using the unprotected sound roms
-  from the main set.
-*/
-
-ROM_START( cencourt )
-	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "a4_56f6.a4", 0x000000, 0x10000, CRC(7116dce6) SHA1(058faf5f1980f811e2e1d5f7d09660ff51b0c0dc) )
-	ROM_LOAD16_BYTE( "a1_478b.a1", 0x000001, 0x10000, CRC(37beb770) SHA1(694a7f7977226997e06a198b311b355505e45b0b) )
-
-	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "epr-b-9.b9",   0x00000, 0x10000, CRC(9a55cd88) SHA1(4a6cf4aa5dde8d50148381aee8c141c98bb86fe8) )
-	ROM_LOAD( "epr-b-10.b10", 0x10000, 0x10000, CRC(fc13ca35) SHA1(3dc9d7c7f28d5605c6ce93243c79f63839aec8f4) )
-	ROM_LOAD( "epr-b-11.b11", 0x20000, 0x10000, CRC(1503c203) SHA1(95e9634bdcfd8027c1b0a47fa87736180ec39b08) )
-
-	ROM_REGION( 0x80000, REGION_GFX2, 0 ) /* sprites */
-	ROM_LOAD16_BYTE( "epr-b-1.b1",  0x00001, 0x10000, CRC(b18bfccf) SHA1(7bce8da08849f5d0f580a2cdc905f0094c83fe13) )
-	ROM_LOAD16_BYTE( "epr-b-5.b5",  0x00000, 0x10000, CRC(3481a8e8) SHA1(13b972af6d4bc3d47258b3ff810e091f3b98a02b) )
-	ROM_LOAD16_BYTE( "epr-b-2.b2",  0x20001, 0x10000, CRC(61a996c0) SHA1(22fb91c1a0102a10b68133051c593eef8ac5748f) )
-	ROM_LOAD16_BYTE( "epr-b-6.b6",  0x20000, 0x10000, CRC(2116bcb1) SHA1(b5fee6b2dca5e51ff1e4d4466ca0802bef662bc4) )
-	ROM_LOAD16_BYTE( "epr-b-3.b3",  0x40001, 0x10000, CRC(69a2e109) SHA1(2a3c4af711c5cf02deaac5236c8088cdadcd85cd) )
-	ROM_LOAD16_BYTE( "epr-b-7.b7",  0x40000, 0x10000, CRC(ccf6b09f) SHA1(d8173b189356245a6b7bdec370829e8580b13c93) )
-	ROM_LOAD16_BYTE( "epr-b-4.b4",  0x60001, 0x10000, CRC(bdf63cd2) SHA1(2a7af7046d66a9542d8ae9fce93a6088a8ff0938) )
-	ROM_LOAD16_BYTE( "epr-b-8.b8",  0x60000, 0x10000, CRC(88a90641) SHA1(15c127a3cbf86807f181cb87967ce8825102b645) )
-
-	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* sound CPU */
-	ROM_LOAD( "epr11857.a7",  0x00000, 0x08000, CRC(789edc06) SHA1(8c89c94e503513c287807d187de78a7fbd75a7cf) )
-	ROM_LOAD( "epr11858.a8",  0x10000, 0x08000, CRC(08ab0018) SHA1(0685f80a7d403208c9cfffea3f2035324f3924fe) )
-	ROM_LOAD( "epr11859.a9",  0x18000, 0x08000, CRC(8673e01b) SHA1(e79183ab30e683fdf61ced2e9dbe010567c324cb) )
-	ROM_LOAD( "epr11860.a10", 0x20000, 0x08000, CRC(10263746) SHA1(1f981fb185c6a9795208ecdcfba36cf892a99ed5) )
-	ROM_LOAD( "epr11861.a11", 0x28000, 0x08000, CRC(38b54a71) SHA1(68ec4ef5b115844214ff2213be1ce6678904fbd2) )
-ROM_END
-
 /***************************************************************************/
 
 static MEMORY_READ16_START( passsht_readmem )
@@ -4283,86 +4249,6 @@ PORT_START /* joy 4 */
 
 INPUT_PORTS_END
 
-/* same as the 4 player bootleg but debug replaces demo sound switch */
-INPUT_PORTS_START( cencourt )
-PORT_START /* joy 1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 )
-
-PORT_START /* joy 2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_COCKTAIL )
-
-PORT_START /* service */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
-
-	SYS16_COINAGE
-
-PORT_START	/* DSW1 */
-	PORT_DIPNAME( 0x01, 0x01, "Debug Display" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0e, 0x0e, "Initial Point" )
-	PORT_DIPSETTING(    0x06, "2000" )
-	PORT_DIPSETTING(    0x0a, "3000" )
-	PORT_DIPSETTING(    0x0c, "4000" )
-	PORT_DIPSETTING(    0x0e, "5000" )
-	PORT_DIPSETTING(    0x08, "6000" )
-	PORT_DIPSETTING(    0x04, "7000" )
-	PORT_DIPSETTING(    0x02, "8000" )
-	PORT_DIPSETTING(    0x00, "9000" )
-	PORT_DIPNAME( 0x30, 0x30, "Point Table" )
-	PORT_DIPSETTING(    0x20, "Easy" )
-	PORT_DIPSETTING(    0x30, "Normal" )
-	PORT_DIPSETTING(    0x10, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x80, "Easy" )
-	PORT_DIPSETTING(    0xc0, "Normal" )
-	PORT_DIPSETTING(    0x40, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )
-
-PORT_START /* joy 3 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER3 )
-
-PORT_START /* joy 4 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER4 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER4 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER4 )
-
-INPUT_PORTS_END
-
 /***************************************************************************/
 
 static MACHINE_DRIVER_START( passsht )
@@ -4406,24 +4292,6 @@ static MACHINE_DRIVER_START( passht4b )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(0)
 	MDRV_SOUND_ADD(YM2203, ym2203_interface)
-MACHINE_DRIVER_END
-
-/* i assume center court needs the 4 player input hookup
-   as per the bootleg, im also keeping the gfx offsets
-   from the 4 player bootleg for now. 
-   
-   the sound rom is encrypted so we use the one from the 
-   parent set which is unencrypted as it protects via the
-   FD1094 on the main cpu.
-*/ 
-static MACHINE_DRIVER_START( cencourt )
-
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(system16_7759b)
-	MDRV_CPU_MODIFY("main")
-	MDRV_CPU_MEMORY(passht4b_readmem,passht4b_writemem)
-
-	MDRV_MACHINE_INIT(passht4b)
 MACHINE_DRIVER_END
 
 /***************************************************************************/
@@ -7121,7 +6989,6 @@ GAMEX(19??, mvp,       0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",  
 GAMEX(1988, passsht,   0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
 GAME( 1988, passshtb,  passsht,  passsht,  passsht,  0,        ROT270, "bootleg", "Passing Shot (2 Players) (bootleg)" )
 GAMEX(1988, passht4b,  passsht,  passht4b, passht4b, passht4b, ROT270, "bootleg", "Passing Shot (4 Players) (bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1988, cencourt,  passsht,  cencourt, cencourt, 0,        ROT270, "Sega",    "Center Court (prototype)" )
 GAME( 1991, riotcity,  0,        riotcity, riotcity, 0,        ROT0,   "Sega / Westone", "Riot City" )
 /* Ryukyu */
 /* Shinobi */
