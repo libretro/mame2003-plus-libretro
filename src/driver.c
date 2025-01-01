@@ -6081,6 +6081,7 @@ Other Sun games
 	DRIVER( xeno )          /* (c) 2019 Bitmap Bureau */
 	DRIVER( hypernoid )     /* 2021 M.Priewe */
 	DRIVER( cyborgforce )   /* (c) 2023 Neo Byte Force Ltd */
+	DRIVER( captainbarrel ) /* (c) 2024 Neo Byte Force Ltd */
 
 	/* SemiCom 68020 based hardware */
 	DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
