@@ -39,6 +39,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bullet (unprotected of FD1094 317-0041 set)" )
 * Cabal (World, Joystick version)
 * Calorie Kun vs Moguranian
+* Center Court
 * Chain Reaction
 * Charlie Ninja
 * Chase Bombers
@@ -159,6 +160,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Pack'n Bang Bang
 * Parallel Turn
 * Party Time: Gonta the Diver II / Ganbare! Gonta!! 2 * Mature *
+* Passing Shot (Japan 2 players) 
 * Penky
 * Photo Y2K 2
 * Pirate Treasure
@@ -337,6 +339,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
+* Captain Barrel
 * Cyborg Force
 * Do DonPachi (Arrange Ver. 1.1) (trap15, hack)
 * Dogou Souken / Victory Road (joystick hack bootleg)
@@ -1122,3 +1125,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added three more Megadrive arcade bootlegs to segac2 namely Jurassic Park, Sonic 3 and Twinkle Tale [MAMEDev, arcadez, mahoneyt944]
 * Improved the gfx significantly for Sega's Title Fight [mahoneyt944]
 * Fixed missing and or incorrect sounds with a two player game in Title Fight [arcadez]
+* Added support for a decrypted version of Passing Shot and a rare prototype of the same game called Center Court to segas16b driver [grant2258]
+* Added Captain Barrel by Neobyteforce to the neogeo driver [arcadez]
