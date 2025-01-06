@@ -102,7 +102,7 @@ static void draw_status( struct mame_bitmap *bitmap )
 	for( row=0; row<4; row++ )
 	{
 		int sy,sx = (row&1)*8;
-		const unsigned char *source = mnchmobl_status_vram + (row&1)*32;
+		const unsigned char *source = mnchmobl_status_vram + (~row&1)*32;
 		if( row<=1 )
 		{
 			source+=2*32;
@@ -174,16 +174,20 @@ static void draw_sprites( struct mame_bitmap *bitmap )
 	int bank = (flags&0x40)?1:0;
 	const struct GfxElement *gfx = Machine->gfx[2+bank];
 	int color_base = mnchmobl_palette_bank*4+3;
-	int i;
-	for( i=0; i<0x200; i++ )
+	int i, j;
+	int firstsprite = mnchmobl_vreg[4] & 0x3f;
+	for( i = firstsprite; i < firstsprite + 0x40; i++ )
 	{
-		int tile_number = mnchmobl_sprite_tile[i];	/*   ETTTTTTT */
-		int attributes = mnchmobl_sprite_attr[i];	/*   XYYYYYCC */
-		int sx = mnchmobl_sprite_xpos[i];			/*   XXXXXXX? */
-		int sy = (i/0x40)*0x20;						/* Y YY------ */
-		sy += (attributes>>2)&0x1f;
-		if( tile_number != 0xff && (attributes&0x80) )
+		for( j = 0; j < 8; j++ )
 		{
+			int offs = (j << 6) | ( i & 0x3f );
+			int tile_number = mnchmobl_sprite_tile[offs];		/*   ETTTTTTT */
+			int attributes = mnchmobl_sprite_attr[offs];		/*   XYYYYYCC */
+			int sx = mnchmobl_sprite_xpos[offs];			    /*   XXXXXXX? */
+			int sy = (offs >> 6) << 5;					        /* Y YY------ */
+			sy += (attributes >> 2) & 0x1f;
+			if( attributes & 0x80 )
+			{
 			sx = (sx>>1) | (tile_number&0x80);
 			sx = 2*((-32-scroll - sx)&0xff)+xadjust;
 			drawgfx( bitmap, gfx,
@@ -192,6 +196,7 @@ static void draw_sprites( struct mame_bitmap *bitmap )
 				0,0, /* no flip */
 				sx,sy,
 				clip, TRANSPARENCY_PEN, 7 );
+			}	
 		}
 	}
 }
