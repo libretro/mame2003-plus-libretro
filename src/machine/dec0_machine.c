@@ -10,7 +10,8 @@ Data East machine functions - Bryan McPhail, mish@tendril.co.uk
 #include "dec0.h"
 #include "cpu/h6280/h6280.h"
 
-static int GAME,i8751_return,slyspy_state,ram;
+static int GAME,i8751_return,slyspy_state;
+data16_t *slyspy_ram;
 
 /******************************************************************************/
 
@@ -116,7 +117,7 @@ READ16_HANDLER( slyspy_protection_r )
 		   chances are that it actually ties to the main CPU xtal instead.
 		   (reads at 6958 6696)
 		*/
-		case 0xc:	return ram[0x2028/2] >> 8;
+		case 0xc:	return slyspy_ram[0x2028/2] >> 8;
     
 	}
 
