@@ -1127,3 +1127,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed missing and or incorrect sounds with a two player game in Title Fight [arcadez]
 * Added support for a decrypted version of Passing Shot and a rare prototype of the same game called Center Court to segas16b driver [grant2258]
 * Added Captain Barrel by Neobyteforce to the neogeo driver [arcadez]
+* Backported some graphical fixes for SNK's Joyful Road / Munch Mobile from later MAME [arcadez]
+* Added RNG protection which handles random events during boss battles improving the emulation
+* for Data East's Secret Agent / Sly Spy [arcadez, Mahoneyt944]
