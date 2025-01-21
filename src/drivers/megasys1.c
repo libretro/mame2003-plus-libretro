@@ -14,7 +14,7 @@ Year + Game							System		Protection
 	Makai Densetsu  (Japan)			Z
 	P-47  (World) /					A
 	P-47  (Japan)					A
-	Kick Off (Japan)				A		
+	Kick Off (Japan)				A
 	Takeda Shingen (Japan)			A			      Encryption (key 1)
 	Ninja Kazan      (World)		A			Yes + Encryption (key 1)
 	Iga Ninjyutsuden (Japan)		A			Yes + Encryption (key 1)
@@ -334,6 +334,31 @@ MEMORY_END
 #define INTERRUPT_NUM_C	INTERRUPT_NUM_B
 #define interrupt_C		interrupt_B
 
+READ16_HANDLER( ms1_ram_r )
+{
+	/* 64street and Chimera Beast rely on this for attract inputs */
+
+	return megasys1_ram[offset];
+}
+
+WRITE16_HANDLER(ms1_ram_w )
+{
+// logerror("%x \n",mem_mask);
+	if (!ACCESSING_MSB)
+	{
+		megasys1_ram[offset] = (data & 0x00ff) |  ((data & 0x00ff)<<8);
+	}
+	else if (!ACCESSING_LSB)
+	{
+		megasys1_ram[offset] = (data & 0xff00) |  ((data & 0xff00)>>8);
+	}
+	else
+	{
+		megasys1_ram[offset] = data;
+	}
+}
+
+
 static MEMORY_READ16_START( readmem_C )
     MEMORY_ADDRESS_BITS(21)
     { 0x000000, 0x07ffff, MRA16_ROM },
@@ -344,7 +369,11 @@ static MEMORY_READ16_START( readmem_C )
     { 0x0f0000, 0x0f3fff, MRA16_RAM },
     { 0x0f8000, 0x0f87ff, paletteram16_word_r },
     { 0x0d8000, 0x0d8001, ip_select_r },
-    { 0x1f0000, 0x1fffff, MRA16_RAM },
+    { 0x0f0000, 0x0f3fff, MRA16_RAM },
+	{ 0x1c0000, 0x1cffff, ms1_ram_r },
+	{ 0x1d0000, 0x1dffff, ms1_ram_r },
+	{ 0x1e0000, 0x1effff, ms1_ram_r },
+	{ 0x1f0000, 0x1fffff, ms1_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_C )
@@ -352,15 +381,22 @@ static MEMORY_WRITE16_START( writemem_C )
     { 0x000000, 0x07ffff, MWA16_ROM },
     { 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },
     { 0x0d2000, 0x0d3fff, MWA16_RAM, &megasys1_objectram },
+
     { 0x0e0000, 0x0e3fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
-    { 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
+	{ 0x0e4000, 0x0e7fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
+	{ 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
+	{ 0x0ec000, 0x0effff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
     { 0x0f0000, 0x0f3fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
-    { 0x0e4000, 0x0e7fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
-    { 0x0ec000, 0x0effff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
     { 0x0f4000, 0x0f7fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
+
     { 0x0f8000, 0x0f87ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
     { 0x0d8000, 0x0d8001, ip_select_w },
-    { 0x1f0000, 0x1fffff, MWA16_RAM, &megasys1_ram },
+	{ 0x1c0000, 0x1cffff, ms1_ram_w, &megasys1_ram },
+	{ 0x1d0000, 0x1dffff, ms1_ram_w },
+	{ 0x1e0000, 0x1effff, ms1_ram_w },
+	{ 0x1f0000, 0x1fffff, ms1_ram_w },
+	
+
 MEMORY_END
 
 
@@ -675,7 +711,7 @@ static MACHINE_DRIVER_START( system_A )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	MDRV_INTERLEAVE(2000)
-	
+
 	MDRV_MACHINE_INIT(megasys1)
 
 	/* video hardware */
@@ -3278,7 +3314,7 @@ ROM_START( inyourfa )
 	ROM_LOAD16_BYTE( "05.27C512", 0x000000, 0x010000, CRC(1737ed64) SHA1(20be59c43d7975fcc5048f1ee9ed5af893bdef85) )
 	ROM_LOAD16_BYTE( "06.27C512", 0x000001, 0x010000, CRC(9f12bcb9) SHA1(7c5faf6a295b2124e16823f50e57b234b6127a38) )
 
-	ROM_REGION( 0x080000, REGION_GFX1, ROMREGION_DISPOSE ) 
+	ROM_REGION( 0x080000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "11.27C1001", 0x000000, 0x020000, CRC(451a1428) SHA1(c017ef4dd3dffd26a93f5b926d80fd5e7bd7dea1) )
 	ROM_LOAD( "12.27C1001", 0x020000, 0x020000, CRC(9ead7432) SHA1(0690b640ebe9d1461f44040a33236705a303dc7e) )
 	ROM_LOAD( "13.27C1001", 0x040000, 0x020000, CRC(7e39842a) SHA1(00a4c86e8ef6e8e20d8f01eccd7d37f46be5f904) )
