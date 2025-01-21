@@ -369,7 +369,7 @@ static MEMORY_READ16_START( readmem_C )
     { 0x0f0000, 0x0f3fff, MRA16_RAM },
     { 0x0f8000, 0x0f87ff, paletteram16_word_r },
     { 0x0d8000, 0x0d8001, ip_select_r },
-    { 0x1c0000, 0x1cffff, MRA16_RAM },
+    { 0x1c0000, 0x1cffff, ms1_ram_r },
     { 0x1d0000, 0x1dffff, ms1_ram_r }, /* mirror */
     { 0x1e0000, 0x1effff, ms1_ram_r }, /* mirror */
     { 0x1f0000, 0x1fffff, ms1_ram_r }, /* mirror */
