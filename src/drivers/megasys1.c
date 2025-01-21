@@ -334,12 +334,6 @@ MEMORY_END
 #define INTERRUPT_NUM_C	INTERRUPT_NUM_B
 #define interrupt_C		interrupt_B
 
-WRITE16_HANDLER( ms1_ram_w )
-{
-	/* 64street and Chimera Beast rely on this for attract inputs */
-	megasys1_ram[offset] = data;
-}    
-
 static MEMORY_READ16_START( readmem_C )
     MEMORY_ADDRESS_BITS(21)
     { 0x000000, 0x07ffff, MRA16_ROM },
@@ -350,8 +344,7 @@ static MEMORY_READ16_START( readmem_C )
     { 0x0f0000, 0x0f3fff, MRA16_RAM },
     { 0x0f8000, 0x0f87ff, paletteram16_word_r },
     { 0x0d8000, 0x0d8001, ip_select_r },
-	  { 0x1c0000, 0x1cffff, MRA16_RAM },
-    { 0x1f0000, 0x1fffff, MRA16_RAM }, /* mirror of above */
+    { 0x1f0000, 0x1fffff, MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_C )
@@ -367,8 +360,7 @@ static MEMORY_WRITE16_START( writemem_C )
     { 0x0f4000, 0x0f7fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
     { 0x0f8000, 0x0f87ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
     { 0x0d8000, 0x0d8001, ip_select_w },
-	  { 0x1c0000, 0x1cffff, ms1_ram_w, &megasys1_ram },
-    { 0x1f0000, 0x1fffff, ms1_ram_w, &megasys1_ram }, /* mirror of above */
+    { 0x1f0000, 0x1fffff, MWA16_RAM, &megasys1_ram },
 MEMORY_END
 
 
