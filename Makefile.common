@@ -2722,7 +2722,7 @@ endif
 
 ifeq ($(USE_CYCLONE), 1)
 	CPUDEFS += -DHAS_CYCLONE=1
-	SOURCES_ASM += $(CORE_DIR)/cpu/m68000_cyclone/cyclone.s
+	SOURCES_ASM_PP += $(CORE_DIR)/cpu/m68000_cyclone/cyclone.S
 	SOURCES_C += $(CORE_DIR)/cpu/m68000_cyclone/c68000.c
 endif
 
