@@ -1093,9 +1093,14 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	srcy = (system32_videoram[0x1ff16/2 + 4 * bgnum] & 0x1ff) << 20;
 	srcy += (system32_videoram[0x1ff14/2 + 4 * bgnum] & 0xfe00) << 4;
 
-	/* then account for the destination center coordinates */
-	srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], (dstxstep != 0x200)?10:9) * srcxstep;
-	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], (dstystep != 0x200)?10:9) * srcystep;
+	/*
+	   Then account for the destination center coordinates - We currently expand the resolution
+	   from 9 bit to 10 bit while zooming which correctly centers the bg during attract mode in
+	   harddunk at the lower resolution and the course selection bg in radr at the higher resolution.
+	   This behavior has not been verified yet on real hardware and might be a hack.
+	*/
+	srcx_start -= SEXT(system32_videoram[0x1ff30/2 + 2 * bgnum], (dstxstep != 0x200) ? 10 : 9) * srcxstep;
+	srcy -= SEXT(system32_videoram[0x1ff32/2 + 2 * bgnum], (dstystep != 0x200) ? 10 : 9) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
 	srcx_start += cliprect->min_x * srcxstep;
