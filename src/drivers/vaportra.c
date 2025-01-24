@@ -75,7 +75,7 @@ static MEMORY_READ16_START( vaportra_readmem )
 	{ 0xffc000, 0xffffff, MRA16_RAM },
 MEMORY_END
 
-static WRITE16_HANDLER(MWA16_SHAREDRAM0 ) { offset &= 0x7ff; COMBINE_DATA( &spriteram16[offset] ); }
+static WRITE16_HANDLER( MWA16_SHAREDRAM0 ) { offset &= 0x7ff; COMBINE_DATA( &spriteram16[offset] ); }
 
 static MEMORY_WRITE16_START( vaportra_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
@@ -93,9 +93,9 @@ static MEMORY_WRITE16_START( vaportra_writemem )
 	{ 0x300000, 0x3009ff, vaportra_palette_24bit_rg_w, &paletteram16 },
 	{ 0x304000, 0x3049ff, vaportra_palette_24bit_b_w, &paletteram16_2 },
 	{ 0x308000, 0x308001, MWA16_NOP },
-	{ 0x30c000, 0x30c001, buffer_spriteram16_w,  },
+	{ 0x30c000, 0x30c001, buffer_spriteram16_w },
 
-	{ 0x318000, 0xff87ff, MWA16_SHAREDRAM0, &spriteram16  },
+	{ 0x318000, 0xff87ff, MWA16_SHAREDRAM0, &spriteram16 },
 	{ 0xffc000, 0xffffff, MWA16_RAM },
 MEMORY_END
 
