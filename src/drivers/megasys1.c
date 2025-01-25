@@ -343,18 +343,22 @@ READ16_HANDLER( ms1_ram_r )
 
 WRITE16_HANDLER(ms1_ram_w )
 {
+//COMBINE_DATA(&megasys1_ram[offset]);
 // logerror("%x \n",mem_mask);
 	if (!ACCESSING_MSB)
 	{
 		megasys1_ram[offset] = (data & 0x00ff) |  ((data & 0x00ff)<<8);
+
 	}
 	else if (!ACCESSING_LSB)
 	{
 		megasys1_ram[offset] = (data & 0xff00) |  ((data & 0xff00)>>8);
+
 	}
 	else
 	{
 		megasys1_ram[offset] = data;
+
 	}
 }
 
@@ -364,15 +368,16 @@ static MEMORY_READ16_START( readmem_C )
     { 0x000000, 0x07ffff, MRA16_ROM },
     { 0x0c0000, 0x0cffff, megasys1_vregs_C_r },
     { 0x0d2000, 0x0d3fff, MRA16_RAM },
-    { 0x0e0000, 0x0e3fff, MRA16_RAM },
-    { 0x0e8000, 0x0ebfff, MRA16_RAM },
-    { 0x0f0000, 0x0f3fff, MRA16_RAM },
     { 0x0f8000, 0x0f87ff, paletteram16_word_r },
     { 0x0d8000, 0x0d8001, ip_select_r },
-    { 0x1c0000, 0x1cffff, ms1_ram_r },
-    { 0x1d0000, 0x1dffff, ms1_ram_r }, /* mirror */
-    { 0x1e0000, 0x1effff, ms1_ram_r }, /* mirror */
-    { 0x1f0000, 0x1fffff, ms1_ram_r }, /* mirror */
+    { 0x0e0000, 0x0e3fff, MRA16_RAM },
+	{ 0x0e8000, 0x0ebfff, MRA16_RAM },
+    { 0x0f0000, 0x0f3fff, MRA16_RAM },
+    { 0x0f4000, 0x0f7fff, MRA16_RAM },
+    { 0x1c0000, 0x1cffff, MRA16_BANK1 },
+    { 0x1d0000, 0x1dffff, MRA16_BANK1 }, /* mirror */
+    { 0x1e0000, 0x1effff, MRA16_BANK1 }, /* mirror */
+    { 0x1f0000, 0x1fffff, MRA16_BANK1 }, /* mirror */
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_C )
@@ -381,17 +386,18 @@ static MEMORY_WRITE16_START( writemem_C )
     { 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },
     { 0x0d2000, 0x0d3fff, MWA16_RAM, &megasys1_objectram },
     { 0x0e0000, 0x0e3fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
-    { 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
-    { 0x0f0000, 0x0f3fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
     { 0x0e4000, 0x0e7fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
+    { 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
     { 0x0ec000, 0x0effff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
+    { 0x0f0000, 0x0f3fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
     { 0x0f4000, 0x0f7fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
+
     { 0x0f8000, 0x0f87ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
     { 0x0d8000, 0x0d8001, ip_select_w },
-    { 0x1c0000, 0x1cffff, MWA16_RAM, &megasys1_ram },
-    { 0x1d0000, 0x1dffff, ms1_ram_w }, /* mirror */
-    { 0x1e0000, 0x1effff, ms1_ram_w }, /* mirror */
-    { 0x1f0000, 0x1fffff, ms1_ram_w }, /* mirror */
+    { 0x1c0000, 0x1cffff, ms1_ram_w  },
+    { 0x1d0000, 0x1dffff, ms1_ram_w  },
+    { 0x1e0000, 0x1effff, ms1_ram_w  },
+    { 0x1f0000, 0x1fffff, ms1_ram_w, &megasys1_ram  }, /* dont move this chimera needs this bank for opcodes.  */
 MEMORY_END
 
 static MEMORY_READ16_START( readmem_C_chimerab )
@@ -793,7 +799,7 @@ static MACHINE_DRIVER_START( system_C )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( system_C_chimerab )
-
+	megasys1_ram = (void * )memory_find_base(1, 0x1f0000);
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(system_A)
 	MDRV_CPU_MODIFY("main")
@@ -3791,7 +3797,7 @@ GAME( 1991, 64street, 0,        system_C,          64street, 64street, ROT0,   "
 GAME( 1991, 64streej, 64street, system_C,          64street, 64street, ROT0,   "Jaleco", "64th. Street - A Detective Story (Japan)" )
 GAME( 1992, soldamj,  0,        system_A,          soldamj,  soldam,   ROT0,   "Jaleco", "Soldam (Japan)" )
 GAME( 1992, bigstrik, 0,        system_C,          bigstrik, bigstrik, ROT0,   "Jaleco", "Big Striker" )
-GAME( 1993, chimerab, 0,        system_C_chimerab, chimerab, chimerab, ROT0,   "Jaleco", "Chimera Beast (prototype)" )
+GAME( 1993, chimerab, 0,        system_C         , chimerab, chimerab, ROT0,   "Jaleco", "Chimera Beast (prototype)" )
 GAME( 1993, cybattlr, 0,        system_C,          cybattlr, cybattlr, ROT90,  "Jaleco", "Cybattler" )
 GAME( 1993, peekaboo, 0,        system_D,          peekaboo, peekaboo, ROT0,   "Jaleco", "Peek-a-Boo!" )
 GAME( 1991, inyourfa, 0,        system_A,          inyourfa, iganinju, ROT0,   "Jaleco", "In Your Face (US, prototype)" )
