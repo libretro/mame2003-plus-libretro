@@ -334,11 +334,6 @@ MEMORY_END
 #define INTERRUPT_NUM_C	INTERRUPT_NUM_B
 #define interrupt_C		interrupt_B
 
-READ16_HANDLER( ms1_ram_r )
-{
-	/* 64street and Chimera Beast rely on this for attract inputs */
-	return megasys1_ram[offset];
-}
 
 WRITE16_HANDLER( ms1_ram_w )
 {
