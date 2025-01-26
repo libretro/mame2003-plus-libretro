@@ -52,7 +52,7 @@ static struct retro_core_option_v2_definition option_def_four_way_emulation = {
    APPNAME"_four_way_emulation",
    "4-Way Joystick Emulation on 8-Way Joysticks",
    NULL,
-   "Improves issues with hitting diagonals when playing 4-way games.",
+   "Emulates a joystick restricted to 4-way movement in 4-way games, either by ignoring diagonals altogether or simulating a joystick rotated by 45 degrees (in games like Q*bert).",
    NULL,
    "cat_key_input",
    {
