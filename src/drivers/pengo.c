@@ -552,32 +552,6 @@ ROM_END
 
 
 
-ROM_START( jrpacmbl )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-	ROM_LOAD( "jrpacpe-05.ic8",     0x0000, 0x1000, CRC(98049df4) SHA1(4ea022c8664dd9ec185f9d5990a548e867e5071f) )
-	ROM_LOAD( "jrpacpe-01.ic7",     0x1000, 0x1000, CRC(b7a5cef8) SHA1(c315970f0dd698a1036df12502e3fe3ec7f81d53) )
-	ROM_LOAD( "jrpacpe-06.ic6",     0x2000, 0x1000, CRC(ecf39785) SHA1(9e47f29f4cadb5d8fd3790c7e16c653fc0a96a88) )
-	ROM_LOAD( "jrpacpe-02.ic5",     0x3000, 0x1000, CRC(c090145c) SHA1(918d32267379b99f898fdcd987b3a65f9ec4f088) )
-	ROM_LOAD( "jrpacpe-07.ic4",     0x4000, 0x1000, CRC(659b9956) SHA1(5576d4d95ced804e8abdd870662574bfdd6df18f) )
-	ROM_LOAD( "jrpacpe-03.ic3",     0x5000, 0x1000, CRC(0ebcfac9) SHA1(4da01169768e35601e04df7004ae7496f08a709a) )
-	ROM_LOAD( "jrpacpe-08.ic2",     0x6000, 0x1000, CRC(0624ffd6) SHA1(8209ab633242f2c8952a5afe2b7cd399bab08f0a) )
-	ROM_LOAD( "jrpacpe-04.ic1",     0x7000, 0x1000, CRC(d3a8448c) SHA1(f58aed6ebdb45ed38613b336a517b87745831e24) )
-
-	ROM_REGION( 0x4000, REGION_GFX1, 0 )
-	ROM_LOAD( "jrpacpe-09.ic92",    0x0000, 0x2000, CRC(2128d9b4) SHA1(b6f64423ae6ee3765050f7b85b4490b5eed95215) ) // tiles bank 1 & 2
-	ROM_LOAD( "jrpacpe-10.ic105",   0x2000, 0x2000, CRC(73477193) SHA1(f00a488958ea0438642d345693787bdf771219ad) ) // sprites (bank 1) & 2
-
-	ROM_REGION( 0x0120, REGION_PROMS, 0 )
-	ROM_LOAD_NIB_LOW ( "jrprom.9e", 0x0000, 0x0100, CRC(029d35c4) SHA1(d9aa2dc442e9ac36cf3c346b9fb1aa745eaf3cb8) ) // color palette (low bits)
-	ROM_LOAD_NIB_HIGH( "jrprom.9f", 0x0000, 0x0100, CRC(eee34a79) SHA1(7561f8ccab2af85c111af6a02af6986eb67503e5) ) // color palette (high bits)
-	ROM_LOAD( "jrprom.9p",          0x0020, 0x0100, CRC(9f6ea9d8) SHA1(62cf15513934d34641433c891a7f73bef82e2fb1) ) // color lookup table
-
-	ROM_REGION( 0x0200, REGION_SOUND1, 0 )    // waveform
-	ROM_LOAD( "jrprom.7p",          0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) ) // waveform
-	ROM_LOAD( "jrprom.5s",          0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) ) // timing - not used
-ROM_END
-
-
 /*************************************
  *
  *	Driver initialization
@@ -688,5 +662,3 @@ GAME( 1982, pengoja,  pengo,    pengo,   pengo, pengo,  ROT90, "Sega",          
 GAME( 1982, pengojb,  pengo,    pengo,   pengo, penta,  ROT90, "Sega",                     "Pengo (Japan, 315-5007 type, rev A)" ) // Sega game ID# 834-5078 PENGO REV.A
 GAME( 1982, pengojbl, pengo,    pengo,   pengo, penta,  ROT90, "bootleg",                  "Pengo (Japan, bootleg)" ) // bootleg of pengojb with cloned encryption
 GAME( 1982, penta,    pengo,    pengo,   pengo, penta,  ROT90, "bootleg (Grinbee Shouji)", "Penta (bootleg)" ) // Grinbee Shouji was a subsidiary of Orca
-
-//GAME( 1983, jrpacmbl, jrpacman, jrpacmbl, jrpacmbl,  0,  ROT90, "bootleg",                  "Jr. Pac-Man (Pengo hardware, bootleg)",  MACHINE_NO_COCKTAIL | MACHINE_SUPPORTS_SAVE )
