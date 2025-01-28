@@ -1605,6 +1605,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ryujin )	/* ??? (c) 1993 Taito Corporation (Japan) */
 	DRIVER( qzshowby )	/* D72 (c) 1993 Taito Corporation (Japan) */
 	DRIVER( pbobble )	/* ??? (c) 1994 Taito Corporation (Japan) */
+	DRIVER( bublbust )	/* ??? (c) 1994 Taito Corporation (US) */
 	DRIVER( spacedx )	/* D89 (c) 1994 Taito Corporation (US) */
 	DRIVER( spacedxj )	/* D89 (c) 1994 Taito Corporation (Japan) */
 	DRIVER( spacedxo )	/* D89 (c) 1994 Taito Corporation (Japan) */
