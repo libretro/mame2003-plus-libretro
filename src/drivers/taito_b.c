@@ -3498,6 +3498,25 @@ ROM_START( pbobble )
 	ROM_LOAD( "pb-ic15.bin", 0x000000, 0x100000, CRC(0840cbc4) SHA1(1adbd7aef44fa80832f63dfb8efdf69fd7256a57) )
 ROM_END
 
+ROM_START( bublbust )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* 512k for 68000 */
+	ROM_LOAD16_BYTE( "p.bobble_prg_h_usa_6-15_c681.ic18", 0x00000, 0x40000, CRC(ba83e398) SHA1(2512ea5a805f0e5c470c4d216d679f3dc3c4aa82) )
+	ROM_LOAD16_BYTE( "p.bobble_prg_l_usa_6-15_e9e1.ic2",  0x00001, 0x40000, CRC(a12cb3f2) SHA1(06271d3a0af101a959e6e777f1f9e99bae1e6076) )
+
+	ROM_REGION( 0x2c000, REGION_CPU2, 0 )     /* 128k for Z80 code */
+	ROM_LOAD( "prg_snd.ic27", 0x00000, 0x04000, CRC(2f288fe0) SHA1(4ba707f4b3a1ca0e573652d1c733ee889f9fef8a) ) 
+	ROM_CONTINUE(             0x10000, 0x1c000 ) /* banked stuff */
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "p.bobble_chr-1l_6-14_eaa0.ic11_ch_1_0l", 0x00000, 0x40000, CRC(8d3fa2f0) SHA1(3d36944e35081740469df61a40e538eb94ea2ef6) ) 
+	ROM_LOAD16_BYTE( "p.bobble_chr-1h_6-14_1515.ic12_ch_1_0h", 0x00001, 0x40000, CRC(a2eb4d32) SHA1(571811a543af50cc5e0f1d7aad9fc388919e93e6) ) 
+	ROM_LOAD16_BYTE( "p.bobble_chr-0l_6-14_86d5.ic7_ch_0_0l",  0x80000, 0x40000, CRC(80f1aab0) SHA1(f5cdb93aa702fb8ba91eaf8f470b6e2a61a581b5) )
+	ROM_LOAD16_BYTE( "p.bobble_chr-0h_6-14_d180.ic8_ch_0_0h",  0x80001, 0x40000, CRC(d773cac8) SHA1(b008a21c39650a28cba402cd1c4de0567e275bc9) )
+
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 )
+	ROM_LOAD( "ach0-kaigai.ic15_ach_0", 0x00000, 0x80000, CRC(f203ae52) SHA1(d41b880ef17eea6614e2911318db5cd070473381) )
+ROM_END
+
 ROM_START( spacedx )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )     /* 512k for 68000 code */
 	ROM_LOAD16_BYTE( "d89-06",       0x00000, 0x40000, CRC(7122751e) SHA1(4b4eb58af28f1988ff102251407449d0affbd4c2) )
@@ -3739,6 +3758,7 @@ GAME( 1992, silentdj, silentd, silentd,  silentdj, 0, ROT0,   "Taito Corporation
 GAME( 1993, ryujin,   0,       ryujin,   ryujin,   0, ROT270, "Taito Corporation", "Ryu Jin (Japan)" )
 GAME( 1993, qzshowby, 0,       qzshowby, qzshowby, 0, ROT0,   "Taito Corporation", "Quiz Sekai wa SHOW by shobai (Japan)" )
 GAME( 1994, pbobble,  0,       pbobble,  pbobble,  0, ROT0,   "Taito Corporation", "Puzzle Bobble (Japan, B-System)" )
+GAME( 1994, bublbust, pbobble, pbobble,  pbobble,  0, ROT0,   "Taito America Corporation", "Bubble Buster (US)" )
 GAME( 1994, spacedx,  0,       spacedx,  pbobble,  0, ROT0,   "Taito Corporation", "Space Invaders DX (US) v2.1" )
 GAME( 1994, spacedxj, spacedx, spacedx,  pbobble,  0, ROT0,   "Taito Corporation", "Space Invaders DX (Japan) v2.1" )
 GAME( 1994, spacedxo, spacedx, spacedxo, spacedxo, 0, ROT0,   "Taito Corporation", "Space Invaders DX (Japan) v2.0" )
