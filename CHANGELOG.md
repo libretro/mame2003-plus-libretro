@@ -35,6 +35,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Botanic (English / Spanish set 1)
 * Bronx (Cycle Shooting bootleg)
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
+* Bubble Buster
 * Buccaneers
 * Bullet (unprotected of FD1094 317-0041 set)" )
 * Cabal (World, Joystick version)
@@ -1130,3 +1131,7 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Backported some graphical fixes for SNK's Joyful Road / Munch Mobile from later MAME [arcadez]
 * Added RNG protection which handles random events during boss battles improving the emulation
 * for Data East's Secret Agent / Sly Spy [arcadez, Mahoneyt944]
+* Improved the protection for Data East's Express Raider to prevent the game stalling on level 2 [MAMEDev, arcadez]
+* Added support for Bubble Buster a unique version of Puzzle Bobble with totally different gameplay and music [arcadez, FBNDev]
+* Fixed the attract mode for 64th Street, Chimera Beast, pengo, updated the pengo sets and fixed the gameover annimation for Vapor Trail [grant2258]
+* Added reset playfield dip switch option in Space Wars [mahoneyt944]
