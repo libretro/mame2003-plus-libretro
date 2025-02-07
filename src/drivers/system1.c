@@ -4252,7 +4252,7 @@ static WRITE_HANDLER( mcuenable_hack_w )
 
 static DRIVER_INIT( shtngmst )
 {
-	install_port_write_handler(0, 0x10, 0x10, mcr_control_port_w);
+	install_port_write_handler(0, 0x10, 0x10, mcuenable_hack_w);
 }
 
 GAME( 1983, starjack, 0,        small,    starjack, 0,        ROT270, "Sega", 			 	   "Star Jacker (Sega)" )
