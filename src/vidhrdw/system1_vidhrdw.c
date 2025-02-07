@@ -678,10 +678,10 @@ VIDEO_UPDATE( shtngmst )
 	int drawn;
 
 
-	//chplft_draw_bg(bitmap,-1);
+	chplft_draw_bg(bitmap,-1);
 	drawn = system1_draw_fg(bitmap,0);
 	/* redraw low priority bg tiles if necessary */
-	if (drawn) chplft_draw_bg(bitmap,0);
+	//if (drawn) chplft_draw_bg(bitmap,0);
 	draw_sprites(bitmap);
 	chplft_draw_bg(bitmap,1);
 	system1_draw_fg(bitmap,1);
