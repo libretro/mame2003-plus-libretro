@@ -2470,7 +2470,7 @@ static MACHINE_DRIVER_START( shtngmst )
 	/* video hardware - same as small - left / right 8 pixels clipped */
 	MDRV_VISIBLE_AREA(0*8+8, 32*8-1-8, 0*8, 28*8-1)
 
-	MDRV_VIDEO_UPDATE(choplifter)
+	MDRV_VIDEO_UPDATE(shtngmst)
 
 MACHINE_DRIVER_END
 
