@@ -22,6 +22,7 @@ TODO: - background is misplaced in wbmlju
 #include "machine/segacrpt.h"
 
 
+static UINT8 *system1_ram;
 
 static MACHINE_INIT( system1 )
 {
@@ -201,7 +202,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( chplft_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
-	{ 0xc000, 0xcfff, MWA_RAMROM },
+	{ 0xc000, 0xcfff, MWA_RAMROM, &system1_ram },
 	{ 0xd000, 0xd1ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xd800, 0xddff, system1_paletteram_w, &paletteram },
 	{ 0xe7c0, 0xe7ff, choplifter_scroll_x_w, &system1_scrollx_ram },
