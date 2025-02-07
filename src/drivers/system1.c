@@ -1519,7 +1519,7 @@ INPUT_PORTS_START( shtngmst )
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0x00, 0xff )
 
 	PORT_START /* 1d */
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1 | IPF_REVERSE, 25, 15, 0x00, 0xff )
+	PORT_ANALOG( 0xff, 0x7f, IPT_LIGHTGUN_Y | IPF_PLAYER1 | IPF_REVERSE, 25, 15, 0x00, 0xff )
 
 	PORT_START /* 2 rotary switches */
 	PORT_DIPNAME( 0x0f, 0x08, "Gun Y Offset" ) /* SW 1 */
@@ -1539,7 +1539,7 @@ INPUT_PORTS_START( shtngmst )
 	PORT_DIPSETTING(    0x0d, "+10" )
 	PORT_DIPSETTING(    0x0e, "+12" )
 	PORT_DIPSETTING(    0x0f, "+14" )
-	PORT_DIPNAME( 0xf0, 0x60, "Gun X Offset" ) /* SW 2 */
+	PORT_DIPNAME( 0xf0, 0xb0, "Gun X Offset" ) /* SW 2 */
 	PORT_DIPSETTING(    0x00, "-16" )
 	PORT_DIPSETTING(    0x10, "-14" )
 	PORT_DIPSETTING(    0x20, "-12" )
