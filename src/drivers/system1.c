@@ -275,6 +275,23 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
+static PORT_READ_START( sht_readport )
+	{ 0x08, 0x08, input_port_2_r }, /* coin,start */
+	{ 0x0c, 0x0c, input_port_3_r }, /* DIP2 */
+	{ 0x0d, 0x0d, input_port_4_r }, /* DIP1 some games read it from here... */
+	{ 0x10, 0x10, input_port_4_r }, /* DIP1 ... and some others from here */
+									/* but there are games which check BOTH! */
+
+	{ 0x12, 0x12, input_port_5_r }, /* trigger is here.. */
+	{ 0x1c, 0x1c, input_port_6_r }, /* gunx */
+	{ 0x1d, 0x1d, input_port_7_r }, /* guny */
+	{ 0x18, 0x18, input_port_8_r }, /* ?? */
+
+	{ 0x15, 0x15, system1_videomode_r },
+	{ 0x16, 0x16, wbml_videoram_bank_latch_r },
+	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
+PORT_END
+
 static PORT_READ_START( nobo_readport )
 	{ 0x00, 0x00, input_port_0_r },	/* Player 1 inputs */
 	{ 0x04, 0x04, input_port_1_r },	/* Player 2 inputs */
@@ -2351,7 +2368,7 @@ static MACHINE_DRIVER_START( shtngmst )
 	MDRV_IMPORT_FROM( system1 )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(brain_readmem,chplft_writemem)
-	MDRV_CPU_PORTS(wbml_readport,chplft_writeport)
+	MDRV_CPU_PORTS(sht_readport,chplft_writeport)
 
 	/* video hardware - same as small - left / right 8 pixels clipped */
 	MDRV_VISIBLE_AREA(0*8+8, 32*8-1-8, 0*8, 28*8-1)
