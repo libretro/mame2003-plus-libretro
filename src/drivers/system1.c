@@ -287,7 +287,7 @@ static PORT_READ_START( sht_readport )
 	{ 0x12, 0x12, input_port_5_r }, /* trigger is here.. */
 	{ 0x1c, 0x1c, input_port_6_r }, /* gunx */
 	{ 0x1d, 0x1d, input_port_7_r }, /* guny */
-	{ 0x18, 0x18, input_port_8_r }, /* ?? */
+	{ 0x18, 0x18, input_port_8_r }, /* 2 rotary switches */
 
 	{ 0x15, 0x15, system1_videomode_r },
 	{ 0x16, 0x16, wbml_videoram_bank_latch_r },
@@ -1477,7 +1477,7 @@ INPUT_PORTS_START( shtngmst )
 	PORT_DIPSETTING(    0x0c, "3" )
 	PORT_DIPSETTING(    0x08, "4" )
 	PORT_DIPSETTING(    0x04, "5" )
-	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPSETTING(    0x00, "Infinite" )
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x30, "100k, 500k" )
 	PORT_DIPSETTING(    0x20, "150k, 600k" )
