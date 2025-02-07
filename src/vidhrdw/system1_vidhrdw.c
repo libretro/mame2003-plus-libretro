@@ -691,7 +691,9 @@ VIDEO_UPDATE( shtngmst )
 		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
 
 
-	draw_crosshair(1, bitmap, readinputport(6), readinputport(7), &Machine->visible_area);
+	draw_crosshair(1, bitmap, readinputport(6) * (Machine->drv->screen_width  - 1) / 255,
+	                          readinputport(7) * (Machine->drv->screen_height - 1) / 255,
+	                          &Machine->visible_area);
 
 #ifdef MAME_DEBUG
 	if (keyboard_pressed(KEYCODE_SPACE))		/* goto next level*/
