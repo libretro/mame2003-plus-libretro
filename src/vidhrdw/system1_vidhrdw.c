@@ -679,17 +679,16 @@ VIDEO_UPDATE( shtngmst )
 
 
 	//chplft_draw_bg(bitmap,-1);
-	//drawn = system1_draw_fg(bitmap,0);
+	drawn = system1_draw_fg(bitmap,0);
 	/* redraw low priority bg tiles if necessary */
-	//if (drawn) chplft_draw_bg(bitmap,0);
-	//draw_sprites(bitmap);
-	//chplft_draw_bg(bitmap,1);
-	//system1_draw_fg(bitmap,1);
+	if (drawn) chplft_draw_bg(bitmap,0);
+	draw_sprites(bitmap);
+	chplft_draw_bg(bitmap,1);
+	system1_draw_fg(bitmap,1);
 
 	/* even if screen is off, sprites must still be drawn to update the collision table */
-	//if (system1_video_mode & 0x10)  /* screen off */
-		//fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
-video_update_wbml(bitmap,cliprect);
+	if (system1_video_mode & 0x10)  /* screen off */
+		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
 
 	draw_crosshair(1, bitmap, readinputport(6) * (Machine->drv->screen_width-1) / 0xff,
 	                          (Machine->drv->screen_height-1) - (readinputport(7) * (Machine->drv->screen_height-1) / 0xff),
