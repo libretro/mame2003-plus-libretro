@@ -276,6 +276,8 @@ static PORT_READ_START( wbml_readport )
 PORT_END
 
 static PORT_READ_START( sht_readport )
+/*	{ 0x00, 0x00, input_port_0_r }, joy1 */
+/*	{ 0x04, 0x04, input_port_1_r }, joy2 */
 	{ 0x08, 0x08, input_port_2_r }, /* coin,start */
 	{ 0x0c, 0x0c, input_port_3_r }, /* DIP2 */
 	{ 0x0d, 0x0d, input_port_4_r }, /* DIP1 some games read it from here... */
