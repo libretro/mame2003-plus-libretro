@@ -311,6 +311,52 @@ static PORT_WRITE_START( wbml_writeport )
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
 PORT_END
 
+/* protection values from real hardware, these were verified to be the same on the title
+   screen and in the first level... they're all jumps that the MCU appears to put in RAM
+   at some point */
+static const int shtngtab[]=
+{
+	0xC3,0xC1,0x39,
+	0xC3,0x6F,0x0A,
+	0xC3,0x56,0x39,
+	0xC3,0x57,0x0C,
+	0xC3,0xE2,0x0B,
+	0xC3,0x68,0x03,
+	0xC3,0xF1,0x06,
+	0xC3,0xCA,0x06,
+	0xC3,0xC4,0x06,
+	0xC3,0xD6,0x07,
+	0xC3,0x89,0x13,
+	0xC3,0x75,0x13,
+	0xC3,0x9F,0x13,
+	0xC3,0xFF,0x38,
+	0xC3,0x60,0x13,
+	0xC3,0x62,0x00,
+	0xC3,0x39,0x04,
+	-1
+};
+static WRITE_HANDLER( mcuenable_hack_w )
+{
+	/*in fact it's gun feedback write, not mcu related */
+	int i=0;
+	while(shtngtab[i]>=0)
+	{
+		system1_ram[i+0x40]=shtngtab[i];
+		i++;
+	}
+
+	system1_ram[0x2ff]=0x49; /* I ? */
+	system1_ram[0x3ff]=0x54; /* T ? */
+}
+
+static PORT_WRITE_START( sht_writeport )
+	{ 0x10, 0x10, mcuenable_hack_w },
+	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
+	{ 0x15, 0x15, chplft_videomode_w },
+	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
+PORT_END
+
+
 static PORT_WRITE_START( hvymetal_writeport )
 	{ 0x18, 0x18, system1_soundport_w },    /* sound commands */
 	{ 0x19, 0x19, hvymetal_videomode_w },
@@ -2368,7 +2414,9 @@ static MACHINE_DRIVER_START( shtngmst )
 	MDRV_IMPORT_FROM( system1 )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(brain_readmem,chplft_writemem)
-	MDRV_CPU_PORTS(sht_readport,chplft_writeport)
+	MDRV_CPU_PORTS(sht_readport,sht_writeport)
+
+	MDRV_MACHINE_INIT(wbml) /* banked */
 
 	/* video hardware - same as small - left / right 8 pixels clipped */
 	MDRV_VISIBLE_AREA(0*8+8, 32*8-1-8, 0*8, 28*8-1)
@@ -4243,48 +4291,6 @@ static DRIVER_INIT( noboranb )
 	ROM2[0x02f9] = 0x28;/*'jr z' instead of 'jr'*/
 }
 
-/* protection values from real hardware, these were verified to be the same on the title
-   screen and in the first level... they're all jumps that the MCU appears to put in RAM
-   at some point */
-static const int shtngtab[]=
-{
-	0xC3,0xC1,0x39,
-	0xC3,0x6F,0x0A,
-	0xC3,0x56,0x39,
-	0xC3,0x57,0x0C,
-	0xC3,0xE2,0x0B,
-	0xC3,0x68,0x03,
-	0xC3,0xF1,0x06,
-	0xC3,0xCA,0x06,
-	0xC3,0xC4,0x06,
-	0xC3,0xD6,0x07,
-	0xC3,0x89,0x13,
-	0xC3,0x75,0x13,
-	0xC3,0x9F,0x13,
-	0xC3,0xFF,0x38,
-	0xC3,0x60,0x13,
-	0xC3,0x62,0x00,
-	0xC3,0x39,0x04,
-	-1
-};
-static WRITE_HANDLER( mcuenable_hack_w )
-{
-	/*in fact it's gun feedback write, not mcu related */
-	int i=0;
-	while(shtngtab[i]>=0)
-	{
-		system1_ram[i+0x40]=shtngtab[i];
-		i++;
-	}
-
-	system1_ram[0x2ff]=0x49; /* I ? */
-	system1_ram[0x3ff]=0x54; /* T ? */
-}
-
-static DRIVER_INIT( shtngmst )
-{
-	install_port_write_handler(0, 0x10, 0x10, mcuenable_hack_w);
-}
 
 GAME( 1983, starjack, 0,        small,    starjack, 0,        ROT270, "Sega", 			 	   "Star Jacker (Sega)" )
 GAME( 1983, starjacs, starjack, small,    starjacs, 0,        ROT270, "Stern",			  	   "Star Jacker (Stern)" )
@@ -4319,7 +4325,7 @@ GAME( 1985, hvymetal, 0,        hvymetal, hvymetal, hvymetal, ROT0,   "Sega", 		
 GAME( 1985, myhero,   0,        system1,  myhero,   0,        ROT0,   "Sega", 			 	   "My Hero (US)" )
 GAME( 1985, sscandal, myhero,   system1,  myhero,   myheroj,  ROT0,   "Coreland / Sega", 	   "Seishun Scandal (Japan)" )
 GAME( 1985, myherok,  myhero,   system1,  myhero,   myherok,  ROT0,   "Coreland / Sega", 	   "My Hero (Korea)" )
-GAMEX(1985, shtngmst, 0,        shtngmst, chplft,   shtngmst, ROT0,   "Sega", 			 	   "Shooting Master", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )	/* 8751 protection, mcu = 315-5159 */
+GAMEX(1985, shtngmst, 0,        shtngmst, chplft,   0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )	/* 8751 protection, mcu = 315-5159 */
 GAMEX(1985, chplft,   0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter", GAME_UNEMULATED_PROTECTION )	/* 8751 protection */
 GAME( 1985, chplftb,  chplft,   chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (alternate)" )
 GAME( 1985, chplftbl, chplft,   chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
