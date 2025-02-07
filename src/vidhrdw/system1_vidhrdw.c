@@ -692,7 +692,7 @@ VIDEO_UPDATE( shtngmst )
 
 
 	draw_crosshair(1, bitmap, readinputport(6) * (Machine->drv->screen_width-1) / 0xff,
-	                          (Machine->drv->screen_height-1) - (readinputport(7) * (Machine->drv->screen_height-1) / 0xff),
+	                          (Machine->drv->screen_height-1) - (readinputport(7) * (Machine->drv->screen_height-1) / 0xff + 8),
 	                          &Machine->visible_area);
 
 #ifdef MAME_DEBUG
