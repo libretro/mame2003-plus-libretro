@@ -1514,10 +1514,10 @@ INPUT_PORTS_START( shtngmst )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START /* 1c */
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0, 255 )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 25, 15, 0, 0xf )
 
 	PORT_START /* 1d */
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1 | IPF_REVERSE, 25, 15, 0, 255 )
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1 | IPF_REVERSE, 25, 15, 0, 0xf )
 
 	PORT_START /* 18 */
 	/* what is this? check the game code... */
@@ -4339,6 +4339,9 @@ static DRIVER_INIT( noboranb )
 
 	ROM2[0x02f9] = 0x28;/*'jr z' instead of 'jr'*/
 }
+
+
+
 
 
 GAME( 1983, starjack, 0,        small,    starjack, 0,        ROT270, "Sega", 			 	   "Star Jacker (Sega)" )
