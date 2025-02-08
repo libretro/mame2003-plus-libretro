@@ -4370,7 +4370,7 @@ GAME( 1985, hvymetal, 0,        hvymetal, hvymetal, hvymetal, ROT0,   "Sega", 		
 GAME( 1985, myhero,   0,        system1,  myhero,   0,        ROT0,   "Sega", 			 	   "My Hero (US)" )
 GAME( 1985, sscandal, myhero,   system1,  myhero,   myheroj,  ROT0,   "Coreland / Sega", 	   "Seishun Scandal (Japan)" )
 GAME( 1985, myherok,  myhero,   system1,  myhero,   myherok,  ROT0,   "Coreland / Sega", 	   "My Hero (Korea)" )
-GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, 0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )	/* 8751 protection, mcu = 315-5159 */
+GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, 0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_IMPERFECT_GRAPHICS )	/* 8751 protection handled via hack */
 GAMEX(1985, chplft,   0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter", GAME_UNEMULATED_PROTECTION )	/* 8751 protection */
 GAME( 1985, chplftb,  chplft,   chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (alternate)" )
 GAME( 1985, chplftbl, chplft,   chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
