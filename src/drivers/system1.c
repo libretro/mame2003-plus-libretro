@@ -22,6 +22,7 @@ TODO: - background is misplaced in wbmlju
 #include "machine/segacrpt.h"
 
 
+static UINT8 *system1_ram;
 
 static MACHINE_INIT( system1 )
 {
@@ -201,7 +202,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( chplft_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
-	{ 0xc000, 0xcfff, MWA_RAMROM },
+	{ 0xc000, 0xcfff, MWA_RAMROM, &system1_ram },
 	{ 0xd000, 0xd1ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xd800, 0xddff, system1_paletteram_w, &paletteram },
 	{ 0xe7c0, 0xe7ff, choplifter_scroll_x_w, &system1_scrollx_ram },
@@ -274,6 +275,25 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
+static PORT_READ_START( sht_readport )
+/*	{ 0x00, 0x00, input_port_0_r }, joy1 */
+/*	{ 0x04, 0x04, input_port_1_r }, joy2 */
+	{ 0x08, 0x08, input_port_2_r }, /* coin,start */
+	{ 0x0c, 0x0c, input_port_3_r }, /* DIP2 */
+	{ 0x0d, 0x0d, input_port_4_r }, /* DIP1 some games read it from here... */
+	{ 0x10, 0x10, input_port_4_r }, /* DIP1 ... and some others from here */
+									/* but there are games which check BOTH! */
+
+	{ 0x12, 0x12, input_port_5_r }, /* trigger is here.. */
+	{ 0x1c, 0x1c, input_port_6_r }, /* gunx */
+	{ 0x1d, 0x1d, input_port_7_r }, /* guny */
+	{ 0x18, 0x18, input_port_8_r }, /* 2 rotary switches */
+
+	{ 0x15, 0x15, system1_videomode_r },
+	{ 0x16, 0x16, wbml_videoram_bank_latch_r },
+	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
+PORT_END
+
 static PORT_READ_START( nobo_readport )
 	{ 0x00, 0x00, input_port_0_r },	/* Player 1 inputs */
 	{ 0x04, 0x04, input_port_1_r },	/* Player 2 inputs */
@@ -292,6 +312,52 @@ static PORT_WRITE_START( wbml_writeport )
 	{ 0x15, 0x15, chplft_videomode_w },
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
 PORT_END
+
+/* protection values from real hardware, these were verified to be the same on the title
+   screen and in the first level... they're all jumps that the MCU appears to put in RAM
+   at some point */
+static const int shtngtab[]=
+{
+	0xC3,0xC1,0x39,
+	0xC3,0x6F,0x0A,
+	0xC3,0x56,0x39,
+	0xC3,0x57,0x0C,
+	0xC3,0xE2,0x0B,
+	0xC3,0x68,0x03,
+	0xC3,0xF1,0x06,
+	0xC3,0xCA,0x06,
+	0xC3,0xC4,0x06,
+	0xC3,0xD6,0x07,
+	0xC3,0x89,0x13,
+	0xC3,0x75,0x13,
+	0xC3,0x9F,0x13,
+	0xC3,0xFF,0x38,
+	0xC3,0x60,0x13,
+	0xC3,0x62,0x00,
+	0xC3,0x39,0x04,
+	-1
+};
+static WRITE_HANDLER( mcuenable_hack_w )
+{
+	/*in fact it's gun feedback write, not mcu related */
+	int i=0;
+	while(shtngtab[i]>=0)
+	{
+		system1_ram[i+0x40]=shtngtab[i];
+		i++;
+	}
+
+	system1_ram[0x2ff]=0x49; /* I ? */
+	system1_ram[0x3ff]=0x54; /* T ? */
+}
+
+static PORT_WRITE_START( sht_writeport )
+	{ 0x10, 0x10, mcuenable_hack_w },
+	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
+	{ 0x15, 0x15, chplft_videomode_w },
+	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
+PORT_END
+
 
 static PORT_WRITE_START( hvymetal_writeport )
 	{ 0x18, 0x18, system1_soundport_w },    /* sound commands */
@@ -1385,53 +1451,93 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( shtngmst )
 	PORT_START  /* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START  /* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START  /* IN0 */
-	IN0_PORT
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED ) /* no 2P start */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START  /* DSW1 */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(	0x00, DEF_STR( Upright ) )
-	PORT_DIPSETTING(	0x01, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x01, 0x01, "Shots Per Second" )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x01, "5" )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(	0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
-	PORT_DIPSETTING(	0x0c, "3" )
-	PORT_DIPSETTING(	0x08, "4" )
-	PORT_DIPSETTING(	0x04, "5" )
-	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x04, "5" )
+	PORT_DIPSETTING(    0x00, "Infinite" )
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(	0x30, "100k 500k" )
-	PORT_DIPSETTING(	0x20, "150k 600k" )
-	PORT_DIPSETTING(	0x10, "200k 700k" )
-	PORT_DIPSETTING(	0x00, "300k 800k" )
+	PORT_DIPSETTING(    0x30, "100k, 500k" )
+	PORT_DIPSETTING(    0x20, "150k, 600k" )
+	PORT_DIPSETTING(    0x10, "200k, 700k" )
+	PORT_DIPSETTING(    0x00, "300k, 800k" )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(  0xc0, "Easy" )
-	PORT_DIPSETTING(  0x80, "Medium" )
-	PORT_DIPSETTING(  0x40, "Hard" )
-	PORT_DIPSETTING(  0x00, "Hardest" )
+	PORT_DIPSETTING(    0xc0, "Easy" )
+	PORT_DIPSETTING(    0x80, "Medium" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
 
 	PORT_START	  /* DSW0 */
 	DSW1_PORT
+
+	PORT_START  /* trigger */
+	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /* 1c */
+	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 48, 8, 0x00, 0xff )
+
+	PORT_START /* 1d */
+	PORT_ANALOG( 0xff, 0x8f, IPT_LIGHTGUN_Y | IPF_PLAYER1 | IPF_REVERSE, 64, 8, 0x00, 0xff )
+
+	PORT_START /* 2 rotary switches */
+	PORT_DIPNAME( 0x0f, 0x0f, "Gun Y Offset" ) /* SW 1 */
+	PORT_DIPSETTING(    0x00, "-16" )
+	PORT_DIPSETTING(    0x01, "-14" )
+	PORT_DIPSETTING(    0x02, "-12" )
+	PORT_DIPSETTING(    0x03, "-10" )
+	PORT_DIPSETTING(    0x04, "-8" )
+	PORT_DIPSETTING(    0x05, "-6" )
+	PORT_DIPSETTING(    0x06, "-4" )
+	PORT_DIPSETTING(    0x07, "-2" )
+	PORT_DIPSETTING(    0x08, "0" )
+	PORT_DIPSETTING(    0x09, "+2" )
+	PORT_DIPSETTING(    0x0a, "+4" )
+	PORT_DIPSETTING(    0x0b, "+6" )
+	PORT_DIPSETTING(    0x0c, "+8" )
+	PORT_DIPSETTING(    0x0d, "+10" )
+	PORT_DIPSETTING(    0x0e, "+12" )
+	PORT_DIPSETTING(    0x0f, "+14" )
+	PORT_DIPNAME( 0xf0, 0xa0, "Gun X Offset" ) /* SW 2 */
+	PORT_DIPSETTING(    0x00, "-16" )
+	PORT_DIPSETTING(    0x10, "-14" )
+	PORT_DIPSETTING(    0x20, "-12" )
+	PORT_DIPSETTING(    0x30, "-10" )
+	PORT_DIPSETTING(    0x40, "-8" )
+	PORT_DIPSETTING(    0x50, "-6" )
+	PORT_DIPSETTING(    0x60, "-4" )
+	PORT_DIPSETTING(    0x70, "-2" )
+	PORT_DIPSETTING(    0x80, "0" )
+	PORT_DIPSETTING(    0x90, "+2" )
+	PORT_DIPSETTING(    0xa0, "+4" )
+	PORT_DIPSETTING(    0xb0, "+6" )
+	PORT_DIPSETTING(    0xc0, "+8" )
+	PORT_DIPSETTING(    0xd0, "+10" )
+	PORT_DIPSETTING(    0xe0, "+12" )
+	PORT_DIPSETTING(    0xf0, "+14" )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( chplft )
@@ -2344,6 +2450,22 @@ static MACHINE_DRIVER_START( chplft )
 
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( shtngmst )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( system1 )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(brain_readmem,chplft_writemem)
+	MDRV_CPU_PORTS(sht_readport,sht_writeport)
+
+	MDRV_MACHINE_INIT(wbml) /* banked */
+
+	/* video hardware - same as small - left / right 8 pixels clipped */
+	MDRV_VISIBLE_AREA(0*8+8, 32*8-1-8, 0*8, 28*8-1)
+
+	MDRV_VIDEO_UPDATE(shtngmst)
+
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( brain )
 
@@ -3272,7 +3394,7 @@ ROM_END
 
 ROM_START( shtngmst )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
-	ROM_LOAD( "epr7100",      0x00000, 0x8000, CRC(45e64431) SHA1(7edf818dc1f65365641e51abc197d13db7a8d4d9) )
+	ROM_LOAD("epr-7100.ic18", 0x00000, 0x8000, CRC(268ecb1d) SHA1(a9274c9718f7244235cc6df76331d6a0b7e4e4c8) )
 	ROM_LOAD( "epr7101",      0x10000, 0x8000, CRC(ebf5ff72) SHA1(13ae06e3a81cf00b80ec939d5baf30143d61d480) )
 	ROM_LOAD( "epr7102",      0x18000, 0x8000, CRC(c890a4ad) SHA1(4b59d37902ace3a69b380ff40652ee37c85f0e9d) )
 
@@ -3284,14 +3406,14 @@ ROM_START( shtngmst )
 	ROM_LOAD( "epr7041",      0x08000, 0x8000, CRC(f3e273f9) SHA1(b8715c528299dc1e4f0c19c50d91ca9861a423a1) )
 	ROM_LOAD( "epr7042",      0x10000, 0x8000, CRC(6841c917) SHA1(6553843eea0131eb7b5a9aa29dddf641e41d8cc3) )
 
-	ROM_REGION( 0x38000, REGION_GFX2, 0 ) /* 224 for sprites data - PROBABLY WRONG! */
-	ROM_LOAD( "epr7105",      0x00000, 0x8000, CRC(13111729) SHA1(57ca2b945db36b056d0e40a39456fd8bf9d0a3ec) )
-	ROM_LOAD( "epr7104",      0x08000, 0x8000, CRC(84a679c5) SHA1(19a21b1b33fc215f606093bfd61d597e4bd0b3d0) )
-	ROM_LOAD( "epr7107",      0x10000, 0x8000, CRC(8f50ea24) SHA1(781687e202dedca7b72c9bd5b97d9d46fcfd601c) )
-	ROM_LOAD( "epr7106",      0x18000, 0x8000, CRC(ae7ab7a2) SHA1(153691e468d29d21b95f1fbffb6896a3140d7e14) )
-	ROM_LOAD( "epr7109",      0x20000, 0x8000, CRC(097f7481) SHA1(4d93ea01b811af1cd3e136116625e4b8e06358a2) )
-	ROM_LOAD( "epr7108",      0x28000, 0x8000, CRC(816180ac) SHA1(a59670ec77d4359041ebf12dae5b74add55d82ac) )
-	ROM_LOAD( "epr7110",      0x30000, 0x8000, CRC(5d1a5048) SHA1(d1626ab1981080451c912df7e4ad7f76c0cb3459) )
+	ROM_REGION( 0x40000, REGION_GFX2, ROMREGION_ERASEFF )
+	ROM_LOAD( "epr7110",   0x00000, 0x8000, CRC(5d1a5048) SHA1(d1626ab1981080451c912df7e4ad7f76c0cb3459) )
+	ROM_LOAD( "epr7106",   0x08000, 0x8000, CRC(ae7ab7a2) SHA1(153691e468d29d21b95f1fbffb6896a3140d7e14) )
+	ROM_LOAD( "epr7108",   0x10000, 0x8000, CRC(816180ac) SHA1(a59670ec77d4359041ebf12dae5b74add55d82ac) )
+	ROM_LOAD( "epr7104",   0x18000, 0x8000, CRC(84a679c5) SHA1(19a21b1b33fc215f606093bfd61d597e4bd0b3d0) )
+	ROM_LOAD( "epr7109",   0x20000, 0x8000, CRC(097f7481) SHA1(4d93ea01b811af1cd3e136116625e4b8e06358a2) )
+	ROM_LOAD( "epr7105",   0x28000, 0x8000, CRC(13111729) SHA1(57ca2b945db36b056d0e40a39456fd8bf9d0a3ec) )
+	ROM_LOAD( "epr7107",   0x30000, 0x8000, CRC(8f50ea24) SHA1(781687e202dedca7b72c9bd5b97d9d46fcfd601c) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
 	ROM_LOAD( "epr7113",      0x0000, 0x0100, CRC(5c0e1360) SHA1(2011b3eef2a58f9bd3f3b1bb9e6c201db85727c2) ) /* palette red component */
@@ -4248,7 +4370,7 @@ GAME( 1985, hvymetal, 0,        hvymetal, hvymetal, hvymetal, ROT0,   "Sega", 		
 GAME( 1985, myhero,   0,        system1,  myhero,   0,        ROT0,   "Sega", 			 	   "My Hero (US)" )
 GAME( 1985, sscandal, myhero,   system1,  myhero,   myheroj,  ROT0,   "Coreland / Sega", 	   "Seishun Scandal (Japan)" )
 GAME( 1985, myherok,  myhero,   system1,  myhero,   myherok,  ROT0,   "Coreland / Sega", 	   "My Hero (Korea)" )
-GAMEX(1985, shtngmst, 0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )	/* 8751 protection, mcu = 315-5159 */
+GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, 0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_IMPERFECT_GRAPHICS )	/* 8751 protection handled via hack */
 GAMEX(1985, chplft,   0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter", GAME_UNEMULATED_PROTECTION )	/* 8751 protection */
 GAME( 1985, chplftb,  chplft,   chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (alternate)" )
 GAME( 1985, chplftbl, chplft,   chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
