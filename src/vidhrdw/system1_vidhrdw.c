@@ -705,14 +705,14 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				int scrollx_row_flip[32];
 
 				for (i = 0; i < 32; i++)
-					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff;
+					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
 			else
 			{
 				for (i = 0; i < 32; i++)
-					scrollx_row[i] = (scrollx_row[0]) & 0xff;
+					scrollx_row[i] = (scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
@@ -800,9 +800,9 @@ VIDEO_UPDATE( shtngmst )
 	drawn = system1_draw_fg(bitmap,0);
 	/* redraw low priority bg tiles if necessary */
 	if (drawn) shtngmst_draw_bg(bitmap,0);
-	//draw_sprites(bitmap);
-	//shtngmst_draw_bg(bitmap,1);
-	//system1_draw_fg(bitmap,1);
+	draw_sprites(bitmap);
+	shtngmst_draw_bg(bitmap,1);
+	system1_draw_fg(bitmap,1);
 
 	/* even if screen is off, sprites must still be drawn to update the collision table */
 	if (system1_video_mode & 0x10)  /* screen off */
