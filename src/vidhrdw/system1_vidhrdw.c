@@ -704,12 +704,17 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				int scrollx_row_flip[32],i;
 
 				for (i = 0; i < 32; i++)
-					scrollx_row_flip[31-i] = (256-scrollx_row[i]) & 0xff;
+					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff;
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
 			else
+			{
+				for (i = 0; i < 32; i++)
+					scrollx_row[i] = (scrollx_row[0]) & 0xff;
+
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+			}
 		}
 		else
 			copybitmap(bitmap,tmp_bitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
