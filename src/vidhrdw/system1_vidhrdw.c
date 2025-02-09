@@ -398,6 +398,61 @@ static int system1_draw_fg(struct mame_bitmap *bitmap,int priority)
 	return drawn;
 }
 
+static int shtngmst_draw_fg(struct mame_bitmap *bitmap,int priority)
+{
+	int sx,sy,offs;
+	int drawn = 0;
+	int choplifter_scroll_x_on = (system1_scrollx_ram[0] == 0xe5 && system1_scrollx_ram[1] == 0xff) ? 0 : 1;
+
+
+	priority <<= 3;
+
+	for (offs = 0;offs < system1_videoram_size;offs += 2)
+	{
+		if ((system1_videoram[offs+1] & 0x08) == priority)
+		{
+			int code,color;
+
+
+			code = (system1_videoram[offs] | (system1_videoram[offs+1] << 8));
+			code = ((code >> 4) & 0x800) | (code & 0x7ff);	/* Heavy Metal only */
+			color = ((code >> 5) & 0x3f);
+			sx = (offs/2) % 32;
+			sy = (offs/2) / 32;
+
+			if (flip_screen)
+			{
+				sx = (31-sx);
+
+				if (choplifter_scroll_x_on)
+					sx = (sx - scrollx_row[sy]) & 0xff;
+
+				sy = 31 - sy;
+			}
+			else
+			{
+				if (choplifter_scroll_x_on)
+					sx = (sx + scrollx_row[sy]) & 0xff;
+			}
+
+			code %= Machine->gfx[0]->total_elements;
+			if (Machine->gfx[0]->pen_usage[code] & ~1)
+			{
+				drawn = 1;
+
+				drawgfx(bitmap,Machine->gfx[0],
+						code,
+						color,
+						flip_screen,flip_screen,
+						8*sx + blockgal_kludgeoffset,8*sy,
+						&Machine->visible_area,TRANSPARENCY_PEN,0);
+			}
+		}
+	}
+
+	return drawn;
+}
+
 static void system1_draw_bg(struct mame_bitmap *bitmap,int priority)
 {
 	int sx,sy,offs;
@@ -791,12 +846,12 @@ VIDEO_UPDATE( shtngmst )
 
 
 	shtngmst_draw_bg(bitmap,-1);
-	drawn = system1_draw_fg(bitmap,0);
+	drawn = shtngmst_draw_fg(bitmap,0);
 	/* redraw low priority bg tiles if necessary */
 	if (drawn) shtngmst_draw_bg(bitmap,0);
 	draw_sprites(bitmap);
 	shtngmst_draw_bg(bitmap,1);
-	system1_draw_fg(bitmap,1);
+	shtngmst_draw_fg(bitmap,1);
 
 	/* even if screen is off, sprites must still be drawn to update the collision table */
 	if (system1_video_mode & 0x10)  /* screen off */
