@@ -273,8 +273,7 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 		/* the +1 prevents sprite lag in Wonder Boy */
 		x = sprite_base[SPR_X_LO] + ((sprite_base[SPR_X_HI] & 0x01) << 8) + 1;
 		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml ||
-			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi ||
-			(!strcmp(Machine->gamedrv->name, "shtngmst")) )
+			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi)
 		{
 			x += 7*2;
 		}
