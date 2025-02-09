@@ -699,9 +699,10 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 		/* copy the temporary bitmap to the screen */
 		if (choplifter_scroll_x_on)
 		{
+			int i;
 			if (flip_screen)
 			{
-				int scrollx_row_flip[32],i;
+				int scrollx_row_flip[32];
 
 				for (i = 0; i < 32; i++)
 					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff;
