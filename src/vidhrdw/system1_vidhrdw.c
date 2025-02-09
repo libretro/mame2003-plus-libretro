@@ -245,7 +245,12 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 	sprite_base	= spriteram + 0x10 * spr_number;
 
 	src = sprite_base[SPR_GFXOFS_LO] + (sprite_base[SPR_GFXOFS_HI] << 8);
-	bank = 0x8000 * (((sprite_base[SPR_X_HI] & 0x80) >> 7) + ((sprite_base[SPR_X_HI] & 0x40) >> 5));
+
+	if (!strcmp(Machine->gamedrv->name, "shtngmst"))
+		bank = 0x8000 * (((sprite_base[SPR_X_HI] & 0x80) >> 7) + ((sprite_base[SPR_X_HI] & 0x40) >> 5) + ((sprite_base[SPR_X_HI] & 0x20) >> 3));
+	else
+		bank = 0x8000 * (((sprite_base[SPR_X_HI] & 0x80) >> 7) + ((sprite_base[SPR_X_HI] & 0x40) >> 5));
+
 	bank &= (memory_region_length(REGION_GFX2)-1);	/* limit to the range of available ROMs */
 	skip = sprite_base[SPR_SKIP_LO] + (sprite_base[SPR_SKIP_HI] << 8);
 
@@ -647,6 +652,113 @@ static void chplft_draw_bg(struct mame_bitmap *bitmap, int priority)
 	}
 }
 
+static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
+{
+	int sx,sy,offs;
+	int choplifter_scroll_x_on = (system1_scrollx_ram[0] == 0xe5 && system1_scrollx_ram[1] == 0xff) ? 0 : 1;
+
+
+	if (priority == -1)
+	{
+		/* optimized far background */
+
+		/* for every character in the background video RAM, check if it has
+		 * been modified since last time and update it accordingly.
+		 */
+
+		for (offs = 0;offs < system1_backgroundram_size;offs += 2)
+		{
+			if (bg_dirtybuffer[offs / 2])
+			{
+				int code,color;
+
+
+				bg_dirtybuffer[offs / 2] = 0;
+
+				code = (system1_backgroundram[offs] | (system1_backgroundram[offs+1] << 8));
+				code = ((code >> 4) & 0x800) | (code & 0x7ff);	/* Heavy Metal only */
+				color = ((code >> 5) & 0x3f) + 0x40;
+				sx = (offs/2) % 32;
+				sy = (offs/2) / 32;
+
+				if (flip_screen)
+				{
+					sx = 31 - sx;
+					sy = 31 - sy;
+				}
+
+				drawgfx(tmp_bitmap,Machine->gfx[0],
+						code,
+						color,
+						flip_screen,flip_screen,
+						8*sx,8*sy,
+						0,TRANSPARENCY_NONE,0);
+			}
+		}
+
+		/* copy the temporary bitmap to the screen */
+		if (choplifter_scroll_x_on)
+		{
+			if (flip_screen)
+			{
+				int scrollx_row_flip[32],i;
+
+				for (i = 0; i < 32; i++)
+					scrollx_row_flip[31-i] = (256-scrollx_row[i]) & 0xff;
+
+				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+			}
+			else
+				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+		}
+		else
+			copybitmap(bitmap,tmp_bitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+	}
+	else
+	{
+		priority <<= 3;
+
+		for (offs = 0;offs < system1_backgroundram_size;offs += 2)
+		{
+			if ((system1_backgroundram[offs+1] & 0x08) == priority)
+			{
+				int code,color;
+
+
+				code = (system1_backgroundram[offs] | (system1_backgroundram[offs+1] << 8));
+				code = ((code >> 4) & 0x800) | (code & 0x7ff);	/* Heavy Metal only */
+				color = ((code >> 5) & 0x3f) + 0x40;
+				sx = (offs/2) % 32;
+				sy = (offs/2) / 32;
+
+				if (flip_screen)
+				{
+					sx = 8*(31-sx);
+
+					if (choplifter_scroll_x_on)
+						sx = (sx - scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
+
+					sy = 31 - sy;
+				}
+				else
+				{
+					sx = 8*sx;
+
+					if (choplifter_scroll_x_on)
+						sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
+				}
+
+				drawgfx(bitmap,Machine->gfx[0],
+						code,
+						color,
+						flip_screen,flip_screen,
+						sx,8*sy,
+						&Machine->visible_area,TRANSPARENCY_PEN,0);
+			}
+		}
+	}
+}
+
 VIDEO_UPDATE( choplifter )
 {
 	int drawn;
@@ -678,12 +790,12 @@ VIDEO_UPDATE( shtngmst )
 	int drawn;
 
 
-	chplft_draw_bg(bitmap,-1);
+	shtngmst_draw_bg(bitmap,-1);
 	drawn = system1_draw_fg(bitmap,0);
 	/* redraw low priority bg tiles if necessary */
-	if (drawn) chplft_draw_bg(bitmap,0);
+	if (drawn) shtngmst_draw_bg(bitmap,0);
 	draw_sprites(bitmap);
-	chplft_draw_bg(bitmap,1);
+	shtngmst_draw_bg(bitmap,1);
 	system1_draw_fg(bitmap,1);
 
 	/* even if screen is off, sprites must still be drawn to update the collision table */
