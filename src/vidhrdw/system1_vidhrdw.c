@@ -708,7 +708,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				int scrollx_row_flip[32];
 
 				for (i = 0; i < 32; i++)
-					scrollx_row_flip[31-i] = (256-(scrollx_row[0]-align)) & 0xff; /* piggyback hack to get scrolling working */
+					scrollx_row_flip[31-i] = (256-(scrollx_row[0]+align)) & 0xff; /* piggyback hack to get scrolling working */
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
@@ -744,7 +744,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 
 				if (flip_screen)
 				{
-					sx = 8*(31-(sx-align));
+					sx = 8*(31-(sx+align));
 
 					if (choplifter_scroll_x_on)
 						sx = (sx - scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
