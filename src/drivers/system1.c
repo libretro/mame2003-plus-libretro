@@ -1521,7 +1521,7 @@ INPUT_PORTS_START( shtngmst )
 	PORT_DIPSETTING(    0x0d, "+10" )
 	PORT_DIPSETTING(    0x0e, "+12" )
 	PORT_DIPSETTING(    0x0f, "+14" )
-	PORT_DIPNAME( 0xf0, 0xa0, "Gun X Offset" ) /* SW 2 */
+	PORT_DIPNAME( 0xf0, 0x70, "Gun X Offset" ) /* SW 2 */
 	PORT_DIPSETTING(    0x00, "-16" )
 	PORT_DIPSETTING(    0x10, "-14" )
 	PORT_DIPSETTING(    0x20, "-12" )

@@ -232,6 +232,7 @@ WRITE_HANDLER( system1_sprites_collisionram_w )
 
 extern struct GameDriver driver_wbml;
 extern struct GameDriver driver_ufosensi;
+extern struct GameDriver driver_shtngmst;
 
 static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 {
@@ -273,7 +274,8 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 		/* the +1 prevents sprite lag in Wonder Boy */
 		x = sprite_base[SPR_X_LO] + ((sprite_base[SPR_X_HI] & 0x01) << 8) + 1;
 		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml ||
-			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi)
+			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi ||
+			Machine->gamedrv == &driver_shtngmst || Machine->gamedrv->clone_of == &driver_shtngmst)
 		{
 			x += 7*2;
 		}
@@ -656,6 +658,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 {
 	int sx,sy,offs;
 	int choplifter_scroll_x_on = (system1_scrollx_ram[0] == 0xe5 && system1_scrollx_ram[1] == 0xff) ? 0 : 1;
+	int align = 5; /* align bg to sprites */
 
 
 	if (priority == -1)
@@ -681,12 +684,6 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				sx = (offs/2) % 32;
 				sy = (offs/2) / 32;
 
-				if (flip_screen)
-				{
-					sx = 31 - sx;
-					sy = 31 - sy;
-				}
-
 				drawgfx(tmp_bitmap,Machine->gfx[0],
 						code,
 						color,
@@ -700,22 +697,12 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 		if (choplifter_scroll_x_on)
 		{
 			int i;
-			if (flip_screen)
-			{
-				int scrollx_row_flip[32];
+			int scrollx_row_shift[32];
 
-				for (i = 0; i < 32; i++)
-					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
+			for (i = 0; i < 32; i++)
+				scrollx_row_shift[i] = (scrollx_row[0]+align) & 0xff; /* piggyback hack to get scrolling working */
 
-				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-			}
-			else
-			{
-				for (i = 0; i < 32; i++)
-					scrollx_row[i] = (scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
-
-				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-			}
+			copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_shift,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 		}
 		else
 			copybitmap(bitmap,tmp_bitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
@@ -737,22 +724,10 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				sx = (offs/2) % 32;
 				sy = (offs/2) / 32;
 
-				if (flip_screen)
-				{
-					sx = 8*(31-sx);
+				sx = 8*sx+align;
 
-					if (choplifter_scroll_x_on)
-						sx = (sx - scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
-
-					sy = 31 - sy;
-				}
-				else
-				{
-					sx = 8*sx;
-
-					if (choplifter_scroll_x_on)
-						sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
-				}
+				if (choplifter_scroll_x_on)
+					sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
 
 				drawgfx(bitmap,Machine->gfx[0],
 						code,
