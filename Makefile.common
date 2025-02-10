@@ -424,7 +424,6 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/topspeed_vidhrdw.c $(CORE_DIR)/drivers/topspeed.c \
 	$(CORE_DIR)/machine/arkanoid_machine.c $(CORE_DIR)/vidhrdw/arkanoid_vidhrdw.c $(CORE_DIR)/drivers/arkanoid.c \
 	$(CORE_DIR)/vidhrdw/superqix_vidhrdw.c $(CORE_DIR)/drivers/superqix.c \
-	$(CORE_DIR)/vidhrdw/pbillian_vidhrdw.c $(CORE_DIR)/drivers/pbillian.c $(CORE_DIR)/sndhrdw/pbillian_sndhrdw.c \
 	$(CORE_DIR)/vidhrdw/exzisus_vidhrdw.c $(CORE_DIR)/drivers/exzisus.c \
 	$(CORE_DIR)/drivers/taito_x.c $(CORE_DIR)/machine/cchip.c \
 	$(CORE_DIR)/vidhrdw/minivadr_vidhrdw.c $(CORE_DIR)/drivers/minivadr.c \

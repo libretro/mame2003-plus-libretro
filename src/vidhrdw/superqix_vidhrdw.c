@@ -9,30 +9,96 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-static int gfxbank;
-static UINT8 *superqix_bitmapram,*superqix_bitmapram2,*superqix_bitmapram_dirty,*superqix_bitmapram2_dirty;
-static struct mame_bitmap *tmpbitmap2;
-int sqix_minx,sqix_maxx,sqix_miny,sqix_maxy;
-int sqix_last_bitmap;
-int sqix_current_bitmap;
+data8_t *superqix_videoram;
+int pbillian_show_power;
 
+static int gfxbank;
+static struct mame_bitmap *bitmap1,*bitmap2;
 static struct tilemap *bg_tilemap;
+
+data8_t p_ram[0x200];
+data8_t sq_bitmap_1[0xffff];// put the right size in at some point
+data8_t sq_bitmap_2[0xffff];// put the right size in at some point 
+
+
+data8_t *superqix_bitmapram  = sq_bitmap_1;
+data8_t *superqix_bitmapram2 = sq_bitmap_2;
+
+/***************************************************************************
+
+  Callbacks for the TileMap code
+
+***************************************************************************/
+
+static void pb_get_bg_tile_info(int tile_index)
+{
+	int attr = superqix_videoram[tile_index + 0x400];
+	int code = superqix_videoram[tile_index] + 256 * (attr & 0x7);
+	int color = (attr & 0xf0) >> 4;
+	SET_TILE_INFO(0, code, color, 0)
+}
+
+static void sqix_get_bg_tile_info(int tile_index)
+{
+	int attr = superqix_videoram[tile_index + 0x400];
+	int bank = (attr & 0x04) ? 0 : 1;
+	int code = superqix_videoram[tile_index] + 256 * (attr & 0x03);
+	int color = (attr & 0xf0) >> 4;
+
+	if (bank) code += 1024 * gfxbank;
+
+	SET_TILE_INFO(bank, code, color, TILE_SPLIT((attr & 0x08) >> 3))
+}
+
+
+
+/***************************************************************************
+
+  Start the video hardware emulation.
+
+***************************************************************************/
+
+VIDEO_START( pbillian )
+{
+	paletteram = p_ram;
+	bg_tilemap = tilemap_create(pb_get_bg_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 8, 8,32,32);
+
+	if (!bg_tilemap)
+		return 1;
+
+	return 0;
+}
+
+VIDEO_START( superqix )
+{
+	paletteram = p_ram;
+	bitmap1 = auto_bitmap_alloc(256, 256);
+	bitmap2 = auto_bitmap_alloc(256, 256);
+	bg_tilemap = tilemap_create(sqix_get_bg_tile_info, tilemap_scan_rows, TILEMAP_SPLIT, 8, 8, 32, 32);
+
+	if (!bitmap1 || !bitmap2 || !bg_tilemap)
+		return 1;
+
+	tilemap_set_transmask(bg_tilemap,0,0xffff,0x0000); /* split type 0 is totally transparent in front half */
+	tilemap_set_transmask(bg_tilemap,1,0x0001,0xfffe); /* split type 1 has pen 0 transparent in front half */
+
+	return 0;
+}
+
+
+
+/***************************************************************************
+
+  Memory handlers
+
+***************************************************************************/
 
 WRITE_HANDLER( superqix_videoram_w )
 {
-	if (videoram[offset] != data)
+	if (superqix_videoram[offset] != data)
 	{
-		videoram[offset] = data;
-		tilemap_mark_tile_dirty(bg_tilemap, offset);
-	}
-}
-
-WRITE_HANDLER( superqix_colorram_w )
-{
-	if (colorram[offset] != data)
-	{
-		colorram[offset] = data;
-		tilemap_mark_tile_dirty(bg_tilemap, offset);
+		superqix_videoram[offset] = data;
+		tilemap_mark_tile_dirty(bg_tilemap, offset & 0x3ff);
 	}
 }
 
@@ -41,193 +107,126 @@ READ_HANDLER( superqix_bitmapram_r )
 	return superqix_bitmapram[offset];
 }
 
-WRITE_HANDLER( superqix_bitmapram_w )
-{
-	if (data != superqix_bitmapram[offset])
-	{
-		int x,y;
-		superqix_bitmapram[offset] = data;
-		superqix_bitmapram_dirty[offset] = 1;
-		x=offset%128;
-		y=offset/128;
-		if(x<sqix_minx) sqix_minx=x;
-		if(x>sqix_maxx) sqix_maxx=x;
-		if(y<sqix_miny) sqix_miny=y;
-		if(y>sqix_maxy) sqix_maxy=y;
-	}
-}
-
 READ_HANDLER( superqix_bitmapram2_r )
 {
 	return superqix_bitmapram2[offset];
+}
+
+WRITE_HANDLER( superqix_bitmapram_w )
+{
+	
+	if (superqix_bitmapram[offset] != data)
+	{
+		int x = 2 * (offset % 128);
+		int y = offset / 128 + 16;
+
+		superqix_bitmapram[offset] = data;
+
+		plot_pixel(bitmap1, x,   y, Machine->pens[data >> 4]);
+		plot_pixel(bitmap1, x+1, y, Machine->pens[data & 0x0f]);
+
+	}
+
+superqix_bitmapram[offset]=data;
 }
 
 WRITE_HANDLER( superqix_bitmapram2_w )
 {
 	if (data != superqix_bitmapram2[offset])
 	{
-		int x,y;
+		int x = 2 * (offset % 128);
+		int y = offset / 128 + 16;
+
 		superqix_bitmapram2[offset] = data;
-		superqix_bitmapram2_dirty[offset] = 1;
-		x=offset%128;
-		y=offset/128;
-		if(x<sqix_minx) sqix_minx=x;
-		if(x>sqix_maxx) sqix_maxx=x;
-		if(y<sqix_miny) sqix_miny=y;
-		if(y>sqix_maxy) sqix_maxy=y;
+
+		plot_pixel(bitmap2, x,   y, Machine->pens[data >> 4]);
+		plot_pixel(bitmap2, x+1, y, Machine->pens[data & 0x0f]);
 	}
+superqix_bitmapram2[offset]=data;
+}
+
+WRITE_HANDLER( pbillian_0410_w )
+{
+	int bankaddress;
+	UINT8 *rom = memory_region(REGION_CPU1);
+
+	/*
+	 -------0  ? [not used]
+	 ------1-  coin counter 1
+	 -----2--  coin counter 2
+	 ----3---  rom 2 HI (reserved for ROM banking , not used)
+	 ---4----  nmi enable/disable
+	 --5-----  flip screen
+	*/
+
+	coin_counter_w(0,data & 0x02);
+	coin_counter_w(1,data & 0x04);
+
+	bankaddress = 0x10000 + ((data & 0x08) >> 3) * 0x4000;
+	cpu_setbank(1,&rom[bankaddress]);
+
+	interrupt_enable_w(0,data & 0x10);
+	flip_screen_set(data & 0x20);
 }
 
 WRITE_HANDLER( superqix_0410_w )
 {
 	int bankaddress;
-	UINT8 *RAM = memory_region(REGION_CPU1);
+	UINT8 *rom = memory_region(REGION_CPU1);
 
 	/* bits 0-1 select the tile bank */
 	if (gfxbank != (data & 0x03))
 	{
 		gfxbank = data & 0x03;
-		tilemap_mark_all_tiles_dirty (bg_tilemap);
+		tilemap_mark_all_tiles_dirty(bg_tilemap);
 	}
 
-	/* bit 2 controls bitmap 1/2 */
-	sqix_current_bitmap=data&4;
-	if(sqix_current_bitmap !=sqix_last_bitmap)
-	{
-		sqix_last_bitmap=sqix_current_bitmap;
-		memset(superqix_bitmapram_dirty,1,0x7000);
-		memset(superqix_bitmapram2_dirty,1,0x7000);
-		sqix_minx=0;sqix_maxx=127;sqix_miny=0;sqix_maxy=223;
-	}
+	/* bit 2 unused? (maybe space for one more gfx bank) */
 
 	/* bit 3 enables NMI */
 	interrupt_enable_w(offset,data & 0x08);
 
 	/* bits 4-5 control ROM bank */
 	bankaddress = 0x10000 + ((data & 0x30) >> 4) * 0x4000;
-	cpu_setbank(1,&RAM[bankaddress]);
+	cpu_setbank(1,&rom[bankaddress]);
 }
 
-WRITE_HANDLER( superqix_flipscreen_w )
+
+
+/***************************************************************************
+
+  Display refresh
+
+***************************************************************************/
+
+static void pb_draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
-	flip_screen_set(!data);
-}
+	int offs;
 
-static void get_bg_tile_info(int tile_index)
-{
-	int attr = colorram[tile_index];
-	int bank = (attr & 0x04) ? 0 : (1 + gfxbank);
-	int code = videoram[tile_index] + 256 * (attr & 0x03);
-	int color = (attr & 0xf0) >> 4;
-
-	tile_info.priority = (attr & 0x08) >> 3;
-
-	SET_TILE_INFO(bank, code, color, 0)
-}
-
-VIDEO_START( superqix )
-{
-	/* palette RAM is accessed thorough I/O ports, so we have to */
-	/* allocate it ourselves */
-	if ((paletteram = auto_malloc(256 * sizeof(UINT8))) == 0)
-		return 1;
-
-	if ((superqix_bitmapram = auto_malloc(0x7000 * sizeof(UINT8))) == 0)
-		return 1;
-
-	if ((superqix_bitmapram2 = auto_malloc(0x7000 * sizeof(UINT8))) == 0)
-		return 1;
-
-	if ((superqix_bitmapram_dirty = auto_malloc(0x7000 * sizeof(UINT8))) == 0)
-		return 1;
-
-	memset(superqix_bitmapram_dirty,1,0x7000);
-
-	if ((superqix_bitmapram2_dirty = auto_malloc(0x7000 * sizeof(UINT8))) == 0)
-		return 1;
-
-	memset(superqix_bitmapram2_dirty,1,0x7000);
-
-	if ((tmpbitmap2 = auto_bitmap_alloc(256, 256)) == 0)
-		return 1;
-
-	sqix_minx=0;sqix_maxx=127;sqix_miny=0;sqix_maxy=223;
-	sqix_last_bitmap=0;
-
-	bg_tilemap = tilemap_create(get_bg_tile_info, tilemap_scan_rows, 
-		TILEMAP_TRANSPARENT, 8, 8, 32, 32);
-	
-	if (!bg_tilemap)
-		return 1;
-
-	tilemap_set_transparent_pen(bg_tilemap, 0);
-
-	return 0;
-}
-
-static void superqix_draw_bitmap( struct mame_bitmap *bitmap )
-{
-	int i;
-	UINT8 pens[16];
-
-	pens[0]=0;
-
-	for (i=1; i<16; i++)
-		pens[i]=Machine->pens[i];
-
-	if (sqix_current_bitmap==0)		/* Bitmap 1 */
+	for (offs = 0; offs < spriteram_size; offs += 4)
 	{
-		int x,y;
+		int attr = spriteram[offs + 3];
+		int code = ((spriteram[offs] & 0xfc) >> 2) + 64 * (attr & 0x0f);
+		int color = (attr & 0xf0) >> 4;
+		int sx = spriteram[offs + 1] + 256 * (spriteram[offs] & 0x01);
+		int sy = spriteram[offs + 2];
 
-		for (y = sqix_miny;y <= sqix_maxy;y++)
+		if (flip_screen)
 		{
-			for (x = sqix_minx;x <= sqix_maxx;x++)
-			{
-				int sx,sy,d;
-
-				if (superqix_bitmapram_dirty[y*128+x])
-				{
-					superqix_bitmapram_dirty[y*128+x]=0;
-					d = superqix_bitmapram[y*128+x];
-
-					sx = 2*x;
-					sy = y+16;
-
-					plot_pixel(tmpbitmap2, sx    , sy, pens[d >> 4]);
-					plot_pixel(tmpbitmap2, sx + 1, sy, pens[d & 0x0f]);
-				}
-			}
+			sx = 240 - sx;
+			sy = 240 - sy;
 		}
+
+		drawgfx(bitmap,Machine->gfx[1],
+				code,
+				color,
+				flip_screen, flip_screen,
+				sx, sy,
+				cliprect, TRANSPARENCY_PEN, 0);
 	}
-	else		/* Bitmap 2 */
-	{
-		int x,y;
-
-		for (y = sqix_miny;y <= sqix_maxy;y++)
-		{
-			for (x = sqix_minx;x <= sqix_maxx;x++)
-			{
-				int sx,sy,d;
-
-				if (superqix_bitmapram2_dirty[y*128+x])
-				{
-					superqix_bitmapram2_dirty[y*128+x]=0;
-					d = superqix_bitmapram2[y*128+x];
-
-					sx = 2*x;
-					sy = y+16;
-
-					plot_pixel(tmpbitmap2, sx    , sy, pens[d >> 4]);
-					plot_pixel(tmpbitmap2, sx + 1, sy, pens[d & 0x0f]);
-				}
-			}
-		}
-	}
-
-	copybitmap(bitmap,tmpbitmap2,flip_screen,flip_screen,0,0,&Machine->visible_area,TRANSPARENCY_PEN,0);
 }
 
-static void superqix_draw_sprites( struct mame_bitmap *bitmap )
+static void sqix_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int offs;
 
@@ -249,18 +248,47 @@ static void superqix_draw_sprites( struct mame_bitmap *bitmap )
 			flipy = !flipy;
 		}
 
-		drawgfx(bitmap,Machine->gfx[5],	code, color, flipx, flipy, sx, sy,
-				&Machine->visible_area, TRANSPARENCY_PEN, 0);
+		drawgfx(bitmap,Machine->gfx[2],
+				code,
+				color,
+				flipx, flipy,
+				sx, sy,
+				cliprect, TRANSPARENCY_PEN, 0);
+	}
+}
+
+VIDEO_UPDATE( pbillian )
+{
+	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
+	pb_draw_sprites(bitmap,cliprect);
+
+	if (pbillian_show_power)
+	{
+		static int last_power[2];
+		int curr_power;
+
+		curr_power = ((readinputport(4)&0x3f)*100)/0x3f;
+		if (last_power[0] != curr_power)
+		{
+			usrintf_showmessage	("Power %d%%", curr_power);
+			last_power[0] = curr_power;
+		}
+
+		curr_power = ((readinputport(6)&0x3f)*100)/0x3f;
+		if (last_power[1] != curr_power)
+		{
+			usrintf_showmessage	("Power %d%%", curr_power);
+			last_power[1] = curr_power;
+		}
 	}
 }
 
 VIDEO_UPDATE( superqix )
 {
-	fillbitmap(bitmap, get_black_pen(), cliprect);
-	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0);
-	superqix_draw_bitmap(bitmap);
-	superqix_draw_sprites(bitmap);
-	tilemap_draw(bitmap, cliprect, bg_tilemap, 1, 0);
-
-	sqix_minx=1000;sqix_maxx=-1;sqix_miny=1000;sqix_maxy=-1;
+	tilemap_draw(bitmap, cliprect, bg_tilemap, TILEMAP_BACK, 0);
+	copybitmap(bitmap,bitmap1,flip_screen,flip_screen,0,0,cliprect,TRANSPARENCY_PEN,0);
+	sqix_draw_sprites(bitmap,cliprect);
+	copybitmap(bitmap,bitmap2,flip_screen,flip_screen,0,0,cliprect,TRANSPARENCY_PEN,0);	/* not used? */
+	tilemap_draw(bitmap, cliprect, bg_tilemap, TILEMAP_FRONT, 0);
 }
+
