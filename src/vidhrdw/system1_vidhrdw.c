@@ -278,7 +278,7 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 			x += 7*2;
 		}
 
-		if (!strcmp(Machine->gamedrv->name, "shtngmst")) x += 10*2;
+		if (!strcmp(Machine->gamedrv->name, "shtngmst")) x += 8*2;
 
 		x_flipped = x;
 		y = y_flipped = sy+row;
@@ -717,7 +717,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				int scrollx_row_shift[32];
 
 				for (i = 0; i < 32; i++)
-					scrollx_row_shift[i] = (scrollx_row[0]+8) & 0xff; /* piggyback hack to get scrolling working */
+					scrollx_row_shift[i] = (scrollx_row[0]+6) & 0xff; /* piggyback hack to get scrolling working */
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_shift,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
@@ -753,7 +753,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				}
 				else
 				{
-					sx = 8*sx+8;
+					sx = 8*sx+6;
 
 					if (choplifter_scroll_x_on)
 						sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
