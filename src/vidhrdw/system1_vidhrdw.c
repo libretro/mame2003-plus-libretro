@@ -704,6 +704,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 			if (flip_screen)
 			{
 				int scrollx_row_flip[32];
+				int scrollx_row_shift[32];
 
 				for (i = 0; i < 32; i++)
 					scrollx_row_flip[31-i] = (256-scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
@@ -712,11 +713,10 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 			}
 			else
 			{
-				scrollx_row[0] += 8;
 				for (i = 0; i < 32; i++)
-					scrollx_row[i] = (scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
+					scrollx_row_shift[i] = (scrollx_row[0]+8) & 0xff; /* piggyback hack to get scrolling working */
 
-				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_shift,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
 		}
 		else
