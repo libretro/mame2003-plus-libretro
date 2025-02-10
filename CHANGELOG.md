@@ -1137,5 +1137,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Bubble Buster a unique version of Puzzle Bobble with totally different gameplay and music [arcadez, FBNDev]
 * Fixed the attract mode for 64th Street, Chimera Beast, pengo, updated the pengo sets and fixed the gameover annimation for Vapor Trail [grant2258]
 * Added reset playfield dip switch option in Space Wars [mahoneyt944]
-* Merged pbillian.c and superqix.c updating to MAME90 which improves the emulation and sound for Prebillian and VS. Hot Smash both games now playable
-* [arcadez, grant2258]
+* Merged pbillian.c and superqix.c updating to MAME90 which improves the emulation and sound for Prebillian and VS. Hot Smash both games now playable [arcadez, grant2258]
