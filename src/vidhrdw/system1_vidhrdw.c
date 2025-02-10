@@ -279,7 +279,6 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 		{
 			x += 7*2;
 		}
-
 		x_flipped = x;
 		y = y_flipped = sy+row;
 
