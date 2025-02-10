@@ -172,6 +172,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Power Up Baseball
+* Prebillian 
 * Progear
 * Puzz Loop 2 (All Sets)
 * Puzzle Break
@@ -253,6 +254,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Vasara 2
 * Virtua Bowling
 * Virtua Fighter
+* Vs. Hot Smash
 * Wheels Runner
 * Wing Force
 * Wing Shooting Championship
@@ -1135,3 +1137,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Added support for Bubble Buster a unique version of Puzzle Bobble with totally different gameplay and music [arcadez, FBNDev]
 * Fixed the attract mode for 64th Street, Chimera Beast, pengo, updated the pengo sets and fixed the gameover annimation for Vapor Trail [grant2258]
 * Added reset playfield dip switch option in Space Wars [mahoneyt944]
+* added new games Prebillian and Vs. Hot Smash [arcadez]
