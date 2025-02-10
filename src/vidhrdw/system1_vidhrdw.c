@@ -683,7 +683,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 
 				if (flip_screen)
 				{
-					sx = 31-sx;
+					sx = 31 - sx;
 
 					if (choplifter_scroll_x_on)
 						sx = (sx - scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
