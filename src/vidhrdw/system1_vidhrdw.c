@@ -712,8 +712,9 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 			}
 			else
 			{
-				for (i = 1; i < 32; i++)
-					scrollx_row[i] = (scrollx_row[0]+8) & 0xff; /* piggyback hack to get scrolling working */
+				scrollx_row[0] += 8;
+				for (i = 0; i < 32; i++)
+					scrollx_row[i] = (scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
 
 				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 			}
