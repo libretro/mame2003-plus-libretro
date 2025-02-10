@@ -799,7 +799,7 @@ VIDEO_UPDATE( choplifter )
 VIDEO_UPDATE( shtngmst )
 {
 	int drawn;
-
+flip_screen = 1;
 
 	shtngmst_draw_bg(bitmap,-1);
 	drawn = system1_draw_fg(bitmap,0);
