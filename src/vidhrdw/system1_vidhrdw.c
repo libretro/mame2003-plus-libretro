@@ -684,12 +684,6 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				sx = (offs/2) % 32;
 				sy = (offs/2) / 32;
 
-				if (flip_screen)
-				{
-					sx = 31 - sx;
-					sy = 31 - sy;
-				}
-
 				drawgfx(tmp_bitmap,Machine->gfx[0],
 						code,
 						color,
@@ -703,24 +697,12 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 		if (choplifter_scroll_x_on)
 		{
 			int i;
-			if (flip_screen)
-			{
-				int scrollx_row_flip[32];
+			int scrollx_row_shift[32];
 
-				for (i = 0; i < 32; i++)
-					scrollx_row_flip[31-i] = ((256-scrollx_row[0])-align) & 0xff; /* piggyback hack to get scrolling working */
+			for (i = 0; i < 32; i++)
+				scrollx_row_shift[i] = (scrollx_row[0]+align) & 0xff; /* piggyback hack to get scrolling working */
 
-				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_flip,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-			}
-			else
-			{
-				int scrollx_row_shift[32];
-
-				for (i = 0; i < 32; i++)
-					scrollx_row_shift[i] = (scrollx_row[0]+align) & 0xff; /* piggyback hack to get scrolling working */
-
-				copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_shift,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-			}
+			copyscrollbitmap(bitmap,tmp_bitmap,32,scrollx_row_shift,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 		}
 		else
 			copybitmap(bitmap,tmp_bitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
@@ -742,22 +724,10 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 				sx = (offs/2) % 32;
 				sy = (offs/2) / 32;
 
-				if (flip_screen)
-				{
-					sx = 8*((31-sx)-align);
+				sx = 8*sx+align;
 
-					if (choplifter_scroll_x_on)
-						sx = (sx - scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
-
-					sy = 31 - sy;
-				}
-				else
-				{
-					sx = 8*sx+align;
-
-					if (choplifter_scroll_x_on)
-						sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
-				}
+				if (choplifter_scroll_x_on)
+					sx = (sx + scrollx_row[0]) & 0xff; /* piggyback hack to get scrolling working */
 
 				drawgfx(bitmap,Machine->gfx[0],
 						code,
@@ -799,7 +769,7 @@ VIDEO_UPDATE( choplifter )
 VIDEO_UPDATE( shtngmst )
 {
 	int drawn;
-flip_screen = 1;
+
 
 	shtngmst_draw_bg(bitmap,-1);
 	drawn = system1_draw_fg(bitmap,0);
