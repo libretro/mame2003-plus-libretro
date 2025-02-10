@@ -273,7 +273,8 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 		/* the +1 prevents sprite lag in Wonder Boy */
 		x = sprite_base[SPR_X_LO] + ((sprite_base[SPR_X_HI] & 0x01) << 8) + 1;
 		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml ||
-			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi)
+			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi ||
+      (!strcmp(Machine->gamedrv->name, "shtngmst")) )
 		{
 			x += 7*2;
 		}
@@ -691,7 +692,7 @@ static void shtngmst_draw_bg(struct mame_bitmap *bitmap, int priority)
 						code,
 						color,
 						flip_screen,flip_screen,
-						8*sx+8,8*sy,
+						8*sx,8*sy,
 						0,TRANSPARENCY_NONE,0);
 			}
 		}
