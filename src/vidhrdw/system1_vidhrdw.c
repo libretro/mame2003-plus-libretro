@@ -278,7 +278,7 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 			x += 7*2;
 		}
 
-		if (!strcmp(Machine->gamedrv->name, "shtngmst")) x += 9*2;
+		if (!strcmp(Machine->gamedrv->name, "shtngmst")) x += 10*2;
 
 		x_flipped = x;
 		y = y_flipped = sy+row;
