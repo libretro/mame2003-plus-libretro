@@ -232,6 +232,7 @@ WRITE_HANDLER( system1_sprites_collisionram_w )
 
 extern struct GameDriver driver_wbml;
 extern struct GameDriver driver_ufosensi;
+extern struct GameDriver driver_shtngmst;
 
 static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 {
@@ -273,12 +274,11 @@ static void draw_sprite(struct mame_bitmap *bitmap,int spr_number)
 		/* the +1 prevents sprite lag in Wonder Boy */
 		x = sprite_base[SPR_X_LO] + ((sprite_base[SPR_X_HI] & 0x01) << 8) + 1;
 		if (Machine->gamedrv == &driver_wbml || Machine->gamedrv->clone_of == &driver_wbml ||
-			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi)
+			Machine->gamedrv == &driver_ufosensi || Machine->gamedrv->clone_of == &driver_ufosensi ||
+			Machine->gamedrv == &driver_shtngmst || Machine->gamedrv->clone_of == &driver_shtngmst)
 		{
 			x += 7*2;
 		}
-
-		if (!strcmp(Machine->gamedrv->name, "shtngmst")) x += 7*2;
 
 		x_flipped = x;
 		y = y_flipped = sy+row;
