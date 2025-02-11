@@ -279,6 +279,9 @@ PORT_END
 
 static READ_HANDLER( gun_trigger_r )
 {
+	if ((readinputport(5) & 0x40) && BIT(gun_output, 0))
+		gun_trigger = 1;
+
 	/* bit 6 = gun trigger latch */
 	/* bit 7 = light sensor? */
 	return ~(gun_trigger << 6);
@@ -359,13 +362,7 @@ static void mcuenable_hack(void)
 	system1_ram[0x2ff]=0x49; /* I ? */
 	system1_ram[0x3ff]=0x54; /* T ? */
 }
-/*
-INPUT_CHANGED_MEMBER(shtngmst_state::gun_trigger)
-{
-	if (newval && BIT(gun_output, 0))
-		gun_trigger = 1;
-}
-*/
+
 static WRITE_HANDLER( gun_output_w )
 {
 	/* bit 0 readies the gun? */
