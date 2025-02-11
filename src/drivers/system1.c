@@ -279,7 +279,7 @@ PORT_END
 
 static READ_HANDLER( gun_trigger_r )
 { usrintf_showmessage("%2x", readinputport(5));
-	if ((readinputport(5) & 0x40) && BIT(gun_output, 0))
+	if ((readinputport(5) & 0x10) && BIT(gun_output, 0))
 		gun_trigger = 1;
 
 	/* bit 6 = gun trigger latch */
@@ -1519,9 +1519,7 @@ INPUT_PORTS_START( shtngmst )
 	DSW1_PORT
 
 	PORT_START  /* trigger */
-	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 
 	PORT_START /* 1c */
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 48, 8, 0x00, 0xff )
