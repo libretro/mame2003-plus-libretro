@@ -1521,7 +1521,7 @@ INPUT_PORTS_START( shtngmst )
 	DSW1_PORT
 
 	PORT_START  /* trigger must pulse 1 frame for HS entry to work */
-	PORT_BIT_IMPULSE( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1, 1 )
+	PORT_BIT/*_IMPULSE*/( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1/*, 1*/ )
 
 	PORT_START /* 1c */
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 48, 8, 0x00, 0xff )
