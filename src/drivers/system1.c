@@ -23,6 +23,8 @@ TODO: - background is misplaced in wbmlju
 
 
 static UINT8 *system1_ram;
+static UINT8 gun_trigger = 0;
+static UINT8 gun_output = 0;
 
 static MACHINE_INIT( system1 )
 {
@@ -275,7 +277,7 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
-static WRITE_HANDLER( gun_trigger_r )
+static READ_HANDLER( gun_trigger_r )
 {
 	/* bit 6 = gun trigger latch */
 	/* bit 7 = light sensor? */
