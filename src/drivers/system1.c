@@ -275,6 +275,13 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
+static WRITE_HANDLER( gun_trigger_r )
+{
+	/* bit 6 = gun trigger latch */
+	/* bit 7 = light sensor? */
+	return ~(gun_trigger << 6);
+}
+
 static PORT_READ_START( sht_readport )
 /*	{ 0x00, 0x00, input_port_0_r }, joy1 */
 /*	{ 0x04, 0x04, input_port_1_r }, joy2 */
@@ -284,7 +291,7 @@ static PORT_READ_START( sht_readport )
 	{ 0x10, 0x10, input_port_4_r }, /* DIP1 ... and some others from here */
 									/* but there are games which check BOTH! */
 
-	{ 0x12, 0x12, input_port_5_r }, /* trigger is here.. */
+	{ 0x12, 0x12, gun_trigger_r }, /* trigger is here.. */
 	{ 0x1c, 0x1c, input_port_6_r }, /* gunx */
 	{ 0x1d, 0x1d, input_port_7_r }, /* guny */
 	{ 0x18, 0x18, input_port_8_r }, /* 2 rotary switches */
@@ -337,7 +344,7 @@ static const int shtngtab[]=
 	0xC3,0x39,0x04,
 	-1
 };
-static WRITE_HANDLER( mcuenable_hack_w )
+static void mcuenable_hack(void)
 {
 	/*in fact it's gun feedback write, not mcu related */
 	int i=0;
@@ -350,9 +357,29 @@ static WRITE_HANDLER( mcuenable_hack_w )
 	system1_ram[0x2ff]=0x49; /* I ? */
 	system1_ram[0x3ff]=0x54; /* T ? */
 }
+/*
+INPUT_CHANGED_MEMBER(shtngmst_state::gun_trigger)
+{
+	if (newval && BIT(gun_output, 0))
+		gun_trigger = 1;
+}
+*/
+static WRITE_HANDLER( gun_output_w )
+{
+	/* bit 0 readies the gun? */
+	if (!BIT(data, 0))
+		gun_trigger = 0;
+
+	/* bit 2 = gun solenoid */
+	/*gun_solenoid = BIT(data, 2);*/
+
+	gun_output = data;
+
+	mcuenable_hack();
+}
 
 static PORT_WRITE_START( sht_writeport )
-	{ 0x10, 0x10, mcuenable_hack_w },
+	{ 0x10, 0x10, gun_output_w },
 	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
 	{ 0x15, 0x15, chplft_videomode_w },
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
