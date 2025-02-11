@@ -278,7 +278,7 @@ static PORT_READ_START( wbml_readport )
 PORT_END
 
 static READ_HANDLER( gun_trigger_r )
-{
+{ usrintf_showmessage("%2x", readinputport(5));
 	if ((readinputport(5) & 0x40) && BIT(gun_output, 0))
 		gun_trigger = 1;
 
