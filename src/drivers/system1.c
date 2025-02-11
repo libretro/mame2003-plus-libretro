@@ -277,6 +277,11 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
+static READ_HANDLER( gun_output_r )
+{
+	return gun_output;
+}
+
 static READ_HANDLER( gun_trigger_r )
 {
 	UINT8 newval = readinputport(5);
@@ -295,7 +300,7 @@ static PORT_READ_START( sht_readport )
 	{ 0x08, 0x08, input_port_2_r }, /* coin,start */
 	{ 0x0c, 0x0c, input_port_3_r }, /* DIP2 */
 	{ 0x0d, 0x0d, input_port_4_r }, /* DIP1 some games read it from here... */
-	{ 0x10, 0x10, input_port_4_r }, /* DIP1 ... and some others from here */
+	{ 0x10, 0x10, gun_output_r }, /* DIP1 ... and some others from here */
 									/* but there are games which check BOTH! */
 
 	{ 0x12, 0x12, gun_trigger_r }, /* trigger is here.. */
