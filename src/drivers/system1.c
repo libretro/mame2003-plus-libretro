@@ -23,6 +23,8 @@ TODO: - background is misplaced in wbmlju
 
 
 static UINT8 *system1_ram;
+static UINT8 gun_trigger = 0;
+static UINT8 gun_output = 0;
 
 static MACHINE_INIT( system1 )
 {
@@ -275,16 +277,33 @@ static PORT_READ_START( wbml_readport )
 	{ 0x19, 0x19, system1_videomode_r },  /* mirror address */
 PORT_END
 
+static READ_HANDLER( gun_output_r )
+{
+	return gun_output;
+}
+
+static READ_HANDLER( gun_trigger_r )
+{
+	UINT8 newval = readinputport(5);
+
+	if (newval && BIT(gun_output, 0))
+		gun_trigger = 1;
+
+	/* bit 6 = gun trigger latch */
+	/* bit 7 = light sensor? */
+	return ~(gun_trigger << 6);
+}
+
 static PORT_READ_START( sht_readport )
 /*	{ 0x00, 0x00, input_port_0_r }, joy1 */
 /*	{ 0x04, 0x04, input_port_1_r }, joy2 */
 	{ 0x08, 0x08, input_port_2_r }, /* coin,start */
 	{ 0x0c, 0x0c, input_port_3_r }, /* DIP2 */
 	{ 0x0d, 0x0d, input_port_4_r }, /* DIP1 some games read it from here... */
-	{ 0x10, 0x10, input_port_4_r }, /* DIP1 ... and some others from here */
-									/* but there are games which check BOTH! */
+	{ 0x10, 0x10, gun_output_r }, /* DIP1 ... and some others from here */
+									/* but there are games which check BOTH! - gun read here instead */
 
-	{ 0x12, 0x12, input_port_5_r }, /* trigger is here.. */
+	{ 0x12, 0x12, gun_trigger_r }, /* trigger is here.. */
 	{ 0x1c, 0x1c, input_port_6_r }, /* gunx */
 	{ 0x1d, 0x1d, input_port_7_r }, /* guny */
 	{ 0x18, 0x18, input_port_8_r }, /* 2 rotary switches */
@@ -337,9 +356,9 @@ static const int shtngtab[]=
 	0xC3,0x39,0x04,
 	-1
 };
-static WRITE_HANDLER( mcuenable_hack_w )
+static void mcuenable_hack(void)
 {
-	/*in fact it's gun feedback write, not mcu related */
+	/* hooked gun feedback */
 	int i=0;
 	while(shtngtab[i]>=0)
 	{
@@ -351,8 +370,22 @@ static WRITE_HANDLER( mcuenable_hack_w )
 	system1_ram[0x3ff]=0x54; /* T ? */
 }
 
+static WRITE_HANDLER( gun_output_w )
+{
+	/* bit 0 readies the gun? */
+	if (!BIT(data, 0))
+		gun_trigger = 0;
+
+	/* bit 2 = gun solenoid */
+	/*gun_solenoid = BIT(data, 2);*/
+
+	gun_output = data;
+
+	mcuenable_hack();
+}
+
 static PORT_WRITE_START( sht_writeport )
-	{ 0x10, 0x10, mcuenable_hack_w },
+	{ 0x10, 0x10, gun_output_w },
 	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
 	{ 0x15, 0x15, chplft_videomode_w },
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
@@ -1492,10 +1525,8 @@ INPUT_PORTS_START( shtngmst )
 	PORT_START	  /* DSW0 */
 	DSW1_PORT
 
-	PORT_START  /* trigger */
-	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_START  /* trigger must pulse 1 frame for HS entry to work */
+	PORT_BIT_IMPULSE( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1, 1 )
 
 	PORT_START /* 1c */
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 48, 8, 0x00, 0xff )
