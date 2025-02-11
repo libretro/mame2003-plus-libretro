@@ -358,7 +358,7 @@ static const int shtngtab[]=
 };
 static void mcuenable_hack(void)
 {
-	/*in fact it's gun feedback write, not mcu related */
+	/* hooked gun feedback */
 	int i=0;
 	while(shtngtab[i]>=0)
 	{
