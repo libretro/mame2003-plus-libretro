@@ -181,7 +181,7 @@ static struct SN76496interface sn76496_interface =
 {
 	2,	/* 2 chips */
 	{ MAIN_CLOCK/2, MAIN_CLOCK/2 },	/* 4.1 MHz */
-	{ 50, 50 }
+	{ 25, 25 }
 };
 
 
