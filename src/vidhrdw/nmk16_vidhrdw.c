@@ -24,7 +24,7 @@ static struct mame_bitmap *background_bitmap;
 
 ***************************************************************************/
 
-//not 100% right yet (check attract mode in raphero)
+/* not 100% right yet (check attract mode in raphero) */
 static UINT32 bg_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 {
 	/* logical (col,row) -> memory offset */
