@@ -58,9 +58,6 @@ TODO:
 - Cocktail mode is supported, but tilemap.c has problems with asymmetrical
   visible areas.
 - Macross2 dip switches (the ones currently listed match macross)
-- Macross2 background is wrong in level 2 at the end of the vertical scroll.
-  The tilemap layout is probably different from the one I used, the dimensions
-  should be correct but the page order is likely different.
 - Music timing in nouryoku is a little off.
 - DSW's in Tdragon2
 - In Bioship, there's an occasional flicker of one of the sprites composing big
@@ -159,7 +156,7 @@ WRITE16_HANDLER( bioship_bank_w );
 WRITE16_HANDLER( mustang_scroll_w );
 WRITE16_HANDLER( vandyke_scroll_w );
 WRITE16_HANDLER( twinactn_scroll_w );
-
+WRITE16_HANDLER( manybloc_scroll_w );
 
 VIDEO_START( gunnail );
 VIDEO_START( macross );
@@ -369,9 +366,7 @@ static MEMORY_READ16_START( manybloc_readmem )
 	{ 0x090000, 0x093fff, nmk_bgvideoram_r },
 	{ 0x09c000, 0x09cfff, MRA16_RAM }, /* Scroll? */
 	{ 0x09d000, 0x09d7ff, nmk_txvideoram_r },
-	{ 0x0f0000, 0x0f7fff, MRA16_RAM },
-	{ 0x0f8000, 0x0f8fff, MRA16_RAM },
-	{ 0x0f9000, 0x0fffff, MRA16_RAM },
+	{ 0x0f0000, 0x0fffff, MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( manybloc_writemem )
@@ -382,13 +377,10 @@ static MEMORY_WRITE16_START( manybloc_writemem )
 	{ 0x08001c, 0x08001d, MWA16_NOP },			/* See notes at the top of the driver */
 	{ 0x08001e, 0x08001f, soundlatch_word_w },
 	{ 0x088000, 0x0883ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
-	{ 0x08c000, 0x08c007, nmk_scroll_w },
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
-	{ 0x09c000, 0x09cfff, MWA16_RAM }, /* Scroll? */
+	{ 0x09c000, 0x09cfff, manybloc_scroll_w, &gunnail_scrollram },
 	{ 0x09d000, 0x09d7ff, nmk_txvideoram_w, &nmk_txvideoram },
-	{ 0x0f0000, 0x0f7fff, MWA16_RAM },	/* Work RAM */
-	{ 0x0f8000, 0x0f8fff, MWA16_RAM, &spriteram16, &spriteram_size },
-	{ 0x0f9000, 0x0fffff, MWA16_RAM, &nmk16_mainram },
+	{ 0x0f0000, 0x0fffff, MWA16_RAM, &nmk16_mainram },
 MEMORY_END
 
 static MEMORY_READ_START( manybloc_sound_readmem )
@@ -548,9 +540,11 @@ static MEMORY_WRITE16_START( acrobatm_writemem )
     { 0x00000, 0x3ffff, MWA16_ROM },
 	{ 0x80000, 0x8ffff, MWA16_RAM, &nmk16_mainram },
 	{ 0xc0014, 0xc0015, nmk_flipscreen_w },
+	{ 0xc0016, 0xc0017, MWA16_NOP },
+	{ 0xc0018, 0xc0019, nmk_tilebank_w },
+	{ 0xc001e, 0xc001f, NMK004_w },
 	{ 0xc4000, 0xc45ff, paletteram16_RRRRGGGGBBBBxxxx_word_w, &paletteram16 },
 	{ 0xc8000, 0xc8007, nmk_scroll_w },
-	{ 0xc001e, 0xc001f, NMK004_w },
 	{ 0xcc000, 0xcffff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0xd4000, 0xd47ff, nmk_txvideoram_w, &nmk_txvideoram },
 MEMORY_END
@@ -1110,6 +1104,90 @@ static MEMORY_WRITE16_START( raphero_writemem )
 	{ 0x171000, 0x171fff, nmk_txvideoram_w },	/* mirror */
 	{ 0x1f0000, 0x1fffff, MWA16_RAM, &nmk16_mainram },	/* Work RAM again */
 MEMORY_END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 static MEMORY_READ_START( macross2_sound_readmem )
     { 0x0000, 0x7fff, MRA_ROM },
@@ -3287,7 +3365,7 @@ static MACHINE_DRIVER_START( manybloc )
 	MDRV_CPU_ADD(M68000, 10000000) /* 10? MHz - check */
 	MDRV_CPU_MEMORY(manybloc_readmem,manybloc_writemem)
 	MDRV_CPU_VBLANK_INT(nmk_interrupt,2)
-	MDRV_CPU_PERIODIC_INT(irq1_line_hold,56)/* is this is too high it breaks the game on this one, too low sprites flicker */
+	MDRV_CPU_PERIODIC_INT(irq1_line_hold,60)/* is this is too high it breaks the game on this one, too low sprites flicker */
 
 	MDRV_CPU_ADD(Z80, 3000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -4813,17 +4891,19 @@ ROM_START( manybloc )
 	ROM_LOAD16_BYTE( "9-u53b.bin",  0x040000, 0x20000, CRC(dfcfa040) SHA1(f1561defe9746afdb1a5327d0a4435a6f3e87a77) )
 	ROM_LOAD16_BYTE( "11-u85b.bin", 0x040001, 0x20000, CRC(fe747dd5) SHA1(6ba57a45f4d77e2574de95d4a2f0718c601e7214) )
 
-	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
-	ROM_LOAD( "6-u131.bin", 0x000000, 0x40000, CRC(79a4ae75) SHA1(f7609d0ca18b4af8c5f37daa1795a7a6c6d768ae) )
+	ROM_REGION( 0xa0000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
+	ROM_LOAD( "6-u131.bin",  0x00000, 0x20000, CRC(79a4ae75) SHA1(f7609d0ca18b4af8c5f37daa1795a7a6c6d768ae) )
+	ROM_CONTINUE(            0x40000, 0x20000 )	/* banked */
+	ROM_LOAD( "7-u132.bin",  0x60000, 0x40000, CRC(21db875e) SHA1(e1d96155b6d8825f7c449f276d02f9769258345d) )	/* banked */
 
-	ROM_REGION( 0x40000, REGION_SOUND2, 0 )	/* OKIM6295 samples */
-	ROM_LOAD( "7-u132.bin", 0x000000, 0x40000, CRC(21db875e) SHA1(e1d96155b6d8825f7c449f276d02f9769258345d) )
+	ROM_REGION( 0xa0000, REGION_SOUND2, ROMREGION_ERASE00 )	/* OKIM6295 samples */
+	/* empty */
 
-	ROM_REGION( 0x20220, REGION_PROMS, 0 )
-	ROM_LOAD( "u7.bpr",      0x0000, 0x0100, CRC(cfdbb86c) SHA1(588822f6308a860937349c9106c2b4b1a75823ec) )	/* unknown */
-	ROM_LOAD( "u120.bpr",      0x0100, 0x0100, CRC(576c5984) SHA1(6e9b7f30de0d91cb766a62abc5888ec9af085a27) )	/* unknown */
-	ROM_LOAD( "u200.bpr",      0x0200, 0x0020, CRC(1823600b) SHA1(7011156ebcb815b176856bd67898ce655ea1b5ab) )	/* unknown */
-	ROM_LOAD( "u10.bpr",      0x0100, 0x0200, CRC(8e9b569a) SHA1(1d8d633fbeb72d5e55ad4b282df02e9ca5e240eb) )	/* unknown */
+	ROM_REGION( 0x0420, REGION_PROMS, 0 )
+	ROM_LOAD( "u200.bpr",    0x0000, 0x0020, CRC(1823600b) SHA1(7011156ebcb815b176856bd67898ce655ea1b5ab) )	/* unknown */
+	ROM_LOAD( "u7.bpr",      0x0020, 0x0100, CRC(cfdbb86c) SHA1(588822f6308a860937349c9106c2b4b1a75823ec) )	/* unknown */
+	ROM_LOAD( "u10.bpr",     0x0120, 0x0200, CRC(8e9b569a) SHA1(1d8d633fbeb72d5e55ad4b282df02e9ca5e240eb) )	/* unknown */
+	ROM_LOAD( "u120.bpr",    0x0320, 0x0100, CRC(576c5984) SHA1(6e9b7f30de0d91cb766a62abc5888ec9af085a27) )	/* unknown */
 ROM_END
 
 ROM_START( twinactn )
