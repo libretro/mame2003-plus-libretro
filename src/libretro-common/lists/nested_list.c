@@ -234,8 +234,8 @@ bool nested_list_add_item(nested_list_t *list,
    else
    {
       string_list_initialize(&id_list);
-      if (!string_split_noalloc(&id_list, address, delim) ||
-          (id_list.size < 1))
+      if (  !string_split_noalloc(&id_list, address, delim)
+          || (id_list.size < 1))
          goto end;
 
       if (id_list.size == 1)
@@ -357,8 +357,8 @@ nested_list_item_t *nested_list_get_item(nested_list_t *list,
    else
    {
       string_list_initialize(&id_list);
-      if (!string_split_noalloc(&id_list, address, delim) ||
-          (id_list.size < 1))
+      if (  !string_split_noalloc(&id_list, address, delim)
+          || (id_list.size < 1))
          goto end;
 
       if (id_list.size == 1)
@@ -518,7 +518,7 @@ const char *nested_list_item_get_id(nested_list_item_t *list_item)
  * @address   : a delimited list of item identifiers,
  *              corresponding to item 'levels'
  * @len       : length of supplied @address char array
- 
+
  * Fetches a compound @address string corresponding to
  * the specified item's 'position' in the top level
  * nested list of which it is a member. The resultant
@@ -536,10 +536,10 @@ bool nested_list_item_get_address(nested_list_item_t *list_item,
    union string_list_elem_attr attr;
    size_t i;
 
-   if (!list_item ||
-       string_is_empty(delim) ||
-       !address ||
-       (len < 1))
+   if (  !list_item
+       || string_is_empty(delim)
+       || !address
+       || (len < 1))
       goto end;
 
    address[0] = '\0';
@@ -562,9 +562,8 @@ bool nested_list_item_get_address(nested_list_item_t *list_item,
    do
    {
       const char *id = current_item->id;
-
-      if (string_is_empty(id) ||
-          !string_list_append(&id_list, id, attr))
+      if (    string_is_empty(id)
+          || !string_list_append(&id_list, id, attr))
          goto end;
 
       current_item = current_item->parent_item;
@@ -577,14 +576,15 @@ bool nested_list_item_get_address(nested_list_item_t *list_item,
    /* Build address string */
    for (i = id_list.size; i > 0; i--)
    {
+      size_t _len;
       const char *id = id_list.elems[i - 1].data;
 
       if (string_is_empty(id))
          goto end;
 
-      strlcat(address, id, len);
+      _len = strlcat(address, id, len);
       if (i > 1)
-         strlcat(address, delim, len);
+         strlcpy(address + _len, delim, len - _len);
    }
 
    success = true;
