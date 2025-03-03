@@ -1,15 +1,37 @@
 /***************************************************************************
 
   sn76496.c
+  by Nicola Salmoria
 
-  Routines to emulate the Texas Instruments SN76489 / SN76496 programmable
-  tone /noise generator. Also known as (or at least compatible with) TMS9919.
+  Routines to emulate the:
+  Texas Instruments SN76489, SN76489A, SN76494/SN76496
+  ( Also known as, or at least compatible with, the TMS9919.)
+  and the Sega 'PSG' used on the Master System, Game Gear, and Megadrive/Genesis
+  This chip is known as the Programmable Sound Generator, or PSG, and is a 4
+  channel sound generator, with three squarewave channels and a noise/arbitrary
+  duty cycle channel.
 
-  Noise emulation is not accurate due to lack of documentation. The noise
-  generator uses a shift register with a XOR-feedback network, but the exact
-  layout is unknown. It can be set for either period or white noise; again,
-  the details are unknown.
+  Noise emulation for all chips should be accurate:
+  SN76489 uses a 15-bit shift register with taps on bits D and E, output on /E
+  * It uses a 15-bit ring buffer for periodic noise/arbitrary duty cycle.
+  SN76489A uses a 16-bit shift register with taps on bits D and F, output on F
+  * It uses a 16-bit ring buffer for periodic noise/arbitrary duty cycle.
+  SN76494 and SN76496 are PROBABLY identical in operation to the SN76489A
+  * They have an audio input line which is mixed with the 4 channels of output.
+  Sega Master System III/MD/Genesis PSG uses a 16-bit shift register with taps
+  on bits C and F, output on F
+  * It uses a 16-bit ring buffer for periodic noise/arbitrary duty cycle.
+  Sega Game Gear PSG is identical to the SMS3/MD/Genesis one except it has an
+  extra register for mapping which channels go to which speaker.
 
+  28/03/2005 : Sebastien Chevalier
+  Update th SN76496Write func, according to SN76489 doc found on SMSPower.
+   - On write with 0x80 set to 0, when LastRegister is other then TONE,
+   the function is similar than update with 0x80 set to 1
+
+  23/04/2007 : Lord Nightmare
+  Major update, implement all three different noise generation algorithms plus
+  the game gear stereo output, and a set_variant call to discern among them.
 ***************************************************************************/
 
 #include "driver.h"
@@ -19,53 +41,31 @@
 
 #define STEP 0x10000
 
-
-/* Formulas for noise generator */
-/* bit0 = output */
-
-/* noise feedback for white noise mode (verified on real SN76489 by John Kortink) */
-#define FB_WNOISE 0x14002	/* (16bits) bit16 = bit0(out) ^ bit2 ^ bit15 */
-
-/* noise feedback for periodic noise mode */
-/*#define FB_PNOISE 0x10000 // 16bit rorate */
-#define FB_PNOISE 0x08000   /* JH 981127 - fixes Do Run Run */
-
-/*
-0x08000 is definitely wrong. The Master System conversion of Marble Madness
-uses periodic noise as a baseline. With a 15-bit rotate, the bassline is
-out of tune.
-The 16-bit rotate has been confirmed against a real PAL Sega Master System 2.
-Hope that helps the System E stuff, more news on the PSG as and when!
-*/
-
-/* noise generator start preset (for periodic noise) */
-#define NG_PRESET 0x0f35
-
-
 struct SN76496
 {
 	int Channel;
 	int SampleRate;
-	unsigned int UpdateStep;
 	int VolTable[16];	/* volume table         */
-	int Register[8];	/* registers */
-	int LastRegister;	/* last register written */
-	int Volume[4];		/* volume of voice 0-2 and noise */
-	unsigned int RNG;		/* noise generator      */
-	int NoiseFB;		/* noise feedback mask */
-	int Period[4];
-	int Count[4];
-	int Output[4];
+	INT32 Register[8];	/* registers */
+	INT32 LastRegister;	/* last register written */
+	INT32 Volume[4];	/* volume of voice 0-2 and noise */
+	UINT32 RNG;		/* noise generator      */
+	INT32 NoiseMode;	/* active noise mode */
+	INT32 FeedbackMask;     /* mask for feedback */
+	INT32 WhitenoiseTaps;   /* mask for white noise taps */
+	INT32 WhitenoiseInvert; /* white noise invert flag */
+	INT32 Period[4];
+	INT32 Count[4];
+	INT32 Output[4];
 };
 
 
 static struct SN76496 sn[MAX_76496];
 
-
-
 static void SN76496Write(int chip,int data)
 {
 	struct SN76496 *R = &sn[chip];
+	int n, r, c;
 
 
 	/* update the output buffer before changing the registers */
@@ -73,78 +73,58 @@ static void SN76496Write(int chip,int data)
 
 	if (data & 0x80)
 	{
-		int r = (data & 0x70) >> 4;
-		int c = r/2;
-
+		r = (data & 0x70) >> 4;
 		R->LastRegister = r;
 		R->Register[r] = (R->Register[r] & 0x3f0) | (data & 0x0f);
-		switch (r)
-		{
-			case 0:	/* tone 0 : frequency */
-			case 2:	/* tone 1 : frequency */
-			case 4:	/* tone 2 : frequency */
-				R->Period[c] = R->UpdateStep * R->Register[r];
-				if (R->Period[c] == 0) R->Period[c] = R->UpdateStep;
-				if (r == 4)
-				{
-					/* update noise shift frequency */
-					if ((R->Register[6] & 0x03) == 0x03)
-						R->Period[3] = 2 * R->Period[2];
-				}
-				break;
-			case 1:	/* tone 0 : volume */
-			case 3:	/* tone 1 : volume */
-			case 5:	/* tone 2 : volume */
-			case 7:	/* noise  : volume */
-				R->Volume[c] = R->VolTable[data & 0x0f];
-				break;
-			case 6:	/* noise  : frequency, mode */
-				{
-					int n = R->Register[6];
-					R->NoiseFB = (n & 4) ? FB_WNOISE : FB_PNOISE;
-					n &= 3;
-					/* N/512,N/1024,N/2048,Tone #3 output */
-					R->Period[3] = (n == 3) ? 2 * R->Period[2] : (R->UpdateStep << (5+n));
-
-					/* reset noise shifter */
-					R->RNG = NG_PRESET;
-					R->Output[3] = R->RNG & 1;
-				}
-				break;
-		}
 	}
 	else
+    {
+		r = R->LastRegister;
+	}
+	c = r/2;
+	switch (r)
 	{
-		int r = R->LastRegister;
-		int c = r/2;
-
-		switch (r)
-		{
-			case 0:	/* tone 0 : frequency */
-			case 2:	/* tone 1 : frequency */
-			case 4:	/* tone 2 : frequency */
-				R->Register[r] = (R->Register[r] & 0x0f) | ((data & 0x3f) << 4);
-				R->Period[c] = R->UpdateStep * R->Register[r];
-				if (R->Period[c] == 0) R->Period[c] = R->UpdateStep;
-				if (r == 4)
-				{
-					/* update noise shift frequency */
-					if ((R->Register[6] & 0x03) == 0x03)
-						R->Period[3] = 2 * R->Period[2];
-				}
-				break;
-		}
+		case 0:	/* tone 0 : frequency */
+		case 2:	/* tone 1 : frequency */
+		case 4:	/* tone 2 : frequency */
+		    if ((data & 0x80) == 0) R->Register[r] = (R->Register[r] & 0x0f) | ((data & 0x3f) << 4);
+			R->Period[c] = STEP * R->Register[r];
+			if (R->Period[c] == 0) R->Period[c] = STEP;
+			if (r == 4)
+			{
+				/* update noise shift frequency */
+				if ((R->Register[6] & 0x03) == 0x03)
+					R->Period[3] = 2 * R->Period[2];
+			}
+			break;
+		case 1:	/* tone 0 : volume */
+		case 3:	/* tone 1 : volume */
+		case 5:	/* tone 2 : volume */
+		case 7:	/* noise  : volume */
+			R->Volume[c] = R->VolTable[data & 0x0f];
+			if ((data & 0x80) == 0) R->Register[r] = (R->Register[r] & 0x3f0) | (data & 0x0f);
+			break;
+		case 6:	/* noise  : frequency, mode */
+			{
+			        if ((data & 0x80) == 0) R->Register[r] = (R->Register[r] & 0x3f0) | (data & 0x0f);
+				n = R->Register[6];
+				R->NoiseMode = (n & 4) ? 1 : 0;
+				/* N/512,N/1024,N/2048,Tone #3 output */
+				R->Period[3] = ((n&3) == 3) ? 2 * R->Period[2] : (STEP << (5+(n&3)));
+			        /* Reset noise shifter */
+				R->RNG = R->FeedbackMask; /* this is correct according to the smspower document */
+				//R->RNG = 0xF35; /* this is not, but sounds better in do run run */
+				R->Output[3] = R->RNG & 1;
+			}
+			break;
 	}
 }
-
 
 WRITE_HANDLER( SN76496_0_w ) {	SN76496Write(0,data); }
 WRITE_HANDLER( SN76496_1_w ) {	SN76496Write(1,data); }
 WRITE_HANDLER( SN76496_2_w ) {	SN76496Write(2,data); }
 WRITE_HANDLER( SN76496_3_w ) {	SN76496Write(3,data); }
 WRITE_HANDLER( SN76496_4_w ) {	SN76496Write(4,data); }
-
-
 
 static void SN76496Update(int chip,INT16 *buffer,int length)
 {
@@ -215,9 +195,32 @@ static void SN76496Update(int chip,INT16 *buffer,int length)
 			R->Count[3] -= nextevent;
 			if (R->Count[3] <= 0)
 			{
-				if (R->RNG & 1) R->RNG ^= R->NoiseFB;
-				R->RNG >>= 1;
-				R->Output[3] = R->RNG & 1;
+		        if (R->NoiseMode == 1) /* White Noise Mode */
+		        {
+			        if (((R->RNG & R->WhitenoiseTaps) != R->WhitenoiseTaps) && ((R->RNG & R->WhitenoiseTaps) != 0)) /* crappy xor! */
+					{
+				        R->RNG >>= 1;
+				        R->RNG |= R->FeedbackMask;
+					}
+					else
+					{
+				        R->RNG >>= 1;
+					}
+					R->Output[3] = R->WhitenoiseInvert ? !(R->RNG & 1) : R->RNG & 1;
+				}
+				else /* Periodic noise mode */
+				{
+			        if (R->RNG & 1)
+					{
+				        R->RNG >>= 1;
+				        R->RNG |= R->FeedbackMask;
+					}
+					else
+					{
+				        R->RNG >>= 1;
+					}
+					R->Output[3] = R->RNG & 1;
+				}
 				R->Count[3] += R->Period[3];
 				if (R->Output[3]) vol[3] += R->Period[3];
 			}
@@ -228,7 +231,6 @@ static void SN76496Update(int chip,INT16 *buffer,int length)
 
 		out = vol[0] * R->Volume[0] + vol[1] * R->Volume[1] +
 				vol[2] * R->Volume[2] + vol[3] * R->Volume[3];
-
 		if (out > MAX_OUTPUT * STEP) out = MAX_OUTPUT * STEP;
 
 		*(buffer++) = out / STEP;
@@ -237,33 +239,13 @@ static void SN76496Update(int chip,INT16 *buffer,int length)
 	}
 }
 
-
-
-static void SN76496_set_clock(int chip,int clock)
-{
-	struct SN76496 *R = &sn[chip];
-
-
-	/* the base clock for the tone generators is the chip clock divided by 16; */
-	/* for the noise generator, it is clock / 256. */
-	/* Here we calculate the number of steps which happen during one sample */
-	/* at the given sample rate. No. of events = sample rate / (clock/16). */
-	/* STEP is a multiplier used to turn the fraction into a fixed point */
-	/* number. */
-	R->UpdateStep = ((double)STEP * R->SampleRate * 16) / clock;
-}
-
-
-
 static void SN76496_set_gain(int chip,int gain)
 {
 	struct SN76496 *R = &sn[chip];
 	int i;
 	double out;
 
-
-	gain &= 0xff;
-
+   	gain &= 0xff;
 	/* increase max output basing on gain (0.2 dB per step) */
 	out = MAX_OUTPUT / 3;
 	while (gain-- > 0)
@@ -281,10 +263,9 @@ static void SN76496_set_gain(int chip,int gain)
 	R->VolTable[15] = 0;
 }
 
-
-
-static int SN76496_init(const struct MachineSound *msound,int chip,int clock,int volume,int sample_rate)
+static int SN76496_init(const struct MachineSound *msound,int chip,int clock,int volume)
 {
+	int sample_rate = clock/16;
 	int i;
 	struct SN76496 *R = &sn[chip];
 	char name[40];
@@ -297,7 +278,6 @@ static int SN76496_init(const struct MachineSound *msound,int chip,int clock,int
 		return 1;
 
 	R->SampleRate = sample_rate;
-	SN76496_set_clock(chip,clock);
 
 	for (i = 0;i < 4;i++) R->Volume[i] = 0;
 
@@ -311,28 +291,36 @@ static int SN76496_init(const struct MachineSound *msound,int chip,int clock,int
 	for (i = 0;i < 4;i++)
 	{
 		R->Output[i] = 0;
-		R->Period[i] = R->Count[i] = R->UpdateStep;
+		R->Period[i] = R->Count[i] = STEP;
 	}
-	R->RNG = NG_PRESET;
+
+	/* Default is SN76489 non-A */
+	R->FeedbackMask = 0x4000;     /* mask for feedback */
+	R->WhitenoiseTaps = 0x03;   /* mask for white noise taps */
+	R->WhitenoiseInvert = 1; /* white noise invert flag */
+
+	R->RNG = R->FeedbackMask;
 	R->Output[3] = R->RNG & 1;
 
 	return 0;
 }
 
-
-
 int SN76496_sh_start(const struct MachineSound *msound)
 {
 	int chip;
+	struct  SN76496 *R;
 	const struct SN76496interface *intf = msound->sound_interface;
-
 
 	for (chip = 0;chip < intf->num;chip++)
 	{
-		if (SN76496_init(msound,chip,intf->baseclock[chip],intf->volume[chip] & 0xff,Machine->sample_rate) != 0)
+		if (SN76496_init(msound,chip,intf->baseclock[chip],intf->volume[chip] & 0xff) != 0)
 			return 1;
 
-		SN76496_set_gain(chip,(intf->volume[chip] >> 8) & 0xff);
+  		SN76496_set_gain(chip, 0);
+        R = &sn[chip];
+		R->FeedbackMask = 0x8000;     /* mask for feedback */
+		R->WhitenoiseTaps = 0x06;     /* mask for white noise taps */
+		R->WhitenoiseInvert = false;  /* white noise invert flag */
 	}
 	return 0;
 }
