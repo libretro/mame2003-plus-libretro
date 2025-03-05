@@ -2062,6 +2062,15 @@ MEMORY_END
 						Extreme Downhill / Sokonuke
 ***************************************************************************/
 
+/*
+ Extreme Downhill Fix crash on game ending it does a check and expects anything 
+ except 0xffff so return 0
+*/
+static READ16_HANDLER( extdwnhl_r )
+{
+	return 0;
+}
+
 static MEMORY_READ16_START( extdwnhl_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
 	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
@@ -2072,6 +2081,7 @@ static MEMORY_READ16_START( extdwnhl_readmem )
 	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
 	{ 0x400008, 0x40000b, seta_dsw_r			},	/* DSW*/
 	{ 0x40000c, 0x40000d, watchdog_reset16_r	},	/* Watchdog (extdwnhl, MUST RETURN $FFFF)*/
+	{ 0x434f56, 0x434f57, extdwnhl_r      },  /* IO check */
 	{ 0x500004, 0x500007, MRA16_NOP				},	/* IRQ Ack  (extdwnhl)*/
 	{ 0x600400, 0x600fff, MRA16_RAM				},	/* Palette*/
 	{ 0x601000, 0x610bff, MRA16_RAM				},	/**/
