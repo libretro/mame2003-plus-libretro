@@ -3376,7 +3376,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	    setup_menu_init();
     }
 
-    if (setup_active()) cpu_pause(true);
+    if (setup_active()) mame_pause(true);
   }
 
 	if (setup_selected && setup_via_menu && !options.display_setup)
@@ -3431,14 +3431,14 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 			tilemap_xpos = 0;
 			tilemap_ypos = 0;
 
-			cpu_pause(true);
+			mame_pause(true);
 		}
 	}
 
 	if(toggle_showgfx) showcharset(bitmap);
 
 	if (!setup_active() && !toggle_showgfx && pause_action)
-		cpu_pause(false);
+		mame_pause(false);
 
 	return 0;
 }

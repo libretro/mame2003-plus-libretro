@@ -370,7 +370,7 @@ void pause_action_generic(void)
 }
 
 /* initialized in cpu_pre_run() */
-void cpu_pause(bool pause)
+void mame_pause(bool pause)
 {
   if (pause)
     pause_action = pause_action_generic;
