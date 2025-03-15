@@ -140,6 +140,10 @@ extern data16_t *nmk_bgvideoram,*nmk_fgvideoram,*nmk_txvideoram;
 extern data16_t *gunnail_scrollram, *gunnail_scrollramy;
 extern data16_t tharrier_scroll;
 
+void NMK112_set_paged_table( int chip, int value );
+
+WRITE_HANDLER( NMK112_okibank_w );
+
 READ16_HANDLER( nmk_bgvideoram_r );
 WRITE16_HANDLER( nmk_bgvideoram_w );
 READ16_HANDLER( nmk_fgvideoram_r );
@@ -325,6 +329,47 @@ static WRITE16_HANDLER( bjtwin_oki6295_bankswitch_w )
 {
 	if (ACCESSING_LSB)
 		macross2_oki6295_bankswitch_w(offset,data & 0xff);
+}
+
+
+#define MAXCHIPS 2
+#define TABLESIZE 0x100
+#define BANKSIZE 0x10000
+
+/* which chips have their sample address table divided into pages */
+static int has_paged_table[MAXCHIPS] = { 1, 1 };
+
+static UINT8 current_bank[8] = { ~0, ~0, ~0, ~0, ~0, ~0, ~0, ~0 };
+
+void NMK112_set_paged_table( int chip, int value )
+{
+	has_paged_table[chip] = value;
+}
+
+WRITE_HANDLER( NMK112_okibank_w )
+{
+	int chip	=	(offset & 4) >> 2;
+	int banknum	=	offset & 3;
+
+	unsigned char *rom	=	memory_region(REGION_SOUND1 + chip);
+	int size			=	memory_region_length(REGION_SOUND1 + chip) - 0x40000;
+	int bankaddr		=	(data * BANKSIZE) % size;
+
+	if (current_bank[offset] == data) return;
+	current_bank[offset] = data;
+
+	/* copy the samples */
+	if ((has_paged_table[chip]) && (banknum == 0))
+		memcpy(rom + 0x400, rom + 0x40000 + bankaddr+0x400, BANKSIZE-0x400);
+	else
+		memcpy(rom + banknum * BANKSIZE, rom + 0x40000 + bankaddr, BANKSIZE);
+
+	/* also copy the sample address table, if it is paged on this chip */
+	if (has_paged_table[chip])
+	{
+		rom += banknum * TABLESIZE;
+		memcpy(rom, rom + 0x40000 + bankaddr, TABLESIZE);
+	}
 }
 
 
@@ -1104,6 +1149,36 @@ static MEMORY_WRITE16_START( raphero_writemem )
 	{ 0x171000, 0x171fff, nmk_txvideoram_w },	/* mirror */
 	{ 0x1f0000, 0x1fffff, MWA16_RAM, &nmk16_mainram },	/* Work RAM again */
 MEMORY_END
+
+static WRITE_HANDLER( raphero_sound_rombank_w )
+{
+	int bank = data & 7;
+	cpu_setbank(1,memory_region(REGION_CPU2) + 0x10000 + (bank * 0x4000));
+}
+
+static MEMORY_READ_START( raphero_sound_readmem )
+    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x8000, 0xbfff, MRA_BANK1 },
+    { 0xc000, 0xc000, YM2203_status_port_0_r },
+	{ 0xc001, 0xc001, YM2203_read_port_0_r },
+	{ 0xc800, 0xc800, OKIM6295_status_0_r },
+	{ 0xc808, 0xc808, OKIM6295_status_1_r },
+	{ 0xd800, 0xd800, soundlatch_r },	// main cpu
+	{ 0xe000, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( raphero_sound_writemem )
+    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0xc000, 0xc000, YM2203_control_port_0_w },
+	{ 0xc001, 0xc001, YM2203_write_port_0_w },
+	{ 0xc800, 0xc800, OKIM6295_data_0_w },
+	{ 0xc808, 0xc808, OKIM6295_data_1_w },
+	{ 0xc810, 0xc817, NMK112_okibank_w },
+    { 0xd000, 0xd000, raphero_sound_rombank_w },
+	{ 0xd800, 0xd800, soundlatch2_w },	// main cpu
+	{ 0xe000, 0xffff, MWA_RAM },
+MEMORY_END
+
 
 static MEMORY_READ_START( macross2_sound_readmem )
     { 0x0000, 0x7fff, MRA_ROM },
@@ -3740,12 +3815,9 @@ static MACHINE_DRIVER_START( raphero )
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,112)/* ???????? */
 
-/*	MDRV_CPU_ADD(Z80, 4000000) */ /* tmp90c841 ?*/
-/*<ianpatt> looks like the tmp90c841 is a microcontroller from toshiba compatible with the z80 instruction set*/
-/*<ianpatt> and luckily it isn't one of the versions with embedded ROM*/
-/*	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)  // 4 MHz ? /*/
-/*	MDRV_CPU_MEMORY(macross2_sound_readmem,macross2_sound_writemem)*/
-/*	MDRV_CPU_PORTS(macross2_sound_readport,macross2_sound_writeport)*/
+	MDRV_CPU_ADD(Z80, 8000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(raphero_sound_readmem,raphero_sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(56) /* measured*/
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(2500))
@@ -4670,8 +4742,9 @@ ROM_START( raphero )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "rhp94099.3",      0x00000, 0x80000, CRC(ec9b4f05) SHA1(e5bd797620dc449fd78b41d87e9ba5a764eb8b44) )
 
-	ROM_REGION( 0x20000, REGION_CPU2, 0 )		/* tmp90c841 ??? sound code/data */
+	ROM_REGION( 0x30000, REGION_CPU2, 0 )		/* tmp90c841 */
 	ROM_LOAD( "rhp94099.2",    0x00000, 0x20000, CRC(fe01ece1) SHA1(c469fb79f2774089848c814f92ddd3c9e384050f) )
+	ROM_RELOAD(                0x10000, 0x20000 )
 
 	ROM_REGION( 0x020000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "rhp94099.1",    0x000000, 0x020000, CRC(55a7a011) SHA1(87ded56bfdd38cbf8d3bd8b3789831f768550a12) )	/* 8x8 tiles */
@@ -4684,12 +4757,13 @@ ROM_START( raphero )
 	ROM_LOAD16_WORD_SWAP( "rhp94099.9", 0x200000, 0x200000, CRC(ea2e47f0) SHA1(97dfa8f95f27b36deb5ce1c80e3d727bad24e52b) )	/* 16x16 tiles */
 	ROM_LOAD16_WORD_SWAP( "rhp94099.10",0x400000, 0x200000, CRC(512cb839) SHA1(4a2c5ac88e4bf8a6f07c703277c4d33e649fd192) )	/* 16x16 tiles */
 
-	ROM_REGION( 0x400000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
-	ROM_LOAD( "rhp94099.5", 0x000000, 0x200000, CRC(515eba93) SHA1(c35cb5f31f4bc7327be5777624af168f9fb364a5) )	/* all banked */
-	ROM_LOAD( "rhp94099.6", 0x200000, 0x200000, CRC(f1a80e5a) SHA1(218bd7b0c3d8b283bf96b95bf888228810699370) )	/* all banked */
-
-	ROM_REGION( 0x240000, REGION_SOUND2, 0 )	/* OKIM6295 samples */
-	ROM_LOAD( "rhp94099.7", 0x040000, 0x200000, CRC(0d99547e) SHA1(2d9630bd55d27010f9d1d2dbdbd07ac265e8ebe6) )	/* all banked */
+	ROM_REGION( 0x440000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
+	ROM_LOAD( "rhp94099.6", 0x040000, 0x200000, CRC(f1a80e5a) SHA1(218bd7b0c3d8b283bf96b95bf888228810699370) )  /* all banked */
+	ROM_LOAD( "rhp94099.7", 0x240000, 0x200000, CRC(0d99547e) SHA1(2d9630bd55d27010f9d1d2dbdbd07ac265e8ebe6) )  /* all banked */
+ 
+	ROM_REGION( 0x440000, REGION_SOUND2, 0 )	/* OKIM6295 samples */
+	ROM_LOAD( "rhp94099.5", 0x040000, 0x200000, CRC(515eba93) SHA1(c35cb5f31f4bc7327be5777624af168f9fb364a5) )	/* all banked */
+	ROM_LOAD( "rhp94099.6", 0x240000, 0x200000, CRC(f1a80e5a) SHA1(218bd7b0c3d8b283bf96b95bf888228810699370) )	/* all banked */
 
 	ROM_REGION( 0x0300, REGION_PROMS, 0 )
 	ROM_LOAD( "prom1.u19",      0x0000, 0x0100, CRC(4299776e) SHA1(683d14d2ace14965f0fcfe0f0540c1b77d2cece5) ) /* unknown */
