@@ -489,7 +489,8 @@ static struct AY8910interface ay8910_interface =
 	{ 0, 0 }
 };
 
-static void snd_irq(int num)
+/* we'll use standard interrupt handling seems fine with it */
+static INTERRUPT_GEN( snd_irq )
 {
 	   sound_irq = 1;
 }
