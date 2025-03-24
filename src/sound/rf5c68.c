@@ -140,8 +140,8 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 	name[1] = buf[1];
 	sprintf( buf[0], "%s Left", sound_name(msound) );
 	sprintf( buf[1], "%s Right", sound_name(msound) );
-	vol[0] = (MIXER_PAN_LEFT<<8)  | (intf->volume&0xff);
-	vol[1] = (MIXER_PAN_RIGHT<<8) | (intf->volume&0xff);
+	vol[0] = intf->volume&0xff;
+	vol[1] = intf->volume&0xff;
 
 	chip->stream = stream_init_multi( RF_LR_PAN, name, vol,  intf->clock / 384 , 0, rf5c68_update );
 	if(chip->stream == -1) return 1;
