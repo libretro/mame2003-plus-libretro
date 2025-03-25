@@ -40,7 +40,7 @@ struct rf5c68pcm *chip;
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
 
-    INT32 tempbuffer[2][length];
+	INT32 tempbuffer[2][length > 0 ? length : 1]; //silence msvc
 	INT32 *left =  tempbuffer[0];
 	INT32 *right = tempbuffer[1];
 	int i, j;
@@ -48,8 +48,6 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 	/* start with clean buffers */
 	memset(left, 0, length * sizeof(*left));
 	memset(right, 0, length * sizeof(*right));
-	memset(buffer[0], 0, length * sizeof(*left));
-	memset(buffer[1], 0, length * sizeof(*right));
 
 	/* bail if not enabled */
 	if (!chip->enable)
@@ -112,7 +110,8 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 		temp = right[j];
 		if (temp > 32767) temp = 32767;
 		else if (temp < -32768) temp = -32768;
-		buffer[1][j] = temp & ~0x3f;	}
+		buffer[1][j] = temp & ~0x3f;
+	}
 }
 
 
