@@ -506,7 +506,7 @@ struct Samplesinterface ost_mk =
 struct Samplesinterface ost_moonwalker =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	100 , /* volume*/
 	moonwalker_sample_set_names
 };
 

@@ -2482,7 +2482,8 @@ struct YM2612interface sys32_ym3438_interface =
 {
 	2,		/* 2 chips */
 	MASTER_CLOCK/4,	/* verified on real PCB */
-	{ 40,40 },
+	{ YM3012_VOL(40,MIXER_PAN_LEFT,40,MIXER_PAN_RIGHT),
+	  YM3012_VOL(40,MIXER_PAN_LEFT,40,MIXER_PAN_RIGHT) },
 	{ 0 },	{ 0 },	{ 0 },	{ 0 },
 	{ ym3438_irq_handler }
 };
@@ -2491,7 +2492,8 @@ struct YM2612interface multi32_ym3438_interface =
 {
 	1,
 	MASTER_CLOCK/4,
-	{ 60,60 },
+	{ YM3012_VOL(40,MIXER_PAN_LEFT,40,MIXER_PAN_RIGHT),
+	  YM3012_VOL(40,MIXER_PAN_LEFT,40,MIXER_PAN_RIGHT) },
 	{ 0 },	{ 0 },	{ 0 },	{ 0 },
 	{ ym3438_irq_handler }
 };
