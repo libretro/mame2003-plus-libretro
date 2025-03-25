@@ -40,7 +40,7 @@ struct rf5c68pcm *chip;
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
 
-	INT32 tempbuffer[2][length > 0 ? length : 1000]; //silence msvc
+	INT32 tempbuffer[2][length > 0 ? length : 1]; //silence msvc
 	INT32 *left =  tempbuffer[0];
 	INT32 *right = tempbuffer[1];
 	int i, j;
