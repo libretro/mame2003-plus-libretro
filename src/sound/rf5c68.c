@@ -114,7 +114,7 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 		temp = right[j];
 		if (temp > 32767) temp = 32767;
 		else if (temp < -32768) temp = -32768;
-		buffer[1][j] = temp & ~0x3f;	
+		buffer[1][j] = temp & ~0x3f;
 	}
 	#if defined _MSC_VER
 	free(left);
@@ -141,16 +141,16 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 	int i;
 
 	if (Machine->sample_rate == 0) return 0;
-	
+
 	chip = auto_malloc(sizeof(*chip));
-	
-	memset(chip, 0, sizeof(*chip));	
+
+	memset(chip, 0, sizeof(*chip));
     /* f1en fix bad sound if set initialized to 0xff fixed in mame0215*/
 	for (i = 0; i < 0x10000; i++)
 		chip->data[i]=0xff;
 
-	//intf = inintf;	
-	
+	//intf = inintf;
+
 	name[0] = buf[0];
 	name[1] = buf[1];
 	sprintf( buf[0], "%s Left", sound_name(msound) );
@@ -160,7 +160,7 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 
 	chip->stream = stream_init_multi( 2, name, vol,  inintf->clock / 384 , 0, rf5c68_update );
 	if(chip->stream == -1) return 1;
-	
+
 	return 0;
 }
 
