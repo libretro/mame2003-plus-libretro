@@ -39,10 +39,14 @@ struct rf5c68pcm *chip;
 
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
-
-	INT32 tempbuffer[2][length > 0 ? length : 1]; //silence msvc
+	#if defined _MSC_VER
+	INT32 *left =  (INT32*)malloc((length) * sizeof(INT32));
+	INT32 *right = (INT32*)malloc((length) * sizeof(INT32));
+	#else
+	INT32 tempbuffer[2][length];
 	INT32 *left =  tempbuffer[0];
 	INT32 *right = tempbuffer[1];
+	#endif
 	int i, j;
 
 	/* start with clean buffers */
@@ -110,8 +114,12 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 		temp = right[j];
 		if (temp > 32767) temp = 32767;
 		else if (temp < -32768) temp = -32768;
-		buffer[1][j] = temp & ~0x3f;
+		buffer[1][j] = temp & ~0x3f;	
 	}
+	#if defined _MSC_VER
+	free(left);
+	free(right);
+	#endif
 }
 
 
