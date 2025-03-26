@@ -42,7 +42,7 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 {
 	int i, j;
 
-	/* resize as needed */
+	/* resize buffers as needed */
 
 
 	/* start with clean buffers */
@@ -144,8 +144,8 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 		chip->data[i]=0xff;
 
 	/* allocate buffers */
-	left  = (INT32*)malloc((length) * sizeof(INT32));
-	right = (INT32*)malloc((length) * sizeof(INT32));
+	left  = (INT32*)malloc(sizeof(INT32));
+	right = (INT32*)malloc(sizeof(INT32));
 
 	//intf = inintf;
 
