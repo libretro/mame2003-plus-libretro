@@ -32,6 +32,7 @@ struct rf5c68pcm
 };
 
 struct rf5c68pcm *chip;
+INT32 *left, *right;
 
 /************************************************/
 /*    RF5C68 stream update                      */
@@ -39,15 +40,10 @@ struct rf5c68pcm *chip;
 
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
-	#if defined _MSC_VER
-	INT32 *left =  (INT32*)malloc((length) * sizeof(INT32));
-	INT32 *right = (INT32*)malloc((length) * sizeof(INT32));
-	#else
-	INT32 tempbuffer[2][length];
-	INT32 *left =  tempbuffer[0];
-	INT32 *right = tempbuffer[1];
-	#endif
 	int i, j;
+
+	/* resize as needed */
+
 
 	/* start with clean buffers */
 	memset(left, 0, length * sizeof(*left));
@@ -116,10 +112,6 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 		else if (temp < -32768) temp = -32768;
 		buffer[1][j] = temp & ~0x3f;
 	}
-	#if defined _MSC_VER
-	free(left);
-	free(right);
-	#endif
 }
 
 
@@ -128,6 +120,8 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 /************************************************/
 void RF5C68_sh_stop( void )
 {
+	free(left);
+	free(right);
 }
 
 
@@ -148,6 +142,10 @@ int RF5C68_sh_start( const struct MachineSound *msound )
     /* f1en fix bad sound if set initialized to 0xff fixed in mame0215*/
 	for (i = 0; i < 0x10000; i++)
 		chip->data[i]=0xff;
+
+	/* allocate buffers */
+	left  = (INT32*)malloc((length) * sizeof(INT32));
+	right = (INT32*)malloc((length) * sizeof(INT32));
 
 	//intf = inintf;
 
