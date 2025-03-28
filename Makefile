@@ -825,6 +825,10 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 # Required for RZIP support in cheat.c
 CFLAGS += -DHAVE_ZLIB
 
+#mimic msvc code failures on gcc so issues can be fixed easier add to this 
+#as more come along.
+CFLAGS += -Werror=vla
+
 # In theory, the RETRO_PROFILE could be set to different values for different
 # architectures or for special builds to hint to the host system how many
 # resources to allocate. In practice, there seems to be no standard way to
