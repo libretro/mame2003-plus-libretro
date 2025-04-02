@@ -824,7 +824,7 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 
 # make gcc fail like msvc does
 ifneq (,$(findstring msvc,$(platform)))
-	CFLAGS += "-Werror=vla -Werror=declaration-after-statement"
+	CFLAGS += -Werror=vla -Werror=declaration-after-statement
 endif
 
 # Required for RZIP support in cheat.c
