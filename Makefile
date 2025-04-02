@@ -771,7 +771,7 @@ else
 	LDFLAGS += -shared -static-libgcc -static-libstdc++
    	ifneq ($(DEBUG), 1)
    	LDFLAGS += -s
-   	endif  
+   	endif
    	LDFLAGS += -Wl,--version-script=link.T
 	CFLAGS += -D__WIN32__
 endif
@@ -822,6 +822,11 @@ CFLAGS += -DHAVE_SOCKLEN_T
 CFLAGS += -D_LARGEFILE_SOURCE
 CFLAGS += -D_FILE_OFFSET_BITS=64
 
+
+#make gcc fail like msvc does
+ifneq (,$(findstring msvc,$(platform)))
+CFLAGS += "-Werror=vla -Werror=declaration-after-statement"
+endif
 # Required for RZIP support in cheat.c
 CFLAGS += -DHAVE_ZLIB
 
@@ -877,7 +882,7 @@ CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 OBJECTS := $(SOURCES_C:.c=.o) $(SOURCES_ASM:.s=.o) $(SOURCES_ASM_PP:.S=.o)
 
 OBJOUT   = -o
-LINKOUT  = -o 
+LINKOUT  = -o
 
 ifneq (,$(findstring msvc,$(platform)))
 	OBJOUT = -Fo
