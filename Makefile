@@ -822,6 +822,11 @@ CFLAGS += -DHAVE_SOCKLEN_T
 CFLAGS += -D_LARGEFILE_SOURCE
 CFLAGS += -D_FILE_OFFSET_BITS=64
 
+# make gcc fail like msvc does
+ifeq (,$(findstring msvc,$(platform)))
+	CFLAGS += -Werror=vla -Werror=declaration-after-statement
+endif
+
 # Required for RZIP support in cheat.c
 CFLAGS += -DHAVE_ZLIB
 
