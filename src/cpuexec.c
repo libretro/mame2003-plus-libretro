@@ -356,8 +356,8 @@ static void cpu_post_run(void)
 	if (Machine->drv->machine_stop)
 		(*Machine->drv->machine_stop)();
 
-	if (ost_samples_reset)
-		ost_samples_reset();
+	if (1)
+		ost_init();
 
 	end_resource_tracking();
 }
