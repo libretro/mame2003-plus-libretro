@@ -23,6 +23,7 @@ enum
 
 extern bool ost_support_enabled (int ost);
 extern bool (*generate_ost_sound) (int);
+extern void ost_init(void);
 
 extern void install_ost_support (struct InternalMachineDriver *machine, int ost);
 
@@ -30,5 +31,4 @@ extern void install_ost_support (struct InternalMachineDriver *machine, int ost)
 	install_ost_support(machine, ost);		\
 
 
-extern void (*ost_samples_reset)(void);
 extern void ost_fade_volume (void);
