@@ -559,7 +559,7 @@ bool ost_support_enabled(int ost)
 }
 
 
-static void ost_init(void)
+void ost_init(void)
 {
   /* ost configuration */
   sa_volume   = 100;
