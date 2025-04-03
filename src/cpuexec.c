@@ -13,6 +13,7 @@
 #include "mamedbg.h"
 #include "cpuexec.h"
 #include "log.h"
+#include "ost_samples.h"
 
 
 #if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
@@ -354,6 +355,9 @@ static void cpu_post_run(void)
 	/* stop the machine */
 	if (Machine->drv->machine_stop)
 		(*Machine->drv->machine_stop)();
+
+	if (ost_samples_reset)
+		ost_samples_reset();
 
 	end_resource_tracking();
 }
