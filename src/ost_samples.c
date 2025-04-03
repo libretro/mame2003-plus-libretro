@@ -582,7 +582,6 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 {
   /* set */
   ost_support = ost;
-  ost_init();
 
   switch(ost)
   {
