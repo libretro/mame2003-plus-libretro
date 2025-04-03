@@ -561,6 +561,10 @@ bool ost_support_enabled(int ost)
 
 void ost_init(void)
 {
+  /* stop samples if playing */
+  if(sample_playing(0) == 1 || sample_playing(1) == 1)
+    ost_stop_samples();
+
   /* ost configuration */
   sa_volume   = 100;
   last_left   = 0;
