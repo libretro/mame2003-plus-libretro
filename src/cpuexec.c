@@ -356,7 +356,7 @@ static void cpu_post_run(void)
 	if (Machine->drv->machine_stop)
 		(*Machine->drv->machine_stop)();
 
-	if (1)
+	if (options.content_flags[CONTENT_ALT_SOUND])
 		ost_init();
 
 	end_resource_tracking();
