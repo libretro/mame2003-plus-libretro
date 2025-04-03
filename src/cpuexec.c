@@ -304,6 +304,10 @@ static void cpu_pre_run(void)
 	/* reset sound chips */
 	sound_reset();
 
+	/* prepare ost if installed */
+	if (options.content_flags[CONTENT_ALT_SOUND])
+		ost_init();
+
 	/* first pass over CPUs */
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
 	{
@@ -355,14 +359,6 @@ static void cpu_post_run(void)
 	/* stop the machine */
 	if (Machine->drv->machine_stop)
 		(*Machine->drv->machine_stop)();
-{
-  const struct Samplesinterface *intf = msound->sound_interface;
-  int i;
-  for(i=0; i < intf->channels; i++)
-    if ( sample_playing(i) ) sample_stop(i);
-}
-	/*if (options.content_flags[CONTENT_ALT_SOUND])
-		ost_init();*/
 
 	end_resource_tracking();
 }
