@@ -13,6 +13,7 @@
 #include "mamedbg.h"
 #include "cpuexec.h"
 #include "log.h"
+#include "ost_samples.h"
 
 
 #if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
@@ -302,6 +303,10 @@ static void cpu_pre_run(void)
 
 	/* reset sound chips */
 	sound_reset();
+
+	/* prepare ost if installed */
+	if (options.content_flags[CONTENT_ALT_SOUND])
+		ost_init();
 
 	/* first pass over CPUs */
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)

@@ -322,7 +322,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 
 		/* allocate the game sample */
 		if(b_data == 1)
-			result = auto_malloc(sizeof(struct GameSample) + length);
+			result = malloc(sizeof(struct GameSample) + length);
 		else
 			result = malloc(sizeof(struct GameSample));
 
@@ -422,7 +422,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		}
 
 		if (b_data == 1)
-			result = auto_malloc(sizeof(struct GameSample) + (flac_file.total_samples * (flac_file.bits_per_sample / 8)));
+			result = malloc(sizeof(struct GameSample) + (flac_file.total_samples * (flac_file.bits_per_sample / 8)));
 		else
 			result = malloc(sizeof(struct GameSample));
 
@@ -520,7 +520,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 
 	if (!i) return 0;
 
-	if ((samples = auto_malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
+	if ((samples = malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
 		return 0;
 
 	samples->total = i;
