@@ -10,10 +10,10 @@
 
 /* ost configuration */
 static int  ost_support = OST_SUPPORT_DISABLED;
-static int  sa_volume   = 100;
-static int  last_left   = 0;
-static int  last_right  = 0;
-static bool fadingMusic = false;
+static int  sa_volume;
+static int  last_left;
+static int  last_right;
+static bool fadingMusic;
 static bool schedule_default_sound;
 
 
@@ -27,6 +27,7 @@ int      start_counter;
 
 
 /* ost functions */
+void ost_init(void);
 static void ost_start_samples(int sa_left, int sa_right, int sa_loop);
 static void ost_stop_samples(void);
 static void ost_mix_samples(void);
@@ -558,10 +559,27 @@ bool ost_support_enabled(int ost)
 }
 
 
+static void ost_init(void)
+{
+  /* ost configuration */
+  sa_volume   = 100;
+  last_left   = 0;
+  last_right  = 0;
+  fadingMusic = false;
+
+  /* game specific variables */
+  ddragon_stage       = 0;
+  ff_alternate_song_1 = false;
+  ff_alternate_song_2 = false;
+  start_counter       = 0;
+}
+
+
 void install_ost_support(struct InternalMachineDriver *machine, int ost)
 {
   /* set */
   ost_support = ost;
+  ost_init();
 
   switch(ost)
   {
@@ -573,14 +591,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_DDRAGON:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ddragon)
       generate_ost_sound = routine_ddragon;
-      ddragon_stage = 0;
       break;
 
     case OST_SUPPORT_FFIGHT:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_ffight)
       generate_ost_sound = routine_ffight;
-      ff_alternate_song_1 = false;
-      ff_alternate_song_2 = false;
       break;
 
     case OST_SUPPORT_IKARI:
@@ -601,13 +616,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_NBA_JAM:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_nba_jam)
       generate_ost_sound = routine_nba_jam;
-      start_counter = 0;
       break;
 
     case OST_SUPPORT_OUTRUN:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_outrun)
       generate_ost_sound = routine_outrun;
-      start_counter = 0;
       break;
 
     case OST_SUPPORT_ROBOCOP:
