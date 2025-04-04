@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "v60.h"
+#include <math.h>
 
 /* memory accessors*/
 #include "v60mem.c"
