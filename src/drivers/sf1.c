@@ -864,7 +864,6 @@ static MACHINE_DRIVER_START( sf1 )
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
 	MDRV_SOUND_ADD(MSM5205, msm5205_interface)
 
-	/* Lets add our SF1 music sample packs. */
 	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_SF1)
 MACHINE_DRIVER_END
 

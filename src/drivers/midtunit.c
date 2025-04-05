@@ -657,8 +657,6 @@ static MACHINE_DRIVER_START( mk )
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
 
-	/* Lets add our Mortal Kombat music sample packs.*/
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_MK)
 MACHINE_DRIVER_END
 
@@ -668,8 +666,6 @@ static MACHINE_DRIVER_START( nbajam )
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
 
-	/* Lets add our NBA Jam music sample packs.*/
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_NBA_JAM)
 MACHINE_DRIVER_END
 
