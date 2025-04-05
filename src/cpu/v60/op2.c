@@ -74,22 +74,15 @@ static UINT32 opCVTSW(void)
 
 	F2DecodeFirstOperand(ReadAM,2);
 
-	// Apply RDI rounding control
+	/* Convert to UINT32 */
 	val = u2f(f2Op1);
-	switch (TKCW & 7)
-	{
-	case 0: val = roundf(val); break;
-	case 1: val = floorf(val); break;
-	case 2: val = ceilf(val); break;
-	default: val = truncf(val); break;
-	}
+	modWriteValW = (INT32)val;
 
-	// Convert to uint32_t
-	modWriteValW = (uint32_t)(int64_t)val;
+	_OV=0;
+	_CY=(val < 0.0f);
+	_S=((modWriteValW & 0x80000000)!=0);
+	_Z=(val == 0.0f);
 
-	_S = ((modWriteValW & 0x80000000) != 0);
-	_OV = (_S && val >= 0.0f) || (!_S && val <= -1.0f);
-	_Z = (modWriteValW  == 0);
 	F2WriteSecondOperand(2);
 	F2END();
 }
