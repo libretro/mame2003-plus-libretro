@@ -1240,7 +1240,6 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_SOUND_ADD(YM2151, sys16_ym2151_interface)
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k)
 
-	/* Lets add our Out Run music sample packs. */
 	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_OUTRUN)
 MACHINE_DRIVER_END
 
