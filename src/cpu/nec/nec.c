@@ -122,6 +122,24 @@ static int no_interrupt;
 
 static UINT8 parity_table[256];
 
+#include "cpuintrf.h"
+
+#define FETCHOP fetchop()
+
+const UINT8* v25v35_decryptiontable = 0;
+
+INLINE UINT8 fetchop(void)
+{
+	UINT8 ret = cpu_readop((I.sregs[CS]<<4)+I.ip++);
+
+	if (I.MF == 1)
+		if (v25v35_decryptiontable)
+		{
+			ret = v25v35_decryptiontable[ret];
+		}
+	return ret;
+}
+
 /***************************************************************************/
 
 void nec_reset (void *param)
