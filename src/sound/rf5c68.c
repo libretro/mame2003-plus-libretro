@@ -39,14 +39,9 @@ struct rf5c68pcm *chip;
 
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
-	#if defined _MSC_VER
-	INT32 *left =  (INT32*)malloc((length) * sizeof(INT32));
-	INT32 *right = (INT32*)malloc((length) * sizeof(INT32));
-	#else
-	INT32 tempbuffer[2][length];
-	INT32 *left =  tempbuffer[0];
-	INT32 *right = tempbuffer[1];
-	#endif
+
+	INT16 *left =  buffer[0];
+	INT16 *right = buffer[1];
 	int i, j;
 
 	/* start with clean buffers */
@@ -90,13 +85,13 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 				if (sample & 0x80)
 				{
 					sample &= 0x7f;
-					left[j] += (sample * lv) >> 5;
-					right[j] += (sample * rv) >> 5;
+					left[j] += (sample * lv) >> 6;
+					right[j] += (sample * rv) >> 6;
 				}
 				else
 				{
-					left[j] -= (sample * lv) >> 5;
-					right[j] -= (sample * rv) >> 5;
+					left[j] -= (sample * lv) >> 6;
+					right[j] -= (sample * rv) >> 6;
 				}
 			}
 		}
@@ -105,21 +100,24 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 	/* now clamp and shift the result (output is only 10 bits) */
 	for (j = 0; j < length; j++)
 	{
+		UINT8 output_shift=10;
+		INT32 output_nandmask = (1 << output_shift) - 1;
 		INT32 temp;
+
 		temp = left[j];
-		if (temp > 32767) temp = 32767;
+		temp *= 2;
+
+		if (temp > 32767 || temp > 32767 ) temp = 32767;
 		else if (temp < -32768) temp = -32768;
-		buffer[0][j] = temp & ~0x3f;
+		buffer[0][j] = temp & ~output_nandmask;
 
 		temp = right[j];
+		temp *= 2;
+
 		if (temp > 32767) temp = 32767;
 		else if (temp < -32768) temp = -32768;
-		buffer[1][j] = temp & ~0x3f;
+		buffer[1][j] = temp & ~output_nandmask;
 	}
-	#if defined _MSC_VER
-	free(left);
-	free(right);
-	#endif
 }
 
 
