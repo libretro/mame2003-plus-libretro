@@ -581,6 +581,7 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
 {
   /* set */
   ost_support = ost;
+  MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 
   switch(ost)
   {
