@@ -412,6 +412,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Get Star / Guardian - Romsets `getstar` and `getstarj`
 * Great 1000 Miles Rally - Romsets `gtmr`, `gtmr2`, `gtmre`, and `gtmrusa`
 * Green Beret - Romset `greenber`
+* Gussun Oyoyo - Romset `gussun`
 * Hacha Mecha Figher - Romsets `hachamf` and `hachamfb` - `hachamf` is playable but has remaining unemulated protection
 * Hang-On - Romset `hangon`
 * Hard Head 2 - Romset `hardhea2`
@@ -448,7 +449,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
 * Rabbit - Romset `rabbit` - no sound
 * Rampage - Romsets `rampage` and `rampage2`
-* Risky Challenge - Romset `riskchal` - Playable but dont press any buttons during the score calc screen between the levels 
+* Risky Challenge - Romset `riskchal`
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
 * Run And Gun - Romset `rungun`
 * Rush'N Attack - Romset `rushatck`
@@ -1138,3 +1139,5 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed the attract mode for 64th Street, Chimera Beast, pengo, updated the pengo sets and fixed the gameover annimation for Vapor Trail [grant2258]
 * Added reset playfield dip switch option in Space Wars [mahoneyt944]
 * Merged pbillian.c and superqix.c updating to MAME90 which improves the emulation and sound for Prebillian and VS. Hot Smash both games now playable [arcadez, grant2258]
+* Ported across from advancemame a proper fix For Risky Challenge / Gussun Oyoyo the protection is now fully cracked and an issue
+* where the game could crash on the score calc between levels is sorted [amadvance, arcadez]
