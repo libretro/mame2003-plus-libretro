@@ -2475,7 +2475,7 @@ INPUT_PORTS_END
 struct RF5C68interface sys32_rf5c68_interface =
 {
   RFC_CLOCK/4,
-  55
+  YM3012_VOL(55,MIXER_PAN_LEFT,55,MIXER_PAN_RIGHT)
 };
 
 struct YM2612interface sys32_ym3438_interface =
