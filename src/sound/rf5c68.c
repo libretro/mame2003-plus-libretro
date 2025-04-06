@@ -33,13 +33,21 @@ struct rf5c68pcm
 
 struct rf5c68pcm *chip;
 
+INT32 Limit( INT32 val, INT32 max,INT32 min) 
+{ 
+	val &= ~ 0x3f; //10bits output (use 0xffff if 16 bit output is required) 
+	if ( val > max )      val = max; 
+	else if ( val < min ) val = min; 
+	return val ;
+}
+
 /************************************************/
 /*    RF5C68 stream update                      */
 /************************************************/
 
+
 static void rf5c68_update( int num, INT16 **buffer, int length )
 {
-
 	INT16 *left =  buffer[0];
 	INT16 *right = buffer[1];
 	int i, j;
@@ -67,7 +75,8 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 			for (j = 0; j < length; j++)
 			{
 				int sample;
-
+				int32_t templ;
+				int32_t tempr;
 				/* fetch the sample and handle looping */
 				sample = chip->data[(chan->addr >> 11) & 0xffff];
 				if (sample == 0xff)
@@ -85,38 +94,21 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 				if (sample & 0x80)
 				{
 					sample &= 0x7f;
-					left[j] += (sample * lv) >> 6;
-					right[j] += (sample * rv) >> 6;
+					templ = Limit( (sample * lv) >> 5, 32767, -32768);
+					tempr = Limit( (sample * rv) >> 5, 32767, -32768);
+					left[j]  += templ;
+					right[j] += tempr;
 				}
 				else
 				{
-					left[j] -= (sample * lv) >> 6;
-					right[j] -= (sample * rv) >> 6;
+					templ = Limit( (sample * lv) >> 5, 32767, -32768);
+					tempr = Limit( (sample * rv) >> 5, 32767, -32768);
+					left[j]  -= templ;
+					right[j] -= tempr;
 				}
+
 			}
 		}
-	}
-
-	/* now clamp and shift the result (output is only 10 bits) */
-	for (j = 0; j < length; j++)
-	{
-		UINT8 output_shift=10;
-		INT32 output_nandmask = (1 << output_shift) - 1;
-		INT32 temp;
-
-		temp = left[j];
-		temp *= 2;
-
-		if (temp > 32767 || temp > 32767 ) temp = 32767;
-		else if (temp < -32768) temp = -32768;
-		buffer[0][j] = temp & ~output_nandmask;
-
-		temp = right[j];
-		temp *= 2;
-
-		if (temp > 32767) temp = 32767;
-		else if (temp < -32768) temp = -32768;
-		buffer[1][j] = temp & ~output_nandmask;
 	}
 }
 
