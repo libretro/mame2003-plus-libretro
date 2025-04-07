@@ -75,8 +75,7 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 			for (j = 0; j < length; j++)
 			{
 				int sample;
-				int32_t templ;
-				int32_t tempr;
+
 				/* fetch the sample and handle looping */
 				sample = chip->data[(chan->addr >> 11) & 0xffff];
 				if (sample == 0xff)
@@ -94,21 +93,24 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 				if (sample & 0x80)
 				{
 					sample &= 0x7f;
-					templ = Limit( (sample * lv) >> 5, 32767, -32768);
-					tempr = Limit( (sample * rv) >> 5, 32767, -32768);
-					left[j]  += templ;
-					right[j] += tempr;
+					left[j] += (sample * lv) >> 6;
+					right[j] += (sample * rv) >> 6;
 				}
 				else
 				{
-					templ = Limit( (sample * lv) >> 5, 32767, -32768);
-					tempr = Limit( (sample * rv) >> 5, 32767, -32768);
-					left[j]  -= templ;
-					right[j] -= tempr;
+					left[j] -= (sample * lv) >> 6;
+					right[j] -= (sample * rv) >> 6;
 				}
 
 			}
 		}
+	}
+	/* now clamp and shift the result (output is only 10 bits) */
+	for (j = 0; j < length; j++)
+	{
+		left[j] =  Limit(left[j] & ~ 0x3f, 32767, -32768);
+ 		right[j] = Limit(right[j] & ~ 0x3f, 32767, -32768);
+ 	
 	}
 }
 
