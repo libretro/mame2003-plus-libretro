@@ -90,7 +90,7 @@ static UINT32 opCVTSW(void)
 	case 0: val = roundf(val); break;
 	case 1: val = floorf(val); break;
 	case 2: val = ceilf(val); break;
-#if defined _MSC_VER
+#ifdef __STDC__
 	default: val = truncf_c89(val); break;
 #else
 	default: val = truncf(val); break;
