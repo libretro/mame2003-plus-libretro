@@ -7,6 +7,7 @@
 #include "osd_cpu.h"
 #include "mamedbg.h"
 #include "state.h"
+#include <math.h>
 
 #include <assert.h>
 #include <stdio.h>

@@ -68,21 +68,41 @@ static UINT32 opCVTWS(void)
 	F2END();
 }
 
+static float truncf_c89(float x)
+{
+  if (x >= 0.0f) {
+    return floorf(x);
+  } else {
+    return ceilf(x);
+  }
+}
+
 static UINT32 opCVTSW(void)
 {
 	float val;
 
 	F2DecodeFirstOperand(ReadAM,2);
 
-	/* Convert to UINT32 */
+	// Apply RDI rounding control
 	val = u2f(f2Op1);
-	modWriteValW = (INT32)val;
+	switch (TKCW & 7)
+	{
+	case 0: val = roundf(val); break;
+	case 1: val = floorf(val); break;
+	case 2: val = ceilf(val); break;
+#if defined _MSC_VER
+	default: val = truncf_c89(val); break;
+#else
+	default: val = truncf(val); break;
+#endif
+	}
 
-	_OV=0;
-	_CY=(val < 0.0f);
-	_S=((modWriteValW & 0x80000000)!=0);
-	_Z=(val == 0.0f);
+	// Convert to uint32_t
+	modWriteValW = (uint32_t)(int64_t)val;
 
+	_S = ((modWriteValW & 0x80000000) != 0);
+	_OV = (_S && val >= 0.0f) || (!_S && val <= -1.0f);
+	_Z = (modWriteValW  == 0);
 	F2WriteSecondOperand(2);
 	F2END();
 }
