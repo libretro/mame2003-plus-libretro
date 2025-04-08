@@ -68,42 +68,13 @@ static UINT32 opCVTWS(void)
 	F2END();
 }
 
-#define FORCE_EVAL(x) do {                        \
-    if (sizeof(x) == sizeof(float)) {         \
-        volatile float __x;               \
-        __x = (x);                        \
-    } else if (sizeof(x) == sizeof(double)) { \
-        volatile double __x;              \
-        __x = (x);                        \
-    } else {                                  \
-        volatile long double __x;         \
-        __x = (x);                        \
-    }                                         \
-} while(0)
-
-float mame_truncf(float x)
+static float truncf_c89(float x)
 {
-    union {float f; uint32_t i;} u = {x};
-    int e = (int)(u.i >> 23 & 0xff) - 0x7f + 9;
-    uint32_t m;
-
-    if (e >= 23 + 9)
-        return x;
-    if (e < 9)
-        e = 1;
-    m = -1U >> e;
-    if ((u.i & m) == 0)
-        return x;
-
-#if defined _MSC_VER
-    x += 2.0e120f;
-#else
-    x += 0x1p120f;
-#endif
-
-    FORCE_EVAL(x);
-    u.i &= ~m;
-    return u.f;
+  if (x >= 0.0f) {
+    return floorf(x);
+  } else {
+    return ceilf(x);
+  }
 }
 
 static UINT32 opCVTSW(void)
@@ -119,7 +90,11 @@ static UINT32 opCVTSW(void)
 	case 0: val = roundf(val); break;
 	case 1: val = floorf(val); break;
 	case 2: val = ceilf(val); break;
-	default: val = mame_truncf(val); break;
+#if defined _MSC_VER
+	default: val = truncf_c89(val); break;
+#else
+	default: val = truncf(val); break;
+#endif
 	}
 
 	// Convert to uint32_t
