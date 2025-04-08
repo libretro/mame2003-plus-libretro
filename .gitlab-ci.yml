@@ -146,7 +146,7 @@ libretro-build-windows-msvc10-x64:
     - .core-defs
   only:
     - master
-    - truncf
+    - Truncf
 
 # Windows msvc10 32-bit
 libretro-build-windows-msvc10-i686:
@@ -224,7 +224,7 @@ android-arm64-v8a:
     - .core-defs
   only:
     - master
-    - truncf
+    - Truncf
 
 # Android 64-bit x86
 android-x86_64:
@@ -378,4 +378,4 @@ libretro-build-emscripten:
     - .core-defs
   only:
     - master
-    - truncf
+    - Truncf
