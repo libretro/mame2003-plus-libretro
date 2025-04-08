@@ -1,4 +1,4 @@
-#include <math.h>
+
 
 #define if2    if12
 #define f2Op1  f12Op1
@@ -90,7 +90,7 @@ static UINT32 opCVTSW(void)
 	case 0: val = roundf(val); break;
 	case 1: val = floorf(val); break;
 	case 2: val = ceilf(val); break;
-#ifdef __STDC__
+#if defined _MSC_VER
 	default: val = truncf_c89(val); break;
 #else
 	default: val = truncf(val); break;
