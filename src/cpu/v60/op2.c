@@ -94,7 +94,13 @@ float mame_truncf(float x)
     m = -1U >> e;
     if ((u.i & m) == 0)
         return x;
+
+#if defined _MSC_VER
+    x += 2.0e120f;
+#else
     x += 0x1p120f;
+#endif
+
     FORCE_EVAL(x);
     u.i &= ~m;
     return u.f;
