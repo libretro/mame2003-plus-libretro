@@ -94,7 +94,8 @@ float mame_truncf(float x)
     m = -1U >> e;
     if ((u.i & m) == 0)
         return x;
-    FORCE_EVAL(x + (float)0x1p120);
+    x += 0x1p120f;
+    FORCE_EVAL(x);
     u.i &= ~m;
     return u.f;
 }
