@@ -51,7 +51,7 @@ static void rf5c68_update( int num, INT16 **buffer, int length )
 	INT16 *left =  buffer[0];
 	INT16 *right = buffer[1];
 	int i, j;
-log_cb(RETRO_LOG_INFO, "length: %i\n", length);
+
 	/* start with clean buffers */
 	memset(left, 0, length * sizeof(*left));
 	memset(right, 0, length * sizeof(*right));
