@@ -847,10 +847,9 @@ static bool routine_ddragon(int data)
 
 		/* Title screen. */
 		case 0x1:
-			if(!ost_last_played(0, 1) && ddragon_stage != 4) {
-				ddragon_stage = 0;
+			if(!ost_last_played(0, 1) && ddragon_stage == 0)
 				ost_start_samples(0, 1, 1);
-			}
+
 			else if(ddragon_stage == 4) /* Final boss fight. */
 				ost_start_samples(22, 23, 1);
 			break;
@@ -1022,7 +1021,7 @@ static bool routine_ffight(int data)
 			ost_start_samples(32, 33, 1);
 			break;
 
-		/* homosexual cheesy ending music*/
+		/* cheesy ending music*/
 		case 0x54:
 			ost_start_samples(48, 49, 1);
 			break;
