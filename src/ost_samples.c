@@ -847,10 +847,9 @@ static bool routine_ddragon(int data)
 
 		/* Title screen. */
 		case 0x1:
-			if(!ost_last_played(0, 1) && ddragon_stage != 4) {
-				ddragon_stage = 0;
+			if(!ost_last_played(0, 1) && ddragon_stage == 0)
 				ost_start_samples(0, 1, 1);
-			}
+
 			else if(ddragon_stage == 4) /* Final boss fight. */
 				ost_start_samples(22, 23, 1);
 			break;
@@ -1022,7 +1021,7 @@ static bool routine_ffight(int data)
 			ost_start_samples(32, 33, 1);
 			break;
 
-		/* homosexual cheesy ending music*/
+		/* cheesy ending music*/
 		case 0x54:
 			ost_start_samples(48, 49, 1);
 			break;
@@ -1319,32 +1318,27 @@ static bool routine_moonwalker(int data)
 
 		/* Stage 1 and Stage 5. Bad. */
 		case 0x81:
-			if(!ost_last_played(0, 1))
-				ost_start_samples(0, 1, 1);
+			ost_start_samples(0, 1, 1);
 			break;
 
 		/* Stage 2. Smooth Criminal. */
 		case 0x82:
-			if(!ost_last_played(2, 3))
-				ost_start_samples(2, 3, 1);
+			ost_start_samples(2, 3, 1);
 			break;
 
 		/* Stage 3. Beat It. */
 		case 0x84:
-			if(!ost_last_played(4, 5))
-				ost_start_samples(4, 5, 1);
+			ost_start_samples(4, 5, 1);
 			break;
 
 		/* Stage 4. Thriller. */
 		case 0x8A:
-			if(!ost_last_played(6, 7))
-				ost_start_samples(6, 7, 1);
+			ost_start_samples(6, 7, 1);
 			break;
 
 		/* Ending. Billie Jean. */
 		case 0x89:
-			if(!ost_last_played(8, 9))
-				ost_start_samples(8, 9, 1);
+			ost_start_samples(8, 9, 1);
 			break;
 
 		/* Boss music */
