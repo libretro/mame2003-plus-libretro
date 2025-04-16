@@ -271,8 +271,8 @@ VIDEO_UPDATE( nycaptor )
 
   case 1:
     tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_BACK|3,0);
-    nycaptor_draw_sprites(bitmap,cliprect,3);
     tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_FRONT|3,0);
+    nycaptor_draw_sprites(bitmap,cliprect,3);
     nycaptor_draw_sprites(bitmap,cliprect,2);
     tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_BACK|2,0);
     tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_BACK|1,0);
