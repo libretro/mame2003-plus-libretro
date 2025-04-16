@@ -29,6 +29,20 @@ static void get_tile_info(int tile_index)
 			flags)
 }
 
+static void victnine_get_tile_info(int tile_index)
+{
+	int code = videoram[tile_index*2];
+	int attr = videoram[tile_index*2+1];
+	int tile_number = tile_number = ((attr & 0x38) << 5) + code;
+	int flags = ((attr & 0x40) ? TILE_FLIPX : 0) | ((attr & 0x80) ? TILE_FLIPY : 0);
+	SET_TILE_INFO(
+			0,
+			tile_number,
+			attr & 0x07,
+			flags)
+}
+
+
 static void rumba_get_tile_info(int tile_index)
 {
 	int code = videoram[tile_index*2];
@@ -49,6 +63,16 @@ VIDEO_START( flstory )
 /*	tilemap_set_transparent_pen( tilemap,15 ); */
 	tilemap_set_transmask(tilemap,0,0x3fff,0xc000); /* split type 0 has pens 0-13 transparent in front half */
 	tilemap_set_transmask(tilemap,1,0x8000,0x7fff); /* split type 1 has pen 15 transparent in front half */
+	tilemap_set_scroll_cols(tilemap,32);
+
+	paletteram = auto_malloc(0x200);
+	paletteram_2 = auto_malloc(0x200);
+	return video_start_generic();
+}
+
+VIDEO_START( victnine )
+{
+	tilemap = tilemap_create( victnine_get_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE,8,8,32,32 );
 	tilemap_set_scroll_cols(tilemap,32);
 
 	paletteram = auto_malloc(0x200);
@@ -248,6 +272,11 @@ void rumba_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *clip
 	}
 }
 
+VIDEO_UPDATE( victnine )
+{
+	tilemap_draw(bitmap,cliprect,tilemap,0,0);
+	rumba_draw_sprites(bitmap,cliprect);
+}
 
 VIDEO_UPDATE( rumba )
 {
