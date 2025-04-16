@@ -674,7 +674,7 @@ INPUT_PORTS_START( bronx )
 	PORT_DIPSETTING(	0x10, "4" )
 	PORT_DIPSETTING(	0x20, "5" )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_DIPNAME( 0x80, 0x80, "Reset Damage (Cheat)" )      /* see notes */
+  PORT_BITX(    0x80, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Reset Damage", IP_KEY_NONE, IP_JOY_NONE )  /* see notes */
 	PORT_DIPSETTING(	0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 
