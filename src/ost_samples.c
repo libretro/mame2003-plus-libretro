@@ -1480,7 +1480,7 @@ static bool routine_outrun(int data)
 	schedule_default_sound = false;
 
 	if(ost_last_played(0, 0)) /* first run */
-		ost_start_samples(0, 1, 1);
+		/*ost_start_samples(0, 1, 1);*/ log_cb(RETRO_LOG_INFO, "%i\n", data);
 
 	switch (data) {
 		/* --> Title screen */
