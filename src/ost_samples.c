@@ -2112,52 +2112,52 @@ static bool routine_shinobi(int data)
 	switch (data) {
 		/* Mission 2 */
 		case 0x90:
-			ost_start_samples(0, 1, 1);
+			ost_start_samples(0, 1, 1); usrintf_showmessage("Mission 2");
 			break;
 
 		/* Mission 3 */
 		case 0x91:
-			ost_start_samples(2, 3, 1);
+			ost_start_samples(2, 3, 1); usrintf_showmessage("Mission 3");
 			break;
 
 		/* Mission 4 */
 		case 0x92:
-			ost_start_samples(4, 5, 1);
+			ost_start_samples(4, 5, 1); usrintf_showmessage("Mission 4");
 			break;
 
 		/* Stage Clear */
 		case 0x93:
-			ost_start_samples(6, 7, 0);
+			ost_start_samples(6, 7, 0); usrintf_showmessage("Stage Clear");
 			break;
 
 		/* Boss Clear */
 		case 0x94:
-			ost_start_samples(8, 9, 0);
+			ost_start_samples(8, 9, 0); usrintf_showmessage("Boss Clear");
 			break;
 
 		/* Bonus Stage */
 		case 0x95:
-			ost_start_samples(10, 11, 1);
+			ost_start_samples(10, 11, 1); usrintf_showmessage("Bonus Stage");
 			break;
 
 		/* Mission 5 */
 		case 0x97:
-			ost_start_samples(12, 13, 1);
+			ost_start_samples(12, 13, 1); usrintf_showmessage("Mission 5");
 			break;
 
 		/* Continue */
 		case 0x98:
-			ost_start_samples(14, 15, 0);
+			ost_start_samples(14, 15, 0); usrintf_showmessage("Continue");
 			break;
 
 		/* Boss */
 		case 0x99:
-			ost_start_samples(16, 17, 1);
+			ost_start_samples(16, 17, 1); usrintf_showmessage("Boss");
 			break;
 
 		/* Mission 1 */
 		case 0x9A:
-			ost_start_samples(18, 19, 1);
+			ost_start_samples(18, 19, 1); usrintf_showmessage("Mission 1");
 			break;
 
 		default:
