@@ -151,6 +151,7 @@ Notes:
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
 #include "machine/fd1089.h"
+#include "ost_samples.h"
 extern void mc8123_decrypt_0066(void);
 
 /***************************************************************************/
@@ -410,8 +411,16 @@ PORT_END
 
 static WRITE16_HANDLER( sound_command_w ){
 	if( ACCESSING_LSB ){
-		soundlatch_w( 0,data&0xff );
-		cpu_set_irq_line( 1, 0, HOLD_LINE );
+		if( ost_support_enabled(OST_SUPPORT_SHINOBI) ) {
+			if(generate_ost_sound( data )) {
+				soundlatch_w( 0,data&0xff );
+				cpu_set_irq_line( 1, 0, HOLD_LINE );
+			}
+		}
+		else {
+			soundlatch_w( 0,data&0xff );
+			cpu_set_irq_line( 1, 0, HOLD_LINE );
+		}
 	}
 }
 
@@ -5177,6 +5186,8 @@ static MACHINE_DRIVER_START( shinobi )
 	MDRV_CPU_MEMORY(shinobi_readmem,shinobi_writemem)
 
 	MDRV_MACHINE_INIT(shinobi)
+
+	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_SHINOBI)
 MACHINE_DRIVER_END
 
 /***************************************************************************/
