@@ -2112,7 +2112,9 @@ static bool routine_shinobi(int data)
 	switch (data) {
 		/* Time to stop the music */
 		case 0x0:
-			ost_stop_samples();
+			/* Extend stage clear and boss clear music */
+			if( !ost_lastplayed(6, 7) && !ost_lastplayed(8, 9) )
+				ost_stop_samples();
 			break;
 
 		/* Mission 2 */
