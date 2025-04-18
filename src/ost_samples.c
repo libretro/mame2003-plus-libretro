@@ -2112,57 +2112,57 @@ static bool routine_shinobi(int data)
 	switch (data) {
 		/* Time to stop the music */
 		case 0x0:
-			ost_stop_samples(); usrintf_showmessage("Stop Music");
+			ost_stop_samples();
 			break;
 
 		/* Mission 2 */
 		case 0x90:
-			ost_start_samples(0, 1, 1); usrintf_showmessage("Mission 2");
+			ost_start_samples(0, 1, 1);
 			break;
 
 		/* Mission 3 */
 		case 0x91:
-			ost_start_samples(2, 3, 1); usrintf_showmessage("Mission 3");
+			ost_start_samples(2, 3, 1);
 			break;
 
 		/* Mission 4 */
 		case 0x92:
-			ost_start_samples(4, 5, 1); usrintf_showmessage("Mission 4");
+			ost_start_samples(4, 5, 1);
 			break;
 
 		/* Stage Clear */
 		case 0x93:
-			ost_start_samples(6, 7, 0); usrintf_showmessage("Stage Clear");
+			ost_start_samples(6, 7, 0);
 			break;
 
 		/* Boss Clear */
 		case 0x94:
-			ost_start_samples(8, 9, 0); usrintf_showmessage("Boss Clear");
+			ost_start_samples(8, 9, 0);
 			break;
 
 		/* Bonus Stage */
 		case 0x95:
-			ost_start_samples(10, 11, 1); usrintf_showmessage("Bonus Stage");
+			ost_start_samples(10, 11, 1);
 			break;
 
 		/* Mission 5 */
 		case 0x97:
-			ost_start_samples(12, 13, 1); usrintf_showmessage("Mission 5");
+			ost_start_samples(12, 13, 1);
 			break;
 
 		/* Continue */
 		case 0x98:
-			ost_start_samples(14, 15, 0); usrintf_showmessage("Continue");
+			ost_start_samples(14, 15, 0);
 			break;
 
 		/* Boss */
 		case 0x99:
-			ost_start_samples(16, 17, 1); usrintf_showmessage("Boss");
+			ost_start_samples(16, 17, 1);
 			break;
 
 		/* Mission 1 */
 		case 0x9A:
-			ost_start_samples(18, 19, 1); usrintf_showmessage("Mission 1");
+			ost_start_samples(18, 19, 1);
 			break;
 
 		default:
