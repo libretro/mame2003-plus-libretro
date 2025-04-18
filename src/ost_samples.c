@@ -2110,6 +2110,11 @@ static bool routine_shinobi(int data)
 	schedule_default_sound = false;
 
 	switch (data) {
+		/* Time to stop the music */
+		case 0x0:
+			ost_stop_samples(); usrintf_showmessage("Stop Music");
+			break;
+
 		/* Mission 2 */
 		case 0x90:
 			ost_start_samples(0, 1, 1); usrintf_showmessage("Mission 2");
