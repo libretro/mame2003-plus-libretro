@@ -47,6 +47,7 @@ static bool routine_outrun     (int data);
 static bool routine_robocop    (int data);
 static bool routine_sf1        (int data);
 static bool routine_sf2        (int data);
+static bool routine_shinobi    (int data);
 
 
 const char *const contra_sample_set_names[] =
@@ -467,6 +468,32 @@ const char *const sf2_sample_set_names[] =
 	0
 };
 
+const char *const shinobi_sample_set_names[] =
+{
+	"*shinobi",
+	"m2-01",
+	"m2-02",
+	"m3-01",
+	"m3-02",
+	"m4-01",
+	"m4-02",
+	"clear-01",
+	"clear-02",
+	"bossc-01",
+	"bossc-02",
+	"bonus-01",
+	"bonus-02",
+	"m5-01",
+	"m5-02",
+	"continue-01",
+	"continue-02",
+	"boss-01",
+	"boss-02",
+	"m1-01",
+	"m1-02",
+	0
+};
+
 
 struct Samplesinterface ost_contra =
 {
@@ -543,6 +570,13 @@ struct Samplesinterface ost_sf2 =
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf2_sample_set_names
+};
+
+struct Samplesinterface ost_shinobi =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	shinobi_sample_set_names
 };
 
 
@@ -638,6 +672,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_SF2:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
       generate_ost_sound = routine_sf2;
+      break;
+
+    case OST_SUPPORT_SHINOBI:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_shinobi)
+      generate_ost_sound = routine_shinobi;
       break;
   }
 }
@@ -2053,6 +2092,77 @@ static bool routine_sf2(int data)
 		case 0xf2:
 		case 0xf7:
 			ost_stop_samples();
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
+static bool routine_shinobi(int data)
+{
+	/* initialize ost config */
+	schedule_default_sound = false;
+
+	switch (data) {
+		/* Time to stop the music */
+		case 0x0:
+			ost_stop_samples();
+			break;
+
+		/* Mission 2 */
+		case 0x90:
+			ost_start_samples(0, 1, 1);
+			break;
+
+		/* Mission 3 */
+		case 0x91:
+			ost_start_samples(2, 3, 1);
+			break;
+
+		/* Mission 4 */
+		case 0x92:
+			ost_start_samples(4, 5, 1);
+			break;
+
+		/* Stage Clear */
+		case 0x93:
+			ost_start_samples(6, 7, 0);
+			break;
+
+		/* Boss Clear */
+		case 0x94:
+			ost_start_samples(8, 9, 0);
+			break;
+
+		/* Bonus Stage */
+		case 0x95:
+			ost_start_samples(10, 11, 1);
+			break;
+
+		/* Mission 5 */
+		case 0x97:
+			ost_start_samples(12, 13, 1);
+			break;
+
+		/* Continue */
+		case 0x98:
+			ost_start_samples(14, 15, 0);
+			break;
+
+		/* Boss */
+		case 0x99:
+			ost_start_samples(16, 17, 1);
+			break;
+
+		/* Mission 1 */
+		case 0x9A:
+			ost_start_samples(18, 19, 1);
 			break;
 
 		default:
