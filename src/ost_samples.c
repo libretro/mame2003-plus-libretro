@@ -1480,7 +1480,7 @@ static bool routine_outrun(int data)
 	schedule_default_sound = false;
 
 	if(ost_last_played(0, 0)) /* first run */
-		/*ost_start_samples(0, 1, 1);*/ log_cb(RETRO_LOG_INFO, "%i\n", data);
+		ost_start_samples(0, 1, 1);
 
 	switch (data) {
 		/* --> Title screen */
@@ -2053,6 +2053,72 @@ static bool routine_sf2(int data)
 		case 0xf2:
 		case 0xf7:
 			ost_stop_samples();
+			break;
+
+		default:
+			schedule_default_sound = true;
+			break;
+	}
+
+	ost_mix_samples();
+
+	return schedule_default_sound;
+}
+
+static bool routine_shinobi(int data)
+{
+	/* initialize ost config */
+	schedule_default_sound = false;
+
+	switch (data) {
+		/* Mission 2 */
+		case 0x90:
+			ost_start_samples(0, 1, 1);
+			break;
+
+		/* Mission 3 */
+		case 0x91:
+			ost_start_samples(2, 3, 1);
+			break;
+
+		/* Mission 4 */
+		case 0x92:
+			ost_start_samples(4, 5, 1);
+			break;
+
+		/* Stage Clear */
+		case 0x93:
+			ost_start_samples(6, 7, 0);
+			break;
+
+		/* Boss Clear */
+		case 0x94:
+			ost_start_samples(8, 9, 0);
+			break;
+
+		/* Bonus Stage */
+		case 0x95:
+			ost_start_samples(10, 11, 1);
+			break;
+
+		/* Mission 5 */
+		case 0x97:
+			ost_start_samples(12, 13, 1);
+			break;
+
+		/* Continue */
+		case 0x98:
+			ost_start_samples(14, 15, 0);
+			break;
+
+		/* Boss */
+		case 0x99:
+			ost_start_samples(16, 17, 1);
+			break;
+
+		/* Mission 1 */
+		case 0x9A:
+			ost_start_samples(18, 19, 1);
 			break;
 
 		default:
