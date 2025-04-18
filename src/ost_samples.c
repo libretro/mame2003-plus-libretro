@@ -47,6 +47,7 @@ static bool routine_outrun     (int data);
 static bool routine_robocop    (int data);
 static bool routine_sf1        (int data);
 static bool routine_sf2        (int data);
+static bool routine_shinobi    (int data);
 
 
 const char *const contra_sample_set_names[] =
@@ -467,6 +468,32 @@ const char *const sf2_sample_set_names[] =
 	0
 };
 
+const char *const shinobi_sample_set_names[] =
+{
+	"*shinobi",
+	"m2-01",
+	"m2-02",
+	"m3-01",
+	"m3-02",
+	"m4-01",
+	"m4-02",
+	"clear-01",
+	"clear-02",
+	"bossc-01",
+	"bossc-02",
+	"bonus-01",
+	"bonus-02",
+	"m5-01",
+	"m5-02",
+	"continue-01",
+	"continue-02",
+	"boss-01",
+	"boss-02",
+	"m1-01",
+	"m1-02",
+	0
+};
+
 
 struct Samplesinterface ost_contra =
 {
@@ -543,6 +570,13 @@ struct Samplesinterface ost_sf2 =
 	2,	/* 2 channels*/
 	100, /* volume*/
 	sf2_sample_set_names
+};
+
+struct Samplesinterface ost_shinobi =
+{
+	2,	/* 2 channels*/
+	100, /* volume*/
+	shinobi_sample_set_names
 };
 
 
@@ -638,6 +672,11 @@ void install_ost_support(struct InternalMachineDriver *machine, int ost)
     case OST_SUPPORT_SF2:
       MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_sf2)
       generate_ost_sound = routine_sf2;
+      break;
+
+    case OST_SUPPORT_SHINOBI:
+      MDRV_SOUND_ADD_TAG("OST Samples", SAMPLES, ost_shinobi)
+      generate_ost_sound = routine_shinobi;
       break;
   }
 }
