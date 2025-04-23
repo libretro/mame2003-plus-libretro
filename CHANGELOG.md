@@ -1139,5 +1139,6 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Fixed the attract mode for 64th Street, Chimera Beast, pengo, updated the pengo sets and fixed the gameover annimation for Vapor Trail [grant2258]
 * Added reset playfield dip switch option in Space Wars [mahoneyt944]
 * Merged pbillian.c and superqix.c updating to MAME90 which improves the emulation and sound for Prebillian and VS. Hot Smash both games now playable [arcadez, grant2258]
-* Ported across from advancemame a proper fix For Risky Challenge / Gussun Oyoyo the protection is now fully cracked and an issue
-* where the game could crash on the score calc between levels is sorted [amadvance, arcadez]
+* Ported across from advancemame a proper fix For Risky Challenge / Gussun Oyoyo the protection is now fully cracked fixing an issuemwhere the game
+could crash on the score calc between levels is sorted [amadvance, arcadez]
+* Added Taito's Victorious Nine to flstory.c and hooked up the M68705 protection MCU for Taito's Field Day [arcadez]
