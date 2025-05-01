@@ -6088,6 +6088,7 @@ Other Sun games
 	DRIVER( hypernoid )     /* 2021 M.Priewe */
 	DRIVER( cyborgforce )   /* (c) 2023 Neo Byte Force Ltd */
 	DRIVER( captainbarrel ) /* (c) 2024 Neo Byte Force Ltd */
+  DRIVER( gladmort )      /* (c) 2024 Pixelheart / ChipsOnSteroids */
 
 	/* SemiCom 68020 based hardware */
 	DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
