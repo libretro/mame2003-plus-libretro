@@ -7243,6 +7243,28 @@ ROM_START( captainbarrel )
     ROM_LOAD16_BYTE( "captain-c2.bin", 0x000001, 0x200000, CRC(843e16ac) SHA1(4288905ef92f813b540e38702477c76dc5146312) )
 ROM_END
 
+// 503 : Gladmort by Pixelheart/ChipsOnSteroids
+ROM_START( gladmort )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "503.p1", 0x000000, 0x100000, CRC(64d77ca4) SHA1(8cf0e12d462dd1f4f67c782c5c643a7da29bc718) )
+
+	NEO_SFIX_128K( "503.s1", CRC(c96154b9) SHA1(c95251dc566d4649496b7785c8e4cddd0aa67d7f) )
+
+	NEO_BIOS_SOUND_64K( "503.m1", CRC(fbccedbd) SHA1(61e7f745d24c4ec3598cbf3cefc603f7deb21497) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "503.v1",   0x000000, 0x400000, CRC(4c0efb20) SHA1(80424564a8cd19bbe7e3f8003129585174cc9367) )
+	ROM_LOAD( "503.v2",   0x400000, 0x400000, CRC(dbd083f5) SHA1(c76980473550fda0ece72fa87104ea79a6a8024e) )
+	ROM_LOAD( "503.v3",   0x800000, 0x400000, CRC(2f5c4eeb) SHA1(4ed687bde1d3b549581270e90832d90a46101df0) )
+	ROM_LOAD( "503.v4",   0xc00000, 0x400000, CRC(12e01947) SHA1(b8147e584712d77c47e97c7a4790807536a22a86) )
+
+  NO_DELTAT_REGION
+
+	ROM_REGION( 0x2800000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "503.c1",   0x0000000, 0x1400000, CRC(c7d367cc) SHA1(91a5241ba793c367e06341c951e9fb43726d0944) )
+	ROM_LOAD16_BYTE( "503.c2",   0x0000001, 0x1400000, CRC(2c39b98e) SHA1(da26d5073fe483650cbcacf595b4410e4f5f4787) )
+ROM_END
+
 /******************************************************************************/
 
 /* dummy entry for the dummy bios driver */
@@ -8151,6 +8173,9 @@ GAMEB( 2023, cyborgforce, neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "Neo B
 
 /* NEO.BYTE.FORCE */
 GAMEB( 2024, captainbarrel, neogeo, neogeo, neogeo, neogeo, neogeo, ROT0, "Neo Byte Force Ltd", "Captain Barrel", &neogeo_ctrl, NULL )  
+
+/* Pixelheart / ChipsOnSteroids */
+GAMEB( 2024, gladmort,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "Pixelheart / ChipsOnSteroids", "Gladmort", &neogeo_ctrl, NULL ) 
 
 
 #if 0
