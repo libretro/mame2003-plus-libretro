@@ -920,9 +920,6 @@ void populate_table(struct memport_data *memport, int iswrite, offs_t start, off
 		if (l1start == l1stop)
 		{
 
-		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
-		memset(&subtable[l2start], handler, l2stop - l2start + 1);
-
 		/* Refetch base after potential realloc */
 		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
 		memset(&subtable[l2start], handler, l2stop - l2start + 1);
