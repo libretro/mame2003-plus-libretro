@@ -1,15 +1,15 @@
 /***************************************************************************
 
-  memory.c
+	memory.c
 
-  Functions which handle the CPU memory and I/O port access.
+	Functions which handle the CPU memory and I/O port access.
 
-  Caveats:
+	Caveats:
 
-  * The install_mem/port_*_handler functions are only intended to be
+	* The install_mem/port_*_handler functions are only intended to be
 	called at driver init time. Do not call them after this time.
 
-  * If your driver executes an opcode which crosses a bank-switched
+	* If your driver executes an opcode which crosses a bank-switched
 	boundary, it will pull the wrong data out of memory. Although not
 	a common case, you may need to revert to memcpy to work around this.
 	See machine/tnzs.c for an example.
@@ -69,8 +69,8 @@
 #define HANDLER_IS_BANK(h)		((FPTR)(h) >= STATIC_BANK1 && (FPTR)(h) <= STATIC_BANKMAX)
 #define HANDLER_IS_STATIC(h)	((FPTR)(h) < STATIC_COUNT)
 
-#define HANDLER_TO_BANK(h)		((FPTR)(h))
-#define BANK_TO_HANDLER(b)		((void *)(b))
+#define BANK_TO_HANDLER(b) ((void *)(FPTR)(b))
+#define HANDLER_TO_BANK(h) ((int)(FPTR)(h))
 
 
 /*-------------------------------------------------
@@ -824,7 +824,9 @@ UINT8 get_handler_index(struct handler_data *table, void *handler, offs_t start)
 		{
 			table[i].handler = handler;
 			table[i].offset = start;
+			return i;
 		}
+
 		if (table[i].handler == handler && table[i].offset == start)
 			return i;
 	}
@@ -846,13 +848,6 @@ UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *
 	if (tabledata->subtable_count + 1 == SUBTABLE_COUNT)
 		fatalerror("error: ran out of memory subtables\n");
 
-
-#ifdef __LIBRETRO__ /* HACK: Don't use realloc*/
-    if(tabledata->subtable_alloc < SUBTABLE_COUNT)
-    {
-        tabledata->subtable_alloc = SUBTABLE_COUNT;
-    }
-#else
 	/* allocate more memory if we need to */
 	if (tabledata->subtable_count <= tabledata->subtable_alloc)
 	{
@@ -861,7 +856,6 @@ UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *
 		if (!tabledata->table)
 			fatalerror("error: ran out of memory allocating memory subtable\n");
 	}
-#endif
 
 	/* initialize the table entries */
 	memset(&tabledata->table[(1 << l1bits) + (tabledata->subtable_count << l2bits)], previous_value, 1 << l2bits);
@@ -912,35 +906,49 @@ void populate_table(struct memport_data *memport, int iswrite, offs_t start, off
 	/* handle the starting edge if it's not on a block boundary */
 	if (l2start != 0)
 	{
+		UINT8 *subtable;
 		/* get the subtable index */
 		subindex = tabledata->table[l1start];
 		if (subindex < SUBTABLE_BASE)
-			subindex = tabledata->table[l1start] = alloc_new_subtable(memport, tabledata, subindex);
+		{
+			subindex = alloc_new_subtable(memport, tabledata, subindex);
+			tabledata->table[l1start] = subindex;
+		}
 		subindex &= SUBTABLE_MASK;
 
 		/* if the start and stop end within the same block, handle that */
 		if (l1start == l1stop)
 		{
-			memset(&tabledata->table[(1 << l1bits) + (subindex << l2bits) + l2start], handler, l2stop - l2start + 1);
-			return;
+
+		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
+		memset(&subtable[l2start], handler, l2stop - l2start + 1);
+
+		/* Refetch base after potential realloc */
+		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
+		memset(&subtable[l2start], handler, l2stop - l2start + 1);
+		return;
 		}
 
 		/* otherwise, fill until the end */
-		memset(&tabledata->table[(1 << l1bits) + (subindex << l2bits) + l2start], handler, (1 << l2bits) - l2start);
+		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
+		memset(&subtable[l2start], handler, (1 << l2bits) - l2start);
+
 		if (l1start != (offs_t)~0) l1start++;
 	}
 
 	/* handle the trailing edge if it's not on a block boundary */
 	if (l2stop != l2mask)
 	{
+		UINT8 *subtable;
 		/* get the subtable index */
 		subindex = tabledata->table[l1stop];
-		if (subindex < SUBTABLE_BASE)
-			subindex = tabledata->table[l1stop] = alloc_new_subtable(memport, tabledata, subindex);
+		if (subindex < SUBTABLE_BASE) {
+			subindex = alloc_new_subtable(memport, tabledata, subindex);
+			tabledata->table[l1stop] = subindex;
+		}
 		subindex &= SUBTABLE_MASK;
-
-		/* fill from the beginning */
-		memset(&tabledata->table[(1 << l1bits) + (subindex << l2bits)], handler, l2stop + 1);
+		subtable = &tabledata->table[(1 << l1bits) + (subindex << l2bits)];
+		memset(subtable, handler, l2stop + 1);
 
 		/* if the start and stop end within the same block, handle that */
 		if (l1start == l1stop)
@@ -1022,6 +1030,7 @@ void install_port_handler(struct memport_data *memport, int iswrite, offs_t star
 {
 	struct table_data *tabledata = iswrite ? &memport->write : &memport->read;
 	UINT8 idx = get_handler_index(tabledata->handlers, handler, start);
+
 	populate_table(memport, iswrite, start, end, idx);
 }
 
@@ -1093,6 +1102,7 @@ static int init_cpudata(void)
 		if (cputype == CPU_Z80)
 			if (!(Machine->drv->cpu[cpunum].cpu_flags & CPU_16BIT_PORT))
 				cpudata[cpunum].port.mask = 0xff;
+				
 #endif
 #if HAS_DRZ80
 		if (cputype == CPU_DRZ80)
@@ -1125,13 +1135,8 @@ static int init_memport(int cpunum, struct memport_data *data, int abits, int db
 	data->mask = 0xffffffffUL >> (32 - abits);
 
 	/* allocate memory */
-#ifdef __LIBRETRO__ /* HACK: Don't use realloc*/
-	data->read.table = malloc(1024*1024);
-	data->write.table = malloc(1024*1024);
-#else
 	data->read.table = malloc(1 << LEVEL1_BITS(data->ebits));
 	data->write.table = malloc(1 << LEVEL1_BITS(data->ebits));
-#endif
 
 	if (!data->read.table)
 		return fatalerror("cpu #%d couldn't allocate read table\n", cpunum);
@@ -1234,7 +1239,7 @@ static int verify_memory(void)
 					bankdata[bank].used = 1;
 					bankdata[bank].cpunum = -1;
 				}
-				mwa++;
+			mwa++;
 		}
 	}
 	return 1;

@@ -1991,23 +1991,23 @@ static void RebuildStringTables(void)
 		(!menuStrings.subStrings && menuStrings.numStrings) ||
 		(!menuStrings.buf && storageNeeded))
 	{
-		logerror(	"cheat: memory allocation error\n"
-					"	length =			%.8X\n"
-					"	numStrings =		%.8X\n"
-					"	mainStringLength =	%.8X\n"
-					"	subStringLength =	%.8X\n"
-					"%.8X %.8X %.8X %.8X %.8X %.8X\n",
-					menuStrings.length,
-					menuStrings.numStrings,
-					menuStrings.mainStringLength,
-					menuStrings.subStringLength,
-
-					(int)menuStrings.mainList,
-					(int)menuStrings.subList,
-					(int)menuStrings.flagList,
-					(int)menuStrings.mainStrings,
-					(int)menuStrings.subStrings,
-					(int)menuStrings.buf);
+		logerror(
+			"cheat: memory allocation error\n"
+			"length = %.8X\n"
+			"numStrings = %.8X\n"
+			"mainStringLength = %.8X\n"
+			"subStringLength = %.8X\n"
+			"%08lX %08lX %08lX %08lX %08lX %08lX\n",
+    menuStrings.length,
+    menuStrings.numStrings,
+    menuStrings.mainStringLength,
+    menuStrings.subStringLength,
+    (unsigned long)(FPTR)menuStrings.mainList,
+    (unsigned long)(FPTR)menuStrings.subList,
+    (unsigned long)(FPTR)menuStrings.flagList,
+    (unsigned long)(FPTR)menuStrings.mainStrings,
+    (unsigned long)(FPTR)menuStrings.subStrings,
+    (unsigned long)(FPTR)menuStrings.buf);
 
 		exit(1);
 	}
@@ -7085,7 +7085,7 @@ static void ResizeCheatListNoDispose(UINT32 newLength)
 
 		if(newLength > cheatListLength)
 		{
-			int	i;
+			UINT32 i;
 
 			memset(&cheatList[cheatListLength], 0, (newLength - cheatListLength) * sizeof(CheatEntry));
 
@@ -7317,9 +7317,18 @@ static void ResizeWatchListNoDispose(UINT32 newLength)
 
 		if(newLength > watchListLength)
 		{
-			int	i;
+			UINT32 i;
+			size_t count = newLength - watchListLength;
 
-			memset(&watchList[watchListLength], 0, (newLength - watchListLength) * sizeof(WatchInfo));
+			WatchInfo* newWatchList = realloc(watchList, newLength * sizeof(WatchInfo));
+			if (!newWatchList)
+			{
+				logerror("cheat: Failed to realloc watchList to size %u\n", newLength);
+				return; //we should probably bail if this happens
+			}
+			watchList = newWatchList;
+
+			memset(&watchList[watchListLength], 0, count * sizeof(WatchInfo));
 
 			for(i = watchListLength; i < newLength; i++)
 			{
@@ -7692,7 +7701,7 @@ static void RestoreRegionBackup(SearchRegion * region)
 static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 {
 	mem_write_handler	handler = region->writeHandler->handler;
-	UINT32				handlerAddress = (UINT32)handler;
+	FPTR handlerAddress = (FPTR)handler;
 
 	switch(info->searchSpeed)
 	{
@@ -7710,15 +7719,14 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 			}
 #endif
 
-			if(	(handler == MWA_RAM) &&
-				(!region->writeHandler->base))
+			if( (handler == MWA_RAM) && (!region->writeHandler->base))
 				return 1;
 
-				/* for neogeo, search bank one*/
-				if(	(options.content_flags[CONTENT_NEOGEO]) &&
-					(info->targetType == kRegionType_CPU) &&
-					(info->targetIdx == 0) &&
-					(handler == MWA_BANK1))
+			/* for neogeo, search bank one*/
+			if(	(options.content_flags[CONTENT_NEOGEO]) &&
+				(info->targetType == kRegionType_CPU) &&
+				(info->targetIdx == 0) &&
+				(handler == MWA_BANK1))
 					return 1;
 
 #if HAS_TMS34010
@@ -7742,8 +7750,8 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 			return 0;
 
 		case kSearchSpeed_Medium:
-			if(	(handlerAddress >= ((UINT32)MWA_BANK1)) &&
-				(handlerAddress <= ((UINT32)MWA_BANK24)))
+			if ((handlerAddress >= (FPTR)MWA_BANK1) &&
+			(handlerAddress <= (FPTR)MWA_BANK24))
 				return 1;
 
 			if(handler == MWA_RAM)
@@ -7784,21 +7792,21 @@ static void SetSearchRegionDefaultName(SearchRegion * region)
 			if(region->writeHandler)
 			{
 				mem_write_handler	handler = region->writeHandler->handler;
-				UINT32				handlerAddress = (UINT32)handler;
+				FPTR handlerAddress = (FPTR)handler;
 
-				if(	(handlerAddress >= ((UINT32)MWA_BANK1)) &&
-					(handlerAddress <= ((UINT32)MWA_BANK24)))
+				if ((handlerAddress >= (FPTR)MWA_BANK1) &&
+						(handlerAddress <= (FPTR)MWA_BANK24))
 				{
-					sprintf(desc, "BANK%.2d", (handlerAddress - ((UINT32)MWA_BANK1)) + 1);
+					sprintf(desc, "BANK%.2d", (int)((handlerAddress - (FPTR)MWA_BANK1) + 1));
 				}
 				else
 				{
 					switch(handlerAddress)
 					{
-						case (UINT32)MWA_NOP:		strcpy(desc, "NOP   ");	break;
-						case (UINT32)MWA_RAM:		strcpy(desc, "RAM   ");	break;
-						case (UINT32)MWA_ROM:		strcpy(desc, "ROM   ");	break;
-						case (UINT32)MWA_RAMROM:	strcpy(desc, "RAMROM");	break;
+						case (FPTR)MWA_NOP:    strcpy(desc, "NOP   "); break;
+						case (FPTR)MWA_RAM:    strcpy(desc, "RAM   "); break;
+						case (FPTR)MWA_ROM:    strcpy(desc, "ROM   "); break;
+						case (FPTR)MWA_RAMROM: strcpy(desc, "RAMROM"); break;
 						default:					strcpy(desc, "CUSTOM");	break;
 					}
 				}

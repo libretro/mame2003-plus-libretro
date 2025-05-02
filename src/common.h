@@ -181,7 +181,7 @@ enum
 #define ROMENTRY_COPY				((const char *)ROMENTRYTYPE_COPY)
 
 /* ----- per-entry macros ----- */
-#define ROMENTRY_GETTYPE(r)			((FPTR)(r)->_name)
+#define ROMENTRY_GETTYPE(r) ((FPTR)(r)->_name)
 #define ROMENTRY_ISSPECIAL(r)		(ROMENTRY_GETTYPE(r) < ROMENTRYTYPE_COUNT)
 #define ROMENTRY_ISFILE(r)			(!ROMENTRY_ISSPECIAL(r))
 #define ROMENTRY_ISREGION(r)		((r)->_name == ROMENTRY_REGION)
@@ -234,7 +234,7 @@ enum
 #define		ROMREGION_DATATYPEDISK	0x00010000
 
 /* ----- per-region macros ----- */
-#define ROMREGION_GETTYPE(r)		((UINT32)(r)->_hashdata)
+#define ROMREGION_GETTYPE(r) ((FPTR)(r)->_hashdata)
 #define ROMREGION_GETLENGTH(r)		((r)->_length)
 #define ROMREGION_GETFLAGS(r)		((r)->_flags)
 #define ROMREGION_GETWIDTH(r)		(8 << (ROMREGION_GETFLAGS(r) & ROMREGION_WIDTHMASK))
