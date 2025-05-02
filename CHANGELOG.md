@@ -90,6 +90,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gaia: The Last Choice Of Earth
 * Galactica - Batalha Espacial
 * Ghostlop
+* Gladmort (NeoGeo Final Release)
 * Glass (Ver 1.1, Break Edition, Checksum D419AB69, Version 1994) (censored, unprotected)
 * Golden Par Golf
 * Golden Tee 3D Golf (v1.93N)
@@ -1142,3 +1143,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 * Ported across from advancemame a proper fix For Risky Challenge / Gussun Oyoyo the protection is now fully cracked fixing an issuemwhere the game
 could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added Taito's Victorious Nine to flstory.c and hooked up the M68705 protection MCU for Taito's Field Day [arcadez]
+* Added support for Gladmort to the NeoGeo driver [arcadez]
