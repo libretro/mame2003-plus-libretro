@@ -905,36 +905,12 @@ data32_t	cpu_readop_arg32_safe(offs_t offset);
 
 /* ----- unsafe opcode and opcode argument reading ----- */
 #define cpu_readop_unsafe(A)		(OP_ROM[(A) & mem_amask])
-//#define cpu_readop16_unsafe(A)		(*(data16_t *)&OP_ROM[(A) & mem_amask])
-static INLINE data16_t cpu_readop16_unsafe(offs_t A)
-{
-	data16_t val;
-	memcpy(&val, &OP_ROM[(A) & mem_amask], sizeof(val));
-	return val;
-}
-//#define cpu_readop32_unsafe(A)		(*(data32_t *)&OP_ROM[(A) & mem_amask])
-static INLINE data32_t cpu_readop32_unsafe(offs_t A)
-{
-	data32_t val;
-	memcpy(&val, &OP_ROM[(A) & mem_amask], sizeof(val));
-	return val;
-}
+#define cpu_readop16_unsafe(A)		(*(data16_t *)&OP_ROM[(A) & mem_amask])
+#define cpu_readop32_unsafe(A)		(*(data32_t *)&OP_ROM[(A) & mem_amask])
 #define cpu_readop_arg_unsafe(A)	(OP_RAM[(A) & mem_amask])
-//#define cpu_readop_arg16_unsafe(A)	(*(data16_t *)&OP_RAM[(A) & mem_amask])
-static INLINE data16_t cpu_readop_arg16_unsafe(offs_t A)
-{
-	data16_t val;
-	memcpy(&val, &OP_RAM[(A) & mem_amask], sizeof(val));
-	return val;
-}
+#define cpu_readop_arg16_unsafe(A)	(*(data16_t *)&OP_RAM[(A) & mem_amask])
+#define cpu_readop_arg32_unsafe(A)	(*(data32_t *)&OP_RAM[(A) & mem_amask])
 
-//#define cpu_readop_arg32_unsafe(A)	(*(data32_t *)&OP_RAM[(A) & mem_amask])
-static INLINE data32_t cpu_readop_arg32_unsafe(offs_t A)
-{
-	data32_t val;
-	memcpy(&val, &OP_RAM[(A) & mem_amask], sizeof(val));
-	return val;
-}
 /* ----- opcode and opcode argument reading ----- */
 void activecpu_set_op_base(unsigned val);
 static INLINE data8_t  cpu_readop(offs_t A)		{ if (address_is_unsafe(A)) { activecpu_set_op_base(A); } return cpu_readop_unsafe(A); }
