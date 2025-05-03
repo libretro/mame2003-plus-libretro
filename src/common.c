@@ -16,7 +16,7 @@
 /*#define LOG_LOAD */
 
 
-char *chd_error_text[] =
+const char *chd_error_text[] =
 {
 	"CHDERR_NONE",
 	"CHDERR_NO_INTERFACE",
