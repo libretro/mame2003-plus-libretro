@@ -492,8 +492,6 @@ MACHINE_DRIVER_END
 
 /**********************************************************************************/
 
-#define ROM_LOAD64_WORD(name,offset,length,crc)		ROMX_LOAD(name, offset, length, crc, ROM_GROUPWORD | ROM_SKIP(6))
-
 ROM_START( dbz )
 	/* main program */
 	ROM_REGION( 0x400000, REGION_CPU1, 0)
