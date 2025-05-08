@@ -146,6 +146,7 @@ libretro-build-windows-msvc10-x64:
     - .core-defs
   only:
     - master
+    - Intlib
 
 # Windows msvc10 32-bit
 libretro-build-windows-msvc10-i686:
