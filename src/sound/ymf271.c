@@ -20,8 +20,6 @@
 
 #define CLOCK (44100 * 384)	/* = 16.9344 MHz*/
 
-#define log2(n) (log((float) n)/log((float) 2))
-
 typedef struct
 {
 	INT8  extout;
