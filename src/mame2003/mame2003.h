@@ -43,17 +43,13 @@ extern "C" {
 #define CLIB_DECL
 #endif
 
-//below is standard modern compilers
+/* fallback for c89 compilers only msvc as far as I know */
+#if defined _MSC_VER
+#include "inttypes.h"
+#include "stdint.h"
+#endif
 #define FPTR uintptr_t
 
-//fallback for c89 compilers only msvc as far as I know
-#if defined _MSC_VER
-	#ifdef __LP64__
-	#define FPTR unsigned long   // 64bit: sizeof(void *) is sizeof(long)  dont think this is the case for msvc 64 bit use #define FPTR uintptr_t for it.  
-	#else
-	#define FPTR unsigned int    // since your using c89 for msvc so youll need to find defines for the 64 bit compilers that set the flags right.
-	#endif                       
-#endif //end defined _MSC_VER
 /***************************************************************************
 
 	Parameters
