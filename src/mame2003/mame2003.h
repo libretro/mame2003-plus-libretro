@@ -45,8 +45,11 @@ extern "C" {
 
 /* fallback for c89 compilers only msvc as far as I know */
 #if defined _MSC_VER
-#include "inttypes.h"
-#include "stdint.h"
+   #ifdef _WIN64
+      typedef unsigned __int64  uintptr_t;
+   #else
+      typedef _W64 unsigned int uintptr_t;
+   #endif
 #endif
 #define FPTR uintptr_t
 
