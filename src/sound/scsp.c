@@ -368,7 +368,7 @@ static void SCSP_StopSlot(struct _SLOT *slot,int keyoff)
 	slot->udata.data[0]&=~0x800;
 }
 
-#define log2(n) (log((float) n)/log((float) 2))
+#define SCSP_LOG2(n) (log((float) n)/log((float) 2))
 
 static void SCSP_Init(int n, struct SCSPinterface *intf)
 {
@@ -398,7 +398,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 
 	for(i=0;i<0x400;++i)
 	{
-		float fcent=1200.0*log2((float) ((1024.0+(float)i)/1024.0));
+		float fcent=1200.0*SCSP_LOG2((float) ((1024.0+(float)i)/1024.0));
 		fcent=pow(2.0,fcent/1200.0);
 		FNS_Table[i]=(float) (1<<SHIFT) *fcent;
 	}
