@@ -3365,25 +3365,21 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 
 	if (setup_selected == 0)
   {
-    if(input_ui_pressed(IPT_UI_CONFIGURE))
+    if(input_ui_pressed(IPT_UI_CONFIGURE) || options.display_setup)
     {
       setup_selected = -1;
-    }
-    else if(options.display_setup)
-    {
-      setup_selected = -1;
-      setup_via_menu = 1;
-	    setup_menu_init();
+      setup_menu_init();
+      mame_pause(true);
     }
 
-    if (setup_active()) mame_pause(true);
+    if(options.display_setup)
+      setup_via_menu = 1;
   }
 
 	if (setup_selected && setup_via_menu && !options.display_setup)
   {
     setup_selected = 0;
     setup_via_menu = 0;
-    setup_menu_init();
     schedule_full_refresh();
   }
   else if(setup_selected)
