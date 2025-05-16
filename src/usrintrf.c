@@ -3376,7 +3376,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
       setup_via_menu = 1;
   }
 
-	if (setup_selected && setup_via_menu && !options.display_setup)
+	if (setup_via_menu && !options.display_setup)
   {
     setup_selected = 0;
     setup_via_menu = 0;
