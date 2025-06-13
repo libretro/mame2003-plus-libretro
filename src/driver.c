@@ -5158,6 +5158,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( glass )		/* (c) 1993 - Ref 931021 */
 	DRIVER( glasskr )	/* (c) 1994 - Ref 931021 Anime girls, unprotected */
 	DRIVER( targeth )	/* (c) 1994 - Ref 940531 */
+	DRIVER( quickshts )	/* (c) 1994 - Ref 940531 */
 	DRIVER( thoop2 )	/* (c) 1994 - Ref ??? */
 	DRIVER( aligator )	/* (c) 1994 - Ref 940411 */
 	DRIVER( aligatun )	/* (c) 1994 - Ref 940411 (unprotected) */
