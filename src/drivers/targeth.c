@@ -58,7 +58,7 @@ static INTERRUPT_GEN(targeth_interrupt )
 /* correct i think */
 static READ16_HANDLER(service_mirror_r)
 {
-   return readinputport(7) << 8;
+   return readinputport(7); /* << 8; */
 }
 
 static MEMORY_READ16_START( targeth_readmem )
