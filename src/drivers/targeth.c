@@ -25,9 +25,9 @@ VIDEO_UPDATE( targeth );
 static struct GfxLayout tilelayout16_0x080000 =
 {
 	16,16,														/* 16x16 tiles */
-	0x080000/32,												/* number of tiles */
+	RGN_FRAC(1,4),												/* number of tiles */
 	4,															/* bitplanes */
-	{ 3*0x080000*8, 2*0x080000*8, 1*0x080000*8, 0*0x080000*8 }, /* plane offsets */
+	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) }, /* plane offsets */
 	{ 0,1,2,3,4,5,6,7, 16*8+0,16*8+1,16*8+2,16*8+3,16*8+4,16*8+5,16*8+6,16*8+7 },
 	{ 0*8,1*8,2*8,3*8,4*8,5*8,6*8,7*8, 8*8,9*8,10*8,11*8,12*8,13*8,14*8,15*8 },
 	32*8
@@ -143,7 +143,7 @@ PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "Gun alarm" )	/* Service mode gets default from here when uninitialized */ 
+	PORT_DIPNAME( 0x40, 0x40, "Gun alarm" )	/* This doesn't work. What's supposed to do? */
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
@@ -213,8 +213,8 @@ static MACHINE_DRIVER_START( targeth )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(64*16, 32*16)				/* 1024x512 */
-	MDRV_VISIBLE_AREA(0, 24*16-1, 16, 16*16-1)	/* 400x240 */
+	MDRV_SCREEN_SIZE(64*16, 16*16)
+	MDRV_VISIBLE_AREA(3*8, 23*16-8-1, 16, 16*16-8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo_0x080000)
 	MDRV_PALETTE_LENGTH(1024)
 
