@@ -148,7 +148,7 @@ VIDEO_UPDATE( targeth )
 	tilemap_set_scrolly(pant[0], 0, targeth_vregs[0]);
 	tilemap_set_scrollx(pant[0], 0, targeth_vregs[1] + 0x04);
 	tilemap_set_scrolly(pant[1], 0, targeth_vregs[2]);
-	tilemap_set_scrollx(pant[1], 0, targeth_vregs[3]);
+	tilemap_set_scrollx(pant[1], 0, targeth_vregs[3] + 0x00);
 
 	tilemap_draw(bitmap,cliprect,pant[1],0,0);
 	tilemap_draw(bitmap,cliprect,pant[0],0,0);
