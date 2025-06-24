@@ -161,11 +161,11 @@ VIDEO_UPDATE( targeth )
 		/* 1P Gun */
 		posx = readinputport(0) & 0x1ff;
 		posy = readinputport(1) & 0x0ff;
-		draw_crosshair(1, bitmap, posx - 0x17, posy + 1, cliprect);
+		draw_crosshair(1, bitmap, posx - 0x16, posy -6, cliprect);
 
 		/* 2P Gun */
 		posx = readinputport(2) & 0x1ff;
 		posy = readinputport(3) & 0x0ff;
-		draw_crosshair(2, bitmap, posx - 0x17, posy + 1, cliprect);
+		draw_crosshair(2, bitmap, posx - 0x16, posy -6 , cliprect);
 	}
 }
