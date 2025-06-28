@@ -179,6 +179,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzzle Star
 * Puzzli 2
 * Puzzli 2 Super
+* Quick Shots (Clone Of Target Hits)
 * Racing Beat
 * Racing Hero
 * Rage Of The Dragons
@@ -1144,3 +1145,4 @@ Gun & Fronter, Metal Black, Ninja Kids, and Pulirula [arcadez]
 could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added Taito's Victorious Nine to flstory.c and hooked up the M68705 protection MCU for Taito's Field Day [arcadez]
 * Added support for Gladmort to the NeoGeo driver [arcadez]
+* Added Quick Shots an unprotected version of Target Hits to the targeth.c driver then updated the gfx and configured the gun sights [arcadez, grant2258]
