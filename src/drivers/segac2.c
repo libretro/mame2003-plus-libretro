@@ -1124,6 +1124,93 @@ static MEMORY_WRITE16_START( jzth_writemem )
 	{ 0xA11100, 0xA11101, MWA16_NOP },
 MEMORY_END
 
+int protval = 0;
+
+READ16_HANDLER(unhandled_protval_r)
+{
+	int pc = (activecpu_get_pc());
+	
+	usrintf_showmessage("%06x unhandled protval_r\n", pc);
+	return protval;
+}
+
+WRITE16_HANDLER(unhandled_protval_w)
+{
+    int offset;
+	int pc = (activecpu_get_pc());
+
+	usrintf_showmessage("%06x unhandled protval_w %08x %04x\n", pc, 0x400000 + (offset * 2) , data);
+	protval = data & 0xff00;
+}
+
+READ16_HANDLER(protval_r)
+{
+	int pc = (activecpu_get_pc());
+	
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x protval_r\n", pc);
+	return protval;
+}
+
+WRITE16_HANDLER(protval_w)
+{
+	int pc = (activecpu_get_pc());
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x protval_w %04x\n", pc, data);
+	protval = data & 0xff00;
+}
+
+READ16_HANDLER(sj_70001c_r)
+{
+	int pc = (activecpu_get_pc());
+	
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001c_r\n", pc);
+	return 0x0002;
+}
+
+READ16_HANDLER(sj_70001c_r)
+{
+	int pc = (activecpu_get_pc());
+	
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001c_r\n", pc);
+	return 0x0031;
+}
+
+static MEMORY_READ16_START( songjang_readmem )
+	{ 0x000000, 0x3fffff, MRA16_ROM },					/* Main 68k Program Roms */
+	{ 0x400000, 0x4fffff, unhandled_protval_r },
+	{ 0x426800, 0x426801, protval_r }, 
+	{ 0x432100, 0x432101, protval_r },
+	{ 0x465460, 0x465461, protval_r },
+	{ 0x467470, 0x467471, protval_r },
+	{ 0x70001c, 0x70001d, sj_70001c_r },
+	{ 0x700010, 0x700011, input_port_0_word_r },		/* Input (P2) */
+	{ 0x700012, 0x700013, input_port_1_word_r },		/* Input (P1) */
+	{ 0x700014, 0x700015, input_port_2_word_r },		/* Input (?) */
+	{ 0x700016, 0x700017, input_port_3_word_r },		/* Input (DSW1) */
+	{ 0x700018, 0x700019, input_port_4_word_r },		/* Input (DSW2) */
+	{ 0x700022, 0x700023, OKIM6295_status_0_lsb_r },	/* M6295 Sound Chip Status Register */
+	{ 0xa04000, 0xa04001, puckpkmn_YM3438_r },			/* Ym3438 Sound Chip Status Register */
+	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xe00000, 0xe1ffff, MRA16_BANK1 },				/* VDP sees the roms here */
+	{ 0xfe0000, 0xfeffff, MRA16_BANK2 },				/* VDP sees the ram here */
+	{ 0xff0000, 0xffffff, MRA16_RAM	},					/* Main Ram */
+MEMORY_END
+
+static MEMORY_WRITE16_START( songjang_writemem )
+	{ 0x000000, 0x3fffff, MWA16_ROM },	/* Main 68k Program Roms */
+	{ 0x01c000, 0x01cfff, MWA16_NOP },
+	{ 0x400000, 0x4fffff, unhandled_protval_w },
+	{ 0x412302, 0x412303, protval_w },
+	{ 0x468202, 0x468203, protval_w },
+	{ 0x45bdb2, 0x45bdb3, protval_w },
+	{ 0x45bdf2, 0x45bdf3, protval_w },
+	{ 0x700022, 0x700023, OKIM6295_data_0_lsb_w },		/* M6295 Sound Chip Writes */
+	{ 0xa04000, 0xa04003, puckpkmn_YM3438_w },			/* Ym3438 Sound Chip Writes */
+	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
+	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
+MEMORY_END
+
 /******************** Sega Genesis ******************************/
 
 /* from MESS */
@@ -3535,6 +3622,87 @@ INPUT_PORTS_START( jzth )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( songjang )
+	PORT_START	/* Player 2 Controls ($700011.b) */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
+
+	PORT_START	/* Player 1 Controls ($700013.b) */
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_LOW, IPT_COIN1, 10 )
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
+
+	PORT_START	/* $700015.b */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START	/* DSW 1 ($700017.b) */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x38, 0x28, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x38, "1" )
+	PORT_DIPSETTING(    0x30, "2" )
+	PORT_DIPSETTING(    0x28, "3" )
+	PORT_DIPSETTING(    0x20, "4" )
+	PORT_DIPSETTING(    0x18, "5" )
+	PORT_DIPSETTING(    0x10, "6" )
+	PORT_DIPSETTING(    0x08, "7" )
+	PORT_DIPSETTING(    0x00, "8" )
+	PORT_DIPNAME( 0xc0, 0x80, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0xc0, "Easy"    )
+	PORT_DIPSETTING(    0x80, "Normal"  )
+	PORT_DIPSETTING(    0x40, "Hard"    )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+
+	PORT_START	/* DSW 1 ($700019.b) */
+	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( sbubsm )
 	/* the bit ordering in the ports is strange here because this is being read through shared RAM, the MCU presumably reads the real inputs then scrambles them in RAM for the 68k to sort out */
 	PORT_START
@@ -4590,6 +4758,22 @@ static MACHINE_DRIVER_START( jzth )
 	MDRV_SOUND_ADD(OKIM6295, puckpkmn_m6295_intf)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( songjang )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( segac )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(songjang_readmem,songjang_writemem)
+
+	/* video hardware */
+	MDRV_VIDEO_START(puckpkmn)
+	MDRV_VISIBLE_AREA(0, 319, 0, 223)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, puckpkmn_m6295_intf)
+MACHINE_DRIVER_END
+
+
 static MACHINE_DRIVER_START( genesis_base )
 	/*basic machine hardware */
 	MDRV_CPU_ADD_TAG("main", M68000, 53693100 / 7)
@@ -5138,6 +5322,28 @@ ROM_START( jzth )
 	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* there are 2 banks in here, so find bank switch */
 	ROM_LOAD( "s.y.u3", 0x00000, 0x40000, CRC(38eef2f2) SHA1(2f750dbf71fea0622e8493f0a8be7c43555ed5cf) )
 	ROM_CONTINUE(0x40000,0x40000)
+ROM_END
+
+ROM_START( songjang )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "rom.u5", 0x000000, 0x080000, CRC(3de4aea5) SHA1(a4fd0799a6fd86ba3f0c4b4277190f4c332e48d6) )
+	ROM_LOAD16_BYTE( "rom.u4", 0x000001, 0x080000, CRC(dc6cfc29) SHA1(e15d6e2187befbbd791c5046cb6d156801095203) )
+	ROM_LOAD16_BYTE( "rom.u8", 0x100000, 0x080000, CRC(d4d2b262) SHA1(2023128b187a8cd1a3f021861da559b5ad48e984) )
+	ROM_LOAD16_BYTE( "rom.u7", 0x100001, 0x080000, CRC(1e24f2c9) SHA1(562249b08a8fe317a606c16ce07a8009a0c5418a) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) // only one bank (2nd half is blank)
+	ROM_LOAD( "rom.u3", 0x00000, 0x80000, CRC(44287ab4) SHA1(42de2010e73c036a2a0e01c9dd3c1c8aef1a54a1) )
+ROM_END
+
+ROM_START( shuifeng )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "shuihufengyunzhuan.u5", 0x000000, 0x080000, CRC(73208a1a) SHA1(1eff253fe48f9e553a238c4cfd41cc5e5839393f) )
+	ROM_LOAD16_BYTE( "shuihufengyunzhuan.u4", 0x000001, 0x080000, CRC(e633c02c) SHA1(7ff1091a5b2e7d5e0e616509854fa0058d3cdcf7) )
+	ROM_LOAD16_BYTE( "shuihufengyunzhuan.u8", 0x100000, 0x080000, CRC(31814eb0) SHA1(3a6b13931d02a0c3b8bd97dc51ac5771a97bd092) )
+	ROM_LOAD16_BYTE( "shuihufengyunzhuan.u7", 0x100001, 0x080000, CRC(51caef9f) SHA1(252dbb29ae878aaf28cb4586e02d823296eaf378) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) // only one bank (2nd half is blank)
+	ROM_LOAD( "shuihufengyunzhuan-oki.u3", 0x00000, 0x80000, CRC(44287ab4) SHA1(42de2010e73c036a2a0e01c9dd3c1c8aef1a54a1) )
 ROM_END
 
 ROM_START( sbubsm )
@@ -6487,6 +6693,8 @@ GAME ( 1994, headonch, 0,        segac2,   headonch, segac2,   ROT0, "Sega",    
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
 GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>",              "Juezhan Tianhuang", GAME_IMPERFECT_SOUND )
+GAMEX( 2000, songjang, 0,        songjang, songjang, puckpkmn, ROT0, "WAH LAP",                "Songjiangyanyi Final",  GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, shuifeng, 0,        songjang, jzth,     puckpkmn, ROT0, "WAH LAP",                "Shuihu Feng Yun Zhuan", GAME_IMPERFECT_GRAPHICS )
 
 /* Bootlegs Using Genesis Hardware */
 GAME ( 1993, aladmdb,  0,        barek3,   aladbl,   aladbl,   ROT0, "bootleg / Sega",         "Aladdin (bootleg of Japanese Megadrive version)" )
