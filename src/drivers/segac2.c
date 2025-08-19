@@ -1136,7 +1136,7 @@ READ16_HANDLER(unhandled_protval_r)
 
 WRITE16_HANDLER(unhandled_protval_w)
 {
-    int offset;
+    //int offset;
 	int pc = (activecpu_get_pc());
 
 	usrintf_showmessage("%06x unhandled protval_w %08x %04x\n", pc, 0x400000 + (offset * 2) , data);
@@ -1159,11 +1159,11 @@ WRITE16_HANDLER(protval_w)
 	protval = data & 0xff00;
 }
 
-READ16_HANDLER(sj_70001c_r)
+READ16_HANDLER(sj_70001b_r)
 {
 	int pc = (activecpu_get_pc());
 	
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001c_r\n", pc);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001b_r\n", pc);
 	return 0x0002;
 }
 
@@ -1182,6 +1182,7 @@ static MEMORY_READ16_START( songjang_readmem )
 	{ 0x432100, 0x432101, protval_r },
 	{ 0x465460, 0x465461, protval_r },
 	{ 0x467470, 0x467471, protval_r },
+  { 0x70001c, 0x70001d, sj_70001b_r },
 	{ 0x70001c, 0x70001d, sj_70001c_r },
 	{ 0x700010, 0x700011, input_port_0_word_r },		/* Input (P2) */
 	{ 0x700012, 0x700013, input_port_1_word_r },		/* Input (P1) */
