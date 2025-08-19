@@ -3257,6 +3257,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 	DRIVER( puckpkmn )	/* (c) 2000 Genie */
 	DRIVER( jzth )		/* (c) 2000 <unknown> */
+  DRIVER( songjang )  /* (c) 2000 WAH LAB */
+  DRIVER( shuifeng )  /* (c) 1999 WAH LAB */
 	DRIVER( sbubsm )	/* (c) 1996 Sun Mixing */
   DRIVER( barek3mb ) /* (c) 1994 bootleg / Sega */
   DRIVER( aladmdb ) /*  (c) 1993 bootleg / Sega */
