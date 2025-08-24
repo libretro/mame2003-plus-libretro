@@ -153,6 +153,8 @@
 
 #define MASTER_CLOCK		53693100
 
+static WRITE16_HANDLER ( genesis_68k_to_z80_w );
+static READ16_HANDLER ( genesis_68k_to_z80_r );
 
 /******************************************************************************
 	Global variables
@@ -917,8 +919,6 @@ ZunkYou
 
 ***************/
 
-
-
 /******************************************************************************
 	Memory Maps
 *******************************************************************************
@@ -1031,51 +1031,7 @@ WRITE16_HANDLER( bl_710000_w )
 
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x writing to bl_710000_w %04x %04x\n", pc, data, mem_mask);
 
-	/* protection value is read from  0x710000 after a series of writes.. and stored at ff0007
-	   startup */
-	/*
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-	*/
-	/* before lv stage 3 */
-	/*
-		059ce0 writing to bl_710000_w 0008 ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0x4)
-	*/
-	/* start level 3 */
-	/*
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000e ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0x5)
-	/* after end sequence */
-	/*
-		059ce0 writing to bl_710000_w 0008 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-	*/
-		protcount++;
+			protcount++;
 }
 
 
@@ -1155,7 +1111,7 @@ WRITE16_HANDLER(protval_w)
 {
 	int pc = (activecpu_get_pc());
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x protval_w %04x\n", pc, data);
+	usrintf_showmessage("%06x protval_w %04x\n", pc, data);
 	protval = data & 0xff00;
 }
 
@@ -1163,53 +1119,61 @@ READ16_HANDLER(sj_70001b_r)
 {
 	int pc = (activecpu_get_pc());
 	
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001b_r\n", pc);
-	return 0x0002;
+	usrintf_showmessage("%06x reading from sj_70001b_r\n", pc);
+	return 0x02;
 }
 
 READ16_HANDLER(sj_70001c_r)
 {
 	int pc = (activecpu_get_pc());
 	
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x reading from sj_70001c_r\n", pc);
-	return 0x0031;
+	usrintf_showmessage( "%s %06x reading from sj_70001c_r\n ", Machine->gamedrv->name, pc);
+	if (strcmp(Machine->gamedrv->name, "songjang" ) ) return 0x31;
+	if (strcmp(Machine->gamedrv->name, "shuifeng" ) ) return 0x02;
 }
+
+WRITE16_HANDLER(MWA16_MAIN_RAMNSHARE_W) { offset &=0x1effff; COMBINE_DATA( &main_ram[offset] ); }
+READ16_HANDLER( MRA16_MAIN_RAMNSHARE_R) { offset &=0x1effff; return main_ram[offset]; }
+
 
 static MEMORY_READ16_START( songjang_readmem )
 	{ 0x000000, 0x3fffff, MRA16_ROM },					/* Main 68k Program Roms */
 	{ 0x400000, 0x4fffff, unhandled_protval_r },
+
+// songjang
 	{ 0x426800, 0x426801, protval_r }, 
 	{ 0x432100, 0x432101, protval_r },
+	// shuifeng
 	{ 0x465460, 0x465461, protval_r },
 	{ 0x467470, 0x467471, protval_r },
-  { 0x70001c, 0x70001d, sj_70001b_r },
-	{ 0x70001c, 0x70001d, sj_70001c_r },
+
 	{ 0x700010, 0x700011, input_port_0_word_r },		/* Input (P2) */
 	{ 0x700012, 0x700013, input_port_1_word_r },		/* Input (P1) */
 	{ 0x700014, 0x700015, input_port_2_word_r },		/* Input (?) */
 	{ 0x700016, 0x700017, input_port_3_word_r },		/* Input (DSW1) */
 	{ 0x700018, 0x700019, input_port_4_word_r },		/* Input (DSW2) */
+	{ 0x70001c, 0x70001d, sj_70001c_r },
 	{ 0x700022, 0x700023, OKIM6295_status_0_lsb_r },	/* M6295 Sound Chip Status Register */
 	{ 0xa04000, 0xa04001, puckpkmn_YM3438_r },			/* Ym3438 Sound Chip Status Register */
 	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
-	{ 0xe00000, 0xe1ffff, MRA16_BANK1 },				/* VDP sees the roms here */
-	{ 0xfe0000, 0xfeffff, MRA16_BANK2 },				/* VDP sees the ram here */
-	{ 0xff0000, 0xffffff, MRA16_RAM	},					/* Main Ram */
+	{ 0xe00000, 0xfeffff, MRA16_MAIN_RAMNSHARE_R },	
+	{ 0xff0000, 0xffffff, MRA16_MAIN_RAMNSHARE_R },	
 MEMORY_END
 
 static MEMORY_WRITE16_START( songjang_writemem )
-	{ 0x000000, 0x3fffff, MWA16_ROM },	/* Main 68k Program Roms */
-	{ 0x01c000, 0x01cfff, MWA16_NOP },
+	{ 0x200000, 0x3fffff, MWA16_NOP },	/* Main 68k Program Roms */
 	{ 0x400000, 0x4fffff, unhandled_protval_w },
-	{ 0x412302, 0x412303, protval_w },
-	{ 0x468202, 0x468203, protval_w },
-	{ 0x45bdb2, 0x45bdb3, protval_w },
-	{ 0x45bdf2, 0x45bdf3, protval_w },
+	// songjang
+	{ 0x412302, 0x412303, protval_w }, // used with 0x432100 read
+	{ 0x468202, 0x468203, protval_w }, // used with 0x426800 read
+	// shuifeng
+	{ 0x45bdb2, 0x45bdb3, protval_w }, // used with 0x465461 read
 	{ 0x700022, 0x700023, OKIM6295_data_0_lsb_w },		/* M6295 Sound Chip Writes */
 	{ 0xa04000, 0xa04003, puckpkmn_YM3438_w },			/* Ym3438 Sound Chip Writes */
 	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
-	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
+	{ 0xe00000, 0xfeffff, MWA16_MAIN_RAMNSHARE_W, &main_ram },	
+	{ 0xff0000, 0xffffff, MWA16_MAIN_RAMNSHARE_W, &main_ram 	}, 
 MEMORY_END
 
 /******************** Sega Genesis ******************************/
@@ -6694,7 +6658,7 @@ GAME ( 1994, headonch, 0,        segac2,   headonch, segac2,   ROT0, "Sega",    
 /* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
 GAME ( 2000, puckpkmn, 0,        puckpkmn, puckpkmn, puckpkmn, ROT0, "Genie",                  "Puckman Pockimon" )
 GAMEX( 2000, jzth,     0,        jzth,     jzth,     puckpkmn, ROT0, "<unknown>",              "Juezhan Tianhuang", GAME_IMPERFECT_SOUND )
-GAMEX( 2000, songjang, 0,        songjang, songjang, puckpkmn, ROT0, "WAH LAP",                "Songjiangyanyi Final",  GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2000, songjang, 0,        songjang, songjang, puckpkmn, ROT0, "WAH LAP",                "Songjiangyanyi Final",  GAME_NOT_WORKING )
 GAMEX( 1999, shuifeng, 0,        songjang, jzth,     puckpkmn, ROT0, "WAH LAP",                "Shuihu Feng Yun Zhuan", GAME_IMPERFECT_GRAPHICS )
 
 /* Bootlegs Using Genesis Hardware */
