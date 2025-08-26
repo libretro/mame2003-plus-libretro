@@ -128,9 +128,11 @@ void mame2003_video_init_orientation(void)
       {
         log_cb(RETRO_LOG_INFO, LOGPRE "RetroArch will perform the rotation.\n");
 
-        rotate_mode = (orientation == ROT270) ? 1 : rotate_mode;
-        rotate_mode = (orientation == ROT180) ? 2 : rotate_mode;
-        rotate_mode = (orientation == ROT90) ? 3 : rotate_mode;
+        rotate_mode = (orientation == ROT270) ? 1
+                    : (orientation == ROT180) ? 2
+                    : (orientation == ROT90 ) ? 3
+                    : rotate_mode;
+
         if (orientation & ORIENTATION_SWAP_XY) video_hw_transpose = true; /*do this before the rotation reverse*/
         orientation = reverse_orientation(orientation ^ orientation); /* undo mame rotation if retroarch can do it */
         environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotate_mode);
