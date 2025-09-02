@@ -499,3 +499,37 @@ void pgm_espgal_decrypt(void)
 		src[i] = x;
 	}
 }
+
+void pgm_ddp2_decrypt(void)
+{
+	int i;
+	data16_t *src = (data16_t *)(memory_region(REGION_USER1));
+
+	int rom_size = 0x200000;
+
+	for(i=0; i<rom_size/2; i++) {
+    	unsigned short x = src[i];
+
+		if((i & 0x0480) != 0x0080)
+			x ^= 0x0001;
+
+		if((i & 0x0042) != 0x0042)
+			x ^= 0x0008;
+
+		if((i & 0x8100) == 0x8000)
+			x ^= 0x0010;
+
+		if((i & 0x2004) != 0x0004)
+			x ^= 0x0020;
+
+		if((i & 0x1800) != 0x0000)
+			x ^= 0x0040;
+
+		if((i & 0x0820) == 0x0820)
+			x ^= 0x0080;
+
+		x ^= ddp2_tab[(i>> 1) & 0xff] << 8;
+
+		src[i] = x;
+	}
+}
