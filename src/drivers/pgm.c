@@ -3393,6 +3393,16 @@ DRIVER_INIT(py2k2)
 
 }
 
+/* ddp2 rubbish */
+
+data16_t *ddp2_protram;
+static int ddp2_asic27_0xd10000 = 0;
+
+static WRITE16_HANDLER ( ddp2_asic27_0xd10000_w )
+{
+	ddp2_asic27_0xd10000=data;
+}
+
 static READ16_HANDLER ( ddp2_asic27_0xd10000_r )
 {
 	logerror("d100000_prot_r %04x, %04x\n", offset,ddp2_asic27_0xd10000);
