@@ -272,7 +272,7 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack  = true; /* dink */
+bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
 
 
@@ -688,7 +688,7 @@ READ16_HANDLER( system32_sprite_control_r )
 WRITE16_HANDLER( system32_sprite_control_w )
 {
 	if (ACCESSING_LSB)
-		sprite_control[offset & 7] = data;
+		sprite_control[offset & 7] = (offset == 3) ? 1 : data;
 }
 
 
