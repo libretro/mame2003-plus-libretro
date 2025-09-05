@@ -2184,7 +2184,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	int x, y, i;
 
 	/* hack rendering refresh */
-	if (sprite_render_count == 1) return;
+	if (sprite_render_count == 0) return;
 
 	/* if we are the second monitor on multi32, swap in the proper sprite bank */
 	if (which == 1)
