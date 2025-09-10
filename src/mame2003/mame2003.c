@@ -1393,16 +1393,8 @@ void osd_xy_device_read(int player, int *deltax, int *deltay, const char* type)
 
   if (strcmp(type, "relative") == 0)
   {
-    if(options.dial_swap_xy)
-    {
-      *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-      *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-    }
-    else
-    {
-      *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-      *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-    }
+    *deltax = input_cb(player, RETRO_DEVICE_MOUSE, 0, options.dial_swap_xy ? RETRO_DEVICE_ID_MOUSE_Y : RETRO_DEVICE_ID_MOUSE_X);
+    *deltay = input_cb(player, RETRO_DEVICE_MOUSE, 0, options.dial_swap_xy ? RETRO_DEVICE_ID_MOUSE_X : RETRO_DEVICE_ID_MOUSE_Y);
   }
 
   else if (strcmp(type, "absolute") == 0)
