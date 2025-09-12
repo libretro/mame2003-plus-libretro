@@ -1473,7 +1473,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 						pix |= color;
 					dst[-3] = pix;
 
-					pix = *src++;
+					pix = *src--;
 
 					pix = (pixels >> 4) & 0x0f;
 					if (pix)
