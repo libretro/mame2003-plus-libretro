@@ -1384,7 +1384,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 			int color = (tile & 0xfe00) >> 5;
 
 			/* non-flipped case */
-			if (!flip)
+			if (/*!flip*/0)
 			{
 				UINT16 *dst = ((UINT16 *)bitmap->line[y * 8]) + x * 8;
 
