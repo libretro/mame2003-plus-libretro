@@ -1270,7 +1270,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			}
 			else
 			{
-				srcx = cliprect->max_x - xscroll;
+				srcx = cliprect->max_x + xscroll;
 				srcxstep = -1;
 			}
 
@@ -1287,7 +1287,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			ypos = (!flipy) ? y : cliprect->max_y - y;
       
 			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
+				srcx += table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
 			if (rowselect)
 				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + ypos]) & 0x1ff;
 
@@ -1333,10 +1333,10 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 				extents++;
 			}
 
-			layer->transparent[y] = (transparent == cliprect->max_x - cliprect->min_x + 1);
+			layer->transparent[ypos] = (transparent == cliprect->max_x - cliprect->min_x + 1);
 		}
 		else
-			layer->transparent[y] = 1;
+			layer->transparent[ypos] = 1;
 	}
 
 	/* enable this code below to display scroll information */
