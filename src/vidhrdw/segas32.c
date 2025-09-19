@@ -1284,9 +1284,9 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 
 			/* apply row scroll/select */
 			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + y] & 0x3ff;
+				srcx += table[0x000 + 0x100 * (bgnum - 2) + (cliprect->max_y - y)] & 0x3ff;
 			if (rowselect)
-				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + y]) & 0x1ff;
+				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + (cliprect->max_y - y)]) & 0x1ff;
 
 
 			/* look up the pages and get their source pixmaps */
