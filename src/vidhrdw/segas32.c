@@ -1260,9 +1260,10 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			int transparent = 0;
 			UINT16 *src[2];
 			int srcxstep;
+			int ypos;
 
 			/* if we're not flipped, things are straightforward */
-			if (0/*!flipx*/)
+			if (!flipx)
 			{
 				srcx = cliprect->min_x + xscroll;
 				srcxstep = 1;
@@ -1273,7 +1274,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 				srcxstep = -1;
 			}
 
-			if (0/*!flipy*/)
+			if (!flipy)
 			{
 				srcy = yscroll + y;
 			}
@@ -1283,10 +1284,12 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			}
 
 			/* apply row scroll/select */
+			ypos = (!flipy) ? y : cliprect->max_y - y;
+      
 			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + (cliprect->max_y - y)] & 0x3ff;
+				srcx += table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
 			if (rowselect)
-				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + (cliprect->max_y - y)]) & 0x1ff;
+				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + ypos]) & 0x1ff;
 
 
 			/* look up the pages and get their source pixmaps */
@@ -1671,21 +1674,21 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	}
 
 	/* update any tilemaps */
-	/*if (enable0)
+	if (enable0)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
 	if (enable1)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG1], cliprect, 1);
 	if (enable2)
 		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG2], cliprect, 2);
-	*/if (enable3)
+	if (enable3)
 		update_tilemap_rowscroll(&layer_data[MIXER_LAYER_NBG3], cliprect, 3);
 	if (enablet)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
-	/*if (enableb)
+	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
 	if (!titlef_kludge)
 		update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
-*/
+
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
 
