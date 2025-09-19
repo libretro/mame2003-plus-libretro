@@ -1279,7 +1279,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			}
 			else
 			{
-				srcy = (cliprect->max_y - y) - yscroll;
+				srcy = cliprect->max_y - (yscroll + y);
 			}
 
 			/* apply row scroll/select */
