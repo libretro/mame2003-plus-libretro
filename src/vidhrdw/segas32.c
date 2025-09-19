@@ -1262,24 +1262,24 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			int srcxstep;
 
 			/* if we're not flipped, things are straightforward */
-			if (!flipx)
+			if (0/*!flipx*/)
 			{
 				srcx = cliprect->min_x + xscroll;
 				srcxstep = 1;
 			}
 			else
 			{
-				srcx = cliprect->max_x - xscroll;
+				srcx = cliprect->max_x + xscroll;
 				srcxstep = -1;
 			}
 
-			if (!flipy)
+			if (0/*!flipy*/)
 			{
 				srcy = yscroll + y;
 			}
 			else
 			{
-				srcy = cliprect->max_y - (yscroll + y);
+				srcy = yscroll + cliprect->max_y - y;
 			}
 
 			/* apply row scroll/select */
