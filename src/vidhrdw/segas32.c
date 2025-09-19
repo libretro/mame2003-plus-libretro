@@ -981,12 +981,12 @@ static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 
 	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
 
-	*flipy ^= layer_flip;
-	*flipx ^= layer_flip;
+	if (layer_flip) *flipx = !*flipx;
+	if (layer_flip) *flipy = !*flipy;
 
 	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
 	// it seems to prohibit (at least) the per-tilemap y flipping (maybe global y can override it)
-	if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) *flipy = !*flipy;
+	//if ((system32_videoram[0x1ff00 / 2] >> 8) & 1) *flipy = 0;
 }
 
 /*************************************
@@ -1286,8 +1286,10 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			/* apply row scroll/select */
 			ypos = (!flipy) ? y : cliprect->max_y - y;
       
-			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
+			if (rowscroll){
+				if (!flipx) srcx += table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
+				else srcx -= table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
+			}
 			if (rowselect)
 				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + ypos]) & 0x1ff;
 
