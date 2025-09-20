@@ -1664,7 +1664,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	}
 
 	/* update any tilemaps */
-	/*if (enable0)
+	if (enable0)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
 	if (enable1)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG1], cliprect, 1);
@@ -1678,7 +1678,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
 	if (!titlef_kludge)
 		update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
-*/
+
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
 
