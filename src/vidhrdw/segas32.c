@@ -968,18 +968,19 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 
 static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 {
-	int layer_flip;
-
-	/* determine if we're flipped */
-	int global_flip = (system32_videoram[0x1ff00 / 2] >> 9)&1;
+	/* determine flip bits */
+	int global_flip    = (system32_videoram[0x1ff00 / 2] >> 9) & 1;
+	int layer_flip     = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
+	int prohibit_flipy = (system32_videoram[0x1ff00 / 2] >> 8) & 1;
 
 	*flipx = global_flip;
 	*flipy = global_flip;
 
-	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
+	if (layer_flip)
+		*flipx = !*flipx;
 
-	if (layer_flip) *flipx = !*flipx;
-	if (layer_flip && !((system32_videoram[0x1ff00 / 2] >> 8) & 1)) *flipy = !*flipy;
+	if (layer_flip && !prohibit_flipy)
+		*flipy = !*flipy;
 }
 
 /*************************************
