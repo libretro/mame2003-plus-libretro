@@ -868,7 +868,7 @@ static void get_tile_info(int tile_index)
 
 static int compute_clipping_extents(int enable, int clipout, int clipmask, const struct rectangle *cliprect, struct extents_list *list)
 {
-	int flip = (system32_videoram[0x1ff00/2] >> 9) & 1;
+	int flip = BIT(system32_videoram[0x1ff00 / 2], 9);
 	struct rectangle tempclip;
 	struct rectangle clips[5];
 	int sorted[5];
@@ -969,18 +969,13 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 {
 	/* determine flip bits */
-	int global_flip    = (system32_videoram[0x1ff00 / 2] >> 9) & 1;
-	int layer_flip     = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
-	int prohibit_flipy = (system32_videoram[0x1ff00 / 2] >> 8) & 1;
+	int global_flip    = BIT(system32_videoram[0x1ff00 / 2], 9);
+	int layer_flip     = BIT(system32_videoram[0x1ff00 / 2], bgnum);
+	int prohibit_flipy = BIT(system32_videoram[0x1ff00 / 2], 8);
 
-	*flipx = global_flip;
-	*flipy = global_flip;
+	*flipx = (layer_flip) ? !global_flip : global_flip;
 
-	if (layer_flip)
-		*flipx = !*flipx;
-
-	if (layer_flip && !prohibit_flipy)
-		*flipy = !*flipy;
+	*flipy = (layer_flip && !prohibit_flipy) ? !global_flip : global_flip;
 }
 
 /*************************************
@@ -1360,7 +1355,7 @@ static void update_tilemap_text(struct layer_info *layer, const struct rectangle
 	int flip;
 
 	/* determine if we're flipped */
-	flip = (system32_videoram[0x1ff00/2] >> 9) & 1;
+	flip = BIT(system32_videoram[0x1ff00 / 2], 9);
 
 	/* determine the base of the tilemap and graphics data */
 	tilebase = &system32_videoram[((system32_videoram[0x1ff5c/2] >> 4) & 0x1f) * 0x800];
