@@ -18,12 +18,6 @@
 	- Verify that X/Y center has 10 bits of resolution when zooming and
 	  9 when not.
 
-	- In svf (the field) and radr (on the field), they use tilemap-specific
-	  flip in conjunction with rowscroll AND rowselect. According to Charles,
-	  in this case, the rowselect lookups should be done in reverse order,
-	  but this results in an incorrect display. For now, we assume there is
-	  a bug in the procedure and implement it so that it looks correct.
-
 	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
 	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
 	  Game actually uses the "rowscroll/rowselect" tables for a line window
