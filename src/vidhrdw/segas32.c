@@ -18,8 +18,8 @@
 	- Verify that X/Y center has 10 bits of resolution when zooming and
 	  9 when not.
 
-	- sonic while globally flipped via the service menu, fails to mirror
-	  the "SEGA" and "SEGASONIC" sprite based logos on the title screen.
+	- Sonic while globally flipped via the service menu, fails to flip the
+	  "SEGA" and "SEGASONIC" sprite based logos on the title screen over the X axis.
 
 	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
 	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
