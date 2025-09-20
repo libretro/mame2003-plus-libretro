@@ -59,8 +59,8 @@
          $31FF00 : w--- ---- ---- ---- : Screen width (0= 320, 1= 412)
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
-                   ---- --f- ---- ---- : 1= Global X/Y flip? (most games?)
-                   ---- ---f ---- ---- : 1= prohbit Y flip? (Air Rescue 2nd screen title, also gets set on one of the intro sequence screens)
+                   ---- --f- ---- ---- : 1= Global X/Y flip (enabled via service menu)
+                   ---- ---f ---- ---- : 1= Prohbit per layer Y flip
                    ---- ---- ---- 4--- : 1= X+Y flip for NBG3
                    ---- ---- ---- -2-- : 1= X+Y flip for NBG2
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
@@ -983,11 +983,6 @@ static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 
 	if (layer_flip) *flipx = !*flipx;
 	if (layer_flip && !((system32_videoram[0x1ff00 / 2] >> 8) & 1)) *flipy = !*flipy;
-
-	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
-	// it seems to prohibit (at least) the per-tilemap y flipping (maybe global y can override it)
-	//if (!global_flip && (system32_videoram[0x1ff00 / 2] >> 8) & 1) *flipy = 0;
-	//else if (global_flip && (system32_videoram[0x1ff00 / 2] >> 8) & 1) *flipy = 1;
 }
 
 /*************************************
