@@ -1250,7 +1250,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			int transparent = 0;
 			UINT16 *src[2];
 			int srcxstep;
-			int ypos;
+			int ylookup;
 
 			/* if we're not flipped, things are straightforward */
 			if (!flipx)
@@ -1267,19 +1267,19 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			if (!flipy)
 			{
 				srcy = yscroll + y;
+				ylookup = y;
 			}
 			else
 			{
 				srcy = yscroll + cliprect->max_y - y;
+				ylookup = cliprect->max_y - y;
 			}
 
 			/* apply row scroll/select */
-			ypos = (!flipy) ? y : cliprect->max_y - y;
-      
 			if (rowscroll)
-				srcx += table[0x000 + 0x100 * (bgnum - 2) + ypos] & 0x3ff;
+				srcx += table[0x000 + 0x100 * (bgnum - 2) + ylookup] & 0x3ff;
 			if (rowselect)
-				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + ypos]) & 0x1ff;
+				srcy = (yscroll + table[0x200 + 0x100 * (bgnum - 2) + ylookup]) & 0x1ff;
 
 
 			/* look up the pages and get their source pixmaps */
