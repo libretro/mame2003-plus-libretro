@@ -57,7 +57,7 @@
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
                    ---- --f- ---- ---- : 1= Global X/Y flip (enabled via service menu)
-                   ---- ---f ---- ---- : 1= Prohibit per layer Y flip (NBG0 - NBG3)
+                   ---- ---f ---- ---- : 1= Prohibit layer Y flip (NBG0 - NBG3)
                    ---- ---- ---- 4--- : 1= X+Y flip for NBG3
                    ---- ---- ---- -2-- : 1= X+Y flip for NBG2
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
