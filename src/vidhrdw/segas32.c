@@ -1057,7 +1057,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 //if (code_pressed(KEYCODE_Z) && bgnum == 0) opaque = 1;
 //if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
 
-	/* todo determine flipping */
+	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
@@ -1221,7 +1221,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 //if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
 //if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
 
-	/* todo determine flipping */
+	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
