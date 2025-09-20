@@ -981,7 +981,7 @@ static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 
 	layer_flip = (system32_videoram[0x1ff00 / 2] >> bgnum) & 1;
 
-	if (layer_flip && !((system32_videoram[0x1ff00 / 2] >> 8) & 1)) *flipx = !*flipx;
+	if (layer_flip) *flipx = !*flipx;
 	if (layer_flip && !((system32_videoram[0x1ff00 / 2] >> 8) & 1)) *flipy = !*flipy;
 
 	// this bit is set on Air Rescue (screen 2) title screen, during the Air Rescue introduction demo, and in f1en when you win a single player race
