@@ -918,6 +918,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 
 	/* create all valid extent combinations */
 	for (i = 1; i < 32; i++)
+	{
 		if (i & clipmask)
 		{
 			UINT16 *extent = &list->extent[i][0];
@@ -927,6 +928,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 
 			/* loop in sorted order over extents */
 			for (j = 0; j < 5; j++)
+			{
 				if (i & (1 << sorted[j]))
 				{
 					const struct rectangle *cur = &clips[sorted[j]];
@@ -937,18 +939,19 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 						if (cur->max_x > extent[-1])
 							extent[-1] = cur->max_x;
 					}
-
-					/* otherwise, just append to the list */
 					else
 					{
+						/* otherwise, just append to the list */
 						*extent++ = cur->min_x;
 						*extent++ = cur->max_x;
 					}
 				}
+			}
 
 			/* append an ending entry */
 			*extent++ = tempclip.max_x;
 		}
+  }
 
 	/* loop over scanlines and build extents */
 	for (y = tempclip.min_y; y < tempclip.max_y; y++)
@@ -973,7 +976,7 @@ static void compute_tilemap_flips(int bgnum, int *flipx, int *flipy)
 	int layer_flip     = BIT(system32_videoram[0x1ff00 / 2], bgnum);
 	int prohibit_flipy = BIT(system32_videoram[0x1ff00 / 2], 8);
 
-	*flipx = (layer_flip) ? !global_flip : global_flip;
+	*flipx = layer_flip ? !global_flip : global_flip;
 
 	*flipy = (layer_flip && !prohibit_flipy) ? !global_flip : global_flip;
 }
