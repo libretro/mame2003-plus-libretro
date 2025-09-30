@@ -951,7 +951,7 @@ static int compute_clipping_extents(int enable, int clipout, int clipmask, const
 			/* append an ending entry */
 			*extent++ = tempclip.max_x;
 		}
-  }
+	}
 
 	/* loop over scanlines and build extents */
 	for (y = tempclip.min_y; y < tempclip.max_y; y++)
