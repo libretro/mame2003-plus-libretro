@@ -63,15 +63,15 @@
                    ---- ---- ---- --1- : 1= X+Y flip for NBG1
                    ---- ---- ---- ---0 : 1= X+Y flip for NBG0
          $31FF02 : x--- ---- --x- ---- : Bitmap layer enable (?)
-				   -x-- ---- ---- ---- : 1= NBG3 page wrapping disable (clipping enable according to code?)
-				   --x- ---- ---- ---- : 1= NBG2 page wrapping disable
+                   -x-- ---- ---- ---- : 1= NBG3 page wrapping disable (clipping enable according to code?)
+                   --x- ---- ---- ---- : 1= NBG2 page wrapping disable
                    ---1 ---- ---- ---- : 1= NBG1 page wrapping disable
                    ---- 0--- ---- ---- : 1= NBG0 page wrapping disable
-				   ---- -x-- ---- ---- : 1= bitmap layer clipping mode (1=outside)
-				   ---- --x- ---- ---- : 1= NBG3 clipping mode (1=outside)
-				   ---- ---x ---- ---- : 1= NBG2 clipping mode (1=outside)
-				   ---- ---- x--- ---- : 1= NBG1 clipping mode (1=outside)
-				   ---- ---- -x-- ---- : 1= NBG0 clipping mode (1=outside)
+                   ---- -x-- ---- ---- : 1= bitmap layer clipping mode (1=outside)
+                   ---- --x- ---- ---- : 1= NBG3 clipping mode (1=outside)
+                   ---- ---x ---- ---- : 1= NBG2 clipping mode (1=outside)
+                   ---- ---- x--- ---- : 1= NBG1 clipping mode (1=outside)
+                   ---- ---- -x-- ---- : 1= NBG0 clipping mode (1=outside)
                    ---- ---- --b- ---- : 1= Bitmap layer disable
                    ---- ---- ---t ---- : 1= Text layer disable
                    ---- ---- ---- 3--- : 1= NBG3 layer disable
