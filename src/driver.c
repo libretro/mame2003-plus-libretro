@@ -6090,6 +6090,7 @@ Other Sun games
   DRIVER( knightsch )     /* (c) 2014 Neobitz */
 	DRIVER( xeno )          /* (c) 2019 Bitmap Bureau */
 	DRIVER( hypernoid )     /* 2021 M.Priewe */
+  DRIVER( teot)           /* 2022 Ozzy Ouzo */
 	DRIVER( cyborgforce )   /* (c) 2023 Neo Byte Force Ltd */
 	DRIVER( captainbarrel ) /* (c) 2024 Neo Byte Force Ltd */
   DRIVER( gladmort )      /* (c) 2024 Pixelheart / ChipsOnSteroids */
