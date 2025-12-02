@@ -7177,6 +7177,26 @@ ROM_START( hypernoid )
 	ROM_LOAD16_BYTE( "447.c2", 0x000001, 0x200000, CRC(36f35df2) SHA1(22715561d5383263e41563fcb060f83a0c544531) )
 ROM_END
 
+ROM_START( teot ) // Beta 7
+	ROM_REGION( 0x900000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "323j.p1", 0x000000, 0x100000, CRC(c0ae0a56) SHA1(d5817755641c5b105c1191b3a1f0dbca64060878) )
+	ROM_LOAD16_WORD_SWAP( "323h.p2", 0x100000, 0x800000, CRC(68dc7463) SHA1(e304187c3343d6a3f4dcad05ab68a1e73434079c) )
+
+	NEO_SFIX_128K( "323g.s1", CRC(6d05f74b) SHA1(1643bcf32249d3d90c230ccac09c8026dbd62960) )
+
+	NEO_BIOS_SOUND_64K( "323j.m1", CRC(0c17ccac) SHA1(39b33f6e6dc96012161cdb452a162495355dd73c) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "323g.v1",   0x000000, 0x800000, CRC(d2911e9c) SHA1(ca53ebda1ae2a339dfceda509c334bc4be24d7a2) )
+	ROM_LOAD( "323g.v2",   0x800000, 0x800000, CRC(49e3afe6) SHA1(0c37f171035baa4392b28df5de3261f084727a47) )
+
+  NO_DELTAT_REGION
+
+	ROM_REGION( 0x2000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "323h.c1",   0x0000000, 0x1000000, CRC(2fdbfbef) SHA1(3bc2f207538893f71a7f14800dc9f11f1788c5bf) )
+	ROM_LOAD16_BYTE( "323h.c2",   0x0000001, 0x1000000, CRC(4b953a79) SHA1(4851352e7f499f3cef20415072a0df7dc0c53bed) )
+ROM_END
+
 /* Cyborg Force
   Neo Byte Force Ltd, 20230409
 */
@@ -8189,6 +8209,9 @@ GAMEB( 2019, xeno,        neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "Bitma
 /* M.Priewe */
 GAMEB( 2021, hypernoid,   neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "M.Priewe", "Hypernoid (2021-11-28)", &neogeo_ctrl, NULL )
 
+/* OzzyOuzo */
+GAMEB( 2022, teot,        neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "OzzyOuzo", "The Eye of Typhoon (Tsunami Edition, beta 7)", &neogeo_ctrl, NULL ) 
+
 /* NEO.BYTE.FORCE */
 GAMEB( 2023, cyborgforce, neogeo, neogeo, neogeo, neogeo, neogeo,   ROT0, "Neo Byte Force Ltd", "Cyborg Force", &neogeo_ctrl, NULL )
 
@@ -8199,7 +8222,7 @@ GAMEB( 2024, captainbarrel, neogeo, neogeo, neogeo, neogeo, neogeo, ROT0, "Neo B
 GAMEB( 2024, gladmort,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "Pixelheart / ChipsOnSteroids", "Gladmort", &neogeo_ctrl, NULL ) 
 
 /* La Casa De Ruivo / Neo Byte Force */
-GAMEB( 2025, doubled1,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "La Casa De Ruivo / Neo Byte Force", "Double Dragon One (Beta)", &neogeo_ctrl, NULL ) 
+GAMEB( 2025, doubled1,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "La Casa De Ruivo / Neo Byte Force", "Double Dragon One (Beta 7)", &neogeo_ctrl, NULL ) 
 
 
 #if 0
