@@ -361,7 +361,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Midnight Resistance (joystick hack bootleg)
 * Mortal Kombat 2 Plus Beta 2
 * TANK III (joystick hack bootleg)
-* The Eve Of The Typhoon (Beta 7)
+* The Eye Of The Typhoon (Beta 7)
 * Tron freeplay custom rom
 * Ultimate Mortal Kombat 3 Plus Beta 2
 
