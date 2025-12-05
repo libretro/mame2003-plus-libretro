@@ -437,6 +437,106 @@ INPUT_PORTS_START( strkforc )
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( saurnfrnt )
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 | IPF_8WAY )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 | IPF_8WAY )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_TILT ) /* Slam Switch */
+	PORT_BITX(0x0010, IP_ACTIVE_LOW, IPT_SERVICE | IPF_TOGGLE, "Test", KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_COIN4 )
+	PORT_BIT( 0xfc00, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START
+	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_DIPNAME( 0x0001, 0x0001, "Coin Meter" )
+	PORT_DIPSETTING(      0x0001, "Shared" )
+	PORT_DIPSETTING(      0x0000, "Independent" )
+	PORT_DIPNAME( 0x0002, 0x0002, "Credits to Start" )
+	PORT_DIPSETTING(      0x0002, "1" )
+	PORT_DIPSETTING(      0x0000, "2" )
+	PORT_DIPNAME( 0x000c, 0x000c, "Points for Ship" )
+	PORT_DIPSETTING(      0x0004, "40000" )
+	PORT_DIPSETTING(      0x0000, "50000" )
+	PORT_DIPSETTING(      0x0008, "750000" )
+	PORT_DIPSETTING(      0x000c, "100000" )
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Lives ))
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPSETTING(      0x0010, "4" )
+	PORT_DIPNAME( 0x00e0, 0x00e0, DEF_STR( Difficulty ))
+	PORT_DIPSETTING(      0x0060, "Level 0" )
+	PORT_DIPSETTING(      0x0020, "Level 1" )
+	PORT_DIPSETTING(      0x0040, "Level 2" )
+	PORT_DIPSETTING(      0x0000, "Level 3" )
+	PORT_DIPSETTING(      0x0080, "Level 4" )
+	PORT_DIPSETTING(      0x00a0, "Level 5" )
+	PORT_DIPSETTING(      0x00c0, "Level 6" )
+	PORT_DIPSETTING(      0x00e0, "Level 7" )
+	PORT_DIPNAME( 0x8000, 0x0000, DEF_STR( Free_Play ))
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x8000, DEF_STR( On ))
+	PORT_DIPNAME( 0x4000, 0x0000, "Test Switch")
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ))
+	PORT_DIPSETTING(      0x4000, DEF_STR( On ))
+	PORT_DIPNAME( 0x3f00, 0x3600, DEF_STR( Coinage ))
+	PORT_DIPSETTING(      0x3600, "USA 1" )
+	PORT_DIPSETTING(      0x3700, "USA 2" )
+	PORT_DIPSETTING(      0x3800, "USA 3" )
+	PORT_DIPSETTING(      0x2a00, "Australia 1" )
+	PORT_DIPSETTING(      0x2d00, "Austria" )
+	PORT_DIPSETTING(      0x2e00, "Belgium 1" )
+	PORT_DIPSETTING(      0x2f00, "Belgium 2" )
+	PORT_DIPSETTING(      0x3500, "Denmark" )
+	PORT_DIPSETTING(      0x3c00, "France 1" )
+	PORT_DIPSETTING(      0x3d00, "France 2" )
+	PORT_DIPSETTING(      0x3e00, "France 3" )
+	PORT_DIPSETTING(      0x3300, "Findland" )
+	PORT_DIPSETTING(      0x3900, "German 1" )
+	PORT_DIPSETTING(      0x3a00, "German 2" )
+	PORT_DIPSETTING(      0x3b00, "German 3" )
+	PORT_DIPSETTING(      0x2500, "Italy 1" )
+	PORT_DIPSETTING(      0x2b00, "Japan 1" )
+	PORT_DIPSETTING(      0x2c00, "Japan 2" )
+	PORT_DIPSETTING(      0x3200, "Netherlands" )
+	PORT_DIPSETTING(      0x3100, "New Zealand" )
+	PORT_DIPSETTING(      0x3400, "Norway" )
+	PORT_DIPSETTING(      0x2900, "Spain 1" )
+	PORT_DIPSETTING(      0x3000, "Sweden 1" )
+	PORT_DIPSETTING(      0x3f00, "Swiss 1" )
+	PORT_DIPSETTING(      0x2600, "U.K. 1" )
+	PORT_DIPSETTING(      0x2700, "U.K. 2" )
+	PORT_DIPSETTING(      0x2800, "U.K. 3" )
+	PORT_DIPSETTING(      0x2400, "Swiss 1" )
+	
+	PORT_START
+	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_START
+	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
 
 INPUT_PORTS_START( mkla2 )
 	PORT_START
@@ -1554,6 +1654,35 @@ ROM_START( strkforc )
 	ROM_LOAD (  "sfu91.bin",  0x2a0000, 0x20000, CRC(da02547e) SHA1(d29c071bd9deab2414ac0733d9a18fcf8c68b4d9) )
 ROM_END
 
+ROM_START( saurnfrnt )
+	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
+
+	ROM_REGION( 0x70000, REGION_CPU2, 0 )	/* sound CPU */
+	ROM_LOAD ( "pa1_saurian_front_sound_rom_u4.u4",   0x10000, 0x10000, CRC(f22a09b8) SHA1(bf8d627b07c76365cff2ba36cb87ac55bbd6e9d1) )
+	ROM_LOAD ( "pa1_saurian_front_sound_rom_u19.u19", 0x30000, 0x10000, CRC(a2dfce0f) SHA1(d3956e3a5dece19f71fc716b8ca1e74f1953992b) )
+	ROM_LOAD ( "pa1_saurian_front_sound_rom_u20.u20", 0x50000, 0x10000, CRC(b0e8f6fd) SHA1(a6129428539d0aa5583009ef526bb6f05cab6af4) )
+
+	ROM_REGION16_LE( 0x100000, REGION_USER1, ROMREGION_DISPOSE ) /* 34010 code */
+	ROM_LOAD16_BYTE( "pa1_saurian_front_game_rom_u105.u105", 0xc0000, 0x20000, CRC(6cd469f3) SHA1(31cacb172edcc3c956ca799d69d695d8741e7029) )
+	ROM_LOAD16_BYTE( "pa1_saurian_front_game_rom_u89.u89",   0xc0001, 0x20000, CRC(bf5188df) SHA1(1b874adb41ceb1e1cce65fb3796b9532eeb0e817) )
+
+	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u111.u111", 0x000000, 0x20000, CRC(ee7a733d) SHA1(90ce8f063e22e91f1493a7403875834be359fc89) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u112.u112", 0x020000, 0x20000, CRC(3a1a0656) SHA1(76faea73ed95a33461cf09359ba3af507988a42f) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u113.u113", 0x040000, 0x20000, CRC(0cba3a22) SHA1(fd9f6b673d01f3895dc4cf304a6c3abfc05788b0) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u114.u114", 0x060000, 0x20000, CRC(1cce75a8) SHA1(31cb260b64fc832e04812b12c3078fa1c5d38744) )
+
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u106.u106", 0x080000, 0x20000, CRC(5d6a6c39) SHA1(683e2fd1c2e1f453273c21b6ed77475a5c176359) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u107.u107", 0x0a0000, 0x20000, CRC(5d178b62) SHA1(9abfed38ec3629dd1a1b99dba372689d203ebdc4) )
+
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u95.u95",   0x200000, 0x20000, CRC(8918d0c3) SHA1(c4c84e97556996b7453eb331401f90d9d7a9ea52) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u96.u96",   0x220000, 0x20000, CRC(6de6e648) SHA1(9d839295c4c5145ed000ee200b5d6029f3be544d) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u97.u97",   0x240000, 0x20000, CRC(6fba9290) SHA1(a7fbfe971431924797f3eba0496359501d642828) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u98.u98",   0x260000, 0x20000, CRC(298939f9) SHA1(d47c0baa36f943976a00dd1866b79cb02bf91665) )
+
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u90.u90",   0x280000, 0x20000, CRC(ff87ab13) SHA1(f51ba3d7879dfe934e4ac872937463bb972f8ac2) )
+	ROM_LOAD ( "pa1_saurian_front_game_rom_u91.u91",   0x2a0000, 0x20000, CRC(67bd128a) SHA1(ceca5cec261c5c82d0c9e56b777077fdd5977097) )
+ROM_END
 
 ROM_START( mkprot9 )
 	ROM_REGION( 0x10, REGION_CPU1, 0 )		/* 34010 dummy region */
@@ -1893,6 +2022,7 @@ GAMEC( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "
 GAMEC( 1990, trogpa6,  trog,    trog,     trog,    trogpa6,  ROT0, "Midway",   "Trog (rev PA6-PAC 09-09-90)", &trog_ctrl, &trogpa6_bootstrap )
 GAMEC( 1990, trogp,    trog,    trog,     trog,    trogp,    ROT0, "Midway",   "Trog (prototype, rev 4.00 07-27-90)", &trog_ctrl, &trogp_bootstrap )
 GAME ( 1991, strkforc, 0,       strkforc, strkforc,strkforc, ROT0, "Midway",   "Strike Force (rev 1 02-25-91)" )
+GAME(  1991, saurnfrnt,strkforc,strkforc, saurnfrnt,strkforc,ROT0, "Williams", "Saurian Front (proto v5.0 8/07/90)" )
 
 GAMEC( 1990, smashtv,  0,       smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 8.00)", &smashtv_ctrl, &smashtv_bootstrap )
 GAMEC( 1990, smashtv6, smashtv, smashtv,  smashtv, smashtv,  ROT0, "Williams", "Smash T.V. (rev 6.00)", &smashtv_ctrl, &smashtv6_bootstrap )
