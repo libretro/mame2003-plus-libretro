@@ -4750,6 +4750,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( shimpact )	/* (c) 1991 Midway */
 	DRIVER( shimpacp )	/* (c) 1991 Midway */
 	DRIVER( strkforc )	/* (c) 1991 Midway */
+	DRIVER( saurnfrnt )	/* (c) 1991 Williams */
 	DRIVER( mk )		/* (c) 1992 Midway */
 	DRIVER( mkr4 )		/* (c) 1992 Midway */
 	DRIVER( mkprot9 )	/* (c) 1992 Midway */
