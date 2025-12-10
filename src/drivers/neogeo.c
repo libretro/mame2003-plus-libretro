@@ -8222,7 +8222,7 @@ GAMEB( 2024, captainbarrel, neogeo, neogeo, neogeo, neogeo, neogeo, ROT0, "Neo B
 GAMEB( 2024, gladmort,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "Pixelheart / ChipsOnSteroids", "Gladmort", &neogeo_ctrl, NULL ) 
 
 /* La Casa De Ruivo / Neo Byte Force */
-GAMEB( 2025, doubled1,    neogeo,  neogeo,  neogeo, neogeo, neogeo, ROT0, "La Casa De Ruivo / Neo Byte Force", "Double Dragon One (Beta 3 2025-09-16)", &neogeo_ctrl, NULL ) 
+GAMEB( 2025, doubled1,    neogeo,  neogeo,  ras320, neogeo, neogeo, ROT0, "La Casa De Ruivo / Neo Byte Force", "Double Dragon One (Beta 3 2025-09-16)", &neogeo_ctrl, NULL ) 
 
 
 #if 0
