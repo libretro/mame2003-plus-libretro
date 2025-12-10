@@ -6096,6 +6096,11 @@ Other Sun games
 	DRIVER( captainbarrel ) /* (c) 2024 Neo Byte Force Ltd */
   DRIVER( gladmort )      /* (c) 2024 Pixelheart / ChipsOnSteroids */
   DRIVER( doubled1 )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
+  DRIVER( doubled1a )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
+  DRIVER( doubled1b )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
+  DRIVER( doubled1c )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
+  DRIVER( doubled1d )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
+  DRIVER( doubled1e )      /* (c) 2025 La Casa De Ruivo / Neo Byte Force */
 	
 	/* SemiCom 68020 based hardware */
 	DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
