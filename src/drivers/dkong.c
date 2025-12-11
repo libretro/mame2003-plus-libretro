@@ -3210,19 +3210,6 @@ ROM_START( jammin )
 	ROM_LOAD( "mac2e.bin", 0x000, 0x0100, CRC(65f57bc6) SHA1(8645c8291c7479ed093d64d3f9b19240d5cf8b4e) ) /* palette low 4 bits (inverted) */
 	ROM_LOAD( "mac2f.bin", 0x100, 0x0100, CRC(938955e5) SHA1(96accf365326e499898fb4d937d716df5792fade) ) /* palette high 4 bits (inverted) */
 	ROM_LOAD( "mac2n.bin", 0x200, 0x0100, CRC(e8198448) SHA1(20fc8da7858daa56be758148e5e80f5de30533f9) ) /* character color codes on a per-column basis */
-/*
-	// 4bpp version of the sprite graphics, all planes are unique compared to the 2bpp version
-	// did this get used?
-	ROM_REGION( 0x4000, "gfx2_alt", 0 ) // 4bpp of sprite data
-	ROM_LOAD16_WORD_SWAP( "jammin.int", 0x00000, 0x4000, CRC(0f9022de) SHA1(40f33dd7fcdc310c0eb93c3072b24f290247e974) )
-
-	// a 2nd set of lookup tables + proms
-	// what are they for?
-	ROM_REGION( 0x300, "proms_alt", 0 )
-	ROM_LOAD( "col2e.bin", 0x000, 0x0100, CRC(d22fd797) SHA1(a21be0d280eb376dc600b28a15ece0f9d1cb6d42) )
-	ROM_LOAD( "col2f.bin", 0x100, 0x0100, CRC(bf115ba7) SHA1(ecd12079c23ed73eed2056cad2c23e6bb19d803e) )
-	ROM_LOAD( "col2n.bin", 0x200, 0x0100, CRC(c5ded6e3) SHA1(21d172952f5befafec6fa93be5023f1df0eceb7d) )
-	*/
 ROM_END
 
 static DRIVER_INIT( herodk )
