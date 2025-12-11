@@ -506,6 +506,41 @@ static MEMORY_WRITE_START( strtheat_writemem )
 	{ 0x7d86, 0x7d87, dkong_palettebank_w },
 MEMORY_END
 
+static MEMORY_READ_START( jammin_readmem )
+	{ 0x0000, 0x3fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x4000, 0x4001, YM2151_status_port_0_r },
+	{ 0x5000, 0x50ff, MRA_RAM }, // might be open bus for 'random' reads based on source?
+	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
+	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
+	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
+	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
+	{ 0x7d07, 0x7d07, input_port_2_r },	/* IN2/DSW2 */
+	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
+	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
+	{ 0xd000, 0xdfff, MRA_ROM },	/* DK3 bootleg only */
+	{ 0x8000, 0xbfff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( jammin_writemem )
+	{ 0x0000, 0x3fff, MWA_ROM },
+  { 0x4000, 0x4000, YM2151_register_port_0_w },
+	{ 0x4001, 0x4001, YM2151_data_port_0_w },
+	{ 0x6000, 0x68ff, MWA_RAM },
+	{ 0x6900, 0x6a7f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0x6a80, 0x6fff, MWA_RAM },
+	{ 0x7000, 0x73ff, MWA_RAM },    /* ???? */
+	{ 0x7400, 0x77ff, dkong_videoram_w, &videoram },
+	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
+	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
+	{ 0x7d82, 0x7d82, dkong_flipscreen_w },
+	{ 0x7d83, 0x7d83, MWA_RAM },
+	{ 0x7d84, 0x7d84, interrupt_enable_w },
+	{ 0x7d85, 0x7d85, MWA_RAM },
+	{ 0x7d86, 0x7d87, dkong_palettebank_w },
+	{ 0x8000, 0xbfff, MRA_ROM },
+MEMORY_END
+
 int hunchloopback;
 
 WRITE_HANDLER( hunchbkd_data_w )
@@ -1555,6 +1590,58 @@ INPUT_PORTS_START( shootgal )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( jammin )
+	PORT_START
+	PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON9   | IPF_PLAYER1, "Drum 4 - Hit 2 / Start 2")
+	PORT_BIT_NAME( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON8   | IPF_PLAYER1, "Drum 3 - Hit 2")
+	PORT_BIT_NAME( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON4   | IPF_PLAYER1, "Drum 2 - Hit 2")
+	PORT_BIT_NAME( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2   | IPF_PLAYER1, "Drum 1 - Hit 2")
+	PORT_BIT_NAME( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON5   | IPF_PLAYER1, "Center Drum Hit / Menu Select")
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON7   | IPF_PLAYER1, "Drum 4 - Hit 1")
+	PORT_BIT_NAME( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON6   | IPF_PLAYER1, "Drum 3 - Hit 1")
+	PORT_BIT_NAME( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3   | IPF_PLAYER1, "Drum 2 - Hit 1")
+	PORT_BIT_NAME( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1   | IPF_PLAYER1, "Drum 1 - Hit 1 / Start 1")
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x7f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 static struct GfxLayout charlayout =
 {
 	8,8,	/* 8*8 characters */
@@ -1654,6 +1741,13 @@ static struct Samplesinterface dkongjr_samples_interface =
 	dkongjr_sample_names
 };
 
+static struct YM2151interface ym2151_interface =
+{
+	1,
+	14318180/4,
+	{ YM3012_VOL(60,MIXER_PAN_LEFT,60,MIXER_PAN_RIGHT) },
+	{ 0 }
+};
 
 static MACHINE_DRIVER_START( radarscp )
 
@@ -2028,7 +2122,33 @@ static MACHINE_DRIVER_START( dkong3 )
 	MDRV_SOUND_ADD(NES, nes_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( jammin )
 
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 3072000)	/* 3.072 MHz (?) */
+	MDRV_CPU_MEMORY(jammin_readmem,jammin_writemem)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(OLD_HTOTAL, OLD_VTOTAL)
+	MDRV_VISIBLE_AREA(OLD_HBEND, OLD_HBSTART-1, OLD_VBEND, OLD_VBSTART -1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+
+	MDRV_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MDRV_COLORTABLE_LENGTH(DK2B_PALETTE_LENGTH)
+
+	MDRV_PALETTE_INIT(dkong)
+	MDRV_VIDEO_START(dkong)
+	MDRV_VIDEO_UPDATE(dkong)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2151,  ym2151_interface)
+MACHINE_DRIVER_END
 
 /***************************************************************************
   Game driver(s)
@@ -3068,6 +3188,43 @@ ROM_START( dkchrmx )
 	ROM_LOAD( "v-5e.ch",        0x0200, 0x0100, CRC(5a8ca805) SHA1(8e711af73ddb20ed62a9a8b53f1150feab1dc051) )
 ROM_END
 
+ROM_START( jammin )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )
+	// ROM was assembled from source, split into 0x4000 chunks as that's realistic for a DK type board / sub-board
+	ROM_LOAD( "jammin_0000.bin", 0x0000, 0x4000, CRC(71742497) SHA1(cd535759466de2236607942f0adaffb72b774e00) )
+	// the bytes for a table at 9b6c-9b87 were missing and have been reconstructed based on video reference
+	// but may not be accurate, they're used for 2 background tilemap columns on one stage
+	ROM_LOAD( "jammin_8000.bin", 0x8000, 0x4000, BAD_DUMP CRC(0a11442c) SHA1(84f1033f26cc1bb36d49b4da7a62d58f0ef04adf) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "jambak.pl0", 0x0000, 0x0800, CRC(af808d29) SHA1(cad060ee4e529f9a2ffa9675682b9e17bed4dffe) )
+	ROM_LOAD( "jambak.pl1", 0x0800, 0x0800, CRC(43eaccef) SHA1(37e032b60c0bbaea81b55b4d137cb2d9d047e521) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "jammin.7c", 0x0000, 0x0800, CRC(82361b24) SHA1(ed070586296c329cb88e3dfc4741d591ec59fb8d) )
+	ROM_LOAD( "jammin.7d", 0x0800, 0x0800, CRC(0f02eb55) SHA1(b97ee07dbd71bdc698ac775a721f220afd6bb7cc) )
+	ROM_LOAD( "jammin.7e", 0x1000, 0x0800, CRC(9563c301) SHA1(3947af64f3becf36afaacdb8c962bfccc236525d) )
+	ROM_LOAD( "jammin.7f", 0x1800, 0x0800, CRC(26c7f3b8) SHA1(a0a13ce692bcf40104099a4d9bb2c36aca885350) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "mac2e.bin", 0x000, 0x0100, CRC(65f57bc6) SHA1(8645c8291c7479ed093d64d3f9b19240d5cf8b4e) ) /* palette low 4 bits (inverted) */
+	ROM_LOAD( "mac2f.bin", 0x100, 0x0100, CRC(938955e5) SHA1(96accf365326e499898fb4d937d716df5792fade) ) /* palette high 4 bits (inverted) */
+	ROM_LOAD( "mac2n.bin", 0x200, 0x0100, CRC(e8198448) SHA1(20fc8da7858daa56be758148e5e80f5de30533f9) ) /* character color codes on a per-column basis */
+/*
+	// 4bpp version of the sprite graphics, all planes are unique compared to the 2bpp version
+	// did this get used?
+	ROM_REGION( 0x4000, "gfx2_alt", 0 ) // 4bpp of sprite data
+	ROM_LOAD16_WORD_SWAP( "jammin.int", 0x00000, 0x4000, CRC(0f9022de) SHA1(40f33dd7fcdc310c0eb93c3072b24f290247e974) )
+
+	// a 2nd set of lookup tables + proms
+	// what are they for?
+	ROM_REGION( 0x300, "proms_alt", 0 )
+	ROM_LOAD( "col2e.bin", 0x000, 0x0100, CRC(d22fd797) SHA1(a21be0d280eb376dc600b28a15ece0f9d1cb6d42) )
+	ROM_LOAD( "col2f.bin", 0x100, 0x0100, CRC(bf115ba7) SHA1(ecd12079c23ed73eed2056cad2c23e6bb19d803e) )
+	ROM_LOAD( "col2n.bin", 0x200, 0x0100, CRC(c5ded6e3) SHA1(21d172952f5befafec6fa93be5023f1df0eceb7d) )
+	*/
+ROM_END
+
 static DRIVER_INIT( herodk )
 {
 	int A;
@@ -3157,6 +3314,9 @@ GAME( 1985, spcfrcii,  0,        spclforc, spclforc, 0,        ROT270, "Senko In
 
 GAMEX(198?, drakton,   0,        dkong,    dkong,    0,        ROT270, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat,  0,        strtheat, strtheat, 0,        ROT270, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
+
+/* Atari */
+GAME( 1985, jammin,    0,        jammin,   jammin,   0,        ROT270, "Atari Games", "Jammin' (prototype)" )
 
 /* Braze Technologies bootleg hardware */
 GAME (2008, dkongx,    dkong,    braze,    dkongx,   dkongx,   ROT270, "bootleg",  "Donkey Kong II - Jumpman Returns (Hack V1.2)" )
