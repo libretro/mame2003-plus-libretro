@@ -1744,7 +1744,7 @@ static struct Samplesinterface dkongjr_samples_interface =
 static struct YM2151interface ym2151_interface =
 {
 	1,
-	6000000/2,
+	3072000,
 	{ YM3012_VOL(60,MIXER_PAN_LEFT,60,MIXER_PAN_RIGHT) },
 	{ 0 }
 };
