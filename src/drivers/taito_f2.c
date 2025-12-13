@@ -4850,6 +4850,7 @@ static MACHINE_DRIVER_START( cameltry )
 	/* video hardware */
 	MDRV_GFXDECODE(pivot_gfxdecodeinfo)
 	MDRV_VIDEO_START(taitof2_dondokod)
+  MDRV_VIDEO_EOF(taitof2_partial_buffer_delayed)
 	MDRV_VIDEO_UPDATE(taitof2_pri_roz)
 MACHINE_DRIVER_END
 
