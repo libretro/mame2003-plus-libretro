@@ -603,7 +603,7 @@ int osd_update_audio_stream(INT16 *buffer)
 			int integer_delta = (int)delta_samples;
 			if (integer_delta <= 16 )
 			{
-				log_cb(RETRO_LOG_DEBUG,"sound: Delta added value %d added to frame\n",integer_delta);
+				//log_cb(RETRO_LOG_DEBUG,"sound: Delta added value %d added to frame\n",integer_delta);
 				samples_per_frame += integer_delta;
 			}
 			else if(integer_delta >= 16) log_cb(RETRO_LOG_INFO, "sound: Delta not added to samples_per_frame too large integer_delta: %d\n", integer_delta);
