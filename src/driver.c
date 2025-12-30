@@ -857,6 +857,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( spnchout )	/* (c) 1984 */
 	DRIVER( spnchotj )	/* (c) 1984 (Japan) */
 	DRIVER( armwrest )	/* (c) 1985 */
+  DRIVER( jammin )	  /* (c) 1985 Atari Prototype */
 
 	/* Nintendo Playchoice 10 games */
 	DRIVER( pc_tenis )	/* (c) 1983 Nintendo */
