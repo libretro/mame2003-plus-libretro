@@ -538,7 +538,7 @@ static MEMORY_WRITE_START( jammin_writemem )
 	{ 0x7d84, 0x7d84, interrupt_enable_w },
 	{ 0x7d85, 0x7d85, MWA_RAM },
 	{ 0x7d86, 0x7d87, dkong_palettebank_w },
-	{ 0x8000, 0xbfff, MRA_ROM },
+	{ 0x8000, 0xbfff, MWA_ROM },
 MEMORY_END
 
 int hunchloopback;
