@@ -725,7 +725,36 @@ ROM_START( dblewing )
 	ROM_RELOAD(                0x40000, 0x20000 )
 	ROM_RELOAD(                0x60000, 0x20000 )
 ROM_END
+/*
+The most noticeable difference with the set below is that it doesn't use checkpoints, but respawns you when you die.
+Checkpoints were more common in Japan, so this is likely to be an export version.
+*/
+ROM_START( dblewingb )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* DECO102 code (encrypted) */
+	ROM_LOAD16_BYTE( "17.3d",    0x000001, 0x040000, CRC(3a7ba822) SHA1(726db048ae3ab45cca45f631ad1f04b5cbc7f741) )
+	ROM_LOAD16_BYTE( "18.5d",    0x000000, 0x040000, CRC(e5f5f004) SHA1(4bd40ef88027554a0328df1cf6f1c9c975a7a73f) )
 
+	ROM_REGION( 0x18000, REGION_CPU2, 0 ) /* sound cpu*/
+	ROM_LOAD( "kp_02-.10h",    0x00000, 0x08000, CRC(def035fa) SHA1(fd50314e5c94c25df109ee52c0ce701b0ff2140c) )
+  ROM_CONTINUE(              0x10000, 0x08000 )
+
+  ROM_REGION( 0x10000, REGION_SOUND2, 0 ) /* sound data*/
+	ROM_COPY( REGION_CPU2,  0x00000, 0x00000, 0x8000 )
+	ROM_COPY( REGION_CPU2,  0x10000, 0x08000, 0x8000 )
+	
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "mbe-02.8h",    0x00000, 0x100000, CRC(5a6d3ac5) SHA1(738bb833e2c5d929ac75fe4e69ee0af88197d8a6) )
+
+	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "mbe-00.14a",    0x000000, 0x100000, CRC(e33f5c93) SHA1(720904b54d02dace2310ac6bd07d5ed4bc4fd69c) )
+	ROM_LOAD16_BYTE( "mbe-01.16a",    0x000001, 0x100000, CRC(ef452ad7) SHA1(7fe49123b5c2778e46104eaa3a2104ce09e05705) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* Oki samples */
+	ROM_LOAD( "kp_03-.16h",    0x00000, 0x20000, CRC(5d7f930d) SHA1(ad23aa804ea3ccbd7630ade9b53fc3ea2718a6ec) )
+	ROM_RELOAD(                0x20000, 0x20000 )
+	ROM_RELOAD(                0x40000, 0x20000 )
+	ROM_RELOAD(                0x60000, 0x20000 )
+ROM_END
 
 extern void deco102_decrypt_cpu(int address_xor, int data_select_xor, int opcode_select_xor);
 
@@ -737,4 +766,5 @@ static DRIVER_INIT( dblewing )
 }
 
 
-GAMEX(1993, dblewing, 0,  dblewing, dblewing, dblewing,  ROT90, "Mitchell", "Double Wings", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
+GAMEX(1993, dblewing,  0,         dblewing, dblewing, dblewing,  ROT90, "Mitchell", "Double Wings", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
+GAMEX(1994, dblewingb, dblewing,  dblewing, dblewing, dblewing,  ROT90, "Mitchell", "Double Wings (Asia)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
