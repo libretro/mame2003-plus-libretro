@@ -103,7 +103,7 @@ static void dblewing_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 		y = 240 - y;
         x = 304 - x;
 
-		if (x>320) continue;
+	//	if (x>320) continue;
 
 		sprite &= ~multi;
 		if (fy)
