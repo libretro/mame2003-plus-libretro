@@ -116,6 +116,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Inca * Mature *
 * Indian Battle
 * Invasion
+* Jammin (Atari Prototype)
 * Joe & Mac Returns
 * Jolly Jogger
 * Jurassic Park (Bootleg Of Megadrive Version)
@@ -190,6 +191,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Rumba Lumber
 * Samurai Shodown V
 * Samurai Shodown V Special
+* Saurian Front (Williams Prototype)
 * SD Fighters
 * Sega Megaplay : Bio Hazard Battle
 * Sega Megaplay : Columns III
@@ -1151,3 +1153,6 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added Quick Shots an unprotected version of Target Hits to the targeth.c driver then updated the gfx and configured the gun sights [arcadez, grant2258]
 * Added Shuihu Feng Yun Zhuan and Songjiangyanyi Final to the segac2.c driver grant2258 fixed Shuihu Feng Yun Zhuan game now playable [grant2258, arcadez]
 * Supported Double Dragon One and The Eve Of The Typhoon in neogeo.c [arcadez]
+* Added Double Wings (Asia) to the dblewing.c driver as unlike the original version this one doen't have checkpoints [arcadez]
+* Ported across from FBL dink's fix for the broken text gfx layer in the Japanese version Of Cameltry [dink, arcadez]
+* Added support for Jammin a rare Atari prototype music game to the Donkey Kong driver [arcadez]
