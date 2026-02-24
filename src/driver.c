@@ -1367,6 +1367,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( piratpet )	/* KN  (c) 1982 Taito America Corporation */
 	DRIVER( alpine )	/* RH  (c) 1982 Taito Corporation */
 	DRIVER( alpinea )	/* RH  (c) 1982 Taito Corporation */
+  DRIVER( adcanoe )	/* ??  (c) 1982 Taito Corporation */
 	DRIVER( timetunl )	/* UN  (c) 1982 Taito Corporation */
 	DRIVER( wwestern )	/* WW  (c) 1982 Taito Corporation */
 	DRIVER( wwester1 )	/* WW  (c) 1982 Taito Corporation */
