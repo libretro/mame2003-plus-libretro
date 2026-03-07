@@ -1731,6 +1731,7 @@ FLAC__bool read_metadata_vorbiscomment_(FLAC__StreamDecoder *decoder, FLAC__Stre
 	if(obj->num_comments > 0) {
 		if(0 == (obj->comments = (FLAC__StreamMetadata_VorbisComment_Entry*)safe_malloc_mul_2op_p(obj->num_comments, /*times*/sizeof(FLAC__StreamMetadata_VorbisComment_Entry)))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
+			obj->num_comments = 0;
 			return false;
 		}
 		for(i = 0; i < obj->num_comments; i++) {
@@ -2719,7 +2720,8 @@ FLAC__bool read_residual_partitioned_rice_(FLAC__StreamDecoder *decoder, unsigne
 		if(decoder->private_->frame.header.blocksize < predictor_order) {
 			send_error_to_client_(decoder, FLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC);
 			decoder->protected_->state = FLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC;
-			return true;
+			/* We have received a potentially malicious bt stream. All we can do is error out to avoid a heap overflow. */
+			return false;
 		}
 	}
 	else {
