@@ -15,6 +15,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * A.B. COP
 * Action Fighter (Unprotected)
 * Action Hollywood
+* Adventure Canoe
 * Air Attack
 * Air Rescue
 * Aladdin (bootleg of Megadrive version)
@@ -1157,3 +1158,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Ported across from FBL dink's fix for the broken text gfx layer in the Japanese version Of Cameltry [dink, arcadez]
 * Added support for Jammin a rare Atari prototype music game to the Donkey Kong driver [arcadez]
 * Added Saurian Front a super rare Williams prototype of Midway's Strike Force to the midyunit driver [arcadez]
+* Added Adventure Canoe to the taitosj driver [arcadez,  jackphilippi, dink]
+
