@@ -188,6 +188,8 @@ libretro-build-linux-aarch64:
   extends:
     - .libretro-linux-aarch64-make-default
     - .core-defs
+  only:
+    - master
 
 # MacOS 64-bit
 libretro-build-osx-x64:
