@@ -2050,6 +2050,24 @@ V-V                           TP-027
 	DRIVER( makaimuc )	/*  9/1985 (c) 1985 */
 	DRIVER( makaimug )	/*  9/1985 (c) 1985 */
 	DRIVER( diamond )	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
+	DRIVER( gngknight )		/*  Hack */
+	DRIVER( gngknighta )		/*  Hack */
+	DRIVER( gngknightb )		/*  Hack */
+	DRIVER( gngknightc )		/*  Hack */
+	DRIVER( gngknightt )		/*  Hack */
+	DRIVER( gngmaiden )		/*  Hack */
+	DRIVER( gngmaidena )		/*  Hack */
+	DRIVER( gngmaidenb )		/*  Hack */
+	DRIVER( gngmaidenc )		/*  Hack */
+	DRIVER( gngmaident )		/*  Hack */
+	DRIVER( makknight )		/*  Hack */
+	DRIVER( makknightb )		/*  Hack */
+	DRIVER( makknightc )		/*  Hack */
+	DRIVER( makknightg )		/*  Hack */
+	DRIVER( makmaiden )		/*  Hack */
+	DRIVER( makmaidenb )		/*  Hack */
+	DRIVER( makmaidenc )		/*  Hack */
+	DRIVER( makmaideng )		/*  Hack */
 	DRIVER( gunsmoke )	/* 11/1985 (c) 1985 (World) */
 	DRIVER( gunsmoku )	/* 11/1985 (c) 1985 + Romstar (US) */
 	DRIVER( gunsmoka )	/* 11/1985 (c) 1985 (US) */
