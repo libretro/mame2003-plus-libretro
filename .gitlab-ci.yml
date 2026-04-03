@@ -396,6 +396,5 @@ libretro-build-webos-armv7a:
   extends:
     - .libretro-webos-armv7a-make-default
     - .core-defs
-    only:
+  only:
     - master
-
