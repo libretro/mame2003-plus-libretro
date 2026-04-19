@@ -16,7 +16,8 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := retro
 LOCAL_SRC_FILES := $(SOURCES_C)
 LOCAL_CFLAGS    := -std=gnu90 $(COREFLAGS) -fsigned-char
-LOCAL_LDFLAGS   := -Wl,-version-script=$(ROOT_DIR)/link.T
+LOCAL_LDFLAGS   := -Wl,-version-script=$(ROOT_DIR)/link.T,-z,max-page-size=16384
+LOCAL_SHORT_COMMANDS := true
 
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
   LOCAL_ARM_NEON := true
