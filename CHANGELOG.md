@@ -125,6 +125,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Jump Kun
 * Kabuki-Z (World)
 * Ketsui: Kizuna Jigoku Tachi
+* Ketsui: Kizuna Jigoku Tachi - IKD 2007 Special Version
 * Knightmare
 * Knights Chance (NeoGeo)
 * Last Hope
@@ -1159,4 +1160,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added support for Jammin a rare Atari prototype music game to the Donkey Kong driver [arcadez]
 * Added Saurian Front a super rare Williams prototype of Midway's Strike Force to the midyunit driver [arcadez]
 * Added Adventure Canoe to the taitosj driver [arcadez,  jackphilippi, dink]
+* Added support for Ketsui: Kizuna Jigoku Tachi - IKD 2007 Special Version to pgm.c [arcadez]
 
