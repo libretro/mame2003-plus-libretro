@@ -962,7 +962,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 
 		/* figure out all the clips that intersect this scanline */
 		for (i = 0; i < 5; i++)
-			if ((BIT(clipmask , i)) && y >= clips[i].min_y && y < clips[i].max_y)
+			if ((BIT(clipmask, i)) && y >= clips[i].min_y && y < clips[i].max_y)
 				sect |= 1 << i;
 		list->scan_extent[y] = sect;
 	}
