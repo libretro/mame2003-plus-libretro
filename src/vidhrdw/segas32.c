@@ -476,7 +476,7 @@ static INLINE void update_color(int offset, UINT16 data)
 
 static INLINE UINT16 common_paletteram_r(int which, offs_t offset)
 {
-	int convert;
+	bool convert;
 
 	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
 	/* the upper half of palette RAM is formatted xBGRBBBBGGGGRRRR */
