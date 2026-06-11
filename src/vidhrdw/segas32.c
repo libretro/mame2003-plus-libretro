@@ -271,7 +271,7 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack  = false; /* dink */
+bool opaquey_hack  = true; /* dink */
 bool titlef_kludge = false;
 
 
@@ -2641,17 +2641,11 @@ VIDEO_UPDATE( multi32 )
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
 
-  usrintf_showmessage("6:%i 7:%i 8:%i 9:%i 10:%i 11:%i 12:%i 13:%i 14:%i 15:%i",
-    BIT(system32_videoram[0x1ff8e/2], 6), 
-    BIT(system32_videoram[0x1ff8e/2], 7), 
+  usrintf_showmessage("8:%i  9:%i  10:%i  11:%i",
     BIT(system32_videoram[0x1ff8e/2], 8),
     BIT(system32_videoram[0x1ff8e/2], 9),
     BIT(system32_videoram[0x1ff8e/2], 10),
-    BIT(system32_videoram[0x1ff8e/2], 11),
-    BIT(system32_videoram[0x1ff8e/2], 12),
-    BIT(system32_videoram[0x1ff8e/2], 13),
-    BIT(system32_videoram[0x1ff8e/2], 14),
-    BIT(system32_videoram[0x1ff8e/2], 15) );
+    BIT(system32_videoram[0x1ff8e/2], 11) );
 }
 
 
