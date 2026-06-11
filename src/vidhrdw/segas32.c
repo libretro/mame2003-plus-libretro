@@ -2640,6 +2640,18 @@ VIDEO_UPDATE( multi32 )
 		mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 	else
 		fillbitmap(bitmap, get_black_pen(), &clipright);
+
+  usrintf_showmessage("6:%i 7:%i 8:%i 9:%i 10:%i 11:%i 12:%i 13:%i 14:%i 15:%i",
+    BIT(system32_videoram[0x1ff8e/2], 6), 
+    BIT(system32_videoram[0x1ff8e/2], 7), 
+    BIT(system32_videoram[0x1ff8e/2], 8),
+    BIT(system32_videoram[0x1ff8e/2], 9),
+    BIT(system32_videoram[0x1ff8e/2], 10),
+    BIT(system32_videoram[0x1ff8e/2], 11),
+    BIT(system32_videoram[0x1ff8e/2], 12),
+    BIT(system32_videoram[0x1ff8e/2], 13),
+    BIT(system32_videoram[0x1ff8e/2], 14),
+    BIT(system32_videoram[0x1ff8e/2], 15) );
 }
 
 
