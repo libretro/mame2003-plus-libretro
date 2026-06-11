@@ -1868,7 +1868,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	int x, y, xtarget, ytarget, yacc = 0, pix, transmask;
 	const UINT32 *spritedata;
 	UINT32 addrmask, curaddr;
-	UINT16 indtable[16] {};
+	UINT16 indtable[16] = {0};
 
 	/* if hidden, or top greater than/equal to bottom, or invalid bank, punt */
 	if (srcw == 0 || srch == 0 || dstw == 0 || dsth == 0)
