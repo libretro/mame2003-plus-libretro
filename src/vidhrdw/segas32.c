@@ -36,6 +36,8 @@
 	  (Note: Theory about these being CPU core bug(s) is debunked by the fact that latter
 	   sets up via immediate opcodes)
 
+	- Tilemap opaque behaviour is incorrect
+
     Information extracted from below, and from Modeler:
 
     Tile format:
@@ -53,7 +55,7 @@
 
     Text RAM:
         Offset     Bits                  Usage
-         $31FF00 : w--- ---- ---- ---- : Screen width (0= 320, 1= 412)
+         $31FF00 : w--- ---- ---- ---- : Screen width (0= 320, 1= 416)
                    ---- f--- ---- ---- : Bitmap format (1= 8bpp, 0= 4bpp)
                    ---- -t-- ---- ---- : Tile banking related
                    ---- --f- ---- ---- : 1= Global X/Y flip (enabled via service menu)
