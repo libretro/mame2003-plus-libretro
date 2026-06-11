@@ -478,7 +478,7 @@ static void update_irq_state(void)
 	/* loop over interrupt vectors, finding the highest priority one with */
 	/* an unmasked interrupt pending */
 	for (vector = 0; vector < 5; vector++)
-		if (effirq & (1 << vector))
+		if (BIT(effirq, vector))
 		{
 			cpu_set_irq_line_and_vector(0, 0, ASSERT_LINE, vector);
 			break;
@@ -713,8 +713,8 @@ static void common_io_chip_w(int which, offs_t offset, UINT16 data, UINT16 mem_m
 				EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 			}
 
-			coin_counter_w(1 + 2*which, data & 0x02);
-			coin_counter_w(0 + 2*which, data & 0x01);
+			coin_counter_w(1 + 2*which, BIT(data, 1));
+			coin_counter_w(0 + 2*which, BIT(data, 0));
 			break;
 
 		/* tile banking */
@@ -943,7 +943,7 @@ static void update_sound_irq_state(void)
 	/* loop over interrupt vectors, finding the highest priority one with */
 	/* an unmasked interrupt pending */
 	for (vector = 0; vector < 3; vector++)
-		if (effirq & (1 << vector))
+		if (BIT(effirq, vector))
 		{
 			cpu_set_irq_line_and_vector(1, 0, ASSERT_LINE, 2 * vector);
 			break;
@@ -980,14 +980,14 @@ static void clear_sound_irq(int which)
 static WRITE_HANDLER( sound_int_control_lo_w )
 {
 	/* odd offsets are interrupt acks */
-	if (offset & 1)
+	if (BIT(offset, 0))
 	{
 		sound_irq_input &= data;
 		update_sound_irq_state();
 	}
 
 	/* high offsets signal an IRQ to the v60 */
-	if (offset & 4)
+	if (BIT(offset, 2))
 		signal_v60_irq(MAIN_IRQ_SOUND);
 }
 
@@ -2524,9 +2524,15 @@ static struct GfxLayout bgcharlayout =
 	16*64
 };
 
-static struct GfxDecodeInfo gfxdecodeinfo[] =
+static struct GfxDecodeInfo gfx_segas32[] =
 {
-	{ REGION_GFX1, 0, &bgcharlayout,   0x00, 0x3ff  },
+	{ REGION_GFX1, 0, &bgcharlayout,   0, 0x400  },
+	{ -1 } /* end of array */
+};
+
+static struct GfxDecodeInfo gfx_multi32[] =
+{
+	{ REGION_GFX1, 0, &bgcharlayout,   0, 0x800  },
 	{ -1 } /* end of array */
 };
 
@@ -2562,8 +2568,8 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_RGB_DIRECT )
 	MDRV_SCREEN_SIZE(52*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(16384)
+	MDRV_GFXDECODE(gfx_segas32)
+	MDRV_PALETTE_LENGTH(0x4000)
 
 	MDRV_VIDEO_START(system32)
 	MDRV_VIDEO_UPDATE(system32)
@@ -2606,8 +2612,8 @@ static MACHINE_DRIVER_START( multi32 )
 	MDRV_SCREEN_SIZE(52*8*2, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 52*8*2-1, 0*8, 28*8-1)
 
-	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(32768)
+	MDRV_GFXDECODE(gfx_multi32)
+	MDRV_PALETTE_LENGTH(0x8000)
 
 	MDRV_VIDEO_START(multi32)
 	MDRV_VIDEO_UPDATE(multi32)
