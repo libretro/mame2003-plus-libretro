@@ -3653,7 +3653,7 @@ static DRIVER_INIT( dbzvrvs )
 static DRIVER_INIT( titlef )
 {
 	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
-	//titlef_kludge = true;
+	titlef_kludge = true;
 }
 
 static DRIVER_INIT( scross )
