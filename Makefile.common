@@ -2676,6 +2676,19 @@ SOURCES_C += \
 	$(CORE_DIR)/libretro-deps/libFLAC/stream_decoder.c \
 	$(CORE_DIR)/libretro-deps/libFLAC/window.c
 
+SOURCES_C += \
+	$(CORE_DIR)/lib/zlib/adler32.c \
+	$(CORE_DIR)/lib/zlib/crc32.c \
+	$(CORE_DIR)/lib/zlib/deflate.c \
+	$(CORE_DIR)/lib/zlib/inffast.c \
+	$(CORE_DIR)/lib/zlib/inflate.c \
+	$(CORE_DIR)/lib/zlib/inftrees.c \
+	$(CORE_DIR)/lib/zlib/ioapi.c \
+	$(CORE_DIR)/lib/zlib/trees.c \
+	$(CORE_DIR)/lib/zlib/uncompr.c \
+	$(CORE_DIR)/lib/zlib/unzip.c \
+	$(CORE_DIR)/lib/zlib/zutil.c
+
 ifeq ($(STATIC_LINKING),1)
 else
 SOURCES_C += \
@@ -2700,18 +2713,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
-	$(LIBRETRO_COMM_DIR)/time/rtime.c \
-	$(CORE_DIR)/lib/zlib/adler32.c \
-	$(CORE_DIR)/lib/zlib/crc32.c \
-	$(CORE_DIR)/lib/zlib/deflate.c \
-	$(CORE_DIR)/lib/zlib/inffast.c \
-	$(CORE_DIR)/lib/zlib/inflate.c \
-	$(CORE_DIR)/lib/zlib/inftrees.c \
-	$(CORE_DIR)/lib/zlib/ioapi.c \
-	$(CORE_DIR)/lib/zlib/trees.c \
-	$(CORE_DIR)/lib/zlib/uncompr.c \
-	$(CORE_DIR)/lib/zlib/unzip.c \
-	$(CORE_DIR)/lib/zlib/zutil.c
+	$(LIBRETRO_COMM_DIR)/time/rtime.c
 endif
 
 ifeq ($(ZLIB_UNCOMPRESS), 1)
