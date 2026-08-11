@@ -3589,7 +3589,28 @@ static DRIVER_INIT ( radr )
 	opaquey_hack = true;
 }
 
+static WRITE16_HANDLER( f1en_comms_echo_w )
+{
+	/* pretend that slave is following master op, enables attract mode video with sound */
+	if (ACCESSING_LSB)
+		cpu_writemem24lew( 0x810049, data );
+}
+
 static DRIVER_INIT ( f1en )
+{
+	install_io_analog();
+
+	dual_pcb_comms = auto_malloc(0x2000);
+	memset(dual_pcb_comms, 0xff, 0x2000);
+
+	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
+	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
+	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
+
+	install_mem_write16_handler(0, 0x810048, 0x810049, f1en_comms_echo_w);
+}
+
+static DRIVER_INIT ( slipstrm )
 {
 	install_io_analog();
 }
@@ -3686,8 +3707,8 @@ GAMEX(1993, f1lap,    0,        system32,     f1lap,    f1sl,     ROT0, "Sega", 
 GAMEX(1993, f1lapj,   f1lap,    system32,     f1lap,    f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, darkedge, 0,        system32,     darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, dbzvrvs,  0,        system32,     system32, dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1995, slipstrm, 0,        system32,     slipstrm, f1en,     ROT0, "Capcom", "Slipstream (Brazil)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1995, slipstrh, slipstrm, system32,     slipstrm, f1en,     ROT0, "Capcom", "Slipstream (Hispanic)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1995, slipstrm, 0,        system32,     slipstrm, slipstrm, ROT0, "Capcom", "Slipstream (Brazil)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1995, slipstrh, slipstrm, system32,     slipstrm, slipstrm, ROT0, "Capcom", "Slipstream (Hispanic)", GAME_IMPERFECT_GRAPHICS )
 
 /* Multi32 games */
 GAMEX(1992, orunners, 0,        multi32,      orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
