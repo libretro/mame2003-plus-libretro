@@ -3632,7 +3632,7 @@ static READ16_HANDLER( arescue_handshake_r )
 
 static READ16_HANDLER( arescue_slavebusy_r )
 {
-	return 0x100; /* prevents master trying to synch to slave */
+	return 0x100; /* prevents master trying to sync to slave */
 }
 
 static DRIVER_INIT( arescue )
