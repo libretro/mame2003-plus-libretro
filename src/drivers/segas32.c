@@ -3600,14 +3600,14 @@ static DRIVER_INIT ( f1en )
 {
 	install_io_analog();
 
-	dual_pcb_comms = auto_malloc(0x2000);
+	dual_pcb_comms = auto_malloc(0x1000);
 	memset(dual_pcb_comms, 0xff, 0x1000 / 2);
 
 	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
 	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
 
-	install_mem_write16_handler(0, 0x810048, 0x810049, f1en_comms_echo_w);
+	install_mem_write16_handler(0, 0x810048, 0x810048, f1en_comms_echo_w);
 }
 
 static DRIVER_INIT ( slipstrm )
