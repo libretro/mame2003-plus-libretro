@@ -3504,7 +3504,7 @@ static DRIVER_INIT ( alien3 )
 
 static DRIVER_INIT ( brival )
 {
-	system32_protram = auto_malloc (0x1000);
+	system32_protram = auto_malloc(sizeof(UINT16)*(0x1000/2));
 	install_mem_read16_handler (0, 0x20ba00, 0x20ba07, brival_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa00fff, brival_protboard_w);
 }
@@ -3542,7 +3542,7 @@ static DRIVER_INIT ( f1sl )
 {
 	install_io_analog();
 
-	dual_pcb_comms = auto_malloc(0x1000);
+	dual_pcb_comms = auto_malloc(sizeof(UINT16)*(0x1000/2));
 	install_mem_read16_handler (0, 0x800000, 0x800fff,  dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
 	install_mem_read16_handler (0, 0x801000, 0x801003,  dual_pcb_masterslave);
@@ -3600,8 +3600,8 @@ static DRIVER_INIT ( f1en )
 {
 	install_io_analog();
 
-	dual_pcb_comms = auto_malloc(0x1000);
-	memset(dual_pcb_comms, 0xff, 0x1000 / 2);
+	dual_pcb_comms = auto_malloc(sizeof(UINT16)*(0x1000/2));
+	memset(dual_pcb_comms, 0xff, 0x1000/2);
 
 	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
@@ -3642,7 +3642,7 @@ static DRIVER_INIT( arescue )
 	install_mem_read16_handler (0, 0xa00000, 0xa00007, arescue_dsp_r); /* protection */
 	install_mem_write16_handler(0, 0xa00000, 0xa00007, arescue_dsp_w);
 
-	dual_pcb_comms = auto_malloc(0x1000);
+	dual_pcb_comms = auto_malloc(sizeof(UINT16)*(0x1000/2));
 	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
 	install_mem_read16_handler (0, 0x818000, 0x818003, dual_pcb_masterslave);
