@@ -473,32 +473,28 @@ static NVRAM_HANDLER( system32 )
 static void update_irq_state(void)
 {
 	UINT8 effirq = v60_irq_control[7] & ~v60_irq_control[6] & 0x1f;
-	int vector;
-
-	/* loop over interrupt vectors, finding the highest priority one with */
-	/* an unmasked interrupt pending */
-	for (vector = 0; vector < 5; vector++)
-		if (BIT(effirq, vector))
-		{
-			cpu_set_irq_line_and_vector(0, 0, ASSERT_LINE, vector);
-			break;
-		}
-
-	/* if we didn't find any, clear the interrupt line */
-	if (vector == 5)
-		cpu_set_irq_line(0, 0, CLEAR_LINE);
+	cpu_set_irq_line(0, 0, effirq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 static void signal_v60_irq(int which)
 {
-	int i;
-
-	/* see if this interrupt input is mapped to any vectors; if so, mark them */
-	for (i = 0; i < 5; i++)
-		if (v60_irq_control[i] == which)
-			v60_irq_control[7] |= 1 << i;
+	/* mark this source as pending */
+	if (which >= 0 && which < 5)
+		v60_irq_control[7] |= 1 << which;
 	update_irq_state();
+}
+
+
+static int segas32_irq_callback(int irqline)
+{
+	UINT8 effirq = v60_irq_control[7] & ~v60_irq_control[6] & 0x1f;
+	int vector;
+
+	for (vector = 0; vector < 5; vector++)
+		if (BIT(effirq, vector))
+			return v60_irq_control[vector];
+	return 0;
 }
 
 
@@ -1164,6 +1160,7 @@ static MACHINE_INIT( segas32 )
 
 	/* clear IRQ lines */
 	cpu_set_irq_line(0, 0, CLEAR_LINE);
+	cpu_set_irq_callback(0, segas32_irq_callback);
 }
 
 /* Analog Input Handlers */
