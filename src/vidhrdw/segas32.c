@@ -297,7 +297,7 @@ static int32_t *prev_bgendx;
 static int32_t *bgcolor_line;
 
 /* sprite data */
-static UINT8 sprite_render_count;
+static UINT8 sprite_render_count = 0;
 static UINT8 sprite_control_latched[8];
 static UINT8 sprite_control[8];
 static UINT32 *spriteram_32bit;
