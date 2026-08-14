@@ -493,14 +493,7 @@ static int segas32_irq_callback(int irqline)
 
 	for (vector = 0; vector < 5; vector++)
 		if (BIT(effirq, vector))
-		{
-			/* acknowledge this interrupt source immediately */
-			v60_irq_control[7] &= ~(1 << vector);
-			update_irq_state(); /* will clear/assert the CPU line as needed */
-
 			return v60_irq_control[vector];
-		}
-
 	return 0;
 }
 
