@@ -3539,7 +3539,7 @@ static READ16_HANDLER( dual_pcb_masterslave )
 	return 0; /* 0/1 master/slave */
 }
 
-static DRIVER_INIT ( f1sl )
+static DRIVER_INIT ( f1lap )
 {
 	install_io_analog();
 
@@ -3548,6 +3548,8 @@ static DRIVER_INIT ( f1sl )
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
 	install_mem_read16_handler (0, 0x801000, 0x801003,  dual_pcb_masterslave);
 	system32_prot_vblank = f1lap_fd1149_vblank;
+
+	f1lap_kludge = true;
 }
 
 static DRIVER_INIT ( arf )
@@ -3704,8 +3706,8 @@ GAMEX(1994, jpark,    0,        system32,     jpark,    jpark,    ROT0, "Sega", 
 GAMEX(1994, svf,      0,        system32,     svf,      0,        ROT0, "Sega", "Super Visual Football - European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, svs,      svf,      system32,     svf,      0,        ROT0, "Sega", "Super Visual Soccer - Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, jleague,  svf,      system32,     svf,      jleague,  ROT0, "Sega", "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1993, f1lap,    0,        system32,     f1lap,    f1sl,     ROT0, "Sega", "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1993, f1lapj,   f1lap,    system32,     f1lap,    f1sl,     ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, f1lap,    0,        system32,     f1lap,    f1lap,    ROT0, "Sega", "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, f1lapj,   f1lap,    system32,     f1lap,    f1lap,    ROT0, "Sega", "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1993, darkedge, 0,        system32,     darkedge, darkedge, ROT0, "Sega", "Dark Edge", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1994, dbzvrvs,  0,        system32,     system32, dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1995, slipstrm, 0,        system32,     slipstrm, slipstrm, ROT0, "Capcom", "Slipstream (Brazil)", GAME_IMPERFECT_GRAPHICS )

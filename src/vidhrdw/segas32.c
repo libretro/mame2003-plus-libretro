@@ -273,6 +273,7 @@ UINT16 system32_tilebank_external;
 
 bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
+bool f1lap_kludge  = false;
 
 
 
@@ -2275,6 +2276,10 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		int effpri = (priority << 3) | 7;
 		int sprindex = numlayers;
 		int dstnum = 0;
+
+		/* f1lap priority hack */
+		if (f1lap_kludge && priority == 0x0a)
+			effpri = (0x0d << 3) | 7;
 
 		/* make a copy of the sorted list, finding a location for the sprite entry */
 		for (laynum = 0; laynum < numlayers; laynum++)
