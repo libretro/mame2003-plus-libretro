@@ -431,8 +431,8 @@ static void update_sprites(int param)
 void system32_set_vblank(int state)
 {
 	/* at the end of VBLANK is when automatic sprite rendering happens */
-	/*if (!state)
-		timer_set(TIME_IN_USEC(50), 1, update_sprites);*/
+	if (!state)
+		timer_set(TIME_IN_USEC(50), 1, update_sprites);
 }
 
 
@@ -2573,13 +2573,6 @@ static void print_mixer_data(int which)
 #endif
 }
 
-static void legacy_sprite_update(void)
-{
-    //sprite_erase_buffer();
-    sprite_swap_buffers();
-    sprite_render_list();
-}
-
 VIDEO_UPDATE( system32 )
 {
 	UINT8 enablemask;
@@ -2599,8 +2592,6 @@ VIDEO_UPDATE( system32 )
 
 	/* update the tilemaps */
 	enablemask = update_tilemaps(cliprect);
-
-	legacy_sprite_update();
 
 	/* do the mixing */
 	mix_all_layers(0, 0, bitmap, cliprect, enablemask);
