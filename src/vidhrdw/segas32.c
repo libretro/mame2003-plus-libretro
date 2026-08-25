@@ -2575,7 +2575,7 @@ static void print_mixer_data(int which)
 
 static void legacy_sprite_update(void)
 {
-    sprite_erase_buffer();
+    //sprite_erase_buffer();
     sprite_swap_buffers();
     sprite_render_list();
 }
