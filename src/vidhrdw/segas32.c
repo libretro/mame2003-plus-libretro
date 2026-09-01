@@ -877,7 +877,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 	int sorted[5];
 	int i, j, y;
 
-	/* expand our cliprect to exclude the bottom-right */
+	/* expand our cliprect to include the bottom-right */
 	tempclip = *cliprect;
 	tempclip.max_x++;
 	tempclip.max_y++;
@@ -963,8 +963,6 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 
 		/*
 		 * $1FF04 bits 4/5 enable per-line clip windows.
-		 *
-		 * $1FF04[15:10] = row-table byte address
 		 *
 		 * clip 2:
 		 *   +000 = min X
