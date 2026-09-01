@@ -2722,7 +2722,7 @@ VIDEO_UPDATE( multi32 )
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
 	}
-titlef_kludge = false;
+
 	/* update the tilemaps */
 	enablemask = update_tilemaps(&clipleft);
 
