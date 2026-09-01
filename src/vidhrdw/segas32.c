@@ -978,7 +978,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
-			int line = flip ? 223 - y : y;
+			int line = flip ? cliprect->max_y - y : y;
 			UINT16 *table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
 
 			for (i = 0; i < 5; i++)
@@ -1745,11 +1745,14 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 static void update_background(struct layer_info *layer, const struct rectangle *cliprect)
 {
 	struct mame_bitmap *bitmap = layer->bitmap;
-	int x, y;
+	int y;
+
+	/* determine if we're flipped */
+	bool flip = BIT(system32_videoram[0x1ff00 / 2], 9);
 
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->line[y];
+		UINT16 *dst = (UINT16 *)bitmap->line[flip ? cliprect->max_y - y : y];
 		int color;
 
 		/* determine the color */
