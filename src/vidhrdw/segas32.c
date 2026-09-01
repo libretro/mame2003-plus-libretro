@@ -920,14 +920,17 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		{
 			UINT16 *extent = &list->extent[i][0];
 
+			/* start off with an entry at tempclip.min_x */
 			*extent++ = tempclip.min_x;
 
+			/* loop in sorted order over extents */
 			for (j = 0; j < 5; j++)
 			{
 				if (BIT(i, sorted[j]))
 				{
 					const struct rectangle *cur = &clips[sorted[j]];
 
+					/* see if this intersects our last extent */
 					if (extent != &list->extent[i][1] && cur->min_x <= extent[-1])
 					{
 						if (cur->max_x > extent[-1])
@@ -935,12 +938,14 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 					}
 					else
 					{
+						/* otherwise, just append to the list */
 						*extent++ = cur->min_x;
 						*extent++ = cur->max_x;
 					}
 				}
 			}
 
+			/* append an ending entry */
 			*extent++ = tempclip.max_x;
 		}
 	}
