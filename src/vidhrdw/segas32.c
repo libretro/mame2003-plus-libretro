@@ -1152,7 +1152,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (/*opaquey_hack*/1) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
+	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1244,7 +1244,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
 						srcx += srcxstep;
-						if ((pix & 0x0f) == 0 && !opaque && pix != 0)
+						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
 						dst[x] = pix;
 					}
@@ -1314,7 +1314,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (/*opaquey_hack*/1) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
+	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1400,7 +1400,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 					for (x = extents[0]; x < extents[1]; x++, srcx += srcxstep)
 					{
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
-						if ((pix & 0x0f) == 0 && !opaque && pix != 0)
+						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
 						dst[x] = pix;
 					}
