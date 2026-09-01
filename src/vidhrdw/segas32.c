@@ -21,12 +21,6 @@
 	- Sonic while globally flipped via the service menu, fails to flip
 	  the "SEGA" and "SEGASONIC" sprite based logos on the title screen.
 
-	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
-	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
-	  Game actually uses the "rowscroll/rowselect" tables for a line window
-	  effect to draw the boxing ring over NBG0.
-	  Same deal for ga2 when in stage 2 cave a wall torch is lit.
-
 	- Wrong priority cases (parenthesis for the level setup):
 	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
 	  dbzvrvs: Sheng-Long speech balloon during Piccoro ending (fixme: check levels).
@@ -1135,28 +1129,6 @@ static INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
 }
 
 
-static bool patch_enable(bool in, int bgnum)
-{
-	if (!titlef_kludge) return in;
-
-	switch (system32_videoram[0x1ff02/2])
-	{
-		case 0x7be0:
-		case 0x52a0:
-		case 0x2960:
-			return false;
-
-		case 0x5be0:
-			return (bgnum%2 == 0) ? in : false;
-
-		case 0x3be0:
-			return (bgnum%2 == 1) ? in : false;
-
-		default: return in;
-	}
-}
-
-
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 	bool clipenable, clipout, clipdraw_start;
@@ -1175,10 +1147,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
-//opaque = (system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1;
-//if (code_pressed(KEYCODE_Z) && bgnum == 0) opaque = 1;
-//if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
+	opaque = (/*opaquey_hack*/1) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1340,10 +1309,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
-//opaque = (system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1;
-//if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
-//if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
+	opaque = (/*opaquey_hack*/1) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1810,8 +1776,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
-	if (!titlef_kludge)
-		update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
+	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
