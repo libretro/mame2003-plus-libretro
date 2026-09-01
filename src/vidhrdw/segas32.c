@@ -905,12 +905,11 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		}
 		else
 		{
-			clips[i].max_x = tempclip.max_x - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
-			clips[i].max_y = tempclip.max_y - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
-			clips[i].min_x = tempclip.max_x - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
-			clips[i].min_y = tempclip.max_y - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
+			clips[i].max_x = (tempclip.max_x) - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
+			clips[i].max_y = (tempclip.max_y) - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
+			clips[i].min_x = (tempclip.max_x) - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
+			clips[i].min_y = (tempclip.max_y) - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
-
 		sect_rect(&clips[i], &tempclip);
 		sorted[i] = i;
 	}
