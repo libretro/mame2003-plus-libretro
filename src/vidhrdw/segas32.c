@@ -893,7 +893,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		return 1;
 	}
 
-	/* extract the clips from videoram and apply the cliprect */
+	/* extract the clips from videoram into locals, and apply the cliprect */
 	for (i = 0; i < 5; i++)
 	{
 		if (!flip)
