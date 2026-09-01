@@ -974,12 +974,12 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		 *   +100 = min X
 		 *   +300 = max X
 		 */
-		if (system32_videoram[0x1ff04 / 2] & 0x0030)
+		if (BIT(system32_videoram[0x1ff04 / 2], 4) || BIT(system32_videoram[0x1ff04 / 2], 5))
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
 			int line = flip ? 223 - y : y;
-			int base = system32_videoram[0x1ff04 / 2] & 0xfc00;
+			UINT16 *table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
 
 			for (i = 0; i < 5; i++)
 			{
@@ -990,8 +990,8 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			/* clip window 2 */
 			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
 			{
-				UINT16 minx = system32_videoram[(base + 0x000 + line) / 2];
-				UINT16 maxx = system32_videoram[(base + 0x200 + line) / 2];
+				UINT16 minx = table[0x000 + line];
+				UINT16 maxx = table[0x200 + line];
 
 				if (minx == 0xffff || maxx == 0xffff)
 				{
@@ -1017,8 +1017,8 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			/* clip window 3 */
 			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
 			{
-				UINT16 minx = system32_videoram[(base + 0x100 + line) / 2];
-				UINT16 maxx = system32_videoram[(base + 0x300 + line) / 2];
+				UINT16 minx = table[0x100 + line];
+				UINT16 maxx = table[0x300 + line];
 
 				if (minx == 0xffff || maxx == 0xffff)
 				{
