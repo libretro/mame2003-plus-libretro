@@ -905,21 +905,10 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		}
 		else
 		{
-			clips[i].max_x =
-				tempclip.max_x -
-				(system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
-
-			clips[i].max_y =
-				tempclip.max_y -
-				(system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
-
-			clips[i].min_x =
-				tempclip.max_x -
-				((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
-
-			clips[i].min_y =
-				tempclip.max_y -
-				((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
+			clips[i].max_x = tempclip.max_x - (system32_videoram[0x1ff60/2 + i * 4] & 0x1ff);
+			clips[i].max_y = tempclip.max_y - (system32_videoram[0x1ff62/2 + i * 4] & 0x0ff);
+			clips[i].min_x = tempclip.max_x - ((system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
+			clips[i].min_y = tempclip.max_y - ((system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
 
 		sect_rect(&clips[i], &tempclip);
@@ -951,8 +940,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 				{
 					const struct rectangle *cur = &clips[sorted[j]];
 
-					if (extent != &list->extent[i][1] &&
-						cur->min_x <= extent[-1])
+					if (extent != &list->extent[i][1] && cur->min_x <= extent[-1])
 					{
 						if (cur->max_x > extent[-1])
 							extent[-1] = cur->max_x;
@@ -976,9 +964,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 
 		/* figure out all the clips that intersect this scanline */
 		for (i = 0; i < 5; i++)
-			if ((BIT(clipmask, i)) &&
-				y >= clips[i].min_y &&
-				y < clips[i].max_y)
+			if ((BIT(clipmask, i)) && y >= clips[i].min_y && y < clips[i].max_y)
 				sect |= 1 << i;
 
 		/*
@@ -1008,13 +994,10 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 2 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 4) &&
-				BIT(clipmask, 2))
+			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
 			{
-				UINT16 minx =
-					system32_videoram[(base + 0x000 + line) / 2];
-				UINT16 maxx =
-					system32_videoram[(base + 0x200 + line) / 2];
+				UINT16 minx = system32_videoram[(base + 0x000 + line) / 2];
+				UINT16 maxx = system32_videoram[(base + 0x200 + line) / 2];
 
 				if (minx == 0xffff || maxx == 0xffff)
 				{
@@ -1027,10 +1010,8 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 				}
 				else
 				{
-					lineclips[2].min_x =
-						tempclip.max_x - ((maxx & 0x1ff) + 1);
-					lineclips[2].max_x =
-						tempclip.max_x - (minx & 0x1ff);
+					lineclips[2].min_x = tempclip.max_x - ((maxx & 0x1ff) + 1);
+					lineclips[2].max_x = tempclip.max_x - (minx & 0x1ff);
 				}
 
 				sect_rect(&lineclips[2], &tempclip);
@@ -1040,13 +1021,10 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 3 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 5) &&
-				BIT(clipmask, 3))
+			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
 			{
-				UINT16 minx =
-					system32_videoram[(base + 0x100 + line) / 2];
-				UINT16 maxx =
-					system32_videoram[(base + 0x300 + line) / 2];
+				UINT16 minx = system32_videoram[(base + 0x100 + line) / 2];
+				UINT16 maxx = system32_videoram[(base + 0x300 + line) / 2];
 
 				if (minx == 0xffff || maxx == 0xffff)
 				{
@@ -1059,10 +1037,8 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 				}
 				else
 				{
-					lineclips[3].min_x =
-						tempclip.max_x - ((maxx & 0x1ff) + 1);
-					lineclips[3].max_x =
-						tempclip.max_x - (minx & 0x1ff);
+					lineclips[3].min_x = tempclip.max_x - ((maxx & 0x1ff) + 1);
+					lineclips[3].max_x = tempclip.max_x - (minx & 0x1ff);
 				}
 
 				sect_rect(&lineclips[3], &tempclip);
@@ -1084,8 +1060,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 
 				for (i = 0; i < 5; i++)
 					for (j = i + 1; j < 5; j++)
-						if (lineclips[linesorted[i]].min_x >
-							lineclips[linesorted[j]].min_x)
+						if (lineclips[linesorted[i]].min_x > lineclips[linesorted[j]].min_x)
 						{
 							int temp = linesorted[i];
 							linesorted[i] = linesorted[j];
@@ -1098,11 +1073,9 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 				{
 					if (BIT(sect, linesorted[j]))
 					{
-						const struct rectangle *cur =
-							&lineclips[linesorted[j]];
+						const struct rectangle *cur = &lineclips[linesorted[j]];
 
-						if (extent != &list->extent[32 + y][1] &&
-							cur->min_x <= extent[-1])
+						if (extent != &list->extent[32 + y][1] && cur->min_x <= extent[-1])
 						{
 							if (cur->max_x > extent[-1])
 								extent[-1] = cur->max_x;
