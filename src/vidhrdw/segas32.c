@@ -985,7 +985,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 2 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 4)/* && BIT(clipmask, 2)*/)
+			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
 			{
 				UINT16 minx = table[0x000 + line];
 				UINT16 maxx = table[0x200 + line];
@@ -1012,7 +1012,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 3 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 5)/* && BIT(clipmask, 3)*/)
+			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
 			{
 				UINT16 minx = table[0x100 + line];
 				UINT16 maxx = table[0x300 + line];
