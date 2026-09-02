@@ -2346,7 +2346,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 
 	/* extract info about the BACKGROUND layer */
 	layersort[numlayers].index = MIXER_LAYER_BACKGROUND;
-	layersort[numlayers].effpri = /*(1 << 3) | */0;
+	layersort[numlayers].effpri = (1 << 3) | 0;
 	layersort[numlayers].palbase = (mixer_control[which][0x2c/2] & 0x00f0) << 6;
 	layersort[numlayers].mixshift = (mixer_control[which][0x2c/2] >> 8) & 3;
 	layersort[numlayers].blendmask = 0;
