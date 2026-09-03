@@ -1046,17 +1046,17 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			{
 				UINT16 *extent = &list->extent[32 + y][0];
 
-				for (i = 0; i < 5; i++)
-					linesorted[i] = i;
+				for (int i = 1; i < 5; i++)
+				{
+					int j = i - 1;
 
-				for (i = 0; i < 5; i++)
-					for (j = i + 1; j < 5; j++)
-						if (lineclips[linesorted[i]].min_x > lineclips[linesorted[j]].min_x)
-						{
-							int temp = linesorted[i];
-							linesorted[i] = linesorted[j];
-							linesorted[j] = temp;
-						}
+					while (j >= 0 && lineclips[linesorted[j]].min_x > lineclips[linesorted[i]].min_x)
+					{
+						linesorted[j + 1] = linesorted[j];
+						j--;
+					}
+					linesorted[j + 1] = linesorted[i];
+				}
 
 				*extent++ = tempclip.min_x;
 
