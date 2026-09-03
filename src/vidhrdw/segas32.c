@@ -866,6 +866,8 @@ static void get_tile_info(int tile_index)
 static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, const struct rectangle *cliprect, struct extents_list *list)
 {
 	bool flip = BIT(system32_videoram[0x1ff00 / 2], 9);
+	bool perlineclip2 = BIT(system32_videoram[0x1ff04 / 2], 4);
+	bool perlineclip3 = BIT(system32_videoram[0x1ff04 / 2], 5);
 	struct rectangle tempclip;
 	struct rectangle clips[5];
 	int sorted[5];
@@ -908,10 +910,18 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		sorted[i] = i;
 	}
 
-	/* bubble sort them by min_x */
-	for (i = 0; i < 5; i++)
-		for (j = i + 1; j < 5; j++)
-			if (clips[sorted[i]].min_x > clips[sorted[j]].min_x) { int temp = sorted[i]; sorted[i] = sorted[j]; sorted[j] = temp; }
+	/* insertion sort them by min_x */
+	for (i = 1; i < 5; i++)
+	{
+		int j = i - 1;
+
+		while (j >= 0 && clips[sorted[j]].min_x > clips[sorted[i]].min_x)
+		{
+			sorted[j + 1] = sorted[j];
+			j--;
+		}
+		sorted[j + 1] = sorted[i];
+	}
 
 	/* create all valid extent combinations */
 	for (i = 1; i < 32; i++)
@@ -971,7 +981,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		 *   +100 = min X
 		 *   +300 = max X
 		 */
-		if (BIT(system32_videoram[0x1ff04 / 2], 4) || BIT(system32_videoram[0x1ff04 / 2], 5))
+		if (perlineclip2 || perlineclip3)
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
@@ -985,7 +995,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 2 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
+			if (perlineclip2 && BIT(clipmask, 2))
 			{
 				UINT16 minx = table[0x000 + line];
 				UINT16 maxx = table[0x200 + line];
@@ -1012,7 +1022,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 3 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
+			if (perlineclip3 && BIT(clipmask, 3))
 			{
 				UINT16 minx = table[0x100 + line];
 				UINT16 maxx = table[0x300 + line];
@@ -1046,17 +1056,17 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			{
 				UINT16 *extent = &list->extent[32 + y][0];
 
-				for (i = 0; i < 5; i++)
-					linesorted[i] = i;
+				for (i = 1; i < 5; i++)
+				{
+					int j = i - 1;
 
-				for (i = 0; i < 5; i++)
-					for (j = i + 1; j < 5; j++)
-						if (lineclips[linesorted[i]].min_x > lineclips[linesorted[j]].min_x)
-						{
-							int temp = linesorted[i];
-							linesorted[i] = linesorted[j];
-							linesorted[j] = temp;
-						}
+					while (j >= 0 && lineclips[linesorted[j]].min_x > lineclips[linesorted[i]].min_x)
+					{
+						linesorted[j + 1] = linesorted[j];
+						j--;
+					}
+					linesorted[j + 1] = linesorted[i];
+				}
 
 				*extent++ = tempclip.min_x;
 
