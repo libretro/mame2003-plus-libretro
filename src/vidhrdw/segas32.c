@@ -1162,7 +1162,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
+	opaque = BIT(system32_videoram[0x1ff8e/2], (8 + bgnum));
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1329,7 +1329,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
+	opaque = BIT(system32_videoram[0x1ff8e/2], (8 + bgnum));
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
