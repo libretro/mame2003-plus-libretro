@@ -909,7 +909,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 	}
 
 	/* insertion sort them by min_x */
-	for (int i = 1; i < 5; i++)
+	for (i = 1; i < 5; i++)
 	{
 		int j = i - 1;
 
@@ -1054,7 +1054,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			{
 				UINT16 *extent = &list->extent[32 + y][0];
 
-				for (int i = 1; i < 5; i++)
+				for (i = 1; i < 5; i++)
 				{
 					int j = i - 1;
 
