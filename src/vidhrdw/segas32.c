@@ -21,12 +21,6 @@
 	- Sonic while globally flipped via the service menu, fails to flip
 	  the "SEGA" and "SEGASONIC" sprite based logos on the title screen.
 
-	- titlef NBG0 and NBG2 layers are currently hidden during gameplay.
-	  It sets $31ff02 with either $7be0 and $2960 (and $31ff8e is $c00).
-	  Game actually uses the "rowscroll/rowselect" tables for a line window
-	  effect to draw the boxing ring over NBG0.
-	  Same deal for ga2 when in stage 2 cave a wall torch is lit.
-
 	- Wrong priority cases (parenthesis for the level setup):
 	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
 	  dbzvrvs: Sheng-Long speech balloon during Piccoro ending (fixme: check levels).
@@ -245,7 +239,7 @@ struct layer_info
 struct extents_list
 {
 	UINT8					scan_extent[256];
-	UINT16					extent[32][16];
+	UINT16					extent[256][16];
 };
 
 
@@ -877,7 +871,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 	int sorted[5];
 	int i, j, y;
 
-	/* expand our cliprect to exclude the bottom-right */
+	/* expand our cliprect to include the bottom-right */
 	tempclip = *cliprect;
 	tempclip.max_x++;
 	tempclip.max_y++;
@@ -893,7 +887,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		return 1;
 	}
 
-	/* extract the from videoram into locals, and apply the cliprect */
+	/* extract the clips from videoram into locals, and apply the cliprect */
 	for (i = 0; i < 5; i++)
 	{
 		if (!flip)
@@ -965,7 +959,135 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		for (i = 0; i < 5; i++)
 			if ((BIT(clipmask, i)) && y >= clips[i].min_y && y < clips[i].max_y)
 				sect |= 1 << i;
-		list->scan_extent[y] = sect;
+
+		/*
+		 * $1FF04 bits 4/5 enable per-line clip windows.
+		 *
+		 * clip 2:
+		 *   +000 = min X
+		 *   +200 = max X
+		 *
+		 * clip 3:
+		 *   +100 = min X
+		 *   +300 = max X
+		 */
+		if (BIT(system32_videoram[0x1ff04 / 2], 4) || BIT(system32_videoram[0x1ff04 / 2], 5))
+		{
+			struct rectangle lineclips[5];
+			int linesorted[5];
+			int line = flip ? cliprect->max_y - y : y;
+			UINT16 *table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
+
+			for (i = 0; i < 5; i++)
+			{
+				lineclips[i] = clips[i];
+				linesorted[i] = i;
+			}
+
+			/* clip window 2 */
+			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
+			{
+				UINT16 minx = table[0x000 + line];
+				UINT16 maxx = table[0x200 + line];
+
+				if (minx == 0xffff || maxx == 0xffff)
+				{
+					sect &= ~(1 << 2);
+				}
+				else if (!flip)
+				{
+					lineclips[2].min_x = minx & 0x1ff;
+					lineclips[2].max_x = (maxx & 0x1ff) + 1;
+				}
+				else
+				{
+					lineclips[2].min_x = tempclip.max_x - ((maxx & 0x1ff) + 1);
+					lineclips[2].max_x = tempclip.max_x - (minx & 0x1ff);
+				}
+
+				sect_rect(&lineclips[2], &tempclip);
+
+				if (lineclips[2].min_x >= lineclips[2].max_x)
+					sect &= ~(1 << 2);
+			}
+
+			/* clip window 3 */
+			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
+			{
+				UINT16 minx = table[0x100 + line];
+				UINT16 maxx = table[0x300 + line];
+
+				if (minx == 0xffff || maxx == 0xffff)
+				{
+					sect &= ~(1 << 3);
+				}
+				else if (!flip)
+				{
+					lineclips[3].min_x = minx & 0x1ff;
+					lineclips[3].max_x = (maxx & 0x1ff) + 1;
+				}
+				else
+				{
+					lineclips[3].min_x = tempclip.max_x - ((maxx & 0x1ff) + 1);
+					lineclips[3].max_x = tempclip.max_x - (minx & 0x1ff);
+				}
+
+				sect_rect(&lineclips[3], &tempclip);
+
+				if (lineclips[3].min_x >= lineclips[3].max_x)
+					sect &= ~(1 << 3);
+			}
+
+			/*
+			 * Build the extent for this individual scanline.
+			 * 0-31 remain the normal combinations.
+			 * 32+y is the per-line extent.
+			 */
+			{
+				UINT16 *extent = &list->extent[32 + y][0];
+
+				for (i = 0; i < 5; i++)
+					linesorted[i] = i;
+
+				for (i = 0; i < 5; i++)
+					for (j = i + 1; j < 5; j++)
+						if (lineclips[linesorted[i]].min_x > lineclips[linesorted[j]].min_x)
+						{
+							int temp = linesorted[i];
+							linesorted[i] = linesorted[j];
+							linesorted[j] = temp;
+						}
+
+				*extent++ = tempclip.min_x;
+
+				for (j = 0; j < 5; j++)
+				{
+					if (BIT(sect, linesorted[j]))
+					{
+						const struct rectangle *cur = &lineclips[linesorted[j]];
+
+						if (extent != &list->extent[32 + y][1] && cur->min_x <= extent[-1])
+						{
+							if (cur->max_x > extent[-1])
+								extent[-1] = cur->max_x;
+						}
+						else
+						{
+							*extent++ = cur->min_x;
+							*extent++ = cur->max_x;
+						}
+					}
+				}
+
+				*extent++ = tempclip.max_x;
+			}
+
+			list->scan_extent[y] = 32 + y;
+		}
+		else
+		{
+			list->scan_extent[y] = sect;
+		}
 	}
 
 	return clipout;
@@ -1012,28 +1134,6 @@ static INLINE void get_tilemaps(int bgnum, struct tilemap **tilemaps)
 }
 
 
-static bool patch_enable(bool in, int bgnum)
-{
-	if (!titlef_kludge) return in;
-
-	switch (system32_videoram[0x1ff02/2])
-	{
-		case 0x7be0:
-		case 0x52a0:
-		case 0x2960:
-			return false;
-
-		case 0x5be0:
-			return (bgnum%2 == 0) ? in : false;
-
-		case 0x3be0:
-			return (bgnum%2 == 1) ? in : false;
-
-		default: return in;
-	}
-}
-
-
 static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle *cliprect, int bgnum)
 {
 	bool clipenable, clipout, clipdraw_start;
@@ -1052,16 +1152,13 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
-//opaque = (system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1;
-//if (code_pressed(KEYCODE_Z) && bgnum == 0) opaque = 1;
-//if (code_pressed(KEYCODE_X) && bgnum == 1) opaque = 1;
+	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = patch_enable(BIT(system32_videoram[0x1ff02/2], (11 + bgnum)), bgnum);
+	clipenable = BIT(system32_videoram[0x1ff02/2], (11 + bgnum));
 	clipout = BIT(system32_videoram[0x1ff02/2], (6 + bgnum));
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
@@ -1217,16 +1314,13 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? ((system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1) : 0;
-//opaque = (system32_videoram[0x1ff8e/2] >> (8 + bgnum)) & 1;
-//if (code_pressed(KEYCODE_C) && bgnum == 2) opaque = 1;
-//if (code_pressed(KEYCODE_V) && bgnum == 3) opaque = 1;
+	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
 
 	/* determine the clipping */
-	clipenable = patch_enable(BIT(system32_videoram[0x1ff02/2], (11 + bgnum)), bgnum);
+	clipenable = BIT(system32_videoram[0x1ff02/2], (11 + bgnum));
 	clipout = BIT(system32_videoram[0x1ff02/2], (6 + bgnum));
 	clips = (system32_videoram[0x1ff06/2] >> (4 * bgnum)) & 0x0f;
 	clipdraw_start = compute_clipping_extents(clipenable, clipout, clips, cliprect, &clip_extents);
@@ -1620,11 +1714,14 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 static void update_background(struct layer_info *layer, const struct rectangle *cliprect)
 {
 	struct mame_bitmap *bitmap = layer->bitmap;
-	int x, y;
+	int y;
+
+	/* determine if we're flipped */
+	bool flip = BIT(system32_videoram[0x1ff00 / 2], 9);
 
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->line[y];
+		UINT16 *dst = (UINT16 *)bitmap->line[flip ? cliprect->max_y - y : y];
 		int color;
 
 		/* determine the color */
@@ -1684,8 +1781,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 		update_tilemap_text(&layer_data[MIXER_LAYER_TEXT], cliprect);
 	if (enableb)
 		update_bitmap(&layer_data[MIXER_LAYER_BITMAP], cliprect);
-	if (!titlef_kludge)
-		update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
+	update_background(&layer_data[MIXER_LAYER_BACKGROUND], cliprect);
 
 	return (enablet << 0) | (enable0 << 1) | (enable1 << 2) | (enable2 << 3) | (enable3 << 4) | (enableb << 5);
 }
