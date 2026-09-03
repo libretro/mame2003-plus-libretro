@@ -908,10 +908,18 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		sorted[i] = i;
 	}
 
-	/* bubble sort them by min_x */
-	for (i = 0; i < 5; i++)
-		for (j = i + 1; j < 5; j++)
-			if (clips[sorted[i]].min_x > clips[sorted[j]].min_x) { int temp = sorted[i]; sorted[i] = sorted[j]; sorted[j] = temp; }
+	/* insertion sort them by min_x */
+	for (int i = 1; i < 5; i++)
+	{
+		int j = i - 1;
+
+		while (j >= 0 && clips[sorted[j]].min_x > clips[sorted[i]].min_x)
+		{
+			sorted[j + 1] = sorted[j];
+			j--;
+		}
+		sorted[j + 1] = sorted[i];
+	}
 
 	/* create all valid extent combinations */
 	for (i = 1; i < 32; i++)
