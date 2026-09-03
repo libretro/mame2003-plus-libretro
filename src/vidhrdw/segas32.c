@@ -1254,8 +1254,13 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 					{
 						UINT16 pix = src[(srcx >> 29) & 1][(srcx >> 20) & 0x1ff];
 						srcx += srcxstep;
-						if ((pix & 0x0f) == 0 && !opaque)
-							pix = 0, transparent++;
+						if ((pix & 0x0f) == 0)
+						{
+							if (opaque)
+								pix |= 0x2000;
+							else
+								pix = 0, transparent++;
+						}
 						dst[x] = pix;
 					}
 				}
@@ -1410,8 +1415,13 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 					for (x = extents[0]; x < extents[1]; x++, srcx += srcxstep)
 					{
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
-						if ((pix & 0x0f) == 0 && !opaque)
-							pix = 0, transparent++;
+						if ((pix & 0x0f) == 0)
+						{
+							if (opaque)
+								pix |= 0x2000;
+							else
+								pix = 0, transparent++;
+						}
 						dst[x] = pix;
 					}
 				}
@@ -2356,7 +2366,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 
 	/* extract info about the BACKGROUND layer */
 	layersort[numlayers].index = MIXER_LAYER_BACKGROUND;
-	layersort[numlayers].effpri = (1 << 3) | 0;
+	layersort[numlayers].effpri = 1;
 	layersort[numlayers].palbase = (mixer_control[which][0x2c/2] & 0x00f0) << 6;
 	layersort[numlayers].mixshift = (mixer_control[which][0x2c/2] >> 8) & 3;
 	layersort[numlayers].blendmask = 0;
@@ -2407,17 +2417,6 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		layerorder[groupnum][sprindex].sprblendmask = 0;
 		layerorder[groupnum][sprindex].coloroffs = compute_color_offsets(which, BIT(mixer_control[which][0x3e/2], 6), BIT(mixer_control[which][0x4c/2], 15));
 	}
-/*
-{
-    static const char *layname[] = { "TEXT", "NBG0", "NBG1", "NBG2", "NBG3", "BITM", "SPRI", "LINE" };
-    for (groupnum = 0; groupnum <= sprgroup_mask; groupnum++)
-    {
-        printf("%X: ", groupnum);
-        for (i = 0; i <= numlayers; i++)
-            printf("%s(%02X) ", layname[layerorder[groupnum][i].index], layerorder[groupnum][i].effpri);
-        printf("\n");
-    }
-}*/
 
 	/* based on the sprite controller flip bits, the data is scanned to us in different */
 	/* directions; account for this */
@@ -2463,6 +2462,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		for (x = cliprect->min_x, sprx = sprx_start; x <= cliprect->max_x; x++, sprx += sprdx)
 		{
 			struct mixer_layer_info *first;
+			struct mixer_layer_info *fallback = NULL;
 			int *rgbdelta;
 			int firstpix;
 			int sprpix, sprgroup;
@@ -2481,7 +2481,23 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 				/* non-sprite layers are treated similarly */
 				if (laynum != MIXER_LAYER_SPRITES)
 				{
-					firstpix = layerbase[laynum][x] & 0x1fff;
+					firstpix = layerbase[laynum][x];
+
+					/*
+					 * Opaque NBG pen 0 is below all normal pixels,
+					 * but above the background. Remember the highest
+					 * NBG fallback and keep looking.
+					 */
+					if ((firstpix & 0x2000) &&
+						laynum >= MIXER_LAYER_NBG0 &&
+						laynum <= MIXER_LAYER_NBG3)
+					{
+						if (!fallback || laynum < fallback->index)
+							fallback = first;
+						continue;
+					}
+
+					firstpix &= 0x1fff;
 					if (firstpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
 						break;
 				}
@@ -2501,6 +2517,13 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 				}
 			}
 
+			/* opaque NBG fallback beats the background */
+			if (first->index == MIXER_LAYER_BACKGROUND && fallback)
+			{
+				first = fallback;
+				firstpix = layerbase[first->index][x] & 0x1fff;
+			}
+
 			/* adjust the first pixel */
 			firstpix = system32_paletteram[which][(first->palbase + ((firstpix >> first->mixshift) & 0xfff0) + (firstpix & 0x0f)) & 0x3fff];
 
@@ -2514,6 +2537,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 			if (first->blendmask != 0)
 			{
 				struct mixer_layer_info *second;
+				struct mixer_layer_info *fallback = NULL;
 				int secondpix;
 
 				/* now scan the layers to find the topmost non-transparent pixel */
@@ -2524,7 +2548,22 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					/* non-sprite layers are treated similarly */
 					if (laynum != MIXER_LAYER_SPRITES)
 					{
-						secondpix = layerbase[laynum][x] & 0x1fff;
+						secondpix = layerbase[laynum][x];
+
+						/*
+						 * Opaque NBG pen 0 is below all normal pixels.
+						 * Remember it in case the background is reached.
+						 */
+						if ((secondpix & 0x2000) &&
+							laynum >= MIXER_LAYER_NBG0 &&
+							laynum <= MIXER_LAYER_NBG3)
+						{
+							if (!fallback || laynum < fallback->index)
+								fallback = second;
+							continue;
+						}
+
+						secondpix &= 0x1fff;
 						if (secondpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
 							break;
 					}
@@ -2542,6 +2581,14 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 							shadow = 1;
 						}
 					}
+				}
+
+				/* opaque NBG fallback beats the background */
+				if (second->index == MIXER_LAYER_BACKGROUND && fallback)
+				{
+					second = fallback;
+					secondpix = layerbase[second->index][x] & 0x1fff;
+					laynum = second->index;
 				}
 
 				/* are we blending with that layer? */
