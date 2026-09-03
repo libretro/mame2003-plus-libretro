@@ -866,6 +866,8 @@ static void get_tile_info(int tile_index)
 static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, const struct rectangle *cliprect, struct extents_list *list)
 {
 	bool flip = BIT(system32_videoram[0x1ff00 / 2], 9);
+	bool perlineclip2 = BIT(system32_videoram[0x1ff04 / 2], 4);
+	bool perlineclip3 = BIT(system32_videoram[0x1ff04 / 2], 5);
 	struct rectangle tempclip;
 	struct rectangle clips[5];
 	int sorted[5];
@@ -979,7 +981,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		 *   +100 = min X
 		 *   +300 = max X
 		 */
-		if (BIT(system32_videoram[0x1ff04 / 2], 4) || BIT(system32_videoram[0x1ff04 / 2], 5))
+		if (perlineclip2 || perlineclip3)
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
@@ -993,7 +995,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 2 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 4) && BIT(clipmask, 2))
+			if (perlineclip2 && BIT(clipmask, 2))
 			{
 				UINT16 minx = table[0x000 + line];
 				UINT16 maxx = table[0x200 + line];
@@ -1020,7 +1022,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			}
 
 			/* clip window 3 */
-			if (BIT(system32_videoram[0x1ff04 / 2], 5) && BIT(clipmask, 3))
+			if (perlineclip3 && BIT(clipmask, 3))
 			{
 				UINT16 minx = table[0x100 + line];
 				UINT16 maxx = table[0x300 + line];
