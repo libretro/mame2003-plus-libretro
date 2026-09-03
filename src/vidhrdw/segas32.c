@@ -1256,7 +1256,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 						srcx += srcxstep;
 						if ((pix & 0x0f) == 0)
 						{
-							if (opaque)
+							if (opaque && pix != 0)
 								pix |= 0x2000;
 							else
 								pix = 0, transparent++;
