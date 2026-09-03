@@ -2727,7 +2727,7 @@ VIDEO_UPDATE( multi32 )
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		return;
 	}
-opaquey_hack = true;
+
 	/* update the tilemaps */
 	enablemask = update_tilemaps(&clipleft);
 
