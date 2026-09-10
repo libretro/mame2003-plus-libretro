@@ -2550,7 +2550,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					/* non-sprite layers are treated similarly */
 					if (laynum != MIXER_LAYER_SPRITES)
 					{
-							secondpix = layerbase[laynum][x];
+						secondpix = layerbase[laynum][x];
 
 						/*
 						 * Opaque NBG pen 0 is below all normal pixels.
