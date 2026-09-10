@@ -921,7 +921,6 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			sorted[j + 1] = sorted[j];
 			j--;
 		}
-
 		sorted[j + 1] = key;
 	}
 
@@ -1068,7 +1067,6 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 						linesorted[j + 1] = linesorted[j];
 						j--;
 					}
-
 					linesorted[j + 1] = key;
 				}
 
