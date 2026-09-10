@@ -910,7 +910,12 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		sorted[i] = i;
 	}
 
-	/* insertion sort them by min_x */
+	/* bubble sort them by min_x */
+	for (i = 0; i < 5; i++)
+		for (j = i + 1; j < 5; j++)
+			if (clips[sorted[i]].min_x > clips[sorted[j]].min_x) { int temp = sorted[i]; sorted[i] = sorted[j]; sorted[j] = temp; }
+
+	/* insertion sort them by min_x
 	for (i = 1; i < 5; i++)
 	{
 		int j = i - 1;
@@ -921,7 +926,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			j--;
 		}
 		sorted[j + 1] = sorted[i];
-	}
+	}*/
 
 	/* create all valid extent combinations */
 	for (i = 1; i < 32; i++)
@@ -1056,7 +1061,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 			{
 				UINT16 *extent = &list->extent[32 + y][0];
 
-				for (i = 1; i < 5; i++)
+				/*for (i = 1; i < 5; i++)
 				{
 					int j = i - 1;
 
@@ -1066,7 +1071,16 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 						j--;
 					}
 					linesorted[j + 1] = linesorted[i];
-				}
+				}*/
+
+				for (i = 0; i < 5; i++)
+					for (j = i + 1; j < 5; j++)
+						if (lineclips[linesorted[i]].min_x > lineclips[linesorted[j]].min_x)
+						{
+							int temp = linesorted[i];
+							linesorted[i] = linesorted[j];
+							linesorted[j] = temp;
+						}
 
 				*extent++ = tempclip.min_x;
 
