@@ -508,7 +508,7 @@ static void common_paletteram_w(int which, offs_t offset, UINT16 data, UINT16 me
 	update_color(0x4000 * which + offset, value);
 
 	/* if blending is enabled, writes go to both halves of palette RAM */
-	if (mixer_control[which][0x4e/2] & 0x0880)
+	if (BIT(mixer_control[which][0x4e/2], 11)) /* what is bit 7 */
 	{
 		offset ^= 0x2000;
 
