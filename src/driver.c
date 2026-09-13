@@ -2050,24 +2050,51 @@ V-V                           TP-027
 	DRIVER( makaimuc )	/*  9/1985 (c) 1985 */
 	DRIVER( makaimug )	/*  9/1985 (c) 1985 */
 	DRIVER( diamond )	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
-	DRIVER( gngknight )		/*  Hack */
-	DRIVER( gngknighta )		/*  Hack */
-	DRIVER( gngknightb )		/*  Hack */
-	DRIVER( gngknightc )		/*  Hack */
-	DRIVER( gngknightt )		/*  Hack */
+	DRIVER( gngenh )		/*  Hack */
+	DRIVER( gngaenh )		/*  Hack */
+	DRIVER( gngbenh )		/*  Hack */
+	DRIVER( gngcenh )		/*  Hack */
+	DRIVER( gngtenh )		/*  Hack */
+	DRIVER( makaimurenh )		/*  Hack */
+	DRIVER( makaimurbenh )		/*  Hack */
+	DRIVER( makaimurcenh )		/*  Hack */
+	DRIVER( makaimurgenh )		/*  Hack */
 	DRIVER( gngmaiden )		/*  Hack */
+	DRIVER( gngmaidenenh )		/*  Hack */
 	DRIVER( gngmaidena )		/*  Hack */
+	DRIVER( gngmaidenaenh )		/*  Hack */
 	DRIVER( gngmaidenb )		/*  Hack */
+	DRIVER( gngmaidenbenh )		/*  Hack */
 	DRIVER( gngmaidenc )		/*  Hack */
+	DRIVER( gngmaidencenh )		/*  Hack */
 	DRIVER( gngmaident )		/*  Hack */
-	DRIVER( makknight )		/*  Hack */
-	DRIVER( makknightb )		/*  Hack */
-	DRIVER( makknightc )		/*  Hack */
-	DRIVER( makknightg )		/*  Hack */
+	DRIVER( gngmaidentenh )		/*  Hack */
+	DRIVER( gngknight )		/*  Hack */
+	DRIVER( gngknightenh )		/*  Hack */
+	DRIVER( gngknighta )		/*  Hack */
+	DRIVER( gngknightaenh )		/*  Hack */
+	DRIVER( gngknightb )		/*  Hack */
+	DRIVER( gngknightbenh )		/*  Hack */
+	DRIVER( gngknightc )		/*  Hack */
+	DRIVER( gngknightcenh )		/*  Hack */
+	DRIVER( gngknightt )		/*  Hack */
+	DRIVER( gngknighttenh )		/*  Hack */
 	DRIVER( makmaiden )		/*  Hack */
+	DRIVER( makmaidenenh )		/*  Hack */
 	DRIVER( makmaidenb )		/*  Hack */
+	DRIVER( makmaidenbenh )		/*  Hack */
 	DRIVER( makmaidenc )		/*  Hack */
+	DRIVER( makmaidencenh )		/*  Hack */
 	DRIVER( makmaideng )		/*  Hack */
+	DRIVER( makmaidengenh )		/*  Hack */
+	DRIVER( makknight )		/*  Hack */
+	DRIVER( makknightenh )		/*  Hack */
+	DRIVER( makknightb )		/*  Hack */
+	DRIVER( makknightbenh )		/*  Hack */
+	DRIVER( makknightc )		/*  Hack */
+	DRIVER( makknightcenh )		/*  Hack */
+	DRIVER( makknightg )		/*  Hack */
+	DRIVER( makknightgenh )		/*  Hack */
 	DRIVER( gunsmoke )	/* 11/1985 (c) 1985 (World) */
 	DRIVER( gunsmoku )	/* 11/1985 (c) 1985 + Romstar (US) */
 	DRIVER( gunsmoka )	/* 11/1985 (c) 1985 (US) */
@@ -2138,6 +2165,12 @@ V-V                           TP-027
 	DRIVER( ghouls )	/* 12/1988 (c) 1988 (World) */
 	DRIVER( ghoulsu )	/* 12/1988 (c) 1988 (US) */
 	DRIVER( daimakai )	/* 12/1988 (c) 1988 (Japan) */
+	DRIVER( ghoulsmaiden )	/*  Hack */
+	DRIVER( ghoulsknight )	/*  Hack */
+	DRIVER( ghoulsumaiden )	/*  Hack */
+	DRIVER( ghoulsuknight )	/*  Hack */
+	DRIVER( daimakaimaiden )	/*  Hack */
+	DRIVER( daimakaiknight )	/*  Hack */
 	DRIVER( strider )	/*  3/1989 (c) 1989 (not explicitly stated but should be US) */
 	DRIVER( stridrua )	/*  3/1989 (c) 1989 (not explicitly stated but should be US) */
 	DRIVER( striderj )	/*  3/1989 (c) 1989 */
