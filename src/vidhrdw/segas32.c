@@ -1246,8 +1246,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 			while (1)
 			{
 				/* error out of bounds */
-				if (extents[1] > cliprect->max_x+1)
-					break;
+				/*if (extents[1] > cliprect->max_x+1)
+					break;*/
 
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
@@ -1408,8 +1408,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 			while (1)
 			{
 				/* error out of bounds */
-				if (extents[1] > cliprect->max_x+1)
-					break;
+				/*if (extents[1] > cliprect->max_x+1)
+					break;*/
 
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
@@ -1666,8 +1666,8 @@ static void update_bitmap(struct layer_info *layer, const struct rectangle *clip
 			while (1)
 			{
 				/* error out of bounds */
-				if (extents[1] > cliprect->max_x+1)
-					break;
+				/*if (extents[1] > cliprect->max_x+1)
+					break;*/
 
 				/* if we're drawing on this extent, draw it */
 				if (clipdraw)
