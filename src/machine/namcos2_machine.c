@@ -269,7 +269,7 @@ READ16_HANDLER( namcos2_68k_key_r )
 		switch(offset)
 		{
 		case 1: return 0xBD;
-		case 7: return 0xBD;
+	/*	case 7: return 0xBD; */
 		}
 		break;
 
