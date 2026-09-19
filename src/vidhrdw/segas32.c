@@ -23,7 +23,7 @@
 
 	- Wrong priority cases (parenthesis for the level setup):
 	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
-	  dbzvrvs: Sheng-Long speech balloon during Piccolo ending (fixme: check levels).
+	  dbzvrvs: Shen-Long speech balloon during Piccolo ending (fixme: check levels).
 	  f1lap: attract mode ranking sprite-based text ($a) vs. road ($d)
 	  f1lap: attract mode map display (after aforementioned), sprite-based turn names
 	  ($a) are hidden by map ($d) again;
@@ -988,7 +988,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
-			int line = flip ? cliprect->max_y - y : y;
+			int line = flip ? (cliprect->max_y - y) : y;
 			UINT16 *table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
 
 			for (i = 0; i < 5; i++)
@@ -1739,7 +1739,7 @@ static void update_background(struct layer_info *layer, const struct rectangle *
 
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->line[flip ? cliprect->max_y - y : y];
+		UINT16 *dst = (UINT16 *)bitmap->line[flip ? (cliprect->max_y - y) : y];
 		int color;
 
 		/* determine the color */
@@ -1776,7 +1776,7 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enablet = !BIT(system32_videoram[0x1ff02/2], 4) && !BIT(system32_videoram[0x1ff8e/2], 0);
 	int enableb = !BIT(system32_videoram[0x1ff02/2], 5) && !BIT(system32_videoram[0x1ff8e/2], 5);
 
-	if (titlef_kludge) /* patch ending credits */
+	if (/*titlef_kludge*/0) /* patch ending credits */
 	{
 		UINT16 *src1 = (UINT16 *)layer_data[MIXER_LAYER_NBG0].bitmap->line[0];
 		UINT16 *src2 = (UINT16 *)layer_data[MIXER_LAYER_NBG1].bitmap->line[0];
