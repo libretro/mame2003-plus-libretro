@@ -1776,16 +1776,6 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enablet = !BIT(system32_videoram[0x1ff02/2], 4) && !BIT(system32_videoram[0x1ff8e/2], 0);
 	int enableb = !BIT(system32_videoram[0x1ff02/2], 5) && !BIT(system32_videoram[0x1ff8e/2], 5);
 
-	if (/*titlef_kludge*/0) /* patch ending credits */
-	{
-		UINT16 *src1 = (UINT16 *)layer_data[MIXER_LAYER_NBG0].bitmap->line[0];
-		UINT16 *src2 = (UINT16 *)layer_data[MIXER_LAYER_NBG1].bitmap->line[0];
-		if (src1[0]==0x1902 && src1[8]==0x1901 && src1[16]==0x1902 && src1[24]==0x1901)
-			enable2 = 0;
-		if (src2[0]==0x1902 && src2[8]==0x1901 && src2[16]==0x1902 && src2[24]==0x1901)
-			enable3 = 0;
-	}
-
 	/* update any tilemaps */
 	if (enable0)
 		update_tilemap_zoom(&layer_data[MIXER_LAYER_NBG0], cliprect, 0);
