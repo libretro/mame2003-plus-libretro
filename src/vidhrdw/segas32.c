@@ -854,7 +854,7 @@ static void get_tile_info(int tile_index)
 	}
 
 	data = system32_videoram[((entry->page & 0x7f) << 9) | tile_index];
-	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x3fff), (data >> 4) & 0x1ff, (data >> 14) & 3)
+	SET_TILE_INFO(0, (entry->bank << 13) | (data & 0x1fff), (data >> 4) & 0x1ff, (data >> 14) & 3)
 }
 
 
@@ -1166,7 +1166,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = BIT(system32_videoram[0x1ff8e/2], (8 + bgnum));
+	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1260,6 +1260,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 						srcx += srcxstep;
 						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
+						else if ((pix & 0x0f) == 0 && titlef_kludge)
+							pix |= 0x2000;
 						dst[x] = pix;
 					}
 				}
@@ -1328,7 +1330,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = BIT(system32_videoram[0x1ff8e/2], (8 + bgnum));
+	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1416,6 +1418,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
 						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
+						else if ((pix & 0x0f) == 0 && titlef_kludge)
+							pix |= 0x2000;
 						dst[x] = pix;
 					}
 				}
@@ -2488,6 +2492,8 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					firstpix = layerbase[laynum][x] & 0x1fff;
 					if (firstpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
 						break;
+					else if ((layerbase[laynum][x] & 0x2000) && titlef_kludge)
+						break;
 				}
 
 				/* sprite layers are special */
@@ -2530,6 +2536,8 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					{
 						secondpix = layerbase[laynum][x] & 0x1fff;
 						if (secondpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
+							break;
+						else if ((layerbase[laynum][x] & 0x2000) && titlef_kludge)
 							break;
 					}
 
