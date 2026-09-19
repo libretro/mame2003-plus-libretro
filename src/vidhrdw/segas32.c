@@ -23,7 +23,7 @@
 
 	- Wrong priority cases (parenthesis for the level setup):
 	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
-	  dbzvrvs: Sheng-Long speech balloon during Piccolo ending (fixme: check levels).
+	  dbzvrvs: Shen-Long speech balloon during Piccolo ending (fixme: check levels).
 	  f1lap: attract mode ranking sprite-based text ($a) vs. road ($d)
 	  f1lap: attract mode map display (after aforementioned), sprite-based turn names
 	  ($a) are hidden by map ($d) again;
@@ -988,7 +988,7 @@ static bool compute_clipping_extents(bool enable, bool clipout, int clipmask, co
 		{
 			struct rectangle lineclips[5];
 			int linesorted[5];
-			int line = flip ? cliprect->max_y - y : y;
+			int line = flip ? (cliprect->max_y - y) : y;
 			UINT16 *table = &system32_videoram[(system32_videoram[0x1ff04/2] >> 10) * 0x400];
 
 			for (i = 0; i < 5; i++)
@@ -1260,6 +1260,8 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 						srcx += srcxstep;
 						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
+						else if ((pix & 0x0f) == 0 && titlef_kludge)
+							pix |= 0x2000;
 						dst[x] = pix;
 					}
 				}
@@ -1416,6 +1418,8 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 						UINT16 pix = src[(srcx >> 9) & 1][srcx & 0x1ff];
 						if ((pix & 0x0f) == 0 && !opaque)
 							pix = 0, transparent++;
+						else if ((pix & 0x0f) == 0 && titlef_kludge)
+							pix |= 0x2000;
 						dst[x] = pix;
 					}
 				}
@@ -1735,7 +1739,7 @@ static void update_background(struct layer_info *layer, const struct rectangle *
 
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->line[flip ? cliprect->max_y - y : y];
+		UINT16 *dst = (UINT16 *)bitmap->line[flip ? (cliprect->max_y - y) : y];
 		int color;
 
 		/* determine the color */
@@ -1771,16 +1775,6 @@ static UINT8 update_tilemaps(const struct rectangle *cliprect)
 	int enable3 = !BIT(system32_videoram[0x1ff02/2], 3) && !BIT(system32_videoram[0x1ff8e/2], 4) && !BIT(system32_videoram[0x1ff00/2], 13);
 	int enablet = !BIT(system32_videoram[0x1ff02/2], 4) && !BIT(system32_videoram[0x1ff8e/2], 0);
 	int enableb = !BIT(system32_videoram[0x1ff02/2], 5) && !BIT(system32_videoram[0x1ff8e/2], 5);
-
-	if (titlef_kludge) /* patch ending credits */
-	{
-		UINT16 *src1 = (UINT16 *)layer_data[MIXER_LAYER_NBG0].bitmap->line[0];
-		UINT16 *src2 = (UINT16 *)layer_data[MIXER_LAYER_NBG1].bitmap->line[0];
-		if (src1[0]==0x1902 && src1[8]==0x1901 && src1[16]==0x1902 && src1[24]==0x1901)
-			enable2 = 0;
-		if (src2[0]==0x1902 && src2[8]==0x1901 && src2[16]==0x1902 && src2[24]==0x1901)
-			enable3 = 0;
-	}
 
 	/* update any tilemaps */
 	if (enable0)
@@ -2488,6 +2482,8 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					firstpix = layerbase[laynum][x] & 0x1fff;
 					if (firstpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
 						break;
+					else if ((layerbase[laynum][x] & 0x2000) && titlef_kludge)
+						break;
 				}
 
 				/* sprite layers are special */
@@ -2530,6 +2526,8 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 					{
 						secondpix = layerbase[laynum][x] & 0x1fff;
 						if (secondpix != 0 || laynum == MIXER_LAYER_BACKGROUND)
+							break;
+						else if ((layerbase[laynum][x] & 0x2000) && titlef_kludge)
 							break;
 					}
 
