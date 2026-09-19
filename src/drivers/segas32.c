@@ -3678,6 +3678,7 @@ static DRIVER_INIT( titlef )
 {
 	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
 	titlef_kludge = true;
+	opaquey_hack = true;
 }
 
 static DRIVER_INIT( scross )
