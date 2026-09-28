@@ -1221,7 +1221,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo spyhunt_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &spyhunt_charlayout,  1*16, 1 },
+	{ REGION_GFX1, 0, &spyhunt_charlayout,  3*16, 1 },
 	{ REGION_GFX2, 0, &mcr_sprite_layout,   0*16, 4 },
 	{ REGION_GFX3, 0, &spyhunt_alphalayout, 4*16, 1 },
 	{ -1 } /* end of array */
