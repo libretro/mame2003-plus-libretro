@@ -691,6 +691,18 @@ ROM_END
 
 static DRIVER_INIT( toki )
 {
+	UINT8 *ROM = memory_region(REGION_SOUND1);
+	UINT8 *buffer = malloc(0x20000);
+	int i;
+
+	memcpy(buffer,ROM,0x20000);
+	for( i = 0; i < 0x20000; i++ )
+	{
+		ROM[i] = buffer[BITSWAP24(i,23,22,21,20,19,18,17,16,13,14,15,12,11,10,9,8,7,6,5,4,3,2,1,0)];
+	}
+
+	free(buffer);
+  
 	seibu_sound_decrypt(REGION_CPU2,0x2000);
 }
 
