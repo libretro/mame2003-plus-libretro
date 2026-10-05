@@ -261,9 +261,9 @@ WRITE_HANDLER( pleiads_videoreg_w )
 	   Four palette changes by level.  The palette selection is
 	   wrong, but the same paletter is used for both layers. */
 
-    if (palette_bank != ((~data >> 1) & 3))
+    if (palette_bank != ((data >> 1) & 3))
 	{
-		palette_bank = ((~data >> 1) & 3);
+		palette_bank = ((data >> 1) & 3);
 
 		tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
 
