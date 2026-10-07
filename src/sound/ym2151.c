@@ -1396,7 +1396,7 @@ static void ym2151_postload_refresh(void)
 	{
 		for (j=0; j<8; j++)
 		{
-			set_connect(&YMPSG[i].oper[j*4], YMPSG[i].connect[j], j);
+			set_connect(&YMPSG[i].oper[j*4], j, YMPSG[i].connect[j]);
 		}
 	}
 }
