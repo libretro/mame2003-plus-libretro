@@ -130,6 +130,8 @@ typedef struct
 	double		timer_A_time[1024];		/* timer A times for MAME */
 	double		timer_B_time[256];		/* timer B times for MAME */
 	int			irqlinestate;
+	double		timer_A_left;			/* save states: time to the next timer A overflow (-1 = stopped) */
+	double		timer_B_left;			/* save states: time to the next timer B overflow (-1 = stopped) */
 #else
 	UINT8		tim_A;					/* timer A enable (0-disabled) */
 	UINT8		tim_B;					/* timer B enable (0-disabled) */
@@ -1388,6 +1390,35 @@ int YM2151ReadStatus( int n )
 /*
 *	state save support for MAME
 */
+/* The timers are MAME timers, which a save state does not keep: save the
+   time left to each overflow, and start them again after loading. Without
+   this a loaded game whose sound CPU waits for a timer flag, or takes its
+   interrupt from a timer, stays silent. */
+#ifdef USE_MAME_TIMERS
+static double ym2151_timer_left(void *timer)
+{
+	int enabled = timer_enable(timer, 1);
+	double left;
+
+	timer_enable(timer, enabled);
+	if (!enabled)
+		return -1.0;
+	left = timer_timeleft(timer);
+	return left > 0 ? left : 0;
+}
+
+static void ym2151_presave(void)
+{
+	int i;
+
+	for (i=0; i<YMNumChips; i++)
+	{
+		YMPSG[i].timer_A_left = ym2151_timer_left(YMPSG[i].timer_A);
+		YMPSG[i].timer_B_left = ym2151_timer_left(YMPSG[i].timer_B);
+	}
+}
+#endif
+
 static void ym2151_postload_refresh(void)
 {
 	int i,j;
@@ -1398,6 +1429,17 @@ static void ym2151_postload_refresh(void)
 		{
 			set_connect(&YMPSG[i].oper[j*4], j, YMPSG[i].connect[j]);
 		}
+
+#ifdef USE_MAME_TIMERS
+		if (YMPSG[i].timer_A_left >= 0)
+			timer_adjust(YMPSG[i].timer_A, YMPSG[i].timer_A_left, i, 0);
+		else
+			timer_enable(YMPSG[i].timer_A, 0);
+		if (YMPSG[i].timer_B_left >= 0)
+			timer_adjust(YMPSG[i].timer_B, YMPSG[i].timer_B_left, i, 0);
+		else
+			timer_enable(YMPSG[i].timer_B, 0);
+#endif
 	}
 }
 
@@ -1498,11 +1540,16 @@ static void ym2151_state_save_register( int numchips )
 		
 #ifdef USE_MAME_TIMERS
 	    state_save_register_int (buf1, i, "sndindex", &YMPSG[i].irqlinestate);
+		state_save_register_double (buf1, i, "TimAleft", &YMPSG[i].timer_A_left, 1);
+		state_save_register_double (buf1, i, "TimBleft", &YMPSG[i].timer_B_left, 1);
 #endif
 
 		state_save_register_UINT8  (buf1, i, "connect" , &YMPSG[i].connect[0], 8);
 	}
 
+#ifdef USE_MAME_TIMERS
+	state_save_register_func_presave(ym2151_presave);
+#endif
 	state_save_register_func_postload(ym2151_postload_refresh);
 }
 #else
