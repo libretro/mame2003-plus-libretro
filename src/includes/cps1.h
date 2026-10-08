@@ -38,4 +38,7 @@ extern struct QSound_interface qsound_interface;
 
 extern int scanline;
 
+/* cps1.c: the QSound Z80 bank, saved for save states */
+void cps_qsound_state_register(void);
+
 #endif

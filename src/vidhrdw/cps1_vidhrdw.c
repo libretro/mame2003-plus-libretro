@@ -786,6 +786,8 @@ DRIVER_INIT( cps2 )
 	data16_t *xor = (data16_t *)memory_region(REGION_USER1);
 	int i;
 
+	cps_qsound_state_register();
+
 
 	for (i = 0;i < memory_region_length(REGION_CPU1)/2;i++)
 		xor[i] ^= rom[i];

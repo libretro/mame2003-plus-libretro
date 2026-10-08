@@ -163,6 +163,36 @@ struct cpuinfo
 
 static struct cpuinfo cpu[MAX_CPU];
 
+/* The lasting suspend reasons of each CPU (held in reset, halted or
+   disabled), kept for save states. Without them a loaded save state keeps
+   the suspend state of the board that loads it: a sound CPU that was held
+   in reset at that moment is reset again when the game releases its reset
+   line, and it restarts its program while the main CPU does not. The
+   short-lived reasons (spin, trigger) are not kept: the loaded CPU simply
+   runs until it waits again. */
+#define SUSPEND_LASTING_REASONS	(SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE)
+static INT32 saved_suspend[MAX_CPU];
+
+static void cpu_suspend_presave(void)
+{
+	int cpunum;
+
+	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		saved_suspend[cpunum] = cpu[cpunum].nextsuspend & SUSPEND_LASTING_REASONS;
+}
+
+static void cpu_suspend_postload(void)
+{
+	int cpunum;
+
+	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+	{
+		cpu[cpunum].suspend = cpu[cpunum].nextsuspend = saved_suspend[cpunum] & SUSPEND_LASTING_REASONS;
+		if (saved_suspend[cpunum])
+			cpu[cpunum].eatcycles = cpu[cpunum].nexteatcycles = 1;
+	}
+}
+
 static int time_to_reset;
 static int time_to_quit;
 
@@ -269,6 +299,9 @@ int cpu_init(void)
 	/* save some stuff in tag 0 */
 	state_save_set_current_tag(0);
 	state_save_register_INT32("cpu", 0, "watchdog count", &watchdog_counter, 1);
+	state_save_register_INT32("cpu", 0, "suspend", saved_suspend, cpu_gettotalcpu());
+	state_save_register_func_presave(cpu_suspend_presave);
+	state_save_register_func_postload(cpu_suspend_postload);
 
 	/* reset the IRQ lines and save those */
 	if (cpuint_init())

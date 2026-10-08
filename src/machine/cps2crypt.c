@@ -748,6 +748,8 @@ DRIVER_INIT( my_cps2 )
 /*	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1); */
 	data16_t *decrypted_opcodes = (data16_t *)auto_malloc(0x0400000);
 
+	cps_qsound_state_register();
+
 	if (m_region_key)
 	{
 		uint32_t key[2];
