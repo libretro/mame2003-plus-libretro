@@ -13,6 +13,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "machine/eeprom.h"
 #include "ost_samples.h"
@@ -231,20 +232,37 @@ static WRITE16_HANDLER( qsound_sharedram2_w )
 		qsound_sharedram2[offset] = data;
 }
 
+static int qsound_bank;	/* Z80 bank, kept for save states */
+
+static void qsound_banksw_set(void)
+{
+	unsigned char *RAM = memory_region(REGION_CPU2);
+	int bankaddress=0x10000+(qsound_bank*0x4000);
+	if (bankaddress >= memory_region_length(REGION_CPU2))
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING: Q sound bank overflow (%02x)\n", qsound_bank);
+		bankaddress=0x10000;
+	}
+	cpu_setbank(1, &RAM[bankaddress]);
+}
+
 static WRITE_HANDLER( qsound_banksw_w )
 {
 	/*
 	Z80 bank register for music note data. It's odd that it isn't encrypted
 	though.
 	*/
-	unsigned char *RAM = memory_region(REGION_CPU2);
-	int bankaddress=0x10000+((data&0x0f)*0x4000);
-	if (bankaddress >= memory_region_length(REGION_CPU2))
-	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING: Q sound bank overflow (%02x)\n", data);
-		bankaddress=0x10000;
-	}
-	cpu_setbank(1, &RAM[bankaddress]);
+	qsound_bank = data & 0x0f;
+	qsound_banksw_set();
+}
+
+/* Save the Z80 bank of the QSound games: after loading a save state the
+   music code runs from the right bank again. */
+void cps_qsound_state_register(void)
+{
+	qsound_bank = 0;
+	state_save_register_int("qsound_z80", 0, "bank", &qsound_bank);
+	state_save_register_func_postload(qsound_banksw_set);
 }
 
 
@@ -8063,24 +8081,28 @@ static DRIVER_INIT( wof )
 {
 	wof_decode();
 	init_cps1();
+	cps_qsound_state_register();
 }
 
 static DRIVER_INIT( dino )
 {
 	dino_decode();
 	init_cps1();
+	cps_qsound_state_register();
 }
 
 static DRIVER_INIT( punisher )
 {
 	punisher_decode();
 	init_cps1();
+	cps_qsound_state_register();
 }
 
 static DRIVER_INIT( slammast )
 {
 	slammast_decode();
 	init_cps1();
+	cps_qsound_state_register();
 }
 
 static DRIVER_INIT( pang3 )
