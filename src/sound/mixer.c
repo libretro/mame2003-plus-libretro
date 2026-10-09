@@ -8,6 +8,7 @@
 
 #include "driver.h"
 #include "filter.h"
+#include "state.h"
 
 #include <math.h>
 #include <limits.h>
@@ -106,6 +107,104 @@ static INT16 mix_buffer[ACCUMULATOR_SAMPLES*2]; /* *2 for stereo */
 
 /* global sample tracking */
 static unsigned samples_this_frame;
+
+/***************************************************************************
+	save states
+
+	The channels' playback positions (samples ready but not played yet),
+	resample phase and filter history, and the accumulators, kept with a
+	save. Without them a loaded game renders a few samples more or less in
+	its first frame, and every sound chip stays that far off the run it was
+	saved from. Non-streamed sample playback (data pointers) is not saved.
+***************************************************************************/
+
+static int ss_channels;
+static UINT32 ss_accum_base;
+static UINT32 ss_samples_available[MIXER_MAX_CHANNELS];
+static INT32 ss_frac[MIXER_MAX_CHANNELS], ss_pivot[MIXER_MAX_CHANNELS];
+static INT32 ss_from_frequency[MIXER_MAX_CHANNELS], ss_lowpass_frequency[MIXER_MAX_CHANNELS];
+static INT32 ss_volume[MIXER_MAX_CHANNELS][2];
+static UINT32 ss_prev_mac[MIXER_MAX_CHANNELS][2];
+static INT32 ss_xprev[MIXER_MAX_CHANNELS][2][FILTER_ORDER_MAX];
+
+static void mixer_channel_resample_set(struct mixer_channel_data *channel, unsigned from_frequency, unsigned lowpass_frequency, int restart);
+
+static void mixer_presave(void)
+{
+	int ch, side, i;
+
+	ss_accum_base = accum_base;
+	for (ch = 0; ch < ss_channels; ch++)
+	{
+		struct mixer_channel_data *channel = &mixer_channel[ch];
+		ss_samples_available[ch] = channel->samples_available;
+		ss_frac[ch] = channel->frac;
+		ss_pivot[ch] = channel->pivot;
+		ss_from_frequency[ch] = channel->from_frequency;
+		ss_lowpass_frequency[ch] = channel->lowpass_frequency;
+		ss_volume[ch][0] = channel->left_volume;
+		ss_volume[ch][1] = channel->right_volume;
+		for (side = 0; side < 2; side++)
+		{
+			filter_state *state = side ? channel->right : channel->left;
+			ss_prev_mac[ch][side] = state ? state->prev_mac : 0;
+			for (i = 0; i < FILTER_ORDER_MAX; i++)
+				ss_xprev[ch][side][i] = state ? state->xprev[i] : 0;
+		}
+	}
+}
+
+static void mixer_postload(void)
+{
+	int ch, side, i;
+
+	accum_base = ss_accum_base & ACCUMULATOR_MASK;
+	for (ch = 0; ch < ss_channels; ch++)
+	{
+		struct mixer_channel_data *channel = &mixer_channel[ch];
+		if ((unsigned)ss_from_frequency[ch] != channel->from_frequency || (unsigned)ss_lowpass_frequency[ch] != channel->lowpass_frequency)
+			mixer_channel_resample_set(channel, ss_from_frequency[ch], ss_lowpass_frequency[ch], 0);
+		channel->samples_available = ss_samples_available[ch];
+		channel->frac = ss_frac[ch];
+		channel->pivot = ss_pivot[ch];
+		channel->left_volume = ss_volume[ch][0];
+		channel->right_volume = ss_volume[ch][1];
+		channel->is_reset_requested = 0;
+		for (side = 0; side < 2; side++)
+		{
+			filter_state *state = side ? channel->right : channel->left;
+			if (!state)
+				continue;
+			state->prev_mac = ss_prev_mac[ch][side];
+			for (i = 0; i < FILTER_ORDER_MAX; i++)
+				state->xprev[i] = ss_xprev[ch][side][i];
+		}
+	}
+}
+
+/* Called once every sound chip has its channels. */
+void mixer_register_state(void)
+{
+	int ch;
+
+	ss_channels = first_free_channel;
+	state_save_register_UINT32("mixer", 0, "accum base", &ss_accum_base, 1);
+	state_save_register_INT32("mixer", 0, "left accum", left_accum, ACCUMULATOR_SAMPLES);
+	state_save_register_INT32("mixer", 0, "right accum", right_accum, ACCUMULATOR_SAMPLES);
+	for (ch = 0; ch < ss_channels; ch++)
+	{
+		state_save_register_UINT32("mixer", ch, "available", &ss_samples_available[ch], 1);
+		state_save_register_INT32("mixer", ch, "frac", &ss_frac[ch], 1);
+		state_save_register_INT32("mixer", ch, "pivot", &ss_pivot[ch], 1);
+		state_save_register_INT32("mixer", ch, "from", &ss_from_frequency[ch], 1);
+		state_save_register_INT32("mixer", ch, "lowpass", &ss_lowpass_frequency[ch], 1);
+		state_save_register_INT32("mixer", ch, "volume", ss_volume[ch], 2);
+		state_save_register_UINT32("mixer", ch, "filter mac", ss_prev_mac[ch], 2);
+		state_save_register_INT32("mixer", ch, "filter history", &ss_xprev[ch][0][0], 2 * FILTER_ORDER_MAX);
+	}
+	state_save_register_func_presave(mixer_presave);
+	state_save_register_func_postload(mixer_postload);
+}
 
 /***************************************************************************
 	mixer_channel_resample

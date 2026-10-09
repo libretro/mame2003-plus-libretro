@@ -72,6 +72,7 @@
 int mixer_sh_start(void);
 void mixer_sh_stop(void);
 void mixer_sh_update(void);
+void mixer_register_state(void);
 int mixer_allocate_channel(int default_mixing_level);
 int mixer_allocate_channels(int channels,const int *default_mixing_levels);
 void mixer_set_name(int channel,const char *name);
