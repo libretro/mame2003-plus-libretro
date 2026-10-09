@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/konamiic.h"
 
 
@@ -56,6 +57,7 @@ VIDEO_START( aliens )
 	paletteram = auto_malloc(0x400);
 	if (!paletteram)
 		return 1;
+	state_save_register_UINT8("aliens", 0, "paletteram", paletteram, 0x400);
 
 	layer_colorbase[0] = 0;
 	layer_colorbase[1] = 4;
