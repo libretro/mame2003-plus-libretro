@@ -24,6 +24,7 @@ added external port callback, and functions to set the volume of the channels
 
 
 #include "driver.h"
+#include "state.h"
 #include <math.h>
 
 
@@ -339,6 +340,16 @@ int K007232_sh_start(const struct MachineSound *msound)
 
       pcm_chan[j] = stream_init_multi(2,name,vol,Machine->sample_rate,
 				      j,KDAC_A_update);
+
+      /* Save the channels and the registers, so a loaded save state keeps
+         its sound (the sample ROM pointers do not change) */
+      state_save_register_UINT8 ("K007232", j, "vol",   &kpcm[j].vol[0][0], KDAC_A_PCM_MAX * 2);
+      state_save_register_UINT32("K007232", j, "addr",  kpcm[j].addr,  KDAC_A_PCM_MAX);
+      state_save_register_UINT32("K007232", j, "start", kpcm[j].start, KDAC_A_PCM_MAX);
+      state_save_register_UINT32("K007232", j, "step",  kpcm[j].step,  KDAC_A_PCM_MAX);
+      state_save_register_UINT32("K007232", j, "bank",  kpcm[j].bank,  KDAC_A_PCM_MAX);
+      state_save_register_INT32 ("K007232", j, "play",  kpcm[j].play,  KDAC_A_PCM_MAX);
+      state_save_register_UINT8 ("K007232", j, "wreg",  kpcm[j].wreg,  0x10);
     }
 
   KDAC_A_make_fncode();

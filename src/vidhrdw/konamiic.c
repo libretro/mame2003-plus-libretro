@@ -2413,6 +2413,7 @@ static int K051960_spriteflip,K051960_readroms;
 static unsigned char K051960_spriterombank[3];
 static unsigned char *K051960_ram;
 static int K051960_irq_enabled, K051960_nmi_enabled;
+static int K051937_counter;
 
 
 int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int plane3,
@@ -2480,6 +2481,15 @@ int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int 
 	if (!K051960_ram) return 1;
 	memset(K051960_ram,0,0x400);
 
+	state_save_register_UINT8("K051960", 0, "memory",   K051960_ram, 0x400);
+	state_save_register_int  ("K051960", 0, "romoffset", &K051960_romoffset);
+	state_save_register_int  ("K051960", 0, "flip",      &K051960_spriteflip);
+	state_save_register_int  ("K051960", 0, "readroms",  &K051960_readroms);
+	state_save_register_UINT8("K051960", 0, "rombank",   K051960_spriterombank, 3);
+	state_save_register_int  ("K051960", 0, "irqen",     &K051960_irq_enabled);
+	state_save_register_int  ("K051960", 0, "nmien",     &K051960_nmi_enabled);
+	state_save_register_int  ("K051960", 0, "counter",   &K051937_counter);
+
 	return 0;
 }
 
@@ -2546,10 +2556,8 @@ READ_HANDLER( K051937_r )
 	{
 		if (offset == 0)
 		{
-			static int counter;
-
 			/* some games need bit 0 to pulse */
-			return (counter++) & 1;
+			return (K051937_counter++) & 1;
 		}
 /*logerror("%04x: read unknown 051937 address %x\n",activecpu_get_pc(),offset);*/
 		return 0;

@@ -8,6 +8,7 @@ Preliminary driver by:
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "cpu/konami/konami.h" /* for the callback and the firq irq definition */
 #include "vidhrdw/konamiic.h"
@@ -434,11 +435,13 @@ ROM_END
 
 ***************************************************************************/
 
-static void aliens_banking( int lines )
+static int aliens_rombank = 0x10;	/* CPU ROM bank lines, kept for save states */
+
+static void aliens_rombank_set(void)
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
+	int lines = aliens_rombank;
 	int offs = 0x18000;
-
 
 	if (lines & 0x10) offs -= 0x8000;
 
@@ -446,14 +449,19 @@ static void aliens_banking( int lines )
 	cpu_setbank( 1, &RAM[offs] );
 }
 
+static void aliens_banking( int lines )
+{
+	aliens_rombank = lines;
+	aliens_rombank_set();
+}
+
 static MACHINE_INIT( aliens )
 {
-	unsigned char *RAM = memory_region(REGION_CPU1);
-
 	konami_cpu_setlines_callback = aliens_banking;
 
-	/* init the default bank */
-	cpu_setbank( 1, &RAM[0x10000] );
+	/* init the default bank (0x10000) */
+	aliens_rombank = 0x10;
+	aliens_rombank_set();
 }
 
 
@@ -462,6 +470,13 @@ static DRIVER_INIT( aliens )
 {
 	konami_rom_deinterleave_2(REGION_GFX1);
 	konami_rom_deinterleave_2(REGION_GFX2);
+
+	/* Save the ROM bank and the work RAM / palette switch, and map the
+	   saved bank again after loading, so a loaded save state runs the
+	   right code */
+	state_save_register_int("aliens", 0, "rombank", &aliens_rombank);
+	state_save_register_int("aliens", 0, "palette_selected", &palette_selected);
+	state_save_register_func_postload(aliens_rombank_set);
 }
 
 
