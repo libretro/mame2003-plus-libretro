@@ -173,12 +173,24 @@ static struct cpuinfo cpu[MAX_CPU];
 #define SUSPEND_LASTING_REASONS	(SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE)
 static INT32 saved_suspend[MAX_CPU];
 
+/* Each CPU's local time (how far it ran past the timer system's time) and
+   cycle count, kept with a save: without them a loaded CPU keeps the offset
+   it had when the save was loaded, a few cycles off, and a game that polls
+   another CPU drifts from the run it was saved from. */
+static double saved_localtime[MAX_CPU];
+static UINT32 saved_cycles[MAX_CPU * 2];
+
 static void cpu_suspend_presave(void)
 {
 	int cpunum;
 
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+	{
 		saved_suspend[cpunum] = cpu[cpunum].nextsuspend & SUSPEND_LASTING_REASONS;
+		saved_localtime[cpunum] = cpu[cpunum].localtime;
+		saved_cycles[cpunum * 2] = (UINT32)cpu[cpunum].totalcycles;
+		saved_cycles[cpunum * 2 + 1] = (UINT32)(cpu[cpunum].totalcycles >> 32);
+	}
 }
 
 static void cpu_suspend_postload(void)
@@ -190,6 +202,8 @@ static void cpu_suspend_postload(void)
 		cpu[cpunum].suspend = cpu[cpunum].nextsuspend = saved_suspend[cpunum] & SUSPEND_LASTING_REASONS;
 		if (saved_suspend[cpunum])
 			cpu[cpunum].eatcycles = cpu[cpunum].nexteatcycles = 1;
+		cpu[cpunum].localtime = saved_localtime[cpunum];
+		cpu[cpunum].totalcycles = ((UINT64)saved_cycles[cpunum * 2 + 1] << 32) | saved_cycles[cpunum * 2];
 	}
 }
 
@@ -300,6 +314,8 @@ int cpu_init(void)
 	state_save_set_current_tag(0);
 	state_save_register_INT32("cpu", 0, "watchdog count", &watchdog_counter, 1);
 	state_save_register_INT32("cpu", 0, "suspend", saved_suspend, cpu_gettotalcpu());
+	state_save_register_double("cpu", 0, "localtime", saved_localtime, cpu_gettotalcpu());
+	state_save_register_UINT32("cpu", 0, "totalcycles", saved_cycles, cpu_gettotalcpu() * 2);
 	state_save_register_func_presave(cpu_suspend_presave);
 	state_save_register_func_postload(cpu_suspend_postload);
 
