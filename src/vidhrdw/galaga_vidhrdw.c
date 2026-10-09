@@ -8,6 +8,7 @@
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "state.h"
 
 
 
@@ -250,6 +251,10 @@ VIDEO_START( galaga )
 		}
 	}
 
+	/* the star field's scroll, kept with a save (or the stars jump on load) */
+	state_save_register_UINT32("galaga", 0, "stars scroll x", &stars_scrollx, 1);
+	state_save_register_UINT32("galaga", 0, "stars scroll y", &stars_scrolly, 1);
+	state_save_register_int("galaga", 0, "gfx bank", &galaga_gfxbank);
 	return 0;
 }
 
