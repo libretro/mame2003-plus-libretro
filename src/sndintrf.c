@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 
 
 /***************************************************************************
@@ -1233,6 +1234,13 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "Sound #%d wrong ID %d: check enum SOUND_... in s
 
 	/* samples will be read later if needed */
 	Machine->samples = 0;
+
+	/* Save the sound latches: a command the main CPU wrote and the sound
+	   CPU has not read yet must still be there after loading */
+	state_save_register_int("soundlatch", 0, "latch",  &latch);
+	state_save_register_int("soundlatch", 0, "latch2", &latch2);
+	state_save_register_int("soundlatch", 0, "latch3", &latch3);
+	state_save_register_int("soundlatch", 0, "latch4", &latch4);
 
 	refresh_period = TIME_IN_HZ(Machine->drv->frames_per_second);
 	refresh_period_inv = 1.0 / refresh_period;
