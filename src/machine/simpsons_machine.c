@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "vidhrdw/konamiic.h"
 #include "cpu/konami/konami.h"
@@ -8,7 +9,14 @@
 extern void simpsons_video_banking( int select );
 extern unsigned char *simpsons_xtraram;
 
+/* from drivers */
+extern int simpsons_z80_bank;
+
 int simpsons_firq_enabled;
+
+/* Bank selections, kept for save states (see simpsons_state_register) */
+static int simpsons_rombank;
+static int simpsons_videobank;
 
 /***************************************************************************
 
@@ -75,7 +83,8 @@ WRITE_HANDLER( simpsons_eeprom_w )
 	EEPROM_set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
 	EEPROM_set_clock_line((data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
 
-	simpsons_video_banking( data & 3 );
+	simpsons_videobank = data & 3;
+	simpsons_video_banking( simpsons_videobank );
 
 	simpsons_firq_enabled = data & 0x04;
 }
@@ -170,9 +179,10 @@ READ_HANDLER( simpsons_speedup2_r )
 
 ***************************************************************************/
 
-static void simpsons_banking( int lines )
+static void simpsons_rombank_set(void)
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
+	int lines = simpsons_rombank;
 	int offs = 0;
 
 	switch ( lines & 0xf0 )
@@ -201,6 +211,37 @@ static void simpsons_banking( int lines )
 	cpu_setbank( 1, &RAM[offs] );
 }
 
+static void simpsons_banking( int lines )
+{
+	simpsons_rombank = lines;
+	simpsons_rombank_set();
+}
+
+/* After loading a save state, map the saved banks again: the CPU ROM bank
+   (0x6000-0x7fff) and the video banks (0x0000-0x0fff and 0x2000-0x3fff). */
+static void simpsons_postload(void)
+{
+	simpsons_rombank_set();
+	simpsons_video_banking( simpsons_videobank );
+}
+
+/* Called once from the driver init: saves the bank selections, the FIRQ
+   enable and the banked RAM (palette, extra RAM and sprite RAM live in
+   the CPU region at 0x88000-0x8afff, outside the saved address space). */
+void simpsons_state_register(void)
+{
+	unsigned char *RAM = memory_region(REGION_CPU1);
+
+	state_save_register_int("simpsons", 0, "rombank", &simpsons_rombank);
+	state_save_register_int("simpsons", 0, "videobank", &simpsons_videobank);
+	state_save_register_int("simpsons", 0, "firq_enabled", &simpsons_firq_enabled);
+	/* reads left that fake the test switch on a board without NVRAM: a board
+	   that boots without it must not enter the service mode after loading */
+	state_save_register_int("simpsons", 0, "init_eeprom_count", &init_eeprom_count);
+	state_save_register_UINT8("simpsons", 0, "banked_ram", &RAM[0x88000], 0x3000);
+	state_save_register_func_postload(simpsons_postload);
+}
+
 MACHINE_INIT( simpsons )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
@@ -214,11 +255,14 @@ MACHINE_INIT( simpsons )
 	simpsons_firq_enabled = 0;
 
 	/* init the default banks */
+	simpsons_rombank = 0;
 	cpu_setbank( 1, &RAM[0x10000] );
 
 	RAM = memory_region(REGION_CPU2);
 
+	simpsons_z80_bank = 2;
 	cpu_setbank( 2, &RAM[0x10000] );
 
+	simpsons_videobank = 0;
 	simpsons_video_banking( 0 );
 }

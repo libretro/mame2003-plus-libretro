@@ -9,6 +9,7 @@ someone@secureshell.com
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "cpu/konami/konami.h" /* for the callback and the firq irq definition */
 #include "cpu/z80/z80.h"
@@ -29,6 +30,7 @@ READ_HANDLER( simpsons_speedup1_r );
 READ_HANDLER( simpsons_speedup2_r );
 MACHINE_INIT( simpsons );
 NVRAM_HANDLER( simpsons );
+void simpsons_state_register(void);
 extern int simpsons_firq_enabled;
 
 /***************************************************************************
@@ -72,13 +74,20 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x8000, 0xffff, MWA_ROM },
 MEMORY_END
 
-static WRITE_HANDLER( z80_bankswitch_w )
+int simpsons_z80_bank = 2;	/* sound CPU bank register, kept for save states */
+
+static void z80_bank_set(void)
 {
 	unsigned char *RAM = memory_region(REGION_CPU2);
-
-	offset = 0x10000 + ( ( ( data & 7 ) - 2 ) * 0x4000 );
+	int offset = 0x10000 + ( ( ( simpsons_z80_bank & 7 ) - 2 ) * 0x4000 );
 
 	cpu_setbank( 2, &RAM[ offset ] );
+}
+
+static WRITE_HANDLER( z80_bankswitch_w )
+{
+	simpsons_z80_bank = data;
+	z80_bank_set();
 }
 
 #if 0
@@ -468,6 +477,12 @@ static DRIVER_INIT( simpsons )
 {
 	konami_rom_deinterleave_2(REGION_GFX1);
 	konami_rom_deinterleave_4(REGION_GFX2);
+
+	/* Save the bank selections so a loaded save state runs the right code */
+	simpsons_z80_bank = 2;
+	state_save_register_int("simpsons_z80", 0, "bank", &simpsons_z80_bank);
+	state_save_register_func_postload(z80_bank_set);
+	simpsons_state_register();
 }
 
 GAME( 1991, simpsons, 0,        simpsons, simpsons, simpsons, ROT0, "Konami", "The Simpsons (4 Players)" )
