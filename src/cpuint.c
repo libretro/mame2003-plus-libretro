@@ -62,6 +62,26 @@ static INT32 irq_line_vector[MAX_CPU][MAX_IRQ_LINES];
 static INT32 irq_event_queue[MAX_CPU][MAX_IRQ_EVENTS];
 static int irq_event_index[MAX_CPU];
 
+static void cpu_empty_event_queue(int cpunum);
+
+/* A save made at the end of a frame finds the VBLANK interrupt still in the
+   queue (it is emptied by a timer at the same time, which runs in the next
+   frame). The queue is saved with the game, and a load sets that timer again,
+   or the CPU misses that interrupt: a game that does its work every other
+   frame then runs one frame late after loading. */
+static void cpuint_postload(void)
+{
+	int cpunum;
+
+	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+	{
+		if (irq_event_index[cpunum] > MAX_IRQ_EVENTS)
+			irq_event_index[cpunum] = MAX_IRQ_EVENTS;
+		if (irq_event_index[cpunum] > 0)
+			timer_set(TIME_NOW, cpunum, cpu_empty_event_queue);
+	}
+}
+
 
 
 /*************************************
@@ -131,6 +151,10 @@ int cpuint_init(void)
 	state_save_register_INT32("cpu", 0, "irq vector",     &interrupt_vector[0][0],cpu_gettotalcpu() * MAX_IRQ_LINES);
 	state_save_register_UINT8("cpu", 0, "irqline state",  &irq_line_state[0][0],  cpu_gettotalcpu() * MAX_IRQ_LINES);
 	state_save_register_INT32("cpu", 0, "irqline vector", &irq_line_vector[0][0], cpu_gettotalcpu() * MAX_IRQ_LINES);
+	state_save_register_INT32("cpu", 0, "irq event queue", &irq_event_queue[0][0], cpu_gettotalcpu() * MAX_IRQ_EVENTS);
+	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		state_save_register_int("cpu", cpunum, "irq events", &irq_event_index[cpunum]);
+	state_save_register_func_postload(cpuint_postload);
 
 	return 0;
 }
