@@ -141,6 +141,7 @@ TODO:
 
 #include "driver.h"
 #include "machine/namcoio.h"
+#include "state.h"
 
 #define VERBOSE 0
 
@@ -1199,6 +1200,67 @@ void nmi_generate(int param)
 
 int customio_command[MAX_06XX];
 
+/* Save states: each I/O chip's coins, credits and counters, the 50XX's
+   scores, and each 06XX's command with the time to its next NMI. Without
+   them a loaded game talks to chips that kept the state they had when the
+   save was loaded, and its NMIs come at another time. */
+static double nmi_left[MAX_06XX];
+
+static void namcoio_presave(void)
+{
+	int chip;
+
+	for (chip = 0; chip < MAX_06XX; chip++)
+		nmi_left[chip] = (nmi_timer[chip] && (customio_command[chip] & 0x0f)) ? timer_timeleft(nmi_timer[chip]) : -1;
+}
+
+static void namcoio_postload(void)
+{
+	int chip;
+
+	for (chip = 0; chip < MAX_06XX; chip++)
+	{
+		if (!nmi_timer[chip])
+			continue;
+		if ((customio_command[chip] & 0x0f) && nmi_left[chip] >= 0)
+			timer_adjust(nmi_timer[chip], nmi_left[chip], chip, TIME_IN_USEC(200));
+		else
+			timer_adjust(nmi_timer[chip], TIME_NEVER, chip, 0);
+	}
+}
+
+static void namcoio_register_state(void)
+{
+	int i;
+
+	state_save_set_current_tag(0);
+	for (i = 0; i < MAX_NAMCOIO; i++)
+	{
+		state_save_register_int("namcoio", i, "reset", &io[i].reset);
+		state_save_register_int("namcoio", i, "lastcoins", &io[i].lastcoins);
+		state_save_register_int("namcoio", i, "lastbuttons", &io[i].lastbuttons);
+		state_save_register_int("namcoio", i, "credits", &io[i].credits);
+		state_save_register_INT32("namcoio", i, "coins", io[i].coins, 2);
+		state_save_register_INT32("namcoio", i, "coins per credit", io[i].coins_per_cred, 2);
+		state_save_register_INT32("namcoio", i, "credits per coin", io[i].creds_per_coin, 2);
+		state_save_register_int("namcoio", i, "in_count", &io[i].in_count);
+		state_save_register_int("namcoio", i, "mode", &io[i].mode);
+		state_save_register_int("namcoio", i, "coincred_mode", &io[i].coincred_mode);
+		state_save_register_int("namcoio", i, "remap_joy", &io[i].remap_joy);
+	}
+	state_save_register_INT32("namco06xx", 0, "command", customio_command, MAX_06XX);
+	state_save_register_double("namco06xx", 0, "nmi left", nmi_left, MAX_06XX);
+	state_save_register_INT32("namco50xx", 0, "hiscore", HiScore, MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "score", &Score[0][0], 2 * MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "next bonus", &NextBonus[0][0], 2 * MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "first bonus", FirstBonus, MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "interval bonus", IntervalBonus, MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "player", Player, MAX_50XX);
+	state_save_register_INT32("namco50xx", 0, "in_count", in_count_50XX, MAX_50XX);
+	state_save_register_func_presave(namcoio_presave);
+	state_save_register_func_postload(namcoio_postload);
+}
+
 
 void namco_06xx_init(int chipnum, int cpu,
 	int type0, const struct namcoio_interface *intf0,
@@ -1214,6 +1276,8 @@ void namco_06xx_init(int chipnum, int cpu,
 		namcoio_init(4*chipnum + 3, type3, intf3);
 		nmi_cpu[chipnum] = cpu;
 		nmi_timer[chipnum] = timer_alloc(nmi_generate);
+		/* registering again on a reset is ignored */
+		namcoio_register_state();
 	}
 }
 
