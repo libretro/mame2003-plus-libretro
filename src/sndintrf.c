@@ -1260,6 +1260,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "Sound #%d wrong ID %d: check enum SOUND_... in s
 		totalsound++;
 	}
 
+	mixer_register_state();
 	return 0;
 
 
