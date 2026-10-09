@@ -72,6 +72,7 @@ TODO:
 
 #include "driver.h"
 #include "filter.h"
+#include "state.h"
 
 
 static int fetch;
@@ -698,6 +699,33 @@ int namco_54xx_sh_start(const struct MachineSound *msound)
 	}
 
 	stream = stream_init_multi(NAMCO54xx_NUMBUF, name, vol, chip_sampfreq, 0, NAMCO54xxUpdateOne);
+
+	/* the explosions' envelopes, noise generator and filters, kept with a save */
+	{
+		static int *const ints[] = {
+			&fetch, &fetchmode, &type_A_active, &type_B_active, &type_C_active,
+			&type_A_state, &type_B_state, &type_C_state,
+			&type_A_pos, &type_A_add, &type_A_curr_vol, &type_A_rel_pos,
+			&type_B_pos, &type_B_add, &type_B_curr_vol, &type_B_rel_pos,
+			&RNG, &RNG_p, &RNG_f_0, &RNG_f_1, &RNG_delay, &out_prev,
+			&noise_out_A, &noise_out_B, &noise_B_will_change, &RNG_p_delay_B };
+		static const char *const names[] = {
+			"fetch", "fetchmode", "A active", "B active", "C active",
+			"A state", "B state", "C state",
+			"A pos", "A add", "A vol", "A rel", "B pos", "B add", "B vol", "B rel",
+			"RNG", "RNG p", "RNG f0", "RNG f1", "RNG delay", "out prev",
+			"noise A", "noise B", "noise B changes", "RNG p delay B" };
+		for (i = 0; i < sizeof(ints) / sizeof(ints[0]); i++)
+			state_save_register_int("namco54", 0, names[i], ints[i]);
+		state_save_register_UINT8("namco54", 0, "A par", type_A_par, 4);
+		state_save_register_UINT8("namco54", 0, "B par", type_B_par, 4);
+		state_save_register_UINT8("namco54", 0, "C par", type_C_par, 5);
+		for (i = 0; i < 3; i++)
+		{
+			state_save_register_double("namco54", i, "filter x", &filter54[i].x0, 3);
+			state_save_register_double("namco54", i, "filter y", &filter54[i].y0, 3);
+		}
+	}
 
 	logerror("Namco 54xx clock=%f sample rate=%f\n", chip_clock, chip_sampfreq);
 
