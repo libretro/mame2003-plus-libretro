@@ -470,6 +470,19 @@ void konami_set_reg(int regnum, unsigned val)
 /****************************************************************************/
 void konami_init(void)
 {
+	int cpu = cpu_getactivecpu();
+	state_save_register_UINT16("konami", cpu, "PC", &PC, 1);
+	state_save_register_UINT16("konami", cpu, "U", &U, 1);
+	state_save_register_UINT16("konami", cpu, "S", &S, 1);
+	state_save_register_UINT16("konami", cpu, "X", &X, 1);
+	state_save_register_UINT16("konami", cpu, "Y", &Y, 1);
+	state_save_register_UINT16("konami", cpu, "D", &D, 1);
+	state_save_register_UINT8("konami", cpu, "DP", &DP, 1);
+	state_save_register_UINT8("konami", cpu, "CC", &CC, 1);
+	state_save_register_UINT8("konami", cpu, "INT", &konami.int_state, 1);
+	state_save_register_UINT8("konami", cpu, "NMI", &konami.nmi_state, 1);
+	state_save_register_UINT8("konami", cpu, "IRQ", &konami.irq_state[0], 1);
+	state_save_register_UINT8("konami", cpu, "FIRQ", &konami.irq_state[1], 1);
 }
 
 void konami_reset(void *param)
