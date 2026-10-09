@@ -5,6 +5,7 @@
 *********************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "k053260.h"
 
 /* 2004-02-28: Fixed ppcm decoding. Games sound much better now.*/
@@ -14,14 +15,14 @@
 #define BASE_SHIFT	16
 
 struct K053260_channel_def {
-	unsigned long		rate;
-	unsigned long		size;
-	unsigned long		start;
-	unsigned long		bank;
-	unsigned long		volume;
+	UINT32				rate;
+	UINT32				size;
+	UINT32				start;
+	UINT32				bank;
+	UINT32				volume;
 	int					play;
-	unsigned long		pan;
-	unsigned long		pos;
+	UINT32				pan;
+	UINT32				pos;
 	int					loop;
 	int					ppcm; /* packed PCM ( 4 bit signed ) */
 	int					ppcm_data;
@@ -229,6 +230,28 @@ int K053260_sh_start(const struct MachineSound *msound) {
 
 		InitDeltaTable( ics );
 
+		/* Save the registers (the first 8 are the latches between the main
+		   and the sound CPU) and the channels, so a loaded save state keeps
+		   its sound and the two CPUs keep talking */
+		state_save_register_int("K053260", ics, "mode", &ic->mode);
+		state_save_register_INT32("K053260", ics, "regs", (INT32 *)ic->regs, 0x30);
+		for ( i = 0; i < 4; i++ ) {
+			struct K053260_channel_def *ch = &ic->channels[i];
+			char name[32];
+
+			sprintf(name, "ch%d rate", i);   state_save_register_UINT32("K053260", ics, name, &ch->rate, 1);
+			sprintf(name, "ch%d size", i);   state_save_register_UINT32("K053260", ics, name, &ch->size, 1);
+			sprintf(name, "ch%d start", i);  state_save_register_UINT32("K053260", ics, name, &ch->start, 1);
+			sprintf(name, "ch%d bank", i);   state_save_register_UINT32("K053260", ics, name, &ch->bank, 1);
+			sprintf(name, "ch%d volume", i); state_save_register_UINT32("K053260", ics, name, &ch->volume, 1);
+			sprintf(name, "ch%d play", i);   state_save_register_int("K053260", ics, name, &ch->play);
+			sprintf(name, "ch%d pan", i);    state_save_register_UINT32("K053260", ics, name, &ch->pan, 1);
+			sprintf(name, "ch%d pos", i);    state_save_register_UINT32("K053260", ics, name, &ch->pos, 1);
+			sprintf(name, "ch%d loop", i);   state_save_register_int("K053260", ics, name, &ch->loop);
+			sprintf(name, "ch%d ppcm", i);   state_save_register_int("K053260", ics, name, &ch->ppcm);
+			sprintf(name, "ch%d ppcm_data", i); state_save_register_int("K053260", ics, name, &ch->ppcm_data);
+		}
+
 		/* setup SH1 timer if necessary */
 		if ( intf->irq[ics] )
 			timer_pulse( TIME_IN_HZ( ( intf->clock[ics] / 32 ) ), 0, intf->irq[ics] );
@@ -275,7 +298,7 @@ static INLINE void check_bounds( int chip, int channel ) {
 
 		ic->channels[channel].size = ic->rom_size - channel_start;
 	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "K053260: Sample Start = %06x, Sample End = %06x, Sample rate = %04lx, PPCM = %s\n", channel_start, channel_end, ic->channels[channel].rate, ic->channels[channel].ppcm ? "yes" : "no" );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "K053260: Sample Start = %06x, Sample End = %06x, Sample rate = %04x, PPCM = %s\n", channel_start, channel_end, ic->channels[channel].rate, ic->channels[channel].ppcm ? "yes" : "no" );
 }
 
 void K053260_write( int chip, offs_t offset, data8_t data )
