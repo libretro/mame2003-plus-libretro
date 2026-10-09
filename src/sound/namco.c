@@ -13,6 +13,7 @@
 
 #include "driver.h"
 #include "namco.h"
+#include "state.h"
 
 
 /* 8 voices max */
@@ -395,6 +396,23 @@ int namco_sh_start(const struct MachineSound *msound)
 		voice->noise_state = 0;
 		voice->noise_seed = 1;
 		voice->noise_counter = 0;
+	}
+
+	/* Save the voices and the enable: many games write the enable once, at boot,
+	   so a save loaded later kept the sound off */
+	state_save_register_int("namco", 0, "sound_enable", &sound_enable);
+	for (voice = channel_list; voice < last_channel; voice++)
+	{
+		int v = voice - channel_list;
+		state_save_register_UINT32("namco", v, "frequency", &voice->frequency, 1);
+		state_save_register_UINT32("namco", v, "counter", &voice->counter, 1);
+		state_save_register_int("namco", v, "volume_l", &voice->volume[0]);
+		state_save_register_int("namco", v, "volume_r", &voice->volume[1]);
+		state_save_register_int("namco", v, "noise_sw", &voice->noise_sw);
+		state_save_register_int("namco", v, "noise_state", &voice->noise_state);
+		state_save_register_int("namco", v, "noise_seed", &voice->noise_seed);
+		state_save_register_UINT32("namco", v, "noise_counter", &voice->noise_counter, 1);
+		state_save_register_int("namco", v, "waveform_select", &voice->waveform_select);
 	}
 
 	return 0;
