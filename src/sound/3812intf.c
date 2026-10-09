@@ -18,6 +18,7 @@
 ******************************************************************************/
 #include "driver.h"
 #include "3812intf.h"
+#include "state.h"
 #include "fm.h"
 #include "sound/fmopl.h"
 
@@ -27,6 +28,42 @@
 static int  stream_3812[MAX_3812];
 static void *Timer_3812[MAX_3812*2];
 static const struct YM3812interface *intf_3812 = NULL;
+
+/* The OPL core keeps no save state: the interface keeps a copy of every
+   register written (and the address register), saves it, and writes it all
+   back on load. That restores the channels and starts the timers again, which
+   sound CPUs that wait on the timer flag or take its interrupt need. */
+static UINT8 regs_3812[MAX_3812][256];
+static UINT8 addr_3812[MAX_3812];
+
+static void YM3812_postload(void)
+{
+	int i, r;
+	for (i = 0; i < intf_3812->num; i++)
+	{
+		YM3812ResetChip(i);
+		for (r = 0x01; r < 0x100; r++)
+		{
+			if (r == 0x04)
+				continue;
+			YM3812Write(i, 0, r);
+			YM3812Write(i, 1, regs_3812[i][r]);
+		}
+		/* the timers last: their load values are in place, start them (bit 7, the IRQ reset, is an action) */
+		YM3812Write(i, 0, 0x04);
+		YM3812Write(i, 1, regs_3812[i][0x04] & 0x63);
+		YM3812Write(i, 0, addr_3812[i]);
+	}
+}
+
+static void YM3812_write_shadow(int n, int a, int data)
+{
+	if (a == 0)
+		addr_3812[n] = data;
+	else
+		regs_3812[n][addr_3812[n]] = data;
+	YM3812Write(n, a, data);
+}
 static void IRQHandler_3812(int n,int irq)
 {
 	if (intf_3812->handler[n]) (intf_3812->handler[n])(irq ? ASSERT_LINE : CLEAR_LINE);
@@ -86,7 +123,13 @@ int YM3812_sh_start(const struct MachineSound *msound)
 
 		Timer_3812[i*2+0] = timer_alloc(timer_callback_3812);
 		Timer_3812[i*2+1] = timer_alloc(timer_callback_3812);
+
+		memset(regs_3812[i], 0, sizeof(regs_3812[i]));
+		addr_3812[i] = 0;
+		state_save_register_UINT8("YM3812", i, "regs", regs_3812[i], 256);
+		state_save_register_UINT8("YM3812", i, "address", &addr_3812[i], 1);
 	}
+	state_save_register_func_postload(YM3812_postload);
 	return 0;
 }
 
@@ -105,10 +148,10 @@ void YM3812_sh_reset(void)
 }
 
 WRITE_HANDLER( YM3812_control_port_0_w ) {
-	YM3812Write(0, 0, data);
+	YM3812_write_shadow(0, 0, data);
 }
 WRITE_HANDLER( YM3812_write_port_0_w ) {
-	YM3812Write(0, 1, data);
+	YM3812_write_shadow(0, 1, data);
 }
 READ_HANDLER( YM3812_status_port_0_r ) {
 	return YM3812Read(0, 0);
@@ -119,10 +162,10 @@ READ_HANDLER( YM3812_read_port_0_r ) {
 
 
 WRITE_HANDLER( YM3812_control_port_1_w ) {
-	YM3812Write(1, 0, data);
+	YM3812_write_shadow(1, 0, data);
 }
 WRITE_HANDLER( YM3812_write_port_1_w ) {
-	YM3812Write(1, 1, data);
+	YM3812_write_shadow(1, 1, data);
 }
 READ_HANDLER( YM3812_status_port_1_r ) {
 	return YM3812Read(1, 0);
