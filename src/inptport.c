@@ -43,6 +43,7 @@ be specified by a CODE_NOT (for example, ALT-TAB on a windows machine).
 #include "driver.h"
 #include "config.h"
 #include "cpuexec.h"
+#include "state.h"
 
 
 /***************************************************************************
@@ -702,6 +703,11 @@ getout:
 	}
 
 	init_analog_seq();
+
+	/* the values the board latched at the last VBLANK: the game reads them
+	   until the next one, so a loaded state must bring them back */
+	state_save_register_UINT16("input", 0, "port values", input_port_value, MAX_INPUT_PORTS);
+	state_save_register_UINT16("input", 0, "vblank",      input_vblank,     MAX_INPUT_PORTS);
 
 	update_input_ports();
 
