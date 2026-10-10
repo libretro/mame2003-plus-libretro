@@ -7,6 +7,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "fm.h"
 #include "ym2151.h"
 
@@ -17,6 +18,11 @@ static int stream[MAX_2151];
 static const struct YM2151interface *intf;
 
 static int FMMode;
+
+/* the register each chip's data port writes to: the CPU selects it once and
+   may write the data port many frames later, so save states keep it */
+static int lastreg0,lastreg1,lastreg2;
+
 #define CHIP_YM2151_DAC 4	/* use Tatsuyuki's FM.C */
 #define CHIP_YM2151_ALT 5	/* use Jarek's YM2151.C */
 
@@ -75,6 +81,11 @@ static int my_YM2151_sh_start(const struct MachineSound *msound,int mode)
 	if( rate == 0 ) rate = 1000;	/* kludge to prevent nasty crashes */
 
 	intf = msound->sound_interface;
+
+	lastreg0 = lastreg1 = lastreg2 = 0;
+	if (intf->num > 0) state_save_register_int("YM2151intf", 0, "lastreg", &lastreg0);
+	if (intf->num > 1) state_save_register_int("YM2151intf", 1, "lastreg", &lastreg1);
+	if (intf->num > 2) state_save_register_int("YM2151intf", 2, "lastreg", &lastreg2);
 
 	if( mode ) FMMode = CHIP_YM2151_ALT;
 	else       FMMode = CHIP_YM2151_DAC;
@@ -200,8 +211,6 @@ void YM2151_sh_reset(void)
 	}
 
 }
-
-static int lastreg0,lastreg1,lastreg2;
 
 READ_HANDLER( YM2151_status_port_0_r )
 {

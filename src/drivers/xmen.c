@@ -707,6 +707,11 @@ static DRIVER_INIT( xmen )
 
 	state_save_register_UINT8("main", 0, "sound bank", &sound_curbank, 1);
 	state_save_register_func_postload(sound_reset_bank);
+
+	/* the EEPROM reads left that hold the service switch down on a board
+	   that starts without a saved EEPROM */
+	state_save_register_int("main", 0, "init eeprom count", &init_eeprom_count);
+	state_save_register_int("main", 0, "tilemap select",    &xmen6p_tilemap_select);
 }
 
 
