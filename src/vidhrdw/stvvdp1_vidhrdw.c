@@ -709,8 +709,10 @@ void stv_vpd1_draw_scaled_sprite(struct mame_bitmap *bitmap, const struct rectan
 
 	xsize = (stv2_current_sprite.CMDSIZE & 0x3f00) >> 8;
 	xsize = xsize * 8;
+	if (xsize == 0) return; /* setting prohibited */
 
 	ysize = (stv2_current_sprite.CMDSIZE & 0x00ff);
+	if (ysize == 0) return; /* setting prohibited */
 
 	patterndata = (stv2_current_sprite.CMDSRCA) & 0xffff;
 	patterndata = patterndata * 0x8;
