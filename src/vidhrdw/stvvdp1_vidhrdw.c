@@ -16,7 +16,7 @@ the vdp1 draws to the FRAMEBUFFER which is mapped in memory
 data32_t *stv_vdp1_vram;
 data32_t *stv_vdp1_regs;
 extern data32_t *stv_scu;
-char shienryu_sprite_kludge;
+/* char shienryu_sprite_kludge;*/
 /*
 Registers:
 00
@@ -58,6 +58,14 @@ X1 register         |Y1 register               |
 #define SET_CEF_FROM_0_TO_1     if(!(STV_VDP1_CEF))	 stv_vdp1_regs[0x010/4]^=0x00020000
 /**/
 
+/* VDP2 sprite related registers */
+extern data32_t* stv_vdp2_regs;
+
+/* 1800e6 - Colour Ram Address Offset (RBG0, SPRITE) */
+#define STV_VDP2_CRAOFB ((stv_vdp2_regs[0x0e4/4] >> 0)&0x0000ffff)
+#define STV_VDP2_SPCAOS ((STV_VDP2_CRAOFB & 0x0070) >> 4)
+
+
 #include "machine/random.h"
 
 READ32_HANDLER( stv_vdp1_regs_r )
@@ -80,10 +88,6 @@ int stv_vdp1_start ( void )
 
 	memset(stv_vdp1_regs, 0, 0x040000);
 	memset(stv_vdp1_vram, 0, 0x100000);
-
-	/* our colour calculation is broken .. must fix it */
-	shienryu_sprite_kludge = 0;
-	if (!strcmp(Machine->gamedrv->name,"shienryu"))	shienryu_sprite_kludge = 1;
 
 	return 0;
 }
@@ -224,11 +228,8 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			mode = 0;
 			transmask = 0xf;
 
-			if (shienryu_sprite_kludge)
-			{
-				pix += 0x400;
-				pix &= 0x7ff;
-			}
+            pix += (STV_VDP2_SPCAOS << 8);
+			pix &= 0x7ff;
 
 			break;
 		case 0x0008: /* mode 1 16 colour lookup table mode (4bits)*/
@@ -258,20 +259,21 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			{
 				pix=pix2; /* this is messy .. but just ensures that pen 0 isn't drawn*/
 			}
-			if (shienryu_sprite_kludge)
+			if ( mode == 1 )
 			{
-				pix &= 0x1ff;
-				pix += 0x400;
+				pix &= 0xff;
+				pix += (STV_VDP2_SPCAOS << 8);
 				pix &= 0x7ff;
 			}
-
-
 			break;
 		case 0x0010: /* mode 2 64 colour bank mode (8bits) (character select portraits on hanagumi)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			mode = 2;
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0fc0);
 			transmask = 0x3f;
+			pix &= 0x7ff;
+			pix += (STV_VDP2_SPCAOS << 8);
+			pix &= 0x7ff;
 			break;
 		case 0x0018: /* mode 3 128 colour bank mode (8bits) (little characters on hanagumi use this mode)*/
 			pix = gfxdata[patterndata+offsetcnt];
@@ -279,12 +281,18 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			transmask = 0x7f;
 			mode = 3;
 		/*	pix = rand();*/
+		    pix &= 0x7ff;
+			pix += (STV_VDP2_SPCAOS << 8);
+			pix &= 0x7ff;
 			break;
 		case 0x0020: /* mode 4 256 colour bank mode (8bits) (hanagumi title)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0f00);
 			transmask = 0xff;
 			mode = 4;
+			pix &= 0x7ff;
+			pix += (STV_VDP2_SPCAOS << 8);
+			pix &= 0x7ff;
 			break;
 		case 0x0028: /* mode 5 32,768 colour RGB mode (16bits)*/
 			pix = gfxdata[patterndata+offsetcnt*2+1] | (gfxdata[patterndata+offsetcnt*2]<<8) ;
