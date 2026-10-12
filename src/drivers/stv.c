@@ -3100,6 +3100,7 @@ static MEMORY_WRITE32_START( stv_master_writemem )
 	{ 0x00200000, 0x002fffff, MWA32_BANK4 }, /* workram low*/
 	{ 0x00400000, 0x0040001f, stv_io_w32 ,&ioga },
 	{ 0x01000000, 0x01000003, minit_w },
+	{ 0x01406f40, 0x01406f43, minit_w },	/* needed by prikura */	
 	{ 0x02000000, 0x04ffffff, MWA32_ROM },
 /*	{ 0x05000000, 0x058fffff, MWA32_RAM },*/
 	{ 0x05800000, 0x0589ffff, cdregister_w },
@@ -4169,6 +4170,8 @@ ROM_START( rsgun )
 	ROM_LOAD16_WORD_SWAP( "mpr20960.3",   0x0800000, 0x0400000, CRC(b5ab9053) SHA1(87c5d077eb1219c35fa65b4e11d5b62e826f5236) ) /* good (was .13)*/
 	ROM_LOAD16_WORD_SWAP( "mpr20961.4",   0x0c00000, 0x0400000, CRC(0e06295c) SHA1(0ec2842622f3e9dc5689abd58aeddc7e5603b97a) ) /* good (was .14)*/
 	ROM_LOAD16_WORD_SWAP( "mpr20962.5",   0x1000000, 0x0400000, CRC(f1e6c7fc) SHA1(0ba0972f1bc7c56f4e0589d3e363523cea988bb0) ) /* good (was .15)*/
+	/*Without the following the game crashes,maybe we need to mirror the previous roms in this location?*/
+	ROM_FILL(                             0x1400000, 0x0c00000, 0x00 )
 ROM_END
 
 ROM_START( sandor )
@@ -4565,6 +4568,7 @@ GAMEBX( 1996, vfkids,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega",
 GAMEBX( 1995, ejihon,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Ejihon Tantei Jimusyo", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, colmns97,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Columns 97", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, dnmtdeka,  diehard, stvbios, stv, stv,  dnmtdeka,  ROT0,   "Sega", 	 "Dynamite Deka (Japan)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS , &generic_ctrl, NULL )
+GAMEBX( 1996, prikura,   stvbios, stvbios, stv, stv,  prikura,   ROT0,   "Atlus",  "Princess Clara Daisakusen", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1997, winterht,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Winter Heat", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS , &generic_ctrl, NULL )
 
 /* Almost */
@@ -4573,7 +4577,6 @@ GAMEBX( 1998, othellos,  stvbios, stvbios, stv, stv,  stv,       ROT0,   "Succes
 GAMEBX( 1995, kiwames,   stvbios, stvbios, stv, stvmp,ic13,      ROT0,   "Athena",   "Pro Mahjong Kiwame S", GAME_NO_SOUND | GAME_NOT_WORKING, &generic_ctrl, NULL )
 
 /* Doing Something.. but not enough yet */
-GAMEBX( 1996, prikura,   stvbios, stvbios, stv, stv,  prikura,   ROT0, "Atlus",      "Princess Clara Daisakusen", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING, &generic_ctrl, NULL )
 GAMEBX( 1995, shanhigw,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Sunsoft / Activision", "Shanghai - The Great Wall - Shanghai Triple Threat", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, groovef,   stvbios, stvbios, stv, stv,  stv,       ROT0, "Atlus",      "Power Instinct 3 - Groove On Fight", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING, &generic_ctrl, NULL )
 GAMEBX( 1999, danchih,   stvbios, stvbios, stv, stvmp,stv,       ROT0, "Altron (Tecmo license)", "Danchi de Hanafuda", GAME_NO_SOUND | GAME_NOT_WORKING, &generic_ctrl, NULL )
