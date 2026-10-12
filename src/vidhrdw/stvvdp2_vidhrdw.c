@@ -2072,7 +2072,7 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 				else
 					scaley = 0xffff;
 
-				usrintf_showmessage("%04x %04x",STV_VDP2_HCNT,stv2_current_tilemap.scalex_f);
+				/* usrintf_showmessage("%04x %04x",STV_VDP2_HCNT,stv2_current_tilemap.scalex_f); */
 
 				if (stv2_current_tilemap.tile_size==1)
 				{
