@@ -503,6 +503,19 @@ static void K054539_init_chip(int chip, const struct MachineSound *msound)
 	state_save_register_UINT8("K054539", chip, "registers", K054539_chips.chip[chip].regs, 0x230);
 	state_save_register_UINT8("K054539", chip, "ram",       K054539_chips.chip[chip].ram,  0x4000);
 	state_save_register_int  ("K054539", chip, "cur_ptr",  &K054539_chips.chip[chip].cur_ptr);
+	/* where each channel plays and the echo buffer's position: without them
+	   every sound restarts from where the chip stood when the save was loaded */
+	state_save_register_int  ("K054539", chip, "reverb_pos", &K054539_chips.chip[chip].reverb_pos);
+	{
+		int ch;
+		for (ch = 0; ch < 8; ch++)
+		{
+			state_save_register_UINT32("K054539", chip * 8 + ch, "ch pos",   &K054539_chips.chip[chip].channels[ch].pos,   1);
+			state_save_register_UINT32("K054539", chip * 8 + ch, "ch pfrac", &K054539_chips.chip[chip].channels[ch].pfrac, 1);
+			state_save_register_INT32 ("K054539", chip * 8 + ch, "ch val",   &K054539_chips.chip[chip].channels[ch].val,   1);
+			state_save_register_INT32 ("K054539", chip * 8 + ch, "ch pval",  &K054539_chips.chip[chip].channels[ch].pval,  1);
+		}
+	}
 }
 
 static void K054539_stop_chip(int chip)
