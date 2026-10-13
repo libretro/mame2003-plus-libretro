@@ -135,11 +135,33 @@ void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct recta
 
 	/*- Draw from cache_bitmap to screen -*/
 
+	/* The overlay is stretched over the whole Genesis picture, as on the real
+	   board (and in current MAME): its 256 active pixels map onto the visible
+	   width, 320 in H40 mode and 256 in H32. Pen 0 is transparent.
+	   Only the lines inside cliprect are drawn: with partial updates the game
+	   layer is rendered in slices, and a full-height overlay would be
+	   overwritten by the slices that follow. */
+	int width = Machine->visible_area.max_x - Machine->visible_area.min_x + 1;
+
 	for (i = 0; i < 192;i++)
+	{
+		const UINT8 *src;
+		UINT16 *dst;
+		int x;
+
+		if (i + 16 < cliprect->min_y || i + 16 > cliprect->max_y)
+			continue;
 		segae_drawscanline(i,0,0);
 
-	for (i = 0;i < 192;i++)
-		draw_scanline8(bitmap,32,i+16,256,&cache_bitmap[i * (16+256+16) +24],&Machine->pens[segasyse_palettebase],0);
+		src = &cache_bitmap[i * (16+256+16) + 16];
+		dst = (UINT16 *)bitmap->line[i + 16] + Machine->visible_area.min_x;
+		for (x = 0; x < width; x++)
+		{
+			UINT8 pix = src[(x * 256) / width];
+			if (pix)
+				dst[x] = Machine->pens[segasyse_palettebase + pix];
+		}
+	}
 
 }
 
