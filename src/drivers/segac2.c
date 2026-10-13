@@ -247,6 +247,10 @@ extern UINT16 scanbase;
 
 ******************************************************************************/
 
+/* Mega Play: H-INT/V-INT are cleared by the 68000 interrupt acknowledge
+   (see genesis_irq_ack_callback) instead of timing out */
+static int genesis_vdp_iack;
+
 /* call this whenever the interrupt state has changed */
 static void update_interrupts(void)
 {
@@ -282,7 +286,9 @@ static void vdp_reload_counter(int scanline)
 		{
 			scanline_int = 1;
 			update_interrupts();
-			timer_set(cpu_getscanlinetime(scanline + 1), 0, vdp_int4_off);
+			/* with IACK emulation the line stays asserted until the 68000 takes it */
+			if (!genesis_vdp_iack)
+				timer_set(cpu_getscanlinetime(scanline + 1), 0, vdp_int4_off);
 		}
 
 	/* advance to the next scanline */
@@ -309,6 +315,19 @@ static void vdp_int6_off(int param)
 /* interrupt callback to generate the VBLANK interrupt */
 static INTERRUPT_GEN( vblank_interrupt )
 {
+	/* with IACK emulation V-INT is held until the 68000 takes it, so it is not
+	   lost while an H-INT handler has the interrupts masked; and, as on the
+	   real 315-5313, it is only raised when enabled in VDP register 1 (bit 5) */
+	if (genesis_vdp_iack)
+	{
+		if (segac2_vdp_regs[1] & 0x20)
+		{
+			vblank_int = 1;
+			update_interrupts();
+		}
+		return;
+	}
+
 	/* generate the interrupt */
 	vblank_int = 1;
 	update_interrupts();
@@ -354,6 +373,8 @@ static MACHINE_INIT( segac2 )
 
 static MACHINE_INIT( genesis )
 {
+	genesis_vdp_iack = 0;
+
 	/* the following ensures that the Z80 begins without running away from 0 */
 	/* 0x76 is just a forced 'halt' as soon as the CPU is initially run */
 	genesis_z80_ram[0] = 0x76;
@@ -380,6 +401,36 @@ static MACHINE_INIT( megatech )
 	machine_init_genesis();
 }
 
+/* On the real 315-5313 VDP the H-INT (level 4) and V-INT (level 6) pending
+   flags are cleared when the 68000 acknowledges the interrupt.
+   The old timed pulses break games that use H-INT on every line:
+   - IRQ4 held for a whole scanline re-enters a short H-INT handler over and
+     over and the main program starves;
+   - IRQ6 dropped after 22 pixels is lost when the H-INT handler of line 223
+     still has the interrupts masked, so the game never sees V-INT again.
+   Gunstar Heroes hits both (68000 stuck at $FFEE04, its H-INT handler in RAM). */
+static int genesis_irq_ack_callback(int irqline)
+{
+	int level = 0;
+
+	if (irqline == 4)
+		scanline_int = 0;
+	else if (irqline == 6)
+		vblank_int = 0;
+
+	if (ym3438_int) level = 2;
+	if (scanline_int) level = 4;
+	if (vblank_int) level = 6;
+
+	/* drop the line now (an immediate clear cannot re-enter the CPU core),
+	   then re-assert whatever is still pending */
+	activecpu_set_irq_line(7, INTERNAL_CLEAR_LINE);
+	if (level)
+		cpu_set_irq_line(0, level, ASSERT_LINE);
+
+	return MC68000_INT_ACK_AUTOVECTOR;
+}
+
 static MACHINE_INIT( megaplay )
 {
 /*	unsigned char* ram = memory_region(REGION_CPU3); */
@@ -390,6 +441,10 @@ static MACHINE_INIT( megaplay )
 	cpu_setbank(3, &genesis_68k_ram[0]);
 
 	machine_init_genesis();
+
+	genesis_vdp_iack = 1;
+	scanline_int = vblank_int = 0;
+	cpu_set_irq_callback(0, genesis_irq_ack_callback);
 }
 
 /******************************************************************************
@@ -4239,6 +4294,28 @@ INPUT_PORTS_START ( mp_shnb3 )
     PORT_DIPSETTING( 0x0c, "Normal" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START ( mp_gunhe )
+	GENESIS_PORTS
+	MEGAPLAY_TEST
+	MEGAPLAY_COIN
+	MEGAPLAY_DSWA
+	MEGAPLAY_DSWB
+
+	PORT_START
+	/* DSW C  (per game settings) */
+	PORT_DIPNAME( 0x03, 0x01, "Initial Players" )
+    PORT_DIPSETTING( 0x00, "4" )
+    PORT_DIPSETTING( 0x01, "3" )
+    PORT_DIPSETTING( 0x02, "2" )
+    PORT_DIPSETTING( 0x03, "1" )
+
+	PORT_DIPNAME( 0xc, 0x0c, DEF_STR ( Difficulty ) )
+    PORT_DIPSETTING( 0x00, "Expert" )
+    PORT_DIPSETTING( 0x04, "Hard" )
+    PORT_DIPSETTING( 0x08, "Easy" )
+    PORT_DIPSETTING( 0x0c, "Normal" )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( aladbl )
 	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
@@ -4852,6 +4929,7 @@ static MACHINE_DRIVER_START( megaplay )
 /*	MDRV_CPU_PROGRAM_MAP(megaplay_genesis_readmem, genesis_writemem) */
 
 	MDRV_VIDEO_START(megaplay)
+	MDRV_VIDEO_EOF(segac2)	/* VBLANK tracking: without it there are no mid-screen partial updates */
 	MDRV_VIDEO_UPDATE(megaplay)
 	MDRV_MACHINE_INIT(megaplay)
 
@@ -5912,6 +5990,20 @@ ROM_START( mp_sor2 ) /* Streets of Rage 2 */
 	MEGAPLAY_BIOS
 ROM_END
 
+ROM_START( mp_gunhe ) /* Gunstar Heroes */
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "mpr-16390.ic1", 0x000000, 0x100000, CRC(d963a748) SHA1(adf231c5180a9307fd6675fe77fffd4c5bfa3d6a) )
+	/* Game Instruction rom copied to 0x300000 - 0x310000 (odd / even bytes equal) */
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* z80 */
+
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* Game Instructions */
+	ROM_LOAD( "epr-15175-10.ic2", 0x000000, 0x08000, CRC(e4f08233) SHA1(b7e0ad3f6ae1c56df6ec76375842050f08afcbef) )
+
+	ROM_REGION( 0x28000, REGION_CPU3, 0 ) /* Bios */
+	MEGAPLAY_BIOS
+ROM_END
+
 ROM_START( mp_twc ) /* Tecmo World Cup */
 	ROM_REGION( 0x400000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ep15183.ic2", 0x000000, 0x040000, CRC(8b79b861) SHA1(c72af72840513b82f2562409eccdf13b031bf3c0) )
@@ -6776,4 +6868,5 @@ static DRIVER_INIT (megaplay)
 /* 05 */ GAMEB( 1993, mp_soni2, megaplay, megaplay, megaplay, mp_soni2, megaplay, ROT0, "Sega",    "Sonic The Hedgehog 2", &megaplay_ctrl, NULL  )
 /* 06 */ GAMEB( 1993, mp_bio,   megaplay, megaplay, megaplay, mp_bio,	  megaplay, ROT0, "Sega",    "Bio-Hazard Battle", &megaplay_ctrl, NULL  )
 /* 07 */ GAMEB( 1993, mp_shnb3, megaplay, megaplay, megaplay, mp_shnb3, megaplay, ROT0, "Sega",    "Shinobi III", &megaplay_ctrl, NULL )
-/* 10 */ GAMEB( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "Columns III", &megaplay_ctrl, NULL )
+/* 10 */ GAMEB( 1993, mp_gunhe, megaplay, megaplay, megaplay, mp_gunhe, megaplay, ROT0, "Sega",    "Gunstar Heroes", &megaplay_ctrl, NULL )
+/* ?? */ GAMEB( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "Columns III", &megaplay_ctrl, NULL )

@@ -725,17 +725,21 @@ static void vdp_control_w(int data)
 static void vdp_register_w(int data)
 {
 	int scrwidth = 0;
-	static const UINT8 is_important[32] = { 0,0,1,1,1,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+	/* R1 (display enable) and R12 (shadow/highlight) are read directly by the
+	   renderer, so a mid-screen write must flush the lines above too
+	   (Gunstar Heroes switches the display on/off from H-INT for its letterbox) */
+	static const UINT8 is_important[32] = { 0,1,1,1,1,1,0,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 	UINT8 regnum = (data & 0x1f00) >> 8; /* ---R RRRR ---- ---- */
 	UINT8 regdat = (data & 0x00ff);      /* ---- ---- DDDD DDDD */
 
-	segac2_vdp_regs[regnum] = regdat;
-
 	/* these are mostly important writes; force an update if they */
-	/* are written during a screen refresh */
-	if (!internal_vblank && is_important[regnum])
+	/* are written during a screen refresh. This must happen BEFORE the
+	   store, otherwise the lines already displayed get the new value */
+	if (!internal_vblank && is_important[regnum] && segac2_vdp_regs[regnum] != regdat)
 		force_partial_update((cpu_getscanline())+ scanbase);
+
+	segac2_vdp_regs[regnum] = regdat;
 
 	/* For quite a few of the registers its a good idea to set a couple of variable based
 	   upon the writes here */
