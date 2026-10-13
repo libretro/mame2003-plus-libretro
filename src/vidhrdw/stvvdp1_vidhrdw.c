@@ -16,7 +16,7 @@ the vdp1 draws to the FRAMEBUFFER which is mapped in memory
 data32_t *stv_vdp1_vram;
 data32_t *stv_vdp1_regs;
 extern data32_t *stv_scu;
-/* char shienryu_sprite_kludge;*/
+char shienryu_sprite_kludge;
 /*
 Registers:
 00
@@ -58,14 +58,6 @@ X1 register         |Y1 register               |
 #define SET_CEF_FROM_0_TO_1     if(!(STV_VDP1_CEF))	 stv_vdp1_regs[0x010/4]^=0x00020000
 /**/
 
-/* VDP2 sprite related registers */
-extern data32_t* stv_vdp2_regs;
-
-/* 1800e6 - Colour Ram Address Offset (RBG0, SPRITE) */
-#define STV_VDP2_CRAOFB ((stv_vdp2_regs[0x0e4/4] >> 0)&0x0000ffff)
-#define STV_VDP2_SPCAOS ((STV_VDP2_CRAOFB & 0x0070) >> 4)
-
-
 #include "machine/random.h"
 
 READ32_HANDLER( stv_vdp1_regs_r )
@@ -88,6 +80,10 @@ int stv_vdp1_start ( void )
 
 	memset(stv_vdp1_regs, 0, 0x040000);
 	memset(stv_vdp1_vram, 0, 0x100000);
+
+	/* our colour calculation is broken .. must fix it */
+	shienryu_sprite_kludge = 0;
+	if (!strcmp(Machine->gamedrv->name,"shienryu"))	shienryu_sprite_kludge = 1;
 
 	return 0;
 }
@@ -205,8 +201,6 @@ static struct stv_vdp2_sprite_list
 int stvvdp1_local_x;
 int stvvdp1_local_y;
 
-static int stv_sprite_colormask;
-
 /* we should actually draw to the framebuffer then process that with vdp.. note that if we're drawing
 to the framebuffer we CAN'T frameskip the vdp1 drawing as the hardware can READ the framebuffer
 and if we skip the drawing the content could be incorrect when it reads it, although i have no idea
@@ -229,6 +223,12 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			pix = pix+((stv2_current_sprite.CMDCOLR&0x0ff0));
 			mode = 0;
 			transmask = 0xf;
+
+			if (shienryu_sprite_kludge)
+			{
+				pix += 0x400;
+				pix &= 0x7ff;
+			}
 
 			break;
 		case 0x0008: /* mode 1 16 colour lookup table mode (4bits)*/
@@ -258,6 +258,13 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			{
 				pix=pix2; /* this is messy .. but just ensures that pen 0 isn't drawn*/
 			}
+			if (shienryu_sprite_kludge)
+			{
+				pix &= 0x1ff;
+				pix += 0x400;
+				pix &= 0x7ff;
+			}
+
 
 			break;
 		case 0x0010: /* mode 2 64 colour bank mode (8bits) (character select portraits on hanagumi)*/
@@ -265,7 +272,6 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			mode = 2;
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0fc0);
 			transmask = 0x3f;
-
 			break;
 		case 0x0018: /* mode 3 128 colour bank mode (8bits) (little characters on hanagumi use this mode)*/
 			pix = gfxdata[patterndata+offsetcnt];
@@ -273,14 +279,12 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			transmask = 0x7f;
 			mode = 3;
 		/*	pix = rand();*/
-
 			break;
 		case 0x0020: /* mode 4 256 colour bank mode (8bits) (hanagumi title)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0f00);
 			transmask = 0xff;
 			mode = 4;
-
 			break;
 		case 0x0028: /* mode 5 32,768 colour RGB mode (16bits)*/
 			pix = gfxdata[patterndata+offsetcnt*2+1] | (gfxdata[patterndata+offsetcnt*2]<<8) ;
@@ -309,10 +313,6 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 
 	if (mode != 5) /* mode 0-4 are 'normal'*/
 	{
-		pix &= stv_sprite_colormask;
-		pix += (STV_VDP2_SPCAOS << 8);
-		pix &= 0x7ff;
-		
 		if (pix & transmask)
 		{
 			/* there is probably a better way to do this .. it will probably have to change anyway because we'll be writing to the framebuffer instead */
@@ -331,42 +331,6 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			col = ((col & 0x001f)*0x400) + (col & 0x03e0) + ((col & 0x7c00)/0x400);
 			*dest = col & 0x7fff;
 		}
-	}
-}
-
-static void stv_vdp1_set_sprite_colormask(void)
-{
-	switch( STV_VDP2_SPTYPE )
-	{
-		case 0x0: 
-		case 0x1:
-		case 0x2:
-		case 0x3:
-		case 0x5:
-			stv_sprite_colormask = 0x07ff; 
-			break;
-		case 0x4:
-		case 0x6:
-			stv_sprite_colormask = 0x03ff; 
-			break;
-		case 0x7:
-			stv_sprite_colormask = 0x01ff; 
-			break;
-		case 0x8:
-			stv_sprite_colormask = 0x007f; 
-			break;
-		case 0x9:
-		case 0xa:
-		case 0xb:
-			stv_sprite_colormask = 0x003f; 
-			break;
-		case 0xc:
-		case 0xd:
-		case 0xe:
-		case 0xf:
-			/* shared bits ??*/
-			stv_sprite_colormask = 0x0ff; 
-			break;
 	}
 }
 
@@ -938,8 +902,6 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 	position = 0;
 
 	if (vdp1_sprite_log) logerror ("Sprite List Process START\n");
-	
-	stv_vdp1_set_sprite_colormask();
 
 	vdp1_nest = -1;
 
