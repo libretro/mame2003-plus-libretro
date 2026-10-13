@@ -4402,6 +4402,27 @@ INPUT_PORTS_START ( mp_mazin )
     PORT_DIPSETTING( 0x00, "U.S.A" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START ( mp_addams )
+	GENESIS_PORTS
+	MEGAPLAY_TEST
+	MEGAPLAY_COIN
+	MEGAPLAY_DSWA
+	MEGAPLAY_DSWB
+
+	PORT_START
+	/* DSW C  (per game settings) */
+	PORT_DIPNAME( 0x03, 0x03, "1UP Every" )
+	PORT_DIPSETTING( 0x03, "3 Pickups" )
+	PORT_DIPSETTING( 0x02, "2 Pickups" )
+	PORT_DIPSETTING( 0x01, "1 Pickup" )
+
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
+	PORT_DIPSETTING( 0x0c, "3" )
+	PORT_DIPSETTING( 0x08, "5" )
+	PORT_DIPSETTING( 0x04, "7" )
+	PORT_DIPSETTING( 0x00, "99" )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( aladbl )
 	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
@@ -5024,6 +5045,23 @@ static MACHINE_DRIVER_START( megaplay )
 	MDRV_CPU_PORTS(megaplay_bios_readport,megaplay_bios_writeport)
 	MDRV_SOUND_ADD(SN76496, megatech_sn76489_intf)
 	MDRV_CPU_VBLANK_INT(megatech_irq, 262)
+MACHINE_DRIVER_END
+
+/* The BIOS keeps its credits, bookkeeping and each slot's 256-byte game
+   area (high scores) in battery-backed RAM at Z80 0x6800-0x77ff. */
+static NVRAM_HANDLER( megaplay )
+{
+	if (read_or_write)
+		mame_fwrite(file, ic3_ram, 0x1000);
+	else if (file)
+		mame_fread(file, ic3_ram, 0x1000);
+	else
+		memset(ic3_ram, 0, 0x1000);
+}
+
+static MACHINE_DRIVER_START( megaplay_nvram )
+	MDRV_IMPORT_FROM(megaplay)
+	MDRV_NVRAM_HANDLER(megaplay)
 MACHINE_DRIVER_END
 
 /******************************************************************************
@@ -6119,6 +6157,20 @@ ROM_START( mp_mazin ) /* Mazin Wars */
 	MEGAPLAY_BIOS
 ROM_END
 
+ROM_START( mp_addams ) /* The Addams Family ARCADE (homebrew conversion of the Mega Drive game) */
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "epr-26013.ic1", 0x000000, 0x200000, CRC(87ecace1) SHA1(d6529b4b692a9515ccf6722f26c011660154ae7a) )
+	/* Game Instruction rom copied to 0x300000 - 0x310000 (odd / even bytes equal) */
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* z80 */
+
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* Game Instructions */
+	ROM_LOAD( "epr-15175-20.ic2", 0x000000, 0x08000, CRC(dcfde4e7) SHA1(3f5a1b4de94fad4ccd404b95a53fdb2e1c4773e6) )
+
+	ROM_REGION( 0x28000, REGION_CPU3, 0 ) /* Bios */
+	MEGAPLAY_BIOS
+ROM_END
+
 ROM_START( mp_twc ) /* Tecmo World Cup */
 	ROM_REGION( 0x400000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ep15183.ic2", 0x000000, 0x040000, CRC(8b79b861) SHA1(c72af72840513b82f2562409eccdf13b031bf3c0) )
@@ -6987,3 +7039,4 @@ static DRIVER_INIT (megaplay)
 /* 10 */ GAMEB( 1993, mp_gunhe, megaplay, megaplay, megaplay, mp_gunhe, megaplay, ROT0, "Sega",    "Gunstar Heroes", &megaplay_ctrl, NULL )
 /* 11 */ GAMEB( 1993, mp_mazin, megaplay, megaplay, megaplay, mp_mazin, megaplay, ROT0, "Sega",    "Mazin Wars / Mazin Saga", &megaplay_ctrl, NULL )
 /* ?? */ GAMEB( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "Columns III", &megaplay_ctrl, NULL )
+/* -- */ GAMEB( 2026, mp_addams, megaplay, megaplay, megaplay_nvram, mp_addams, megaplay, ROT0, "hack", "The Addams Family ARCADE (Mega Play)", &megaplay_ctrl, NULL )
