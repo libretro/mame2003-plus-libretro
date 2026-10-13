@@ -3386,12 +3386,14 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Sega MegaPlay */
 	DRIVER( mp_sonic )	/* 01 */
 	DRIVER( mp_gaxe2 )	/* 02 */
+	DRIVER( mp_gslam )  /* 03 */
 	DRIVER( mp_sor2 )   /* 03 */
 	DRIVER( mp_twc )	/* 04 */
 	DRIVER( mp_soni2 )  /* 05 */
 	DRIVER( mp_bio )    /* 06 */
 	DRIVER( mp_shnb3 )  /* 07 */
 	DRIVER( mp_gunhe )  /* 10 */
+	DRIVER( mp_mazin )  /* 11 */
 	DRIVER( mp_col3 )   /* ?? */
 
 	/* Data East "Burger Time hardware" games */

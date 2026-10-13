@@ -248,8 +248,10 @@ extern UINT16 scanbase;
 ******************************************************************************/
 
 /* Mega Play: H-INT/V-INT are cleared by the 68000 interrupt acknowledge
-   (see genesis_irq_ack_callback) instead of timing out */
-static int genesis_vdp_iack;
+   (see genesis_irq_ack_callback) instead of timing out; also selects the
+   corrected HBLANK status bit in vidhrdw/segac2_vidhrdw.c */
+int genesis_vdp_iack;
+void segac2_vdp_set_vblank(void);
 
 /* call this whenever the interrupt state has changed */
 static void update_interrupts(void)
@@ -258,8 +260,20 @@ static void update_interrupts(void)
 
 	/* determine which interrupt is active */
 	if (ym3438_int) level = 2;
-	if (scanline_int) level = 4;
-	if (vblank_int) level = 6;
+	if (genesis_vdp_iack)
+	{
+		/* Mega Play: a pending H-INT/V-INT only drives the line while it is
+		   enabled in VDP register 0/1, as on the real 315-5313 (Mazin Wars masks
+		   H-INT this way while its V-INT handler borrows a5/a6, which its H-INT
+		   handler jumps through) */
+		if (scanline_int && (segac2_vdp_regs[0] & 0x10)) level = 4;
+		if (vblank_int && (segac2_vdp_regs[1] & 0x20)) level = 6;
+	}
+	else
+	{
+		if (scanline_int) level = 4;
+		if (vblank_int) level = 6;
+	}
 
 	/* either set or clear the appropriate lines */
 	if (level)
@@ -313,18 +327,35 @@ static void vdp_int6_off(int param)
 
 
 /* interrupt callback to generate the VBLANK interrupt */
+/* Mega Play: V-INT raised shortly after the VBLANK status bit */
+static void genesis_vint_delayed(int param)
+{
+	/* the pending flag is always set; update_interrupts() gates it with R1 */
+	vblank_int = 1;
+	update_interrupts();
+}
+
+/* called by the VDP after a write to R0/R1 (Mega Play only) */
+void segac2_vdp_irq_update(void)
+{
+	if (genesis_vdp_iack)
+		update_interrupts();
+}
+
 static INTERRUPT_GEN( vblank_interrupt )
 {
-	/* with IACK emulation V-INT is held until the 68000 takes it, so it is not
-	   lost while an H-INT handler has the interrupts masked; and, as on the
-	   real 315-5313, it is only raised when enabled in VDP register 1 (bit 5) */
+	/* with IACK emulation V-INT stays pending until the 68000 takes it, so it
+	   is not lost while an H-INT handler has the interrupts masked; as on the
+	   real 315-5313 it only drives the 68000 while enabled in VDP register 1 */
 	if (genesis_vdp_iack)
 	{
-		if (segac2_vdp_regs[1] & 0x20)
-		{
-			vblank_int = 1;
-			update_interrupts();
-		}
+		/* the VBLANK status bit rises first and V-INT follows about 788 master
+		   clocks later (~112 68000 cycles): code polling the status bit gets to
+		   see VBLANK before the interrupt takes over. Mazin Wars depends on it:
+		   its V-INT handler outlasts the blanking period, so without the gap its
+		   main loop never sees VBLANK and hangs in a fade loop after coin-up. */
+		segac2_vdp_set_vblank();
+		timer_set(TIME_IN_USEC(788.0 * 1000000.0 / 53693100.0), 0, genesis_vint_delayed);
 		return;
 	}
 
@@ -419,8 +450,8 @@ static int genesis_irq_ack_callback(int irqline)
 		vblank_int = 0;
 
 	if (ym3438_int) level = 2;
-	if (scanline_int) level = 4;
-	if (vblank_int) level = 6;
+	if (scanline_int && (segac2_vdp_regs[0] & 0x10)) level = 4;
+	if (vblank_int && (segac2_vdp_regs[1] & 0x20)) level = 6;
 
 	/* drop the line now (an immediate clear cannot re-enter the CPU core),
 	   then re-assert whatever is still pending */
@@ -1661,7 +1692,12 @@ READ16_HANDLER ( megaplay_genesis_io_r )
 				return_value = readinputport(1) & (genesis_io_ram[4]^0xff);
 			else
 			{
-				return_value = readinputport(2) & (genesis_io_ram[4]^0xff);
+				/* the pad's Start line is driven by the BIOS (bit 4 of $6203,
+				   active low), not by the Start button: the BIOS reads the button
+				   on its own port and passes it on only when the game may start
+				   (Mazin Wars expects exactly this). Same as current MAME. */
+				return_value = (readinputport(2) & ~0x20 & 0xff) | ((bios_bank & 0x10) ? 0x20 : 0x00);
+				return_value &= (genesis_io_ram[4]^0xff);
 				return_value |= readinputport(1) & 0x03;
 			}
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
@@ -1674,7 +1710,9 @@ READ16_HANDLER ( megaplay_genesis_io_r )
 				return_value = readinputport(3) & (genesis_io_ram[5]^0xff);
 			else
 			{
-				return_value = readinputport(4) & (genesis_io_ram[5]^0xff);
+				/* P2 Start from the BIOS too (bit 5 of $6203) */
+				return_value = (readinputport(4) & ~0x20 & 0xff) | ((bios_bank & 0x20) ? 0x20 : 0x00);
+				return_value &= (genesis_io_ram[5]^0xff);
 				return_value |= readinputport(3) & 0x03;
 			}
 			return_value = (genesis_io_ram[offset] & 0x80) | return_value;
@@ -4316,6 +4354,54 @@ INPUT_PORTS_START ( mp_gunhe )
     PORT_DIPSETTING( 0x0c, "Normal" )
 INPUT_PORTS_END
 
+INPUT_PORTS_START ( mp_gslam )
+	GENESIS_PORTS
+	MEGAPLAY_TEST
+	MEGAPLAY_COIN
+	MEGAPLAY_DSWA
+	MEGAPLAY_DSWB
+
+	PORT_START
+	/* DSW C  (per game settings) */
+	PORT_DIPNAME( 0x07, 0x04, "Game Time" )
+    PORT_DIPSETTING( 0x07, "1:30" )
+    PORT_DIPSETTING( 0x06, "2:00" )
+    PORT_DIPSETTING( 0x05, "2:30" )
+    PORT_DIPSETTING( 0x04, "3:00" )
+    PORT_DIPSETTING( 0x03, "3:30" )
+    PORT_DIPSETTING( 0x02, "4:00" )
+    PORT_DIPSETTING( 0x01, "4:30" )
+    PORT_DIPSETTING( 0x00, "5:00" )
+
+	PORT_DIPNAME( 0x08, 0x08, "2P-Play Continue" )
+    PORT_DIPSETTING( 0x00, "1 Credit" )
+    PORT_DIPSETTING( 0x08, "2 Credits" )
+INPUT_PORTS_END
+
+INPUT_PORTS_START ( mp_mazin )
+	GENESIS_PORTS
+	MEGAPLAY_TEST
+	MEGAPLAY_COIN
+	MEGAPLAY_DSWA
+	MEGAPLAY_DSWB
+
+	PORT_START
+	/* DSW C  (per game settings) */
+	PORT_DIPNAME( 0x03, 0x01, "Initial Player" )
+    PORT_DIPSETTING( 0x02, "1" )
+    PORT_DIPSETTING( 0x03, "2" )
+    PORT_DIPSETTING( 0x01, "3" )
+    PORT_DIPSETTING( 0x00, "4" )
+
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR ( Difficulty ) )
+    PORT_DIPSETTING( 0x04, "Normal" )
+    PORT_DIPSETTING( 0x00, "Hard" )
+
+	PORT_DIPNAME( 0x08, 0x08, "Title" )
+    PORT_DIPSETTING( 0x08, "EUROPE" )
+    PORT_DIPSETTING( 0x00, "U.S.A" )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( aladbl )
 	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
@@ -6004,6 +6090,35 @@ ROM_START( mp_gunhe ) /* Gunstar Heroes */
 	MEGAPLAY_BIOS
 ROM_END
 
+ROM_START( mp_gslam ) /* Grand Slam */
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "epr-15181.ic2", 0x000000, 0x040000, CRC(642437c1) SHA1(cbf88e196c04b6d886bf9642b69bf165045510fe) )
+	ROM_LOAD16_BYTE( "epr-15180.ic1", 0x000001, 0x040000, CRC(73bb48f1) SHA1(981b64f834d5618599352f5fad683bf232390ba3) )
+	/* Game Instruction rom copied to 0x300000 - 0x310000 (odd / even bytes equal) */
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* z80 */
+
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* Game Instructions */
+	ROM_LOAD( "epr-15175-03.ic3", 0x000000, 0x08000, CRC(70ea1aec) SHA1(0d9d82a1f8aa51d02707f7b343e7cfb6591efccd) )
+
+	ROM_REGION( 0x28000, REGION_CPU3, 0 ) /* Bios */
+	MEGAPLAY_BIOS
+ROM_END
+
+ROM_START( mp_mazin ) /* Mazin Wars */
+	ROM_REGION( 0x400000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "mpr-16460.ic1", 0x000000, 0x100000, CRC(e9635a83) SHA1(ab3afa11656f0ae3a50c957dce012fb15d3992e0) )
+	/* Game Instruction rom copied to 0x300000 - 0x310000 (odd / even bytes equal) */
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* z80 */
+
+	ROM_REGION( 0x8000, REGION_USER1, 0 ) /* Game Instructions */
+	ROM_LOAD( "epr-15175-11.ic2", 0x000000, 0x08000, CRC(bb651120) SHA1(81cb736f2732373e260dde162249c1d29a3489c3) )
+
+	ROM_REGION( 0x28000, REGION_CPU3, 0 ) /* Bios */
+	MEGAPLAY_BIOS
+ROM_END
+
 ROM_START( mp_twc ) /* Tecmo World Cup */
 	ROM_REGION( 0x400000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "ep15183.ic2", 0x000000, 0x040000, CRC(8b79b861) SHA1(c72af72840513b82f2562409eccdf13b031bf3c0) )
@@ -6863,10 +6978,12 @@ static DRIVER_INIT (megaplay)
 /* -- */ GAMEBX(1993, megaplay, 0,        megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "MegaPlay: BIOS", NOT_A_DRIVER, &generic_ctrl, NULL )
 /* 01 */ GAMEB( 1993, mp_sonic, megaplay, megaplay, megaplay, mp_sonic, megaplay, ROT0, "Sega",    "Sonic The Hedgehog", &megaplay_ctrl, NULL  )
 /* 02 */ GAMEB( 1993, mp_gaxe2, megaplay, megaplay, megaplay, mp_gaxe2, megaplay, ROT0, "Sega",    "Golden Axe II", &megaplay_ctrl, NULL  )
+/* 03 */ GAMEB( 1993, mp_gslam, megaplay, megaplay, megaplay, mp_gslam, megaplay, ROT0, "Sega",    "Grand Slam", &megaplay_ctrl, NULL )
 /* 03 */ GAMEB( 1993, mp_sor2,  megaplay, megaplay, megaplay, mp_sor2,	megaplay, ROT0, "Sega",    "Streets Of Rage II", &megaplay_ctrl, NULL  )
 /* 04 */ GAMEB( 1993, mp_twc,   megaplay, megaplay, megaplay, mp_twc,	  megaplay, ROT0, "Sega",    "Tecmo World Cup", &megaplay_ctrl, NULL  )
 /* 05 */ GAMEB( 1993, mp_soni2, megaplay, megaplay, megaplay, mp_soni2, megaplay, ROT0, "Sega",    "Sonic The Hedgehog 2", &megaplay_ctrl, NULL  )
 /* 06 */ GAMEB( 1993, mp_bio,   megaplay, megaplay, megaplay, mp_bio,	  megaplay, ROT0, "Sega",    "Bio-Hazard Battle", &megaplay_ctrl, NULL  )
 /* 07 */ GAMEB( 1993, mp_shnb3, megaplay, megaplay, megaplay, mp_shnb3, megaplay, ROT0, "Sega",    "Shinobi III", &megaplay_ctrl, NULL )
 /* 10 */ GAMEB( 1993, mp_gunhe, megaplay, megaplay, megaplay, mp_gunhe, megaplay, ROT0, "Sega",    "Gunstar Heroes", &megaplay_ctrl, NULL )
+/* 11 */ GAMEB( 1993, mp_mazin, megaplay, megaplay, megaplay, mp_mazin, megaplay, ROT0, "Sega",    "Mazin Wars / Mazin Saga", &megaplay_ctrl, NULL )
 /* ?? */ GAMEB( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "Columns III", &megaplay_ctrl, NULL )

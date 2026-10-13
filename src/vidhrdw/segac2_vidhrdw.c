@@ -300,6 +300,13 @@ static void vblank_end(int param)
 }
 
 
+/* Mega Play: raise the VBLANK status bit at the start of blanking, ahead of
+   V-INT (VIDEO_EOF only runs after the screen update) */
+void segac2_vdp_set_vblank(void)
+{
+	internal_vblank = 1;
+}
+
 /* end-of-frame callback to mark the start of VBLANK */
 VIDEO_EOF( segac2 )
 {
@@ -686,8 +693,21 @@ static int vdp_control_r(void)
 		status |= 0x0008;
 
 	/* set the HBLANK bit */
-	if (beampos < Machine->visible_area.min_x || beampos > Machine->visible_area.max_x)
-		status |= 0x0004;
+	{
+		extern int genesis_vdp_iack;
+		if (genesis_vdp_iack)
+		{
+			/* cpu_gethorzbeampos() runs 0..screen_width-1 over the whole line, so in
+			   H40 mode (visible area 0-319) the old test below was never true and
+			   HBLANK never appeared. Mega Play: HBLANK for the last fifth of the line
+			   (the same window the old test gave in H32 mode). Grand Slam waits on
+			   HBLANK edges to send one long per line and hung forever. */
+			if (beampos >= (Machine->drv->screen_width * 4) / 5)
+				status |= 0x0004;
+		}
+		else if (beampos < Machine->visible_area.min_x || beampos > Machine->visible_area.max_x)
+			status |= 0x0004;
+	}
 
 	return (status);
 }
@@ -740,6 +760,13 @@ static void vdp_register_w(int data)
 		force_partial_update((cpu_getscanline())+ scanbase);
 
 	segac2_vdp_regs[regnum] = regdat;
+
+	/* interrupt enables changed: re-evaluate the 68000 IRQ line (Mega Play) */
+	if (regnum <= 1)
+	{
+		extern void segac2_vdp_irq_update(void);
+		segac2_vdp_irq_update();
+	}
 
 	/* For quite a few of the registers its a good idea to set a couple of variable based
 	   upon the writes here */
