@@ -52,6 +52,7 @@ WRITE_HANDLER( seibu_main_data_w );
 MACHINE_INIT( seibu_sound_1 );
 MACHINE_INIT( seibu_sound_2 );
 void seibu_sound_decrypt(int cpu_region,int length);
+void seibu_sound_state_save_register(void);
 
 void seibu_adpcm_decrypt(int region);
 WRITE_HANDLER( seibu_adpcm_adr_1_w );
