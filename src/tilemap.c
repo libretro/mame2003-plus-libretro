@@ -2806,7 +2806,20 @@ static UINT8 TRANSP(HandleTransparencyPen)(struct tilemap *tilemap, UINT32 x0, U
 				x = x0+(yx%MAX_TILESIZE);
 				y = y0+(yx/MAX_TILESIZE);
 				*(x+(UINT16 *)pixmap->line[y]) = PAL_GET(pen);
-				((UINT8 *)transparency_bitmap->line[y])[x] = (pen==transparent_pen)?code_transparent:code_opaque;
+				/* Both pixels in a packed byte contribute to the per-tile
+				 * classification. Ignoring the high nibble can classify a
+				 * mixed tile as wholly opaque/transparent, bypassing its mask
+				 * and leaving solid blocks over the layers underneath. */
+				if( pen==transparent_pen )
+				{
+					((UINT8 *)transparency_bitmap->line[y])[x] = code_transparent;
+					bWhollyOpaque = 0;
+				}
+				else
+				{
+					((UINT8 *)transparency_bitmap->line[y])[x] = code_opaque;
+					bWhollyTransparent = 0;
+				}
 			}
 			pPenData += pitch/2;
 		}
