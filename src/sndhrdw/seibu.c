@@ -34,6 +34,7 @@
 
 #include "driver.h"
 #include "sndhrdw/seibu.h"
+#include "state.h"
 
 
 
@@ -202,6 +203,8 @@ WRITE_HANDLER( seibu_adpcm_ctl_2_w )
 /***************************************************************************/
 
 static int sound_cpu;
+static int seibu_irq1, seibu_irq2;
+static int seibu_bank_latch;
 
 enum
 {
@@ -214,35 +217,33 @@ enum
 
 static void update_irq_lines(int param)
 {
-	static int irq1,irq2;
-
 	switch(param)
 	{
 		case VECTOR_INIT:
-			irq1 = irq2 = 0xff;
+			seibu_irq1 = seibu_irq2 = 0xff;
 			break;
 
 		case RST10_ASSERT:
-			irq1 = 0xd7;
+			seibu_irq1 = 0xd7;
 			break;
 
 		case RST10_CLEAR:
-			irq1 = 0xff;
+			seibu_irq1 = 0xff;
 			break;
 
 		case RST18_ASSERT:
-			irq2 = 0xdf;
+			seibu_irq2 = 0xdf;
 			break;
 
 		case RST18_CLEAR:
-			irq2 = 0xff;
+			seibu_irq2 = 0xff;
 			break;
 	}
 
-	if ((irq1 & irq2) == 0xff)	/* no IRQs pending */
+	if ((seibu_irq1 & seibu_irq2) == 0xff)	/* no IRQs pending */
 		cpu_set_irq_line(sound_cpu,0,CLEAR_LINE);
 	else	/* IRQ pending */
-		cpu_set_irq_line_and_vector(sound_cpu,0,ASSERT_LINE,irq1 & irq2);
+		cpu_set_irq_line_and_vector(sound_cpu,0,ASSERT_LINE,seibu_irq1 & seibu_irq2);
 }
 
 WRITE_HANDLER( seibu_irq_clear_w )
@@ -306,8 +307,31 @@ static int main2sub_pending,sub2main_pending;
 WRITE_HANDLER( seibu_bank_w )
 {
 	UINT8 *rom = memory_region(REGION_CPU1+sound_cpu);
+	seibu_bank_latch = data & 1;
+	cpu_setbank(1,rom + 0x10000 + 0x8000 * seibu_bank_latch);
+}
 
-	cpu_setbank(1,rom + 0x10000 + 0x8000 * (data & 1));
+static void seibu_sound_state_postload(void)
+{
+	UINT8 *rom = memory_region(REGION_CPU1 + sound_cpu);
+	cpu_setbank(1, rom + 0x10000 + 0x8000 * (seibu_bank_latch & 1));
+	if ((seibu_irq1 & seibu_irq2) == 0xff)
+		cpu_set_irq_line(sound_cpu, 0, CLEAR_LINE);
+	else
+		cpu_set_irq_line_and_vector(sound_cpu, 0, ASSERT_LINE,
+			seibu_irq1 & seibu_irq2);
+}
+
+void seibu_sound_state_save_register(void)
+{
+	state_save_register_UINT8("seibu", 0, "main2sub", main2sub, 2);
+	state_save_register_UINT8("seibu", 0, "sub2main", sub2main, 2);
+	state_save_register_int("seibu", 0, "main2sub_pending", &main2sub_pending);
+	state_save_register_int("seibu", 0, "sub2main_pending", &sub2main_pending);
+	state_save_register_int("seibu", 0, "bank", &seibu_bank_latch);
+	state_save_register_int("seibu", 0, "irq1", &seibu_irq1);
+	state_save_register_int("seibu", 0, "irq2", &seibu_irq2);
+	state_save_register_func_postload(seibu_sound_state_postload);
 }
 
 WRITE_HANDLER( seibu_coin_w )
