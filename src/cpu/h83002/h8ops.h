@@ -119,6 +119,7 @@ int h8_3002_execute(int cycles)
 	UINT16 opcode=0;
 
 	h8->cyccnt = cycles;
+	h8_idle_since = -1;		/* no pass seen yet in this timeslice */
 
 	h8_check_irqs(h8);
 
@@ -129,6 +130,13 @@ int h8_3002_execute(int cycles)
 		CALL_MAME_DEBUG;
 
 		opcode = h8_readop16(h8, h8->pc);
+		if (h8_idle_end)
+		{
+			if ((opcode & 0xfff0) == 0x6a20)		/* mov.b @aa:24, Rd */
+				h8_idle_check(h8);
+			if (h8_idle_since >= 0)
+				h8_idle_since++;
+		}
 		h8->pc += 2;
 
 		switch((opcode>>12) & 0xf)

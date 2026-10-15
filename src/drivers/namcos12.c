@@ -662,6 +662,8 @@ static DRIVER_INIT( namcos12_h8 )
 	state_save_register_int( "namcos12", 0, "s12_setnum", &s12_setnum );
 
 	h8_3002_set_io_handlers( s12_h8_io_r, s12_h8_io_w );
+	/* the sound program polls the shared RAM in "mov.b @aa:24 / bne" loops */
+	h8_3002_set_idle_poll( 0x080000, 0x08ffff );
 	s12_boot_hack = 0;
 }
 

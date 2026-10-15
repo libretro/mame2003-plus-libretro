@@ -93,6 +93,15 @@ typedef void (*h8_io_write_func)(int port, data8_t data);
 
 /* hook the on-chip ports/ADC/serial to the driver (call before reset) */
 void h8_3002_set_io_handlers(h8_io_read_func readfn, h8_io_write_func writefn);
+/*
+	Speedup (end 0 = off): memory in start-end only changes outside the
+	H8's timeslice (other CPUs, the H8's own interrupts) and reading it has
+	no side effects. A polling loop on it, "mov.b @aa:24, Rd / bne (or
+	beq) back", leaves the same state on every pass, so once one pass has
+	run in a timeslice the whole passes that still fit are skipped:
+	registers, memory and cycles end up exactly as if they had run.
+*/
+void h8_3002_set_idle_poll(UINT32 start, UINT32 end);
 
 extern int h8_3002_ICount;
 

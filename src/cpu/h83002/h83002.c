@@ -445,6 +445,41 @@ static void h8_check_irqs(h83xx_state *h8)
 
 #define U64(x) x##ULL
 #define H8_ADDR_MASK 0xffffff
+static UINT32 h8_idle_start, h8_idle_end;		/* polled memory (end 0 = off) */
+static UINT32 h8_idle_pc;						/* loop start last reached */
+static int h8_idle_since;						/* instructions since then */
+static int h8_idle_cycles;						/* cyccnt then */
+
+void h8_3002_set_idle_poll(UINT32 start, UINT32 end)
+{
+	h8_idle_start = start;
+	h8_idle_end = end;
+}
+
+/* at "mov.b @aa:24, Rd": the start of a polling loop? skip passes */
+static void h8_idle_check(h83xx_state *h8)
+{
+	UINT32 address = ((UINT32)h8_readop16(h8, h8->pc + 2) << 16) | h8_readop16(h8, h8->pc + 4);
+	UINT16 branch = h8_readop16(h8, h8->pc + 6);
+
+	address &= 0xffffff;
+	if (address < h8_idle_start || address > h8_idle_end || (branch != 0x46f8 && branch != 0x47f8))
+	{
+		h8_idle_since = -1;
+		return;
+	}
+	/* one whole pass just ran: skip the passes that still fit */
+	if (h8->pc == h8_idle_pc && h8_idle_since == 2)
+	{
+		int pass = h8_idle_cycles - h8->cyccnt;
+		if (pass > 0 && h8->cyccnt > pass)
+			h8->cyccnt -= ((h8->cyccnt - 1) / pass) * pass;
+	}
+	h8_idle_pc = h8->pc;
+	h8_idle_since = 0;
+	h8_idle_cycles = h8->cyccnt;
+}
+
 #include "h8ops.h"
 
 /***************************************************************************
@@ -714,6 +749,7 @@ void h8_3002_reset(void *param)
 
 void h8_3002_exit(void)
 {
+	h8_idle_end = 0;
 }
 
 /* single instance: the state lives in h8state, contexts are not swapped */
