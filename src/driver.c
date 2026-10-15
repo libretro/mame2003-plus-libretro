@@ -2695,7 +2695,8 @@ V-V                           TP-027
 	DRIVER( soulclbr )	/* Soul Calibur (SOC1/VER.A) */
 	DRIVER( ehrgeiz )	/* Ehrgeiz (EG3/VER.A) */
 	DRIVER( mdhorse )	/* Derby Quiz My Dream Horse (MDH1/VER.A) */
-	DRIVER( fgtlayer )	/* Fighting Layer (FTL1/VER.A) */
+	DRIVER( fgtlayer )	/* Fighting Layer (Asia, FTL3/VER.A) */
+	DRIVER( fgtlayerja )	/* Fighting Layer (Japan, FTL0/VER.A) */
 	DRIVER( pacapp )	/* Paca Paca Passion (PPP1/VERA) */
 	DRIVER( sws99 )		/* Super World Stadium '99 (SS91/VER.A) */
 	DRIVER( tekkentt )	/* Tekken Tag Tournament (TEG3/VER.B) */

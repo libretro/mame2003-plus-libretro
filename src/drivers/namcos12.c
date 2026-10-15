@@ -21,7 +21,7 @@ tekken3    Tekken 3 (TET2/VER.E1)                  COH 700             ?        
 soulclbr   Soul Calibur (SOC1/VER.A)               COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M5F2           KC020
 ehrgeiz    Ehrgeiz (EG3/VER.A)                     COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M4F6           KC021
 mdhorse    Derby Quiz My Dream Horse (MDH1/VER.A)  COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M10X64         KC035
-fgtlayer   Fighting Layer (FTL1/VER.A)             COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M5F4           KC037
+fgtlayer   Fighting Layer (FTL3/VER.A)             COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M5F4           KC037
 pacapp     Paca Paca Passion (PPP1/VER.A)          COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M8F2           KC038
 sws99      Super World Stadium '99 (SS91/VER.A)    COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M5F4           KC043
 tekkentt   Tekken Tag Tournament (TEG3/VER.B)      COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M8F4           KC044
@@ -208,6 +208,7 @@ MEMORY_END
    in System 12, bit 0 of H8/3002 port A is connected to it's chip enable
    the actual I/O takes place through the H8/3002's serial port B. */
 static int s12_porta = 0, s12_rtcstate = 0;
+static int s12_boot_hack = 0;
 static int s12_lastpB = 0x50, s12_setstate = 0, s12_setnum = 0, s12_settings[ 8 ];
 
 static data8_t make_bcd( data8_t data )
@@ -447,7 +448,6 @@ static DRIVER_INIT( namcos12 )
 
 	/* kludge: some kind of protection? */
 	if( strcmp( Machine->gamedrv->name, "tekkentt" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "fgtlayer" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "golgo13" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "mrdrillr" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "pacapp" ) == 0 )
@@ -475,6 +475,13 @@ static DRIVER_INIT( namcos12_h8 )
 	state_save_register_int( "namcos12", 0, "s12_setnum", &s12_setnum );
 
 	h8_3002_set_io_handlers( s12_h8_io_r, s12_h8_io_w );
+	s12_boot_hack = 0;
+}
+
+static DRIVER_INIT( namcos12_h8b )
+{
+	init_namcos12_h8();
+	s12_boot_hack = 1;
 }
 
 MACHINE_INIT( namcos12 )
@@ -491,6 +498,13 @@ MACHINE_INIT( namcos12_h8 )
 	s12_lastpB = 0x50;
 	s12_setstate = 0;
 	s12_setnum = 0;
+
+	if( s12_boot_hack )
+	{
+		/* 12 bytes in ram are checked early in the boot sequence, how they get
+		   into memory is not currently known (from current MAME, coh700b) */
+		memcpy( memory_region( REGION_CPU1 ) + 0x10000, memory_region( REGION_USER2 ) + 0x20280, 12 );
+	}
 }
 
 static MACHINE_DRIVER_START( coh700 )
@@ -605,6 +619,54 @@ INPUT_PORTS_START( namcos12_h8 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+/* Tekken 3: LP/RP on button 1/2, LK/RK on the button 4/5 pins */
+INPUT_PORTS_START( tekken3 )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -738,24 +800,49 @@ ROM_START( fgtlayer )
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
 
 	ROM_REGION32_LE( 0x00400000, REGION_USER2, 0 ) /* main prg */
-	ROM_LOAD16_BYTE( "ftl1vera.2e", 0x0000000, 0x200000, CRC(f4156e79) SHA1(cedb917940be8c74fa4ddb48213ce6917444e306) )
-	ROM_LOAD16_BYTE( "ftl1vera.2j", 0x0000001, 0x200000, CRC(c65b57c0) SHA1(0051aa46d09fbe9d896ae5f534e21955373f1d46) )
+	ROM_LOAD16_BYTE( "ftl3vera.2e", 0x0000000, 0x200000, CRC(17c23471) SHA1(22b5a25569c085f059c1c846cf628a1f140035e9) )
+	ROM_LOAD16_BYTE( "ftl3vera.2j", 0x0000001, 0x200000, CRC(1626465d) SHA1(941e7f8fbbaa232aab10a52aba1c462b4c91bb71) )
 
 	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
-	ROM_LOAD(        "ftl1rm0.9",   0x0000000, 0x800000, CRC(e33ce365) SHA1(f7e5b98d2e8e5f233265909477c84331f016ebfb) )
-	ROM_LOAD(        "ftl1rm1.10",  0x0800000, 0x800000, CRC(a1ec7d08) SHA1(e693a0b16235c44d4165b2f53dc25d5288297c27) )
-	ROM_LOAD(        "ftl1rm2.11",  0x1000000, 0x800000, CRC(204be858) SHA1(95b22b678b7d11b0ec907698c18cebd84437c656) )
+	ROM_LOAD(        "ftl1rom0.9",  0x0000000, 0x800000, CRC(e33ce365) SHA1(f7e5b98d2e8e5f233265909477c84331f016ebfb) )
+	ROM_LOAD(        "ftl1rom1.10", 0x0800000, 0x800000, CRC(a1ec7d08) SHA1(e693a0b16235c44d4165b2f53dc25d5288297c27) )
+	ROM_LOAD(        "ftl1rom2.11", 0x1000000, 0x800000, CRC(204be858) SHA1(95b22b678b7d11b0ec907698c18cebd84437c656) )
 	ROM_LOAD16_BYTE( "ftl1fl3l.7",  0x1800000, 0x200000, CRC(e4fb01e1) SHA1(c7883e86afb58412281a317bfdf62a21488421be) )
 	ROM_LOAD16_BYTE( "ftl1fl3h.8",  0x1800001, 0x200000, CRC(67a5c56f) SHA1(6f0a4f93b4975b24efb26c3dd47b791c92c55fbf) )
 	ROM_LOAD16_BYTE( "ftl1fl4l.5",  0x1c00000, 0x200000, CRC(8039242c) SHA1(9c3f9637d7cd0c004c0c39aee815eed228ebad20) )
 	ROM_LOAD16_BYTE( "ftl1fl4h.6",  0x1c00001, 0x200000, CRC(5ad59726) SHA1(b3a68f7ba2052b99407a5423223202001f2a4f67) )
 
-	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg */
-	ROM_LOAD( "ftl1vera.11s", 0x0000000, 0x080000, CRC(e3f957cd) SHA1(1c7f2033025fb9c40654cff26d78697baf697c59) )
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "ftl1vera.11s", 0x0000000, 0x080000, CRC(e3f957cd) SHA1(1c7f2033025fb9c40654cff26d78697baf697c59) )
 
-	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples */
-	ROM_LOAD( "ftl1wav0.2",   0x0000000, 0x800000, CRC(ee009a2b) SHA1(c332bf59917b2673d7acb864bf92d25d74a350b6) )
-	ROM_LOAD( "ftl1wav1.1",   0x0800000, 0x800000, CRC(a54a89cd) SHA1(543b47c6442f7a78e26992b041235a91d719bb89) )
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "ftl1wave0.2",  0x0000000, 0x800000, CRC(ee009a2b) SHA1(c332bf59917b2673d7acb864bf92d25d74a350b6) )
+	ROM_LOAD( "ftl1wave1.1",  0x0800000, 0x800000, CRC(a54a89cd) SHA1(543b47c6442f7a78e26992b041235a91d719bb89) )
+ROM_END
+
+ROM_START( fgtlayerja )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x00400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "ftl0vera.2e", 0x0000000, 0x200000, CRC(f4156e79) SHA1(cedb917940be8c74fa4ddb48213ce6917444e306) )
+	ROM_LOAD16_BYTE( "ftl0vera.2j", 0x0000001, 0x200000, CRC(c65b57c0) SHA1(0051aa46d09fbe9d896ae5f534e21955373f1d46) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "ftl1rom0.9",  0x0000000, 0x800000, CRC(e33ce365) SHA1(f7e5b98d2e8e5f233265909477c84331f016ebfb) )
+	ROM_LOAD(        "ftl1rom1.10", 0x0800000, 0x800000, CRC(a1ec7d08) SHA1(e693a0b16235c44d4165b2f53dc25d5288297c27) )
+	ROM_LOAD(        "ftl1rom2.11", 0x1000000, 0x800000, CRC(204be858) SHA1(95b22b678b7d11b0ec907698c18cebd84437c656) )
+	ROM_LOAD16_BYTE( "ftl1fl3l.7",  0x1800000, 0x200000, CRC(e4fb01e1) SHA1(c7883e86afb58412281a317bfdf62a21488421be) )
+	ROM_LOAD16_BYTE( "ftl1fl3h.8",  0x1800001, 0x200000, CRC(67a5c56f) SHA1(6f0a4f93b4975b24efb26c3dd47b791c92c55fbf) )
+	ROM_LOAD16_BYTE( "ftl1fl4l.5",  0x1c00000, 0x200000, CRC(8039242c) SHA1(9c3f9637d7cd0c004c0c39aee815eed228ebad20) )
+	ROM_LOAD16_BYTE( "ftl1fl4h.6",  0x1c00001, 0x200000, CRC(5ad59726) SHA1(b3a68f7ba2052b99407a5423223202001f2a4f67) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "ftl1vera.11s", 0x0000000, 0x080000, CRC(e3f957cd) SHA1(1c7f2033025fb9c40654cff26d78697baf697c59) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "ftl1wave0.2",  0x0000000, 0x800000, CRC(ee009a2b) SHA1(c332bf59917b2673d7acb864bf92d25d74a350b6) )
+	ROM_LOAD( "ftl1wave1.1",  0x0800000, 0x800000, CRC(a54a89cd) SHA1(543b47c6442f7a78e26992b041235a91d719bb89) )
 ROM_END
 
 ROM_START( golgo13 )
@@ -981,12 +1068,13 @@ ROM_START( tekkentt )
 	ROM_LOAD( "teg3wav1.12",  0x0800000, 0x800000, CRC(dbc74fff) SHA1(601b7e7361ea744b34e3fa1fc39d88641de7f4c6) )
 ROM_END
 
-GAMEX( 1997, tekken3,   0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Tekken 3 (World, TET2/VER.E1)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, tekken3je1, tekken3, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Tekken 3 (Japan, TET1/VER.E1)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, tekken3,   0,        coh700s, tekken3, namcos12_h8, ROT0, "Namco",         "Tekken 3 (World, TET2/VER.E1)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, tekken3je1, tekken3, coh700s, tekken3, namcos12_h8, ROT0, "Namco",         "Tekken 3 (Japan, TET1/VER.E1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, soulclbr,  0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Soul Calibur (SOC1-VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1998, ehrgeiz,   0,        coh700, namcos12, namcos12, ROT0, "Square/Namco",  "Ehrgeiz (EG3-VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1998, mdhorse,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Derby Quiz My Dream Horse (MDH1-VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1998, fgtlayer,  0,        coh700, namcos12, namcos12, ROT0, "Arika/Namco",   "Fighting Layer (FTL1-VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1998, fgtlayer,  0,        coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Asia, FTL3/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, fgtlayerja, fgtlayer, coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Japan, FTL0/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, pacapp,    0,        coh700, namcos12, namcos12, ROT0, "Produce/Namco", "Paca Paca Passion (PPP1-VERA)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1999, sws99,     0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Super World Stadium '99 (SS91-VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1999, tekkentt,  0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Tekken Tag Tournament (TEG3-VER.B)", GAME_NOT_WORKING | GAME_NO_SOUND )
