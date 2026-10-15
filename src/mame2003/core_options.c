@@ -10,7 +10,7 @@
 #include "driver.h"
 #include <libretro.h>
 #include <string/stdstring.h>
-#if (HAS_R4600 || HAS_R5000)
+#if (HAS_R4600)
 #include "cpu/mips/mips3.h"
 #endif
 
@@ -758,7 +758,7 @@ static struct retro_core_option_v2_definition option_def_mips3_dynarec = {
    APPNAME"_mips3_dynarec",
    "MIPS3 Dynarec",
    NULL,
-   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
+   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct, Killer Instinct 2). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
    NULL,
    NULL,
    {
@@ -939,7 +939,7 @@ static void set_variables(void)
          break;
       case OPT_MIPS3_DYNAREC:
          if(!options.content_flags[CONTENT_MIPS3])
-           continue; /* only offered for games with a MIPS III CPU */
+           continue; /* only offered for the games that use the recompiler */
          break;
       case OPT_NEOGEO_BIOS:
           if(!options.content_flags[CONTENT_NEOGEO])
@@ -1347,23 +1347,13 @@ void set_content_flags(void)
       }
   }
 
-  /************ DRIVERS WITH A MIPS III CPU (recompiler option) ************/
-  for( i = 0; i < MAX_CPU && Machine->drv->cpu[i].cpu_type; i++ )
-  {
-    switch (Machine->drv->cpu[i].cpu_type)
-    {
+  /************ DRIVERS THAT USE THE MIPS III RECOMPILER ************/
+  /* only the Killer Instinct driver enables it (Seattle games do not), */
+  /* and the option means nothing where it is compiled out */
 #if (HAS_R4600)
-      case CPU_R4600BE: case CPU_R4600LE:
+  if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && mips3_jit_available())
+    options.content_flags[CONTENT_MIPS3] = true;
 #endif
-#if (HAS_R5000)
-      case CPU_R5000BE: case CPU_R5000LE:
-#endif
-        /* the dynarec option means nothing where it is compiled out */
-        if (mips3_jit_available())
-          options.content_flags[CONTENT_MIPS3] = true;
-        break;
-    }
-  }
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE
