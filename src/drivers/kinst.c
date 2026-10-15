@@ -202,10 +202,39 @@ static void end_spin(int param)
 }
 
 
+/*
+	Every version waits in the same busy loop on the CP0 Count register:
+		v1 = [delay]
+	loop:	k0 = Count; k1 = [start]; k0 -= k1; if (k0 < v1) goto loop
+	When the loop reads [start] we skip the remaining wait.
+	The PC is the instruction after the read; addresses from each version's code.
+*/
+struct kinst_speedup_info
+{
+	const char *	name;
+	offs_t			pc;
+	offs_t			address;
+};
+
+static const struct kinst_speedup_info kinst_speedups[] =
+{
+	{ "kinst",    0x88029f98, 0x8808f5d4 },	/* v1.5d */
+	{ "kinst14",  0x88029890, 0x8808f5bc },	/* v1.4 */
+	{ "kinst13",  0x88029880, 0x8808f5bc },	/* v1.3 */
+	{ "kinstp",   0x88029010, 0x8808f5bc },	/* proto v4.7 */
+	{ "kinst2",   0x8802c2d0, 0x887ff544 },	/* v1.4 */
+	{ "kinst213", 0x8802c2d0, 0x887ff544 },	/* v1.3 */
+	{ "kinst211", 0x8802bef4, 0x887ff544 },	/* v1.1 */
+	{ "kinst210", 0x8802bb80, 0x887ff544 },	/* v1.0 */
+	{ NULL }
+};
+
+static offs_t kinst_speedup_pc;
+
+
 static READ32_HANDLER( kinst_speedup_r )
 {
-	if (activecpu_get_pc() == 0x88029890 ||	/* KI */
-		activecpu_get_pc() == 0x8802c2d0	/* KI2 */)
+	if (activecpu_get_pc() == kinst_speedup_pc)
 	{
 		UINT32 r3 = activecpu_get_reg(MIPS3_R3);
 		UINT32 r26 = activecpu_get_reg(MIPS3_R26) - *kinst_speedup;
@@ -218,6 +247,19 @@ static READ32_HANDLER( kinst_speedup_r )
 	return *kinst_speedup;
 }
 
+
+static void kinst_install_speedup(void)
+{
+	const struct kinst_speedup_info *info;
+
+	for (info = kinst_speedups; info->name; info++)
+		if (!strcmp(Machine->gamedrv->name, info->name))
+		{
+			kinst_speedup_pc = info->pc;
+			kinst_speedup = install_mem_read32_handler(0, info->address, info->address + 3, kinst_speedup_r);
+			break;
+		}
+}
 
 
 
@@ -736,7 +778,7 @@ static DRIVER_INIT( kinst )
 	features[31*2+1] = 0x20;
 
 	/* optimize one of the non-standard loops */
-	kinst_speedup = install_mem_read32_handler(0, 0x8808f5bc, 0x8808f5bf, kinst_speedup_r);
+	kinst_install_speedup();
 
 	/* set the fastest DRC options */
 	mips3drc_set_options(0, MIPS3DRC_FASTEST_OPTIONS);
@@ -778,7 +820,7 @@ static DRIVER_INIT( kinst2 )
 	features[14*2+1] = 0x41;
 
 	/* optimize one of the non-standard loops */
-	kinst_speedup = install_mem_read32_handler(0, 0x887ff544, 0x887ff547, kinst_speedup_r);
+	kinst_install_speedup();
 
 	/* set the fastest DRC options */
 	mips3drc_set_options(0, MIPS3DRC_FASTEST_OPTIONS);
