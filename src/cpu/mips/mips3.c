@@ -1481,11 +1481,16 @@ int mips3_execute(int cycles)
 			struct jit_block *block = jit_lookup(mips3.pc);
 			if (block && (int)block->len <= mips3_icount)
 			{
+				/* the block takes its own cycles; none taken means a side exit */
+				/* before its first instruction, which the interpreter then runs */
+				int before = mips3_icount;
 				mips3.pc = ((jit_func)block->code)();
-				mips3.ppc = block->lastpc;
-				mips3_icount -= block->len;
-				change_pc32bedw(mips3.pc);
-				continue;
+				if (mips3_icount != before)
+				{
+					mips3.ppc = mips3.pc - 4;
+					change_pc32bedw(mips3.pc);
+					continue;
+				}
 			}
 		}
 #endif
