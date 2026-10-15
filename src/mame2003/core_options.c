@@ -10,9 +10,6 @@
 #include "driver.h"
 #include <libretro.h>
 #include <string/stdstring.h>
-#if (HAS_PSXCPU)
-#include "cpu/mips/psx.h"
-#endif
 
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
@@ -758,7 +755,7 @@ static struct retro_core_option_v2_definition option_def_mips_dynarec = {
    APPNAME"_mips_dynarec",
    "MIPS Dynarec",
    NULL,
-   "Restart core required. Recompile the MIPS CPU code to native code (Namco System 11/12: Tekken, Tekken 2, Tekken 3, Tekken Tag Tournament, Soul Edge...). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
+   "Restart core required. Recompile the MIPS CPU code to native code (offered only for the games that support it, on x86 and ARM hosts, 32 and 64-bit, that allow it); turn it off to use the interpreter.",
    NULL,
    NULL,
    {
@@ -1347,15 +1344,6 @@ void set_content_flags(void)
       }
   }
 
-  /************ DRIVERS THAT USE THE MIPS RECOMPILER ************/
-  /* Namco System 11 and 12 (PSX CPU); the option means nothing where */
-  /* the recompiler is compiled out */
-#if (HAS_PSXCPU)
-  if (game_driver->source_file && psxcpu_jit_available()
-   && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")))
-    options.content_flags[CONTENT_MIPS_DYNAREC] = true;
-#endif
-
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE
  {
@@ -1373,6 +1361,17 @@ void set_content_flags(void)
     options.content_flags[CONTENT_STV] = true;
   }
 }
+#endif
+
+  /************ NAMCO SYSTEM 11/12: PSX CPU RECOMPILER ************/
+  /* the option means nothing where the recompiler is compiled out */
+#if (HAS_PSXCPU)
+  {
+    extern int psxcpu_jit_available(void);
+    if (game_driver->source_file && psxcpu_jit_available()
+     && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")))
+      options.content_flags[CONTENT_MIPS_DYNAREC] = true;
+  }
 #endif
 
   /************ DIE HARD: ARCADE ************/
