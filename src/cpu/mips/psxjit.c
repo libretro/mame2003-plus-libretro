@@ -2,8 +2,8 @@
 
     psxjit.c
 
-    Optional recompiler for the PSX CPU (R3000A), built on sljit
-    (included by psx_cpu.c).
+    Optional recompiler for the PSX CPU (R3000A), built on the bundled
+    sljit (src/lib/sljit/sljit_mame.h; included by psx_cpu.c).
 
     Straight-line runs of supported instructions, ending at a jump (with
     its delay slot) or at the first unsupported instruction, become
@@ -36,40 +36,12 @@
 
 ***************************************************************************/
 
-/* little-endian x86 and ARM hosts, 32 and 64-bit, that allow run-time */
-/* code generation */
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
-#endif
-#if defined(IOS) || defined(__IOS__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || \
-	defined(__SWITCH__) || defined(HAVE_LIBNX) || defined(_XBOX) || defined(__WINRT__)
-#define PSXJIT_NO_JIT
-#endif
+/* the sljit build shared by the recompilers decides where this one runs */
+#include "../../lib/sljit/sljit_mame.h"
 
-#if !defined(PSXJIT_NO_JIT) && \
-	(defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) || defined(_M_ARM64) || \
-	 defined(__i386__) || defined(_M_IX86) || defined(__arm__) || defined(_M_ARM)) && \
-	!defined(__ARMEB__) && \
-	!(defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) && \
-	!defined(MSB_FIRST)
-#define PSXJIT_SUPPORTED		1
-#else
-#define PSXJIT_SUPPORTED		0
-#endif
+#define PSXJIT_SUPPORTED		SLJIT_MAME_SUPPORTED
 
 #if PSXJIT_SUPPORTED
-
-/* a private copy of sljit: its API is static to this file */
-#define SLJIT_CONFIG_AUTO		1
-#define SLJIT_CONFIG_STATIC		1
-#ifndef SLJIT_DEBUG
-#define SLJIT_DEBUG				0
-#endif
-#define SLJIT_VERBOSE			0
-/* sljit names some parameters "options", like the core's global */
-#define options sljit_options
-#include "../../lib/sljit/sljitLir.c"
-#undef options
 
 #if (defined SLJIT_64BIT_ARCHITECTURE && SLJIT_64BIT_ARCHITECTURE)
 #define JIT_HOST64		1
