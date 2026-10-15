@@ -883,6 +883,8 @@ static void neogeo_register_sub_savestate(void)
 {
 	data8_t* gamevector = memory_region(REGION_CPU1);
 
+	pd4990a_init();
+
 	state_save_register_int   ("neogeo", 0, "sram_locked",             &sram_locked);
 	state_save_register_UINT16("neogeo", 0, "neogeo_ram16",            neogeo_ram16,             0x10000/2);
 	state_save_register_UINT8 ("neogeo", 0, "neogeo_memcard",          neogeo_memcard,           0x800);

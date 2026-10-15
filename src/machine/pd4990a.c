@@ -32,6 +32,7 @@
 
 #include "driver.h"
 #include "machine/pd4990a.h"
+#include "state.h"
 
 
 /* Set the data in the chip to Monday 09/09/73 00:00:00 	*/
@@ -47,7 +48,7 @@ struct pd4990a_s pd4990a =
 	1		/* weekday BCD */
 };
 
-static unsigned int shiftlo,shifthi;
+static UINT32 shiftlo,shifthi;
 
 static int retraces = 0;	/* Assumes 60 retraces a second */
 static int testwaits= 0;
@@ -56,12 +57,37 @@ static int testbit = 0;	/* Pulses a bit in order to simulate */
 					/* test output */
 static int outputbit=0;
 static int bitno=0;
-static char reading=0;
-static char writting=0;
+static int reading=0;
+static int writting=0;
+static int clock_line=0;
+static int command_line=0;	/*??*/
 
 #define DATA_BIT	0x1
 #define CLOCK_BIT	0x2
 #define END_BIT		0x4
+
+void pd4990a_init(void)
+{
+	state_save_register_int   ("pd4990a", 0, "seconds",      &pd4990a.seconds);
+	state_save_register_int   ("pd4990a", 0, "minutes",      &pd4990a.minutes);
+	state_save_register_int   ("pd4990a", 0, "hours",        &pd4990a.hours);
+	state_save_register_int   ("pd4990a", 0, "days",         &pd4990a.days);
+	state_save_register_int   ("pd4990a", 0, "month",        &pd4990a.month);
+	state_save_register_int   ("pd4990a", 0, "year",         &pd4990a.year);
+	state_save_register_int   ("pd4990a", 0, "weekday",      &pd4990a.weekday);
+	state_save_register_UINT32("pd4990a", 0, "shiftlo",      &shiftlo, 1);
+	state_save_register_UINT32("pd4990a", 0, "shifthi",      &shifthi, 1);
+	state_save_register_int   ("pd4990a", 0, "retraces",     &retraces);
+	state_save_register_int   ("pd4990a", 0, "testwaits",    &testwaits);
+	state_save_register_int   ("pd4990a", 0, "maxwaits",     &maxwaits);
+	state_save_register_int   ("pd4990a", 0, "testbit",      &testbit);
+	state_save_register_int   ("pd4990a", 0, "outputbit",    &outputbit);
+	state_save_register_int   ("pd4990a", 0, "bitno",        &bitno);
+	state_save_register_int   ("pd4990a", 0, "reading",      &reading);
+	state_save_register_int   ("pd4990a", 0, "writting",     &writting);
+	state_save_register_int   ("pd4990a", 0, "clock_line",   &clock_line);
+	state_save_register_int   ("pd4990a", 0, "command_line", &command_line);
+}
 
 void pd4990a_addretrace()
 {
@@ -300,9 +326,6 @@ static void pd4990a_process_command(void)
 
 void pd4990a_serial_control(unsigned char data)
 {
-	static int clock_line=0;
-	static int command_line=0;	/*??*/
-
 	/*Check for command end*/
 	if(command_line && !(data&END_BIT)) /*end of command*/
 	{
