@@ -177,7 +177,7 @@ enum /* used to index content-specific flags */
   CONTENT_JOYSTICK_DIRECTIONS,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_CHEAT_INPUT_PORT,
-  CONTENT_MIPS3,
+  CONTENT_MIPS_DYNAREC,
   CONTENT_end,
 };
 
@@ -219,7 +219,7 @@ struct GameOptions
 
   int      samplerate;		       /* sound sample playback rate, in KHz */
   bool     use_samples;	         /* 1 to enable external .wav samples */
-  bool     mips3_dynarec;	       /* 1 to let drivers enable the MIPS3 recompiler */
+  bool     mips_dynarec;	       /* 1 to let drivers enable the MIPS recompiler */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */

@@ -10,9 +10,6 @@
 #include "driver.h"
 #include <libretro.h>
 #include <string/stdstring.h>
-#if (HAS_R4600)
-#include "cpu/mips/mips3.h"
-#endif
 
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
@@ -754,11 +751,11 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    "default"
 };
 
-static struct retro_core_option_v2_definition option_def_mips3_dynarec = {
-   APPNAME"_mips3_dynarec",
-   "MIPS3 Dynarec",
+static struct retro_core_option_v2_definition option_def_mips_dynarec = {
+   APPNAME"_mips_dynarec",
+   "MIPS Dynarec",
    NULL,
-   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct, Killer Instinct 2). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
+   "Restart core required. Recompile the MIPS CPU code to native code (offered only for the games that support it, on x86 and ARM hosts, 32 and 64-bit, that allow it); turn it off to use the interpreter.",
    NULL,
    NULL,
    {
@@ -903,8 +900,8 @@ void init_core_options(void)
   default_options[OPT_CHEAT_INPUT_PORTS]         = option_def_cheat_input_ports;
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
-  default_options[OPT_MIPS3_DYNAREC]             = option_def_mips3_dynarec;
-  options.mips3_dynarec = true;		/* default when the frontend sends no value */
+  default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
+  options.mips_dynarec = true;		/* default when the frontend sends no value */
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -937,8 +934,8 @@ static void set_variables(void)
          if(!options.content_flags[CONTENT_STV])
            continue; /* only offer BIOS selection when it is relevant */
          break;
-      case OPT_MIPS3_DYNAREC:
-         if(!options.content_flags[CONTENT_MIPS3])
+      case OPT_MIPS_DYNAREC:
+         if(!options.content_flags[CONTENT_MIPS_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
          break;
       case OPT_NEOGEO_BIOS:
@@ -1239,8 +1236,8 @@ void update_variables(bool first_time)
           retro_set_audio_buff_status_cb();
           break;
 
-        case OPT_MIPS3_DYNAREC:
-          options.mips3_dynarec = (strcmp(var.value, "enabled") == 0);
+        case OPT_MIPS_DYNAREC:
+          options.mips_dynarec = (strcmp(var.value, "enabled") == 0);
           break;
 
         case OPT_CPU_CLOCK_SCALE:
@@ -1347,12 +1344,15 @@ void set_content_flags(void)
       }
   }
 
-  /************ DRIVERS THAT USE THE MIPS III RECOMPILER ************/
+  /************ KILLER INSTINCT: MIPS III RECOMPILER ************/
   /* only the Killer Instinct driver enables it (Seattle games do not), */
   /* and the option means nothing where it is compiled out */
 #if (HAS_R4600)
-  if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && mips3_jit_available())
-    options.content_flags[CONTENT_MIPS3] = true;
+  {
+    extern int mips3_jit_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && mips3_jit_available())
+      options.content_flags[CONTENT_MIPS_DYNAREC] = true;
+  }
 #endif
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
