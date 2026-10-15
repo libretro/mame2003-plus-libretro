@@ -7791,6 +7791,34 @@ ROM_START( spf2th )
 	ROM_LOAD( "spf2th.key",   0x000000, 0x000014, CRC(292db449) SHA1(e0b82bd471ceadcee1e52ff5a4a8835d53a84a66) )
 ROM_END
 
+/* Super Puzzle Fighter 2 X' (X Prime) - fan rebalance hack by Kaito Sinclaire, based on the Euro set (spf2t).
+   Recreates the X' balance changes from Super Puzzle Fighter II HD Remix.
+   https://github.com/KScl/puzzle-fighter-x-prime - ROM names follow the Fightcade set. */
+ROM_START( spf2xpri )
+	ROM_REGION(CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "pzfxp.03", 0x000000, 0x80000, CRC(f205a7da) SHA1(3fa4b7ecc54d239061148781ecdc469f975122af) )
+	ROM_LOAD16_WORD_SWAP( "pzfxp.04", 0x080000, 0x80000, CRC(4177aadd) SHA1(c218d2446f3fc348a952a8b7a75dace864fed0f9) )
+
+	ROM_REGION( 0xC00000, REGION_GFX1, 0 )
+	ROM_FILL(             0x000000, 0x800000, 0x00 )
+	ROM_LOAD64_WORD( "pzfxp.14m", 0x800000, 0x100000, CRC(930b0ec7) SHA1(60b786dca5a943010b0273a5f6d084453a3bd121) )
+	ROM_LOAD64_WORD( "pzfxp.16m", 0x800002, 0x100000, CRC(769377ad) SHA1(eb86026999ab01e74a975d03305d637899615bf4) )
+	ROM_LOAD64_WORD( "pzfxp.18m", 0x800004, 0x100000, CRC(5a79233f) SHA1(31ca4744be2d7860351dc56fbb3e03e0ddf35b09) )
+	ROM_LOAD64_WORD( "pzfxp.20m", 0x800006, 0x100000, CRC(42cfc9e2) SHA1(04cadb017163732f5ba022733d0cb442ce3cada3) )
+
+	ROM_REGION(QSOUND_SIZE, REGION_CPU2, 0 )  /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "pzf.01",   0x00000, 0x08000, CRC(600fb2a3) SHA1(1fab1c2a23bf6ad8309d29ddbbc29435a8aeea13) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+	ROM_LOAD( "pzf.02",   0x28000, 0x20000, CRC(496076e0) SHA1(1ee4e135140afd0e8e03231e570cd77d140f6367) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 )  /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "pzf.11m",   0x000000, 0x200000, CRC(78442743) SHA1(b61190bb586871de6d54af580e3e1d9cc0de0acb) )
+	ROM_LOAD16_WORD_SWAP( "pzf.12m",   0x200000, 0x200000, CRC(399d2c7b) SHA1(e849dea97b8d16540415c0d9bbc4f9f4eb755ec4) )
+
+	ROM_REGION( 0x20, REGION_USER5, 0 )
+	ROM_LOAD( "spf2t.key",    0x000000, 0x000014, CRC(4c4dc7e3) SHA1(db4f257f6006b2f3cfa7cc70917228d639324513) )
+ROM_END
+
 ROM_START( ssf2 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "ssfe-03b", 0x000000, 0x80000, CRC(af654792) SHA1(a8e84154a639c036413f1423aaf2312a5affa55a) )
@@ -11849,6 +11877,7 @@ GAME( 1996, spf2tu,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Ca
 GAME( 1996, spf2xj,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II X (Japan 960531)")
 GAME( 1996, spf2ta,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II Turbo (Asia 960529)")
 GAME( 1996, spf2th,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II Turbo (Hispanic 960531)")
+GAME( 2021, spf2xpri,   spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "hack",   "Super Puzzle Fighter 2 X'")
 GAME( 1996, megaman2,   0,        cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (USA 960708)")
 GAME( 1996, megaman2a,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (Asia 960708)")
 GAME( 1996, rockman2j,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Rockman 2: The Power Fighters (Japan 960708)")

@@ -2451,6 +2451,7 @@ V-V                           TP-027
 	DRIVER( spf2xj )     /* Capcom, Super Puzzle Fighter II X (Japan 960531) */
 	DRIVER( spf2ta )     /* Capcom, Super Puzzle Fighter II Turbo (Asia 960529) */
 	DRIVER( spf2th )     /* Capcom, Super Puzzle Fighter II Turbo (Hispanic 960531) */
+	DRIVER( spf2xpri )   /* hack, Super Puzzle Fighter 2 X' (X Prime rebalance of Euro 960529) */
 	DRIVER( megaman2 )   /* Capcom, Mega Man 2: The Power Fighters (USA 960708) */
 	DRIVER( megaman2a )  /* Capcom, Mega Man 2: The Power Fighters (Asia 960708) */
 	DRIVER( rockman2j )  /* Capcom, Rockman 2: The Power Fighters (Japan 960708) */
