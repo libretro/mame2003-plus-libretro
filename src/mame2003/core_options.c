@@ -758,7 +758,7 @@ static struct retro_core_option_v2_definition option_def_mips3_dynarec = {
    APPNAME"_mips3_dynarec",
    "MIPS3 Dynarec",
    NULL,
-   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct). Only offered on 64-bit x86 and ARM hosts that allow it; turn it off to use the interpreter.",
+   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
    NULL,
    NULL,
    {

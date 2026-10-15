@@ -19,6 +19,11 @@
     Only code in fast RAM (mips3_add_fastram) is translated; writes to
     fast RAM that touch translated code flush the translation cache.
 
+    On 32-bit hosts each 64-bit MIPS register is handled as two 32-bit
+    halves (low word first, as the little-endian host stores it); the few
+    64-bit instructions without a simple pair translation (variable
+    doubleword shifts) are left to the interpreter.
+
     Off unless a driver enables it with mips3_set_jit().
 
 ***************************************************************************/
@@ -115,9 +120,22 @@ static void jit_init(void)
  *  Code generation helpers
  *************************************/
 
-#define JREG(n)			SLJIT_MEM1(SLJIT_S0), (sljit_sw)(offsetof(mips3_regs, r) + (n) * sizeof(UINT64))
-#define JHI				SLJIT_MEM1(SLJIT_S0), (sljit_sw)offsetof(mips3_regs, hi)
-#define JLO				SLJIT_MEM1(SLJIT_S0), (sljit_sw)offsetof(mips3_regs, lo)
+#if (defined SLJIT_64BIT_ARCHITECTURE && SLJIT_64BIT_ARCHITECTURE)
+#define JIT_HOST64		1
+#else
+#define JIT_HOST64		0
+#endif
+
+/* register, HI and LO in mips3_regs (on 32-bit hosts: their low word; */
+/* the high word is at +4, as the host is little-endian) */
+#define JOFF_R(n)		((sljit_sw)(offsetof(mips3_regs, r) + (n) * sizeof(UINT64)))
+#define JOFF_HI			((sljit_sw)offsetof(mips3_regs, hi))
+#define JOFF_LO			((sljit_sw)offsetof(mips3_regs, lo))
+#define JMEM(off)		SLJIT_MEM1(SLJIT_S0), (off)
+#define JREG(n)			JMEM(JOFF_R(n))
+#define JREGH(n)		JMEM(JOFF_R(n) + 4)
+#define JHI				JMEM(JOFF_HI)
+#define JLO				JMEM(JOFF_LO)
 
 #define OPC_RS(o)		(((o) >> 21) & 31)
 #define OPC_RT(o)		(((o) >> 16) & 31)
@@ -126,6 +144,13 @@ static void jit_init(void)
 #define OPC_SIMM(o)		((sljit_sw)(INT16)(o))
 #define OPC_UIMM(o)		((sljit_sw)(UINT16)(o))
 
+/*
+	Register helpers. Scratch registers R0-R3 only: S1 and S2 hold a
+	branch condition and a delay slot's host address around these.
+*/
+
+#if JIT_HOST64
+
 /* result of a 32-bit operation in R0, sign extended into a register */
 static void jit_store32(struct sljit_compiler *C, int reg)
 {
@@ -133,20 +158,271 @@ static void jit_store32(struct sljit_compiler *C, int reg)
 	sljit_emit_op1(C, SLJIT_MOV, JREG(reg), SLJIT_R0, 0);
 }
 
-/* 0/1 from a comparison of two operands into a register */
-static void jit_setcc(struct sljit_compiler *C, int reg, sljit_s32 cond,
-	sljit_s32 src1, sljit_sw src1w, sljit_s32 src2, sljit_sw src2w)
+/* unsigned 32-bit value in R0 (or an immediate), zero extended into a register */
+static void jit_store_u32(struct sljit_compiler *C, int reg, sljit_s32 src, sljit_sw srcw)
 {
-	sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET(cond & ~1), src1, src1w, src2, src2w);
+	sljit_emit_op1(C, SLJIT_MOV_U32, SLJIT_R0, 0, src, srcw);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(reg), SLJIT_R0, 0);
+}
+
+/* 64-bit copy between register file slots */
+static void jit_move64(struct sljit_compiler *C, sljit_sw dst, sljit_sw src)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JMEM(src));
+	sljit_emit_op1(C, SLJIT_MOV, JMEM(dst), SLJIT_R0, 0);
+}
+
+/* 0/1 from a 64-bit comparison of two operands into a register */
+static void jit_setcc(struct sljit_compiler *C, int reg, sljit_s32 cond,
+	int rs, sljit_s32 src2, sljit_sw src2w, sljit_sw src2hw)
+{
+	(void)src2hw;
+	sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET(cond & ~1), JREG(rs), src2, src2w);
 	sljit_emit_op_flags(C, SLJIT_MOV, SLJIT_R0, 0, cond);
 	sljit_emit_op1(C, SLJIT_MOV, JREG(reg), SLJIT_R0, 0);
 }
 
-/* 64-bit ALU op rd = rs op rt */
-static void jit_op64(struct sljit_compiler *C, sljit_s32 op, int rd, int rs, int rt)
+/* 64-bit AND/OR/XOR (NOR with 'invert') rd = rs op rt */
+static void jit_logic64(struct sljit_compiler *C, sljit_s32 op, int rd, int rs, int rt, int invert)
 {
 	sljit_emit_op2(C, op, SLJIT_R0, 0, JREG(rs), JREG(rt));
+	if (invert)
+		sljit_emit_op2(C, SLJIT_XOR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, -1);
 	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+}
+
+/* ORI/XORI: rt = rs op zero-extended immediate */
+static void jit_logic_imm(struct sljit_compiler *C, sljit_s32 op, int rt, int rs, sljit_sw imm)
+{
+	sljit_emit_op2(C, op, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, imm);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+}
+
+/* DADDU/DSUBU rd = rs +/- rt */
+static void jit_add64(struct sljit_compiler *C, int sub, int rd, int rs, int rt)
+{
+	sljit_emit_op2(C, sub ? SLJIT_SUB : SLJIT_ADD, SLJIT_R0, 0, JREG(rs), JREG(rt));
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+}
+
+/* DADDIU rt = rs + sign-extended immediate */
+static void jit_addi64(struct sljit_compiler *C, int rt, int rs, sljit_sw imm)
+{
+	sljit_emit_op2(C, SLJIT_ADD, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, imm);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+}
+
+/* DSLL/DSRL/DSRA by 0-63 */
+static void jit_shift64(struct sljit_compiler *C, sljit_s32 op, int rd, int rt, int amount)
+{
+	sljit_emit_op2(C, op, SLJIT_R0, 0, JREG(rt), SLJIT_IMM, amount);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+}
+
+/* 64-bit value at 'host' into a register (LD) */
+static void jit_load64(struct sljit_compiler *C, int rt, sljit_s32 host)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, SLJIT_MEM1(host), 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+}
+
+/* a register to 'host' (SD) */
+static void jit_store64(struct sljit_compiler *C, int rt, sljit_s32 host)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rt));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_MEM1(host), 0, SLJIT_R0, 0);
+}
+
+#else	/* 32-bit host: low and high words */
+
+static void jit_store32(struct sljit_compiler *C, int reg)
+{
+	sljit_emit_op1(C, SLJIT_MOV, JREG(reg), SLJIT_R0, 0);
+	sljit_emit_op2(C, SLJIT_ASHR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, 31);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(reg), SLJIT_R0, 0);
+}
+
+static void jit_store_u32(struct sljit_compiler *C, int reg, sljit_s32 src, sljit_sw srcw)
+{
+	if (src != SLJIT_R0 && src != SLJIT_IMM)
+	{
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, src, srcw);
+		src = SLJIT_R0;
+		srcw = 0;
+	}
+	sljit_emit_op1(C, SLJIT_MOV, JREG(reg), src, srcw);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(reg), SLJIT_IMM, 0);
+}
+
+static void jit_move64(struct sljit_compiler *C, sljit_sw dst, sljit_sw src)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JMEM(src));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JMEM(src + 4));
+	sljit_emit_op1(C, SLJIT_MOV, JMEM(dst), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JMEM(dst + 4), SLJIT_R1, 0);
+}
+
+/*
+	64-bit comparison: the high words decide (signed for SLT, unsigned
+	for SLTU) unless they are equal, then the low words (unsigned).
+	src2 is a register (src2w its low word offset, src2hw its high word
+	offset) or an immediate (src2w low word, src2hw high word).
+*/
+static void jit_setcc(struct sljit_compiler *C, int reg, sljit_s32 cond,
+	int rs, sljit_s32 src2, sljit_sw src2w, sljit_sw src2hw)
+{
+	struct sljit_jump *differ, *done;
+
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREGH(rs));
+	if (src2 == SLJIT_IMM)
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, SLJIT_IMM, src2hw);
+	else
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, src2, src2hw);
+	differ = sljit_emit_cmp(C, SLJIT_NOT_EQUAL, SLJIT_R0, 0, SLJIT_R1, 0);
+
+	/* equal high words: the low words, unsigned */
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+	if (src2 == SLJIT_IMM)
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, SLJIT_IMM, src2w);
+	else
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, src2, src2w);
+	sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET_LESS, SLJIT_R0, 0, SLJIT_R1, 0);
+	sljit_emit_op_flags(C, SLJIT_MOV, SLJIT_R2, 0, SLJIT_LESS);
+	done = sljit_emit_jump(C, SLJIT_JUMP);
+
+	sljit_set_label(differ, sljit_emit_label(C));
+	sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET(cond & ~1), SLJIT_R0, 0, SLJIT_R1, 0);
+	sljit_emit_op_flags(C, SLJIT_MOV, SLJIT_R2, 0, cond);
+
+	sljit_set_label(done, sljit_emit_label(C));
+	jit_store_u32(C, reg, SLJIT_R2, 0);
+}
+
+static void jit_logic64(struct sljit_compiler *C, sljit_s32 op, int rd, int rs, int rt, int invert)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+	sljit_emit_op2(C, op, SLJIT_R0, 0, SLJIT_R0, 0, JREG(rt));
+	sljit_emit_op2(C, op, SLJIT_R1, 0, SLJIT_R1, 0, JREGH(rt));
+	if (invert)
+	{
+		sljit_emit_op2(C, SLJIT_XOR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, -1);
+		sljit_emit_op2(C, SLJIT_XOR, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, -1);
+	}
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rd), SLJIT_R1, 0);
+}
+
+static void jit_logic_imm(struct sljit_compiler *C, sljit_s32 op, int rt, int rs, sljit_sw imm)
+{
+	sljit_emit_op2(C, op, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, imm);
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rt), SLJIT_R1, 0);
+}
+
+/* the carry pair works on registers only, so nothing between can touch the flags */
+static void jit_add64(struct sljit_compiler *C, int sub, int rd, int rs, int rt)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R2, 0, JREG(rt));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R3, 0, JREGH(rt));
+	sljit_emit_op2(C, (sub ? SLJIT_SUB : SLJIT_ADD) | SLJIT_SET_CARRY, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R2, 0);
+	sljit_emit_op2(C, sub ? SLJIT_SUBC : SLJIT_ADDC, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R3, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rd), SLJIT_R1, 0);
+}
+
+static void jit_addi64(struct sljit_compiler *C, int rt, int rs, sljit_sw imm)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+	sljit_emit_op2(C, SLJIT_ADD | SLJIT_SET_CARRY, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, imm);
+	sljit_emit_op2(C, SLJIT_ADDC, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, (imm < 0) ? -1 : 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rt), SLJIT_R1, 0);
+}
+
+/* R0 = low word, R1 = high word, shifted by a constant 0-63 */
+static void jit_shift64(struct sljit_compiler *C, sljit_s32 op, int rd, int rt, int amount)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rt));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rt));
+
+	if (amount >= 32)
+	{
+		amount -= 32;
+		if (op == SLJIT_SHL)
+		{
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R1, 0, SLJIT_R0, 0, SLJIT_IMM, amount);
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, SLJIT_IMM, 0);
+		}
+		else
+		{
+			sljit_emit_op2(C, op, SLJIT_R0, 0, SLJIT_R1, 0, SLJIT_IMM, amount);
+			if (op == SLJIT_ASHR)
+				sljit_emit_op2(C, SLJIT_ASHR, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, 31);
+			else
+				sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, SLJIT_IMM, 0);
+		}
+	}
+	else if (amount > 0)
+	{
+		if (op == SLJIT_SHL)
+		{
+			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R2, 0, SLJIT_R0, 0, SLJIT_IMM, 32 - amount);
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, amount);
+			sljit_emit_op2(C, SLJIT_OR, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R2, 0);
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, amount);
+		}
+		else
+		{
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R2, 0, SLJIT_R1, 0, SLJIT_IMM, 32 - amount);
+			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, amount);
+			sljit_emit_op2(C, SLJIT_OR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R2, 0);
+			sljit_emit_op2(C, op, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, amount);
+		}
+	}
+
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rd), SLJIT_R1, 0);
+}
+
+/* 'host' is R1 or S2, so the words go through R0 and R2 */
+static void jit_load64(struct sljit_compiler *C, int rt, sljit_s32 host)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, SLJIT_MEM1(host), 0);
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R2, 0, SLJIT_MEM1(host), 4);
+	sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JREGH(rt), SLJIT_R2, 0);
+}
+
+static void jit_store64(struct sljit_compiler *C, int rt, sljit_s32 host)
+{
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rt));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_MEM1(host), 0, SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREGH(rt));
+	sljit_emit_op1(C, SLJIT_MOV, SLJIT_MEM1(host), 4, SLJIT_R0, 0);
+}
+
+/* MULT/DIV results: LO from R0, HI from R1, both sign extended */
+static void jit_store_hilo(struct sljit_compiler *C)
+{
+	sljit_emit_op1(C, SLJIT_MOV, JLO, SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JHI, SLJIT_R1, 0);
+	sljit_emit_op2(C, SLJIT_ASHR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, 31);
+	sljit_emit_op2(C, SLJIT_ASHR, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, 31);
+	sljit_emit_op1(C, SLJIT_MOV, JMEM(JOFF_LO + 4), SLJIT_R0, 0);
+	sljit_emit_op1(C, SLJIT_MOV, JMEM(JOFF_HI + 4), SLJIT_R1, 0);
+}
+
+#endif	/* JIT_HOST64 */
+
+/* JAL/JALR link: the return address, zero extended (as the interpreter) */
+static void jit_store_link(struct sljit_compiler *C, int reg, UINT32 value)
+{
+	jit_store_u32(C, reg, SLJIT_IMM, (sljit_sw)value);
 }
 
 
@@ -200,7 +476,6 @@ static int jit_classify(UINT32 op)
 				case 0x00: case 0x02: case 0x03: case 0x04: case 0x06: case 0x07:
 				case 0x0f:
 				case 0x10: case 0x11: case 0x12: case 0x13:
-				case 0x14: case 0x16: case 0x17:
 				case 0x18: case 0x19: case 0x1a: case 0x1b:		/* MULT MULTU DIV DIVU */
 				case 0x20: case 0x21: case 0x22: case 0x23:
 				case 0x24: case 0x25: case 0x26: case 0x27:
@@ -208,6 +483,8 @@ static int jit_classify(UINT32 op)
 				case 0x2c: case 0x2d: case 0x2e: case 0x2f:
 				case 0x38: case 0x3a: case 0x3b: case 0x3c: case 0x3e: case 0x3f:
 					return JIT_SIMPLE;
+				case 0x14: case 0x16: case 0x17:		/* DSLLV DSRLV DSRAV */
+					return JIT_HOST64 ? JIT_SIMPLE : JIT_NONE;
 				case 0x08: case 0x09:		/* JR, JALR */
 					return JIT_BRANCH;
 			}
@@ -270,28 +547,32 @@ static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 				case 0x0f:	/* SYNC */
 					break;
 				case 0x10:	/* MFHI */
-					if (rd) { sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JHI); sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0); }
+					if (rd) jit_move64(C, JOFF_R(rd), JOFF_HI);
 					break;
 				case 0x11:	/* MTHI */
-					sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs)); sljit_emit_op1(C, SLJIT_MOV, JHI, SLJIT_R0, 0);
+					jit_move64(C, JOFF_HI, JOFF_R(rs));
 					break;
 				case 0x12:	/* MFLO */
-					if (rd) { sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JLO); sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0); }
+					if (rd) jit_move64(C, JOFF_R(rd), JOFF_LO);
 					break;
 				case 0x13:	/* MTLO */
-					sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs)); sljit_emit_op1(C, SLJIT_MOV, JLO, SLJIT_R0, 0);
+					jit_move64(C, JOFF_LO, JOFF_R(rs));
 					break;
+#if JIT_HOST64
 				case 0x14:	/* DSLLV */
-					if (rd) jit_op64(C, SLJIT_MSHL, rd, rt, rs);
-					break;
 				case 0x16:	/* DSRLV */
-					if (rd) jit_op64(C, SLJIT_MLSHR, rd, rt, rs);
-					break;
 				case 0x17:	/* DSRAV */
-					if (rd) jit_op64(C, SLJIT_MASHR, rd, rt, rs);
+					if (rd)
+					{
+						sljit_s32 shift = ((op & 63) == 0x14) ? SLJIT_MSHL : ((op & 63) == 0x16) ? SLJIT_MLSHR : SLJIT_MASHR;
+						sljit_emit_op2(C, shift, SLJIT_R0, 0, JREG(rt), JREG(rs));
+						sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
+					}
 					break;
+#endif
 				case 0x18:	/* MULT */
 				case 0x19:	/* MULTU */
+#if JIT_HOST64
 					sljit_emit_op1(C, ((op & 63) == 0x18) ? SLJIT_MOV_S32 : SLJIT_MOV_U32, SLJIT_R0, 0, JREG(rs));
 					sljit_emit_op1(C, ((op & 63) == 0x18) ? SLJIT_MOV_S32 : SLJIT_MOV_U32, SLJIT_R1, 0, JREG(rt));
 					sljit_emit_op2(C, SLJIT_MUL, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R1, 0);
@@ -300,6 +581,13 @@ static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 					sljit_emit_op1(C, SLJIT_MOV_S32, SLJIT_R1, 0, SLJIT_R1, 0);
 					sljit_emit_op1(C, SLJIT_MOV, JLO, SLJIT_R0, 0);
 					sljit_emit_op1(C, SLJIT_MOV, JHI, SLJIT_R1, 0);
+#else
+					/* 32x32 -> 64 into R1:R0, then both halves sign extended */
+					sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+					sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREG(rt));
+					sljit_emit_op0(C, ((op & 63) == 0x18) ? SLJIT_LMUL_SW : SLJIT_LMUL_UW);
+					jit_store_hilo(C);
+#endif
 					break;
 				case 0x1a:	/* DIV */
 				case 0x1b:	/* DIVU: nothing happens on a zero divisor */
@@ -309,10 +597,14 @@ static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 					zero = sljit_emit_cmp(C, SLJIT_EQUAL | SLJIT_32, SLJIT_R1, 0, SLJIT_IMM, 0);
 					sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, JREG(rs));
 					sljit_emit_op0(C, ((op & 63) == 0x1a) ? SLJIT_DIVMOD_S32 : SLJIT_DIVMOD_U32);
+#if JIT_HOST64
 					sljit_emit_op1(C, SLJIT_MOV_S32, SLJIT_R0, 0, SLJIT_R0, 0);
 					sljit_emit_op1(C, SLJIT_MOV_S32, SLJIT_R1, 0, SLJIT_R1, 0);
 					sljit_emit_op1(C, SLJIT_MOV, JLO, SLJIT_R0, 0);
 					sljit_emit_op1(C, SLJIT_MOV, JHI, SLJIT_R1, 0);
+#else
+					jit_store_hilo(C);
+#endif
 					sljit_set_label(zero, sljit_emit_label(C));
 					break;
 				}
@@ -329,63 +621,46 @@ static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 					if (rd) { sljit_emit_op2(C, SLJIT_SUB32, SLJIT_R0, 0, JREG(rs), JREG(rt)); jit_store32(C, rd); }
 					break;
 				case 0x24:	/* AND */
-					if (rd) jit_op64(C, SLJIT_AND, rd, rs, rt);
+					if (rd) jit_logic64(C, SLJIT_AND, rd, rs, rt, 0);
 					break;
 				case 0x25:	/* OR */
-					if (rd) jit_op64(C, SLJIT_OR, rd, rs, rt);
+					if (rd) jit_logic64(C, SLJIT_OR, rd, rs, rt, 0);
 					break;
 				case 0x26:	/* XOR */
-					if (rd) jit_op64(C, SLJIT_XOR, rd, rs, rt);
+					if (rd) jit_logic64(C, SLJIT_XOR, rd, rs, rt, 0);
 					break;
 				case 0x27:	/* NOR */
-					if (rd)
-					{
-						sljit_emit_op2(C, SLJIT_OR, SLJIT_R0, 0, JREG(rs), JREG(rt));
-						sljit_emit_op2(C, SLJIT_XOR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, -1);
-						sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
-					}
+					if (rd) jit_logic64(C, SLJIT_OR, rd, rs, rt, 1);
 					break;
 				case 0x2a:	/* SLT */
-					if (rd) jit_setcc(C, rd, SLJIT_SIG_LESS, JREG(rs), JREG(rt));
+					if (rd) jit_setcc(C, rd, SLJIT_SIG_LESS, rs, JREG(rt), JOFF_R(rt) + 4);
 					break;
 				case 0x2b:	/* SLTU */
-					if (rd) jit_setcc(C, rd, SLJIT_LESS, JREG(rs), JREG(rt));
+					if (rd) jit_setcc(C, rd, SLJIT_LESS, rs, JREG(rt), JOFF_R(rt) + 4);
 					break;
 				case 0x2c:	/* DADD (as DADDU, but writes even r0) */
-					jit_op64(C, SLJIT_ADD, rd, rs, rt);
+					jit_add64(C, 0, rd, rs, rt);
 					break;
 				case 0x2d:	/* DADDU */
-					if (rd) jit_op64(C, SLJIT_ADD, rd, rs, rt);
+					if (rd) jit_add64(C, 0, rd, rs, rt);
 					break;
 				case 0x2e:	/* DSUB (as DSUBU, but writes even r0) */
-					jit_op64(C, SLJIT_SUB, rd, rs, rt);
+					jit_add64(C, 1, rd, rs, rt);
 					break;
 				case 0x2f:	/* DSUBU */
-					if (rd) jit_op64(C, SLJIT_SUB, rd, rs, rt);
+					if (rd) jit_add64(C, 1, rd, rs, rt);
 					break;
 				case 0x38:	/* DSLL */
 				case 0x3c:	/* DSLL32 */
-					if (rd)
-					{
-						sljit_emit_op2(C, SLJIT_SHL, SLJIT_R0, 0, JREG(rt), SLJIT_IMM, sa + ((op & 4) ? 32 : 0));
-						sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
-					}
+					if (rd) jit_shift64(C, SLJIT_SHL, rd, rt, sa + ((op & 4) ? 32 : 0));
 					break;
 				case 0x3a:	/* DSRL */
 				case 0x3e:	/* DSRL32 */
-					if (rd)
-					{
-						sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R0, 0, JREG(rt), SLJIT_IMM, sa + ((op & 4) ? 32 : 0));
-						sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
-					}
+					if (rd) jit_shift64(C, SLJIT_LSHR, rd, rt, sa + ((op & 4) ? 32 : 0));
 					break;
 				case 0x3b:	/* DSRA */
 				case 0x3f:	/* DSRA32 */
-					if (rd)
-					{
-						sljit_emit_op2(C, SLJIT_ASHR, SLJIT_R0, 0, JREG(rt), SLJIT_IMM, sa + ((op & 4) ? 32 : 0));
-						sljit_emit_op1(C, SLJIT_MOV, JREG(rd), SLJIT_R0, 0);
-					}
+					if (rd) jit_shift64(C, SLJIT_ASHR, rd, rt, sa + ((op & 4) ? 32 : 0));
 					break;
 			}
 			break;
@@ -395,25 +670,25 @@ static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 			if (rt) { sljit_emit_op2(C, SLJIT_ADD32, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_SIMM(op)); jit_store32(C, rt); }
 			break;
 		case 0x0a:	/* SLTI */
-			if (rt) jit_setcc(C, rt, SLJIT_SIG_LESS, JREG(rs), SLJIT_IMM, OPC_SIMM(op));
+			if (rt) jit_setcc(C, rt, SLJIT_SIG_LESS, rs, SLJIT_IMM, OPC_SIMM(op), (OPC_SIMM(op) < 0) ? -1 : 0);
 			break;
 		case 0x0b:	/* SLTIU (against the sign-extended immediate) */
-			if (rt) jit_setcc(C, rt, SLJIT_LESS, JREG(rs), SLJIT_IMM, OPC_SIMM(op));
+			if (rt) jit_setcc(C, rt, SLJIT_LESS, rs, SLJIT_IMM, OPC_SIMM(op), (OPC_SIMM(op) < 0) ? -1 : 0);
 			break;
 		case 0x0c:	/* ANDI */
-			if (rt) { sljit_emit_op2(C, SLJIT_AND, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_UIMM(op)); sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0); }
+			if (rt) { sljit_emit_op2(C, SLJIT_AND, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_UIMM(op)); jit_store_u32(C, rt, SLJIT_R0, 0); }
 			break;
 		case 0x0d:	/* ORI */
-			if (rt) { sljit_emit_op2(C, SLJIT_OR, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_UIMM(op)); sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0); }
+			if (rt) jit_logic_imm(C, SLJIT_OR, rt, rs, OPC_UIMM(op));
 			break;
 		case 0x0e:	/* XORI */
-			if (rt) { sljit_emit_op2(C, SLJIT_XOR, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_UIMM(op)); sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0); }
+			if (rt) jit_logic_imm(C, SLJIT_XOR, rt, rs, OPC_UIMM(op));
 			break;
 		case 0x0f:	/* LUI */
-			if (rt) sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_IMM, (sljit_sw)(INT32)(OPC_UIMM(op) << 16));
+			if (rt) { sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)(INT32)(OPC_UIMM(op) << 16)); jit_store32(C, rt); }
 			break;
 		case 0x19:	/* DADDIU */
-			if (rt) { sljit_emit_op2(C, SLJIT_ADD, SLJIT_R0, 0, JREG(rs), SLJIT_IMM, OPC_SIMM(op)); sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0); }
+			if (rt) jit_addi64(C, rt, rs, OPC_SIMM(op));
 			break;
 		case 0x2f:	/* CACHE */
 		case 0x33:	/* PREF */
@@ -565,13 +840,16 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT32 op, sljit_s32 h
 
 	switch (op >> 26)
 	{
+		case 0x37:	/* LD */
+			if (rt)
+				jit_load64(C, rt, host);
+			return;
 		case 0x20:	load = SLJIT_MOV_S8;	break;		/* LB */
 		case 0x21:	load = SLJIT_MOV_S16;	break;		/* LH */
 		case 0x23:	load = SLJIT_MOV_S32;	break;		/* LW */
 		case 0x24:	load = SLJIT_MOV_U8;	break;		/* LBU */
 		case 0x25:	load = SLJIT_MOV_U16;	break;		/* LHU */
 		case 0x27:	load = SLJIT_MOV_U32;	break;		/* LWU */
-		case 0x37:	load = SLJIT_MOV;		break;		/* LD */
 
 		case 0x28:	/* SB */
 			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rt));
@@ -586,8 +864,7 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT32 op, sljit_s32 h
 			sljit_emit_op1(C, SLJIT_MOV32, SLJIT_MEM1(host), 0, SLJIT_R0, 0);
 			return;
 		case 0x3f:	/* SD: low word first, as two little-endian words */
-			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rt));
-			sljit_emit_op1(C, SLJIT_MOV, SLJIT_MEM1(host), 0, SLJIT_R0, 0);
+			jit_store64(C, rt, host);
 			return;
 	}
 
@@ -595,7 +872,10 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT32 op, sljit_s32 h
 	if (rt)
 	{
 		sljit_emit_op1(C, load, SLJIT_R0, 0, SLJIT_MEM1(host), 0);
-		sljit_emit_op1(C, SLJIT_MOV, JREG(rt), SLJIT_R0, 0);
+		if (load == SLJIT_MOV_U8 || load == SLJIT_MOV_U16 || load == SLJIT_MOV_U32)
+			jit_store_u32(C, rt, SLJIT_R0, 0);
+		else
+			jit_store32(C, rt);
 	}
 }
 
@@ -682,6 +962,37 @@ static void jit_emit_condition(struct sljit_compiler *C, UINT32 op, sljit_s32 ds
 {
 	int rs = OPC_RS(op), rt = OPC_RT(op);
 
+#if !JIT_HOST64
+	/* 32-bit host: the sign is in the high word, zero needs both */
+	switch (op >> 26)
+	{
+		case 0x01:	/* BLTZ / BGEZ */
+			sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET_SIG_LESS, JREGH(rs), SLJIT_IMM, 0);
+			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, (rt == 0x00) ? SLJIT_SIG_LESS : SLJIT_SIG_GREATER_EQUAL);
+			break;
+		case 0x04:	/* BEQ */
+		case 0x05:	/* BNE */
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, JREG(rs));
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+			sljit_emit_op2(C, SLJIT_XOR, SLJIT_R0, 0, SLJIT_R0, 0, JREG(rt));
+			sljit_emit_op2(C, SLJIT_XOR, SLJIT_R1, 0, SLJIT_R1, 0, JREGH(rt));
+			sljit_emit_op2(C, SLJIT_OR | SLJIT_SET_Z, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R1, 0);
+			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, ((op >> 26) == 0x04) ? SLJIT_EQUAL : SLJIT_NOT_EQUAL);
+			break;
+		case 0x06:	/* BLEZ: negative, or zero */
+		case 0x07:	/* BGTZ: the opposite */
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, JREGH(rs));
+			sljit_emit_op2(C, SLJIT_OR | SLJIT_SET_Z, SLJIT_R0, 0, SLJIT_R1, 0, JREG(rs));
+			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, SLJIT_EQUAL);
+			sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET_SIG_LESS, SLJIT_R1, 0, SLJIT_IMM, 0);
+			sljit_emit_op_flags(C, SLJIT_OR, dst, 0, SLJIT_SIG_LESS);
+			if ((op >> 26) == 0x07)
+				sljit_emit_op2(C, SLJIT_XOR, dst, 0, dst, 0, SLJIT_IMM, 1);
+			break;
+	}
+	return;
+#endif
+
 	switch (op >> 26)
 	{
 		case 0x01:	/* BLTZ / BGEZ */
@@ -752,12 +1063,12 @@ static void jit_emit_branch(struct jit_ctx *ctx, UINT32 op, UINT32 slot, UINT32 
 		case 0x00:	/* JR / JALR: target is the low 32 bits of rs */
 			sljit_emit_op1(C, SLJIT_MOV_U32, SLJIT_S1, 0, JREG(OPC_RS(op)));
 			if ((op & 63) == 0x09)		/* JALR links into rd, even r0 */
-				sljit_emit_op1(C, SLJIT_MOV, JREG(OPC_RD(op)), SLJIT_IMM, (sljit_sw)(UINT32)next);
+				jit_store_link(C, OPC_RD(op), next);
 			break;
 		case 0x02:	/* J */
 			break;
 		case 0x03:	/* JAL */
-			sljit_emit_op1(C, SLJIT_MOV, JREG(31), SLJIT_IMM, (sljit_sw)(UINT32)next);
+			jit_store_link(C, 31, next);
 			break;
 		default:
 			jit_emit_condition(C, op, SLJIT_S1);
@@ -926,7 +1237,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	ctx.acct = 0;
 	ctx.nexits = 0;
 	ctx.npending = 0;
-	sljit_emit_enter(C, 0, SLJIT_ARGS0(32), 3, 3, 0);
+	sljit_emit_enter(C, 0, SLJIT_ARGS0(32), 4, 3, 0);
 	sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_S0, 0, SLJIT_IMM, (sljit_sw)&mips3);
 
 	for (i = 0; i < count; i++)

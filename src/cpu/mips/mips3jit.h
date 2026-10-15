@@ -11,8 +11,9 @@
 #ifndef MIPS3JIT_H
 #define MIPS3JIT_H
 
-/* 64-bit little-endian hosts only for now (x86-64, AArch64), and not on */
-/* systems that forbid or restrict run-time code generation */
+/* little-endian x86 and ARM hosts, 64-bit (x86-64, AArch64) and 32-bit */
+/* (x86, ARMv6/ARMv7/Thumb-2), and not on systems that forbid or restrict */
+/* run-time code generation */
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
 #endif
@@ -22,7 +23,9 @@
 #endif
 
 #if !defined(MIPS3_NO_JIT) && \
-	(defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) || defined(_M_ARM64)) && \
+	(defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) || defined(_M_ARM64) || \
+	 defined(__i386__) || defined(_M_IX86) || defined(__arm__) || defined(_M_ARM)) && \
+	!defined(__ARMEB__) && \
 	!(defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) && \
 	!defined(MSB_FIRST)
 #define MIPS3_JIT_SUPPORTED		1
@@ -32,7 +35,9 @@
 
 #if MIPS3_JIT_SUPPORTED
 #define SLJIT_CONFIG_AUTO		1
+#ifndef SLJIT_DEBUG
 #define SLJIT_DEBUG				0
+#endif
 #define SLJIT_VERBOSE			0
 #include "../../lib/sljit/sljitLir.h"
 #endif
