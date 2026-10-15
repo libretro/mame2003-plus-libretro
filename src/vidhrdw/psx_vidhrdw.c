@@ -734,6 +734,28 @@ VIDEO_UPDATE( psx )
 			n_x = m_n_displaystartx;
 		}
 
+		if( ( m_n_gpustatus & ( 1L << 0x15 ) ) != 0 )
+		{
+			/* 24-bit display mode (MDEC movies): 3 bytes per pixel in VRAM,
+			   reduced to the 15-bit palette used by the bitmap */
+			for( n_y = 0; n_y < m_n_screenheight; n_y++ )
+			{
+				const UINT16 *src = m_p_p_vram[ ( n_y + m_n_displaystarty ) & 1023 ];
+				UINT16 *dst = (UINT16 *)bitmap->base + n_y * bitmap->rowpixels;
+				UINT32 n_byte = n_x * 2;
+				int length = m_n_screenwidth;
+
+				while( length-- )
+				{
+					UINT32 n_r, n_g, n_b;
+					n_r = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
+					n_g = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
+					n_b = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
+					*dst++ = ( ( n_b >> 3 ) << 10 ) | ( ( n_g >> 3 ) << 5 ) | ( n_r >> 3 );
+				}
+			}
+		}
+		else
 		for( n_y = 0; n_y < m_n_screenheight; n_y++ )
       {
          const uint16_t *src = (m_p_p_vram[ n_y + m_n_displaystarty ] + n_x);

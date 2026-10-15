@@ -876,6 +876,78 @@ static void mdec_yuv2_to_rgb15( UINT32 n_address )
 	}
 }
 
+/* 24-bit output (from current MAME psxmdec): blocks are Cr, Cb, Y0-Y3 */
+static INLINE UINT16 mdec_clamp8( INT32 n )
+{
+	n += 128;
+	if( n < 0 ) return 0;
+	if( n > 255 ) return 255;
+	return n;
+}
+
+static INLINE void mdec_makergb24( UINT32 n_address, INT32 n_r, INT32 n_g, INT32 n_b, INT32 *p_n_y )
+{
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 0 ) ] ) = ( mdec_clamp8( p_n_y[ 0 ] + n_g ) << 8 ) | mdec_clamp8( p_n_y[ 0 ] + n_r );
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 2 ) ] ) = ( mdec_clamp8( p_n_y[ 1 ] + n_r ) << 8 ) | mdec_clamp8( p_n_y[ 0 ] + n_b );
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 4 ) ] ) = ( mdec_clamp8( p_n_y[ 1 ] + n_b ) << 8 ) | mdec_clamp8( p_n_y[ 1 ] + n_g );
+}
+
+static void mdec_yuv2_to_rgb24( UINT32 n_address )
+{
+	INT32 n_r;
+	INT32 n_g;
+	INT32 n_b;
+	INT32 n_cb;
+	INT32 n_cr;
+	INT32 *p_n_cb;
+	INT32 *p_n_cr;
+	INT32 *p_n_y;
+	UINT32 n_x;
+	UINT32 n_y;
+	UINT32 n_z;
+
+	p_n_cr = &m_p_n_mdec_unpacked[ 0 ];
+	p_n_cb = &m_p_n_mdec_unpacked[ DCTSIZE2 ];
+	p_n_y = &m_p_n_mdec_unpacked[ DCTSIZE2 * 2 ];
+
+	for( n_z = 0; n_z < 2; n_z++ )
+	{
+		for( n_y = 0; n_y < 4; n_y++ )
+		{
+			for( n_x = 0; n_x < 4; n_x++ )
+			{
+				n_cr = *( p_n_cr );
+				n_cb = *( p_n_cb );
+				n_r = mdec_cr_to_r( n_cr );
+				n_g = mdec_cr_to_g( n_cr ) + mdec_cb_to_g( n_cb );
+				n_b = mdec_cb_to_b( n_cb );
+
+				mdec_makergb24( ( n_address +  0 ), n_r, n_g, n_b, p_n_y );
+				mdec_makergb24( ( n_address + 48 ), n_r, n_g, n_b, p_n_y + 8 );
+
+				n_cr = *( p_n_cr + 4 );
+				n_cb = *( p_n_cb + 4 );
+				n_r = mdec_cr_to_r( n_cr );
+				n_g = mdec_cr_to_g( n_cr ) + mdec_cb_to_g( n_cb );
+				n_b = mdec_cb_to_b( n_cb );
+
+				mdec_makergb24( ( n_address + 24 ), n_r, n_g, n_b, p_n_y + DCTSIZE2 );
+				mdec_makergb24( ( n_address + 72 ), n_r, n_g, n_b, p_n_y + DCTSIZE2 + 8 );
+
+				p_n_cr++;
+				p_n_cb++;
+				p_n_y += 2;
+				n_address += 6;
+			}
+			p_n_cr += 4;
+			p_n_cb += 4;
+			p_n_y += 8;
+			n_address += 72;
+		}
+		p_n_y += DCTSIZE2;
+	}
+}
+
 static void mdec0_write( UINT32 n_address, INT32 n_size )
 {
 	int n_index;
@@ -914,17 +986,31 @@ static void mdec1_read( UINT32 n_address, INT32 n_size )
 {
 	if( ( m_n_mdec0_command & ( 1L << 29 ) ) != 0 )
 	{
-		while( n_size > 0 )
+		/* bits 28-27 select the output depth: 0x38000000 = 15 bit, 0x30000000 = 24 bit */
+		if( ( m_n_mdec0_command & ( 1L << 27 ) ) != 0 )
 		{
-			m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
-			mdec_yuv2_to_rgb15( n_address );
-			n_address += ( 16 * 16 ) * 2;
-			n_size -= ( 16 * 16 ) / 2;
+			while( n_size > 0 )
+			{
+				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
+				mdec_yuv2_to_rgb15( n_address );
+				n_address += ( 16 * 16 ) * 2;
+				n_size -= ( 16 * 16 ) / 2;
+			}
+		}
+		else
+		{
+			while( n_size > 0 )
+			{
+				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
+				mdec_yuv2_to_rgb24( n_address );
+				n_address += ( 16 * 16 ) * 3;
+				n_size -= ( 16 * 16 * 3 ) / 4;
+			}
 		}
 	}
 	else
 	{
-		verboselog( 0, "mdec 24bit not supported\n" );
+		verboselog( 0, "mdec1_read no conversion %08x\n", m_n_mdec0_command );
 	}
 	m_n_mdec1_status &= ~( 1L << 29 );
 }

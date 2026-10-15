@@ -2699,7 +2699,10 @@ V-V                           TP-027
 	DRIVER( fgtlayerja )	/* Fighting Layer (Japan, FTL0/VER.A) */
 	DRIVER( pacapp )	/* Paca Paca Passion (PPP1/VERA) */
 	DRIVER( sws99 )		/* Super World Stadium '99 (SS91/VER.A) */
-	DRIVER( tekkentt )	/* Tekken Tag Tournament (TEG3/VER.B) */
+	DRIVER( tektagt )	/* Tekken Tag Tournament (World, TEG2/VER.C1) */
+	DRIVER( tektagtub )	/* Tekken Tag Tournament (US, TEG3/VER.B) */
+	DRIVER( tektagtuc1 )	/* Tekken Tag Tournament (US, TEG3/VER.C1) */
+	DRIVER( tektagtjc1 )	/* Tekken Tag Tournament (Japan, TEG1/VER.C1) */
 	DRIVER( mrdrillr )	/* Mr Driller (DRI1/VER.A) */
 	DRIVER( aquarush )	/* Aqua Rush (AQ1/VER.A) */
 	DRIVER( golgo13 )	/* Golgo 13 (GLG1/VER.A) */
