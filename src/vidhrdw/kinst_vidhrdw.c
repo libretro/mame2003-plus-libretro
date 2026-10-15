@@ -10,7 +10,7 @@
 #include "kinst.h"
 
 
-static UINT16 *vram_buffer;
+static data32_t *video_base;
 
 /* hardware is xBBBBBGGGGGRRRRR; the direct RGB bitmap is xRRRRRGGGGGBBBBB */
 #define KINST_RGB(v) ((((v) & 0x001f) << 10) | ((v) & 0x03e0) | (((v) >> 10) & 0x001f))
@@ -19,33 +19,14 @@ static UINT16 *vram_buffer;
 
 /*************************************
  *
- *	Video RAM buffering
+ *	Video RAM base selection
  *
  *************************************/
 
-void kinst_buffer_vram(data32_t *base)
+void kinst_set_video_base(data32_t *base)
 {
-	UINT16 *dest = vram_buffer;
-	int y;
-
-	/*  it is not at all understood how this really works; it breaks in
-		the disk test, but this seems to be a close approximation to the
-		real thing otherwise */
-
-	/* loop over rows */
-	for (y = 0; y < 240; y++)
-	{
-		data32_t *src = &base[640/4 * y];
-		int i;
-
-		/* loop over columns */
-		for (i = 0; i < 320; i += 2)
-		{
-			UINT32 pix = *src++;
-			*dest++ = KINST_RGB(pix);
-			*dest++ = KINST_RGB(pix >> 16);
-		}
-	}
+	/* the frame buffer is read straight from RAM, as in current MAME */
+	video_base = base;
 }
 
 
@@ -80,9 +61,6 @@ PALETTE_INIT( kinst )
 
 VIDEO_START( kinst )
 {
-	vram_buffer = auto_malloc(320 * 240 * sizeof(UINT16));
-	if (!vram_buffer)
-		return 1;
 	return 0;
 }
 
@@ -96,9 +74,20 @@ VIDEO_START( kinst )
 
 VIDEO_UPDATE( kinst )
 {
-	int y;
+	int x, y;
 
 	/* loop over rows and copy to the destination */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		memcpy(bitmap->line[y], &vram_buffer[y * 320], 320 * sizeof(UINT16));
+	{
+		const data32_t *src = &video_base[640/4 * y + cliprect->min_x / 2];
+		UINT16 *dest = (UINT16 *)bitmap->line[y] + (cliprect->min_x & ~1);
+
+		/* two pixels per 32-bit word */
+		for (x = cliprect->min_x & ~1; x <= cliprect->max_x; x += 2)
+		{
+			data32_t pix = *src++;
+			*dest++ = KINST_RGB(pix);
+			*dest++ = KINST_RGB(pix >> 16);
+		}
+	}
 }
