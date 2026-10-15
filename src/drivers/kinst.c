@@ -203,29 +203,39 @@ static void end_spin(int param)
 
 
 /*
-	Every version waits in the same busy loop on the CP0 Count register:
+	Speedups. Every version has the same two waiting loops, at different addresses.
+
+	1) A delay on the CP0 Count register:
 		v1 = [delay]
 	loop:	k0 = Count; k1 = [start]; k0 -= k1; if (k0 < v1) goto loop
 	When the loop reads [start] we skip the remaining wait.
-	The PC is the instruction after the read; addresses from each version's code.
+	The PC is the instruction after the read.
+
+	2) The wait for VBLANK, polling the interrupt bit in the CP0 Cause register:
+	loop:	v0 = Cause; if (!(v0 & 0x400)) goto loop
+	The MIPS3 core ends the timeslice there instead of spinning (idlepc).
+
+	On top of that the MIPS3 core reads and writes main RAM directly (fast RAM).
+	The addresses come from each version's code, as loaded from the hard disk.
 */
 struct kinst_speedup_info
 {
 	const char *	name;
 	offs_t			pc;
 	offs_t			address;
+	offs_t			idlepc;
 };
 
 static const struct kinst_speedup_info kinst_speedups[] =
 {
-	{ "kinst",    0x88029f98, 0x8808f5d4 },	/* v1.5d */
-	{ "kinst14",  0x88029890, 0x8808f5bc },	/* v1.4 */
-	{ "kinst13",  0x88029880, 0x8808f5bc },	/* v1.3 */
-	{ "kinstp",   0x88029010, 0x8808f5bc },	/* proto v4.7 */
-	{ "kinst2",   0x8802c2d0, 0x887ff544 },	/* v1.4 */
-	{ "kinst213", 0x8802c2d0, 0x887ff544 },	/* v1.3 */
-	{ "kinst211", 0x8802bef4, 0x887ff544 },	/* v1.1 */
-	{ "kinst210", 0x8802bb80, 0x887ff544 },	/* v1.0 */
+	{ "kinst",    0x88029f98, 0x8808f5d4, 0x88012638 },	/* v1.5d */
+	{ "kinst14",  0x88029890, 0x8808f5bc, 0x88012368 },	/* v1.4 */
+	{ "kinst13",  0x88029880, 0x8808f5bc, 0x88012358 },	/* v1.3 */
+	{ "kinstp",   0x88029010, 0x8808f5bc, 0x88011de8 },	/* proto v4.7 */
+	{ "kinst2",   0x8802c2d0, 0x887ff544, 0x8801a308 },	/* v1.4 */
+	{ "kinst213", 0x8802c2d0, 0x887ff544, 0x8801a308 },	/* v1.3 */
+	{ "kinst211", 0x8802bef4, 0x887ff544, 0x8801a1b8 },	/* v1.1 */
+	{ "kinst210", 0x8802bb80, 0x887ff544, 0x8801a058 },	/* v1.0 */
 	{ NULL }
 };
 
@@ -254,11 +264,22 @@ static void kinst_install_speedup(void)
 
 	for (info = kinst_speedups; info->name; info++)
 		if (!strcmp(Machine->gamedrv->name, info->name))
-		{
-			kinst_speedup_pc = info->pc;
-			kinst_speedup = install_mem_read32_handler(0, info->address, info->address + 3, kinst_speedup_r);
 			break;
-		}
+	if (!info->name)
+		return;
+
+	/* the Count delay loop */
+	kinst_speedup_pc = info->pc;
+	kinst_speedup = install_mem_read32_handler(0, info->address, info->address + 3, kinst_speedup_r);
+
+	/* the VBLANK wait (IRQ 0 is bit 0x400 of Cause) */
+	mips3_set_cause_idle_loop(info->idlepc, 0x400);
+
+	/* main RAM through a direct pointer, except the word watched by the delay speedup */
+	mips3_add_fastram(0x80000000, 0x8007ffff, 0, rambase1);
+	mips3_add_fastram(0xa0000000, 0xa007ffff, 0, rambase1);
+	mips3_add_fastram(0x88000000, info->address - 1, 0, rambase2);
+	mips3_add_fastram(info->address + 4, 0x887fffff, 0, (UINT8 *)rambase2 + (info->address + 4 - 0x88000000));
 }
 
 

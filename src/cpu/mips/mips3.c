@@ -293,6 +293,157 @@ static const memory_handlers le_memory =
 
 
 /*###################################################################################################
+**	OPTIONAL SPEEDUPS
+**
+**	Off unless a driver enables them (currently only Killer Instinct):
+**	- fast RAM: plain RAM regions read and written through a direct pointer
+**	  instead of the memory system, including instruction fetch;
+**	- idle loop: a loop that polls the COP0 Cause register for an interrupt
+**	  gives up the rest of its timeslice instead of spinning.
+**	They live outside the CPU context and are cleared by mips3_init().
+**#################################################################################################*/
+
+#define MIPS3_MAX_FASTRAM	8
+
+struct mips3_fastram
+{
+	offs_t		start;
+	offs_t		end;
+	UINT8 *		base;
+	UINT8		readonly;
+};
+
+static struct mips3_fastram fastram[MIPS3_MAX_FASTRAM];
+static int fastram_count;
+static offs_t fastram_byte_xor, fastram_word_xor;
+static memory_handlers fastram_slow;		/* handlers for everything else */
+
+static offs_t idle_pc;
+static UINT32 idle_cause_mask;
+
+
+void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base)
+{
+	if (fastram_count < MIPS3_MAX_FASTRAM)
+	{
+		fastram[fastram_count].start = start;
+		fastram[fastram_count].end = end;
+		fastram[fastram_count].base = (UINT8 *)base;
+		fastram[fastram_count].readonly = readonly;
+		fastram_count++;
+	}
+}
+
+
+void mips3_set_cause_idle_loop(offs_t pc, UINT32 causemask)
+{
+	idle_pc = pc;
+	idle_cause_mask = causemask;
+}
+
+
+static struct mips3_fastram *fastram_last = &fastram[0];
+
+static INLINE struct mips3_fastram *find_fastram(offs_t address)
+{
+	struct mips3_fastram *r = fastram_last;
+	int i;
+
+	/* most accesses hit the same region as the previous one */
+	if (address - r->start <= r->end - r->start)
+		return r;
+	for (i = 0; i < fastram_count; i++)
+		if (address - fastram[i].start <= fastram[i].end - fastram[i].start)
+			return fastram_last = &fastram[i];
+	return NULL;
+}
+
+static data8_t fastram_readbyte(offs_t address)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r) return r->base[(address - r->start) ^ fastram_byte_xor];
+	return (*fastram_slow.readbyte)(address);
+}
+
+static data16_t fastram_readword(offs_t address)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r) return *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor];
+	return (*fastram_slow.readword)(address);
+}
+
+static data32_t fastram_readlong(offs_t address)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r) return *(data32_t *)&r->base[address - r->start];
+	return (*fastram_slow.readlong)(address);
+}
+
+static UINT64 fastram_readdouble(offs_t address)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r && address + 7 <= r->end)
+	{
+		UINT64 first = *(data32_t *)&r->base[address - r->start];
+		UINT64 second = *(data32_t *)&r->base[address + 4 - r->start];
+		return mips3.bigendian ? ((first << 32) | second) : (first | (second << 32));
+	}
+	return (*fastram_slow.readdouble)(address);
+}
+
+static void fastram_writebyte(offs_t address, data8_t data)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r && !r->readonly) { r->base[(address - r->start) ^ fastram_byte_xor] = data; return; }
+	(*fastram_slow.writebyte)(address, data);
+}
+
+static void fastram_writeword(offs_t address, data16_t data)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r && !r->readonly) { *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor] = data; return; }
+	(*fastram_slow.writeword)(address, data);
+}
+
+static void fastram_writelong(offs_t address, data32_t data)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r && !r->readonly) { *(data32_t *)&r->base[address - r->start] = data; return; }
+	(*fastram_slow.writelong)(address, data);
+}
+
+static void fastram_writedouble(offs_t address, UINT64 data)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	if (r && !r->readonly && address + 7 <= r->end)
+	{
+		*(data32_t *)&r->base[address - r->start] = mips3.bigendian ? (data32_t)(data >> 32) : (data32_t)data;
+		*(data32_t *)&r->base[address + 4 - r->start] = mips3.bigendian ? (data32_t)data : (data32_t)(data >> 32);
+		return;
+	}
+	(*fastram_slow.writedouble)(address, data);
+}
+
+static const memory_handlers fastram_memory =
+{
+	fastram_readbyte,  fastram_readword,  fastram_readlong,  fastram_readdouble,
+	fastram_writebyte, fastram_writeword, fastram_writelong, fastram_writedouble
+};
+
+/* switch the memory handlers when fast RAM is in use */
+static void fastram_attach(void)
+{
+	if (!fastram_count || mips3.memory.readlong == fastram_readlong)
+		return;
+	fastram_slow = mips3.bigendian ? be_memory : le_memory;
+	fastram_byte_xor = mips3.bigendian ? BYTE4_XOR_BE(0) : BYTE4_XOR_LE(0);
+	fastram_word_xor = mips3.bigendian ? WORD_XOR_BE(0) : WORD_XOR_LE(0);
+	mips3.memory = fastram_memory;
+}
+
+
+
+/*###################################################################################################
 **	MEMORY ACCESSORS
 **#################################################################################################*/
 
@@ -441,6 +592,12 @@ static void compare_int_callback(int cpu)
 
 void mips3_init(void)
 {
+	/* optional speedups are off until a driver asks for them */
+	fastram_count = 0;
+	fastram_last = &fastram[0];
+	idle_pc = 0;
+	idle_cause_mask = 0;
+
 	mips3.compare_int_timer = timer_alloc(compare_int_callback);
 }
 
@@ -689,7 +846,11 @@ static INLINE void handle_cop0(UINT32 op)
 
 	switch (RSREG)
 	{
-		case 0x00:	/* MFCz */		if (RTREG) RTVAL64 = (INT32)get_cop0_reg(RDREG);		break;
+		case 0x00:	/* MFCz */		if (RTREG) RTVAL64 = (INT32)get_cop0_reg(RDREG);
+									/* optional idle loop: waiting for an interrupt in Cause */
+									if (idle_pc && mips3.ppc == idle_pc && RDREG == COP0_Cause && !(CAUSE & idle_cause_mask))
+										mips3_icount = 0;
+									break;
 		case 0x01:	/* DMFCz */		if (RTREG) RTVAL64 = get_cop0_reg(RDREG);				break;
 		case 0x02:	/* CFCz */		if (RTREG) RTVAL64 = (INT32)get_cop0_creg(RDREG);		break;
 		case 0x04:	/* MTCz */		set_cop0_reg(RDREG, RTVAL32);							break;
@@ -1282,6 +1443,9 @@ int mips3_execute(int cycles)
 	else
 		change_pc32bedw(mips3.pc);
 
+
+	/* optional fast RAM (see mips3_add_fastram) */
+	fastram_attach();
 
 	/* check for IRQs */
 	check_irqs();

@@ -183,6 +183,12 @@ extern void r5000le_reset(void *param);
 
 void mips3drc_set_options(UINT8 cpunum, UINT32 opts);
 
+/* optional speedups for a single MIPS3 CPU, off by default; set them up in DRIVER_INIT */
+/* plain RAM accessed through a direct pointer (no handlers may sit in the range) */
+void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base);
+/* an MFC0 of Cause at pc, waiting for one of causemask, ends the timeslice instead of spinning */
+void mips3_set_cause_idle_loop(offs_t pc, UINT32 causemask);
+
 
 
 #endif /* _MIPS3_H */
