@@ -997,6 +997,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_namcos2 core_none))
 	CPUS+=M6809@
 	CPUS+=HD63705@
 	SOUNDS+=C140@
+SOUNDS+=C352@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
@@ -1842,6 +1843,15 @@ else
 CPUDEFS += -DHAS_PSXCPU=0
 endif
 
+CPU=$(strip $(findstring H83002@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/h83002
+CPUDEFS += -DHAS_H83002=1
+SOURCES_C += $(CORE_DIR)/cpu/h83002/h83002.c
+else
+CPUDEFS += -DHAS_H83002=0
+endif
+
 CPU=$(strip $(findstring ASAP@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/asap
@@ -2485,6 +2495,14 @@ SOUNDDEFS += -DHAS_C140=1
 SOURCES_C += $(CORE_DIR)/sound/c140.c
 else
 SOUNDDEFS += -DHAS_C140=0
+endif
+
+SOUND=$(strip $(findstring C352@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C352=1
+SOURCES_C += $(CORE_DIR)/sound/c352.c
+else
+SOUNDDEFS += -DHAS_C352=0
 endif
 
 SOUND=$(strip $(findstring QSOUND@,$(SOUNDS)))

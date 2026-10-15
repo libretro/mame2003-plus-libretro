@@ -2690,7 +2690,8 @@ V-V                           TP-027
 	DRIVER( myangel3 )	/* Kosodate Quiz My Angel 3 (KQT1/VER.A) */
 
 	/* Namco System 12 */
-	DRIVER( tekken3 )	/* Tekken 3 (TET1/VER.E) */
+	DRIVER( tekken3 )	/* Tekken 3 (World, TET2/VER.E1) */
+	DRIVER( tekken3je1 )	/* Tekken 3 (Japan, TET1/VER.E1) */
 	DRIVER( soulclbr )	/* Soul Calibur (SOC1/VER.A) */
 	DRIVER( ehrgeiz )	/* Ehrgeiz (EG3/VER.A) */
 	DRIVER( mdhorse )	/* Derby Quiz My Dream Horse (MDH1/VER.A) */

@@ -3,9 +3,12 @@
   Namco System 12 - Arcade PSX Hardware
   =====================================
   Driver by smf
+  H8/3002 and Golgo13 support by R. Belmont based on work by The_Author and DynaChicken
+  H8/3002 + C352 sound backported to mame2003-plus (coh700s, Tekken 3 only for now)
 
   Issues:
-    sound cpu is only simulated enough for inputs to work, credit handling is not perfect.
+    on coh700 the sound cpu is only simulated enough for inputs to work, credit handling is not perfect.
+    coh700s runs the real H8/3002 sound/I-O program and the C352 (sound, inputs, coins, RTC).
     not all games work due to either banking, dma or protection issues.
     graphics are glitchy in some games.
 
@@ -14,7 +17,7 @@ Known Dumps
 
 Game       Description                             CPU board           Mother board             Daughter board          Keycus
 
-tekken3    Tekken 3 (TET1/VER.E)                   COH 700             ?                        SYSTEM12 M8F2           ?
+tekken3    Tekken 3 (TET2/VER.E1)                  COH 700             ?                        SYSTEM12 M8F2           ?
 soulclbr   Soul Calibur (SOC1/VER.A)               COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M5F2           KC020
 ehrgeiz    Ehrgeiz (EG3/VER.A)                     COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M4F6           KC021
 mdhorse    Derby Quiz My Dream Horse (MDH1/VER.A)  COH 700             SYSTEM12 MOTHER(B)       SYSTEM12 M10X64         KC035
@@ -41,6 +44,9 @@ X101: M53.693 KDS 745 (near CXD8654Q)
 #include "state.h"
 #include "cpu/mips/psx.h"
 #include "includes/psx.h"
+#include "cpu/h83002/h83002.h"
+#include "sound/c352.h"
+#include <time.h>
 
 #define VERBOSE_LEVEL ( 0 )
 
@@ -131,6 +137,187 @@ static INTERRUPT_GEN( namcos12_vblank )
 		}
 	}
 }
+
+
+/***************************************************************************
+
+  H8/3002 sound & I/O CPU and C352 (backported from MAME 0.152 / current MAME)
+
+  The H8/3002 runs the sound program from SOUND.11S, drives the C352 and
+  handles the inputs, coins, RTC and video settings, talking to the main
+  CPU through the shared RAM.  Machines using it (coh700s) do not need the
+  input/coin simulation done in namcos12_vblank.
+
+***************************************************************************/
+
+static data16_t *namcos12_h8ram;	/* H8 side of 0x080000-0x08ffff not seen by the PSX */
+
+/* the PSX sees the first 16KB (0x1f080000-0x1f083fff) as 32-bit LE, the H8 as 16-bit words */
+#define SHRAM16( x ) ( ( (data16_t *)namcos12_sharedram )[ WORD_XOR_LE( ( x ) * 2 ) / 2 ] )
+
+static READ16_HANDLER( s12_h8_sharedram_r )
+{
+	if( offset < 0x2000 )
+	{
+		return SHRAM16( offset );
+	}
+	return namcos12_h8ram[ offset - 0x2000 ];
+}
+
+static WRITE16_HANDLER( s12_h8_sharedram_w )
+{
+	if( offset < 0x2000 )
+	{
+		COMBINE_DATA( &SHRAM16( offset ) );
+	}
+	else
+	{
+		COMBINE_DATA( &namcos12_h8ram[ offset - 0x2000 ] );
+	}
+}
+
+static READ16_HANDLER( s12_h8_in0_r )
+{
+	return readinputport( 1 );
+}
+
+static READ16_HANDLER( s12_h8_in1_r )
+{
+	return readinputport( 2 );
+}
+
+static MEMORY_READ16_START( s12h8_readmem )
+	{ 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x080000, 0x08ffff, s12_h8_sharedram_r },
+	{ 0x280000, 0x287fff, c352_0_r },
+	{ 0x300000, 0x300001, s12_h8_in0_r },
+	{ 0x300002, 0x300003, s12_h8_in1_r },
+	{ 0x300010, 0x300011, MRA16_NOP },	/* golgo13 writes here a lot, possibly also a wait state generator? */
+	{ 0x300030, 0x300031, MRA16_NOP },	/* most S12 bioses write here simply to generate a wait state.  there is no deeper meaning. */
+MEMORY_END
+
+static MEMORY_WRITE16_START( s12h8_writemem )
+	{ 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x080000, 0x08ffff, s12_h8_sharedram_w },
+	{ 0x280000, 0x287fff, c352_0_w },
+	{ 0x300010, 0x300011, MWA16_NOP },
+	{ 0x300030, 0x300031, MWA16_NOP },
+MEMORY_END
+
+/* emulation of the Epson R4543 real time clock
+   in System 12, bit 0 of H8/3002 port A is connected to it's chip enable
+   the actual I/O takes place through the H8/3002's serial port B. */
+static int s12_porta = 0, s12_rtcstate = 0;
+static int s12_lastpB = 0x50, s12_setstate = 0, s12_setnum = 0, s12_settings[ 8 ];
+
+static data8_t make_bcd( data8_t data )
+{
+	return ( ( data / 10 ) << 4 ) | ( data % 10 );
+}
+
+static data8_t s12_mcu_rtc_r( void )
+{
+	/* the R4543 shifts out 52 bits LSB first: seconds, minutes, hours (8 bits each),
+	   day of the week (4 bits), day, month, year (8 bits each).  The H8 reads them
+	   8 bits at a time, so everything after the day of the week is nibble-shifted. */
+	time_t now = time( NULL );
+	struct tm *t = localtime( &now );
+	UINT64 bits = 0;
+	data8_t ret;
+
+	if( t != NULL )
+	{
+		static const int weekday[ 7 ] = { 7, 1, 2, 3, 4, 5, 6 };	/* 1 = Monday, 7 = Sunday */
+
+		bits  = (UINT64)make_bcd( t->tm_sec );					/* seconds (BCD, 0-59), bit 7 = battery low */
+		bits |= (UINT64)make_bcd( t->tm_min ) << 8;				/* minutes (BCD, 0-59) */
+		bits |= (UINT64)make_bcd( t->tm_hour ) << 16;			/* hour (BCD, 0-23) */
+		bits |= (UINT64)( weekday[ t->tm_wday ] & 0x0f ) << 24;	/* day of the week */
+		bits |= (UINT64)make_bcd( t->tm_mday ) << 28;			/* day (BCD, 1-31) */
+		bits |= (UINT64)make_bcd( t->tm_mon + 1 ) << 36;		/* month (BCD, 1-12) */
+		bits |= (UINT64)make_bcd( t->tm_year % 100 ) << 44;		/* year (BCD, 0-99) */
+	}
+
+	ret = ( s12_rtcstate < 7 ) ? (data8_t)( bits >> ( s12_rtcstate * 8 ) ) : 0;
+	s12_rtcstate++;
+	return ret;
+}
+
+static void s12_mcu_settings_w( data8_t data )
+{
+	if( s12_setstate )
+	{
+		/* data */
+		s12_settings[ s12_setnum & 7 ] = data;
+	}
+	else
+	{
+		/* setting number */
+		s12_setnum = ( data >> 4 ) - 1;
+	}
+
+	s12_setstate ^= 1;
+}
+
+static data8_t s12_h8_io_r( int port )
+{
+	switch( port )
+	{
+	case H8_PORT_7:
+		return readinputport( 0 ) & 0xff;	/* DIP switches */
+	case H8_PORT_8:
+		return 0x02;
+	case H8_PORT_A:
+		return s12_porta;
+	case H8_PORT_B:
+		/* golgo13 won't boot if this doesn't toggle every read */
+		s12_lastpB ^= 0x80;
+		return s12_lastpB;
+	case H8_SERIAL_1:
+		return s12_mcu_rtc_r();
+	}
+	return 0;
+}
+
+static void s12_h8_io_w( int port, data8_t data )
+{
+	switch( port )
+	{
+	case H8_PORT_A:
+		/* bit 0 = chip enable for the RTC, reset the state on the rising edge of the bit */
+		if( ( !( s12_porta & 1 ) ) && ( data & 1 ) )
+		{
+			s12_rtcstate = 0;
+		}
+		s12_porta = data;
+		break;
+	case H8_PORT_B:
+		/* bit 7 = chip enable for the video settings controller */
+		if( data & 0x80 )
+		{
+			s12_setstate = 0;
+		}
+		s12_lastpB = data;
+		break;
+	case H8_SERIAL_1:
+		s12_mcu_settings_w( data );
+		break;
+	}
+}
+
+static INTERRUPT_GEN( namcos12_vblank_h8 )
+{
+	/* inputs, coins and sound are handled by the H8/3002 */
+	psx_vblank();
+}
+
+static struct C352interface c352_interface =
+{
+	25401600,		/* clock */
+	288,			/* divider: 88.2kHz output */
+	REGION_SOUND1,
+	100
+};
 
 static data32_t m_n_bankoffset;
 
@@ -273,9 +460,37 @@ static DRIVER_INIT( namcos12 )
 	}
 }
 
+static DRIVER_INIT( namcos12_h8 )
+{
+	init_namcos12();
+
+	namcos12_h8ram = auto_malloc( 0xc000 );
+	memset( namcos12_h8ram, 0, 0xc000 );
+	state_save_register_UINT16( "namcos12", 0, "h8ram", namcos12_h8ram, 0xc000 / 2 );
+
+	state_save_register_int( "namcos12", 0, "s12_porta", &s12_porta );
+	state_save_register_int( "namcos12", 0, "s12_rtcstate", &s12_rtcstate );
+	state_save_register_int( "namcos12", 0, "s12_lastpB", &s12_lastpB );
+	state_save_register_int( "namcos12", 0, "s12_setstate", &s12_setstate );
+	state_save_register_int( "namcos12", 0, "s12_setnum", &s12_setnum );
+
+	h8_3002_set_io_handlers( s12_h8_io_r, s12_h8_io_w );
+}
+
 MACHINE_INIT( namcos12 )
 {
 	psx_machine_init();
+}
+
+MACHINE_INIT( namcos12_h8 )
+{
+	psx_machine_init();
+
+	s12_porta = 0;
+	s12_rtcstate = 0;
+	s12_lastpB = 0x50;
+	s12_setstate = 0;
+	s12_setnum = 0;
 }
 
 static MACHINE_DRIVER_START( coh700 )
@@ -309,6 +524,93 @@ static MACHINE_DRIVER_START( coh700 )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
 MACHINE_DRIVER_END
+
+/* System 12 with the H8/3002 sound/I-O CPU and the C352 */
+static MACHINE_DRIVER_START( coh700s )
+	/* basic machine hardware */
+	MDRV_CPU_ADD( PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_MEMORY( namcos12_readmem, namcos12_writemem )
+	MDRV_CPU_VBLANK_INT( namcos12_vblank_h8, 1 )
+
+	MDRV_CPU_ADD( H83002, 16934400 ) /* frequency based on research (superctr) */
+	MDRV_CPU_MEMORY( s12h8_readmem, s12h8_writemem )
+	MDRV_CPU_VBLANK_INT( irq1_line_pulse, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+	MDRV_INTERLEAVE( 40 )
+
+	MDRV_MACHINE_INIT( namcos12_h8 )
+	MDRV_NVRAM_HANDLER( generic_0fill )
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
+#if defined( MAME_DEBUG )
+	MDRV_SCREEN_SIZE( 1024, 1024 )
+	MDRV_VISIBLE_AREA( 0, 1023, 0, 1023 )
+#else
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+#endif
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( C352, c352_interface )
+MACHINE_DRIVER_END
+
+/* inputs read by the H8/3002 (port 7 and 0x300000/0x300002) */
+INPUT_PORTS_START( namcos12_h8 )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
 
 INPUT_PORTS_START( namcos12 )
 	/* IN 0 */
@@ -604,25 +906,51 @@ ROM_START( tekken3 )
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
 
 	ROM_REGION32_LE( 0x00400000, REGION_USER2, 0 ) /* main prg */
-	ROM_LOAD16_BYTE( "tet1vere.2e", 0x0000000, 0x200000, CRC(8b01113b) SHA1(45fdfd58293641ed16bc59c633a85a9cf64ccbaf) )
-	ROM_LOAD16_BYTE( "tet1vere.2j", 0x0000001, 0x200000, CRC(df4c96fb) SHA1(2e223045bf5b80ccf615106e869760c5b7aa8d44) )
+	ROM_LOAD16_BYTE( "tet2vere1.2e", 0x0000000, 0x200000, CRC(7ded5461) SHA1(3a5638c6ad40bfde6e12fdfd6d469f6ea5e9f4fb) )
+	ROM_LOAD16_BYTE( "tet2vere1.2j", 0x0000001, 0x200000, CRC(25c96e1e) SHA1(554d1e42886d6a6c9c5857e9cbd5d7c37d7a6e67) )
 
 	ROM_REGION32_LE( 0x1c00000, REGION_USER3, 0 ) /* main data */
-	ROM_LOAD16_BYTE( "tet1rm0l.6",  0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
-	ROM_LOAD16_BYTE( "tet1rm0u.9",  0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
-	ROM_LOAD16_BYTE( "tet1rm1l.7",  0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
-	ROM_LOAD16_BYTE( "tet1rm1u.10", 0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
-	ROM_LOAD16_BYTE( "tet1rm2l.8",  0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
-	ROM_LOAD16_BYTE( "tet1rm2u.11", 0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
-	ROM_LOAD16_BYTE( "tet1fl3l.12", 0x1800000, 0x200000, CRC(45513073) SHA1(8a36f58ee2d292b50e00c6bf275f9def358032d8) )
-	ROM_LOAD16_BYTE( "tet1fl3u.13", 0x1800001, 0x200000, CRC(1917d993) SHA1(cabc44514a3e62a18a7f8f883603241447d6948b) )
+	ROM_LOAD16_BYTE( "tet1rom0l.6",  0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
+	ROM_LOAD16_BYTE( "tet1rom0u.9",  0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
+	ROM_LOAD16_BYTE( "tet1rom1l.7",  0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
+	ROM_LOAD16_BYTE( "tet1rom1u.10", 0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
+	ROM_LOAD16_BYTE( "tet1rom2l.8",  0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
+	ROM_LOAD16_BYTE( "tet1rom2u.11", 0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
+	ROM_LOAD16_BYTE( "tet1fl3l.12",  0x1800000, 0x200000, CRC(45513073) SHA1(8a36f58ee2d292b50e00c6bf275f9def358032d8) )
+	ROM_LOAD16_BYTE( "tet1fl3u.13",  0x1800001, 0x200000, CRC(1917d993) SHA1(cabc44514a3e62a18a7f8f883603241447d6948b) )
 
-	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg */
-	ROM_LOAD( "tet1vere.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) )
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "tet1vere.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) )
 
-	ROM_REGION( 0x0800000, REGION_SOUND1, 0 ) /* samples */
-	ROM_LOAD( "tet1wav0.5",   0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
-	ROM_LOAD( "tet1wav1.4",   0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "tet1wave0.5",  0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
+	ROM_LOAD( "tet1wave1.4",  0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
+ROM_END
+
+ROM_START( tekken3je1 )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x00400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "tet1vere1.2e", 0x0000000, 0x200000, CRC(8b01113b) SHA1(45fdfd58293641ed16bc59c633a85a9cf64ccbaf) )
+	ROM_LOAD16_BYTE( "tet1vere1.2j", 0x0000001, 0x200000, CRC(df4c96fb) SHA1(2e223045bf5b80ccf615106e869760c5b7aa8d44) )
+
+	ROM_REGION32_LE( 0x1c00000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD16_BYTE( "tet1rom0l.6",  0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
+	ROM_LOAD16_BYTE( "tet1rom0u.9",  0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
+	ROM_LOAD16_BYTE( "tet1rom1l.7",  0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
+	ROM_LOAD16_BYTE( "tet1rom1u.10", 0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
+	ROM_LOAD16_BYTE( "tet1rom2l.8",  0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
+	ROM_LOAD16_BYTE( "tet1rom2u.11", 0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
+	ROM_LOAD16_BYTE( "tet1fl3l.12",  0x1800000, 0x200000, CRC(45513073) SHA1(8a36f58ee2d292b50e00c6bf275f9def358032d8) )
+	ROM_LOAD16_BYTE( "tet1fl3u.13",  0x1800001, 0x200000, CRC(1917d993) SHA1(cabc44514a3e62a18a7f8f883603241447d6948b) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "tet1vere.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "tet1wave0.5",  0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
+	ROM_LOAD( "tet1wave1.4",  0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
 
 ROM_START( tekkentt )
@@ -653,7 +981,8 @@ ROM_START( tekkentt )
 	ROM_LOAD( "teg3wav1.12",  0x0800000, 0x800000, CRC(dbc74fff) SHA1(601b7e7361ea744b34e3fa1fc39d88641de7f4c6) )
 ROM_END
 
-GAMEX( 1996, tekken3,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Tekken 3 (TET1-VER.E)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1997, tekken3,   0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Tekken 3 (World, TET2/VER.E1)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, tekken3je1, tekken3, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Tekken 3 (Japan, TET1/VER.E1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, soulclbr,  0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Soul Calibur (SOC1-VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1998, ehrgeiz,   0,        coh700, namcos12, namcos12, ROT0, "Square/Namco",  "Ehrgeiz (EG3-VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1998, mdhorse,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Derby Quiz My Dream Horse (MDH1-VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )

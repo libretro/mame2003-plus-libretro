@@ -127014,14 +127014,14 @@ tekken2b:0:0030669E:7E:000:Infinite Energy PL2
 tekken2b:0:0030669E:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 3 (TET1/VER.E1) ]
-tekken3:0:0021FB8C:32:000:Infinite Time
-tekken3:0:0021FB8D:17:500:Infinite Time (2/2)
-tekken3:0:0021FB8C:01:001:Finish this Round Now!
-tekken3:0:0021FB8D:00:501:Finish this Round Now! (2/2)
-tekken3:0:0031E492:82:000:Infinite Energy PL1
-tekken3:0:0031E492:00:001:Drain All Energy Now! PL1
-tekken3:0:0031FF76:82:000:Infinite Energy PL2
-tekken3:0:0031FF76:00:001:Drain All Energy Now! PL2
+tekken3je1:0:0021FB8C:32:000:Infinite Time
+tekken3je1:0:0021FB8D:17:500:Infinite Time (2/2)
+tekken3je1:0:0021FB8C:01:001:Finish this Round Now!
+tekken3je1:0:0021FB8D:00:501:Finish this Round Now! (2/2)
+tekken3je1:0:0031E492:82:000:Infinite Energy PL1
+tekken3je1:0:0031E492:00:001:Drain All Energy Now! PL1
+tekken3je1:0:0031FF76:82:000:Infinite Energy PL2
+tekken3je1:0:0031FF76:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken (TE2/VER.B) ]
 tekkena:0:00266CE0:09:000:Infinite Credits
