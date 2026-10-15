@@ -8,6 +8,7 @@
 #include <retro_inline.h>
 #include <utils/md5.h>
 #include "mame_sha1.h"
+#include "chd_v5.h"
 #include <compat/zlib.h>
 #include <time.h>
 #include <string.h>
@@ -126,6 +127,8 @@ struct chd_file
 	struct crcmap_entry **	crctable;		/* table of CRC entries */
 
 	UINT32					maxhunk;		/* maximum hunk accessed */
+
+	void *					v5;				/* CHD v4/v5 read through libchdr (chd_v5.c), or NULL */
 };
 
 struct zlib_codec_data
@@ -396,6 +399,8 @@ int chd_create(const char *filename, UINT64 logicalbytes, UINT32 hunkbytes, UINT
 				mapentry.offset = i * MAP_STACK_ENTRIES + j;
 				mapentry.crc = parent->map[i * MAP_STACK_ENTRIES + j].crc;
 				mapentry.flags = MAP_ENTRY_TYPE_PARENT_HUNK;
+				if (parent->v5)
+					mapentry.flags |= MAP_ENTRY_FLAG_NO_CRC;
 				assemble_map_entry(&blank_map_entries[j * MAP_ENTRY_SIZE], &mapentry);
 			}
 
@@ -416,6 +421,8 @@ int chd_create(const char *filename, UINT64 logicalbytes, UINT32 hunkbytes, UINT
 				mapentry.offset = i * MAP_STACK_ENTRIES + j;
 				mapentry.crc = parent->map[i * MAP_STACK_ENTRIES + j].crc;
 				mapentry.flags = MAP_ENTRY_TYPE_PARENT_HUNK;
+				if (parent->v5)
+					mapentry.flags |= MAP_ENTRY_FLAG_NO_CRC;
 				assemble_map_entry(&blank_map_entries[j * MAP_ENTRY_SIZE], &mapentry);
 			}
 
@@ -474,6 +481,64 @@ cleanup:
 
 /*************************************
  *
+ *	CHD v4/v5 support (libchdr)
+ *
+ *************************************/
+
+static UINT32 v5_read(void *param, UINT64 offset, UINT32 count, void *buffer)
+{
+	return multi_read((struct chd_interface_file *)param, offset, count, buffer);
+}
+
+
+static int is_v5_file(struct chd_interface_file *file)
+{
+	UINT8 rawheader[16];
+
+	if (multi_read(file, 0, sizeof(rawheader), rawheader) != sizeof(rawheader))
+		return 0;
+	return strncmp((char *)rawheader, "MComprHD", 8) == 0 && get_bigendian_uint32(&rawheader[12]) > CHD_HEADER_VERSION;
+}
+
+
+static int open_v5(struct chd_file *chd)
+{
+	struct chd_v5_info info;
+	UINT32 i;
+
+	chd->v5 = chd_v5_open(v5_read, chd->file, multi_length(chd->file), &info);
+	if (!chd->v5)
+		return CHDERR_UNSUPPORTED_VERSION;
+
+	/* present it with a v3-style header: no MD5, no compression of ours */
+	memset(&chd->header, 0, sizeof(chd->header));
+	chd->header.length = CHD_V3_HEADER_SIZE;
+	chd->header.version = info.version;
+	chd->header.compression = CHDCOMPRESSION_NONE;
+	chd->header.hunkbytes = info.hunkbytes;
+	chd->header.totalhunks = info.totalhunks;
+	chd->header.logicalbytes = info.logicalbytes;
+	memcpy(chd->header.sha1, info.sha1, sizeof(chd->header.sha1));
+	memcpy(chd->header.rawsha1, info.rawsha1, sizeof(chd->header.rawsha1));
+
+	/* hunks have no CRC we can check; differencing files depend on this map */
+	chd->map = malloc(chd->header.totalhunks * sizeof(chd->map[0]));
+	if (!chd->map)
+		return CHDERR_OUT_OF_MEMORY;
+	for (i = 0; i < chd->header.totalhunks; i++)
+	{
+		chd->map[i].offset = 0;
+		chd->map[i].crc = 0;
+		chd->map[i].length = 0;
+		chd->map[i].flags = MAP_ENTRY_TYPE_COMPRESSED | MAP_ENTRY_FLAG_NO_CRC;
+	}
+	return CHDERR_NONE;
+}
+
+
+
+/*************************************
+ *
  *	Opening a data file
  *
  *************************************/
@@ -503,6 +568,17 @@ struct chd_file *chd_open(const char *filename, int writeable, struct chd_file *
 	chd.file = multi_open(filename, writeable ? "rb+" : "rb");
 	if (!chd.file)
 		SET_ERROR_AND_CLEANUP(CHDERR_FILE_NOT_FOUND);
+
+	/* CHD v4/v5 (current MAME): read-only, through libchdr */
+	if (is_v5_file(chd.file))
+	{
+		if (writeable)
+			SET_ERROR_AND_CLEANUP(CHDERR_FILE_NOT_WRITEABLE);
+		err = open_v5(&chd);
+		if (err != CHDERR_NONE)
+			SET_ERROR_AND_CLEANUP(err);
+		goto allocate_buffers;
+	}
 
 	/* now attempt to read the header */
 	err = read_header(chd.file, &chd.header);
@@ -535,10 +611,16 @@ struct chd_file *chd_open(const char *filename, int writeable, struct chd_file *
 			memcmp(chd.parent->header.md5, chd.header.parentmd5, sizeof(chd.header.parentmd5)))
 			SET_ERROR_AND_CLEANUP(CHDERR_INVALID_PARENT);
 
-		/* check SHA1 if it isn't empty */
+		/* check SHA1 if it isn't empty; a v4/v5 parent also matches by its raw data SHA1, */
+		/* which is what a differencing file made against the same disk as a v3 CHD holds */
 		if (memcmp(nullsha1, chd.header.parentsha1, sizeof(chd.header.parentsha1)) &&
 			memcmp(nullsha1, chd.parent->header.sha1, sizeof(chd.parent->header.sha1)) &&
-			memcmp(chd.parent->header.sha1, chd.header.parentsha1, sizeof(chd.header.parentsha1)))
+			memcmp(chd.parent->header.sha1, chd.header.parentsha1, sizeof(chd.header.parentsha1)) &&
+			!(chd.parent->v5 && !memcmp(chd.parent->header.rawsha1, chd.header.parentsha1, sizeof(chd.header.parentsha1))))
+			SET_ERROR_AND_CLEANUP(CHDERR_INVALID_PARENT);
+
+		/* hunks of a v4/v5 parent must line up with the differencing file */
+		if (chd.parent->v5 && (chd.parent->header.hunkbytes != chd.header.hunkbytes || chd.parent->header.totalhunks != chd.header.totalhunks))
 			SET_ERROR_AND_CLEANUP(CHDERR_INVALID_PARENT);
 	}
 
@@ -547,6 +629,7 @@ struct chd_file *chd_open(const char *filename, int writeable, struct chd_file *
 	if (err != CHDERR_NONE)
 		SET_ERROR_AND_CLEANUP(err);
 
+allocate_buffers:
 	/* allocate and init the hunk cache */
 	chd.cache = malloc(chd.header.hunkbytes);
 	chd.compare = malloc(chd.header.hunkbytes);
@@ -560,10 +643,13 @@ struct chd_file *chd_open(const char *filename, int writeable, struct chd_file *
 	if (!chd.compressed)
 		SET_ERROR_AND_CLEANUP(CHDERR_OUT_OF_MEMORY);
 
-	/* now init the codec */
-	err = init_codec(&chd);
-	if (err != CHDERR_NONE)
-		SET_ERROR_AND_CLEANUP(err);
+	/* now init the codec (libchdr has its own) */
+	if (!chd.v5)
+	{
+		err = init_codec(&chd);
+		if (err != CHDERR_NONE)
+			SET_ERROR_AND_CLEANUP(err);
+	}
 
 	/* okay, now allocate our entry and copy it */
 	finalchd = malloc(sizeof(chd));
@@ -580,6 +666,8 @@ struct chd_file *chd_open(const char *filename, int writeable, struct chd_file *
 	return finalchd;
 
 cleanup:
+	if (chd.v5)
+		chd_v5_close(chd.v5);
 	if (chd.codecdata)
 		free_codec(&chd);
 	if (chd.compressed)
@@ -633,6 +721,10 @@ void chd_close(struct chd_file *chd)
 	if (chd->crcmap)
 		free(chd->crcmap);
 
+	/* close the libchdr handle */
+	if (chd->v5)
+		chd_v5_close(chd->v5);
+
 	/* close the file */
 	if (chd->file)
 		multi_close(chd->file);
@@ -682,6 +774,14 @@ UINT32 chd_get_metadata(struct chd_file *chd, UINT32 *metatag, UINT32 metaindex,
 {
 	struct metadata_entry metaentry;
 	UINT32 count;
+
+	/* CHD v4/v5 */
+	if (chd->v5)
+	{
+		count = chd_v5_get_metadata(chd->v5, metatag, metaindex, outputbuf, outputlen);
+		last_error = count ? CHDERR_NONE : CHDERR_METADATA_NOT_FOUND;
+		return count;
+	}
 
 	/* if we didn't find it, just return */
 	last_error = find_metadata_entry(chd, *metatag, metaindex, &metaentry);
@@ -902,6 +1002,10 @@ UINT32 chd_write(struct chd_file *chd, UINT32 hunknum, UINT32 hunkcount, const v
 	/* punt if NULL or invalid */
 	if (!chd || chd->cookie != COOKIE_VALUE)
 		SET_ERROR_AND_CLEANUP(CHDERR_INVALID_PARAMETER);
+
+	/* CHD v4/v5 files are read-only */
+	if (chd->v5)
+		SET_ERROR_AND_CLEANUP(CHDERR_FILE_NOT_WRITEABLE);
 
 	/* if we're past the end, fail */
 	if (hunknum >= chd->header.totalhunks)
@@ -1301,6 +1405,10 @@ static int read_hunk_into_memory(struct chd_file *chd, UINT32 hunknum, UINT8 *de
 	struct map_entry *entry = &chd->map[hunknum];
 	UINT32 bytes;
 	int err;
+
+	/* CHD v4/v5 */
+	if (chd->v5)
+		return chd_v5_read_hunk(chd->v5, hunknum, dest) ? CHDERR_NONE : CHDERR_DECOMPRESSION_ERROR;
 
 	/* switch off the entry type */
 	switch (entry->flags & MAP_ENTRY_FLAG_TYPE_MASK)
