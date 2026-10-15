@@ -1956,7 +1956,7 @@ ifeq ($(HAS_MIPS3),1)
 ifdef X86_MIPS3_DRC
 SOURCES_C += $(CORE_DIR)/cpu/mips/mips3drc.c
 else
-SOURCES_C += $(CORE_DIR)/cpu/mips/mips3.c
+SOURCES_C += $(CORE_DIR)/cpu/mips/mips3.c $(CORE_DIR)/cpu/mips/mips3jit_sljit.c
 endif
 ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/mips/mips3dsm.c

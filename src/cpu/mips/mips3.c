@@ -13,6 +13,7 @@
 **
 **#################################################################################################*/
 
+#include "mips3jit.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -21,6 +22,7 @@
 #include "driver.h"
 #include "mamedbg.h"
 #include "mips3.h"
+#include "state.h"
 
 
 #define ENABLE_OVERFLOWS	0
@@ -344,6 +346,9 @@ void mips3_set_cause_idle_loop(offs_t pc, UINT32 causemask)
 
 static struct mips3_fastram *fastram_last = &fastram[0];
 
+/* recompiler hook (mips3jit.c): a write may hit translated code */
+static INLINE void jit_check_write(const void *host);
+
 static INLINE struct mips3_fastram *find_fastram(offs_t address)
 {
 	struct mips3_fastram *r = fastram_last;
@@ -394,21 +399,21 @@ static UINT64 fastram_readdouble(offs_t address)
 static void fastram_writebyte(offs_t address, data8_t data)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r && !r->readonly) { r->base[(address - r->start) ^ fastram_byte_xor] = data; return; }
+	if (r && !r->readonly) { jit_check_write(&r->base[address - r->start]); r->base[(address - r->start) ^ fastram_byte_xor] = data; return; }
 	(*fastram_slow.writebyte)(address, data);
 }
 
 static void fastram_writeword(offs_t address, data16_t data)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r && !r->readonly) { *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor] = data; return; }
+	if (r && !r->readonly) { jit_check_write(&r->base[address - r->start]); *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor] = data; return; }
 	(*fastram_slow.writeword)(address, data);
 }
 
 static void fastram_writelong(offs_t address, data32_t data)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r && !r->readonly) { *(data32_t *)&r->base[address - r->start] = data; return; }
+	if (r && !r->readonly) { jit_check_write(&r->base[address - r->start]); *(data32_t *)&r->base[address - r->start] = data; return; }
 	(*fastram_slow.writelong)(address, data);
 }
 
@@ -417,6 +422,8 @@ static void fastram_writedouble(offs_t address, UINT64 data)
 	struct mips3_fastram *r = find_fastram(address);
 	if (r && !r->readonly && address + 7 <= r->end)
 	{
+		jit_check_write(&r->base[address - r->start]);
+		jit_check_write(&r->base[address + 4 - r->start]);
 		*(data32_t *)&r->base[address - r->start] = mips3.bigendian ? (data32_t)(data >> 32) : (data32_t)data;
 		*(data32_t *)&r->base[address + 4 - r->start] = mips3.bigendian ? (data32_t)data : (data32_t)(data >> 32);
 		return;
@@ -440,6 +447,9 @@ static void fastram_attach(void)
 	fastram_word_xor = mips3.bigendian ? WORD_XOR_BE(0) : WORD_XOR_LE(0);
 	mips3.memory = fastram_memory;
 }
+
+
+#include "mips3jit.c"
 
 
 
@@ -595,6 +605,7 @@ void mips3_init(void)
 	/* optional speedups are off until a driver asks for them */
 	fastram_count = 0;
 	fastram_last = &fastram[0];
+	mips3_set_jit(0);
 	idle_pc = 0;
 	idle_cause_mask = 0;
 
@@ -692,6 +703,8 @@ void r5000le_reset(void *param)
 
 void mips3_exit(void)
 {
+	mips3_set_jit(0);
+
 	/* free cache memory */
 	if (mips3.icache)
 		free(mips3.icache);
@@ -1460,6 +1473,22 @@ int mips3_execute(int cycles)
 		/* debugging */
 		mips3.ppc = mips3.pc;
 		CALL_MAME_DEBUG;
+
+#if MIPS3_JIT_SUPPORTED
+		/* recompiled block, when there are enough cycles left for all of it */
+		if (jit_enabled && mips3.nextpc == ~0)
+		{
+			struct jit_block *block = jit_lookup(mips3.pc);
+			if (block && (int)block->len <= mips3_icount)
+			{
+				mips3.pc = ((jit_func)block->code)();
+				mips3.ppc = block->lastpc;
+				mips3_icount -= block->len;
+				change_pc32bedw(mips3.pc);
+				continue;
+			}
+		}
+#endif
 
 		/* instruction fetch */
 		op = ROPCODE(mips3.pc);

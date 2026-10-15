@@ -188,6 +188,8 @@ void mips3drc_set_options(UINT8 cpunum, UINT32 opts);
 void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base);
 /* an MFC0 of Cause at pc, waiting for one of causemask, ends the timeslice instead of spinning */
 void mips3_set_cause_idle_loop(offs_t pc, UINT32 causemask);
+/* recompile integer code in fast RAM with sljit, where supported (x86-64, AArch64) */
+void mips3_set_jit(int enable);
 
 
 

@@ -1,0 +1,10 @@
+sljit for mame2003-plus
+=======================
+
+Source: https://github.com/zherczeg/sljit, commit 39c508d (2026-09-30),
+sljit_src folder only, unmodified. BSD 2-clause (LICENSE).
+
+Used by the optional MIPS3 recompiler (src/cpu/mips/mips3jit.c). It is
+built through src/cpu/mips/mips3jit_sljit.c, and only on the hosts the
+recompiler supports (64-bit little-endian x86-64 and AArch64, see
+src/cpu/mips/mips3jit.h); elsewhere nothing of it is compiled.
