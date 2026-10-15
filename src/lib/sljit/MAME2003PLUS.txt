@@ -4,7 +4,12 @@ sljit for mame2003-plus
 Source: https://github.com/zherczeg/sljit, commit 39c508d (2026-09-30),
 sljit_src folder only, unmodified. BSD 2-clause (LICENSE).
 
-Used by the optional MIPS3 recompiler (src/cpu/mips/mips3jit.c). It is
-built through src/cpu/mips/mips3jit_sljit.c, and only on the hosts the
-recompiler supports (64-bit little-endian x86-64 and AArch64, see
-src/cpu/mips/mips3jit.h); elsewhere nothing of it is compiled.
+Used by the optional recompilers: MIPS III (src/cpu/mips/mips3jit.c) and
+PSX CPU (src/cpu/mips/psxjit.c). Added here:
+
+sljit_mame.h   configuration shared by the recompilers, and
+               SLJIT_MAME_SUPPORTED: the hosts they support (little-endian
+               x86 and ARM, 32 and 64-bit, not where run-time code
+               generation is forbidden or restricted)
+sljit_mame.c   builds sljit once (only on those hosts; elsewhere nothing
+               of it is compiled)
