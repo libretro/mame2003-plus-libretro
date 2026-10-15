@@ -4970,6 +4970,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 
 	DRIVER( raiden2 )
+  DRIVER( raidendx )
 
 /* Seibu STI System games:
 	Viper: Phase 1 					(c) 1995
