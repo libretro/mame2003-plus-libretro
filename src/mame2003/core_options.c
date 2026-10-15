@@ -10,6 +10,9 @@
 #include "driver.h"
 #include <libretro.h>
 #include <string/stdstring.h>
+#if (HAS_PSXCPU)
+#include "cpu/mips/psx.h"
+#endif
 
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
@@ -751,6 +754,21 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    "default"
 };
 
+static struct retro_core_option_v2_definition option_def_mips_dynarec = {
+   APPNAME"_mips_dynarec",
+   "MIPS Dynarec",
+   NULL,
+   "Restart core required. Recompile the MIPS CPU code to native code (Namco System 11/12: Tekken, Tekken 2, Tekken 3, Tekken Tag Tournament, Soul Edge...). Only offered on x86 and ARM hosts (32 and 64-bit) that allow it; turn it off to use the interpreter.",
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone Mode",
@@ -885,6 +903,8 @@ void init_core_options(void)
   default_options[OPT_CHEAT_INPUT_PORTS]         = option_def_cheat_input_ports;
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
+  default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
+  options.mips_dynarec = true;		/* default when the frontend sends no value */
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -916,6 +936,10 @@ static void set_variables(void)
       case OPT_STV_BIOS:
          if(!options.content_flags[CONTENT_STV])
            continue; /* only offer BIOS selection when it is relevant */
+         break;
+      case OPT_MIPS_DYNAREC:
+         if(!options.content_flags[CONTENT_MIPS_DYNAREC])
+           continue; /* only offered for the games that use the recompiler */
          break;
       case OPT_NEOGEO_BIOS:
           if(!options.content_flags[CONTENT_NEOGEO])
@@ -1215,6 +1239,10 @@ void update_variables(bool first_time)
           retro_set_audio_buff_status_cb();
           break;
 
+        case OPT_MIPS_DYNAREC:
+          options.mips_dynarec = (strcmp(var.value, "enabled") == 0);
+          break;
+
         case OPT_CPU_CLOCK_SCALE:
           if(strcmp(var.value, "default") == 0)
             options.cpu_clock_scale = 1;
@@ -1318,6 +1346,15 @@ void set_content_flags(void)
         options.content_flags[CONTENT_ALT_SOUND] = true;
       }
   }
+
+  /************ DRIVERS THAT USE THE MIPS RECOMPILER ************/
+  /* Namco System 11 and 12 (PSX CPU); the option means nothing where */
+  /* the recompiler is compiled out */
+#if (HAS_PSXCPU)
+  if (game_driver->source_file && psxcpu_jit_available()
+   && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")))
+    options.content_flags[CONTENT_MIPS_DYNAREC] = true;
+#endif
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE

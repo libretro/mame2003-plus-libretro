@@ -11,7 +11,7 @@
 #include "includes/psx.h"
 #include "cpu/mips/psx.h"
 
-#define VERBOSE_LEVEL ( 1 )
+#define VERBOSE_LEVEL ( 0 )
 
 static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
@@ -189,6 +189,12 @@ void psx_machine_cpu_speedups( void )
 	for( i = 0; i < 3; i++ )
 	{
 		psxcpu_add_fastram( bios_base[ i ], bios_base[ i ] + n_bios - 1, 1, memory_region( REGION_USER2 ) );
+	}
+
+	/* the recompiler (core option, default on) */
+	if( options.mips_dynarec )
+	{
+		psxcpu_set_jit( 1 );
 	}
 }
 
