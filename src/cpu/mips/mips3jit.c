@@ -1015,6 +1015,12 @@ static void jit_exit(void) { }
 #endif	/* MIPS3_JIT_SUPPORTED */
 
 
+int mips3_jit_available(void)
+{
+	return MIPS3_JIT_SUPPORTED;
+}
+
+
 void mips3_set_jit(int enable)
 {
 #if MIPS3_JIT_SUPPORTED

@@ -10,6 +10,9 @@
 #include "driver.h"
 #include <libretro.h>
 #include <string/stdstring.h>
+#if (HAS_R4600 || HAS_R5000)
+#include "cpu/mips/mips3.h"
+#endif
 
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
@@ -755,7 +758,7 @@ static struct retro_core_option_v2_definition option_def_mips3_dynarec = {
    APPNAME"_mips3_dynarec",
    "MIPS3 Dynarec",
    NULL,
-   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct). Available on 64-bit x86 and ARM hosts that allow it; turn it off to use the interpreter.",
+   "Restart core required. Recompile the MIPS III CPU code to native code (Killer Instinct). Only offered on 64-bit x86 and ARM hosts that allow it; turn it off to use the interpreter.",
    NULL,
    NULL,
    {
@@ -1355,7 +1358,9 @@ void set_content_flags(void)
 #if (HAS_R5000)
       case CPU_R5000BE: case CPU_R5000LE:
 #endif
-        options.content_flags[CONTENT_MIPS3] = true;
+        /* the dynarec option means nothing where it is compiled out */
+        if (mips3_jit_available())
+          options.content_flags[CONTENT_MIPS3] = true;
         break;
     }
   }
