@@ -67783,9 +67783,9 @@ mrdoy:0:E0F3:01:000:One red monster PL2
 mrdoy:0:E0F3:00:000:NO red monsters PL2
 
 ; [ Mr Driller (DRI1/VER.A2) ]
-mrdrillr:0:002C4560:09:000:Infinite Credits
-mrdrillr:0:0021D5F8:0A:000:Infinite Lives
-mrdrillr:0:0029EBF9:4A:000:Infinite Air
+mrdrillrja2:0:002C4560:09:000:Infinite Credits
+mrdrillrja2:0:0021D5F8:0A:000:Infinite Lives
+mrdrillrja2:0:0029EBF9:4A:000:Infinite Air
 
 ; [ Mr Driller 2 ]
 mrdrilr2:0:0000:00:999:[ There are no cheats   ]:REASON 1

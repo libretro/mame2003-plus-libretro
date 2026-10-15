@@ -2692,20 +2692,23 @@ V-V                           TP-027
 	/* Namco System 12 */
 	DRIVER( tekken3 )	/* Tekken 3 (World, TET2/VER.E1) */
 	DRIVER( tekken3je1 )	/* Tekken 3 (Japan, TET1/VER.E1) */
-	DRIVER( soulclbr )	/* Soul Calibur (SOC1/VER.A) */
-	DRIVER( ehrgeiz )	/* Ehrgeiz (EG3/VER.A) */
-	DRIVER( mdhorse )	/* Derby Quiz My Dream Horse (MDH1/VER.A) */
+	DRIVER( soulclbr )	/* Soul Calibur (World, SOC12/VER.A2) */
+	DRIVER( soulclbrja2 )	/* Soul Calibur (Japan, SOC11/VER.A2) */
+	DRIVER( ehrgeiz )	/* Ehrgeiz (World, EG2/VER.A) */
+	DRIVER( ehrgeizua )	/* Ehrgeiz (US, EG3/VER.A) */
+	DRIVER( mdhorse )	/* Derby Quiz My Dream Horse (Japan, MDH1/VER.A2) */
 	DRIVER( fgtlayer )	/* Fighting Layer (Asia, FTL3/VER.A) */
 	DRIVER( fgtlayerja )	/* Fighting Layer (Japan, FTL0/VER.A) */
-	DRIVER( pacapp )	/* Paca Paca Passion (PPP1/VERA) */
-	DRIVER( sws99 )		/* Super World Stadium '99 (SS91/VER.A) */
+	DRIVER( pacapp )	/* Paca Paca Passion (Japan, PPP1/VER.A2) */
+	DRIVER( sws99 )	/* Super World Stadium '99 (Japan, SS91/VER.A3) */
 	DRIVER( tektagt )	/* Tekken Tag Tournament (World, TEG2/VER.C1) */
 	DRIVER( tektagtub )	/* Tekken Tag Tournament (US, TEG3/VER.B) */
 	DRIVER( tektagtuc1 )	/* Tekken Tag Tournament (US, TEG3/VER.C1) */
 	DRIVER( tektagtjc1 )	/* Tekken Tag Tournament (Japan, TEG1/VER.C1) */
-	DRIVER( mrdrillr )	/* Mr Driller (DRI1/VER.A) */
-	DRIVER( aquarush )	/* Aqua Rush (AQ1/VER.A) */
-	DRIVER( golgo13 )	/* Golgo 13 (GLG1/VER.A) */
+	DRIVER( mrdrillr )	/* Mr. Driller (US, DRI3/VER.A2) */
+	DRIVER( mrdrillrja2 )	/* Mr. Driller (Japan, DRI1/VER.A2) */
+	DRIVER( aquarush )	/* Aqua Rush (Japan, AQ1/VER.A1) */
+	DRIVER( golgo13 )	/* Golgo 13 (Japan, GLG1/VER.A) */
 
 	/* Namco System 10 */
 	DRIVER( mrdrilr2 )	/* Mr Driller 2 */
