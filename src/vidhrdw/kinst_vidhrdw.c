@@ -12,6 +12,9 @@
 
 static UINT16 *vram_buffer;
 
+/* hardware is xBBBBBGGGGGRRRRR; the direct RGB bitmap is xRRRRRGGGGGBBBBB */
+#define KINST_RGB(v) ((((v) & 0x001f) << 10) | ((v) & 0x03e0) | (((v) >> 10) & 0x001f))
+
 
 
 /*************************************
@@ -38,8 +41,9 @@ void kinst_buffer_vram(data32_t *base)
 		/* loop over columns */
 		for (i = 0; i < 320; i += 2)
 		{
-			*dest++ = *src & 0x7fff;
-			*dest++ = (*src++ >> 16) & 0x7fff;
+			UINT32 pix = *src++;
+			*dest++ = KINST_RGB(pix);
+			*dest++ = KINST_RGB(pix >> 16);
 		}
 	}
 }
