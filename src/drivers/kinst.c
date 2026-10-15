@@ -281,8 +281,9 @@ static void kinst_install_speedup(void)
 	mips3_add_fastram(0x88000000, info->address - 1, 0, rambase2);
 	mips3_add_fastram(info->address + 4, 0x887fffff, 0, (UINT8 *)rambase2 + (info->address + 4 - 0x88000000));
 
-	/* recompiler (only on the hosts that support it) */
-	mips3_set_jit(1);
+	/* recompiler (core option; only on the hosts that support it) */
+	if (options.mips3_dynarec)
+		mips3_set_jit(1);
 }
 
 

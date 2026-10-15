@@ -11,7 +11,16 @@
 #ifndef MIPS3JIT_H
 #define MIPS3JIT_H
 
-/* 64-bit little-endian hosts only for now (x86-64, AArch64) */
+/* 64-bit little-endian hosts only for now (x86-64, AArch64), and not on */
+/* systems that forbid or restrict run-time code generation */
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+#if defined(IOS) || defined(__IOS__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || \
+	defined(__SWITCH__) || defined(HAVE_LIBNX) || defined(_XBOX) || defined(__WINRT__)
+#define MIPS3_NO_JIT
+#endif
+
 #if !defined(MIPS3_NO_JIT) && \
 	(defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) || defined(_M_ARM64)) && \
 	!(defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) && \
