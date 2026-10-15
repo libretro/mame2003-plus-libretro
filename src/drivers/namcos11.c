@@ -663,6 +663,7 @@ MACHINE_INIT( namcos11 )
 {
 	memset( namcos11_keycus, 0, namcos11_keycus_size );
 	psx_machine_init();
+	psx_machine_cpu_speedups();
 }
 
 
@@ -775,6 +776,8 @@ static DRIVER_INIT( namcos11_c76 )
 
 	m37710_set_io_handlers( c76_io_r, c76_io_w );
 	m37710_set_internal_rom( memory_region( REGION_USER4 ) );
+	/* the C76 BIOS waits for its interrupts in "lda $83 / beq" (c151) */
+	m37710_set_idle_loop( 0xc151, 2 );
 }
 
 /* System 11 with the C76 sound/I-O MCU and the C352 */

@@ -135,6 +135,7 @@ static INTERRUPT_GEN( namcos12_vblank )
 		if( *( (data32_t *)&RAM[ 0x2ac494 ] ) == 0x080ab125 )
 		{
 			*( (data32_t *)&RAM[ 0x2ac494 ] ) = 0;
+			psxcpu_ram_written( &RAM[ 0x2ac494 ], 4 );
 		}
 	}
 	else if( namcos12_is( "pacapp" ) )
@@ -143,6 +144,7 @@ static INTERRUPT_GEN( namcos12_vblank )
 		if( *( (data32_t *)&RAM[ 0x16d50 ] ) == 0x08005b54 )
 		{
 			*( (data32_t *)&RAM[ 0x16d50 ] ) = 0;
+			psxcpu_ram_written( &RAM[ 0x16d50 ], 4 );
 		}
 	}
 }
@@ -686,11 +688,13 @@ static DRIVER_INIT( tektagt )
 MACHINE_INIT( namcos12 )
 {
 	psx_machine_init();
+	psx_machine_cpu_speedups();
 }
 
 MACHINE_INIT( namcos12_h8 )
 {
 	psx_machine_init();
+	psx_machine_cpu_speedups();
 
 	s12_porta = 0;
 	s12_rtcstate = 0;

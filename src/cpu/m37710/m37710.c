@@ -83,6 +83,17 @@ void m37710_set_internal_rom(const UINT8 *rom)
 	m37710_irom = rom;
 }
 
+UINT32 m37710_idle_pc;			/* idle loop start (bank | address), 0 = none */
+int m37710_idle_count;			/* instructions in one pass */
+int m37710_idle_since;			/* instructions since the loop start was last reached */
+int m37710_idle_clocks;			/* CLOCKS when it was last reached */
+
+void m37710_set_idle_loop(UINT32 pc, int count)
+{
+	m37710_idle_pc = pc;
+	m37710_idle_count = count;
+}
+
 static data8_t io_read_byte_8(int port)
 {
 	return m37710_io_read ? m37710_io_read(port) : 0xff;
@@ -993,13 +1004,14 @@ void m37710_reset(void *param)
 /* Exit and clean up */
 void m37710_exit(void)
 {
-	/* nothing to do yet */
+	m37710_idle_pc = 0;
 }
 
 /* Execute some instructions */
 int m37710_execute(int cycles)
 {
 	m37710_fullCount = cycles;
+	m37710_idle_since = -1;		/* no pass seen yet in this timeslice */
 
 	m37710i_update_irqs();
 

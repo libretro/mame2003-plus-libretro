@@ -180,6 +180,144 @@ mips_cpu_context mipscpu;
 
 int mips_ICount = 0;
 
+
+/***************************************************************************
+    Fast RAM
+
+    Loads and stores to plain RAM regions registered by the driver
+    (psxcpu_add_fastram) use a direct pointer instead of the memory
+    system. Off unless a driver registers regions. Little-endian hosts
+    only (the regions are kept in host order).
+***************************************************************************/
+
+#define PSX_MAX_FASTRAM		8
+
+struct psx_fastram
+{
+	offs_t		start;
+	offs_t		end;
+	int			readonly;
+	UINT8 *		base;
+};
+
+static struct psx_fastram fastram[ PSX_MAX_FASTRAM ];
+static int fastram_count;
+static struct psx_fastram *fastram_last = &fastram[ 0 ];
+
+static INLINE void psx_jit_check_write( const void *host );
+
+void psxcpu_add_fastram( offs_t start, offs_t end, int readonly, void *base )
+{
+#ifndef MSB_FIRST
+	int i;
+	for( i = 0; i < fastram_count; i++ )
+	{
+		if( fastram[ i ].start == start )
+		{
+			break;
+		}
+	}
+	if( i == PSX_MAX_FASTRAM )
+	{
+		return;
+	}
+	fastram[ i ].start = start;
+	fastram[ i ].end = end;
+	fastram[ i ].readonly = readonly;
+	fastram[ i ].base = (UINT8 *)base;
+	if( i == fastram_count )
+	{
+		fastram_count++;
+	}
+#endif
+}
+
+/* the region holding all 'size' bytes at 'address', or NULL */
+static INLINE struct psx_fastram *find_fastram( offs_t address, int size )
+{
+	struct psx_fastram *r = fastram_last;
+	int i;
+
+	if( fastram_count == 0 )
+	{
+		return NULL;
+	}
+	if( address - r->start <= r->end - r->start && address + size - 1 <= r->end )
+	{
+		return r;
+	}
+	for( i = 0; i < fastram_count; i++ )
+	{
+		r = &fastram[ i ];
+		if( address - r->start <= r->end - r->start && address + size - 1 <= r->end )
+		{
+			fastram_last = r;
+			return r;
+		}
+	}
+	return NULL;
+}
+
+static INLINE data8_t psx_read8( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 1 );
+	if( r ) return r->base[ address - r->start ];
+	return cpu_readmem32ledw( address );
+}
+
+static INLINE data16_t psx_read16( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 2 );
+	if( r ) return *(data16_t *)&r->base[ address - r->start ];
+	return cpu_readmem32ledw_word( address );
+}
+
+static INLINE data32_t psx_read32( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 4 );
+	if( r ) return *(data32_t *)&r->base[ address - r->start ];
+	return cpu_readmem32ledw_dword( address );
+}
+
+static INLINE void psx_write8( offs_t address, data8_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 1 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		r->base[ address - r->start ] = data;
+		return;
+	}
+	cpu_writemem32ledw( address, data );
+}
+
+static INLINE void psx_write16( offs_t address, data16_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 2 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		*(data16_t *)&r->base[ address - r->start ] = data;
+		return;
+	}
+	cpu_writemem32ledw_word( address, data );
+}
+
+static INLINE void psx_write32( offs_t address, data32_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 4 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		*(data32_t *)&r->base[ address - r->start ] = data;
+		return;
+	}
+	cpu_writemem32ledw_dword( address, data );
+}
+
+#include "psxjit.c"
+
+
 static UINT32 mips_mtc0_writemask[]=
 {
 	0xffffffff, /* INDEX */
@@ -352,6 +490,10 @@ void mips_init( void )
 {
 	int cpu = cpu_getactivecpu();
 
+	fastram_count = 0;
+	fastram_last = &fastram[ 0 ];
+	psxcpu_set_jit( 0 );
+
 	state_save_register_UINT32( "psxcpu", cpu, "op", &mipscpu.op, 1 );
 	state_save_register_UINT32( "psxcpu", cpu, "pc", &mipscpu.pc, 1 );
 	state_save_register_UINT32( "psxcpu", cpu, "delayv", &mipscpu.delayv, 1 );
@@ -374,6 +516,7 @@ void mips_reset( void *param )
 
 void mips_exit( void )
 {
+	psxcpu_set_jit( 0 );
 }
 
 int mips_execute( int cycles )
@@ -973,7 +1116,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( cpu_readmem32ledw( n_adr ^ 3 ) ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( psx_read8( n_adr ^ 3 ) ) );
 				}
 			}
 			else
@@ -987,7 +1130,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( cpu_readmem32ledw( n_adr ) ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( psx_read8( n_adr ) ) );
 				}
 			}
 			break;
@@ -1010,7 +1153,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( cpu_readmem32ledw_word( n_adr ^ 2 ) ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( psx_read16( n_adr ^ 2 ) ) );
 				}
 			}
 			else
@@ -1024,7 +1167,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( cpu_readmem32ledw_word( n_adr ) ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( psx_read16( n_adr ) ) );
 				}
 			}
 			break;
@@ -1050,16 +1193,16 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)cpu_readmem32ledw( n_adr + 3 ) << 24 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)psx_read8( n_adr + 3 ) << 24 );
 						break;
 					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr + 1 ) << 16 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)psx_read16( n_adr + 1 ) << 16 );
 						break;
 					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)cpu_readmem32ledw( n_adr - 1 ) << 8 ) | ( (UINT32)cpu_readmem32ledw_word( n_adr ) << 16 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)psx_read8( n_adr - 1 ) << 8 ) | ( (UINT32)psx_read16( n_adr ) << 16 );
 						break;
 					default:
-						n_res = cpu_readmem32ledw_dword( n_adr - 3 );
+						n_res = psx_read32( n_adr - 3 );
 						break;
 					}
 					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
@@ -1079,16 +1222,16 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)cpu_readmem32ledw( n_adr ) << 24 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)psx_read8( n_adr ) << 24 );
 						break;
 					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr - 1 ) << 16 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)psx_read16( n_adr - 1 ) << 16 );
 						break;
 					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr - 2 ) << 8 ) | ( (UINT32)cpu_readmem32ledw( n_adr ) << 24 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)psx_read16( n_adr - 2 ) << 8 ) | ( (UINT32)psx_read8( n_adr ) << 24 );
 						break;
 					default:
-						n_res = cpu_readmem32ledw_dword( n_adr - 3 );
+						n_res = psx_read32( n_adr - 3 );
 						break;
 					}
 					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
@@ -1114,7 +1257,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_dword( n_adr ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), psx_read32( n_adr ) );
 				}
 			}
 			break;
@@ -1137,7 +1280,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw( n_adr ^ 3 ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), psx_read8( n_adr ^ 3 ) );
 				}
 			}
 			else
@@ -1151,7 +1294,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw( n_adr ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), psx_read8( n_adr ) );
 				}
 			}
 			break;
@@ -1174,7 +1317,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_word( n_adr ^ 2 ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), psx_read16( n_adr ^ 2 ) );
 				}
 			}
 			else
@@ -1188,7 +1331,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_word( n_adr ) );
+					mips_delayed_load( INS_RT( mipscpu.op ), psx_read16( n_adr ) );
 				}
 			}
 			break;
@@ -1214,16 +1357,16 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 3:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | cpu_readmem32ledw( n_adr - 3 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | psx_read8( n_adr - 3 );
 						break;
 					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | cpu_readmem32ledw_word( n_adr - 2 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | psx_read16( n_adr - 2 );
 						break;
 					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | cpu_readmem32ledw_word( n_adr - 1 ) | ( (UINT32)cpu_readmem32ledw( n_adr + 1 ) << 16 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | psx_read16( n_adr - 1 ) | ( (UINT32)psx_read8( n_adr + 1 ) << 16 );
 						break;
 					default:
-						n_res = cpu_readmem32ledw_dword( n_adr );
+						n_res = psx_read32( n_adr );
 						break;
 					}
 					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
@@ -1243,16 +1386,16 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 3:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | cpu_readmem32ledw( n_adr );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | psx_read8( n_adr );
 						break;
 					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | cpu_readmem32ledw_word( n_adr );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | psx_read16( n_adr );
 						break;
 					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | cpu_readmem32ledw( n_adr ) | ( (UINT32)cpu_readmem32ledw_word( n_adr + 1 ) << 8 );
+						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | psx_read8( n_adr ) | ( (UINT32)psx_read16( n_adr + 1 ) << 8 );
 						break;
 					default:
-						n_res = cpu_readmem32ledw_dword( n_adr );
+						n_res = psx_read32( n_adr );
 						break;
 					}
 					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
@@ -1278,7 +1421,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw( n_adr ^ 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write8( n_adr ^ 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 					mips_advance_pc();
 				}
 			}
@@ -1293,7 +1436,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 					mips_advance_pc();
 				}
 			}
@@ -1317,7 +1460,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw_word( n_adr ^ 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write16( n_adr ^ 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 					mips_advance_pc();
 				}
 			}
@@ -1332,7 +1475,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 					mips_advance_pc();
 				}
 			}
@@ -1359,17 +1502,17 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						cpu_writemem32ledw( n_adr + 3, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+						psx_write8( n_adr + 3, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
 						break;
 					case 1:
-						cpu_writemem32ledw_word( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+						psx_write16( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
 						break;
 					case 2:
-						cpu_writemem32ledw( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
-						cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+						psx_write8( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+						psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
 						break;
 					case 3:
-						cpu_writemem32ledw_dword( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write32( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					}
 					mips_advance_pc();
@@ -1389,17 +1532,17 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+						psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
 						break;
 					case 1:
-						cpu_writemem32ledw_word( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+						psx_write16( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
 						break;
 					case 2:
-						cpu_writemem32ledw_word( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+						psx_write16( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+						psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
 						break;
 					case 3:
-						cpu_writemem32ledw_dword( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write32( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					}
 					mips_advance_pc();
@@ -1427,7 +1570,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 					mips_advance_pc();
 				}
 			}
@@ -1454,17 +1597,17 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					case 1:
-						cpu_writemem32ledw_word( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						cpu_writemem32ledw( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+						psx_write16( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write8( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
 						break;
 					case 2:
-						cpu_writemem32ledw_word( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write16( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					case 3:
-						cpu_writemem32ledw( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write8( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					}
 					mips_advance_pc();
@@ -1484,17 +1627,17 @@ int mips_execute( int cycles )
 					switch( n_adr & 3 )
 					{
 					case 0:
-						cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					case 1:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						cpu_writemem32ledw_word( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+						psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write16( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
 						break;
 					case 2:
-						cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					case 3:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+						psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
 						break;
 					}
 					mips_advance_pc();
@@ -1532,7 +1675,7 @@ int mips_execute( int cycles )
 				else
 				{
 					/* todo: delay? */
-					setcp2dr( INS_RT( mipscpu.op ), cpu_readmem32ledw_dword( n_adr ) );
+					setcp2dr( INS_RT( mipscpu.op ), psx_read32( n_adr ) );
 					mips_advance_pc();
 				}
 			}
@@ -1567,7 +1710,7 @@ int mips_execute( int cycles )
 				}
 				else
 				{
-					cpu_writemem32ledw_dword( n_adr, getcp2dr( INS_RT( mipscpu.op ) ) );
+					psx_write32( n_adr, getcp2dr( INS_RT( mipscpu.op ) ) );
 					mips_advance_pc();
 				}
 			}

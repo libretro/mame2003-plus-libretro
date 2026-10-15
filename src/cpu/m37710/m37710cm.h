@@ -109,6 +109,8 @@ typedef struct
 } m37710i_cpu_struct;
 
 extern m37710i_cpu_struct m37710i_cpu;
+extern UINT32 m37710_idle_pc;
+extern int m37710_idle_count, m37710_idle_since, m37710_idle_clocks;
 extern int m37710_ICount;
 extern uint m37710i_source;
 extern uint m37710i_destination;

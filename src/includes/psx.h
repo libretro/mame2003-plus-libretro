@@ -40,6 +40,7 @@ extern void psx_sio_send( int, data8_t );
 WRITE32_HANDLER( psx_mdec_w );
 READ32_HANDLER( psx_mdec_r );
 extern void psx_machine_init( void );
+extern void psx_machine_cpu_speedups( void );
 extern void psx_driver_init( void );
 
 #define PSX_H ( 1 )

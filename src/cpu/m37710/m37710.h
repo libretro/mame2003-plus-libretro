@@ -102,6 +102,15 @@ typedef void (*m37710_io_write_func)(int port, data8_t data);
 void m37710_set_io_handlers(m37710_io_read_func readfn, m37710_io_write_func writefn);
 /* M37702 with internal mask ROM: 16KB mapped at 0xc000-0xffff (NULL = external) */
 void m37710_set_internal_rom(const UINT8 *rom);
+/*
+	Speedup (0 = off): 'pc' (bank | address) starts a loop of 'count'
+	instructions that only polls memory written by interrupts (such as
+	"lda dp / beq loop"), so every pass leaves the same state. Once one
+	pass has run inside a timeslice, the whole passes that still fit in
+	it are skipped: registers, memory and cycles end up exactly as if
+	they had run.
+*/
+void m37710_set_idle_loop(UINT32 pc, int count);
 
 extern int m37710_ICount;				/* cycle count */
 

@@ -9,6 +9,7 @@
 #include "driver.h"
 #include "state.h"
 #include "includes/psx.h"
+#include "cpu/mips/psx.h"
 
 #define VERBOSE_LEVEL ( 1 )
 
@@ -144,6 +145,53 @@ void dma_finished( int n_channel )
 	dma_timer( n_channel, 0xffffffff );
 }
 
+/* DMA into main RAM: tell the CPU (its recompiler may hold code from there) */
+static void dma_ram_written( UINT32 n_address, INT32 n_size )
+{
+	UINT32 n_bytes;
+
+	if( n_size <= 0 || n_address > m_n_ramsize )
+	{
+		return;
+	}
+	n_bytes = (UINT32)n_size * 4;
+	if( n_bytes > m_n_ramsize + 1 - n_address )
+	{
+		n_bytes = m_n_ramsize + 1 - n_address;
+	}
+	psxcpu_ram_written( &m_p_n_ram[ n_address ], n_bytes );
+}
+
+/*
+	Speedups of the PSX CPU core for a driver with the usual memory map:
+	main RAM at 0x00000000 with its 0x80000000 and 0xa0000000 mirrors
+	(REGION_CPU1), scratchpad at 0x1f800000 (REGION_USER1), BIOS at
+	0x1fc00000 with its 0x9fc00000 and 0xbfc00000 mirrors (REGION_USER2).
+*/
+void psx_machine_cpu_speedups( void )
+{
+	static const offs_t ram_base[] = { 0x00000000, 0x80000000, 0xa0000000 };
+	static const offs_t bios_base[] = { 0x1fc00000, 0x9fc00000, 0xbfc00000 };
+	UINT32 n_ram = memory_region_length( REGION_CPU1 );
+	UINT32 n_bios = memory_region_length( REGION_USER2 );
+	int i;
+
+	if( n_ram > 0x00800000 ) n_ram = 0x00800000;
+	if( n_bios > 0x00400000 ) n_bios = 0x00400000;
+	for( i = 0; i < 3; i++ )
+	{
+		psxcpu_add_fastram( ram_base[ i ], ram_base[ i ] + n_ram - 1, 0, memory_region( REGION_CPU1 ) );
+	}
+	if( memory_region_length( REGION_USER1 ) >= 0x400 )
+	{
+		psxcpu_add_fastram( 0x1f800000, 0x1f8003ff, 0, memory_region( REGION_USER1 ) );
+	}
+	for( i = 0; i < 3; i++ )
+	{
+		psxcpu_add_fastram( bios_base[ i ], bios_base[ i ] + n_bios - 1, 1, memory_region( REGION_USER2 ) );
+	}
+}
+
 void psx_dma_install_read_handler( int n_channel, psx_dma_read_handler p_fn_dma_read )
 {
 	m_p_fn_dma_read[ n_channel ] = p_fn_dma_read;
@@ -192,6 +240,7 @@ WRITE32_HANDLER( psx_dma_w )
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
+					dma_ram_written( n_address, n_size );
 					dma_finished( n_channel );
 				}
 				else if( m_p_n_dmachannelcontrol[ n_channel ] == 0x01000200 &&
@@ -200,6 +249,7 @@ WRITE32_HANDLER( psx_dma_w )
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
+					dma_ram_written( n_address, n_size );
 					if( n_channel == 1 )
 					{
 						dma_timer( n_channel, cpu_getscanline() + 16 );
@@ -249,6 +299,15 @@ WRITE32_HANDLER( psx_dma_w )
 						m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					if( n_size > 0 )
 					{
+						/* the table runs down from n_address */
+						if( (UINT32)( n_size - 1 ) * 4 <= n_address )
+						{
+							dma_ram_written( n_address - ( n_size - 1 ) * 4, n_size );
+						}
+						else
+						{
+							dma_ram_written( 0, ( m_n_ramsize + 1 ) / 4 );
+						}
 						n_size--;
 						while( n_size > 0 )
 						{

@@ -3049,6 +3049,23 @@ TABLE_FUNCTION(int, execute, (int clocks))
 		do
 		{
 			REG_PPC = REG_PC;
+			if (m37710_idle_pc)
+			{
+				if ((REG_PB | REG_PC) == m37710_idle_pc)
+				{
+					/* one whole pass just ran: skip the passes that still fit */
+					if (m37710_idle_since == m37710_idle_count)
+					{
+						int pass = m37710_idle_clocks - CLOCKS;
+						if (pass > 0 && CLOCKS > pass)
+							CLOCKS -= ((CLOCKS - 1) / pass) * pass;
+					}
+					m37710_idle_since = 0;
+					m37710_idle_clocks = CLOCKS;
+				}
+				if (m37710_idle_since >= 0)
+					m37710_idle_since++;
+			}
 			M37710_CALL_DEBUGGER;
 			REG_PC++;
 			REG_IR = read_8_IMM(REG_PB | REG_PPC);
