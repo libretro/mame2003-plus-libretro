@@ -1767,6 +1767,9 @@ static INLINE void mips_step( void )
 int mips_execute( int cycles )
 {
 	mips_ICount = cycles;
+	/* a polling loop's pass is only trusted within one timeslice (psxloop.c): */
+	/* RAM may change between timeslices, and after a state load or a reset */
+	loop_pure_armed = 0;
 	do
 	{
 		CALL_MAME_DEBUG;
