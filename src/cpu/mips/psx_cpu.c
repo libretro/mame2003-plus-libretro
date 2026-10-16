@@ -206,6 +206,9 @@ static struct psx_fastram *fastram_last = &fastram[ 0 ];
 
 static INLINE void psx_jit_check_write( const void *host );
 
+/* set by any access outside fast RAM (see psxloop.c) */
+static int psx_slow_access;
+
 #ifdef PSXJIT_VERIFY
 /* debug: stores logged while the recompiler is checked against the interpreter */
 #define PSXJIT_VLOG		262144
@@ -283,6 +286,7 @@ static INLINE data8_t psx_read8( offs_t address )
 {
 	struct psx_fastram *r = find_fastram( address, 1 );
 	if( r ) return r->base[ address - r->start ];
+	psx_slow_access = 1;
 	return cpu_readmem32ledw( address );
 }
 
@@ -290,6 +294,7 @@ static INLINE data16_t psx_read16( offs_t address )
 {
 	struct psx_fastram *r = find_fastram( address, 2 );
 	if( r ) return *(data16_t *)&r->base[ address - r->start ];
+	psx_slow_access = 1;
 	return cpu_readmem32ledw_word( address );
 }
 
@@ -297,6 +302,7 @@ static INLINE data32_t psx_read32( offs_t address )
 {
 	struct psx_fastram *r = find_fastram( address, 4 );
 	if( r ) return *(data32_t *)&r->base[ address - r->start ];
+	psx_slow_access = 1;
 	return cpu_readmem32ledw_dword( address );
 }
 
@@ -310,6 +316,7 @@ static INLINE void psx_write8( offs_t address, data8_t data )
 		r->base[ address - r->start ] = data;
 		return;
 	}
+	psx_slow_access = 1;
 	cpu_writemem32ledw( address, data );
 }
 
@@ -323,6 +330,7 @@ static INLINE void psx_write16( offs_t address, data16_t data )
 		*(data16_t *)&r->base[ address - r->start ] = data;
 		return;
 	}
+	psx_slow_access = 1;
 	cpu_writemem32ledw_word( address, data );
 }
 
@@ -336,10 +344,17 @@ static INLINE void psx_write32( offs_t address, data32_t data )
 		*(data32_t *)&r->base[ address - r->start ] = data;
 		return;
 	}
+	psx_slow_access = 1;
 	cpu_writemem32ledw_dword( address, data );
 }
 
+static void loop_arrive( UINT32 l, UINT32 from );
+static int loop_kind( UINT32 l );
+static int loop_pure_armed;
+#define LOOP_NONE		0
+
 #include "psxjit.c"
+#include "psxloop.c"
 
 
 static UINT32 mips_mtc0_writemask[]=
@@ -1760,9 +1775,17 @@ int mips_execute( int cycles )
 		{
 			continue;
 		}
-		mipscpu.op = cpu_readop32( mipscpu.pc );
-		mips_step();
-		mips_ICount--;
+		{
+			UINT32 from = mipscpu.pc;
+			mipscpu.op = cpu_readop32( from );
+			mips_step();
+			mips_ICount--;
+			/* back to an earlier address: maybe a wait loop to skip (psxloop.c) */
+			if( mipscpu.pc < from && mipscpu.delayr == 0 )
+			{
+				loop_arrive( mipscpu.pc, from );
+			}
+		}
 	} while( mips_ICount > 0 );
 
 	return cycles - mips_ICount;

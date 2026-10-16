@@ -67,6 +67,8 @@ struct jit_block
 
 typedef sljit_u32 (SLJIT_FUNC *jit_func)(void);
 
+static void SLJIT_FUNC loop_skip_helper( sljit_u32 l );	/* psxloop.c */
+
 static int jit_enabled;
 static struct jit_block *jit_table;
 static UINT8 *jit_codemap;
@@ -1073,6 +1075,7 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 {
 	static struct jit_ctx ctx;
 	static UINT8 kind[ JIT_MAX_BLOCK ];		/* 0 one, 1 branch */
+	static UINT8 loopskip[ JIT_MAX_BLOCK ];	/* instruction n is the head of a wait loop */
 	static UINT32 ops[ JIT_MAX_BLOCK + 1 ];
 	struct psx_fastram *region;
 	struct sljit_compiler *C;
@@ -1175,6 +1178,25 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 		}
 	}
 
+	/* wait loop heads: block start or jump targets, not right after a load */
+	memset( loopskip, 0, sizeof( loopskip ) );
+	for( i = 0; i < count; i++ )
+	{
+		if( ctx.target[ i ] && loop_kind( pc + i * 4 ) != LOOP_NONE )
+		{
+			struct jit_op prev;
+			if( i > 0 )
+			{
+				jit_decode( ops[ i - 1 ], &prev );
+				if( prev.kind == JIT_MEM || prev.kind == JIT_HELPER_MEM )
+				{
+					continue;
+				}
+			}
+			loopskip[ i ] = 1;
+		}
+	}
+
 	C = sljit_create_compiler( NULL );
 	if( !C )
 	{
@@ -1199,6 +1221,16 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 			jit_emit_cycles_to( &ctx, i );
 			ctx.acct = i;
 			ctx.label[ i ] = sljit_emit_label( C );
+
+			/* the head of a wait loop (psxloop.c): skip the passes that fit, */
+			/* then go on only if the rest of the block still fits */
+			if( loopskip[ i ] )
+			{
+				sljit_emit_op1( C, SLJIT_MOV32, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)( pc + i * 4 ) );
+				sljit_emit_icall( C, SLJIT_CALL, SLJIT_ARGS1V( 32 ), SLJIT_IMM, SLJIT_FUNC_ADDR( loop_skip_helper ) );
+				jit_add_exit( &ctx, sljit_emit_cmp( C, SLJIT_SIG_LESS | SLJIT_32,
+					SLJIT_MEM0(), (sljit_sw)&mips_ICount, SLJIT_IMM, count - i ), i );
+			}
 		}
 
 		if( kind[ i ] )
@@ -1429,6 +1461,7 @@ static INLINE int jit_run( void )
 		/* left before its first instruction: the interpreter runs it */
 		return 0;
 	}
+	loop_pure_armed = 0;	/* the interpreter's loop tracking (psxloop.c) saw none of this */
 	change_pc32ledw( mipscpu.pc );
 	return 1;
 }
