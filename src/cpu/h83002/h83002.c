@@ -70,6 +70,8 @@ typedef struct
 	UINT8 h8TSTR;
 
 	mame_timer *timer[5];
+	double tcnt_offset[5];	/* time counted before the timer was last armed by a state load */
+	double save_left[5], save_elapsed[5];	/* saved timer state (time left < 0: not armed) */
 	int clock;
 } h83xx_state;
 
@@ -514,6 +516,7 @@ static void h8itu_timer_expire(int which)
 	h83xx_state *h8 = &h8state;
 
 	timer_adjust(h8->timer[which], TIME_NEVER, 0, 0);
+	h8->tcnt_offset[which] = 0;
 	h8->h8TCNT[which] = 0;
 	h8->per_regs[tsr[which]] |= 4;
 	/* interrupt on overflow ? */
@@ -535,6 +538,7 @@ static void h8_itu_refresh_timer(h83xx_state *h8, int tnum)
 		H8_LOG("H8/3002: Timer %d is using an external clock.  Unsupported!\n", tnum);
 
 	timer_adjust(h8->timer[tnum], period, tnum, 0);
+	h8->tcnt_offset[tnum] = 0;
 }
 
 static void h8_itu_sync_timers(h83xx_state *h8, int tnum)
@@ -544,7 +548,7 @@ static void h8_itu_sync_timers(h83xx_state *h8, int tnum)
 
 	/* get the time per unit */
 	cycle_time = TIME_IN_HZ(h8->clock) * tscales[ourTCR & 3];
-	cur = timer_timeelapsed(h8->timer[tnum]);
+	cur = timer_timeelapsed(h8->timer[tnum]) + h8->tcnt_offset[tnum];
 
 	h8->h8TCNT[tnum] = (UINT16)(cur / cycle_time);
 }
@@ -688,9 +692,40 @@ static void h8_register_write8(h83xx_state *h8, UINT32 address, UINT8 val)
     MAME 0.78 interface
 ***************************************************************************/
 
+/* the ITU timers are MAME timers, which a state does not hold: save how
+   long each one has run and how long it has left, and re-arm them on load */
+static void h8_onstatesave(void)
+{
+	h83xx_state *h8 = &h8state;
+	int i;
+
+	for (i = 0; i < 5; i++)
+	{
+		int enabled = timer_enable(h8->timer[i], 0);
+		timer_enable(h8->timer[i], enabled);
+		h8->save_left[i] = enabled ? timer_timeleft(h8->timer[i]) : -1;
+		h8->save_elapsed[i] = timer_timeelapsed(h8->timer[i]) + h8->tcnt_offset[i];
+	}
+}
+
 static void h8_onstateload(void)
 {
-	h8_set_ccr(&h8state, h8state.ccr);
+	h83xx_state *h8 = &h8state;
+	int i;
+
+	h8_set_ccr(h8, h8->ccr);
+
+	for (i = 0; i < 5; i++)
+	{
+		if (h8->save_left[i] >= 0)
+			timer_adjust(h8->timer[i], h8->save_left[i], i, 0);
+		else
+		{
+			timer_adjust(h8->timer[i], TIME_NEVER, 0, 0);
+			timer_enable(h8->timer[i], 0);
+		}
+		h8->tcnt_offset[i] = h8->save_elapsed[i];
+	}
 }
 
 void h8_3002_init(void)
@@ -716,6 +751,9 @@ void h8_3002_init(void)
 	state_save_register_UINT8 ("h8_3002", cpu, "iram",     h8->iram, sizeof(h8->iram));
 	state_save_register_UINT8 ("h8_3002", cpu, "h8TSTR",   &h8->h8TSTR, 1);
 	state_save_register_UINT16("h8_3002", cpu, "h8TCNT",   h8->h8TCNT, 5);
+	state_save_register_double("h8_3002", cpu, "timer_left",    h8->save_left, 5);
+	state_save_register_double("h8_3002", cpu, "timer_elapsed", h8->save_elapsed, 5);
+	state_save_register_func_presave(h8_onstatesave);
 	state_save_register_func_postload(h8_onstateload);
 }
 
@@ -744,6 +782,7 @@ void h8_3002_reset(void *param)
 	{
 		h8->h8TCNT[i] = 0;
 		timer_adjust(h8->timer[i], TIME_NEVER, 0, 0);
+		h8->tcnt_offset[i] = 0;
 	}
 }
 

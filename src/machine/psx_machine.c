@@ -407,6 +407,41 @@ static data16_t m_p_n_root_count[ 3 ];
 static data16_t m_p_n_root_mode[ 3 ];
 static data16_t m_p_n_root_target[ 3 ];
 
+/* the counter timers are saved as their time left (negative: not armed),
+   so a load neither restarts them nor adds interrupts */
+static double m_p_f_root_timeleft[ 3 ];
+
+static void root_presave( void )
+{
+	int n;
+
+	for( n = 0; n < 3; n++ )
+	{
+		/* timer_enable() returns the previous state; put it back */
+		int b_enabled = timer_enable( m_p_timer_root[ n ], 0 );
+		timer_enable( m_p_timer_root[ n ], b_enabled );
+		m_p_f_root_timeleft[ n ] = b_enabled ? timer_timeleft( m_p_timer_root[ n ] ) : -1;
+	}
+}
+
+static void root_postload( void )
+{
+	int n;
+
+	for( n = 0; n < 3; n++ )
+	{
+		if( m_p_f_root_timeleft[ n ] >= 0 )
+		{
+			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ], n, 0 );
+		}
+		else
+		{
+			timer_adjust( m_p_timer_root[ n ], TIME_NEVER, n, 0 );
+			timer_enable( m_p_timer_root[ n ], 0 );
+		}
+	}
+}
+
 static void root_finished( int n_counter )
 {
 	if( ( m_p_n_root_mode[ n_counter ] & 0x50 ) != 0 )
@@ -1154,10 +1189,7 @@ static void psx_postload( void )
 		dma_timer( n, m_p_n_dma_lastscanline[ n ] );
 	}
 
-	for( n = 0; n < 3; n++ )
-	{
-		root_timer( n );
-	}
+	root_postload();
 
 	mdec_cos_precalc();
 }
@@ -1199,7 +1231,7 @@ void psx_driver_init( void )
 		m_p_n_sio_mode[ n ] = 0;
 		m_p_n_sio_control[ n ] = 0;
 		m_p_n_sio_baud[ n ] = 0;
-		m_p_p_n_sio_buf[ n ] = malloc( 256 );
+		m_p_p_n_sio_buf[ n ] = calloc( 1, 256 ); /* zeroed: the buffers are part of the save state */
 		m_p_n_sio_rx[ n ] = 0;
 		m_p_n_sio_read[ n ] = 0;
 		m_p_f_sio_write[ n ] = NULL;
@@ -1225,6 +1257,8 @@ void psx_driver_init( void )
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_count", m_p_n_root_count, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_mode", m_p_n_root_mode, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_target", m_p_n_root_target, 3 );
+	state_save_register_double( "psx", 0, "m_p_f_root_timeleft", m_p_f_root_timeleft, 3 );
+	state_save_register_func_presave( root_presave );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_status", m_p_n_sio_status, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_mode", m_p_n_sio_mode, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_control", m_p_n_sio_control, 2 );

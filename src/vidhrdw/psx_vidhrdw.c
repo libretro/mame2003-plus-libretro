@@ -600,7 +600,8 @@ static int psx_gpu_init( int n_width, int n_height )
 	state_save_register_UINT32( "psx", 0, "m_n_vramy", &m_n_vramy, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_twy", &m_n_twy, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_twx", &m_n_twx, 1 );
-	state_save_register_UINT32( "psx", 0, "m_n_twh", &m_n_tww, 1 );
+	state_save_register_UINT32( "psx", 0, "m_n_tww", &m_n_tww, 1 );
+	state_save_register_UINT32( "psx", 0, "m_n_twh", &m_n_twh, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_drawarea_x1", &m_n_drawarea_x1, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_drawarea_y1", &m_n_drawarea_y1, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_drawarea_x2", &m_n_drawarea_x2, 1 );
