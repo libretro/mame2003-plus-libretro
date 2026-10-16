@@ -128,6 +128,7 @@ static data16_t *dcs_sram_bank1;
 static data16_t *dcs_expanded_rom;
 
 static data16_t *dcs_polling_base;
+static UINT8 *dcs_rombank_base;	/* the banked sound ROMs (dcs_rombank_data_r) */
 
 #if (LOG_DCS_TRANSFERS)
 static data16_t *transfer_dest;
@@ -423,6 +424,8 @@ void dcs_init(void)
       dcs_speedup4 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x0641, 0x0641), dcs_speedup4_w);
    }
 
+	dcs_rombank_base = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;
+
 	/* create the timer */
 	dcs.reg_timer = timer_alloc(dcs_irq);
 	dcs.sport_timer = NULL;
@@ -446,6 +449,7 @@ void dcs2_init(offs_t polling_offset)
 
 	/* find the DCS CPU */
 	dcs_cpunum = mame_find_cpu_index("dcs2");
+	dcs_rombank_base = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;
 
 	/* borrow memory for the extra 8k */
 	dcs_sram_bank1 = (UINT16 *)(memory_region(REGION_CPU1 + dcs_cpunum) + 0x8000);
@@ -581,10 +585,8 @@ static WRITE16_HANDLER( dcs_rombank_select_w )
 
 static READ16_HANDLER( dcs_rombank_data_r )
 {
-	UINT8	*banks = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;
-
 	offset += (dcs.rombank & 0x7ff) << 12;
-	return banks[BYTE_XOR_LE(offset)];
+	return dcs_rombank_base[BYTE_XOR_LE(offset)];
 }
 
 
