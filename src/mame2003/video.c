@@ -8,6 +8,11 @@
 #include "mame.h"
 #include "usrintrf.h"
 #include "driver.h"
+#if defined(__ARM_NEON) || defined(__ARM_NEON__)
+#include <arm_neon.h>
+#elif defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
+#include <emmintrin.h>
+#endif
 
 #define MAX_LED 8
 
@@ -41,7 +46,8 @@ enum
    VCT_PASS8888,
    VCT_PASS1555,
    VCT_PASSPAL,
-   VCT_PALTO565
+   VCT_PALTO565,
+   VCT_1555TO565
 };
 
 /* Retrieve output geometry (i.e. window dimensions) */
@@ -195,12 +201,15 @@ void mame2003_video_init_conversion(UINT32 *rgb_components)
       rgb_components[2] = 0x000000FF;
    }
 
-   /* Case III: 16-bit 0RGB1555, pass it through */
+   /* Case III: 16-bit 0RGB1555 bitmaps (direct colour), sent as RGB565: */
+   /* 0RGB1555 is deprecated in libretro and some frontends/video drivers */
+   /* (RetroArch on the Raspberry Pi 5, for one) show it as RGB565, which */
+   /* scrambles every colour */
    else if (video_config.depth == 15)
    {
       video_stride_in = 2; video_stride_out = 2;
-      video_conversion_type = VCT_PASS1555;
-      color_mode = RETRO_PIXEL_FORMAT_0RGB1555;
+      video_conversion_type = VCT_1555TO565;
+      color_mode = RETRO_PIXEL_FORMAT_RGB565;
 
       /* TODO: figure those out */
       rgb_components[0] = 0x00007C00;
@@ -239,7 +248,7 @@ int osd_create_display(
    /* Check if a framebuffer conversion can be bypassed */
    video_do_bypass =
       !video_flip_x && !video_flip_y && !video_swap_xy &&
-      ((video_config.depth == 15) || (video_config.depth == 32));
+      (video_config.depth == 32);
    /* Allocate an output video buffer, if necessary */
    if (!video_do_bypass)
    {
@@ -265,6 +274,41 @@ static INLINE void pix_convert_pass8888(uint32_t *from, uint32_t *to)
 static INLINE void pix_convert_pass1555(uint16_t *from, uint16_t *to)
 {
    *to = *from;
+}
+
+/* xRRRRRGGGGGBBBBB -> RRRRRGGGGGGBBBBB, the green LSB repeating its MSB */
+static INLINE uint16_t rgb1555_to_565(uint16_t v)
+{
+   return ((v & 0x7fe0) << 1) | (v & 0x1f) | ((v >> 4) & 0x20);
+}
+
+static INLINE void pix_convert_1555to565(uint16_t *from, uint16_t *to)
+{
+   *to = rgb1555_to_565(*from);
+}
+
+/* one row, no flips: eight pixels at a time where SIMD is available */
+static void row_1555to565(const uint16_t *in, uint16_t *out, int n)
+{
+#if defined(__ARM_NEON) || defined(__ARM_NEON__)
+   const uint16x8_t m_rg = vdupq_n_u16(0x7fe0), m_b = vdupq_n_u16(0x1f), m_g0 = vdupq_n_u16(0x20);
+   for (; n >= 8; n -= 8, in += 8, out += 8)
+   {
+      uint16x8_t v = vld1q_u16(in);
+      uint16x8_t r = vorrq_u16(vshlq_n_u16(vandq_u16(v, m_rg), 1), vandq_u16(v, m_b));
+      vst1q_u16(out, vorrq_u16(r, vandq_u16(vshrq_n_u16(v, 4), m_g0)));
+   }
+#elif defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
+   const __m128i m_rg = _mm_set1_epi16(0x7fe0), m_b = _mm_set1_epi16(0x1f), m_g0 = _mm_set1_epi16(0x20);
+   for (; n >= 8; n -= 8, in += 8, out += 8)
+   {
+      __m128i v = _mm_loadu_si128((const __m128i *)in);
+      __m128i r = _mm_or_si128(_mm_slli_epi16(_mm_and_si128(v, m_rg), 1), _mm_and_si128(v, m_b));
+      _mm_storeu_si128((__m128i *)out, _mm_or_si128(r, _mm_and_si128(_mm_srli_epi16(v, 4), m_g0)));
+   }
+#endif
+   for (; n > 0; n--)
+      *out++ = rgb1555_to_565(*in++);
 }
 
 static INLINE void pix_convert_passpal(uint16_t *from, uint32_t *to)
@@ -364,6 +408,17 @@ static void frame_convert(struct mame_display *display)
          break;
       case VCT_PALTO565:
          CONVERT(pix_convert_palto565, uint16_t, uint16_t);
+         break;
+      case VCT_1555TO565:
+         if (!video_swap_xy && !flip_x && !flip_y)
+         {
+            const uint16_t *in = (const uint16_t*)input + x0 + y0 * pitch;
+            uint16_t *out = (uint16_t*)output;
+            for (y = 0; y < h; y++, in += pitch, out += w)
+               row_1555to565(in, out, w);
+         }
+         else
+            CONVERT(pix_convert_1555to565, uint16_t, uint16_t);
          break;
    }
 }
