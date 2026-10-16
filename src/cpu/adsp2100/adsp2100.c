@@ -694,6 +694,21 @@ int adsp2100_execute(int cycles)
 		/* handle looping */
 		else
 		{
+			/* a one-instruction NOP loop counted by CNTR (a delay): run the */
+			/* iterations that fit in this timeslice at once, leaving at */
+			/* least one to the code below; nothing else changes in between */
+			if (op == 0 && adsp2100.loop_condition == 14 && pc_stack_top() == adsp2100.pc)
+			{
+				INT32 skip = (INT32)adsp2100.cntr - 2;
+				if (skip > adsp2100_icount - 1)
+					skip = adsp2100_icount - 1;
+				if (skip > 0)
+				{
+					adsp2100.cntr -= skip;
+					adsp2100_icount -= skip;
+				}
+			}
+
 			/* condition not met, keep looping */
 			if (CONDITION(adsp2100.loop_condition))
 				adsp2100.pc = pc_stack_top();
